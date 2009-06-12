@@ -1,0 +1,174 @@
+#!/usr/bin/env php
+<?php
+error_reporting(E_ALL);
+
+$zt = new zentaotest();
+$zt->execute();
+
+class zentaotest
+{
+    private $cwd     = '';
+    private $logFile = '';
+    private $logInfo = '';
+    private $scripts = array();
+    private $scriptMaxLength = 0;
+
+    public function __construct()
+    {
+        $this->setcwd();
+        $this->setLogFile();
+        $this->findScripts();
+        $this->getScriptFileMaxLength();
+    }
+
+    public function execute()
+    {
+        $this->runScripts();
+        $this->saveReport();
+    }
+
+    private function setcwd()
+    {
+        $this->cwd = getcwd() . DIRECTORY_SEPARATOR;
+    }
+
+    private function setLogFile()
+    {
+        $this->logFile = '/tmp/zt_' . date('Ymd_Hi') . '.log';
+    }
+
+    private function runScripts()
+    {
+        $total = count($this->scripts);
+        $digits = strlen($total);
+        foreach($this->scripts as $key => $script)
+        {
+            echo '(' . str_pad($key + 1, $digits, ' ', STR_PAD_LEFT)  . '/' . $total . ") ";
+            $this->runScript($script);
+        }
+    }
+
+    private function runScript($script)
+    {
+        extract($this->extractSection($script));
+        
+        /* 运行当前脚本，获得输出内容。*/
+        chdir(dirname($script));
+        $out = trim(`$script`);
+
+        /* 比较输出和预期的结果。*/
+        if(strcmp($compare, $out) !== 0)
+        {
+            $this->logInfo .= "$title\t $script\n";
+            $this->logInfo .= $this->diff($compare, $out) . "\n";
+            $result = "FAIL";
+        }
+        else
+        {
+            $result = "PASS";
+        }
+        $script = str_replace($this->cwd, '', $script);
+        echo $result . "  " . $title . "  " . "[$script]\n";
+        chdir($this->cwd);
+    }
+
+    /* 取得comment部分的内容。*/
+    private function extractSection($script)
+    {
+        $script = realpath($script);
+        $lines  = trim(file_get_contents($script));
+
+        /* 取得comment部分的内容。*/
+        $commentStart = strpos($lines, '/**');
+        $commentEnd   = strpos($lines, '*/', $commentStart);
+        $comment      = trim(substr($lines, $commentStart + 3, $commentEnd - $commentStart - 3));
+        $comment      = str_replace('*', '', $comment);
+        $comment      = explode("\n", $comment);
+        $title        = trim($comment[0]);
+
+        /* 取得比较部分的内容。*/
+        chdir(dirname($script));
+        $compare = '';
+        $compareStart = strpos($lines, '<<<', $commentEnd);
+        if($compareStart !== false)
+        {
+            $nextLinePos  = strpos($lines, "\n", $compareStart);
+            $compareType  = trim(substr($lines, $compareStart + 3, $nextLinePos - $compareStart - 3));
+            $compareEnd   = strrpos($lines, $compareType, $nextLinePos);
+            $compare      = trim(substr($lines, $nextLinePos + 1, $compareEnd - $nextLinePos - 1));
+
+            /* 如果compare部分为文件，取文件的内容。*/
+            if(is_file($compare)) $compare = trim(file_get_contents($compare));
+        }
+        else
+        {
+            $compareFile = '.' . basename($script, '.php') . '.expect';
+            if(file_exists($compareFile)) $compare = trim(file_get_contents($compareFile));
+        }
+        chdir($this->cwd);
+
+        return array('title' => $title, 'compare' => $compare);
+    }
+
+    private function saveReport()
+    {
+        /* 保存最终的结果。*/
+        file_put_contents($this->logFile, $this->logInfo);
+        echo "The log file is $this->logFile\n";
+    }
+
+    /* 递归扫描某一个目录下面所有的测试脚本。*/
+    private function findScripts($dir = '.')
+    {
+        $scripts = glob($dir . '/' . '*');
+        foreach($scripts as $script)
+        {
+            if(is_dir($script))
+            {
+                $this->findScripts($script);
+            }
+            else
+            {
+                if(strpos($script, '.php'))
+                {
+                    $compareFile = str_replace(basename($script), '.' . str_replace('.php', '.expect', basename($script)), $script);
+                    if(file_exists($compareFile) or strpos(file_get_contents($script), '<<<expect'))
+                    {
+                        $this->scripts[] = realpath($script);
+                    }    
+                }    
+            }
+        }
+    }
+
+    private function getScriptFileMaxLength()
+    {
+        foreach($this->scripts as $script)
+        {
+            $script = str_replace($this->cwd, '', $script);
+            $length = strlen($script);
+            if($length > $this->scriptMaxLength) $this->scriptMaxLength = $length; 
+        }
+    }
+
+    private function diff($wanted, $out)
+    {
+        $w  = explode("\n", $wanted);
+        $o  = explode("\n", $out);
+        $w1 = array_diff_assoc($w,$o);
+        $o1 = array_diff_assoc($o,$w);
+        $w2 = array();
+        $o2 = array();
+        foreach($w1 as $idx => $val) $w2[sprintf("%03d<",$idx)] = sprintf("%03d- ", $idx+1).$val;
+        foreach($o1 as $idx => $val) $o2[sprintf("%03d>",$idx)] = sprintf("%03d+ ", $idx+1).$val;
+        $diff = array_merge($w2, $o2);
+        ksort($diff);
+        return implode("\n", $diff);
+    }
+
+    private function error($message)
+    {
+        die("ERROR: " . $message . "\n");
+    }
+}
+?>
