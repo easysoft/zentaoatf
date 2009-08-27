@@ -1,18 +1,42 @@
 #!/usr/bin/env php
 <?php
-error_reporting(E_ALL);
+/**
+ * The zentao auto testing tools.
+ *
+ * ZenTaoTest is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * ZenTaoTest is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ZenTaoTest.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @copyright   Copyright 2009, Chunsheng Wang
+ * @author      Chunsheng Wang <wwccss@gmail.com>
+ * @package     ZenTaoTest
+ * @version     $Id$
+ * @link        http://www.zentao.cn
+ */
+error_reporting(0);
 
 $zt = new zentaotest();
 $zt->execute();
 
+/* 测试类定义。*/
 class zentaotest
 {
-    private $cwd     = '';
-    private $logFile = '';
-    private $logInfo = '';
-    private $scripts = array();
-    private $scriptMaxLength = 0;
+    private $cwd     = '';          // 当前工作目录。
+    private $logFile = '';          // 结果文件。
+    private $logInfo = '';          // 结果信息。
+    private $scripts = array();     // 需要运行的脚本。
+    private $scriptMaxLength = 0;   // 脚本文件名的最大长度。
 
+    /* 构造函数。*/
     public function __construct()
     {
         $this->setcwd();
@@ -21,22 +45,26 @@ class zentaotest
         $this->getScriptFileMaxLength();
     }
 
+    /* 运行自动化测试框架。*/
     public function execute()
     {
         $this->runScripts();
         $this->saveReport();
     }
 
+    /* 设置当前工作目录。*/
     private function setcwd()
     {
         $this->cwd = getcwd() . DIRECTORY_SEPARATOR;
     }
 
+    /* 设置结果文件。*/
     private function setLogFile()
     {
         $this->logFile = '/tmp/zt_' . date('Ymd_Hi') . '.log';
     }
 
+    /* 批量运行测试脚本。*/
     private function runScripts()
     {
         $total = count($this->scripts);
@@ -48,6 +76,7 @@ class zentaotest
         }
     }
 
+    /* 运行单个测试脚本。*/
     private function runScript($script)
     {
         extract($this->extractSection($script));
@@ -110,6 +139,7 @@ class zentaotest
         return array('title' => $title, 'compare' => $compare);
     }
 
+    /* 保存结果文件。*/
     private function saveReport()
     {
         /* 保存最终的结果。*/
@@ -141,6 +171,7 @@ class zentaotest
         }
     }
 
+    /* 获得脚本文件名的最大长度。*/
     private function getScriptFileMaxLength()
     {
         foreach($this->scripts as $script)
@@ -151,6 +182,7 @@ class zentaotest
         }
     }
 
+    /* 比较两个字符串的区别，代码摘自php的自动化测试框架。*/
     private function diff($wanted, $out)
     {
         $w  = explode("\n", $wanted);
@@ -166,6 +198,7 @@ class zentaotest
         return implode("\n", $diff);
     }
 
+    /* 打印错误信息，并退出。*/
     private function error($message)
     {
         die("ERROR: " . $message . "\n");
