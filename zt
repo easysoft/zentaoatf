@@ -113,7 +113,7 @@ class zentaotest
         $comment      = trim(substr($lines, $commentStart + 3, $commentEnd - $commentStart - 3));
         $comment      = str_replace('*', '', $comment);
         $comment      = explode("\n", $comment);
-        $title        = trim($comment[0]);
+        $title        = iconv('utf-8', 'gbk', trim($comment[0]));
 
         /* 取得比较部分的内容。*/
         chdir(dirname($script));
