@@ -4,5 +4,5 @@
  * just for test.
  */
 
-echo 'hello!';
+echo 'hello';
 ?>
