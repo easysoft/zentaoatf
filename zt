@@ -9,6 +9,13 @@
  *  May you do good and not evil.
  *  May you find forgiveness for yourself and forgive others.
  *  May you share freely, never taking more than you give.
+ todo:
+ 1. 操作系统的支持。
+ 2. 帮助支持。
+ 3. 指定用例或者目录运行。
+ 5. expectf和expectreg的支持。
+ 6. windows下面的各个脚本解释程序的支持。
+ 7. 多语言的支持。
  */
 
 /* Turn off error reporting. */
@@ -17,10 +24,12 @@ error_reporting(E_ALL ^ E_NOTICE);
 /* Define constants. */
 define('TC_BEGIN',     '<<TC');
 define('TC_END',       'TC');
-define('COLOR_RED',    31);
-define('COLOR_GREEN',  32);
-define('COLOR_YELLOW', 33);
-define('COLOR_PURPLE', 35);
+define('COLOR_PREFIX', "\033[");
+define('COLOR_POSTFIX',"\033[0m");
+define('COLOR_RED',    '31m');
+define('COLOR_GREEN',  '32m');
+define('COLOR_YELLOW', '33m');
+define('COLOR_PURPLE', '35m');
 
 /* Run testing. */
 zentaotest::run();
@@ -28,6 +37,30 @@ zentaotest::run();
 /* The class defination of zentao auto testing framework. */
 class zentaotest
 {
+    /**
+     * The os type.
+     * 
+     * @var string   
+     * @access public
+     */
+    public $os;
+
+    /**
+     * The temp directory.
+     * 
+     * @var string   
+     * @access public
+     */
+    public $temp;
+
+    /**
+     * The home directory.
+     * 
+     * @var string   
+     * @access public
+     */
+    public $home;
+
     /**
      * Current working directory.
      * 
@@ -85,6 +118,14 @@ class zentaotest
     public $results = array('pass' => 0, 'fail' => 0, 'skip' => 0);
 
     /**
+     * Failed scripts.
+     * 
+     * @var array 
+     * @access public
+     */
+    public $failedScripts = array();
+
+    /**
      * The report file.
      * 
      * @var string
@@ -100,8 +141,6 @@ class zentaotest
      */
     public $reportInfo = '';
 
-
-
     /**
      * The construct function.
      * 
@@ -110,8 +149,74 @@ class zentaotest
      */
     public function __construct()
     {
+        $this->setOS();
+        $this->setTemp();
+        $this->setHome();
         $this->setCWD();
-        $this->setLogFile();
+        $this->setReportFile();
+    }
+
+    /**
+     * Set current os, please see:http://en.wikipedia.org/wiki/Uname#Table_of_standard_uname_output.
+     * 
+     * @access public
+     * @return void
+     */
+    public function setOS()
+    {
+        if(stripos(PHP_OS, 'linux') !== false)  return $this->os = 'linux';
+        if(stripos(PHP_OS, 'cygwin') !== false) return $this->os = 'linux';
+        if(stripos(PHP_OS, 'win') !== false)    return $this->os = 'win';
+        if(stripos(PHP_OS, 'bsd') !== false)    return $this->os = 'bsd';
+        if(stripos(PHP_OS, 'darwin') !== false) return $this->os = 'mac';
+    }
+
+    /**
+     * Set the temp directory.
+     * 
+     * @access public
+     * @return void
+     */
+    public function setTemp()
+    {
+        if($this->os == 'win')
+        {
+            if(!empty($_SERVER['TMP']))  $this->temp = realpath($_SERVER['TMP']);
+            if(!empty($_SERVER['TEMP'])) $this->temp = realpath($_SERVER['TEMP']);
+            if(empty($this->temp)) $this->temp = dirname(__FILE__) . DIRECTORY_SEPERATOR;
+        }
+        else
+        {
+            $this->temp = '/tmp/';
+        }
+
+        if(!is_writable($this->temp)) $this->error("The temp directory $this->temp is not writable\n");
+    }
+
+    /**
+     * Set the home directory for current user.
+     * 
+     * @access public
+     * @return void
+     */
+    public function setHome()
+    {
+        if($this->os == 'win')
+        {
+            if(isset($_SERVER['HOMEDRIVE']) and isset($_SERVER['HOMEPATH']))
+            {
+                $this->home = $_SERVER['HOMEDRIVE'] . $_SERVER['HOMEPATH'] . DIRECTORY_SEPERATOR;
+            }    
+            else
+            {
+                $this->home = $this->temp;
+            }
+        }
+        else
+        {
+            $this->home = getenv('HOME') . DIRECTORY_SEPARATOR;
+        }
+
     }
 
     /**
@@ -126,14 +231,14 @@ class zentaotest
     }
 
     /**
-     * Set the log file.
+     * Set the report file.
      * 
      * @access public
      * @return void
      */
-    public function setLogFile()
+    public function setReportFile()
     {
-        $this->reportFile = '/tmp/zt.' . date('Ymd.Hi') . '.log';
+        $this->reportFile = $this->temp . date('Ymd.Hi') . '.log';
     }
 
     /**
@@ -150,6 +255,7 @@ class zentaotest
         $zt->setMaxLength();
         $zt->runScripts();
         $zt->logEnd();
+        $zt->printFailed();
         $zt->printSummary();
         $zt->saveReport();
     }
@@ -233,7 +339,8 @@ class zentaotest
      */
     public function printTotal()
     {
-        echo date('n/j G:i:s') . " found " . $this->colorString(count($this->scripts), COLOR_YELLOW) . " scripts.\n\n";
+        $totalInfo = date('n/j G:i:s') . " found " . $this->colorString(count($this->scripts), COLOR_YELLOW) . " scripts.\n\n";
+        (print($totalInfo)) && $this->reportInfo .= $totalInfo;
     }
 
     /**
@@ -245,11 +352,12 @@ class zentaotest
      */
     public function printNumber($key)
     {
-        $total  = count($this->scripts);
-        $padLen = strlen($total);
-        $key    = str_pad($key + 1, $padLen, ' ', STR_PAD_LEFT);
+        $total   = count($this->scripts);
+        $padLen  = strlen($total);
+        $key     = str_pad($key + 1, $padLen, ' ', STR_PAD_LEFT);
+        $keyInfo = "($key/$total) ";
 
-        echo "($key/$total) ";
+        (print($keyInfo)) && $this->reportInfo .= $keyInfo;
     }
 
     /**
@@ -327,8 +435,8 @@ class zentaotest
         else
         {
             $result = 'fail';
-            $this->report .= $this->current->title . "\t" . $this->current->script . "\n";
-            $this->report .= $this->diff($this->current->expect, $this->current->output) . "\n";
+            $this->current->diff = $this->diff($this->current->expect, $this->current->output) . "\n";
+            $this->failedScripts[] = $this->current;
         }
 
         $this->current->result = $result;
@@ -366,22 +474,11 @@ class zentaotest
      */
     public function printResult()
     {
-        if($this->current->result == 'pass') return print($this->colorString('PASS ', COLOR_GREEN));
-        if($this->current->result == 'fail') return print($this->colorString('FAIL ', COLOR_RED));
-        if($this->current->result == 'skip') return print($this->colorString('SKIP ', COLOR_PURPLE));
-    }
+        if($this->current->result == 'pass') $resultInfo = $this->colorString('PASS ', COLOR_GREEN);
+        if($this->current->result == 'fail') $resultInfo = $this->colorString('FAIL ', COLOR_RED);
+        if($this->current->result == 'skip') $resultInfo = $this->colorString('SKIP ', COLOR_PURPLE);
 
-    /**
-     * Print a string in color.
-     * 
-     * @param  string    $string 
-     * @param  string    $color 
-     * @access public
-     * @return string
-     */
-    public function colorString($string, $color)
-    {
-        return "\033[" . $color . 'm' .  $string . "\033[0m";
+        (print($resultInfo)) && $this->reportInfo .= $resultInfo;
     }
 
    /**
@@ -393,7 +490,8 @@ class zentaotest
     public function printFileName()
     {
         $fileName = str_replace($this->cwd, '', $this->current->script);
-        echo '[' . str_pad($fileName, $this->maxLength, ' ') . '] ';
+        $fileName = '[' . str_pad($fileName, $this->maxLength, ' ') . '] ';
+        (print($fileName)) && $this->reportInfo .= $fileName;
     }
 
     /**
@@ -404,7 +502,7 @@ class zentaotest
      */
     public function printTitle()
     {
-        echo $this->current->title;
+        (print($this->current->title)) && $this->reportInfo .= $this->current->title;
     }
 
     /**
@@ -415,7 +513,8 @@ class zentaotest
      */
     public function printTime()
     {
-        echo ' (' . round($this->current->time, 2) . 's)' . "\n";
+        $timeInfo = ' (' . round($this->current->time, 2) . 's)' . "\n";
+        (print($timeInfo)) && $this->reportInfo .= $timeInfo;
     }
 
     /**
@@ -430,6 +529,28 @@ class zentaotest
     }
 
     /**
+     * Print failed scripts info.
+     * 
+     * @access public
+     * @return void
+     */
+    public function printFailed()
+    {
+        if(count($this->failedScripts) > 0)
+        {
+            $failedInfo = "\nFailed scripts:\n";
+            (print($failedInfo)) && $this->reportInfo .= $failedInfo;
+            foreach($this->failedScripts as $script)
+            {
+                $this->current = $script;
+                $this->printFileName();
+                $this->printTitle();
+                (print("\n")) && $this->reportInfo .= "\n";
+            }
+        }
+    }
+
+    /**
      * Print summary of this run.
      * 
      * @access public
@@ -437,16 +558,18 @@ class zentaotest
      */
     public function printSummary()
     {
-        echo "\n" . date("n/j G:i:s") . ' run ' . $this->colorString(count($this->scripts), COLOR_YELLOW) . ' scripts ';
-        echo "in " . round($this->end - $this->begin, 2) . 's. ';
+        $summary  = "\n" . date("n/j G:i:s") . ' run ' . $this->colorString(count($this->scripts), COLOR_YELLOW) . ' scripts ';
+        $summary .= "in " . round($this->end - $this->begin, 2) . 's. ';
 
         $passRate = '(' . round($this->results['pass'] / count($this->scripts), 3) * 100 . '%' . ')';
         $failRate = '(' . round($this->results['fail'] / count($this->scripts), 3) * 100 . '%' . ')';
         $skipRate = '(' . round($this->results['skip'] / count($this->scripts), 3) * 100 . '%' . ')';
 
-        echo $this->colorString($this->results['pass'] . $passRate, COLOR_GREEN)  . ' pass, ';
-        echo $this->colorString($this->results['fail'] . $failRate, COLOR_RED)    . ' fail, ';
-        echo $this->colorString($this->results['skip'] . $skipRate, COLOR_PURPLE) . ' skip. ';
+        $summary .= $this->colorString($this->results['pass'] . $passRate . ' pass, ', COLOR_GREEN);
+        $summary .= $this->colorString($this->results['fail'] . $failRate . ' fail, ', COLOR_RED);
+        $summary .= $this->colorString($this->results['skip'] . $skipRate . ' skip. ', COLOR_PURPLE);
+
+        (print($summary)) && $this->reportInfo .= $summary;
     }
 
     /**
@@ -457,8 +580,54 @@ class zentaotest
      */
     public function saveReport()
     {
-        file_put_contents($this->reportFile, $this->report);
+        /* Append the diff info for failed scripts. */
+        if(count($this->failedScripts) > 0)
+        {
+            $this->reportInfo .= "\n\n[Diff of failed scripts.]\n";
+            foreach($this->failedScripts as $script)
+            {
+                $this->reportInfo .= "$script->script failed\n";
+                $this->reportInfo .= "[title]\n$script->title\n\n";
+                $this->reportInfo .= "[expect]\n$script->expect\n\n";
+                $this->reportInfo .= "[output]\n$script->output\n\n";
+                $this->reportInfo .= "[diff]\n$script->diff\n";
+            }
+        }
+
+        file_put_contents($this->reportFile, $this->removeColor($this->reportInfo));
         echo 'Report: ' . $this->colorString($this->reportFile, COLOR_YELLOW) . " .\n";
+    }
+
+    /**
+     * Print a string in color.
+     * 
+     * @param  string    $string 
+     * @param  string    $color 
+     * @access public
+     * @return string
+     */
+    public function colorString($string, $color)
+    {
+        if($this->os == 'win') return $string;
+        return COLOR_PREFIX . $color .  $string . COLOR_POSTFIX;
+    }
+
+    /**
+     * Remove the color marking chars.
+     * 
+     * @param  string    $string 
+     * @access public
+     * @return string
+     */
+    public function removeColor($string)
+    {
+        $string = str_replace(COLOR_PREFIX . COLOR_GREEN,  '', $string);
+        $string = str_replace(COLOR_PREFIX . COLOR_RED,    '', $string);
+        $string = str_replace(COLOR_PREFIX . COLOR_YELLOW, '', $string);
+        $string = str_replace(COLOR_PREFIX . COLOR_PURPLE, '', $string);
+        $string = str_replace(COLOR_POSTFIX, '', $string);
+
+        return $string;
     }
 
     /**
