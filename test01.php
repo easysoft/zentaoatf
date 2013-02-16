@@ -1,11 +1,8 @@
 #!/usr/bin/env php 
 <?php
-/**
- * just for test.
- */
+<<<TC
+title: php hello world.
+expect: hello world.
+TC;
 
-echo 'hello!';
-<<<expect
-hello!
-expect
-?>
+echo 'hello world.';

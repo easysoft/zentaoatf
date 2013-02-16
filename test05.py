@@ -1,10 +1,8 @@
 #!/usr/bin/env python
-#  python test
-#
-#  desc
-# @author   chunsheng.wang  
-# @version  $Id$
-print 'hello';
-'''expect
-hello
 '''
+<<TC
+title: python hello world.
+expect: hello world.
+TC
+'''
+print 'hello world.';

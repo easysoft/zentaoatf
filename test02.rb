@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby 
-
-print 'hello';
-<<expect
-hello
-expect
+<<TC
+title: ruby hello world.
+expect: hello world.
+TC
+print 'hello world.';

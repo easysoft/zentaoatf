@@ -1,8 +1,10 @@
 #!/usr/bin/env tclsh
-#  python test
-#
-#  desc
-# @author   chunsheng.wang  
-# @version  $Id$
-set expect {
+set case {
+<<TC
+title: tcl hello world.
+expect:hello world.
+TC
 }
+
+set hello "hello world."
+puts [set hello]

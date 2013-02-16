@@ -1,12 +1,6 @@
 #!/usr/bin/env bash
-# shellΩ≈±æ≤‚ ‘°£
-#
-# œÍœ∏–≈œ¢°£
-#
-# @author       chunsheng.wang
-# @version      $Id$
-
-echo helloworld;
-<<EOT
-helloworld
-EOT;
+<<TC
+title:shell hello world.
+expect:hello world.
+TC
+echo hello world.
