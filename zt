@@ -32,7 +32,7 @@ define('COLOR_YELLOW', '33m');
 define('COLOR_PURPLE', '35m');
 
 /* Run testing. */
-zentaotest::run();
+zentaotest::run(isset($argv[1]) ? $argv[1] : './');
 
 /* The class defination of zentao auto testing framework. */
 class zentaotest
@@ -244,14 +244,15 @@ class zentaotest
     /**
      * Run testing scripts.
      * 
+     * @param  string    $dir 
      * @access public
      * @return void
      */
-    public function run()
+    public function run($dir)
     {
         $zt = new zentaotest();
         $zt->logBegin();
-        $zt->findScripts();
+        $zt->findScripts($dir);
         $zt->setMaxLength($zt->scripts);
         $zt->runScripts();
         $zt->logEnd();
@@ -280,6 +281,8 @@ class zentaotest
      */
     public function findScripts($dir = '.')
     {
+        if(is_file($dir)) return $this->scripts[] = realpath($dir);
+
         $scripts = glob($dir . '/' . '*');
         foreach($scripts as $script)
         {
