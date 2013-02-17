@@ -252,7 +252,7 @@ class zentaotest
         $zt = new zentaotest();
         $zt->logBegin();
         $zt->findScripts();
-        $zt->setMaxLength();
+        $zt->setMaxLength($zt->scripts);
         $zt->runScripts();
         $zt->logEnd();
         $zt->printFailed();
@@ -300,11 +300,14 @@ class zentaotest
      * Set the max length of scripts filenames.
      * 
      * @access public
+     * @param  array    $scripts 
+     * @access public
      * @return void
      */
-    public function setMaxLength()
+    public function setMaxLength($scripts)
     {
-        foreach($this->scripts as $script)
+        $this->maxLength = 0;
+        foreach($scripts as $script)
         {
             $script = str_replace($this->cwd, '', $script);
             $length = strlen($script);
@@ -619,6 +622,11 @@ class zentaotest
     {
         if(count($this->failedScripts) > 0)
         {
+            /* Compute the max file name length of failed scripts. */
+            foreach($this->failedScripts as $script) $scriptFiles[] = $script->script;
+            $this->setMaxLength($scriptFiles);
+
+            /* Print info of failed scripts. */
             $failedInfo = "\nFailed scripts:\n";
             (print($failedInfo)) && $this->reportInfo .= $failedInfo;
             foreach($this->failedScripts as $script)
