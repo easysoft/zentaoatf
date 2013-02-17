@@ -396,6 +396,9 @@ class zentaotest
         /* Parse the yaml. */
         $this->current = (object)spyc::yamlLoadString($yaml);
 
+        /* Set the default value of expect. */
+        if(!isset($this->current->expect)) $this->current->expect = '';
+
         /* Append the script file name. */
         $this->current->script = $script;
 
@@ -403,8 +406,11 @@ class zentaotest
         $path = pathinfo($script);
         $expectFile = str_replace($path['basename'], '.' . $path['basename'], $script);
         $expectFile = str_replace('.'. $path['extension'], '.expect', $expectFile);
+        if(is_file($expectFile)) return $this->current->expect = file_get_contents($expectFile);
 
-        if(is_file($expectFile)) $this->current->expect = file_get_contents($expectFile);
+        /* Check whether the expectx file exists. */
+        $expectxFile = str_replace('.expect', '.expectx', $expectFile);
+        if(is_file($expectxFile)) return $this->current->expectx = file_get_contents($expectxFile);
     }
 
     /**
@@ -428,19 +434,89 @@ class zentaotest
      */
     public function computeResult()
     {
+        /* First try to compare the expect and output. */
         if(strcmp($this->current->expect, $this->current->output) === 0)
         {
-            $result = "pass";
+            $this->current->result = 'pass';
+            $this->results[$pass] ++;
+            return true;
+        }
+
+        /* Then try to get regular from expectx or try convert format chars in expect field.. */
+        $regulars = '';
+        if(isset($this->current->expectx))
+        {
+            $regulars = $this->current->expectx;
+        }
+        elseif(strpos($this->current->expect, '%') !== false)
+        {
+            $expect = $this->convertFormat2REG($this->current->expect);
+            if($expect != $this->current->expect) $regulars = $expect;
+        }
+
+        /* No regulars found, fail. */
+        if(!$regulars)
+        {
+            $this->current->result = 'fail';
+            $this->current->diff = $this->diff($this->current->expect, $this->current->output) . "\n";
+            $this->failedScripts[] = $this->current;
+            $this->results['fail'] ++;
+
+            return false;
+        }
+
+        /* Compare the results by regular. */
+        $regulars = explode("\n", $regulars);
+        $output   = explode("\n", $this->current->output);
+        foreach($regulars as $line => $regular)
+        {
+            if(isset($output[$line]) and preg_match("/^$regular$/s", $output[$line])) $regulars[$line] = $output[$line];
+        }
+
+        if($regulars == $output)
+        {
+            $this->current->result = 'pass';
+            $this->result['pass'] ++;
+            return true;
         }
         else
         {
-            $result = 'fail';
-            $this->current->diff = $this->diff($this->current->expect, $this->current->output) . "\n";
+            $this->current->result = 'fail';
+            $this->current->diff   = $this->diff(join("\n", $regulars), join("\n", $output));
             $this->failedScripts[] = $this->current;
+            $this->results['fail'] ++;
+            return false;
         }
+    }
 
-        $this->current->result = $result;
-        $this->results[$result] ++;
+    /**
+     * Convert format string to reg. 
+     *
+     * This function is copied from run-test.php of php project. 
+     * Please see: http://qa.php.net/phpt_details.php#expectf_section.
+     * 
+     * @param  string    $string 
+     * @access public
+     * @return string
+     */
+    public function convertFormat2REG($string)
+    {
+        $string = preg_replace('/\r\n/', "\n", $string);
+        $string = preg_quote($string, '/');
+
+        $string = str_replace('%e', '\\' . DIRECTORY_SEPARATOR, $string);
+        $string = str_replace('%s', '[^\r\n]+', $string);
+        $string = str_replace('%S', '[^\r\n]*', $string);
+        $string = str_replace('%a', '.+', $string);
+        $string = str_replace('%A', '.*', $string);
+        $string = str_replace('%w', '\s*', $string);
+        $string = str_replace('%i', '[+-]?\d+', $string);
+        $string = str_replace('%d', '\d+', $string);
+        $string = str_replace('%x', '[0-9a-fA-F]+', $string);
+        $string = str_replace('%f', '[+-]?\.?\d+\.?\d*(?:[Ee][+-]?\d+)?', $string);
+        $string = str_replace('%c', '.', $string);
+
+        return $string;
     }
 
     /**
@@ -583,14 +659,15 @@ class zentaotest
         /* Append the diff info for failed scripts. */
         if(count($this->failedScripts) > 0)
         {
-            $this->reportInfo .= "\n\n[Diff of failed scripts.]\n";
+            $this->reportInfo .= "\n";
             foreach($this->failedScripts as $script)
             {
-                $this->reportInfo .= "$script->script failed\n";
-                $this->reportInfo .= "[title]\n$script->title\n\n";
-                $this->reportInfo .= "[expect]\n$script->expect\n\n";
+                $expect = isset($script->expectx) ? $script->expectx : $script->expect;
+                $this->reportInfo .= "\n{{===\nfailed $script->script <$script->title>}}\n";
+                $this->reportInfo .= "[expect]\n$expect\n\n";
                 $this->reportInfo .= "[output]\n$script->output\n\n";
-                $this->reportInfo .= "[diff]\n$script->diff\n";
+                $this->reportInfo .= "[diff]\n$script->diff";
+                $this->reportInfo .= "\n===}}\n";
             }
         }
 
