@@ -280,9 +280,11 @@ class zentaotest
      */
     public function findScripts($dir = '.')
     {
-        $scripts = glob($dir . '/' . '*.*');
+        $scripts = glob($dir . '/' . '*');
         foreach($scripts as $script)
         {
+            if(basename($script) == 'zt') continue;
+
             if(is_dir($script))
             {
                 $this->findScripts($script);
@@ -405,12 +407,12 @@ class zentaotest
         /* Check whether the expect file exists. */
         $path = pathinfo($script);
         $expectFile = str_replace($path['basename'], '.' . $path['basename'], $script);
-        $expectFile = str_replace('.'. $path['extension'], '.expect', $expectFile);
-        if(is_file($expectFile)) return $this->current->expect = file_get_contents($expectFile);
+        $expectFile = str_replace('.'. $path['extension'], '.et', $expectFile);
+        if(is_file($expectFile)) return $this->current->expect = trim(file_get_contents($expectFile));
 
         /* Check whether the expectx file exists. */
-        $expectxFile = str_replace('.expect', '.expectx', $expectFile);
-        if(is_file($expectxFile)) return $this->current->expectx = file_get_contents($expectxFile);
+        $expectxFile = str_replace('.et', '.ex', $expectFile);
+        if(is_file($expectxFile)) return $this->current->expectx = trim(file_get_contents($expectxFile));
     }
 
     /**
@@ -481,8 +483,11 @@ class zentaotest
         }
         else
         {
+            if(isset($this->current->expectx))  $diff = $this->diff(join("\n", $regulars), join("\n", $output));
+            if(!isset($this->current->expectx)) $diff = $this->diff($this->current->expect, $this->current->output);
+
             $this->current->result = 'fail';
-            $this->current->diff   = $this->diff(join("\n", $regulars), join("\n", $output));
+            $this->current->diff   = $diff;
             $this->failedScripts[] = $this->current;
             $this->results['fail'] ++;
             return false;
