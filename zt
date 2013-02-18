@@ -248,7 +248,7 @@ class zentaotest
      * @access public
      * @return void
      */
-    public function run($dir)
+    public static function run($dir)
     {
         $zt = new zentaotest();
         $zt->logBegin();
