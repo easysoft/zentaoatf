@@ -446,7 +446,7 @@ class zentaotest
         if(strcmp($this->current->expect, $this->current->output) === 0)
         {
             $this->current->result = 'pass';
-            $this->results[$pass] ++;
+            $this->results['pass'] ++;
             return true;
         }
 
