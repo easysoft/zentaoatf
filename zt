@@ -11,20 +11,23 @@
  * @link        http://www.zentao.net
  *
  * Todo:
- *   1. 操作系统的支持。
- *   2. 帮助支持。
- *   3. 指定用例或者目录运行。
- *   4. windows下面的各个脚本解释程序的支持。
- *   5. 多语言的支持。
- *   6. 和禅道的绑定集成。
+ *   1. 帮助支持。
+ *   2. 指定用例或者目录运行。
+ *   3. 多语言的支持。
+ *   4. 和禅道的绑定集成。
  */
 
 /* Turn off error reporting. */
 error_reporting(E_ALL ^ E_NOTICE);
 
-/* Define constants. */
-define('TC_BEGIN',     '<<TC');
-define('TC_END',       'TC');
+/* Short DIRECTORY_SEPARATOR . */
+define('DS', DIRECTORY_SEPARATOR);
+
+/* The begin and end mark of testing scripts. */
+define('TC_BEGIN', 'TC');
+define('TC_END',   'TC');
+
+/* Colors. */
 define('COLOR_PREFIX', "\033[");
 define('COLOR_POSTFIX',"\033[0m");
 define('COLOR_RED',    '31m');
@@ -63,6 +66,22 @@ class zentaotest
     public $home;
 
     /**
+     * The profile.
+     * 
+     * @var string   
+     * @access public
+     */
+    public $profile;
+
+    /**
+     * The custom config params.
+     * 
+     * @var object   
+     * @access public
+     */
+    public $config;
+
+    /**
      * Current working directory.
      * 
      * @var string
@@ -77,6 +96,14 @@ class zentaotest
      * @access public
      */
     public $scripts = array();
+
+    /**
+     * Script langs.
+     * 
+     * @var array 
+     * @access public
+     */
+    public $langs = array();
 
     /**
      * The begin time.
@@ -153,6 +180,8 @@ class zentaotest
         $this->setOS();
         $this->setTemp();
         $this->setHome();
+        $this->setProfile();
+        $this->loadConfig();
         $this->setCWD();
         $this->setReportFile();
     }
@@ -184,7 +213,7 @@ class zentaotest
         {
             if(!empty($_SERVER['TMP']))  $this->temp = realpath($_SERVER['TMP']);
             if(!empty($_SERVER['TEMP'])) $this->temp = realpath($_SERVER['TEMP']);
-            if(empty($this->temp)) $this->temp = dirname(__FILE__) . DIRECTORY_SEPERATOR;
+            if(empty($this->temp)) $this->temp = dirname(__FILE__) . DS;
         }
         else
         {
@@ -206,7 +235,7 @@ class zentaotest
         {
             if(isset($_SERVER['HOMEDRIVE']) and isset($_SERVER['HOMEPATH']))
             {
-                $this->home = $_SERVER['HOMEDRIVE'] . $_SERVER['HOMEPATH'] . DIRECTORY_SEPERATOR;
+                $this->home = $_SERVER['HOMEDRIVE'] . $_SERVER['HOMEPATH'] . DS;
             }    
             else
             {
@@ -215,9 +244,48 @@ class zentaotest
         }
         else
         {
-            $this->home = getenv('HOME') . DIRECTORY_SEPARATOR;
+            $this->home = getenv('HOME') . DS;
         }
 
+    }
+
+    /**
+     * Set the profile.
+     * 
+     * @access public
+     * @return void
+     */
+    public function setProfile()
+    {
+        $this->profile = $this->home . '.ztconfig';
+        if(!is_file($this->profile)) touch($this->profile);
+    }
+
+    /**
+     * Load config from the profile.
+     * 
+     * @access public
+     * @return void
+     */
+    public function loadConfig()
+    {
+        $this->config = json_decode(file_get_contents($this->profile));
+        if(!$this->config)
+        {
+            $this->config = new stdclass();
+            $this->config->langs = new stdclass();
+        }
+    }
+
+    /**
+     * Save config to profile.
+     * 
+     * @access public
+     * @return void
+     */
+    public function saveConfig()
+    {
+        file_put_contents($this->profile, json_encode($this->config));
     }
 
     /**
@@ -228,7 +296,7 @@ class zentaotest
      */
     public function setCWD()
     {
-        $this->cwd = getcwd() . DIRECTORY_SEPARATOR;
+        $this->cwd = getcwd() . DS;
     }
 
     /**
@@ -239,7 +307,7 @@ class zentaotest
      */
     public function setReportFile()
     {
-        $this->reportFile = $this->temp . date('Ymd.Hi') . '.log';
+        $this->reportFile = $this->temp . DS . date('Ymd.Hi') . '.log';
     }
 
     /**
@@ -254,6 +322,7 @@ class zentaotest
         $zt = new zentaotest();
         $zt->logBegin();
         $zt->findScripts($dir);
+        $zt->setInterpreters();
         $zt->setMaxLength($zt->scripts);
         $zt->runScripts();
         $zt->logEnd();
@@ -295,9 +364,48 @@ class zentaotest
             }
             else
             {
-                if(strpos(file_get_contents($script), TC_BEGIN) !== false) $this->scripts[] = realpath($script);
+                if(strpos(file_get_contents($script), TC_BEGIN) !== false)
+                {
+                    $this->scripts[] = realpath($script);
+
+                    /* Get the script language. */
+                    $lang  = strtolower(pathinfo($script, PATHINFO_EXTENSION));
+                    if($lang) $this->langs[$lang] = $lang;
+                }
             }
         }
+    }
+
+    /**
+     * Set interpreters for scripts languages.
+     * 
+     * @access public
+     * @return void
+     */
+    public function setInterpreters()
+    {
+        foreach($this->langs as $lang)
+        {
+            if(isset($this->config->langs->$lang)) continue;
+            if($lang == 'bat') continue;
+
+            while(true)
+            {
+                echo "Please set the interpreter for $lang scripts, type 'skip' to skip:";
+                $input = trim(fgets(STDIN));
+                if(!is_file($input))
+                {
+                    if($input == 'skip') break;
+
+                    echo "The interpreter you input not exists, please try again.\n";
+                    continue;
+                }
+
+                $this->config->langs->$lang = $input;
+                break;
+            }
+        }
+        $this->saveConfig();
     }
 
     /**
@@ -408,18 +516,19 @@ class zentaotest
         /* Set the default value of expect. */
         if(!isset($this->current->expect)) $this->current->expect = '';
 
-        /* Append the script file name. */
+        /* Append the script file name and lang. */
         $this->current->script = $script;
+        $this->current->lang   = pathinfo($script, PATHINFO_EXTENSION);
 
         /* Check whether the expect file exists. */
         $path = pathinfo($script);
         $expectFile = str_replace($path['basename'], '.' . $path['basename'], $script);
         $expectFile = str_replace('.'. $path['extension'], '.et', $expectFile);
-        if(is_file($expectFile)) return $this->current->expect = trim(file_get_contents($expectFile));
+        if(is_file($expectFile)) return $this->current->expect = trim($this->dos2unix(file_get_contents($expectFile)));
 
         /* Check whether the expectx file exists. */
         $expectxFile = str_replace('.et', '.ex', $expectFile);
-        if(is_file($expectxFile)) return $this->current->expectx = trim(file_get_contents($expectxFile));
+        if(is_file($expectxFile)) return $this->current->expectx = trim($this->dos2unix(file_get_contents($expectxFile)));
     }
 
     /**
@@ -431,7 +540,29 @@ class zentaotest
     public function getScriptOutput()
     {
         chdir(dirname($this->current->script));
-        $this->current->output = trim(`{$this->current->script}`);
+
+        if($this->os == 'win')
+        {
+            $lang = $this->current->lang;
+
+            if($lang == 'bat')
+            {
+                $this->current->output = trim(`{$this->current->script}`);
+            }
+            elseif(isset($this->config->langs->$lang))
+            {
+                $this->current->output = trim(`{$this->config->langs->$lang} {$this->current->script}`);
+            }
+            else
+            {
+                $this->current->output = "skip";
+            }
+        }
+        else
+        {
+            $this->current->output = trim(`{$this->current->script}`);
+        }
+
         chdir($this->cwd);
     }
 
@@ -443,6 +574,14 @@ class zentaotest
      */
     public function computeResult()
     {
+        /* If the output is skip, skip this script. */
+        if($this->current->output == 'skip')
+        {
+            $this->current->result = 'skip';
+            $this->results['skip'] ++;
+            return true;
+        }
+
         /* First try to compare the expect and output. */
         if(strcmp($this->current->expect, $this->current->output) === 0)
         {
@@ -516,7 +655,7 @@ class zentaotest
         $string = preg_replace('/\r\n/', "\n", $string);
         $string = preg_quote($string, '/');
 
-        $string = str_replace('%e', '\\' . DIRECTORY_SEPARATOR, $string);
+        $string = str_replace('%e', '\\' . DS, $string);
         $string = str_replace('%s', '[^\r\n]+', $string);
         $string = str_replace('%S', '[^\r\n]*', $string);
         $string = str_replace('%a', '.+', $string);
@@ -541,6 +680,8 @@ class zentaotest
      */
     public function diff($expect, $out)
     {
+        $expect = str_replace("\r", '', $expect);
+        $out    = str_replace("\r", '', $out);
         $w  = explode("\n", $expect);
         $o  = explode("\n", $out);
         $w1 = array_diff_assoc($w,$o);
@@ -722,6 +863,18 @@ class zentaotest
         $string = str_replace(COLOR_POSTFIX, '', $string);
 
         return $string;
+    }
+
+    /**
+     * Convert a string fro dos format to unix.
+     * 
+     * @param  string    $string 
+     * @access public
+     * @return string
+     */
+    public function dos2unix($string)
+    {
+        return str_replace("\r", '', $string);
     }
 
     /**
