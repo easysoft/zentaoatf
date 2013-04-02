@@ -23,6 +23,12 @@ error_reporting(E_ALL ^ E_NOTICE);
 /* Short DIRECTORY_SEPARATOR . */
 define('DS', DIRECTORY_SEPARATOR);
 
+/* The time zone. */
+define('TIME_ZONE', 'Asia/Shanghai');
+
+/* Skip files. */
+define('SKIP_FILES', 'exe,dll,gif,jpg,png,bmp');
+
 /* The begin and end mark of testing scripts. */
 define('TC_BEGIN', 'TC');
 define('TC_END',   'TC');
@@ -183,6 +189,7 @@ class zentaotest
         $this->setProfile();
         $this->loadConfig();
         $this->setCWD();
+        $this->setTimeZone();
         $this->setReportFile();
     }
 
@@ -300,6 +307,17 @@ class zentaotest
     }
 
     /**
+     * Set the time zone.
+     * 
+     * @access public
+     * @return void
+     */
+    public function setTimeZone()
+    {
+        date_default_timezone_set(TIME_ZONE);
+    }
+
+    /**
      * Set the report file.
      * 
      * @access public
@@ -364,12 +382,14 @@ class zentaotest
             }
             else
             {
+                /* Get the script language. */
+                $lang = strtolower(pathinfo($script, PATHINFO_EXTENSION));
+                if($lang and strpos(SKIP_FILES, $lang) !== false) continue;
+
+                /* Has TC_BEGIN in the script, save it. */
                 if(strpos(file_get_contents($script), TC_BEGIN) !== false)
                 {
                     $this->scripts[] = realpath($script);
-
-                    /* Get the script language. */
-                    $lang  = strtolower(pathinfo($script, PATHINFO_EXTENSION));
                     if($lang) $this->langs[$lang] = $lang;
                 }
             }
@@ -391,11 +411,11 @@ class zentaotest
 
             while(true)
             {
-                echo "Please set the interpreter for $lang scripts, type 'skip' to skip:";
+                echo "Please set the interpreter for $lang scripts, enter to skip:";
                 $input = trim(fgets(STDIN));
                 if(!is_file($input))
                 {
-                    if($input == 'skip') break;
+                    if(empty($input)) break;
 
                     echo "The interpreter you input not exists, please try again.\n";
                     continue;
