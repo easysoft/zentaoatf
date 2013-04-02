@@ -404,6 +404,8 @@ class zentaotest
      */
     public function setInterpreters()
     {
+        if($this->os != 'win') return; 
+
         foreach($this->langs as $lang)
         {
             if(isset($this->config->langs->$lang)) continue;
