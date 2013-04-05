@@ -23,28 +23,25 @@
  */
 
 /* Turn off error reporting. */
-error_reporting(E_ALL ^ E_NOTICE);
+error_reporting(E_ALL);
 
 /* Short DIRECTORY_SEPARATOR . */
 define('DS', DIRECTORY_SEPARATOR);
 
-/* The time zone. */
-define('TIME_ZONE', 'Asia/Shanghai');
+/* Config. */
+$config = new stdclass();
+$config->timezone = 'Asia/Shanghai';
+$config->skipfiles = 'exe,dll,gif,jpg,png,bmp';
+$config->casePrefix  = 'TC';
+$config->casePostfix = 'TC';
 
-/* Skip files. */
-define('SKIP_FILES', 'exe,dll,gif,jpg,png,bmp');
-
-/* The begin and end mark of testing scripts. */
-define('TC_BEGIN', 'TC');
-define('TC_END',   'TC');
-
-/* Colors. */
-define('COLOR_PREFIX', "\033[");
-define('COLOR_POSTFIX',"\033[0m");
-define('COLOR_RED',    '31m');
-define('COLOR_GREEN',  '32m');
-define('COLOR_YELLOW', '33m');
-define('COLOR_PURPLE', '35m');
+/* Ansi control codes. */
+$config->ansi = new stdclass();
+$config->ansi->off    = "\033[0m";
+$config->ansi->red    = "\033[31m";
+$config->ansi->green  = "\033[32m";
+$config->ansi->yellow = "\033[33m";
+$config->ansi->purple = "\033[35m";
 
 /* Run testing. */
 zentaotest::run(isset($argv[1]) ? $argv[1] : './');
@@ -52,6 +49,14 @@ zentaotest::run(isset($argv[1]) ? $argv[1] : './');
 /* The class defination of zentao auto testing framework. */
 class zentaotest
 {
+    /**
+     * The config object.
+     * 
+     * @var object   
+     * @access public
+     */
+    public $config;
+
     /**
      * The os type.
      * 
@@ -77,7 +82,7 @@ class zentaotest
     public $home;
 
     /**
-     * The profile.
+     * The profile for user personal settings.
      * 
      * @var string   
      * @access public
@@ -85,12 +90,12 @@ class zentaotest
     public $profile;
 
     /**
-     * The custom config params.
+     * The custom settings.
      * 
      * @var object   
      * @access public
      */
-    public $config;
+    public $settings;
 
     /**
      * Current working directory.
@@ -109,12 +114,12 @@ class zentaotest
     public $scripts = array();
 
     /**
-     * Script langs.
+     * Script interpreters.
      * 
      * @var array 
      * @access public
      */
-    public $langs = array();
+    public $interpreters = array();
 
     /**
      * The begin time.
@@ -188,14 +193,27 @@ class zentaotest
      */
     public function __construct()
     {
+        $this->setConfig();
         $this->setOS();
         $this->setTemp();
         $this->setHome();
         $this->setProfile();
-        $this->loadConfig();
+        $this->loadSettings();
         $this->setCWD();
         $this->setTimeZone();
         $this->setReportFile();
+    }
+
+    /**
+     * Set config.
+     * 
+     * @access public
+     * @return void
+     */
+    public function setConfig()
+    {
+        global $config;
+        $this->config = $config;
     }
 
     /**
@@ -274,30 +292,30 @@ class zentaotest
     }
 
     /**
-     * Load config from the profile.
+     * Load settings from the profile.
      * 
      * @access public
      * @return void
      */
-    public function loadConfig()
+    public function loadSettings()
     {
-        $this->config = json_decode(file_get_contents($this->profile));
-        if(!$this->config)
+        $this->settings = json_decode(file_get_contents($this->profile));
+        if(!$this->settings)
         {
-            $this->config = new stdclass();
-            $this->config->langs = new stdclass();
+            $this->settings = new stdclass();
+            $this->settings->interpreters = new stdclass();
         }
     }
 
     /**
-     * Save config to profile.
+     * Save settings to profile.
      * 
      * @access public
      * @return void
      */
-    public function saveConfig()
+    public function saveSettings()
     {
-        file_put_contents($this->profile, json_encode($this->config));
+        file_put_contents($this->profile, json_encode($this->settings));
     }
 
     /**
@@ -319,7 +337,7 @@ class zentaotest
      */
     public function setTimeZone()
     {
-        date_default_timezone_set(TIME_ZONE);
+        date_default_timezone_set($this->config->timezone);
     }
 
     /**
@@ -387,22 +405,22 @@ class zentaotest
             }
             else
             {
-                /* Get the script language. */
-                $lang = strtolower(pathinfo($script, PATHINFO_EXTENSION));
-                if($lang and strpos(SKIP_FILES, $lang) !== false) continue;
+                /* Get the script interpreter. */
+                $interpreter = strtolower(pathinfo($script, PATHINFO_EXTENSION));
+                if($interpreter and strpos($this->config->skipfiles, $interpreter) !== false) continue;
 
                 /* Has TC_BEGIN in the script, save it. */
-                if(strpos(file_get_contents($script), TC_BEGIN) !== false)
+                if(strpos(file_get_contents($script), $this->config->casePrefix) !== false)
                 {
                     $this->scripts[] = realpath($script);
-                    if($lang) $this->langs[$lang] = $lang;
+                    if($interpreter) $this->interpreters[$interpreter] = $interpreter;
                 }
             }
         }
     }
 
     /**
-     * Set interpreters for scripts languages.
+     * Set interpreters for scripts.
      * 
      * @access public
      * @return void
@@ -411,14 +429,13 @@ class zentaotest
     {
         if($this->os != 'win') return; 
 
-        foreach($this->langs as $lang)
+        foreach($this->interpreters as $interpreter)
         {
-            if(isset($this->config->langs->$lang)) continue;
-            if($lang == 'bat') continue;
+            if(isset($this->settings->interpreters->$interpreter)) continue;
+            if($interpreter == 'bat') continue;
 
             while(true)
             {
-                echo "Please set the interpreter for $lang scripts, enter to skip:";
                 $input = trim(fgets(STDIN));
                 if(!is_file($input))
                 {
@@ -428,11 +445,11 @@ class zentaotest
                     continue;
                 }
 
-                $this->config->langs->$lang = $input;
+                $this->settings->interpreters->$interpreter = $input;
                 break;
             }
         }
-        $this->saveConfig();
+        $this->saveSettings();
     }
 
     /**
@@ -483,7 +500,7 @@ class zentaotest
      */
     public function printTotal()
     {
-        $totalInfo = date('n/j G:i:s') . " found " . $this->colorString(count($this->scripts), COLOR_YELLOW) . " scripts.\n\n";
+        $totalInfo = date('n/j G:i:s') . " found " . $this->colorString(count($this->scripts), $this->config->ansi->yellow) . " scripts.\n\n";
         (print($totalInfo)) && $this->reportInfo .= $totalInfo;
     }
 
@@ -533,8 +550,8 @@ class zentaotest
     {
         /* Extract the yaml defination. */
         $contents = trim(file_get_contents($script));
-        $begin    = strpos($contents, TC_BEGIN) + strlen(TC_BEGIN);
-        $end      = strpos($contents, TC_END, $begin);
+        $begin    = strpos($contents, $this->config->casePrefix) + strlen($this->config->casePrefix);
+        $end      = strpos($contents, $this->config->casePostfix);
         $yaml     = substr($contents, $begin, $end - $begin);
 
         /* Parse the yaml. */
@@ -543,9 +560,9 @@ class zentaotest
         /* Set the default value of expect. */
         if(!isset($this->current->expect)) $this->current->expect = '';
 
-        /* Append the script file name and lang. */
+        /* Append the script file name and interpreter. */
         $this->current->script = $script;
-        $this->current->lang   = pathinfo($script, PATHINFO_EXTENSION);
+        $this->current->interpreter   = pathinfo($script, PATHINFO_EXTENSION);
 
         /* Check whether the expect file exists. */
         $path = pathinfo($script);
@@ -570,15 +587,15 @@ class zentaotest
 
         if($this->os == 'win')
         {
-            $lang = $this->current->lang;
+            $interpreter = $this->current->interpreter;
 
-            if($lang == 'bat')
+            if($interpreter == 'bat')
             {
                 $this->current->output = trim(`{$this->current->script}`);
             }
-            elseif(isset($this->config->langs->$lang))
+            elseif(isset($this->settings->interpreters->$interpreter))
             {
-                $this->current->output = trim(`{$this->config->langs->$lang} {$this->current->script}`);
+                $this->current->output = trim(`{$this->settings->interpreters->$interpreter} {$this->current->script}`);
             }
             else
             {
@@ -651,7 +668,7 @@ class zentaotest
         if($regulars == $output)
         {
             $this->current->result = 'pass';
-            $this->result['pass'] ++;
+            $this->results['pass'] ++;
             return true;
         }
         else
@@ -730,9 +747,9 @@ class zentaotest
      */
     public function printResult()
     {
-        if($this->current->result == 'pass') $resultInfo = $this->colorString('PASS ', COLOR_GREEN);
-        if($this->current->result == 'fail') $resultInfo = $this->colorString('FAIL ', COLOR_RED);
-        if($this->current->result == 'skip') $resultInfo = $this->colorString('SKIP ', COLOR_PURPLE);
+        if($this->current->result == 'pass') $resultInfo = $this->colorString('PASS ', $this->config->ansi->green);
+        if($this->current->result == 'fail') $resultInfo = $this->colorString('FAIL ', $this->config->ansi->red);
+        if($this->current->result == 'skip') $resultInfo = $this->colorString('SKIP ', $this->config->ansi->purple);
 
         (print($resultInfo)) && $this->reportInfo .= $resultInfo;
     }
@@ -819,16 +836,16 @@ class zentaotest
      */
     public function printSummary()
     {
-        $summary  = "\n" . date("n/j G:i:s") . ' run ' . $this->colorString(count($this->scripts), COLOR_YELLOW) . ' scripts ';
+        $summary  = "\n" . date("n/j G:i:s") . ' run ' . $this->colorString(count($this->scripts), $this->config->ansi->yellow) . ' scripts ';
         $summary .= "in " . round($this->end - $this->begin, 2) . 's. ';
 
         $passRate = '(' . round($this->results['pass'] / count($this->scripts), 3) * 100 . '%' . ')';
         $failRate = '(' . round($this->results['fail'] / count($this->scripts), 3) * 100 . '%' . ')';
         $skipRate = '(' . round($this->results['skip'] / count($this->scripts), 3) * 100 . '%' . ')';
 
-        $summary .= $this->colorString($this->results['pass'] . $passRate . ' pass, ', COLOR_GREEN);
-        $summary .= $this->colorString($this->results['fail'] . $failRate . ' fail, ', COLOR_RED);
-        $summary .= $this->colorString($this->results['skip'] . $skipRate . ' skip. ', COLOR_PURPLE);
+        $summary .= $this->colorString($this->results['pass'] . $passRate . ' pass, ', $this->config->ansi->green);
+        $summary .= $this->colorstring($this->results['fail'] . $failRate . ' fail, ', $this->config->ansi->red);
+        $summary .= $this->colorstring($this->results['skip'] . $skipRate . ' skip. ', $this->config->ansi->purple);
 
         (print($summary)) && $this->reportInfo .= $summary;
     }
@@ -857,7 +874,7 @@ class zentaotest
         }
 
         file_put_contents($this->reportFile, $this->removeColor($this->reportInfo));
-        echo 'Report: ' . $this->colorString($this->reportFile, COLOR_YELLOW) . " .\n";
+        echo 'Report: ' . $this->colorString($this->reportFile, $this->config->ansi->yellow) . " .\n";
     }
 
     /**
@@ -870,13 +887,13 @@ class zentaotest
      */
     public function colorString($string, $color)
     {
-        if($this->os == 'win')
+        if($this->os == 'win2')
         {
             $console = getenv('console');
             if($console !== 'ansicon') return $string;
         }
 
-        return COLOR_PREFIX . $color .  $string . COLOR_POSTFIX;
+        return $color .  $string . $this->config->ansi->off;
     }
 
     /**
@@ -888,11 +905,11 @@ class zentaotest
      */
     public function removeColor($string)
     {
-        $string = str_replace(COLOR_PREFIX . COLOR_GREEN,  '', $string);
-        $string = str_replace(COLOR_PREFIX . COLOR_RED,    '', $string);
-        $string = str_replace(COLOR_PREFIX . COLOR_YELLOW, '', $string);
-        $string = str_replace(COLOR_PREFIX . COLOR_PURPLE, '', $string);
-        $string = str_replace(COLOR_POSTFIX, '', $string);
+        $string = str_replace($this->config->ansi->green,  '', $string);
+        $string = str_replace($this->config->ansi->red,    '', $string);
+        $string = str_replace($this->config->ansi->yellow, '', $string);
+        $string = str_replace($this->config->ansi->purple, '', $string);
+        $string = str_replace($this->config->ansi->off,    '', $string);
 
         return $string;
     }
@@ -907,6 +924,11 @@ class zentaotest
     public function dos2unix($string)
     {
         return str_replace("\r", '', $string);
+    }
+
+    public function printIconv($string)
+    {
+        echo iconv('utf-8', 'gbk', $string);
     }
 
     /**
