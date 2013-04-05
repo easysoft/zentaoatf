@@ -13,12 +13,9 @@
  * Todo:
  *   1. 帮助支持。
  *   2. 指定用例或者目录运行。
- *   3. 多语言的支持。
  *   4. 和禅道的绑定集成。
  *   5. 保存日志文件考虑换个目录。windows下面，或者单独创建一个目录。每次执行删除若干分钟之前的？
  *   6. 输出日志的时候根据操作系统判断换行符。
- *   7. 每种语言可以设置支持的编码，然后输出的时候根据编码输出。
- *   8. 首次运行的时候，提示用户选择语言，编码。
  *   9. 不同的操作系统有不同的skipfile。
  */
 
@@ -436,6 +433,7 @@ class zentaotest
 
             while(true)
             {
+                echo "Please set interpreter for $interpreter scripts, enter to skip:";
                 $input = trim(fgets(STDIN));
                 if(!is_file($input))
                 {
