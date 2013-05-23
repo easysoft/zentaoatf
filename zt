@@ -876,7 +876,7 @@ class zentaotest
     }
 
     /**
-     * Print a string in color in a linux os or in ansicon console in windows.
+     * Print a string with color if the os is not windows.
      * 
      * @param  string    $string 
      * @param  string    $color 
@@ -885,12 +885,7 @@ class zentaotest
      */
     public function colorString($string, $color)
     {
-        if($this->os == 'win2')
-        {
-            $console = getenv('console');
-            if($console !== 'ansicon') return $string;
-        }
-
+        if($this->os == 'win') return $string;
         return $color .  $string . $this->config->ansi->off;
     }
 
