@@ -13,10 +13,7 @@
  * Todo:
  *   1. 帮助支持。
  *   2. 指定用例或者目录运行。
- *   4. 和禅道的绑定集成。
- *   5. 保存日志文件考虑换个目录。windows下面，或者单独创建一个目录。每次执行删除若干分钟之前的？
- *   6. 输出日志的时候根据操作系统判断换行符。
- *   9. 不同的操作系统有不同的skipfile。
+ *   3. 和禅道的绑定集成。
  */
 
 /* Turn off error reporting. */
@@ -27,8 +24,8 @@ define('DS', DIRECTORY_SEPARATOR);
 
 /* Config. */
 $config = new stdclass();
-$config->timezone = 'Asia/Shanghai';
-$config->skipfiles = 'exe,dll,gif,jpg,png,bmp';
+$config->timezone    = 'Asia/Shanghai';
+$config->skipfiles   = 'exe,dll,gif,jpg,png,bmp';
 $config->casePrefix  = 'TC';
 $config->casePostfix = 'TC';
 
