@@ -12,9 +12,7 @@ zip:
 	rm -fr zentaoatf
 win:        
 	mkdir zentaoatf
-	cp -fr {zt,langs,hello} zentaoatf
+	cp -fr {zt*,langs,hello} zentaoatf
 	cp -fr php zentaoatf/
-	echo "@echo off" > zentaoatf/zt.bat
-	echo ".\php\php.exe zt %*" >> zentaoatf/zt.bat
 	zip -r -9 ZenTaoATF.$(VERSION).win.zip zentaoatf
 	rm -fr zentaoatf
