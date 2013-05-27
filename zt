@@ -40,6 +40,29 @@ $config->ansi->green  = "\033[32m";
 $config->ansi->yellow = "\033[33m";
 $config->ansi->purple = "\033[35m";
 
+/* Supportted languages. */
+$config->langs['en']['label'] = 'English';
+$config->langs['cn']['label'] = 'Chinese Simplified';
+
+$config->langs['cn']['charsets']['gbk']   = 'GBK';
+$config->langs['cn']['charsets']['utf-8'] = 'UTF-8';
+
+/* Languages. */
+$lang = new stdclass();
+$lang->en = new stdclass();
+$lang->cn = new stdclass();
+
+$lang->en->foundScripts  = "%s, found %s scripts.\n\n";
+$lang->en->failedScripts = "\nFailed scripts:\n";
+$lang->en->summary       = "\n%s run %s scripts in %s seconds. ";
+$lang->en->reportFile    = "Report: %s\n";
+
+
+$lang->cn->foundScripts  = "%s, 共发现了%s个脚本。\n\n";
+$lang->cn->failedScripts = "\n失败的用例：\n";
+$lang->cn->summary       = "\n%s 共执行了%s个用例，耗时%s秒. ";
+$lang->cn->reportFile    = "报表文件：%s\n";
+
 /* Run testing. */
 zentaotest::run(isset($argv[1]) ? $argv[1] : './');
 
@@ -53,6 +76,14 @@ class zentaotest
      * @access public
      */
     public $config;
+
+    /**
+     * The language object.
+     * 
+     * @var int   
+     * @access public
+     */
+    public $lang;
 
     /**
      * The os type.
@@ -196,6 +227,7 @@ class zentaotest
         $this->setHome();
         $this->setProfile();
         $this->loadSettings();
+        $this->setLang();
         $this->setCWD();
         $this->setTimeZone();
         $this->setReportFile();
@@ -273,7 +305,6 @@ class zentaotest
         {
             $this->home = getenv('HOME') . DS;
         }
-
     }
 
     /**
@@ -316,6 +347,68 @@ class zentaotest
     }
 
     /**
+     * Set language. 
+     * 
+     * @access public
+     * @return void
+     */
+    public function setLang()
+    {
+        if(!isset($this->settings->lang))
+        {
+            while(true)
+            {
+                $langs = array_keys($this->config->langs);
+
+                echo "Please select your favorite language:\n";
+                $i = 1;
+                foreach($this->config->langs as $lang)
+                {
+                    echo "($i) $lang[label]\n";
+                    $i ++;
+                }
+
+                $input = trim(fgets(STDIN));
+                $langCode = isset($langs[$input - 1]) ? $langs[$input - 1] : '';
+                if(!$langCode) continue;
+
+                $lang    = $this->config->langs[$langCode];
+                $charset = 'utf-8';
+                if(isset($lang['charsets']))
+                {
+                    $charsets = array_keys($lang['charsets']);
+
+                    while(true)
+                    {
+                        echo "Please select charset:\n";
+                        $i = 1;
+                        foreach($lang['charsets'] as $charset)
+                        {
+                            echo "($i) $charset\n";
+                            $i ++;
+                        }
+
+                        $input   = trim(fgets(STDIN));
+                        $charset = isset($charsets[$input - 1]) ? $charsets[$input - 1] : '';
+                        if(!$charset) continue;
+                        break;
+                    }
+                }
+
+                /* Update the settings. */
+                $this->settings->lang = $langCode;
+                $this->settings->charset = $charset;
+                $this->saveSettings();
+
+                break;
+            }
+        }
+
+        global $lang;
+        $this->lang = $lang->{$this->settings->lang};
+    }
+
+    /**
      * Set current working directory.
      * 
      * @access public
@@ -345,7 +438,7 @@ class zentaotest
      */
     public function setReportFile()
     {
-        $this->reportFile = $this->temp . DS . date('Ymd.Hi') . '.log';
+        $this->reportFile = $this->temp . date('Ymd.Hi') . '.log';
     }
 
     /**
@@ -498,7 +591,7 @@ class zentaotest
      */
     public function printTotal()
     {
-        $totalInfo = date('n/j G:i:s') . " found " . $this->colorString(count($this->scripts), $this->config->ansi->yellow) . " scripts.\n\n";
+        $totalInfo = sprintf($this->processLang($this->lang->foundScripts), date('n/j G:i:s'), $this->colorString(count($this->scripts), $this->config->ansi->yellow));
         (print($totalInfo)) && $this->reportInfo .= $totalInfo;
     }
 
@@ -814,7 +907,7 @@ class zentaotest
             $this->setMaxLength($scriptFiles);
 
             /* Print info of failed scripts. */
-            $failedInfo = "\nFailed scripts:\n";
+            $failedInfo = $this->processLang($this->lang->failedScripts);
             (print($failedInfo)) && $this->reportInfo .= $failedInfo;
             foreach($this->failedScripts as $script)
             {
@@ -834,8 +927,10 @@ class zentaotest
      */
     public function printSummary()
     {
-        $summary  = "\n" . date("n/j G:i:s") . ' run ' . $this->colorString(count($this->scripts), $this->config->ansi->yellow) . ' scripts ';
-        $summary .= "in " . round($this->end - $this->begin, 2) . 's. ';
+        $now     = date("n/j G:i:s");
+        $scripts = $this->colorString(count($this->scripts), $this->config->ansi->yellow);
+        $seconds = round($this->end - $this->begin, 2);
+        $summary = sprintf($this->processLang($this->lang->summary), $now, $scripts, $seconds);
 
         $passRate = '(' . round($this->results['pass'] / count($this->scripts), 3) * 100 . '%' . ')';
         $failRate = '(' . round($this->results['fail'] / count($this->scripts), 3) * 100 . '%' . ')';
@@ -872,7 +967,7 @@ class zentaotest
         }
 
         file_put_contents($this->reportFile, $this->removeColor($this->reportInfo));
-        echo 'Report: ' . $this->colorString($this->reportFile, $this->config->ansi->yellow) . " .\n";
+        printf($this->processLang($this->lang->reportFile), $this->colorString($this->reportFile, $this->config->ansi->yellow));
     }
 
     /**
@@ -919,9 +1014,17 @@ class zentaotest
         return str_replace("\r", '', $string);
     }
 
-    public function printIconv($string)
+    /**
+     * Process lang item, if the charset is not utf-8, convert it.
+     * 
+     * @param  string    $string 
+     * @access public
+     * @return string
+     */
+    public function processLang($string)
     {
-        echo iconv('utf-8', 'gbk', $string);
+        if(!function_exists('iconv') or $this->settings->charset == 'utf-8') return $string;
+        return iconv('utf-8', $this->settings->charset, $string);
     }
 
     /**
