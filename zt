@@ -57,7 +57,6 @@ $lang->en->failedScripts = "\nFailed scripts:\n";
 $lang->en->summary       = "\n%s run %s scripts in %s seconds. ";
 $lang->en->reportFile    = "Report: %s\n";
 
-
 $lang->cn->foundScripts  = "%s, 共发现了%s个脚本。\n\n";
 $lang->cn->failedScripts = "\n失败的用例：\n";
 $lang->cn->summary       = "\n%s 共执行了%s个用例，耗时%s秒. ";
@@ -404,6 +403,7 @@ class zentaotest
             }
         }
 
+        /* Load language. */
         global $lang;
         $this->lang = $lang->{$this->settings->lang};
     }
