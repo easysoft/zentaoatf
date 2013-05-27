@@ -52,15 +52,19 @@ $lang = new stdclass();
 $lang->en = new stdclass();
 $lang->cn = new stdclass();
 
-$lang->en->foundScripts  = "%s, found %s scripts.\n\n";
-$lang->en->failedScripts = "\nFailed scripts:\n";
-$lang->en->summary       = "\n%s run %s scripts in %s seconds. ";
-$lang->en->reportFile    = "Report: %s\n";
+$lang->en->foundScripts         = "%s, found %s scripts.\n\n";
+$lang->en->failedScripts        = "\nFailed scripts:\n";
+$lang->en->summary              = "\n%s run %s scripts in %s seconds. ";
+$lang->en->reportFile           = "Report: %s\n";
+$lang->en->setInterpreter       = "Please set interpreter for %s scripts, enter to skip:";
+$lang->en->interpreterNotExists = "The interpreter you input not exists, please try again.\n";
 
-$lang->cn->foundScripts  = "%s, 共发现了%s个脚本。\n\n";
-$lang->cn->failedScripts = "\n失败的用例：\n";
-$lang->cn->summary       = "\n%s 共执行了%s个用例，耗时%s秒. ";
-$lang->cn->reportFile    = "报表文件：%s\n";
+$lang->cn->foundScripts         = "%s, 共发现了%s个脚本。\n\n";
+$lang->cn->failedScripts        = "\n失败的用例：\n";
+$lang->cn->summary              = "\n%s 共执行了%s个用例，耗时%s秒. ";
+$lang->cn->reportFile           = "报表文件：%s\n";
+$lang->cn->setInterpreter       = "请设置%s类型脚本的解释程序，回车忽略：";
+$lang->cn->interpreterNotExists = "您输入的解释程序不存在，请重试。\n";
 
 /* Run testing. */
 zentaotest::run(isset($argv[1]) ? $argv[1] : './');
@@ -269,9 +273,8 @@ class zentaotest
     {
         if($this->os == 'win')
         {
-            if(!empty($_SERVER['TMP']))  $this->temp = realpath($_SERVER['TMP']);
-            if(!empty($_SERVER['TEMP'])) $this->temp = realpath($_SERVER['TEMP']);
-            if(empty($this->temp)) $this->temp = dirname(__FILE__) . DS;
+            $this->temp = dirname(__FILE__) . DS . 'temp' . DS;
+            if(!is_dir($this->temp)) mkdir($this->temp);
         }
         else
         {
@@ -291,14 +294,7 @@ class zentaotest
     {
         if($this->os == 'win')
         {
-            if(isset($_SERVER['HOMEDRIVE']) and isset($_SERVER['HOMEPATH']))
-            {
-                $this->home = $_SERVER['HOMEDRIVE'] . $_SERVER['HOMEPATH'] . DS;
-            }    
-            else
-            {
-                $this->home = $this->temp;
-            }
+            $this->home = $this->temp;
         }
         else
         {
@@ -526,13 +522,13 @@ class zentaotest
 
             while(true)
             {
-                echo "Please set interpreter for $interpreter scripts, enter to skip:";
+                printf($this->processLang($this->lang->setInterpreter), $interpreter);
                 $input = trim(fgets(STDIN));
                 if(!is_file($input))
                 {
                     if(empty($input)) break;
 
-                    echo "The interpreter you input not exists, please try again.\n";
+                    printf($this->processLang($this->lang->interpreterNotExists));
                     continue;
                 }
 
@@ -674,19 +670,26 @@ class zentaotest
      */
     public function getScriptOutput()
     {
-        chdir(dirname($this->current->script));
+        /* Get the directory of current script and set the temp file. */
+        $scriptDir  = dirname($this->current->script) . DS;
+        $scriptTemp = $scriptDir . 'temp';
+        chdir($scriptDir);
 
+        /* Set default output as empty. */
+        $this->current->output = '';
+
+        /* Windows. Bat file, excute it directly, else checking the interpreter set or not. */
         if($this->os == 'win')
         {
             $interpreter = $this->current->interpreter;
 
             if($interpreter == 'bat')
             {
-                $this->current->output = trim(`{$this->current->script}`);
+                `{$this->current->script} > $scriptTemp 2>&1`;
             }
             elseif(isset($this->settings->interpreters->$interpreter))
             {
-                $this->current->output = trim(`{$this->settings->interpreters->$interpreter} {$this->current->script}`);
+                `{$this->settings->interpreters->$interpreter} {$this->current->script} > $scriptTemp 2>&1`;
             }
             else
             {
@@ -695,7 +698,14 @@ class zentaotest
         }
         else
         {
-            $this->current->output = trim(`{$this->current->script}`);
+            `{$this->current->script} > $scriptTemp 2>&1`;
+        }
+
+        /* Get the contents of the temp file. */
+        if(file_exists($scriptTemp))
+        {
+            $this->current->output = trim(file_get_contents($scriptTemp));
+            unlink($scriptTemp);
         }
 
         chdir($this->cwd);
@@ -966,6 +976,7 @@ class zentaotest
             }
         }
 
+        if($this->os == 'win') $this->reportInfo = $this->unix2dos($this->reportInfo);
         file_put_contents($this->reportFile, $this->removeColor($this->reportInfo));
         printf($this->processLang($this->lang->reportFile), $this->colorString($this->reportFile, $this->config->ansi->yellow));
     }
@@ -1003,7 +1014,7 @@ class zentaotest
     }
 
     /**
-     * Convert a string fro dos format to unix.
+     * Convert a string from dos format to unix.
      * 
      * @param  string    $string 
      * @access public
@@ -1013,6 +1024,19 @@ class zentaotest
     {
         return str_replace("\r", '', $string);
     }
+
+    /**
+     * Convert a string from unix format to dos.
+     * 
+     * @param  string    $string 
+     * @access public
+     * @return string
+     */
+    public function unix2dos($string)
+    {
+        return str_replace("\n", "\r\n", $string);
+    }
+
 
     /**
      * Process lang item, if the charset is not utf-8, convert it.
