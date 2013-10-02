@@ -26,8 +26,6 @@ define('DS', DIRECTORY_SEPARATOR);
 $config = new stdclass();
 $config->timezone    = 'Asia/Shanghai';
 $config->skipfiles   = 'exe,dll,gif,jpg,png,bmp';
-$config->casePrefix  = 'TC';
-$config->casePostfix = 'TC';
 
 /* Ansi control codes. */
 $config->ansi = new stdclass();
@@ -492,12 +490,8 @@ class zentaotest
                 $interpreter = strtolower(pathinfo($script, PATHINFO_EXTENSION));
                 if($interpreter and strpos($this->config->skipfiles, $interpreter) !== false) continue;
 
-                /* Has TC_BEGIN in the script, save it. */
-                if(strpos(file_get_contents($script), $this->config->casePrefix) !== false)
-                {
-                    $this->scripts[] = realpath($script);
-                    if($interpreter) $this->interpreters[$interpreter] = $interpreter;
-                }
+                $this->scripts[] = realpath($script);
+                if($interpreter) $this->interpreters[$interpreter] = $interpreter;
             }
         }
     }
@@ -616,47 +610,15 @@ class zentaotest
     {
         $begin = microtime(true);
 
-        $this->parseScript($script);
+        /* Append the script file name and interpreter. */
+        $this->current = new stdclass();
+        $this->current->script = $script;
+        $this->current->interpreter = pathinfo($script, PATHINFO_EXTENSION);
         $this->getScriptOutput();
-        $this->computeResult();
+        $this->parseOutput();
+        $this->computeCaseResult();
 
         $this->current->time = microtime(true) - $begin;
-    }
-
-    /**
-     * Parse the script to extract the case definations.
-     * 
-     * @param  string    $script 
-     * @access public
-     * @return void
-     */
-    public function parseScript($script)
-    {
-        /* Extract the yaml defination. */
-        $contents = trim(file_get_contents($script));
-        $begin    = strpos($contents, $this->config->casePrefix) + strlen($this->config->casePrefix);
-        $end      = strpos($contents, $this->config->casePostfix);
-        $yaml     = substr($contents, $begin, $end - $begin);
-
-        /* Parse the yaml. */
-        $this->current = (object)spyc::yamlLoadString($yaml);
-
-        /* Set the default value of expect. */
-        if(!isset($this->current->expect)) $this->current->expect = '';
-
-        /* Append the script file name and interpreter. */
-        $this->current->script = $script;
-        $this->current->interpreter   = pathinfo($script, PATHINFO_EXTENSION);
-
-        /* Check whether the expect file exists. */
-        $path = pathinfo($script);
-        $expectFile = str_replace($path['basename'], '.' . $path['basename'], $script);
-        $expectFile = str_replace('.'. $path['extension'], '.et', $expectFile);
-        if(is_file($expectFile)) return $this->current->expect = trim($this->dos2unix(file_get_contents($expectFile)));
-
-        /* Check whether the expectx file exists. */
-        $expectxFile = str_replace('.et', '.ex', $expectFile);
-        if(is_file($expectxFile)) return $this->current->expectx = trim($this->dos2unix(file_get_contents($expectxFile)));
     }
 
     /**
@@ -709,55 +671,110 @@ class zentaotest
     }
 
     /**
-     * Compute the result by comparing the expect and output.
+     * Parse the output into yaml format and ste title, steps to current script object.
      * 
      * @access public
      * @return void
      */
-    public function computeResult()
+    public function parseOutput()
     {
-        /* If the output is skip, skip this script. */
-        if($this->current->output == 'skip')
+        $output = (object)spyc::yamlLoadString($this->current->output);
+        $this->current->title = $output->title;
+        $this->current->steps = $output->steps;
+    }
+
+    /**
+     * Compute the result of current case.
+     * 
+     * @access public
+     * @return void
+     */
+    public function computeCaseResult()
+    {
+        /* First to check the case skip or not. */
+        if(strpos($this->current->output, 'skip') !== false)
         {
-            $this->current->result = 'skip';
-            $this->results['skip'] ++;
+              $this->current->result = 'skip';
+              $this->results['skip'] ++;
+              return true;
+        }
+
+        $diff = '';
+        $result = 'pass';
+
+        /* Compute result of every step. */
+        foreach($this->current->steps as $step)
+        {
+            $step = (object)$step;
+            $this->computeStepResult($step);
+            if($step->result == 'fail')
+            {
+                $result = 'fail';
+                break;
+            }
+        }
+
+        if($result == 'fail')
+        {
+            $this->current->result = 'fail';
+            $this->results['fail'] ++;
+            $this->failedScripts[] = $this->current;
+            return false;
+        }
+
+        $this->current->result = 'pass';
+        $this->results['pass'] ++;
+        return true;
+    }
+
+    /**
+     * Compute result of a step by comparing the expect and output of every step.
+     * 
+     * @access public
+     * @return void
+     */
+    public function computeStepResult($step)
+    {
+        if(!isset($step->expect)) $step->expect = '';
+
+        /* If the output is skip, skip this script. */
+        if($step->output == 'skip')
+        {
+            $step->result = 'skip';
             return true;
         }
 
         /* First try to compare the expect and output. */
-        if(strcmp($this->current->expect, $this->current->output) === 0)
+        if(strcmp($step->expect, $step->output) === 0)
         {
-            $this->current->result = 'pass';
-            $this->results['pass'] ++;
+            $step->result = 'pass';
             return true;
         }
 
         /* Then try to get regular from expectx or try convert format chars in expect field.. */
         $regulars = '';
-        if(isset($this->current->expectx))
+        if(isset($step->expectx))
         {
-            $regulars = $this->current->expectx;
+            $regulars = $step->expectx;
         }
-        elseif(strpos($this->current->expect, '%') !== false)
+        elseif(strpos($step->expect, '%') !== false)
         {
-            $expect = $this->convertFormat2REG($this->current->expect);
-            if($expect != $this->current->expect) $regulars = $expect;
+            $expect = $this->convertFormat2REG($step->expect);
+            if($expect != $step->expect) $regulars = $expect;
         }
 
         /* No regulars found, fail. */
         if(!$regulars)
         {
-            $this->current->result = 'fail';
-            $this->current->diff = $this->diff($this->current->expect, $this->current->output) . "\n";
-            $this->failedScripts[] = $this->current;
-            $this->results['fail'] ++;
+            $step->result = 'fail';
+            $step->diff = $this->diff($step->expect, $step->output) . "\n";
 
             return false;
         }
 
         /* Compare the results by regular. */
         $regulars = explode("\n", $regulars);
-        $output   = explode("\n", $this->current->output);
+        $output   = explode("\n", $step->output);
         foreach($regulars as $line => $regular)
         {
             if(isset($output[$line]) and preg_match("/^$regular$/s", $output[$line])) $regulars[$line] = $output[$line];
@@ -765,19 +782,16 @@ class zentaotest
 
         if($regulars == $output)
         {
-            $this->current->result = 'pass';
-            $this->results['pass'] ++;
+            $step->result = 'pass';
             return true;
         }
         else
         {
-            if(isset($this->current->expectx))  $diff = $this->diff(join("\n", $regulars), join("\n", $output));
-            if(!isset($this->current->expectx)) $diff = $this->diff($this->current->expect, $this->current->output);
+            if(isset($step->expectx))  $diff = $this->diff(join("\n", $regulars), join("\n", $output));
+            if(!isset($step->expectx)) $diff = $this->diff($step->expect, $step->output);
 
-            $this->current->result = 'fail';
-            $this->current->diff   = $diff;
-            $this->failedScripts[] = $this->current;
-            $this->results['fail'] ++;
+            $step->result = 'fail';
+            $step->diff   = $diff;
             return false;
         }
     }
@@ -964,10 +978,19 @@ class zentaotest
             $this->reportInfo .= "\n";
             foreach($this->failedScripts as $script)
             {
-                $expect = isset($script->expectx) ? $script->expectx : $script->expect;
+                $script->expect = '';
+                $script->output = '';
+                foreach($script->steps as $step)
+                {
+                    $step = (object)$step;
+                    $script->expect .= (isset($step->expectx) ? $step->expectx : $step->expect) . "\n";
+                    $script->output .= $step->output . "\n";
+                }
+                $script->diff = $this->diff($script->expect, $script->output);
+
                 $this->reportInfo .= "\n{{===\nfailed $script->script <$script->title>}}\n";
-                $this->reportInfo .= "[expect]\n$expect\n\n";
-                $this->reportInfo .= "[output]\n$script->output\n\n";
+                $this->reportInfo .= "[expect]\n$script->expect\n";
+                $this->reportInfo .= "[output]\n$script->output\n";
                 $this->reportInfo .= "[diff]\n$script->diff";
                 $this->reportInfo .= "\n===}}\n";
             }
@@ -1033,7 +1056,6 @@ class zentaotest
     {
         return str_replace("\n", "\r\n", $string);
     }
-
 
     /**
      * Process lang item, if the charset is not utf-8, convert it.
