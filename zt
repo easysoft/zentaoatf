@@ -679,8 +679,8 @@ class zentaotest
     public function parseOutput()
     {
         $output = (object)spyc::yamlLoadString($this->current->output);
-        $this->current->title = $output->title;
-        $this->current->steps = $output->steps;
+        $this->current->title = isset($output->title) ? $output->title : '';
+        $this->current->steps = isset($output->steps) ? $output->steps : '';
     }
 
     /**
@@ -692,7 +692,7 @@ class zentaotest
     public function computeCaseResult()
     {
         /* First to check the case skip or not. */
-        if(strpos($this->current->output, 'skip') !== false)
+        if(strpos($this->current->output, 'skip') !== false or empty($this->current->steps))
         {
               $this->current->result = 'skip';
               $this->results['skip'] ++;
@@ -703,15 +703,14 @@ class zentaotest
         $result = 'pass';
 
         /* Compute result of every step. */
-        foreach($this->current->steps as $step)
+        foreach($this->current->steps as $key => $step)
         {
             $step = (object)$step;
             $this->computeStepResult($step);
-            if($step->result == 'fail')
-            {
-                $result = 'fail';
-                break;
-            }
+            if($step->result == 'fail') $result = 'fail';
+
+            /* Save the compute result step to $this->current->steps. */
+            $this->current->steps[$key] = $step;
         }
 
         if($result == 'fail')
@@ -978,21 +977,23 @@ class zentaotest
             $this->reportInfo .= "\n";
             foreach($this->failedScripts as $script)
             {
-                $script->expect = '';
-                $script->output = '';
-                foreach($script->steps as $step)
+                $this->reportInfo .= str_repeat('-', 80) . "\n";
+                $this->reportInfo .= "FAIL [$script->script] $script->title\n";
+                foreach($script->steps as $key => $step)
                 {
-                    $step = (object)$step;
-                    $script->expect .= (isset($step->expectx) ? $step->expectx : $step->expect) . "\n";
-                    $script->output .= $step->output . "\n";
-                }
-                $script->diff = $this->diff($script->expect, $script->output);
+                    if($step->result != 'fail') continue;
 
-                $this->reportInfo .= "\n{{===\nfailed $script->script <$script->title>}}\n";
-                $this->reportInfo .= "[expect]\n$script->expect\n";
-                $this->reportInfo .= "[output]\n$script->output\n";
-                $this->reportInfo .= "[diff]\n$script->diff";
-                $this->reportInfo .= "\n===}}\n";
+                    $stepNO = $key + 1;
+                    $step->expect = trim($step->expect);
+                    $step->output = trim($step->output);
+                    $step->diff = trim($step->diff);
+
+                    $this->reportInfo .= "===STEP $stepNO ===\n";
+                    $this->reportInfo .= "[expect]\n$step->expect\n\n";
+                    $this->reportInfo .= "[output]\n$step->output\n\n";
+                    $this->reportInfo .= "[diff]\n$step->diff\n\n";
+                }
+                $this->reportInfo .= str_repeat('-', 80) . "\n";
             }
         }
 

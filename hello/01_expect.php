@@ -1,8 +1,5 @@
 #!/usr/bin/env php 
 <?php
-<<<TC
-title: php hello world.
-expect: hello world.
-TC;
-
-echo 'hello world.';
+include 'init.php';
+title('the hello word case for php scripts');
+run(sprintf('helloworld')) && expect('helloworld');

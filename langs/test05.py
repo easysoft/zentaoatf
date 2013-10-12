@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-'''
-<<TC
-title: python hello world.
-expect: hello world.
-TC
-'''
-print 'hello world.';
+def s(step):
+  return step
+execfile("init.py");
+title('hello world.');
+run(s('hello world.')) and expect('test');
+
+

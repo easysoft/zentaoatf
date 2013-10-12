@@ -37,6 +37,8 @@ function run($output)
 
     echo space(4) . "output: |\n";
     foreach($lines as $line) echo space(6) . trim($line) . "\n";
+
+    return true;
 }
 
 /**

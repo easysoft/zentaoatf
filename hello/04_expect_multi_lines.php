@@ -1,11 +1,12 @@
 #!/usr/bin/env php 
 <?php
-<<<TC
-title: with multi lines.
-expect:| 
-  2
-  3
-TC;
+include 'init.php';
+title('with multi lines.');
+run(multiline()) && expect("2\n3\n");
 
-echo 1 + 1 . "\n";
-echo 1 + 2 . "\n";
+function multiline()
+{
+    $lines  = (1 + 1 . "\n");
+    $lines .= (1 + 2 . "\n");
+    return $lines;
+}
