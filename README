@@ -24,3 +24,16 @@ expect: helloworld.
 
 4. 和禅道项目管理软件集成
   后续版本我们会和禅道开源项目管理软件进行集成和绑定，脚本和用例可以做到有机的结合。
+  
+ZenTaoATF is an automation testing framework written by php. It has only one php shell file. You can write you automation testing
+shell in other languages like python, ruby, shell, lua, tcl, bat and also php.
+
+The basic flow:
+
+First you can write a shell to test your software, the shell can be python, ruby, shell, lua, tcl, bat and php.
+Then write the case info in the shell like this:
+title: helloworld.
+expect: helloworld.
+Then run zt shell, which will scan all shells can run them, get the real output of every shell, compare to the expect in the file.
+
+For more examples, please see the codes.
