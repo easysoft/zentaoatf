@@ -1,7 +1,6 @@
 ZenTaoATF是由禅道软件开发团队开发的一款自动化测试框架，它只有一个脚本文件，可以支持各种脚本语言编写的自动化测试脚本，语法简单，使用灵活，后续会和禅道项目管理软件进行绑定和集成。
 
 它的基本工作原理如下：
-
 首先，你需要写一个测试脚本来实现你正常的测试逻辑。现在支持php, python, ruby, lua, tcl, bash, bat.
 这个测试脚本里面按照自己所测程序的业务逻辑编写，比如链接数据库，查询某一个记录等等。
 
@@ -14,23 +13,27 @@ expect: helloworld.
 相比较于其他的自动化测试框架或者单元测试框架来将，ZenTaoATF的主要特点如下： 
 
 1. 简单
-
-  1.1 程序简单
-
-  整个自动化测试框架只有一个zt文件，使用php开发，安装和运行都非常的方便。
-
-  1.2 语法简单
-
-  ZenTaoATF的语法只有简单的标题，步骤，预期结果，采用yaml格式，撰写比较方便，可读性也很好。
+  1.1 程序简单  整个自动化测试框架只有一个zt文件，使用php开发，安装和运行都非常的方便。
+  1.2 语法简单  ZenTaoATF的语法只有简单的标题，步骤，预期结果，采用yaml格式，撰写比较方便，可读性也很好。
 
 2. 跨语言
-
   ZenTaoATF框架本身是使用PHP开发的，但它支持各种各样的脚本语言，比如python, ruby, lua, tcl, bash, bat等。
 
 3. 跨平台
-
   ZenTaoATF可以运行在各个平台下面。
 
 4. 和禅道项目管理软件集成
-
   后续版本我们会和禅道开源项目管理软件进行集成和绑定，脚本和用例可以做到有机的结合。
+  
+ZenTaoATF is an automation testing framework written by php. It has only one php shell file. You can write you automation testing
+shell in other languages like python, ruby, shell, lua, tcl, bat and also php.
+
+The basic flow:
+
+First you can write a shell to test your software, the shell can be python, ruby, shell, lua, tcl, bat and php.
+Then write the case info in the shell like this:
+title: helloworld.
+expect: helloworld.
+Then run zt shell, which will scan all shells can run them, get the real output of every shell, compare to the expect in the file.
+
+For more examples, please see the codes.
