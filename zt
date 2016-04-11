@@ -25,7 +25,7 @@ define('DS', DIRECTORY_SEPARATOR);
 /* Config. */
 $config = new stdclass();
 $config->timezone    = 'Asia/Shanghai';
-$config->skipfiles   = 'exe,dll,gif,jpg,png,bmp';
+$config->skipFiles   = 'exe,dll,gif,jpg,png,bmp';
 
 /* Ansi control codes. */
 $config->ansi = new stdclass();
@@ -488,7 +488,7 @@ class zentaotest
             {
                 /* Get the script interpreter. */
                 $interpreter = strtolower(pathinfo($script, PATHINFO_EXTENSION));
-                if($interpreter and strpos($this->config->skipfiles, $interpreter) !== false) continue;
+                if($interpreter and strpos($this->config->skipFiles, $interpreter) !== false) continue;
 
                 $this->scripts[] = realpath($script);
                 if($interpreter) $this->interpreters[$interpreter] = $interpreter;
