@@ -1,0 +1,89 @@
+{
+  "code": 1,
+  "cases": [
+    {
+      "id": 100,
+      "title": "用户登录",
+      "steps": [
+        {
+          "id": 1000,
+          "action": "打开登录页面",
+          "expect": "",
+          "group": false
+        },
+        {
+          "id": 1010,
+          "action": "输入正确的用户名和密码",
+          "expect": "",
+          "group": false
+        },
+        {
+          "id": 1020,
+          "action": "点击'登录'按钮",
+          "expect": "用户成功登录",
+          "group": false
+        }
+      ]
+    },
+    {
+      "id": 200,
+      "title": "登录失败账号锁定策略",
+      "steps": [
+        {
+          "id": 2000,
+          "action": "连续输入3次错误的密码",
+          "expect": "",
+          "group": false
+        },
+        {
+          "id": 2010,
+          "action": "第4次尝试登录",
+          "expect": "系统提示账号被锁定",
+          "group": false
+        },
+        {
+          "id": 2100,
+          "action": "不连续输入3次错误的密码",
+          "expect": "",
+          "group": true,
+          "steps": [
+            {
+              "id": 2101,
+              "action": "输入2次错误的密码",
+              "expect": "",
+              "group": true
+            },
+            {
+              "id": 2102,
+              "action": "输入1次正确的密码",
+              "expect": "",
+              "group": true
+            },
+            {
+              "id": 2103,
+              "action": "再输入1次错误的密码",
+              "expect": "",
+              "group": true
+            },
+            {
+              "id": 2104,
+              "action": "再输入1次正确的密码",
+              "expect": "登录成功，账号未被锁定",
+              "group": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 300,
+      "title": "注册",
+      "steps": []
+    },
+    {
+      "id": 400,
+      "title": "忘记密码",
+      "steps": []
+    }
+  ]
+}
