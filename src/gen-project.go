@@ -29,6 +29,8 @@ func DealwithTestCase(tc model.TestCase, langType string) {
 		strings.Join(steps, "\n"), strings.Join(expects, "\n"), strings.Join(srcCode, "\n")))
 
 	fmt.Println(content)
+
+	utils.WriteFile("xdoc/tc-"+strconv.Itoa(caseId)+"."+langType, content)
 }
 
 func DealwithTestStep(ts model.TestStep, langType string, level int,
