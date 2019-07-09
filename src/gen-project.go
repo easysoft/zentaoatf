@@ -3,49 +3,20 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"model"
 	"os"
 	"strconv"
 	"strings"
+	"utils"
 )
 
-type Response struct {
-	Code  int
-	Cases []TestCase
-}
-
-type TestCase struct {
-	Id    int
-	Title string
-	Steps []TestStep
-}
-
-type TestStep struct {
-	Id    int
-	Title string
-	Steps []TestStep
-
-	Expect       string
-	IsGroup      bool
-	IsCheckPoint bool
-}
-
-func ReadAll(filePth string) []byte {
-	buf, err := ioutil.ReadFile(filePth)
-	if err != nil {
-		return nil
-	}
-
-	return buf
-}
-
-func DealwithTestCase(tc TestCase, langType string) {
+func DealwithTestCase(tc model.TestCase, langType string) {
 	caseId := tc.Id
 	caseTitle := tc.Title
 
-	steps := []string{}
-	expects := []string{}
-	srcCode := []string{}
+	steps := make([]string, 0)
+	expects := make([]string, 0)
+	srcCode := make([]string, 0)
 
 	level := 1
 
@@ -53,21 +24,21 @@ func DealwithTestCase(tc TestCase, langType string) {
 		DealwithTestStep(ts, langType, level, &steps, &expects, &srcCode)
 	}
 
-	template := ReadAll("xdoc/script-template.txt")
+	template := utils.ReadFile("xdoc/script-template.txt")
 	content := string(fmt.Sprintf(string(template), langType, caseTitle, caseId,
 		strings.Join(steps, "\n"), strings.Join(expects, "\n"), strings.Join(srcCode, "\n")))
 
 	fmt.Println(content)
 }
 
-func DealwithTestStep(ts TestStep, langType string, level int,
+func DealwithTestStep(ts model.TestStep, langType string, level int,
 	steps *[]string, expects *[]string, srcCode *[]string) {
 	isGroup := ts.IsGroup
 	isCheckPoint := ts.IsCheckPoint
 
 	stepId := ts.Id
 	stepTitle := ts.Title
-	stepExpect := ts.Expect
+	// stepExpect := ts.Expect
 
 	// 处理steps
 	stepLine := ""
@@ -94,12 +65,11 @@ func DealwithTestStep(ts TestStep, langType string, level int,
 	*steps = append(*steps, stepLine)
 
 	// 处理expects
-
 	if isCheckPoint {
 		expectsLine := ""
 
-		expectsLine = "# " + stepLineSimple + " " + stepExpect + "\n"
-		expectsLine += "<期望值字符串, 可以有多行>\n"
+		expectsLine = "# \n" //  + stepLineSimple + " " + stepExpect + "\n"
+		expectsLine += "<" + stepType + strconv.Itoa(stepId) + " 期望结果, 可以有多行>\n"
 
 		*expects = append(*expects, expectsLine)
 	}
@@ -128,9 +98,9 @@ func main() {
 	}
 
 	caseFile, langType := os.Args[1], os.Args[2]
-	buf := ReadAll(caseFile)
+	buf := utils.ReadFile(caseFile)
 
-	var resp Response
+	var resp model.Response
 	json.Unmarshal(buf, &resp)
 
 	if resp.Code != 1 {
