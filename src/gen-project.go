@@ -19,9 +19,9 @@ func DealwithTestCase(tc model.TestCase, langType string) {
 	srcCode := make([]string, 0)
 
 	level := 1
-
+	checkPointIndex := 0
 	for _, ts := range tc.Steps {
-		DealwithTestStep(ts, langType, level, &steps, &expects, &srcCode)
+		DealwithTestStep(ts, langType, level, &checkPointIndex, &steps, &expects, &srcCode)
 	}
 
 	template := utils.ReadFile("xdoc/script-template.txt")
@@ -33,29 +33,31 @@ func DealwithTestCase(tc model.TestCase, langType string) {
 	utils.WriteFile("xdoc/tc-"+strconv.Itoa(caseId)+"."+langType, content)
 }
 
-func DealwithTestStep(ts model.TestStep, langType string, level int,
+func DealwithTestStep(ts model.TestStep, langType string, level int, checkPointIndex *int,
 	steps *[]string, expects *[]string, srcCode *[]string) {
 	isGroup := ts.IsGroup
 	isCheckPoint := ts.IsCheckPoint
 
 	stepId := ts.Id
 	stepTitle := ts.Title
-	// stepExpect := ts.Expect
+	stepExpect := ts.Expect
 
 	// 处理steps
-	stepLine := ""
-
 	var stepType string
 	if isGroup {
 		stepType = "group"
 	} else {
 		stepType = "step"
 	}
-	stepLine += stepType + strconv.Itoa(stepId) + " // " + stepTitle
+
+	stepIdent := stepType + strconv.Itoa(stepId)
 	if isCheckPoint {
-		stepLine = "@" + stepLine
+		stepIdent = "@" + stepIdent
+		(*checkPointIndex)++
 	}
 	i := level
+
+	stepLine := stepIdent + " // " + stepTitle
 	for {
 		stepLine = "   " + stepLine
 		i--
@@ -63,33 +65,36 @@ func DealwithTestStep(ts model.TestStep, langType string, level int,
 			break
 		}
 	}
-	stepLineSimple := strings.Replace(strings.TrimLeft(stepLine, " "), "//", "-", -1)
 	*steps = append(*steps, stepLine)
 
 	// 处理expects
 	if isCheckPoint {
 		expectsLine := ""
 
-		expectsLine = "# \n" //  + stepLineSimple + " " + stepExpect + "\n"
-		expectsLine += "<" + stepType + strconv.Itoa(stepId) + " 期望结果, 可以有多行>\n"
+		expectsLine = "# \n"
+		expectsLine += "<" + stepIdent + " 期望结果, 可以有多行>\n"
 
 		*expects = append(*expects, expectsLine)
 	}
 
 	// 处理srcCode
-
 	if isCheckPoint {
 		codeLine := ""
 
-		codeLine = "# " + stepLineSimple + "\n"
-		codeLine += "// 此处编写上述验证点代码 \n"
+		codeLine = "# " + stepIdent + " - " + stepExpect + "\n"
+		codeLine += "// 此处编写上述验证点代码"
+		if *checkPointIndex == 1 {
+			codeLine += "，输出实际结果, 可以有多行 \n"
+		} else {
+			codeLine += "\n"
+		}
 
 		*srcCode = append(*srcCode, codeLine)
 	}
 
 	if isGroup {
 		for _, tsChild := range ts.Steps {
-			DealwithTestStep(tsChild, langType, level+1, steps, expects, srcCode)
+			DealwithTestStep(tsChild, langType, level+1, checkPointIndex, steps, expects, srcCode)
 		}
 	}
 }
