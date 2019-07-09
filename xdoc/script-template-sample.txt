@@ -1,0 +1,31 @@
+<?%s
+<<<TC
+title: with multi lines.
+caseId: %d
+steps:
+    @group1:
+        step1.1
+        step1.2
+        step1.3
+    @step2
+    step3
+    @step4
+
+expects:
+#
+expect line1 point 1
+expect line2 point 1
+#
+expect for point 2
+#
+expect for point 3
+TC;
+
+echo '#';
+scriptsForPoint1();
+echo '#';
+scriptsForPoint2();
+echo '#';
+scriptsForPoint3();
+
+?>

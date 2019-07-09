@@ -7,21 +7,24 @@
       "steps": [
         {
           "id": 1000,
-          "action": "打开登录页面",
+          "title": "打开登录页面",
           "expect": "",
-          "group": false
+          "isGroup": false,
+          "isCheckPoint": false
         },
         {
           "id": 1010,
-          "action": "输入正确的用户名和密码",
+          "title": "输入正确的用户名和密码",
           "expect": "",
-          "group": false
+          "isGroup": false,
+          "isCheckPoint": false
         },
         {
           "id": 1020,
-          "action": "点击'登录'按钮",
+          "title": "点击'登录'按钮",
           "expect": "用户成功登录",
-          "group": false
+          "isGroup": false,
+          "isCheckPoint": true
         }
       ]
     },
@@ -31,45 +34,39 @@
       "steps": [
         {
           "id": 2000,
-          "action": "连续输入3次错误的密码",
-          "expect": "",
-          "group": false
+          "title": "连续输入3次错误的密码"
         },
         {
           "id": 2010,
-          "action": "第4次尝试登录",
+          "title": "第4次尝试登录",
           "expect": "系统提示账号被锁定",
-          "group": false
+          "isCheckPoint": true
         },
         {
           "id": 2100,
-          "action": "不连续输入3次错误的密码",
-          "expect": "",
-          "group": true,
+          "title": "不连续输入3次错误的密码",
+          "isGroup": true,
           "steps": [
             {
               "id": 2101,
-              "action": "输入2次错误的密码",
-              "expect": "",
-              "group": true
+              "title": "输入2次错误的密码",
+              "isGroup": false
             },
             {
               "id": 2102,
-              "action": "输入1次正确的密码",
-              "expect": "",
-              "group": true
+              "title": "输入1次正确的密码",
+              "isGroup": false
             },
             {
               "id": 2103,
-              "action": "再输入1次错误的密码",
-              "expect": "",
-              "group": true
+              "title": "再输入1次错误的密码",
+              "isGroup": false
             },
             {
               "id": 2104,
-              "action": "再输入1次正确的密码",
+              "title": "再输入1次正确的密码",
               "expect": "登录成功，账号未被锁定",
-              "group": true
+              "isCheckPoint": true
             }
           ]
         }

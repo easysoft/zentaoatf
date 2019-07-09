@@ -1,0 +1,16 @@
+<?%s
+<<<TC
+title: %s
+caseId: %d
+steps:
+%s
+
+expects:
+%s
+TC;
+
+// 此处编写操作步骤代码
+
+%s
+
+?>
