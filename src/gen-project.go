@@ -105,7 +105,7 @@ func main() {
 	}
 
 	caseFile, langType := os.Args[1], os.Args[2]
-	buf := utils.ReadFile(caseFile)
+	buf := utils.ReadFileBuf(caseFile)
 
 	var resp model.Response
 	json.Unmarshal(buf, &resp)

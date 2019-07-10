@@ -3,10 +3,16 @@ package utils
 import (
 	"io/ioutil"
 	"os"
+	"regexp"
 	"strings"
 )
 
-func ReadFile(filePath string) []byte {
+func ReadFile(filePath string) string {
+	buf := ReadFileBuf(filePath)
+	return string(buf)
+}
+
+func ReadFileBuf(filePath string) []byte {
 	buf, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		return nil
@@ -67,4 +73,32 @@ func GetAllFiles(dirPth string, ext string) (files []string, err error) {
 	}
 
 	return files, nil
+}
+
+func MkDir(dir string) {
+	if !CheckFileIsExist(dir) {
+		os.Mkdir(dir, os.ModePerm)
+	}
+}
+
+func ReadExpect(file string) string {
+	content := ReadFile(file)
+
+	myExp := regexp.MustCompile(`<<<TC[\S\s]*expects:\n*([\S\s]*)\n+TC;`)
+	arr := myExp.FindStringSubmatch(content)
+	if len(arr) > 1 {
+		return RemoveBlankLine(arr[1])
+	}
+
+	return ""
+}
+
+func RemoveBlankLine(str string) string {
+	myExp := regexp.MustCompile(`\n{2,}`) // 连续换行
+	ret := myExp.ReplaceAllString(str, "\n")
+
+	myExp = regexp.MustCompile(`#[^\n]*\n`) // 空行
+	ret = myExp.ReplaceAllString(ret, "")
+
+	return ret
 }
