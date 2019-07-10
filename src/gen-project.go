@@ -100,7 +100,7 @@ func DealwithTestStep(ts model.TestStep, langType string, level int, checkPointI
 }
 
 func main() {
-	if len(os.Args) < 2 {
+	if len(os.Args) < 3 {
 		fmt.Println("usage: gen-project.go <path> <langType>")
 	}
 
