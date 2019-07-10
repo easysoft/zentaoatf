@@ -3,12 +3,16 @@ package biz
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 	"utils"
 )
 
 func CheckResults(dir string, langType string) {
 	scriptFiles, _ := utils.GetAllFiles(dir, langType)
+
+	resultMap := make(map[string]bool)
+	checkpointMap := make(map[string][]string)
 
 	for _, scriptFile := range scriptFiles {
 		logFile := utils.ScriptToLog(scriptFile)
@@ -19,16 +23,20 @@ func CheckResults(dir string, langType string) {
 		expectContent = strings.Trim(expectContent, "\n")
 		logContent = strings.Trim(logContent, "\n")
 
-		fmt.Printf(scriptFile + ": " + logFile + "\n")
-		Compare(expectContent, logContent)
+		Compare(scriptFile, expectContent, logContent, &resultMap, &checkpointMap)
 	}
+
+	Print(resultMap, checkpointMap)
 }
 
-func Compare(expectContent string, logContent string) {
+func Compare(scriptFile string, expectContent string, logContent string,
+	resultMap *map[string]bool, checkpointMap *map[string][]string) {
 	expectArr := strings.Split(expectContent, "\n")
 	logArr := strings.Split(logContent, "\n")
 
-	fmt.Printf("%d %d \n", len(expectArr), len(logArr))
+	checkpoints := make([]string, 0)
+
+	result := true
 
 	for numb, line := range expectArr {
 		log := "N/A"
@@ -38,6 +46,38 @@ func Compare(expectContent string, logContent string) {
 
 		pass, _ := regexp.MatchString(line, log)
 
-		fmt.Printf("%d: %t \n", numb+1, pass)
+		if !pass {
+			result = false
+		}
+
+		checkpoints = append(checkpoints, "Line "+strconv.Itoa(numb+1)+": "+strconv.FormatBool(result))
+
+		if !pass {
+			checkpoints = append(checkpoints, "Expect "+line)
+			checkpoints = append(checkpoints, "Actual "+log)
+		}
+	}
+
+	(*resultMap)[scriptFile] = result
+	(*checkpointMap)[scriptFile] = checkpoints
+}
+
+func Print(resultMap map[string]bool, checkpointMap map[string][]string) {
+	fmt.Printf("")
+
+	for script, result := range resultMap {
+
+		fmt.Printf("\n=== Case %s: %t \n", script, result)
+		if !result {
+			checkpoints := checkpointMap[script]
+
+			for _, line := range checkpoints {
+				if strings.Index(line, "Line") > -1 {
+					fmt.Printf("\n")
+				}
+
+				fmt.Printf("    %s \n", line)
+			}
+		}
 	}
 }

@@ -1,6 +1,7 @@
 package biz
 
 import (
+	"fmt"
 	"os"
 	"runtime"
 	"strings"
@@ -30,6 +31,10 @@ func RunScript(file string, langType string) {
 		}
 	}
 
+	fmt.Println("\n=== Begin " + file)
+
 	output := utils.ExecCommand(command)
 	utils.WriteFile(logFile, strings.Join(output, ""))
+
+	fmt.Println("=== End " + file + "\n")
 }

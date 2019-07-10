@@ -25,9 +25,6 @@ func ExecCommand(commandName string) []string {
 
 	output := make([]string, 0)
 
-	//显示运行的命令
-	fmt.Println("begin to run " + strings.Join(cmd.Args, " "))
-
 	stdout, err := cmd.StdoutPipe()
 
 	if err != nil {
@@ -44,10 +41,11 @@ func ExecCommand(commandName string) []string {
 		if err2 != nil || io.EOF == err2 {
 			break
 		}
-		fmt.Println(line)
+		fmt.Println(strings.Replace(line, "\n", "", -1))
 		output = append(output, line)
 	}
 
 	cmd.Wait()
+
 	return output
 }
