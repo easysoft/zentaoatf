@@ -5,14 +5,19 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 	"utils"
 )
 
-func CheckResults(dir string, langType string) {
-	scriptFiles, _ := utils.GetAllFiles(dir, langType)
+func CheckResults(dir string, langType string,
+	summaryMap *map[string]interface{}, resultMap *map[string]bool, checkpointMap *map[string][]string) {
+	fmt.Printf("\n=== Begin to analyse test result ===\n\n")
 
-	resultMap := make(map[string]bool)
-	checkpointMap := make(map[string][]string)
+	(*summaryMap)["pass"] = 0
+	(*summaryMap)["fail"] = 0
+	(*summaryMap)["total"] = 0
+
+	scriptFiles, _ := utils.GetAllFiles(dir, langType)
 
 	for _, scriptFile := range scriptFiles {
 		logFile := utils.ScriptToLog(scriptFile)
@@ -23,14 +28,12 @@ func CheckResults(dir string, langType string) {
 		expectContent = strings.Trim(expectContent, "\n")
 		logContent = strings.Trim(logContent, "\n")
 
-		Compare(scriptFile, expectContent, logContent, &resultMap, &checkpointMap)
+		Compare(scriptFile, expectContent, logContent, summaryMap, resultMap, checkpointMap)
 	}
-
-	Print(resultMap, checkpointMap)
 }
 
 func Compare(scriptFile string, expectContent string, logContent string,
-	resultMap *map[string]bool, checkpointMap *map[string][]string) {
+	summaryMap *map[string]interface{}, resultMap *map[string]bool, checkpointMap *map[string][]string) {
 	expectArr := strings.Split(expectContent, "\n")
 	logArr := strings.Split(logContent, "\n")
 
@@ -48,7 +51,11 @@ func Compare(scriptFile string, expectContent string, logContent string,
 
 		if !pass {
 			result = false
+			(*summaryMap)["fail"] = (*summaryMap)["fail"].(int) + 1
+		} else {
+			(*summaryMap)["pass"] = (*summaryMap)["pass"].(int) + 1
 		}
+		(*summaryMap)["total"] = (*summaryMap)["total"].(int) + 1
 
 		checkpoints = append(checkpoints, "Line "+strconv.Itoa(numb+1)+": "+strconv.FormatBool(result))
 
@@ -62,12 +69,21 @@ func Compare(scriptFile string, expectContent string, logContent string,
 	(*checkpointMap)[scriptFile] = checkpoints
 }
 
-func Print(resultMap map[string]bool, checkpointMap map[string][]string) {
-	fmt.Printf("")
+func Print(summaryMap map[string]interface{}, resultMap map[string]bool, checkpointMap map[string][]string) {
+	startSec := time.Unix(summaryMap["startTime"].(int64), 0)
+	endSec := time.Unix(summaryMap["endTime"].(int64), 0)
+
+	fmt.Printf("From %s to %s, duration %d sec \n",
+		startSec.Format("2006-01-02 15:04:05"),
+		endSec.Format("2006-01-02 15:04:05"),
+		summaryMap["duration"])
+
+	fmt.Printf("Total: %d, Fail: %d, Pass: %d \n",
+		summaryMap["total"], summaryMap["pass"], summaryMap["fail"])
 
 	for script, result := range resultMap {
 
-		fmt.Printf("\n=== Case %s: %t \n", script, result)
+		fmt.Printf("\n--- Case %s: %t \n", script, result)
 		if !result {
 			checkpoints := checkpointMap[script]
 
