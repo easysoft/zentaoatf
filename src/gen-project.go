@@ -12,7 +12,7 @@ import (
 	"utils"
 )
 
-func DealwithTestCase(tc model.TestCase, langType string, expectToSingleFile bool) {
+func DealwithTestCase(tc model.TestCase, langType string, independentExpect bool) {
 	caseId := tc.Id
 	caseTitle := tc.Title
 	scriptFile := "xdoc/scripts/tc-" + strconv.Itoa(caseId) + "." + langType
@@ -28,7 +28,7 @@ func DealwithTestCase(tc model.TestCase, langType string, expectToSingleFile boo
 	}
 
 	var expectsTxt string
-	if expectToSingleFile {
+	if independentExpect {
 		expectFile := utils.ScriptToExpectName(scriptFile)
 
 		expectsTxt = "@file"
@@ -117,13 +117,13 @@ func usage() {
 }
 
 func main() {
-	expectToSingleFile := flag.Bool("e", false, "Save ExpectResult To Single File or not")
+	independentExpect := flag.Bool("e", false, "Save ExpectResult in an independent file or not")
 	langType := flag.String("l", "", "Script Language like python, php etc.")
 	caseFile := flag.String("p", "", "Folder that contains the scripts")
 
 	flag.Parse()
 
-	if *caseFile == "" || *langType == "" || expectToSingleFile == nil {
+	if *caseFile == "" || *langType == "" || independentExpect == nil {
 		flag.Usage()
 		os.Exit(1)
 	}
@@ -139,6 +139,6 @@ func main() {
 	}
 
 	for _, testCase := range resp.Cases {
-		DealwithTestCase(testCase, *langType, *expectToSingleFile)
+		DealwithTestCase(testCase, *langType, *independentExpect)
 	}
 }
