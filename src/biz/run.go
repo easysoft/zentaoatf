@@ -2,17 +2,18 @@ package biz
 
 import (
 	"fmt"
+	"model"
 	"runtime"
 	"strings"
 	"time"
 	"utils"
 )
 
-func RunScripts(files []string, dir string, langType string, summaryMap *map[string]interface{}) {
+func RunScripts(files []string, dir string, langType string, report *model.TestReport) {
 	fmt.Println("=== Begin to run test scripts ===")
 
 	startTime := time.Now().Unix()
-	(*summaryMap)["startTime"] = startTime
+	report.StartTime = startTime
 
 	for _, file := range files {
 		RunScript(file, langType, dir)
@@ -20,8 +21,9 @@ func RunScripts(files []string, dir string, langType string, summaryMap *map[str
 
 	endTime := time.Now().Unix()
 	secs := endTime - startTime
-	(*summaryMap)["endTime"] = startTime
-	(*summaryMap)["duration"] = secs
+
+	report.EndTime = startTime
+	report.Duration = secs
 }
 
 func RunScript(file string, langType string, dir string) {

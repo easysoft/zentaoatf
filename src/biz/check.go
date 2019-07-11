@@ -2,21 +2,15 @@ package biz
 
 import (
 	"fmt"
+	"model"
 	"regexp"
-	"sort"
-	"strconv"
 	"strings"
 	"time"
 	"utils"
 )
 
-func CheckResults(dir string, langType string,
-	summaryMap *map[string]interface{}, resultMap *map[string]bool, checkpointMap *map[string][]string) {
+func CheckResults(dir string, langType string, report *model.TestReport) {
 	fmt.Printf("\n=== Begin to analyse test result ===\n\n")
-
-	(*summaryMap)["pass"] = 0
-	(*summaryMap)["fail"] = 0
-	(*summaryMap)["total"] = 0
 
 	scriptFiles, _ := utils.GetAllFiles(dir, langType)
 
@@ -29,16 +23,15 @@ func CheckResults(dir string, langType string,
 		expectContent = strings.Trim(expectContent, "\n")
 		logContent = strings.Trim(logContent, "\n")
 
-		Compare(scriptFile, expectContent, logContent, summaryMap, resultMap, checkpointMap)
+		Compare(scriptFile, expectContent, logContent, report)
 	}
 }
 
-func Compare(scriptFile string, expectContent string, logContent string,
-	summaryMap *map[string]interface{}, resultMap *map[string]bool, checkpointMap *map[string][]string) {
+func Compare(scriptFile string, expectContent string, logContent string, report *model.TestReport) {
 	expectArr := strings.Split(expectContent, "\n")
 	logArr := strings.Split(logContent, "\n")
 
-	checkpoints := make([]string, 0)
+	checkpoints := make([]model.CheckPointLog, 0)
 
 	result := true
 
@@ -60,69 +53,58 @@ func Compare(scriptFile string, expectContent string, logContent string,
 			result = false
 		}
 
-		checkpoints = append(checkpoints, "Line "+strconv.Itoa(numb+1)+": "+strconv.FormatBool(result))
-
-		checkpoints = append(checkpoints, "Expect "+line)
-		checkpoints = append(checkpoints, "Actual "+log)
+		cp := model.CheckPointLog{Numb: numb + 1, Status: result, Expect: line, Actual: log}
+		checkpoints = append(checkpoints, cp)
 	}
 
 	if !result {
-		(*summaryMap)["fail"] = (*summaryMap)["fail"].(int) + 1
+		report.Fail = report.Fail + 1
 	} else {
-		(*summaryMap)["pass"] = (*summaryMap)["pass"].(int) + 1
+		report.Pass = report.Pass + 1
 	}
-	(*summaryMap)["total"] = (*summaryMap)["total"].(int) + 1
+	report.Total = report.Total + 1
 
-	(*resultMap)[scriptFile] = result
-	(*checkpointMap)[scriptFile] = checkpoints
+	cs := model.CaseLog{Path: scriptFile, Status: result, CheckPoints: checkpoints}
+	report.Cases = append(report.Cases, cs)
 }
 
-func Print(summaryMap map[string]interface{}, resultMap map[string]bool, checkpointMap map[string][]string, workDir string) {
-	startSec := time.Unix(summaryMap["startTime"].(int64), 0)
-	endSec := time.Unix(summaryMap["endTime"].(int64), 0)
+func Print(report model.TestReport, workDir string) {
+	startSec := time.Unix(report.StartTime, 0)
+	endSec := time.Unix(report.EndTime, 0)
 
-	var log string
 	logs := make([]string, 0)
 
-	log = fmt.Sprintf("From %s to %s, duration %d sec",
-		startSec.Format("2006-01-02 15:04:05"),
-		endSec.Format("2006-01-02 15:04:05"),
-		summaryMap["duration"])
-	logs = append(logs, log)
-	fmt.Println(log)
+	PrintAndLog(&logs, fmt.Sprintf("From %s to %s, duration %d sec",
+		startSec.Format("2006-01-02 15:04:05"), endSec.Format("2006-01-02 15:04:05"), report.Duration))
 
-	log = fmt.Sprintf("Total: %d, Fail: %d, Pass: %d",
-		summaryMap["total"], summaryMap["pass"], summaryMap["fail"])
-	logs = append(logs, log)
-	fmt.Println(log)
+	PrintAndLog(&logs, fmt.Sprintf("Total: %d, Fail: %d, Pass: %d",
+		report.Total, report.Pass, report.Fail))
 
-	var sslice []string
-	for key, _ := range resultMap {
-		sslice = append(sslice, key)
-	}
-	sort.Strings(sslice)
+	for _, cs := range report.Cases {
+		PrintAndLog(&logs, fmt.Sprintf("\n%s: %t", cs.Path, cs.Status))
 
-	for _, script := range sslice {
-		count := 0
-		log = fmt.Sprintf("\n%s: %t", script, resultMap[script])
-		logs = append(logs, log)
-		fmt.Println(log)
+		if len(cs.CheckPoints) > 0 {
+			count := 0
+			for _, cp := range cs.CheckPoints {
+				if count > 0 {
+					PrintAndLog(&logs, "")
+				}
 
-		checkpoints := checkpointMap[script]
+				PrintAndLog(&logs, fmt.Sprintf("   Line %d: %t", cp.Numb, cp.Status))
+				PrintAndLog(&logs, fmt.Sprintf("   Expect %s", cp.Expect))
+				PrintAndLog(&logs, fmt.Sprintf("   Actual %s", cp.Actual))
 
-		for _, line := range checkpoints {
-			if count > 0 && strings.Index(line, "Line ") > -1 {
-				logs = append(logs, "")
-				fmt.Println("")
+				count++
 			}
-
-			log = fmt.Sprintf("    %s", line)
-			logs = append(logs, log)
-			fmt.Println(log)
-
-			count++
+		} else {
+			PrintAndLog(&logs, "   No checkpoints")
 		}
 	}
 
 	utils.WriteFile(workDir+"/logs/report.log", strings.Join(logs, "\n"))
+}
+
+func PrintAndLog(logs *[]string, str string) {
+	*logs = append(*logs, str)
+	fmt.Println(str)
 }

@@ -18,3 +18,27 @@ type TestStep struct {
 	IsGroup      bool
 	IsCheckPoint bool
 }
+
+type TestReport struct {
+	Pass      int
+	Fail      int
+	Total     int
+	StartTime int64
+	EndTime   int64
+	Duration  int64
+
+	Cases []CaseLog
+}
+type CaseLog struct {
+	Numb   int
+	Path   string
+	Status bool
+
+	CheckPoints []CheckPointLog
+}
+type CheckPointLog struct {
+	Numb   int
+	Expect string
+	Actual string
+	Status bool
+}

@@ -3,6 +3,7 @@ package main
 import (
 	"biz"
 	"flag"
+	"model"
 	"os"
 	"utils"
 )
@@ -20,11 +21,14 @@ func main() {
 
 	files, _ := utils.GetAllFiles(*workDir, *langType)
 
-	summaryMap := make(map[string]interface{})
-	biz.RunScripts(files, *workDir, *langType, &summaryMap)
+	var report model.TestReport
+	report.Pass = 0
+	report.Fail = 0
+	report.Total = 0
+	report.Cases = make([]model.CaseLog, 0)
 
-	resultMap := make(map[string]bool)
-	checkpointMap := make(map[string][]string)
-	biz.CheckResults(*workDir, *langType, &summaryMap, &resultMap, &checkpointMap)
-	biz.Print(summaryMap, resultMap, checkpointMap, *workDir)
+	biz.RunScripts(files, *workDir, *langType, &report)
+
+	biz.CheckResults(*workDir, *langType, &report)
+	biz.Print(report, *workDir)
 }
