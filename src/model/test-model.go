@@ -20,6 +20,9 @@ type TestStep struct {
 }
 
 type TestReport struct {
+	Path string
+	Env  string
+
 	Pass      int
 	Fail      int
 	Total     int

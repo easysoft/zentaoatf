@@ -74,6 +74,9 @@ func Print(report model.TestReport, workDir string) {
 
 	logs := make([]string, 0)
 
+	PrintAndLog(&logs, fmt.Sprintf("Run scripts in folder \"%s\" on %s OS\n",
+		report.Path, report.Env))
+
 	PrintAndLog(&logs, fmt.Sprintf("From %s to %s, duration %d sec",
 		startSec.Format("2006-01-02 15:04:05"), endSec.Format("2006-01-02 15:04:05"), report.Duration))
 
@@ -101,7 +104,7 @@ func Print(report model.TestReport, workDir string) {
 		}
 	}
 
-	utils.WriteFile(workDir+"/logs/report.log", strings.Join(logs, "\n"))
+	utils.WriteFile(workDir+"/logs/report.txt", strings.Join(logs, "\n"))
 }
 
 func PrintAndLog(logs *[]string, str string) {

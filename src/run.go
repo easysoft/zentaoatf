@@ -21,11 +21,8 @@ func main() {
 
 	files, _ := utils.GetAllFiles(*workDir, *langType)
 
-	var report model.TestReport
-	report.Pass = 0
-	report.Fail = 0
-	report.Total = 0
-	report.Cases = make([]model.CaseLog, 0)
+	var report = model.TestReport{Path: *workDir, Env: utils.GetOs(),
+		Pass: 0, Fail: 0, Total: 0, Cases: make([]model.CaseLog, 0)}
 
 	biz.RunScripts(files, *workDir, *langType, &report)
 

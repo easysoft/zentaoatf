@@ -3,7 +3,6 @@ package biz
 import (
 	"fmt"
 	"model"
-	"runtime"
 	"strings"
 	"time"
 	"utils"
@@ -27,11 +26,10 @@ func RunScripts(files []string, dir string, langType string, report *model.TestR
 }
 
 func RunScript(file string, langType string, dir string) {
-	osName := runtime.GOOS
-
 	var command string
 	var logFile string
-	if osName == "darwin" {
+
+	if utils.IsMac() {
 		logFile = utils.ScriptToLogName(dir, file)
 		command = file //  + " > " + logFile
 

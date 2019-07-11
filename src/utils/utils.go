@@ -4,6 +4,7 @@ import (
 	"os"
 	"path"
 	"regexp"
+	"runtime"
 	"strings"
 )
 
@@ -35,4 +36,17 @@ func ScriptToExpectName(file string) string {
 	expectName := strings.TrimSuffix(file, fileSuffix) + ".ex"
 
 	return expectName
+}
+
+func GetOs() string {
+	osName := runtime.GOOS
+
+	if osName == "darwin" {
+		return "mac"
+	} else {
+		return osName
+	}
+}
+func IsMac() bool {
+	return GetOs() == "mac"
 }
