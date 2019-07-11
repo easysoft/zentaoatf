@@ -3,6 +3,7 @@ package biz
 import (
 	"fmt"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -20,7 +21,7 @@ func CheckResults(dir string, langType string,
 	scriptFiles, _ := utils.GetAllFiles(dir, langType)
 
 	for _, scriptFile := range scriptFiles {
-		logFile := utils.ScriptToLogName(scriptFile)
+		logFile := utils.ScriptToLogName(dir, scriptFile)
 
 		expectContent := utils.ReadExpect(scriptFile)
 		logContent := utils.ReadFile(logFile)
@@ -95,9 +96,15 @@ func Print(summaryMap map[string]interface{}, resultMap map[string]bool, checkpo
 	logs = append(logs, log)
 	fmt.Println(log)
 
-	for script, result := range resultMap {
+	var sslice []string
+	for key, _ := range resultMap {
+		sslice = append(sslice, key)
+	}
+	sort.Strings(sslice)
+
+	for _, script := range sslice {
 		count := 0
-		log = fmt.Sprintf("\n--- Case %s: %t", script, result)
+		log = fmt.Sprintf("\n%s: %t", script, resultMap[script])
 		logs = append(logs, log)
 		fmt.Println(log)
 
@@ -105,7 +112,7 @@ func Print(summaryMap map[string]interface{}, resultMap map[string]bool, checkpo
 
 		for _, line := range checkpoints {
 			if count > 0 && strings.Index(line, "Line ") > -1 {
-				logs = append(logs, "\n")
+				logs = append(logs, "")
 				fmt.Println("")
 			}
 
@@ -117,5 +124,5 @@ func Print(summaryMap map[string]interface{}, resultMap map[string]bool, checkpo
 		}
 	}
 
-	utils.WriteFile(workDir+"/logs/log.txt", strings.Join(logs, "\n"))
+	utils.WriteFile(workDir+"/logs/report.log", strings.Join(logs, "\n"))
 }

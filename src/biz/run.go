@@ -2,7 +2,6 @@ package biz
 
 import (
 	"fmt"
-	"os"
 	"runtime"
 	"strings"
 	"time"
@@ -10,16 +9,13 @@ import (
 )
 
 func RunScripts(files []string, dir string, langType string, summaryMap *map[string]interface{}) {
-	logDir := dir + string(os.PathSeparator) + "logs"
-	utils.MkDir(logDir)
-
 	fmt.Println("=== Begin to run test scripts ===")
 
 	startTime := time.Now().Unix()
 	(*summaryMap)["startTime"] = startTime
 
 	for _, file := range files {
-		RunScript(file, langType)
+		RunScript(file, langType, dir)
 	}
 
 	endTime := time.Now().Unix()
@@ -28,13 +24,13 @@ func RunScripts(files []string, dir string, langType string, summaryMap *map[str
 	(*summaryMap)["duration"] = secs
 }
 
-func RunScript(file string, langType string) {
+func RunScript(file string, langType string, dir string) {
 	osName := runtime.GOOS
 
 	var command string
 	var logFile string
 	if osName == "darwin" {
-		logFile = utils.ScriptToLogName(file)
+		logFile = utils.ScriptToLogName(dir, file)
 		command = file //  + " > " + logFile
 
 		if langType == "php" {

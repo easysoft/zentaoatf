@@ -17,16 +17,15 @@ func RemoveBlankLine(str string) string {
 	return ret
 }
 
-func ScriptToLogName(file string) string {
-	pthSep := string(os.PathSeparator)
-
-	dir := path.Dir(file)
+func ScriptToLogName(dir string, file string) string {
+	logDir := dir + string(os.PathSeparator) + "logs"
+	MkDir(logDir)
 
 	nameSuffix := path.Ext(file)
 	nameWithSuffix := path.Base(file)
 	name := strings.TrimSuffix(nameWithSuffix, nameSuffix)
 
-	logFile := dir + pthSep + "logs" + pthSep + name + ".log"
+	logFile := logDir + string(os.PathSeparator) + name + ".log"
 
 	return logFile
 }
