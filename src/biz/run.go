@@ -34,7 +34,7 @@ func RunScript(file string, langType string) {
 	var command string
 	var logFile string
 	if osName == "darwin" {
-		logFile = utils.ScriptToLog(file)
+		logFile = utils.ScriptToLogName(file)
 		command = file //  + " > " + logFile
 
 		if langType == "php" {

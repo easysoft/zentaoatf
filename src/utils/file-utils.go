@@ -86,19 +86,16 @@ func ReadExpect(file string) string {
 
 	myExp := regexp.MustCompile(`<<<TC[\S\s]*expects:\n*([\S\s]*)\n+TC;`)
 	arr := myExp.FindStringSubmatch(content)
+
 	if len(arr) > 1 {
-		return RemoveBlankLine(arr[1])
+		expects := arr[1]
+
+		if strings.Index(expects, "@file") > -1 {
+			return ReadFile(ScriptToExpectName(file))
+		} else {
+			return RemoveBlankLine(expects)
+		}
 	}
 
 	return ""
-}
-
-func RemoveBlankLine(str string) string {
-	myExp := regexp.MustCompile(`\n{2,}`) // 连续换行
-	ret := myExp.ReplaceAllString(str, "\n")
-
-	myExp = regexp.MustCompile(`#[^\n]*\n`) // 空行
-	ret = myExp.ReplaceAllString(ret, "")
-
-	return ret
 }

@@ -20,7 +20,7 @@ func CheckResults(dir string, langType string,
 	scriptFiles, _ := utils.GetAllFiles(dir, langType)
 
 	for _, scriptFile := range scriptFiles {
-		logFile := utils.ScriptToLog(scriptFile)
+		logFile := utils.ScriptToLogName(scriptFile)
 
 		expectContent := utils.ReadExpect(scriptFile)
 		logContent := utils.ReadFile(logFile)
@@ -42,58 +42,80 @@ func Compare(scriptFile string, expectContent string, logContent string,
 	result := true
 
 	for numb, line := range expectArr {
+		line = strings.TrimSpace(line)
+		if line == "#" || line == "" {
+			continue
+		}
+
 		log := "N/A"
 		if len(logArr) > numb {
 			log = logArr[numb]
+			log = strings.TrimSpace(log)
 		}
 
 		pass, _ := regexp.MatchString(line, log)
 
 		if !pass {
 			result = false
-			(*summaryMap)["fail"] = (*summaryMap)["fail"].(int) + 1
-		} else {
-			(*summaryMap)["pass"] = (*summaryMap)["pass"].(int) + 1
 		}
-		(*summaryMap)["total"] = (*summaryMap)["total"].(int) + 1
 
 		checkpoints = append(checkpoints, "Line "+strconv.Itoa(numb+1)+": "+strconv.FormatBool(result))
 
-		if !pass {
-			checkpoints = append(checkpoints, "Expect "+line)
-			checkpoints = append(checkpoints, "Actual "+log)
-		}
+		checkpoints = append(checkpoints, "Expect "+line)
+		checkpoints = append(checkpoints, "Actual "+log)
 	}
+
+	if !result {
+		(*summaryMap)["fail"] = (*summaryMap)["fail"].(int) + 1
+	} else {
+		(*summaryMap)["pass"] = (*summaryMap)["pass"].(int) + 1
+	}
+	(*summaryMap)["total"] = (*summaryMap)["total"].(int) + 1
 
 	(*resultMap)[scriptFile] = result
 	(*checkpointMap)[scriptFile] = checkpoints
 }
 
-func Print(summaryMap map[string]interface{}, resultMap map[string]bool, checkpointMap map[string][]string) {
+func Print(summaryMap map[string]interface{}, resultMap map[string]bool, checkpointMap map[string][]string, workDir string) {
 	startSec := time.Unix(summaryMap["startTime"].(int64), 0)
 	endSec := time.Unix(summaryMap["endTime"].(int64), 0)
 
-	fmt.Printf("From %s to %s, duration %d sec \n",
+	var log string
+	logs := make([]string, 0)
+
+	log = fmt.Sprintf("From %s to %s, duration %d sec",
 		startSec.Format("2006-01-02 15:04:05"),
 		endSec.Format("2006-01-02 15:04:05"),
 		summaryMap["duration"])
+	logs = append(logs, log)
+	fmt.Println(log)
 
-	fmt.Printf("Total: %d, Fail: %d, Pass: %d \n",
+	log = fmt.Sprintf("Total: %d, Fail: %d, Pass: %d",
 		summaryMap["total"], summaryMap["pass"], summaryMap["fail"])
+	logs = append(logs, log)
+	fmt.Println(log)
 
 	for script, result := range resultMap {
+		count := 0
+		log = fmt.Sprintf("\n--- Case %s: %t", script, result)
+		logs = append(logs, log)
+		fmt.Println(log)
 
-		fmt.Printf("\n--- Case %s: %t \n", script, result)
-		if !result {
-			checkpoints := checkpointMap[script]
+		checkpoints := checkpointMap[script]
 
-			for _, line := range checkpoints {
-				if strings.Index(line, "Line") > -1 {
-					fmt.Printf("\n")
-				}
-
-				fmt.Printf("    %s \n", line)
+		for _, line := range checkpoints {
+			if count > 0 && strings.Index(line, "Line ") > -1 {
+				logs = append(logs, "\n")
+				fmt.Println("")
 			}
+
+			log = fmt.Sprintf("    %s", line)
+			logs = append(logs, log)
+			fmt.Println(log)
+
+			count++
 		}
 	}
+
+	utils.WriteFile(workDir+"/logs/log.txt", strings.Join(logs, "\n"))
 }

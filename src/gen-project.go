@@ -2,7 +2,9 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
+	"log"
 	"model"
 	"os"
 	"strconv"
@@ -10,9 +12,10 @@ import (
 	"utils"
 )
 
-func DealwithTestCase(tc model.TestCase, langType string) {
+func DealwithTestCase(tc model.TestCase, langType string, expectToSingleFile bool) {
 	caseId := tc.Id
 	caseTitle := tc.Title
+	scriptFile := "xdoc/scripts/tc-" + strconv.Itoa(caseId) + "." + langType
 
 	steps := make([]string, 0)
 	expects := make([]string, 0)
@@ -24,13 +27,23 @@ func DealwithTestCase(tc model.TestCase, langType string) {
 		DealwithTestStep(ts, langType, level, &checkPointIndex, &steps, &expects, &srcCode)
 	}
 
+	var expectsTxt string
+	if expectToSingleFile {
+		expectFile := utils.ScriptToExpectName(scriptFile)
+
+		expectsTxt = "@file"
+		utils.WriteFile(expectFile, strings.Join(expects, "\n"))
+	} else {
+		expectsTxt = strings.Join(expects, "\n")
+	}
+
 	template := utils.ReadFile("xdoc/script-template.txt")
 	content := string(fmt.Sprintf(string(template), langType, caseTitle, caseId,
-		strings.Join(steps, "\n"), strings.Join(expects, "\n"), strings.Join(srcCode, "\n")))
+		strings.Join(steps, "\n"), expectsTxt, strings.Join(srcCode, "\n")))
 
 	fmt.Println(content)
 
-	utils.WriteFile("xdoc/tc-"+strconv.Itoa(caseId)+"."+langType, content)
+	utils.WriteFile(scriptFile, content)
 }
 
 func DealwithTestStep(ts model.TestStep, langType string, level int, checkPointIndex *int,
@@ -99,13 +112,23 @@ func DealwithTestStep(ts model.TestStep, langType string, level int, checkPointI
 	}
 }
 
+func usage() {
+	log.Fatalf("usage: gen-project.go -p path -l lang [-e] \n")
+}
+
 func main() {
-	if len(os.Args) < 3 {
-		fmt.Println("usage: gen-project.go <path> <langType>")
+	expectToSingleFile := flag.Bool("e", false, "Save ExpectResult To Single File or not")
+	langType := flag.String("l", "", "Script Language like python, php etc.")
+	caseFile := flag.String("p", "", "Folder that contains the scripts")
+
+	flag.Parse()
+
+	if *caseFile == "" || *langType == "" || expectToSingleFile == nil {
+		flag.Usage()
+		os.Exit(1)
 	}
 
-	caseFile, langType := os.Args[1], os.Args[2]
-	buf := utils.ReadFileBuf(caseFile)
+	buf := utils.ReadFileBuf(*caseFile)
 
 	var resp model.Response
 	json.Unmarshal(buf, &resp)
@@ -116,6 +139,6 @@ func main() {
 	}
 
 	for _, testCase := range resp.Cases {
-		DealwithTestCase(testCase, langType)
+		DealwithTestCase(testCase, *langType, *expectToSingleFile)
 	}
 }
