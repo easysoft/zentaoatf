@@ -3,12 +3,16 @@ package main
 import (
 	"biz"
 	"flag"
+	"fmt"
+	"misc"
 	"model"
 	"os"
 	"utils"
 )
 
 func main() {
+	p := misc.GetInstance()
+
 	langType := flag.String("l", "", "Script Language like python, php etc.")
 	workDir := flag.String("p", "", "Folder that contains the scripts")
 
@@ -18,6 +22,9 @@ func main() {
 		flag.Usage()
 		os.Exit(1)
 	}
+
+	p.Printf("HELLO_1", "Peter")
+	fmt.Println(p.Sprintf("HELLO_1", "Peter"))
 
 	files, _ := utils.GetAllFiles(*workDir, *langType)
 

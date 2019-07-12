@@ -1,0 +1,86 @@
+{
+  "language": "en-US",
+  "messages": [
+    {
+      "id": "HELLO_WORLD",
+      "message": "Hello world!",
+      "translation": "Hello world!"
+    },
+    {
+      "id": "HELLO_1",
+      "message": "Hello",
+      "translation": "Hello %s",
+      "placeholders": [
+        {
+          "id": "World",
+          "string": "%[1]v",
+          "type": "string",
+          "underlyingType": "string",
+          "argNum": 1,
+          "expr": "world!"
+        }
+      ]
+    },
+    {
+      "id": "VISITOR",
+      "message": "{Person} is visiting {Place}!",
+      "translation": "%s is visiting %s",
+      "placeholders": [
+        {
+          "id": "Person",
+          "string": "%[1]s",
+          "type": "string",
+          "underlyingType": "string",
+          "argNum": 1,
+          "expr": "person"
+        },
+        {
+          "id": "Place",
+          "string": "%[2]s",
+          "type": "string",
+          "underlyingType": "string",
+          "argNum": 2,
+          "expr": "place"
+        }
+      ]
+    },
+    {
+      "id": "CONFIG",
+      "message": "config",
+      "translation": "config: %[1]v",
+      "placeholders": [
+        {
+          "id": "World",
+          "string": "%[1]v",
+          "type": "string",
+          "underlyingType": "string",
+          "argNum": 1,
+          "expr": "Object"
+        }
+      ]
+    },
+    {
+      "id": "{Miles} miles traveled ({Miles_1})",
+      "message": "{Miles} miles traveled ({Miles_1})",
+      "translation": "%.2[1]f μίλια ταξίδεψε %[1]f",
+      "placeholders": [
+        {
+          "id": "Miles",
+          "string": "%.2[1]f",
+          "type": "float64",
+          "underlyingType": "float64",
+          "argNum": 1,
+          "expr": "miles"
+        },
+        {
+          "id": "Miles_1",
+          "string": "%[1]f",
+          "type": "float64",
+          "underlyingType": "float64",
+          "argNum": 1,
+          "expr": "miles"
+        }
+      ]
+    }
+  ]
+}
