@@ -48,14 +48,11 @@ func InitConfig(jsonPath string) {
 	var i18n I18n
 	str := ReadI18nJson(jsonPath)
 	json.Unmarshal([]byte(str), &i18n)
-	//fmt.Println(i18n.Language)
 
-	msaArry := i18n.Messages
+	msgArr := i18n.Messages
 	tag := language.MustParse(i18n.Language)
-	// 以上代码和以下代码都是硬编码方式
-	for _, e := range msaArry {
-		//fmt.Println(e.Id+"\t"+e.Translation)
-		message.SetString(tag, e.Id, e.Translation)
 
+	for _, e := range msgArr {
+		message.SetString(tag, e.Id, e.Translation)
 	}
 }
