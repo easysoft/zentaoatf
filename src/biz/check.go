@@ -2,10 +2,10 @@ package biz
 
 import (
 	"fmt"
-	"model"
+	"github.com/easysoft/zentaoatf/src/model"
+	"github.com/easysoft/zentaoatf/src/utils"
 	"strings"
 	"time"
-	"utils"
 )
 
 func CheckResults(dir string, langType string, report *model.TestReport) {

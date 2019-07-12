@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/easysoft/zentaoatf/src/model"
+	"github.com/easysoft/zentaoatf/src/utils"
 	"log"
-	"model"
 	"os"
 	"strconv"
 	"strings"
-	"utils"
 )
 
 func DealwithTestCase(tc model.TestCase, langType string, independentExpect bool) {

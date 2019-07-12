@@ -2,11 +2,11 @@ package biz
 
 import (
 	"fmt"
-	"misc"
-	"model"
+	"github.com/easysoft/zentaoatf/src/misc"
+	"github.com/easysoft/zentaoatf/src/model"
+	"github.com/easysoft/zentaoatf/src/utils"
 	"strings"
 	"time"
-	"utils"
 )
 
 func RunScripts(files []string, dir string, langType string, report *model.TestReport) {

@@ -1,7 +1,7 @@
 package biz
 
 import (
-	"misc"
+	"github.com/easysoft/zentaoatf/src/misc"
 	"regexp"
 	"strings"
 )
