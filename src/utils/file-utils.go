@@ -81,7 +81,7 @@ func MkDir(dir string) {
 	}
 }
 
-func ReadCheckpoints(file string) []string {
+func ReadCheckpointSteps(file string) []string {
 	content := ReadFile(file)
 
 	myExp := regexp.MustCompile(`<<<TC[\S\s]*steps:[^\n]*\n*([\S\s]*)\n+expects:`)
@@ -93,7 +93,7 @@ func ReadCheckpoints(file string) []string {
 		str = RemoveBlankLine(checkpoints)
 	}
 
-	ret := GenCheckpointArr(str)
+	ret := GenCheckpointStepArr(str)
 
 	return ret
 }
@@ -127,7 +127,7 @@ func ReadLog(logFile string) [][]string {
 	return ret
 }
 
-func GenCheckpointArr(str string) []string {
+func GenCheckpointStepArr(str string) []string {
 	ret := make([]string, 0)
 	for _, line := range strings.Split(str, "\n") {
 		line := strings.TrimSpace(line)

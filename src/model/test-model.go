@@ -37,6 +37,13 @@ type CaseLog struct {
 	Path   string
 	Status bool
 
+	Steps []StepLog
+}
+type StepLog struct {
+	Numb   int
+	Name   string
+	Status bool
+
 	CheckPoints []CheckPointLog
 }
 type CheckPointLog struct {
