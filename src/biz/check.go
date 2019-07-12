@@ -33,8 +33,6 @@ func ValidateTestCase(scriptFile string, langType string,
 
 	indx := 0
 	for _, step := range stepArr {
-		stepResult := true
-
 		var expectLines []string
 		if len(expectArr) > indx {
 			expectLines = expectArr[indx]
@@ -45,26 +43,7 @@ func ValidateTestCase(scriptFile string, langType string,
 			actualLines = actualArr[indx]
 		}
 
-		checkpointLogs := make([]model.CheckPointLog, 0)
-
-		indx2 := 0
-		for _, expect := range expectLines {
-			log := "N/A"
-			if len(actualLines) > indx2 {
-				log = actualLines[indx2]
-			}
-
-			pass := MatchString(expect, log, langType)
-			if !pass {
-				stepResult = false
-			}
-
-			cp := model.CheckPointLog{Numb: indx2 + 1, Status: pass, Expect: expect, Actual: log}
-			checkpointLogs = append(checkpointLogs, cp)
-
-			indx2++
-		}
-
+		stepResult, checkpointLogs := ValidateStep(langType, expectLines, actualLines)
 		step := model.StepLog{Numb: indx + 1, Name: step, Status: stepResult, CheckPoints: checkpointLogs}
 		stepLogs = append(stepLogs, step)
 
@@ -80,6 +59,34 @@ func ValidateTestCase(scriptFile string, langType string,
 
 	cs := model.CaseLog{Path: scriptFile, Status: caseResult, Steps: stepLogs}
 	report.Cases = append(report.Cases, cs)
+}
+
+func ValidateStep(langType string, expectLines []string, actualLines []string) (bool, []model.CheckPointLog) {
+
+	stepResult := true
+
+	checkpointLogs := make([]model.CheckPointLog, 0)
+
+	indx2 := 0
+	for _, expect := range expectLines {
+		log := "N/A"
+		if len(actualLines) > indx2 {
+			log = actualLines[indx2]
+		}
+
+		pass := MatchString(expect, log, langType)
+		if !pass {
+			stepResult = false
+		}
+
+		cp := model.CheckPointLog{Numb: indx2 + 1, Status: pass, Expect: expect, Actual: log}
+		checkpointLogs = append(checkpointLogs, cp)
+
+		indx2++
+	}
+
+	return stepResult, checkpointLogs
+
 }
 
 func Print(report model.TestReport, workDir string) {
@@ -125,7 +132,7 @@ func Print(report model.TestReport, workDir string) {
 				count++
 			}
 		} else {
-			PrintAndLog(&logs, "   No checkpoints")
+			PrintAndLog(&logs, "   No check points")
 		}
 	}
 
