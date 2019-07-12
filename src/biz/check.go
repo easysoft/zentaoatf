@@ -3,7 +3,6 @@ package biz
 import (
 	"fmt"
 	"model"
-	"regexp"
 	"strings"
 	"time"
 	"utils"
@@ -23,11 +22,11 @@ func CheckResults(dir string, langType string, report *model.TestReport) {
 		expectContent = strings.Trim(expectContent, "\n")
 		logContent = strings.Trim(logContent, "\n")
 
-		Compare(scriptFile, expectContent, logContent, report)
+		Compare(scriptFile, langType, expectContent, logContent, report)
 	}
 }
 
-func Compare(scriptFile string, expectContent string, logContent string, report *model.TestReport) {
+func Compare(scriptFile string, langType string, expectContent string, logContent string, report *model.TestReport) {
 	expectArr := strings.Split(expectContent, "\n")
 	logArr := strings.Split(logContent, "\n")
 
@@ -35,26 +34,29 @@ func Compare(scriptFile string, expectContent string, logContent string, report 
 
 	result := true
 
-	for numb, line := range expectArr {
+	indx := 0
+	for _, line := range expectArr {
 		line = strings.TrimSpace(line)
 		if line == "#" || line == "" {
 			continue
 		}
 
 		log := "N/A"
-		if len(logArr) > numb {
-			log = logArr[numb]
+		if len(logArr) > indx {
+			log = logArr[indx]
 			log = strings.TrimSpace(log)
 		}
 
-		pass, _ := regexp.MatchString(line, log)
+		pass := MatchString(line, log, langType)
 
 		if !pass {
 			result = false
 		}
 
-		cp := model.CheckPointLog{Numb: numb + 1, Status: result, Expect: line, Actual: log}
+		cp := model.CheckPointLog{Numb: indx + 1, Status: result, Expect: line, Actual: log}
 		checkpoints = append(checkpoints, cp)
+
+		indx++
 	}
 
 	if !result {

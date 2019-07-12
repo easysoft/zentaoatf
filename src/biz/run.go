@@ -2,6 +2,7 @@ package biz
 
 import (
 	"fmt"
+	"misc"
 	"model"
 	"strings"
 	"time"
@@ -33,7 +34,7 @@ func RunScript(file string, langType string, dir string) {
 		logFile = utils.ScriptToLogName(dir, file)
 		command = file //  + " > " + logFile
 
-		if langType == "php" {
+		if langType == misc.PHP.String() {
 			command = langType + " " + command
 		}
 	}
