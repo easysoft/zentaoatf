@@ -81,21 +81,80 @@ func MkDir(dir string) {
 	}
 }
 
-func ReadExpect(file string) string {
+func ReadCheckpoints(file string) []string {
 	content := ReadFile(file)
 
-	myExp := regexp.MustCompile(`<<<TC[\S\s]*expects:\n*([\S\s]*)\n+TC;`)
+	myExp := regexp.MustCompile(`<<<TC[\S\s]*steps:[^\n]*\n*([\S\s]*)\n+expects:`)
 	arr := myExp.FindStringSubmatch(content)
 
+	str := ""
+	if len(arr) > 1 {
+		checkpoints := arr[1]
+		str = RemoveBlankLine(checkpoints)
+	}
+
+	ret := GenCheckpointArr(str)
+
+	return ret
+}
+
+func ReadExpect(file string) [][]string {
+	content := ReadFile(file)
+
+	myExp := regexp.MustCompile(`<<<TC[\S\s]*expects:[^\n]*\n*([\S\s]*)\n+TC;`)
+	arr := myExp.FindStringSubmatch(content)
+
+	str := ""
 	if len(arr) > 1 {
 		expects := arr[1]
 
 		if strings.Index(expects, "@file") > -1 {
-			return ReadFile(ScriptToExpectName(file))
+			str = ReadFile(ScriptToExpectName(file))
 		} else {
-			return RemoveBlankLine(expects)
+			str = RemoveBlankLine(expects)
 		}
 	}
 
-	return ""
+	ret := GenExpectArr(str)
+
+	return ret
+}
+
+func ReadLog(logFile string) [][]string {
+	str := ReadFile(logFile)
+
+	ret := GenExpectArr(str)
+	return ret
+}
+
+func GenCheckpointArr(str string) []string {
+	ret := make([]string, 0)
+	for _, line := range strings.Split(str, "\n") {
+		line := strings.TrimSpace(line)
+
+		if strings.Index(line, "@") == 0 {
+			ret = append(ret, line)
+		}
+	}
+
+	return ret
+}
+
+func GenExpectArr(str string) [][]string {
+	ret := make([][]string, 0)
+	indx := -1
+	for _, line := range strings.Split(str, "\n") {
+		line := strings.TrimSpace(line)
+
+		if line == "#" {
+			ret = append(ret, make([]string, 0))
+			indx++
+		} else {
+			if len(line) > 0 {
+				ret[indx] = append(ret[indx], line)
+			}
+		}
+	}
+
+	return ret
 }

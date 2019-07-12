@@ -2,7 +2,7 @@
 <<<TC
 title: %s
 caseId: %d
-steps:
+steps: // @开头的为含验证点的步骤
 %s
 
 expects:

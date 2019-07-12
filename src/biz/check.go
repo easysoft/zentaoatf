@@ -16,48 +16,59 @@ func CheckResults(dir string, langType string, report *model.TestReport) {
 	for _, scriptFile := range scriptFiles {
 		logFile := utils.ScriptToLogName(dir, scriptFile)
 
-		expectContent := utils.ReadExpect(scriptFile)
-		logContent := utils.ReadFile(logFile)
+		checkpointArr := utils.ReadCheckpoints(scriptFile)
+		expectArr := utils.ReadExpect(scriptFile)
+		logArr := utils.ReadLog(logFile)
 
-		expectContent = strings.Trim(expectContent, "\n")
-		logContent = strings.Trim(logContent, "\n")
-
-		Compare(scriptFile, langType, expectContent, logContent, report)
+		ValidateTestCase(scriptFile, langType, checkpointArr, expectArr, logArr, report)
 	}
 }
 
-func Compare(scriptFile string, langType string, expectContent string, logContent string, report *model.TestReport) {
-	expectArr := strings.Split(expectContent, "\n")
-	logArr := strings.Split(logContent, "\n")
+func ValidateTestCase(scriptFile string, langType string,
+	checkpointArr []string, expectArr [][]string, actualArr [][]string, report *model.TestReport) {
 
 	checkpoints := make([]model.CheckPointLog, 0)
 
 	result := true
 
 	indx := 0
-	for _, line := range expectArr {
-		line = strings.TrimSpace(line)
-		if line == "#" || line == "" {
-			continue
+	for _, checkpoint := range checkpointArr {
+		var expectLines []string
+		if len(expectArr) > indx {
+			expectLines = expectArr[indx]
 		}
 
-		log := "N/A"
-		if len(logArr) > indx {
-			log = logArr[indx]
-			log = strings.TrimSpace(log)
+		var actualLines []string
+		if len(actualArr) > indx {
+			actualLines = actualArr[indx]
 		}
 
-		pass := MatchString(line, log, langType)
-
-		if !pass {
-			result = false
-		}
-
-		cp := model.CheckPointLog{Numb: indx + 1, Status: result, Expect: line, Actual: log}
-		checkpoints = append(checkpoints, cp)
-
-		indx++
 	}
+
+	//indx := 0
+	//for _, line := range expectArr {
+	//	line = strings.TrimSpace(line)
+	//	if line == "#" || line == "" {
+	//		continue
+	//	}
+	//
+	//	log := "N/A"
+	//	if len(logArr) > indx {
+	//		log = logArr[indx]
+	//		log = strings.TrimSpace(log)
+	//	}
+	//
+	//	pass := MatchString(line, log, langType)
+	//
+	//	if !pass {
+	//		result = false
+	//	}
+	//
+	//	cp := model.CheckPointLog{Numb: indx + 1, Status: result, Expect: line, Actual: log}
+	//	checkpoints = append(checkpoints, cp)
+	//
+	//	indx++
+	//}
 
 	if !result {
 		report.Fail = report.Fail + 1

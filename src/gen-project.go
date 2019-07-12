@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/easysoft/zentaoatf/src/misc"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"log"
@@ -85,7 +86,7 @@ func DealwithTestStep(ts model.TestStep, langType string, level int, checkPointI
 		expectsLine := ""
 
 		expectsLine = "# \n"
-		expectsLine += "<" + stepIdent + " 期望结果, 可以有多行>\n"
+		expectsLine += "<" + stepIdent + " 期望结果, 可以有多行>"
 
 		*expects = append(*expects, expectsLine)
 	}
@@ -94,7 +95,14 @@ func DealwithTestStep(ts model.TestStep, langType string, level int, checkPointI
 	if isCheckPoint {
 		codeLine := ""
 
-		codeLine = "# " + stepIdent + " - " + stepExpect + "\n"
+		if langType == misc.PHP.String() {
+			codeLine += `echo "#\n";`
+		} else if langType == misc.GO.String() {
+			codeLine += `println("#")\n`
+		}
+
+		codeLine += "   // 验证点" + stepIdent + "的标记位，请勿删除\n"
+		codeLine += "// 期待结果：" + stepExpect + "\n"
 		codeLine += "// 此处编写上述验证点代码"
 		if *checkPointIndex == 1 {
 			codeLine += "，输出实际结果, 可以有多行 \n"
