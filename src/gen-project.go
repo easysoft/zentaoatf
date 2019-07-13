@@ -14,6 +14,8 @@ import (
 )
 
 func DealwithTestCase(tc model.TestCase, langType string, independentExpect bool) {
+	StepWidth := 20
+
 	caseId := tc.Id
 	caseTitle := tc.Title
 	scriptFile := "xdoc/scripts/tc-" + strconv.Itoa(caseId) + "." + langType
@@ -22,10 +24,13 @@ func DealwithTestCase(tc model.TestCase, langType string, independentExpect bool
 	expects := make([]string, 0)
 	srcCode := make([]string, 0)
 
+	stepDisplayMaxWidth := 0
+	DealwithTestStepWidth(tc.Steps, &stepDisplayMaxWidth, StepWidth)
+
 	level := 1
 	checkPointIndex := 0
 	for _, ts := range tc.Steps {
-		DealwithTestStep(ts, langType, level, &checkPointIndex, &steps, &expects, &srcCode)
+		DealwithTestStep(ts, langType, level, StepWidth, &checkPointIndex, &steps, &expects, &srcCode)
 	}
 
 	var expectsTxt string
@@ -47,8 +52,19 @@ func DealwithTestCase(tc model.TestCase, langType string, independentExpect bool
 	utils.WriteFile(scriptFile, content)
 }
 
-func DealwithTestStep(ts model.TestStep, langType string, level int, checkPointIndex *int,
+func DealwithTestStepWidth(steps []model.TestStep, stepSDisplayMaxWidth *int, stepWidth int) {
+	for _, ts := range steps {
+		length := len(strconv.Itoa(ts.Id))
+		if length > *stepSDisplayMaxWidth {
+			*stepSDisplayMaxWidth = length
+		}
+	}
+	*stepSDisplayMaxWidth += stepWidth // prefix space and @step
+}
+
+func DealwithTestStep(ts model.TestStep, langType string, level int, stepWidth int, checkPointIndex *int,
 	steps *[]string, expects *[]string, srcCode *[]string) {
+
 	isGroup := ts.IsGroup
 	isCheckPoint := ts.IsCheckPoint
 
@@ -67,18 +83,16 @@ func DealwithTestStep(ts model.TestStep, langType string, level int, checkPointI
 	stepIdent := stepType + strconv.Itoa(stepId)
 	if isCheckPoint {
 		stepIdent = "@" + stepIdent
-		(*checkPointIndex)++
+		*checkPointIndex++
 	}
-	i := level
 
-	stepLine := stepIdent + " // " + stepTitle
-	for {
-		stepLine = "   " + stepLine
-		i--
-		if i == 0 {
-			break
-		}
-	}
+	preFixSpace := level * 3
+	postFixSpace := stepWidth - preFixSpace - len(stepIdent)
+
+	stepLine := fmt.Sprintf("%*s", preFixSpace, " ") + stepIdent
+	stepLine += fmt.Sprintf("%*s", postFixSpace, " ")
+	stepLine += stepTitle
+
 	*steps = append(*steps, stepLine)
 
 	// 处理expects
@@ -86,7 +100,7 @@ func DealwithTestStep(ts model.TestStep, langType string, level int, checkPointI
 		expectsLine := ""
 
 		expectsLine = "# \n"
-		expectsLine += "<" + stepIdent + " 期望结果, 可以有多行>"
+		expectsLine += "/* " + stepIdent + " 期望结果, 可以有多行 */\n"
 
 		*expects = append(*expects, expectsLine)
 	}
@@ -101,21 +115,15 @@ func DealwithTestStep(ts model.TestStep, langType string, level int, checkPointI
 			codeLine += `println("#")\n`
 		}
 
-		codeLine += "   // 验证点" + stepIdent + "的标记位，请勿删除\n"
-		codeLine += "// 期待结果：" + stepExpect + "\n"
-		codeLine += "// 此处编写上述验证点代码"
-		if *checkPointIndex == 1 {
-			codeLine += "，输出实际结果, 可以有多行 \n"
-		} else {
-			codeLine += "\n"
-		}
+		codeLine += "  // 开始" + stepIdent + " - " + stepExpect + "\n"
+		codeLine += "/* 输出验证点实际结果 */\n"
 
 		*srcCode = append(*srcCode, codeLine)
 	}
 
 	if isGroup {
 		for _, tsChild := range ts.Steps {
-			DealwithTestStep(tsChild, langType, level+1, checkPointIndex, steps, expects, srcCode)
+			DealwithTestStep(tsChild, langType, level+1, stepWidth, checkPointIndex, steps, expects, srcCode)
 		}
 	}
 }
