@@ -26,7 +26,7 @@ func main() {
 	case "run":
 		if err := runSet.Parse(os.Args[2:]); err == nil {
 			if langType == "" || scriptDir == "" {
-				flag.Usage()
+				runSet.Usage()
 				os.Exit(1)
 			} else {
 				action.Run(scriptDir, langType)
@@ -35,7 +35,7 @@ func main() {
 	case "gen":
 		if err := genSet.Parse(os.Args[2:]); err == nil {
 			if fromUrl == "" || langType == "" {
-				flag.Usage()
+				genSet.Usage()
 				os.Exit(1)
 			} else {
 				action.Gen(fromUrl, langType, independentExpectFile)
