@@ -1,17 +1,30 @@
-package main
+package action
 
 import (
 	"encoding/json"
-	"flag"
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/misc"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils"
-	"log"
-	"os"
 	"strconv"
 	"strings"
 )
+
+func Gen(remoteUrl string, langType string, independentExpectFile bool) {
+	buf := utils.ReadFileBuf(remoteUrl)
+
+	var resp model.Response
+	json.Unmarshal(buf, &resp)
+
+	if resp.Code != 1 {
+		fmt.Println(string(buf))
+		return
+	}
+
+	for _, testCase := range resp.Cases {
+		DealwithTestCase(testCase, langType, independentExpectFile)
+	}
+}
 
 func DealwithTestCase(tc model.TestCase, langType string, independentExpect bool) {
 	StepWidth := 20
@@ -125,36 +138,5 @@ func DealwithTestStep(ts model.TestStep, langType string, level int, stepWidth i
 		for _, tsChild := range ts.Steps {
 			DealwithTestStep(tsChild, langType, level+1, stepWidth, checkPointIndex, steps, expects, srcCode)
 		}
-	}
-}
-
-func usage() {
-	log.Fatalf("usage: gen-project.go -p path -l lang [-e] \n")
-}
-
-func main() {
-	independentExpect := flag.Bool("e", false, "Save ExpectResult in an independent file or not")
-	langType := flag.String("l", "", "Script Language like python, php etc.")
-	caseFile := flag.String("p", "", "Folder that contains the scripts")
-
-	flag.Parse()
-
-	if *caseFile == "" || *langType == "" || independentExpect == nil {
-		flag.Usage()
-		os.Exit(1)
-	}
-
-	buf := utils.ReadFileBuf(*caseFile)
-
-	var resp model.Response
-	json.Unmarshal(buf, &resp)
-
-	if resp.Code != 1 {
-		fmt.Println(string(buf))
-		return
-	}
-
-	for _, testCase := range resp.Cases {
-		DealwithTestCase(testCase, *langType, *independentExpect)
 	}
 }

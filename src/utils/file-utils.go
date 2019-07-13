@@ -3,6 +3,7 @@ package utils
 import (
 	"io/ioutil"
 	"os"
+	"path"
 	"regexp"
 	"strings"
 )
@@ -22,6 +23,9 @@ func ReadFileBuf(filePath string) []byte {
 }
 
 func WriteFile(filePath string, content string) {
+	dir := path.Dir(filePath)
+	MkDir(dir)
+
 	var d1 = []byte(content)
 	err2 := ioutil.WriteFile(filePath, d1, 0666) //写入文件(字节数组)
 	check(err2)
@@ -33,9 +37,9 @@ func check(e error) {
 	}
 }
 
-func CheckFileIsExist(filename string) bool {
+func CheckFileIsExist(path string) bool {
 	var exist = true
-	if _, err := os.Stat(filename); os.IsNotExist(err) {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
 		exist = false
 	}
 	return exist
@@ -101,7 +105,7 @@ func ReadCheckpointSteps(file string) []string {
 func ReadExpect(file string) [][]string {
 	content := ReadFile(file)
 
-	myExp := regexp.MustCompile(`<<<TC[\S\s]*expects:[^\n]*\n*([\S\s]*)\n+TC;`)
+	myExp := regexp.MustCompile(`<<<TC[\S\s]*expects:[^\n]*\n*([\S\s]*?)(readme:|TC;)`)
 	arr := myExp.FindStringSubmatch(content)
 
 	str := ""

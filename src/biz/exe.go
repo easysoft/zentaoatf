@@ -9,14 +9,14 @@ import (
 	"time"
 )
 
-func RunScripts(files []string, dir string, langType string, report *model.TestReport) {
+func ExeScripts(files []string, dir string, langType string, report *model.TestReport) {
 	fmt.Println("=== Begin to run test scripts ===")
 
 	startTime := time.Now().Unix()
 	report.StartTime = startTime
 
 	for _, file := range files {
-		RunScript(file, langType, dir)
+		ExeScript(file, langType, dir)
 	}
 
 	endTime := time.Now().Unix()
@@ -26,7 +26,7 @@ func RunScripts(files []string, dir string, langType string, report *model.TestR
 	report.Duration = secs
 }
 
-func RunScript(file string, langType string, dir string) {
+func ExeScript(file string, langType string, dir string) {
 	var command string
 	var logFile string
 
