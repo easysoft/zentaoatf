@@ -44,7 +44,7 @@ func DealwithTestCase(tc model.TestCase, langType string, independentExpect bool
 	}
 
 	template := utils.ReadFile("xdoc/script-template.txt")
-	content := string(fmt.Sprintf(string(template), langType, caseTitle, caseId,
+	content := string(fmt.Sprintf(string(template), langType, caseId, caseTitle,
 		strings.Join(steps, "\n"), expectsTxt, strings.Join(srcCode, "\n")))
 
 	fmt.Println(content)
@@ -100,7 +100,7 @@ func DealwithTestStep(ts model.TestStep, langType string, level int, stepWidth i
 		expectsLine := ""
 
 		expectsLine = "# \n"
-		expectsLine += "/* " + stepIdent + " 期望结果, 可以有多行 */\n"
+		expectsLine += "/* " + stepIdent + "期望结果, 可以有多行 */\n"
 
 		*expects = append(*expects, expectsLine)
 	}
@@ -115,7 +115,7 @@ func DealwithTestStep(ts model.TestStep, langType string, level int, stepWidth i
 			codeLine += `println("#")\n`
 		}
 
-		codeLine += "  // 开始" + stepIdent + " - " + stepExpect + "\n"
+		codeLine += "  // " + stepIdent + ": " + stepExpect + "\n"
 		codeLine += "/* 输出验证点实际结果 */\n"
 
 		*srcCode = append(*srcCode, codeLine)

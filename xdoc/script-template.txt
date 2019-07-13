@@ -1,12 +1,16 @@
 <?%s
 <<<TC
-title:    %s
-caseId:   %d
-steps:    @开头的为含验证点的步骤
+CaseId:   %d
+Title:    %s
+Steps:    @开头的为含验证点的步骤
 %s
 
 expects:
 %s
+readme:
+- 脚本输出日志和expects章节中，#号标注的验证点需保持一致对应
+- 具体自动化测试样例，请参考http://
+
 TC;
 
 /* 此处编写操作步骤代码 */

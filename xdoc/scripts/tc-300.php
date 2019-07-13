@@ -1,11 +1,14 @@
 <?php
 <<<TC
-title:    注册
-caseId:   300
-steps:    @开头的为含验证点的步骤
+CaseId:   300
+Title:    注册
+Steps:    @开头的为含验证点的步骤
 
 
 expects:
+
+readme:
+1. 脚本输出日志和expects章节中，#号标注的验证点需保持一致对应
 
 TC;
 
