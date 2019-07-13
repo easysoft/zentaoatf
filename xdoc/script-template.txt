@@ -9,7 +9,7 @@ expects:
 %s
 readme:
 - 脚本输出日志和expects章节中，#号标注的验证点需保持一致对应
-- 具体自动化测试样例，请参考http://
+- 参考样例https://github.com/easysoft/zentaoatf/tree/master/xdoc/sample
 
 TC;
 

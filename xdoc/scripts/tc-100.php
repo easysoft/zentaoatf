@@ -12,7 +12,8 @@ expects:
 /* @step1020期望结果, 可以有多行 */
 
 readme:
-1. 脚本输出日志和expects章节中，#号标注的验证点需保持一致对应
+- 脚本输出日志和expects章节中，#号标注的验证点需保持一致对应
+- 参考样例https://github.com/easysoft/zentaoatf/tree/master/xdoc/sample
 
 TC;
 

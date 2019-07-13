@@ -8,7 +8,8 @@ Steps:    @开头的为含验证点的步骤
 expects:
 
 readme:
-1. 脚本输出日志和expects章节中，#号标注的验证点需保持一致对应
+- 脚本输出日志和expects章节中，#号标注的验证点需保持一致对应
+- 参考样例https://github.com/easysoft/zentaoatf/tree/master/xdoc/sample
 
 TC;
 
