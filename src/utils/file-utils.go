@@ -10,7 +10,9 @@ import (
 
 func ReadFile(filePath string) string {
 	buf := ReadFileBuf(filePath)
-	return string(buf)
+	str := string(buf)
+	str = RemoveBlankLine(str)
+	return str
 }
 
 func ReadFileBuf(filePath string) []byte {
@@ -127,7 +129,7 @@ func ReadExpect(file string) [][]string {
 func ReadLog(logFile string) [][]string {
 	str := ReadFile(logFile)
 
-	ret := GenExpectArr(str)
+	ret := GenLogArr(str)
 	return ret
 }
 
@@ -145,6 +147,12 @@ func GenCheckpointStepArr(str string) []string {
 }
 
 func GenExpectArr(str string) [][]string {
+	return GenArr(str)
+}
+func GenLogArr(str string) [][]string {
+	return GenArr(str)
+}
+func GenArr(str string) [][]string {
 	ret := make([][]string, 0)
 	indx := -1
 	for _, line := range strings.Split(str, "\n") {

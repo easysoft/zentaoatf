@@ -12,8 +12,7 @@ func RemoveBlankLine(str string) string {
 	myExp := regexp.MustCompile(`\n{2,}`) // 连续换行
 	ret := myExp.ReplaceAllString(str, "\n")
 
-	//myExp = regexp.MustCompile(`#[^\n]*\n`) // 空行
-	//ret = myExp.ReplaceAllString(ret, "")
+	ret = strings.Trim(ret, "\n")
 
 	return ret
 }
