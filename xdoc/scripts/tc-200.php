@@ -20,6 +20,7 @@ expects:
 
 readme:
 - 脚本输出日志和expects章节中，#号标注的验证点需保持一致对应
+- 脚本中/* */注释的为编写代码的位置，//符号注释的为说明文字
 - 参考样例https://github.com/easysoft/zentaoatf/tree/master/xdoc/sample
 
 TC;
