@@ -126,11 +126,11 @@ func ReadExpect(file string) [][]string {
 	return ret
 }
 
-func ReadLog(logFile string) [][]string {
+func ReadLog(logFile string) (bool, [][]string) {
 	str := ReadFile(logFile)
 
-	ret := GenLogArr(str)
-	return ret
+	skip, ret := GenLogArr(str)
+	return skip, ret
 }
 
 func GenCheckpointStepArr(str string) []string {
@@ -147,16 +147,22 @@ func GenCheckpointStepArr(str string) []string {
 }
 
 func GenExpectArr(str string) [][]string {
-	return GenArr(str)
+	_, arr := GenArr(str, false)
+	return arr
 }
-func GenLogArr(str string) [][]string {
-	return GenArr(str)
+func GenLogArr(str string) (bool, [][]string) {
+	skip, arr := GenArr(str, true)
+	return skip, arr
 }
-func GenArr(str string) [][]string {
+func GenArr(str string, checkSkip bool) (bool, [][]string) {
 	ret := make([][]string, 0)
 	indx := -1
 	for _, line := range strings.Split(str, "\n") {
 		line := strings.TrimSpace(line)
+
+		if checkSkip && strings.ToLower(line) == "skip" {
+			return true, nil
+		}
 
 		if line == "#" {
 			ret = append(ret, make([]string, 0))
@@ -168,5 +174,5 @@ func GenArr(str string) [][]string {
 		}
 	}
 
-	return ret
+	return false, ret
 }

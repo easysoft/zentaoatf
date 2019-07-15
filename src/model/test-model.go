@@ -1,5 +1,7 @@
 package model
 
+import "github.com/easysoft/zentaoatf/src/misc"
+
 type Response struct {
 	Code  int
 	Cases []TestCase
@@ -25,6 +27,7 @@ type TestReport struct {
 
 	Pass      int
 	Fail      int
+	Skip      int
 	Total     int
 	StartTime int64
 	EndTime   int64
@@ -35,7 +38,7 @@ type TestReport struct {
 type CaseLog struct {
 	Numb   int
 	Path   string
-	Status bool
+	Status misc.ResultStatus
 
 	Steps []StepLog
 }

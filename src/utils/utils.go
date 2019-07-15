@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"github.com/easysoft/zentaoatf/src/misc"
 	"os"
 	"path"
 	"regexp"
@@ -35,6 +36,14 @@ func ScriptToExpectName(file string) string {
 	expectName := strings.TrimSuffix(file, fileSuffix) + ".ex"
 
 	return expectName
+}
+
+func BoolToPass(b bool) string {
+	if b {
+		return misc.PASS.String()
+	} else {
+		return misc.FAIL.String()
+	}
 }
 
 func GetOs() string {
