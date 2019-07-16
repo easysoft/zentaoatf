@@ -2,6 +2,6 @@ package action
 
 import "github.com/easysoft/zentaoatf/src/biz"
 
-func View(scriptDir string, langType string, files []string) {
-	biz.View(scriptDir, langType, files)
+func View(scriptDir string, files []string, langType string) {
+	biz.View(scriptDir, files, langType)
 }

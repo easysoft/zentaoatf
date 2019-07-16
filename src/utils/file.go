@@ -81,6 +81,21 @@ func GetAllFiles(dirPth string, ext string) (files []string, err error) {
 	return files, nil
 }
 
+func GetSpecifiedFiles(dirPth string, fileNames []string) (files []string, err error) {
+	sep := string(os.PathSeparator)
+	ret := make([]string, 0)
+
+	for _, name := range fileNames {
+		file := name
+		if strings.Index(file, sep) == -1 {
+			file = dirPth + sep + file
+		}
+		ret = append(ret, file)
+	}
+
+	return ret, nil
+}
+
 func MkDir(dir string) {
 	if !CheckFileIsExist(dir) {
 		os.Mkdir(dir, os.ModePerm)

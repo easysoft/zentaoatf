@@ -11,7 +11,7 @@ import (
 var printer *message.Printer
 var once sync.Once
 
-func GetInstance() *message.Printer {
+func GetI118() *message.Printer {
 	once.Do(func() {
 		InitConfig("src/res/messages_zh.json")
 		InitConfig("src/res/messages_en.json")

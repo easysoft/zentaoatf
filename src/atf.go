@@ -16,9 +16,10 @@ func main() {
 
 	var files strSlice
 
-	runSet := flag.NewFlagSet("atf run: \n Run test scripts in specific folder", flag.ContinueOnError)
+	runSet := flag.NewFlagSet("atf run: \n Run test scripts in specified folder", flag.ContinueOnError)
 	runSet.StringVar(&scriptDir, "d", "./", "Directory that contains test scripts")
 	runSet.StringVar(&langType, "l", "", "Script Language like python, php etc.")
+	runSet.Var(&files, "f", "Script files to run, no need langType if specified")
 
 	genSet := flag.NewFlagSet("atf gen: \n Generate test scripts from zentao test cases", flag.ContinueOnError)
 	genSet.StringVar(&fromUrl, "u", "", "Remote interface for test case export")
@@ -37,7 +38,7 @@ func main() {
 	if len(os.Args) < 2 {
 		fmt.Printf("Usage of atf: \n")
 
-		fmt.Printf("atf run - Run test scripts in specific folder \n")
+		fmt.Printf("atf run - Run test scripts in specified folder \n")
 		runSet.PrintDefaults()
 
 		fmt.Printf("\natf gen - Generate test scripts from zentao test cases \n")
@@ -56,11 +57,11 @@ func main() {
 	switch os.Args[1] {
 	case "run":
 		if err := runSet.Parse(os.Args[2:]); err == nil {
-			if langType == "" || scriptDir == "" {
+			if scriptDir == "" || (langType == "" && len(files) == 0) {
 				runSet.Usage()
 				os.Exit(1)
 			} else {
-				action.Run(scriptDir, langType)
+				action.Run(scriptDir, files, langType)
 			}
 		}
 	case "gen":
@@ -83,11 +84,11 @@ func main() {
 		}
 	case "view":
 		if err := viewSet.Parse(os.Args[2:]); err == nil {
-			if scriptDir == "" || (langType == "" || len(files) == 0) {
+			if scriptDir == "" || (langType == "" && len(files) == 0) {
 				viewSet.Usage()
 				os.Exit(1)
 			} else {
-				action.View(scriptDir, langType, files)
+				action.View(scriptDir, files, langType)
 			}
 		}
 	}

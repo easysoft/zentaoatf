@@ -7,12 +7,10 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils"
 )
 
-func CheckResults(dir string, langType string, report *model.TestReport) {
+func CheckResults(files []string, dir string, langType string, report *model.TestReport) {
 	fmt.Printf("\n=== Begin to analyse test result ===\n\n")
 
-	scriptFiles, _ := utils.GetAllFiles(dir, langType)
-
-	for _, scriptFile := range scriptFiles {
+	for _, scriptFile := range files {
 		logFile := utils.ScriptToLogName(dir, scriptFile)
 
 		stepArr := utils.ReadCheckpointSteps(scriptFile)
