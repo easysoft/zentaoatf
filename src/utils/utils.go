@@ -14,6 +14,7 @@ func RemoveBlankLine(str string) string {
 	ret := myExp.ReplaceAllString(str, "\n")
 
 	ret = strings.Trim(ret, "\n")
+	ret = strings.TrimSpace(ret)
 
 	return ret
 }

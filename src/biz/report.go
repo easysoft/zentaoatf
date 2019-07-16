@@ -20,7 +20,7 @@ func Print(report model.TestReport, workDir string) {
 	PrintAndLog(&logs, fmt.Sprintf("From %s to %s, duration %d sec",
 		startSec.Format("2006-01-02 15:04:05"), endSec.Format("2006-01-02 15:04:05"), report.Duration))
 
-	PrintAndLog(&logs, fmt.Sprintf("Total: %d, Fail: %d, Pass: %d, Skip: %d",
+	PrintAndLog(&logs, fmt.Sprintf("Totally: %d, Fail: %d, Pass: %d, Skip: %d",
 		report.Total, report.Pass, report.Fail, report.Skip))
 
 	for _, cs := range report.Cases {
