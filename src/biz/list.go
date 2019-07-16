@@ -2,6 +2,7 @@ package biz
 
 import (
 	"fmt"
+	"github.com/easysoft/zentaoatf/src/script"
 	"github.com/easysoft/zentaoatf/src/utils"
 )
 
@@ -11,6 +12,6 @@ func List(scriptDir string, langType string) {
 	fmt.Printf("Totally %d test cases \n", len(files))
 
 	for _, file := range files {
-		ReadFile(file)
+		script.Summary(file)
 	}
 }
