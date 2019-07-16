@@ -4,10 +4,13 @@ import (
 	"flag"
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/action"
+	"github.com/easysoft/zentaoatf/src/utils"
 	"os"
 )
 
 func main() {
+	flagSets := make([]flag.FlagSet, 0)
+
 	var scriptDir string
 	var langType string
 
@@ -17,43 +20,44 @@ func main() {
 	var path string
 	var files strSlice
 
-	runSet := flag.NewFlagSet("atf run: \n Run test scripts in specified folder", flag.ContinueOnError)
+	runSet := flag.NewFlagSet("atf run - Run test scripts in specified folder", flag.ContinueOnError)
+	flagSets = append(flagSets, *runSet)
 	runSet.StringVar(&scriptDir, "d", "./", "Directory that contains test scripts")
 	runSet.StringVar(&langType, "l", "", "Script Language like python, php etc.")
 	runSet.Var(&files, "f", "Script files to run, no need langType if specified")
 
-	rerunSet := flag.NewFlagSet("atf rerun: \n Rerun failed test scripts in specified result", flag.ContinueOnError)
+	rerunSet := flag.NewFlagSet("atf rerun - Rerun failed test scripts in specified result", flag.ContinueOnError)
+	flagSets = append(flagSets, *rerunSet)
 	rerunSet.StringVar(&path, "p", "", "Test result file path")
 
-	genSet := flag.NewFlagSet("atf gen: \n Generate test scripts from zentao test cases", flag.ContinueOnError)
+	genSet := flag.NewFlagSet("atf gen - Generate test scripts from zentao test cases", flag.ContinueOnError)
+	flagSets = append(flagSets, *genSet)
 	genSet.StringVar(&fromUrl, "u", "", "Remote interface for test case export")
 	genSet.StringVar(&langType, "l", "", "Script Language like python, php etc.")
 	genSet.BoolVar(&independentExpectFile, "e", false, "Save ExpectResult in an independent file or not")
 
-	listSet := flag.NewFlagSet("atf list: \n List test scripts", flag.ContinueOnError)
+	listSet := flag.NewFlagSet("atf list - List test scripts", flag.ContinueOnError)
+	flagSets = append(flagSets, *listSet)
 	listSet.StringVar(&scriptDir, "d", "./", "Directory that contains test scripts")
 	listSet.StringVar(&langType, "l", "", "Script Language like python, php etc.")
 
-	viewSet := flag.NewFlagSet("atf view: \n View test scripts", flag.ContinueOnError)
+	viewSet := flag.NewFlagSet("atf view - View test scripts", flag.ContinueOnError)
+	flagSets = append(flagSets, *viewSet)
 	viewSet.StringVar(&scriptDir, "d", "./", "Directory that contains test scripts")
 	viewSet.StringVar(&langType, "l", "", "Script Language like python, php etc.")
 	viewSet.Var(&files, "f", "Script files to view, no need langType if specified")
 
 	if len(os.Args) < 2 {
 		fmt.Printf("Usage of atf: \n")
+		// utils.PrintUsage(flagSets)
 
-		fmt.Printf("atf run - Run test scripts in specified folder \n")
-		runSet.PrintDefaults()
+		utils.PrintUsage(*runSet)
+		utils.PrintUsage(*rerunSet)
+		utils.PrintUsage(*genSet)
+		utils.PrintUsage(*listSet)
+		utils.PrintUsage(*viewSet)
 
-		fmt.Printf("\natf gen - Generate test scripts from zentao test cases \n")
-		genSet.PrintDefaults()
-
-		fmt.Printf("\natf list - List test cases \n")
-
-		fmt.Printf("\natf view - View test cases \n")
-
-		fmt.Printf("\nSample to use: \n")
-		fmt.Printf("TODO... \n")
+		utils.PrintSample()
 
 		os.Exit(1)
 	}

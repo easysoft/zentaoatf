@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"flag"
+	"fmt"
 	"github.com/easysoft/zentaoatf/src/misc"
 	"os"
 	"path"
@@ -58,4 +60,21 @@ func GetOs() string {
 }
 func IsMac() bool {
 	return GetOs() == "mac"
+}
+
+func PrintUsages(flagSets []flag.FlagSet) {
+	for _, flagSet := range flagSets {
+		fmt.Printf("\n %s \n", flagSet.Name())
+		flagSet.PrintDefaults()
+	}
+}
+
+func PrintUsage(flagSet flag.FlagSet) {
+	fmt.Printf("\n %s \n", flagSet.Name())
+	flagSet.PrintDefaults()
+}
+
+func PrintSample() {
+	fmt.Printf("\nSample to use: \n")
+	fmt.Printf("TODO... \n")
 }
