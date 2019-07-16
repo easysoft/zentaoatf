@@ -14,12 +14,16 @@ func main() {
 	var independentExpectFile bool
 	var fromUrl string
 
+	var path string
 	var files strSlice
 
 	runSet := flag.NewFlagSet("atf run: \n Run test scripts in specified folder", flag.ContinueOnError)
 	runSet.StringVar(&scriptDir, "d", "./", "Directory that contains test scripts")
 	runSet.StringVar(&langType, "l", "", "Script Language like python, php etc.")
 	runSet.Var(&files, "f", "Script files to run, no need langType if specified")
+
+	rerunSet := flag.NewFlagSet("atf rerun: \n Rerun failed test scripts in specified result", flag.ContinueOnError)
+	rerunSet.StringVar(&path, "p", "", "Test result file path")
 
 	genSet := flag.NewFlagSet("atf gen: \n Generate test scripts from zentao test cases", flag.ContinueOnError)
 	genSet.StringVar(&fromUrl, "u", "", "Remote interface for test case export")
@@ -62,6 +66,15 @@ func main() {
 				os.Exit(1)
 			} else {
 				action.Run(scriptDir, files, langType)
+			}
+		}
+	case "rerun":
+		if err := rerunSet.Parse(os.Args[2:]); err == nil {
+			if path == "" {
+				rerunSet.Usage()
+				os.Exit(1)
+			} else {
+				action.Rerun(path)
 			}
 		}
 	case "gen":

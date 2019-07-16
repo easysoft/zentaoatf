@@ -33,7 +33,7 @@ func (c ResultStatus) String() string {
 	case PASS:
 		return "PASS"
 	case FAIL:
-		return "FAILL"
+		return "FAIL"
 	case SKIP:
 		return "SKIP"
 	}

@@ -57,5 +57,5 @@ func Print(report model.TestReport, workDir string) {
 		}
 	}
 
-	utils.WriteFile(workDir+"/logs/report.txt", strings.Join(logs, "\n"))
+	utils.WriteFile(workDir+"/logs/result-"+utils.DateTimeStrLong(time.Now())+".txt", strings.Join(logs, "\n"))
 }

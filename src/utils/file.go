@@ -96,6 +96,37 @@ func GetSpecifiedFiles(dirPth string, fileNames []string) (files []string, err e
 	return ret, nil
 }
 
+func GetFailedFiles(resultFile string) ([]string, string, string, error) {
+	ret := make([]string, 0)
+	dir := ""
+	extName := ""
+
+	content := ReadFile(resultFile)
+
+	reg := regexp.MustCompile(`\nFAIL\s([^\n]+)\n`)
+	arr := reg.FindAllStringSubmatch(content, -1)
+
+	if len(arr) > 1 {
+		for _, file := range arr {
+			if len(file) == 1 {
+				continue
+			}
+
+			caseFile := RemoveBlankLine(file[1])
+			ret = append(ret, caseFile)
+
+			if dir == "" {
+				dir = path.Dir(caseFile)
+			}
+			if extName == "" {
+				extName = strings.TrimLeft(path.Ext(caseFile), ".")
+			}
+		}
+	}
+
+	return ret, dir, extName, nil
+}
+
 func MkDir(dir string) {
 	if !CheckFileIsExist(dir) {
 		os.Mkdir(dir, os.ModePerm)
