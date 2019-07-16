@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/action"
+	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"os"
 )
@@ -18,7 +19,7 @@ func main() {
 	var fromUrl string
 
 	var path string
-	var files strSlice
+	var files model.FlagSlice
 
 	runSet := flag.NewFlagSet("atf run - Run test scripts in specified folder", flag.ContinueOnError)
 	flagSets = append(flagSets, *runSet)
@@ -110,17 +111,4 @@ func main() {
 		}
 	}
 
-}
-
-type strSlice []string
-
-func (i *strSlice) String() string {
-	return fmt.Sprintf("%d", *i)
-}
-
-func (i *strSlice) Set(value string) error {
-	if value != "" {
-		*i = append(*i, value)
-	}
-	return nil
 }
