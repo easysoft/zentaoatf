@@ -24,9 +24,17 @@ func main() {
 	genSet.BoolVar(&independentExpectFile, "e", false, "Save ExpectResult in an independent file or not")
 
 	if len(os.Args) < 2 {
-		fmt.Println("Usage of atf:")
-		fmt.Println("  atf run -help")
-		fmt.Println("  atf gen -help")
+		fmt.Printf("Usage of atf:\n")
+
+		fmt.Printf("atf run - Run test scripts in specific folder\n")
+		runSet.PrintDefaults()
+
+		fmt.Printf("\natf gen - Generate test scripts from zentao test cases\n")
+		genSet.PrintDefaults()
+
+		fmt.Printf("\nSample to use:\n")
+		fmt.Printf("...\n")
+
 		os.Exit(1)
 	}
 
