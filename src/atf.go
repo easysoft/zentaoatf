@@ -52,7 +52,7 @@ func main() {
 		fmt.Printf("Usage of atf: \n")
 		// utils.PrintUsage(flagSets)
 
-		utils.PrintUsage(*runSet)
+		utils.PrintUsageWithSpaceLine(*runSet, false)
 		utils.PrintUsage(*rerunSet)
 		utils.PrintUsage(*genSet)
 		utils.PrintUsage(*listSet)

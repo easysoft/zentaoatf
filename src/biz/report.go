@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils"
+	"github.com/fatih/color"
 	"strings"
 	"time"
 )
@@ -20,11 +21,14 @@ func Print(report model.TestReport, workDir string) {
 	PrintAndLog(&logs, fmt.Sprintf("From %s to %s, duration %d sec",
 		startSec.Format("2006-01-02 15:04:05"), endSec.Format("2006-01-02 15:04:05"), report.Duration))
 
-	PrintAndLog(&logs, fmt.Sprintf("Totally: %d, Fail: %d, Pass: %d, Skip: %d",
-		report.Total, report.Pass, report.Fail, report.Skip))
+	PrintAndLog(&logs, fmt.Sprintf("Total: %d \n %s\n %s\n %s",
+		report.Total,
+		color.GreenString("Pass: %d", report.Pass),
+		color.RedString("Fail: %d", report.Fail),
+		color.BlueString("Skip: %d", report.Skip)))
 
 	for _, cs := range report.Cases {
-		PrintAndLog(&logs, fmt.Sprintf("\n%s %s", cs.Status.String(), cs.Path))
+		PrintAndLog(&logs, fmt.Sprintf("\n%s %s", colorStatus(cs.Status.String()), cs.Path))
 
 		if len(cs.Steps) > 0 {
 			count := 0
@@ -34,7 +38,7 @@ func Print(report model.TestReport, workDir string) {
 				}
 
 				PrintAndLog(&logs, fmt.Sprintf("  Step %d %s: %s", step.Numb, step.Name,
-					utils.BoolToPass(step.Status)))
+					colorStatus(utils.BoolToPass(step.Status))))
 
 				count1 := 0
 				for _, cp := range step.CheckPoints {
@@ -58,4 +62,19 @@ func Print(report model.TestReport, workDir string) {
 	}
 
 	utils.WriteFile(workDir+"/logs/result-"+utils.DateTimeStrLong(time.Now())+".txt", strings.Join(logs, "\n"))
+}
+
+func colorStatus(status string) string {
+	temp := strings.ToLower(status)
+
+	switch temp {
+	case "pass":
+		return color.GreenString(status)
+	case "fail":
+		return color.RedString(status)
+	case "skip":
+		return color.YellowString(status)
+	}
+
+	return status
 }

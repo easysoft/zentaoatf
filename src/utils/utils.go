@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/misc"
+	"github.com/fatih/color"
 	"os"
 	"path"
 	"regexp"
@@ -70,7 +71,15 @@ func PrintUsages(flagSets []flag.FlagSet) {
 }
 
 func PrintUsage(flagSet flag.FlagSet) {
-	fmt.Printf("\n %s \n", flagSet.Name())
+	PrintUsageWithSpaceLine(flagSet, true)
+}
+func PrintUsageWithSpaceLine(flagSet flag.FlagSet, spaceLine bool) {
+	prefix := ""
+	if spaceLine {
+		prefix = "\n"
+	}
+
+	fmt.Printf("%s %s \n", prefix, color.CyanString(flagSet.Name()))
 	flagSet.PrintDefaults()
 }
 
