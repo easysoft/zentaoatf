@@ -2,6 +2,12 @@
   "language": "en-US",
   "messages": [
     {
+      "id": "use_language",
+      "message": "Use English language",
+      "translation": "Use English language"
+    },
+
+    {
       "id": "HELLO_WORLD",
       "message": "Hello world!",
       "translation": "Hello world!"

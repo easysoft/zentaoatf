@@ -1,5 +1,1 @@
 package misc
-
-func init() {
-
-}

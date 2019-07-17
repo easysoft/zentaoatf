@@ -2,6 +2,12 @@
   "language": "zh",
   "messages": [
     {
+      "id": "use_language",
+      "message": "Use Chinese language",
+      "translation": "使用中文语言"
+    },
+
+    {
       "id": "HELLO_WORLD",
       "message": "Hello world!",
       "translation": "你好，世界"

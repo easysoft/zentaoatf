@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/action"
+	"github.com/easysoft/zentaoatf/src/config"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"os"
@@ -11,6 +12,8 @@ import (
 
 func main() {
 	flagSets := make([]flag.FlagSet, 0)
+
+	var language string
 
 	var scriptDir string
 	var langType string
@@ -20,6 +23,10 @@ func main() {
 
 	var path string
 	var files model.FlagSlice
+
+	configSet := flag.NewFlagSet("atf set/reset - Config parameters", flag.ContinueOnError)
+	flagSets = append(flagSets, *configSet)
+	configSet.StringVar(&language, "lang", "", "tool language, en or zh")
 
 	runSet := flag.NewFlagSet("atf run - Run test scripts in specified folder", flag.ContinueOnError)
 	flagSets = append(flagSets, *runSet)
@@ -52,7 +59,8 @@ func main() {
 		fmt.Printf("Usage of atf: \n")
 		// utils.PrintUsage(flagSets)
 
-		utils.PrintUsageWithSpaceLine(*runSet, false)
+		utils.PrintUsageWithSpaceLine(*configSet, false)
+		utils.PrintUsage(*runSet)
 		utils.PrintUsage(*rerunSet)
 		utils.PrintUsage(*genSet)
 		utils.PrintUsage(*listSet)
@@ -109,6 +117,22 @@ func main() {
 				action.View(scriptDir, files, langType)
 			}
 		}
-	}
 
+	case "set":
+		if err := configSet.Parse(os.Args[2:]); err == nil {
+			if language == "" {
+				configSet.Usage()
+				os.Exit(1)
+			} else {
+				action.Set("lang", language)
+				// more
+			}
+		}
+	case "reset":
+		action.Reset()
+	}
+}
+
+func init() {
+	config.InitConfig()
 }

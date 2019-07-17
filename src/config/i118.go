@@ -1,4 +1,4 @@
-package misc
+package config
 
 import (
 	"encoding/json"
@@ -9,13 +9,17 @@ import (
 )
 
 var printer *message.Printer
-var once sync.Once
 
-func GetI118() *message.Printer {
+func GetI118(lang string) *message.Printer {
+	var once sync.Once
 	once.Do(func() {
-		InitConfig("src/res/messages_zh.json")
-		InitConfig("src/res/messages_en.json")
-		printer = message.NewPrinter(language.SimplifiedChinese)
+		InitRes("src/res/messages_en.json")
+		if lang == "zh" {
+			InitRes("src/res/messages_zh.json")
+			printer = message.NewPrinter(language.SimplifiedChinese)
+		} else {
+			printer = message.NewPrinter(language.AmericanEnglish)
+		}
 	})
 	return printer
 }
@@ -44,7 +48,7 @@ func ReadI18nJson(file string) string {
 
 }
 
-func InitConfig(jsonPath string) {
+func InitRes(jsonPath string) {
 	var i18n I18n
 	str := ReadI18nJson(jsonPath)
 	json.Unmarshal([]byte(str), &i18n)
