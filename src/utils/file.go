@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"github.com/easysoft/zentaoatf/src/misc"
 	"io/ioutil"
 	"os"
 	"path"
@@ -90,7 +91,17 @@ func GetSpecifiedFiles(dirPth string, fileNames []string) (files []string, err e
 		if strings.Index(file, sep) == -1 {
 			file = dirPth + sep + file
 		}
-		ret = append(ret, file)
+
+		if path.Ext(file) == "."+misc.SuiteExt {
+			fileList := make([]string, 0)
+			GetSuiteFiles(dirPth, file, &fileList)
+
+			for _, f := range fileList {
+				ret = append(ret, f)
+			}
+		} else {
+			ret = append(ret, file)
+		}
 	}
 
 	return ret, nil
@@ -125,6 +136,34 @@ func GetFailedFiles(resultFile string) ([]string, string, string, error) {
 	}
 
 	return ret, dir, extName, nil
+}
+
+func GetSuiteFiles(dirPth string, name string, fileList *[]string) {
+	sep := string(os.PathSeparator)
+
+	file := name
+	if strings.Index(file, sep) == -1 {
+		file = dirPth + sep + file
+	}
+
+	content := ReadFile(file)
+	for _, line := range strings.Split(content, "\n") {
+		line := strings.TrimSpace(line)
+		if line == "" {
+			return
+		}
+
+		file := line
+		if strings.Index(file, sep) == -1 {
+			file = dirPth + sep + file
+		}
+
+		if path.Ext(file) == "."+misc.SuiteExt {
+			GetSuiteFiles(dirPth, file, fileList)
+		} else {
+			*fileList = append(*fileList, file)
+		}
+	}
 }
 
 func MkDir(dir string) {

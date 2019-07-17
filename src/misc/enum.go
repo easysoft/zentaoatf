@@ -39,3 +39,7 @@ func (c ResultStatus) String() string {
 	}
 	return "UNKNOWN"
 }
+
+const (
+	SuiteExt string = "suite"
+)
