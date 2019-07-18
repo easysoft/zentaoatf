@@ -1,4 +1,4 @@
-package config
+package utils
 
 const (
 	SuiteExt string = "suite"

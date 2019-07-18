@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 	"regexp"
@@ -9,18 +8,7 @@ import (
 	"strings"
 )
 
-type ScreenSizeStruct struct {
-	Width  int
-	Height int
-}
-
-var ScreenSize ScreenSizeStruct
-
-func GetTermSize() ScreenSizeStruct {
-	if ScreenSize.Width != 0 {
-		return ScreenSize
-	}
-
+func InitScreenSize() {
 	var cmd string
 	var width int
 	var height int
@@ -47,10 +35,8 @@ func GetTermSize() ScreenSizeStruct {
 		width, height = noWindowsSize()
 	}
 
-	ScreenSize.Width = width
-	ScreenSize.Height = height
-
-	return ScreenSize
+	Conf.Width = width
+	Conf.Height = height
 }
 
 func noWindowsSize() (int, int) {
@@ -64,9 +50,6 @@ func noWindowsSize() (int, int) {
 	}
 	width, height, err := parseSize(output)
 
-	if width == 0 {
-		fmt.Printf("  IDE debug mode will return:")
-	}
 	return width, height
 }
 func parseSize(input string) (int, int, error) {

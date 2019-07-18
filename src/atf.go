@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/action"
-	"github.com/easysoft/zentaoatf/src/config"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"os"
@@ -134,8 +133,5 @@ func main() {
 }
 
 func init() {
-	config.InitConfig()
-
-	size := utils.GetTermSize()
-	fmt.Printf("  width: %d, height: %d \n", size.Width, size.Height)
+	utils.InitConfig()
 }

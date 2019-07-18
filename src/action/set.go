@@ -2,20 +2,20 @@ package action
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/config"
+	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/fatih/color"
 )
 
 func Set(param string, val string) {
 	if param == "lang" {
-		if val == config.LanguageEN || val == config.LanguageZH {
-			config.Set(param, val)
+		if val == utils.LanguageEN || val == utils.LanguageZH {
+			utils.Set(param, val)
 		} else {
-			fmt.Println(color.RedString("only %s or %s language is acceptable", config.LanguageEN, config.LanguageZH))
+			fmt.Println(color.RedString("only %s or %s language is acceptable", utils.LanguageEN, utils.LanguageZH))
 		}
 	}
 }
 
 func Reset() {
-	Set("ZENTAO_LANG", config.LanguageDefault)
+	Set("ZENTAO_LANG", utils.LanguageDefault)
 }

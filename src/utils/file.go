@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"github.com/easysoft/zentaoatf/src/config"
 	"io/ioutil"
 	"os"
 	"path"
@@ -92,7 +91,7 @@ func GetSpecifiedFiles(dirPth string, fileNames []string) (files []string, err e
 			file = dirPth + sep + file
 		}
 
-		if path.Ext(file) == "."+config.SuiteExt {
+		if path.Ext(file) == "."+SuiteExt {
 			fileList := make([]string, 0)
 			GetSuiteFiles(dirPth, file, &fileList)
 
@@ -158,7 +157,7 @@ func GetSuiteFiles(dirPth string, name string, fileList *[]string) {
 			file = dirPth + sep + file
 		}
 
-		if path.Ext(file) == "."+config.SuiteExt {
+		if path.Ext(file) == "."+SuiteExt {
 			GetSuiteFiles(dirPth, file, fileList)
 		} else {
 			*fileList = append(*fileList, file)
