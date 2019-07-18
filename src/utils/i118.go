@@ -2,7 +2,7 @@ package utils
 
 import (
 	"encoding/json"
-	data2 "github.com/easysoft/zentaoatf"
+	"github.com/easysoft/zentaoatf/res"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 	"io/ioutil"
@@ -14,7 +14,7 @@ var printer *message.Printer
 func GetI118(lang string) *message.Printer {
 	var once sync.Once
 	once.Do(func() {
-		data, err := data2.Asset(EnRes)
+		data, err := res.Asset(EnRes)
 		if err == nil {
 			InitResFromAsset(data)
 		} else {
@@ -22,7 +22,7 @@ func GetI118(lang string) *message.Printer {
 		}
 
 		if lang == "zh" {
-			data, err := data2.Asset(ZhRes)
+			data, err := res.Asset(ZhRes)
 			if err == nil {
 				InitResFromAsset(data)
 			} else {

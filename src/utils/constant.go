@@ -9,6 +9,6 @@ const (
 
 	ConfFile = "conf.yaml"
 
-	EnRes = "src/res/messages_en.json"
-	ZhRes = "src/res/messages_zh.json"
+	EnRes = "res/messages_en.json"
+	ZhRes = "res/messages_zh.json"
 )

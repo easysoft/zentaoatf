@@ -1,3 +1,4 @@
 GO_ENABLED=0 GOOS=linux GOARCH=amd64 go build src/atf.go
-
 CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build src/atf.go
+
+go-bindata -o=res/res.go -pkg=res res/
