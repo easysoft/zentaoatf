@@ -25,9 +25,7 @@ func GetInst() Config {
 }
 
 func InitConfig() {
-	config := Config{}
-	buf, _ := ioutil.ReadFile("config.yaml")
-	yaml.Unmarshal(buf, &config)
+	config := GetInst()
 
 	fmt.Println(color.BlueString("current config %+v", config))
 
@@ -36,7 +34,7 @@ func InitConfig() {
 }
 
 func Set(param string, val string) {
-	buf, _ := ioutil.ReadFile("config.yaml")
+	buf, _ := ioutil.ReadFile(ConfigFile)
 	yaml.Unmarshal(buf, &config)
 
 	if param == "lang" {
