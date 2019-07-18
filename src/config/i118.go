@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	data2 "github.com/easysoft/zentaoatf"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 	"io/ioutil"
@@ -11,11 +12,26 @@ import (
 var printer *message.Printer
 
 func GetI118(lang string) *message.Printer {
+	en := "src/res/messages_en.json"
+	zh := "src/res/messages_zh.json"
+
 	var once sync.Once
 	once.Do(func() {
-		InitRes("src/res/messages_en.json")
+		data, err := data2.Asset(en)
+		if err == nil {
+			InitResFromAsset(data)
+		} else {
+			InitRes(en)
+		}
+
 		if lang == "zh" {
-			InitRes("src/res/messages_zh.json")
+			data, err := data2.Asset(zh)
+			if err == nil {
+				InitResFromAsset(data)
+			} else {
+				InitRes(zh)
+			}
+
 			printer = message.NewPrinter(language.SimplifiedChinese)
 		} else {
 			printer = message.NewPrinter(language.AmericanEnglish)
@@ -48,6 +64,17 @@ func ReadI18nJson(file string) string {
 
 }
 
+func InitResFromAsset(bytes []byte) {
+	var i18n I18n
+	json.Unmarshal(bytes, &i18n)
+
+	msgArr := i18n.Messages
+	tag := language.MustParse(i18n.Language)
+
+	for _, e := range msgArr {
+		message.SetString(tag, e.Id, e.Translation)
+	}
+}
 func InitRes(jsonPath string) {
 	var i18n I18n
 	str := ReadI18nJson(jsonPath)

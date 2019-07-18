@@ -26,7 +26,7 @@ func GetTermSize() ScreenSizeStruct {
 	var height int
 
 	if IsWin() {
-		cmd = "mode" // for win7
+		cmd = "mode" // tested for win7
 		out, _ := ExeShell(cmd)
 
 		//out := `设备状态 CON:
