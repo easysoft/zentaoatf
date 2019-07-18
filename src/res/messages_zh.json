@@ -2,6 +2,26 @@
   "language": "zh",
   "messages": [
     {
+      "id": "current_config",
+      "message": "Current config",
+      "translation": "当前配置"
+    },
+    {
+      "id": "set_config",
+      "message": "set config",
+      "translation": "设置%s为%s"
+    },
+    {
+      "id": "lang",
+      "message": "lang",
+      "translation": "语言"
+    },
+    {
+      "id": "zh",
+      "message": "zh",
+      "translation": "中文"
+    },
+    {
       "id": "use_language",
       "message": "Use Chinese language",
       "translation": "使用中文语言"

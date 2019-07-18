@@ -5,6 +5,7 @@ import (
 	"github.com/fatih/color"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
+	"reflect"
 	"sync"
 )
 
@@ -14,23 +15,17 @@ type Config struct {
 
 var config Config
 
-func GetInst() Config {
-	var once sync.Once
-	once.Do(func() {
-		config = Config{}
-		buf, _ := ioutil.ReadFile(ConfigFile)
-		yaml.Unmarshal(buf, &config)
-	})
-	return config
-}
-
 func InitConfig() {
 	config := GetInst()
 
-	fmt.Println(color.BlueString("current config %+v", config))
-
 	p := GetI118(config.Language)
-	fmt.Println(p.Sprintf("HELLO_1", "Peter"))
+	color.Blue(p.Sprintf("current_config", ""))
+
+	val := reflect.ValueOf(config)
+	typeOfS := val.Type()
+	for i := 0; i < reflect.ValueOf(config).NumField(); i++ {
+		fmt.Printf("  %s: %v \n", typeOfS.Field(i).Name, val.Field(i).Interface())
+	}
 }
 
 func Set(param string, val string) {
@@ -42,6 +37,20 @@ func Set(param string, val string) {
 
 		data, _ := yaml.Marshal(&config)
 		ioutil.WriteFile(ConfigFile, data, 0666)
+
+		config := GetInst()
+		p := GetI118(GetInst().Language)
+		color.Blue(p.Sprintf("set_config", p.Sprintf("lang"), p.Sprintf(config.Language)))
 	}
 
+}
+
+func GetInst() Config {
+	var once sync.Once
+	once.Do(func() {
+		config = Config{}
+		buf, _ := ioutil.ReadFile(ConfigFile)
+		yaml.Unmarshal(buf, &config)
+	})
+	return config
 }

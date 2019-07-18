@@ -2,9 +2,30 @@
   "language": "en-US",
   "messages": [
     {
+      "id": "current_config",
+      "message": "current config",
+      "translation": "current config"
+    },
+    {
+      "id": "set_config",
+      "message": "set config",
+      "translation": "set %s to %s"
+    },
+    {
       "id": "use_language",
       "message": "Use English language",
       "translation": "Use English language"
+    },
+
+    {
+      "id": "lang",
+      "message": "lang",
+      "translation": "language"
+    },
+    {
+      "id": "zh",
+      "message": "zh",
+      "translation": "Chinese"
     },
 
     {
