@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"fmt"
+	"github.com/fatih/color"
 	"os"
 	"os/exec"
 	"regexp"
@@ -37,6 +39,20 @@ func InitScreenSize() {
 
 	Conf.Width = width
 	Conf.Height = height
+}
+
+func PrintWholeLine(msg string, char string, attr color.Attribute) {
+	fixLen := (Conf.Width - len(msg)) / 2
+	if fixLen < 0 { // debug mode
+		fixLen = 6
+	}
+
+	fmt.Println(fixLen)
+
+	fixStr := strings.Repeat(char, fixLen)
+
+	clr := color.New(attr)
+	clr.Printf("%s%s%s", fixStr, msg, fixStr)
 }
 
 func noWindowsSize() (int, int) {

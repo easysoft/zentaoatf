@@ -11,7 +11,8 @@ import (
 )
 
 func ExeScripts(files []string, dir string, langType string, report *model.TestReport) {
-	fmt.Println(color.BlueString("=== Begin to run test scripts ==="))
+	msg := "Begin to run test scripts"
+	utils.PrintWholeLine(msg, "=", color.FgBlue)
 
 	startTime := time.Now().Unix()
 	report.StartTime = startTime
