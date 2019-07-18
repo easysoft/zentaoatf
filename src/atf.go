@@ -135,4 +135,7 @@ func main() {
 
 func init() {
 	config.InitConfig()
+
+	size := utils.GetTermSize()
+	fmt.Printf("  width: %d, height: %d \n", size.Width, size.Height)
 }

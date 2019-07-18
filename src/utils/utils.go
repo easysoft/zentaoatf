@@ -59,6 +59,12 @@ func GetOs() string {
 		return osName
 	}
 }
+func IsWin() bool {
+	return GetOs() == "windows"
+}
+func IsLinux() bool {
+	return GetOs() == "linux"
+}
 func IsMac() bool {
 	return GetOs() == "mac"
 }
@@ -87,3 +93,11 @@ func PrintSample() {
 	fmt.Printf("\nSample to use: \n")
 	fmt.Printf("TODO... \n")
 }
+
+//func PrintStuct(s interface{}) {
+//	val := reflect.ValueOf(s)
+//	typeOfS := val.Type()
+//	for i := 0; i < reflect.ValueOf(s).NumField(); i++ {
+//		fmt.Printf("  %s: %v \n", typeOfS.Field(i).Name, val.Field(i).Interface())
+//	}
+//}

@@ -9,8 +9,13 @@ import (
 	"strings"
 )
 
-func ExeShell(s string) (string, error) {
-	cmd := exec.Command("/bin/bash", "-c", s)
+func ExeShell(cmdStr string) (string, error) {
+	var cmd *exec.Cmd
+	if IsWin() {
+		cmd = exec.Command(cmdStr)
+	} else {
+		cmd = exec.Command("/bin/bash", "-c", cmdStr)
+	}
 
 	var out bytes.Buffer
 	cmd.Stdout = &out

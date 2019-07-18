@@ -9,6 +9,11 @@ import (
 	"sync"
 )
 
+type ScreenSizeStruct struct {
+	width  int
+	height int
+}
+
 type Config struct {
 	Language string
 }
@@ -16,8 +21,9 @@ type Config struct {
 var config Config
 
 func InitConfig() {
-	config := GetInst()
+	config = GetInst()
 
+	// language
 	p := GetI118(config.Language)
 	color.Blue(p.Sprintf("current_config", ""))
 
@@ -29,14 +35,14 @@ func InitConfig() {
 }
 
 func Set(param string, val string) {
-	buf, _ := ioutil.ReadFile(ConfigFile)
+	buf, _ := ioutil.ReadFile(ConfFile)
 	yaml.Unmarshal(buf, &config)
 
 	if param == "lang" {
 		config.Language = val
 
 		data, _ := yaml.Marshal(&config)
-		ioutil.WriteFile(ConfigFile, data, 0666)
+		ioutil.WriteFile(ConfFile, data, 0666)
 
 		config := GetInst()
 		p := GetI118(GetInst().Language)
@@ -49,7 +55,7 @@ func GetInst() Config {
 	var once sync.Once
 	once.Do(func() {
 		config = Config{}
-		buf, _ := ioutil.ReadFile(ConfigFile)
+		buf, _ := ioutil.ReadFile(ConfFile)
 		yaml.Unmarshal(buf, &config)
 	})
 	return config

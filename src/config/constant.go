@@ -7,5 +7,5 @@ const (
 	LanguageEN      = "en"
 	LanguageZH      = "zh"
 
-	ConfigFile = "conf.yaml"
+	ConfFile = "conf.yaml"
 )
