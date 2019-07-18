@@ -9,9 +9,9 @@ import (
 	"sync"
 )
 
-var printer *message.Printer
+var I118Prt *message.Printer
 
-func GetI118(lang string) *message.Printer {
+func InitI118(lang string) {
 	var once sync.Once
 	once.Do(func() {
 		data, err := res.Asset(EnRes)
@@ -29,12 +29,11 @@ func GetI118(lang string) *message.Printer {
 				InitRes(ZhRes)
 			}
 
-			printer = message.NewPrinter(language.SimplifiedChinese)
+			I118Prt = message.NewPrinter(language.SimplifiedChinese)
 		} else {
-			printer = message.NewPrinter(language.AmericanEnglish)
+			I118Prt = message.NewPrinter(language.AmericanEnglish)
 		}
 	})
-	return printer
 }
 
 type I18n struct {

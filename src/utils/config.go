@@ -24,8 +24,9 @@ func InitConfig() {
 	// screen size
 	InitScreenSize()
 
-	p := GetI118(Conf.Language)
-	color.Blue(p.Sprintf("current_config", ""))
+	// internationalization
+	InitI118(Conf.Language)
+	color.Blue(I118Prt.Sprintf("current_config", ""))
 
 	// print config
 	val := reflect.ValueOf(Conf)
@@ -45,8 +46,7 @@ func Set(param string, val string) {
 		data, _ := yaml.Marshal(&Conf)
 		ioutil.WriteFile(ConfFile, data, 0666)
 
-		p := GetI118(Conf.Language)
-		color.Blue(p.Sprintf("set_config", p.Sprintf("lang"), p.Sprintf(Conf.Language)))
+		color.Blue(I118Prt.Sprintf("set_config", I118Prt.Sprintf("lang"), I118Prt.Sprintf(Conf.Language)))
 	}
 
 }
