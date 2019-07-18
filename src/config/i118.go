@@ -12,24 +12,21 @@ import (
 var printer *message.Printer
 
 func GetI118(lang string) *message.Printer {
-	en := "src/res/messages_en.json"
-	zh := "src/res/messages_zh.json"
-
 	var once sync.Once
 	once.Do(func() {
-		data, err := data2.Asset(en)
+		data, err := data2.Asset(EnRes)
 		if err == nil {
 			InitResFromAsset(data)
 		} else {
-			InitRes(en)
+			InitRes(EnRes)
 		}
 
 		if lang == "zh" {
-			data, err := data2.Asset(zh)
+			data, err := data2.Asset(ZhRes)
 			if err == nil {
 				InitResFromAsset(data)
 			} else {
-				InitRes(zh)
+				InitRes(ZhRes)
 			}
 
 			printer = message.NewPrinter(language.SimplifiedChinese)

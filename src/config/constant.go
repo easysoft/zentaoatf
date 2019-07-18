@@ -8,4 +8,7 @@ const (
 	LanguageZH      = "zh"
 
 	ConfFile = "conf.yaml"
+
+	EnRes = "src/res/messages_en.json"
+	ZhRes = "src/res/messages_zh.json"
 )
