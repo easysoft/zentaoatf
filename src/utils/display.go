@@ -1,13 +1,13 @@
 package utils
 
 import (
-	"fmt"
 	"github.com/fatih/color"
 	"os"
 	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 )
 
 func InitScreenSize() {
@@ -42,12 +42,10 @@ func InitScreenSize() {
 }
 
 func PrintWholeLine(msg string, char string, attr color.Attribute) {
-	fixLen := (Conf.Width - len(msg)) / 2
+	fixLen := (Conf.Width - utf8.RuneCountInString(msg)) / 2
 	if fixLen < 0 { // debug mode
-		fixLen = 6
+		fixLen = 10
 	}
-
-	fmt.Println(fixLen)
 
 	fixStr := strings.Repeat(char, fixLen)
 

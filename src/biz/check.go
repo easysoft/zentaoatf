@@ -9,7 +9,10 @@ import (
 )
 
 func CheckResults(files []string, dir string, langType string, report *model.TestReport) {
-	fmt.Printf(color.BlueString("\n=== Begin to analyse test result ===\n\n"))
+	fmt.Println()
+	msg := "Begin to analyse test result"
+	utils.PrintWholeLine(msg, "=", color.FgBlue)
+	fmt.Println("\n")
 
 	for _, scriptFile := range files {
 		logFile := utils.ScriptToLogName(dir, scriptFile)
@@ -98,4 +101,9 @@ func ValidateStep(langType string, expectLines []string, actualLines []string) (
 func PrintAndLog(logs *[]string, str string) {
 	*logs = append(*logs, str)
 	fmt.Println(str)
+}
+
+func PrintAndLogColorLn(logs *[]string, str string, attr color.Attribute) {
+	*logs = append(*logs, str)
+	color.New(attr).Printf(str + "\n")
 }

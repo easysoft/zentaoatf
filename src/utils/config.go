@@ -28,7 +28,7 @@ func InitConfig() {
 	InitI118(Conf.Language)
 	color.Blue(I118Prt.Sprintf("current_config", ""))
 
-	// print config
+	// print config object
 	val := reflect.ValueOf(Conf)
 	typeOfS := val.Type()
 	for i := 0; i < reflect.ValueOf(Conf).NumField(); i++ {

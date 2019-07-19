@@ -21,14 +21,18 @@ func Print(report model.TestReport, workDir string) {
 	PrintAndLog(&logs, fmt.Sprintf("From %s to %s, duration %d sec",
 		startSec.Format("2006-01-02 15:04:05"), endSec.Format("2006-01-02 15:04:05"), report.Duration))
 
-	PrintAndLog(&logs, fmt.Sprintf("Total: %d \n %s\n %s\n %s",
-		report.Total,
-		color.GreenString("Pass: %d", report.Pass),
-		color.RedString("Fail: %d", report.Fail),
-		color.BlueString("Skip: %d", report.Skip)))
+	PrintAndLog(&logs, fmt.Sprintf("Total: %d", report.Total))
+	PrintAndLogColorLn(&logs, fmt.Sprintf("Pass: %d", report.Pass), color.FgGreen)
+	PrintAndLogColorLn(&logs, fmt.Sprintf("Fail: %d", report.Fail), color.FgRed)
+	PrintAndLogColorLn(&logs, fmt.Sprintf("Skip: %d", report.Skip), color.FgYellow)
 
 	for _, cs := range report.Cases {
-		PrintAndLog(&logs, fmt.Sprintf("\n%s %s", colorStatus(cs.Status.String()), cs.Path))
+		str := "\n%s %s"
+		status := cs.Status.String()
+		statusColor := colorStatus(status)
+
+		logs = append(logs, fmt.Sprintf(str, status, cs.Path))
+		fmt.Printf(str, statusColor, cs.Path)
 
 		if len(cs.Steps) > 0 {
 			count := 0
@@ -37,8 +41,12 @@ func Print(report model.TestReport, workDir string) {
 					PrintAndLog(&logs, "")
 				}
 
-				PrintAndLog(&logs, fmt.Sprintf("  Step %d %s: %s", step.Numb, step.Name,
-					colorStatus(utils.BoolToPass(step.Status))))
+				str := "  Step %d %s: %s"
+				status := utils.BoolToPass(step.Status)
+				statusColor := colorStatus(status)
+
+				logs = append(logs, fmt.Sprintf(str, step.Numb, step.Name, status))
+				fmt.Printf(str, step.Numb, step.Name, statusColor+"\n")
 
 				count1 := 0
 				for _, cp := range step.CheckPoints {
