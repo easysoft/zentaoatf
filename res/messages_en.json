@@ -46,6 +46,63 @@
       "id": "end_case",
       "message": "End Case",
       "translation": "End Case %s at %s, spend %dsecs"
+    },
+
+    {
+      "id": "begin_analyse",
+      "message": "Run scripts",
+      "translation": "Begin to analyse test result"
+    },
+    {
+      "id": "run_scripts",
+      "message": "Run scripts",
+      "translation": "Run scripts in folder '%s' on %s OS"
+    },
+    {
+      "id": "time_from_to",
+      "message": "From To",
+      "translation": "From %s to %s, spend %d secs"
+    },
+    {
+      "id": "total",
+      "message": "Total",
+      "translation": "Total"
+    },
+    {
+      "id": "pass",
+      "message": "Pass",
+      "translation": "Pass"
+    },
+    {
+      "id": "fail",
+      "message": "Fail",
+      "translation": "Fail"
+    },
+    {
+      "id": "skip",
+      "message": "Skip",
+      "translation": "Skip"
+    },
+
+    {
+      "id": "step",
+      "message": "Step",
+      "translation": "Step"
+    },
+    {
+      "id": "checkpoint",
+      "message": "Checkpoint",
+      "translation": "Checkpoint"
+    },
+    {
+      "id": "expect_result",
+      "message": "Expect Result",
+      "translation": "Expect Result"
+    },
+    {
+      "id": "actual_result",
+      "message": "Actual Result",
+      "translation": "Actual Result"
     }
   ]
 }

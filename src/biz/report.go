@@ -15,16 +15,15 @@ func Print(report model.TestReport, workDir string) {
 
 	logs := make([]string, 0)
 
-	PrintAndLog(&logs, fmt.Sprintf("Run scripts in folder \"%s\" on %s OS\n",
-		report.Path, report.Env))
+	PrintAndLog(&logs, utils.I118Prt.Sprintf("run_scripts", report.Path, report.Env))
 
-	PrintAndLog(&logs, fmt.Sprintf("From %s to %s, duration %d sec",
+	PrintAndLog(&logs, utils.I118Prt.Sprintf("time_from_to",
 		startSec.Format("2006-01-02 15:04:05"), endSec.Format("2006-01-02 15:04:05"), report.Duration))
 
-	PrintAndLog(&logs, fmt.Sprintf("Total: %d", report.Total))
-	PrintAndLogColorLn(&logs, fmt.Sprintf("Pass: %d", report.Pass), color.FgGreen)
-	PrintAndLogColorLn(&logs, fmt.Sprintf("Fail: %d", report.Fail), color.FgRed)
-	PrintAndLogColorLn(&logs, fmt.Sprintf("Skip: %d", report.Skip), color.FgYellow)
+	PrintAndLog(&logs, fmt.Sprintf("%s: %d", utils.I118Prt.Sprintf("total"), report.Total))
+	PrintAndLogColorLn(&logs, fmt.Sprintf("%s: %d", utils.I118Prt.Sprintf("pass"), report.Pass), color.FgGreen)
+	PrintAndLogColorLn(&logs, fmt.Sprintf("%s: %d", utils.I118Prt.Sprintf("fail"), report.Fail), color.FgRed)
+	PrintAndLogColorLn(&logs, fmt.Sprintf("%s: %d", utils.I118Prt.Sprintf("skip"), report.Skip), color.FgYellow)
 
 	for _, cs := range report.Cases {
 		str := "\n%s %s"

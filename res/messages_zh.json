@@ -44,7 +44,64 @@
     {
       "id": "end_case",
       "message": "End Case",
-      "translation": "结束用例 %s %s，持续%d秒"
+      "translation": "结束用例 %s %s，耗时%d秒"
+    },
+
+    {
+      "id": "begin_analyse",
+      "message": "Run scripts",
+      "translation": "开始分析测试结果"
+    },
+    {
+      "id": "run_scripts",
+      "message": "Run scripts",
+      "translation": "运行脚本'%s'于%s操作系统"
+    },
+    {
+      "id": "time_from_to",
+      "message": "From To",
+      "translation": "从%s到%s, 耗时%d秒"
+    },
+    {
+      "id": "total",
+      "message": "Total",
+      "translation": "合计"
+    },
+    {
+      "id": "pass",
+      "message": "Pass",
+      "translation": "通过"
+    },
+    {
+      "id": "fail",
+      "message": "Fail",
+      "translation": "失败"
+    },
+    {
+      "id": "skip",
+      "message": "Skip",
+      "translation": "跳过"
+    },
+
+    {
+      "id": "step",
+      "message": "Step",
+      "translation": "步骤"
+    },
+    {
+      "id": "checkpoint",
+      "message": "Checkpoint",
+      "translation": "验证点"
+    },
+    {
+      "id": "expect_result",
+      "message": "Expect Result",
+      "translation": "期待结果"
+    },
+    {
+      "id": "actual_result",
+      "message": "Actual Result",
+      "translation": "实际结果"
     }
   ]
 }
