@@ -27,6 +27,26 @@
       "message": "zh",
       "translation": "Chinese"
     },
+    {
+      "id": "start_execution",
+      "message": "Start Execution",
+      "translation": "Start Execution"
+    },
+    {
+      "id": "end_execution",
+      "message": "End Execution",
+      "translation": "End Execution"
+    },
+    {
+      "id": "start_case",
+      "message": "Start Case",
+      "translation": "Start Case %s at %s"
+    },
+    {
+      "id": "end_case",
+      "message": "End Case",
+      "translation": "End Case   %s at %s, spend %dsecs"
+    },
 
     {
       "id": "HELLO_WORLD",

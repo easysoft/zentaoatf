@@ -26,6 +26,26 @@
       "message": "Use Chinese language",
       "translation": "使用中文语言"
     },
+    {
+      "id": "start_execution",
+      "message": "Start Execution",
+      "translation": "开始执行"
+    },
+    {
+      "id": "end_execution",
+      "message": "End Execution",
+      "translation": "结束执行"
+    },
+    {
+      "id": "start_case",
+      "message": "Start Case",
+      "translation": "开始用例 %s %s"
+    },
+    {
+      "id": "end_case",
+      "message": "End Case",
+      "translation": "结束用例 %s %s，持续%d秒"
+    },
 
     {
       "id": "HELLO_WORLD",

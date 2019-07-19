@@ -14,19 +14,21 @@ var I118Prt *message.Printer
 func InitI118(lang string) {
 	var once sync.Once
 	once.Do(func() {
-		data, err := res.Asset(EnRes)
-		if err == nil {
-			InitResFromAsset(data)
-		} else {
+		isDebug := IsDebug()
+
+		if isDebug {
 			InitRes(EnRes)
+		} else {
+			data, _ := res.Asset(EnRes)
+			InitResFromAsset(data)
 		}
 
 		if lang == "zh" {
-			data, err := res.Asset(ZhRes)
-			if err == nil {
-				InitResFromAsset(data)
-			} else {
+			if isDebug {
 				InitRes(ZhRes)
+			} else {
+				data, _ := res.Asset(ZhRes)
+				InitResFromAsset(data)
 			}
 
 			I118Prt = message.NewPrinter(language.SimplifiedChinese)

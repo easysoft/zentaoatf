@@ -42,15 +42,17 @@ func InitScreenSize() {
 }
 
 func PrintWholeLine(msg string, char string, attr color.Attribute) {
-	fixLen := (Conf.Width - utf8.RuneCountInString(msg)) / 2
-	if fixLen < 0 { // debug mode
-		fixLen = 10
+	prefixLen := 6
+	postfixLen := Conf.Width - utf8.RuneCountInString(msg) - 6
+	if postfixLen < 0 { // no width in debug mode
+		postfixLen = 6
 	}
 
-	fixStr := strings.Repeat(char, fixLen)
+	preFixStr := strings.Repeat(char, prefixLen)
+	postFixStr := strings.Repeat(char, postfixLen)
 
 	clr := color.New(attr)
-	clr.Printf("%s%s%s", fixStr, msg, fixStr)
+	clr.Printf("%s%s%s", preFixStr, msg, postFixStr)
 }
 
 func noWindowsSize() (int, int) {

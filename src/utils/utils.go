@@ -94,6 +94,13 @@ func PrintSample() {
 	fmt.Printf("TODO... \n")
 }
 
+func IsDebug() bool {
+	debug := CheckFileIsExist("res")
+	fmt.Printf("debug = %t \n", debug)
+
+	return debug
+}
+
 //func PrintStuct(s interface{}) {
 //	val := reflect.ValueOf(s)
 //	typeOfS := val.Type()
