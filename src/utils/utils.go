@@ -94,11 +94,8 @@ func PrintSample() {
 	fmt.Printf("TODO... \n")
 }
 
-func IsDebug() bool {
-	debug := CheckFileIsExist("res")
-	fmt.Printf("debug = %t \n", debug)
-
-	return debug
+func IsRelease() bool {
+	return !CheckFileIsExist("res")
 }
 
 //func PrintStuct(s interface{}) {
