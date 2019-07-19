@@ -40,12 +40,12 @@ func Print(report model.TestReport, workDir string) {
 					PrintAndLog(&logs, "")
 				}
 
-				str := "  %s %d %s: %s"
+				str := "  %s%d: %s   %s"
 				status := utils.BoolToPass(step.Status)
 				statusColor := colorStatus(status)
 
-				logs = append(logs, fmt.Sprintf(str, utils.I118Prt.Sprintf("step"), step.Numb, step.Name, status))
-				fmt.Printf(str, utils.I118Prt.Sprintf("step"), step.Numb, step.Name, statusColor+"\n")
+				logs = append(logs, fmt.Sprintf(str, utils.I118Prt.Sprintf("step"), step.Numb, status, step.Name))
+				fmt.Printf(str, utils.I118Prt.Sprintf("step"), step.Numb, statusColor, step.Name+"\n")
 
 				count1 := 0
 				for _, cp := range step.CheckPoints {
@@ -53,8 +53,12 @@ func Print(report model.TestReport, workDir string) {
 						PrintAndLog(&logs, "")
 					}
 
-					PrintAndLog(&logs, fmt.Sprintf("    %s %d: %s", utils.I118Prt.Sprintf("checkpoint"), cp.Numb,
+					cpStatus := utils.BoolToPass(step.Status)
+					cpStatusColor := colorStatus(cpStatus)
+					logs = append(logs, fmt.Sprintf("    %s%d: %s", utils.I118Prt.Sprintf("checkpoint"), cp.Numb,
 						utils.BoolToPass(cp.Status)))
+					fmt.Printf("    %s%d: %s", utils.I118Prt.Sprintf("checkpoint"), cp.Numb, cpStatusColor)
+
 					PrintAndLog(&logs, fmt.Sprintf("      %s %s", utils.I118Prt.Sprintf("expect_result"), cp.Expect))
 					PrintAndLog(&logs, fmt.Sprintf("      %s %s", utils.I118Prt.Sprintf("actual_result"), cp.Actual))
 

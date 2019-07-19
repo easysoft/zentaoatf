@@ -6,6 +6,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/fatih/color"
+	"regexp"
 )
 
 func CheckResults(files []string, dir string, langType string, report *model.TestReport) {
@@ -44,9 +45,12 @@ func ValidateTestCase(scriptFile string, langType string,
 				actualLines = actualArr[indx]
 			}
 
+			re, _ := regexp.Compile(`\s{2,}`)
+			step = re.ReplaceAllString(step, " ")
+
 			stepResult, checkpointLogs := ValidateStep(langType, expectLines, actualLines)
-			step := model.StepLog{Numb: indx + 1, Name: step, Status: stepResult, CheckPoints: checkpointLogs}
-			stepLogs = append(stepLogs, step)
+			stepLog := model.StepLog{Numb: indx + 1, Name: step, Status: stepResult, CheckPoints: checkpointLogs}
+			stepLogs = append(stepLogs, stepLog)
 			if !stepResult {
 				caseResult = misc.FAIL
 			}
