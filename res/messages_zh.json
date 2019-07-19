@@ -102,6 +102,11 @@
       "id": "actual_result",
       "message": "Actual Result",
       "translation": "实际结果"
+    },
+    {
+      "id": "no_checkpoints",
+      "message": "No checkpoints",
+      "translation": "没有验证点"
     }
   ]
 }

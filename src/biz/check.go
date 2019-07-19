@@ -9,10 +9,8 @@ import (
 )
 
 func CheckResults(files []string, dir string, langType string, report *model.TestReport) {
-	fmt.Println()
-
-	utils.PrintWholeLine(utils.I118Prt.Sprintf("begin_analyse"), "=", color.FgBlue)
 	fmt.Println("\n")
+	utils.PrintWholeLine(utils.I118Prt.Sprintf("begin_analyse"), "=", color.FgBlue)
 
 	for _, scriptFile := range files {
 		logFile := utils.ScriptToLogName(dir, scriptFile)

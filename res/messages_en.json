@@ -103,6 +103,12 @@
       "id": "actual_result",
       "message": "Actual Result",
       "translation": "Actual Result"
+    },
+    {
+      "id": "no_checkpoints",
+      "message": "No checkpoints",
+      "translation": "No checkpoints"
     }
+
   ]
 }
