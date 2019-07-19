@@ -45,7 +45,7 @@
     {
       "id": "end_case",
       "message": "End Case",
-      "translation": "End Case   %s at %s, spend %dsecs"
+      "translation": "End Case %s at %s, spend %dsecs"
     },
 
     {
