@@ -1,4 +1,4 @@
-<?%s
+%s
 <<<TC
 caseId:   %d
 title:    %s
@@ -12,9 +12,9 @@ readme:
 - 脚本中CODE打头的注释需用代码替换
 - 参考样例https://github.com/easysoft/zentaoatf/tree/master/xdoc/sample
 
-TC;
+TC %s
 
-/* 此处编写操作步骤代码 */
+//CODE: 此处编写操作步骤代码
 
 %s
 ?>
