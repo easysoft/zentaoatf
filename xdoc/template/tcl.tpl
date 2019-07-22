@@ -10,6 +10,7 @@ expects:
 readme:
 %s
 
-TC }
+TC
+}
 
 %s
