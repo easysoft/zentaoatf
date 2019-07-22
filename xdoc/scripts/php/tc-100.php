@@ -16,7 +16,7 @@ readme:
 - 脚本中/* */标注的需用代码替换，//注解的为说明文字
 - 参考样例https://github.com/easysoft/zentaoatf/tree/master/xdoc/sample
 
-TC;
+TC ;
 
 /* 此处编写操作步骤代码 */
 
