@@ -3,7 +3,6 @@ package action
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/misc"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"strconv"
@@ -27,15 +26,21 @@ func Gen(remoteUrl string, langType string, independentExpectFile bool) {
 }
 
 func DealwithTestCase(tc model.TestCase, langType string, independentExpect bool) {
+	langMap := GetLangMap()
 	StepWidth := 20
 
 	caseId := tc.Id
 	caseTitle := tc.Title
-	scriptFile := "xdoc/scripts/tc-" + strconv.Itoa(caseId) + "." + langType
+	scriptFile := fmt.Sprintf("xdoc/scripts/tc-%s.%s", strconv.Itoa(caseId), langMap[langType]["extName"])
 
 	steps := make([]string, 0)
 	expects := make([]string, 0)
 	srcCode := make([]string, 0)
+
+	steps = append(steps, "@开头的为含验证点的步骤")
+	temp := fmt.Sprintf("\n%sCODE: 此处编写操作步骤代码\n", langMap[langType]["commentsTag"])
+	srcCode = append(srcCode, temp)
+	readme := utils.ReadFile("xdoc/template/readme.tpl") + "\n"
 
 	stepDisplayMaxWidth := 0
 	DealwithTestStepWidth(tc.Steps, &stepDisplayMaxWidth, StepWidth)
@@ -56,9 +61,12 @@ func DealwithTestCase(tc model.TestCase, langType string, independentExpect bool
 		expectsTxt = strings.Join(expects, "\n")
 	}
 
-	template := utils.ReadFile("xdoc/script-template.txt")
-	content := string(fmt.Sprintf(string(template), langType, caseId, caseTitle,
-		strings.Join(steps, "\n"), expectsTxt, strings.Join(srcCode, "\n")))
+	template := utils.ReadFile("xdoc/template/" + langType + ".tpl")
+	content := fmt.Sprintf(template,
+		caseId, caseTitle,
+		strings.Join(steps, "\n"), expectsTxt,
+		readme,
+		strings.Join(srcCode, "\n"))
 
 	fmt.Println(content)
 
@@ -75,8 +83,10 @@ func DealwithTestStepWidth(steps []model.TestStep, stepSDisplayMaxWidth *int, st
 	*stepSDisplayMaxWidth += stepWidth // prefix space and @step
 }
 
-func DealwithTestStep(ts model.TestStep, langType string, level int, stepWidth int, checkPointIndex *int,
+func DealwithTestStep(ts model.TestStep, langType string,
+	level int, stepWidth int, checkPointIndex *int,
 	steps *[]string, expects *[]string, srcCode *[]string) {
+	langMap := GetLangMap()
 
 	isGroup := ts.IsGroup
 	isCheckPoint := ts.IsCheckPoint
@@ -113,23 +123,18 @@ func DealwithTestStep(ts model.TestStep, langType string, level int, stepWidth i
 		expectsLine := ""
 
 		expectsLine = "# \n"
-		expectsLine += "/* " + stepIdent + "期望结果, 可以有多行 */\n"
+		expectsLine += "CODE: " + stepIdent + "期望结果, 可以有多行\n"
 
 		*expects = append(*expects, expectsLine)
 	}
 
 	// 处理srcCode
 	if isCheckPoint {
-		codeLine := ""
+		codeLine := langMap[langType]["printGrammar"]
 
-		if langType == misc.PHP.String() {
-			codeLine += `echo "#\n";`
-		} else if langType == misc.GO.String() {
-			codeLine += `println("#")\n`
-		}
+		codeLine += fmt.Sprintf("  %s %s: %s\n", langMap[langType]["commentsTag"], stepIdent, stepExpect)
 
-		codeLine += "  // " + stepIdent + ": " + stepExpect + "\n"
-		codeLine += "/* 输出验证点实际结果 */\n"
+		codeLine += langMap[langType]["commentsTag"] + "CODE: 输出验证点实际结果\n"
 
 		*srcCode = append(*srcCode, codeLine)
 	}
@@ -139,4 +144,58 @@ func DealwithTestStep(ts model.TestStep, langType string, level int, stepWidth i
 			DealwithTestStep(tsChild, langType, level+1, stepWidth, checkPointIndex, steps, expects, srcCode)
 		}
 	}
+}
+
+func GetLangMap() map[string]map[string]string {
+	langMap := make(map[string]map[string]string)
+
+	langMap["go"] = map[string]string{
+		"extName":      "go",
+		"commentsTag":  "//",
+		"printGrammar": "println(\"#\")",
+	}
+
+	langMap["lua"] = map[string]string{
+		"extName":      "lua",
+		"commentsTag":  "--",
+		"printGrammar": "print('#')",
+	}
+
+	langMap["perl"] = map[string]string{
+		"extName":      "pl",
+		"commentsTag":  "#",
+		"printGrammar": "print \"#\\n\";",
+	}
+
+	langMap["php"] = map[string]string{
+		"extName":      "php",
+		"commentsTag":  "//",
+		"printGrammar": "echo \"#\n\";",
+	}
+
+	langMap["python"] = map[string]string{
+		"extName":      "py",
+		"commentsTag":  "#",
+		"printGrammar": "print(\"#\")",
+	}
+
+	langMap["ruby"] = map[string]string{
+		"extName":      "rb",
+		"commentsTag":  "#",
+		"printGrammar": "print(\"#\\n\")",
+	}
+
+	langMap["shell"] = map[string]string{
+		"extName":      "sh",
+		"commentsTag":  "#",
+		"printGrammar": "echo \"#\"",
+	}
+
+	langMap["tcl"] = map[string]string{
+		"extName":      "tl",
+		"commentsTag":  "#",
+		"printGrammar": "set hello \"#\"; \n puts [set hello];",
+	}
+
+	return langMap
 }

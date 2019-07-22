@@ -55,18 +55,7 @@ func main() {
 	viewSet.Var(&files, "f", "Script files to view, no need langType if specified")
 
 	if len(os.Args) < 2 {
-		fmt.Printf("Usage of atf: \n")
-		// utils.PrintUsage(flagSets)
-
-		utils.PrintUsageWithSpaceLine(*configSet, false)
-		utils.PrintUsage(*runSet)
-		utils.PrintUsage(*rerunSet)
-		utils.PrintUsage(*genSet)
-		utils.PrintUsage(*listSet)
-		utils.PrintUsage(*viewSet)
-
-		utils.PrintSample()
-
+		usage(flagSets)
 		os.Exit(1)
 	}
 
@@ -129,9 +118,26 @@ func main() {
 		}
 	case "reset":
 		action.Reset()
+	default:
+		usage(flagSets)
+		os.Exit(1)
 	}
 }
 
 func init() {
 	utils.InitConfig()
+}
+
+func usage(flagSets []flag.FlagSet) {
+	fmt.Printf("Usage of atf: \n")
+
+	for inx, flag := range flagSets {
+		if inx == 0 {
+			utils.PrintUsageWithSpaceLine(flag, false)
+		} else {
+			utils.PrintUsage(flag)
+		}
+	}
+
+	utils.PrintSample()
 }

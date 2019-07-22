@@ -3,19 +3,34 @@ package misc
 type LangType int
 
 const (
-	PHP LangType = iota
+	GO LangType = iota
+	LUA
+	PERL
+	PHP
 	PYTHON
-	GO
+	RUBY
+	SHELL
+	TCL
 )
 
 func (c LangType) String() string {
 	switch c {
+	case GO:
+		return "go"
+	case LUA:
+		return "lua"
+	case PERL:
+		return "perl"
 	case PHP:
 		return "php"
 	case PYTHON:
 		return "python"
-	case GO:
-		return "go"
+	case RUBY:
+		return "ruby"
+	case SHELL:
+		return "shell"
+	case TCL:
+		return "tcl"
 	}
 	return "unknown"
 }

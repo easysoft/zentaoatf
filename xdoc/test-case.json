@@ -2,33 +2,6 @@
   "code": 1,
   "cases": [
     {
-      "id": 100,
-      "title": "用户登录",
-      "steps": [
-        {
-          "id": 1000,
-          "title": "打开登录页面",
-          "expect": "",
-          "isGroup": false,
-          "isCheckPoint": false
-        },
-        {
-          "id": 1010,
-          "title": "输入正确的用户名和密码",
-          "expect": "",
-          "isGroup": false,
-          "isCheckPoint": false
-        },
-        {
-          "id": 1020,
-          "title": "点击'登录'按钮",
-          "expect": "用户成功登录",
-          "isGroup": false,
-          "isCheckPoint": true
-        }
-      ]
-    },
-    {
       "id": 200,
       "title": "登录失败账号锁定策略",
       "steps": [
@@ -71,16 +44,6 @@
           ]
         }
       ]
-    },
-    {
-      "id": 300,
-      "title": "注册",
-      "steps": []
-    },
-    {
-      "id": 400,
-      "title": "忘记密码",
-      "steps": []
     }
   ]
 }
