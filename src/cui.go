@@ -14,6 +14,7 @@ func layout(g *gocui.Gui) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
+
 		v.Highlight = true
 		v.SelBgColor = gocui.ColorGreen
 		v.SelFgColor = gocui.ColorBlack
@@ -22,13 +23,20 @@ func layout(g *gocui.Gui) error {
 		fmt.Fprintln(v, "Switch Project")
 	}
 
-	if _, err := g.SetView("main", int(0.2*float32(maxX)), 0, maxX-1, maxY-5); err != nil &&
-		err != gocui.ErrUnknownView {
-		return err
+	if v, err := g.SetView("main", int(0.2*float32(maxX)), 0, maxX-1, maxY-5); err != nil {
+		if err != gocui.ErrUnknownView {
+			return err
+		}
+
+		v.Autoscroll = true
 	}
-	if _, err := g.SetView("cmdline", int(0.2*float32(maxX)), maxY-5, maxX-1, maxY-1); err != nil &&
-		err != gocui.ErrUnknownView {
-		return err
+	if v, err := g.SetView("cmdline", int(0.2*float32(maxX)), maxY-5, maxX-1, maxY-1); err != nil {
+		if err != gocui.ErrUnknownView {
+			return err
+		}
+
+		v.Editable = true
+		v.Wrap = true
 	}
 	return nil
 }
@@ -61,11 +69,12 @@ func keybindings(g *gocui.Gui) error {
 	if err := g.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, quit); err != nil {
 		return err
 	}
-	for _, n := range []string{"side"} {
-		if err := g.SetKeybinding(n, gocui.MouseLeft, gocui.ModNone, showMsg); err != nil {
-			return err
-		}
+	if err := g.SetKeybinding("side", gocui.MouseLeft, gocui.ModNone, showMsg); err != nil {
+		return err
 	}
+	//if err := g.SetKeybinding("cmdline", gocui.MouseLeft, gocui.ModNone, setEdit); err != nil {
+	//	return err
+	//}
 	if err := g.SetKeybinding("msg", gocui.MouseLeft, gocui.ModNone, delMsg); err != nil {
 		return err
 	}
@@ -88,6 +97,12 @@ func showMsg(g *gocui.Gui, v *gocui.View) error {
 	mainView, err := g.View("main")
 	fmt.Fprintln(mainView, l)
 
+	if _, err := g.SetCurrentView("cmdline"); err != nil {
+		return err
+	}
+	v.SetCursor(0, 0)
+	v.SetOrigin(0, 0)
+
 	//maxX, maxY := g.Size()
 	//if v, err := g.SetView("msg", maxX/2-10, maxY/2, maxX/2+10, maxY/2+2); err != nil {
 	//	if err != gocui.ErrUnknownView {
@@ -102,5 +117,11 @@ func delMsg(g *gocui.Gui, v *gocui.View) error {
 	if err := g.DeleteView("msg"); err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func setEdit(g *gocui.Gui, v *gocui.View) error {
+
 	return nil
 }
