@@ -1,7 +1,3 @@
-// Copyright 2014 The gocui Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
-
 package main
 
 import (
@@ -10,6 +6,36 @@ import (
 
 	"github.com/jroimartin/gocui"
 )
+
+func layout(g *gocui.Gui) error {
+	maxX, maxY := g.Size()
+
+	if v, err := g.SetView("side", 0, 0, int(0.2*float32(maxX)), maxY-1); err != nil {
+		if err != gocui.ErrUnknownView {
+			return err
+		}
+		v.Highlight = true
+		v.SelBgColor = gocui.ColorGreen
+		v.SelFgColor = gocui.ColorBlack
+		fmt.Fprintln(v, "New Project")
+		fmt.Fprintln(v, "New From Zentao")
+		fmt.Fprintln(v, "Switch Project")
+	}
+
+	if _, err := g.SetView("main", int(0.2*float32(maxX)), 0, maxX-1, maxY-5); err != nil &&
+		err != gocui.ErrUnknownView {
+		return err
+	}
+	if _, err := g.SetView("cmdline", int(0.2*float32(maxX)), maxY-5, maxX-1, maxY-1); err != nil &&
+		err != gocui.ErrUnknownView {
+		return err
+	}
+	return nil
+}
+
+func quit(g *gocui.Gui, v *gocui.View) error {
+	return gocui.ErrQuit
+}
 
 func main() {
 	g, err := gocui.NewGui(gocui.OutputNormal)
@@ -20,7 +46,6 @@ func main() {
 
 	g.Cursor = true
 	g.Mouse = true
-
 	g.SetManagerFunc(layout)
 
 	if err := keybindings(g); err != nil {
@@ -32,37 +57,11 @@ func main() {
 	}
 }
 
-func layout(g *gocui.Gui) error {
-	if v, err := g.SetView("but1", 2, 2, 22, 7); err != nil {
-		if err != gocui.ErrUnknownView {
-			return err
-		}
-		v.Highlight = true
-		v.SelBgColor = gocui.ColorGreen
-		v.SelFgColor = gocui.ColorBlack
-		fmt.Fprintln(v, "Button 1 - line 1")
-		fmt.Fprintln(v, "Button 1 - line 2")
-		fmt.Fprintln(v, "Button 1 - line 3")
-		fmt.Fprintln(v, "Button 1 - line 4")
-	}
-
-	if v, err := g.SetView("but2", 24, 2, 44, 4); err != nil {
-		if err != gocui.ErrUnknownView {
-			return err
-		}
-		v.Highlight = true
-		v.SelBgColor = gocui.ColorGreen
-		v.SelFgColor = gocui.ColorBlack
-		fmt.Fprintln(v, "Button 2 - line 1")
-	}
-	return nil
-}
-
 func keybindings(g *gocui.Gui) error {
 	if err := g.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, quit); err != nil {
 		return err
 	}
-	for _, n := range []string{"but1", "but2"} {
+	for _, n := range []string{"side"} {
 		if err := g.SetKeybinding(n, gocui.MouseLeft, gocui.ModNone, showMsg); err != nil {
 			return err
 		}
@@ -71,10 +70,6 @@ func keybindings(g *gocui.Gui) error {
 		return err
 	}
 	return nil
-}
-
-func quit(g *gocui.Gui, v *gocui.View) error {
-	return gocui.ErrQuit
 }
 
 func showMsg(g *gocui.Gui, v *gocui.View) error {
@@ -90,13 +85,16 @@ func showMsg(g *gocui.Gui, v *gocui.View) error {
 		l = ""
 	}
 
-	maxX, maxY := g.Size()
-	if v, err := g.SetView("msg", maxX/2-10, maxY/2, maxX/2+10, maxY/2+2); err != nil {
-		if err != gocui.ErrUnknownView {
-			return err
-		}
-		fmt.Fprintln(v, l)
-	}
+	mainView, err := g.View("main")
+	fmt.Fprintln(mainView, l)
+
+	//maxX, maxY := g.Size()
+	//if v, err := g.SetView("msg", maxX/2-10, maxY/2, maxX/2+10, maxY/2+2); err != nil {
+	//	if err != gocui.ErrUnknownView {
+	//		return err
+	//	}
+	//	fmt.Fprintln(v, l)
+	//}
 	return nil
 }
 
