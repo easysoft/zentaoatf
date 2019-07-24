@@ -6,30 +6,51 @@ import (
 	"log"
 )
 
+const (
+	leftWidth      = 32
+	labelWidth     = 10
+	inputNumbWidth = 25
+	buttonWidth    = 10
+	space          = 2
+)
+
 func layout(g *gocui.Gui) error {
 	maxX, maxY := g.Size()
 
-	if v, err := g.SetView("side", 0, 0, int(0.2*float32(maxX)), maxY-1); err != nil {
+	if v, err := g.SetView("qickbar", 0, 0, leftWidth, 2); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
-
-		v.Frame = true
 		v.Highlight = true
 		v.SelBgColor = gocui.ColorGreen
 		v.SelFgColor = gocui.ColorBlack
-		fmt.Fprintln(v, "New From Zentao")
-		fmt.Fprintln(v, "Switch Project")
+	}
+	if v, err := g.SetView("import", 3, 0, 14, 2); err != nil {
+		v.Frame = false
+		fmt.Fprintln(v, "  Import   ")
+	}
+	if v, err := g.SetView("switch", 19, 0, 31, 2); err != nil {
+		v.Frame = false
+		fmt.Fprintln(v, "  Switch   ")
 	}
 
-	if v, err := g.SetView("main", int(0.2*float32(maxX)), 0, maxX-1, maxY-5); err != nil {
+	if v, err := g.SetView("side", 0, 2, leftWidth, maxY-1); err != nil {
+		if err != gocui.ErrUnknownView {
+			return err
+		}
+		v.Highlight = true
+		v.SelBgColor = gocui.ColorGreen
+		v.SelFgColor = gocui.ColorBlack
+	}
+
+	if v, err := g.SetView("main", leftWidth, 0, maxX-1, maxY-5); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
 		v.Autoscroll = true
 	}
 
-	if v, err := g.SetView("cmdline", int(0.2*float32(maxX)), maxY-5, maxX-1, maxY-1); err != nil {
+	if v, err := g.SetView("cmdline", leftWidth, maxY-5, maxX-1, maxY-1); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
@@ -68,9 +89,14 @@ func keybindings(g *gocui.Gui) error {
 	if err := g.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, quit); err != nil {
 		return err
 	}
-	if err := g.SetKeybinding("side", gocui.MouseLeft, gocui.ModNone, newProjectFormZentao); err != nil {
+
+	if err := g.SetKeybinding("import", gocui.MouseLeft, gocui.ModNone, importProject); err != nil {
 		return err
 	}
+	if err := g.SetKeybinding("switch", gocui.MouseLeft, gocui.ModNone, switchProject); err != nil {
+		return err
+	}
+
 	if err := g.SetKeybinding("cmdline", gocui.MouseLeft, gocui.ModNone, setEdit); err != nil {
 		return err
 	}
@@ -121,26 +147,25 @@ func setEdit(g *gocui.Gui, v *gocui.View) error {
 	return nil
 }
 
-func newProjectFormZentao(g *gocui.Gui, slide *gocui.View) error {
+func importProject(g *gocui.Gui, slide *gocui.View) error {
+	maxX, _ := g.Size()
+
 	slideView, _ := g.View("side")
 	slideX, _ := slideView.Size()
 
-	//mainView, _ := g.View("main")
-	//mainX, mainY := mainView.Size()
+	mainView, _ := g.View("main")
+	_, mainY := mainView.Size()
 
-	labelWidth := 10
-	inputWidth := 30
-	space := 2
-	left := slideX + 3
+	left := slideX + 2
 	right := left + labelWidth
 
 	if v, err := g.SetView("productLabel", left, 1, right, 3); err != nil {
 		v.Frame = false
-		fmt.Fprintln(v, "ProjectId")
+		fmt.Fprintln(v, "ProdoctId")
 	}
 
 	left = right + space
-	right = left + inputWidth
+	right = left + inputNumbWidth
 	if v, err := g.SetView("productInput", left, 1, right, 3); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
@@ -169,7 +194,7 @@ func newProjectFormZentao(g *gocui.Gui, slide *gocui.View) error {
 	}
 
 	left = right + space
-	right = left + inputWidth
+	right = left + inputNumbWidth
 	if v, err := g.SetView("planInput", left, 1, right, 3); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
@@ -179,5 +204,19 @@ func newProjectFormZentao(g *gocui.Gui, slide *gocui.View) error {
 		v.Wrap = true
 	}
 
+	buttonX := (maxX-leftWidth)/2 + leftWidth - buttonWidth
+	buttonY := mainY - 2
+	if v, err := g.SetView("submit", buttonX, buttonY, buttonX+buttonWidth, buttonY+2); err != nil {
+		if err != gocui.ErrUnknownView {
+			return err
+		}
+
+		fmt.Fprintln(v, "  Submit  ")
+	}
+
+	return nil
+}
+
+func switchProject(g *gocui.Gui, slide *gocui.View) error {
 	return nil
 }
