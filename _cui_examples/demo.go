@@ -176,7 +176,7 @@ func layout(g *gocui.Gui) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
-		b, err := ioutil.ReadFile("Mark.Twain-Tom.Sawyer.txt")
+		b, err := ioutil.ReadFile("_cui_examples/Mark.Twain-Tom.Sawyer.txt")
 		if err != nil {
 			panic(err)
 		}

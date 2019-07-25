@@ -5,6 +5,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/action"
 	httpClient "github.com/easysoft/zentaoatf/src/http"
 	"github.com/easysoft/zentaoatf/src/mock"
+	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/jroimartin/gocui"
 	"log"
@@ -37,7 +38,7 @@ func main() {
 
 	g.Cursor = true
 	g.Mouse = true
-	g.SetManagerFunc(layout)
+	layout(g)
 
 	if err := keybindings(g); err != nil {
 		log.Panicln(err)
@@ -93,6 +94,9 @@ func layout(g *gocui.Gui) error {
 		v.Wrap = true
 		v.Autoscroll = true
 	}
+
+	ui.NewHelpWidget(g)
+
 	return nil
 
 }
@@ -100,10 +104,35 @@ func layout(g *gocui.Gui) error {
 func quit(g *gocui.Gui, v *gocui.View) error {
 	return gocui.ErrQuit
 }
+func showHelp(g *gocui.Gui, v *gocui.View) error {
+	help, _ := g.View("help")
+
+	if help != nil {
+		hideHelp(g)
+	} else {
+		ui.NewHelpWidget(g)
+	}
+
+	return nil
+}
+func hideHelp(g *gocui.Gui) error {
+	help, _ := g.View("help")
+
+	if help != nil {
+		if err := g.DeleteView("help"); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
 
 func keybindings(g *gocui.Gui) error {
 	if err := g.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, quit); err != nil {
 		return err
+	}
+	if err := g.SetKeybinding("", gocui.KeyCtrlH, gocui.ModNone, showHelp); err != nil {
+		log.Panicln(err)
 	}
 
 	if err := g.SetKeybinding("import", gocui.MouseLeft, gocui.ModNone, importProjectUi); err != nil {
@@ -132,6 +161,8 @@ func setEdit(g *gocui.Gui, v *gocui.View) error {
 }
 
 func importProjectUi(g *gocui.Gui, v *gocui.View) error {
+	hideHelp(g)
+
 	maxX, _ := g.Size()
 
 	slideView, _ := g.View("side")
