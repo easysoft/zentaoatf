@@ -2,16 +2,20 @@ package main
 
 import (
 	"fmt"
+	"github.com/easysoft/zentaoatf/src/mock"
 	"github.com/jroimartin/gocui"
+	"io/ioutil"
 	"log"
+	"net/http"
 )
 
 const (
-	leftWidth      = 32
-	labelWidth     = 10
-	inputNumbWidth = 25
-	buttonWidth    = 10
-	space          = 2
+	leftWidth          = 32
+	labelWidth         = 10
+	inputFullLineWidth = 66
+	inputNumbWidth     = 25
+	buttonWidth        = 10
+	space              = 2
 )
 
 func layout(g *gocui.Gui) error {
@@ -66,6 +70,16 @@ func quit(g *gocui.Gui, v *gocui.View) error {
 }
 
 func main() {
+	server := mock.Server("case-from-prodoct.json")
+	defer server.Close()
+
+	resp, err := http.Get(server.URL)
+
+	bytes, err := ioutil.ReadAll(resp.Body)
+	fmt.Println(string(bytes))
+
+	defer resp.Body.Close()
+
 	g, err := gocui.NewGui(gocui.OutputNormal)
 	if err != nil {
 		log.Panicln(err)
@@ -158,44 +172,60 @@ func importProject(g *gocui.Gui, slide *gocui.View) error {
 
 	left := slideX + 2
 	right := left + labelWidth
-
-	if v, err := g.SetView("productLabel", left, 1, right, 3); err != nil {
+	if v, err := g.SetView("urlLabel", left, 1, right, 3); err != nil {
 		v.Frame = false
-		fmt.Fprintln(v, "ProdoctId")
+		fmt.Fprintln(v, "ZentaoUrl")
 	}
 
 	left = right + space
-	right = left + inputNumbWidth
-	if v, err := g.SetView("productInput", left, 1, right, 3); err != nil {
+	right = left + inputFullLineWidth
+	if v, err := g.SetView("urlInput", left, 1, right, 3); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
 
 		v.Editable = true
 		v.Wrap = true
-
-		if _, err := g.SetCurrentView("productInput"); err != nil {
+		if _, err := g.SetCurrentView("urlInput"); err != nil {
 			return err
 		}
 	}
 
+	left = slideX + 2
+	right = left + labelWidth
+	if v, err := g.SetView("productLabel", left, 4, right, 6); err != nil {
+		v.Frame = false
+		fmt.Fprintln(v, "ProdoctId")
+	}
+
+	left = right + space
+	right = left + inputNumbWidth
+	if v, err := g.SetView("productInput", left, 4, right, 6); err != nil {
+		if err != gocui.ErrUnknownView {
+			return err
+		}
+
+		v.Editable = true
+		v.Wrap = true
+	}
+
 	left = right + space
 	right = left + 3
-	if v, err := g.SetView("or", left, 1, right, 3); err != nil {
+	if v, err := g.SetView("or", left, 4, right, 6); err != nil {
 		v.Frame = false
 		fmt.Fprintln(v, "or")
 	}
 
 	left = right + space
 	right = left + (labelWidth - 3)
-	if v, err := g.SetView("planLabel", left, 1, right, 3); err != nil {
+	if v, err := g.SetView("planLabel", left, 4, right, 6); err != nil {
 		v.Frame = false
 		fmt.Fprintln(v, "PlanId")
 	}
 
 	left = right + space
 	right = left + inputNumbWidth
-	if v, err := g.SetView("planInput", left, 1, right, 3); err != nil {
+	if v, err := g.SetView("planInput", left, 4, right, 6); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
