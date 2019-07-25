@@ -5,10 +5,10 @@ import (
 	"net/http"
 )
 
-func Get(url string, params map[string]string) string {
+func GetBuf(url string, params map[string]string) []byte {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return ""
+		return []byte("")
 	}
 
 	q := req.URL.Query()
@@ -23,12 +23,17 @@ func Get(url string, params map[string]string) string {
 	resp, err = http.DefaultClient.Do(req)
 	defer resp.Body.Close()
 	if err != nil {
-		return resp.Status
+		return []byte(resp.Status)
 	}
 
 	bytes, _ := ioutil.ReadAll(resp.Body)
 
-	return string(bytes)
+	return bytes
+}
+
+func Get(url string, params map[string]string) string {
+	bts := GetBuf(url, params)
+	return string(bts)
 }
 
 func GetMock(url string, params map[string]string) string {

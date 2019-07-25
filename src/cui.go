@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/easysoft/zentaoatf/src/action"
 	httpClient "github.com/easysoft/zentaoatf/src/http"
 	"github.com/easysoft/zentaoatf/src/mock"
 	"github.com/jroimartin/gocui"
@@ -132,9 +133,6 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 	slideView, _ := g.View("side")
 	slideX, _ := slideView.Size()
 
-	mainView, _ := g.View("main")
-	_, mainY := mainView.Size()
-
 	left := slideX + 2
 	right := left + labelWidth
 	if v, err := g.SetView("urlLabel", left, 1, right, 3); err != nil {
@@ -204,12 +202,35 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 		fmt.Fprintln(v, "1")
 	}
 
-	buttonX := (maxX-leftWidth)/2 + leftWidth - buttonWidth
-	buttonY := mainY - 2
-	if v, err := g.SetView("submit", buttonX, buttonY, buttonX+buttonWidth, buttonY+2); err != nil {
+	left = slideX + 2
+	right = left + labelWidth
+	if v, err := g.SetView("languageLabel", left, 7, right, 9); err != nil {
+		v.Frame = false
+		fmt.Fprintln(v, "Language")
+	}
+
+	left = right + space
+	right = left + inputNumbWidth
+	if v, err := g.SetView("languageInput", left, 7, right, 9); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
+
+		v.Editable = true
+		v.Wrap = true
+
+		fmt.Fprintln(v, "python")
+	}
+
+	buttonX := (maxX-leftWidth)/2 + leftWidth - buttonWidth
+	if v, err := g.SetView("submit", buttonX, 10, buttonX+buttonWidth, 12); err != nil {
+		if err != gocui.ErrUnknownView {
+			return err
+		}
+
+		v.Highlight = true
+		v.BgColor = gocui.ColorGreen
+		v.FgColor = gocui.ColorBlack
 
 		fmt.Fprintln(v, "  Submit  ")
 		if err := g.SetKeybinding("submit", gocui.MouseLeft, gocui.ModNone, importProjectRequest); err != nil {
@@ -225,23 +246,17 @@ func switchProjectUi(g *gocui.Gui, v *gocui.View) error {
 }
 
 func importProjectRequest(g *gocui.Gui, v *gocui.View) error {
-	urlView, err := g.View("urlInput")
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	productView, err := g.View("productInput")
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	taskView, err := g.View("taskInput")
-	if err != nil {
-		fmt.Println(err.Error())
-	}
+	urlView, _ := g.View("urlInput")
+	productView, _ := g.View("productInput")
+	taskView, _ := g.View("taskInput")
+	languageView, _ := g.View("languageInput")
 
 	url := strings.TrimSpace(urlView.ViewBuffer())
 
 	productCode := strings.TrimSpace(productView.ViewBuffer())
 	taskId := strings.TrimSpace(taskView.ViewBuffer())
+	language := strings.TrimSpace(languageView.ViewBuffer())
+
 	params := make(map[string]string)
 	if productCode != "" {
 		params["type"] = "product"
@@ -253,10 +268,17 @@ func importProjectRequest(g *gocui.Gui, v *gocui.View) error {
 
 	fmt.Println(url)
 
-	jsonStr := httpClient.Get(url, params)
+	jsonBuf := httpClient.GetBuf(url, params)
 
 	cmdView, _ := g.View("cmd")
-	fmt.Fprintln(cmdView, jsonStr)
+	//fmt.Fprintln(cmdView, string(jsonBuf))
+
+	err := action.Gen(jsonBuf, language, false)
+	if err == nil {
+		fmt.Fprintln(cmdView, "success to generate test scripts in 'xdoc/scripts'")
+	} else {
+		fmt.Fprintln(cmdView, err.Error())
+	}
 
 	return nil
 }

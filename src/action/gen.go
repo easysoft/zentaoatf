@@ -2,6 +2,7 @@ package action
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils"
@@ -13,20 +14,20 @@ import (
 
 var LangMap map[string]map[string]string
 
-func Gen(remoteUrl string, langType string, independentExpectFile bool) {
-	buf := utils.ReadFileBuf(remoteUrl)
-
+func Gen(jsonBuf []byte, langType string, independentExpectFile bool) error {
 	var resp model.Response
-	json.Unmarshal(buf, &resp)
+	json.Unmarshal(jsonBuf, &resp)
 
 	if resp.Code != 1 {
-		fmt.Println(string(buf))
-		return
+		fmt.Println(string(jsonBuf))
+		return errors.New("request fail")
 	}
 
 	for _, testCase := range resp.Cases {
 		DealwithTestCase(testCase, langType, independentExpectFile)
 	}
+
+	return nil
 }
 
 func DealwithTestCase(tc model.TestCase, langType string, independentExpect bool) {
@@ -86,7 +87,7 @@ func DealwithTestCase(tc model.TestCase, langType string, independentExpect bool
 		readme,
 		strings.Join(srcCode, "\n"))
 
-	fmt.Println(content)
+	//fmt.Println(content)
 
 	utils.WriteFile(scriptFile, content)
 }
