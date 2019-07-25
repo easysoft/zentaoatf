@@ -11,4 +11,6 @@ const (
 
 	EnRes = "res/messages_en.json"
 	ZhRes = "res/messages_zh.json"
+
+	GenDir = "scripts/"
 )

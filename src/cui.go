@@ -17,7 +17,7 @@ import (
 const (
 	leftWidth          = 32
 	labelWidth         = 15
-	inputFullLineWidth = 64
+	inputFullLineWidth = 69
 	inputNumbWidth     = 25
 	buttonWidth        = 10
 	space              = 2
@@ -295,19 +295,18 @@ func importProjectRequest(g *gocui.Gui, v *gocui.View) error {
 	_, _ = fmt.Fprintln(cmdView, fmt.Sprintf("#atf gen -u %s -t %s -v %s -l %s -s %t",
 		url, params["entityType"], params["entityVal"], language, singleFile))
 
-	jsonBuf, e := httpClient.GetBuf(url, params)
+	json, e := httpClient.Get(url, params)
 	if e != nil {
-		fmt.Fprint(cmdView, e.Error())
+		fmt.Fprintln(cmdView, e.Error())
 		return nil
 	}
 
-	err := action.Generate(jsonBuf, language, singleFile)
+	err := action.Generate(json, language, singleFile)
 	if err == nil {
-
-		fmt.Fprintln(cmdView, fmt.Sprintf("success to generate test scripts in 'xdoc/scripts' at %s",
-			utils.DateTimeStr(time.Now())))
+		fmt.Fprintln(cmdView, fmt.Sprintf("success to generate test scripts in '%s' at %s",
+			utils.GenDir, utils.DateTimeStr(time.Now())))
 	} else {
-		fmt.Fprint(cmdView, err.Error())
+		fmt.Fprintln(cmdView, err.Error())
 	}
 
 	return nil

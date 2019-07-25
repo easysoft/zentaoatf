@@ -1,7 +1,6 @@
 package action
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	httpClient "github.com/easysoft/zentaoatf/src/http"
@@ -25,23 +24,19 @@ func Gen(url string, entityType string, entityVal string, langType string, singl
 		params["taskId"] = entityVal
 	}
 
-	jsonBuf, err := httpClient.GetBuf(url, params)
+	json, err := httpClient.Get(url, params)
 
 	if err != nil {
-		Generate(jsonBuf, langType, singleFile)
+		Generate(json, langType, singleFile)
 	}
 }
 
-func Generate(jsonBuf []byte, langType string, singleFile bool) error {
-	var resp model.Response
-	json.Unmarshal(jsonBuf, &resp)
-
-	if resp.Code != 1 {
-		fmt.Println(string(jsonBuf))
-		return errors.New("request fail")
+func Generate(json model.Response, langType string, singleFile bool) error {
+	if json.Code != 1 {
+		return errors.New("response code = %s")
 	}
 
-	for _, testCase := range resp.Cases {
+	for _, testCase := range json.Cases {
 		DealwithTestCase(testCase, langType, singleFile)
 	}
 
@@ -68,7 +63,7 @@ func DealwithTestCase(tc model.TestCase, langType string, singleFile bool) {
 
 	caseId := tc.Id
 	caseTitle := tc.Title
-	scriptFile := fmt.Sprintf("xdoc/scripts/tc-%s.%s", strconv.Itoa(caseId), LangMap[langType]["extName"])
+	scriptFile := fmt.Sprintf(utils.GenDir+"tc-%s.%s", strconv.Itoa(caseId), LangMap[langType]["extName"])
 
 	steps := make([]string, 0)
 	expects := make([]string, 0)
@@ -94,7 +89,7 @@ func DealwithTestCase(tc model.TestCase, langType string, singleFile bool) {
 	} else {
 		expectFile := utils.ScriptToExpectName(scriptFile)
 
-		expectsTxt = "@file"
+		expectsTxt = "@file\n"
 		utils.WriteFile(expectFile, strings.Join(expects, "\n"))
 	}
 
