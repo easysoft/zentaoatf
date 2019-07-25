@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
+	httpClient "github.com/easysoft/zentaoatf/src/http"
 	"github.com/easysoft/zentaoatf/src/mock"
 	"github.com/jroimartin/gocui"
-	"io/ioutil"
 	"log"
-	"net/http"
 	"net/http/httptest"
+	"strings"
 )
 
 const (
@@ -111,35 +111,6 @@ func keybindings(g *gocui.Gui) error {
 	if err := g.SetKeybinding("cmdline", gocui.MouseLeft, gocui.ModNone, setEdit); err != nil {
 		return err
 	}
-	if err := g.SetKeybinding("msg", gocui.MouseLeft, gocui.ModNone, delMsg); err != nil {
-		return err
-	}
-	return nil
-}
-
-func showMsg(g *gocui.Gui, v *gocui.View) error {
-	var l string
-	var err error
-
-	if _, err := g.SetCurrentView(v.Name()); err != nil {
-		return err
-	}
-
-	_, cy := v.Cursor()
-	if l, err = v.Line(cy); err != nil {
-		l = ""
-	}
-
-	mainView, err := g.View("main")
-	fmt.Fprintln(mainView, l)
-
-	return nil
-}
-
-func delMsg(g *gocui.Gui, v *gocui.View) error {
-	if err := g.DeleteView("msg"); err != nil {
-		return err
-	}
 
 	return nil
 }
@@ -148,9 +119,6 @@ func setEdit(g *gocui.Gui, v *gocui.View) error {
 	if _, err := g.SetCurrentView("cmdline"); err != nil {
 		return err
 	}
-
-	//v.SetOrigin(0, 0)
-	//v.SetCursor(0, 0)
 
 	v.SetCursor(0, 0)
 	v.Clear()
@@ -180,6 +148,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
+		fmt.Fprintln(v, server.URL)
 
 		v.Editable = true
 		v.Wrap = true
@@ -204,6 +173,8 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 
 		v.Editable = true
 		v.Wrap = true
+
+		fmt.Fprintln(v, "1")
 	}
 
 	left = right + space
@@ -215,20 +186,22 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 
 	left = right + space
 	right = left + (labelWidth - 3)
-	if v, err := g.SetView("planLabel", left, 4, right, 6); err != nil {
+	if v, err := g.SetView("taskLabel", left, 4, right, 6); err != nil {
 		v.Frame = false
-		fmt.Fprintln(v, "PlanId")
+		fmt.Fprintln(v, "TaskId")
 	}
 
 	left = right + space
 	right = left + inputNumbWidth
-	if v, err := g.SetView("planInput", left, 4, right, 6); err != nil {
+	if v, err := g.SetView("taskInput", left, 4, right, 6); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
 
 		v.Editable = true
 		v.Wrap = true
+
+		fmt.Fprintln(v, "1")
 	}
 
 	buttonX := (maxX-leftWidth)/2 + leftWidth - buttonWidth
@@ -253,13 +226,33 @@ func switchProjectUi(g *gocui.Gui, v *gocui.View) error {
 }
 
 func importProjectRequest(g *gocui.Gui, v *gocui.View) error {
-	resp, _ := http.Get(server.URL)
+	urlView, err := g.View("urlInput")
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	productView, err := g.View("productInput")
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	taskView, err := g.View("taskInput")
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 
-	bytes, _ := ioutil.ReadAll(resp.Body)
+	url := strings.TrimSpace(urlView.ViewBuffer())
+	productId := strings.TrimSpace(productView.ViewBuffer())
+	taskId := strings.TrimSpace(taskView.ViewBuffer())
+
+	fmt.Println(url)
+
+	params := make(map[string]string)
+	params["productId"] = productId
+	params["taskId"] = taskId
+
+	jsonStr := httpClient.Get(url, params)
+
 	cmdView, _ := g.View("cmd")
-	fmt.Fprintln(cmdView, string(bytes))
-
-	defer resp.Body.Close()
+	fmt.Fprintln(cmdView, jsonStr)
 
 	return nil
 }
