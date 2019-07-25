@@ -1,7 +1,6 @@
 package httpClient
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -18,7 +17,7 @@ func Get(url string, params map[string]string) string {
 	}
 	req.URL.RawQuery = q.Encode()
 
-	fmt.Println(req.URL.String())
+	// fmt.Println(req.URL.String())
 
 	var resp *http.Response
 	resp, err = http.DefaultClient.Do(req)

@@ -212,7 +212,6 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 		}
 
 		fmt.Fprintln(v, "  Submit  ")
-
 		if err := g.SetKeybinding("submit", gocui.MouseLeft, gocui.ModNone, importProjectRequest); err != nil {
 			return err
 		}
@@ -240,14 +239,19 @@ func importProjectRequest(g *gocui.Gui, v *gocui.View) error {
 	}
 
 	url := strings.TrimSpace(urlView.ViewBuffer())
-	productId := strings.TrimSpace(productView.ViewBuffer())
+
+	productCode := strings.TrimSpace(productView.ViewBuffer())
 	taskId := strings.TrimSpace(taskView.ViewBuffer())
+	params := make(map[string]string)
+	if productCode != "" {
+		params["type"] = "product"
+		params["productCode"] = productCode
+	} else {
+		params["type"] = "task"
+		params["taskId"] = taskId
+	}
 
 	fmt.Println(url)
-
-	params := make(map[string]string)
-	params["productId"] = productId
-	params["taskId"] = taskId
 
 	jsonStr := httpClient.Get(url, params)
 
