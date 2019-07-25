@@ -5,10 +5,10 @@ import (
 	"net/http"
 )
 
-func GetBuf(url string, params map[string]string) []byte {
+func GetBuf(url string, params map[string]string) ([]byte, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return []byte("")
+		return []byte(""), err
 	}
 
 	q := req.URL.Query()
@@ -17,23 +17,25 @@ func GetBuf(url string, params map[string]string) []byte {
 	}
 	req.URL.RawQuery = q.Encode()
 
-	// fmt.Println(req.URL.String())
-
 	var resp *http.Response
 	resp, err = http.DefaultClient.Do(req)
 	if err != nil {
-		return []byte(err.Error())
+		return []byte(""), err
 	}
 
 	bytes, _ := ioutil.ReadAll(resp.Body)
 
 	defer resp.Body.Close()
-	return bytes
+	return bytes, nil
 }
 
-func Get(url string, params map[string]string) string {
-	bts := GetBuf(url, params)
-	return string(bts)
+func Get(url string, params map[string]string) (string, error) {
+	bts, err := GetBuf(url, params)
+	if err != nil {
+		return "", err
+	}
+
+	return string(bts), nil
 }
 
 func GetMock(url string, params map[string]string) string {

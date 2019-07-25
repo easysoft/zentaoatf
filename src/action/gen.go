@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	httpClient "github.com/easysoft/zentaoatf/src/http"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"os"
@@ -14,7 +15,24 @@ import (
 
 var LangMap map[string]map[string]string
 
-func Gen(jsonBuf []byte, langType string, independentExpectFile bool) error {
+func Gen(url string, entityType string, entityVal string, langType string, singleFile bool) {
+	params := make(map[string]string)
+	if entityType != "product" {
+		params["type"] = "product"
+		params["productCode"] = entityVal
+	} else {
+		params["type"] = "task"
+		params["taskId"] = entityVal
+	}
+
+	jsonBuf, err := httpClient.GetBuf(url, params)
+
+	if err != nil {
+		Generate(jsonBuf, langType, singleFile)
+	}
+}
+
+func Generate(jsonBuf []byte, langType string, singleFile bool) error {
 	var resp model.Response
 	json.Unmarshal(jsonBuf, &resp)
 
@@ -24,13 +42,13 @@ func Gen(jsonBuf []byte, langType string, independentExpectFile bool) error {
 	}
 
 	for _, testCase := range resp.Cases {
-		DealwithTestCase(testCase, langType, independentExpectFile)
+		DealwithTestCase(testCase, langType, singleFile)
 	}
 
 	return nil
 }
 
-func DealwithTestCase(tc model.TestCase, langType string, independentExpect bool) {
+func DealwithTestCase(tc model.TestCase, langType string, singleFile bool) {
 	LangMap := GetLangMap()
 	langs := ""
 	if LangMap[langType] == nil {
@@ -71,13 +89,13 @@ func DealwithTestCase(tc model.TestCase, langType string, independentExpect bool
 	}
 
 	var expectsTxt string
-	if independentExpect {
+	if singleFile {
+		expectsTxt = strings.Join(expects, "\n")
+	} else {
 		expectFile := utils.ScriptToExpectName(scriptFile)
 
 		expectsTxt = "@file"
 		utils.WriteFile(expectFile, strings.Join(expects, "\n"))
-	} else {
-		expectsTxt = strings.Join(expects, "\n")
 	}
 
 	template := utils.ReadFile("xdoc/template/" + langType + ".tpl")

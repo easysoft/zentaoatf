@@ -17,8 +17,10 @@ func main() {
 	var scriptDir string
 	var langType string
 
-	var independentExpectFile bool
-	var fromUrl string
+	var singleFile bool
+	var zentaoUrl string
+	var entityType string
+	var entityVal string
 
 	var path string
 	var files model.FlagSlice
@@ -39,9 +41,11 @@ func main() {
 
 	genSet := flag.NewFlagSet("atf gen - Generate test scripts from zentao test cases", flag.ContinueOnError)
 	flagSets = append(flagSets, *genSet)
-	genSet.StringVar(&fromUrl, "u", "", "Remote interface for test case export")
+	genSet.StringVar(&zentaoUrl, "u", "", "Zentao project url")
+	genSet.StringVar(&entityType, "t", "", "Import from type, 'product' or 'task'")
+	genSet.StringVar(&entityVal, "v", "", "product code or task id")
 	genSet.StringVar(&langType, "l", "", "Script Language like python, php etc.")
-	genSet.BoolVar(&independentExpectFile, "e", false, "Save ExpectResult in an independent file or not")
+	genSet.BoolVar(&singleFile, "s", false, "Save ExpectResult in same file file or not")
 
 	listSet := flag.NewFlagSet("atf list - List test scripts", flag.ContinueOnError)
 	flagSets = append(flagSets, *listSet)
@@ -80,11 +84,11 @@ func main() {
 		}
 	case "gen":
 		if err := genSet.Parse(os.Args[2:]); err == nil {
-			if fromUrl == "" || langType == "" {
+			if zentaoUrl == "" || langType == "" || entityType == "" && entityVal == "" {
 				genSet.Usage()
 				os.Exit(1)
 			} else {
-				action.Gen(fromUrl, langType, independentExpectFile)
+				action.Gen(zentaoUrl, entityType, entityVal, langType, singleFile)
 			}
 		}
 	case "list":
