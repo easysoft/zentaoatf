@@ -5,10 +5,12 @@ import (
 	"github.com/easysoft/zentaoatf/src/action"
 	httpClient "github.com/easysoft/zentaoatf/src/http"
 	"github.com/easysoft/zentaoatf/src/mock"
+	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/jroimartin/gocui"
 	"log"
 	"net/http/httptest"
 	"strings"
+	"time"
 )
 
 const (
@@ -74,20 +76,21 @@ func layout(g *gocui.Gui) error {
 		v.SelFgColor = gocui.ColorBlack
 	}
 
-	if v, err := g.SetView("main", leftWidth, 0, maxX-1, maxY-5); err != nil {
+	if v, err := g.SetView("main", leftWidth, 0, maxX-1, maxY-10); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
-		v.Autoscroll = true
+		v.Wrap = true
 	}
 
-	if v, err := g.SetView("cmd", leftWidth, maxY-5, maxX-1, maxY-1); err != nil {
+	if v, err := g.SetView("cmd", leftWidth, maxY-10, maxX-1, maxY-1); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
 
 		v.Editable = true
 		v.Wrap = true
+		v.Autoscroll = true
 	}
 	return nil
 
@@ -121,7 +124,7 @@ func setEdit(g *gocui.Gui, v *gocui.View) error {
 		return err
 	}
 
-	v.SetCursor(0, 0)
+	v.Autoscroll = true
 	v.Clear()
 
 	return nil
@@ -146,7 +149,8 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
-		fmt.Fprintln(v, server.URL)
+		v.Clear()
+		fmt.Fprint(v, server.URL)
 
 		v.Editable = true
 		v.Wrap = true
@@ -266,8 +270,6 @@ func importProjectRequest(g *gocui.Gui, v *gocui.View) error {
 		params["taskId"] = taskId
 	}
 
-	fmt.Println(url)
-
 	jsonBuf := httpClient.GetBuf(url, params)
 
 	cmdView, _ := g.View("cmd")
@@ -275,7 +277,8 @@ func importProjectRequest(g *gocui.Gui, v *gocui.View) error {
 
 	err := action.Gen(jsonBuf, language, false)
 	if err == nil {
-		fmt.Fprintln(cmdView, "success to generate test scripts in 'xdoc/scripts'")
+		fmt.Fprintln(cmdView, fmt.Sprintf("success to generate test scripts in 'xdoc/scripts' at %s",
+			utils.DateTimeStr(time.Now())))
 	} else {
 		fmt.Fprintln(cmdView, err.Error())
 	}

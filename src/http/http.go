@@ -21,13 +21,13 @@ func GetBuf(url string, params map[string]string) []byte {
 
 	var resp *http.Response
 	resp, err = http.DefaultClient.Do(req)
-	defer resp.Body.Close()
 	if err != nil {
-		return []byte(resp.Status)
+		return []byte(err.Error())
 	}
 
 	bytes, _ := ioutil.ReadAll(resp.Body)
 
+	defer resp.Body.Close()
 	return bytes
 }
 
