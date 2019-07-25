@@ -89,6 +89,7 @@ func layout(g *gocui.Gui) error {
 		v.Wrap = true
 	}
 	return nil
+
 }
 
 func quit(g *gocui.Gui, v *gocui.View) error {
