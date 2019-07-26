@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="680a739e-87e7-4304-88c6-b3aaf0003894" name="Default Changelist" comment="rename folder">
-      <change afterPath="$PROJECT_DIR$/.gitingore" afterDir="false" />
+    <list default="true" id="680a739e-87e7-4304-88c6-b3aaf0003894" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cui.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/cui.go" afterDir="false" />
     </list>
     <ignored path=".idea/" />
     <ignored path="bin/" />
@@ -19,10 +20,28 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/cui.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="247">
+              <caret line="71" column="4" selection-start-line="71" selection-start-column="4" selection-end-line="71" selection-end-column="4" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.gitingore">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" column="8" selection-start-line="1" selection-start-column="8" selection-end-line="1" selection-end-column="8" />
+            <state relative-caret-position="45">
+              <caret line="3" column="4" lean-forward="true" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="4" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/atf.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="369">
+              <caret line="154" column="1" selection-start-line="154" selection-start-column="1" selection-end-line="154" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -139,10 +158,10 @@
         <option value="$PROJECT_DIR$/src/action/gen.go" />
         <option value="$PROJECT_DIR$/src/action/run.go" />
         <option value="$PROJECT_DIR$/src/utils/config.go" />
-        <option value="$PROJECT_DIR$/src/atf.go" />
-        <option value="$PROJECT_DIR$/src/cui.go" />
         <option value="$PROJECT_DIR$/src/ui/panelWidget.go" />
         <option value="$PROJECT_DIR$/.gitingore" />
+        <option value="$PROJECT_DIR$/src/atf.go" />
+        <option value="$PROJECT_DIR$/src/cui.go" />
       </list>
     </option>
   </component>
@@ -163,6 +182,11 @@
             <path>
               <item name="zentaoatf" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="~/dev/goproject/zentaoatf" type="442cc68d:ScopeViewTreeModel$RootNode" />
+            </path>
+            <path>
+              <item name="zentaoatf" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/dev/goproject/zentaoatf" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
           </expand>
           <select />
@@ -376,8 +400,8 @@
       <window_info anchor="bottom" id="TODO" order="6" weight="0.329927" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
-      <window_info anchor="bottom" id="Version Control" order="9" visible="true" weight="0.24671532" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.24087591" />
+      <window_info anchor="bottom" id="Version Control" order="9" weight="0.24671532" />
+      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.24087591" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="bottom" id="TypeScript" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -439,7 +463,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/src/golang.org/x/text" />
     </ignored-roots>
-    <MESSAGE value="run nested test suite file" />
     <MESSAGE value="print colorized outputs" />
     <MESSAGE value="use yaml to save properties like language etc." />
     <MESSAGE value="get the screen size for mac, linux and win7" />
@@ -464,7 +487,8 @@
     <MESSAGE value="save/load workDir, language settings in a yaml file" />
     <MESSAGE value="fix a crash bug when window height &lt; 10" />
     <MESSAGE value="rename folder" />
-    <option name="LAST_COMMIT_MESSAGE" value="rename folder" />
+    <MESSAGE value="git ignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="git ignore" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
@@ -678,13 +702,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/atf.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/utils/config.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -750,13 +767,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cui.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="93">
-          <caret line="49" column="26" selection-start-line="49" selection-start-column="26" selection-end-line="49" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/_legacy/langs/test04.pl">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -791,10 +801,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/atf.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="369">
+          <caret line="154" column="1" selection-start-line="154" selection-start-column="1" selection-end-line="154" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/.gitingore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="8" selection-start-line="1" selection-start-column="8" selection-end-line="1" selection-end-column="8" />
+        <state relative-caret-position="45">
+          <caret line="3" column="4" lean-forward="true" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cui.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="71" column="4" selection-start-line="71" selection-start-column="4" selection-end-line="71" selection-end-column="4" />
         </state>
       </provider>
     </entry>
