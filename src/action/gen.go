@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 )
 
 var LangMap map[string]map[string]string
@@ -31,16 +32,16 @@ func Gen(url string, entityType string, entityVal string, langType string, singl
 	}
 }
 
-func Generate(json model.Response, langType string, singleFile bool) error {
+func Generate(json model.Response, langType string, singleFile bool) (int, error) {
 	if json.Code != 1 {
-		return errors.New("response code = %s")
+		return 0, errors.New("response code = %s")
 	}
 
 	for _, testCase := range json.Cases {
 		DealwithTestCase(testCase, langType, singleFile)
 	}
 
-	return nil
+	return len(json.Cases), nil
 }
 
 func DealwithTestCase(tc model.TestCase, langType string, singleFile bool) {
@@ -64,6 +65,11 @@ func DealwithTestCase(tc model.TestCase, langType string, singleFile bool) {
 	caseId := tc.Id
 	caseTitle := tc.Title
 	scriptFile := fmt.Sprintf(utils.GenDir+"tc-%s.%s", strconv.Itoa(caseId), LangMap[langType]["extName"])
+
+	if utils.CheckFileIsExist(scriptFile) {
+		scriptFile = fmt.Sprintf(utils.GenDir+"tc-%s.%s",
+			strconv.Itoa(caseId)+"-"+utils.DateTimeStrLong(time.Now()), LangMap[langType]["extName"])
+	}
 
 	steps := make([]string, 0)
 	expects := make([]string, 0)

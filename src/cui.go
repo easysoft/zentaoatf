@@ -219,10 +219,10 @@ func importProjectRequest(g *gocui.Gui, v *gocui.View) error {
 		return nil
 	}
 
-	err := action.Generate(json, language, singleFile)
+	count, err := action.Generate(json, language, singleFile)
 	if err == nil {
-		fmt.Fprintln(cmdView, fmt.Sprintf("success to generate test scripts in '%s' at %s",
-			utils.GenDir, utils.DateTimeStr(time.Now())))
+		fmt.Fprintln(cmdView, fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
+			count, utils.GenDir, utils.DateTimeStr(time.Now())))
 	} else {
 		fmt.Fprintln(cmdView, err.Error())
 	}
