@@ -11,7 +11,8 @@ const (
 
 	HelpGlobal = `KEYBINDINGS
 				Tab: Move between widgets
-				Enter: Push button
+				Space: Toggle radio box
+				Enter: Click button
 				^H: Show/Hide help
 				^C: Exit`
 )

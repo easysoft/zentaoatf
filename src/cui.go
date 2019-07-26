@@ -25,19 +25,22 @@ const (
 )
 
 var server *httptest.Server
+var importTabViews []string
 
 func main() {
 	server = mock.Server("case-from-prodoct.json")
 	defer server.Close()
+
+	importTabViews = make([]string, 0)
 
 	g, err := gocui.NewGui(gocui.OutputNormal)
 	if err != nil {
 		log.Panicln(err)
 	}
 	defer g.Close()
-
 	g.Cursor = true
 	g.Mouse = true
+
 	layout(g)
 
 	if err := keybindings(g); err != nil {
@@ -134,6 +137,9 @@ func keybindings(g *gocui.Gui) error {
 	if err := g.SetKeybinding("", gocui.KeyCtrlH, gocui.ModNone, showHelp); err != nil {
 		log.Panicln(err)
 	}
+	if err := g.SetKeybinding("", gocui.KeyTab, gocui.ModNone, toggleInput); err != nil {
+		log.Panicln(err)
+	}
 
 	if err := g.SetKeybinding("import", gocui.MouseLeft, gocui.ModNone, importProjectUi); err != nil {
 		return err
@@ -142,7 +148,7 @@ func keybindings(g *gocui.Gui) error {
 		return err
 	}
 
-	if err := g.SetKeybinding("cmdline", gocui.MouseLeft, gocui.ModNone, setEdit); err != nil {
+	if err := g.SetKeybinding("cmd", gocui.MouseLeft, gocui.ModNone, setEdit); err != nil {
 		return err
 	}
 
@@ -150,7 +156,7 @@ func keybindings(g *gocui.Gui) error {
 }
 
 func setEdit(g *gocui.Gui, v *gocui.View) error {
-	if _, err := g.SetCurrentView("cmdline"); err != nil {
+	if _, err := g.SetCurrentView("cmd"); err != nil {
 		return err
 	}
 
@@ -186,9 +192,12 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 
 		v.Editable = true
 		v.Wrap = true
+
 		if _, err := g.SetCurrentView("urlInput"); err != nil {
 			return err
 		}
+
+		importTabViews = append(importTabViews, v.Name())
 	}
 
 	left = slideX + 2
@@ -209,6 +218,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 		v.Wrap = true
 
 		fmt.Fprint(v, "1")
+		importTabViews = append(importTabViews, v.Name())
 	}
 
 	left = right + space
@@ -229,6 +239,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 		v.Wrap = true
 
 		fmt.Fprint(v, "1")
+		importTabViews = append(importTabViews, v.Name())
 	}
 
 	left = slideX + 2
@@ -249,6 +260,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 		v.Wrap = true
 
 		fmt.Fprint(v, "python")
+		importTabViews = append(importTabViews, v.Name())
 	}
 
 	left = right + space
@@ -265,11 +277,12 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 			return err
 		}
 
-		if err := g.SetKeybinding("singleFileInput", gocui.MouseLeft, gocui.ModNone, changeSingleFile); err != nil {
+		if err := g.SetKeybinding("singleFileInput", gocui.KeySpace, gocui.ModNone, changeSingleFile); err != nil {
 			return err
 		}
 
-		fmt.Fprint(v, "true")
+		fmt.Fprint(v, "[*]")
+		importTabViews = append(importTabViews, v.Name())
 	}
 
 	buttonX := (maxX-leftWidth)/2 + leftWidth - buttonWidth
@@ -286,6 +299,10 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 		if err := g.SetKeybinding("submit", gocui.MouseLeft, gocui.ModNone, importProjectRequest); err != nil {
 			return err
 		}
+		if err := g.SetKeybinding("submit", gocui.KeyEnter, gocui.ModNone, importProjectRequest); err != nil {
+			return err
+		}
+		importTabViews = append(importTabViews, v.Name())
 	}
 
 	return nil
@@ -346,13 +363,35 @@ func importProjectRequest(g *gocui.Gui, v *gocui.View) error {
 func changeSingleFile(g *gocui.Gui, v *gocui.View) error {
 	val := strings.TrimSpace(v.Buffer())
 
-	singleFile, e := strconv.ParseBool(val)
-
 	v.Clear()
-	if e != nil || !singleFile {
-		fmt.Fprint(v, "true")
+	if val == "[*]" {
+		fmt.Fprint(v, "[ ]")
 	} else {
-		fmt.Fprint(v, "false")
+		fmt.Fprint(v, "[*]")
+	}
+
+	return nil
+}
+
+func toggleInput(g *gocui.Gui, v *gocui.View) error {
+	nextview := ""
+	if v != nil {
+		for idx, name := range importTabViews {
+			if name == v.Name() {
+				if idx == len(importTabViews)-1 {
+					nextview = importTabViews[0]
+				} else {
+					nextview = importTabViews[idx+1]
+				}
+
+				break
+			}
+		}
+	}
+
+	if nextview != "" {
+		_, err := g.SetCurrentView(nextview)
+		return err
 	}
 
 	return nil
