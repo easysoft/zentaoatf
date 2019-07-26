@@ -10,8 +10,8 @@ func GetNextView(name string, views []string) string {
 	for true {
 		if name == views[i] {
 			found = true
-
 			i++
+			i = i % len(views)
 			continue
 		}
 
