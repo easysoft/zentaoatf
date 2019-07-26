@@ -24,13 +24,13 @@ const (
 )
 
 var server *httptest.Server
-var importViews []string
+var viewMap map[string][]string
 
 func main() {
 	server = mock.Server("case-from-prodoct.json")
 	defer server.Close()
 
-	importViews = make([]string, 0)
+	viewMap = map[string][]string{"root": {}, "import": {}}
 
 	g, err := gocui.NewGui(gocui.OutputNormal)
 	if err != nil {
@@ -54,42 +54,29 @@ func main() {
 func layout(g *gocui.Gui) error {
 	maxX, maxY := g.Size()
 
-	ui.NewLabelWidget(g, "qickbar", 0, 0, leftWidth, "")
+	qickbarView := ui.NewLabelWidget(g, "qickbar", 0, 0, leftWidth, "")
+	viewMap["root"] = append(viewMap["root"], qickbarView.Name())
 
-	if v, err := g.SetView("import", 3, 0, 14, 2); err != nil {
-		v.Frame = false
-		fmt.Fprint(v, "  Import   ")
-	}
-	if v, err := g.SetView("switch", 19, 0, 31, 2); err != nil {
-		v.Frame = false
-		fmt.Fprint(v, "  Switch   ")
-	}
+	importView := ui.NewLabelWidget(g, "import", 3, 0, 9, "Import")
+	viewMap["root"] = append(viewMap["root"], importView.Name())
+	importView.Frame = false
 
-	if v, err := g.SetView("side", 0, 2, leftWidth, maxY-1); err != nil {
-		if err != gocui.ErrUnknownView {
-			return err
-		}
-		v.Highlight = true
-		v.SelBgColor = gocui.ColorGreen
-		v.SelFgColor = gocui.ColorBlack
-	}
+	switchView := ui.NewLabelWidget(g, "switch", 19, 0, 13, "Switch")
+	viewMap["root"] = append(viewMap["root"], switchView.Name())
+	switchView.Frame = false
 
-	if v, err := g.SetView("main", leftWidth, 0, maxX-1, maxY-10); err != nil {
-		if err != gocui.ErrUnknownView {
-			return err
-		}
-		v.Wrap = true
-	}
+	sideView := ui.NewPanelWidget(g, "side", 0, 2, leftWidth, maxY-3, "")
+	viewMap["root"] = append(viewMap["root"], sideView.Name())
 
-	if v, err := g.SetView("cmd", leftWidth, maxY-10, maxX-1, maxY-1); err != nil {
-		if err != gocui.ErrUnknownView {
-			return err
-		}
+	mainView := ui.NewPanelWidget(g, "main", leftWidth, 0, maxX-1-leftWidth, maxY-10, "")
+	viewMap["root"] = append(viewMap["root"], mainView.Name())
 
-		v.Editable = true
-		v.Wrap = true
-		v.Autoscroll = true
-	}
+	cmdView := ui.NewPanelWidget(g, "cmd", leftWidth, maxY-10, maxX-1-leftWidth, 9, "")
+	viewMap["root"] = append(viewMap["root"], cmdView.Name())
+
+	cmdView.Editable = true
+	cmdView.Wrap = true
+	cmdView.Autoscroll = true
 
 	ui.NewHelpWidget(g)
 
@@ -173,7 +160,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 		v.Frame = false
 		fmt.Fprint(v, "ZentaoUrl")
 
-		importViews = append(importViews, v.Name())
+		viewMap["import"] = append(viewMap["import"], v.Name())
 	}
 
 	left = right + space
@@ -192,7 +179,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 			return err
 		}
 
-		importViews = append(importViews, v.Name())
+		viewMap["import"] = append(viewMap["import"], v.Name())
 	}
 
 	left = slideX + 2
@@ -200,7 +187,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 	if v, err := g.SetView("productLabel", left, 4, right, 6); err != nil {
 		v.Frame = false
 		fmt.Fprint(v, "ProdoctId")
-		importViews = append(importViews, v.Name())
+		viewMap["import"] = append(viewMap["import"], v.Name())
 	}
 
 	left = right + space
@@ -214,7 +201,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 		v.Wrap = true
 
 		fmt.Fprint(v, "1")
-		importViews = append(importViews, v.Name())
+		viewMap["import"] = append(viewMap["import"], v.Name())
 	}
 
 	left = right + space
@@ -222,7 +209,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 	if v, err := g.SetView("taskLabel", left, 4, right, 6); err != nil {
 		v.Frame = false
 		fmt.Fprint(v, "or TaskId")
-		importViews = append(importViews, v.Name())
+		viewMap["import"] = append(viewMap["import"], v.Name())
 	}
 
 	left = right + space
@@ -236,7 +223,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 		v.Wrap = true
 
 		fmt.Fprint(v, "1")
-		importViews = append(importViews, v.Name())
+		viewMap["import"] = append(viewMap["import"], v.Name())
 	}
 
 	left = slideX + 2
@@ -244,7 +231,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 	if v, err := g.SetView("languageLabel", left, 7, right, 9); err != nil {
 		v.Frame = false
 		fmt.Fprint(v, "Language")
-		importViews = append(importViews, v.Name())
+		viewMap["import"] = append(viewMap["import"], v.Name())
 	}
 
 	left = right + space
@@ -258,7 +245,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 		v.Wrap = true
 
 		fmt.Fprint(v, "python")
-		importViews = append(importViews, v.Name())
+		viewMap["import"] = append(viewMap["import"], v.Name())
 	}
 
 	left = right + space
@@ -266,7 +253,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 	if v, err := g.SetView("singleFileLabel", left, 7, right, 9); err != nil {
 		v.Frame = false
 		fmt.Fprint(v, "SingleFile")
-		importViews = append(importViews, v.Name())
+		viewMap["import"] = append(viewMap["import"], v.Name())
 	}
 
 	left = right + space
@@ -275,13 +262,14 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
+		v.Frame = false
 
 		if err := g.SetKeybinding("singleFileInput", gocui.KeySpace, gocui.ModNone, changeSingleFile); err != nil {
 			return err
 		}
 
 		fmt.Fprint(v, "[*]")
-		importViews = append(importViews, v.Name())
+		viewMap["import"] = append(viewMap["import"], v.Name())
 	}
 
 	buttonX := (maxX-leftWidth)/2 + leftWidth - buttonWidth
@@ -301,7 +289,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 		if err := g.SetKeybinding("submitInput", gocui.KeyEnter, gocui.ModNone, importProjectRequest); err != nil {
 			return err
 		}
-		importViews = append(importViews, v.Name())
+		viewMap["import"] = append(viewMap["import"], v.Name())
 	}
 
 	return nil
@@ -370,7 +358,7 @@ func changeSingleFile(g *gocui.Gui, v *gocui.View) error {
 }
 
 func toggleInput(g *gocui.Gui, v *gocui.View) error {
-	nextView := ui.GetNextView(v.Name(), importViews)
+	nextView := ui.GetNextView(v.Name(), viewMap["import"])
 
 	if nextView != "" {
 		_, err := g.SetCurrentView(nextView)

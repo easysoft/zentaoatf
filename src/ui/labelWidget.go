@@ -16,24 +16,26 @@ type LabelWidget struct {
 	label string
 }
 
-func NewLabelWidget(g *gocui.Gui, name string, x, y, w int, label string) {
+func NewLabelWidget(g *gocui.Gui, name string, x, y, w int, label string) *gocui.View {
 	widget := LabelWidget{name: name, x: x, y: y, w: w, label: label}
-	widget.Layout(g)
+	v, _ := widget.Layout(g)
+	return v
 }
 
-func NewLabelWidgetAutoWidth(g *gocui.Gui, name string, x, y int, label string) {
+func NewLabelWidgetAutoWidth(g *gocui.Gui, name string, x, y int, label string) *gocui.View {
 	widget := &LabelWidget{name: name, x: x, y: y, w: len(label) + 1, label: label}
-	widget.Layout(g)
+	v, _ := widget.Layout(g)
+	return v
 }
 
-func (w *LabelWidget) Layout(g *gocui.Gui) error {
+func (w *LabelWidget) Layout(g *gocui.Gui) (*gocui.View, error) {
 	v, err := g.SetView(w.name, w.x, w.y, w.x+w.w, w.y+2)
 	if err != nil {
 		if err != gocui.ErrUnknownView {
-			return err
+			return nil, err
 		}
 
 		fmt.Fprint(v, w.label)
 	}
-	return nil
+	return v, nil
 }
