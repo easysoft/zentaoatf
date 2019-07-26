@@ -23,6 +23,11 @@
       "translation": "language"
     },
     {
+      "id": "workDir",
+      "message": "Work Dir",
+      "translation": "Work Dir"
+    },
+    {
       "id": "zh",
       "message": "zh",
       "translation": "Chinese"

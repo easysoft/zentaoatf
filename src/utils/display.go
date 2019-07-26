@@ -52,7 +52,7 @@ func PrintWholeLine(msg string, char string, attr color.Attribute) {
 	postFixStr := strings.Repeat(char, postfixLen)
 
 	clr := color.New(attr)
-	clr.Printf("%s%s%s", preFixStr, msg, postFixStr)
+	clr.Printf("%s%s%s\n", preFixStr, msg, postFixStr)
 }
 
 func noWindowsSize() (int, int) {

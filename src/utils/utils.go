@@ -95,13 +95,5 @@ func PrintSample() {
 }
 
 func IsRelease() bool {
-	return !CheckFileIsExist("res")
+	return !FileExist("res")
 }
-
-//func PrintStuct(s interface{}) {
-//	val := reflect.ValueOf(s)
-//	typeOfS := val.Type()
-//	for i := 0; i < reflect.ValueOf(s).NumField(); i++ {
-//		fmt.Printf("  %s: %v \n", typeOfS.Field(i).Name, val.Field(i).Interface())
-//	}
-//}

@@ -58,6 +58,9 @@ func layout(g *gocui.Gui) error {
 	switchView := ui.NewLabelWidget(g, "switch", 19, 0, "Switch")
 	viewMap["root"] = append(viewMap["root"], switchView.Name())
 
+	//workDirView := ui.NewLabelWidget(g, "workDir", 3, 2, utils.Conf.WorkDir)
+	//viewMap["root"] = append(viewMap["root"], workDirView.Name())
+
 	sideView := ui.NewPanelWidget(g, "side", 0, 2, leftWidth, maxY-3, "")
 	viewMap["root"] = append(viewMap["root"], sideView.Name())
 
@@ -67,9 +70,7 @@ func layout(g *gocui.Gui) error {
 	cmdView := ui.NewPanelWidget(g, "cmd", leftWidth, maxY-10, maxX-1-leftWidth, 9, "")
 	viewMap["root"] = append(viewMap["root"], cmdView.Name())
 
-	cmdView.Editable = true
-	cmdView.Wrap = true
-	cmdView.Autoscroll = true
+	utils.PrintConfigToView(cmdView)
 
 	ui.NewHelpWidget(g)
 
@@ -90,21 +91,6 @@ func keyBindings(g *gocui.Gui) error {
 	if err := g.SetKeybinding("switch", gocui.MouseLeft, gocui.ModNone, switchProjectUi); err != nil {
 		return err
 	}
-
-	if err := g.SetKeybinding("cmd", gocui.MouseLeft, gocui.ModNone, setEdit); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func setEdit(g *gocui.Gui, v *gocui.View) error {
-	if _, err := g.SetCurrentView("cmd"); err != nil {
-		return err
-	}
-
-	v.Autoscroll = true
-	v.Clear()
 
 	return nil
 }
@@ -228,4 +214,8 @@ func importProjectRequest(g *gocui.Gui, v *gocui.View) error {
 	}
 
 	return nil
+}
+
+func init() {
+	utils.InitConfig()
 }

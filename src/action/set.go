@@ -13,6 +13,8 @@ func Set(param string, val string) {
 		} else {
 			fmt.Println(color.RedString("only %s or %s language is acceptable", utils.LanguageEN, utils.LanguageZH))
 		}
+	} else if param == "workDir" {
+		utils.Set(param, val)
 	}
 }
 

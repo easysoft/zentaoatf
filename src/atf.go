@@ -13,6 +13,7 @@ func main() {
 	flagSets := make([]flag.FlagSet, 0)
 
 	var language string
+	var workDir string
 
 	var scriptDir string
 	var langType string
@@ -27,7 +28,8 @@ func main() {
 
 	configSet := flag.NewFlagSet("atf set/reset - Config parameters", flag.ContinueOnError)
 	flagSets = append(flagSets, *configSet)
-	configSet.StringVar(&language, "lang", "", "tool language, en or zh")
+	configSet.StringVar(&language, "l", "", "tool language, en or zh")
+	configSet.StringVar(&workDir, "d", "./", "work dir")
 
 	runSet := flag.NewFlagSet("atf run - Run test scripts in specified folder", flag.ContinueOnError)
 	flagSets = append(flagSets, *runSet)
@@ -112,12 +114,18 @@ func main() {
 
 	case "set":
 		if err := configSet.Parse(os.Args[2:]); err == nil {
-			if language == "" {
+			if language == "" || workDir == "" {
 				configSet.Usage()
 				os.Exit(1)
 			} else {
-				action.Set("lang", language)
-				// more
+				if language != "" {
+					action.Set("lang", language)
+				}
+				if workDir != "" {
+					action.Set("workDir", workDir)
+				}
+
+				utils.PrintConfig()
 			}
 		}
 	case "reset":

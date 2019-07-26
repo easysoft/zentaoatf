@@ -5,15 +5,13 @@ import (
 	"fmt"
 	httpClient "github.com/easysoft/zentaoatf/src/http"
 	"github.com/easysoft/zentaoatf/src/model"
+	"github.com/easysoft/zentaoatf/src/script"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"os"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 )
-
-var LangMap map[string]map[string]string
 
 func Gen(url string, entityType string, entityVal string, langType string, singleFile bool) {
 	params := make(map[string]string)
@@ -45,7 +43,7 @@ func Generate(json model.Response, langType string, singleFile bool) (int, error
 }
 
 func DealwithTestCase(tc model.TestCase, langType string, singleFile bool) {
-	LangMap := GetLangMap()
+	LangMap := script.GetLangMap()
 	langs := ""
 	if LangMap[langType] == nil {
 		i := 0
@@ -66,7 +64,7 @@ func DealwithTestCase(tc model.TestCase, langType string, singleFile bool) {
 	caseTitle := tc.Title
 	scriptFile := fmt.Sprintf(utils.GenDir+"tc-%s.%s", strconv.Itoa(caseId), LangMap[langType]["extName"])
 
-	if utils.CheckFileIsExist(scriptFile) {
+	if utils.FileExist(scriptFile) {
 		scriptFile = fmt.Sprintf(utils.GenDir+"tc-%s.%s",
 			strconv.Itoa(caseId)+"-"+utils.DateTimeStrLong(time.Now()), LangMap[langType]["extName"])
 	}
@@ -124,7 +122,7 @@ func DealwithTestStepWidth(steps []model.TestStep, stepSDisplayMaxWidth *int, st
 func DealwithTestStep(ts model.TestStep, langType string,
 	level int, stepWidth int, checkPointIndex *int,
 	steps *[]string, expects *[]string, srcCode *[]string) {
-	LangMap := GetLangMap()
+	LangMap := script.GetLangMap()
 
 	isGroup := ts.IsGroup
 	isCheckPoint := ts.IsCheckPoint
@@ -182,54 +180,4 @@ func DealwithTestStep(ts model.TestStep, langType string,
 			DealwithTestStep(tsChild, langType, level+1, stepWidth, checkPointIndex, steps, expects, srcCode)
 		}
 	}
-}
-
-func GetLangMap() map[string]map[string]string {
-	var once sync.Once
-	once.Do(func() {
-		LangMap = map[string]map[string]string{
-			"go": {
-				"extName":      "go",
-				"commentsTag":  "//",
-				"printGrammar": "println(\"#\")",
-			},
-			"lua": {
-				"extName":      "lua",
-				"commentsTag":  "--",
-				"printGrammar": "print('#')",
-			},
-			"perl": {
-				"extName":      "pl",
-				"commentsTag":  "#",
-				"printGrammar": "print \"#\\n\";",
-			},
-			"php": {
-				"extName":      "php",
-				"commentsTag":  "//",
-				"printGrammar": "echo \"#\n\";",
-			},
-			"python": {
-				"extName":      "py",
-				"commentsTag":  "#",
-				"printGrammar": "print(\"#\")",
-			},
-			"ruby": {
-				"extName":      "rb",
-				"commentsTag":  "#",
-				"printGrammar": "print(\"#\\n\")",
-			},
-			"shell": {
-				"extName":      "sh",
-				"commentsTag":  "#",
-				"printGrammar": "echo \"#\"",
-			},
-			"tcl": {
-				"extName":      "tl",
-				"commentsTag":  "#",
-				"printGrammar": "set hello \"#\"; \n puts [set hello];",
-			},
-		}
-	})
-
-	return LangMap
 }

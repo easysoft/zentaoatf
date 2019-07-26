@@ -17,6 +17,11 @@
       "translation": "语言"
     },
     {
+      "id": "workDir",
+      "message": "Work Dir",
+      "translation": "工作目录"
+    },
+    {
       "id": "zh",
       "message": "zh",
       "translation": "中文"

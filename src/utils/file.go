@@ -39,7 +39,7 @@ func check(e error) {
 	}
 }
 
-func CheckFileIsExist(path string) bool {
+func FileExist(path string) bool {
 	var exist = true
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		exist = false
@@ -166,7 +166,7 @@ func GetSuiteFiles(dirPth string, name string, fileList *[]string) {
 }
 
 func MkDir(dir string) {
-	if !CheckFileIsExist(dir) {
+	if !FileExist(dir) {
 		os.Mkdir(dir, os.ModePerm)
 	}
 }
