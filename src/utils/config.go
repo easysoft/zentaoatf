@@ -33,7 +33,7 @@ func InitConfig() {
 	// internationalization
 	InitI118(Conf.Language)
 
-	if strings.Index(os.Args[0], "atf") > -1 && Conf.Language != "" && os.Args[1] != "set" {
+	if strings.Index(os.Args[0], "atf") > -1 && (len(os.Args) >1 && os.Args[1] != "set") {
 		PrintConfig()
 	}
 }
