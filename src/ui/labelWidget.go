@@ -6,7 +6,8 @@ import (
 )
 
 const (
-	labelWidth = 15
+	LabelWidth  = 15
+	LabelHeight = 2
 )
 
 type LabelWidget struct {
@@ -16,20 +17,22 @@ type LabelWidget struct {
 	label string
 }
 
-func NewLabelWidget(g *gocui.Gui, name string, x, y, w int, label string) *gocui.View {
-	widget := LabelWidget{name: name, x: x, y: y, w: w, label: label}
+func NewLabelWidget(g *gocui.Gui, name string, x, y int, label string) *gocui.View {
+	widget := LabelWidget{name: name, x: x, y: y, w: LabelWidth, label: label}
 	v, _ := widget.Layout(g)
+	v.Frame = false
 	return v
 }
 
 func NewLabelWidgetAutoWidth(g *gocui.Gui, name string, x, y int, label string) *gocui.View {
-	widget := &LabelWidget{name: name, x: x, y: y, w: len(label) + 1, label: label}
+	widget := LabelWidget{name: name, x: x, y: y, w: len(label), label: label}
 	v, _ := widget.Layout(g)
+	v.Frame = false
 	return v
 }
 
 func (w *LabelWidget) Layout(g *gocui.Gui) (*gocui.View, error) {
-	v, err := g.SetView(w.name, w.x, w.y, w.x+w.w, w.y+2)
+	v, err := g.SetView(w.name, w.x, w.y, w.x+w.w, w.y+LabelHeight)
 	if err != nil {
 		if err != gocui.ErrUnknownView {
 			return nil, err

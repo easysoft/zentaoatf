@@ -6,7 +6,8 @@ import (
 )
 
 const (
-	buttonWidth = 10
+	ButtonWidth  = 15
+	ButtonHeight = 2
 )
 
 type ButtonWidget struct {
@@ -17,23 +18,34 @@ type ButtonWidget struct {
 	handler func(g *gocui.Gui, v *gocui.View) error
 }
 
-func NewButtonWidget(name string, x, y int, label string, handler func(g *gocui.Gui, v *gocui.View) error) *ButtonWidget {
-	return &ButtonWidget{name: name, x: x, y: y, w: len(label) + 1, label: label, handler: handler}
+func NewButtonWidget(g *gocui.Gui, name string, x, y, w int, label string,
+	handler func(g *gocui.Gui, v *gocui.View) error) *gocui.View {
+	widget := ButtonWidget{name: name, x: x, y: y, w: w, label: label, handler: handler}
+	v, _ := widget.Layout(g, handler)
+	return v
 }
 
-func (w *ButtonWidget) Layout(g *gocui.Gui) error {
-	v, err := g.SetView(w.name, w.x, w.y, w.x+w.w, w.y+2)
+func NewButtonWidgetAutoWidth(g *gocui.Gui, name string, x, y int, label string,
+	handler func(g *gocui.Gui, v *gocui.View) error) *gocui.View {
+	widget := NewButtonWidget(g, name, x, y, len(label)+3, " "+label+" ", handler)
+	return widget
+}
+
+func (w *ButtonWidget) Layout(g *gocui.Gui, handler func(g *gocui.Gui, v *gocui.View) error) (*gocui.View, error) {
+	v, err := g.SetView(w.name, w.x, w.y, w.x+w.w, w.y+ButtonHeight)
 	if err != nil {
 		if err != gocui.ErrUnknownView {
-			return err
+			return nil, err
 		}
-		if _, err := g.SetCurrentView(w.name); err != nil {
-			return err
-		}
+
 		if err := g.SetKeybinding(w.name, gocui.KeyEnter, gocui.ModNone, w.handler); err != nil {
-			return err
+			return nil, err
 		}
+		if err := g.SetKeybinding(w.name, gocui.MouseLeft, gocui.ModNone, w.handler); err != nil {
+			return nil, err
+		}
+
 		fmt.Fprint(v, w.label)
 	}
-	return nil
+	return v, nil
 }
