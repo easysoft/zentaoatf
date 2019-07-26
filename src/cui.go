@@ -167,11 +167,8 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 
 	left = right + ui.Space
 	right = left + ui.TextWidthHalf
-	singleFileInput := ui.NewLabelWidget(g, "singleFileInput", left, 7, "[*]")
+	singleFileInput := ui.NewRadioWidget(g, "singleFileInput", left, 7, true)
 	viewMap["import"] = append(viewMap["import"], singleFileInput.Name())
-	if err := g.SetKeybinding("singleFileInput", gocui.KeySpace, gocui.ModNone, changeSingleFile); err != nil {
-		return err
-	}
 
 	buttonX := (maxX-leftWidth)/2 + leftWidth - ui.ButtonWidth
 	submitInput := ui.NewButtonWidgetAutoWidth(g, "submitInput", buttonX, 10, "Submit", importProjectRequest)
@@ -228,19 +225,6 @@ func importProjectRequest(g *gocui.Gui, v *gocui.View) error {
 			utils.GenDir, utils.DateTimeStr(time.Now())))
 	} else {
 		fmt.Fprintln(cmdView, err.Error())
-	}
-
-	return nil
-}
-
-func changeSingleFile(g *gocui.Gui, v *gocui.View) error {
-	val := strings.TrimSpace(v.Buffer())
-
-	v.Clear()
-	if val == "[*]" {
-		fmt.Fprint(v, "[ ]")
-	} else {
-		fmt.Fprint(v, "[*]")
 	}
 
 	return nil
