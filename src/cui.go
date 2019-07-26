@@ -58,9 +58,6 @@ func layout(g *gocui.Gui) error {
 	switchView := ui.NewLabelWidget(g, "switch", 19, 0, "Switch")
 	viewMap["root"] = append(viewMap["root"], switchView.Name())
 
-	//workDirView := ui.NewLabelWidget(g, "workDir", 3, 2, utils.Conf.WorkDir)
-	//viewMap["root"] = append(viewMap["root"], workDirView.Name())
-
 	sideView := ui.NewPanelWidget(g, "side", 0, 2, leftWidth, maxY-3, "")
 	viewMap["root"] = append(viewMap["root"], sideView.Name())
 
