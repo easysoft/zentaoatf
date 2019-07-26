@@ -10,7 +10,6 @@ import (
 	"github.com/jroimartin/gocui"
 	"log"
 	"net/http/httptest"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -55,14 +54,8 @@ func main() {
 func layout(g *gocui.Gui) error {
 	maxX, maxY := g.Size()
 
-	if v, err := g.SetView("qickbar", 0, 0, leftWidth, 2); err != nil {
-		if err != gocui.ErrUnknownView {
-			return err
-		}
-		v.Highlight = true
-		v.SelBgColor = gocui.ColorGreen
-		v.SelFgColor = gocui.ColorBlack
-	}
+	ui.NewLabelWidget(g, "qickbar", 0, 0, leftWidth, "")
+
 	if v, err := g.SetView("import", 3, 0, 14, 2); err != nil {
 		v.Frame = false
 		fmt.Fprint(v, "  Import   ")
@@ -325,10 +318,7 @@ func importProjectRequest(g *gocui.Gui, v *gocui.View) error {
 	taskId := strings.TrimSpace(taskView.Buffer())
 	language := strings.TrimSpace(languageView.Buffer())
 	singleFileStr := strings.TrimSpace(singleFileView.Buffer())
-	singleFile, e := strconv.ParseBool(singleFileStr)
-	if e != nil {
-		singleFile = true
-	}
+	singleFile := ui.ParseRadioVal(singleFileStr)
 
 	params := make(map[string]string)
 	if productCode != "" {

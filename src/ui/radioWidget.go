@@ -62,3 +62,11 @@ func statusSet(v *gocui.View) error {
 
 	return nil
 }
+
+func ParseRadioVal(val string) bool {
+	if val == "[*]" {
+		return true
+	}
+
+	return false
+}
