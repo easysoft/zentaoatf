@@ -24,13 +24,13 @@ const (
 )
 
 var server *httptest.Server
-var importTabViews []string
+var importViews []string
 
 func main() {
 	server = mock.Server("case-from-prodoct.json")
 	defer server.Close()
 
-	importTabViews = make([]string, 0)
+	importViews = make([]string, 0)
 
 	g, err := gocui.NewGui(gocui.OutputNormal)
 	if err != nil {
@@ -172,6 +172,8 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 	if v, err := g.SetView("urlLabel", left, 1, right, 3); err != nil {
 		v.Frame = false
 		fmt.Fprint(v, "ZentaoUrl")
+
+		importViews = append(importViews, v.Name())
 	}
 
 	left = right + space
@@ -190,7 +192,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 			return err
 		}
 
-		importTabViews = append(importTabViews, v.Name())
+		importViews = append(importViews, v.Name())
 	}
 
 	left = slideX + 2
@@ -198,6 +200,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 	if v, err := g.SetView("productLabel", left, 4, right, 6); err != nil {
 		v.Frame = false
 		fmt.Fprint(v, "ProdoctId")
+		importViews = append(importViews, v.Name())
 	}
 
 	left = right + space
@@ -211,7 +214,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 		v.Wrap = true
 
 		fmt.Fprint(v, "1")
-		importTabViews = append(importTabViews, v.Name())
+		importViews = append(importViews, v.Name())
 	}
 
 	left = right + space
@@ -219,6 +222,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 	if v, err := g.SetView("taskLabel", left, 4, right, 6); err != nil {
 		v.Frame = false
 		fmt.Fprint(v, "or TaskId")
+		importViews = append(importViews, v.Name())
 	}
 
 	left = right + space
@@ -232,7 +236,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 		v.Wrap = true
 
 		fmt.Fprint(v, "1")
-		importTabViews = append(importTabViews, v.Name())
+		importViews = append(importViews, v.Name())
 	}
 
 	left = slideX + 2
@@ -240,6 +244,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 	if v, err := g.SetView("languageLabel", left, 7, right, 9); err != nil {
 		v.Frame = false
 		fmt.Fprint(v, "Language")
+		importViews = append(importViews, v.Name())
 	}
 
 	left = right + space
@@ -253,7 +258,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 		v.Wrap = true
 
 		fmt.Fprint(v, "python")
-		importTabViews = append(importTabViews, v.Name())
+		importViews = append(importViews, v.Name())
 	}
 
 	left = right + space
@@ -261,6 +266,7 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 	if v, err := g.SetView("singleFileLabel", left, 7, right, 9); err != nil {
 		v.Frame = false
 		fmt.Fprint(v, "SingleFile")
+		importViews = append(importViews, v.Name())
 	}
 
 	left = right + space
@@ -275,11 +281,11 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 		}
 
 		fmt.Fprint(v, "[*]")
-		importTabViews = append(importTabViews, v.Name())
+		importViews = append(importViews, v.Name())
 	}
 
 	buttonX := (maxX-leftWidth)/2 + leftWidth - buttonWidth
-	if v, err := g.SetView("submit", buttonX, 10, buttonX+buttonWidth, 12); err != nil {
+	if v, err := g.SetView("submitInput", buttonX, 10, buttonX+buttonWidth, 12); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
@@ -289,13 +295,13 @@ func importProjectUi(g *gocui.Gui, v *gocui.View) error {
 		v.FgColor = gocui.ColorBlack
 
 		fmt.Fprint(v, "  Submit  ")
-		if err := g.SetKeybinding("submit", gocui.MouseLeft, gocui.ModNone, importProjectRequest); err != nil {
+		if err := g.SetKeybinding("submitInput", gocui.MouseLeft, gocui.ModNone, importProjectRequest); err != nil {
 			return err
 		}
-		if err := g.SetKeybinding("submit", gocui.KeyEnter, gocui.ModNone, importProjectRequest); err != nil {
+		if err := g.SetKeybinding("submitInput", gocui.KeyEnter, gocui.ModNone, importProjectRequest); err != nil {
 			return err
 		}
-		importTabViews = append(importTabViews, v.Name())
+		importViews = append(importViews, v.Name())
 	}
 
 	return nil
@@ -364,23 +370,10 @@ func changeSingleFile(g *gocui.Gui, v *gocui.View) error {
 }
 
 func toggleInput(g *gocui.Gui, v *gocui.View) error {
-	nextview := ""
-	if v != nil {
-		for idx, name := range importTabViews {
-			if name == v.Name() {
-				if idx == len(importTabViews)-1 {
-					nextview = importTabViews[0]
-				} else {
-					nextview = importTabViews[idx+1]
-				}
+	nextView := ui.GetNextView(v.Name(), importViews)
 
-				break
-			}
-		}
-	}
-
-	if nextview != "" {
-		_, err := g.SetCurrentView(nextview)
+	if nextView != "" {
+		_, err := g.SetCurrentView(nextView)
 		return err
 	}
 
