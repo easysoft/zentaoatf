@@ -135,6 +135,7 @@ func DestoryImportPage(g *gocui.Gui, v *gocui.View) {
 		g.DeleteView(v)
 	}
 
+	g.DeleteKeybindings("singleFileInput")
 	g.DeleteKeybindings("submitInput")
 	g.DeleteKeybinding("", gocui.KeyTab, gocui.ModNone)
 }
