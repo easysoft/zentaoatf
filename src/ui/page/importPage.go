@@ -15,6 +15,8 @@ import (
 )
 
 func InitImportPage(g *gocui.Gui, v *gocui.View) error {
+	DestoryPages(g, v)
+
 	maxX, _ := g.Size()
 	slideView, _ := g.View("side")
 	slideX, _ := slideView.Size()
@@ -134,6 +136,7 @@ func DestoryImportPage(g *gocui.Gui, v *gocui.View) {
 	for _, v := range ui.ViewMap["import"] {
 		g.DeleteView(v)
 	}
+	ui.ViewMap["import"] = make([]string, 0)
 
 	g.DeleteKeybinding("", gocui.KeyTab, gocui.ModNone)
 	g.DeleteKeybindings("singleFileInput")

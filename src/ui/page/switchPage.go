@@ -13,6 +13,8 @@ import (
 )
 
 func InitSwitchPage(g *gocui.Gui, v *gocui.View) error {
+	DestoryPages(g, v)
+
 	maxX, _ := g.Size()
 	slideView, _ := g.View("side")
 	slideX, _ := slideView.Size()
@@ -69,4 +71,6 @@ func DestorySwitchPage(g *gocui.Gui, v *gocui.View) {
 
 	g.DeleteKeybinding("", gocui.KeyTab, gocui.ModNone)
 	g.DeleteKeybindings("submitInput")
+
+	ui.ViewMap["import"] = make([]string, 0)
 }

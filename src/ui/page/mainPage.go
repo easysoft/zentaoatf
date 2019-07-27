@@ -52,14 +52,9 @@ func MainPageKeyBindings(g *gocui.Gui) error {
 	if err := g.SetKeybinding("import", gocui.MouseLeft, gocui.ModNone, InitImportPage); err != nil {
 		return err
 	}
-	if err := g.SetKeybinding("switch", gocui.MouseLeft, gocui.ModNone, SwitchProjectUi); err != nil {
+	if err := g.SetKeybinding("switch", gocui.MouseLeft, gocui.ModNone, InitSwitchPage); err != nil {
 		return err
 	}
 
-	return nil
-}
-
-func SwitchProjectUi(g *gocui.Gui, v *gocui.View) error {
-	DestoryImportPage(g, v)
 	return nil
 }
