@@ -59,5 +59,6 @@ func MainPageKeyBindings(g *gocui.Gui) error {
 }
 
 func SwitchProjectUi(g *gocui.Gui, v *gocui.View) error {
+	DestoryImportPage(g, v)
 	return nil
 }

@@ -14,6 +14,7 @@ func main() {
 	defer mock.Server.Close()
 
 	ui.ViewMap = map[string][]string{"root": {}, "import": {}}
+	ui.EventMap = map[string][]string{"root": {}, "import": {}}
 
 	g, err := gocui.NewGui(gocui.OutputNormal)
 	if err != nil {
