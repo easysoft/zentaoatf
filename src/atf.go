@@ -119,10 +119,10 @@ func main() {
 				os.Exit(1)
 			} else {
 				if language != "" {
-					action.Set("lang", language)
+					action.Set("lang", language, false)
 				}
 				if workDir != "" {
-					action.Set("workDir", workDir)
+					action.Set("workDir", workDir, false)
 				}
 
 				utils.PrintConfig()

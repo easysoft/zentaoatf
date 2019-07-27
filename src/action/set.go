@@ -1,23 +1,23 @@
 package action
 
 import (
-	"fmt"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/fatih/color"
+	"log"
 )
 
-func Set(param string, val string) {
+func Set(param string, val string, dumb bool) {
 	if param == "lang" {
 		if val == utils.LanguageEN || val == utils.LanguageZH {
-			utils.Set(param, val)
+			utils.Set(param, val, dumb)
 		} else {
-			fmt.Println(color.RedString("only %s or %s language is acceptable", utils.LanguageEN, utils.LanguageZH))
+			log.Println(color.RedString("only %s or %s language is acceptable", utils.LanguageEN, utils.LanguageZH))
 		}
 	} else if param == "workDir" {
-		utils.Set(param, val)
+		utils.Set(param, val, dumb)
 	}
 }
 
 func Reset() {
-	Set("ZENTAO_LANG", utils.LanguageDefault)
+	Set("ZENTAO_LANG", utils.LanguageDefault, true)
 }

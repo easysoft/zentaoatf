@@ -55,7 +55,10 @@ func SwitchWorkDir(g *gocui.Gui, v *gocui.View) error {
 
 	err := action.SwitchWorkDir(workDir)
 	if err == nil {
-		fmt.Fprintln(cmdView, fmt.Sprintf("success to switch project %d at %s",
+		workDirView.Clear()
+		workDirView.Write([]byte(utils.Conf.WorkDir))
+
+		fmt.Fprintln(cmdView, fmt.Sprintf("success to switch project to %s at %s",
 			workDir, utils.DateTimeStr(time.Now())))
 	} else {
 		fmt.Fprintln(cmdView, err.Error())

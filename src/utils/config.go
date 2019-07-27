@@ -33,23 +33,27 @@ func InitConfig() {
 	// internationalization
 	InitI118(Conf.Language)
 
-	if strings.Index(os.Args[0], "atf") > -1 && (len(os.Args) >1 && os.Args[1] != "set") {
+	if strings.Index(os.Args[0], "atf") > -1 && (len(os.Args) > 1 && os.Args[1] != "set") {
 		PrintConfig()
 	}
 }
 
-func Set(param string, val string) {
+func Set(param string, val string, dumb bool) {
 	buf, _ := ioutil.ReadFile(ConfFile)
 	yaml.Unmarshal(buf, &Conf)
 
 	if param == "lang" {
 		Conf.Language = val
-		color.Blue(I118Prt.Sprintf("set_config", I118Prt.Sprintf("lang"), I118Prt.Sprintf(Conf.Language)))
+		if !dumb {
+			color.Blue(I118Prt.Sprintf("set_config", I118Prt.Sprintf("lang"), I118Prt.Sprintf(Conf.Language)))
+		}
 	} else if param == "workDir" {
-		val = getWorkDir(val)
+		val = convertWorkDir(val)
 
 		Conf.WorkDir = val
-		color.Blue(I118Prt.Sprintf("set_config", I118Prt.Sprintf("workDir"), Conf.WorkDir))
+		if !dumb {
+			color.Blue(I118Prt.Sprintf("set_config", I118Prt.Sprintf("workDir"), Conf.WorkDir))
+		}
 	}
 	data, _ := yaml.Marshal(&Conf)
 	ioutil.WriteFile(ConfFile, data, 0666)
@@ -64,7 +68,7 @@ func getInst() Config {
 			yaml.Unmarshal(buf, &Conf)
 		} else { // init
 			Conf.Language = "en"
-			Conf.WorkDir = getWorkDir("./")
+			Conf.WorkDir = convertWorkDir("./")
 
 			data, _ := yaml.Marshal(&Conf)
 			ioutil.WriteFile(ConfFile, data, 0666)
@@ -95,10 +99,12 @@ func PrintConfigToView(v *gocui.View) {
 	}
 }
 
-func getWorkDir(path string) string {
-	if path == "./" {
+func convertWorkDir(path string) string {
+	if path == "./" || path == "." {
 		path, _ = filepath.Abs(`.`)
-		if !IsRelease() { // remove 'bin' on dev mode
+		path = path + string(os.PathSeparator)
+	} else {
+		if strings.LastIndex(path, "/") != len(path)-1 {
 			path = path + string(os.PathSeparator)
 		}
 	}
