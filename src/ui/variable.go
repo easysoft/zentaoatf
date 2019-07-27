@@ -5,4 +5,4 @@ const (
 )
 
 var ViewMap map[string][]string
-var EventMap map[string][]string
+var EventMap map[string][][]interface{}

@@ -28,6 +28,7 @@ func InitMainPage(g *gocui.Gui) error {
 
 	cmdView := widget.NewPanelWidget(g, "cmd", ui.LeftWidth, maxY-10, maxX-1-ui.LeftWidth, 9, "")
 	ui.ViewMap["root"] = append(ui.ViewMap["root"], cmdView.Name())
+	cmdView.Autoscroll = true
 
 	utils.PrintConfigToView(cmdView)
 

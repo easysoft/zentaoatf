@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"fmt"
 	"github.com/easysoft/zentaoatf/src/ui/widget"
 	"github.com/jroimartin/gocui"
 	"strings"
@@ -72,4 +73,8 @@ func GetNextView(name string, views []string) string {
 
 func Quit(g *gocui.Gui, v *gocui.View) error {
 	return gocui.ErrQuit
+}
+
+func PrintToView(msg string, v *gocui.View) {
+	fmt.Fprintln(v, msg)
 }
