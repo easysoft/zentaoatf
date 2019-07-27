@@ -30,7 +30,7 @@ func InitMainPage(g *gocui.Gui) error {
 	ui.ViewMap["root"] = append(ui.ViewMap["root"], cmdView.Name())
 	cmdView.Autoscroll = true
 
-	utils.PrintConfigToView(cmdView)
+	utils.PrintPreferenceToView(cmdView)
 
 	widget.NewHelpWidget(g)
 

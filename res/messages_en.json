@@ -2,13 +2,13 @@
   "language": "en-US",
   "messages": [
     {
-      "id": "current_config",
-      "message": "current config",
-      "translation": "current config"
+      "id": "current_preference",
+      "message": "current preference",
+      "translation": "current preference"
     },
     {
-      "id": "set_config",
-      "message": "set config",
+      "id": "set_preference",
+      "message": "set Preference",
       "translation": "set %s to %s"
     },
     {

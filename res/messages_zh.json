@@ -2,13 +2,13 @@
   "language": "zh",
   "messages": [
     {
-      "id": "current_config",
-      "message": "Current config",
+      "id": "current_preference",
+      "message": "Current preference",
       "translation": "当前配置"
     },
     {
-      "id": "set_config",
-      "message": "set config",
+      "id": "set_preference",
+      "message": "set Preference",
       "translation": "设置%s为%s"
     },
     {

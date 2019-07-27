@@ -32,5 +32,5 @@ func main() {
 }
 
 func init() {
-	utils.InitConfig()
+	utils.InitPreference()
 }

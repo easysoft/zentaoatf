@@ -26,10 +26,10 @@ func main() {
 	var path string
 	var files model.FlagSlice
 
-	configSet := flag.NewFlagSet("atf set/reset - Config parameters", flag.ContinueOnError)
-	flagSets = append(flagSets, *configSet)
-	configSet.StringVar(&language, "l", "", "tool language, en or zh")
-	configSet.StringVar(&workDir, "d", "./", "work dir")
+	preferenceSet := flag.NewFlagSet("atf set/reset - Set preferences", flag.ContinueOnError)
+	flagSets = append(flagSets, *preferenceSet)
+	preferenceSet.StringVar(&language, "l", "", "tool language, en or zh")
+	preferenceSet.StringVar(&workDir, "d", "./", "work dir")
 
 	runSet := flag.NewFlagSet("atf run - Run test scripts in specified folder", flag.ContinueOnError)
 	flagSets = append(flagSets, *runSet)
@@ -113,9 +113,9 @@ func main() {
 		}
 
 	case "set":
-		if err := configSet.Parse(os.Args[2:]); err == nil {
+		if err := preferenceSet.Parse(os.Args[2:]); err == nil {
 			if language == "" || workDir == "" {
-				configSet.Usage()
+				preferenceSet.Usage()
 				os.Exit(1)
 			} else {
 				if language != "" {
@@ -125,7 +125,7 @@ func main() {
 					action.Set("workDir", workDir, false)
 				}
 
-				utils.PrintConfig()
+				utils.PrintPreference()
 			}
 		}
 	case "reset":
@@ -137,7 +137,7 @@ func main() {
 }
 
 func init() {
-	utils.InitConfig()
+	utils.InitPreference()
 }
 
 func usage(flagSets []flag.FlagSet) {

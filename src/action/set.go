@@ -9,12 +9,12 @@ import (
 func Set(param string, val string, dumb bool) {
 	if param == "lang" {
 		if val == utils.LanguageEN || val == utils.LanguageZH {
-			utils.Set(param, val, dumb)
+			utils.SetPreference(param, val, dumb)
 		} else {
 			log.Println(color.RedString("only %s or %s language is acceptable", utils.LanguageEN, utils.LanguageZH))
 		}
 	} else if param == "workDir" {
-		utils.Set(param, val, dumb)
+		utils.SetPreference(param, val, dumb)
 	}
 }
 

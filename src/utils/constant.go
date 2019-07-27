@@ -7,7 +7,7 @@ const (
 	LanguageEN      = "en"
 	LanguageZH      = "zh"
 
-	ConfFile = "conf.yaml"
+	PreferenceFile = "preferences.yaml"
 
 	EnRes = "res/messages_en.json"
 	ZhRes = "res/messages_zh.json"

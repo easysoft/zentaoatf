@@ -13,7 +13,7 @@ import (
 	"sync"
 )
 
-type Config struct {
+type Preference struct {
 	Language string
 	WorkDir  string
 
@@ -21,10 +21,10 @@ type Config struct {
 	Height int
 }
 
-var Conf Config
+var Conf Preference
 
-func InitConfig() {
-	// config from yaml
+func InitPreference() {
+	// preference from yaml
 	Conf = getInst()
 
 	// screen size
@@ -34,51 +34,51 @@ func InitConfig() {
 	InitI118(Conf.Language)
 
 	if strings.Index(os.Args[0], "atf") > -1 && (len(os.Args) > 1 && os.Args[1] != "set") {
-		PrintConfig()
+		PrintPreference()
 	}
 }
 
-func Set(param string, val string, dumb bool) {
-	buf, _ := ioutil.ReadFile(ConfFile)
+func SetPreference(param string, val string, dumb bool) {
+	buf, _ := ioutil.ReadFile(PreferenceFile)
 	yaml.Unmarshal(buf, &Conf)
 
 	if param == "lang" {
 		Conf.Language = val
 		if !dumb {
-			color.Blue(I118Prt.Sprintf("set_config", I118Prt.Sprintf("lang"), I118Prt.Sprintf(Conf.Language)))
+			color.Blue(I118Prt.Sprintf("set_preference", I118Prt.Sprintf("lang"), I118Prt.Sprintf(Conf.Language)))
 		}
 	} else if param == "workDir" {
 		val = convertWorkDir(val)
 
 		Conf.WorkDir = val
 		if !dumb {
-			color.Blue(I118Prt.Sprintf("set_config", I118Prt.Sprintf("workDir"), Conf.WorkDir))
+			color.Blue(I118Prt.Sprintf("set_preference", I118Prt.Sprintf("workDir"), Conf.WorkDir))
 		}
 	}
 	data, _ := yaml.Marshal(&Conf)
-	ioutil.WriteFile(ConfFile, data, 0666)
+	ioutil.WriteFile(PreferenceFile, data, 0666)
 }
 
-func getInst() Config {
+func getInst() Preference {
 	var once sync.Once
 	once.Do(func() {
-		Conf = Config{}
-		if FileExist(ConfFile) {
-			buf, _ := ioutil.ReadFile(ConfFile)
+		Conf = Preference{}
+		if FileExist(PreferenceFile) {
+			buf, _ := ioutil.ReadFile(PreferenceFile)
 			yaml.Unmarshal(buf, &Conf)
 		} else { // init
 			Conf.Language = "en"
 			Conf.WorkDir = convertWorkDir("./")
 
 			data, _ := yaml.Marshal(&Conf)
-			ioutil.WriteFile(ConfFile, data, 0666)
+			ioutil.WriteFile(PreferenceFile, data, 0666)
 		}
 	})
 	return Conf
 }
 
-func PrintConfig() {
-	color.Blue(I118Prt.Sprintf("current_config", ""))
+func PrintPreference() {
+	color.Blue(I118Prt.Sprintf("current_preference", ""))
 
 	val := reflect.ValueOf(Conf)
 	typeOfS := val.Type()
@@ -88,8 +88,8 @@ func PrintConfig() {
 	}
 }
 
-func PrintConfigToView(v *gocui.View) {
-	fmt.Fprintln(v, color.BlueString(I118Prt.Sprintf("current_config", "")))
+func PrintPreferenceToView(v *gocui.View) {
+	fmt.Fprintln(v, color.BlueString(I118Prt.Sprintf("current_preference", "")))
 
 	val := reflect.ValueOf(Conf)
 	typeOfS := val.Type()
