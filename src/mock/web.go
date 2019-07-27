@@ -7,7 +7,9 @@ import (
 	"net/http/httptest"
 )
 
-func Server(interf string) *httptest.Server {
+var Server *httptest.Server
+
+func CreateServer(interf string) *httptest.Server {
 	jsonString := utils.ReadFile("src/mock/json/" + interf)
 
 	f := func(w http.ResponseWriter, r *http.Request) {

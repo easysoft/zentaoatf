@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"github.com/easysoft/zentaoatf/src/ui/widget"
 	"github.com/jroimartin/gocui"
 	"strings"
 )
@@ -15,7 +16,7 @@ func ShowHelp(g *gocui.Gui, v *gocui.View) error {
 	if help != nil {
 		HideHelp(g)
 	} else {
-		NewHelpWidget(g)
+		widget.NewHelpWidget(g)
 	}
 
 	return nil
