@@ -1,8 +1,7 @@
-package widget
+package ui
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/jroimartin/gocui"
 )
 
@@ -35,7 +34,7 @@ func (w *TabWidget) Layout(g *gocui.Gui) (*gocui.View, error) {
 			return nil, err
 		}
 
-		Select(g)
+		ShowTab(g)
 		fmt.Fprint(v, w.label)
 	}
 
@@ -45,13 +44,13 @@ func (w *TabWidget) Layout(g *gocui.Gui) (*gocui.View, error) {
 func ToggleTab(g *gocui.Gui, v *gocui.View) error {
 	CurrTab = v.Name()
 
-	Select(g)
+	ShowTab(g)
 
 	return nil
 }
 
-func Select(g *gocui.Gui) {
-	for _, name := range ui.Tabs {
+func ShowTab(g *gocui.Gui) {
+	for _, name := range Tabs {
 		v, err := g.View(name)
 
 		if err == nil {
@@ -65,6 +64,11 @@ func Select(g *gocui.Gui) {
 				v.SelFgColor = gocui.ColorDefault
 			}
 		}
+	}
+
+	DestoryLeftPages(g)
+	if CurrTab == "settings" {
+		InitSettingsPage(g)
 	}
 }
 
