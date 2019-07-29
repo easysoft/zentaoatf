@@ -7,30 +7,29 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/script"
 	"github.com/easysoft/zentaoatf/src/utils"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
 	"os"
 	"strconv"
 	"strings"
 	"time"
 )
 
-func Gen(url string, entityType string, entityVal string, langType string, singleFile bool) {
+func GenFromCmd(url string, entityType string, entityVal string, langType string, singleFile bool) {
 	params := make(map[string]string)
-	if entityType != "product" {
-		params["type"] = "product"
-		params["productCode"] = entityVal
-	} else {
-		params["type"] = "task"
-		params["taskId"] = entityVal
-	}
+
+	params["entityType"] = entityType
+	params["entityVal"] = entityVal
 
 	json, err := httpClient.Get(url, params)
 
-	if err != nil {
-		Generate(json, langType, singleFile)
+	if err == nil {
+		Generate(json, url, entityType, entityVal, langType, singleFile)
 	}
 }
 
-func Generate(json model.Response, langType string, singleFile bool) (int, error) {
+func Generate(json model.Response,
+	url string, entityType string, entityVal string, langType string, singleFile bool) (int, error) {
 	if json.Code != 1 {
 		return 0, errors.New("response code = %s")
 	}
@@ -38,6 +37,8 @@ func Generate(json model.Response, langType string, singleFile bool) (int, error
 	for _, testCase := range json.Cases {
 		DealwithTestCase(testCase, langType, singleFile)
 	}
+
+	SaveConfig(url, entityType, entityVal, langType, singleFile)
 
 	return len(json.Cases), nil
 }
@@ -62,7 +63,7 @@ func DealwithTestCase(tc model.TestCase, langType string, singleFile bool) {
 
 	caseId := tc.Id
 	caseTitle := tc.Title
-	folder := utils.Conf.WorkDir + utils.GenDir
+	folder := utils.Prefer.WorkDir + utils.GenDir
 	scriptFile := fmt.Sprintf(folder+"tc-%s.%s", strconv.Itoa(caseId), LangMap[langType]["extName"])
 
 	utils.MkDirIfNeeded(folder)
@@ -182,4 +183,16 @@ func DealwithTestStep(ts model.TestStep, langType string,
 			DealwithTestStep(tsChild, langType, level+1, stepWidth, checkPointIndex, steps, expects, srcCode)
 		}
 	}
+}
+
+func SaveConfig(url string, entityType string, entityVal string, langType string, singleFile bool) error {
+	config := model.Config{Url: url, EntityType: entityType, LangType: langType, SingleFile: singleFile}
+
+	config.EntityType = entityType
+	config.EntityVal = entityVal
+
+	data, _ := yaml.Marshal(&config)
+	ioutil.WriteFile(utils.Prefer.WorkDir+utils.ConfigFile, data, 0666)
+
+	return nil
 }

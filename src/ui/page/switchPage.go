@@ -26,7 +26,7 @@ func InitSwitchPage(g *gocui.Gui, v *gocui.View) error {
 
 	left = right + ui.Space
 	right = left + widget.TextWidthFull
-	workDirInput := widget.NewTextWidget(g, "workDirInput", left, 1, widget.TextWidthFull, utils.Conf.WorkDir)
+	workDirInput := widget.NewTextWidget(g, "workDirInput", left, 1, widget.TextWidthFull, utils.Prefer.WorkDir)
 	ui.ViewMap["switch"] = append(ui.ViewMap["switch"], workDirInput.Name())
 	if _, err := g.SetCurrentView("workDirInput"); err != nil {
 		return err
@@ -56,7 +56,7 @@ func SwitchWorkDir(g *gocui.Gui, v *gocui.View) error {
 	err := action.SwitchWorkDir(workDir)
 	if err == nil {
 		workDirView.Clear()
-		workDirView.Write([]byte(utils.Conf.WorkDir))
+		workDirView.Write([]byte(utils.Prefer.WorkDir))
 
 		fmt.Fprintln(cmdView, fmt.Sprintf("success to switch project to %s at %s",
 			workDir, utils.DateTimeStr(time.Now())))

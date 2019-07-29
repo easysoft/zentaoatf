@@ -121,7 +121,7 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 		return nil
 	}
 
-	count, err := action.Generate(json, language, singleFile)
+	count, err := action.Generate(json, url, params["entityType"], params["entityVal"], language, singleFile)
 	if err == nil {
 		fmt.Fprintln(cmdView, fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
 			count, utils.GenDir, utils.DateTimeStr(time.Now())))

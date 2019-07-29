@@ -37,13 +37,13 @@ func InitScreenSize() {
 		width, height = noWindowsSize()
 	}
 
-	Conf.Width = width
-	Conf.Height = height
+	Prefer.Width = width
+	Prefer.Height = height
 }
 
 func PrintWholeLine(msg string, char string, attr color.Attribute) {
 	prefixLen := 6
-	postfixLen := Conf.Width - utf8.RuneCountInString(msg) - 6
+	postfixLen := Prefer.Width - utf8.RuneCountInString(msg) - 6
 	if postfixLen < 0 { // no width in debug mode
 		postfixLen = 6
 	}

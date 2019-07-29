@@ -90,7 +90,7 @@ func main() {
 				genSet.Usage()
 				os.Exit(1)
 			} else {
-				action.Gen(zentaoUrl, entityType, entityVal, langType, singleFile)
+				action.GenFromCmd(zentaoUrl, entityType, entityVal, langType, singleFile)
 			}
 		}
 	case "list":

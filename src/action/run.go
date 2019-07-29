@@ -10,7 +10,7 @@ import (
 
 func Run(scriptDir string, fileNames []string, langType string) {
 	if strings.Index(scriptDir, "/") != 0 {
-		scriptDir = utils.Conf.WorkDir + scriptDir
+		scriptDir = utils.Prefer.WorkDir + scriptDir
 	}
 
 	LangMap := script.GetLangMap()

@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/fatih/color"
 	"github.com/jroimartin/gocui"
 	"gopkg.in/yaml.v2"
@@ -13,25 +14,17 @@ import (
 	"sync"
 )
 
-type Preference struct {
-	Language string
-	WorkDir  string
-
-	Width  int
-	Height int
-}
-
-var Conf Preference
+var Prefer model.Preference
 
 func InitPreference() {
 	// preference from yaml
-	Conf = getInst()
+	Prefer = getInst()
 
 	// screen size
 	InitScreenSize()
 
 	// internationalization
-	InitI118(Conf.Language)
+	InitI118(Prefer.Language)
 
 	if strings.Index(os.Args[0], "atf") > -1 && (len(os.Args) > 1 && os.Args[1] != "set") {
 		PrintPreference()
@@ -40,49 +33,49 @@ func InitPreference() {
 
 func SetPreference(param string, val string, dumb bool) {
 	buf, _ := ioutil.ReadFile(PreferenceFile)
-	yaml.Unmarshal(buf, &Conf)
+	yaml.Unmarshal(buf, &Prefer)
 
 	if param == "lang" {
-		Conf.Language = val
+		Prefer.Language = val
 		if !dumb {
-			color.Blue(I118Prt.Sprintf("set_preference", I118Prt.Sprintf("lang"), I118Prt.Sprintf(Conf.Language)))
+			color.Blue(I118Prt.Sprintf("set_preference", I118Prt.Sprintf("lang"), I118Prt.Sprintf(Prefer.Language)))
 		}
 	} else if param == "workDir" {
 		val = convertWorkDir(val)
 
-		Conf.WorkDir = val
+		Prefer.WorkDir = val
 		if !dumb {
-			color.Blue(I118Prt.Sprintf("set_preference", I118Prt.Sprintf("workDir"), Conf.WorkDir))
+			color.Blue(I118Prt.Sprintf("set_preference", I118Prt.Sprintf("workDir"), Prefer.WorkDir))
 		}
 	}
-	data, _ := yaml.Marshal(&Conf)
+	data, _ := yaml.Marshal(&Prefer)
 	ioutil.WriteFile(PreferenceFile, data, 0666)
 }
 
-func getInst() Preference {
+func getInst() model.Preference {
 	var once sync.Once
 	once.Do(func() {
-		Conf = Preference{}
+		Prefer = model.Preference{}
 		if FileExist(PreferenceFile) {
 			buf, _ := ioutil.ReadFile(PreferenceFile)
-			yaml.Unmarshal(buf, &Conf)
+			yaml.Unmarshal(buf, &Prefer)
 		} else { // init
-			Conf.Language = "en"
-			Conf.WorkDir = convertWorkDir("./")
+			Prefer.Language = "en"
+			Prefer.WorkDir = convertWorkDir("./")
 
-			data, _ := yaml.Marshal(&Conf)
+			data, _ := yaml.Marshal(&Prefer)
 			ioutil.WriteFile(PreferenceFile, data, 0666)
 		}
 	})
-	return Conf
+	return Prefer
 }
 
 func PrintPreference() {
 	color.Blue(I118Prt.Sprintf("current_preference", ""))
 
-	val := reflect.ValueOf(Conf)
+	val := reflect.ValueOf(Prefer)
 	typeOfS := val.Type()
-	for i := 0; i < reflect.ValueOf(Conf).NumField(); i++ {
+	for i := 0; i < reflect.ValueOf(Prefer).NumField(); i++ {
 		val := val.Field(i)
 		fmt.Printf("  %s: %v \n", typeOfS.Field(i).Name, val.Interface())
 	}
@@ -91,9 +84,9 @@ func PrintPreference() {
 func PrintPreferenceToView(v *gocui.View) {
 	fmt.Fprintln(v, color.BlueString(I118Prt.Sprintf("current_preference", "")))
 
-	val := reflect.ValueOf(Conf)
+	val := reflect.ValueOf(Prefer)
 	typeOfS := val.Type()
-	for i := 0; i < reflect.ValueOf(Conf).NumField(); i++ {
+	for i := 0; i < reflect.ValueOf(Prefer).NumField(); i++ {
 		val := val.Field(i)
 		fmt.Fprintln(v, fmt.Sprintf("  %s: %v", typeOfS.Field(i).Name, val.Interface()))
 	}
