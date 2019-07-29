@@ -44,10 +44,19 @@ func SetPreference(param string, val string, dumb bool) {
 		val = convertWorkDir(val)
 
 		Prefer.WorkDir = val
+		updateWorkDirHistory()
 		if !dumb {
 			color.Blue(I118Prt.Sprintf("set_preference", I118Prt.Sprintf("workDir"), Prefer.WorkDir))
 		}
 	}
+	data, _ := yaml.Marshal(&Prefer)
+	ioutil.WriteFile(PreferenceFile, data, 0666)
+}
+
+func SaveProjectHistory(workDir string) {
+	buf, _ := ioutil.ReadFile(workDir + ConfigFile)
+	yaml.Unmarshal(buf, &Prefer)
+
 	data, _ := yaml.Marshal(&Prefer)
 	ioutil.WriteFile(PreferenceFile, data, 0666)
 }
@@ -62,6 +71,7 @@ func getInst() model.Preference {
 		} else { // init
 			Prefer.Language = "en"
 			Prefer.WorkDir = convertWorkDir("./")
+			Prefer.WorkHistories = []string{Prefer.WorkDir}
 
 			data, _ := yaml.Marshal(&Prefer)
 			ioutil.WriteFile(PreferenceFile, data, 0666)
@@ -103,4 +113,35 @@ func convertWorkDir(path string) string {
 	}
 
 	return path
+}
+
+func updateWorkDirHistory() {
+	curr := Prefer.WorkDir
+	histories := Prefer.WorkHistories
+
+	// 已经是第一个，不做操作
+	if histories[0] == curr {
+		return
+	}
+
+	// 移除元素
+	idx := -1
+	for i, item := range histories {
+		if item == curr {
+			idx = i
+		}
+	}
+	if idx > -1 {
+		histories = append(histories[:idx], histories[idx+1:]...)
+	}
+
+	// 头部插入元素
+	histories = append([]string{curr}, histories...)
+
+	// 保存最后10个
+	if len(histories) > 10 {
+		histories = histories[:10]
+	}
+
+	Prefer.WorkHistories = histories
 }

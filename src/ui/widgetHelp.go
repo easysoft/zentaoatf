@@ -10,11 +10,12 @@ const (
 	helpWidth = 15
 
 	HelpGlobal = `KEYBINDINGS
-				Tab: Move between widgets
-				Space: Toggle radio box
-				Enter: Click button
-				^H: Show/Hide help
-				^C: Exit`
+			Mouse: Click menu on left side
+			Tab: Move between form widgets
+			Space: Toggle radio box
+			Enter: Click button
+			^H: Show/Hide help
+			^C: Exit`
 )
 
 type HelpWidget struct {
@@ -35,7 +36,7 @@ func NewHelpWidget(g *gocui.Gui) {
 			w = len(l)
 		}
 	}
-	h := len(lines) + 1
+	h := len(lines) + 2
 	w = w + 1
 
 	help := HelpWidget{name: "help", x: maxX - w - 3, y: 1, w: w, h: h + 1, body: HelpGlobal}

@@ -11,7 +11,7 @@ func InitSettingsPage(g *gocui.Gui) error {
 	DestoryLeftPages(g)
 	DestoryRightPages(g)
 
-	importLabel := NewLabelWidgetAutoWidth(g, "switch", 0, 2, "Switch Project")
+	importLabel := NewLabelWidgetAutoWidth(g, "switch", 0, 2, "Switch Work dir")
 	ViewMap["settings"] = append(ViewMap["settings"], importLabel.Name())
 
 	switchLabel := NewLabelWidgetAutoWidth(g, "import", 0, 3, "Import from Zentao")

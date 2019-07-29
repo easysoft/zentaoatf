@@ -6,4 +6,6 @@ type Preference struct {
 
 	Width  int
 	Height int
+
+	WorkHistories []string
 }

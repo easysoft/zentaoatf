@@ -8,11 +8,11 @@ import (
 
 func InitMainPage(g *gocui.Gui) error {
 	maxX, maxY := g.Size()
-	if maxX < 130 {
-		maxX = 130
+	if maxX < MinWidth {
+		maxX = MinWidth
 	}
-	if maxY < 36 {
-		maxY = 36
+	if maxY < MinHeight {
+		maxY = MinHeight
 	}
 
 	quickBarView := NewPanelWidget(g, "quickBarView", 0, 0, LeftWidth, 2, "")
@@ -53,13 +53,6 @@ func MainPageKeyBindings(g *gocui.Gui) error {
 	if err := g.SetKeybinding("", gocui.KeyCtrlH, gocui.ModNone, ShowHelp); err != nil {
 		log.Panicln(err)
 	}
-
-	//if err := g.SetKeybinding("import", gocui.MouseLeft, gocui.ModNone, InitImportPage); err != nil {
-	//	return err
-	//}
-	//if err := g.SetKeybinding("switch", gocui.MouseLeft, gocui.ModNone, InitSwitchPage); err != nil {
-	//	return err
-	//}
 
 	return nil
 }

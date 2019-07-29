@@ -14,7 +14,7 @@ func Set(param string, val string, dumb bool) {
 			log.Println(color.RedString("only %s or %s language is acceptable", utils.LanguageEN, utils.LanguageZH))
 		}
 	} else if param == "workDir" {
-		utils.SetPreference(param, val, dumb)
+		utils.SetPreference("workDir", val, dumb)
 	}
 }
 
