@@ -52,3 +52,27 @@ func (w *HelpWidget) Layout(g *gocui.Gui) error {
 	}
 	return nil
 }
+
+func ShowHelp(g *gocui.Gui, v *gocui.View) error {
+	help, _ := g.View("help")
+
+	if help != nil {
+		HideHelp(g)
+	} else {
+		NewHelpWidget(g)
+	}
+
+	return nil
+}
+
+func HideHelp(g *gocui.Gui) error {
+	help, _ := g.View("help")
+
+	if help != nil {
+		if err := g.DeleteView("help"); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}

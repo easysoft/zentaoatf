@@ -82,7 +82,7 @@ func InitImportPage(g *gocui.Gui, v *gocui.View) error {
 		log.Panicln(err)
 	}
 
-	ui.HideHelp(g)
+	widget.HideHelp(g)
 
 	return nil
 }
