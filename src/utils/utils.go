@@ -24,7 +24,7 @@ func RemoveBlankLine(str string) string {
 
 func ScriptToLogName(dir string, file string) string {
 	logDir := dir + string(os.PathSeparator) + "logs"
-	MkDir(logDir)
+	MkDirIfNeeded(logDir)
 
 	nameSuffix := path.Ext(file)
 	nameWithSuffix := path.Base(file)

@@ -26,7 +26,7 @@ func ReadFileBuf(filePath string) []byte {
 
 func WriteFile(filePath string, content string) {
 	dir := path.Dir(filePath)
-	MkDir(dir)
+	MkDirIfNeeded(dir)
 
 	var d1 = []byte(content)
 	err2 := ioutil.WriteFile(filePath, d1, 0666) //写入文件(字节数组)
@@ -165,9 +165,9 @@ func GetSuiteFiles(dirPth string, name string, fileList *[]string) {
 	}
 }
 
-func MkDir(dir string) {
+func MkDirIfNeeded(dir string) {
 	if !FileExist(dir) {
-		os.Mkdir(dir, os.ModePerm)
+		os.MkdirAll(dir, os.ModePerm)
 	}
 }
 

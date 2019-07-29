@@ -62,10 +62,12 @@ func DealwithTestCase(tc model.TestCase, langType string, singleFile bool) {
 
 	caseId := tc.Id
 	caseTitle := tc.Title
-	scriptFile := fmt.Sprintf(utils.GenDir+"tc-%s.%s", strconv.Itoa(caseId), LangMap[langType]["extName"])
+	folder := utils.Conf.WorkDir + utils.GenDir
+	scriptFile := fmt.Sprintf(folder+"tc-%s.%s", strconv.Itoa(caseId), LangMap[langType]["extName"])
 
+	utils.MkDirIfNeeded(folder)
 	if utils.FileExist(scriptFile) {
-		scriptFile = fmt.Sprintf(utils.GenDir+"tc-%s.%s",
+		scriptFile = fmt.Sprintf(folder+"tc-%s.%s",
 			strconv.Itoa(caseId)+"-"+utils.DateTimeStrLong(time.Now()), LangMap[langType]["extName"])
 	}
 
