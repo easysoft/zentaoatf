@@ -98,7 +98,7 @@ func printForSwitch(g *gocui.Gui, his model.WorkHistory) {
 	utils.PrintToCmd(g, fmt.Sprintf("success to switch to project %s: %s at %s",
 		name, his.ProjectPath, utils.DateTimeStr(time.Now())))
 
-	str := "%s \nWork dir: %s\nZentao project: %s\nImport type: %s\nProduct code: %s\nLanguage: %s\n" +
+	str := "%s\n Work dir: %s\n Zentao project: %s\n Import type: %s\n Product code: %s\n Language: %s\n " +
 		"Independent ExpectResult file: %t"
 	str = fmt.Sprintf(str, name, his.ProjectPath, config.Url, config.EntityType, config.EntityVal,
 		config.LangType, !config.SingleFile)
