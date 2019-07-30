@@ -67,6 +67,7 @@ func ShowTab(g *gocui.Gui) {
 	}
 
 	DestoryLeftPages(g)
+	DestoryRightPages(g)
 	if CurrTab == "settings" {
 		InitSettingsPage(g)
 	}
