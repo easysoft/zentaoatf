@@ -3,6 +3,7 @@ package action
 import (
 	"errors"
 	"fmt"
+	"github.com/easysoft/zentaoatf/src/biz"
 	httpClient "github.com/easysoft/zentaoatf/src/http"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/script"
@@ -32,16 +33,18 @@ func Generate(json model.Response,
 		return 0, errors.New("response code = %s")
 	}
 
+	casePaths := make([]string, 0)
 	for _, testCase := range json.Cases {
-		DealwithTestCase(testCase, langType, singleFile)
+		DealwithTestCase(testCase, langType, singleFile, &casePaths)
 	}
+	biz.GenSuite(casePaths)
 
 	utils.SaveConfig(url, entityType, entityVal, langType, singleFile, json.Name)
 
 	return len(json.Cases), nil
 }
 
-func DealwithTestCase(tc model.TestCase, langType string, singleFile bool) {
+func DealwithTestCase(tc model.TestCase, langType string, singleFile bool, casePaths *[]string) {
 	LangMap := script.GetLangMap()
 	langs := ""
 	if LangMap[langType] == nil {
@@ -61,14 +64,16 @@ func DealwithTestCase(tc model.TestCase, langType string, singleFile bool) {
 
 	caseId := tc.Id
 	caseTitle := tc.Title
-	folder := utils.Prefer.WorkDir + utils.GenDir
-	scriptFile := fmt.Sprintf(folder+"tc-%s.%s", strconv.Itoa(caseId), LangMap[langType]["extName"])
 
-	utils.MkDirIfNeeded(folder)
-	if utils.FileExist(scriptFile) {
-		scriptFile = fmt.Sprintf(folder+"tc-%s.%s",
+	scriptFile := fmt.Sprintf(utils.GenDir+"tc-%s.%s", strconv.Itoa(caseId), LangMap[langType]["extName"])
+
+	utils.MkDirIfNeeded(utils.Prefer.WorkDir + utils.GenDir)
+	if utils.FileExist(utils.Prefer.WorkDir + scriptFile) {
+		scriptFile = fmt.Sprintf(utils.GenDir+"tc-%s.%s",
 			strconv.Itoa(caseId)+"-"+utils.DateTimeStrLong(time.Now()), LangMap[langType]["extName"])
 	}
+	*casePaths = append(*casePaths, scriptFile)
+	scriptFullPath := utils.Prefer.WorkDir + scriptFile
 
 	steps := make([]string, 0)
 	expects := make([]string, 0)
@@ -92,7 +97,7 @@ func DealwithTestCase(tc model.TestCase, langType string, singleFile bool) {
 	if singleFile {
 		expectsTxt = strings.Join(expects, "\n")
 	} else {
-		expectFile := utils.ScriptToExpectName(scriptFile)
+		expectFile := utils.ScriptToExpectName(scriptFullPath)
 
 		expectsTxt = "@file\n"
 		utils.WriteFile(expectFile, strings.Join(expects, "\n"))
@@ -107,7 +112,7 @@ func DealwithTestCase(tc model.TestCase, langType string, singleFile bool) {
 
 	//fmt.Println(content)
 
-	utils.WriteFile(scriptFile, content)
+	utils.WriteFile(scriptFullPath, content)
 }
 
 func DealwithTestStepWidth(steps []model.TestStep, stepSDisplayMaxWidth *int, stepWidth int) {
