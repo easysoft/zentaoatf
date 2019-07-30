@@ -61,8 +61,7 @@ func SelectProjectsButton(g *gocui.Gui) {
 				v.SelFgColor = gocui.ColorBlack
 
 				action.SwitchWorkDir(path)
-				utils.PrintToCmd(g, fmt.Sprintf("success to switch project to %s at %s",
-					path, utils.DateTimeStr(time.Now())))
+				printForSwitch(g, his)
 			} else {
 				v.Highlight = false
 				v.SelBgColor = gocui.ColorBlack
@@ -87,6 +86,24 @@ func getProjectInfo(his model.WorkHistory) (string, string, string) {
 	}
 
 	return name, label, path
+}
+
+func printForSwitch(g *gocui.Gui, his model.WorkHistory) {
+	config := utils.ReadConfig()
+	name := config.ProjectName
+	if name == "" {
+		name = "No Name"
+	}
+
+	utils.PrintToCmd(g, fmt.Sprintf("success to switch to project %s: %s at %s",
+		name, his.ProjectPath, utils.DateTimeStr(time.Now())))
+
+	str := "%s \nWork dir: %s\nZentao project: %s\nImport type: %s\nProduct code: %s\nLanguage: %s\n" +
+		"Independent ExpectResult file: %t"
+	str = fmt.Sprintf(str, name, his.ProjectPath, config.Url, config.EntityType, config.EntityVal,
+		config.LangType, !config.SingleFile)
+
+	utils.PrintToMain(g, str)
 }
 
 func init() {

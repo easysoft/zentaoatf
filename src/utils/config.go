@@ -23,3 +23,15 @@ func SaveEmptyConfig() error {
 
 	return nil
 }
+
+func ReadConfig() model.Config {
+	configPath := Prefer.WorkDir + ConfigFile
+	var config model.Config
+	if !FileExist(configPath) {
+		SaveEmptyConfig()
+	}
+	buf, _ := ioutil.ReadFile(configPath)
+	yaml.Unmarshal(buf, &config)
+
+	return config
+}

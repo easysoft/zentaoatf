@@ -129,13 +129,7 @@ func updateWorkDirHistory() {
 	}
 
 	// 头部插入元素
-	configPath := Prefer.WorkDir + ConfigFile
-	var config model.Config
-	if !FileExist(configPath) {
-		SaveEmptyConfig()
-	}
-	buf, _ := ioutil.ReadFile(configPath)
-	yaml.Unmarshal(buf, &config)
+	config := ReadConfig()
 
 	history := model.WorkHistory{ProjectName: config.ProjectName, ProjectPath: Prefer.WorkDir,
 		EntityType: config.EntityType, EntityVal: config.EntityVal}

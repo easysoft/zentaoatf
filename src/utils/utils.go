@@ -99,6 +99,12 @@ func PrintToCmd(g *gocui.Gui, msg string) {
 	cmdView, _ := g.View("cmd")
 	_, _ = fmt.Fprintln(cmdView, msg)
 }
+func PrintToMain(g *gocui.Gui, msg string) {
+	mainView, _ := g.View("main")
+	mainView.Clear()
+
+	_, _ = fmt.Fprintln(mainView, msg)
+}
 
 func IsRelease() bool {
 	return !FileExist("res")

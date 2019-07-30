@@ -7,14 +7,12 @@ import (
 )
 
 const (
-	helpWidth = 15
-
 	HelpGlobal = `KEYBINDINGS
-			Mouse: Click menu on left side
+			Mouse: Menu operation on left side
 			Tab: Move between form widgets
 			Space: Toggle radio box
 			Enter: Click button
-			^H: Show/Hide help
+			^H: Show/Hide help window
 			^C: Exit`
 )
 
@@ -36,8 +34,8 @@ func NewHelpWidget(g *gocui.Gui) {
 			w = len(l)
 		}
 	}
-	h := len(lines) + 2
-	w = w + 1
+	h := len(lines) + 1
+	w = w + 2
 
 	help := HelpWidget{name: "help", x: maxX - w - 3, y: 1, w: w, h: h + 1, body: HelpGlobal}
 	help.Layout(g)
