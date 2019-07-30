@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/misc"
 	"github.com/fatih/color"
+	"github.com/jroimartin/gocui"
 	"os"
 	"path"
 	"regexp"
@@ -92,6 +93,11 @@ func PrintUsageWithSpaceLine(flagSet flag.FlagSet, spaceLine bool) {
 func PrintSample() {
 	fmt.Printf("\nSample to use: \n")
 	fmt.Printf("TODO... \n")
+}
+
+func PrintToCmd(g *gocui.Gui, msg string) {
+	cmdView, _ := g.View("cmd")
+	_, _ = fmt.Fprintln(cmdView, msg)
 }
 
 func IsRelease() bool {

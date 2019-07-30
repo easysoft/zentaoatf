@@ -1,55 +1,59 @@
 package ui
 
 import (
+	"github.com/easysoft/zentaoatf/src/model"
+	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/jroimartin/gocui"
 )
 
-var CurrProjectsButton string
-var projectsButtons []string
+var CurrProjectName string
+var projectHistoriess []model.WorkHistory
 
 func InitProjectsPage(g *gocui.Gui) error {
-	importLabel := NewLabelWidgetAutoWidth(g, "switch", 0, 2, "Switch Work dir")
-	ViewMap["projects"] = append(ViewMap["projects"], importLabel.Name())
+	his := utils.Prefer.WorkHistories[0]
+	name, _ := getProjectInfo(his)
+	CurrProjectName = name
 
-	switchLabel := NewLabelWidgetAutoWidth(g, "import", 0, 3, "Import from Zentao")
-	ViewMap["projects"] = append(ViewMap["projects"], switchLabel.Name())
+	y := 2
+	for _, his := range utils.Prefer.WorkHistories {
+		name, label := getProjectInfo(his)
 
+		hisView := NewLabelWidgetAutoWidth(g, name, 0, y, label)
+		ViewMap["projects"] = append(ViewMap["projects"], hisView.Name())
+
+		y += 1
+	}
 	keybindingProjectsButton(g)
 
 	return nil
 }
 
 func keybindingProjectsButton(g *gocui.Gui) error {
-	if err := g.SetKeybinding("import", gocui.MouseLeft, gocui.ModNone, toggleProjectsButton); err != nil {
-		return err
-	}
-	if err := g.SetKeybinding("switch", gocui.MouseLeft, gocui.ModNone, toggleProjectsButton); err != nil {
-		return err
+	for _, his := range utils.Prefer.WorkHistories {
+		name, _ := getProjectInfo(his)
+		if err := g.SetKeybinding(name, gocui.MouseLeft, gocui.ModNone, toggleProjectsButton); err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
 func toggleProjectsButton(g *gocui.Gui, v *gocui.View) error {
-	CurrProjectsButton = v.Name()
-
+	CurrProjectName = v.Name()
 	SelectProjectsButton(g)
-
-	if v.Name() == "import" {
-		InitImportPage(g)
-	} else if v.Name() == "switch" {
-		InitSwitchPage(g)
-	}
 
 	return nil
 }
 
 func SelectProjectsButton(g *gocui.Gui) {
-	for _, name := range projectsButtons {
+	for _, his := range utils.Prefer.WorkHistories {
+		name, _ := getProjectInfo(his)
+
 		v, err := g.View(name)
 
 		if err == nil {
-			if v.Name() == CurrProjectsButton {
+			if v.Name() == CurrProjectName {
 				v.Highlight = true
 				v.SelBgColor = gocui.ColorWhite
 				v.SelFgColor = gocui.ColorBlack
@@ -62,9 +66,23 @@ func SelectProjectsButton(g *gocui.Gui) {
 	}
 }
 
+func getProjectInfo(his model.WorkHistory) (string, string) {
+	var name string
+	var label string
+
+	if his.EntityType != "" {
+		name = his.EntityType + "-" + his.EntityVal
+		label = his.ProjectName
+	} else {
+		name = his.ProjectPath
+		label = utils.PathSomple(his.ProjectPath)
+	}
+
+	return name, label
+}
+
 func init() {
-	CurrProjectsButton = "import"
-	projectsButtons = append(projectsButtons, "import", "switch")
+
 }
 
 func DestoryProjectsPage(g *gocui.Gui) {
