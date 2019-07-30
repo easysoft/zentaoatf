@@ -7,8 +7,6 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/script"
 	"github.com/easysoft/zentaoatf/src/utils"
-	"gopkg.in/yaml.v2"
-	"io/ioutil"
 	"os"
 	"strconv"
 	"strings"
@@ -38,7 +36,7 @@ func Generate(json model.Response,
 		DealwithTestCase(testCase, langType, singleFile)
 	}
 
-	SaveConfig(url, entityType, entityVal, langType, singleFile)
+	utils.SaveConfig(url, entityType, entityVal, langType, singleFile, json.Name)
 
 	return len(json.Cases), nil
 }
@@ -183,16 +181,4 @@ func DealwithTestStep(ts model.TestStep, langType string,
 			DealwithTestStep(tsChild, langType, level+1, stepWidth, checkPointIndex, steps, expects, srcCode)
 		}
 	}
-}
-
-func SaveConfig(url string, entityType string, entityVal string, langType string, singleFile bool) error {
-	config := model.Config{Url: url, EntityType: entityType, LangType: langType, SingleFile: singleFile}
-
-	config.EntityType = entityType
-	config.EntityVal = entityVal
-
-	data, _ := yaml.Marshal(&config)
-	ioutil.WriteFile(utils.Prefer.WorkDir+utils.ConfigFile, data, 0666)
-
-	return nil
 }

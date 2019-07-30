@@ -53,14 +53,6 @@ func SetPreference(param string, val string, dumb bool) {
 	ioutil.WriteFile(PreferenceFile, data, 0666)
 }
 
-func SaveProjectHistory(workDir string) {
-	buf, _ := ioutil.ReadFile(workDir + ConfigFile)
-	yaml.Unmarshal(buf, &Prefer)
-
-	data, _ := yaml.Marshal(&Prefer)
-	ioutil.WriteFile(PreferenceFile, data, 0666)
-}
-
 func getInst() model.Preference {
 	var once sync.Once
 	once.Do(func() {
@@ -71,7 +63,9 @@ func getInst() model.Preference {
 		} else { // init
 			Prefer.Language = "en"
 			Prefer.WorkDir = convertWorkDir("./")
-			Prefer.WorkHistories = []string{Prefer.WorkDir}
+
+			history := model.WorkHistory{ProjectPath: Prefer.WorkDir}
+			Prefer.WorkHistories = []model.WorkHistory{history}
 
 			data, _ := yaml.Marshal(&Prefer)
 			ioutil.WriteFile(PreferenceFile, data, 0666)
@@ -116,18 +110,17 @@ func convertWorkDir(path string) string {
 }
 
 func updateWorkDirHistory() {
-	curr := Prefer.WorkDir
 	histories := Prefer.WorkHistories
 
 	// 已经是第一个，不做操作
-	if histories[0] == curr {
+	if histories[0].ProjectPath == Prefer.WorkDir {
 		return
 	}
 
 	// 移除元素
 	idx := -1
 	for i, item := range histories {
-		if item == curr {
+		if item.ProjectPath == Prefer.WorkDir {
 			idx = i
 		}
 	}
@@ -136,7 +129,18 @@ func updateWorkDirHistory() {
 	}
 
 	// 头部插入元素
-	histories = append([]string{curr}, histories...)
+	configPath := Prefer.WorkDir + ConfigFile
+	var config model.Config
+	if !FileExist(configPath) {
+		SaveEmptyConfig()
+	}
+	buf, _ := ioutil.ReadFile(configPath)
+	yaml.Unmarshal(buf, &config)
+
+	history := model.WorkHistory{ProjectName: config.ProjectName, ProjectPath: Prefer.WorkDir,
+		EntityType: config.EntityType, EntityVal: config.EntityVal}
+
+	histories = append([]model.WorkHistory{history}, histories...)
 
 	// 保存最后10个
 	if len(histories) > 10 {

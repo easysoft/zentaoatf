@@ -7,5 +7,13 @@ type Preference struct {
 	Width  int
 	Height int
 
-	WorkHistories []string
+	WorkHistories []WorkHistory
+}
+
+type WorkHistory struct {
+	ProjectName string
+	ProjectPath string
+
+	EntityType string
+	EntityVal  string
 }

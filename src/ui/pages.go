@@ -17,16 +17,9 @@ func DestoryRightPages(g *gocui.Gui) {
 }
 
 func DestoryLeftPages(g *gocui.Gui) {
-	for key, _ := range ViewMap {
-		if key == "testings" {
-			//DestoryImportPage(g)
-
-		} else if key == "projects" {
-			//DestorySwitchPage(g)
-		} else if key == "settings" {
-			DestorySettingsPage(g)
-		}
-	}
+	//DestoryTestingPage(g)
+	DestoryProjectsPage(g)
+	DestorySettingsPage(g)
 
 	ViewMap["testings"] = make([]string, 0)
 	ViewMap["projects"] = make([]string, 0)

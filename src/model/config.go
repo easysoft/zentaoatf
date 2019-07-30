@@ -6,4 +6,6 @@ type Config struct {
 	EntityVal  string
 	LangType   string
 	SingleFile bool
+
+	ProjectName string
 }
