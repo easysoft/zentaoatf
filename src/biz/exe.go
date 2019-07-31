@@ -9,7 +9,7 @@ import (
 )
 
 func ExeScripts(files []string, dir string, langType string, report *model.TestReport) {
-	PrintWholeLine(utils.I118Prt.Sprintf("start_execution", ""), "=", color.FgCyan)
+	utils.PrintWholeLine(utils.I118Prt.Sprintf("start_execution", ""), "=", color.FgCyan)
 
 	startTime := time.Now().Unix()
 	report.StartTime = startTime
@@ -18,7 +18,7 @@ func ExeScripts(files []string, dir string, langType string, report *model.TestR
 		ExeScript(file, langType, dir)
 	}
 
-	PrintWholeLine(utils.I118Prt.Sprintf("end_execution", ""), "=", color.FgCyan)
+	utils.PrintWholeLine(utils.I118Prt.Sprintf("end_execution", ""), "=", color.FgCyan)
 
 	endTime := time.Now().Unix()
 	secs := endTime - startTime
@@ -43,15 +43,14 @@ func ExeScript(file string, langType string, dir string) {
 	startTime := time.Now()
 
 	msg := utils.I118Prt.Sprintf("start_case", file, startTime.Format("2006-01-02 15:04:05"))
-	PrintWholeLine(msg, "-", color.FgCyan)
+	utils.PrintWholeLine(msg, "-", color.FgCyan)
 
 	output := utils.ExecCommand(command)
 	utils.WriteFile(logFile, output)
-	Printt(output)
 
 	entTime := time.Now()
 	secs := int64(entTime.Sub(startTime) / time.Second)
 
 	msg = utils.I118Prt.Sprintf("end_case", file, entTime.Format("2006-01-02 15:04:05"), secs)
-	PrintWholeLine(msg, "-", color.FgCyan)
+	utils.PrintWholeLine(msg, "-", color.FgCyan)
 }
