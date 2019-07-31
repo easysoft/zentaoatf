@@ -10,7 +10,7 @@ import (
 func Summary(file string) {
 	content := utils.ReadFile(file)
 
-	myExp := regexp.MustCompile(`<<<TC[\S\s]*caseId:([^\n]*)\n+title:([^\n]*)\n`)
+	myExp := regexp.MustCompile(`<<TC[\S\s]*caseId:([^\n]*)\n+title:([^\n]*)\n`)
 	arr := myExp.FindStringSubmatch(content)
 
 	if len(arr) > 2 {
@@ -25,7 +25,7 @@ func Detail(file string) {
 	content := utils.ReadFile(file)
 
 	myExp := regexp.MustCompile(
-		`<<<TC[\S\s]*caseId:([^\n]*)\n+title:([^\n]*)\n+steps:([\S\s]*)\n+expects:([\S\s]*?)\n+(readme:|TC;)`)
+		`<<TC[\S\s]*caseId:([^\n]*)\n+title:([^\n]*)\n+steps:([\S\s]*)\n+expects:([\S\s]*?)\n+(readme:|TC;)`)
 	arr := myExp.FindStringSubmatch(content)
 
 	if len(arr) > 2 {

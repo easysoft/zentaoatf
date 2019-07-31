@@ -14,7 +14,7 @@ func PrintWholeLine(msg string, char string, attr color.Attribute) {
 	var postfixLen int
 	if utils.RunFromCui {
 		maxX, _ := utils.Cui.Size()
-		postfixLen = maxX - utils.LeftWidth - utf8.RuneCountInString(msg) - 8
+		postfixLen = maxX - utils.LeftWidth - utf8.RuneCountInString(msg) - 9
 	} else {
 		postfixLen = utils.Prefer.Width - utf8.RuneCountInString(msg) - 6
 		if postfixLen < 0 { // no width in debug mode
@@ -71,7 +71,7 @@ func Printt(str string) {
 		output = color.Output
 	}
 
-	fmt.Fprintf(output, str+"\n")
+	fmt.Fprintf(output, str)
 }
 
 func coloredStatus(status string) string {

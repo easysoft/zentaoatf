@@ -1,7 +1,6 @@
 package biz
 
 import (
-	"fmt"
 	"github.com/easysoft/zentaoatf/src/misc"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils"
@@ -10,8 +9,8 @@ import (
 )
 
 func CheckResults(files []string, dir string, langType string, report *model.TestReport) {
-	fmt.Println("\n")
-	PrintWholeLine(utils.I118Prt.Sprintf("begin_analyse"), "=", color.FgBlue)
+	Printt("\n")
+	PrintWholeLine(utils.I118Prt.Sprintf("begin_analyse"), "=", color.FgCyan)
 
 	for _, scriptFile := range files {
 		logFile := utils.ScriptToLogName(dir, scriptFile)
@@ -73,7 +72,6 @@ func ValidateTestCase(scriptFile string, langType string,
 }
 
 func ValidateStep(langType string, expectLines []string, actualLines []string) (bool, []model.CheckPointLog) {
-
 	stepResult := true
 
 	checkpointLogs := make([]model.CheckPointLog, 0)

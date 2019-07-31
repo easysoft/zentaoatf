@@ -174,7 +174,7 @@ func MkDirIfNeeded(dir string) {
 func ReadCheckpointSteps(file string) []string {
 	content := ReadFile(file)
 
-	myExp := regexp.MustCompile(`<<<TC[\S\s]*steps:[^\n]*\n*([\S\s]*)\n+expects:`)
+	myExp := regexp.MustCompile(`<<TC[\S\s]*steps:[^\n]*\n*([\S\s]*)\n+expects:`)
 	arr := myExp.FindStringSubmatch(content)
 
 	str := ""
@@ -191,7 +191,7 @@ func ReadCheckpointSteps(file string) []string {
 func ReadExpect(file string) [][]string {
 	content := ReadFile(file)
 
-	myExp := regexp.MustCompile(`<<<TC[\S\s]*expects:[^\n]*\n*([\S\s]*?)(readme:|TC;)`)
+	myExp := regexp.MustCompile(`<<TC[\S\s]*expects:[^\n]*\n+([\S\s]*?)(readme:|TC;)`)
 	arr := myExp.FindStringSubmatch(content)
 
 	str := ""

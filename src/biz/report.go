@@ -26,7 +26,7 @@ func Print(report model.TestReport, workDir string) {
 	PrintAndLogColorLn(&logs, fmt.Sprintf("  %s: %d", utils.I118Prt.Sprintf("skip"), report.Skip), color.FgYellow)
 
 	for _, cs := range report.Cases {
-		str := "\n %s %s "
+		str := "\n %s %s \n"
 		status := cs.Status.String()
 		statusColor := coloredStatus(status)
 
@@ -55,9 +55,9 @@ func Print(report model.TestReport, workDir string) {
 
 					cpStatus := utils.BoolToPass(step.Status)
 					cpStatusColored := coloredStatus(cpStatus)
-					logs = append(logs, fmt.Sprintf("    %s%d: %s", utils.I118Prt.Sprintf("checkpoint"), cp.Numb,
+					logs = append(logs, fmt.Sprintf("    %s%d: %s\n", utils.I118Prt.Sprintf("checkpoint"), cp.Numb,
 						utils.BoolToPass(cp.Status)))
-					Printt(fmt.Sprintf("    %s%d: %s", utils.I118Prt.Sprintf("checkpoint"), cp.Numb, cpStatusColored))
+					Printt(fmt.Sprintf("    %s%d: %s\n", utils.I118Prt.Sprintf("checkpoint"), cp.Numb, cpStatusColored))
 
 					PrintAndLog(&logs, fmt.Sprintf("      %s %s", utils.I118Prt.Sprintf("expect_result"), cp.Expect))
 					PrintAndLog(&logs, fmt.Sprintf("      %s %s", utils.I118Prt.Sprintf("actual_result"), cp.Actual))
