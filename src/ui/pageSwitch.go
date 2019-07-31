@@ -38,8 +38,6 @@ func InitSwitchPage(g *gocui.Gui) error {
 		log.Panicln(err)
 	}
 
-	HideHelp(g)
-
 	return nil
 }
 

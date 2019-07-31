@@ -17,7 +17,7 @@ func DestoryRightPages(g *gocui.Gui) {
 }
 
 func DestoryLeftPages(g *gocui.Gui) {
-	//DestoryTestingPage(g)
+	DestoryTestingPage(g)
 	DestoryProjectsPage(g)
 	DestorySettingsPage(g)
 

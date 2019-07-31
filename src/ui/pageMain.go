@@ -38,10 +38,9 @@ func InitMainPage(g *gocui.Gui) error {
 	utils.PrintPreferenceToView(cmdView)
 
 	NewHelpWidget(g)
+	MainPageKeyBindings(g)
 
-	if err := MainPageKeyBindings(g); err != nil {
-		log.Panicln(err)
-	}
+	InitTestingPage(g)
 
 	return nil
 }

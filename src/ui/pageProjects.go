@@ -10,7 +10,7 @@ import (
 )
 
 var CurrProjectName string
-var projectHistoriess []model.WorkHistory
+var projectHistories []model.WorkHistory
 
 func InitProjectsPage(g *gocui.Gui) error {
 	his := utils.Prefer.WorkHistories[0]

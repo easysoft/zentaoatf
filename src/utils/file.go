@@ -54,18 +54,18 @@ func GetAllFiles(dirPth string, ext string) (files []string, err error) {
 		return nil, err
 	}
 
-	PthSep := string(os.PathSeparator)
+	//PthSep := string(os.PathSeparator)
 	//suffix = strings.ToUpper(suffix) //忽略后缀匹配的大小写
 
 	for _, fi := range dir {
 		if fi.IsDir() { // 目录, 递归遍历
-			dirs = append(dirs, dirPth+PthSep+fi.Name())
-			GetAllFiles(dirPth+PthSep+fi.Name(), ext)
+			dirs = append(dirs, dirPth+fi.Name())
+			GetAllFiles(dirPth+fi.Name(), ext)
 		} else {
 			// 过滤指定格式
 			ok := strings.HasSuffix(fi.Name(), "."+ext)
 			if ok {
-				files = append(files, dirPth+PthSep+fi.Name())
+				files = append(files, dirPth+fi.Name())
 			}
 		}
 	}

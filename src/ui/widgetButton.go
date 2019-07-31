@@ -21,13 +21,28 @@ type ButtonWidget struct {
 func NewButtonWidget(g *gocui.Gui, name string, x, y, w int, label string,
 	handler func(g *gocui.Gui, v *gocui.View) error) *gocui.View {
 	widget := ButtonWidget{name: name, x: x, y: y, w: w, label: label, handler: handler}
+
 	v, _ := widget.Layout(g, handler)
+	return v
+}
+func NewButtonWidgetNoBorder(g *gocui.Gui, name string, x, y, w int, label string,
+	handler func(g *gocui.Gui, v *gocui.View) error) *gocui.View {
+	widget := ButtonWidget{name: name, x: x, y: y, w: w, label: label, handler: handler}
+
+	v, _ := widget.Layout(g, handler)
+	v.Frame = false
 	return v
 }
 
 func NewButtonWidgetAutoWidth(g *gocui.Gui, name string, x, y int, label string,
 	handler func(g *gocui.Gui, v *gocui.View) error) *gocui.View {
 	widget := NewButtonWidget(g, name, x, y, len(label)+3, " "+label+" ", handler)
+
+	return widget
+}
+func NewButtonWidgetNoBorderAutoWidth(g *gocui.Gui, name string, x, y int, label string,
+	handler func(g *gocui.Gui, v *gocui.View) error) *gocui.View {
+	widget := NewButtonWidgetNoBorder(g, name, x, y, len(label)+3, " "+label+" ", handler)
 	return widget
 }
 
