@@ -102,7 +102,7 @@ func getProjectInfo(his model.WorkHistory) (string, string, string) {
 	if his.EntityType != "" {
 		label = his.ProjectName
 	} else {
-		label = utils.PathSomple(his.ProjectPath)
+		label = utils.PathSimple(his.ProjectPath)
 	}
 
 	return id, label, path

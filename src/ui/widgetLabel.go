@@ -3,7 +3,6 @@ package ui
 import (
 	"fmt"
 	"github.com/jroimartin/gocui"
-	"unicode/utf8"
 )
 
 const (
@@ -26,7 +25,7 @@ func NewLabelWidget(g *gocui.Gui, name string, x, y int, label string) *gocui.Vi
 }
 
 func NewLabelWidgetAutoWidth(g *gocui.Gui, name string, x, y int, label string) *gocui.View {
-	widget := LabelWidget{name: name, x: x, y: y, w: utf8.RuneCountInString(label) + 1, label: label}
+	widget := LabelWidget{name: name, x: x, y: y, w: len(label), label: label}
 	v, _ := widget.Layout(g)
 	v.Frame = false
 	return v

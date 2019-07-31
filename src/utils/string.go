@@ -20,7 +20,7 @@ func Lcfirst(str string) string {
 	return ""
 }
 
-func PathSomple(str string) string {
+func PathSimple(str string) string {
 	sep := string(os.PathSeparator)
 	arr := strings.Split(str, sep)
 

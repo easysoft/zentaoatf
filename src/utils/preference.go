@@ -39,7 +39,7 @@ func SetPreference(param string, val string, dumb bool) {
 	if param == "lang" {
 		Prefer.Language = val
 		if !dumb {
-			color.Blue(I118Prt.Sprintf("set_preference", I118Prt.Sprintf("lang"), I118Prt.Sprintf(Prefer.Language)))
+			color.Cyan(I118Prt.Sprintf("set_preference", I118Prt.Sprintf("lang"), I118Prt.Sprintf(Prefer.Language)))
 		}
 	} else if param == "workDir" {
 		val = convertWorkDir(val)
@@ -47,7 +47,7 @@ func SetPreference(param string, val string, dumb bool) {
 		Prefer.WorkDir = val
 		updateWorkDirHistory()
 		if !dumb {
-			color.Blue(I118Prt.Sprintf("set_preference", I118Prt.Sprintf("workDir"), Prefer.WorkDir))
+			color.Cyan(I118Prt.Sprintf("set_preference", I118Prt.Sprintf("workDir"), Prefer.WorkDir))
 		}
 	}
 	data, _ := yaml.Marshal(&Prefer)
@@ -76,7 +76,7 @@ func getInst() model.Preference {
 }
 
 func PrintPreference() {
-	color.Blue(I118Prt.Sprintf("current_preference", ""))
+	color.Cyan(I118Prt.Sprintf("current_preference", ""))
 
 	val := reflect.ValueOf(Prefer)
 	typeOfS := val.Type()
@@ -87,7 +87,7 @@ func PrintPreference() {
 }
 
 func PrintPreferenceToView(v *gocui.View) {
-	fmt.Fprintln(v, color.BlueString(I118Prt.Sprintf("current_preference", "")))
+	fmt.Fprintln(v, color.CyanString(I118Prt.Sprintf("current_preference", "")))
 
 	val := reflect.ValueOf(Prefer)
 	typeOfS := val.Type()
