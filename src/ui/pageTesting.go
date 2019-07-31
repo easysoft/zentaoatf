@@ -1,6 +1,8 @@
 package ui
 
 import (
+	"fmt"
+	"github.com/easysoft/zentaoatf/src/action"
 	"github.com/easysoft/zentaoatf/src/script"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/jroimartin/gocui"
@@ -82,7 +84,14 @@ func showRunButton(g *gocui.Gui) error {
 	return nil
 }
 
-func run(g *gocui.Gui, view *gocui.View) error {
+func run(g *gocui.Gui, v *gocui.View) error {
+	if _, err := g.SetCurrentView("main"); err != nil {
+		return err
+	}
+
+	utils.PrintToCmd(g, fmt.Sprintf("#atf run -d %s -f %s", utils.Prefer.WorkDir, CurrAsset))
+	utils.PrintToMain(g, "")
+	action.Run(utils.Prefer.WorkDir, []string{CurrAsset}, "")
 
 	return nil
 }
@@ -95,15 +104,6 @@ func loadTestAssets() ([]string, []string) {
 	suitesFiles, _ := utils.GetAllFiles(utils.Prefer.WorkDir+utils.GenDir, "suite")
 
 	return caseFiles, suitesFiles
-}
-
-func printSuiteInfo(g *gocui.Gui, file string) {
-	//str := "%s\n Work dir: %s\n Zentao project: %s\n Import type: %s\n Product code: %s\n Language: %s\n " +
-	//	"Independent ExpectResult file: %t"
-	//str = fmt.Sprintf(str, name, his.ProjectPath, config.Url, config.EntityType, config.EntityVal,
-	//	config.LangType, !config.SingleFile)
-	//
-	//utils.PrintToMain(g, str)
 }
 
 func init() {

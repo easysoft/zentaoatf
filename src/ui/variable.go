@@ -2,12 +2,6 @@ package ui
 
 import "sync"
 
-const (
-	LeftWidth = 36
-	MinWidth  = 130
-	MinHeight = 36
-)
-
 var Tabs []string
 
 var ViewMap map[string][]string

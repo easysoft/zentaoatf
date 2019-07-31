@@ -30,7 +30,7 @@ func InitSwitchPage(g *gocui.Gui) error {
 		return err
 	}
 
-	buttonX := (maxX-LeftWidth)/2 + LeftWidth - ButtonWidth
+	buttonX := (maxX-utils.LeftWidth)/2 + utils.LeftWidth - ButtonWidth
 	submitInput := NewButtonWidgetAutoWidth(g, "submitInput", buttonX, 4, "Submit", SwitchWorkDir)
 	ViewMap["switch"] = append(ViewMap["switch"], submitInput.Name())
 

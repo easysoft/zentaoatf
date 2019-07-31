@@ -13,7 +13,7 @@ func Run(scriptDir string, fileNames []string, langType string) {
 		scriptDir = utils.Prefer.WorkDir + scriptDir
 	}
 
-	LangMap := script.GetLangMap()
+	LangMap := script.LangMap
 	var files []string
 	if fileNames != nil && len(fileNames) > 0 {
 		files, _ = utils.GetSpecifiedFiles(scriptDir, fileNames)

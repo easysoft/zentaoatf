@@ -11,7 +11,7 @@ import (
 
 func CheckResults(files []string, dir string, langType string, report *model.TestReport) {
 	fmt.Println("\n")
-	utils.PrintWholeLine(utils.I118Prt.Sprintf("begin_analyse"), "=", color.FgBlue)
+	PrintWholeLine(utils.I118Prt.Sprintf("begin_analyse"), "=", color.FgBlue)
 
 	for _, scriptFile := range files {
 		logFile := utils.ScriptToLogName(dir, scriptFile)
@@ -98,14 +98,4 @@ func ValidateStep(langType string, expectLines []string, actualLines []string) (
 
 	return stepResult, checkpointLogs
 
-}
-
-func PrintAndLog(logs *[]string, str string) {
-	*logs = append(*logs, str)
-	fmt.Println(str)
-}
-
-func PrintAndLogColorLn(logs *[]string, str string, attr color.Attribute) {
-	*logs = append(*logs, str)
-	color.New(attr).Printf(str + "\n")
 }

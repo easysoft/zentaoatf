@@ -80,8 +80,10 @@ func DealwithTestCase(tc model.TestCase, langType string, singleFile bool, caseP
 	srcCode := make([]string, 0)
 
 	steps = append(steps, "@开头的为含验证点的步骤")
+
 	temp := fmt.Sprintf("\n%sCODE: 此处编写操作步骤代码\n", LangMap[langType]["commentsTag"])
 	srcCode = append(srcCode, temp)
+
 	readme := utils.ReadFile("xdoc/template/readme.tpl") + "\n"
 
 	stepDisplayMaxWidth := 0

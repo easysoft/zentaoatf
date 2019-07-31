@@ -72,7 +72,7 @@ func InitImportPage(g *gocui.Gui) error {
 	singleFileInput := NewRadioWidget(g, "singleFileInput", left, 7, true)
 	ViewMap["import"] = append(ViewMap["import"], singleFileInput.Name())
 
-	buttonX := (maxX-LeftWidth)/2 + LeftWidth - ButtonWidth
+	buttonX := (maxX-utils.LeftWidth)/2 + utils.LeftWidth - ButtonWidth
 	submitInput := NewButtonWidgetAutoWidth(g, "submitInput", buttonX, 10, "Submit", ImportRequest)
 	ViewMap["import"] = append(ViewMap["import"], submitInput.Name())
 

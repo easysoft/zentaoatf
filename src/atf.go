@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+	utils.RunFromCui = false
 	flagSets := make([]flag.FlagSet, 0)
 
 	var language string

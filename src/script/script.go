@@ -53,3 +53,7 @@ func GetLangMap() map[string]map[string]string {
 
 	return LangMap
 }
+
+func init() {
+	GetLangMap()
+}

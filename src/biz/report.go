@@ -26,12 +26,12 @@ func Print(report model.TestReport, workDir string) {
 	PrintAndLogColorLn(&logs, fmt.Sprintf("  %s: %d", utils.I118Prt.Sprintf("skip"), report.Skip), color.FgYellow)
 
 	for _, cs := range report.Cases {
-		str := "\n%s %s \n"
+		str := "\n %s %s "
 		status := cs.Status.String()
-		statusColor := colorStatus(status)
+		statusColor := coloredStatus(status)
 
 		logs = append(logs, fmt.Sprintf(str, status, cs.Path))
-		fmt.Printf(str, statusColor, cs.Path)
+		Printt(fmt.Sprintf(str, statusColor, cs.Path))
 
 		if len(cs.Steps) > 0 {
 			count := 0
@@ -42,10 +42,10 @@ func Print(report model.TestReport, workDir string) {
 
 				str := "  %s%d: %s   %s"
 				status := utils.BoolToPass(step.Status)
-				statusColor := colorStatus(status)
+				statusColor := coloredStatus(status)
 
 				logs = append(logs, fmt.Sprintf(str, utils.I118Prt.Sprintf("step"), step.Numb, status, step.Name))
-				fmt.Printf(str, utils.I118Prt.Sprintf("step"), step.Numb, statusColor, step.Name+"\n")
+				Printt(fmt.Sprintf(str, utils.I118Prt.Sprintf("step"), step.Numb, statusColor, step.Name+"\n"))
 
 				count1 := 0
 				for _, cp := range step.CheckPoints {
@@ -54,10 +54,10 @@ func Print(report model.TestReport, workDir string) {
 					}
 
 					cpStatus := utils.BoolToPass(step.Status)
-					cpStatusColor := colorStatus(cpStatus)
+					cpStatusColored := coloredStatus(cpStatus)
 					logs = append(logs, fmt.Sprintf("    %s%d: %s", utils.I118Prt.Sprintf("checkpoint"), cp.Numb,
 						utils.BoolToPass(cp.Status)))
-					fmt.Printf("    %s%d: %s", utils.I118Prt.Sprintf("checkpoint"), cp.Numb, cpStatusColor)
+					Printt(fmt.Sprintf("    %s%d: %s", utils.I118Prt.Sprintf("checkpoint"), cp.Numb, cpStatusColored))
 
 					PrintAndLog(&logs, fmt.Sprintf("      %s %s", utils.I118Prt.Sprintf("expect_result"), cp.Expect))
 					PrintAndLog(&logs, fmt.Sprintf("      %s %s", utils.I118Prt.Sprintf("actual_result"), cp.Actual))
@@ -73,19 +73,4 @@ func Print(report model.TestReport, workDir string) {
 	}
 
 	utils.WriteFile(workDir+"/logs/result-"+utils.DateTimeStrLong(time.Now())+".txt", strings.Join(logs, "\n"))
-}
-
-func colorStatus(status string) string {
-	temp := strings.ToLower(status)
-
-	switch temp {
-	case "pass":
-		return color.GreenString(utils.I118Prt.Sprintf(temp))
-	case "fail":
-		return color.RedString(utils.I118Prt.Sprintf(temp))
-	case "skip":
-		return color.YellowString(utils.I118Prt.Sprintf(temp))
-	}
-
-	return status
 }

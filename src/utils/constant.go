@@ -1,5 +1,7 @@
 package utils
 
+import "github.com/jroimartin/gocui"
+
 const (
 	PreferenceFile = "preferences.yaml"
 	ConfigFile     = "conf.yaml"
@@ -14,4 +16,11 @@ const (
 	ZhRes = "res/messages_zh.json"
 
 	GenDir = "scripts/"
+
+	LeftWidth = 36
+	MinWidth  = 130
+	MinHeight = 36
 )
+
+var RunFromCui bool
+var Cui *gocui.Gui

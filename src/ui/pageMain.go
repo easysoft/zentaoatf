@@ -8,17 +8,17 @@ import (
 
 func InitMainPage(g *gocui.Gui) error {
 	maxX, maxY := g.Size()
-	if maxX < MinWidth {
-		maxX = MinWidth
+	if maxX < utils.MinWidth {
+		maxX = utils.MinWidth
 	}
-	if maxY < MinHeight {
-		maxY = MinHeight
+	if maxY < utils.MinHeight {
+		maxY = utils.MinHeight
 	}
 
-	quickBarView := NewPanelWidget(g, "quickBarView", 0, 0, LeftWidth, 2, "")
+	quickBarView := NewPanelWidget(g, "quickBarView", 0, 0, utils.LeftWidth, 2, "")
 	ViewMap["root"] = append(ViewMap["root"], quickBarView.Name())
 
-	sideView := NewPanelWidget(g, "side", 0, 2, LeftWidth, maxY-3, "")
+	sideView := NewPanelWidget(g, "side", 0, 2, utils.LeftWidth, maxY-3, "")
 	ViewMap["root"] = append(ViewMap["root"], sideView.Name())
 
 	x := 2
@@ -28,12 +28,12 @@ func InitMainPage(g *gocui.Gui) error {
 		x += 10
 	}
 
-	mainView := NewPanelWidget(g, "main", LeftWidth, 0, maxX-1-LeftWidth, maxY-10, "")
+	mainView := NewPanelWidget(g, "main", utils.LeftWidth, 0, maxX-1-utils.LeftWidth, maxY-10, "")
 	ViewMap["root"] = append(ViewMap["root"], mainView.Name())
 	mainView.Editable = true
 	mainView.Wrap = true
 
-	cmdView := NewPanelWidget(g, "cmd", LeftWidth, maxY-10, maxX-1-LeftWidth, 9, "")
+	cmdView := NewPanelWidget(g, "cmd", utils.LeftWidth, maxY-10, maxX-1-utils.LeftWidth, 9, "")
 	ViewMap["root"] = append(ViewMap["root"], cmdView.Name())
 	cmdView.Autoscroll = true
 

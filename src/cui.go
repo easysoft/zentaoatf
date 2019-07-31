@@ -9,6 +9,8 @@ import (
 )
 
 func main() {
+	utils.RunFromCui = true
+
 	mock.Server = mock.CreateServer("case-from-prodoct.json")
 	defer mock.Server.Close()
 
@@ -19,6 +21,8 @@ func main() {
 	defer g.Close()
 	g.Cursor = true
 	g.Mouse = true
+
+	utils.Cui = g
 
 	ui.InitMainPage(g)
 

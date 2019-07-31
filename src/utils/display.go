@@ -1,13 +1,11 @@
 package utils
 
 import (
-	"github.com/fatih/color"
 	"os"
 	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
-	"unicode/utf8"
 )
 
 func InitScreenSize() {
@@ -39,20 +37,6 @@ func InitScreenSize() {
 
 	Prefer.Width = width
 	Prefer.Height = height
-}
-
-func PrintWholeLine(msg string, char string, attr color.Attribute) {
-	prefixLen := 6
-	postfixLen := Prefer.Width - utf8.RuneCountInString(msg) - 6
-	if postfixLen < 0 { // no width in debug mode
-		postfixLen = 6
-	}
-
-	preFixStr := strings.Repeat(char, prefixLen)
-	postFixStr := strings.Repeat(char, postfixLen)
-
-	clr := color.New(attr)
-	clr.Printf("%s%s%s\n", preFixStr, msg, postFixStr)
 }
 
 func noWindowsSize() (int, int) {
