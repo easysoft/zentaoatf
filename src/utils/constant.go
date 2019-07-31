@@ -24,3 +24,4 @@ const (
 
 var RunFromCui bool
 var Cui *gocui.Gui
+var MainViewHeight int
