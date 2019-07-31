@@ -107,22 +107,21 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 		params["entityVal"] = taskId
 	}
 
-	cmdView, _ := g.View("cmd")
-	_, _ = fmt.Fprintln(cmdView, fmt.Sprintf("#atf gen -u %s -t %s -v %s -l %s -s %t",
+	utils.PrintToCmd(g, fmt.Sprintf("#atf gen -u %s -t %s -v %s -l %s -s %t",
 		url, params["entityType"], params["entityVal"], language, singleFile))
 
 	json, e := httpClient.Get(url, params)
 	if e != nil {
-		fmt.Fprintln(cmdView, e.Error())
+		utils.PrintToCmd(g, e.Error())
 		return nil
 	}
 
 	count, err := action.Generate(json, url, params["entityType"], params["entityVal"], language, singleFile)
 	if err == nil {
-		fmt.Fprintln(cmdView, fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
+		utils.PrintToCmd(g, fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
 			count, utils.GenDir, utils.DateTimeStr(time.Now())))
 	} else {
-		fmt.Fprintln(cmdView, err.Error())
+		utils.PrintToCmd(g, err.Error())
 	}
 
 	return nil

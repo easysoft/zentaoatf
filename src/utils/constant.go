@@ -20,6 +20,8 @@ const (
 	LeftWidth = 36
 	MinWidth  = 130
 	MinHeight = 36
+
+	CmdViewHeight = 10
 )
 
 var RunFromCui bool

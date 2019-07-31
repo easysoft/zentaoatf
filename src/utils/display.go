@@ -64,3 +64,20 @@ func parseSize(input string) (int, int, error) {
 	}
 	return int(w), int(h), nil
 }
+
+func AdjustOrigin(name string) {
+	if !RunFromCui {
+		return
+	}
+
+	view, _ := Cui.View(name)
+	_, height := view.Size()
+	contentHeight := len(view.BufferLines())
+	oy := contentHeight - height
+	if oy < 0 {
+		oy = 0
+	}
+
+	ox, _ := view.Origin()
+	view.SetOrigin(ox, oy)
+}

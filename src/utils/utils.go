@@ -1,11 +1,7 @@
 package utils
 
 import (
-	"flag"
-	"fmt"
 	"github.com/easysoft/zentaoatf/src/misc"
-	"github.com/fatih/color"
-	"github.com/jroimartin/gocui"
 	"os"
 	"path"
 	"regexp"
@@ -68,42 +64,6 @@ func IsLinux() bool {
 }
 func IsMac() bool {
 	return GetOs() == "mac"
-}
-
-func PrintUsages(flagSets []flag.FlagSet) {
-	for _, flagSet := range flagSets {
-		fmt.Printf("\n %s \n", flagSet.Name())
-		flagSet.PrintDefaults()
-	}
-}
-
-func PrintUsage(flagSet flag.FlagSet) {
-	PrintUsageWithSpaceLine(flagSet, true)
-}
-func PrintUsageWithSpaceLine(flagSet flag.FlagSet, spaceLine bool) {
-	prefix := ""
-	if spaceLine {
-		prefix = "\n"
-	}
-
-	fmt.Printf("%s %s \n", prefix, color.CyanString(flagSet.Name()))
-	flagSet.PrintDefaults()
-}
-
-func PrintSample() {
-	fmt.Printf("\nSample to use: \n")
-	fmt.Printf("TODO... \n")
-}
-
-func PrintToCmd(g *gocui.Gui, msg string) {
-	cmdView, _ := g.View("cmd")
-	_, _ = fmt.Fprintln(cmdView, msg)
-}
-func PrintToMain(g *gocui.Gui, msg string) {
-	mainView, _ := g.View("main")
-	mainView.Clear()
-
-	_, _ = fmt.Fprintln(mainView, msg)
 }
 
 func IsRelease() bool {

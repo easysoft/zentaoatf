@@ -14,7 +14,7 @@ func InitMainPage(g *gocui.Gui) error {
 	if maxY < utils.MinHeight {
 		maxY = utils.MinHeight
 	}
-	utils.MainViewHeight = maxY - 10
+	utils.MainViewHeight = maxY - utils.CmdViewHeight - 1
 
 	quickBarView := NewPanelWidget(g, "quickBarView", 0, 0, utils.LeftWidth, 2, "")
 	ViewMap["root"] = append(ViewMap["root"], quickBarView.Name())
@@ -31,12 +31,11 @@ func InitMainPage(g *gocui.Gui) error {
 
 	mainView := NewPanelWidget(g, "main", utils.LeftWidth, 0, maxX-1-utils.LeftWidth, utils.MainViewHeight, "")
 	ViewMap["root"] = append(ViewMap["root"], mainView.Name())
-	//mainView.Editable = true
 	mainView.Wrap = true
 
-	cmdView := NewPanelWidget(g, "cmd", utils.LeftWidth, utils.MainViewHeight, maxX-1-utils.LeftWidth, 9, "")
+	cmdView := NewPanelWidget(g, "cmd", utils.LeftWidth, utils.MainViewHeight, maxX-1-utils.LeftWidth, utils.CmdViewHeight, "")
 	ViewMap["root"] = append(ViewMap["root"], cmdView.Name())
-	cmdView.Autoscroll = true
+	mainView.Wrap = true
 
 	utils.PrintPreferenceToView(cmdView)
 
@@ -56,31 +55,25 @@ func MainPageKeyBindings(g *gocui.Gui) error {
 		log.Panicln(err)
 	}
 
-	if err := g.SetKeybinding("main", gocui.KeyArrowUp, gocui.ModNone,
-		func(g *gocui.Gui, v *gocui.View) error {
-			scrollView(v, -1)
-			return nil
-		}); err != nil {
+	if err := g.SetKeybinding("main", gocui.MouseLeft, gocui.ModNone, setCurrView("main")); err != nil {
 		return err
 	}
-	if err := g.SetKeybinding("main", gocui.KeyArrowDown, gocui.ModNone,
-		func(g *gocui.Gui, v *gocui.View) error {
-			scrollView(v, 1)
-			return nil
-		}); err != nil {
+	if err := g.SetKeybinding("main", gocui.KeyArrowUp, gocui.ModNone, scroll(-1)); err != nil {
+		return err
+	}
+	if err := g.SetKeybinding("main", gocui.KeyArrowDown, gocui.ModNone, scroll(1)); err != nil {
 		return err
 	}
 
-	return nil
-}
-
-func scrollView(v *gocui.View, dy int) error {
-	if v != nil {
-		v.Autoscroll = false
-		ox, oy := v.Origin()
-		if err := v.SetOrigin(ox, oy+dy); err != nil {
-			return err
-		}
+	if err := g.SetKeybinding("cmd", gocui.MouseLeft, gocui.ModNone, setCurrView("cmd")); err != nil {
+		return err
 	}
+	if err := g.SetKeybinding("cmd", gocui.KeyArrowUp, gocui.ModNone, scroll(-1)); err != nil {
+		return err
+	}
+	if err := g.SetKeybinding("cmd", gocui.KeyArrowDown, gocui.ModNone, scroll(1)); err != nil {
+		return err
+	}
+
 	return nil
 }

@@ -46,18 +46,17 @@ func SwitchWorkDir(g *gocui.Gui, v *gocui.View) error {
 
 	workDir := strings.TrimSpace(workDirView.ViewBuffer())
 
-	cmdView, _ := g.View("cmd")
-	_, _ = fmt.Fprintln(cmdView, fmt.Sprintf("#atf switch -d %s", workDir))
+	utils.PrintToCmd(g, fmt.Sprintf("#atf switch -d %s", workDir))
 
 	err := action.SwitchWorkDir(workDir)
 	if err == nil {
 		workDirView.Clear()
 		workDirView.Write([]byte(utils.Prefer.WorkDir))
 
-		fmt.Fprintln(cmdView, fmt.Sprintf("success to switch project to %s at %s",
+		utils.PrintToCmd(g, fmt.Sprintf("success to switch project to %s at %s",
 			workDir, utils.DateTimeStr(time.Now())))
 	} else {
-		fmt.Fprintln(cmdView, err.Error())
+		utils.PrintToCmd(g, err.Error())
 	}
 
 	return nil

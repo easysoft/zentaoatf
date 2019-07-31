@@ -49,3 +49,33 @@ func GetNextView(name string, views []string) string {
 func Quit(g *gocui.Gui, v *gocui.View) error {
 	return gocui.ErrQuit
 }
+
+func scroll(dy int) func(g *gocui.Gui, v *gocui.View) error {
+	return func(g *gocui.Gui, v *gocui.View) error {
+		return scrollView(v, dy)
+	}
+}
+
+func scrollView(v *gocui.View, dy int) error {
+	v.Autoscroll = false
+	ox, oy := v.Origin()
+	pos := oy + dy
+	_, height := v.Size()
+	if pos < 0 {
+		pos = 0
+	} else if pos > len(v.BufferLines())-height {
+		pos = len(v.BufferLines()) - height
+	}
+
+	if err := v.SetOrigin(ox, pos); err != nil {
+		return err
+	}
+	return nil
+}
+
+func setCurrView(name string) func(g *gocui.Gui, v *gocui.View) error {
+	return func(g *gocui.Gui, v *gocui.View) error {
+		g.SetCurrentView(name)
+		return nil
+	}
+}
