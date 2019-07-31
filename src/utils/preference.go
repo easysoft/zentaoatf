@@ -5,6 +5,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/fatih/color"
 	"github.com/jroimartin/gocui"
+	uuid "github.com/satori/go.uuid"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
@@ -64,7 +65,7 @@ func getInst() model.Preference {
 			Prefer.Language = "en"
 			Prefer.WorkDir = convertWorkDir("./")
 
-			history := model.WorkHistory{ProjectPath: Prefer.WorkDir}
+			history := model.WorkHistory{Id: uuid.NewV4().String(), ProjectPath: Prefer.WorkDir}
 			Prefer.WorkHistories = []model.WorkHistory{history}
 
 			data, _ := yaml.Marshal(&Prefer)
@@ -131,7 +132,7 @@ func updateWorkDirHistory() {
 	// 头部插入元素
 	config := ReadConfig()
 
-	history := model.WorkHistory{ProjectName: config.ProjectName, ProjectPath: Prefer.WorkDir,
+	history := model.WorkHistory{Id: uuid.NewV4().String(), ProjectName: config.ProjectName, ProjectPath: Prefer.WorkDir,
 		EntityType: config.EntityType, EntityVal: config.EntityVal}
 
 	histories = append([]model.WorkHistory{history}, histories...)

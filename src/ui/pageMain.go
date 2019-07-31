@@ -30,6 +30,8 @@ func InitMainPage(g *gocui.Gui) error {
 
 	mainView := NewPanelWidget(g, "main", LeftWidth, 0, maxX-1-LeftWidth, maxY-10, "")
 	ViewMap["root"] = append(ViewMap["root"], mainView.Name())
+	mainView.Editable = true
+	mainView.Wrap = true
 
 	cmdView := NewPanelWidget(g, "cmd", LeftWidth, maxY-10, maxX-1-LeftWidth, 9, "")
 	ViewMap["root"] = append(ViewMap["root"], cmdView.Name())

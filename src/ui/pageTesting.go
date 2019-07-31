@@ -13,6 +13,7 @@ func InitTestingPage(g *gocui.Gui) error {
 	caseFiles, suitesFiles := loadTestAssets()
 	dir := utils.Prefer.WorkDir + utils.GenDir
 
+	// left asserts
 	y := 2
 	suiteLabel := NewLabelWidget(g, "suiteLabel", 0, y, "Test Suite")
 	ViewMap["testing"] = append(ViewMap["testing"], suiteLabel.Name())
@@ -45,6 +46,7 @@ func InitTestingPage(g *gocui.Gui) error {
 }
 
 func selectTestingItem(g *gocui.Gui, view *gocui.View) error {
+	HideHelp(g)
 	CurrAsset = view.Name()
 
 	for _, name := range ViewMap["testing"] {
@@ -64,8 +66,23 @@ func selectTestingItem(g *gocui.Gui, view *gocui.View) error {
 		}
 	}
 
+	showRunButton(g)
 	content := utils.ReadFile(CurrAsset)
 	utils.PrintToMain(g, content)
+
+	return nil
+}
+
+func showRunButton(g *gocui.Gui) error {
+	maxX, _ := g.Size()
+
+	runButton := NewButtonWidgetAutoWidth(g, "runButton", maxX-10, 1, "Run", run)
+	ViewMap["testing"] = append(ViewMap["testing"], runButton.Name())
+
+	return nil
+}
+
+func run(g *gocui.Gui, view *gocui.View) error {
 
 	return nil
 }

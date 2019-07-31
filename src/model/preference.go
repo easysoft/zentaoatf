@@ -11,6 +11,7 @@ type Preference struct {
 }
 
 type WorkHistory struct {
+	Id          string
 	ProjectName string
 	ProjectPath string
 

@@ -9,19 +9,19 @@ import (
 	"time"
 )
 
-var CurrProjectName string
+var CurrProjectId string
 var projectHistories []model.WorkHistory
 
 func InitProjectsPage(g *gocui.Gui) error {
 	his := utils.Prefer.WorkHistories[0]
-	name, _, _ := getProjectInfo(his)
-	CurrProjectName = name
+	id, _, _ := getProjectInfo(his)
+	CurrProjectId = id
 
 	y := 2
 	for _, his := range utils.Prefer.WorkHistories {
-		name, label, _ := getProjectInfo(his)
+		id, label, _ := getProjectInfo(his)
 
-		hisView := NewLabelWidgetAutoWidth(g, name, 0, y, label)
+		hisView := NewLabelWidgetAutoWidth(g, id, 0, y, label)
 		ViewMap["projects"] = append(ViewMap["projects"], hisView.Name())
 
 		y += 1
@@ -43,7 +43,7 @@ func keybindingProjectsButton(g *gocui.Gui) error {
 }
 
 func toggleProjectsButton(g *gocui.Gui, v *gocui.View) error {
-	CurrProjectName = v.Name()
+	CurrProjectId = v.Name()
 	SelectProjectsButton(g)
 
 	return nil
@@ -51,17 +51,17 @@ func toggleProjectsButton(g *gocui.Gui, v *gocui.View) error {
 
 func SelectProjectsButton(g *gocui.Gui) {
 	for _, his := range utils.Prefer.WorkHistories {
-		name, _, path := getProjectInfo(his)
+		name, _, _ := getProjectInfo(his)
 
 		v, err := g.View(name)
 		if err == nil {
-			if v.Name() == CurrProjectName {
+			if v.Name() == CurrProjectId {
 				v.Highlight = true
 				v.SelBgColor = gocui.ColorWhite
 				v.SelFgColor = gocui.ColorBlack
 
-				action.SwitchWorkDir(path)
-				printForSwitch(g, his)
+				printForSwitch(g, his) // 显示项目信息
+				showWitchButton(g)
 			} else {
 				v.Highlight = false
 				v.SelBgColor = gocui.ColorBlack
@@ -71,21 +71,41 @@ func SelectProjectsButton(g *gocui.Gui) {
 	}
 }
 
+func showWitchButton(g *gocui.Gui) error {
+	maxX, _ := g.Size()
+
+	switchButton := NewButtonWidgetAutoWidth(g, "switchButton", maxX-15, 1, "Switch To", switchProject)
+	ViewMap["projects"] = append(ViewMap["projects"], switchButton.Name())
+
+	return nil
+}
+func switchProject(g *gocui.Gui, v *gocui.View) error {
+	for _, his := range utils.Prefer.WorkHistories {
+		id, label, path := getProjectInfo(his)
+		if id == CurrProjectId {
+			action.SwitchWorkDir(path)
+			utils.PrintToCmd(g, fmt.Sprintf("success to switch to project %s: %s at %s",
+				label, path, utils.DateTimeStr(time.Now())))
+			break
+		}
+	}
+	return nil
+}
+
 func getProjectInfo(his model.WorkHistory) (string, string, string) {
-	var name string
+	var id string
 	var label string
 	var path string
 
+	id = his.Id
 	path = his.ProjectPath
 	if his.EntityType != "" {
-		name = his.EntityType + "-" + his.EntityVal
 		label = his.ProjectName
 	} else {
-		name = his.ProjectPath
 		label = utils.PathSomple(his.ProjectPath)
 	}
 
-	return name, label, path
+	return id, label, path
 }
 
 func printForSwitch(g *gocui.Gui, his model.WorkHistory) {
@@ -94,9 +114,6 @@ func printForSwitch(g *gocui.Gui, his model.WorkHistory) {
 	if name == "" {
 		name = "No Name"
 	}
-
-	utils.PrintToCmd(g, fmt.Sprintf("success to switch to project %s: %s at %s",
-		name, his.ProjectPath, utils.DateTimeStr(time.Now())))
 
 	str := "%s\n Work dir: %s\n Zentao project: %s\n Import type: %s\n Product code: %s\n Language: %s\n " +
 		"Independent ExpectResult file: %t"
