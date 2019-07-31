@@ -5,7 +5,6 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/fatih/color"
-	"strings"
 	"time"
 )
 
@@ -47,10 +46,8 @@ func ExeScript(file string, langType string, dir string) {
 	PrintWholeLine(msg, "-", color.FgCyan)
 
 	output := utils.ExecCommand(command)
-	utils.WriteFile(logFile, strings.Join(output, ""))
-	if utils.RunFromCui {
-		Printt(strings.Join(output, ""))
-	}
+	utils.WriteFile(logFile, output)
+	Printt(output)
 
 	entTime := time.Now()
 	secs := int64(entTime.Sub(startTime) / time.Second)

@@ -94,6 +94,10 @@ func coloredStatus(status string) string {
 }
 
 func adjustOrigin() {
+	if !utils.RunFromCui {
+		return
+	}
+
 	view, _ := utils.Cui.View("main")
 	contentHeight := len(view.BufferLines())
 	oy := contentHeight - utils.MainViewHeight
