@@ -33,8 +33,8 @@ func InitProjectsPage(g *gocui.Gui) error {
 
 func keybindingProjectsButton(g *gocui.Gui) error {
 	for _, his := range utils.Prefer.WorkHistories {
-		name, _, _ := getProjectInfo(his)
-		if err := g.SetKeybinding(name, gocui.MouseLeft, gocui.ModNone, toggleProjectsButton); err != nil {
+		id, _, _ := getProjectInfo(his)
+		if err := g.SetKeybinding(id, gocui.MouseLeft, gocui.ModNone, toggleProjectsButton); err != nil {
 			return err
 		}
 	}
@@ -51,11 +51,11 @@ func toggleProjectsButton(g *gocui.Gui, v *gocui.View) error {
 
 func SelectProjectsButton(g *gocui.Gui) {
 	for _, his := range utils.Prefer.WorkHistories {
-		name, _, _ := getProjectInfo(his)
+		id, _, _ := getProjectInfo(his)
 
-		v, err := g.View(name)
+		v, err := g.View(id)
 		if err == nil {
-			if v.Name() == CurrProjectId {
+			if id == CurrProjectId {
 				v.Highlight = true
 				v.SelBgColor = gocui.ColorWhite
 				v.SelFgColor = gocui.ColorBlack
@@ -109,7 +109,7 @@ func getProjectInfo(his model.WorkHistory) (string, string, string) {
 }
 
 func printForSwitch(g *gocui.Gui, his model.WorkHistory) {
-	config := utils.ReadConfig()
+	config := utils.ReadProjectConfig(his.ProjectPath)
 	name := config.ProjectName
 	if name == "" {
 		name = "No Name"

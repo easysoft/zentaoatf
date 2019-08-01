@@ -130,7 +130,7 @@ func updateWorkDirHistory() {
 	}
 
 	// 头部插入元素
-	config := ReadConfig()
+	config := ReadCurrConfig()
 
 	history := model.WorkHistory{Id: uuid.NewV4().String(), ProjectName: config.ProjectName, ProjectPath: Prefer.WorkDir,
 		EntityType: config.EntityType, EntityVal: config.EntityVal}

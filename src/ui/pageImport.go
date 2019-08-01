@@ -7,7 +7,6 @@ import (
 	"github.com/easysoft/zentaoatf/src/mock"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/jroimartin/gocui"
-	"log"
 	"strings"
 	"time"
 )
@@ -28,9 +27,6 @@ func InitImportPage(g *gocui.Gui) error {
 	right = left + TextWidthFull
 	urlInput := NewTextWidget(g, "urlInput", left, 1, TextWidthFull, mock.GetUrl("importProject"))
 	ViewMap["import"] = append(ViewMap["import"], urlInput.Name())
-	if _, err := g.SetCurrentView("urlInput"); err != nil {
-		return err
-	}
 
 	left = slideX + 2
 	right = left + LabelWidth
@@ -76,12 +72,7 @@ func InitImportPage(g *gocui.Gui) error {
 	submitInput := NewButtonWidgetAutoWidth(g, "submitInput", buttonX, 10, "Submit", ImportRequest)
 	ViewMap["import"] = append(ViewMap["import"], submitInput.Name())
 
-	if err := g.SetKeybinding("import", gocui.MouseLeft, gocui.ModNone, setCurrView("urlInput")); err != nil {
-		return err
-	}
-	if err := g.SetKeybinding("", gocui.KeyTab, gocui.ModNone, ToggleInput(ViewMap["import"])); err != nil {
-		log.Panicln(err)
-	}
+	keyBindsInput(ViewMap["import"])
 
 	return nil
 }

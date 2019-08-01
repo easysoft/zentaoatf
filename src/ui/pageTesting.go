@@ -84,7 +84,7 @@ func run(g *gocui.Gui, v *gocui.View) error {
 }
 
 func loadTestAssets() ([]string, []string) {
-	config := utils.ReadConfig()
+	config := utils.ReadCurrConfig()
 	ext := script.GetLangMap()[config.LangType]["extName"]
 
 	caseFiles, _ := utils.GetAllFiles(utils.Prefer.WorkDir+utils.GenDir, ext)

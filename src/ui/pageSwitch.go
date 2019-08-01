@@ -5,7 +5,6 @@ import (
 	"github.com/easysoft/zentaoatf/src/action"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/jroimartin/gocui"
-	"log"
 	"strings"
 	"time"
 )
@@ -34,9 +33,7 @@ func InitSwitchPage(g *gocui.Gui) error {
 	submitInput := NewButtonWidgetAutoWidth(g, "submitInput", buttonX, 4, "Switch", SwitchWorkDir)
 	ViewMap["switch"] = append(ViewMap["switch"], submitInput.Name())
 
-	if err := g.SetKeybinding("", gocui.KeyTab, gocui.ModNone, ToggleInput(ViewMap["switch"])); err != nil {
-		log.Panicln(err)
-	}
+	keyBindsInput(ViewMap["switch"])
 
 	return nil
 }
@@ -60,6 +57,14 @@ func SwitchWorkDir(g *gocui.Gui, v *gocui.View) error {
 	}
 
 	return nil
+}
+
+func keyBindsSwitch(g *gocui.Gui) {
+	for _, v := range ViewMap["switch"] {
+		if strings.Index(v, "Input") > -1 {
+			setInputEvent(g, v)
+		}
+	}
 }
 
 func DestorySwitchPage(g *gocui.Gui) {

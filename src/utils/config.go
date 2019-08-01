@@ -24,8 +24,16 @@ func SaveEmptyConfig() error {
 	return nil
 }
 
-func ReadConfig() model.Config {
-	configPath := Prefer.WorkDir + ConfigFile
+func ReadProjectConfig(projectPath string) model.Config {
+	return ReadConfig(projectPath)
+}
+
+func ReadCurrConfig() model.Config {
+	return ReadConfig(Prefer.WorkDir)
+}
+
+func ReadConfig(dir string) model.Config {
+	configPath := dir + ConfigFile
 	var config model.Config
 	if !FileExist(configPath) {
 		SaveEmptyConfig()
