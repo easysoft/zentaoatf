@@ -31,7 +31,7 @@ func InitSwitchPage(g *gocui.Gui) error {
 	}
 
 	buttonX := (maxX-utils.LeftWidth)/2 + utils.LeftWidth - ButtonWidth
-	submitInput := NewButtonWidgetAutoWidth(g, "submitInput", buttonX, 4, "Submit", SwitchWorkDir)
+	submitInput := NewButtonWidgetAutoWidth(g, "submitInput", buttonX, 4, "Switch", SwitchWorkDir)
 	ViewMap["switch"] = append(ViewMap["switch"], submitInput.Name())
 
 	if err := g.SetKeybinding("", gocui.KeyTab, gocui.ModNone, ToggleInput(ViewMap["switch"])); err != nil {
@@ -44,7 +44,7 @@ func InitSwitchPage(g *gocui.Gui) error {
 func SwitchWorkDir(g *gocui.Gui, v *gocui.View) error {
 	workDirView, _ := g.View("workDirInput")
 
-	workDir := strings.TrimSpace(workDirView.ViewBuffer())
+	workDir := strings.TrimSpace(workDirView.Buffer())
 
 	utils.PrintToCmd(g, fmt.Sprintf("#atf switch -d %s", workDir))
 
@@ -65,8 +65,8 @@ func SwitchWorkDir(g *gocui.Gui, v *gocui.View) error {
 func DestorySwitchPage(g *gocui.Gui) {
 	for _, v := range ViewMap["switch"] {
 		g.DeleteView(v)
+		g.DeleteKeybindings(v)
 	}
 
 	g.DeleteKeybinding("", gocui.KeyTab, gocui.ModNone)
-	g.DeleteKeybindings("submitInput")
 }

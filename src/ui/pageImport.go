@@ -76,6 +76,9 @@ func InitImportPage(g *gocui.Gui) error {
 	submitInput := NewButtonWidgetAutoWidth(g, "submitInput", buttonX, 10, "Submit", ImportRequest)
 	ViewMap["import"] = append(ViewMap["import"], submitInput.Name())
 
+	if err := g.SetKeybinding("import", gocui.MouseLeft, gocui.ModNone, setCurrView("urlInput")); err != nil {
+		return err
+	}
 	if err := g.SetKeybinding("", gocui.KeyTab, gocui.ModNone, ToggleInput(ViewMap["import"])); err != nil {
 		log.Panicln(err)
 	}
@@ -130,9 +133,8 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 func DestoryImportPage(g *gocui.Gui) {
 	for _, v := range ViewMap["import"] {
 		g.DeleteView(v)
+		g.DeleteKeybindings(v)
 	}
 
 	g.DeleteKeybinding("", gocui.KeyTab, gocui.ModNone)
-	g.DeleteKeybindings("singleFileInput")
-	g.DeleteKeybindings("submitInput")
 }
