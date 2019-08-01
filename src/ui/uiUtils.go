@@ -58,23 +58,54 @@ func scrollEvent(dy int) func(g *gocui.Gui, v *gocui.View) error {
 
 func scroll(g *gocui.Gui, v *gocui.View, dy int) error {
 	v.Autoscroll = false
-	ox, oy := v.Origin()
-	pos := oy + dy
-	_, height := v.Size()
 
-	if pos > len(v.BufferLines())-height {
-		pos = len(v.BufferLines()) - height
-	}
-	if pos < 0 {
-		pos = 0
+	if dy > 0 {
+		_, oy := v.Origin()
+		cx, cy := v.Cursor()
+
+		pos := oy + dy
+		_, height := v.Size()
+
+		if err := v.SetCursor(cx, cy+1); err != nil {
+			ox, oy := v.Origin()
+
+			if pos < len(v.BufferLines())-height-1 {
+				if err := v.SetOrigin(ox, oy+1); err != nil {
+					return err
+				}
+			}
+		}
+	} else if dy < 0 {
+		ox, oy := v.Origin()
+		cx, cy := v.Cursor()
+
+		if err := v.SetCursor(cx, cy-1); err != nil && oy > 0 {
+			if err := v.SetOrigin(ox, oy-1); err != nil {
+				return err
+			}
+		}
 	}
 
-	v.SetOrigin(ox, pos)
+	//
+	//ox, oy := v.Origin()
+	//pos := oy + dy
+	//_, height := v.Size()
+	//
+	//if pos > len(v.BufferLines())-height {
+	//	pos = len(v.BufferLines()) - height
+	//}
+	//if pos < 0 {
+	//	pos = 0
+	//}
+	//
+	//cx, cy := v.Cursor()
+	//v.SetCursor(cx, cy+dy)
+	//v.SetOrigin(ox, pos)
 
 	return nil
 }
 
-func setScrollView(g *gocui.Gui, name string) error {
+func setViewScroll(g *gocui.Gui, name string) error {
 	if err := g.SetKeybinding(name, gocui.MouseLeft, gocui.ModNone, setCurrView(name)); err != nil {
 		return err
 	}
@@ -82,6 +113,17 @@ func setScrollView(g *gocui.Gui, name string) error {
 		return err
 	}
 	if err := g.SetKeybinding(name, gocui.KeyArrowDown, gocui.ModNone, scrollEvent(1)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func setViewLineSelected(g *gocui.Gui, name string, selectLine func(g *gocui.Gui, v *gocui.View) error) error {
+	if err := g.SetKeybinding(name, gocui.KeyEnter, gocui.ModNone, selectLine); err != nil {
+		return err
+	}
+	if err := g.SetKeybinding(name, gocui.MouseLeft, gocui.ModNone, selectLine); err != nil {
 		return err
 	}
 

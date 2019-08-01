@@ -22,6 +22,9 @@ func InitMainPage(g *gocui.Gui) error {
 	sideView := NewPanelWidget(g, "side", 0, 2, utils.LeftWidth, maxY-3, "")
 	ViewMap["root"] = append(ViewMap["root"], sideView.Name())
 	sideView.Wrap = true
+	sideView.Highlight = true
+	sideView.SelBgColor = gocui.ColorWhite
+	sideView.SelFgColor = gocui.ColorBlack
 
 	x := 2
 	for _, name := range Tabs {
@@ -45,6 +48,7 @@ func InitMainPage(g *gocui.Gui) error {
 
 	InitTestingPage(g)
 
+	setCurrView("side")
 	return nil
 }
 
@@ -56,9 +60,9 @@ func MainPageKeyBindings(g *gocui.Gui) error {
 		log.Panicln(err)
 	}
 
-	setScrollView(g, "slide")
-	setScrollView(g, "main")
-	setScrollView(g, "cmd")
+	setViewScroll(g, "side")
+	setViewScroll(g, "main")
+	setViewScroll(g, "cmd")
 
 	return nil
 }

@@ -25,11 +25,11 @@ func PrintSample() {
 	fmt.Printf("TODO... \n")
 }
 
-func PrintToCmd(g *gocui.Gui, msg string) {
-	cmdView, _ := g.View("cmd")
-	_, _ = fmt.Fprintln(cmdView, msg)
+func PrintToSide(g *gocui.Gui, msg string) {
+	slideView, _ := g.View("side")
+	slideView.Clear()
 
-	AdjustOrigin("cmd")
+	fmt.Fprintln(slideView, msg)
 }
 func PrintToMain(g *gocui.Gui, msg string) {
 	PrintToMainNoScroll(g, msg)
@@ -39,5 +39,17 @@ func PrintToMainNoScroll(g *gocui.Gui, msg string) {
 	mainView, _ := g.View("main")
 	mainView.Clear()
 
-	_, _ = fmt.Fprintln(mainView, msg)
+	fmt.Fprintln(mainView, msg)
+}
+
+func PrintToCmd(g *gocui.Gui, msg string) {
+	cmdView, _ := g.View("cmd")
+	_, _ = fmt.Fprintln(cmdView, msg)
+
+	AdjustOrigin("cmd")
+}
+
+func ClearSide(g *gocui.Gui) {
+	slideView, _ := g.View("side")
+	slideView.Clear()
 }

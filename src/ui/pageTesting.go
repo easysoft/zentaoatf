@@ -15,64 +15,48 @@ func InitTestingPage(g *gocui.Gui) error {
 	caseFiles, suitesFiles := loadTestAssets()
 	dir := utils.Prefer.WorkDir + utils.GenDir
 
-	// left asserts
-	y := 2
-	suiteLabel := NewLabelWidget(g, "suiteLabel", 0, y, "Test Suite")
-	ViewMap["testing"] = append(ViewMap["testing"], suiteLabel.Name())
-
-	y += 1
+	content := "Test Suite:" + "\n"
 	for _, suitePath := range suitesFiles {
 		suiteName := strings.Replace(suitePath, dir, "", -1)
-
-		suiteView := NewButtonWidgetNoBorderAutoWidth(g, suitePath, 0, y, suiteName, selectTestingItem)
-		ViewMap["testing"] = append(ViewMap["testing"], suiteView.Name())
-
-		y += 1
+		content += "  " + suiteName + "\n"
 	}
 
-	y += 1
-	caseLabel := NewLabelWidget(g, "caseLabel", 0, y, "Test Script")
-	ViewMap["testing"] = append(ViewMap["testing"], caseLabel.Name())
-
-	y += 1
+	content += "Test Scripts:" + "\n"
 	for _, casePath := range caseFiles {
 		caseName := strings.Replace(casePath, dir, "", -1)
-
-		caseView := NewButtonWidgetNoBorderAutoWidth(g, casePath, 0, y, caseName, selectTestingItem)
-		ViewMap["testing"] = append(ViewMap["testing"], caseView.Name())
-
-		y += 1
+		content += "  " + caseName + "\n"
 	}
+
+	setViewLineSelected(g, "side", selectLineEvent)
+
+	utils.PrintToSide(g, content)
 
 	return nil
 }
 
-func selectTestingItem(g *gocui.Gui, view *gocui.View) error {
-	HideHelp(g)
-	CurrAsset = view.Name()
+func selectLineEvent(g *gocui.Gui, v *gocui.View) error {
+	var line string
+	var err error
 
-	for _, name := range ViewMap["testing"] {
-		v, err := g.View(name)
-		if err != nil {
-			return err
-		}
-
-		if v.Name() == CurrAsset {
-			v.Highlight = true
-			v.SelBgColor = gocui.ColorWhite
-			v.SelFgColor = gocui.ColorBlack
-		} else {
-			v.Highlight = false
-			v.SelBgColor = gocui.ColorBlack
-			v.SelFgColor = gocui.ColorDefault
-		}
+	_, cy := v.Cursor()
+	if line, err = v.Line(cy); err != nil || strings.Index(line, ".") < 0 {
+		utils.PrintToMainNoScroll(g, "")
+		return nil
 	}
+	line = strings.TrimSpace(line)
+
+	showAsset(g, line)
+
+	return nil
+}
+func showAsset(g *gocui.Gui, file string) {
+
+	HideHelp(g)
+	CurrAsset = utils.Prefer.WorkDir + utils.GenDir + file
 
 	showRunButton(g)
 	content := utils.ReadFile(CurrAsset)
 	utils.PrintToMainNoScroll(g, content)
-
-	return nil
 }
 
 func showRunButton(g *gocui.Gui) error {

@@ -1,10 +1,13 @@
 package ui
 
 import (
+	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/jroimartin/gocui"
 )
 
 func DestoryLeftPages(g *gocui.Gui) {
+	utils.ClearSide(g)
+
 	DestoryTestingPage(g)
 	DestoryProjectsPage(g)
 	DestorySettingsPage(g)
