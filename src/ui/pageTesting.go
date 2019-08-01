@@ -39,18 +39,20 @@ func selectLineEvent(g *gocui.Gui, v *gocui.View) error {
 	var err error
 
 	_, cy := v.Cursor()
-	if line, err = v.Line(cy); err != nil || strings.Index(line, ".") < 0 {
-		utils.PrintToMainNoScroll(g, "")
+	if line, err = v.Line(cy); err != nil {
 		return nil
 	}
 	line = strings.TrimSpace(line)
+	if strings.Index(line, ".") < 0 {
+		utils.PrintToMainNoScroll(g, "")
+		return nil
+	}
 
 	showAsset(g, line)
 
 	return nil
 }
 func showAsset(g *gocui.Gui, file string) {
-
 	HideHelp(g)
 	CurrAsset = utils.Prefer.WorkDir + utils.GenDir + file
 
