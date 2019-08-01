@@ -26,10 +26,10 @@ func InitTestingPage(g *gocui.Gui) error {
 		caseName := strings.Replace(casePath, dir, "", -1)
 		content += "  " + caseName + "\n"
 	}
-
-	setViewLineSelected(g, "side", selectLineEvent)
-
 	utils.PrintToSide(g, content)
+
+	setViewScroll(g, "side")
+	setViewLineSelected(g, "side", selectLineEvent)
 
 	return nil
 }

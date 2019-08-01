@@ -58,7 +58,6 @@ func MainPageKeyBindings(g *gocui.Gui) error {
 		log.Panicln(err)
 	}
 
-	setViewScroll(g, "side")
 	setViewScroll(g, "main")
 	setViewScroll(g, "cmd")
 
