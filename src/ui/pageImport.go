@@ -26,7 +26,7 @@ func InitImportPage(g *gocui.Gui) error {
 
 	left = right + Space
 	right = left + TextWidthFull
-	urlInput := NewTextWidget(g, "urlInput", left, 1, TextWidthFull, mock.Server.URL)
+	urlInput := NewTextWidget(g, "urlInput", left, 1, TextWidthFull, mock.GetUrl("importProject"))
 	ViewMap["import"] = append(ViewMap["import"], urlInput.Name())
 	if _, err := g.SetCurrentView("urlInput"); err != nil {
 		return err

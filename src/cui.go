@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/easysoft/zentaoatf/src/mock"
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/jroimartin/gocui"
@@ -10,9 +9,6 @@ import (
 
 func main() {
 	utils.RunFromCui = true
-
-	mock.Server = mock.CreateServer("case-from-prodoct.json")
-	defer mock.Server.Close()
 
 	g, err := gocui.NewGui(gocui.OutputNormal)
 	if err != nil {

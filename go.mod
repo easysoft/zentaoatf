@@ -6,6 +6,7 @@ require golang.org/x/text v0.3.0
 
 require (
 	github.com/fatih/color v1.7.0
+	github.com/gorilla/mux v1.7.3
 	github.com/jroimartin/gocui v0.4.0
 	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/mattn/go-runewidth v0.0.4 // indirect

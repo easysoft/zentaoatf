@@ -25,16 +25,6 @@ func ExeShell(cmdStr string) (string, error) {
 	return out.String(), err
 }
 
-//func ExecCommand(commandName string) string {
-//	cmd := exec.Command("/bin/bash", "-c", commandName)
-//	var out bytes.Buffer
-//	cmd.Stdout = &out
-//
-//	_ = cmd.Run()
-//
-//	return out.String()
-//}
-
 func ExecCommand(commandName string) string {
 	cmd := exec.Command("/bin/bash", "-c", commandName)
 
@@ -63,4 +53,14 @@ func ExecCommand(commandName string) string {
 	cmd.Wait()
 
 	return strings.Join(output, "")
+}
+
+func ExecCommandBlock(commandName string) string {
+	cmd := exec.Command("/bin/bash", "-c", commandName)
+	var out bytes.Buffer
+	cmd.Stdout = &out
+
+	_ = cmd.Run()
+
+	return out.String()
 }
