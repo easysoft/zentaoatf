@@ -21,6 +21,7 @@ func InitMainPage(g *gocui.Gui) error {
 
 	sideView := NewPanelWidget(g, "side", 0, 2, utils.LeftWidth, maxY-3, "")
 	ViewMap["root"] = append(ViewMap["root"], sideView.Name())
+	sideView.Wrap = true
 
 	x := 2
 	for _, name := range Tabs {
@@ -55,25 +56,9 @@ func MainPageKeyBindings(g *gocui.Gui) error {
 		log.Panicln(err)
 	}
 
-	if err := g.SetKeybinding("main", gocui.MouseLeft, gocui.ModNone, setCurrView("main")); err != nil {
-		return err
-	}
-	if err := g.SetKeybinding("main", gocui.KeyArrowUp, gocui.ModNone, scroll(-1)); err != nil {
-		return err
-	}
-	if err := g.SetKeybinding("main", gocui.KeyArrowDown, gocui.ModNone, scroll(1)); err != nil {
-		return err
-	}
-
-	if err := g.SetKeybinding("cmd", gocui.MouseLeft, gocui.ModNone, setCurrView("cmd")); err != nil {
-		return err
-	}
-	if err := g.SetKeybinding("cmd", gocui.KeyArrowUp, gocui.ModNone, scroll(-1)); err != nil {
-		return err
-	}
-	if err := g.SetKeybinding("cmd", gocui.KeyArrowDown, gocui.ModNone, scroll(1)); err != nil {
-		return err
-	}
+	setScrollView(g, "slide")
+	setScrollView(g, "main")
+	setScrollView(g, "cmd")
 
 	return nil
 }

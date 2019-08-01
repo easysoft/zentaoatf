@@ -120,7 +120,7 @@ func printForSwitch(g *gocui.Gui, his model.WorkHistory) {
 	str = fmt.Sprintf(str, name, his.ProjectPath, config.Url, config.EntityType, config.EntityVal,
 		config.LangType, !config.SingleFile)
 
-	utils.PrintToMain(g, str)
+	utils.PrintToMainNoScroll(g, str)
 }
 
 func init() {

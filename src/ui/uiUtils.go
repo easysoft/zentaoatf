@@ -50,13 +50,13 @@ func Quit(g *gocui.Gui, v *gocui.View) error {
 	return gocui.ErrQuit
 }
 
-func scroll(dy int) func(g *gocui.Gui, v *gocui.View) error {
+func scrollEvent(dy int) func(g *gocui.Gui, v *gocui.View) error {
 	return func(g *gocui.Gui, v *gocui.View) error {
-		return scrollView(g, v, dy)
+		return scroll(g, v, dy)
 	}
 }
 
-func scrollView(g *gocui.Gui, v *gocui.View, dy int) error {
+func scroll(g *gocui.Gui, v *gocui.View, dy int) error {
 	v.Autoscroll = false
 	ox, oy := v.Origin()
 	pos := oy + dy
@@ -70,6 +70,20 @@ func scrollView(g *gocui.Gui, v *gocui.View, dy int) error {
 	}
 
 	v.SetOrigin(ox, pos)
+
+	return nil
+}
+
+func setScrollView(g *gocui.Gui, name string) error {
+	if err := g.SetKeybinding(name, gocui.MouseLeft, gocui.ModNone, setCurrView(name)); err != nil {
+		return err
+	}
+	if err := g.SetKeybinding(name, gocui.KeyArrowUp, gocui.ModNone, scrollEvent(-1)); err != nil {
+		return err
+	}
+	if err := g.SetKeybinding(name, gocui.KeyArrowDown, gocui.ModNone, scrollEvent(1)); err != nil {
+		return err
+	}
 
 	return nil
 }

@@ -70,7 +70,7 @@ func selectTestingItem(g *gocui.Gui, view *gocui.View) error {
 
 	showRunButton(g)
 	content := utils.ReadFile(CurrAsset)
-	utils.PrintToMain(g, content)
+	utils.PrintToMainNoScroll(g, content)
 
 	return nil
 }

@@ -32,9 +32,12 @@ func PrintToCmd(g *gocui.Gui, msg string) {
 	AdjustOrigin("cmd")
 }
 func PrintToMain(g *gocui.Gui, msg string) {
+	PrintToMainNoScroll(g, msg)
+	AdjustOrigin("main")
+}
+func PrintToMainNoScroll(g *gocui.Gui, msg string) {
 	mainView, _ := g.View("main")
 	mainView.Clear()
 
 	_, _ = fmt.Fprintln(mainView, msg)
-	AdjustOrigin("main")
 }
