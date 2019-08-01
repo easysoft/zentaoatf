@@ -43,6 +43,7 @@ func selectLineEvent(g *gocui.Gui, v *gocui.View) error {
 		return nil
 	}
 	line = strings.TrimSpace(line)
+	//utils.PrintToCmd(g, line)
 	if strings.Index(line, ".") < 0 {
 		utils.PrintToMainNoScroll(g, "")
 		return nil
@@ -97,6 +98,7 @@ func init() {
 }
 
 func DestoryTestingPage(g *gocui.Gui) {
+	g.DeleteKeybindings("side")
 	for _, v := range ViewMap["testing"] {
 		g.DeleteView(v)
 		g.DeleteKeybindings(v)

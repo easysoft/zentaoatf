@@ -46,8 +46,6 @@ func InitMainPage(g *gocui.Gui) error {
 	NewHelpWidget(g)
 	MainPageKeyBindings(g)
 
-	InitTestingPage(g)
-
 	setCurrView("side")
 	return nil
 }

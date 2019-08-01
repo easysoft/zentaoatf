@@ -52,11 +52,11 @@ func Quit(g *gocui.Gui, v *gocui.View) error {
 
 func scrollEvent(dy int) func(g *gocui.Gui, v *gocui.View) error {
 	return func(g *gocui.Gui, v *gocui.View) error {
-		return scroll(g, v, dy)
+		return scrollAction(g, v, dy)
 	}
 }
 
-func scroll(g *gocui.Gui, v *gocui.View, dy int) error {
+func scrollAction(g *gocui.Gui, v *gocui.View, dy int) error {
 	v.Autoscroll = false
 
 	if dy > 0 {
@@ -85,22 +85,6 @@ func scroll(g *gocui.Gui, v *gocui.View, dy int) error {
 			}
 		}
 	}
-
-	//
-	//ox, oy := v.Origin()
-	//pos := oy + dy
-	//_, height := v.Size()
-	//
-	//if pos > len(v.BufferLines())-height {
-	//	pos = len(v.BufferLines()) - height
-	//}
-	//if pos < 0 {
-	//	pos = 0
-	//}
-	//
-	//cx, cy := v.Cursor()
-	//v.SetCursor(cx, cy+dy)
-	//v.SetOrigin(ox, pos)
 
 	return nil
 }
