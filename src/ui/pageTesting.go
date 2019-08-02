@@ -46,28 +46,24 @@ func selectAssetEvent(g *gocui.Gui, v *gocui.View) error {
 		return nil
 	}
 	line = strings.TrimSpace(line)
-	//utils.PrintToCmd(g, line)
 	if strings.Index(line, ".") < 0 {
 		utils.PrintToMainNoScroll(g, "")
 		return nil
 	}
+	CurrAsset = utils.Prefer.WorkDir + utils.GenDir + line
 
-	showAsset(g, line)
+	showAsset(g)
 
 	return nil
 }
-func showAsset(g *gocui.Gui, file string) {
-	HideHelp(g)
-	CurrAsset = utils.Prefer.WorkDir + utils.GenDir + file
+func showAsset(g *gocui.Gui) {
+	if len(tabs) == 0 {
+		HideHelp(g)
+		showTab(g)
+	}
 
-	showTab(g)
 	defaultTab, _ := g.View("tabContentView")
 	showContent(g, defaultTab)
-	content := utils.ReadFile(CurrAsset)
-
-	panelFileContent, _ := g.View("panelFileContent")
-	panelFileContent.Clear()
-	fmt.Fprintln(panelFileContent, content)
 }
 
 func showTab(g *gocui.Gui) error {
@@ -93,14 +89,22 @@ func showContent(g *gocui.Gui, v *gocui.View) error {
 	DestoryRunPanel(g)
 	HighlightTab(v.Name(), tabs)
 
-	maxX, _ := g.Size()
-	panelFileContent := NewPanelWidget(g, "panelFileContent", utils.LeftWidth, 2,
-		maxX-utils.LeftWidth-1, utils.MainViewHeight, "panelFileContent")
-	ViewMap["testing"] = append(ViewMap["testing"], panelFileContent.Name())
+	panelFileContent, _ := g.View("panelFileContent")
+	if panelFileContent != nil {
+		panelFileContent.Clear()
+	} else {
+		maxX, _ := g.Size()
+		panelFileContent = NewPanelWidget(g, "panelFileContent", utils.LeftWidth, 2,
+			maxX-utils.LeftWidth-1, utils.MainViewHeight, "")
+		ViewMap["testing"] = append(ViewMap["testing"], panelFileContent.Name())
 
-	runButton := NewButtonWidgetAutoWidth(g, "runButton", maxX-10, 0, "Run", run)
-	runButton.Frame = false
-	ViewMap["testing"] = append(ViewMap["testing"], runButton.Name())
+		runButton := NewButtonWidgetAutoWidth(g, "runButton", maxX-10, 0, "Run", run)
+		runButton.Frame = false
+		ViewMap["testing"] = append(ViewMap["testing"], runButton.Name())
+	}
+
+	content := utils.ReadFile(CurrAsset)
+	fmt.Fprintln(panelFileContent, content)
 
 	return nil
 }
