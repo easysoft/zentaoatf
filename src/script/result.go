@@ -26,7 +26,6 @@ func LoadTestResults(assert string) []string {
 
 	reg := fmt.Sprintf("result-%s-(%s-.+)\\.txt", mode, name)
 	myExp := regexp.MustCompile(reg)
-	utils.PrintToCmd(utils.Cui, reg)
 
 	files, _ := ioutil.ReadDir(dir)
 	for _, fi := range files {

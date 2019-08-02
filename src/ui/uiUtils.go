@@ -124,6 +124,17 @@ func setViewScroll(g *gocui.Gui, name string) error {
 	return nil
 }
 
+func setHighlight(g *gocui.Gui, name string) error {
+	v, _ := g.View(name)
+
+	v.Wrap = true
+	v.Highlight = true
+	v.SelBgColor = gocui.ColorWhite
+	v.SelFgColor = gocui.ColorBlack
+
+	return nil
+}
+
 func setViewLineSelected(g *gocui.Gui, name string, selectLine func(g *gocui.Gui, v *gocui.View) error) error {
 	if err := g.SetKeybinding(name, gocui.KeyEnter, gocui.ModNone, selectLine); err != nil {
 		return err

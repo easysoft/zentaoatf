@@ -127,7 +127,7 @@ func showRun(g *gocui.Gui, v *gocui.View) error {
 	runViews = append(runViews, panelResultList.Name())
 
 	panelCaseList := NewPanelWidget(g, "panelCaseList", utils.LeftWidth, h+2,
-		60, utils.MainViewHeight-h, "panelCaseList")
+		60, utils.MainViewHeight-h, "")
 	ViewMap["testing"] = append(ViewMap["testing"], panelCaseList.Name())
 	runViews = append(runViews, panelCaseList.Name())
 
@@ -136,9 +136,16 @@ func showRun(g *gocui.Gui, v *gocui.View) error {
 	ViewMap["testing"] = append(ViewMap["testing"], panelCaseResult.Name())
 	runViews = append(runViews, panelCaseResult.Name())
 
-	for _, v := range runViews {
+	for idx, v := range runViews {
 		setViewScroll(g, v)
+
+		if idx < 2 {
+			setHighlight(g, v)
+		}
 	}
+
+	//setViewLineSelected(g, "panelResultList", selectAssetEvent)
+	//setViewLineSelected(g, "panelCaseList", selectAssetEvent)
 
 	results := script.LoadTestResults(CurrAsset)
 	fmt.Fprintln(panelResultList, strings.Join(results, "\n"))
