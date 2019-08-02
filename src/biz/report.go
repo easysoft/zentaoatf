@@ -72,5 +72,5 @@ func Print(report model.TestReport, workDir string) {
 		}
 	}
 
-	utils.WriteFile(workDir+"/logs/result-"+utils.RunName+".txt", strings.Join(logs, "\n"))
+	utils.WriteFile(workDir+"/"+utils.LogDir+"/result-"+utils.RunName+".txt", strings.Join(logs, "\n"))
 }

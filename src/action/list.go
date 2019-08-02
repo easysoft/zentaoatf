@@ -1,7 +1,9 @@
 package action
 
-import "github.com/easysoft/zentaoatf/src/biz"
+import (
+	"github.com/easysoft/zentaoatf/src/script"
+)
 
 func List(scriptDir string, langType string) {
-	biz.List(scriptDir, langType)
+	script.List(scriptDir, langType)
 }

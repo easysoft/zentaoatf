@@ -113,7 +113,7 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 	count, err := action.Generate(json, url, params["entityType"], params["entityVal"], language, singleFile)
 	if err == nil {
 		utils.PrintToCmd(g, fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
-			count, utils.GenDir, utils.DateTimeStr(time.Now())))
+			count, utils.ScriptDir, utils.DateTimeStr(time.Now())))
 	} else {
 		utils.PrintToCmd(g, err.Error())
 	}

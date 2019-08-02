@@ -42,14 +42,14 @@ func ScriptToExpectName(file string) string {
 
 func PathToRunName(filePath string) string {
 	if filePath == "" {
-		return RunMode.String() + "-" + DateTimeStrLong(time.Now())
+		return RunMode.String() + "-" + DateTimeStrFmt(time.Now(), "2006-01-02 15:04:05")
 	}
 
 	name := path.Base(filePath)
 	ext := path.Ext(filePath)
 	name = strings.Replace(name, ext, "", -1)
 
-	runName := RunMode.String() + "-" + name + "-" + DateTimeStrLong(time.Now())
+	runName := RunMode.String() + "-" + name + "-" + DateTimeStrFmt(time.Now(), "2006-01-02 15:04:05")
 
 	return runName
 }

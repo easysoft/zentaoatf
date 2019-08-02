@@ -26,6 +26,8 @@ func ExeShell(cmdStr string) (string, error) {
 }
 
 func ExecCommand(commandName string) string {
+	// TODO: now tested for linux and mac
+	commandName = "chmod +x " + commandName + "; " + commandName + ";"
 	cmd := exec.Command("/bin/bash", "-c", commandName)
 
 	output := make([]string, 0)
@@ -56,11 +58,19 @@ func ExecCommand(commandName string) string {
 }
 
 func ExecCommandBlock(commandName string) string {
+	commandName = "chmod +x " + commandName + "; " + commandName + ";"
+
 	cmd := exec.Command("/bin/bash", "-c", commandName)
 	var out bytes.Buffer
 	cmd.Stdout = &out
 
-	_ = cmd.Run()
+	var ret string
+	err := cmd.Run()
+	if err != nil {
+		ret = err.Error()
+	} else {
+		ret = out.String()
+	}
 
-	return out.String()
+	return ret
 }

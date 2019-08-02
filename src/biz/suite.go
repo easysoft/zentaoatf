@@ -8,5 +8,5 @@ import (
 func GenSuite(cases []string) {
 	str := strings.Join(cases, "\n")
 
-	utils.WriteFile(utils.Prefer.WorkDir+utils.GenDir+"all."+utils.SuiteExt, str)
+	utils.WriteFile(utils.Prefer.WorkDir+utils.ScriptDir+"all."+utils.SuiteExt, str)
 }

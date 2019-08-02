@@ -65,11 +65,11 @@ func DealwithTestCase(tc model.TestCase, langType string, singleFile bool, caseP
 	caseId := tc.Id
 	caseTitle := tc.Title
 
-	scriptFile := fmt.Sprintf(utils.GenDir+"tc-%s.%s", strconv.Itoa(caseId), LangMap[langType]["extName"])
+	scriptFile := fmt.Sprintf(utils.ScriptDir+"tc-%s.%s", strconv.Itoa(caseId), LangMap[langType]["extName"])
 
-	utils.MkDirIfNeeded(utils.Prefer.WorkDir + utils.GenDir)
+	utils.MkDirIfNeeded(utils.Prefer.WorkDir + utils.ScriptDir)
 	if utils.FileExist(utils.Prefer.WorkDir + scriptFile) {
-		scriptFile = fmt.Sprintf(utils.GenDir+"tc-%s.%s",
+		scriptFile = fmt.Sprintf(utils.ScriptDir+"tc-%s.%s",
 			strconv.Itoa(caseId)+"-"+utils.DateTimeStrLong(time.Now()), LangMap[langType]["extName"])
 	}
 	*casePaths = append(*casePaths, scriptFile)

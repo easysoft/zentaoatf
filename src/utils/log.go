@@ -26,14 +26,14 @@ func PrintWholeLine(msg string, char string, attr color.Attribute) {
 
 	var output io.Writer
 	if RunFromCui {
-		output, _ = Cui.View("main")
+		output, _ = Cui.View(CuiRunOutputView)
 	} else {
 		output = color.Output
 	}
 
 	clr := color.New(attr)
 	clr.Fprintf(output, fmt.Sprintf("%s%s%s\n", preFixStr, msg, postFixStr))
-	AdjustOrigin("main")
+	AdjustOrigin(CuiRunOutputView)
 }
 
 func PrintAndLog(logs *[]string, str string) {
@@ -41,13 +41,13 @@ func PrintAndLog(logs *[]string, str string) {
 
 	var output io.Writer
 	if RunFromCui {
-		output, _ = Cui.View("main")
+		output, _ = Cui.View(CuiRunOutputView)
 	} else {
 		output = color.Output
 	}
 
 	fmt.Fprintf(output, str+"\n")
-	AdjustOrigin("main")
+	AdjustOrigin(CuiRunOutputView)
 }
 
 func PrintAndLogColorLn(logs *[]string, str string, attr color.Attribute) {
@@ -55,26 +55,26 @@ func PrintAndLogColorLn(logs *[]string, str string, attr color.Attribute) {
 
 	var output io.Writer
 	if RunFromCui {
-		output, _ = Cui.View("main")
+		output, _ = Cui.View(CuiRunOutputView)
 	} else {
 		output = color.Output
 	}
 
 	clr := color.New(attr)
 	clr.Fprintf(output, str+"\n")
-	AdjustOrigin("main")
+	AdjustOrigin(CuiRunOutputView)
 }
 
 func Printt(str string) {
 	var output io.Writer
 	if RunFromCui {
-		output, _ = Cui.View("main")
+		output, _ = Cui.View(CuiRunOutputView)
 	} else {
 		output = color.Output
 	}
 
 	fmt.Fprintf(output, str)
-	AdjustOrigin("main")
+	AdjustOrigin(CuiRunOutputView)
 }
 
 func ColoredStatus(status string) string {

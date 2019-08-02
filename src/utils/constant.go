@@ -18,13 +18,16 @@ const (
 	EnRes = "res/messages_en.json"
 	ZhRes = "res/messages_zh.json"
 
-	GenDir = "scripts/"
+	ScriptDir = "scripts/"
+	LogDir    = "logs/"
 
 	LeftWidth = 36
 	MinWidth  = 130
 	MinHeight = 36
 
 	CmdViewHeight = 10
+
+	CuiRunOutputView = "panelFileContent"
 )
 
 var RunMode misc.RunMode

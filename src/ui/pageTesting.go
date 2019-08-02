@@ -11,11 +11,13 @@ import (
 
 var CurrAsset string
 var tabs []string
+var contentViews []string
+var runViews []string
 
 func InitTestingPage(g *gocui.Gui) error {
 	// left
-	caseFiles, suitesFiles := loadTestAssets()
-	dir := utils.Prefer.WorkDir + utils.GenDir
+	caseFiles, suitesFiles := script.LoadTestAssets()
+	dir := utils.Prefer.WorkDir + utils.ScriptDir
 
 	content := "Test Suite:" + "\n"
 	for _, suitePath := range suitesFiles {
@@ -50,7 +52,7 @@ func selectAssetEvent(g *gocui.Gui, v *gocui.View) error {
 		utils.PrintToMainNoScroll(g, "")
 		return nil
 	}
-	CurrAsset = utils.Prefer.WorkDir + utils.GenDir + line
+	CurrAsset = utils.Prefer.WorkDir + utils.ScriptDir + line
 
 	showAsset(g)
 
@@ -94,15 +96,19 @@ func showContent(g *gocui.Gui, v *gocui.View) error {
 		panelFileContent.Clear()
 	} else {
 		maxX, _ := g.Size()
-		panelFileContent = NewPanelWidget(g, "panelFileContent", utils.LeftWidth, 2,
+		panelFileContent = NewPanelWidget(g, utils.CuiRunOutputView, utils.LeftWidth, 2,
 			maxX-utils.LeftWidth-1, utils.MainViewHeight, "")
 		ViewMap["testing"] = append(ViewMap["testing"], panelFileContent.Name())
+		contentViews = append(contentViews, panelFileContent.Name())
+		setViewScroll(g, panelFileContent.Name())
 
 		runButton := NewButtonWidgetAutoWidth(g, "runButton", maxX-10, 0, "Run", run)
 		runButton.Frame = false
-		ViewMap["testing"] = append(ViewMap["testing"], runButton.Name())
+		contentViews = append(contentViews, runButton.Name())
 	}
 
+	panelFileContent.Clear()
+	panelFileContent.SetOrigin(0, 0)
 	content := utils.ReadFile(CurrAsset)
 	fmt.Fprintln(panelFileContent, content)
 
@@ -116,17 +122,26 @@ func showRun(g *gocui.Gui, v *gocui.View) error {
 	h := utils.MainViewHeight / 2
 	maxX, _ := g.Size()
 
-	panelResultList := NewPanelWidget(g, "panelResultList", utils.LeftWidth, 2,
-		60, h, "panelResultList")
+	panelResultList := NewPanelWidget(g, "panelResultList", utils.LeftWidth, 2, 60, h, "")
 	ViewMap["testing"] = append(ViewMap["testing"], panelResultList.Name())
+	runViews = append(runViews, panelResultList.Name())
 
 	panelCaseList := NewPanelWidget(g, "panelCaseList", utils.LeftWidth, h+2,
 		60, utils.MainViewHeight-h, "panelCaseList")
 	ViewMap["testing"] = append(ViewMap["testing"], panelCaseList.Name())
+	runViews = append(runViews, panelCaseList.Name())
 
 	panelCaseResult := NewPanelWidget(g, "panelCaseResult", utils.LeftWidth+60, 2,
 		maxX-utils.LeftWidth-61, utils.MainViewHeight, "panelCaseResult")
 	ViewMap["testing"] = append(ViewMap["testing"], panelCaseResult.Name())
+	runViews = append(runViews, panelCaseResult.Name())
+
+	for _, v := range runViews {
+		setViewScroll(g, v)
+	}
+
+	results := script.LoadTestResults(CurrAsset)
+	fmt.Fprintln(panelResultList, strings.Join(results, "\n"))
 
 	return nil
 }
@@ -137,20 +152,11 @@ func run(g *gocui.Gui, v *gocui.View) error {
 	}
 
 	utils.PrintToCmd(g, fmt.Sprintf("#atf run -d %s -f %s", utils.Prefer.WorkDir, CurrAsset))
-	utils.PrintToMain(g, "")
+	output, _ := g.View(utils.CuiRunOutputView)
+	output.Clear()
 	action.Run(utils.Prefer.WorkDir, []string{CurrAsset}, "")
 
 	return nil
-}
-
-func loadTestAssets() ([]string, []string) {
-	config := utils.ReadCurrConfig()
-	ext := script.GetLangMap()[config.LangType]["extName"]
-
-	caseFiles, _ := utils.GetAllFiles(utils.Prefer.WorkDir+utils.GenDir, ext)
-	suitesFiles, _ := utils.GetAllFiles(utils.Prefer.WorkDir+utils.GenDir, "suite")
-
-	return caseFiles, suitesFiles
 }
 
 func init() {
@@ -166,13 +172,13 @@ func DestoryTestingPage(g *gocui.Gui) {
 }
 
 func DestoryContentPanel(g *gocui.Gui) {
-	for _, v := range []string{"panelResultList", "runButton"} {
+	for _, v := range contentViews {
 		g.DeleteView(v)
 		g.DeleteKeybindings(v)
 	}
 }
 func DestoryRunPanel(g *gocui.Gui) {
-	for _, v := range []string{"panelFileContent", "panelCaseList", "panelCaseResult"} {
+	for _, v := range runViews {
 		g.DeleteView(v)
 		g.DeleteKeybindings(v)
 	}

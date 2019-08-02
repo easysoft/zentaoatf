@@ -1,7 +1,6 @@
-package biz
+package script
 
 import (
-	"github.com/easysoft/zentaoatf/src/script"
 	"github.com/easysoft/zentaoatf/src/utils"
 )
 
@@ -14,7 +13,7 @@ func View(scriptDir string, fileNames []string, langType string) {
 	}
 
 	for _, file := range files {
-		script.Detail(file)
+		Detail(file)
 	}
 
 }
