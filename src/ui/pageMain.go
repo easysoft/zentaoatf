@@ -33,7 +33,7 @@ func InitMainPage(g *gocui.Gui) error {
 		x += 10
 	}
 
-	mainView := NewPanelWidget(g, "main", utils.LeftWidth, 0, maxX-1-utils.LeftWidth, utils.MainViewHeight, "")
+	mainView := NewPanelWidget(g, "main", utils.LeftWidth, 0, maxX-utils.LeftWidth-1, utils.MainViewHeight, "")
 	ViewMap["root"] = append(ViewMap["root"], mainView.Name())
 	mainView.Wrap = true
 

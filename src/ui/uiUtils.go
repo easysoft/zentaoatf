@@ -148,3 +148,19 @@ func setInputEvent(g *gocui.Gui, name string) error {
 	}
 	return nil
 }
+
+func HighlightTab(view string, views []string) {
+	for _, name := range views {
+		v, _ := utils.Cui.View(name)
+
+		if v.Name() == view {
+			v.Highlight = true
+			v.SelBgColor = gocui.ColorWhite
+			v.SelFgColor = gocui.ColorBlack
+		} else {
+			v.Highlight = false
+			v.SelBgColor = gocui.ColorBlack
+			v.SelFgColor = gocui.ColorDefault
+		}
+	}
+}

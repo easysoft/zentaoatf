@@ -10,8 +10,10 @@ import (
 )
 
 var CurrAsset string
+var tabs []string
 
 func InitTestingPage(g *gocui.Gui) error {
+	// left
 	caseFiles, suitesFiles := loadTestAssets()
 	dir := utils.Prefer.WorkDir + utils.GenDir
 
@@ -28,13 +30,14 @@ func InitTestingPage(g *gocui.Gui) error {
 	}
 	utils.PrintToSide(g, content)
 
+	// right
 	setViewScroll(g, "side")
-	setViewLineSelected(g, "side", selectLineEvent)
+	setViewLineSelected(g, "side", selectAssetEvent)
 
 	return nil
 }
 
-func selectLineEvent(g *gocui.Gui, v *gocui.View) error {
+func selectAssetEvent(g *gocui.Gui, v *gocui.View) error {
 	var line string
 	var err error
 
@@ -57,16 +60,69 @@ func showAsset(g *gocui.Gui, file string) {
 	HideHelp(g)
 	CurrAsset = utils.Prefer.WorkDir + utils.GenDir + file
 
-	showRunButton(g)
+	showTab(g)
+	defaultTab, _ := g.View("tabContentView")
+	showContent(g, defaultTab)
 	content := utils.ReadFile(CurrAsset)
-	utils.PrintToMainNoScroll(g, content)
+
+	panelFileContent, _ := g.View("panelFileContent")
+	panelFileContent.Clear()
+	fmt.Fprintln(panelFileContent, content)
 }
 
-func showRunButton(g *gocui.Gui) error {
+func showTab(g *gocui.Gui) error {
+	x := utils.LeftWidth + 1
+	tabContentView := NewLabelWidgetAutoWidth(g, "tabContentView", x, 0, "Content")
+	ViewMap["testing"] = append(ViewMap["testing"], tabContentView.Name())
+	tabs = append(tabs, tabContentView.Name())
+	if err := g.SetKeybinding("tabContentView", gocui.MouseLeft, gocui.ModNone, showContent); err != nil {
+		return nil
+	}
+
+	tabResultView := NewLabelWidgetAutoWidth(g, "tabResultView", x+12, 0, "Results")
+	ViewMap["testing"] = append(ViewMap["testing"], tabResultView.Name())
+	tabs = append(tabs, tabResultView.Name())
+	if err := g.SetKeybinding("tabResultView", gocui.MouseLeft, gocui.ModNone, shoRun); err != nil {
+		return nil
+	}
+
+	return nil
+}
+
+func showContent(g *gocui.Gui, v *gocui.View) error {
+	DestoryRunPanel(g)
+	HighlightTab(v.Name(), tabs)
+
+	maxX, _ := g.Size()
+	panelFileContent := NewPanelWidget(g, "panelFileContent", utils.LeftWidth, 2,
+		maxX-utils.LeftWidth-1, utils.MainViewHeight, "panelFileContent")
+	ViewMap["testing"] = append(ViewMap["testing"], panelFileContent.Name())
+
+	runButton := NewButtonWidgetAutoWidth(g, "runButton", maxX-10, 0, "Run", run)
+	runButton.Frame = false
+	ViewMap["testing"] = append(ViewMap["testing"], runButton.Name())
+
+	return nil
+}
+
+func shoRun(g *gocui.Gui, v *gocui.View) error {
+	DestoryContentPanel(g)
+	HighlightTab(v.Name(), tabs)
+
+	h := utils.MainViewHeight / 2
 	maxX, _ := g.Size()
 
-	runButton := NewButtonWidgetAutoWidth(g, "runButton", maxX-10, 1, "Run", run)
-	ViewMap["testing"] = append(ViewMap["testing"], runButton.Name())
+	panelResultList := NewPanelWidget(g, "panelResultList", utils.LeftWidth, 2,
+		60, h, "panelResultList")
+	ViewMap["testing"] = append(ViewMap["testing"], panelResultList.Name())
+
+	panelCaseList := NewPanelWidget(g, "panelCaseList", utils.LeftWidth, h+2,
+		60, utils.MainViewHeight-h, "panelCaseList")
+	ViewMap["testing"] = append(ViewMap["testing"], panelCaseList.Name())
+
+	panelCaseResult := NewPanelWidget(g, "panelCaseResult", utils.LeftWidth+60, 2,
+		maxX-utils.LeftWidth-61, utils.MainViewHeight, "panelCaseResult")
+	ViewMap["testing"] = append(ViewMap["testing"], panelCaseResult.Name())
 
 	return nil
 }
@@ -100,6 +156,19 @@ func init() {
 func DestoryTestingPage(g *gocui.Gui) {
 	g.DeleteKeybindings("side")
 	for _, v := range ViewMap["testing"] {
+		g.DeleteView(v)
+		g.DeleteKeybindings(v)
+	}
+}
+
+func DestoryContentPanel(g *gocui.Gui) {
+	for _, v := range []string{"panelFileContent", "panelCaseList", "panelCaseResult"} {
+		g.DeleteView(v)
+		g.DeleteKeybindings(v)
+	}
+}
+func DestoryRunPanel(g *gocui.Gui) {
+	for _, v := range []string{"panelResultList", "runButton"} {
 		g.DeleteView(v)
 		g.DeleteKeybindings(v)
 	}
