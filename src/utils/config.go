@@ -6,20 +6,24 @@ import (
 	"io/ioutil"
 )
 
-func SaveConfig(url string, entityType string, entityVal string, langType string, singleFile bool, name string) error {
+func SaveConfig(dir string, url string, entityType string, entityVal string, langType string, singleFile bool, name string) error {
 	config := model.Config{Url: url, EntityType: entityType, LangType: langType, SingleFile: singleFile, ProjectName: name}
 
 	config.EntityType = entityType
 	config.EntityVal = entityVal
 
+	if dir == "" {
+		dir = Prefer.WorkDir
+	}
+
 	data, _ := yaml.Marshal(&config)
-	ioutil.WriteFile(Prefer.WorkDir+ConfigFile, data, 0666)
+	ioutil.WriteFile(dir+ConfigFile, data, 0666)
 
 	return nil
 }
 
-func SaveEmptyConfig() error {
-	SaveConfig("", "", "", "", false, "")
+func SaveEmptyConfig(dir string) error {
+	SaveConfig(dir, "", "", "", "", false, "")
 
 	return nil
 }
@@ -35,8 +39,9 @@ func ReadCurrConfig() model.Config {
 func ReadConfig(dir string) model.Config {
 	configPath := dir + ConfigFile
 	var config model.Config
+
 	if !FileExist(configPath) {
-		SaveEmptyConfig()
+		SaveEmptyConfig(dir)
 	}
 	buf, _ := ioutil.ReadFile(configPath)
 	yaml.Unmarshal(buf, &config)

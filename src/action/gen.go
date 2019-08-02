@@ -39,7 +39,7 @@ func Generate(json model.Response,
 	}
 	biz.GenSuite(casePaths)
 
-	utils.SaveConfig(url, entityType, entityVal, langType, singleFile, json.Name)
+	utils.SaveConfig("", url, entityType, entityVal, langType, singleFile, json.Name)
 
 	return len(json.Cases), nil
 }
