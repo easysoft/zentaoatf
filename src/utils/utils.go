@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"runtime"
 	"strings"
+	"time"
 )
 
 func RemoveBlankLine(str string) string {
@@ -37,6 +38,20 @@ func ScriptToExpectName(file string) string {
 	expectName := strings.TrimSuffix(file, fileSuffix) + ".ex"
 
 	return expectName
+}
+
+func PathToRunName(filePath string) string {
+	if filePath == "" {
+		return RunMode.String() + "-" + DateTimeStrLong(time.Now())
+	}
+
+	name := path.Base(filePath)
+	ext := path.Ext(filePath)
+	name = strings.Replace(name, ext, "", -1)
+
+	runName := RunMode.String() + "-" + name + "-" + DateTimeStrLong(time.Now())
+
+	return runName
 }
 
 func BoolToPass(b bool) string {

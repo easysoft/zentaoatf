@@ -19,18 +19,21 @@ func Run(scriptDir string, fileNames []string, langType string) {
 	if fileNames != nil && len(fileNames) > 0 {
 		if len(fileNames) == 1 {
 			if strings.Index(fileNames[0], ".suite") > -1 {
-				utils.RunType = misc.SUITE
+				utils.RunMode = misc.SUITE
 			} else {
-				utils.RunType = misc.SCRIPT
+				utils.RunMode = misc.SCRIPT
 			}
+			utils.RunName = utils.PathToRunName(fileNames[0])
 		} else {
-			utils.RunType = misc.LIST
+			utils.RunMode = misc.BATCH
+			utils.RunName = utils.PathToRunName("")
 		}
 
 		files, _ = utils.GetSpecifiedFiles(scriptDir, fileNames)
 	} else {
 		files, _ = utils.GetAllFiles(scriptDir, LangMap[langType]["extName"])
-		utils.RunType = misc.DIR
+		utils.RunMode = misc.DIR
+		utils.RunName = utils.PathToRunName(scriptDir)
 	}
 
 	var report = model.TestReport{Path: scriptDir, Env: utils.GetOs(),

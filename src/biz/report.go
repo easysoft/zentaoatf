@@ -26,12 +26,12 @@ func Print(report model.TestReport, workDir string) {
 	utils.PrintAndLogColorLn(&logs, fmt.Sprintf("  %s: %d", utils.I118Prt.Sprintf("skip"), report.Skip), color.FgYellow)
 
 	for _, cs := range report.Cases {
-		str := "\n %s %s \n"
+		str := "\n %s %s"
 		status := cs.Status.String()
 		statusColor := utils.ColoredStatus(status)
 
 		logs = append(logs, fmt.Sprintf(str, status, cs.Path))
-		utils.Printt(fmt.Sprintf(str, statusColor, cs.Path))
+		utils.Printt(fmt.Sprintf(str+"\n", statusColor, cs.Path))
 
 		if len(cs.Steps) > 0 {
 			count := 0
@@ -55,7 +55,7 @@ func Print(report model.TestReport, workDir string) {
 
 					cpStatus := utils.BoolToPass(step.Status)
 					cpStatusColored := utils.ColoredStatus(cpStatus)
-					logs = append(logs, fmt.Sprintf("    %s%d: %s\n", utils.I118Prt.Sprintf("checkpoint"), cp.Numb,
+					logs = append(logs, fmt.Sprintf("    %s%d: %s", utils.I118Prt.Sprintf("checkpoint"), cp.Numb,
 						utils.BoolToPass(cp.Status)))
 					utils.Printt(fmt.Sprintf("    %s%d: %s\n", utils.I118Prt.Sprintf("checkpoint"), cp.Numb, cpStatusColored))
 
@@ -72,5 +72,5 @@ func Print(report model.TestReport, workDir string) {
 		}
 	}
 
-	utils.WriteFile(workDir+"/logs/result-"+utils.DateTimeStrLong(time.Now())+".txt", strings.Join(logs, "\n"))
+	utils.WriteFile(workDir+"/logs/result-"+utils.RunName+".txt", strings.Join(logs, "\n"))
 }

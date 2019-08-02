@@ -27,7 +27,8 @@ const (
 	CmdViewHeight = 10
 )
 
-var RunType misc.RunType
+var RunMode misc.RunMode
+var RunName string
 var RunFromCui bool
 var Cui *gocui.Gui
 var MainViewHeight int

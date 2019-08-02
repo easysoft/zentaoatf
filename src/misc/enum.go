@@ -55,22 +55,21 @@ func (c ResultStatus) String() string {
 	return "UNKNOWN"
 }
 
-type RunType int
+type RunMode int
 
 const (
-	DIR RunType = iota // from command line
-	LIST
-
-	SUITE // from cui
+	DIR RunMode = iota
+	BATCH
+	SUITE
 	SCRIPT
 )
 
-func (c RunType) String() string {
+func (c RunMode) String() string {
 	switch c {
 	case DIR:
 		return "dir"
-	case LIST:
-		return "list"
+	case BATCH:
+		return "batch"
 	case SUITE:
 		return "suite"
 	case SCRIPT:
