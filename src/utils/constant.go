@@ -1,6 +1,9 @@
 package utils
 
-import "github.com/jroimartin/gocui"
+import (
+	"github.com/easysoft/zentaoatf/src/misc"
+	"github.com/jroimartin/gocui"
+)
 
 const (
 	PreferenceFile = "preferences.yaml"
@@ -24,6 +27,7 @@ const (
 	CmdViewHeight = 10
 )
 
+var RunType misc.RunType
 var RunFromCui bool
 var Cui *gocui.Gui
 var MainViewHeight int

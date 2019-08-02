@@ -54,3 +54,27 @@ func (c ResultStatus) String() string {
 	}
 	return "UNKNOWN"
 }
+
+type RunType int
+
+const (
+	DIR RunType = iota // from command line
+	LIST
+
+	SUITE // from cui
+	SCRIPT
+)
+
+func (c RunType) String() string {
+	switch c {
+	case DIR:
+		return "dir"
+	case LIST:
+		return "list"
+	case SUITE:
+		return "suite"
+	case SCRIPT:
+		return "script"
+	}
+	return "unknown"
+}
