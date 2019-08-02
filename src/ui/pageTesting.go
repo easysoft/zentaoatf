@@ -78,7 +78,7 @@ func showTab(g *gocui.Gui) error {
 	tabResultView := NewLabelWidgetAutoWidth(g, "tabResultView", x+12, 0, "Results")
 	ViewMap["testing"] = append(ViewMap["testing"], tabResultView.Name())
 	tabs = append(tabs, tabResultView.Name())
-	if err := g.SetKeybinding("tabResultView", gocui.MouseLeft, gocui.ModNone, shoRun); err != nil {
+	if err := g.SetKeybinding("tabResultView", gocui.MouseLeft, gocui.ModNone, showRun); err != nil {
 		return nil
 	}
 
@@ -109,7 +109,7 @@ func showContent(g *gocui.Gui, v *gocui.View) error {
 	return nil
 }
 
-func shoRun(g *gocui.Gui, v *gocui.View) error {
+func showRun(g *gocui.Gui, v *gocui.View) error {
 	DestoryContentPanel(g)
 	HighlightTab(v.Name(), tabs)
 
@@ -166,13 +166,13 @@ func DestoryTestingPage(g *gocui.Gui) {
 }
 
 func DestoryContentPanel(g *gocui.Gui) {
-	for _, v := range []string{"panelFileContent", "panelCaseList", "panelCaseResult"} {
+	for _, v := range []string{"panelResultList", "runButton"} {
 		g.DeleteView(v)
 		g.DeleteKeybindings(v)
 	}
 }
 func DestoryRunPanel(g *gocui.Gui) {
-	for _, v := range []string{"panelResultList", "runButton"} {
+	for _, v := range []string{"panelFileContent", "panelCaseList", "panelCaseResult"} {
 		g.DeleteView(v)
 		g.DeleteKeybindings(v)
 	}
