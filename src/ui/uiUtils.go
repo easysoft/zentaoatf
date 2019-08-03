@@ -3,6 +3,7 @@ package ui
 import (
 	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/jroimartin/gocui"
+	"regexp"
 	"strings"
 )
 
@@ -174,4 +175,23 @@ func HighlightTab(view string, views []string) {
 			v.SelFgColor = gocui.ColorDefault
 		}
 	}
+}
+
+func SelectLine(v *gocui.View, reg string) (string, error) {
+	var line string
+	var err error
+
+	_, cy := v.Cursor()
+	if line, err = v.Line(cy); err != nil {
+		return "", nil
+	}
+	line = strings.TrimSpace(line)
+
+	pass, _ := regexp.MatchString(reg, line)
+
+	if !pass {
+		return "", nil
+	}
+
+	return line, nil
 }

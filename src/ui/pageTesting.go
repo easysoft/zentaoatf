@@ -10,6 +10,9 @@ import (
 )
 
 var CurrAsset string
+var CurrRun string
+var CurrResult string
+
 var tabs []string
 var contentViews []string
 var runViews []string
@@ -37,35 +40,6 @@ func InitTestingPage(g *gocui.Gui) error {
 	setViewLineSelected(g, "side", selectAssetEvent)
 
 	return nil
-}
-
-func selectAssetEvent(g *gocui.Gui, v *gocui.View) error {
-	var line string
-	var err error
-
-	_, cy := v.Cursor()
-	if line, err = v.Line(cy); err != nil {
-		return nil
-	}
-	line = strings.TrimSpace(line)
-	if strings.Index(line, ".") < 0 {
-		utils.PrintToMainNoScroll(g, "")
-		return nil
-	}
-	CurrAsset = utils.Prefer.WorkDir + utils.ScriptDir + line
-
-	showAsset(g)
-
-	return nil
-}
-func showAsset(g *gocui.Gui) {
-	if len(tabs) == 0 {
-		HideHelp(g)
-		showTab(g)
-	}
-
-	defaultTab, _ := g.View("tabContentView")
-	showContent(g, defaultTab)
 }
 
 func showTab(g *gocui.Gui) error {
@@ -144,8 +118,8 @@ func showRun(g *gocui.Gui, v *gocui.View) error {
 		}
 	}
 
-	//setViewLineSelected(g, "panelResultList", selectAssetEvent)
-	//setViewLineSelected(g, "panelCaseList", selectAssetEvent)
+	setViewLineSelected(g, "panelResultList", selectResultEvent)
+	setViewLineSelected(g, "panelCaseList", selectCaseEvent)
 
 	results := script.LoadTestResults(CurrAsset)
 	fmt.Fprintln(panelResultList, strings.Join(results, "\n"))
@@ -189,4 +163,50 @@ func DestoryRunPanel(g *gocui.Gui) {
 		g.DeleteView(v)
 		g.DeleteKeybindings(v)
 	}
+}
+
+func selectAssetEvent(g *gocui.Gui, v *gocui.View) error {
+	var line string
+	var err error
+
+	_, cy := v.Cursor()
+	if line, err = v.Line(cy); err != nil {
+		return nil
+	}
+	line = strings.TrimSpace(line)
+	if strings.Index(line, ".") < 0 {
+		utils.PrintToMainNoScroll(g, "")
+		return nil
+	}
+	CurrAsset = utils.Prefer.WorkDir + utils.ScriptDir + line
+
+	showAsset(g)
+
+	return nil
+}
+
+func showAsset(g *gocui.Gui) {
+	if len(tabs) == 0 {
+		HideHelp(g)
+		showTab(g)
+	}
+
+	defaultTab, _ := g.View("tabContentView")
+	showContent(g, defaultTab)
+}
+
+func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
+	line, _ := SelectLine(v, ".*")
+	content := script.GetTestResult(CurrAsset, line)
+
+	panelCaseList, _ := g.View("panelCaseList")
+	panelCaseList.Clear()
+	fmt.Fprintln(panelCaseList, content)
+
+	return nil
+}
+
+func selectCaseEvent(g *gocui.Gui, v *gocui.View) error {
+
+	return nil
 }

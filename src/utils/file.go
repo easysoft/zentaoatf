@@ -18,7 +18,7 @@ func ReadFile(filePath string) string {
 func ReadFileBuf(filePath string) []byte {
 	buf, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		return nil
+		return []byte(err.Error())
 	}
 
 	return buf
