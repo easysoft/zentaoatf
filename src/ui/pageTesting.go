@@ -209,9 +209,11 @@ func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
 func selectCaseEvent(g *gocui.Gui, v *gocui.View) error {
 	v.Highlight = true
 
-	line, _ := SelectLine(v, ".*")
-	path := script.GetLogFileByCase(CurrAsset, CurrResult, line)
-	content := utils.ReadFile(path)
+	caseLine, _ := SelectLine(v, ".*")
+	//path := script.GetLogFileByCase(CurrAsset, CurrResult, line)
+	//content := utils.ReadFile(path)
+
+	content := script.GetCheckpointsResult(CurrAsset, CurrResult, caseLine)
 
 	panelCaseResult, _ := g.View("panelCaseResult")
 	panelCaseResult.Clear()

@@ -55,6 +55,27 @@ func GetTestResult(assert string, date string) string {
 	return strings.Join(arr, "\n")
 }
 
+func GetCheckpointsResult(assert string, date string, caseLine string) string {
+	mode, name := GetRunModeAndName(assert)
+	resultPath := utils.Prefer.WorkDir + utils.LogDir + logFolder(mode, name, date) + "/result.txt"
+
+	content := utils.ReadFile(resultPath)
+
+	utils.PrintToCmd(utils.Cui, resultPath)
+	utils.PrintToCmd(utils.Cui, content)
+	utils.PrintToCmd(utils.Cui, caseLine+"(.*)")
+
+	myExp := regexp.MustCompile("(?m:^\\s" + caseLine + "\n([\\s\\S]*?)((^\\s(PASS|FAIL))|\\z))")
+	arr := myExp.FindStringSubmatch(content)
+
+	str := "111"
+	if len(arr) > 1 {
+		str = arr[1]
+	}
+
+	return str
+}
+
 func GetRunModeAndName(assert string) (string, string) {
 	ext := path.Ext(assert)
 	name := strings.Replace(path.Base(assert), ext, "", -1)
