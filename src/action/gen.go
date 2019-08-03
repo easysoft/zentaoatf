@@ -11,7 +11,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
 )
 
 func GenFromCmd(url string, entityType string, entityVal string, langType string, singleFile bool) {
@@ -68,10 +67,6 @@ func DealwithTestCase(tc model.TestCase, langType string, singleFile bool, caseP
 	scriptFile := fmt.Sprintf(utils.ScriptDir+"tc-%s.%s", strconv.Itoa(caseId), LangMap[langType]["extName"])
 
 	utils.MkDirIfNeeded(utils.Prefer.WorkDir + utils.ScriptDir)
-	if utils.FileExist(utils.Prefer.WorkDir + scriptFile) {
-		scriptFile = fmt.Sprintf(utils.ScriptDir+"tc-%s.%s",
-			strconv.Itoa(caseId)+"-"+utils.DateTimeStrLong(time.Now()), LangMap[langType]["extName"])
-	}
 	*casePaths = append(*casePaths, scriptFile)
 	scriptFullPath := utils.Prefer.WorkDir + scriptFile
 

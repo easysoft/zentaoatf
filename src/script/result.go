@@ -34,8 +34,7 @@ func LoadTestResults(assert string) []string {
 
 func GetTestResult(assert string, date string) string {
 	mode, name := GetRunModeAndName(assert)
-	resultPath := utils.Prefer.WorkDir + utils.LogDir + mode + "-" + name + "-" + date + "/result.txt"
-	utils.PrintToCmd(utils.Cui, resultPath)
+	resultPath := utils.Prefer.WorkDir + utils.LogDir + logFolder(mode, name, date) + "/result.txt"
 
 	arr := make([]string, 0)
 	content := utils.ReadFile(resultPath)
@@ -70,11 +69,15 @@ func GetRunModeAndName(assert string) (string, string) {
 	return mode, name
 }
 
-func GetLogFileByCase(assert string, result string, file string) string {
+func GetLogFileByCase(assert string, date string, file string) string {
 	mode, name := GetRunModeAndName(assert)
 
 	ext := path.Ext(file)
 	logName := strings.Replace(path.Base(file), ext, ".log", -1)
 
-	return utils.Prefer.WorkDir + utils.LogDir + mode + "-" + name + "-" + result + "/" + logName
+	return utils.Prefer.WorkDir + utils.LogDir + logFolder(mode, name, date) + "/" + logName
+}
+
+func logFolder(mode string, name string, date string) string {
+	return fmt.Sprintf("%s-%s-%s", mode, name, date)
 }

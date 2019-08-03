@@ -106,7 +106,7 @@ func showRun(g *gocui.Gui, v *gocui.View) error {
 	runViews = append(runViews, panelCaseList.Name())
 
 	panelCaseResult := NewPanelWidget(g, "panelCaseResult", utils.LeftWidth+60, 2,
-		maxX-utils.LeftWidth-61, utils.MainViewHeight, "panelCaseResult")
+		maxX-utils.LeftWidth-61, utils.MainViewHeight, "")
 	ViewMap["testing"] = append(ViewMap["testing"], panelCaseResult.Name())
 	runViews = append(runViews, panelCaseResult.Name())
 
@@ -178,7 +178,7 @@ func selectAssetEvent(g *gocui.Gui, v *gocui.View) error {
 		utils.PrintToMainNoScroll(g, "")
 		return nil
 	}
-	CurrAsset = utils.Prefer.WorkDir + utils.ScriptDir + line
+	CurrAsset = utils.ScriptDir + line
 
 	// show
 	if len(tabs) == 0 {
