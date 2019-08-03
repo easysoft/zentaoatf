@@ -16,13 +16,12 @@ func LoadTestResults(assert string) []string {
 
 	mode, name := GetRunModeAndName(assert)
 
-	reg := fmt.Sprintf("result-%s-%s-(.+)\\.txt", mode, name)
+	reg := fmt.Sprintf("%s-%s-(.+)", mode, name)
 	myExp := regexp.MustCompile(reg)
 
 	files, _ := ioutil.ReadDir(dir)
 	for _, fi := range files {
-		if !fi.IsDir() {
-
+		if fi.IsDir() {
 			arr := myExp.FindStringSubmatch(fi.Name())
 			if len(arr) > 1 {
 				ret = append(ret, arr[1])
@@ -33,9 +32,10 @@ func LoadTestResults(assert string) []string {
 	return ret
 }
 
-func GetTestResult(nassert string, date string) string {
-	mode, name := GetRunModeAndName(nassert)
-	resultPath := utils.Prefer.WorkDir + utils.LogDir + fmt.Sprintf("result-%s-%s-%s.txt", mode, name, date)
+func GetTestResult(assert string, date string) string {
+	mode, name := GetRunModeAndName(assert)
+	resultPath := utils.Prefer.WorkDir + utils.LogDir + mode + "-" + name + "-" + date + "/result.txt"
+	utils.PrintToCmd(utils.Cui, resultPath)
 
 	arr := make([]string, 0)
 	content := utils.ReadFile(resultPath)
@@ -70,9 +70,11 @@ func GetRunModeAndName(assert string) (string, string) {
 	return mode, name
 }
 
-func GetLogFileByCase(file string) string {
+func GetLogFileByCase(assert string, result string, file string) string {
+	mode, name := GetRunModeAndName(assert)
+
 	ext := path.Ext(file)
 	logName := strings.Replace(path.Base(file), ext, ".log", -1)
 
-	return utils.Prefer.WorkDir + utils.LogDir + logName
+	return utils.Prefer.WorkDir + utils.LogDir + mode + "-" + name + "-" + result + "/" + logName
 }

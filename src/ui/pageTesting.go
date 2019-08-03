@@ -196,6 +196,7 @@ func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
 	v.Highlight = true
 
 	line, _ := SelectLine(v, ".*")
+	CurrResult = line
 	content := script.GetTestResult(CurrAsset, line)
 
 	panelCaseList, _ := g.View("panelCaseList")
@@ -209,7 +210,7 @@ func selectCaseEvent(g *gocui.Gui, v *gocui.View) error {
 	v.Highlight = true
 
 	line, _ := SelectLine(v, ".*")
-	path := script.GetLogFileByCase(line)
+	path := script.GetLogFileByCase(CurrAsset, CurrResult, line)
 	content := utils.ReadFile(path)
 
 	panelCaseResult, _ := g.View("panelCaseResult")
