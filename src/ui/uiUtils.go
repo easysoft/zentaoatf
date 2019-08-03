@@ -125,7 +125,7 @@ func setViewScroll(g *gocui.Gui, name string) error {
 	return nil
 }
 
-func setHighlight(g *gocui.Gui, name string) error {
+func setViewLineHighlight(g *gocui.Gui, name string) error {
 	v, _ := g.View(name)
 
 	v.Wrap = true

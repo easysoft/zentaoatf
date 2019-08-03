@@ -69,3 +69,10 @@ func GetRunModeAndName(assert string) (string, string) {
 
 	return mode, name
 }
+
+func GetLogFileByScript(file string) string {
+	ext := path.Ext(file)
+	logName := strings.Replace(path.Base(file), ext, ".log", -1)
+
+	return utils.Prefer.WorkDir + utils.LogDir + logName
+}

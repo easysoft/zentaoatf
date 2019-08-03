@@ -114,7 +114,7 @@ func showRun(g *gocui.Gui, v *gocui.View) error {
 		setViewScroll(g, v)
 
 		if idx < 2 {
-			setHighlight(g, v)
+			setViewLineHighlight(g, v)
 		}
 	}
 
@@ -207,6 +207,13 @@ func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
 }
 
 func selectCaseEvent(g *gocui.Gui, v *gocui.View) error {
+	line, _ := SelectLine(v, ".*")
+	path := script.GetLogFileByScript(line)
+	content := utils.ReadFile(path)
+
+	panelCaseResult, _ := g.View("panelCaseResult")
+	panelCaseResult.Clear()
+	fmt.Fprintln(panelCaseResult, content)
 
 	return nil
 }
