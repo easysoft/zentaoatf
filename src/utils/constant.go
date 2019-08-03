@@ -31,7 +31,7 @@ const (
 )
 
 var RunMode misc.RunMode
-var RunName string
+var RunDir string
 var RunFromCui bool
 var Cui *gocui.Gui
 var MainViewHeight int

@@ -23,17 +23,17 @@ func Run(scriptDir string, fileNames []string, langType string) {
 			} else {
 				utils.RunMode = misc.SCRIPT
 			}
-			utils.RunName = utils.PathToRunName(fileNames[0])
+			utils.RunDir = utils.PathToRunName(fileNames[0])
 		} else {
 			utils.RunMode = misc.BATCH
-			utils.RunName = utils.PathToRunName("")
+			utils.RunDir = utils.PathToRunName("")
 		}
 
 		files, _ = utils.GetSpecifiedFiles(scriptDir, fileNames)
 	} else {
 		files, _ = utils.GetAllFiles(scriptDir, LangMap[langType]["extName"])
 		utils.RunMode = misc.DIR
-		utils.RunName = utils.PathToRunName(scriptDir)
+		utils.RunDir = utils.PathToRunName(scriptDir)
 	}
 
 	var report = model.TestReport{Path: scriptDir, Env: utils.GetOs(),
