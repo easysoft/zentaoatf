@@ -9,13 +9,13 @@ var CurrSettingsButton string
 var settingsButtons []string
 
 func InitSettingsPage() error {
-	importLabel := NewLabelWidgetAutoWidth(utils.Cui, "switch", 0, 2, "Switch Work dir")
+	importLabel := NewLabelWidgetAutoWidth("switch", 0, 2, "Switch Work dir")
 	ViewMap["settings"] = append(ViewMap["settings"], importLabel.Name())
 
-	switchLabel := NewLabelWidgetAutoWidth(utils.Cui, "import", 0, 3, "Import from Zentao")
+	switchLabel := NewLabelWidgetAutoWidth("import", 0, 3, "Import from Zentao")
 	ViewMap["settings"] = append(ViewMap["settings"], switchLabel.Name())
 
-	keybindingSettingsButton(utils.Cui)
+	keybindingSettingsButton()
 
 	return nil
 }

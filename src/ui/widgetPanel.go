@@ -16,7 +16,7 @@ type PanelWidget struct {
 
 func NewPanelWidget(name string, x, y, w, h int, body string) *gocui.View {
 	widget := PanelWidget{name: name, x: x, y: y, w: w, h: h, body: body}
-	v, _ := widget.Layout(utils.Cui)
+	v, _ := widget.Layout()
 
 	return v
 }

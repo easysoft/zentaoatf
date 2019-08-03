@@ -77,9 +77,7 @@ func InitImportPage() error {
 	return nil
 }
 
-func ImportRequest(v *gocui.View) error {
-	g := utils.Cui
-
+func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 	urlView, _ := g.View("urlInput")
 	productView, _ := g.View("productInput")
 	taskView, _ := g.View("taskInput")
@@ -103,12 +101,12 @@ func ImportRequest(v *gocui.View) error {
 		params["entityVal"] = taskId
 	}
 
-	utils.PrintToCmd(g, fmt.Sprintf("#atf gen -u %s -t %s -v %s -l %s -s %t",
+	utils.PrintToCmd(fmt.Sprintf("#atf gen -u %s -t %s -v %s -l %s -s %t",
 		url, params["entityType"], params["entityVal"], language, singleFile))
 
 	json, e := httpClient.Get(url, params)
 	if e != nil {
-		utils.PrintToCmd(g, e.Error())
+		utils.PrintToCmd(e.Error())
 		return nil
 	}
 

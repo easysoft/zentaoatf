@@ -40,7 +40,7 @@ func (w *RadioWidget) Layout() (*gocui.View, error) {
 		if err != gocui.ErrUnknownView {
 			return nil, err
 		}
-		if err := g.SetKeybinding(w.name, gocui.KeySpace, gocui.ModNone, w.handler); err != nil {
+		if err := utils.Cui.SetKeybinding(w.name, gocui.KeySpace, gocui.ModNone, w.handler); err != nil {
 			return nil, err
 		}
 		v.Frame = false

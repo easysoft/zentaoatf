@@ -20,7 +20,7 @@ func main() {
 
 	utils.Cui = g
 
-	ui.InitMainPage(g)
+	ui.InitMainPage()
 
 	if err := g.MainLoop(); err != nil && err != gocui.ErrQuit {
 		log.Panicln(err)

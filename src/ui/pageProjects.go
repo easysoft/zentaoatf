@@ -21,12 +21,12 @@ func InitProjectsPage() error {
 	for _, his := range utils.Prefer.WorkHistories {
 		id, label, _ := getProjectInfo(his)
 
-		hisView := NewLabelWidgetAutoWidth(utils.Cui, id, 0, y, label)
+		hisView := NewLabelWidgetAutoWidth(id, 0, y, label)
 		ViewMap["projects"] = append(ViewMap["projects"], hisView.Name())
 
 		y += 1
 	}
-	keybindingProjectsButton(utils.Cui)
+	keybindingProjectsButton()
 
 	return nil
 }
@@ -60,7 +60,7 @@ func SelectProjectsButton() {
 				v.SelBgColor = gocui.ColorWhite
 				v.SelFgColor = gocui.ColorBlack
 
-				printForSwitch(utils.Cui, his) // 显示项目信息
+				printForSwitch(his) // 显示项目信息
 				showWitchButton()
 			} else {
 				v.Highlight = false
@@ -120,7 +120,7 @@ func printForSwitch(his model.WorkHistory) {
 	str = fmt.Sprintf(str, name, his.ProjectPath, config.Url, config.EntityType, config.EntityVal,
 		config.LangType, !config.SingleFile)
 
-	utils.PrintToMainNoScroll(utils.Cui, str)
+	utils.PrintToMainNoScroll(str)
 }
 
 func init() {

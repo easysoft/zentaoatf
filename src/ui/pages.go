@@ -2,7 +2,6 @@ package ui
 
 import (
 	"github.com/easysoft/zentaoatf/src/utils"
-	"github.com/jroimartin/gocui"
 )
 
 func DestoryLeftPages() {

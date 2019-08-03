@@ -25,12 +25,12 @@ func InitSwitchPage() error {
 	right = left + TextWidthFull
 	workDirInput := NewTextWidget("workDirInput", left, 1, TextWidthFull, utils.Prefer.WorkDir)
 	ViewMap["switch"] = append(ViewMap["switch"], workDirInput.Name())
-	if _, err := g.SetCurrentView("workDirInput"); err != nil {
+	if _, err := utils.Cui.SetCurrentView("workDirInput"); err != nil {
 		return err
 	}
 
 	buttonX := (maxX-utils.LeftWidth)/2 + utils.LeftWidth - ButtonWidth
-	submitInput := NewButtonWidgetAutoWidth(g, "submitInput", buttonX, 4, "Switch", SwitchWorkDir)
+	submitInput := NewButtonWidgetAutoWidth("submitInput", buttonX, 4, "Switch", SwitchWorkDir)
 	ViewMap["switch"] = append(ViewMap["switch"], submitInput.Name())
 
 	keyBindsInput(ViewMap["switch"])

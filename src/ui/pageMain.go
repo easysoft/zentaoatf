@@ -7,7 +7,7 @@ import (
 )
 
 func InitMainPage() error {
-	maxX, maxY := g.Size()
+	maxX, maxY := utils.Cui.Size()
 	if maxX < utils.MinWidth {
 		maxX = utils.MinWidth
 	}

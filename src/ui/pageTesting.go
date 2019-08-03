@@ -45,14 +45,14 @@ func InitTestingPage() error {
 func showTab() error {
 	g := utils.Cui
 	x := utils.LeftWidth + 1
-	tabContentView := NewLabelWidgetAutoWidth(g, "tabContentView", x, 0, "Content")
+	tabContentView := NewLabelWidgetAutoWidth("tabContentView", x, 0, "Content")
 	ViewMap["testing"] = append(ViewMap["testing"], tabContentView.Name())
 	tabs = append(tabs, tabContentView.Name())
 	if err := g.SetKeybinding("tabContentView", gocui.MouseLeft, gocui.ModNone, showContent); err != nil {
 		return nil
 	}
 
-	tabResultView := NewLabelWidgetAutoWidth(g, "tabResultView", x+12, 0, "Results")
+	tabResultView := NewLabelWidgetAutoWidth("tabResultView", x+12, 0, "Results")
 	ViewMap["testing"] = append(ViewMap["testing"], tabResultView.Name())
 	tabs = append(tabs, tabResultView.Name())
 	if err := g.SetKeybinding("tabResultView", gocui.MouseLeft, gocui.ModNone, showRun); err != nil {
@@ -77,7 +77,7 @@ func showContent(g *gocui.Gui, v *gocui.View) error {
 		contentViews = append(contentViews, panelFileContent.Name())
 		setViewScroll(panelFileContent.Name())
 
-		runButton := NewButtonWidgetAutoWidth(g, "runButton", maxX-10, 0, "[Run]", run)
+		runButton := NewButtonWidgetAutoWidth("runButton", maxX-10, 0, "[Run]", run)
 		runButton.Frame = false
 		contentViews = append(contentViews, runButton.Name())
 	}
@@ -165,7 +165,7 @@ func selectAssetEvent(g *gocui.Gui, v *gocui.View) error {
 	}
 	line = strings.TrimSpace(line)
 	if strings.Index(line, ".") < 0 {
-		utils.PrintToMainNoScroll(g, "")
+		utils.PrintToMainNoScroll("")
 		return nil
 	}
 	CurrAsset = utils.ScriptDir + line
@@ -210,11 +210,11 @@ func selectCaseEvent(g *gocui.Gui, v *gocui.View) error {
 
 	// show submit bug button
 	maxX, _ := g.Size()
-	uploadButton := NewButtonWidgetAutoWidth(g, "uploadButton", maxX-35, 0, "[Upload Result]", uploadResult)
+	uploadButton := NewButtonWidgetAutoWidth("uploadButton", maxX-35, 0, "[Upload Result]", uploadResult)
 	uploadButton.Frame = false
 	runViews = append(runViews, uploadButton.Name())
 
-	bugButton := NewButtonWidgetAutoWidth(g, "bugButton", maxX-18, 0, "[Report Bug]", reportBug)
+	bugButton := NewButtonWidgetAutoWidth("bugButton", maxX-18, 0, "[Report Bug]", reportBug)
 	bugButton.Frame = false
 	runViews = append(runViews, bugButton.Name())
 
