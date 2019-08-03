@@ -129,7 +129,7 @@ func setViewLineHighlight(g *gocui.Gui, name string) error {
 	v, _ := g.View(name)
 
 	v.Wrap = true
-	v.Highlight = true
+	// v.Highlight = true
 	v.SelBgColor = gocui.ColorWhite
 	v.SelFgColor = gocui.ColorBlack
 

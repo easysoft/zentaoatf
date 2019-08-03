@@ -196,6 +196,8 @@ func showAsset(g *gocui.Gui) {
 }
 
 func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
+	v.Highlight = true
+
 	line, _ := SelectLine(v, ".*")
 	content := script.GetTestResult(CurrAsset, line)
 
@@ -207,8 +209,10 @@ func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
 }
 
 func selectCaseEvent(g *gocui.Gui, v *gocui.View) error {
+	v.Highlight = true
+
 	line, _ := SelectLine(v, ".*")
-	path := script.GetLogFileByScript(line)
+	path := script.GetLogFileByCase(line)
 	content := utils.ReadFile(path)
 
 	panelCaseResult, _ := g.View("panelCaseResult")
