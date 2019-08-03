@@ -127,19 +127,6 @@ func showRun(g *gocui.Gui, v *gocui.View) error {
 	return nil
 }
 
-func run(g *gocui.Gui, v *gocui.View) error {
-	if _, err := g.SetCurrentView("main"); err != nil {
-		return err
-	}
-
-	utils.PrintToCmd(g, fmt.Sprintf("#atf run -d %s -f %s", utils.Prefer.WorkDir, CurrAsset))
-	output, _ := g.View(utils.CuiRunOutputView)
-	output.Clear()
-	action.Run(utils.Prefer.WorkDir, []string{CurrAsset}, "")
-
-	return nil
-}
-
 func init() {
 
 }
@@ -166,6 +153,8 @@ func DestoryRunPanel(g *gocui.Gui) {
 }
 
 func selectAssetEvent(g *gocui.Gui, v *gocui.View) error {
+	clearPanelCaseResult()
+
 	var line string
 	var err error
 
@@ -193,6 +182,8 @@ func selectAssetEvent(g *gocui.Gui, v *gocui.View) error {
 }
 
 func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
+	clearPanelCaseResult()
+
 	v.Highlight = true
 
 	line, _ := SelectLine(v, ".*")
@@ -210,14 +201,43 @@ func selectCaseEvent(g *gocui.Gui, v *gocui.View) error {
 	v.Highlight = true
 
 	caseLine, _ := SelectLine(v, ".*")
-	//path := script.GetLogFileByCase(CurrAsset, CurrResult, line)
-	//content := utils.ReadFile(path)
 
 	content := script.GetCheckpointsResult(CurrAsset, CurrResult, caseLine)
-
 	panelCaseResult, _ := g.View("panelCaseResult")
 	panelCaseResult.Clear()
 	fmt.Fprintln(panelCaseResult, content)
+
+	// show submit bug button
+	maxX, _ := g.Size()
+	bugButton := NewButtonWidgetAutoWidth(g, "bugButton", maxX-10, 3, "Bug", reportBug)
+	runViews = append(runViews, bugButton.Name())
+
+	return nil
+}
+
+func clearPanelCaseResult() {
+	panelCaseResult, _ := utils.Cui.View("panelCaseResult")
+	if panelCaseResult != nil {
+		panelCaseResult.Clear()
+	}
+	utils.Cui.DeleteView("bugButton")
+}
+
+func run(g *gocui.Gui, v *gocui.View) error {
+	if _, err := g.SetCurrentView("main"); err != nil {
+		return err
+	}
+
+	utils.PrintToCmd(g, fmt.Sprintf("#atf run -d %s -f %s", utils.Prefer.WorkDir, CurrAsset))
+	output, _ := g.View(utils.CuiRunOutputView)
+	output.Clear()
+	action.Run(utils.Prefer.WorkDir, []string{CurrAsset}, "")
+
+	return nil
+}
+
+func reportBug(g *gocui.Gui, v *gocui.View) error {
+	utils.PrintToCmd(g, fmt.Sprintf("#report bug"))
 
 	return nil
 }
