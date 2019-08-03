@@ -180,12 +180,7 @@ func selectAssetEvent(g *gocui.Gui, v *gocui.View) error {
 	}
 	CurrAsset = utils.Prefer.WorkDir + utils.ScriptDir + line
 
-	showAsset(g)
-
-	return nil
-}
-
-func showAsset(g *gocui.Gui) {
+	// show
 	if len(tabs) == 0 {
 		HideHelp(g)
 		showTab(g)
@@ -193,6 +188,8 @@ func showAsset(g *gocui.Gui) {
 
 	defaultTab, _ := g.View("tabContentView")
 	showContent(g, defaultTab)
+
+	return nil
 }
 
 func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
