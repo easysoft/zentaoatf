@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fmt"
+	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/jroimartin/gocui"
 )
 
@@ -18,45 +19,45 @@ type ButtonWidget struct {
 	handler func(g *gocui.Gui, v *gocui.View) error
 }
 
-func NewButtonWidget(g *gocui.Gui, name string, x, y, w int, label string,
+func NewButtonWidget(name string, x, y, w int, label string,
 	handler func(g *gocui.Gui, v *gocui.View) error) *gocui.View {
 	widget := ButtonWidget{name: name, x: x, y: y, w: w, label: label, handler: handler}
 
-	v, _ := widget.Layout(g, handler)
+	v, _ := widget.Layout(handler)
 	return v
 }
-func NewButtonWidgetNoBorder(g *gocui.Gui, name string, x, y, w int, label string,
+func NewButtonWidgetNoBorder(name string, x, y, w int, label string,
 	handler func(g *gocui.Gui, v *gocui.View) error) *gocui.View {
 	widget := ButtonWidget{name: name, x: x, y: y, w: w, label: label, handler: handler}
 
-	v, _ := widget.Layout(g, handler)
+	v, _ := widget.Layout(handler)
 	v.Frame = false
 	return v
 }
 
-func NewButtonWidgetAutoWidth(g *gocui.Gui, name string, x, y int, label string,
+func NewButtonWidgetAutoWidth(name string, x, y int, label string,
 	handler func(g *gocui.Gui, v *gocui.View) error) *gocui.View {
-	widget := NewButtonWidget(g, name, x, y, len(label)+3, " "+label+" ", handler)
+	widget := NewButtonWidget(name, x, y, len(label)+3, " "+label+" ", handler)
 
 	return widget
 }
-func NewButtonWidgetNoBorderAutoWidth(g *gocui.Gui, name string, x, y int, label string,
+func NewButtonWidgetNoBorderAutoWidth(name string, x, y int, label string,
 	handler func(g *gocui.Gui, v *gocui.View) error) *gocui.View {
-	widget := NewButtonWidgetNoBorder(g, name, x, y, len(label)+3, " "+label+" ", handler)
+	widget := NewButtonWidgetNoBorder(name, x, y, len(label)+3, " "+label+" ", handler)
 	return widget
 }
 
-func (w *ButtonWidget) Layout(g *gocui.Gui, handler func(g *gocui.Gui, v *gocui.View) error) (*gocui.View, error) {
-	v, err := g.SetView(w.name, w.x, w.y, w.x+w.w, w.y+ButtonHeight)
+func (w *ButtonWidget) Layout(handler func(g *gocui.Gui, v *gocui.View) error) (*gocui.View, error) {
+	v, err := utils.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+ButtonHeight)
 	if err != nil {
 		if err != gocui.ErrUnknownView {
 			return nil, err
 		}
 
-		if err := g.SetKeybinding(w.name, gocui.KeyEnter, gocui.ModNone, w.handler); err != nil {
+		if err := utils.Cui.SetKeybinding(w.name, gocui.KeyEnter, gocui.ModNone, w.handler); err != nil {
 			return nil, err
 		}
-		if err := g.SetKeybinding(w.name, gocui.MouseLeft, gocui.ModNone, w.handler); err != nil {
+		if err := utils.Cui.SetKeybinding(w.name, gocui.MouseLeft, gocui.ModNone, w.handler); err != nil {
 			return nil, err
 		}
 

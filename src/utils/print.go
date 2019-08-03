@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"github.com/fatih/color"
-	"github.com/jroimartin/gocui"
 )
 
 func PrintUsage(flagSet flag.FlagSet) {
@@ -25,31 +24,28 @@ func PrintSample() {
 	fmt.Printf("TODO... \n")
 }
 
-func PrintToSide(g *gocui.Gui, msg string) {
-	slideView, _ := g.View("side")
+func PrintToSide(msg string) {
+	slideView, _ := Cui.View("side")
 	slideView.Clear()
 
 	fmt.Fprintln(slideView, msg)
 }
-func PrintToMain(g *gocui.Gui, msg string) {
-	PrintToMainNoScroll(g, msg)
-	AdjustOrigin("main")
-}
-func PrintToMainNoScroll(g *gocui.Gui, msg string) {
-	mainView, _ := g.View("main")
+
+func PrintToMainNoScroll(msg string) {
+	mainView, _ := Cui.View("main")
 	mainView.Clear()
 
 	fmt.Fprintln(mainView, msg)
 }
 
-func PrintToCmd(g *gocui.Gui, msg string) {
-	cmdView, _ := g.View("cmd")
+func PrintToCmd(msg string) {
+	cmdView, _ := Cui.View("cmd")
 	_, _ = fmt.Fprintln(cmdView, msg)
 
 	AdjustOrigin("cmd")
 }
 
-func ClearSide(g *gocui.Gui) {
-	slideView, _ := g.View("side")
+func ClearSide() {
+	slideView, _ := Cui.View("side")
 	slideView.Clear()
 }

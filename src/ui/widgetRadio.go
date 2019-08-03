@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fmt"
+	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/jroimartin/gocui"
 	"strings"
 )
@@ -20,7 +21,7 @@ type RadioWidget struct {
 	handler func(g *gocui.Gui, v *gocui.View) error
 }
 
-func NewRadioWidget(g *gocui.Gui, name string, x, y int, checked bool) *gocui.View {
+func NewRadioWidget(name string, x, y int, checked bool) *gocui.View {
 	var val string
 	if checked {
 		val = "[*]"
@@ -29,12 +30,12 @@ func NewRadioWidget(g *gocui.Gui, name string, x, y int, checked bool) *gocui.Vi
 	}
 
 	widget := RadioWidget{name: name, x: x, y: y, w: len(val) + 1, val: val, checked: checked, handler: handler}
-	v, _ := widget.Layout(g)
+	v, _ := widget.Layout()
 	return v
 }
 
-func (w *RadioWidget) Layout(g *gocui.Gui) (*gocui.View, error) {
-	v, err := g.SetView(w.name, w.x, w.y, w.x+w.w, w.y+2)
+func (w *RadioWidget) Layout() (*gocui.View, error) {
+	v, err := utils.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+2)
 	if err != nil {
 		if err != gocui.ErrUnknownView {
 			return nil, err

@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fmt"
+	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/jroimartin/gocui"
 )
 
@@ -19,14 +20,14 @@ type TextWidget struct {
 	text string
 }
 
-func NewTextWidget(g *gocui.Gui, name string, x, y, w int, text string) *gocui.View {
+func NewTextWidget(name string, x, y, w int, text string) *gocui.View {
 	widget := TextWidget{name: name, x: x, y: y, w: w, text: text}
-	v, _ := widget.Layout(g)
+	v, _ := widget.Layout()
 	return v
 }
 
-func (w *TextWidget) Layout(g *gocui.Gui) (*gocui.View, error) {
-	v, err := g.SetView(w.name, w.x, w.y, w.x+w.w, w.y+TextHeight)
+func (w *TextWidget) Layout() (*gocui.View, error) {
+	v, err := utils.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+TextHeight)
 	if err != nil {
 		if err != gocui.ErrUnknownView {
 			return nil, err

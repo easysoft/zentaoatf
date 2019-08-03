@@ -1,29 +1,30 @@
 package ui
 
 import (
+	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/jroimartin/gocui"
 )
 
 var CurrSettingsButton string
 var settingsButtons []string
 
-func InitSettingsPage(g *gocui.Gui) error {
-	importLabel := NewLabelWidgetAutoWidth(g, "switch", 0, 2, "Switch Work dir")
+func InitSettingsPage() error {
+	importLabel := NewLabelWidgetAutoWidth(utils.Cui, "switch", 0, 2, "Switch Work dir")
 	ViewMap["settings"] = append(ViewMap["settings"], importLabel.Name())
 
-	switchLabel := NewLabelWidgetAutoWidth(g, "import", 0, 3, "Import from Zentao")
+	switchLabel := NewLabelWidgetAutoWidth(utils.Cui, "import", 0, 3, "Import from Zentao")
 	ViewMap["settings"] = append(ViewMap["settings"], switchLabel.Name())
 
-	keybindingSettingsButton(g)
+	keybindingSettingsButton(utils.Cui)
 
 	return nil
 }
 
-func keybindingSettingsButton(g *gocui.Gui) error {
-	if err := g.SetKeybinding("import", gocui.MouseLeft, gocui.ModNone, toggleSettingsButton); err != nil {
+func keybindingSettingsButton() error {
+	if err := utils.Cui.SetKeybinding("import", gocui.MouseLeft, gocui.ModNone, toggleSettingsButton); err != nil {
 		return err
 	}
-	if err := g.SetKeybinding("switch", gocui.MouseLeft, gocui.ModNone, toggleSettingsButton); err != nil {
+	if err := utils.Cui.SetKeybinding("switch", gocui.MouseLeft, gocui.ModNone, toggleSettingsButton); err != nil {
 		return err
 	}
 
@@ -33,20 +34,20 @@ func keybindingSettingsButton(g *gocui.Gui) error {
 func toggleSettingsButton(g *gocui.Gui, v *gocui.View) error {
 	CurrSettingsButton = v.Name()
 
-	SelectSettingsButton(g)
+	SelectSettingsButton()
 
 	if v.Name() == "import" {
-		InitImportPage(g)
+		InitImportPage()
 	} else if v.Name() == "switch" {
-		InitSwitchPage(g)
+		InitSwitchPage()
 	}
 
 	return nil
 }
 
-func SelectSettingsButton(g *gocui.Gui) {
+func SelectSettingsButton() {
 	for _, name := range settingsButtons {
-		v, err := g.View(name)
+		v, err := utils.Cui.View(name)
 
 		if err == nil {
 			if v.Name() == CurrSettingsButton {
@@ -67,9 +68,9 @@ func init() {
 	settingsButtons = append(settingsButtons, "import", "switch")
 }
 
-func DestorySettingsPage(g *gocui.Gui) {
+func DestorySettingsPage() {
 	for _, v := range ViewMap["settings"] {
-		g.DeleteView(v)
-		g.DeleteKeybindings(v)
+		utils.Cui.DeleteView(v)
+		utils.Cui.DeleteKeybindings(v)
 	}
 }

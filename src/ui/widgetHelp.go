@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fmt"
+	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/jroimartin/gocui"
 	"strings"
 )
@@ -23,8 +24,8 @@ type HelpWidget struct {
 	body string
 }
 
-func NewHelpWidget(g *gocui.Gui) {
-	maxX, _ := g.Size()
+func NewHelpWidget() {
+	maxX, _ := utils.Cui.Size()
 
 	lines := strings.Split(HelpGlobal, "\n")
 
@@ -38,11 +39,11 @@ func NewHelpWidget(g *gocui.Gui) {
 	w = w + 2
 
 	help := HelpWidget{name: "help", x: maxX - w - 3, y: 1, w: w, h: h + 1, body: HelpGlobal}
-	help.Layout(g)
+	help.Layout()
 }
 
-func (w *HelpWidget) Layout(g *gocui.Gui) error {
-	v, err := g.SetView(w.name, w.x, w.y, w.x+w.w, w.y+w.h)
+func (w *HelpWidget) Layout() error {
+	v, err := utils.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+w.h)
 	if err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
@@ -56,19 +57,19 @@ func ShowHelp(g *gocui.Gui, v *gocui.View) error {
 	help, _ := g.View("help")
 
 	if help != nil {
-		HideHelp(g)
+		HideHelp()
 	} else {
-		NewHelpWidget(g)
+		NewHelpWidget()
 	}
 
 	return nil
 }
 
-func HideHelp(g *gocui.Gui) error {
-	help, _ := g.View("help")
+func HideHelp() error {
+	help, _ := utils.Cui.View("help")
 
 	if help != nil {
-		if err := g.DeleteView("help"); err != nil {
+		if err := utils.Cui.DeleteView("help"); err != nil {
 			return err
 		}
 	}

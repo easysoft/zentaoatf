@@ -17,7 +17,7 @@ var tabs []string
 var contentViews []string
 var runViews []string
 
-func InitTestingPage(g *gocui.Gui) error {
+func InitTestingPage() error {
 	// left
 	caseFiles, suitesFiles := script.LoadTestAssets()
 	dir := utils.Prefer.WorkDir + utils.ScriptDir
@@ -33,16 +33,17 @@ func InitTestingPage(g *gocui.Gui) error {
 		caseName := strings.Replace(casePath, dir, "", -1)
 		content += "  " + caseName + "\n"
 	}
-	utils.PrintToSide(g, content)
+	utils.PrintToSide(content)
 
 	// right
-	setViewScroll(g, "side")
-	setViewLineSelected(g, "side", selectAssetEvent)
+	setViewScroll("side")
+	setViewLineSelected("side", selectAssetEvent)
 
 	return nil
 }
 
-func showTab(g *gocui.Gui) error {
+func showTab() error {
+	g := utils.Cui
 	x := utils.LeftWidth + 1
 	tabContentView := NewLabelWidgetAutoWidth(g, "tabContentView", x, 0, "Content")
 	ViewMap["testing"] = append(ViewMap["testing"], tabContentView.Name())
@@ -62,7 +63,7 @@ func showTab(g *gocui.Gui) error {
 }
 
 func showContent(g *gocui.Gui, v *gocui.View) error {
-	DestoryRunPanel(g)
+	DestoryRunPanel()
 	HighlightTab(v.Name(), tabs)
 
 	panelFileContent, _ := g.View("panelFileContent")
@@ -70,13 +71,13 @@ func showContent(g *gocui.Gui, v *gocui.View) error {
 		panelFileContent.Clear()
 	} else {
 		maxX, _ := g.Size()
-		panelFileContent = NewPanelWidget(g, utils.CuiRunOutputView, utils.LeftWidth, 2,
+		panelFileContent = NewPanelWidget(utils.CuiRunOutputView, utils.LeftWidth, 2,
 			maxX-utils.LeftWidth-1, utils.MainViewHeight, "")
 		ViewMap["testing"] = append(ViewMap["testing"], panelFileContent.Name())
 		contentViews = append(contentViews, panelFileContent.Name())
-		setViewScroll(g, panelFileContent.Name())
+		setViewScroll(panelFileContent.Name())
 
-		runButton := NewButtonWidgetAutoWidth(g, "runButton", maxX-10, 0, "Run", run)
+		runButton := NewButtonWidgetAutoWidth(g, "runButton", maxX-10, 0, "[Run]", run)
 		runButton.Frame = false
 		contentViews = append(contentViews, runButton.Name())
 	}
@@ -90,36 +91,36 @@ func showContent(g *gocui.Gui, v *gocui.View) error {
 }
 
 func showRun(g *gocui.Gui, v *gocui.View) error {
-	DestoryContentPanel(g)
+	DestoryContentPanel()
 	HighlightTab(v.Name(), tabs)
 
 	h := utils.MainViewHeight / 2
 	maxX, _ := g.Size()
 
-	panelResultList := NewPanelWidget(g, "panelResultList", utils.LeftWidth, 2, 60, h, "")
+	panelResultList := NewPanelWidget("panelResultList", utils.LeftWidth, 2, 60, h, "")
 	ViewMap["testing"] = append(ViewMap["testing"], panelResultList.Name())
 	runViews = append(runViews, panelResultList.Name())
 
-	panelCaseList := NewPanelWidget(g, "panelCaseList", utils.LeftWidth, h+2,
+	panelCaseList := NewPanelWidget("panelCaseList", utils.LeftWidth, h+2,
 		60, utils.MainViewHeight-h, "")
 	ViewMap["testing"] = append(ViewMap["testing"], panelCaseList.Name())
 	runViews = append(runViews, panelCaseList.Name())
 
-	panelCaseResult := NewPanelWidget(g, "panelCaseResult", utils.LeftWidth+60, 2,
+	panelCaseResult := NewPanelWidget("panelCaseResult", utils.LeftWidth+60, 2,
 		maxX-utils.LeftWidth-61, utils.MainViewHeight, "")
 	ViewMap["testing"] = append(ViewMap["testing"], panelCaseResult.Name())
 	runViews = append(runViews, panelCaseResult.Name())
 
 	for idx, v := range runViews {
-		setViewScroll(g, v)
+		setViewScroll(v)
 
 		if idx < 2 {
-			setViewLineHighlight(g, v)
+			setViewLineHighlight(v)
 		}
 	}
 
-	setViewLineSelected(g, "panelResultList", selectResultEvent)
-	setViewLineSelected(g, "panelCaseList", selectCaseEvent)
+	setViewLineSelected("panelResultList", selectResultEvent)
+	setViewLineSelected("panelCaseList", selectCaseEvent)
 
 	results := script.LoadTestResults(CurrAsset)
 	fmt.Fprintln(panelResultList, strings.Join(results, "\n"))
@@ -131,24 +132,24 @@ func init() {
 
 }
 
-func DestoryTestingPage(g *gocui.Gui) {
-	g.DeleteKeybindings("side")
+func DestoryTestingPage() {
+	utils.Cui.DeleteKeybindings("side")
 	for _, v := range ViewMap["testing"] {
-		g.DeleteView(v)
-		g.DeleteKeybindings(v)
+		utils.Cui.DeleteView(v)
+		utils.Cui.DeleteKeybindings(v)
 	}
 }
 
-func DestoryContentPanel(g *gocui.Gui) {
+func DestoryContentPanel() {
 	for _, v := range contentViews {
-		g.DeleteView(v)
-		g.DeleteKeybindings(v)
+		utils.Cui.DeleteView(v)
+		utils.Cui.DeleteKeybindings(v)
 	}
 }
-func DestoryRunPanel(g *gocui.Gui) {
+func DestoryRunPanel() {
 	for _, v := range runViews {
-		g.DeleteView(v)
-		g.DeleteKeybindings(v)
+		utils.Cui.DeleteView(v)
+		utils.Cui.DeleteKeybindings(v)
 	}
 }
 
@@ -171,8 +172,8 @@ func selectAssetEvent(g *gocui.Gui, v *gocui.View) error {
 
 	// show
 	if len(tabs) == 0 {
-		HideHelp(g)
-		showTab(g)
+		HideHelp()
+		showTab()
 	}
 
 	defaultTab, _ := g.View("tabContentView")
@@ -209,7 +210,12 @@ func selectCaseEvent(g *gocui.Gui, v *gocui.View) error {
 
 	// show submit bug button
 	maxX, _ := g.Size()
-	bugButton := NewButtonWidgetAutoWidth(g, "bugButton", maxX-10, 3, "Bug", reportBug)
+	uploadButton := NewButtonWidgetAutoWidth(g, "uploadButton", maxX-35, 0, "[Upload Result]", uploadResult)
+	uploadButton.Frame = false
+	runViews = append(runViews, uploadButton.Name())
+
+	bugButton := NewButtonWidgetAutoWidth(g, "bugButton", maxX-18, 0, "[Report Bug]", reportBug)
+	bugButton.Frame = false
 	runViews = append(runViews, bugButton.Name())
 
 	return nil
@@ -228,7 +234,7 @@ func run(g *gocui.Gui, v *gocui.View) error {
 		return err
 	}
 
-	utils.PrintToCmd(g, fmt.Sprintf("#atf run -d %s -f %s", utils.Prefer.WorkDir, CurrAsset))
+	utils.PrintToCmd(fmt.Sprintf("#atf run -d %s -f %s", utils.Prefer.WorkDir, CurrAsset))
 	output, _ := g.View(utils.CuiRunOutputView)
 	output.Clear()
 	action.Run(utils.Prefer.WorkDir, []string{CurrAsset}, "")
@@ -237,7 +243,11 @@ func run(g *gocui.Gui, v *gocui.View) error {
 }
 
 func reportBug(g *gocui.Gui, v *gocui.View) error {
-	utils.PrintToCmd(g, fmt.Sprintf("#report bug"))
+
+	return nil
+}
+
+func uploadResult(g *gocui.Gui, v *gocui.View) error {
 
 	return nil
 }

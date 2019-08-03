@@ -5,26 +5,26 @@ import (
 	"github.com/jroimartin/gocui"
 )
 
-func DestoryLeftPages(g *gocui.Gui) {
-	utils.ClearSide(g)
+func DestoryLeftPages() {
+	utils.ClearSide()
 
-	DestoryTestingPage(g)
-	DestoryProjectsPage(g)
-	DestorySettingsPage(g)
+	DestoryTestingPage()
+	DestoryProjectsPage()
+	DestorySettingsPage()
 
 	ViewMap["testing"] = make([]string, 0)
 	ViewMap["projects"] = make([]string, 0)
 	ViewMap["settings"] = make([]string, 0)
 }
 
-func DestoryRightPages(g *gocui.Gui) {
-	mainView, err := g.View("main")
+func DestoryRightPages() {
+	mainView, err := utils.Cui.View("main")
 	if err == nil {
 		mainView.Clear()
 	}
 
-	DestoryImportPage(g)
-	DestorySwitchPage(g)
+	DestoryImportPage()
+	DestorySwitchPage()
 
 	ViewMap["import"] = make([]string, 0)
 	ViewMap["switch"] = make([]string, 0)

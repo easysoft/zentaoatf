@@ -9,21 +9,21 @@ import (
 	"time"
 )
 
-func InitSwitchPage(g *gocui.Gui) error {
-	DestoryRightPages(g)
+func InitSwitchPage() error {
+	DestoryRightPages()
 
-	maxX, _ := g.Size()
-	slideView, _ := g.View("side")
+	maxX, _ := utils.Cui.Size()
+	slideView, _ := utils.Cui.View("side")
 	slideX, _ := slideView.Size()
 
 	left := slideX + 2
 	right := left + LabelWidth
-	workDirLabel := NewLabelWidget(g, "workDirLabel", left, 1, "WorkDir")
+	workDirLabel := NewLabelWidget("workDirLabel", left, 1, "WorkDir")
 	ViewMap["switch"] = append(ViewMap["switch"], workDirLabel.Name())
 
 	left = right + Space
 	right = left + TextWidthFull
-	workDirInput := NewTextWidget(g, "workDirInput", left, 1, TextWidthFull, utils.Prefer.WorkDir)
+	workDirInput := NewTextWidget("workDirInput", left, 1, TextWidthFull, utils.Prefer.WorkDir)
 	ViewMap["switch"] = append(ViewMap["switch"], workDirInput.Name())
 	if _, err := g.SetCurrentView("workDirInput"); err != nil {
 		return err
@@ -43,35 +43,27 @@ func SwitchWorkDir(g *gocui.Gui, v *gocui.View) error {
 
 	workDir := strings.TrimSpace(workDirView.Buffer())
 
-	utils.PrintToCmd(g, fmt.Sprintf("#atf switch -d %s", workDir))
+	utils.PrintToCmd(fmt.Sprintf("#atf switch -d %s", workDir))
 
 	err := action.SwitchWorkDir(workDir)
 	if err == nil {
 		workDirView.Clear()
 		workDirView.Write([]byte(utils.Prefer.WorkDir))
 
-		utils.PrintToCmd(g, fmt.Sprintf("success to switch project to %s at %s",
+		utils.PrintToCmd(fmt.Sprintf("success to switch project to %s at %s",
 			workDir, utils.DateTimeStr(time.Now())))
 	} else {
-		utils.PrintToCmd(g, err.Error())
+		utils.PrintToCmd(err.Error())
 	}
 
 	return nil
 }
 
-func keyBindsSwitch(g *gocui.Gui) {
+func DestorySwitchPage() {
 	for _, v := range ViewMap["switch"] {
-		if strings.Index(v, "Input") > -1 {
-			setInputEvent(g, v)
-		}
-	}
-}
-
-func DestorySwitchPage(g *gocui.Gui) {
-	for _, v := range ViewMap["switch"] {
-		g.DeleteView(v)
-		g.DeleteKeybindings(v)
+		utils.Cui.DeleteView(v)
+		utils.Cui.DeleteKeybindings(v)
 	}
 
-	g.DeleteKeybinding("", gocui.KeyTab, gocui.ModNone)
+	utils.Cui.DeleteKeybinding("", gocui.KeyTab, gocui.ModNone)
 }
