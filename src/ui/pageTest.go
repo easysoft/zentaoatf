@@ -57,10 +57,10 @@ func selectAssetEvent(g *gocui.Gui, v *gocui.View) error {
 	CurrAsset = utils.ScriptDir + line
 
 	// show
-	//if len(tabs) == 0 {
-	HideHelp()
-	showTab()
-	//}
+	if len(tabs) == 0 {
+		HideHelp()
+		showTab()
+	}
 
 	defaultTab, _ := g.View("tabContentView")
 	showContent(g, defaultTab)
@@ -139,6 +139,7 @@ func DestoryTestPage() {
 		utils.Cui.DeleteView(v)
 		utils.Cui.DeleteKeybindings(v)
 	}
+	tabs = []string{}
 }
 
 func DestoryContentPanel() {
