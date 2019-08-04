@@ -55,42 +55,6 @@ func init() {
 
 }
 
-func DestoryRunPanel() {
-	for _, v := range runViews {
-		utils.Cui.DeleteView(v)
-		utils.Cui.DeleteKeybindings(v)
-	}
-}
-
-func selectAssetEvent(g *gocui.Gui, v *gocui.View) error {
-	clearPanelCaseResult()
-
-	var line string
-	var err error
-
-	_, cy := v.Cursor()
-	if line, err = v.Line(cy); err != nil {
-		return nil
-	}
-	line = strings.TrimSpace(line)
-	if strings.Index(line, ".") < 0 {
-		utils.PrintToMainNoScroll("")
-		return nil
-	}
-	CurrAsset = utils.ScriptDir + line
-
-	// show
-	if len(tabs) == 0 {
-		HideHelp()
-		showTab()
-	}
-
-	defaultTab, _ := g.View("tabContentView")
-	showContent(g, defaultTab)
-
-	return nil
-}
-
 func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
 	clearPanelCaseResult()
 
@@ -150,4 +114,11 @@ func uploadResult(g *gocui.Gui, v *gocui.View) error {
 func reportBug(g *gocui.Gui, v *gocui.View) error {
 
 	return nil
+}
+
+func DestoryRunPanel() {
+	for _, v := range runViews {
+		utils.Cui.DeleteView(v)
+		utils.Cui.DeleteKeybindings(v)
+	}
 }

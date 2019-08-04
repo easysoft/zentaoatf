@@ -39,6 +39,35 @@ func InitTestPage() error {
 	return nil
 }
 
+func selectAssetEvent(g *gocui.Gui, v *gocui.View) error {
+	clearPanelCaseResult()
+
+	var line string
+	var err error
+
+	_, cy := v.Cursor()
+	if line, err = v.Line(cy); err != nil {
+		return nil
+	}
+	line = strings.TrimSpace(line)
+	if strings.Index(line, ".") < 0 {
+		utils.PrintToMainNoScroll("")
+		return nil
+	}
+	CurrAsset = utils.ScriptDir + line
+
+	// show
+	//if len(tabs) == 0 {
+	HideHelp()
+	showTab()
+	//}
+
+	defaultTab, _ := g.View("tabContentView")
+	showContent(g, defaultTab)
+
+	return nil
+}
+
 func showTab() error {
 	g := utils.Cui
 	x := utils.LeftWidth + 1
