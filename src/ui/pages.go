@@ -7,7 +7,7 @@ import (
 func DestoryLeftPages() {
 	utils.ClearSide()
 
-	DestoryTestingPage()
+	DestoryTestPage()
 	DestoryProjectsPage()
 	DestorySettingsPage()
 

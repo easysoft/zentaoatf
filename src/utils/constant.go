@@ -9,6 +9,10 @@ const (
 	PreferenceFile = "preferences.yaml"
 	ConfigFile     = "conf.yaml"
 
+	UrlImportProject = "importProject"
+	UrlSubmitResult  = "submitResults"
+	UrlReportBug     = "reportBug"
+
 	SuiteExt string = "suite"
 
 	LanguageDefault = "en"

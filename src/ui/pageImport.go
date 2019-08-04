@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/action"
 	"github.com/easysoft/zentaoatf/src/http"
@@ -25,7 +26,7 @@ func InitImportPage() error {
 
 	left = right + Space
 	right = left + TextWidthFull
-	urlInput := NewTextWidget("urlInput", left, 1, TextWidthFull, mock.GetUrl("importProject"))
+	urlInput := NewTextWidget("urlInput", left, 1, TextWidthFull, mock.BaseUrl)
 	ViewMap["import"] = append(ViewMap["import"], urlInput.Name())
 
 	left = slideX + 2
@@ -101,10 +102,12 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 		params["entityVal"] = taskId
 	}
 
+	jsonStr, _ := json.Marshal(params)
+	url = utils.UpdateUrl(url)
 	utils.PrintToCmd(fmt.Sprintf("#atf gen -u %s -t %s -v %s -l %s -s %t",
 		url, params["entityType"], params["entityVal"], language, singleFile))
 
-	json, e := httpClient.Get(url, params)
+	json, e := httpClient.Post(url+utils.UrlImportProject, string(jsonStr))
 	if e != nil {
 		utils.PrintToCmd(e.Error())
 		return nil

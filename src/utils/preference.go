@@ -102,7 +102,7 @@ func convertWorkDir(path string) string {
 		path, _ = filepath.Abs(`.`)
 		path = path + string(os.PathSeparator)
 	} else {
-		if strings.LastIndex(path, "/") != len(path)-1 {
+		if strings.LastIndex(path, string(os.PathSeparator)) != len(path)-1 {
 			path = path + string(os.PathSeparator)
 		}
 	}

@@ -32,7 +32,7 @@ func LoadTestResults(assert string) []string {
 	return ret
 }
 
-func GetTestResult(assert string, date string) string {
+func GetTestResult(assert string, date string) []string {
 	mode, name := GetRunModeAndName(assert)
 	resultPath := utils.Prefer.WorkDir + utils.LogDir + logFolder(mode, name, date) + "/result.txt"
 
@@ -52,7 +52,7 @@ func GetTestResult(assert string, date string) string {
 		arr = append(arr, line)
 	}
 
-	return strings.Join(arr, "\n")
+	return arr
 }
 
 func GetCheckpointsResult(assert string, date string, caseLine string) string {

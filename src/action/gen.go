@@ -1,6 +1,7 @@
 package action
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/biz"
@@ -11,6 +12,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func GenFromCmd(url string, entityType string, entityVal string, langType string, singleFile bool) {
@@ -19,7 +21,10 @@ func GenFromCmd(url string, entityType string, entityVal string, langType string
 	params["entityType"] = entityType
 	params["entityVal"] = entityVal
 
-	json, err := httpClient.Get(url, params)
+	jsonObj, _ := json.Marshal(params)
+
+	url = utils.UpdateUrl(url)
+	json, err := httpClient.Post(url+utils.UrlImportProject, string(jsonObj))
 
 	if err == nil {
 		Generate(json, url, entityType, entityVal, langType, singleFile)
@@ -65,6 +70,10 @@ func DealwithTestCase(tc model.TestCase, langType string, singleFile bool, caseP
 	caseTitle := tc.Title
 
 	scriptFile := fmt.Sprintf(utils.ScriptDir+"tc-%s.%s", strconv.Itoa(caseId), LangMap[langType]["extName"])
+	if utils.FileExist(scriptFile) {
+		scriptFile = fmt.Sprintf(utils.ScriptDir+"tc-%s.%s",
+			strconv.Itoa(caseId)+"-"+utils.DateTimeStrLong(time.Now()), LangMap[langType]["extName"])
+	}
 
 	utils.MkDirIfNeeded(utils.Prefer.WorkDir + utils.ScriptDir)
 	*casePaths = append(*casePaths, scriptFile)

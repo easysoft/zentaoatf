@@ -1,9 +1,7 @@
 package mock
 
 var (
-	BaseUrl       = "http://localhost:8888/"
-	ImportProject = "importProject"
-	ReportBugs    = "reportBugs"
+	BaseUrl = "http://localhost:8888/"
 )
 
 func GetUrl(uri string) string {

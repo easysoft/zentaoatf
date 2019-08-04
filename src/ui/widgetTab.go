@@ -72,7 +72,7 @@ func ShowTab() {
 	HideHelp()
 
 	if CurrTab == "testing" {
-		InitTestingPage()
+		InitTestPage()
 	} else if CurrTab == "projects" {
 		InitProjectsPage()
 	} else if CurrTab == "settings" {

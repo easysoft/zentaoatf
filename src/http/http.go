@@ -7,35 +7,33 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
-func Get(url string, params map[string]string) (model.Response, error) {
+func Post(url string, jsonStr string) (model.Response, error) {
+	client := &http.Client{}
 	var ret model.Response
 
-	req, err := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest("POST", url, strings.NewReader(jsonStr))
 	if err != nil {
 		return ret, err
 	}
 
-	q := req.URL.Query()
-	for k, v := range params {
-		q.Add(k, v)
-	}
-	req.URL.RawQuery = q.Encode()
+	req.Header.Set("Content-Type", "application/json")
+	//req.Header.Set("Cookie", "name=anny")
 
-	var resp *http.Response
-	resp, err = http.DefaultClient.Do(req)
+	resp, err := client.Do(req)
 	if err != nil {
-		return ret, err
+		return model.Response{}, nil
 	}
 
-	bytes, err := ioutil.ReadAll(resp.Body)
+	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return ret, err
+		// handle error
 	}
 
 	var respModel model.Response
-	json.Unmarshal(bytes, &respModel)
+	json.Unmarshal(body, &respModel)
 	if respModel.Code != 1 {
 		return ret, errors.New(fmt.Sprintf("request fail, code %d", respModel.Code))
 	}
