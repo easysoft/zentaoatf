@@ -2,9 +2,13 @@ package ui
 
 import (
 	"github.com/easysoft/zentaoatf/src/biz"
+	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/jroimartin/gocui"
+	"strings"
 )
+
+var filedValMap map[string]int
 
 func InitReportBugPage() error {
 	DestoryReportBugPage()
@@ -37,28 +41,28 @@ func InitReportBugPage() error {
 	// module
 	left = x + 2 + LabelWidthSmall + Space
 	right = left + SelectWidth
-	moduleInput := NewSelectWidget("moduleInput", left, y+4, SelectWidth, 6,
-		"Module", utils.ZendaoSettings.Modules)
+	moduleInput := NewSelectWidget("module", left, y+4, SelectWidth, 6,
+		"Module", utils.ZendaoSettings.Modules, selectOptionEvent(filedValMap))
 	ViewMap["reportBug"] = append(ViewMap["reportBug"], moduleInput.Name())
 
 	// category
 	left = right + Space
 	right = left + SelectWidth
-	categoryInput := NewSelectWidget("categoryInput", left, y+4, SelectWidth, 6,
-		"Category", utils.ZendaoSettings.Modules)
+	categoryInput := NewSelectWidget("category", left, y+4, SelectWidth, 6,
+		"Category", utils.ZendaoSettings.Modules, selectOptionEvent(filedValMap))
 	ViewMap["reportBug"] = append(ViewMap["reportBug"], categoryInput.Name())
 
 	// version
 	left = right + Space
 	right = left + SelectWidth
-	versionInput := NewSelectWidget("versionInput", left, y+4, SelectWidth, 6,
-		"Version", utils.ZendaoSettings.Modules)
+	versionInput := NewSelectWidget("version", left, y+4, SelectWidth, 6,
+		"Version", utils.ZendaoSettings.Modules, selectOptionEvent(filedValMap))
 	ViewMap["reportBug"] = append(ViewMap["reportBug"], versionInput.Name())
 
 	// priority
 	left = x + 2 + LabelWidthSmall + Space
-	priorityInput := NewSelectWidget("priorityInput", left, y+11, SelectWidth, 6,
-		"Priority", utils.ZendaoSettings.Modules)
+	priorityInput := NewSelectWidget("priority", left, y+11, SelectWidth, 6,
+		"Priority", utils.ZendaoSettings.Modules, selectOptionEvent(filedValMap))
 	ViewMap["reportBug"] = append(ViewMap["reportBug"], priorityInput.Name())
 
 	// buttons
@@ -118,9 +122,43 @@ func cancelReportBug(g *gocui.Gui, v *gocui.View) error {
 	return nil
 }
 
+func selectOptionEvent(filedValMap map[string]int) func(g *gocui.Gui, v *gocui.View) error {
+	return func(g *gocui.Gui, v *gocui.View) error {
+		name := v.Name()
+
+		g.SetCurrentView(name)
+
+		line, _ := SelectLine(v, ".*")
+		line = strings.TrimSpace(line)
+
+		var options []model.Option
+		if name == "module" {
+			options = utils.ZendaoSettings.Modules
+		} else if name == "category" {
+			options = utils.ZendaoSettings.Categories
+		} else if name == "version" {
+			options = utils.ZendaoSettings.Versions
+		} else if name == "priority" {
+			options = utils.ZendaoSettings.Priorities
+		}
+
+		for _, opt := range options {
+			if opt.Name == line {
+				filedValMap[name] = opt.Id
+			}
+		}
+
+		return nil
+	}
+}
+
 func DestoryReportBugPage() {
 	for _, v := range ViewMap["reportBug"] {
 		utils.Cui.DeleteView(v)
 		utils.Cui.DeleteKeybindings(v)
 	}
+}
+
+func init() {
+	filedValMap = make(map[string]int)
 }
