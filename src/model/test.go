@@ -2,12 +2,6 @@ package model
 
 import "github.com/easysoft/zentaoatf/src/misc"
 
-type Response struct {
-	Code  int
-	Name  string
-	Cases []TestCase
-}
-
 type TestCase struct {
 	Id    int
 	Title string

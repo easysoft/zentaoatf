@@ -69,7 +69,7 @@ func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
 	fmt.Fprintln(panelCaseList, strings.Join(content, "\n"))
 
 	maxX, _ := g.Size()
-	uploadButton := NewButtonWidgetAutoWidth("uploadButton", maxX-35, 0, "[Upload Result]", uploadResult)
+	uploadButton := NewButtonWidgetAutoWidth("uploadButton", maxX-35, 0, "[Upload Result]", toUploadResult)
 	uploadButton.Frame = false
 	runViews = append(runViews, uploadButton.Name())
 
@@ -88,7 +88,7 @@ func selectCaseEvent(g *gocui.Gui, v *gocui.View) error {
 
 	// show submit bug button
 	maxX, _ := g.Size()
-	bugButton := NewButtonWidgetAutoWidth("bugButton", maxX-18, 0, "[Report Bug]", reportBug)
+	bugButton := NewButtonWidgetAutoWidth("bugButton", maxX-18, 0, "[Report Bug]", toReportBug)
 	bugButton.Frame = false
 	runViews = append(runViews, bugButton.Name())
 
@@ -103,7 +103,7 @@ func clearPanelCaseResult() {
 	utils.Cui.DeleteView("bugButton")
 }
 
-func uploadResult(g *gocui.Gui, v *gocui.View) error {
+func toUploadResult(g *gocui.Gui, v *gocui.View) error {
 	caseList := script.GetTestResult(CurrAsset, CurrResult)
 
 	biz.SubmitResult(caseList)
@@ -111,7 +111,8 @@ func uploadResult(g *gocui.Gui, v *gocui.View) error {
 	return nil
 }
 
-func reportBug(g *gocui.Gui, v *gocui.View) error {
+func toReportBug(g *gocui.Gui, v *gocui.View) error {
+	InitReportBugPage()
 
 	return nil
 }
