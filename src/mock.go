@@ -10,6 +10,8 @@ import (
 
 func main() {
 	r := mux.NewRouter()
+
+	r.HandleFunc("/"+utils.UrlZentaoSettings, zentaoSettings)
 	r.HandleFunc("/"+utils.UrlImportProject, importProject)
 	r.HandleFunc("/"+utils.UrlSubmitResult, submitResult)
 	r.HandleFunc("/"+utils.UrlReportBug, reportBug)
@@ -44,6 +46,15 @@ func reportBug(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.Body)
 
 	jsonString := utils.ReadFile("src/mock/json/success.json")
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, jsonString)
+}
+
+func zentaoSettings(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.Body)
+
+	jsonString := utils.ReadFile("src/mock/json/zentao-settings.json")
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, jsonString)

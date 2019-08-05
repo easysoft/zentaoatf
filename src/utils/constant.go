@@ -2,6 +2,7 @@ package utils
 
 import (
 	"github.com/easysoft/zentaoatf/src/misc"
+	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/jroimartin/gocui"
 )
 
@@ -9,9 +10,10 @@ const (
 	PreferenceFile = "preferences.yaml"
 	ConfigFile     = "conf.yaml"
 
-	UrlImportProject = "importProject"
-	UrlSubmitResult  = "submitResults"
-	UrlReportBug     = "reportBug"
+	UrlZentaoSettings = "zentaoSettings"
+	UrlImportProject  = "importProject"
+	UrlSubmitResult   = "submitResults"
+	UrlReportBug      = "reportBug"
 
 	SuiteExt string = "suite"
 
@@ -34,6 +36,7 @@ const (
 	CuiRunOutputView = "panelFileContent"
 )
 
+var ZendaoSettings model.ZentaoSettings
 var RunMode misc.RunMode
 var RunDir string
 var RunFromCui bool

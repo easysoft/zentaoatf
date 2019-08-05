@@ -1,0 +1,157 @@
+{
+  "code": 1,
+  "zentaoSettings": {
+    "modules": [
+      {
+        "Id": 100,
+        "Code": "admin",
+        "Name": "Admin",
+        "isDefault": false
+      },
+      {
+        "Id": 200,
+        "Code": "client",
+        "Name": "Client",
+        "isDefault": false
+      },
+      {
+        "Id": 300,
+        "Code": "interface",
+        "Name": "Interface",
+        "isDefault": false
+      },
+      {
+        "Id": 400,
+        "Code": "site",
+        "Name": "Site",
+        "isDefault": false
+      },
+      {
+        "Id": 500,
+        "Code": "api",
+        "Name": "API",
+        "isDefault": false
+      },
+      {
+        "Id": 600,
+        "Code": "testing",
+        "Name": "Testing",
+        "isDefault": false
+      }
+    ],
+    "categories": [
+      {
+        "Id": 100,
+        "Code": "admin",
+        "Name": "Admin",
+        "isDefault": false
+      },
+      {
+        "Id": 200,
+        "Code": "client",
+        "Name": "Client",
+        "isDefault": false
+      },
+      {
+        "Id": 300,
+        "Code": "interface",
+        "Name": "Interface",
+        "isDefault": false
+      },
+      {
+        "Id": 400,
+        "Code": "site",
+        "Name": "Site",
+        "isDefault": false
+      },
+      {
+        "Id": 500,
+        "Code": "api",
+        "Name": "API",
+        "isDefault": false
+      },
+      {
+        "Id": 600,
+        "Code": "testing",
+        "Name": "Testing",
+        "isDefault": false
+      }
+    ],
+    "versions": [
+      {
+        "Id": 100,
+        "Code": "admin",
+        "Name": "Admin",
+        "isDefault": false
+      },
+      {
+        "Id": 200,
+        "Code": "client",
+        "Name": "Client",
+        "isDefault": false
+      },
+      {
+        "Id": 300,
+        "Code": "interface",
+        "Name": "Interface",
+        "isDefault": false
+      },
+      {
+        "Id": 400,
+        "Code": "site",
+        "Name": "Site",
+        "isDefault": false
+      },
+      {
+        "Id": 500,
+        "Code": "api",
+        "Name": "API",
+        "isDefault": false
+      },
+      {
+        "Id": 600,
+        "Code": "testing",
+        "Name": "Testing",
+        "isDefault": false
+      }
+    ],
+    "priorities": [
+      {
+        "Id": 100,
+        "Code": "admin",
+        "Name": "Admin",
+        "isDefault": false
+      },
+      {
+        "Id": 200,
+        "Code": "client",
+        "Name": "Client",
+        "isDefault": false
+      },
+      {
+        "Id": 300,
+        "Code": "interface",
+        "Name": "Interface",
+        "isDefault": false
+      },
+      {
+        "Id": 400,
+        "Code": "site",
+        "Name": "Site",
+        "isDefault": false
+      },
+      {
+        "Id": 500,
+        "Code": "api",
+        "Name": "API",
+        "isDefault": false
+      },
+      {
+        "Id": 600,
+        "Code": "testing",
+        "Name": "Testing",
+        "isDefault": false
+      }
+    ]
+  }
+}

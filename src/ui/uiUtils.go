@@ -67,6 +67,9 @@ func scrollAction(v *gocui.View, dy int) error {
 }
 
 func setViewScroll(name string) error {
+	v, _ := utils.Cui.View(name)
+	v.Wrap = true
+
 	if err := utils.Cui.SetKeybinding(name, gocui.MouseLeft, gocui.ModNone, setCurrView(name)); err != nil {
 		return err
 	}
@@ -84,7 +87,7 @@ func setViewLineHighlight(name string) error {
 	v, _ := utils.Cui.View(name)
 
 	v.Wrap = true
-	// v.Highlight = true
+	v.Highlight = true
 	v.SelBgColor = gocui.ColorWhite
 	v.SelFgColor = gocui.ColorBlack
 

@@ -1,24 +1,15 @@
 package model
 
-type Module struct {
-	Id   string
-	Code string
-	Name string
+type ZentaoSettings struct {
+	Modules    []Option
+	Categories []Option
+	Versions   []Option
+	Priorities []Option
 }
 
-type Category struct {
-	Id   string
-	Code string
-	Name string
-}
-
-type Version struct {
-	Id   string
-	Code string
-	Name string
-}
-type Priority struct {
-	Id   string
-	Code string
-	Name string
+type Option struct {
+	Id        string
+	Code      string
+	Name      string
+	isDefault bool
 }

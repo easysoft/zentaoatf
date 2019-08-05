@@ -9,6 +9,9 @@ import (
 const (
 	LabelWidth  = 15
 	LabelHeight = 2
+
+	LabelWidthSmall = 10
+	SelectWidth     = 20
 )
 
 type LabelWidget struct {
