@@ -1,12 +1,14 @@
 package utils
 
 import (
+	"fmt"
 	"github.com/easysoft/zentaoatf/src/misc"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/jroimartin/gocui"
+	"os"
 )
 
-const (
+var (
 	PreferenceFile = "preferences.yaml"
 	ConfigFile     = "conf.yaml"
 
@@ -21,11 +23,11 @@ const (
 	LanguageEN      = "en"
 	LanguageZH      = "zh"
 
-	EnRes = "res/messages_en.json"
-	ZhRes = "res/messages_zh.json"
+	EnRes = fmt.Sprintf("res%smessages_en.json", string(os.PathSeparator))
+	ZhRes = fmt.Sprintf("res%smessages_zh.json", string(os.PathSeparator))
 
-	ScriptDir = "scripts/"
-	LogDir    = "logs/"
+	ScriptDir = fmt.Sprintf("scripts%s", string(os.PathSeparator))
+	LogDir    = fmt.Sprintf("logs%s", string(os.PathSeparator))
 
 	LeftWidth = 36
 	MinWidth  = 130

@@ -7,14 +7,14 @@ import (
 	"time"
 )
 
-func ExeScripts(files []string, dir string, langType string, report *model.TestReport) {
+func ExeScripts(files []string, scriptDir string, langType string, report *model.TestReport) {
 	utils.PrintWholeLine(utils.I118Prt.Sprintf("start_execution", ""), "=", color.FgCyan)
 
 	startTime := time.Now().Unix()
 	report.StartTime = startTime
 
 	for _, file := range files {
-		ExeScript(file, langType, dir)
+		ExeScript(file, langType, scriptDir)
 	}
 
 	utils.PrintWholeLine(utils.I118Prt.Sprintf("end_execution", ""), "=", color.FgCyan)
@@ -26,12 +26,12 @@ func ExeScripts(files []string, dir string, langType string, report *model.TestR
 	report.Duration = secs
 }
 
-func ExeScript(file string, langType string, dir string) {
+func ExeScript(file string, langType string, scriptDir string) {
 	var command string
 	var logFile string
 
 	//if !utils.IsWin() {
-	logFile = utils.ScriptToLogName(dir, file)
+	logFile = utils.ScriptToLogName(scriptDir, file)
 	command = file
 
 	//if langType == misc.PHP.String() {
