@@ -24,7 +24,6 @@ func ExeScripts(files []string, scriptDir string, langType string, report *model
 
 	report.EndTime = startTime
 	report.Duration = secs
-
 }
 
 func ExeScript(file string, langType string, scriptDir string) {
