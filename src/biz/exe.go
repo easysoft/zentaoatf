@@ -33,13 +33,16 @@ func ExeScript(file string, langType string, scriptDir string) {
 	logFile = utils.ScriptToLogName(scriptDir, file)
 	command = file
 
+	utils.PrintToCmd(logFile)
+
 	startTime := time.Now()
 
 	msg := utils.I118Prt.Sprintf("start_case", file, startTime.Format("2006-01-02 15:04:05"))
 	utils.PrintWholeLine(msg, "-", color.FgCyan)
 
 	output := utils.ExecFile(command)
-	utils.WriteFile(logFile, output)
+	_ = output
+	//utils.WriteFile(logFile, output)
 
 	entTime := time.Now()
 	secs := int64(entTime.Sub(startTime) / time.Second)
