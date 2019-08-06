@@ -41,7 +41,7 @@ func InitMainPage() error {
 	ViewMap["root"] = append(ViewMap["root"], cmdView.Name())
 	mainView.Wrap = true
 
-	utils.PrintPreferenceToView(cmdView)
+	utils.PrintPreferenceToView()
 
 	NewHelpWidget()
 	MainPageKeyBindings()

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/fatih/color"
-	"github.com/jroimartin/gocui"
 	uuid "github.com/satori/go.uuid"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -86,14 +85,15 @@ func PrintPreference() {
 	}
 }
 
-func PrintPreferenceToView(v *gocui.View) {
-	fmt.Fprintln(v, color.CyanString(I118Prt.Sprintf("current_preference", "")))
+func PrintPreferenceToView() {
+	cmdView, _ := Cui.View("cmd")
+	fmt.Fprintln(cmdView, color.CyanString(I118Prt.Sprintf("current_preference", "")))
 
 	val := reflect.ValueOf(Prefer)
 	typeOfS := val.Type()
 	for i := 0; i < reflect.ValueOf(Prefer).NumField(); i++ {
 		val := val.Field(i)
-		fmt.Fprintln(v, fmt.Sprintf("  %s: %v", typeOfS.Field(i).Name, val.Interface()))
+		fmt.Fprintln(cmdView, fmt.Sprintf("  %s: %v", typeOfS.Field(i).Name, val.Interface()))
 	}
 }
 
