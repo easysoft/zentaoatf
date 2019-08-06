@@ -131,19 +131,11 @@ func GetFailedFiles(resultFile string) ([]string, string, string, error) {
 }
 
 func GetSuiteFiles(dirPth string, name string, fileList *[]string) {
-	sep := string(os.PathSeparator)
-	file := name
-
-	content := ReadFile(file)
+	content := ReadFile(name)
 	for _, line := range strings.Split(content, "\n") {
-		line := strings.TrimSpace(line)
-		if line == "" {
+		file := strings.TrimSpace(line)
+		if file == "" {
 			return
-		}
-
-		file := line
-		if strings.Index(file, sep) == -1 {
-			file = dirPth + sep + file
 		}
 
 		if path.Ext(file) == "."+SuiteExt {
