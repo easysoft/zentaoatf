@@ -11,5 +11,5 @@ type Option struct {
 	Id        int
 	Code      string
 	Name      string
-	isDefault bool
+	IsDefault bool
 }

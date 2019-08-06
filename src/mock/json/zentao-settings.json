@@ -6,37 +6,37 @@
         "Id": 100,
         "Code": "admin",
         "Name": "Admin",
-        "isDefault": false
+        "IsDefault": false
       },
       {
         "Id": 200,
         "Code": "client",
         "Name": "Client",
-        "isDefault": false
+        "IsDefault": false
       },
       {
         "Id": 300,
         "Code": "interface",
         "Name": "Interface",
-        "isDefault": false
+        "IsDefault": false
       },
       {
         "Id": 400,
         "Code": "site",
         "Name": "Site",
-        "isDefault": false
+        "IsDefault": false
       },
       {
         "Id": 500,
         "Code": "api",
         "Name": "API",
-        "isDefault": false
+        "IsDefault": true
       },
       {
         "Id": 600,
         "Code": "testing",
         "Name": "Testing",
-        "isDefault": false
+        "IsDefault": false
       }
     ],
     "categories": [
@@ -44,37 +44,37 @@
         "Id": 100,
         "Code": "admin",
         "Name": "Admin",
-        "isDefault": false
+        "IsDefault": false
       },
       {
         "Id": 200,
         "Code": "client",
         "Name": "Client",
-        "isDefault": false
+        "IsDefault": false
       },
       {
         "Id": 300,
         "Code": "interface",
         "Name": "Interface",
-        "isDefault": false
+        "IsDefault": false
       },
       {
         "Id": 400,
         "Code": "site",
         "Name": "Site",
-        "isDefault": false
+        "IsDefault": false
       },
       {
         "Id": 500,
         "Code": "api",
         "Name": "API",
-        "isDefault": false
+        "IsDefault": false
       },
       {
         "Id": 600,
         "Code": "testing",
         "Name": "Testing",
-        "isDefault": false
+        "IsDefault": false
       }
     ],
     "versions": [
@@ -82,37 +82,37 @@
         "Id": 100,
         "Code": "admin",
         "Name": "Admin",
-        "isDefault": false
+        "IsDefault": false
       },
       {
         "Id": 200,
         "Code": "client",
         "Name": "Client",
-        "isDefault": false
+        "IsDefault": false
       },
       {
         "Id": 300,
         "Code": "interface",
         "Name": "Interface",
-        "isDefault": false
+        "IsDefault": false
       },
       {
         "Id": 400,
         "Code": "site",
         "Name": "Site",
-        "isDefault": false
+        "IsDefault": false
       },
       {
         "Id": 500,
         "Code": "api",
         "Name": "API",
-        "isDefault": false
+        "IsDefault": false
       },
       {
         "Id": 600,
         "Code": "testing",
         "Name": "Testing",
-        "isDefault": false
+        "IsDefault": false
       }
     ],
     "priorities": [
@@ -120,37 +120,37 @@
         "Id": 100,
         "Code": "admin",
         "Name": "Admin",
-        "isDefault": false
+        "IsDefault": false
       },
       {
         "Id": 200,
         "Code": "client",
         "Name": "Client",
-        "isDefault": false
+        "IsDefault": false
       },
       {
         "Id": 300,
         "Code": "interface",
         "Name": "Interface",
-        "isDefault": false
+        "IsDefault": false
       },
       {
         "Id": 400,
         "Code": "site",
         "Name": "Site",
-        "isDefault": false
+        "IsDefault": false
       },
       {
         "Id": 500,
         "Code": "api",
         "Name": "API",
-        "isDefault": false
+        "IsDefault": false
       },
       {
         "Id": 600,
         "Code": "testing",
         "Name": "Testing",
-        "isDefault": false
+        "IsDefault": false
       }
     ]
   }

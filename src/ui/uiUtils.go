@@ -29,11 +29,11 @@ func Quit(g *gocui.Gui, v *gocui.View) error {
 
 func scrollEvent(dy int) func(g *gocui.Gui, v *gocui.View) error {
 	return func(g *gocui.Gui, v *gocui.View) error {
-		return scrollAction(v, dy)
+		return scrollAction(v, dy, false)
 	}
 }
 
-func scrollAction(v *gocui.View, dy int) error {
+func scrollAction(v *gocui.View, dy int, isSelectWidget bool) error {
 	v.Autoscroll = false
 
 	if dy > 0 {
@@ -46,7 +46,13 @@ func scrollAction(v *gocui.View, dy int) error {
 		if err := v.SetCursor(cx, cy+1); err != nil {
 			ox, oy := v.Origin()
 
-			if pos < len(v.BufferLines())-height-1 {
+			h := len(v.BufferLines()) - height - 1
+			if isSelectWidget {
+				h += 2
+			}
+
+			if pos < h {
+
 				if err := v.SetOrigin(ox, oy+1); err != nil {
 					return err
 				}
@@ -87,7 +93,7 @@ func setViewLineHighlight(name string) error {
 	v, _ := utils.Cui.View(name)
 
 	v.Wrap = true
-	v.Highlight = true
+	//v.Highlight = true
 	v.SelBgColor = gocui.ColorWhite
 	v.SelFgColor = gocui.ColorBlack
 

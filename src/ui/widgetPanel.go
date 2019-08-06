@@ -27,6 +27,7 @@ func (w *PanelWidget) Layout() (*gocui.View, error) {
 	}
 
 	v, err := utils.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+w.h)
+	v.Highlight = false
 	if err != nil {
 		if err != gocui.ErrUnknownView {
 			return nil, err
