@@ -27,3 +27,5 @@ require (
 replace golang.org/x/text => github.com/golang/text v0.3.0
 
 replace golang.org/x/sys => github.com/golang/sys v0.0.0-20190804053845-51ab0e2deafa
+
+replace rsc.io/goversion => github.com/rsc/goversion v1.2.0
