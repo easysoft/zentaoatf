@@ -2,7 +2,6 @@ package utils
 
 import (
 	"github.com/easysoft/zentaoatf/src/misc"
-	"log"
 	"os"
 	"path"
 	"path/filepath"
@@ -53,7 +52,6 @@ func PathToRunName(filePath string) string {
 	}
 
 	name := Base(filePath)
-	log.Panic(name)
 
 	ext := path.Ext(filePath)
 	name = strings.Replace(name, ext, "", -1)
