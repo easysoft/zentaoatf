@@ -32,7 +32,7 @@ func ExeScript(file string, langType string, scriptDir string) {
 	var logFile string
 
 	logFile = utils.ScriptToLogName(scriptDir, file)
-	log.Panic(logFile)
+	log.Panic(scriptDir)
 	command = file
 
 	startTime := time.Now()

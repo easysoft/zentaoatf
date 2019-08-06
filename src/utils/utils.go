@@ -2,6 +2,7 @@ package utils
 
 import (
 	"github.com/easysoft/zentaoatf/src/misc"
+	"os"
 	"path"
 	"regexp"
 	"runtime"
@@ -21,7 +22,6 @@ func RemoveBlankLine(str string) string {
 
 func ScriptToLogName(dir string, file string) string {
 	logDir := dir + LogDir + RunDir
-	PrintToCmd(logDir)
 	MkDirIfNeeded(logDir)
 
 	nameSuffix := path.Ext(file)
@@ -29,7 +29,6 @@ func ScriptToLogName(dir string, file string) string {
 	name := strings.TrimSuffix(nameWithSuffix, nameSuffix)
 
 	logFile := logDir + name + ".log"
-	PrintToCmd(logFile)
 
 	return logFile
 }
@@ -43,14 +42,14 @@ func ScriptToExpectName(file string) string {
 
 func PathToRunName(filePath string) string {
 	if filePath == "" {
-		return RunMode.String() + "-" + DateTimeStrFmt(time.Now(), "2006-01-02 15:04:05") + "/"
+		return RunMode.String() + "-" + DateTimeStrFmt(time.Now(), "2006-01-02 15:04:05") + string(os.PathSeparator)
 	}
 
 	name := path.Base(filePath)
 	ext := path.Ext(filePath)
 	name = strings.Replace(name, ext, "", -1)
 
-	runName := RunMode.String() + "-" + name + "-" + DateTimeStrFmt(time.Now(), "2006-01-02 15:04:05") + "/"
+	runName := RunMode.String() + "-" + name + "-" + DateTimeStrFmt(time.Now(), "2006-01-02 15:04:05") + string(os.PathSeparator)
 
 	return runName
 }
