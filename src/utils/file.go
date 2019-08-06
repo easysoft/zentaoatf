@@ -54,9 +54,6 @@ func GetAllFiles(dirPth string, ext string) (files []string, err error) {
 		return nil, err
 	}
 
-	//PthSep := string(os.PathSeparator)
-	//suffix = strings.ToUpper(suffix) //忽略后缀匹配的大小写
-
 	for _, fi := range dir {
 		if fi.IsDir() { // 目录, 递归遍历
 			dirs = append(dirs, dirPth+fi.Name())
@@ -81,19 +78,19 @@ func GetAllFiles(dirPth string, ext string) (files []string, err error) {
 	return files, nil
 }
 
-func GetSpecifiedFiles(dirPth string, fileNames []string) (files []string, err error) {
+func GetSpecifiedFiles(scriptDir string, fileNames []string) (files []string, err error) {
 	sep := string(os.PathSeparator)
 	ret := make([]string, 0)
 
 	for _, name := range fileNames {
 		file := name
 		if strings.Index(file, sep) == -1 {
-			file = dirPth + sep + file
+			file = scriptDir + sep + file
 		}
 
 		if path.Ext(file) == "."+SuiteExt {
 			fileList := make([]string, 0)
-			GetSuiteFiles(dirPth, file, &fileList)
+			GetSuiteFiles(scriptDir, file, &fileList)
 
 			for _, f := range fileList {
 				ret = append(ret, f)

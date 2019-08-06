@@ -11,6 +11,10 @@ import (
 )
 
 func Run(scriptDir string, fileNames []string, langType string) {
+	if scriptDir == "." {
+		scriptDir = ""
+	}
+
 	if !utils.IsWin() && strings.Index(scriptDir, string(os.PathSeparator)) != 0 { // relate path on NO windows sys
 		scriptDir = utils.Prefer.WorkDir + scriptDir
 	}
