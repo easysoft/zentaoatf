@@ -51,7 +51,7 @@ func (w *SelectWidget) Layout() (*gocui.View, error) {
 
 	_, height := v.Size()
 	for true {
-		line, _ := SelectLine(v, ".*")
+		line, _ := GetSelectedLine(v, ".*")
 		if utils.IsBugFieldDefault(line, w.options) {
 			break
 		}

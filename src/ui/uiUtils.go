@@ -141,7 +141,7 @@ func HighlightTab(view string, views []string) {
 	}
 }
 
-func SelectLine(v *gocui.View, reg string) (string, error) {
+func GetSelectedLine(v *gocui.View, reg string) (string, error) {
 	var line string
 	var err error
 
@@ -158,4 +158,10 @@ func SelectLine(v *gocui.View, reg string) (string, error) {
 	}
 
 	return line, nil
+}
+
+func GetSelectedLineVal(v *gocui.View) string {
+	line, _ := GetSelectedLine(v, ".*")
+
+	return line
 }

@@ -60,7 +60,7 @@ func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
 
 	v.Highlight = true
 
-	line, _ := SelectLine(v, ".*")
+	line, _ := GetSelectedLine(v, ".*")
 	CurrResult = line
 	content := script.GetTestResult(CurrAsset, line)
 
@@ -79,7 +79,7 @@ func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
 func selectCaseEvent(g *gocui.Gui, v *gocui.View) error {
 	v.Highlight = true
 
-	caseLine, _ := SelectLine(v, ".*")
+	caseLine, _ := GetSelectedLine(v, ".*")
 
 	content := script.GetCheckpointsResult(CurrAsset, CurrResult, caseLine)
 	panelCaseResult, _ := g.View("panelCaseResult")

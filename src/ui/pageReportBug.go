@@ -1,10 +1,16 @@
 package ui
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/easysoft/zentaoatf/src/biz"
+	httpClient "github.com/easysoft/zentaoatf/src/http"
+	"github.com/easysoft/zentaoatf/src/mock"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/jroimartin/gocui"
+	"strconv"
 	"strings"
+	"time"
 )
 
 var filedValMap map[string]int
@@ -79,39 +85,50 @@ func InitReportBugPage() error {
 }
 
 func reportBug(g *gocui.Gui, v *gocui.View) error {
-	//titleView, _ := g.View("titleInput")
-	//moduleView, _ := g.View("moduleInput")
-	//categoryView, _ := g.View("categoryInput")
-	//versionView, _ := g.View("versionInput")
-	//priorityView, _ := g.View("priorityInput")
-	//
-	//title := strings.TrimSpace(titleView.Buffer())
-	//moduleStr := strings.TrimSpace(moduleView.Buffer())
-	//categoryStr := strings.TrimSpace(categoryView.Buffer())
-	//versionStr := strings.TrimSpace(versionView.Buffer())
-	//priorityStr := strings.TrimSpace(priorityView.Buffer())
-	//
-	//params := make(map[string]string)
-	//if productCode != "" {
-	//	params["entityType"] = "product"
-	//	params["entityVal"] = productCode
-	//} else {
-	//	params["entityType"] = "task"
-	//	params["entityVal"] = taskId
-	//}
-	//
-	//jsonStr, _ := json.Marshal(params)
-	//url := utils.UpdateUrl(mock.BaseUrl)
-	//
-	//json, e := httpClient.Post(url+utils.UrlImportProject, string(jsonStr))
-	//if e != nil {
-	//	utils.PrintToCmd(e.Error())
-	//	return nil
-	//} else {
-	//	if json.Code == 1 {
-	//		utils.PrintToCmd(fmt.Sprintf("success to report bug at %s", utils.DateTimeStr(time.Now())))
-	//	}
-	//}
+	titleView, _ := g.View("titleInput")
+	moduleView, _ := g.View("module")
+	categoryView, _ := g.View("category")
+	versionView, _ := g.View("version")
+	priorityView, _ := g.View("priority")
+
+	title := strings.TrimSpace(titleView.Buffer())
+	moduleStr := strings.TrimSpace(GetSelectedLineVal(moduleView))
+	categoryStr := strings.TrimSpace(GetSelectedLineVal(categoryView))
+	versionStr := strings.TrimSpace(GetSelectedLineVal(versionView))
+	priorityStr := strings.TrimSpace(GetSelectedLineVal(priorityView))
+
+	config := utils.ReadCurrConfig()
+	params := make(map[string]interface{})
+	params["entityType"] = config.EntityType
+	params["entityVal"] = config.EntityVal
+	params["projectName"] = config.ProjectName
+
+	params["title"] = title
+
+	modulelId, _ := strconv.Atoi(moduleStr)
+	params["moduleId"] = modulelId
+
+	categoryId, _ := strconv.Atoi(categoryStr)
+	params["categoryId"] = categoryId
+
+	versionId, _ := strconv.Atoi(versionStr)
+	params["versionId"] = versionId
+
+	priorityId, _ := strconv.Atoi(priorityStr)
+	params["priorityId"] = priorityId
+
+	jsonStr, _ := json.Marshal(params)
+	url := utils.UpdateUrl(mock.BaseUrl)
+
+	json, e := httpClient.Post(url+utils.UrlReportBug, string(jsonStr))
+	if e != nil {
+		utils.PrintToCmd(e.Error())
+		return nil
+	} else {
+		if json.Code == 1 {
+			utils.PrintToCmd(fmt.Sprintf("success to report bug at %s", utils.DateTimeStr(time.Now())))
+		}
+	}
 
 	return nil
 }
@@ -122,7 +139,7 @@ func bugSelectFieldCheckEvent(filedValMap map[string]int) func(g *gocui.Gui, v *
 
 		g.SetCurrentView(name)
 
-		line, _ := SelectLine(v, ".*")
+		line, _ := GetSelectedLine(v, ".*")
 		line = strings.TrimSpace(line)
 
 		utils.SetBugField(name, line, filedValMap)
@@ -136,7 +153,7 @@ func bugSelectFieldScrollEvent(dy int, filedValMap map[string]int) func(g *gocui
 		scrollAction(v, dy, true)
 
 		name := v.Name()
-		line, _ := SelectLine(v, ".*")
+		line, _ := GetSelectedLine(v, ".*")
 		utils.SetBugField(name, strings.TrimSpace(line), filedValMap)
 
 		return nil
