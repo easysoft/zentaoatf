@@ -1,7 +1,6 @@
 package biz
 
 import (
-	"github.com/easysoft/zentaoatf/src/misc"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/fatih/color"
@@ -31,14 +30,16 @@ func ExeScript(file string, langType string, dir string) {
 	var command string
 	var logFile string
 
-	if utils.IsMac() {
-		logFile = utils.ScriptToLogName(dir, file)
-		command = file //  + " > " + logFile
+	//if !utils.IsWin() {
+	logFile = utils.ScriptToLogName(dir, file)
+	command = file
 
-		if langType == misc.PHP.String() {
-			command = langType + " " + command
-		}
-	}
+	//if langType == misc.PHP.String() {
+	//	command = langType + " " + command
+	//}
+	//} else {
+	//
+	//}
 
 	startTime := time.Now()
 
