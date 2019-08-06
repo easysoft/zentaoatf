@@ -45,7 +45,7 @@ func ExeScript(file string, langType string, dir string) {
 	msg := utils.I118Prt.Sprintf("start_case", file, startTime.Format("2006-01-02 15:04:05"))
 	utils.PrintWholeLine(msg, "-", color.FgCyan)
 
-	output := utils.ExecCommand(command)
+	output := utils.ExecFile(command)
 	utils.WriteFile(logFile, output)
 
 	entTime := time.Now()

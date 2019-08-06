@@ -25,10 +25,17 @@ func ExeShell(cmdStr string) (string, error) {
 	return out.String(), err
 }
 
-func ExecCommand(commandName string) string {
+func ExecFile(commandName string) string {
 	// TODO: now tested for linux and mac
-	commandName = "chmod +x " + commandName + "; " + commandName + ";"
-	cmd := exec.Command("/bin/bash", "-c", commandName)
+	commandName = commandName + ";"
+
+	var cmd *exec.Cmd
+	if IsWin() {
+		cmd = exec.Command("cmd", "/C", commandName)
+	} else {
+		commandName = "chmod +x " + commandName + "; " + commandName
+		cmd = exec.Command("/bin/bash", "-c", commandName)
+	}
 
 	output := make([]string, 0)
 
