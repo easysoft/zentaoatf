@@ -2,6 +2,7 @@ package utils
 
 import (
 	"github.com/easysoft/zentaoatf/src/misc"
+	"log"
 	"os"
 	"path"
 	"regexp"
@@ -48,6 +49,7 @@ func PathToRunName(filePath string) string {
 	name := path.Base(filePath)
 	ext := path.Ext(filePath)
 	name = strings.Replace(name, ext, "", -1)
+	log.Panic(name)
 
 	runName := RunMode.String() + "-" + name + "-" + DateTimeStrFmt(time.Now(), "2006-01-02 15:04:05") + string(os.PathSeparator)
 

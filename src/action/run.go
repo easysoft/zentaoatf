@@ -17,7 +17,8 @@ func Run(scriptDir string, fileNames []string, langType string) {
 
 	LangMap := script.LangMap
 	var files []string
-	if fileNames != nil && len(fileNames) > 0 {
+
+	if fileNames != nil && len(fileNames) > 0 { // pass a list
 		if len(fileNames) == 1 {
 			if strings.Index(fileNames[0], ".suite") > -1 {
 				utils.RunMode = misc.SUITE
@@ -31,7 +32,7 @@ func Run(scriptDir string, fileNames []string, langType string) {
 		}
 
 		files, _ = utils.GetSpecifiedFiles(scriptDir, fileNames)
-	} else {
+	} else { // give a dir
 		files, _ = utils.GetAllFiles(scriptDir, LangMap[langType]["extName"])
 		utils.RunMode = misc.DIR
 		utils.RunDir = utils.PathToRunName(scriptDir)
