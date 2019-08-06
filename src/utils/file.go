@@ -79,14 +79,10 @@ func GetAllFiles(dirPth string, ext string) (files []string, err error) {
 }
 
 func GetSpecifiedFiles(scriptDir string, fileNames []string) (files []string, err error) {
-	sep := string(os.PathSeparator)
 	ret := make([]string, 0)
 
 	for _, name := range fileNames {
 		file := name
-		if strings.Index(file, sep) == -1 {
-			file = scriptDir + sep + file
-		}
 
 		if path.Ext(file) == "."+SuiteExt {
 			fileList := make([]string, 0)
