@@ -30,7 +30,7 @@ func SubmitResult(caseList []string) {
 			status = false
 		}
 
-		caseStr := path.Base(strings.TrimSpace(arr[1]))
+		caseStr := utils.Base(strings.TrimSpace(arr[1]))
 		name := strings.Replace(caseStr, path.Ext(caseStr), "", -1)
 		caseIdStr := strings.Split(name, "-")[1]
 		caseId, _ := strconv.Atoi(caseIdStr)

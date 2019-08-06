@@ -5,11 +5,17 @@ import (
 	"log"
 	"os"
 	"path"
+	"path/filepath"
 	"regexp"
 	"runtime"
 	"strings"
 	"time"
 )
+
+func Base(pathStr string) string {
+	pathStr = filepath.ToSlash(pathStr)
+	return path.Base(pathStr)
+}
 
 func RemoveBlankLine(str string) string {
 	myExp := regexp.MustCompile(`\n{2,}`) // 连续换行
@@ -26,7 +32,7 @@ func ScriptToLogName(dir string, file string) string {
 	MkDirIfNeeded(logDir)
 
 	nameSuffix := path.Ext(file)
-	nameWithSuffix := path.Base(file)
+	nameWithSuffix := Base(file)
 	name := strings.TrimSuffix(nameWithSuffix, nameSuffix)
 
 	logFile := logDir + name + ".log"
@@ -46,7 +52,7 @@ func PathToRunName(filePath string) string {
 		return RunMode.String() + "-" + DateTimeStrFmt(time.Now(), "2006-01-02 15:04:05") + string(os.PathSeparator)
 	}
 
-	name := path.Base(filePath)
+	name := Base(filePath)
 	log.Panic(name)
 
 	ext := path.Ext(filePath)

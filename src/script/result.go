@@ -74,7 +74,7 @@ func GetCheckpointsResult(assert string, date string, caseLine string) string {
 
 func GetRunModeAndName(assert string) (string, string) {
 	ext := path.Ext(assert)
-	name := strings.Replace(path.Base(assert), ext, "", -1)
+	name := strings.Replace(utils.Base(assert), ext, "", -1)
 
 	var mode string
 	if ext == ".suite" {
@@ -90,7 +90,7 @@ func GetLogFileByCase(assert string, date string, file string) string {
 	mode, name := GetRunModeAndName(assert)
 
 	ext := path.Ext(file)
-	logName := strings.Replace(path.Base(file), ext, ".log", -1)
+	logName := strings.Replace(utils.Base(file), ext, ".log", -1)
 
 	return utils.Prefer.WorkDir + utils.LogDir + logFolder(mode, name, date) + string(os.PathSeparator) + logName
 }
