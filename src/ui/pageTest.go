@@ -6,6 +6,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/script"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/jroimartin/gocui"
+	"log"
 	"strings"
 )
 
@@ -128,6 +129,8 @@ func run(g *gocui.Gui, v *gocui.View) error {
 	utils.PrintToCmd(fmt.Sprintf("#atf run -d %s -f %s", utils.Prefer.WorkDir, CurrAsset))
 	output, _ := g.View(utils.CuiRunOutputView)
 	output.Clear()
+
+	log.Panic(utils.Prefer.WorkDir)
 	action.Run(utils.Prefer.WorkDir, []string{CurrAsset}, "")
 
 	return nil

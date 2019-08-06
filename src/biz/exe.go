@@ -4,7 +4,6 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/fatih/color"
-	"log"
 	"time"
 )
 
@@ -32,7 +31,6 @@ func ExeScript(file string, langType string, scriptDir string) {
 	var logFile string
 
 	logFile = utils.ScriptToLogName(scriptDir, file)
-	log.Panic(scriptDir)
 	command = file
 
 	startTime := time.Now()
