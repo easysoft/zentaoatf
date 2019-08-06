@@ -15,7 +15,10 @@ func main() {
 		log.Panicln(err)
 	}
 	defer g.Close()
-	g.ASCII = true
+	if utils.IsWin() {
+		g.ASCII = true
+	}
+
 	g.Cursor = true
 	g.Mouse = true
 

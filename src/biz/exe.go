@@ -30,16 +30,8 @@ func ExeScript(file string, langType string, scriptDir string) {
 	var command string
 	var logFile string
 
-	//if !utils.IsWin() {
 	logFile = utils.ScriptToLogName(scriptDir, file)
 	command = file
-
-	//if langType == misc.PHP.String() {
-	//	command = langType + " " + command
-	//}
-	//} else {
-	//
-	//}
 
 	startTime := time.Now()
 
