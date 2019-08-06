@@ -7,6 +7,7 @@ import (
 	httpClient "github.com/easysoft/zentaoatf/src/http"
 	"github.com/easysoft/zentaoatf/src/mock"
 	"github.com/easysoft/zentaoatf/src/utils"
+	"github.com/fatih/color"
 	"github.com/jroimartin/gocui"
 	"strconv"
 	"strings"
@@ -24,7 +25,7 @@ func InitReportBugPage() error {
 	x := maxX/2 - 50
 	y := maxY/2 - 14
 
-	reportBugPanel := NewPanelWidget("reportBugPanel", x, y, 100, 26, "")
+	reportBugPanel := NewPanelWidget("reportBugPanel", x, y, 100, 27, "")
 	ViewMap["reportBug"] = append(ViewMap["reportBug"], reportBugPanel.Name())
 
 	y += 1
@@ -46,7 +47,7 @@ func InitReportBugPage() error {
 	// module
 	left = x + 2 + LabelWidthSmall + Space
 	right = left + SelectWidth
-	moduleInput := NewSelectWidget("module", left, y+4, SelectWidth, 3, "Module", utils.ZendaoSettings.Modules,
+	moduleInput := NewSelectWidget("module", left, y+4, SelectWidth, 6, "Module", utils.ZendaoSettings.Modules,
 		bugSelectFieldCheckEvent(filedValMap))
 	ViewMap["reportBug"] = append(ViewMap["reportBug"], moduleInput.Name())
 
@@ -70,13 +71,17 @@ func InitReportBugPage() error {
 		bugSelectFieldCheckEvent(filedValMap))
 	ViewMap["reportBug"] = append(ViewMap["reportBug"], priorityInput.Name())
 
+	reportBugMsg := NewPanelWidget("reportBugMsg", x+2+LabelWidthSmall+Space, y+18, TextWidthFull, 2, "")
+	reportBugMsg.Frame = false
+	ViewMap["reportBug"] = append(ViewMap["reportBug"], reportBugMsg.Name())
+
 	// buttons
 	buttonX := maxX/2 - 50 + 2 + LabelWidthSmall + Space
-	submitInput := NewButtonWidgetAutoWidth("submitInput", buttonX, y+19, "Submit", reportBug)
+	submitInput := NewButtonWidgetAutoWidth("submitInput", buttonX, y+21, "Submit", reportBug)
 	ViewMap["reportBug"] = append(ViewMap["reportBug"], submitInput.Name())
 
 	cancelReportBugInput := NewButtonWidgetAutoWidth("cancelReportBugInput",
-		buttonX+12, y+19, "Cancel", cancelReportBug)
+		buttonX+12, y+21, "Cancel", cancelReportBug)
 	ViewMap["reportBug"] = append(ViewMap["reportBug"], cancelReportBugInput.Name())
 
 	keyBindsInput(ViewMap["reportBug"])
@@ -96,6 +101,13 @@ func reportBug(g *gocui.Gui, v *gocui.View) error {
 	categoryStr := strings.TrimSpace(GetSelectedLineVal(categoryView))
 	versionStr := strings.TrimSpace(GetSelectedLineVal(versionView))
 	priorityStr := strings.TrimSpace(GetSelectedLineVal(priorityView))
+
+	if title == "" {
+		v, _ := utils.Cui.View("reportBugMsg")
+
+		color.New(color.FgMagenta).Fprintf(v, "Title cannot be empty")
+		return nil
+	}
 
 	config := utils.ReadCurrConfig()
 	params := make(map[string]interface{})

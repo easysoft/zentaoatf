@@ -1,9 +1,11 @@
 package mock
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/gorilla/mux"
+	"io"
 	"log"
 	"net/http"
 )
@@ -33,7 +35,7 @@ func Launch() {
 }
 
 func importProject(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.Body)
+	printRequestBody(r.Body)
 
 	jsonString := utils.ReadFile("src/mock/json/case-from-prodoct.json")
 
@@ -42,7 +44,7 @@ func importProject(w http.ResponseWriter, r *http.Request) {
 }
 
 func submitResult(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.Body)
+	printRequestBody(r.Body)
 
 	jsonString := utils.ReadFile("src/mock/json/success.json")
 
@@ -51,7 +53,7 @@ func submitResult(w http.ResponseWriter, r *http.Request) {
 }
 
 func reportBug(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.Body)
+	printRequestBody(r.Body)
 
 	jsonString := utils.ReadFile("src/mock/json/success.json")
 
@@ -60,10 +62,16 @@ func reportBug(w http.ResponseWriter, r *http.Request) {
 }
 
 func zentaoSettings(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.Body)
+	printRequestBody(r.Body)
 
 	jsonString := utils.ReadFile("src/mock/json/zentao-settings.json")
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, jsonString)
+}
+
+func printRequestBody(rd io.ReadCloser) {
+	var body map[string]interface{}
+	json.NewDecoder(rd).Decode(&body)
+	fmt.Printf("%v\n", body)
 }
