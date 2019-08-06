@@ -6,11 +6,12 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/script"
 	"github.com/easysoft/zentaoatf/src/utils"
+	"os"
 	"strings"
 )
 
 func Run(scriptDir string, fileNames []string, langType string) {
-	if strings.Index(scriptDir, "/") != 0 {
+	if !utils.IsWin() && strings.Index(scriptDir, string(os.PathSeparator)) != 0 { // relate path on NO windows sys
 		scriptDir = utils.Prefer.WorkDir + scriptDir
 	}
 
