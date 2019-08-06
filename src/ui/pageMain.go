@@ -8,12 +8,12 @@ import (
 
 func InitMainPage() error {
 	maxX, maxY := utils.Cui.Size()
-	//if maxX < utils.MinWidth {
-	//	maxX = utils.MinWidth
-	//}
-	//if maxY < utils.MinHeight {
-	//	maxY = utils.MinHeight
-	//}
+	if maxX < utils.MinWidth {
+		maxX = utils.MinWidth
+	}
+	if maxY < utils.MinHeight {
+		maxY = utils.MinHeight
+	}
 	utils.MainViewHeight = maxY - utils.CmdViewHeight - 1
 
 	quickBarView := NewPanelWidget("quickBarView", 0, 0, utils.LeftWidth, 2, "")
