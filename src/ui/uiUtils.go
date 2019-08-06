@@ -73,7 +73,12 @@ func scrollAction(v *gocui.View, dy int, isSelectWidget bool) error {
 }
 
 func setViewScroll(name string) error {
-	v, _ := utils.Cui.View(name)
+	v, err := utils.Cui.View(name)
+	if err != nil {
+		utils.PrintToCmd(err.Error() + ": " + name)
+		return nil
+	}
+
 	v.Wrap = true
 
 	if err := utils.Cui.SetKeybinding(name, gocui.MouseLeft, gocui.ModNone, setCurrView(name)); err != nil {

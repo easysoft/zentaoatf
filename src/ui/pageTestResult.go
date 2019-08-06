@@ -35,7 +35,9 @@ func showRun(g *gocui.Gui, v *gocui.View) error {
 	runViews = append(runViews, panelCaseResult.Name())
 
 	for idx, v := range runViews {
-		setViewScroll(v)
+		if idx < 3 {
+			setViewScroll(v)
+		}
 
 		if idx < 2 {
 			setViewLineHighlight(v)
