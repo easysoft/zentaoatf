@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	a := path.Base("ss/1.txt")
+	a := path.Ext("ss/1.txt")
 
 	fmt.Println(a)
 }

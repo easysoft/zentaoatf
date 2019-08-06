@@ -62,7 +62,7 @@ func getInst() model.Preference {
 			yaml.Unmarshal(buf, &Prefer)
 		} else { // init
 			Prefer.Language = "en"
-			Prefer.WorkDir = convertWorkDir("./")
+			Prefer.WorkDir = convertWorkDir(".")
 
 			history := model.WorkHistory{Id: uuid.NewV4().String(), ProjectPath: Prefer.WorkDir}
 			Prefer.WorkHistories = []model.WorkHistory{history}
@@ -98,7 +98,7 @@ func PrintPreferenceToView() {
 }
 
 func convertWorkDir(path string) string {
-	if path == "./" || path == "." {
+	if path == "." {
 		path, _ = filepath.Abs(`.`)
 		path = path + string(os.PathSeparator)
 	} else {

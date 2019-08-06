@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"io/ioutil"
+	"os"
 	"path"
 	"regexp"
 	"strings"
@@ -34,7 +35,7 @@ func LoadTestResults(assert string) []string {
 
 func GetTestResult(assert string, date string) []string {
 	mode, name := GetRunModeAndName(assert)
-	resultPath := utils.Prefer.WorkDir + utils.LogDir + logFolder(mode, name, date) + "/result.txt"
+	resultPath := utils.Prefer.WorkDir + utils.LogDir + logFolder(mode, name, date) + string(os.PathSeparator) + "result.txt"
 
 	arr := make([]string, 0)
 	content := utils.ReadFile(resultPath)
@@ -57,7 +58,7 @@ func GetTestResult(assert string, date string) []string {
 
 func GetCheckpointsResult(assert string, date string, caseLine string) string {
 	mode, name := GetRunModeAndName(assert)
-	resultPath := utils.Prefer.WorkDir + utils.LogDir + logFolder(mode, name, date) + "/result.txt"
+	resultPath := utils.Prefer.WorkDir + utils.LogDir + logFolder(mode, name, date) + string(os.PathSeparator) + "result.txt"
 
 	content := utils.ReadFile(resultPath)
 
@@ -91,7 +92,7 @@ func GetLogFileByCase(assert string, date string, file string) string {
 	ext := path.Ext(file)
 	logName := strings.Replace(path.Base(file), ext, ".log", -1)
 
-	return utils.Prefer.WorkDir + utils.LogDir + logFolder(mode, name, date) + "/" + logName
+	return utils.Prefer.WorkDir + utils.LogDir + logFolder(mode, name, date) + string(os.PathSeparator) + logName
 }
 
 func logFolder(mode string, name string, date string) string {
