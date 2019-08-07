@@ -25,7 +25,7 @@ func ExeShell(cmdStr string) (string, error) {
 	return out.String(), err
 }
 
-func ExecFile2(commandName string) string {
+func ExecFile(commandName string) string {
 	var cmd *exec.Cmd
 	if IsWin() {
 		cmd = exec.Command("cmd", "/C", commandName)
@@ -45,6 +45,10 @@ func ExecFile2(commandName string) string {
 
 	cmd.Start()
 
+	if err != nil {
+		return fmt.Sprint(err)
+	}
+
 	reader := bufio.NewReader(stdout)
 
 	for {
@@ -61,7 +65,7 @@ func ExecFile2(commandName string) string {
 	return strings.Join(output, "")
 }
 
-func ExecFile(commandName string) string {
+func ExecFile2(commandName string) string {
 	var cmd *exec.Cmd
 	if IsWin() {
 		cmd = exec.Command("cmd", "/C", commandName)
