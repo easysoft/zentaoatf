@@ -26,16 +26,15 @@ func ExeShell(cmdStr string) (string, error) {
 }
 
 func ExecFile(commandName string) string {
-	// TODO: now tested for linux and mac
-	commandName = commandName + ";"
-
 	var cmd *exec.Cmd
 	if IsWin() {
 		cmd = exec.Command("cmd", "/C", commandName)
 	} else {
-		commandName = "chmod +x " + commandName + "; " + commandName
+		commandName = "chmod +x " + commandName + "; " + commandName + ";"
 		cmd = exec.Command("/bin/bash", "-c", commandName)
 	}
+
+	fmt.Println(commandName)
 
 	output := make([]string, 0)
 
@@ -64,7 +63,7 @@ func ExecFile(commandName string) string {
 	return strings.Join(output, "")
 }
 
-func ExecCommandBlock(commandName string) string {
+func ExecCommand(commandName string) string {
 	commandName = "chmod +x " + commandName + "; " + commandName + ";"
 
 	cmd := exec.Command("/bin/bash", "-c", commandName)
