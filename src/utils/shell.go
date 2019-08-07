@@ -25,7 +25,7 @@ func ExeShell(cmdStr string) (string, error) {
 	return out.String(), err
 }
 
-func ExecFile(commandName string) string {
+func ExecFile2(commandName string) string {
 	var cmd *exec.Cmd
 	if IsWin() {
 		cmd = exec.Command("cmd", "/C", commandName)
@@ -33,8 +33,6 @@ func ExecFile(commandName string) string {
 		commandName = "chmod +x " + commandName + "; " + commandName + ";"
 		cmd = exec.Command("/bin/bash", "-c", commandName)
 	}
-
-	fmt.Println(commandName)
 
 	output := make([]string, 0)
 
@@ -63,10 +61,15 @@ func ExecFile(commandName string) string {
 	return strings.Join(output, "")
 }
 
-func ExecCommand(commandName string) string {
-	commandName = "chmod +x " + commandName + "; " + commandName + ";"
+func ExecFile(commandName string) string {
+	var cmd *exec.Cmd
+	if IsWin() {
+		cmd = exec.Command("cmd", "/C", commandName)
+	} else {
+		commandName = "chmod +x " + commandName + "; " + commandName + ";"
+		cmd = exec.Command("/bin/bash", "-c", commandName)
+	}
 
-	cmd := exec.Command("/bin/bash", "-c", commandName)
 	var out bytes.Buffer
 	cmd.Stdout = &out
 
@@ -77,6 +80,8 @@ func ExecCommand(commandName string) string {
 	} else {
 		ret = out.String()
 	}
+
+	Printt(ret)
 
 	return ret
 }
