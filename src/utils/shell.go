@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"log"
 	"os/exec"
 	"strings"
 )
@@ -81,7 +82,7 @@ func ExecFile(commandName string) string {
 		ret = out.String()
 	}
 
-	Printt(ret)
+	log.Panic(ret)
 
 	return ret
 }
