@@ -82,7 +82,7 @@ func ExecFile(commandName string) string {
 		ret = out.String()
 	}
 
-	log.Panic(ret)
+	log.Panic(commandName)
 
 	return ret
 }
