@@ -72,12 +72,14 @@ func ExecFile(commandName string) string {
 	}
 
 	var out bytes.Buffer
+	var stderr bytes.Buffer
 	cmd.Stdout = &out
+	cmd.Stderr = &stderr
 
 	var ret string
 	err := cmd.Run()
 	if err != nil {
-		ret = err.Error()
+		ret = fmt.Sprint(err) + ": " + stderr.String()
 	} else {
 		ret = out.String()
 	}
