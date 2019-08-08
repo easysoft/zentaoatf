@@ -62,6 +62,8 @@ func GetCheckpointsResult(assert string, date string, caseLine string) string {
 
 	content := utils.ReadFile(resultPath)
 
+	caseLine = strings.Replace(caseLine, " ", "\\s", -1)
+
 	myExp := regexp.MustCompile(`(?m:^\s` + caseLine + `\n([\s\S]*?)((^\s(PASS|FAIL))|\z))`)
 	arr := myExp.FindStringSubmatch(content)
 	str := ""
