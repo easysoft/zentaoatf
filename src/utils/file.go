@@ -50,7 +50,6 @@ func FileExist(path string) bool {
 func GetAllFiles(dirPth string, ext string, files *[]string) error {
 	sep := string(os.PathSeparator)
 
-	var dirs []string
 	dir, err := ioutil.ReadDir(dirPth)
 	if err != nil {
 		return err
@@ -63,7 +62,6 @@ func GetAllFiles(dirPth string, ext string, files *[]string) error {
 				continue
 			}
 
-			dirs = append(dirs, dirPth+fi.Name())
 			GetAllFiles(dirPth+name+sep, ext, files)
 		} else {
 			// 过滤指定格式

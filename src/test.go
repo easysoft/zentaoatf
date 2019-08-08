@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/utils"
 )
 
 func main() {
@@ -16,6 +15,6 @@ func main() {
 	//
 	//fmt.Println(arr[1])
 
-	a := utils.ConvertWorkDir("/sdf")
-	fmt.Println(a)
+	a := "."
+	fmt.Println(a == ".")
 }

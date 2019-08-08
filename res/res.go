@@ -138,7 +138,7 @@ func resResGo() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "res/res.go", size: 12288, mode: os.FileMode(420), modTime: time.Unix(1565242287, 0)}
+	info := bindataFileInfo{name: "res/res.go", size: 12288, mode: os.FileMode(420), modTime: time.Unix(1565256982, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }

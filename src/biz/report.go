@@ -5,7 +5,6 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/fatih/color"
-	"os"
 	"strings"
 	"time"
 )
@@ -73,5 +72,5 @@ func Print(report model.TestReport, workDir string) {
 		}
 	}
 
-	utils.WriteFile(workDir+string(os.PathSeparator)+utils.LogDir+utils.RunDir+"result.txt", strings.Join(logs, "\n"))
+	utils.WriteFile(workDir+utils.LogDir+utils.RunDir+"result.txt", strings.Join(logs, "\n"))
 }

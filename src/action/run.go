@@ -33,11 +33,11 @@ func Run(scriptDir string, fileNames []string, langType string) {
 		utils.RunDir = utils.PathToRunName(scriptDir)
 	}
 
-	var report = model.TestReport{Path: scriptDir, Env: utils.GetOs(),
+	var report = model.TestReport{Path: utils.Prefer.WorkDir, Env: utils.GetOs(),
 		Pass: 0, Fail: 0, Total: 0, Cases: make([]model.CaseLog, 0)}
 
-	biz.ExeScripts(files, scriptDir, langType, &report)
+	biz.ExeScripts(files, utils.Prefer.WorkDir, langType, &report)
 
-	biz.CheckResults(files, scriptDir, langType, &report)
-	biz.Print(report, scriptDir)
+	biz.CheckResults(files, utils.Prefer.WorkDir, langType, &report)
+	biz.Print(report, utils.Prefer.WorkDir)
 }
