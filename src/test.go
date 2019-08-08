@@ -2,11 +2,26 @@ package main
 
 import (
 	"fmt"
-	"path"
+	"regexp"
 )
 
 func main() {
-	a := path.Ext("ss/1.txt")
+	text := ` df 
+ FAIL scripts/tc-200.py
+  Step1: FAIL   @step2010 第4次尝试登录
+    Checkpoint1: FAIL
+      Expect Result CODE: @step2010期望结果, 可以有多行
+      Actual Result N/A
 
-	fmt.Println(a)
+  Step2: FAIL   @step2104 再输入1次正确的密码
+    Checkpoint1: FAIL
+      Expect Result CODE: @step2104期望结果, 可以有多行
+      Actual Result N/A
+ 
+dd`
+
+	myExp := regexp.MustCompile("(?m:^\\s(?:PASS|FAIL) scripts/tc-200.py\n([\\s\\S]*?)((^\\s(PASS|FAIL))|\\z))")
+	arr := myExp.FindStringSubmatch(text)
+
+	fmt.Println(arr[1])
 }
