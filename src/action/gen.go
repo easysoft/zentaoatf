@@ -88,7 +88,7 @@ func DealwithTestCase(tc model.TestCase, langType string, singleFile bool, caseP
 	temp := fmt.Sprintf("\n%sCODE: 此处编写操作步骤代码\n", LangMap[langType]["commentsTag"])
 	srcCode = append(srcCode, temp)
 
-	readme := utils.ReadFile("xdoc/template/readme.tpl") + "\n"
+	readme := utils.ReadResData("res/template/readme.tpl") + "\n"
 
 	stepDisplayMaxWidth := 0
 	DealwithTestStepWidth(tc.Steps, &stepDisplayMaxWidth, StepWidth)

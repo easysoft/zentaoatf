@@ -59,6 +59,10 @@ func GetAllFiles(dirPth string, ext string, files *[]string) error {
 	for _, fi := range dir {
 		name := fi.Name()
 		if fi.IsDir() { // 目录, 递归遍历
+			if name == "res" || name == "xdoc" {
+				continue
+			}
+
 			dirs = append(dirs, dirPth+fi.Name())
 			GetAllFiles(dirPth+name+sep, ext, files)
 		} else {
@@ -101,7 +105,7 @@ func GetFailedFiles(resultFile string) ([]string, string, string, error) {
 
 	content := ReadFile(resultFile)
 
-	reg := regexp.MustCompile(`\nFAIL\s([^\n]+)\n`)
+	reg := regexp.MustCompile(`\n\sFAIL\s([^\n]+)\n`)
 	arr := reg.FindAllStringSubmatch(content, -1)
 
 	if len(arr) > 1 {

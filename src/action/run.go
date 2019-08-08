@@ -13,7 +13,7 @@ func Run(scriptDir string, fileNames []string, langType string) {
 	LangMap := script.LangMap
 	var files []string
 
-	if fileNames != nil && len(fileNames) > 0 { // pass a list
+	if fileNames != nil && len(fileNames) > 0 { // pass a list, cui always
 		if len(fileNames) == 1 {
 			if strings.Index(fileNames[0], ".suite") > -1 {
 				utils.RunMode = misc.SUITE
