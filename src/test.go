@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	text := utils.ReadFile("result.txt")
+	text := utils.ReadFile("logs\\suite\\result.txt")
 
 	str := "(?m:^\\s" + "FAIL\\sscripts\\\\tc-200.py" + "\\n([\\s\\S]*?)((^\\s(PASS|FAIL))|\\z))"
 	// myExp := regexp.MustCompile("(?m:^\\s(?:PASS|FAIL) scripts\\tc-200.py\n([\\s\\S]*?)((^\\s(PASS|FAIL))|\\z))")
