@@ -125,13 +125,10 @@ func ConvertWorkDir(p string) string {
 func ConvertRunDir(p string) string {
 	sepa := string(os.PathSeparator)
 
-	if p == "." {
-		return Prefer.WorkDir
-	}
-
-	//if IsRelativePath(p) {
-	//	temp = Prefer.WorkDir + p
+	//if p == "." {
+	//	return Prefer.WorkDir
 	//}
+
 	if !PathEndWithSeparator(p) {
 		p = p + sepa
 	}
