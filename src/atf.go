@@ -84,6 +84,7 @@ func main() {
 				runSet.Usage()
 				os.Exit(1)
 			} else {
+				scriptDir = utils.ConvertRunDir(scriptDir)
 				action.Run(scriptDir, files, langType)
 			}
 		}
@@ -111,6 +112,7 @@ func main() {
 				listSet.Usage()
 				os.Exit(1)
 			} else {
+				scriptDir = utils.ConvertRunDir(scriptDir)
 				action.List(scriptDir, langType)
 			}
 		}
@@ -120,6 +122,7 @@ func main() {
 				viewSet.Usage()
 				os.Exit(1)
 			} else {
+				scriptDir = utils.ConvertRunDir(scriptDir)
 				action.View(scriptDir, files, langType)
 			}
 		}

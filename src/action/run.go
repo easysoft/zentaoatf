@@ -6,19 +6,10 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/script"
 	"github.com/easysoft/zentaoatf/src/utils"
-	"os"
 	"strings"
 )
 
 func Run(scriptDir string, fileNames []string, langType string) {
-	if scriptDir == "." {
-		scriptDir = ""
-	}
-
-	if !utils.IsWin() && strings.Index(scriptDir, string(os.PathSeparator)) != 0 { // relate path on NO windows sys
-		scriptDir = utils.Prefer.WorkDir + scriptDir
-	}
-
 	LangMap := script.LangMap
 	var files []string
 
@@ -37,7 +28,7 @@ func Run(scriptDir string, fileNames []string, langType string) {
 
 		files, _ = utils.GetSpecifiedFiles(scriptDir, fileNames)
 	} else { // give a dir
-		files, _ = utils.GetAllFiles(scriptDir, LangMap[langType]["extName"])
+		utils.GetAllFiles(scriptDir, LangMap[langType]["extName"], &files)
 		utils.RunMode = misc.DIR
 		utils.RunDir = utils.PathToRunName(scriptDir)
 	}

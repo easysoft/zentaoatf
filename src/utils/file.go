@@ -47,35 +47,30 @@ func FileExist(path string) bool {
 	return exist
 }
 
-func GetAllFiles(dirPth string, ext string) (files []string, err error) {
+func GetAllFiles(dirPth string, ext string, files *[]string) error {
+	sep := string(os.PathSeparator)
+
 	var dirs []string
 	dir, err := ioutil.ReadDir(dirPth)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	for _, fi := range dir {
+		name := fi.Name()
 		if fi.IsDir() { // 目录, 递归遍历
 			dirs = append(dirs, dirPth+fi.Name())
-			GetAllFiles(dirPth+fi.Name(), ext)
+			GetAllFiles(dirPth+name+sep, ext, files)
 		} else {
 			// 过滤指定格式
-			ok := strings.HasSuffix(fi.Name(), "."+ext)
+			ok := strings.HasSuffix(name, "."+ext)
 			if ok {
-				files = append(files, dirPth+fi.Name())
+				*files = append(*files, dirPth+name)
 			}
 		}
 	}
 
-	// 读取子目录下文件
-	for _, table := range dirs {
-		temp, _ := GetAllFiles(table, ext)
-		for _, temp1 := range temp {
-			files = append(files, temp1)
-		}
-	}
-
-	return files, nil
+	return nil
 }
 
 func GetSpecifiedFiles(scriptDir string, fileNames []string) (files []string, err error) {
@@ -233,7 +228,7 @@ func GenArr(str string, checkSkip bool) (bool, [][]string) {
 			ret = append(ret, make([]string, 0))
 			indx++
 		} else {
-			if len(line) > 0 {
+			if len(line) > 0 && indx < len(ret) {
 				ret[indx] = append(ret[indx], line)
 			}
 		}

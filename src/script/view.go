@@ -5,11 +5,11 @@ import (
 )
 
 func View(scriptDir string, fileNames []string, langType string) {
-	var files []string
+	files := make([]string, 0)
 	if fileNames != nil && len(fileNames) > 0 {
 		files, _ = utils.GetSpecifiedFiles(scriptDir, fileNames)
 	} else {
-		files, _ = utils.GetAllFiles(scriptDir, langType)
+		utils.GetAllFiles(scriptDir, langType, &files)
 	}
 
 	for _, file := range files {

@@ -6,7 +6,8 @@ import (
 )
 
 func List(scriptDir string, langType string) {
-	files, _ := utils.GetAllFiles(scriptDir, langType)
+	files := make([]string, 0)
+	utils.GetAllFiles(scriptDir, langType, &files)
 
 	fmt.Printf("Totally %d test cases \n", len(files))
 

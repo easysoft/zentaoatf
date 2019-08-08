@@ -8,7 +8,6 @@ import (
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
-	"path/filepath"
 	"reflect"
 	"strings"
 	"sync"
@@ -41,7 +40,7 @@ func SetPreference(param string, val string, dumb bool) {
 			color.Cyan(I118Prt.Sprintf("set_preference", I118Prt.Sprintf("lang"), I118Prt.Sprintf(Prefer.Language)))
 		}
 	} else if param == "workDir" {
-		val = convertWorkDir(val)
+		val = ConvertWorkDir(val)
 
 		Prefer.WorkDir = val
 		updateWorkDirHistory()
@@ -62,7 +61,7 @@ func getInst() model.Preference {
 			yaml.Unmarshal(buf, &Prefer)
 		} else { // init
 			Prefer.Language = "en"
-			Prefer.WorkDir = convertWorkDir(".")
+			Prefer.WorkDir = ConvertWorkDir(".")
 
 			history := model.WorkHistory{Id: uuid.NewV4().String(), ProjectPath: Prefer.WorkDir}
 			Prefer.WorkHistories = []model.WorkHistory{history}
@@ -100,19 +99,6 @@ func PrintPreferenceToView() {
 		val := val.Field(i)
 		fmt.Fprintln(cmdView, fmt.Sprintf("  %s: %v", typeOfS.Field(i).Name, val.Interface()))
 	}
-}
-
-func convertWorkDir(path string) string {
-	if path == "." {
-		path, _ = filepath.Abs(`.`)
-		path = path + string(os.PathSeparator)
-	} else {
-		if strings.LastIndex(path, string(os.PathSeparator)) != len(path)-1 {
-			path = path + string(os.PathSeparator)
-		}
-	}
-
-	return path
 }
 
 func updateWorkDirHistory() {

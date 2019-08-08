@@ -100,6 +100,63 @@ func UpdateUrl(url string) string {
 	return url
 }
 
+// base on "."
+func ConvertWorkDir(p string) string {
+	sepa := string(os.PathSeparator)
+	var temp string
+	if p == "." {
+		temp, _ := filepath.Abs(`.`)
+		temp = temp + sepa
+		return temp
+	}
+
+	if IsRelativePath(p) {
+		temp, _ = filepath.Abs(`.`)
+		temp = temp + sepa + p
+	}
+	if !PathEndWithSeparator(p) {
+		temp = p + sepa
+	}
+
+	return temp
+}
+
+// base on workdir
+func ConvertRunDir(p string) string {
+	sepa := string(os.PathSeparator)
+	var temp string
+	if p == "." {
+		return Prefer.WorkDir
+	}
+
+	if IsRelativePath(p) {
+		temp = Prefer.WorkDir + p
+	}
+	if !PathEndWithSeparator(p) {
+		temp = p + sepa
+	}
+
+	return temp
+}
+
+func IsRelativePath(path string) bool {
+	var idx int
+
+	if IsWin() {
+		idx = strings.Index(path, ":")
+		return idx < 0
+	} else {
+		idx = strings.Index(path, string(os.PathSeparator))
+		return idx != 0
+	}
+}
+
+func PathEndWithSeparator(path string) bool {
+	idx := strings.LastIndex(path, string(os.PathSeparator))
+	ret := idx == len(path)-1
+	return ret
+}
+
 func ReadResData(path string) string {
 	isRelease := IsRelease()
 
