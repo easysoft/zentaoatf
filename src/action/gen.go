@@ -109,9 +109,8 @@ func DealwithTestCase(tc model.TestCase, langType string, singleFile bool, caseP
 		utils.WriteFile(expectFile, strings.Join(expects, "\n"))
 	}
 
-	template := utils.ReadFile(
-		fmt.Sprintf("xdoc%stemplate%s", string(os.PathSeparator), string(os.PathSeparator)) +
-			langType + ".tpl")
+	path := fmt.Sprintf("res%stemplate%s", string(os.PathSeparator), string(os.PathSeparator))
+	template := utils.ReadResData(path + langType + ".tpl")
 	content := fmt.Sprintf(template,
 		caseId, caseTitle,
 		strings.Join(steps, "\n"), expectsTxt,

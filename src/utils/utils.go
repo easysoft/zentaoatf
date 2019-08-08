@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"github.com/easysoft/zentaoatf/res"
 	"github.com/easysoft/zentaoatf/src/misc"
 	"os"
 	"path"
@@ -97,4 +98,18 @@ func UpdateUrl(url string) string {
 		url += "/"
 	}
 	return url
+}
+
+func ReadResData(path string) string {
+	isRelease := IsRelease()
+
+	var jsonStr string
+	if isRelease {
+		data, _ := res.Asset(path)
+		jsonStr = string(data)
+	} else {
+		jsonStr = ReadFile(path)
+	}
+
+	return jsonStr
 }

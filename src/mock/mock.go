@@ -8,10 +8,15 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 )
 
 var (
 	BaseUrl = "http://localhost:8888/"
+
+	caseJson     = fmt.Sprintf("res%sjson%scase-from-prodoct.json", string(os.PathSeparator), string(os.PathSeparator))
+	settingsJson = fmt.Sprintf("res%sjson%szentao-settings.json", string(os.PathSeparator), string(os.PathSeparator))
+	successJson  = fmt.Sprintf("res%sjson%ssuccess.json", string(os.PathSeparator), string(os.PathSeparator))
 )
 
 func GetUrl(uri string) string {
@@ -37,7 +42,7 @@ func Launch() {
 func importProject(w http.ResponseWriter, r *http.Request) {
 	printRequestBody(r.Body)
 
-	jsonString := utils.ReadFile("src/mock/json/case-from-prodoct.json")
+	jsonString := utils.ReadResData(caseJson)
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, jsonString)
@@ -46,7 +51,7 @@ func importProject(w http.ResponseWriter, r *http.Request) {
 func submitResult(w http.ResponseWriter, r *http.Request) {
 	printRequestBody(r.Body)
 
-	jsonString := utils.ReadFile("src/mock/json/success.json")
+	jsonString := utils.ReadResData(successJson)
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, jsonString)
@@ -55,7 +60,7 @@ func submitResult(w http.ResponseWriter, r *http.Request) {
 func reportBug(w http.ResponseWriter, r *http.Request) {
 	printRequestBody(r.Body)
 
-	jsonString := utils.ReadFile("src/mock/json/success.json")
+	jsonString := utils.ReadResData(successJson)
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, jsonString)
@@ -64,7 +69,7 @@ func reportBug(w http.ResponseWriter, r *http.Request) {
 func zentaoSettings(w http.ResponseWriter, r *http.Request) {
 	printRequestBody(r.Body)
 
-	jsonString := utils.ReadFile("src/mock/json/zentao-settings.json")
+	jsonString := utils.ReadResData(settingsJson)
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, jsonString)

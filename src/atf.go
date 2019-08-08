@@ -4,13 +4,14 @@ import (
 	"flag"
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/action"
+	"github.com/easysoft/zentaoatf/src/mock"
 	"github.com/easysoft/zentaoatf/src/model"
+	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"os"
 )
 
 func main() {
-	utils.RunFromCui = false
 	flagSets := make([]flag.FlagSet, 0)
 
 	var language string
@@ -26,6 +27,12 @@ func main() {
 
 	var path string
 	var files model.FlagSlice
+
+	mockSet := flag.NewFlagSet("atf mock - Start Mock Server", flag.ContinueOnError)
+	flagSets = append(flagSets, *mockSet)
+
+	cuiSet := flag.NewFlagSet("atf cui - Open CUI Window", flag.ContinueOnError)
+	flagSets = append(flagSets, *cuiSet)
 
 	preferenceSet := flag.NewFlagSet("atf set/reset - Set preferences", flag.ContinueOnError)
 	flagSets = append(flagSets, *preferenceSet)
@@ -67,6 +74,10 @@ func main() {
 	}
 
 	switch os.Args[1] {
+	case "mock":
+		mock.Launch()
+	case "cui":
+		ui.Cui()
 	case "run":
 		if err := runSet.Parse(os.Args[2:]); err == nil {
 			if scriptDir == "" || (langType == "" && len(files) == 0) {
@@ -138,7 +149,15 @@ func main() {
 }
 
 func init() {
-	utils.InitPreference()
+	if len(os.Args) > 1 {
+		if os.Args[1] == "cui" {
+			utils.RunFromCui = true
+		} else {
+			utils.RunFromCui = false
+		}
+
+		utils.InitPreference()
+	}
 }
 
 func usage(flagSets []flag.FlagSet) {

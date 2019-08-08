@@ -62,9 +62,10 @@ func ReadI18nJson(file string) string {
 
 }
 
-func InitResFromAsset(bytes []byte) {
+func InitRes(jsonPath string) {
 	var i18n I18n
-	json.Unmarshal(bytes, &i18n)
+	str := ReadI18nJson(jsonPath)
+	json.Unmarshal([]byte(str), &i18n)
 
 	msgArr := i18n.Messages
 	tag := language.MustParse(i18n.Language)
@@ -73,10 +74,10 @@ func InitResFromAsset(bytes []byte) {
 		message.SetString(tag, e.Id, e.Translation)
 	}
 }
-func InitRes(jsonPath string) {
+
+func InitResFromAsset(bytes []byte) {
 	var i18n I18n
-	str := ReadI18nJson(jsonPath)
-	json.Unmarshal([]byte(str), &i18n)
+	json.Unmarshal(bytes, &i18n)
 
 	msgArr := i18n.Messages
 	tag := language.MustParse(i18n.Language)

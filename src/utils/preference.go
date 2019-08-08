@@ -81,6 +81,11 @@ func PrintPreference() {
 	typeOfS := val.Type()
 	for i := 0; i < reflect.ValueOf(Prefer).NumField(); i++ {
 		val := val.Field(i)
+		name := typeOfS.Field(i).Name
+
+		if !RunFromCui && (name == "Width" || name == "Height" || name == "WorkHistories") {
+			continue
+		}
 		fmt.Printf("  %s: %v \n", typeOfS.Field(i).Name, val.Interface())
 	}
 }

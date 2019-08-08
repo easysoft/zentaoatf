@@ -2,35 +2,8 @@ package main
 
 import (
 	"github.com/easysoft/zentaoatf/src/ui"
-	"github.com/easysoft/zentaoatf/src/utils"
-	"github.com/jroimartin/gocui"
-	"log"
 )
 
 func main() {
-	utils.RunFromCui = true
-
-	g, err := gocui.NewGui(gocui.OutputNormal)
-	if err != nil {
-		log.Panicln(err)
-	}
-	defer g.Close()
-	if utils.IsWin() {
-		g.ASCII = true
-	}
-
-	g.Cursor = true
-	g.Mouse = true
-
-	utils.Cui = g
-
-	ui.InitMainPage()
-
-	if err := g.MainLoop(); err != nil && err != gocui.ErrQuit {
-		log.Panicln(err)
-	}
-}
-
-func init() {
-	utils.InitPreference()
+	ui.Cui()
 }
