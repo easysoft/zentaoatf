@@ -61,6 +61,7 @@ func GetCheckpointsResult(assert string, date string, caseLine string) string {
 	resultPath := utils.Prefer.WorkDir + utils.LogDir + logFolder(mode, name, date) + string(os.PathSeparator) + "result.txt"
 
 	content := utils.ReadFile(resultPath)
+	utils.PrintToCmd(content)
 
 	caseLine = strings.Replace(caseLine, " ", "\\s", -1)
 	caseLine = strings.Replace(caseLine, "\\", "\\\\", -1)
