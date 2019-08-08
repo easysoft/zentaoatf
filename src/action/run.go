@@ -30,6 +30,7 @@ func Run(scriptDir string, fileNames []string, langType string) {
 		files, _ = utils.GetSpecifiedFiles(scriptDir, fileNames)
 	} else { // give a dir
 		utils.GetAllFiles(scriptDir, LangMap[langType]["extName"], &files)
+		fmt.Printf("%v", scriptDir)
 		fmt.Printf("%v", files)
 		utils.RunMode = misc.DIR
 		utils.RunDir = utils.PathToRunName(scriptDir)
