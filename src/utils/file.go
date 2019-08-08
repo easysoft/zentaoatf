@@ -108,7 +108,7 @@ func GetFailedFiles(resultFile string) ([]string, string, string, error) {
 	reg := regexp.MustCompile(`\n\sFAIL\s([^\n]+)\n`)
 	arr := reg.FindAllStringSubmatch(content, -1)
 
-	if len(arr) > 1 {
+	if len(arr) > 0 {
 		for _, file := range arr {
 			if len(file) == 1 {
 				continue
