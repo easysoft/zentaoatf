@@ -7,7 +7,7 @@ import (
 
 func main() {
 	text := ` df 
- FAIL scripts/tc-200.py
+ FAIL scripts\tc-200.py
   Step1: FAIL   @step2010 第4次尝试登录
     Checkpoint1: FAIL
       Expect Result CODE: @step2010期望结果, 可以有多行
@@ -20,8 +20,8 @@ func main() {
  
 dd`
 
-	str := "(?m:^\\s" + "FAIL\\sscripts/tc-200.py" + "\\n([\\s\\S]*?)((^\\s(PASS|FAIL))|\\z))"
-	// myExp := regexp.MustCompile("(?m:^\\s(?:PASS|FAIL) scripts/tc-200.py\n([\\s\\S]*?)((^\\s(PASS|FAIL))|\\z))")
+	str := "(?m:^\\s" + "FAIL\\sscripts\\\\tc-200.py" + "\\n([\\s\\S]*?)((^\\s(PASS|FAIL))|\\z))"
+	// myExp := regexp.MustCompile("(?m:^\\s(?:PASS|FAIL) scripts\\tc-200.py\n([\\s\\S]*?)((^\\s(PASS|FAIL))|\\z))")
 
 	myExp := regexp.MustCompile(str)
 	arr := myExp.FindStringSubmatch(text)
