@@ -6,11 +6,10 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils"
 )
 
-func GetProductInfo(baseUrl string, productId string) *simplejson.Json {
+func ListCaseByProduct(baseUrl string, productId string) *simplejson.Json {
 	params := map[string]string{"productID": productId}
-
-	myurl := baseUrl + utils.GenSuperApiUri("product", "getById", params)
-	body, err := http.Get(myurl, nil)
+	url := baseUrl + utils.GenSuperApiUri("testcase", "getModuleCases", params)
+	body, err := http.Post(url, nil)
 
 	if err == nil {
 		json, _ := simplejson.NewJson([]byte(body))
@@ -23,6 +22,17 @@ func GetProductInfo(baseUrl string, productId string) *simplejson.Json {
 			return data
 		}
 	}
+
+	return nil
+}
+
+func ListCaseByTask(baseUrl string, taskId string) []byte {
+	url := baseUrl + "case.json"
+
+	params := make(map[string]string)
+	params["taskId"] = taskId
+
+	_, _ = http.Get(url, params)
 
 	return nil
 }

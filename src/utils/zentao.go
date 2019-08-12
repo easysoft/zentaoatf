@@ -16,7 +16,13 @@ func GenSuperApiUri(module string, methd string, params map[string]string) strin
 		paramStr += pkey + "=" + pval
 	}
 
-	uri := fmt.Sprintf("?m=api&f=getModel&module=%s&methodName=%s&params=%s", module, methd, paramStr)
+	var uri string
+	if RequestType == RequestTypePathInfo {
+		uri = fmt.Sprintf("api-getmodel-%s-%s-%s.json", module, methd, paramStr)
+	} else {
+		uri = fmt.Sprintf("?m=api&f=getmodel&module=%s&methodName=%s&params=%s", module, methd, paramStr)
+	}
+
 	fmt.Println(uri)
 	return uri
 }

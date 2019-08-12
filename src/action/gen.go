@@ -3,6 +3,7 @@ package action
 import (
 	"fmt"
 	"github.com/bitly/go-simplejson"
+	"github.com/easysoft/zentaoatf/src/biz"
 	"github.com/easysoft/zentaoatf/src/biz/zentao"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/script"
@@ -27,45 +28,47 @@ func GenFromCmd(url string, entityType string, entityVal string, langType string
 	var json *simplejson.Json
 	if entityType == "product" {
 		productJson := zentao.GetProductInfo(url, params["entityVal"])
-		name, _ = productJson.Get("title").String()
-		//json = zentao.ListCaseByProduct(url, params["entityVal"])
+		name, _ = productJson.Get("name").String()
+		json = zentao.ListCaseByProduct(url, params["entityVal"])
 	} else {
 		//taskJson := zentao.GetTaskInfo(url, params["entityVal"])
 		//name, _ = taskJson.Get("name").String()
 		//json = zentao.ListCaseByProduct(url, params["entityVal"])
 	}
 
-	count, err := Generate(json, url, entityType, entityVal, langType, singleFile, account, password)
-	if err == nil {
-		utils.SaveConfig("", url, params["entityType"], params["entityVal"], langType, singleFile,
-			name, account, password)
+	if json != nil {
+		count, err := Generate(json, url, entityType, entityVal, langType, singleFile, account, password)
+		if err == nil {
+			utils.SaveConfig("", url, params["entityType"], params["entityVal"], langType, singleFile,
+				name, account, password)
 
-		fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
-			count, utils.ScriptDir, utils.DateTimeStr(time.Now()))
-	} else {
-		fmt.Sprintf(err.Error())
+			fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
+				count, utils.ScriptDir, utils.DateTimeStr(time.Now()))
+		} else {
+			fmt.Sprintf(err.Error())
+		}
 	}
 }
 
-func Generate(json *simplejson.Json,
-	url string, entityType string, entityVal string, langType string, singleFile bool,
+func Generate(json *simplejson.Json, url string, entityType string, entityVal string, langType string, singleFile bool,
 	account string, password string) (int, error) {
-	//if json.Code != 1 {
-	//	return 0, errors.New("response code = %s")
-	//}
-	//
-	//casePaths := make([]string, 0)
-	//for _, testCase := range json.Cases {
-	//	DealwithTestCase(testCase, langType, singleFile, &casePaths)
-	//}
-	//biz.GenSuite(casePaths)
-	//
-	//return len(json.Cases), nil
+
+	mp, _ := json.Map()
+	casePaths := make([]string, 0)
+	for _, csJson := range mp {
+		if cs, ok := csJson.(map[string]interface{}); ok {
+			DealwithTestCase(cs, langType, singleFile, &casePaths)
+		}
+	}
+
+	biz.GenSuite(casePaths)
+
+	return len(mp), nil
 
 	return 0, nil
 }
 
-func DealwithTestCase(tc model.TestCase, langType string, singleFile bool, casePaths *[]string) {
+func DealwithTestCase(tc map[string]interface{}, langType string, singleFile bool, casePaths *[]string) {
 	LangMap := script.GetLangMap()
 	langs := ""
 	if LangMap[langType] == nil {
@@ -81,15 +84,15 @@ func DealwithTestCase(tc model.TestCase, langType string, singleFile bool, caseP
 		os.Exit(1)
 	}
 
-	StepWidth := 20
+	//StepWidth := 20
 
-	caseId := tc.Id
-	caseTitle := tc.Title
+	caseId := tc["id"].(string)
+	caseTitle := tc["title"]
 
-	scriptFile := fmt.Sprintf(utils.ScriptDir+"tc-%s.%s", strconv.Itoa(caseId), LangMap[langType]["extName"])
+	scriptFile := fmt.Sprintf(utils.ScriptDir+"tc-%s.%s", caseId, LangMap[langType]["extName"])
 	if utils.FileExist(scriptFile) {
 		scriptFile = fmt.Sprintf(utils.ScriptDir+"tc-%s.%s",
-			strconv.Itoa(caseId)+"-"+utils.DateTimeStrLong(time.Now()), LangMap[langType]["extName"])
+			caseId+"-"+utils.DateTimeStrLong(time.Now()), LangMap[langType]["extName"])
 	}
 
 	utils.MkDirIfNeeded(utils.Prefer.WorkDir + utils.ScriptDir)
@@ -107,14 +110,14 @@ func DealwithTestCase(tc model.TestCase, langType string, singleFile bool, caseP
 
 	readme := utils.ReadResData("res/template/readme.tpl") + "\n"
 
-	stepDisplayMaxWidth := 0
-	DealwithTestStepWidth(tc.Steps, &stepDisplayMaxWidth, StepWidth)
-
-	level := 1
-	checkPointIndex := 0
-	for _, ts := range tc.Steps {
-		DealwithTestStep(ts, langType, level, StepWidth, &checkPointIndex, &steps, &expects, &srcCode)
-	}
+	//stepDisplayMaxWidth := 0
+	//ComputerTestStepWidth(tc["steps], &stepDisplayMaxWidth, StepWidth)
+	//
+	//level := 1
+	//checkPointIndex := 0
+	//for _, ts := range tc.Steps {
+	//	DealwithTestStep(ts, langType, level, StepWidth, &checkPointIndex, &steps, &expects, &srcCode)
+	//}
 
 	var expectsTxt string
 	if singleFile {
@@ -139,7 +142,7 @@ func DealwithTestCase(tc model.TestCase, langType string, singleFile bool, caseP
 	utils.WriteFile(scriptFullPath, content)
 }
 
-func DealwithTestStepWidth(steps []model.TestStep, stepSDisplayMaxWidth *int, stepWidth int) {
+func ComputerTestStepWidth(steps []model.TestStep, stepSDisplayMaxWidth *int, stepWidth int) {
 	for _, ts := range steps {
 		length := len(strconv.Itoa(ts.Id))
 		if length > *stepSDisplayMaxWidth {
