@@ -1,18 +1,20 @@
 package http
 
 import (
+	"encoding/json"
+	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"io/ioutil"
 	"net/http"
 	"strings"
 )
 
-func Get(url string, params map[string]string) ([]byte, error) {
+func Get(url string, params map[string]string) (string, bool) {
 	client := &http.Client{}
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, err
+		return "", false
 	}
 
 	req.Header.Set("cookie", utils.SessionVar+"="+utils.SessionId)
@@ -29,17 +31,27 @@ func Get(url string, params map[string]string) ([]byte, error) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return "", false
 	}
 
-	body, _ := ioutil.ReadAll(resp.Body)
-	println(string(body))
+	bodyStr, _ := ioutil.ReadAll(resp.Body)
+	println(string(bodyStr))
+
+	var bodyJson model.ZentaoResponse
+	json.Unmarshal(bodyStr, &bodyJson)
 
 	defer resp.Body.Close()
-	return body, nil
+
+	status := bodyJson.Status
+	if status == "" { // 非嵌套结构
+		return string(bodyStr), true
+	} else { // 嵌套结构
+		dataStr := bodyJson.Data
+		return dataStr, status == "success"
+	}
 }
 
-func Post(url string, params map[string]string) ([]byte, error) {
+func Post(url string, params map[string]string) (string, bool) {
 	client := &http.Client{}
 
 	paramStr := ""
@@ -54,7 +66,7 @@ func Post(url string, params map[string]string) ([]byte, error) {
 
 	req, err := http.NewRequest("POST", url, strings.NewReader(paramStr))
 	if err != nil {
-		return nil, err
+		return "", false
 	}
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -62,12 +74,22 @@ func Post(url string, params map[string]string) ([]byte, error) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return "", false
 	}
 
-	body, _ := ioutil.ReadAll(resp.Body)
-	println(string(body))
+	bodyStr, _ := ioutil.ReadAll(resp.Body)
+	println(string(bodyStr))
+
+	var bodyJson model.ZentaoResponse
+	json.Unmarshal(bodyStr, &bodyJson)
 
 	defer resp.Body.Close()
-	return body, nil
+
+	status := bodyJson.Status
+	if status == "" { // 非嵌套结构
+		return string(bodyStr), true
+	} else { // 嵌套结构
+		dataStr := bodyJson.Data
+		return dataStr, status == "success"
+	}
 }

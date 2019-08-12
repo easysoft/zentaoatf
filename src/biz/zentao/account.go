@@ -16,18 +16,20 @@ func Login(baseUrl string, account string, password string) {
 	params["account"] = account
 	params["password"] = password
 
-	_, err := http.Post(url, params)
-	if err != nil {
-		fmt.Println(err.Error())
+	_, ok := http.Post(url, params)
+	if ok {
+		fmt.Println("succes to login")
+	} else {
+		fmt.Println("fail to login")
 	}
 }
 
 func GetConfig(baseUrl string) {
 	url := baseUrl + "?mode=getconfig"
 
-	body, err := http.Get(url, nil)
+	body, ok := http.Get(url, nil)
 
-	if err == nil {
+	if ok {
 		json, _ := simplejson.NewJson([]byte(body))
 
 		utils.SessionId, _ = json.Get("sessionID").String()
@@ -42,15 +44,8 @@ func GetConfig(baseUrl string) {
 func GetSession(baseUrl string) {
 	url := baseUrl + "api-getsessionid.json"
 
-	body, _ := http.Get(url, nil)
-
-	json, _ := simplejson.NewJson([]byte(body))
-	status, _ := json.Get("status").String()
-
-	pass := status == "" || status == "success" // some api not return a status
-
-	if pass {
-		dataStr, _ := json.Get("data").String()
+	dataStr, ok := http.Get(url, nil)
+	if ok {
 		data, _ := simplejson.NewJson([]byte(dataStr))
 
 		utils.SessionId, _ = data.Get("sessionID").String()

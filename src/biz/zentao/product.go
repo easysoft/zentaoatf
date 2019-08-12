@@ -11,20 +11,13 @@ func GetProductInfo(baseUrl string, productId string) model.Product {
 	params := map[string]string{"productID": productId}
 
 	myurl := baseUrl + utils.GenSuperApiUri("product", "getById", params)
-	bodyStr, err := http.Get(myurl, nil)
+	dataStr, ok := http.Get(myurl, nil)
 
-	if err == nil {
-		var bodyJson model.ZentaoResponse
-		json.Unmarshal(bodyStr, &bodyJson)
+	if ok {
+		var product model.Product
+		json.Unmarshal([]byte(dataStr), &product)
 
-		if bodyJson.Status == "success" {
-			dataStr := bodyJson.Data
-
-			var product model.Product
-			json.Unmarshal([]byte(dataStr), &product)
-
-			return product
-		}
+		return product
 	}
 
 	return model.Product{}
