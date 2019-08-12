@@ -180,4 +180,5 @@ func usage(flagSets []flag.FlagSet) {
 	}
 
 	utils.PrintSample()
+
 }
