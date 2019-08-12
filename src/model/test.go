@@ -2,18 +2,26 @@ package model
 
 import "github.com/easysoft/zentaoatf/src/misc"
 
+type Product struct {
+	Id   int
+	Code string
+	Name string
+}
+
 type TestCase struct {
-	Id    int
-	Title string
-	Steps []TestStep
+	Id      string
+	Title   string
+	Steps   map[int]TestStep
+	StepArr []TestStep
 }
 
 type TestStep struct {
-	TestCase
+	Id   string
+	Desc string
 
-	Expect       string
-	IsGroup      bool
-	IsCheckPoint bool
+	Expect string
+	Type   string
+	Parent string
 }
 
 type TestReport struct {

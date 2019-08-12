@@ -1,28 +1,31 @@
 package zentao
 
 import (
-	"github.com/bitly/go-simplejson"
+	"encoding/json"
 	"github.com/easysoft/zentaoatf/src/http"
+	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils"
 )
 
-func GetProductInfo(baseUrl string, productId string) *simplejson.Json {
+func GetProductInfo(baseUrl string, productId string) model.Product {
 	params := map[string]string{"productID": productId}
 
 	myurl := baseUrl + utils.GenSuperApiUri("product", "getById", params)
-	body, err := http.Get(myurl, nil)
+	bodyStr, err := http.Get(myurl, nil)
 
 	if err == nil {
-		json, _ := simplejson.NewJson([]byte(body))
+		var bodyJson model.ZentaoResponse
+		json.Unmarshal(bodyStr, &bodyJson)
 
-		status, _ := json.Get("status").String()
-		if status == "success" {
-			dataStr, _ := json.Get("data").String()
-			data, _ := simplejson.NewJson([]byte(dataStr))
+		if bodyJson.Status == "success" {
+			dataStr := bodyJson.Data
 
-			return data
+			var product model.Product
+			json.Unmarshal([]byte(dataStr), &product)
+
+			return product
 		}
 	}
 
-	return nil
+	return model.Product{}
 }

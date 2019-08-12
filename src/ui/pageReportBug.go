@@ -31,7 +31,7 @@ func InitReportBugPage() error {
 	y += 2
 	left := x + 2
 	right := left + LabelWidthSmall
-	titleLabel := NewLabelWidget("titleLabel", left, y+1, "Title")
+	titleLabel := NewLabelWidget("titleLabel", left, y+1, "Desc")
 	ViewMap["reportBug"] = append(ViewMap["reportBug"], titleLabel.Name())
 
 	left = right + Space
@@ -100,7 +100,7 @@ func reportBug(g *gocui.Gui, v *gocui.View) error {
 	if title == "" {
 		v, _ := utils.Cui.View("reportBugMsg")
 
-		color.New(color.FgMagenta).Fprintf(v, "Title cannot be empty")
+		color.New(color.FgMagenta).Fprintf(v, "Desc cannot be empty")
 		return nil
 	}
 

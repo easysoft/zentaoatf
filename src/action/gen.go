@@ -2,14 +2,12 @@ package action
 
 import (
 	"fmt"
-	"github.com/bitly/go-simplejson"
 	"github.com/easysoft/zentaoatf/src/biz"
 	"github.com/easysoft/zentaoatf/src/biz/zentao"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/script"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -25,19 +23,19 @@ func GenFromCmd(url string, entityType string, entityVal string, langType string
 	zentao.Login(url, account, password)
 
 	var name string
-	var json *simplejson.Json
+	var testcases []model.TestCase
 	if entityType == "product" {
-		productJson := zentao.GetProductInfo(url, params["entityVal"])
-		name, _ = productJson.Get("name").String()
-		json = zentao.ListCaseByProduct(url, params["entityVal"])
+		product := zentao.GetProductInfo(url, params["entityVal"])
+		name = product.Name
+		testcases = zentao.ListCaseByProduct(url, params["entityVal"])
 	} else {
 		//taskJson := zentao.GetTaskInfo(url, params["entityVal"])
 		//name, _ = taskJson.Get("name").String()
 		//json = zentao.ListCaseByProduct(url, params["entityVal"])
 	}
 
-	if json != nil {
-		count, err := Generate(json, url, entityType, entityVal, langType, singleFile, account, password)
+	if testcases != nil {
+		count, err := Generate(testcases, langType, singleFile, account, password)
 		if err == nil {
 			utils.SaveConfig("", url, params["entityType"], params["entityVal"], langType, singleFile,
 				name, account, password)
@@ -50,25 +48,20 @@ func GenFromCmd(url string, entityType string, entityVal string, langType string
 	}
 }
 
-func Generate(json *simplejson.Json, url string, entityType string, entityVal string, langType string, singleFile bool,
+func Generate(testcases []model.TestCase, langType string, singleFile bool,
 	account string, password string) (int, error) {
 
-	mp, _ := json.Map()
 	casePaths := make([]string, 0)
-	for _, csJson := range mp {
-		if cs, ok := csJson.(map[string]interface{}); ok {
-			DealwithTestCase(cs, langType, singleFile, &casePaths)
-		}
+	for _, cs := range testcases {
+		DealwithTestCase(cs, langType, singleFile, &casePaths)
 	}
 
 	biz.GenSuite(casePaths)
 
-	return len(mp), nil
-
-	return 0, nil
+	return len(testcases), nil
 }
 
-func DealwithTestCase(tc map[string]interface{}, langType string, singleFile bool, casePaths *[]string) {
+func DealwithTestCase(cs model.TestCase, langType string, singleFile bool, casePaths *[]string) {
 	LangMap := script.GetLangMap()
 	langs := ""
 	if LangMap[langType] == nil {
@@ -84,10 +77,8 @@ func DealwithTestCase(tc map[string]interface{}, langType string, singleFile boo
 		os.Exit(1)
 	}
 
-	//StepWidth := 20
-
-	caseId := tc["id"].(string)
-	caseTitle := tc["title"]
+	caseId := cs.Id
+	caseTitle := cs.Title
 
 	scriptFile := fmt.Sprintf(utils.ScriptDir+"tc-%s.%s", caseId, LangMap[langType]["extName"])
 	if utils.FileExist(scriptFile) {
@@ -110,14 +101,13 @@ func DealwithTestCase(tc map[string]interface{}, langType string, singleFile boo
 
 	readme := utils.ReadResData("res/template/readme.tpl") + "\n"
 
-	//stepDisplayMaxWidth := 0
-	//ComputerTestStepWidth(tc["steps], &stepDisplayMaxWidth, StepWidth)
-	//
-	//level := 1
-	//checkPointIndex := 0
-	//for _, ts := range tc.Steps {
-	//	DealwithTestStep(ts, langType, level, StepWidth, &checkPointIndex, &steps, &expects, &srcCode)
-	//}
+	StepWidth := 20
+	stepDisplayMaxWidth := 0
+	ComputerTestStepWidth(cs.StepArr, &stepDisplayMaxWidth, StepWidth)
+
+	for _, ts := range cs.StepArr {
+		DealwithTestStep(ts, langType, StepWidth, &steps, &expects, &srcCode)
+	}
 
 	var expectsTxt string
 	if singleFile {
@@ -144,7 +134,7 @@ func DealwithTestCase(tc map[string]interface{}, langType string, singleFile boo
 
 func ComputerTestStepWidth(steps []model.TestStep, stepSDisplayMaxWidth *int, stepWidth int) {
 	for _, ts := range steps {
-		length := len(strconv.Itoa(ts.Id))
+		length := len(ts.Id)
 		if length > *stepSDisplayMaxWidth {
 			*stepSDisplayMaxWidth = length
 		}
@@ -152,19 +142,24 @@ func ComputerTestStepWidth(steps []model.TestStep, stepSDisplayMaxWidth *int, st
 	*stepSDisplayMaxWidth += stepWidth // prefix space and @step
 }
 
-func DealwithTestStep(ts model.TestStep, langType string,
-	level int, stepWidth int, checkPointIndex *int,
+func DealwithTestStep(ts model.TestStep, langType string, stepWidth int,
 	steps *[]string, expects *[]string, srcCode *[]string) {
 	LangMap := script.GetLangMap()
 
-	isGroup := ts.IsGroup
-	isCheckPoint := ts.IsCheckPoint
+	isGroup := ts.Type == "group"
+	isCheckPoint := ts.Expect != ""
 
 	stepId := ts.Id
-	stepTitle := ts.Title
+	stepTitle := ts.Desc
 	stepExpect := ts.Expect
+	stepParent := ts.Parent
 
 	// 处理steps
+	preFixSpace := 3
+	if stepParent != "" && stepParent != "0" {
+		preFixSpace = 6
+	}
+
 	var stepType string
 	if isGroup {
 		stepType = "group"
@@ -172,13 +167,11 @@ func DealwithTestStep(ts model.TestStep, langType string,
 		stepType = "step"
 	}
 
-	stepIdent := stepType + strconv.Itoa(stepId)
+	stepIdent := stepType + stepId
 	if isCheckPoint {
 		stepIdent = "@" + stepIdent
-		*checkPointIndex++
 	}
 
-	preFixSpace := level * 3
 	postFixSpace := stepWidth - preFixSpace - len(stepIdent)
 
 	stepLine := fmt.Sprintf("%*s", preFixSpace, " ") + stepIdent
@@ -206,11 +199,5 @@ func DealwithTestStep(ts model.TestStep, langType string,
 		codeLine += LangMap[langType]["commentsTag"] + "CODE: 输出验证点实际结果\n"
 
 		*srcCode = append(*srcCode, codeLine)
-	}
-
-	if isGroup {
-		for _, tsChild := range ts.Steps {
-			DealwithTestStep(tsChild, langType, level+1, stepWidth, checkPointIndex, steps, expects, srcCode)
-		}
 	}
 }

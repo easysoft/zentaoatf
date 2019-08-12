@@ -2,9 +2,9 @@ package ui
 
 import (
 	"fmt"
-	"github.com/bitly/go-simplejson"
 	"github.com/easysoft/zentaoatf/src/action"
 	"github.com/easysoft/zentaoatf/src/biz/zentao"
+	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/jroimartin/gocui"
 	"strings"
@@ -126,8 +126,8 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 		params["entityType"] = "product"
 		params["entityVal"] = productId
 
-		productJson := zentao.GetProductInfo(url, productId)
-		name, _ = productJson.Get("name").String()
+		product := zentao.GetProductInfo(url, productId)
+		name = product.Name
 	} else {
 		params["entityType"] = "task"
 		params["entityVal"] = taskId
@@ -142,15 +142,14 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 
 	zentao.Login(url, account, password)
 
-	var json *simplejson.Json
-	//if productId != "" {
-	//	json = zentao.ListCaseByProduct(url, productId)
-	//} else {
-	//	json = zentao.ListCaseByTask(url, taskId)
-	//}
+	var cases []model.TestCase
+	if productId != "" {
+		cases = zentao.ListCaseByProduct(url, productId)
+	} else {
+		cases = zentao.ListCaseByTask(url, taskId)
+	}
 
-	count, err := action.Generate(json, url, params["entityType"], params["entityVal"], language, singleFile,
-		account, password)
+	count, err := action.Generate(cases, language, singleFile, account, password)
 	if err == nil {
 		utils.SaveConfig("", url, params["entityType"], params["entityVal"], language, singleFile,
 			name, account, password)
