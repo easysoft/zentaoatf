@@ -36,6 +36,8 @@ var (
 	CmdViewHeight = 10
 
 	CuiRunOutputView = "panelFileContent"
+
+	RequestTypePathInfo = "PATH_INFO"
 )
 
 var ZendaoSettings model.ZentaoSettings
@@ -47,3 +49,5 @@ var MainViewHeight int
 
 var SessionVar string
 var SessionId string
+var RequestType string
+var RequestFix string

@@ -7,7 +7,7 @@ import (
 )
 
 func GetProductInfo(baseUrl string, productId string) *simplejson.Json {
-	url := baseUrl + "product-browse-" + productId + ".json"
+	url := baseUrl + utils.GenApiUri("product", "view", productId)
 	body, err := http.Get(url, nil)
 
 	if err == nil {
