@@ -7,5 +7,8 @@ type Config struct {
 	LangType   string
 	SingleFile bool
 
+	Account  string
+	Password string
+
 	ProjectName string
 }

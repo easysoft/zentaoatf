@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"github.com/easysoft/zentaoatf/src/biz/zentao"
 )
 
 func main() {
@@ -15,6 +15,5 @@ func main() {
 	//
 	//fmt.Println(arr[1])
 
-	a := "."
-	fmt.Println(a == ".")
+	zentao.GetSession()
 }

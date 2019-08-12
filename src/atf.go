@@ -24,6 +24,8 @@ func main() {
 	var zentaoUrl string
 	var entityType string
 	var entityVal string
+	var account string
+	var password string
 
 	var path string
 	var files model.FlagSlice
@@ -56,6 +58,8 @@ func main() {
 	genSet.StringVar(&entityVal, "v", "", "product code or task id")
 	genSet.StringVar(&langType, "l", "", "Script Language like python, php etc.")
 	genSet.BoolVar(&singleFile, "s", false, "Save ExpectResult in same file file or not")
+	genSet.StringVar(&account, "a", "", "Zentao login account")
+	genSet.StringVar(&password, "p", "", "Zentao login password")
 
 	listSet := flag.NewFlagSet("atf list - List test scripts", flag.ContinueOnError)
 	flagSets = append(flagSets, *listSet)
@@ -103,7 +107,7 @@ func main() {
 				genSet.Usage()
 				os.Exit(1)
 			} else {
-				action.GenFromCmd(zentaoUrl, entityType, entityVal, langType, singleFile)
+				action.GenFromCmd(zentaoUrl, entityType, entityVal, langType, singleFile, account, password)
 			}
 		}
 	case "list":

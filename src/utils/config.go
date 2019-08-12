@@ -6,8 +6,10 @@ import (
 	"io/ioutil"
 )
 
-func SaveConfig(dir string, url string, entityType string, entityVal string, langType string, singleFile bool, name string) error {
-	config := model.Config{Url: url, EntityType: entityType, LangType: langType, SingleFile: singleFile, ProjectName: name}
+func SaveConfig(dir string, url string, entityType string, entityVal string, langType string, singleFile bool, name string,
+	account string, password string) error {
+	config := model.Config{Url: url, EntityType: entityType, LangType: langType, SingleFile: singleFile, ProjectName: name,
+		Account: account, Password: password}
 
 	config.EntityType = entityType
 	config.EntityVal = entityVal
@@ -18,12 +20,6 @@ func SaveConfig(dir string, url string, entityType string, entityVal string, lan
 
 	data, _ := yaml.Marshal(&config)
 	ioutil.WriteFile(dir+ConfigFile, data, 0666)
-
-	return nil
-}
-
-func SaveEmptyConfig(dir string) error {
-	SaveConfig(dir, "", "", "", "", false, "")
 
 	return nil
 }
@@ -41,10 +37,17 @@ func ReadConfig(dir string) model.Config {
 	var config model.Config
 
 	if !FileExist(configPath) {
-		SaveEmptyConfig(dir)
+		saveEmptyConfig(dir)
 	}
 	buf, _ := ioutil.ReadFile(configPath)
 	yaml.Unmarshal(buf, &config)
 
 	return config
+}
+
+func saveEmptyConfig(dir string) error {
+	SaveConfig(dir, "", "", "", "", false, "",
+		"", "")
+
+	return nil
 }

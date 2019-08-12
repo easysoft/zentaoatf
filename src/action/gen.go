@@ -1,11 +1,10 @@
 package action
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/biz"
-	httpClient "github.com/easysoft/zentaoatf/src/http"
+	"github.com/easysoft/zentaoatf/src/biz/zentao"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/script"
 	"github.com/easysoft/zentaoatf/src/utils"
@@ -15,24 +14,24 @@ import (
 	"time"
 )
 
-func GenFromCmd(url string, entityType string, entityVal string, langType string, singleFile bool) {
+func GenFromCmd(url string, entityType string, entityVal string, langType string, singleFile bool,
+	account string, password string) {
 	params := make(map[string]string)
 
 	params["entityType"] = entityType
 	params["entityVal"] = entityVal
 
-	jsonObj, _ := json.Marshal(params)
-
 	url = utils.UpdateUrl(url)
-	json, err := httpClient.Post(url+utils.UrlImportProject, string(jsonObj))
+	zentao.GetSession()
 
-	if err == nil {
-		Generate(json, url, entityType, entityVal, langType, singleFile)
-	}
+	//if err == nil {
+	//	Generate(json, url, entityType, entityVal, langType, singleFile, account, password)
+	//}
 }
 
 func Generate(json model.Response,
-	url string, entityType string, entityVal string, langType string, singleFile bool) (int, error) {
+	url string, entityType string, entityVal string, langType string, singleFile bool,
+	account string, password string) (int, error) {
 	if json.Code != 1 {
 		return 0, errors.New("response code = %s")
 	}
@@ -43,7 +42,7 @@ func Generate(json model.Response,
 	}
 	biz.GenSuite(casePaths)
 
-	utils.SaveConfig("", url, entityType, entityVal, langType, singleFile, json.Name)
+	utils.SaveConfig("", url, entityType, entityVal, langType, singleFile, json.Name, account, password)
 
 	return len(json.Cases), nil
 }
