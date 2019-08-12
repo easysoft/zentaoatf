@@ -1,9 +1,8 @@
 package action
 
 import (
-	"errors"
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/biz"
+	"github.com/bitly/go-simplejson"
 	"github.com/easysoft/zentaoatf/src/biz/zentao"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/script"
@@ -22,29 +21,48 @@ func GenFromCmd(url string, entityType string, entityVal string, langType string
 	params["entityVal"] = entityVal
 
 	url = utils.UpdateUrl(url)
-	zentao.GetSession()
+	zentao.Login(url, account, password)
 
-	//if err == nil {
-	//	Generate(json, url, entityType, entityVal, langType, singleFile, account, password)
-	//}
+	var name string
+	var json *simplejson.Json
+	if entityType == "product" {
+		productJson := zentao.GetProductInfo(url, params["entityVal"])
+		name, _ = productJson.Get("title").String()
+		//json = zentao.ListCaseByProduct(url, params["entityVal"])
+	} else {
+		//taskJson := zentao.GetTaskInfo(url, params["entityVal"])
+		//name, _ = taskJson.Get("name").String()
+		//json = zentao.ListCaseByProduct(url, params["entityVal"])
+	}
+
+	count, err := Generate(json, url, entityType, entityVal, langType, singleFile, account, password)
+	if err == nil {
+		utils.SaveConfig("", url, params["entityType"], params["entityVal"], langType, singleFile,
+			name, account, password)
+
+		fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
+			count, utils.ScriptDir, utils.DateTimeStr(time.Now()))
+	} else {
+		fmt.Sprintf(err.Error())
+	}
 }
 
-func Generate(json model.Response,
+func Generate(json *simplejson.Json,
 	url string, entityType string, entityVal string, langType string, singleFile bool,
 	account string, password string) (int, error) {
-	if json.Code != 1 {
-		return 0, errors.New("response code = %s")
-	}
+	//if json.Code != 1 {
+	//	return 0, errors.New("response code = %s")
+	//}
+	//
+	//casePaths := make([]string, 0)
+	//for _, testCase := range json.Cases {
+	//	DealwithTestCase(testCase, langType, singleFile, &casePaths)
+	//}
+	//biz.GenSuite(casePaths)
+	//
+	//return len(json.Cases), nil
 
-	casePaths := make([]string, 0)
-	for _, testCase := range json.Cases {
-		DealwithTestCase(testCase, langType, singleFile, &casePaths)
-	}
-	biz.GenSuite(casePaths)
-
-	utils.SaveConfig("", url, entityType, entityVal, langType, singleFile, json.Name, account, password)
-
-	return len(json.Cases), nil
+	return 0, nil
 }
 
 func DealwithTestCase(tc model.TestCase, langType string, singleFile bool, casePaths *[]string) {

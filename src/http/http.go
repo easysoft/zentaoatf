@@ -1,88 +1,73 @@
 package http
 
 import (
-	"encoding/json"
-	"errors"
-	"fmt"
-	"github.com/bitly/go-simplejson"
-	"github.com/easysoft/zentaoatf/src/model"
+	"github.com/easysoft/zentaoatf/src/utils"
 	"io/ioutil"
 	"net/http"
 	"strings"
 )
 
-func Get(url string, params map[string]string) (bool, *simplejson.Json, error) {
+func Get(url string, params map[string]string) ([]byte, error) {
 	client := &http.Client{}
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return false, nil, err
+		return nil, err
 	}
 
+	req.Header.Set("cookie", utils.SessionVar+"="+utils.SessionId)
+
+	q := req.URL.Query()
+	q.Add(utils.SessionVar, utils.SessionId)
 	if params != nil {
-		q := req.URL.Query()
 		for pkey, pval := range params {
 			q.Add(pkey, pval)
 		}
-		req.URL.RawQuery = q.Encode()
-	}
 
-	//req.Header.Set("Cookie", "name=anny")
+	}
+	req.URL.RawQuery = q.Encode()
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return false, nil, err
+		return nil, err
 	}
 
 	body, _ := ioutil.ReadAll(resp.Body)
-	json, err := simplejson.NewJson([]byte(body))
-	status, err := json.Get("status").String()
-
-	pass := status == "success"
-
-	if err != nil && pass {
-		return false, nil, err
-	}
-
-	dataStr, _ := json.Get("data").String()
-	data, _ := simplejson.NewJson([]byte(dataStr))
-
-	//if respModel.Code != 1 {
-	//	return ret, errors.New(fmt.Sprintf("request fail, code %d", respModel.Code))
-	//}
+	println(string(body))
 
 	defer resp.Body.Close()
-	return pass, data, nil
+	return body, nil
 }
 
-func Post(url string, jsonStr string) (model.Response, error) {
+func Post(url string, params map[string]string) ([]byte, error) {
 	client := &http.Client{}
-	var ret model.Response
 
-	req, err := http.NewRequest("POST", url, strings.NewReader(jsonStr))
-	if err != nil {
-		return ret, err
+	paramStr := ""
+	idx := 0
+	for pkey, pval := range params {
+		if idx > 0 {
+			paramStr += "&"
+		}
+		paramStr = paramStr + pkey + "=" + pval
+		idx++
 	}
 
-	req.Header.Set("Content-Type", "application/json")
-	//req.Header.Set("Cookie", "name=anny")
+	req, err := http.NewRequest("POST", url, strings.NewReader(paramStr))
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("cookie", utils.SessionVar+"="+utils.SessionId)
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return model.Response{}, err
+		return nil, err
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		// handle error
-	}
-
-	var respModel model.Response
-	json.Unmarshal(body, &respModel)
-	if respModel.Code != 1 {
-		return ret, errors.New(fmt.Sprintf("request fail, code %d", respModel.Code))
-	}
+	body, _ := ioutil.ReadAll(resp.Body)
+	println(string(body))
 
 	defer resp.Body.Close()
-	return respModel, nil
+	return body, nil
 }

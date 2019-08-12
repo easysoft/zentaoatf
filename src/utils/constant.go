@@ -44,3 +44,6 @@ var RunDir string
 var RunFromCui bool
 var Cui *gocui.Gui
 var MainViewHeight int
+
+var SessionVar string
+var SessionId string

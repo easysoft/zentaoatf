@@ -54,7 +54,7 @@ func main() {
 	genSet := flag.NewFlagSet("atf gen - Generate test scripts from zentao test cases", flag.ContinueOnError)
 	flagSets = append(flagSets, *genSet)
 	genSet.StringVar(&zentaoUrl, "u", "", "Zentao project url")
-	genSet.StringVar(&entityType, "t", "", "Import from type, 'product' or 'task'")
+	genSet.StringVar(&entityType, "t", "", "Import type, 'product' or 'task'")
 	genSet.StringVar(&entityVal, "v", "", "product code or task id")
 	genSet.StringVar(&langType, "l", "", "Script Language like python, php etc.")
 	genSet.BoolVar(&singleFile, "s", false, "Save ExpectResult in same file file or not")
@@ -103,7 +103,8 @@ func main() {
 		}
 	case "gen":
 		if err := genSet.Parse(os.Args[2:]); err == nil {
-			if zentaoUrl == "" || langType == "" || entityType == "" && entityVal == "" {
+			if zentaoUrl == "" || langType == "" || entityType == "" || entityVal == "" ||
+				account == "" || password == "" {
 				genSet.Usage()
 				os.Exit(1)
 			} else {

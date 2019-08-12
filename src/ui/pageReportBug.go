@@ -1,17 +1,12 @@
 package ui
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/easysoft/zentaoatf/src/biz"
-	httpClient "github.com/easysoft/zentaoatf/src/http"
-	"github.com/easysoft/zentaoatf/src/mock"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/fatih/color"
 	"github.com/jroimartin/gocui"
 	"strconv"
 	"strings"
-	"time"
 )
 
 var filedValMap map[string]int
@@ -129,18 +124,17 @@ func reportBug(g *gocui.Gui, v *gocui.View) error {
 	priorityId, _ := strconv.Atoi(priorityStr)
 	params["priorityId"] = priorityId
 
-	jsonStr, _ := json.Marshal(params)
-	url := utils.UpdateUrl(mock.BaseUrl)
+	//url := utils.UpdateUrl(mock.BaseUrl)
 
-	json, e := httpClient.Post(url+utils.UrlReportBug, string(jsonStr))
-	if e != nil {
-		utils.PrintToCmd(e.Error())
-		return nil
-	} else {
-		if json.Code == 1 {
-			utils.PrintToCmd(fmt.Sprintf("success to report bug at %s", utils.DateTimeStr(time.Now())))
-		}
-	}
+	//pass, _, e := httpClient.Post(url+utils.UrlReportBug, string(jsonStr))
+	//if e != nil {
+	//	utils.PrintToCmd(e.Error())
+	//	return nil
+	//} else {
+	//	if pass {
+	//		utils.PrintToCmd(fmt.Sprintf("success to report bug at %s", utils.DateTimeStr(time.Now())))
+	//	}
+	//}
 
 	return nil
 }

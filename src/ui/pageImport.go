@@ -2,9 +2,13 @@ package ui
 
 import (
 	"fmt"
+	"github.com/bitly/go-simplejson"
+	"github.com/easysoft/zentaoatf/src/action"
+	"github.com/easysoft/zentaoatf/src/biz/zentao"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"github.com/jroimartin/gocui"
 	"strings"
+	"time"
 )
 
 func InitImportPage() error {
@@ -108,7 +112,7 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 
 	url := strings.TrimSpace(urlView.ViewBuffer())
 
-	productCode := strings.TrimSpace(productView.Buffer())
+	productId := strings.TrimSpace(productView.Buffer())
 	taskId := strings.TrimSpace(taskView.Buffer())
 	language := strings.TrimSpace(languageView.Buffer())
 	account := strings.TrimSpace(accountView.Buffer())
@@ -116,40 +120,46 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 	singleFileStr := strings.TrimSpace(singleFileView.Buffer())
 	singleFile := ParseRadioVal(singleFileStr)
 
+	var name string
 	params := make(map[string]string)
-	if productCode != "" {
+	if productId != "" {
 		params["entityType"] = "product"
-		params["entityVal"] = productCode
+		params["entityVal"] = productId
+
+		productJson := zentao.GetProductInfo(url, productId)
+		name, _ = productJson.Get("name").String()
 	} else {
 		params["entityType"] = "task"
 		params["entityVal"] = taskId
+
+		//taskJson := zentao.GetTaskInfo(url, taskId)
+		//name, _ = taskJson.Get("name").String()
 	}
 
 	url = utils.UpdateUrl(url)
 	utils.PrintToCmd(fmt.Sprintf("#atf gen -u %s -t %s -v %s -l %s -s %t -a %s -p %s",
 		url, params["entityType"], params["entityVal"], language, singleFile, account, password))
 
-	//zentao.GetSession()
-	//if e != nil {
-	//	utils.PrintToCmd(e.Error())
-	//	return nil
+	zentao.Login(url, account, password)
+
+	var json *simplejson.Json
+	//if productId != "" {
+	//	json = zentao.ListCaseByProduct(url, productId)
 	//} else {
-	//	str, err := json.String()
-	//	if err != nil {
-	//		utils.PrintToCmd(e.Error())
-	//		return nil
-	//	}
-	//	utils.PrintToCmd(str)
+	//	json = zentao.ListCaseByTask(url, taskId)
 	//}
 
-	//count, err := action.Generate(json, url, params["entityType"], params["entityVal"], language, singleFile,
-	//	account, password)
-	//if err == nil {
-	//	utils.PrintToCmd(fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
-	//		count, utils.ScriptDir, utils.DateTimeStr(time.Now())))
-	//} else {
-	//	utils.PrintToCmd(err.Error())
-	//}
+	count, err := action.Generate(json, url, params["entityType"], params["entityVal"], language, singleFile,
+		account, password)
+	if err == nil {
+		utils.SaveConfig("", url, params["entityType"], params["entityVal"], language, singleFile,
+			name, account, password)
+
+		utils.PrintToCmd(fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
+			count, utils.ScriptDir, utils.DateTimeStr(time.Now())))
+	} else {
+		utils.PrintToCmd(err.Error())
+	}
 
 	return nil
 }
