@@ -3,7 +3,7 @@ package action
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
-	"github.com/easysoft/zentaoatf/src/script"
+	"github.com/easysoft/zentaoatf/src/service/script"
 	testingService "github.com/easysoft/zentaoatf/src/service/test"
 	"github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/const"
@@ -14,7 +14,7 @@ import (
 )
 
 func Run(scriptDir string, fileNames []string, langType string) {
-	LangMap := script.LangMap
+	LangMap := scriptService.LangMap
 	var files []string
 
 	if fileNames != nil && len(fileNames) > 0 { // pass a list, cui always

@@ -2,7 +2,7 @@ package testingService
 
 import (
 	"encoding/json"
-	httpClient "github.com/easysoft/zentaoatf/src/client"
+	httpClient "github.com/easysoft/zentaoatf/src/service/client"
 	"github.com/easysoft/zentaoatf/src/utils/common"
 	config2 "github.com/easysoft/zentaoatf/src/utils/config"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"

@@ -3,7 +3,7 @@ package action
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
-	"github.com/easysoft/zentaoatf/src/script"
+	"github.com/easysoft/zentaoatf/src/service/script"
 	testingService "github.com/easysoft/zentaoatf/src/service/test"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	"github.com/easysoft/zentaoatf/src/utils/common"
@@ -69,7 +69,7 @@ func Generate(testcases []model.TestCase, langType string, singleFile bool,
 }
 
 func DealwithTestCase(cs model.TestCase, langType string, singleFile bool, casePaths *[]string) {
-	LangMap := script.GetLangMap()
+	LangMap := scriptService.GetLangMap()
 	langs := ""
 	if LangMap[langType] == nil {
 		i := 0
@@ -153,7 +153,7 @@ func ComputerTestStepWidth(steps []model.TestStep, stepSDisplayMaxWidth *int, st
 
 func DealwithTestStep(ts model.TestStep, langType string, stepWidth int,
 	steps *[]string, expects *[]string, srcCode *[]string) {
-	LangMap := script.GetLangMap()
+	LangMap := scriptService.GetLangMap()
 
 	isGroup := ts.Type == "group"
 	isCheckPoint := ts.Expect != ""

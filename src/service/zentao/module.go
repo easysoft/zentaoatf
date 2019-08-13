@@ -2,8 +2,8 @@ package zentaoService
 
 import (
 	"encoding/json"
-	"github.com/easysoft/zentaoatf/src/client"
 	"github.com/easysoft/zentaoatf/src/model"
+	"github.com/easysoft/zentaoatf/src/service/client"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
 )
 

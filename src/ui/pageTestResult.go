@@ -2,7 +2,7 @@ package ui
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/script"
+	"github.com/easysoft/zentaoatf/src/service/script"
 	testingService "github.com/easysoft/zentaoatf/src/service/test"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
@@ -48,7 +48,7 @@ func showRun(g *gocui.Gui, v *gocui.View) error {
 	setViewLineSelected("panelResultList", selectResultEvent)
 	setViewLineSelected("panelCaseList", selectCaseEvent)
 
-	results := script.LoadTestResults(CurrAsset)
+	results := scriptService.LoadTestResults(CurrAsset)
 	fmt.Fprintln(panelResultList, strings.Join(results, "\n"))
 
 	return nil
@@ -65,7 +65,7 @@ func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
 
 	line, _ := GetSelectedLine(v, ".*")
 	CurrResult = line
-	content := script.GetTestResult(CurrAsset, line)
+	content := scriptService.GetTestResult(CurrAsset, line)
 
 	panelCaseList, _ := g.View("panelCaseList")
 	panelCaseList.Clear()
@@ -84,7 +84,7 @@ func selectCaseEvent(g *gocui.Gui, v *gocui.View) error {
 
 	caseLine, _ := GetSelectedLine(v, ".*")
 
-	content := script.GetCheckpointsResult(CurrAsset, CurrResult, caseLine)
+	content := scriptService.GetCheckpointsResult(CurrAsset, CurrResult, caseLine)
 	panelCaseResult, _ := g.View("panelCaseResult")
 	panelCaseResult.Clear()
 	fmt.Fprintln(panelCaseResult, content)
@@ -107,7 +107,7 @@ func clearPanelCaseResult() {
 }
 
 func toUploadResult(g *gocui.Gui, v *gocui.View) error {
-	caseList := script.GetTestResult(CurrAsset, CurrResult)
+	caseList := scriptService.GetTestResult(CurrAsset, CurrResult)
 
 	testingService.SubmitResult(caseList)
 

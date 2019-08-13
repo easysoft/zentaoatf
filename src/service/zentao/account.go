@@ -3,7 +3,7 @@ package zentaoService
 import (
 	"fmt"
 	"github.com/bitly/go-simplejson"
-	"github.com/easysoft/zentaoatf/src/client"
+	"github.com/easysoft/zentaoatf/src/service/client"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 )
 

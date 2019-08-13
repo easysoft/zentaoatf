@@ -3,7 +3,7 @@ package ui
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/action"
-	"github.com/easysoft/zentaoatf/src/script"
+	"github.com/easysoft/zentaoatf/src/service/script"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/file"
 	print2 "github.com/easysoft/zentaoatf/src/utils/print"
@@ -19,7 +19,7 @@ var contentViews []string
 
 func InitTestPage() error {
 	// left
-	caseFiles, suitesFiles := script.LoadTestAssets()
+	caseFiles, suitesFiles := scriptService.LoadTestAssets()
 	dir := vari.Prefer.WorkDir + constant.ScriptDir
 
 	content := "Test Suite:" + "\n"

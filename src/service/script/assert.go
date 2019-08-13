@@ -1,4 +1,4 @@
-package script
+package scriptService
 
 import (
 	config2 "github.com/easysoft/zentaoatf/src/utils/config"
