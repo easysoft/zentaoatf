@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 <<TC
-caseId:   %d
-title:    %s
-steps:    %s
+caseId:         %s
+caseIdInTask:   %s
+title:          %s
+steps:          %s
 
 expects:
 %s

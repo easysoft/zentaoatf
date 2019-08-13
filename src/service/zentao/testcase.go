@@ -46,9 +46,12 @@ func ListCaseByTask(baseUrl string, taskId string) []model.TestCase {
 
 		caseArr := make([]model.TestCase, 0)
 		for _, cs := range task.Runs {
-			id := cs.Case
-			csWithSteps := GetCaseById(baseUrl, id)
-			caseArr = append(caseArr, model.TestCase{Id: id, Title: cs.Title, StepArr: csWithSteps.StepArr})
+			caseId := cs.Case
+			caseInTaskId := cs.Id
+
+			csWithSteps := GetCaseById(baseUrl, caseId)
+			caseArr = append(caseArr, model.TestCase{Id: caseId, IdInTask: caseInTaskId,
+				Title: cs.Title, StepArr: csWithSteps.StepArr})
 		}
 
 		return caseArr

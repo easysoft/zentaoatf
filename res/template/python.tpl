@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 '''
 <<TC
-caseId:   %d
-title:    %s
-steps:    %s
+caseId:         %s
+caseIdInTask:   %s
+title:          %s
+steps:          %s
 
 expects:
 %s

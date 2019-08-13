@@ -21,16 +21,22 @@ type TestTask struct {
 	Code string
 	Name string
 
-	Runs    map[int]TestCase
-	CaseArr []TestCase
+	Runs map[int]TestCaseInTask
+}
+
+type TestCaseInTask struct {
+	Id    string // runId in task
+	Title string
+	Case  string // real caseId
 }
 
 type TestCase struct {
-	Id      string
+	Id       string // runId in task
+	IdInTask string
+
 	Title   string
 	Steps   map[int]TestStep
 	StepArr []TestStep
-	Case    string // caseId in task
 }
 
 type TestStep struct {

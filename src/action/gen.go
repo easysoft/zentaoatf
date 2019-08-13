@@ -14,7 +14,6 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -85,6 +84,7 @@ func DealwithTestCase(cs model.TestCase, langType string, singleFile bool, caseP
 	}
 
 	caseId := cs.Id
+	caseInTaskId := cs.IdInTask
 	caseTitle := cs.Title
 
 	scriptFile := fmt.Sprintf(constant.ScriptDir+"tc-%s.%s", caseId, LangMap[langType]["extName"])
@@ -129,9 +129,8 @@ func DealwithTestCase(cs model.TestCase, langType string, singleFile bool, caseP
 	path := fmt.Sprintf("res%stemplate%s", string(os.PathSeparator), string(os.PathSeparator))
 	template := zentaoUtils.ReadResData(path + langType + ".tpl")
 
-	id, _ := strconv.Atoi(caseId)
 	content := fmt.Sprintf(template,
-		id, caseTitle,
+		caseId, caseInTaskId, caseTitle,
 		strings.Join(steps, "\n"), expectsTxt,
 		readme,
 		strings.Join(srcCode, "\n"))

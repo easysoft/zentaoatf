@@ -1,7 +1,8 @@
 <?%s
 <<<TC
-caseId:   100
-title:    用户登录
+caseId:         100
+caseIdInTask:   200
+title:          用户登录
 steps:
    -
    	id: step1000 # 可省略
