@@ -8,7 +8,7 @@ import (
 )
 
 func GetProductInfo(baseUrl string, productId string) model.Product {
-	params := map[string]string{"productID": productId}
+	params := [][]string{{"productID", productId}}
 
 	myurl := baseUrl + utils.GenSuperApiUri("product", "getById", params)
 	dataStr, ok := client.Get(myurl, nil)

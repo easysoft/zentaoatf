@@ -8,6 +8,12 @@ type Product struct {
 	Name string
 }
 
+type Module struct {
+	Id   int
+	Code string
+	Name string
+}
+
 type TestTask struct {
 	Id   int
 	Code string

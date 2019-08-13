@@ -6,14 +6,22 @@ import (
 	"strconv"
 )
 
-func GenSuperApiUri(module string, methd string, params map[string]string) string {
+func GenSuperApiUri(module string, methd string, params [][]string) string {
+	var sep string
+	if RequestType == RequestTypePathInfo {
+		sep = ","
+	} else {
+		sep = "&"
+	}
+
 	paramStr := ""
 	i := 0
-	for pkey, pval := range params {
+	for _, p := range params {
 		if i > 0 {
-			paramStr += "&"
+			paramStr += sep
 		}
-		paramStr += pkey + "=" + pval
+		paramStr += p[0] + "=" + p[1]
+		i++
 	}
 
 	var uri string

@@ -8,7 +8,7 @@ import (
 )
 
 func GetTaskInfo(baseUrl string, taskId string) model.TestTask {
-	params := map[string]string{"taskID": taskId}
+	params := [][]string{{"taskID", taskId}}
 
 	myurl := baseUrl + utils.GenSuperApiUri("testtask", "getById", params)
 	dataStr, ok := client.Get(myurl, nil)

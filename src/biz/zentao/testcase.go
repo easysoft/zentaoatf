@@ -10,7 +10,10 @@ import (
 )
 
 func ListCaseByProduct(baseUrl string, productId string) []model.TestCase {
-	params := map[string]string{"productID": productId}
+	modules := ListCaseModule(baseUrl, productId)
+	_ = modules
+
+	params := [][]string{{"productID", productId}}
 	url := baseUrl + utils.GenSuperApiUri("testcase", "getModuleCases", params)
 	dataStr, ok := client.Get(url, nil)
 
@@ -55,7 +58,7 @@ func ListCaseByTask(baseUrl string, taskId string) []model.TestCase {
 }
 
 func GetCaseById(baseUrl string, caseId string) model.TestCase {
-	params := map[string]string{"caseID": caseId}
+	params := [][]string{{"caseID", caseId}}
 	url := baseUrl + utils.GenSuperApiUri("testcase", "getById", params)
 	dataStr, ok := client.Post(url, nil)
 
