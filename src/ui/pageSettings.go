@@ -1,7 +1,7 @@
 package ui
 
 import (
-	"github.com/easysoft/zentaoatf/src/utils"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 )
 
@@ -21,10 +21,10 @@ func InitSettingsPage() error {
 }
 
 func keybindingSettingsButton() error {
-	if err := utils.Cui.SetKeybinding("import", gocui.MouseLeft, gocui.ModNone, toggleSettingsButton); err != nil {
+	if err := vari.Cui.SetKeybinding("import", gocui.MouseLeft, gocui.ModNone, toggleSettingsButton); err != nil {
 		return err
 	}
-	if err := utils.Cui.SetKeybinding("switch", gocui.MouseLeft, gocui.ModNone, toggleSettingsButton); err != nil {
+	if err := vari.Cui.SetKeybinding("switch", gocui.MouseLeft, gocui.ModNone, toggleSettingsButton); err != nil {
 		return err
 	}
 
@@ -47,7 +47,7 @@ func toggleSettingsButton(g *gocui.Gui, v *gocui.View) error {
 
 func SelectSettingsButton() {
 	for _, name := range settingsButtons {
-		v, err := utils.Cui.View(name)
+		v, err := vari.Cui.View(name)
 
 		if err == nil {
 			if v.Name() == CurrSettingsButton {
@@ -70,7 +70,7 @@ func init() {
 
 func DestorySettingsPage() {
 	for _, v := range ViewMap["settings"] {
-		utils.Cui.DeleteView(v)
-		utils.Cui.DeleteKeybindings(v)
+		vari.Cui.DeleteView(v)
+		vari.Cui.DeleteKeybindings(v)
 	}
 }

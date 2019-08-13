@@ -3,7 +3,7 @@ package client
 import (
 	"encoding/json"
 	"github.com/easysoft/zentaoatf/src/model"
-	"github.com/easysoft/zentaoatf/src/utils"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -17,10 +17,10 @@ func Get(url string, params map[string]string) (string, bool) {
 		return "", false
 	}
 
-	req.Header.Set("cookie", utils.SessionVar+"="+utils.SessionId)
+	req.Header.Set("cookie", vari.SessionVar+"="+vari.SessionId)
 
 	q := req.URL.Query()
-	q.Add(utils.SessionVar, utils.SessionId)
+	q.Add(vari.SessionVar, vari.SessionId)
 	if params != nil {
 		for pkey, pval := range params {
 			q.Add(pkey, pval)
@@ -70,7 +70,7 @@ func Post(url string, params map[string]string) (string, bool) {
 	}
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("cookie", utils.SessionVar+"="+utils.SessionId)
+	req.Header.Set("cookie", vari.SessionVar+"="+vari.SessionId)
 
 	resp, err := client.Do(req)
 	if err != nil {

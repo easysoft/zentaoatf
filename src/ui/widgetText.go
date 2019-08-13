@@ -2,7 +2,7 @@ package ui
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/utils"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 )
 
@@ -27,7 +27,7 @@ func NewTextWidget(name string, x, y, w int, text string) *gocui.View {
 }
 
 func (w *TextWidget) Layout() (*gocui.View, error) {
-	v, err := utils.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+TextHeight)
+	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+TextHeight)
 	if err != nil {
 		if err != gocui.ErrUnknownView {
 			return nil, err

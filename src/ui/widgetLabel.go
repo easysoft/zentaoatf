@@ -2,7 +2,7 @@ package ui
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/utils"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 )
 
@@ -36,7 +36,7 @@ func NewLabelWidgetAutoWidth(name string, x, y int, label string) *gocui.View {
 }
 
 func (w *LabelWidget) Layout() (*gocui.View, error) {
-	v, err := utils.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+LabelHeight)
+	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+LabelHeight)
 	if err != nil {
 		if err != gocui.ErrUnknownView {
 			return nil, err

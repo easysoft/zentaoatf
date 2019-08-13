@@ -4,7 +4,11 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/action"
 	"github.com/easysoft/zentaoatf/src/model"
-	"github.com/easysoft/zentaoatf/src/utils"
+	config2 "github.com/easysoft/zentaoatf/src/utils/config"
+	"github.com/easysoft/zentaoatf/src/utils/date"
+	print2 "github.com/easysoft/zentaoatf/src/utils/print"
+	string2 "github.com/easysoft/zentaoatf/src/utils/string"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 	"time"
 )
@@ -13,12 +17,12 @@ var CurrProjectId string
 var projectHistories []model.WorkHistory
 
 func InitProjectsPage() error {
-	his := utils.Prefer.WorkHistories[0]
+	his := vari.Prefer.WorkHistories[0]
 	id, _, _ := getProjectInfo(his)
 	CurrProjectId = id
 
 	y := 2
-	for _, his := range utils.Prefer.WorkHistories {
+	for _, his := range vari.Prefer.WorkHistories {
 		id, label, _ := getProjectInfo(his)
 
 		hisView := NewLabelWidgetAutoWidth(id, 0, y, label)
@@ -32,9 +36,9 @@ func InitProjectsPage() error {
 }
 
 func keybindingProjectsButton() error {
-	for _, his := range utils.Prefer.WorkHistories {
+	for _, his := range vari.Prefer.WorkHistories {
 		id, _, _ := getProjectInfo(his)
-		if err := utils.Cui.SetKeybinding(id, gocui.MouseLeft, gocui.ModNone, toggleProjectsButton); err != nil {
+		if err := vari.Cui.SetKeybinding(id, gocui.MouseLeft, gocui.ModNone, toggleProjectsButton); err != nil {
 			return err
 		}
 	}
@@ -50,10 +54,10 @@ func toggleProjectsButton(g *gocui.Gui, v *gocui.View) error {
 }
 
 func SelectProjectsButton() {
-	for _, his := range utils.Prefer.WorkHistories {
+	for _, his := range vari.Prefer.WorkHistories {
 		id, _, _ := getProjectInfo(his)
 
-		v, err := utils.Cui.View(id)
+		v, err := vari.Cui.View(id)
 		if err == nil {
 			if id == CurrProjectId {
 				v.Highlight = true
@@ -72,7 +76,7 @@ func SelectProjectsButton() {
 }
 
 func showWitchButton() error {
-	maxX, _ := utils.Cui.Size()
+	maxX, _ := vari.Cui.Size()
 
 	switchButton := NewButtonWidgetAutoWidth("switchButton", maxX-15, 1, "Switch To", switchProject)
 	ViewMap["projects"] = append(ViewMap["projects"], switchButton.Name())
@@ -80,12 +84,12 @@ func showWitchButton() error {
 	return nil
 }
 func switchProject(g *gocui.Gui, v *gocui.View) error {
-	for _, his := range utils.Prefer.WorkHistories {
+	for _, his := range vari.Prefer.WorkHistories {
 		id, label, path := getProjectInfo(his)
 		if id == CurrProjectId {
 			action.SwitchWorkDir(path)
-			utils.PrintToCmd(fmt.Sprintf("success to switch to project %s: %s at %s",
-				label, path, utils.DateTimeStr(time.Now())))
+			print2.PrintToCmd(fmt.Sprintf("success to switch to project %s: %s at %s",
+				label, path, dateUtils.DateTimeStr(time.Now())))
 			break
 		}
 	}
@@ -102,14 +106,14 @@ func getProjectInfo(his model.WorkHistory) (string, string, string) {
 	if his.EntityType != "" {
 		label = his.ProjectName
 	} else {
-		label = utils.PathSimple(his.ProjectPath)
+		label = string2.PathSimple(his.ProjectPath)
 	}
 
 	return id, label, path
 }
 
 func printForSwitch(his model.WorkHistory) {
-	config := utils.ReadProjectConfig(his.ProjectPath)
+	config := config2.ReadProjectConfig(his.ProjectPath)
 	name := config.ProjectName
 	if name == "" {
 		name = "No Name"
@@ -120,7 +124,7 @@ func printForSwitch(his model.WorkHistory) {
 	str = fmt.Sprintf(str, name, his.ProjectPath, config.Url, config.EntityType, config.EntityVal,
 		config.LangType, !config.SingleFile)
 
-	utils.PrintToMainNoScroll(str)
+	print2.PrintToMainNoScroll(str)
 }
 
 func init() {
@@ -129,7 +133,7 @@ func init() {
 
 func DestoryProjectsPage() {
 	for _, v := range ViewMap["projects"] {
-		utils.Cui.DeleteView(v)
-		utils.Cui.DeleteKeybindings(v)
+		vari.Cui.DeleteView(v)
+		vari.Cui.DeleteKeybindings(v)
 	}
 }

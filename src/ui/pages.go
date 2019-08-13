@@ -1,11 +1,12 @@
 package ui
 
 import (
-	"github.com/easysoft/zentaoatf/src/utils"
+	print2 "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 )
 
 func DestoryLeftPages() {
-	utils.ClearSide()
+	print2.ClearSide()
 
 	DestoryTestPage()
 	DestoryProjectsPage()
@@ -17,7 +18,7 @@ func DestoryLeftPages() {
 }
 
 func DestoryRightPages() {
-	mainView, err := utils.Cui.View("main")
+	mainView, err := vari.Cui.View("main")
 	if err == nil {
 		mainView.Clear()
 	}

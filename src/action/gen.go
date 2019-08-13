@@ -2,11 +2,17 @@ package action
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/biz"
-	"github.com/easysoft/zentaoatf/src/biz/zentao"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/script"
-	"github.com/easysoft/zentaoatf/src/utils"
+	testingService "github.com/easysoft/zentaoatf/src/service/test"
+	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
+	"github.com/easysoft/zentaoatf/src/utils/common"
+	"github.com/easysoft/zentaoatf/src/utils/config"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	"github.com/easysoft/zentaoatf/src/utils/date"
+	"github.com/easysoft/zentaoatf/src/utils/file"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
+	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"os"
 	"strconv"
 	"strings"
@@ -20,29 +26,29 @@ func GenFromCmd(url string, entityType string, entityVal string, langType string
 	params["entityType"] = entityType
 	params["entityVal"] = entityVal
 
-	url = utils.UpdateUrl(url)
-	zentao.Login(url, account, password)
+	url = commonUtils.UpdateUrl(url)
+	zentaoService.Login(url, account, password)
 
 	var name string
 	var testcases []model.TestCase
 	if entityType == "product" {
-		product := zentao.GetProductInfo(url, params["entityVal"])
+		product := zentaoService.GetProductInfo(url, params["entityVal"])
 		name = product.Name
-		testcases = zentao.ListCaseByProduct(url, params["entityVal"])
+		testcases = zentaoService.ListCaseByProduct(url, params["entityVal"])
 	} else {
-		task := zentao.GetTaskInfo(url, params["entityVal"])
+		task := zentaoService.GetTaskInfo(url, params["entityVal"])
 		name = task.Name
-		testcases = zentao.ListCaseByTask(url, params["entityVal"])
+		testcases = zentaoService.ListCaseByTask(url, params["entityVal"])
 	}
 
 	if testcases != nil {
 		count, err := Generate(testcases, langType, singleFile, account, password)
 		if err == nil {
-			utils.SaveConfig("", url, params["entityType"], params["entityVal"], langType, singleFile,
+			configUtils.SaveConfig("", url, params["entityType"], params["entityVal"], langType, singleFile,
 				name, account, password)
 
 			fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
-				count, utils.ScriptDir, utils.DateTimeStr(time.Now()))
+				count, constant.ScriptDir, dateUtils.DateTimeStr(time.Now()))
 		} else {
 			fmt.Sprintf(err.Error())
 		}
@@ -57,7 +63,7 @@ func Generate(testcases []model.TestCase, langType string, singleFile bool,
 		DealwithTestCase(cs, langType, singleFile, &casePaths)
 	}
 
-	biz.GenSuite(casePaths)
+	testingService.GenSuite(casePaths)
 
 	return len(testcases), nil
 }
@@ -81,15 +87,15 @@ func DealwithTestCase(cs model.TestCase, langType string, singleFile bool, caseP
 	caseId := cs.Id
 	caseTitle := cs.Title
 
-	scriptFile := fmt.Sprintf(utils.ScriptDir+"tc-%s.%s", caseId, LangMap[langType]["extName"])
-	if utils.FileExist(scriptFile) {
-		scriptFile = fmt.Sprintf(utils.ScriptDir+"tc-%s.%s",
-			caseId+"-"+utils.DateTimeStrLong(time.Now()), LangMap[langType]["extName"])
+	scriptFile := fmt.Sprintf(constant.ScriptDir+"tc-%s.%s", caseId, LangMap[langType]["extName"])
+	if fileUtils.FileExist(scriptFile) {
+		scriptFile = fmt.Sprintf(constant.ScriptDir+"tc-%s.%s",
+			caseId+"-"+dateUtils.DateTimeStrLong(time.Now()), LangMap[langType]["extName"])
 	}
 
-	utils.MkDirIfNeeded(utils.Prefer.WorkDir + utils.ScriptDir)
+	fileUtils.MkDirIfNeeded(vari.Prefer.WorkDir + constant.ScriptDir)
 	*casePaths = append(*casePaths, scriptFile)
-	scriptFullPath := utils.Prefer.WorkDir + scriptFile
+	scriptFullPath := vari.Prefer.WorkDir + scriptFile
 
 	steps := make([]string, 0)
 	expects := make([]string, 0)
@@ -100,7 +106,7 @@ func DealwithTestCase(cs model.TestCase, langType string, singleFile bool, caseP
 	temp := fmt.Sprintf("\n%sCODE: 此处编写操作步骤代码\n", LangMap[langType]["commentsTag"])
 	srcCode = append(srcCode, temp)
 
-	readme := utils.ReadResData("res/template/readme.tpl") + "\n"
+	readme := zentaoUtils.ReadResData("res/template/readme.tpl") + "\n"
 
 	StepWidth := 20
 	stepDisplayMaxWidth := 0
@@ -114,14 +120,14 @@ func DealwithTestCase(cs model.TestCase, langType string, singleFile bool, caseP
 	if singleFile {
 		expectsTxt = strings.Join(expects, "\n")
 	} else {
-		expectFile := utils.ScriptToExpectName(scriptFullPath)
+		expectFile := zentaoUtils.ScriptToExpectName(scriptFullPath)
 
 		expectsTxt = "@file\n"
-		utils.WriteFile(expectFile, strings.Join(expects, "\n"))
+		fileUtils.WriteFile(expectFile, strings.Join(expects, "\n"))
 	}
 
 	path := fmt.Sprintf("res%stemplate%s", string(os.PathSeparator), string(os.PathSeparator))
-	template := utils.ReadResData(path + langType + ".tpl")
+	template := zentaoUtils.ReadResData(path + langType + ".tpl")
 
 	id, _ := strconv.Atoi(caseId)
 	content := fmt.Sprintf(template,
@@ -132,7 +138,7 @@ func DealwithTestCase(cs model.TestCase, langType string, singleFile bool, caseP
 
 	//fmt.Println(content)
 
-	utils.WriteFile(scriptFullPath, content)
+	fileUtils.WriteFile(scriptFullPath, content)
 }
 
 func ComputerTestStepWidth(steps []model.TestStep, stepSDisplayMaxWidth *int, stepWidth int) {

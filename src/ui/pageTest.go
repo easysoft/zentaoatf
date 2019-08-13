@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/action"
 	"github.com/easysoft/zentaoatf/src/script"
-	"github.com/easysoft/zentaoatf/src/utils"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	"github.com/easysoft/zentaoatf/src/utils/file"
+	print2 "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 	"strings"
 )
@@ -17,7 +20,7 @@ var contentViews []string
 func InitTestPage() error {
 	// left
 	caseFiles, suitesFiles := script.LoadTestAssets()
-	dir := utils.Prefer.WorkDir + utils.ScriptDir
+	dir := vari.Prefer.WorkDir + constant.ScriptDir
 
 	content := "Test Suite:" + "\n"
 	for _, suitePath := range suitesFiles {
@@ -30,7 +33,7 @@ func InitTestPage() error {
 		caseName := strings.Replace(casePath, dir, "", -1)
 		content += "  " + caseName + "\n"
 	}
-	utils.PrintToSide(content)
+	print2.PrintToSide(content)
 
 	// right
 	setViewScroll("side")
@@ -51,10 +54,10 @@ func selectAssetEvent(g *gocui.Gui, v *gocui.View) error {
 	}
 	line = strings.TrimSpace(line)
 	if strings.Index(line, ".") < 0 {
-		utils.PrintToMainNoScroll("")
+		print2.PrintToMainNoScroll("")
 		return nil
 	}
-	CurrAsset = utils.ScriptDir + line
+	CurrAsset = constant.ScriptDir + line
 
 	// show
 	if len(tabs) == 0 {
@@ -69,8 +72,8 @@ func selectAssetEvent(g *gocui.Gui, v *gocui.View) error {
 }
 
 func showTab() error {
-	g := utils.Cui
-	x := utils.LeftWidth + 1
+	g := vari.Cui
+	x := constant.LeftWidth + 1
 	tabContentView := NewLabelWidgetAutoWidth("tabContentView", x, 0, "Content")
 	ViewMap["testing"] = append(ViewMap["testing"], tabContentView.Name())
 	tabs = append(tabs, tabContentView.Name())
@@ -97,8 +100,8 @@ func showContent(g *gocui.Gui, v *gocui.View) error {
 		panelFileContent.Clear()
 	} else {
 		maxX, _ := g.Size()
-		panelFileContent = NewPanelWidget(utils.CuiRunOutputView, utils.LeftWidth, 2,
-			maxX-utils.LeftWidth-1, utils.MainViewHeight, "")
+		panelFileContent = NewPanelWidget(constant.CuiRunOutputView, constant.LeftWidth, 2,
+			maxX-constant.LeftWidth-1, vari.MainViewHeight, "")
 		ViewMap["testing"] = append(ViewMap["testing"], panelFileContent.Name())
 		contentViews = append(contentViews, panelFileContent.Name())
 		setViewScroll(panelFileContent.Name())
@@ -110,7 +113,7 @@ func showContent(g *gocui.Gui, v *gocui.View) error {
 
 	panelFileContent.Clear()
 	panelFileContent.SetOrigin(0, 0)
-	content := utils.ReadFile(CurrAsset)
+	content := fileUtils.ReadFile(CurrAsset)
 	fmt.Fprintln(panelFileContent, content)
 
 	return nil
@@ -125,27 +128,27 @@ func run(g *gocui.Gui, v *gocui.View) error {
 		return err
 	}
 
-	utils.PrintToCmd(fmt.Sprintf("#atf run -d %s -f %s", utils.Prefer.WorkDir, CurrAsset))
-	output, _ := g.View(utils.CuiRunOutputView)
+	print2.PrintToCmd(fmt.Sprintf("#atf run -d %s -f %s", vari.Prefer.WorkDir, CurrAsset))
+	output, _ := g.View(constant.CuiRunOutputView)
 	output.Clear()
 
-	action.Run(utils.Prefer.WorkDir, []string{CurrAsset}, "")
+	action.Run(vari.Prefer.WorkDir, []string{CurrAsset}, "")
 
 	return nil
 }
 
 func DestoryTestPage() {
-	utils.Cui.DeleteKeybindings("side")
+	vari.Cui.DeleteKeybindings("side")
 	for _, v := range ViewMap["testing"] {
-		utils.Cui.DeleteView(v)
-		utils.Cui.DeleteKeybindings(v)
+		vari.Cui.DeleteView(v)
+		vari.Cui.DeleteKeybindings(v)
 	}
 	tabs = []string{}
 }
 
 func DestoryContentPanel() {
 	for _, v := range contentViews {
-		utils.Cui.DeleteView(v)
-		utils.Cui.DeleteKeybindings(v)
+		vari.Cui.DeleteView(v)
+		vari.Cui.DeleteKeybindings(v)
 	}
 }

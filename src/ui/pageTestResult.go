@@ -2,9 +2,10 @@ package ui
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/biz"
 	"github.com/easysoft/zentaoatf/src/script"
-	"github.com/easysoft/zentaoatf/src/utils"
+	testingService "github.com/easysoft/zentaoatf/src/service/test"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 	"strings"
 )
@@ -18,19 +19,19 @@ func showRun(g *gocui.Gui, v *gocui.View) error {
 	DestoryContentPanel()
 	HighlightTab(v.Name(), tabs)
 
-	h := utils.MainViewHeight / 2
+	h := vari.MainViewHeight / 2
 	maxX, _ := g.Size()
 
-	panelResultList := NewPanelWidget("panelResultList", utils.LeftWidth, 2, 50, h, "")
+	panelResultList := NewPanelWidget("panelResultList", constant.LeftWidth, 2, 50, h, "")
 	ViewMap["testing"] = append(ViewMap["testing"], panelResultList.Name())
 	runViews = append(runViews, panelResultList.Name())
 
-	panelCaseList := NewPanelWidget("panelCaseList", utils.LeftWidth, h+2, 50, utils.MainViewHeight-h, "")
+	panelCaseList := NewPanelWidget("panelCaseList", constant.LeftWidth, h+2, 50, vari.MainViewHeight-h, "")
 	ViewMap["testing"] = append(ViewMap["testing"], panelCaseList.Name())
 	runViews = append(runViews, panelCaseList.Name())
 
-	panelCaseResult := NewPanelWidget("panelCaseResult", utils.LeftWidth+50, 2,
-		maxX-utils.LeftWidth-51, utils.MainViewHeight, "")
+	panelCaseResult := NewPanelWidget("panelCaseResult", constant.LeftWidth+50, 2,
+		maxX-constant.LeftWidth-51, vari.MainViewHeight, "")
 	ViewMap["testing"] = append(ViewMap["testing"], panelCaseResult.Name())
 	runViews = append(runViews, panelCaseResult.Name())
 
@@ -98,17 +99,17 @@ func selectCaseEvent(g *gocui.Gui, v *gocui.View) error {
 }
 
 func clearPanelCaseResult() {
-	panelCaseResult, _ := utils.Cui.View("panelCaseResult")
+	panelCaseResult, _ := vari.Cui.View("panelCaseResult")
 	if panelCaseResult != nil {
 		panelCaseResult.Clear()
 	}
-	utils.Cui.DeleteView("bugButton")
+	vari.Cui.DeleteView("bugButton")
 }
 
 func toUploadResult(g *gocui.Gui, v *gocui.View) error {
 	caseList := script.GetTestResult(CurrAsset, CurrResult)
 
-	biz.SubmitResult(caseList)
+	testingService.SubmitResult(caseList)
 
 	return nil
 }
@@ -121,7 +122,7 @@ func toReportBug(g *gocui.Gui, v *gocui.View) error {
 
 func DestoryRunPanel() {
 	for _, v := range runViews {
-		utils.Cui.DeleteView(v)
-		utils.Cui.DeleteKeybindings(v)
+		vari.Cui.DeleteView(v)
+		vari.Cui.DeleteKeybindings(v)
 	}
 }

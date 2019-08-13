@@ -2,7 +2,7 @@ package ui
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/utils"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 )
 
@@ -25,13 +25,13 @@ func NewTabWidget(name string, x, y int, label string) *gocui.View {
 }
 
 func (w *TabWidget) Layout() (*gocui.View, error) {
-	v, err := utils.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+LabelHeight)
+	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+LabelHeight)
 	if err != nil {
 		if err != gocui.ErrUnknownView {
 			return nil, err
 		}
 
-		if err := utils.Cui.SetKeybinding(w.name, gocui.MouseLeft, gocui.ModNone, ToggleTab); err != nil {
+		if err := vari.Cui.SetKeybinding(w.name, gocui.MouseLeft, gocui.ModNone, ToggleTab); err != nil {
 			return nil, err
 		}
 
@@ -52,7 +52,7 @@ func ToggleTab(g *gocui.Gui, v *gocui.View) error {
 
 func ShowTab() {
 	for _, name := range Tabs {
-		v, err := utils.Cui.View(name)
+		v, err := vari.Cui.View(name)
 
 		if err == nil {
 			if v.Name() == CurrTab {

@@ -2,11 +2,14 @@ package action
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/biz"
-	"github.com/easysoft/zentaoatf/src/misc"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/script"
-	"github.com/easysoft/zentaoatf/src/utils"
+	testingService "github.com/easysoft/zentaoatf/src/service/test"
+	"github.com/easysoft/zentaoatf/src/utils/common"
+	"github.com/easysoft/zentaoatf/src/utils/const"
+	"github.com/easysoft/zentaoatf/src/utils/file"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
+	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"strings"
 )
 
@@ -17,30 +20,30 @@ func Run(scriptDir string, fileNames []string, langType string) {
 	if fileNames != nil && len(fileNames) > 0 { // pass a list, cui always
 		if len(fileNames) == 1 {
 			if strings.Index(fileNames[0], ".suite") > -1 {
-				utils.RunMode = misc.SUITE
+				vari.RunMode = constant.SUITE
 			} else {
-				utils.RunMode = misc.SCRIPT
+				vari.RunMode = constant.SCRIPT
 			}
-			utils.RunDir = utils.PathToRunName(fileNames[0])
+			vari.RunDir = zentaoUtils.PathToRunName(fileNames[0])
 		} else {
-			utils.RunMode = misc.BATCH
-			utils.RunDir = utils.PathToRunName("")
+			vari.RunMode = constant.BATCH
+			vari.RunDir = zentaoUtils.PathToRunName("")
 		}
 
-		files, _ = utils.GetSpecifiedFiles(scriptDir, fileNames)
+		files, _ = fileUtils.GetSpecifiedFiles(scriptDir, fileNames)
 	} else { // give a dir
-		utils.GetAllFiles(scriptDir, LangMap[langType]["extName"], &files)
+		fileUtils.GetAllFiles(scriptDir, LangMap[langType]["extName"], &files)
 		fmt.Printf("%v", scriptDir)
 		fmt.Printf("%v", files)
-		utils.RunMode = misc.DIR
-		utils.RunDir = utils.PathToRunName(scriptDir)
+		vari.RunMode = constant.DIR
+		vari.RunDir = zentaoUtils.PathToRunName(scriptDir)
 	}
 
-	var report = model.TestReport{Path: utils.Prefer.WorkDir, Env: utils.GetOs(),
+	var report = model.TestReport{Path: vari.Prefer.WorkDir, Env: commonUtils.GetOs(),
 		Pass: 0, Fail: 0, Total: 0, Cases: make([]model.CaseLog, 0)}
 
-	biz.ExeScripts(files, utils.Prefer.WorkDir, langType, &report)
+	testingService.ExeScripts(files, vari.Prefer.WorkDir, langType, &report)
 
-	biz.CheckResults(files, utils.Prefer.WorkDir, langType, &report)
-	biz.Print(report, utils.Prefer.WorkDir)
+	testingService.CheckResults(files, vari.Prefer.WorkDir, langType, &report)
+	testingService.Print(report, vari.Prefer.WorkDir)
 }

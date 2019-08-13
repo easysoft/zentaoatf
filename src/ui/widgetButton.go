@@ -2,7 +2,7 @@ package ui
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/utils"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 )
 
@@ -48,16 +48,16 @@ func NewButtonWidgetNoBorderAutoWidth(name string, x, y int, label string,
 }
 
 func (w *ButtonWidget) Layout(handler func(g *gocui.Gui, v *gocui.View) error) (*gocui.View, error) {
-	v, err := utils.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+ButtonHeight)
+	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+ButtonHeight)
 	if err != nil {
 		if err != gocui.ErrUnknownView {
 			return nil, err
 		}
 
-		if err := utils.Cui.SetKeybinding(w.name, gocui.KeyEnter, gocui.ModNone, w.handler); err != nil {
+		if err := vari.Cui.SetKeybinding(w.name, gocui.KeyEnter, gocui.ModNone, w.handler); err != nil {
 			return nil, err
 		}
-		if err := utils.Cui.SetKeybinding(w.name, gocui.MouseLeft, gocui.ModNone, w.handler); err != nil {
+		if err := vari.Cui.SetKeybinding(w.name, gocui.MouseLeft, gocui.ModNone, w.handler); err != nil {
 			return nil, err
 		}
 

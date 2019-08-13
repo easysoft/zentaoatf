@@ -5,7 +5,7 @@
 // res/res.go
 // res/json/case-from-prodoct.json
 // res/json/success.json
-// res/json/zentao-settings.json
+// res/json/zentaoService-settings.json
 // res/template/go.tpl
 // res/template/lua.tpl
 // res/template/perl.tpl
@@ -188,7 +188,7 @@ var _resJsonZentaoSettingsJson = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xf
 func resJsonZentaoSettingsJsonBytes() ([]byte, error) {
 	return bindataRead(
 		_resJsonZentaoSettingsJson,
-		"res/json/zentao-settings.json",
+		"res/json/zentaoService-settings.json",
 	)
 }
 
@@ -198,7 +198,7 @@ func resJsonZentaoSettingsJson() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "res/json/zentao-settings.json", size: 2883, mode: os.FileMode(420), modTime: time.Unix(1565055118, 0)}
+	info := bindataFileInfo{name: "res/json/zentaoService-settings.json", size: 2883, mode: os.FileMode(420), modTime: time.Unix(1565055118, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -455,22 +455,22 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"res/messages_en.json":            resMessages_enJson,
-	"res/messages_zh.json":            resMessages_zhJson,
-	"res/res.go":                      resResGo,
-	"res/json/case-from-prodoct.json": resJsonCaseFromProdoctJson,
-	"res/json/success.json":           resJsonSuccessJson,
-	"res/json/zentao-settings.json":   resJsonZentaoSettingsJson,
-	"res/template/go.tpl":             resTemplateGoTpl,
-	"res/template/lua.tpl":            resTemplateLuaTpl,
-	"res/template/perl.tpl":           resTemplatePerlTpl,
-	"res/template/php.tpl":            resTemplatePhpTpl,
-	"res/template/php.yaml":           resTemplatePhpYaml,
-	"res/template/python.tpl":         resTemplatePythonTpl,
-	"res/template/readme.tpl":         resTemplateReadmeTpl,
-	"res/template/ruby.tpl":           resTemplateRubyTpl,
-	"res/template/shell.tpl":          resTemplateShellTpl,
-	"res/template/tcl.tpl":            resTemplateTclTpl,
+	"res/messages_en.json":                 resMessages_enJson,
+	"res/messages_zh.json":                 resMessages_zhJson,
+	"res/res.go":                           resResGo,
+	"res/json/case-from-prodoct.json":      resJsonCaseFromProdoctJson,
+	"res/json/success.json":                resJsonSuccessJson,
+	"res/json/zentaoService-settings.json": resJsonZentaoSettingsJson,
+	"res/template/go.tpl":                  resTemplateGoTpl,
+	"res/template/lua.tpl":                 resTemplateLuaTpl,
+	"res/template/perl.tpl":                resTemplatePerlTpl,
+	"res/template/php.tpl":                 resTemplatePhpTpl,
+	"res/template/php.yaml":                resTemplatePhpYaml,
+	"res/template/python.tpl":              resTemplatePythonTpl,
+	"res/template/readme.tpl":              resTemplateReadmeTpl,
+	"res/template/ruby.tpl":                resTemplateRubyTpl,
+	"res/template/shell.tpl":               resTemplateShellTpl,
+	"res/template/tcl.tpl":                 resTemplateTclTpl,
 }
 
 // AssetDir returns the file names below a certain
@@ -516,9 +516,9 @@ type bintree struct {
 var _bintree = &bintree{nil, map[string]*bintree{
 	"res": &bintree{nil, map[string]*bintree{
 		"json": &bintree{nil, map[string]*bintree{
-			"case-from-prodoct.json": &bintree{resJsonCaseFromProdoctJson, map[string]*bintree{}},
-			"success.json":           &bintree{resJsonSuccessJson, map[string]*bintree{}},
-			"zentao-settings.json":   &bintree{resJsonZentaoSettingsJson, map[string]*bintree{}},
+			"case-from-prodoct.json":      &bintree{resJsonCaseFromProdoctJson, map[string]*bintree{}},
+			"success.json":                &bintree{resJsonSuccessJson, map[string]*bintree{}},
+			"zentaoService-settings.json": &bintree{resJsonZentaoSettingsJson, map[string]*bintree{}},
 		}},
 		"messages_en.json": &bintree{resMessages_enJson, map[string]*bintree{}},
 		"messages_zh.json": &bintree{resMessages_zhJson, map[string]*bintree{}},

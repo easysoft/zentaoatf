@@ -1,8 +1,10 @@
 package ui
 
 import (
-	"github.com/easysoft/zentaoatf/src/biz"
-	"github.com/easysoft/zentaoatf/src/utils"
+	testingService "github.com/easysoft/zentaoatf/src/service/test"
+	config2 "github.com/easysoft/zentaoatf/src/utils/config"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
+	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/fatih/color"
 	"github.com/jroimartin/gocui"
 	"strconv"
@@ -14,9 +16,9 @@ var filedValMap map[string]int
 func InitReportBugPage() error {
 	DestoryReportBugPage()
 
-	biz.GetZentaoSettings()
+	testingService.GetZentaoSettings()
 
-	maxX, maxY := utils.Cui.Size()
+	maxX, maxY := vari.Cui.Size()
 	x := maxX/2 - 50
 	y := maxY/2 - 14
 
@@ -42,27 +44,27 @@ func InitReportBugPage() error {
 	// module
 	left = x + 2 + LabelWidthSmall + Space
 	right = left + SelectWidth
-	moduleInput := NewSelectWidget("module", left, y+4, SelectWidth, 6, "Module", utils.ZendaoSettings.Modules,
+	moduleInput := NewSelectWidget("module", left, y+4, SelectWidth, 6, "Module", vari.ZendaoSettings.Modules,
 		bugSelectFieldCheckEvent(filedValMap))
 	ViewMap["reportBug"] = append(ViewMap["reportBug"], moduleInput.Name())
 
 	// category
 	left = right + Space
 	right = left + SelectWidth
-	categoryInput := NewSelectWidget("category", left, y+4, SelectWidth, 6, "Category", utils.ZendaoSettings.Modules,
+	categoryInput := NewSelectWidget("category", left, y+4, SelectWidth, 6, "Category", vari.ZendaoSettings.Modules,
 		bugSelectFieldCheckEvent(filedValMap))
 	ViewMap["reportBug"] = append(ViewMap["reportBug"], categoryInput.Name())
 
 	// version
 	left = right + Space
 	right = left + SelectWidth
-	versionInput := NewSelectWidget("version", left, y+4, SelectWidth, 6, "Version", utils.ZendaoSettings.Modules,
+	versionInput := NewSelectWidget("version", left, y+4, SelectWidth, 6, "Version", vari.ZendaoSettings.Modules,
 		bugSelectFieldCheckEvent(filedValMap))
 	ViewMap["reportBug"] = append(ViewMap["reportBug"], versionInput.Name())
 
 	// priority
 	left = x + 2 + LabelWidthSmall + Space
-	priorityInput := NewSelectWidget("priority", left, y+11, SelectWidth, 6, "Priority", utils.ZendaoSettings.Modules,
+	priorityInput := NewSelectWidget("priority", left, y+11, SelectWidth, 6, "Priority", vari.ZendaoSettings.Modules,
 		bugSelectFieldCheckEvent(filedValMap))
 	ViewMap["reportBug"] = append(ViewMap["reportBug"], priorityInput.Name())
 
@@ -98,13 +100,13 @@ func reportBug(g *gocui.Gui, v *gocui.View) error {
 	priorityStr := strings.TrimSpace(GetSelectedLineVal(priorityView))
 
 	if title == "" {
-		v, _ := utils.Cui.View("reportBugMsg")
+		v, _ := vari.Cui.View("reportBugMsg")
 
 		color.New(color.FgMagenta).Fprintf(v, "Desc cannot be empty")
 		return nil
 	}
 
-	config := utils.ReadCurrConfig()
+	config := config2.ReadCurrConfig()
 	params := make(map[string]interface{})
 	params["entityType"] = config.EntityType
 	params["entityVal"] = config.EntityVal
@@ -148,7 +150,7 @@ func bugSelectFieldCheckEvent(filedValMap map[string]int) func(g *gocui.Gui, v *
 		line, _ := GetSelectedLine(v, ".*")
 		line = strings.TrimSpace(line)
 
-		utils.SetBugField(name, line, filedValMap)
+		zentaoUtils.SetBugField(name, line, filedValMap)
 
 		return nil
 	}
@@ -160,7 +162,7 @@ func bugSelectFieldScrollEvent(dy int, filedValMap map[string]int) func(g *gocui
 
 		name := v.Name()
 		line, _ := GetSelectedLine(v, ".*")
-		utils.SetBugField(name, strings.TrimSpace(line), filedValMap)
+		zentaoUtils.SetBugField(name, strings.TrimSpace(line), filedValMap)
 
 		return nil
 	}
@@ -177,7 +179,7 @@ func cancelReportBug(g *gocui.Gui, v *gocui.View) error {
 
 func DestoryReportBugPage() {
 	for _, v := range ViewMap["reportBug"] {
-		utils.Cui.DeleteView(v)
-		utils.Cui.DeleteKeybindings(v)
+		vari.Cui.DeleteView(v)
+		vari.Cui.DeleteKeybindings(v)
 	}
 }

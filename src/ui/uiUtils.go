@@ -1,7 +1,8 @@
 package ui
 
 import (
-	"github.com/easysoft/zentaoatf/src/utils"
+	print2 "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 	"regexp"
 	"strings"
@@ -73,21 +74,21 @@ func scrollAction(v *gocui.View, dy int, isSelectWidget bool) error {
 }
 
 func setViewScroll(name string) error {
-	v, err := utils.Cui.View(name)
+	v, err := vari.Cui.View(name)
 	if err != nil {
-		utils.PrintToCmd(err.Error() + ": " + name)
+		print2.PrintToCmd(err.Error() + ": " + name)
 		return nil
 	}
 
 	v.Wrap = true
 
-	if err := utils.Cui.SetKeybinding(name, gocui.MouseLeft, gocui.ModNone, setCurrView(name)); err != nil {
+	if err := vari.Cui.SetKeybinding(name, gocui.MouseLeft, gocui.ModNone, setCurrView(name)); err != nil {
 		return err
 	}
-	if err := utils.Cui.SetKeybinding(name, gocui.KeyArrowUp, gocui.ModNone, scrollEvent(-1)); err != nil {
+	if err := vari.Cui.SetKeybinding(name, gocui.KeyArrowUp, gocui.ModNone, scrollEvent(-1)); err != nil {
 		return err
 	}
-	if err := utils.Cui.SetKeybinding(name, gocui.KeyArrowDown, gocui.ModNone, scrollEvent(1)); err != nil {
+	if err := vari.Cui.SetKeybinding(name, gocui.KeyArrowDown, gocui.ModNone, scrollEvent(1)); err != nil {
 		return err
 	}
 
@@ -95,7 +96,7 @@ func setViewScroll(name string) error {
 }
 
 func setViewLineHighlight(name string) error {
-	v, _ := utils.Cui.View(name)
+	v, _ := vari.Cui.View(name)
 
 	v.Wrap = true
 	//v.Highlight = true
@@ -106,10 +107,10 @@ func setViewLineHighlight(name string) error {
 }
 
 func setViewLineSelected(name string, selectLine func(g *gocui.Gui, v *gocui.View) error) error {
-	if err := utils.Cui.SetKeybinding(name, gocui.KeyEnter, gocui.ModNone, selectLine); err != nil {
+	if err := vari.Cui.SetKeybinding(name, gocui.KeyEnter, gocui.ModNone, selectLine); err != nil {
 		return err
 	}
-	if err := utils.Cui.SetKeybinding(name, gocui.MouseLeft, gocui.ModNone, selectLine); err != nil {
+	if err := vari.Cui.SetKeybinding(name, gocui.MouseLeft, gocui.ModNone, selectLine); err != nil {
 		return err
 	}
 
@@ -124,7 +125,7 @@ func setCurrView(name string) func(g *gocui.Gui, v *gocui.View) error {
 }
 
 func setInputEvent(name string) error {
-	if err := utils.Cui.SetKeybinding(name, gocui.MouseLeft, gocui.ModNone, setCurrView(name)); err != nil {
+	if err := vari.Cui.SetKeybinding(name, gocui.MouseLeft, gocui.ModNone, setCurrView(name)); err != nil {
 		return err
 	}
 	return nil
@@ -132,7 +133,7 @@ func setInputEvent(name string) error {
 
 func HighlightTab(view string, views []string) {
 	for _, name := range views {
-		v, _ := utils.Cui.View(name)
+		v, _ := vari.Cui.View(name)
 
 		if v.Name() == view {
 			v.Highlight = true

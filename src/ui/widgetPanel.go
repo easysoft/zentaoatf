@@ -2,7 +2,7 @@ package ui
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/utils"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 )
 
@@ -26,7 +26,7 @@ func (w *PanelWidget) Layout() (*gocui.View, error) {
 		w.h = 3
 	}
 
-	v, err := utils.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+w.h)
+	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+w.h)
 	v.Highlight = false
 	if err != nil {
 		if err != gocui.ErrUnknownView {

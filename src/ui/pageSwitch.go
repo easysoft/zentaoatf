@@ -3,7 +3,10 @@ package ui
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/action"
-	"github.com/easysoft/zentaoatf/src/utils"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	"github.com/easysoft/zentaoatf/src/utils/date"
+	print2 "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 	"strings"
 	"time"
@@ -12,8 +15,8 @@ import (
 func InitSwitchPage() error {
 	DestoryRightPages()
 
-	maxX, _ := utils.Cui.Size()
-	slideView, _ := utils.Cui.View("side")
+	maxX, _ := vari.Cui.Size()
+	slideView, _ := vari.Cui.View("side")
 	slideX, _ := slideView.Size()
 
 	left := slideX + 2
@@ -23,13 +26,13 @@ func InitSwitchPage() error {
 
 	left = right + Space
 	right = left + TextWidthFull
-	workDirInput := NewTextWidget("workDirInput", left, 1, TextWidthFull, utils.Prefer.WorkDir)
+	workDirInput := NewTextWidget("workDirInput", left, 1, TextWidthFull, vari.Prefer.WorkDir)
 	ViewMap["switch"] = append(ViewMap["switch"], workDirInput.Name())
-	if _, err := utils.Cui.SetCurrentView("workDirInput"); err != nil {
+	if _, err := vari.Cui.SetCurrentView("workDirInput"); err != nil {
 		return err
 	}
 
-	buttonX := (maxX-utils.LeftWidth)/2 + utils.LeftWidth - ButtonWidth
+	buttonX := (maxX-constant.LeftWidth)/2 + constant.LeftWidth - ButtonWidth
 	submitInput := NewButtonWidgetAutoWidth("submitInput", buttonX, 4, "Switch", SwitchWorkDir)
 	ViewMap["switch"] = append(ViewMap["switch"], submitInput.Name())
 
@@ -43,17 +46,17 @@ func SwitchWorkDir(g *gocui.Gui, v *gocui.View) error {
 
 	workDir := strings.TrimSpace(workDirView.Buffer())
 
-	utils.PrintToCmd(fmt.Sprintf("#atf switch -d %s", workDir))
+	print2.PrintToCmd(fmt.Sprintf("#atf switch -d %s", workDir))
 
 	err := action.SwitchWorkDir(workDir)
 	if err == nil {
 		workDirView.Clear()
-		workDirView.Write([]byte(utils.Prefer.WorkDir))
+		workDirView.Write([]byte(vari.Prefer.WorkDir))
 
-		utils.PrintToCmd(fmt.Sprintf("success to switch project to %s at %s",
-			workDir, utils.DateTimeStr(time.Now())))
+		print2.PrintToCmd(fmt.Sprintf("success to switch project to %s at %s",
+			workDir, dateUtils.DateTimeStr(time.Now())))
 	} else {
-		utils.PrintToCmd(err.Error())
+		print2.PrintToCmd(err.Error())
 	}
 
 	return nil
@@ -61,9 +64,9 @@ func SwitchWorkDir(g *gocui.Gui, v *gocui.View) error {
 
 func DestorySwitchPage() {
 	for _, v := range ViewMap["switch"] {
-		utils.Cui.DeleteView(v)
-		utils.Cui.DeleteKeybindings(v)
+		vari.Cui.DeleteView(v)
+		vari.Cui.DeleteKeybindings(v)
 	}
 
-	utils.Cui.DeleteKeybinding("", gocui.KeyTab, gocui.ModNone)
+	vari.Cui.DeleteKeybinding("", gocui.KeyTab, gocui.ModNone)
 }

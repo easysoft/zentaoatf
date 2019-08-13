@@ -1,24 +1,26 @@
 package action
 
 import (
-	"github.com/easysoft/zentaoatf/src/utils"
+	"github.com/easysoft/zentaoatf/src/utils/config"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	"github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/fatih/color"
 	"log"
 )
 
 func Set(param string, val string, dumb bool) {
 	if param == "lang" {
-		if val == utils.LanguageEN || val == utils.LanguageZH {
-			utils.SetPreference(param, val, dumb)
+		if val == constant.LanguageEN || val == constant.LanguageZH {
+			configUtils.SetPreference(param, val, dumb)
 		} else {
-			log.Println(color.RedString("only %s or %s language is acceptable", utils.LanguageEN, utils.LanguageZH))
+			log.Println(color.RedString("only %s or %s language is acceptable", constant.LanguageEN, constant.LanguageZH))
 		}
 	} else if param == "workDir" {
-		utils.MkDirIfNeeded(val)
-		utils.SetPreference("workDir", val, dumb)
+		fileUtils.MkDirIfNeeded(val)
+		configUtils.SetPreference("workDir", val, dumb)
 	}
 }
 
 func Reset() {
-	Set("ZENTAO_LANG", utils.LanguageDefault, true)
+	Set("ZENTAO_LANG", constant.LanguageDefault, true)
 }

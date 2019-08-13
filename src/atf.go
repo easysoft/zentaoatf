@@ -7,7 +7,10 @@ import (
 	"github.com/easysoft/zentaoatf/src/mock"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/ui"
-	"github.com/easysoft/zentaoatf/src/utils"
+	"github.com/easysoft/zentaoatf/src/utils/common"
+	"github.com/easysoft/zentaoatf/src/utils/config"
+	print2 "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"os"
 )
 
@@ -51,7 +54,7 @@ func main() {
 	flagSets = append(flagSets, *rerunSet)
 	rerunSet.StringVar(&path, "p", "", "Test result file path")
 
-	genSet := flag.NewFlagSet("atf gen - Generate test scripts from zentao test cases", flag.ContinueOnError)
+	genSet := flag.NewFlagSet("atf gen - Generate test scripts from zentaoService test cases", flag.ContinueOnError)
 	flagSets = append(flagSets, *genSet)
 	genSet.StringVar(&zentaoUrl, "u", "", "Zentao project url")
 	genSet.StringVar(&entityType, "t", "", "Import type, 'product' or 'task'")
@@ -88,7 +91,7 @@ func main() {
 				runSet.Usage()
 				os.Exit(1)
 			} else {
-				scriptDir = utils.ConvertRunDir(scriptDir)
+				scriptDir = commonUtils.ConvertRunDir(scriptDir)
 				action.Run(scriptDir, files, langType)
 			}
 		}
@@ -117,7 +120,7 @@ func main() {
 				listSet.Usage()
 				os.Exit(1)
 			} else {
-				scriptDir = utils.ConvertRunDir(scriptDir)
+				scriptDir = commonUtils.ConvertRunDir(scriptDir)
 				action.List(scriptDir, langType)
 			}
 		}
@@ -127,7 +130,7 @@ func main() {
 				viewSet.Usage()
 				os.Exit(1)
 			} else {
-				scriptDir = utils.ConvertRunDir(scriptDir)
+				scriptDir = commonUtils.ConvertRunDir(scriptDir)
 				action.View(scriptDir, files, langType)
 			}
 		}
@@ -145,7 +148,7 @@ func main() {
 					action.Set("workDir", workDir, false)
 				}
 
-				utils.PrintPreference()
+				configUtils.PrintPreference()
 			}
 		}
 	case "reset":
@@ -159,12 +162,12 @@ func main() {
 func init() {
 	if len(os.Args) > 1 {
 		if os.Args[1] == "cui" {
-			utils.RunFromCui = true
+			vari.RunFromCui = true
 		} else {
-			utils.RunFromCui = false
+			vari.RunFromCui = false
 		}
 
-		utils.InitPreference()
+		configUtils.InitPreference()
 	}
 }
 
@@ -173,12 +176,12 @@ func usage(flagSets []flag.FlagSet) {
 
 	for inx, flag := range flagSets {
 		if inx == 0 {
-			utils.PrintUsageWithSpaceLine(flag, false)
+			print2.PrintUsageWithSpaceLine(flag, false)
 		} else {
-			utils.PrintUsage(flag)
+			print2.PrintUsage(flag)
 		}
 	}
 
-	utils.PrintSample()
+	print2.PrintSample()
 
 }

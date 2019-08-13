@@ -2,7 +2,7 @@ package ui
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/utils"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 	"strings"
 )
@@ -35,12 +35,12 @@ func NewRadioWidget(name string, x, y int, checked bool) *gocui.View {
 }
 
 func (w *RadioWidget) Layout() (*gocui.View, error) {
-	v, err := utils.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+2)
+	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+2)
 	if err != nil {
 		if err != gocui.ErrUnknownView {
 			return nil, err
 		}
-		if err := utils.Cui.SetKeybinding(w.name, gocui.KeySpace, gocui.ModNone, w.handler); err != nil {
+		if err := vari.Cui.SetKeybinding(w.name, gocui.KeySpace, gocui.ModNone, w.handler); err != nil {
 			return nil, err
 		}
 		v.Frame = false

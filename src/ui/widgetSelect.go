@@ -3,7 +3,8 @@ package ui
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
-	"github.com/easysoft/zentaoatf/src/utils"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
+	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/jroimartin/gocui"
 	"strings"
 )
@@ -34,7 +35,7 @@ func (w *SelectWidget) Layout() (*gocui.View, error) {
 		w.h = 3
 	}
 
-	v, _ := utils.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+w.h)
+	v, _ := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+w.h)
 	v.Highlight = true
 	setViewScroll(w.name)
 	setViewLineHighlight(w.name)
@@ -52,7 +53,7 @@ func (w *SelectWidget) Layout() (*gocui.View, error) {
 	_, height := v.Size()
 	for true {
 		line, _ := GetSelectedLine(v, ".*")
-		if utils.IsBugFieldDefault(line, w.options) {
+		if zentaoUtils.IsBugFieldDefault(line, w.options) {
 			break
 		}
 
@@ -80,10 +81,10 @@ func (w *SelectWidget) Layout() (*gocui.View, error) {
 		}
 	}
 
-	if err := utils.Cui.SetKeybinding(w.name, gocui.KeyEnter, gocui.ModNone, w.checkHandler); err != nil {
+	if err := vari.Cui.SetKeybinding(w.name, gocui.KeyEnter, gocui.ModNone, w.checkHandler); err != nil {
 		return nil, err
 	}
-	if err := utils.Cui.SetKeybinding(w.name, gocui.MouseLeft, gocui.ModNone, w.checkHandler); err != nil {
+	if err := vari.Cui.SetKeybinding(w.name, gocui.MouseLeft, gocui.ModNone, w.checkHandler); err != nil {
 		return nil, err
 	}
 

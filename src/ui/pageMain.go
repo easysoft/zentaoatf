@@ -1,25 +1,28 @@
 package ui
 
 import (
-	"github.com/easysoft/zentaoatf/src/utils"
+	"github.com/easysoft/zentaoatf/src/utils/config"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	string2 "github.com/easysoft/zentaoatf/src/utils/string"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 	"log"
 )
 
 func InitMainPage() error {
-	maxX, maxY := utils.Cui.Size()
-	if maxX < utils.MinWidth {
-		maxX = utils.MinWidth
+	maxX, maxY := vari.Cui.Size()
+	if maxX < constant.MinWidth {
+		maxX = constant.MinWidth
 	}
-	if maxY < utils.MinHeight {
-		maxY = utils.MinHeight
+	if maxY < constant.MinHeight {
+		maxY = constant.MinHeight
 	}
-	utils.MainViewHeight = maxY - utils.CmdViewHeight - 1
+	vari.MainViewHeight = maxY - constant.CmdViewHeight - 1
 
-	quickBarView := NewPanelWidget("quickBarView", 0, 0, utils.LeftWidth, 2, "")
+	quickBarView := NewPanelWidget("quickBarView", 0, 0, constant.LeftWidth, 2, "")
 	ViewMap["root"] = append(ViewMap["root"], quickBarView.Name())
 
-	sideView := NewPanelWidget("side", 0, 2, utils.LeftWidth, maxY-3, "")
+	sideView := NewPanelWidget("side", 0, 2, constant.LeftWidth, maxY-3, "")
 	ViewMap["root"] = append(ViewMap["root"], sideView.Name())
 	sideView.Wrap = true
 	sideView.Highlight = true
@@ -28,20 +31,20 @@ func InitMainPage() error {
 
 	x := 2
 	for _, name := range Tabs {
-		tabView := NewTabWidget(name, x, 0, utils.Ucfirst(name))
+		tabView := NewTabWidget(name, x, 0, string2.Ucfirst(name))
 		ViewMap["root"] = append(ViewMap["root"], tabView.Name())
 		x += 10
 	}
 
-	mainView := NewPanelWidget("main", utils.LeftWidth, 0, maxX-utils.LeftWidth-1, utils.MainViewHeight, "")
+	mainView := NewPanelWidget("main", constant.LeftWidth, 0, maxX-constant.LeftWidth-1, vari.MainViewHeight, "")
 	ViewMap["root"] = append(ViewMap["root"], mainView.Name())
 	mainView.Wrap = true
 
-	cmdView := NewPanelWidget("cmd", utils.LeftWidth, utils.MainViewHeight, maxX-1-utils.LeftWidth, utils.CmdViewHeight, "")
+	cmdView := NewPanelWidget("cmd", constant.LeftWidth, vari.MainViewHeight, maxX-1-constant.LeftWidth, constant.CmdViewHeight, "")
 	ViewMap["root"] = append(ViewMap["root"], cmdView.Name())
 	mainView.Wrap = true
 
-	utils.PrintPreferenceToView()
+	configUtils.PrintPreferenceToView()
 
 	NewHelpWidget()
 	MainPageKeyBindings()
@@ -51,10 +54,10 @@ func InitMainPage() error {
 }
 
 func MainPageKeyBindings() error {
-	if err := utils.Cui.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, Quit); err != nil {
+	if err := vari.Cui.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, Quit); err != nil {
 		return err
 	}
-	if err := utils.Cui.SetKeybinding("", gocui.KeyCtrlH, gocui.ModNone, ShowHelp); err != nil {
+	if err := vari.Cui.SetKeybinding("", gocui.KeyCtrlH, gocui.ModNone, ShowHelp); err != nil {
 		log.Panicln(err)
 	}
 

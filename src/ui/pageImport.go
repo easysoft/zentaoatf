@@ -3,9 +3,14 @@ package ui
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/action"
-	"github.com/easysoft/zentaoatf/src/biz/zentao"
 	"github.com/easysoft/zentaoatf/src/model"
-	"github.com/easysoft/zentaoatf/src/utils"
+	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
+	"github.com/easysoft/zentaoatf/src/utils/common"
+	"github.com/easysoft/zentaoatf/src/utils/config"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	"github.com/easysoft/zentaoatf/src/utils/date"
+	print2 "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 	"strings"
 	"time"
@@ -14,8 +19,8 @@ import (
 func InitImportPage() error {
 	DestoryRightPages()
 
-	maxX, _ := utils.Cui.Size()
-	slideView, _ := utils.Cui.View("side")
+	maxX, _ := vari.Cui.Size()
+	slideView, _ := vari.Cui.View("side")
 	slideX, _ := slideView.Size()
 
 	left := slideX + 2
@@ -68,7 +73,7 @@ func InitImportPage() error {
 	singleFileInput := NewRadioWidget("singleFileInput", left, 7, true)
 	ViewMap["import"] = append(ViewMap["import"], singleFileInput.Name())
 
-	// zentao account and password
+	// zentaoService account and password
 	y := 10
 	left = slideX + 2
 	right = left + LabelWidth
@@ -92,7 +97,7 @@ func InitImportPage() error {
 
 	// button
 	y += 3
-	buttonX := (maxX-utils.LeftWidth)/2 + utils.LeftWidth - ButtonWidth
+	buttonX := (maxX-constant.LeftWidth)/2 + constant.LeftWidth - ButtonWidth
 	submitInput := NewButtonWidgetAutoWidth("submitInput", buttonX, 13, "Submit", ImportRequest)
 	ViewMap["import"] = append(ViewMap["import"], submitInput.Name())
 
@@ -126,38 +131,38 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 		params["entityType"] = "product"
 		params["entityVal"] = productId
 
-		product := zentao.GetProductInfo(url, productId)
+		product := zentaoService.GetProductInfo(url, productId)
 		name = product.Name
 	} else {
 		params["entityType"] = "task"
 		params["entityVal"] = taskId
 
-		//taskJson := zentao.GetTaskInfo(url, taskId)
+		//taskJson := zentaoService.GetTaskInfo(url, taskId)
 		//name, _ = taskJson.Get("name").String()
 	}
 
-	url = utils.UpdateUrl(url)
-	utils.PrintToCmd(fmt.Sprintf("#atf gen -u %s -t %s -v %s -l %s -s %t -a %s -p %s",
+	url = commonUtils.UpdateUrl(url)
+	print2.PrintToCmd(fmt.Sprintf("#atf gen -u %s -t %s -v %s -l %s -s %t -a %s -p %s",
 		url, params["entityType"], params["entityVal"], language, singleFile, account, password))
 
-	zentao.Login(url, account, password)
+	zentaoService.Login(url, account, password)
 
 	var cases []model.TestCase
 	if productId != "" {
-		cases = zentao.ListCaseByProduct(url, productId)
+		cases = zentaoService.ListCaseByProduct(url, productId)
 	} else {
-		cases = zentao.ListCaseByTask(url, taskId)
+		cases = zentaoService.ListCaseByTask(url, taskId)
 	}
 
 	count, err := action.Generate(cases, language, singleFile, account, password)
 	if err == nil {
-		utils.SaveConfig("", url, params["entityType"], params["entityVal"], language, singleFile,
+		configUtils.SaveConfig("", url, params["entityType"], params["entityVal"], language, singleFile,
 			name, account, password)
 
-		utils.PrintToCmd(fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
-			count, utils.ScriptDir, utils.DateTimeStr(time.Now())))
+		print2.PrintToCmd(fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
+			count, constant.ScriptDir, dateUtils.DateTimeStr(time.Now())))
 	} else {
-		utils.PrintToCmd(err.Error())
+		print2.PrintToCmd(err.Error())
 	}
 
 	return nil
@@ -165,9 +170,9 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 
 func DestoryImportPage() {
 	for _, v := range ViewMap["import"] {
-		utils.Cui.DeleteView(v)
-		utils.Cui.DeleteKeybindings(v)
+		vari.Cui.DeleteView(v)
+		vari.Cui.DeleteKeybindings(v)
 	}
 
-	utils.Cui.DeleteKeybinding("", gocui.KeyTab, gocui.ModNone)
+	vari.Cui.DeleteKeybinding("", gocui.KeyTab, gocui.ModNone)
 }

@@ -3,7 +3,8 @@ package mock
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/utils"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/gorilla/mux"
 	"io"
 	"log"
@@ -26,10 +27,10 @@ func GetUrl(uri string) string {
 func Launch() {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/"+utils.UrlZentaoSettings, zentaoSettings)
-	r.HandleFunc("/"+utils.UrlImportProject, importProject)
-	r.HandleFunc("/"+utils.UrlSubmitResult, submitResult)
-	r.HandleFunc("/"+utils.UrlReportBug, reportBug)
+	r.HandleFunc("/"+constant.UrlZentaoSettings, zentaoSettings)
+	r.HandleFunc("/"+constant.UrlImportProject, importProject)
+	r.HandleFunc("/"+constant.UrlSubmitResult, submitResult)
+	r.HandleFunc("/"+constant.UrlReportBug, reportBug)
 
 	r.Methods("POST")
 
@@ -42,7 +43,7 @@ func Launch() {
 func importProject(w http.ResponseWriter, r *http.Request) {
 	printRequestBody(r.Body)
 
-	jsonString := utils.ReadResData(caseJson)
+	jsonString := zentaoUtils.ReadResData(caseJson)
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, jsonString)
@@ -51,7 +52,7 @@ func importProject(w http.ResponseWriter, r *http.Request) {
 func submitResult(w http.ResponseWriter, r *http.Request) {
 	printRequestBody(r.Body)
 
-	jsonString := utils.ReadResData(successJson)
+	jsonString := zentaoUtils.ReadResData(successJson)
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, jsonString)
@@ -60,7 +61,7 @@ func submitResult(w http.ResponseWriter, r *http.Request) {
 func reportBug(w http.ResponseWriter, r *http.Request) {
 	printRequestBody(r.Body)
 
-	jsonString := utils.ReadResData(successJson)
+	jsonString := zentaoUtils.ReadResData(successJson)
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, jsonString)
@@ -69,7 +70,7 @@ func reportBug(w http.ResponseWriter, r *http.Request) {
 func zentaoSettings(w http.ResponseWriter, r *http.Request) {
 	printRequestBody(r.Body)
 
-	jsonString := utils.ReadResData(settingsJson)
+	jsonString := zentaoUtils.ReadResData(settingsJson)
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, jsonString)

@@ -1,16 +1,21 @@
 package script
 
-import "github.com/easysoft/zentaoatf/src/utils"
+import (
+	config2 "github.com/easysoft/zentaoatf/src/utils/config"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	"github.com/easysoft/zentaoatf/src/utils/file"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
+)
 
 func LoadTestAssets() ([]string, []string) {
-	config := utils.ReadCurrConfig()
+	config := config2.ReadCurrConfig()
 	ext := GetLangMap()[config.LangType]["extName"]
 
 	caseFiles := make([]string, 0)
 	suitesFiles := make([]string, 0)
 
-	utils.GetAllFiles(utils.Prefer.WorkDir+utils.ScriptDir, ext, &caseFiles)
-	utils.GetAllFiles(utils.Prefer.WorkDir+utils.ScriptDir, "suite", &suitesFiles)
+	fileUtils.GetAllFiles(vari.Prefer.WorkDir+constant.ScriptDir, ext, &caseFiles)
+	fileUtils.GetAllFiles(vari.Prefer.WorkDir+constant.ScriptDir, "suite", &suitesFiles)
 
 	return caseFiles, suitesFiles
 }

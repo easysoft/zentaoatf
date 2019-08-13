@@ -1,15 +1,15 @@
 package script
 
 import (
-	"github.com/easysoft/zentaoatf/src/utils"
+	"github.com/easysoft/zentaoatf/src/utils/file"
 )
 
 func View(scriptDir string, fileNames []string, langType string) {
 	files := make([]string, 0)
 	if fileNames != nil && len(fileNames) > 0 {
-		files, _ = utils.GetSpecifiedFiles(scriptDir, fileNames)
+		files, _ = fileUtils.GetSpecifiedFiles(scriptDir, fileNames)
 	} else {
-		utils.GetAllFiles(scriptDir, langType, &files)
+		fileUtils.GetAllFiles(scriptDir, langType, &files)
 	}
 
 	for _, file := range files {

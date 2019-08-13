@@ -1,6 +1,8 @@
 package model
 
-import "github.com/easysoft/zentaoatf/src/misc"
+import (
+	"github.com/easysoft/zentaoatf/src/utils/const"
+)
 
 type Product struct {
 	Id   int
@@ -57,7 +59,7 @@ type TestReport struct {
 type CaseLog struct {
 	Numb   int
 	Path   string
-	Status misc.ResultStatus
+	Status constant.ResultStatus
 
 	Steps []StepLog
 }
