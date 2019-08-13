@@ -30,9 +30,9 @@ func GenFromCmd(url string, entityType string, entityVal string, langType string
 		name = product.Name
 		testcases = zentao.ListCaseByProduct(url, params["entityVal"])
 	} else {
-		//taskJson := zentao.GetTaskInfo(url, params["entityVal"])
-		//name, _ = taskJson.Get("name").String()
-		//json = zentao.ListCaseByProduct(url, params["entityVal"])
+		task := zentao.GetTaskInfo(url, params["entityVal"])
+		name = task.Name
+		testcases = zentao.ListCaseByTask(url, params["entityVal"])
 	}
 
 	if testcases != nil {

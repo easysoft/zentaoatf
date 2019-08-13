@@ -2,7 +2,7 @@ package biz
 
 import (
 	"encoding/json"
-	httpClient "github.com/easysoft/zentaoatf/src/http"
+	httpClient "github.com/easysoft/zentaoatf/src/client"
 	"github.com/easysoft/zentaoatf/src/utils"
 	"path"
 	"strconv"

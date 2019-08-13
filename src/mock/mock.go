@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	BaseUrl = "http://ztpmp.ngtesting.com/"
+	BaseUrl = "client://ztpmp.ngtesting.com/"
 
 	caseJson     = fmt.Sprintf("res%sjson%scase-from-prodoct.json", string(os.PathSeparator), string(os.PathSeparator))
 	settingsJson = fmt.Sprintf("res%sjson%szentao-settings.json", string(os.PathSeparator), string(os.PathSeparator))

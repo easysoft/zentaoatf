@@ -1,7 +1,7 @@
 package biz
 
 import (
-	httpClient "github.com/easysoft/zentaoatf/src/http"
+	httpClient "github.com/easysoft/zentaoatf/src/client"
 	"github.com/easysoft/zentaoatf/src/utils"
 )
 

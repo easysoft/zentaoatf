@@ -25,7 +25,7 @@ func InitImportPage() error {
 
 	left = right + Space
 	right = left + TextWidthFull
-	urlInput := NewTextWidget("urlInput", left, 1, TextWidthFull, "http://ztpmp.ngtesting.org")
+	urlInput := NewTextWidget("urlInput", left, 1, TextWidthFull, "client://ztpmp.ngtesting.org")
 	ViewMap["import"] = append(ViewMap["import"], urlInput.Name())
 
 	left = slideX + 2

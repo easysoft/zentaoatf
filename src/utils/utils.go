@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"runtime"
+	"sort"
 	"strings"
 	"time"
 )
@@ -166,4 +167,14 @@ func ReadResData(path string) string {
 	}
 
 	return jsonStr
+}
+
+func GetSortKey(mp map[int]interface{}) []int {
+	var keys []int
+	for key := range mp {
+		keys = append(keys, key)
+	}
+	sort.Ints(keys)
+
+	return keys
 }

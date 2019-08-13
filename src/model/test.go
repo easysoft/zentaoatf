@@ -8,11 +8,21 @@ type Product struct {
 	Name string
 }
 
+type TestTask struct {
+	Id   int
+	Code string
+	Name string
+
+	Runs    map[int]TestCase
+	CaseArr []TestCase
+}
+
 type TestCase struct {
 	Id      string
 	Title   string
 	Steps   map[int]TestStep
 	StepArr []TestStep
+	Case    string // caseId in task
 }
 
 type TestStep struct {

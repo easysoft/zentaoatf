@@ -3,7 +3,7 @@ package zentao
 import (
 	"fmt"
 	"github.com/bitly/go-simplejson"
-	"github.com/easysoft/zentaoatf/src/http"
+	"github.com/easysoft/zentaoatf/src/client"
 	"github.com/easysoft/zentaoatf/src/utils"
 )
 
@@ -16,7 +16,7 @@ func Login(baseUrl string, account string, password string) {
 	params["account"] = account
 	params["password"] = password
 
-	_, ok := http.Post(url, params)
+	_, ok := client.Post(url, params)
 	if ok {
 		fmt.Println("succes to login")
 	} else {
@@ -27,7 +27,7 @@ func Login(baseUrl string, account string, password string) {
 func GetConfig(baseUrl string) {
 	url := baseUrl + "?mode=getconfig"
 
-	body, ok := http.Get(url, nil)
+	body, ok := client.Get(url, nil)
 
 	if ok {
 		json, _ := simplejson.NewJson([]byte(body))
@@ -44,7 +44,7 @@ func GetConfig(baseUrl string) {
 func GetSession(baseUrl string) {
 	url := baseUrl + "api-getsessionid.json"
 
-	dataStr, ok := http.Get(url, nil)
+	dataStr, ok := client.Get(url, nil)
 	if ok {
 		data, _ := simplejson.NewJson([]byte(dataStr))
 
