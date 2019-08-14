@@ -2,56 +2,76 @@ package testingService
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/easysoft/zentaoatf/src/model"
 	httpClient "github.com/easysoft/zentaoatf/src/service/client"
-	"github.com/easysoft/zentaoatf/src/utils/common"
-	config2 "github.com/easysoft/zentaoatf/src/utils/config"
+	scriptService "github.com/easysoft/zentaoatf/src/service/script"
+	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
-	print2 "github.com/easysoft/zentaoatf/src/utils/print"
-	"path"
+	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
+	printUtils "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
+	"os"
 	"strconv"
 	"strings"
 )
 
-func SubmitResult(caseList []string) {
-	config := config2.ReadCurrConfig()
+func SubmitResult(assert string, date string) {
+	conf := configUtils.ReadCurrConfig()
 
-	entityType := config.EntityType
-	entityVal := config.EntityVal
+	report := GetTestTestReportForSubmit(assert, date)
 
-	requestObj := make(map[string]string)
-	requestObj["entityType"] = entityType
-	requestObj["entityVal"] = entityVal
+	for _, cs := range report.Cases {
+		id := cs.Id
+		runId := cs.IdInTask
 
-	cases := make(map[int]bool)
-	for _, str := range caseList {
-		arr := strings.Split(str, " ")
-		var status bool
-		str := strings.ToLower(strings.TrimSpace(arr[0]))
-		if str == "pass" {
-			status = true
-		} else {
-			status = false
+		var uri string
+		if runId != 0 { // exe case
+			uri = fmt.Sprintf("testtask-runCase-%d-%d-1.json", runId, id)
+		} else { // exe task
+			uri = fmt.Sprintf("testtask-runCase-%d.json", runId)
 		}
 
-		caseStr := commonUtils.Base(strings.TrimSpace(arr[1]))
-		name := strings.Replace(caseStr, path.Ext(caseStr), "", -1)
-		caseIdStr := strings.Split(name, "-")[1]
-		caseId, _ := strconv.Atoi(caseIdStr)
+		requestObj := map[string]string{"case": strconv.Itoa(id), "version": "0"}
 
-		cases[caseId] = status
+		for _, step := range cs.Steps {
+			var stepStatus string
+			if step.Status {
+				stepStatus = constant.PASS.String()
+			} else {
+				stepStatus = constant.FAIL.String()
+			}
+
+			stepResults := ""
+			for _, checkpoint := range step.CheckPoints {
+				stepResults += checkpoint.Actual // strconv.FormatBool(checkpoint.Status) + ": " + checkpoint.Actual
+			}
+
+			requestObj["steps["+strconv.Itoa(step.Id)+"]"] = stepStatus
+			requestObj["reals["+strconv.Itoa(step.Id)+"]"] = stepResults
+		}
+
+		reqStr, _ := json.Marshal(requestObj)
+		printUtils.PrintToCmd(string(reqStr))
+
+		url := conf.Url + uri
+		_, ok := httpClient.PostStr(url, requestObj)
+		if ok {
+			printUtils.PrintToCmd(fmt.Sprintf("success to submit the results for case %d", id))
+		}
 	}
-	//requestObj["cases"] = cases
+}
 
-	reqStr, _ := json.Marshal(requestObj)
-	print2.PrintToCmd(string(reqStr))
+func GetTestTestReportForSubmit(assert string, date string) model.TestReport {
+	mode, name := scriptService.GetRunModeAndName(assert)
+	resultPath := vari.Prefer.WorkDir + constant.LogDir + scriptService.LogFolder(mode, name, date) +
+		string(os.PathSeparator) + "result.json"
 
-	url := config.Url
-	url = commonUtils.UpdateUrl(url)
-	_, _ = httpClient.Post(url+constant.UrlSubmitResult, requestObj)
+	content := fileUtils.ReadFile(resultPath)
+	content = strings.Replace(content, "\n", "", -1)
 
-	//if err == nil {
-	//	if pass {
-	//		utils.PrintToCmd("success to submit the results")
-	//	}
-	//}
+	var report model.TestReport
+	json.Unmarshal([]byte(content), &report)
+
+	return report
 }

@@ -16,7 +16,7 @@ func Login(baseUrl string, account string, password string) {
 	params["account"] = account
 	params["password"] = password
 
-	_, ok := client.Post(url, params)
+	_, ok := client.PostStr(url, params)
 	if ok {
 		fmt.Println("succes to login")
 	} else {

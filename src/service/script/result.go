@@ -37,9 +37,9 @@ func LoadTestResults(assert string) []string {
 	return ret
 }
 
-func GetTestResult(assert string, date string) []string {
+func GetTestResultForDisplay(assert string, date string) []string {
 	mode, name := GetRunModeAndName(assert)
-	resultPath := vari.Prefer.WorkDir + constant.LogDir + logFolder(mode, name, date) + string(os.PathSeparator) + "result.txt"
+	resultPath := vari.Prefer.WorkDir + constant.LogDir + LogFolder(mode, name, date) + string(os.PathSeparator) + "result.txt"
 
 	arr := make([]string, 0)
 	content := fileUtils.ReadFile(resultPath)
@@ -62,7 +62,7 @@ func GetTestResult(assert string, date string) []string {
 
 func GetCheckpointsResult(assert string, date string, caseLine string) string {
 	mode, name := GetRunModeAndName(assert)
-	resultPath := vari.Prefer.WorkDir + constant.LogDir + logFolder(mode, name, date) + string(os.PathSeparator) + "result.txt"
+	resultPath := vari.Prefer.WorkDir + constant.LogDir + LogFolder(mode, name, date) + string(os.PathSeparator) + "result.txt"
 
 	content := fileUtils.ReadFile(resultPath)
 
@@ -101,9 +101,9 @@ func GetLogFileByCase(assert string, date string, file string) string {
 	ext := path.Ext(file)
 	logName := strings.Replace(commonUtils.Base(file), ext, ".log", -1)
 
-	return vari.Prefer.WorkDir + constant.LogDir + logFolder(mode, name, date) + string(os.PathSeparator) + logName
+	return vari.Prefer.WorkDir + constant.LogDir + LogFolder(mode, name, date) + string(os.PathSeparator) + logName
 }
 
-func logFolder(mode string, name string, date string) string {
+func LogFolder(mode string, name string, date string) string {
 	return fmt.Sprintf("%s-%s-%s", mode, name, date)
 }

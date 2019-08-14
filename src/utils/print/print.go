@@ -28,6 +28,10 @@ func PrintSample() {
 }
 
 func PrintToSide(msg string) {
+	if !vari.RunFromCui {
+		fmt.Println(msg)
+		return
+	}
 	slideView, _ := vari.Cui.View("side")
 	slideView.Clear()
 
@@ -35,6 +39,10 @@ func PrintToSide(msg string) {
 }
 
 func PrintToMainNoScroll(msg string) {
+	if !vari.RunFromCui {
+		fmt.Println(msg)
+		return
+	}
 	mainView, _ := vari.Cui.View("main")
 	mainView.Clear()
 
@@ -42,6 +50,10 @@ func PrintToMainNoScroll(msg string) {
 }
 
 func PrintToCmd(msg string) {
+	if !vari.RunFromCui {
+		fmt.Println(msg)
+		return
+	}
 	cmdView, _ := vari.Cui.View("cmd")
 	_, _ = fmt.Fprintln(cmdView, msg)
 

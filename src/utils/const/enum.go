@@ -41,17 +41,21 @@ const (
 	PASS ResultStatus = iota
 	FAIL
 	SKIP
+	BLOCKED
 )
 
 func (c ResultStatus) String() string {
 	switch c {
 	case PASS:
-		return "PASS"
+		return "pass"
 	case FAIL:
-		return "FAIL"
+		return "fail"
 	case SKIP:
-		return "SKIP"
+		return "n/a"
+	case BLOCKED:
+		return "blocked"
 	}
+
 	return "UNKNOWN"
 }
 

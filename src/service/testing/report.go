@@ -1,6 +1,7 @@
 package testingService
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils/common"
@@ -32,7 +33,7 @@ func Print(report model.TestReport, workDir string) {
 
 	for _, cs := range report.Cases {
 		str := "\n %s %d-%d: %s"
-		status := cs.Status.String()
+		status := cs.Status
 		statusColor := logUtils.ColoredStatus(status)
 
 		logs = append(logs, fmt.Sprintf(str, status, cs.Id, cs.IdInTask, cs.Path))
@@ -78,4 +79,7 @@ func Print(report model.TestReport, workDir string) {
 	}
 
 	fileUtils.WriteFile(workDir+constant.LogDir+vari.RunDir+"result.txt", strings.Join(logs, "\n"))
+
+	json, _ := json.Marshal(report)
+	fileUtils.WriteFile(workDir+constant.LogDir+vari.RunDir+"result.json", string(json))
 }

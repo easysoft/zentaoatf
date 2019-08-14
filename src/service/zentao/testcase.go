@@ -63,7 +63,7 @@ func ListCaseByTask(baseUrl string, taskId string) []model.TestCase {
 func GetCaseById(baseUrl string, caseId string) model.TestCase {
 	params := [][]string{{"caseID", caseId}}
 	url := baseUrl + zentaoUtils.GenSuperApiUri("testcase", "getById", params)
-	dataStr, ok := client.Post(url, nil)
+	dataStr, ok := client.PostStr(url, nil)
 
 	if ok {
 		var tc model.TestCase

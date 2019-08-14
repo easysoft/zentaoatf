@@ -1,9 +1,5 @@
 package model
 
-import (
-	"github.com/easysoft/zentaoatf/src/utils/const"
-)
-
 type Product struct {
 	Id   int
 	Code string
@@ -66,7 +62,7 @@ type CaseLog struct {
 	Id       int
 	IdInTask int
 	Path     string
-	Status   constant.ResultStatus
+	Status   string
 
 	Steps []StepLog
 }
@@ -82,4 +78,12 @@ type CheckPointLog struct {
 	Expect string
 	Actual string
 	Status bool
+}
+
+type CaseResult struct {
+	Case    string
+	Version string
+
+	Steps map[string]string
+	Reals map[string]string
 }

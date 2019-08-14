@@ -65,7 +65,7 @@ func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
 
 	line, _ := GetSelectedLine(v, ".*")
 	CurrResult = line
-	content := scriptService.GetTestResult(CurrAsset, line)
+	content := scriptService.GetTestResultForDisplay(CurrAsset, line)
 
 	panelCaseList, _ := g.View("panelCaseList")
 	panelCaseList.Clear()
@@ -107,9 +107,7 @@ func clearPanelCaseResult() {
 }
 
 func toUploadResult(g *gocui.Gui, v *gocui.View) error {
-	caseList := scriptService.GetTestResult(CurrAsset, CurrResult)
-
-	testingService.SubmitResult(caseList)
+	testingService.SubmitResult(CurrAsset, CurrResult)
 
 	return nil
 }

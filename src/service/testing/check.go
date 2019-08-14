@@ -34,10 +34,10 @@ func ValidateTestCase(scriptFile string, langType string,
 	caseId, caseIdInTask := zentaoUtils.GetCaseIds(scriptFile)
 
 	stepLogs := make([]model.StepLog, 0)
-	caseResult := constant.PASS
+	caseResult := constant.PASS.String()
 
 	if skip {
-		caseResult = constant.SKIP
+		caseResult = constant.SKIP.String()
 	} else {
 		indx := 0
 		for _, step := range checkpointStepArr { // iterate by checkpoints
@@ -62,18 +62,18 @@ func ValidateTestCase(scriptFile string, langType string,
 			stepLog := model.StepLog{Id: stepId, Name: step, Status: stepResult, CheckPoints: checkpointLogs}
 			stepLogs = append(stepLogs, stepLog)
 			if !stepResult {
-				caseResult = constant.FAIL
+				caseResult = constant.FAIL.String()
 			}
 
 			indx++
 		}
 	}
 
-	if caseResult == constant.FAIL {
+	if caseResult == constant.FAIL.String() {
 		report.Fail = report.Fail + 1
-	} else if caseResult == constant.PASS {
+	} else if caseResult == constant.PASS.String() {
 		report.Pass = report.Pass + 1
-	} else if caseResult == constant.SKIP {
+	} else if caseResult == constant.SKIP.String() {
 		report.Skip = report.Skip + 1
 	}
 	report.Total = report.Total + 1
