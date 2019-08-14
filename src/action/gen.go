@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/service/script"
-	testingService "github.com/easysoft/zentaoatf/src/service/test"
+	testingService "github.com/easysoft/zentaoatf/src/service/testing"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	"github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/config"
@@ -85,6 +85,9 @@ func DealwithTestCase(cs model.TestCase, langType string, singleFile bool, caseP
 
 	caseId := cs.Id
 	caseInTaskId := cs.IdInTask
+	if caseInTaskId == "" {
+		caseInTaskId = "0"
+	}
 	caseTitle := cs.Title
 
 	scriptFile := fmt.Sprintf(constant.ScriptDir+"tc-%s.%s", caseId, LangMap[langType]["extName"])
@@ -192,8 +195,8 @@ func DealwithTestStep(ts model.TestStep, langType string, stepWidth int,
 	if isCheckPoint {
 		expectsLine := ""
 
-		expectsLine = "# \n"
-		expectsLine += "CODE: " + stepIdent + "期望结果, 可以有多行\n"
+		expectsLine = "# " + stepIdent + " \n"
+		expectsLine += "CODE: " + "期望结果, 可以有多行\n"
 
 		*expects = append(*expects, expectsLine)
 	}

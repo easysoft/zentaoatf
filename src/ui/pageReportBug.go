@@ -1,7 +1,7 @@
 package ui
 
 import (
-	testingService "github.com/easysoft/zentaoatf/src/service/test"
+	testingService "github.com/easysoft/zentaoatf/src/service/testing"
 	config2 "github.com/easysoft/zentaoatf/src/utils/config"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"

@@ -63,14 +63,15 @@ type TestReport struct {
 	Cases []CaseLog
 }
 type CaseLog struct {
-	Numb   int
-	Path   string
-	Status constant.ResultStatus
+	Id       int
+	IdInTask int
+	Path     string
+	Status   constant.ResultStatus
 
 	Steps []StepLog
 }
 type StepLog struct {
-	Numb   int
+	Id     int
 	Name   string
 	Status bool
 

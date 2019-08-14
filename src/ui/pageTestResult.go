@@ -3,7 +3,7 @@ package ui
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/service/script"
-	testingService "github.com/easysoft/zentaoatf/src/service/test"
+	testingService "github.com/easysoft/zentaoatf/src/service/testing"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"

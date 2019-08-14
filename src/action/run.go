@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/service/script"
-	testingService "github.com/easysoft/zentaoatf/src/service/test"
+	testingService "github.com/easysoft/zentaoatf/src/service/testing"
 	"github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/file"

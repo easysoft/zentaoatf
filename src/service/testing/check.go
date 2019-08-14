@@ -9,6 +9,8 @@ import (
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/fatih/color"
 	"regexp"
+	"strconv"
+	"strings"
 )
 
 func CheckResults(files []string, dir string, langType string, report *model.TestReport) {
@@ -18,16 +20,18 @@ func CheckResults(files []string, dir string, langType string, report *model.Tes
 	for _, scriptFile := range files {
 		logFile := zentaoUtils.ScriptToLogName(dir, scriptFile)
 
-		stepArr := zentaoUtils.ReadCheckpointSteps(scriptFile)
+		checkpointStepArr := zentaoUtils.ReadCheckpointSteps(scriptFile)
 		expectArr := zentaoUtils.ReadExpect(scriptFile)
 		skip, logArr := zentaoUtils.ReadLog(logFile)
 
-		ValidateTestCase(scriptFile, langType, stepArr, expectArr, skip, logArr, report)
+		ValidateTestCase(scriptFile, langType, checkpointStepArr, expectArr, skip, logArr, report)
 	}
 }
 
 func ValidateTestCase(scriptFile string, langType string,
-	stepArr []string, expectArr [][]string, skip bool, actualArr [][]string, report *model.TestReport) {
+	checkpointStepArr []string, expectArr [][]string, skip bool, actualArr [][]string, report *model.TestReport) {
+
+	caseId, caseIdInTask := zentaoUtils.GetCaseIds(scriptFile)
 
 	stepLogs := make([]model.StepLog, 0)
 	caseResult := constant.PASS
@@ -36,22 +40,26 @@ func ValidateTestCase(scriptFile string, langType string,
 		caseResult = constant.SKIP
 	} else {
 		indx := 0
-		for _, step := range stepArr {
+		for _, step := range checkpointStepArr { // iterate by checkpoints
 			var expectLines []string
+			var actualLines []string
+
 			if len(expectArr) > indx {
 				expectLines = expectArr[indx]
 			}
-
-			var actualLines []string
 			if len(actualArr) > indx {
 				actualLines = actualArr[indx]
 			}
 
 			re, _ := regexp.Compile(`\s{2,}`)
-			step = re.ReplaceAllString(step, " ")
+			step = re.ReplaceAllString(step, " ") // 多个空格替换成一个
+
+			arr := strings.Split(step, " ")
+			str := strings.Replace(arr[0], "@step", "", -1)
+			stepId, _ := strconv.Atoi(str)
 
 			stepResult, checkpointLogs := ValidateStep(langType, expectLines, actualLines)
-			stepLog := model.StepLog{Numb: indx + 1, Name: step, Status: stepResult, CheckPoints: checkpointLogs}
+			stepLog := model.StepLog{Id: stepId, Name: step, Status: stepResult, CheckPoints: checkpointLogs}
 			stepLogs = append(stepLogs, stepLog)
 			if !stepResult {
 				caseResult = constant.FAIL
@@ -70,7 +78,7 @@ func ValidateTestCase(scriptFile string, langType string,
 	}
 	report.Total = report.Total + 1
 
-	cs := model.CaseLog{Path: scriptFile, Status: caseResult, Steps: stepLogs}
+	cs := model.CaseLog{Id: caseId, IdInTask: caseIdInTask, Path: scriptFile, Status: caseResult, Steps: stepLogs}
 	report.Cases = append(report.Cases, cs)
 }
 

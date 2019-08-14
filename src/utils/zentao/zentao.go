@@ -121,6 +121,27 @@ func PathToRunName(filePath string) string {
 	return runName
 }
 
+func GetCaseIds(file string) (int, int) {
+	content := fileUtils.ReadFile(file)
+
+	var caseId int
+	var caseIdInTask int
+
+	myExp := regexp.MustCompile(`[\S\s]*caseId:([^\n]?)*\n+`)
+	arr := myExp.FindStringSubmatch(content)
+	if len(arr) > 1 {
+		caseId, _ = strconv.Atoi(arr[1])
+	}
+
+	myExp = regexp.MustCompile(`[\S\s]*caseIdInTask:([^\n]?)*\n+`)
+	arr = myExp.FindStringSubmatch(content)
+	if len(arr) > 1 {
+		caseIdInTask, _ = strconv.Atoi(arr[1])
+	}
+
+	return caseId, caseIdInTask
+}
+
 func ReadExpect(file string) [][]string {
 	content := fileUtils.ReadFile(file)
 
@@ -192,7 +213,7 @@ func GenArr(str string, checkSkip bool) (bool, [][]string) {
 			return true, nil
 		}
 
-		if line == "#" {
+		if strings.Index(line, "#") == 0 {
 			ret = append(ret, make([]string, 0))
 			indx++
 		} else {

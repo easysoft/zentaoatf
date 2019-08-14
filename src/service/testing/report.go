@@ -31,12 +31,12 @@ func Print(report model.TestReport, workDir string) {
 	logUtils.PrintAndLogColorLn(&logs, fmt.Sprintf("  %s: %d", i118Utils.I118Prt.Sprintf("skip"), report.Skip), color.FgYellow)
 
 	for _, cs := range report.Cases {
-		str := "\n %s %s"
+		str := "\n %s %d-%d: %s"
 		status := cs.Status.String()
 		statusColor := logUtils.ColoredStatus(status)
 
-		logs = append(logs, fmt.Sprintf(str, status, cs.Path))
-		logUtils.Printt(fmt.Sprintf(str+"\n", statusColor, cs.Path))
+		logs = append(logs, fmt.Sprintf(str, status, cs.Id, cs.IdInTask, cs.Path))
+		logUtils.Printt(fmt.Sprintf(str+"\n", cs.Id, cs.IdInTask, statusColor, cs.Path))
 
 		if len(cs.Steps) > 0 {
 			count := 0
@@ -45,12 +45,12 @@ func Print(report model.TestReport, workDir string) {
 					logUtils.PrintAndLog(&logs, "")
 				}
 
-				str := "  %s%d: %s   %s"
+				str := "  %s %d:   %s"
 				status := commonUtils.BoolToPass(step.Status)
 				statusColor := logUtils.ColoredStatus(status)
 
-				logs = append(logs, fmt.Sprintf(str, i118Utils.I118Prt.Sprintf("step"), step.Numb, status, step.Name))
-				logUtils.Printt(fmt.Sprintf(str, i118Utils.I118Prt.Sprintf("step"), step.Numb, statusColor, step.Name+"\n"))
+				logs = append(logs, fmt.Sprintf(str, status, step.Id, step.Name))
+				logUtils.Printt(fmt.Sprintf(str, statusColor, step.Id, step.Name+"\n"))
 
 				count1 := 0
 				for _, cp := range step.CheckPoints {
@@ -60,9 +60,9 @@ func Print(report model.TestReport, workDir string) {
 
 					cpStatus := commonUtils.BoolToPass(step.Status)
 					cpStatusColored := logUtils.ColoredStatus(cpStatus)
-					logs = append(logs, fmt.Sprintf("    %s%d: %s", i118Utils.I118Prt.Sprintf("checkpoint"), cp.Numb,
-						commonUtils.BoolToPass(cp.Status)))
-					logUtils.Printt(fmt.Sprintf("    %s%d: %s\n", i118Utils.I118Prt.Sprintf("checkpoint"), cp.Numb, cpStatusColored))
+					logs = append(logs, fmt.Sprintf("    %s %d: %s", commonUtils.BoolToPass(cp.Status), cp.Numb,
+						i118Utils.I118Prt.Sprintf("checkpoint")))
+					logUtils.Printt(fmt.Sprintf("    %s %d: %s\n", cpStatusColored, cp.Numb, i118Utils.I118Prt.Sprintf("checkpoint")))
 
 					logUtils.PrintAndLog(&logs, fmt.Sprintf("      %s %s", i118Utils.I118Prt.Sprintf("expect_result"), cp.Expect))
 					logUtils.PrintAndLog(&logs, fmt.Sprintf("      %s %s", i118Utils.I118Prt.Sprintf("actual_result"), cp.Actual))
