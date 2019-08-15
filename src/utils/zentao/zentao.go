@@ -8,7 +8,6 @@ import (
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	dateUtils "github.com/easysoft/zentaoatf/src/utils/date"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
-	print2 "github.com/easysoft/zentaoatf/src/utils/print"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"os"
 	"path"
@@ -55,26 +54,26 @@ func GenApiUri(module string, methd string, param string) string {
 	return ""
 }
 
-func SetBugField(name string, optName string, filedValMap map[string]int) {
-	var options []model.Option
-	if name == "module" {
-		options = vari.ZendaoSettings.Modules
-	} else if name == "category" {
-		options = vari.ZendaoSettings.Categories
-	} else if name == "version" {
-		options = vari.ZendaoSettings.Versions
-	} else if name == "priority" {
-		options = vari.ZendaoSettings.Priorities
-	}
-
-	for _, opt := range options {
-		if opt.Name == optName {
-			filedValMap[name] = opt.Id
-		}
-	}
-
-	print2.PrintToCmd(strconv.Itoa(filedValMap[name]))
-}
+//func SetBugField(name string, optName string, filedValMap map[string]int) {
+//	var options []model.Option
+//	if name == "module" {
+//		options = vari.ZendaoSettings.Modules
+//	} else if name == "category" {
+//		options = vari.ZendaoSettings.Categories
+//	} else if name == "version" {
+//		options = vari.ZendaoSettings.Versions
+//	} else if name == "priority" {
+//		options = vari.ZendaoSettings.Priorities
+//	}
+//
+//	for _, opt := range options {
+//		if opt.Name == optName {
+//			filedValMap[name] = opt.Id
+//		}
+//	}
+//
+//	print2.PrintToCmd(strconv.Itoa(filedValMap[name]))
+//}
 
 func IsBugFieldDefault(optName string, options []model.Option) bool {
 	for _, opt := range options {

@@ -10,12 +10,13 @@ import (
 )
 
 type SelectWidget struct {
-	name    string
-	x, y    int
-	w       int
-	h       int
-	title   string
-	options []model.Option
+	name     string
+	x, y     int
+	w        int
+	h        int
+	title    string
+	options  []model.Option
+	defaultt string
 
 	checkHandler func(g *gocui.Gui, v *gocui.View) error
 }
@@ -23,6 +24,15 @@ type SelectWidget struct {
 func NewSelectWidget(name string, x, y, w, h int, title string, options []model.Option,
 	checkHandler func(g *gocui.Gui, v *gocui.View) error) *gocui.View {
 	widget := SelectWidget{name: name, x: x, y: y, w: w, h: h, title: title, options: options,
+		checkHandler: checkHandler}
+	v, _ := widget.Layout()
+
+	return v
+}
+
+func NewSelectWidgetWithDefault(name string, x, y, w, h int, title string, options []model.Option, defaultt string,
+	checkHandler func(g *gocui.Gui, v *gocui.View) error) *gocui.View {
+	widget := SelectWidget{name: name, x: x, y: y, w: w, h: h, title: title, options: options, defaultt: defaultt,
 		checkHandler: checkHandler}
 	v, _ := widget.Layout()
 
@@ -53,8 +63,14 @@ func (w *SelectWidget) Layout() (*gocui.View, error) {
 	_, height := v.Size()
 	for true {
 		line, _ := GetSelectedLine(v, ".*")
-		if zentaoUtils.IsBugFieldDefault(line, w.options) {
-			break
+		if w.defaultt != "" {
+			if line == w.defaultt {
+				break
+			}
+		} else {
+			if zentaoUtils.IsBugFieldDefault(line, w.options) {
+				break
+			}
 		}
 
 		_, oy := v.Origin()

@@ -14,7 +14,7 @@ var (
 	UrlSubmitResult   = "submitResults"
 	UrlReportBug      = "reportBug"
 
-	SuiteExt string = "suite"
+	SuiteExt = "suite"
 
 	LanguageDefault = "en"
 	LanguageEN      = "en"

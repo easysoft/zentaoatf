@@ -14,7 +14,7 @@ type ZentaoSettings struct {
 }
 
 type Option struct {
-	Id        int
+	Id        string
 	Code      string
 	Name      string
 	IsDefault bool

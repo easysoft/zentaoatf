@@ -3,6 +3,7 @@ package zentaoService
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/service/client"
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
@@ -10,12 +11,11 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	uuid "github.com/satori/go.uuid"
 	"strconv"
+	"strings"
 )
 
-func SubmitBug() {
+func GenBug() (model.Bug, string, string) {
 	conf := configUtils.ReadCurrConfig()
-	Login(conf.Url, conf.Account, conf.Password)
-
 	productId := conf.ProductId
 	projectId := conf.ProjectId
 
@@ -25,79 +25,76 @@ func SubmitBug() {
 			continue
 		}
 
-		id := cs.Id
-		idInTask := cs.IdInTask
-		taskId := cs.TaskId
-		zentaoResultId := cs.ZentaoResultId
 		title := cs.Title
+		module := "0"
+		typ := "install"
+		openedBuild := map[string]interface{}{"0": "trunk"}
+		severity := "1"
+		priority := "1"
 
-		// bug-create-1-0-caseID=1,version=3,resultID=93,runID=0,stepIdList=9_12_
-		// bug-create-1-0-caseID=1,version=3,resultID=84,runID=6,stepIdList=9_12_,testtask=2,projectID=1,buildID=1
+		product := productId
+		project := projectId
+		caseId := cs.Id
+		Result := cs.ZentaoResultId
+		taskId := cs.TaskId
+
+		uid := uuid.NewV4().String()
+		caseVersion := ""
+		oldTaskID := "0"
+
+		idInTask := strconv.Itoa(cs.IdInTask)
+
 		stepIds := ""
-
-		requestObj := map[string]interface{}{"module": "0", "uid": uuid.NewV4().String(),
-			"caseVersion": "0", "oldTaskID": "0", "product": productId, "project": projectId,
-			"case": cs.Id, "result": cs.ZentaoResultId, "title": title,
-		}
-
-		version := map[string]interface{}{"0": "trunk"}
-		requestObj["openedBuild"] = version
-
-		if taskId != 0 {
-			requestObj["testtask"] = taskId
-		}
-
+		steps := make([]string, 0)
 		for _, step := range cs.Steps {
 			if !step.Status {
 				stepIds += strconv.Itoa(step.Id) + "_"
 			}
 
-			requestObj["steps"] = testingService.GetStepHtml(step)
+			stepHtml := testingService.GetStepHtml(step)
+			steps = append(steps, stepHtml+"<br/>")
 		}
 
-		params := fmt.Sprintf("caseID=%d,version=0,resultID=%d,runID=%d,stepIdList=%s",
-			id, zentaoResultId, idInTask, stepIds)
-
-		if taskId != 0 {
-			temp := fmt.Sprintf("testtask=%d,projectID=%d,buildID=1", taskId, projectId)
-			params += temp
+		bug := model.Bug{Title: title,
+			Module: module, Type: typ, OpenedBuild: openedBuild, Severity: severity, Pri: priority,
+			Product: strconv.Itoa(product), Project: strconv.Itoa(project), Case: strconv.Itoa(caseId),
+			Result: strconv.Itoa(Result), Testtask: strconv.Itoa(taskId), Steps: strings.Join(steps, "<br/>"),
+			Uid: uid, CaseVersion: caseVersion, OldTaskID: oldTaskID,
 		}
+		return bug, idInTask, stepIds
 
-		uri := fmt.Sprintf("bug-create-%d-0-%s.json", productId, params)
-		printUtils.PrintToCmd(uri)
-
-		reqStr, _ := json.Marshal(requestObj)
-		printUtils.PrintToCmd(string(reqStr))
-
-		url := conf.Url + uri
-		_, ok := client.PostObject(url, requestObj)
-		if ok {
-			printUtils.PrintToCmd(
-				fmt.Sprintf("success to submit a bug for case %d-%d", id, idInTask))
-		}
 	}
+
+	return model.Bug{}, "", ""
 }
 
-func GetZentaoSettings() {
-	config := configUtils.ReadCurrConfig()
+func SubmitBug(bug model.Bug, idInTask string, stepIds string) {
+	conf := configUtils.ReadCurrConfig()
+	Login(conf.Url, conf.Account, conf.Password)
 
-	entityType := config.EntityType
-	entityVal := config.EntityVal
+	productId := bug.Product
+	projectId := bug.Project
 
-	requestObj := make(map[string]interface{})
-	requestObj["entityType"] = entityType
-	requestObj["entityVal"] = entityVal
+	// bug-create-1-0-caseID=1,version=3,resultID=93,runID=0,stepIdList=9_12_
+	// bug-create-1-0-caseID=1,version=3,resultID=84,runID=6,stepIdList=9_12_,testtask=2,projectID=1,buildID=1
+	params := fmt.Sprintf("caseID=%s,version=0,resultID=%s,runID=%s,stepIdList=%s",
+		bug.Case, bug.Result, idInTask, stepIds)
 
-	//url := config.Url
-	//_, _ = client.PostJson(url+constant.UrlZentaoSettings, requestObj)
-	//printUtils.PrintToCmd(url + constant.UrlZentaoSettings)
-	//
-	//if err == nil {
-	//	if pass {
-	//		utils.PrintToCmd("success to get settings")
-	//		//utils.ZendaoSettings = body.ZentaoSettings
-	//	}
-	//} else {
-	//	printUtils.PrintToCmd(err.Error())
-	//}
+	if bug.Testtask != "" {
+		temp := fmt.Sprintf("testtask=%s,projectID=%s,buildID=1", bug.Testtask, projectId)
+		params += temp
+	}
+
+	uri := fmt.Sprintf("bug-create-%s-0-%s.json", productId, params)
+	printUtils.PrintToCmd(uri)
+
+	reqStr, _ := json.Marshal(bug)
+	printUtils.PrintToCmd(string(reqStr))
+
+	url := conf.Url + uri
+	_, ok := client.PostObject(url, bug)
+	if ok {
+		printUtils.PrintToCmd(
+			fmt.Sprintf("success to submit a bug for case %s-%s", bug.Case, idInTask))
+	}
 }
