@@ -9,15 +9,16 @@ import (
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	printUtils "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"strconv"
 )
 
-func SubmitResult(assert string, date string) {
+func SubmitResult() {
 	conf := configUtils.ReadCurrConfig()
 	Login(conf.Url, conf.Account, conf.Password)
 
-	report := testingService.GetTestTestReportForSubmit(assert, date)
+	report := testingService.GetTestTestReportForSubmit(vari.CurrScriptFile, vari.CurrResultDate)
 
 	for idx, cs := range report.Cases {
 		id := cs.Id
@@ -56,12 +57,10 @@ func SubmitResult(assert string, date string) {
 			report.Cases[idx].ZentaoResultId = resultId
 
 			json, _ := json.Marshal(report)
-			testingService.SaveTestTestReportAfterSubmit(assert, date, string(json))
+			testingService.SaveTestTestReportAfterSubmit(vari.CurrScriptFile, vari.CurrResultDate, string(json))
 
 			printUtils.PrintToCmd(
 				fmt.Sprintf("success to submit the results for case %d, resultId is %d", id, resultId))
-
-			SubmitBug(assert, date, id, idInTask)
 		}
 	}
 }

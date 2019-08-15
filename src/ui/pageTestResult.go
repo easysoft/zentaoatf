@@ -12,9 +12,6 @@ import (
 	"strings"
 )
 
-var CurrRun string
-var CurrResult string
-
 var runViews []string
 
 func showRun(g *gocui.Gui, v *gocui.View) error {
@@ -50,7 +47,7 @@ func showRun(g *gocui.Gui, v *gocui.View) error {
 	setViewLineSelected("panelResultList", selectResultEvent)
 	setViewLineSelected("panelCaseList", selectCaseEvent)
 
-	results := scriptService.LoadTestResults(CurrAsset)
+	results := scriptService.LoadTestResults(vari.CurrScriptFile)
 	fmt.Fprintln(panelResultList, strings.Join(results, "\n"))
 
 	return nil
@@ -66,11 +63,10 @@ func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
 	v.Highlight = true
 
 	line, _ := GetSelectedLine(v, ".*")
-	CurrResult = line
-	//content := scriptService.GetTestResultForDisplay(CurrAsset, line)
+	vari.CurrResultDate = line
 
 	content := make([]string, 0)
-	report := testingService.GetTestTestReportForSubmit(CurrAsset, line)
+	report := testingService.GetTestTestReportForSubmit(vari.CurrScriptFile, vari.CurrResultDate)
 	for _, cs := range report.Cases {
 		id := cs.Id
 		title := cs.Title
@@ -98,9 +94,10 @@ func selectCaseEvent(g *gocui.Gui, v *gocui.View) error {
 	caseLine, _ := GetSelectedLine(v, ".*")
 	caseIdStr := strings.Split(caseLine, "-")[0]
 	caseId, _ := strconv.Atoi(caseIdStr)
+	vari.CurrCaseId = caseId
 
 	content := make([]string, 0)
-	report := testingService.GetTestTestReportForSubmit(CurrAsset, CurrResult)
+	report := testingService.GetTestTestReportForSubmit(vari.CurrScriptFile, vari.CurrResultDate)
 	for _, cs := range report.Cases {
 		if cs.Id == caseId {
 			for _, step := range cs.Steps {
@@ -132,7 +129,7 @@ func clearPanelCaseResult() {
 }
 
 func toUploadResult(g *gocui.Gui, v *gocui.View) error {
-	zentaoService.SubmitResult(CurrAsset, CurrResult)
+	zentaoService.SubmitResult()
 
 	return nil
 }

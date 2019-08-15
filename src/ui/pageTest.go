@@ -12,8 +12,6 @@ import (
 	"strings"
 )
 
-var CurrAsset string
-
 var tabs []string
 var contentViews []string
 
@@ -37,12 +35,12 @@ func InitTestPage() error {
 
 	// right
 	setViewScroll("side")
-	setViewLineSelected("side", selectAssetEvent)
+	setViewLineSelected("side", selectScriptEvent)
 
 	return nil
 }
 
-func selectAssetEvent(g *gocui.Gui, v *gocui.View) error {
+func selectScriptEvent(g *gocui.Gui, v *gocui.View) error {
 	clearPanelCaseResult()
 
 	var line string
@@ -57,7 +55,7 @@ func selectAssetEvent(g *gocui.Gui, v *gocui.View) error {
 		print2.PrintToMainNoScroll("")
 		return nil
 	}
-	CurrAsset = constant.ScriptDir + line
+	vari.CurrScriptFile = constant.ScriptDir + line
 
 	// show
 	if len(tabs) == 0 {
@@ -113,7 +111,7 @@ func showContent(g *gocui.Gui, v *gocui.View) error {
 
 	panelFileContent.Clear()
 	panelFileContent.SetOrigin(0, 0)
-	content := fileUtils.ReadFile(CurrAsset)
+	content := fileUtils.ReadFile(vari.CurrScriptFile)
 	fmt.Fprintln(panelFileContent, content)
 
 	return nil
@@ -128,11 +126,11 @@ func run(g *gocui.Gui, v *gocui.View) error {
 		return err
 	}
 
-	print2.PrintToCmd(fmt.Sprintf("#atf run -d %s -f %s", vari.Prefer.WorkDir, CurrAsset))
+	print2.PrintToCmd(fmt.Sprintf("#atf run -d %s -f %s", vari.Prefer.WorkDir, vari.CurrScriptFile))
 	output, _ := g.View(constant.CuiRunOutputView)
 	output.Clear()
 
-	action.Run(vari.Prefer.WorkDir, []string{CurrAsset}, "")
+	action.Run(vari.Prefer.WorkDir, []string{vari.CurrScriptFile}, "")
 
 	return nil
 }

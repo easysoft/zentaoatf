@@ -5,33 +5,36 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/service/client"
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
+	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	printUtils "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	uuid "github.com/satori/go.uuid"
 	"strconv"
 )
 
-func SubmitBug(assert string, date string, caseId int, caseIdInTask int) {
+func SubmitBug() {
 	conf := configUtils.ReadCurrConfig()
 	Login(conf.Url, conf.Account, conf.Password)
 
 	productId := conf.ProductId
 	projectId := conf.ProjectId
 
-	report := testingService.GetTestTestReportForSubmit(assert, date)
+	report := testingService.GetTestTestReportForSubmit(vari.CurrScriptFile, vari.CurrResultDate)
 	for _, cs := range report.Cases {
+		if cs.Id != vari.CurrCaseId {
+			continue
+		}
+
 		id := cs.Id
 		idInTask := cs.IdInTask
 		taskId := cs.TaskId
 		zentaoResultId := cs.ZentaoResultId
 		title := cs.Title
 
-		if caseId != id || caseIdInTask != idInTask {
-			continue
-		}
-
-		// bug-create-1-0-caseID=1,version=3,resultID=93,runID=0,stepIdList=9_12_.html
-		// bug-create-1-0-caseID=1,version=3,resultID=84,runID=6,stepIdList=9_12_,testtask=2,projectID=1,buildID=1.html
+		// bug-create-1-0-caseID=1,version=3,resultID=93,runID=0,stepIdList=9_12_
+		// bug-create-1-0-caseID=1,version=3,resultID=84,runID=6,stepIdList=9_12_,testtask=2,projectID=1,buildID=1
 		stepIds := ""
 
 		requestObj := map[string]interface{}{"module": "0", "uid": uuid.NewV4().String(),
@@ -63,7 +66,7 @@ func SubmitBug(assert string, date string, caseId int, caseIdInTask int) {
 		}
 
 		uri := fmt.Sprintf("bug-create-%d-0-%s.json", productId, params)
-		println(uri)
+		printUtils.PrintToCmd(uri)
 
 		reqStr, _ := json.Marshal(requestObj)
 		printUtils.PrintToCmd(string(reqStr))
@@ -74,5 +77,29 @@ func SubmitBug(assert string, date string, caseId int, caseIdInTask int) {
 			printUtils.PrintToCmd(
 				fmt.Sprintf("success to submit a bug for case %d-%d", id, idInTask))
 		}
+	}
+}
+
+func GetZentaoSettings() {
+	config := configUtils.ReadCurrConfig()
+
+	entityType := config.EntityType
+	entityVal := config.EntityVal
+
+	requestObj := make(map[string]interface{})
+	requestObj["entityType"] = entityType
+	requestObj["entityVal"] = entityVal
+
+	url := config.Url
+	_, _ = client.PostJson(url+constant.UrlZentaoSettings, requestObj)
+	printUtils.PrintToCmd(url + constant.UrlZentaoSettings)
+
+	if err == nil {
+		if pass {
+			utils.PrintToCmd("success to get settings")
+			//utils.ZendaoSettings = body.ZentaoSettings
+		}
+	} else {
+		printUtils.PrintToCmd(err.Error())
 	}
 }

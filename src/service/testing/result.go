@@ -13,9 +13,9 @@ import (
 	"strings"
 )
 
-func GetTestTestReportForSubmit(assert string, date string) model.TestReport {
-	mode, name := scriptService.GetRunModeAndName(assert)
-	resultPath := vari.Prefer.WorkDir + constant.LogDir + scriptService.LogFolder(mode, name, date) +
+func GetTestTestReportForSubmit(scriptFile string, resultDate string) model.TestReport {
+	mode, name := scriptService.GetRunModeAndName(scriptFile)
+	resultPath := vari.Prefer.WorkDir + constant.LogDir + scriptService.LogFolder(mode, name, resultDate) +
 		string(os.PathSeparator) + "result.json"
 
 	content := fileUtils.ReadFile(resultPath)
@@ -27,9 +27,9 @@ func GetTestTestReportForSubmit(assert string, date string) model.TestReport {
 	return report
 }
 
-func SaveTestTestReportAfterSubmit(assert string, date string, content string) {
-	mode, name := scriptService.GetRunModeAndName(assert)
-	resultPath := vari.Prefer.WorkDir + constant.LogDir + scriptService.LogFolder(mode, name, date) +
+func SaveTestTestReportAfterSubmit(scriptFile string, resultDate string, content string) {
+	mode, name := scriptService.GetRunModeAndName(scriptFile)
+	resultPath := vari.Prefer.WorkDir + constant.LogDir + scriptService.LogFolder(mode, name, resultDate) +
 		string(os.PathSeparator) + "result.json"
 
 	fileUtils.WriteFile(resultPath, content)

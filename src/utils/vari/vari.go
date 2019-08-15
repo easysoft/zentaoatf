@@ -19,4 +19,8 @@ var (
 	SessionId   string
 	RequestType string
 	RequestFix  string
+
+	CurrScriptFile string // scripts/tc-001.py
+	CurrResultDate string // 2019-08-15T173802
+	CurrCaseId     int    // 2019-08-15T173802
 )

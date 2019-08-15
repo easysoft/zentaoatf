@@ -1,7 +1,7 @@
 package ui
 
 import (
-	testingService "github.com/easysoft/zentaoatf/src/service/testing"
+	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	config2 "github.com/easysoft/zentaoatf/src/utils/config"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
@@ -16,7 +16,7 @@ var filedValMap map[string]int
 func InitReportBugPage() error {
 	DestoryReportBugPage()
 
-	testingService.GetZentaoSettings()
+	zentaoService.GetZentaoSettings()
 
 	maxX, maxY := vari.Cui.Size()
 	x := maxX/2 - 50
@@ -126,17 +126,7 @@ func reportBug(g *gocui.Gui, v *gocui.View) error {
 	priorityId, _ := strconv.Atoi(priorityStr)
 	params["priorityId"] = priorityId
 
-	//url := utils.UpdateUrl(mock.BaseUrl)
-
-	//pass, _, e := httpClient.Post(url+utils.UrlReportBug, string(jsonStr))
-	//if e != nil {
-	//	utils.PrintToCmd(e.Error())
-	//	return nil
-	//} else {
-	//	if pass {
-	//		utils.PrintToCmd(fmt.Sprintf("success to report bug at %s", utils.DateTimeStr(time.Now())))
-	//	}
-	//}
+	zentaoService.SubmitBug()
 
 	return nil
 }
