@@ -1,6 +1,10 @@
 package stringUtils
 
 import (
+	"bytes"
+	"encoding/binary"
+	"encoding/hex"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"os"
 	"strings"
 	"unicode"
@@ -31,4 +35,24 @@ func PathSimple(str string) string {
 	}
 
 	return ""
+}
+
+func U2s(form string) (to string, err error) {
+	bs, err := hex.DecodeString(strings.Replace(form, `\u`, ``, -1))
+	if err != nil {
+		return
+	}
+	for i, bl, br, r := 0, len(bs), bytes.NewReader(bs), uint16(0); i < bl; i += 2 {
+		binary.Read(br, binary.BigEndian, &r)
+		to += string(r)
+	}
+	return
+}
+
+func BoolToPass(b bool) string {
+	if b {
+		return constant.PASS.String()
+	} else {
+		return constant.FAIL.String()
+	}
 }

@@ -121,32 +121,39 @@ func PathToRunName(filePath string) string {
 	return runName
 }
 
-func GetCaseIds(file string) (int, int, int) {
+func GetCaseIds(file string) (int, int, int, string) {
 	content := fileUtils.ReadFile(file)
 
 	var caseId int
 	var caseIdInTask int
 	var taskId int
+	var title string
 
-	myExp := regexp.MustCompile(`[\S\s]*caseId:([^\n]?)*\n+`)
+	myExp := regexp.MustCompile(`[\S\s]*caseId:\s*([^\n]*?)\s*\n`)
 	arr := myExp.FindStringSubmatch(content)
 	if len(arr) > 1 {
 		caseId, _ = strconv.Atoi(arr[1])
 	}
 
-	myExp = regexp.MustCompile(`[\S\s]*caseIdInTask:([^\n]?)*\n+`)
+	myExp = regexp.MustCompile(`[\S\s]*caseIdInTask:\s*([^\n]*?)\s*\n`)
 	arr = myExp.FindStringSubmatch(content)
 	if len(arr) > 1 {
 		caseIdInTask, _ = strconv.Atoi(arr[1])
 	}
 
-	myExp = regexp.MustCompile(`[\S\s]*taskId:([^\n]?)*\n+`)
+	myExp = regexp.MustCompile(`[\S\s]*taskId:\s*([^\n]*?)\s*\n`)
 	arr = myExp.FindStringSubmatch(content)
 	if len(arr) > 1 {
 		taskId, _ = strconv.Atoi(arr[1])
 	}
 
-	return caseId, caseIdInTask, taskId
+	myExp = regexp.MustCompile(`[\S\s]*title:\s*([^\n]*?)\s*\n`)
+	arr = myExp.FindStringSubmatch(content)
+	if len(arr) > 1 {
+		title = arr[1]
+	}
+
+	return caseId, caseIdInTask, taskId, title
 }
 
 func ReadExpect(file string) [][]string {

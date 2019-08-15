@@ -39,7 +39,7 @@ func Get(url string, params map[string]string) (string, bool) {
 	}
 
 	bodyStr, _ := ioutil.ReadAll(resp.Body)
-	println(string(bodyStr))
+	printUtils.PrintUnicode(bodyStr)
 
 	var bodyJson model.ZentaoResponse
 	json.Unmarshal(bodyStr, &bodyJson)
@@ -55,19 +55,18 @@ func Get(url string, params map[string]string) (string, bool) {
 	}
 }
 
-func PostJson(url string, params interface{}) (string, bool) {
+func PostObject(url string, params interface{}) (string, bool) {
 	client := &http.Client{}
 
 	reqStr, _ := json.Marshal(params)
 	printUtils.PrintToCmd(string(reqStr))
 
 	val, _ := form.EncodeToValues(params)
-	fmt.Printf("%s\n", val.Encode())
-
 	//str := "case=1&reals[12]=N%2FA&reals[9]=N%2FA&steps[12]=pass&steps[9]=pass&version=0"
 
 	re3, _ := regexp.Compile("\\.(.*?)=")
 	data := re3.ReplaceAllStringFunc(val.Encode(), replacePostData)
+	fmt.Printf("%s\n", data)
 
 	req, err := http.NewRequest("POST", url, strings.NewReader(data))
 	if err != nil {
@@ -83,7 +82,7 @@ func PostJson(url string, params interface{}) (string, bool) {
 	}
 
 	bodyStr, _ := ioutil.ReadAll(resp.Body)
-	println(string(bodyStr))
+	printUtils.PrintUnicode(bodyStr)
 
 	var bodyJson model.ZentaoResponse
 	json.Unmarshal(bodyStr, &bodyJson)
@@ -126,7 +125,7 @@ func PostStr(url string, params map[string]string) (string, bool) {
 	}
 
 	bodyStr, _ := ioutil.ReadAll(resp.Body)
-	println(string(bodyStr))
+	printUtils.PrintUnicode(bodyStr)
 
 	var bodyJson model.ZentaoResponse
 	json.Unmarshal(bodyStr, &bodyJson)

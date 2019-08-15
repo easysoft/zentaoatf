@@ -49,7 +49,7 @@ func SubmitResult(assert string, date string) {
 		}
 
 		url := conf.Url + uri
-		_, ok := client.PostJson(url, requestObj)
+		_, ok := client.PostObject(url, requestObj)
 		if ok {
 			resultId := GetLastResult(conf.Url, idInTask, id)
 			report.Cases[idx].ZentaoResultId = resultId
@@ -59,6 +59,8 @@ func SubmitResult(assert string, date string) {
 
 			printUtils.PrintToCmd(
 				fmt.Sprintf("success to submit the results for case %d, resultId is %d", id, resultId))
+
+			SubmitBug(assert, date, id, idInTask)
 		}
 	}
 }

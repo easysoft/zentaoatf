@@ -68,6 +68,7 @@ type CaseLog struct {
 	ZentaoResultId int
 	Path           string
 	Status         string
+	Title          string
 
 	Steps []StepLog
 }

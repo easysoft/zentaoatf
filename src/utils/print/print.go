@@ -1,6 +1,7 @@
 package printUtils
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
@@ -78,4 +79,15 @@ func PrintMap(obj map[string]interface{}) {
 	for key, val := range obj {
 		fmt.Printf("  %s: %v\n", key, val)
 	}
+}
+
+func PrintUnicode(str []byte) {
+	var a interface{}
+	err := json.Unmarshal(str, &a)
+	if err == nil {
+		fmt.Println(a)
+	} else {
+		fmt.Println(string(str))
+	}
+
 }
