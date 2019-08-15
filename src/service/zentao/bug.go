@@ -36,11 +36,15 @@ func SubmitBug(assert string, date string, caseId int, caseIdInTask int) {
 
 		requestObj := map[string]interface{}{"module": "0", "uid": uuid.NewV4().String(),
 			"caseVersion": "0", "oldTaskID": "0", "product": productId, "project": projectId,
-			"case": cs.Id, "result": cs.ZentaoResultId, "testtask": taskId, "title": title,
+			"case": cs.Id, "result": cs.ZentaoResultId, "title": title,
 		}
 
 		version := map[string]interface{}{"0": "trunk"}
 		requestObj["openedBuild"] = version
+
+		if taskId != 0 {
+			requestObj["testtask"] = taskId
+		}
 
 		for _, step := range cs.Steps {
 			if !step.Status {
