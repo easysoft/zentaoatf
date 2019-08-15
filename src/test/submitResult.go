@@ -7,5 +7,5 @@ import (
 
 func main() {
 	zentaoService.Login("http://ztpmp.ngtesting.org/", "admin", "P2ssw0rd")
-	testingService.SubmitResult("scripts/all.suite", "2019-08-14T125610")
+	testingService.SubmitResult("scripts/all.suite", "2019-08-15T082332")
 }

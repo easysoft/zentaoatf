@@ -47,7 +47,7 @@ func Get(url string, params map[string]string) (string, bool) {
 		return string(bodyStr), true
 	} else { // 嵌套结构
 		dataStr := bodyJson.Data
-		return dataStr, status == "pass"
+		return dataStr, status == "success"
 	}
 }
 
@@ -83,7 +83,7 @@ func PostJson(url string, params map[string]interface{}) (string, bool) {
 		return string(bodyStr), true
 	} else { // 嵌套结构
 		dataStr := bodyJson.Data
-		return dataStr, status == "pass"
+		return dataStr, status == "success"
 	}
 }
 
@@ -126,6 +126,6 @@ func PostStr(url string, params map[string]string) (string, bool) {
 		return string(bodyStr), true
 	} else { // 嵌套结构
 		dataStr := bodyJson.Data
-		return dataStr, status == "pass"
+		return dataStr, status == "success"
 	}
 }

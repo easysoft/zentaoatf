@@ -26,11 +26,7 @@ func SubmitResult(assert string, date string) {
 		runId := cs.IdInTask
 
 		var uri string
-		if runId != 0 { // exe case
-			uri = fmt.Sprintf("testtask-runCase-%d-%d-1.json", runId, id)
-		} else { // exe task
-			uri = fmt.Sprintf("testtask-runCase-%d.json", runId)
-		}
+		uri = fmt.Sprintf("testtask-runCase-%d-%d-1.json", runId, id)
 
 		requestObj := map[string]string{"case": strconv.Itoa(id), "version": "0"}
 
