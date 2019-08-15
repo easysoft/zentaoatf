@@ -15,6 +15,7 @@ import (
 
 func SubmitResult(assert string, date string) {
 	conf := configUtils.ReadCurrConfig()
+	Login(conf.Url, conf.Account, conf.Password)
 
 	report := testingService.GetTestTestReportForSubmit(assert, date)
 

@@ -13,6 +13,8 @@ import (
 
 func SubmitBug(assert string, date string, caseId int, caseIdInTask int) {
 	conf := configUtils.ReadCurrConfig()
+	Login(conf.Url, conf.Account, conf.Password)
+
 	productId := conf.ProductId
 	projectId := conf.ProjectId
 
