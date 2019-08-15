@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/service/client"
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
-	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
-	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	printUtils "github.com/easysoft/zentaoatf/src/utils/print"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	uuid "github.com/satori/go.uuid"
@@ -90,16 +88,16 @@ func GetZentaoSettings() {
 	requestObj["entityType"] = entityType
 	requestObj["entityVal"] = entityVal
 
-	url := config.Url
-	_, _ = client.PostJson(url+constant.UrlZentaoSettings, requestObj)
-	printUtils.PrintToCmd(url + constant.UrlZentaoSettings)
-
-	if err == nil {
-		if pass {
-			utils.PrintToCmd("success to get settings")
-			//utils.ZendaoSettings = body.ZentaoSettings
-		}
-	} else {
-		printUtils.PrintToCmd(err.Error())
-	}
+	//url := config.Url
+	//_, _ = client.PostJson(url+constant.UrlZentaoSettings, requestObj)
+	//printUtils.PrintToCmd(url + constant.UrlZentaoSettings)
+	//
+	//if err == nil {
+	//	if pass {
+	//		utils.PrintToCmd("success to get settings")
+	//		//utils.ZendaoSettings = body.ZentaoSettings
+	//	}
+	//} else {
+	//	printUtils.PrintToCmd(err.Error())
+	//}
 }

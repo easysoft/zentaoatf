@@ -9,6 +9,7 @@ type ZentaoSettings struct {
 	Modules    []Option
 	Categories []Option
 	Versions   []Option
+	Severities []Option
 	Priorities []Option
 }
 

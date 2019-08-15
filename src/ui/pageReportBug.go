@@ -62,12 +62,20 @@ func InitReportBugPage() error {
 		bugSelectFieldCheckEvent(filedValMap))
 	ViewMap["reportBug"] = append(ViewMap["reportBug"], versionInput.Name())
 
-	// priority
+	// severity
 	left = x + 2 + LabelWidthSmall + Space
+	severityInput := NewSelectWidget("severity", left, y+11, SelectWidth, 6, "Severity", vari.ZendaoSettings.Modules,
+		bugSelectFieldCheckEvent(filedValMap))
+	ViewMap["reportBug"] = append(ViewMap["reportBug"], severityInput.Name())
+
+	// priority
+	left = right + Space
+	right = left + SelectWidth
 	priorityInput := NewSelectWidget("priority", left, y+11, SelectWidth, 6, "Priority", vari.ZendaoSettings.Modules,
 		bugSelectFieldCheckEvent(filedValMap))
 	ViewMap["reportBug"] = append(ViewMap["reportBug"], priorityInput.Name())
 
+	// msg
 	reportBugMsg := NewPanelWidget("reportBugMsg", x+2+LabelWidthSmall+Space, y+18, TextWidthFull, 2, "")
 	reportBugMsg.Frame = false
 	ViewMap["reportBug"] = append(ViewMap["reportBug"], reportBugMsg.Name())
