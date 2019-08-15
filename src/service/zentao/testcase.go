@@ -25,7 +25,7 @@ func ListCaseByProduct(baseUrl string, productId string) []model.TestCase {
 		for _, cs := range caseMap {
 			id := cs.Id
 			csWithSteps := GetCaseById(baseUrl, id)
-			caseArr = append(caseArr, model.TestCase{Id: id, Title: cs.Title, StepArr: csWithSteps.StepArr})
+			caseArr = append(caseArr, model.TestCase{Id: id, TaskId: "0", Title: cs.Title, StepArr: csWithSteps.StepArr})
 		}
 
 		return caseArr
@@ -50,7 +50,7 @@ func ListCaseByTask(baseUrl string, taskId string) []model.TestCase {
 			caseInTaskId := cs.Id
 
 			csWithSteps := GetCaseById(baseUrl, caseId)
-			caseArr = append(caseArr, model.TestCase{Id: caseId, IdInTask: caseInTaskId,
+			caseArr = append(caseArr, model.TestCase{Id: caseId, IdInTask: caseInTaskId, TaskId: taskId,
 				Title: cs.Title, StepArr: csWithSteps.StepArr})
 		}
 

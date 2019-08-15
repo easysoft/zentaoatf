@@ -85,6 +85,7 @@ func DealwithTestCase(cs model.TestCase, langType string, singleFile bool, caseP
 
 	caseId := cs.Id
 	caseInTaskId := cs.IdInTask
+	taskId := cs.TaskId
 	if caseInTaskId == "" {
 		caseInTaskId = "0"
 	}
@@ -133,7 +134,7 @@ func DealwithTestCase(cs model.TestCase, langType string, singleFile bool, caseP
 	template := zentaoUtils.ReadResData(path + langType + ".tpl")
 
 	content := fmt.Sprintf(template,
-		caseId, caseInTaskId, caseTitle,
+		caseId, caseInTaskId, taskId, caseTitle,
 		strings.Join(steps, "\n"), expectsTxt,
 		readme,
 		strings.Join(srcCode, "\n"))

@@ -3,7 +3,7 @@ package ui
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/service/script"
-	testingService "github.com/easysoft/zentaoatf/src/service/testing"
+	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
@@ -107,7 +107,7 @@ func clearPanelCaseResult() {
 }
 
 func toUploadResult(g *gocui.Gui, v *gocui.View) error {
-	testingService.SubmitResult(CurrAsset, CurrResult)
+	zentaoService.SubmitResult(CurrAsset, CurrResult)
 
 	return nil
 }

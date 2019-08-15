@@ -3,6 +3,7 @@ set case {
 <<TC
 caseId:         %s
 caseIdInTask:   %s
+taskId:         %s
 title:          %s
 steps:          %s
 

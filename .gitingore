@@ -1,5 +1,6 @@
 preferences.yaml
 config.yaml
 /scripts
+/logs
 /.idea/
 /bin
