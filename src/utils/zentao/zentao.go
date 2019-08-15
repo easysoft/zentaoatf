@@ -121,11 +121,12 @@ func PathToRunName(filePath string) string {
 	return runName
 }
 
-func GetCaseIds(file string) (int, int) {
+func GetCaseIds(file string) (int, int, int) {
 	content := fileUtils.ReadFile(file)
 
 	var caseId int
 	var caseIdInTask int
+	var taskId int
 
 	myExp := regexp.MustCompile(`[\S\s]*caseId:([^\n]?)*\n+`)
 	arr := myExp.FindStringSubmatch(content)
@@ -139,7 +140,13 @@ func GetCaseIds(file string) (int, int) {
 		caseIdInTask, _ = strconv.Atoi(arr[1])
 	}
 
-	return caseId, caseIdInTask
+	myExp = regexp.MustCompile(`[\S\s]*taskId:([^\n]?)*\n+`)
+	arr = myExp.FindStringSubmatch(content)
+	if len(arr) > 1 {
+		taskId, _ = strconv.Atoi(arr[1])
+	}
+
+	return caseId, caseIdInTask, taskId
 }
 
 func ReadExpect(file string) [][]string {

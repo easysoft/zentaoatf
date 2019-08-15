@@ -4,6 +4,8 @@ type Config struct {
 	Url        string
 	EntityType string
 	EntityVal  string
+	ProductId  int
+	ProjectId  int
 	LangType   string
 	SingleFile bool
 

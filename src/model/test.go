@@ -1,7 +1,7 @@
 package model
 
 type Product struct {
-	Id   int
+	Id   string
 	Code string
 	Name string
 }
@@ -13,9 +13,11 @@ type Module struct {
 }
 
 type TestTask struct {
-	Id   int
-	Code string
-	Name string
+	Id      int
+	Code    string
+	Name    string
+	Product string
+	Project string
 
 	Runs map[int]TestCaseInTask
 }
@@ -60,11 +62,12 @@ type TestReport struct {
 	Cases []CaseLog
 }
 type CaseLog struct {
-	Id          int
-	IdInTask    int
-	ZentaoRunId int
-	Path        string
-	Status      string
+	Id             int
+	IdInTask       int
+	TaskId         int
+	ZentaoResultId int
+	Path           string
+	Status         string
 
 	Steps []StepLog
 }

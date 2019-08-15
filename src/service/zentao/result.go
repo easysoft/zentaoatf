@@ -25,8 +25,10 @@ func SubmitResult(assert string, date string) {
 		var uri string
 		uri = fmt.Sprintf("testtask-runCase-%d-%d-1.json", idInTask, id)
 
-		requestObj := map[string]string{"case": strconv.Itoa(id), "version": "0"}
+		requestObj := map[string]interface{}{"case": strconv.Itoa(id), "version": "0"}
 
+		stepMap := map[string]string{}
+		realMap := map[string]string{}
 		for _, step := range cs.Steps {
 			var stepStatus string
 			if step.Status {
@@ -39,19 +41,18 @@ func SubmitResult(assert string, date string) {
 			for _, checkpoint := range step.CheckPoints {
 				stepResults += checkpoint.Actual // strconv.FormatBool(checkpoint.Status) + ": " + checkpoint.Actual
 			}
+			stepMap[strconv.Itoa(step.Id)] = stepStatus
+			realMap[strconv.Itoa(step.Id)] = stepResults
 
-			requestObj["steps["+strconv.Itoa(step.Id)+"]"] = stepStatus
-			requestObj["reals["+strconv.Itoa(step.Id)+"]"] = stepResults
+			requestObj["steps"] = stepMap
+			requestObj["reals"] = realMap
 		}
 
-		reqStr, _ := json.Marshal(requestObj)
-		printUtils.PrintToCmd(string(reqStr))
-
 		url := conf.Url + uri
-		_, ok := client.PostStr(url, requestObj)
+		_, ok := client.PostJson(url, requestObj)
 		if ok {
 			resultId := GetLastResult(conf.Url, idInTask, id)
-			report.Cases[idx].ZentaoRunId = resultId
+			report.Cases[idx].ZentaoResultId = resultId
 
 			json, _ := json.Marshal(report)
 			testingService.SaveTestTestReportAfterSubmit(assert, date, string(json))

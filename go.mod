@@ -6,9 +6,11 @@ require golang.org/x/text v0.3.0
 
 require (
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
+	github.com/ajg/form v1.5.1
 	github.com/bitly/go-simplejson v0.5.0
 	github.com/fatih/color v1.7.0
 	github.com/go-ole/go-ole v1.2.4 // indirect
+	github.com/go-playground/form v3.1.4+incompatible
 	github.com/gorilla/mux v1.7.3
 	github.com/jroimartin/gocui v0.4.0
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0 // indirect

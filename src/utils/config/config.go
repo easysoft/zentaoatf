@@ -10,9 +10,11 @@ import (
 	"io/ioutil"
 )
 
-func SaveConfig(dir string, url string, entityType string, entityVal string, langType string, singleFile bool, name string,
+func SaveConfig(dir string, url string, entityType string, entityVal string,
+	productId int, projectId int, langType string, singleFile bool, name string,
 	account string, password string) error {
-	config := model.Config{Url: url, EntityType: entityType, LangType: langType, SingleFile: singleFile, ProjectName: name,
+	config := model.Config{Url: url, EntityType: entityType,
+		ProductId: productId, ProjectId: projectId, LangType: langType, SingleFile: singleFile, ProjectName: name,
 		Account: account, Password: password}
 
 	config.EntityType = entityType
@@ -50,7 +52,7 @@ func ReadConfig(dir string) model.Config {
 }
 
 func saveEmptyConfig(dir string) error {
-	SaveConfig(dir, "", "", "", "", false, "",
+	SaveConfig(dir, "", "", "", 0, 0, "", false, "",
 		"", "")
 
 	return nil

@@ -14,6 +14,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -28,14 +29,19 @@ func GenFromCmd(url string, entityType string, entityVal string, langType string
 	url = commonUtils.UpdateUrl(url)
 	zentaoService.Login(url, account, password)
 
+	var productId int
+	var projectId int
 	var name string
 	var testcases []model.TestCase
 	if entityType == "product" {
 		product := zentaoService.GetProductInfo(url, params["entityVal"])
+		productId, _ = strconv.Atoi(product.Id)
 		name = product.Name
 		testcases = zentaoService.ListCaseByProduct(url, params["entityVal"])
 	} else {
 		task := zentaoService.GetTaskInfo(url, params["entityVal"])
+		productId, _ = strconv.Atoi(task.Product)
+		projectId, _ = strconv.Atoi(task.Project)
 		name = task.Name
 		testcases = zentaoService.ListCaseByTask(url, params["entityVal"])
 	}
@@ -43,7 +49,8 @@ func GenFromCmd(url string, entityType string, entityVal string, langType string
 	if testcases != nil {
 		count, err := Generate(testcases, langType, singleFile, account, password)
 		if err == nil {
-			configUtils.SaveConfig("", url, params["entityType"], params["entityVal"], langType, singleFile,
+			configUtils.SaveConfig("", url, params["entityType"], params["entityVal"],
+				productId, projectId, langType, singleFile,
 				name, account, password)
 
 			fmt.Sprintf("success to generate %d test scripts in '%s' at %s",

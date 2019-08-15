@@ -12,6 +12,7 @@ import (
 	print2 "github.com/easysoft/zentaoatf/src/utils/print"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -125,6 +126,8 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 	singleFileStr := strings.TrimSpace(singleFileView.Buffer())
 	singleFile := ParseRadioVal(singleFileStr)
 
+	var productIdInt int
+	var projectId int
 	var name string
 	params := make(map[string]string)
 	if productId != "" {
@@ -132,13 +135,16 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 		params["entityVal"] = productId
 
 		product := zentaoService.GetProductInfo(url, productId)
+		productIdInt, _ = strconv.Atoi(productId)
 		name = product.Name
 	} else {
 		params["entityType"] = "task"
 		params["entityVal"] = taskId
 
-		//taskJson := zentaoService.GetTaskInfo(url, taskId)
-		//name, _ = taskJson.Get("name").String()
+		task := zentaoService.GetTaskInfo(url, params["entityVal"])
+		productIdInt, _ = strconv.Atoi(task.Product)
+		projectId, _ = strconv.Atoi(task.Project)
+		name = task.Name
 	}
 
 	url = commonUtils.UpdateUrl(url)
@@ -156,7 +162,8 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 
 	count, err := action.Generate(cases, language, singleFile, account, password)
 	if err == nil {
-		configUtils.SaveConfig("", url, params["entityType"], params["entityVal"], language, singleFile,
+		configUtils.SaveConfig("", url, params["entityType"], params["entityVal"],
+			productIdInt, projectId, language, singleFile,
 			name, account, password)
 
 		print2.PrintToCmd(fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
