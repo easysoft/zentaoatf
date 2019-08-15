@@ -2,10 +2,12 @@ package testingService
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	scriptService "github.com/easysoft/zentaoatf/src/service/script"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
+	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"os"
 	"strings"
@@ -31,4 +33,56 @@ func SaveTestTestReportAfterSubmit(assert string, date string, content string) {
 		string(os.PathSeparator) + "result.json"
 
 	fileUtils.WriteFile(resultPath, content)
+}
+
+func GetStepHtml(step model.StepLog) string {
+	stepResults := make([]string, 0)
+
+	stepStatus := stringUtils.BoolToPass(step.Status)
+
+	stepTxt := fmt.Sprintf(
+		"<p><b>%s: %s</b></p>",
+		step.Name, stepStatus)
+
+	for _, checkpoint := range step.CheckPoints {
+		checkpointStatus := stringUtils.BoolToPass(checkpoint.Status)
+
+		text := fmt.Sprintf(
+			"<p>&nbsp;Checkpoint: %s</p>"+
+				"<p>&nbsp;&nbsp;Expect</p>"+
+				"&nbsp;&nbsp;&nbsp;%s"+
+				"<p>&nbsp;&nbsp;Actual<p/>"+
+				"&nbsp;&nbsp;&nbsp;%s",
+			checkpointStatus, checkpoint.Expect, checkpoint.Actual)
+
+		stepResults = append(stepResults, text)
+	}
+
+	return stepTxt + strings.Join(stepResults, "<br/>")
+}
+
+func GetStepText(step model.StepLog) string {
+	stepResults := make([]string, 0)
+
+	stepStatus := stringUtils.BoolToPass(step.Status)
+
+	stepTxt := fmt.Sprintf(
+		"%s: %s\n",
+		step.Name, stepStatus)
+
+	for _, checkpoint := range step.CheckPoints {
+		checkpointStatus := stringUtils.BoolToPass(checkpoint.Status)
+
+		text := fmt.Sprintf(
+			" Checkpoint: %s\n"+
+				"  Expect\n"+
+				"   %s\n"+
+				"  Actual\n"+
+				"   %s",
+			checkpointStatus, checkpoint.Expect, checkpoint.Actual)
+
+		stepResults = append(stepResults, text)
+	}
+
+	return stepTxt + strings.Join(stepResults, "\n")
 }

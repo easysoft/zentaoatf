@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/utils/common"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
-	"github.com/easysoft/zentaoatf/src/utils/file"
-	print2 "github.com/easysoft/zentaoatf/src/utils/print"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"io/ioutil"
 	"os"
@@ -37,49 +35,51 @@ func LoadTestResults(assert string) []string {
 	return ret
 }
 
-func GetTestResultForDisplay(assert string, date string) []string {
-	mode, name := GetRunModeAndName(assert)
-	resultPath := vari.Prefer.WorkDir + constant.LogDir + LogFolder(mode, name, date) + string(os.PathSeparator) + "result.txt"
-
-	arr := make([]string, 0)
-	content := fileUtils.ReadFile(resultPath)
-	for _, line := range strings.Split(content, "\n") {
-		pass, _ := regexp.MatchString("^\\s(PASS|FAIL).*", line)
-		if !pass {
-			continue
-		}
-
-		line := strings.TrimSpace(line)
-		if line == "" {
-			continue
-		}
-
-		arr = append(arr, line)
-	}
-
-	return arr
-}
-
-func GetCheckpointsResult(assert string, date string, caseLine string) string {
-	mode, name := GetRunModeAndName(assert)
-	resultPath := vari.Prefer.WorkDir + constant.LogDir + LogFolder(mode, name, date) + string(os.PathSeparator) + "result.txt"
-
-	content := fileUtils.ReadFile(resultPath)
-
-	caseLine = strings.Replace(caseLine, "\\", "\\\\", -1)
-	caseLine = strings.Replace(caseLine, " ", "\\s", -1)
-
-	print2.PrintToCmd(caseLine)
-
-	myExp := regexp.MustCompile(`(?m:^\s` + caseLine + `\n([\s\S]*?)((^\s(PASS|FAIL))|\z))`)
-	arr := myExp.FindStringSubmatch(content)
-	str := ""
-	if len(arr) > 1 {
-		str = arr[1]
-	}
-
-	return str
-}
+//func GetTestResultForDisplay(assert string, date string) []string {
+//	mode, name := GetRunModeAndName(assert)
+//	resultPath := vari.Prefer.WorkDir + constant.LogDir + LogFolder(mode, name, date) + string(os.PathSeparator) + "result.json"
+//
+//	arr := make([]string, 0)
+//	content := fileUtils.ReadFile(resultPath)
+//
+//
+//	for _, line := range strings.Split(content, "\n") {
+//		pass, _ := regexp.MatchString("^\\s(PASS|FAIL).*", line)
+//		if !pass {
+//			continue
+//		}
+//
+//		line := strings.TrimSpace(line)
+//		if line == "" {
+//			continue
+//		}
+//
+//		arr = append(arr, line)
+//	}
+//
+//	return arr
+//}
+//
+//func GetCheckpointsResult(assert string, date string, caseLine string) string {
+//	mode, name := GetRunModeAndName(assert)
+//	resultPath := vari.Prefer.WorkDir + constant.LogDir + LogFolder(mode, name, date) + string(os.PathSeparator) + "result.txt"
+//
+//	content := fileUtils.ReadFile(resultPath)
+//
+//	caseLine = strings.Replace(caseLine, "\\", "\\\\", -1)
+//	caseLine = strings.Replace(caseLine, " ", "\\s", -1)
+//
+//	print2.PrintToCmd(caseLine)
+//
+//	myExp := regexp.MustCompile(`(?m:^\s` + caseLine + `\n([\s\S]*?)((^\s(PASS|FAIL))|\z))`)
+//	arr := myExp.FindStringSubmatch(content)
+//	str := ""
+//	if len(arr) > 1 {
+//		str = arr[1]
+//	}
+//
+//	return str
+//}
 
 func GetRunModeAndName(assert string) (string, string) {
 	ext := path.Ext(assert)

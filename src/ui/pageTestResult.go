@@ -3,10 +3,12 @@ package ui
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/service/script"
+	testingService "github.com/easysoft/zentaoatf/src/service/testing"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
+	"strconv"
 	"strings"
 )
 
@@ -65,7 +67,18 @@ func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
 
 	line, _ := GetSelectedLine(v, ".*")
 	CurrResult = line
-	content := scriptService.GetTestResultForDisplay(CurrAsset, line)
+	//content := scriptService.GetTestResultForDisplay(CurrAsset, line)
+
+	content := make([]string, 0)
+	report := testingService.GetTestTestReportForSubmit(CurrAsset, line)
+	for _, cs := range report.Cases {
+		id := cs.Id
+		title := cs.Title
+		result := cs.Status
+
+		str := fmt.Sprintf("%d-%s: %s", id, title, result)
+		content = append(content, str)
+	}
 
 	panelCaseList, _ := g.View("panelCaseList")
 	panelCaseList.Clear()
@@ -83,11 +96,23 @@ func selectCaseEvent(g *gocui.Gui, v *gocui.View) error {
 	v.Highlight = true
 
 	caseLine, _ := GetSelectedLine(v, ".*")
+	caseIdStr := strings.Split(caseLine, "-")[0]
+	caseId, _ := strconv.Atoi(caseIdStr)
 
-	content := scriptService.GetCheckpointsResult(CurrAsset, CurrResult, caseLine)
+	content := make([]string, 0)
+	report := testingService.GetTestTestReportForSubmit(CurrAsset, CurrResult)
+	for _, cs := range report.Cases {
+		if cs.Id == caseId {
+			for _, step := range cs.Steps {
+				content = append(content, testingService.GetStepText(step))
+				content = append(content, "")
+			}
+		}
+	}
+
 	panelCaseResult, _ := g.View("panelCaseResult")
 	panelCaseResult.Clear()
-	fmt.Fprintln(panelCaseResult, content)
+	fmt.Fprintln(panelCaseResult, strings.Join(content, "\n"))
 
 	// show submit bug button
 	maxX, _ := g.Size()

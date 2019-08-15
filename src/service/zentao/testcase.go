@@ -35,7 +35,7 @@ func ListCaseByProduct(baseUrl string, productId string) []model.TestCase {
 }
 
 func ListCaseByTask(baseUrl string, taskId string) []model.TestCase {
-	params := fmt.Sprintf("%s-all-0-id_desc-0-10000-1", taskId)
+	params := fmt.Sprintf("%s-all-0-id_asc-0-10000-1", taskId)
 
 	url := baseUrl + zentaoUtils.GenApiUri("testtask", "cases", params)
 	dataStr, ok := client.Get(url, nil)

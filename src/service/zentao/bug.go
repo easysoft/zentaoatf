@@ -7,10 +7,8 @@ import (
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	printUtils "github.com/easysoft/zentaoatf/src/utils/print"
-	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	uuid "github.com/satori/go.uuid"
 	"strconv"
-	"strings"
 )
 
 func SubmitBug(assert string, date string, caseId int, caseIdInTask int) {
@@ -51,26 +49,7 @@ func SubmitBug(assert string, date string, caseId int, caseIdInTask int) {
 				stepIds += strconv.Itoa(step.Id) + "_"
 			}
 
-			stepStatus := stringUtils.BoolToPass(step.Status)
-
-			stepTxt := fmt.Sprintf(
-				"<p><b>%s: %s</b></p>",
-				step.Name, stepStatus)
-			stepResults := make([]string, 0)
-			for _, checkpoint := range step.CheckPoints {
-				checkpointStatus := stringUtils.BoolToPass(checkpoint.Status)
-
-				text := fmt.Sprintf(
-					"<p>&nbsp;Checkpoint: %s</p>"+
-						"<p>&nbsp;&nbsp;Expect</p>"+
-						"&nbsp;&nbsp;&nbsp;%s"+
-						"<p>&nbsp;&nbsp;Actual<p/>"+
-						"&nbsp;&nbsp;&nbsp;%s",
-					checkpointStatus, checkpoint.Expect, checkpoint.Actual)
-
-				stepResults = append(stepResults, text)
-			}
-			requestObj["steps"] = stepTxt + strings.Join(stepResults, "<br/>")
+			requestObj["steps"] = testingService.GetStepHtml(step)
 		}
 
 		params := fmt.Sprintf("caseID=%d,version=0,resultID=%d,runID=%d,stepIdList=%s",
