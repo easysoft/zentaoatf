@@ -74,9 +74,9 @@ func (c RunMode) String() string {
 		return "dir"
 	case RunModeBatch:
 		return "batch"
-	case RunModeSuite: // can be show with cui
+	case RunModeSuite: // can be show with cui by select a suite file
 		return "suite"
-	case RunModeScript: // can be show with cui
+	case RunModeScript: // can be show with cui by select a script file
 		return "script"
 	}
 	return "unknown"
