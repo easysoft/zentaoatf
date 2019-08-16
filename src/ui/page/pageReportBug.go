@@ -42,21 +42,22 @@ func InitReportBugPage() error {
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], reportBugTitle.Name())
 
 	// title
-	y += 2
+	y += 3
 	left := x + 2
 	right := left + widget.LabelWidthSmall
-	titleLabel := widget.NewLabelWidget("titleLabel", left, y+1, "Desc")
+	titleLabel := widget.NewLabelWidget("titleLabel", left, y, "Desc")
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], titleLabel.Name())
 
 	left = right + ui.Space
 	right = left + widget.TextWidthFull
-	titleInput := widget.NewTextWidget("titleInput", left, y+1, widget.TextWidthFull, bug.Title)
+	titleInput := widget.NewTextWidget("titleInput", left, y, widget.TextWidthFull, bug.Title)
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], titleInput.Name())
 
 	// module
+	y += 3
 	left = x + 2 + widget.LabelWidthSmall + ui.Space
 	right = left + widget.SelectWidth
-	moduleInput := widget.NewSelectWidgetWithDefault("module", left, y+4, widget.SelectWidth, 6, "Module",
+	moduleInput := widget.NewSelectWidgetWithDefault("module", left, y, widget.SelectWidth, 6, "Module",
 		vari.ZendaoSettings.Modules, zentaoService.GetNameById(bug.Module, vari.ZendaoSettings.Modules),
 		bugSelectFieldCheckEvent(filedValMap))
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], moduleInput.Name())
@@ -64,7 +65,7 @@ func InitReportBugPage() error {
 	// type
 	left = right + ui.Space
 	right = left + widget.SelectWidth
-	typeInput := widget.NewSelectWidgetWithDefault("type", left, y+4, widget.SelectWidth, 6, "Category",
+	typeInput := widget.NewSelectWidgetWithDefault("type", left, y, widget.SelectWidth, 6, "Category",
 		vari.ZendaoSettings.Modules, bug.Type,
 		bugSelectFieldCheckEvent(filedValMap))
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], typeInput.Name())
@@ -72,14 +73,16 @@ func InitReportBugPage() error {
 	// version
 	left = right + ui.Space
 	right = left + widget.SelectWidth
-	versionInput := widget.NewSelectWidgetWithDefault("version", left, y+4, widget.SelectWidth, 6, "Version",
+	versionInput := widget.NewSelectWidgetWithDefault("version", left, y, widget.SelectWidth, 6, "Version",
 		vari.ZendaoSettings.Modules, zentaoService.GetNameById(bugVersion, vari.ZendaoSettings.Versions),
 		bugSelectFieldCheckEvent(filedValMap))
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], versionInput.Name())
 
 	// severity
+	y += 7
 	left = x + 2 + widget.LabelWidthSmall + ui.Space
-	severityInput := widget.NewSelectWidgetWithDefault("severity", left, y+11, widget.SelectWidth, 6, "Severity",
+	right = left + widget.SelectWidth
+	severityInput := widget.NewSelectWidgetWithDefault("severity", left, y, widget.SelectWidth, 6, "Severity",
 		vari.ZendaoSettings.Modules, zentaoService.GetNameById(bug.Severity, vari.ZendaoSettings.Severities),
 		bugSelectFieldCheckEvent(filedValMap))
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], severityInput.Name())
@@ -87,23 +90,25 @@ func InitReportBugPage() error {
 	// priority
 	left = right + ui.Space
 	right = left + widget.SelectWidth
-	priorityInput := widget.NewSelectWidgetWithDefault("priority", left, y+11, widget.SelectWidth, 6, "Priority",
+	priorityInput := widget.NewSelectWidgetWithDefault("priority", left, y, widget.SelectWidth, 6, "Priority",
 		vari.ZendaoSettings.Modules, zentaoService.GetNameById(bug.Pri, vari.ZendaoSettings.Priorities),
 		bugSelectFieldCheckEvent(filedValMap))
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], priorityInput.Name())
 
+	y += 7
 	// msg
-	reportBugMsg := widget.NewPanelWidget("reportBugMsg", x+2+widget.LabelWidthSmall+ui.Space, y+18, widget.TextWidthFull, 2, "")
+	reportBugMsg := widget.NewPanelWidget("reportBugMsg", x+2+widget.LabelWidthSmall+ui.Space, y, widget.TextWidthFull, 2, "")
 	reportBugMsg.Frame = false
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], reportBugMsg.Name())
 
 	// buttons
+	y += 3
 	buttonX := maxX/2 - 50 + 2 + widget.LabelWidthSmall + ui.Space
-	submitInput := widget.NewButtonWidgetAutoWidth("submitInput", buttonX, y+21, "Submit", reportBug)
+	submitInput := widget.NewButtonWidgetAutoWidth("submitInput", buttonX, y, "Submit", reportBug)
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], submitInput.Name())
 
 	cancelReportBugInput := widget.NewButtonWidgetAutoWidth("cancelReportBugInput",
-		buttonX+12, y+21, "Cancel", cancelReportBug)
+		buttonX+12, y, "Cancel", cancelReportBug)
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], cancelReportBugInput.Name())
 
 	ui.KeyBindsInput(ui.ViewMap["reportBug"])

@@ -58,15 +58,11 @@ func Get(url string, params map[string]string) (string, bool) {
 func PostObject(url string, params interface{}) (string, bool) {
 	client := &http.Client{}
 
-	reqStr, _ := json.Marshal(params)
-	printUtils.PrintToCmd(string(reqStr))
-
 	val, _ := form.EncodeToValues(params)
-	//str := "case=1&reals[12]=N%2FA&reals[9]=N%2FA&steps[12]=pass&steps[9]=pass&version=0"
-
+	// convert data to post fomat
 	re3, _ := regexp.Compile("\\.(.*?)=")
 	data := re3.ReplaceAllStringFunc(val.Encode(), replacePostData)
-	fmt.Printf("%s\n", data)
+	printUtils.PrintToCmd(fmt.Sprintf("%s", data))
 
 	req, err := http.NewRequest("POST", url, strings.NewReader(data))
 	if err != nil {

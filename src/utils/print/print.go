@@ -85,9 +85,11 @@ func PrintUnicode(str []byte) {
 	var a interface{}
 	err := json.Unmarshal(str, &a)
 	if err == nil {
-		fmt.Println(a)
+		if !vari.RunFromCui {
+			fmt.Println(a)
+		}
 	} else {
-		fmt.Println(string(str))
+		PrintToCmd(string(str))
 	}
 
 }

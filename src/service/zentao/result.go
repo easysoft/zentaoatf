@@ -15,6 +15,7 @@ import (
 )
 
 func SubmitResult() {
+
 	conf := configUtils.ReadCurrConfig()
 	Login(conf.Url, conf.Account, conf.Password)
 
@@ -60,7 +61,7 @@ func SubmitResult() {
 			testingService.SaveTestTestReportAfterSubmit(vari.CurrScriptFile, vari.CurrResultDate, string(json))
 
 			printUtils.PrintToCmd(
-				fmt.Sprintf("success to submit the results for case %d, resultId is %d", id, resultId))
+				fmt.Sprintf("success to submit the results for case %d, resultId is %d\n", id, resultId))
 		}
 	}
 }
