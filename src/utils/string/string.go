@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/hex"
+	"encoding/json"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"os"
 	"strings"
@@ -55,4 +56,9 @@ func BoolToPass(b bool) string {
 	} else {
 		return constant.FAIL.String()
 	}
+}
+
+func StructToStr(obj interface{}) string {
+	val, _ := json.Marshal(obj)
+	return string(val)
 }

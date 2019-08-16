@@ -53,8 +53,11 @@ func (w *HelpWidget) Layout() error {
 	return nil
 }
 
-func ShowHelp(g *gocui.Gui, v *gocui.View) error {
-	help, _ := g.View("help")
+func ShowHelpFromView(g *gocui.Gui, v *gocui.View) error {
+	return ShowHelp()
+}
+func ShowHelp() error {
+	help, _ := vari.Cui.View("help")
 
 	if help != nil {
 		HideHelp()

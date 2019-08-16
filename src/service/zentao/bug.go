@@ -51,8 +51,8 @@ func GenBug() (model.Bug, string, string) {
 				stepIds += strconv.Itoa(step.Id) + "_"
 			}
 
-			stepHtml := testingService.GetStepHtml(step)
-			steps = append(steps, stepHtml+"<br/>")
+			stepsContent := testingService.GetStepContent(step)
+			steps = append(steps, stepsContent+"<br/>")
 		}
 
 		bug := model.Bug{Title: title,

@@ -15,7 +15,7 @@ const (
 func KeyBindsInput(arr []string) {
 	for _, v := range arr {
 		if IsInput(v) {
-			SetInputEvent(v)
+			AddEventForInputWidth(v)
 		}
 	}
 }
@@ -28,13 +28,35 @@ func Quit(g *gocui.Gui, v *gocui.View) error {
 	return gocui.ErrQuit
 }
 
-func ScrollEvent(dy int) func(g *gocui.Gui, v *gocui.View) error {
+func SupportScroll(name string) error {
+	v, err := vari.Cui.View(name)
+	if err != nil {
+		print2.PrintToCmd(err.Error() + ": " + name)
+		return nil
+	}
+
+	v.Wrap = true
+
+	if err := vari.Cui.SetKeybinding(name, gocui.MouseLeft, gocui.ModNone, SetCurrView(name)); err != nil {
+		return err
+	}
+	if err := vari.Cui.SetKeybinding(name, gocui.KeyArrowUp, gocui.ModNone, scrollEvent(-1)); err != nil {
+		return err
+	}
+	if err := vari.Cui.SetKeybinding(name, gocui.KeyArrowDown, gocui.ModNone, scrollEvent(1)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func scrollEvent(dy int) func(g *gocui.Gui, v *gocui.View) error {
 	return func(g *gocui.Gui, v *gocui.View) error {
-		return ScrollAction(v, dy, false)
+		return scrollAction(v, dy, false)
 	}
 }
 
-func ScrollAction(v *gocui.View, dy int, isSelectWidget bool) error {
+func scrollAction(v *gocui.View, dy int, isSelectWidget bool) error {
 	v.Autoscroll = false
 
 	if dy > 0 {
@@ -73,40 +95,17 @@ func ScrollAction(v *gocui.View, dy int, isSelectWidget bool) error {
 	return nil
 }
 
-func SetViewScroll(name string) error {
-	v, err := vari.Cui.View(name)
-	if err != nil {
-		print2.PrintToCmd(err.Error() + ": " + name)
-		return nil
-	}
-
-	v.Wrap = true
-
-	if err := vari.Cui.SetKeybinding(name, gocui.MouseLeft, gocui.ModNone, SetCurrView(name)); err != nil {
-		return err
-	}
-	if err := vari.Cui.SetKeybinding(name, gocui.KeyArrowUp, gocui.ModNone, ScrollEvent(-1)); err != nil {
-		return err
-	}
-	if err := vari.Cui.SetKeybinding(name, gocui.KeyArrowDown, gocui.ModNone, ScrollEvent(1)); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func SetViewLineHighlight(name string) error {
+func SupportLineHighlight(name string) error {
 	v, _ := vari.Cui.View(name)
 
 	v.Wrap = true
-	//v.Highlight = true
 	v.SelBgColor = gocui.ColorWhite
 	v.SelFgColor = gocui.ColorBlack
 
 	return nil
 }
 
-func SetViewLineSelected(name string, selectLine func(g *gocui.Gui, v *gocui.View) error) error {
+func AddLineSelectedEvent(name string, selectLine func(g *gocui.Gui, v *gocui.View) error) error {
 	if err := vari.Cui.SetKeybinding(name, gocui.KeyEnter, gocui.ModNone, selectLine); err != nil {
 		return err
 	}
@@ -124,7 +123,7 @@ func SetCurrView(name string) func(g *gocui.Gui, v *gocui.View) error {
 	}
 }
 
-func SetInputEvent(name string) error {
+func AddEventForInputWidth(name string) error {
 	if err := vari.Cui.SetKeybinding(name, gocui.MouseLeft, gocui.ModNone, SetCurrView(name)); err != nil {
 		return err
 	}

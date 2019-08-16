@@ -59,12 +59,12 @@ func MainPageKeyBindings() error {
 	if err := vari.Cui.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, ui.Quit); err != nil {
 		return err
 	}
-	if err := vari.Cui.SetKeybinding("", gocui.KeyCtrlH, gocui.ModNone, widget.ShowHelp); err != nil {
+	if err := vari.Cui.SetKeybinding("", gocui.KeyCtrlH, gocui.ModNone, widget.ShowHelpFromView); err != nil {
 		log.Panicln(err)
 	}
 
-	ui.SetViewScroll("main")
-	ui.SetViewScroll("cmd")
+	ui.SupportScroll("main")
+	ui.SupportScroll("cmd")
 
 	return nil
 }

@@ -17,6 +17,7 @@ type TextWidget struct {
 	name string
 	x, y int
 	w    int
+	h    int
 	text string
 }
 
@@ -26,8 +27,21 @@ func NewTextWidget(name string, x, y, w int, text string) *gocui.View {
 	return v
 }
 
+func NewTextWidgetWithHeight(name string, x, y, w, h int, text string) *gocui.View {
+	widget := TextWidget{name: name, x: x, y: y, w: w, h: h, text: text}
+	v, _ := widget.Layout()
+	return v
+}
+
 func (w *TextWidget) Layout() (*gocui.View, error) {
-	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+TextHeight)
+	var h int
+	if w.h == 0 {
+		h = TextHeight
+	} else {
+		h = w.h
+	}
+
+	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+h)
 	if err != nil {
 		if err != gocui.ErrUnknownView {
 			return nil, err

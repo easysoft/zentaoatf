@@ -36,8 +36,8 @@ func InitTestPage() error {
 	print2.PrintToSide(content)
 
 	// right
-	ui.SetViewScroll("side")
-	ui.SetViewLineSelected("side", selectScriptEvent)
+	ui.SupportScroll("side")
+	ui.AddLineSelectedEvent("side", selectScriptEvent)
 
 	return nil
 }
@@ -104,7 +104,7 @@ func showContent(g *gocui.Gui, v *gocui.View) error {
 			maxX-constant.LeftWidth-1, vari.MainViewHeight, "")
 		ui.ViewMap["testing"] = append(ui.ViewMap["testing"], panelFileContent.Name())
 		contentViews = append(contentViews, panelFileContent.Name())
-		ui.SetViewScroll(panelFileContent.Name())
+		ui.SupportScroll(panelFileContent.Name())
 
 		runButton := widget.NewButtonWidgetAutoWidth("runButton", maxX-10, 0, "[Run]", run)
 		runButton.Frame = false

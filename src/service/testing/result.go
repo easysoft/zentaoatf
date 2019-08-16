@@ -35,6 +35,17 @@ func SaveTestTestReportAfterSubmit(scriptFile string, resultDate string, content
 	fileUtils.WriteFile(resultPath, content)
 }
 
+func GetStepContent(step model.StepLog) string {
+	var stepsContent string
+	if !vari.RunFromCui {
+		stepsContent = GetStepHtml(step)
+	} else {
+		stepsContent = GetStepText(step)
+	}
+
+	return stepsContent
+}
+
 func GetStepHtml(step model.StepLog) string {
 	stepResults := make([]string, 0)
 

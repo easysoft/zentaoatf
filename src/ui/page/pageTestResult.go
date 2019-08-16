@@ -36,18 +36,15 @@ func showRun(g *gocui.Gui, v *gocui.View) error {
 	ui.ViewMap["testing"] = append(ui.ViewMap["testing"], panelCaseResult.Name())
 	runViews = append(runViews, panelCaseResult.Name())
 
-	for idx, v := range runViews {
-		if idx < 3 {
-			ui.SetViewScroll(v)
-		}
+	ui.SupportScroll("panelResultList")
+	ui.SupportScroll("panelCaseList")
+	ui.SupportScroll("panelCaseResult")
 
-		if idx < 2 {
-			ui.SetViewLineHighlight(v)
-		}
-	}
+	ui.SupportLineHighlight("panelResultList")
+	ui.SupportLineHighlight("panelCaseList")
 
-	ui.SetViewLineSelected("panelResultList", selectResultEvent)
-	ui.SetViewLineSelected("panelCaseList", selectCaseEvent)
+	ui.AddLineSelectedEvent("panelResultList", selectResultEvent)
+	ui.AddLineSelectedEvent("panelCaseList", selectCaseEvent)
 
 	results := scriptService.LoadTestResults(vari.CurrScriptFile)
 	fmt.Fprintln(panelResultList, strings.Join(results, "\n"))

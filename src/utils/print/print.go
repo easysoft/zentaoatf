@@ -5,9 +5,9 @@ import (
 	"flag"
 	"fmt"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
+	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
-	"reflect"
 )
 
 func PrintUsage(flagSet flag.FlagSet) {
@@ -60,25 +60,14 @@ func PrintToCmd(msg string) {
 
 	logUtils.AdjustOrigin("cmd")
 }
+func PrintStructToCmd(obj interface{}) {
+	str := stringUtils.StructToStr(obj)
+	PrintToCmd(str)
+}
 
 func ClearSide() {
 	slideView, _ := vari.Cui.View("side")
 	slideView.Clear()
-}
-
-func PrintStruct(obj interface{}) {
-	val := reflect.ValueOf(obj)
-	typeOfS := val.Type()
-	for i := 0; i < reflect.ValueOf(obj).NumField(); i++ {
-		val := val.Field(i)
-		fmt.Printf("  %s: %v\n", typeOfS.Field(i).Name, val.Interface())
-	}
-}
-
-func PrintMap(obj map[string]interface{}) {
-	for key, val := range obj {
-		fmt.Printf("  %s: %v\n", key, val)
-	}
 }
 
 func PrintUnicode(str []byte) {
