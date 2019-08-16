@@ -62,21 +62,21 @@ func (c ResultStatus) String() string {
 type RunMode int
 
 const (
-	DIR RunMode = iota
-	BATCH
-	SUITE
-	SCRIPT
+	RunModeDir RunMode = iota
+	RunModeBatch
+	RunModeSuite
+	RunModeScript
 )
 
 func (c RunMode) String() string {
 	switch c {
-	case DIR:
+	case RunModeDir:
 		return "dir"
-	case BATCH:
+	case RunModeBatch:
 		return "batch"
-	case SUITE:
+	case RunModeSuite: // can be show with cui
 		return "suite"
-	case SCRIPT:
+	case RunModeScript: // can be show with cui
 		return "script"
 	}
 	return "unknown"

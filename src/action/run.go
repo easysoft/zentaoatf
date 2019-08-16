@@ -20,13 +20,13 @@ func Run(scriptDir string, fileNames []string, langType string) {
 	if fileNames != nil && len(fileNames) > 0 { // pass a list, cui always
 		if len(fileNames) == 1 {
 			if strings.Index(fileNames[0], ".suite") > -1 {
-				vari.RunMode = constant.SUITE
+				vari.RunMode = constant.RunModeSuite
 			} else {
-				vari.RunMode = constant.SCRIPT
+				vari.RunMode = constant.RunModeScript
 			}
 			vari.RunDir = zentaoUtils.PathToRunName(fileNames[0])
 		} else {
-			vari.RunMode = constant.BATCH
+			vari.RunMode = constant.RunModeBatch
 			vari.RunDir = zentaoUtils.PathToRunName("")
 		}
 
@@ -35,7 +35,7 @@ func Run(scriptDir string, fileNames []string, langType string) {
 		fileUtils.GetAllFiles(scriptDir, LangMap[langType]["extName"], &files)
 		fmt.Printf("%v", scriptDir)
 		fmt.Printf("%v", files)
-		vari.RunMode = constant.DIR
+		vari.RunMode = constant.RUN_MODE_DIR
 		vari.RunDir = zentaoUtils.PathToRunName(scriptDir)
 	}
 

@@ -13,6 +13,9 @@ import (
 	"strings"
 )
 
+/**
+Get all test script and suite files in current work dir
+*/
 func LoadAssetFiles() ([]string, []string) {
 	config := config2.ReadCurrConfig()
 	ext := GetSupportedScriptLang()[config.LangType]["extName"]
@@ -26,6 +29,9 @@ func LoadAssetFiles() ([]string, []string) {
 	return caseFiles, suitesFiles
 }
 
+/**
+Get all test result histories for specific test script/suite
+*/
 func LoadTestResults(assert string) []string {
 	ret := make([]string, 0)
 
@@ -48,15 +54,18 @@ func LoadTestResults(assert string) []string {
 	return ret
 }
 
+/**
+Run mode: refer to utils/const/enum
+*/
 func GetRunModeAndName(assert string) (string, string) {
 	ext := path.Ext(assert)
 	name := strings.Replace(commonUtils.Base(assert), ext, "", -1)
 
 	var mode string
 	if ext == ".suite" {
-		mode = "suite"
+		mode = constant.RunModeSuite.String()
 	} else {
-		mode = "script"
+		mode = constant.RunModeScript.String()
 	}
 
 	return mode, name
