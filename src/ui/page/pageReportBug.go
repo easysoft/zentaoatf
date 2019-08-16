@@ -144,7 +144,7 @@ func reportBug(g *gocui.Gui, v *gocui.View) error {
 	}
 
 	bug.Title = title
-	bug.Steps = stepsStr
+	bug.Steps = strings.Replace(stepsStr, "\n", "<br/>", -1)
 	bug.Type = typeStr
 
 	bug.Module = zentaoService.GetIdByName(moduleStr, vari.ZendaoSettings.Modules)
