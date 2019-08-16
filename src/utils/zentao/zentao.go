@@ -58,7 +58,7 @@ func GenApiUri(module string, methd string, param string) string {
 //	var options []model.Option
 //	if name == "module" {
 //		options = vari.ZendaoSettings.Modules
-//	} else if name == "category" {
+//	} else if name == "type" {
 //		options = vari.ZendaoSettings.Categories
 //	} else if name == "version" {
 //		options = vari.ZendaoSettings.Versions

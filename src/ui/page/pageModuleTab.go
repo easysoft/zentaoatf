@@ -1,7 +1,9 @@
-package ui
+package page
 
 import (
 	"fmt"
+	"github.com/easysoft/zentaoatf/src/ui"
+	"github.com/easysoft/zentaoatf/src/ui/widget"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 )
@@ -25,7 +27,7 @@ func NewTabWidget(name string, x, y int, label string) *gocui.View {
 }
 
 func (w *TabWidget) Layout() (*gocui.View, error) {
-	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+LabelHeight)
+	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+widget.LabelHeight)
 	if err != nil {
 		if err != gocui.ErrUnknownView {
 			return nil, err
@@ -51,7 +53,7 @@ func ToggleTab(g *gocui.Gui, v *gocui.View) error {
 }
 
 func ShowTab() {
-	for _, name := range Tabs {
+	for _, name := range ui.ModuleTabs {
 		v, err := vari.Cui.View(name)
 
 		if err == nil {
@@ -69,7 +71,7 @@ func ShowTab() {
 
 	DestoryLeftPages()
 	DestoryRightPages()
-	HideHelp()
+	widget.HideHelp()
 
 	if CurrTab == "testing" {
 		InitTestPage()

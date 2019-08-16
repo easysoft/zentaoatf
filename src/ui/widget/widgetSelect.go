@@ -1,8 +1,9 @@
-package ui
+package widget
 
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
+	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/jroimartin/gocui"
@@ -47,9 +48,8 @@ func (w *SelectWidget) Layout() (*gocui.View, error) {
 
 	v, _ := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+w.h)
 	v.Highlight = true
-	setViewScroll(w.name)
-	setViewLineHighlight(w.name)
-	setViewLineSelected(w.name, selectResultEvent)
+	ui.SetViewScroll(w.name)
+	ui.SetViewLineHighlight(w.name)
 
 	v.Title = w.title
 
@@ -62,7 +62,7 @@ func (w *SelectWidget) Layout() (*gocui.View, error) {
 
 	_, height := v.Size()
 	for true {
-		line, _ := GetSelectedLine(v, ".*")
+		line, _ := ui.GetSelectedLine(v, ".*")
 		if w.defaultt != "" {
 			if line == w.defaultt {
 				break

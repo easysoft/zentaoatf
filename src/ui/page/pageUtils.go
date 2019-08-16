@@ -1,6 +1,7 @@
-package ui
+package page
 
 import (
+	"github.com/easysoft/zentaoatf/src/ui"
 	print2 "github.com/easysoft/zentaoatf/src/utils/print"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 )
@@ -12,9 +13,9 @@ func DestoryLeftPages() {
 	DestoryProjectsPage()
 	DestorySettingsPage()
 
-	ViewMap["testing"] = make([]string, 0)
-	ViewMap["projects"] = make([]string, 0)
-	ViewMap["settings"] = make([]string, 0)
+	ui.ViewMap["testing"] = make([]string, 0)
+	ui.ViewMap["projects"] = make([]string, 0)
+	ui.ViewMap["settings"] = make([]string, 0)
 }
 
 func DestoryRightPages() {
@@ -26,6 +27,6 @@ func DestoryRightPages() {
 	DestoryImportPage()
 	DestorySwitchPage()
 
-	ViewMap["import"] = make([]string, 0)
-	ViewMap["switch"] = make([]string, 0)
+	ui.ViewMap["import"] = make([]string, 0)
+	ui.ViewMap["switch"] = make([]string, 0)
 }

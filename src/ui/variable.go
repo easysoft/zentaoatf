@@ -2,7 +2,7 @@ package ui
 
 import "sync"
 
-var Tabs []string
+var ModuleTabs []string
 
 var ViewMap map[string][]string
 
@@ -17,7 +17,7 @@ func init() {
 			"import":      {},
 		}
 
-		Tabs = make([]string, 0)
-		Tabs = append(Tabs, "testing", "projects", "settings")
+		ModuleTabs = make([]string, 0)
+		ModuleTabs = append(ModuleTabs, "testing", "projects", "settings")
 	})
 }

@@ -1,9 +1,11 @@
-package ui
+package page
 
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/action"
 	"github.com/easysoft/zentaoatf/src/service/script"
+	"github.com/easysoft/zentaoatf/src/ui"
+	"github.com/easysoft/zentaoatf/src/ui/widget"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/file"
 	print2 "github.com/easysoft/zentaoatf/src/utils/print"
@@ -34,8 +36,8 @@ func InitTestPage() error {
 	print2.PrintToSide(content)
 
 	// right
-	setViewScroll("side")
-	setViewLineSelected("side", selectScriptEvent)
+	ui.SetViewScroll("side")
+	ui.SetViewLineSelected("side", selectScriptEvent)
 
 	return nil
 }
@@ -59,7 +61,7 @@ func selectScriptEvent(g *gocui.Gui, v *gocui.View) error {
 
 	// show
 	if len(tabs) == 0 {
-		HideHelp()
+		widget.HideHelp()
 		showTab()
 	}
 
@@ -72,15 +74,15 @@ func selectScriptEvent(g *gocui.Gui, v *gocui.View) error {
 func showTab() error {
 	g := vari.Cui
 	x := constant.LeftWidth + 1
-	tabContentView := NewLabelWidgetAutoWidth("tabContentView", x, 0, "Content")
-	ViewMap["testing"] = append(ViewMap["testing"], tabContentView.Name())
+	tabContentView := widget.NewLabelWidgetAutoWidth("tabContentView", x, 0, "Content")
+	ui.ViewMap["testing"] = append(ui.ViewMap["testing"], tabContentView.Name())
 	tabs = append(tabs, tabContentView.Name())
 	if err := g.SetKeybinding("tabContentView", gocui.MouseLeft, gocui.ModNone, showContent); err != nil {
 		return nil
 	}
 
-	tabResultView := NewLabelWidgetAutoWidth("tabResultView", x+12, 0, "Results")
-	ViewMap["testing"] = append(ViewMap["testing"], tabResultView.Name())
+	tabResultView := widget.NewLabelWidgetAutoWidth("tabResultView", x+12, 0, "Results")
+	ui.ViewMap["testing"] = append(ui.ViewMap["testing"], tabResultView.Name())
 	tabs = append(tabs, tabResultView.Name())
 	if err := g.SetKeybinding("tabResultView", gocui.MouseLeft, gocui.ModNone, showRun); err != nil {
 		return nil
@@ -91,20 +93,20 @@ func showTab() error {
 
 func showContent(g *gocui.Gui, v *gocui.View) error {
 	DestoryRunPanel()
-	HighlightTab(v.Name(), tabs)
+	ui.HighlightTab(v.Name(), tabs)
 
 	panelFileContent, _ := g.View("panelFileContent")
 	if panelFileContent != nil {
 		panelFileContent.Clear()
 	} else {
 		maxX, _ := g.Size()
-		panelFileContent = NewPanelWidget(constant.CuiRunOutputView, constant.LeftWidth, 2,
+		panelFileContent = widget.NewPanelWidget(constant.CuiRunOutputView, constant.LeftWidth, 2,
 			maxX-constant.LeftWidth-1, vari.MainViewHeight, "")
-		ViewMap["testing"] = append(ViewMap["testing"], panelFileContent.Name())
+		ui.ViewMap["testing"] = append(ui.ViewMap["testing"], panelFileContent.Name())
 		contentViews = append(contentViews, panelFileContent.Name())
-		setViewScroll(panelFileContent.Name())
+		ui.SetViewScroll(panelFileContent.Name())
 
-		runButton := NewButtonWidgetAutoWidth("runButton", maxX-10, 0, "[Run]", run)
+		runButton := widget.NewButtonWidgetAutoWidth("runButton", maxX-10, 0, "[Run]", run)
 		runButton.Frame = false
 		contentViews = append(contentViews, runButton.Name())
 	}
@@ -137,7 +139,7 @@ func run(g *gocui.Gui, v *gocui.View) error {
 
 func DestoryTestPage() {
 	vari.Cui.DeleteKeybindings("side")
-	for _, v := range ViewMap["testing"] {
+	for _, v := range ui.ViewMap["testing"] {
 		vari.Cui.DeleteView(v)
 		vari.Cui.DeleteKeybindings(v)
 	}

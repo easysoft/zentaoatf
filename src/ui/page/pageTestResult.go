@@ -1,10 +1,12 @@
-package ui
+package page
 
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/service/script"
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
+	"github.com/easysoft/zentaoatf/src/ui"
+	"github.com/easysoft/zentaoatf/src/ui/widget"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
@@ -16,36 +18,36 @@ var runViews []string
 
 func showRun(g *gocui.Gui, v *gocui.View) error {
 	DestoryContentPanel()
-	HighlightTab(v.Name(), tabs)
+	ui.HighlightTab(v.Name(), tabs)
 
 	h := vari.MainViewHeight / 2
 	maxX, _ := g.Size()
 
-	panelResultList := NewPanelWidget("panelResultList", constant.LeftWidth, 2, 50, h, "")
-	ViewMap["testing"] = append(ViewMap["testing"], panelResultList.Name())
+	panelResultList := widget.NewPanelWidget("panelResultList", constant.LeftWidth, 2, 50, h, "")
+	ui.ViewMap["testing"] = append(ui.ViewMap["testing"], panelResultList.Name())
 	runViews = append(runViews, panelResultList.Name())
 
-	panelCaseList := NewPanelWidget("panelCaseList", constant.LeftWidth, h+2, 50, vari.MainViewHeight-h, "")
-	ViewMap["testing"] = append(ViewMap["testing"], panelCaseList.Name())
+	panelCaseList := widget.NewPanelWidget("panelCaseList", constant.LeftWidth, h+2, 50, vari.MainViewHeight-h, "")
+	ui.ViewMap["testing"] = append(ui.ViewMap["testing"], panelCaseList.Name())
 	runViews = append(runViews, panelCaseList.Name())
 
-	panelCaseResult := NewPanelWidget("panelCaseResult", constant.LeftWidth+50, 2,
+	panelCaseResult := widget.NewPanelWidget("panelCaseResult", constant.LeftWidth+50, 2,
 		maxX-constant.LeftWidth-51, vari.MainViewHeight, "")
-	ViewMap["testing"] = append(ViewMap["testing"], panelCaseResult.Name())
+	ui.ViewMap["testing"] = append(ui.ViewMap["testing"], panelCaseResult.Name())
 	runViews = append(runViews, panelCaseResult.Name())
 
 	for idx, v := range runViews {
 		if idx < 3 {
-			setViewScroll(v)
+			ui.SetViewScroll(v)
 		}
 
 		if idx < 2 {
-			setViewLineHighlight(v)
+			ui.SetViewLineHighlight(v)
 		}
 	}
 
-	setViewLineSelected("panelResultList", selectResultEvent)
-	setViewLineSelected("panelCaseList", selectCaseEvent)
+	ui.SetViewLineSelected("panelResultList", selectResultEvent)
+	ui.SetViewLineSelected("panelCaseList", selectCaseEvent)
 
 	results := scriptService.LoadTestResults(vari.CurrScriptFile)
 	fmt.Fprintln(panelResultList, strings.Join(results, "\n"))
@@ -62,7 +64,7 @@ func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
 
 	v.Highlight = true
 
-	line, _ := GetSelectedLine(v, ".*")
+	line, _ := ui.GetSelectedLine(v, ".*")
 	vari.CurrResultDate = line
 
 	content := make([]string, 0)
@@ -81,7 +83,7 @@ func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
 	fmt.Fprintln(panelCaseList, strings.Join(content, "\n"))
 
 	maxX, _ := g.Size()
-	uploadButton := NewButtonWidgetAutoWidth("uploadButton", maxX-35, 0, "[Upload Result]", toUploadResult)
+	uploadButton := widget.NewButtonWidgetAutoWidth("uploadButton", maxX-35, 0, "[Upload Result]", toUploadResult)
 	uploadButton.Frame = false
 	runViews = append(runViews, uploadButton.Name())
 
@@ -91,7 +93,7 @@ func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
 func selectCaseEvent(g *gocui.Gui, v *gocui.View) error {
 	v.Highlight = true
 
-	caseLine, _ := GetSelectedLine(v, ".*")
+	caseLine, _ := ui.GetSelectedLine(v, ".*")
 	caseIdStr := strings.Split(caseLine, "-")[0]
 	caseId, _ := strconv.Atoi(caseIdStr)
 	vari.CurrCaseId = caseId
@@ -113,7 +115,7 @@ func selectCaseEvent(g *gocui.Gui, v *gocui.View) error {
 
 	// show submit bug button
 	maxX, _ := g.Size()
-	bugButton := NewButtonWidgetAutoWidth("bugButton", maxX-18, 0, "[Report Bug]", toReportBug)
+	bugButton := widget.NewButtonWidgetAutoWidth("bugButton", maxX-18, 0, "[Report Bug]", toReportBug)
 	bugButton.Frame = false
 	runViews = append(runViews, bugButton.Name())
 

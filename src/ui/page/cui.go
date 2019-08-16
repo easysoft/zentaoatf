@@ -1,4 +1,4 @@
-package ui
+package page
 
 import (
 	"github.com/easysoft/zentaoatf/src/utils/common"

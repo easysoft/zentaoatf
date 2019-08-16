@@ -1,9 +1,11 @@
-package ui
+package page
 
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/action"
 	"github.com/easysoft/zentaoatf/src/model"
+	"github.com/easysoft/zentaoatf/src/ui"
+	"github.com/easysoft/zentaoatf/src/ui/widget"
 	config2 "github.com/easysoft/zentaoatf/src/utils/config"
 	"github.com/easysoft/zentaoatf/src/utils/date"
 	print2 "github.com/easysoft/zentaoatf/src/utils/print"
@@ -25,8 +27,8 @@ func InitProjectsPage() error {
 	for _, his := range vari.Prefer.WorkHistories {
 		id, label, _ := getProjectInfo(his)
 
-		hisView := NewLabelWidgetAutoWidth(id, 0, y, label)
-		ViewMap["projects"] = append(ViewMap["projects"], hisView.Name())
+		hisView := widget.NewLabelWidgetAutoWidth(id, 0, y, label)
+		ui.ViewMap["projects"] = append(ui.ViewMap["projects"], hisView.Name())
 
 		y += 1
 	}
@@ -78,8 +80,8 @@ func SelectProjectsButton() {
 func showWitchButton() error {
 	maxX, _ := vari.Cui.Size()
 
-	switchButton := NewButtonWidgetAutoWidth("switchButton", maxX-15, 1, "Switch To", switchProject)
-	ViewMap["projects"] = append(ViewMap["projects"], switchButton.Name())
+	switchButton := widget.NewButtonWidgetAutoWidth("switchButton", maxX-15, 1, "Switch To", switchProject)
+	ui.ViewMap["projects"] = append(ui.ViewMap["projects"], switchButton.Name())
 
 	return nil
 }
@@ -132,7 +134,7 @@ func init() {
 }
 
 func DestoryProjectsPage() {
-	for _, v := range ViewMap["projects"] {
+	for _, v := range ui.ViewMap["projects"] {
 		vari.Cui.DeleteView(v)
 		vari.Cui.DeleteKeybindings(v)
 	}

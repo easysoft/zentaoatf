@@ -6,7 +6,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/action"
 	"github.com/easysoft/zentaoatf/src/mock"
 	"github.com/easysoft/zentaoatf/src/model"
-	"github.com/easysoft/zentaoatf/src/ui"
+	"github.com/easysoft/zentaoatf/src/ui/page"
 	"github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/config"
 	print2 "github.com/easysoft/zentaoatf/src/utils/print"
@@ -84,7 +84,7 @@ func main() {
 	case "mock":
 		mock.Launch()
 	case "cui":
-		ui.Cui()
+		page.Cui()
 	case "run":
 		if err := runSet.Parse(os.Args[2:]); err == nil {
 			if scriptDir == "" || (langType == "" && len(files) == 0) {

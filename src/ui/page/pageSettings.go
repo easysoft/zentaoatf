@@ -1,6 +1,8 @@
-package ui
+package page
 
 import (
+	"github.com/easysoft/zentaoatf/src/ui"
+	"github.com/easysoft/zentaoatf/src/ui/widget"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 )
@@ -9,11 +11,11 @@ var CurrSettingsButton string
 var settingsButtons []string
 
 func InitSettingsPage() error {
-	importLabel := NewLabelWidgetAutoWidth("switch", 0, 2, "Switch Work dir")
-	ViewMap["settings"] = append(ViewMap["settings"], importLabel.Name())
+	importLabel := widget.NewLabelWidgetAutoWidth("switch", 0, 2, "Switch Work dir")
+	ui.ViewMap["settings"] = append(ui.ViewMap["settings"], importLabel.Name())
 
-	switchLabel := NewLabelWidgetAutoWidth("import", 0, 3, "Import from Zentao")
-	ViewMap["settings"] = append(ViewMap["settings"], switchLabel.Name())
+	switchLabel := widget.NewLabelWidgetAutoWidth("import", 0, 3, "Import from Zentao")
+	ui.ViewMap["settings"] = append(ui.ViewMap["settings"], switchLabel.Name())
 
 	keybindingSettingsButton()
 
@@ -69,7 +71,7 @@ func init() {
 }
 
 func DestorySettingsPage() {
-	for _, v := range ViewMap["settings"] {
+	for _, v := range ui.ViewMap["settings"] {
 		vari.Cui.DeleteView(v)
 		vari.Cui.DeleteKeybindings(v)
 	}

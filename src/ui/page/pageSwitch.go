@@ -1,8 +1,10 @@
-package ui
+package page
 
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/action"
+	"github.com/easysoft/zentaoatf/src/ui"
+	"github.com/easysoft/zentaoatf/src/ui/widget"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/date"
 	print2 "github.com/easysoft/zentaoatf/src/utils/print"
@@ -20,23 +22,23 @@ func InitSwitchPage() error {
 	slideX, _ := slideView.Size()
 
 	left := slideX + 2
-	right := left + LabelWidth
-	workDirLabel := NewLabelWidget("workDirLabel", left, 1, "WorkDir")
-	ViewMap["switch"] = append(ViewMap["switch"], workDirLabel.Name())
+	right := left + widget.LabelWidth
+	workDirLabel := widget.NewLabelWidget("workDirLabel", left, 1, "WorkDir")
+	ui.ViewMap["switch"] = append(ui.ViewMap["switch"], workDirLabel.Name())
 
-	left = right + Space
-	right = left + TextWidthFull
-	workDirInput := NewTextWidget("workDirInput", left, 1, TextWidthFull, vari.Prefer.WorkDir)
-	ViewMap["switch"] = append(ViewMap["switch"], workDirInput.Name())
+	left = right + ui.Space
+	right = left + widget.TextWidthFull
+	workDirInput := widget.NewTextWidget("workDirInput", left, 1, widget.TextWidthFull, vari.Prefer.WorkDir)
+	ui.ViewMap["switch"] = append(ui.ViewMap["switch"], workDirInput.Name())
 	if _, err := vari.Cui.SetCurrentView("workDirInput"); err != nil {
 		return err
 	}
 
-	buttonX := (maxX-constant.LeftWidth)/2 + constant.LeftWidth - ButtonWidth
-	submitInput := NewButtonWidgetAutoWidth("submitInput", buttonX, 4, "Switch", SwitchWorkDir)
-	ViewMap["switch"] = append(ViewMap["switch"], submitInput.Name())
+	buttonX := (maxX-constant.LeftWidth)/2 + constant.LeftWidth - widget.ButtonWidth
+	submitInput := widget.NewButtonWidgetAutoWidth("submitInput", buttonX, 4, "Switch", SwitchWorkDir)
+	ui.ViewMap["switch"] = append(ui.ViewMap["switch"], submitInput.Name())
 
-	keyBindsInput(ViewMap["switch"])
+	ui.KeyBindsInput(ui.ViewMap["switch"])
 
 	return nil
 }
@@ -63,7 +65,7 @@ func SwitchWorkDir(g *gocui.Gui, v *gocui.View) error {
 }
 
 func DestorySwitchPage() {
-	for _, v := range ViewMap["switch"] {
+	for _, v := range ui.ViewMap["switch"] {
 		vari.Cui.DeleteView(v)
 		vari.Cui.DeleteKeybindings(v)
 	}
