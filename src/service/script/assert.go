@@ -9,7 +9,7 @@ import (
 
 func LoadTestAssets() ([]string, []string) {
 	config := config2.ReadCurrConfig()
-	ext := GetLangMap()[config.LangType]["extName"]
+	ext := GetSupportedScriptLang()[config.LangType]["extName"]
 
 	caseFiles := make([]string, 0)
 	suitesFiles := make([]string, 0)

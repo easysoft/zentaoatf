@@ -51,7 +51,7 @@ func InitReportBugPage() error {
 	// steps
 	left = right + ui.Space
 	stepsWidth := pageWidth - left - ui.Space + x
-	stepsInput := widget.NewTextWidgetWithHeight("stepsInput", left, y, stepsWidth, pageHeight-2, bug.Steps)
+	stepsInput := widget.NewTextareaWidget("stepsInput", left, y, stepsWidth, pageHeight-2, bug.Steps)
 	stepsInput.Title = "Steps"
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], stepsInput.Name())
 
@@ -114,7 +114,7 @@ func InitReportBugPage() error {
 		buttonX+11, y, "Cancel", cancelReportBug)
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], cancelReportBugInput.Name())
 
-	ui.KeyBindsInput(ui.ViewMap["reportBug"])
+	ui.AddEventForInputWidgets(ui.ViewMap["reportBug"])
 
 	return nil
 }
@@ -131,11 +131,11 @@ func reportBug(g *gocui.Gui, v *gocui.View) error {
 	title := strings.TrimSpace(titleView.Buffer())
 	stepsStr := strings.TrimSpace(stepsView.Buffer())
 
-	moduleStr := strings.TrimSpace(ui.GetSelectedLineVal(moduleView))
-	typeStr := strings.TrimSpace(ui.GetSelectedLineVal(typeView))
-	versionStr := strings.TrimSpace(ui.GetSelectedLineVal(versionView))
-	severityStr := strings.TrimSpace(ui.GetSelectedLineVal(severityView))
-	priorityStr := strings.TrimSpace(ui.GetSelectedLineVal(priorityView))
+	moduleStr := strings.TrimSpace(ui.GetSelectedRowVal(moduleView))
+	typeStr := strings.TrimSpace(ui.GetSelectedRowVal(typeView))
+	versionStr := strings.TrimSpace(ui.GetSelectedRowVal(versionView))
+	severityStr := strings.TrimSpace(ui.GetSelectedRowVal(severityView))
+	priorityStr := strings.TrimSpace(ui.GetSelectedRowVal(priorityView))
 
 	if title == "" {
 		v, _ := vari.Cui.View("reportBugMsg")
@@ -166,7 +166,7 @@ func bugSelectFieldCheckEvent(filedValMap map[string]int) func(g *gocui.Gui, v *
 
 		g.SetCurrentView(name)
 
-		//line, _ := GetSelectedLine(v, ".*")
+		//line, _ := GetSelectedRow(v, ".*")
 		//line = strings.TrimSpace(line)
 		//
 		//zentaoUtils.SetBugField(name, line, filedValMap)

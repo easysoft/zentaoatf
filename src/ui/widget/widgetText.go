@@ -27,7 +27,7 @@ func NewTextWidget(name string, x, y, w int, text string) *gocui.View {
 	return v
 }
 
-func NewTextWidgetWithHeight(name string, x, y, w, h int, text string) *gocui.View {
+func NewTextareaWidget(name string, x, y, w, h int, text string) *gocui.View {
 	widget := TextWidget{name: name, x: x, y: y, w: w, h: h, text: text}
 	v, _ := widget.Layout()
 	return v

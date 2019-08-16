@@ -12,15 +12,14 @@ const (
 	Space = 2
 )
 
-func KeyBindsInput(arr []string) {
+func AddEventForInputWidgets(arr []string) {
 	for _, v := range arr {
-		if IsInput(v) {
-			AddEventForInputWidth(v)
+		if isInput(v) {
+			vari.Cui.SetKeybinding(v, gocui.MouseLeft, gocui.ModNone, SetCurrView(v))
 		}
 	}
 }
-
-func IsInput(v string) bool {
+func isInput(v string) bool {
 	return strings.Index(v, "Input") > -1
 }
 
@@ -95,7 +94,7 @@ func scrollAction(v *gocui.View, dy int, isSelectWidget bool) error {
 	return nil
 }
 
-func SupportLineHighlight(name string) error {
+func SupportRowHighlight(name string) error {
 	v, _ := vari.Cui.View(name)
 
 	v.Wrap = true
@@ -123,13 +122,6 @@ func SetCurrView(name string) func(g *gocui.Gui, v *gocui.View) error {
 	}
 }
 
-func AddEventForInputWidth(name string) error {
-	if err := vari.Cui.SetKeybinding(name, gocui.MouseLeft, gocui.ModNone, SetCurrView(name)); err != nil {
-		return err
-	}
-	return nil
-}
-
 func HighlightTab(view string, views []string) {
 	for _, name := range views {
 		v, _ := vari.Cui.View(name)
@@ -146,7 +138,12 @@ func HighlightTab(view string, views []string) {
 	}
 }
 
-func GetSelectedLine(v *gocui.View, reg string) (string, error) {
+func GetSelectedRowVal(v *gocui.View) string {
+	line, _ := getSelectedRow(v, ".*")
+
+	return line
+}
+func getSelectedRow(v *gocui.View, reg string) (string, error) {
 	var line string
 	var err error
 
@@ -163,10 +160,4 @@ func GetSelectedLine(v *gocui.View, reg string) (string, error) {
 	}
 
 	return line, nil
-}
-
-func GetSelectedLineVal(v *gocui.View) string {
-	line, _ := GetSelectedLine(v, ".*")
-
-	return line
 }

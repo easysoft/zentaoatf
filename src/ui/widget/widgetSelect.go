@@ -49,7 +49,7 @@ func (w *SelectWidget) Layout() (*gocui.View, error) {
 	v, _ := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+w.h)
 	v.Highlight = true
 	ui.SupportScroll(w.name)
-	ui.SupportLineHighlight(w.name)
+	ui.SupportRowHighlight(w.name)
 
 	v.Title = w.title
 
@@ -62,7 +62,7 @@ func (w *SelectWidget) Layout() (*gocui.View, error) {
 
 	_, height := v.Size()
 	for true {
-		line, _ := ui.GetSelectedLine(v, ".*")
+		line := ui.GetSelectedRowVal(v)
 		if w.defaultt != "" {
 			if line == w.defaultt {
 				break

@@ -4,7 +4,7 @@ import "sync"
 
 var LangMap map[string]map[string]string
 
-func GetLangMap() map[string]map[string]string {
+func GetSupportedScriptLang() map[string]map[string]string {
 	var once sync.Once
 	once.Do(func() {
 		LangMap = map[string]map[string]string{
@@ -55,5 +55,5 @@ func GetLangMap() map[string]map[string]string {
 }
 
 func init() {
-	GetLangMap()
+	GetSupportedScriptLang()
 }

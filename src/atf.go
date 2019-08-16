@@ -111,7 +111,7 @@ func main() {
 				genSet.Usage()
 				os.Exit(1)
 			} else {
-				action.GenFromCmd(zentaoUrl, entityType, entityVal, langType, singleFile, account, password)
+				action.GenerateScriptFromCmd(zentaoUrl, entityType, entityVal, langType, singleFile, account, password)
 			}
 		}
 	case "list":

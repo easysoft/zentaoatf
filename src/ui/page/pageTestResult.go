@@ -40,8 +40,8 @@ func showRun(g *gocui.Gui, v *gocui.View) error {
 	ui.SupportScroll("panelCaseList")
 	ui.SupportScroll("panelCaseResult")
 
-	ui.SupportLineHighlight("panelResultList")
-	ui.SupportLineHighlight("panelCaseList")
+	ui.SupportRowHighlight("panelResultList")
+	ui.SupportRowHighlight("panelCaseList")
 
 	ui.AddLineSelectedEvent("panelResultList", selectResultEvent)
 	ui.AddLineSelectedEvent("panelCaseList", selectCaseEvent)
@@ -61,7 +61,7 @@ func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
 
 	v.Highlight = true
 
-	line, _ := ui.GetSelectedLine(v, ".*")
+	line := ui.GetSelectedRowVal(v)
 	vari.CurrResultDate = line
 
 	content := make([]string, 0)
@@ -90,7 +90,7 @@ func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
 func selectCaseEvent(g *gocui.Gui, v *gocui.View) error {
 	v.Highlight = true
 
-	caseLine, _ := ui.GetSelectedLine(v, ".*")
+	caseLine := ui.GetSelectedRowVal(v)
 	caseIdStr := strings.Split(caseLine, "-")[0]
 	caseId, _ := strconv.Atoi(caseIdStr)
 	vari.CurrCaseId = caseId

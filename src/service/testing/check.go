@@ -3,7 +3,7 @@ package testingService
 import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils/const"
-	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
+	"github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/string"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"

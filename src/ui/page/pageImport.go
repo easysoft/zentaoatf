@@ -2,8 +2,8 @@ package page
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/action"
 	"github.com/easysoft/zentaoatf/src/model"
+	scriptService "github.com/easysoft/zentaoatf/src/service/script"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/ui/widget"
@@ -104,7 +104,7 @@ func InitImportPage() error {
 	submitInput := widget.NewButtonWidgetAutoWidth("submitInput", buttonX, 13, "Submit", ImportRequest)
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], submitInput.Name())
 
-	ui.KeyBindsInput(ui.ViewMap["import"])
+	ui.AddEventForInputWidgets(ui.ViewMap["import"])
 
 	return nil
 }
@@ -162,7 +162,7 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 		cases = zentaoService.ListCaseByTask(url, taskId)
 	}
 
-	count, err := action.Generate(cases, language, singleFile, account, password)
+	count, err := scriptService.Generate(cases, language, singleFile, account, password)
 	if err == nil {
 		configUtils.SaveConfig("", url, params["entityType"], params["entityVal"],
 			productIdInt, projectId, language, singleFile,

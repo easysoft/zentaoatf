@@ -38,7 +38,7 @@ func InitSwitchPage() error {
 	submitInput := widget.NewButtonWidgetAutoWidth("submitInput", buttonX, 4, "Switch", SwitchWorkDir)
 	ui.ViewMap["switch"] = append(ui.ViewMap["switch"], submitInput.Name())
 
-	ui.KeyBindsInput(ui.ViewMap["switch"])
+	ui.AddEventForInputWidgets(ui.ViewMap["switch"])
 
 	return nil
 }
