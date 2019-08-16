@@ -3,13 +3,24 @@ package scriptService
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/utils/common"
-	file2 "github.com/easysoft/zentaoatf/src/utils/file"
+	"github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/fatih/color"
 	"regexp"
 )
 
+func List(scriptDir string, langType string) {
+	files := make([]string, 0)
+	fileUtils.GetAllFiles(scriptDir, langType, &files)
+
+	fmt.Printf("Totally %d test cases \n", len(files))
+
+	for _, file := range files {
+		Summary(file)
+	}
+}
+
 func Summary(file string) {
-	content := file2.ReadFile(file)
+	content := fileUtils.ReadFile(file)
 
 	myExp := regexp.MustCompile(`<<TC[\S\s]*caseId:([^\n]*)\n+title:([^\n]*)\n`)
 	arr := myExp.FindStringSubmatch(content)
@@ -22,8 +33,22 @@ func Summary(file string) {
 	}
 }
 
+func View(scriptDir string, fileNames []string, langType string) {
+	files := make([]string, 0)
+	if fileNames != nil && len(fileNames) > 0 {
+		files, _ = fileUtils.GetSpecifiedFiles(scriptDir, fileNames)
+	} else {
+		fileUtils.GetAllFiles(scriptDir, langType, &files)
+	}
+
+	for _, file := range files {
+		Detail(file)
+	}
+
+}
+
 func Detail(file string) {
-	content := file2.ReadFile(file)
+	content := fileUtils.ReadFile(file)
 
 	myExp := regexp.MustCompile(
 		`<<TC[\S\s]*caseId:([^\n]*)\n+title:([^\n]*)\n+steps:([\S\s]*)\n+expects:([\S\s]*?)\n+(readme:|TC;)`)

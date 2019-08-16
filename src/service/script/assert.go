@@ -7,7 +7,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 )
 
-func LoadTestAssets() ([]string, []string) {
+func LoadAssetFiles() ([]string, []string) {
 	config := config2.ReadCurrConfig()
 	ext := GetSupportedScriptLang()[config.LangType]["extName"]
 

@@ -19,7 +19,7 @@ var contentViews []string
 
 func InitTestPage() error {
 	// left
-	caseFiles, suitesFiles := scriptService.LoadTestAssets()
+	caseFiles, suitesFiles := scriptService.LoadAssetFiles()
 	dir := vari.Prefer.WorkDir + constant.ScriptDir
 
 	content := "Test Suite:" + "\n"
