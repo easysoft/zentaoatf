@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/ajg/form"
 	"github.com/easysoft/zentaoatf/src/model"
-	printUtils "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"io/ioutil"
 	"net/http"
@@ -39,7 +39,7 @@ func Get(url string, params map[string]string) (string, bool) {
 	}
 
 	bodyStr, _ := ioutil.ReadAll(resp.Body)
-	printUtils.PrintUnicode(bodyStr)
+	logUtils.PrintUnicode(bodyStr)
 
 	var bodyJson model.ZentaoResponse
 	json.Unmarshal(bodyStr, &bodyJson)
@@ -62,7 +62,7 @@ func PostObject(url string, params interface{}) (string, bool) {
 	// convert data to post fomat
 	re3, _ := regexp.Compile("\\.(.*?)=")
 	data := re3.ReplaceAllStringFunc(val.Encode(), replacePostData)
-	printUtils.PrintToCmd(fmt.Sprintf("%s", data))
+	logUtils.PrintToCmd(fmt.Sprintf("%s", data))
 
 	req, err := http.NewRequest("POST", url, strings.NewReader(data))
 	if err != nil {
@@ -78,7 +78,7 @@ func PostObject(url string, params interface{}) (string, bool) {
 	}
 
 	bodyStr, _ := ioutil.ReadAll(resp.Body)
-	printUtils.PrintUnicode(bodyStr)
+	logUtils.PrintUnicode(bodyStr)
 
 	var bodyJson model.ZentaoResponse
 	json.Unmarshal(bodyStr, &bodyJson)
@@ -121,7 +121,7 @@ func PostStr(url string, params map[string]string) (string, bool) {
 	}
 
 	bodyStr, _ := ioutil.ReadAll(resp.Body)
-	printUtils.PrintUnicode(bodyStr)
+	logUtils.PrintUnicode(bodyStr)
 
 	var bodyJson model.ZentaoResponse
 	json.Unmarshal(bodyStr, &bodyJson)

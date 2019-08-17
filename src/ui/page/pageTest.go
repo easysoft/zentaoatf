@@ -8,7 +8,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/ui/widget"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/file"
-	print2 "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 	"strings"
@@ -33,7 +33,7 @@ func InitTestPage() error {
 		caseName := strings.Replace(casePath, dir, "", -1)
 		content += "  " + caseName + "\n"
 	}
-	print2.PrintToSide(content)
+	logUtils.PrintToSide(content)
 
 	// right
 	ui.SupportScroll("side")
@@ -54,7 +54,7 @@ func selectScriptEvent(g *gocui.Gui, v *gocui.View) error {
 	}
 	line = strings.TrimSpace(line)
 	if strings.Index(line, ".") < 0 {
-		print2.PrintToMainNoScroll("")
+		logUtils.PrintToMainNoScroll("")
 		return nil
 	}
 	vari.CurrScriptFile = constant.ScriptDir + line
@@ -128,7 +128,7 @@ func run(g *gocui.Gui, v *gocui.View) error {
 		return err
 	}
 
-	print2.PrintToCmd(fmt.Sprintf("#atf run -d %s -f %s", vari.Prefer.WorkDir, vari.CurrScriptFile))
+	logUtils.PrintToCmd(fmt.Sprintf("#atf run -d %s -f %s", vari.Prefer.WorkDir, vari.CurrScriptFile))
 	output, _ := g.View(constant.CuiRunOutputView)
 	output.Clear()
 

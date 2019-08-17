@@ -8,7 +8,7 @@ import (
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
-	printUtils "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"strconv"
@@ -60,7 +60,7 @@ func SubmitResult() {
 			json, _ := json.Marshal(report)
 			testingService.SaveTestTestReportAfterSubmit(vari.CurrScriptFile, vari.CurrResultDate, string(json))
 
-			printUtils.PrintToCmd(
+			logUtils.PrintToCmd(
 				fmt.Sprintf("success to submit the results for case %d, resultId is %d\n", id, resultId))
 		}
 	}

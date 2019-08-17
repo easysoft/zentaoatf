@@ -9,7 +9,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/ui/page"
 	"github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/config"
-	print2 "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"os"
 )
@@ -176,12 +176,12 @@ func usage(flagSets []flag.FlagSet) {
 
 	for inx, flag := range flagSets {
 		if inx == 0 {
-			print2.PrintUsageWithSpaceLine(flag, false)
+			logUtils.PrintUsageWithSpaceLine(flag, false)
 		} else {
-			print2.PrintUsage(flag)
+			logUtils.PrintUsage(flag)
 		}
 	}
 
-	print2.PrintSample()
+	logUtils.PrintSample()
 
 }

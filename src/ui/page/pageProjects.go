@@ -8,7 +8,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/ui/widget"
 	config2 "github.com/easysoft/zentaoatf/src/utils/config"
 	"github.com/easysoft/zentaoatf/src/utils/date"
-	print2 "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/log"
 	string2 "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
@@ -90,7 +90,7 @@ func switchProject(g *gocui.Gui, v *gocui.View) error {
 		id, label, path := getProjectInfo(his)
 		if id == CurrProjectId {
 			action.SwitchWorkDir(path)
-			print2.PrintToCmd(fmt.Sprintf("success to switch to project %s: %s at %s",
+			logUtils.PrintToCmd(fmt.Sprintf("success to switch to project %s: %s at %s",
 				label, path, dateUtils.DateTimeStr(time.Now())))
 			break
 		}
@@ -126,7 +126,7 @@ func printForSwitch(his model.WorkHistory) {
 	str = fmt.Sprintf(str, name, his.ProjectPath, config.Url, config.EntityType, config.EntityVal,
 		config.LangType, !config.SingleFile)
 
-	print2.PrintToMainNoScroll(str)
+	logUtils.PrintToMainNoScroll(str)
 }
 
 func init() {

@@ -3,7 +3,7 @@ package zentaoService
 import (
 	"github.com/bitly/go-simplejson"
 	"github.com/easysoft/zentaoatf/src/service/client"
-	printUtils "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 )
 
@@ -23,7 +23,7 @@ func Login(baseUrl string, account string, password string) {
 	} else {
 		log = "fail to login"
 	}
-	printUtils.PrintToCmd(log)
+	logUtils.PrintToCmd(log)
 }
 
 func GetConfig(baseUrl string) {

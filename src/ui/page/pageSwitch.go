@@ -7,7 +7,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/ui/widget"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/date"
-	print2 "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 	"strings"
@@ -48,17 +48,17 @@ func SwitchWorkDir(g *gocui.Gui, v *gocui.View) error {
 
 	workDir := strings.TrimSpace(workDirView.Buffer())
 
-	print2.PrintToCmd(fmt.Sprintf("#atf switch -d %s", workDir))
+	logUtils.PrintToCmd(fmt.Sprintf("#atf switch -d %s", workDir))
 
 	err := action.SwitchWorkDir(workDir)
 	if err == nil {
 		workDirView.Clear()
 		workDirView.Write([]byte(vari.Prefer.WorkDir))
 
-		print2.PrintToCmd(fmt.Sprintf("success to switch project to %s at %s",
+		logUtils.PrintToCmd(fmt.Sprintf("success to switch project to %s at %s",
 			workDir, dateUtils.DateTimeStr(time.Now())))
 	} else {
-		print2.PrintToCmd(err.Error())
+		logUtils.PrintToCmd(err.Error())
 	}
 
 	return nil

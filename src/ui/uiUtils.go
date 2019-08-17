@@ -1,7 +1,7 @@
 package ui
 
 import (
-	print2 "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 	"regexp"
@@ -30,7 +30,7 @@ func Quit(g *gocui.Gui, v *gocui.View) error {
 func SupportScroll(name string) error {
 	v, err := vari.Cui.View(name)
 	if err != nil {
-		print2.PrintToCmd(err.Error() + ": " + name)
+		logUtils.PrintToCmd(err.Error() + ": " + name)
 		return nil
 	}
 

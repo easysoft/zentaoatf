@@ -1,10 +1,9 @@
-package printUtils
+package logUtils
 
 import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
@@ -58,7 +57,7 @@ func PrintToCmd(msg string) {
 	cmdView, _ := vari.Cui.View("cmd")
 	_, _ = fmt.Fprintln(cmdView, msg)
 
-	logUtils.AdjustOrigin("cmd")
+	AdjustOrigin("cmd")
 }
 func PrintStructToCmd(obj interface{}) {
 	str := stringUtils.StructToStr(obj)

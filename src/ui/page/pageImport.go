@@ -11,7 +11,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/config"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/date"
-	print2 "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 	"strconv"
@@ -150,7 +150,7 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 	}
 
 	url = commonUtils.UpdateUrl(url)
-	print2.PrintToCmd(fmt.Sprintf("#atf gen -u %s -t %s -v %s -l %s -s %t -a %s -p %s",
+	logUtils.PrintToCmd(fmt.Sprintf("#atf gen -u %s -t %s -v %s -l %s -s %t -a %s -p %s",
 		url, params["entityType"], params["entityVal"], language, singleFile, account, password))
 
 	zentaoService.Login(url, account, password)
@@ -168,10 +168,10 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 			productIdInt, projectId, language, singleFile,
 			name, account, password)
 
-		print2.PrintToCmd(fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
+		logUtils.PrintToCmd(fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
 			count, constant.ScriptDir, dateUtils.DateTimeStr(time.Now())))
 	} else {
-		print2.PrintToCmd(err.Error())
+		logUtils.PrintToCmd(err.Error())
 	}
 
 	return nil

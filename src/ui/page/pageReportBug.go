@@ -5,7 +5,7 @@ import (
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/ui/widget"
-	printUtils "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
 	"github.com/jroimartin/gocui"
@@ -154,7 +154,7 @@ func reportBug(g *gocui.Gui, v *gocui.View) error {
 	bug.Severity = zentaoService.GetIdByName(severityStr, vari.ZendaoSettings.Severities)
 	bug.Pri = zentaoService.GetIdByName(priorityStr, vari.ZendaoSettings.Priorities)
 
-	printUtils.PrintStructToCmd(bug)
+	logUtils.PrintStructToCmd(bug)
 	//zentaoService.SubmitBug(bug, idInTask, stepIds)
 
 	return nil

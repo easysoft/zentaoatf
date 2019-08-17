@@ -7,7 +7,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/service/client"
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
-	printUtils "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	uuid "github.com/satori/go.uuid"
 	"strconv"
@@ -86,15 +86,15 @@ func SubmitBug(bug model.Bug, idInTask string, stepIds string) {
 	}
 
 	uri := fmt.Sprintf("bug-create-%s-0-%s.json", productId, params)
-	printUtils.PrintToCmd(uri)
+	logUtils.PrintToCmd(uri)
 
 	reqStr, _ := json.Marshal(bug)
-	printUtils.PrintToCmd(string(reqStr))
+	logUtils.PrintToCmd(string(reqStr))
 
 	url := conf.Url + uri
 	_, ok := client.PostObject(url, bug)
 	if ok {
-		printUtils.PrintToCmd(
+		logUtils.PrintToCmd(
 			fmt.Sprintf("success to submit a bug for case %s-%s", bug.Case, idInTask))
 	}
 }

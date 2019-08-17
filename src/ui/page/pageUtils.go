@@ -2,12 +2,12 @@ package page
 
 import (
 	"github.com/easysoft/zentaoatf/src/ui"
-	print2 "github.com/easysoft/zentaoatf/src/utils/print"
+	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 )
 
 func DestoryLeftPages() {
-	print2.ClearSide()
+	logUtils.ClearSide()
 
 	DestoryTestPage()
 	DestoryProjectsPage()
