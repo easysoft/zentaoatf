@@ -6,12 +6,10 @@ import (
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/ui/widget"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
-	"github.com/easysoft/zentaoatf/src/utils/date"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 	"strings"
-	"time"
 )
 
 func InitSwitchPage() error {
@@ -54,9 +52,6 @@ func SwitchWorkDir(g *gocui.Gui, v *gocui.View) error {
 	if err == nil {
 		workDirView.Clear()
 		workDirView.Write([]byte(vari.Prefer.WorkDir))
-
-		logUtils.PrintToCmd(fmt.Sprintf("success to switch project to %s at %s",
-			workDir, dateUtils.DateTimeStr(time.Now())))
 	} else {
 		logUtils.PrintToCmd(err.Error())
 	}

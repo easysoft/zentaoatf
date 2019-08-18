@@ -7,6 +7,7 @@ import (
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
+	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
 	uuid "github.com/satori/go.uuid"
@@ -52,10 +53,10 @@ func SetPreference(param string, val string, dumb bool) {
 	i118Utils.InitI118(vari.Prefer.Language)
 	if !dumb {
 		if param == "lang" {
-			color.Cyan(i118Utils.I118Prt.Sprintf("set_preference", i118Utils.I118Prt.Sprintf("lang"),
-				i118Utils.I118Prt.Sprintf(vari.Prefer.Language)))
+			logUtils.PrintToCmd(color.CyanString(i118Utils.I118Prt.Sprintf("set_preference", i118Utils.I118Prt.Sprintf("lang"),
+				i118Utils.I118Prt.Sprintf(vari.Prefer.Language))))
 		} else if param == "workDir" {
-			color.Cyan(i118Utils.I118Prt.Sprintf("set_preference", i118Utils.I118Prt.Sprintf("workDir"), vari.Prefer.WorkDir))
+			logUtils.PrintToCmd(color.CyanString(i118Utils.I118Prt.Sprintf("set_preference", i118Utils.I118Prt.Sprintf("workDir"), vari.Prefer.WorkDir)))
 		}
 	}
 }
