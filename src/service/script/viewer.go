@@ -10,26 +10,26 @@ import (
 
 func List(scriptDir string, langType string) {
 	files := make([]string, 0)
-	fileUtils.GetAllFiles(scriptDir, langType, &files)
+	fileUtils.GetAllFiles(scriptDir, LangMap[langType]["extName"], &files)
 
 	fmt.Printf("Totally %d test cases \n", len(files))
 
-	for _, file := range files {
-		Summary(file)
+	for idx, file := range files {
+		Summary(file, idx)
 	}
 }
 
-func Summary(file string) {
+func Summary(file string, inx int) {
 	content := fileUtils.ReadFile(file)
 
-	myExp := regexp.MustCompile(`<<TC[\S\s]*caseId:([^\n]*)\n+title:([^\n]*)\n`)
+	myExp := regexp.MustCompile(`<<TC[\S\s]*caseId:([^\n]*)(?:[\S\s]+?)\n+title:([^\n]*)\n`)
 	arr := myExp.FindStringSubmatch(content)
 
 	if len(arr) > 2 {
 		caseId := commonUtils.RemoveBlankLine(arr[1])
 		title := commonUtils.RemoveBlankLine(arr[2])
 
-		fmt.Printf("%s %s \n", color.CyanString(caseId), title)
+		fmt.Printf("%d %s %s \n", inx+1, color.CyanString("tc-%s", caseId), title)
 	}
 }
 
