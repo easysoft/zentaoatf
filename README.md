@@ -3,4 +3,4 @@ ZentaoATF is an automation testing framework written in Golang, support most pop
 
 ## Licenses
 
-All SERVER SIDE source code is licensed under the [Z PUBLIC LICENSE](LICENSE.md).
+All source code is licensed under the [Z PUBLIC LICENSE](LICENSE.md).
