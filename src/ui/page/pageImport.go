@@ -2,7 +2,6 @@ package page
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/model"
 	scriptService "github.com/easysoft/zentaoatf/src/service/script"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	"github.com/easysoft/zentaoatf/src/ui"
@@ -14,13 +13,22 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
-	"strconv"
 	"strings"
 	"time"
 )
 
 func InitImportPage() error {
 	DestoryRightPages()
+
+	conf := configUtils.ReadCurrConfig()
+
+	productId := ""
+	taskId := ""
+	if conf.LangType == "task" {
+		taskId = conf.EntityVal
+	} else {
+		productId = conf.EntityVal
+	}
 
 	maxX, _ := vari.Cui.Size()
 	slideView, _ := vari.Cui.View("side")
@@ -33,7 +41,7 @@ func InitImportPage() error {
 
 	left = right + ui.Space
 	right = left + widget.TextWidthFull
-	urlInput := widget.NewTextWidget("urlInput", left, 1, widget.TextWidthFull, "client://ztpmp.ngtesting.org")
+	urlInput := widget.NewTextWidget("urlInput", left, 1, widget.TextWidthFull, conf.Url)
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], urlInput.Name())
 
 	left = slideX + 2
@@ -43,7 +51,7 @@ func InitImportPage() error {
 
 	left = right + ui.Space
 	right = left + widget.TextWidthHalf
-	productInput := widget.NewTextWidget("productInput", left, 4, widget.TextWidthHalf, "1")
+	productInput := widget.NewTextWidget("productInput", left, 4, widget.TextWidthHalf, productId)
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], productInput.Name())
 
 	left = right + ui.Space
@@ -53,7 +61,7 @@ func InitImportPage() error {
 
 	left = right + ui.Space
 	right = left + widget.TextWidthHalf
-	taskInput := widget.NewTextWidget("taskInput", left, 4, widget.TextWidthHalf, "")
+	taskInput := widget.NewTextWidget("taskInput", left, 4, widget.TextWidthHalf, taskId)
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], taskInput.Name())
 
 	left = slideX + 2
@@ -63,7 +71,7 @@ func InitImportPage() error {
 
 	left = right + ui.Space
 	right = left + widget.TextWidthHalf
-	languageInput := widget.NewTextWidget("languageInput", left, 7, widget.TextWidthHalf, "python")
+	languageInput := widget.NewTextWidget("languageInput", left, 7, widget.TextWidthHalf, conf.LangType)
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], languageInput.Name())
 
 	left = right + ui.Space
@@ -73,7 +81,7 @@ func InitImportPage() error {
 
 	left = right + ui.Space
 	right = left + widget.TextWidthHalf
-	singleFileInput := widget.NewRadioWidget("singleFileInput", left, 7, true)
+	singleFileInput := widget.NewRadioWidget("singleFileInput", left, 7, conf.SingleFile)
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], singleFileInput.Name())
 
 	// zentaoService account and password
@@ -128,50 +136,33 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 	singleFileStr := strings.TrimSpace(singleFileView.Buffer())
 	singleFile := widget.ParseRadioVal(singleFileStr)
 
-	var productIdInt int
-	var projectId int
-	var name string
-	params := make(map[string]string)
+	var entityType string
+	var entityVal string
 	if productId != "" {
-		params["entityType"] = "product"
-		params["entityVal"] = productId
-
-		product := zentaoService.GetProductInfo(url, productId)
-		productIdInt, _ = strconv.Atoi(productId)
-		name = product.Name
+		entityType = "product"
+		entityVal = productId
 	} else {
-		params["entityType"] = "task"
-		params["entityVal"] = taskId
-
-		task := zentaoService.GetTaskInfo(url, params["entityVal"])
-		productIdInt, _ = strconv.Atoi(task.Product)
-		projectId, _ = strconv.Atoi(task.Project)
-		name = task.Name
+		entityType = "task"
+		entityVal = taskId
 	}
 
 	url = commonUtils.UpdateUrl(url)
 	logUtils.PrintToCmd(fmt.Sprintf("#atf gen -u %s -t %s -v %s -l %s -s %t -a %s -p %s",
-		url, params["entityType"], params["entityVal"], language, singleFile, account, password))
+		url, entityType, entityVal, language, singleFile, account, password))
 
-	zentaoService.Login(url, account, password)
+	cases, productIdInt, projectId, name := zentaoService.LoadTestCases(url, account, password, entityType, entityVal)
+	if cases != nil {
+		count, err := scriptService.Generate(cases, language, singleFile)
+		if err == nil {
+			configUtils.SaveConfig("", url, entityType, entityVal,
+				productIdInt, projectId, language, singleFile,
+				name, account, password)
 
-	var cases []model.TestCase
-	if productId != "" {
-		cases = zentaoService.ListCaseByProduct(url, productId)
-	} else {
-		cases = zentaoService.ListCaseByTask(url, taskId)
-	}
-
-	count, err := scriptService.Generate(cases, language, singleFile, account, password)
-	if err == nil {
-		configUtils.SaveConfig("", url, params["entityType"], params["entityVal"],
-			productIdInt, projectId, language, singleFile,
-			name, account, password)
-
-		logUtils.PrintToCmd(fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
-			count, constant.ScriptDir, dateUtils.DateTimeStr(time.Now())))
-	} else {
-		logUtils.PrintToCmd(err.Error())
+			logUtils.PrintToCmd(fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
+				count, constant.ScriptDir, dateUtils.DateTimeStr(time.Now())))
+		} else {
+			logUtils.PrintToCmd(err.Error())
+		}
 	}
 
 	return nil

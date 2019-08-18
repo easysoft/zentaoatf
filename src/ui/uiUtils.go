@@ -28,13 +28,13 @@ func Quit(g *gocui.Gui, v *gocui.View) error {
 }
 
 func SupportScroll(name string) error {
-	v, err := vari.Cui.View(name)
+	_, err := vari.Cui.View(name)
 	if err != nil {
 		logUtils.PrintToCmd(err.Error() + ": " + name)
 		return nil
 	}
 
-	v.Wrap = true
+	//v.Wrap = true
 
 	if err := vari.Cui.SetKeybinding(name, gocui.MouseLeft, gocui.ModNone, SetCurrView(name)); err != nil {
 		return err

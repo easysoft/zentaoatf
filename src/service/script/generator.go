@@ -13,12 +13,11 @@ import (
 	"time"
 )
 
-func Generate(testcases []model.TestCase, langType string, singleFile bool,
-	account string, password string) (int, error) {
+func Generate(testcases []model.TestCase, langType string, singleFile bool) (int, error) {
 
 	casePaths := make([]string, 0)
 	for _, cs := range testcases {
-		GenerateTestCaseScrrpt(cs, langType, singleFile, &casePaths)
+		GenerateTestCaseScript(cs, langType, singleFile, &casePaths)
 	}
 
 	GenSuite(casePaths)
@@ -26,7 +25,7 @@ func Generate(testcases []model.TestCase, langType string, singleFile bool,
 	return len(testcases), nil
 }
 
-func GenerateTestCaseScrrpt(cs model.TestCase, langType string, singleFile bool, casePaths *[]string) {
+func GenerateTestCaseScript(cs model.TestCase, langType string, singleFile bool, casePaths *[]string) {
 	LangMap := GetSupportedScriptLang()
 	langs := ""
 	if LangMap[langType] == nil {

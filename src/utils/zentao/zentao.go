@@ -8,6 +8,7 @@ import (
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	dateUtils "github.com/easysoft/zentaoatf/src/utils/date"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
+	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"os"
 	"path"
@@ -42,7 +43,7 @@ func GenSuperApiUri(module string, methd string, params [][]string) string {
 		uri = fmt.Sprintf("?m=api&f=getmodel&module=%s&methodName=%s&params=%s", module, methd, paramStr)
 	}
 
-	fmt.Println(uri)
+	logUtils.PrintToCmd(uri)
 	return uri
 }
 

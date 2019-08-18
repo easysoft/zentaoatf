@@ -43,12 +43,12 @@ func SetPreference(param string, val string, dumb bool) {
 		val = commonUtils.ConvertWorkDir(val)
 
 		vari.Prefer.WorkDir = val
-		updateWorkDirHistory()
+		UpdateWorkDirHistory()
 	}
 	data, _ := yaml.Marshal(&vari.Prefer)
 	ioutil.WriteFile(constant.PreferenceFile, data, 0666)
 
-	// re-int language resource
+	// re-init language resource
 	i118Utils.InitI118(vari.Prefer.Language)
 	if !dumb {
 		if param == "lang" {
@@ -109,7 +109,7 @@ func PrintPreferenceToView() {
 	}
 }
 
-func updateWorkDirHistory() {
+func UpdateWorkDirHistory() {
 	histories := vari.Prefer.WorkHistories
 
 	// 已经是第一个，不做操作

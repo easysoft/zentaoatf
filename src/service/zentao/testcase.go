@@ -7,11 +7,37 @@ import (
 	"github.com/easysoft/zentaoatf/src/service/client"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"sort"
+	"strconv"
 )
 
+func LoadTestCases(url string, account string, password string, entityType string, entityVal string) ([]model.TestCase, int, int, string) {
+	var testcases []model.TestCase
+
+	var name string
+	var productId int
+	var projectId int
+
+	Login(url, account, password)
+
+	if entityType == "product" {
+		product := GetProductInfo(url, entityVal)
+		productId, _ = strconv.Atoi(product.Id)
+		name = product.Name
+		testcases = ListCaseByProduct(url, entityVal)
+	} else {
+		task := GetTaskInfo(url, entityVal)
+		productId, _ = strconv.Atoi(task.Product)
+		projectId, _ = strconv.Atoi(task.Project)
+		name = task.Name
+		testcases = ListCaseByTask(url, entityVal)
+	}
+
+	return testcases, productId, projectId, name
+}
+
 func ListCaseByProduct(baseUrl string, productId string) []model.TestCase {
-	modules := ListCaseModule(baseUrl, productId)
-	_ = modules
+	//modules := ListCaseModule(baseUrl, productId)
+	//_ = modules
 
 	params := [][]string{{"productID", productId}}
 	url := baseUrl + zentaoUtils.GenSuperApiUri("testcase", "getModuleCases", params)
@@ -21,11 +47,20 @@ func ListCaseByProduct(baseUrl string, productId string) []model.TestCase {
 		var caseMap map[string]model.TestCase
 		json.Unmarshal([]byte(dataStr), &caseMap)
 
-		caseArr := make([]model.TestCase, 0)
+		keys := make([]int, 0)
 		for _, cs := range caseMap {
-			id := cs.Id
-			csWithSteps := GetCaseById(baseUrl, id)
-			caseArr = append(caseArr, model.TestCase{Id: id, TaskId: "0", Title: cs.Title, StepArr: csWithSteps.StepArr})
+			i, _ := strconv.Atoi(cs.Id)
+			keys = append(keys, i)
+		}
+		sort.Ints(keys)
+
+		caseArr := make([]model.TestCase, 0)
+		for _, id := range keys {
+			idStr := strconv.Itoa(id)
+
+			cs := caseMap[idStr]
+			csWithSteps := GetCaseById(baseUrl, idStr)
+			caseArr = append(caseArr, model.TestCase{Id: idStr, TaskId: "0", Title: cs.Title, StepArr: csWithSteps.StepArr})
 		}
 
 		return caseArr
