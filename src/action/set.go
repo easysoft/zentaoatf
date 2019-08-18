@@ -21,6 +21,6 @@ func Set(param string, val string, dumb bool) {
 	}
 }
 
-func Reset() {
-	Set("ZENTAO_LANG", constant.LanguageDefault, true)
-}
+//func Reset() {
+//	Set("ZENTAO_LANG", constant.LanguageDefault, true)
+//}

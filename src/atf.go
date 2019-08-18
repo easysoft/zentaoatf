@@ -38,10 +38,10 @@ func main() {
 	cuiSet := flag.NewFlagSet("atf cui - Open CUI Window", flag.ContinueOnError)
 	flagSets = append(flagSets, *cuiSet)
 
-	preferenceSet := flag.NewFlagSet("atf set/reset - Set preferences", flag.ContinueOnError)
+	preferenceSet := flag.NewFlagSet("atf set - Set preferences", flag.ContinueOnError)
 	flagSets = append(flagSets, *preferenceSet)
 	preferenceSet.StringVar(&language, "l", "", "tool language, en or zh")
-	preferenceSet.StringVar(&workDir, "d", ".", "work dir")
+	preferenceSet.StringVar(&workDir, "d", "", "work dir")
 
 	runSet := flag.NewFlagSet("atf run - Run test scripts in specified folder", flag.ContinueOnError)
 	flagSets = append(flagSets, *runSet)
@@ -136,7 +136,7 @@ func main() {
 
 	case "set":
 		if err := preferenceSet.Parse(os.Args[2:]); err == nil {
-			if language == "" || workDir == "" {
+			if language == "" && workDir == "" {
 				preferenceSet.Usage()
 				os.Exit(1)
 			} else {
@@ -150,8 +150,8 @@ func main() {
 				configUtils.PrintPreference()
 			}
 		}
-	case "reset":
-		action.Reset()
+	//case "reset":
+	//	action.Reset()
 	default:
 		usage(flagSets)
 		os.Exit(1)

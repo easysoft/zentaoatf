@@ -38,7 +38,7 @@ func View(scriptDir string, fileNames []string, langType string) {
 	if fileNames != nil && len(fileNames) > 0 {
 		files, _ = fileUtils.GetSpecifiedFiles(scriptDir, fileNames)
 	} else {
-		fileUtils.GetAllFiles(scriptDir, langType, &files)
+		fileUtils.GetAllFiles(scriptDir, LangMap[langType]["extName"], &files)
 	}
 
 	for _, file := range files {
@@ -51,17 +51,27 @@ func Detail(file string) {
 	content := fileUtils.ReadFile(file)
 
 	myExp := regexp.MustCompile(
-		`<<TC[\S\s]*caseId:([^\n]*)\n+title:([^\n]*)\n+steps:([\S\s]*)\n+expects:([\S\s]*?)\n+(readme:|TC;)`)
+		`<<TC[\S\s]*` +
+			`caseId:([^\n]*)\n+` +
+			`caseIdInTask:([^\n]*)\n+` +
+			`taskId:([^\n]*)\n+` +
+			`title:([^\n]*)\n+` +
+			`steps:([\S\s]*)\n` +
+			`expects:([\S\s]*?)\n+` +
+			`(readme:|TC;)`)
 	arr := myExp.FindStringSubmatch(content)
 
 	if len(arr) > 2 {
 		caseId := commonUtils.RemoveBlankLine(arr[1])
-		title := commonUtils.RemoveBlankLine(arr[2])
-		steps := commonUtils.RemoveBlankLine(arr[3])
-		expects := commonUtils.RemoveBlankLine(arr[4])
+		//caseIdInTask := commonUtils.RemoveBlankLine(arr[2])
+		//taskId := commonUtils.RemoveBlankLine(arr[3])
 
-		fmt.Printf("%s %s \n", color.CyanString(caseId), title)
-		fmt.Printf("%s \n", steps)
-		fmt.Printf("%s \n\n", expects)
+		title := commonUtils.RemoveBlankLine(arr[4])
+		steps := commonUtils.RemoveBlankLine(arr[5])
+		expects := commonUtils.RemoveBlankLine(arr[6])
+
+		color.Cyan("\n%s %s \n", caseId, title)
+		fmt.Printf("Steps: \n%s \n\n", steps)
+		fmt.Printf("Expect Results: \n%s\n", expects)
 	}
 }
