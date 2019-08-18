@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/utils/common"
+	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"io"
 	"os/exec"

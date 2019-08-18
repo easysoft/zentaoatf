@@ -35,7 +35,7 @@ func Run(scriptDir string, fileNames []string, langType string) {
 		fileUtils.GetAllFiles(scriptDir, LangMap[langType]["extName"], &files)
 		fmt.Printf("%v", scriptDir)
 		fmt.Printf("%v", files)
-		vari.RunMode = constant.RUN_MODE_DIR
+		vari.RunMode = constant.RunModeDir
 		vari.RunDir = zentaoUtils.PathToRunName(scriptDir)
 	}
 

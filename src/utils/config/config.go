@@ -2,8 +2,8 @@ package configUtils
 
 import (
 	"github.com/easysoft/zentaoatf/src/model"
-	"github.com/easysoft/zentaoatf/src/utils/common"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	"github.com/easysoft/zentaoatf/src/utils/display"
 	"github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"gopkg.in/yaml.v2"
@@ -59,7 +59,7 @@ func saveEmptyConfig(dir string) error {
 }
 
 func InitScreenSize() {
-	w, h := commonUtils.GetScreenSize()
+	w, h := display.GetScreenSize()
 	vari.Prefer.Width = w
 	vari.Prefer.Height = h
 }

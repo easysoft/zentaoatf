@@ -1,6 +1,7 @@
-package commonUtils
+package display
 
 import (
+	"github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/shellUtils"
 	"os"
 	"os/exec"
@@ -14,7 +15,7 @@ func GetScreenSize() (int, int) {
 	var width int
 	var height int
 
-	if IsWin() {
+	if commonUtils.IsWin() {
 		cmd = "mode" // tested for win7
 		out, _ := shellUtils.ExeShell(cmd)
 

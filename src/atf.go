@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/action"
-	"github.com/easysoft/zentaoatf/src/mock"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/ui/page"
 	"github.com/easysoft/zentaoatf/src/utils/common"
@@ -33,8 +32,8 @@ func main() {
 	var path string
 	var files model.FlagSlice
 
-	mockSet := flag.NewFlagSet("atf mock - Start Mock Server", flag.ContinueOnError)
-	flagSets = append(flagSets, *mockSet)
+	//mockSet := flag.NewFlagSet("atf mock - Start Mock Server", flag.ContinueOnError)
+	//flagSets = append(flagSets, *mockSet)
 
 	cuiSet := flag.NewFlagSet("atf cui - Open CUI Window", flag.ContinueOnError)
 	flagSets = append(flagSets, *cuiSet)
@@ -81,8 +80,8 @@ func main() {
 	}
 
 	switch os.Args[1] {
-	case "mock":
-		mock.Launch()
+	//case "mock":
+	//	mock.Launch()
 	case "cui":
 		page.Cui()
 	case "run":
