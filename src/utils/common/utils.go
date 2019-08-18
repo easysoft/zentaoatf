@@ -93,9 +93,9 @@ func ConvertWorkDir(p string) string {
 func ConvertRunDir(p string) string {
 	sepa := string(os.PathSeparator)
 
-	//if p == "." {
-	//	return Prefer.WorkDir
-	//}
+	if p == "." || p == "./" {
+		p = "scripts"
+	}
 
 	if !PathEndWithSeparator(p) {
 		p = p + sepa

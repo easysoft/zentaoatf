@@ -24,11 +24,11 @@ func CheckResults(files []string, dir string, langType string, report *model.Tes
 		expectArr := zentaoUtils.ReadExpect(scriptFile)
 		skip, logArr := zentaoUtils.ReadLog(logFile)
 
-		ValidateTestCase(scriptFile, langType, checkpointStepArr, expectArr, skip, logArr, report)
+		ValidateCaseResult(scriptFile, langType, checkpointStepArr, expectArr, skip, logArr, report)
 	}
 }
 
-func ValidateTestCase(scriptFile string, langType string,
+func ValidateCaseResult(scriptFile string, langType string,
 	checkpointStepArr []string, expectArr [][]string, skip bool, actualArr [][]string, report *model.TestReport) {
 
 	caseId, caseIdInTask, taskId, title := zentaoUtils.GetCaseIds(scriptFile)
@@ -58,7 +58,7 @@ func ValidateTestCase(scriptFile string, langType string,
 			str := strings.Replace(arr[0], "@step", "", -1)
 			stepId, _ := strconv.Atoi(str)
 
-			stepResult, checkpointLogs := ValidateStep(langType, expectLines, actualLines)
+			stepResult, checkpointLogs := ValidateStepResult(langType, expectLines, actualLines)
 			stepLog := model.StepLog{Id: stepId, Name: step, Status: stepResult, CheckPoints: checkpointLogs}
 			stepLogs = append(stepLogs, stepLog)
 			if !stepResult {
@@ -83,7 +83,7 @@ func ValidateTestCase(scriptFile string, langType string,
 	report.Cases = append(report.Cases, cs)
 }
 
-func ValidateStep(langType string, expectLines []string, actualLines []string) (bool, []model.CheckPointLog) {
+func ValidateStepResult(langType string, expectLines []string, actualLines []string) (bool, []model.CheckPointLog) {
 	stepResult := true
 
 	checkpointLogs := make([]model.CheckPointLog, 0)

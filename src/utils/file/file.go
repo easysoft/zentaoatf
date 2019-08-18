@@ -1,12 +1,13 @@
 package fileUtils
 
 import (
+	"encoding/json"
+	"github.com/easysoft/zentaoatf/src/model"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"io/ioutil"
 	"os"
 	"path"
-	"regexp"
 	"strings"
 )
 
@@ -83,7 +84,7 @@ func GetSpecifiedFiles(scriptDir string, fileNames []string) (files []string, er
 	for _, name := range fileNames {
 		file := name
 
-		if path.Ext(file) == "."+constant.SuiteExt {
+		if path.Ext(file) == "."+constant.ExtNameSuite {
 			fileList := make([]string, 0)
 			GetSuiteFiles(scriptDir, file, &fileList)
 
@@ -98,35 +99,30 @@ func GetSpecifiedFiles(scriptDir string, fileNames []string) (files []string, er
 	return ret, nil
 }
 
-func GetFailedFiles(resultFile string) ([]string, string, string, error) {
+func GetFailedFiles(resultFile string) ([]string, string) {
 	ret := make([]string, 0)
 	dir := ""
-	extName := ""
+	extName := path.Ext(resultFile)
+
+	if extName == "."+constant.ExtNameTxt {
+		resultFile = strings.Replace(resultFile, extName, "."+constant.ExtNameJson, -1)
+	}
 
 	content := ReadFile(resultFile)
 
-	reg := regexp.MustCompile(`\n\sFAIL\s([^\n]+)\n`)
-	arr := reg.FindAllStringSubmatch(content, -1)
+	var report model.TestReport
+	json.Unmarshal([]byte(content), &report)
 
-	if len(arr) > 0 {
-		for _, file := range arr {
-			if len(file) == 1 {
-				continue
-			}
-
-			caseFile := commonUtils.RemoveBlankLine(file[1])
-			ret = append(ret, caseFile)
-
-			if dir == "" {
-				dir = path.Dir(caseFile)
-			}
-			if extName == "" {
-				extName = strings.TrimLeft(path.Ext(caseFile), ".")
-			}
+	for _, cs := range report.Cases {
+		if cs.Status != constant.PASS.String() {
+			ret = append(ret, cs.Path)
+		}
+		if dir == "" {
+			dir = path.Dir(cs.Path)
 		}
 	}
 
-	return ret, dir, extName, nil
+	return ret, dir
 }
 
 func GetSuiteFiles(dirPth string, name string, fileList *[]string) {
@@ -137,7 +133,7 @@ func GetSuiteFiles(dirPth string, name string, fileList *[]string) {
 			return
 		}
 
-		if path.Ext(file) == "."+constant.SuiteExt {
+		if path.Ext(file) == "."+constant.ExtNameSuite {
 			GetSuiteFiles(dirPth, file, fileList)
 		} else {
 			*fileList = append(*fileList, file)

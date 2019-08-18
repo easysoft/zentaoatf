@@ -166,7 +166,7 @@ func GenerateTestStepScript(ts model.TestStep, langType string, stepWidth int,
 func GenSuite(cases []string) {
 	str := strings.Join(cases, "\n")
 
-	fileUtils.WriteFile(vari.Prefer.WorkDir+constant.ScriptDir+"all."+constant.SuiteExt, str)
+	fileUtils.WriteFile(vari.Prefer.WorkDir+constant.ScriptDir+"all."+constant.ExtNameSuite, str)
 }
 
 func computerTestStepWidth(steps []model.TestStep, stepSDisplayMaxWidth *int, stepWidth int) {

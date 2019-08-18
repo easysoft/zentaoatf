@@ -14,7 +14,9 @@ var (
 	UrlSubmitResult   = "submitResults"
 	UrlReportBug      = "reportBug"
 
-	SuiteExt = "suite"
+	ExtNameSuite = "suite"
+	ExtNameJson  = "json"
+	ExtNameTxt   = "txt"
 
 	LanguageDefault = "en"
 	LanguageEN      = "en"
