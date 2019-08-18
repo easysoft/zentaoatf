@@ -3,6 +3,7 @@ package commonUtils
 import (
 	"github.com/easysoft/zentaoatf/src/utils/const"
 	"os"
+	"os/user"
 	"path"
 	"path/filepath"
 	"regexp"
@@ -72,21 +73,25 @@ func UpdateUrl(url string) string {
 func ConvertWorkDir(p string) string {
 	sepa := string(os.PathSeparator)
 	var temp string
-	if p == "." {
-		temp, _ := filepath.Abs(`.`)
-		temp = temp + sepa
-		return temp
-	}
-
-	if IsRelativePath(p) {
+	if strings.Index(p, ".") == 0 {
+		temp, _ := filepath.Abs(".")
+		p = temp + p[1:]
+	} else if strings.Index(p, "~") == 0 && !IsWin() {
+		user, err := user.Current()
+		if nil == err {
+			temp := user.HomeDir
+			p = temp + p[1:]
+		}
+	} else if IsRelativePath(p) {
 		temp, _ = filepath.Abs(`.`)
-		temp = temp + sepa + p
-	}
-	if !PathEndWithSeparator(p) {
-		temp = p + sepa
+		p = temp + sepa + p
 	}
 
-	return temp
+	if !PathEndWithSeparator(p) {
+		p = p + sepa
+	}
+
+	return p
 }
 
 // base on workdir

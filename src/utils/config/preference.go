@@ -43,7 +43,7 @@ func SetPreference(param string, val string, dumb bool) {
 		val = commonUtils.ConvertWorkDir(val)
 
 		vari.Prefer.WorkDir = val
-		UpdateWorkDirHistory()
+		UpdateWorkDirHistoryForSwitch()
 	}
 	data, _ := yaml.Marshal(&vari.Prefer)
 	ioutil.WriteFile(constant.PreferenceFile, data, 0666)
@@ -109,7 +109,18 @@ func PrintPreferenceToView() {
 	}
 }
 
-func UpdateWorkDirHistory() {
+func UpdateWorkDirHistoryForGenerate() {
+	conf := ReadCurrConfig()
+
+	vari.Prefer.WorkHistories[0].ProjectName = conf.ProjectName
+	vari.Prefer.WorkHistories[0].EntityType = conf.EntityType
+	vari.Prefer.WorkHistories[0].EntityVal = conf.EntityVal
+
+	data, _ := yaml.Marshal(&vari.Prefer)
+	ioutil.WriteFile(constant.PreferenceFile, data, 0666)
+}
+
+func UpdateWorkDirHistoryForSwitch() {
 	histories := vari.Prefer.WorkHistories
 
 	// 已经是第一个，不做操作
@@ -136,7 +147,7 @@ func UpdateWorkDirHistory() {
 
 	histories = append([]model.WorkHistory{history}, histories...)
 
-	// 保存最后10个
+	// 只保存最后10个
 	if len(histories) > 10 {
 		histories = histories[:10]
 	}

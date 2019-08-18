@@ -53,6 +53,10 @@ func main() {
 	flagSets = append(flagSets, *rerunSet)
 	rerunSet.StringVar(&path, "p", "", "Test result file path")
 
+	switchSet := flag.NewFlagSet("atf switch - Swith work dir to another path", flag.ContinueOnError)
+	flagSets = append(flagSets, *switchSet)
+	switchSet.StringVar(&path, "p", "", "Work dir path")
+
 	genSet := flag.NewFlagSet("atf gen - Generate test scripts from zentaoService test cases", flag.ContinueOnError)
 	flagSets = append(flagSets, *genSet)
 	genSet.StringVar(&zentaoUrl, "u", "", "Zentao project url")
@@ -101,6 +105,15 @@ func main() {
 				os.Exit(1)
 			} else {
 				action.Rerun(path)
+			}
+		}
+	case "switch":
+		if err := switchSet.Parse(os.Args[2:]); err == nil {
+			if path == "" {
+				switchSet.Usage()
+				os.Exit(1)
+			} else {
+				action.SwitchWorkDir(path)
 			}
 		}
 	case "gen":

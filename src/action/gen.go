@@ -24,6 +24,8 @@ func GenerateScriptFromCmd(url string, entityType string, entityVal string, lang
 				productId, projectId, langType, singleFile,
 				name, account, password)
 
+			configUtils.UpdateWorkDirHistoryForGenerate()
+
 			fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
 				count, constant.ScriptDir, dateUtils.DateTimeStr(time.Now()))
 		} else {
