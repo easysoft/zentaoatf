@@ -28,13 +28,13 @@ func Quit(g *gocui.Gui, v *gocui.View) error {
 }
 
 func SupportScroll(name string) error {
-	_, err := vari.Cui.View(name)
+	v, err := vari.Cui.View(name)
 	if err != nil {
 		logUtils.PrintToCmd(err.Error() + ": " + name)
 		return nil
 	}
 
-	//v.Wrap = true
+	v.Wrap = true
 
 	if err := vari.Cui.SetKeybinding(name, gocui.MouseLeft, gocui.ModNone, SetCurrView(name)); err != nil {
 		return err
@@ -56,39 +56,18 @@ func scrollEvent(dy int) func(g *gocui.Gui, v *gocui.View) error {
 }
 
 func scrollAction(v *gocui.View, dy int, isSelectWidget bool) error {
-	v.Autoscroll = false
+	// Get the size and position of the view.
+	_, y := v.Size()
+	ox, oy := v.Origin()
 
-	if dy > 0 {
-		_, oy := v.Origin()
-		cx, cy := v.Cursor()
-
-		pos := oy + dy
-		_, height := v.Size()
-
-		if err := v.SetCursor(cx, cy+1); err != nil {
-			ox, oy := v.Origin()
-
-			h := len(v.BufferLines()) - height - 1
-			if isSelectWidget {
-				h += 2
-			}
-
-			if pos < h {
-
-				if err := v.SetOrigin(ox, oy+1); err != nil {
-					return err
-				}
-			}
-		}
-	} else if dy < 0 {
-		ox, oy := v.Origin()
-		cx, cy := v.Cursor()
-
-		if err := v.SetCursor(cx, cy-1); err != nil && oy > 0 {
-			if err := v.SetOrigin(ox, oy-1); err != nil {
-				return err
-			}
-		}
+	// If we're at the bottom...
+	if oy+dy > strings.Count(v.ViewBuffer(), "\n")-y-1 {
+		// Set autoscroll to normal again.
+		v.Autoscroll = true
+	} else {
+		// Set autoscroll to false and scroll.
+		v.Autoscroll = false
+		v.SetOrigin(ox, oy+dy)
 	}
 
 	return nil

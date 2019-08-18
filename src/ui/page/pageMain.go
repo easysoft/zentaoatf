@@ -66,5 +66,8 @@ func MainPageKeyBindings() error {
 	ui.SupportScroll("main")
 	ui.SupportScroll("cmd")
 
+	v, _ := vari.Cui.View("cmd")
+	v.Autoscroll = true
+
 	return nil
 }

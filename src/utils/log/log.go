@@ -36,7 +36,6 @@ func PrintWholeLine(msg string, char string, attr color.Attribute) {
 
 	clr := color.New(attr)
 	clr.Fprintf(output, fmt.Sprintf("%s%s%s\n", preFixStr, msg, postFixStr))
-	AdjustOrigin(constant.CuiRunOutputView)
 }
 
 func PrintAndLog(logs *[]string, str string) {
@@ -50,7 +49,6 @@ func PrintAndLog(logs *[]string, str string) {
 	}
 
 	fmt.Fprintf(output, str+"\n")
-	AdjustOrigin(constant.CuiRunOutputView)
 }
 
 func PrintAndLogColorLn(logs *[]string, str string, attr color.Attribute) {
@@ -65,7 +63,6 @@ func PrintAndLogColorLn(logs *[]string, str string, attr color.Attribute) {
 
 	clr := color.New(attr)
 	clr.Fprintf(output, str+"\n")
-	AdjustOrigin(constant.CuiRunOutputView)
 }
 
 func Printt(str string) {
@@ -77,7 +74,6 @@ func Printt(str string) {
 	}
 
 	fmt.Fprintf(output, str)
-	AdjustOrigin(constant.CuiRunOutputView)
 }
 
 func ColoredStatus(status string) string {
@@ -93,21 +89,4 @@ func ColoredStatus(status string) string {
 	}
 
 	return status
-}
-
-func AdjustOrigin(name string) {
-	if !vari.RunFromCui {
-		return
-	}
-
-	view, _ := vari.Cui.View(name)
-	_, height := view.Size()
-	contentHeight := len(view.BufferLines())
-	oy := contentHeight - height
-	if oy < 0 {
-		oy = 0
-	}
-
-	ox, _ := view.Origin()
-	view.SetOrigin(ox, oy)
 }
