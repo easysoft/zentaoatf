@@ -110,7 +110,7 @@ func PrintPreferenceToView() {
 	}
 }
 
-func UpdateWorkDirHistoryForGenerate() {
+func UpdateWorkDirHistoryForGenerate() { // update the first one
 	conf := ReadCurrConfig()
 
 	vari.Prefer.WorkHistories[0].ProjectName = conf.ProjectName
