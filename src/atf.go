@@ -147,7 +147,7 @@ func main() {
 					action.Set("workDir", workDir, false)
 				}
 
-				configUtils.PrintPreference()
+				configUtils.PrintCurrPreference()
 			}
 		}
 	//case "reset":

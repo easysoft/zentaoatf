@@ -8,36 +8,35 @@ import (
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 	"io/ioutil"
-	"sync"
 )
 
 var I118Prt *message.Printer
 
 func InitI118(lang string) {
-	var once sync.Once
-	once.Do(func() {
-		isRelease := commonUtils.IsRelease()
+	//var once sync.Once
+	//once.Do(func() {
+	isRelease := commonUtils.IsRelease()
 
+	if isRelease {
+		data, _ := res.Asset(constant.EnRes)
+		InitResFromAsset(data)
+	} else {
+		InitRes(constant.EnRes)
+	}
+
+	if lang == "zh" {
 		if isRelease {
-			data, _ := res.Asset(constant.EnRes)
+			data, _ := res.Asset(constant.ZhRes)
 			InitResFromAsset(data)
 		} else {
-			InitRes(constant.EnRes)
+			InitRes(constant.ZhRes)
 		}
 
-		if lang == "zh" {
-			if isRelease {
-				data, _ := res.Asset(constant.ZhRes)
-				InitResFromAsset(data)
-			} else {
-				InitRes(constant.ZhRes)
-			}
-
-			I118Prt = message.NewPrinter(language.SimplifiedChinese)
-		} else {
-			I118Prt = message.NewPrinter(language.AmericanEnglish)
-		}
-	})
+		I118Prt = message.NewPrinter(language.SimplifiedChinese)
+	} else {
+		I118Prt = message.NewPrinter(language.AmericanEnglish)
+	}
+	//})
 }
 
 type I18n struct {

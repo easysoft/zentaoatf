@@ -29,7 +29,7 @@ func InitPreference() {
 	i118Utils.InitI118(vari.Prefer.Language)
 
 	if strings.Index(os.Args[0], "atf") > -1 && (len(os.Args) > 1 && os.Args[1] != "set") {
-		PrintPreference()
+		PrintCurrPreference()
 	}
 }
 
@@ -39,21 +39,25 @@ func SetPreference(param string, val string, dumb bool) {
 
 	if param == "lang" {
 		vari.Prefer.Language = val
-		if !dumb {
-			color.Cyan(i118Utils.I118Prt.Sprintf("set_preference", i118Utils.I118Prt.Sprintf("lang"),
-				i118Utils.I118Prt.Sprintf(vari.Prefer.Language)))
-		}
 	} else if param == "workDir" {
 		val = commonUtils.ConvertWorkDir(val)
 
 		vari.Prefer.WorkDir = val
 		updateWorkDirHistory()
-		if !dumb {
-			color.Cyan(i118Utils.I118Prt.Sprintf("set_preference", i118Utils.I118Prt.Sprintf("workDir"), vari.Prefer.WorkDir))
-		}
 	}
 	data, _ := yaml.Marshal(&vari.Prefer)
 	ioutil.WriteFile(constant.PreferenceFile, data, 0666)
+
+	// re-int language resource
+	i118Utils.InitI118(vari.Prefer.Language)
+	if !dumb {
+		if param == "lang" {
+			color.Cyan(i118Utils.I118Prt.Sprintf("set_preference", i118Utils.I118Prt.Sprintf("lang"),
+				i118Utils.I118Prt.Sprintf(vari.Prefer.Language)))
+		} else if param == "workDir" {
+			color.Cyan(i118Utils.I118Prt.Sprintf("set_preference", i118Utils.I118Prt.Sprintf("workDir"), vari.Prefer.WorkDir))
+		}
+	}
 }
 
 func getInst() model.Preference {
@@ -77,7 +81,7 @@ func getInst() model.Preference {
 	return vari.Prefer
 }
 
-func PrintPreference() {
+func PrintCurrPreference() {
 	color.Cyan(i118Utils.I118Prt.Sprintf("current_preference", ""))
 
 	val := reflect.ValueOf(vari.Prefer)
