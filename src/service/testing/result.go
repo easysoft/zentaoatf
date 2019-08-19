@@ -69,7 +69,7 @@ func GetStepHtml(step model.StepLog) string {
 		stepResults = append(stepResults, text)
 	}
 
-	return stepTxt + strings.Join(stepResults, "<br/>")
+	return stepTxt + strings.Join(stepResults, "<br/>") + "<br/>"
 }
 
 func GetStepText(step model.StepLog) string {
@@ -95,5 +95,5 @@ func GetStepText(step model.StepLog) string {
 		stepResults = append(stepResults, text)
 	}
 
-	return stepTxt + strings.Join(stepResults, "\n")
+	return stepTxt + strings.Join(stepResults, "\n") + "\n"
 }

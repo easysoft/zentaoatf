@@ -52,7 +52,7 @@ func GenBug() (model.Bug, string, string) {
 			}
 
 			stepsContent := testingService.GetStepContent(step)
-			steps = append(steps, stepsContent+"<br/>")
+			steps = append(steps, stepsContent)
 		}
 
 		bug := model.Bug{Title: title,

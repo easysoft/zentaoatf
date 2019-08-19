@@ -5,7 +5,7 @@ type ZentaoResponse struct {
 	Data   string
 }
 
-type ZentaoSettings struct {
+type ZentaoBugFileds struct {
 	Modules    []Option
 	Categories []Option
 	Versions   []Option

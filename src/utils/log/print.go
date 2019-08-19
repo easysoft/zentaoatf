@@ -70,12 +70,18 @@ func ClearSide() {
 func PrintUnicode(str []byte) {
 	var a interface{}
 	err := json.Unmarshal(str, &a)
+
+	var msg string
 	if err == nil {
-		if !vari.RunFromCui {
-			fmt.Println(a)
-		}
+		msg = string(str)
 	} else {
-		PrintToCmd(string(str))
+		msg = err.Error()
+	}
+
+	if !vari.RunFromCui {
+		fmt.Println(msg)
+	} else {
+		PrintToCmd(msg)
 	}
 
 }

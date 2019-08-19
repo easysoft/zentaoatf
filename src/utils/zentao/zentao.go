@@ -55,27 +55,6 @@ func GenApiUri(module string, methd string, param string) string {
 	return ""
 }
 
-//func SetBugField(name string, optName string, filedValMap map[string]int) {
-//	var options []model.Option
-//	if name == "module" {
-//		options = vari.ZendaoSettings.Modules
-//	} else if name == "type" {
-//		options = vari.ZendaoSettings.Categories
-//	} else if name == "version" {
-//		options = vari.ZendaoSettings.Versions
-//	} else if name == "priority" {
-//		options = vari.ZendaoSettings.Priorities
-//	}
-//
-//	for _, opt := range options {
-//		if opt.Name == optName {
-//			filedValMap[name] = opt.Id
-//		}
-//	}
-//
-//	print2.PrintToCmd(strconv.Itoa(filedValMap[name]))
-//}
-
 func IsBugFieldDefault(optName string, options []model.Option) bool {
 	for _, opt := range options {
 		if opt.IsDefault && opt.Name == optName {

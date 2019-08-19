@@ -6,6 +6,7 @@ import (
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	dateUtils "github.com/easysoft/zentaoatf/src/utils/date"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
+	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"os"
@@ -14,6 +15,20 @@ import (
 )
 
 func Generate(testcases []model.TestCase, langType string, independentFile bool) (int, error) {
+	LangMap := GetSupportedScriptLang()
+	langs := ""
+	if LangMap[langType] == nil {
+		i := 0
+		for lang, _ := range LangMap {
+			if i > 0 {
+				langs += ", "
+			}
+			langs += lang
+			i++
+		}
+		logUtils.PrintToCmd(fmt.Sprintf("only support languages %s \n", langs))
+		os.Exit(1)
+	}
 
 	casePaths := make([]string, 0)
 	for _, cs := range testcases {
@@ -26,21 +41,6 @@ func Generate(testcases []model.TestCase, langType string, independentFile bool)
 }
 
 func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile bool, casePaths *[]string) {
-	LangMap := GetSupportedScriptLang()
-	langs := ""
-	if LangMap[langType] == nil {
-		i := 0
-		for lang, _ := range LangMap {
-			if i > 0 {
-				langs += ", "
-			}
-			langs += lang
-			i++
-		}
-		fmt.Printf("only support languages %s \n", langs)
-		os.Exit(1)
-	}
-
 	caseId := cs.Id
 	caseInTaskId := cs.IdInTask
 	taskId := cs.TaskId

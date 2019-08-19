@@ -25,8 +25,7 @@ func SubmitResult() {
 		id := cs.Id
 		idInTask := cs.IdInTask
 
-		var uri string
-		uri = fmt.Sprintf("testtask-runCase-%d-%d-1.json", idInTask, id)
+		uri := fmt.Sprintf("testtask-runCase-%d-%d-1.json", idInTask, id)
 
 		requestObj := map[string]interface{}{"case": strconv.Itoa(id), "version": "0"}
 

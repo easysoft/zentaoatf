@@ -14,10 +14,12 @@ import (
 )
 
 func Get(url string, params map[string]string) (string, bool) {
+	logUtils.PrintToCmd(url)
 	client := &http.Client{}
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
+		logUtils.PrintToCmd(err.Error())
 		return "", false
 	}
 
@@ -35,6 +37,7 @@ func Get(url string, params map[string]string) (string, bool) {
 
 	resp, err := client.Do(req)
 	if err != nil {
+		logUtils.PrintToCmd(err.Error())
 		return "", false
 	}
 

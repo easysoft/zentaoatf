@@ -11,7 +11,7 @@ var CurrSettingsButton string
 var settingsButtons []string
 
 func InitSettingsPage() error {
-	importLabel := widget.NewLabelWidgetAutoWidth("switch", 0, 2, "Switch Work dir")
+	importLabel := widget.NewLabelWidgetAutoWidth("switch", 0, 2, "Create/Change Project")
 	ui.ViewMap["settings"] = append(ui.ViewMap["settings"], importLabel.Name())
 
 	switchLabel := widget.NewLabelWidgetAutoWidth("import", 0, 3, "Import from Zentao")

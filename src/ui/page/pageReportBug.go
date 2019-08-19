@@ -1,6 +1,7 @@
 package page
 
 import (
+	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	"github.com/easysoft/zentaoatf/src/ui"
@@ -23,7 +24,9 @@ var filedValMap map[string]int
 func InitReportBugPage() error {
 	DestoryReportBugPage()
 
-	zentaoService.GetZentaoSettings()
+	zentaoService.GetBugFiledOptions()
+	logUtils.PrintToCmd(fmt.Sprintf("%v", vari.ZentaoBugFileds.Modules))
+
 	bug, idInTask, stepIds = zentaoService.GenBug()
 
 	maxX, maxY := vari.Cui.Size()
@@ -33,7 +36,7 @@ func InitReportBugPage() error {
 	y := maxY/2 - 14
 
 	var bugVersion string
-	for _, val := range bug.OpenedBuild {
+	for _, val := range bug.OpenedBuild { // 取字符串值显示
 		bugVersion = val.(string)
 	}
 
@@ -60,7 +63,7 @@ func InitReportBugPage() error {
 	left = x + 2
 	right = left + widget.SelectWidth
 	moduleInput := widget.NewSelectWidgetWithDefault("module", left, y, widget.SelectWidth, 6, "Module",
-		vari.ZendaoSettings.Modules, zentaoService.GetNameById(bug.Module, vari.ZendaoSettings.Modules),
+		vari.ZentaoBugFileds.Modules, zentaoService.GetNameById(bug.Module, vari.ZentaoBugFileds.Modules),
 		bugSelectFieldCheckEvent(filedValMap))
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], moduleInput.Name())
 
@@ -68,7 +71,7 @@ func InitReportBugPage() error {
 	left = right + ui.Space
 	right = left + widget.SelectWidth
 	typeInput := widget.NewSelectWidgetWithDefault("type", left, y, widget.SelectWidth, 6, "Category",
-		vari.ZendaoSettings.Modules, bug.Type,
+		vari.ZentaoBugFileds.Categories, zentaoService.GetNameById(bug.Type, vari.ZentaoBugFileds.Categories),
 		bugSelectFieldCheckEvent(filedValMap))
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], typeInput.Name())
 
@@ -76,7 +79,7 @@ func InitReportBugPage() error {
 	left = right + ui.Space
 	right = left + widget.SelectWidth
 	versionInput := widget.NewSelectWidgetWithDefault("version", left, y, widget.SelectWidth, 6, "Version",
-		vari.ZendaoSettings.Modules, zentaoService.GetNameById(bugVersion, vari.ZendaoSettings.Versions),
+		vari.ZentaoBugFileds.Versions, zentaoService.GetNameById(bugVersion, vari.ZentaoBugFileds.Versions),
 		bugSelectFieldCheckEvent(filedValMap))
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], versionInput.Name())
 
@@ -85,7 +88,7 @@ func InitReportBugPage() error {
 	left = x + 2
 	right = left + widget.SelectWidth
 	severityInput := widget.NewSelectWidgetWithDefault("severity", left, y, widget.SelectWidth, 6, "Severity",
-		vari.ZendaoSettings.Modules, zentaoService.GetNameById(bug.Severity, vari.ZendaoSettings.Severities),
+		vari.ZentaoBugFileds.Severities, zentaoService.GetNameById(bug.Severity, vari.ZentaoBugFileds.Severities),
 		bugSelectFieldCheckEvent(filedValMap))
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], severityInput.Name())
 
@@ -93,7 +96,7 @@ func InitReportBugPage() error {
 	left = right + ui.Space
 	right = left + widget.SelectWidth
 	priorityInput := widget.NewSelectWidgetWithDefault("priority", left, y, widget.SelectWidth, 6, "Priority",
-		vari.ZendaoSettings.Modules, zentaoService.GetNameById(bug.Pri, vari.ZendaoSettings.Priorities),
+		vari.ZentaoBugFileds.Priorities, zentaoService.GetNameById(bug.Pri, vari.ZentaoBugFileds.Priorities),
 		bugSelectFieldCheckEvent(filedValMap))
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], priorityInput.Name())
 
@@ -147,12 +150,12 @@ func reportBug(g *gocui.Gui, v *gocui.View) error {
 	bug.Steps = strings.Replace(stepsStr, "\n", "<br/>", -1)
 	bug.Type = typeStr
 
-	bug.Module = zentaoService.GetIdByName(moduleStr, vari.ZendaoSettings.Modules)
+	bug.Module = zentaoService.GetIdByName(moduleStr, vari.ZentaoBugFileds.Modules)
 	bug.OpenedBuild = map[string]interface{}{
-		zentaoService.GetIdByName(versionStr, vari.ZendaoSettings.Versions): versionStr,
+		zentaoService.GetIdByName(versionStr, vari.ZentaoBugFileds.Versions): versionStr,
 	}
-	bug.Severity = zentaoService.GetIdByName(severityStr, vari.ZendaoSettings.Severities)
-	bug.Pri = zentaoService.GetIdByName(priorityStr, vari.ZendaoSettings.Priorities)
+	bug.Severity = zentaoService.GetIdByName(severityStr, vari.ZentaoBugFileds.Severities)
+	bug.Pri = zentaoService.GetIdByName(priorityStr, vari.ZentaoBugFileds.Priorities)
 
 	logUtils.PrintStructToCmd(bug)
 	//zentaoService.SubmitBug(bug, idInTask, stepIds)
