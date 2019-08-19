@@ -163,8 +163,6 @@ func main() {
 				configUtils.PrintCurrPreference()
 			}
 		}
-	//case "reset":
-	//	action.Reset()
 	default:
 		usage(flagSets)
 		os.Exit(1)

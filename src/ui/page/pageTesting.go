@@ -17,10 +17,10 @@ import (
 var tabs []string
 var contentViews []string
 
-func InitTestPage() error {
+func InitTestingPage() error {
 	// left
 	caseFiles, suitesFiles := scriptService.LoadAssetFiles()
-	dir := vari.Prefer.WorkDir + constant.ScriptDir
+	dir := constant.ScriptDir
 
 	content := "Test Suite:" + "\n"
 	for _, suitePath := range suitesFiles {

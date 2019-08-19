@@ -74,7 +74,7 @@ func ShowTab() {
 	widget.HideHelp()
 
 	if CurrTab == "testing" {
-		InitTestPage()
+		InitTestingPage()
 	} else if CurrTab == "projects" {
 		InitProjectsPage()
 	} else if CurrTab == "settings" {

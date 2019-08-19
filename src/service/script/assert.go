@@ -3,7 +3,7 @@ package scriptService
 import (
 	"fmt"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
-	config2 "github.com/easysoft/zentaoatf/src/utils/config"
+	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
@@ -17,14 +17,14 @@ import (
 Get all test script and suite files in current work dir
 */
 func LoadAssetFiles() ([]string, []string) {
-	config := config2.ReadCurrConfig()
-	ext := GetSupportedScriptLang()[config.LangType]["extName"]
+	conf := configUtils.ReadCurrConfig()
+	ext := GetSupportedScriptLang()[conf.LangType]["extName"]
 
 	caseFiles := make([]string, 0)
 	suitesFiles := make([]string, 0)
 
-	fileUtils.GetAllFilesInDir(vari.Prefer.WorkDir+constant.ScriptDir, ext, &caseFiles)
-	fileUtils.GetAllFilesInDir(vari.Prefer.WorkDir+constant.ScriptDir, "suite", &suitesFiles)
+	fileUtils.GetAllFilesInDir(constant.ScriptDir, ext, &caseFiles)
+	fileUtils.GetAllFilesInDir(constant.ScriptDir, "suite", &suitesFiles)
 
 	return caseFiles, suitesFiles
 }
