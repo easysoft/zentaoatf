@@ -34,30 +34,40 @@ func InitPreference() {
 	}
 }
 
-func SetPreference(param string, val string, dumb bool) {
+func SetLanguage(lang string, dumb bool) {
 	buf, _ := ioutil.ReadFile(constant.PreferenceFile)
 	yaml.Unmarshal(buf, &vari.Prefer)
 
-	if param == "lang" {
-		vari.Prefer.Language = val
-	} else if param == "workDir" {
-		val = commonUtils.ConvertWorkDir(val)
+	vari.Prefer.Language = lang
 
-		vari.Prefer.WorkDir = val
-		UpdateWorkDirHistoryForSwitch()
-	}
 	data, _ := yaml.Marshal(&vari.Prefer)
 	ioutil.WriteFile(constant.PreferenceFile, data, 0666)
 
 	// re-init language resource
 	i118Utils.InitI118(vari.Prefer.Language)
+
 	if !dumb {
-		if param == "lang" {
-			logUtils.PrintToCmd(color.CyanString(i118Utils.I118Prt.Sprintf("set_preference", i118Utils.I118Prt.Sprintf("lang"),
-				i118Utils.I118Prt.Sprintf(vari.Prefer.Language))))
-		} else if param == "workDir" {
-			logUtils.PrintToCmd(color.CyanString(i118Utils.I118Prt.Sprintf("set_preference", i118Utils.I118Prt.Sprintf("workDir"), vari.Prefer.WorkDir)))
-		}
+		logUtils.PrintToCmd(color.CyanString(i118Utils.I118Prt.Sprintf("set_preference", i118Utils.I118Prt.Sprintf("lang"),
+			i118Utils.I118Prt.Sprintf(vari.Prefer.Language))))
+	}
+}
+
+func SetWorkDir(dir string, dumb bool) {
+	fileUtils.MkDirIfNeeded(dir)
+
+	buf, _ := ioutil.ReadFile(constant.PreferenceFile)
+	yaml.Unmarshal(buf, &vari.Prefer)
+
+	dir = commonUtils.ConvertWorkDir(dir)
+
+	vari.Prefer.WorkDir = dir
+	UpdateWorkDirHistoryForSwitch()
+
+	data, _ := yaml.Marshal(&vari.Prefer)
+	ioutil.WriteFile(constant.PreferenceFile, data, 0666)
+
+	if !dumb {
+		logUtils.PrintToCmd(color.CyanString(i118Utils.I118Prt.Sprintf("set_preference", i118Utils.I118Prt.Sprintf("workDir"), vari.Prefer.WorkDir)))
 	}
 }
 

@@ -123,7 +123,7 @@ func main() {
 				genSet.Usage()
 				os.Exit(1)
 			} else {
-				action.GenerateScriptFromCmd(zentaoUrl, entityType, entityVal, langType, singleFile, account, password)
+				action.GenerateScript(zentaoUrl, entityType, entityVal, langType, singleFile, account, password)
 			}
 		}
 	case "list":
@@ -154,10 +154,10 @@ func main() {
 				os.Exit(1)
 			} else {
 				if language != "" {
-					action.Set("lang", language, false)
+					action.SetLanguage(language, false)
 				}
 				if workDir != "" {
-					action.Set("workDir", workDir, false)
+					action.SetWorkDir(workDir, false)
 				}
 
 				configUtils.PrintCurrPreference()

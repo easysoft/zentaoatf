@@ -2,19 +2,16 @@ package page
 
 import (
 	"fmt"
-	scriptService "github.com/easysoft/zentaoatf/src/service/script"
-	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
+	"github.com/easysoft/zentaoatf/src/action"
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/ui/widget"
 	"github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/config"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
-	"github.com/easysoft/zentaoatf/src/utils/date"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 	"strings"
-	"time"
 )
 
 func InitImportPage() error {
@@ -150,20 +147,7 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 	logUtils.PrintToCmd(fmt.Sprintf("#atf gen -u %s -t %s -v %s -l %s -s %t -a %s -p %s",
 		url, entityType, entityVal, language, singleFile, account, password))
 
-	cases, productIdInt, projectId, name := zentaoService.LoadTestCases(url, account, password, entityType, entityVal)
-	if cases != nil {
-		count, err := scriptService.Generate(cases, language, singleFile)
-		if err == nil {
-			configUtils.SaveConfig("", url, entityType, entityVal,
-				productIdInt, projectId, language, singleFile,
-				name, account, password)
-
-			logUtils.PrintToCmd(fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
-				count, constant.ScriptDir, dateUtils.DateTimeStr(time.Now())))
-		} else {
-			logUtils.PrintToCmd(err.Error())
-		}
-	}
+	action.GenerateScript(url, entityType, entityVal, language, singleFile, account, password)
 
 	return nil
 }
