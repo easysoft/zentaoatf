@@ -98,7 +98,7 @@ func GetSpecifiedFilesInWorkDir(fileNames []string) (files []string, err error) 
 	return ret, nil
 }
 
-func GetFailedFiles(resultFile string) ([]string, string) {
+func GetFailedFilesFromTestResult(resultFile string) ([]string, string) {
 	ret := make([]string, 0)
 	dir := ""
 	extName := path.Ext(resultFile)

@@ -7,7 +7,7 @@ import (
 )
 
 func Rerun(resultFile string) {
-	files, scriptDir := fileUtils.GetFailedFiles(resultFile)
+	files, scriptDir := fileUtils.GetFailedFilesFromTestResult(resultFile)
 
 	if !commonUtils.PathEndWithSeparator(scriptDir) {
 		scriptDir += string(os.PathSeparator)

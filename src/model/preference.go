@@ -4,8 +4,8 @@ type Preference struct {
 	Language string
 	WorkDir  string
 
-	Width  int
-	Height int
+	Width  int `json:"-"`
+	Height int `json:"-"`
 
 	WorkHistories []WorkHistory
 }
