@@ -12,16 +12,16 @@ import (
 	"time"
 )
 
-func GenerateScript(url string, entityType string, entityVal string, langType string, singleFile bool,
+func GenerateScript(url string, entityType string, entityVal string, langType string, independentFile bool,
 	account string, password string) {
 
 	url = commonUtils.UpdateUrl(url)
 	cases, productIdInt, projectId, name := zentaoService.LoadTestCases(url, account, password, entityType, entityVal)
 	if cases != nil {
-		count, err := scriptService.Generate(cases, langType, singleFile)
+		count, err := scriptService.Generate(cases, langType, independentFile)
 		if err == nil {
 			configUtils.SaveConfig("", url, entityType, entityVal,
-				productIdInt, projectId, langType, singleFile,
+				productIdInt, projectId, langType, independentFile,
 				name, account, password)
 
 			configUtils.UpdateWorkDirHistoryForGenerate()

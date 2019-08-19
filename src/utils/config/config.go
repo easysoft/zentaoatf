@@ -11,10 +11,10 @@ import (
 )
 
 func SaveConfig(dir string, url string, entityType string, entityVal string,
-	productId int, projectId int, langType string, singleFile bool, name string,
+	productId int, projectId int, langType string, independentFile bool, name string,
 	account string, password string) error {
 	config := model.Config{Url: url, EntityType: entityType,
-		ProductId: productId, ProjectId: projectId, LangType: langType, SingleFile: singleFile, ProjectName: name,
+		ProductId: productId, ProjectId: projectId, LangType: langType, IndependentFile: independentFile, ProjectName: name,
 		Account: account, Password: password}
 
 	config.EntityType = entityType

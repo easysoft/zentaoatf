@@ -73,13 +73,13 @@ func InitImportPage() error {
 
 	left = right + ui.Space
 	right = left + widget.LabelWidth
-	singleFileLabel := widget.NewLabelWidget("singleFileLabel", left, 7, "SingleFile")
-	ui.ViewMap["import"] = append(ui.ViewMap["import"], singleFileLabel.Name())
+	independentFileLabel := widget.NewLabelWidget("independentFileLabel", left, 7, "Indep. Result")
+	ui.ViewMap["import"] = append(ui.ViewMap["import"], independentFileLabel.Name())
 
 	left = right + ui.Space
 	right = left + widget.TextWidthHalf
-	singleFileInput := widget.NewRadioWidget("singleFileInput", left, 7, conf.SingleFile)
-	ui.ViewMap["import"] = append(ui.ViewMap["import"], singleFileInput.Name())
+	independentFileInput := widget.NewRadioWidget("independentFileInput", left, 7, conf.IndependentFile)
+	ui.ViewMap["import"] = append(ui.ViewMap["import"], independentFileInput.Name())
 
 	// zentaoService account and password
 	y := 10
@@ -119,7 +119,7 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 	productView, _ := g.View("productInput")
 	taskView, _ := g.View("taskInput")
 	languageView, _ := g.View("languageInput")
-	singleFileView, _ := g.View("singleFileInput")
+	independentFileView, _ := g.View("independentFileInput")
 	accountView, _ := g.View("accountInput")
 	passwordView, _ := g.View("passwordInput")
 
@@ -130,8 +130,8 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 	language := strings.TrimSpace(languageView.Buffer())
 	account := strings.TrimSpace(accountView.Buffer())
 	password := strings.TrimSpace(passwordView.Buffer())
-	singleFileStr := strings.TrimSpace(singleFileView.Buffer())
-	singleFile := widget.ParseRadioVal(singleFileStr)
+	independentFileStr := strings.TrimSpace(independentFileView.Buffer())
+	independentFile := widget.ParseRadioVal(independentFileStr)
 
 	var entityType string
 	var entityVal string
@@ -144,10 +144,10 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 	}
 
 	url = commonUtils.UpdateUrl(url)
-	logUtils.PrintToCmd(fmt.Sprintf("#atf gen -u %s -t %s -v %s -l %s -s %t -a %s -p %s",
-		url, entityType, entityVal, language, singleFile, account, password))
+	logUtils.PrintToCmd(fmt.Sprintf("#atf gen -u %s -t %s -v %s -l %s -i %t -a %s -p %s",
+		url, entityType, entityVal, language, independentFile, account, password))
 
-	action.GenerateScript(url, entityType, entityVal, language, singleFile, account, password)
+	action.GenerateScript(url, entityType, entityVal, language, independentFile, account, password)
 
 	return nil
 }

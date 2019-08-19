@@ -5,6 +5,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"io/ioutil"
 	"os"
 	"path"
@@ -50,10 +51,10 @@ func FileExist(path string) bool {
 	return exist
 }
 
-func GetAllFiles(dirPth string, ext string, files *[]string) error {
+func GetAllFilesInDir(dirPth string, ext string, files *[]string) error {
 	sep := string(os.PathSeparator)
 
-	dir, err := ioutil.ReadDir(dirPth)
+	dir, err := ioutil.ReadDir(vari.Prefer.WorkDir + dirPth)
 	if err != nil {
 		return err
 	}
@@ -65,7 +66,7 @@ func GetAllFiles(dirPth string, ext string, files *[]string) error {
 				continue
 			}
 
-			GetAllFiles(dirPth+name+sep, ext, files)
+			GetAllFilesInDir(dirPth+name+sep, ext, files)
 		} else {
 			// 过滤指定格式
 			ok := strings.HasSuffix(name, "."+ext)
@@ -78,15 +79,13 @@ func GetAllFiles(dirPth string, ext string, files *[]string) error {
 	return nil
 }
 
-func GetSpecifiedFiles(scriptDir string, fileNames []string) (files []string, err error) {
+func GetSpecifiedFilesInWorkDir(fileNames []string) (files []string, err error) {
 	ret := make([]string, 0)
 
-	for _, name := range fileNames {
-		file := name
-
+	for _, file := range fileNames {
 		if path.Ext(file) == "."+constant.ExtNameSuite {
 			fileList := make([]string, 0)
-			GetSuiteFiles(scriptDir, file, &fileList)
+			GetSuiteFiles(file, &fileList)
 
 			for _, f := range fileList {
 				ret = append(ret, f)
@@ -108,7 +107,7 @@ func GetFailedFiles(resultFile string) ([]string, string) {
 		resultFile = strings.Replace(resultFile, extName, "."+constant.ExtNameJson, -1)
 	}
 
-	content := ReadFile(resultFile)
+	content := ReadFile(vari.Prefer.WorkDir + resultFile)
 
 	var report model.TestReport
 	json.Unmarshal([]byte(content), &report)
@@ -125,8 +124,9 @@ func GetFailedFiles(resultFile string) ([]string, string) {
 	return ret, dir
 }
 
-func GetSuiteFiles(dirPth string, name string, fileList *[]string) {
-	content := ReadFile(name)
+func GetSuiteFiles(name string, fileList *[]string) {
+	content := ReadFile(vari.Prefer.WorkDir + name)
+
 	for _, line := range strings.Split(content, "\n") {
 		file := strings.TrimSpace(line)
 		if file == "" {
@@ -134,7 +134,7 @@ func GetSuiteFiles(dirPth string, name string, fileList *[]string) {
 		}
 
 		if path.Ext(file) == "."+constant.ExtNameSuite {
-			GetSuiteFiles(dirPth, file, fileList)
+			GetSuiteFiles(file, fileList)
 		} else {
 			*fileList = append(*fileList, file)
 		}

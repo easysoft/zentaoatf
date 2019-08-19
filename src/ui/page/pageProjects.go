@@ -124,7 +124,7 @@ func printForSwitch(his model.WorkHistory) {
 	str := "%s\n Work dir: %s\n Zentao project: %s\n Import type: %s\n Product code: %s\n Language: %s\n " +
 		"Independent ExpectResult file: %t"
 	str = fmt.Sprintf(str, name, his.ProjectPath, config.Url, config.EntityType, config.EntityVal,
-		config.LangType, !config.SingleFile)
+		config.LangType, !config.IndependentFile)
 
 	logUtils.PrintToMainNoScroll(str)
 }

@@ -30,9 +30,11 @@ func Run(scriptDir string, fileNames []string, langType string) {
 			vari.RunDir = zentaoUtils.PathToRunName("")
 		}
 
-		files, _ = fileUtils.GetSpecifiedFiles(scriptDir, fileNames)
+		files, _ = fileUtils.GetSpecifiedFilesInWorkDir(fileNames)
+
 	} else { // give a dir
-		fileUtils.GetAllFiles(scriptDir, LangMap[langType]["extName"], &files)
+		fileUtils.GetAllFilesInDir(scriptDir, LangMap[langType]["extName"], &files)
+
 		fmt.Printf("%v", scriptDir)
 		fmt.Printf("%v", files)
 		vari.RunMode = constant.RunModeDir

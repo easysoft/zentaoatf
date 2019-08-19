@@ -13,11 +13,11 @@ import (
 	"time"
 )
 
-func Generate(testcases []model.TestCase, langType string, singleFile bool) (int, error) {
+func Generate(testcases []model.TestCase, langType string, independentFile bool) (int, error) {
 
 	casePaths := make([]string, 0)
 	for _, cs := range testcases {
-		GenerateTestCaseScript(cs, langType, singleFile, &casePaths)
+		GenerateTestCaseScript(cs, langType, independentFile, &casePaths)
 	}
 
 	GenSuite(casePaths)
@@ -25,7 +25,7 @@ func Generate(testcases []model.TestCase, langType string, singleFile bool) (int
 	return len(testcases), nil
 }
 
-func GenerateTestCaseScript(cs model.TestCase, langType string, singleFile bool, casePaths *[]string) {
+func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile bool, casePaths *[]string) {
 	LangMap := GetSupportedScriptLang()
 	langs := ""
 	if LangMap[langType] == nil {
@@ -50,14 +50,16 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, singleFile bool,
 	caseTitle := cs.Title
 
 	scriptFile := fmt.Sprintf(constant.ScriptDir+"tc-%s.%s", caseId, LangMap[langType]["extName"])
-	if fileUtils.FileExist(scriptFile) {
+	scriptFullPath := vari.Prefer.WorkDir + scriptFile
+
+	if fileUtils.FileExist(scriptFullPath) {
 		scriptFile = fmt.Sprintf(constant.ScriptDir+"tc-%s.%s",
 			caseId+"-"+dateUtils.DateTimeStrLong(time.Now()), LangMap[langType]["extName"])
+		scriptFullPath = vari.Prefer.WorkDir + scriptFile
 	}
 
 	fileUtils.MkDirIfNeeded(vari.Prefer.WorkDir + constant.ScriptDir)
 	*casePaths = append(*casePaths, scriptFile)
-	scriptFullPath := vari.Prefer.WorkDir + scriptFile
 
 	steps := make([]string, 0)
 	expects := make([]string, 0)
@@ -79,7 +81,7 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, singleFile bool,
 	}
 
 	var expectsTxt string
-	if singleFile {
+	if !independentFile {
 		expectsTxt = strings.Join(expects, "\n")
 	} else {
 		expectFile := zentaoUtils.ScriptToExpectName(scriptFullPath)
