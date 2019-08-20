@@ -48,7 +48,6 @@ type TestStep struct {
 }
 
 type Bug struct {
-	Id    string
 	Title string
 
 	Module      string            // id

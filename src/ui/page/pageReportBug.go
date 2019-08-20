@@ -165,7 +165,11 @@ func reportBug(g *gocui.Gui, v *gocui.View) error {
 	bug.Pri = zentaoService.GetIdByName(priorityStr, vari.ZentaoBugFileds.Priorities)
 
 	logUtils.PrintStructToCmd(bug)
-	zentaoService.SubmitBug(bug, idInTask, stepIds)
+	ret := zentaoService.SubmitBug(bug, idInTask, stepIds)
+
+	if ret {
+		DestoryReportBugPage()
+	}
 
 	return nil
 }

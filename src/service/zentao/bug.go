@@ -2,6 +2,7 @@ package zentaoService
 
 import (
 	"fmt"
+	"github.com/bitly/go-simplejson"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/service/client"
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
@@ -38,7 +39,7 @@ func GenBug() (model.Bug, string, string) {
 		taskId := cs.TaskId
 
 		uid := uuid.NewV4().String()
-		caseVersion := ""
+		caseVersion := "0"
 		oldTaskID := "0"
 
 		idInTask := strconv.Itoa(cs.IdInTask)
@@ -67,7 +68,7 @@ func GenBug() (model.Bug, string, string) {
 	return model.Bug{}, "", ""
 }
 
-func SubmitBug(bug model.Bug, idInTask string, stepIds string) {
+func SubmitBug(bug model.Bug, idInTask string, stepIds string) bool {
 	conf := configUtils.ReadCurrConfig()
 	Login(conf.Url, conf.Account, conf.Password)
 
@@ -79,21 +80,25 @@ func SubmitBug(bug model.Bug, idInTask string, stepIds string) {
 	params := fmt.Sprintf("caseID=%s,version=0,resultID=%s,runID=%s,stepIdList=%s",
 		bug.Case, bug.Result, idInTask, stepIds)
 
+	bug.Steps = strings.Replace(bug.Steps, " ", "&nbsp;", -1)
 	if bug.Testtask != "" {
 		temp := fmt.Sprintf("testtask=%s,projectID=%s,buildID=1", bug.Testtask, projectId)
 		params += temp
 	}
 
 	uri := fmt.Sprintf("bug-create-%s-0-%s.json", productId, params)
-	//logUtils.PrintToCmd(uri)
-
-	//reqStr, _ := json.Marshal(bug)
-	//logUtils.PrintToCmd(string(reqStr))
 
 	url := conf.Url + uri
-	_, ok := client.PostObject(url, bug)
-	if ok {
+	body, ok := client.PostObject(url, bug)
+
+	json, _ := simplejson.NewJson([]byte(body))
+	msg, _ := json.Get("message").String()
+	if ok && msg == "" {
 		logUtils.PrintToCmd(
 			fmt.Sprintf("success to submit a bug for case %s-%s", bug.Case, idInTask))
+
+		return true
+	} else {
+		return false
 	}
 }

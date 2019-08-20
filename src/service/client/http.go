@@ -62,10 +62,12 @@ func PostObject(url string, params interface{}) (string, bool) {
 	logUtils.PrintToCmd(url)
 	client := &http.Client{}
 
-	val, _ := form.EncodeToValues(params)
+	val, _ := form.EncodeToString(params)
+
 	// convert data to post fomat
-	re3, _ := regexp.Compile("\\.(.*?)=")
-	data := re3.ReplaceAllStringFunc(val.Encode(), replacePostData)
+	re3, _ := regexp.Compile(`([^&]*?)=`)
+	data := re3.ReplaceAllStringFunc(val, replacePostData)
+
 	logUtils.PrintToCmd(fmt.Sprintf("%s", data))
 
 	req, err := http.NewRequest("POST", url, strings.NewReader(data))
@@ -143,7 +145,16 @@ func PostStr(url string, params map[string]string) (string, bool) {
 }
 
 func replacePostData(str string) string {
-	str = strings.Replace(str, ".", "[", -1)
-	str = strings.Replace(str, "=", "]=", -1)
+	logUtils.PrintToCmd(str)
+	logUtils.PrintToCmd(str[:1])
+	logUtils.PrintToCmd(str[1:])
+	logUtils.PrintToCmd("---")
+
+	str = strings.ToLower(str[:1]) + str[1:]
+
+	if strings.Index(str, ".") > -1 {
+		str = strings.Replace(str, ".", "[", -1)
+		str = strings.Replace(str, "=", "]=", -1)
+	}
 	return str
 }
