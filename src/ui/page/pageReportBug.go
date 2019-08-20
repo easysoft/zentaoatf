@@ -119,6 +119,8 @@ func InitReportBugPage() error {
 
 	ui.AddEventForInputWidgets(ui.ViewMap["reportBug"])
 
+	vari.Cui.SetCurrentView("titleInput")
+
 	return nil
 }
 

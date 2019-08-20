@@ -107,6 +107,16 @@ func fieldArrToListKeyStr(arr0 []interface{}) []model.Option {
 	return arr
 }
 
+func GetFirstNoEmptyVal(options []model.Option) string {
+	for _, opt := range options {
+		if opt.Name != "" {
+			return opt.Id
+		}
+	}
+
+	return ""
+}
+
 func GetIdByName(name string, options []model.Option) string {
 	for _, opt := range options {
 		if opt.Name == name {

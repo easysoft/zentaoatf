@@ -26,11 +26,11 @@ func GenBug() (model.Bug, string, string) {
 		}
 
 		title := cs.Title
-		module := "0"
-		typ := "install"
+		module := GetFirstNoEmptyVal(vari.ZentaoBugFileds.Modules)
+		typ := GetFirstNoEmptyVal(vari.ZentaoBugFileds.Categories)
 		openedBuild := map[string]string{"0": "trunk"}
-		severity := "1"
-		priority := "1"
+		severity := GetFirstNoEmptyVal(vari.ZentaoBugFileds.Severities)
+		priority := GetFirstNoEmptyVal(vari.ZentaoBugFileds.Priorities)
 
 		product := productId
 		project := projectId
