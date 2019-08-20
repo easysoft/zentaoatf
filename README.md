@@ -24,8 +24,6 @@ ZentaoATF is an automation testing framework written in Golang.
 
 
 ## Example TODO:
-Open CUI Window 
-
 Switch work dir to another path 
 
 Change tool language（English, Simplified Chinese）
@@ -41,6 +39,8 @@ Rerun failed test scripts in specified result file
 List test scripts 
 
 View test scripts
+
+Open CUI Window
 
 Submit test result to remote Zentao system
 Use CUI

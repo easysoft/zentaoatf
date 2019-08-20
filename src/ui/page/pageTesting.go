@@ -36,7 +36,6 @@ func InitTestingPage() error {
 	logUtils.PrintToSide(content)
 
 	// right
-	ui.SupportScroll("side")
 	ui.AddLineSelectedEvent("side", selectScriptEvent)
 
 	return nil
@@ -101,7 +100,7 @@ func showContent(g *gocui.Gui, v *gocui.View) error {
 	} else {
 		maxX, _ := g.Size()
 		panelFileContent = widget.NewPanelWidget(constant.CuiRunOutputView, constant.LeftWidth, 2,
-			maxX-constant.LeftWidth-1, vari.MainViewHeight, "")
+			maxX-constant.LeftWidth-1, vari.MainViewHeight-2, "")
 		ui.ViewMap["testing"] = append(ui.ViewMap["testing"], panelFileContent.Name())
 		contentViews = append(contentViews, panelFileContent.Name())
 		ui.SupportScroll(panelFileContent.Name())

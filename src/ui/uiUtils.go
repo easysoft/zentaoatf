@@ -57,17 +57,34 @@ func scrollEvent(dy int) func(g *gocui.Gui, v *gocui.View) error {
 
 func scrollAction(v *gocui.View, dy int, isSelectWidget bool) error {
 	// Get the size and position of the view.
-	_, y := v.Size()
+	cx, cy := v.Cursor()
+	_, h := v.Size()
+
+	newCy := cy + dy
+	//logUtils.PrintToCmd(fmt.Sprintf("%d - %d", cy, dy))
+	if (cy == 0 && dy < 0) || // top
+		(newCy == h && dy > 0) { // bottom
+		scroll(v, dy)
+	} else {
+		v.SetCursor(cx, newCy)
+	}
+
+	return nil
+}
+func scroll(v *gocui.View, dy int) error {
+	_, h := v.Size()
+
 	ox, oy := v.Origin()
+	newOy := oy + dy
 
 	// If we're at the bottom...
-	if oy+dy > strings.Count(v.ViewBuffer(), "\n")-y-1 {
+	if newOy+h >= strings.Count(v.ViewBuffer(), "\n") {
 		// Set autoscroll to normal again.
 		v.Autoscroll = true
 	} else {
 		// Set autoscroll to false and scroll.
 		v.Autoscroll = false
-		v.SetOrigin(ox, oy+dy)
+		v.SetOrigin(ox, newOy)
 	}
 
 	return nil

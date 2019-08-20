@@ -19,7 +19,7 @@ func InitMainPage() error {
 	if maxY < constant.MinHeight {
 		maxY = constant.MinHeight
 	}
-	vari.MainViewHeight = maxY - constant.CmdViewHeight - 1
+	vari.MainViewHeight = maxY - constant.CmdViewHeight
 
 	quickBarView := widget.NewPanelWidget("quickBarView", 0, 0, constant.LeftWidth, 2, "")
 	ui.ViewMap["root"] = append(ui.ViewMap["root"], quickBarView.Name())
@@ -40,11 +40,9 @@ func InitMainPage() error {
 
 	mainView := widget.NewPanelWidget("main", constant.LeftWidth, 0, maxX-constant.LeftWidth-1, vari.MainViewHeight, "")
 	ui.ViewMap["root"] = append(ui.ViewMap["root"], mainView.Name())
-	mainView.Wrap = true
 
-	cmdView := widget.NewPanelWidget("cmd", constant.LeftWidth, vari.MainViewHeight, maxX-1-constant.LeftWidth, constant.CmdViewHeight, "")
+	cmdView := widget.NewPanelWidget("cmd", constant.LeftWidth, vari.MainViewHeight, maxX-1-constant.LeftWidth, constant.CmdViewHeight-1, "")
 	ui.ViewMap["root"] = append(ui.ViewMap["root"], cmdView.Name())
-	mainView.Wrap = true
 
 	configUtils.PrintPreferenceToView()
 
@@ -65,6 +63,7 @@ func MainPageKeyBindings() error {
 
 	ui.SupportScroll("main")
 	ui.SupportScroll("cmd")
+	ui.SupportScroll("side")
 
 	v, _ := vari.Cui.View("cmd")
 	v.Autoscroll = true

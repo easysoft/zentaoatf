@@ -27,12 +27,12 @@ func showRun(g *gocui.Gui, v *gocui.View) error {
 	ui.ViewMap["testing"] = append(ui.ViewMap["testing"], panelResultList.Name())
 	runViews = append(runViews, panelResultList.Name())
 
-	panelCaseList := widget.NewPanelWidget("panelCaseList", constant.LeftWidth, h+2, 50, vari.MainViewHeight-h, "")
+	panelCaseList := widget.NewPanelWidget("panelCaseList", constant.LeftWidth, h+2, 50, vari.MainViewHeight-h-2, "")
 	ui.ViewMap["testing"] = append(ui.ViewMap["testing"], panelCaseList.Name())
 	runViews = append(runViews, panelCaseList.Name())
 
 	panelCaseResult := widget.NewPanelWidget("panelCaseResult", constant.LeftWidth+50, 2,
-		maxX-constant.LeftWidth-51, vari.MainViewHeight, "")
+		maxX-constant.LeftWidth-51, vari.MainViewHeight-2, "")
 	ui.ViewMap["testing"] = append(ui.ViewMap["testing"], panelCaseResult.Name())
 	runViews = append(runViews, panelCaseResult.Name())
 
