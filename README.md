@@ -5,8 +5,10 @@ ZentaoATF is an automation testing framework written in Golang, support most pop
 Coming soon
 
 ## QuickStart
+### Usage
+Download the release file form [here](release)
 
-go get -u all
+### Dev
 
 ## Example
 Coming soon
