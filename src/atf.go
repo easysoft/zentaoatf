@@ -32,9 +32,6 @@ func main() {
 	var path string
 	var files model.FlagSlice
 
-	//mockSet := flag.NewFlagSet("atf mock - Start Mock Server", flag.ContinueOnError)
-	//flagSets = append(flagSets, *mockSet)
-
 	cuiSet := flag.NewFlagSet("atf cui - Open CUI Window", flag.ContinueOnError)
 	flagSets = append(flagSets, *cuiSet)
 
@@ -43,17 +40,7 @@ func main() {
 	preferenceSet.StringVar(&language, "l", "", "tool language, en or zh")
 	preferenceSet.StringVar(&workDir, "d", "", "work dir")
 
-	runSet := flag.NewFlagSet("atf run - Run test scripts in specified folder", flag.ContinueOnError)
-	flagSets = append(flagSets, *runSet)
-	runSet.StringVar(&scriptDir, "d", ".", "Directory that contains test scripts, base on current workdir")
-	runSet.StringVar(&langType, "l", "", "Script Language like python, php etc.")
-	runSet.Var(&files, "f", "Script files to run, no need langType if specified, base on current workdir")
-
-	rerunSet := flag.NewFlagSet("atf rerun - Rerun failed test scripts in specified result", flag.ContinueOnError)
-	flagSets = append(flagSets, *rerunSet)
-	rerunSet.StringVar(&path, "p", "", "Test result file path, base on current workdir")
-
-	switchSet := flag.NewFlagSet("atf switch - Swith work dir to another path", flag.ContinueOnError)
+	switchSet := flag.NewFlagSet("atf switch - Switch work dir to another path", flag.ContinueOnError)
 	flagSets = append(flagSets, *switchSet)
 	switchSet.StringVar(&path, "p", "", "Work dir path")
 
@@ -66,6 +53,16 @@ func main() {
 	genSet.BoolVar(&independentFile, "i", false, "Save ExpectResult in independent file or not")
 	genSet.StringVar(&account, "a", "", "Zentao login account")
 	genSet.StringVar(&password, "p", "", "Zentao login password")
+
+	runSet := flag.NewFlagSet("atf run - Run test scripts in specified folder", flag.ContinueOnError)
+	flagSets = append(flagSets, *runSet)
+	runSet.StringVar(&scriptDir, "d", ".", "Directory that contains test scripts, base on current workdir")
+	runSet.StringVar(&langType, "l", "", "Script Language like python, php etc.")
+	runSet.Var(&files, "f", "Script files to run, no need langType if specified, base on current workdir")
+
+	rerunSet := flag.NewFlagSet("atf rerun - Rerun failed test scripts in specified result", flag.ContinueOnError)
+	flagSets = append(flagSets, *rerunSet)
+	rerunSet.StringVar(&path, "p", "", "Test result file path, base on current workdir")
 
 	listSet := flag.NewFlagSet("atf list - List test scripts", flag.ContinueOnError)
 	flagSets = append(flagSets, *listSet)
