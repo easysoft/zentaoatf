@@ -7,7 +7,7 @@ ZentaoATF is an automation testing framework written in Golang.
 3. Easy to use with the help of UI window
 
 ## QuickStart
-### Usage
+### Run
 1. Download corresponding release file from [here](https://github.com/easysoft/zentaoatf/tree/master/release);
 2. Type 'atf-2.0.0.alpha.exe' to get the help doc. 
 
@@ -16,6 +16,11 @@ ZentaoATF is an automation testing framework written in Golang.
 2. Type `go get -u all' to get all dependencies;
 3. Type 'go run src/atf.go' to get the help doc;
 4. To open the CUI window, type 'go run src/atf.go cui'
+
+### Test Suite
+
+### Test Script
+
 
 ## Example TODO:
 Open CUI Window 
