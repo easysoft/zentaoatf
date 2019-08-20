@@ -82,7 +82,7 @@ func PostObject(url string, params interface{}) (string, bool) {
 	}
 
 	bodyStr, _ := ioutil.ReadAll(resp.Body)
-	logUtils.PrintToCmd(string(bodyStr))
+	logUtils.PrintUnicode(bodyStr)
 
 	var bodyJson model.ZentaoResponse
 	json.Unmarshal(bodyStr, &bodyJson)

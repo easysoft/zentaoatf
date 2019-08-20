@@ -7,6 +7,7 @@ import (
 	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
+	"strings"
 )
 
 func PrintUsage(flagSet flag.FlagSet) {
@@ -69,13 +70,16 @@ func ClearSide() {
 
 func PrintUnicode(str []byte) {
 	var a interface{}
-	err := json.Unmarshal(str, &a)
+
+	temp := strings.Replace(string(str), "\\\\", "\\", -1)
+
+	err := json.Unmarshal([]byte(temp), &a)
 
 	var msg string
 	if err == nil {
-		msg = string(str)
+		msg = fmt.Sprint(a)
 	} else {
-		msg = err.Error()
+		msg = temp
 	}
 
 	if !vari.RunFromCui {
@@ -83,5 +87,4 @@ func PrintUnicode(str []byte) {
 	} else {
 		PrintToCmd(msg)
 	}
-
 }
