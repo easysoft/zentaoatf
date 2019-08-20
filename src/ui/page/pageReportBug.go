@@ -37,7 +37,7 @@ func InitReportBugPage() error {
 
 	var bugVersion string
 	for _, val := range bug.OpenedBuild { // 取字符串值显示
-		bugVersion = val.(string)
+		bugVersion = val
 	}
 
 	// panel
@@ -64,7 +64,7 @@ func InitReportBugPage() error {
 	right = left + widget.SelectWidth
 	moduleInput := widget.NewSelectWidgetWithDefault("module", left, y, widget.SelectWidth, 6, "Module",
 		vari.ZentaoBugFileds.Modules, zentaoService.GetNameById(bug.Module, vari.ZentaoBugFileds.Modules),
-		bugSelectFieldCheckEvent(filedValMap))
+		bugSelectFieldCheckEvent())
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], moduleInput.Name())
 
 	// type
@@ -72,7 +72,7 @@ func InitReportBugPage() error {
 	right = left + widget.SelectWidth
 	typeInput := widget.NewSelectWidgetWithDefault("type", left, y, widget.SelectWidth, 6, "Category",
 		vari.ZentaoBugFileds.Categories, zentaoService.GetNameById(bug.Type, vari.ZentaoBugFileds.Categories),
-		bugSelectFieldCheckEvent(filedValMap))
+		bugSelectFieldCheckEvent())
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], typeInput.Name())
 
 	// version
@@ -80,7 +80,7 @@ func InitReportBugPage() error {
 	right = left + widget.SelectWidth
 	versionInput := widget.NewSelectWidgetWithDefault("version", left, y, widget.SelectWidth, 6, "Version",
 		vari.ZentaoBugFileds.Versions, zentaoService.GetNameById(bugVersion, vari.ZentaoBugFileds.Versions),
-		bugSelectFieldCheckEvent(filedValMap))
+		bugSelectFieldCheckEvent())
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], versionInput.Name())
 
 	// severity
@@ -89,7 +89,7 @@ func InitReportBugPage() error {
 	right = left + widget.SelectWidth
 	severityInput := widget.NewSelectWidgetWithDefault("severity", left, y, widget.SelectWidth, 6, "Severity",
 		vari.ZentaoBugFileds.Severities, zentaoService.GetNameById(bug.Severity, vari.ZentaoBugFileds.Severities),
-		bugSelectFieldCheckEvent(filedValMap))
+		bugSelectFieldCheckEvent())
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], severityInput.Name())
 
 	// priority
@@ -97,7 +97,7 @@ func InitReportBugPage() error {
 	right = left + widget.SelectWidth
 	priorityInput := widget.NewSelectWidgetWithDefault("priority", left, y, widget.SelectWidth, 6, "Priority",
 		vari.ZentaoBugFileds.Priorities, zentaoService.GetNameById(bug.Pri, vari.ZentaoBugFileds.Priorities),
-		bugSelectFieldCheckEvent(filedValMap))
+		bugSelectFieldCheckEvent())
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], priorityInput.Name())
 
 	// msg
@@ -148,31 +148,33 @@ func reportBug(g *gocui.Gui, v *gocui.View) error {
 
 	bug.Title = title
 	bug.Steps = strings.Replace(stepsStr, "\n", "<br/>", -1)
-	bug.Type = typeStr
+	bug.Type = zentaoService.GetIdByName(typeStr, vari.ZentaoBugFileds.Categories)
 
 	bug.Module = zentaoService.GetIdByName(moduleStr, vari.ZentaoBugFileds.Modules)
-	bug.OpenedBuild = map[string]interface{}{
-		zentaoService.GetIdByName(versionStr, vari.ZentaoBugFileds.Versions): versionStr,
+
+	versionKey := zentaoService.GetIdByName(versionStr, vari.ZentaoBugFileds.Versions)
+	build := make(map[string]string)
+	if versionKey == "trunk" {
+		build["0"] = "trunk"
+	} else {
+		build[versionKey] = versionStr
 	}
+	bug.OpenedBuild = build
+
 	bug.Severity = zentaoService.GetIdByName(severityStr, vari.ZentaoBugFileds.Severities)
 	bug.Pri = zentaoService.GetIdByName(priorityStr, vari.ZentaoBugFileds.Priorities)
 
 	logUtils.PrintStructToCmd(bug)
-	//zentaoService.SubmitBug(bug, idInTask, stepIds)
+	zentaoService.SubmitBug(bug, idInTask, stepIds)
 
 	return nil
 }
 
-func bugSelectFieldCheckEvent(filedValMap map[string]int) func(g *gocui.Gui, v *gocui.View) error {
+func bugSelectFieldCheckEvent() func(g *gocui.Gui, v *gocui.View) error {
 	return func(g *gocui.Gui, v *gocui.View) error {
 		name := v.Name()
 
 		g.SetCurrentView(name)
-
-		//line, _ := GetSelectedRow(v, ".*")
-		//line = strings.TrimSpace(line)
-		//
-		//zentaoUtils.SetBugField(name, line, filedValMap)
 
 		return nil
 	}

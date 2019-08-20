@@ -51,11 +51,11 @@ type Bug struct {
 	Id    string
 	Title string
 
-	Module      string                 // id
-	Type        string                 // install
-	OpenedBuild map[string]interface{} // {"0": "trunk"}
-	Severity    string                 // id
-	Pri         string                 // id
+	Module      string            // id
+	Type        string            // install
+	OpenedBuild map[string]string // {"0": "trunk"}
+	Severity    string            // id
+	Pri         string            // id
 
 	Product  string
 	Project  string

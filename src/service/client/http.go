@@ -59,6 +59,7 @@ func Get(url string, params map[string]string) (string, bool) {
 }
 
 func PostObject(url string, params interface{}) (string, bool) {
+	logUtils.PrintToCmd(url)
 	client := &http.Client{}
 
 	val, _ := form.EncodeToValues(params)
@@ -81,7 +82,7 @@ func PostObject(url string, params interface{}) (string, bool) {
 	}
 
 	bodyStr, _ := ioutil.ReadAll(resp.Body)
-	logUtils.PrintUnicode(bodyStr)
+	logUtils.PrintToCmd(string(bodyStr))
 
 	var bodyJson model.ZentaoResponse
 	json.Unmarshal(bodyStr, &bodyJson)
@@ -98,6 +99,7 @@ func PostObject(url string, params interface{}) (string, bool) {
 }
 
 func PostStr(url string, params map[string]string) (string, bool) {
+	logUtils.PrintToCmd(url)
 	client := &http.Client{}
 
 	paramStr := ""

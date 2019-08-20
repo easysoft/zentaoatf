@@ -1,7 +1,6 @@
 package zentaoService
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/service/client"
@@ -28,7 +27,7 @@ func GenBug() (model.Bug, string, string) {
 		title := cs.Title
 		module := "0"
 		typ := "install"
-		openedBuild := map[string]interface{}{"0": "trunk"}
+		openedBuild := map[string]string{"0": "trunk"}
 		severity := "1"
 		priority := "1"
 
@@ -86,10 +85,10 @@ func SubmitBug(bug model.Bug, idInTask string, stepIds string) {
 	}
 
 	uri := fmt.Sprintf("bug-create-%s-0-%s.json", productId, params)
-	logUtils.PrintToCmd(uri)
+	//logUtils.PrintToCmd(uri)
 
-	reqStr, _ := json.Marshal(bug)
-	logUtils.PrintToCmd(string(reqStr))
+	//reqStr, _ := json.Marshal(bug)
+	//logUtils.PrintToCmd(string(reqStr))
 
 	url := conf.Url + uri
 	_, ok := client.PostObject(url, bug)
