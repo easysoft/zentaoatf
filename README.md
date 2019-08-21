@@ -56,13 +56,14 @@ go run src/atf.go cui
 ![report_bug](xdoc/snapshot/report_bug.jpg)
 
 ### Test Suite
-scripts/tc-1.py
+```scripts/tc-1.py
 scripts/tc-2.py
 scripts/tc-3.py
 scripts/tc-4.py
+```
 
 ### Test Script
-#!/usr/bin/env python3
+```#!/usr/bin/env python3
 '''
 <<TC
 caseId:         1
@@ -87,7 +88,7 @@ TC
 
 print("#")  # @step1: 正常显示
 #CODE: 输出验证点实际结果
-
+```
 
 ## Licenses
 All source code is licensed under the [Z PUBLIC LICENSE](LICENSE.md).
