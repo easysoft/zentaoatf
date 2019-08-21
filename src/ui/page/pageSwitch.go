@@ -6,6 +6,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/ui/widget"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
@@ -21,7 +22,8 @@ func InitSwitchPage() error {
 
 	left := slideX + 2
 	right := left + widget.LabelWidth
-	workDirLabel := widget.NewLabelWidget("workDirLabel", left, 1, "WorkDir")
+	workDirLabel := widget.NewLabelWidget("workDirLabel", left, 1,
+		i118Utils.I118Prt.Sprintf("Workdir"))
 	ui.ViewMap["switch"] = append(ui.ViewMap["switch"], workDirLabel.Name())
 
 	left = right + ui.Space
@@ -33,7 +35,8 @@ func InitSwitchPage() error {
 	}
 
 	buttonX := (maxX-constant.LeftWidth)/2 + constant.LeftWidth - widget.ButtonWidth
-	submitInput := widget.NewButtonWidgetAutoWidth("submitInput", buttonX, 4, "Switch", SwitchWorkDir)
+	submitInput := widget.NewButtonWidgetAutoWidth("submitInput", buttonX, 4,
+		i118Utils.I118Prt.Sprintf("switch"), SwitchWorkDir)
 	ui.ViewMap["switch"] = append(ui.ViewMap["switch"], submitInput.Name())
 
 	ui.AddEventForInputWidgets(ui.ViewMap["switch"])

@@ -8,6 +8,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/ui/widget"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 	"strconv"
@@ -80,7 +81,8 @@ func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
 	fmt.Fprintln(panelCaseList, strings.Join(content, "\n"))
 
 	maxX, _ := g.Size()
-	uploadButton := widget.NewButtonWidgetAutoWidth("uploadButton", maxX-35, 0, "[Upload Result]", toUploadResult)
+	uploadButton := widget.NewButtonWidgetAutoWidth("uploadButton", maxX-35, 0,
+		"["+i118Utils.I118Prt.Sprintf("upload_result")+"]", toUploadResult)
 	uploadButton.Frame = false
 	runViews = append(runViews, uploadButton.Name())
 
@@ -112,7 +114,8 @@ func selectCaseEvent(g *gocui.Gui, v *gocui.View) error {
 
 	// show submit bug button
 	maxX, _ := g.Size()
-	bugButton := widget.NewButtonWidgetAutoWidth("bugButton", maxX-18, 0, "[Report Bug]", toReportBug)
+	bugButton := widget.NewButtonWidgetAutoWidth("bugButton", maxX-18, 0,
+		"["+i118Utils.I118Prt.Sprintf("report_bug")+"]", toReportBug)
 	bugButton.Frame = false
 	runViews = append(runViews, bugButton.Name())
 

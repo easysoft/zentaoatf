@@ -149,7 +149,7 @@ func reportBug(g *gocui.Gui, v *gocui.View) error {
 
 	if title == "" {
 		v, _ := vari.Cui.View("reportBugMsg")
-		color.New(color.FgMagenta).Fprintf(v, "Title cannot be empty")
+		color.New(color.FgMagenta).Fprintf(v, i118Utils.ReadI18nJson("title_cannot_be_empty"))
 		return nil
 	}
 

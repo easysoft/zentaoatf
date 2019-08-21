@@ -179,9 +179,9 @@
       "translation": "Test Suite"
     },
     {
-      "id": "test_scripts",
-      "message": "Test Scripts",
-      "translation": "Test Scripts"
+      "id": "test_script",
+      "message": "Test Script",
+      "translation": "Test Script"
     },
     {
       "id": "content",
@@ -189,12 +189,17 @@
       "translation": "Content"
     },
     {
+      "id": "run",
+      "message": "Run",
+      "translation": "Run"
+    },
+    {
       "id": "results",
       "message": "Results",
       "translation": "Results"
     },
     {
-      "id": "upload_test_result",
+      "id": "upload_result",
       "message": "Upload Result",
       "translation": "Upload Result"
     },
@@ -258,7 +263,6 @@
       "message": "Switch To",
       "translation": "Switch To"
     },
-    d
     {
       "id": "project_config",
       "message": "",

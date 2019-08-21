@@ -8,6 +8,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/ui/widget"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/file"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
@@ -22,13 +23,13 @@ func InitTestingPage() error {
 	caseFiles, suitesFiles := scriptService.LoadAssetFiles()
 	dir := constant.ScriptDir
 
-	content := "Test Suite:" + "\n"
+	content := i118Utils.I118Prt.Sprintf("test_suite") + ":\n"
 	for _, suitePath := range suitesFiles {
 		suiteName := strings.Replace(suitePath, dir, "", -1)
 		content += "  " + suiteName + "\n"
 	}
 
-	content += "Test Scripts:" + "\n"
+	content += i118Utils.I118Prt.Sprintf("test_script") + ":\n"
 	for _, casePath := range caseFiles {
 		caseName := strings.Replace(casePath, dir, "", -1)
 		content += "  " + caseName + "\n"
@@ -73,14 +74,14 @@ func selectScriptEvent(g *gocui.Gui, v *gocui.View) error {
 func showTab() error {
 	g := vari.Cui
 	x := constant.LeftWidth + 1
-	tabContentView := widget.NewLabelWidgetAutoWidth("tabContentView", x, 0, "Content")
+	tabContentView := widget.NewLabelWidgetAutoWidth("tabContentView", x, 0, i118Utils.I118Prt.Sprintf("content"))
 	ui.ViewMap["testing"] = append(ui.ViewMap["testing"], tabContentView.Name())
 	tabs = append(tabs, tabContentView.Name())
 	if err := g.SetKeybinding("tabContentView", gocui.MouseLeft, gocui.ModNone, showContent); err != nil {
 		return nil
 	}
 
-	tabResultView := widget.NewLabelWidgetAutoWidth("tabResultView", x+12, 0, "Results")
+	tabResultView := widget.NewLabelWidgetAutoWidth("tabResultView", x+12, 0, i118Utils.I118Prt.Sprintf("results"))
 	ui.ViewMap["testing"] = append(ui.ViewMap["testing"], tabResultView.Name())
 	tabs = append(tabs, tabResultView.Name())
 	if err := g.SetKeybinding("tabResultView", gocui.MouseLeft, gocui.ModNone, showRun); err != nil {
@@ -105,7 +106,8 @@ func showContent(g *gocui.Gui, v *gocui.View) error {
 		contentViews = append(contentViews, panelFileContent.Name())
 		ui.SupportScroll(panelFileContent.Name())
 
-		runButton := widget.NewButtonWidgetAutoWidth("runButton", maxX-10, 0, "[Run]", run)
+		runButton := widget.NewButtonWidgetAutoWidth("runButton", maxX-10, 0,
+			"["+i118Utils.I118Prt.Sprintf("run")+"]", run)
 		runButton.Frame = false
 		contentViews = append(contentViews, runButton.Name())
 	}

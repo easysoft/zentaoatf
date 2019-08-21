@@ -3,6 +3,7 @@ package page
 import (
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/ui/widget"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 )
@@ -11,10 +12,12 @@ var CurrSettingsButton string
 var settingsButtons []string
 
 func InitSettingsPage() error {
-	importLabel := widget.NewLabelWidgetAutoWidth("switch", 0, 2, "Create/Change Project")
+	importLabel := widget.NewLabelWidgetAutoWidth("switch", 0, 2,
+		i118Utils.I118Prt.Sprintf("switch_project"))
 	ui.ViewMap["settings"] = append(ui.ViewMap["settings"], importLabel.Name())
 
-	switchLabel := widget.NewLabelWidgetAutoWidth("import", 0, 3, "Import from Zentao")
+	switchLabel := widget.NewLabelWidgetAutoWidth("import", 0, 3,
+		i118Utils.I118Prt.Sprintf("import_from_zentao"))
 	ui.ViewMap["settings"] = append(ui.ViewMap["settings"], switchLabel.Name())
 
 	keybindingSettingsButton()

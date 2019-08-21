@@ -187,12 +187,17 @@
       "translation": "内容"
     },
     {
+      "id": "run",
+      "message": "Run",
+      "translation": "运行"
+    },
+    {
       "id": "results",
       "message": "Results",
       "translation": "结果"
     },
     {
-      "id": "upload_test_result",
+      "id": "upload_result",
       "message": "Upload Result",
       "translation": "上传结果"
     },
