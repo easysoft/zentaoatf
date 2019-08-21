@@ -93,7 +93,7 @@ func InitImportPage() error {
 
 	left = right + ui.Space
 	right = left + widget.TextWidthHalf
-	accountInput := widget.NewTextWidget("accountInput", left, y, widget.TextWidthHalf, "admin")
+	accountInput := widget.NewTextWidget("accountInput", left, y, widget.TextWidthHalf, conf.Account)
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], accountInput.Name())
 
 	left = right + ui.Space
@@ -103,7 +103,7 @@ func InitImportPage() error {
 
 	left = right + ui.Space
 	right = left + widget.TextWidthHalf
-	passwordInput := widget.NewTextWidget("passwordInput", left, y, widget.TextWidthHalf, "P2ssw0rd")
+	passwordInput := widget.NewTextWidget("passwordInput", left, y, widget.TextWidthHalf, conf.Password)
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], passwordInput.Name())
 
 	// button
