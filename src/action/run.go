@@ -1,7 +1,6 @@
 package action
 
 import (
-	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/service/script"
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
@@ -35,8 +34,6 @@ func Run(scriptDir string, fileNames []string, langType string) {
 	} else { // give a dir
 		fileUtils.GetAllFilesInDir(scriptDir, LangMap[langType]["extName"], &files)
 
-		fmt.Printf("%v", scriptDir)
-		fmt.Printf("%v", files)
 		vari.RunMode = constant.RunModeDir
 		vari.RunDir = zentaoUtils.PathToRunName(scriptDir)
 	}

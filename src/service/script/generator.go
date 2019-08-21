@@ -6,6 +6,7 @@ import (
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	dateUtils "github.com/easysoft/zentaoatf/src/utils/date"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
@@ -26,7 +27,7 @@ func Generate(testcases []model.TestCase, langType string, independentFile bool)
 			langs += lang
 			i++
 		}
-		logUtils.PrintToCmd(fmt.Sprintf("only support languages %s \n", langs))
+		logUtils.PrintToCmd(fmt.Sprintf(i118Utils.I118Prt.Sprintf("only_support_script_language", langs) + "\n"))
 		os.Exit(1)
 	}
 
@@ -98,8 +99,6 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 		strings.Join(steps, "\n"), expectsTxt,
 		readme,
 		strings.Join(srcCode, "\n"))
-
-	//fmt.Println(content)
 
 	fileUtils.WriteFile(scriptFullPath, content)
 }

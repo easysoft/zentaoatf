@@ -12,8 +12,8 @@
       "translation": "设置%s为%s"
     },
     {
-      "id": "lang",
-      "message": "lang",
+      "id": "language",
+      "message": "language",
       "translation": "语言"
     },
     {
@@ -22,10 +22,21 @@
       "translation": "工作目录"
     },
     {
+      "id": "en",
+      "message": "English",
+      "translation": "英文"
+    },
+    {
       "id": "zh",
-      "message": "zh",
+      "message": "Chinese",
       "translation": "中文"
     },
+    {
+      "id": "support_language",
+      "message": "只支持语言en(%s)和zh(%s)",
+      "translation": "只支持语言en(%s)和zh(%s)"
+    },
+
     {
       "id": "use_language",
       "message": "Use Chinese language",
@@ -112,6 +123,198 @@
       "id": "no_checkpoints",
       "message": "No checkpoints",
       "translation": "没有验证点"
+    },
+
+    {
+      "id": "steps",
+      "message": "Steps",
+      "translation": "步骤"
+    },
+    {
+      "id": "only_support_script_language",
+      "message": "only support language %s",
+      "translation": "只支持脚本语言%s"
+    },
+    {
+      "id": "total_test_case",
+      "message": "Totally %d test cases",
+      "translation": "合计%d个测试用例"
+    },
+    {
+      "id": "usage_of_atf",
+      "message": "Usage of atf",
+      "translation": "使用帮助"
+    },
+    {
+      "id": "sample_to_use",
+      "message": "Sample to use: ",
+      "translation": "使用示例"
+    },
+    {
+      "id": "success_to_generate",
+      "message": "success to generate %d test scripts in '%s'",
+      "translation": "成功创建%d个测试脚本, 目录: '%s'"
+    },
+    {
+      "id": "success_to_report_bug",
+      "message": "success to report a bug for case %s-%s",
+      "translation": "成功为用例%s-%s提交缺陷"
+    },
+    {
+      "id": "success_to_submit_result",
+      "message": "success to submit the results for case %d, resultId is %d",
+      "translation": "成功为用例%d提交结果, 返回结果编号%d"
+    },
+    {
+      "id": "success_to_switch_project",
+      "message": "success to switch to project %s: %s",
+      "translation": "成功切换到项目%s，路径%s"
+    },
+
+    {
+      "id": "test_suite",
+      "message": "Test Suite",
+      "translation": "测试套件"
+    },
+    {
+      "id": "test_scripts",
+      "message": "Test Scripts",
+      "translation": "测试脚本"
+    },
+    {
+      "id": "content",
+      "message": "Content",
+      "translation": "内容"
+    },
+    {
+      "id": "results",
+      "message": "Results",
+      "translation": "结果"
+    },
+    {
+      "id": "upload_test_result",
+      "message": "Upload Result",
+      "translation": "上传结果"
+    },
+    {
+      "id": "report_bug",
+      "message": "Report Bug",
+      "translation": "提交缺陷"
+    },
+    {
+      "id": "or",
+      "message": "or",
+      "translation": "或"
+    },
+    {
+      "id": "zentao_url",
+      "message": "ZentaoUrl",
+      "translation": "禅道地址"
+    },
+    {
+      "id": "product_id",
+      "message": "ProductId",
+      "translation": "产品ID"
+    },
+    {
+      "id": "task_id",
+      "message": "TaskId",
+      "translation": "任务ID"
+    },
+    {
+      "id": "independent_expect_result",
+      "message": "Indep. Result",
+      "translation": "独立期待结果文件"
+    },
+    {
+      "id": "account",
+      "message": "Account",
+      "translation": "账号"
+    },
+    {
+      "id": "password",
+      "message": "Password",
+      "translation": "密码"
+    },
+    {
+      "id": "submit",
+      "message": "Submit",
+      "translation": "提交"
+    },
+    {
+      "id": "save",
+      "message": "Save",
+      "translation": "保存"
+    },
+    {
+      "id": "cancel",
+      "message": "Cancel",
+      "translation": "取消"
+    },
+    {
+      "id": "switch_to",
+      "message": "Switch To",
+      "translation": "切换至"
+    },
+    {
+      "id": "no_name",
+      "message": "No Name",
+      "translation": "空"
+    },
+    {
+      "id": "project_config",
+      "message": "",
+      "translation": "%s\\n 工作目录: %s\\n 禅道项目: %s\\n 导入类型: %s\\n 产品ID: %s\\n 语言: %s\\n \" +\n    \"独立期待结果文件: %t\""
+    },
+    {
+      "id": "module",
+      "message": "Module",
+      "translation": "模块"
+    },
+    {
+      "id": "category",
+      "message": "Category",
+      "translation": "目录"
+    },
+    {
+      "id": "version",
+      "message": "Version",
+      "translation": "版本"
+    },
+    {
+      "id": "severity",
+      "message": "Severity",
+      "translation": "严重级别"
+    },
+    {
+      "id": "priority",
+      "message": "Priority",
+      "translation": "紧急程度"
+    },
+    {
+      "id": "title_cannot_be_empty",
+      "message": "Title cannot be empty",
+      "translation": "标题不能为空"
+    },
+    {
+      "id": "switch",
+      "message": "Switch",
+      "translation": "切换"
+    },
+    {
+      "id": "switch_project",
+      "message": "Create/Switch Project",
+      "translation": "创建/切换 Project"
+    },
+    {
+      "id": "import_from_zentao",
+      "message": "Import from Zentao",
+      "translation": "从禅道导入"
+    },
+    {
+      "id": "workdir",
+      "message": "WorkDir",
+      "translation": "工作目录"
     }
   ]
 }

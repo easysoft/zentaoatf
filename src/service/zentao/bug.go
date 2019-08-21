@@ -7,6 +7,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/service/client"
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	uuid "github.com/satori/go.uuid"
@@ -94,8 +95,7 @@ func SubmitBug(bug model.Bug, idInTask string, stepIds string) bool {
 	json, _ := simplejson.NewJson([]byte(body))
 	msg, _ := json.Get("message").String()
 	if ok && msg == "" {
-		logUtils.PrintToCmd(
-			fmt.Sprintf("success to submit a bug for case %s-%s", bug.Case, idInTask))
+		logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("success_to_report_bug", bug.Case, idInTask) + "\n")
 
 		return true
 	} else {

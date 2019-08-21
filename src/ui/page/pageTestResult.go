@@ -8,7 +8,6 @@ import (
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/ui/widget"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
-	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 	"strconv"
@@ -22,7 +21,6 @@ func showRun(g *gocui.Gui, v *gocui.View) error {
 	ui.HighlightTab(v.Name(), tabs)
 
 	h := vari.MainViewHeight / 2
-	logUtils.PrintToCmd(fmt.Sprintf("==%d==", h))
 	maxX, _ := g.Size()
 
 	panelResultList := widget.NewPanelWidget("panelResultList", constant.LeftWidth, 2, 50, h-2, "")

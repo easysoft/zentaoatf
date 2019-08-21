@@ -1,11 +1,11 @@
 package page
 
 import (
-	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/ui/widget"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
@@ -25,7 +25,6 @@ func InitReportBugPage() error {
 	DestoryReportBugPage()
 
 	zentaoService.GetBugFiledOptions()
-	logUtils.PrintToCmd(fmt.Sprintf("%v", vari.ZentaoBugFileds.Modules))
 
 	bug, idInTask, stepIds = zentaoService.GenBug()
 
@@ -62,7 +61,8 @@ func InitReportBugPage() error {
 	y += 3
 	left = x + 2
 	right = left + widget.SelectWidth
-	moduleInput := widget.NewSelectWidgetWithDefault("module", left, y, widget.SelectWidth, 6, "Module",
+	moduleInput := widget.NewSelectWidgetWithDefault("module", left, y, widget.SelectWidth, 6,
+		i118Utils.I118Prt.Sprintf("module"),
 		vari.ZentaoBugFileds.Modules, zentaoService.GetNameById(bug.Module, vari.ZentaoBugFileds.Modules),
 		bugSelectFieldCheckEvent())
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], moduleInput.Name())
@@ -70,7 +70,8 @@ func InitReportBugPage() error {
 	// type
 	left = right + ui.Space
 	right = left + widget.SelectWidth
-	typeInput := widget.NewSelectWidgetWithDefault("type", left, y, widget.SelectWidth, 6, "Category",
+	typeInput := widget.NewSelectWidgetWithDefault("type", left, y, widget.SelectWidth, 6,
+		i118Utils.I118Prt.Sprintf("category"),
 		vari.ZentaoBugFileds.Categories, zentaoService.GetNameById(bug.Type, vari.ZentaoBugFileds.Categories),
 		bugSelectFieldCheckEvent())
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], typeInput.Name())
@@ -78,7 +79,8 @@ func InitReportBugPage() error {
 	// version
 	left = right + ui.Space
 	right = left + widget.SelectWidth
-	versionInput := widget.NewSelectWidgetWithDefault("version", left, y, widget.SelectWidth, 6, "Version",
+	versionInput := widget.NewSelectWidgetWithDefault("version", left, y, widget.SelectWidth, 6,
+		i118Utils.I118Prt.Sprintf("version"),
 		vari.ZentaoBugFileds.Versions, zentaoService.GetNameById(bugVersion, vari.ZentaoBugFileds.Versions),
 		bugSelectFieldCheckEvent())
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], versionInput.Name())
@@ -87,7 +89,8 @@ func InitReportBugPage() error {
 	y += 7
 	left = x + 2
 	right = left + widget.SelectWidth
-	severityInput := widget.NewSelectWidgetWithDefault("severity", left, y, widget.SelectWidth, 6, "Severity",
+	severityInput := widget.NewSelectWidgetWithDefault("severity", left, y, widget.SelectWidth, 6,
+		i118Utils.I118Prt.Sprintf("severity"),
 		vari.ZentaoBugFileds.Severities, zentaoService.GetNameById(bug.Severity, vari.ZentaoBugFileds.Severities),
 		bugSelectFieldCheckEvent())
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], severityInput.Name())
@@ -95,7 +98,8 @@ func InitReportBugPage() error {
 	// priority
 	left = right + ui.Space
 	right = left + widget.SelectWidth
-	priorityInput := widget.NewSelectWidgetWithDefault("priority", left, y, widget.SelectWidth, 6, "Priority",
+	priorityInput := widget.NewSelectWidgetWithDefault("priority", left, y, widget.SelectWidth, 6,
+		i118Utils.I118Prt.Sprintf("priority"),
 		vari.ZentaoBugFileds.Priorities, zentaoService.GetNameById(bug.Pri, vari.ZentaoBugFileds.Priorities),
 		bugSelectFieldCheckEvent())
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], priorityInput.Name())
@@ -110,11 +114,12 @@ func InitReportBugPage() error {
 	// buttons
 	y += 6
 	buttonX := maxX/2 - 49 + widget.LabelWidthSmall + ui.Space
-	submitInput := widget.NewButtonWidgetAutoWidth("submitInput", buttonX, y, "Submit", reportBug)
+	submitInput := widget.NewButtonWidgetAutoWidth("submitInput", buttonX, y,
+		i118Utils.I118Prt.Sprintf("submit"), reportBug)
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], submitInput.Name())
 
 	cancelReportBugInput := widget.NewButtonWidgetAutoWidth("cancelReportBugInput",
-		buttonX+11, y, "Cancel", cancelReportBug)
+		buttonX+11, y, i118Utils.I118Prt.Sprintf("cancel"), cancelReportBug)
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], cancelReportBugInput.Name())
 
 	ui.AddEventForInputWidgets(ui.ViewMap["reportBug"])

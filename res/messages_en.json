@@ -18,8 +18,8 @@
     },
 
     {
-      "id": "lang",
-      "message": "lang",
+      "id": "language",
+      "message": "language",
       "translation": "language"
     },
     {
@@ -27,11 +27,23 @@
       "message": "Work Dir",
       "translation": "Work Dir"
     },
+
+    {
+      "id": "en",
+      "message": "English",
+      "translation": "English"
+    },
     {
       "id": "zh",
-      "message": "zh",
+      "message": "Chinese",
       "translation": "Chinese"
     },
+    {
+      "id": "support_language",
+      "message": "only en(%s) and zh(%s) language is acceptable",
+      "translation": "only en(%s) and zh(%s) language is acceptable"
+    },
+
     {
       "id": "start_execution",
       "message": "Start Execution",
@@ -95,6 +107,11 @@
       "translation": "Step"
     },
     {
+      "id": "steps",
+      "message": "Steps",
+      "translation": "Steps"
+    },
+    {
       "id": "checkpoint",
       "message": "Checkpoint",
       "translation": "Checkpoint"
@@ -113,7 +130,189 @@
       "id": "no_checkpoints",
       "message": "No checkpoints",
       "translation": "No checkpoints"
-    }
+    },
 
+    {
+      "id": "only_support_script_language",
+      "message": "only support language %s",
+      "translation": "only support language %s"
+    },
+    {
+      "id": "total_test_case",
+      "message": "Totally %d test cases",
+      "translation": "Totally %d test cases"
+    },
+    {
+      "id": "usage_of_atf",
+      "message": "Usage of atf",
+      "translation": "Usage of atf"
+    },
+    {
+      "id": "sample_to_use",
+      "message": "Sample to use: ",
+      "translation": "Sample to use: "
+    },
+    {
+      "id": "success_to_generate",
+      "message": "success to generate %d test scripts in '%s'",
+      "translation": "success to generate %d test scripts in '%s'"
+    },
+    {
+      "id": "success_to_report_bug",
+      "message": "success to report a bug for case %s-%s",
+      "translation": "success to report a bug for case %s-%s"
+    },
+    {
+      "id": "success_to_submit_result",
+      "message": "success to submit the results for case %d, resultId is %d",
+      "translation": "success to submit the results for case %d, resultId is %d"
+    },
+    {
+      "id": "success_to_switch_project",
+      "message": "success to switch to project %s: %s",
+      "translation": "success to switch to project %s: %s"
+    },
+
+    {
+      "id": "test_suite",
+      "message": "Test Suite",
+      "translation": "Test Suite"
+    },
+    {
+      "id": "test_scripts",
+      "message": "Test Scripts",
+      "translation": "Test Scripts"
+    },
+    {
+      "id": "content",
+      "message": "Content",
+      "translation": "Content"
+    },
+    {
+      "id": "results",
+      "message": "Results",
+      "translation": "Results"
+    },
+    {
+      "id": "upload_test_result",
+      "message": "Upload Result",
+      "translation": "Upload Result"
+    },
+    {
+      "id": "report_bug",
+      "message": "Report Bug",
+      "translation": "Report Bug"
+    },
+    {
+      "id": "or",
+      "message": "or",
+      "translation": "or"
+    },
+    {
+      "id": "zentao_url",
+      "message": "ZentaoUrl",
+      "translation": "ZentaoUrl"
+    },
+    {
+      "id": "product_id",
+      "message": "ProductId",
+      "translation": "ProductId"
+    },
+    {
+      "id": "task_id",
+      "message": "TaskId",
+      "translation": "TaskId"
+    },
+    {
+      "id": "independent_expect_result",
+      "message": "Indep. Result",
+      "translation": "Indep. Result"
+    },
+    {
+      "id": "account",
+      "message": "Account",
+      "translation": "Account"
+    },
+    {
+      "id": "password",
+      "message": "Password",
+      "translation": "Password"
+    },
+    {
+      "id": "submit",
+      "message": "Submit",
+      "translation": "Submit"
+    },
+    {
+      "id": "save",
+      "message": "Save",
+      "translation": "Save"
+    },
+    {
+      "id": "cancel",
+      "message": "Cancel",
+      "translation": "Cancel"
+    },
+    {
+      "id": "switch_to",
+      "message": "Switch To",
+      "translation": "Switch To"
+    },
+    d
+    {
+      "id": "project_config",
+      "message": "",
+      "translation": "%s\\n Work dir: %s\\n Zentao project: %s\\n Import type: %s\\n Product code: %s\\n Language: %s\\n \" +\n    \"Indep. ExpectResult file: %t\""
+    },
+    {
+      "id": "module",
+      "message": "Module",
+      "translation": "Module"
+    },
+    {
+      "id": "category",
+      "message": "Category",
+      "translation": "Category"
+    },
+    {
+      "id": "version",
+      "message": "Version",
+      "translation": "Version"
+    },
+    {
+      "id": "severity",
+      "message": "Severity",
+      "translation": "Severity"
+    },
+    {
+      "id": "priority",
+      "message": "Priority",
+      "translation": "Priority"
+    },
+    {
+      "id": "title_cannot_be_empty",
+      "message": "Title cannot be empty",
+      "translation": "Title cannot be empty"
+    },
+    {
+      "id": "switch",
+      "message": "Switch",
+      "translation": "Switch"
+    },
+    {
+      "id": "switch_project",
+      "message": "Create/Switch Project",
+      "translation": "Create/Switch Project"
+    },
+    {
+      "id": "import_from_zentao",
+      "message": "Import from Zentao",
+      "translation": "Import from Zentao"
+    },
+    {
+      "id": "workdir",
+      "message": "WorkDir",
+      "translation": "WorkDir"
+    },
   ]
 }

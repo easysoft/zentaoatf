@@ -1,15 +1,13 @@
 package action
 
 import (
-	"fmt"
 	"github.com/easysoft/zentaoatf/src/service/script"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	"github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/config"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
-	"github.com/easysoft/zentaoatf/src/utils/date"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
-	"time"
 )
 
 func GenerateScript(url string, entityType string, entityVal string, langType string, independentFile bool,
@@ -26,8 +24,7 @@ func GenerateScript(url string, entityType string, entityVal string, langType st
 
 			configUtils.UpdateWorkDirHistoryForGenerate()
 
-			logUtils.PrintToCmd(fmt.Sprintf("success to generate %d test scripts in '%s' at %s",
-				count, constant.ScriptDir, dateUtils.DateTimeStr(time.Now())))
+			logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("success_to_generate", count, constant.ScriptDir) + "\n")
 		} else {
 			logUtils.PrintToCmd(err.Error())
 		}

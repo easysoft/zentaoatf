@@ -38,7 +38,5 @@ func GetConfig(baseUrl string) {
 		vari.SessionVar, _ = json.Get("sessionVar").String()
 		vari.RequestType, _ = json.Get("requestType").String()
 		vari.RequestFix, _ = json.Get("requestFix").String()
-
-		//fmt.Sprintf("%s: %s", vari.SessionVar, vari.SessionId)
 	}
 }

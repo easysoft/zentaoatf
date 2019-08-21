@@ -8,6 +8,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/config"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
@@ -33,7 +34,7 @@ func InitImportPage() error {
 
 	left := slideX + 2
 	right := left + widget.LabelWidth
-	urlLabel := widget.NewLabelWidget("urlLabel", left, 1, "ZentaoUrl")
+	urlLabel := widget.NewLabelWidget("urlLabel", left, 1, i118Utils.I118Prt.Sprintf("zentao_url"))
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], urlLabel.Name())
 
 	left = right + ui.Space
@@ -43,7 +44,7 @@ func InitImportPage() error {
 
 	left = slideX + 2
 	right = left + widget.LabelWidth
-	productLabel := widget.NewLabelWidget("productLabel", left, 4, "ProductId")
+	productLabel := widget.NewLabelWidget("productLabel", left, 4, i118Utils.I118Prt.Sprintf("product_id"))
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], productLabel.Name())
 
 	left = right + ui.Space
@@ -53,7 +54,8 @@ func InitImportPage() error {
 
 	left = right + ui.Space
 	right = left + widget.LabelWidth
-	taskLabel := widget.NewLabelWidget("taskLabel", left, 4, "or TaskId")
+	taskLabel := widget.NewLabelWidget("taskLabel", left, 4,
+		i118Utils.I118Prt.Sprintf("task_id")+""+i118Utils.I118Prt.Sprintf("task_id"))
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], taskLabel.Name())
 
 	left = right + ui.Space
@@ -63,7 +65,7 @@ func InitImportPage() error {
 
 	left = slideX + 2
 	right = left + widget.LabelWidth
-	languageLabel := widget.NewLabelWidget("languageLabel", left, 7, "Language")
+	languageLabel := widget.NewLabelWidget("languageLabel", left, 7, i118Utils.I118Prt.Sprintf("language"))
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], languageLabel.Name())
 
 	left = right + ui.Space
@@ -73,7 +75,8 @@ func InitImportPage() error {
 
 	left = right + ui.Space
 	right = left + widget.LabelWidth
-	independentFileLabel := widget.NewLabelWidget("independentFileLabel", left, 7, "Indep. Result")
+	independentFileLabel := widget.NewLabelWidget("independentFileLabel", left, 7,
+		i118Utils.I118Prt.Sprintf("independent_expect_result"))
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], independentFileLabel.Name())
 
 	left = right + ui.Space
@@ -85,7 +88,7 @@ func InitImportPage() error {
 	y := 10
 	left = slideX + 2
 	right = left + widget.LabelWidth
-	accountLabel := widget.NewLabelWidget("accountLabel", left, y, "Account")
+	accountLabel := widget.NewLabelWidget("accountLabel", left, y, i118Utils.I118Prt.Sprintf("account"))
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], accountLabel.Name())
 
 	left = right + ui.Space
@@ -95,7 +98,7 @@ func InitImportPage() error {
 
 	left = right + ui.Space
 	right = left + widget.LabelWidth
-	passwordLabel := widget.NewLabelWidget("passwordLabel", left, y, "Password")
+	passwordLabel := widget.NewLabelWidget("passwordLabel", left, y, i118Utils.I118Prt.Sprintf("password"))
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], passwordLabel.Name())
 
 	left = right + ui.Space
@@ -106,7 +109,8 @@ func InitImportPage() error {
 	// button
 	y += 3
 	buttonX := (maxX-constant.LeftWidth)/2 + constant.LeftWidth - widget.ButtonWidth
-	submitInput := widget.NewButtonWidgetAutoWidth("submitInput", buttonX, 13, "Submit", ImportRequest)
+	submitInput := widget.NewButtonWidgetAutoWidth("submitInput", buttonX, 13,
+		i118Utils.I118Prt.Sprintf("submit"), ImportRequest)
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], submitInput.Name())
 
 	ui.AddEventForInputWidgets(ui.ViewMap["import"])

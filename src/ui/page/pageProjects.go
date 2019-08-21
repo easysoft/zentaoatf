@@ -6,13 +6,12 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/ui/widget"
-	config2 "github.com/easysoft/zentaoatf/src/utils/config"
-	"github.com/easysoft/zentaoatf/src/utils/date"
+	config "github.com/easysoft/zentaoatf/src/utils/config"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	string2 "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
-	"time"
 )
 
 var CurrProjectId string
@@ -90,8 +89,7 @@ func switchProject(g *gocui.Gui, v *gocui.View) error {
 		id, label, path := getProjectInfo(his)
 		if id == CurrProjectId {
 			action.SwitchWorkDir(path)
-			logUtils.PrintToCmd(fmt.Sprintf("success to switch to project %s: %s at %s",
-				label, path, dateUtils.DateTimeStr(time.Now())))
+			logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("success_to_switch_project", label, path))
 			break
 		}
 	}
@@ -115,16 +113,15 @@ func getProjectInfo(his model.WorkHistory) (string, string, string) {
 }
 
 func printForSwitch(his model.WorkHistory) {
-	config := config2.ReadProjectConfig(his.ProjectPath)
-	name := config.ProjectName
+	conf := config.ReadProjectConfig(his.ProjectPath)
+	name := conf.ProjectName
 	if name == "" {
-		name = "No Name"
+		name = i118Utils.I118Prt.Sprintf("no_name")
 	}
 
-	str := "%s\n Work dir: %s\n Zentao project: %s\n Import type: %s\n Product code: %s\n Language: %s\n " +
-		"Independent ExpectResult file: %t"
-	str = fmt.Sprintf(str, name, his.ProjectPath, config.Url, config.EntityType, config.EntityVal,
-		config.LangType, !config.IndependentFile)
+	str := i118Utils.I118Prt.Sprintf("project_config")
+	str = fmt.Sprintf(str, name, his.ProjectPath, conf.Url, conf.EntityType, conf.EntityVal,
+		conf.LangType, !conf.IndependentFile)
 
 	logUtils.PrintToMainNoScroll(str)
 }
