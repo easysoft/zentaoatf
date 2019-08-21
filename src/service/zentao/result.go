@@ -16,7 +16,6 @@ import (
 )
 
 func SubmitResult() {
-
 	conf := configUtils.ReadCurrConfig()
 	Login(conf.Url, conf.Account, conf.Password)
 

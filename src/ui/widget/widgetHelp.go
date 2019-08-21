@@ -2,19 +2,14 @@ package widget
 
 import (
 	"fmt"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 	"strings"
 )
 
-const (
-	HelpGlobal = `KEYBINDINGS
-			Mouse: Menu operation on left side
-			Tab: Move between form widgets
-			Space: Toggle radio box
-			Enter: Click button
-			^H: Show/Hide help window
-			^C: Exit`
+var (
+	HelpGlobal = ""
 )
 
 type HelpWidget struct {
@@ -25,6 +20,8 @@ type HelpWidget struct {
 }
 
 func NewHelpWidget() {
+	initContent()
+
 	maxX, _ := vari.Cui.Size()
 
 	lines := strings.Split(HelpGlobal, "\n")
@@ -35,10 +32,10 @@ func NewHelpWidget() {
 			w = len(l)
 		}
 	}
-	h := len(lines) + 1
+	h := len(lines)
 	w = w + 2
 
-	help := HelpWidget{name: "help", x: maxX - w - 3, y: 1, w: w, h: h + 1, body: HelpGlobal}
+	help := HelpWidget{name: "help", x: maxX - w - 3, y: 1, w: w, h: h, body: HelpGlobal}
 	help.Layout()
 }
 
@@ -78,4 +75,15 @@ func HideHelp() error {
 	}
 
 	return nil
+}
+
+func initContent() {
+	HelpGlobal = fmt.Sprintf("%s \n %s \n %s \n %s \n %s \n %s \n",
+		i118Utils.I118Prt.Sprintf("help_key_bind"),
+		i118Utils.I118Prt.Sprintf("help_mouse"),
+		//i118Utils.I118Prt.Sprintf("help_tab"),
+		i118Utils.I118Prt.Sprintf("help_space"),
+		i118Utils.I118Prt.Sprintf("help_enter"),
+		i118Utils.I118Prt.Sprintf("help_show"),
+		i118Utils.I118Prt.Sprintf("help_exit"))
 }

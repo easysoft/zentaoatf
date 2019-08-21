@@ -54,7 +54,7 @@ func InitReportBugPage() error {
 	left = right + ui.Space
 	stepsWidth := pageWidth - left - ui.Space + x
 	stepsInput := widget.NewTextareaWidget("stepsInput", left, y, stepsWidth, pageHeight-2, bug.Steps)
-	stepsInput.Title = "Steps"
+	stepsInput.Title = i118Utils.I118Prt.Sprintf("steps")
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], stepsInput.Name())
 
 	// module

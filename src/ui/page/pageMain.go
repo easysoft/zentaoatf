@@ -5,7 +5,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/ui/widget"
 	"github.com/easysoft/zentaoatf/src/utils/config"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
-	string2 "github.com/easysoft/zentaoatf/src/utils/string"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
 	"log"
@@ -33,7 +33,7 @@ func InitMainPage() error {
 
 	x := 2
 	for _, name := range ui.ModuleTabs {
-		tabView := NewTabWidget(name, x, 0, string2.Ucfirst(name))
+		tabView := NewTabWidget(name, x, 0, i118Utils.I118Prt.Sprintf(name))
 		ui.ViewMap["root"] = append(ui.ViewMap["root"], tabView.Name())
 		x += 10
 	}

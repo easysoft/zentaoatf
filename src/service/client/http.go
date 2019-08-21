@@ -145,10 +145,10 @@ func PostStr(url string, params map[string]string) (string, bool) {
 }
 
 func replacePostData(str string) string {
-	logUtils.PrintToCmd(str)
-	logUtils.PrintToCmd(str[:1])
-	logUtils.PrintToCmd(str[1:])
-	logUtils.PrintToCmd("---")
+	//logUtils.PrintToCmd(str)
+	//logUtils.PrintToCmd(str[:1])
+	//logUtils.PrintToCmd(str[1:])
+	//logUtils.PrintToCmd("---")
 
 	str = strings.ToLower(str[:1]) + str[1:]
 

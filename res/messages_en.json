@@ -318,5 +318,55 @@
       "message": "WorkDir",
       "translation": "WorkDir"
     },
+    {
+      "id": "testing",
+      "message": "Testing",
+      "translation": "Testing"
+    },
+    {
+      "id": "projects",
+      "message": "Projects",
+      "translation": "Projects"
+    },
+    {
+      "id": "settings",
+      "message": "Settings",
+      "translation": "Settings"
+    },
+    {
+      "id": "help_key_bind",
+      "message": "KEYBINDINGS",
+      "translation": "KEYBINDINGS"
+    },
+    {
+      "id": "help_mouse",
+      "message": "Mouse: Mouse support",
+      "translation": "Mouse: Mouse support"
+    },
+    {
+      "id": "help_tab",
+      "message": "Tab: Move between form widgets",
+      "translation": "Tab: Move between form widgets"
+    },
+    {
+      "id": "help_space",
+      "message": "Space: Toggle radio box",
+      "translation": "Space: Toggle radio box"
+    },
+    {
+      "id": "help_enter",
+      "message": "Enter: Click button",
+      "translation": "Enter: Click button"
+    },
+    {
+      "id": "help_show",
+      "message": "^H: Show/Hide help window",
+      "translation": "^H: Show/Hide help window"
+    },
+    {
+      "id": "help_exit",
+      "message": "^C: Exit",
+      "translation": "^C: Exit"
+    }
   ]
 }

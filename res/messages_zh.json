@@ -177,8 +177,8 @@
       "translation": "测试套件"
     },
     {
-      "id": "test_scripts",
-      "message": "Test Scripts",
+      "id": "test_script",
+      "message": "Test Script",
       "translation": "测试脚本"
     },
     {
@@ -309,7 +309,7 @@
     {
       "id": "switch_project",
       "message": "Create/Switch Project",
-      "translation": "创建/切换 Project"
+      "translation": "创建/切换项目"
     },
     {
       "id": "import_from_zentao",
@@ -320,6 +320,56 @@
       "id": "workdir",
       "message": "WorkDir",
       "translation": "工作目录"
+    },
+    {
+      "id": "testing",
+      "message": "Testing",
+      "translation": "测试"
+    },
+    {
+      "id": "projects",
+      "message": "Projects",
+      "translation": "项目"
+    },
+    {
+      "id": "settings",
+      "message": "Settings",
+      "translation": "设置"
+    },
+    {
+      "id": "help_key_bind",
+      "message": "KEYBINDINGS",
+      "translation": "快捷键"
+    },
+    {
+      "id": "help_mouse",
+      "message": "Mouse: Mouse support",
+      "translation": "Mouse: 支持鼠标"
+    },
+    {
+      "id": "help_tab",
+      "message": "Tab: Move between form widgets",
+      "translation": "Tab: 表单控件导航"
+    },
+    {
+      "id": "help_space",
+      "message": "Space: Toggle radio box",
+      "translation": "Space: 选中/取消单选框"
+    },
+    {
+      "id": "help_enter",
+      "message": "Enter: Click button",
+      "translation": "Enter: 点击按钮"
+    },
+    {
+      "id": "help_show",
+      "message": "^H: Show/Hide help window",
+      "translation": "^H: 显示/隐藏帮助"
+    },
+    {
+      "id": "help_exit",
+      "message": "^C: Exit",
+      "translation": "^C: 退出"
     }
   ]
 }
