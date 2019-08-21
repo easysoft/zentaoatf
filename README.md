@@ -23,31 +23,31 @@ ZentaoATF is an automation testing framework written in Golang.
 ```go run src/atf.go gen -u http://ruiyinxin.test.zentao.net -t product -v 1 -l python -a autotest01 -p P2ssw0rd```
 
 #### Run test scripts in specified folder
-go run src/atf.go run -d scripts -l python
+```go run src/atf.go run -d scripts -l python```
 
 #### Batch run with test suite
-go run src/atf.go run -f scripts/all.suite -l python
+```go run src/atf.go run -f scripts/all.suite -l python```
 
 #### Rerun failed test cases in specified result file
-go run src/atf.go rerun -p logs/suite-all-2019-08-21T133157/result.txt
+```go run src/atf.go rerun -p logs/suite-all-2019-08-21T133157/result.txt```
 
 #### List test scripts
-go run src/atf.go list -d scripts -l python
+```go run src/atf.go list -d scripts -l python```
 
 #### Brief test scripts in dir
-go run src/atf.go view -d scripts -l python
+```go run src/atf.go view -d scripts -l python```
 
 #### View test scripts by path
-go run src/atf.go view -f scripts/tc-1.py -f scripts/tc-2.py
+```go run src/atf.go view -f scripts/tc-1.py -f scripts/tc-2.py```
 
 #### Switch work dir to another path
-go run src/atf.go switch -p /Users/aaron/dev/go/autotest/
+```go run src/atf.go switch -p /Users/aaron/dev/go/autotest/```
 
 #### Change tool language（en: English, zh: Simplified Chinese）
-go run src/atf.go set -l zh
+```go run src/atf.go set -l zh```
 
 #### Open CUI Window
-go run src/atf.go cui
+```go run src/atf.go cui```
 
 #### Submit test result to remote Zentao system
 ![submit_result](xdoc/snapshot/submit_result.jpg)
