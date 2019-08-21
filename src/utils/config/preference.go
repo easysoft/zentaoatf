@@ -47,7 +47,7 @@ func SetLanguage(lang string, dumb bool) {
 	i118Utils.InitI118(vari.Prefer.Language)
 
 	if !dumb {
-		logUtils.PrintToCmd(color.CyanString(i118Utils.I118Prt.Sprintf("set_preference", i118Utils.I118Prt.Sprintf("lang"),
+		logUtils.PrintToCmd(color.CyanString(i118Utils.I118Prt.Sprintf("set_preference", i118Utils.I118Prt.Sprintf("language"),
 			i118Utils.I118Prt.Sprintf(vari.Prefer.Language))))
 	}
 }

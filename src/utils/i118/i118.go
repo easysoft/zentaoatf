@@ -17,21 +17,21 @@ func InitI118(lang string) {
 	//once.Do(func() {
 	isRelease := commonUtils.IsRelease()
 
+	var langRes string
+	if lang == constant.LanguageEN {
+		langRes = constant.EnRes
+	} else {
+		langRes = constant.ZhRes
+	}
+
 	if isRelease {
-		data, _ := res.Asset(constant.EnRes)
+		data, _ := res.Asset(langRes)
 		InitResFromAsset(data)
 	} else {
-		InitRes(constant.EnRes)
+		InitRes(langRes)
 	}
 
 	if lang == "zh" {
-		if isRelease {
-			data, _ := res.Asset(constant.ZhRes)
-			InitResFromAsset(data)
-		} else {
-			InitRes(constant.ZhRes)
-		}
-
 		I118Prt = message.NewPrinter(language.SimplifiedChinese)
 	} else {
 		I118Prt = message.NewPrinter(language.AmericanEnglish)
