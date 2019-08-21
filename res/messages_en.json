@@ -153,6 +153,26 @@
       "translation": "Sample to use: "
     },
     {
+      "id": "is_checkpoint",
+      "message": "Step begin with '@' has checkpoint",
+      "translation": "Step begin with '@' has checkpoint"
+    },
+    {
+      "id": "your_codes_here",
+      "message": "Write your codes here",
+      "translation": "Write your codes here"
+    },
+    {
+      "id": "expect_result_here",
+      "message": "Expect Results",
+      "translation": "Expect Results, can be more than one line"
+    },
+    {
+      "id": "actual_result_here",
+      "message": "Record actual results",
+      "translation": "Record actual results"
+    },
+    {
       "id": "success_to_generate",
       "message": "success to generate %d test scripts in '%s'",
       "translation": "success to generate %d test scripts in '%s'"

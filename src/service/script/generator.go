@@ -66,12 +66,13 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 	expects := make([]string, 0)
 	srcCode := make([]string, 0)
 
-	steps = append(steps, "@开头的为含验证点的步骤")
+	steps = append(steps, i118Utils.I118Prt.Sprintf("is_checkpoint"))
 
-	temp := fmt.Sprintf("\n%sCODE: 此处编写操作步骤代码\n", LangMap[langType]["commentsTag"])
+	temp := fmt.Sprintf("\n%sCODE: %s\n", LangMap[langType]["commentsTag"],
+		i118Utils.I118Prt.Sprintf("your_codes_here"))
 	srcCode = append(srcCode, temp)
 
-	readme := zentaoUtils.ReadResData("res/template/readme.tpl") + "\n"
+	readme := zentaoUtils.ReadResData("res/template/readme-"+vari.Prefer.Language+".tpl") + "\n"
 
 	StepWidth := 20
 	stepDisplayMaxWidth := 0
@@ -146,7 +147,7 @@ func GenerateTestStepScript(ts model.TestStep, langType string, stepWidth int,
 		expectsLine := ""
 
 		expectsLine = "# " + stepIdent + " \n"
-		expectsLine += "CODE: " + "期望结果, 可以有多行\n"
+		expectsLine += "CODE: " + i118Utils.I118Prt.Sprintf("expect_result_here") + " \n"
 
 		*expects = append(*expects, expectsLine)
 	}
@@ -157,7 +158,7 @@ func GenerateTestStepScript(ts model.TestStep, langType string, stepWidth int,
 
 		codeLine += fmt.Sprintf("  %s %s: %s\n", LangMap[langType]["commentsTag"], stepIdent, stepExpect)
 
-		codeLine += LangMap[langType]["commentsTag"] + "CODE: 输出验证点实际结果\n"
+		codeLine += LangMap[langType]["commentsTag"] + "CODE: " + i118Utils.I118Prt.Sprintf("actual_result_here") + "\n"
 
 		*srcCode = append(*srcCode, codeLine)
 	}
