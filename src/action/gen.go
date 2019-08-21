@@ -8,10 +8,26 @@ import (
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
+	"github.com/fatih/color"
 )
 
 func GenerateScript(url string, entityType string, entityVal string, langType string, independentFile bool,
 	account string, password string) {
+
+	LangMap := scriptService.GetSupportedScriptLang()
+	langs := ""
+	if LangMap[langType] == nil {
+		i := 0
+		for lang, _ := range LangMap {
+			if i > 0 {
+				langs += ", "
+			}
+			langs += lang
+			i++
+		}
+		logUtils.PrintToCmd(color.RedString(i118Utils.I118Prt.Sprintf("only_support_script_language", langs)) + "\n")
+		return
+	}
 
 	url = commonUtils.UpdateUrl(url)
 	cases, productIdInt, projectId, name := zentaoService.LoadTestCases(url, account, password, entityType, entityVal)
