@@ -23,12 +23,9 @@ ZentaoATF is an automation testing framework written in Golang.
 ### Test Script
 
 
-## Example TODO:
-Switch work dir to another path 
-
-Change tool language（English, Simplified Chinese）
-
-Import test cases from remote Zentao system
+## Example:
+#### Import test cases from remote Zentao system
+go run src/atf.go gen -u http://ruiyinxin.test.zentao.net -t product -v 1 -l python -a autotest01 -p P2ssw0rd -i false
 
 Run test scripts in specified folder
 
@@ -39,6 +36,11 @@ Rerun failed test scripts in specified result file
 List test scripts 
 
 View test scripts
+
+####Switch work dir to another path
+
+
+####Change tool language（English, Simplified Chinese）
 
 Open CUI Window
 
