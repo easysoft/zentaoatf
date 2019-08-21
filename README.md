@@ -19,7 +19,7 @@ ZentaoATF is an automation testing framework written in Golang.
 4. To open the CUI window, type 'go run src/atf.go cui'
 
 ## Usage:
-####S Import test cases from remote Zentao system
+#### Import test cases from remote Zentao system
 go run src/atf.go gen -u http://ruiyinxin.test.zentao.net -t product -v 1 -l python -a autotest01 -p P2ssw0rd
 
 #### Run test scripts in specified folder
