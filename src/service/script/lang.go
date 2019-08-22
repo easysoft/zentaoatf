@@ -8,6 +8,11 @@ func GetSupportedScriptLang() map[string]map[string]string {
 	var once sync.Once
 	once.Do(func() {
 		LangMap = map[string]map[string]string{
+			"bat": {
+				"extName":      "bat",
+				"commentsTag":  "::",
+				"printGrammar": "@echo #",
+			},
 			"go": {
 				"extName":      "go",
 				"commentsTag":  "//",
