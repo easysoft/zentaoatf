@@ -138,7 +138,7 @@ func GetCaseIds(file string) (int, int, int, string) {
 func ReadExpect(file string) [][]string {
 	content := fileUtils.ReadFile(file)
 
-	myExp := regexp.MustCompile(`<<TC[\S\s]*expects:[^\n]*\n+([\S\s]*?)(readme:|TC:start)`)
+	myExp := regexp.MustCompile(`<<TC[\S\s]*expects:[^\n]*\n+([\S\s]*?)(readme:|TC)`)
 	arr := myExp.FindStringSubmatch(content)
 
 	str := ""

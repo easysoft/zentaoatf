@@ -63,7 +63,7 @@ func Brief(file string) {
 			`title:([^\n]*)\n+` +
 			`steps:([\S\s]*)\n` +
 			`expects:([\S\s]*?)\n+` +
-			`(readme:|TC|:start)`)
+			`(readme:|TC)`)
 	arr := myExp.FindStringSubmatch(content)
 
 	if len(arr) > 2 {

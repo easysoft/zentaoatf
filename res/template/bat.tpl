@@ -1,5 +1,6 @@
 goto start
 
+<<<TC
 caseId:         %s
 caseIdInTask:   %s
 taskId:         %s
@@ -11,6 +12,7 @@ expects:
 readme:
 %s
 
+TC;
 :start
 
 %s
