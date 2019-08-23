@@ -2,7 +2,7 @@
 ZentaoATF is an automation testing framework written in Golang.
 
 ## Features
-1. Support most popular programming languages like Python, Ruby, Lua, Tcl, PHP, Shell and GO;
+1. Support most popular programming languages like Python, Ruby, Lua, Tcl, PHP, Shell, GO and Windows Bat;
 2. Reduce the invasive of existing testing scripts
 3. Integration with ZenTao - an open source project management system;
 3. Easy to use with the help of UI window

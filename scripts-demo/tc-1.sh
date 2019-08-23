@@ -24,7 +24,7 @@ readme:
 
 TC
 
-timeout=300
+timeout=500
 
 ((count = 3)) #Number to test
 
