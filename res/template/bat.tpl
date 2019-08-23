@@ -15,4 +15,7 @@ readme:
 TC;
 :start
 
+@echo off
+Setlocal enabledelayedexpansion
+
 %s
