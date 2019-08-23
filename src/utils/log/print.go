@@ -19,7 +19,7 @@ func PrintUsageWithSpaceLine(flagSet flag.FlagSet, spaceLine bool) {
 		prefix = "\n"
 	}
 
-	fmt.Printf("%s %s \n", prefix, color.CyanString(flagSet.Name()))
+	fmt.Fprintf(color.Output, "%s %s \n", prefix, color.CyanString(flagSet.Name()))
 	flagSet.PrintDefaults()
 }
 
