@@ -39,7 +39,7 @@ while [[ $count -ne 0 ]] ; do
     ((count = count - 1))
 done
 
-echo '#' #checkpoint 1
+echo '#' #checkpoint start
 
 if [ ! -n "$tm" ]; then
     echo 'unknown'

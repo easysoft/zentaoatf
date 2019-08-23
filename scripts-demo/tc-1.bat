@@ -43,7 +43,7 @@ for %%a in (1,2,3) do (
 )
 
 :ret
-echo #
+echo # ::checkpoint start
 if !tm2! GTR !timeout! (
 	echo timeout
 ) else (
