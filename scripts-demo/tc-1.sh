@@ -1,50 +1,54 @@
-#!/usr/bin/env bash
-<<TC
+goto s
+<<<TC
+
 caseId:         1
 caseIdInTask:   0
 taskId:         0
-title:          测试服务器响应时间
-steps:          @开头的为含验证点的步骤
-   step1           执行ping命令，向zentao.com服务器发送ICMP请求
-   step2           获取返回消息，截取响应时间字段，转换成整数
-   step3           判断响应时间，如果超过300ms，则放弃后续请求并返回
-                               如果小于300ms，重复以上步骤累计3次
-   @step4          验证最后返回的响应时间，如果小于300ms，打印"work"
-                                        如果大于300ms，打印"timeout"
-                                        如果为空，打印unknown表明为未到服务器
+title:          Test site response time
+steps:          steps that begin with @ are checkpoints
+   step1           type "ping zentao.com" to send ICMP request
+   step2           get response time from output
+   step3           if time > 300ms, break the cycle
+                      time < 300ms, continue
+   @step4          check the last response time，if time < 300ms，print "pass"
+                                                    time > 300ms，print "timeout"
 
 expects:
 # @step4
-work
+pass
 
 readme:
-- Logs of test scripts，must expects章节中#号标注的验证点需保持一致对应
-- 脚本中CODE打头的注释需用代码替换
-- 参考样例https://github.com/easysoft/zentaoatf/tree/master/xdoc/sample
+- Print '#' in test log to match up with the ones in expects section
+- Write test scripts to replace the lines begin with 'CODE'
+- More examples, pls refer to https://github.com/easysoft/zentaoatf/tree/master/xdoc/sample
 
-TC
+TC;
+:s
 
-timeout=500
+@echo off
+Setlocal enabledelayedexpansion
+::chcp 65001
+::chcp 936
 
-((count = 3)) #Number to test
+set timeout=500
 
-while [[ $count -ne 0 ]] ; do
-    #get time field
-    tm=`ping -c 1 zentao.com 2>/dev/null | grep 'time=' | sed 's/.*time=\([.0-9]*\) ms/\1/g' | awk -F. '{print $1}'`
-    echo $tm
+for %%a in (1,2,3) do (
+	for /f "tokens=5" %%i in ('ping zentao.com -n 1 ^| findstr "TTL"') do set tmstr=%%i
+	REM echo !tmstr!
 
-    if [[ $tm -gt $timeout ]] ; then #timeout
-        ((count = 1)) # break
-    fi
-    ((count = count - 1))
-done
+	for /f "tokens=2 delims='='" %%x in ('echo !tmstr!') do set tm=%%x
+	set tm2=!tm:~0,-2!
+	echo !tm2!
 
-echo '#' #checkpoint start
+	if !tm2! GTR !timeout! (
+		goto r
+	)
+)
 
-if [ ! -n "$tm" ]; then
-    echo 'unknown'
-elif [[ $tm -gt $timeout ]]; then
-    echo 'timeout'
-else
-    echo 'work'
-fi
+:r
+echo # ::checkpoint
+if !tm2! GTR !timeout! (
+	echo timeout
+) else (
+	echo pass
+)

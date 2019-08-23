@@ -10,12 +10,12 @@ steps:          steps that begin with @ are checkpoints
    step2           get response time from output
    step3           if time > 300ms, break the cycle
                       time < 300ms, continue
-   @step4          check the last response time，if time < 300ms，print "work"
+   @step4          check the last response time，if time < 300ms，print "pass"
                                                     time > 300ms，print "timeout"
 
 expects:
 # @step4
-work
+pass
 
 readme:
 - Print '#' in test log to match up with the ones in expects section
@@ -50,5 +50,5 @@ echo # ::checkpoint
 if !tm2! GTR !timeout! (
 	echo timeout
 ) else (
-	echo work
+	echo pass
 )
