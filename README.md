@@ -9,7 +9,7 @@ ZentaoATF is an automation testing framework written in Golang.
 
 ## QuickStart
 ### Run from release file
-1. Download corresponding release file from [here](https://github.com/easysoft/zentaoatf/tree/master/release);
+1. Download last release file from [here](https://github.com/easysoft/zentaoatf/releases);
 2. Type 'atf-2.0.0.alpha.exe' to get the help doc.
 
 ### Run from Golang codes
