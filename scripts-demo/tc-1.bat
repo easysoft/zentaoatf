@@ -27,12 +27,14 @@ TC;
 
 @echo off
 Setlocal enabledelayedexpansion
+::chcp 65001
+::chcp 936
 
 set timeout=500
 
 for %%a in (1,2,3) do (
 	for /f "tokens=5" %%i in ('ping zentao.com -n 1 ^| findstr "TTL"') do set tmstr=%%i
-	echo !tmstr!
+	REM echo !tmstr!
 
 	for /f "tokens=2 delims='='" %%x in ('echo !tmstr!') do set tm=%%x
 	set tm2=!tm:~0,-2!
