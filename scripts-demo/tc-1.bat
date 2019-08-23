@@ -1,4 +1,4 @@
-goto start
+goto s
 <<<TC
 
 caseId:         1
@@ -24,7 +24,7 @@ readme:
 - 参考样例https://github.com/easysoft/zentaoatf/tree/master/xdoc/sample
 
 TC;
-:start
+:s
 
 @echo off
 Setlocal enabledelayedexpansion
@@ -40,12 +40,12 @@ for %%a in (1,2,3) do (
 	echo !tm2!
 
 	if !tm2! GTR !timeout! (
-		goto ret
+		goto r
 	)
 )
 
-:ret
-echo # ::checkpoint start
+:r
+echo # ::checkpoint
 if !tm2! GTR !timeout! (
 	echo timeout
 ) else (

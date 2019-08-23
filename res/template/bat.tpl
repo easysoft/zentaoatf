@@ -1,4 +1,4 @@
-goto start
+goto s
 
 <<<TC
 caseId:         %s
@@ -13,7 +13,8 @@ readme:
 %s
 
 TC;
-:start
+:s
+
 
 @echo off
 Setlocal enabledelayedexpansion
