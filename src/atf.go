@@ -10,10 +10,13 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/config"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
+	"github.com/fatih/color"
 	"os"
 )
 
 func main() {
+	fmt.Fprintf(color.Output, "Windows support: %s\n", color.GreenString("PASS"))
+
 	flagSets := make([]flag.FlagSet, 0)
 
 	var language string
