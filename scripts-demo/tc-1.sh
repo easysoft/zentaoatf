@@ -5,11 +5,11 @@ caseId:         1
 caseIdInTask:   0
 taskId:         0
 title:          Test site response time
-steps:          steps that begin with @ are checkpoints
+steps:          steps that begin with "@" have checkpoints
    step1           type "ping zentao.com" to send ICMP request
-   step2           get response time from output
+   step2           get response time from command line output
    step3           if time > 300ms, break the cycle
-                      time < 300ms, continue
+                      time < 300ms, continue totally 3 times
    @step4          check the last response time，if time < 300ms，print "pass"
                                                     time > 300ms，print "timeout"
 
