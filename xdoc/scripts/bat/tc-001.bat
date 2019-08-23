@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
-<<TC
+goto start
+
 caseId:         1
 caseIdInTask:   0
 taskId:         0
@@ -22,29 +22,30 @@ readme:
 - 脚本中CODE打头的注释需用代码替换
 - 参考样例https://github.com/easysoft/zentaoatf/tree/master/xdoc/sample
 
-TC
+:start
 
-timeout=500
+@echo off
+Setlocal enabledelayedexpansion
 
-((count = 3)) #Number to test
+set timeout=500
 
-while [[ $count -ne 0 ]] ; do
-    #get time field
-    tm=`ping -c 1 zentao.com 2>/dev/null | grep 'time=' | sed 's/.*time=\([.0-9]*\) ms/\1/g' | awk -F. '{print $1}'`
-    echo $tm
+for %%a in (1,2,3) do (
+	for /f "tokens=5" %%i in ('ping zentao.com -n 1 ^| findstr "TTL"') do set tmstr=%%i
+	echo !tmstr!
 
-    if [[ $tm -gt $timeout ]] ; then #timeout
-        ((count = 1)) # break
-    fi
-    ((count = count - 1))
-done
+	for /f "tokens=2 delims='='" %%x in ('echo !tmstr!') do set tm=%%x
+	set tm2=!tm:~0,-2!
+	echo !tm2!
 
-echo '#' #checkpoint 1
+	if !tm2! GTR !timeout! (
+		goto ret
+	)
+)
 
-if [ ! -n "$tm" ]; then
-    echo 'unknown'
-elif [[ $tm -gt $timeout ]]; then
-    echo 'timeout'
-else
-    echo 'work'
-fi
+:ret
+echo #
+if !tm2! GTR !timeout! (
+	echo timeout
+) else (
+	echo work
+)
