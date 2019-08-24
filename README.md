@@ -24,8 +24,11 @@ You need a Zentao user account with super model API permissions, below we use au
 
 #### Run demo test scripts
 For Windows
+
 ```go run src/atf.go run -f scripts-demo/tc-01.bat -l bat```
+
 For Linux/Mac
+
 ```go run src/atf.go run -f scripts-demo/tc-01.sh -l shell```
 
 #### Run test scripts in specified folder
