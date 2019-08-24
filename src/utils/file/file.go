@@ -83,6 +83,10 @@ func GetSpecifiedFilesInWorkDir(fileNames []string) (files []string, err error) 
 	ret := make([]string, 0)
 
 	for _, file := range fileNames {
+		if !FileExist(file) {
+			continue
+		}
+
 		if path.Ext(file) == "."+constant.ExtNameSuite {
 			fileList := make([]string, 0)
 			GetSuiteFiles(file, &fileList)

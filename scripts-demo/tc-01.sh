@@ -1,4 +1,6 @@
-goto s
+#!/usr/bin/env bash
+
+:<<!
 <<<TC
 
 caseId:         1
@@ -23,32 +25,29 @@ readme:
 - More examples, pls refer to https://github.com/easysoft/zentaoatf/tree/master/xdoc/sample
 
 TC;
-:s
+!
 
-@echo off
-Setlocal enabledelayedexpansion
-::chcp 65001
-::chcp 936
+timeout=500
 
-set timeout=500
+((count = 3)) #Number to test
 
-for %%a in (1,2,3) do (
-	for /f "tokens=5" %%i in ('ping zentao.com -n 1 ^| findstr "TTL"') do set tmstr=%%i
-	REM echo !tmstr!
+while [[ $count -ne 0 ]] ; do
+    #get time field
+    tm=`ping -c 1 zentao.com 2>/dev/null | grep 'time=' | sed 's/.*time=\([.0-9]*\) ms/\1/g' | awk -F. '{print $1}'`
+    echo $tm
 
-	for /f "tokens=2 delims='='" %%x in ('echo !tmstr!') do set tm=%%x
-	set tm2=!tm:~0,-2!
-	echo !tm2!
+    if [[ $tm -gt $timeout ]] ; then #timeout
+        ((count = 1)) # break
+    fi
+    ((count = count - 1))
+done
 
-	if !tm2! GTR !timeout! (
-		goto r
-	)
-)
+echo '#' #checkpoint start
 
-:r
-echo # ::checkpoint
-if !tm2! GTR !timeout! (
-	echo timeout
-) else (
-	echo pass
-)
+if [ ! -n "$tm" ]; then
+    echo 'unknown'
+elif [[ $tm -gt $timeout ]]; then
+    echo 'timeout'
+else
+    echo 'pass'
+fi

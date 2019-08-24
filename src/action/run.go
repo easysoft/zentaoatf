@@ -7,8 +7,11 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/file"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
+	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
+	"github.com/fatih/color"
 	"strings"
 )
 
@@ -36,6 +39,11 @@ func Run(scriptDir string, fileNames []string, langType string) {
 
 		vari.RunMode = constant.RunModeDir
 		vari.RunDir = zentaoUtils.PathToRunName(scriptDir)
+	}
+
+	if len(files) < 1 {
+		logUtils.PrintToCmd(color.RedString("\n" + i118Utils.I118Prt.Sprintf("no_scripts")))
+		return
 	}
 
 	var report = model.TestReport{Path: vari.Prefer.WorkDir, Env: commonUtils.GetOs(),

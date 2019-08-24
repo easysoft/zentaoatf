@@ -36,6 +36,11 @@
       "message": "只支持语言en(%s)和zh(%s)",
       "translation": "只支持语言en(%s)和zh(%s)"
     },
+    {
+      "id": "no_scripts",
+      "message": "No test scripts found",
+      "translation": "未发现测试脚本"
+    },
 
     {
       "id": "use_language",
