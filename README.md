@@ -69,7 +69,8 @@ scripts/tc-4.py
 ```
 
 ### Test Script
-```#!/usr/bin/env python3
+```
+#!/usr/bin/env python3
 '''
 <<TC
 caseId:         1
