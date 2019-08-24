@@ -18,7 +18,7 @@ ZentaoATF is an automation testing framework written in Golang.
 3. Type 'go run src/atf.go' to get the help doc;
 
 ## Usage:
-### Run demo test scripts
+### Run demo test script
 #### For Windows
 ```go run src/atf.go run -f scripts-demo/tc-01.bat -l bat```
 #### For Linux/Mac
@@ -26,7 +26,7 @@ ZentaoATF is an automation testing framework written in Golang.
 
 ### Import test cases from remote Zentao system
 ```go run src/atf.go gen -u http://ruiyinxin.test.zentao.net -t product -v 1 -l python -a autotest01 -p P2ssw0rd```  
-Need a Zentao user account with super model API permissions, we use autotest01/P2ssw0rd on http://ruiyinxin.test.zentao.net 
+Need a Zentao user account with super model API permissions, we use autotest01/P2ssw0rd on ruiyinxin.test.zentao.net 
 
 ### Run test scripts in specified folder
 ```go run src/atf.go run -d scripts -l python```
