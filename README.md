@@ -19,49 +19,46 @@ ZentaoATF is an automation testing framework written in Golang.
 
 ## Usage:
 You need a Zentao user account with super model API permissions, below we use autotest01/P2ssw0rd on http://ruiyinxin.test.zentao.net site 
-#### Import test cases from remote Zentao system
+### Import test cases from remote Zentao system
 ```go run src/atf.go gen -u http://ruiyinxin.test.zentao.net -t product -v 1 -l python -a autotest01 -p P2ssw0rd```
 
-#### Run demo test scripts
-For Windows
-
+### Run demo test scripts
+#### For Windows
 ```go run src/atf.go run -f scripts-demo/tc-01.bat -l bat```
-
-For Linux/Mac
-
+#### For Linux/Mac
 ```go run src/atf.go run -f scripts-demo/tc-01.sh -l shell```
 
-#### Run test scripts in specified folder
+### Run test scripts in specified folder
 ```go run src/atf.go run -d scripts -l python```
 
-#### Batch run with test suite
+### Batch run with test suite
 ```go run src/atf.go run -f scripts/all.suite -l python```
 
-#### Rerun failed test cases in specified result file
+### Rerun failed test cases in specified result file
 ```go run src/atf.go rerun -p logs/suite-all-2019-08-21T133157/result.txt```
 
-#### List test scripts
+### List test scripts
 ```go run src/atf.go list -d scripts -l python```
 
-#### Brief test scripts in dir
+### Brief test scripts in dir
 ```go run src/atf.go view -d scripts -l python```
 
-#### View test scripts by path
+### View test scripts by path
 ```go run src/atf.go view -f scripts/tc-1.py -f scripts/tc-2.py```
 
-#### Switch work dir to another path
+### Switch work dir to another path
 ```go run src/atf.go switch -p /Users/aaron/dev/go/autotest/```
 
-#### Change tool language（en: English, zh: Simplified Chinese）
+### Change tool language（en: English, zh: Simplified Chinese）
 ```go run src/atf.go set -l zh```
 
-#### Open CUI Window
+### Open CUI Window
 ```go run src/atf.go cui```
 
-#### Submit test result to remote Zentao system
+### Submit test result to remote Zentao system
 ![submit_result](xdoc/snapshot/submit_result.jpg)
 
-#### Report bug for failed test case to remote Zentao system
+### Report bug for failed test case to remote Zentao system
 ![report_bug](xdoc/snapshot/report_bug.jpg)
 
 ### Test Suite
