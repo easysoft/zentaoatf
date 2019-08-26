@@ -3,13 +3,11 @@ package configUtils
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
-	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/display"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
-	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
 	"gopkg.in/yaml.v2"
@@ -44,38 +42,37 @@ func ConfigFromStdin() {
 	account := ""
 	password := ""
 
-	fmt.Printf(i118Utils.I118Prt.Sprintf("begin_config"))
+	fmt.Println(i118Utils.I118Prt.Sprintf("begin_config"))
 
-	language = getInput("enter_language", "(english|chinese|e|c")
+	language = getInput("enter_language", "(english|chinese|e|c)")
 	if strings.Index(strings.ToLower(language), "e") == 0 {
 		language = "en"
 	} else {
 		language = "zh"
 	}
 
-	configSite = getInput("config_zentao_site", "yes|no|y|n")
-	if strings.Index(configSite, "y") != 0 {
-		os.Exit(1)
+	configSite = getInput("config_zentao_site", "(yes|no|y|n)")
+	if strings.Index(configSite, "y") == 0 {
+		url = getInput("enter_url", "http://.*")
+		account = getInput("enter_account", ".{3,}")
+		password = getInput("enter_password", ".{4,}")
 	}
 
-	url = getInput("enter_url", "http://.*")
+	SaveConfig(language, url, account, password)
 
-	account = getInput("enter_account", ".[2,]")
-
-	password = getInput("enter_password", ".[6,]")
-
+	PrintCurrConfig()
 }
 
 func getInput(msg string, regx string) string {
 	var ret string
 
 	for {
-		fmt.Printf(i118Utils.I118Prt.Sprintf(msg))
-		fmt.Scanf("%s", &ret)
+		fmt.Println(i118Utils.I118Prt.Sprintf(msg) + ": ")
+		fmt.Scanln(&ret)
 
 		ret = strings.ToLower(ret)
 		if ret == "exit" {
-			return ""
+			os.Exit(1)
 		}
 
 		if regx == "" {
@@ -85,6 +82,8 @@ func getInput(msg string, regx string) string {
 		pass, _ := regexp.MatchString(regx, ret)
 		if pass {
 			return ret
+		} else {
+			color.Red("invalid input, please try again\n")
 		}
 	}
 }
@@ -149,10 +148,50 @@ func getInst() model.Config {
 			yaml.Unmarshal(buf, &vari.Config)
 		} else { // init
 			vari.Config.Language = "en"
-
-			data, _ := yaml.Marshal(&vari.Config)
-			ioutil.WriteFile(constant.ConfigFile, data, 0666)
+			saveEmptyConfig()
 		}
 	})
 	return vari.Config
+}
+
+func SaveConfig(language string, url string, account string, password string) error {
+	config := ReadCurrConfig()
+
+	if language != "" {
+		config.Language = language
+	}
+	if url != "" {
+		config.Url = url
+	}
+	if account != "" {
+		config.Account = account
+	}
+	if password != "" {
+		config.Password = password
+	}
+
+	data, _ := yaml.Marshal(&config)
+	ioutil.WriteFile(constant.ConfigFile, data, 0666)
+
+	vari.Config = ReadCurrConfig()
+	return nil
+}
+
+func ReadCurrConfig() model.Config {
+	configPath := constant.ConfigFile
+	var config model.Config
+
+	if !fileUtils.FileExist(configPath) {
+		saveEmptyConfig()
+	}
+	buf, _ := ioutil.ReadFile(configPath)
+	yaml.Unmarshal(buf, &config)
+
+	return config
+}
+
+func saveEmptyConfig() error {
+	SaveConfig("en", "", "", "")
+
+	return nil
 }

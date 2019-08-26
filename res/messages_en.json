@@ -9,32 +9,32 @@
     {
       "id": "enter_language",
       "message": "enter language",
-      "translation": "Please enter the language you want to use, English/Chinese"
+      "translation": "enter the language you want to use, English / Chinese"
     },
     {
       "id": "config_zentao_site",
       "message": "config zentao site",
-      "translation": "Do you want to config Zentao site for current test automation project now? Yes/No"
+      "translation": "do you want to config Zentao site? Yes / No"
     },
     {
       "id": "enter_url",
-      "message": "Zentao site url",
-      "translation": "Zentao site url"
+      "message": "zentao site url",
+      "translation": "zentao site url"
     },
     {
       "id": "enter_account",
-      "message": "Zentao site login account",
-      "translation": "Zentao site login account"
+      "message": "zentao site login account",
+      "translation": "zentao site login account"
     },
     {
       "id": "enter_password",
       "message": "enter password",
-      "translation": "Account password"
+      "translation": "account password"
     },
     {
       "id": "enter_password",
       "message": "enter password",
-      "translation": "请输入账号密码"
+      "translation": "enter password"
     },
     {
       "id": "zentao_config_success",

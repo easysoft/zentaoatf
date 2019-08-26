@@ -12,8 +12,6 @@ import (
 )
 
 func main() {
-	var lang string
-
 	var zentaoUrl string
 	var account string
 	var password string
@@ -46,6 +44,7 @@ func main() {
 		} else {
 			color.Red(err.Error())
 		}
+		os.Exit(1)
 
 	case "update":
 
@@ -56,7 +55,8 @@ func main() {
 	case "view":
 
 	case "set":
-		_ = lang
+		configUtils.ConfigFromStdin()
+		os.Exit(1)
 
 	case "help":
 
