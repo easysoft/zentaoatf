@@ -83,7 +83,7 @@ func getInput(msg string, regx string) string {
 		if pass {
 			return ret
 		} else {
-			color.Red("invalid input, please try again\n")
+			color.Red(i118Utils.I118Prt.Sprintf("invalid_input") + "\n")
 		}
 	}
 }

@@ -32,6 +32,11 @@
       "translation": "请输入账号密码"
     },
     {
+      "id": "invalid_input",
+      "message": "invalid input",
+      "translation": "无效数据，请重新输入"
+    },
+    {
       "id": "zentao_config_success",
       "message": "zentao config success",
       "translation": "禅道系统连接配置成功"

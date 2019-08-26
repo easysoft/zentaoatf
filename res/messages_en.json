@@ -37,6 +37,11 @@
       "translation": "enter password"
     },
     {
+      "id": "invalid_input",
+      "message": "invalid input",
+      "translation": "invalid input, please try again"
+    },
+    {
       "id": "zentao_config_success",
       "message": "zentao config success",
       "translation": "success to config Zentao connection"
