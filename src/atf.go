@@ -25,7 +25,7 @@ func main() {
 
 	flagSet.StringVar(&dir, "d", "", "")
 	flagSet.Var(commonUtils.NewSliceValue([]string{}, &files), "f", "")
-	flagSet.StringVar(&productId, "p", ".", "")
+	flagSet.StringVar(&productId, "p", "", "")
 	flagSet.StringVar(&moduleId, "m", "", "")
 	flagSet.StringVar(&taskId, "t", "", "")
 	flagSet.StringVar(&suite, "s", "", "")

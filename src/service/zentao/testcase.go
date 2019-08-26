@@ -68,22 +68,22 @@ func ListCaseByProduct(baseUrl string, productId string, moduleId string) []mode
 	return nil
 }
 
-func ListCaseByTask(baseUrl string, taskId string) []model.TestCase {
-	params := fmt.Sprintf("%s-all-0-id_asc-0-10000-1", taskId)
+func ListCaseBySuite(baseUrl string, suiteId string) []model.TestCase {
+	params := fmt.Sprintf("%s-id_asc-0-10000-1", suiteId)
 
-	url := baseUrl + zentaoUtils.GenApiUri("testtask", "cases", params)
+	url := baseUrl + zentaoUtils.GenApiUri("testsuite", "view", params)
 	dataStr, ok := client.Get(url, nil)
 
 	if ok {
-		var task model.TestTask
-		json.Unmarshal([]byte(dataStr), &task)
+		var suite model.TestSuite
+		json.Unmarshal([]byte(dataStr), &suite)
 
 		caseArr := make([]model.TestCase, 0)
-		for _, cs := range task.Runs {
-			caseId := cs.Case
+		for _, cs := range suite.Cases {
+			caseId := cs.Id
 
 			csWithSteps := GetCaseById(baseUrl, caseId)
-			caseArr = append(caseArr, model.TestCase{Id: caseId, Product: cs.ProductId,
+			caseArr = append(caseArr, model.TestCase{Id: caseId, Product: cs.Product,
 				Title: cs.Title, StepArr: csWithSteps.StepArr})
 		}
 
@@ -93,7 +93,7 @@ func ListCaseByTask(baseUrl string, taskId string) []model.TestCase {
 	return nil
 }
 
-func ListCaseBySuite(baseUrl string, suiteId string) []model.TestCase {
+func ListCaseByTask(baseUrl string, suiteId string) []model.TestCase {
 	params := fmt.Sprintf("%s-all-0-id_asc-0-10000-1", suiteId)
 
 	url := baseUrl + zentaoUtils.GenApiUri("testtask", "cases", params)

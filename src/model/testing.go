@@ -12,6 +12,21 @@ type Module struct {
 	Name string
 }
 
+type TestSuite struct {
+	Id      int
+	Code    string
+	Name    string
+	Product string
+
+	Cases map[int]TestCaseInSuite
+}
+
+type TestCaseInSuite struct {
+	Id      string
+	Title   string
+	Product string
+}
+
 type TestTask struct {
 	Id      int
 	Code    string
