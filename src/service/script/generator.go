@@ -15,17 +15,17 @@ import (
 )
 
 func Generate(testcases []model.TestCase, langType string, independentFile bool) (int, error) {
-	casePaths := make([]string, 0)
+	caseIds := make([]string, 0)
 	for _, cs := range testcases {
-		GenerateTestCaseScript(cs, langType, independentFile, &casePaths)
+		GenerateTestCaseScript(cs, langType, independentFile, &caseIds)
 	}
 
-	GenSuite(casePaths)
+	GenSuite(caseIds)
 
 	return len(testcases), nil
 }
 
-func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile bool, casePaths *[]string) {
+func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile bool, caseIds *[]string) {
 	caseId := cs.Id
 	productId := cs.ProductId
 	caseTitle := cs.Title
@@ -40,7 +40,7 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 	}
 
 	fileUtils.MkDirIfNeeded(constant.ScriptDir)
-	*casePaths = append(*casePaths, scriptFile)
+	*caseIds = append(*caseIds, caseId)
 
 	steps := make([]string, 0)
 	expects := make([]string, 0)
