@@ -2,16 +2,15 @@ package action
 
 import (
 	"github.com/easysoft/zentaoatf/src/service/script"
-	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
-	"github.com/easysoft/zentaoatf/src/utils/common"
-	constant "github.com/easysoft/zentaoatf/src/utils/const"
-	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
-	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
+	"github.com/easysoft/zentaoatf/src/service/zentao"
+	"github.com/easysoft/zentaoatf/src/utils/config"
+	"github.com/easysoft/zentaoatf/src/utils/const"
+	"github.com/easysoft/zentaoatf/src/utils/i118"
+	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/fatih/color"
 )
 
-func GenerateScript(url string, account string, password string,
-	productId string, moduleId string, suiteId string, taskId string,
+func GenerateScript(productId string, moduleId string, suiteId string, taskId string,
 	independentFile bool, scriptLang string) {
 
 	LangMap := scriptService.GetSupportedScriptLang()
@@ -29,18 +28,18 @@ func GenerateScript(url string, account string, password string,
 		return
 	}
 
-	url = commonUtils.UpdateUrl(url)
-	cases := zentaoService.LoadTestCases(url, account, password, productId, moduleId, suiteId, taskId)
+	config := configUtils.ReadCurrConfig()
+	if config.Url == "" {
+		configUtils.ConfigForCheckout()
+	}
+
+	config = configUtils.ReadCurrConfig()
+
+	cases := zentaoService.LoadTestCases(config.Url, config.Account, config.Password, productId, moduleId, suiteId, taskId)
 
 	if cases != nil {
 		count, err := scriptService.Generate(cases, scriptLang, independentFile)
 		if err == nil {
-			//configUtils.SaveConfig("", url, entityType, entityVal,
-			//	productIdInt, projectId, scriptLang, independentFile,
-			//	name, account, password)
-
-			//configUtils.UpdateWorkDirHistoryForGenerate()
-
 			logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("success_to_generate", count, constant.ScriptDir) + "\n")
 		} else {
 			logUtils.PrintToCmd(err.Error())

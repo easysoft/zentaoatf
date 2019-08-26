@@ -7,14 +7,10 @@ import (
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
-	"github.com/fatih/color"
 	"os"
 )
 
 func main() {
-	var zentaoUrl string
-	var account string
-	var password string
 	var language string
 	var independentFile bool
 
@@ -33,18 +29,15 @@ func main() {
 	flagSet.StringVar(&moduleId, "m", "", "")
 	flagSet.StringVar(&taskId, "t", "", "")
 	flagSet.StringVar(&suite, "s", "", "")
+	flagSet.StringVar(&language, "l", "", "")
 
 	switch os.Args[1] {
 	case "run":
 
 	case "co":
 		if err := flagSet.Parse(os.Args[2:]); err == nil {
-			action.GenerateScript(zentaoUrl, account, password,
-				productId, moduleId, suite, taskId, independentFile, language)
-		} else {
-			color.Red(err.Error())
+			action.GenerateScript(productId, moduleId, suite, taskId, independentFile, language)
 		}
-		os.Exit(1)
 
 	case "update":
 
@@ -55,8 +48,7 @@ func main() {
 	case "view":
 
 	case "set":
-		configUtils.ConfigFromStdin()
-		os.Exit(1)
+		configUtils.ConfigForSet()
 
 	case "help":
 

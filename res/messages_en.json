@@ -2,6 +2,11 @@
   "language": "en-US",
   "messages": [
     {
+      "id": "need_config",
+      "message": "need config",
+      "translation": "you need to config the zentao site before checkout, type 'exit' to quit"
+    },
+    {
       "id": "begin_config",
       "message": "begin config, type 'exit' to quit",
       "translation": "begin to config"

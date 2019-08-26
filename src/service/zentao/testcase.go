@@ -16,7 +16,10 @@ func LoadTestCases(url string, account string, password string,
 
 	var testcases []model.TestCase
 
-	Login(url, account, password)
+	ok := Login(url, account, password)
+	if !ok {
+		return testcases
+	}
 
 	if productId != "" {
 		testcases = ListCaseByProduct(url, productId, moduleId)

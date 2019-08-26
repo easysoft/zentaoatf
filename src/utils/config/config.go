@@ -3,6 +3,7 @@ package configUtils
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
+	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/display"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
@@ -34,7 +35,7 @@ func InitConfig() {
 	}
 }
 
-func ConfigFromStdin() {
+func ConfigForSet() {
 	configSite := ""
 
 	language := ""
@@ -57,6 +58,23 @@ func ConfigFromStdin() {
 		account = getInput("enter_account", ".{3,}")
 		password = getInput("enter_password", ".{4,}")
 	}
+
+	SaveConfig(language, url, account, password)
+
+	PrintCurrConfig()
+}
+
+func ConfigForCheckout() {
+	language := ""
+	url := ""
+	account := ""
+	password := ""
+
+	fmt.Println(i118Utils.I118Prt.Sprintf("need_config"))
+
+	url = getInput("enter_url", "http://.*")
+	account = getInput("enter_account", ".{3,}")
+	password = getInput("enter_password", ".{4,}")
 
 	SaveConfig(language, url, account, password)
 
@@ -186,6 +204,8 @@ func ReadCurrConfig() model.Config {
 	}
 	buf, _ := ioutil.ReadFile(configPath)
 	yaml.Unmarshal(buf, &config)
+
+	config.Url = commonUtils.UpdateUrl(config.Url)
 
 	return config
 }

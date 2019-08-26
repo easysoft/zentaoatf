@@ -2,6 +2,11 @@
   "language": "zh",
   "messages": [
     {
+      "id": "need_config",
+      "message": "need config",
+      "translation": "在导出用例之前，您需要先配置禅道站点"
+    },
+    {
       "id": "begin_config",
       "message": "begin config",
       "translation": "开始配置, 输入'exit'退出"

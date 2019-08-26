@@ -7,7 +7,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 )
 
-func Login(baseUrl string, account string, password string) {
+func Login(baseUrl string, account string, password string) bool {
 	GetConfig(baseUrl)
 
 	url := baseUrl + "user-login"
@@ -24,6 +24,8 @@ func Login(baseUrl string, account string, password string) {
 		log = "fail to login"
 	}
 	logUtils.PrintToCmd(log)
+
+	return ok
 }
 
 func GetConfig(baseUrl string) {
