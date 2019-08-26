@@ -26,7 +26,7 @@ func Generate(testcases []model.TestCase, langType string, independentFile bool)
 
 func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile bool, caseIds *[]string) {
 	caseId := cs.Id
-	productId := cs.ProductId
+	productId := cs.Product
 	caseTitle := cs.Title
 
 	scriptFile := fmt.Sprintf(constant.ScriptDir+"tc-%s.%s", caseId, LangMap[langType]["extName"])
@@ -50,7 +50,6 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 
 	if fileUtils.FileExist(scriptFile) { // update title and steps
 		content := fileUtils.ReadFile(scriptFile)
-		fmt.Println(content)
 
 		// replace title
 		re, _ := regexp.Compile(`title:\s*([^\n]*?)\s*\n`)

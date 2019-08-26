@@ -30,8 +30,8 @@ type TestCaseInTask struct {
 }
 
 type TestCase struct {
-	Id        string
-	ProductId string
+	Id      string
+	Product string
 
 	Title   string
 	Steps   map[int]TestStep
