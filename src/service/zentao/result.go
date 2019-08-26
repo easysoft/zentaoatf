@@ -6,7 +6,6 @@ import (
 	"github.com/bitly/go-simplejson"
 	"github.com/easysoft/zentaoatf/src/service/client"
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
-	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
@@ -16,8 +15,8 @@ import (
 )
 
 func SubmitResult() {
-	conf := configUtils.ReadCurrConfig()
-	Login(conf.Url, conf.Account, conf.Password)
+	//conf := configUtils.ReadCurrConfig()
+	Login("conf.Url", "conf.Account", "conf.Password")
 
 	report := testingService.GetTestTestReportForSubmit(vari.CurrScriptFile, vari.CurrResultDate)
 
@@ -25,7 +24,7 @@ func SubmitResult() {
 		id := cs.Id
 		idInTask := cs.IdInTask
 
-		uri := fmt.Sprintf("testtask-runCase-%d-%d-1.json", idInTask, id)
+		//uri := fmt.Sprintf("testtask-runCase-%d-%d-1.json", idInTask, id)
 
 		requestObj := map[string]interface{}{"case": strconv.Itoa(id), "version": "0"}
 
@@ -50,10 +49,10 @@ func SubmitResult() {
 			requestObj["reals"] = realMap
 		}
 
-		url := conf.Url + uri
+		url := "conf.Url + uri"
 		_, ok := client.PostObject(url, requestObj)
 		if ok {
-			resultId := GetLastResult(conf.Url, idInTask, id)
+			resultId := GetLastResult("conf.Url", idInTask, id)
 			report.Cases[idx].ZentaoResultId = resultId
 
 			json, _ := json.Marshal(report)

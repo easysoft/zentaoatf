@@ -3,10 +3,8 @@ package scriptService
 import (
 	"fmt"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
-	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/file"
-	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"io/ioutil"
 	"path"
 	"regexp"
@@ -17,14 +15,11 @@ import (
 Get all test script and suite files in current work dir
 */
 func LoadAssetFiles() ([]string, []string) {
-	conf := configUtils.ReadCurrConfig()
-	ext := GetSupportedScriptLang()[conf.LangType]["extName"]
-
 	caseFiles := make([]string, 0)
 	suitesFiles := make([]string, 0)
 
-	fileUtils.GetAllFilesInDir(constant.ScriptDir, ext, &caseFiles)
-	fileUtils.GetAllFilesInDir(constant.ScriptDir, "suite", &suitesFiles)
+	fileUtils.GetAllFilesInDir(constant.ScriptDir, &caseFiles)
+	fileUtils.GetAllFilesInDir(constant.ScriptDir, &suitesFiles)
 
 	return caseFiles, suitesFiles
 }
@@ -35,7 +30,7 @@ Get all test result histories for specific test script/suite
 func LoadTestResults(assert string) []string {
 	ret := make([]string, 0)
 
-	dir := vari.Prefer.WorkDir + constant.LogDir
+	dir := constant.LogDir
 
 	mode, name := GetRunModeAndName(assert)
 	reg := fmt.Sprintf("%s-%s-(.+)", mode, name)

@@ -6,7 +6,6 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/service/client"
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
-	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
@@ -16,9 +15,9 @@ import (
 )
 
 func GenBug() (model.Bug, string, string) {
-	conf := configUtils.ReadCurrConfig()
-	productId := conf.ProductId
-	projectId := conf.ProjectId
+	//conf := configUtils.ReadCurrConfig()
+	productId := 0 // conf.ProductId
+	projectId := 0 // conf.ProjectId
 
 	report := testingService.GetTestTestReportForSubmit(vari.CurrScriptFile, vari.CurrResultDate)
 	for _, cs := range report.Cases {
@@ -70,8 +69,8 @@ func GenBug() (model.Bug, string, string) {
 }
 
 func SubmitBug(bug model.Bug, idInTask string, stepIds string) bool {
-	conf := configUtils.ReadCurrConfig()
-	Login(conf.Url, conf.Account, conf.Password)
+	//conf := configUtils.ReadCurrConfig()
+	Login("conf.Url", "conf.Account", "conf.Password")
 
 	productId := bug.Product
 	projectId := bug.Project
@@ -89,7 +88,7 @@ func SubmitBug(bug model.Bug, idInTask string, stepIds string) bool {
 
 	uri := fmt.Sprintf("bug-create-%s-0-%s.json", productId, params)
 
-	url := conf.Url + uri
+	url := uri
 	body, ok := client.PostObject(url, bug)
 
 	json, _ := simplejson.NewJson([]byte(body))

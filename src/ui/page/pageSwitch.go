@@ -28,7 +28,7 @@ func InitSwitchPage() error {
 
 	left = right + ui.Space
 	right = left + widget.TextWidthFull
-	workDirInput := widget.NewTextWidget("workDirInput", left, 1, widget.TextWidthFull, vari.Prefer.WorkDir)
+	workDirInput := widget.NewTextWidget("workDirInput", left, 1, widget.TextWidthFull, "vari.Config.WorkDir")
 	ui.ViewMap["switch"] = append(ui.ViewMap["switch"], workDirInput.Name())
 	if _, err := vari.Cui.SetCurrentView("workDirInput"); err != nil {
 		return err
@@ -54,7 +54,7 @@ func SwitchWorkDir(g *gocui.Gui, v *gocui.View) error {
 	err := action.SwitchWorkDir(workDir)
 	if err == nil {
 		workDirView.Clear()
-		workDirView.Write([]byte(vari.Prefer.WorkDir))
+		workDirView.Write([]byte("vari.Config.WorkDir"))
 	} else {
 		logUtils.PrintToCmd(err.Error())
 	}

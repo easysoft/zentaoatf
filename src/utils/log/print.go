@@ -2,7 +2,6 @@ package logUtils
 
 import (
 	"encoding/json"
-	"flag"
 	"fmt"
 	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
@@ -10,22 +9,11 @@ import (
 	"strings"
 )
 
-func PrintUsage(flagSet flag.FlagSet) {
-	PrintUsageWithSpaceLine(flagSet, true)
-}
-func PrintUsageWithSpaceLine(flagSet flag.FlagSet, spaceLine bool) {
-	prefix := ""
-	if spaceLine {
-		prefix = "\n"
-	}
+func PrintUsage() {
+	fmt.Fprintf(color.Output, "\n %s \n", "TODO:")
 
-	fmt.Fprintf(color.Output, "%s %s \n", prefix, color.CyanString(flagSet.Name()))
-	flagSet.PrintDefaults()
-}
-
-func PrintSample() {
 	fmt.Printf("\nSample to use: \n")
-	fmt.Printf("TODO... \n")
+	fmt.Printf("TODO: \n")
 }
 
 func PrintToSide(msg string) {

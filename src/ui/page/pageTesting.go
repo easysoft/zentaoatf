@@ -129,11 +129,11 @@ func run(g *gocui.Gui, v *gocui.View) error {
 		return err
 	}
 
-	logUtils.PrintToCmd(fmt.Sprintf("#atf run -d %s -f %s", vari.Prefer.WorkDir, vari.CurrScriptFile))
+	logUtils.PrintToCmd(fmt.Sprintf("#atf run -d %s -f %s", "vari.Config.WorkDir", vari.CurrScriptFile))
 	output, _ := g.View(constant.CuiRunOutputView)
 	output.Clear()
 
-	action.Run(vari.Prefer.WorkDir, []string{vari.CurrScriptFile}, "")
+	action.Run("vari.Config.WorkDir", []string{vari.CurrScriptFile}, "")
 
 	return nil
 }

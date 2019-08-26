@@ -18,5 +18,5 @@ func SetLanguage(lang string, dumb bool) {
 }
 
 func SetWorkDir(dir string, dumb bool) {
-	configUtils.SetWorkDir(dir, dumb)
+	//configUtils.SetWorkDir(dir, dumb)
 }

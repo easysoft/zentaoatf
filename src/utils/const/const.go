@@ -6,8 +6,7 @@ import (
 )
 
 var (
-	PreferenceFile = "preferences.yaml"
-	ConfigFile     = "conf.yaml"
+	ConfigFile = "conf.yaml"
 
 	UrlZentaoSettings = "zentaoSettings"
 	UrlImportProject  = "importProject"

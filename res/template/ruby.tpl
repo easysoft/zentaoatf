@@ -1,8 +1,7 @@
 #!/usr/bin/env ruby
 <<TC
 caseId:         %s
-caseIdInTask:   %s
-taskId:         %s
+productId:      %s
 title:          %s
 steps:          %s
 

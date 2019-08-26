@@ -2,13 +2,59 @@
   "language": "en-US",
   "messages": [
     {
-      "id": "current_preference",
-      "message": "current preference",
-      "translation": "current preference"
+      "id": "begin_config",
+      "message": "begin config, type 'exit' to quit",
+      "translation": "begin to config"
     },
     {
-      "id": "set_preference",
-      "message": "set Preference",
+      "id": "enter_language",
+      "message": "enter language",
+      "translation": "Please enter the language you want to use, English/Chinese"
+    },
+    {
+      "id": "config_zentao_site",
+      "message": "config zentao site",
+      "translation": "Do you want to config Zentao site for current test automation project now? Yes/No"
+    },
+    {
+      "id": "enter_url",
+      "message": "Zentao site url",
+      "translation": "Zentao site url"
+    },
+    {
+      "id": "enter_account",
+      "message": "Zentao site login account",
+      "translation": "Zentao site login account"
+    },
+    {
+      "id": "enter_password",
+      "message": "enter password",
+      "translation": "Account password"
+    },
+    {
+      "id": "enter_password",
+      "message": "enter password",
+      "translation": "请输入账号密码"
+    },
+    {
+      "id": "zentao_config_success",
+      "message": "zentao config success",
+      "translation": "success to config Zentao connection"
+    },
+    {
+      "id": "zentao_config_fail",
+      "message": "zentao config fail",
+      "translation": "fail to config Zentao connection"
+    },
+
+    {
+      "id": "current_config",
+      "message": "current config",
+      "translation": "current config"
+    },
+    {
+      "id": "set_config",
+      "message": "set config",
       "translation": "set %s to %s"
     },
     {

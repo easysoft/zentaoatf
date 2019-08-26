@@ -62,3 +62,13 @@ func StructToStr(obj interface{}) string {
 	val, _ := json.Marshal(obj)
 	return string(val)
 }
+
+func FindInArr(str string, arr []string) bool {
+	for _, s := range arr {
+		if str == s {
+			return true
+		}
+	}
+
+	return false
+}

@@ -4,19 +4,19 @@ import (
 	"github.com/easysoft/zentaoatf/src/service/script"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	"github.com/easysoft/zentaoatf/src/utils/common"
-	"github.com/easysoft/zentaoatf/src/utils/config"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/fatih/color"
 )
 
-func GenerateScript(url string, entityType string, entityVal string, langType string, independentFile bool,
-	account string, password string) {
+func GenerateScript(url string, account string, password string,
+	productId string, moduleId string, suiteId string, taskId string,
+	independentFile bool, scriptLang string) {
 
 	LangMap := scriptService.GetSupportedScriptLang()
 	langs := ""
-	if LangMap[langType] == nil {
+	if LangMap[scriptLang] == nil {
 		i := 0
 		for lang, _ := range LangMap {
 			if i > 0 {
@@ -30,15 +30,16 @@ func GenerateScript(url string, entityType string, entityVal string, langType st
 	}
 
 	url = commonUtils.UpdateUrl(url)
-	cases, productIdInt, projectId, name := zentaoService.LoadTestCases(url, account, password, entityType, entityVal)
-	if cases != nil {
-		count, err := scriptService.Generate(cases, langType, independentFile)
-		if err == nil {
-			configUtils.SaveConfig("", url, entityType, entityVal,
-				productIdInt, projectId, langType, independentFile,
-				name, account, password)
+	cases := zentaoService.LoadTestCases(url, account, password, productId, moduleId, suiteId, taskId)
 
-			configUtils.UpdateWorkDirHistoryForGenerate()
+	if cases != nil {
+		count, err := scriptService.Generate(cases, scriptLang, independentFile)
+		if err == nil {
+			//configUtils.SaveConfig("", url, entityType, entityVal,
+			//	productIdInt, projectId, scriptLang, independentFile,
+			//	name, account, password)
+
+			//configUtils.UpdateWorkDirHistoryForGenerate()
 
 			logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("success_to_generate", count, constant.ScriptDir) + "\n")
 		} else {

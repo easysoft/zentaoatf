@@ -5,37 +5,33 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/service/client"
+	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"sort"
 	"strconv"
 )
 
-func LoadTestCases(url string, account string, password string, entityType string, entityVal string) ([]model.TestCase, int, int, string) {
-	var testcases []model.TestCase
+func LoadTestCases(url string, account string, password string,
+	productId string, moduleId string, suiteId string, taskId string) []model.TestCase {
 
-	var name string
-	var productId int
-	var projectId int
+	var testcases []model.TestCase
 
 	Login(url, account, password)
 
-	if entityType == "product" {
-		product := GetProductInfo(url, entityVal)
-		productId, _ = strconv.Atoi(product.Id)
-		name = product.Name
-		testcases = ListCaseByProduct(url, entityVal)
+	if productId != "" {
+		testcases = ListCaseByProduct(url, productId, moduleId)
+	} else if suiteId != "" {
+		testcases = ListCaseBySuite(url, suiteId)
+	} else if taskId != "" {
+		testcases = ListCaseByTask(url, taskId)
 	} else {
-		task := GetTaskInfo(url, entityVal)
-		productId, _ = strconv.Atoi(task.Product)
-		projectId, _ = strconv.Atoi(task.Project)
-		name = task.Name
-		testcases = ListCaseByTask(url, entityVal)
+		logUtils.PrintUsage()
 	}
 
-	return testcases, productId, projectId, name
+	return testcases
 }
 
-func ListCaseByProduct(baseUrl string, productId string) []model.TestCase {
+func ListCaseByProduct(baseUrl string, productId string, moduleId string) []model.TestCase {
 	//modules := ListCaseModule(baseUrl, productId)
 	//_ = modules
 
@@ -58,9 +54,9 @@ func ListCaseByProduct(baseUrl string, productId string) []model.TestCase {
 		for _, id := range keys {
 			idStr := strconv.Itoa(id)
 
-			cs := caseMap[idStr]
+			tc := caseMap[idStr]
 			csWithSteps := GetCaseById(baseUrl, idStr)
-			caseArr = append(caseArr, model.TestCase{Id: idStr, TaskId: "0", Title: cs.Title, StepArr: csWithSteps.StepArr})
+			caseArr = append(caseArr, model.TestCase{Id: idStr, ProductId: tc.ProductId, Title: tc.Title, StepArr: csWithSteps.StepArr})
 		}
 
 		return caseArr
@@ -82,10 +78,34 @@ func ListCaseByTask(baseUrl string, taskId string) []model.TestCase {
 		caseArr := make([]model.TestCase, 0)
 		for _, cs := range task.Runs {
 			caseId := cs.Case
-			caseInTaskId := cs.Id
 
 			csWithSteps := GetCaseById(baseUrl, caseId)
-			caseArr = append(caseArr, model.TestCase{Id: caseId, IdInTask: caseInTaskId, TaskId: taskId,
+			caseArr = append(caseArr, model.TestCase{Id: caseId, ProductId: cs.ProductId,
+				Title: cs.Title, StepArr: csWithSteps.StepArr})
+		}
+
+		return caseArr
+	}
+
+	return nil
+}
+
+func ListCaseBySuite(baseUrl string, suiteId string) []model.TestCase {
+	params := fmt.Sprintf("%s-all-0-id_asc-0-10000-1", suiteId)
+
+	url := baseUrl + zentaoUtils.GenApiUri("testtask", "cases", params)
+	dataStr, ok := client.Get(url, nil)
+
+	if ok {
+		var task model.TestTask
+		json.Unmarshal([]byte(dataStr), &task)
+
+		caseArr := make([]model.TestCase, 0)
+		for _, cs := range task.Runs {
+			caseId := cs.Case
+
+			csWithSteps := GetCaseById(baseUrl, caseId)
+			caseArr = append(caseArr, model.TestCase{Id: caseId, ProductId: cs.ProductId,
 				Title: cs.Title, StepArr: csWithSteps.StepArr})
 		}
 

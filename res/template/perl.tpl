@@ -1,8 +1,7 @@
 #!/usr/bin/env perl
 <<TC;
 caseId:         %s
-caseIdInTask:   %s
-taskId:         %s
+productId:      %s
 title:          %s
 steps:          %s
 

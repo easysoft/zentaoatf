@@ -2,166 +2,66 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"github.com/easysoft/zentaoatf/src/action"
-	"github.com/easysoft/zentaoatf/src/model"
-	"github.com/easysoft/zentaoatf/src/ui/page"
 	"github.com/easysoft/zentaoatf/src/utils/common"
-	"github.com/easysoft/zentaoatf/src/utils/config"
-	"github.com/easysoft/zentaoatf/src/utils/log"
+	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
+	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
+	"github.com/fatih/color"
 	"os"
 )
 
 func main() {
-	flagSets := make([]flag.FlagSet, 0)
+	var lang string
 
-	var language string
-	var workDir string
-
-	var scriptDir string
-	var langType string
-
-	var independentFile bool
 	var zentaoUrl string
-	var entityType string
-	var entityVal string
 	var account string
 	var password string
+	var language string
+	var independentFile bool
 
-	var path string
-	var files model.FlagSlice
+	var dir string
+	var files []string
+	var productId string
+	var moduleId string
+	var taskId string
+	var suite string
 
-	cuiSet := flag.NewFlagSet("atf cui - Open CUI Window", flag.ContinueOnError)
-	flagSets = append(flagSets, *cuiSet)
+	flagSet := flag.NewFlagSet("atf", flag.ContinueOnError)
 
-	preferenceSet := flag.NewFlagSet("atf set - Set preferences", flag.ContinueOnError)
-	flagSets = append(flagSets, *preferenceSet)
-	preferenceSet.StringVar(&language, "l", "", "tool language, en or zh")
-	preferenceSet.StringVar(&workDir, "d", "", "work dir")
-
-	switchSet := flag.NewFlagSet("atf switch - Switch work dir to another path", flag.ContinueOnError)
-	flagSets = append(flagSets, *switchSet)
-	switchSet.StringVar(&path, "p", "", "Work dir path")
-
-	genSet := flag.NewFlagSet("atf gen - Generate test scripts from zentaoService test cases", flag.ContinueOnError)
-	flagSets = append(flagSets, *genSet)
-	genSet.StringVar(&zentaoUrl, "u", "", "Zentao project url")
-	genSet.StringVar(&entityType, "t", "", "Import type, 'product' or 'task'")
-	genSet.StringVar(&entityVal, "v", "", "product code or task id")
-	genSet.StringVar(&langType, "l", "", "Script Language like python, php etc.")
-	genSet.BoolVar(&independentFile, "i", false, "Save ExpectResult in independent file or not")
-	genSet.StringVar(&account, "a", "", "Zentao login account")
-	genSet.StringVar(&password, "p", "", "Zentao login password")
-
-	runSet := flag.NewFlagSet("atf run - Run test scripts in specified folder", flag.ContinueOnError)
-	flagSets = append(flagSets, *runSet)
-	runSet.StringVar(&scriptDir, "d", ".", "Directory that contains test scripts, base on current workdir")
-	runSet.StringVar(&langType, "l", "", "Script Language like python, php etc.")
-	runSet.Var(&files, "f", "Script files to run, no need langType if specified, base on current workdir")
-
-	rerunSet := flag.NewFlagSet("atf rerun - Rerun failed test scripts in specified result", flag.ContinueOnError)
-	flagSets = append(flagSets, *rerunSet)
-	rerunSet.StringVar(&path, "p", "", "Test result file path, base on current workdir")
-
-	listSet := flag.NewFlagSet("atf list - List test scripts", flag.ContinueOnError)
-	flagSets = append(flagSets, *listSet)
-	listSet.StringVar(&scriptDir, "d", ".", "Directory that contains test scripts")
-	listSet.StringVar(&langType, "l", "", "Script Language like python, php etc.")
-
-	viewSet := flag.NewFlagSet("atf view - View test scripts", flag.ContinueOnError)
-	flagSets = append(flagSets, *viewSet)
-	viewSet.StringVar(&scriptDir, "d", ".", "Directory that contains test scripts")
-	viewSet.StringVar(&langType, "l", "", "Script Language like python, php etc.")
-	viewSet.Var(&files, "f", "Script files to view, no need langType if specified")
-
-	if len(os.Args) < 2 {
-		usage(flagSets)
-		os.Exit(1)
-	}
+	flagSet.StringVar(&dir, "d", "", "")
+	flagSet.Var(commonUtils.NewSliceValue([]string{}, &files), "f", "")
+	flagSet.StringVar(&productId, "p", ".", "")
+	flagSet.StringVar(&moduleId, "m", "", "")
+	flagSet.StringVar(&taskId, "t", "", "")
+	flagSet.StringVar(&suite, "s", "", "")
 
 	switch os.Args[1] {
-	//case "mock":
-	//	mock.Launch()
-	case "cui":
-		page.Cui()
 	case "run":
-		if err := runSet.Parse(os.Args[2:]); err == nil {
-			if len(files) == 0 && (scriptDir == "" || langType == "") {
-				runSet.Usage()
-				os.Exit(1)
-			} else {
-				scriptDir = commonUtils.ConvertRunDir(scriptDir)
-				action.Run(scriptDir, files, langType)
-			}
+
+	case "co":
+		if err := flagSet.Parse(os.Args[2:]); err == nil {
+			action.GenerateScript(zentaoUrl, account, password,
+				productId, moduleId, suite, taskId, independentFile, language)
+		} else {
+			color.Red(err.Error())
 		}
-	case "rerun":
-		if err := rerunSet.Parse(os.Args[2:]); err == nil {
-			if path == "" {
-				rerunSet.Usage()
-				os.Exit(1)
-			} else {
-				action.Rerun(path)
-			}
-		}
-	case "switch":
-		if err := switchSet.Parse(os.Args[2:]); err == nil {
-			if path == "" {
-				switchSet.Usage()
-				os.Exit(1)
-			} else {
-				action.SwitchWorkDir(path)
-			}
-		}
-	case "gen":
-		if err := genSet.Parse(os.Args[2:]); err == nil {
-			if zentaoUrl == "" || langType == "" || entityType == "" || entityVal == "" ||
-				account == "" || password == "" {
-				genSet.Usage()
-				os.Exit(1)
-			} else {
-				action.GenerateScript(zentaoUrl, entityType, entityVal, langType, independentFile, account, password)
-			}
-		}
+
+	case "update":
+
+	case "ci":
+
 	case "list":
-		if err := listSet.Parse(os.Args[2:]); err == nil {
-			if scriptDir == "" || langType == "" {
-				listSet.Usage()
-				os.Exit(1)
-			} else {
-				scriptDir = commonUtils.ConvertRunDir(scriptDir)
-				action.List(scriptDir, langType)
-			}
-		}
+
 	case "view":
-		if err := viewSet.Parse(os.Args[2:]); err == nil {
-			if scriptDir == "" || (langType == "" && len(files) == 0) {
-				viewSet.Usage()
-				os.Exit(1)
-			} else {
-				scriptDir = commonUtils.ConvertRunDir(scriptDir)
-				action.View(scriptDir, files, langType)
-			}
-		}
 
 	case "set":
-		if err := preferenceSet.Parse(os.Args[2:]); err == nil {
-			if language == "" && workDir == "" {
-				preferenceSet.Usage()
-				os.Exit(1)
-			} else {
-				if language != "" {
-					action.SetLanguage(language, false)
-				}
-				if workDir != "" {
-					action.SetWorkDir(workDir, false)
-				}
+		_ = lang
 
-				configUtils.PrintCurrPreference()
-			}
-		}
+	case "help":
+
 	default:
-		usage(flagSets)
+		logUtils.PrintUsage()
 		os.Exit(1)
 	}
 }
@@ -173,22 +73,7 @@ func init() {
 		} else {
 			vari.RunFromCui = false
 		}
-
-		configUtils.InitPreference()
-	}
-}
-
-func usage(flagSets []flag.FlagSet) {
-	fmt.Printf("Usage of atf: \n")
-
-	for inx, flag := range flagSets {
-		if inx == 0 {
-			logUtils.PrintUsageWithSpaceLine(flag, false)
-		} else {
-			logUtils.PrintUsage(flag)
-		}
 	}
 
-	logUtils.PrintSample()
-
+	configUtils.InitConfig()
 }

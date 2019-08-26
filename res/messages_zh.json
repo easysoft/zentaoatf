@@ -2,13 +2,54 @@
   "language": "zh",
   "messages": [
     {
-      "id": "current_preference",
-      "message": "Current preference",
+      "id": "begin_config",
+      "message": "begin config",
+      "translation": "开始配置"
+    },
+    {
+      "id": "enter_language",
+      "message": "enter language",
+      "translation": "请输入你期望使用的语言，'en'代表英文, 'zh'代表中文"
+    },
+    {
+      "id": "config_zentao_site",
+      "message": "config zentao site",
+      "translation": "现在开始配置同禅道系统的同步参数? Yes/No"
+    },
+    {
+      "id": "enter_url",
+      "message": "Zentao site url",
+      "translation": "请输入禅道站点的网站"
+    },
+    {
+      "id": "enter_account",
+      "message": "Zentao site login account",
+      "translation": "请输入登录账号"
+    },
+    {
+      "id": "enter_password",
+      "message": "enter password",
+      "translation": "请输入账号密码"
+    },
+    {
+      "id": "zentao_config_success",
+      "message": "zentao config success",
+      "translation": "禅道系统连接配置成功"
+    },
+    {
+      "id": "zentao_config_fail",
+      "message": "zentao config fail",
+      "translation": "禅道系统连接配置失败"
+    },
+
+    {
+      "id": "current_config",
+      "message": "Current config",
       "translation": "当前配置"
     },
     {
-      "id": "set_preference",
-      "message": "set Preference",
+      "id": "set_config",
+      "message": "set config",
       "translation": "设置%s为%s"
     },
     {

@@ -1,16 +1,11 @@
 package model
 
 type Config struct {
-	Url             string
-	EntityType      string
-	EntityVal       string
-	ProductId       int
-	ProjectId       int
-	LangType        string
-	IndependentFile bool
+	Language string
 
+	Url      string
 	Account  string
 	Password string
 
-	ProjectName string
+	ProductId int
 }

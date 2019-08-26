@@ -5,7 +5,6 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
-	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"io/ioutil"
 	"os"
 	"path"
@@ -51,10 +50,10 @@ func FileExist(path string) bool {
 	return exist
 }
 
-func GetAllFilesInDir(dirPth string, ext string, files *[]string) error {
+func GetAllFilesInDir(dirPth string, files *[]string) error {
 	sep := string(os.PathSeparator)
 
-	dir, err := ioutil.ReadDir(vari.Prefer.WorkDir + dirPth)
+	dir, err := ioutil.ReadDir(dirPth)
 	if err != nil {
 		return err
 	}
@@ -66,10 +65,10 @@ func GetAllFilesInDir(dirPth string, ext string, files *[]string) error {
 				continue
 			}
 
-			GetAllFilesInDir(dirPth+name+sep, ext, files)
+			GetAllFilesInDir(dirPth+name+sep, files)
 		} else {
 			// 过滤指定格式
-			ok := strings.HasSuffix(name, "."+ext)
+			ok := true // strings.HasSuffix(name, "."+ext)
 			if ok {
 				*files = append(*files, dirPth+name)
 			}
@@ -111,7 +110,7 @@ func GetFailedFilesFromTestResult(resultFile string) ([]string, string) {
 		resultFile = strings.Replace(resultFile, extName, "."+constant.ExtNameJson, -1)
 	}
 
-	content := ReadFile(vari.Prefer.WorkDir + resultFile)
+	content := ReadFile(resultFile)
 
 	var report model.TestReport
 	json.Unmarshal([]byte(content), &report)
@@ -129,7 +128,7 @@ func GetFailedFilesFromTestResult(resultFile string) ([]string, string) {
 }
 
 func GetSuiteFiles(name string, fileList *[]string) {
-	content := ReadFile(vari.Prefer.WorkDir + name)
+	content := ReadFile(name)
 
 	for _, line := range strings.Split(content, "\n") {
 		file := strings.TrimSpace(line)

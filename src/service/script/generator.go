@@ -27,23 +27,19 @@ func Generate(testcases []model.TestCase, langType string, independentFile bool)
 
 func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile bool, casePaths *[]string) {
 	caseId := cs.Id
-	caseInTaskId := cs.IdInTask
-	taskId := cs.TaskId
-	if caseInTaskId == "" {
-		caseInTaskId = "0"
-	}
+	productId := cs.ProductId
 	caseTitle := cs.Title
 
 	scriptFile := fmt.Sprintf(constant.ScriptDir+"tc-%s.%s", caseId, LangMap[langType]["extName"])
-	scriptFullPath := vari.Prefer.WorkDir + scriptFile
+	scriptFullPath := scriptFile
 
 	if fileUtils.FileExist(scriptFullPath) {
 		scriptFile = fmt.Sprintf(constant.ScriptDir+"tc-%s.%s",
 			caseId+"-"+dateUtils.DateTimeStrLong(time.Now()), LangMap[langType]["extName"])
-		scriptFullPath = vari.Prefer.WorkDir + scriptFile
+		scriptFullPath = scriptFile
 	}
 
-	fileUtils.MkDirIfNeeded(vari.Prefer.WorkDir + constant.ScriptDir)
+	fileUtils.MkDirIfNeeded(constant.ScriptDir)
 	*casePaths = append(*casePaths, scriptFile)
 
 	steps := make([]string, 0)
@@ -56,7 +52,7 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 		i118Utils.I118Prt.Sprintf("your_codes_here"))
 	srcCode = append(srcCode, temp)
 
-	readme := zentaoUtils.ReadResData("res/template/readme-"+vari.Prefer.Language+".tpl") + "\n"
+	readme := zentaoUtils.ReadResData("res/template/readme-"+vari.Config.Language+".tpl") + "\n"
 
 	StepWidth := 20
 	stepDisplayMaxWidth := 0
@@ -80,7 +76,7 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 	template := zentaoUtils.ReadResData(path + langType + ".tpl")
 
 	content := fmt.Sprintf(template,
-		caseId, caseInTaskId, taskId, caseTitle,
+		caseId, productId, caseTitle,
 		strings.Join(steps, "\n"), expectsTxt,
 		readme,
 		strings.Join(srcCode, "\n"))
@@ -151,7 +147,7 @@ func GenerateTestStepScript(ts model.TestStep, langType string, stepWidth int,
 func GenSuite(cases []string) {
 	str := strings.Join(cases, "\n")
 
-	fileUtils.WriteFile(vari.Prefer.WorkDir+constant.ScriptDir+"all."+constant.ExtNameSuite, str)
+	fileUtils.WriteFile(constant.ScriptDir+"all."+constant.ExtNameSuite, str)
 }
 
 func computerTestStepWidth(steps []model.TestStep, stepSDisplayMaxWidth *int, stepWidth int) {

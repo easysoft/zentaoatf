@@ -2,11 +2,9 @@ package page
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/action"
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/ui/widget"
 	"github.com/easysoft/zentaoatf/src/utils/common"
-	"github.com/easysoft/zentaoatf/src/utils/config"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
@@ -18,15 +16,15 @@ import (
 func InitImportPage() error {
 	DestoryRightPages()
 
-	conf := configUtils.ReadCurrConfig()
+	//conf := configUtils.ReadCurrConfig()
 
 	productId := ""
 	taskId := ""
-	if conf.LangType == "task" {
-		taskId = conf.EntityVal
-	} else {
-		productId = conf.EntityVal
-	}
+	//if conf.LangType == "task" {
+	//	taskId = conf.EntityVal
+	//} else {
+	//	productId = conf.EntityVal
+	//}
 
 	maxX, _ := vari.Cui.Size()
 	slideView, _ := vari.Cui.View("side")
@@ -39,7 +37,7 @@ func InitImportPage() error {
 
 	left = right + ui.Space
 	right = left + widget.TextWidthFull
-	urlInput := widget.NewTextWidget("urlInput", left, 1, widget.TextWidthFull, conf.Url)
+	urlInput := widget.NewTextWidget("urlInput", left, 1, widget.TextWidthFull, "conf.Url")
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], urlInput.Name())
 
 	left = slideX + 2
@@ -70,7 +68,7 @@ func InitImportPage() error {
 
 	left = right + ui.Space
 	right = left + widget.TextWidthHalf
-	languageInput := widget.NewTextWidget("languageInput", left, 7, widget.TextWidthHalf, conf.LangType)
+	languageInput := widget.NewTextWidget("languageInput", left, 7, widget.TextWidthHalf, "conf.LangType")
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], languageInput.Name())
 
 	left = right + ui.Space
@@ -81,7 +79,7 @@ func InitImportPage() error {
 
 	left = right + ui.Space
 	right = left + widget.TextWidthHalf
-	independentFileInput := widget.NewRadioWidget("independentFileInput", left, 7, conf.IndependentFile)
+	independentFileInput := widget.NewRadioWidget("independentFileInput", left, 7, true)
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], independentFileInput.Name())
 
 	// zentaoService account and password
@@ -93,7 +91,7 @@ func InitImportPage() error {
 
 	left = right + ui.Space
 	right = left + widget.TextWidthHalf
-	accountInput := widget.NewTextWidget("accountInput", left, y, widget.TextWidthHalf, conf.Account)
+	accountInput := widget.NewTextWidget("accountInput", left, y, widget.TextWidthHalf, "conf.Account")
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], accountInput.Name())
 
 	left = right + ui.Space
@@ -103,7 +101,7 @@ func InitImportPage() error {
 
 	left = right + ui.Space
 	right = left + widget.TextWidthHalf
-	passwordInput := widget.NewTextWidget("passwordInput", left, y, widget.TextWidthHalf, conf.Password)
+	passwordInput := widget.NewTextWidget("passwordInput", left, y, widget.TextWidthHalf, "conf.Password")
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], passwordInput.Name())
 
 	// button
@@ -151,7 +149,7 @@ func ImportRequest(g *gocui.Gui, v *gocui.View) error {
 	logUtils.PrintToCmd(fmt.Sprintf("#atf gen -u %s -t %s -v %s -l %s -i %t -a %s -p %s",
 		url, entityType, entityVal, language, independentFile, account, password))
 
-	action.GenerateScript(url, entityType, entityVal, language, independentFile, account, password)
+	//action.GenerateScript(url, entityType, entityVal, language, independentFile, account, password)
 
 	return nil
 }

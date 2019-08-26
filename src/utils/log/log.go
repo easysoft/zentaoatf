@@ -18,7 +18,7 @@ func PrintWholeLine(msg string, char string, attr color.Attribute) {
 		maxX, _ := vari.Cui.Size()
 		postfixLen = maxX - constant.LeftWidth - utf8.RuneCountInString(msg) - 9
 	} else {
-		postfixLen = vari.Prefer.Width - utf8.RuneCountInString(msg) - 6
+		postfixLen = vari.ScreenWidth - utf8.RuneCountInString(msg) - 6
 		if postfixLen < 0 { // no width in debug mode
 			postfixLen = 6
 		}

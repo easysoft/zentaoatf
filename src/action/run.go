@@ -2,7 +2,6 @@ package action
 
 import (
 	"github.com/easysoft/zentaoatf/src/model"
-	"github.com/easysoft/zentaoatf/src/service/script"
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
 	"github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/const"
@@ -16,7 +15,7 @@ import (
 )
 
 func Run(scriptDir string, fileNames []string, langType string) {
-	LangMap := scriptService.LangMap
+	//LangMap := scriptService.LangMap
 	var files []string
 
 	if fileNames != nil && len(fileNames) > 0 { // pass a list, cui always
@@ -35,7 +34,7 @@ func Run(scriptDir string, fileNames []string, langType string) {
 		files, _ = fileUtils.GetSpecifiedFilesInWorkDir(fileNames)
 
 	} else { // give a dir
-		fileUtils.GetAllFilesInDir(scriptDir, LangMap[langType]["extName"], &files)
+		fileUtils.GetAllFilesInDir(scriptDir, &files)
 
 		vari.RunMode = constant.RunModeDir
 		vari.RunDir = zentaoUtils.PathToRunName(scriptDir)
@@ -46,11 +45,11 @@ func Run(scriptDir string, fileNames []string, langType string) {
 		return
 	}
 
-	var report = model.TestReport{Path: vari.Prefer.WorkDir, Env: commonUtils.GetOs(),
+	var report = model.TestReport{Path: vari.ReportDir, Env: commonUtils.GetOs(),
 		Pass: 0, Fail: 0, Total: 0, Cases: make([]model.CaseLog, 0)}
 
-	testingService.ExeScripts(files, vari.Prefer.WorkDir, langType, &report)
+	testingService.ExeScripts(files, "vari.Config.WorkDir", langType, &report)
 
-	testingService.CheckResults(files, vari.Prefer.WorkDir, langType, &report)
-	testingService.Print(report, vari.Prefer.WorkDir)
+	testingService.CheckResults(files, "vari.Config.WorkDir", langType, &report)
+	testingService.Print(report, "vari.Config.WorkDir")
 }

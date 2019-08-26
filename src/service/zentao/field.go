@@ -5,7 +5,6 @@ import (
 	"github.com/bitly/go-simplejson"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/service/client"
-	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
@@ -14,11 +13,11 @@ import (
 )
 
 func GetBugFiledOptions() {
-	conf := configUtils.ReadCurrConfig()
-	Login(conf.Url, conf.Account, conf.Password)
+	//conf := configUtils.ReadCurrConfig()
+	Login("conf.Url", "conf.Account", "conf.Password")
 
-	params := fmt.Sprintf("%d-%d", conf.ProductId, conf.ProjectId)
-	url := conf.Url + zentaoUtils.GenApiUri("bug", "ajaxGetBugFieldOptions", params)
+	params := fmt.Sprintf("%d-%d", "conf.ProductId", "conf.ProjectId")
+	url := "conf.Url" + zentaoUtils.GenApiUri("bug", "ajaxGetBugFieldOptions", params)
 	dataStr, ok := client.Get(url, nil)
 
 	bugFields := model.ZentaoBugFileds{}
