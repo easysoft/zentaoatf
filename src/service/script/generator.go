@@ -4,14 +4,13 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
-	dateUtils "github.com/easysoft/zentaoatf/src/utils/date"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"os"
+	"regexp"
 	"strings"
-	"time"
 )
 
 func Generate(testcases []model.TestCase, langType string, independentFile bool) (int, error) {
@@ -31,13 +30,6 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 	caseTitle := cs.Title
 
 	scriptFile := fmt.Sprintf(constant.ScriptDir+"tc-%s.%s", caseId, LangMap[langType]["extName"])
-	scriptFullPath := scriptFile
-
-	if fileUtils.FileExist(scriptFullPath) {
-		scriptFile = fmt.Sprintf(constant.ScriptDir+"tc-%s.%s",
-			caseId+"-"+dateUtils.DateTimeStrLong(time.Now()), LangMap[langType]["extName"])
-		scriptFullPath = scriptFile
-	}
 
 	fileUtils.MkDirIfNeeded(constant.ScriptDir)
 	*caseIds = append(*caseIds, caseId)
@@ -48,12 +40,6 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 
 	steps = append(steps, i118Utils.I118Prt.Sprintf("is_checkpoint"))
 
-	temp := fmt.Sprintf("\n%sCODE: %s\n", LangMap[langType]["commentsTag"],
-		i118Utils.I118Prt.Sprintf("your_codes_here"))
-	srcCode = append(srcCode, temp)
-
-	readme := zentaoUtils.ReadResData("res/template/readme-"+vari.Config.Language+".tpl") + "\n"
-
 	StepWidth := 20
 	stepDisplayMaxWidth := 0
 	computerTestStepWidth(cs.StepArr, &stepDisplayMaxWidth, StepWidth)
@@ -62,11 +48,34 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 		GenerateTestStepScript(ts, langType, StepWidth, &steps, &expects, &srcCode)
 	}
 
+	if fileUtils.FileExist(scriptFile) { // update title and steps
+		content := fileUtils.ReadFile(scriptFile)
+		fmt.Println(content)
+
+		// replace title
+		re, _ := regexp.Compile(`title:\s*([^\n]*?)\s*\n`)
+		content = re.ReplaceAllString(content, fmt.Sprintf("title:          %s\n", caseTitle))
+
+		// replace steps
+		re, _ = regexp.Compile(`steps:[^\n]*\n*([\S\s]*)\n+expects:`)
+		content = re.ReplaceAllString(content,
+			fmt.Sprintf("steps:          %s\n\nexpects:", strings.Join(steps, "\n")))
+
+		fileUtils.WriteFile(scriptFile, content)
+		return
+	}
+
+	temp := fmt.Sprintf("\n%sCODE: %s\n", LangMap[langType]["commentsTag"],
+		i118Utils.I118Prt.Sprintf("your_codes_here"))
+	srcCode = append(srcCode, temp)
+
+	readme := zentaoUtils.ReadResData("res/template/readme-"+vari.Config.Language+".tpl") + "\n"
+
 	var expectsTxt string
 	if !independentFile {
 		expectsTxt = strings.Join(expects, "\n")
 	} else {
-		expectFile := zentaoUtils.ScriptToExpectName(scriptFullPath)
+		expectFile := zentaoUtils.ScriptToExpectName(scriptFile)
 
 		expectsTxt = "@file\n"
 		fileUtils.WriteFile(expectFile, strings.Join(expects, "\n"))
@@ -81,7 +90,7 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 		readme,
 		strings.Join(srcCode, "\n"))
 
-	fileUtils.WriteFile(scriptFullPath, content)
+	fileUtils.WriteFile(scriptFile, content)
 }
 
 func GenerateTestStepScript(ts model.TestStep, langType string, stepWidth int,

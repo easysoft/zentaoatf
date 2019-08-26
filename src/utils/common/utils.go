@@ -18,8 +18,8 @@ func Base(pathStr string) string {
 }
 
 func RemoveBlankLine(str string) string {
-	myExp := regexp.MustCompile(`\n{2,}`) // 连续换行
-	ret := myExp.ReplaceAllString(str, "\n")
+	myExp := regexp.MustCompile(`\n{3,}`) // 连续换行
+	ret := myExp.ReplaceAllString(str, "\n\n")
 
 	ret = strings.Trim(ret, "\n")
 	ret = strings.TrimSpace(ret)
