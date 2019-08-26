@@ -21,8 +21,10 @@ func LoadTestCases(url string, account string, password string,
 		return testcases
 	}
 
-	if productId != "" {
-		testcases = ListCaseByProduct(url, productId, moduleId)
+	if moduleId != "" {
+		testcases = ListCaseByModule(url, productId, moduleId)
+	} else if moduleId != "" {
+		testcases = ListCaseByProduct(url, productId)
 	} else if suiteId != "" {
 		testcases = ListCaseBySuite(url, suiteId)
 	} else if taskId != "" {
@@ -34,10 +36,7 @@ func LoadTestCases(url string, account string, password string,
 	return testcases
 }
 
-func ListCaseByProduct(baseUrl string, productId string, moduleId string) []model.TestCase {
-	//modules := ListCaseModule(baseUrl, productId)
-	//_ = modules
-
+func ListCaseByProduct(baseUrl string, productId string) []model.TestCase {
 	params := [][]string{{"productID", productId}}
 	url := baseUrl + zentaoUtils.GenSuperApiUri("testcase", "getModuleCases", params)
 	dataStr, ok := client.Get(url, nil)
@@ -68,6 +67,31 @@ func ListCaseByProduct(baseUrl string, productId string, moduleId string) []mode
 	return nil
 }
 
+func ListCaseByModule(baseUrl string, productId string, moduleId string) []model.TestCase {
+	params := fmt.Sprintf("%s--byModule-%s-id_asc-0-10000-1", productId, moduleId)
+
+	url := baseUrl + zentaoUtils.GenApiUri("testcase", "browse", params)
+	dataStr, ok := client.Get(url, nil)
+
+	if ok {
+		var module model.Module
+		json.Unmarshal([]byte(dataStr), &module)
+
+		caseArr := make([]model.TestCase, 0)
+		for _, cs := range module.Cases {
+			caseId := cs.Id
+
+			csWithSteps := GetCaseById(baseUrl, caseId)
+			caseArr = append(caseArr, model.TestCase{Id: caseId, Product: cs.Product,
+				Title: cs.Title, StepArr: csWithSteps.StepArr})
+		}
+
+		return caseArr
+	}
+
+	return nil
+}
+
 func ListCaseBySuite(baseUrl string, suiteId string) []model.TestCase {
 	params := fmt.Sprintf("%s-id_asc-0-10000-1", suiteId)
 
@@ -75,11 +99,11 @@ func ListCaseBySuite(baseUrl string, suiteId string) []model.TestCase {
 	dataStr, ok := client.Get(url, nil)
 
 	if ok {
-		var suite model.TestSuite
-		json.Unmarshal([]byte(dataStr), &suite)
+		var task model.TestSuite
+		json.Unmarshal([]byte(dataStr), &task)
 
 		caseArr := make([]model.TestCase, 0)
-		for _, cs := range suite.Cases {
+		for _, cs := range task.Cases {
 			caseId := cs.Id
 
 			csWithSteps := GetCaseById(baseUrl, caseId)

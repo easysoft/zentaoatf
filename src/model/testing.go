@@ -10,6 +10,13 @@ type Module struct {
 	Id   int
 	Code string
 	Name string
+
+	Cases map[int]TestCaseInModule
+}
+type TestCaseInModule struct {
+	Id      string
+	Title   string
+	Product string
 }
 
 type TestSuite struct {
