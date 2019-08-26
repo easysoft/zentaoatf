@@ -23,12 +23,12 @@ func LoadTestCases(url string, account string, password string,
 
 	if moduleId != "" {
 		testcases = ListCaseByModule(url, productId, moduleId)
-	} else if moduleId != "" {
-		testcases = ListCaseByProduct(url, productId)
 	} else if suiteId != "" {
 		testcases = ListCaseBySuite(url, suiteId)
 	} else if taskId != "" {
 		testcases = ListCaseByTask(url, taskId)
+	} else if productId != "" {
+		testcases = ListCaseByProduct(url, productId)
 	} else {
 		logUtils.PrintUsage()
 	}
