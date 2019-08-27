@@ -12,7 +12,7 @@ import (
 	"strconv"
 )
 
-func LoadTestCases(productId string, moduleId string, suiteId string, taskId string) []model.TestCase {
+func LoadTestCases(productId string, moduleId string, suiteIdStr string, taskIdStr string) []model.TestCase {
 	config := configUtils.ReadCurrConfig()
 
 	var testcases []model.TestCase
@@ -24,10 +24,10 @@ func LoadTestCases(productId string, moduleId string, suiteId string, taskId str
 
 	if moduleId != "" {
 		testcases = ListCaseByModule(config.Url, productId, moduleId)
-	} else if suiteId != "" {
-		testcases = ListCaseBySuite(config.Url, suiteId)
-	} else if taskId != "" {
-		testcases = ListCaseByTask(config.Url, taskId)
+	} else if suiteIdStr != "" {
+		testcases = ListCaseBySuite(config.Url, suiteIdStr)
+	} else if taskIdStr != "" {
+		testcases = ListCaseByTask(config.Url, taskIdStr)
 	} else if productId != "" {
 		testcases = ListCaseByProduct(config.Url, productId)
 	} else {
@@ -172,20 +172,34 @@ func GetCaseById(baseUrl string, caseId string) model.TestCase {
 	return model.TestCase{}
 }
 
-func GetCaseIdsBySuite(suiteId int, idMap *map[int]string) {
+func GetCaseIdsBySuite(suiteId string, idMap *map[int]string) {
 	config := configUtils.ReadCurrConfig()
 
 	ok := Login(config.Url, config.Account, config.Password)
 	if !ok {
 		return
 	}
+
+	testcases := ListCaseBySuite(config.Url, suiteId)
+
+	for _, tc := range testcases {
+		id, _ := strconv.Atoi(tc.Id)
+		(*idMap)[id] = ""
+	}
 }
 
-func GetCaseIdsByTask(taskId int, idMap *map[int]string) {
+func GetCaseIdsByTask(taskId string, idMap *map[int]string) {
 	config := configUtils.ReadCurrConfig()
 
 	ok := Login(config.Url, config.Account, config.Password)
 	if !ok {
 		return
+	}
+
+	testcases := ListCaseByTask(config.Url, taskId)
+
+	for _, tc := range testcases {
+		id, _ := strconv.Atoi(tc.Id)
+		(*idMap)[id] = ""
 	}
 }

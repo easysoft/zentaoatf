@@ -15,7 +15,7 @@ func main() {
 	var independentFile bool
 
 	//var dir string
-	var files []string
+	//var files []string
 	var productId string
 	var moduleId string
 	var task string
@@ -53,8 +53,8 @@ func main() {
 
 	switch os.Args[1] {
 	case "run":
-		files = commonUtils.GetFilesFromParams(os.Args[2:])
-		if err := flagSet.Parse(os.Args[2:]); err == nil {
+		files, idx := commonUtils.GetFilesFromParams(os.Args[2:])
+		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
 			action.Run(files, suite, task, result)
 		}
 

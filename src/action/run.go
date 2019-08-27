@@ -23,16 +23,16 @@ func Run(files []string, suite string, task string, result string) {
 	if suite != "" {
 		suiteId, err := strconv.Atoi(suite)
 		if err == nil && suiteId > 0 { // load cases from remote by suite id
-			zentaoService.GetCaseIdsBySuite(suiteId, &caseIdMap)
+			zentaoService.GetCaseIdsBySuite(suite, &caseIdMap)
 		} else { // load cases in suite file
 			scriptService.GetCaseIdsInSuiteFile(suite, &caseIdMap)
 		}
 
 		scriptService.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
 	} else if task != "" { // load cases from remote by task id
-		taskId, err := strconv.Atoi(suite)
-		if err == nil {
-			zentaoService.GetCaseIdsByTask(taskId, &caseIdMap)
+		taskId, err := strconv.Atoi(task)
+		if err == nil && taskId > 0 {
+			zentaoService.GetCaseIdsByTask(task, &caseIdMap)
 		}
 
 		scriptService.GetScriptByIdsInDir(files[0], caseIdMap, &cases)

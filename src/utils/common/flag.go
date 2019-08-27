@@ -21,14 +21,16 @@ func (s *sliceValue) String() string {
 	return "It's none of my business"
 }
 
-func GetFilesFromParams(arguments []string) []string {
+func GetFilesFromParams(arguments []string) ([]string, int) {
 	ret := make([]string, 0)
 
-	for _, arg := range arguments {
+	index := -1
+	for idx, arg := range arguments {
 		if strings.Index(arg, "-") != 0 {
 			ret = append(ret, arg)
+			index = idx
 		}
 	}
 
-	return ret
+	return ret, index
 }
