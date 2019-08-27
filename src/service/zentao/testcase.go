@@ -133,7 +133,7 @@ func ListCaseByTask(baseUrl string, suiteId string) []model.TestCase {
 			caseId := cs.Case
 
 			csWithSteps := GetCaseById(baseUrl, caseId)
-			caseArr = append(caseArr, model.TestCase{Id: caseId, Product: cs.ProductId,
+			caseArr = append(caseArr, model.TestCase{Id: caseId, Product: cs.Product,
 				Title: cs.Title, StepArr: csWithSteps.StepArr})
 		}
 

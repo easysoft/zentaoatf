@@ -45,10 +45,10 @@ type TestTask struct {
 }
 
 type TestCaseInTask struct {
-	Id        string // runId in task
-	Title     string
-	Case      string // real caseId
-	ProductId string
+	Id      string // runId in task
+	Title   string
+	Case    string // real caseId
+	Product string
 }
 
 type TestCase struct {
