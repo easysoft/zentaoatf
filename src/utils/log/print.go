@@ -42,7 +42,7 @@ func PrintUsage() {
 
 `
 
-	fmt.Println(color.CyanString("Usage: "))
+	fmt.Println(color.CyanString("\nUsage: "))
 	fmt.Fprintf(color.Output, "%s\n", usage)
 
 	fmt.Println(color.CyanString("Example: "))
