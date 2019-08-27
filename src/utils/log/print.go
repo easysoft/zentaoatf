@@ -27,6 +27,7 @@ func PrintUsage() {
 		`
  $>atf.exe run -f scripts-demo/tc-01.bat             执行本项目自带的测试用，非windows系统使用tc-01.sh脚本
 
+ $>atf.exe co                                        交互式导出测试用例，将提示用户输入导出类型和编号。
  $>atf.exe co -p 1 -l python                         从禅道导出编号为1的产品测试用例，使用python语言。
  $>atf.exe co -p 1 -m 16 -l python                   从禅道导出产品编号为1、模块编号为16的测试用例。
  $>atf.exe co -s 1 -l python                         从禅道导出编号为1的套件所含测试用例。
