@@ -10,7 +10,6 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
-	"path"
 	"path/filepath"
 	"strconv"
 )
@@ -43,10 +42,6 @@ func Run(files []string, suite string, task string, result string) {
 		fileUtils.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
 	} else { // find cases in current dir
 		for _, file := range files {
-			if !path.IsAbs(file) {
-				file, _ = filepath.Abs(file)
-			}
-
 			fileUtils.GetAllScriptsInDir(file, &cases)
 		}
 	}

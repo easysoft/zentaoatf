@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -53,6 +54,11 @@ func FileExist(path string) bool {
 }
 
 func GetAllScriptsInDir(dirPth string, files *[]string) error {
+	dirPth = commonUtils.UpdateDir(dirPth)
+	if !path.IsAbs(dirPth) {
+		dirPth, _ = filepath.Abs(dirPth)
+	}
+
 	sep := string(os.PathSeparator)
 
 	dir, err := ioutil.ReadDir(dirPth)
@@ -75,10 +81,15 @@ func GetAllScriptsInDir(dirPth string, files *[]string) error {
 	return nil
 }
 
-func GetScriptByIdsInDir(dir string, idMap map[int]string, files *[]string) error {
+func GetScriptByIdsInDir(dirPth string, idMap map[int]string, files *[]string) error {
+	dirPth = commonUtils.UpdateDir(dirPth)
+	if !path.IsAbs(dirPth) {
+		dirPth, _ = filepath.Abs(dirPth)
+	}
+
 	sep := string(os.PathSeparator)
 
-	dir, err := ioutil.ReadDir(dir)
+	dir, err := ioutil.ReadDir(dirPth)
 	if err != nil {
 		return err
 	}
@@ -86,9 +97,9 @@ func GetScriptByIdsInDir(dir string, idMap map[int]string, files *[]string) erro
 	for _, fi := range dir {
 		name := fi.Name()
 		if fi.IsDir() { // 目录, 递归遍历
-			GetAllScriptsInDir(dir+name+sep, files)
+			GetAllScriptsInDir(dirPth+name+sep, files)
 		} else {
-			path := dir + name
+			path := dirPth + name
 			if CheckFileIsScript(path) {
 				*files = append(*files, path)
 			}
