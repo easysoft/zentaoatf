@@ -21,7 +21,7 @@ func Print(report model.TestReport) {
 
 	logs := make([]string, 0)
 
-	logUtils.PrintAndLog(&logs, i118Utils.I118Prt.Sprintf("run_scripts", report.Path, report.Env))
+	logUtils.PrintAndLog(&logs, i118Utils.I118Prt.Sprintf("run_scripts", vari.WorkDir, report.Env))
 
 	logUtils.PrintAndLog(&logs, i118Utils.I118Prt.Sprintf("time_from_to",
 		startSec.Format("2006-01-02 15:04:05"), endSec.Format("2006-01-02 15:04:05"), report.Duration))
@@ -32,11 +32,11 @@ func Print(report model.TestReport) {
 	logUtils.PrintAndLogColorLn(&logs, fmt.Sprintf("  %s: %d", i118Utils.I118Prt.Sprintf("skip"), report.Skip), color.FgYellow)
 
 	for _, cs := range report.Cases {
-		str := "\n %s %d-%d: %s"
+		str := "\n %s %d: %s"
 		status := cs.Status
 		statusColor := logUtils.ColoredStatus(status)
 
-		logs = append(logs, fmt.Sprintf(str, status, cs.Id, cs.IdInTask, cs.Path))
+		logs = append(logs, fmt.Sprintf(str, status, cs.Id, cs.Path))
 		logUtils.Printt(fmt.Sprintf(str+"\n", statusColor, cs.Id, cs.IdInTask, cs.Path))
 
 		if len(cs.Steps) > 0 {

@@ -91,8 +91,7 @@ type Bug struct {
 }
 
 type TestReport struct {
-	Path string
-	Env  string
+	Env string
 
 	Pass      int
 	Fail      int
@@ -107,6 +106,7 @@ type TestReport struct {
 type CaseLog struct {
 	Id             int
 	IdInTask       int
+	ProductId      int
 	TaskId         int
 	ZentaoResultId int
 	Path           string

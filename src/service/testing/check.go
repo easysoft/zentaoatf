@@ -32,7 +32,7 @@ func CheckResults(files []string, report *model.TestReport) {
 func ValidateCaseResult(scriptFile string, langType string,
 	checkpointStepArr []string, expectArr [][]string, skip bool, actualArr [][]string, report *model.TestReport) {
 
-	caseId, caseIdInTask, taskId, title := zentaoUtils.GetCaseIds(scriptFile)
+	caseId, productId, title := zentaoUtils.GetCaseIds(scriptFile)
 
 	stepLogs := make([]model.StepLog, 0)
 	caseResult := constant.PASS.String()
@@ -79,7 +79,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 	}
 	report.Total = report.Total + 1
 
-	cs := model.CaseLog{Id: caseId, IdInTask: caseIdInTask, TaskId: taskId, Title: title,
+	cs := model.CaseLog{Id: caseId, ProductId: productId, Title: title,
 		Path: scriptFile, Status: caseResult, Steps: stepLogs}
 	report.Cases = append(report.Cases, cs)
 }

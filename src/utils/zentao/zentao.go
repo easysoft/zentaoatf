@@ -66,12 +66,12 @@ func IsBugFieldDefault(optName string, options []model.Option) bool {
 }
 
 func ScriptToLogName(file string) string {
-	logDir := constant.LogDir + vari.RunDir
+	logDir := vari.WorkDir + constant.LogDir
 	fileUtils.MkDirIfNeeded(logDir)
 
 	nameWithSuffix := commonUtils.Base(file)
 
-	logFile := logDir + nameWithSuffix + ".log"
+	logFile := logDir + vari.RunDir + nameWithSuffix + ".log"
 
 	return logFile
 }
@@ -83,27 +83,17 @@ func ScriptToExpectName(file string) string {
 	return expectName
 }
 
-func PathToRunName(filePath string) string {
-	if filePath == "" {
-		return vari.RunMode.String() + "-" + dateUtils.DateTimeStrFmt(time.Now(), "2006-01-02T150405") + string(os.PathSeparator)
-	}
-
-	name := commonUtils.Base(filePath)
-
-	ext := path.Ext(filePath)
-	name = strings.Replace(name, ext, "", -1)
-
-	runName := vari.RunMode.String() + "-" + name + "-" + dateUtils.DateTimeStrFmt(time.Now(), "2006-01-02T150405") + string(os.PathSeparator)
+func PathToRunName() string {
+	runName := dateUtils.DateTimeStrFmt(time.Now(), "2006-01-02T150405") + string(os.PathSeparator)
 
 	return runName
 }
 
-func GetCaseIds(file string) (int, int, int, string) {
+func GetCaseIds(file string) (int, int, string) {
 	content := fileUtils.ReadFile(file)
 
 	var caseId int
-	var caseIdInTask int
-	var taskId int
+	var productId int
 	var title string
 
 	myExp := regexp.MustCompile(`[\S\s]*caseId:\s*([^\n]*?)\s*\n`)
@@ -112,16 +102,10 @@ func GetCaseIds(file string) (int, int, int, string) {
 		caseId, _ = strconv.Atoi(arr[1])
 	}
 
-	myExp = regexp.MustCompile(`[\S\s]*caseIdInTask:\s*([^\n]*?)\s*\n`)
+	myExp = regexp.MustCompile(`[\S\s]*productId:\s*([^\n]*?)\s*\n`)
 	arr = myExp.FindStringSubmatch(content)
 	if len(arr) > 1 {
-		caseIdInTask, _ = strconv.Atoi(arr[1])
-	}
-
-	myExp = regexp.MustCompile(`[\S\s]*taskId:\s*([^\n]*?)\s*\n`)
-	arr = myExp.FindStringSubmatch(content)
-	if len(arr) > 1 {
-		taskId, _ = strconv.Atoi(arr[1])
+		productId, _ = strconv.Atoi(arr[1])
 	}
 
 	myExp = regexp.MustCompile(`[\S\s]*title:\s*([^\n]*?)\s*\n`)
@@ -130,7 +114,7 @@ func GetCaseIds(file string) (int, int, int, string) {
 		title = arr[1]
 	}
 
-	return caseId, caseIdInTask, taskId, title
+	return caseId, productId, title
 }
 
 func ReadExpect(file string) [][]string {

@@ -12,6 +12,7 @@ var (
 	MainViewHeight int
 
 	RunMode    constant.RunMode
+	WorkDir    string
 	RunDir     string
 	RunFromCui bool
 
@@ -24,7 +25,6 @@ var (
 	CurrResultDate string // 2019-08-15T173802
 	CurrCaseId     int    // 2019-08-15T173802
 
-	ReportDir       string
 	ScreenWidth     int
 	ZentaoBugFileds model.ZentaoBugFileds
 )

@@ -7,6 +7,7 @@ import (
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/file"
+	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"io/ioutil"
 	"os"
 	"path"
@@ -76,8 +77,14 @@ func GetLogFolder(mode string, name string, date string) string {
 
 func GetAllScriptsInDir(filePth string, files *[]string) error {
 	if !fileUtils.IsDir(filePth) {
-		if CheckFileIsScript(filePth) {
-			*files = append(*files, filePth)
+		pass := CheckFileIsScript(filePth)
+
+		if pass {
+			id, _, _ := zentaoUtils.GetCaseIds(filePth)
+
+			if id > 0 {
+				*files = append(*files, filePth)
+			}
 		}
 
 		return nil
@@ -170,6 +177,7 @@ func CheckFileIsScript(path string) bool {
 	content := fileUtils.ReadFile(path)
 
 	pass, _ := regexp.MatchString("<<<TC", content)
+
 	return pass
 }
 

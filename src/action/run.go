@@ -6,11 +6,12 @@ import (
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	"github.com/easysoft/zentaoatf/src/utils/common"
+	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
+	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/fatih/color"
-	"path/filepath"
 	"strconv"
 )
 
@@ -18,7 +19,8 @@ func Run(files []string, suite string, task string, result string) {
 	caseIdMap := map[int]string{}
 	cases := make([]string, 0)
 
-	vari.RunDir, _ = filepath.Abs("")
+	vari.WorkDir = fileUtils.AbosutePath(".")
+	vari.RunDir = zentaoUtils.PathToRunName()
 
 	if suite != "" {
 		suiteId, err := strconv.Atoi(suite)
@@ -51,7 +53,7 @@ func Run(files []string, suite string, task string, result string) {
 		return
 	}
 
-	var report = model.TestReport{Path: vari.ReportDir, Env: commonUtils.GetOs(),
+	var report = model.TestReport{Env: commonUtils.GetOs(),
 		Pass: 0, Fail: 0, Total: 0, Cases: make([]model.CaseLog, 0)}
 
 	testingService.ExeScripts(cases, &report)
