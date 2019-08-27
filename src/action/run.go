@@ -3,42 +3,52 @@ package action
 import (
 	"github.com/easysoft/zentaoatf/src/model"
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
+	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	"github.com/easysoft/zentaoatf/src/utils/common"
-	"github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
-	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/fatih/color"
-	"strings"
+	"path"
+	"path/filepath"
+	"strconv"
 )
 
-func Run(dir string, fileNames []string) {
-	dir = commonUtils.UpdateDir(dir)
+func Run(files []string, suite string, task string, result string) {
+	caseIdMap := map[int]string{}
+	cases := make([]string, 0)
 
-	var files []string
+	vari.RunDir, _ = filepath.Abs("")
 
-	if fileNames != nil && len(fileNames) > 0 { // pass a list, cui always
-		if len(fileNames) == 1 {
-			if strings.Index(fileNames[0], ".suite") > -1 {
-				vari.RunMode = constant.RunModeSuite
-			} else {
-				vari.RunMode = constant.RunModeScript
-			}
-			vari.RunDir = zentaoUtils.PathToRunName(fileNames[0])
-		} else {
-			vari.RunMode = constant.RunModeBatch
-			vari.RunDir = zentaoUtils.PathToRunName("")
+	if suite != "" {
+		suiteId, err := strconv.Atoi(suite)
+		if err == nil && suiteId > 0 { // load cases from remote by suite id
+			zentaoService.GetCaseIdsBySuite(suiteId, &caseIdMap)
+		} else { // load cases in suite file
+			fileUtils.GetCaseIdsInSuiteFile(suite, &caseIdMap)
 		}
 
-		files, _ = fileUtils.GetSpecifiedFilesInWorkDir(fileNames)
+		fileUtils.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
+	} else if task != "" { // load cases from remote by task id
+		taskId, err := strconv.Atoi(suite)
+		if err == nil {
+			zentaoService.GetCaseIdsByTask(taskId, &caseIdMap)
+		}
 
-	} else { // give a dir
-		fileUtils.GetAllFilesInDir(dir, &files)
+		fileUtils.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
+	} else if result != "" { // load cases result file
+		fileUtils.GetFailedCasesFromTestResult(result, &caseIdMap)
 
-		vari.RunMode = constant.RunModeDir
-		vari.RunDir = zentaoUtils.PathToRunName(dir)
+		fileUtils.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
+	} else { // find cases in current dir
+		for _, file := range files {
+			if !path.IsAbs(file) {
+				file, _ = filepath.Abs(file)
+			}
+
+			fileUtils.GetAllScriptsInDir(file, &cases)
+		}
 	}
 
 	if len(files) < 1 {

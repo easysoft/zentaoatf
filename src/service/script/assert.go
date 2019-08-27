@@ -18,8 +18,8 @@ func LoadAssetFiles() ([]string, []string) {
 	caseFiles := make([]string, 0)
 	suitesFiles := make([]string, 0)
 
-	fileUtils.GetAllFilesInDir(constant.ScriptDir, &caseFiles)
-	fileUtils.GetAllFilesInDir(constant.ScriptDir, &suitesFiles)
+	fileUtils.GetAllScriptsInDir(constant.ScriptDir, &caseFiles)
+	fileUtils.GetAllScriptsInDir(constant.ScriptDir, &suitesFiles)
 
 	return caseFiles, suitesFiles
 }

@@ -5,30 +5,31 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/service/client"
+	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"sort"
 	"strconv"
 )
 
-func LoadTestCases(url string, account string, password string,
-	productId string, moduleId string, suiteId string, taskId string) []model.TestCase {
+func LoadTestCases(productId string, moduleId string, suiteId string, taskId string) []model.TestCase {
+	config := configUtils.ReadCurrConfig()
 
 	var testcases []model.TestCase
 
-	ok := Login(url, account, password)
+	ok := Login(config.Url, config.Account, config.Password)
 	if !ok {
 		return testcases
 	}
 
 	if moduleId != "" {
-		testcases = ListCaseByModule(url, productId, moduleId)
+		testcases = ListCaseByModule(config.Url, productId, moduleId)
 	} else if suiteId != "" {
-		testcases = ListCaseBySuite(url, suiteId)
+		testcases = ListCaseBySuite(config.Url, suiteId)
 	} else if taskId != "" {
-		testcases = ListCaseByTask(url, taskId)
+		testcases = ListCaseByTask(config.Url, taskId)
 	} else if productId != "" {
-		testcases = ListCaseByProduct(url, productId)
+		testcases = ListCaseByProduct(config.Url, productId)
 	} else {
 		logUtils.PrintUsage()
 	}
@@ -169,4 +170,22 @@ func GetCaseById(baseUrl string, caseId string) model.TestCase {
 	}
 
 	return model.TestCase{}
+}
+
+func GetCaseIdsBySuite(suiteId int, idMap *map[int]string) {
+	config := configUtils.ReadCurrConfig()
+
+	ok := Login(config.Url, config.Account, config.Password)
+	if !ok {
+		return
+	}
+}
+
+func GetCaseIdsByTask(taskId int, idMap *map[int]string) {
+	config := configUtils.ReadCurrConfig()
+
+	ok := Login(config.Url, config.Account, config.Password)
+	if !ok {
+		return
+	}
 }

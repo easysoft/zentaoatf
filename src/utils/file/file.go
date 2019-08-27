@@ -9,6 +9,7 @@ import (
 	"os"
 	"path"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -51,7 +52,7 @@ func FileExist(path string) bool {
 	return exist
 }
 
-func GetAllFilesInDir(dirPth string, files *[]string) error {
+func GetAllScriptsInDir(dirPth string, files *[]string) error {
 	sep := string(os.PathSeparator)
 
 	dir, err := ioutil.ReadDir(dirPth)
@@ -62,7 +63,7 @@ func GetAllFilesInDir(dirPth string, files *[]string) error {
 	for _, fi := range dir {
 		name := fi.Name()
 		if fi.IsDir() { // 目录, 递归遍历
-			GetAllFilesInDir(dirPth+name+sep, files)
+			GetAllScriptsInDir(dirPth+name+sep, files)
 		} else {
 			path := dirPth + name
 			if CheckFileIsScript(path) {
@@ -74,35 +75,72 @@ func GetAllFilesInDir(dirPth string, files *[]string) error {
 	return nil
 }
 
-func GetSpecifiedFilesInWorkDir(fileNames []string) (files []string, err error) {
-	ret := make([]string, 0)
+func GetScriptByIdsInDir(dir string, idMap map[int]string, files *[]string) error {
+	sep := string(os.PathSeparator)
 
-	for _, file := range fileNames {
-		if !FileExist(file) {
-			continue
-		}
+	dir, err := ioutil.ReadDir(dir)
+	if err != nil {
+		return err
+	}
 
-		if path.Ext(file) == "."+constant.ExtNameSuite {
-			fileList := make([]string, 0)
-			GetSuiteFiles(file, &fileList)
-
-			for _, f := range fileList {
-				ret = append(ret, f)
-			}
+	for _, fi := range dir {
+		name := fi.Name()
+		if fi.IsDir() { // 目录, 递归遍历
+			GetAllScriptsInDir(dir+name+sep, files)
 		} else {
-			ret = append(ret, file)
+			path := dir + name
+			if CheckFileIsScript(path) {
+				*files = append(*files, path)
+			}
 		}
 	}
 
-	return ret, nil
+	return nil
 }
 
-func GetFailedFilesFromTestResult(resultFile string) ([]string, string) {
-	ret := make([]string, 0)
-	dir := ""
+//func GetSpecifiedFilesInWorkDir(fileNames []string) (files []string, err error) {
+//	ret := make([]string, 0)
+//
+//	for _, file := range fileNames {
+//		if !FileExist(file) {
+//			continue
+//		}
+//
+//		if path.Ext(file) == "."+constant.ExtNameSuite {
+//			fileList := make([]string, 0)
+//			GetCaseIdsInSuiteFile(file, &fileList)
+//
+//			for _, f := range fileList {
+//				ret = append(ret, f)
+//			}
+//		} else {
+//			ret = append(ret, file)
+//		}
+//	}
+//
+//	return ret, nil
+//}
+
+func GetCaseIdsInSuiteFile(name string, fileIdMap *map[int]string) {
+	content := ReadFile(name)
+
+	for _, line := range strings.Split(content, "\n") {
+		idStr := strings.TrimSpace(line)
+		if idStr == "" {
+			continue
+		}
+
+		id, err := strconv.Atoi(idStr)
+		if err == nil {
+			(*fileIdMap)[id] = ""
+		}
+	}
+}
+
+func GetFailedCasesFromTestResult(resultFile string, fileIdMap *map[int]string) {
 	extName := path.Ext(resultFile)
 
-	if extName == "."+constant.ExtNameTxt {
+	if extName == "."+constant.ExtNameTxt { // txt format
 		resultFile = strings.Replace(resultFile, extName, "."+constant.ExtNameJson, -1)
 	}
 
@@ -113,29 +151,7 @@ func GetFailedFilesFromTestResult(resultFile string) ([]string, string) {
 
 	for _, cs := range report.Cases {
 		if cs.Status != constant.PASS.String() {
-			ret = append(ret, cs.Path)
-		}
-		if dir == "" {
-			dir = path.Dir(cs.Path)
-		}
-	}
-
-	return ret, dir
-}
-
-func GetSuiteFiles(name string, fileList *[]string) {
-	content := ReadFile(name)
-
-	for _, line := range strings.Split(content, "\n") {
-		file := strings.TrimSpace(line)
-		if file == "" {
-			return
-		}
-
-		if path.Ext(file) == "."+constant.ExtNameSuite {
-			GetSuiteFiles(file, fileList)
-		} else {
-			*fileList = append(*fileList, file)
+			(*fileIdMap)[cs.Id] = ""
 		}
 	}
 }
@@ -151,4 +167,12 @@ func MkDirIfNeeded(dir string) {
 	if !FileExist(dir) {
 		os.MkdirAll(dir, os.ModePerm)
 	}
+}
+
+func IsDir(f string) bool {
+	fi, e := os.Stat(f)
+	if e != nil {
+		return false
+	}
+	return fi.IsDir()
 }

@@ -33,9 +33,7 @@ func GenerateScript(productId string, moduleId string, suiteId string, taskId st
 		configUtils.ConfigForCheckout()
 	}
 
-	config = configUtils.ReadCurrConfig()
-
-	cases := zentaoService.LoadTestCases(config.Url, config.Account, config.Password, productId, moduleId, suiteId, taskId)
+	cases := zentaoService.LoadTestCases(productId, moduleId, suiteId, taskId)
 
 	if cases != nil {
 		count, err := scriptService.Generate(cases, scriptLang, independentFile)
