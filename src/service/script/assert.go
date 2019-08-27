@@ -74,12 +74,19 @@ func GetLogFolder(mode string, name string, date string) string {
 	return fmt.Sprintf("%s-%s-%s", mode, name, date)
 }
 
-func GetAllScriptsInDir(dirPth string, files *[]string) error {
-	dirPth = fileUtils.AbosutePath(dirPth)
+func GetAllScriptsInDir(filePth string, files *[]string) error {
+	if !fileUtils.IsDir(filePth) {
+		if CheckFileIsScript(filePth) {
+			*files = append(*files, filePth)
+		}
 
+		return nil
+	}
+
+	filePth = fileUtils.AbosutePath(filePth)
 	sep := string(os.PathSeparator)
 
-	dir, err := ioutil.ReadDir(dirPth)
+	dir, err := ioutil.ReadDir(filePth)
 	if err != nil {
 		return err
 	}
@@ -87,9 +94,9 @@ func GetAllScriptsInDir(dirPth string, files *[]string) error {
 	for _, fi := range dir {
 		name := fi.Name()
 		if fi.IsDir() { // 目录, 递归遍历
-			GetAllScriptsInDir(dirPth+name+sep, files)
+			GetAllScriptsInDir(filePth+name+sep, files)
 		} else {
-			path := dirPth + name
+			path := filePth + name
 			if CheckFileIsScript(path) {
 				*files = append(*files, path)
 			}
