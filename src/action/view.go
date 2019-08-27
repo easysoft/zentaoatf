@@ -1,9 +1,13 @@
 package action
 
-import (
-	"github.com/easysoft/zentaoatf/src/service/script"
-)
+import scriptService "github.com/easysoft/zentaoatf/src/service/script"
 
-func View(dir string, files []string, langType string) {
-	scriptService.View(dir, files, langType)
+func View(files []string, keywords string) {
+	cases := make([]string, 0)
+
+	for _, file := range files {
+		scriptService.GetAllScriptsInDir(file, &cases)
+	}
+
+	scriptService.View(cases, keywords)
 }

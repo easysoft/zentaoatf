@@ -6,20 +6,18 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/fatih/color"
 	"regexp"
+	"strings"
 )
 
-func List(dir string, langType string) {
-	files := make([]string, 0)
-	GetAllScriptsInDir(dir, &files)
+func List(cases []string, keywords string) {
+	fmt.Printf("Totally %d test cases \n", len(cases))
 
-	fmt.Printf("Totally %d test cases \n", len(files))
-
-	for idx, file := range files {
-		Summary(file, idx)
+	for idx, tc := range cases {
+		Summary(tc, idx, keywords)
 	}
 }
 
-func Summary(file string, inx int) {
+func Summary(file string, inx int, keywords string) {
 	content := fileUtils.ReadFile(file)
 
 	myExp := regexp.MustCompile(`<<<TC[\S\s]*caseId:([^\n]*)(?:[\S\s]+?)\n+title:([^\n]*)\n`)
@@ -29,74 +27,64 @@ func Summary(file string, inx int) {
 		caseId := commonUtils.RemoveBlankLine(arr[1])
 		title := commonUtils.RemoveBlankLine(arr[2])
 
-		fmt.Printf("%d %s %s \n", inx+1, color.CyanString("tc-%s", caseId), title)
-	}
-}
-
-func View(dir string, fileNames []string, langType string) {
-	files := make([]string, 0)
-	if fileNames != nil && len(fileNames) > 0 {
-		files, _ = GetSpecifiedFilesInWorkDir(fileNames)
-	} else {
-		GetAllScriptsInDir(dir, &files)
-	}
-
-	for _, file := range files {
-		if fileNames != nil && len(fileNames) > 0 {
-			Detail(file)
-		} else {
-			Brief(file)
+		if strings.Index(title, keywords) > -1 {
+			fmt.Printf("%s %s \n", color.CyanString("%s", caseId), title)
 		}
-
 	}
-
 }
 
-func Brief(file string) {
+func View(cases []string, keywords string) {
+	for _, file := range cases {
+		Brief(file, keywords)
+		//Detail(file)
+	}
+}
+
+func Brief(file string, keywords string) {
 	content := fileUtils.ReadFile(file)
 
 	myExp := regexp.MustCompile(
 		`<<<TC[\S\s]*` +
 			`caseId:([^\n]*)\n+` +
-			`caseIdInTask:([^\n]*)\n+` +
-			`taskId:([^\n]*)\n+` +
+			`productId:([^\n]*)\n+` +
 			`title:([^\n]*)\n+` +
-			`steps:([\S\s]*)\n` +
-			`expects:([\S\s]*?)\n+` +
+			`steps:.*\n([\S\s]*)\n` +
+			`expects:.*\n([\S\s]*?)\n` +
 			`(readme:|TC)`)
 	arr := myExp.FindStringSubmatch(content)
 
 	if len(arr) > 2 {
 		caseId := commonUtils.RemoveBlankLine(arr[1])
-		//caseIdInTask := commonUtils.RemoveBlankLine(arr[2])
-		//taskId := commonUtils.RemoveBlankLine(arr[3])
+		_ = commonUtils.RemoveBlankLine(arr[2])
 
-		title := commonUtils.RemoveBlankLine(arr[4])
-		steps := commonUtils.RemoveBlankLine(arr[5])
-		expects := commonUtils.RemoveBlankLine(arr[6])
+		title := commonUtils.RemoveBlankLine(arr[3])
+		steps := arr[4]
+		expects := commonUtils.RemoveBlankLine(arr[5])
 
-		color.Cyan("\n%s %s \n", caseId, title)
-		fmt.Printf("Steps: \n%s \n\n", steps)
-		fmt.Printf("Expect Results: \n%s\n", expects)
+		if strings.Index(title, keywords) > -1 {
+			color.Cyan("\n%s %s \n", caseId, title)
+			fmt.Printf("Steps: \n%s \n", steps)
+			fmt.Printf("Expects: \n%s\n", expects)
+		}
 	}
 }
 
-func Detail(file string) {
-	content := fileUtils.ReadFile(file)
-
-	myExp := regexp.MustCompile(
-		`<<<TC[\S\s]*` +
-			`caseId:([^\n]*)\n+` +
-			`caseIdInTask:([^\n]*)\n+` +
-			`taskId:([^\n]*)\n+` +
-			`title:([^\n]*)\n+`)
-	arr := myExp.FindStringSubmatch(content)
-
-	if len(arr) > 2 {
-		caseId := commonUtils.RemoveBlankLine(arr[1])
-		title := commonUtils.RemoveBlankLine(arr[4])
-
-		color.Cyan("\n%s %s \n", caseId, title)
-		fmt.Printf("%s\n", content)
-	}
-}
+//func Detail(file string) {
+//	content := fileUtils.ReadFile(file)
+//
+//	myExp := regexp.MustCompile(
+//		`<<<TC[\S\s]*` +
+//			`caseId:([^\n]*)\n+` +
+//			`caseIdInTask:([^\n]*)\n+` +
+//			`taskId:([^\n]*)\n+` +
+//			`title:([^\n]*)\n+`)
+//	arr := myExp.FindStringSubmatch(content)
+//
+//	if len(arr) > 2 {
+//		caseId := commonUtils.RemoveBlankLine(arr[1])
+//		title := commonUtils.RemoveBlankLine(arr[4])
+//
+//		color.Cyan("\n%s %s \n", caseId, title)
+//		fmt.Printf("%s\n", content)
+//	}
+//}

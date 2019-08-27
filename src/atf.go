@@ -13,9 +13,8 @@ import (
 func main() {
 	var language string
 	var independentFile bool
+	var keywords string
 
-	//var dir string
-	//var files []string
 	var productId string
 	var moduleId string
 	var task string
@@ -24,11 +23,7 @@ func main() {
 
 	flagSet := flag.NewFlagSet("atf", flag.ContinueOnError)
 
-	//flagSet.Var(commonUtils.NewSliceValue([]string{}, &files), "f", "")
 	//flagSet.Var(commonUtils.NewSliceValue([]string{}, &files), "file", "")
-
-	//flagSet.StringVar(&dir, "d", "", "")
-	//flagSet.StringVar(&dir, "dir", "", "")
 
 	flagSet.StringVar(&productId, "p", "", "")
 	flagSet.StringVar(&productId, "product", "", "")
@@ -50,6 +45,9 @@ func main() {
 
 	flagSet.BoolVar(&independentFile, "i", false, "")
 	flagSet.BoolVar(&independentFile, "independent", false, "")
+
+	flagSet.StringVar(&keywords, "k", "", "")
+	flagSet.StringVar(&keywords, "keywords", "", "")
 
 	switch os.Args[1] {
 	case "run":
@@ -78,9 +76,22 @@ func main() {
 
 	case "ci":
 
+	case "ls":
+		files, idx := commonUtils.GetFilesFromParams(os.Args[2:])
+		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
+			action.List(files, keywords)
+		}
 	case "list":
+		files, idx := commonUtils.GetFilesFromParams(os.Args[2:])
+		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
+			action.List(files, keywords)
+		}
 
 	case "view":
+		files, idx := commonUtils.GetFilesFromParams(os.Args[2:])
+		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
+			action.View(files, keywords)
+		}
 
 	case "set":
 		configUtils.ConfigForSet()
@@ -90,7 +101,6 @@ func main() {
 
 	default:
 		logUtils.PrintUsage()
-		os.Exit(1)
 	}
 }
 
