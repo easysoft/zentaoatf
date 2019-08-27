@@ -1,3 +1,3 @@
 - Print '#' in test log to match up with the ones in expects section
 - Write test scripts to replace the lines begin with 'CODE'
-- More examples, pls refer to https://github.com/easysoft/zentaoatf/tree/master/xdoc/sample
+- Pls refer to https://github.com/easysoft/zentaoatf/scripts-demo

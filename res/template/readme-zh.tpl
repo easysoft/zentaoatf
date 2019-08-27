@@ -1,3 +1,3 @@
 - 日志中的验证点，必须和expects章节中#号标注的验证点需保持一致对应
 - 脚本中CODE打头的注释需用代码替换
-- 参考样例https://github.com/easysoft/zentaoatf/tree/master/xdoc/sample
+- 参考样例https://github.com/easysoft/zentaoatf/scripts-demo

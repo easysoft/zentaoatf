@@ -64,11 +64,11 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 		return
 	}
 
-	temp := fmt.Sprintf("\n%sCODE: %s\n", LangMap[langType]["commentsTag"],
+	temp := fmt.Sprintf("\n%sCODE: %s", LangMap[langType]["commentsTag"],
 		i118Utils.I118Prt.Sprintf("your_codes_here"))
 	srcCode = append(srcCode, temp)
 
-	readme := zentaoUtils.ReadResData("res/template/readme-"+vari.Config.Language+".tpl") + "\n"
+	readme := zentaoUtils.ReadResData("res/template/readme-" + vari.Config.Language + ".tpl")
 
 	var expectsTxt string
 	if !independentFile {
@@ -146,7 +146,7 @@ func GenerateTestStepScript(ts model.TestStep, langType string, stepWidth int,
 
 		codeLine += fmt.Sprintf("  %s %s: %s\n", LangMap[langType]["commentsTag"], stepIdent, stepExpect)
 
-		codeLine += LangMap[langType]["commentsTag"] + "CODE: " + i118Utils.I118Prt.Sprintf("actual_result_here") + "\n"
+		codeLine += LangMap[langType]["commentsTag"] + "CODE: " + i118Utils.I118Prt.Sprintf("actual_result_here")
 
 		*srcCode = append(*srcCode, codeLine)
 	}
