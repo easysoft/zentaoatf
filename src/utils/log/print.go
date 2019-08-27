@@ -10,11 +10,21 @@ import (
 )
 
 func PrintUsage() {
-	fmt.Println(color.CyanString("\nUsage: "))
-	fmt.Fprintf(color.Output, "\n%s\n", "TODO:")
+	usage :=
+		`
+ help                 查看使用帮助。
+ set                  全局设置语言、禅道站点连接参数。
+ co      checkout     导出禅道系统中的用例，已存在的将更新标题和步骤描述。可指定产品、套件、测试单编号。
+ up      update       从禅道系统更新已存在的用例。可指定产品、套件、测试单编号。
+ run                  执行测试用例。可指定要目录、套件、任务、结果或脚本的路径，多个参数之间用空格隔开。
+ ci      commit       将执行结果提交到禅道系统中。可指定测试日志目录，会弹出命令行图形界面。
+ bug                  将执行结果中的失败用例，作为缺陷提交到餐到系统。可指定测试日志目录和用例编号，弹出命令行图形界面。
+ ls      list         查看测试用例列表。可指定目录或文件列表。
+ view                 查看测试用例详情。可指定目录或文件列表。
+`
 
-	fmt.Println(color.CyanString("\nExample: "))
-	fmt.Fprintf(color.Output, "\n%s\n", "TODO:")
+	fmt.Println(color.CyanString("\nUsage: "))
+	fmt.Fprintf(color.Output, "%s\n", usage)
 }
 
 func PrintToSide(msg string) {
