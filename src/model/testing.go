@@ -104,14 +104,14 @@ type TestReport struct {
 	Cases []CaseLog
 }
 type CaseLog struct {
-	Id             int
-	IdInTask       int
-	ProductId      int
-	TaskId         int
-	ZentaoResultId int
-	Path           string
-	Status         string
-	Title          string
+	Id        int
+	IdInTask  int
+	ProductId int
+	TaskId    int
+	//ZentaoResultId int
+	Path   string
+	Status string
+	Title  string
 
 	Steps []StepLog
 }

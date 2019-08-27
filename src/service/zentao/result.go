@@ -1,7 +1,6 @@
 package zentaoService
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/bitly/go-simplejson"
 	"github.com/easysoft/zentaoatf/src/service/client"
@@ -20,7 +19,7 @@ func SubmitResult() {
 
 	report := testingService.GetTestTestReportForSubmit(vari.CurrScriptFile, vari.CurrResultDate)
 
-	for idx, cs := range report.Cases {
+	for _, cs := range report.Cases {
 		id := cs.Id
 		idInTask := cs.IdInTask
 
@@ -53,14 +52,14 @@ func SubmitResult() {
 		_, ok := client.PostObject(url, requestObj)
 		if ok {
 			resultId := GetLastResult("conf.Url", idInTask, id)
-			report.Cases[idx].ZentaoResultId = resultId
-
-			json, _ := json.Marshal(report)
-			testingService.SaveTestTestReportAfterSubmit(vari.CurrScriptFile, vari.CurrResultDate, string(json))
+			//report.Cases[idx].ZentaoResultId = resultId
 
 			logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("success_to_submit_result", id, resultId) + "\n")
 		}
 	}
+
+	//json, _ := json.Marshal(report)
+	//testingService.SaveTestTestReportAfterSubmit(vari.CurrScriptFile, vari.CurrResultDate, string(json))
 }
 
 func GetLastResult(baseUrl string, caseInTaskId int, caseId int) int {
