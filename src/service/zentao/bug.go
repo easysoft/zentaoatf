@@ -35,7 +35,7 @@ func GenBug() (model.Bug, string, string) {
 		product := productId
 		project := projectId
 		caseId := cs.Id
-		Result := cs.ZentaoResultId
+		//Result := cs.ZentaoResultId
 		taskId := cs.TaskId
 
 		uid := uuid.NewV4().String()
@@ -58,7 +58,8 @@ func GenBug() (model.Bug, string, string) {
 		bug := model.Bug{Title: title,
 			Module: module, Type: typ, OpenedBuild: openedBuild, Severity: severity, Pri: priority,
 			Product: strconv.Itoa(product), Project: strconv.Itoa(project), Case: strconv.Itoa(caseId),
-			Result: strconv.Itoa(Result), Testtask: strconv.Itoa(taskId), Steps: strings.Join(steps, "<br/>"),
+			//Result: strconv.Itoa(Result),
+			Testtask: strconv.Itoa(taskId), Steps: strings.Join(steps, "<br/>"),
 			Uid: uid, CaseVersion: caseVersion, OldTaskID: oldTaskID,
 		}
 		return bug, idInTask, stepIds

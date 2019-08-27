@@ -86,6 +86,7 @@ func main() {
 		configUtils.ConfigForSet()
 
 	case "help":
+		logUtils.PrintUsage()
 
 	default:
 		logUtils.PrintUsage()

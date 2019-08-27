@@ -13,7 +13,7 @@ var (
 	UrlSubmitResult   = "submitResults"
 	UrlReportBug      = "reportBug"
 
-	ExtNameSuite = "suite"
+	ExtNameSuite = "cs"
 	ExtNameJson  = "json"
 	ExtNameTxt   = "txt"
 

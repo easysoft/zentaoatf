@@ -10,10 +10,11 @@ import (
 )
 
 func PrintUsage() {
-	fmt.Fprintf(color.Output, "\n %s \n", "TODO:")
+	fmt.Println(color.CyanString("\nUsage: "))
+	fmt.Fprintf(color.Output, "\n%s\n", "TODO:")
 
-	fmt.Printf("\nSample to use: \n")
-	fmt.Printf("TODO: \n")
+	fmt.Println(color.CyanString("\nExample: "))
+	fmt.Fprintf(color.Output, "\n%s\n", "TODO:")
 }
 
 func PrintToSide(msg string) {
