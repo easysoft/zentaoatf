@@ -126,11 +126,19 @@ func GetScriptByIdsInDir(dirPth string, idMap map[int]string, files *[]string) e
 	for _, fi := range dir {
 		name := fi.Name()
 		if fi.IsDir() { // 目录, 递归遍历
-			GetAllScriptsInDir(dirPth+name+sep, files)
+			GetScriptByIdsInDir(dirPth+name+sep, idMap, files)
 		} else {
 			path := dirPth + name
 			if CheckFileIsScript(path) {
-				*files = append(*files, path)
+				id, _, _ := zentaoUtils.GetCaseIds(path)
+
+				if id > 0 {
+					_, ok := idMap[id]
+
+					if ok {
+						*files = append(*files, path)
+					}
+				}
 			}
 		}
 	}
