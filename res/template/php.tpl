@@ -1,5 +1,7 @@
 <?php
+/*
 <<<TC
+
 caseId:         %s
 productId:      %s
 title:          %s
@@ -11,6 +13,7 @@ readme:
 %s
 
 TC;
+*/
 
 %s
 

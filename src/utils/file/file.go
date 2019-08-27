@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"regexp"
 	"strings"
 )
 
@@ -61,16 +62,11 @@ func GetAllFilesInDir(dirPth string, files *[]string) error {
 	for _, fi := range dir {
 		name := fi.Name()
 		if fi.IsDir() { // 目录, 递归遍历
-			if name == "res" || name == "xdoc" {
-				continue
-			}
-
 			GetAllFilesInDir(dirPth+name+sep, files)
 		} else {
-			// 过滤指定格式
-			ok := true // strings.HasSuffix(name, "."+ext)
-			if ok {
-				*files = append(*files, dirPth+name)
+			path := dirPth + name
+			if CheckFileIsScript(path) {
+				*files = append(*files, path)
 			}
 		}
 	}
@@ -142,6 +138,13 @@ func GetSuiteFiles(name string, fileList *[]string) {
 			*fileList = append(*fileList, file)
 		}
 	}
+}
+
+func CheckFileIsScript(path string) bool {
+	content := ReadFile(path)
+
+	pass, _ := regexp.MatchString("<<<TC", content)
+	return pass
 }
 
 func MkDirIfNeeded(dir string) {

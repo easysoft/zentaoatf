@@ -1,5 +1,7 @@
 #!/usr/bin/env perl
-<<TC;
+=pod
+<<<TC;
+
 caseId:         %s
 productId:      %s
 title:          %s
@@ -10,6 +12,7 @@ expects:
 readme:
 %s
 
-TC
+TC;
+=cut
 
 %s

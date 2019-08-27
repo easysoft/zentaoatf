@@ -69,6 +69,15 @@ func UpdateUrl(url string) string {
 	return url
 }
 
+func UpdateDir(path string) string {
+	sepa := string(os.PathSeparator)
+
+	if strings.LastIndex(path, sepa) < len(path)-1 {
+		path += sepa
+	}
+	return path
+}
+
 // base on "."
 func ConvertWorkDir(p string) string {
 	sepa := string(os.PathSeparator)

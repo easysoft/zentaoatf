@@ -65,15 +65,13 @@ func IsBugFieldDefault(optName string, options []model.Option) bool {
 	return false
 }
 
-func ScriptToLogName(dir string, file string) string {
-	logDir := dir + constant.LogDir + vari.RunDir
+func ScriptToLogName(file string) string {
+	logDir := constant.LogDir + vari.RunDir
 	fileUtils.MkDirIfNeeded(logDir)
 
-	nameSuffix := path.Ext(file)
 	nameWithSuffix := commonUtils.Base(file)
-	name := strings.TrimSuffix(nameWithSuffix, nameSuffix)
 
-	logFile := logDir + name + ".log"
+	logFile := logDir + nameWithSuffix + ".log"
 
 	return logFile
 }
@@ -138,7 +136,7 @@ func GetCaseIds(file string) (int, int, int, string) {
 func ReadExpect(file string) [][]string {
 	content := fileUtils.ReadFile(file)
 
-	myExp := regexp.MustCompile(`<<TC[\S\s]*expects:[^\n]*\n+([\S\s]*?)(readme:|TC)`)
+	myExp := regexp.MustCompile(`<<<TC[\S\s]*expects:[^\n]*\n+([\S\s]*?)(readme:|TC)`)
 	arr := myExp.FindStringSubmatch(content)
 
 	str := ""
@@ -160,7 +158,7 @@ func ReadExpect(file string) [][]string {
 func ReadCheckpointSteps(file string) []string {
 	content := fileUtils.ReadFile(file)
 
-	myExp := regexp.MustCompile(`<<TC[\S\s]*steps:[^\n]*\n*([\S\s]*)\n+expects:`)
+	myExp := regexp.MustCompile(`<<<TC[\S\s]*steps:[^\n]*\n*([\S\s]*)\n+expects:`)
 	arr := myExp.FindStringSubmatch(content)
 
 	str := ""

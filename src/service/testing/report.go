@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-func Print(report model.TestReport, workDir string) {
+func Print(report model.TestReport) {
 	startSec := time.Unix(report.StartTime, 0)
 	endSec := time.Unix(report.EndTime, 0)
 
@@ -78,8 +78,8 @@ func Print(report model.TestReport, workDir string) {
 		}
 	}
 
-	fileUtils.WriteFile(workDir+constant.LogDir+vari.RunDir+"result.txt", strings.Join(logs, "\n"))
+	fileUtils.WriteFile(constant.LogDir+vari.RunDir+"result.txt", strings.Join(logs, "\n"))
 
 	json, _ := json.Marshal(report)
-	fileUtils.WriteFile(workDir+constant.LogDir+vari.RunDir+"result.json", string(json))
+	fileUtils.WriteFile(constant.LogDir+vari.RunDir+"result.json", string(json))
 }

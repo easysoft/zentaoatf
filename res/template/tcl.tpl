@@ -1,6 +1,6 @@
 #!/usr/bin/env tclsh
 set case {
-<<TC
+<<<TC
 caseId:         %s
 productId:      %s
 title:          %s

@@ -11,14 +11,14 @@ import (
 	"time"
 )
 
-func ExeScripts(files []string, scriptDir string, langType string, report *model.TestReport) {
+func ExeScripts(files []string, report *model.TestReport) {
 	logUtils.PrintWholeLine(i118Utils.I118Prt.Sprintf("start_execution", ""), "=", color.FgCyan)
 
 	startTime := time.Now().Unix()
 	report.StartTime = startTime
 
 	for _, file := range files {
-		ExeScript(file, langType, scriptDir)
+		ExeScript(file)
 	}
 
 	logUtils.PrintWholeLine(i118Utils.I118Prt.Sprintf("end_execution", ""), "=", color.FgCyan)
@@ -30,19 +30,17 @@ func ExeScripts(files []string, scriptDir string, langType string, report *model
 	report.Duration = secs
 }
 
-func ExeScript(file string, langType string, scriptDir string) {
-	var command string
+func ExeScript(file string) {
 	var logFile string
 
-	logFile = zentaoUtils.ScriptToLogName(scriptDir, file)
-	command = file
+	logFile = zentaoUtils.ScriptToLogName(file)
 
 	startTime := time.Now()
 
 	msg := i118Utils.I118Prt.Sprintf("start_case", file, startTime.Format("2006-01-02 15:04:05"))
 	logUtils.PrintWholeLine(msg, "-", color.FgCyan)
 
-	output := shellUtils.ExecFile(command)
+	output := shellUtils.ExecFile(file)
 	file2.WriteFile(logFile, output)
 
 	entTime := time.Now()

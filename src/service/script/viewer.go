@@ -8,9 +8,9 @@ import (
 	"regexp"
 )
 
-func List(scriptDir string, langType string) {
+func List(dir string, langType string) {
 	files := make([]string, 0)
-	fileUtils.GetAllFilesInDir(scriptDir, &files)
+	fileUtils.GetAllFilesInDir(dir, &files)
 
 	fmt.Printf("Totally %d test cases \n", len(files))
 
@@ -22,7 +22,7 @@ func List(scriptDir string, langType string) {
 func Summary(file string, inx int) {
 	content := fileUtils.ReadFile(file)
 
-	myExp := regexp.MustCompile(`<<TC[\S\s]*caseId:([^\n]*)(?:[\S\s]+?)\n+title:([^\n]*)\n`)
+	myExp := regexp.MustCompile(`<<<TC[\S\s]*caseId:([^\n]*)(?:[\S\s]+?)\n+title:([^\n]*)\n`)
 	arr := myExp.FindStringSubmatch(content)
 
 	if len(arr) > 2 {
@@ -33,12 +33,12 @@ func Summary(file string, inx int) {
 	}
 }
 
-func View(scriptDir string, fileNames []string, langType string) {
+func View(dir string, fileNames []string, langType string) {
 	files := make([]string, 0)
 	if fileNames != nil && len(fileNames) > 0 {
 		files, _ = fileUtils.GetSpecifiedFilesInWorkDir(fileNames)
 	} else {
-		fileUtils.GetAllFilesInDir(scriptDir, &files)
+		fileUtils.GetAllFilesInDir(dir, &files)
 	}
 
 	for _, file := range files {
@@ -56,7 +56,7 @@ func Brief(file string) {
 	content := fileUtils.ReadFile(file)
 
 	myExp := regexp.MustCompile(
-		`<<TC[\S\s]*` +
+		`<<<TC[\S\s]*` +
 			`caseId:([^\n]*)\n+` +
 			`caseIdInTask:([^\n]*)\n+` +
 			`taskId:([^\n]*)\n+` +
@@ -85,7 +85,7 @@ func Detail(file string) {
 	content := fileUtils.ReadFile(file)
 
 	myExp := regexp.MustCompile(
-		`<<TC[\S\s]*` +
+		`<<<TC[\S\s]*` +
 			`caseId:([^\n]*)\n+` +
 			`caseIdInTask:([^\n]*)\n+` +
 			`taskId:([^\n]*)\n+` +

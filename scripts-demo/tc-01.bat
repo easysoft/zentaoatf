@@ -1,4 +1,4 @@
-goto s
+goto start
 <<<TC
 
 caseId:         1
@@ -23,7 +23,7 @@ readme:
 - More examples, pls refer to https://github.com/easysoft/zentaoatf/tree/master/xdoc/sample
 
 TC;
-:s
+:start
 
 @echo off
 Setlocal enabledelayedexpansion

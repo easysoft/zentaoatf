@@ -31,7 +31,7 @@ func GetSupportedScriptLang() map[string]map[string]string {
 			"php": {
 				"extName":      "php",
 				"commentsTag":  "//",
-				"printGrammar": "echo \"#\n\";",
+				"printGrammar": "echo \"#\";",
 			},
 			"python": {
 				"extName":      "py",

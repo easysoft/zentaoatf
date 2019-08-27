@@ -22,7 +22,7 @@ func main() {
 	var language string
 	var workDir string
 
-	var scriptDir string
+	var dir string
 	var langType string
 
 	var independentFile bool
@@ -59,7 +59,7 @@ func main() {
 
 	runSet := flag.NewFlagSet("atf run - Run test scripts in specified folder", flag.ContinueOnError)
 	flagSets = append(flagSets, *runSet)
-	runSet.StringVar(&scriptDir, "d", ".", "Directory that contains test scripts, base on current workdir")
+	runSet.StringVar(&dir, "d", ".", "Directory that contains test scripts, base on current workdir")
 	runSet.StringVar(&langType, "l", "", "Script Language like python, php etc.")
 	runSet.Var(&files, "f", "Script files to run, no need langType if specified, base on current workdir")
 
@@ -69,12 +69,12 @@ func main() {
 
 	listSet := flag.NewFlagSet("atf list - List test scripts", flag.ContinueOnError)
 	flagSets = append(flagSets, *listSet)
-	listSet.StringVar(&scriptDir, "d", ".", "Directory that contains test scripts")
+	listSet.StringVar(&dir, "d", ".", "Directory that contains test scripts")
 	listSet.StringVar(&langType, "l", "", "Script Language like python, php etc.")
 
 	viewSet := flag.NewFlagSet("atf view - View test scripts", flag.ContinueOnError)
 	flagSets = append(flagSets, *viewSet)
-	viewSet.StringVar(&scriptDir, "d", ".", "Directory that contains test scripts")
+	viewSet.StringVar(&dir, "d", ".", "Directory that contains test scripts")
 	viewSet.StringVar(&langType, "l", "", "Script Language like python, php etc.")
 	viewSet.Var(&files, "f", "Script files to view, no need langType if specified")
 

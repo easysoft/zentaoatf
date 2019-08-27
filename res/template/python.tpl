@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 '''
-<<TC
+<<<TC
 caseId:         %s
 productId:      %s
 title:          %s

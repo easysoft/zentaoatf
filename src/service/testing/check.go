@@ -13,18 +13,19 @@ import (
 	"strings"
 )
 
-func CheckResults(files []string, dir string, langType string, report *model.TestReport) {
+func CheckResults(files []string, report *model.TestReport) {
 	logUtils.Printt("\n")
 	logUtils.PrintWholeLine(i118Utils.I118Prt.Sprintf("begin_analyse"), "=", color.FgCyan)
 
 	for _, scriptFile := range files {
-		logFile := zentaoUtils.ScriptToLogName(dir, scriptFile)
+		logFile := zentaoUtils.ScriptToLogName(scriptFile)
 
 		checkpointStepArr := zentaoUtils.ReadCheckpointSteps(scriptFile)
 		expectArr := zentaoUtils.ReadExpect(scriptFile)
 		skip, logArr := zentaoUtils.ReadLog(logFile)
 
-		ValidateCaseResult(scriptFile, langType, checkpointStepArr, expectArr, skip, logArr, report)
+		language := ""
+		ValidateCaseResult(scriptFile, language, checkpointStepArr, expectArr, skip, logArr, report)
 	}
 }
 

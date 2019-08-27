@@ -49,13 +49,24 @@ func main() {
 
 	switch os.Args[1] {
 	case "run":
+		if err := flagSet.Parse(os.Args[2:]); err == nil {
+			action.Run(dir, files)
+		}
 
+	case "checkout":
+		if err := flagSet.Parse(os.Args[2:]); err == nil {
+			action.GenerateScript(productId, moduleId, suite, taskId, independentFile, language)
+		}
 	case "co":
 		if err := flagSet.Parse(os.Args[2:]); err == nil {
 			action.GenerateScript(productId, moduleId, suite, taskId, independentFile, language)
 		}
 
 	case "update":
+		if err := flagSet.Parse(os.Args[2:]); err == nil {
+			action.GenerateScript(productId, moduleId, suite, taskId, independentFile, language)
+		}
+	case "up":
 		if err := flagSet.Parse(os.Args[2:]); err == nil {
 			action.GenerateScript(productId, moduleId, suite, taskId, independentFile, language)
 		}

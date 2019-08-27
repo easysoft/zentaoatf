@@ -14,8 +14,9 @@ import (
 	"strings"
 )
 
-func Run(scriptDir string, fileNames []string, langType string) {
-	//LangMap := scriptService.LangMap
+func Run(dir string, fileNames []string) {
+	dir = commonUtils.UpdateDir(dir)
+
 	var files []string
 
 	if fileNames != nil && len(fileNames) > 0 { // pass a list, cui always
@@ -34,10 +35,10 @@ func Run(scriptDir string, fileNames []string, langType string) {
 		files, _ = fileUtils.GetSpecifiedFilesInWorkDir(fileNames)
 
 	} else { // give a dir
-		fileUtils.GetAllFilesInDir(scriptDir, &files)
+		fileUtils.GetAllFilesInDir(dir, &files)
 
 		vari.RunMode = constant.RunModeDir
-		vari.RunDir = zentaoUtils.PathToRunName(scriptDir)
+		vari.RunDir = zentaoUtils.PathToRunName(dir)
 	}
 
 	if len(files) < 1 {
@@ -48,8 +49,8 @@ func Run(scriptDir string, fileNames []string, langType string) {
 	var report = model.TestReport{Path: vari.ReportDir, Env: commonUtils.GetOs(),
 		Pass: 0, Fail: 0, Total: 0, Cases: make([]model.CaseLog, 0)}
 
-	testingService.ExeScripts(files, "vari.Config.WorkDir", langType, &report)
+	testingService.ExeScripts(files, &report)
 
-	testingService.CheckResults(files, "vari.Config.WorkDir", langType, &report)
-	testingService.Print(report, "vari.Config.WorkDir")
+	testingService.CheckResults(files, &report)
+	testingService.Print(report)
 }

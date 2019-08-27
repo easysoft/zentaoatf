@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
-<<TC
+=begin
+<<<TC
+
 caseId:         %s
 productId:      %s
 title:          %s
@@ -10,6 +12,7 @@ expects:
 readme:
 %s
 
-TC
+TC;
+=end
 
 %s

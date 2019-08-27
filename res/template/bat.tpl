@@ -1,4 +1,4 @@
-goto s
+goto start
 
 <<<TC
 caseId:         %s
@@ -12,7 +12,7 @@ readme:
 %s
 
 TC;
-:s
+:start
 
 
 @echo off

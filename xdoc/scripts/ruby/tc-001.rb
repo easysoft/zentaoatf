@@ -1,7 +1,10 @@
-#!/usr/bin/env ruby 
+#!/usr/bin/env ruby
+=begin
 <<TC
+
 title: ruby hello world.
 expect: hello world.
-TC
+TC;
+=end
 
 print "hello world.\n";

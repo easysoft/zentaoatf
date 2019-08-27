@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+
+:<<!
 <<TC
 caseId:         1
 caseIdInTask:   0
@@ -22,7 +24,8 @@ readme:
 - 脚本中CODE打头的注释需用代码替换
 - 参考样例https://github.com/easysoft/zentaoatf/tree/master/xdoc/sample
 
-TC
+TC;
+!
 
 timeout=500
 

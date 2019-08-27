@@ -7,11 +7,11 @@ import (
 )
 
 func Rerun(resultFile string) {
-	files, scriptDir := fileUtils.GetFailedFilesFromTestResult(resultFile)
+	files, dir := fileUtils.GetFailedFilesFromTestResult(resultFile)
 
-	if !commonUtils.PathEndWithSeparator(scriptDir) {
-		scriptDir += string(os.PathSeparator)
+	if !commonUtils.PathEndWithSeparator(dir) {
+		dir += string(os.PathSeparator)
 	}
 
-	Run(scriptDir, files, "")
+	Run(dir, files)
 }
