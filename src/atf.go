@@ -23,13 +23,29 @@ func main() {
 
 	flagSet := flag.NewFlagSet("atf", flag.ContinueOnError)
 
-	flagSet.StringVar(&dir, "d", "", "")
 	flagSet.Var(commonUtils.NewSliceValue([]string{}, &files), "f", "")
+	flagSet.Var(commonUtils.NewSliceValue([]string{}, &files), "file", "")
+
+	flagSet.StringVar(&dir, "d", "", "")
+	flagSet.StringVar(&dir, "dir", "", "")
+
 	flagSet.StringVar(&productId, "p", "", "")
+	flagSet.StringVar(&productId, "product", "", "")
+
 	flagSet.StringVar(&moduleId, "m", "", "")
+	flagSet.StringVar(&moduleId, "module", "", "")
+
 	flagSet.StringVar(&taskId, "t", "", "")
+	flagSet.StringVar(&taskId, "task", "", "")
+
 	flagSet.StringVar(&suite, "s", "", "")
+	flagSet.StringVar(&suite, "suite", "", "")
+
 	flagSet.StringVar(&language, "l", "", "")
+	flagSet.StringVar(&language, "language", "", "")
+
+	flagSet.BoolVar(&independentFile, "i", false, "")
+	flagSet.BoolVar(&independentFile, "independent", false, "")
 
 	switch os.Args[1] {
 	case "run":
@@ -40,6 +56,9 @@ func main() {
 		}
 
 	case "update":
+		if err := flagSet.Parse(os.Args[2:]); err == nil {
+			action.GenerateScript(productId, moduleId, suite, taskId, independentFile, language)
+		}
 
 	case "ci":
 
