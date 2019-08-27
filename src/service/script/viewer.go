@@ -10,7 +10,7 @@ import (
 
 func List(dir string, langType string) {
 	files := make([]string, 0)
-	fileUtils.GetAllScriptsInDir(dir, &files)
+	GetAllScriptsInDir(dir, &files)
 
 	fmt.Printf("Totally %d test cases \n", len(files))
 
@@ -36,9 +36,9 @@ func Summary(file string, inx int) {
 func View(dir string, fileNames []string, langType string) {
 	files := make([]string, 0)
 	if fileNames != nil && len(fileNames) > 0 {
-		files, _ = fileUtils.GetSpecifiedFilesInWorkDir(fileNames)
+		files, _ = GetSpecifiedFilesInWorkDir(fileNames)
 	} else {
-		fileUtils.GetAllScriptsInDir(dir, &files)
+		GetAllScriptsInDir(dir, &files)
 	}
 
 	for _, file := range files {

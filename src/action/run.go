@@ -2,10 +2,10 @@ package action
 
 import (
 	"github.com/easysoft/zentaoatf/src/model"
+	scriptService "github.com/easysoft/zentaoatf/src/service/script"
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	"github.com/easysoft/zentaoatf/src/utils/common"
-	"github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
@@ -25,28 +25,28 @@ func Run(files []string, suite string, task string, result string) {
 		if err == nil && suiteId > 0 { // load cases from remote by suite id
 			zentaoService.GetCaseIdsBySuite(suiteId, &caseIdMap)
 		} else { // load cases in suite file
-			fileUtils.GetCaseIdsInSuiteFile(suite, &caseIdMap)
+			scriptService.GetCaseIdsInSuiteFile(suite, &caseIdMap)
 		}
 
-		fileUtils.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
+		scriptService.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
 	} else if task != "" { // load cases from remote by task id
 		taskId, err := strconv.Atoi(suite)
 		if err == nil {
 			zentaoService.GetCaseIdsByTask(taskId, &caseIdMap)
 		}
 
-		fileUtils.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
+		scriptService.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
 	} else if result != "" { // load cases result file
-		fileUtils.GetFailedCasesFromTestResult(result, &caseIdMap)
+		scriptService.GetFailedCasesFromTestResult(result, &caseIdMap)
 
-		fileUtils.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
+		scriptService.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
 	} else { // find cases in current dir
 		for _, file := range files {
-			fileUtils.GetAllScriptsInDir(file, &cases)
+			scriptService.GetAllScriptsInDir(file, &cases)
 		}
 	}
 
-	if len(files) < 1 {
+	if len(cases) < 1 {
 		logUtils.PrintToCmd(color.RedString("\n" + i118Utils.I118Prt.Sprintf("no_scripts")))
 		return
 	}
@@ -54,8 +54,8 @@ func Run(files []string, suite string, task string, result string) {
 	var report = model.TestReport{Path: vari.ReportDir, Env: commonUtils.GetOs(),
 		Pass: 0, Fail: 0, Total: 0, Cases: make([]model.CaseLog, 0)}
 
-	testingService.ExeScripts(files, &report)
+	testingService.ExeScripts(cases, &report)
 
-	testingService.CheckResults(files, &report)
+	testingService.CheckResults(cases, &report)
 	testingService.Print(report)
 }
