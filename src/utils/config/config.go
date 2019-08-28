@@ -46,15 +46,24 @@ func ConfigForSet() {
 
 	fmt.Println(i118Utils.I118Prt.Sprintf("begin_config"))
 
-	language = getInput("(english|chinese|e|c)", "enter_language")
-	if strings.Index(strings.ToLower(language), "e") == 0 {
-		language = "en"
-	} else {
+	language = getInput("(english|chinese|e|c|)", "enter_language")
+	languageDefault := "en"
+	if language == "chinese" || language == "c" { // default en
 		language = "zh"
+	} else {
+		if language == "" {
+			fmt.Print(languageDefault)
+		}
+		language = languageDefault
 	}
 
-	configSite = getInput("(yes|no|y|n)", "config_zentao_site")
-	if strings.Index(configSite, "y") == 0 {
+	configSite = getInput("(yes|no|y|n|)", "config_zentao_site")
+	configSiteDefault := "yes"
+	if configSite != "no" && configSite != "n" { // default yes
+		if configSite == "" {
+			fmt.Print(configSiteDefault)
+		}
+
 		url = getInput("http://.*", "enter_url")
 		account = getInput(".{3,}", "enter_account")
 		password = getInput(".{4,}", "enter_password")
@@ -88,18 +97,20 @@ func ConfigForCheckout(productId *string, moduleId *string, suiteId *string, tas
 		*taskId = getInput("\\d+", "taskId")
 	}
 
-	indep := getInput("(yes|no|y|n)", "enter_co_independent")
+	indep := getInput("(yes|no|y|n|)", "enter_co_independent")
+	indep = strings.ToLower(indep)
+	if indep != "yes" && indep != "y" { // default no
+		*independentFile = true
+	} else {
+		if indep == "" {
+			fmt.Print("no")
+		}
+		*independentFile = false
+	}
 
 	regx := "(" + strings.Join(langUtils.GetSupportLangageArr(), "|") + ")"
 	fmtParam := strings.Join(langUtils.GetSupportLangageArr(), " / ")
 	*scriptLang = getInput(regx, "enter_co_language", fmtParam)
-
-	indep = strings.ToLower(indep)
-	if indep == "yes" || indep == "y" {
-		*independentFile = true
-	} else {
-		*independentFile = false
-	}
 
 	SaveConfig("en", url, account, password)
 
@@ -112,7 +123,7 @@ func getInput(regx string, fmtStr string, params ...interface{}) string {
 	msg := i118Utils.I118Prt.Sprintf(fmtStr, params...)
 
 	for {
-		color.Cyan("\n" + msg + " \n")
+		color.Cyan("\n" + msg)
 		fmt.Scanln(&ret)
 
 		temp := strings.ToLower(ret)

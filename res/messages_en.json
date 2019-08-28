@@ -14,12 +14,12 @@
     {
       "id": "enter_language",
       "message": "enter language",
-      "translation": "enter the language you want to use, English / Chinese"
+      "translation": "enter the language you want to use, English / Chinese, default English."
     },
     {
       "id": "config_zentao_site",
       "message": "config zentao site",
-      "translation": "do you want to config Zentao site? Yes / No"
+      "translation": "do you want to config Zentao site? Yes / No, default Yes."
     },
     {
       "id": "enter_url",
@@ -49,7 +49,7 @@
     {
       "id": "enter_co_independent",
       "message": "enter co independent",
-      "translation": "save expect results in independent file? Yes / No"
+      "translation": "save expect results in independent file? Yes / No, default No"
     },
     {
       "id": "enter_co_language",
