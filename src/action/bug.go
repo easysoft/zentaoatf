@@ -1,11 +1,9 @@
 package action
 
 import (
-	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	"github.com/easysoft/zentaoatf/src/ui/page"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
-	"github.com/easysoft/zentaoatf/src/utils/vari"
 )
 
 func CommitBug(files []string, caseId string) {
@@ -15,13 +13,12 @@ func CommitBug(files []string, caseId string) {
 	} else {
 		configUtils.ConfigForDir(&resultDir, "result")
 	}
+	resultDir = fileUtils.UpdateDir(resultDir)
 
 	if caseId == "" {
 		configUtils.ConfigForInt(&caseId, "test_case")
 	}
 
-	resultDir = fileUtils.UpdateDir(resultDir)
-
-	vari.CurrBug = zentaoService.PrepareBug(resultDir, caseId)
-	page.Cui("bug")
+	page.Cui()
+	//page.InitReportBugPage(resultDir, caseId)
 }

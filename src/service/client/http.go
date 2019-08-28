@@ -72,6 +72,7 @@ func PostObject(url string, params interface{}) (string, bool) {
 
 	req, err := http.NewRequest("POST", url, strings.NewReader(data))
 	if err != nil {
+		logUtils.PrintToCmd(err.Error())
 		return "", false
 	}
 
@@ -80,6 +81,7 @@ func PostObject(url string, params interface{}) (string, bool) {
 
 	resp, err := client.Do(req)
 	if err != nil {
+		logUtils.PrintToCmd(err.Error())
 		return "", false
 	}
 

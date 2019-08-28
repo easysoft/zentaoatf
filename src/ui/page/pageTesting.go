@@ -2,7 +2,6 @@ package page
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/action"
 	"github.com/easysoft/zentaoatf/src/service/script"
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/ui/widget"
@@ -133,7 +132,7 @@ func run(g *gocui.Gui, v *gocui.View) error {
 	output, _ := g.View(constant.CuiRunOutputView)
 	output.Clear()
 
-	action.Run("vari.Config.WorkDir", []string{vari.CurrScriptFile}, "")
+	//action.Run("vari.Config.WorkDir", []string{vari.CurrScriptFile}, "")
 
 	return nil
 }

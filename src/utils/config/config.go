@@ -200,8 +200,9 @@ func PrintConfigToView() {
 }
 
 func InitScreenSize() {
-	w, _ := display.GetScreenSize()
+	w, h := display.GetScreenSize()
 	vari.ScreenWidth = w
+	vari.ScreenHeight = h
 }
 
 func getInst() model.Config {

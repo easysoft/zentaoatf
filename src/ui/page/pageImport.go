@@ -111,7 +111,7 @@ func InitImportPage() error {
 		i118Utils.I118Prt.Sprintf("submit"), ImportRequest)
 	ui.ViewMap["import"] = append(ui.ViewMap["import"], submitInput.Name())
 
-	ui.AddEventForInputWidgets(ui.ViewMap["import"])
+	ui.BindEventForInputWidgets(ui.ViewMap["import"])
 
 	return nil
 }

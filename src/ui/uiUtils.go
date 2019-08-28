@@ -12,7 +12,7 @@ const (
 	Space = 2
 )
 
-func AddEventForInputWidgets(arr []string) {
+func BindEventForInputWidgets(arr []string) {
 	for _, v := range arr {
 		if isInput(v) {
 			vari.Cui.SetKeybinding(v, gocui.MouseLeft, gocui.ModNone, SetCurrView(v))

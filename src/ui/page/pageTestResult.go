@@ -66,7 +66,7 @@ func selectResultEvent(g *gocui.Gui, v *gocui.View) error {
 	vari.CurrResultDate = line
 
 	content := make([]string, 0)
-	report := testingService.GetTestTestReportForSubmit(vari.CurrScriptFile, vari.CurrResultDate)
+	report := testingService.GetTestTestReportForSubmit("result_dir")
 	for _, cs := range report.Cases {
 		id := cs.Id
 		title := cs.Title
@@ -98,7 +98,7 @@ func selectCaseEvent(g *gocui.Gui, v *gocui.View) error {
 	vari.CurrCaseId = caseId
 
 	content := make([]string, 0)
-	report := testingService.GetTestTestReportForSubmit(vari.CurrScriptFile, vari.CurrResultDate)
+	report := testingService.GetTestTestReportForSubmit("result_dir")
 	for _, cs := range report.Cases {
 		if cs.Id == caseId {
 			for _, step := range cs.Steps {
@@ -131,13 +131,13 @@ func clearPanelCaseResult() {
 }
 
 func toUploadResult(g *gocui.Gui, v *gocui.View) error {
-	zentaoService.SubmitResult()
+	zentaoService.CommitResult("result_dir")
 
 	return nil
 }
 
 func toReportBug(g *gocui.Gui, v *gocui.View) error {
-	InitReportBugPage()
+	//InitReportBugPage()
 
 	return nil
 }

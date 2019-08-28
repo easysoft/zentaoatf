@@ -14,12 +14,12 @@ import (
 	"strconv"
 )
 
-func GetBugFiledOptions() {
+func GetBugFiledOptions(productId int) {
 	conf := configUtils.ReadCurrConfig()
 	Login(conf.Url, conf.Account, conf.Password)
 
-	params := fmt.Sprintf("%d-%0", conf.ProductId)
-	url := "conf.Url" + zentaoUtils.GenApiUri("bug", "ajaxGetBugFieldOptions", params)
+	params := fmt.Sprintf("%d-0", productId)
+	url := conf.Url + zentaoUtils.GenApiUri("bug", "ajaxGetBugFieldOptions", params)
 	dataStr, ok := client.Get(url, nil)
 
 	bugFields := model.ZentaoBugFileds{}

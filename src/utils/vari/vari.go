@@ -26,9 +26,11 @@ var (
 	CurrCaseId     int    // 2019-08-15T173802
 
 	ScreenWidth     int
+	ScreenHeight    int
 	ZentaoBugFileds model.ZentaoBugFileds
 
 	ZentaoCaseFileds model.ZentaoCaseFileds
 
-	CurrBug model.Bug
+	CurrBug        model.Bug
+	CurrBugStepIds string
 )

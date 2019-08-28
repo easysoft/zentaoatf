@@ -5,7 +5,6 @@ import (
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/ui/widget"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
-	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
 	"github.com/jroimartin/gocui"
@@ -14,45 +13,40 @@ import (
 
 var filedValMap map[string]int
 
-func InitReportBugPage() error {
+func InitReportBugPage(resultDir string, caseId string) error {
 	DestoryReportBugPage()
 
-	zentaoService.GetBugFiledOptions()
-
+	vari.CurrBug, vari.CurrBugStepIds = zentaoService.PrepareBug(resultDir, caseId)
 	bug := vari.CurrBug
 
 	maxX, maxY := vari.Cui.Size()
 	pageWidth := 120
 	pageHeight := 27
-	x := maxX/2 - 60
-	y := maxY/2 - 14
+	x := maxX/2 - 62
+	y := maxY/2 - 18
 
 	var bugVersion string
 	for _, val := range bug.OpenedBuild { // 取字符串值显示
 		bugVersion = val
 	}
 
-	// panel
-	reportBugPanel := widget.NewPanelWidget("reportBugPanel", x, y, pageWidth, pageHeight, "")
-	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], reportBugPanel.Name())
-
 	// title
 	y += 1
-	left := x + 2
+	left := x
 	right := left + widget.TextWidthFull - 5
 	titleInput := widget.NewTextWidget("titleInput", left, y, widget.TextWidthFull-5, bug.Title)
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], titleInput.Name())
 
 	// steps
 	left = right + ui.Space
-	stepsWidth := pageWidth - left - ui.Space + x
+	stepsWidth := pageWidth - left - ui.Space + x + 3
 	stepsInput := widget.NewTextareaWidget("stepsInput", left, y, stepsWidth, pageHeight-2, bug.Steps)
 	stepsInput.Title = i118Utils.I118Prt.Sprintf("steps")
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], stepsInput.Name())
 
 	// module
 	y += 3
-	left = x + 2
+	left = x
 	right = left + widget.SelectWidth
 	moduleInput := widget.NewSelectWidgetWithDefault("module", left, y, widget.SelectWidth, 6,
 		i118Utils.I118Prt.Sprintf("module"),
@@ -80,7 +74,7 @@ func InitReportBugPage() error {
 
 	// severity
 	y += 7
-	left = x + 2
+	left = x
 	right = left + widget.SelectWidth
 	severityInput := widget.NewSelectWidgetWithDefault("severity", left, y, widget.SelectWidth, 6,
 		i118Utils.I118Prt.Sprintf("severity"),
@@ -99,14 +93,14 @@ func InitReportBugPage() error {
 
 	// msg
 	y += 7
-	left = x + 2
+	left = x
 	reportBugMsg := widget.NewPanelWidget("reportBugMsg", left, y, widget.TextWidthFull-5, 2, "")
 	reportBugMsg.Frame = false
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], reportBugMsg.Name())
 
 	// buttons
 	y += 6
-	buttonX := maxX/2 - 49 + widget.LabelWidthSmall + ui.Space
+	buttonX := maxX/2 - 51 + widget.LabelWidthSmall + ui.Space
 	submitInput := widget.NewButtonWidgetAutoWidth("submitInput", buttonX, y,
 		i118Utils.I118Prt.Sprintf("submit"), reportBug)
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], submitInput.Name())
@@ -115,7 +109,7 @@ func InitReportBugPage() error {
 		buttonX+11, y, i118Utils.I118Prt.Sprintf("cancel"), cancelReportBug)
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], cancelReportBugInput.Name())
 
-	ui.AddEventForInputWidgets(ui.ViewMap["reportBug"])
+	ui.BindEventForInputWidgets(ui.ViewMap["reportBug"])
 
 	vari.Cui.SetCurrentView("titleInput")
 
@@ -150,6 +144,7 @@ func reportBug(g *gocui.Gui, v *gocui.View) error {
 
 	bug.Title = title
 	bug.Steps = strings.Replace(stepsStr, "\n", "<br/>", -1)
+
 	bug.Type = zentaoService.GetIdByName(typeStr, vari.ZentaoBugFileds.Categories)
 
 	bug.Module = zentaoService.GetIdByName(moduleStr, vari.ZentaoBugFileds.Modules)
@@ -166,11 +161,10 @@ func reportBug(g *gocui.Gui, v *gocui.View) error {
 	bug.Severity = zentaoService.GetIdByName(severityStr, vari.ZentaoBugFileds.Severities)
 	bug.Pri = zentaoService.GetIdByName(priorityStr, vari.ZentaoBugFileds.Priorities)
 
-	logUtils.PrintStructToCmd(bug)
-	ret := zentaoService.CommitBug(bug)
+	vari.CurrBug = bug
+	ok := zentaoService.CommitBug()
 
-	if ret {
-		DestoryReportBugPage()
+	if ok {
 	}
 
 	return nil

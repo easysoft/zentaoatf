@@ -82,18 +82,13 @@ type Bug struct {
 	Severity    string            // id
 	Pri         string            // id
 
-	Product  string
-	Project  string
-	Case     string
-	Result   string // ZentaoResultId
-	Testtask string
-	Steps    string
+	Product string
+	Case    string
+	Steps   string
 
 	Uid         string // uuid.NewV4().String()
 	CaseVersion string // 0
 	OldTaskID   string // 0
-
-	StepIds string
 }
 
 type TestReport struct {

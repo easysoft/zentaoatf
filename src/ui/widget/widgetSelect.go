@@ -63,6 +63,7 @@ func (w *SelectWidget) Layout() (*gocui.View, error) {
 	_, height := v.Size()
 	for true {
 		line := ui.GetSelectedRowVal(v)
+
 		if w.defaultt != "" {
 			if line == w.defaultt {
 				break

@@ -2,7 +2,6 @@ package page
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/action"
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/ui/widget"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
@@ -39,7 +38,7 @@ func InitSwitchPage() error {
 		i118Utils.I118Prt.Sprintf("switch"), SwitchWorkDir)
 	ui.ViewMap["switch"] = append(ui.ViewMap["switch"], submitInput.Name())
 
-	ui.AddEventForInputWidgets(ui.ViewMap["switch"])
+	ui.BindEventForInputWidgets(ui.ViewMap["switch"])
 
 	return nil
 }
@@ -51,13 +50,13 @@ func SwitchWorkDir(g *gocui.Gui, v *gocui.View) error {
 
 	logUtils.PrintToCmd(fmt.Sprintf("#atf switch -d %s", workDir))
 
-	err := action.SwitchWorkDir(workDir)
-	if err == nil {
-		workDirView.Clear()
-		workDirView.Write([]byte("vari.Config.WorkDir"))
-	} else {
-		logUtils.PrintToCmd(err.Error())
-	}
+	//err := action.SwitchWorkDir(workDir)
+	//if err == nil {
+	//	workDirView.Clear()
+	//	workDirView.Write([]byte("vari.Config.WorkDir"))
+	//} else {
+	//	logUtils.PrintToCmd(err.Error())
+	//}
 
 	return nil
 }
