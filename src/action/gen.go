@@ -15,6 +15,12 @@ func GenerateScript(productId string, moduleId string, suiteId string, taskId st
 
 	config := configUtils.ReadCurrConfig()
 	if config.Url == "" || config.Account == "" || config.Password == "" {
+		configUtils.ConfigForSet()
+	}
+
+	if (productId != "") || (moduleId != "" && productId != "") || suiteId != "" || taskId != "" {
+
+	} else {
 		configUtils.ConfigForCheckout(&productId, &moduleId, &suiteId, &taskId,
 			&independentFile, &scriptLang)
 	}

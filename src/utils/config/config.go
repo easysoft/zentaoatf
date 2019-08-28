@@ -52,7 +52,7 @@ func ConfigForSet() {
 		language = "zh"
 	} else {
 		if language == "" {
-			fmt.Print(languageDefault)
+			fmt.Print("English")
 		}
 		language = languageDefault
 	}
@@ -77,12 +77,6 @@ func ConfigForSet() {
 func ConfigForCheckout(productId *string, moduleId *string, suiteId *string, taskId *string,
 	independentFile *bool, scriptLang *string) {
 
-	color.Cyan("\n" + i118Utils.I118Prt.Sprintf("need_config"))
-
-	url := getInput("http://.*", "enter_url")
-	account := getInput(".{3,}", "enter_account")
-	password := getInput(".{4,}", "enter_password")
-
 	coType := getInput("(product|module|suite|task|p|m|s|t)", "enter_co_type")
 
 	coType = strings.ToLower(coType)
@@ -99,7 +93,7 @@ func ConfigForCheckout(productId *string, moduleId *string, suiteId *string, tas
 
 	indep := getInput("(yes|no|y|n|)", "enter_co_independent")
 	indep = strings.ToLower(indep)
-	if indep != "yes" && indep != "y" { // default no
+	if indep == "yes" && indep == "y" {
 		*independentFile = true
 	} else {
 		if indep == "" {
@@ -111,8 +105,6 @@ func ConfigForCheckout(productId *string, moduleId *string, suiteId *string, tas
 	regx := "(" + strings.Join(langUtils.GetSupportLangageArr(), "|") + ")"
 	fmtParam := strings.Join(langUtils.GetSupportLangageArr(), " / ")
 	*scriptLang = getInput(regx, "enter_co_language", fmtParam)
-
-	SaveConfig("en", url, account, password)
 
 	PrintCurrConfig()
 }
