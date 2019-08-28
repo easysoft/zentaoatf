@@ -12,6 +12,21 @@
       "translation": "begin to config"
     },
     {
+      "id": "result",
+      "message": "result",
+      "translation": "result"
+    },
+    {
+      "id": "enter_dir",
+      "message": "enter dir",
+      "translation": "enter %s dir."
+    },
+    {
+      "id": "dir_not_exist",
+      "message": "",
+      "translation": "dir not exist"
+    },
+    {
       "id": "enter_language",
       "message": "enter language",
       "translation": "enter the language you want to use, English / Chinese, default English."

@@ -109,6 +109,10 @@ func ConfigForCheckout(productId *string, moduleId *string, suiteId *string, tas
 	PrintCurrConfig()
 }
 
+func ConfigForDir(dir *string, entity string) {
+	*dir = getInput("is_dir", "enter_dir", i118Utils.I118Prt.Sprintf(entity))
+}
+
 func getInput(regx string, fmtStr string, params ...interface{}) string {
 	var ret string
 
@@ -127,11 +131,20 @@ func getInput(regx string, fmtStr string, params ...interface{}) string {
 			return ret
 		}
 
-		pass, _ := regexp.MatchString("^"+regx+"$", temp)
+		var pass bool
+		var msg string
+		if regx == "is_dir" {
+			pass = fileUtils.IsDir(ret)
+			msg = "dir_not_exist"
+		} else {
+			pass, _ = regexp.MatchString("^"+regx+"$", temp)
+			msg = "invalid_input"
+		}
+
 		if pass {
 			return ret
 		} else {
-			color.Red(i118Utils.I118Prt.Sprintf("invalid_input") + "\n")
+			color.Red(i118Utils.I118Prt.Sprintf(msg) + "\n")
 		}
 	}
 }
