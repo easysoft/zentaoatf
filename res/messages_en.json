@@ -42,6 +42,22 @@
       "translation": "enter password"
     },
     {
+      "id": "enter_co_type",
+      "message": "enter co type",
+      "translation": "select case source? Product / Module / Suite / Task"
+    },
+    {
+      "id": "enter_co_independent",
+      "message": "enter co independent",
+      "translation": "save expect results in independent file? Yes / No"
+    },
+    {
+      "id": "enter_co_language",
+      "message": "enter co language",
+      "translation": "select script language. %s"
+    },
+
+    {
       "id": "invalid_input",
       "message": "invalid input",
       "translation": "invalid input, please try again"

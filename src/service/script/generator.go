@@ -6,6 +6,7 @@ import (
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
+	"github.com/easysoft/zentaoatf/src/utils/langUtils"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"os"
@@ -36,7 +37,7 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 		modulePath = modulePath[1:]
 	}
 
-	scriptFile := fmt.Sprintf(constant.ScriptDir+"%stc-%s.%s", modulePath, caseId, LangMap[langType]["extName"])
+	scriptFile := fmt.Sprintf(constant.ScriptDir+"%stc-%s.%s", modulePath, caseId, langUtils.LangMap[langType]["extName"])
 
 	fileUtils.MkDirIfNeeded(constant.ScriptDir)
 	*caseIds = append(*caseIds, caseId)
@@ -71,7 +72,7 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 		return
 	}
 
-	temp := fmt.Sprintf("\n%sCODE: %s", LangMap[langType]["commentsTag"],
+	temp := fmt.Sprintf("\n%sCODE: %s", langUtils.LangMap[langType]["commentsTag"],
 		i118Utils.I118Prt.Sprintf("your_codes_here"))
 	srcCode = append(srcCode, temp)
 
@@ -101,7 +102,7 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 
 func GenerateTestStepScript(ts model.TestStep, langType string, stepWidth int,
 	steps *[]string, expects *[]string, srcCode *[]string) {
-	LangMap := GetSupportedScriptLang()
+	LangMap := langUtils.GetSupportedScriptLang()
 
 	isGroup := ts.Type == "group"
 	isCheckPoint := ts.Expect != ""

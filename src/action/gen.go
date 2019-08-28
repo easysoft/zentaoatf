@@ -6,31 +6,22 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/config"
 	"github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/i118"
+	"github.com/easysoft/zentaoatf/src/utils/langUtils"
 	"github.com/easysoft/zentaoatf/src/utils/log"
-	"github.com/fatih/color"
 )
 
 func GenerateScript(productId string, moduleId string, suiteId string, taskId string,
 	independentFile bool, scriptLang string) {
 
-	LangMap := scriptService.GetSupportedScriptLang()
-	langs := ""
-	if LangMap[scriptLang] == nil {
-		i := 0
-		for lang, _ := range LangMap {
-			if i > 0 {
-				langs += ", "
-			}
-			langs += lang
-			i++
-		}
-		logUtils.PrintToCmd(color.RedString(i118Utils.I118Prt.Sprintf("only_support_script_language", langs)) + "\n")
-		return
+	config := configUtils.ReadCurrConfig()
+	if config.Url == "" || config.Account == "" || config.Password == "" {
+		configUtils.ConfigForCheckout(&productId, &moduleId, &suiteId, &taskId,
+			&independentFile, &scriptLang)
 	}
 
-	config := configUtils.ReadCurrConfig()
-	if config.Url == "" {
-		configUtils.ConfigForCheckout()
+	ok := langUtils.CheckSupportLangages(scriptLang)
+	if !ok {
+		return
 	}
 
 	cases := zentaoService.LoadTestCases(productId, moduleId, suiteId, taskId)

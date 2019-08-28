@@ -8,6 +8,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/display"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/easysoft/zentaoatf/src/utils/i118"
+	"github.com/easysoft/zentaoatf/src/utils/langUtils"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
@@ -45,18 +46,18 @@ func ConfigForSet() {
 
 	fmt.Println(i118Utils.I118Prt.Sprintf("begin_config"))
 
-	language = getInput("enter_language", "(english|chinese|e|c)")
+	language = getInput("(english|chinese|e|c)", "enter_language")
 	if strings.Index(strings.ToLower(language), "e") == 0 {
 		language = "en"
 	} else {
 		language = "zh"
 	}
 
-	configSite = getInput("config_zentao_site", "(yes|no|y|n)")
+	configSite = getInput("(yes|no|y|n)", "config_zentao_site")
 	if strings.Index(configSite, "y") == 0 {
-		url = getInput("enter_url", "http://.*")
-		account = getInput("enter_account", ".{3,}")
-		password = getInput("enter_password", ".{4,}")
+		url = getInput("http://.*", "enter_url")
+		account = getInput(".{3,}", "enter_account")
+		password = getInput(".{4,}", "enter_password")
 	}
 
 	SaveConfig(language, url, account, password)
@@ -64,32 +65,58 @@ func ConfigForSet() {
 	PrintCurrConfig()
 }
 
-func ConfigForCheckout() {
-	language := ""
-	url := ""
-	account := ""
-	password := ""
+func ConfigForCheckout(productId *string, moduleId *string, suiteId *string, taskId *string,
+	independentFile *bool, scriptLang *string) {
 
-	fmt.Println(i118Utils.I118Prt.Sprintf("need_config"))
+	color.Cyan("\n" + i118Utils.I118Prt.Sprintf("need_config"))
 
-	url = getInput("enter_url", "http://.*")
-	account = getInput("enter_account", ".{3,}")
-	password = getInput("enter_password", ".{4,}")
+	url := getInput("http://.*", "enter_url")
+	account := getInput(".{3,}", "enter_account")
+	password := getInput(".{4,}", "enter_password")
 
-	SaveConfig(language, url, account, password)
+	coType := getInput("(product|module|suite|task|p|m|s|t)", "enter_co_type")
+
+	coType = strings.ToLower(coType)
+	if coType == "product" || coType == "p" {
+		*productId = getInput("\\d+", "productId")
+	} else if coType == "module" || coType == "m" {
+		*productId = getInput("\\d+", "productId")
+		*moduleId = getInput("\\d+", "moduleId")
+	} else if coType == "suite" || coType == "s" {
+		*suiteId = getInput("\\d+", "suiteId")
+	} else if coType == "task" || coType == "t" {
+		*taskId = getInput("\\d+", "taskId")
+	}
+
+	indep := getInput("(yes|no|y|n)", "enter_co_independent")
+
+	regx := "(" + strings.Join(langUtils.GetSupportLangageArr(), "|") + ")"
+	fmtParam := strings.Join(langUtils.GetSupportLangageArr(), " / ")
+	*scriptLang = getInput(regx, "enter_co_language", fmtParam)
+
+	indep = strings.ToLower(indep)
+	if indep == "yes" || indep == "y" {
+		*independentFile = true
+	} else {
+		*independentFile = false
+	}
+
+	SaveConfig("en", url, account, password)
 
 	PrintCurrConfig()
 }
 
-func getInput(msg string, regx string) string {
+func getInput(regx string, fmtStr string, params ...interface{}) string {
 	var ret string
 
+	msg := i118Utils.I118Prt.Sprintf(fmtStr, params...)
+
 	for {
-		fmt.Println(i118Utils.I118Prt.Sprintf(msg) + ": ")
+		color.Cyan("\n" + msg + " \n")
 		fmt.Scanln(&ret)
 
-		ret = strings.ToLower(ret)
-		if ret == "exit" {
+		temp := strings.ToLower(ret)
+		if temp == "exit" {
 			os.Exit(1)
 		}
 
@@ -97,7 +124,7 @@ func getInput(msg string, regx string) string {
 			return ret
 		}
 
-		pass, _ := regexp.MatchString(regx, ret)
+		pass, _ := regexp.MatchString("^"+regx+"$", temp)
 		if pass {
 			return ret
 		} else {
@@ -211,7 +238,10 @@ func ReadCurrConfig() model.Config {
 }
 
 func saveEmptyConfig() error {
-	SaveConfig("en", "", "", "")
+	config := model.Config{Language: "en", Url: "", Account: "", Password: ""}
+
+	data, _ := yaml.Marshal(&config)
+	ioutil.WriteFile(constant.ConfigFile, data, 0666)
 
 	return nil
 }

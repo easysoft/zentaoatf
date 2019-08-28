@@ -1,6 +1,12 @@
-package scriptService
+package langUtils
 
-import "sync"
+import (
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
+	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
+	"github.com/fatih/color"
+	"strings"
+	"sync"
+)
 
 var LangMap map[string]map[string]string
 
@@ -57,6 +63,29 @@ func GetSupportedScriptLang() map[string]map[string]string {
 	})
 
 	return LangMap
+}
+
+func GetSupportLangageArr() []string {
+	langMap := GetSupportedScriptLang()
+
+	arr := make([]string, 0)
+	for lang, _ := range langMap {
+		arr = append(arr, lang)
+	}
+
+	return arr
+}
+
+func CheckSupportLangages(scriptLang string) bool {
+	langMap := GetSupportedScriptLang()
+
+	if langMap[scriptLang] == nil {
+		langs := strings.Join(GetSupportLangageArr(), ", ")
+		logUtils.PrintToCmd(color.RedString(i118Utils.I118Prt.Sprintf("only_support_script_language", langs)) + "\n")
+		return false
+	}
+
+	return true
 }
 
 func init() {

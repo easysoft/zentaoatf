@@ -1,15 +1,14 @@
 package main
 
 import (
-	"flag"
 	"fmt"
-	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
+	"github.com/easysoft/zentaoatf/src/utils/langUtils"
+	"strings"
 )
 
 func main() {
-	var languages []string
-	flag.Var(commonUtils.NewSliceValue([]string{}, &languages), "slice", "I like programming `languages`")
-	flag.Parse()
+	fmtParam := strings.Join(langUtils.GetSupportLangageArr(), " / ")
+	scriptLang := fmt.Sprintf("enter_co_language%s", fmtParam)
 
-	fmt.Println(languages)
+	fmt.Println(scriptLang)
 }

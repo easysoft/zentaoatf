@@ -14,7 +14,7 @@
     {
       "id": "enter_language",
       "message": "enter language",
-      "translation": "请输入你期望使用的语言，En / Zh"
+      "translation": "请输入你期望使用的语言。En / Zh"
     },
     {
       "id": "config_zentao_site",
@@ -35,6 +35,21 @@
       "id": "enter_password",
       "message": "enter password",
       "translation": "请输入账号密码"
+    },
+    {
+      "id": "enter_co_type",
+      "message": "enter co type",
+      "translation": "请选择用例来源。Product / Module / Suite / Task"
+    },
+    {
+      "id": "enter_co_independent",
+      "message": "enter co independent",
+      "translation": "是否将用例期待结果保存在独立的文件中？Yes / No"
+    },
+    {
+      "id": "enter_co_language",
+      "message": "enter co language",
+      "translation": "请选择脚本语言。 %s"
     },
     {
       "id": "invalid_input",
