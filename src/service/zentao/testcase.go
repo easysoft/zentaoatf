@@ -59,7 +59,8 @@ func ListCaseByProduct(baseUrl string, productId string) []model.TestCase {
 
 			tc := caseMap[idStr]
 			csWithSteps := GetCaseById(baseUrl, idStr)
-			caseArr = append(caseArr, model.TestCase{Id: idStr, Product: tc.Product, Title: tc.Title, StepArr: csWithSteps.StepArr})
+			caseArr = append(caseArr, model.TestCase{Id: idStr, Product: tc.Product, Module: tc.Module,
+				Title: tc.Title, StepArr: csWithSteps.StepArr})
 		}
 
 		return caseArr
@@ -83,7 +84,7 @@ func ListCaseByModule(baseUrl string, productId string, moduleId string) []model
 			caseId := cs.Id
 
 			csWithSteps := GetCaseById(baseUrl, caseId)
-			caseArr = append(caseArr, model.TestCase{Id: caseId, Product: cs.Product,
+			caseArr = append(caseArr, model.TestCase{Id: caseId, Product: cs.Product, Module: cs.Module,
 				Title: cs.Title, StepArr: csWithSteps.StepArr})
 		}
 
@@ -108,7 +109,7 @@ func ListCaseBySuite(baseUrl string, suiteId string) []model.TestCase {
 			caseId := cs.Id
 
 			csWithSteps := GetCaseById(baseUrl, caseId)
-			caseArr = append(caseArr, model.TestCase{Id: caseId, Product: cs.Product,
+			caseArr = append(caseArr, model.TestCase{Id: caseId, Product: cs.Product, Module: cs.Module,
 				Title: cs.Title, StepArr: csWithSteps.StepArr})
 		}
 
@@ -133,7 +134,7 @@ func ListCaseByTask(baseUrl string, suiteId string) []model.TestCase {
 			caseId := cs.Case
 
 			csWithSteps := GetCaseById(baseUrl, caseId)
-			caseArr = append(caseArr, model.TestCase{Id: caseId, Product: cs.Product,
+			caseArr = append(caseArr, model.TestCase{Id: caseId, Product: cs.Product, Module: cs.Module,
 				Title: cs.Title, StepArr: csWithSteps.StepArr})
 		}
 

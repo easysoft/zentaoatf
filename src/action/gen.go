@@ -34,6 +34,8 @@ func GenerateScript(productId string, moduleId string, suiteId string, taskId st
 	}
 
 	cases := zentaoService.LoadTestCases(productId, moduleId, suiteId, taskId)
+	productId = cases[0].Product
+	zentaoService.GetCaseModules(productId)
 
 	if cases != nil {
 		count, err := scriptService.Generate(cases, scriptLang, independentFile)

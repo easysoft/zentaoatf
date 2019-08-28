@@ -1,10 +1,12 @@
 package zentaoService
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/bitly/go-simplejson"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/service/client"
+	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
@@ -13,10 +15,10 @@ import (
 )
 
 func GetBugFiledOptions() {
-	//conf := configUtils.ReadCurrConfig()
-	Login("conf.Url", "conf.Account", "conf.Password")
+	conf := configUtils.ReadCurrConfig()
+	Login(conf.Url, conf.Account, conf.Password)
 
-	params := fmt.Sprintf("%d-%d", "conf.ProductId", "conf.ProjectId")
+	params := fmt.Sprintf("%d-%d", conf.ProductId, conf.ProjectId)
 	url := "conf.Url" + zentaoUtils.GenApiUri("bug", "ajaxGetBugFieldOptions", params)
 	dataStr, ok := client.Get(url, nil)
 
@@ -47,6 +49,23 @@ func GetBugFiledOptions() {
 
 		vari.ZentaoBugFileds = bugFields
 	}
+}
+
+func GetCaseModules(productId string) {
+	conf := configUtils.ReadCurrConfig()
+	Login(conf.Url, conf.Account, conf.Password)
+
+	params := [][]string{{"rootID", productId}, {"type", "case"}}
+	url := conf.Url + zentaoUtils.GenSuperApiUri("tree", "getOptionMenu", params)
+
+	dataStr, ok := client.Get(url, nil)
+
+	var moduelMap map[string]string
+	if ok {
+		json.Unmarshal([]byte(dataStr), &moduelMap)
+	}
+
+	vari.ZentaoCaseFileds.Modules = moduelMap
 }
 
 func fieldMapToListKeyInt(mp map[string]interface{}) []model.Option {

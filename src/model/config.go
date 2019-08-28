@@ -8,4 +8,5 @@ type Config struct {
 	Password string
 
 	ProductId int
+	ProjectId int
 }

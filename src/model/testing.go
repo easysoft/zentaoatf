@@ -17,6 +17,7 @@ type TestCaseInModule struct {
 	Id      string
 	Title   string
 	Product string
+	Module  string
 }
 
 type TestSuite struct {
@@ -32,6 +33,7 @@ type TestCaseInSuite struct {
 	Id      string
 	Title   string
 	Product string
+	Module  string
 }
 
 type TestTask struct {
@@ -49,11 +51,13 @@ type TestCaseInTask struct {
 	Title   string
 	Case    string // real caseId
 	Product string
+	Module  string
 }
 
 type TestCase struct {
 	Id      string
 	Product string
+	Module  string
 
 	Title   string
 	Steps   map[int]TestStep

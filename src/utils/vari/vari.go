@@ -27,4 +27,6 @@ var (
 
 	ScreenWidth     int
 	ZentaoBugFileds model.ZentaoBugFileds
+
+	ZentaoCaseFileds model.ZentaoCaseFileds
 )

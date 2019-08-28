@@ -27,9 +27,16 @@ func Generate(testcases []model.TestCase, langType string, independentFile bool)
 func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile bool, caseIds *[]string) {
 	caseId := cs.Id
 	productId := cs.Product
+	moduleId := cs.Module
 	caseTitle := cs.Title
 
-	scriptFile := fmt.Sprintf(constant.ScriptDir+"tc-%s.%s", caseId, LangMap[langType]["extName"])
+	modulePath := ""
+	if vari.ZentaoCaseFileds.Modules[moduleId] != "" {
+		modulePath = vari.ZentaoCaseFileds.Modules[moduleId] + string(os.PathSeparator)
+		modulePath = modulePath[1:]
+	}
+
+	scriptFile := fmt.Sprintf(constant.ScriptDir+"%stc-%s.%s", modulePath, caseId, LangMap[langType]["extName"])
 
 	fileUtils.MkDirIfNeeded(constant.ScriptDir)
 	*caseIds = append(*caseIds, caseId)

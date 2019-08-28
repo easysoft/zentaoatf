@@ -18,7 +18,7 @@ import (
 	"time"
 )
 
-func GenSuperApiUri(module string, methd string, params [][]string) string {
+func GenSuperApiUri(model string, methd string, params [][]string) string {
 	var sep string
 	if vari.RequestType == constant.RequestTypePathInfo {
 		sep = ","
@@ -38,9 +38,9 @@ func GenSuperApiUri(module string, methd string, params [][]string) string {
 
 	var uri string
 	if vari.RequestType == constant.RequestTypePathInfo {
-		uri = fmt.Sprintf("api-getmodel-%s-%s-%s.json", module, methd, paramStr)
+		uri = fmt.Sprintf("api-getmodel-%s-%s-%s.json", model, methd, paramStr)
 	} else {
-		uri = fmt.Sprintf("?m=api&f=getmodel&module=%s&methodName=%s&params=%s", module, methd, paramStr)
+		uri = fmt.Sprintf("?m=api&f=getmodel&model=%s&methodName=%s&params=%s", model, methd, paramStr)
 	}
 
 	logUtils.PrintToCmd(uri)

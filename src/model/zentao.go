@@ -13,6 +13,10 @@ type ZentaoBugFileds struct {
 	Priorities []Option
 }
 
+type ZentaoCaseFileds struct {
+	Modules map[string]string
+}
+
 type Option struct {
 	Id        string
 	Code      string
