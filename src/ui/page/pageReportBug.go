@@ -26,7 +26,7 @@ func InitReportBugPage() error {
 
 	zentaoService.GetBugFiledOptions()
 
-	bug, idInTask, stepIds = zentaoService.SubmitBug()
+	bug, idInTask, stepIds = zentaoService.CommitBug()
 
 	maxX, maxY := vari.Cui.Size()
 	pageWidth := 120
@@ -172,7 +172,7 @@ func reportBug(g *gocui.Gui, v *gocui.View) error {
 	bug.Pri = zentaoService.GetIdByName(priorityStr, vari.ZentaoBugFileds.Priorities)
 
 	logUtils.PrintStructToCmd(bug)
-	ret := zentaoService.SubmitBug(bug, idInTask, stepIds)
+	ret := zentaoService.CommitBug(bug, idInTask, stepIds)
 
 	if ret {
 		DestoryReportBugPage()

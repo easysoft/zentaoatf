@@ -20,6 +20,7 @@ func main() {
 	var task string
 	var suite string
 	var result string
+	var caseId string
 
 	flagSet := flag.NewFlagSet("atf", flag.ContinueOnError)
 
@@ -48,6 +49,9 @@ func main() {
 
 	flagSet.StringVar(&keywords, "k", "", "")
 	flagSet.StringVar(&keywords, "keywords", "", "")
+
+	flagSet.StringVar(&caseId, "c", "", "")
+	flagSet.StringVar(&caseId, "case", "", "")
 
 	switch os.Args[1] {
 	case "run":
@@ -78,6 +82,12 @@ func main() {
 		files, idx := commonUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
 			action.CommitResult(files)
+		}
+
+	case "bug":
+		files, idx := commonUtils.GetFilesFromParams(os.Args[2:])
+		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
+			action.CommitBug(files, caseId)
 		}
 
 	case "ls":

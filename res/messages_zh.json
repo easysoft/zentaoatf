@@ -12,6 +12,11 @@
       "translation": "开始配置, 输入'exit'退出"
     },
     {
+      "id": "test_case",
+      "message": "test case",
+      "translation": "用例"
+    },
+    {
       "id": "result",
       "message": "result",
       "translation": "结果"
@@ -20,6 +25,11 @@
       "id": "enter_dir",
       "message": "enter dir",
       "translation": "输入%s目录"
+    },
+    {
+      "id": "enter_id",
+      "message": "enter id",
+      "translation": "enter %s id."
     },
     {
       "id": "dir_not_exist",
@@ -263,8 +273,8 @@
     },
     {
       "id": "success_to_report_bug",
-      "message": "success to report a bug for case %s-%s",
-      "translation": "成功为用例%s-%s提交缺陷"
+      "message": "success to report a bug for case %s",
+      "translation": "成功为用例%s提交缺陷"
     },
     {
       "id": "success_to_submit_result",

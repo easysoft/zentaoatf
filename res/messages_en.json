@@ -12,6 +12,11 @@
       "translation": "begin to config"
     },
     {
+      "id": "test_case",
+      "message": "test case",
+      "translation": "case"
+    },
+    {
       "id": "result",
       "message": "result",
       "translation": "result"
@@ -20,6 +25,11 @@
       "id": "enter_dir",
       "message": "enter dir",
       "translation": "enter %s dir."
+    },
+    {
+      "id": "enter_id",
+      "message": "enter id",
+      "translation": "enter %s id."
     },
     {
       "id": "dir_not_exist",
@@ -271,8 +281,8 @@
     },
     {
       "id": "success_to_report_bug",
-      "message": "success to report a bug for case %s-%s",
-      "translation": "success to report a bug for case %s-%s"
+      "message": "success to report a bug for case %s",
+      "translation": "success to report a bug for case %s"
     },
     {
       "id": "success_to_submit_result",

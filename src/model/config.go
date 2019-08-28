@@ -6,7 +6,4 @@ type Config struct {
 	Url      string
 	Account  string
 	Password string
-
-	ProductId int
-	ProjectId int
 }

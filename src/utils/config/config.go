@@ -113,6 +113,10 @@ func ConfigForDir(dir *string, entity string) {
 	*dir = getInput("is_dir", "enter_dir", i118Utils.I118Prt.Sprintf(entity))
 }
 
+func ConfigForInt(in *string, entity string) {
+	*in = getInput("\\d+", "enter_id", i118Utils.I118Prt.Sprintf(entity))
+}
+
 func getInput(regx string, fmtStr string, params ...interface{}) string {
 	var ret string
 

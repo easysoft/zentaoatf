@@ -6,6 +6,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/service/client"
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
+	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
@@ -14,14 +15,16 @@ import (
 	"strings"
 )
 
-func GenBug(resultDir string) (model.Bug, string) {
-	//conf := configUtils.ReadCurrConfig()
-	productId := 0 // conf.ProductId
-	projectId := 0 // conf.ProjectId
+func GenBug(resultDir string, caseIdStr string) (model.Bug, string) {
+	caseId, err := strconv.Atoi(caseIdStr)
+
+	if err != nil {
+		return model.Bug{}, ""
+	}
 
 	report := testingService.GetTestTestReportForSubmit(resultDir)
 	for _, cs := range report.Cases {
-		if cs.Id != vari.CurrCaseId {
+		if cs.Id != caseId {
 			continue
 		}
 
@@ -32,11 +35,8 @@ func GenBug(resultDir string) (model.Bug, string) {
 		severity := GetFirstNoEmptyVal(vari.ZentaoBugFileds.Severities)
 		priority := GetFirstNoEmptyVal(vari.ZentaoBugFileds.Priorities)
 
-		product := productId
-		project := projectId
+		product := cs.ProductId
 		caseId := cs.Id
-		//Result := cs.ZentaoResultId
-		taskId := cs.TaskId
 
 		uid := uuid.NewV4().String()
 		caseVersion := "0"
@@ -55,9 +55,8 @@ func GenBug(resultDir string) (model.Bug, string) {
 
 		bug := model.Bug{Title: title,
 			Module: module, Type: typ, OpenedBuild: openedBuild, Severity: severity, Pri: priority,
-			Product: strconv.Itoa(product), Project: strconv.Itoa(project), Case: strconv.Itoa(caseId),
-			//Result: strconv.Itoa(Result),
-			Testtask: strconv.Itoa(taskId), Steps: strings.Join(steps, "<br/>"),
+			Product: strconv.Itoa(product), Project: "0", Case: strconv.Itoa(caseId),
+			Testtask: "0", Steps: strings.Join(steps, "<br/>"),
 			Uid: uid, CaseVersion: caseVersion, OldTaskID: oldTaskID,
 		}
 		return bug, stepIds
@@ -67,17 +66,19 @@ func GenBug(resultDir string) (model.Bug, string) {
 	return model.Bug{}, ""
 }
 
-func SubmitBug(bug model.Bug, idInTask string, stepIds string) bool {
-	//conf := configUtils.ReadCurrConfig()
-	Login("conf.Url", "conf.Account", "conf.Password")
+func CommitBug(bug model.Bug, stepIds string) bool {
+	// TODO: open cui
+
+	conf := configUtils.ReadCurrConfig()
+	Login(conf.Url, conf.Account, conf.Password)
 
 	productId := bug.Product
 	projectId := bug.Project
 
 	// bug-create-1-0-caseID=1,version=3,resultID=93,runID=0,stepIdList=9_12_
 	// bug-create-1-0-caseID=1,version=3,resultID=84,runID=6,stepIdList=9_12_,testtask=2,projectID=1,buildID=1
-	params := fmt.Sprintf("caseID=%s,version=0,resultID=%s,runID=%s,stepIdList=%s",
-		bug.Case, bug.Result, idInTask, stepIds)
+	params := fmt.Sprintf("caseID=%s,version=0,resultID=%s,runID=0,stepIdList=%s",
+		bug.Case, bug.Result, stepIds)
 
 	bug.Steps = strings.Replace(bug.Steps, " ", "&nbsp;", -1)
 	if bug.Testtask != "" {
@@ -93,7 +94,7 @@ func SubmitBug(bug model.Bug, idInTask string, stepIds string) bool {
 	json, _ := simplejson.NewJson([]byte(body))
 	msg, _ := json.Get("message").String()
 	if ok && msg == "" {
-		logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("success_to_report_bug", bug.Case, idInTask) + "\n")
+		logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("success_to_report_bug", bug.Case) + "\n")
 
 		return true
 	} else {

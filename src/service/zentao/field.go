@@ -18,7 +18,7 @@ func GetBugFiledOptions() {
 	conf := configUtils.ReadCurrConfig()
 	Login(conf.Url, conf.Account, conf.Password)
 
-	params := fmt.Sprintf("%d-%d", conf.ProductId, conf.ProjectId)
+	params := fmt.Sprintf("%d-%0", conf.ProductId)
 	url := "conf.Url" + zentaoUtils.GenApiUri("bug", "ajaxGetBugFieldOptions", params)
 	dataStr, ok := client.Get(url, nil)
 
