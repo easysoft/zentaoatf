@@ -44,7 +44,7 @@
     {
       "id": "enter_co_type",
       "message": "enter co type",
-      "translation": "select case source? Product / Module / Suite / Task"
+      "translation": "import test cases from? Product / Module / Suite / Task"
     },
     {
       "id": "enter_co_independent",
