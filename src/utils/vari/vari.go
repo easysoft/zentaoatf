@@ -29,4 +29,6 @@ var (
 	ZentaoBugFileds model.ZentaoBugFileds
 
 	ZentaoCaseFileds model.ZentaoCaseFileds
+
+	CurrBug model.Bug
 )

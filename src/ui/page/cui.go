@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-func Cui() {
+func Cui(page string) {
 	g, err := gocui.NewGui(gocui.OutputNormal)
 	if err != nil {
 		log.Panicln(err)
@@ -22,7 +22,9 @@ func Cui() {
 
 	vari.Cui = g
 
-	InitMainPage()
+	if page == "bug" {
+		InitReportBugPage()
+	}
 
 	if err := g.MainLoop(); err != nil && err != gocui.ErrQuit {
 		log.Panicln(err)

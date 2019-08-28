@@ -1,7 +1,6 @@
 package page
 
 import (
-	"github.com/easysoft/zentaoatf/src/model"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/ui/widget"
@@ -13,12 +12,6 @@ import (
 	"strings"
 )
 
-var (
-	bug      model.Bug
-	idInTask string
-	stepIds  string
-)
-
 var filedValMap map[string]int
 
 func InitReportBugPage() error {
@@ -26,7 +19,7 @@ func InitReportBugPage() error {
 
 	zentaoService.GetBugFiledOptions()
 
-	bug, idInTask, stepIds = zentaoService.CommitBug()
+	bug := vari.CurrBug
 
 	maxX, maxY := vari.Cui.Size()
 	pageWidth := 120
@@ -130,6 +123,8 @@ func InitReportBugPage() error {
 }
 
 func reportBug(g *gocui.Gui, v *gocui.View) error {
+	bug := vari.CurrBug
+
 	titleView, _ := g.View("titleInput")
 	stepsView, _ := g.View("stepsInput")
 	moduleView, _ := g.View("module")
@@ -172,7 +167,7 @@ func reportBug(g *gocui.Gui, v *gocui.View) error {
 	bug.Pri = zentaoService.GetIdByName(priorityStr, vari.ZentaoBugFileds.Priorities)
 
 	logUtils.PrintStructToCmd(bug)
-	ret := zentaoService.CommitBug(bug, idInTask, stepIds)
+	ret := zentaoService.CommitBug(bug)
 
 	if ret {
 		DestoryReportBugPage()

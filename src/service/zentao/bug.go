@@ -15,11 +15,11 @@ import (
 	"strings"
 )
 
-func GenBug(resultDir string, caseIdStr string) (model.Bug, string) {
+func PrepareBug(resultDir string, caseIdStr string) model.Bug {
 	caseId, err := strconv.Atoi(caseIdStr)
 
 	if err != nil {
-		return model.Bug{}, ""
+		return model.Bug{}
 	}
 
 	report := testingService.GetTestTestReportForSubmit(resultDir)
@@ -57,17 +57,17 @@ func GenBug(resultDir string, caseIdStr string) (model.Bug, string) {
 			Module: module, Type: typ, OpenedBuild: openedBuild, Severity: severity, Pri: priority,
 			Product: strconv.Itoa(product), Project: "0", Case: strconv.Itoa(caseId),
 			Testtask: "0", Steps: strings.Join(steps, "<br/>"),
-			Uid: uid, CaseVersion: caseVersion, OldTaskID: oldTaskID,
+			Uid: uid, CaseVersion: caseVersion, OldTaskID: oldTaskID, StepIds: stepIds,
 		}
-		return bug, stepIds
+		return bug
 
 	}
 
-	return model.Bug{}, ""
+	return model.Bug{}
 }
 
-func CommitBug(bug model.Bug, stepIds string) bool {
-	// TODO: open cui
+func CommitBug() bool {
+	bug := vari.CurrBug
 
 	conf := configUtils.ReadCurrConfig()
 	Login(conf.Url, conf.Account, conf.Password)
@@ -78,7 +78,7 @@ func CommitBug(bug model.Bug, stepIds string) bool {
 	// bug-create-1-0-caseID=1,version=3,resultID=93,runID=0,stepIdList=9_12_
 	// bug-create-1-0-caseID=1,version=3,resultID=84,runID=6,stepIdList=9_12_,testtask=2,projectID=1,buildID=1
 	params := fmt.Sprintf("caseID=%s,version=0,resultID=%s,runID=0,stepIdList=%s",
-		bug.Case, bug.Result, stepIds)
+		bug.Case, bug.Result, bug.StepIds)
 
 	bug.Steps = strings.Replace(bug.Steps, " ", "&nbsp;", -1)
 	if bug.Testtask != "" {

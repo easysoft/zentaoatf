@@ -2,8 +2,10 @@ package action
 
 import (
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
+	"github.com/easysoft/zentaoatf/src/ui/page"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 )
 
 func CommitBug(files []string, caseId string) {
@@ -20,6 +22,6 @@ func CommitBug(files []string, caseId string) {
 
 	resultDir = fileUtils.UpdateDir(resultDir)
 
-	bug, stepIds := zentaoService.GenBug(resultDir, caseId)
-	zentaoService.CommitBug(bug, stepIds)
+	vari.CurrBug = zentaoService.PrepareBug(resultDir, caseId)
+	page.Cui("bug")
 }

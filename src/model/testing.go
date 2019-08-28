@@ -92,6 +92,8 @@ type Bug struct {
 	Uid         string // uuid.NewV4().String()
 	CaseVersion string // 0
 	OldTaskID   string // 0
+
+	StepIds string
 }
 
 type TestReport struct {
