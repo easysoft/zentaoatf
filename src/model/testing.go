@@ -109,7 +109,6 @@ type TestReport struct {
 }
 type CaseLog struct {
 	Id        int
-	IdInTask  int
 	ProductId int
 	TaskId    int
 	//ZentaoResultId int

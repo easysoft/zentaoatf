@@ -14,12 +14,12 @@ import (
 	"strings"
 )
 
-func GenBug() (model.Bug, string, string) {
+func GenBug(resultDir string) (model.Bug, string) {
 	//conf := configUtils.ReadCurrConfig()
 	productId := 0 // conf.ProductId
 	projectId := 0 // conf.ProjectId
 
-	report := testingService.GetTestTestReportForSubmit(vari.CurrScriptFile, vari.CurrResultDate)
+	report := testingService.GetTestTestReportForSubmit(resultDir)
 	for _, cs := range report.Cases {
 		if cs.Id != vari.CurrCaseId {
 			continue
@@ -42,8 +42,6 @@ func GenBug() (model.Bug, string, string) {
 		caseVersion := "0"
 		oldTaskID := "0"
 
-		idInTask := strconv.Itoa(cs.IdInTask)
-
 		stepIds := ""
 		steps := make([]string, 0)
 		for _, step := range cs.Steps {
@@ -62,11 +60,11 @@ func GenBug() (model.Bug, string, string) {
 			Testtask: strconv.Itoa(taskId), Steps: strings.Join(steps, "<br/>"),
 			Uid: uid, CaseVersion: caseVersion, OldTaskID: oldTaskID,
 		}
-		return bug, idInTask, stepIds
+		return bug, stepIds
 
 	}
 
-	return model.Bug{}, "", ""
+	return model.Bug{}, ""
 }
 
 func SubmitBug(bug model.Bug, idInTask string, stepIds string) bool {

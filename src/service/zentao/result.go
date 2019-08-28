@@ -5,25 +5,22 @@ import (
 	"github.com/bitly/go-simplejson"
 	"github.com/easysoft/zentaoatf/src/service/client"
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
+	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
-	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"strconv"
 )
 
-func SubmitResult() {
-	//conf := configUtils.ReadCurrConfig()
-	Login("conf.Url", "conf.Account", "conf.Password")
+func CommitResult(resultDir string) {
+	conf := configUtils.ReadCurrConfig()
+	Login(conf.Url, conf.Account, conf.Password)
 
-	report := testingService.GetTestTestReportForSubmit(vari.CurrScriptFile, vari.CurrResultDate)
+	report := testingService.GetTestTestReportForSubmit(resultDir)
 
 	for _, cs := range report.Cases {
 		id := cs.Id
-		idInTask := cs.IdInTask
-
-		//uri := fmt.Sprintf("testtask-runCase-%d-%d-1.json", idInTask, id)
 
 		requestObj := map[string]interface{}{"case": strconv.Itoa(id), "version": "0"}
 
@@ -48,22 +45,19 @@ func SubmitResult() {
 			requestObj["reals"] = realMap
 		}
 
-		url := "conf.Url + uri"
+		uri := fmt.Sprintf("testtask-runCase-0-%d-1.json", id)
+		url := conf.Url + uri
+
 		_, ok := client.PostObject(url, requestObj)
 		if ok {
-			resultId := GetLastResult("conf.Url", idInTask, id)
-			//report.Cases[idx].ZentaoResultId = resultId
-
+			resultId := GetLastResult(conf.Url, id)
 			logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("success_to_submit_result", id, resultId) + "\n")
 		}
 	}
-
-	//json, _ := json.Marshal(report)
-	//testingService.SaveTestTestReportAfterSubmit(vari.CurrScriptFile, vari.CurrResultDate, string(json))
 }
 
-func GetLastResult(baseUrl string, caseInTaskId int, caseId int) int {
-	params := fmt.Sprintf("%d-%d-1.json", caseInTaskId, caseId)
+func GetLastResult(baseUrl string, caseId int) int {
+	params := fmt.Sprintf("0-%d-1.json", caseId)
 
 	url := baseUrl + zentaoUtils.GenApiUri("testtask", "results", params)
 	dataStr, ok := client.Get(url, nil)

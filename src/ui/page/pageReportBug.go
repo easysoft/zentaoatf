@@ -26,7 +26,7 @@ func InitReportBugPage() error {
 
 	zentaoService.GetBugFiledOptions()
 
-	bug, idInTask, stepIds = zentaoService.GenBug()
+	bug, idInTask, stepIds = zentaoService.SubmitBug()
 
 	maxX, maxY := vari.Cui.Size()
 	pageWidth := 120

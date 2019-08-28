@@ -37,7 +37,7 @@ func Print(report model.TestReport) {
 		statusColor := logUtils.ColoredStatus(status)
 
 		logs = append(logs, fmt.Sprintf(str, status, cs.Id, cs.Path))
-		logUtils.Printt(fmt.Sprintf(str+"\n", statusColor, cs.Id, cs.IdInTask, cs.Path))
+		logUtils.Printt(fmt.Sprintf(str+"\n", statusColor, cs.Id, cs.Path))
 
 		if len(cs.Steps) > 0 {
 			count := 0

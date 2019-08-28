@@ -13,10 +13,8 @@ import (
 	"strings"
 )
 
-func GetTestTestReportForSubmit(scriptFile string, resultDate string) model.TestReport {
-	mode, name := scriptService.GetRunModeAndName(scriptFile)
-	resultPath := constant.LogDir + scriptService.GetLogFolder(mode, name, resultDate) +
-		string(os.PathSeparator) + "result.json"
+func GetTestTestReportForSubmit(resultDir string) model.TestReport {
+	resultPath := resultDir + "result.json"
 
 	content := fileUtils.ReadFile(resultPath)
 	content = strings.Replace(content, "\n", "", -1)
