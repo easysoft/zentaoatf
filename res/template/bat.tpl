@@ -8,8 +8,6 @@ steps:          %s
 
 expects:
 %s
-readme:
-%s
 
 TC;
 :start

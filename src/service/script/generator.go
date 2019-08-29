@@ -76,8 +76,6 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 		i118Utils.I118Prt.Sprintf("your_codes_here"))
 	srcCode = append(srcCode, temp)
 
-	readme := zentaoUtils.ReadResData("res/template/readme-" + vari.Config.Language + ".tpl")
-
 	var expectsTxt string
 	if !independentFile {
 		expectsTxt = strings.Join(expects, "\n")
@@ -94,7 +92,6 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 	content := fmt.Sprintf(template,
 		caseId, productId, caseTitle,
 		strings.Join(steps, "\n"), expectsTxt,
-		readme,
 		strings.Join(srcCode, "\n"))
 
 	fileUtils.WriteFile(scriptFile, content)

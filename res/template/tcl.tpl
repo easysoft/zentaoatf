@@ -9,10 +9,8 @@ steps:          %s
 
 expects:
 %s
-readme:
-%s
 
-TC
+TC;
 }
 
 %s
