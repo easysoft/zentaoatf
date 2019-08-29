@@ -16,6 +16,8 @@ expects:
 TC;
 !
 
+echo '中文测试'
+
 tm=`ping -c 1 zentao.com 2>/dev/null | grep 'time='`
 
 echo '#'
