@@ -19,6 +19,7 @@ TC;
 
 echo "中文测试"
 
+:: print the line with TTL
 for /f "delims=" %%i in ('ping zentao.com -n 1 ^| findstr "TTL"') do set output=%%i
 
 echo #

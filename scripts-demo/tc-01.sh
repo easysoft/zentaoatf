@@ -16,7 +16,8 @@ expects:
 TC;
 !
 
-tm=`ping -c 1 zentao.com 2>/dev/null | grep 'time='`
+:: print the line with ttl
+tm=`ping -c 1 zentao.com 2>/dev/null | grep 'ttl'`
 
 echo '#'
 echo $tm
