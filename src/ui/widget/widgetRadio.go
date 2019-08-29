@@ -7,10 +7,6 @@ import (
 	"strings"
 )
 
-const (
-	radioWidth = 10
-)
-
 type RadioWidget struct {
 	name string
 	x, y int

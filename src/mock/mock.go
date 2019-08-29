@@ -20,10 +20,6 @@ var (
 	successJson  = fmt.Sprintf("res%sjson%ssuccess.json", string(os.PathSeparator), string(os.PathSeparator))
 )
 
-func GetUrl(uri string) string {
-	return BaseUrl + uri
-}
-
 func Launch() {
 	r := mux.NewRouter()
 

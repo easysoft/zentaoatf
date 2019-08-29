@@ -78,12 +78,7 @@ func HideHelp() error {
 }
 
 func initContent() {
-	HelpGlobal = fmt.Sprintf("%s \n %s \n %s \n %s \n %s \n %s \n",
+	HelpGlobal = fmt.Sprintf("%s \n %s \n",
 		i118Utils.I118Prt.Sprintf("help_key_bind"),
-		i118Utils.I118Prt.Sprintf("help_mouse"),
-		//i118Utils.I118Prt.Sprintf("help_tab"),
-		i118Utils.I118Prt.Sprintf("help_space"),
-		i118Utils.I118Prt.Sprintf("help_enter"),
-		i118Utils.I118Prt.Sprintf("help_show"),
 		i118Utils.I118Prt.Sprintf("help_exit"))
 }

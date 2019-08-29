@@ -21,5 +21,4 @@ type Option struct {
 	Id   string
 	Code string
 	Name string
-	//IsDefault bool
 }

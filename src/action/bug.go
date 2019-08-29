@@ -20,5 +20,4 @@ func CommitBug(files []string, caseId string) {
 	}
 
 	page.Cui()
-	//page.InitReportBugPage(resultDir, caseId)
 }

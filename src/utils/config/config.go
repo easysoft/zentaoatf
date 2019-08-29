@@ -8,7 +8,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/display"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/easysoft/zentaoatf/src/utils/i118"
-	"github.com/easysoft/zentaoatf/src/utils/langUtils"
+	"github.com/easysoft/zentaoatf/src/utils/lang"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"

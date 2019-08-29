@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/utils/langUtils"
+	"github.com/easysoft/zentaoatf/src/utils/lang"
 	"strings"
 )
 

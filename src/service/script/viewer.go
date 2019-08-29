@@ -68,23 +68,3 @@ func Brief(file string, keywords string) {
 		}
 	}
 }
-
-//func Detail(file string) {
-//	content := fileUtils.ReadFile(file)
-//
-//	myExp := regexp.MustCompile(
-//		`<<<TC[\S\s]*` +
-//			`caseId:([^\n]*)\n+` +
-//			`caseIdInTask:([^\n]*)\n+` +
-//			`taskId:([^\n]*)\n+` +
-//			`title:([^\n]*)\n+`)
-//	arr := myExp.FindStringSubmatch(content)
-//
-//	if len(arr) > 2 {
-//		caseId := commonUtils.RemoveBlankLine(arr[1])
-//		title := commonUtils.RemoveBlankLine(arr[4])
-//
-//		color.Cyan("\n%s %s \n", caseId, title)
-//		fmt.Printf("%s\n", content)
-//	}
-//}

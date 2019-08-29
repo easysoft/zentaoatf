@@ -6,7 +6,7 @@ import (
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
-	"github.com/easysoft/zentaoatf/src/utils/langUtils"
+	"github.com/easysoft/zentaoatf/src/utils/lang"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"os"

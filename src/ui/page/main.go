@@ -24,6 +24,7 @@ func InitMainPage() error {
 	cmdView := widget.NewPanelWidget("cmd", 0, vari.MainViewHeight, maxX-2, constant.CmdViewHeight-1, "")
 	ui.ViewMap["root"] = append(ui.ViewMap["root"], cmdView.Name())
 
+	widget.NewHelpWidget()
 	MainPageKeyBindings()
 	return nil
 }

@@ -7,7 +7,6 @@ import (
 )
 
 const (
-	ButtonWidth  = 15
 	ButtonHeight = 2
 )
 

@@ -148,7 +148,6 @@ func GetIdByName(name string, options []model.Option) string {
 func GetNameById(id string, options []model.Option) string {
 	for _, opt := range options {
 		if opt.Id == id {
-			logUtils.PrintToCmd("===" + opt.Name)
 			return opt.Name
 		}
 	}

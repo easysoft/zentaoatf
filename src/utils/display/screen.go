@@ -2,7 +2,7 @@ package display
 
 import (
 	"github.com/easysoft/zentaoatf/src/utils/common"
-	"github.com/easysoft/zentaoatf/src/utils/shellUtils"
+	"github.com/easysoft/zentaoatf/src/utils/shell"
 	"os"
 	"os/exec"
 	"regexp"

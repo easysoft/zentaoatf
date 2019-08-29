@@ -6,7 +6,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/config"
 	"github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/i118"
-	"github.com/easysoft/zentaoatf/src/utils/langUtils"
+	"github.com/easysoft/zentaoatf/src/utils/lang"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 )
 

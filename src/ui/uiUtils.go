@@ -106,17 +106,6 @@ func SupportRowHighlight(name string) error {
 	return nil
 }
 
-func AddLineSelectedEvent(name string, selectLine func(g *gocui.Gui, v *gocui.View) error) error {
-	if err := vari.Cui.SetKeybinding(name, gocui.KeyEnter, gocui.ModNone, selectLine); err != nil {
-		return err
-	}
-	if err := vari.Cui.SetKeybinding(name, gocui.MouseLeft, gocui.ModNone, selectLine); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func SetCurrView(name string) func(g *gocui.Gui, v *gocui.View) error {
 	return func(g *gocui.Gui, v *gocui.View) error {
 		g.SetCurrentView(name)
