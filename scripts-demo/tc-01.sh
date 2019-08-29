@@ -18,5 +18,5 @@ TC;
 
 tm=`ping -c 1 zentao.com 2>/dev/null | grep 'time='`
 
-echo '#' #checkpoint
+echo '#'
 echo $tm
