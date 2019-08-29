@@ -17,9 +17,9 @@ func Get(url string, params map[string]string) (string, bool) {
 	logUtils.PrintToCmd(url)
 	client := &http.Client{}
 
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		logUtils.PrintToCmd(err.Error())
+	req, reqErr := http.NewRequest("GET", url, nil)
+	if reqErr != nil {
+		logUtils.PrintToCmd(reqErr.Error())
 		return "", false
 	}
 
@@ -35,9 +35,9 @@ func Get(url string, params map[string]string) (string, bool) {
 	}
 	req.URL.RawQuery = q.Encode()
 
-	resp, err := client.Do(req)
-	if err != nil {
-		logUtils.PrintToCmd(err.Error())
+	resp, respErr := client.Do(req)
+	if respErr != nil {
+		logUtils.PrintToCmd(respErr.Error())
 		return "", false
 	}
 
@@ -45,7 +45,11 @@ func Get(url string, params map[string]string) (string, bool) {
 	logUtils.PrintUnicode(bodyStr)
 
 	var bodyJson model.ZentaoResponse
-	json.Unmarshal(bodyStr, &bodyJson)
+	jsonErr := json.Unmarshal(bodyStr, &bodyJson)
+	if jsonErr != nil {
+		logUtils.PrintToCmd(jsonErr.Error())
+		return "", false
+	}
 
 	defer resp.Body.Close()
 
@@ -70,18 +74,18 @@ func PostObject(url string, params interface{}) (string, bool) {
 
 	logUtils.PrintToCmd(fmt.Sprintf("%s", data))
 
-	req, err := http.NewRequest("POST", url, strings.NewReader(data))
-	if err != nil {
-		logUtils.PrintToCmd(err.Error())
+	req, reqErr := http.NewRequest("POST", url, strings.NewReader(data))
+	if reqErr != nil {
+		logUtils.PrintToCmd(reqErr.Error())
 		return "", false
 	}
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("cookie", vari.SessionVar+"="+vari.SessionId)
 
-	resp, err := client.Do(req)
-	if err != nil {
-		logUtils.PrintToCmd(err.Error())
+	resp, respErr := client.Do(req)
+	if respErr != nil {
+		logUtils.PrintToCmd(respErr.Error())
 		return "", false
 	}
 
@@ -89,7 +93,11 @@ func PostObject(url string, params interface{}) (string, bool) {
 	logUtils.PrintUnicode(bodyStr)
 
 	var bodyJson model.ZentaoResponse
-	json.Unmarshal(bodyStr, &bodyJson)
+	jsonErr := json.Unmarshal(bodyStr, &bodyJson)
+	if jsonErr != nil {
+		logUtils.PrintToCmd(jsonErr.Error())
+		return "", false
+	}
 
 	defer resp.Body.Close()
 
@@ -116,16 +124,18 @@ func PostStr(url string, params map[string]string) (string, bool) {
 		idx++
 	}
 
-	req, err := http.NewRequest("POST", url, strings.NewReader(paramStr))
-	if err != nil {
+	req, reqErr := http.NewRequest("POST", url, strings.NewReader(paramStr))
+	if reqErr != nil {
+		logUtils.PrintToCmd(reqErr.Error())
 		return "", false
 	}
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("cookie", vari.SessionVar+"="+vari.SessionId)
 
-	resp, err := client.Do(req)
-	if err != nil {
+	resp, respErr := client.Do(req)
+	if respErr != nil {
+		logUtils.PrintToCmd(respErr.Error())
 		return "", false
 	}
 
@@ -133,7 +143,11 @@ func PostStr(url string, params map[string]string) (string, bool) {
 	logUtils.PrintUnicode(bodyStr)
 
 	var bodyJson model.ZentaoResponse
-	json.Unmarshal(bodyStr, &bodyJson)
+	jsonErr := json.Unmarshal(bodyStr, &bodyJson)
+	if jsonErr != nil {
+		logUtils.PrintToCmd(jsonErr.Error())
+		return "", false
+	}
 
 	defer resp.Body.Close()
 

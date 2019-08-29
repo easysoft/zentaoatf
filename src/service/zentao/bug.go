@@ -87,7 +87,6 @@ func CommitBug() bool {
 
 	url := conf.Url + uri
 	body, ok := client.PostObject(url, bug)
-
 	if !ok {
 		return false
 	}
