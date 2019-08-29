@@ -373,6 +373,11 @@
       "translation": "取消"
     },
     {
+      "id": "close",
+      "message": "close",
+      "translation": "关闭"
+    },
+    {
       "id": "switch_to",
       "message": "Switch To",
       "translation": "切换至"

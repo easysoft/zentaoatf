@@ -1,6 +1,7 @@
 package page
 
 import (
+	"fmt"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/ui/widget"
@@ -165,6 +166,11 @@ func reportBug(g *gocui.Gui, v *gocui.View) error {
 	ok := zentaoService.CommitBug()
 
 	if ok {
+		vari.Cui.DeleteView("submitInput")
+
+		cancelReportBugInput, _ := vari.Cui.View("cancelReportBugInput")
+		cancelReportBugInput.Clear()
+		fmt.Fprint(cancelReportBugInput, " "+i118Utils.I118Prt.Sprintf("cancel"))
 	}
 
 	return nil
@@ -185,8 +191,7 @@ func init() {
 }
 
 func cancelReportBug(g *gocui.Gui, v *gocui.View) error {
-	DestoryReportBugPage()
-	return nil
+	return gocui.ErrQuit
 }
 
 func DestoryReportBugPage() {

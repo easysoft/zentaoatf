@@ -381,6 +381,11 @@
       "translation": "Cancel"
     },
     {
+      "id": "close",
+      "message": "close",
+      "translation": "Close"
+    },
+    {
       "id": "switch_to",
       "message": "Switch To",
       "translation": "Switch To"
