@@ -1,7 +1,6 @@
 package fileUtils
 
 import (
-	"fmt"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	"io/ioutil"
 	"os"
@@ -28,8 +27,6 @@ func ReadFileBuf(filePath string) []byte {
 
 func WriteFile(filePath string, content string) {
 	dir := filepath.Dir(filePath)
-	fmt.Println("=file=" + filePath)
-	fmt.Println("=dir=" + dir)
 	MkDirIfNeeded(dir)
 
 	var d1 = []byte(content)
