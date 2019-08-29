@@ -48,6 +48,7 @@ func PrintToCmd(msg string) {
 	cmdView, _ := vari.Cui.View("cmd")
 	_, _ = fmt.Fprintln(cmdView, msg)
 }
+
 func PrintStructToCmd(obj interface{}) {
 	str := stringUtils.StructToStr(obj)
 	PrintToCmd(str)
