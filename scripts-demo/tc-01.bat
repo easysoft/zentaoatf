@@ -22,4 +22,4 @@ for /f %%i in ('ping zentao.com -n 1') do set output=%%i
 
 :r
 echo # ::checkpoint
-echo output
+echo !output!
