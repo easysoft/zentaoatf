@@ -273,7 +273,7 @@
     },
     {
       "id": "success_to_report_bug",
-      "message": "success to report a bug for case %s",
+      "message": "",
       "translation": "成功为用例%s提交缺陷"
     },
     {

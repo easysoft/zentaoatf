@@ -281,8 +281,8 @@
     },
     {
       "id": "success_to_report_bug",
-      "message": "success to report a bug for case %s",
-      "translation": "success to report a bug for case %s"
+      "message": "",
+      "translation": "success to report bug for case %s"
     },
     {
       "id": "success_to_submit_result",

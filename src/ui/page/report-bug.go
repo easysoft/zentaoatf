@@ -5,6 +5,7 @@ import (
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/ui/widget"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
@@ -20,11 +21,9 @@ func InitReportBugPage(resultDir string, caseId string) error {
 	vari.CurrBug, vari.CurrBugStepIds = zentaoService.PrepareBug(resultDir, caseId)
 	bug := vari.CurrBug
 
-	maxX, maxY := vari.Cui.Size()
-	pageWidth := 120
-	pageHeight := 27
-	x := maxX/2 - 62
-	y := maxY/2 - 18
+	w, h := vari.Cui.Size()
+	x := 1
+	y := 1
 
 	var bugVersion string
 	for _, val := range bug.OpenedBuild { // 取字符串值显示
@@ -32,7 +31,6 @@ func InitReportBugPage(resultDir string, caseId string) error {
 	}
 
 	// title
-	y += 1
 	left := x
 	right := left + widget.TextWidthFull - 5
 	titleInput := widget.NewTextWidget("titleInput", left, y, widget.TextWidthFull-5, bug.Title)
@@ -40,8 +38,8 @@ func InitReportBugPage(resultDir string, caseId string) error {
 
 	// steps
 	left = right + ui.Space
-	stepsWidth := pageWidth - left - ui.Space + x + 3
-	stepsInput := widget.NewTextareaWidget("stepsInput", left, y, stepsWidth, pageHeight-2, bug.Steps)
+	stepsWidth := w - left - 3
+	stepsInput := widget.NewTextareaWidget("stepsInput", left, y, stepsWidth, h-constant.CmdViewHeight-2, bug.Steps)
 	stepsInput.Title = i118Utils.I118Prt.Sprintf("steps")
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], stepsInput.Name())
 
@@ -100,8 +98,8 @@ func InitReportBugPage(resultDir string, caseId string) error {
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], reportBugMsg.Name())
 
 	// buttons
-	y += 6
-	buttonX := maxX/2 - 51 + widget.LabelWidthSmall + ui.Space
+	y += 7
+	buttonX := x + widget.SelectWidth + ui.Space
 	submitInput := widget.NewButtonWidgetAutoWidth("submitInput", buttonX, y,
 		i118Utils.I118Prt.Sprintf("submit"), reportBug)
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], submitInput.Name())
@@ -163,14 +161,18 @@ func reportBug(g *gocui.Gui, v *gocui.View) error {
 	bug.Pri = zentaoService.GetIdByName(priorityStr, vari.ZentaoBugFileds.Priorities)
 
 	vari.CurrBug = bug
-	ok := zentaoService.CommitBug()
+	ok, msg := zentaoService.CommitBug()
+
+	msgView, _ := vari.Cui.View("reportBugMsg")
+	msgView.Clear()
+	color.New(color.FgMagenta).Fprintf(msgView, msg)
 
 	if ok {
 		vari.Cui.DeleteView("submitInput")
 
 		cancelReportBugInput, _ := vari.Cui.View("cancelReportBugInput")
 		cancelReportBugInput.Clear()
-		fmt.Fprint(cancelReportBugInput, " "+i118Utils.I118Prt.Sprintf("cancel"))
+		fmt.Fprint(cancelReportBugInput, " "+i118Utils.I118Prt.Sprintf("close"))
 	}
 
 	return nil

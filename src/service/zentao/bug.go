@@ -8,7 +8,6 @@ import (
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
-	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	uuid "github.com/satori/go.uuid"
 	"strconv"
@@ -67,7 +66,7 @@ func PrepareBug(resultDir string, caseIdStr string) (model.Bug, string) {
 	return model.Bug{}, ""
 }
 
-func CommitBug() bool {
+func CommitBug() (bool, string) {
 	bug := vari.CurrBug
 	stepIds := vari.CurrBugStepIds
 
@@ -88,24 +87,22 @@ func CommitBug() bool {
 	url := conf.Url + uri
 	body, ok := client.PostObject(url, bug)
 	if !ok {
-		return false
+		return false, ""
 	}
 
 	json, err1 := simplejson.NewJson([]byte(body))
 	if err1 != nil {
-		return false
+		return false, ""
 	}
 
 	msg, err2 := json.Get("message").String()
 	if err2 != nil {
-		return false
+		return false, ""
 	}
 
 	if msg == "" {
-		logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("success_to_report_bug", bug.Case) + "\n")
-
-		return true
+		return true, i118Utils.I118Prt.Sprintf("success_to_report_bug", bug.Case)
 	} else {
-		return false
+		return false, msg
 	}
 }
