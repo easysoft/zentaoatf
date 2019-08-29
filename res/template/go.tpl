@@ -1,7 +1,9 @@
-package main
+///usr/local/go/bin/go run $0 $@; exit $?
 
+package main
 /*
 <<<TC
+
 caseId:         %s
 productId:      %s
 title:          %s

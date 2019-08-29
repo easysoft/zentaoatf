@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"github.com/easysoft/zentaoatf/src/action"
-	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
+	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"os"
@@ -55,7 +55,7 @@ func main() {
 
 	switch os.Args[1] {
 	case "run":
-		files, idx := commonUtils.GetFilesFromParams(os.Args[2:])
+		files, idx := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
 			action.Run(files, suite, task, result)
 		}
@@ -79,30 +79,30 @@ func main() {
 		}
 
 	case "ci":
-		files, idx := commonUtils.GetFilesFromParams(os.Args[2:])
+		files, idx := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
 			action.CommitResult(files)
 		}
 
 	case "bug":
-		files, idx := commonUtils.GetFilesFromParams(os.Args[2:])
+		files, idx := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
 			action.CommitBug(files, caseId)
 		}
 
 	case "ls":
-		files, idx := commonUtils.GetFilesFromParams(os.Args[2:])
+		files, idx := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
 			action.List(files, keywords)
 		}
 	case "list":
-		files, idx := commonUtils.GetFilesFromParams(os.Args[2:])
+		files, idx := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
 			action.List(files, keywords)
 		}
 
 	case "view":
-		files, idx := commonUtils.GetFilesFromParams(os.Args[2:])
+		files, idx := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
 			action.View(files, keywords)
 		}

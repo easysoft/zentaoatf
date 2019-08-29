@@ -32,7 +32,7 @@ func CheckResults(files []string, report *model.TestReport) {
 func ValidateCaseResult(scriptFile string, langType string,
 	checkpointStepArr []string, expectArr [][]string, skip bool, actualArr [][]string, report *model.TestReport) {
 
-	caseId, productId, title := zentaoUtils.GetCaseIds(scriptFile)
+	caseId, productId, title := zentaoUtils.GetCaseInfo(scriptFile)
 
 	stepLogs := make([]model.StepLog, 0)
 	caseResult := constant.PASS.String()

@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 '''
 <<TC
+
 title: python hello world.
 expect: hello world.
-TC
+
+TC;
 '''
 
 print("Hello World")

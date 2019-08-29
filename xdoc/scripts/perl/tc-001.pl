@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 =pod
-<<TC;
+<<<TC;
+
 title:perl hello world.
 expect:hello world.
 TC;

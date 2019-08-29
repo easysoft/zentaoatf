@@ -1,5 +1,6 @@
 <?php
-/* <<<TC
+/*
+<<<TC
 
 caseId:   100
 title:    用户登录
@@ -17,9 +18,10 @@ readme:
 - 脚本中CODE打头的注释需用代码替换
 - 参考样例https://github.com/easysoft/zentaoatf/tree/master/xdoc/sample
 
+TC;
 */
 
-
-echo "#\n";
+echo "#";
+echo "#";
 
 ?>

@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 =pod
-<<<TC;
+<<<TC
 
 caseId:         %s
 productId:      %s

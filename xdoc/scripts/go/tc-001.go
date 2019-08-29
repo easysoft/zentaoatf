@@ -1,7 +1,11 @@
+///usr/local/go/bin/go run $0 $@; exit $?
+
 package main
 
+import "fmt"
+
 /*
-<<TC
+<<<TC
 caseId:   100
 title:    用户登录
 steps:    @开头的为含验证点的步骤
@@ -21,5 +25,5 @@ TC
 */
 
 func main() {
-	println("hello world.")
+	fmt.Println("hello world.")
 }

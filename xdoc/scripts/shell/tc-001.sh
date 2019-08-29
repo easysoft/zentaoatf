@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 :<<!
-<<TC
+<<<TC
 caseId:         1
 caseIdInTask:   0
 taskId:         0

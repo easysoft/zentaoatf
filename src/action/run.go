@@ -20,7 +20,7 @@ func Run(files []string, suite string, task string, result string) {
 	cases := make([]string, 0)
 
 	vari.WorkDir = fileUtils.AbosutePath(".")
-	vari.RunDir = zentaoUtils.PathToRunName()
+	vari.RunDir = zentaoUtils.RunDateFolder()
 
 	if suite != "" {
 		suiteId, err := strconv.Atoi(suite)

@@ -82,13 +82,13 @@ func ScriptToExpectName(file string) string {
 	return expectName
 }
 
-func PathToRunName() string {
+func RunDateFolder() string {
 	runName := dateUtils.DateTimeStrFmt(time.Now(), "2006-01-02T150405") + string(os.PathSeparator)
 
 	return runName
 }
 
-func GetCaseIds(file string) (int, int, string) {
+func GetCaseInfo(file string) (int, int, string) {
 	content := fileUtils.ReadFile(file)
 
 	var caseId int

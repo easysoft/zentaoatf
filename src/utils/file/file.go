@@ -80,3 +80,25 @@ func UpdateDir(path string) string {
 	}
 	return path
 }
+
+func GetFilesFromParams(arguments []string) ([]string, int) {
+	ret := make([]string, 0)
+
+	index := -1
+	for idx, arg := range arguments {
+		if strings.Index(arg, "-") != 0 {
+			if arg == "." {
+				arg = AbosutePath(".")
+			} else if strings.Index(arg, "."+string(os.PathSeparator)) == 0 {
+				arg = AbosutePath(".") + arg[2:]
+			} else if !path.IsAbs(arg) {
+				arg = AbosutePath(".") + arg
+			}
+
+			ret = append(ret, arg)
+			index = idx
+		}
+	}
+
+	return ret, index
+}

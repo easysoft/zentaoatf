@@ -76,11 +76,11 @@ func GetLogFolder(mode string, name string, date string) string {
 }
 
 func GetAllScriptsInDir(filePth string, files *[]string) error {
-	if !fileUtils.IsDir(filePth) {
+	if !fileUtils.IsDir(filePth) { // not dir
 		pass := CheckFileIsScript(filePth)
 
 		if pass {
-			id, _, _ := zentaoUtils.GetCaseIds(filePth)
+			id, _, _ := zentaoUtils.GetCaseInfo(filePth)
 
 			if id > 0 {
 				*files = append(*files, filePth)
@@ -130,7 +130,7 @@ func GetScriptByIdsInDir(dirPth string, idMap map[int]string, files *[]string) e
 		} else {
 			path := dirPth + name
 			if CheckFileIsScript(path) {
-				id, _, _ := zentaoUtils.GetCaseIds(path)
+				id, _, _ := zentaoUtils.GetCaseInfo(path)
 
 				if id > 0 {
 					_, ok := idMap[id]

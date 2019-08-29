@@ -1,7 +1,11 @@
 #!/usr/bin/env lua
---[[<<TC
+--[[
+<<<TC
+
 title:lua hello world.
 expect:hello world.
-TC ]]
+
+TC;
+]]
 
 print('hello world.')
