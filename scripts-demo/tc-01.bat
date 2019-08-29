@@ -16,7 +16,6 @@ TC;
 :start
 
 @echo off
-Setlocal enabledelayedexpansion
 
 echo "中文测试"
 
