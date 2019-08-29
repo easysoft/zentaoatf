@@ -6,6 +6,7 @@ import (
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
+	"log"
 )
 
 func InitMainPage() error {
@@ -30,6 +31,9 @@ func InitMainPage() error {
 }
 
 func MainPageKeyBindings() error {
+	if err := vari.Cui.SetKeybinding("", gocui.KeyCtrlH, gocui.ModNone, widget.ShowHelpFromView); err != nil {
+		log.Panicln(err)
+	}
 	if err := vari.Cui.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, ui.Quit); err != nil {
 		return err
 	}

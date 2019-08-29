@@ -462,8 +462,8 @@
     },
     {
       "id": "help_key_bind",
-      "message": "KEYBINDINGS",
-      "translation": "KEYBINDINGS"
+      "message": "help",
+      "translation": "HELP"
     },
     {
       "id": "help_mouse",
@@ -487,13 +487,13 @@
     },
     {
       "id": "help_show",
-      "message": "^H: Show/Hide help window",
-      "translation": "^H: Show/Hide help window"
+      "message": "",
+      "translation": "CTRL+H: Show/Hide help"
     },
     {
       "id": "help_exit",
-      "message": "^C: Exit",
-      "translation": "^C: Exit"
+      "message": "",
+      "translation": "CTRL+C: Exit"
     }
   ]
 }

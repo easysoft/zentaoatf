@@ -460,7 +460,7 @@
     {
       "id": "help_key_bind",
       "message": "KEYBINDINGS",
-      "translation": "快捷键"
+      "translation": "帮助"
     },
     {
       "id": "help_mouse",
@@ -484,13 +484,13 @@
     },
     {
       "id": "help_show",
-      "message": "^H: Show/Hide help window",
-      "translation": "^H: 显示/隐藏帮助"
+      "message": "",
+      "translation": "CTRL+H: 显示/隐藏帮助"
     },
     {
       "id": "help_exit",
-      "message": "^C: Exit",
-      "translation": "^C: 退出"
+      "message": "",
+      "translation": "CTRL+C: 退出"
     }
   ]
 }

@@ -35,7 +35,7 @@ func NewHelpWidget() {
 	h := len(lines)
 	w = w + 2
 
-	help := HelpWidget{name: "help", x: maxX - w - 3, y: 1, w: w, h: h, body: HelpGlobal}
+	help := HelpWidget{name: "help", x: maxX - w - 3, y: vari.MainViewHeight, w: w, h: h, body: HelpGlobal}
 	help.Layout()
 }
 
@@ -78,7 +78,8 @@ func HideHelp() error {
 }
 
 func initContent() {
-	HelpGlobal = fmt.Sprintf("%s \n %s \n",
+	HelpGlobal = fmt.Sprintf("%s \n %s \n %s \n",
 		i118Utils.I118Prt.Sprintf("help_key_bind"),
+		i118Utils.I118Prt.Sprintf("help_show"),
 		i118Utils.I118Prt.Sprintf("help_exit"))
 }
