@@ -51,11 +51,12 @@ func SupportScroll(name string) error {
 
 func scrollEvent(dy int) func(g *gocui.Gui, v *gocui.View) error {
 	return func(g *gocui.Gui, v *gocui.View) error {
-		return scrollAction(v, dy, false)
+		ScrollAction(v, dy)
+		return nil
 	}
 }
 
-func scrollAction(v *gocui.View, dy int, isSelectWidget bool) error {
+func ScrollAction(v *gocui.View, dy int) bool {
 	// Get the size and position of the view.
 	cx, cy := v.Cursor()
 	_, h := v.Size()
@@ -64,14 +65,17 @@ func scrollAction(v *gocui.View, dy int, isSelectWidget bool) error {
 	//logUtils.PrintToCmd(fmt.Sprintf("%d - %d", cy, dy))
 	if (cy == 0 && dy < 0) || // top
 		(newCy == h && dy > 0) { // bottom
-		scroll(v, dy)
+		atBottom := scroll(v, dy)
+		if atBottom {
+			return true
+		}
 	} else {
 		v.SetCursor(cx, newCy)
 	}
 
-	return nil
+	return false
 }
-func scroll(v *gocui.View, dy int) error {
+func scroll(v *gocui.View, dy int) bool {
 	_, h := v.Size()
 
 	ox, oy := v.Origin()
@@ -81,13 +85,15 @@ func scroll(v *gocui.View, dy int) error {
 	if newOy+h >= strings.Count(v.ViewBuffer(), "\n") {
 		// Set autoscroll to normal again.
 		v.Autoscroll = true
+
+		return true
 	} else {
 		// Set autoscroll to false and scroll.
 		v.Autoscroll = false
 		v.SetOrigin(ox, newOy)
-	}
 
-	return nil
+		return false
+	}
 }
 
 func SupportRowHighlight(name string) error {

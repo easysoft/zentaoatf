@@ -18,8 +18,8 @@ type ZentaoCaseFileds struct {
 }
 
 type Option struct {
-	Id        string
-	Code      string
-	Name      string
-	IsDefault bool
+	Id   string
+	Code string
+	Name string
+	//IsDefault bool
 }

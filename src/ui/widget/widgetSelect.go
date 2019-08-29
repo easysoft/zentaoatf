@@ -5,7 +5,6 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
-	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/jroimartin/gocui"
 	"strings"
 )
@@ -54,13 +53,21 @@ func (w *SelectWidget) Layout() (*gocui.View, error) {
 	v.Title = w.title
 
 	labels := make([]string, 0)
-	for _, opt := range w.options {
+	defaultValIndex := -1
+	for idx, opt := range w.options {
 		labels = append(labels, opt.Name)
+
+		if w.defaultt == opt.Name {
+			defaultValIndex = idx
+		}
+	}
+
+	if defaultValIndex == -1 {
+		w.defaultt = labels[0]
 	}
 
 	fmt.Fprint(v, strings.Join(labels, "\n"))
 
-	_, height := v.Size()
 	for true {
 		line := ui.GetSelectedRowVal(v)
 
@@ -68,32 +75,10 @@ func (w *SelectWidget) Layout() (*gocui.View, error) {
 			if line == w.defaultt {
 				break
 			}
-		} else {
-			if zentaoUtils.IsBugFieldDefault(line, w.options) {
-				break
-			}
 		}
 
-		_, oy := v.Origin()
-		cx, cy := v.Cursor()
-
-		pos := oy + 1
-
-		if err := v.SetCursor(cx, cy+1); err != nil {
-			ox, oy := v.Origin()
-
-			h := len(v.BufferLines()) - height + 1
-
-			if pos < h {
-				if err := v.SetOrigin(ox, oy+1); err != nil {
-					break
-				}
-			}
-		}
-
-		_, oy1 := v.Origin() // 1
-		_, cy1 := v.Cursor() // 4
-		if oy1+cy1 >= len(labels)-1 {
+		atBottom := ui.ScrollAction(v, 1)
+		if atBottom {
 			break
 		}
 	}

@@ -3,7 +3,6 @@ package zentaoUtils
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/res"
-	"github.com/easysoft/zentaoatf/src/model"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	dateUtils "github.com/easysoft/zentaoatf/src/utils/date"
@@ -55,15 +54,15 @@ func GenApiUri(module string, methd string, param string) string {
 	return ""
 }
 
-func IsBugFieldDefault(optName string, options []model.Option) bool {
-	for _, opt := range options {
-		if opt.IsDefault && opt.Name == optName {
-			return true
-		}
-	}
-
-	return false
-}
+//func IsBugFieldDefault(optName string, options []model.Option) bool {
+//	for _, opt := range options {
+//		if opt.IsDefault && opt.Name == optName {
+//			return true
+//		}
+//	}
+//
+//	return false
+//}
 
 func ScriptToLogName(file string) string {
 	logDir := vari.WorkDir + constant.LogDir

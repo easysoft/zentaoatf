@@ -35,8 +35,8 @@ func PrepareBug(resultDir string, caseIdStr string) (model.Bug, string) {
 		module := GetFirstNoEmptyVal(vari.ZentaoBugFileds.Modules)
 		typ := GetFirstNoEmptyVal(vari.ZentaoBugFileds.Categories)
 		openedBuild := map[string]string{"0": "trunk"}
-		severity := GetFirstNoEmptyVal(vari.ZentaoBugFileds.Severities)
-		priority := GetFirstNoEmptyVal(vari.ZentaoBugFileds.Priorities)
+		severity := "2"
+		priority := "2"
 
 		caseId := cs.Id
 
