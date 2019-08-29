@@ -1,6 +1,7 @@
 package testingService
 
 import (
+	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	file2 "github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
@@ -41,6 +42,7 @@ func ExeScript(file string) {
 	logUtils.PrintWholeLine(msg, "-", color.FgCyan)
 
 	output := shellUtils.ExecFile(file)
+	fmt.Println("===" + logFile)
 	file2.WriteFile(logFile, output)
 
 	entTime := time.Now()
