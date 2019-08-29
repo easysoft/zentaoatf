@@ -27,7 +27,8 @@ func ReadFileBuf(filePath string) []byte {
 }
 
 func WriteFile(filePath string, content string) {
-	dir := path.Dir(filePath)
+	dir := filepath.Dir(filePath)
+	fmt.Println("=file=" + filePath)
 	fmt.Println("=dir=" + dir)
 	MkDirIfNeeded(dir)
 
