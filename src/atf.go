@@ -49,6 +49,11 @@ func main() {
 	flagSet.StringVar(&caseId, "c", "", "")
 	flagSet.StringVar(&caseId, "case", "", "")
 
+	var placeholder string
+	flagSet.StringVar(&placeholder, "h", "", "")
+	flagSet.StringVar(&placeholder, "r", "", "")
+	flagSet.StringVar(&placeholder, "v", "", "")
+
 	if len(os.Args) < 2 {
 		logUtils.PrintUsage()
 		return
