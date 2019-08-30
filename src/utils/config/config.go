@@ -167,6 +167,7 @@ func PrintCurrConfig() {
 		}
 		fmt.Printf("  %s: %v \n", typeOfS.Field(i).Name, val.Interface())
 	}
+	fmt.Println("")
 }
 
 func InitScreenSize() {
@@ -182,9 +183,12 @@ func getInst() model.Config {
 		if fileUtils.FileExist(constant.ConfigFile) {
 			buf, _ := ioutil.ReadFile(constant.ConfigFile)
 			yaml.Unmarshal(buf, &vari.Config)
+
+			if vari.Config.Version != constant.ConfigVer {
+				vari.Config = saveEmptyConfig()
+			}
 		} else { // init
-			vari.Config.Language = "en"
-			saveEmptyConfig()
+			vari.Config = saveEmptyConfig()
 		}
 	})
 	return vari.Config
@@ -228,11 +232,11 @@ func ReadCurrConfig() model.Config {
 	return config
 }
 
-func saveEmptyConfig() error {
-	config := model.Config{Language: "en", Url: "", Account: "", Password: ""}
+func saveEmptyConfig() model.Config {
+	config := model.Config{Version: constant.ConfigVer, Language: "en", Url: "", Account: "", Password: ""}
 
 	data, _ := yaml.Marshal(&config)
 	ioutil.WriteFile(constant.ConfigFile, data, 0666)
 
-	return nil
+	return config
 }

@@ -6,6 +6,7 @@ import (
 )
 
 var (
+	ConfigVer  = 1
 	ConfigFile = "conf.yaml"
 
 	UrlZentaoSettings = "zentaoSettings"
