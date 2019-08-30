@@ -36,6 +36,13 @@ func InitConfig() {
 	}
 }
 
+func CheckConfigForRequest() {
+	conf := ReadCurrConfig()
+	if conf.Url == "" || conf.Account == "" || conf.Password == "" {
+		ConfigForRequest()
+	}
+}
+
 func ConfigForSet() {
 	configSite := ""
 
@@ -70,6 +77,22 @@ func ConfigForSet() {
 	}
 
 	SaveConfig(language, url, account, password)
+
+	PrintCurrConfig()
+}
+
+func ConfigForRequest() {
+	url := ""
+	account := ""
+	password := ""
+
+	fmt.Println(i118Utils.I118Prt.Sprintf("begin_config"))
+
+	url = getInput("http://.*", "enter_url")
+	account = getInput(".{3,}", "enter_account")
+	password = getInput(".{4,}", "enter_password")
+
+	SaveConfig("", url, account, password)
 
 	PrintCurrConfig()
 }
@@ -148,7 +171,7 @@ func getInput(regx string, fmtStr string, params ...interface{}) string {
 		if pass {
 			return ret
 		} else {
-			logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf(msg)+"\n", color.FgRed)
+			logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf(msg), color.FgRed)
 		}
 	}
 }

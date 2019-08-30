@@ -17,9 +17,8 @@ func main() {
 
 	var productId string
 	var moduleId string
-	var task string
-	var suite string
-	var result string
+	var taskId string
+	var suiteId string
 	var caseId string
 
 	flagSet := flag.NewFlagSet("atf", flag.ContinueOnError)
@@ -32,14 +31,11 @@ func main() {
 	flagSet.StringVar(&moduleId, "m", "", "")
 	flagSet.StringVar(&moduleId, "module", "", "")
 
-	flagSet.StringVar(&suite, "s", "", "")
-	flagSet.StringVar(&suite, "suite", "", "")
+	flagSet.StringVar(&suiteId, "s", "", "")
+	flagSet.StringVar(&suiteId, "suiteId", "", "")
 
-	flagSet.StringVar(&task, "t", "", "")
-	flagSet.StringVar(&task, "task", "", "")
-
-	flagSet.StringVar(&result, "r", "", "")
-	flagSet.StringVar(&result, "result", "", "")
+	flagSet.StringVar(&taskId, "t", "", "")
+	flagSet.StringVar(&taskId, "taskId", "", "")
 
 	flagSet.StringVar(&language, "l", "", "")
 	flagSet.StringVar(&language, "language", "", "")
@@ -62,17 +58,17 @@ func main() {
 	case "run":
 		files, idx := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
-			action.Run(files, suite, task, result)
+			action.Run(files, suiteId, taskId)
 		}
 
 	case "checkout", "co":
 		if err := flagSet.Parse(os.Args[2:]); err == nil {
-			action.GenerateScript(productId, moduleId, suite, task, independentFile, language)
+			action.Generate(productId, moduleId, suiteId, taskId, independentFile, language)
 		}
 
 	case "update", "up":
 		if err := flagSet.Parse(os.Args[2:]); err == nil {
-			action.GenerateScript(productId, moduleId, suite, task, independentFile, language)
+			action.Generate(productId, moduleId, suiteId, taskId, independentFile, language)
 		}
 
 	case "ci":

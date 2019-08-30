@@ -14,9 +14,9 @@ var (
 	UrlSubmitResult   = "submitResults"
 	UrlReportBug      = "reportBug"
 
-	ExtNameSuite = "cs"
-	ExtNameJson  = "json"
-	ExtNameTxt   = "txt"
+	ExtNameSuite  = "cs"
+	ExtNameJson   = "json"
+	ExtNameResult = "txt"
 
 	LanguageDefault = "en"
 	LanguageEN      = "en"
@@ -43,7 +43,7 @@ var (
  set                   全局设置语言、禅道站点连接参数。
  co      checkout      导出禅道系统中的用例，已存在的将更新标题和步骤描述。可指定产品、套件、测试单编号。
  up      update        从禅道系统更新已存在的用例。可指定产品、模块、套件、测试单编号。
- run                   执行测试用例。可指定目录、套件、脚本、测试结果文件的路径，也支持套件和任务的编号，多个参数之间用空格隔开。
+ run                   执行测试用例。可指定目录、套件、脚本、结果文件的路径，也支持套件和任务的编号，多个文件间用空格隔开。
  ci      commit        将执行结果提交到禅道系统中。可指定测试日志目录，会弹出命令行图形界面。
  bug                   将执行结果中的失败用例，作为缺陷提交到餐到系统。可指定测试日志目录和用例编号，弹出命令行图形界面。
  ls      list          查看测试用例列表。可指定目录和文件的列表，之间用空格隔开。
@@ -60,10 +60,10 @@ var (
  $>atf.exe co -t 1 -l python                         导出编号为1的测试单所含用例。
 
  $>atf.exe run dir1 dir2 tc01.py                     执行目录dir1和dir2目录下，以及tc01.py文件的用例。
- $>atf.exe run c:\scripts all.cs                     执行本机all.cs测试套件，脚本在c:\scripts中。
- $>atf.exe run c:\scripts -suite 1                   执行禅道中编号为1的套件, 缩写-s。
- $>atf.exe run c:\scripts -task 1                    执行禅道系统中编号为1的任务, 缩写-t
- $>atf.exe run c:\scripts c:\19-08-27\result.txt     执行指定结果文件中失败的用例，缩写-r。
+ $>atf.exe run c:\scripts all.cs                     执行all.cs测试套件的用例，脚本在c:\scripts中。
+ $>atf.exe run c:\scripts c:\19-08-27\result.txt     执行result.txt结果文件中的失败用例。
+ $>atf.exe run c:\scripts -suite 1                   执行禅道系统中编号为1的套件, 缩写-s。
+ $>atf.exe run c:\scripts -task 1                    执行禅道系统中编号为1的任务, 缩写-t。
 
  $>atf.exe ci tc01.py                                将脚本里面修改的用例信息，同步到禅道系统。
  $>atf.exe cr logs/2019-08-28T164819                 提交测试结果到禅道系统。

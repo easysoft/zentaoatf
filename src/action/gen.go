@@ -11,13 +11,10 @@ import (
 	"github.com/fatih/color"
 )
 
-func GenerateScript(productId string, moduleId string, suiteId string, taskId string,
+func Generate(productId string, moduleId string, suiteId string, taskId string,
 	independentFile bool, scriptLang string) {
 
-	config := configUtils.ReadCurrConfig()
-	if config.Url == "" || config.Account == "" || config.Password == "" {
-		configUtils.ConfigForSet()
-	}
+	configUtils.CheckConfigForRequest()
 
 	if (productId != "") || (moduleId != "" && productId != "") || suiteId != "" || taskId != "" {
 

@@ -165,7 +165,7 @@ func GetCaseIdsInSuiteFile(name string, fileIdMap *map[int]string) {
 func GetFailedCasesFromTestResult(resultFile string, fileIdMap *map[int]string) {
 	extName := path.Ext(resultFile)
 
-	if extName == "."+constant.ExtNameTxt { // txt format
+	if extName == "."+constant.ExtNameResult {
 		resultFile = strings.Replace(resultFile, extName, "."+constant.ExtNameJson, -1)
 	}
 

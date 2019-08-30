@@ -37,10 +37,10 @@ func PrintToCmd(msg string, attr color.Attribute) {
 	}
 
 	if attr == -1 {
-		fmt.Fprintf(output, msg)
+		fmt.Fprintf(output, msg+"\n")
 	} else {
 		clr := color.New(attr)
-		clr.Fprintf(output, msg)
+		clr.Fprintf(output, msg+"\n")
 	}
 }
 

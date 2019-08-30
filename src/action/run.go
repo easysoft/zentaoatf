@@ -6,49 +6,65 @@ import (
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	"github.com/easysoft/zentaoatf/src/utils/common"
+	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
+	"path"
 	"strconv"
 )
 
-func Run(files []string, suite string, task string, result string) {
+func Run(files []string, suiteIdStr string, taskIdStr string) {
 	caseIdMap := map[int]string{}
 	cases := make([]string, 0)
 
 	vari.WorkDir = fileUtils.AbosutePath(".")
 	vari.RunDir = zentaoUtils.RunDateFolder()
 
-	if suite != "" {
-		suiteId, err := strconv.Atoi(suite)
-		if err == nil && suiteId > 0 { // load cases from remote by suite id
-			zentaoService.GetCaseIdsBySuite(suite, &caseIdMap)
-		} else { // load cases in suite file
-			scriptService.GetCaseIdsInSuiteFile(suite, &caseIdMap)
+	if suiteIdStr != "" {
+		suiteId, err := strconv.Atoi(suiteIdStr)
+		if err == nil && suiteId > 0 {
+
+			configUtils.CheckConfigForRequest()
+			zentaoService.GetCaseIdsBySuite(suiteIdStr, &caseIdMap)
 		}
 
 		scriptService.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
-	} else if task != "" { // load cases from remote by task id
-		taskId, err := strconv.Atoi(task)
+	} else if taskIdStr != "" { // load cases from remote by taskIdStr id
+		taskId, err := strconv.Atoi(taskIdStr)
 		if err == nil && taskId > 0 {
-			zentaoService.GetCaseIdsByTask(task, &caseIdMap)
+
+			configUtils.CheckConfigForRequest()
+			zentaoService.GetCaseIdsByTask(taskIdStr, &caseIdMap)
 		}
 
 		scriptService.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
-	} else if result != "" { // load cases result file
-		scriptService.GetFailedCasesFromTestResult(result, &caseIdMap)
+	} else { // no suiteId, taskId param
 
-		scriptService.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
-	} else { // find cases in current dir
-		for _, file := range files {
-			scriptService.GetAllScriptsInDir(file, &cases)
+		if len(files) > 1 && fileUtils.IsDir(files[0]) &&
+			path.Ext(files[1]) == constant.ExtNameSuite { // run suite file
+
+			scriptService.GetCaseIdsInSuiteFile(files[1], &caseIdMap)
+			scriptService.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
+
+		} else if len(files) > 1 && fileUtils.IsDir(files[0]) &&
+			path.Ext(files[1]) == constant.ExtNameResult { // run result file
+
+			scriptService.GetFailedCasesFromTestResult(files[1], &caseIdMap)
+			scriptService.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
+
+		} else { // run with dir and script files
+			for _, file := range files {
+				scriptService.GetAllScriptsInDir(file, &cases)
+			}
 		}
 	}
 
 	if len(cases) < 1 {
-		logUtils.PrintToCmd("\n"+i118Utils.I118Prt.Sprintf("no_scripts"), -1)
+		logUtils.PrintToCmd("\n"+i118Utils.I118Prt.Sprintf("no_scripts")+"\n", -1)
 		return
 	}
 

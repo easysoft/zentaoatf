@@ -10,7 +10,11 @@ import (
 )
 
 func Login(baseUrl string, account string, password string) bool {
-	GetConfig(baseUrl)
+	ok := GetConfig(baseUrl)
+
+	if !ok {
+		return false
+	}
 
 	url := baseUrl + "user-login"
 
@@ -19,7 +23,7 @@ func Login(baseUrl string, account string, password string) bool {
 	params["password"] = password
 
 	var log string
-	_, ok := client.PostStr(url, params)
+	_, ok = client.PostStr(url, params)
 	if ok {
 		log = i118Utils.I118Prt.Sprintf("success_to_login")
 		logUtils.PrintToCmd(log, -1)
@@ -31,7 +35,7 @@ func Login(baseUrl string, account string, password string) bool {
 	return ok
 }
 
-func GetConfig(baseUrl string) {
+func GetConfig(baseUrl string) bool {
 	url := baseUrl + "?mode=getconfig"
 
 	body, ok := client.Get(url, nil)
@@ -43,5 +47,9 @@ func GetConfig(baseUrl string) {
 		vari.SessionVar, _ = json.Get("sessionVar").String()
 		vari.RequestType, _ = json.Get("requestType").String()
 		vari.RequestFix, _ = json.Get("requestFix").String()
+
+		return true
+	} else {
+		return false
 	}
 }
