@@ -31,7 +31,7 @@ func PrintToStdOut(msg string, attr color.Attribute) {
 func PrintToCmd(msg string, attr color.Attribute) {
 	var output io.Writer
 	if vari.RunFromCui {
-		output, _ = vari.Cui.View(constant.CuiRunOutputView)
+		output, _ = vari.Cui.View("cmd")
 	} else {
 		output = color.Output
 	}

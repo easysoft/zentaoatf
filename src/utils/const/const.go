@@ -34,8 +34,6 @@ var (
 
 	CmdViewHeight = 10
 
-	CuiRunOutputView = "panelFileContent"
-
 	RequestTypePathInfo = "PATH_INFO"
 
 	Usage = `

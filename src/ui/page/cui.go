@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-func Cui() error {
+func CuiReportBug(dir string, id string) error {
 	g, err := gocui.NewGui(gocui.OutputNormal)
 	if err != nil {
 		log.Panicln(err)
@@ -24,7 +24,7 @@ func Cui() error {
 	vari.RunFromCui = true
 
 	InitMainPage()
-	InitReportBugPage("logs/2019-08-28T164819/", "1")
+	InitReportBugPage(dir, id)
 
 	if err := g.MainLoop(); err != nil && err != gocui.ErrQuit {
 		log.Panicln(err)

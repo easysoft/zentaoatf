@@ -98,7 +98,7 @@ func InitReportBugPage(resultDir string, caseId string) error {
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], reportBugMsg.Name())
 
 	// buttons
-	y += 7
+	y += 5
 	buttonX := x + widget.SelectWidth + ui.Space
 	submitInput := widget.NewButtonWidgetAutoWidth("submitInput", buttonX, y,
 		i118Utils.I118Prt.Sprintf("submit"), reportBug)

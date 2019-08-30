@@ -19,5 +19,5 @@ func CommitBug(files []string, caseId string) {
 		configUtils.ConfigForInt(&caseId, "test_case")
 	}
 
-	page.Cui()
+	page.CuiReportBug("logs/2019-08-30T130258/", "1")
 }

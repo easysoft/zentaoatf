@@ -29,7 +29,7 @@ func PrintWholeLine(msg string, char string, attr color.Attribute) {
 
 	var output io.Writer
 	if vari.RunFromCui {
-		output, _ = vari.Cui.View(constant.CuiRunOutputView)
+		output, _ = vari.Cui.View("cmd")
 	} else {
 		output = color.Output
 	}
@@ -43,7 +43,7 @@ func PrintAndLog(logs *[]string, str string) {
 
 	var output io.Writer
 	if vari.RunFromCui {
-		output, _ = vari.Cui.View(constant.CuiRunOutputView)
+		output, _ = vari.Cui.View("cmd")
 	} else {
 		output = color.Output
 	}
@@ -56,7 +56,7 @@ func PrintAndLogColorLn(logs *[]string, str string, attr color.Attribute) {
 
 	var output io.Writer
 	if vari.RunFromCui {
-		output, _ = vari.Cui.View(constant.CuiRunOutputView)
+		output, _ = vari.Cui.View("cmd")
 	} else {
 		output = color.Output
 	}
@@ -68,7 +68,7 @@ func PrintAndLogColorLn(logs *[]string, str string, attr color.Attribute) {
 func Printt(str string) {
 	var output io.Writer
 	if vari.RunFromCui {
-		output, _ = vari.Cui.View(constant.CuiRunOutputView)
+		output, _ = vari.Cui.View("cmd")
 	} else {
 		output = color.Output
 	}
