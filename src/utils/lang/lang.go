@@ -81,7 +81,7 @@ func CheckSupportLangages(scriptLang string) bool {
 
 	if langMap[scriptLang] == nil {
 		langs := strings.Join(GetSupportLangageArr(), ", ")
-		logUtils.PrintToCmd(color.RedString(i118Utils.I118Prt.Sprintf("only_support_script_language", langs)) + "\n")
+		logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("only_support_script_language", langs)+"\n", color.FgRed)
 		return false
 	}
 

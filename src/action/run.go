@@ -11,7 +11,6 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
-	"github.com/fatih/color"
 	"strconv"
 )
 
@@ -49,7 +48,7 @@ func Run(files []string, suite string, task string, result string) {
 	}
 
 	if len(cases) < 1 {
-		logUtils.PrintToCmd(color.RedString("\n" + i118Utils.I118Prt.Sprintf("no_scripts")))
+		logUtils.PrintToCmd("\n"+i118Utils.I118Prt.Sprintf("no_scripts"), -1)
 		return
 	}
 

@@ -145,6 +145,16 @@
       "message": "No test scripts found",
       "translation": "No test scripts found"
     },
+    {
+      "id": "success_to_login",
+      "message": "",
+      "translation": "success to login"
+    },
+    {
+      "id": "fail_to_login",
+      "message": "",
+      "translation": "fail to login"
+    },
 
     {
       "id": "start_execution",

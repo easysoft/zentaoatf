@@ -53,6 +53,11 @@ func main() {
 	flagSet.StringVar(&caseId, "c", "", "")
 	flagSet.StringVar(&caseId, "case", "", "")
 
+	if len(os.Args) < 2 {
+		logUtils.PrintUsage()
+		return
+	}
+
 	switch os.Args[1] {
 	case "run":
 		files, idx := fileUtils.GetFilesFromParams(os.Args[2:])

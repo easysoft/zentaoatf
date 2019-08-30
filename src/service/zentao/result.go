@@ -51,7 +51,7 @@ func CommitResult(resultDir string) {
 		_, ok := client.PostObject(url, requestObj)
 		if ok {
 			resultId := GetLastResult(conf.Url, id)
-			logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("success_to_submit_result", id, resultId) + "\n")
+			logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("success_to_submit_result", id, resultId)+"\n", -1)
 		}
 	}
 }

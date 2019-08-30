@@ -7,6 +7,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
+	"github.com/fatih/color"
 	"io/ioutil"
 	"net/http"
 	"regexp"
@@ -14,12 +15,12 @@ import (
 )
 
 func Get(url string, params map[string]string) (string, bool) {
-	logUtils.PrintToCmd(url)
+	logUtils.PrintToCmd(url, -1)
 	client := &http.Client{}
 
 	req, reqErr := http.NewRequest("GET", url, nil)
 	if reqErr != nil {
-		logUtils.PrintToCmd(reqErr.Error())
+		logUtils.PrintToCmd(reqErr.Error(), color.FgRed)
 		return "", false
 	}
 
@@ -72,11 +73,11 @@ func PostObject(url string, params interface{}) (string, bool) {
 	re3, _ := regexp.Compile(`([^&]*?)=`)
 	data := re3.ReplaceAllStringFunc(val, replacePostData)
 
-	logUtils.PrintToCmd(fmt.Sprintf("%s", data))
+	logUtils.PrintToCmd(data, -1)
 
 	req, reqErr := http.NewRequest("POST", url, strings.NewReader(data))
 	if reqErr != nil {
-		logUtils.PrintToCmd(reqErr.Error())
+		logUtils.PrintToCmd(reqErr.Error(), color.FgRed)
 		return "", false
 	}
 
@@ -85,7 +86,7 @@ func PostObject(url string, params interface{}) (string, bool) {
 
 	resp, respErr := client.Do(req)
 	if respErr != nil {
-		logUtils.PrintToCmd(respErr.Error())
+		logUtils.PrintToCmd(respErr.Error(), color.FgRed)
 		return "", false
 	}
 
@@ -95,7 +96,7 @@ func PostObject(url string, params interface{}) (string, bool) {
 	var bodyJson model.ZentaoResponse
 	jsonErr := json.Unmarshal(bodyStr, &bodyJson)
 	if jsonErr != nil {
-		logUtils.PrintToCmd(jsonErr.Error())
+		logUtils.PrintToCmd(jsonErr.Error(), color.FgRed)
 		return "", false
 	}
 
@@ -111,7 +112,7 @@ func PostObject(url string, params interface{}) (string, bool) {
 }
 
 func PostStr(url string, params map[string]string) (string, bool) {
-	logUtils.PrintToCmd(url)
+	logUtils.PrintToCmd(url, -1)
 	client := &http.Client{}
 
 	paramStr := ""
@@ -126,7 +127,7 @@ func PostStr(url string, params map[string]string) (string, bool) {
 
 	req, reqErr := http.NewRequest("POST", url, strings.NewReader(paramStr))
 	if reqErr != nil {
-		logUtils.PrintToCmd(reqErr.Error())
+		logUtils.PrintToCmd(reqErr.Error(), color.FgRed)
 		return "", false
 	}
 
@@ -135,7 +136,7 @@ func PostStr(url string, params map[string]string) (string, bool) {
 
 	resp, respErr := client.Do(req)
 	if respErr != nil {
-		logUtils.PrintToCmd(respErr.Error())
+		logUtils.PrintToCmd(respErr.Error(), color.FgRed)
 		return "", false
 	}
 
@@ -145,7 +146,7 @@ func PostStr(url string, params map[string]string) (string, bool) {
 	var bodyJson model.ZentaoResponse
 	jsonErr := json.Unmarshal(bodyStr, &bodyJson)
 	if jsonErr != nil {
-		logUtils.PrintToCmd(jsonErr.Error())
+		logUtils.PrintToCmd(jsonErr.Error(), color.FgRed)
 		return "", false
 	}
 

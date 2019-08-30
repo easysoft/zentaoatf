@@ -10,6 +10,7 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
+	"github.com/fatih/color"
 	"sort"
 	"strconv"
 )
@@ -44,7 +45,7 @@ func GetBugFiledOptions(productId int) {
 			bugFields.Priorities = fieldArrToListKeyStr(arr)
 
 		} else {
-			logUtils.PrintToCmd(err.Error())
+			logUtils.PrintToCmd(err.Error(), color.FgRed)
 		}
 
 		vari.ZentaoBugFileds = bugFields

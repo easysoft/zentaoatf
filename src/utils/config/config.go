@@ -9,7 +9,7 @@ import (
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/lang"
-	"github.com/easysoft/zentaoatf/src/utils/log"
+	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
 	"gopkg.in/yaml.v2"
@@ -123,7 +123,7 @@ func getInput(regx string, fmtStr string, params ...interface{}) string {
 	msg := i118Utils.I118Prt.Sprintf(fmtStr, params...)
 
 	for {
-		color.Cyan("\n" + msg)
+		logUtils.PrintToStdOut("\n"+msg, color.FgCyan)
 		fmt.Scanln(&ret)
 
 		temp := strings.ToLower(ret)
@@ -148,31 +148,13 @@ func getInput(regx string, fmtStr string, params ...interface{}) string {
 		if pass {
 			return ret
 		} else {
-			color.Red(i118Utils.I118Prt.Sprintf(msg) + "\n")
+			logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf(msg)+"\n", color.FgRed)
 		}
 	}
 }
 
-func SetLanguage(lang string, dumb bool) {
-	buf, _ := ioutil.ReadFile(constant.ConfigFile)
-	yaml.Unmarshal(buf, &vari.Config)
-
-	vari.Config.Language = lang
-
-	data, _ := yaml.Marshal(&vari.Config)
-	ioutil.WriteFile(constant.ConfigFile, data, 0666)
-
-	// re-init language resource
-	i118Utils.InitI118(vari.Config.Language)
-
-	if !dumb {
-		logUtils.PrintToCmd(color.CyanString(i118Utils.I118Prt.Sprintf("set_config", i118Utils.I118Prt.Sprintf("language"),
-			i118Utils.I118Prt.Sprintf(vari.Config.Language))))
-	}
-}
-
 func PrintCurrConfig() {
-	color.Cyan(i118Utils.I118Prt.Sprintf("current_config", ""))
+	logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("current_config"), color.FgCyan)
 
 	val := reflect.ValueOf(vari.Config)
 	typeOfS := val.Type()
@@ -184,18 +166,6 @@ func PrintCurrConfig() {
 			continue
 		}
 		fmt.Printf("  %s: %v \n", typeOfS.Field(i).Name, val.Interface())
-	}
-}
-
-func PrintConfigToView() {
-	cmdView, _ := vari.Cui.View("cmd")
-	fmt.Fprintln(cmdView, color.CyanString(i118Utils.I118Prt.Sprintf("current_config", "")))
-
-	val := reflect.ValueOf(vari.Config)
-	typeOfS := val.Type()
-	for i := 0; i < reflect.ValueOf(vari.Config).NumField(); i++ {
-		val := val.Field(i)
-		fmt.Fprintln(cmdView, fmt.Sprintf("  %s: %v", typeOfS.Field(i).Name, val.Interface()))
 	}
 }
 

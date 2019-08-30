@@ -132,6 +132,16 @@
       "message": "No test scripts found",
       "translation": "未发现测试脚本"
     },
+    {
+      "id": "success_to_login",
+      "message": "",
+      "translation": "登录成功"
+    },
+    {
+      "id": "fail_to_login",
+      "message": "",
+      "translation": "登录失败"
+    },
 
     {
       "id": "use_language",

@@ -42,7 +42,7 @@ func GenSuperApiUri(model string, methd string, params [][]string) string {
 		uri = fmt.Sprintf("?m=api&f=getmodel&model=%s&methodName=%s&params=%s", model, methd, paramStr)
 	}
 
-	logUtils.PrintToCmd(uri)
+	logUtils.PrintToCmd(uri, -1)
 	return uri
 }
 
@@ -53,16 +53,6 @@ func GenApiUri(module string, methd string, param string) string {
 
 	return ""
 }
-
-//func IsBugFieldDefault(optName string, options []model.Option) bool {
-//	for _, opt := range options {
-//		if opt.IsDefault && opt.Name == optName {
-//			return true
-//		}
-//	}
-//
-//	return false
-//}
 
 func ScriptToLogName(file string) string {
 	logDir := vari.WorkDir + constant.LogDir

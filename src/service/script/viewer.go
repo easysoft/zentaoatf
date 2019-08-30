@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/file"
+	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/fatih/color"
 	"regexp"
 	"strings"
@@ -28,7 +29,7 @@ func Summary(file string, inx int, keywords string) {
 		title := commonUtils.RemoveBlankLine(arr[2])
 
 		if strings.Index(title, keywords) > -1 {
-			fmt.Printf("%s %s \n", color.CyanString("%s", caseId), title)
+			fmt.Printf("%s %s \n", caseId, title)
 		}
 	}
 }
@@ -62,7 +63,7 @@ func Brief(file string, keywords string) {
 		expects := commonUtils.RemoveBlankLine(arr[5])
 
 		if strings.Index(title, keywords) > -1 {
-			color.Cyan("\n%s %s \n", caseId, title)
+			logUtils.PrintToStdOut(fmt.Sprintf("\n%s %s \n", caseId, title), color.FgCyan)
 			fmt.Printf("Steps: \n%s \n", steps)
 			fmt.Printf("Expects: \n%s\n", expects)
 		}

@@ -8,6 +8,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/lang"
 	"github.com/easysoft/zentaoatf/src/utils/log"
+	"github.com/fatih/color"
 )
 
 func GenerateScript(productId string, moduleId string, suiteId string, taskId string,
@@ -37,9 +38,9 @@ func GenerateScript(productId string, moduleId string, suiteId string, taskId st
 	if cases != nil {
 		count, err := scriptService.Generate(cases, scriptLang, independentFile)
 		if err == nil {
-			logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("success_to_generate", count, constant.ScriptDir) + "\n")
+			logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("success_to_generate", count, constant.ScriptDir)+"\n", -1)
 		} else {
-			logUtils.PrintToCmd(err.Error())
+			logUtils.PrintToCmd(err.Error(), color.FgRed)
 		}
 	}
 }

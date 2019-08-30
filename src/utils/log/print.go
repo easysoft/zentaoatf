@@ -4,59 +4,44 @@ import (
 	"encoding/json"
 	"fmt"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
-	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
+	"io"
 	"strings"
 )
 
 func PrintUsage() {
-	fmt.Println(color.CyanString("\nUsage: "))
-	fmt.Fprintf(color.Output, "%s\n", constant.Usage)
+	PrintToStdOut("\nUsage: ", color.FgCyan)
+	fmt.Printf("%s\n", constant.Usage)
 
-	fmt.Println(color.CyanString("Example: "))
-	fmt.Fprintf(color.Output, "%s\n", constant.Example)
+	PrintToStdOut("Example: ", color.FgCyan)
+	fmt.Printf("%s\n", constant.Example)
 }
 
-func PrintToSide(msg string) {
-	if !vari.RunFromCui {
-		fmt.Println(msg)
-		return
+func PrintToStdOut(msg string, attr color.Attribute) {
+	output := color.Output
+
+	if attr == -1 {
+		fmt.Fprintf(output, msg)
+	} else {
+		color.New(attr).Fprintf(output, msg)
 	}
-	slideView, _ := vari.Cui.View("side")
-	slideView.Clear()
-
-	fmt.Fprintln(slideView, msg)
 }
 
-func PrintToMainNoScroll(msg string) {
-	if !vari.RunFromCui {
-		fmt.Println(msg)
-		return
+func PrintToCmd(msg string, attr color.Attribute) {
+	var output io.Writer
+	if vari.RunFromCui {
+		output, _ = vari.Cui.View(constant.CuiRunOutputView)
+	} else {
+		output = color.Output
 	}
-	mainView, _ := vari.Cui.View("main")
-	mainView.Clear()
 
-	fmt.Fprintln(mainView, msg)
-}
-
-func PrintToCmd(msg string) {
-	if !vari.RunFromCui {
-		fmt.Println(msg)
-		return
+	if attr == -1 {
+		fmt.Fprintf(output, msg)
+	} else {
+		clr := color.New(attr)
+		clr.Fprintf(output, msg)
 	}
-	cmdView, _ := vari.Cui.View("cmd")
-	_, _ = fmt.Fprintln(cmdView, msg)
-}
-
-func PrintStructToCmd(obj interface{}) {
-	str := stringUtils.StructToStr(obj)
-	PrintToCmd(str)
-}
-
-func ClearSide() {
-	slideView, _ := vari.Cui.View("side")
-	slideView.Clear()
 }
 
 func PrintUnicode(str []byte) {
@@ -73,9 +58,5 @@ func PrintUnicode(str []byte) {
 		msg = temp
 	}
 
-	if !vari.RunFromCui {
-		fmt.Println(msg)
-	} else {
-		PrintToCmd(msg)
-	}
+	PrintToCmd(msg, -1)
 }
