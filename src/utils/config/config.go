@@ -30,6 +30,10 @@ func InitConfig() {
 
 	// internationalization
 	i118Utils.InitI118(vari.Config.Language)
+
+	if strings.Index(os.Args[0], "atf") > -1 && (len(os.Args) > 1 && os.Args[1] != "set") {
+		PrintCurrConfig()
+	}
 }
 
 func ConfigForSet() {

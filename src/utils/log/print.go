@@ -22,9 +22,9 @@ func PrintToStdOut(msg string, attr color.Attribute) {
 	output := color.Output
 
 	if attr == -1 {
-		fmt.Fprintf(output, msg)
+		fmt.Fprintf(output, msg+"\n")
 	} else {
-		color.New(attr).Fprintf(output, msg)
+		color.New(attr).Fprintf(output, msg+"\n")
 	}
 }
 
