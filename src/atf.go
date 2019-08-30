@@ -55,7 +55,7 @@ func main() {
 	}
 
 	switch os.Args[1] {
-	case "run":
+	case "run", "-r":
 		files, idx := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
 			action.Run(files, suiteId, taskId)
@@ -85,22 +85,22 @@ func main() {
 			action.CommitBug(files, caseId)
 		}
 
-	case "list", "ls":
+	case "list", "ls", "-l":
 		files, idx := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
 			action.List(files, keywords)
 		}
 
-	case "view":
+	case "view", "-v":
 		files, idx := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
 			action.View(files, keywords)
 		}
 
-	case "set":
+	case "set", "-s":
 		configUtils.ConfigForSet()
 
-	case "help":
+	case "help", "-h":
 		logUtils.PrintUsage()
 
 	default:
