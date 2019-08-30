@@ -144,7 +144,7 @@ func PostStr(url string, params map[string]string) (string, bool) {
 
 	var bodyJson model.ZentaoResponse
 	jsonErr := json.Unmarshal(bodyStr, &bodyJson)
-	if jsonErr != nil {
+	if jsonErr != nil && strings.Index(url, "login") == -1 { // ignore login request which return a html
 		logUtils.PrintToCmd(jsonErr.Error(), color.FgRed)
 		return "", false
 	}
