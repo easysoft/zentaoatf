@@ -184,8 +184,12 @@ func getInst() model.Config {
 			buf, _ := ioutil.ReadFile(constant.ConfigFile)
 			yaml.Unmarshal(buf, &vari.Config)
 
-			if vari.Config.Version != constant.ConfigVer {
-				vari.Config = saveEmptyConfig()
+			if vari.Config.Version != constant.ConfigVer { // init
+				if vari.Config.Language != "en" && vari.Config.Language != "zh" {
+					vari.Config.Language = "en"
+				}
+
+				SaveConfig(vari.Config.Language, vari.Config.Url, vari.Config.Account, vari.Config.Password)
 			}
 		} else { // init
 			vari.Config = saveEmptyConfig()
@@ -196,6 +200,8 @@ func getInst() model.Config {
 
 func SaveConfig(language string, url string, account string, password string) error {
 	config := ReadCurrConfig()
+
+	config.Version = constant.ConfigVer
 
 	if language != "" {
 		config.Language = language

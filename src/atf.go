@@ -65,42 +65,31 @@ func main() {
 			action.Run(files, suite, task, result)
 		}
 
-	case "checkout":
-		if err := flagSet.Parse(os.Args[2:]); err == nil {
-			action.GenerateScript(productId, moduleId, suite, task, independentFile, language)
-		}
-	case "co":
+	case "checkout", "co":
 		if err := flagSet.Parse(os.Args[2:]); err == nil {
 			action.GenerateScript(productId, moduleId, suite, task, independentFile, language)
 		}
 
-	case "update":
-		if err := flagSet.Parse(os.Args[2:]); err == nil {
-			action.GenerateScript(productId, moduleId, suite, task, independentFile, language)
-		}
-	case "up":
+	case "update", "up":
 		if err := flagSet.Parse(os.Args[2:]); err == nil {
 			action.GenerateScript(productId, moduleId, suite, task, independentFile, language)
 		}
 
 	case "ci":
+
+	case "cr":
 		files, idx := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
 			action.CommitResult(files)
 		}
 
-	case "bug":
+	case "cb":
 		files, idx := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
 			action.CommitBug(files, caseId)
 		}
 
-	case "ls":
-		files, idx := fileUtils.GetFilesFromParams(os.Args[2:])
-		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
-			action.List(files, keywords)
-		}
-	case "list":
+	case "list", "ls":
 		files, idx := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
 			action.List(files, keywords)
