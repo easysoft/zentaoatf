@@ -2,7 +2,6 @@ package client
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/ajg/form"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils/log"
@@ -38,7 +37,7 @@ func Get(url string, params map[string]string) (string, bool) {
 
 	resp, respErr := client.Do(req)
 	if respErr != nil {
-		logUtils.PrintToCmd(respErr.Error())
+		logUtils.PrintToCmd(respErr.Error(), color.FgRed)
 		return "", false
 	}
 
@@ -48,7 +47,7 @@ func Get(url string, params map[string]string) (string, bool) {
 	var bodyJson model.ZentaoResponse
 	jsonErr := json.Unmarshal(bodyStr, &bodyJson)
 	if jsonErr != nil {
-		logUtils.PrintToCmd(jsonErr.Error())
+		logUtils.PrintToCmd(jsonErr.Error(), color.FgRed)
 		return "", false
 	}
 
@@ -64,7 +63,7 @@ func Get(url string, params map[string]string) (string, bool) {
 }
 
 func PostObject(url string, params interface{}) (string, bool) {
-	logUtils.PrintToCmd(url)
+	logUtils.PrintToCmd(url, -1)
 	client := &http.Client{}
 
 	val, _ := form.EncodeToString(params)
