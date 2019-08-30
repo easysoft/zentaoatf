@@ -165,14 +165,17 @@ func reportBug(g *gocui.Gui, v *gocui.View) error {
 
 	msgView, _ := vari.Cui.View("reportBugMsg")
 	msgView.Clear()
-	color.New(color.FgMagenta).Fprintf(msgView, msg)
 
 	if ok {
+		color.New(color.FgGreen).Fprintf(msgView, msg)
+
 		vari.Cui.DeleteView("submitInput")
 
 		cancelReportBugInput, _ := vari.Cui.View("cancelReportBugInput")
 		cancelReportBugInput.Clear()
 		fmt.Fprint(cancelReportBugInput, " "+i118Utils.I118Prt.Sprintf("close"))
+	} else {
+		color.New(color.FgMagenta).Fprintf(msgView, msg)
 	}
 
 	return nil
