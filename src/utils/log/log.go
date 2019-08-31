@@ -10,7 +10,6 @@ import (
 	"github.com/sirupsen/logrus"
 	"io"
 	"io/ioutil"
-	"os"
 	"strings"
 	"unicode/utf8"
 )
@@ -101,19 +100,10 @@ func NewLogger(dir string) *logrus.Logger {
 	Logger = logrus.New()
 	Logger.Out = ioutil.Discard
 
-	writeMap := lfshook.WriterMap{
-		logrus.InfoLevel: os.Stdout,
-	}
-
 	pathMap := lfshook.PathMap{
 		logrus.WarnLevel:  dir + "trace.log",
 		logrus.ErrorLevel: dir + "result.log",
 	}
-
-	Logger.Hooks.Add(lfshook.NewHook(
-		writeMap,
-		&MyFormatter{},
-	))
 
 	Logger.Hooks.Add(lfshook.NewHook(
 		pathMap,
@@ -126,7 +116,7 @@ func NewLogger(dir string) *logrus.Logger {
 }
 
 func Screen(msg string) {
-	Logger.Infoln(msg)
+	PrintTo(msg)
 }
 func Trace(msg string) {
 	Logger.Warnln(msg)

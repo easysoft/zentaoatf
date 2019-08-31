@@ -25,7 +25,6 @@ require (
 	github.com/shirou/gopsutil v2.19.6+incompatible // indirect
 	github.com/sirupsen/logrus v1.4.2
 	github.com/stretchr/objx v0.2.0 // indirect
-	github.com/t-tomalak/logrus-easy-formatter v0.0.0-20190827215021-c074f06c5816 // indirect
 	github.com/xlab/treeprint v0.0.0-20181112141820-a009c3971eca // indirect
 	golang.org/x/sys v0.0.0-20190804053845-51ab0e2deafa // indirect
 

@@ -41,7 +41,7 @@ func ExeScript(file string, report *model.TestReport) {
 	msg := i118Utils.I118Prt.Sprintf("start_case", file, startTime.Format("2006-01-02 15:04:05"))
 	logUtils.PrintWholeLine(msg, "-", color.FgCyan)
 
-	logUtils.Screen("===" + msg)
+	logUtils.Screen("===" + color.CyanString(msg))
 	logUtils.Trace("---" + msg)
 
 	output := shellUtils.ExecFile(file)
