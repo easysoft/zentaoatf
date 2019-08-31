@@ -18,6 +18,17 @@ func PrintUsage() {
 	fmt.Printf("%s\n", constant.Example)
 }
 
+func PrintTo(str string) {
+	var output io.Writer
+	if vari.RunFromCui {
+		output, _ = vari.Cui.View("cmd")
+	} else {
+		output = color.Output
+	}
+
+	fmt.Fprintf(output, str)
+}
+
 func PrintToStdOut(msg string, attr color.Attribute) {
 	output := color.Output
 
