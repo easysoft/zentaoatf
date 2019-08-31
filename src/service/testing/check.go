@@ -52,7 +52,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 			stepId, _ := strconv.Atoi(str)
 
 			stepResult, checkpointLogs := ValidateStepResult(langType, expectLines, actualLines)
-			stepLog := model.StepLog{Id: stepId, Name: step, Status: stepResult, CheckPoints: checkpointLogs}
+			stepLog := model.StepLog{Id: stepId, Name: arr[1], Status: stepResult, CheckPoints: checkpointLogs}
 			stepLogs = append(stepLogs, stepLog)
 			if !stepResult {
 				caseResult = constant.FAIL.String()

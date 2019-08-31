@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
-	"github.com/easysoft/zentaoatf/src/utils/common"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
@@ -29,7 +28,7 @@ func Print(report model.TestReport) {
 	logUtils.PrintAndLogColorLn(fmt.Sprintf("  %s: %d", i118Utils.I118Prt.Sprintf("skip"), report.Skip), color.FgYellow)
 
 	for _, cs := range report.Cases {
-		str := "\n %d. %s %s, %s"
+		str := "\n%d. %s %s, %s"
 		status := cs.Status
 		statusColor := logUtils.ColoredStatus(status)
 
@@ -43,12 +42,12 @@ func Print(report model.TestReport) {
 					logUtils.PrintAndLog("")
 				}
 
-				str := "  %s: %s"
-				status := commonUtils.BoolToPass(step.Status)
-				statusColor := logUtils.ColoredStatus(status)
+				str := "[Step%d]: %s \n"
+				//status := commonUtils.BoolToPass(step.Status)
+				//statusColor := logUtils.ColoredStatus(status)
 
 				//logs = append(logs, fmt.Sprintf(str, status, step.Name))
-				logUtils.PrintTo(fmt.Sprintf(str, statusColor, step.Name+"\n"))
+				logUtils.PrintTo(fmt.Sprintf(str, step.Id, step.Name))
 
 				count1 := 0
 				for _, cp := range step.CheckPoints {
@@ -62,8 +61,8 @@ func Print(report model.TestReport) {
 					//	i118Utils.I118Prt.Sprintf("checkpoint"), cp.Numb))
 					//logUtils.PrintTo(fmt.Sprintf("    %s: %s %d\n", cpStatusColored, i118Utils.I118Prt.Sprintf("checkpoint"), cp.Numb))
 
-					logUtils.PrintAndLog(fmt.Sprintf("        %s %s", i118Utils.I118Prt.Sprintf("expect_result"), cp.Expect))
-					logUtils.PrintAndLog(fmt.Sprintf("        %s %s", i118Utils.I118Prt.Sprintf("actual_result"), cp.Actual))
+					logUtils.PrintAndLog(fmt.Sprintf("[Expect] %s", cp.Expect))
+					logUtils.PrintAndLog(fmt.Sprintf("[Actual] %s", cp.Actual))
 
 					count1++
 				}
