@@ -2,11 +2,11 @@ package testingService
 
 import (
 	"github.com/easysoft/zentaoatf/src/model"
-	file2 "github.com/easysoft/zentaoatf/src/utils/file"
-	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
+	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
+	"github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/shell"
-	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
+	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/fatih/color"
 	"time"
 )
@@ -18,7 +18,7 @@ func ExeScripts(files []string, report *model.TestReport) {
 	report.StartTime = startTime
 
 	for _, file := range files {
-		ExeScript(file)
+		ExeScript(file, report)
 	}
 
 	logUtils.PrintWholeLine(i118Utils.I118Prt.Sprintf("end_execution", ""), "=", color.FgCyan)
@@ -30,18 +30,24 @@ func ExeScripts(files []string, report *model.TestReport) {
 	report.Duration = secs
 }
 
-func ExeScript(file string) {
+func ExeScript(file string, report *model.TestReport) {
 	var logFile string
 
 	logFile = zentaoUtils.ScriptToLogName(file)
+	logUtils.InitLog(zentaoUtils.ScriptToLogDir(file))
 
 	startTime := time.Now()
 
 	msg := i118Utils.I118Prt.Sprintf("start_case", file, startTime.Format("2006-01-02 15:04:05"))
 	logUtils.PrintWholeLine(msg, "-", color.FgCyan)
 
+	logUtils.Screen(msg)
+	logUtils.Trace(msg)
+
 	output := shellUtils.ExecFile(file)
-	file2.WriteFile(logFile, output)
+	fileUtils.WriteFile(logFile, output)
+
+	CheckResult(file, report)
 
 	entTime := time.Now()
 	secs := int64(entTime.Sub(startTime) / time.Second)

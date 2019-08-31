@@ -4,7 +4,7 @@
 
 caseId:         1
 productId:      0
-title:          Test site response time
+title:          Test network connection
 steps:          steps that begin with @ are checkpoints
    step1           type "ping zentao.com"
    @step2          check the output contains "ttl"

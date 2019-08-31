@@ -3,30 +3,22 @@ package testingService
 import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils/const"
-	"github.com/easysoft/zentaoatf/src/utils/i118"
-	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/string"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
-	"github.com/fatih/color"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
-func CheckResults(files []string, report *model.TestReport) {
-	logUtils.Printt("\n")
-	logUtils.PrintWholeLine(i118Utils.I118Prt.Sprintf("begin_analyse"), "=", color.FgCyan)
+func CheckResult(scriptFile string, report *model.TestReport) {
+	logFile := zentaoUtils.ScriptToLogName(scriptFile)
 
-	for _, scriptFile := range files {
-		logFile := zentaoUtils.ScriptToLogName(scriptFile)
+	checkpointStepArr := zentaoUtils.ReadCheckpointSteps(scriptFile)
+	expectArr := zentaoUtils.ReadExpect(scriptFile)
+	skip, logArr := zentaoUtils.ReadLog(logFile)
 
-		checkpointStepArr := zentaoUtils.ReadCheckpointSteps(scriptFile)
-		expectArr := zentaoUtils.ReadExpect(scriptFile)
-		skip, logArr := zentaoUtils.ReadLog(logFile)
-
-		language := ""
-		ValidateCaseResult(scriptFile, language, checkpointStepArr, expectArr, skip, logArr, report)
-	}
+	language := ""
+	ValidateCaseResult(scriptFile, language, checkpointStepArr, expectArr, skip, logArr, report)
 }
 
 func ValidateCaseResult(scriptFile string, langType string,

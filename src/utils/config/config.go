@@ -30,6 +30,7 @@ func InitConfig() {
 
 	// internationalization
 	i118Utils.InitI118(vari.Config.Language)
+
 }
 
 func CheckConfigForRequest() {

@@ -59,7 +59,7 @@ func ExecFile(filePath string) string {
 		if err2 != nil || io.EOF == err2 {
 			break
 		}
-		logUtils.Printt(line)
+		logUtils.PrintTo(line)
 		output = append(output, line)
 	}
 

@@ -54,6 +54,13 @@ func GenApiUri(module string, methd string, param string) string {
 	return ""
 }
 
+func ScriptToLogDir(file string) string {
+	logDir := vari.WorkDir + constant.LogDir
+	fileUtils.MkDirIfNeeded(logDir)
+
+	return logDir + vari.RunDir
+}
+
 func ScriptToLogName(file string) string {
 	logDir := vari.WorkDir + constant.LogDir
 	fileUtils.MkDirIfNeeded(logDir)
