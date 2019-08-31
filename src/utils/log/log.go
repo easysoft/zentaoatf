@@ -9,6 +9,8 @@ import (
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
 	"io"
+	"io/ioutil"
+	"os"
 	"strings"
 	"unicode/utf8"
 )
@@ -96,16 +98,28 @@ func NewLogger(dir string) *logrus.Logger {
 		return Logger
 	}
 
+	Logger = logrus.New()
+	Logger.Out = ioutil.Discard
+
+	writeMap := lfshook.WriterMap{
+		logrus.InfoLevel: os.Stdout,
+	}
+
 	pathMap := lfshook.PathMap{
 		logrus.WarnLevel:  dir + "trace.log",
 		logrus.ErrorLevel: dir + "result.log",
 	}
 
-	Logger = logrus.New()
+	Logger.Hooks.Add(lfshook.NewHook(
+		writeMap,
+		&MyFormatter{},
+	))
+
 	Logger.Hooks.Add(lfshook.NewHook(
 		pathMap,
 		&MyFormatter{},
 	))
+
 	Logger.SetFormatter(&MyFormatter{})
 
 	return Logger
