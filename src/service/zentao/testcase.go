@@ -6,6 +6,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/service/client"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"sort"
@@ -202,5 +203,25 @@ func GetCaseIdsByTask(taskId string, idMap *map[int]string) {
 	for _, tc := range testcases {
 		id, _ := strconv.Atoi(tc.Id)
 		(*idMap)[id] = ""
+	}
+}
+
+func CommitCase(caseId int, title string) {
+	config := configUtils.ReadCurrConfig()
+
+	ok := Login(config.Url, config.Account, config.Password)
+	if !ok {
+		return
+	}
+
+	uri := fmt.Sprintf("testcase-edit-%d.json", caseId)
+	requestObj := map[string]interface{}{"title": title}
+
+	url := config.Url + uri
+	dataStr, ok := client.PostObject(url, requestObj)
+	_ = dataStr
+
+	if ok {
+		logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("success_to_commit_case", caseId)+"\n", -1)
 	}
 }

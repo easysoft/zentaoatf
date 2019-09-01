@@ -77,6 +77,10 @@ func main() {
 		}
 
 	case "ci":
+		files, idx := fileUtils.GetFilesFromParams(os.Args[2:])
+		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
+			action.CommitCases(files)
+		}
 
 	case "cr":
 		files, idx := fileUtils.GetFilesFromParams(os.Args[2:])

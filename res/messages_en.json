@@ -290,6 +290,11 @@
       "translation": "success to generate %d test scripts in '%s'"
     },
     {
+      "id": "success_to_commit_case",
+      "message": "",
+      "translation": "success to commit case %d"
+    },
+    {
       "id": "success_to_report_bug",
       "message": "",
       "translation": "success to report bug for case %s"

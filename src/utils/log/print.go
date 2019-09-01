@@ -26,16 +26,16 @@ func PrintTo(str string) {
 		output = color.Output
 	}
 
-	fmt.Fprintf(output, str+"\n")
+	fmt.Fprint(output, str+"\n")
 }
 
 func PrintToStdOut(msg string, attr color.Attribute) {
 	output := color.Output
 
 	if attr == -1 {
-		fmt.Fprintf(output, msg+"\n")
+		fmt.Fprint(output, msg+"\n")
 	} else {
-		color.New(attr).Fprintf(output, msg+"\n")
+		color.New(attr).Fprint(output, msg+"\n")
 	}
 }
 
@@ -48,10 +48,10 @@ func PrintToCmd(msg string, attr color.Attribute) {
 	}
 
 	if attr == -1 {
-		fmt.Fprintf(output, msg+"\n")
+		fmt.Fprint(output, msg+"\n")
 	} else {
 		clr := color.New(attr)
-		clr.Fprintf(output, msg+"\n")
+		clr.Fprint(output, msg+"\n")
 	}
 }
 

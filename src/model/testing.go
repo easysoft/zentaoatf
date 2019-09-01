@@ -54,6 +54,14 @@ type TestCaseInTask struct {
 	Module  string
 }
 
+type TestCaseNoStepArr struct {
+	Id      string
+	Product string
+	Module  string
+
+	Title string
+	Steps map[int]TestStep
+}
 type TestCase struct {
 	Id      string
 	Product string
@@ -61,7 +69,7 @@ type TestCase struct {
 
 	Title   string
 	Steps   map[int]TestStep
-	StepArr []TestStep
+	StepArr []TestStep `json tag -`
 }
 
 type TestStep struct {

@@ -282,6 +282,11 @@
       "translation": "成功创建%d个测试脚本, 目录: '%s'"
     },
     {
+      "id": "success_to_commit_case",
+      "message": "",
+      "translation": "成功更新用例%d"
+    },
+    {
       "id": "success_to_report_bug",
       "message": "",
       "translation": "成功为用例%s提交缺陷"

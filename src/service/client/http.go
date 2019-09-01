@@ -95,8 +95,13 @@ func PostObject(url string, params interface{}) (string, bool) {
 	var bodyJson model.ZentaoResponse
 	jsonErr := json.Unmarshal(bodyStr, &bodyJson)
 	if jsonErr != nil {
-		logUtils.PrintToCmd(jsonErr.Error(), color.FgRed)
-		return "", false
+		if strings.Index(string(bodyStr), "<html>") > -1 { // some api return a html
+			logUtils.PrintToCmd("", color.FgRed)
+			return "", true
+		} else {
+			logUtils.PrintToCmd(jsonErr.Error(), color.FgRed)
+			return "", false
+		}
 	}
 
 	defer resp.Body.Close()
