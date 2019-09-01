@@ -67,7 +67,7 @@ var (
 
  $>atf.exe ci tc01.py                                将脚本里面修改的用例信息，同步到禅道系统。
  $>atf.exe cr logs/2019-08-28T164819                 提交测试结果到禅道系统。
- $>atf.exe cb logs/2019-08-28T164819 -case 1         将编号为1的用例结果提交为缺陷，缩写-c。
+ $>atf.exe cb logs/2019-08-28T164819                 提交测试结果中失败用例为缺陷。
 
  $>atf.exe list dir1 .                               列出目录dir1，以及当前目录下的所有脚本文件。
  $>atf.exe view tc01.py tc02.py                      查看指定路径的测试脚本。

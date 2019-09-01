@@ -19,7 +19,7 @@ func main() {
 	var moduleId string
 	var taskId string
 	var suiteId string
-	var caseId string
+	//var caseId string
 
 	flagSet := flag.NewFlagSet("atf", flag.ContinueOnError)
 
@@ -46,8 +46,8 @@ func main() {
 	flagSet.StringVar(&keywords, "k", "", "")
 	flagSet.StringVar(&keywords, "keywords", "", "")
 
-	flagSet.StringVar(&caseId, "c", "", "")
-	flagSet.StringVar(&caseId, "case", "", "")
+	//flagSet.StringVar(&caseId, "c", "", "")
+	//flagSet.StringVar(&caseId, "case", "", "")
 
 	var placeholder string
 	flagSet.StringVar(&placeholder, "h", "", "")
@@ -91,7 +91,7 @@ func main() {
 	case "cb":
 		files, idx := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[idx+1:]); err == nil {
-			action.CommitBug(files, caseId)
+			action.CommitBug(files)
 		}
 
 	case "list", "ls", "-l":

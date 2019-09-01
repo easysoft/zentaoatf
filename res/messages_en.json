@@ -81,6 +81,11 @@
       "message": "enter co language",
       "translation": "select script language. %s"
     },
+    {
+      "id": "enter_case_id_for_report_bug",
+      "message": "",
+      "translation": "which case do you want to report bug for? enter case id, 'exit' to quit"
+    },
 
     {
       "id": "invalid_input",

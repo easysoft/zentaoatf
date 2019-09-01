@@ -77,6 +77,12 @@
       "translation": "请选择脚本语言。 %s"
     },
     {
+      "id": "enter_case_id_for_report_bug",
+      "message": "",
+      "translation": "请输入您想提交缺陷的用例编号，输入'exit'退出"
+    },
+
+    {
       "id": "invalid_input",
       "message": "invalid input",
       "translation": "无效数据，请重新输入"
