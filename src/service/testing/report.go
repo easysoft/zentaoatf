@@ -35,13 +35,13 @@ func Report(report model.TestReport) {
 
 		if len(cs.Steps) > 0 {
 			count := 0
-			for _, step := range cs.Steps {
+			for idx, step := range cs.Steps {
 				if count > 0 { // 空行
 					logUtils.PrintAndLog("")
 				}
 
 				status := i118Utils.I118Prt.Sprintf(commonUtils.BoolToPass(step.Status))
-				logUtils.TraceAndResult(fmt.Sprintf("  [Step%d]: %s %s", step.Id, step.Name, status))
+				logUtils.TraceAndResult(fmt.Sprintf("  [Step%d] %s %s", step.Id, step.Name, status))
 
 				count1 := 0
 				for _, cp := range step.CheckPoints {
@@ -50,10 +50,14 @@ func Report(report model.TestReport) {
 					}
 
 					//cpStatus := commonUtils.BoolToPass(step.Status)
-					logUtils.TraceAndResult(fmt.Sprintf("    [Expect] %s", cp.Expect))
-					logUtils.TraceAndResult(fmt.Sprintf("    [Actual] %s", cp.Actual))
+					logUtils.TraceAndResult(fmt.Sprintf("  [Expect] %s", cp.Expect))
+					logUtils.TraceAndResult(fmt.Sprintf("  [Actual] %s", cp.Actual))
 
 					count1++
+				}
+
+				if idx < len(cs.Steps)-1 {
+					logUtils.TraceAndResult("")
 				}
 
 				count++
