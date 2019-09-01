@@ -36,8 +36,7 @@ var (
 
 	RequestTypePathInfo = "PATH_INFO"
 
-	Usage = `
- help    -h            查看帮助信息。
+	Usage = ` help    -h            查看帮助信息。
  set     -s            设置语言、禅道系统同步参数。
  co      checkout      导出禅道系统中的用例，已存在的将更新标题和步骤描述。可指定产品、套件、测试单编号。
  up      update        从禅道系统更新已存在的用例。可指定产品、模块、套件、测试单编号。
@@ -46,11 +45,9 @@ var (
  cr                    将用例执行结果提交到禅道系统中。
  cb                    将执行结果中的失败用例，作为缺陷提交到餐到系统。可指定测试日志目录和用例编号，弹出命令行图形界面。
  list    ls -l         查看测试用例列表。可指定目录和文件的列表，之间用空格隔开。
- view    -v            查看测试用例详情。可指定目录和文件的列表，之间用空格隔开。
-`
+ view    -v            查看测试用例详情。可指定目录和文件的列表，之间用空格隔开。`
 
-	Example = `
- $>atf.exe run scripts-demo/tc-01.bat                执行本项目自带的测试用，非windows系统使用tc-01.sh脚本。
+	Example = ` $>atf.exe run scripts-demo/tc-01.bat                执行本项目自带的测试用，非windows系统使用tc-01.sh脚本。
 
  $>atf.exe co                                        交互式导出禅道测试用例，将提示用户输入导出类型和编号。
  $>atf.exe co -product 1 -language python            导出编号为1的产品测试用例，使用python语言，缩写-p -l。

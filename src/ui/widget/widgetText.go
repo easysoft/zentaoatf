@@ -8,7 +8,6 @@ import (
 
 const (
 	TextWidthFull = 69
-	TextWidthHalf = 25
 
 	TextHeight = 2
 )
@@ -30,13 +29,15 @@ func NewTextWidget(name string, x, y, w int, text string) *gocui.View {
 func NewTextareaWidget(name string, x, y, w, h int, text string) *gocui.View {
 	widget := TextWidget{name: name, x: x, y: y, w: w, h: h, text: text}
 	v, _ := widget.Layout()
+
 	return v
 }
 
 func (w *TextWidget) Layout() (*gocui.View, error) {
 	var h int
-	if w.h == 0 {
+	if w.h <= 0 {
 		h = TextHeight
+		w.h = h
 	} else {
 		h = w.h
 	}

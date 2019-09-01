@@ -13,7 +13,7 @@ import (
 func ExeScripts(files []string, report *model.TestReport) {
 	logUtils.InitLog(zentaoUtils.ScriptToLogDir())
 
-	msg := i118Utils.I118Prt.Sprintf("start_execution", "")
+	msg := i118Utils.I118Prt.Sprint("start_execution")
 	msg = logUtils.GetWholeLine(msg, "=")
 	logUtils.Trace(msg)
 
@@ -24,7 +24,7 @@ func ExeScripts(files []string, report *model.TestReport) {
 		ExeScript(file, report, idx, len(files))
 	}
 
-	msg = i118Utils.I118Prt.Sprintf("end_execution", "")
+	msg = i118Utils.I118Prt.Sprint("end_execution")
 	logUtils.Trace(logUtils.GetWholeLine(msg, "=") + "\n")
 
 	endTime := time.Now().Unix()

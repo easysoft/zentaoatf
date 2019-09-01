@@ -11,11 +11,11 @@ import (
 )
 
 func PrintUsage() {
-	PrintToStdOut("\nUsage: ", color.FgCyan)
+	PrintToStdOut("Usage: ", color.FgCyan)
 	fmt.Printf("%s\n", constant.Usage)
 
-	PrintToStdOut("Example: ", color.FgCyan)
-	fmt.Printf("%s\n", constant.Example)
+	PrintToStdOut("\nExample: ", color.FgCyan)
+	fmt.Printf("%s", constant.Example)
 }
 
 func PrintTo(str string) {
@@ -35,7 +35,7 @@ func PrintToStdOut(msg string, attr color.Attribute) {
 	if attr == -1 {
 		fmt.Fprint(output, msg+"\n")
 	} else {
-		color.New(attr).Fprint(output, msg+"\n")
+		color.New(attr).Fprintf(output, msg+"\n")
 	}
 }
 

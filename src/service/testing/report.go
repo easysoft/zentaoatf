@@ -34,33 +34,23 @@ func Report(report model.TestReport) {
 			cs.Id, cs.Title, status, cs.Path, idx+1, len(report.Cases)))
 
 		if len(cs.Steps) > 0 {
-			count := 0
 			for idx, step := range cs.Steps {
-				if count > 0 { // 空行
-					logUtils.PrintAndLog("")
-				}
-
 				status := i118Utils.I118Prt.Sprintf(commonUtils.BoolToPass(step.Status))
 				logUtils.TraceAndResult(fmt.Sprintf("  [Step%d] %s %s", step.Id, step.Name, status))
 
-				count1 := 0
 				for _, cp := range step.CheckPoints {
-					if count1 > 0 { // 空行
-						logUtils.PrintAndLog("")
-					}
-
 					//cpStatus := commonUtils.BoolToPass(step.Status)
 					logUtils.TraceAndResult(fmt.Sprintf("  [Expect] %s", cp.Expect))
 					logUtils.TraceAndResult(fmt.Sprintf("  [Actual] %s", cp.Actual))
 
-					count1++
+					//if idx1 < len(step.CheckPoints)-1 {
+					//	logUtils.TraceAndResult("")
+					//}
 				}
 
 				if idx < len(cs.Steps)-1 {
 					logUtils.TraceAndResult("")
 				}
-
-				count++
 			}
 		} else {
 			logUtils.TraceAndResult("   " + i118Utils.I118Prt.Sprintf("no_checkpoints"))
