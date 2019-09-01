@@ -1,8 +1,10 @@
 package testingService
 
 import (
+	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils/const"
+	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/string"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"regexp"
@@ -10,7 +12,7 @@ import (
 	"strings"
 )
 
-func CheckResult(scriptFile string, report *model.TestReport) {
+func CheckCaseResult(scriptFile string, report *model.TestReport, idx int, total int) {
 	logFile := zentaoUtils.ScriptToLogName(scriptFile)
 
 	checkpointStepArr := zentaoUtils.ReadCheckpointSteps(scriptFile)
@@ -18,11 +20,12 @@ func CheckResult(scriptFile string, report *model.TestReport) {
 	skip, logArr := zentaoUtils.ReadLog(logFile)
 
 	language := ""
-	ValidateCaseResult(scriptFile, language, checkpointStepArr, expectArr, skip, logArr, report)
+	ValidateCaseResult(scriptFile, language, checkpointStepArr, expectArr, skip, logArr, report, idx, total)
 }
 
 func ValidateCaseResult(scriptFile string, langType string,
-	checkpointStepArr []string, expectArr [][]string, skip bool, actualArr [][]string, report *model.TestReport) {
+	checkpointStepArr []string, expectArr [][]string, skip bool, actualArr [][]string, report *model.TestReport,
+	idx int, total int) {
 
 	caseId, productId, title := zentaoUtils.GetCaseInfo(scriptFile)
 
@@ -74,6 +77,10 @@ func ValidateCaseResult(scriptFile string, langType string,
 	cs := model.CaseLog{Id: caseId, ProductId: productId, Title: title,
 		Path: scriptFile, Status: caseResult, Steps: stepLogs}
 	report.Cases = append(report.Cases, cs)
+
+	// print case result to console
+	statusColor := logUtils.ColoredStatus(cs.Status)
+	logUtils.Screen(fmt.Sprintf("%d. %s %s, %s (%d/%d)", cs.Id, cs.Title, statusColor, cs.Path, idx+1, total))
 }
 
 func ValidateStepResult(langType string, expectLines []string, actualLines []string) (bool, []model.CheckPointLog) {

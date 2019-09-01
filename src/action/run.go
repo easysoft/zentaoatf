@@ -73,5 +73,5 @@ func Run(files []string, suiteIdStr string, taskIdStr string) {
 
 	testingService.ExeScripts(cases, &report)
 
-	testingService.Print(report)
+	testingService.Report(report)
 }

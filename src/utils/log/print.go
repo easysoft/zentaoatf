@@ -26,7 +26,7 @@ func PrintTo(str string) {
 		output = color.Output
 	}
 
-	fmt.Fprintf(output, str)
+	fmt.Fprintf(output, str+"\n")
 }
 
 func PrintToStdOut(msg string, attr color.Attribute) {

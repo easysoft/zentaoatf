@@ -11,26 +11,24 @@ import (
 	"io"
 	"io/ioutil"
 	"strings"
-	"unicode/utf8"
 )
 
 var Logger *logrus.Logger
 
-func PrintWholeLine(msg string, char string, attr color.Attribute) {
-	prefixLen := (vari.ScreenWidth - utf8.RuneCountInString(msg)) / 2
-	if prefixLen <= 0 { // no width in debug mode
-		prefixLen = 6
-	}
-	postfixLen := vari.ScreenWidth - utf8.RuneCountInString(msg) - prefixLen
-	if postfixLen <= 0 { // no width in debug mode
-		postfixLen = 6
-	}
+func GetWholeLine(msg string, char string) string {
+	//prefixLen := (vari.ScreenWidth - utf8.RuneCountInString(msg)) / 2
+	//if prefixLen <= 0 { // no width in debug mode
+	//	prefixLen = 6
+	//}
+	//postfixLen := vari.ScreenWidth - utf8.RuneCountInString(msg) - prefixLen
+	//if postfixLen <= 0 { // no width in debug mode
+	//	postfixLen = 6
+	//}
 
-	preFixStr := strings.Repeat(char, prefixLen)
-	postFixStr := strings.Repeat(char, postfixLen)
+	preFixStr := strings.Repeat(char, 10)
+	postFixStr := strings.Repeat(char, 0)
 
-	clr := color.New(attr)
-	clr.Fprintf(color.Output, fmt.Sprintf("%s%s%s\n", preFixStr, msg, postFixStr))
+	return fmt.Sprintf("%s%s%s", preFixStr, msg, postFixStr)
 }
 
 func PrintAndLog(str string) {
@@ -111,6 +109,10 @@ func Trace(msg string) {
 	Logger.Warnln(msg)
 }
 func Result(msg string) {
+	Logger.Errorln(msg)
+}
+func TraceAndResult(msg string) {
+	Logger.Warnln(msg)
 	Logger.Errorln(msg)
 }
 

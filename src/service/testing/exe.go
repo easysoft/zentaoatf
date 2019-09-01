@@ -7,21 +7,25 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/shell"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
-	"github.com/fatih/color"
 	"time"
 )
 
 func ExeScripts(files []string, report *model.TestReport) {
-	logUtils.PrintWholeLine(i118Utils.I118Prt.Sprintf("start_execution", ""), "=", color.FgCyan)
+	logUtils.InitLog(zentaoUtils.ScriptToLogDir())
+
+	msg := i118Utils.I118Prt.Sprintf("start_execution", "")
+	msg = logUtils.GetWholeLine(msg, "=")
+	logUtils.Trace(msg)
 
 	startTime := time.Now().Unix()
 	report.StartTime = startTime
 
-	for _, file := range files {
-		ExeScript(file, report)
+	for idx, file := range files {
+		ExeScript(file, report, idx, len(files))
 	}
 
-	logUtils.PrintWholeLine(i118Utils.I118Prt.Sprintf("end_execution", ""), "=", color.FgCyan)
+	msg = i118Utils.I118Prt.Sprintf("end_execution", "")
+	logUtils.Trace(logUtils.GetWholeLine(msg, "=") + "\n")
 
 	endTime := time.Now().Unix()
 	secs := endTime - startTime
@@ -30,28 +34,26 @@ func ExeScripts(files []string, report *model.TestReport) {
 	report.Duration = secs
 }
 
-func ExeScript(file string, report *model.TestReport) {
-	var logFile string
-
-	logFile = zentaoUtils.ScriptToLogName(file)
-	logUtils.InitLog(zentaoUtils.ScriptToLogDir(file))
+func ExeScript(file string, report *model.TestReport, idx int, total int) {
+	logFile := zentaoUtils.ScriptToLogName(file)
 
 	startTime := time.Now()
 
 	msg := i118Utils.I118Prt.Sprintf("start_case", file, startTime.Format("2006-01-02 15:04:05"))
-	logUtils.PrintWholeLine(msg, "-", color.FgCyan)
-
-	logUtils.Screen("===" + color.CyanString(msg))
-	logUtils.Trace("---" + msg)
+	logUtils.Trace(logUtils.GetWholeLine(msg, "-"))
 
 	output := shellUtils.ExecFile(file)
 	fileUtils.WriteFile(logFile, output)
 
-	CheckResult(file, report)
+	CheckCaseResult(file, report, idx, total)
 
 	entTime := time.Now()
 	secs := int64(entTime.Sub(startTime) / time.Second)
 
 	msg = i118Utils.I118Prt.Sprintf("end_case", file, entTime.Format("2006-01-02 15:04:05"), secs)
-	logUtils.PrintWholeLine(msg, "-", color.FgCyan)
+	logUtils.Trace(logUtils.GetWholeLine(msg, "-"))
+
+	if idx < total-1 {
+		logUtils.Trace("")
+	}
 }
