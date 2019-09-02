@@ -76,7 +76,7 @@ func Run(files []string, suiteIdStr string, taskIdStr string) {
 	}
 
 	if len(cases) < 1 {
-		logUtils.PrintToCmd("\n"+i118Utils.I118Prt.Sprintf("no_scripts")+"\n", -1)
+		logUtils.PrintToCmd("\n"+i118Utils.I118Prt.Sprintf("no_scripts"), -1)
 		return
 	}
 

@@ -47,8 +47,13 @@ func Get(url string, params map[string]string) (string, bool) {
 	var bodyJson model.ZentaoResponse
 	jsonErr := json.Unmarshal(bodyStr, &bodyJson)
 	if jsonErr != nil {
-		logUtils.PrintToCmd(jsonErr.Error(), color.FgRed)
-		return "", false
+		if strings.Index(string(bodyStr), "<html>") > -1 {
+			logUtils.PrintToCmd("server return a html", color.FgRed)
+			return "", false
+		} else {
+			logUtils.PrintToCmd(jsonErr.Error(), color.FgRed)
+			return "", false
+		}
 	}
 
 	defer resp.Body.Close()
@@ -96,7 +101,7 @@ func PostObject(url string, params interface{}) (string, bool) {
 	jsonErr := json.Unmarshal(bodyStr, &bodyJson)
 	if jsonErr != nil {
 		if strings.Index(string(bodyStr), "<html>") > -1 { // some api return a html
-			logUtils.PrintToCmd("", color.FgRed)
+			logUtils.PrintToCmd("server return a html", color.FgRed)
 			return "", true
 		} else {
 			logUtils.PrintToCmd(jsonErr.Error(), color.FgRed)
