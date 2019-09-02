@@ -18,8 +18,8 @@ var filedValMap map[string]int
 func InitReportBugPage(resultDir string, caseId string) error {
 	DestoryReportBugPage()
 
-	vari.CurrBug, vari.CurrBugStepIds = zentaoService.PrepareBug(resultDir, caseId)
-	//bug := vari.CurrBug
+	//vari.CurrBug, vari.CurrBugStepIds = zentaoService.PrepareBug(resultDir, caseId)
+	bug := vari.CurrBug
 
 	w, h := vari.Cui.Size()
 	x := 1
@@ -33,13 +33,13 @@ func InitReportBugPage(resultDir string, caseId string) error {
 	// title
 	left := x
 	right := left + widget.TextWidthFull - 5
-	titleInput := widget.NewTextWidget("titleInput", left, y, widget.TextWidthFull-5, "bug.Title")
+	titleInput := widget.NewTextWidget("titleInput", left, y, widget.TextWidthFull-5, "测试")
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], titleInput.Name())
 
 	// steps
 	left = right + ui.Space
 	stepsWidth := w - left - 3
-	stepsInput := widget.NewTextareaWidget("stepsInput", left, y, stepsWidth, h-constant.CmdViewHeight-2, "bug.Steps")
+	stepsInput := widget.NewTextareaWidget("stepsInput", left, y, stepsWidth, h-constant.CmdViewHeight-2, bug.Steps)
 	stepsInput.Title = i118Utils.I118Prt.Sprintf("steps")
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], stepsInput.Name())
 
