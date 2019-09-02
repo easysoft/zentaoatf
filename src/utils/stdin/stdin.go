@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-func ConfigForSet() {
+func InputForSet() {
 	configSite := ""
 
 	language := ""
@@ -51,14 +51,14 @@ func ConfigForSet() {
 	configUtils.PrintCurrConfig()
 }
 
-func CheckConfigForRequest() {
+func CheckRequestConfig() {
 	conf := configUtils.ReadCurrConfig()
 	if conf.Url == "" || conf.Account == "" || conf.Password == "" {
-		ConfigForRequest()
+		InputForRequest()
 	}
 }
 
-func ConfigForRequest() {
+func InputForRequest() {
 	url := ""
 	account := ""
 	password := ""
@@ -74,7 +74,7 @@ func ConfigForRequest() {
 	configUtils.PrintCurrConfig()
 }
 
-func ConfigForCheckout(productId *string, moduleId *string, suiteId *string, taskId *string,
+func InputForCheckout(productId *string, moduleId *string, suiteId *string, taskId *string,
 	independentFile *bool, scriptLang *string) {
 
 	coType := getInput("(product|module|suite|task|p|m|s|t)", "enter_co_type")
@@ -109,11 +109,11 @@ func ConfigForCheckout(productId *string, moduleId *string, suiteId *string, tas
 	configUtils.PrintCurrConfig()
 }
 
-func ConfigForDir(dir *string, entity string) {
+func InputForDir(dir *string, entity string) {
 	*dir = getInput("is_dir", "enter_dir", i118Utils.I118Prt.Sprintf(entity))
 }
 
-func ConfigForInt(in *string, entity string) {
+func InputForInt(in *string, entity string) {
 	*in = getInput("\\d+", "enter_id", i118Utils.I118Prt.Sprintf(entity))
 }
 

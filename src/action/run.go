@@ -28,7 +28,7 @@ func Run(files []string, suiteIdStr string, taskIdStr string) {
 		suiteId, err := strconv.Atoi(suiteIdStr)
 		if err == nil && suiteId > 0 {
 
-			stdinUtils.CheckConfigForRequest()
+			stdinUtils.CheckRequestConfig()
 			zentaoService.GetCaseIdsBySuite(suiteIdStr, &caseIdMap)
 		}
 
@@ -37,7 +37,7 @@ func Run(files []string, suiteIdStr string, taskIdStr string) {
 		taskId, err := strconv.Atoi(taskIdStr)
 		if err == nil && taskId > 0 {
 
-			stdinUtils.CheckConfigForRequest()
+			stdinUtils.CheckRequestConfig()
 			zentaoService.GetCaseIdsByTask(taskIdStr, &caseIdMap)
 		}
 

@@ -14,12 +14,12 @@ import (
 func Generate(productId string, moduleId string, suiteId string, taskId string,
 	independentFile bool, scriptLang string) {
 
-	stdinUtils.CheckConfigForRequest()
+	stdinUtils.CheckRequestConfig()
 
 	if (productId != "") || (moduleId != "" && productId != "") || suiteId != "" || taskId != "" {
 
 	} else {
-		stdinUtils.ConfigForCheckout(&productId, &moduleId, &suiteId, &taskId,
+		stdinUtils.InputForCheckout(&productId, &moduleId, &suiteId, &taskId,
 			&independentFile, &scriptLang)
 	}
 

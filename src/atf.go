@@ -108,7 +108,7 @@ func main() {
 		}
 
 	case "set", "-s":
-		stdinUtils.ConfigForSet()
+		stdinUtils.InputForSet()
 
 	case "help", "-h":
 		logUtils.PrintUsage()

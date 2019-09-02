@@ -11,7 +11,7 @@ func CommitResult(files []string) {
 	if len(files) > 0 {
 		resultDir = files[0]
 	} else {
-		stdinUtils.ConfigForDir(&resultDir, "result")
+		stdinUtils.InputForDir(&resultDir, "result")
 	}
 
 	resultDir = fileUtils.UpdateDir(resultDir)
