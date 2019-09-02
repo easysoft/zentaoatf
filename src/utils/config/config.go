@@ -83,7 +83,7 @@ func SaveConfig(language string, url string, account string, password string) er
 }
 
 func PrintCurrConfig() {
-	logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("current_config"), color.FgCyan)
+	logUtils.PrintToStdOut("\n"+i118Utils.I118Prt.Sprintf("current_config"), color.FgCyan)
 
 	val := reflect.ValueOf(vari.Config)
 	typeOfS := val.Type()
@@ -91,12 +91,8 @@ func PrintCurrConfig() {
 		val := val.Field(i)
 		name := typeOfS.Field(i).Name
 
-		if !vari.RunFromCui && (name == "Width" || name == "Height" || name == "WorkHistories") {
-			continue
-		}
-		fmt.Printf("  %s: %v \n", typeOfS.Field(i).Name, val.Interface())
+		fmt.Printf("  %s: %v \n", name, val.Interface())
 	}
-	fmt.Println("")
 }
 
 func ReadCurrConfig() model.Config {
