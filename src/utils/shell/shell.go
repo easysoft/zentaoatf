@@ -8,6 +8,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"io"
 	"os/exec"
+	"path"
 	"strings"
 )
 
@@ -32,7 +33,14 @@ func ExecFile(filePath string) string {
 	if commonUtils.IsWin() {
 		cmd = exec.Command("cmd", "/C", filePath)
 	} else {
-		exec.Command("/bin/bash", "-c", "chmod +x "+filePath)
+		if !commonUtils.IsWin() {
+			exec.Command("/bin/bash", "-c", "chmod +x "+filePath)
+		} else {
+			ext := path.Ext(filePath)
+			if ext == ".php" {
+				filePath = "php " + filePath
+			}
+		}
 
 		cmd = exec.Command("/bin/bash", "-c", filePath)
 	}
