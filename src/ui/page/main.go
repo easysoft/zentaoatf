@@ -28,9 +28,6 @@ func InitMainPage() error {
 	widget.NewHelpWidget()
 	MainPageKeyBindings()
 
-	titleInput := widget.NewTextWidget("titleInput", 2, 2, widget.TextWidthFull-5, "bug.Title")
-	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], titleInput.Name())
-
 	return nil
 }
 
