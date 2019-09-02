@@ -81,11 +81,10 @@ func UpdateDir(path string) string {
 	return path
 }
 
-func GetFilesFromParams(arguments []string) ([]string, int) {
+func GetFilesFromParams(arguments []string) []string {
 	ret := make([]string, 0)
 
-	index := -1
-	for idx, arg := range arguments {
+	for _, arg := range arguments {
 		if strings.Index(arg, "-") != 0 {
 			if arg == "." {
 				arg = AbosutePath(".")
@@ -96,9 +95,10 @@ func GetFilesFromParams(arguments []string) ([]string, int) {
 			}
 
 			ret = append(ret, arg)
-			index = idx
+		} else {
+			break
 		}
 	}
 
-	return ret, index
+	return ret
 }

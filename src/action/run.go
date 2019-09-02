@@ -24,6 +24,19 @@ func Run(files []string, suiteIdStr string, taskIdStr string) {
 	vari.WorkDir = fileUtils.AbosutePath(".")
 	vari.RunDir = zentaoUtils.RunDateFolder()
 
+	if (suiteIdStr != "" || taskIdStr != "") && len(files) == 0 { // run with suite/task id, but no dir, get scripts from .
+		files = append(files, fileUtils.AbosutePath("."))
+
+	} else if (len(files) > 0 && path.Ext(files[0]) == "."+constant.ExtNameSuite) ||
+		(len(files) > 0 && path.Ext(files[0]) == "."+constant.ExtNameResult) { // only suite/result file provided
+
+		temp := make([]string, 0)
+		temp = append(temp, fileUtils.AbosutePath(path.Dir(files[0])))
+		temp = append(temp, files[0])
+
+		files = temp
+	}
+
 	if suiteIdStr != "" {
 		suiteId, err := strconv.Atoi(suiteIdStr)
 		if err == nil && suiteId > 0 {

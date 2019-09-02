@@ -88,6 +88,12 @@ func CheckSupportLangages(scriptLang string) bool {
 	return true
 }
 
+func GetSupportLangageRegx() string {
+	regx := "(" + strings.Join(GetSupportLangageArr(), "|") + ")"
+
+	return regx
+}
+
 func init() {
 	GetSupportedScriptLang()
 }

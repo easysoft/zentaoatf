@@ -1,7 +1,7 @@
 goto start
 <<<TC
 
-caseId:         1
+caseId:         -1
 productId:      0
 title:          Test network connection
 steps:          steps that begin with @ are checkpoints

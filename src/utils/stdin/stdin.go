@@ -102,7 +102,7 @@ func InputForCheckout(productId *string, moduleId *string, suiteId *string, task
 		*independentFile = false
 	}
 
-	regx := "(" + strings.Join(langUtils.GetSupportLangageArr(), "|") + ")"
+	regx := langUtils.GetSupportLangageRegx()
 	fmtParam := strings.Join(langUtils.GetSupportLangageArr(), " / ")
 	*scriptLang = getInput(regx, "enter_co_language", fmtParam)
 

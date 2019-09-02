@@ -7,6 +7,7 @@ import (
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/file"
+	langUtils "github.com/easysoft/zentaoatf/src/utils/lang"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"io/ioutil"
 	"os"
@@ -118,6 +119,11 @@ func GetScriptByIdsInDir(dirPth string, idMap map[int]string, files *[]string) e
 
 	sep := string(os.PathSeparator)
 
+	name := path.Base(dirPth)
+	if strings.Index(name, ".") == 0 || name == "bin" || name == "release" || name == "logs" || name == "xdoc" {
+		return nil
+	}
+
 	dir, err := ioutil.ReadDir(dirPth)
 	if err != nil {
 		return err
@@ -128,6 +134,13 @@ func GetScriptByIdsInDir(dirPth string, idMap map[int]string, files *[]string) e
 		if fi.IsDir() { // 目录, 递归遍历
 			GetScriptByIdsInDir(dirPth+name+sep, idMap, files)
 		} else {
+			regx := langUtils.GetSupportLangageRegx()
+			pass, _ := regexp.MatchString("^*.\\."+regx+"$", name)
+
+			if !pass {
+				continue
+			}
+
 			path := dirPth + name
 			if CheckFileIsScript(path) {
 				id, _, _ := zentaoUtils.GetCaseInfo(path)

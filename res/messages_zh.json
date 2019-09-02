@@ -134,6 +134,11 @@
       "translation": "只支持语言en(%s)和zh(%s)"
     },
     {
+      "id": "run_sets_with_no_dir",
+      "message": "",
+      "translation": "执行套件或任务时，第一个参数必须为包含脚本的目录"
+    },
+    {
       "id": "no_cases",
       "message": "No test cases found",
       "translation": "No test cases found"

@@ -1,7 +1,7 @@
 goto start
 <<<TC
 
-caseId:         1
+caseId:         -1
 caseIdInTask:   0
 taskId:         0
 title:          测试服务器响应时间
