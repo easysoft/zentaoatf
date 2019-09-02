@@ -18,22 +18,22 @@ var filedValMap map[string]int
 func InitReportBugPage(resultDir string, caseId string) error {
 	DestoryReportBugPage()
 
-	//vari.CurrBug, vari.CurrBugStepIds = zentaoService.PrepareBug(resultDir, caseId)
+	vari.CurrBug, vari.CurrBugStepIds = zentaoService.PrepareBug(resultDir, caseId)
 	bug := vari.CurrBug
 
 	w, h := vari.Cui.Size()
 	x := 1
 	y := 1
 
-	//var bugVersion string
-	//for _, val := range bug.OpenedBuild { // 取字符串值显示
-	//	bugVersion = val
-	//}
+	var bugVersion string
+	for _, val := range bug.OpenedBuild { // 取字符串值显示
+		bugVersion = val
+	}
 
 	// title
 	left := x
 	right := left + widget.TextWidthFull - 5
-	titleInput := widget.NewTextWidget("titleInput", left, y, widget.TextWidthFull-5, "测试")
+	titleInput := widget.NewTextWidget("titleInput", left, y, widget.TextWidthFull-5, bug.Title)
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], titleInput.Name())
 
 	// steps
@@ -43,72 +43,72 @@ func InitReportBugPage(resultDir string, caseId string) error {
 	stepsInput.Title = i118Utils.I118Prt.Sprintf("steps")
 	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], stepsInput.Name())
 
-	//// module
-	//y += 3
-	//left = x
-	//right = left + widget.SelectWidth
-	//moduleInput := widget.NewSelectWidgetWithDefault("module", left, y, widget.SelectWidth, 6,
-	//	i118Utils.I118Prt.Sprintf("module"),
-	//	vari.ZentaoBugFileds.Modules, zentaoService.GetNameById(bug.Module, vari.ZentaoBugFileds.Modules),
-	//	bugSelectFieldCheckEvent())
-	//ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], moduleInput.Name())
-	//
-	//// type
-	//left = right + ui.Space
-	//right = left + widget.SelectWidth
-	//typeInput := widget.NewSelectWidgetWithDefault("type", left, y, widget.SelectWidth, 6,
-	//	i118Utils.I118Prt.Sprintf("category"),
-	//	vari.ZentaoBugFileds.Categories, zentaoService.GetNameById(bug.Type, vari.ZentaoBugFileds.Categories),
-	//	bugSelectFieldCheckEvent())
-	//ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], typeInput.Name())
-	//
-	//// version
-	//left = right + ui.Space
-	//right = left + widget.SelectWidth
-	//versionInput := widget.NewSelectWidgetWithDefault("version", left, y, widget.SelectWidth, 6,
-	//	i118Utils.I118Prt.Sprintf("version"),
-	//	vari.ZentaoBugFileds.Versions, zentaoService.GetNameById(bugVersion, vari.ZentaoBugFileds.Versions),
-	//	bugSelectFieldCheckEvent())
-	//ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], versionInput.Name())
-	//
-	//// severity
-	//y += 7
-	//left = x
-	//right = left + widget.SelectWidth
-	//severityInput := widget.NewSelectWidgetWithDefault("severity", left, y, widget.SelectWidth, 6,
-	//	i118Utils.I118Prt.Sprintf("severity"),
-	//	vari.ZentaoBugFileds.Severities, zentaoService.GetNameById(bug.Severity, vari.ZentaoBugFileds.Severities),
-	//	bugSelectFieldCheckEvent())
-	//ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], severityInput.Name())
-	//
-	//// priority
-	//left = right + ui.Space
-	//right = left + widget.SelectWidth
-	//priorityInput := widget.NewSelectWidgetWithDefault("priority", left, y, widget.SelectWidth, 6,
-	//	i118Utils.I118Prt.Sprintf("priority"),
-	//	vari.ZentaoBugFileds.Priorities, zentaoService.GetNameById(bug.Pri, vari.ZentaoBugFileds.Priorities),
-	//	bugSelectFieldCheckEvent())
-	//ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], priorityInput.Name())
-	//
-	//// msg
-	//y += 7
-	//left = x
-	//reportBugMsg := widget.NewPanelWidget("reportBugMsg", left, y, widget.TextWidthFull-5, 2, "")
-	//reportBugMsg.Frame = false
-	//ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], reportBugMsg.Name())
-	//
-	//// buttons
-	//y += 5
-	//buttonX := x + widget.SelectWidth + ui.Space
-	//submitInput := widget.NewButtonWidgetAutoWidth("submitInput", buttonX, y,
-	//	i118Utils.I118Prt.Sprintf("submit"), reportBug)
-	//ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], submitInput.Name())
-	//
-	//cancelReportBugInput := widget.NewButtonWidgetAutoWidth("cancelReportBugInput",
-	//	buttonX+11, y, i118Utils.I118Prt.Sprintf("cancel"), cancelReportBug)
-	//ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], cancelReportBugInput.Name())
-	//
-	//ui.BindEventForInputWidgets(ui.ViewMap["reportBug"])
+	// module
+	y += 3
+	left = x
+	right = left + widget.SelectWidth
+	moduleInput := widget.NewSelectWidgetWithDefault("module", left, y, widget.SelectWidth, 6,
+		i118Utils.I118Prt.Sprintf("module"),
+		vari.ZentaoBugFileds.Modules, zentaoService.GetNameById(bug.Module, vari.ZentaoBugFileds.Modules),
+		bugSelectFieldCheckEvent())
+	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], moduleInput.Name())
+
+	// type
+	left = right + ui.Space
+	right = left + widget.SelectWidth
+	typeInput := widget.NewSelectWidgetWithDefault("type", left, y, widget.SelectWidth, 6,
+		i118Utils.I118Prt.Sprintf("category"),
+		vari.ZentaoBugFileds.Categories, zentaoService.GetNameById(bug.Type, vari.ZentaoBugFileds.Categories),
+		bugSelectFieldCheckEvent())
+	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], typeInput.Name())
+
+	// version
+	left = right + ui.Space
+	right = left + widget.SelectWidth
+	versionInput := widget.NewSelectWidgetWithDefault("version", left, y, widget.SelectWidth, 6,
+		i118Utils.I118Prt.Sprintf("version"),
+		vari.ZentaoBugFileds.Versions, zentaoService.GetNameById(bugVersion, vari.ZentaoBugFileds.Versions),
+		bugSelectFieldCheckEvent())
+	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], versionInput.Name())
+
+	// severity
+	y += 7
+	left = x
+	right = left + widget.SelectWidth
+	severityInput := widget.NewSelectWidgetWithDefault("severity", left, y, widget.SelectWidth, 6,
+		i118Utils.I118Prt.Sprintf("severity"),
+		vari.ZentaoBugFileds.Severities, zentaoService.GetNameById(bug.Severity, vari.ZentaoBugFileds.Severities),
+		bugSelectFieldCheckEvent())
+	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], severityInput.Name())
+
+	// priority
+	left = right + ui.Space
+	right = left + widget.SelectWidth
+	priorityInput := widget.NewSelectWidgetWithDefault("priority", left, y, widget.SelectWidth, 6,
+		i118Utils.I118Prt.Sprintf("priority"),
+		vari.ZentaoBugFileds.Priorities, zentaoService.GetNameById(bug.Pri, vari.ZentaoBugFileds.Priorities),
+		bugSelectFieldCheckEvent())
+	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], priorityInput.Name())
+
+	// msg
+	y += 7
+	left = x
+	reportBugMsg := widget.NewPanelWidget("reportBugMsg", left, y, widget.TextWidthFull-5, 2, "")
+	reportBugMsg.Frame = false
+	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], reportBugMsg.Name())
+
+	// buttons
+	y += 5
+	buttonX := x + widget.SelectWidth + ui.Space
+	submitInput := widget.NewButtonWidgetAutoWidth("submitInput", buttonX, y,
+		i118Utils.I118Prt.Sprintf("submit"), reportBug)
+	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], submitInput.Name())
+
+	cancelReportBugInput := widget.NewButtonWidgetAutoWidth("cancelReportBugInput",
+		buttonX+11, y, i118Utils.I118Prt.Sprintf("cancel"), cancelReportBug)
+	ui.ViewMap["reportBug"] = append(ui.ViewMap["reportBug"], cancelReportBugInput.Name())
+
+	ui.BindEventForInputWidgets(ui.ViewMap["reportBug"])
 
 	vari.Cui.SetCurrentView("titleInput")
 
