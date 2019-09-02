@@ -6,6 +6,7 @@ import (
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
+	stdinUtils "github.com/easysoft/zentaoatf/src/utils/stdin"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"os"
 )
@@ -107,7 +108,7 @@ func main() {
 		}
 
 	case "set", "-s":
-		configUtils.ConfigForSet()
+		stdinUtils.ConfigForSet()
 
 	case "help", "-h":
 		logUtils.PrintUsage()

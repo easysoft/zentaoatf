@@ -4,11 +4,11 @@ import (
 	"fmt"
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
 	"github.com/easysoft/zentaoatf/src/ui/page"
-	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
+	stdinUtils "github.com/easysoft/zentaoatf/src/utils/stdin"
 	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/fatih/color"
 	"os"
@@ -21,7 +21,7 @@ func CommitBug(files []string) {
 	if len(files) > 0 {
 		resultDir = files[0]
 	} else {
-		configUtils.ConfigForDir(&resultDir, "result")
+		stdinUtils.ConfigForDir(&resultDir, "result")
 	}
 	resultDir = fileUtils.UpdateDir(resultDir)
 

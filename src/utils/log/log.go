@@ -4,11 +4,9 @@ import (
 	"fmt"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/easysoft/zentaoatf/src/utils/i118"
-	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
-	"io"
 	"io/ioutil"
 	"strings"
 )
@@ -25,33 +23,10 @@ func GetWholeLine(msg string, char string) string {
 	//	postfixLen = 6
 	//}
 
-	preFixStr := strings.Repeat(char, 10)
+	preFixStr := strings.Repeat(char, 6)
 	postFixStr := strings.Repeat(char, 0)
 
 	return fmt.Sprintf("%s%s%s", preFixStr, msg, postFixStr)
-}
-
-func PrintAndLog(str string) {
-	var output io.Writer
-	if vari.RunFromCui {
-		output, _ = vari.Cui.View("cmd")
-	} else {
-		output = color.Output
-	}
-
-	fmt.Fprintf(output, str+"\n")
-}
-
-func PrintAndLogColorLn(str string, attr color.Attribute) {
-	var output io.Writer
-	if vari.RunFromCui {
-		output, _ = vari.Cui.View("cmd")
-	} else {
-		output = color.Output
-	}
-
-	clr := color.New(attr)
-	clr.Fprintf(output, str+"\n")
 }
 
 func ColoredStatus(status string) string {
@@ -67,14 +42,6 @@ func ColoredStatus(status string) string {
 	}
 
 	return status
-}
-
-type MyFormatter struct {
-	logrus.TextFormatter
-}
-
-func (f *MyFormatter) Format(entry *logrus.Entry) ([]byte, error) {
-	return []byte(entry.Message + "\n"), nil
 }
 
 func NewLogger(dir string) *logrus.Logger {
@@ -118,4 +85,12 @@ func TraceAndResult(msg string) {
 
 func InitLog(dir string) {
 	Logger = NewLogger(dir)
+}
+
+type MyFormatter struct {
+	logrus.TextFormatter
+}
+
+func (f *MyFormatter) Format(entry *logrus.Entry) ([]byte, error) {
+	return []byte(entry.Message + "\n"), nil
 }

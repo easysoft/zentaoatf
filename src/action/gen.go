@@ -3,23 +3,23 @@ package action
 import (
 	"github.com/easysoft/zentaoatf/src/service/script"
 	"github.com/easysoft/zentaoatf/src/service/zentao"
-	"github.com/easysoft/zentaoatf/src/utils/config"
 	"github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/lang"
 	"github.com/easysoft/zentaoatf/src/utils/log"
+	stdinUtils "github.com/easysoft/zentaoatf/src/utils/stdin"
 	"github.com/fatih/color"
 )
 
 func Generate(productId string, moduleId string, suiteId string, taskId string,
 	independentFile bool, scriptLang string) {
 
-	configUtils.CheckConfigForRequest()
+	stdinUtils.CheckConfigForRequest()
 
 	if (productId != "") || (moduleId != "" && productId != "") || suiteId != "" || taskId != "" {
 
 	} else {
-		configUtils.ConfigForCheckout(&productId, &moduleId, &suiteId, &taskId,
+		stdinUtils.ConfigForCheckout(&productId, &moduleId, &suiteId, &taskId,
 			&independentFile, &scriptLang)
 	}
 
