@@ -148,6 +148,7 @@ func getInput(regx string, fmtStr string, params ...interface{}) string {
 		if pass {
 			return ret
 		} else {
+			ret = ""
 			logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf(msg), color.FgRed)
 		}
 	}

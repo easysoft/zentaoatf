@@ -146,6 +146,11 @@
       "translation": "only en(%s) and zh(%s) language is acceptable"
     },
     {
+      "id": "no_cases",
+      "message": "No test cases found",
+      "translation": "No test cases found"
+    },
+    {
       "id": "no_scripts",
       "message": "No test scripts found",
       "translation": "No test scripts found"

@@ -134,6 +134,11 @@
       "translation": "只支持语言en(%s)和zh(%s)"
     },
     {
+      "id": "no_cases",
+      "message": "No test cases found",
+      "translation": "No test cases found"
+    },
+    {
       "id": "no_scripts",
       "message": "No test scripts found",
       "translation": "未发现测试脚本"
