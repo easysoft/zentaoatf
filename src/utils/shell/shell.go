@@ -31,18 +31,16 @@ func ExeShell(cmdStr string) (string, error) {
 func ExecFile(filePath string) string {
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
-		cmd = exec.Command("cmd", "/C", filePath)
-	} else {
-		if !commonUtils.IsWin() {
-			exec.Command("/bin/bash", "-c", "chmod +x "+filePath)
-		} else {
-			ext := path.Ext(filePath)
-			if ext == ".php" {
-				filePath = "php " + filePath
-			}
+		ext := path.Ext(filePath)
+		if ext == ".php" {
+			filePath = "php " + filePath
 		}
 
-		cmd = exec.Command("/bin/bash", "-c", filePath)
+		cmd = exec.Command("cmd", "/C", filePath)
+	} else {
+		exec.Command("/bin/bash", "-c", "chmod +x "+filePath)
+
+		cmd = exec.Command("/bin/bash", "-c", "php "+filePath)
 	}
 
 	output := make([]string, 0)
