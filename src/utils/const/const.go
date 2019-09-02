@@ -47,9 +47,9 @@ var (
  list    ls -l         查看测试用例列表。可指定目录和文件的列表，之间用空格隔开。
  view    -v            查看测试用例详情。可指定目录和文件的列表，之间用空格隔开。`
 
-	Example = ` $>atf.exe run scripts-demo/tc-01.bat                执行本项目自带的测试用，非windows系统使用tc-01.sh脚本。
-
+	Example = ` $>atf.exe run scripts-demo/tc-01.bat                执行演示测试用例，非windows系统请使用tc-01.sh脚本。
  $>atf.exe set                                       根据系统提示，设置语言、禅道系统地址、账号和密码参数。
+                                                     可使用测试数据 http://ruiyinxin.test.zentao.net，autotest01 / P2ssw0rd
  $>atf.exe co                                        交互式导出禅道测试用例，将提示用户输入导出类型和编号。
  $>atf.exe co -product 1 -language python            导出编号为1的产品测试用例，使用python语言，缩写-p -l。
  $>atf.exe co -p 1 -m 16 -l python                   导出产品编号为1、模块编号为16的测试用例。
