@@ -59,7 +59,7 @@ var (
 
  $>atf.exe run dir1 dir2 tc01.py                     执行目录dir1和dir2目录下，以及tc01.py文件的用例。
  $>atf.exe run c:\scripts all.cs                     执行all.cs测试套件的用例，脚本在c:\scripts中。
- $>atf.exe run c:\scripts c:\19-08-27\result.txt     执行result.txt结果文件中的失败用例。
+ $>atf.exe run c:\scripts logs\19-08-28\result.txt     执行result.txt结果文件中的失败用例。
  $>atf.exe run c:\scripts -suite 1                   执行禅道系统中编号为1的套件, 缩写-s。
  $>atf.exe run c:\scripts -task 1                    执行禅道系统中编号为1的任务, 缩写-t。
 

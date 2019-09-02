@@ -56,7 +56,7 @@ func NewLogger(dir string) *logrus.Logger {
 
 	pathMap := lfshook.PathMap{
 		logrus.WarnLevel:  dir + "trace.log",
-		logrus.ErrorLevel: dir + "result.log",
+		logrus.ErrorLevel: dir + "result.txt",
 	}
 
 	Logger.Hooks.Add(lfshook.NewHook(

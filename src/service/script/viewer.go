@@ -63,7 +63,7 @@ func Brief(file string, keywords string) {
 		expects := commonUtils.RemoveBlankLine(arr[5])
 
 		if strings.Index(title, keywords) > -1 {
-			logUtils.PrintToStdOut(fmt.Sprintf("\n%s %s \n", caseId, title), color.FgCyan)
+			logUtils.PrintToStdOut(fmt.Sprintf("\n%s %s", caseId, title), color.FgCyan)
 			fmt.Printf("Steps: \n%s \n", steps)
 			fmt.Printf("Expects: \n%s\n", expects)
 		}

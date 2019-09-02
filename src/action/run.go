@@ -43,15 +43,16 @@ func Run(files []string, suiteIdStr string, taskIdStr string) {
 
 		scriptService.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
 	} else { // no suiteId, taskId param
-
+		aa := path.Ext(files[1])
+		_ = aa
 		if len(files) > 1 && fileUtils.IsDir(files[0]) &&
-			path.Ext(files[1]) == constant.ExtNameSuite { // run suite file
+			path.Ext(files[1]) == "."+constant.ExtNameSuite { // run suite file
 
 			scriptService.GetCaseIdsInSuiteFile(files[1], &caseIdMap)
 			scriptService.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
 
 		} else if len(files) > 1 && fileUtils.IsDir(files[0]) &&
-			path.Ext(files[1]) == constant.ExtNameResult { // run result file
+			path.Ext(files[1]) == "."+constant.ExtNameResult { // run result file
 
 			scriptService.GetFailedCasesFromTestResult(files[1], &caseIdMap)
 			scriptService.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
