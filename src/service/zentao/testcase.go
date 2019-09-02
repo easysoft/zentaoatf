@@ -218,8 +218,7 @@ func CommitCase(caseId int, title string) {
 	requestObj := map[string]interface{}{"title": title}
 
 	url := config.Url + uri
-	dataStr, ok := client.PostObject(url, requestObj)
-	_ = dataStr
+	_, ok = client.PostObject(url, requestObj)
 
 	if ok {
 		logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("success_to_commit_case", caseId)+"\n", -1)
