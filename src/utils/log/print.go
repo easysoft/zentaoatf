@@ -20,12 +20,12 @@ func PrintUsage() {
 	PrintToStdOut("Usage: ", color.FgCyan)
 
 	content := fileUtils.ReadResData(usageFile)
-	fmt.Printf(" %s\n", content)
+	fmt.Printf("%s\n", content)
 
 	PrintToStdOut("\nExample: ", color.FgCyan)
 
 	content = fileUtils.ReadResData(usageFile)
-	fmt.Printf(" %s", content)
+	fmt.Printf("%s\n", content)
 }
 
 func PrintTo(str string) {
