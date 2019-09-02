@@ -30,6 +30,9 @@ func InitMainPage(dir string, id string) error {
 
 	InitReportBugPage(dir, id)
 
+	i := 0
+	i++
+
 	return nil
 }
 
