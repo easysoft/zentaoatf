@@ -1,7 +1,6 @@
 package page
 
 import (
-	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/jroimartin/gocui"
@@ -9,8 +8,6 @@ import (
 )
 
 func CuiReportBug(dir string, id string) error {
-	vari.CurrBug, vari.CurrBugStepIds = zentaoService.PrepareBug(dir, id)
-
 	g, err := gocui.NewGui(gocui.OutputNormal)
 	if err != nil {
 		log.Panicln(err)
@@ -26,7 +23,7 @@ func CuiReportBug(dir string, id string) error {
 	vari.Cui = g
 	vari.RunFromCui = true
 
-	//InitMainPage()
+	InitMainPage()
 
 	InitReportBugPage(dir, id)
 
