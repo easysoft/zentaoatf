@@ -23,8 +23,7 @@ func CuiReportBug(dir string, id string) error {
 	vari.Cui = g
 	vari.RunFromCui = true
 
-	//InitMainPage()
-	InitReportBugPage(dir, id)
+	InitMainPage(dir, id)
 
 	if err := g.MainLoop(); err != nil && err != gocui.ErrQuit {
 		log.Panicln(err)

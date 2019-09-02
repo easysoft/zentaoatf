@@ -9,7 +9,7 @@ import (
 	"log"
 )
 
-func InitMainPage() error {
+func InitMainPage(dir string, id string) error {
 	maxX, maxY := vari.Cui.Size()
 	if maxX < constant.MinWidth {
 		maxX = constant.MinWidth
@@ -27,6 +27,9 @@ func InitMainPage() error {
 
 	widget.NewHelpWidget()
 	MainPageKeyBindings()
+
+	InitReportBugPage(dir, id)
+
 	return nil
 }
 

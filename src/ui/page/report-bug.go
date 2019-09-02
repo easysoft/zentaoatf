@@ -16,9 +16,7 @@ import (
 var filedValMap map[string]int
 
 func InitReportBugPage(resultDir string, caseId string) error {
-	InitMainPage()
-
-	DestoryReportBugPage()
+	//DestoryReportBugPage()
 
 	vari.CurrBug, vari.CurrBugStepIds = zentaoService.PrepareBug(resultDir, caseId)
 	bug := vari.CurrBug
