@@ -19,7 +19,7 @@ func InitReportBugPage(resultDir string, caseId string) error {
 	DestoryReportBugPage()
 
 	vari.CurrBug, vari.CurrBugStepIds = zentaoService.PrepareBug(resultDir, caseId)
-	bug := vari.CurrBug
+	//bug := vari.CurrBug
 
 	w, h := vari.Cui.Size()
 	x := 1
