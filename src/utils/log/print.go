@@ -3,19 +3,29 @@ package logUtils
 import (
 	"encoding/json"
 	"fmt"
-	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
 	"io"
+	"os"
 	"strings"
+)
+
+var (
+	usageFile  = fmt.Sprintf("res%sdoc%susage.txt", string(os.PathSeparator), string(os.PathSeparator))
+	sampleFile = fmt.Sprintf("res%sdoc%sample.txt", string(os.PathSeparator), string(os.PathSeparator))
 )
 
 func PrintUsage() {
 	PrintToStdOut("Usage: ", color.FgCyan)
-	fmt.Printf("%s\n", constant.Usage)
+
+	content := fileUtils.ReadResData(usageFile)
+	fmt.Printf(" %s\n", content)
 
 	PrintToStdOut("\nExample: ", color.FgCyan)
-	fmt.Printf("%s", constant.Example)
+
+	content = fileUtils.ReadResData(usageFile)
+	fmt.Printf(" %s", content)
 }
 
 func PrintTo(str string) {

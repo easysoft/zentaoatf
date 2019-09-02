@@ -3,7 +3,9 @@ package mock
 import (
 	"encoding/json"
 	"fmt"
+	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/gorilla/mux"
 	"io"
@@ -39,7 +41,7 @@ func Launch() {
 func importProject(w http.ResponseWriter, r *http.Request) {
 	printRequestBody(r.Body)
 
-	jsonString := zentaoUtils.ReadResData(caseJson)
+	jsonString := fileUtils.ReadResData(caseJson)
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, jsonString)
@@ -48,7 +50,7 @@ func importProject(w http.ResponseWriter, r *http.Request) {
 func submitResult(w http.ResponseWriter, r *http.Request) {
 	printRequestBody(r.Body)
 
-	jsonString := zentaoUtils.ReadResData(successJson)
+	jsonString := fileUtils.ReadResData(successJson)
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, jsonString)

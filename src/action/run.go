@@ -27,14 +27,15 @@ func Run(files []string, suiteIdStr string, taskIdStr string) {
 	if (suiteIdStr != "" || taskIdStr != "") && len(files) == 0 { // run with suite/task id, but no dir, get scripts from .
 		files = append(files, fileUtils.AbosutePath("."))
 
-	} else if (len(files) > 0 && path.Ext(files[0]) == "."+constant.ExtNameSuite) ||
-		(len(files) > 0 && path.Ext(files[0]) == "."+constant.ExtNameResult) { // only suite/result file provided
+	} else if len(files) > 0 && path.Ext(files[0]) == "."+constant.ExtNameSuite { // only suite file provided
 
 		temp := make([]string, 0)
 		temp = append(temp, fileUtils.AbosutePath(path.Dir(files[0])))
 		temp = append(temp, files[0])
 
 		files = temp
+	} else if len(files) > 0 && path.Ext(files[0]) == "."+constant.ExtNameResult { // only result file provided
+		// run scripts(absolute path) in result
 	}
 
 	if suiteIdStr != "" {
@@ -62,12 +63,9 @@ func Run(files []string, suiteIdStr string, taskIdStr string) {
 			scriptService.GetCaseIdsInSuiteFile(files[1], &caseIdMap)
 			scriptService.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
 
-		} else if len(files) > 1 && fileUtils.IsDir(files[0]) &&
-			path.Ext(files[1]) == "."+constant.ExtNameResult { // run result file
+		} else if path.Ext(files[0]) == "."+constant.ExtNameResult { // run result file
 
-			scriptService.GetFailedCasesFromTestResult(files[1], &caseIdMap)
-			scriptService.GetScriptByIdsInDir(files[0], caseIdMap, &cases)
-
+			scriptService.GetFailedCasesDirectlyFromTestResult(files[0], &cases)
 		} else { // run with dir and script files
 			for _, file := range files {
 				scriptService.GetAllScriptsInDir(file, &cases)

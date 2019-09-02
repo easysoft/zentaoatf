@@ -2,7 +2,6 @@ package zentaoUtils
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/res"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	dateUtils "github.com/easysoft/zentaoatf/src/utils/date"
@@ -202,18 +201,4 @@ func ReadLog(logFile string) (bool, [][]string) {
 
 	skip, ret := GenLogArr(str)
 	return skip, ret
-}
-
-func ReadResData(path string) string {
-	isRelease := commonUtils.IsRelease()
-
-	var jsonStr string
-	if isRelease {
-		data, _ := res.Asset(path)
-		jsonStr = string(data)
-	} else {
-		jsonStr = fileUtils.ReadFile(path)
-	}
-
-	return jsonStr
 }

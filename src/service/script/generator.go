@@ -87,7 +87,7 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 	}
 
 	path := fmt.Sprintf("res%stemplate%s", string(os.PathSeparator), string(os.PathSeparator))
-	template := zentaoUtils.ReadResData(path + langType + ".tpl")
+	template := fileUtils.ReadResData(path + langType + ".tpl")
 
 	content := fmt.Sprintf(template,
 		caseId, productId, caseTitle,

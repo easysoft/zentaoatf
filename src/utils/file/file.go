@@ -1,6 +1,7 @@
 package fileUtils
 
 import (
+	"github.com/easysoft/zentaoatf/res"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	"io/ioutil"
 	"os"
@@ -101,4 +102,18 @@ func GetFilesFromParams(arguments []string) []string {
 	}
 
 	return ret
+}
+
+func ReadResData(path string) string {
+	isRelease := commonUtils.IsRelease()
+
+	var jsonStr string
+	if isRelease {
+		data, _ := res.Asset(path)
+		jsonStr = string(data)
+	} else {
+		jsonStr = ReadFile(path)
+	}
+
+	return jsonStr
 }

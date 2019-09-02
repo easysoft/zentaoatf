@@ -175,7 +175,7 @@ func GetCaseIdsInSuiteFile(name string, fileIdMap *map[int]string) {
 	}
 }
 
-func GetFailedCasesFromTestResult(resultFile string, fileIdMap *map[int]string) {
+func GetFailedCasesDirectlyFromTestResult(resultFile string, cases *[]string) {
 	extName := path.Ext(resultFile)
 
 	if extName == "."+constant.ExtNameResult {
@@ -188,9 +188,7 @@ func GetFailedCasesFromTestResult(resultFile string, fileIdMap *map[int]string) 
 	json.Unmarshal([]byte(content), &report)
 
 	for _, cs := range report.Cases {
-		if cs.Status != constant.PASS.String() {
-			(*fileIdMap)[cs.Id] = ""
-		}
+		*cases = append(*cases, cs.Path)
 	}
 }
 
@@ -200,27 +198,4 @@ func CheckFileIsScript(path string) bool {
 	pass, _ := regexp.MatchString("<<<TC", content)
 
 	return pass
-}
-
-func GetSpecifiedFilesInWorkDir(fileNames []string) (files []string, err error) {
-	ret := make([]string, 0)
-
-	for _, file := range fileNames {
-		if !fileUtils.FileExist(file) {
-			continue
-		}
-
-		//if path.Ext(file) == "."+constant.ExtNameSuite {
-		//	fileList := make([]string, 0)
-		//	GetSuiteFiles(file, &fileList)
-		//
-		//	for _, f := range fileList {
-		//		ret = append(ret, f)
-		//	}
-		//} else {
-		ret = append(ret, file)
-		//}
-	}
-
-	return ret, nil
 }
