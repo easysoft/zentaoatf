@@ -8,6 +8,7 @@ import (
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
+	stdinUtils "github.com/easysoft/zentaoatf/src/utils/stdin"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"sort"
 	"strconv"
@@ -217,10 +218,16 @@ func CommitCase(caseId int, title string) {
 	uri := fmt.Sprintf("testcase-edit-%d.json", caseId)
 	requestObj := map[string]interface{}{"title": title}
 
-	url := config.Url + uri
-	_, ok = client.PostObject(url, requestObj)
+	var yes bool
+	logUtils.PrintToStdOut("\n"+i118Utils.I118Prt.Sprintf("case_update_confirm", title), -1)
+	stdinUtils.InputForBool(&yes, "want_to_continue")
 
-	if ok {
-		logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("success_to_commit_case", caseId)+"\n", -1)
+	if yes {
+		url := config.Url + uri
+		_, ok = client.PostObject(url, requestObj)
+
+		if ok {
+			logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("success_to_commit_case", caseId)+"\n", -1)
+		}
 	}
 }

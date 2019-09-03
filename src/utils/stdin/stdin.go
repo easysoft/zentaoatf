@@ -117,6 +117,16 @@ func InputForInt(in *string, entity string) {
 	*in = getInput("\\d+", "enter_id", i118Utils.I118Prt.Sprintf(entity))
 }
 
+func InputForBool(in *bool, entity string) {
+	str := getInput("(yes|no|y|n)", i118Utils.I118Prt.Sprintf(entity), "")
+
+	if str != "n" && str != "no" {
+		*in = true
+	} else {
+		*in = false
+	}
+}
+
 func getInput(regx string, fmtStr string, params ...interface{}) string {
 	var ret string
 

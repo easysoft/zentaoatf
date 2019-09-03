@@ -22,6 +22,16 @@
       "translation": "结果"
     },
     {
+      "id": "want_to_continue",
+      "message": "",
+      "translation": "确认继续[Y/n]?"
+    },
+    {
+      "id": "case_update_confirm",
+      "message": "",
+      "translation": "以下用例信息将被更新:\n 标题: %s"
+    },
+    {
       "id": "enter_dir",
       "message": "enter dir",
       "translation": "输入%s目录"

@@ -25,8 +25,10 @@ func Login(baseUrl string, account string, password string) bool {
 	var log string
 	_, ok = client.PostStr(url, params)
 	if ok {
-		log = i118Utils.I118Prt.Sprintf("success_to_login")
-		logUtils.PrintToCmd(log, -1)
+		if vari.Verbose {
+			log = i118Utils.I118Prt.Sprintf("success_to_login")
+			logUtils.PrintToCmd(log, -1)
+		}
 	} else {
 		log = i118Utils.I118Prt.Sprintf("fail_to_login")
 		logUtils.PrintToCmd(log, color.FgRed)

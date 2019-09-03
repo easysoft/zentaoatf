@@ -22,6 +22,16 @@
       "translation": "result"
     },
     {
+      "id": "want_to_continue",
+      "message": "",
+      "translation": "Do you want to continue[Y/n]?"
+    },
+    {
+      "id": "case_update_confirm",
+      "message": "",
+      "translation": "Will update case as below:\n Title: %s"
+    },
+    {
       "id": "enter_dir",
       "message": "enter dir",
       "translation": "enter %s dir."
