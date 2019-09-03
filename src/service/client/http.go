@@ -2,6 +2,7 @@ package client
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/ajg/form"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils/log"
@@ -14,12 +15,16 @@ import (
 )
 
 func Get(url string, params map[string]string) (string, bool) {
-	logUtils.PrintToCmd(url, -1)
+	if vari.Verbose {
+		logUtils.PrintToCmd(url, -1)
+	}
 	client := &http.Client{}
 
 	req, reqErr := http.NewRequest("GET", url, nil)
 	if reqErr != nil {
-		logUtils.PrintToCmd(reqErr.Error(), color.FgRed)
+		if vari.Verbose {
+			logUtils.PrintToCmd(reqErr.Error(), color.FgRed)
+		}
 		return "", false
 	}
 
@@ -37,21 +42,29 @@ func Get(url string, params map[string]string) (string, bool) {
 
 	resp, respErr := client.Do(req)
 	if respErr != nil {
-		logUtils.PrintToCmd(respErr.Error(), color.FgRed)
+		if vari.Verbose {
+			logUtils.PrintToCmd(respErr.Error(), color.FgRed)
+		}
 		return "", false
 	}
 
 	bodyStr, _ := ioutil.ReadAll(resp.Body)
-	logUtils.PrintUnicode(bodyStr)
+	if vari.Verbose {
+		logUtils.PrintUnicode(bodyStr)
+	}
 
 	var bodyJson model.ZentaoResponse
 	jsonErr := json.Unmarshal(bodyStr, &bodyJson)
 	if jsonErr != nil {
 		if strings.Index(string(bodyStr), "<html>") > -1 {
-			logUtils.PrintToCmd("server return a html", -1)
+			if vari.Verbose {
+				logUtils.PrintToCmd("server return a html", -1)
+			}
 			return "", false
 		} else {
-			logUtils.PrintToCmd(jsonErr.Error(), color.FgRed)
+			if vari.Verbose {
+				logUtils.PrintToCmd(jsonErr.Error(), color.FgRed)
+			}
 			return "", false
 		}
 	}
@@ -68,7 +81,11 @@ func Get(url string, params map[string]string) (string, bool) {
 }
 
 func PostObject(url string, params interface{}) (string, bool) {
-	logUtils.PrintToCmd(url, -1)
+	if vari.Verbose {
+		logUtils.PrintToCmd(url, -1)
+		logUtils.PrintToCmd(fmt.Sprintf("%+v", params), -1)
+	}
+
 	client := &http.Client{}
 
 	val, _ := form.EncodeToString(params)
@@ -77,11 +94,11 @@ func PostObject(url string, params interface{}) (string, bool) {
 	re3, _ := regexp.Compile(`([^&]*?)=`)
 	data := re3.ReplaceAllStringFunc(val, replacePostData)
 
-	logUtils.PrintToCmd(data, -1)
-
 	req, reqErr := http.NewRequest("POST", url, strings.NewReader(data))
 	if reqErr != nil {
-		logUtils.PrintToCmd(reqErr.Error(), color.FgRed)
+		if vari.Verbose {
+			logUtils.PrintToCmd(reqErr.Error(), color.FgRed)
+		}
 		return "", false
 	}
 
@@ -90,21 +107,29 @@ func PostObject(url string, params interface{}) (string, bool) {
 
 	resp, respErr := client.Do(req)
 	if respErr != nil {
-		logUtils.PrintToCmd(respErr.Error(), color.FgRed)
+		if vari.Verbose {
+			logUtils.PrintToCmd(respErr.Error(), color.FgRed)
+		}
 		return "", false
 	}
 
 	bodyStr, _ := ioutil.ReadAll(resp.Body)
-	logUtils.PrintUnicode(bodyStr)
+	if vari.Verbose {
+		logUtils.PrintUnicode(bodyStr)
+	}
 
 	var bodyJson model.ZentaoResponse
 	jsonErr := json.Unmarshal(bodyStr, &bodyJson)
 	if jsonErr != nil {
 		if strings.Index(string(bodyStr), "<html>") > -1 { // some api return a html
-			logUtils.PrintToCmd("server return a html", -1)
+			if vari.Verbose {
+				logUtils.PrintToCmd("server return a html", -1)
+			}
 			return "", true
 		} else {
-			logUtils.PrintToCmd(jsonErr.Error(), color.FgRed)
+			if vari.Verbose {
+				logUtils.PrintToCmd(jsonErr.Error(), color.FgRed)
+			}
 			return "", false
 		}
 	}
@@ -121,7 +146,9 @@ func PostObject(url string, params interface{}) (string, bool) {
 }
 
 func PostStr(url string, params map[string]string) (string, bool) {
-	logUtils.PrintToCmd(url, -1)
+	if vari.Verbose {
+		logUtils.PrintToCmd(url, -1)
+	}
 	client := &http.Client{}
 
 	paramStr := ""
@@ -136,7 +163,9 @@ func PostStr(url string, params map[string]string) (string, bool) {
 
 	req, reqErr := http.NewRequest("POST", url, strings.NewReader(paramStr))
 	if reqErr != nil {
-		logUtils.PrintToCmd(reqErr.Error(), color.FgRed)
+		if vari.Verbose {
+			logUtils.PrintToCmd(reqErr.Error(), color.FgRed)
+		}
 		return "", false
 	}
 
@@ -145,17 +174,23 @@ func PostStr(url string, params map[string]string) (string, bool) {
 
 	resp, respErr := client.Do(req)
 	if respErr != nil {
-		logUtils.PrintToCmd(respErr.Error(), color.FgRed)
+		if vari.Verbose {
+			logUtils.PrintToCmd(respErr.Error(), color.FgRed)
+		}
 		return "", false
 	}
 
 	bodyStr, _ := ioutil.ReadAll(resp.Body)
-	logUtils.PrintUnicode(bodyStr)
+	if vari.Verbose {
+		logUtils.PrintUnicode(bodyStr)
+	}
 
 	var bodyJson model.ZentaoResponse
 	jsonErr := json.Unmarshal(bodyStr, &bodyJson)
 	if jsonErr != nil && strings.Index(url, "login") == -1 { // ignore login request which return a html
-		logUtils.PrintToCmd(jsonErr.Error(), color.FgRed)
+		if vari.Verbose {
+			logUtils.PrintToCmd(jsonErr.Error(), color.FgRed)
+		}
 		return "", false
 	}
 
@@ -171,11 +206,6 @@ func PostStr(url string, params map[string]string) (string, bool) {
 }
 
 func replacePostData(str string) string {
-	//logUtils.PrintToCmd(str)
-	//logUtils.PrintToCmd(str[:1])
-	//logUtils.PrintToCmd(str[1:])
-	//logUtils.PrintToCmd("---")
-
 	str = strings.ToLower(str[:1]) + str[1:]
 
 	if strings.Index(str, ".") > -1 {

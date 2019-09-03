@@ -39,14 +39,6 @@ func Run(files []string, suiteIdStr string, taskIdStr string) error {
 
 		cases = getCaseByTaskId(taskIdStr, dir)
 
-	} else if path.Ext(files[0]) == "."+constant.ExtNameSuite { // run with suite file, but no dir
-		dir := fileUtils.AbosutePath(".")
-		cases = getCaseBySuiteFile(files[0], dir)
-
-	} else if len(files) == 2 && path.Ext(files[1]) == "."+constant.ExtNameSuite { // run with suite file, with dir
-		dir := files[0]
-		cases = getCaseBySuiteFile(files[0], dir)
-
 	} else {
 		suite, dir := isRunWithSuiteFile(files)
 

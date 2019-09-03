@@ -11,18 +11,24 @@ import (
 	"os"
 )
 
-func main() {
-	var language string
-	var independentFile bool
-	var keywords string
+var (
+	language        string
+	independentFile bool
+	keywords        string
 
-	var productId string
-	var moduleId string
-	var taskId string
-	var suiteId string
+	productId string
+	moduleId  string
+	taskId    string
+	suiteId   string
+
+	flagSet *flag.FlagSet
+)
+
+func main() {
+
 	//var caseId string
 
-	flagSet := flag.NewFlagSet("atf", flag.ContinueOnError)
+	flagSet = flag.NewFlagSet("atf", flag.ContinueOnError)
 
 	//flagSet.Var(commonUtils.NewSliceValue([]string{}, &files), "file", "")
 
@@ -47,6 +53,8 @@ func main() {
 	flagSet.StringVar(&keywords, "k", "", "")
 	flagSet.StringVar(&keywords, "keywords", "", "")
 
+	flagSet.BoolVar(&vari.Verbose, "verbose", false, "")
+
 	//flagSet.StringVar(&caseId, "c", "", "")
 	//flagSet.StringVar(&caseId, "case", "", "")
 
@@ -61,10 +69,7 @@ func main() {
 
 	switch os.Args[1] {
 	case "run", "-r":
-		files := fileUtils.GetFilesFromParams(os.Args[2:])
-		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
-			action.Run(files, suiteId, taskId)
-		}
+		run(os.Args)
 
 	case "checkout", "co":
 		if err := flagSet.Parse(os.Args[2:]); err == nil {
@@ -112,19 +117,22 @@ func main() {
 	case "help", "-h":
 		logUtils.PrintUsage()
 
-	default:
-		if len(os.Args) > 1 { // ignore run param, like 'atf suite.cs', 'atf -task 1'
-			args := []string{os.Args[0]}
-			args = append(args, "run")
+	default: // maybe run
+		if len(os.Args) > 1 { // ignore run param, like 'atf ., atf suite.cs', 'atf -task 1'
+			args := []string{os.Args[0], "run"}
 			args = append(args, os.Args[1:]...)
 
-			files := fileUtils.GetFilesFromParams(args[2:])
-			if err := flagSet.Parse(args[len(files)+2:]); err == nil {
-				action.Run(files, suiteId, taskId)
-			}
+			run(args)
 		} else {
 			logUtils.PrintUsage()
 		}
+	}
+}
+
+func run(args []string) {
+	files := fileUtils.GetFilesFromParams(args[2:])
+	if err := flagSet.Parse(args[len(files)+2:]); err == nil {
+		action.Run(files, suiteId, taskId)
 	}
 }
 
