@@ -85,11 +85,16 @@ func RunDateFolder() string {
 }
 
 func GetCaseInfo(file string) (int, int, string) {
-	content := fileUtils.ReadFile(file)
-
 	var caseId int
 	var productId int
 	var title string
+
+	content := fileUtils.ReadFile(file)
+
+	pass := CheckFileContentIsScript(content)
+	if !pass {
+		return caseId, productId, title
+	}
 
 	myExp := regexp.MustCompile(`[\S\s]*caseId:\s*([^\n]*?)\s*\n`)
 	arr := myExp.FindStringSubmatch(content)
@@ -201,4 +206,18 @@ func ReadLog(logFile string) (bool, [][]string) {
 
 	skip, ret := GenLogArr(str)
 	return skip, ret
+}
+
+func CheckFileIsScript(path string) bool {
+	content := fileUtils.ReadFile(path)
+
+	pass, _ := regexp.MatchString("<<<TC", content)
+
+	return pass
+}
+
+func CheckFileContentIsScript(content string) bool {
+	pass, _ := regexp.MatchString("<<<TC", content)
+
+	return pass
 }

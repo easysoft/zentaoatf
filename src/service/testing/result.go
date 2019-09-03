@@ -4,12 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
-	scriptService "github.com/easysoft/zentaoatf/src/service/script"
-	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
-	"os"
 	"strings"
 )
 
@@ -23,14 +20,6 @@ func GetTestTestReportForSubmit(resultDir string) model.TestReport {
 	json.Unmarshal([]byte(content), &report)
 
 	return report
-}
-
-func SaveTestTestReportAfterSubmit(scriptFile string, resultDate string, content string) {
-	mode, name := scriptService.GetRunModeAndName(scriptFile)
-	resultPath := constant.LogDir + scriptService.GetLogFolder(mode, name, resultDate) +
-		string(os.PathSeparator) + "result.json"
-
-	fileUtils.WriteFile(resultPath, content)
 }
 
 func GetStepContent(step model.StepLog) string {

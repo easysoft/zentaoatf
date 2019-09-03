@@ -55,9 +55,8 @@ func main() {
 	flagSet.StringVar(&placeholder, "r", "", "")
 	flagSet.StringVar(&placeholder, "v", "", "")
 
-	if len(os.Args) < 2 {
-		logUtils.PrintUsage()
-		return
+	if len(os.Args) == 1 {
+		os.Args = append(os.Args, "run", ".")
 	}
 
 	switch os.Args[1] {
@@ -114,7 +113,19 @@ func main() {
 		logUtils.PrintUsage()
 
 	default:
-		logUtils.PrintUsage()
+		if len(os.Args) > 1 { // ignore run param, like atf suite.cs, atf -task 1
+			args := []string{os.Args[0]}
+			args = append(args, "run")
+			args = append(args, os.Args[1:]...)
+
+			os.Args = args
+			files := fileUtils.GetFilesFromParams(os.Args[2:])
+			if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
+				action.Run(files, suiteId, taskId)
+			}
+		} else {
+			logUtils.PrintUsage()
+		}
 	}
 }
 

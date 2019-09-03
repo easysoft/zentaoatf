@@ -13,7 +13,7 @@ import (
 
 var (
 	usageFile  = fmt.Sprintf("res%sdoc%susage.txt", string(os.PathSeparator), string(os.PathSeparator))
-	sampleFile = fmt.Sprintf("res%sdoc%sample.txt", string(os.PathSeparator), string(os.PathSeparator))
+	sampleFile = fmt.Sprintf("res%sdoc%ssample.txt", string(os.PathSeparator), string(os.PathSeparator))
 )
 
 func PrintUsage() {
@@ -24,7 +24,7 @@ func PrintUsage() {
 
 	PrintToStdOut("\nExample: ", color.FgCyan)
 
-	content = fileUtils.ReadResData(usageFile)
+	content = fileUtils.ReadResData(sampleFile)
 	fmt.Printf("%s\n", content)
 }
 
