@@ -140,7 +140,7 @@ func GenerateTestStepScript(ts model.TestStep, langType string, stepWidth int,
 		expectsLine := ""
 
 		expectsLine = "# " + stepIdent + " \n"
-		expectsLine += "CODE: " + i118Utils.I118Prt.Sprintf("expect_result_here") + " \n"
+		expectsLine += "CODE: " + i118Utils.I118Prt.Sprintf("expect_result_here")
 
 		*expects = append(*expects, expectsLine)
 	}
