@@ -10,6 +10,7 @@ import (
 	"github.com/fatih/color"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -101,9 +102,13 @@ func InputForCheckout(productId *string, moduleId *string, suiteId *string, task
 
 	InputForBool(independentFile, false, "enter_co_independent")
 
-	regx := langUtils.GetSupportLangageRegx()
-	fmtParam := strings.Join(langUtils.GetSupportLangageArr(), "\n")
-	*scriptLang = getInput(regx, "enter_co_language", fmtParam)
+	numbs, names, labels := langUtils.GetSupportLanguageOptions()
+	fmtParam := strings.Join(labels, "\n")
+	numbStr := getInput("("+strings.Join(numbs, "|")+")", "enter_co_language", fmtParam)
+
+	numb, _ := strconv.Atoi(numbStr)
+
+	*scriptLang = names[numb-1]
 }
 
 func InputForDir(dir *string, entity string) {

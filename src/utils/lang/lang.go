@@ -3,7 +3,9 @@ package langUtils
 import (
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
+	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/fatih/color"
+	"strconv"
 	"strings"
 	"sync"
 )
@@ -63,6 +65,29 @@ func GetSupportedScriptLang() map[string]map[string]string {
 	})
 
 	return LangMap
+}
+
+func GetSupportLanguageOptions() ([]string, []string, []string) {
+	arr0 := GetSupportLangageArr()
+
+	numbs := make([]string, 0)
+	names := make([]string, 0)
+	labels := make([]string, 0)
+
+	for idx, lang := range arr0 {
+		numbs = append(numbs, strconv.Itoa(idx+1))
+		names = append(names, lang)
+
+		if lang == "bat" || lang == "php" {
+			lang = stringUtils.UcAll(lang)
+		} else {
+			lang = stringUtils.Ucfirst(lang)
+		}
+
+		labels = append(labels, strconv.Itoa(idx+1)+". "+lang)
+	}
+
+	return numbs, names, labels
 }
 
 func GetSupportLangageArr() []string {

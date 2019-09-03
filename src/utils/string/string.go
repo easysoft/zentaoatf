@@ -17,6 +17,14 @@ func Ucfirst(str string) string {
 	}
 	return ""
 }
+func UcAll(str string) string {
+	ret := ""
+
+	for _, v := range str {
+		ret += string(unicode.ToUpper(v))
+	}
+	return ret
+}
 
 func Lcfirst(str string) string {
 	for i, v := range str {
