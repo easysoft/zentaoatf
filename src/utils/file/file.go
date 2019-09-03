@@ -68,18 +68,20 @@ func AbosutePath(pth string) string {
 		pth, _ = filepath.Abs(pth)
 	}
 
-	pth = UpdateDir(pth)
+	if IsDir(pth) {
+		pth = UpdateDir(pth)
+	}
 
 	return pth
 }
 
-func UpdateDir(path string) string {
+func UpdateDir(pth string) string {
 	sepa := string(os.PathSeparator)
 
-	if strings.LastIndex(path, sepa) < len(path)-1 {
-		path += sepa
+	if strings.LastIndex(pth, sepa) < len(pth)-1 {
+		pth += sepa
 	}
-	return path
+	return pth
 }
 
 func GetFilesFromParams(arguments []string) []string {

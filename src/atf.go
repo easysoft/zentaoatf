@@ -118,9 +118,8 @@ func main() {
 			args = append(args, "run")
 			args = append(args, os.Args[1:]...)
 
-			os.Args = args
-			files := fileUtils.GetFilesFromParams(os.Args[2:])
-			if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
+			files := fileUtils.GetFilesFromParams(args[2:])
+			if err := flagSet.Parse(args[len(files)+2:]); err == nil {
 				action.Run(files, suiteId, taskId)
 			}
 		} else {

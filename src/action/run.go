@@ -23,13 +23,13 @@ func Run(files []string, suiteIdStr string, taskIdStr string) error {
 
 	cases := make([]string, 0)
 
-	if suiteIdStr != "" {
-		if len(files) == 0 { // run with suite/task id, but no dir
+	if suiteIdStr != "" { // run with suite id,
+		if len(files) == 0 { // no dir
 			files[0] = fileUtils.AbosutePath(".")
 		}
 		cases = getCaseBySuiteId(suiteIdStr, files[0])
-	} else if taskIdStr != "" {
-		if len(files) == 0 { // run with suite/task id, but no dir
+	} else if taskIdStr != "" { // run with task id,
+		if len(files) == 0 { // no dir
 			files[0] = fileUtils.AbosutePath(".")
 		}
 		cases = getCaseByTaskId(taskIdStr, files[0])
