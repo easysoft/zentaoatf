@@ -14,7 +14,7 @@ import (
 func Generate(productId string, moduleId string, suiteId string, taskId string,
 	independentFile bool, scriptLang string) {
 
-	stdinUtils.CheckRequestConfig()
+	CheckRequestConfig()
 
 	if (productId != "") || (moduleId != "" && productId != "") || suiteId != "" || taskId != "" {
 

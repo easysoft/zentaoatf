@@ -10,7 +10,6 @@ import (
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
-	stdinUtils "github.com/easysoft/zentaoatf/src/utils/stdin"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"path"
@@ -66,7 +65,7 @@ func getCaseByTaskId(id string, dir string) []string {
 	taskId, err := strconv.Atoi(id)
 	if err == nil && taskId > 0 {
 
-		stdinUtils.CheckRequestConfig()
+		CheckRequestConfig()
 		zentaoService.GetCaseIdsByTask(id, &caseIdMap)
 	}
 
@@ -80,7 +79,7 @@ func getCaseBySuiteId(id string, dir string) []string {
 
 	suiteId, err := strconv.Atoi(id)
 	if err == nil && suiteId > 0 {
-		stdinUtils.CheckRequestConfig()
+		CheckRequestConfig()
 		zentaoService.GetCaseIdsBySuite(id, &caseIdMap)
 	}
 
