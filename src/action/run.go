@@ -132,12 +132,12 @@ func isRunWithSuiteFile(files []string) (string, string) {
 		if path.Ext(file) == "."+constant.ExtNameSuite {
 			suiteFile = file
 		} else {
-			if fileUtils.IsDir(file) {
+			if fileUtils.IsDir(file) && dir != "" { // only select the first dir
 				dir = file
 			}
 		}
 
-		if suiteFile != "" && dir != "" { // only select the first dir
+		if suiteFile != "" && dir != "" {
 			break
 		}
 	}
