@@ -23,24 +23,38 @@ func Run(files []string, suiteIdStr string, taskIdStr string) error {
 
 	cases := make([]string, 0)
 
-	if suiteIdStr != "" { // run with suite id,
-		if len(files) == 0 { // no dir
-			files[0] = fileUtils.AbosutePath(".")
-		}
-		cases = getCaseBySuiteId(suiteIdStr, files[0])
-	} else if taskIdStr != "" { // run with task id,
-		if len(files) == 0 { // no dir
-			files[0] = fileUtils.AbosutePath(".")
-		}
-		cases = getCaseByTaskId(taskIdStr, files[0])
-	} else if path.Ext(files[0]) == "."+constant.ExtNameSuite {
-		if len(files) == 1 { // run suite file, but no dir
-			files[1] = fileUtils.AbosutePath(".")
+	if suiteIdStr != "" { // run with suite id
+		dir := fileUtils.AbosutePath(".")
+		if len(files) > 0 {
+			dir = files[0]
 		}
 
-		cases = getCaseBySuiteFile(files[0], files[1])
+		cases = getCaseBySuiteId(suiteIdStr, dir)
+
+	} else if taskIdStr != "" { // run with task id,
+		dir := fileUtils.AbosutePath(".")
+		if len(files) > 0 {
+			dir = files[0]
+		}
+
+		cases = getCaseByTaskId(taskIdStr, dir)
+
+	} else if path.Ext(files[0]) == "."+constant.ExtNameSuite { // run with suite file, but no dir
+		dir := fileUtils.AbosutePath(".")
+		cases = getCaseBySuiteFile(files[0], dir)
+
+	} else if len(files) == 2 && path.Ext(files[1]) == "."+constant.ExtNameSuite { // run with suite file, with dir
+		dir := files[0]
+		cases = getCaseBySuiteFile(files[0], dir)
+
 	} else {
-		cases = getCaseByDirAndFile(files)
+		suite, dir := isRunWithSuiteFile(files)
+
+		if suite != "" {
+			cases = getCaseBySuiteFile(suite, dir)
+		} else {
+			cases = getCaseByDirAndFile(files)
+		}
 	}
 
 	if len(cases) < 1 {
@@ -108,4 +122,29 @@ func runCases(cases []string) {
 
 	testingService.ExeScripts(cases, &report)
 	testingService.Report(report)
+}
+
+func isRunWithSuiteFile(files []string) (string, string) {
+	var suiteFile string
+	var dir string
+
+	for _, file := range files {
+		if path.Ext(file) == "."+constant.ExtNameSuite {
+			suiteFile = file
+		} else {
+			if fileUtils.IsDir(file) {
+				dir = file
+			}
+		}
+
+		if suiteFile != "" && dir != "" { // only select the first dir
+			break
+		}
+	}
+
+	if suiteFile != "" && dir == "" {
+		dir = fileUtils.AbosutePath(".")
+	}
+
+	return suiteFile, dir
 }

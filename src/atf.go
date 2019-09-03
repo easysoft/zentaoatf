@@ -113,7 +113,7 @@ func main() {
 		logUtils.PrintUsage()
 
 	default:
-		if len(os.Args) > 1 { // ignore run param, like atf suite.cs, atf -task 1
+		if len(os.Args) > 1 { // ignore run param, like 'atf suite.cs', 'atf -task 1'
 			args := []string{os.Args[0]}
 			args = append(args, "run")
 			args = append(args, os.Args[1:]...)
