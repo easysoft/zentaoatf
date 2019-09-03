@@ -129,7 +129,7 @@
     },
     {
       "id": "enter_language",
-      "translation": "Enter the language you want to use:\n1. English *\n2. Chinese"
+      "translation": "Enter the language you want to use:\n1. English %s\n2. Chinese %s"
     },
     {
       "id": "config_zentao_site",
@@ -137,15 +137,15 @@
     },
     {
       "id": "enter_url",
-      "translation": "Zentao site url:"
+      "translation": "Zentao site url: %s *"
     },
     {
       "id": "enter_account",
-      "translation": "Zentao site account:"
+      "translation": "Zentao site account: %s *"
     },
     {
       "id": "enter_password",
-      "translation": "Account password:"
+      "translation": "Account password: %s *"
     },
     {
       "id": "enter_co_type",

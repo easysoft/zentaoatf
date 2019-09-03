@@ -124,7 +124,7 @@
     },
     {
       "id": "enter_language",
-      "translation": "请输入你期望使用的语言:\n1. English *\n2. Chinese"
+      "translation": "请输入你期望使用的语言:\n1. English %s\n2. Chinese %s"
     },
     {
       "id": "config_zentao_site",
@@ -132,15 +132,15 @@
     },
     {
       "id": "enter_url",
-      "translation": "请输入禅道站点的网站："
+      "translation": "请输入禅道站点的网站：%s *"
     },
     {
       "id": "enter_account",
-      "translation": "请输入登录账号："
+      "translation": "请输入登录账号：%s *"
     },
     {
       "id": "enter_password",
-      "translation": "请输入账号密码："
+      "translation": "请输入账号密码：%s *"
     },
     {
       "id": "enter_co_type",
@@ -231,7 +231,7 @@
     },
 
     {
-      "id": "no_checkpoints",。
+      "id": "no_checkpoints",
       "translation": "没有验证点。"
     },
 

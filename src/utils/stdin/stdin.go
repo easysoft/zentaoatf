@@ -15,7 +15,9 @@ import (
 )
 
 func InputForSet() {
-	configSite := ""
+	conf := configUtils.ReadCurrConfig()
+
+	var configSite bool
 
 	language := ""
 	url := ""
@@ -24,27 +26,49 @@ func InputForSet() {
 
 	fmt.Println(i118Utils.I118Prt.Sprintf("begin_config"))
 
-	language = getInput("(english|chinese|e|c|)", "enter_language")
-	languageDefault := "en"
-	if language == "chinese" || language == "c" { // default en
-		language = "zh"
-	} else {
-		if language == "" {
-			fmt.Print("English")
-		}
-		language = languageDefault
+	enCheck := ""
+	var numb string
+	if conf.Language == "en" {
+		enCheck = "*"
+		numb = "1"
+	}
+	zhCheck := ""
+	if conf.Language == "zh" {
+		zhCheck = "*"
+		numb = "2"
 	}
 
-	configSite = getInput("(yes|no|y|n|)", "config_zentao_site")
-	configSiteDefault := "yes"
-	if configSite != "no" && configSite != "n" { // default yes
-		if configSite == "" {
-			fmt.Print(configSiteDefault)
+	language = getInput("(1|2|)", "enter_language", enCheck, zhCheck)
+
+	if language == "" {
+		language = conf.Language
+		logUtils.PrintToStdOut(numb, -1)
+	} else if language == "1" {
+		language = "en"
+	} else {
+		language = "zh"
+	}
+
+	InputForBool(&configSite, true, "config_zentao_site")
+	if configSite {
+		url = getInput("(http://.*|)", "enter_url", conf.Url)
+		if url == "" {
+			url = conf.Url
+			logUtils.PrintToStdOut(url, -1)
 		}
 
-		url = getInput("http://.*", "enter_url")
-		account = getInput(".{3,}", "enter_account")
-		password = getInput(".{4,}", "enter_password")
+		account = getInput("(.{3,}|)", "enter_account", conf.Account)
+		if account == "" {
+			account = conf.Account
+			logUtils.PrintToStdOut(account, -1)
+		}
+
+		password = getInput("(.{4,}|)", "enter_password", conf.Password)
+		if password == "" {
+			password = conf.Password
+			logUtils.PrintToStdOut(password, -1)
+		}
+
 	}
 
 	configUtils.SaveConfig(language, url, account, password)
