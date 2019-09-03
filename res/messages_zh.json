@@ -132,15 +132,15 @@
     },
     {
       "id": "enter_url",
-      "translation": "请输入禅道站点的网站：%s *"
+      "translation": "请输入禅道站点的网站：%s"
     },
     {
       "id": "enter_account",
-      "translation": "请输入登录账号：%s *"
+      "translation": "请输入登录账号：%s"
     },
     {
       "id": "enter_password",
-      "translation": "请输入账号密码：%s *"
+      "translation": "请输入账号密码：%s"
     },
     {
       "id": "enter_co_type",

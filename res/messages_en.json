@@ -137,15 +137,15 @@
     },
     {
       "id": "enter_url",
-      "translation": "Zentao site url: %s *"
+      "translation": "Zentao site url: %s"
     },
     {
       "id": "enter_account",
-      "translation": "Zentao site account: %s *"
+      "translation": "Zentao site account: %s"
     },
     {
       "id": "enter_password",
-      "translation": "Account password: %s *"
+      "translation": "Account password: %s"
     },
     {
       "id": "enter_co_type",

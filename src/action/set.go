@@ -43,9 +43,9 @@ func InputForSet() {
 	if configSite {
 		url = stdinUtils.GetInput("(http://.*)", conf.Url, "enter_url", conf.Url)
 
-		account = stdinUtils.GetInput("(.{3,})", conf.Account, "enter_account", conf.Account)
+		account = stdinUtils.GetInput("(.{2,})", conf.Account, "enter_account", conf.Account)
 
-		password = stdinUtils.GetInput("(.{4,})", conf.Password, "enter_password", conf.Password)
+		password = stdinUtils.GetInput("(.{2,})", conf.Password, "enter_password", conf.Password)
 	}
 
 	configUtils.SaveConfig(language, url, account, password)
@@ -71,9 +71,9 @@ func InputForRequest() {
 
 	url = stdinUtils.GetInput("(http://.*)", conf.Url, "enter_url", conf.Url)
 
-	account = stdinUtils.GetInput("(.{3,})", conf.Account, "enter_account", conf.Account)
+	account = stdinUtils.GetInput("(.{2,})", conf.Account, "enter_account", conf.Account)
 
-	password = stdinUtils.GetInput("(.{4,})", conf.Password, "enter_password", conf.Password)
+	password = stdinUtils.GetInput("(.{2,})", conf.Password, "enter_password", conf.Password)
 
 	configUtils.SaveConfig("", url, account, password)
 }
