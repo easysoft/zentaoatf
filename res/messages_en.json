@@ -2,142 +2,184 @@
   "language": "en-US",
   "messages": [
     {
-      "id": "need_config",
-      "message": "need config",
-      "translation": "you need to config the zentao site before checkout, type 'exit' to quit"
+      "id": "total",
+      "translation": "Total"
     },
     {
-      "id": "begin_config",
-      "message": "begin config, type 'exit' to quit",
-      "translation": "begin to config"
+      "id": "pass",
+      "translation": "Pass"
     },
+    {
+      "id": "fail",
+      "translation": "Fail"
+    },
+    {
+      "id": "skip",
+      "translation": "Skip"
+    },
+
+    {
+      "id": "product_id",
+      "translation": "Product Id"
+    },
+    {
+      "id": "module_id",
+      "translation": "Module Id"
+    },
+    {
+      "id": "suite_id",
+      "translation": "Suite Id"
+    },
+    {
+      "id": "task_id",
+      "translation": "Task Id"
+    },
+
     {
       "id": "test_case",
-      "message": "test case",
-      "translation": "case"
+      "translation": "test case"
+    },
+    {
+      "id": "test_suite",
+      "translation": "Test Suite"
+    },
+    {
+      "id": "test_script",
+      "translation": "Test Script"
     },
     {
       "id": "result",
-      "message": "result",
       "translation": "result"
     },
     {
+      "id": "step",
+      "translation": "Step"
+    },
+    {
+      "id": "steps",
+      "translation": "Steps"
+    },
+    {
+      "id": "checkpoint",
+      "translation": "Checkpoint"
+    },
+    {
+      "id": "expect_result",
+      "translation": "Expect Result"
+    },
+    {
+      "id": "actual_result",
+      "translation": "Actual Result"
+    },
+    {
+      "id": "content",
+      "message": "Content",
+      "translation": "Content"
+    },
+    {
+      "id": "module",
+      "translation": "Module"
+    },
+    {
+      "id": "category",
+      "translation": "Category"
+    },
+    {
+      "id": "version",
+      "translation": "Version"
+    },
+    {
+      "id": "severity",
+      "translation": "Severity"
+    },
+    {
+      "id": "priority",
+      "translation": "Priority"
+    },
+    {
+      "id": "title_cannot_be_empty",
+      "message": "Title cannot be empty",
+      "translation": "Title cannot be empty"
+    },
+
+    {
+      "id": "need_config",
+      "translation": "You need to config Zentao site before checkout, type 'exit' to quit."
+    },
+    {
+      "id": "begin_config",
+      "translation": "Begin to config, type 'exit' to quit."
+    },
+
+    {
       "id": "want_to_continue",
-      "message": "",
       "translation": "Do you want to continue[Y/n]?"
     },
     {
       "id": "case_update_confirm",
-      "message": "",
       "translation": "Will update case as below:\n Title: %s"
     },
     {
       "id": "enter_dir",
-      "message": "enter dir",
-      "translation": "enter %s dir."
-    },
-    {
-      "id": "enter_id",
-      "message": "enter id",
-      "translation": "enter %s id."
+      "translation": "Enter %s dir."
     },
     {
       "id": "dir_not_exist",
-      "message": "",
-      "translation": "dir not exist"
+      "translation": "Dir not exist"
     },
     {
       "id": "enter_language",
-      "message": "enter language",
-      "translation": "enter the language you want to use, English / Chinese, default English."
+      "translation": "Enter the language you want to use:\n1. English *\n2. Chinese"
     },
     {
       "id": "config_zentao_site",
-      "message": "config zentao site",
-      "translation": "do you want to config Zentao site? Yes / No, default Yes."
+      "translation": "Do you want to config Zentao site[Y/n]?"
     },
     {
       "id": "enter_url",
-      "message": "zentao site url",
-      "translation": "zentao site url"
+      "translation": "Zentao site url:"
     },
     {
       "id": "enter_account",
-      "message": "zentao site login account",
-      "translation": "zentao site login account"
+      "translation": "Zentao site account:"
     },
     {
       "id": "enter_password",
-      "message": "enter password",
-      "translation": "account password"
-    },
-    {
-      "id": "enter_password",
-      "message": "enter password",
-      "translation": "enter password"
+      "translation": "Account password:"
     },
     {
       "id": "enter_co_type",
-      "message": "",
       "translation": "Import test cases from?\n1. Product\n2. Module\n3. Suite\n4. Task"
     },
     {
       "id": "enter_co_independent",
-      "message": "enter co independent",
       "translation": "Save expect results in independent file[y/N]?"
     },
     {
       "id": "enter_co_language",
-      "message": "enter co language",
-      "translation": "select script language. %s"
+      "translation": "Select script language:\n%s"
     },
     {
       "id": "enter_case_id_for_report_bug",
-      "message": "",
-      "translation": "which case do you want to report bug for? enter case id, 'exit' to quit"
+      "translation": "Which case do you want to report bug for?"
     },
 
     {
       "id": "invalid_input",
-      "message": "invalid input",
-      "translation": "invalid input, please try again"
+      "translation": "Invalid input, please try again."
     },
     {
       "id": "zentao_config_success",
-      "message": "zentao config success",
-      "translation": "success to config Zentao connection"
+      "translation": "Success to config Zentao connection."
     },
     {
       "id": "zentao_config_fail",
-      "message": "zentao config fail",
-      "translation": "fail to config Zentao connection"
+      "translation": "Fail to config Zentao connection."
     },
 
     {
       "id": "current_config",
-      "message": "current config",
-      "translation": "current config"
-    },
-    {
-      "id": "set_config",
-      "message": "set config",
-      "translation": "set %s to %s"
-    },
-    {
-      "id": "use_language",
-      "message": "Use English language",
-      "translation": "Use English language"
-    },
-
-    {
-      "id": "language",
-      "message": "language",
-      "translation": "language"
-    },
-    {
-      "id": "workDir",
-      "message": "Work Dir",
-      "translation": "Work Dir"
+      "translation": "Current config:"
     },
 
     {
@@ -152,394 +194,122 @@
     },
     {
       "id": "support_language",
-      "message": "only en(%s) and zh(%s) language is acceptable",
-      "translation": "only en(%s) and zh(%s) language is acceptable"
-    },
-    {
-      "id": "run_sets_with_no_dir",
-      "message": "",
-      "translation": "To run suite or task, the first param should be a dir that contains scripts"
+      "translation": "Only en(%s) and zh(%s) language is acceptable."
     },
     {
       "id": "no_cases",
-      "message": "No test cases found",
-      "translation": "No test cases found"
+      "translation": "No test cases found."
     },
 
     {
       "id": "no_scripts",
-      "message": "No test scripts found",
-      "translation": "No test scripts found"
+      "translation": "No test scripts found."
     },
     {
       "id": "success_to_login",
-      "message": "",
-      "translation": "success to login"
+      "translation": "Success to login."
     },
     {
       "id": "fail_to_login",
-      "message": "",
-      "translation": "fail to login"
+      "translation": "Fail to login."
     },
 
     {
       "id": "start_execution",
-      "message": "Start Execution",
       "translation": "Start Execution"
     },
     {
       "id": "end_execution",
-      "message": "End Execution",
       "translation": "End Execution"
     },
     {
       "id": "start_case",
-      "message": "Start Case",
       "translation": "Start Case %s at %s"
     },
     {
       "id": "end_case",
-      "message": "End Case",
-      "translation": "End Case %s at %s, spend %dsecs"
-    },
-
-    {
-      "id": "begin_analyse",
-      "message": "Run scripts",
-      "translation": "Begin to analyse test result"
+      "translation": "End Case %s at %s, spend %d secs"
     },
     {
       "id": "run_scripts",
-      "message": "Run scripts",
-      "translation": "Run scripts in folder '%s' on %s OS"
+      "translation": "Run scripts in folder '%s' on %s OS."
     },
     {
       "id": "time_from_to",
-      "message": "From To",
-      "translation": "From %s to %s, spend %d secs"
-    },
-    {
-      "id": "total",
-      "message": "Total",
-      "translation": "Total"
-    },
-    {
-      "id": "pass",
-      "message": "Pass",
-      "translation": "Pass"
-    },
-    {
-      "id": "fail",
-      "message": "Fail",
-      "translation": "Fail"
-    },
-    {
-      "id": "skip",
-      "message": "Skip",
-      "translation": "Skip"
+      "translation": "From %s to %s, spend %d secs."
     },
 
     {
-      "id": "step",
-      "message": "Step",
-      "translation": "Step"
-    },
-    {
-      "id": "steps",
-      "message": "Steps",
-      "translation": "Steps"
-    },
-    {
-      "id": "checkpoint",
-      "message": "Checkpoint",
-      "translation": "Checkpoint"
-    },
-    {
-      "id": "expect_result",
-      "message": "Expect Result",
-      "translation": "Expect Result"
-    },
-    {
-      "id": "actual_result",
-      "message": "Actual Result",
-      "translation": "Actual Result"
-    },
-    {
       "id": "no_checkpoints",
-      "message": "No checkpoints",
-      "translation": "No checkpoints"
+      "translation": "No checkpoints."
     },
 
     {
       "id": "only_support_script_language",
-      "message": "only support language %s",
-      "translation": "only support language %s"
+      "translation": "Only support language %s."
     },
     {
       "id": "total_test_case",
-      "message": "Totally %d test cases",
-      "translation": "Totally %d test cases"
-    },
-    {
-      "id": "usage_of_atf",
-      "message": "Usage of atf",
-      "translation": "Usage of atf"
-    },
-    {
-      "id": "sample_to_use",
-      "message": "Sample to use: ",
-      "translation": "Sample to use: "
-    },
-    {
-      "id": "is_checkpoint",
-      "message": "Step begin with '@' has checkpoint",
-      "translation": "Step begin with '@' has checkpoint"
-    },
-    {
-      "id": "your_codes_here",
-      "message": "Write your codes here",
-      "translation": "Write your codes here"
-    },
-    {
-      "id": "expect_result_here",
-      "message": "Expect Results",
-      "translation": "Expect Results, can be more than one line"
-    },
-    {
-      "id": "actual_result_here",
-      "message": "Record actual results",
-      "translation": "Record actual results"
-    },
-    {
-      "id": "success_to_generate",
-      "message": "success to generate %d test scripts in '%s'",
-      "translation": "success to generate %d test scripts in '%s'"
-    },
-    {
-      "id": "success_to_commit_case",
-      "message": "",
-      "translation": "success to commit case %d"
-    },
-    {
-      "id": "success_to_report_bug",
-      "message": "",
-      "translation": "success to report bug for case %s"
-    },
-    {
-      "id": "success_to_submit_result",
-      "message": "success to submit the results for case %d, resultId is %d",
-      "translation": "success to submit the results for case %d, resultId is %d"
-    },
-    {
-      "id": "success_to_switch_project",
-      "message": "success to switch to project %s: %s",
-      "translation": "success to switch to project %s: %s"
+      "translation": "Totally %d test cases."
     },
 
     {
-      "id": "test_suite",
-      "message": "Test Suite",
-      "translation": "Test Suite"
+      "id": "is_checkpoint",
+      "translation": "Step begin with '@' has checkpoint."
     },
     {
-      "id": "test_script",
-      "message": "Test Script",
-      "translation": "Test Script"
+      "id": "your_codes_here",
+      "translation": "Write your codes here."
     },
     {
-      "id": "content",
-      "message": "Content",
-      "translation": "Content"
+      "id": "expect_result_here",
+      "translation": "Expect Results, can be more than one line."
     },
     {
-      "id": "run",
-      "message": "Run",
-      "translation": "Run"
+      "id": "actual_result_here",
+      "translation": "Record actual results."
     },
     {
-      "id": "results",
-      "message": "Results",
-      "translation": "Results"
+      "id": "success_to_generate",
+      "translation": "Success to generate %d test scripts in '%s'."
     },
     {
-      "id": "upload_result",
-      "message": "Upload Result",
-      "translation": "Upload Result"
+      "id": "success_to_commit_case",
+      "translation": "Success to commit case %d."
     },
     {
-      "id": "report_bug",
-      "message": "Report Bug",
-      "translation": "Report Bug"
+      "id": "success_to_report_bug",
+      "translation": "Success to report bug for case %s."
     },
     {
-      "id": "or",
-      "message": "or",
-      "translation": "or"
+      "id": "success_to_commit_result",
+      "translation": "Success to commit the results for case %d, resultId is %d"
     },
+
     {
-      "id": "zentao_url",
-      "message": "ZentaoUrl",
-      "translation": "ZentaoUrl"
-    },
-    {
-      "id": "pls_input",
-      "message": "",
-      "translation": "Please input"
-    },
-    {
-      "id": "product_id",
-      "message": "",
-      "translation": "Product Id"
-    },
-    {
-      "id": "module_id",
-      "message": "",
-      "translation": "Module Id"
-    },
-    {
-      "id": "suite_id",
-      "message": "",
-      "translation": "Suite Id"
-    },
-    {
-      "id": "task_id",
-      "message": "",
-      "translation": "Task Id"
-    },
-    {
-      "id": "independent_expect_result",
-      "message": "Indep. Result",
-      "translation": "Indep. Result"
-    },
-    {
-      "id": "account",
-      "message": "Account",
-      "translation": "Account"
-    },
-    {
-      "id": "password",
-      "message": "Password",
-      "translation": "Password"
+      "id": "pls_enter",
+      "translation": "Please enter"
     },
     {
       "id": "submit",
-      "message": "Submit",
       "translation": "Submit"
     },
     {
       "id": "save",
-      "message": "Save",
       "translation": "Save"
     },
     {
       "id": "cancel",
-      "message": "Cancel",
       "translation": "Cancel"
     },
     {
       "id": "close",
-      "message": "close",
       "translation": "Close"
-    },
-    {
-      "id": "switch_to",
-      "message": "Switch To",
-      "translation": "Switch To"
-    },
-    {
-      "id": "project_config",
-      "message": "",
-      "translation": "%s\\n Work dir: %s\\n Zentao project: %s\\n Import type: %s\\n Product code: %s\\n Language: %s\\n \" +\n    \"Indep. ExpectResult file: %t\""
-    },
-    {
-      "id": "module",
-      "message": "Module",
-      "translation": "Module"
-    },
-    {
-      "id": "category",
-      "message": "Category",
-      "translation": "Category"
-    },
-    {
-      "id": "version",
-      "message": "Version",
-      "translation": "Version"
-    },
-    {
-      "id": "severity",
-      "message": "Severity",
-      "translation": "Severity"
-    },
-    {
-      "id": "priority",
-      "message": "Priority",
-      "translation": "Priority"
-    },
-    {
-      "id": "title_cannot_be_empty",
-      "message": "Title cannot be empty",
-      "translation": "Title cannot be empty"
-    },
-    {
-      "id": "switch",
-      "message": "Switch",
-      "translation": "Switch"
-    },
-    {
-      "id": "switch_project",
-      "message": "Create/Switch Project",
-      "translation": "Create/Switch Project"
-    },
-    {
-      "id": "import_from_zentao",
-      "message": "Import from Zentao",
-      "translation": "Import from Zentao"
-    },
-    {
-      "id": "workdir",
-      "message": "WorkDir",
-      "translation": "WorkDir"
-    },
-    {
-      "id": "testing",
-      "message": "Testing",
-      "translation": "Testing"
-    },
-    {
-      "id": "projects",
-      "message": "Projects",
-      "translation": "Projects"
-    },
-    {
-      "id": "settings",
-      "message": "Settings",
-      "translation": "Settings"
     },
     {
       "id": "help_key_bind",
       "message": "help",
       "translation": "HELP"
-    },
-    {
-      "id": "help_mouse",
-      "message": "Mouse: Mouse support",
-      "translation": "Mouse: Mouse support"
-    },
-    {
-      "id": "help_tab",
-      "message": "Tab: Move between form widgets",
-      "translation": "Tab: Move between form widgets"
-    },
-    {
-      "id": "help_space",
-      "message": "Space: Toggle radio box",
-      "translation": "Space: Toggle radio box"
-    },
-    {
-      "id": "help_enter",
-      "message": "Enter: Click button",
-      "translation": "Enter: Click button"
     },
     {
       "id": "help_show",

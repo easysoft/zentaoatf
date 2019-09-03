@@ -82,27 +82,27 @@ func InputForCheckout(productId *string, moduleId *string, suiteId *string, task
 	coType = strings.ToLower(coType)
 	if coType == "1" {
 		*productId = getInput("\\d+",
-			i118Utils.I118Prt.Sprintf("pls_input")+" "+i118Utils.I118Prt.Sprintf("product_id"))
+			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("product_id"))
 
 	} else if coType == "2" {
 		*productId = getInput("\\d+",
-			i118Utils.I118Prt.Sprintf("pls_input")+" "+i118Utils.I118Prt.Sprintf("product_id"))
+			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("product_id"))
 
 		*moduleId = getInput("\\d+",
-			i118Utils.I118Prt.Sprintf("pls_input")+" "+i118Utils.I118Prt.Sprintf("module_id"))
+			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("module_id"))
 
 	} else if coType == "3" {
 		*suiteId = getInput("\\d+",
-			i118Utils.I118Prt.Sprintf("pls_input")+" "+i118Utils.I118Prt.Sprintf("suite_id"))
+			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("suite_id"))
 	} else if coType == "4" {
 		*taskId = getInput("\\d+",
-			i118Utils.I118Prt.Sprintf("pls_input")+" "+i118Utils.I118Prt.Sprintf("task_id"))
+			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("task_id"))
 	}
 
 	InputForBool(independentFile, false, "enter_co_independent")
 
 	regx := langUtils.GetSupportLangageRegx()
-	fmtParam := strings.Join(langUtils.GetSupportLangageArr(), " / ")
+	fmtParam := strings.Join(langUtils.GetSupportLangageArr(), "\n")
 	*scriptLang = getInput(regx, "enter_co_language", fmtParam)
 }
 
@@ -119,6 +119,15 @@ func InputForBool(in *bool, defaultVal bool, fmtStr string, fmtParam ...string) 
 
 	if str == "" {
 		*in = defaultVal
+
+		msg := ""
+		if *in {
+			msg = "Yes"
+		} else {
+			msg = "No"
+		}
+
+		logUtils.PrintToStdOut(msg, -1)
 		return
 	}
 

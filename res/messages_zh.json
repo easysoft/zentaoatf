@@ -2,462 +2,81 @@
   "language": "zh",
   "messages": [
     {
-      "id": "need_config",
-      "message": "need config",
-      "translation": "在导出用例之前，您需要先配置禅道站点"
-    },
-    {
-      "id": "begin_config",
-      "message": "begin config",
-      "translation": "开始配置, 输入'exit'退出"
-    },
-    {
-      "id": "test_case",
-      "message": "test case",
-      "translation": "用例"
-    },
-    {
-      "id": "result",
-      "message": "result",
-      "translation": "结果"
-    },
-    {
-      "id": "want_to_continue",
-      "message": "",
-      "translation": "确认继续[Y/n]?"
-    },
-    {
-      "id": "case_update_confirm",
-      "message": "",
-      "translation": "以下用例信息将被更新:\n 标题: %s"
-    },
-    {
-      "id": "enter_dir",
-      "message": "enter dir",
-      "translation": "输入%s目录"
-    },
-    {
-      "id": "enter_id",
-      "message": "enter id",
-      "translation": "enter %s id."
-    },
-    {
-      "id": "dir_not_exist",
-      "message": "",
-      "translation": "目录不存在"
-    },
-    {
-      "id": "enter_language",
-      "message": "enter language",
-      "translation": "请输入你期望使用的语言。English / Chinese，默认En"
-    },
-    {
-      "id": "config_zentao_site",
-      "message": "config zentao site",
-      "translation": "现在开始配置同禅道系统的同步参数? Yes / No，默认Yes"
-    },
-    {
-      "id": "enter_url",
-      "message": "zentao site url",
-      "translation": "请输入禅道站点的网站"
-    },
-    {
-      "id": "enter_account",
-      "message": "zentao site login account",
-      "translation": "请输入登录账号"
-    },
-    {
-      "id": "enter_password",
-      "message": "enter password",
-      "translation": "请输入账号密码"
-    },
-    {
-      "id": "enter_co_type",
-      "message": "enter co type",
-      "translation": "请选择用例来源。Product / Module / Suite / Task"
-    },
-    {
-      "id": "enter_co_independent",
-      "message": "enter co independent",
-      "translation": "是否将用例期待结果保存在独立的文件中？Yes / No，默认No"
-    },
-    {
-      "id": "enter_co_language",
-      "message": "enter co language",
-      "translation": "请选择脚本语言。 %s"
-    },
-    {
-      "id": "enter_case_id_for_report_bug",
-      "message": "",
-      "translation": "请输入您想提交缺陷的用例编号，输入'exit'退出"
-    },
-
-    {
-      "id": "invalid_input",
-      "message": "invalid input",
-      "translation": "无效数据，请重新输入"
-    },
-    {
-      "id": "zentao_config_success",
-      "message": "zentao config success",
-      "translation": "禅道系统连接配置成功"
-    },
-    {
-      "id": "zentao_config_fail",
-      "message": "zentao config fail",
-      "translation": "禅道系统连接配置失败"
-    },
-
-    {
-      "id": "current_config",
-      "message": "Current config",
-      "translation": "当前配置"
-    },
-    {
-      "id": "set_config",
-      "message": "set config",
-      "translation": "设置%s为%s"
-    },
-    {
-      "id": "language",
-      "message": "language",
-      "translation": "语言"
-    },
-    {
-      "id": "workDir",
-      "message": "Work Dir",
-      "translation": "工作目录"
-    },
-    {
-      "id": "en",
-      "message": "English",
-      "translation": "英文"
-    },
-    {
-      "id": "zh",
-      "message": "Chinese",
-      "translation": "中文"
-    },
-    {
-      "id": "support_language",
-      "message": "只支持语言en(%s)和zh(%s)",
-      "translation": "只支持语言en(%s)和zh(%s)"
-    },
-    {
-      "id": "run_sets_with_no_dir",
-      "message": "",
-      "translation": "执行套件或任务时，第一个参数必须为包含脚本的目录"
-    },
-    {
-      "id": "no_cases",
-      "message": "No test cases found",
-      "translation": "No test cases found"
-    },
-    {
-      "id": "no_scripts",
-      "message": "No test scripts found",
-      "translation": "未发现测试脚本"
-    },
-    {
-      "id": "success_to_login",
-      "message": "",
-      "translation": "登录成功"
-    },
-    {
-      "id": "fail_to_login",
-      "message": "",
-      "translation": "登录失败"
-    },
-
-    {
-      "id": "use_language",
-      "message": "Use Chinese language",
-      "translation": "使用中文语言"
-    },
-    {
-      "id": "start_execution",
-      "message": "Start Execution",
-      "translation": "开始执行"
-    },
-    {
-      "id": "end_execution",
-      "message": "End Execution",
-      "translation": "结束执行"
-    },
-    {
-      "id": "start_case",
-      "message": "Start Case",
-      "translation": "开始用例 %s %s"
-    },
-    {
-      "id": "end_case",
-      "message": "End Case",
-      "translation": "结束用例 %s %s，耗时%d秒"
-    },
-
-    {
-      "id": "begin_analyse",
-      "message": "Run scripts",
-      "translation": "开始分析测试结果"
-    },
-    {
-      "id": "run_scripts",
-      "message": "Run scripts",
-      "translation": "运行脚本'%s'于%s操作系统"
-    },
-    {
-      "id": "time_from_to",
-      "message": "From To",
-      "translation": "从%s到%s, 耗时%d秒"
-    },
-    {
       "id": "total",
-      "message": "Total",
       "translation": "合计"
     },
     {
       "id": "pass",
-      "message": "Pass",
       "translation": "通过"
     },
     {
       "id": "fail",
-      "message": "Fail",
       "translation": "失败"
     },
     {
       "id": "skip",
-      "message": "Skip",
       "translation": "跳过"
     },
 
     {
-      "id": "step",
-      "message": "Step",
-      "translation": "步骤"
-    },
-    {
-      "id": "checkpoint",
-      "message": "Checkpoint",
-      "translation": "验证点"
-    },
-    {
-      "id": "expect_result",
-      "message": "Expect Result",
-      "translation": "期待结果"
-    },
-    {
-      "id": "actual_result",
-      "message": "Actual Result",
-      "translation": "实际结果"
-    },
-    {
-      "id": "no_checkpoints",
-      "message": "No checkpoints",
-      "translation": "没有验证点"
-    },
-
-    {
-      "id": "steps",
-      "message": "Steps",
-      "translation": "步骤"
-    },
-    {
-      "id": "only_support_script_language",
-      "message": "only support language %s",
-      "translation": "只支持脚本语言%s"
-    },
-    {
-      "id": "total_test_case",
-      "message": "Totally %d test cases",
-      "translation": "合计%d个测试用例"
-    },
-    {
-      "id": "usage_of_atf",
-      "message": "Usage of atf",
-      "translation": "使用帮助"
-    },
-    {
-      "id": "sample_to_use",
-      "message": "Sample to use: ",
-      "translation": "使用示例"
-    },
-    {
-      "id": "is_checkpoint",
-      "message": "Step begin with '@' has checkpoint",
-      "translation": "@开头的为含验证点的步骤"
-    },
-    {
-      "id": "your_codes_here",
-      "message": "Write your codes here",
-      "translation": "此处编写操作步骤代码"
-    },
-    {
-      "id": "expect_result_here",
-      "message": "Expect Results",
-      "translation": "期望结果, 可以有多行"
-    },
-    {
-      "id": "actual_result_here",
-      "message": "Record actual results",
-      "translation": "输出验证点实际结果"
-    },
-    {
-      "id": "success_to_generate",
-      "message": "success to generate %d test scripts in '%s'",
-      "translation": "成功创建%d个测试脚本, 目录: '%s'"
-    },
-    {
-      "id": "success_to_commit_case",
-      "message": "",
-      "translation": "成功更新用例%d"
-    },
-    {
-      "id": "success_to_report_bug",
-      "message": "",
-      "translation": "成功为用例%s提交缺陷"
-    },
-    {
-      "id": "success_to_submit_result",
-      "message": "success to submit the results for case %d, resultId is %d",
-      "translation": "成功为用例%d提交结果, 返回结果编号%d"
-    },
-    {
-      "id": "success_to_switch_project",
-      "message": "success to switch to project %s: %s",
-      "translation": "成功切换到项目%s，路径%s"
-    },
-
-    {
-      "id": "test_suite",
-      "message": "Test Suite",
-      "translation": "测试套件"
-    },
-    {
-      "id": "test_script",
-      "message": "Test Script",
-      "translation": "测试脚本"
-    },
-    {
-      "id": "content",
-      "message": "Content",
-      "translation": "内容"
-    },
-    {
-      "id": "run",
-      "message": "Run",
-      "translation": "运行"
-    },
-    {
-      "id": "results",
-      "message": "Results",
-      "translation": "结果"
-    },
-    {
-      "id": "upload_result",
-      "message": "Upload Result",
-      "translation": "上传结果"
-    },
-    {
-      "id": "report_bug",
-      "message": "Report Bug",
-      "translation": "提交缺陷"
-    },
-    {
-      "id": "or",
-      "message": "or",
-      "translation": "或"
-    },
-    {
-      "id": "zentao_url",
-      "message": "ZentaoUrl",
-      "translation": "禅道地址"
-    },
-
-    {
-      "id": "pls_input",
-      "message": "",
-      "translation": "请输入"
-    },
-    {
       "id": "product_id",
-      "message": "",
       "translation": "产品Id"
     },
     {
       "id": "module_id",
-      "message": "",
       "translation": "模块Id"
     },
     {
       "id": "suite_id",
-      "message": "",
       "translation": "套件Id"
     },
     {
       "id": "task_id",
-      "message": "",
       "translation": "任务Id"
     },
 
     {
-      "id": "independent_expect_result",
-      "message": "Indep. Result",
-      "translation": "独立期待结果文件"
+      "id": "test_case",
+      "translation": "用例"
     },
     {
-      "id": "account",
-      "message": "Account",
-      "translation": "账号"
+      "id": "test_suite",
+      "translation": "测试套件"
     },
     {
-      "id": "password",
-      "message": "Password",
-      "translation": "密码"
+      "id": "test_script",
+      "translation": "测试脚本"
     },
     {
-      "id": "submit",
-      "message": "Submit",
-      "translation": "提交"
+      "id": "result",
+      "translation": "结果"
     },
     {
-      "id": "save",
-      "message": "Save",
-      "translation": "保存"
+      "id": "step",
+      "translation": "步骤"
     },
     {
-      "id": "cancel",
-      "message": "Cancel",
-      "translation": "取消"
+      "id": "checkpoint",
+      "translation": "验证点"
     },
     {
-      "id": "close",
-      "message": "close",
-      "translation": "关闭"
+      "id": "expect_result",
+      "translation": "期待结果"
     },
     {
-      "id": "switch_to",
-      "message": "Switch To",
-      "translation": "切换至"
+      "id": "actual_result",
+      "translation": "实际结果"
     },
     {
-      "id": "no_name",
-      "message": "No Name",
-      "translation": "空"
-    },
-    {
-      "id": "project_config",
-      "message": "",
-      "translation": "%s\\n 工作目录: %s\\n 禅道项目: %s\\n 导入类型: %s\\n 产品ID: %s\\n 语言: %s\\n \" +\n    \"独立期待结果文件: %t\""
+      "id": "content",
+      "translation": "内容"
     },
     {
       "id": "module",
-      "message": "Module",
       "translation": "模块"
     },
     {
       "id": "category",
-      "message": "Category",
       "translation": "目录"
     },
     {
@@ -467,87 +86,238 @@
     },
     {
       "id": "severity",
-      "message": "Severity",
       "translation": "严重级别"
     },
     {
       "id": "priority",
-      "message": "Priority",
       "translation": "紧急程度"
     },
     {
       "id": "title_cannot_be_empty",
-      "message": "Title cannot be empty",
-      "translation": "标题不能为空"
+      "translation": "标题不能为空。"
+    },
+
+    {
+      "id": "need_config",
+      "translation": "在导出用例之前，您需要先配置禅道站点。"
     },
     {
-      "id": "switch",
-      "message": "Switch",
-      "translation": "切换"
+      "id": "begin_config",
+      "translation": "开始配置, 输入'exit'退出。"
+    },
+
+    {
+      "id": "want_to_continue",
+      "translation": "确认继续[Y/n]?"
     },
     {
-      "id": "switch_project",
-      "message": "Create/Switch Project",
-      "translation": "创建/切换项目"
+      "id": "case_update_confirm",
+      "translation": "以下用例信息将被更新:\n 标题: %s"
     },
     {
-      "id": "import_from_zentao",
-      "message": "Import from Zentao",
-      "translation": "从禅道导入"
+      "id": "enter_dir",
+      "translation": "输入%s目录："
     },
     {
-      "id": "workdir",
-      "message": "WorkDir",
-      "translation": "工作目录"
+      "id": "dir_not_exist",
+      "translation": "目录不存在"
     },
     {
-      "id": "testing",
-      "message": "Testing",
-      "translation": "测试"
+      "id": "enter_language",
+      "translation": "请输入你期望使用的语言:\n1. English *\n2. Chinese"
     },
     {
-      "id": "projects",
-      "message": "Projects",
-      "translation": "项目"
+      "id": "config_zentao_site",
+      "translation": "现在开始配置同禅道系统的同步参数[Y/n]?"
     },
     {
-      "id": "settings",
-      "message": "Settings",
-      "translation": "设置"
+      "id": "enter_url",
+      "translation": "请输入禅道站点的网站："
+    },
+    {
+      "id": "enter_account",
+      "translation": "请输入登录账号："
+    },
+    {
+      "id": "enter_password",
+      "translation": "请输入账号密码："
+    },
+    {
+      "id": "enter_co_type",
+      "translation": "请选择用例来源\n1. 产品\n2. 模块\n3. 套件\n4. 任务"
+    },
+    {
+      "id": "enter_co_independent",
+      "translation": "是否将用例期待结果保存在独立的文件中[y/N]?"
+    },
+    {
+      "id": "enter_co_language",
+      "translation": "请选择脚本语言。%s"
+    },
+    {
+      "id": "enter_case_id_for_report_bug",
+      "translation": "请输入您想提交缺陷的用例编号，输入'exit'退出"
+    },
+
+    {
+      "id": "invalid_input",
+      "translation": "无效数据，请重新输入。"
+    },
+    {
+      "id": "zentao_config_success",
+      "translation": "禅道系统连接配置成功。"
+    },
+    {
+      "id": "zentao_config_fail",
+      "translation": "禅道系统连接配置失败。"
+    },
+
+    {
+      "id": "current_config",
+      "translation": "当前配置："
+    },
+    {
+      "id": "en",
+      "translation": "英文"
+    },
+    {
+      "id": "zh",
+      "translation": "中文"
+    },
+    {
+      "id": "support_language",
+      "translation": "只支持语言en(%s)和zh(%s)。"
+    },
+    {
+      "id": "no_cases",
+      "translation": "未发现测试用例。"
+    },
+    {
+      "id": "no_scripts",
+      "translation": "未发现测试脚本。"
+    },
+    {
+      "id": "success_to_login",
+      "translation": "登录成功。"
+    },
+    {
+      "id": "fail_to_login",
+      "translation": "登录失败。"
+    },
+    {
+      "id": "start_execution",
+      "translation": "开始执行。"
+    },
+    {
+      "id": "end_execution",
+      "translation": "结束执行。"
+    },
+    {
+      "id": "start_case",
+      "translation": "开始用例 %s %s。"
+    },
+    {
+      "id": "end_case",
+      "translation": "结束用例 %s %s，耗时%d秒。"
+    },
+
+    {
+      "id": "run_scripts",
+      "translation": "运行脚本'%s'于%s操作系统。"
+    },
+    {
+      "id": "time_from_to",
+      "translation": "从%s到%s, 耗时%d秒。"
+    },
+
+    {
+      "id": "no_checkpoints",。
+      "translation": "没有验证点。"
+    },
+
+    {
+      "id": "steps",
+      "translation": "步骤"
+    },
+    {
+      "id": "only_support_script_language",
+      "translation": "只支持脚本语言%s。"
+    },
+    {
+      "id": "total_test_case",
+      "translation": "合计%d个测试用例。"
+    },
+
+    {
+      "id": "is_checkpoint",
+      "translation": "@开头的为含验证点的步骤。"
+    },
+    {
+      "id": "your_codes_here",
+      "translation": "此处编写操作步骤代码。"
+    },
+    {
+      "id": "expect_result_here",
+      "message": "Expect Results",
+      "translation": "期望结果, 可以有多行。"
+    },
+    {
+      "id": "actual_result_here",
+      "translation": "输出验证点实际结果。"
+    },
+    {
+      "id": "success_to_generate",
+      "translation": "成功创建%d个测试脚本, 目录: '%s'。"
+    },
+    {
+      "id": "success_to_commit_case",
+      "translation": "成功更新用例%d"
+    },
+    {
+      "id": "success_to_report_bug",
+      "translation": "成功为用例%s提交缺陷"
+    },
+    {
+      "id": "success_to_commit_result",
+      "translation": "成功为用例%d提交结果, 返回结果编号%d"
+    },
+
+    {
+      "id": "or",
+      "message": "or",
+      "translation": "或"
+    },
+    {
+      "id": "zentao_url",
+      "translation": "禅道地址"
+    },
+
+    {
+      "id": "pls_enter",
+      "translation": "请输入"
+    },
+    {
+      "id": "submit",
+      "translation": "提交"
+    },
+    {
+      "id": "save",
+      "translation": "保存"
+    },
+    {
+      "id": "cancel",
+      "translation": "取消"
+    },
+    {
+      "id": "close",
+      "translation": "关闭"
     },
     {
       "id": "help_key_bind",
-      "message": "KEYBINDINGS",
       "translation": "帮助"
     },
     {
-      "id": "help_mouse",
-      "message": "Mouse: Mouse support",
-      "translation": "Mouse: 支持鼠标"
-    },
-    {
-      "id": "help_tab",
-      "message": "Tab: Move between form widgets",
-      "translation": "Tab: 表单控件导航"
-    },
-    {
-      "id": "help_space",
-      "message": "Space: Toggle radio box",
-      "translation": "Space: 选中/取消单选框"
-    },
-    {
-      "id": "help_enter",
-      "message": "Enter: Click button",
-      "translation": "Enter: 点击按钮"
-    },
-    {
-      "id": "help_show",
-      "message": "",
-      "translation": "CTRL+H: 显示/隐藏帮助"
-    },
-    {
       "id": "help_exit",
-      "message": "",
       "translation": "CTRL+C: 退出"
     }
   ]
