@@ -77,50 +77,52 @@ func InputForRequest() {
 func InputForCheckout(productId *string, moduleId *string, suiteId *string, taskId *string,
 	independentFile *bool, scriptLang *string) {
 
-	coType := getInput("(product|module|suite|task|p|m|s|t)", "enter_co_type")
+	coType := getInput("(1|2|3|4)", "enter_co_type")
 
 	coType = strings.ToLower(coType)
-	if coType == "product" || coType == "p" {
-		*productId = getInput("\\d+", "productId")
-	} else if coType == "module" || coType == "m" {
-		*productId = getInput("\\d+", "productId")
-		*moduleId = getInput("\\d+", "moduleId")
-	} else if coType == "suite" || coType == "s" {
-		*suiteId = getInput("\\d+", "suiteId")
-	} else if coType == "task" || coType == "t" {
-		*taskId = getInput("\\d+", "taskId")
+	if coType == "1" {
+		*productId = getInput("\\d+",
+			i118Utils.I118Prt.Sprintf("pls_input")+" "+i118Utils.I118Prt.Sprintf("product_id"))
+
+	} else if coType == "2" {
+		*productId = getInput("\\d+",
+			i118Utils.I118Prt.Sprintf("pls_input")+" "+i118Utils.I118Prt.Sprintf("product_id"))
+
+		*moduleId = getInput("\\d+",
+			i118Utils.I118Prt.Sprintf("pls_input")+" "+i118Utils.I118Prt.Sprintf("module_id"))
+
+	} else if coType == "3" {
+		*suiteId = getInput("\\d+",
+			i118Utils.I118Prt.Sprintf("pls_input")+" "+i118Utils.I118Prt.Sprintf("suite_id"))
+	} else if coType == "4" {
+		*taskId = getInput("\\d+",
+			i118Utils.I118Prt.Sprintf("pls_input")+" "+i118Utils.I118Prt.Sprintf("task_id"))
 	}
 
-	indep := getInput("(yes|no|y|n|)", "enter_co_independent")
-	indep = strings.ToLower(indep)
-	if indep == "yes" && indep == "y" {
-		*independentFile = true
-	} else {
-		if indep == "" {
-			fmt.Print("no")
-		}
-		*independentFile = false
-	}
+	InputForBool(independentFile, false, "enter_co_independent")
 
 	regx := langUtils.GetSupportLangageRegx()
 	fmtParam := strings.Join(langUtils.GetSupportLangageArr(), " / ")
 	*scriptLang = getInput(regx, "enter_co_language", fmtParam)
-
-	configUtils.PrintCurrConfig()
 }
 
 func InputForDir(dir *string, entity string) {
 	*dir = getInput("is_dir", "enter_dir", i118Utils.I118Prt.Sprintf(entity))
 }
 
-func InputForInt(in *string, entity string) {
-	*in = getInput("\\d+", "enter_id", i118Utils.I118Prt.Sprintf(entity))
+func InputForInt(in *string, fmtStr string, fmtParam ...string) {
+	*in = getInput("\\d+", "fmtStr", fmtParam)
 }
 
-func InputForBool(in *bool, entity string) {
-	str := getInput("(yes|no|y|n)", i118Utils.I118Prt.Sprintf(entity), "")
+func InputForBool(in *bool, defaultVal bool, fmtStr string, fmtParam ...string) {
+	str := getInput("(yes|no|y|n|)", fmtStr, fmtParam)
 
-	if str != "n" && str != "no" {
+	if str == "" {
+		*in = defaultVal
+		return
+	}
+
+	if str == "y" && str != "yes" {
 		*in = true
 	} else {
 		*in = false

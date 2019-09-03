@@ -78,13 +78,13 @@
     },
     {
       "id": "enter_co_type",
-      "message": "enter co type",
-      "translation": "import test cases from? Product / Module / Suite / Task"
+      "message": "",
+      "translation": "Import test cases from?\n1. Product\n2. Module\n3. Suite\n4. Task"
     },
     {
       "id": "enter_co_independent",
       "message": "enter co independent",
-      "translation": "save expect results in independent file? Yes / No, default No"
+      "translation": "Save expect results in independent file[y/N]?"
     },
     {
       "id": "enter_co_language",
@@ -382,14 +382,29 @@
       "translation": "ZentaoUrl"
     },
     {
+      "id": "pls_input",
+      "message": "",
+      "translation": "Please input"
+    },
+    {
       "id": "product_id",
-      "message": "ProductId",
-      "translation": "ProductId"
+      "message": "",
+      "translation": "Product Id"
+    },
+    {
+      "id": "module_id",
+      "message": "",
+      "translation": "Module Id"
+    },
+    {
+      "id": "suite_id",
+      "message": "",
+      "translation": "Suite Id"
     },
     {
       "id": "task_id",
-      "message": "TaskId",
-      "translation": "TaskId"
+      "message": "",
+      "translation": "Task Id"
     },
     {
       "id": "independent_expect_result",

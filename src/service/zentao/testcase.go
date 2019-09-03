@@ -220,7 +220,7 @@ func CommitCase(caseId int, title string) {
 
 	var yes bool
 	logUtils.PrintToStdOut("\n"+i118Utils.I118Prt.Sprintf("case_update_confirm", title), -1)
-	stdinUtils.InputForBool(&yes, "want_to_continue")
+	stdinUtils.InputForBool(&yes, true, "want_to_continue")
 
 	if yes {
 		url := config.Url + uri

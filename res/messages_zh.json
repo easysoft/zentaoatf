@@ -373,16 +373,33 @@
       "message": "ZentaoUrl",
       "translation": "禅道地址"
     },
+
+    {
+      "id": "pls_input",
+      "message": "",
+      "translation": "请输入"
+    },
     {
       "id": "product_id",
-      "message": "ProductId",
-      "translation": "产品ID"
+      "message": "",
+      "translation": "产品Id"
+    },
+    {
+      "id": "module_id",
+      "message": "",
+      "translation": "模块Id"
+    },
+    {
+      "id": "suite_id",
+      "message": "",
+      "translation": "套件Id"
     },
     {
       "id": "task_id",
-      "message": "TaskId",
-      "translation": "任务ID"
+      "message": "",
+      "translation": "任务Id"
     },
+
     {
       "id": "independent_expect_result",
       "message": "Indep. Result",
