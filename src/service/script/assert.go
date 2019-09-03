@@ -25,11 +25,10 @@ func GetAllScriptsInDir(filePth string, files *[]string) error {
 		pass, _ := regexp.MatchString("^*.\\."+regx+"$", filePth)
 
 		if pass {
-			id, _, _ := zentaoUtils.GetCaseInfo(filePth)
-
-			if id > 0 {
-				*files = append(*files, filePth)
-			}
+			//id, _, _ := zentaoUtils.GetCaseInfo(filePth)
+			//if id > 0 {
+			*files = append(*files, filePth)
+			//}
 		}
 
 		return nil
@@ -54,11 +53,10 @@ func GetAllScriptsInDir(filePth string, files *[]string) error {
 			pass, _ := regexp.MatchString("^*.\\."+regx+"$", path)
 
 			if pass {
-				id, _, _ := zentaoUtils.GetCaseInfo(path)
-
-				if id > 0 {
-					*files = append(*files, path)
-				}
+				//id, _, _ := zentaoUtils.GetCaseInfo(path)
+				//if id > 0 {
+				*files = append(*files, path)
+				//}
 			}
 		}
 	}
@@ -94,14 +92,13 @@ func GetScriptByIdsInDir(dirPth string, idMap map[int]string, files *[]string) e
 
 			path := dirPth + name
 			id, _, _ := zentaoUtils.GetCaseInfo(path)
+			//if id > 0 {
+			_, ok := idMap[id]
 
-			if id > 0 {
-				_, ok := idMap[id]
-
-				if ok {
-					*files = append(*files, path)
-				}
+			if ok {
+				*files = append(*files, path)
 			}
+			//}
 		}
 	}
 
