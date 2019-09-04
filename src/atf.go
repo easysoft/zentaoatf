@@ -128,6 +128,9 @@ func main() {
 func run(args []string) {
 	files := fileUtils.GetFilesFromParams(args[2:])
 	if err := flagSet.Parse(args[len(files)+2:]); err == nil {
+		if len(files) == 0 {
+			files = append(files, ".")
+		}
 		action.Run(files, suiteId, taskId)
 	}
 }
