@@ -81,7 +81,7 @@ func RunDateFolder() string {
 	return runName
 }
 
-func GetCaseInfo(file string) (int, int, string) {
+func GetCaseInfo(file string) (bool, int, int, string) {
 	var caseId int
 	var productId int
 	var title string
@@ -90,7 +90,7 @@ func GetCaseInfo(file string) (int, int, string) {
 
 	pass := CheckFileContentIsScript(content)
 	if !pass {
-		return caseId, productId, title
+		return false, caseId, productId, title
 	}
 
 	myExp := regexp.MustCompile(`[\S\s]*caseId:\s*([^\n]*?)\s*\n`)
@@ -111,7 +111,7 @@ func GetCaseInfo(file string) (int, int, string) {
 		title = arr[1]
 	}
 
-	return caseId, productId, title
+	return pass, caseId, productId, title
 }
 
 func ReadExpect(file string) [][]string {

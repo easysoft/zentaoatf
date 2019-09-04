@@ -30,10 +30,10 @@ func InputForCheckout(productId *string, moduleId *string, suiteId *string, task
 		productCheck = "*"
 		numb = "1"
 	} else if *suiteId != "" {
-		moduleCheck = "*"
+		suiteCheck = "*"
 		numb = "3"
 	} else if *taskId != "" {
-		moduleCheck = "*"
+		taskCheck = "*"
 		numb = "4"
 	}
 
@@ -41,22 +41,22 @@ func InputForCheckout(productId *string, moduleId *string, suiteId *string, task
 
 	coType = strings.ToLower(coType)
 	if coType == "1" {
-		*productId = GetInput("\\d+", "",
-			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("product_id"))
+		*productId = GetInput("\\d+", *productId,
+			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("product_id")+": "+*productId)
 
 	} else if coType == "2" {
-		*productId = GetInput("\\d+", "",
-			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("product_id"))
+		*productId = GetInput("\\d+", *productId,
+			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("product_id")+": "+*productId)
 
-		*moduleId = GetInput("\\d+", "",
-			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("module_id"))
+		*moduleId = GetInput("\\d+", *moduleId,
+			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("module_id")+": "+*moduleId)
 
 	} else if coType == "3" {
-		*suiteId = GetInput("\\d+", "",
-			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("suite_id"))
+		*suiteId = GetInput("\\d+", *suiteId,
+			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("suite_id")+": "+*suiteId)
 	} else if coType == "4" {
-		*taskId = GetInput("\\d+", "",
-			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("task_id"))
+		*taskId = GetInput("\\d+", *taskId,
+			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("task_id")+": "+*taskId)
 	}
 
 	InputForBool(independentFile, false, "enter_co_independent")

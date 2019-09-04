@@ -27,7 +27,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 	checkpointStepArr []string, expectArr [][]string, skip bool, actualArr [][]string, report *model.TestReport,
 	idx int, total int) {
 
-	caseId, productId, title := zentaoUtils.GetCaseInfo(scriptFile)
+	_, caseId, productId, title := zentaoUtils.GetCaseInfo(scriptFile)
 
 	stepLogs := make([]model.StepLog, 0)
 	caseResult := constant.PASS.String()

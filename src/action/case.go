@@ -7,7 +7,7 @@ import (
 
 func CommitCases(files []string) {
 	for _, file := range files {
-		id, _, title := zentaoUtils.GetCaseInfo(file)
+		_, id, _, title := zentaoUtils.GetCaseInfo(file)
 		zentaoService.CommitCase(id, title)
 	}
 }
