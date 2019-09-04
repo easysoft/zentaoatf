@@ -16,7 +16,7 @@ func Generate(productId string, moduleId string, suiteId string, taskId string,
 
 	CheckRequestConfig()
 
-	if (productId != "") || (moduleId != "" && productId != "") || suiteId != "" || taskId != "" {
+	if ((productId != "") || (moduleId != "" && productId != "") || suiteId != "" || taskId != "") && scriptLang != "" {
 
 	} else {
 		stdinUtils.InputForCheckout(&productId, &moduleId, &suiteId, &taskId,

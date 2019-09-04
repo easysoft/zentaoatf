@@ -144,7 +144,7 @@
     },
     {
       "id": "enter_co_type",
-      "translation": "请选择用例来源\n1. 产品\n2. 模块\n3. 套件\n4. 任务"
+      "translation": "请选择用例来源\n1. 产品 %s\n2. 模块 %s\n3. 套件 %s\n4. 任务 %s"
     },
     {
       "id": "enter_co_independent",

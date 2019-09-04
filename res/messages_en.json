@@ -149,7 +149,7 @@
     },
     {
       "id": "enter_co_type",
-      "translation": "Import test cases from?\n1. Product\n2. Module\n3. Suite\n4. Task"
+      "translation": "Import test cases from?\n1. Product %s\n2. Module %s\n3. Suite %s\n4. Task %s"
     },
     {
       "id": "enter_co_independent",

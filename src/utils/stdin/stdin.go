@@ -16,7 +16,28 @@ import (
 func InputForCheckout(productId *string, moduleId *string, suiteId *string, taskId *string,
 	independentFile *bool, scriptLang *string) {
 
-	coType := GetInput("(1|2|3|4)", "", "enter_co_type")
+	var numb string
+
+	moduleCheck := ""
+	productCheck := ""
+	suiteCheck := ""
+	taskCheck := ""
+
+	if *moduleId != "" {
+		moduleCheck = "*"
+		numb = "2"
+	} else if *productId != "" {
+		productCheck = "*"
+		numb = "1"
+	} else if *suiteId != "" {
+		moduleCheck = "*"
+		numb = "3"
+	} else if *taskId != "" {
+		moduleCheck = "*"
+		numb = "4"
+	}
+
+	coType := GetInput("(1|2|3|4)", numb, "enter_co_type", productCheck, moduleCheck, suiteCheck, taskCheck)
 
 	coType = strings.ToLower(coType)
 	if coType == "1" {
@@ -42,11 +63,11 @@ func InputForCheckout(productId *string, moduleId *string, suiteId *string, task
 
 	numbs, names, labels := langUtils.GetSupportLanguageOptions()
 	fmtParam := strings.Join(labels, "\n")
-	numbStr := GetInput("("+strings.Join(numbs, "|")+")", "enter_co_language", fmtParam)
+	langStr := GetInput("("+strings.Join(numbs, "|")+")", "enter_co_language", fmtParam)
 
-	numb, _ := strconv.Atoi(numbStr)
+	langNumb, _ := strconv.Atoi(langStr)
 
-	*scriptLang = names[numb-1]
+	*scriptLang = names[langNumb-1]
 }
 
 func InputForDir(dir *string, entity string) {
@@ -88,6 +109,8 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 
 		if strings.TrimSpace(ret) == "" {
 			ret = defaultVal
+
+			logUtils.PrintToStdOut(ret, -1)
 		}
 
 		temp := strings.ToLower(ret)

@@ -54,9 +54,6 @@ func main() {
 
 	flagSet.BoolVar(&vari.Verbose, "verbose", false, "")
 
-	//flagSet.StringVar(&caseId, "c", "", "")
-	//flagSet.StringVar(&caseId, "case", "", "")
-
 	var placeholder string
 	flagSet.StringVar(&placeholder, "h", "", "")
 	flagSet.StringVar(&placeholder, "r", "", "")
@@ -116,8 +113,8 @@ func main() {
 	case "help", "-h":
 		logUtils.PrintUsage()
 
-	default: // maybe run
-		if len(os.Args) > 1 { // ignore run param, like 'atf ., atf suite.cs', 'atf -task 1'
+	default: // run
+		if len(os.Args) > 1 {
 			args := []string{os.Args[0], "run"}
 			args = append(args, os.Args[1:]...)
 
