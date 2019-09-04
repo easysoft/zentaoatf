@@ -11,8 +11,8 @@ $>atf.exe up -t 1 -l python               更新编号为1的测试单所含用�
 $>atf.exe run dir1 dir2 tc01.py           执行目录dir1和dir2目录下，以及tc01.py文件的用例。
 $>atf.exe run c:\scripts all.cs           执行all.cs测试套件的用例，脚本在c:\scripts中。
 $>atf.exe logs\19-08-28\result.txt        执行result.txt结果文件中的失败用例。
-$>atf.exe c:\scripts -suite 1             执行禅道系统中编号为1的套件, 缩写-s。
-$>atf.exe c:\scripts -task 1              执行禅道系统中编号为1的任务, 缩写-t。
+$>atf.exe c:\scripts -suite 1             执行禅道系统中编号为1的套件，缩写-s。
+$>atf.exe -task 1                         执行禅道系统中编号为1的任务，脚本在当期目录, 缩写-t。
 
 $>atf.exe ci scripts\tc01.py              将脚本里面修改的用例信息，同步到禅道系统。
 $>atf.exe cr logs\2019-08-28T164819       提交测试结果到禅道系统。
