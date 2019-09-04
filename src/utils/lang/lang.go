@@ -101,6 +101,17 @@ func GetSupportLangageArr() []string {
 	return arr
 }
 
+func GetSupportLangageExtArr() []string {
+	langMap := GetSupportedScriptLang()
+
+	arr := make([]string, 0)
+	for _, val := range langMap {
+		arr = append(arr, val["extName"])
+	}
+
+	return arr
+}
+
 func CheckSupportLangages(scriptLang string) bool {
 	langMap := GetSupportedScriptLang()
 
@@ -114,7 +125,7 @@ func CheckSupportLangages(scriptLang string) bool {
 }
 
 func GetSupportLangageRegx() string {
-	regx := "(" + strings.Join(GetSupportLangageArr(), "|") + ")"
+	regx := "(" + strings.Join(GetSupportLangageExtArr(), "|") + ")"
 
 	return regx
 }
