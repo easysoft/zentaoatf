@@ -4,21 +4,28 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/file"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/fatih/color"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
 func List(cases []string, keywords string) {
-	fmt.Printf("Totally %d test cases \n", len(cases))
+	keywords = strings.TrimSpace(keywords)
 
-	for idx, tc := range cases {
-		Summary(tc, idx, keywords)
+	count := 0
+	for _, tc := range cases {
+		if Summary(tc, keywords) {
+			count++
+		}
 	}
+
+	logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("total_test_case", count), -1)
 }
 
-func Summary(file string, inx int, keywords string) {
+func Summary(file string, keywords string) bool {
 	content := fileUtils.ReadFile(file)
 
 	myExp := regexp.MustCompile(`<<<TC[\S\s]*caseId:([^\n]*)(?:[\S\s]+?)\n+title:([^\n]*)\n`)
@@ -28,20 +35,41 @@ func Summary(file string, inx int, keywords string) {
 		caseId := commonUtils.RemoveBlankLine(arr[1])
 		title := commonUtils.RemoveBlankLine(arr[2])
 
-		if strings.Index(title, keywords) > -1 {
+		_, err := strconv.Atoi(keywords)
+		var pass bool
+
+		if err == nil && keywords == caseId { // int
+			pass = true
+		} else if strings.Index(title, keywords) > -1 {
+			pass = true
+		}
+
+		if pass {
 			fmt.Printf("%s %s \n", caseId, title)
+
+			return true
+		} else {
+			return false
 		}
 	}
+	return false
 }
 
 func View(cases []string, keywords string) {
+	keywords = strings.TrimSpace(keywords)
+	count := 0
+
 	for _, file := range cases {
-		Brief(file, keywords)
+		if Brief(file, keywords) {
+			count++
+		}
 		//Detail(file)
 	}
+
+	logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("total_test_case", count), -1)
 }
 
-func Brief(file string, keywords string) {
+func Brief(file string, keywords string) bool {
 	content := fileUtils.ReadFile(file)
 
 	myExp := regexp.MustCompile(
@@ -62,10 +90,25 @@ func Brief(file string, keywords string) {
 		steps := arr[4]
 		expects := commonUtils.RemoveBlankLine(arr[5])
 
-		if strings.Index(title, keywords) > -1 {
+		_, err := strconv.Atoi(keywords)
+		var pass bool
+
+		if err == nil && keywords == caseId { // int
+			pass = true
+		} else if strings.Index(title, keywords) > -1 {
+			pass = true
+		}
+
+		if pass {
 			logUtils.PrintToStdOut(fmt.Sprintf("%s %s", caseId, title), color.FgCyan)
 			fmt.Printf("Steps: \n%s \n", steps)
 			fmt.Printf("Expects: \n%s\n\n", expects)
+
+			return true
+		} else {
+			return false
 		}
 	}
+
+	return false
 }

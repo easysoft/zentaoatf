@@ -19,4 +19,9 @@ $>atf.exe cr logs\2019-08-28T164819       提交测试结果到禅道系统。
 $>atf.exe cb logs\2019-08-28T164819       提交测试结果中失败用例为缺陷。
 
 $>atf.exe list dir1 .                     列出目录dir1，以及当前目录下的所有脚本文件。
+$>atf.exe list dir1 -k 1                  列出指定路径下，ID为1的脚本。
+$>atf.exe list dir1 -k word               列出指定路径下，标题包含'word'的脚本。
+
 $>atf.exe view tc01.py tc02.py            查看指定路径的测试脚本。
+$>atf.exe view dir1 -k 1                  查看指定路径下，ID为1的脚本。
+$>atf.exe view dir1 -k word               查看指定路径下，标题包含'word'的脚本。
