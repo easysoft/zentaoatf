@@ -208,13 +208,13 @@ func ReadLog(logFile string) (bool, [][]string) {
 func CheckFileIsScript(path string) bool {
 	content := fileUtils.ReadFile(path)
 
-	pass, _ := regexp.MatchString("<<<TC", content)
+	pass := CheckFileContentIsScript(content)
 
 	return pass
 }
 
 func CheckFileContentIsScript(content string) bool {
-	pass, _ := regexp.MatchString("<<<TC", content)
+	pass, _ := regexp.MatchString(`<<<TC\n`, content)
 
 	return pass
 }

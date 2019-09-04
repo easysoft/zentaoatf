@@ -16,25 +16,25 @@ import (
 	"strings"
 )
 
-func GetAllScriptsInDir(filePth string, files *[]string) error {
-	filePth = fileUtils.AbosutePath(filePth)
+func GetAllScriptsInDir(filePthParam string, files *[]string) error {
+	filePthParam = fileUtils.AbosutePath(filePthParam)
 	sep := string(os.PathSeparator)
 
-	if !fileUtils.IsDir(filePth) { // first call, param is file
+	if !fileUtils.IsDir(filePthParam) { // first call, param is file
 		regx := langUtils.GetSupportLangageRegx()
-		pass, _ := regexp.MatchString("^*.\\."+regx+"$", filePth)
+		pass, _ := regexp.MatchString("^*.\\."+regx+"$", filePthParam)
 
 		if pass {
-			pass := zentaoUtils.CheckFileIsScript(filePth)
+			pass := zentaoUtils.CheckFileIsScript(filePthParam)
 			if pass {
-				*files = append(*files, filePth)
+				*files = append(*files, filePthParam)
 			}
 		}
 
 		return nil
 	}
 
-	dir, err := ioutil.ReadDir(filePth)
+	dir, err := ioutil.ReadDir(filePthParam)
 	if err != nil {
 		return err
 	}
@@ -46,14 +46,14 @@ func GetAllScriptsInDir(filePth string, files *[]string) error {
 		}
 
 		if fi.IsDir() { // 目录, 递归遍历
-			GetAllScriptsInDir(filePth+name+sep, files)
+			GetAllScriptsInDir(filePthParam+name+sep, files)
 		} else {
-			path := filePth + name
+			path := filePthParam + name
 			regx := langUtils.GetSupportLangageRegx()
 			pass, _ := regexp.MatchString("^*.\\."+regx+"$", path)
 
 			if pass {
-				pass := zentaoUtils.CheckFileIsScript(filePth)
+				pass = zentaoUtils.CheckFileIsScript(path)
 				if pass {
 					*files = append(*files, path)
 				}
