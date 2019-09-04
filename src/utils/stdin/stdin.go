@@ -63,7 +63,8 @@ func InputForCheckout(productId *string, moduleId *string, suiteId *string, task
 
 	numbs, names, labels := langUtils.GetSupportLanguageOptions()
 	fmtParam := strings.Join(labels, "\n")
-	langStr := GetInput("("+strings.Join(numbs, "|")+")", "enter_co_language", fmtParam)
+
+	langStr := GetInput("("+strings.Join(numbs, "|")+")", "", "enter_co_language", fmtParam)
 
 	langNumb, _ := strconv.Atoi(langStr)
 

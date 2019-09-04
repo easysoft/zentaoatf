@@ -21,7 +21,7 @@ func GetAllScriptsInDir(filePthParam string, files *[]string) error {
 	sep := string(os.PathSeparator)
 
 	if !fileUtils.IsDir(filePthParam) { // first call, param is file
-		regx := langUtils.GetSupportLangageRegx()
+		regx := langUtils.GetSupportLanguageExtRegx()
 
 		pass, _ := regexp.MatchString("^*.\\."+regx+"$", filePthParam)
 
@@ -50,7 +50,7 @@ func GetAllScriptsInDir(filePthParam string, files *[]string) error {
 			GetAllScriptsInDir(filePthParam+name+sep, files)
 		} else {
 			path := filePthParam + name
-			regx := langUtils.GetSupportLangageRegx()
+			regx := langUtils.GetSupportLanguageExtRegx()
 			pass, _ := regexp.MatchString("^*.\\."+regx+"$", path)
 
 			if pass {
@@ -84,7 +84,7 @@ func GetScriptByIdsInDir(dirPth string, idMap map[int]string, files *[]string) e
 		if fi.IsDir() { // 目录, 递归遍历
 			GetScriptByIdsInDir(dirPth+name+sep, idMap, files)
 		} else {
-			regx := langUtils.GetSupportLangageRegx()
+			regx := langUtils.GetSupportLanguageExtRegx()
 			pass, _ := regexp.MatchString("^*.\\."+regx+"$", name)
 
 			if !pass {

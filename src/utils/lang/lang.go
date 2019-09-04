@@ -5,6 +5,7 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/fatih/color"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -12,7 +13,7 @@ import (
 
 var LangMap map[string]map[string]string
 
-func GetSupportedScriptLang() map[string]map[string]string {
+func initSupportedScriptLang() map[string]map[string]string {
 	var once sync.Once
 	once.Do(func() {
 		LangMap = map[string]map[string]string{
@@ -68,7 +69,7 @@ func GetSupportedScriptLang() map[string]map[string]string {
 }
 
 func GetSupportLanguageOptions() ([]string, []string, []string) {
-	arr0 := GetSupportLangageArr()
+	arr0 := GetSupportLanguageArrSort()
 
 	numbs := make([]string, 0)
 	names := make([]string, 0)
@@ -90,46 +91,42 @@ func GetSupportLanguageOptions() ([]string, []string, []string) {
 	return numbs, names, labels
 }
 
-func GetSupportLangageArr() []string {
-	langMap := GetSupportedScriptLang()
-
+func GetSupportLanguageArrSort() []string {
 	arr := make([]string, 0)
-	for lang, _ := range langMap {
+	for lang, _ := range LangMap {
 		arr = append(arr, lang)
 	}
 
+	sort.Strings(arr)
+
 	return arr
 }
 
-func GetSupportLangageExtArr() []string {
-	langMap := GetSupportedScriptLang()
-
+func GetSupportLanguageExtArr() []string {
 	arr := make([]string, 0)
-	for _, val := range langMap {
-		arr = append(arr, val["extName"])
+	for _, key := range GetSupportLanguageArrSort() {
+		arr = append(arr, LangMap[key]["extName"])
 	}
 
 	return arr
 }
 
-func CheckSupportLangages(scriptLang string) bool {
-	langMap := GetSupportedScriptLang()
-
-	if langMap[scriptLang] == nil {
-		langs := strings.Join(GetSupportLangageArr(), ", ")
-		logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("only_support_script_language", langs)+"\n", color.FgRed)
+func CheckSupportLanguages(scriptLang string) bool {
+	if LangMap[scriptLang] == nil {
+		langStr := strings.Join(GetSupportLanguageArrSort(), ", ")
+		logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("only_support_script_language", langStr)+"\n", color.FgRed)
 		return false
 	}
 
 	return true
 }
 
-func GetSupportLangageRegx() string {
-	regx := "(" + strings.Join(GetSupportLangageExtArr(), "|") + ")"
+func GetSupportLanguageExtRegx() string {
+	regx := "(" + strings.Join(GetSupportLanguageExtArr(), "|") + ")"
 
 	return regx
 }
 
 func init() {
-	GetSupportedScriptLang()
+	initSupportedScriptLang()
 }

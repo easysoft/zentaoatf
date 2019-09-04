@@ -99,7 +99,6 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 
 func GenerateTestStepScript(ts model.TestStep, langType string, stepWidth int,
 	steps *[]string, expects *[]string, srcCode *[]string) {
-	LangMap := langUtils.GetSupportedScriptLang()
 
 	isGroup := ts.Type == "group"
 	isCheckPoint := ts.Expect != ""
@@ -147,11 +146,11 @@ func GenerateTestStepScript(ts model.TestStep, langType string, stepWidth int,
 
 	// 处理srcCode
 	if isCheckPoint {
-		codeLine := LangMap[langType]["printGrammar"]
+		codeLine := langUtils.LangMap[langType]["printGrammar"]
 
-		codeLine += fmt.Sprintf("  %s %s: %s\n", LangMap[langType]["commentsTag"], stepIdent, stepExpect)
+		codeLine += fmt.Sprintf("  %s %s: %s\n", langUtils.LangMap[langType]["commentsTag"], stepIdent, stepExpect)
 
-		codeLine += LangMap[langType]["commentsTag"] + "CODE: " + i118Utils.I118Prt.Sprintf("actual_result_here")
+		codeLine += langUtils.LangMap[langType]["commentsTag"] + "CODE: " + i118Utils.I118Prt.Sprintf("actual_result_here")
 
 		*srcCode = append(*srcCode, codeLine)
 	}

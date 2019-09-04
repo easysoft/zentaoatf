@@ -23,7 +23,7 @@ func Generate(productId string, moduleId string, suiteId string, taskId string,
 			&independentFile, &scriptLang)
 	}
 
-	ok := langUtils.CheckSupportLangages(scriptLang)
+	ok := langUtils.CheckSupportLanguages(scriptLang)
 	if !ok {
 		return
 	}
