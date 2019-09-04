@@ -122,7 +122,9 @@ func GetCaseIdsInSuiteFile(name string, fileIdMap *map[int]string) {
 	}
 }
 
-func GetFailedCasesDirectlyFromTestResult(resultFile string, cases *[]string) {
+func GetFailedCasesDirectlyFromTestResult(resultFile string) []string {
+	cases := make([]string, 0)
+
 	extName := path.Ext(resultFile)
 
 	if extName == "."+constant.ExtNameResult {
@@ -135,6 +137,8 @@ func GetFailedCasesDirectlyFromTestResult(resultFile string, cases *[]string) {
 	json.Unmarshal([]byte(content), &report)
 
 	for _, cs := range report.Cases {
-		*cases = append(*cases, cs.Path)
+		cases = append(cases, cs.Path)
 	}
+
+	return cases
 }

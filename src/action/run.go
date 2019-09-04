@@ -40,9 +40,12 @@ func Run(files []string, suiteIdStr string, taskIdStr string) error {
 
 	} else {
 		suite, dir := isRunWithSuiteFile(files)
+		result := isRunWithResultFile(files)
 
 		if suite != "" {
 			cases = getCaseBySuiteFile(suite, dir)
+		} else if result != "" {
+			cases = scriptService.GetFailedCasesDirectlyFromTestResult(result)
 		} else {
 			cases = getCaseByDirAndFile(files)
 		}
@@ -138,4 +141,18 @@ func isRunWithSuiteFile(files []string) (string, string) {
 	}
 
 	return suiteFile, dir
+}
+
+func isRunWithResultFile(files []string) string {
+	var resultFile string
+
+	for _, file := range files {
+		if path.Ext(file) == "."+constant.ExtNameResult {
+			resultFile = file
+
+			return resultFile
+		}
+	}
+
+	return ""
 }
