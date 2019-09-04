@@ -64,7 +64,7 @@ func IsDir(f string) bool {
 }
 
 func AbosutePath(pth string) string {
-	if !path.IsAbs(pth) {
+	if !IsAbosutePath(pth) {
 		pth, _ = filepath.Abs(pth)
 	}
 
@@ -73,6 +73,11 @@ func AbosutePath(pth string) string {
 	}
 
 	return pth
+}
+
+func IsAbosutePath(pth string) bool {
+	return path.IsAbs(pth) ||
+		strings.Index(pth, ":") == 1 // windows
 }
 
 func UpdateDir(pth string) string {
@@ -93,7 +98,7 @@ func GetFilesFromParams(arguments []string) []string {
 				arg = AbosutePath(".")
 			} else if strings.Index(arg, "."+string(os.PathSeparator)) == 0 {
 				arg = AbosutePath(".") + arg[2:]
-			} else if !path.IsAbs(arg) {
+			} else if !IsAbosutePath(arg) {
 				arg = AbosutePath(".") + arg
 			}
 
