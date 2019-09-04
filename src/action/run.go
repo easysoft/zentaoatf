@@ -126,7 +126,7 @@ func isRunWithSuiteFile(files []string) (string, string) {
 		if path.Ext(file) == "."+constant.ExtNameSuite {
 			suiteFile = file
 		} else {
-			if fileUtils.IsDir(file) && dir != "" { // only select the first dir
+			if fileUtils.IsDir(file) && dir == "" { // only select the first dir
 				dir = file
 			}
 		}
@@ -147,7 +147,7 @@ func isRunWithResultFile(files []string) string {
 	var resultFile string
 
 	for _, file := range files {
-		if path.Ext(file) == "."+constant.ExtNameResult {
+		if path.Ext(file) == "."+constant.ExtNameResult || path.Ext(file) == "."+constant.ExtNameJson {
 			resultFile = file
 
 			return resultFile

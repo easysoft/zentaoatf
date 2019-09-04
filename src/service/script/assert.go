@@ -137,7 +137,9 @@ func GetFailedCasesDirectlyFromTestResult(resultFile string) []string {
 	json.Unmarshal([]byte(content), &report)
 
 	for _, cs := range report.Cases {
-		cases = append(cases, cs.Path)
+		if cs.Status != "pass" {
+			cases = append(cases, cs.Path)
+		}
 	}
 
 	return cases

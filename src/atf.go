@@ -107,7 +107,7 @@ func main() {
 			action.View(files, keywords)
 		}
 
-	case "set", "-s":
+	case "set", "-set":
 		action.InputForSet()
 
 	case "help", "-h":
