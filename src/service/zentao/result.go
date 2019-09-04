@@ -9,6 +9,9 @@ import (
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
+	stdinUtils "github.com/easysoft/zentaoatf/src/utils/stdin"
+	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"strconv"
 )
@@ -21,6 +24,13 @@ func CommitResult(resultDir string) {
 
 	for _, cs := range report.Cases {
 		id := cs.Id
+		title := cs.Title
+		status := cs.Status
+
+		confirm := true
+
+		tips := fmt.Sprintf("%d. %s %s", id, title, stringUtils.Ucfirst(status))
+		stdinUtils.InputForBool(&confirm, confirm, "confirm_commit_result", tips)
 
 		requestObj := map[string]interface{}{"case": strconv.Itoa(id), "version": "0"}
 
@@ -50,8 +60,12 @@ func CommitResult(resultDir string) {
 
 		_, ok := client.PostObject(url, requestObj)
 		if ok {
-			resultId := GetLastResult(conf.Url, id)
-			logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("success_to_commit_result", id, resultId)+"\n", -1)
+			logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("success_to_commit_result", id), -1)
+
+			if vari.Verbose {
+				resultId := GetLastResult(conf.Url, id)
+				logUtils.PrintToStdOut(fmt.Sprintf("returned result id = %d", resultId), -1)
+			}
 		}
 	}
 }

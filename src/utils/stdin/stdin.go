@@ -74,8 +74,8 @@ func InputForDir(dir *string, entity string) {
 	*dir = GetInput("is_dir", "", "enter_dir", i118Utils.I118Prt.Sprintf(entity))
 }
 
-func InputForBool(in *bool, defaultVal bool, fmtStr string, fmtParam ...string) {
-	str := GetInput("(yes|no|y|n|)", "", fmtStr, fmtParam)
+func InputForBool(in *bool, defaultVal bool, fmtStr string, fmtParam ...interface{}) {
+	str := GetInput("(yes|no|y|n|)", "", fmtStr, fmtParam...)
 
 	if str == "" {
 		*in = defaultVal
@@ -86,7 +86,6 @@ func InputForBool(in *bool, defaultVal bool, fmtStr string, fmtParam ...string) 
 		} else {
 			msg = "No"
 		}
-
 		logUtils.PrintToStdOut(msg, -1)
 		return
 	}
@@ -107,7 +106,7 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 		logUtils.PrintToStdOut("\n"+msg, color.FgCyan)
 		fmt.Scanln(&ret)
 
-		if strings.TrimSpace(ret) == "" {
+		if strings.TrimSpace(ret) == "" && defaultVal != "" {
 			ret = defaultVal
 
 			logUtils.PrintToStdOut(ret, -1)

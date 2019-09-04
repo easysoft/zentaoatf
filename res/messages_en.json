@@ -117,7 +117,7 @@
     },
     {
       "id": "case_update_confirm",
-      "translation": "Will update case as below:\n Title: %s"
+      "translation": "Will commit case info to Zentao as below:\n Title: %s"
     },
     {
       "id": "enter_dir",
@@ -162,6 +162,10 @@
     {
       "id": "enter_case_id_for_report_bug",
       "translation": "Which case do you want to report bug for?"
+    },
+    {
+      "id": "confirm_commit_result",
+      "translation": "Continue to commit result as below[Y/n]?\n%s"
     },
 
     {
@@ -283,7 +287,7 @@
     },
     {
       "id": "success_to_commit_result",
-      "translation": "Success to commit the results for case %d, resultId is %d"
+      "translation": "Success to commit the results for case %d"
     },
 
     {

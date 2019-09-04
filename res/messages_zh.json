@@ -112,7 +112,7 @@
     },
     {
       "id": "case_update_confirm",
-      "translation": "以下用例信息将被更新:\n 标题: %s"
+      "translation": "以下用例信息将被更新到禅道:\n 标题: %s"
     },
     {
       "id": "enter_dir",
@@ -157,6 +157,10 @@
     {
       "id": "enter_case_id_for_report_bug",
       "translation": "请输入您想提交缺陷的用例编号，输入'exit'退出"
+    },
+    {
+      "id": "confirm_commit_result",
+      "translation": "确认提交以下结果信息[Y/n]?\n%s"
     },
 
     {
@@ -279,7 +283,7 @@
     },
     {
       "id": "success_to_commit_result",
-      "translation": "成功为用例%d提交结果, 返回结果编号%d"
+      "translation": "成功为用例%d提交结果"
     },
 
     {
