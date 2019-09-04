@@ -156,7 +156,7 @@
     },
     {
       "id": "enter_case_id_for_report_bug",
-      "translation": "请输入您想提交缺陷的用例编号，输入'exit'退出"
+      "translation": "请输入您想提交缺陷的用例ID，输入'exit'退出"
     },
     {
       "id": "confirm_commit_result",

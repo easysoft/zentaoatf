@@ -161,7 +161,7 @@
     },
     {
       "id": "enter_case_id_for_report_bug",
-      "translation": "Which case do you want to report bug for?"
+      "translation": "Which case do you want to report bug for? Type 'exit' to quit."
     },
     {
       "id": "confirm_commit_result",
