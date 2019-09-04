@@ -7,7 +7,9 @@ import (
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/file"
 	langUtils "github.com/easysoft/zentaoatf/src/utils/lang"
+	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
+	"github.com/fatih/color"
 	"io/ioutil"
 	"os"
 	"path"
@@ -17,15 +19,20 @@ import (
 )
 
 func GetAllScriptsInDir(filePthParam string, files *[]string) error {
+	logUtils.PrintToStdOut(filePthParam, color.FgRed)
+
 	filePthParam = fileUtils.AbosutePath(filePthParam)
 	sep := string(os.PathSeparator)
 
 	if !fileUtils.IsDir(filePthParam) { // first call, param is file
 		regx := langUtils.GetSupportLangageRegx()
+		logUtils.PrintToStdOut(regx, color.FgRed)
+
 		pass, _ := regexp.MatchString("^*.\\."+regx+"$", filePthParam)
 
 		if pass {
 			pass := zentaoUtils.CheckFileIsScript(filePthParam)
+			logUtils.PrintToStdOut("pass", color.FgRed)
 			if pass {
 				*files = append(*files, filePthParam)
 			}
