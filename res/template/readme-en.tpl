@@ -1,3 +1,2 @@
-- Print '#' in test log to match up with the ones in expects section
-- Write test scripts to replace the lines begin with 'CODE'
-- Pls refer to https://github.com/easysoft/zentaoatf/scripts-demo
+- Log a '#' for each checkpoint to match up with the ones in expects section.
+- Pls refer to https://github.com/easysoft/zentaoatf/scripts-demo.
