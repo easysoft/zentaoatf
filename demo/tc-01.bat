@@ -5,7 +5,7 @@ caseId:         -1
 productId:      0
 title:          Test network connection
 steps:          steps that begin with @ are checkpoints
-   step1           type "ping zentao.com"
+   step1           type "ping zentao.net"
    @step2          check the output contains "TTL"
 
 expects:

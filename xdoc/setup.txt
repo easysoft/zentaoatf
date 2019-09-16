@@ -1,7 +1,7 @@
 go-bindata -o=res/res.go -pkg=res res/ res/doc res/json res/template
 
-CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o release/atf-2.0.0.alpha.exe src/atf.go
-GO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o release/atf-linux-amd64-2.0.0.alpha src/atf.go
-CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o release/atf-mac-amd64-2.0.0.alpha src/atf.go
+CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o release/ztf-2.0.beta1.exe src/ztf.go
+GO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o release/ztf-linux-2.0.beta1 src/ztf.go
+CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o release/ztf-mac-2.0.beta1 src/ztf.go
 
 error_log(json_encode($_POST, JSON_FORCE_OBJECT));
