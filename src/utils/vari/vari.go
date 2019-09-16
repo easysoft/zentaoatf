@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	Config         model.Config
+	Config         = model.Config{}
 	Cui            *gocui.Gui
 	MainViewHeight int
 

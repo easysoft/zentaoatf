@@ -60,8 +60,6 @@ func SaveConfig(language string, url string, account string, password string) er
 
 	cfg.SaveTo(constant.ConfigFile)
 
-	fmt.Printf("=%v=", cfg)
-
 	vari.Config = ReadCurrConfig()
 	return nil
 }
@@ -91,7 +89,7 @@ func ReadCurrConfig() model.Config {
 		return config
 	}
 
-	ini.MapTo(config, constant.ConfigFile)
+	ini.MapTo(&config, constant.ConfigFile)
 
 	config.Url = commonUtils.UpdateUrl(config.Url)
 
@@ -101,8 +99,9 @@ func ReadCurrConfig() model.Config {
 func getInst() model.Config {
 	CheckConfig()
 
-	vari.Config = model.Config{}
-	ini.MapTo(vari.Config, constant.ConfigFile)
+	configFile := constant.ConfigFile
+
+	ini.MapTo(&vari.Config, configFile)
 
 	if vari.Config.Version != constant.ConfigVer { // old config file, re-init
 		if vari.Config.Language != "en" && vari.Config.Language != "zh" {

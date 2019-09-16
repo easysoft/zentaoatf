@@ -129,7 +129,7 @@ func GetZtfDir() string {
 	var dir string
 	arg1 := os.Args[0]
 
-	if strings.Index(arg1, "build") > -1 {
+	if strings.Index(arg1, "build") > -1 || strings.Index(arg1, "bin") > -1 {
 		dir, _ = os.Getwd()
 	} else {
 		dir, _ = filepath.Abs(filepath.Dir(os.Args[0]))
