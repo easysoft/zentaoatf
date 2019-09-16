@@ -108,7 +108,7 @@ func main() {
 		}
 
 	case "set", "-set":
-		action.InputForSet()
+		action.Set()
 
 	case "help", "-h":
 		logUtils.PrintUsage()
@@ -136,13 +136,6 @@ func run(args []string) {
 }
 
 func init() {
-	if len(os.Args) > 1 {
-		if os.Args[1] == "cui" {
-			vari.RunFromCui = true
-		} else {
-			vari.RunFromCui = false
-		}
-	}
-
+	vari.RunFromCui = false
 	configUtils.InitConfig()
 }

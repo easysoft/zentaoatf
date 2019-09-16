@@ -3,6 +3,7 @@ package action
 import (
 	"github.com/easysoft/zentaoatf/src/service/script"
 	"github.com/easysoft/zentaoatf/src/service/zentao"
+	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	"github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/lang"
@@ -14,7 +15,7 @@ import (
 func Generate(productId string, moduleId string, suiteId string, taskId string,
 	independentFile bool, scriptLang string) {
 
-	CheckRequestConfig()
+	configUtils.CheckRequestConfig()
 
 	if ((productId != "") || (moduleId != "" && productId != "") || suiteId != "" || taskId != "") && scriptLang != "" {
 

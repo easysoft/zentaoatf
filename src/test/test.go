@@ -2,10 +2,23 @@ package main
 
 import (
 	"fmt"
-	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
+	"os"
+	"path/filepath"
+	"strings"
 )
 
 func main() {
-	osName := commonUtils.GetOs()
-	fmt.Println(osName)
+
+	var dir string
+
+	arg1 := os.Args[0]
+
+	if strings.Index(arg1, "build") > -1 {
+		dir, _ = os.Getwd()
+	} else {
+		dir, _ = filepath.Abs(filepath.Dir(os.Args[0]))
+	}
+
+	fmt.Println(dir)
+
 }

@@ -104,7 +104,7 @@
 
     {
       "id": "need_config",
-      "translation": "You need to config Zentao site before checkout, type 'exit' to quit."
+      "translation": "You need to config Zentao connection before checkout, type 'exit' to quit."
     },
     {
       "id": "begin_config",
