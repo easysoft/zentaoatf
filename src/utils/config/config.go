@@ -73,25 +73,21 @@ func PrintCurrConfig() {
 }
 
 func ReadCurrConfig() model.Config {
+	config := model.Config{}
+
 	configPath := constant.ConfigFile
-	var config model.Config
+
+	if !fileUtils.FileExist(configPath) {
+		config.Language = "en"
+		i118Utils.InitI118("en")
+
+		return config
+	}
 
 	buf, _ := ioutil.ReadFile(configPath)
 	yaml.Unmarshal(buf, &config)
 
-	if config.Language == "" {
-		config.Language = "en"
-		i118Utils.InitI118("en")
-	}
 	config.Url = commonUtils.UpdateUrl(config.Url)
-
-	if vari.Config.Version != constant.ConfigVer { // old config file, re-init
-		if vari.Config.Language != "en" && vari.Config.Language != "zh" {
-			vari.Config.Language = "en"
-		}
-
-		SaveConfig(vari.Config.Language, vari.Config.Url, vari.Config.Account, vari.Config.Password)
-	}
 
 	return config
 }
@@ -127,10 +123,10 @@ func InputForSet() {
 
 	var configSite bool
 
-	language := ""
-	url := ""
-	account := ""
-	password := ""
+	language := conf.Language
+	url := conf.Url
+	account := conf.Account
+	password := conf.Password
 
 	logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("begin_config"), color.FgCyan)
 
