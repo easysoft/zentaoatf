@@ -147,16 +147,3 @@ func IngoreFile(path string) bool {
 		return false
 	}
 }
-
-func GetZtfDir() string {
-	var dir string
-	arg1 := os.Args[0]
-
-	if strings.Index(arg1, "build") > -1 {
-		dir, _ = os.Getwd()
-	} else {
-		dir, _ = filepath.Abs(filepath.Dir(os.Args[0]))
-	}
-
-	return dir
-}

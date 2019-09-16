@@ -12,12 +12,13 @@ import (
 	stdinUtils "github.com/easysoft/zentaoatf/src/utils/stdin"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
-	"gopkg.in/yaml.v2"
-	"io/ioutil"
+	"gopkg.in/ini.v1"
 	"reflect"
 )
 
 func InitConfig() {
+	constant.ConfigFile = fileUtils.GetZtfDir() + constant.ConfigFile
+
 	// preference from yaml
 	vari.Config = getInst()
 
@@ -35,6 +36,8 @@ func InitScreenSize() {
 }
 
 func SaveConfig(language string, url string, account string, password string) error {
+	fileUtils.MkDirIfNeeded(fileUtils.GetZtfDir() + "conf")
+
 	config := ReadCurrConfig()
 
 	config.Version = constant.ConfigVer
@@ -52,8 +55,12 @@ func SaveConfig(language string, url string, account string, password string) er
 		config.Password = password
 	}
 
-	data, _ := yaml.Marshal(&config)
-	ioutil.WriteFile(constant.ConfigFile, data, 0666)
+	cfg := ini.Empty()
+	cfg.ReflectFrom(&config)
+
+	cfg.SaveTo(constant.ConfigFile)
+
+	fmt.Printf("=%v=", cfg)
 
 	vari.Config = ReadCurrConfig()
 	return nil
@@ -84,8 +91,7 @@ func ReadCurrConfig() model.Config {
 		return config
 	}
 
-	buf, _ := ioutil.ReadFile(configPath)
-	yaml.Unmarshal(buf, &config)
+	ini.MapTo(config, constant.ConfigFile)
 
 	config.Url = commonUtils.UpdateUrl(config.Url)
 
@@ -96,9 +102,7 @@ func getInst() model.Config {
 	CheckConfig()
 
 	vari.Config = model.Config{}
-
-	buf, _ := ioutil.ReadFile(constant.ConfigFile)
-	yaml.Unmarshal(buf, &vari.Config)
+	ini.MapTo(vari.Config, constant.ConfigFile)
 
 	if vari.Config.Version != constant.ConfigVer { // old config file, re-init
 		if vari.Config.Language != "en" && vari.Config.Language != "zh" {

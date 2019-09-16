@@ -1,5 +1,4 @@
-preferences.yaml
-config.yaml
+/conf
 /scripts
 /logs
 /.idea/
