@@ -132,7 +132,7 @@
     },
     {
       "id": "enter_url",
-      "translation": "请输入禅道站点的网站：%s"
+      "translation": "请输入禅道站点网址：%s"
     },
     {
       "id": "enter_account",
