@@ -68,7 +68,7 @@ func initSupportedScriptLang() map[string]map[string]string {
 	return LangMap
 }
 
-func GetSupportLanguageOptions() ([]string, []string, []string) {
+func GetSupportLanguageOptions(scriptExtsInDir []string) ([]string, []string, []string) {
 	arr0 := GetSupportLanguageArrSort()
 
 	numbs := make([]string, 0)
@@ -76,6 +76,15 @@ func GetSupportLanguageOptions() ([]string, []string, []string) {
 	labels := make([]string, 0)
 
 	for idx, lang := range arr0 {
+		ext := LangMap[lang]["extName"]
+
+		if scriptExtsInDir != nil {
+			found := stringUtils.FindInArr(ext, scriptExtsInDir)
+			if !found {
+				continue
+			}
+		}
+
 		numbs = append(numbs, strconv.Itoa(idx+1))
 		names = append(names, lang)
 

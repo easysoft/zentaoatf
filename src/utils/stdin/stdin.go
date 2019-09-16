@@ -61,7 +61,7 @@ func InputForCheckout(productId *string, moduleId *string, suiteId *string, task
 
 	InputForBool(independentFile, false, "enter_co_independent")
 
-	numbs, names, labels := langUtils.GetSupportLanguageOptions()
+	numbs, names, labels := langUtils.GetSupportLanguageOptions(nil)
 	fmtParam := strings.Join(labels, "\n")
 
 	langStr := GetInput("("+strings.Join(numbs, "|")+")", "", "enter_co_language", fmtParam)
