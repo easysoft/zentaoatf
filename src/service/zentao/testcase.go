@@ -241,17 +241,22 @@ func IsMutiLine(step model.TestStep) bool {
 	return false
 }
 
-func GetCaseContent(step model.TestStep, numb string) []string {
+func GetCaseContent(step model.TestStep, numb string, independentFile bool) []string {
 	lines := make([]string, 0)
+
+	expect := step.Expect
+	if independentFile {
+		expect = ""
+	}
 
 	if IsMutiLine(step) {
 		lines = append(lines, fmt.Sprintf("  [%s. steps] \n%s \n  [%s. expects] \n%s",
-			numb, addPrefixSpace(step.Desc, 4), numb, addPrefixSpace(step.Expect, 4)))
+			numb, addPrefixSpace(step.Desc, 4), numb, addPrefixSpace(expect, 4)))
 	} else {
 		if strings.TrimSpace(step.Expect) == "" {
 			lines = append(lines, fmt.Sprintf("  %s. %s", numb, step.Desc))
 		} else {
-			lines = append(lines, fmt.Sprintf("  %s. %s >> %s", numb, step.Desc, step.Expect))
+			lines = append(lines, fmt.Sprintf("  %s. %s >> %s", numb, step.Desc, expect))
 		}
 	}
 
