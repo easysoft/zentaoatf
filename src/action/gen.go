@@ -12,13 +12,12 @@ import (
 	"github.com/fatih/color"
 )
 
-func Generate(productId string, moduleId string, suiteId string, taskId string,
-	independentFile bool, scriptLang string) {
+func Generate(productId string, moduleId string, suiteId string, taskId string, independentFile bool, scriptLang string) {
 
 	configUtils.CheckRequestConfig()
 
 	if ((productId != "") || (moduleId != "" && productId != "") || suiteId != "" || taskId != "") && scriptLang != "" {
-
+		// ready
 	} else {
 		stdinUtils.InputForCheckout(&productId, &moduleId, &suiteId, &taskId,
 			&independentFile, &scriptLang)

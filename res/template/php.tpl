@@ -2,17 +2,10 @@
 
 <?php
 /*
-<<<TC
-
-caseId:         %s
-productId:      %s
-title:          %s
-steps:          %s
-
-expects:
+[case]
 %s
 
-TC;
+[esac]
 */
 
 %s

@@ -12,6 +12,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"sort"
 	"strconv"
+	"strings"
 )
 
 func LoadTestCases(productId string, moduleId string, suiteIdStr string, taskIdStr string) []model.TestCase {
@@ -161,13 +162,13 @@ func GetCaseById(baseUrl string, caseId string) model.TestCase {
 		}
 		sort.Ints(keys)
 
-		stepArr := make([]model.TestStep, 0)
 		for _, key := range keys {
-			step := tc.Steps[key]
-			stepArr = append(stepArr, model.TestStep{Id: step.Id, Desc: step.Desc, Expect: step.Expect,
-				Type: step.Type, Parent: step.Parent})
+			stepTo := tc.Steps[key]
+			testStep := model.TestStep{Id: stepTo.Id, Desc: stepTo.Desc, Expect: stepTo.Expect,
+				Type: stepTo.Type, Parent: stepTo.Parent}
+
+			tc.StepArr = append(tc.StepArr, testStep)
 		}
-		tc.StepArr = stepArr
 
 		return tc
 	}
@@ -230,4 +231,42 @@ func CommitCase(caseId int, title string) {
 			logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("success_to_commit_case", caseId)+"\n", -1)
 		}
 	}
+}
+
+func IsMutiLine(step model.TestStep) bool {
+	if strings.Index(step.Desc, "\n") > -1 || strings.Index(step.Expect, "\n") > -1 {
+		return true
+	}
+
+	return false
+}
+
+func GetCaseContent(step model.TestStep, numb string) []string {
+	lines := make([]string, 0)
+
+	if IsMutiLine(step) {
+		lines = append(lines, fmt.Sprintf("  [%s. steps] \n%s \n  [%s. expects] \n%s",
+			numb, addPrefixSpace(step.Desc, 4), numb, addPrefixSpace(step.Expect, 4)))
+	} else {
+		if strings.TrimSpace(step.Expect) == "" {
+			lines = append(lines, fmt.Sprintf("  %s. %s", numb, step.Desc))
+		} else {
+			lines = append(lines, fmt.Sprintf("  %s. %s >> %s", numb, step.Desc, step.Expect))
+		}
+	}
+
+	return lines
+}
+
+func addPrefixSpace(str string, numb int) string {
+	arr := strings.Split(str, "\r\n")
+
+	ret := make([]string, 0)
+	for _, line := range arr {
+		line = fmt.Sprintf("%*s", numb, " ") + line
+
+		ret = append(ret, line)
+	}
+
+	return strings.Join(ret, "\n")
 }

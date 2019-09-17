@@ -79,6 +79,9 @@ type TestStep struct {
 	Expect string
 	Type   string
 	Parent string
+
+	Children []TestStep
+	Numb     string
 }
 
 type Bug struct {
