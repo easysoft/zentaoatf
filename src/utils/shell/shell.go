@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"fmt"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
-	"github.com/easysoft/zentaoatf/src/utils/log"
 	"io"
 	"os/exec"
 	"path"
@@ -65,7 +64,7 @@ func ExecFile(filePath string) string {
 		if err2 != nil || io.EOF == err2 {
 			break
 		}
-		logUtils.Trace(strings.TrimRight(line, "\n"))
+		//logUtils.Trace(strings.TrimRight(line, "\n"))
 		output = append(output, line)
 	}
 

@@ -26,7 +26,7 @@ var (
 	ZhRes = fmt.Sprintf("res%smessages_zh.json", string(os.PathSeparator))
 
 	ScriptDir = fmt.Sprintf("scripts%s", string(os.PathSeparator))
-	LogDir    = fmt.Sprintf("logs%s", string(os.PathSeparator))
+	LogDir    = fmt.Sprintf("log%s", string(os.PathSeparator))
 
 	LeftWidth = 36
 	MinWidth  = 130

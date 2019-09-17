@@ -214,7 +214,7 @@ func CheckFileIsScript(path string) bool {
 }
 
 func CheckFileContentIsScript(content string) bool {
-	pass, _ := regexp.MatchString(`<<<TC`, content)
+	pass, _ := regexp.MatchString(`\[case\]`, content)
 
 	return pass
 }

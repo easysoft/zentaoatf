@@ -10,9 +10,10 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 )
 
-func CheckCaseResult(scriptFile string, report *model.TestReport, idx int, total int) {
+func CheckCaseResult(scriptFile string, report *model.TestReport, idx int, total int, secs string, pathMaxWidth int) {
 	logFile := zentaoUtils.ScriptToLogName(scriptFile)
 
 	checkpointStepArr := zentaoUtils.ReadCheckpointSteps(scriptFile)
@@ -20,12 +21,12 @@ func CheckCaseResult(scriptFile string, report *model.TestReport, idx int, total
 	skip, logArr := zentaoUtils.ReadLog(logFile)
 
 	language := ""
-	ValidateCaseResult(scriptFile, language, checkpointStepArr, expectArr, skip, logArr, report, idx, total)
+	ValidateCaseResult(scriptFile, language, checkpointStepArr, expectArr, skip, logArr, report, idx, total, secs, pathMaxWidth)
 }
 
 func ValidateCaseResult(scriptFile string, langType string,
 	checkpointStepArr []string, expectArr [][]string, skip bool, actualArr [][]string, report *model.TestReport,
-	idx int, total int) {
+	idx int, total int, secs string, pathMaxWidth int) {
 
 	_, caseId, productId, title := zentaoUtils.GetCaseInfo(scriptFile)
 
@@ -80,7 +81,18 @@ func ValidateCaseResult(scriptFile string, langType string,
 
 	// print case result to console
 	statusColor := logUtils.ColoredStatus(cs.Status)
-	logUtils.Screen(fmt.Sprintf("%d. %s %s, %s (%d/%d)", cs.Id, cs.Title, statusColor, cs.Path, idx+1, total))
+	width := strconv.Itoa(len(strconv.Itoa(total)))
+
+	path := cs.Path
+	lent := utf8.RuneCountInString(path)
+
+	if pathMaxWidth > lent {
+		postFix := strings.Repeat(" ", pathMaxWidth-lent)
+		path += postFix
+	}
+
+	logUtils.Screen(
+		fmt.Sprintf("(%"+width+"d/%d) %s [%s] %d %s (%ss)", idx+1, total, statusColor, path, cs.Id, cs.Title, secs))
 }
 
 func ValidateStepResult(langType string, expectLines []string, actualLines []string) (bool, []model.CheckPointLog) {

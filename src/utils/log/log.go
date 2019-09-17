@@ -55,7 +55,7 @@ func NewLogger(dir string) *logrus.Logger {
 	Logger.Out = ioutil.Discard
 
 	pathMap := lfshook.PathMap{
-		logrus.WarnLevel:  dir + "trace.log",
+		//logrus.WarnLevel:  dir + "trace.log",
 		logrus.ErrorLevel: dir + "result.txt",
 	}
 
@@ -72,9 +72,10 @@ func NewLogger(dir string) *logrus.Logger {
 func Screen(msg string) {
 	PrintTo(msg)
 }
-func Trace(msg string) {
-	Logger.Warnln(msg)
-}
+
+//func Trace(msg string) {
+//	Logger.Warnln(msg)
+//}
 func Result(msg string) {
 	Logger.Errorln(msg)
 }
