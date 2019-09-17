@@ -7,10 +7,10 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/string"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
+	"github.com/mattn/go-runewidth"
 	"regexp"
 	"strconv"
 	"strings"
-	"unicode/utf8"
 )
 
 func CheckCaseResult(scriptFile string, report *model.TestReport, idx int, total int, secs string, pathMaxWidth int) {
@@ -84,7 +84,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 	width := strconv.Itoa(len(strconv.Itoa(total)))
 
 	path := cs.Path
-	lent := utf8.RuneCountInString(path)
+	lent := runewidth.StringWidth(path)
 
 	if pathMaxWidth > lent {
 		postFix := strings.Repeat(" ", pathMaxWidth-lent)

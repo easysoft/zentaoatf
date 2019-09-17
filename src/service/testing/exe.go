@@ -7,8 +7,8 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/shell"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
+	"github.com/mattn/go-runewidth"
 	"time"
-	"unicode/utf8"
 )
 
 func ExeScripts(files []string, report *model.TestReport) {
@@ -23,7 +23,7 @@ func ExeScripts(files []string, report *model.TestReport) {
 
 	pathMaxWidth := 0
 	for _, file := range files {
-		lent := utf8.RuneCountInString(file)
+		lent := runewidth.StringWidth(file)
 		if lent > pathMaxWidth {
 			pathMaxWidth = lent
 		}
