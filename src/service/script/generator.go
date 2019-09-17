@@ -9,6 +9,7 @@ import (
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/lang"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
+	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"os"
 	"regexp"
 	"strconv"
@@ -46,7 +47,8 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 	info := make([]string, 0)
 	steps := make([]string, 0)
 	independentExpects := make([]string, 0)
-	srcCode := make([]string, 0)
+	srcCode := fmt.Sprintf("\n%sCODE: %s", langUtils.LangMap[langType]["commentsTag"],
+		i118Utils.I118Prt.Sprintf("your_codes_here"))
 
 	info = append(info, fmt.Sprintf("title=%s", caseTitle))
 	info = append(info, fmt.Sprintf("cid=%s", caseId))
@@ -56,8 +58,13 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 	stepDisplayMaxWidth := 0
 	computerTestStepWidth(cs.StepArr, &stepDisplayMaxWidth, StepWidth)
 
-	GenerateTestStepAndScript(cs.StepArr, langType, StepWidth, &steps, &independentExpects, &srcCode)
+	GenerateTestStepAndScript(cs.StepArr, &steps, &independentExpects)
 	info = append(info, strings.Join(steps, "\n"))
+
+	if independentFile {
+		expectFile := zentaoUtils.ScriptToExpectName(scriptFile)
+		fileUtils.WriteFile(expectFile, strings.Join(independentExpects, "\n"))
+	}
 
 	if fileUtils.FileExist(scriptFile) { // update title and steps
 		content := fileUtils.ReadFile(scriptFile)
@@ -70,31 +77,15 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 		return
 	}
 
-	temp := fmt.Sprintf("\n%sCODE: %s", langUtils.LangMap[langType]["commentsTag"],
-		i118Utils.I118Prt.Sprintf("your_codes_here"))
-	srcCode = append(srcCode, temp)
-
-	//var expectsTxt string
-	//if !independentFile {
-	//	expectsTxt = strings.Join(independentExpects, "\n")
-	//} else {
-	//	expectFile := zentaoUtils.ScriptToExpectName(scriptFile)
-	//
-	//	expectsTxt = "@file\n"
-	//	fileUtils.WriteFile(expectFile, strings.Join(independentExpects, "\n"))
-	//}
-
 	path := fmt.Sprintf("res%stemplate%s", string(os.PathSeparator), string(os.PathSeparator))
 	template := fileUtils.ReadResData(path + langType + ".tpl")
 
-	content := fmt.Sprintf(template, strings.Join(info, "\n"), strings.Join(srcCode, "\n"))
+	content := fmt.Sprintf(template, strings.Join(info, "\n"), srcCode)
 
 	fileUtils.WriteFile(scriptFile, content)
 }
 
-func GenerateTestStepAndScript(teststeps []model.TestStep, langType string, stepWidth int,
-	steps *[]string, independentExpects *[]string, srcCode *[]string) {
-
+func GenerateTestStepAndScript(teststeps []model.TestStep, steps *[]string, independentExpects *[]string) {
 	var currGroupId string
 
 	groupNo := 0
@@ -111,6 +102,10 @@ func GenerateTestStepAndScript(teststeps []model.TestStep, langType string, step
 				currGroupId = "0"
 				*steps = append(*steps, "[group]")
 				*steps = append(*steps, zentaoService.GetCaseContent(ts, strconv.Itoa(groupNo))...)
+
+				if strings.TrimSpace(ts.Expect) != "" {
+					*independentExpects = append(*independentExpects, ts.Expect)
+				}
 			}
 
 			childNo = 1
@@ -136,6 +131,8 @@ func GenerateTestStepAndScript(teststeps []model.TestStep, langType string, step
 			*steps = append(*steps, "[group]")
 			*steps = append(*steps, zentaoService.GetCaseContent(ts, strconv.Itoa(groupNo))...)
 
+			*independentExpects = append(*independentExpects, ts.Expect)
+
 			childNo = 1
 			continue
 		}
@@ -150,30 +147,12 @@ func GenerateTestStepAndScript(teststeps []model.TestStep, langType string, step
 		}
 
 		*steps = append(*steps, zentaoService.GetCaseContent(ts, numb)...)
+
+		if strings.TrimSpace(ts.Expect) != "" {
+			*independentExpects = append(*independentExpects, ts.Expect)
+		}
 		childNo++
 	}
-
-	//isCheckpoint := ts.Expect != ""
-	// 处理expects
-	//if isCheckpoint {
-	//	expectsLine := ""
-	//
-	//	expectsLine = "# " + stepIdent + " \n"
-	//	expectsLine += "CODE: " + i118Utils.I118Prt.Sprintf("expect_result_here")
-	//
-	//	*independentExpects = append(*independentExpects, expectsLine)
-	//}
-
-	// 处理srcCode
-	//if isCheckpoint {
-	//	codeLine := langUtils.LangMap[langType]["printGrammar"]
-	//
-	//	codeLine += fmt.Sprintf("  %s %s: %s\n", langUtils.LangMap[langType]["commentsTag"], stepIdent, stepExpect)
-	//
-	//	codeLine += langUtils.LangMap[langType]["commentsTag"] + "CODE: " + i118Utils.I118Prt.Sprintf("actual_result_here")
-	//
-	//	*srcCode = append(*srcCode, codeLine)
-	//}
 }
 
 func GenSuite(cases []string) {
