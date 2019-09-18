@@ -92,7 +92,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 	}
 
 	logUtils.Screen(
-		fmt.Sprintf("(%"+width+"d/%d) %s [%s] %d %s (%ss)", idx+1, total, statusColor, path, cs.Id, cs.Title, secs))
+		fmt.Sprintf("(%"+width+"d/%d) %s [%s] %d.%s (%ss)", idx+1, total, statusColor, path, cs.Id, cs.Title, secs))
 }
 
 func ValidateStepResult(langType string, expectLines []string, actualLines []string) (bool, []model.CheckPointLog) {

@@ -93,20 +93,27 @@ func GetCaseInfo(file string) (bool, int, int, string) {
 		return false, caseId, productId, title
 	}
 
-	myExp := regexp.MustCompile(`[\S\s]*caseId:\s*([^\n]*?)\s*\n`)
+	caseInfo := ""
+	myExp := regexp.MustCompile(`(?s)\[case\](.*)\[esac\]`)
 	arr := myExp.FindStringSubmatch(content)
+	if len(arr) > 1 {
+		caseInfo = arr[1]
+	}
+
+	myExp = regexp.MustCompile(`[\S\s]*cid=\s*([^\n]*?)\s*\n`)
+	arr = myExp.FindStringSubmatch(caseInfo)
 	if len(arr) > 1 {
 		caseId, _ = strconv.Atoi(arr[1])
 	}
 
-	myExp = regexp.MustCompile(`[\S\s]*productId:\s*([^\n]*?)\s*\n`)
-	arr = myExp.FindStringSubmatch(content)
+	myExp = regexp.MustCompile(`[\S\s]*pid=\s*([^\n]*?)\s*\n`)
+	arr = myExp.FindStringSubmatch(caseInfo)
 	if len(arr) > 1 {
 		productId, _ = strconv.Atoi(arr[1])
 	}
 
-	myExp = regexp.MustCompile(`[\S\s]*title:\s*([^\n]*?)\s*\n`)
-	arr = myExp.FindStringSubmatch(content)
+	myExp = regexp.MustCompile(`[\S\s]*title=\s*([^\n]*?)\s*\n`)
+	arr = myExp.FindStringSubmatch(caseInfo)
 	if len(arr) > 1 {
 		title = arr[1]
 	}
