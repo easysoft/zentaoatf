@@ -150,7 +150,7 @@ func GetLogDir() string {
 
 	regx := `^\d\d\d$`
 
-	numb := 1
+	numb := 0
 	for _, fi := range dir {
 		if fi.IsDir() {
 			name := fi.Name()
@@ -160,7 +160,7 @@ func GetLogDir() string {
 				name = strings.TrimLeft(name, "0")
 				nm, _ := strconv.Atoi(name)
 
-				if nm > numb {
+				if nm >= numb {
 					numb = nm
 				}
 			}
