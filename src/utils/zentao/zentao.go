@@ -70,7 +70,7 @@ func ScriptToLogName(file string) string {
 
 func ScriptToExpectName(file string) string {
 	fileSuffix := path.Ext(file)
-	expectName := strings.TrimSuffix(file, fileSuffix) + ".ex"
+	expectName := strings.TrimSuffix(file, fileSuffix) + ".exp"
 
 	return expectName
 }
