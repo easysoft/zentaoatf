@@ -72,9 +72,9 @@ func Report(report model.TestReport, pathMaxWidth int) {
 			report.Pass, float32(report.Pass*100/report.Total), i118Utils.I118Prt.Sprintf("pass"),
 			report.Fail, float32(report.Fail*100/report.Total), i118Utils.I118Prt.Sprintf("fail"),
 			report.Skip, float32(report.Skip*100/report.Total), i118Utils.I118Prt.Sprintf("skip"),
-			constant.LogDir+vari.RunDir+"result.txt",
+			constant.LogDir+vari.ZtfDir+"result.txt",
 		))
 
 	json, _ := json.Marshal(report)
-	fileUtils.WriteFile(constant.LogDir+vari.RunDir+"result.json", string(json))
+	fileUtils.WriteFile(vari.LogDir+"result.json", string(json))
 }

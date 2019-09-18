@@ -1,12 +1,17 @@
 package fileUtils
 
 import (
+	"fmt"
 	"github.com/easysoft/zentaoatf/res"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
+	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -136,4 +141,45 @@ func GetZtfDir() string {
 	}
 
 	return UpdateDir(dir)
+}
+
+func GetLogDir() string {
+	path := vari.ZtfDir + constant.LogDir
+
+	dir, _ := ioutil.ReadDir(path)
+
+	regx := `^\d\d\d$`
+
+	numb := 1
+	for _, fi := range dir {
+		if fi.IsDir() {
+			name := fi.Name()
+			pass, _ := regexp.MatchString(regx, name)
+
+			if pass { // 999
+				name = strings.TrimLeft(name, "0")
+				nm, _ := strconv.Atoi(name)
+
+				if nm > numb {
+					numb = nm
+				}
+			}
+		}
+	}
+
+	if numb == 9 {
+		numb = 0
+
+		bak := path[:len(path)-1] + "-bak" + string(os.PathSeparator) + path[len(path):]
+		os.RemoveAll(bak)
+		os.Rename(path, bak)
+	}
+
+	ret := getLogNumb(numb + 1)
+
+	return UpdateDir(path + ret)
+}
+
+func getLogNumb(numb int) string {
+	return fmt.Sprintf("%03s", strconv.Itoa(numb))
 }

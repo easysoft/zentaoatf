@@ -7,6 +7,7 @@ import (
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/string"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/mattn/go-runewidth"
 	"regexp"
@@ -15,11 +16,9 @@ import (
 )
 
 func CheckCaseResult(scriptFile string, report *model.TestReport, idx int, total int, secs string, pathMaxWidth int) {
-	logFile := zentaoUtils.ScriptToLogName(scriptFile)
-
 	checkpointStepArr := zentaoUtils.ReadCheckpointSteps(scriptFile)
 	expectArr := zentaoUtils.ReadExpect(scriptFile)
-	skip, logArr := zentaoUtils.ReadLog(logFile)
+	skip, logArr := zentaoUtils.ReadLog(vari.LogDir + "log.txt")
 
 	language := ""
 	ValidateCaseResult(scriptFile, language, checkpointStepArr, expectArr, skip, logArr, report, idx, total, secs, pathMaxWidth)

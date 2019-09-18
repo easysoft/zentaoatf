@@ -3,17 +3,14 @@ package testingService
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
-	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/shell"
-	"github.com/easysoft/zentaoatf/src/utils/zentao"
+	"strings"
 	"time"
 )
 
 func ExeScripts(files []string, report *model.TestReport, pathMaxWidth int) {
-	logUtils.InitLog(zentaoUtils.ScriptToLogDir())
-
 	//msg := i118Utils.I118Prt.Sprint("start_execution")
 	//msg = logUtils.GetWholeLine(msg, "=")
 	//logUtils.Trace(msg)
@@ -40,25 +37,25 @@ func ExeScripts(files []string, report *model.TestReport, pathMaxWidth int) {
 }
 
 func ExeScript(file string, report *model.TestReport, idx int, total int, pathMaxWidth int) {
-	logFile := zentaoUtils.ScriptToLogName(file)
-
 	startTime := time.Now()
 
-	//msg := i118Utils.I118Prt.Sprintf("start_case", file, startTime.Format("2006-01-02 15:04:05"))
-	//logUtils.Trace(logUtils.GetWholeLine(msg, "-"))
+	logUtils.Log("===start " + file + " at " + startTime.Format("2006-01-02 15:04:05"))
 
 	output := shellUtils.ExecFile(file)
-	fileUtils.WriteFile(logFile, output)
+	output = strings.Trim(output, "\n")
+
+	if output != "" {
+		logUtils.Log(output)
+	}
 
 	entTime := time.Now()
 	secs := fmt.Sprintf("%.2f", float32(entTime.Sub(startTime)/time.Second))
 
 	CheckCaseResult(file, report, idx, total, secs, pathMaxWidth)
 
-	//msg = i118Utils.I118Prt.Sprintf("end_case", file, entTime.Format("2006-01-02 15:04:05"), secs)
-	//logUtils.Trace(logUtils.GetWholeLine(msg, "-"))
-	//
-	//if idx < total-1 {
-	//	logUtils.Trace("")
-	//}
+	logUtils.Log("===end " + file + " at " + entTime.Format("2006-01-02 15:04:05"))
+
+	if idx < total-1 {
+		logUtils.Log("")
+	}
 }

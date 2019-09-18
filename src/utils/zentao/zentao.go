@@ -50,24 +50,6 @@ func GenApiUri(module string, methd string, param string) string {
 	return ""
 }
 
-func ScriptToLogDir() string {
-	logDir := vari.WorkDir + constant.LogDir
-	fileUtils.MkDirIfNeeded(logDir)
-
-	return logDir + vari.RunDir
-}
-
-func ScriptToLogName(file string) string {
-	logDir := vari.WorkDir + constant.LogDir
-	fileUtils.MkDirIfNeeded(logDir)
-
-	nameWithSuffix := commonUtils.Base(file)
-
-	logFile := logDir + vari.RunDir + nameWithSuffix + ".log"
-
-	return logFile
-}
-
 func ScriptToExpectName(file string) string {
 	fileSuffix := path.Ext(file)
 	expectName := strings.TrimSuffix(file, fileSuffix) + ".exp"

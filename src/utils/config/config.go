@@ -17,7 +17,8 @@ import (
 )
 
 func InitConfig() {
-	constant.ConfigFile = fileUtils.GetZtfDir() + constant.ConfigFile
+	vari.ZtfDir = fileUtils.GetZtfDir()
+	constant.ConfigFile = vari.ZtfDir + constant.ConfigFile
 
 	// preference from yaml
 	vari.Config = getInst()

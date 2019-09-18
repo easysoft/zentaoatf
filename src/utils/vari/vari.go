@@ -12,8 +12,8 @@ var (
 	MainViewHeight int
 
 	RunMode    constant.RunMode
-	WorkDir    string
-	RunDir     string
+	ZtfDir     string
+	LogDir     string
 	RunFromCui bool
 
 	SessionVar  string

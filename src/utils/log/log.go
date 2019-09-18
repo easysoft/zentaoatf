@@ -1,9 +1,9 @@
 package logUtils
 
 import (
-	"fmt"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/easysoft/zentaoatf/src/utils/i118"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
@@ -12,22 +12,6 @@ import (
 )
 
 var Logger *logrus.Logger
-
-func GetWholeLine(msg string, char string) string {
-	//prefixLen := (vari.ScreenWidth - utf8.RuneCountInString(msg)) / 2
-	//if prefixLen <= 0 { // no width in debug mode
-	//	prefixLen = 6
-	//}
-	//postfixLen := vari.ScreenWidth - utf8.RuneCountInString(msg) - prefixLen
-	//if postfixLen <= 0 { // no width in debug mode
-	//	postfixLen = 6
-	//}
-
-	preFixStr := strings.Repeat(char, 6)
-	postFixStr := strings.Repeat(char, 0)
-
-	return fmt.Sprintf("%s%s%s", preFixStr, msg, postFixStr)
-}
 
 func ColoredStatus(status string) string {
 	temp := strings.ToLower(status)
@@ -44,8 +28,8 @@ func ColoredStatus(status string) string {
 	return status
 }
 
-func NewLogger(dir string) *logrus.Logger {
-	dir = fileUtils.UpdateDir(dir)
+func InitLogger() *logrus.Logger {
+	vari.LogDir = fileUtils.GetLogDir()
 
 	if Logger != nil {
 		return Logger
@@ -55,8 +39,8 @@ func NewLogger(dir string) *logrus.Logger {
 	Logger.Out = ioutil.Discard
 
 	pathMap := lfshook.PathMap{
-		//logrus.WarnLevel:  dir + "trace.log",
-		logrus.ErrorLevel: dir + "result.txt",
+		logrus.WarnLevel:  vari.LogDir + "log.txt",
+		logrus.ErrorLevel: vari.LogDir + "result.txt",
 	}
 
 	Logger.Hooks.Add(lfshook.NewHook(
@@ -72,6 +56,9 @@ func NewLogger(dir string) *logrus.Logger {
 func Screen(msg string) {
 	PrintTo(msg)
 }
+func Log(msg string) {
+	Logger.Warnln(msg)
+}
 func Result(msg string) {
 	Logger.Errorln(msg)
 }
@@ -79,10 +66,6 @@ func Result(msg string) {
 func ScreenAndResult(msg string) {
 	Screen(msg)
 	Result(msg)
-}
-
-func InitLog(dir string) {
-	Logger = NewLogger(dir)
 }
 
 type MyFormatter struct {

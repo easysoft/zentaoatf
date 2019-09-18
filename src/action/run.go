@@ -11,16 +11,13 @@ import (
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
-	"github.com/easysoft/zentaoatf/src/utils/vari"
-	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/mattn/go-runewidth"
 	"path"
 	"strconv"
 )
 
 func Run(files []string, suiteIdStr string, taskIdStr string) error {
-	vari.WorkDir = fileUtils.AbosutePath(".")
-	vari.RunDir = zentaoUtils.RunDateFolder()
+	logUtils.InitLogger()
 
 	cases := make([]string, 0)
 
