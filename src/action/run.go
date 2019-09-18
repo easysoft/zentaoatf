@@ -13,6 +13,7 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
+	"github.com/mattn/go-runewidth"
 	"path"
 	"strconv"
 )
@@ -115,8 +116,16 @@ func runCases(cases []string) {
 	var report = model.TestReport{Env: commonUtils.GetOs(),
 		Pass: 0, Fail: 0, Total: 0, Cases: make([]model.CaseLog, 0)}
 
-	testingService.ExeScripts(cases, &report)
-	testingService.Report(report)
+	pathMaxWidth := 0
+	for _, file := range cases {
+		lent := runewidth.StringWidth(file)
+		if lent > pathMaxWidth {
+			pathMaxWidth = lent
+		}
+	}
+
+	testingService.ExeScripts(cases, &report, pathMaxWidth)
+	testingService.Report(report, pathMaxWidth)
 }
 
 func isRunWithSuiteFile(files []string) (string, string) {

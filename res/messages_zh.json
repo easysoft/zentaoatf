@@ -217,6 +217,15 @@
       "translation": "结束执行。"
     },
     {
+      "id": "found_scripts",
+      "translation": "发现%d个脚本"
+    },
+    {
+      "id": "failed_scripts",
+      "translation": "失败用例："
+    },
+
+    {
       "id": "start_case",
       "translation": "开始用例 %s %s。"
     },
@@ -227,8 +236,9 @@
 
     {
       "id": "run_scripts",
-      "translation": "运行脚本'%s'于%s操作系统。"
+      "translation": "执行%d个用例，耗时%d秒。%d(%.1f%%) %s，%d(%.1f%%) %s，%d(%.1f%%) %s。报告%s。"
     },
+
     {
       "id": "time_from_to",
       "translation": "从%s到%s, 耗时%d秒。"

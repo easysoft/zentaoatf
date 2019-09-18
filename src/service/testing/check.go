@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils/const"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/string"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
@@ -91,8 +92,9 @@ func ValidateCaseResult(scriptFile string, langType string,
 		path += postFix
 	}
 
-	logUtils.Screen(
-		fmt.Sprintf("(%"+width+"d/%d) %s [%s] %d.%s (%ss)", idx+1, total, statusColor, path, cs.Id, cs.Title, secs))
+	format := "(%" + width + "d/%d) %s [%s] %d.%s (%ss)"
+	logUtils.Screen(fmt.Sprintf(format, idx+1, total, statusColor, path, cs.Id, cs.Title, secs))
+	logUtils.Result(fmt.Sprintf(format, idx+1, total, i118Utils.I118Prt.Sprintf(cs.Status), path, cs.Id, cs.Title, secs))
 }
 
 func ValidateStepResult(langType string, expectLines []string, actualLines []string) (bool, []model.CheckPointLog) {

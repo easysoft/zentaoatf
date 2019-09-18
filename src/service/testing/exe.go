@@ -4,30 +4,26 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/shell"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
-	"github.com/mattn/go-runewidth"
 	"time"
 )
 
-func ExeScripts(files []string, report *model.TestReport) {
+func ExeScripts(files []string, report *model.TestReport, pathMaxWidth int) {
 	logUtils.InitLog(zentaoUtils.ScriptToLogDir())
 
 	//msg := i118Utils.I118Prt.Sprint("start_execution")
 	//msg = logUtils.GetWholeLine(msg, "=")
 	//logUtils.Trace(msg)
 
-	startTime := time.Now().Unix()
+	now := time.Now()
+	startTime := now.Unix()
 	report.StartTime = startTime
 
-	pathMaxWidth := 0
-	for _, file := range files {
-		lent := runewidth.StringWidth(file)
-		if lent > pathMaxWidth {
-			pathMaxWidth = lent
-		}
-	}
+	logUtils.ScreenAndResult(now.Format("2006-01-02 15:04:05") + " " +
+		i118Utils.I118Prt.Sprintf("found_scripts", len(files)) + "\n")
 
 	for idx, file := range files {
 		ExeScript(file, report, idx, len(files), pathMaxWidth)

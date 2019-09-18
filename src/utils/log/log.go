@@ -72,16 +72,13 @@ func NewLogger(dir string) *logrus.Logger {
 func Screen(msg string) {
 	PrintTo(msg)
 }
-
-//func Trace(msg string) {
-//	Logger.Warnln(msg)
-//}
 func Result(msg string) {
 	Logger.Errorln(msg)
 }
-func TraceAndResult(msg string) {
-	Logger.Warnln(msg)
-	Logger.Errorln(msg)
+
+func ScreenAndResult(msg string) {
+	Screen(msg)
+	Result(msg)
 }
 
 func InitLog(dir string) {

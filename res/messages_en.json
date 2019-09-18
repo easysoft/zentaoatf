@@ -227,6 +227,15 @@
       "translation": "End Execution"
     },
     {
+      "id": "found_scripts",
+      "translation": "Found %d scripts"
+    },
+    {
+      "id": "failed_scripts",
+      "translation": "Failed Scripts:"
+    },
+
+    {
       "id": "start_case",
       "translation": "Start Case %s at %s"
     },
@@ -236,11 +245,7 @@
     },
     {
       "id": "run_scripts",
-      "translation": "Run scripts in folder '%s' on %s OS."
-    },
-    {
-      "id": "time_from_to",
-      "translation": "From %s to %s, spend %d secs."
+      "translation": "Run scripts %d scripts in %d secs, %d(%.1f%%) %s, %d(%.1f%%) %s, %d(%.1f%%) %s. Report %s"
     },
 
     {
