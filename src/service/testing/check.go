@@ -4,21 +4,20 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils/const"
-	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
-	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
+	"github.com/easysoft/zentaoatf/src/utils/i118"
+	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/string"
-	"github.com/easysoft/zentaoatf/src/utils/vari"
-	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
+	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/mattn/go-runewidth"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
-func CheckCaseResult(scriptFile string, report *model.TestReport, idx int, total int, secs string, pathMaxWidth int) {
+func CheckCaseResult(scriptFile string, logs string, report *model.TestReport, idx int, total int, secs string, pathMaxWidth int) {
 	cpStepArr, expectArr := zentaoUtils.ReadCheckpoints(scriptFile)
 
-	skip, logArr := zentaoUtils.ReadLog(vari.LogDir + "log.txt")
+	skip, logArr := zentaoUtils.ReadLogArr(logs)
 
 	language := ""
 	ValidateCaseResult(scriptFile, language, cpStepArr, expectArr, skip, logArr, report, idx, total, secs, pathMaxWidth)

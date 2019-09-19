@@ -4,12 +4,17 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/hex"
-	"encoding/json"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
-	"os"
 	"strings"
 	"unicode"
 )
+
+func TrimAll(str string) string {
+	str = strings.Trim(str, "\n")
+	str = strings.TrimSpace(str)
+
+	return str
+}
 
 func Ucfirst(str string) string {
 	for i, v := range str {
@@ -33,19 +38,6 @@ func Lcfirst(str string) string {
 	return ""
 }
 
-func PathSimple(str string) string {
-	sep := string(os.PathSeparator)
-	arr := strings.Split(str, sep)
-
-	if len(arr) > 3 {
-		return strings.Join(arr[len(arr)-3:], sep)
-	} else {
-		return str
-	}
-
-	return ""
-}
-
 func U2s(form string) (to string, err error) {
 	bs, err := hex.DecodeString(strings.Replace(form, `\u`, ``, -1))
 	if err != nil {
@@ -64,11 +56,6 @@ func BoolToPass(b bool) string {
 	} else {
 		return constant.FAIL.String()
 	}
-}
-
-func StructToStr(obj interface{}) string {
-	val, _ := json.Marshal(obj)
-	return string(val)
 }
 
 func FindInArr(str string, arr []string) bool {

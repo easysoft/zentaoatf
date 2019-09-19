@@ -8,6 +8,7 @@ import (
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/lang"
+	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"os"
@@ -104,7 +105,7 @@ func generateTestStepAndScript(teststeps []model.TestStep, steps *[]string, inde
 				*steps = append(*steps, zentaoService.GetCaseContent(ts, strconv.Itoa(groupNo), independentFile)...)
 
 				if independentFile && strings.TrimSpace(ts.Expect) != "" {
-					*independentExpects = append(*independentExpects, ">>\n"+ts.Expect)
+					*independentExpects = append(*independentExpects, getExcepts(ts.Expect))
 				}
 			}
 
@@ -132,7 +133,7 @@ func generateTestStepAndScript(teststeps []model.TestStep, steps *[]string, inde
 			*steps = append(*steps, zentaoService.GetCaseContent(ts, strconv.Itoa(groupNo), independentFile)...)
 
 			if independentFile && strings.TrimSpace(ts.Expect) != "" {
-				*independentExpects = append(*independentExpects, ">>\n"+ts.Expect)
+				*independentExpects = append(*independentExpects, getExcepts(ts.Expect))
 			}
 
 			childNo = 1
@@ -151,7 +152,7 @@ func generateTestStepAndScript(teststeps []model.TestStep, steps *[]string, inde
 		*steps = append(*steps, zentaoService.GetCaseContent(ts, numb, independentFile)...)
 
 		if independentFile && strings.TrimSpace(ts.Expect) != "" {
-			*independentExpects = append(*independentExpects, ">>\n"+ts.Expect)
+			*independentExpects = append(*independentExpects, getExcepts(ts.Expect))
 		}
 		childNo++
 	}
@@ -171,4 +172,16 @@ func computerTestStepWidth(steps []model.TestStep, stepSDisplayMaxWidth *int, st
 		}
 	}
 	*stepSDisplayMaxWidth += stepWidth // prefix space and @step
+}
+
+func getExcepts(str string) string {
+	str = stringUtils.TrimAll(str)
+
+	arr := strings.Split(str, "\n")
+
+	if len(arr) == 1 {
+		return ">> " + str
+	} else {
+		return ">>\n" + str
+	}
 }

@@ -51,7 +51,7 @@ func (c ResultStatus) String() string {
 	case FAIL:
 		return "fail"
 	case SKIP:
-		return "n/a"
+		return "skip"
 	case BLOCKED:
 		return "blocked"
 	}

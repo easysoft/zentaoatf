@@ -11,10 +11,6 @@ import (
 )
 
 func ExeScripts(files []string, report *model.TestReport, pathMaxWidth int) {
-	//msg := i118Utils.I118Prt.Sprint("start_execution")
-	//msg = logUtils.GetWholeLine(msg, "=")
-	//logUtils.Trace(msg)
-
 	now := time.Now()
 	startTime := now.Unix()
 	report.StartTime = startTime
@@ -25,9 +21,6 @@ func ExeScripts(files []string, report *model.TestReport, pathMaxWidth int) {
 	for idx, file := range files {
 		ExeScript(file, report, idx, len(files), pathMaxWidth)
 	}
-
-	//msg = i118Utils.I118Prt.Sprint("end_execution")
-	//logUtils.Trace(logUtils.GetWholeLine(msg, "=") + "\n")
 
 	endTime := time.Now().Unix()
 	secs := endTime - startTime
@@ -40,20 +33,22 @@ func ExeScript(file string, report *model.TestReport, idx int, total int, pathMa
 	startTime := time.Now()
 
 	logUtils.Log("===start " + file + " at " + startTime.Format("2006-01-02 15:04:05"))
+	logs := ""
 
 	output := shellUtils.ExecFile(file)
 	output = strings.Trim(output, "\n")
 
 	if output != "" {
 		logUtils.Log(output)
+		logs = output
 	}
 
 	entTime := time.Now()
 	secs := fmt.Sprintf("%.2f", float32(entTime.Sub(startTime)/time.Second))
 
-	CheckCaseResult(file, report, idx, total, secs, pathMaxWidth)
-
 	logUtils.Log("===end " + file + " at " + entTime.Format("2006-01-02 15:04:05"))
+
+	CheckCaseResult(file, logs, report, idx, total, secs, pathMaxWidth)
 
 	if idx < total-1 {
 		logUtils.Log("")

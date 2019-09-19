@@ -192,17 +192,21 @@ func readExpectIndependentArr(content string) [][]string {
 	for idx, line := range lines {
 		line = strings.TrimSpace(line)
 
-		if line == ">>" {
-			if idx > 0 {
-				ret = append(ret, cpArr)
-			}
-
+		if line == ">>" { // more than one line
 			cpArr = make([]string, 0)
-		} else {
+		} else if strings.Index(line, ">>") == 0 { // single line
+			line = strings.Replace(line, ">>", "", -1)
+			line = strings.TrimSpace(line)
+
+			cpArr = append(cpArr, line)
+			ret = append(ret, cpArr)
+			cpArr = make([]string, 0)
+		} else { // under >>
 			cpArr = append(cpArr, line)
 
-			if idx == len(lines)-1 {
+			if idx == len(lines)-1 || strings.Index(lines[idx+1], ">>") > -1 {
 				ret = append(ret, cpArr)
+				cpArr = make([]string, 0)
 			}
 		}
 	}
@@ -210,26 +214,34 @@ func readExpectIndependentArr(content string) [][]string {
 	return ret
 }
 
-func GenLogArr(str string) (bool, [][]string) {
-	skip, arr := GenArr(str, true)
-	return skip, arr
-}
-func GenArr(str string, checkSkip bool) (bool, [][]string) {
-	ret := make([][]string, 0)
-	indx := -1
-	for _, line := range strings.Split(str, "\n") {
-		line := strings.TrimSpace(line)
+func ReadLogArr(content string) (bool, [][]string) {
+	lines := strings.Split(content, "\n")
 
-		if checkSkip && strings.ToLower(line) == "skip" {
+	ret := make([][]string, 0)
+	var cpArr []string
+
+	for idx, line := range lines {
+		line = strings.TrimSpace(line)
+
+		if line == "skip" {
 			return true, nil
 		}
 
-		if strings.Index(line, "#") == 0 {
-			ret = append(ret, make([]string, 0))
-			indx++
-		} else if indx > -1 {
-			if len(line) > 0 && indx < len(ret) {
-				ret[indx] = append(ret[indx], line)
+		if line == ">>" { // more than one line
+			cpArr = make([]string, 0)
+		} else if strings.Index(line, ">>") == 0 { // single line
+			line = strings.Replace(line, ">>", "", -1)
+			line = strings.TrimSpace(line)
+
+			cpArr = append(cpArr, line)
+			ret = append(ret, cpArr)
+			cpArr = make([]string, 0)
+		} else { // under >>
+			cpArr = append(cpArr, line)
+
+			if idx == len(lines)-1 || strings.Index(lines[idx+1], ">>") > -1 {
+				ret = append(ret, cpArr)
+				cpArr = make([]string, 0)
 			}
 		}
 	}
@@ -237,12 +249,38 @@ func GenArr(str string, checkSkip bool) (bool, [][]string) {
 	return false, ret
 }
 
-func ReadLog(logFile string) (bool, [][]string) {
-	str := fileUtils.ReadFile(logFile)
-
-	skip, ret := GenLogArr(str)
-	return skip, ret
-}
+//func ReadLog(logFile string) (bool, [][]string) {
+//	str := fileUtils.ReadFile(logFile)
+//
+//	skip, ret := GenLogArr(str)
+//	return skip, ret
+//}
+//func GenLogArr(str string) (bool, [][]string) {
+//	skip, arr := GenArr(str, true)
+//	return skip, arr
+//}
+//func GenArr(str string, checkSkip bool) (bool, [][]string) {
+//	ret := make([][]string, 0)
+//	idx := -1
+//	for _, line := range strings.Split(str, "\n") {
+//		line := strings.TrimSpace(line)
+//
+//		if checkSkip && strings.ToLower(line) == "skip" {
+//			return true, nil
+//		}
+//
+//		if strings.Index(line, "#") == 0 {
+//			ret = append(ret, make([]string, 0))
+//			idx++
+//		} else if idx > -1 {
+//			if len(line) > 0 && idx < len(ret) {
+//				ret[idx] = append(ret[idx], line)
+//			}
+//		}
+//	}
+//
+//	return false, ret
+//}
 
 func CheckFileIsScript(path string) bool {
 	content := fileUtils.ReadFile(path)
