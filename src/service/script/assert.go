@@ -16,6 +16,16 @@ import (
 	"strings"
 )
 
+func GetCaseByDirAndFile(files []string) []string {
+	cases := make([]string, 0)
+
+	for _, file := range files {
+		GetAllScriptsInDir(file, &cases)
+	}
+
+	return cases
+}
+
 func GetAllScriptsInDir(filePthParam string, files *[]string) error {
 	filePthParam = fileUtils.AbosutePath(filePthParam)
 	sep := string(os.PathSeparator)

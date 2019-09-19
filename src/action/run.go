@@ -46,7 +46,7 @@ func Run(files []string, suiteIdStr string, taskIdStr string) error {
 		} else if result != "" {
 			cases = scriptService.GetFailedCasesDirectlyFromTestResult(result)
 		} else {
-			cases = getCaseByDirAndFile(files)
+			cases = scriptService.GetCaseByDirAndFile(files)
 		}
 	}
 
@@ -95,16 +95,6 @@ func getCaseBySuiteFile(file string, dir string) []string {
 
 	scriptService.GetCaseIdsInSuiteFile(file, &caseIdMap)
 	scriptService.GetScriptByIdsInDir(dir, caseIdMap, &cases)
-
-	return cases
-}
-
-func getCaseByDirAndFile(files []string) []string {
-	cases := make([]string, 0)
-
-	for _, file := range files {
-		scriptService.GetAllScriptsInDir(file, &cases)
-	}
 
 	return cases
 }

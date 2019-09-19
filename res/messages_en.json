@@ -329,6 +329,15 @@
       "id": "help_exit",
       "message": "",
       "translation": "CTRL+C: Exit"
+    },
+
+    {
+      "id": "success_to_clean_logs",
+      "translation": "Success to clean all logs."
+    },
+    {
+      "id": "success_sort_steps",
+      "translation": "Success to sort steps for %d scripts."
     }
   ]
 }

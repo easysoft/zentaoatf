@@ -110,6 +110,15 @@ func main() {
 	case "set", "-set":
 		action.Set()
 
+	case "sort", "-sort", "-s":
+		files := fileUtils.GetFilesFromParams(os.Args[2:])
+		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
+			action.Sort(files)
+		}
+
+	case "clean", "-clean", "-c":
+		action.Clean()
+
 	case "help", "-h":
 		logUtils.PrintUsage()
 

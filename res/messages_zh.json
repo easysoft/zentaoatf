@@ -333,6 +333,15 @@
     {
       "id": "help_exit",
       "translation": "CTRL+C: 退出"
+    },
+
+    {
+      "id": "success_to_clean_logs",
+      "translation": "成功删除所有日志。"
+    },
+    {
+      "id": "success_sort_steps",
+      "translation": "成功对%d个脚本进行步骤重排。"
     }
   ]
 }
