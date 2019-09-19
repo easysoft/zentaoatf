@@ -82,6 +82,8 @@ type TestStep struct {
 
 	Children []TestStep
 	Numb     string
+
+	MutiLine bool
 }
 
 type Bug struct {

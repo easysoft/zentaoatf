@@ -87,74 +87,99 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 }
 
 func generateTestStepAndScript(teststeps []model.TestStep, steps *[]string, independentExpects *[]string, independentFile bool) {
-	var currGroupId string
+	nestedSteps := make([]model.TestStep, 0)
+	currGroup := model.TestStep{}
+	idx := 0
+	for true {
+		if idx >= len(teststeps) {
+			break
+		}
 
-	groupNo := 0
-	childNo := 1
-	for idx, ts := range teststeps {
-		if idx == 0 { // file start, new group
-			groupNo++
-			*steps = append(*steps, "")
+		ts := teststeps[idx]
+		if ts.Parent == "0" && ts.Type != "group" { // flat step
+			currGroup = model.TestStep{Id: "-1", Desc: "group", Children: make([]model.TestStep, 0)}
+			currGroup.Children = append(currGroup.Children, ts)
+			idx++
 
-			if ts.Type == "group" {
-				currGroupId = ts.Id
-				*steps = append(*steps, fmt.Sprintf("[1. %s]", ts.Desc))
-			} else {
-				currGroupId = "0"
-				*steps = append(*steps, "[group]")
-				*steps = append(*steps, zentaoService.GetCaseContent(ts, strconv.Itoa(groupNo), independentFile)...)
+			mutiLine := false
+			for true {
+				if idx >= len(teststeps) {
+					currGroup.MutiLine = mutiLine
+					nestedSteps = append(nestedSteps, currGroup)
+					break
+				}
 
-				if independentFile && strings.TrimSpace(ts.Expect) != "" {
-					*independentExpects = append(*independentExpects, getExcepts(ts.Expect))
+				child := teststeps[idx]
+				if child.Type != "group" { // flat step
+					if !mutiLine {
+						mutiLine = zentaoService.IsMutiLine(child)
+					}
+
+					currGroup.Children = append(currGroup.Children, child)
+				} else { // found a group step
+					currGroup.MutiLine = mutiLine
+					nestedSteps = append(nestedSteps, currGroup)
+					break
+				}
+				idx++
+			}
+		} else if ts.Type == "group" {
+			currGroup = model.TestStep{Desc: ts.Desc, Children: make([]model.TestStep, 0)}
+			idx++
+
+			mutiLine := false
+			for true {
+				if idx >= len(teststeps) {
+					nestedSteps = append(nestedSteps, currGroup)
+					break
+				}
+
+				child := teststeps[idx]
+				if child.Type != "group" && child.Parent == ts.Id { // child step
+					if !mutiLine {
+						mutiLine = zentaoService.IsMutiLine(child)
+					}
+
+					currGroup.Children = append(currGroup.Children, child)
+				} else { // found a group step
+					currGroup.MutiLine = mutiLine
+					nestedSteps = append(nestedSteps, currGroup)
+					break
+				}
+				idx++
+			}
+		}
+	}
+
+	stepNumb := 1
+	for _, group := range nestedSteps {
+		if group.Id == "-1" {
+			*steps = append(*steps, "\n[group]")
+
+			for _, child := range group.Children {
+				*steps = append(*steps,
+					zentaoService.GetCaseContent(child, strconv.Itoa(stepNumb), independentFile, group.MutiLine)...)
+
+				if independentFile && strings.TrimSpace(child.Expect) != "" {
+					*independentExpects = append(*independentExpects, getExcepts(child.Expect))
+				}
+
+				stepNumb++
+			}
+		} else {
+			*steps = append(*steps, "\n"+fmt.Sprintf("[%d. %s]", stepNumb, group.Desc))
+
+			for childNo, child := range group.Children {
+				numbStr := fmt.Sprintf("%d.%d", stepNumb, childNo+1)
+				*steps = append(*steps, zentaoService.GetCaseContent(child, numbStr, independentFile, group.MutiLine)...)
+
+				if independentFile && strings.TrimSpace(child.Expect) != "" {
+					*independentExpects = append(*independentExpects, getExcepts(child.Expect))
 				}
 			}
 
-			childNo = 1
-			continue
+			stepNumb++
 		}
-
-		if ts.Type == "group" { // group start, new group
-			groupNo++
-			*steps = append(*steps, "")
-
-			currGroupId = ts.Id
-			*steps = append(*steps, fmt.Sprintf("[%d. %s]", groupNo, ts.Desc))
-
-			childNo = 1
-			continue
-		}
-
-		if ts.Type != "group" && ts.Parent != currGroupId { // group end, new group
-			groupNo++
-			*steps = append(*steps, "")
-
-			currGroupId = "0"
-			*steps = append(*steps, "[group]")
-			*steps = append(*steps, zentaoService.GetCaseContent(ts, strconv.Itoa(groupNo), independentFile)...)
-
-			if independentFile && strings.TrimSpace(ts.Expect) != "" {
-				*independentExpects = append(*independentExpects, getExcepts(ts.Expect))
-			}
-
-			childNo = 1
-			continue
-		}
-
-		// follow pre group
-		var numb string
-		if ts.Parent == "0" {
-			groupNo++
-			numb = fmt.Sprintf("%d", groupNo)
-		} else {
-			numb = fmt.Sprintf("%d.%d", groupNo, childNo)
-		}
-
-		*steps = append(*steps, zentaoService.GetCaseContent(ts, numb, independentFile)...)
-
-		if independentFile && strings.TrimSpace(ts.Expect) != "" {
-			*independentExpects = append(*independentExpects, getExcepts(ts.Expect))
-		}
-		childNo++
 	}
 }
 

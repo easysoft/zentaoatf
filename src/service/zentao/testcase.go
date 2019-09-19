@@ -241,7 +241,7 @@ func IsMutiLine(step model.TestStep) bool {
 	return false
 }
 
-func GetCaseContent(step model.TestStep, numb string, independentFile bool) []string {
+func GetCaseContent(step model.TestStep, numb string, independentFile bool, mutiLine bool) []string {
 	lines := make([]string, 0)
 
 	expect := step.Expect
@@ -249,7 +249,7 @@ func GetCaseContent(step model.TestStep, numb string, independentFile bool) []st
 		expect = ""
 	}
 
-	if IsMutiLine(step) {
+	if mutiLine {
 		lines = append(lines, fmt.Sprintf("  [%s. steps] \n%s \n  [%s. expects] \n%s",
 			numb, addPrefixSpace(step.Desc, 4), numb, addPrefixSpace(expect, 4)))
 	} else {
