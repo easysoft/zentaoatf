@@ -73,7 +73,6 @@
     },
     {
       "id": "content",
-      "message": "Content",
       "translation": "Content"
     },
     {
@@ -98,7 +97,6 @@
     },
     {
       "id": "title_cannot_be_empty",
-      "message": "Title cannot be empty",
       "translation": "Title cannot be empty"
     },
 
@@ -188,12 +186,10 @@
 
     {
       "id": "en",
-      "message": "English",
       "translation": "English"
     },
     {
       "id": "zh",
-      "message": "Chinese",
       "translation": "Chinese"
     },
     {
@@ -317,17 +313,14 @@
     },
     {
       "id": "help_key_bind",
-      "message": "help",
       "translation": "HELP"
     },
     {
       "id": "help_show",
-      "message": "",
       "translation": "CTRL+H: Show/Hide help"
     },
     {
       "id": "help_exit",
-      "message": "",
       "translation": "CTRL+C: Exit"
     },
 

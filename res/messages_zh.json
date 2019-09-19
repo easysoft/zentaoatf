@@ -81,7 +81,6 @@
     },
     {
       "id": "version",
-      "message": "Version",
       "translation": "版本"
     },
     {
@@ -272,7 +271,6 @@
     },
     {
       "id": "expect_result_here",
-      "message": "Expect Results",
       "translation": "期望结果, 可以有多行。"
     },
     {
@@ -298,7 +296,6 @@
 
     {
       "id": "or",
-      "message": "or",
       "translation": "或"
     },
     {
