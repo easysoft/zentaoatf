@@ -103,27 +103,35 @@ func GetCaseInfo(file string) (bool, int, int, string) {
 	return pass, caseId, productId, title
 }
 
-func ReadCheckpointSteps(file string) ([]string, [][]string) {
+func ReadCheckpoints(file string) ([]string, [][]string) {
+	expectIndependentFile := strings.Replace(file, path.Ext(file), ".exp", -1)
+	expectIndependentContent := ""
+
+	if fileUtils.FileExist(expectIndependentFile) {
+		expectIndependentContent = fileUtils.ReadFile(expectIndependentFile)
+	}
+
 	content := fileUtils.ReadFile(file)
 
 	myExp := regexp.MustCompile(`(?s)\[case\](?U:.*)(\[.*)\[esac\]`)
 	arr := myExp.FindStringSubmatch(content)
 
-	str := ""
 	if len(arr) > 1 {
 		checkpoints := arr[1]
-		str = commonUtils.RemoveBlankLine(checkpoints)
+		content = commonUtils.RemoveBlankLine(checkpoints)
 	}
 
-	cpStepArr, expectArr := genCheckpointStepArr(str)
+	cpStepArr, expectArr := genCheckpointStepArr(content, expectIndependentContent)
 
 	return cpStepArr, expectArr
 }
-func genCheckpointStepArr(str string) ([]string, [][]string) {
+func genCheckpointStepArr(content string, expectIndependentContent string) ([]string, [][]string) {
 	cpStepArr := make([]string, 0)
 	expectArr := make([][]string, 0)
 
-	lines := strings.Split(str, "\n")
+	independentExpect := expectIndependentContent != ""
+
+	lines := strings.Split(content, "\n")
 	i := 0
 	for i < len(lines) {
 		step := ""
@@ -135,21 +143,25 @@ func genCheckpointStepArr(str string) ([]string, [][]string) {
 		arr := regx.FindStringSubmatch(line)
 		if len(arr) > 1 {
 			step = arr[1]
-			expects = append(expects, arr[2])
+			if !independentExpect {
+				expects = append(expects, arr[2])
+			}
 		} else {
 			regx = regexp.MustCompile(`\[([\d\.]*).*expects\]`)
 			arr = regx.FindStringSubmatch(line)
 			if len(arr) > 1 {
 				step = arr[1]
 
-				for i+1 < len(lines) {
-					ln := strings.TrimSpace(lines[i+1])
+				if !independentExpect {
+					for i+1 < len(lines) {
+						ln := strings.TrimSpace(lines[i+1])
 
-					if strings.Index(ln, "[") == 0 || strings.Index(ln, ">>") > 0 || ln == "" {
-						break
-					} else {
-						expects = append(expects, ln)
-						i++
+						if strings.Index(ln, "[") == 0 || strings.Index(ln, ">>") > 0 || ln == "" {
+							break
+						} else {
+							expects = append(expects, ln)
+							i++
+						}
 					}
 				}
 			}
@@ -157,9 +169,16 @@ func genCheckpointStepArr(str string) ([]string, [][]string) {
 
 		if step != "" {
 			cpStepArr = append(cpStepArr, step)
-			expectArr = append(expectArr, expects)
+			if !independentExpect {
+				expectArr = append(expectArr, expects)
+			}
 		}
 		i++
+	}
+
+	if independentExpect {
+		expectIndependentArr := strings.Split(expectIndependentContent, "\n")
+		expectArr = expectIndependentArr
 	}
 
 	return cpStepArr, expectArr
