@@ -103,32 +103,10 @@ func GetCaseInfo(file string) (bool, int, int, string) {
 	return pass, caseId, productId, title
 }
 
-func ReadExpect(file string) [][]string {
+func ReadCheckpointSteps(file string) ([]string, [][]string) {
 	content := fileUtils.ReadFile(file)
 
-	myExp := regexp.MustCompile(`<<<TC[\S\s]*expects:[^\n]*\n+([\S\s]*?)(readme:|TC)`)
-	arr := myExp.FindStringSubmatch(content)
-
-	str := ""
-	if len(arr) > 1 {
-		expects := arr[1]
-
-		if strings.Index(expects, "@file") > -1 {
-			str = fileUtils.ReadFile(ScriptToExpectName(file))
-		} else {
-			str = commonUtils.RemoveBlankLine(expects)
-		}
-	}
-
-	ret := GenExpectArr(str)
-
-	return ret
-}
-
-func ReadCheckpointSteps(file string) []string {
-	content := fileUtils.ReadFile(file)
-
-	myExp := regexp.MustCompile(`<<<TC[\S\s]*steps:[^\n]*\n*([\S\s]*)\n+expects:`)
+	myExp := regexp.MustCompile(`(?s)\[case\](?U:.*)(\[.*)\[esac\]`)
 	arr := myExp.FindStringSubmatch(content)
 
 	str := ""
@@ -137,27 +115,54 @@ func ReadCheckpointSteps(file string) []string {
 		str = commonUtils.RemoveBlankLine(checkpoints)
 	}
 
-	ret := GenCheckpointStepArr(str)
+	cpStepArr, expectArr := genCheckpointStepArr(str)
 
-	return ret
+	return cpStepArr, expectArr
 }
+func genCheckpointStepArr(str string) ([]string, [][]string) {
+	cpStepArr := make([]string, 0)
+	expectArr := make([][]string, 0)
 
-func GenCheckpointStepArr(str string) []string {
-	ret := make([]string, 0)
-	for _, line := range strings.Split(str, "\n") {
-		line := strings.TrimSpace(line)
+	lines := strings.Split(str, "\n")
+	i := 0
+	for i < len(lines) {
+		step := ""
+		expects := make([]string, 0)
 
-		if strings.Index(line, "@") == 0 {
-			ret = append(ret, line)
+		line := strings.TrimSpace(lines[i])
+
+		regx := regexp.MustCompile(`([\d\.]+).*>>(.*)`)
+		arr := regx.FindStringSubmatch(line)
+		if len(arr) > 1 {
+			step = arr[1]
+			expects = append(expects, arr[2])
+		} else {
+			regx = regexp.MustCompile(`\[([\d\.]*).*expects\]`)
+			arr = regx.FindStringSubmatch(line)
+			if len(arr) > 1 {
+				step = arr[1]
+
+				for i+1 < len(lines) {
+					ln := strings.TrimSpace(lines[i+1])
+
+					if strings.Index(ln, "[") == 0 || strings.Index(ln, ">>") > 0 || ln == "" {
+						break
+					} else {
+						expects = append(expects, ln)
+						i++
+					}
+				}
+			}
 		}
+
+		if step != "" {
+			cpStepArr = append(cpStepArr, step)
+			expectArr = append(expectArr, expects)
+		}
+		i++
 	}
 
-	return ret
-}
-
-func GenExpectArr(str string) [][]string {
-	_, arr := GenArr(str, false)
-	return arr
+	return cpStepArr, expectArr
 }
 
 func GenLogArr(str string) (bool, [][]string) {

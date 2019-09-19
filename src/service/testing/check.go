@@ -16,16 +16,16 @@ import (
 )
 
 func CheckCaseResult(scriptFile string, report *model.TestReport, idx int, total int, secs string, pathMaxWidth int) {
-	checkpointStepArr := zentaoUtils.ReadCheckpointSteps(scriptFile)
-	expectArr := zentaoUtils.ReadExpect(scriptFile)
+	cpStepArr, expectArr := zentaoUtils.ReadCheckpointSteps(scriptFile)
+
 	skip, logArr := zentaoUtils.ReadLog(vari.LogDir + "log.txt")
 
 	language := ""
-	ValidateCaseResult(scriptFile, language, checkpointStepArr, expectArr, skip, logArr, report, idx, total, secs, pathMaxWidth)
+	ValidateCaseResult(scriptFile, language, cpStepArr, expectArr, skip, logArr, report, idx, total, secs, pathMaxWidth)
 }
 
 func ValidateCaseResult(scriptFile string, langType string,
-	checkpointStepArr []string, expectArr [][]string, skip bool, actualArr [][]string, report *model.TestReport,
+	cpStepArr []string, expectArr [][]string, skip bool, actualArr [][]string, report *model.TestReport,
 	idx int, total int, secs string, pathMaxWidth int) {
 
 	_, caseId, productId, title := zentaoUtils.GetCaseInfo(scriptFile)
@@ -37,7 +37,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 		caseResult = constant.SKIP.String()
 	} else {
 		indx := 0
-		for _, step := range checkpointStepArr { // iterate by checkpoints
+		for _, step := range cpStepArr { // iterate by checkpoints
 			var expectLines []string
 			var actualLines []string
 

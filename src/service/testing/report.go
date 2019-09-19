@@ -35,29 +35,29 @@ func Report(report model.TestReport, pathMaxWidth int) {
 			line := fmt.Sprintf("[%s] %d.%s", cs.Path, cs.Id, cs.Title)
 			failedCaseLines = append(failedCaseLines, line)
 			failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, line)
+		}
 
-			if len(cs.Steps) > 0 {
-				for idx, step := range cs.Steps {
-					status := i118Utils.I118Prt.Sprintf(commonUtils.BoolToPass(step.Status))
-					failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("  [Step%d] %s %s", step.Id, step.Name, status))
+		if len(cs.Steps) > 0 {
+			for idx, step := range cs.Steps {
+				status := i118Utils.I118Prt.Sprintf(commonUtils.BoolToPass(step.Status))
+				failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("  [Step%d] %s %s", step.Id, step.Name, status))
 
-					for _, cp := range step.CheckPoints {
-						//cpStatus := commonUtils.BoolToPass(step.Status)
-						failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("  [Expect] %s", cp.Expect))
-						failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("  [Actual] %s", cp.Actual))
+				for _, cp := range step.CheckPoints {
+					//cpStatus := commonUtils.BoolToPass(step.Status)
+					failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("  [Expect] %s", cp.Expect))
+					failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("  [Actual] %s", cp.Actual))
 
-						//if idx1 < len(step.CheckPoints)-1 {
-						//	logUtils.ScreenAndResult("")
-						//}
-					}
-
-					if idx < len(cs.Steps)-1 {
-						logUtils.ScreenAndResult("")
-					}
+					//if idx1 < len(step.CheckPoints)-1 {
+					//	logUtils.ScreenAndResult("")
+					//}
 				}
-			} else {
-				failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "   "+i118Utils.I118Prt.Sprintf("no_checkpoints"))
+
+				if idx < len(cs.Steps)-1 {
+					logUtils.ScreenAndResult("")
+				}
 			}
+		} else {
+			failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "   "+i118Utils.I118Prt.Sprintf("no_checkpoints"))
 		}
 	}
 	if failedCount > 0 {
