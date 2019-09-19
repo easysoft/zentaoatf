@@ -51,12 +51,8 @@ func ValidateCaseResult(scriptFile string, langType string,
 			re, _ := regexp.Compile(`\s{2,}`)
 			step = re.ReplaceAllString(step, " ") // 多个空格替换成一个
 
-			arr := strings.Split(step, " ")
-			str := strings.Replace(arr[0], "@step", "", -1)
-			stepId, _ := strconv.Atoi(str)
-
 			stepResult, checkpointLogs := ValidateStepResult(langType, expectLines, actualLines)
-			stepLog := model.StepLog{Id: stepId, Name: arr[1], Status: stepResult, CheckPoints: checkpointLogs}
+			stepLog := model.StepLog{Id: step, Status: stepResult, CheckPoints: checkpointLogs}
 			stepLogs = append(stepLogs, stepLog)
 			if !stepResult {
 				caseResult = constant.FAIL.String()

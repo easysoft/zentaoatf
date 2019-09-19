@@ -177,11 +177,37 @@ func genCheckpointStepArr(content string, expectIndependentContent string) ([]st
 	}
 
 	if independentExpect {
-		expectIndependentArr := strings.Split(expectIndependentContent, "\n")
-		expectArr = expectIndependentArr
+		expectArr = readExpectIndependentArr(expectIndependentContent)
 	}
 
 	return cpStepArr, expectArr
+}
+
+func readExpectIndependentArr(content string) [][]string {
+	lines := strings.Split(content, "\n")
+
+	ret := make([][]string, 0)
+	var cpArr []string
+
+	for idx, line := range lines {
+		line = strings.TrimSpace(line)
+
+		if line == ">>" {
+			if idx > 0 {
+				ret = append(ret, cpArr)
+			}
+
+			cpArr = make([]string, 0)
+		} else {
+			cpArr = append(cpArr, line)
+
+			if idx == len(lines)-1 {
+				ret = append(ret, cpArr)
+			}
+		}
+	}
+
+	return ret
 }
 
 func GenLogArr(str string) (bool, [][]string) {

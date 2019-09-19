@@ -58,7 +58,7 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 	stepDisplayMaxWidth := 0
 	computerTestStepWidth(cs.StepArr, &stepDisplayMaxWidth, StepWidth)
 
-	GenerateTestStepAndScript(cs.StepArr, &steps, &independentExpects, independentFile)
+	generateTestStepAndScript(cs.StepArr, &steps, &independentExpects, independentFile)
 	info = append(info, strings.Join(steps, "\n"))
 
 	if independentFile {
@@ -85,13 +85,13 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 	fileUtils.WriteFile(scriptFile, content)
 }
 
-func GenerateTestStepAndScript(teststeps []model.TestStep, steps *[]string, independentExpects *[]string, independentFile bool) {
+func generateTestStepAndScript(teststeps []model.TestStep, steps *[]string, independentExpects *[]string, independentFile bool) {
 	var currGroupId string
 
 	groupNo := 0
 	childNo := 1
 	for idx, ts := range teststeps {
-		if idx == 0 { // new group
+		if idx == 0 { // file start, new group
 			groupNo++
 			*steps = append(*steps, "")
 
@@ -104,7 +104,7 @@ func GenerateTestStepAndScript(teststeps []model.TestStep, steps *[]string, inde
 				*steps = append(*steps, zentaoService.GetCaseContent(ts, strconv.Itoa(groupNo), independentFile)...)
 
 				if independentFile && strings.TrimSpace(ts.Expect) != "" {
-					*independentExpects = append(*independentExpects, ts.Expect)
+					*independentExpects = append(*independentExpects, ">>\n"+ts.Expect)
 				}
 			}
 
@@ -112,7 +112,7 @@ func GenerateTestStepAndScript(teststeps []model.TestStep, steps *[]string, inde
 			continue
 		}
 
-		if ts.Type == "group" { // new group
+		if ts.Type == "group" { // group start, new group
 			groupNo++
 			*steps = append(*steps, "")
 
@@ -123,7 +123,7 @@ func GenerateTestStepAndScript(teststeps []model.TestStep, steps *[]string, inde
 			continue
 		}
 
-		if ts.Type != "group" && ts.Parent != currGroupId { // new group
+		if ts.Type != "group" && ts.Parent != currGroupId { // group end, new group
 			groupNo++
 			*steps = append(*steps, "")
 
@@ -132,7 +132,7 @@ func GenerateTestStepAndScript(teststeps []model.TestStep, steps *[]string, inde
 			*steps = append(*steps, zentaoService.GetCaseContent(ts, strconv.Itoa(groupNo), independentFile)...)
 
 			if independentFile && strings.TrimSpace(ts.Expect) != "" {
-				*independentExpects = append(*independentExpects, ts.Expect)
+				*independentExpects = append(*independentExpects, ">>\n"+ts.Expect)
 			}
 
 			childNo = 1
@@ -151,7 +151,7 @@ func GenerateTestStepAndScript(teststeps []model.TestStep, steps *[]string, inde
 		*steps = append(*steps, zentaoService.GetCaseContent(ts, numb, independentFile)...)
 
 		if independentFile && strings.TrimSpace(ts.Expect) != "" {
-			*independentExpects = append(*independentExpects, ts.Expect)
+			*independentExpects = append(*independentExpects, ">>\n"+ts.Expect)
 		}
 		childNo++
 	}

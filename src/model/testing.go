@@ -125,7 +125,7 @@ type CaseLog struct {
 	Steps []StepLog
 }
 type StepLog struct {
-	Id     int
+	Id     string
 	Name   string
 	Status bool
 

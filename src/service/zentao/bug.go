@@ -47,7 +47,7 @@ func PrepareBug(resultDir string, caseIdStr string) (model.Bug, string) {
 		steps := make([]string, 0)
 		for _, step := range cs.Steps {
 			if !step.Status {
-				stepIds += strconv.Itoa(step.Id) + "_"
+				stepIds += step.Id + "_"
 			}
 
 			stepsContent := testingService.GetStepContent(step)

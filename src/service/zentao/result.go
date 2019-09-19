@@ -48,8 +48,8 @@ func CommitResult(resultDir string) {
 			for _, checkpoint := range step.CheckPoints {
 				stepResults += checkpoint.Actual // strconv.FormatBool(checkpoint.Status) + ": " + checkpoint.Actual
 			}
-			stepMap[strconv.Itoa(step.Id)] = stepStatus
-			realMap[strconv.Itoa(step.Id)] = stepResults
+			stepMap[step.Id] = stepStatus
+			realMap[step.Id] = stepResults
 
 			requestObj["steps"] = stepMap
 			requestObj["reals"] = realMap

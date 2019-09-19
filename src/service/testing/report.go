@@ -40,20 +40,20 @@ func Report(report model.TestReport, pathMaxWidth int) {
 		if len(cs.Steps) > 0 {
 			for idx, step := range cs.Steps {
 				status := i118Utils.I118Prt.Sprintf(commonUtils.BoolToPass(step.Status))
-				failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("  [Step%d] %s %s", step.Id, step.Name, status))
+				failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("  %s %s", step.Id, status))
 
-				for _, cp := range step.CheckPoints {
+				for idx1, cp := range step.CheckPoints {
 					//cpStatus := commonUtils.BoolToPass(step.Status)
-					failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("  [Expect] %s", cp.Expect))
-					failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("  [Actual] %s", cp.Actual))
+					failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("    [Expect] %s", cp.Expect))
+					failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("    [Actual] %s", cp.Actual))
 
-					//if idx1 < len(step.CheckPoints)-1 {
-					//	logUtils.ScreenAndResult("")
-					//}
+					if idx1 < len(step.CheckPoints)-1 {
+						failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "")
+					}
 				}
 
 				if idx < len(cs.Steps)-1 {
-					logUtils.ScreenAndResult("")
+					failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "")
 				}
 			}
 		} else {
