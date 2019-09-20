@@ -263,8 +263,8 @@
       "translation": "Step begin with '@' has checkpoint."
     },
     {
-      "id": "your_codes_here",
-      "translation": "Write your codes here"
+      "id": "find_example",
+      "translation": "Examples in 'demo%s%s'"
     },
     {
       "id": "expect_result_here",

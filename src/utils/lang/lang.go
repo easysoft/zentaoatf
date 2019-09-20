@@ -22,10 +22,10 @@ func initSupportedScriptLang() map[string]map[string]string {
 				"commentsTag":  "::",
 				"printGrammar": "echo #",
 			},
-			"go": {
-				"extName":      "go",
+			"js": {
+				"extName":      "js",
 				"commentsTag":  "//",
-				"printGrammar": "println(\"#\")",
+				"printGrammar": "console.log(\"#\")",
 			},
 			"lua": {
 				"extName":      "lua",

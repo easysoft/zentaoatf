@@ -266,8 +266,8 @@
       "translation": "@开头的为含验证点的步骤。"
     },
     {
-      "id": "your_codes_here",
-      "translation": "此处编写测试代码"
+      "id": "find_example",
+      "translation": "访问'demo%s%s'获取更多帮助"
     },
     {
       "id": "expect_result_here",
