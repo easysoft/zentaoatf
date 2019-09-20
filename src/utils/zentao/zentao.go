@@ -103,7 +103,7 @@ func GetCaseInfo(file string) (bool, int, int, string) {
 	return pass, caseId, productId, title
 }
 
-func ReadCheckpoints(file string) ([]string, [][]string) {
+func ReadScriptCheckpoints(file string) ([]string, [][]string) {
 	expectIndependentFile := strings.Replace(file, path.Ext(file), ".exp", -1)
 	expectIndependentContent := ""
 
@@ -121,11 +121,11 @@ func ReadCheckpoints(file string) ([]string, [][]string) {
 		content = commonUtils.RemoveBlankLine(checkpoints)
 	}
 
-	cpStepArr, expectArr := genCheckpointStepArr(content, expectIndependentContent)
+	cpStepArr, expectArr := getCheckpointStepArr(content, expectIndependentContent)
 
 	return cpStepArr, expectArr
 }
-func genCheckpointStepArr(content string, expectIndependentContent string) ([]string, [][]string) {
+func getCheckpointStepArr(content string, expectIndependentContent string) ([]string, [][]string) {
 	cpStepArr := make([]string, 0)
 	expectArr := make([][]string, 0)
 
@@ -248,39 +248,6 @@ func ReadLogArr(content string) (bool, [][]string) {
 
 	return false, ret
 }
-
-//func ReadLog(logFile string) (bool, [][]string) {
-//	str := fileUtils.ReadFile(logFile)
-//
-//	skip, ret := GenLogArr(str)
-//	return skip, ret
-//}
-//func GenLogArr(str string) (bool, [][]string) {
-//	skip, arr := GenArr(str, true)
-//	return skip, arr
-//}
-//func GenArr(str string, checkSkip bool) (bool, [][]string) {
-//	ret := make([][]string, 0)
-//	idx := -1
-//	for _, line := range strings.Split(str, "\n") {
-//		line := strings.TrimSpace(line)
-//
-//		if checkSkip && strings.ToLower(line) == "skip" {
-//			return true, nil
-//		}
-//
-//		if strings.Index(line, "#") == 0 {
-//			ret = append(ret, make([]string, 0))
-//			idx++
-//		} else if idx > -1 {
-//			if len(line) > 0 && idx < len(ret) {
-//				ret[idx] = append(ret[idx], line)
-//			}
-//		}
-//	}
-//
-//	return false, ret
-//}
 
 func CheckFileIsScript(path string) bool {
 	content := fileUtils.ReadFile(path)

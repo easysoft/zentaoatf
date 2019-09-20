@@ -15,7 +15,7 @@ import (
 )
 
 func CheckCaseResult(scriptFile string, logs string, report *model.TestReport, idx int, total int, secs string, pathMaxWidth int) {
-	cpStepArr, expectArr := zentaoUtils.ReadCheckpoints(scriptFile)
+	cpStepArr, expectArr := zentaoUtils.ReadScriptCheckpoints(scriptFile)
 
 	skip, logArr := zentaoUtils.ReadLogArr(logs)
 

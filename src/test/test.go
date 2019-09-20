@@ -1,11 +1,28 @@
 package main
 
 import (
-	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
+	"fmt"
+	"regexp"
 )
 
+var content = `[4. steps] 
+    step4...
+    line1...
+    line2... 
+  [4. expects] 
+    
+  [5. steps] 
+    step5... 
+  [5. expects] 
+    
+  [6. steps] 
+    step6... 
+  [6. expects]
+?>`
+
 func main() {
+	myExp := regexp.MustCompile(`(?U)\[.*steps\]([\S\s]+)\[(.*steps.*|$)\]`)
 
-	_ = configUtils.SaveConfig("a", "2", "3", "4")
-
+	arr := myExp.FindAllStringSubmatch(content, -1)
+	fmt.Printf("%+v", arr)
 }

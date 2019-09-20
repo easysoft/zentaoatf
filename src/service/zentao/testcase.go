@@ -246,7 +246,11 @@ func GetCaseContent(step model.TestStep, numb string, independentFile bool, muti
 
 	expect := step.Expect
 	if independentFile {
-		expect = ""
+		if mutiLine {
+			expect = ">>"
+		} else {
+			expect = ""
+		}
 	}
 
 	if mutiLine {
