@@ -6,6 +6,7 @@ import (
 	"fmt"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	"io"
+	"os"
 	"os/exec"
 	"path"
 	"strings"
@@ -37,8 +38,7 @@ func ExecFile(filePath string) string {
 
 		cmd = exec.Command("cmd", "/C", filePath)
 	} else {
-		exec.Command("/bin/bash", "-c", "chmod +x "+filePath)
-
+		os.Chmod(filePath, 0777)
 		cmd = exec.Command("/bin/bash", "-c", filePath)
 	}
 
