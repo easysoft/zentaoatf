@@ -8,6 +8,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/file"
 	langUtils "github.com/easysoft/zentaoatf/src/utils/lang"
 	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"io/ioutil"
 	"os"
@@ -158,7 +159,7 @@ func GetFailedCasesDirectlyFromTestResult(resultFile string) []string {
 }
 
 func GetScriptType(scripts []string) []string {
-	extMap := langUtils.GetExtToNameMap()
+	vari.ScriptExtToNameMap = langUtils.GetExtToNameMap()
 
 	exts := make([]string, 0)
 	for _, script := range scripts {
@@ -166,7 +167,7 @@ func GetScriptType(scripts []string) []string {
 		if ext != "" {
 			ext = ext[1:]
 			if !stringUtils.FindInArr(ext, exts) {
-				exts = append(exts, extMap[ext])
+				exts = append(exts, vari.ScriptExtToNameMap[ext])
 			}
 		}
 	}

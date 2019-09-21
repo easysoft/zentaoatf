@@ -187,6 +187,10 @@ func InputForScriptInterpreter(scripts []string, config *model.Config, from stri
 	langs := assertUtils.GetScriptType(scripts)
 
 	for _, lang := range langs {
+		if lang == "bat" {
+			continue
+		}
+
 		deflt := commonUtils.GetFieldVal(*config, lang)
 		defltShow := ""
 		if deflt == "" {

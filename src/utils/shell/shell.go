@@ -5,6 +5,8 @@ import (
 	"bytes"
 	"fmt"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
+	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"io"
 	"os"
 	"os/exec"
@@ -32,11 +34,14 @@ func ExecFile(filePath string) string {
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
 		ext := path.Ext(filePath)
-		if ext == ".php" {
-			filePath = "php " + filePath
-		}
+		ext = ext[1:]
 
-		cmd = exec.Command("cmd", "/C", filePath)
+		lang := vari.ScriptExtToNameMap[ext]
+
+		scriptInterpreter := commonUtils.GetFieldVal(vari.Config, stringUtils.Ucfirst(lang))
+		fmt.Printf("use interpreter %s for script %s", scriptInterpreter, ext)
+
+		cmd = exec.Command("cmd", "/C", scriptInterpreter, filePath)
 	} else {
 		os.Chmod(filePath, 0777)
 		cmd = exec.Command("/bin/bash", "-c", filePath)

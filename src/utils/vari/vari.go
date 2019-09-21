@@ -21,9 +21,10 @@ var (
 	RequestType string
 	RequestFix  string
 
-	CurrScriptFile string // scripts/tc-001.py
-	CurrResultDate string // 2019-08-15T173802
-	CurrCaseId     int    // 2019-08-15T173802
+	ScriptExtToNameMap map[string]string
+	CurrScriptFile     string // scripts/tc-001.py
+	CurrResultDate     string // 2019-08-15T173802
+	CurrCaseId         int    // 2019-08-15T173802
 
 	ScreenWidth     int
 	ScreenHeight    int
