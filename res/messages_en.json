@@ -185,7 +185,7 @@
     },
     {
       "id": "set_script_interpreter",
-      "translation": "Please set script interpreter for %s."
+      "translation": "Please set script interpreter for %s, (e.g. /usr/bin/php)."
     },
 
     {
