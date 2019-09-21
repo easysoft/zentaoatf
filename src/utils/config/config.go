@@ -14,6 +14,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
 	"gopkg.in/ini.v1"
+	"os"
 	"reflect"
 )
 
@@ -186,7 +187,7 @@ func InputForScriptInterpreter(scripts []string, config *model.Config) {
 	langs := assertUtils.GetScriptType(scripts)
 
 	for _, lang := range langs {
-		inter := stdinUtils.GetInput(".*", commonUtils.GetFieldVal(*config, lang), "set_script_interpreter", lang)
+		inter := stdinUtils.GetInput(string(os.PathSeparator)+"+", commonUtils.GetFieldVal(*config, lang), "set_script_interpreter", lang)
 
 		fmt.Printf("lang: %s, inter: %s", lang, inter)
 
