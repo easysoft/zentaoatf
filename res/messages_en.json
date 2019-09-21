@@ -2,6 +2,10 @@
   "language": "en-US",
   "messages": [
     {
+      "id": "for_example",
+      "translation": "(e.g. %s)"
+    },
+    {
       "id": "total",
       "translation": "Total"
     },
@@ -184,8 +188,12 @@
       "translation": "Current config:"
     },
     {
+      "id": "config_script_interpreter",
+      "translation": "Do you want to config script interpreter[Y/n]?"
+    },
+    {
       "id": "set_script_interpreter",
-      "translation": "Please set script interpreter for %s, (e.g. /usr/bin/php)."
+      "translation": "Please set script interpreter for %s: %s"
     },
 
     {

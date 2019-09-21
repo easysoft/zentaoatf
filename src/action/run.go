@@ -55,8 +55,11 @@ func Run(files []string, suiteIdStr string, taskIdStr string) error {
 		return nil
 	}
 
+	//if commonUtils.IsWin() {
 	conf := configUtils.ReadCurrConfig()
 	configUtils.InputForScriptInterpreter(cases, &conf)
+	configUtils.SaveConfig(conf)
+	//}
 
 	runCases(cases)
 

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
-	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
@@ -72,7 +71,7 @@ func Report(report model.TestReport, pathMaxWidth int) {
 			report.Pass, float32(report.Pass*100/report.Total), i118Utils.I118Prt.Sprintf("pass"),
 			report.Fail, float32(report.Fail*100/report.Total), i118Utils.I118Prt.Sprintf("fail"),
 			report.Skip, float32(report.Skip*100/report.Total), i118Utils.I118Prt.Sprintf("skip"),
-			constant.LogDir+vari.ZtfDir+"result.txt",
+			vari.ZtfDir+"result.txt",
 		))
 
 	json, _ := json.Marshal(report)

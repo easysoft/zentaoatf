@@ -39,7 +39,6 @@ func InitScreenSize() {
 }
 
 func SaveConfig(conf model.Config) error {
-	fmt.Printf("\n%s=%s\n", "php", conf.Php)
 
 	fileUtils.MkDirIfNeeded(fileUtils.GetZtfDir() + "conf")
 
@@ -152,10 +151,14 @@ func InputForSet() {
 		conf.Password = stdinUtils.GetInput("(.{2,})", conf.Password, "enter_password", conf.Password)
 	}
 
-	scripts := assertUtils.GetCaseByDirAndFile([]string{"."})
-	InputForScriptInterpreter(scripts, &conf)
-
-	fmt.Printf("\n%s=%s\n", "php", conf.Php)
+	//if  commonUtils.IsWin() {
+	var configInterpreter bool
+	stdinUtils.InputForBool(&configInterpreter, true, "config_script_interpreter")
+	if configInterpreter {
+		scripts := assertUtils.GetCaseByDirAndFile([]string{"."})
+		InputForScriptInterpreter(scripts, &conf)
+	}
+	//}
 
 	SaveConfig(conf)
 	PrintCurrConfig()
@@ -181,20 +184,27 @@ func InputForRequest() {
 }
 
 func InputForScriptInterpreter(scripts []string, config *model.Config) {
-	//var configScriptInterpreter bool
-	//stdinUtils.InputForBool(&configScriptInterpreter, true, "set_script_interpreter")
-	//if configScriptInterpreter {
 	langs := assertUtils.GetScriptType(scripts)
 
 	for _, lang := range langs {
-		inter := stdinUtils.GetInput(string(os.PathSeparator)+"+", commonUtils.GetFieldVal(*config, lang), "set_script_interpreter", lang)
+		sep := string(os.PathSeparator)
+		if sep == `\` {
+			sep = `\\`
+		}
 
-		fmt.Printf("lang: %s, inter: %s", lang, inter)
+		reg := fmt.Sprintf(".*%s+[^%s]+", sep, sep)
+		//println(reg)
+
+		deflt := commonUtils.GetFieldVal(*config, lang)
+		defltShow := ""
+		if deflt == "" {
+			defltShow = i118Utils.I118Prt.Sprintf("for_example", "/usr/bin/php")
+		} else {
+			defltShow = deflt
+		}
+
+		inter := stdinUtils.GetInput(reg, deflt, "set_script_interpreter", lang, defltShow)
 
 		commonUtils.SetFieldVal(config, lang, inter)
 	}
-
-	fmt.Printf("\n%s=%s\n", "php", (*config).Php)
-
-	//}
 }

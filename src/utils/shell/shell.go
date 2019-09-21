@@ -39,7 +39,7 @@ func ExecFile(filePath string) string {
 	} else {
 		exec.Command("/bin/bash", "-c", "chmod +x "+filePath)
 
-		cmd = exec.Command("/bin/bash", "-c", "php "+filePath)
+		cmd = exec.Command("/bin/bash", "-c", filePath)
 	}
 
 	output := make([]string, 0)
