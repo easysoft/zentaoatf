@@ -156,7 +156,7 @@ func InputForSet() {
 	stdinUtils.InputForBool(&configInterpreter, true, "config_script_interpreter")
 	if configInterpreter {
 		scripts := assertUtils.GetCaseByDirAndFile([]string{"."})
-		InputForScriptInterpreter(scripts, &conf)
+		InputForScriptInterpreter(scripts, &conf, "set")
 	}
 	//}
 
@@ -183,18 +183,10 @@ func InputForRequest() {
 	SaveConfig(conf)
 }
 
-func InputForScriptInterpreter(scripts []string, config *model.Config) {
+func InputForScriptInterpreter(scripts []string, config *model.Config, from string) {
 	langs := assertUtils.GetScriptType(scripts)
 
 	for _, lang := range langs {
-		sep := string(os.PathSeparator)
-		if sep == `\` {
-			sep = `\\`
-		}
-
-		reg := fmt.Sprintf(".*%s+[^%s]+", sep, sep)
-		//println(reg)
-
 		deflt := commonUtils.GetFieldVal(*config, lang)
 		defltShow := ""
 		if deflt == "" {
@@ -203,8 +195,18 @@ func InputForScriptInterpreter(scripts []string, config *model.Config) {
 			defltShow = deflt
 		}
 
-		inter := stdinUtils.GetInput(reg, deflt, "set_script_interpreter", lang, defltShow)
+		if from == "run" && deflt != "" {
+			continue
+		}
 
+		sep := string(os.PathSeparator)
+		if sep == `\` {
+			sep = `\\`
+		}
+
+		reg := fmt.Sprintf(".*%s+[^%s]+", sep, sep)
+
+		inter := stdinUtils.GetInput(reg, deflt, "set_script_interpreter", lang, defltShow)
 		commonUtils.SetFieldVal(config, lang, inter)
 	}
 }
