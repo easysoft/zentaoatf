@@ -1,10 +1,13 @@
 package commonUtils
 
 import (
+	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils/const"
+	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"os"
 	"path"
 	"path/filepath"
+	"reflect"
 	"regexp"
 	"runtime"
 	"strings"
@@ -76,4 +79,22 @@ func IngoreFile(path string) bool {
 	} else {
 		return false
 	}
+}
+
+func GetFieldVal(config model.Config, key string) string {
+	key = stringUtils.Ucfirst(key)
+
+	immutable := reflect.ValueOf(config)
+	val := immutable.FieldByName(key).String()
+
+	return val
+}
+
+func SetFieldVal(config model.Config, key string, val string) string {
+	key = stringUtils.Ucfirst(key)
+
+	mutable := reflect.ValueOf(&config).Elem()
+	mutable.FieldByName(key).SetString(val)
+
+	return val
 }

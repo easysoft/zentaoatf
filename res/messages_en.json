@@ -183,6 +183,10 @@
       "id": "current_config",
       "translation": "Current config:"
     },
+    {
+      "id": "set_script_interpreter",
+      "translation": "Please set script interpreter for %s."
+    },
 
     {
       "id": "en",

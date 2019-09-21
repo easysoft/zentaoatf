@@ -1,4 +1,4 @@
-package scriptService
+package assertUtils
 
 import (
 	"encoding/json"
@@ -154,4 +154,20 @@ func GetFailedCasesDirectlyFromTestResult(resultFile string) []string {
 	}
 
 	return cases
+}
+
+func GetScriptType(scripts []string) []string {
+	extMap := langUtils.GetExtToNameMap()
+
+	exts := make([]string, 0)
+	for _, script := range scripts {
+		ext := path.Ext(script)
+		if ext != "" {
+			ext = ext[1:]
+		}
+
+		exts = append(exts, extMap[ext])
+	}
+
+	return exts
 }

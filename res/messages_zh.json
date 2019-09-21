@@ -174,11 +174,15 @@
       "id": "zentao_config_fail",
       "translation": "禅道系统连接配置失败。"
     },
-
     {
       "id": "current_config",
       "translation": "当前配置："
     },
+    {
+      "id": "set_script_interpreter",
+      "translation": "请设置%s脚本的解释程序。"
+    },
+
     {
       "id": "en",
       "translation": "英文"

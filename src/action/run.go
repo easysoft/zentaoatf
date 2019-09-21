@@ -2,9 +2,9 @@ package action
 
 import (
 	"github.com/easysoft/zentaoatf/src/model"
-	scriptService "github.com/easysoft/zentaoatf/src/service/script"
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
+	assertUtils "github.com/easysoft/zentaoatf/src/utils/assert"
 	"github.com/easysoft/zentaoatf/src/utils/common"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
@@ -44,9 +44,9 @@ func Run(files []string, suiteIdStr string, taskIdStr string) error {
 		if suite != "" {
 			cases = getCaseBySuiteFile(suite, dir)
 		} else if result != "" {
-			cases = scriptService.GetFailedCasesDirectlyFromTestResult(result)
+			cases = assertUtils.GetFailedCasesDirectlyFromTestResult(result)
 		} else {
-			cases = scriptService.GetCaseByDirAndFile(files)
+			cases = assertUtils.GetCaseByDirAndFile(files)
 		}
 	}
 
@@ -54,6 +54,9 @@ func Run(files []string, suiteIdStr string, taskIdStr string) error {
 		logUtils.PrintToCmd("\n"+i118Utils.I118Prt.Sprintf("no_scripts"), -1)
 		return nil
 	}
+
+	conf := configUtils.ReadCurrConfig()
+	configUtils.InputForScriptInterpreter(cases, &conf)
 
 	runCases(cases)
 
@@ -71,7 +74,7 @@ func getCaseByTaskId(id string, dir string) []string {
 		zentaoService.GetCaseIdsByTask(id, &caseIdMap)
 	}
 
-	scriptService.GetScriptByIdsInDir(dir, caseIdMap, &cases)
+	assertUtils.GetScriptByIdsInDir(dir, caseIdMap, &cases)
 	return cases
 }
 
@@ -85,7 +88,7 @@ func getCaseBySuiteId(id string, dir string) []string {
 		zentaoService.GetCaseIdsBySuite(id, &caseIdMap)
 	}
 
-	scriptService.GetScriptByIdsInDir(dir, caseIdMap, &cases)
+	assertUtils.GetScriptByIdsInDir(dir, caseIdMap, &cases)
 	return cases
 }
 
@@ -93,8 +96,8 @@ func getCaseBySuiteFile(file string, dir string) []string {
 	caseIdMap := map[int]string{}
 	cases := make([]string, 0)
 
-	scriptService.GetCaseIdsInSuiteFile(file, &caseIdMap)
-	scriptService.GetScriptByIdsInDir(dir, caseIdMap, &cases)
+	assertUtils.GetCaseIdsInSuiteFile(file, &caseIdMap)
+	assertUtils.GetScriptByIdsInDir(dir, caseIdMap, &cases)
 
 	return cases
 }

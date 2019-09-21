@@ -3,6 +3,7 @@ package configUtils
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
+	assertUtils "github.com/easysoft/zentaoatf/src/utils/assert"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/display"
@@ -36,28 +37,13 @@ func InitScreenSize() {
 	vari.ScreenHeight = h
 }
 
-func SaveConfig(language string, url string, account string, password string) error {
+func SaveConfig(conf model.Config) error {
 	fileUtils.MkDirIfNeeded(fileUtils.GetZtfDir() + "conf")
 
-	config := ReadCurrConfig()
-
-	config.Version = constant.ConfigVer
-
-	if language != "" {
-		config.Language = language
-	}
-	if url != "" {
-		config.Url = url
-	}
-	if account != "" {
-		config.Account = account
-	}
-	if password != "" {
-		config.Password = password
-	}
+	conf.Version = constant.ConfigVer
 
 	cfg := ini.Empty()
-	cfg.ReflectFrom(&config)
+	cfg.ReflectFrom(&conf)
 
 	cfg.SaveTo(constant.ConfigFile)
 
@@ -109,7 +95,7 @@ func getInst() model.Config {
 			vari.Config.Language = "en"
 		}
 
-		SaveConfig(vari.Config.Language, vari.Config.Url, vari.Config.Account, vari.Config.Password)
+		SaveConfig(vari.Config)
 	}
 
 	return vari.Config
@@ -127,10 +113,10 @@ func InputForSet() {
 
 	var configSite bool
 
-	language := conf.Language
-	url := conf.Url
-	account := conf.Account
-	password := conf.Password
+	//language := conf.Language
+	//url := conf.Url
+	//account := conf.Account
+	//password := conf.Password
 
 	logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("begin_config"), color.FgCyan)
 
@@ -149,22 +135,24 @@ func InputForSet() {
 	numbSelected := stdinUtils.GetInput("(1|2)", numb, "enter_language", enCheck, zhCheck)
 
 	if numbSelected == "1" {
-		language = "en"
+		conf.Language = "en"
 	} else {
-		language = "zh"
+		conf.Language = "zh"
 	}
 
 	stdinUtils.InputForBool(&configSite, true, "config_zentao_site")
 	if configSite {
-		url = stdinUtils.GetInput("(http://.*)", conf.Url, "enter_url", conf.Url)
+		conf.Url = stdinUtils.GetInput("(http://.*)", conf.Url, "enter_url", conf.Url)
 
-		account = stdinUtils.GetInput("(.{2,})", conf.Account, "enter_account", conf.Account)
+		conf.Account = stdinUtils.GetInput("(.{2,})", conf.Account, "enter_account", conf.Account)
 
-		password = stdinUtils.GetInput("(.{2,})", conf.Password, "enter_password", conf.Password)
+		conf.Password = stdinUtils.GetInput("(.{2,})", conf.Password, "enter_password", conf.Password)
 	}
 
-	SaveConfig(language, url, account, password)
+	scripts := assertUtils.GetCaseByDirAndFile([]string{"."})
+	InputForScriptInterpreter(scripts, &conf)
 
+	SaveConfig(conf)
 	PrintCurrConfig()
 }
 
@@ -178,17 +166,24 @@ func CheckRequestConfig() {
 func InputForRequest() {
 	conf := ReadCurrConfig()
 
-	url := ""
-	account := ""
-	password := ""
-
 	logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("need_config"), color.FgCyan)
 
-	url = stdinUtils.GetInput("(http://.*)", conf.Url, "enter_url", conf.Url)
+	conf.Url = stdinUtils.GetInput("(http://.*)", conf.Url, "enter_url", conf.Url)
+	conf.Account = stdinUtils.GetInput("(.{2,})", conf.Account, "enter_account", conf.Account)
+	conf.Password = stdinUtils.GetInput("(.{2,})", conf.Password, "enter_password", conf.Password)
 
-	account = stdinUtils.GetInput("(.{2,})", conf.Account, "enter_account", conf.Account)
+	SaveConfig(conf)
+}
 
-	password = stdinUtils.GetInput("(.{2,})", conf.Password, "enter_password", conf.Password)
+func InputForScriptInterpreter(scripts []string, config *model.Config) {
+	//var configScriptInterpreter bool
+	//stdinUtils.InputForBool(&configScriptInterpreter, true, "set_script_interpreter")
+	//if configScriptInterpreter {
+	langs := assertUtils.GetScriptType(scripts)
 
-	SaveConfig("", url, account, password)
+	for _, lang := range langs {
+		inter := stdinUtils.GetInput(".*", commonUtils.GetFieldVal(*config, lang), "set_script_interpreter", lang)
+		commonUtils.SetFieldVal(*config, lang, inter)
+	}
+	//}
 }

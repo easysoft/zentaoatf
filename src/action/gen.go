@@ -35,7 +35,7 @@ func Generate(productId string, moduleId string, suiteId string, taskId string, 
 		productId = cases[0].Product
 		zentaoService.GetCaseModules(productId)
 
-		count, err := scriptService.Generate(cases, scriptLang, independentFile)
+		count, err := scriptUtils.Generate(cases, scriptLang, independentFile)
 		if err == nil {
 			logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("success_to_generate", count, constant.ScriptDir)+"\n", -1)
 		} else {

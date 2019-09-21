@@ -136,6 +136,15 @@ func GetSupportLanguageExtRegx() string {
 	return regx
 }
 
+func GetExtToNameMap() map[string]string {
+	extMap := make(map[string]string, 0)
+	for _, key := range GetSupportLanguageArrSort() {
+		extMap[LangMap[key]["extName"]] = key
+	}
+
+	return extMap
+}
+
 func init() {
 	initSupportedScriptLang()
 }
