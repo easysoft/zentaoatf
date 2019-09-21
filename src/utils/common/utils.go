@@ -90,10 +90,10 @@ func GetFieldVal(config model.Config, key string) string {
 	return val
 }
 
-func SetFieldVal(config model.Config, key string, val string) string {
+func SetFieldVal(config *model.Config, key string, val string) string {
 	key = stringUtils.Ucfirst(key)
 
-	mutable := reflect.ValueOf(&config).Elem()
+	mutable := reflect.ValueOf(config).Elem()
 	mutable.FieldByName(key).SetString(val)
 
 	return val

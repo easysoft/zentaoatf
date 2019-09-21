@@ -7,6 +7,7 @@ import (
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/file"
 	langUtils "github.com/easysoft/zentaoatf/src/utils/lang"
+	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"io/ioutil"
 	"os"
@@ -164,9 +165,10 @@ func GetScriptType(scripts []string) []string {
 		ext := path.Ext(script)
 		if ext != "" {
 			ext = ext[1:]
+			if !stringUtils.FindInArr(ext, exts) {
+				exts = append(exts, extMap[ext])
+			}
 		}
-
-		exts = append(exts, extMap[ext])
 	}
 
 	return exts

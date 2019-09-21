@@ -38,6 +38,8 @@ func InitScreenSize() {
 }
 
 func SaveConfig(conf model.Config) error {
+	fmt.Printf("\n%s=%s\n", "php", conf.Php)
+
 	fileUtils.MkDirIfNeeded(fileUtils.GetZtfDir() + "conf")
 
 	conf.Version = constant.ConfigVer
@@ -152,6 +154,8 @@ func InputForSet() {
 	scripts := assertUtils.GetCaseByDirAndFile([]string{"."})
 	InputForScriptInterpreter(scripts, &conf)
 
+	fmt.Printf("\n%s=%s\n", "php", conf.Php)
+
 	SaveConfig(conf)
 	PrintCurrConfig()
 }
@@ -183,7 +187,13 @@ func InputForScriptInterpreter(scripts []string, config *model.Config) {
 
 	for _, lang := range langs {
 		inter := stdinUtils.GetInput(".*", commonUtils.GetFieldVal(*config, lang), "set_script_interpreter", lang)
-		commonUtils.SetFieldVal(*config, lang, inter)
+
+		fmt.Printf("lang: %s, inter: %s", lang, inter)
+
+		commonUtils.SetFieldVal(config, lang, inter)
 	}
+
+	fmt.Printf("\n%s=%s\n", "php", (*config).Php)
+
 	//}
 }

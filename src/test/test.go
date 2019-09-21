@@ -1,28 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"regexp"
+	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
+	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 )
 
-var content = `[4. steps] 
-    step4...
-    line1...
-    line2... 
-  [4. expects] 
-    
-  [5. steps] 
-    step5... 
-  [5. expects] 
-    
-  [6. steps] 
-    step6... 
-  [6. expects]
-?>`
-
 func main() {
-	myExp := regexp.MustCompile(`(?U)\[.*steps\]([\S\s]+)\[(.*steps.*|$)\]`)
+	config := configUtils.ReadCurrConfig()
 
-	arr := myExp.FindAllStringSubmatch(content, -1)
-	fmt.Printf("%+v", arr)
+	commonUtils.SetFieldVal(config, "php", "sdfdsf")
 }
