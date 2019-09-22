@@ -5,6 +5,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/i118"
+	langUtils "github.com/easysoft/zentaoatf/src/utils/lang"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
@@ -19,7 +20,7 @@ func CheckCaseResult(scriptFile string, logs string, report *model.TestReport, i
 
 	skip, logArr := zentaoUtils.ReadLogArr(logs)
 
-	language := ""
+	language := langUtils.GetLangByFile(scriptFile)
 	ValidateCaseResult(scriptFile, language, cpStepArr, expectArr, skip, logArr, report, idx, total, secs, pathMaxWidth)
 }
 

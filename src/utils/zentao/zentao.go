@@ -2,7 +2,6 @@ package zentaoUtils
 
 import (
 	"fmt"
-	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	dateUtils "github.com/easysoft/zentaoatf/src/utils/date"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
@@ -112,16 +111,9 @@ func ReadScriptCheckpoints(file string) ([]string, [][]string) {
 	}
 
 	content := fileUtils.ReadFile(file)
+	_, checkpoints := ReadCaseInfo(content)
 
-	myExp := regexp.MustCompile(`(?s)\[case\](?U:.*)(\[.*)\[esac\]`)
-	arr := myExp.FindStringSubmatch(content)
-
-	if len(arr) > 1 {
-		checkpoints := arr[1]
-		content = commonUtils.RemoveBlankLine(checkpoints)
-	}
-
-	cpStepArr, expectArr := getCheckpointStepArr(content, expectIndependentContent)
+	cpStepArr, expectArr := getCheckpointStepArr(checkpoints, expectIndependentContent)
 
 	return cpStepArr, expectArr
 }
@@ -144,7 +136,7 @@ func getCheckpointStepArr(content string, expectIndependentContent string) ([]st
 		if len(arr) > 1 {
 			step = arr[1]
 			if !independentExpect {
-				expects = append(expects, arr[2])
+				expects = append(expects, strings.TrimSpace(arr[2]))
 			}
 		} else {
 			regx = regexp.MustCompile(`\[([\d\.]*).*expects\]`)
@@ -261,4 +253,18 @@ func CheckFileContentIsScript(content string) bool {
 	pass, _ := regexp.MatchString(`\[case\]`, content)
 
 	return pass
+}
+
+func ReadCaseInfo(content string) (string, string) {
+	myExp := regexp.MustCompile(`(?s)\[case\]((?U:.*pid.*))\n(.*)\[esac\]`)
+	arr := myExp.FindStringSubmatch(content)
+
+	if len(arr) > 2 {
+		info := strings.TrimSpace(arr[1])
+		checkpoints := strings.TrimSpace(arr[2])
+
+		return info, checkpoints
+	}
+
+	return "", ""
 }

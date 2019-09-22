@@ -5,12 +5,12 @@ import (
 	"bytes"
 	"fmt"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
+	langUtils "github.com/easysoft/zentaoatf/src/utils/lang"
 	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"io"
 	"os"
 	"os/exec"
-	"path"
 	"strings"
 )
 
@@ -33,13 +33,10 @@ func ExeShell(cmdStr string) (string, error) {
 func ExecFile(filePath string) string {
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
-		ext := path.Ext(filePath)
-		ext = ext[1:]
-
-		lang := vari.ScriptExtToNameMap[ext]
+		lang := langUtils.GetLangByFile(filePath)
 
 		scriptInterpreter := commonUtils.GetFieldVal(vari.Config, stringUtils.Ucfirst(lang))
-		fmt.Printf("use interpreter %s for script %s", scriptInterpreter, ext)
+		fmt.Printf("use interpreter %s for script %s", scriptInterpreter, filePath)
 
 		cmd = exec.Command("cmd", "/C", scriptInterpreter, filePath)
 	} else {

@@ -17,6 +17,8 @@ func Sort(cases []string) {
 		if fileUtils.FileExist(file) {
 			script := fileUtils.ReadFile(file)
 
+			//`(?s)\[case\](?U:.*pid.*)\n(.*)\[esac\]`
+
 			regx := regexp.MustCompile(`(?s)\[case\](?U)(.*)(\[.*)\[esac\]`)
 			arr := regx.FindStringSubmatch(script)
 
@@ -37,8 +39,6 @@ func Sort(cases []string) {
 			// replace info
 			re, _ := regexp.Compile(`(?s)\[case\].*\[esac\]`)
 			script = re.ReplaceAllString(script, "[case]"+info+"\n"+stepsTxt+"\n\n[esac]")
-
-			println(script)
 
 			fileUtils.WriteFile(file, script)
 			return
