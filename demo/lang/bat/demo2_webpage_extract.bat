@@ -14,6 +14,6 @@ Find img element zt-logo.png in html >> .*zt-logo.png
 !
 
 resp=$(curl -s http://pms.zentao.net/user-login.html)
-elem=`echo $resp | grep -o "<img[^>]*src='[^']*'" | grep -o "[^']*.png"`
+elem=`echo $resp | grep -o '<img[^>]*src="[^"]*"' | grep -o '[^"]*.png'`
 
 echo $elem

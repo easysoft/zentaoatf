@@ -4,20 +4,17 @@
 /**
 [case]
 
-title=string match
-cid=1
-pid=1
+title=check string matches pattern
+cid=0
+pid=0
 
-test string             >> abc123
-test regular expression >> abc\d{3}
-test format string      >> %s%d
+exactly match            >> hello
+regular expression match >> 1d{10}
+format string match      >> %s%d
 
 [esac]
 */
 
-// your business logic here
-$str = "abc" . "123";
-
-print(">> $str\n");
-print(">> $str\n");
-print(">> $str\n");
+print(">> hello\n");
+print(">> 13905120512\n");
+print(">> abc123\n");
