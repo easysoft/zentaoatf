@@ -15,6 +15,6 @@ pid=0
 
 @echo off
 
-echo ">> hello"
-echo ">> 13905120512"
-echo ">> abc123"
+echo >> hello
+echo >> 13905120512
+echo >> abc123
