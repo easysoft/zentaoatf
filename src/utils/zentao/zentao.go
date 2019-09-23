@@ -212,6 +212,7 @@ func ReadLogArr(content string) (bool, [][]string) {
 	ret := make([][]string, 0)
 	var cpArr []string
 
+	model := ""
 	for idx, line := range lines {
 		line = strings.TrimSpace(line)
 
@@ -220,15 +221,23 @@ func ReadLogArr(content string) (bool, [][]string) {
 		}
 
 		if line == ">>" { // more than one line
+			model = "multi"
 			cpArr = make([]string, 0)
 		} else if strings.Index(line, ">>") == 0 { // single line
+			model = "single"
+
 			line = strings.Replace(line, ">>", "", -1)
 			line = strings.TrimSpace(line)
 
 			cpArr = append(cpArr, line)
 			ret = append(ret, cpArr)
 			cpArr = make([]string, 0)
-		} else { // under >>
+		} else {
+			if model == "" || model == "single" {
+				continue
+			}
+
+			// under >>
 			cpArr = append(cpArr, line)
 
 			if idx == len(lines)-1 || strings.Index(lines[idx+1], ">>") > -1 {
