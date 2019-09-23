@@ -1,6 +1,4 @@
-#!/usr/bin/env bash
-
-:<<!
+goto start
 [case]
 
 title=extract content from webpage
@@ -13,7 +11,9 @@ pid=0
 3. Check img exist >> .*zt-logo.png
 
 [esac]
-!
+:start
+
+@echo off
 
 resp=$(curl -s http://pms.zentao.net/user-login.html)
 elem=`echo $resp | grep -o '<img[^>]*src="[^"]*"' | grep -o '[^"]*.png'`

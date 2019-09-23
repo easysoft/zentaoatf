@@ -1,6 +1,4 @@
-#!/usr/bin/env bash
-
-:<<!
+goto start
 [case]
 
 title=check remote interface response
@@ -13,7 +11,9 @@ pid=0
 3. Validate its format >> ^[a-z0-9]{26}
 
 [esac]
-!
+:start
+
+@echo off
 
 resp=$(curl -s 'http://pms.zentao.net?mode=getconfig')
 elem=`echo $resp | grep -o '"sessionID":"[^"]*"' | sed 's/^.*:"//g' | sed 's/"//g'`
