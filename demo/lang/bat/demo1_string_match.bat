@@ -7,9 +7,10 @@ title=check string matches pattern
 cid=0
 pid=0
 
-exactly match            >> abc123
-regular expression match >> abc\d{3}
-format string match      >> %s%d
+[group]
+1. exactly match            >> abc123
+2. regular expression match >> abc\d{3}
+3. format string match      >> %s%d
 
 [esac]
 !
