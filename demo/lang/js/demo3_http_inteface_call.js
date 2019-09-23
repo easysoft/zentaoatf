@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- [case]
+[case]
 
 title=check remote interface response
 cid=0
@@ -26,7 +26,7 @@ http.get('http://pms.zentao.net?mode=getconfig', function(req) {
         if(req.statusCode === 200){
             try{
                 var json = JSON.parse(jsonStr);
-                console.log(json.sessionID)
+                console.log(">>" + json.sessionID)
             } catch(err){
                 console.log('ERR: ' + err);
             }

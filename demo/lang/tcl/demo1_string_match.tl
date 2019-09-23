@@ -1,4 +1,6 @@
-#!/usr/bin/env node
+#!/usr/bin/env php
+
+<?php
 /**
 [case]
 
@@ -14,8 +16,6 @@ pid=0
 [esac]
 */
 
-'use strict';
-
-console.log(">> hello");
-console.log(">> 13905120512");
-console.log(">> abc123");
+print(">> hello\n");
+print(">> 13905120512\n");
+print(">> abc123\n");

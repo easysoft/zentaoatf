@@ -30,5 +30,5 @@ if c~= 200 then
     print("ERR: " .. c)
 else
     _, _, src = string.find(body, "<img%ssrc='(.-)' .*>")
-    print(src)
+    print(">>" .. src)
 end

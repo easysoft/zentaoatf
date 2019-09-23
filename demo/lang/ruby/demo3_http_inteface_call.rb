@@ -1,6 +1,5 @@
-#!/usr/bin/env php
-<?php
-/**
+#!/usr/bin/env ruby
+=begin
 [case]
 
 title=check remote interface response
@@ -13,7 +12,7 @@ pid=0
 3. Check its format >> ^[a-z0-9]{26}
 
 [esac]
-*/
+=end
 
 $resp = file_get_contents('http://pms.zentao.net?mode=getconfig');
 $json = json_decode($resp);

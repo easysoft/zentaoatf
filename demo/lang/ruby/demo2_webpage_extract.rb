@@ -1,6 +1,5 @@
-#!/usr/bin/env php
-<?php
-/**
+#!/usr/bin/env ruby
+=begin
 [case]
 
 title=extract content from webpage
@@ -13,7 +12,7 @@ pid=0
 3. Check img exist >> .*zt-logo.png
 
 [esac]
-*/
+=end
 
 $resp = file_get_contents('http://pms.zentao.net/user-login.html');
 preg_match_all("/<img src='(.*)' .*>/U", $resp, $matches);

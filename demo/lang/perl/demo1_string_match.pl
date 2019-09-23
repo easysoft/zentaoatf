@@ -1,5 +1,5 @@
-#!/usr/bin/env node
-/**
+#!/usr/bin/env perl
+=pod
 [case]
 
 title=check string matches pattern
@@ -12,10 +12,8 @@ pid=0
 3. format string match      >> %s%d
 
 [esac]
-*/
+=cut
 
-'use strict';
-
-console.log(">> hello");
-console.log(">> 13905120512");
-console.log(">> abc123");
+print ">> hello\n";
+print ">> 13905120512\n";
+print ">> abc123\n";

@@ -18,4 +18,4 @@ pid=0
 resp=$(curl -s http://pms.zentao.net/user-login.html)
 elem=`echo $resp | grep -o "<img[^>]*src='[^']*'" | grep -o "[^']*.png"`
 
-echo $elem
+echo ">> $elem"

@@ -31,5 +31,5 @@ if c~= 200 then
     print("ERR: " .. c)
 else
     _, _, src = string.find(body, '"sessionID":"(.-)"')
-    print(src)
+    print(">>" .. src)
 end

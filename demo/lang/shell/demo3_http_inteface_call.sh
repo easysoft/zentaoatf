@@ -18,4 +18,4 @@ pid=0
 resp=$(curl -s 'http://pms.zentao.net?mode=getconfig')
 elem=`echo $resp | grep -o '"sessionID":"[^"]*"' | sed 's/^.*:"//g' | sed 's/"//g'`
 
-echo $elem
+echo ">> $elem"

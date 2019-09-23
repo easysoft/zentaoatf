@@ -11,6 +11,7 @@ pid=0
 2. Retrieve img element zt-logo.png in html
 3. Check img exist >> .*zt-logo.png
 
+[esac]
 */
 
 var http = require('http');
@@ -27,6 +28,6 @@ http.get('http://pms.zentao.net/user-login.html', function(req) {
             image = res[1]
         }
 
-        console.log(res[1])
+        console.log(">>" + res[1])
     });
 });
