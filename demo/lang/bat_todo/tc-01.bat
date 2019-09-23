@@ -22,3 +22,4 @@ for /f "delims=" %%i in ('ping zentao.com -n 1 ^| findstr "TTL"') do set output=
 
 echo #
 echo %output%
+
