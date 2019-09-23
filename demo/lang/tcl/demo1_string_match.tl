@@ -1,7 +1,5 @@
-#!/usr/bin/env php
-
-<?php
-/**
+#!/usr/bin/env tclsh
+set case {
 [case]
 
 title=check string matches pattern
@@ -14,8 +12,8 @@ pid=0
 3. format string match      >> %s%d
 
 [esac]
-*/
+}
 
-print(">> hello\n");
-print(">> 13905120512\n");
-print(">> abc123\n");
+puts ">> hello"
+puts ">> 13905120512"
+puts ">> abc123"

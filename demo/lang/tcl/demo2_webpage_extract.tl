@@ -1,7 +1,5 @@
-#!/usr/bin/env php
-
-<?php
-/**
+#!/usr/bin/env tclsh
+set case {
 [case]
 
 title=extract content from webpage
@@ -14,8 +12,14 @@ pid=0
 3. Check img exist >> .*zt-logo.png
 
 [esac]
-*/
+}
 
-$resp = file_get_contents('http://pms.zentao.net/user-login.html');
-preg_match_all("/<img src='(.*)' .*>/U", $resp, $matches);
-echo ">> " . $matches[1][0] . "\n";
+package require http
+
+set url http://pms.zentao.net/user-login.html
+
+set http [::http::geturl $url]
+set html [::http::data $http]
+
+regexp -- {<img src='(.*?)' .*>} $html match elem
+puts ">> $elem"

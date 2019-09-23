@@ -1,7 +1,5 @@
-#!/usr/bin/env php
-
-<?php
-/**
+#!/usr/bin/env tclsh
+set case {
 [case]
 
 title=check remote interface response
@@ -14,8 +12,14 @@ pid=0
 3. Check its format >> ^[a-z0-9]{26}
 
 [esac]
-*/
+}
 
-$resp = file_get_contents('http://pms.zentao.net?mode=getconfig');
-$json = json_decode($resp);
-echo ">> " . $json->sessionID . "\n";
+package require http
+package require json
+
+set url http://pms.zentao.net?mode=getconfig
+
+set http [::http::geturl $url]
+set jsonStr [::http::data $http]
+set jsonObj [json::json2dict $jsonStr]
+puts ">> [dict get $jsonObj sessionID]"
