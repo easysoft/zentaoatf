@@ -15,8 +15,8 @@ pid=0
 
 var http = require('http');
 
-http.get('http://pms.zentao.net/user-login.html', function(req, resp) {
-    var html = '', image = '';
+http.get('http://pms.zentao.net/user-login.html', function(req) {
+    let html = '', image = '';
 
     req.on('data', function(data) {
         html += data;
