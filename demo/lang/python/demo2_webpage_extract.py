@@ -14,6 +14,10 @@ pid=0
 [esac]
 '''
 
-$resp = file_get_contents('http://pms.zentao.net/user-login.html');
-preg_match_all("/<img src='(.*)' .*>/U", $resp, $matches);
-echo ">> " . $matches[1][0] . "\n";
+import requests
+import re
+
+html = requests.get('http://pms.zentao.net/user-login.html').content
+elem = re.search(r"<img src='(.*?)' .*>", html).group(1)
+print('>> ' + elem)
+
