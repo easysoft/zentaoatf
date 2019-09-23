@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-<?php
-/**
+:<<!
 [case]
 
 title=json api call
@@ -13,8 +12,9 @@ Retrieve sessionID field from response json
 Validate its format >> ^[a-z0-9]{26}
 
 [esac]
-*/
+!
 
-$resp = file_get_contents('http://ruiyinxin.test.zentao.net/?mode=getconfig');
-$json = json_decode($resp);
-echo ">> " . $json->sessionID . "\n";
+resp=$(curl -s 'http://ruiyinxin.test.zentao.net/?mode=getconfig')
+elem=`echo $resp | grep -o '"sessionID":"[^"]*"' | sed 's/^.*:"//g' | sed 's/"//g'`
+
+echo $elem

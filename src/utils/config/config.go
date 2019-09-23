@@ -115,11 +115,6 @@ func InputForSet() {
 
 	var configSite bool
 
-	//language := conf.Language
-	//url := conf.Url
-	//account := conf.Account
-	//password := conf.Password
-
 	logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("begin_config"), color.FgCyan)
 
 	enCheck := ""
@@ -151,14 +146,14 @@ func InputForSet() {
 		conf.Password = stdinUtils.GetInput("(.{2,})", conf.Password, "enter_password", conf.Password)
 	}
 
-	//if  commonUtils.IsWin() {
-	var configInterpreter bool
-	stdinUtils.InputForBool(&configInterpreter, true, "config_script_interpreter")
-	if configInterpreter {
-		scripts := assertUtils.GetCaseByDirAndFile([]string{"."})
-		InputForScriptInterpreter(scripts, &conf, "set")
+	if commonUtils.IsWin() {
+		var configInterpreter bool
+		stdinUtils.InputForBool(&configInterpreter, true, "config_script_interpreter")
+		if configInterpreter {
+			scripts := assertUtils.GetCaseByDirAndFile([]string{"."})
+			InputForScriptInterpreter(scripts, &conf, "set")
+		}
 	}
-	//}
 
 	SaveConfig(conf)
 	PrintCurrConfig()

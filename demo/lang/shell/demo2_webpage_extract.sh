@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-<?php
-/**
+:<<!
 [case]
 
 title=webpage extract
@@ -12,8 +11,9 @@ Load web page from url http://xxx
 Find img element zt-logo.png in html >> .*zt-logo.png
 
 [esac]
-*/
+!
 
-$resp = file_get_contents('http://ruiyinxin.test.zentao.net/user-login.html');
-preg_match_all('/<img src="(.*)" .*>/U', $resp, $matches);
-echo ">> " . $matches[1][0] . "\n";
+resp=$(curl -s http://ruiyinxin.test.zentao.net/user-login.html)
+elem=`echo $resp | grep -o '<img[^>]*src="[^"]*"' | grep -o '[^"]*.png'`
+
+echo $elem

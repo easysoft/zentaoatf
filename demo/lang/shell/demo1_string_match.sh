@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-<?php
-/**
+:<<!
 [case]
 
 title=string match
@@ -13,11 +12,10 @@ test regular expression >> abc\d{3}
 test format string      >> %s%d
 
 [esac]
-*/
+!
 
-// your business logic here
-$str = "abc" . "123";
+str="abc123"
 
-print(">> $str\n");
-print(">> $str\n");
-print(">> $str\n");
+echo ">> ${str}"
+echo ">> ${str}"
+echo ">> ${str}"
