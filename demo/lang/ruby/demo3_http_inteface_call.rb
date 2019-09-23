@@ -14,6 +14,14 @@ pid=0
 [esac]
 =end
 
-$resp = file_get_contents('http://pms.zentao.net?mode=getconfig');
-$json = json_decode($resp);
-echo ">> " . $json->sessionID . "\n";
+require "open-uri"
+require "json"
+
+uri = 'http://pms.zentao.net?mode=getconfig'
+html = nil
+open(uri) do |http|
+  html = http.read
+end
+
+json = JSON.parse(html)
+puts '>> ' + json['sessionID']

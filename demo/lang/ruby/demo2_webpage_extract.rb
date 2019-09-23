@@ -14,6 +14,13 @@ pid=0
 [esac]
 =end
 
-$resp = file_get_contents('http://pms.zentao.net/user-login.html');
-preg_match_all("/<img src='(.*)' .*>/U", $resp, $matches);
-echo ">> " . $matches[1][0] . "\n";
+require "open-uri"
+
+uri = 'http://pms.zentao.net/user-login.html'
+html = nil
+open(uri) do |http|
+  html = http.read
+end
+
+elem = html.match(/<img src='(.*?)' .*>/).captures
+puts '>> ' + elem[0]
