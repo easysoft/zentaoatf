@@ -8,7 +8,9 @@ title=the simple demo for ztf
 cid=1
 pid=1
 
-step1 >> ^[a-z0-9]{26}
+Send a request to interface http://xxx
+Retrieve sessionID field from response json
+Validate its format >> ^[a-z0-9]{26}
 
 [esac]
 */

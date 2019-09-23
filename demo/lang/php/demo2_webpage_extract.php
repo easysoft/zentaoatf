@@ -8,7 +8,8 @@ title=the simple demo for ztf
 cid=1
 pid=1
 
-step1 >> .*zt-logo.png
+Load web page from url http://xxx
+Find img element zt-logo.png in html >> .*zt-logo.png
 
 [esac]
 */
