@@ -17,7 +17,7 @@ pid=0
 require "open-uri"
 require "json"
 
-uri = 'http://pms.zentao.net?mode=getconfig'
+uri = 'http://pms.zentao.net/?mode=getconfig'
 html = nil
 open(uri) do |http|
   html = http.read

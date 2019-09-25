@@ -15,7 +15,7 @@ pid=0
 =cut
 
 use LWP::Simple; # need to install LWP::Simple module
-$json = get('http://pms.zentao.net?mode=getconfig');
+$json = get('http://pms.zentao.net/?mode=getconfig');
 
 if ( $json =~ /"sessionID":"([^"]*)"/ ) {
   print ">> $1\n";

@@ -15,6 +15,6 @@ pid=0
 [esac]
 */
 
-$resp = file_get_contents('http://pms.zentao.net?mode=getconfig');
+$resp = file_get_contents('http://pms.zentao.net/?mode=getconfig');
 $json = json_decode($resp);
 echo ">> " . $json->sessionID . "\n";

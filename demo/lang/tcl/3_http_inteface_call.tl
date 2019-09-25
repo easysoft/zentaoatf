@@ -17,7 +17,7 @@ pid=0
 package require http
 package require json
 
-set url http://pms.zentao.net?mode=getconfig
+set url http://pms.zentao.net/?mode=getconfig
 
 set http [::http::geturl $url]
 set jsonStr [::http::data $http]

@@ -17,7 +17,6 @@ pid=0
 import requests
 import re
 
-html = requests.get('http://pms.zentao.net/user-login.html').content #need to install luasocket library, easy_install requests
+html = requests.get('http://pms.zentao.net/user-login.html').content #need to install luasocket library, pip install requests
 elem = re.search(r"<img src='(.*?)' .*>", html).group(1)
 print('>> ' + elem)
-
