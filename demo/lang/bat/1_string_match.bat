@@ -1,3 +1,4 @@
+@echo off
 goto start
 [case]
 
@@ -12,8 +13,6 @@ pid=0
 
 [esac]
 :start
-
-@echo off
 
 echo ^>^> hello
 echo ^>^> 13905120512

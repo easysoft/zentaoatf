@@ -1,3 +1,4 @@
+@echo off
 goto start
 [case]
 
@@ -13,11 +14,9 @@ pid=0
 [esac]
 :start
 
-@echo off
-
 for /f "tokens=9 delims=," %%a in ('curl -s  "http://pms.zentao.net/?mode=getconfig"') do (
     for /f "tokens=2 delims=:" %%i in (%%a) do (
         set s=%%i
-        echo %s:~1,100%
+        echo ^>^> %s:~1,100%
     )
 )
