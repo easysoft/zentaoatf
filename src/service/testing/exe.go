@@ -29,10 +29,10 @@ func ExeScripts(files []string, report *model.TestReport, pathMaxWidth int) {
 	report.StartTime = startTime
 
 	logUtils.ScreenAndResult(now.Format("2006-01-02 15:04:05") + " " +
-		i118Utils.I118Prt.Sprintf("found_scripts", len(files)) + "\n")
+		i118Utils.I118Prt.Sprintf("found_scripts", len(casesToRun)) + "\n")
 
-	for idx, file := range files {
-		ExeScript(file, report, idx, len(files), pathMaxWidth)
+	for idx, file := range casesToRun {
+		ExeScript(file, report, idx, len(casesToRun), pathMaxWidth)
 	}
 
 	endTime := time.Now().Unix()
