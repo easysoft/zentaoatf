@@ -15,7 +15,9 @@ pid=0
 
 @echo off
 
-resp=$(curl -s http://pms.zentao.net/user-login.html)
-elem=`echo $resp | grep -o '<img[^>]*src="[^"]*"' | grep -o '[^"]*.png'`
-
-echo $elem
+for /f "delims=" %%s in ('curl -s  "http://pms.zentao.net/user-login.html" ^| findstr/irc:"<img src='[^']*'.*/>"') do (
+    for /f "tokens=2 delims='" %%i in ("%s%") do (
+        set b=%%~i
+    )
+    echo %b%
+)

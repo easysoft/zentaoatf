@@ -15,7 +15,9 @@ pid=0
 
 @echo off
 
-resp=$(curl -s 'http://pms.zentao.net?mode=getconfig')
-elem=`echo $resp | grep -o '"sessionID":"[^"]*"' | sed 's/^.*:"//g' | sed 's/"//g'`
-
-echo $elem
+for /f "tokens=9 delims=," %%a in ('curl -s  "http://pms.zentao.net/?mode=getconfig"') do (
+    for /f "tokens=2 delims=:" %%i in (%%a) do (
+        set s=%%i
+        echo %s:~1,100%
+    )
+)
