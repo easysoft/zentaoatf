@@ -14,13 +14,10 @@ import (
 
 func ExeScripts(files []string, report *model.TestReport, pathMaxWidth int) {
 	casesToRun := make([]string, 0)
-	if commonUtils.IsWin() {
-		casesToRun = files
-	} else {
-		for _, file := range files {
-			if path.Ext(file) != ".bat" {
-				casesToRun = append(casesToRun, file)
-			}
+
+	for _, file := range files {
+		if (commonUtils.IsWin() && path.Ext(file) != ".sh") || (!commonUtils.IsWin() && path.Ext(file) != ".bat") {
+			casesToRun = append(casesToRun, file)
 		}
 	}
 
