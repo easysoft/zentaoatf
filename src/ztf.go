@@ -140,6 +140,7 @@ func run(args []string) {
 		if len(files) == 0 {
 			files = append(files, ".")
 		}
+
 		action.Run(files, suiteId, taskId)
 	}
 }
