@@ -255,6 +255,10 @@
       "id": "run_scripts",
       "translation": "Run scripts %d scripts in %d secs, %d(%.1f%%) %s, %d(%.1f%%) %s, %d(%.1f%%) %s. Report %s"
     },
+    {
+      "id": "no_interpreter_for_run",
+      "translation": "Skip script %s since not found interpreter for language %s"
+    },
 
     {
       "id": "no_checkpoints",

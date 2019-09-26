@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"fmt"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	langUtils "github.com/easysoft/zentaoatf/src/utils/lang"
 	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
@@ -40,8 +41,12 @@ func ExecFile(filePath string) string {
 			scriptInterpreter = commonUtils.GetFieldVal(vari.Config, stringUtils.Ucfirst(lang))
 			// fmt.Printf("use interpreter %s for script %s\n", scriptInterpreter, filePath)
 		}
-
-		cmd = exec.Command("cmd", "/C", scriptInterpreter, filePath)
+		if scriptInterpreter != "" || strings.ToLower(lang) == "bat" {
+			cmd = exec.Command("cmd", "/C", scriptInterpreter, filePath)
+		} else {
+			fmt.Printf("use interpreter %s for script %s\n", scriptInterpreter, filePath)
+			i118Utils.I118Prt.Printf("no_interpreter_for_run", filePath, lang)
+		}
 	} else {
 		os.Chmod(filePath, 0777)
 		cmd = exec.Command("/bin/bash", "-c", filePath)

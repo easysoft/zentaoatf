@@ -249,6 +249,10 @@
       "id": "run_scripts",
       "translation": "执行%d个用例，耗时%d秒。%d(%.1f%%) %s，%d(%.1f%%) %s，%d(%.1f%%) %s。报告%s。"
     },
+    {
+      "id": "no_interpreter_for_run",
+      "translation": "由于未配置%s语言的解释程序，跳过脚本%s"
+    },
 
     {
       "id": "time_from_to",
