@@ -1,8 +1,8 @@
-/conf
-/scripts
+/conf/
+/scripts/
 /log/
 /log-bak/
 /.idea/
-/bin
-/release
-/test
+/bin/
+/release/
+/test/
