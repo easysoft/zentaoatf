@@ -1,0 +1,12 @@
+===start /home/aaron/dev/go/zentaoatf/demo/lang/tcl/1_string_match.tl at 2019-09-26 04:07:16
+>> hello
+>> 13905120512
+>> abc123
+===end /home/aaron/dev/go/zentaoatf/demo/lang/tcl/1_string_match.tl at 2019-09-26 04:07:16
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/tcl/2_webpage_extract.tl at 2019-09-26 04:07:16
+>> /theme/default/images/main/zt-logo.png?v=biz3.4
+===end /home/aaron/dev/go/zentaoatf/demo/lang/tcl/2_webpage_extract.tl at 2019-09-26 04:07:16
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/tcl/3_http_inteface_call.tl at 2019-09-26 04:07:16
+===end /home/aaron/dev/go/zentaoatf/demo/lang/tcl/3_http_inteface_call.tl at 2019-09-26 04:07:16

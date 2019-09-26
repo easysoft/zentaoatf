@@ -1,0 +1,11 @@
+2019-09-26 04:07:22 Found 1 scripts
+
+(1/1) Fail [/home/aaron/dev/go/zentaoatf/demo/lang/tcl/3_http_inteface_call.tl] 0.check remote interface response (0.00s)
+
+Failed Scripts:
+[/home/aaron/dev/go/zentaoatf/demo/lang/tcl/3_http_inteface_call.tl] 0.check remote interface response
+  Step 3.  Fail
+    [Expect] ^[a-z0-9]{26}
+    [Actual] N/A
+
+2019-09-26 04:07:22 Run scripts 1 scripts in 0 secs, 0(0.0%) Pass, 1(100.0%) Fail, 0(0.0%) Skip. Report /home/aaron/dev/go/zentaoatf/result.txt

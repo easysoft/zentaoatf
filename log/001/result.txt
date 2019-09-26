@@ -1,0 +1,13 @@
+2019-09-26 04:07:16 Found 3 scripts
+
+(1/3) Pass [/home/aaron/dev/go/zentaoatf/demo/lang/tcl/1_string_match.tl      ] 0.check string matches pattern (0.00s)
+(2/3) Pass [/home/aaron/dev/go/zentaoatf/demo/lang/tcl/2_webpage_extract.tl   ] 0.extract content from webpage (0.00s)
+(3/3) Fail [/home/aaron/dev/go/zentaoatf/demo/lang/tcl/3_http_inteface_call.tl] 0.check remote interface response (0.00s)
+
+Failed Scripts:
+[/home/aaron/dev/go/zentaoatf/demo/lang/tcl/3_http_inteface_call.tl] 0.check remote interface response
+  Step 3.  Fail
+    [Expect] ^[a-z0-9]{26}
+    [Actual] N/A
+
+2019-09-26 04:07:16 Run scripts 3 scripts in 0 secs, 2(66.0%) Pass, 1(33.0%) Fail, 0(0.0%) Skip. Report /home/aaron/dev/go/zentaoatf/result.txt
