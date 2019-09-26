@@ -178,7 +178,9 @@ func InputForRequest() {
 	SaveConfig(conf)
 }
 
-func InputForScriptInterpreter(scripts []string, config *model.Config, from string) {
+func InputForScriptInterpreter(scripts []string, config *model.Config, from string) bool {
+	configChanged := false
+
 	langs := assertUtils.GetScriptType(scripts)
 
 	for _, lang := range langs {
@@ -189,7 +191,7 @@ func InputForScriptInterpreter(scripts []string, config *model.Config, from stri
 		deflt := commonUtils.GetFieldVal(*config, lang)
 		defltShow := ""
 		if deflt == "" {
-			defltShow = i118Utils.I118Prt.Sprintf("for_example", "/usr/bin/php")
+			defltShow = i118Utils.I118Prt.Sprintf("for_example", `c:\php7\php.exe`)
 		} else {
 			defltShow = deflt
 		}
@@ -197,6 +199,8 @@ func InputForScriptInterpreter(scripts []string, config *model.Config, from stri
 		if from == "run" && deflt != "" {
 			continue
 		}
+
+		configChanged = true
 
 		sep := string(os.PathSeparator)
 		if sep == `\` {
@@ -208,4 +212,6 @@ func InputForScriptInterpreter(scripts []string, config *model.Config, from stri
 		inter := stdinUtils.GetInput(reg, deflt, "set_script_interpreter", lang, defltShow)
 		commonUtils.SetFieldVal(config, lang, inter)
 	}
+
+	return configChanged
 }

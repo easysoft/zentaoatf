@@ -37,8 +37,8 @@ func ExecFile(filePath string) string {
 
 		scriptInterpreter := ""
 		if strings.ToLower(lang) != "bat" {
-			scriptInterpreter := commonUtils.GetFieldVal(vari.Config, stringUtils.Ucfirst(lang))
-			fmt.Printf("use interpreter %s for script %s\n", scriptInterpreter, filePath)
+			scriptInterpreter = commonUtils.GetFieldVal(vari.Config, stringUtils.Ucfirst(lang))
+			// fmt.Printf("use interpreter %s for script %s\n", scriptInterpreter, filePath)
 		}
 
 		cmd = exec.Command("cmd", "/C", scriptInterpreter, filePath)
