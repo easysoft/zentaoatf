@@ -15,7 +15,7 @@ pid=0
 [esac]
 !
 
-resp=$(curl -s http://pms.zentao.net/user-login.html)
+resp=$(curl -s http://pms.zentao.net/user-login.html)   # apt-get install curl if needed
 elem=`echo $resp | grep -o "<img[^>]*src='[^']*'" | grep -o "[^']*.png"`
 
 echo ">> $elem"

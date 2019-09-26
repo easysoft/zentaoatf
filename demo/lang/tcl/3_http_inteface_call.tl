@@ -21,5 +21,5 @@ set url http://pms.zentao.net/?mode=getconfig
 
 set http [::http::geturl $url]
 set jsonStr [::http::data $http]
-set jsonObj [json::json2dict $jsonStr]
+set jsonObj [json::json2dict $jsonStr]  # need to install json library, you may use ActiveTcl
 puts ">> [dict get $jsonObj sessionID]"

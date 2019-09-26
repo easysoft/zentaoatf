@@ -15,7 +15,7 @@ pid=0
 [esac]
 !
 
-resp=$(curl -s 'http://pms.zentao.net/?mode=getconfig')
+resp=$(curl -s 'http://pms.zentao.net/?mode=getconfig')  # apt-get install curl if needed
 elem=`echo $resp | grep -o '"sessionID":"[^"]*"' | sed 's/^.*:"//g' | sed 's/"//g'`
 
 echo ">> $elem"
