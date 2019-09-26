@@ -132,9 +132,9 @@ func ReadResData(path string) string {
 
 func GetZtfDir() string {
 	var dir string
-	arg1 := os.Args[0]
+	arg1 := strings.ToLower(os.Args[0])
 
-	if strings.Index(arg1, "build") > -1 || strings.Index(arg1, "bin") > -1 {
+	if strings.Index(arg1, "build") > -1 || strings.Index(arg1, "bin") > -1 || strings.Index(arg1, "temp") > -1 { // debug
 		dir, _ = os.Getwd()
 	} else {
 		dir, _ = filepath.Abs(filepath.Dir(os.Args[0]))

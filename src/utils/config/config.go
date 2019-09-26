@@ -178,7 +178,9 @@ func InputForRequest() {
 	SaveConfig(conf)
 }
 
-func InputForScriptInterpreter(scripts []string, config *model.Config, from string) {
+func InputForScriptInterpreter(scripts []string, config *model.Config, from string) bool {
+	configChanged := false
+
 	langs := assertUtils.GetScriptType(scripts)
 
 	for _, lang := range langs {
@@ -198,6 +200,8 @@ func InputForScriptInterpreter(scripts []string, config *model.Config, from stri
 			continue
 		}
 
+		configChanged = true
+
 		sep := string(os.PathSeparator)
 		if sep == `\` {
 			sep = `\\`
@@ -208,4 +212,6 @@ func InputForScriptInterpreter(scripts []string, config *model.Config, from stri
 		inter := stdinUtils.GetInput(reg, deflt, "set_script_interpreter", lang, defltShow)
 		commonUtils.SetFieldVal(config, lang, inter)
 	}
+
+	return configChanged
 }
