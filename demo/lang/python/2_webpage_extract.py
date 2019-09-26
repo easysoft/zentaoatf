@@ -18,5 +18,5 @@ import requests
 import re
 
 html = requests.get('http://pms.zentao.net/user-login.html').content #need to install luasocket library, pip install requests
-elem = re.search(r"<img src='(.*?)' .*>", html).group(1)
+elem = re.search(r"<img src='(.*?)' .*>", html.decode("utf-8")).group(1)
 print('>> ' + elem)
