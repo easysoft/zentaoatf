@@ -191,7 +191,7 @@ func InputForScriptInterpreter(scripts []string, config *model.Config, from stri
 		deflt := commonUtils.GetFieldVal(*config, lang)
 		defltShow := ""
 		if deflt == "" {
-			defltShow = i118Utils.I118Prt.Sprintf("for_example", "/usr/bin/php")
+			defltShow = i118Utils.I118Prt.Sprintf("for_example", `c:\php7\php.exe`)
 		} else {
 			defltShow = deflt
 		}
