@@ -1,7 +1,7 @@
 package stdinUtils
 
 import (
-	"fmt"
+	"bufio"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	langUtils "github.com/easysoft/zentaoatf/src/utils/lang"
@@ -104,7 +104,8 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 
 	for {
 		logUtils.PrintToStdOut("\n"+msg, color.FgCyan)
-		fmt.Scanln(&ret)
+		// fmt.Scanln(&ret)
+		Scanf(&ret)
 
 		if strings.TrimSpace(ret) == "" && defaultVal != "" {
 			ret = defaultVal
@@ -116,6 +117,8 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 		if temp == "exit" {
 			os.Exit(1)
 		}
+
+		logUtils.PrintToStdOut(ret, -1)
 
 		if regx == "" {
 			return ret
@@ -138,4 +141,10 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 			logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf(msg), color.FgRed)
 		}
 	}
+}
+
+func Scanf(a *string) {
+	reader := bufio.NewReader(os.Stdin)
+	data, _, _ := reader.ReadLine()
+	*a = string(data)
 }

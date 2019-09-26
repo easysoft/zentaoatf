@@ -17,3 +17,4 @@ zip -r ztf/ztf-linux-2.0.beta1.zip ztf/ztf-linux ztf/demo ztf/conf ztf/log
 zip -r ztf/ztf-mac-2.0.beta1.zip ztf/ztf-mac ztf/demo ztf/conf ztf/log
 
 error_log(json_encode($_POST, JSON_FORCE_OBJECT));
+pip install -i https://pypi.tuna.tsinghua.edu.cn/simple requests
