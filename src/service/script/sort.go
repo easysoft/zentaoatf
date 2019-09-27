@@ -3,10 +3,10 @@ package scriptUtils
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
-	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
+	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"regexp"
 	"strconv"
 	"strings"
@@ -17,18 +17,7 @@ func Sort(cases []string) {
 		if fileUtils.FileExist(file) {
 			script := fileUtils.ReadFile(file)
 
-			//`(?s)\[case\](?U:.*pid.*)\n(.*)\[esac\]`
-
-			regx := regexp.MustCompile(`(?s)\[case\](?U)(.*)(\[.*)\[esac\]`)
-			arr := regx.FindStringSubmatch(script)
-
-			info := ""
-			content := ""
-			if len(arr) > 2 {
-				info = strings.TrimSpace(arr[1])
-				checkpoints := arr[2]
-				content = commonUtils.RemoveBlankLine(checkpoints)
-			}
+			info, content := zentaoUtils.ReadCaseInfo(script)
 
 			lines := strings.Split(content, "\n")
 
@@ -41,7 +30,6 @@ func Sort(cases []string) {
 			script = re.ReplaceAllString(script, "[case]"+info+"\n"+stepsTxt+"\n\n[esac]")
 
 			fileUtils.WriteFile(file, script)
-			return
 		}
 	}
 

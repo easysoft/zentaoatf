@@ -159,7 +159,7 @@ func getCheckpointStepArr(content string, expectIndependentContent string) ([]st
 			}
 		}
 
-		if step != "" {
+		if step != "" && len(expects) > 0 {
 			cpStepArr = append(cpStepArr, step)
 			if !independentExpect {
 				expectArr = append(expectArr, expects)
