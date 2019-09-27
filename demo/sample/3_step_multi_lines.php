@@ -2,8 +2,7 @@
 <?php
 /**
 [case]
-
-[case]title=step multi lines
+title=step multi lines
 cid=0
 pid=0
 
@@ -12,7 +11,7 @@ pid=0
     step 1.1
     step 1.2
   [1.1. expects]
-
+    
   [1.2. steps]
     step 2.1
     step 2.2

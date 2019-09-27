@@ -27,7 +27,7 @@ func Sort(cases []string) {
 
 			// replace info
 			re, _ := regexp.Compile(`(?s)\[case\].*\[esac\]`)
-			script = re.ReplaceAllString(script, "[case]"+info+"\n"+stepsTxt+"\n\n[esac]")
+			script = re.ReplaceAllString(script, "[case]\n"+info+"\n"+stepsTxt+"\n\n[esac]")
 
 			fileUtils.WriteFile(file, script)
 		}
@@ -70,7 +70,7 @@ func getGroupBlockArr(lines []string) [][]string {
 
 		var groupContent []string
 		line := strings.TrimSpace(lines[idx])
-		if isGroup(line) {
+		if isGroup(line) { // must match a group
 			groupContent = make([]string, 0)
 			groupContent = append(groupContent, line)
 
@@ -93,8 +93,6 @@ func getGroupBlockArr(lines []string) [][]string {
 
 				idx++
 			}
-		} else {
-			idx++
 		}
 	}
 
@@ -233,7 +231,10 @@ func getOrderTextFromNestedSteps(groups []model.TestStep) string {
 					}
 				} else {
 					desc = replaceNumb(child.Desc, groupNumb, -1, false)
+					desc = strings.TrimSpace(desc)
+
 					expect := child.Expect
+					expect = strings.TrimSpace(expect)
 					if expect != "" {
 						expect = ">> " + expect
 					}
@@ -248,7 +249,7 @@ func getOrderTextFromNestedSteps(groups []model.TestStep) string {
 			ret = append(ret, "\n"+desc)
 
 			childNumb := 1
-			for idx, child := range group.Children {
+			for _, child := range group.Children {
 				if group.MutiLine {
 					// steps
 					desc = replaceNumb("[steps]", groupNumb, childNumb, true)
@@ -262,12 +263,21 @@ func getOrderTextFromNestedSteps(groups []model.TestStep) string {
 
 					ret = append(ret, printMutiStepOrExpect(child.Expect))
 
-					if idx < len(group.Children)-1 {
-						ret = append(ret, "")
-					}
+					//if idx < len(group.Children)-1 {
+					//	ret = append(ret, "")
+					//}
 				} else {
 					desc = replaceNumb(child.Desc, groupNumb, -1, false)
-					ret = append(ret, fmt.Sprintf("  %s >> %s", desc, child.Expect))
+					desc = strings.TrimSpace(desc)
+
+					expect := child.Expect
+					expect = strings.TrimSpace(expect)
+
+					if expect != "" {
+						expect = ">> " + expect
+					}
+
+					ret = append(ret, fmt.Sprintf("  %s %s", desc, expect))
 				}
 
 				childNumb++

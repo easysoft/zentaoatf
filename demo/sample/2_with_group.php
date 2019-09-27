@@ -2,19 +2,18 @@
 <?php
 /**
 [case]
-
 title=with multi groups
 cid=0
 pid=0
 
 [group]
-  step 1 >> expect 1
-  step 2 >> expect 2
+  1. step 1 >> expect 1
+  2. step 2 >> expect 2
 
-[group title 3]
-  step 3.1 >> expect 3.1
-  step 3.2 >> expect 3.2
-  
+[3. group title 3]
+  3. step 3.1 >> expect 3.1
+  3. step 3.2 >> expect 3.2
+
 [esac]
 */
 
