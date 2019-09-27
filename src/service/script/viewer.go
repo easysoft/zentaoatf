@@ -23,7 +23,7 @@ func List(cases []string, keywords string) {
 		}
 	}
 
-	logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("total_test_case", count), -1)
+	logUtils.PrintToStdOut("\n"+i118Utils.I118Prt.Sprintf("total_test_case", count), -1)
 }
 
 func Summary(file string, keywords string) bool {
@@ -56,12 +56,12 @@ func View(cases []string, keywords string) {
 
 	for _, file := range cases {
 		if Brief(file, keywords) {
+			logUtils.PrintToStdOut("", -1)
 			count++
 		}
-		//Detail(file)
 	}
 
-	logUtils.PrintToStdOut("\n"+i118Utils.I118Prt.Sprintf("total_test_case", count), -1)
+	logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("total_test_case", count), -1)
 }
 
 func Brief(file string, keywords string) bool {
