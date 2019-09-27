@@ -1,7 +1,8 @@
 #!/usr/bin/env php
-
 <?php
 /**
+[case]
+
 [case]title=step multi lines
 cid=0
 pid=0

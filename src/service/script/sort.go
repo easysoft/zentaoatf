@@ -21,8 +21,8 @@ func Sort(cases []string) {
 
 			lines := strings.Split(content, "\n")
 
-			groupBlock := getGroupBlock(lines)
-			groupArr := getStepNestedArr(groupBlock)
+			groupBlockArr := getGroupBlockArr(lines)
+			groupArr := getStepNestedArr(groupBlockArr)
 			stepsTxt := getOrderTextFromNestedSteps(groupArr)
 
 			// replace info
@@ -59,7 +59,7 @@ func getStepNestedArr(blocks [][]string) []model.TestStep {
 	return ret
 }
 
-func getGroupBlock(lines []string) [][]string {
+func getGroupBlockArr(lines []string) [][]string {
 	groupBlockArr := make([][]string, 0)
 
 	idx := 0
@@ -93,6 +93,8 @@ func getGroupBlock(lines []string) [][]string {
 
 				idx++
 			}
+		} else {
+			idx++
 		}
 	}
 
@@ -231,7 +233,12 @@ func getOrderTextFromNestedSteps(groups []model.TestStep) string {
 					}
 				} else {
 					desc = replaceNumb(child.Desc, groupNumb, -1, false)
-					ret = append(ret, fmt.Sprintf("  %s >> %s", desc, child.Expect))
+					expect := child.Expect
+					if expect != "" {
+						expect = ">> " + expect
+					}
+
+					ret = append(ret, fmt.Sprintf("  %s %s", desc, expect))
 				}
 
 				groupNumb++
