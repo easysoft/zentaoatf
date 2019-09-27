@@ -38,6 +38,7 @@ func Sort(cases []string) {
 
 func getStepNestedArr(blocks [][]string) []model.TestStep {
 	ret := make([]model.TestStep, 0)
+
 	for _, block := range blocks {
 		name := block[0]
 		group := model.TestStep{Desc: name}
@@ -93,6 +94,8 @@ func getGroupBlockArr(lines []string) [][]string {
 
 				idx++
 			}
+		} else {
+			idx++
 		}
 	}
 
