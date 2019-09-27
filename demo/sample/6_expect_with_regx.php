@@ -2,12 +2,12 @@
 <?php
 /**
 [case]
-
 title=expect with regx
 cid=0
 pid=0
 
-step1 >> ^abc\d{3}$
+[group]
+  1. step1 >> ^abc\d{3}$
 
 [esac]
 */

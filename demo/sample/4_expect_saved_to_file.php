@@ -2,20 +2,19 @@
 <?php
 /**
 [case]
-
 title=step multi_lines
 cid=0
 pid=0
 
 [group]
-   step 1 >>
-   step 2
+  1. step 1 
+  2. step 2 
 
-[group title 3]
-  [3. steps]
+[3. group title 3]
+  [3.1. steps]
     step 3.1
     step 3.2
-  [3. expects]
+  [3.1. expects]
     >>
 
 [esac]

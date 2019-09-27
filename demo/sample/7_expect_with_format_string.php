@@ -2,12 +2,12 @@
 <?php
 /**
 [case]
-
 title=expect with format string
 cid=0
 pid=0
 
-step1 >> %s%d
+[group]
+  1. step1 >> %s%d
 
 [esac]
 */
