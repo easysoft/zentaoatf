@@ -118,7 +118,7 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 			os.Exit(1)
 		}
 
-		logUtils.PrintToStdOut(ret, -1)
+		//logUtils.PrintToStdOut(ret, -1)
 
 		if regx == "" {
 			return ret

@@ -5,8 +5,8 @@
 [case]
 
 title=the simple demo for ztf
-cid=1
-pid=1
+cid=0
+pid=0
 
 step1 >> expect 1
 step2

@@ -5,8 +5,8 @@
 [case]
 
 title=step multi lines
-cid=1
-pid=1
+cid=0
+pid=0
 
 [group title 1]
   [1. steps]

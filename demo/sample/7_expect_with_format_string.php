@@ -5,8 +5,8 @@
 [case]
 
 title=expect with format string
-cid=1
-pid=1
+cid=0
+pid=0
 
 step1 >> %s%d
 

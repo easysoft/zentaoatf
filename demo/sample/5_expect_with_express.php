@@ -5,8 +5,8 @@
 [case]
 
 title=the expect with regx
-cid=1
-pid=1
+cid=0
+pid=0
 
 step1 >> abc123
 

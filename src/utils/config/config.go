@@ -21,8 +21,6 @@ import (
 func InitConfig() {
 	vari.ZtfDir = fileUtils.GetZtfDir()
 	constant.ConfigFile = vari.ZtfDir + constant.ConfigFile
-
-	// preference from yaml
 	vari.Config = getInst()
 
 	// screen size
@@ -86,7 +84,10 @@ func ReadCurrConfig() model.Config {
 }
 
 func getInst() model.Config {
-	CheckConfig()
+	isSet := len(os.Args) > 1 && (os.Args[1] == "set" || os.Args[1] == "-set")
+	if !isSet {
+		CheckConfig()
+	}
 
 	configFile := constant.ConfigFile
 
