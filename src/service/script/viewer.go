@@ -6,6 +6,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
+	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/fatih/color"
 	"regexp"
 	"strconv"
@@ -26,26 +27,20 @@ func List(cases []string, keywords string) {
 }
 
 func Summary(file string, keywords string) bool {
-	content := fileUtils.ReadFile(file)
+	pass, caseId, _, title := zentaoUtils.GetCaseInfo(file)
 
-	myExp := regexp.MustCompile(`<<<TC[\S\s]*caseId:([^\n]*)(?:[\S\s]+?)\n+title:([^\n]*)\n`)
-	arr := myExp.FindStringSubmatch(content)
-
-	if len(arr) > 2 {
-		caseId := commonUtils.RemoveBlankLine(arr[1])
-		title := commonUtils.RemoveBlankLine(arr[2])
-
+	if pass {
 		_, err := strconv.Atoi(keywords)
 		var pass bool
 
-		if err == nil && keywords == caseId { // int
+		if err == nil && keywords == strconv.Itoa(caseId) { // int
 			pass = true
 		} else if strings.Index(title, keywords) > -1 {
 			pass = true
 		}
 
 		if pass {
-			fmt.Printf("%s %s \n", caseId, title)
+			fmt.Printf("%d. %s \n", caseId, title)
 
 			return true
 		} else {
@@ -66,29 +61,27 @@ func View(cases []string, keywords string) {
 		//Detail(file)
 	}
 
-	logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("total_test_case", count), -1)
+	logUtils.PrintToStdOut("\n"+i118Utils.I118Prt.Sprintf("total_test_case", count), -1)
 }
 
 func Brief(file string, keywords string) bool {
 	content := fileUtils.ReadFile(file)
 
 	myExp := regexp.MustCompile(
-		`<<<TC[\S\s]*` +
-			`caseId:([^\n]*)\n+` +
-			`productId:([^\n]*)\n+` +
-			`title:([^\n]*)\n+` +
-			`steps:.*\n([\S\s]*)\n` +
-			`expects:.*\n([\S\s]*?)\n` +
-			`(readme:|TC)`)
+		`\[case\][\S\s]*` +
+			`title=([^\n]*)\n+` +
+			`cid=([^\n]*)\n+` +
+			`pid=([^\n]*)\n+` +
+			`([\S\s]*)\n*` +
+			`\[esac\]`)
 	arr := myExp.FindStringSubmatch(content)
 
 	if len(arr) > 2 {
-		caseId := commonUtils.RemoveBlankLine(arr[1])
-		_ = commonUtils.RemoveBlankLine(arr[2])
+		title := commonUtils.RemoveBlankLine(arr[1])
+		caseId := commonUtils.RemoveBlankLine(arr[2])
 
-		title := commonUtils.RemoveBlankLine(arr[3])
-		steps := arr[4]
-		expects := commonUtils.RemoveBlankLine(arr[5])
+		//productId := commonUtils.RemoveBlankLine(arr[3])
+		steps := commonUtils.RemoveBlankLine(arr[4])
 
 		_, err := strconv.Atoi(keywords)
 		var pass bool
@@ -102,7 +95,6 @@ func Brief(file string, keywords string) bool {
 		if pass {
 			logUtils.PrintToStdOut(fmt.Sprintf("%s %s", caseId, title), color.FgCyan)
 			fmt.Printf("Steps: \n%s \n", steps)
-			fmt.Printf("Expects: \n%s\n\n", expects)
 
 			return true
 		} else {
