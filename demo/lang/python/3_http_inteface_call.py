@@ -17,6 +17,6 @@ pid=0
 import requests
 import json
 
-jsonStr = requests.get('http://pms.zentao.net/?mode=getconfig').content #need to install requests library, pip install requests
+jsonStr = requests.get('http://pms.zentao.net/?mode=getconfig').content #need requests library (pip/pip3 install requests)
 jsonObj = json.loads(jsonStr)
 print('>> ' + jsonObj['sessionID'])

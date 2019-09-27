@@ -14,7 +14,7 @@ pid=0
 [esac]
 =cut
 
-use LWP::Simple; # need to install LWP::Simple module
+use LWP::Simple; # need LWP::Simple module
 $html = get('http://pms.zentao.net/user-login.html');
 
 if ( $html =~ /<img src='(.*?)' .*>/ ) {

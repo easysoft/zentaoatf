@@ -14,7 +14,7 @@ pid=0
 [esac]
 ]]
 
-local http = require("socket.http") -- need to install luasocket library, luarocks install luasocket
+local http = require("socket.http") -- need luasocket library (luarocks install luasocket)
 local ltn12 = require("ltn12")
 
 function http.get(u)

@@ -23,5 +23,5 @@ open(uri) do |http|
   html = http.read
 end
 
-json = JSON.parse(html)   # need to install json library,  gem install json
+json = JSON.parse(html)   # need json library (gem install json)
 puts '>> ' + json['sessionID']
