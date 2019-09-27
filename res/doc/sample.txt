@@ -25,3 +25,6 @@ $>atf.exe -l dir1 -k word                 列出指定路径下，标题包含'w
 $>atf.exe view tc01.py tc02.py            查看指定路径的测试脚本。
 $>atf.exe -v dir1 -k 1                    查看指定路径下，ID为1的脚本。
 $>atf.exe -v dir1 -k word                 查看指定路径下，标题包含'word'的脚本。
+
+$>atf.exe sort dir1                       将dir1目录下脚本的步骤重新排序, 缩写-s。
+$>atf.exe clean                           清除所有测试执行日志，缩写-c。
