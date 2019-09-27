@@ -7,6 +7,7 @@ title=the simple demo for ztf
 cid=0
 pid=0
 
+[group]
 step1 >> expect 1
 step2
 step3 >> expect 3
