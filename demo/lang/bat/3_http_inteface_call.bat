@@ -18,9 +18,10 @@ pid=0
 for /f "tokens=9 delims=," %%a in ('curl -s  "http://pms.zentao.net/?mode=getconfig"') do (
     set var=%%a
 )
+
 for /f "tokens=2 delims=:" %%i in ("!var!") do (
     set s=%%i
-    set var2= %s:~1,100%
+    set var2=!s:~1,26!
 )
 
 echo ^>^> !var2!
