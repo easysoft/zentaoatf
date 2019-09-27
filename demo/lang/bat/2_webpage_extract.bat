@@ -1,5 +1,5 @@
 @echo off
-
+setlocal enabledelayedexpansion
 goto start
 [case]
 
@@ -15,9 +15,10 @@ pid=0
 [esac]
 :start
 
-for /f "delims=" %%s in ('curl -s  "http://pms.zentao.net/user-login.html" ^| findstr/irc:"<img src=.*/>"') do (
-    for /f "tokens=2 delims='" %%i in ("%%s") do (
-        set b=%%~i
-    )
-    echo ^>^> %b%
+for /f "delims=" %%a in ('curl -s  "http://pms.zentao.net/user-login.html" ^| findstr/irc:"<img src="') do (
+    set var=%%a
 )
+for /f "tokens=2 delims='" %%i in ("!var!") do (
+    set var2=%%~i
+)
+echo ^>^> !var2!
