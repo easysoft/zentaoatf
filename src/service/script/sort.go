@@ -20,17 +20,16 @@ func Sort(cases []string) {
 	logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("success_sort_steps", len(cases)), -1)
 }
 
-func SortFile(script string, output bool) (map[string]string, map[string]string, map[string]string) {
+func SortFile(file string, output bool) (map[string]string, map[string]string, map[string]string) {
 	stepsTxt := ""
 	stepMap := make(map[string]string, 0)
 	stepTypeMap := make(map[string]string, 0)
 	expectMap := make(map[string]string, 0)
 
-	if fileUtils.FileExist(script) {
-		script := fileUtils.ReadFile(script)
+	if fileUtils.FileExist(file) {
+		content := fileUtils.ReadFile(file)
 
-		info, content := zentaoUtils.ReadCaseInfo(script)
-
+		info, content := zentaoUtils.ReadCaseInfo(content)
 		lines := strings.Split(content, "\n")
 
 		groupBlockArr := getGroupBlockArr(lines)
@@ -39,9 +38,9 @@ func SortFile(script string, output bool) (map[string]string, map[string]string,
 
 		// replace info
 		re, _ := regexp.Compile(`(?s)\[case\].*\[esac\]`)
-		script = re.ReplaceAllString(script, "[case]\n"+info+"\n"+stepsTxt+"\n\n[esac]")
+		script := re.ReplaceAllString(content, "[case]\n"+info+"\n"+stepsTxt+"\n\n[esac]")
 
-		fileUtils.WriteFile(script, script)
+		fileUtils.WriteFile(file, script)
 
 		pass, expectIndependentContent := zentaoUtils.GetDependentExpect(script)
 		if pass {
@@ -271,7 +270,7 @@ func getSortedTextFromNestedSteps(groups []model.TestStep) (string, map[string]s
 						expectTxt = ">> " + expectTxt
 					}
 
-					ret = append(ret, fmt.Sprintf("  %s %s", desc, expectTxt))
+					ret = append(ret, fmt.Sprintf("  %s %s", stepTxt, expectTxt))
 				}
 
 				groupNumb++
@@ -319,7 +318,7 @@ func getSortedTextFromNestedSteps(groups []model.TestStep) (string, map[string]s
 						expectTxt = ">> " + expectTxt
 					}
 
-					ret = append(ret, fmt.Sprintf("  %s %s", desc, expectTxt))
+					ret = append(ret, fmt.Sprintf("  %s %s", stepTxt, expectTxt))
 				}
 
 				childNumb++

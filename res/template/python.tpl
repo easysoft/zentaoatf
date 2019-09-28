@@ -1,16 +1,9 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 '''
-<<<TC
+[case]
 
-caseId:         %s
-productId:      %s
-title:          %s
-steps:          %s
-
-expects:
 %s
 
-TC;
+[esac]
 '''
-
 %s

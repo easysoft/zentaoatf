@@ -1,19 +1,11 @@
+@echo off
+setlocal enabledelayedexpansion
 goto start
-<<<TC
+[case]
 
-caseId:         %s
-productId:      %s
-title:          %s
-steps:          %s
-
-expects:
 %s
 
-TC;
+[esac]
 :start
-
-
-@echo off
-Setlocal enabledelayedexpansion
 
 %s

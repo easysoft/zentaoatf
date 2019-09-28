@@ -1,16 +1,10 @@
 #!/usr/bin/env ruby
 =begin
-<<<TC
+[case]
 
-caseId:         %s
-productId:      %s
-title:          %s
-steps:          %s
-
-expects:
 %s
 
-TC;
+[esac]
 =end
 
 %s

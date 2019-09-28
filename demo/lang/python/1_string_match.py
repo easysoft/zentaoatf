@@ -14,6 +14,6 @@ pid=0
 [esac]
 '''
 
-print(">> hello");
-print(">> 13905120512");
-print(">> abc123");
+print(">> hello")
+print(">> 13905120512")
+print(">> abc123")

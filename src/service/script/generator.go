@@ -153,7 +153,7 @@ func generateTestStepAndScript(teststeps []model.TestStep, steps *[]string, inde
 
 	stepNumb := 1
 	for _, group := range nestedSteps {
-		if group.Id == "-1" {
+		if group.Id == "-1" { // [group]
 			*steps = append(*steps, "\n[group]")
 
 			for _, child := range group.Children {

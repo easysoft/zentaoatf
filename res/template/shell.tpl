@@ -1,16 +1,10 @@
 #!/usr/bin/env bash
 :<<!
-<<<TC
+[case]
 
-caseId:         %s
-productId:      %s
-title:          %s
-steps:          %s
-
-expects:
 %s
 
-TC;
+[esac]
 !
 
 %s

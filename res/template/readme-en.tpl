@@ -1,2 +1,0 @@
-- Log a '#' for each checkpoint to match up with the ones in expects section.
-- Pls refer to https://github.com/easysoft/zentaoatf/scripts-demo.

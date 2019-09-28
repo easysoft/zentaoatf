@@ -1,2 +1,0 @@
-- 测试日志中的验证点以#打头，且和expects章节中的#标注保持一致对应。
-- 参考样例https://github.com/easysoft/zentaoatf/scripts-demo。
