@@ -42,7 +42,7 @@ func SortFile(file string, output bool) (map[string]string, map[string]string, m
 
 		fileUtils.WriteFile(file, script)
 
-		pass, expectIndependentContent := zentaoUtils.GetDependentExpect(script)
+		pass, expectIndependentContent := zentaoUtils.GetDependentExpect(file)
 		if pass {
 			expectMap = getExpectMapFromIndependentFile(stepMap, expectIndependentContent)
 		}
