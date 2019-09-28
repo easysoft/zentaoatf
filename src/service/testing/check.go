@@ -16,12 +16,12 @@ import (
 )
 
 func CheckCaseResult(scriptFile string, logs string, report *model.TestReport, idx int, total int, secs string, pathMaxWidth int) {
-	cpStepNumbArr, _, expectArr := zentaoUtils.ReadScriptCheckpoints(scriptFile)
+	cpStepNumbArr, _, cpExpectArr := zentaoUtils.ReadScriptCheckpoints(scriptFile)
 
 	skip, logArr := zentaoUtils.ReadLogArr(logs)
 
 	language := langUtils.GetLangByFile(scriptFile)
-	ValidateCaseResult(scriptFile, language, cpStepNumbArr, expectArr, skip, logArr, report, idx, total, secs, pathMaxWidth)
+	ValidateCaseResult(scriptFile, language, cpStepNumbArr, cpExpectArr, skip, logArr, report, idx, total, secs, pathMaxWidth)
 }
 
 func ValidateCaseResult(scriptFile string, langType string,

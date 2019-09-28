@@ -8,6 +8,11 @@ import (
 func CommitCases(files []string) {
 	for _, file := range files {
 		pass, id, _, title := zentaoUtils.GetCaseInfo(file)
-		zentaoService.CommitCase(id, title)
+
+		if pass {
+			cpStepDescArr, cpStepDescArr, cpExpectArr := zentaoUtils.ReadScriptCheckpoints(file)
+
+			zentaoService.CommitCase(id, title)
+		}
 	}
 }

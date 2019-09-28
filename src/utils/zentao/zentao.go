@@ -113,12 +113,12 @@ func ReadScriptCheckpoints(file string) ([]string, []string, [][]string) {
 	content := fileUtils.ReadFile(file)
 	_, checkpoints := ReadCaseInfo(content)
 
-	cpStepArr, cpStepNumbArr, cpStepDescArr := getCheckpointStepArr(checkpoints, expectIndependentContent)
+	cpStepNumbArr, cpStepDescArr, cpExpectArr := getCheckpointStepArr(checkpoints, expectIndependentContent)
 
-	return cpStepArr, cpStepNumbArr, cpStepDescArr
+	return cpStepNumbArr, cpStepDescArr, cpExpectArr
 }
 func getCheckpointStepArr(content string, expectIndependentContent string) ([]string, []string, [][]string) {
-	cpStepNumArr := make([]string, 0)
+	cpStepNumbArr := make([]string, 0)
 	cpStepDescArr := make([]string, 0)
 	cpExpectArr := make([][]string, 0)
 
@@ -165,8 +165,8 @@ func getCheckpointStepArr(content string, expectIndependentContent string) ([]st
 		}
 
 		if stepDesc != "" && len(expects) > 0 { // only return steps that have expects
-			cpStepNumArr = append(cpStepNumArr, stepNumb)
-			cpStepDescArr = append(cpStepNumArr, stepDesc)
+			cpStepNumbArr = append(cpStepNumbArr, stepNumb)
+			cpStepDescArr = append(cpStepDescArr, stepDesc)
 			if !independentExpect {
 				cpExpectArr = append(cpExpectArr, expects)
 			}
@@ -178,7 +178,7 @@ func getCheckpointStepArr(content string, expectIndependentContent string) ([]st
 		cpExpectArr = readExpectIndependentArr(expectIndependentContent)
 	}
 
-	return cpStepNumArr, cpStepDescArr, cpExpectArr
+	return cpStepDescArr, cpStepDescArr, cpExpectArr
 }
 
 func readExpectIndependentArr(content string) [][]string {
