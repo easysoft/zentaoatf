@@ -7,6 +7,7 @@ import (
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
+	"path"
 	"regexp"
 	"strconv"
 	"strings"
@@ -14,50 +15,42 @@ import (
 
 func Sort(cases []string) {
 	for _, file := range cases {
-		if fileUtils.FileExist(file) {
-			script := fileUtils.ReadFile(file)
-
-			info, content := zentaoUtils.ReadCaseInfo(script)
-
-			lines := strings.Split(content, "\n")
-
-			groupBlockArr := getGroupBlockArr(lines)
-			groupArr := getStepNestedArr(groupBlockArr)
-			stepsTxt := getOrderTextFromNestedSteps(groupArr)
-
-			// replace info
-			re, _ := regexp.Compile(`(?s)\[case\].*\[esac\]`)
-			script = re.ReplaceAllString(script, "[case]\n"+info+"\n"+stepsTxt+"\n\n[esac]")
-
-			fileUtils.WriteFile(file, script)
-		}
+		SortFile(file, false)
 	}
 
 	logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("success_sort_steps", len(cases)), -1)
 }
 
-func getStepNestedArr(blocks [][]string) []model.TestStep {
-	ret := make([]model.TestStep, 0)
+func SortFile(script string, output bool) (map[string]string, map[string]string, map[string]string) {
+	stepMap := make(map[string]string, 0)
+	stepTypeMap := make(map[string]string, 0)
+	expectMap := make(map[string]string, 0)
 
-	for _, block := range blocks {
-		name := block[0]
-		group := model.TestStep{Desc: name}
+	if fileUtils.FileExist(script) {
+		script := fileUtils.ReadFile(script)
 
-		if isStepsIdent(block[1]) { // muti line
-			group.MutiLine = true
-			childs := loadMutiLineSteps(block[1:])
+		info, content := zentaoUtils.ReadCaseInfo(script)
 
-			group.Children = append(group.Children, childs...)
-		} else {
-			childs := loadSingleLineSteps(block[1:])
+		lines := strings.Split(content, "\n")
 
-			group.Children = append(group.Children, childs...)
+		groupBlockArr := getGroupBlockArr(lines)
+		groupArr := getStepNestedArr(groupBlockArr)
+		stepsTxt, stepMap, stepTypeMap, expectMap := getSortedTextFromNestedSteps(groupArr)
+
+		// replace info
+		re, _ := regexp.Compile(`(?s)\[case\].*\[esac\]`)
+		script = re.ReplaceAllString(script, "[case]\n"+info+"\n"+stepsTxt+"\n\n[esac]")
+
+		fileUtils.WriteFile(script, script)
+
+		pass, expectIndependentContent := zentaoUtils.GetDependentExpect(script)
+		if pass {
+			expectMap = getExpectMapFromIndependentFile(stepMap, expectIndependentContent)
 		}
 
-		ret = append(ret, group)
 	}
 
-	return ret
+	return stepMap, stepTypeMap, expectMap
 }
 
 func getGroupBlockArr(lines []string) [][]string {
@@ -100,6 +93,30 @@ func getGroupBlockArr(lines []string) [][]string {
 	}
 
 	return groupBlockArr
+}
+
+func getStepNestedArr(blocks [][]string) []model.TestStep {
+	ret := make([]model.TestStep, 0)
+
+	for _, block := range blocks {
+		name := block[0]
+		group := model.TestStep{Desc: name}
+
+		if isStepsIdent(block[1]) { // muti line
+			group.MutiLine = true
+			childs := loadMutiLineSteps(block[1:])
+
+			group.Children = append(group.Children, childs...)
+		} else {
+			childs := loadSingleLineSteps(block[1:])
+
+			group.Children = append(group.Children, childs...)
+		}
+
+		ret = append(ret, group)
+	}
+
+	return ret
 }
 
 func loadMutiLineSteps(arr []string) []model.TestStep {
@@ -206,8 +223,11 @@ func isGroup(str string) bool {
 	return ret
 }
 
-func getOrderTextFromNestedSteps(groups []model.TestStep) string {
+func getSortedTextFromNestedSteps(groups []model.TestStep) (string, map[string]string, map[string]string, map[string]string) {
 	ret := make([]string, 0)
+	stepMap := make(map[string]string, 0)
+	stepTypeMap := make(map[string]string, 0)
+	expectMap := make(map[string]string, 0)
 
 	groupNumb := 1
 	for _, group := range groups {
@@ -290,14 +310,11 @@ func getOrderTextFromNestedSteps(groups []model.TestStep) string {
 		}
 	}
 
-	return strings.Join(ret, "\n")
+	return strings.Join(ret, "\n"), stepMap, stepTypeMap, expectMap
 }
 
 func replaceNumb(str string, groupNumb int, childNumb int, withBrackets bool) string {
-	numb := strconv.Itoa(groupNumb) + "."
-	if childNumb != -1 {
-		numb += strconv.Itoa(childNumb) + "."
-	}
+	numb := getNumbStr(groupNumb, childNumb)
 
 	reg := `[\d\.\s]*(.*)`
 	repl := numb + " ${1}"
@@ -310,6 +327,14 @@ func replaceNumb(str string, groupNumb int, childNumb int, withBrackets bool) st
 	str = regx.ReplaceAllString(str, repl)
 
 	return str
+}
+func getNumbStr(groupNumb int, childNumb int) string {
+	numb := strconv.Itoa(groupNumb) + "."
+	if childNumb != -1 {
+		numb += strconv.Itoa(childNumb) + "."
+	}
+
+	return numb
 }
 
 func printMutiStepOrExpect(str string) string {
@@ -324,4 +349,17 @@ func printMutiStepOrExpect(str string) string {
 	}
 
 	return strings.Join(ret, "\n")
+}
+
+func getExpectMapFromIndependentFile(stepMap map[string]string, content string) map[string]string {
+	retMap := make(map[string]string, 0)
+
+	expectArr := zentaoUtils.ReadExpectIndependentArr(content)
+
+	idx := 0
+	for k, _ := range stepMap {
+		retMap[k] = strings.Join(expectArr[idx], "\r\n")
+	}
+
+	return retMap
 }

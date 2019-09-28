@@ -208,7 +208,7 @@ func GetCaseIdsByTask(taskId string, idMap *map[int]string) {
 	}
 }
 
-func CommitCase(caseId int, title string) {
+func CommitCase(caseId int, title string, stepMap map[string]string, stepTypeMap map[string]string, expectMap map[string]string) {
 	config := configUtils.ReadCurrConfig()
 
 	ok := Login(config.Url, config.Account, config.Password)
@@ -217,7 +217,7 @@ func CommitCase(caseId int, title string) {
 	}
 
 	uri := fmt.Sprintf("testcase-edit-%d.json", caseId)
-	requestObj := map[string]interface{}{"title": title}
+	requestObj := map[string]interface{}{"title": title, "steps": stepMap, "stepType": stepTypeMap, "expects": expectMap}
 
 	var yes bool
 	logUtils.PrintToStdOut("\n"+i118Utils.I118Prt.Sprintf("case_update_confirm", title), -1)

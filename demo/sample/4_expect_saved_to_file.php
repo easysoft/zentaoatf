@@ -12,8 +12,8 @@ pid=0
 
 [3. group title 3]
   [3.1. steps]
-    step 3.1
-    step 3.2
+    step 3.1.1
+    step 3.1.2
   [3.1. expects]
     >>
 
@@ -24,8 +24,8 @@ checkStep1() || print(">> expect 1\n");
 
 if (checkStep3() || true) {
     print(">>\n");
-    print("expect 3.1\n");
-    print("expect 3.2\n");
+    print("expect 3.1.1\n");
+    print("expect 3.1.2\n");
 }
 
 function checkStep1(){}

@@ -102,55 +102,45 @@ func GetCaseInfo(file string) (bool, int, int, string) {
 	return pass, caseId, productId, title
 }
 
-func ReadScriptCheckpoints(file string) ([]string, []string, [][]string) {
-	expectIndependentFile := strings.Replace(file, path.Ext(file), ".exp", -1)
-	expectIndependentContent := ""
-
-	if fileUtils.FileExist(expectIndependentFile) {
-		expectIndependentContent = fileUtils.ReadFile(expectIndependentFile)
-	}
+func ReadScriptCheckpoints(file string) ([]string, [][]string) {
+	_, expectIndependentContent := GetDependentExpect(file)
 
 	content := fileUtils.ReadFile(file)
 	_, checkpoints := ReadCaseInfo(content)
 
-	cpStepNumbArr, cpStepDescArr, cpExpectArr := getCheckpointStepArr(checkpoints, expectIndependentContent)
+	cpStepArr, expectArr := getCheckpointStepArr(checkpoints, expectIndependentContent)
 
-	return cpStepNumbArr, cpStepDescArr, cpExpectArr
+	return cpStepArr, expectArr
 }
-func getCheckpointStepArr(content string, expectIndependentContent string) ([]string, []string, [][]string) {
-	cpStepNumbArr := make([]string, 0)
-	cpStepDescArr := make([]string, 0)
-	cpExpectArr := make([][]string, 0)
+func getCheckpointStepArr(content string, expectIndependentContent string) ([]string, [][]string) {
+	cpStepArr := make([]string, 0)
+	expectArr := make([][]string, 0)
 
 	independentExpect := expectIndependentContent != ""
 
 	lines := strings.Split(content, "\n")
 	i := 0
 	for i < len(lines) {
-		stepNumb := ""
-		stepDesc := ""
+		step := ""
 		expects := make([]string, 0)
 
 		line := strings.TrimSpace(lines[i])
 
-		regx := regexp.MustCompile(`([\d\.]+)(.*)>>(.*)`)
+		regx := regexp.MustCompile(`([\d\.]+).*>>(.*)`)
 		arr := regx.FindStringSubmatch(line)
-		if len(arr) > 2 { // single line
-			stepNumb = strings.TrimSpace(arr[1])
-			stepDesc = strings.TrimSpace(arr[2])
-
+		if len(arr) > 1 {
+			step = arr[1]
 			if !independentExpect {
 				expects = append(expects, strings.TrimSpace(arr[2]))
 			}
 		} else {
-			regx = regexp.MustCompile(`\[([\d\.]*)([\s\S]*)\[[\d\.\s]*expects\]`)
+			regx = regexp.MustCompile(`\[([\d\.]*).*expects\]`)
 			arr = regx.FindStringSubmatch(line)
-			if len(arr) > 2 {
-				stepNumb = strings.TrimSpace(arr[1])
-				stepDesc = strings.TrimSpace(arr[2])
+			if len(arr) > 1 {
+				step = arr[1]
 
 				if !independentExpect {
-					for i+1 < len(lines) { // read continues lines
+					for i+1 < len(lines) {
 						ln := strings.TrimSpace(lines[i+1])
 
 						if strings.Index(ln, "[") == 0 || strings.Index(ln, ">>") > 0 || ln == "" {
@@ -164,24 +154,23 @@ func getCheckpointStepArr(content string, expectIndependentContent string) ([]st
 			}
 		}
 
-		if stepDesc != "" && len(expects) > 0 { // only return steps that have expects
-			cpStepNumbArr = append(cpStepNumbArr, stepNumb)
-			cpStepDescArr = append(cpStepDescArr, stepDesc)
+		if step != "" && len(expects) > 0 {
+			cpStepArr = append(cpStepArr, step)
 			if !independentExpect {
-				cpExpectArr = append(cpExpectArr, expects)
+				expectArr = append(expectArr, expects)
 			}
 		}
 		i++
 	}
 
 	if independentExpect {
-		cpExpectArr = readExpectIndependentArr(expectIndependentContent)
+		expectArr = ReadExpectIndependentArr(expectIndependentContent)
 	}
 
-	return cpStepDescArr, cpStepDescArr, cpExpectArr
+	return cpStepArr, expectArr
 }
 
-func readExpectIndependentArr(content string) [][]string {
+func ReadExpectIndependentArr(content string) [][]string {
 	lines := strings.Split(content, "\n")
 
 	ret := make([][]string, 0)
@@ -282,4 +271,15 @@ func ReadCaseInfo(content string) (string, string) {
 	}
 
 	return "", ""
+}
+
+func GetDependentExpect(file string) (bool, string) {
+	expectIndependentFile := strings.Replace(file, path.Ext(file), ".exp", -1)
+
+	if fileUtils.FileExist(expectIndependentFile) {
+		expectIndependentContent := fileUtils.ReadFile(expectIndependentFile)
+		return true, expectIndependentContent
+	}
+
+	return false, ""
 }
