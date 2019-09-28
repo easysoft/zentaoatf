@@ -7,7 +7,6 @@ import (
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
-	"path"
 	"regexp"
 	"strconv"
 	"strings"
@@ -22,6 +21,7 @@ func Sort(cases []string) {
 }
 
 func SortFile(script string, output bool) (map[string]string, map[string]string, map[string]string) {
+	stepsTxt := ""
 	stepMap := make(map[string]string, 0)
 	stepTypeMap := make(map[string]string, 0)
 	expectMap := make(map[string]string, 0)
@@ -35,7 +35,7 @@ func SortFile(script string, output bool) (map[string]string, map[string]string,
 
 		groupBlockArr := getGroupBlockArr(lines)
 		groupArr := getStepNestedArr(groupBlockArr)
-		stepsTxt, stepMap, stepTypeMap, expectMap := getSortedTextFromNestedSteps(groupArr)
+		stepsTxt, stepMap, stepTypeMap, expectMap = getSortedTextFromNestedSteps(groupArr)
 
 		// replace info
 		re, _ := regexp.Compile(`(?s)\[case\].*\[esac\]`)
@@ -47,7 +47,6 @@ func SortFile(script string, output bool) (map[string]string, map[string]string,
 		if pass {
 			expectMap = getExpectMapFromIndependentFile(stepMap, expectIndependentContent)
 		}
-
 	}
 
 	return stepMap, stepTypeMap, expectMap
@@ -236,33 +235,43 @@ func getSortedTextFromNestedSteps(groups []model.TestStep) (string, map[string]s
 		if desc == "[group]" {
 			ret = append(ret, "\n"+desc)
 
-			for idx, child := range group.Children {
+			for idx, child := range group.Children { // level 1 item
+				numbStr := getNumbStr(groupNumb, -1)
+				stepTypeMap[numbStr] = "item"
+
 				if group.MutiLine {
 					// steps
-					desc = replaceNumb("[steps]", groupNumb, -1, true)
-					ret = append(ret, "  "+desc)
+					tag := replaceNumb("[steps]", groupNumb, -1, true)
+					ret = append(ret, "  "+tag)
 
-					ret = append(ret, printMutiStepOrExpect(child.Desc))
+					stepTxt := printMutiStepOrExpect(child.Desc)
+					ret = append(ret, stepTxt)
+					stepMap[numbStr] = stepTxt
 
 					// expects
-					desc = replaceNumb("[expects]", groupNumb, -1, true)
-					ret = append(ret, "  "+desc)
+					tag = replaceNumb("[expects]", groupNumb, -1, true)
+					ret = append(ret, "  "+tag)
 
-					ret = append(ret, printMutiStepOrExpect(child.Expect))
+					expectTxt := printMutiStepOrExpect(child.Expect)
+					ret = append(ret, expectTxt)
 					if idx < len(group.Children)-1 {
 						ret = append(ret, "")
 					}
+					expectMap[numbStr] = expectTxt
 				} else {
-					desc = replaceNumb(child.Desc, groupNumb, -1, false)
-					desc = strings.TrimSpace(desc)
+					stepTxt := replaceNumb(child.Desc, groupNumb, -1, false)
+					stepTxt = strings.TrimSpace(stepTxt)
+					stepMap[numbStr] = stepTxt
 
-					expect := child.Expect
-					expect = strings.TrimSpace(expect)
-					if expect != "" {
-						expect = ">> " + expect
+					expectTxt := child.Expect
+					expectTxt = strings.TrimSpace(expectTxt)
+					expectMap[numbStr] = expectTxt
+
+					if expectTxt != "" {
+						expectTxt = ">> " + expectTxt
 					}
 
-					ret = append(ret, fmt.Sprintf("  %s %s", desc, expect))
+					ret = append(ret, fmt.Sprintf("  %s %s", desc, expectTxt))
 				}
 
 				groupNumb++
@@ -271,36 +280,46 @@ func getSortedTextFromNestedSteps(groups []model.TestStep) (string, map[string]s
 			desc = replaceNumb(group.Desc, groupNumb, -1, true)
 			ret = append(ret, "\n"+desc)
 
+			numbStr := getNumbStr(groupNumb, -1)
+			stepMap[numbStr] = getGroupName(group.Desc)
+			stepTypeMap[numbStr] = "group"
+			expectMap[numbStr] = ""
+
 			childNumb := 1
 			for _, child := range group.Children {
+				numbStr := getNumbStr(groupNumb, childNumb)
+				stepTypeMap[numbStr] = "item"
+
 				if group.MutiLine {
 					// steps
-					desc = replaceNumb("[steps]", groupNumb, childNumb, true)
-					ret = append(ret, "  "+desc)
+					tag := replaceNumb("[steps]", groupNumb, childNumb, true)
+					ret = append(ret, "  "+tag)
 
-					ret = append(ret, printMutiStepOrExpect(child.Desc))
+					stepTxt := printMutiStepOrExpect(child.Desc)
+					ret = append(ret, stepTxt)
+					stepMap[numbStr] = stepTxt
 
 					// expects
-					desc = replaceNumb("[expects]", groupNumb, childNumb, true)
-					ret = append(ret, "  "+desc)
+					tag = replaceNumb("[expects]", groupNumb, childNumb, true)
+					ret = append(ret, "  "+tag)
 
-					ret = append(ret, printMutiStepOrExpect(child.Expect))
-
-					//if idx < len(group.Children)-1 {
-					//	ret = append(ret, "")
-					//}
+					expectTxt := printMutiStepOrExpect(child.Expect)
+					ret = append(ret, expectTxt)
+					expectMap[numbStr] = expectTxt
 				} else {
-					desc = replaceNumb(child.Desc, groupNumb, -1, false)
-					desc = strings.TrimSpace(desc)
+					stepTxt := replaceNumb(child.Desc, groupNumb, childNumb, false)
+					stepTxt = strings.TrimSpace(stepTxt)
+					stepMap[numbStr] = stepTxt
 
-					expect := child.Expect
-					expect = strings.TrimSpace(expect)
+					expectTxt := child.Expect
+					expectTxt = strings.TrimSpace(expectTxt)
+					expectMap[numbStr] = expectTxt
 
-					if expect != "" {
-						expect = ">> " + expect
+					if expectTxt != "" {
+						expectTxt = ">> " + expectTxt
 					}
 
-					ret = append(ret, fmt.Sprintf("  %s %s", desc, expect))
+					ret = append(ret, fmt.Sprintf("  %s %s", desc, expectTxt))
 				}
 
 				childNumb++
@@ -336,6 +355,15 @@ func getNumbStr(groupNumb int, childNumb int) string {
 
 	return numb
 }
+func getGroupName(str string) string {
+	reg := `\[\d\.\s]*(.*)\]`
+	repl := "${1}"
+
+	regx, _ := regexp.Compile(reg)
+	str = regx.ReplaceAllString(str, repl)
+
+	return str
+}
 
 func printMutiStepOrExpect(str string) string {
 	str = strings.TrimSpace(str)
@@ -348,7 +376,7 @@ func printMutiStepOrExpect(str string) string {
 		ret = append(ret, fmt.Sprintf("%s%s", strings.Repeat(" ", 4), line))
 	}
 
-	return strings.Join(ret, "\n")
+	return strings.Join(ret, "\r\n")
 }
 
 func getExpectMapFromIndependentFile(stepMap map[string]string, content string) map[string]string {
