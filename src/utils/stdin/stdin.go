@@ -155,18 +155,19 @@ func GetInputForScriptInterpreter(defaultVal string, fmtStr string, params ...in
 		logUtils.PrintToStdOut("\n"+msg, color.FgCyan)
 		Scanf(&ret)
 
-		if strings.TrimSpace(ret) == "" && defaultVal != "" {
+		ret = strings.TrimSpace(ret)
+
+		if ret == "" && defaultVal != "" {
 			ret = defaultVal
 
 			logUtils.PrintToStdOut(ret, -1)
 		}
 
-		temp := strings.ToLower(ret)
-		if temp == "exit" {
+		if ret == "exit" {
 			os.Exit(1)
 		}
 
-		if temp == "" {
+		if ret == "" {
 			return ""
 		}
 
@@ -175,7 +176,7 @@ func GetInputForScriptInterpreter(defaultVal string, fmtStr string, params ...in
 			sep = `\\`
 		}
 		reg := fmt.Sprintf(".*%s+[^%s]+", sep, sep)
-		pass, _ := regexp.MatchString(reg, temp)
+		pass, _ := regexp.MatchString(reg, ret)
 		if pass {
 			return ret
 		} else {
