@@ -3,7 +3,7 @@
   "messages": [
     {
       "id": "for_example",
-      "translation": "(例如 %s)"
+      "translation": "例如 %s"
     },
     {
       "id": "total",
