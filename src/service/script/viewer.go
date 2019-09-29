@@ -2,6 +2,7 @@ package scriptUtils
 
 import (
 	"fmt"
+	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
@@ -11,22 +12,33 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func List(cases []string, keywords string) {
 	keywords = strings.TrimSpace(keywords)
 
-	count := 0
+	scriptArr := make([]model.CaseLog, 0)
 	for _, tc := range cases {
-		if Summary(tc, keywords) {
-			count++
+		pass, cs := Summary(tc, keywords)
+		if pass {
+			scriptArr = append(scriptArr, cs)
 		}
 	}
 
-	logUtils.PrintToStdOut("\n"+i118Utils.I118Prt.Sprintf("total_test_case", count), -1)
+	total := len(scriptArr)
+	width := strconv.Itoa(len(strconv.Itoa(total)))
+
+	logUtils.Screen(time.Now().Format("2006-01-02 15:04:05") + " " +
+		i118Utils.I118Prt.Sprintf("found_scripts", total) + "\n")
+
+	for idx, cs := range scriptArr {
+		format := "(%" + width + "d/%d) [%s] %d.%s"
+		logUtils.Screen(fmt.Sprintf(format, idx+1, total, cs.Path, cs.Id, cs.Title))
+	}
 }
 
-func Summary(file string, keywords string) bool {
+func Summary(file string, keywords string) (bool, model.CaseLog) {
 	pass, caseId, _, title := zentaoUtils.GetCaseInfo(file)
 
 	if pass {
@@ -40,14 +52,14 @@ func Summary(file string, keywords string) bool {
 		}
 
 		if pass {
-			fmt.Printf("%d. %s \n", caseId, title)
+			//fmt.Printf("%d. %s \n", caseId, title)
 
-			return true
+			return true, model.CaseLog{Id: caseId, Title: title, Path: file}
 		} else {
-			return false
+			return false, model.CaseLog{}
 		}
 	}
-	return false
+	return false, model.CaseLog{}
 }
 
 func View(cases []string, keywords string) {
