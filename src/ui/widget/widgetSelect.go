@@ -5,6 +5,7 @@ import (
 	"github.com/awesome-gocui/gocui"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/ui"
+	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"strings"
 )
@@ -51,6 +52,8 @@ func (w *SelectWidget) Layout() (*gocui.View, error) {
 	ui.SupportRowHighlight(w.name)
 
 	v.Title = w.title
+
+	logUtils.PrintToCmd(fmt.Sprintf("%s: defalut=%s", v.Name(), w.defaultt), -1)
 
 	labels := make([]string, 0)
 	defaultValIndex := -1

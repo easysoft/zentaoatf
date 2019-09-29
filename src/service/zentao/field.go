@@ -34,16 +34,16 @@ func GetBugFiledOptions(productId int) {
 			bugFields.Modules = fieldMapToListOrderByInt(mp)
 
 			mp, _ = jsonData.Get("categories").Map()
-			bugFields.Categories = fieldMapToListOrderByStr(mp)
+			bugFields.Categories = fieldMapToListOrderByStr(mp, false)
 
 			mp, _ = jsonData.Get("versions").Map()
-			bugFields.Versions = fieldMapToListOrderByStr(mp)
+			bugFields.Versions = fieldMapToListOrderByStr(mp, true)
 
 			mp, _ = jsonData.Get("severities").Map()
 			bugFields.Severities = fieldMapToListOrderByInt(mp)
 
 			arr, _ := jsonData.Get("priorities").Array()
-			bugFields.Priorities = fieldArrToListKeyStr(arr)
+			bugFields.Priorities = fieldArrToListKeyStr(arr, true)
 
 		} else {
 			logUtils.PrintToCmd(err.Error(), color.FgRed)
@@ -95,7 +95,7 @@ func fieldMapToListOrderByInt(mp map[string]interface{}) []model.Option {
 	return arr
 }
 
-func fieldMapToListOrderByStr(mp map[string]interface{}) []model.Option {
+func fieldMapToListOrderByStr(mp map[string]interface{}, notNull bool) []model.Option {
 	arr := make([]model.Option, 0)
 
 	keys := make([]string, 0)
@@ -108,7 +108,9 @@ func fieldMapToListOrderByStr(mp map[string]interface{}) []model.Option {
 	for _, key := range keys {
 		name := strings.TrimSpace(mp[key].(string))
 		if name == "" {
-			name = "-"
+			if notNull {
+				continue
+			}
 		}
 
 		opt := model.Option{Id: key, Name: name}
@@ -118,7 +120,7 @@ func fieldMapToListOrderByStr(mp map[string]interface{}) []model.Option {
 	return arr
 }
 
-func fieldArrToListKeyStr(arr0 []interface{}) []model.Option {
+func fieldArrToListKeyStr(arr0 []interface{}, notNull bool) []model.Option {
 	arr := make([]model.Option, 0)
 
 	keys := make([]string, 0)
@@ -131,7 +133,9 @@ func fieldArrToListKeyStr(arr0 []interface{}) []model.Option {
 	for _, val := range arr0 {
 		name := val.(string)
 		if name == "" {
-			name = "-"
+			if notNull {
+				continue
+			}
 		}
 
 		opt := model.Option{Id: val.(string), Name: name}

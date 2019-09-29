@@ -107,6 +107,8 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 		// fmt.Scanln(&ret)
 		Scanf(&ret)
 
+		//logUtils.PrintToStdOut(fmt.Sprintf("%v", ret), -1)
+
 		if strings.TrimSpace(ret) == "" && defaultVal != "" {
 			ret = defaultVal
 

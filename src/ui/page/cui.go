@@ -24,7 +24,6 @@ func CuiReportBug(dir string, id string) error {
 	vari.RunFromCui = true
 
 	InitMainPage()
-
 	InitReportBugPage(dir, id)
 
 	if err := g.MainLoop(); err != nil && err != gocui.ErrQuit {
