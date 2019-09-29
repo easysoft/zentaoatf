@@ -2,6 +2,7 @@ package stdinUtils
 
 import (
 	"bufio"
+	"fmt"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	langUtils "github.com/easysoft/zentaoatf/src/utils/lang"
@@ -141,6 +142,45 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 		} else {
 			ret = ""
 			logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf(msg), color.FgRed)
+		}
+	}
+}
+
+func GetInputForScriptInterpreter(defaultVal string, fmtStr string, params ...interface{}) string {
+	var ret string
+
+	msg := i118Utils.I118Prt.Sprintf(fmtStr, params...)
+
+	for {
+		logUtils.PrintToStdOut("\n"+msg, color.FgCyan)
+		Scanf(&ret)
+
+		if strings.TrimSpace(ret) == "" && defaultVal != "" {
+			ret = defaultVal
+
+			logUtils.PrintToStdOut(ret, -1)
+		}
+
+		temp := strings.ToLower(ret)
+		if temp == "exit" {
+			os.Exit(1)
+		}
+
+		if temp == "" {
+			return ""
+		}
+
+		sep := string(os.PathSeparator)
+		if sep == `\` {
+			sep = `\\`
+		}
+		reg := fmt.Sprintf(".*%s+[^%s]+", sep, sep)
+		pass, _ := regexp.MatchString(reg, temp)
+		if pass {
+			return ret
+		} else {
+			ret = ""
+			logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("invalid_input"), color.FgRed)
 		}
 	}
 }

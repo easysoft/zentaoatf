@@ -190,6 +190,10 @@
       "id": "set_script_interpreter",
       "translation": "请设置%s脚本的解释程序："
     },
+    {
+      "id": "empty_to_ignore",
+      "translation": "（输入空忽略）"
+    },
 
     {
       "id": "en",

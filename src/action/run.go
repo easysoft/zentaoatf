@@ -11,6 +11,8 @@ import (
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
+	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/mattn/go-runewidth"
 	"path"
 	"strconv"
@@ -53,14 +55,6 @@ func Run(files []string, suiteIdStr string, taskIdStr string) error {
 	if len(cases) < 1 {
 		logUtils.PrintToCmd("\n"+i118Utils.I118Prt.Sprintf("no_scripts"), -1)
 		return nil
-	}
-
-	if commonUtils.IsWin() {
-		conf := configUtils.ReadCurrConfig()
-		configChanged := configUtils.InputForScriptInterpreter(cases, &conf, "run")
-		if configChanged {
-			configUtils.SaveConfig(conf)
-		}
 	}
 
 	runCases(cases)
@@ -107,19 +101,54 @@ func getCaseBySuiteFile(file string, dir string) []string {
 	return cases
 }
 
-func runCases(cases []string) {
+func runCases(files []string) {
+	casesToRun := make([]string, 0)
+
+	// config interpreter if needed
+	if commonUtils.IsWin() {
+		conf := configUtils.ReadCurrConfig()
+		configChanged := configUtils.InputForScriptInterpreter(files, &conf, "run")
+		if configChanged {
+			configUtils.SaveConfig(conf)
+		}
+	}
+
+	conf := configUtils.ReadCurrConfig()
+	for _, file := range files {
+		if commonUtils.IsWin() {
+			if path.Ext(file) == ".sh" { // filter by os
+				continue
+			}
+
+			ext := path.Ext(file)
+			if ext != "" {
+				ext = ext[1:]
+			}
+			lang := vari.ScriptExtToNameMap[ext]
+			if commonUtils.GetFieldVal(conf, stringUtils.Ucfirst(lang)) == "" { // filter by interpreter
+				continue
+			}
+		} else if !commonUtils.IsWin() { // filter by os
+			if path.Ext(file) == ".bat" {
+				continue
+			}
+		}
+
+		casesToRun = append(casesToRun, file)
+	}
+
 	var report = model.TestReport{Env: commonUtils.GetOs(),
 		Pass: 0, Fail: 0, Total: 0, Cases: make([]model.CaseLog, 0)}
 
 	pathMaxWidth := 0
-	for _, file := range cases {
+	for _, file := range casesToRun {
 		lent := runewidth.StringWidth(file)
 		if lent > pathMaxWidth {
 			pathMaxWidth = lent
 		}
 	}
 
-	testingService.ExeScripts(cases, &report, pathMaxWidth)
+	testingService.ExeScripts(casesToRun, &report, pathMaxWidth)
 	testingService.Report(report, pathMaxWidth)
 }
 

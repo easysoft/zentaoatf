@@ -190,11 +190,12 @@ func InputForScriptInterpreter(scripts []string, config *model.Config, from stri
 		}
 
 		deflt := commonUtils.GetFieldVal(*config, lang)
-		defltShow := ""
+		defltTips := ""
 		if deflt == "" {
-			defltShow = i118Utils.I118Prt.Sprintf("for_example", `C:\Python\Python37-32\python.exe`)
+			defltTips = i118Utils.I118Prt.Sprintf("for_example", `C:\Python37-32\python.exe`) +
+				i118Utils.I118Prt.Sprintf("empty_to_ignore")
 		} else {
-			defltShow = deflt
+			defltTips = deflt
 		}
 
 		if from == "run" && deflt != "" {
@@ -203,14 +204,7 @@ func InputForScriptInterpreter(scripts []string, config *model.Config, from stri
 
 		configChanged = true
 
-		sep := string(os.PathSeparator)
-		if sep == `\` {
-			sep = `\\`
-		}
-
-		reg := fmt.Sprintf(".*%s+[^%s]+", sep, sep)
-
-		inter := stdinUtils.GetInput(reg, deflt, "set_script_interpreter", lang, defltShow)
+		inter := stdinUtils.GetInputForScriptInterpreter(deflt, "set_script_interpreter", lang, defltTips)
 		commonUtils.SetFieldVal(config, lang, inter)
 	}
 

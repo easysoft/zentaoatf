@@ -3,24 +3,14 @@ package testingService
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
-	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/shell"
-	"path"
 	"strings"
 	"time"
 )
 
-func ExeScripts(files []string, report *model.TestReport, pathMaxWidth int) {
-	casesToRun := make([]string, 0)
-
-	for _, file := range files {
-		if (commonUtils.IsWin() && path.Ext(file) != ".sh") || (!commonUtils.IsWin() && path.Ext(file) != ".bat") {
-			casesToRun = append(casesToRun, file)
-		}
-	}
-
+func ExeScripts(casesToRun []string, report *model.TestReport, pathMaxWidth int) {
 	now := time.Now()
 	startTime := now.Unix()
 	report.StartTime = startTime

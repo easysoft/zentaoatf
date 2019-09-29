@@ -195,6 +195,10 @@
       "id": "set_script_interpreter",
       "translation": "Please set script interpreter for %s: %s"
     },
+    {
+      "id": "empty_to_ignore",
+      "translation": "(Input empty to ignore)"
+    },
 
     {
       "id": "en",
