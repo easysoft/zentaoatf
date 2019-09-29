@@ -63,12 +63,13 @@ func ScrollAction(v *gocui.View, dy int) bool {
 	//logUtils.PrintToCmd(fmt.Sprintf("%d - %d", cy, dy))
 	if (cy == 0 && dy < 0) || // top
 		(newCy == h && dy > 0) { // bottom
-		atBottom := scroll(v, dy)
+
+		atBottom := scroll(v, dy) // A. scroll
 		if atBottom {
 			return true
 		}
 	} else {
-		v.SetCursor(cx, newCy)
+		v.SetCursor(cx, newCy) // B. move
 	}
 
 	return false
@@ -80,12 +81,16 @@ func scroll(v *gocui.View, dy int) bool {
 	newOy := oy + dy
 
 	// If we're at the bottom...
-	if newOy+h >= strings.Count(v.ViewBuffer(), "\n") {
+	if newOy+h > strings.Count(v.ViewBuffer(), "\n") {
+		//logUtils.PrintToCmd(fmt.Sprintf("=1= %d", time.Now().Unix()), -1)
+
 		// Set autoscroll to normal again.
 		v.Autoscroll = true
 
 		return true
 	} else {
+		//logUtils.PrintToCmd(fmt.Sprintf("=2= %d", time.Now().Unix()), -1)
+
 		// Set autoscroll to false and scroll.
 		v.Autoscroll = false
 		v.SetOrigin(ox, newOy)
