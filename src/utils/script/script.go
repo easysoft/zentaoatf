@@ -201,12 +201,12 @@ func isExpectsIdent(str string) bool {
 }
 
 func hasBrackets(str string) bool {
-	pass, _ := regexp.MatchString(`(?i)\[.*\]`, str)
+	pass, _ := regexp.MatchString(`(?i)()\[.*\]`, str)
 	return pass
 }
 
 func isGroup(str string) bool {
-	ret := hasBrackets(str) && !isStepsIdent(str) && !isExpectsIdent(str)
+	ret := strings.Index(str, ">>") < 0 && hasBrackets(str) && !isStepsIdent(str) && !isExpectsIdent(str)
 
 	return ret
 }
