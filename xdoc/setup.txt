@@ -10,13 +10,10 @@ CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ztf/ztf.exe src/ztf.go
 GO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ztf/ztf-linux src/ztf.go
 CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ztf/ztf-mac src/ztf.go
 
-zip -r ztf/ztf-win-2.0.zip ztf/ztf.exe ztf/demo ztf/conf ztf/log
-zip -r ztf/ztf-linux-2.0.zip ztf/ztf-linux ztf/demo ztf/conf ztf/log
-zip -r ztf/ztf-mac-2.0.zip ztf/ztf-mac ztf/demo ztf/conf ztf/log
-
-
-
-
+cd ztf && zip -r ztf-win-2.0.RC.zip ztf.exe demo conf log
+zip -r ztf-linux-2.0.RC.zip ztf-linux demo conf log
+zip -r ztf-mac-2.0.RC.zip ztf-mac demo conf log
+cd ..
 
 
 error_log(json_encode($_POST, JSON_FORCE_OBJECT));
