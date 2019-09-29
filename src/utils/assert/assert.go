@@ -166,8 +166,10 @@ func GetScriptType(scripts []string) []string {
 		ext := path.Ext(script)
 		if ext != "" {
 			ext = ext[1:]
-			if !stringUtils.FindInArr(ext, exts) {
-				exts = append(exts, vari.ScriptExtToNameMap[ext])
+			name := vari.ScriptExtToNameMap[ext]
+
+			if !stringUtils.FindInArr(name, exts) {
+				exts = append(exts, name)
 			}
 		}
 	}
