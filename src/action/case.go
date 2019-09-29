@@ -1,9 +1,9 @@
 package action
 
 import (
-	scriptService "github.com/easysoft/zentaoatf/src/service/script"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	assertUtils "github.com/easysoft/zentaoatf/src/utils/assert"
+	scriptUtils "github.com/easysoft/zentaoatf/src/utils/script"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 )
 
@@ -14,7 +14,7 @@ func CommitCases(files []string) {
 		pass, id, _, title := zentaoUtils.GetCaseInfo(cs)
 
 		if pass {
-			stepMap, stepTypeMap, expectMap := scriptService.SortFile(cs, true)
+			stepMap, stepTypeMap, expectMap := scriptUtils.SortFile(cs)
 
 			zentaoService.CommitCase(id, title, stepMap, stepTypeMap, expectMap)
 		}

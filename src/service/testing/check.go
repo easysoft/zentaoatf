@@ -5,27 +5,27 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/i118"
-	langUtils "github.com/easysoft/zentaoatf/src/utils/lang"
+	"github.com/easysoft/zentaoatf/src/utils/lang"
 	"github.com/easysoft/zentaoatf/src/utils/log"
+	scriptUtils "github.com/easysoft/zentaoatf/src/utils/script"
 	"github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/mattn/go-runewidth"
-	"regexp"
 	"strconv"
 	"strings"
 )
 
-func CheckCaseResult(scriptFile string, logs string, report *model.TestReport, idx int, total int, secs string, pathMaxWidth int) {
-	cpStepNumbArr, cpExpectArr := zentaoUtils.ReadScriptCheckpoints(scriptFile)
+func CheckCaseResult(file string, logs string, report *model.TestReport, idx int, total int, secs string, pathMaxWidth int) {
+	_, _, expectMap := scriptUtils.SortFile(file)
 
-	skip, logArr := zentaoUtils.ReadLogArr(logs)
+	skip, actualArr := zentaoUtils.ReadLogArr(logs)
 
-	language := langUtils.GetLangByFile(scriptFile)
-	ValidateCaseResult(scriptFile, language, cpStepNumbArr, cpExpectArr, skip, logArr, report, idx, total, secs, pathMaxWidth)
+	language := langUtils.GetLangByFile(file)
+	ValidateCaseResult(file, language, expectMap, skip, actualArr, report, idx, total, secs, pathMaxWidth)
 }
 
 func ValidateCaseResult(scriptFile string, langType string,
-	cpStepArr []string, expectArr [][]string, skip bool, actualArr [][]string, report *model.TestReport,
+	expectMap map[string]string, skip bool, actualArr [][]string, report *model.TestReport,
 	idx int, total int, secs string, pathMaxWidth int) {
 
 	_, caseId, productId, title := zentaoUtils.GetCaseInfo(scriptFile)
@@ -37,22 +37,19 @@ func ValidateCaseResult(scriptFile string, langType string,
 		caseResult = constant.SKIP.String()
 	} else {
 		indx := 0
-		for _, step := range cpStepArr { // iterate by checkpoints
-			var expectLines []string
-			var actualLines []string
-
-			if len(expectArr) > indx {
-				expectLines = expectArr[indx]
+		for numb, expect := range expectMap { // iterate by checkpoints
+			if expect == "" {
+				continue
 			}
+
+			expectLines := strings.Split(expect, "\n")
+			var actualLines []string
 			if len(actualArr) > indx {
 				actualLines = actualArr[indx]
 			}
 
-			re, _ := regexp.Compile(`\s{2,}`)
-			step = re.ReplaceAllString(step, " ") // 多个空格替换成一个
-
 			stepResult, checkpointLogs := ValidateStepResult(langType, expectLines, actualLines)
-			stepLog := model.StepLog{Id: step, Status: stepResult, CheckPoints: checkpointLogs}
+			stepLog := model.StepLog{Id: numb, Status: stepResult, CheckPoints: checkpointLogs}
 			stepLogs = append(stepLogs, stepLog)
 			if !stepResult {
 				caseResult = constant.FAIL.String()

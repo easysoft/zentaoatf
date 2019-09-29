@@ -126,9 +126,9 @@ func getCheckpointStepArr(content string, expectIndependentContent string) ([]st
 
 		line := strings.TrimSpace(lines[i])
 
-		regx := regexp.MustCompile(`([\d\.]+).*>>(.*)`)
+		regx := regexp.MustCompile(`(?U:[\d\.]*)(.+)>>(.*)`)
 		arr := regx.FindStringSubmatch(line)
-		if len(arr) > 1 {
+		if len(arr) > 2 {
 			step = arr[1]
 			if !independentExpect {
 				expects = append(expects, strings.TrimSpace(arr[2]))

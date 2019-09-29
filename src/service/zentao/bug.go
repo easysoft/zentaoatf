@@ -57,7 +57,7 @@ func PrepareBug(resultDir string, caseIdStr string) (model.Bug, string) {
 		bug := model.Bug{Title: title,
 			Module: module, Type: typ, OpenedBuild: openedBuild, Severity: severity, Pri: priority,
 			Product: strconv.Itoa(product), Case: strconv.Itoa(caseId),
-			Steps: strings.Join(steps, "<br/>"),
+			Steps: strings.Join(steps, "\n"),
 			Uid:   uid, CaseVersion: caseVersion, OldTaskID: oldTaskID,
 		}
 		return bug, stepIds

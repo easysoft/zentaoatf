@@ -39,8 +39,8 @@ func GetStepHtml(step model.StepLog) string {
 	stepStatus := stringUtils.BoolToPass(step.Status)
 
 	stepTxt := fmt.Sprintf(
-		"<p><b>%s: %s</b></p>",
-		step.Name, stepStatus)
+		"<p><b>%s %s</b></p>",
+		step.Id, stepStatus)
 
 	for _, checkpoint := range step.CheckPoints {
 		checkpointStatus := stringUtils.BoolToPass(checkpoint.Status)
@@ -65,8 +65,8 @@ func GetStepText(step model.StepLog) string {
 	stepStatus := stringUtils.BoolToPass(step.Status)
 
 	stepTxt := fmt.Sprintf(
-		"%s: %s\n",
-		step.Name, stepStatus)
+		"%s %s\n",
+		step.Id, stepStatus)
 
 	for _, checkpoint := range step.CheckPoints {
 		checkpointStatus := stringUtils.BoolToPass(checkpoint.Status)

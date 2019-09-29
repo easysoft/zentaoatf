@@ -13,6 +13,7 @@ import (
 	"github.com/fatih/color"
 	"sort"
 	"strconv"
+	"strings"
 )
 
 func GetBugFiledOptions(productId int) {
@@ -30,16 +31,16 @@ func GetBugFiledOptions(productId int) {
 
 		if err == nil {
 			mp, _ := jsonData.Get("modules").Map()
-			bugFields.Modules = fieldMapToListKeyInt(mp)
+			bugFields.Modules = fieldMapToListOrderByInt(mp)
 
 			mp, _ = jsonData.Get("categories").Map()
-			bugFields.Categories = fieldMapToListKeyStr(mp)
+			bugFields.Categories = fieldMapToListOrderByStr(mp)
 
 			mp, _ = jsonData.Get("versions").Map()
-			bugFields.Versions = fieldMapToListKeyStr(mp)
+			bugFields.Versions = fieldMapToListOrderByStr(mp)
 
 			mp, _ = jsonData.Get("severities").Map()
-			bugFields.Severities = fieldMapToListKeyInt(mp)
+			bugFields.Severities = fieldMapToListOrderByInt(mp)
 
 			arr, _ := jsonData.Get("priorities").Array()
 			bugFields.Priorities = fieldArrToListKeyStr(arr)
@@ -69,7 +70,7 @@ func GetCaseModules(productId string) {
 	vari.ZentaoCaseFileds.Modules = moduelMap
 }
 
-func fieldMapToListKeyInt(mp map[string]interface{}) []model.Option {
+func fieldMapToListOrderByInt(mp map[string]interface{}) []model.Option {
 	arr := make([]model.Option, 0)
 
 	keys := make([]int, 0)
@@ -82,15 +83,19 @@ func fieldMapToListKeyInt(mp map[string]interface{}) []model.Option {
 
 	for _, key := range keys {
 		keyStr := strconv.Itoa(key)
+		name := strings.TrimSpace(mp[keyStr].(string))
+		if name == "" {
+			name = "-"
+		}
 
-		opt := model.Option{Id: keyStr, Name: mp[keyStr].(string)}
+		opt := model.Option{Id: keyStr, Name: name}
 		arr = append(arr, opt)
 	}
 
 	return arr
 }
 
-func fieldMapToListKeyStr(mp map[string]interface{}) []model.Option {
+func fieldMapToListOrderByStr(mp map[string]interface{}) []model.Option {
 	arr := make([]model.Option, 0)
 
 	keys := make([]string, 0)
@@ -101,7 +106,12 @@ func fieldMapToListKeyStr(mp map[string]interface{}) []model.Option {
 	sort.Strings(keys)
 
 	for _, key := range keys {
-		opt := model.Option{Id: key, Name: mp[key].(string)}
+		name := strings.TrimSpace(mp[key].(string))
+		if name == "" {
+			name = "-"
+		}
+
+		opt := model.Option{Id: key, Name: name}
 		arr = append(arr, opt)
 	}
 
@@ -119,7 +129,12 @@ func fieldArrToListKeyStr(arr0 []interface{}) []model.Option {
 	sort.Strings(keys)
 
 	for _, val := range arr0 {
-		opt := model.Option{Id: val.(string), Name: val.(string)}
+		name := val.(string)
+		if name == "" {
+			name = "-"
+		}
+
+		opt := model.Option{Id: val.(string), Name: name}
 		arr = append(arr, opt)
 	}
 
