@@ -20,6 +20,7 @@ func InitMainPage() error {
 	vari.MainViewHeight = maxY - constant.CmdViewHeight
 
 	mainView := widget.NewPanelWidget("main", 0, 0, maxX-2, vari.MainViewHeight, "")
+
 	ui.ViewMap["root"] = append(ui.ViewMap["root"], mainView.Name())
 
 	cmdView := widget.NewPanelWidget("cmd", 0, vari.MainViewHeight, maxX-2, constant.CmdViewHeight-1, "")

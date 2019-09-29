@@ -44,7 +44,7 @@ func (w *TextWidget) Layout() (*gocui.View, error) {
 
 	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+h, 0)
 	if err != nil {
-		if err != gocui.ErrUnknownView {
+		if !gocui.IsUnknownView(err) {
 			return nil, err
 		}
 

@@ -38,7 +38,7 @@ func NewLabelWidgetAutoWidth(name string, x, y int, label string) *gocui.View {
 func (w *LabelWidget) Layout() (*gocui.View, error) {
 	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+LabelHeight, 0)
 	if err != nil {
-		if err != gocui.ErrUnknownView {
+		if !gocui.IsUnknownView(err) {
 			return nil, err
 		}
 

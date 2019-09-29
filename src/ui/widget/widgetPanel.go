@@ -29,11 +29,12 @@ func (w *PanelWidget) Layout() (*gocui.View, error) {
 	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+w.h, 0)
 	v.Highlight = false
 	if err != nil {
-		if err != gocui.ErrUnknownView {
+		if !gocui.IsUnknownView(err) {
 			return nil, err
 		}
 
 		fmt.Fprint(v, w.body)
 	}
+
 	return v, nil
 }
