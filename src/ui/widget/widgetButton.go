@@ -2,8 +2,8 @@ package widget
 
 import (
 	"fmt"
+	"github.com/awesome-gocui/gocui"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
-	"github.com/jroimartin/gocui"
 )
 
 const (
@@ -32,7 +32,7 @@ func NewButtonWidgetAutoWidth(name string, x, y int, label string, handler func(
 }
 
 func (w *ButtonWidget) Layout(handler func(g *gocui.Gui, v *gocui.View) error) (*gocui.View, error) {
-	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+ButtonHeight)
+	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+ButtonHeight, 0)
 	if err != nil {
 		if err != gocui.ErrUnknownView {
 			return nil, err

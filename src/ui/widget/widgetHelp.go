@@ -2,9 +2,9 @@ package widget
 
 import (
 	"fmt"
+	"github.com/awesome-gocui/gocui"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
-	"github.com/jroimartin/gocui"
 	"strings"
 )
 
@@ -40,7 +40,7 @@ func NewHelpWidget() {
 }
 
 func (w *HelpWidget) Layout() error {
-	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+w.h)
+	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+w.h, 0)
 	if err != nil {
 		if err != gocui.ErrUnknownView {
 			return err

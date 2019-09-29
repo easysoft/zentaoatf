@@ -2,8 +2,8 @@ package widget
 
 import (
 	"fmt"
+	"github.com/awesome-gocui/gocui"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
-	"github.com/jroimartin/gocui"
 )
 
 type PanelWidget struct {
@@ -26,7 +26,7 @@ func (w *PanelWidget) Layout() (*gocui.View, error) {
 		w.h = 3
 	}
 
-	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+w.h)
+	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+w.h, 0)
 	v.Highlight = false
 	if err != nil {
 		if err != gocui.ErrUnknownView {

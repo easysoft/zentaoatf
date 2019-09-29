@@ -2,8 +2,8 @@ package widget
 
 import (
 	"fmt"
+	"github.com/awesome-gocui/gocui"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
-	"github.com/jroimartin/gocui"
 	"strings"
 )
 
@@ -31,7 +31,7 @@ func NewRadioWidget(name string, x, y int, checked bool) *gocui.View {
 }
 
 func (w *RadioWidget) Layout() (*gocui.View, error) {
-	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+2)
+	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+2, 0)
 	if err != nil {
 		if err != gocui.ErrUnknownView {
 			return nil, err

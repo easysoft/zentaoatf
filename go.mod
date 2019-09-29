@@ -7,6 +7,7 @@ require golang.org/x/text v0.3.2
 require (
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
 	github.com/ajg/form v1.5.1
+	github.com/awesome-gocui/gocui v0.6.0
 	github.com/bitly/go-simplejson v0.5.0
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
 	github.com/fatih/color v1.7.0
@@ -15,6 +16,7 @@ require (
 	github.com/gopherjs/gopherjs v0.0.0-20190915194858-d3ddacdb130f // indirect
 	github.com/gorilla/mux v1.7.3
 	github.com/jroimartin/gocui v0.4.0
+
 	github.com/jteeuwen/go-bindata v3.0.7+incompatible // indirect
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect

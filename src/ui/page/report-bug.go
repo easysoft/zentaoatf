@@ -2,6 +2,7 @@ package page
 
 import (
 	"fmt"
+	"github.com/awesome-gocui/gocui"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/ui/widget"
@@ -9,7 +10,6 @@ import (
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
-	"github.com/jroimartin/gocui"
 	"strings"
 )
 

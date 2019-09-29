@@ -1,11 +1,11 @@
 package page
 
 import (
+	"github.com/awesome-gocui/gocui"
 	"github.com/easysoft/zentaoatf/src/ui"
 	"github.com/easysoft/zentaoatf/src/ui/widget"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
-	"github.com/jroimartin/gocui"
 	"log"
 )
 

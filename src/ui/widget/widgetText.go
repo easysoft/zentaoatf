@@ -2,8 +2,8 @@ package widget
 
 import (
 	"fmt"
+	"github.com/awesome-gocui/gocui"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
-	"github.com/jroimartin/gocui"
 )
 
 const (
@@ -42,7 +42,7 @@ func (w *TextWidget) Layout() (*gocui.View, error) {
 		h = w.h
 	}
 
-	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+h)
+	v, err := vari.Cui.SetView(w.name, w.x, w.y, w.x+w.w, w.y+h, 0)
 	if err != nil {
 		if err != gocui.ErrUnknownView {
 			return nil, err

@@ -1,9 +1,9 @@
 package vari
 
 import (
+	"github.com/awesome-gocui/gocui"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils/const"
-	"github.com/jroimartin/gocui"
 )
 
 var (

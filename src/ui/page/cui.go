@@ -1,14 +1,14 @@
 package page
 
 import (
+	"github.com/awesome-gocui/gocui"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
-	"github.com/jroimartin/gocui"
 	"log"
 )
 
 func CuiReportBug(dir string, id string) error {
-	g, err := gocui.NewGui(gocui.OutputNormal)
+	g, err := gocui.NewGui(gocui.OutputNormal, true)
 	if err != nil {
 		log.Panicln(err)
 	}
