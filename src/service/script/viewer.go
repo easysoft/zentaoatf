@@ -66,17 +66,28 @@ func View(cases []string, keywords string) {
 	keywords = strings.TrimSpace(keywords)
 	count := 0
 
+	arrs := make([][]string, 0)
 	for _, file := range cases {
-		if Brief(file, keywords) {
-			logUtils.PrintToStdOut("", -1)
+		pass, arr := Brief(file, keywords)
+
+		if pass {
+			arrs = append(arrs, arr)
 			count++
 		}
 	}
 
-	logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("total_test_case", count), -1)
+	logUtils.Screen(time.Now().Format("2006-01-02 15:04:05") + " " +
+		i118Utils.I118Prt.Sprintf("found_scripts", len(arrs)))
+
+	for _, arr := range arrs {
+		logUtils.PrintToStdOut(fmt.Sprintf("%s. %s", arr[0], arr[1]), color.FgCyan)
+		fmt.Printf("Steps: \n%s \n", arr[2])
+
+		logUtils.PrintToStdOut("", -1)
+	}
 }
 
-func Brief(file string, keywords string) bool {
+func Brief(file string, keywords string) (bool, []string) {
 	content := fileUtils.ReadFile(file)
 
 	myExp := regexp.MustCompile(
@@ -105,14 +116,11 @@ func Brief(file string, keywords string) bool {
 		}
 
 		if pass {
-			logUtils.PrintToStdOut(fmt.Sprintf("%s %s", caseId, title), color.FgCyan)
-			fmt.Printf("Steps: \n%s \n", steps)
-
-			return true
+			return true, []string{caseId, title, steps}
 		} else {
-			return false
+			return false, nil
 		}
 	}
 
-	return false
+	return false, nil
 }
