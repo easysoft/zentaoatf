@@ -68,6 +68,7 @@ func UpdateUrl(url string) string {
 	if strings.LastIndex(url, "/") < len(url)-1 {
 		url += "/"
 	}
+
 	return url
 }
 
