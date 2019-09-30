@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/service/client"
+	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
-	stdinUtils "github.com/easysoft/zentaoatf/src/utils/stdin"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
+	"github.com/emirpasic/gods/maps"
 	"sort"
 	"strconv"
 	"strings"
@@ -208,7 +209,7 @@ func GetCaseIdsByTask(taskId string, idMap *map[int]string) {
 	}
 }
 
-func CommitCase(caseId int, title string, stepMap map[string]string, stepTypeMap map[string]string, expectMap map[string]string) {
+func CommitCase(caseId int, title string, stepMap maps.Map, stepTypeMap maps.Map, expectMap maps.Map) {
 	config := configUtils.ReadCurrConfig()
 
 	ok := Login(config.Url, config.Account, config.Password)
@@ -217,20 +218,23 @@ func CommitCase(caseId int, title string, stepMap map[string]string, stepTypeMap
 	}
 
 	uri := fmt.Sprintf("testcase-edit-%d.json", caseId)
-	requestObj := map[string]interface{}{"title": title, "steps": stepMap, "stepType": stepTypeMap, "expects": expectMap}
+	requestObj := map[string]interface{}{"title": title,
+		"steps":    commonUtils.LinkedMapToMap(stepMap),
+		"stepType": commonUtils.LinkedMapToMap(stepTypeMap),
+		"expects":  commonUtils.LinkedMapToMap(expectMap)}
 
-	var yes bool
-	logUtils.PrintToStdOut("\n"+i118Utils.I118Prt.Sprintf("case_update_confirm", title), -1)
-	stdinUtils.InputForBool(&yes, true, "want_to_continue")
+	//var yes bool
+	//logUtils.PrintToStdOut("\n"+i118Utils.I118Prt.Sprintf("case_update_confirm", caseId, title), -1)
+	//stdinUtils.InputForBool(&yes, true, "want_to_continue")
 
-	if yes {
-		url := config.Url + uri
-		_, ok = client.PostObject(url, requestObj)
+	//if yes {
+	url := config.Url + uri
+	_, ok = client.PostObject(url, requestObj)
 
-		if ok {
-			logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("success_to_commit_case", caseId)+"\n", -1)
-		}
+	if ok {
+		logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("success_to_commit_case", caseId)+"\n", -1)
 	}
+	//}
 }
 
 func IsMutiLine(step model.TestStep) bool {

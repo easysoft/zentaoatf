@@ -119,7 +119,7 @@
     },
     {
       "id": "case_update_confirm",
-      "translation": "Will commit case info to Zentao as below:\n Title: %s"
+      "translation": "Will commit below case info to Zentao:\n %d. %s"
     },
     {
       "id": "enter_dir",

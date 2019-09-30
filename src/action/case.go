@@ -14,7 +14,12 @@ func CommitCases(files []string) {
 		pass, id, _, title := zentaoUtils.GetCaseInfo(cs)
 
 		if pass {
-			stepMap, stepTypeMap, expectMap := scriptUtils.SortFile(cs)
+			stepMap, stepTypeMap, expectMap := scriptUtils.GetStepAndExpectMap(cs)
+
+			isIndependent, expectIndependentContent := zentaoUtils.GetDependentExpect(cs)
+			if isIndependent {
+				expectMap = scriptUtils.GetExpectMapFromIndependentFile(expectMap, expectIndependentContent, true)
+			}
 
 			zentaoService.CommitCase(id, title, stepMap, stepTypeMap, expectMap)
 		}

@@ -115,7 +115,7 @@
     },
     {
       "id": "case_update_confirm",
-      "translation": "以下用例信息将被更新到禅道:\n 标题: %s"
+      "translation": "以下用例信息将被更新到禅道:\n %d. %s"
     },
     {
       "id": "enter_dir",
