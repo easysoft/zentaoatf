@@ -10,13 +10,18 @@ import (
 	scriptUtils "github.com/easysoft/zentaoatf/src/utils/script"
 	"github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
+	"github.com/emirpasic/gods/maps"
 	"github.com/mattn/go-runewidth"
 	"strconv"
 	"strings"
 )
 
 func CheckCaseResult(file string, logs string, report *model.TestReport, idx int, total int, secs string, pathMaxWidth int) {
-	_, _, expectMap := scriptUtils.SortFile(file)
+	_, _, expectMap := scriptUtils.GetStepAndExpectMap(file)
+	isIndependent, expectIndependentContent := zentaoUtils.GetDependentExpect(file)
+	if isIndependent {
+		expectMap = scriptUtils.GetExpectMapFromIndependentFile(expectMap, expectIndependentContent, false)
+	}
 
 	skip, actualArr := zentaoUtils.ReadLogArr(logs)
 
@@ -25,7 +30,7 @@ func CheckCaseResult(file string, logs string, report *model.TestReport, idx int
 }
 
 func ValidateCaseResult(scriptFile string, langType string,
-	expectMap map[string]string, skip bool, actualArr [][]string, report *model.TestReport,
+	expectMap maps.Map, skip bool, actualArr [][]string, report *model.TestReport,
 	idx int, total int, secs string, pathMaxWidth int) {
 
 	_, caseId, productId, title := zentaoUtils.GetCaseInfo(scriptFile)
@@ -37,7 +42,12 @@ func ValidateCaseResult(scriptFile string, langType string,
 		caseResult = constant.SKIP.String()
 	} else {
 		indx := 0
-		for numb, expect := range expectMap { // iterate by checkpoints
+		for _, numbInterf := range expectMap.Keys() { // iterate by checkpoints
+			expectInterf, _ := expectMap.Get(numbInterf)
+
+			numb := strings.TrimSpace(numbInterf.(string))
+			expect := strings.TrimSpace(expectInterf.(string))
+
 			if expect == "" {
 				continue
 			}

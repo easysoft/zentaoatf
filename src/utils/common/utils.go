@@ -4,6 +4,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils/const"
 	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
+	"github.com/emirpasic/gods/maps"
 	"os"
 	"path"
 	"path/filepath"
@@ -67,6 +68,7 @@ func UpdateUrl(url string) string {
 	if strings.LastIndex(url, "/") < len(url)-1 {
 		url += "/"
 	}
+
 	return url
 }
 
@@ -97,4 +99,19 @@ func SetFieldVal(config *model.Config, key string, val string) string {
 	mutable.FieldByName(key).SetString(val)
 
 	return val
+}
+
+func LinkedMapToMap(mp maps.Map) map[string]string {
+	ret := make(map[string]string, 0)
+
+	for _, keyIfs := range mp.Keys() {
+		valueIfs, _ := mp.Get(keyIfs)
+
+		key := strings.TrimSpace(keyIfs.(string))
+		value := strings.TrimSpace(valueIfs.(string))
+
+		ret[key] = value
+	}
+
+	return ret
 }

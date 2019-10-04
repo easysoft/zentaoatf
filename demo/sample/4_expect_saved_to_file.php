@@ -7,7 +7,7 @@ cid=0
 pid=0
 
 [group]
-  1. step 1 
+  1. step 1 >>
   2. step 2 
 
 [3. group title 3]

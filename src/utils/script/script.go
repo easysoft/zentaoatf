@@ -5,16 +5,32 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
+	"github.com/emirpasic/gods/maps"
+	"github.com/emirpasic/gods/maps/linkedhashmap"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
-func SortFile(file string) (map[string]string, map[string]string, map[string]string) {
+func GetStepAndExpectMap(file string) (maps.Map, maps.Map, maps.Map) {
+	if fileUtils.FileExist(file) {
+		txt := fileUtils.ReadFile(file)
+
+		_, content := zentaoUtils.ReadCaseInfo(txt)
+		lines := strings.Split(content, "\n")
+
+		groupBlockArr := getGroupBlockArr(lines)
+		groupArr := getStepNestedArr(groupBlockArr)
+		_, stepMap, stepTypeMap, expectMap := getSortedTextFromNestedSteps(groupArr)
+
+		return stepMap, stepTypeMap, expectMap
+	}
+
+	return nil, nil, nil
+}
+
+func SortFile(file string) {
 	stepsTxt := ""
-	stepMap := make(map[string]string, 0)
-	stepTypeMap := make(map[string]string, 0)
-	expectMap := make(map[string]string, 0)
 
 	if fileUtils.FileExist(file) {
 		txt := fileUtils.ReadFile(file)
@@ -24,21 +40,14 @@ func SortFile(file string) (map[string]string, map[string]string, map[string]str
 
 		groupBlockArr := getGroupBlockArr(lines)
 		groupArr := getStepNestedArr(groupBlockArr)
-		stepsTxt, stepMap, stepTypeMap, expectMap = getSortedTextFromNestedSteps(groupArr)
+		stepsTxt, _, _, _ = getSortedTextFromNestedSteps(groupArr)
 
 		// replace info
 		re, _ := regexp.Compile(`(?s)\[case\].*\[esac\]`)
 		script := re.ReplaceAllString(txt, "[case]\n"+info+"\n"+stepsTxt+"\n\n[esac]")
 
 		fileUtils.WriteFile(file, script)
-
-		isIndependent, expectIndependentContent := zentaoUtils.GetDependentExpect(file)
-		if isIndependent {
-			expectMap = getExpectMapFromIndependentFile(stepMap, expectIndependentContent)
-		}
 	}
-
-	return stepMap, stepTypeMap, expectMap
 }
 
 func getGroupBlockArr(lines []string) [][]string {
@@ -133,7 +142,7 @@ func loadMutiLineSteps(arr []string) []model.TestStep {
 			idx++
 
 			stp := ""
-			for true {
+			for true { // retrieve next lines
 				if idx >= len(arr) || hasBrackets(arr[idx]) {
 					child.Desc = stp
 					break
@@ -148,13 +157,17 @@ func loadMutiLineSteps(arr []string) []model.TestStep {
 			idx++
 
 			exp := ""
-			for true {
+			for true { // retrieve next lines
 				if idx >= len(arr) || hasBrackets(arr[idx]) {
 					child.Expect = exp
 					break
 				}
 
-				exp += arr[idx] + "\n"
+				temp := strings.TrimSpace(arr[idx])
+				if temp == ">>" {
+					temp = "pending"
+				}
+				exp += temp + "\n"
 				idx++
 			}
 		}
@@ -171,10 +184,12 @@ func loadSingleLineSteps(arr []string) []model.TestStep {
 		line = strings.TrimSpace(line)
 
 		sections := strings.Split(line, ">>")
-
 		expect := ""
-		if len(sections) > 1 {
-			expect = sections[1]
+		if len(sections) > 1 { // has expect
+			expect = strings.TrimSpace(sections[1])
+			if expect == "" { // in independent file
+				expect = "pending"
+			}
 		}
 
 		child := model.TestStep{Desc: sections[0], Expect: expect}
@@ -211,11 +226,11 @@ func isGroup(str string) bool {
 	return ret
 }
 
-func getSortedTextFromNestedSteps(groups []model.TestStep) (string, map[string]string, map[string]string, map[string]string) {
+func getSortedTextFromNestedSteps(groups []model.TestStep) (string, maps.Map, maps.Map, maps.Map) {
 	ret := make([]string, 0)
-	stepMap := make(map[string]string, 0)
-	stepTypeMap := make(map[string]string, 0)
-	expectMap := make(map[string]string, 0)
+	stepMap := linkedhashmap.New()
+	stepTypeMap := linkedhashmap.New()
+	expectMap := linkedhashmap.New()
 
 	groupNumb := 1
 	for _, group := range groups {
@@ -226,7 +241,7 @@ func getSortedTextFromNestedSteps(groups []model.TestStep) (string, map[string]s
 
 			for idx, child := range group.Children { // level 1 item
 				numbStr := getNumbStr(groupNumb, -1)
-				stepTypeMap[numbStr] = "item"
+				stepTypeMap.Put(numbStr, "item")
 
 				if group.MutiLine {
 					// steps
@@ -235,7 +250,7 @@ func getSortedTextFromNestedSteps(groups []model.TestStep) (string, map[string]s
 
 					stepTxt := printMutiStepOrExpect(child.Desc)
 					ret = append(ret, stepTxt)
-					stepMap[numbStr] = stepTxt
+					stepMap.Put(numbStr, stepTxt)
 
 					// expects
 					tag = replaceNumb("[expects]", groupNumb, -1, true)
@@ -246,15 +261,15 @@ func getSortedTextFromNestedSteps(groups []model.TestStep) (string, map[string]s
 					if idx < len(group.Children)-1 {
 						ret = append(ret, "")
 					}
-					expectMap[numbStr] = expectTxt
+					expectMap.Put(numbStr, expectTxt)
 				} else {
 					stepTxt := strings.TrimSpace(child.Desc)
 					stepTxtWithNumb := replaceNumb(stepTxt, groupNumb, -1, false)
-					stepMap[numbStr] = stepTxt
+					stepMap.Put(numbStr, stepTxt)
 
 					expectTxt := child.Expect
 					expectTxt = strings.TrimSpace(expectTxt)
-					expectMap[numbStr] = expectTxt
+					expectMap.Put(numbStr, expectTxt)
 
 					if expectTxt != "" {
 						expectTxt = ">> " + expectTxt
@@ -270,14 +285,14 @@ func getSortedTextFromNestedSteps(groups []model.TestStep) (string, map[string]s
 			ret = append(ret, "\n"+desc)
 
 			numbStr := getNumbStr(groupNumb, -1)
-			stepMap[numbStr] = getGroupName(group.Desc)
-			stepTypeMap[numbStr] = "group"
-			expectMap[numbStr] = ""
+			stepMap.Put(numbStr, getGroupName(group.Desc))
+			stepTypeMap.Put(numbStr, "group")
+			expectMap.Put(numbStr, "")
 
 			childNumb := 1
 			for _, child := range group.Children {
 				numbStr := getNumbStr(groupNumb, childNumb)
-				stepTypeMap[numbStr] = "item"
+				stepTypeMap.Put(numbStr, "item")
 
 				if group.MutiLine {
 					// steps
@@ -286,7 +301,7 @@ func getSortedTextFromNestedSteps(groups []model.TestStep) (string, map[string]s
 
 					stepTxt := printMutiStepOrExpect(child.Desc)
 					ret = append(ret, stepTxt)
-					stepMap[numbStr] = stepTxt
+					stepMap.Put(numbStr, stepTxt)
 
 					// expects
 					tag = replaceNumb("[expects]", groupNumb, childNumb, true)
@@ -294,14 +309,14 @@ func getSortedTextFromNestedSteps(groups []model.TestStep) (string, map[string]s
 
 					expectTxt := printMutiStepOrExpect(child.Expect)
 					ret = append(ret, expectTxt)
-					expectMap[numbStr] = expectTxt
+					expectMap.Put(numbStr, expectTxt)
 				} else {
 					stepTxt := strings.TrimSpace(child.Desc)
-					stepMap[numbStr] = stepTxt
+					stepMap.Put(numbStr, stepTxt)
 
 					expectTxt := child.Expect
 					expectTxt = strings.TrimSpace(expectTxt)
-					expectMap[numbStr] = expectTxt
+					expectMap.Put(numbStr, expectTxt)
 
 					if expectTxt != "" {
 						expectTxt = ">> " + expectTxt
@@ -367,14 +382,26 @@ func printMutiStepOrExpect(str string) string {
 	return strings.Join(ret, "\r\n")
 }
 
-func getExpectMapFromIndependentFile(stepMap map[string]string, content string) map[string]string {
-	retMap := make(map[string]string, 0)
+func GetExpectMapFromIndependentFile(expectMap maps.Map, content string, withEmptyExpect bool) maps.Map {
+	retMap := linkedhashmap.New()
 
 	expectArr := zentaoUtils.ReadExpectIndependentArr(content)
 
 	idx := 0
-	for k, _ := range stepMap {
-		retMap[k] = strings.Join(expectArr[idx], "\r\n")
+	for _, keyIfs := range expectMap.Keys() {
+		valueIfs, _ := expectMap.Get(keyIfs)
+
+		key := strings.TrimSpace(keyIfs.(string))
+		value := strings.TrimSpace(valueIfs.(string))
+
+		if value == "pending" {
+			retMap.Put(key, strings.Join(expectArr[idx], "\r\n"))
+			idx++
+		} else {
+			if withEmptyExpect {
+				retMap.Put(key, "")
+			}
+		}
 	}
 
 	return retMap
