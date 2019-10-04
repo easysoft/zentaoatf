@@ -15,6 +15,10 @@ import (
 )
 
 func Report(report model.TestReport, pathMaxWidth int) {
+	if len(report.Cases) == 0 {
+		return
+	}
+
 	// print failed case
 	failedCount := 0
 	failedCaseLines := make([]string, 0)

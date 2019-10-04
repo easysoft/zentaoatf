@@ -125,7 +125,7 @@ func runCases(files []string) {
 				ext = ext[1:]
 			}
 			lang := vari.ScriptExtToNameMap[ext]
-			if commonUtils.GetFieldVal(conf, stringUtils.Ucfirst(lang)) == "" { // filter by interpreter
+			if lang != "bat" && commonUtils.GetFieldVal(conf, stringUtils.Ucfirst(lang)) == "" { // filter by interpreter
 				continue
 			}
 		} else if !commonUtils.IsWin() { // filter by os
