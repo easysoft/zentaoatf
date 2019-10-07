@@ -127,7 +127,10 @@ func runCases(files []string) {
 			}
 			lang := vari.ScriptExtToNameMap[ext]
 			interpreter := commonUtils.GetFieldVal(conf, stringUtils.Ucfirst(lang))
-			if lang != "bat" && (interpreter == "" || interpreter == "-") { // ignore by interpreter
+			if interpreter == "-" {
+				interpreter = ""
+			}
+			if lang != "bat" && interpreter == "" { // ignore by interpreter
 				continue
 			}
 		} else if !commonUtils.IsWin() { // filter by os
