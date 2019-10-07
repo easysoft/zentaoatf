@@ -167,12 +167,19 @@ func GetLogDir() string {
 		}
 	}
 
-	if numb == 9 {
+	if numb >= 3 {
 		numb = 0
 
-		bak := path[:len(path)-1] + "-bak" + string(os.PathSeparator) + path[len(path):]
-		os.RemoveAll(bak)
-		os.Rename(path, bak)
+		tempDir := path[:len(path)-1] + "-bak" + string(os.PathSeparator) + path[len(path):]
+		childDir := path + "bak" + string(os.PathSeparator) + path[len(path):]
+
+		os.RemoveAll(childDir)
+		os.Rename(path, tempDir)
+
+		MkDirIfNeeded(path)
+
+		err := os.Rename(tempDir, childDir)
+		_ = err
 	}
 
 	ret := getLogNumb(numb + 1)
