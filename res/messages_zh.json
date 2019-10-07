@@ -359,6 +359,10 @@
     {
       "id": "success_sort_steps",
       "translation": "成功对%d个脚本进行步骤重排。"
+    },
+    {
+      "id": "success_add_to_path",
+      "translation": "成功将ztf命令加入用户PATH环境变量。"
     }
   ]
 }

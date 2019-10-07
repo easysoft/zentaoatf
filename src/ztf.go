@@ -24,7 +24,6 @@ var (
 )
 
 func main() {
-
 	//var caseId string
 
 	flagSet = flag.NewFlagSet("atf", flag.ContinueOnError)
@@ -122,6 +121,9 @@ func main() {
 
 	case "clean", "-clean", "-c":
 		action.Clean()
+
+	//case "addpath", "-a":
+	//	action.AddPath()
 
 	case "help", "-h":
 		logUtils.PrintUsage()

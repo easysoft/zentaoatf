@@ -351,6 +351,10 @@
     {
       "id": "success_sort_steps",
       "translation": "Success to sort steps for %d scripts."
+    },
+    {
+      "id": "success_add_to_path",
+      "translation": "Success to add ztf to PATH environment variable."
     }
   ]
 }
