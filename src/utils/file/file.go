@@ -167,7 +167,7 @@ func GetLogDir() string {
 		}
 	}
 
-	if numb >= 3 {
+	if numb >= 9 {
 		numb = 0
 
 		tempDir := path[:len(path)-1] + "-bak" + string(os.PathSeparator) + path[len(path):]

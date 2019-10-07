@@ -9,6 +9,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/display"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/easysoft/zentaoatf/src/utils/i118"
+	langUtils "github.com/easysoft/zentaoatf/src/utils/lang"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	stdinUtils "github.com/easysoft/zentaoatf/src/utils/stdin"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
@@ -192,7 +193,7 @@ func InputForScriptInterpreter(scripts []string, config *model.Config, from stri
 		deflt := commonUtils.GetFieldVal(*config, lang)
 		defltTips := ""
 		if deflt == "" {
-			defltTips = i118Utils.I118Prt.Sprintf("for_example", `C:\Python37-32\python.exe`) + " " +
+			defltTips = i118Utils.I118Prt.Sprintf("for_example", langUtils.LangMap[lang]["interpreter"]) + " " +
 				i118Utils.I118Prt.Sprintf("empty_to_ignore")
 		} else {
 			defltTips = deflt

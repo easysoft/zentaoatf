@@ -28,31 +28,37 @@ func initSupportedScriptLang() map[string]map[string]string {
 				"extName":      "js",
 				"commentsTag":  "//",
 				"printGrammar": "console.log(\"#\")",
+				"interpreter":  "C:\\nodejs\\node.exe",
 			},
 			"lua": {
 				"extName":      "lua",
 				"commentsTag":  "--",
 				"printGrammar": "print('#')",
+				"interpreter":  "C:\\Lua\\5.1\\lua.exe",
 			},
 			"perl": {
 				"extName":      "pl",
 				"commentsTag":  "#",
 				"printGrammar": "print \"#\\n\";",
+				"interpreter":  "C:\\Perl64\\bin\\perl.exe",
 			},
 			"php": {
 				"extName":      "php",
 				"commentsTag":  "//",
 				"printGrammar": "echo \"#\\n\";",
+				"interpreter":  "C:\\php-7.3.9-Win32-VC15-x64\\php.exe",
 			},
 			"python": {
 				"extName":      "py",
 				"commentsTag":  "#",
 				"printGrammar": "print(\"#\")",
+				"interpreter":  "C:\\Python37-32\\python.exe",
 			},
 			"ruby": {
 				"extName":      "rb",
 				"commentsTag":  "#",
 				"printGrammar": "print(\"#\\n\")",
+				"interpreter":  "C:\\Ruby26-x64\\bin\\ruby.exe",
 			},
 			"shell": {
 				"extName":      "sh",
@@ -63,6 +69,7 @@ func initSupportedScriptLang() map[string]map[string]string {
 				"extName":      "tl",
 				"commentsTag":  "#",
 				"printGrammar": "set hello \"#\"; \n puts [set hello];",
+				"interpreter":  "C:\\ActiveTcl\\bin\\tclsh.exe",
 			},
 		}
 	})
