@@ -28,4 +28,3 @@ $>ztf.exe -v demo\lang\bat -k word                   查看指定路径下，标
 
 $>ztf.exe sort demo\sample\2_with_group.php          将dir1目录下脚本的步骤重新排序, 缩写-s。
 $>ztf.exe clean                                      清除所有测试执行日志，缩写-c。
-$>ztf.exe addPath                                    添加ztf命令到用户的PATH环境变量，当前会话窗口有效。
