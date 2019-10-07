@@ -24,7 +24,7 @@ func initSupportedScriptLang() map[string]map[string]string {
 				"commentsTag":  "::",
 				"printGrammar": "echo #",
 			},
-			"js": {
+			"javascript": {
 				"extName":      "js",
 				"commentsTag":  "//",
 				"printGrammar": "console.log(\"#\")",

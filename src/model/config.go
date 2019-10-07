@@ -8,13 +8,13 @@ type Config struct {
 	Account  string
 	Password string
 
-	Bat    string
-	Js     string
-	Lua    string
-	Perl   string
-	Php    string
-	Python string
-	Ruby   string
-	Shell  string
-	Tcl    string
+	Bat        string
+	Javascript string
+	Lua        string
+	Perl       string
+	Php        string
+	Python     string
+	Ruby       string
+	Shell      string
+	Tcl        string
 }

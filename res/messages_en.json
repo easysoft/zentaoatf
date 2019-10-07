@@ -115,7 +115,7 @@
 
     {
       "id": "want_to_continue",
-      "translation": "Do you want to continue[Y/n]?"
+      "translation": "Do you want to continue? (y/n, default is Yes)"
     },
     {
       "id": "case_update_confirm",
@@ -135,7 +135,7 @@
     },
     {
       "id": "config_zentao_site",
-      "translation": "Do you want to config Zentao site[Y/n]?"
+      "translation": "Do you want to config Zentao site? (y/n, default is Yes)"
     },
     {
       "id": "enter_url",
@@ -155,7 +155,7 @@
     },
     {
       "id": "enter_co_independent",
-      "translation": "Save expect results in independent file[y/N]?"
+      "translation": "Save expect results in independent file? (y/n, default is No)"
     },
     {
       "id": "enter_co_language",
@@ -167,7 +167,7 @@
     },
     {
       "id": "confirm_commit_result",
-      "translation": "Continue to commit result as below[Y/n]?\n%s"
+      "translation": "Continue to commit result as below? (y/n, default is Yes)\n%s"
     },
 
     {
@@ -189,7 +189,7 @@
     },
     {
       "id": "config_script_interpreter",
-      "translation": "Do you want to config script interpreter[Y/n]?"
+      "translation": "Do you want to config script interpreter? (y/n, default is Yes)"
     },
     {
       "id": "set_script_interpreter",

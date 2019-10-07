@@ -111,7 +111,7 @@
 
     {
       "id": "want_to_continue",
-      "translation": "确认继续[Y/n]?"
+      "translation": "确认继续？（y/n, 默认Yes）"
     },
     {
       "id": "case_update_confirm",
@@ -131,7 +131,7 @@
     },
     {
       "id": "config_zentao_site",
-      "translation": "现在开始配置同禅道系统的同步参数[Y/n]?"
+      "translation": "现在开始配置同禅道系统的同步参数？（y/n, 默认Yes）"
     },
     {
       "id": "enter_url",
@@ -151,7 +151,7 @@
     },
     {
       "id": "enter_co_independent",
-      "translation": "是否将用例期待结果保存在独立的文件中[y/N]?"
+      "translation": "是否将用例期待结果保存在独立的文件中？（y/n, 默认No）"
     },
     {
       "id": "enter_co_language",
@@ -163,7 +163,7 @@
     },
     {
       "id": "confirm_commit_result",
-      "translation": "确认提交以下结果信息[Y/n]?\n%s"
+      "translation": "确认提交以下结果信息？（y/n, 默认Yes）\n%s"
     },
 
     {
@@ -184,7 +184,7 @@
     },
     {
       "id": "config_script_interpreter",
-      "translation": "现在配置脚本的解释程序[Y/n]？"
+      "translation": "现在配置脚本的解释程序？（y/n, 默认Yes）"
     },
     {
       "id": "set_script_interpreter",

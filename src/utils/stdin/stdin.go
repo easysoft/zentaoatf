@@ -83,9 +83,9 @@ func InputForBool(in *bool, defaultVal bool, fmtStr string, fmtParam ...interfac
 
 		msg := ""
 		if *in {
-			msg = "Yes"
+			msg = "yes"
 		} else {
-			msg = "No"
+			msg = "no"
 		}
 		logUtils.PrintToStdOut(msg, -1)
 		return
