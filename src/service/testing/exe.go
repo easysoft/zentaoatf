@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func ExeScripts(casesToRun []string, report *model.TestReport, pathMaxWidth int) {
+func ExeScripts(casesToRun []string, report *model.TestReport, pathMaxWidth int, numbMaxWidth int) {
 	now := time.Now()
 	startTime := now.Unix()
 	report.StartTime = startTime
@@ -19,7 +19,7 @@ func ExeScripts(casesToRun []string, report *model.TestReport, pathMaxWidth int)
 		i118Utils.I118Prt.Sprintf("found_scripts", len(casesToRun)) + "\n")
 
 	for idx, file := range casesToRun {
-		ExeScript(file, report, idx, len(casesToRun), pathMaxWidth)
+		ExeScript(file, report, idx, len(casesToRun), pathMaxWidth, numbMaxWidth)
 	}
 
 	endTime := time.Now().Unix()
@@ -29,7 +29,7 @@ func ExeScripts(casesToRun []string, report *model.TestReport, pathMaxWidth int)
 	report.Duration = secs
 }
 
-func ExeScript(file string, report *model.TestReport, idx int, total int, pathMaxWidth int) {
+func ExeScript(file string, report *model.TestReport, idx int, total int, pathMaxWidth int, numbMaxWidth int) {
 	startTime := time.Now()
 
 	logUtils.Log("===start " + file + " at " + startTime.Format("2006-01-02 15:04:05"))
@@ -48,7 +48,7 @@ func ExeScript(file string, report *model.TestReport, idx int, total int, pathMa
 
 	logUtils.Log("===end " + file + " at " + entTime.Format("2006-01-02 15:04:05"))
 
-	CheckCaseResult(file, logs, report, idx, total, secs, pathMaxWidth)
+	CheckCaseResult(file, logs, report, idx, total, secs, pathMaxWidth, numbMaxWidth)
 
 	if idx < total-1 {
 		logUtils.Log("")

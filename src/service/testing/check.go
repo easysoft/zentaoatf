@@ -16,7 +16,7 @@ import (
 	"strings"
 )
 
-func CheckCaseResult(file string, logs string, report *model.TestReport, idx int, total int, secs string, pathMaxWidth int) {
+func CheckCaseResult(file string, logs string, report *model.TestReport, idx int, total int, secs string, pathMaxWidth int, numbMaxWidth int) {
 	_, _, expectMap := scriptUtils.GetStepAndExpectMap(file)
 	isIndependent, expectIndependentContent := zentaoUtils.GetDependentExpect(file)
 	if isIndependent {
@@ -26,12 +26,12 @@ func CheckCaseResult(file string, logs string, report *model.TestReport, idx int
 	skip, actualArr := zentaoUtils.ReadLogArr(logs)
 
 	language := langUtils.GetLangByFile(file)
-	ValidateCaseResult(file, language, expectMap, skip, actualArr, report, idx, total, secs, pathMaxWidth)
+	ValidateCaseResult(file, language, expectMap, skip, actualArr, report, idx, total, secs, pathMaxWidth, numbMaxWidth)
 }
 
 func ValidateCaseResult(scriptFile string, langType string,
 	expectMap maps.Map, skip bool, actualArr [][]string, report *model.TestReport,
-	idx int, total int, secs string, pathMaxWidth int) {
+	idx int, total int, secs string, pathMaxWidth int, numbMaxWidth int) {
 
 	_, caseId, productId, title := zentaoUtils.GetCaseInfo(scriptFile)
 
@@ -85,6 +85,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 	// print case result to console
 	statusColor := logUtils.ColoredStatus(cs.Status)
 	width := strconv.Itoa(len(strconv.Itoa(total)))
+	numbWidth := strconv.Itoa(numbMaxWidth)
 
 	path := cs.Path
 	lent := runewidth.StringWidth(path)
@@ -94,7 +95,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 		path += postFix
 	}
 
-	format := "(%" + width + "d/%d) %s [%s] %d.%s (%ss)"
+	format := "(%" + width + "d/%d) %s [%s] [%" + numbWidth + "d. %s] (%ss)"
 	logUtils.Screen(fmt.Sprintf(format, idx+1, total, statusColor, path, cs.Id, cs.Title, secs))
 	logUtils.Result(fmt.Sprintf(format, idx+1, total, i118Utils.I118Prt.Sprintf(cs.Status), path, cs.Id, cs.Title, secs))
 }

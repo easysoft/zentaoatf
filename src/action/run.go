@@ -13,6 +13,7 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
+	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/mattn/go-runewidth"
 	"path"
 	"strconv"
@@ -141,14 +142,21 @@ func runCases(files []string) {
 		Pass: 0, Fail: 0, Total: 0, Cases: make([]model.CaseLog, 0)}
 
 	pathMaxWidth := 0
+	numbMaxWidth := 0
 	for _, file := range casesToRun {
 		lent := runewidth.StringWidth(file)
 		if lent > pathMaxWidth {
 			pathMaxWidth = lent
 		}
+
+		content := fileUtils.ReadFile(file)
+		caseId := zentaoUtils.ReadCaseId(content)
+		if len(caseId) > numbMaxWidth {
+			numbMaxWidth = len(caseId)
+		}
 	}
 
-	testingService.ExeScripts(casesToRun, &report, pathMaxWidth)
+	testingService.ExeScripts(casesToRun, &report, pathMaxWidth, numbMaxWidth)
 	testingService.Report(report, pathMaxWidth)
 }
 

@@ -102,16 +102,16 @@ func GetCaseInfo(file string) (bool, int, int, string) {
 	return pass, caseId, productId, title
 }
 
-func ReadScriptCheckpoints(file string) ([]string, [][]string) {
-	_, expectIndependentContent := GetDependentExpect(file)
-
-	content := fileUtils.ReadFile(file)
-	_, checkpoints := ReadCaseInfo(content)
-
-	cpStepArr, expectArr := getCheckpointStepArr(checkpoints, expectIndependentContent)
-
-	return cpStepArr, expectArr
-}
+//func ReadScriptCheckpoints(file string) ([]string, [][]string) {
+//	_, expectIndependentContent := GetDependentExpect(file)
+//
+//	content := fileUtils.ReadFile(file)
+//	_, checkpoints := ReadCaseInfo(content)
+//
+//	cpStepArr, expectArr := getCheckpointStepArr(checkpoints, expectIndependentContent)
+//
+//	return cpStepArr, expectArr
+//}
 func getCheckpointStepArr(content string, expectIndependentContent string) ([]string, [][]string) {
 	cpStepArr := make([]string, 0)
 	expectArr := make([][]string, 0)
@@ -271,6 +271,17 @@ func ReadCaseInfo(content string) (string, string) {
 	}
 
 	return "", ""
+}
+func ReadCaseId(content string) string {
+	myExp := regexp.MustCompile(`(?s)\[case\].*\ncid=((?U:.*))\n.*\[esac\]`)
+	arr := myExp.FindStringSubmatch(content)
+
+	if len(arr) > 1 {
+		id := strings.TrimSpace(arr[1])
+		return id
+	}
+
+	return ""
 }
 
 func GetDependentExpect(file string) (bool, string) {
