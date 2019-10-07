@@ -167,8 +167,8 @@ func GetInputForScriptInterpreter(defaultVal string, fmtStr string, params ...in
 			os.Exit(1)
 		}
 
-		if ret == "" {
-			return ""
+		if ret == "" { // ignore to set
+			return "-"
 		}
 
 		sep := string(os.PathSeparator)
