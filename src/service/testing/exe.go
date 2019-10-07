@@ -17,8 +17,13 @@ func ExeScripts(casesToRun []string, report *model.TestReport, pathMaxWidth int,
 	startTime := now.Unix()
 	report.StartTime = startTime
 
+	postFix := ":\n"
+	if len(casesToRun) == 0 {
+		postFix = "."
+	}
+
 	logUtils.ScreenAndResult(now.Format("2006-01-02 15:04:05") + " " +
-		i118Utils.I118Prt.Sprintf("found_scripts", color.CyanString(strconv.Itoa(len(casesToRun)))) + ":\n")
+		i118Utils.I118Prt.Sprintf("found_scripts", color.CyanString(strconv.Itoa(len(casesToRun)))) + postFix)
 
 	for idx, file := range casesToRun {
 		ExeScript(file, report, idx, len(casesToRun), pathMaxWidth, numbMaxWidth)
