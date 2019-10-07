@@ -69,13 +69,17 @@ func Report(report model.TestReport, pathMaxWidth int) {
 		logUtils.Result(strings.Join(failedCaseLinesWithCheckpoint, "\n"))
 	}
 
+	secTag := ""
+	if vari.Config.Language == "en" && report.Duration > 1 {
+		secTag = "s"
+	}
 	logUtils.ScreenAndResult("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
 		i118Utils.I118Prt.Sprintf("run_scripts",
-			report.Total, report.Duration,
+			report.Total, report.Duration, secTag,
 			report.Pass, float32(report.Pass*100/report.Total), i118Utils.I118Prt.Sprintf("pass"),
 			report.Fail, float32(report.Fail*100/report.Total), i118Utils.I118Prt.Sprintf("fail"),
 			report.Skip, float32(report.Skip*100/report.Total), i118Utils.I118Prt.Sprintf("skip"),
-			vari.ZtfDir+"result.txt",
+			vari.LogDir+"result.txt",
 		))
 
 	json, _ := json.Marshal(report)

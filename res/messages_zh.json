@@ -233,7 +233,7 @@
     },
     {
       "id": "found_scripts",
-      "translation": "发现%d个脚本"
+      "translation": "发现%s个脚本"
     },
     {
       "id": "failed_scripts",
@@ -251,7 +251,7 @@
 
     {
       "id": "run_scripts",
-      "translation": "执行%d个用例，耗时%d秒。%d(%.1f%%) %s，%d(%.1f%%) %s，%d(%.1f%%) %s。报告%s。"
+      "translation": "执行%d个用例，耗时%d秒%s。%d(%.1f%%) %s，%d(%.1f%%) %s，%d(%.1f%%) %s。报告%s。"
     },
     {
       "id": "no_interpreter_for_run",

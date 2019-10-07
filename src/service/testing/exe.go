@@ -6,6 +6,8 @@ import (
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/shell"
+	"github.com/fatih/color"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -16,7 +18,7 @@ func ExeScripts(casesToRun []string, report *model.TestReport, pathMaxWidth int,
 	report.StartTime = startTime
 
 	logUtils.ScreenAndResult(now.Format("2006-01-02 15:04:05") + " " +
-		i118Utils.I118Prt.Sprintf("found_scripts", len(casesToRun)) + "\n")
+		i118Utils.I118Prt.Sprintf("found_scripts", color.CyanString(strconv.Itoa(len(casesToRun)))) + ":\n")
 
 	for idx, file := range casesToRun {
 		ExeScript(file, report, idx, len(casesToRun), pathMaxWidth, numbMaxWidth)
