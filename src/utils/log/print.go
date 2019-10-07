@@ -3,11 +3,13 @@ package logUtils
 import (
 	"encoding/json"
 	"fmt"
+	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
 	"io"
 	"os"
+	"regexp"
 	"strings"
 )
 
@@ -25,6 +27,19 @@ func PrintUsage() {
 	PrintToStdOut("\nExample: ", color.FgCyan)
 
 	content = fileUtils.ReadResData(sampleFile)
+	if !commonUtils.IsWin() {
+		regx, _ := regexp.Compile(`\\`)
+		content = regx.ReplaceAllString(content, "/")
+
+		regx, _ = regexp.Compile(`ztf.exe`)
+		content = regx.ReplaceAllString(content, "ztf")
+
+		regx, _ = regexp.Compile(`/bat/`)
+		content = regx.ReplaceAllString(content, "/shell/")
+
+		regx, _ = regexp.Compile(`\.bat\s{4}`)
+		content = regx.ReplaceAllString(content, ".shell")
+	}
 	fmt.Printf("%s\n", content)
 }
 

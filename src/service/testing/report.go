@@ -23,8 +23,12 @@ func Report(report model.TestReport, pathMaxWidth int) {
 	failedCount := 0
 	failedCaseLines := make([]string, 0)
 	failedCaseLinesWithCheckpoint := make([]string, 0)
+
 	for _, cs := range report.Cases {
 		if cs.Status == "fail" {
+			if failedCount > 0 {
+				failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "")
+			}
 			failedCount++
 
 			path := cs.Path
@@ -40,22 +44,29 @@ func Report(report model.TestReport, pathMaxWidth int) {
 			failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, line)
 
 			if len(cs.Steps) > 0 {
-				for idx, step := range cs.Steps {
+				stepNumb := 0
+				for _, step := range cs.Steps {
+					if step.Status {
+						continue
+					}
+
+					if stepNumb > 0 {
+						failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "")
+					}
+					stepNumb++
+
+					step.Id = strings.TrimRight(step.Id, ".")
 					status := i118Utils.I118Prt.Sprintf(commonUtils.BoolToPass(step.Status))
-					failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("  Step %s %s %s", step.Id, step.Name, status))
+					failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("Step %s: %s", step.Id, status))
 
 					for idx1, cp := range step.CheckPoints {
 						//cpStatus := commonUtils.BoolToPass(step.Status)
-						failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("    [Expect] %s", cp.Expect))
-						failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("    [Actual] %s", cp.Actual))
+						failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("[Expect] %s", cp.Expect))
+						failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("[Actual] %s", cp.Actual))
 
 						if idx1 < len(step.CheckPoints)-1 {
 							failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "")
 						}
-					}
-
-					if idx < len(cs.Steps)-1 {
-						failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "")
 					}
 				}
 			} else {
