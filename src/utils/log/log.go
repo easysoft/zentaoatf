@@ -1,6 +1,7 @@
 package logUtils
 
 import (
+	"fmt"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
@@ -9,9 +10,26 @@ import (
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"strings"
+	"unicode/utf8"
 )
 
 var Logger *logrus.Logger
+
+func GetWholeLine(msg string, char string) string {
+	prefixLen := (vari.ScreenWidth - utf8.RuneCountInString(msg) - 2) / 2
+	if prefixLen <= 0 { // no width in debug mode
+		prefixLen = 6
+	}
+	postfixLen := vari.ScreenWidth - utf8.RuneCountInString(msg) - 2 - prefixLen
+	if postfixLen <= 0 { // no width in debug mode
+		postfixLen = 6
+	}
+
+	preFixStr := strings.Repeat(char, prefixLen)
+	postFixStr := strings.Repeat(char, postfixLen)
+
+	return fmt.Sprintf("%s %s %s", preFixStr, msg, postFixStr)
+}
 
 func ColoredStatus(status string) string {
 	temp := strings.ToLower(status)

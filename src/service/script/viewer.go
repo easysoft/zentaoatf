@@ -24,7 +24,7 @@ func List(cases []string, keywords string) {
 	pathMaxWidth := 0
 	numbMaxWidth := 0
 	for _, tc := range cases {
-		pass, cs := Summary(tc, keywords)
+		pass, cs := SummaryObj(tc, keywords)
 		if pass {
 			scriptArr = append(scriptArr, cs)
 		}
@@ -62,7 +62,7 @@ func List(cases []string, keywords string) {
 	}
 }
 
-func Summary(file string, keywords string) (bool, model.CaseLog) {
+func SummaryObj(file string, keywords string) (bool, model.CaseLog) {
 	pass, caseId, _, title := zentaoUtils.GetCaseInfo(file)
 
 	if pass {
@@ -100,11 +100,16 @@ func View(cases []string, keywords string) {
 		}
 	}
 
-	logUtils.Screen(time.Now().Format("2006-01-02 15:04:05") + " " +
-		i118Utils.I118Prt.Sprintf("found_scripts", len(arrs)))
+	logUtils.Screen(time.Now().Format("2006-01-02 15:04:05") + " " + i118Utils.I118Prt.Sprintf("found_scripts",
+		strconv.Itoa(len(arrs))))
 
-	for _, arr := range arrs {
+	width := len(strconv.Itoa(len(arrs)))
+	for idx, arr := range arrs {
+		numb := fmt.Sprintf("#%0"+strconv.Itoa(width)+"d", idx+1)
+
+		logUtils.PrintToStdOut(logUtils.GetWholeLine(numb+" "+arr[3], "="), -1)
 		logUtils.PrintToStdOut(fmt.Sprintf("%s. %s", arr[0], arr[1]), color.FgCyan)
+
 		fmt.Printf("Steps: \n%s \n", arr[2])
 
 		logUtils.PrintToStdOut("", -1)
@@ -140,7 +145,7 @@ func Brief(file string, keywords string) (bool, []string) {
 		}
 
 		if pass {
-			return true, []string{caseId, title, steps}
+			return true, []string{caseId, title, steps, file}
 		} else {
 			return false, nil
 		}
