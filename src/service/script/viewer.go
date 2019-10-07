@@ -9,6 +9,7 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/fatih/color"
+	"github.com/mattn/go-runewidth"
 	"regexp"
 	"strconv"
 	"strings"
@@ -19,12 +20,24 @@ func List(cases []string, keywords string) {
 	keywords = strings.TrimSpace(keywords)
 
 	scriptArr := make([]model.CaseLog, 0)
+
+	pathMaxWidth := 0
+	numbMaxWidth := 0
 	for _, tc := range cases {
 		pass, cs := Summary(tc, keywords)
 		if pass {
 			scriptArr = append(scriptArr, cs)
 		}
+
+		if len(cs.Path) > pathMaxWidth {
+			pathMaxWidth = len(cs.Path)
+		}
+
+		if len(tc) > numbMaxWidth {
+			numbMaxWidth = len(strconv.Itoa(cs.Id))
+		}
 	}
+	numbWidth := strconv.Itoa(numbMaxWidth)
 
 	total := len(scriptArr)
 	width := strconv.Itoa(len(strconv.Itoa(total)))
@@ -33,8 +46,19 @@ func List(cases []string, keywords string) {
 		i118Utils.I118Prt.Sprintf("found_scripts", total) + "\n")
 
 	for idx, cs := range scriptArr {
-		format := "(%" + width + "d/%d) [%s] %d.%s"
-		logUtils.Screen(fmt.Sprintf(format, idx+1, total, cs.Path, cs.Id, cs.Title))
+		//format := "(%" + width + "d/%d) [%s] %d.%s"
+		//logUtils.Screen(fmt.Sprintf(format, idx+1, total, cs.Path, cs.Id, cs.Title))
+
+		path := cs.Path
+		lent := runewidth.StringWidth(path)
+
+		if pathMaxWidth > lent {
+			postFix := strings.Repeat(" ", pathMaxWidth-lent)
+			path += postFix
+		}
+
+		format := "(%" + width + "d/%d) [%s] [%" + numbWidth + "d. %s]"
+		logUtils.Screen(fmt.Sprintf(format, idx+1, total, path, cs.Id, cs.Title))
 	}
 }
 
