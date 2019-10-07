@@ -195,17 +195,17 @@ func InputForScriptInterpreter(scripts []string, config *model.Config, from stri
 			continue
 		}
 
-		defltTips := ""
+		sampleOrDefaultTips := ""
 		if deflt == "" {
-			defltTips = i118Utils.I118Prt.Sprintf("for_example", langUtils.LangMap[lang]["interpreter"]) + " " +
+			sampleOrDefaultTips = i118Utils.I118Prt.Sprintf("for_example", langUtils.LangMap[lang]["interpreter"]) + " " +
 				i118Utils.I118Prt.Sprintf("empty_to_ignore")
 		} else {
-			defltTips = deflt
+			sampleOrDefaultTips = deflt
 		}
 
 		configChanged = true
 
-		inter := stdinUtils.GetInputForScriptInterpreter(deflt, "set_script_interpreter", lang, defltTips)
+		inter := stdinUtils.GetInputForScriptInterpreter(deflt, "set_script_interpreter", lang, sampleOrDefaultTips)
 		commonUtils.SetFieldVal(config, lang, inter)
 	}
 
