@@ -44,6 +44,7 @@ func CommitBug(files []string) {
 		fmt.Scanln(&caseId)
 
 		if caseId == "exit" {
+			color.Unset()
 			os.Exit(0)
 		} else {
 			if stringUtils.FindInArr(caseId, ids) {

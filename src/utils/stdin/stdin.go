@@ -118,6 +118,7 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 
 		temp := strings.ToLower(ret)
 		if temp == "exit" {
+			color.Unset()
 			os.Exit(0)
 		}
 
@@ -164,6 +165,7 @@ func GetInputForScriptInterpreter(defaultVal string, fmtStr string, params ...in
 		}
 
 		if ret == "exit" {
+			color.Unset()
 			os.Exit(0)
 		}
 
