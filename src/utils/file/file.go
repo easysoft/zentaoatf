@@ -73,9 +73,7 @@ func AbosutePath(pth string) string {
 		pth, _ = filepath.Abs(pth)
 	}
 
-	if IsDir(pth) {
-		pth = UpdateDir(pth)
-	}
+	pth = UpdateDir(pth)
 
 	return pth
 }
