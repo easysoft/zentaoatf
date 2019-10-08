@@ -3,6 +3,7 @@ package action
 import (
 	"fmt"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
+	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
@@ -21,7 +22,7 @@ func AddPath() {
 		if commonUtils.IsWin() {
 
 		} else {
-			os.Setenv("PATH", pathEnv+":"+ztfPath)
+			fileUtils.CopyFile("./ztf", "/usr/local/bin")
 		}
 	}
 

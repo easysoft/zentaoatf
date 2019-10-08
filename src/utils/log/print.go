@@ -5,6 +5,7 @@ import (
 	"fmt"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
 	"io"
@@ -21,26 +22,36 @@ var (
 func PrintUsage() {
 	PrintToStdOut("Usage: ", color.FgCyan)
 
-	content := fileUtils.ReadResData(usageFile)
-	fmt.Printf("%s\n", content)
+	usage := fileUtils.ReadResData(usageFile)
+	exeFile := "ztf"
+	command := ""
+	tips := ""
+	if !commonUtils.IsWin() {
+		command = "cp -f ztf /usr/local/bin/"
+	} else {
+		exeFile += ".exe"
+		tips = i118Utils.I118Prt.Sprintf("windows_permission")
+		command = "copy /Y ztf.exe c:\\Windows"
+	}
+	usage = fmt.Sprintf(usage, exeFile, exeFile, command, tips, exeFile)
+	fmt.Printf("%s\n", usage)
 
 	PrintToStdOut("\nExample: ", color.FgCyan)
-
-	content = fileUtils.ReadResData(sampleFile)
+	sample := fileUtils.ReadResData(sampleFile)
 	if !commonUtils.IsWin() {
 		regx, _ := regexp.Compile(`\\`)
-		content = regx.ReplaceAllString(content, "/")
+		sample = regx.ReplaceAllString(sample, "/")
 
 		regx, _ = regexp.Compile(`ztf.exe`)
-		content = regx.ReplaceAllString(content, "ztf")
+		sample = regx.ReplaceAllString(sample, "ztf")
 
 		regx, _ = regexp.Compile(`/bat/`)
-		content = regx.ReplaceAllString(content, "/shell/")
+		sample = regx.ReplaceAllString(sample, "/shell/")
 
 		regx, _ = regexp.Compile(`\.bat\s{4}`)
-		content = regx.ReplaceAllString(content, ".shell")
+		sample = regx.ReplaceAllString(sample, ".shell")
 	}
-	fmt.Printf("%s\n", content)
+	fmt.Printf("%s\n", sample)
 }
 
 func PrintTo(str string) {

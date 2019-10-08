@@ -2,6 +2,10 @@
   "language": "zh",
   "messages": [
     {
+      "id": "windows_permission",
+      "translation": "Windows系统下，需以管理员身份打开cmd命令行窗口。"
+    },
+    {
       "id": "for_example",
       "translation": "例如 %s"
     },
