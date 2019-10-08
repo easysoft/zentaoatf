@@ -44,7 +44,7 @@ func CommitBug(files []string) {
 		fmt.Scanln(&caseId)
 
 		if caseId == "exit" {
-			os.Exit(1)
+			os.Exit(0)
 		} else {
 			if stringUtils.FindInArr(caseId, ids) {
 				page.CuiReportBug(resultDir, caseId)

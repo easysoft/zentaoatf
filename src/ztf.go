@@ -156,6 +156,8 @@ func run(args []string) {
 }
 
 func init() {
+	color.Unset()
+
 	vari.RunFromCui = false
 	configUtils.InitConfig()
 }
