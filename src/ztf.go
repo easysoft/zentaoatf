@@ -7,6 +7,7 @@ import (
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
+	"github.com/fatih/color"
 	"os"
 )
 
@@ -24,6 +25,9 @@ var (
 )
 
 func main() {
+	color.Set(color.FgYellow)
+	//color.Unset() // Don't forget to unset
+
 	//var caseId string
 
 	flagSet = flag.NewFlagSet("atf", flag.ContinueOnError)
