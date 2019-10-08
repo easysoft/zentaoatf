@@ -130,7 +130,7 @@ func ReadResData(path string) string {
 	return jsonStr
 }
 
-func GetZtfDir() string {
+func GetZtfDir() string { // where ztf command in
 	var dir string
 	arg1 := strings.ToLower(os.Args[0])
 
@@ -140,6 +140,11 @@ func GetZtfDir() string {
 		dir, _ = filepath.Abs(filepath.Dir(os.Args[0]))
 	}
 
+	return UpdateDir(dir)
+}
+
+func GetCurrDir() string { // where you run command from
+	dir, _ := os.Getwd()
 	return UpdateDir(dir)
 }
 

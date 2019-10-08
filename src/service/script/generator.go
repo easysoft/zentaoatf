@@ -9,7 +9,6 @@ import (
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/lang"
 	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
-	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"os"
 	"regexp"
@@ -17,32 +16,38 @@ import (
 	"strings"
 )
 
-func Generate(testcases []model.TestCase, langType string, independentFile bool) (int, error) {
+func Generate(testcases []model.TestCase, langType string, independentFile bool,
+	targetDir string, byModule bool, prefix string) (int, error) {
 	caseIds := make([]string, 0)
 	for _, cs := range testcases {
-		GenerateTestCaseScript(cs, langType, independentFile, &caseIds)
+		GenerateTestCaseScript(cs, langType, independentFile, &caseIds, targetDir, byModule, prefix)
 	}
 
-	GenSuite(caseIds)
+	GenSuite(caseIds, targetDir)
 
 	return len(testcases), nil
 }
 
-func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile bool, caseIds *[]string) {
+func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile bool, caseIds *[]string,
+	targetDir string, byModule bool, prefix string) {
 	caseId := cs.Id
 	productId := cs.Product
 	moduleId := cs.Module
 	caseTitle := cs.Title
 
+	//if vari.ZentaoCaseFileds.Modules[moduleId] != "" {
+	//	modulePath = vari.ZentaoCaseFileds.Modules[moduleId] + string(os.PathSeparator)
+	//	modulePath = modulePath[1:]
+	//}
+
+	fileUtils.MkDirIfNeeded(targetDir)
 	modulePath := ""
-	if vari.ZentaoCaseFileds.Modules[moduleId] != "" {
-		modulePath = vari.ZentaoCaseFileds.Modules[moduleId] + string(os.PathSeparator)
-		modulePath = modulePath[1:]
+	if byModule && moduleId != "0" {
+		modulePath = moduleId + string(os.PathSeparator)
 	}
 
-	scriptFile := fmt.Sprintf(constant.ScriptDir+"%stc-%s.%s", modulePath, caseId, langUtils.LangMap[langType]["extName"])
+	scriptFile := fmt.Sprintf(targetDir+"%s%s%s.%s", modulePath, prefix, caseId, langUtils.LangMap[langType]["extName"])
 
-	fileUtils.MkDirIfNeeded(constant.ScriptDir)
 	*caseIds = append(*caseIds, caseId)
 
 	info := make([]string, 0)
@@ -183,10 +188,10 @@ func generateTestStepAndScript(teststeps []model.TestStep, steps *[]string, inde
 	}
 }
 
-func GenSuite(cases []string) {
+func GenSuite(cases []string, targetDir string) {
 	str := strings.Join(cases, "\n")
 
-	fileUtils.WriteFile(constant.ScriptDir+"all."+constant.ExtNameSuite, str)
+	fileUtils.WriteFile(targetDir+"all."+constant.ExtNameSuite, str)
 }
 
 func computerTestStepWidth(steps []model.TestStep, stepSDisplayMaxWidth *int, stepWidth int) {

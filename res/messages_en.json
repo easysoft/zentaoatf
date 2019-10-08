@@ -56,6 +56,10 @@
       "translation": "result"
     },
     {
+      "id": "script",
+      "translation": "script"
+    },
+    {
       "id": "step",
       "translation": "Step"
     },
@@ -123,7 +127,11 @@
     },
     {
       "id": "enter_dir",
-      "translation": "Enter %s dir."
+      "translation": "Enter %s dir:"
+    },
+    {
+      "id": "where_to_store_script",
+      "translation": "Where to store scripts? default is '%s'"
     },
     {
       "id": "dir_not_exist",
@@ -151,7 +159,7 @@
     },
     {
       "id": "enter_co_type",
-      "translation": "Import test cases from?\n1. Product %s\n2. Module %s\n3. Suite %s\n4. Task %s"
+      "translation": "Import test cases from?\n1. Product %s\n2. Suite %s\n3. Task %s"
     },
     {
       "id": "enter_co_independent",
@@ -161,6 +169,15 @@
       "id": "enter_co_language",
       "translation": "Select script language:\n%s"
     },
+    {
+      "id": "co_organize_by_module",
+      "translation": "Organize test scripts by module? (y/n, default is Yes)"
+    },
+    {
+      "id": "co_script_prefix",
+      "translation": "Enter script name prefix: default is empty."
+    },
+
     {
       "id": "enter_case_id_for_report_bug",
       "translation": "Which case do you want to report bug for? Type 'exit' to quit."

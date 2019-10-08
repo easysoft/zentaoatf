@@ -30,7 +30,7 @@ var (
 	ScreenHeight    int
 	ZentaoBugFileds model.ZentaoBugFileds
 
-	ZentaoCaseFileds model.ZentaoCaseFileds
+	//ZentaoCaseFileds model.ZentaoCaseFileds
 
 	CurrBug        model.Bug
 	CurrBugStepIds string

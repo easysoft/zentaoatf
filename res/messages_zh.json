@@ -56,6 +56,10 @@
       "translation": "结果"
     },
     {
+      "id": "script",
+      "translation": "脚本"
+    },
+    {
       "id": "step",
       "translation": "步骤"
     },
@@ -122,6 +126,19 @@
       "translation": "输入%s目录："
     },
     {
+      "id": "where_to_store_script",
+      "translation": "请输入脚本保存目录: 默认为%s"
+    },
+    {
+      "id": "co_organize_by_module",
+      "translation": "是否希望按模块ID组织脚本目录结构？（y/n, 默认Yes）"
+    },
+    {
+      "id": "co_script_prefix",
+      "translation": "请输入脚本前缀，默认为空。"
+    },
+
+    {
       "id": "dir_not_exist",
       "translation": "目录不存在"
     },
@@ -147,7 +164,7 @@
     },
     {
       "id": "enter_co_type",
-      "translation": "请选择用例来源\n1. 产品 %s\n2. 模块 %s\n3. 套件 %s\n4. 任务 %s"
+      "translation": "请选择用例来源\n1. 产品 %s\n2. 套件 %s\n3. 任务 %s"
     },
     {
       "id": "enter_co_independent",

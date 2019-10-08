@@ -1,7 +1,6 @@
 package zentaoService
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/bitly/go-simplejson"
 	"github.com/easysoft/zentaoatf/src/model"
@@ -53,22 +52,22 @@ func GetBugFiledOptions(productId int) {
 	}
 }
 
-func GetCaseModules(productId string) {
-	conf := configUtils.ReadCurrConfig()
-	Login(conf.Url, conf.Account, conf.Password)
-
-	params := [][]string{{"rootID", productId}, {"type", "case"}}
-	url := conf.Url + zentaoUtils.GenSuperApiUri("tree", "getOptionMenu", params)
-
-	dataStr, ok := client.Get(url, nil)
-
-	var moduelMap map[string]string
-	if ok {
-		json.Unmarshal([]byte(dataStr), &moduelMap)
-	}
-
-	vari.ZentaoCaseFileds.Modules = moduelMap
-}
+//func GetCaseModules(productId string) {
+//	conf := configUtils.ReadCurrConfig()
+//	Login(conf.Url, conf.Account, conf.Password)
+//
+//	params := [][]string{{"rootID", productId}, {"type", "case"}}
+//	url := conf.Url + zentaoUtils.GenSuperApiUri("tree", "getOptionMenu", params)
+//
+//	dataStr, ok := client.Get(url, nil)
+//
+//	var moduelMap map[string]string
+//	if ok {
+//		json.Unmarshal([]byte(dataStr), &moduelMap)
+//	}
+//
+//	vari.ZentaoCaseFileds.Modules = moduelMap
+//}
 
 func fieldMapToListOrderByInt(mp map[string]interface{}) []model.Option {
 	arr := make([]model.Option, 0)

@@ -19,43 +19,35 @@ func InputForCheckout(productId *string, moduleId *string, suiteId *string, task
 
 	var numb string
 
-	moduleCheck := ""
-	productCheck := ""
-	suiteCheck := ""
-	taskCheck := ""
+	productCheckbox := ""
+	suiteCheckbox := ""
+	taskCheckbox := ""
 
-	if *moduleId != "" {
-		moduleCheck = "*"
-		numb = "2"
-	} else if *productId != "" {
-		productCheck = "*"
+	if *productId != "" {
+		productCheckbox = "*"
 		numb = "1"
 	} else if *suiteId != "" {
-		suiteCheck = "*"
-		numb = "3"
+		suiteCheckbox = "*"
+		numb = "2"
 	} else if *taskId != "" {
-		taskCheck = "*"
-		numb = "4"
+		taskCheckbox = "*"
+		numb = "3"
 	}
 
-	coType := GetInput("(1|2|3|4)", numb, "enter_co_type", productCheck, moduleCheck, suiteCheck, taskCheck)
+	coType := GetInput("(1|2|3)", numb, "enter_co_type", productCheckbox, suiteCheckbox, taskCheckbox)
 
 	coType = strings.ToLower(coType)
 	if coType == "1" {
 		*productId = GetInput("\\d+", *productId,
 			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("product_id")+": "+*productId)
 
-	} else if coType == "2" {
-		*productId = GetInput("\\d+", *productId,
-			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("product_id")+": "+*productId)
-
-		*moduleId = GetInput("\\d+", *moduleId,
+		*moduleId = GetInput("\\d*", *moduleId,
 			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("module_id")+": "+*moduleId)
 
-	} else if coType == "3" {
+	} else if coType == "2" {
 		*suiteId = GetInput("\\d+", *suiteId,
 			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("suite_id")+": "+*suiteId)
-	} else if coType == "4" {
+	} else if coType == "3" {
 		*taskId = GetInput("\\d+", *taskId,
 			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("task_id")+": "+*taskId)
 	}
@@ -63,16 +55,24 @@ func InputForCheckout(productId *string, moduleId *string, suiteId *string, task
 	InputForBool(independentFile, false, "enter_co_independent")
 
 	numbs, names, labels := langUtils.GetSupportLanguageOptions(nil)
-	fmtParam := strings.Join(labels, "\n")
+	fmtParam := make([]string, 0)
+	dft := -1
+	for idx, label := range labels {
+		if names[idx] == *scriptLang {
+			dft = idx + 1
+			label += " *"
+		}
+		fmtParam = append(fmtParam, label)
+	}
 
-	langStr := GetInput("("+strings.Join(numbs, "|")+")", "", "enter_co_language", fmtParam)
+	langStr := GetInput("("+strings.Join(numbs, "|")+")", strconv.Itoa(dft), "enter_co_language", strings.Join(fmtParam, "\n"))
 	langNumb, _ := strconv.Atoi(langStr)
 
 	*scriptLang = names[langNumb-1]
 }
 
-func InputForDir(dir *string, entity string) {
-	*dir = GetInput("is_dir", "", "enter_dir", i118Utils.I118Prt.Sprintf(entity))
+func InputForDir(dir *string, dft string, i118Key string) {
+	*dir = GetInput("is_dir", dft, "enter_dir", i118Utils.I118Prt.Sprintf(i118Key))
 }
 
 func InputForBool(in *bool, defaultVal bool, fmtStr string, fmtParam ...interface{}) {
