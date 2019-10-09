@@ -38,7 +38,7 @@ sample/5_expect_with_express.php         >> Pass
 sample/6_expect_with_regx.php            >> Pass
 sample/7_expect_with_format_string.php   >> Pass
 sample/8_misc.php                        >> Pass
-sample/9_skip.php                        >> Pass
+sample/9_skip.php                        >> Skip
 
 [esac]
 :start
