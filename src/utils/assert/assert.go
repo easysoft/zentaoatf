@@ -29,13 +29,12 @@ func GetCaseByDirAndFile(files []string) []string {
 }
 
 func GetAllScriptsInDir(filePthParam string, files *[]string) error {
-	filePthParam = fileUtils.AbosutePath(filePthParam)
 	sep := string(os.PathSeparator)
 
 	if !fileUtils.IsDir(filePthParam) { // first call, param is file
 		regx := langUtils.GetSupportLanguageExtRegx()
 
-		pass, _ := regexp.MatchString("^.*\\."+regx+"$", filePthParam)
+		pass, _ := regexp.MatchString(`.*\.`+regx+`$`, filePthParam)
 
 		if pass {
 			pass := zentaoUtils.CheckFileIsScript(filePthParam)
@@ -46,6 +45,8 @@ func GetAllScriptsInDir(filePthParam string, files *[]string) error {
 
 		return nil
 	}
+
+	filePthParam = fileUtils.AbosutePath(filePthParam)
 
 	dir, err := ioutil.ReadDir(filePthParam)
 	if err != nil {
