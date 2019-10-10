@@ -35,7 +35,7 @@ func GetAllScriptsInDir(filePthParam string, files *[]string) error {
 	if !fileUtils.IsDir(filePthParam) { // first call, param is file
 		regx := langUtils.GetSupportLanguageExtRegx()
 
-		pass, _ := regexp.MatchString("^*.\\."+regx+"$", filePthParam)
+		pass, _ := regexp.MatchString("^.*\\."+regx+"$", filePthParam)
 
 		if pass {
 			pass := zentaoUtils.CheckFileIsScript(filePthParam)
