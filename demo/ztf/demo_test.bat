@@ -1,4 +1,5 @@
 @echo off
+setlocal enabledelayedexpansion
 goto start
 [case]
 title=check string matches pattern
@@ -43,7 +44,11 @@ pid=0
 [esac]
 :start
 
-for /f "delims="  eol^=^( %%i in (log/001/result.txt) do (
+for /f "delims=" %%i in (log/001/result.txt) do (
     set "a=%%i"
-    echo ^>^> !a!
+    set "b=!a:~0,1!"
+
+    if "!b!"=="(" (
+        echo ^>^> !a!
+    )
 )
