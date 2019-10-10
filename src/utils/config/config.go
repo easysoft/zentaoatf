@@ -191,13 +191,13 @@ func InputForScriptInterpreter(scripts []string, config *model.Config, from stri
 		}
 
 		deflt := commonUtils.GetFieldVal(*config, lang)
-		if deflt == "-" {
-			deflt = ""
-		}
-		if from == "run" && deflt == "-" { // ignore to set or already set when run
+		if from == "run" && deflt != "" { // ignore to set or already set when run
 			continue
 		}
 
+		if deflt == "-" {
+			deflt = ""
+		}
 		sampleOrDefaultTips := ""
 		if deflt == "" {
 			sampleOrDefaultTips = i118Utils.I118Prt.Sprintf("for_example", langUtils.LangMap[lang]["interpreter"]) + " " +
