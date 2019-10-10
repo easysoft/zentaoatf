@@ -15,5 +15,5 @@ func Clean() {
 	os.RemoveAll(path)
 	os.RemoveAll(bak)
 
-	logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("success_to_clean_logs"), -1)
+	logUtils.PrintTo(i118Utils.I118Prt.Sprintf("success_to_clean_logs"))
 }

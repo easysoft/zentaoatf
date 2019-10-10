@@ -49,12 +49,6 @@ func PrintUsage() {
 
 func PrintTo(str string) {
 	var output io.Writer
-	if vari.RunFromCui {
-		output, _ = vari.Cui.View("cmd")
-	} else {
-		output = color.Output
-	}
-
 	fmt.Fprint(output, str+"\n")
 }
 

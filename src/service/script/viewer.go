@@ -107,7 +107,7 @@ func View(cases []string, keywords string) {
 	for idx, arr := range arrs {
 		numb := fmt.Sprintf("#%0"+strconv.Itoa(width)+"d", idx+1)
 
-		logUtils.PrintToStdOut(logUtils.GetWholeLine(numb+" "+arr[3], "="), -1)
+		logUtils.PrintTo(logUtils.GetWholeLine(numb+" "+arr[3], "="))
 		logUtils.PrintToStdOut(fmt.Sprintf("%s. %s", arr[0], arr[1]), color.FgCyan)
 
 		fmt.Printf("Steps: \n%s \n", arr[2])

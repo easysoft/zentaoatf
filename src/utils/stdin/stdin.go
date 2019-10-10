@@ -87,7 +87,7 @@ func InputForBool(in *bool, defaultVal bool, fmtStr string, fmtParam ...interfac
 		} else {
 			msg = "no"
 		}
-		logUtils.PrintToStdOut(msg, -1)
+		logUtils.PrintTo(msg)
 		return
 	}
 
@@ -113,7 +113,7 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 		if strings.TrimSpace(ret) == "" && defaultVal != "" {
 			ret = defaultVal
 
-			logUtils.PrintToStdOut(ret, -1)
+			logUtils.PrintTo(ret)
 		}
 
 		temp := strings.ToLower(ret)

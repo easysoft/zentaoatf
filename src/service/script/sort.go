@@ -11,5 +11,5 @@ func Sort(cases []string) {
 		scriptUtils.SortFile(file)
 	}
 
-	logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("success_sort_steps", len(cases)), -1)
+	logUtils.PrintTo(i118Utils.I118Prt.Sprintf("success_sort_steps", len(cases)))
 }

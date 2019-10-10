@@ -233,7 +233,7 @@ func CommitCase(caseId int, title string, stepMap maps.Map, stepTypeMap maps.Map
 		_, ok = client.PostObject(url, requestObj)
 
 		if ok {
-			logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("success_to_commit_case", caseId)+"\n", -1)
+			logUtils.PrintTo(i118Utils.I118Prt.Sprintf("success_to_commit_case", caseId) + "\n")
 		}
 	}
 }

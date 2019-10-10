@@ -60,11 +60,11 @@ func CommitResult(resultDir string) {
 
 		_, ok := client.PostObject(url, requestObj)
 		if ok {
-			logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("success_to_commit_result", id), -1)
+			logUtils.PrintTo(i118Utils.I118Prt.Sprintf("success_to_commit_result", id))
 
 			if vari.Verbose {
 				resultId := GetLastResult(conf.Url, id)
-				logUtils.PrintToStdOut(fmt.Sprintf("returned result id = %d", resultId), -1)
+				logUtils.PrintTo(fmt.Sprintf("returned result id = %d", resultId))
 			}
 		}
 	}

@@ -29,5 +29,5 @@ func AddPath() {
 	pathEnv = os.Getenv("PATH")
 	fmt.Println(pathEnv)
 
-	logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("success_add_to_path"), -1)
+	logUtils.PrintTo(i118Utils.I118Prt.Sprintf("success_add_to_path"))
 }
