@@ -19,7 +19,7 @@ var (
 )
 
 func PrintUsage() {
-	PrintToStdOut("Usage: ", color.FgCyan)
+	PrintToWithColor("Usage: ", color.FgCyan)
 
 	usage := fileUtils.ReadResData(usageFile)
 	exeFile := "ztf"
@@ -29,7 +29,7 @@ func PrintUsage() {
 	usage = fmt.Sprintf(usage, exeFile)
 	fmt.Printf("%s\n", usage)
 
-	PrintToStdOut("\nExample: ", color.FgCyan)
+	PrintToWithColor("\nExample: ", color.FgCyan)
 	sample := fileUtils.ReadResData(sampleFile)
 	if !commonUtils.IsWin() {
 		regx, _ := regexp.Compile(`\\`)
@@ -52,7 +52,7 @@ func PrintTo(str string) {
 	fmt.Fprint(output, str+"\n")
 }
 
-func PrintToStdOut(msg string, attr color.Attribute) {
+func PrintToWithColor(msg string, attr color.Attribute) {
 	output := color.Output
 
 	if attr == -1 {

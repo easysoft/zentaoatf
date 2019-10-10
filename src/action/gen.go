@@ -50,9 +50,9 @@ func Generate(productId string, moduleId string, suiteId string, taskId string, 
 		if err == nil {
 			logUtils.PrintTo(i118Utils.I118Prt.Sprintf("success_to_generate", count, targetDir) + "\n")
 		} else {
-			logUtils.PrintToStdOut(err.Error(), color.FgRed)
+			logUtils.PrintToWithColor(err.Error(), color.FgRed)
 		}
 	} else {
-		logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("no_cases"), color.FgRed)
+		logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("no_cases"), color.FgRed)
 	}
 }

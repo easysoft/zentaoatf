@@ -53,7 +53,7 @@ func SaveConfig(conf model.Config) error {
 }
 
 func PrintCurrConfig() {
-	logUtils.PrintToStdOut("\n"+i118Utils.I118Prt.Sprintf("current_config"), color.FgCyan)
+	logUtils.PrintToWithColor("\n"+i118Utils.I118Prt.Sprintf("current_config"), color.FgCyan)
 
 	val := reflect.ValueOf(vari.Config)
 	typeOfS := val.Type()
@@ -117,7 +117,7 @@ func InputForSet() {
 
 	var configSite bool
 
-	logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("begin_config"), color.FgCyan)
+	logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("begin_config"), color.FgCyan)
 
 	enCheck := ""
 	var numb string
@@ -171,7 +171,7 @@ func CheckRequestConfig() {
 func InputForRequest() {
 	conf := ReadCurrConfig()
 
-	logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("need_config"), color.FgCyan)
+	logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("need_config"), color.FgCyan)
 
 	conf.Url = stdinUtils.GetInput("(http://.*)", conf.Url, "enter_url", conf.Url)
 	conf.Account = stdinUtils.GetInput("(.{2,})", conf.Account, "enter_account", conf.Account)

@@ -108,11 +108,11 @@ func View(cases []string, keywords string) {
 		numb := fmt.Sprintf("#%0"+strconv.Itoa(width)+"d", idx+1)
 
 		logUtils.PrintTo(logUtils.GetWholeLine(numb+" "+arr[3], "="))
-		logUtils.PrintToStdOut(fmt.Sprintf("%s. %s", arr[0], arr[1]), color.FgCyan)
+		logUtils.PrintToWithColor(fmt.Sprintf("%s. %s", arr[0], arr[1]), color.FgCyan)
 
 		fmt.Printf("Steps: \n%s \n", arr[2])
 
-		logUtils.PrintToStdOut("", -1)
+		logUtils.PrintToWithColor("", -1)
 	}
 }
 

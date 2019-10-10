@@ -104,11 +104,11 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 	msg := i118Utils.I118Prt.Sprintf(fmtStr, params...)
 
 	for {
-		logUtils.PrintToStdOut("\n"+msg, color.FgCyan)
+		logUtils.PrintToWithColor("\n"+msg, color.FgCyan)
 		// fmt.Scanln(&ret)
 		Scanf(&ret)
 
-		//logUtils.PrintToStdOut(fmt.Sprintf("%v", ret), -1)
+		//logUtils.PrintToWithColor(fmt.Sprintf("%v", ret), -1)
 
 		if strings.TrimSpace(ret) == "" && defaultVal != "" {
 			ret = defaultVal
@@ -122,7 +122,7 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 			os.Exit(0)
 		}
 
-		//logUtils.PrintToStdOut(ret, -1)
+		//logUtils.PrintToWithColor(ret, -1)
 
 		if regx == "" {
 			return ret
@@ -142,7 +142,7 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 			return ret
 		} else {
 			ret = ""
-			logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf(msg), color.FgRed)
+			logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf(msg), color.FgRed)
 		}
 	}
 }
@@ -153,7 +153,7 @@ func GetInputForScriptInterpreter(defaultVal string, fmtStr string, params ...in
 	msg := i118Utils.I118Prt.Sprintf(fmtStr, params...)
 
 	for {
-		logUtils.PrintToStdOut("\n"+msg, color.FgCyan)
+		logUtils.PrintToWithColor("\n"+msg, color.FgCyan)
 		Scanf(&ret)
 
 		ret = strings.TrimSpace(ret)
@@ -161,7 +161,7 @@ func GetInputForScriptInterpreter(defaultVal string, fmtStr string, params ...in
 		if ret == "" && defaultVal != "" {
 			ret = defaultVal
 
-			logUtils.PrintToStdOut(ret, -1)
+			logUtils.PrintToWithColor(ret, -1)
 		}
 
 		if ret == "exit" {
@@ -183,7 +183,7 @@ func GetInputForScriptInterpreter(defaultVal string, fmtStr string, params ...in
 			return ret
 		} else {
 			ret = ""
-			logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("invalid_input"), color.FgRed)
+			logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("invalid_input"), color.FgRed)
 		}
 	}
 }

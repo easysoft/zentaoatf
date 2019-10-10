@@ -37,8 +37,8 @@ func CommitBug(files []string) {
 	}
 
 	for {
-		logUtils.PrintToStdOut("\n"+i118Utils.I118Prt.Sprintf("enter_case_id_for_report_bug"), color.FgCyan)
-		logUtils.PrintToStdOut(strings.Join(lines, "\n"), -1)
+		logUtils.PrintToWithColor("\n"+i118Utils.I118Prt.Sprintf("enter_case_id_for_report_bug"), color.FgCyan)
+		logUtils.PrintToWithColor(strings.Join(lines, "\n"), -1)
 
 		var caseId string
 		fmt.Scanln(&caseId)
@@ -50,7 +50,7 @@ func CommitBug(files []string) {
 			if stringUtils.FindInArr(caseId, ids) {
 				page.CuiReportBug(resultDir, caseId)
 			} else {
-				logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("invalid_input"), color.FgRed)
+				logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("invalid_input"), color.FgRed)
 			}
 		}
 	}

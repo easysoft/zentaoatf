@@ -225,7 +225,7 @@ func CommitCase(caseId int, title string, stepMap maps.Map, stepTypeMap maps.Map
 		"expects":  commonUtils.LinkedMapToMap(expectMap)}
 
 	var yes bool
-	logUtils.PrintToStdOut("\n"+i118Utils.I118Prt.Sprintf("case_update_confirm", caseId, title), -1)
+	logUtils.PrintToWithColor("\n"+i118Utils.I118Prt.Sprintf("case_update_confirm", caseId, title), -1)
 	stdinUtils.InputForBool(&yes, true, "want_to_continue")
 
 	if yes {

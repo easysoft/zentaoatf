@@ -132,7 +132,7 @@ func GetSupportLanguageExtArr() []string {
 func CheckSupportLanguages(scriptLang string) bool {
 	if LangMap[scriptLang] == nil {
 		langStr := strings.Join(GetSupportLanguageArrSort(), ", ")
-		logUtils.PrintToStdOut(i118Utils.I118Prt.Sprintf("only_support_script_language", langStr)+"\n", color.FgRed)
+		logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("only_support_script_language", langStr)+"\n", color.FgRed)
 		return false
 	}
 
