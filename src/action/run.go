@@ -54,7 +54,7 @@ func Run(files []string, suiteIdStr string, taskIdStr string) error {
 	}
 
 	if len(cases) < 1 {
-		logUtils.PrintToCmd("\n"+i118Utils.I118Prt.Sprintf("no_scripts"), -1)
+		logUtils.PrintToStdOut("\n"+i118Utils.I118Prt.Sprintf("no_scripts"), -1)
 		return nil
 	}
 

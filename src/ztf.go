@@ -25,14 +25,7 @@ var (
 )
 
 func main() {
-	color.Set(color.FgYellow)
-	//color.Unset() // Don't forget to unset
-
-	//var caseId string
-
 	flagSet = flag.NewFlagSet("atf", flag.ContinueOnError)
-
-	//flagSet.Var(commonUtils.NewSliceValue([]string{}, &files), "file", "")
 
 	flagSet.StringVar(&productId, "p", "", "")
 	flagSet.StringVar(&productId, "product", "", "")
@@ -157,6 +150,7 @@ func run(args []string) {
 
 func init() {
 	color.Unset()
+	color.Set(color.FgWhite)
 
 	vari.RunFromCui = false
 	configUtils.InitConfig()
