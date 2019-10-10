@@ -5,7 +5,6 @@ import (
 	"fmt"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
-	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
 	"io"
@@ -24,16 +23,10 @@ func PrintUsage() {
 
 	usage := fileUtils.ReadResData(usageFile)
 	exeFile := "ztf"
-	command := ""
-	tips := ""
-	if !commonUtils.IsWin() {
-		command = "cp -f ztf /usr/local/bin/"
-	} else {
+	if commonUtils.IsWin() {
 		exeFile += ".exe"
-		tips = i118Utils.I118Prt.Sprintf("windows_permission")
-		command = "copy /Y ztf.exe c:\\Windows"
 	}
-	usage = fmt.Sprintf(usage, exeFile, exeFile, command, tips, exeFile)
+	usage = fmt.Sprintf(usage, exeFile)
 	fmt.Printf("%s\n", usage)
 
 	PrintToStdOut("\nExample: ", color.FgCyan)
