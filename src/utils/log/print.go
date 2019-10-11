@@ -48,7 +48,7 @@ func PrintUsage() {
 }
 
 func PrintTo(str string) {
-	var output io.Writer
+	output := color.Output
 	fmt.Fprint(output, str+"\n")
 }
 
