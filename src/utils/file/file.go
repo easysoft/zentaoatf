@@ -139,7 +139,10 @@ func GetZtfDir() string { // where ztf command in
 		dir, _ = filepath.Abs(filepath.Dir(os.Args[0]))
 	}
 
-	return UpdateDir(dir)
+	dir = UpdateDir(dir)
+
+	fmt.Println("run in " + dir)
+	return dir
 }
 
 func GetCurrDir() string { // where you run command from

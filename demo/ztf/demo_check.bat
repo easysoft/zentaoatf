@@ -3,7 +3,7 @@ setlocal enabledelayedexpansion
 goto start
 [case]
 title=check string matches pattern
-cid=0
+cid=-1
 pid=0
 
 [group]

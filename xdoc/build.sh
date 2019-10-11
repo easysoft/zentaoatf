@@ -11,10 +11,14 @@ GO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ztf/ztf-linux src/ztf.go
 CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ztf/ztf-mac src/ztf.go
 
 cd ztf
+
 zip -r ztf-win-2.0.RC.zip ztf.exe demo conf log
+
 cp -r ztf-linux ztf
 zip -r ztf-linux-2.0.RC.zip ztf demo conf log
+
 cp -r ztf-mac ztf
 zip -r ztf-mac-2.0.RC.zip ztf demo conf log
+
 rm ztf
 cd ..
