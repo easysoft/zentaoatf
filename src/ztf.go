@@ -119,9 +119,6 @@ func main() {
 	case "clean", "-clean", "-c":
 		action.Clean()
 
-	//case "addpath", "-a":
-	//	action.AddPath()
-
 	case "help", "-h":
 		logUtils.PrintUsage()
 

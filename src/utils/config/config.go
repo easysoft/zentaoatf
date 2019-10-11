@@ -58,6 +58,10 @@ func PrintCurrConfig() {
 	val := reflect.ValueOf(vari.Config)
 	typeOfS := val.Type()
 	for i := 0; i < reflect.ValueOf(vari.Config).NumField(); i++ {
+		if !commonUtils.IsWin() && i > 4 {
+			break
+		}
+
 		val := val.Field(i)
 		name := typeOfS.Field(i).Name
 
