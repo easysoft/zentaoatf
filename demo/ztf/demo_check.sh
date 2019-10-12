@@ -2,7 +2,7 @@
 
 :<<!
 [case]
-title=test demo scrtips
+title=test demo scripts
 cid=-1
 pid=0
 

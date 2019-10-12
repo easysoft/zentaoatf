@@ -20,7 +20,7 @@ func GetWholeLine(msg string, char string) string {
 	if prefixLen <= 0 { // no width in debug mode
 		prefixLen = 6
 	}
-	postfixLen := vari.ScreenWidth - utf8.RuneCountInString(msg) - 2 - prefixLen
+	postfixLen := vari.ScreenWidth - utf8.RuneCountInString(msg) - 2 - prefixLen - 1
 	if postfixLen <= 0 { // no width in debug mode
 		postfixLen = 6
 	}

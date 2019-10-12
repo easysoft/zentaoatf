@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 goto start
 [case]
-title=check string matches pattern
+title=test demo scripts
 cid=-1
 pid=0
 

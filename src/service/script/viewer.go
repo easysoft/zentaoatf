@@ -100,8 +100,10 @@ func View(cases []string, keywords string) {
 		}
 	}
 
+	total := len(arrs)
+
 	logUtils.Screen(time.Now().Format("2006-01-02 15:04:05") + " " + i118Utils.I118Prt.Sprintf("found_scripts",
-		strconv.Itoa(len(arrs))))
+		color.CyanString(strconv.Itoa(total))))
 
 	width := len(strconv.Itoa(len(arrs)))
 	for idx, arr := range arrs {
