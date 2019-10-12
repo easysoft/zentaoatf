@@ -9,6 +9,8 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
 	"os"
+	"os/signal"
+	"syscall"
 )
 
 var (
@@ -25,6 +27,14 @@ var (
 )
 
 func main() {
+	channel := make(chan os.Signal)
+	signal.Notify(channel, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-channel
+		cleanup()
+		os.Exit(1)
+	}()
+
 	flagSet = flag.NewFlagSet("atf", flag.ContinueOnError)
 
 	flagSet.StringVar(&productId, "p", "", "")
@@ -146,9 +156,13 @@ func run(args []string) {
 }
 
 func init() {
-	color.Unset()
-	color.Set(color.FgWhite)
+	cleanup()
 
 	vari.RunFromCui = false
 	configUtils.InitConfig()
+}
+
+func cleanup() {
+	color.Unset()
+	//color.Set(color.FgWhite)
 }

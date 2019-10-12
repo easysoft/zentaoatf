@@ -14,11 +14,12 @@ cd ztf
 
 zip -r ztf-win-2.0.RC.zip ztf.exe demo conf log
 
-cp -r ztf-linux ztf
+cp ztf-linux ztf
 zip -r ztf-linux-2.0.RC.zip ztf demo conf log
-
-cp -r ztf-mac ztf
-zip -r ztf-mac-2.0.RC.zip ztf demo conf log
-
 rm ztf
+
+cp ztf-mac ztf
+zip -r ztf-mac-2.0.RC.zip ztf demo conf log
+rm ztf
+
 cd ..
