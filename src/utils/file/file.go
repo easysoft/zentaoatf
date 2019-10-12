@@ -144,7 +144,7 @@ func GetZtfDir() string { // where ztf command in
 
 	dir = UpdateDir(dir)
 
-	fmt.Printf("launch ztf from: %s, %s \n", arg1, dir)
+	fmt.Printf("Launch %s in %s \n", arg1, dir)
 	return dir
 }
 
