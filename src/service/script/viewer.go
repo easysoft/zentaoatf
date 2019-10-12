@@ -43,7 +43,7 @@ func List(cases []string, keywords string) {
 	width := strconv.Itoa(len(strconv.Itoa(total)))
 
 	logUtils.Screen(time.Now().Format("2006-01-02 15:04:05") + " " +
-		i118Utils.I118Prt.Sprintf("found_scripts", total) + "\n")
+		i118Utils.I118Prt.Sprintf("found_scripts", color.CyanString(strconv.Itoa(total))) + "\n")
 
 	for idx, cs := range scriptArr {
 		//format := "(%" + width + "d/%d) [%s] %d.%s"
