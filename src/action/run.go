@@ -182,7 +182,7 @@ func isRunWithSuiteFile(files []string) (string, string) {
 		}
 	}
 
-	if suiteFile != "" && dir == "" {
+	if len(files) == 1 && suiteFile != "" && dir == "" { // no dir provided, not including a wrong dir param
 		dir = fileUtils.AbosutePath(".")
 	}
 

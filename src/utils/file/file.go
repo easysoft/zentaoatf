@@ -138,8 +138,9 @@ func GetZtfDir() string { // where ztf command in
 		dir, _ = os.Getwd()
 	} else {
 		p, _ := exec.LookPath(os.Args[0]) // filepath.Abs(filepath.Dir(os.Args[0]))
-
-		dir = p[0:strings.LastIndex(p, string(os.PathSeparator))]
+		if strings.Index(p, string(os.PathSeparator)) > -1 {
+			dir = p[:strings.LastIndex(p, string(os.PathSeparator))]
+		}
 	}
 
 	dir = UpdateDir(dir)
