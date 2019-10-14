@@ -4,7 +4,7 @@ $>ztf.exe set                                        根据系统提示，设置
 $>ztf.exe co                                         交互式导出禅道测试用例，将提示用户输入导出类型和编号。
 $>ztf.exe co -product 1 -language python             导出编号为1的产品测试用例，使用python语言，缩写-p -l。
 $>ztf.exe co -p 1 -m 15 -l python                    导出产品编号为1、模块编号为15的测试用例。
-$>ztf.exe co -s 1 -l python                          导出编号为1的套件所含测试用例。
+$>ztf.exe co -s 1 -l python -i true                  导出编号为1的套件所含测试用例，期待结果保存在独立文件中。
 $>ztf.exe co -t 1 -l python                          导出编号为1的测试单所含用例。
 $>ztf.exe up -t 1 -l python                          更新编号为1的测试单所含用例的信息。
 
@@ -26,5 +26,5 @@ $>ztf.exe view demo\lang\bat\1_string_match.bat      查看指定路径的测试
 $>ztf.exe -v demo\lang\bat -k 0                      查看指定路径下，ID为0的脚本。
 $>ztf.exe -v demo\lang\bat -k word                   查看指定路径下，标题包含'pattern'的脚本。
 
-$>ztf.exe sort demo\sample\2_with_group.php          将dir1目录下脚本的步骤重新排序, 缩写-s。
+$>ztf.exe sort demo\sample\2_with_group.php          将脚本的步骤重新排序，支持多个目录和文件参数项，缩写-s。
 $>ztf.exe clean                                      清除所有测试执行日志，缩写-c。
