@@ -10,8 +10,8 @@ pid=0
   1. step 1 >> expect 1
 
 [2. group title 3]
-  2. step 3.1 >> expect 1.1
-  2. step 3.2 >> expect 1.2
+  2.1 step >> expect 2.1
+  2.2 step >> expect 2.2
 
 [esac]
 */
