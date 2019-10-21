@@ -32,7 +32,7 @@ func main() {
 	go func() {
 		<-channel
 		cleanup()
-		os.Exit(1)
+		os.Exit(0)
 	}()
 
 	flagSet = flag.NewFlagSet("atf", flag.ContinueOnError)
@@ -164,5 +164,4 @@ func init() {
 
 func cleanup() {
 	color.Unset()
-	//color.Set(color.FgWhite)
 }

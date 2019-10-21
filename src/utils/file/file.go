@@ -134,24 +134,20 @@ func GetZtfDir() string { // where ztf command in
 	var dir string
 	arg1 := strings.ToLower(os.Args[0])
 
-	if strings.Index(arg1, "build") > -1 || strings.Index(arg1, "bin") > -1 || strings.Index(arg1, "temp") > -1 { // debug
-		dir, _ = os.Getwd()
-	} else {
-		p, _ := exec.LookPath(os.Args[0]) // filepath.Abs(filepath.Dir(os.Args[0]))
+	name := filepath.Base(arg1)
+	if strings.Index(name, "ztf") == 0 {
+		p, _ := exec.LookPath(os.Args[0])
 		if strings.Index(p, string(os.PathSeparator)) > -1 {
 			dir = p[:strings.LastIndex(p, string(os.PathSeparator))]
 		}
+	} else { // debug
+		dir, _ = os.Getwd()
 	}
 
 	dir = UpdateDir(dir)
 
 	fmt.Printf("Debug: Launch %s in %s \n", arg1, dir)
 	return dir
-}
-
-func GetCurrDir() string { // where you run command from
-	dir, _ := os.Getwd()
-	return UpdateDir(dir)
 }
 
 func GetLogDir() string {

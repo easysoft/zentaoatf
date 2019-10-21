@@ -18,7 +18,7 @@ func main() {
 	go func() {
 		<-c
 		cleanup()
-		os.Exit(1)
+		os.Exit(0)
 	}()
 
 	for {

@@ -17,10 +17,13 @@ import (
 	"gopkg.in/ini.v1"
 	"os"
 	"reflect"
+	"syscall"
 )
 
 func InitConfig() {
 	vari.ZtfDir = fileUtils.GetZtfDir()
+	CheckConfigPermission()
+
 	constant.ConfigFile = vari.ZtfDir + constant.ConfigFile
 	vari.Config = getInst()
 
@@ -38,7 +41,6 @@ func InitScreenSize() {
 }
 
 func SaveConfig(conf model.Config) error {
-
 	fileUtils.MkDirIfNeeded(fileUtils.GetZtfDir() + "conf")
 
 	conf.Version = constant.ConfigVer
@@ -46,7 +48,12 @@ func SaveConfig(conf model.Config) error {
 	cfg := ini.Empty()
 	cfg.ReflectFrom(&conf)
 
-	cfg.SaveTo(constant.ConfigFile)
+	err := cfg.SaveTo(constant.ConfigFile)
+	if err != nil {
+		logUtils.PrintToWithColor(
+			fmt.Sprintf("Permission denied to open %s for write.", vari.ZtfDir), color.FgRed)
+		os.Exit(0)
+	}
 
 	vari.Config = ReadCurrConfig()
 	return nil
@@ -89,14 +96,12 @@ func ReadCurrConfig() model.Config {
 }
 
 func getInst() model.Config {
-	isSet := len(os.Args) > 1 && (os.Args[1] == "set" || os.Args[1] == "-set")
-	if !isSet {
-		CheckConfig()
+	isSetAction := len(os.Args) > 1 && (os.Args[1] == "set" || os.Args[1] == "-set")
+	if !isSetAction {
+		CheckConfigReady()
 	}
 
-	configFile := constant.ConfigFile
-
-	ini.MapTo(&vari.Config, configFile)
+	ini.MapTo(&vari.Config, constant.ConfigFile)
 
 	if vari.Config.Version != constant.ConfigVer { // old config file, re-init
 		if vari.Config.Language != "en" && vari.Config.Language != "zh" {
@@ -109,9 +114,17 @@ func getInst() model.Config {
 	return vari.Config
 }
 
-func CheckConfig() {
-	configPath := constant.ConfigFile
-	if !fileUtils.FileExist(configPath) {
+func CheckConfigPermission() {
+	err := syscall.Access(vari.ZtfDir, syscall.O_RDWR)
+	if err != nil {
+		logUtils.PrintToWithColor(
+			fmt.Sprintf("Permission denied to open %s for write. Please change the dir add it to PATH environment variable.", vari.ZtfDir), color.FgRed)
+		os.Exit(0)
+	}
+}
+
+func CheckConfigReady() {
+	if !fileUtils.FileExist(constant.ConfigFile) {
 		InputForSet()
 	}
 }
