@@ -48,12 +48,7 @@ func SaveConfig(conf model.Config) error {
 	cfg := ini.Empty()
 	cfg.ReflectFrom(&conf)
 
-	err := cfg.SaveTo(constant.ConfigFile)
-	if err != nil {
-		logUtils.PrintToWithColor(
-			fmt.Sprintf("Permission denied to open %s for write.", vari.ZtfDir), color.FgRed)
-		os.Exit(0)
-	}
+	cfg.SaveTo(constant.ConfigFile)
 
 	vari.Config = ReadCurrConfig()
 	return nil
@@ -118,7 +113,7 @@ func CheckConfigPermission() {
 	err := syscall.Access(vari.ZtfDir, syscall.O_RDWR)
 	if err != nil {
 		logUtils.PrintToWithColor(
-			fmt.Sprintf("Permission denied to open %s for write. Please change the dir add it to PATH environment variable.", vari.ZtfDir), color.FgRed)
+			fmt.Sprintf("Permission denied to open %s for write. Please change work dir.", vari.ZtfDir), color.FgRed)
 		os.Exit(0)
 	}
 }
