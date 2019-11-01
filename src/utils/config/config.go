@@ -17,7 +17,6 @@ import (
 	"gopkg.in/ini.v1"
 	"os"
 	"reflect"
-	"syscall"
 )
 
 func InitConfig() {
@@ -110,7 +109,9 @@ func getInst() model.Config {
 }
 
 func CheckConfigPermission() {
-	err := syscall.Access(vari.ZtfDir, syscall.O_RDWR)
+	//err := syscall.Access(vari.ZtfDir, syscall.O_RDWR)
+
+	err := fileUtils.MkDirIfNeeded(vari.ZtfDir + "conf")
 	if err != nil {
 		logUtils.PrintToWithColor(
 			fmt.Sprintf("Permission denied to open %s for write. Please change work dir.", vari.ZtfDir), color.FgRed)

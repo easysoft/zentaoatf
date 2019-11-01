@@ -56,10 +56,13 @@ func FileExist(path string) bool {
 	return exist
 }
 
-func MkDirIfNeeded(dir string) {
+func MkDirIfNeeded(dir string) error {
 	if !FileExist(dir) {
-		os.MkdirAll(dir, os.ModePerm)
+		err := os.MkdirAll(dir, os.ModePerm)
+		return err
 	}
+
+	return nil
 }
 
 func IsDir(f string) bool {
