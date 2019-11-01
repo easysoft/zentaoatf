@@ -279,7 +279,7 @@
     },
     {
       "id": "run_scripts",
-      "translation": "Run %d scripts in %d sec%s, %d(%.1f%%) %s, %d(%.1f%%) %s, %d(%.1f%%) %s. Report %s"
+      "translation": "Run %d scripts in %d sec%s, %s, %s, %s. Report %s"
     },
     {
       "id": "no_interpreter_for_run",

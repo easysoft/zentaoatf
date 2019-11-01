@@ -147,6 +147,7 @@ func GetZtfDir() string { // where ztf command in
 		dir, _ = os.Getwd()
 	}
 
+	dir, _ = filepath.Abs(dir)
 	dir = UpdateDir(dir)
 
 	//fmt.Printf("Debug: Launch %s in %s \n", arg1, dir)

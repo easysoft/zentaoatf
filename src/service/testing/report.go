@@ -9,6 +9,7 @@ import (
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
+	"github.com/fatih/color"
 	"github.com/mattn/go-runewidth"
 	"strings"
 	"time"
@@ -84,14 +85,27 @@ func Report(report model.TestReport, pathMaxWidth int) {
 	if vari.Config.Language == "en" && report.Duration > 1 {
 		secTag = "s"
 	}
-	logUtils.ScreenAndResult("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
+
+	fmtStr := "%d(%.1f%%) %s"
+	passStr := fmt.Sprintf(fmtStr, report.Pass, float32(report.Pass*100/report.Total), i118Utils.I118Prt.Sprintf("pass"))
+	failStr := fmt.Sprintf(fmtStr, report.Fail, float32(report.Fail*100/report.Total), i118Utils.I118Prt.Sprintf("fail"))
+	skipStr := fmt.Sprintf(fmtStr, report.Skip, float32(report.Skip*100/report.Total), i118Utils.I118Prt.Sprintf("skip"))
+
+	logUtils.Result("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
 		i118Utils.I118Prt.Sprintf("run_scripts",
 			report.Total, report.Duration, secTag,
-			report.Pass, float32(report.Pass*100/report.Total), i118Utils.I118Prt.Sprintf("pass"),
-			report.Fail, float32(report.Fail*100/report.Total), i118Utils.I118Prt.Sprintf("fail"),
-			report.Skip, float32(report.Skip*100/report.Total), i118Utils.I118Prt.Sprintf("skip"),
+			passStr, failStr, skipStr,
 			vari.LogDir+"result.txt",
 		))
+
+	logUtils.Screen("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
+		i118Utils.I118Prt.Sprintf("run_scripts",
+			report.Total, report.Duration, secTag,
+			color.GreenString(passStr), color.RedString(failStr), color.YellowString(skipStr),
+			vari.LogDir+"result.txt",
+		))
+
+	//println("===" + vari.LogDir)
 
 	json, _ := json.Marshal(report)
 	fileUtils.WriteFile(vari.LogDir+"result.json", string(json))
