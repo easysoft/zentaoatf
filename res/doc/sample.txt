@@ -1,6 +1,5 @@
 $>ztf.exe run demo\lang\bat\1_string_match.bat       执行演示测试用例。
 $>ztf.exe set                                        根据系统提示，设置语言、禅道系统地址、账号和密码参数，Windows系统下会提示输入各种脚本语言的解释程序。
-                                                       测试数据：http://ruiyinxin.test.zentao.net autotest01/P2ssw0rd
 $>ztf.exe co                                         交互式导出禅道测试用例，将提示用户输入导出类型和编号。
 $>ztf.exe co -product 1 -language python             导出编号为1的产品测试用例，使用python语言，缩写-p -l。
 $>ztf.exe co -p 1 -m 15 -l python                    导出产品编号为1、模块编号为15的测试用例。
