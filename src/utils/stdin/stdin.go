@@ -153,7 +153,7 @@ func GetInputForScriptInterpreter(defaultVal string, fmtStr string, params ...in
 	msg := i118Utils.I118Prt.Sprintf(fmtStr, params...)
 
 	for {
-		logUtils.PrintToWithColor("\n"+msg, color.FgCyan)
+		logUtils.PrintToWithColor(msg, color.FgCyan)
 		Scanf(&ret)
 
 		ret = strings.TrimSpace(ret)
