@@ -66,7 +66,11 @@ func (w *SelectWidget) Layout() (*gocui.View, error) {
 	}
 
 	if defaultValIndex == -1 {
-		w.defaultt = labels[0]
+		if len(labels) > 0 {
+			w.defaultt = labels[0]
+		} else {
+			w.defaultt = ""
+		}
 	}
 
 	fmt.Fprint(v, strings.Join(labels, "\n"))
