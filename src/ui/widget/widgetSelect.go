@@ -52,7 +52,6 @@ func (w *SelectWidget) Layout() (*gocui.View, error) {
 	ui.SupportRowHighlight(w.name)
 
 	v.Title = w.title
-
 	logUtils.PrintToCmd(fmt.Sprintf("%s: defalut=%s", v.Name(), w.defaultt), -1)
 
 	labels := make([]string, 0)
