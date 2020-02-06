@@ -23,6 +23,8 @@ var (
 	taskId    string
 	suiteId   string
 
+	noNeedConfirm bool
+
 	flagSet *flag.FlagSet
 )
 
@@ -58,6 +60,7 @@ func main() {
 	flagSet.StringVar(&keywords, "k", "", "")
 	flagSet.StringVar(&keywords, "keywords", "", "")
 
+	flagSet.BoolVar(&noNeedConfirm, "y", false, "")
 	flagSet.BoolVar(&vari.Verbose, "verbose", false, "")
 
 	var placeholder string
@@ -92,7 +95,7 @@ func main() {
 	case "cr":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
-			action.CommitResult(files)
+			action.CommitResult(files, noNeedConfirm)
 		}
 
 	case "cb":

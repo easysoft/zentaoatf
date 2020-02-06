@@ -32,6 +32,8 @@ func ExeShell(cmdStr string) (string, error) {
 }
 
 func ExecFile(filePath string) string {
+	filePath = "\"" + filePath + "\""
+
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
 		lang := langUtils.GetLangByFile(filePath)

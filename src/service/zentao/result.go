@@ -16,7 +16,7 @@ import (
 	"strconv"
 )
 
-func CommitResult(resultDir string) {
+func CommitResult(resultDir string, noNeedConfirm bool) {
 	conf := configUtils.ReadCurrConfig()
 	Login(conf.Url, conf.Account, conf.Password)
 
@@ -29,8 +29,10 @@ func CommitResult(resultDir string) {
 
 		confirm := true
 
-		tips := fmt.Sprintf("%d. %s %s", id, title, stringUtils.Ucfirst(status))
-		stdinUtils.InputForBool(&confirm, confirm, "confirm_commit_result", tips)
+		if !noNeedConfirm {
+			tips := fmt.Sprintf("%d. %s %s", id, title, stringUtils.Ucfirst(status))
+			stdinUtils.InputForBool(&confirm, confirm, "confirm_commit_result", tips)
+		}
 
 		requestObj := map[string]interface{}{"case": strconv.Itoa(id), "version": "0"}
 

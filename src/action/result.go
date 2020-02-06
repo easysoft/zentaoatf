@@ -6,7 +6,7 @@ import (
 	stdinUtils "github.com/easysoft/zentaoatf/src/utils/stdin"
 )
 
-func CommitResult(files []string) {
+func CommitResult(files []string, noNeedConfirm bool) {
 	var resultDir string
 	if len(files) > 0 {
 		resultDir = files[0]
@@ -15,6 +15,6 @@ func CommitResult(files []string) {
 	}
 
 	resultDir = fileUtils.UpdateDir(resultDir)
-	zentaoService.CommitResult(resultDir)
+	zentaoService.CommitResult(resultDir, noNeedConfirm)
 
 }
