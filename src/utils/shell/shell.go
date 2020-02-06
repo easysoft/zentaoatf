@@ -32,8 +32,6 @@ func ExeShell(cmdStr string) (string, error) {
 }
 
 func ExecFile(filePath string) string {
-	filePath = "\"" + filePath + "\""
-
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
 		lang := langUtils.GetLangByFile(filePath)
@@ -50,6 +48,8 @@ func ExecFile(filePath string) string {
 			i118Utils.I118Prt.Printf("no_interpreter_for_run", filePath, lang)
 		}
 	} else {
+		filePath = "\"" + filePath + "\""
+
 		os.Chmod(filePath, 0777)
 		cmd = exec.Command("/bin/bash", "-c", filePath)
 	}
