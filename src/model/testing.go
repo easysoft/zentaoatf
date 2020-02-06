@@ -4,6 +4,8 @@ type Product struct {
 	Id   string
 	Code string
 	Name string
+
+	Cases map[int]TestCaseInModule
 }
 
 type Module struct {
@@ -70,6 +72,10 @@ type TestCase struct {
 	Title   string
 	Steps   map[int]TestStep
 	StepArr []TestStep `json tag -`
+}
+type TestCaseWrapper struct {
+	From string
+	Case TestCase
 }
 
 type TestStep struct {

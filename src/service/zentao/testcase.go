@@ -14,7 +14,6 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/emirpasic/gods/maps"
-	"sort"
 	"strconv"
 	"strings"
 )
@@ -59,11 +58,11 @@ func ListCaseByProduct(baseUrl string, productId string) []model.TestCase {
 	dataStr, ok := client.Get(url)
 
 	if ok {
-		var module model.Module
-		json.Unmarshal([]byte(dataStr), &module)
+		var product model.Product
+		json.Unmarshal([]byte(dataStr), &product)
 
 		caseArr := make([]model.TestCase, 0)
-		for _, cs := range module.Cases {
+		for _, cs := range product.Cases {
 			caseId := cs.Id
 
 			csWithSteps := GetCaseById(baseUrl, caseId)
@@ -124,11 +123,11 @@ func ListCaseBySuite(baseUrl string, suiteId string) []model.TestCase {
 	dataStr, ok := client.Get(url)
 
 	if ok {
-		var task model.TestSuite
-		json.Unmarshal([]byte(dataStr), &task)
+		var suite model.TestSuite
+		json.Unmarshal([]byte(dataStr), &suite)
 
 		caseArr := make([]model.TestCase, 0)
-		for _, cs := range task.Cases {
+		for _, cs := range suite.Cases {
 			caseId := cs.Id
 
 			csWithSteps := GetCaseById(baseUrl, caseId)
@@ -176,29 +175,24 @@ func ListCaseByTask(baseUrl string, taskId string) []model.TestCase {
 }
 
 func GetCaseById(baseUrl string, caseId string) model.TestCase {
-	params := [][]string{{"caseID", caseId}}
-	url := baseUrl + zentaoUtils.GenSuperApiUri("testcase", "getById", params)
-	dataStr, ok := client.PostStr(url, nil)
+	// $caseID, $version = 0, $from = 'testcase', $taskID = 0
+
+	params := ""
+	if vari.RequestType == constant.RequestTypePathInfo {
+		params = fmt.Sprintf("%s-0-testcase-0", caseId)
+	} else {
+		params = fmt.Sprintf("caseID=%s&version=0&$from=testcase&taskID=0", caseId)
+	}
+
+	url := baseUrl + zentaoUtils.GenApiUri("testcase", "view", params)
+	dataStr, ok := client.Get(url)
 
 	if ok {
-		var tc model.TestCase
-		json.Unmarshal([]byte(dataStr), &tc)
+		var csw model.TestCaseWrapper
+		json.Unmarshal([]byte(dataStr), &csw)
 
-		var keys []int
-		for key := range tc.Steps {
-			keys = append(keys, key)
-		}
-		sort.Ints(keys)
-
-		for _, key := range keys {
-			stepTo := tc.Steps[key]
-			testStep := model.TestStep{Id: stepTo.Id, Desc: stepTo.Desc, Expect: stepTo.Expect,
-				Type: stepTo.Type, Parent: stepTo.Parent}
-
-			tc.StepArr = append(tc.StepArr, testStep)
-		}
-
-		return tc
+		cs := csw.Case
+		return cs
 	}
 
 	return model.TestCase{}
