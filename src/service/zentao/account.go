@@ -3,6 +3,7 @@ package zentaoService
 import (
 	"github.com/bitly/go-simplejson"
 	"github.com/easysoft/zentaoatf/src/service/client"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
@@ -16,7 +17,14 @@ func Login(baseUrl string, account string, password string) bool {
 		return false
 	}
 
-	url := baseUrl + "user-login"
+	// $referer = '', $from = ''
+	uri := ""
+	if vari.RequestType == constant.RequestTypePathInfo {
+		uri = "user-login"
+	} else {
+		uri = "index.php?m=user&f=login&t=json"
+	}
+	url := baseUrl + uri
 
 	params := make(map[string]string)
 	params["account"] = account
@@ -40,7 +48,7 @@ func Login(baseUrl string, account string, password string) bool {
 func GetConfig(baseUrl string) bool {
 	url := baseUrl + "?mode=getconfig"
 
-	body, ok := client.Get(url, nil)
+	body, ok := client.Get(url)
 
 	if ok {
 		json, _ := simplejson.NewJson([]byte(body))

@@ -6,6 +6,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/service/client"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
@@ -19,9 +20,16 @@ func GetBugFiledOptions(productId int) {
 	conf := configUtils.ReadCurrConfig()
 	Login(conf.Url, conf.Account, conf.Password)
 
-	params := fmt.Sprintf("%d-0", productId)
+	// $productID, $projectID = 0
+	params := ""
+	if vari.RequestType == constant.RequestTypePathInfo {
+		params = fmt.Sprintf("%d-0", productId)
+	} else {
+		params = fmt.Sprintf("productID=%d", productId)
+	}
+
 	url := conf.Url + zentaoUtils.GenApiUri("bug", "ajaxGetBugFieldOptions", params)
-	dataStr, ok := client.Get(url, nil)
+	dataStr, ok := client.Get(url)
 
 	bugFields := model.ZentaoBugFileds{}
 

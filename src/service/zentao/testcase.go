@@ -7,9 +7,11 @@ import (
 	"github.com/easysoft/zentaoatf/src/service/client"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	stdinUtils "github.com/easysoft/zentaoatf/src/utils/stdin"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/emirpasic/gods/maps"
 	"sort"
@@ -43,29 +45,30 @@ func LoadTestCases(productId string, moduleId string, suiteIdStr string, taskIdS
 }
 
 func ListCaseByProduct(baseUrl string, productId string) []model.TestCase {
-	params := [][]string{{"productID", productId}}
-	url := baseUrl + zentaoUtils.GenSuperApiUri("testcase", "getModuleCases", params)
-	dataStr, ok := client.Get(url, nil)
+	// $productID=productId, $branch = '', $browseType = 'byModule', $param=moduleId,
+	// $orderBy='id_desc', $recTotal=0, $recPerPage=10000, $pageID=1)
+
+	params := ""
+	if vari.RequestType == constant.RequestTypePathInfo {
+		params = fmt.Sprintf("%s--byModule-all-id_asc-0-10000-1", productId)
+	} else {
+		params = fmt.Sprintf("productID=%s&branch=&browseType=byModule&param=0&orderBy=id_desc&recTotal=0&recPerPage=10000", productId)
+	}
+
+	url := baseUrl + zentaoUtils.GenApiUri("testcase", "browse", params)
+	dataStr, ok := client.Get(url)
 
 	if ok {
-		var caseMap map[string]model.TestCase
-		json.Unmarshal([]byte(dataStr), &caseMap)
-
-		keys := make([]int, 0)
-		for _, cs := range caseMap {
-			i, _ := strconv.Atoi(cs.Id)
-			keys = append(keys, i)
-		}
-		sort.Ints(keys)
+		var module model.Module
+		json.Unmarshal([]byte(dataStr), &module)
 
 		caseArr := make([]model.TestCase, 0)
-		for _, id := range keys {
-			idStr := strconv.Itoa(id)
+		for _, cs := range module.Cases {
+			caseId := cs.Id
 
-			tc := caseMap[idStr]
-			csWithSteps := GetCaseById(baseUrl, idStr)
-			caseArr = append(caseArr, model.TestCase{Id: idStr, Product: tc.Product, Module: tc.Module,
-				Title: tc.Title, StepArr: csWithSteps.StepArr})
+			csWithSteps := GetCaseById(baseUrl, caseId)
+			caseArr = append(caseArr, model.TestCase{Id: caseId, Product: cs.Product, Module: cs.Module,
+				Title: cs.Title, StepArr: csWithSteps.StepArr})
 		}
 
 		return caseArr
@@ -75,10 +78,18 @@ func ListCaseByProduct(baseUrl string, productId string) []model.TestCase {
 }
 
 func ListCaseByModule(baseUrl string, productId string, moduleId string) []model.TestCase {
-	params := fmt.Sprintf("%s--byModule-%s-id_asc-0-10000-1", productId, moduleId)
+	// $productID=productId, $branch = '', $browseType = 'byModule', $param=moduleId,
+	// $orderBy='id_desc', $recTotal=0, $recPerPage=10000, $pageID=1)
+
+	params := ""
+	if vari.RequestType == constant.RequestTypePathInfo {
+		params = fmt.Sprintf("%s--byModule-%s-id_asc-0-10000-1", productId, moduleId)
+	} else {
+		params = fmt.Sprintf("productID=%s&branch=&browseType=byModule&param=%s&orderBy=id_desc&recTotal=0&recPerPage=10000", productId, moduleId)
+	}
 
 	url := baseUrl + zentaoUtils.GenApiUri("testcase", "browse", params)
-	dataStr, ok := client.Get(url, nil)
+	dataStr, ok := client.Get(url)
 
 	if ok {
 		var module model.Module
@@ -100,10 +111,17 @@ func ListCaseByModule(baseUrl string, productId string, moduleId string) []model
 }
 
 func ListCaseBySuite(baseUrl string, suiteId string) []model.TestCase {
-	params := fmt.Sprintf("%s-id_asc-0-10000-1", suiteId)
+	// $suiteID, $orderBy = 'id_desc', $recTotal = 0, $recPerPage = 20, $pageID = 1
+
+	params := ""
+	if vari.RequestType == constant.RequestTypePathInfo {
+		params = fmt.Sprintf("%s-id_asc-0-10000-1", suiteId)
+	} else {
+		params = fmt.Sprintf("suiteID=%s&orderBy=id_desc&recTotal=0&recPerPage=10000", suiteId)
+	}
 
 	url := baseUrl + zentaoUtils.GenApiUri("testsuite", "view", params)
-	dataStr, ok := client.Get(url, nil)
+	dataStr, ok := client.Get(url)
 
 	if ok {
 		var task model.TestSuite
@@ -124,11 +142,19 @@ func ListCaseBySuite(baseUrl string, suiteId string) []model.TestCase {
 	return nil
 }
 
-func ListCaseByTask(baseUrl string, suiteId string) []model.TestCase {
-	params := fmt.Sprintf("%s-all-0-id_asc-0-10000-1", suiteId)
+func ListCaseByTask(baseUrl string, taskId string) []model.TestCase {
+	// $taskID, $browseType = 'all', $param = 0,
+	// $orderBy = 'id_desc', $recTotal = 0, $recPerPage = 20, $pageID = 1
+
+	params := ""
+	if vari.RequestType == constant.RequestTypePathInfo {
+		params = fmt.Sprintf("%s-all-0-id_asc-0-10000-1", taskId)
+	} else {
+		params = fmt.Sprintf("taskID=%s&browseType=all&param=0&orderBy=id_desc&recTotal=0&recPerPage=10000", taskId)
+	}
 
 	url := baseUrl + zentaoUtils.GenApiUri("testtask", "cases", params)
-	dataStr, ok := client.Get(url, nil)
+	dataStr, ok := client.Get(url)
 
 	if ok {
 		var task model.TestTask
@@ -218,18 +244,29 @@ func CommitCase(caseId int, title string, stepMap maps.Map, stepTypeMap maps.Map
 		return
 	}
 
-	uri := fmt.Sprintf("testcase-edit-%d.json", caseId)
+	// $caseID, $comment = false
+	params := ""
+	if vari.RequestType == constant.RequestTypePathInfo {
+		params = fmt.Sprintf("%d-0", caseId)
+	} else {
+		params = fmt.Sprintf("caseID=%d&comment=0", caseId)
+	}
+
+	url := config.Url + zentaoUtils.GenApiUri("testcase", "edit", params)
+
 	requestObj := map[string]interface{}{"title": title,
 		"steps":    commonUtils.LinkedMapToMap(stepMap),
 		"stepType": commonUtils.LinkedMapToMap(stepTypeMap),
 		"expects":  commonUtils.LinkedMapToMap(expectMap)}
+
+	json, _ := json.Marshal(requestObj)
+	logUtils.PrintToCmd(string(json), -1)
 
 	var yes bool
 	logUtils.PrintToWithColor("\n"+i118Utils.I118Prt.Sprintf("case_update_confirm", caseId, title), -1)
 	stdinUtils.InputForBool(&yes, true, "want_to_continue")
 
 	if yes {
-		url := config.Url + uri
 		_, ok = client.PostObject(url, requestObj)
 
 		if ok {

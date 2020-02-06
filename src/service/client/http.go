@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/ajg/form"
 	"github.com/easysoft/zentaoatf/src/model"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
@@ -14,11 +15,18 @@ import (
 	"strings"
 )
 
-func Get(url string, params map[string]string) (string, bool) {
+func Get(url string) (string, bool) {
+	client := &http.Client{}
+
+	if vari.RequestType == constant.RequestTypePathInfo {
+		url = url + "?" + vari.SessionVar + "=" + vari.SessionId
+	} else {
+		url = url + "&" + vari.SessionVar + "=" + vari.SessionId
+	}
+
 	if vari.Verbose {
 		logUtils.PrintToCmd(url, -1)
 	}
-	client := &http.Client{}
 
 	req, reqErr := http.NewRequest("GET", url, nil)
 	if reqErr != nil {
@@ -28,17 +36,16 @@ func Get(url string, params map[string]string) (string, bool) {
 		return "", false
 	}
 
-	req.Header.Set("cookie", vari.SessionVar+"="+vari.SessionId)
-
-	q := req.URL.Query()
-	q.Add(vari.SessionVar, vari.SessionId)
-	if params != nil {
-		for pkey, pval := range params {
-			q.Add(pkey, pval)
-		}
-
-	}
-	req.URL.RawQuery = q.Encode()
+	//req.Header.Set("cookie", vari.SessionVar+"="+vari.SessionId)
+	//
+	//q := req.URL.Query()
+	//q.Add(vari.SessionVar, vari.SessionId)
+	//if params != nil {
+	//	for pkey, pval := range params {
+	//		q.Add(pkey, pval)
+	//	}
+	//}
+	//req.URL.RawQuery = q.Encode()
 
 	resp, respErr := client.Do(req)
 	if respErr != nil {
@@ -81,6 +88,12 @@ func Get(url string, params map[string]string) (string, bool) {
 }
 
 func PostObject(url string, params interface{}) (string, bool) {
+	if vari.RequestType == constant.RequestTypePathInfo {
+		url = url + "?" + vari.SessionVar + "=" + vari.SessionId
+	} else {
+		url = url + "&" + vari.SessionVar + "=" + vari.SessionId
+	}
+
 	if vari.Verbose {
 		logUtils.PrintToCmd(url, -1)
 		logUtils.PrintToCmd(fmt.Sprintf("%+v", params), -1)
@@ -103,7 +116,7 @@ func PostObject(url string, params interface{}) (string, bool) {
 	}
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("cookie", vari.SessionVar+"="+vari.SessionId)
+	//req.Header.Set("cookie", vari.SessionVar+"="+vari.SessionId)
 
 	resp, respErr := client.Do(req)
 	if respErr != nil {

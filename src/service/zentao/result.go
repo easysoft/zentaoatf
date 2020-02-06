@@ -55,8 +55,15 @@ func CommitResult(resultDir string) {
 			requestObj["reals"] = realMap
 		}
 
-		uri := fmt.Sprintf("testtask-runCase-0-%d-1.json", id)
-		url := conf.Url + uri
+		// $runID, $caseID = 0, $version = 0
+		params := ""
+		if vari.RequestType == constant.RequestTypePathInfo {
+			params = fmt.Sprintf("0-%d-1", id)
+		} else {
+			params = fmt.Sprintf("runID=0&caseID=%d&version=1", id)
+		}
+
+		url := conf.Url + zentaoUtils.GenApiUri("testtask", "runCase", params)
 
 		_, ok := client.PostObject(url, requestObj)
 		if ok {
@@ -71,10 +78,17 @@ func CommitResult(resultDir string) {
 }
 
 func GetLastResult(baseUrl string, caseId int) int {
-	params := fmt.Sprintf("0-%d-1.json", caseId)
+	// $runID, $caseID = 0, $version = 0
+
+	params := ""
+	if vari.RequestType == constant.RequestTypePathInfo {
+		params = fmt.Sprintf("0-%d-1.json", caseId)
+	} else {
+		params = fmt.Sprintf("caseID=%d", caseId)
+	}
 
 	url := baseUrl + zentaoUtils.GenApiUri("testtask", "results", params)
-	dataStr, ok := client.Get(url, nil)
+	dataStr, ok := client.Get(url)
 
 	resultId := -1
 	if ok {

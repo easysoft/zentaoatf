@@ -22,7 +22,7 @@ func GenSuperApiUri(model string, methd string, params [][]string) string {
 		sep = "&"
 	}
 
-	paramStr := ""
+	paramStr := "" // format is key1=val1&key2=val2
 	i := 0
 	for _, p := range params {
 		if i > 0 {
@@ -36,17 +36,21 @@ func GenSuperApiUri(model string, methd string, params [][]string) string {
 	if vari.RequestType == constant.RequestTypePathInfo {
 		uri = fmt.Sprintf("api-getmodel-%s-%s-%s.json", model, methd, paramStr)
 	} else {
-		uri = fmt.Sprintf("?m=api&f=getmodel&model=%s&methodName=%s&params=%s", model, methd, paramStr)
+		uri = fmt.Sprintf("index.php?m=api&f=getmodel&model=%s&methodName=%s&params=%s&t=json", model, methd, paramStr)
 	}
 	return uri
 }
 
 func GenApiUri(module string, methd string, param string) string {
+	var uri string
+
 	if vari.RequestType == constant.RequestTypePathInfo {
-		return fmt.Sprintf("%s-%s-%s.json", module, methd, param)
+		uri = fmt.Sprintf("%s-%s-%s.json", module, methd, param)
+	} else {
+		uri = fmt.Sprintf("index.php?m=%s&f=%s&%s&t=json", module, methd, param)
 	}
 
-	return ""
+	return uri
 }
 
 func ScriptToExpectName(file string) string {

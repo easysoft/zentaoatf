@@ -7,8 +7,10 @@ import (
 	"github.com/easysoft/zentaoatf/src/service/client"
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
+	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	uuid "github.com/satori/go.uuid"
 	"strconv"
 	"strings"
@@ -74,17 +76,23 @@ func CommitBug() (bool, string) {
 	Login(conf.Url, conf.Account, conf.Password)
 
 	productId := bug.Product
+	bug.Steps = strings.Replace(bug.Steps, " ", "&nbsp;", -1)
 
 	// bug-create-1-0-caseID=1,version=3,resultID=93,runID=0,stepIdList=9_12_
 	// bug-create-1-0-caseID=1,version=3,resultID=84,runID=6,stepIdList=9_12_,testtask=2,projectID=1,buildID=1
-	params := fmt.Sprintf("caseID=%s,version=0,resultID=0,runID=0,stepIdList=%s",
+	p := fmt.Sprintf("caseID=%s,version=0,resultID=0,runID=0,stepIdList=%s",
 		bug.Case, stepIds)
 
-	bug.Steps = strings.Replace(bug.Steps, " ", "&nbsp;", -1)
+	// $productID, $branch = '', $extras = ''
+	params := ""
+	if vari.RequestType == constant.RequestTypePathInfo {
+		params = fmt.Sprintf("%s-0-%s.json", productId, p)
+	} else {
+		params = fmt.Sprintf("productID=%s&branch=0&$extras=%s", productId, p)
+	}
 
-	uri := fmt.Sprintf("bug-create-%s-0-%s.json", productId, params)
+	url := conf.Url + zentaoUtils.GenApiUri("bug", "create", params)
 
-	url := conf.Url + uri
 	body, ok := client.PostObject(url, bug)
 	if !ok {
 		return false, ""
