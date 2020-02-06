@@ -41,8 +41,10 @@ func ExecFile(filePath string) string {
 			scriptInterpreter = commonUtils.GetFieldVal(vari.Config, stringUtils.Ucfirst(lang))
 			// fmt.Printf("use interpreter %s for script %s\n", scriptInterpreter, filePath)
 		}
-		if scriptInterpreter != "" || strings.ToLower(lang) == "bat" {
+		if scriptInterpreter != "" {
 			cmd = exec.Command("cmd", "/C", scriptInterpreter, filePath)
+		} else if strings.ToLower(lang) == "bat" {
+			cmd = exec.Command("cmd", "/C", filePath)
 		} else {
 			fmt.Printf("use interpreter %s for script %s\n", scriptInterpreter, filePath)
 			i118Utils.I118Prt.Printf("no_interpreter_for_run", filePath, lang)
