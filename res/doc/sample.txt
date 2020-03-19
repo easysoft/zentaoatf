@@ -15,6 +15,7 @@ $>ztf.exe run -task 1                                执行禅道系统中编号
 
 $>ztf.exe ci product01\tc-1.py                       将脚本里修改的用例信息，同步到禅道系统。
 $>ztf.exe cr log\001                                 提交测试结果到禅道系统。
+$>ztf.exe cr -r log\001                              提交测试结果到禅道系统，不需要逐个确认。
 $>ztf.exe cb log\001                                 提交测试结果中失败用例为缺陷。
 
 $>ztf.exe list demo\lang\bat                         列出目录bat下的所有脚本文件，支持多个目录和文件参数项。
