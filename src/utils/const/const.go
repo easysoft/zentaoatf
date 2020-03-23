@@ -35,4 +35,6 @@ var (
 	CmdViewHeight = 10
 
 	RequestTypePathInfo = "PATH_INFO"
+
+	UnitTestType []string = []string{"junit", "testng", "phpunit", "pytest", "jtest", "cppunit", "gtest", "qtest"}
 )

@@ -4,12 +4,16 @@ import (
 	"flag"
 	"github.com/easysoft/zentaoatf/src/action"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
+	"github.com/easysoft/zentaoatf/src/utils/const"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
+	shellUtils "github.com/easysoft/zentaoatf/src/utils/shell"
+	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 )
 
@@ -148,6 +152,16 @@ func main() {
 }
 
 func run(args []string) {
+	if len(args) >= 3 && stringUtils.FindInArr(args[2], constant.UnitTestType) { // unit test
+		vari.UnitTestType = args[2]
+
+		cmd := strings.Join(args[3:], " ")
+		shellUtils.ExeShellWithOutput(cmd)
+		//logUtils.Screen(out)
+
+		return
+	}
+
 	files := fileUtils.GetFilesFromParams(args[2:])
 
 	err := flagSet.Parse(args[len(files)+2:])
