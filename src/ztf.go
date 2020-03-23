@@ -7,7 +7,6 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/const"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
-	shellUtils "github.com/easysoft/zentaoatf/src/utils/shell"
 	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
@@ -154,25 +153,28 @@ func main() {
 func run(args []string) {
 	if len(args) >= 3 && stringUtils.FindInArr(args[2], constant.UnitTestType) { // unit test
 		vari.UnitTestType = args[2]
-
-		cmd := strings.Join(args[3:], " ")
-		shellUtils.ExeShellWithOutput(cmd)
-		//logUtils.Screen(out)
-
-		return
-	}
-
-	files := fileUtils.GetFilesFromParams(args[2:])
-
-	err := flagSet.Parse(args[len(files)+2:])
-	if err == nil {
-		if len(files) == 0 {
-			files = append(files, ".")
+		if args[3] == "mvn" {
+			vari.UnitTestTool = "mvn"
 		}
 
-		action.Run(files, suiteId, taskId)
-	} else {
-		logUtils.PrintUsage()
+		cmd := strings.Join(args[3:], " ")
+
+		output := action.UnitTest(cmd)
+		logUtils.Screen(output)
+
+	} else { // func test
+		files := fileUtils.GetFilesFromParams(args[2:])
+
+		err := flagSet.Parse(args[len(files)+2:])
+		if err == nil {
+			if len(files) == 0 {
+				files = append(files, ".")
+			}
+
+			action.Run(files, suiteId, taskId)
+		} else {
+			logUtils.PrintUsage()
+		}
 	}
 }
 

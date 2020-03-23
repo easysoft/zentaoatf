@@ -1,5 +1,7 @@
 package model
 
+import "encoding/xml"
+
 type Product struct {
 	Id   string
 	Code string
@@ -152,4 +154,30 @@ type CaseResult struct {
 
 	Steps map[string]string
 	Reals map[string]string
+}
+
+// 单元测试
+type UnitTestSuite struct {
+	XMLName xml.Name `xml:"testsuite"`
+
+	//Name    string
+	//Duration int
+
+	Properties Properties     `xml:"properties"`
+	Testcase   []UnitTestCase `xml:"testcase"`
+}
+type UnitTestCase struct {
+	Name      string  `xml:"name,attr"`
+	Classname string  `xml:"classname,attr"`
+	Time      float32 `xml:"time,attr"`
+
+	//Status string
+}
+
+type Properties struct {
+	Property []Property `xml:"property"`
+}
+type Property struct {
+	Name  string `xml:"name,attr"`
+	Value string `xml:"value,attr"`
 }

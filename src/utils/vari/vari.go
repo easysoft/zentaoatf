@@ -16,6 +16,7 @@ var (
 	LogDir       string
 	RunFromCui   bool
 	UnitTestType string
+	UnitTestTool string
 
 	SessionVar  string
 	SessionId   string

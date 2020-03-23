@@ -32,7 +32,7 @@ func ExeShell(cmdStr string) (string, error) {
 	return out.String(), err
 }
 
-func ExeShellWithOutput(cmdStr string) string {
+func ExeShellWithOutput(cmdStr string) []string {
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
 		cmd = exec.Command("cmd", "/C", cmdStr)
@@ -46,13 +46,14 @@ func ExeShellWithOutput(cmdStr string) string {
 
 	if err != nil {
 		fmt.Println(err)
-		return ""
+		return output
 	}
 
 	cmd.Start()
 
 	if err != nil {
-		return fmt.Sprint(err)
+		output = append(output, fmt.Sprint(err))
+		return output
 	}
 
 	reader := bufio.NewReader(stdout)
@@ -67,7 +68,7 @@ func ExeShellWithOutput(cmdStr string) string {
 
 	cmd.Wait()
 
-	return strings.Join(output, "")
+	return output
 }
 
 func ExecFile(filePath string) string {
