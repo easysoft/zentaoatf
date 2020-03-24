@@ -377,6 +377,15 @@
     {
       "id": "success_add_to_path",
       "translation": "Success to add ztf to PATH environment variable."
+    },
+
+    {
+      "id": "success_to_submit_unit_test_result",
+      "translation": "Success to submit unit test results to Zentao。"
+    },
+    {
+      "id": "fail_to_submit_unit_test_result",
+      "translation": "Fail to submit unit test results to Zentao。"
     }
   ]
 }

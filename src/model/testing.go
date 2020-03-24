@@ -168,7 +168,7 @@ type UnitTestReport struct {
 	EndTime   int64
 	Duration  int64
 
-	Cases []UnitTestCase
+	TestCases []UnitTestCase
 }
 type UnitTestSuite struct {
 	XMLName xml.Name `xml:"testsuite"`
@@ -177,11 +177,11 @@ type UnitTestSuite struct {
 	Duration int
 
 	Properties Properties     `xml:"properties"`
-	Testcase   []UnitTestCase `xml:"testcase"`
+	TestCases  []UnitTestCase `xml:"testcase"`
 }
 type UnitTestCase struct {
 	Name      string   `xml:"name,attr"`
-	Classname string   `xml:"classname,attr"`
+	TestSuite string   `xml:"classname,attr"`
 	Time      float32  `xml:"time,attr"`
 	Failure   *Failure `xml:"failure,omitempty"`
 

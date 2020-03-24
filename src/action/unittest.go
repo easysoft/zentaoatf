@@ -2,6 +2,7 @@ package action
 
 import (
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
+	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	shellUtils "github.com/easysoft/zentaoatf/src/utils/shell"
 )
 
@@ -12,5 +13,5 @@ func UnitTest(cmdStr string) {
 	cases, classNameMaxWidth := testingService.ParserUnitTestResult(testSuites)
 
 	report := testingService.GenUnitTestReport(cases, classNameMaxWidth)
-	testingService.SubmitUnitTestReport(report)
+	zentaoService.CommitUnitTestResult(report)
 }

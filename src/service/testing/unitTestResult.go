@@ -54,7 +54,7 @@ func ParserUnitTestResult(testSuites []model.UnitTestSuite) ([]model.UnitTestCas
 	classNameMaxWidth := 0
 	idx := 1
 	for _, suite := range testSuites {
-		for _, cs := range suite.Testcase {
+		for _, cs := range suite.TestCases {
 			cs.Id = idx
 
 			if cs.Failure != nil {
@@ -67,7 +67,7 @@ func ParserUnitTestResult(testSuites []model.UnitTestSuite) ([]model.UnitTestCas
 				cs.Status = "pass"
 			}
 
-			lent2 := runewidth.StringWidth(cs.Classname)
+			lent2 := runewidth.StringWidth(cs.TestSuite)
 			if lent2 > classNameMaxWidth {
 				classNameMaxWidth = lent2
 			}

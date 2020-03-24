@@ -25,15 +25,13 @@ func GenUnitTestReport(cases []model.UnitTestCase, classNameMaxWidth int) model.
 	failedCaseLinesDesc := make([]string, 0)
 
 	for idx, cs := range cases {
-		cases[idx].Classname = stringUtils.AddPostfix(cs.Classname, classNameMaxWidth, " ")
-
 		if cs.Failure != nil {
 			report.Fail++
 
 			if failedCount > 0 { // 换行
 				failedCaseLinesDesc = append(failedCaseLinesDesc, "")
 			}
-			className := cases[idx].Classname
+			className := cases[idx].TestSuite
 
 			line := fmt.Sprintf("[%s] %d.%s", className, cs.Id, cs.Name)
 			failedCaseLines = append(failedCaseLines, line)
@@ -46,7 +44,7 @@ func GenUnitTestReport(cases []model.UnitTestCase, classNameMaxWidth int) model.
 		}
 		report.Total++
 	}
-	report.Cases = cases
+	report.TestCases = cases
 
 	postFix := ":"
 	if len(cases) == 0 {
@@ -63,11 +61,12 @@ func GenUnitTestReport(cases []model.UnitTestCase, classNameMaxWidth int) model.
 	width := strconv.Itoa(len(strconv.Itoa(report.Total)))
 	for idx, cs := range cases {
 		statusColor := logUtils.ColoredStatus(cs.Status)
+		testSuite := stringUtils.AddPostfix(cs.TestSuite, classNameMaxWidth, " ")
 
 		format := "(%" + width + "d/%d) %s [%s] [%" + width + "d. %s] (%.3fs)"
-		logUtils.Screen(fmt.Sprintf(format, idx+1, report.Total, statusColor, cs.Classname, cs.Id, cs.Name, cs.Time))
+		logUtils.Screen(fmt.Sprintf(format, idx+1, report.Total, statusColor, testSuite, cs.Id, cs.Name, cs.Time))
 		logUtils.Result(fmt.Sprintf(format, idx+1, report.Total,
-			i118Utils.I118Prt.Sprintf(cs.Status), cs.Classname, cs.Id, cs.Name, cs.Time))
+			i118Utils.I118Prt.Sprintf(cs.Status), testSuite, cs.Id, cs.Name, cs.Time))
 	}
 
 	if report.Fail > 0 {
@@ -106,8 +105,4 @@ func GenUnitTestReport(cases []model.UnitTestCase, classNameMaxWidth int) model.
 	fileUtils.WriteFile(vari.LogDir+"result.json", string(json))
 
 	return report
-}
-
-func SubmitUnitTestReport(report model.UnitTestReport) {
-
 }

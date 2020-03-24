@@ -384,6 +384,15 @@
     {
       "id": "success_add_to_path",
       "translation": "成功将ztf命令加入用户PATH环境变量。"
+    },
+
+    {
+      "id": "success_to_submit_unit_test_result",
+      "translation": "提交单元测试结果到禅道成功。"
+    },
+    {
+      "id": "fail_to_submit_unit_test_result",
+      "translation": "提交单元测试结果到禅道失败。"
     }
   ]
 }
