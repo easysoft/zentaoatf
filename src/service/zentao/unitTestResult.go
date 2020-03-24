@@ -41,5 +41,10 @@ func CommitUnitTestResult(report model.UnitTestReport) {
 		msg += "\n" + i118Utils.I118Prt.Sprintf("server_return")
 		msg += "\n" + resp
 	}
+
 	logUtils.Screen(msg)
+
+	if report.Fail > 0 || !ok {
+		os.Exit(1)
+	}
 }
