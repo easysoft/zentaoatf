@@ -392,7 +392,7 @@
     },
     {
       "id": "fail_to_submit_unit_test_result",
-      "translation": "提交单元测试结果到禅道失败。"
+      "translation": "提交单元测试结果到禅道失败，服务器返回："
     }
   ]
 }

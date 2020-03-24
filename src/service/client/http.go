@@ -138,7 +138,7 @@ func PostObject(url string, params interface{}) (string, bool) {
 			if vari.Verbose {
 				logUtils.PrintToCmd("server return a html", -1)
 			}
-			return "", true
+			return string(bodyStr), true
 		} else {
 			if vari.Verbose {
 				logUtils.PrintToCmd(jsonErr.Error(), color.FgRed)
