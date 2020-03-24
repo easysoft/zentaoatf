@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
+	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
@@ -15,8 +16,9 @@ import (
 	"time"
 )
 
-func UnitTestReport(report model.TestReport, cases []model.UnitTestCase, classNameMaxWidth int) {
+func GenUnitTestReport(cases []model.UnitTestCase, classNameMaxWidth int) model.UnitTestReport {
 	logUtils.InitLogger()
+	report := model.UnitTestReport{Env: commonUtils.GetOs(), Pass: 0, Fail: 0, Total: 0}
 
 	failedCount := 0
 	failedCaseLines := make([]string, 0)
@@ -44,6 +46,7 @@ func UnitTestReport(report model.TestReport, cases []model.UnitTestCase, classNa
 		}
 		report.Total++
 	}
+	report.Cases = cases
 
 	postFix := ":"
 	if len(cases) == 0 {
@@ -54,7 +57,7 @@ func UnitTestReport(report model.TestReport, cases []model.UnitTestCase, classNa
 		i118Utils.I118Prt.Sprintf("found_scripts", color.CyanString(strconv.Itoa(len(cases)))) + postFix)
 
 	if report.Total == 0 {
-		return
+		return report
 	}
 
 	width := strconv.Itoa(len(strconv.Itoa(report.Total)))
@@ -101,4 +104,10 @@ func UnitTestReport(report model.TestReport, cases []model.UnitTestCase, classNa
 
 	json, _ := json.Marshal(report)
 	fileUtils.WriteFile(vari.LogDir+"result.json", string(json))
+
+	return report
+}
+
+func SubmitUnitTestReport(report model.UnitTestReport) {
+
 }

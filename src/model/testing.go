@@ -157,6 +157,19 @@ type CaseResult struct {
 }
 
 // 单元测试
+type UnitTestReport struct {
+	Env string
+
+	Pass      int
+	Fail      int
+	Skip      int
+	Total     int
+	StartTime int64
+	EndTime   int64
+	Duration  int64
+
+	Cases []UnitTestCase
+}
 type UnitTestSuite struct {
 	XMLName xml.Name `xml:"testsuite"`
 

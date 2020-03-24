@@ -5,10 +5,13 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
+	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
+	"github.com/mattn/go-runewidth"
 	"io/ioutil"
 	"os"
 	"path"
+	"strings"
 )
 
 func RetriveResult() []model.UnitTestSuite {
@@ -44,4 +47,35 @@ func RetriveResult() []model.UnitTestSuite {
 	}
 
 	return suites
+}
+
+func ParserUnitTestResult(testSuites []model.UnitTestSuite) ([]model.UnitTestCase, int) {
+	cases := make([]model.UnitTestCase, 0)
+	classNameMaxWidth := 0
+	idx := 1
+	for _, suite := range testSuites {
+		for _, cs := range suite.Testcase {
+			cs.Id = idx
+
+			if cs.Failure != nil {
+				cs.Status = "fail"
+
+				cs.Failure.Desc = strings.Replace(cs.Failure.Desc, "<![CDATA[", "", -1)
+				cs.Failure.Desc = strings.Replace(cs.Failure.Desc, "]]>", "", -1)
+				logUtils.Screen(cs.Failure.Desc)
+			} else {
+				cs.Status = "pass"
+			}
+
+			lent2 := runewidth.StringWidth(cs.Classname)
+			if lent2 > classNameMaxWidth {
+				classNameMaxWidth = lent2
+			}
+
+			cases = append(cases, cs)
+			idx++
+		}
+	}
+
+	return cases, classNameMaxWidth
 }
