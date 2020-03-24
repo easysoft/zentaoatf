@@ -11,7 +11,7 @@ import (
 	"path"
 )
 
-func RetriveResult() model.UnitTestSuite {
+func RetriveResult() []model.UnitTestSuite {
 	sep := string(os.PathSeparator)
 
 	resultDir := ""
@@ -28,21 +28,20 @@ func RetriveResult() model.UnitTestSuite {
 			ext := path.Ext(name)
 			if ext == ".xml" {
 				resultFiles = append(resultFiles, resultDir+name)
-				break
 			}
 		}
 	}
 
-	testsuite := model.UnitTestSuite{}
-	if len(resultFile) == 0 {
-		return testsuite
+	suites := make([]model.UnitTestSuite, 0)
+	for _, file := range resultFiles {
+		content := fileUtils.ReadFile(file)
+
+		testsuite := model.UnitTestSuite{}
+		err = xml.Unmarshal([]byte(content), &testsuite)
+		if err == nil {
+			suites = append(suites, testsuite)
+		}
 	}
 
-	content := fileUtils.ReadFile(resultFile)
-	err = xml.Unmarshal([]byte(content), &testsuite)
-	if err != nil {
-		return testsuite
-	}
-
-	return testsuite
+	return suites
 }

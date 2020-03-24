@@ -15,15 +15,15 @@ import (
 	"time"
 )
 
-func UnitTestReport(report model.TestReport, testResult model.UnitTestSuite, classNameMaxWidth int) {
+func UnitTestReport(report model.TestReport, cases []model.UnitTestCase, classNameMaxWidth int) {
 	logUtils.InitLogger()
 
 	failedCount := 0
 	failedCaseLines := make([]string, 0)
 	failedCaseLinesDesc := make([]string, 0)
 
-	for idx, cs := range testResult.Testcase {
-		testResult.Testcase[idx].Classname = stringUtils.AddPostfix(cs.Classname, classNameMaxWidth, " ")
+	for idx, cs := range cases {
+		cases[idx].Classname = stringUtils.AddPostfix(cs.Classname, classNameMaxWidth, " ")
 
 		if cs.Failure != nil {
 			report.Fail++
@@ -31,7 +31,7 @@ func UnitTestReport(report model.TestReport, testResult model.UnitTestSuite, cla
 			if failedCount > 0 { // 换行
 				failedCaseLinesDesc = append(failedCaseLinesDesc, "")
 			}
-			className := testResult.Testcase[idx].Classname
+			className := cases[idx].Classname
 
 			line := fmt.Sprintf("[%s] %d.%s", className, cs.Id, cs.Name)
 			failedCaseLines = append(failedCaseLines, line)
@@ -46,19 +46,19 @@ func UnitTestReport(report model.TestReport, testResult model.UnitTestSuite, cla
 	}
 
 	postFix := ":"
-	if len(testResult.Testcase) == 0 {
+	if len(cases) == 0 {
 		postFix = "."
 	}
 
 	logUtils.ScreenAndResult(time.Now().Format("2006-01-02 15:04:05") + " " +
-		i118Utils.I118Prt.Sprintf("found_scripts", color.CyanString(strconv.Itoa(len(testResult.Testcase)))) + postFix)
+		i118Utils.I118Prt.Sprintf("found_scripts", color.CyanString(strconv.Itoa(len(cases)))) + postFix)
 
 	if report.Total == 0 {
 		return
 	}
 
 	width := strconv.Itoa(len(strconv.Itoa(report.Total)))
-	for idx, cs := range testResult.Testcase {
+	for idx, cs := range cases {
 		statusColor := logUtils.ColoredStatus(cs.Status)
 
 		format := "(%" + width + "d/%d) %s [%s] [%" + width + "d. %s] (%.3fs)"
