@@ -16,9 +16,13 @@ import (
 	"time"
 )
 
-func GenUnitTestReport(cases []model.UnitTestCase, classNameMaxWidth int) model.UnitTestReport {
+func GenUnitTestReport(cases []model.UnitTestCase, classNameMaxWidth int,
+	startTime int64, endTime int64) model.UnitTestReport {
 	logUtils.InitLogger()
 	report := model.UnitTestReport{Env: commonUtils.GetOs(), Pass: 0, Fail: 0, Total: 0}
+	report.StartTime = startTime
+	report.EndTime = endTime
+	report.Duration = endTime - startTime
 
 	failedCount := 0
 	failedCaseLines := make([]string, 0)

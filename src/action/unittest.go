@@ -15,10 +15,7 @@ func UnitTest(cmdStr string) {
 	testSuites := testingService.RetriveResult()
 	cases, classNameMaxWidth := testingService.ParserUnitTestResult(testSuites)
 
-	report := testingService.GenUnitTestReport(cases, classNameMaxWidth)
+	report := testingService.GenUnitTestReport(cases, classNameMaxWidth, startTime, endTime)
 
-	report.StartTime = startTime
-	report.EndTime = endTime
-	report.Duration = endTime - startTime
 	zentaoService.CommitUnitTestResult(report)
 }
