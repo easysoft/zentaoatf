@@ -18,7 +18,7 @@ func CommitUnitTestResult(report model.UnitTestReport) {
 
 	buildNumb := os.Getenv("BUILD_NUMBER")
 	url := conf.Url + zentaoUtils.GenApiUri("unittest", "commitResult", buildNumb)
-	logUtils.Screen(url)
+	//logUtils.Screen(url)
 	resp, ok := client.PostObject(url, report)
 
 	if ok {
@@ -33,11 +33,12 @@ func CommitUnitTestResult(report model.UnitTestReport) {
 		}
 	}
 
-	msg := ""
+	msg := "\n"
 	if ok {
-		msg = color.GreenString(i118Utils.I118Prt.Sprintf("success_to_submit_unit_test_result"))
+		msg += color.GreenString(i118Utils.I118Prt.Sprintf("success_to_submit_unit_test_result"))
 	} else {
-		msg = color.RedString(i118Utils.I118Prt.Sprintf("fail_to_submit_unit_test_result"))
+		msg += color.RedString(i118Utils.I118Prt.Sprintf("fail_to_submit_unit_test_result", url))
+		msg += "\n" + i118Utils.I118Prt.Sprintf("server_return")
 		msg += "\n" + resp
 	}
 	logUtils.Screen(msg)

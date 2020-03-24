@@ -385,7 +385,11 @@
     },
     {
       "id": "fail_to_submit_unit_test_result",
-      "translation": "Fail to submit unit test results to Zentao, server Return:"
+      "translation": "Fail to submit unit test results to Zentao %s"
+    },
+    {
+      "id": "server_return",
+      "translation": "服务器返回："
     }
   ]
 }
