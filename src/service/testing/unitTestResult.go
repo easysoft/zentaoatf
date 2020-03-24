@@ -15,7 +15,7 @@ func RetriveResult() model.UnitTestSuite {
 	sep := string(os.PathSeparator)
 
 	resultDir := ""
-	resultFile := ""
+	resultFiles := make([]string, 0)
 
 	if vari.UnitTestType == "junit" && vari.UnitTestTool == "mvn" {
 		resultDir = fmt.Sprintf("target%ssurefire-reports%s", sep, sep)
@@ -27,7 +27,7 @@ func RetriveResult() model.UnitTestSuite {
 			name := fi.Name()
 			ext := path.Ext(name)
 			if ext == ".xml" {
-				resultFile = resultDir + name
+				resultFiles = append(resultFiles, resultDir+name)
 				break
 			}
 		}

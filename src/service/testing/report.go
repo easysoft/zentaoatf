@@ -86,18 +86,20 @@ func Report(report model.TestReport, pathMaxWidth int) {
 		secTag = "s"
 	}
 
+	// 生成统计行
 	fmtStr := "%d(%.1f%%) %s"
 	passStr := fmt.Sprintf(fmtStr, report.Pass, float32(report.Pass*100/report.Total), i118Utils.I118Prt.Sprintf("pass"))
 	failStr := fmt.Sprintf(fmtStr, report.Fail, float32(report.Fail*100/report.Total), i118Utils.I118Prt.Sprintf("fail"))
 	skipStr := fmt.Sprintf(fmtStr, report.Skip, float32(report.Skip*100/report.Total), i118Utils.I118Prt.Sprintf("skip"))
 
+	// 带映带结果文件
 	logUtils.Result("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
 		i118Utils.I118Prt.Sprintf("run_scripts",
 			report.Total, report.Duration, secTag,
 			passStr, failStr, skipStr,
 			vari.LogDir+"result.txt",
 		))
-
+	// 打印到屏幕
 	logUtils.Screen("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
 		i118Utils.I118Prt.Sprintf("run_scripts",
 			report.Total, report.Duration, secTag,

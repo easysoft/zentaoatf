@@ -159,8 +159,7 @@ func run(args []string) {
 
 		cmd := strings.Join(args[3:], " ")
 
-		output := action.UnitTest(cmd)
-		logUtils.Screen(output)
+		action.UnitTest(cmd)
 
 	} else { // func test
 		files := fileUtils.GetFilesFromParams(args[2:])

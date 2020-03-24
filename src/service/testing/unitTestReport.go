@@ -4,81 +4,73 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
-	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	"github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/log"
+	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
-	"github.com/mattn/go-runewidth"
+	"strconv"
 	"strings"
 	"time"
 )
 
-func UnitTestReport(report model.TestReport, testResult model.UnitTestSuite, pathMaxWidth int) {
-	if len(report.Cases) == 0 {
+func UnitTestReport(report model.TestReport, testResult model.UnitTestSuite, classNameMaxWidth int) {
+	logUtils.InitLogger()
+
+	failedCount := 0
+	failedCaseLines := make([]string, 0)
+	failedCaseLinesDesc := make([]string, 0)
+
+	for idx, cs := range testResult.Testcase {
+		testResult.Testcase[idx].Classname = stringUtils.AddPostfix(cs.Classname, classNameMaxWidth, " ")
+
+		if cs.Failure != nil {
+			report.Fail++
+
+			if failedCount > 0 { // 换行
+				failedCaseLinesDesc = append(failedCaseLinesDesc, "")
+			}
+			className := testResult.Testcase[idx].Classname
+
+			line := fmt.Sprintf("[%s] %d.%s", className, cs.Id, cs.Name)
+			failedCaseLines = append(failedCaseLines, line)
+
+			failedCaseLinesDesc = append(failedCaseLinesDesc, line)
+			failDesc := fmt.Sprintf("   %s - %s", cs.Failure.Type, cs.Failure.Desc)
+			failedCaseLinesDesc = append(failedCaseLinesDesc, failDesc)
+		} else {
+			report.Pass++
+		}
+		report.Total++
+	}
+
+	postFix := ":"
+	if len(testResult.Testcase) == 0 {
+		postFix = "."
+	}
+
+	logUtils.ScreenAndResult(time.Now().Format("2006-01-02 15:04:05") + " " +
+		i118Utils.I118Prt.Sprintf("found_scripts", color.CyanString(strconv.Itoa(len(testResult.Testcase)))) + postFix)
+
+	if report.Total == 0 {
 		return
 	}
 
-	// print failed case
-	failedCount := 0
-	failedCaseLines := make([]string, 0)
-	failedCaseLinesWithCheckpoint := make([]string, 0)
+	width := strconv.Itoa(len(strconv.Itoa(report.Total)))
+	for idx, cs := range testResult.Testcase {
+		statusColor := logUtils.ColoredStatus(cs.Status)
 
-	for _, cs := range report.Cases {
-		if cs.Status == "fail" {
-			if failedCount > 0 {
-				failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "")
-			}
-			failedCount++
-
-			path := cs.Path
-			lent := runewidth.StringWidth(path)
-
-			if pathMaxWidth > lent {
-				postFix := strings.Repeat(" ", pathMaxWidth-lent)
-				path += postFix
-			}
-
-			line := fmt.Sprintf("[%s] %d.%s", cs.Path, cs.Id, cs.Title)
-			failedCaseLines = append(failedCaseLines, line)
-			failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, line)
-
-			if len(cs.Steps) > 0 {
-				stepNumb := 0
-				for _, step := range cs.Steps {
-					if step.Status {
-						continue
-					}
-
-					if stepNumb > 0 {
-						failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "")
-					}
-					stepNumb++
-
-					step.Id = strings.TrimRight(step.Id, ".")
-					status := i118Utils.I118Prt.Sprintf(commonUtils.BoolToPass(step.Status))
-					failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("Step %s: %s", step.Id, status))
-
-					for idx1, cp := range step.CheckPoints {
-						//cpStatus := commonUtils.BoolToPass(step.Status)
-						failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("[Expect] %s", cp.Expect))
-						failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("[Actual] %s", cp.Actual))
-
-						if idx1 < len(step.CheckPoints)-1 {
-							failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "")
-						}
-					}
-				}
-			} else {
-				failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "   "+i118Utils.I118Prt.Sprintf("no_checkpoints"))
-			}
-		}
+		format := "(%" + width + "d/%d) %s [%s] [%" + width + "d. %s] (%.3fs)"
+		logUtils.Screen(fmt.Sprintf(format, idx+1, report.Total, statusColor, cs.Classname, cs.Id, cs.Name, cs.Time))
+		logUtils.Result(fmt.Sprintf(format, idx+1, report.Total,
+			i118Utils.I118Prt.Sprintf(cs.Status), cs.Classname, cs.Id, cs.Name, cs.Time))
 	}
-	if failedCount > 0 {
+
+	if report.Fail > 0 {
 		logUtils.ScreenAndResult("\n" + i118Utils.I118Prt.Sprintf("failed_scripts"))
 		logUtils.Screen(strings.Join(failedCaseLines, "\n"))
-		logUtils.Result(strings.Join(failedCaseLinesWithCheckpoint, "\n"))
+		logUtils.Result(strings.Join(failedCaseLinesDesc, "\n"))
 	}
 
 	secTag := ""
@@ -91,6 +83,7 @@ func UnitTestReport(report model.TestReport, testResult model.UnitTestSuite, pat
 	failStr := fmt.Sprintf(fmtStr, report.Fail, float32(report.Fail*100/report.Total), i118Utils.I118Prt.Sprintf("fail"))
 	skipStr := fmt.Sprintf(fmtStr, report.Skip, float32(report.Skip*100/report.Total), i118Utils.I118Prt.Sprintf("skip"))
 
+	// 输出到文件
 	logUtils.Result("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
 		i118Utils.I118Prt.Sprintf("run_scripts",
 			report.Total, report.Duration, secTag,
@@ -98,14 +91,13 @@ func UnitTestReport(report model.TestReport, testResult model.UnitTestSuite, pat
 			vari.LogDir+"result.txt",
 		))
 
+	// 输出到屏幕
 	logUtils.Screen("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
 		i118Utils.I118Prt.Sprintf("run_scripts",
 			report.Total, report.Duration, secTag,
 			color.GreenString(passStr), color.RedString(failStr), color.YellowString(skipStr),
 			vari.LogDir+"result.txt",
 		))
-
-	//println("===" + vari.LogDir)
 
 	json, _ := json.Marshal(report)
 	fileUtils.WriteFile(vari.LogDir+"result.json", string(json))

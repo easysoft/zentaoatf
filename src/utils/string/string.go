@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	"github.com/mattn/go-runewidth"
 	"strings"
 	"unicode"
 )
@@ -66,4 +67,15 @@ func FindInArr(str string, arr []string) bool {
 	}
 
 	return false
+}
+
+func AddPostfix(str string, width int, ch string) string {
+	lent := runewidth.StringWidth(str)
+
+	if width > lent {
+		postFix := strings.Repeat(ch, width-lent)
+		str += postFix
+	}
+
+	return str
 }

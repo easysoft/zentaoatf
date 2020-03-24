@@ -160,18 +160,25 @@ type CaseResult struct {
 type UnitTestSuite struct {
 	XMLName xml.Name `xml:"testsuite"`
 
-	//Name    string
-	//Duration int
+	Name     string
+	Duration int
 
 	Properties Properties     `xml:"properties"`
 	Testcase   []UnitTestCase `xml:"testcase"`
 }
 type UnitTestCase struct {
-	Name      string  `xml:"name,attr"`
-	Classname string  `xml:"classname,attr"`
-	Time      float32 `xml:"time,attr"`
+	Name      string   `xml:"name,attr"`
+	Classname string   `xml:"classname,attr"`
+	Time      float32  `xml:"time,attr"`
+	Failure   *Failure `xml:"failure,omitempty"`
 
-	//Status string
+	Id     int
+	Status string
+}
+
+type Failure struct {
+	Type string `xml:"type,attr"`
+	Desc string `xml:",innerxml"`
 }
 
 type Properties struct {
