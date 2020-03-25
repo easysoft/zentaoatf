@@ -164,8 +164,6 @@ func runCases(files []string) {
 
 	testingService.ExeScripts(casesToRun, &report, pathMaxWidth, numbMaxWidth)
 	testingService.GenZtfTestReport(report, pathMaxWidth)
-
-	zentaoService.CommitTestResult(report)
 }
 
 func isRunWithSuiteFile(files []string) (string, string) {

@@ -90,9 +90,12 @@ func ExecFile(filePath string) string {
 			i118Utils.I118Prt.Printf("no_interpreter_for_run", filePath, lang)
 		}
 	} else {
-		filePath = "\"" + filePath + "\""
+		err := os.Chmod(filePath, 0777)
+		if err != nil {
+			logUtils.Screen("chmod error" + err.Error())
+		}
 
-		os.Chmod(filePath, 0777)
+		filePath = "\"" + filePath + "\""
 		cmd = exec.Command("/bin/bash", "-c", filePath)
 	}
 
