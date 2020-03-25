@@ -397,6 +397,10 @@
     {
       "id": "server_return",
       "translation": "服务器返回："
+    },
+    {
+      "id": "task_id_empty_to_create",
+      "translation": "，默认为空则新建。"
     }
   ]
 }

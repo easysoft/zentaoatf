@@ -29,7 +29,7 @@ func CommitBug(files []string) {
 
 	ids := make([]string, 0)
 	lines := make([]string, 0)
-	for _, cs := range report.Cases {
+	for _, cs := range report.ZtfCaseResults {
 		if cs.Status != constant.PASS.String() {
 			lines = append(lines, fmt.Sprintf("%d. %s %s", cs.Id, cs.Title, logUtils.ColoredStatus(cs.Status)))
 			ids = append(ids, strconv.Itoa(cs.Id))

@@ -150,7 +150,7 @@ func GetFailedCasesDirectlyFromTestResult(resultFile string) []string {
 	var report model.TestReport
 	json.Unmarshal([]byte(content), &report)
 
-	for _, cs := range report.Cases {
+	for _, cs := range report.ZtfCaseResults {
 		if cs.Status != "pass" {
 			cases = append(cases, cs.Path)
 		}

@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-func GenUnitTestReport(cases []model.UnitTestCase, classNameMaxWidth int,
+func GenUnitTestReport(cases []model.UnitCaseResult, classNameMaxWidth int,
 	startTime int64, endTime int64) model.TestReport {
 	logUtils.InitLogger()
 	report := model.TestReport{Env: commonUtils.GetOs(), Pass: 0, Fail: 0, Total: 0}
@@ -39,7 +39,7 @@ func GenUnitTestReport(cases []model.UnitTestCase, classNameMaxWidth int,
 			}
 			className := cases[idx].TestSuite
 
-			line := fmt.Sprintf("[%s] %d.%s", className, cs.Id, cs.Name)
+			line := fmt.Sprintf("[%s] %d.%s", className, cs.Id, cs.Title)
 			failedCaseLines = append(failedCaseLines, line)
 
 			failedCaseLinesDesc = append(failedCaseLinesDesc, line)
@@ -50,7 +50,7 @@ func GenUnitTestReport(cases []model.UnitTestCase, classNameMaxWidth int,
 		}
 		report.Total++
 	}
-	report.TestCases = cases
+	report.UnitCaseResults = cases
 
 	postFix := ":"
 	if len(cases) == 0 {
@@ -70,9 +70,9 @@ func GenUnitTestReport(cases []model.UnitTestCase, classNameMaxWidth int,
 		testSuite := stringUtils.AddPostfix(cs.TestSuite, classNameMaxWidth, " ")
 
 		format := "(%" + width + "d/%d) %s [%s] [%" + width + "d. %s] (%.3fs)"
-		logUtils.Screen(fmt.Sprintf(format, idx+1, report.Total, statusColor, testSuite, cs.Id, cs.Name, cs.Time))
+		logUtils.Screen(fmt.Sprintf(format, idx+1, report.Total, statusColor, testSuite, cs.Id, cs.Title, cs.Duration))
 		logUtils.Result(fmt.Sprintf(format, idx+1, report.Total,
-			i118Utils.I118Prt.Sprintf(cs.Status), testSuite, cs.Id, cs.Name, cs.Time))
+			i118Utils.I118Prt.Sprintf(cs.Status), testSuite, cs.Id, cs.Title, cs.Duration))
 	}
 
 	if report.Fail > 0 {

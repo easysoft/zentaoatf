@@ -49,8 +49,8 @@ func RetrieveUnitResult() []model.UnitTestSuite {
 	return suites
 }
 
-func ParserUnitTestResult(testSuites []model.UnitTestSuite) ([]model.UnitTestCase, int) {
-	cases := make([]model.UnitTestCase, 0)
+func ParserUnitTestResult(testSuites []model.UnitTestSuite) ([]model.UnitCaseResult, int) {
+	cases := make([]model.UnitCaseResult, 0)
 	classNameMaxWidth := 0
 	idx := 1
 	for _, suite := range testSuites {

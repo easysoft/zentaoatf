@@ -1,24 +1,35 @@
 package zentaoService
 
 import (
+	"fmt"
 	"github.com/bitly/go-simplejson"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/service/client"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/fatih/color"
 	"os"
 )
 
-func CommitTestResult(report model.TestReport) {
+func CommitTestResult(report model.TestReport, testTaskId int) {
 	conf := configUtils.ReadCurrConfig()
 	Login(conf.Url, conf.Account, conf.Password)
 
 	buildNumb := os.Getenv("BUILD_NUMBER")
-	url := conf.Url + zentaoUtils.GenApiUri("unittest", "commitResult", buildNumb)
-	//logUtils.Screen(url)
+
+	params := ""
+	if vari.RequestType == constant.RequestTypePathInfo {
+		params = fmt.Sprintf("%d-%s", testTaskId, buildNumb)
+	} else {
+		params = fmt.Sprintf("testTaskId=%d&buildNumb=%s", testTaskId, buildNumb)
+	}
+	url := conf.Url + zentaoUtils.GenApiUri("unittest", "commitResult", params)
+	logUtils.Screen(url)
+
 	resp, ok := client.PostObject(url, report)
 
 	if ok {

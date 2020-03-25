@@ -390,6 +390,10 @@
     {
       "id": "server_return",
       "translation": "服务器返回："
+    },
+    {
+      "id": "task_id_empty_to_create",
+      "translation": ", leave it blank to create a new one."
     }
   ]
 }

@@ -125,11 +125,11 @@ type TestReport struct {
 	EndTime   int64
 	Duration  int64
 
-	Cases     []CaseLog
-	TestCases []UnitTestCase
+	ZtfCaseResults  []ZtfCaseResult
+	UnitCaseResults []UnitCaseResult
 }
 
-type CaseLog struct {
+type ZtfCaseResult struct {
 	Id        int
 	ProductId int
 	Path      string
@@ -152,14 +152,6 @@ type CheckPointLog struct {
 	Status bool
 }
 
-type CaseResult struct {
-	Case    string
-	Version string
-
-	Steps map[string]string
-	Reals map[string]string
-}
-
 // 单元测试
 type UnitTestSuite struct {
 	XMLName xml.Name `xml:"testsuite"`
@@ -167,13 +159,13 @@ type UnitTestSuite struct {
 	Name     string
 	Duration int
 
-	Properties Properties     `xml:"properties"`
-	TestCases  []UnitTestCase `xml:"testcase"`
+	Properties Properties       `xml:"properties"`
+	TestCases  []UnitCaseResult `xml:"testcase"`
 }
-type UnitTestCase struct {
-	Name      string   `xml:"name,attr"`
+type UnitCaseResult struct {
+	Title     string   `xml:"name,attr"`
 	TestSuite string   `xml:"classname,attr"`
-	Time      float32  `xml:"time,attr"`
+	Duration  float32  `xml:"time,attr"`
 	Failure   *Failure `xml:"failure,omitempty"`
 
 	Id     int
