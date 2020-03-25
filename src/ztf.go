@@ -95,11 +95,11 @@ func main() {
 			action.CommitCases(files)
 		}
 
-	//case "cr":
-	//	files := fileUtils.GetFilesFromParams(os.Args[2:])
-	//	if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
-	//		action.CommitResult(files, noNeedConfirm)
-	//	}
+	case "cr":
+		files := fileUtils.GetFilesFromParams(os.Args[2:])
+		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
+			action.CommitZtfTestResult(files, noNeedConfirm)
+		}
 
 	case "cb":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
