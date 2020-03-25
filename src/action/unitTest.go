@@ -7,15 +7,15 @@ import (
 	"time"
 )
 
-func UnitTest(cmdStr string) {
+func RunUnitTest(cmdStr string) {
 	startTime := time.Now().Unix()
 	shellUtils.ExeShellWithOutput(cmdStr)
 	endTime := time.Now().Unix()
 
-	testSuites := testingService.RetriveResult()
+	testSuites := testingService.RetrieveUnitResult()
 	cases, classNameMaxWidth := testingService.ParserUnitTestResult(testSuites)
 
 	report := testingService.GenUnitTestReport(cases, classNameMaxWidth, startTime, endTime)
 
-	zentaoService.CommitUnitTestResult(report)
+	zentaoService.CommitTestResult(report)
 }

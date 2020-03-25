@@ -12,7 +12,7 @@ import (
 	"os"
 )
 
-func CommitUnitTestResult(report model.UnitTestReport) {
+func CommitTestResult(report model.TestReport) {
 	conf := configUtils.ReadCurrConfig()
 	Login(conf.Url, conf.Account, conf.Password)
 

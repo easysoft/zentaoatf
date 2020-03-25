@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-func Report(report model.TestReport, pathMaxWidth int) {
+func GenZtfTestReport(report model.TestReport, pathMaxWidth int) {
 	if len(report.Cases) == 0 {
 		return
 	}

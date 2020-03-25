@@ -19,7 +19,7 @@ import (
 	"strconv"
 )
 
-func Run(files []string, suiteIdStr string, taskIdStr string) error {
+func RunZtfTest(files []string, suiteIdStr string, taskIdStr string) error {
 	logUtils.InitLogger()
 
 	cases := make([]string, 0)
@@ -144,6 +144,8 @@ func runCases(files []string) {
 
 	var report = model.TestReport{Env: commonUtils.GetOs(),
 		Pass: 0, Fail: 0, Total: 0, Cases: make([]model.CaseLog, 0)}
+	report.TestType = "ztf"
+	report.TestFrame = "ztf"
 
 	pathMaxWidth := 0
 	numbMaxWidth := 0
@@ -161,7 +163,9 @@ func runCases(files []string) {
 	}
 
 	testingService.ExeScripts(casesToRun, &report, pathMaxWidth, numbMaxWidth)
-	testingService.Report(report, pathMaxWidth)
+	testingService.GenZtfTestReport(report, pathMaxWidth)
+
+	zentaoService.CommitTestResult(report)
 }
 
 func isRunWithSuiteFile(files []string) (string, string) {

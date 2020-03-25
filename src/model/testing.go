@@ -113,7 +113,9 @@ type Bug struct {
 }
 
 type TestReport struct {
-	Env string
+	Env       string
+	TestType  string
+	TestFrame string
 
 	Pass      int
 	Fail      int
@@ -123,8 +125,10 @@ type TestReport struct {
 	EndTime   int64
 	Duration  int64
 
-	Cases []CaseLog
+	Cases     []CaseLog
+	TestCases []UnitTestCase
 }
+
 type CaseLog struct {
 	Id        int
 	ProductId int
@@ -157,19 +161,6 @@ type CaseResult struct {
 }
 
 // 单元测试
-type UnitTestReport struct {
-	Env string
-
-	Pass      int
-	Fail      int
-	Skip      int
-	Total     int
-	StartTime int64
-	EndTime   int64
-	Duration  int64
-
-	TestCases []UnitTestCase
-}
 type UnitTestSuite struct {
 	XMLName xml.Name `xml:"testsuite"`
 

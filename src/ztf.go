@@ -95,11 +95,11 @@ func main() {
 			action.CommitCases(files)
 		}
 
-	case "cr":
-		files := fileUtils.GetFilesFromParams(os.Args[2:])
-		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
-			action.CommitResult(files, noNeedConfirm)
-		}
+	//case "cr":
+	//	files := fileUtils.GetFilesFromParams(os.Args[2:])
+	//	if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
+	//		action.CommitResult(files, noNeedConfirm)
+	//	}
 
 	case "cb":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
@@ -159,7 +159,7 @@ func run(args []string) {
 
 		cmd := strings.Join(args[3:], " ")
 
-		action.UnitTest(cmd)
+		action.RunUnitTest(cmd)
 
 	} else { // func test
 		files := fileUtils.GetFilesFromParams(args[2:])
@@ -170,7 +170,7 @@ func run(args []string) {
 				files = append(files, ".")
 			}
 
-			action.Run(files, suiteId, taskId)
+			action.RunZtfTest(files, suiteId, taskId)
 		} else {
 			logUtils.PrintUsage()
 		}

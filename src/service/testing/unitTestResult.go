@@ -14,7 +14,7 @@ import (
 	"strings"
 )
 
-func RetriveResult() []model.UnitTestSuite {
+func RetrieveUnitResult() []model.UnitTestSuite {
 	sep := string(os.PathSeparator)
 
 	resultDir := ""

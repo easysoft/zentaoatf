@@ -25,7 +25,7 @@ func CommitBug(files []string) {
 	}
 	resultDir = fileUtils.UpdateDir(resultDir)
 
-	report := testingService.GetTestTestReportForSubmit(resultDir)
+	report := testingService.GetZtfTestReportForSubmit(resultDir)
 
 	ids := make([]string, 0)
 	lines := make([]string, 0)

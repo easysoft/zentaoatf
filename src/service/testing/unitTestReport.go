@@ -17,12 +17,14 @@ import (
 )
 
 func GenUnitTestReport(cases []model.UnitTestCase, classNameMaxWidth int,
-	startTime int64, endTime int64) model.UnitTestReport {
+	startTime int64, endTime int64) model.TestReport {
 	logUtils.InitLogger()
-	report := model.UnitTestReport{Env: commonUtils.GetOs(), Pass: 0, Fail: 0, Total: 0}
+	report := model.TestReport{Env: commonUtils.GetOs(), Pass: 0, Fail: 0, Total: 0}
 	report.StartTime = startTime
 	report.EndTime = endTime
 	report.Duration = endTime - startTime
+	report.TestType = "unit"
+	report.TestFrame = vari.UnitTestType
 
 	failedCount := 0
 	failedCaseLines := make([]string, 0)

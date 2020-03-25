@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func GetTestTestReportForSubmit(resultDir string) model.TestReport {
+func GetZtfTestReportForSubmit(resultDir string) model.TestReport {
 	resultPath := resultDir + "result.json"
 
 	content := fileUtils.ReadFile(resultPath)
