@@ -4,7 +4,12 @@ use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 include 'vendor/autoload.php';
-if (isWindows()) exec("CHCP 936");
+if (isWindows()) {
+    exec("CHCP 936");
+
+	$command = 'start /B runtime\selenium\chrome80.exe >log.txt 2>&1';
+	pclose(popen($command, 'w'));
+}
 
 $host = 'http://127.0.0.1:9515';
 
