@@ -1,10 +1,10 @@
 <?php
 namespace Facebook\WebDriver;
-exec("CHCP 936");
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Chrome\ChromeOptions;
-include 'vendor\autoload.php';
+include 'vendor/autoload.php';
+if (isWindows()) exec("CHCP 936");
 
 $host = 'http://127.0.0.1:9515';
 
@@ -25,8 +25,13 @@ $keywordsInput->sendKeys("禅道");
 $submitButton = $driver->findElement(WebDriverBy::id('su'));
 $submitButton->click();
 
-$driver-> wait(10,500)-> until(WebDriverExpectedCondition::titleContains('禅道')); 
-$title = iconv("UTF-8","GB2312",$driver->getTitle()); 
+$driver-> wait(10,500)-> until(WebDriverExpectedCondition::titleContains('禅道'));
+$title = $driver->getTitle();
+if (isWindows()) $title = iconv("UTF-8","GB2312", $title);
 print(">> $title\n");
 
 $driver->close();
+
+function  isWindows() {
+    return strtoupper(substr(PHP_OS,0,3))==='WIN';
+}
