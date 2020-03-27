@@ -1,4 +1,17 @@
+#!/usr/bin/env php
 <?php
+/**
+[case]
+title=use ztf to run selenium test
+cid=0
+pid=0
+
+[group]
+  1. webpage title >> 禅道_百度搜索
+
+[esac]
+*/
+
 namespace Facebook\WebDriver;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
@@ -7,7 +20,7 @@ include 'vendor/autoload.php';
 if (isWindows()) {
     exec("CHCP 936");
 
-	$command = 'start /B runtime\selenium\chrome80.exe >log.txt 2>&1';
+	$command = 'start /B ' + dirname(__FILE__, 2) + '\runtime\selenium\chrome80.exe >log.txt 2>&1';
 	pclose(popen($command, 'w'));
 }
 

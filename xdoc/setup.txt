@@ -5,4 +5,4 @@ Ruby:
 sudo apt-get install libgmp3-dev
 sudo gem install json
 
-error_log(json_encode($_POST, JSON_FORCE_OBJECT));
+runtime\php\php7\php.exe demo\selenium\chrome.php
