@@ -6,6 +6,7 @@ import (
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	"github.com/easysoft/zentaoatf/src/utils/const"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
@@ -41,6 +42,9 @@ func main() {
 	}()
 
 	flagSet = flag.NewFlagSet("atf", flag.ContinueOnError)
+
+	flagSet.StringVar(&vari.Interpreter, "interp", "", "")
+	flagSet.StringVar(&vari.Interpreter, "interpreter", "", "")
 
 	flagSet.StringVar(&productId, "p", "", "")
 	flagSet.StringVar(&productId, "product", "", "")
@@ -170,6 +174,9 @@ func run(args []string) {
 				files = append(files, ".")
 			}
 
+			if vari.Interpreter != "" {
+				logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("run_with_specific_interpreter", vari.Interpreter), color.FgCyan)
+			}
 			action.RunZtfTest(files, suiteId, taskId)
 		} else {
 			logUtils.PrintUsage()

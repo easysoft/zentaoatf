@@ -12,10 +12,10 @@
  */
 class zentao
 {
-    const ztURL        = '';            // ZenTaoPMS deploys domain names.
-    const ztAccount    = '';            // ZenTaoPMS login account.
-    const ztPassword   = '';            // ZenTaoPMS login password.
-    const ztAccessMode = '';            // Parameter request method. [GET|PATH_INFO]
+    const ztURL        = 'https://demo.zentao.net';            // ZenTaoPMS deploys domain names.
+    const ztAccount    = 'demo';            // ZenTaoPMS login account.
+    const ztPassword   = '123456';            // ZenTaoPMS login password.
+    const ztAccessMode = 'PATH_INFO';            // Parameter request method. [GET|PATH_INFO]
 
     public $sessionRand   = 0;          // Session random number for some encryption and verification.
     public $tokenAuth     = '';         // Session authentication.

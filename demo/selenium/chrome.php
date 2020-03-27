@@ -7,7 +7,7 @@ cid=0
 pid=0
 
 [group]
-  1. webpage title >> 禅道_百度搜索
+  1. check webpage title >> 禅道_百度搜索
 
 [esac]
 */
@@ -17,11 +17,11 @@ use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 include 'vendor/autoload.php';
-if (isWindows()) {
-    exec("CHCP 936");
-
-	$command = 'start /B ' + dirname(__FILE__, 2) + '\runtime\selenium\chrome80.exe >log.txt 2>&1';
+if (isWindows()) { // launch build-in selenium driver to test
+	$command = 'start /B ' . dirname(__FILE__, 3) . '\runtime\selenium\chrome80.exe >log.txt 2>&1';
 	pclose(popen($command, 'w'));
+
+//	exec("CHCP 936");
 }
 
 $host = 'http://127.0.0.1:9515';
@@ -45,7 +45,7 @@ $submitButton->click();
 
 $driver-> wait(10,500)-> until(WebDriverExpectedCondition::titleContains('禅道'));
 $title = $driver->getTitle();
-if (isWindows()) $title = iconv("UTF-8","GB2312", $title);
+//if (isWindows()) $title = iconv("UTF-8","GB2312", $title);
 print(">> $title\n");
 
 $driver->close();

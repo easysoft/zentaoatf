@@ -394,6 +394,10 @@
     {
       "id": "task_id_empty_to_create",
       "translation": ", leave it blank to create a new one."
+    },
+    {
+      "id": "run_with_specific_interpreter",
+      "translation": "Will run all test scripts with specific interpreter %s."
     }
   ]
 }

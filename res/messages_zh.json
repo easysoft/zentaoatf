@@ -401,6 +401,10 @@
     {
       "id": "task_id_empty_to_create",
       "translation": "，默认为空则新建。"
+    },
+    {
+      "id": "run_with_specific_interpreter",
+      "translation": "将使用您指定的解释器运行所有脚本 %s。"
     }
   ]
 }

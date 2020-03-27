@@ -37,5 +37,6 @@ var (
 	CurrBug        model.Bug
 	CurrBugStepIds string
 
-	Verbose bool
+	Verbose     bool
+	Interpreter string
 )
