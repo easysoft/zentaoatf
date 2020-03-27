@@ -19,7 +19,7 @@ use Facebook\WebDriver\Chrome\ChromeOptions;
 include 'vendor/autoload.php';
 if (isWindows()) { // launch build-in selenium driver to test
 	$command = 'start /B ' . dirname(__FILE__, 3) . '\runtime\selenium\chrome80.exe >log.txt 2>&1';
-	pclose(popen($command, 'w'));
+	pclose(popen($command, 'r'));
 
 //	exec("CHCP 936");
 }
@@ -49,6 +49,7 @@ $title = $driver->getTitle();
 print(">> $title\n");
 
 $driver->close();
+exec('taskkill /F /im chrome80.exe');
 
 function  isWindows() {
     return strtoupper(substr(PHP_OS,0,3))==='WIN';
