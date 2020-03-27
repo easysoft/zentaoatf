@@ -209,7 +209,7 @@
     },
     {
       "id": "set_script_interpreter",
-      "translation": "请设置%s脚本的解释程序："
+      "translation": "请设置%s脚本的解释程序: %s"
     },
     {
       "id": "empty_to_ignore",
