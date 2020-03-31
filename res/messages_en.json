@@ -265,6 +265,10 @@
       "translation": "Found %s scripts"
     },
     {
+      "id": "ignore_scripts",
+      "translation": "Ignore %s scripts with no interpreter set"
+    },
+    {
       "id": "failed_scripts",
       "translation": "Failed Scripts:"
     },

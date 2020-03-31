@@ -257,6 +257,10 @@
       "translation": "发现%s个脚本"
     },
     {
+      "id": "ignore_scripts",
+      "translation": "忽略%s个未设置解析器的脚本"
+    },
+    {
       "id": "failed_scripts",
       "translation": "失败用例："
     },

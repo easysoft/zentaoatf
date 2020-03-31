@@ -204,7 +204,7 @@ func InputForScriptInterpreter(scripts []string, config *model.Config, from stri
 		}
 
 		deflt := commonUtils.GetFieldVal(*config, lang)
-		if from == "run" && deflt != "" { // ignore to set or already set when run
+		if from == "run" && deflt != "" { // already set when run, "-" means ignore
 			continue
 		}
 

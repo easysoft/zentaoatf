@@ -104,6 +104,7 @@ func getCaseBySuiteFile(file string, dir string) []string {
 
 func runCases(files []string) {
 	casesToRun := make([]string, 0)
+	casesToIgnore := make([]string, 0)
 
 	// config interpreter if needed
 	if commonUtils.IsWin() {
@@ -129,8 +130,10 @@ func runCases(files []string) {
 			interpreter := commonUtils.GetFieldVal(conf, stringUtils.Ucfirst(lang))
 			if interpreter == "-" {
 				interpreter = ""
+
+				casesToIgnore = append(casesToIgnore, file)
 			}
-			if lang != "bat" && interpreter == "" { // ignore by interpreter
+			if lang != "bat" && interpreter == "" { // ignore the ones with no interpreter set
 				continue
 			}
 		} else if !commonUtils.IsWin() { // filter by os
@@ -162,7 +165,7 @@ func runCases(files []string) {
 		}
 	}
 
-	testingService.ExeScripts(casesToRun, &report, pathMaxWidth, numbMaxWidth)
+	testingService.ExeScripts(casesToRun, casesToIgnore, &report, pathMaxWidth, numbMaxWidth)
 	testingService.GenZtfTestReport(report, pathMaxWidth)
 }
 

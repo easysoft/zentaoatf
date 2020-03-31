@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-func ExeScripts(casesToRun []string, report *model.TestReport, pathMaxWidth int, numbMaxWidth int) {
+func ExeScripts(casesToRun []string, casesToIgnore []string, report *model.TestReport, pathMaxWidth int, numbMaxWidth int) {
 	now := time.Now()
 	startTime := now.Unix()
 	report.StartTime = startTime
@@ -24,6 +24,11 @@ func ExeScripts(casesToRun []string, report *model.TestReport, pathMaxWidth int,
 
 	logUtils.ScreenAndResult(now.Format("2006-01-02 15:04:05") + " " +
 		i118Utils.I118Prt.Sprintf("found_scripts", color.CyanString(strconv.Itoa(len(casesToRun)))) + postFix)
+
+	if len(casesToIgnore) > 0 {
+		logUtils.ScreenAndResult("                    " +
+			i118Utils.I118Prt.Sprintf("ignore_scripts", color.CyanString(strconv.Itoa(len(casesToIgnore)))) + postFix)
+	}
 
 	for idx, file := range casesToRun {
 		ExeScript(file, report, idx, len(casesToRun), pathMaxWidth, numbMaxWidth)
