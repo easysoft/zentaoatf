@@ -17,5 +17,5 @@ func RunUnitTest(cmdStr string) {
 
 	report := testingService.GenUnitTestReport(cases, classNameMaxWidth, startTime, endTime)
 
-	zentaoService.CommitTestResult(report, 0)
+	zentaoService.CommitTestResult(report)
 }
