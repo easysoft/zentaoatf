@@ -184,3 +184,79 @@ type Property struct {
 	Name  string `xml:"name,attr"`
 	Value string `xml:"value,attr"`
 }
+
+// jtest xml
+type JTestSuites struct {
+	XMLName    xml.Name `xml:"testsuites"`
+	Title      string   `xml:"name,attr"`
+	TestSuites []struct {
+		Title     string           `xml:"name,attr"`
+		TestCases []UnitCaseResult `xml:"testcase"`
+
+		Duration int
+	} `xml:"testsuite"`
+
+	Duration int
+}
+
+// phpunit xml
+type PhpUnitSuites struct {
+	XMLName   xml.Name `xml:"tests"`
+	TestCases []struct {
+		Title     string `xml:"prettifiedMethodName,attr"`
+		TestSuite string `xml:"prettifiedClassName,attr"`
+		Fail      string `xml:"exceptionMessage,attr"`
+
+		Groups   string  `xml:"groups,attr"`
+		Status   int     `xml:"status,attr"`
+		Duration float32 `xml:"time,attr"`
+	} `xml:"test"`
+
+	Duration int
+}
+
+// pytest xml
+type PyTestSuites struct {
+	XMLName    xml.Name `xml:"testsuites"`
+	TestSuites []struct {
+		Title     string `xml:"name,attr"`
+		TestCases []struct {
+			Title     string  `xml:"name,attr"`
+			TestSuite string  `xml:"classname,attr"`
+			Duration  float32 `xml:"time,attr"`
+			Failure   *struct {
+				Type string `xml:"message,attr"`
+				Desc string `xml:",innerxml"`
+			} `xml:"failure,omitempty"`
+
+			Status string
+		} `xml:"testcase"`
+
+		Duration int
+	} `xml:"testsuite"`
+
+	Duration int
+}
+
+// gtest xml
+type GTestSuites struct {
+	XMLName    xml.Name `xml:"testsuites"`
+	TestSuites []struct {
+		Title     string `xml:"name,attr"`
+		TestCases []struct {
+			Title     string  `xml:"name,attr"`
+			TestSuite string  `xml:"classname,attr"`
+			Duration  float32 `xml:"time,attr"`
+			Failure   *struct {
+				Type string `xml:"message,attr"`
+				Desc string `xml:",innerxml"`
+			} `xml:"failure,omitempty"`
+
+			Status string `xml:"status,attr"`
+		} `xml:"testcase"`
+
+		Duration int
+	} `xml:"testsuite"`
+
+	Duration int
+}
