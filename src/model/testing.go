@@ -117,6 +117,11 @@ type TestReport struct {
 	TestType  string
 	TestFrame string
 
+	ProductId  int
+	TaskId     int
+	ZentaoData string
+	BuildUrl   string
+
 	Pass      int
 	Fail      int
 	Skip      int
