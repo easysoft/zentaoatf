@@ -1,6 +1,7 @@
 package zentaoService
 
 import (
+	"encoding/json"
 	"github.com/bitly/go-simplejson"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/service/client"
@@ -26,6 +27,9 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 
 	url := conf.Url + zentaoUtils.GenApiUri("unittest", "commitResult", "")
 	logUtils.Screen(url)
+
+	reportJson, _ := json.Marshal(report)
+	logUtils.Screen(string(reportJson))
 
 	resp, ok := client.PostObject(url, report)
 
