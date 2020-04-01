@@ -21,8 +21,8 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 	report.BuildUrl = os.Getenv("BUILD_URL")
 	report.TaskId = testTaskId
 
-	if len(report.ZTFCaseResults) > 0 {
-		report.ProductId = report.ZTFCaseResults[0].ProductId
+	if len(report.ZTFResults) > 0 {
+		report.ProductId = report.ZTFResults[0].ProductId
 	}
 
 	url := conf.Url + zentaoUtils.GenApiUri("unittest", "commitResult", "")

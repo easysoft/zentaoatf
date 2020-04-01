@@ -115,46 +115,46 @@ type Bug struct {
 type TestReport struct {
 	Env       string `json:"env"`
 	TestType  string `json:"testType"`
-	TestFrame string `json:"TestFrame"`
+	TestFrame string `json:"testFrame"`
 
-	ProductId  int    `json:"ProductId"`
-	TaskId     int    `json:"TaskId"`
-	ZentaoData string `json:"ZentaoData"`
-	BuildUrl   string `json:"BuildUrl"`
+	ProductId  int    `json:"productId"`
+	TaskId     int    `json:"taskId"`
+	ZentaoData string `json:"zentaoData"`
+	BuildUrl   string `json:"buildUrl"`
 
-	Pass      int   `json:"Pass"`
-	Fail      int   `json:"Fail"`
-	Skip      int   `json:"Skip"`
-	Total     int   `json:"Total"`
-	StartTime int64 `json:"StartTime"`
-	EndTime   int64 `json:"EndTime"`
-	Duration  int64 `json:"Duration"`
+	Pass      int   `json:"pass"`
+	Fail      int   `json:"fail"`
+	Skip      int   `json:"skip"`
+	Total     int   `json:"total"`
+	StartTime int64 `json:"startTime"`
+	EndTime   int64 `json:"endTime"`
+	Duration  int64 `json:"duration"`
 
-	ZTFCaseResults  []ZTFCaseResult  `json:"ZTFCaseResults"`
-	UnitCaseResults []UnitCaseResult `json:"UnitCaseResults"`
+	ZTFResults  []ZTFResult  `json:"ztfResults"`
+	UnitResults []UnitResult `json:"unitResults"`
 }
 
-type ZTFCaseResult struct {
-	Id        int    `json:"Id"`
-	ProductId int    `json:"ProductId"`
-	Path      string `json:"Path"`
-	Status    string `json:"Status"`
-	Title     string `json:"Title"`
+type ZTFResult struct {
+	Id        int    `json:"id"`
+	ProductId int    `json:"productId"`
+	Path      string `json:"path"`
+	Status    string `json:"status"`
+	Title     string `json:"title"`
 
-	Steps []StepLog `json:"Steps"`
+	Steps []StepLog `json:"steps"`
 }
 type StepLog struct {
-	Id     string `json:"Id"`
-	Name   string `json:"Name"`
-	Status bool   `json:"Status"`
+	Id     string `json:"id"`
+	Name   string `json:"name"`
+	Status bool   `json:"status"`
 
-	CheckPoints []CheckPointLog `json:"CheckPoints"`
+	CheckPoints []CheckPointLog `json:"checkPoints"`
 }
 type CheckPointLog struct {
-	Numb   int    `json:"Numb"`
-	Expect string `json:"Expect"`
-	Actual string `json:"Actual"`
-	Status bool   `json:"Status"`
+	Numb   int    `json:"numb"`
+	Expect string `json:"expect"`
+	Actual string `json:"actual"`
+	Status bool   `json:"status"`
 }
 
 // 单元测试
@@ -164,10 +164,10 @@ type UnitTestSuite struct {
 	Name     string
 	Duration int
 
-	Properties Properties       `xml:"properties"`
-	TestCases  []UnitCaseResult `xml:"testcase"`
+	Properties Properties   `xml:"properties"`
+	TestCases  []UnitResult `xml:"testcase"`
 }
-type UnitCaseResult struct {
+type UnitResult struct {
 	Title     string   `json:"title" xml:"name,attr"`
 	TestSuite string   `json:"testSuite" xml:"classname,attr"`
 	Duration  float32  `json:"duration" xml:"time,attr"`
@@ -195,8 +195,8 @@ type JTestSuites struct {
 	XMLName    xml.Name `xml:"testsuites"`
 	Title      string   `xml:"name,attr"`
 	TestSuites []struct {
-		Title     string           `xml:"name,attr"`
-		TestCases []UnitCaseResult `xml:"testcase"`
+		Title     string       `xml:"name,attr"`
+		TestCases []UnitResult `xml:"testcase"`
 
 		Duration int
 	} `xml:"testsuite"`

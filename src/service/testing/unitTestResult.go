@@ -91,8 +91,8 @@ func RetrieveUnitResult() []model.UnitTestSuite {
 	return suites
 }
 
-func ParserUnitTestResult(testSuites []model.UnitTestSuite) ([]model.UnitCaseResult, int) {
-	cases := make([]model.UnitCaseResult, 0)
+func ParserUnitTestResult(testSuites []model.UnitTestSuite) ([]model.UnitResult, int) {
+	cases := make([]model.UnitResult, 0)
 	classNameMaxWidth := 0
 	idx := 1
 	for _, suite := range testSuites {
@@ -127,7 +127,7 @@ func ConvertJTestResult(jtestSuite model.JTestSuites) model.UnitTestSuite {
 
 	for _, suite := range jtestSuite.TestSuites {
 		for _, cs := range suite.TestCases {
-			caseResult := model.UnitCaseResult{}
+			caseResult := model.UnitResult{}
 			caseResult.Title = cs.Title
 			caseResult.Duration = cs.Duration
 
@@ -150,7 +150,7 @@ func ConvertPhpUnitResult(phpUnitSuite model.PhpUnitSuites) model.UnitTestSuite 
 	testSuite := model.UnitTestSuite{}
 
 	for _, cs := range phpUnitSuite.TestCases {
-		caseResult := model.UnitCaseResult{}
+		caseResult := model.UnitResult{}
 		caseResult.Title = cs.Title
 		caseResult.Duration = cs.Duration
 
@@ -177,7 +177,7 @@ func ConvertPyTestResult(pytestSuites model.PyTestSuites) model.UnitTestSuite {
 
 	for _, suite := range pytestSuites.TestSuites {
 		for _, cs := range suite.TestCases {
-			caseResult := model.UnitCaseResult{}
+			caseResult := model.UnitResult{}
 			caseResult.Title = cs.Title
 			caseResult.Duration = cs.Duration
 
@@ -207,7 +207,7 @@ func ConvertGTestResult(gTestSuite model.GTestSuites) model.UnitTestSuite {
 
 	for _, suite := range gTestSuite.TestSuites {
 		for _, cs := range suite.TestCases {
-			caseResult := model.UnitCaseResult{}
+			caseResult := model.UnitResult{}
 			caseResult.Title = cs.Title
 			caseResult.Duration = cs.Duration
 			caseResult.Status = cs.Status
