@@ -9,7 +9,7 @@ import (
 )
 
 func Clean() {
-	path := vari.ZtfDir + constant.LogDir
+	path := vari.ZTFDir + constant.LogDir
 	bak := path[:len(path)-1] + "-bak" + string(os.PathSeparator) + path[len(path):]
 
 	os.RemoveAll(path)

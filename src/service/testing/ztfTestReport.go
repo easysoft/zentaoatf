@@ -15,8 +15,8 @@ import (
 	"time"
 )
 
-func GenZtfTestReport(report model.TestReport, pathMaxWidth int) {
-	if len(report.ZtfCaseResults) == 0 {
+func GenZTFTestReport(report model.TestReport, pathMaxWidth int) {
+	if len(report.ZTFCaseResults) == 0 {
 		return
 	}
 
@@ -25,7 +25,7 @@ func GenZtfTestReport(report model.TestReport, pathMaxWidth int) {
 	failedCaseLines := make([]string, 0)
 	failedCaseLinesWithCheckpoint := make([]string, 0)
 
-	for _, cs := range report.ZtfCaseResults {
+	for _, cs := range report.ZTFCaseResults {
 		if cs.Status == "fail" {
 			if failedCount > 0 {
 				failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "")

@@ -23,8 +23,8 @@ func PrepareBug(resultDir string, caseIdStr string) (model.Bug, string) {
 		return model.Bug{}, ""
 	}
 
-	report := testingService.GetZtfTestReportForSubmit(resultDir)
-	for _, cs := range report.ZtfCaseResults {
+	report := testingService.GetZTFTestReportForSubmit(resultDir)
+	for _, cs := range report.ZTFCaseResults {
 		if cs.Id != caseId {
 			continue
 		}

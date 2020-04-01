@@ -8,11 +8,11 @@ import (
 	"strconv"
 )
 
-func CommitZtfTestResult(resultDir string, noNeedConfirm bool) {
+func CommitZTFTestResult(resultDir string, noNeedConfirm bool) {
 	conf := configUtils.ReadCurrConfig()
 	Login(conf.Url, conf.Account, conf.Password)
 
-	report := testingService.GetZtfTestReportForSubmit(resultDir)
+	report := testingService.GetZTFTestReportForSubmit(resultDir)
 
 	task := stdinUtils.GetInput("\\d*", "",
 		i118Utils.I118Prt.Sprintf("pls_enter")+i118Utils.I118Prt.Sprintf("task_id")+

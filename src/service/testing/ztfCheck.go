@@ -78,9 +78,9 @@ func ValidateCaseResult(scriptFile string, langType string,
 	}
 	report.Total = report.Total + 1
 
-	cs := model.ZtfCaseResult{Id: caseId, ProductId: productId, Title: title,
+	cs := model.ZTFCaseResult{Id: caseId, ProductId: productId, Title: title,
 		Path: scriptFile, Status: caseResult, Steps: stepLogs}
-	report.ZtfCaseResults = append(report.ZtfCaseResults, cs)
+	report.ZTFCaseResults = append(report.ZTFCaseResults, cs)
 
 	// print case result to console
 	statusColor := logUtils.ColoredStatus(cs.Status)

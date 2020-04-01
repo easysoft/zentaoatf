@@ -113,48 +113,48 @@ type Bug struct {
 }
 
 type TestReport struct {
-	Env       string
-	TestType  string
-	TestFrame string
+	Env       string `json:"env"`
+	TestType  string `json:"testType"`
+	TestFrame string `json:"TestFrame"`
 
-	ProductId  int
-	TaskId     int
-	ZentaoData string
-	BuildUrl   string
+	ProductId  int    `json:"ProductId"`
+	TaskId     int    `json:"TaskId"`
+	ZentaoData string `json:"ZentaoData"`
+	BuildUrl   string `json:"BuildUrl"`
 
-	Pass      int
-	Fail      int
-	Skip      int
-	Total     int
-	StartTime int64
-	EndTime   int64
-	Duration  int64
+	Pass      int   `json:"Pass"`
+	Fail      int   `json:"Fail"`
+	Skip      int   `json:"Skip"`
+	Total     int   `json:"Total"`
+	StartTime int64 `json:"StartTime"`
+	EndTime   int64 `json:"EndTime"`
+	Duration  int64 `json:"Duration"`
 
-	ZtfCaseResults  []ZtfCaseResult
-	UnitCaseResults []UnitCaseResult
+	ZTFCaseResults  []ZTFCaseResult  `json:"ZTFCaseResults"`
+	UnitCaseResults []UnitCaseResult `json:"UnitCaseResults"`
 }
 
-type ZtfCaseResult struct {
-	Id        int
-	ProductId int
-	Path      string
-	Status    string
-	Title     string
+type ZTFCaseResult struct {
+	Id        int    `json:"Id"`
+	ProductId int    `json:"ProductId"`
+	Path      string `json:"Path"`
+	Status    string `json:"Status"`
+	Title     string `json:"Title"`
 
-	Steps []StepLog
+	Steps []StepLog `json:"Steps"`
 }
 type StepLog struct {
-	Id     string
-	Name   string
-	Status bool
+	Id     string `json:"Id"`
+	Name   string `json:"Name"`
+	Status bool   `json:"Status"`
 
-	CheckPoints []CheckPointLog
+	CheckPoints []CheckPointLog `json:"CheckPoints"`
 }
 type CheckPointLog struct {
-	Numb   int
-	Expect string
-	Actual string
-	Status bool
+	Numb   int    `json:"Numb"`
+	Expect string `json:"Expect"`
+	Actual string `json:"Actual"`
+	Status bool   `json:"Status"`
 }
 
 // 单元测试
@@ -168,26 +168,26 @@ type UnitTestSuite struct {
 	TestCases  []UnitCaseResult `xml:"testcase"`
 }
 type UnitCaseResult struct {
-	Title     string   `xml:"name,attr"`
-	TestSuite string   `xml:"classname,attr"`
-	Duration  float32  `xml:"time,attr"`
-	Failure   *Failure `xml:"failure,omitempty"`
+	Title     string   `json:"title" xml:"name,attr"`
+	TestSuite string   `json:"testSuite" xml:"classname,attr"`
+	Duration  float32  `json:"duration" xml:"time,attr"`
+	Failure   *Failure `json:"failure" xml:"failure,omitempty"`
 
-	Id     int
-	Status string
+	Id     int    `json:"id"`
+	Status string `json:"status"`
 }
 
 type Failure struct {
-	Type string `xml:"type,attr"`
-	Desc string `xml:",innerxml"`
+	Type string `json:"type" xml:"type,attr"`
+	Desc string `json:"desc" xml:",innerxml"`
 }
 
 type Properties struct {
-	Property []Property `xml:"property"`
+	Property []Property `json:"property" xml:"property"`
 }
 type Property struct {
-	Name  string `xml:"name,attr"`
-	Value string `xml:"value,attr"`
+	Name  string `json:"name" xml:"name,attr"`
+	Value string `json:"value" xml:"value,attr"`
 }
 
 // jtest xml

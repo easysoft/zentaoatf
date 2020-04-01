@@ -24,25 +24,27 @@ func RetrieveUnitResult() []model.UnitTestSuite {
 		resultDir = fmt.Sprintf("target%ssurefire-reports%s", sep, sep)
 	} else if vari.UnitTestType == "testng" && vari.UnitTestTool == "mvn" {
 		resultDir = fmt.Sprintf("target%ssurefire-reports%sjunitreports", sep, sep)
-	} else if vari.UnitTestType == "jtest" {
-		resultDir = "./"
-	} else if vari.UnitTestType == "phpunit" {
-		resultDir = "./"
-	} else if vari.UnitTestType == "pytest" {
-		resultDir = "./"
-	} else if vari.UnitTestType == "gtest" {
-		resultDir = "./"
+	} else {
+		resultDir = vari.UnitTestResult
 	}
 
-	dir, err := ioutil.ReadDir(resultDir)
-	if err == nil {
-		for _, fi := range dir {
-			name := fi.Name()
-			ext := path.Ext(name)
-			if ext == ".xml" {
-				resultFiles = append(resultFiles, resultDir+name)
+	if fileUtils.IsDir(resultDir) {
+		if resultDir[len(resultDir)-1:] != sep {
+			resultDir = resultDir + sep
+		}
+
+		dir, err := ioutil.ReadDir(resultDir)
+		if err == nil {
+			for _, fi := range dir {
+				name := fi.Name()
+				ext := path.Ext(name)
+				if ext == ".xml" {
+					resultFiles = append(resultFiles, resultDir+name)
+				}
 			}
 		}
+	} else {
+		resultFiles = append(resultFiles, resultDir)
 	}
 
 	suites := make([]model.UnitTestSuite, 0)

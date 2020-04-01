@@ -75,6 +75,8 @@ func main() {
 	flagSet.StringVar(&placeholder, "r", "", "")
 	flagSet.StringVar(&placeholder, "v", "", "")
 
+	flagSet.StringVar(&vari.UnitTestResult, "result", "", "")
+
 	if len(os.Args) == 1 {
 		os.Args = append(os.Args, "run", ".")
 	}
@@ -102,7 +104,7 @@ func main() {
 	case "cr":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
-			action.CommitZtfTestResult(files, noNeedConfirm)
+			action.CommitZTFTestResult(files, noNeedConfirm)
 		}
 
 	case "cb":
@@ -159,12 +161,17 @@ func run(args []string) {
 		vari.UnitTestType = args[2]
 		if args[3] == "mvn" {
 			vari.UnitTestTool = "mvn"
+		} else {
+			flagSet.Parse(args[3:])
 		}
-
-		cmd := strings.Join(args[3:], " ")
-
+		start := 3
+		if vari.UnitTestResult != "" {
+			start = start + 2
+		} else {
+			vari.UnitTestResult = "./"
+		}
+		cmd := strings.Join(args[start:], " ")
 		action.RunUnitTest(cmd)
-
 	} else { // func test
 		files := fileUtils.GetFilesFromParams(args[2:])
 
@@ -177,7 +184,7 @@ func run(args []string) {
 			if vari.Interpreter != "" {
 				logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("run_with_specific_interpreter", vari.Interpreter), color.FgCyan)
 			}
-			action.RunZtfTest(files, suiteId, taskId)
+			action.RunZTFTest(files, suiteId, taskId)
 		} else {
 			logUtils.PrintUsage()
 		}

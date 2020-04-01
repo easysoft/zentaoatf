@@ -11,12 +11,13 @@ var (
 	Cui            *gocui.Gui
 	MainViewHeight int
 
-	RunMode      constant.RunMode
-	ZtfDir       string
-	LogDir       string
-	RunFromCui   bool
-	UnitTestType string
-	UnitTestTool string
+	RunMode        constant.RunMode
+	ZTFDir         string
+	LogDir         string
+	RunFromCui     bool
+	UnitTestType   string
+	UnitTestTool   string
+	UnitTestResult string
 
 	SessionVar  string
 	SessionId   string
