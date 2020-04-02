@@ -17,7 +17,8 @@ use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 include 'vendor/autoload.php';
-if (isWindows()) { // launch build-in selenium driver to test
+if (isWindows())
+{ // launch build-in selenium driver to test
 	$command = 'start /B ' . dirname(__FILE__, 3) . '\runtime\selenium\chrome80.exe >log.txt 2>&1';
 	pclose(popen($command, 'r'));
 
@@ -43,7 +44,7 @@ $keywordsInput->sendKeys("禅道");
 $submitButton = $driver->findElement(WebDriverBy::id('su'));
 $submitButton->click();
 
-$driver-> wait(10,500)-> until(WebDriverExpectedCondition::titleContains('禅道'));
+$driver-> wait(10, 500)-> until(WebDriverExpectedCondition::titleContains('禅道'));
 $title = $driver->getTitle();
 //if (isWindows()) $title = iconv("UTF-8","GB2312", $title);
 print(">> $title\n");
@@ -52,5 +53,5 @@ $driver->close();
 exec('taskkill /F /im chrome80.exe');
 
 function  isWindows() {
-    return strtoupper(substr(PHP_OS,0,3))==='WIN';
+    return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
 }
