@@ -128,7 +128,7 @@ func runCases(files []string) {
 			}
 			lang := vari.ScriptExtToNameMap[ext]
 			interpreter := commonUtils.GetFieldVal(conf, stringUtils.Ucfirst(lang))
-			if interpreter == "-" {
+			if interpreter == "-" && vari.Interpreter == "" { // not to ignore if interpreter set
 				interpreter = ""
 
 				casesToIgnore = append(casesToIgnore, file)
