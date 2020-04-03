@@ -1,0 +1,111 @@
+===start /home/aaron/dev/go/zentaoatf/demo/lang/js/1_string_match.js at 2019-09-26 05:18:58
+>> hello
+>> 13905120512
+>> abc123
+===end /home/aaron/dev/go/zentaoatf/demo/lang/js/1_string_match.js at 2019-09-26 05:18:58
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/js/2_webpage_extract.js at 2019-09-26 05:18:58
+>>/theme/default/images/main/zt-logo.png?v=biz3.4
+===end /home/aaron/dev/go/zentaoatf/demo/lang/js/2_webpage_extract.js at 2019-09-26 05:18:59
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/js/3_http_inteface_call.js at 2019-09-26 05:18:59
+>>pttr8atpe47bpr7erkuf7l5dru
+===end /home/aaron/dev/go/zentaoatf/demo/lang/js/3_http_inteface_call.js at 2019-09-26 05:18:59
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/lua/1_string_match.lua at 2019-09-26 05:18:59
+>> hello
+>> 13905120512
+>> abc123
+===end /home/aaron/dev/go/zentaoatf/demo/lang/lua/1_string_match.lua at 2019-09-26 05:18:59
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/lua/2_webpage_extract.lua at 2019-09-26 05:18:59
+>>/theme/default/images/main/zt-logo.png?v=biz3.4
+===end /home/aaron/dev/go/zentaoatf/demo/lang/lua/2_webpage_extract.lua at 2019-09-26 05:18:59
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/lua/3_http_inteface_call.lua at 2019-09-26 05:18:59
+>>jmqua69arkv1u53mcr5r7vnhbm
+===end /home/aaron/dev/go/zentaoatf/demo/lang/lua/3_http_inteface_call.lua at 2019-09-26 05:18:59
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/perl/1_string_match.pl at 2019-09-26 05:18:59
+>> hello
+>> 13905120512
+>> abc123
+===end /home/aaron/dev/go/zentaoatf/demo/lang/perl/1_string_match.pl at 2019-09-26 05:18:59
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/perl/2_webpage_extract.pl at 2019-09-26 05:18:59
+>> /theme/default/images/main/zt-logo.png?v=biz3.4
+===end /home/aaron/dev/go/zentaoatf/demo/lang/perl/2_webpage_extract.pl at 2019-09-26 05:18:59
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/perl/3_http_inteface_call.pl at 2019-09-26 05:18:59
+>> 96tp67dis70a90ev3f6mthnvvo
+===end /home/aaron/dev/go/zentaoatf/demo/lang/perl/3_http_inteface_call.pl at 2019-09-26 05:19:00
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/php/1_string_match.php at 2019-09-26 05:19:00
+>> hello
+>> 13905120512
+>> abc123
+===end /home/aaron/dev/go/zentaoatf/demo/lang/php/1_string_match.php at 2019-09-26 05:19:00
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/php/2_webpage_extract.php at 2019-09-26 05:19:00
+>> /theme/default/images/main/zt-logo.png?v=biz3.4
+===end /home/aaron/dev/go/zentaoatf/demo/lang/php/2_webpage_extract.php at 2019-09-26 05:19:00
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/php/3_http_inteface_call.php at 2019-09-26 05:19:00
+>> mirc73is93tiqbe6td2kmbrin3
+===end /home/aaron/dev/go/zentaoatf/demo/lang/php/3_http_inteface_call.php at 2019-09-26 05:19:00
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/python/1_string_match.py at 2019-09-26 05:19:00
+>> hello
+>> 13905120512
+>> abc123
+===end /home/aaron/dev/go/zentaoatf/demo/lang/python/1_string_match.py at 2019-09-26 05:19:00
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/python/2_webpage_extract.py at 2019-09-26 05:19:00
+>> /theme/default/images/main/zt-logo.png?v=biz3.4
+===end /home/aaron/dev/go/zentaoatf/demo/lang/python/2_webpage_extract.py at 2019-09-26 05:19:00
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/python/3_http_inteface_call.py at 2019-09-26 05:19:00
+>> lubsoo2ikas7p9rrg6hkpcrccr
+===end /home/aaron/dev/go/zentaoatf/demo/lang/python/3_http_inteface_call.py at 2019-09-26 05:19:00
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/ruby/1_string_match.rb at 2019-09-26 05:19:00
+>> hello
+>> 13905120512
+>> abc123
+===end /home/aaron/dev/go/zentaoatf/demo/lang/ruby/1_string_match.rb at 2019-09-26 05:19:00
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/ruby/2_webpage_extract.rb at 2019-09-26 05:19:00
+>> /theme/default/images/main/zt-logo.png?v=biz3.4
+===end /home/aaron/dev/go/zentaoatf/demo/lang/ruby/2_webpage_extract.rb at 2019-09-26 05:19:01
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/ruby/3_http_inteface_call.rb at 2019-09-26 05:19:01
+>> 7rlac0n2vpkkrov8rvco3kooiq
+===end /home/aaron/dev/go/zentaoatf/demo/lang/ruby/3_http_inteface_call.rb at 2019-09-26 05:19:01
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/shell/1_string_match.sh at 2019-09-26 05:19:01
+>> hello
+>> 13905120512
+>> abc123
+===end /home/aaron/dev/go/zentaoatf/demo/lang/shell/1_string_match.sh at 2019-09-26 05:19:01
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/shell/2_webpage_extract.sh at 2019-09-26 05:19:01
+>> /theme/default/images/main/zt-logo.png
+===end /home/aaron/dev/go/zentaoatf/demo/lang/shell/2_webpage_extract.sh at 2019-09-26 05:19:02
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/shell/3_http_inteface_call.sh at 2019-09-26 05:19:02
+>> q46ui0j45ue6qqkp5vo228154j
+===end /home/aaron/dev/go/zentaoatf/demo/lang/shell/3_http_inteface_call.sh at 2019-09-26 05:19:03
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/tcl/1_string_match.tl at 2019-09-26 05:19:03
+>> hello
+>> 13905120512
+>> abc123
+===end /home/aaron/dev/go/zentaoatf/demo/lang/tcl/1_string_match.tl at 2019-09-26 05:19:03
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/tcl/2_webpage_extract.tl at 2019-09-26 05:19:03
+>> /theme/default/images/main/zt-logo.png?v=biz3.4
+===end /home/aaron/dev/go/zentaoatf/demo/lang/tcl/2_webpage_extract.tl at 2019-09-26 05:19:03
+
+===start /home/aaron/dev/go/zentaoatf/demo/lang/tcl/3_http_inteface_call.tl at 2019-09-26 05:19:03
+>> 61b63lnprrq7ut5s76r335gl83
+===end /home/aaron/dev/go/zentaoatf/demo/lang/tcl/3_http_inteface_call.tl at 2019-09-26 05:19:03
