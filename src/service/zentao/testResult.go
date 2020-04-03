@@ -7,9 +7,11 @@ import (
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/fatih/color"
 	"os"
+	"strconv"
 )
 
 func CommitTestResult(report model.TestReport, testTaskId int) {
@@ -18,6 +20,7 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 
 	report.ZentaoData = os.Getenv("ZENTAO_DATA")
 	report.BuildUrl = os.Getenv("BUILD_URL")
+	report.ProductId, _ = strconv.Atoi(vari.ProductId)
 	report.TaskId = testTaskId
 
 	if len(report.ZTFResults) > 0 {
