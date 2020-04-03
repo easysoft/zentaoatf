@@ -22,8 +22,8 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, report *model.TestR
 		postFix = "."
 	}
 
-	logUtils.ScreenAndResult(now.Format("2006-01-02 15:04:05") + " " +
-		i118Utils.I118Prt.Sprintf("found_scripts", color.CyanString(strconv.Itoa(len(casesToRun)))) + postFix)
+	logUtils.ScreenAndResult("\n" + logUtils.GetWholeLine(now.Format("2006-01-02 15:04:05")+" "+
+		i118Utils.I118Prt.Sprintf("found_scripts", color.CyanString(strconv.Itoa(len(casesToRun))))+postFix, "="))
 
 	if len(casesToIgnore) > 0 {
 		logUtils.ScreenAndResult("                    " +

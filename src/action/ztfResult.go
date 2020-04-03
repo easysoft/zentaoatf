@@ -16,5 +16,4 @@ func CommitZTFTestResult(files []string, noNeedConfirm bool) {
 
 	resultDir = fileUtils.UpdateDir(resultDir)
 	zentaoService.CommitZTFTestResult(resultDir, noNeedConfirm)
-
 }

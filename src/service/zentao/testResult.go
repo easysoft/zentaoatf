@@ -49,6 +49,7 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 	}
 
 	logUtils.Screen(msg)
+	logUtils.Screen(logUtils.GetWholeLine("=", "=") + "\n")
 
 	if report.Fail > 0 || !ok {
 		os.Exit(1)
