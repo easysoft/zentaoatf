@@ -265,3 +265,49 @@ type GTestSuites struct {
 
 	Duration int
 }
+
+// cppunit xml
+type CppUnitSuites struct {
+	XMLName xml.Name `xml:"TestRun"`
+
+	SuccessfulTests struct {
+		TestCases []CppUnitTest `json:"test" xml:"Test"`
+	} `json:"successfulTests" xml:"SuccessfulTests"`
+
+	FailedTests struct {
+		TestCases []CppUnitTest `json:"test" xml:"FailedTest"`
+	} `json:"failedTests" xml:"FailedTests"`
+
+	Duration int
+}
+type CppUnitTest struct {
+	Id          int    `json:"id" xml:"Id,attr"`
+	Title       string `json:"name" xml:"Name,innerxml"`
+	FailureType string `json:"failureType" xml:"FailureType,innerxml"`
+	Message     string `json:"message" xml:"Message,innerxml"`
+	Location    []struct {
+		File string `json:"file" xml:"File,innerxml"`
+		Line string `json:"line" xml:"Line,innerxml"`
+	} `json:"location" xml:"Location"`
+
+	Duration int
+}
+
+// qtest xml
+type QTestSuites struct {
+	XMLName xml.Name `xml:"testsuite"`
+	Name    string   `json:"name" xml:"name,attr"`
+
+	TestCases []struct {
+		Title  string `json:"name" xml:"name,attr"`
+		Result string `json:"result" xml:"result,attr"`
+
+		Failure *struct {
+			Type string `json:"type" xml:"tag,attr"`
+			Desc string `json:"desc" xml:"message,attr"`
+		} `json:"failure" xml:"failure"`
+	} `json:"testCases" xml:"testcase"`
+
+	Properties Properties `json:"properties" xml:"properties"`
+	Duration   int
+}

@@ -78,6 +78,18 @@ func RetrieveUnitResult() []model.UnitTestSuite {
 			if err == nil {
 				testSuite = ConvertGTestResult(gTestSuite)
 			}
+		} else if vari.UnitTestType == "cppunit" {
+			cppUnitSuites := model.CppUnitSuites{}
+			err = xml.Unmarshal([]byte(content), &cppUnitSuites)
+			if err == nil {
+				testSuite = ConvertCppUnitResult(cppUnitSuites)
+			}
+		} else if vari.UnitTestType == "qtest" {
+			qTestSuite := model.QTestSuites{}
+			err = xml.Unmarshal([]byte(content), &qTestSuite)
+			if err == nil {
+				testSuite = ConvertQTestResult(qTestSuite)
+			}
 		} else {
 			testSuite = model.UnitTestSuite{}
 			err = xml.Unmarshal([]byte(content), &testSuite)
@@ -226,6 +238,55 @@ func ConvertGTestResult(gTestSuite model.GTestSuites) model.UnitTestSuite {
 			testSuite.TestCases = append(testSuite.TestCases, caseResult)
 
 		}
+	}
+
+	return testSuite
+}
+
+func ConvertCppUnitResult(cppunitSuite model.CppUnitSuites) model.UnitTestSuite {
+	testSuite := model.UnitTestSuite{}
+
+	for _, cs := range cppunitSuite.FailedTests.TestCases {
+		caseResult := model.UnitResult{}
+		caseResult.Id = cs.Id
+		caseResult.Title = cs.Title
+
+		fail := model.Failure{}
+		fail.Type = cs.FailureType
+		fail.Desc = cs.Message
+		caseResult.Failure = &fail
+
+		testSuite.TestCases = append(testSuite.TestCases, caseResult)
+	}
+
+	for _, cs := range cppunitSuite.SuccessfulTests.TestCases {
+		caseResult := model.UnitResult{}
+		caseResult.Id = cs.Id
+		caseResult.Title = cs.Title
+
+		testSuite.TestCases = append(testSuite.TestCases, caseResult)
+	}
+
+	return testSuite
+}
+
+func ConvertQTestResult(qTestSuite model.QTestSuites) model.UnitTestSuite {
+	testSuite := model.UnitTestSuite{}
+
+	for _, cs := range qTestSuite.TestCases {
+		caseResult := model.UnitResult{}
+		caseResult.TestSuite = qTestSuite.Name
+		caseResult.Title = cs.Title
+		caseResult.Status = cs.Result
+
+		if cs.Failure != nil {
+			fail := model.Failure{}
+			fail.Type = cs.Failure.Type
+			fail.Desc = cs.Failure.Desc
+			caseResult.Failure = &fail
+		}
+
+		testSuite.TestCases = append(testSuite.TestCases, caseResult)
 	}
 
 	return testSuite
