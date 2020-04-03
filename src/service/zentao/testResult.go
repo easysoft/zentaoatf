@@ -25,7 +25,7 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 		report.ProductId = report.ZTFResults[0].ProductId
 	}
 
-	url := conf.Url + zentaoUtils.GenApiUri("unittest", "commitResult", "")
+	url := conf.Url + zentaoUtils.GenApiUri("ci", "commitResult", "")
 	logUtils.Screen(url)
 
 	reportJson, _ := json.Marshal(report)

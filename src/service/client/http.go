@@ -93,6 +93,7 @@ func PostObject(url string, params interface{}) (string, bool) {
 	} else {
 		url = url + "&" + vari.SessionVar + "=" + vari.SessionId
 	}
+	url = url + "&XDEBUG_SESSION_START=PHPSTORM"
 
 	if vari.Verbose {
 		logUtils.PrintToCmd(url, -1)
@@ -116,6 +117,7 @@ func PostObject(url string, params interface{}) (string, bool) {
 	}
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
 	//req.Header.Set("cookie", vari.SessionVar+"="+vari.SessionId)
 
 	resp, respErr := client.Do(req)
