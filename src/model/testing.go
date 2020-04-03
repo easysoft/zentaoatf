@@ -282,12 +282,12 @@ type CppUnitSuites struct {
 }
 type CppUnitTest struct {
 	Id          int    `json:"id" xml:"Id,attr"`
-	Title       string `json:"name" xml:"Name,innerxml"`
-	FailureType string `json:"failureType" xml:"FailureType,innerxml"`
-	Message     string `json:"message" xml:"Message,innerxml"`
+	Title       string `json:"name" xml:"Name"`
+	FailureType string `json:"failureType" xml:"FailureType"`
+	Message     string `json:"message" xml:"Message"`
 	Location    []struct {
-		File string `json:"file" xml:"File,innerxml"`
-		Line string `json:"line" xml:"Line,innerxml"`
+		File string `json:"file" xml:"File"`
+		Line string `json:"line" xml:"Line"`
 	} `json:"location" xml:"Location"`
 
 	Duration int

@@ -161,7 +161,11 @@ func run(args []string) {
 		// junit  -p 1 mvn clean package test
 
 		vari.UnitTestType = args[2]
-		flagSet.Parse(args[3:8])
+		end := 8
+		if end > len(args) - 1 {
+			end = len(args) - 1
+		}
+		flagSet.Parse(args[3:end])
 
 		start := 3
 		if vari.UnitTestResult != "" {

@@ -79,6 +79,8 @@ func RetrieveUnitResult() []model.UnitTestSuite {
 				testSuite = ConvertGTestResult(gTestSuite)
 			}
 		} else if vari.UnitTestType == "cppunit" {
+			content = strings.Replace(content, "ISO-8859-1", "UTF-8", -1)
+
 			cppUnitSuites := model.CppUnitSuites{}
 			err = xml.Unmarshal([]byte(content), &cppUnitSuites)
 			if err == nil {
