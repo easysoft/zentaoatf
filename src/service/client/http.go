@@ -2,8 +2,6 @@ package client
 
 import (
 	"encoding/json"
-	"fmt"
-	"github.com/ajg/form"
 	"github.com/easysoft/zentaoatf/src/model"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/log"
@@ -95,18 +93,18 @@ func PostObject(url string, params interface{}) (string, bool) {
 	}
 	url = url + "&XDEBUG_SESSION_START=PHPSTORM"
 
+	val, _ := json.Marshal(params)
+
 	if vari.Verbose {
 		logUtils.PrintToCmd(url, -1)
-		logUtils.PrintToCmd(fmt.Sprintf("%+v", params), -1)
+		logUtils.PrintToCmd(string(val), -1)
 	}
 
 	client := &http.Client{}
 
-	val, _ := form.EncodeToString(params)
-
 	// convert data to post fomat
 	re3, _ := regexp.Compile(`([^&]*?)=`)
-	data := re3.ReplaceAllStringFunc(val, replacePostData)
+	data := re3.ReplaceAllStringFunc(string(val), replacePostData)
 
 	req, reqErr := http.NewRequest("POST", url, strings.NewReader(data))
 	if reqErr != nil {
