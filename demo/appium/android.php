@@ -34,11 +34,13 @@ class HelloWorld
 
         $driver = RemoteWebDriver::create("http://172.16.13.1:4723/wd/hub", $capabilities);
 
-            $driver->findElement(WebDriverBy::id("random_number_check_box"))->click();
-            $driver->findElement(WebDriverBy::id("click_me_btn"))->click();
-			
-			$image = $driver->findElement(WebDriverBy::id("image"));
-			echo '>>' . $image->getAttribute('displayed');
+        $driver->findElement(WebDriverBy::id("random_number_check_box"))->click();
+        $driver->findElement(WebDriverBy::id("click_me_btn"))->click();
+
+        $image = $driver->findElement(WebDriverBy::id("image"));
+        print('>>' . $image->getAttribute('displayed') . "\n");
+
+        $driver->quit();
     }
 }
 
