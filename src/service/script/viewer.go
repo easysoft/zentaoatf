@@ -19,7 +19,7 @@ import (
 func List(cases []string, keywords string) {
 	keywords = strings.TrimSpace(keywords)
 
-	scriptArr := make([]model.ZTFResult, 0)
+	scriptArr := make([]model.FuncResult, 0)
 
 	pathMaxWidth := 0
 	numbMaxWidth := 0
@@ -62,7 +62,7 @@ func List(cases []string, keywords string) {
 	}
 }
 
-func SummaryObj(file string, keywords string) (bool, model.ZTFResult) {
+func SummaryObj(file string, keywords string) (bool, model.FuncResult) {
 	pass, caseId, _, title := zentaoUtils.GetCaseInfo(file)
 
 	if pass {
@@ -78,12 +78,12 @@ func SummaryObj(file string, keywords string) (bool, model.ZTFResult) {
 		if pass {
 			//fmt.Printf("%d. %s \n", caseId, title)
 
-			return true, model.ZTFResult{Id: caseId, Title: title, Path: file}
+			return true, model.FuncResult{Id: caseId, Title: title, Path: file}
 		} else {
-			return false, model.ZTFResult{}
+			return false, model.FuncResult{}
 		}
 	}
-	return false, model.ZTFResult{}
+	return false, model.FuncResult{}
 }
 
 func View(cases []string, keywords string) {

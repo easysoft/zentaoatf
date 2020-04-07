@@ -16,7 +16,7 @@ import (
 )
 
 func GenZTFTestReport(report model.TestReport, pathMaxWidth int) {
-	if len(report.ZTFResults) == 0 {
+	if len(report.FuncResult) == 0 {
 		return
 	}
 
@@ -25,7 +25,7 @@ func GenZTFTestReport(report model.TestReport, pathMaxWidth int) {
 	failedCaseLines := make([]string, 0)
 	failedCaseLinesWithCheckpoint := make([]string, 0)
 
-	for _, cs := range report.ZTFResults {
+	for _, cs := range report.FuncResult {
 		if cs.Status == "fail" {
 			if failedCount > 0 {
 				failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "")

@@ -23,8 +23,8 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 	report.ProductId, _ = strconv.Atoi(vari.ProductId)
 	report.TaskId = testTaskId
 
-	if len(report.ZTFResults) > 0 {
-		report.ProductId = report.ZTFResults[0].ProductId
+	if len(report.FuncResult) > 0 {
+		report.ProductId = report.FuncResult[0].ProductId
 	}
 
 	url := conf.Url + zentaoUtils.GenApiUri("ci", "commitResult", "")

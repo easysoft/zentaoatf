@@ -145,7 +145,7 @@ func runCases(files []string) {
 	}
 
 	var report = model.TestReport{Env: commonUtils.GetOs(),
-		Pass: 0, Fail: 0, Total: 0, ZTFResults: make([]model.ZTFResult, 0)}
+		Pass: 0, Fail: 0, Total: 0, FuncResult: make([]model.FuncResult, 0)}
 	report.TestType = "ztf"
 	report.TestFrame = "ztf"
 

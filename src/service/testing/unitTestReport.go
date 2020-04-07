@@ -50,7 +50,7 @@ func GenUnitTestReport(cases []model.UnitResult, classNameMaxWidth int,
 		}
 		report.Total++
 	}
-	report.UnitResults = cases
+	report.UnitResult = cases
 
 	postFix := ":"
 	if len(cases) == 0 {

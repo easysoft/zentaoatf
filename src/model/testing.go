@@ -130,11 +130,11 @@ type TestReport struct {
 	EndTime   int64 `json:"endTime"`
 	Duration  int64 `json:"duration"`
 
-	ZTFResults  []ZTFResult  `json:"ztfResults"`
-	UnitResults []UnitResult `json:"unitResults"`
+	FuncResult []FuncResult `json:"funcResult"`
+	UnitResult []UnitResult `json:"unitResult"`
 }
 
-type ZTFResult struct {
+type FuncResult struct {
 	Id        int    `json:"id"`
 	ProductId int    `json:"productId"`
 	Path      string `json:"path"`
