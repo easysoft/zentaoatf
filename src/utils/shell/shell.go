@@ -86,7 +86,11 @@ func ExecFile(filePath string) string {
 			}
 		}
 		if scriptInterpreter != "" {
-			cmd = exec.Command("cmd", "/C", scriptInterpreter, filePath)
+			if strings.Index(strings.ToLower(scriptInterpreter), "autoit") > -1 {
+				cmd = exec.Command("cmd", "/C", scriptInterpreter, filePath, "|", "more")
+			} else {
+				cmd = exec.Command("cmd", "/C", scriptInterpreter, filePath)
+			}
 		} else if strings.ToLower(lang) == "bat" {
 			cmd = exec.Command("cmd", "/C", filePath)
 		} else {

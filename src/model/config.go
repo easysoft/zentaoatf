@@ -15,4 +15,5 @@ type Config struct {
 	Python     string
 	Ruby       string
 	Tcl        string
+	Autoit     string
 }

@@ -69,7 +69,6 @@ func getCaseByTaskId(id string, dir string) []string {
 
 	taskId, err := strconv.Atoi(id)
 	if err == nil && taskId > 0 {
-
 		configUtils.CheckRequestConfig()
 		zentaoService.GetCaseIdsByTask(id, &caseIdMap)
 	}

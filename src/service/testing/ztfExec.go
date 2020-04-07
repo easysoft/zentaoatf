@@ -59,7 +59,6 @@ func ExeScript(file string, report *model.TestReport, idx int, total int, pathMa
 	secs := fmt.Sprintf("%.2f", float32(entTime.Sub(startTime)/time.Second))
 
 	logUtils.Log("===end " + file + " at " + entTime.Format("2006-01-02 15:04:05"))
-
 	CheckCaseResult(file, logs, report, idx, total, secs, pathMaxWidth, numbMaxWidth)
 
 	if idx < total-1 {

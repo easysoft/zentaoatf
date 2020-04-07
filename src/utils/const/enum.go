@@ -11,6 +11,7 @@ const (
 	RUBY
 	SHELL
 	TCL
+	AUTOIT
 )
 
 func (c LangType) String() string {
@@ -31,6 +32,8 @@ func (c LangType) String() string {
 		return "shell"
 	case TCL:
 		return "tcl"
+	case AUTOIT:
+	return "autoit"
 	}
 	return "unknown"
 }

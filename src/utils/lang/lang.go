@@ -71,6 +71,12 @@ func initSupportedScriptLang() map[string]map[string]string {
 				"printGrammar": "set hello \"#\"; \n puts [set hello];",
 				"interpreter":  "C:\\ActiveTcl\\bin\\tclsh.exe",
 			},
+			"autoit": {
+				"extName":      "au3",
+				"commentsTag":  "#",
+				"printGrammar": "ConsoleWrite(text & @CRLF)",
+				"interpreter":  "c:\\Program Files (x86)\\AutoIt3\\AutoIt3_x64.exe",
+			},
 		}
 	})
 
