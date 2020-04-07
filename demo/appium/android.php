@@ -7,7 +7,7 @@ cid=0
 pid=0
 
 [group]
-  1. find image element which id is >> image
+  1. check image element displayed attribute is >>true
 
 [esac]
 */
@@ -38,7 +38,7 @@ class HelloWorld
             $driver->findElement(WebDriverBy::id("click_me_btn"))->click();
 			
 			$image = $driver->findElement(WebDriverBy::id("image"));
-			echo '>>' . $image->getAttribute('id');
+			echo '>>' . $image->getAttribute('displayed');
     }
 }
 
