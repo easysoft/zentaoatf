@@ -18,6 +18,7 @@ var (
 	UnitTestType   string
 	UnitTestTool   string
 	UnitTestResult string
+	ProductId      string
 
 	SessionVar  string
 	SessionId   string

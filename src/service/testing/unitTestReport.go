@@ -57,8 +57,8 @@ func GenUnitTestReport(cases []model.UnitResult, classNameMaxWidth int,
 		postFix = "."
 	}
 
-	logUtils.ScreenAndResult(time.Now().Format("2006-01-02 15:04:05") + " " +
-		i118Utils.I118Prt.Sprintf("found_scripts", color.CyanString(strconv.Itoa(len(cases)))) + postFix)
+	logUtils.ScreenAndResult("\n" + logUtils.GetWholeLine(time.Now().Format("2006-01-02 15:04:05")+" "+
+		i118Utils.I118Prt.Sprintf("found_scripts", color.CyanString(strconv.Itoa(len(cases))))+postFix, "="))
 
 	if report.Total == 0 {
 		return report

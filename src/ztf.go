@@ -158,18 +158,33 @@ func main() {
 
 func run(args []string) {
 	if len(args) >= 3 && stringUtils.FindInArr(args[2], constant.UnitTestType) { // unit test
+		// junit  -p 1 mvn clean package test
+
 		vari.UnitTestType = args[2]
-		if args[3] == "mvn" {
-			vari.UnitTestTool = "mvn"
-		} else {
-			flagSet.Parse(args[3:])
+		end := 8
+		if end > len(args) - 1 {
+			end = len(args) - 1
 		}
+		flagSet.Parse(args[3:end])
+
 		start := 3
 		if vari.UnitTestResult != "" {
 			start = start + 2
 		} else {
 			vari.UnitTestResult = "./"
 		}
+		if productId != "" {
+			start = start + 2
+			vari.ProductId = productId
+		}
+		if vari.Verbose {
+			start = start + 1
+		}
+
+		if args[start] == "mvn" {
+			vari.UnitTestTool = "mvn"
+		}
+
 		cmd := strings.Join(args[start:], " ")
 		action.RunUnitTest(cmd)
 	} else { // func test
@@ -177,6 +192,8 @@ func run(args []string) {
 
 		err := flagSet.Parse(args[len(files)+2:])
 		if err == nil {
+			vari.ProductId = productId
+
 			if len(files) == 0 {
 				files = append(files, ".")
 			}

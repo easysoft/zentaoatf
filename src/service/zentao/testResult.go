@@ -1,16 +1,17 @@
 package zentaoService
 
 import (
-	"encoding/json"
 	"github.com/bitly/go-simplejson"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/service/client"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/fatih/color"
 	"os"
+	"strconv"
 )
 
 func CommitTestResult(report model.TestReport, testTaskId int) {
@@ -19,18 +20,14 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 
 	report.ZentaoData = os.Getenv("ZENTAO_DATA")
 	report.BuildUrl = os.Getenv("BUILD_URL")
+	report.ProductId, _ = strconv.Atoi(vari.ProductId)
 	report.TaskId = testTaskId
 
 	if len(report.ZTFResults) > 0 {
 		report.ProductId = report.ZTFResults[0].ProductId
 	}
 
-	url := conf.Url + zentaoUtils.GenApiUri("unittest", "commitResult", "")
-	logUtils.Screen(url)
-
-	reportJson, _ := json.Marshal(report)
-	logUtils.Screen(string(reportJson))
-
+	url := conf.Url + zentaoUtils.GenApiUri("ci", "commitResult", "")
 	resp, ok := client.PostObject(url, report)
 
 	if ok {
@@ -55,6 +52,7 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 	}
 
 	logUtils.Screen(msg)
+	logUtils.Screen(logUtils.GetWholeLine("=", "=") + "\n")
 
 	if report.Fail > 0 || !ok {
 		os.Exit(1)

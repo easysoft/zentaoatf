@@ -52,6 +52,7 @@ print(">> $title\n");
 $driver->close();
 exec('taskkill /F /im chrome80.exe');
 
-function  isWindows() {
+function  isWindows()
+{
     return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
 }
