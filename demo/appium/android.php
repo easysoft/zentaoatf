@@ -24,14 +24,20 @@ class AndroidTest
 
     public function demo()
     {
+        /* you need to start appium service on below host and port */
+        $url = "http://172.16.13.1:4723/wd/hub";
+
         $capabilities = new DesiredCapabilities();
         $capabilities->setCapability("deviceName", "redmi");
         $capabilities->setCapability("platformName", "Android");
 
+        // use remote url to download android apk
         // $capabilities->setCapability("app", "https://applitools.bintray.com/Examples/eyes-android-hello-world.apk");
+
+        // or use local apk path on host that appium run on
 		$capabilities->setCapability("app", '/Users/aaron/testing/res/eyes-android-hello-world.apk');
 
-        $driver = RemoteWebDriver::create("http://172.16.13.1:4723/wd/hub", $capabilities);
+        $driver = RemoteWebDriver::create($url, $capabilities);
 
             $driver->findElement(WebDriverBy::id("random_number_check_box"))->click();
             $driver->findElement(WebDriverBy::id("click_me_btn"))->click();
