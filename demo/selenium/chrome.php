@@ -17,8 +17,10 @@ use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 include 'vendor/autoload.php';
+
+/* launch build-in selenium driver to test */
 if (isWindows())
-{ // launch build-in selenium driver to test
+{
 	$command = 'start ' . dirname(__FILE__, 3) . '\runtime\selenium\chrome80.exe >log.txt 2>&1';
     //	exec("CHCP 936");
 } else // for no-windows system, pls download chrome driver from https://chromedriver.storage.googleapis.com/index.html
