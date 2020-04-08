@@ -2,7 +2,7 @@
 <?php
 /**
 [case]
-title=use ztf to run selenium test
+title=use ztf to run appium test
 cid=0
 pid=0
 
@@ -14,12 +14,11 @@ pid=0
 
 require_once('vendor/autoload.php');
 
-use Applitools\Selenium\Eyes;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
 
-class HelloWorld
+class AndroidTest
 {
     protected $webDriver;
 
@@ -44,5 +43,5 @@ class HelloWorld
     }
 }
 
-$test = new HelloWorld();
+$test = new AndroidTest();
 $test->demo();
