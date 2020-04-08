@@ -18,7 +18,7 @@ use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 include 'vendor/autoload.php';
 if (isWindows())
-{ // launch build-in selenium driver to test
+{ // launch build-in selenium driver server to test
 	$command = 'start /B ' . dirname(__FILE__, 3) . '\runtime\selenium\chrome80.exe >log.txt 2>&1';
 	pclose(popen($command, 'r'));
 
@@ -50,7 +50,11 @@ $title = $driver->getTitle();
 print(">> $title\n");
 
 $driver->close();
-exec('taskkill /F /im chrome80.exe');
+
+if (isWindows())
+{
+    exec('taskkill /F /im chrome80.exe');
+}
 
 function  isWindows()
 {
