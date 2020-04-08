@@ -50,6 +50,7 @@ $submitButton = $driver->findElement(WebDriverBy::id('su'));
 $submitButton->click();
 
 $driver-> wait(10, 500)-> until(WebDriverExpectedCondition::titleContains('禅道'));
+
 $title = $driver->getTitle();
 //if (isWindows()) $title = iconv("UTF-8","GB2312", $title);
 print(">> $title\n");
