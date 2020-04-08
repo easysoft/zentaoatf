@@ -21,8 +21,7 @@ if (isWindows())
 { // launch build-in selenium driver to test
 	$command = 'start ' . dirname(__FILE__, 3) . '\runtime\selenium\chrome80.exe ^>log.txt ^>2^&1';
 	pclose(popen($command, 'r'));
-
-//	exec("CHCP 936");
+    //	exec("CHCP 936");
 }
 
 $host = 'http://127.0.0.1:9515';
