@@ -261,7 +261,7 @@ func CommitCase(caseId int, title string, stepMap maps.Map, stepTypeMap maps.Map
 	stdinUtils.InputForBool(&yes, true, "want_to_continue")
 
 	if yes {
-		_, ok = client.PostObject(url, requestObj)
+		_, ok = client.PostObject(url, requestObj, true)
 
 		if ok {
 			logUtils.PrintTo(i118Utils.I118Prt.Sprintf("success_to_commit_case", caseId) + "\n")

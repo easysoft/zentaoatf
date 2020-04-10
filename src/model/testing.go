@@ -95,21 +95,21 @@ type TestStep struct {
 }
 
 type Bug struct {
-	Title string
+	Title string `json:"title"`
 
-	Module      string            // id
-	Type        string            // install
-	OpenedBuild map[string]string // {"0": "trunk"}
-	Severity    string            // id
-	Pri         string            // id
+	Module      string  `json:"module"`
+	Type        string `json:"type"`
+	OpenedBuild map[string]string `json:"openedBuild"`
+	Severity    string `json:"severity"`
+	Pri         string `json:"pri"`
 
-	Product string
-	Case    string
-	Steps   string
+	Product string `json:"product"`
+	Case    string `json:"case"`
+	Steps   string `json:"steps"`
 
-	Uid         string // uuid.NewV4().String()
-	CaseVersion string // 0
-	OldTaskID   string // 0
+	Uid         string `json:"uid"`
+	CaseVersion string `json:"caseVersion"`
+	OldTaskID   string `json:"oldTaskID"`
 }
 
 type TestReport struct {

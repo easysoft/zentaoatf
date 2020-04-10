@@ -2,6 +2,7 @@ package client
 
 import (
 	"encoding/json"
+	"github.com/ajg/form"
 	"github.com/easysoft/zentaoatf/src/model"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/log"
@@ -85,7 +86,7 @@ func Get(url string) (string, bool) {
 	}
 }
 
-func PostObject(url string, params interface{}) (string, bool) {
+func PostObject(url string, params interface{}, useFormFormat bool) (string, bool) {
 	if vari.RequestType == constant.RequestTypePathInfo {
 		url = url + "?" + vari.SessionVar + "=" + vari.SessionId
 	} else {
@@ -94,20 +95,25 @@ func PostObject(url string, params interface{}) (string, bool) {
 
 	url = url + "&XDEBUG_SESSION_START=PHPSTORM"
 
-	val, _ := json.Marshal(params)
+	jsonStr, _ := json.Marshal(params)
 
 	if vari.Verbose {
 		logUtils.PrintToCmd(url, -1)
-		logUtils.PrintToCmd(string(val), -1)
+		logUtils.PrintToCmd(string(jsonStr), -1)
 	}
+
 
 	client := &http.Client{}
 
-	// convert data to post fomat
-	re3, _ := regexp.Compile(`([^&]*?)=`)
-	data := re3.ReplaceAllStringFunc(string(val), replacePostData)
+	val := string(jsonStr)
+	if useFormFormat {
+		val, _ = form.EncodeToString(params)
+		// convert data to post fomat
+		re3, _ := regexp.Compile(`([^&]*?)=`)
+		val = re3.ReplaceAllStringFunc(string(val), replacePostData)
+	}
 
-	req, reqErr := http.NewRequest("POST", url, strings.NewReader(data))
+	req, reqErr := http.NewRequest("POST", url, strings.NewReader(val))
 	if reqErr != nil {
 		if vari.Verbose {
 			logUtils.PrintToCmd(reqErr.Error(), color.FgRed)

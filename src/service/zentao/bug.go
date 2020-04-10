@@ -93,7 +93,7 @@ func CommitBug() (bool, string) {
 	params=""
 	url := conf.Url + zentaoUtils.GenApiUri("bug", "create", params)
 
-	body, ok := client.PostObject(url, bug)
+	body, ok := client.PostObject(url, bug,  true)
 	if !ok {
 		return false, ""
 	}
