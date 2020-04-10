@@ -92,16 +92,13 @@ func PostObject(url string, params interface{}, useFormFormat bool) (string, boo
 	} else {
 		url = url + "&" + vari.SessionVar + "=" + vari.SessionId
 	}
-
 	url = url + "&XDEBUG_SESSION_START=PHPSTORM"
 
 	jsonStr, _ := json.Marshal(params)
-
 	if vari.Verbose {
 		logUtils.PrintToCmd(url, -1)
 		logUtils.PrintToCmd(string(jsonStr), -1)
 	}
-
 
 	client := &http.Client{}
 
