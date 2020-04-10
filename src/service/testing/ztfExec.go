@@ -17,13 +17,14 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, report *model.TestR
 	startTime := now.Unix()
 	report.StartTime = startTime
 
-	postFix := ":\n"
+	postFix := ":"
 	if len(casesToRun) == 0 {
 		postFix = "."
 	}
 
-	logUtils.ScreenAndResult("\n" + logUtils.GetWholeLine(now.Format("2006-01-02 15:04:05")+" "+
-		i118Utils.I118Prt.Sprintf("found_scripts", color.CyanString(strconv.Itoa(len(casesToRun))))+postFix, "="))
+	msg := now.Format("2006-01-02 15:04:05") + " " +
+		i118Utils.I118Prt.Sprintf("found_scripts", color.CyanString(strconv.Itoa(len(casesToRun)))) + postFix
+	logUtils.ScreenAndResult("\n" + logUtils.GetWholeLine(msg, "="))
 
 	if len(casesToIgnore) > 0 {
 		logUtils.ScreenAndResult("                    " +

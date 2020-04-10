@@ -46,6 +46,10 @@ func Login(baseUrl string, account string, password string) bool {
 }
 
 func GetConfig(baseUrl string) bool {
+	if vari.RequestType != "" {
+		return true
+	}
+
 	url := baseUrl + "?mode=getconfig"
 
 	body, ok := client.Get(url)

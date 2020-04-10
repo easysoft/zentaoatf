@@ -23,7 +23,7 @@ var (
 	SessionVar  string
 	SessionId   string
 	RequestType string
-	RequestFix  string
+	RequestFix  string = ""
 
 	ScriptExtToNameMap map[string]string
 	CurrScriptFile     string // scripts/tc-001.py

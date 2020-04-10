@@ -80,17 +80,17 @@ func CommitBug() (bool, string) {
 
 	// bug-create-1-0-caseID=1,version=3,resultID=93,runID=0,stepIdList=9_12_
 	// bug-create-1-0-caseID=1,version=3,resultID=84,runID=6,stepIdList=9_12_,testtask=2,projectID=1,buildID=1
-	p := fmt.Sprintf("caseID=%s,version=0,resultID=0,runID=0,stepIdList=%s",
+	extras := fmt.Sprintf("caseID=%s,version=0,resultID=0,runID=0,stepIdList=%s",
 		bug.Case, stepIds)
 
 	// $productID, $branch = '', $extras = ''
 	params := ""
 	if vari.RequestType == constant.RequestTypePathInfo {
-		params = fmt.Sprintf("%s-0-%s.json", productId, p)
+		params = fmt.Sprintf("%s-0-%s", productId, extras)
 	} else {
-		params = fmt.Sprintf("productID=%s&branch=0&$extras=%s", productId, p)
+		params = fmt.Sprintf("productID=%s&branch=0&$extras=%s", productId, extras)
 	}
-
+	params=""
 	url := conf.Url + zentaoUtils.GenApiUri("bug", "create", params)
 
 	body, ok := client.PostObject(url, bug)

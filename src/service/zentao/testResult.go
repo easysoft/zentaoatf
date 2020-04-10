@@ -28,7 +28,7 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 	}
 
 	url := conf.Url + zentaoUtils.GenApiUri("ci", "commitResult", "")
-	resp, ok := client.PostObject(url, report)
+	resp, ok := client.PostObject(url, "SDFDSF")
 
 	if ok {
 		json, err1 := simplejson.NewJson([]byte(resp))
