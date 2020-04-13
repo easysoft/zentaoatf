@@ -1,5 +1,5 @@
 # zentaoatf
-ZentaoATF is an automation testing framework written in Golang.
+ZentaoATF is an automated testing framework written in Golang.
 
 ## Features
 1. Support popular programming languages like Python, Ruby, Lua, Tcl, PHP, GO, Shell and Bat;
