@@ -1,14 +1,8 @@
 package mock
 
 import (
-	"encoding/json"
 	"fmt"
-	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
-	constant "github.com/easysoft/zentaoatf/src/utils/const"
-	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
-	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/gorilla/mux"
-	"io"
 	"log"
 	"net/http"
 	"os"
@@ -25,10 +19,7 @@ var (
 func Launch() {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/"+constant.UrlZentaoSettings, zentaoSettings)
-	r.HandleFunc("/"+constant.UrlImportProject, importProject)
-	r.HandleFunc("/"+constant.UrlSubmitResult, submitResult)
-	r.HandleFunc("/"+constant.UrlReportBug, reportBug)
+	//r.HandleFunc("/"+constant.UrlZentaoSettings, zentaoSettings)
 
 	r.Methods("POST")
 
@@ -36,46 +27,4 @@ func Launch() {
 	if err != nil {
 		log.Fatalln("ListenAndServe err:", err)
 	}
-}
-
-func importProject(w http.ResponseWriter, r *http.Request) {
-	printRequestBody(r.Body)
-
-	jsonString := fileUtils.ReadResData(caseJson)
-
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, jsonString)
-}
-
-func submitResult(w http.ResponseWriter, r *http.Request) {
-	printRequestBody(r.Body)
-
-	jsonString := fileUtils.ReadResData(successJson)
-
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, jsonString)
-}
-
-func reportBug(w http.ResponseWriter, r *http.Request) {
-	printRequestBody(r.Body)
-
-	jsonString := zentaoUtils.ReadResData(successJson)
-
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, jsonString)
-}
-
-func zentaoSettings(w http.ResponseWriter, r *http.Request) {
-	printRequestBody(r.Body)
-
-	jsonString := zentaoUtils.ReadResData(settingsJson)
-
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, jsonString)
-}
-
-func printRequestBody(rd io.ReadCloser) {
-	var body map[string]interface{}
-	json.NewDecoder(rd).Decode(&body)
-	fmt.Printf("%v\n", body)
 }
