@@ -15,19 +15,19 @@ CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ztf/ztf-mac src/ztf.go
 cd ztf
 
 cp ztf-x86.exe ztf.exe
-zip -r ztf-win-x86-2.1.zip ztf.exe demo conf log
+zip -r ztf-win-x86-2.1.zip ztf.exe conf demo runtime log
 rm ztf.exe
 
 cp ztf-amd64.exe ztf.exe
-zip -r ztf-win-amd64-2.1.zip ztf.exe demo conf log
+zip -r ztf-win-amd64-2.1.zip ztf.exe conf demo runtime log
 rm ztf.exe
 
 cp ztf-linux ztf
-tar -zcvf ztf-linux-2.1.tar.gz ztf demo conf log
+tar -zcvf ztf-linux-2.1.tar.gz ztf conf demo runtime log
 rm ztf
 
 cp ztf-mac ztf
-zip -r ztf-mac-2.1.zip ztf demo conf log
+zip -r ztf-mac-2.1.zip ztf conf demo runtime log
 rm ztf
 
 cd ..
