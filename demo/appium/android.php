@@ -32,10 +32,10 @@ class AndroidTest
         $capabilities->setCapability("platformName", "Android");
 
         // use android apk remote url
-        // $capabilities->setCapability("app", "https://applitools.bintray.com/Examples/eyes-android-hello-world.apk");
+        $capabilities->setCapability("app", "https://applitools.bintray.com/Examples/eyes-android-hello-world.apk");
 
         // or use local apk path on host that appium run on
-		$capabilities->setCapability("app", '/Users/aaron/testing/res/eyes-android-hello-world.apk');
+		// $capabilities->setCapability("app", '/Users/aaron/testing/res/eyes-android-hello-world.apk');
 
         $driver = RemoteWebDriver::create($url, $capabilities);
 
