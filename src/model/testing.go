@@ -190,8 +190,8 @@ type Property struct {
 	Value string `json:"value" xml:"value,attr"`
 }
 
-// jtest xml
-type JTestSuites struct {
+// jest xml
+type JestSuites struct {
 	XMLName    xml.Name `xml:"testsuites"`
 	Title      string   `xml:"name,attr"`
 	TestSuites []struct {
