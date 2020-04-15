@@ -54,11 +54,11 @@ func RetrieveUnitResult() []model.UnitTestSuite {
 		var err error
 		var testSuite model.UnitTestSuite
 
-		if vari.UnitTestType == "jtest" {
-			jTestSuite := model.JTestSuites{}
-			err = xml.Unmarshal([]byte(content), &jTestSuite)
+		if vari.UnitTestType == "jest" {
+			jestSuite := model.JestSuites{}
+			err = xml.Unmarshal([]byte(content), &jestSuite)
 			if err == nil {
-				testSuite = ConvertJTestResult(jTestSuite)
+				testSuite = ConvertJestResult(jestSuite)
 			}
 		} else if vari.UnitTestType == "phpunit" {
 			phpTestSuite := model.PhpUnitSuites{}
@@ -136,10 +136,10 @@ func ParserUnitTestResult(testSuites []model.UnitTestSuite) ([]model.UnitResult,
 	return cases, classNameMaxWidth
 }
 
-func ConvertJTestResult(jtestSuite model.JTestSuites) model.UnitTestSuite {
+func ConvertJestResult(jestSuite model.JestSuites) model.UnitTestSuite {
 	testSuite := model.UnitTestSuite{}
 
-	for _, suite := range jtestSuite.TestSuites {
+	for _, suite := range jestSuite.TestSuites {
 		for _, cs := range suite.TestCases {
 			caseResult := model.UnitResult{}
 			caseResult.Title = cs.Title
@@ -148,7 +148,7 @@ func ConvertJTestResult(jtestSuite model.JTestSuites) model.UnitTestSuite {
 			if suite.Title != "" && suite.Title != "undefined" {
 				caseResult.TestSuite = suite.Title
 			} else {
-				caseResult.TestSuite = jtestSuite.Title
+				caseResult.TestSuite = jestSuite.Title
 			}
 
 			caseResult.Failure = cs.Failure
