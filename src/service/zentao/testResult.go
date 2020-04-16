@@ -15,6 +15,10 @@ import (
 )
 
 func CommitTestResult(report model.TestReport, testTaskId int) {
+	if vari.ProductId == "" {
+
+	}
+
 	conf := configUtils.ReadCurrConfig()
 	Login(conf.Url, conf.Account, conf.Password)
 

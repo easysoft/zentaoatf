@@ -392,6 +392,11 @@
       "translation": "Fail to submit unit test results to Zentao %s"
     },
     {
+      "id": "ignore_to_submit_result",
+      "translation": "Ignore to submit test result with no productId provided。"
+    },
+
+    {
       "id": "server_return",
       "translation": "服务器返回："
     },

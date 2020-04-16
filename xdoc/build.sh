@@ -2,6 +2,7 @@ rm -rf ztf
 mkdir ztf
 mkdir ztf/log
 cp -r conf ztf/
+cp -r runtime ztf/
 cp -r demo ztf/
 
 /Users/aaron/go/bin/go-bindata -o=res/res.go -pkg=res res/ res/doc res/json res/template
