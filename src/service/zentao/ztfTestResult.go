@@ -15,7 +15,7 @@ func CommitZTFTestResult(resultDir string, noNeedConfirm bool) {
 	report := testingService.GetZTFTestReportForSubmit(resultDir)
 
 	task := stdinUtils.GetInput("\\d*", "",
-		i118Utils.I118Prt.Sprintf("pls_enter")+i118Utils.I118Prt.Sprintf("task_id")+
+		i118Utils.I118Prt.Sprintf("pls_enter") + " " + i118Utils.I118Prt.Sprintf("task_id")+
 			i118Utils.I118Prt.Sprintf("task_id_empty_to_create"))
 
 	testTask, _ := strconv.Atoi(task)

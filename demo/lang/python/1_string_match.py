@@ -3,8 +3,8 @@
 [case]
 
 title=check string matches pattern
-cid=0
-pid=0
+cid=1
+pid=1
 
 [group]
 1. exactly match            >> hello

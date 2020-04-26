@@ -1,6 +1,7 @@
 package zentaoService
 
 import (
+	"encoding/json"
 	"github.com/bitly/go-simplejson"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/service/client"
@@ -15,6 +16,10 @@ import (
 )
 
 func CommitTestResult(report model.TestReport, testTaskId int) {
+	if len(report.FuncResult) > 0 && vari.ProductId == "" {
+		vari.ProductId = strconv.Itoa(report.FuncResult[0].ProductId)
+	}
+
 	if vari.ProductId == "" {
 		logUtils.Screen(i118Utils.I118Prt.Sprintf("ignore_to_submit_result"))
 		return
@@ -34,6 +39,9 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 
 	url := conf.Url + zentaoUtils.GenApiUri("ci", "commitResult", "")
 	resp, ok := client.PostObject(url, report, false)
+	jsonStr, _ := json.Marshal(report)
+
+	logUtils.Screen(string(jsonStr))
 
 	if ok {
 		json, err1 := simplejson.NewJson([]byte(resp))
