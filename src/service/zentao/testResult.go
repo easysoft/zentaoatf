@@ -57,9 +57,9 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 
 	msg := "\n"
 	if ok {
-		msg += color.GreenString(i118Utils.I118Prt.Sprintf("success_to_submit_unit_test_result"))
+		msg += color.GreenString(i118Utils.I118Prt.Sprintf("success_to_submit_test_result"))
 	} else {
-		msg += color.RedString(i118Utils.I118Prt.Sprintf("fail_to_submit_unit_test_result", url))
+		msg += color.RedString(i118Utils.I118Prt.Sprintf("fail_to_submit_test_result", url))
 		msg += "\n" + i118Utils.I118Prt.Sprintf("server_return")
 		msg += "\n" + resp
 	}

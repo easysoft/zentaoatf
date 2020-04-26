@@ -384,12 +384,12 @@
     },
 
     {
-      "id": "success_to_submit_unit_test_result",
-      "translation": "Success to submit unit test results to Zentao。"
+      "id": "success_to_submit_test_result",
+      "translation": "Success to submit test results to Zentao。"
     },
     {
-      "id": "fail_to_submit_unit_test_result",
-      "translation": "Fail to submit unit test results to Zentao %s"
+      "id": "fail_to_submit_test_result",
+      "translation": "Fail to submit test results to Zentao %s"
     },
     {
       "id": "ignore_to_submit_result",
