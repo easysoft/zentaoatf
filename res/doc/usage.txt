@@ -14,4 +14,4 @@ clean   -c        清除脚本执行日志。
 --verbose         增加此参数，用于显示详细日志，如Http请求、响应、错误等信息。
 
 为了方便在任意目录中执行%s命令，建议将其加入环境变量中，具体方法参照以下地址。
-https://github.com/easysoft/zentaoatf/blob/master/HOWTO.md
+https://www.ztesting.net/book/ztf-doc/add-to-path-46.html
