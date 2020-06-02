@@ -18,6 +18,7 @@ import (
 
 func CheckCaseResult(file string, logs string, report *model.TestReport, idx int, total int, secs string, pathMaxWidth int, numbMaxWidth int) {
 	_, _, expectMap := scriptUtils.GetStepAndExpectMap(file)
+
 	isIndependent, expectIndependentContent := zentaoUtils.GetDependentExpect(file)
 	if isIndependent {
 		expectMap = scriptUtils.GetExpectMapFromIndependentFile(expectMap, expectIndependentContent, false)
