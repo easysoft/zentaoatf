@@ -394,7 +394,7 @@ func GetExpectMapFromIndependentFile(expectMap maps.Map, content string, withEmp
 		key := strings.TrimSpace(keyIfs.(string))
 		value := strings.TrimSpace(valueIfs.(string))
 
-		if value == "pending" {
+		if value == "pending" && len(expectArr) > idx {
 			retMap.Put(key, strings.Join(expectArr[idx], "\r\n"))
 			idx++
 		} else {
