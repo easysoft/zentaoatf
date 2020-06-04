@@ -14,7 +14,7 @@ pid=0
 [esac]
 */
 
-checkStep1() || print(">> expect 1\n");
+checkStep1() || print(">> - expect 1\n");
 checkStep3() || print(">> expect 3\n");
 
 function checkStep1(){}
