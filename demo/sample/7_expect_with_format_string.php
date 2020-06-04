@@ -2,12 +2,12 @@
 <?php
 /**
 [case]
-title=expect with format string
+title=expect with format string by using backquote `
 cid=0
 pid=0
 
 [group]
-  1. step1 >> %s%d
+  1. step1 >> `%s%d`
 
 [esac]
 */

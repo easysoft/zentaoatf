@@ -8,7 +8,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/lang"
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	scriptUtils "github.com/easysoft/zentaoatf/src/utils/script"
-	"github.com/easysoft/zentaoatf/src/utils/string"
+	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/emirpasic/gods/maps"
 	"github.com/mattn/go-runewidth"
@@ -113,7 +113,14 @@ func ValidateStepResult(langType string, expectLines []string, actualLines []str
 			log = actualLines[indx2]
 		}
 
-		pass := stringUtils.MatchString(expect, log, langType)
+		var pass bool
+		if expect[:1] == "`" && expect[len(expect) - 1:] == "`" {
+			expect = expect[1:len(expect) - 1]
+			pass = stringUtils.MatchString(expect, log, langType)
+		} else {
+			pass = strings.Contains(expect, log)
+		}
+
 		if !pass {
 			stepResult = false
 		}
