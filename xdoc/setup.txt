@@ -1,3 +1,5 @@
+go get -u github.com/jteeuwen/go-bindata/...
+
 Python:
 pip install -i https://pypi.tuna.tsinghua.edu.cn/simple requests
 
