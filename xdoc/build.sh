@@ -5,7 +5,7 @@ cp -r conf ztf/
 cp -r runtime ztf/
 cp -r demo ztf/
 
-/Users/aaron/go/bin/go-bindata -o=res/res.go -pkg=res res/ res/doc res/json res/template
+go-bindata -o=res/res.go -pkg=res res/ res/doc res/json res/template
 
 CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o ztf/ztf-x86.exe src/ztf.go
 CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ztf/ztf-amd64.exe src/ztf.go
