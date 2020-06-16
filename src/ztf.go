@@ -159,7 +159,6 @@ func main() {
 func run(args []string) {
 	if len(args) >= 3 && stringUtils.FindInArr(args[2], constant.UnitTestType) { // unit test
 		// junit  -p 1 mvn clean package test
-
 		vari.UnitTestType = args[2]
 		end := 8
 		if end > len(args) - 1 {
