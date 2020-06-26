@@ -1,2 +1,0 @@
-请根据您的Chrome版本，从以下地址下载相应的Driver:
-https://chromedriver.storage.googleapis.com/index.html 
