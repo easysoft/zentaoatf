@@ -35,17 +35,6 @@ func Get(url string) (string, bool) {
 		return "", false
 	}
 
-	//req.Header.Set("cookie", vari.SessionVar+"="+vari.SessionId)
-	//
-	//q := req.URL.Query()
-	//q.Add(vari.SessionVar, vari.SessionId)
-	//if params != nil {
-	//	for pkey, pval := range params {
-	//		q.Add(pkey, pval)
-	//	}
-	//}
-	//req.URL.RawQuery = q.Encode()
-
 	resp, respErr := client.Do(req)
 	if respErr != nil {
 		if vari.Verbose {

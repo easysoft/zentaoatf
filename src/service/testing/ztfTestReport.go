@@ -11,6 +11,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
 	"github.com/mattn/go-runewidth"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -108,7 +109,7 @@ func GenZTFTestReport(report model.TestReport, pathMaxWidth int) {
 		))
 
 	//println("===" + vari.LogDir)
-
+	report.ProductId, _ = strconv.Atoi(vari.ProductId)
 	json, _ := json.Marshal(report)
 	fileUtils.WriteFile(vari.LogDir+"result.json", string(json))
 }

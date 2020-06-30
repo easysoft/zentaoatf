@@ -16,12 +16,12 @@ import (
 )
 
 func CommitTestResult(report model.TestReport, testTaskId int) {
-	if len(report.FuncResult) > 0 && vari.ProductId == "" {
-		vari.ProductId = strconv.Itoa(report.FuncResult[0].ProductId)
-	}
+	//if len(report.FuncResult) > 0 && vari.ProductId == "" {
+	//	vari.ProductId = strconv.Itoa(report.FuncResult[0].ProductId)
+	//}
 
 	if vari.ProductId == "" {
-		logUtils.Screen(i118Utils.I118Prt.Sprintf("ignore_to_submit_result"))
+		logUtils.Screen(color.CyanString(i118Utils.I118Prt.Sprintf("ignore_to_submit_result")))
 		return
 	}
 

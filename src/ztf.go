@@ -104,7 +104,7 @@ func main() {
 	case "cr":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
-			action.CommitZTFTestResult(files, noNeedConfirm)
+			action.CommitZTFTestResult(files, productId, taskId, noNeedConfirm)
 		}
 
 	case "cb":
@@ -158,7 +158,7 @@ func main() {
 
 func run(args []string) {
 	if len(args) >= 3 && stringUtils.FindInArr(args[2], constant.UnitTestType) { // unit test
-		// junit  -p 1 mvn clean package test
+		// junit -p 1 mvn clean package test
 		vari.UnitTestType = args[2]
 		end := 8
 		if end > len(args) - 1 {
