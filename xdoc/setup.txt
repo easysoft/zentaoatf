@@ -8,3 +8,5 @@ sudo apt-get install libgmp3-dev
 sudo gem install json
 
 runtime\php\php7\php.exe demo\selenium\chrome.php
+
+scp aaron@172.16.13.1:/Users/aaron/rd/project/zentao/go/ztf/ztf/ztf-amd64.exe .
