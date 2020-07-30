@@ -122,6 +122,7 @@ func ValidateStepResult(langType string, expectLines []string, actualLines []str
 			pass = strings.Contains(log, expect)
 		}
 
+
 		if !pass {
 			stepResult = false
 		}
