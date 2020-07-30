@@ -113,6 +113,7 @@ func ValidateStepResult(langType string, expectLines []string, actualLines []str
 			log = actualLines[indx2]
 		}
 
+		expect = strings.TrimSpace(expect)
 		var pass bool
 		if expect[:1] == "`" && expect[len(expect) - 1:] == "`" {
 			expect = expect[1:len(expect) - 1]
