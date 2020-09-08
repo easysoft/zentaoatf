@@ -16,19 +16,19 @@ CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o bin/ztf-mac src/ztf.go
 cd bin
 
 cp ztf-x86.exe ztf.exe
-zip -r ztf-win-x86-2.2.zip ztf.exe conf demo runtime log -x runtime/selenium/chrome80
+zip -r ztf-win-x86-2.2.zip ztf.exe conf demo runtime log -x runtime/selenium/chrome84
 rm ztf.exe
 
 cp ztf-amd64.exe ztf.exe
-zip -r ztf-win-amd64-2.2.zip ztf.exe conf demo runtime -x runtime/selenium/chrome80
+zip -r ztf-win-amd64-2.2.zip ztf.exe conf demo runtime -x runtime/selenium/chrome84
 rm ztf.exe
 
 cp ztf-linux ztf
-tar --exclude=runtime/php --exclude=runtime/selenium/chrome80 --exclude=runtime/selenium/chrome80.exe -zcvf ztf-linux-2.2.tar.gz ztf conf demo runtime log
+tar --exclude=runtime/php --exclude=runtime/selenium/chrome84 --exclude=runtime/selenium/chrome84.exe -zcvf ztf-linux-2.2.tar.gz ztf conf demo runtime log
 rm ztf
 
 cp ztf-mac ztf
-zip -r ztf-mac-2.2.zip ztf conf demo runtime log -x "runtime/php*" -x "runtime/selenium/chrome80" -x "runtime/selenium/chrome80.exe"
+zip -r ztf-mac-2.2.zip ztf conf demo runtime log -x "runtime/php*" -x "runtime/selenium/chrome84" -x "runtime/selenium/chrome84.exe"
 rm ztf
 
 cd ..
