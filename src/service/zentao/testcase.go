@@ -66,8 +66,14 @@ func ListCaseByProduct(baseUrl string, productId string) []model.TestCase {
 			caseId := cs.Id
 
 			csWithSteps := GetCaseById(baseUrl, caseId)
+
+			stepArr := make([]model.TestStep, 0)
+			for _, step := range csWithSteps.Steps {
+				stepArr = append(stepArr, step)
+			}
+
 			caseArr = append(caseArr, model.TestCase{Id: caseId, Product: cs.Product, Module: cs.Module,
-				Title: cs.Title, StepArr: csWithSteps.StepArr})
+				Title: cs.Title, StepArr: stepArr})
 		}
 
 		return caseArr
