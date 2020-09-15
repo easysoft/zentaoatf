@@ -14,6 +14,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/emirpasic/gods/maps"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -67,8 +68,16 @@ func ListCaseByProduct(baseUrl string, productId string) []model.TestCase {
 
 			csWithSteps := GetCaseById(baseUrl, caseId)
 
+			// get order keys
+			keys := make([]int, 0, len(csWithSteps.Steps))
+			for k := range csWithSteps.Steps {
+				keys = append(keys, k)
+			}
+			sort.Ints(keys)
+
 			stepArr := make([]model.TestStep, 0)
-			for _, step := range csWithSteps.Steps {
+			for _, key := range keys {
+				step := csWithSteps.Steps[key]
 				stepArr = append(stepArr, step)
 			}
 			caseArr = append(caseArr, model.TestCase{Id: caseId, Product: cs.Product, Module: cs.Module,
