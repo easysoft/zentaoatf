@@ -3,7 +3,7 @@
   "messages": [
     {
       "id": "windows_permission",
-      "translation": "Windows系统下，需以管理员身份打开cmd命令行窗口。"
+      "translation": "In Windows, open cmd window as the admin"
     },
 
     {
@@ -41,12 +41,12 @@
     },
     {
       "id": "task_id",
-      "translation": "Task Id"
+      "translation": "Test Request Id"
     },
 
     {
       "id": "test_case",
-      "translation": "test case"
+      "translation": "Test Case"
     },
     {
       "id": "test_suite",
@@ -58,11 +58,11 @@
     },
     {
       "id": "result",
-      "translation": "result"
+      "translation": "Result"
     },
     {
       "id": "script",
-      "translation": "script"
+      "translation": "Script"
     },
     {
       "id": "step",
@@ -78,7 +78,7 @@
     },
     {
       "id": "expect_result",
-      "translation": "Expect Result"
+      "translation": "Expected Result"
     },
     {
       "id": "actual_result",
@@ -110,16 +110,16 @@
     },
     {
       "id": "title_cannot_be_empty",
-      "translation": "Title cannot be empty"
+      "translation": "Title cannot be empty."
     },
 
     {
       "id": "need_config",
-      "translation": "You need to config Zentao connection before checkout, type 'exit' to quit."
+      "translation": "You need to config ZenTao connection before checkout, type 'exit' to quit."
     },
     {
       "id": "begin_config",
-      "translation": "Begin to config, type 'exit' to quit."
+      "translation": "Begin configuring, type 'exit' to quit."
     },
 
     {
@@ -128,7 +128,7 @@
     },
     {
       "id": "case_update_confirm",
-      "translation": "Will commit below case info to Zentao:\n %d. %s"
+      "translation": "Will commit cases below to Zentao:\n %d. %s"
     },
     {
       "id": "enter_dir",
@@ -136,11 +136,11 @@
     },
     {
       "id": "where_to_store_script",
-      "translation": "Where to store scripts? default is '%s'"
+      "translation": "Where to store scripts? Default is '%s'"
     },
     {
       "id": "dir_not_exist",
-      "translation": "Dir not exist"
+      "translation": "Dir does not exist"
     },
     {
       "id": "enter_language",
@@ -156,11 +156,11 @@
     },
     {
       "id": "enter_account",
-      "translation": "Zentao site account: %s"
+      "translation": "Zentao account: %s"
     },
     {
       "id": "enter_password",
-      "translation": "Account password: %s"
+      "translation": "Zentao password: %s"
     },
     {
       "id": "enter_co_type",
@@ -168,7 +168,7 @@
     },
     {
       "id": "enter_co_independent",
-      "translation": "Save expect results in independent file? (y/n, default is No)"
+      "translation": "Save expected results in a separate file? (y/n, default is No)"
     },
     {
       "id": "enter_co_language",
@@ -189,20 +189,20 @@
     },
     {
       "id": "confirm_commit_result",
-      "translation": "Continue to commit result as below? (y/n, default is Yes)\n%s"
+      "translation": "Continue to commit results below? (y/n, default is Yes)\n%s"
     },
 
     {
       "id": "invalid_input",
-      "translation": "Invalid input, please try again."
+      "translation": "Invalid input. Try again."
     },
     {
       "id": "zentao_config_success",
-      "translation": "Success to config Zentao connection."
+      "translation": "Successfully config Zentao connection."
     },
     {
       "id": "zentao_config_fail",
-      "translation": "Fail to config Zentao connection."
+      "translation": "Failed to config Zentao connection."
     },
 
     {
@@ -219,7 +219,7 @@
     },
     {
       "id": "empty_to_ignore",
-      "translation": "(Input empty to ignore)"
+      "translation": "(Ignore it if empty)"
     },
 
     {
@@ -249,16 +249,16 @@
     },
     {
       "id": "fail_to_login",
-      "translation": "Fail to login."
+      "translation": "Failed to login."
     },
 
     {
       "id": "start_execution",
-      "translation": "Start Execution"
+      "translation": "Start execution"
     },
     {
       "id": "end_execution",
-      "translation": "End Execution"
+      "translation": "End execution"
     },
     {
       "id": "found_scripts",
@@ -270,7 +270,7 @@
     },
     {
       "id": "failed_scripts",
-      "translation": "Failed Scripts:"
+      "translation": "Failed scripts:"
     },
 
     {
@@ -279,7 +279,7 @@
     },
     {
       "id": "end_case",
-      "translation": "End Case %s at %s, spend %d secs"
+      "translation": "End Case %s at %s, %d secs"
     },
     {
       "id": "run_scripts",
@@ -287,7 +287,7 @@
     },
     {
       "id": "no_interpreter_for_run",
-      "translation": "Skip script %s since not found interpreter for language %s"
+      "translation": "Skip script %s since interpreter for %s not found."
     },
 
     {
@@ -297,16 +297,16 @@
 
     {
       "id": "only_support_script_language",
-      "translation": "Only support language %s."
+      "translation": "Only support %s."
     },
     {
       "id": "total_test_case",
-      "translation": "Totally %d test cases."
+      "translation": "Total %d test cases."
     },
 
     {
       "id": "is_checkpoint",
-      "translation": "Step begin with '@' has checkpoint."
+      "translation": "What begin with '@' has checkpoint steps."
     },
     {
       "id": "find_example",
@@ -314,19 +314,19 @@
     },
     {
       "id": "expect_result_here",
-      "translation": "Expect Results, can be more than one line."
+      "translation": "Expected Results. It can be more than one line."
     },
     {
       "id": "actual_result_here",
-      "translation": "Record actual results."
+      "translation": "Actual results."
     },
     {
       "id": "success_to_generate",
-      "translation": "Success to generate %d test scripts in '%s'."
+      "translation": "Successfully generated %d test scripts in '%s'."
     },
     {
       "id": "success_to_commit_case",
-      "translation": "Success to commit case %d."
+      "translation": "Successfully committed case %d."
     },
     {
       "id": "success_to_report_bug",
@@ -334,7 +334,7 @@
     },
     {
       "id": "success_to_commit_result",
-      "translation": "Success to commit the result for case %d"
+      "translation": "Successfully committed the result for case %d"
     },
 
     {
@@ -372,41 +372,41 @@
 
     {
       "id": "success_to_clean_logs",
-      "translation": "Success to clean all logs."
+      "translation": "Successflly cleaned all logs."
     },
     {
       "id": "success_sort_steps",
-      "translation": "Success to sort steps for %d scripts."
+      "translation": "Successfully sorted steps for %d scripts."
     },
     {
       "id": "success_add_to_path",
-      "translation": "Success to add ztf to PATH environment variable."
+      "translation": "Successflly added ztf commands to PATH environment variable."
     },
 
     {
       "id": "success_to_submit_test_result",
-      "translation": "Success to submit test results to Zentao。"
+      "translation": "Submitted test results to ZenTao."
     },
     {
       "id": "fail_to_submit_test_result",
-      "translation": "Fail to submit test results to Zentao %s"
+      "translation": "Failed to submit test results to ZenTao %s."
     },
     {
       "id": "ignore_to_submit_result",
-      "translation": "Ignore to submit test result with no productId provided。"
+      "translation": "Ignore to submit test result with no productId provided."
     },
 
     {
       "id": "server_return",
-      "translation": "服务器返回："
+      "translation": "Returned by the server:"
     },
     {
       "id": "task_id_empty_to_create",
-      "translation": ", leave it blank to create a new one."
+      "translation": ", create a new one if the default is empty."
     },
     {
       "id": "run_with_specific_interpreter",
-      "translation": "Will run all test scripts with specific interpreter %s."
+      "translation": "Run all test scripts with specific interpreter %s."
     }
   ]
 }
