@@ -7,7 +7,7 @@ cid=0
 pid=0
 
 [group]
-  1. check first product name >> .+
+  1. check first product name >> `.+`
 
 [esac]
 */

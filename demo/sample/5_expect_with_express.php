@@ -7,7 +7,7 @@ cid=0
 pid=0
 
 [group]
-  1. step1 >> abc123
+  1. step1 >> `abc\d{3}`
 
 [esac]
 */

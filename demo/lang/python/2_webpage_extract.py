@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 '''
 [case]
 
@@ -9,7 +10,7 @@ pid=0
 [group]
 1. Load web page from url http://xxx
 2. Retrieve img element zt-logo.png in html
-3. Check img exist >> .*zt-logo.png
+3. Check img exist >> `.*zt-logo.png`
 
 [esac]
 '''

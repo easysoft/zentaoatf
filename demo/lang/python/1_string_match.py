@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 '''
 [case]
 
@@ -8,8 +9,8 @@ pid=1
 
 [group]
 1. exactly match            >> hello
-2. regular expression match >> 1\d{10}
-3. format string match      >> %s%d
+2. regular expression match >> `1\d{10}`
+3. format string match      >> `%s%d`
 
 [esac]
 '''
