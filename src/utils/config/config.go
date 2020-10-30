@@ -154,7 +154,7 @@ func InputForSet() {
 
 	stdinUtils.InputForBool(&configSite, true, "config_zentao_site")
 	if configSite {
-		conf.Url = stdinUtils.GetInput("(http://.*)", conf.Url, "enter_url", conf.Url)
+		conf.Url = stdinUtils.GetInput("((http|https)://.*)", conf.Url, "enter_url", conf.Url)
 
 		conf.Account = stdinUtils.GetInput("(.{2,})", conf.Account, "enter_account", conf.Account)
 

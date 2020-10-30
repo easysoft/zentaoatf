@@ -105,12 +105,10 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 
 	for {
 		logUtils.PrintToWithColor("\n"+msg, color.FgCyan)
-		// fmt.Scanln(&ret)
 		Scanf(&ret)
+		ret = strings.TrimSpace(ret)
 
-		//logUtils.PrintToWithColor(fmt.Sprintf("%v", ret), -1)
-
-		if strings.TrimSpace(ret) == "" && defaultVal != "" {
+		if ret == "" && defaultVal != "" {
 			ret = defaultVal
 
 			logUtils.PrintTo(ret)
@@ -121,8 +119,6 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 			color.Unset()
 			os.Exit(0)
 		}
-
-		//logUtils.PrintToWithColor(ret, -1)
 
 		if regx == "" {
 			return ret
