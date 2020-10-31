@@ -25,6 +25,7 @@ rm ztf.exe
 
 cp ztf-linux ztf
 tar --exclude=runtime/php --exclude=runtime/selenium/chrome84 --exclude=runtime/selenium/chrome84.exe -zcvf ztf-linux-2.2.tar.gz ztf conf demo runtime log
+tar --exclude=runtime/php --exclude=runtime/selenium/chrome84 --exclude=runtime/selenium/chrome84.exe -cvf ztf-linux-2.2.tar ztf conf demo runtime log
 rm ztf
 
 cp ztf-mac ztf
