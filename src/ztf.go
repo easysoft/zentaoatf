@@ -76,6 +76,7 @@ func main() {
 	flagSet.StringVar(&placeholder, "v", "", "")
 
 	flagSet.StringVar(&vari.UnitTestResult, "result", "", "")
+	flagSet.StringVar(&vari.UnitTestResults, "d", "", "")
 
 	if len(os.Args) == 1 {
 		os.Args = append(os.Args, "run", ".")
@@ -161,7 +162,7 @@ func run(args []string) {
 		// junit -p 1 mvn clean package test
 		vari.UnitTestType = args[2]
 		end := 8
-		if end > len(args) - 1 {
+		if end > len(args)-1 {
 			end = len(args) - 1
 		}
 		flagSet.Parse(args[3:end])
@@ -182,6 +183,8 @@ func run(args []string) {
 
 		if args[start] == "mvn" {
 			vari.UnitTestTool = "mvn"
+		} else if args[start] == "robot" {
+			vari.UnitTestTool = "robot"
 		}
 
 		cmd := strings.Join(args[start:], " ")

@@ -36,6 +36,6 @@ var (
 
 	RequestTypePathInfo = "PATH_INFO"
 
-	UnitTestType []string = []string{"junit", "testng", "phpunit", "pytest", "jest", "cppunit", "gtest", "qtest"}
+	UnitTestType []string = []string{"junit", "testng", "phpunit", "pytest", "jest", "cppunit", "gtest", "qtest", "robot"}
 	AutoTestType []string = []string{"selenium", "appium"}
 )

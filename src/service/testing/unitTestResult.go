@@ -12,6 +12,7 @@ import (
 	"os"
 	"path"
 	"strings"
+	"time"
 )
 
 func RetrieveUnitResult() []model.UnitTestSuite {
@@ -24,6 +25,8 @@ func RetrieveUnitResult() []model.UnitTestSuite {
 		resultDir = fmt.Sprintf("target%ssurefire-reports%s", sep, sep)
 	} else if vari.UnitTestType == "testng" && vari.UnitTestTool == "mvn" {
 		resultDir = fmt.Sprintf("target%ssurefire-reports%sjunitreports", sep, sep)
+	} else if vari.UnitTestType == "robot" {
+		resultDir = vari.UnitTestResults
 	} else {
 		resultDir = vari.UnitTestResult
 	}
@@ -91,6 +94,12 @@ func RetrieveUnitResult() []model.UnitTestSuite {
 			err = xml.Unmarshal([]byte(content), &qTestSuite)
 			if err == nil {
 				testSuite = ConvertQTestResult(qTestSuite)
+			}
+		} else if vari.UnitTestType == "robot" {
+			robotResult := model.RobotResult{}
+			err = xml.Unmarshal([]byte(content), &robotResult)
+			if err == nil {
+				testSuite = ConvertRobotResult(robotResult)
 			}
 		} else {
 			testSuite = model.UnitTestSuite{}
@@ -292,4 +301,53 @@ func ConvertQTestResult(qTestSuite model.QTestSuites) model.UnitTestSuite {
 	}
 
 	return testSuite
+}
+
+func ConvertRobotResult(result model.RobotResult) model.UnitTestSuite {
+	testSuite := model.UnitTestSuite{}
+
+	suiteMap := map[string]string{}
+	for _, state := range result.Statistics.Suite.States {
+		suiteMap[state.ID] = state.Text
+	}
+
+	tests := make([]model.RobotTest, 0)
+	for _, suite := range result.Suites {
+		RetrieveRobotTests(suite, &tests)
+	}
+
+	for _, cs := range tests {
+		caseResult := model.UnitResult{}
+		caseResult.Title = cs.Name
+		caseResult.Status = strings.ToLower(cs.Status.Status)
+
+		suiteId := cs.ID[0:strings.LastIndex(cs.ID, "-")]
+		caseResult.TestSuite = suiteMap[suiteId]
+
+		templ := "20060102 15:04:05.000"
+		start, _ := time.ParseInLocation(templ, cs.Status.Starttime, time.Local)
+		end, _ := time.ParseInLocation(templ, cs.Status.Endtime, time.Local)
+		caseResult.Duration = float32(end.Unix() - start.Unix())
+
+		if caseResult.Status != "pass" {
+			fail := model.Failure{}
+			fail.Type = ""
+			fail.Desc = cs.Status.Text
+			caseResult.Failure = &fail
+		}
+
+		testSuite.TestCases = append(testSuite.TestCases, caseResult)
+	}
+
+	return testSuite
+}
+
+func RetrieveRobotTests(suite model.RobotSuite, tests *[]model.RobotTest) {
+	for _, suite := range suite.Suites {
+		RetrieveRobotTests(suite, tests)
+	}
+
+	for _, test := range suite.Tests {
+		*tests = append(*tests, test)
+	}
 }
