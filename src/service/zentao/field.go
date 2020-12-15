@@ -31,7 +31,7 @@ func GetBugFiledOptions(productId int) {
 	url := conf.Url + zentaoUtils.GenApiUri("bug", "ajaxGetBugFieldOptions", params)
 	dataStr, ok := client.Get(url)
 
-	bugFields := model.ZentaoBugFileds{}
+	bugFields := model.ZentaoBugFields{}
 
 	if ok {
 		jsonData, err := simplejson.NewJson([]byte(dataStr))

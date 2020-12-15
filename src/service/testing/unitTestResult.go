@@ -215,6 +215,11 @@ func ConvertPyTestResult(pytestSuites model.PyTestSuites) model.UnitTestSuite {
 				fail.Type = cs.Failure.Type
 				fail.Desc = cs.Failure.Desc
 				caseResult.Failure = &fail
+			} else if cs.Error != nil {
+				fail := model.Failure{}
+				fail.Type = cs.Error.Message
+				fail.Desc = cs.Error.Text
+				caseResult.Failure = &fail
 			}
 
 			testSuite.TestCases = append(testSuite.TestCases, caseResult)

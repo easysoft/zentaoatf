@@ -33,7 +33,7 @@ var (
 
 	ScreenWidth     int
 	ScreenHeight    int
-	ZentaoBugFileds model.ZentaoBugFileds
+	ZentaoBugFileds model.ZentaoBugFields
 
 	//ZentaoCaseFileds model.ZentaoCaseFileds
 

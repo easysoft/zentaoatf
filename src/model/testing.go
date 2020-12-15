@@ -233,6 +233,10 @@ type PyTestSuites struct {
 				Type string `xml:"message,attr"`
 				Desc string `xml:",innerxml"`
 			} `xml:"failure,omitempty"`
+			Error *struct {
+				Text    string `xml:",chardata"`
+				Message string `xml:"message,attr"`
+			} `xml:"error"`
 
 			Status string
 		} `xml:"testcase"`
