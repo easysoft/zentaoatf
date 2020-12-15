@@ -17,6 +17,7 @@ import (
 	"gopkg.in/ini.v1"
 	"os"
 	"reflect"
+	"strings"
 )
 
 func InitConfig() {
@@ -84,7 +85,7 @@ func ReadCurrConfig() model.Config {
 
 	ini.MapTo(&config, constant.ConfigFile)
 
-	config.Url = commonUtils.UpdateUrl(config.Url)
+	config.Url = commonUtils.AddSlashForUrl(config.Url)
 
 	return config
 }
@@ -155,9 +156,9 @@ func InputForSet() {
 	stdinUtils.InputForBool(&configSite, true, "config_zentao_site")
 	if configSite {
 		conf.Url = stdinUtils.GetInput("((http|https)://.*)", conf.Url, "enter_url", conf.Url)
+		conf.Url = getZenTaoBaseUrl(conf.Url)
 
 		conf.Account = stdinUtils.GetInput("(.{2,})", conf.Account, "enter_account", conf.Account)
-
 		conf.Password = stdinUtils.GetInput("(.{2,})", conf.Password, "enter_password", conf.Password)
 	}
 
@@ -226,4 +227,21 @@ func InputForScriptInterpreter(scripts []string, config *model.Config, from stri
 	}
 
 	return configChanged
+}
+
+func getZenTaoBaseUrl(url string) string {
+	arr := strings.Split(url, "/")
+
+	base := url
+	last := arr[len(arr)-1]
+	if strings.Index(last, ".php") > -1 || strings.Index(last, ".html") > -1 ||
+		strings.Index(last, "user-login") > -1 || strings.Index(last, "?") == 0 {
+		base = base[:strings.LastIndex(base, "/")]
+	}
+
+	if strings.Index(base, "?") > -1 {
+		base = base[:strings.LastIndex(base, "?")]
+	}
+
+	return base
 }

@@ -64,7 +64,7 @@ func IsRelease() bool {
 	return false
 }
 
-func UpdateUrl(url string) string {
+func AddSlashForUrl(url string) string {
 	if strings.LastIndex(url, "/") < len(url)-1 {
 		url += "/"
 	}
