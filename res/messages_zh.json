@@ -176,7 +176,7 @@
     },
     {
       "id": "enter_co_language",
-      "translation": "请选择脚本语言。%s"
+      "translation": "请选择脚本语言\n%s"
     },
     {
       "id": "enter_case_id_for_report_bug",

@@ -19,7 +19,7 @@ import (
 	"strings"
 )
 
-func LoadTestCases(productId string, moduleId string, suiteIdStr string, taskIdStr string) []model.TestCase {
+func LoadTestCases(productIdStr, moduleIdStr, suiteIdStr, taskIdStr string) []model.TestCase {
 	config := configUtils.ReadCurrConfig()
 
 	var testcases []model.TestCase
@@ -29,14 +29,14 @@ func LoadTestCases(productId string, moduleId string, suiteIdStr string, taskIdS
 		return testcases
 	}
 
-	if moduleId != "" {
-		testcases = ListCaseByModule(config.Url, productId, moduleId)
+	if moduleIdStr != "" {
+		testcases = ListCaseByModule(config.Url, productIdStr, moduleIdStr)
 	} else if suiteIdStr != "" {
 		testcases = ListCaseBySuite(config.Url, suiteIdStr)
 	} else if taskIdStr != "" {
 		testcases = ListCaseByTask(config.Url, taskIdStr)
-	} else if productId != "" {
-		testcases = ListCaseByProduct(config.Url, productId)
+	} else if productIdStr != "" {
+		testcases = ListCaseByProduct(config.Url, productIdStr)
 	} else {
 		logUtils.PrintUsage()
 	}
