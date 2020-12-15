@@ -397,8 +397,16 @@
     },
 
     {
+      "id": "server_address",
+      "translation": "\nRequest Address:\n"
+    },
+    {
+      "id": "server_params",
+      "translation": "Request Params:\n"
+    },
+    {
       "id": "server_return",
-      "translation": "Returned by the server:"
+      "translation": "Server Return:\n"
     },
     {
       "id": "task_id_empty_to_create",

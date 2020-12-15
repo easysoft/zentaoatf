@@ -78,7 +78,7 @@ func PrintToCmd(msg string, attr color.Attribute) {
 	}
 }
 
-func PrintUnicode(str []byte) {
+func ConvertUnicode(str []byte) string {
 	var a interface{}
 
 	temp := strings.Replace(string(str), "\\\\", "\\", -1)
@@ -92,5 +92,5 @@ func PrintUnicode(str []byte) {
 		msg = temp
 	}
 
-	PrintToCmd(msg, -1)
+	return msg
 }

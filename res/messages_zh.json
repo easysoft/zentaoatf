@@ -396,7 +396,7 @@
     },
     {
       "id": "fail_to_submit_test_result",
-      "translation": "提交测试结果到禅道失败 %s"
+      "translation": "提交测试结果到禅道失败"
     },
     {
       "id": "ignore_to_submit_result",
@@ -404,8 +404,16 @@
     },
 
     {
+      "id": "server_address",
+      "translation": "\n请求地址：\n"
+    },
+    {
+      "id": "server_params",
+      "translation": "请求参数：\n"
+    },
+    {
       "id": "server_return",
-      "translation": "服务器返回："
+      "translation": "服务返回：\n"
     },
     {
       "id": "task_id_empty_to_create",

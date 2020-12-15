@@ -18,7 +18,6 @@ require (
 	github.com/gopherjs/gopherjs v0.0.0-20200217142428-fce0ec30dd00 // indirect
 	github.com/gorilla/mux v1.7.4
 	github.com/jroimartin/gocui v0.4.0
-
 	github.com/jteeuwen/go-bindata v3.0.7+incompatible // indirect
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0 // indirect
 	github.com/kr/pretty v0.2.0 // indirect
@@ -39,11 +38,11 @@ require (
 	github.com/stretchr/objx v0.2.0 // indirect
 	github.com/stretchr/testify v1.5.1 // indirect
 	github.com/xlab/treeprint v0.0.0-20181112141820-a009c3971eca // indirect
+	github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4
 	golang.org/x/sys v0.0.0-20200515095857-1151b9dac4a9 // indirect
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 	gopkg.in/ini.v1 v1.56.0
 	gopkg.in/yaml.v2 v2.3.0 // indirect
-
 	rsc.io/goversion v1.2.0 // indirect
 )
 

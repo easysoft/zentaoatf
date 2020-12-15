@@ -35,7 +35,7 @@ func Login(baseUrl string, account string, password string) bool {
 	if ok {
 		if vari.Verbose {
 			log = i118Utils.I118Prt.Sprintf("success_to_login")
-			logUtils.PrintToCmd(log, -1)
+			logUtils.Screen(log)
 		}
 	} else {
 		log = i118Utils.I118Prt.Sprintf("fail_to_login")

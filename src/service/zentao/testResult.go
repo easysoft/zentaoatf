@@ -30,7 +30,7 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 	}
 
 	conf := configUtils.ReadCurrConfig()
-	Login(conf.Url, conf.Account, conf.Password)
+	//Login(conf.Url, conf.Account, conf.Password)
 
 	report.ZentaoData = os.Getenv("ZENTAO_DATA")
 	report.BuildUrl = os.Getenv("BUILD_URL")
@@ -43,9 +43,10 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 
 	url := conf.Url + zentaoUtils.GenApiUri("ci", "commitResult", "")
 	resp, ok := client.PostObject(url, report, false)
-	jsonStr, _ := json.Marshal(report)
-
-	logUtils.Screen(string(jsonStr))
+	bytes, _ := json.Marshal(report)
+	if vari.Verbose {
+		logUtils.Screen(string(bytes))
+	}
 
 	if ok {
 		json, err1 := simplejson.NewJson([]byte(resp))
@@ -63,9 +64,7 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 	if ok {
 		msg += color.GreenString(i118Utils.I118Prt.Sprintf("success_to_submit_test_result"))
 	} else {
-		msg += color.RedString(i118Utils.I118Prt.Sprintf("fail_to_submit_test_result", url))
-		msg += "\n" + i118Utils.I118Prt.Sprintf("server_return")
-		msg += "\n" + resp
+		msg += color.RedString(i118Utils.I118Prt.Sprintf("fail_to_submit_test_result"))
 	}
 
 	logUtils.Screen(msg)

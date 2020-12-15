@@ -1,12 +1,8 @@
 package main
 
 import (
-	"encoding/xml"
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/model"
-	testingService "github.com/easysoft/zentaoatf/src/service/testing"
-	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
-	"log"
+	"github.com/yosssi/gohtml"
 )
 
 func cleanup() {
@@ -27,12 +23,15 @@ func main() {
 	//	time.Sleep(10 * time.Second) // or runtime.Gosched() or similar per @misterbee
 	//}
 
-	content := fileUtils.ReadFile("log/pytest-result.xml")
+	//content := fileUtils.ReadFile("log/pytest-result.xml")
+	//
+	//pyTestSuite := model.PyTestSuites{}
+	//err := xml.Unmarshal([]byte(content), &pyTestSuite)
+	//if err == nil {
+	//	testSuite := testingService.ConvertPyTestResult(pyTestSuite)
+	//	log.Println(fmt.Sprintf("%v", testSuite))
+	//}
 
-	pyTestSuite := model.PyTestSuites{}
-	err := xml.Unmarshal([]byte(content), &pyTestSuite)
-	if err == nil {
-		testSuite := testingService.ConvertPyTestResult(pyTestSuite)
-		log.Println(fmt.Sprintf("%v", testSuite))
-	}
+	html := "<html><head><title>Website Title</title></head><body><div class=\"random-class\"><h1>I like pie</h1><p>It's true!</p></div></body></html>"
+	fmt.Println(gohtml.FormatWithLineNo(html))
 }
