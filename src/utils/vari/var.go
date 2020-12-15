@@ -18,7 +18,7 @@ var (
 	UnitTestType    string
 	UnitTestTool    string
 	UnitTestResult  string
-	UnitTestResults string
+	UnitTestResults = "results"
 	ProductId       string
 
 	SessionVar  string

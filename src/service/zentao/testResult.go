@@ -1,7 +1,6 @@
 package zentaoService
 
 import (
-	"encoding/json"
 	"github.com/bitly/go-simplejson"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/service/client"
@@ -13,6 +12,7 @@ import (
 	"github.com/fatih/color"
 	"os"
 	"strconv"
+	"strings"
 )
 
 func CommitTestResult(report model.TestReport, testTaskId int) {
@@ -30,7 +30,7 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 	}
 
 	conf := configUtils.ReadCurrConfig()
-	//Login(conf.Url, conf.Account, conf.Password)
+	Login(conf.Url, conf.Account, conf.Password)
 
 	report.ZentaoData = os.Getenv("ZENTAO_DATA")
 	report.BuildUrl = os.Getenv("BUILD_URL")
@@ -43,10 +43,6 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 
 	url := conf.Url + zentaoUtils.GenApiUri("ci", "commitResult", "")
 	resp, ok := client.PostObject(url, report, false)
-	bytes, _ := json.Marshal(report)
-	if vari.Verbose {
-		logUtils.Screen(string(bytes))
-	}
 
 	if ok {
 		json, err1 := simplejson.NewJson([]byte(resp))
@@ -64,7 +60,11 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 	if ok {
 		msg += color.GreenString(i118Utils.I118Prt.Sprintf("success_to_submit_test_result"))
 	} else {
-		msg += color.RedString(i118Utils.I118Prt.Sprintf("fail_to_submit_test_result"))
+		msg = i118Utils.I118Prt.Sprintf("fail_to_submit_test_result")
+		if strings.Index(resp, "login") > -1 {
+			msg = i118Utils.I118Prt.Sprintf("fail_to_login")
+		}
+		msg = color.RedString(msg)
 	}
 
 	logUtils.Screen(msg)

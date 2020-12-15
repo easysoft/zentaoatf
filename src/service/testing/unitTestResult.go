@@ -57,7 +57,13 @@ func RetrieveUnitResult() []model.UnitTestSuite {
 		var err error
 		var testSuite model.UnitTestSuite
 
-		if vari.UnitTestType == "jest" {
+		if vari.UnitTestType == "gtest" {
+			gTestSuite := model.GTestSuites{}
+			err = xml.Unmarshal([]byte(content), &gTestSuite)
+			if err == nil {
+				testSuite = ConvertGTestResult(gTestSuite)
+			}
+		} else if vari.UnitTestType == "jest" {
 			jestSuite := model.JestSuites{}
 			err = xml.Unmarshal([]byte(content), &jestSuite)
 			if err == nil {
@@ -74,12 +80,6 @@ func RetrieveUnitResult() []model.UnitTestSuite {
 			err = xml.Unmarshal([]byte(content), &pyTestSuite)
 			if err == nil {
 				testSuite = ConvertPyTestResult(pyTestSuite)
-			}
-		} else if vari.UnitTestType == "gtest" {
-			gTestSuite := model.GTestSuites{}
-			err = xml.Unmarshal([]byte(content), &gTestSuite)
-			if err == nil {
-				testSuite = ConvertGTestResult(gTestSuite)
 			}
 		} else if vari.UnitTestType == "cppunit" {
 			content = strings.Replace(content, "ISO-8859-1", "UTF-8", -1)
@@ -101,7 +101,7 @@ func RetrieveUnitResult() []model.UnitTestSuite {
 			if err == nil {
 				testSuite = ConvertRobotResult(robotResult)
 			}
-		} else {
+		} else { // junit, testng
 			testSuite = model.UnitTestSuite{}
 			err = xml.Unmarshal([]byte(content), &testSuite)
 		}
@@ -111,14 +111,18 @@ func RetrieveUnitResult() []model.UnitTestSuite {
 		}
 	}
 
+	//suites[0].Time = suites[0].Time + 10000 // TODO: delay for testing
+
 	return suites
 }
 
-func ParserUnitTestResult(testSuites []model.UnitTestSuite) ([]model.UnitResult, int) {
-	cases := make([]model.UnitResult, 0)
-	classNameMaxWidth := 0
+func ParserUnitTestResult(testSuites []model.UnitTestSuite) (cases []model.UnitResult, classNameMaxWidth int, dur float32) {
 	idx := 1
 	for _, suite := range testSuites {
+		if suite.Time != 0 { // for junit, there is a time on suite level
+			dur += suite.Time
+		}
+
 		for _, cs := range suite.TestCases {
 			cs.Id = idx
 
@@ -142,11 +146,12 @@ func ParserUnitTestResult(testSuites []model.UnitTestSuite) ([]model.UnitResult,
 		}
 	}
 
-	return cases, classNameMaxWidth
+	return
 }
 
 func ConvertJestResult(jestSuite model.JestSuites) model.UnitTestSuite {
 	testSuite := model.UnitTestSuite{}
+	testSuite.Time = jestSuite.Time
 
 	for _, suite := range jestSuite.TestSuites {
 		for _, cs := range suite.TestCases {
@@ -172,10 +177,13 @@ func ConvertJestResult(jestSuite model.JestSuites) model.UnitTestSuite {
 func ConvertPhpUnitResult(phpUnitSuite model.PhpUnitSuites) model.UnitTestSuite {
 	testSuite := model.UnitTestSuite{}
 
+	var total float32 = 0
 	for _, cs := range phpUnitSuite.TestCases {
 		caseResult := model.UnitResult{}
 		caseResult.Title = cs.Title
-		caseResult.Duration = cs.Duration
+		caseResult.Duration = cs.Time
+
+		total += cs.Time
 
 		if cs.Groups != "" && cs.Groups != "default" {
 			caseResult.TestSuite = cs.Groups
@@ -191,6 +199,8 @@ func ConvertPhpUnitResult(phpUnitSuite model.PhpUnitSuites) model.UnitTestSuite 
 
 		testSuite.TestCases = append(testSuite.TestCases, caseResult)
 	}
+	testSuite.Duration = int64(total)
+	testSuite.Time = total
 
 	return testSuite
 }
@@ -198,7 +208,10 @@ func ConvertPhpUnitResult(phpUnitSuite model.PhpUnitSuites) model.UnitTestSuite 
 func ConvertPyTestResult(pytestSuites model.PyTestSuites) model.UnitTestSuite {
 	testSuite := model.UnitTestSuite{}
 
+	var total float32 = 0
 	for _, suite := range pytestSuites.TestSuites {
+		total += suite.Time
+
 		for _, cs := range suite.TestCases {
 			caseResult := model.UnitResult{}
 			caseResult.Title = cs.Title
@@ -227,11 +240,15 @@ func ConvertPyTestResult(pytestSuites model.PyTestSuites) model.UnitTestSuite {
 		}
 	}
 
+	testSuite.Duration = int64(total)
+	testSuite.Time = total
+
 	return testSuite
 }
 
 func ConvertGTestResult(gTestSuite model.GTestSuites) model.UnitTestSuite {
 	testSuite := model.UnitTestSuite{}
+	testSuite.Time = gTestSuite.Time
 
 	for _, suite := range gTestSuite.TestSuites {
 		for _, cs := range suite.TestCases {
@@ -330,9 +347,12 @@ func ConvertRobotResult(result model.RobotResult) model.UnitTestSuite {
 		caseResult.TestSuite = suiteMap[suiteId]
 
 		templ := "20060102 15:04:05.000"
-		start, _ := time.ParseInLocation(templ, cs.Status.Starttime, time.Local)
-		end, _ := time.ParseInLocation(templ, cs.Status.Endtime, time.Local)
-		caseResult.Duration = float32(end.Unix() - start.Unix())
+		startTime, _ := time.ParseInLocation(templ, cs.Status.StartTime, time.Local)
+		endTime, _ := time.ParseInLocation(templ, cs.Status.EndTime, time.Local)
+
+		caseResult.StartTime = startTime.Unix()
+		caseResult.EndTime = endTime.Unix()
+		caseResult.Duration = float32(caseResult.EndTime - caseResult.StartTime)
 
 		if caseResult.Status != "pass" {
 			fail := model.Failure{}

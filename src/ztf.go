@@ -76,7 +76,7 @@ func main() {
 	flagSet.StringVar(&placeholder, "v", "", "")
 
 	flagSet.StringVar(&vari.UnitTestResult, "result", "", "")
-	flagSet.StringVar(&vari.UnitTestResults, "d", "", "")
+	//flagSet.StringVar(&vari.UnitTestResults, "d", "", "")
 
 	if len(os.Args) == 1 {
 		os.Args = append(os.Args, "run", ".")
@@ -165,7 +165,7 @@ func run(args []string) {
 		if end > len(args)-1 {
 			end = len(args) - 1
 		}
-		flagSet.Parse(args[3:end])
+		flagSet.Parse(args[3:])
 
 		start := 3
 		if vari.UnitTestResult != "" {

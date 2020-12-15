@@ -233,10 +233,6 @@
       "translation": "未发现测试用例。"
     },
     {
-      "id": "no_scripts",
-      "translation": "未发现测试脚本。"
-    },
-    {
       "id": "success_to_login",
       "translation": "登录成功。"
     },
@@ -254,7 +250,7 @@
     },
     {
       "id": "found_scripts",
-      "translation": "发现%s个脚本"
+      "translation": "发现%s个用例"
     },
     {
       "id": "ignore_scripts",
@@ -421,7 +417,7 @@
     },
     {
       "id": "run_with_specific_interpreter",
-      "translation": "将使用您指定的解释器运行所有脚本 %s。"
+      "translation": "将使用您指定的解释器运行脚本 %s。"
     }
   ]
 }

@@ -16,13 +16,9 @@ import (
 	"time"
 )
 
-func GenUnitTestReport(cases []model.UnitResult, classNameMaxWidth int,
-	startTime int64, endTime int64) model.TestReport {
+func GenUnitTestReport(cases []model.UnitResult, classNameMaxWidth int, timeVal float32) model.TestReport {
 	logUtils.InitLogger()
 	report := model.TestReport{Env: commonUtils.GetOs(), Pass: 0, Fail: 0, Total: 0}
-	report.StartTime = startTime
-	report.EndTime = endTime
-	report.Duration = endTime - startTime
 	report.TestType = "unit"
 	report.TestFrame = vari.UnitTestType
 
@@ -49,15 +45,29 @@ func GenUnitTestReport(cases []model.UnitResult, classNameMaxWidth int,
 			report.Pass++
 		}
 		report.Total++
+
+		if timeVal == 0 {
+			if report.StartTime == 0 || cs.StartTime < report.StartTime {
+				report.StartTime = cs.StartTime
+			}
+			if cs.EndTime > report.EndTime {
+				report.EndTime = cs.EndTime
+			}
+		}
 	}
 	report.UnitResult = cases
+	if timeVal == 0 {
+		report.Duration = report.EndTime - report.StartTime
+	} else {
+		report.Duration = int64(timeVal)
+	}
 
 	postFix := ":"
 	if len(cases) == 0 {
 		postFix = "."
 	}
 
-	logUtils.ScreenAndResult("\n" + logUtils.GetWholeLine(time.Now().Format("2006-01-02 15:04:05") + " " +
+	logUtils.ScreenAndResult("\n" + logUtils.GetWholeLine(time.Now().Format("2006-01-02 15:04:05")+" "+
 		i118Utils.I118Prt.Sprintf("found_scripts", color.CyanString(strconv.Itoa(len(cases))))+postFix, "="))
 
 	if report.Total == 0 {

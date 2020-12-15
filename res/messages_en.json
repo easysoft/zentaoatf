@@ -240,10 +240,6 @@
     },
 
     {
-      "id": "no_scripts",
-      "translation": "No test scripts found."
-    },
-    {
       "id": "success_to_login",
       "translation": "Success to login."
     },
@@ -262,7 +258,7 @@
     },
     {
       "id": "found_scripts",
-      "translation": "Found %s scripts"
+      "translation": "Found %s test cases"
     },
     {
       "id": "ignore_scripts",

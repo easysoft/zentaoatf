@@ -36,10 +36,8 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, report *model.TestR
 	}
 
 	endTime := time.Now().Unix()
-	secs := endTime - startTime
-
-	report.EndTime = startTime
-	report.Duration = secs
+	report.EndTime = endTime
+	report.Duration = endTime - startTime
 }
 
 func ExeScript(file string, report *model.TestReport, idx int, total int, pathMaxWidth int, numbMaxWidth int) {

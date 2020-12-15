@@ -162,16 +162,21 @@ type UnitTestSuite struct {
 	XMLName xml.Name `xml:"testsuite"`
 
 	Name     string
-	Duration int
+	Duration int64   `xml:"-"`
+	Time     float32 `xml:"time,attr"`
 
 	Properties Properties   `xml:"properties"`
 	TestCases  []UnitResult `xml:"testcase"`
 }
 type UnitResult struct {
-	Title     string   `json:"title" xml:"name,attr"`
-	TestSuite string   `json:"testSuite" xml:"classname,attr"`
-	Duration  float32  `json:"duration" xml:"time,attr"`
-	Failure   *Failure `json:"failure" xml:"failure,omitempty"`
+	Title     string `json:"title" xml:"name,attr"`
+	TestSuite string `json:"testSuite" xml:"classname,attr"`
+
+	StartTime int64 `json:"startTime" xml:"startTime"`
+	EndTime   int64 `json:"endTime" xml:"endTime"`
+
+	Duration float32  `json:"duration" xml:"time,attr"`
+	Failure  *Failure `json:"failure" xml:"failure,omitempty"`
 
 	Id     int    `json:"id"`
 	Status string `json:"status"`
@@ -190,6 +195,30 @@ type Property struct {
 	Value string `json:"value" xml:"value,attr"`
 }
 
+// gtest xml
+type GTestSuites struct {
+	XMLName    xml.Name `xml:"testsuites"`
+	TestSuites []struct {
+		Title     string `xml:"name,attr"`
+		TestCases []struct {
+			Title     string  `xml:"name,attr"`
+			TestSuite string  `xml:"classname,attr"`
+			Duration  float32 `xml:"time,attr"`
+			Failure   *struct {
+				Type string `xml:"message,attr"`
+				Desc string `xml:",innerxml"`
+			} `xml:"failure,omitempty"`
+
+			Status string `xml:"status,attr"`
+		} `xml:"testcase"`
+
+		Duration int
+	} `xml:"testsuite"`
+
+	Duration int
+	Time     float32 `xml:"time,attr"`
+}
+
 // jest xml
 type JestSuites struct {
 	XMLName    xml.Name `xml:"testsuites"`
@@ -202,6 +231,7 @@ type JestSuites struct {
 	} `xml:"testsuite"`
 
 	Duration int
+	Time     float32 `xml:"time,attr"`
 }
 
 // phpunit xml
@@ -212,9 +242,9 @@ type PhpUnitSuites struct {
 		TestSuite string `xml:"prettifiedClassName,attr"`
 		Fail      string `xml:"exceptionMessage,attr"`
 
-		Groups   string  `xml:"groups,attr"`
-		Status   int     `xml:"status,attr"`
-		Duration float32 `xml:"time,attr"`
+		Groups string  `xml:"groups,attr"`
+		Status int     `xml:"status,attr"`
+		Time   float32 `xml:"time,attr"`
 	} `xml:"test"`
 
 	Duration int
@@ -242,29 +272,7 @@ type PyTestSuites struct {
 		} `xml:"testcase"`
 
 		Duration int
-	} `xml:"testsuite"`
-
-	Duration int
-}
-
-// gtest xml
-type GTestSuites struct {
-	XMLName    xml.Name `xml:"testsuites"`
-	TestSuites []struct {
-		Title     string `xml:"name,attr"`
-		TestCases []struct {
-			Title     string  `xml:"name,attr"`
-			TestSuite string  `xml:"classname,attr"`
-			Duration  float32 `xml:"time,attr"`
-			Failure   *struct {
-				Type string `xml:"message,attr"`
-				Desc string `xml:",innerxml"`
-			} `xml:"failure,omitempty"`
-
-			Status string `xml:"status,attr"`
-		} `xml:"testcase"`
-
-		Duration int
+		Time     float32 `xml:"time,attr"`
 	} `xml:"testsuite"`
 
 	Duration int
@@ -283,6 +291,7 @@ type CppUnitSuites struct {
 	} `json:"failedTests" xml:"FailedTests"`
 
 	Duration int
+	Time     float32 `xml:"time,attr"`
 }
 type CppUnitTest struct {
 	Id          int    `json:"id" xml:"Id,attr"`
@@ -314,6 +323,7 @@ type QTestSuites struct {
 
 	Properties Properties `json:"properties" xml:"properties"`
 	Duration   int
+	Time       float32 `xml:"time,attr"`
 }
 
 // RobotFramework xml
@@ -394,6 +404,6 @@ type RobotTest struct {
 type RobotStatus struct {
 	Text      string `xml:",chardata"`
 	Status    string `xml:"status,attr"`
-	Starttime string `xml:"starttime,attr"`
-	Endtime   string `xml:"endtime,attr"`
+	StartTime string `xml:"starttime,attr"`
+	EndTime   string `xml:"endtime,attr"`
 }
