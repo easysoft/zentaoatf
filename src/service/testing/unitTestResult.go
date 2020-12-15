@@ -57,18 +57,10 @@ func RetrieveUnitResult() []model.UnitTestSuite {
 		var err error
 		var testSuite model.UnitTestSuite
 
-		if vari.UnitTestType == "gtest" {
-			gTestSuite := model.GTestSuites{}
-			err = xml.Unmarshal([]byte(content), &gTestSuite)
-			if err == nil {
-				testSuite = ConvertGTestResult(gTestSuite)
-			}
-		} else if vari.UnitTestType == "jest" {
-			jestSuite := model.JestSuites{}
-			err = xml.Unmarshal([]byte(content), &jestSuite)
-			if err == nil {
-				testSuite = ConvertJestResult(jestSuite)
-			}
+		if vari.UnitTestType == "junit" || vari.UnitTestType == "testng" {
+			testSuite = model.UnitTestSuite{}
+			err = xml.Unmarshal([]byte(content), &testSuite)
+
 		} else if vari.UnitTestType == "phpunit" {
 			phpTestSuite := model.PhpUnitSuites{}
 			err = xml.Unmarshal([]byte(content), &phpTestSuite)
@@ -81,6 +73,24 @@ func RetrieveUnitResult() []model.UnitTestSuite {
 			if err == nil {
 				testSuite = ConvertPyTestResult(pyTestSuite)
 			}
+		} else if vari.UnitTestType == "jest" {
+			jestSuite := model.JestSuites{}
+			err = xml.Unmarshal([]byte(content), &jestSuite)
+			if err == nil {
+				testSuite = ConvertJestResult(jestSuite)
+			}
+		} else if vari.UnitTestType == "gtest" {
+			gTestSuite := model.GTestSuites{}
+			err = xml.Unmarshal([]byte(content), &gTestSuite)
+			if err == nil {
+				testSuite = ConvertGTestResult(gTestSuite)
+			}
+		} else if vari.UnitTestType == "qtest" {
+			qTestSuite := model.QTestSuites{}
+			err = xml.Unmarshal([]byte(content), &qTestSuite)
+			if err == nil {
+				testSuite = ConvertQTestResult(qTestSuite)
+			}
 		} else if vari.UnitTestType == "cppunit" {
 			content = strings.Replace(content, "ISO-8859-1", "UTF-8", -1)
 
@@ -89,21 +99,12 @@ func RetrieveUnitResult() []model.UnitTestSuite {
 			if err == nil {
 				testSuite = ConvertCppUnitResult(cppUnitSuites)
 			}
-		} else if vari.UnitTestType == "qtest" {
-			qTestSuite := model.QTestSuites{}
-			err = xml.Unmarshal([]byte(content), &qTestSuite)
-			if err == nil {
-				testSuite = ConvertQTestResult(qTestSuite)
-			}
 		} else if vari.UnitTestType == "robot" {
 			robotResult := model.RobotResult{}
 			err = xml.Unmarshal([]byte(content), &robotResult)
 			if err == nil {
 				testSuite = ConvertRobotResult(robotResult)
 			}
-		} else { // junit, testng
-			testSuite = model.UnitTestSuite{}
-			err = xml.Unmarshal([]byte(content), &testSuite)
 		}
 
 		if err == nil {
