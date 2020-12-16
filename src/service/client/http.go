@@ -153,7 +153,7 @@ func PostObject(url string, params interface{}, useFormFormat bool) (string, boo
 	}
 }
 
-func PostStr(url string, params map[string]string) (string, bool) {
+func PostStr(url string, params map[string]string) (msg string, ok bool) {
 	if vari.Verbose {
 		logUtils.Screen(i118Utils.I118Prt.Sprintf("server_address") + url)
 	}
@@ -174,7 +174,8 @@ func PostStr(url string, params map[string]string) (string, bool) {
 		if vari.Verbose {
 			logUtils.PrintToCmd(reqErr.Error(), color.FgRed)
 		}
-		return "", false
+		ok = false
+		return
 	}
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -185,7 +186,8 @@ func PostStr(url string, params map[string]string) (string, bool) {
 		if vari.Verbose {
 			logUtils.PrintToCmd(respErr.Error(), color.FgRed)
 		}
-		return "", false
+		ok = false
+		return
 	}
 
 	bodyStr, _ := ioutil.ReadAll(resp.Body)
@@ -195,21 +197,24 @@ func PostStr(url string, params map[string]string) (string, bool) {
 
 	var bodyJson model.ZentaoResponse
 	jsonErr := json.Unmarshal(bodyStr, &bodyJson)
-	if jsonErr != nil && strings.Index(url, "login") == -1 { // ignore login request which return a html
+	if jsonErr != nil {
 		if vari.Verbose {
 			logUtils.PrintToCmd(jsonErr.Error(), color.FgRed)
 		}
-		return "", false
+		ok = false
+		return
 	}
 
 	defer resp.Body.Close()
 
 	status := bodyJson.Status
 	if status == "" { // 非嵌套结构
-		return string(bodyStr), true
+		msg = string(bodyStr)
+		return
 	} else { // 嵌套结构
-		dataStr := bodyJson.Data
-		return dataStr, status == "success"
+		msg = bodyJson.Data
+		ok = status == "success"
+		return
 	}
 }
 
