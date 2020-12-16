@@ -19,14 +19,13 @@ import (
 	"strings"
 )
 
-func LoadTestCases(productIdStr, moduleIdStr, suiteIdStr, taskIdStr string) []model.TestCase {
+func LoadTestCases(productIdStr, moduleIdStr, suiteIdStr, taskIdStr string) (testcases []model.TestCase, loginFail bool) {
 	config := configUtils.ReadCurrConfig()
-
-	var testcases []model.TestCase
 
 	ok := Login(config.Url, config.Account, config.Password)
 	if !ok {
-		return testcases
+		loginFail = true
+		return
 	}
 
 	if moduleIdStr != "" {
@@ -41,7 +40,7 @@ func LoadTestCases(productIdStr, moduleIdStr, suiteIdStr, taskIdStr string) []mo
 		logUtils.PrintUsage()
 	}
 
-	return testcases
+	return
 }
 
 func ListCaseByProduct(baseUrl string, productId string) []model.TestCase {

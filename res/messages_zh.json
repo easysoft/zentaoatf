@@ -230,7 +230,7 @@
     },
     {
       "id": "no_cases",
-      "translation": "未发现测试用例。"
+      "translation": "未找到测试用例。"
     },
     {
       "id": "success_to_login",

@@ -199,7 +199,9 @@ func PostStr(url string, params map[string]string) (msg string, ok bool) {
 	jsonErr := json.Unmarshal(bodyStr, &bodyJson)
 	if jsonErr != nil {
 		if vari.Verbose {
-			logUtils.PrintToCmd(jsonErr.Error(), color.FgRed)
+			if strings.Index(url, "login") == -1 { // ignore jsonErr caused by login request return a html
+				logUtils.PrintToCmd(jsonErr.Error(), color.FgRed)
+			}
 		}
 		ok = false
 		return

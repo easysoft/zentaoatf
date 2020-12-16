@@ -29,7 +29,7 @@ func Generate(productId string, moduleId string, suiteId string, taskId string, 
 		return
 	}
 
-	cases := zentaoService.LoadTestCases(productId, moduleId, suiteId, taskId)
+	cases, loginFail := zentaoService.LoadTestCases(productId, moduleId, suiteId, taskId)
 
 	if cases != nil && len(cases) > 0 {
 		productId = cases[0].Product
@@ -62,6 +62,8 @@ func Generate(productId string, moduleId string, suiteId string, taskId string, 
 			logUtils.PrintToWithColor(err.Error(), color.FgRed)
 		}
 	} else {
-		logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("no_cases"), color.FgRed)
+		if !loginFail {
+			logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("no_cases"), color.FgRed)
+		}
 	}
 }
