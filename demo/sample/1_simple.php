@@ -8,7 +8,7 @@ pid=0
 
 [group]
   1. step1 >> expect好 1
-  2. step2 
+  2. step2
   3. step3 >> expect 3
 
 [esac]

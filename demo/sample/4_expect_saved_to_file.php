@@ -8,7 +8,7 @@ pid=0
 
 [group]
   1. step 1 >>
-  2. step 2 
+  2. step 2
 
 [3. group title 3]
   [3.1. steps]

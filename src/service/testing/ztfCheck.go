@@ -38,11 +38,13 @@ func ValidateCaseResult(scriptFile string, langType string,
 
 	stepLogs := make([]model.StepLog, 0)
 	caseResult := constant.PASS.String()
+	noExpects := true
 
 	if skip {
 		caseResult = constant.SKIP.String()
 	} else {
 		indx := 0
+
 		for _, numbInterf := range expectMap.Keys() { // iterate by checkpoints
 			expectInterf, _ := expectMap.Get(numbInterf)
 
@@ -52,6 +54,8 @@ func ValidateCaseResult(scriptFile string, langType string,
 			if expect == "" {
 				continue
 			}
+
+			noExpects = false
 
 			expectLines := strings.Split(expect, "\n")
 			var actualLines []string
@@ -68,6 +72,10 @@ func ValidateCaseResult(scriptFile string, langType string,
 
 			indx++
 		}
+	}
+
+	if noExpects {
+		caseResult = constant.SKIP.String()
 	}
 
 	if caseResult == constant.FAIL.String() {
@@ -115,13 +123,12 @@ func ValidateStepResult(langType string, expectLines []string, actualLines []str
 
 		expect = strings.TrimSpace(expect)
 		var pass bool
-		if expect[:1] == "`" && expect[len(expect) - 1:] == "`" {
-			expect = expect[1:len(expect) - 1]
+		if expect[:1] == "`" && expect[len(expect)-1:] == "`" {
+			expect = expect[1 : len(expect)-1]
 			pass = stringUtils.MatchString(expect, log, langType)
 		} else {
 			pass = strings.Contains(log, expect)
 		}
-
 
 		if !pass {
 			stepResult = false

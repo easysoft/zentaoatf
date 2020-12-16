@@ -165,7 +165,7 @@ func loadMutiLineSteps(arr []string) []model.TestStep {
 
 				temp := strings.TrimSpace(arr[idx])
 				if temp == ">>" {
-					temp = "pending"
+					temp = ""
 				}
 				exp += temp + "\n"
 				idx++
@@ -187,9 +187,6 @@ func loadSingleLineSteps(arr []string) []model.TestStep {
 		expect := ""
 		if len(sections) > 1 { // has expect
 			expect = strings.TrimSpace(sections[1])
-			if expect == "" { // in independent file
-				expect = "pending"
-			}
 		}
 
 		child := model.TestStep{Desc: sections[0], Expect: expect}
@@ -394,7 +391,7 @@ func GetExpectMapFromIndependentFile(expectMap maps.Map, content string, withEmp
 		key := strings.TrimSpace(keyIfs.(string))
 		value := strings.TrimSpace(valueIfs.(string))
 
-		if value == "pending" && len(expectArr) > idx {
+		if value == "" && len(expectArr) > idx {
 			retMap.Put(key, strings.Join(expectArr[idx], "\r\n"))
 			idx++
 		} else {

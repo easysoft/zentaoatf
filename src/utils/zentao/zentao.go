@@ -8,6 +8,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"os"
 	"path"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -289,7 +290,13 @@ func ReadCaseId(content string) string {
 }
 
 func GetDependentExpect(file string) (bool, string) {
-	expectIndependentFile := strings.Replace(file, path.Ext(file), ".exp", -1)
+	dir := fileUtils.UpdateDir(filepath.Dir(file))
+	name := strings.Replace(filepath.Base(file), path.Ext(file), ".exp", -1)
+	expectIndependentFile := dir + name
+
+	if !fileUtils.FileExist(expectIndependentFile) {
+		expectIndependentFile = dir + "." + name
+	}
 
 	if fileUtils.FileExist(expectIndependentFile) {
 		expectIndependentContent := fileUtils.ReadFile(expectIndependentFile)
