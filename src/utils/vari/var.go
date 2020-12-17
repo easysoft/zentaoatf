@@ -3,7 +3,6 @@ package vari
 import (
 	"github.com/awesome-gocui/gocui"
 	"github.com/easysoft/zentaoatf/src/model"
-	"github.com/easysoft/zentaoatf/src/utils/const"
 )
 
 var (
@@ -11,7 +10,7 @@ var (
 	Cui            *gocui.Gui
 	MainViewHeight int
 
-	RunMode         constant.RunMode
+	//RunMode         constant.RunMode
 	ZTFDir          string
 	LogDir          string
 	RunFromCui      bool
@@ -42,4 +41,9 @@ var (
 
 	Verbose     bool
 	Interpreter string
+
+	// server
+	RunMode string
+	WorkDir string
+	Port    int
 )

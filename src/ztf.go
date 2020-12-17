@@ -70,6 +70,9 @@ func main() {
 	flagSet.BoolVar(&noNeedConfirm, "y", false, "")
 	flagSet.BoolVar(&vari.Verbose, "verbose", false, "")
 
+	flagSet.IntVar(&vari.Port, "P", 8848, "")
+	flagSet.IntVar(&vari.Port, "port", 8848, "")
+
 	var placeholder string
 	flagSet.StringVar(&placeholder, "h", "", "")
 	flagSet.StringVar(&placeholder, "r", "", "")

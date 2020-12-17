@@ -33,7 +33,7 @@ func (c LangType) String() string {
 	case TCL:
 		return "tcl"
 	case AUTOIT:
-	return "autoit"
+		return "autoit"
 	}
 	return "unknown"
 }
@@ -62,25 +62,25 @@ func (c ResultStatus) String() string {
 	return "UNKNOWN"
 }
 
-type RunMode int
+//type RunMode int
 
-const (
-	RunModeDir RunMode = iota
-	RunModeBatch
-	RunModeSuite
-	RunModeScript
-)
+//const (
+//	RunModeDir RunMode = iota
+//	RunModeBatch
+//	RunModeSuite
+//	RunModeScript
+//)
 
-func (c RunMode) String() string {
-	switch c {
-	case RunModeDir:
-		return "dir"
-	case RunModeBatch:
-		return "batch"
-	case RunModeSuite: // can be show with cui by select a suite file
-		return "suite"
-	case RunModeScript: // can be show with cui by select a script file
-		return "script"
-	}
-	return "unknown"
-}
+//func (c RunMode) String() string {
+//	switch c {
+//	case RunModeDir:
+//		return "dir"
+//	case RunModeBatch:
+//		return "batch"
+//	case RunModeSuite: // can be show with cui by select a suite file
+//		return "suite"
+//	case RunModeScript: // can be show with cui by select a script file
+//		return "script"
+//	}
+//	return "unknown"
+//}
