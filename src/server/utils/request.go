@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 func SetupCORS(w *http.ResponseWriter, req *http.Request) {
@@ -41,7 +42,12 @@ func ParserJsonReq(bytes []byte, obj *model.ReqData) (err error) {
 	return
 }
 
-func ParserGetParams(values url.Values) (params map[string]string) {
+func ParserGetParams(req *http.Request) (method string, params map[string]string) {
+	path := req.URL.Path
+	arr := strings.Split(path, "/")
+	method = arr[1]
+
+	values := req.URL.Query()
 	params = map[string]string{}
 	for key, items := range values {
 		value := items[len(items)-1]

@@ -65,20 +65,23 @@ func (s *Server) handle(writer http.ResponseWriter, req *http.Request) {
 }
 
 func (s *Server) get(req *http.Request) (resp model.ResData, err error) {
-	params := serverUtils.ParserGetParams(req.URL.Query())
-	method := params["method"]
+	method, _ := serverUtils.ParserGetParams(req)
 
 	switch method {
 
 	case "ListTask":
-		resp.Msg = "WORKING"
+		resp.Msg = "ListTask"
+	case "ListHistory":
+		resp.Msg = "ListHistory"
+	case "PushTask":
+		resp.Msg = "PushTask"
 
 	case "":
 		resp.Code = 0
 		resp.Msg = "METHOD IS EMPTY"
 	default:
 		resp.Code = 0
-		resp.Msg = "API NOT FOUND"
+		resp.Msg = "METHOD NOT FOUND"
 	}
 
 	return
