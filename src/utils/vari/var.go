@@ -10,7 +10,6 @@ var (
 	Cui            *gocui.Gui
 	MainViewHeight int
 
-	//RunMode         constant.RunMode
 	ZTFDir          string
 	LogDir          string
 	RunFromCui      bool
@@ -32,9 +31,7 @@ var (
 
 	ScreenWidth     int
 	ScreenHeight    int
-	ZentaoBugFileds model.ZentaoBugFields
-
-	//ZentaoCaseFileds model.ZentaoCaseFileds
+	ZenTaoBugFields model.ZentaoBugFields
 
 	CurrBug        model.Bug
 	CurrBugStepIds string
@@ -44,6 +41,6 @@ var (
 
 	// server
 	RunMode string
-	WorkDir string
+	IP      string
 	Port    int
 )

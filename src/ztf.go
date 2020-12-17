@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"github.com/easysoft/zentaoatf/src/action"
+	"github.com/easysoft/zentaoatf/src/server"
+	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	"github.com/easysoft/zentaoatf/src/utils/const"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
@@ -13,6 +15,7 @@ import (
 	"github.com/fatih/color"
 	"os"
 	"os/signal"
+	"strconv"
 	"strings"
 	"syscall"
 )
@@ -79,7 +82,6 @@ func main() {
 	flagSet.StringVar(&placeholder, "v", "", "")
 
 	flagSet.StringVar(&vari.UnitTestResult, "result", "", "")
-	//flagSet.StringVar(&vari.UnitTestResults, "d", "", "")
 
 	if len(os.Args) == 1 {
 		os.Args = append(os.Args, "run", ".")
@@ -149,6 +151,13 @@ func main() {
 		logUtils.PrintUsage()
 
 	default: // run
+		if vari.Port != 0 {
+			vari.RunMode = constant.RunModeServer
+			startServer()
+
+			return
+		}
+
 		if len(os.Args) > 1 {
 			args := []string{os.Args[0], "run"}
 			args = append(args, os.Args[1:]...)
@@ -211,6 +220,16 @@ func run(args []string) {
 			logUtils.PrintUsage()
 		}
 	}
+}
+
+func startServer() {
+	vari.IP = commonUtils.GetIp()
+	logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("start_server", vari.IP, strconv.Itoa(vari.Port)), color.FgCyan)
+
+	server := server.NewServer()
+	server.Run()
+
+	return
 }
 
 func init() {

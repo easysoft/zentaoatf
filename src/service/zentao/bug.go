@@ -33,11 +33,11 @@ func PrepareBug(resultDir string, caseIdStr string) (model.Bug, string) {
 		GetBugFiledOptions(product)
 
 		title := cs.Title
-		module := GetFirstNoEmptyVal(vari.ZentaoBugFileds.Modules)
-		typ := GetFirstNoEmptyVal(vari.ZentaoBugFileds.Categories)
+		module := GetFirstNoEmptyVal(vari.ZenTaoBugFields.Modules)
+		typ := GetFirstNoEmptyVal(vari.ZenTaoBugFields.Categories)
 		openedBuild := map[string]string{"0": "trunk"}
-		severity := GetFirstNoEmptyVal(vari.ZentaoBugFileds.Severities)
-		priority := GetFirstNoEmptyVal(vari.ZentaoBugFileds.Priorities)
+		severity := GetFirstNoEmptyVal(vari.ZenTaoBugFields.Severities)
+		priority := GetFirstNoEmptyVal(vari.ZenTaoBugFields.Priorities)
 
 		caseId := cs.Id
 
@@ -90,10 +90,10 @@ func CommitBug() (bool, string) {
 	} else {
 		params = fmt.Sprintf("productID=%s&branch=0&$extras=%s", productId, extras)
 	}
-	params=""
+	params = ""
 	url := conf.Url + zentaoUtils.GenApiUri("bug", "create", params)
 
-	body, ok := client.PostObject(url, bug,  true)
+	body, ok := client.PostObject(url, bug, true)
 	if !ok {
 		return false, ""
 	}

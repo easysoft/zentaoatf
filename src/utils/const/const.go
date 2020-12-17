@@ -38,4 +38,8 @@ var (
 
 	UnitTestType []string = []string{"junit", "testng", "phpunit", "pytest", "jest", "cppunit", "gtest", "qtest", "robot"}
 	AutoTestType []string = []string{"selenium", "appium"}
+
+	RunModeCommon  = "common"
+	RunModeServer  = "server"
+	RunModeRequest = "request"
 )

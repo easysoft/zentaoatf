@@ -56,7 +56,7 @@ func GetBugFiledOptions(productId int) {
 			logUtils.PrintToCmd(err.Error(), color.FgRed)
 		}
 
-		vari.ZentaoBugFileds = bugFields
+		vari.ZenTaoBugFields = bugFields
 	}
 }
 

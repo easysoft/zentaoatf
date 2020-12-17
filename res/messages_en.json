@@ -411,6 +411,23 @@
     {
       "id": "run_with_specific_interpreter",
       "translation": "Run all test scripts with specific interpreter %s."
+    },
+
+    {
+      "id": "start_server",
+      "translation": "Start ZTF HTTP service, press CTRL+C to exist.\nPlease access http://%s:%s/data for more information."
+    },
+    {
+      "id": "start_server_fail",
+      "translation": "Fail to start ZenData HTTP service, please confirm port %s is available."
+    },
+    {
+      "id": "server_request",
+      "translation": "\nGot %s request %s. "
+    },
+    {
+      "id": "server_response",
+      "translation": "Create %d records in %d sec."
     }
   ]
 }

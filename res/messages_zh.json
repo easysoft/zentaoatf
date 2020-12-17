@@ -418,6 +418,23 @@
     {
       "id": "run_with_specific_interpreter",
       "translation": "将使用您指定的解释器运行脚本 %s。"
+    },
+
+    {
+      "id": "start_server",
+      "translation": "正在启动ZTF HTTP服务，按CTRL+C键退出。请调用http://%s:%s/获取更多信息。"
+    },
+    {
+      "id": "start_server_fail",
+      "translation": "ZenData HTTP服务启动失败，请确认端口%s有效。"
+    },
+    {
+      "id": "server_request",
+      "translation": "\n收到%s请求 %s。"
+    },
+    {
+      "id": "server_response",
+      "translation": "生成%d条记录，耗时%d秒。"
     }
   ]
 }

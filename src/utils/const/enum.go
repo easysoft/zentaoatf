@@ -61,26 +61,3 @@ func (c ResultStatus) String() string {
 
 	return "UNKNOWN"
 }
-
-//type RunMode int
-
-//const (
-//	RunModeDir RunMode = iota
-//	RunModeBatch
-//	RunModeSuite
-//	RunModeScript
-//)
-
-//func (c RunMode) String() string {
-//	switch c {
-//	case RunModeDir:
-//		return "dir"
-//	case RunModeBatch:
-//		return "batch"
-//	case RunModeSuite: // can be show with cui by select a suite file
-//		return "suite"
-//	case RunModeScript: // can be show with cui by select a script file
-//		return "script"
-//	}
-//	return "unknown"
-//}
