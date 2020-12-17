@@ -35,7 +35,7 @@ func (s *CronService) Init() {
 					return
 				}
 
-				// no task to run, submit free
+				// no task to run, register idle
 				if s.taskService.GetSize() == 0 {
 					s.heartBeatService.HeartBeat(false)
 					return
