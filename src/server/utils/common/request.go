@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	serverModel "github.com/easysoft/zentaoatf/src/server/model"
+	serverModel "github.com/easysoft/zentaoatf/src/server/domain"
 	"io"
 	"log"
 	"net/http"
@@ -23,13 +23,13 @@ func OutputErr(err error, writer http.ResponseWriter) {
 	WriteRes(errRes, writer)
 }
 
-func WriteRes(ret serverModel.ResData, writer http.ResponseWriter) {
+func WriteRes(ret serverModel.RespData, writer http.ResponseWriter) {
 	jsonStr, _ := json.Marshal(ret)
 	io.WriteString(writer, string(jsonStr))
 }
 
-func ErrRes(msg string) serverModel.ResData {
-	return serverModel.ResData{Code: 0, Msg: msg}
+func ErrRes(msg string) serverModel.RespData {
+	return serverModel.RespData{Code: 0, Msg: msg}
 }
 
 func ParserJsonReq(bytes []byte, obj *serverModel.ReqData) (err error) {

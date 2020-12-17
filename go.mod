@@ -12,12 +12,15 @@ require (
 	github.com/emirpasic/gods v1.12.0
 	github.com/fatih/color v1.9.0
 	github.com/go-errors/errors v1.0.2 // indirect
+	github.com/go-git/go-git/v5 v5.2.0
 	github.com/gopherjs/gopherjs v0.0.0-20200217142428-fce0ec30dd00 // indirect
 	github.com/gorilla/mux v1.7.4
+	github.com/klauspost/compress v1.10.10
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mattn/go-runewidth v0.0.9
+	github.com/mholt/archiver/v3 v3.5.0
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/rifflock/lfshook v0.0.0-20180920164130-b9218ef580f5
 	github.com/robfig/cron/v3 v3.0.1

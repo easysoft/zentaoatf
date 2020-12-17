@@ -3,7 +3,7 @@ package serverUtils
 import (
 	"bytes"
 	"errors"
-	serverModel "github.com/easysoft/zentaoatf/src/server/model"
+	serverModel "github.com/easysoft/zentaoatf/src/server/domain"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"os"
 	"os/exec"

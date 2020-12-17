@@ -1,4 +1,4 @@
-package serverModel
+package domain
 
 type SysInfo struct {
 	AgentDir string `json:"agentDir"`

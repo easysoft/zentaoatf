@@ -3,7 +3,7 @@ package server
 import (
 	"encoding/json"
 	"fmt"
-	serverModel "github.com/easysoft/zentaoatf/src/server/model"
+	"github.com/easysoft/zentaoatf/src/server/domain"
 	"github.com/easysoft/zentaoatf/src/server/service"
 	serverUtils "github.com/easysoft/zentaoatf/src/server/utils/common"
 	serverConst "github.com/easysoft/zentaoatf/src/server/utils/const"
@@ -18,16 +18,24 @@ import (
 type Server struct {
 	commonService *service.CommonService
 	agentService  *service.AgentService
+	buildService  *service.BuildService
+	taskService   *service.TaskService
 	cronService   *service.CronService
 }
 
 func NewServer() *Server {
 	commonService := service.NewCommonService()
 	agentService := service.NewAgentService()
+
+	taskService := service.NewTaskService()
+	buildService := service.NewBuildService(taskService)
+
 	cronService := service.NewCronService(commonService)
 	cronService.Init()
 
-	return &Server{commonService: commonService, agentService: agentService, cronService: cronService}
+	return &Server{commonService: commonService, agentService: agentService,
+		buildService: buildService, taskService: taskService,
+		cronService: cronService}
 }
 
 func (s *Server) Init() {
@@ -57,7 +65,7 @@ func (s *Server) Handler() http.Handler {
 }
 
 func (s *Server) handle(writer http.ResponseWriter, req *http.Request) {
-	ret := serverModel.ResData{Code: 1, Msg: "success"}
+	ret := domain.RespData{Code: 1, Msg: "success"}
 	var err error
 
 	serverUtils.SetupCORS(&writer, req)
@@ -81,17 +89,15 @@ func (s *Server) handle(writer http.ResponseWriter, req *http.Request) {
 	io.WriteString(writer, string(bytes))
 }
 
-func (s *Server) get(req *http.Request) (resp serverModel.ResData, err error) {
+func (s *Server) get(req *http.Request) (resp domain.RespData, err error) {
 	method, _ := serverUtils.ParserGetParams(req)
 
 	switch method {
 
-	case "ListTask":
-		resp.Msg = "ListTask"
-	case "ListHistory":
-		resp.Msg = "ListHistory"
-	case "PushTask":
-		resp.Msg = "PushTask"
+	case "listTask":
+		resp.Msg = "listTask"
+	case "listHistory":
+		resp.Msg = "listHistory"
 
 	case "":
 		resp.Code = 0
@@ -104,13 +110,13 @@ func (s *Server) get(req *http.Request) (resp serverModel.ResData, err error) {
 	return
 }
 
-func (s *Server) post(req *http.Request) (resp serverModel.ResData, err error) {
+func (s *Server) post(req *http.Request) (resp domain.RespData, err error) {
 	body, err := ioutil.ReadAll(req.Body)
 	if len(body) == 0 {
 		return
 	}
 
-	reqData := serverModel.ReqData{}
+	reqData := domain.ReqData{}
 	err = serverUtils.ParserJsonReq(body, &reqData)
 	if err != nil {
 		return
@@ -120,7 +126,8 @@ func (s *Server) post(req *http.Request) (resp serverModel.ResData, err error) {
 
 	switch method {
 
-	case "ListTask":
+	case "addTask":
+		s.buildService.Add(reqData)
 
 	default:
 		resp.Code = 0

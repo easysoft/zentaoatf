@@ -226,3 +226,22 @@ func CopyFile(src, dst string) (int64, error) {
 	nBytes, err := io.Copy(destination, source)
 	return nBytes, err
 }
+
+func GetFileNameWithoutExt(pathOrUrl string) string {
+	name := GetFileName(pathOrUrl)
+	index := strings.LastIndex(name, ".")
+	return name[:index]
+}
+
+func GetExtName(pathOrUrl string) string {
+	index := strings.LastIndex(pathOrUrl, ".")
+
+	return pathOrUrl[index:]
+}
+
+func GetFileName(pathOrUrl string) string {
+	index := strings.LastIndex(pathOrUrl, string(os.PathSeparator))
+
+	name := pathOrUrl[index+1:]
+	return name
+}
