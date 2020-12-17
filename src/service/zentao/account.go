@@ -20,7 +20,7 @@ func Login(baseUrl string, account string, password string) bool {
 	// $referer = '', $from = ''
 	uri := ""
 	if vari.RequestType == constant.RequestTypePathInfo {
-		uri = "user-login"
+		uri = "user-login.json"
 	} else {
 		uri = "index.php?m=user&f=login&t=json"
 	}

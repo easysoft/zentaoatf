@@ -197,17 +197,13 @@ func PostStr(url string, params map[string]string) (msg string, ok bool) {
 
 	var bodyJson model.ZentaoResponse
 	jsonErr := json.Unmarshal(bodyStr, &bodyJson)
-	isLogin := strings.Index(url, "login") > -1
 	if jsonErr != nil {
-		if isLogin && strings.Index(string(bodyStr), "location=") > -1 { // ignore login request return a html
-			ok = true
-		} else {
-			ok = false
-			if !isLogin && vari.Verbose {
+		if vari.Verbose {
+			if strings.Index(url, "login") == -1 { // jsonErr caused by login request return a html
 				logUtils.PrintToCmd(jsonErr.Error(), color.FgRed)
 			}
 		}
-
+		ok = false
 		return
 	}
 
