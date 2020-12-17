@@ -30,6 +30,13 @@ const (
 	StatusFail    BuildStatus = "fail"
 )
 
+type HostStatus string
+
+const (
+	HostActive  HostStatus = "active"
+	HostOffline HostStatus = "offline"
+)
+
 type VmStatus string
 
 const (
@@ -42,13 +49,6 @@ const (
 	VmFailToCreate  VmStatus = "fail_to_create"
 	VmFailToDestroy VmStatus = "fail_to_destroy"
 	VmUnknown       VmStatus = "unknown"
-)
-
-type HostStatus string
-
-const (
-	HostActive  HostStatus = "active"
-	HostOffline HostStatus = "offline"
 )
 
 type DeviceStatus string

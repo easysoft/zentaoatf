@@ -42,6 +42,8 @@ var (
 	// server
 	RunMode  string
 	IP       string
+	MAC      string
 	Port     int
 	AgentDir string
+	Platform string
 )

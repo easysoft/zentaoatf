@@ -26,11 +26,13 @@ type Server struct {
 func NewServer() *Server {
 	commonService := service.NewCommonService()
 	agentService := service.NewAgentService()
+	heartBeatService := service.NewHeartBeatService()
 
 	taskService := service.NewTaskService()
 	buildService := service.NewBuildService(taskService)
+	execService := service.NewExecService()
 
-	cronService := service.NewCronService(commonService)
+	cronService := service.NewCronService(heartBeatService, buildService, taskService, execService)
 	cronService.Init()
 
 	return &Server{commonService: commonService, agentService: agentService,
@@ -39,6 +41,8 @@ func NewServer() *Server {
 }
 
 func (s *Server) Init() {
+	vari.IP, vari.MAC = serverUtils.GetIp()
+
 	if vari.AgentDir != "" {
 		return
 	}

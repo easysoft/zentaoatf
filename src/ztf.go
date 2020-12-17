@@ -4,6 +4,7 @@ import (
 	"flag"
 	"github.com/easysoft/zentaoatf/src/action"
 	"github.com/easysoft/zentaoatf/src/server"
+	serverConst "github.com/easysoft/zentaoatf/src/server/utils/const"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	"github.com/easysoft/zentaoatf/src/utils/const"
@@ -75,6 +76,7 @@ func main() {
 
 	flagSet.IntVar(&vari.Port, "P", 8848, "")
 	flagSet.IntVar(&vari.Port, "port", 8848, "")
+	flagSet.StringVar(&vari.Platform, "M", string(serverConst.Vm), "")
 	flagSet.StringVar(&vari.AgentDir, "w", "", "")
 
 	var placeholder string
