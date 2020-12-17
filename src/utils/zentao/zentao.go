@@ -290,7 +290,7 @@ func ReadCaseId(content string) string {
 }
 
 func GetDependentExpect(file string) (bool, string) {
-	dir := fileUtils.UpdateDir(filepath.Dir(file))
+	dir := fileUtils.AddPathSepIfNeeded(filepath.Dir(file))
 	name := strings.Replace(filepath.Base(file), path.Ext(file), ".exp", -1)
 	expectIndependentFile := dir + name
 

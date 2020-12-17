@@ -23,7 +23,7 @@ func CommitBug(files []string) {
 	} else {
 		stdinUtils.InputForDir(&resultDir, "", "result")
 	}
-	resultDir = fileUtils.UpdateDir(resultDir)
+	resultDir = fileUtils.AddPathSepIfNeeded(resultDir)
 
 	report := testingService.GetZTFTestReportForSubmit(resultDir)
 

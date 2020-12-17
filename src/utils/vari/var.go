@@ -40,7 +40,8 @@ var (
 	Interpreter string
 
 	// server
-	RunMode string
-	IP      string
-	Port    int
+	RunMode  string
+	IP       string
+	Port     int
+	AgentDir string
 )

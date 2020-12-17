@@ -6,6 +6,8 @@ import (
 )
 
 var (
+	PthSep = string(os.PathSeparator)
+
 	ConfigVer  = 1
 	ConfigFile = fmt.Sprintf("conf%sztf.conf", string(os.PathSeparator))
 

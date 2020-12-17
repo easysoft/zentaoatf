@@ -75,6 +75,7 @@ func main() {
 
 	flagSet.IntVar(&vari.Port, "P", 8848, "")
 	flagSet.IntVar(&vari.Port, "port", 8848, "")
+	flagSet.StringVar(&vari.AgentDir, "w", "", "")
 
 	var placeholder string
 	flagSet.StringVar(&placeholder, "h", "", "")
@@ -227,6 +228,7 @@ func startServer() {
 	logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("start_server", vari.IP, strconv.Itoa(vari.Port)), color.FgCyan)
 
 	server := server.NewServer()
+	server.Init()
 	server.Run()
 
 	return

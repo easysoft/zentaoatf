@@ -5,7 +5,10 @@ import (
 	"fmt"
 	serverModel "github.com/easysoft/zentaoatf/src/server/model"
 	"github.com/easysoft/zentaoatf/src/server/service"
-	serverUtils "github.com/easysoft/zentaoatf/src/server/utils"
+	serverUtils "github.com/easysoft/zentaoatf/src/server/utils/common"
+	serverConst "github.com/easysoft/zentaoatf/src/server/utils/const"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"io"
 	"io/ioutil"
@@ -25,6 +28,15 @@ func NewServer() *Server {
 	cronService.Init()
 
 	return &Server{commonService: commonService, agentService: agentService, cronService: cronService}
+}
+
+func (s *Server) Init() {
+	if vari.AgentDir != "" {
+		return
+	}
+
+	home, _ := serverUtils.GetUserHome()
+	vari.AgentDir = fileUtils.AddPathSepIfNeeded(home + constant.PthSep + serverConst.AgentDir)
 }
 
 func (s *Server) Run() {

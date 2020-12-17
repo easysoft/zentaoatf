@@ -14,6 +14,6 @@ func CommitZTFTestResult(files []string, productId string, taskId string, noNeed
 		stdinUtils.InputForDir(&resultDir, "", "result")
 	}
 
-	resultDir = fileUtils.UpdateDir(resultDir)
+	resultDir = fileUtils.AddPathSepIfNeeded(resultDir)
 	zentaoService.CommitZTFTestResult(resultDir, productId, taskId, noNeedConfirm)
 }

@@ -1,6 +1,8 @@
 package serverModel
 
 type SysInfo struct {
+	AgentDir string `json:"agentDir"`
+
 	SysArch  string `json:"sysArch"`
 	SysCores int    `json:"sysCores"`
 

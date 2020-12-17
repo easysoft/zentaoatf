@@ -78,7 +78,7 @@ func AbosutePath(pth string) string {
 		pth, _ = filepath.Abs(pth)
 	}
 
-	pth = UpdateDir(pth)
+	pth = AddPathSepIfNeeded(pth)
 
 	return pth
 }
@@ -88,7 +88,7 @@ func IsAbosutePath(pth string) bool {
 		strings.Index(pth, ":") == 1 // windows
 }
 
-func UpdateDir(pth string) string {
+func AddPathSepIfNeeded(pth string) string {
 	sepa := string(os.PathSeparator)
 
 	if strings.LastIndex(pth, sepa) < len(pth)-1 {
@@ -148,7 +148,7 @@ func GetZTFDir() string { // where ztf command in
 	}
 
 	dir, _ = filepath.Abs(dir)
-	dir = UpdateDir(dir)
+	dir = AddPathSepIfNeeded(dir)
 
 	//fmt.Printf("Debug: Launch %s in %s \n", arg1, dir)
 	return dir
@@ -195,7 +195,7 @@ func GetLogDir() string {
 
 	ret := getLogNumb(numb + 1)
 
-	return UpdateDir(path + ret)
+	return AddPathSepIfNeeded(path + ret)
 }
 
 func getLogNumb(numb int) string {
