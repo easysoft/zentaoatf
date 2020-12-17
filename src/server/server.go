@@ -95,7 +95,8 @@ func (s *Server) get(req *http.Request) (resp domain.RespData, err error) {
 	switch method {
 
 	case "listTask":
-		resp.Msg = "listTask"
+		resp.Data = s.taskService.ListTask()
+
 	case "listHistory":
 		resp.Msg = "listHistory"
 

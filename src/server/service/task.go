@@ -57,3 +57,8 @@ func (s *TaskService) CheckRunning() bool {
 	}
 	return isRunning
 }
+
+func (s *TaskService) ListTask() (data []domain.Build) {
+	data = tasks
+	return
+}
