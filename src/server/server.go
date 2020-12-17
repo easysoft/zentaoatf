@@ -3,7 +3,7 @@ package server
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/server/model"
+	serverModel "github.com/easysoft/zentaoatf/src/server/model"
 	"github.com/easysoft/zentaoatf/src/server/service"
 	serverUtils "github.com/easysoft/zentaoatf/src/server/utils"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
@@ -13,13 +13,18 @@ import (
 )
 
 type Server struct {
-	agentService *service.AgentService
+	commonService *service.CommonService
+	agentService  *service.AgentService
+	cronService   *service.CronService
 }
 
 func NewServer() *Server {
+	commonService := service.NewCommonService()
 	agentService := service.NewAgentService()
+	cronService := service.NewCronService(commonService)
+	cronService.Init()
 
-	return &Server{agentService: agentService}
+	return &Server{commonService: commonService, agentService: agentService, cronService: cronService}
 }
 
 func (s *Server) Run() {
@@ -40,7 +45,7 @@ func (s *Server) Handler() http.Handler {
 }
 
 func (s *Server) handle(writer http.ResponseWriter, req *http.Request) {
-	ret := model.ResData{Code: 1, Msg: "success"}
+	ret := serverModel.ResData{Code: 1, Msg: "success"}
 	var err error
 
 	serverUtils.SetupCORS(&writer, req)
@@ -64,7 +69,7 @@ func (s *Server) handle(writer http.ResponseWriter, req *http.Request) {
 	io.WriteString(writer, string(bytes))
 }
 
-func (s *Server) get(req *http.Request) (resp model.ResData, err error) {
+func (s *Server) get(req *http.Request) (resp serverModel.ResData, err error) {
 	method, _ := serverUtils.ParserGetParams(req)
 
 	switch method {
@@ -87,13 +92,13 @@ func (s *Server) get(req *http.Request) (resp model.ResData, err error) {
 	return
 }
 
-func (s *Server) post(req *http.Request) (resp model.ResData, err error) {
+func (s *Server) post(req *http.Request) (resp serverModel.ResData, err error) {
 	body, err := ioutil.ReadAll(req.Body)
 	if len(body) == 0 {
 		return
 	}
 
-	reqData := model.ReqData{}
+	reqData := serverModel.ReqData{}
 	err = serverUtils.ParserJsonReq(body, &reqData)
 	if err != nil {
 		return

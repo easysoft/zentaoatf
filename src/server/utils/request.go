@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/easysoft/zentaoatf/src/server/model"
+	serverModel "github.com/easysoft/zentaoatf/src/server/model"
 	"io"
 	"log"
 	"net/http"
@@ -23,16 +23,16 @@ func OutputErr(err error, writer http.ResponseWriter) {
 	WriteRes(errRes, writer)
 }
 
-func WriteRes(ret model.ResData, writer http.ResponseWriter) {
+func WriteRes(ret serverModel.ResData, writer http.ResponseWriter) {
 	jsonStr, _ := json.Marshal(ret)
 	io.WriteString(writer, string(jsonStr))
 }
 
-func ErrRes(msg string) model.ResData {
-	return model.ResData{Code: 0, Msg: msg}
+func ErrRes(msg string) serverModel.ResData {
+	return serverModel.ResData{Code: 0, Msg: msg}
 }
 
-func ParserJsonReq(bytes []byte, obj *model.ReqData) (err error) {
+func ParserJsonReq(bytes []byte, obj *serverModel.ReqData) (err error) {
 	err = json.Unmarshal(bytes, &obj)
 	if err != nil {
 		log.Println(fmt.Sprintf("parse json error %s", err))
