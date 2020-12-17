@@ -69,31 +69,32 @@ func (s *Server) Handler() http.Handler {
 }
 
 func (s *Server) handle(writer http.ResponseWriter, req *http.Request) {
-	ret := domain.RespData{Code: 1, Msg: "success"}
+	resp := domain.RespData{Code: 1, Msg: "success"}
 	var err error
 
 	serverUtils.SetupCORS(&writer, req)
 
 	if req.Method == "GET" {
-		ret, err = s.get(req)
+		resp, err = s.get(req)
 		if err != nil {
 			serverUtils.OutputErr(err, writer)
 			return
 		}
 
 	} else if req.Method == "POST" {
-		ret, err = s.post(req)
+		resp, err = s.post(req)
 		if err != nil {
 			serverUtils.OutputErr(err, writer)
 			return
 		}
 	}
 
-	bytes, _ := json.Marshal(ret)
+	bytes, _ := json.Marshal(resp)
 	io.WriteString(writer, string(bytes))
 }
 
 func (s *Server) get(req *http.Request) (resp domain.RespData, err error) {
+	resp = domain.RespData{Code: 1, Msg: "success"}
 	method, _ := serverUtils.ParserGetParams(req)
 
 	switch method {
