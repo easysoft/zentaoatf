@@ -15,7 +15,7 @@ func BakLog(src string) {
 	now := time.Now()
 	dateStr := dateUtils.DateStr(now)
 	timeStr := dateUtils.TimeStr(now)
-	logDir := vari.ServerWorkDir + constant.LogDir + "agent" + constant.PthSep
+	logDir := vari.ServerWorkDir + "log-agent" + constant.PthSep
 	dateDir := logDir + dateStr + constant.PthSep
 	dist := dateDir + timeStr + ".zip"
 

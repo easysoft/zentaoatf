@@ -50,7 +50,7 @@ func ColoredStatus(status string) string {
 func InitLogger() *logrus.Logger {
 	vari.LogDir = fileUtils.GetLogDir()
 
-	if Logger != nil && vari.RunMode != constant.RunModeServer {
+	if Logger != nil && vari.RunMode != constant.RunModeRequest {
 		return Logger
 	}
 
