@@ -1,10 +1,10 @@
 package serverUtils
 
 import (
+	"archive/zip"
 	"fmt"
 	errUtils "github.com/easysoft/zentaoatf/src/utils/err"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
-	"github.com/klauspost/compress/zip"
 	"github.com/mholt/archiver/v3"
 	"io/ioutil"
 	"net/http"
@@ -12,34 +12,33 @@ import (
 )
 
 func Download(url string, dst string) {
-	fmt.Printf("DownloadToFile From: %s.\n", url)
 	if d, err := HTTPDownload(url); err == nil {
-		logUtils.Logger.Info(fmt.Sprintf("downloaded %s.\n", url))
+		logUtils.PrintTo(fmt.Sprintf("downloaded %s.\n", url))
 		if WriteDownloadFile(dst, d) == nil {
-			logUtils.Logger.Info(fmt.Sprintf("saved %s as %s\n", url, dst))
+			logUtils.PrintTo(fmt.Sprintf("saved %s as %s\n", url, dst))
 		}
 	}
 }
 func HTTPDownload(uri string) ([]byte, error) {
-	logUtils.Logger.Info(fmt.Sprintf("HTTPDownload From: %s.\n", uri))
+	logUtils.PrintTo(fmt.Sprintf("download file from %s.\n", uri))
 	res, err := http.Get(uri)
 	if err != nil {
-		logUtils.Logger.Error(err.Error())
+		logUtils.PrintTo(err.Error())
 	}
 	defer res.Body.Close()
 	d, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		logUtils.Logger.Error(err.Error())
+		logUtils.PrintTo(err.Error())
 	}
-	logUtils.Logger.Info(fmt.Sprintf("ReadFile: Size of download: %d\n", len(d)))
+	logUtils.PrintTo(fmt.Sprintf("ReadFile: Size of download: %d\n", len(d)))
 	return d, err
 }
 
 func WriteDownloadFile(dst string, d []byte) error {
-	logUtils.Logger.Info(fmt.Sprintf("WriteFile: Size of download: %d\n", len(d)))
+	logUtils.PrintTo(fmt.Sprintf("WriteFile: Size of download: %d\n", len(d)))
 	err := ioutil.WriteFile(dst, d, 0444)
 	if err != nil {
-		logUtils.Logger.Error(err.Error())
+		logUtils.PrintTo(err.Error())
 	}
 	return err
 }
@@ -51,7 +50,7 @@ func GetZipSingleDir(path string) string {
 		if f.IsDir() {
 			zfh, ok := f.Header.(zip.FileHeader)
 			if ok {
-				fmt.Println("file: ", zfh.Name)
+				logUtils.PrintTo("file: " + zfh.Name)
 
 				if folder == "" && zfh.Name != "__MACOSX" {
 					folder = zfh.Name

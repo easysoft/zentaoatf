@@ -23,3 +23,8 @@ func DateTimeStr(tm time.Time) string {
 func DateTimeStrLong(tm time.Time) string {
 	return tm.Format("20060102150405")
 }
+
+func StrToDate(str string) (tm time.Time, err error) {
+	tm, err = time.Parse("2006-01-02", str)
+	return
+}

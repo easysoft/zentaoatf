@@ -6,6 +6,7 @@ import (
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
+	"github.com/mholt/archiver/v3"
 	"io"
 	"io/ioutil"
 	"os"
@@ -64,6 +65,14 @@ func MkDirIfNeeded(dir string) error {
 
 	return nil
 }
+func RmDir(dir string) error {
+	if FileExist(dir) {
+		err := os.RemoveAll(dir)
+		return err
+	}
+
+	return nil
+}
 
 func IsDir(f string) bool {
 	fi, e := os.Stat(f)
@@ -73,7 +82,7 @@ func IsDir(f string) bool {
 	return fi.IsDir()
 }
 
-func AbosutePath(pth string) string {
+func AbsolutePath(pth string) string {
 	if !IsAbosutePath(pth) {
 		pth, _ = filepath.Abs(pth)
 	}
@@ -96,6 +105,14 @@ func AddPathSepIfNeeded(pth string) string {
 	}
 	return pth
 }
+func RemovePathSepIfNeeded(pth string) string {
+	sepa := string(os.PathSeparator)
+
+	if strings.LastIndex(pth, sepa) == len(pth)-1 {
+		pth = pth[:len(pth)-1]
+	}
+	return pth
+}
 
 func GetFilesFromParams(arguments []string) []string {
 	ret := make([]string, 0)
@@ -103,11 +120,11 @@ func GetFilesFromParams(arguments []string) []string {
 	for _, arg := range arguments {
 		if strings.Index(arg, "-") != 0 {
 			if arg == "." {
-				arg = AbosutePath(".")
+				arg = AbsolutePath(".")
 			} else if strings.Index(arg, "."+string(os.PathSeparator)) == 0 {
-				arg = AbosutePath(".") + arg[2:]
+				arg = AbsolutePath(".") + arg[2:]
 			} else if !IsAbosutePath(arg) {
-				arg = AbosutePath(".") + arg
+				arg = AbsolutePath(".") + arg
 			}
 
 			ret = append(ret, arg)
@@ -247,4 +264,16 @@ func GetFileName(pathOrUrl string) string {
 
 	name := pathOrUrl[index+1:]
 	return name
+}
+
+func ZipFiles(dist string, dir string) error {
+	dir = RemovePathSepIfNeeded(dir)
+
+	paths := make([]string, 0)
+	paths = append(paths, dir)
+
+	zip := archiver.NewZip()
+	err := zip.Archive(paths, dist)
+
+	return err
 }

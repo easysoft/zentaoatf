@@ -2,6 +2,7 @@ package logUtils
 
 import (
 	"fmt"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
@@ -49,7 +50,7 @@ func ColoredStatus(status string) string {
 func InitLogger() *logrus.Logger {
 	vari.LogDir = fileUtils.GetLogDir()
 
-	if Logger != nil {
+	if Logger != nil && vari.RunMode != constant.RunModeServer {
 		return Logger
 	}
 

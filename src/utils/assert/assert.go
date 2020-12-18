@@ -48,7 +48,7 @@ func GetAllScriptsInDir(path string, files *[]string) error {
 		return nil
 	}
 
-	path = fileUtils.AbosutePath(path)
+	path = fileUtils.AbsolutePath(path)
 
 	dir, err := ioutil.ReadDir(path)
 	if err != nil {
@@ -81,7 +81,7 @@ func GetAllScriptsInDir(path string, files *[]string) error {
 }
 
 func GetScriptByIdsInDir(dirPth string, idMap map[int]string, files *[]string) error {
-	dirPth = fileUtils.AbosutePath(dirPth)
+	dirPth = fileUtils.AbsolutePath(dirPth)
 
 	sep := string(os.PathSeparator)
 

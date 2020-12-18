@@ -21,26 +21,29 @@ func NewExecService() *ExecService {
 func (s *ExecService) Exec(build domain.Build) (reply domain.OptResult) {
 	serverVerbose := vari.Verbose
 	vari.Verbose = build.Debug
+	vari.RunMode = constant.RunModeRequest
+	defer rollback(serverVerbose)
 
 	s.prepareCodes(&build)
 	s.prepareDir(&build)
 
+	resultDir := ""
 	if stringUtils.FindInArr(build.UnitTestType, constant.UnitTestTypes) { // unit test
 		vari.ProductId = build.ProductId
 
 		vari.UnitTestType = build.UnitTestType
 		vari.UnitTestTool = build.UnitTestTool
 
-		action.RunUnitTest(build.UnitTestCmd)
+		resultDir = action.RunUnitTest(build.UnitTestCmd)
 
 	} else { // ztf functional test
 		vari.ProductId = build.ProductId
 
 		action.RunZTFTest(build.Files, build.SuiteId, build.TaskId)
+		resultDir = vari.LogDir
 	}
 
-	vari.Verbose = serverVerbose
-
+	serverUtils.BakLog(resultDir)
 	return
 }
 
@@ -52,7 +55,7 @@ func (s *ExecService) prepareCodes(build *domain.Build) {
 	if build.ScmAddress != "" { // git
 		serverUtils.CheckoutCodes(build)
 
-	} else if strings.Index(build.ScriptUrl, "http://") == 0 { // zip
+	} else if strings.Index(build.ScriptUrl, "http") == 0 { // zip
 		serverUtils.DownloadCodes(build)
 
 	} else { // folder
@@ -72,7 +75,7 @@ func (s *ExecService) prepareDir(build *domain.Build) {
 	} else if vari.ServerProjectDir != "" && vari.ServerWorkDir == "" {
 		vari.ServerWorkDir = vari.ServerProjectDir
 	} else if vari.ServerProjectDir == "" && vari.ServerWorkDir == "" {
-		vari.ServerWorkDir = fileUtils.AbosutePath(".")
+		vari.ServerWorkDir = fileUtils.AbsolutePath(".")
 		vari.ServerProjectDir = vari.ServerWorkDir
 	}
 
@@ -82,4 +85,9 @@ func (s *ExecService) prepareDir(build *domain.Build) {
 	if vari.ServerProjectDir != "" {
 		vari.ServerProjectDir = fileUtils.AddPathSepIfNeeded(vari.ServerProjectDir)
 	}
+}
+
+func rollback(serverVerbose bool) {
+	vari.Verbose = serverVerbose
+	vari.RunMode = constant.RunModeCommon
 }

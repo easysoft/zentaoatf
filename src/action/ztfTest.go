@@ -25,7 +25,7 @@ func RunZTFTest(files []string, suiteIdStr, taskIdStr string) error {
 	cases := make([]string, 0)
 
 	if suiteIdStr != "" { // run with suite id
-		dir := fileUtils.AbosutePath(".")
+		dir := fileUtils.AbsolutePath(".")
 		if vari.ServerProjectDir != "" {
 			dir = vari.ServerProjectDir
 		} else if len(files) > 0 {
@@ -35,7 +35,7 @@ func RunZTFTest(files []string, suiteIdStr, taskIdStr string) error {
 		cases = getCaseBySuiteId(suiteIdStr, dir)
 
 	} else if taskIdStr != "" { // run with task id,
-		dir := fileUtils.AbosutePath(".")
+		dir := fileUtils.AbsolutePath(".")
 		if vari.ServerProjectDir != "" {
 			dir = vari.ServerProjectDir
 		} else if len(files) > 0 {
@@ -50,7 +50,7 @@ func RunZTFTest(files []string, suiteIdStr, taskIdStr string) error {
 
 		if suite != "" { // run from suite file
 			if dir == "" { // not found dir in files param
-				dir = fileUtils.AbosutePath(".")
+				dir = fileUtils.AbsolutePath(".")
 				if vari.ServerProjectDir != "" {
 					dir = vari.ServerProjectDir
 				}

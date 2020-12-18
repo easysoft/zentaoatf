@@ -7,12 +7,12 @@ import (
 	time2 "time"
 )
 
-func RunUnitTest(cmdStr string) {
+func RunUnitTest(cmdStr string) string {
 	startTime := time2.Now().Unix()
 	shellUtils.ExeShellWithOutput(cmdStr)
 	endTime := time2.Now().Unix()
 
-	testSuites := testingService.RetrieveUnitResult()
+	testSuites, resultDir := testingService.RetrieveUnitResult()
 	cases, classNameMaxWidth, time := testingService.ParserUnitTestResult(testSuites)
 
 	if time == 0 {
@@ -22,4 +22,6 @@ func RunUnitTest(cmdStr string) {
 	report := testingService.GenUnitTestReport(cases, classNameMaxWidth, time)
 
 	zentaoService.CommitTestResult(report, 0)
+
+	return resultDir
 }

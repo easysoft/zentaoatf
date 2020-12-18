@@ -41,7 +41,7 @@ func Generate(productId string, moduleId string, suiteId string, taskId string, 
 		if !isReady {
 			targetDir = stdinUtils.GetInput("", targetDir, "where_to_store_script", targetDir)
 		}
-		targetDir = fileUtils.AbosutePath(targetDir)
+		targetDir = fileUtils.AbsolutePath(targetDir)
 
 		// 2. organize by module
 		byModule := true

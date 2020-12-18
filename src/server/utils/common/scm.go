@@ -50,7 +50,7 @@ func CheckoutCodes(build *serverModel.Build) {
 }
 
 func DownloadCodes(build *serverModel.Build) {
-	zipPath := build.WorkDir + uuid.NewV4().String() + fileUtils.GetExtName(build.ScriptUrl)
+	zipPath := build.WorkDir + uuid.NewV4().String() + ".zip"
 	Download(build.ScriptUrl, zipPath)
 
 	scriptFolder := GetZipSingleDir(zipPath)

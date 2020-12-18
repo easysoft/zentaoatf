@@ -15,8 +15,7 @@ import (
 	"time"
 )
 
-func RetrieveUnitResult() []model.UnitTestSuite {
-	resultDir := ""
+func RetrieveUnitResult() (suites []model.UnitTestSuite, resultDir string) {
 	resultFiles := make([]string, 0)
 
 	if vari.UnitTestType == constant.UnitTestTypeJunit && vari.UnitTestTool == constant.UnitTestToolMvn {
@@ -50,7 +49,6 @@ func RetrieveUnitResult() []model.UnitTestSuite {
 		resultFiles = append(resultFiles, resultDir)
 	}
 
-	suites := make([]model.UnitTestSuite, 0)
 	for _, file := range resultFiles {
 		content := fileUtils.ReadFile(file)
 
@@ -112,9 +110,7 @@ func RetrieveUnitResult() []model.UnitTestSuite {
 		}
 	}
 
-	//suites[0].Time = suites[0].Time + 10000 // TODO: delay for testing
-
-	return suites
+	return
 }
 
 func ParserUnitTestResult(testSuites []model.UnitTestSuite) (cases []model.UnitResult, classNameMaxWidth int, dur float32) {
