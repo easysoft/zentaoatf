@@ -10,15 +10,16 @@ var (
 	Cui            *gocui.Gui
 	MainViewHeight int
 
-	ConfigPath      string
-	ZTFDir          string
-	ServerWorkDir   string
-	LogDir          string
-	UnitTestType    string
-	UnitTestTool    string
-	UnitTestResult  string
-	UnitTestResults = "results"
-	ProductId       string
+	ConfigPath       string
+	ZTFDir           string
+	ServerWorkDir    string
+	ServerProjectDir string
+	LogDir           string
+	UnitTestType     string
+	UnitTestTool     string
+	UnitTestResult   string
+	UnitTestResults  = "results"
+	ProductId        string
 
 	SessionVar  string
 	SessionId   string

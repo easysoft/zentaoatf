@@ -40,8 +40,8 @@ func ExeShellWithOutput(cmdStr string) []string {
 		cmd = exec.Command("/bin/bash", "-c", cmdStr)
 	}
 
-	if vari.ServerWorkDir != "" {
-		cmd.Dir = vari.ServerWorkDir
+	if vari.ServerProjectDir != "" {
+		cmd.Dir = vari.ServerProjectDir
 	}
 
 	output := make([]string, 0)

@@ -23,7 +23,7 @@ func GetCaseByDirAndFile(files []string) []string {
 
 	for _, file := range files {
 		if !fileUtils.IsAbosutePath(file) && vari.ServerWorkDir != "" {
-			file = vari.ServerWorkDir + file
+			file = vari.ServerProjectDir + file
 		}
 		GetAllScriptsInDir(file, &cases)
 	}
@@ -145,6 +145,10 @@ func GetFailedCasesDirectlyFromTestResult(resultFile string) []string {
 
 	if extName == "."+constant.ExtNameResult {
 		resultFile = strings.Replace(resultFile, extName, "."+constant.ExtNameJson, -1)
+	}
+
+	if vari.ServerProjectDir != "" {
+		resultFile = vari.ServerProjectDir + resultFile
 	}
 
 	content := fileUtils.ReadFile(resultFile)

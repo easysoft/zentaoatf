@@ -24,14 +24,14 @@ func GetTestScript(build *serverModel.Build) (result serverModel.OptResult) {
 	return result
 }
 
-func CheckoutCodes(task *serverModel.Build) {
-	url := task.ScmAddress
-	userName := task.ScmAccount
-	password := task.ScmPassword
+func CheckoutCodes(build *serverModel.Build) {
+	url := build.ScmAddress
+	userName := build.ScmAccount
+	password := build.ScmPassword
 
-	projectDir := task.WorkDir + GetGitProjectName(url) + string(os.PathSeparator)
+	build.ProjectDir = build.WorkDir + GetGitProjectName(url) + string(os.PathSeparator)
 
-	fileUtils.MkDirIfNeeded(projectDir)
+	fileUtils.MkDirIfNeeded(build.ProjectDir)
 
 	options := git.CloneOptions{
 		URL:      url,
@@ -43,25 +43,23 @@ func CheckoutCodes(task *serverModel.Build) {
 			Password: password,
 		}
 	}
-	_, err := git.PlainClone(projectDir, false, &options)
+	_, err := git.PlainClone(build.ProjectDir, false, &options)
 	if err != nil {
 		return
 	}
-
-	task.ProjectDir = projectDir
 }
 
-func DownloadCodes(task *serverModel.Build) {
-	zipPath := task.WorkDir + uuid.NewV4().String() + fileUtils.GetExtName(task.ScriptUrl)
-	Download(task.ScriptUrl, zipPath)
+func DownloadCodes(build *serverModel.Build) {
+	zipPath := build.WorkDir + uuid.NewV4().String() + fileUtils.GetExtName(build.ScriptUrl)
+	Download(build.ScriptUrl, zipPath)
 
 	scriptFolder := GetZipSingleDir(zipPath)
 	if scriptFolder != "" { // single dir in zip
-		task.ProjectDir = task.WorkDir + scriptFolder
-		archiver.Unarchive(zipPath, task.WorkDir)
+		build.ProjectDir = build.WorkDir + scriptFolder
+		archiver.Unarchive(zipPath, build.WorkDir)
 	} else { // more then one dir, unzip to a folder
 		fileNameWithoutExt := fileUtils.GetFileNameWithoutExt(zipPath)
-		task.ProjectDir = task.WorkDir + fileNameWithoutExt + string(os.PathSeparator)
-		archiver.Unarchive(zipPath, task.ProjectDir)
+		build.ProjectDir = build.WorkDir + fileNameWithoutExt + string(os.PathSeparator)
+		archiver.Unarchive(zipPath, build.ProjectDir)
 	}
 }

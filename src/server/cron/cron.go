@@ -45,8 +45,14 @@ func (s *CronService) Init() {
 				// has task to run，register busy, then run
 				build := s.taskService.Peek()
 				s.heartBeatService.HeartBeat(true)
+
+				// run
+				s.taskService.Start()
+
 				s.execService.Exec(build)
+
 				s.taskService.Remove()
+				s.taskService.End()
 			}
 		},
 	)

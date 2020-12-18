@@ -10,36 +10,31 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/mattn/go-runewidth"
 	"io/ioutil"
-	"os"
 	"path"
 	"strings"
 	"time"
 )
 
 func RetrieveUnitResult() []model.UnitTestSuite {
-	sep := string(os.PathSeparator)
-
 	resultDir := ""
 	resultFiles := make([]string, 0)
 
 	if vari.UnitTestType == constant.UnitTestTypeJunit && vari.UnitTestTool == constant.UnitTestToolMvn {
-		resultDir = fmt.Sprintf("target%ssurefire-reports%s", sep, sep)
+		resultDir = fmt.Sprintf("target%ssurefire-reports%s", constant.PthSep, constant.PthSep)
 	} else if vari.UnitTestType == constant.UnitTestTypeTestNG && vari.UnitTestTool == constant.UnitTestToolMvn {
-		resultDir = fmt.Sprintf("target%ssurefire-reports%sjunitreports", sep, sep)
+		resultDir = fmt.Sprintf("target%ssurefire-reports%sjunitreports", constant.PthSep, constant.PthSep)
 	} else if vari.UnitTestType == constant.UnitTestTypeRobot {
 		resultDir = vari.UnitTestResults
 	} else {
 		resultDir = vari.UnitTestResult
 	}
 
-	if vari.ServerWorkDir != "" {
-		resultDir = vari.ServerWorkDir + resultDir
+	if vari.ServerProjectDir != "" {
+		resultDir = vari.ServerProjectDir + resultDir
 	}
 
 	if fileUtils.IsDir(resultDir) {
-		if resultDir[len(resultDir)-1:] != sep {
-			resultDir = resultDir + sep
-		}
+		resultDir = fileUtils.AddPathSepIfNeeded(resultDir)
 
 		dir, err := ioutil.ReadDir(resultDir)
 		if err == nil {
