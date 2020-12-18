@@ -10,9 +10,10 @@ var (
 	Cui            *gocui.Gui
 	MainViewHeight int
 
+	ConfigPath      string
 	ZTFDir          string
+	ServerWorkDir   string
 	LogDir          string
-	RunFromCui      bool
 	UnitTestType    string
 	UnitTestTool    string
 	UnitTestResult  string
@@ -22,7 +23,7 @@ var (
 	SessionVar  string
 	SessionId   string
 	RequestType string
-	RequestFix  string = ""
+	RequestFix  string
 
 	ScriptExtToNameMap map[string]string
 	CurrScriptFile     string // scripts/tc-001.py

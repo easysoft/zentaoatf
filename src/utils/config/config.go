@@ -24,7 +24,7 @@ func InitConfig() {
 	vari.ZTFDir = fileUtils.GetZTFDir()
 	CheckConfigPermission()
 
-	constant.ConfigFile = vari.ZTFDir + constant.ConfigFile
+	vari.ConfigPath = vari.ZTFDir + constant.ConfigFile
 	vari.Config = getInst()
 
 	// screen size
@@ -38,20 +38,6 @@ func InitScreenSize() {
 	w, h := display.GetScreenSize()
 	vari.ScreenWidth = w
 	vari.ScreenHeight = h
-}
-
-func SaveConfig(conf model.Config) error {
-	fileUtils.MkDirIfNeeded(fileUtils.GetZTFDir() + "conf")
-
-	conf.Version = constant.ConfigVer
-
-	cfg := ini.Empty()
-	cfg.ReflectFrom(&conf)
-
-	cfg.SaveTo(constant.ConfigFile)
-
-	vari.Config = ReadCurrConfig()
-	return nil
 }
 
 func PrintCurrConfig() {
@@ -74,7 +60,10 @@ func PrintCurrConfig() {
 func ReadCurrConfig() model.Config {
 	config := model.Config{}
 
-	configPath := constant.ConfigFile
+	configPath := vari.ConfigPath
+	if vari.ServerWorkDir != "" {
+		configPath = vari.ServerWorkDir + constant.ConfigFile
+	}
 
 	if !fileUtils.FileExist(configPath) {
 		config.Language = "en"
@@ -83,11 +72,29 @@ func ReadCurrConfig() model.Config {
 		return config
 	}
 
-	ini.MapTo(&config, constant.ConfigFile)
+	ini.MapTo(&config, vari.ConfigPath)
 
 	config.Url = commonUtils.AddSlashForUrl(config.Url)
 
 	return config
+}
+func SaveConfig(conf model.Config) error {
+	configPath := vari.ConfigPath
+	if vari.ServerWorkDir != "" {
+		configPath = vari.ServerWorkDir + constant.ConfigFile
+	}
+
+	fileUtils.MkDirIfNeeded(vari.ServerWorkDir + "conf")
+
+	conf.Version = constant.ConfigVer
+
+	cfg := ini.Empty()
+	cfg.ReflectFrom(&conf)
+
+	cfg.SaveTo(configPath)
+
+	vari.Config = ReadCurrConfig()
+	return nil
 }
 
 func getInst() model.Config {
@@ -96,7 +103,7 @@ func getInst() model.Config {
 		CheckConfigReady()
 	}
 
-	ini.MapTo(&vari.Config, constant.ConfigFile)
+	ini.MapTo(&vari.Config, vari.ConfigPath)
 
 	if vari.Config.Version != constant.ConfigVer { // old config file, re-init
 		if vari.Config.Language != "en" && vari.Config.Language != "zh" {
@@ -121,7 +128,7 @@ func CheckConfigPermission() {
 }
 
 func CheckConfigReady() {
-	if !fileUtils.FileExist(constant.ConfigFile) {
+	if !fileUtils.FileExist(vari.ConfigPath) {
 		InputForSet()
 	}
 }

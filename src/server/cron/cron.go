@@ -1,23 +1,24 @@
-package service
+package cron
 
 import (
 	"fmt"
+	"github.com/easysoft/zentaoatf/src/server/service"
 	serverUtils "github.com/easysoft/zentaoatf/src/server/utils/common"
 	serverConst "github.com/easysoft/zentaoatf/src/server/utils/const"
 	cronUtils "github.com/easysoft/zentaoatf/src/server/utils/cron"
 )
 
 type CronService struct {
-	heartBeatService *HeartBeatService
+	heartBeatService *service.HeartBeatService
 
-	buildService *BuildService
-	taskService  *TaskService
-	execService  *ExecService
+	buildService *service.BuildService
+	taskService  *service.TaskService
+	execService  *service.ExecService
 }
 
-func NewCronService(heartBeatService *HeartBeatService,
-	buildService *BuildService, taskService *TaskService,
-	execService *ExecService) *CronService {
+func NewCronService(heartBeatService *service.HeartBeatService,
+	buildService *service.BuildService, taskService *service.TaskService,
+	execService *service.ExecService) *CronService {
 	return &CronService{heartBeatService: heartBeatService,
 		buildService: buildService, taskService: taskService, execService: execService}
 }
@@ -45,6 +46,7 @@ func (s *CronService) Init() {
 				build := s.taskService.Peek()
 				s.heartBeatService.HeartBeat(true)
 				s.execService.Exec(build)
+				s.taskService.Remove()
 			}
 		},
 	)

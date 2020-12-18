@@ -3,6 +3,7 @@ package server
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/easysoft/zentaoatf/src/server/cron"
 	"github.com/easysoft/zentaoatf/src/server/domain"
 	"github.com/easysoft/zentaoatf/src/server/service"
 	serverUtils "github.com/easysoft/zentaoatf/src/server/utils/common"
@@ -20,7 +21,7 @@ type Server struct {
 	agentService  *service.AgentService
 	buildService  *service.BuildService
 	taskService   *service.TaskService
-	cronService   *service.CronService
+	cronService   *cron.CronService
 }
 
 func NewServer() *Server {
@@ -32,7 +33,7 @@ func NewServer() *Server {
 	buildService := service.NewBuildService(taskService)
 	execService := service.NewExecService()
 
-	cronService := service.NewCronService(heartBeatService, buildService, taskService, execService)
+	cronService := cron.NewCronService(heartBeatService, buildService, taskService, execService)
 	cronService.Init()
 
 	return &Server{commonService: commonService, agentService: agentService,
@@ -117,6 +118,8 @@ func (s *Server) get(req *http.Request) (resp domain.RespData, err error) {
 }
 
 func (s *Server) post(req *http.Request) (resp domain.RespData, err error) {
+	resp = domain.RespData{Code: 1, Msg: "success"}
+
 	body, err := ioutil.ReadAll(req.Body)
 	if len(body) == 0 {
 		return
@@ -129,6 +132,9 @@ func (s *Server) post(req *http.Request) (resp domain.RespData, err error) {
 	}
 
 	method := reqData.Action
+	if method == "" {
+		method, _ = serverUtils.ParserGetParams(req)
+	}
 
 	switch method {
 

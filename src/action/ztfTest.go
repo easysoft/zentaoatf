@@ -19,14 +19,16 @@ import (
 	"strconv"
 )
 
-func RunZTFTest(files []string, suiteIdStr string, taskIdStr string) error {
+func RunZTFTest(files []string, suiteIdStr, taskIdStr string) error {
 	logUtils.InitLogger()
 
 	cases := make([]string, 0)
 
 	if suiteIdStr != "" { // run with suite id
 		dir := fileUtils.AbosutePath(".")
-		if len(files) > 0 {
+		if vari.ServerWorkDir != "" {
+			dir = vari.ServerWorkDir
+		} else if len(files) > 0 {
 			dir = files[0]
 		}
 
@@ -34,7 +36,9 @@ func RunZTFTest(files []string, suiteIdStr string, taskIdStr string) error {
 
 	} else if taskIdStr != "" { // run with task id,
 		dir := fileUtils.AbosutePath(".")
-		if len(files) > 0 {
+		if vari.ServerWorkDir != "" {
+			dir = vari.ServerWorkDir
+		} else if len(files) > 0 {
 			dir = files[0]
 		}
 
@@ -44,11 +48,18 @@ func RunZTFTest(files []string, suiteIdStr string, taskIdStr string) error {
 		suite, dir := isRunWithSuiteFile(files)
 		result := isRunWithResultFile(files)
 
-		if suite != "" {
+		if suite != "" { // run from suite file
+			if dir == "" { // not found dir in files param
+				dir = fileUtils.AbosutePath(".")
+				if vari.ServerWorkDir != "" {
+					dir = vari.ServerWorkDir
+				}
+			}
+
 			cases = getCaseBySuiteFile(suite, dir)
-		} else if result != "" {
+		} else if result != "" { // run from failed result file
 			cases = assertUtils.GetFailedCasesDirectlyFromTestResult(result)
-		} else {
+		} else { // run files
 			cases = assertUtils.GetCaseByDirAndFile(files)
 		}
 	}
@@ -101,27 +112,27 @@ func getCaseBySuiteFile(file string, dir string) []string {
 	return cases
 }
 
-func runCases(files []string) {
+func runCases(cases []string) {
 	casesToRun := make([]string, 0)
 	casesToIgnore := make([]string, 0)
 
 	// config interpreter if needed
 	if commonUtils.IsWin() {
 		conf := configUtils.ReadCurrConfig()
-		configChanged := configUtils.InputForScriptInterpreter(files, &conf, "run")
+		configChanged := configUtils.InputForScriptInterpreter(cases, &conf, "run")
 		if configChanged {
 			configUtils.SaveConfig(conf)
 		}
 	}
 
 	conf := configUtils.ReadCurrConfig()
-	for _, file := range files {
+	for _, cs := range cases {
 		if commonUtils.IsWin() {
-			if path.Ext(file) == ".sh" { // filter by os
+			if path.Ext(cs) == ".sh" { // filter by os
 				continue
 			}
 
-			ext := path.Ext(file)
+			ext := path.Ext(cs)
 			if ext != "" {
 				ext = ext[1:]
 			}
@@ -130,18 +141,18 @@ func runCases(files []string) {
 			if interpreter == "-" && vari.Interpreter == "" { // not to ignore if interpreter set
 				interpreter = ""
 
-				casesToIgnore = append(casesToIgnore, file)
+				casesToIgnore = append(casesToIgnore, cs)
 			}
 			if lang != "bat" && interpreter == "" { // ignore the ones with no interpreter set
 				continue
 			}
 		} else if !commonUtils.IsWin() { // filter by os
-			if path.Ext(file) == ".bat" {
+			if path.Ext(cs) == ".bat" {
 				continue
 			}
 		}
 
-		casesToRun = append(casesToRun, file)
+		casesToRun = append(casesToRun, cs)
 	}
 
 	var report = model.TestReport{Env: commonUtils.GetOs(),
@@ -151,13 +162,13 @@ func runCases(files []string) {
 
 	pathMaxWidth := 0
 	numbMaxWidth := 0
-	for _, file := range casesToRun {
-		lent := runewidth.StringWidth(file)
+	for _, cs := range casesToRun {
+		lent := runewidth.StringWidth(cs)
 		if lent > pathMaxWidth {
 			pathMaxWidth = lent
 		}
 
-		content := fileUtils.ReadFile(file)
+		content := fileUtils.ReadFile(cs)
 		caseId := zentaoUtils.ReadCaseId(content)
 		if len(caseId) > numbMaxWidth {
 			numbMaxWidth = len(caseId)
@@ -168,10 +179,7 @@ func runCases(files []string) {
 	testingService.GenZTFTestReport(report, pathMaxWidth)
 }
 
-func isRunWithSuiteFile(files []string) (string, string) {
-	var suiteFile string
-	var dir string
-
+func isRunWithSuiteFile(files []string) (suiteFile, dir string) {
 	for _, file := range files {
 		if path.Ext(file) == "."+constant.ExtNameSuite {
 			suiteFile = file
@@ -186,11 +194,7 @@ func isRunWithSuiteFile(files []string) (string, string) {
 		}
 	}
 
-	if len(files) == 1 && suiteFile != "" && dir == "" { // no dir provided, not including a wrong dir param
-		dir = fileUtils.AbosutePath(".")
-	}
-
-	return suiteFile, dir
+	return
 }
 
 func isRunWithResultFile(files []string) string {

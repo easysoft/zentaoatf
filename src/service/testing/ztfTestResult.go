@@ -6,7 +6,6 @@ import (
 	"github.com/easysoft/zentaoatf/src/model"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
-	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"strings"
 )
 
@@ -20,17 +19,6 @@ func GetZTFTestReportForSubmit(resultDir string) model.TestReport {
 	json.Unmarshal([]byte(content), &report)
 
 	return report
-}
-
-func GetStepContent(step model.StepLog) string {
-	var stepsContent string
-	if !vari.RunFromCui {
-		stepsContent = GetStepHtml(step)
-	} else {
-		stepsContent = GetStepText(step)
-	}
-
-	return stepsContent
 }
 
 func GetStepHtml(step model.StepLog) string {

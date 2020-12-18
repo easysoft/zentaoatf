@@ -385,7 +385,7 @@
     },
     {
       "id": "fail_to_submit_test_result",
-      "translation": "Failed to submit test results to ZenTao %s."
+      "translation": "Failed to submit test results to ZenTao."
     },
     {
       "id": "ignore_to_submit_result",

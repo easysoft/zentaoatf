@@ -173,7 +173,7 @@ func main() {
 }
 
 func run(args []string) {
-	if len(args) >= 3 && stringUtils.FindInArr(args[2], constant.UnitTestType) { // unit test
+	if len(args) >= 3 && stringUtils.FindInArr(args[2], constant.UnitTestTypes) { // unit test
 		// junit -p 1 mvn clean package test
 		vari.UnitTestType = args[2]
 		end := 8
@@ -196,10 +196,10 @@ func run(args []string) {
 			start = start + 1
 		}
 
-		if args[start] == "mvn" {
-			vari.UnitTestTool = "mvn"
-		} else if args[start] == "robot" {
-			vari.UnitTestTool = "robot"
+		if args[start] == constant.UnitTestToolMvn {
+			vari.UnitTestTool = constant.UnitTestToolMvn
+		} else if args[start] == constant.UnitTestToolRobot {
+			vari.UnitTestTool = constant.UnitTestToolRobot
 		}
 
 		cmd := strings.Join(args[start:], " ")
@@ -239,7 +239,6 @@ func startServer() {
 func init() {
 	cleanup()
 
-	vari.RunFromCui = false
 	configUtils.InitConfig()
 }
 

@@ -5,9 +5,7 @@ import (
 	"fmt"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
-	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
-	"io"
 	"os"
 	"regexp"
 	"strings"
@@ -63,12 +61,7 @@ func PrintToWithColor(msg string, attr color.Attribute) {
 }
 
 func PrintToCmd(msg string, attr color.Attribute) {
-	var output io.Writer
-	if vari.RunFromCui {
-		output, _ = vari.Cui.View("cmd")
-	} else {
-		output = color.Output
-	}
+	output := color.Output
 
 	if attr == -1 {
 		fmt.Fprint(output, msg+"\n")

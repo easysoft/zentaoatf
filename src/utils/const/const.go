@@ -27,7 +27,6 @@ var (
 	EnRes = fmt.Sprintf("res%smessages_en.json", string(os.PathSeparator))
 	ZhRes = fmt.Sprintf("res%smessages_zh.json", string(os.PathSeparator))
 
-	//ScriptDir = fmt.Sprintf("scripts%s", string(os.PathSeparator))
 	LogDir = fmt.Sprintf("log%s", string(os.PathSeparator))
 
 	LeftWidth = 36
@@ -38,8 +37,14 @@ var (
 
 	RequestTypePathInfo = "PATH_INFO"
 
-	UnitTestType []string = []string{"junit", "testng", "phpunit", "pytest", "jest", "cppunit", "gtest", "qtest", "robot"}
-	AutoTestType []string = []string{"selenium", "appium"}
+	AutoTestTypes      = []string{"selenium", "appium"}
+	UnitTestTypeJunit  = "junit"
+	UnitTestTypeTestNG = "testng"
+	UnitTestTypeRobot  = "robot"
+	UnitTestTypes      = []string{UnitTestTypeJunit, UnitTestTypeTestNG, UnitTestTypeRobot,
+		"phpunit", "pytest", "jest", "cppunit", "gtest", "qtest"}
+	UnitTestToolMvn   = "mvn"
+	UnitTestToolRobot = "robot"
 
 	RunModeCommon  = "common"
 	RunModeServer  = "server"

@@ -18,7 +18,8 @@ func NewBuildService(taskService *TaskService) *BuildService {
 func (s *BuildService) Add(req domain.ReqData) (reply domain.OptResult) {
 	build := domain.Build{}
 
-	err := json.Unmarshal([]byte(req.Data), &build)
+	reqStr, _ := json.Marshal(req.Data)
+	err := json.Unmarshal(reqStr, &build)
 	if err != nil {
 		logUtils.PrintTo(fmt.Sprintf("error: %v", err))
 		return
@@ -27,7 +28,7 @@ func (s *BuildService) Add(req domain.ReqData) (reply domain.OptResult) {
 	size := s.taskService.GetSize()
 	if size == 0 {
 		s.taskService.Add(build)
-		reply.Success("Success to add job.")
+		reply.Success("Success to add task.")
 	} else {
 		reply.Fail(fmt.Sprintf("already has %d jobs to be done.", size))
 	}

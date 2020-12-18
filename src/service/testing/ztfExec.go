@@ -46,7 +46,7 @@ func ExeScript(file string, report *model.TestReport, idx int, total int, pathMa
 	logUtils.Log("===start " + file + " at " + startTime.Format("2006-01-02 15:04:05"))
 	logs := ""
 
-	output := shellUtils.ExecFile(file)
+	output := shellUtils.ExecScriptFile(file)
 	output = strings.Trim(output, "\n")
 
 	if output != "" {

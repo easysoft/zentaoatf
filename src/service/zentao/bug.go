@@ -52,7 +52,7 @@ func PrepareBug(resultDir string, caseIdStr string) (model.Bug, string) {
 				stepIds += step.Id + "_"
 			}
 
-			stepsContent := testingService.GetStepContent(step)
+			stepsContent := testingService.GetStepText(step)
 			steps = append(steps, stepsContent)
 		}
 

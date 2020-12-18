@@ -22,33 +22,35 @@ func GetCaseByDirAndFile(files []string) []string {
 	cases := make([]string, 0)
 
 	for _, file := range files {
+		if !fileUtils.IsAbosutePath(file) && vari.ServerWorkDir != "" {
+			file = vari.ServerWorkDir + file
+		}
 		GetAllScriptsInDir(file, &cases)
 	}
 
 	return cases
 }
 
-func GetAllScriptsInDir(filePthParam string, files *[]string) error {
-	sep := string(os.PathSeparator)
+func GetAllScriptsInDir(path string, files *[]string) error {
 
-	if !fileUtils.IsDir(filePthParam) { // first call, param is file
+	if !fileUtils.IsDir(path) { // first call, param is file
 		regx := langUtils.GetSupportLanguageExtRegx()
 
-		pass, _ := regexp.MatchString(`.*\.`+regx+`$`, filePthParam)
+		pass, _ := regexp.MatchString(`.*\.`+regx+`$`, path)
 
 		if pass {
-			pass := zentaoUtils.CheckFileIsScript(filePthParam)
+			pass := zentaoUtils.CheckFileIsScript(path)
 			if pass {
-				*files = append(*files, filePthParam)
+				*files = append(*files, path)
 			}
 		}
 
 		return nil
 	}
 
-	filePthParam = fileUtils.AbosutePath(filePthParam)
+	path = fileUtils.AbosutePath(path)
 
-	dir, err := ioutil.ReadDir(filePthParam)
+	dir, err := ioutil.ReadDir(path)
 	if err != nil {
 		return err
 	}
@@ -60,9 +62,9 @@ func GetAllScriptsInDir(filePthParam string, files *[]string) error {
 		}
 
 		if fi.IsDir() { // 目录, 递归遍历
-			GetAllScriptsInDir(filePthParam+name+sep, files)
+			GetAllScriptsInDir(path+name+constant.PthSep, files)
 		} else {
-			path := filePthParam + name
+			path := path + name
 			regx := langUtils.GetSupportLanguageExtRegx()
 			pass, _ := regexp.MatchString("^*.\\."+regx+"$", path)
 

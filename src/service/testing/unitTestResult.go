@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
@@ -21,14 +22,18 @@ func RetrieveUnitResult() []model.UnitTestSuite {
 	resultDir := ""
 	resultFiles := make([]string, 0)
 
-	if vari.UnitTestType == "junit" && vari.UnitTestTool == "mvn" {
+	if vari.UnitTestType == constant.UnitTestTypeJunit && vari.UnitTestTool == constant.UnitTestToolMvn {
 		resultDir = fmt.Sprintf("target%ssurefire-reports%s", sep, sep)
-	} else if vari.UnitTestType == "testng" && vari.UnitTestTool == "mvn" {
+	} else if vari.UnitTestType == constant.UnitTestTypeTestNG && vari.UnitTestTool == constant.UnitTestToolMvn {
 		resultDir = fmt.Sprintf("target%ssurefire-reports%sjunitreports", sep, sep)
-	} else if vari.UnitTestType == "robot" {
+	} else if vari.UnitTestType == constant.UnitTestTypeRobot {
 		resultDir = vari.UnitTestResults
 	} else {
 		resultDir = vari.UnitTestResult
+	}
+
+	if vari.ServerWorkDir != "" {
+		resultDir = vari.ServerWorkDir + resultDir
 	}
 
 	if fileUtils.IsDir(resultDir) {

@@ -20,7 +20,6 @@ func CuiReportBug(dir string, id string) error {
 	g.Mouse = true
 
 	vari.Cui = g
-	vari.RunFromCui = true
 
 	InitMainPage()
 	InitReportBugPage(dir, id)

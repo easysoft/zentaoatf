@@ -156,6 +156,9 @@ func GetZTFDir() string { // where ztf command in
 
 func GetLogDir() string {
 	path := vari.ZTFDir + constant.LogDir
+	if vari.ServerWorkDir != "" {
+		path = vari.ServerWorkDir + constant.LogDir
+	}
 
 	dir, _ := ioutil.ReadDir(path)
 

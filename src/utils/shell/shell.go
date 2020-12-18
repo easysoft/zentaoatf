@@ -40,6 +40,10 @@ func ExeShellWithOutput(cmdStr string) []string {
 		cmd = exec.Command("/bin/bash", "-c", cmdStr)
 	}
 
+	if vari.ServerWorkDir != "" {
+		cmd.Dir = vari.ServerWorkDir
+	}
+
 	output := make([]string, 0)
 
 	stdout, err := cmd.StdoutPipe()
@@ -71,7 +75,7 @@ func ExeShellWithOutput(cmdStr string) []string {
 	return output
 }
 
-func ExecFile(filePath string) string {
+func ExecScriptFile(filePath string) string {
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
 		lang := langUtils.GetLangByFile(filePath)
@@ -107,23 +111,20 @@ func ExecFile(filePath string) string {
 		cmd = exec.Command("/bin/bash", "-c", filePath)
 	}
 
-	output := make([]string, 0)
+	if vari.ServerWorkDir != "" {
+		cmd.Dir = vari.ServerWorkDir
+	}
 
 	stdout, err := cmd.StdoutPipe()
-
 	if err != nil {
 		fmt.Println(err)
-		return ""
+		return fmt.Sprint(err)
 	}
 
 	cmd.Start()
 
-	if err != nil {
-		return fmt.Sprint(err)
-	}
-
 	reader := bufio.NewReader(stdout)
-
+	output := make([]string, 0)
 	for {
 		line, err2 := reader.ReadString('\n')
 		if err2 != nil || io.EOF == err2 {
