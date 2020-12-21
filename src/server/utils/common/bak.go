@@ -8,6 +8,7 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"io/ioutil"
+	"path"
 	"time"
 )
 
@@ -15,7 +16,7 @@ func BakLog(src string) {
 	now := time.Now()
 	dateStr := dateUtils.DateStr(now)
 	timeStr := dateUtils.TimeStr(now)
-	logDir := vari.ServerWorkDir + "log-agent" + constant.PthSep
+	logDir := vari.ZTFDir + "log-agent" + constant.PthSep
 	dateDir := logDir + dateStr + constant.PthSep
 	dist := dateDir + timeStr + ".zip"
 
@@ -41,4 +42,27 @@ func removeHistoryLog(dir string) {
 			fileUtils.RmDir(dir + name)
 		}
 	}
+}
+
+func ListHistoryLog() (ret []map[string]string) {
+	logDir := vari.ServerWorkDir + "log-agent" + constant.PthSep
+
+	dirs, _ := ioutil.ReadDir(logDir)
+
+	for _, dir := range dirs {
+		dirName := dir.Name()
+		files, _ := ioutil.ReadDir(logDir + dirName)
+
+		for _, fi := range files {
+			name := fi.Name()
+			if path.Ext(name) != ".zip" {
+				continue
+			}
+
+			item := map[string]string{"name": dirName + constant.PthSep + name}
+			ret = append(ret, item)
+		}
+	}
+
+	return
 }

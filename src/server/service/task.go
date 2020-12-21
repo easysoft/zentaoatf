@@ -1,8 +1,12 @@
 package service
 
 import (
+	"fmt"
 	"github.com/easysoft/zentaoatf/src/server/domain"
+	serverUtils "github.com/easysoft/zentaoatf/src/server/utils/common"
 	serverConst "github.com/easysoft/zentaoatf/src/server/utils/const"
+	"github.com/easysoft/zentaoatf/src/utils/vari"
+	"strconv"
 	"time"
 )
 
@@ -60,5 +64,15 @@ func (s *TaskService) CheckRunning() bool {
 
 func (s *TaskService) ListTask() (data []domain.Build) {
 	data = tasks
+	return
+}
+
+func (s *TaskService) ListHistory() (data []map[string]string) {
+	data = serverUtils.ListHistoryLog()
+
+	for key, item := range data {
+		data[key]["url"] = fmt.Sprintf("http://%s:%s/down?f=%s", vari.IP, strconv.Itoa(vari.Port), item["name"])
+	}
+
 	return
 }

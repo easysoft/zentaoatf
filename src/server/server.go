@@ -14,10 +14,13 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"os"
+	"strconv"
 )
 
 type Server struct {
 	commonService *service.CommonService
+	configService *service.ConfigService
 	agentService  *service.AgentService
 	buildService  *service.BuildService
 	taskService   *service.TaskService
@@ -26,6 +29,7 @@ type Server struct {
 
 func NewServer() *Server {
 	commonService := service.NewCommonService()
+	configService := service.NewConfigService()
 	agentService := service.NewAgentService()
 	heartBeatService := service.NewHeartBeatService()
 
@@ -36,7 +40,7 @@ func NewServer() *Server {
 	cronService := cron.NewCronService(heartBeatService, buildService, taskService, execService)
 	cronService.Init()
 
-	return &Server{commonService: commonService, agentService: agentService,
+	return &Server{commonService: commonService, configService: configService, agentService: agentService,
 		buildService: buildService, taskService: taskService,
 		cronService: cronService}
 }
@@ -76,7 +80,7 @@ func (s *Server) handle(writer http.ResponseWriter, req *http.Request) {
 	serverUtils.SetupCORS(&writer, req)
 
 	if req.Method == "GET" {
-		resp, err = s.get(req)
+		resp, err = s.get(writer, req)
 		if err != nil {
 			serverUtils.OutputErr(err, writer)
 			return
@@ -94,9 +98,9 @@ func (s *Server) handle(writer http.ResponseWriter, req *http.Request) {
 	io.WriteString(writer, string(bytes))
 }
 
-func (s *Server) get(req *http.Request) (resp domain.RespData, err error) {
+func (s *Server) get(writer http.ResponseWriter, req *http.Request) (resp domain.RespData, err error) {
 	resp = domain.RespData{Code: 1, Msg: "success"}
-	method, _ := serverUtils.ParserGetParams(req)
+	method, params := serverUtils.ParserGetParams(req)
 
 	switch method {
 
@@ -104,7 +108,10 @@ func (s *Server) get(req *http.Request) (resp domain.RespData, err error) {
 		resp.Data = s.taskService.ListTask()
 
 	case "listHistory":
-		resp.Msg = "listHistory"
+		resp.Data = s.taskService.ListHistory()
+
+	case "down":
+		Download(writer, params["f"])
 
 	case "":
 		resp.Code = 0
@@ -141,6 +148,9 @@ func (s *Server) post(req *http.Request) (resp domain.RespData, err error) {
 	case "addTask":
 		s.buildService.Add(reqData)
 
+	case "config":
+		s.configService.Update(reqData)
+
 	default:
 		resp.Code = 0
 		resp.Msg = "API NOT FOUND"
@@ -149,6 +159,26 @@ func (s *Server) post(req *http.Request) (resp domain.RespData, err error) {
 		resp.Code = 0
 		resp.Msg = "API ERROR: " + err.Error()
 	}
+
+	return
+}
+
+func Download(w http.ResponseWriter, fi string) {
+	logDir := vari.ZTFDir + "log-agent" + constant.PthSep
+	file, _ := os.Open(logDir + fi)
+	defer file.Close()
+
+	fileHeader := make([]byte, 512)
+	file.Read(fileHeader)
+
+	fileStat, _ := file.Stat()
+
+	w.Header().Set("Content-Disposition", "attachment; filename="+fi)
+	w.Header().Set("Content-Type", http.DetectContentType(fileHeader))
+	w.Header().Set("Content-Length", strconv.FormatInt(fileStat.Size(), 10))
+
+	file.Seek(0, 0)
+	io.Copy(w, file)
 
 	return
 }
