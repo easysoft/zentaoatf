@@ -7,7 +7,7 @@ import (
 
 const (
 	AppName   = "ztf"
-	ConfigVer = 1.0
+	ConfigVer = 2.0
 )
 
 var (

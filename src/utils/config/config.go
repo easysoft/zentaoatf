@@ -95,7 +95,11 @@ func SaveConfig(conf model.Config) error {
 	cfg.ReflectFrom(&conf)
 
 	cfg.SaveTo(configPath)
-	logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("success_update_config", configPath), color.FgCyan)
+	if i118Utils.I118Prt == nil {
+		logUtils.PrintToWithColor(fmt.Sprintf("Successfully update config file %s.", configPath), color.FgCyan)
+	} else {
+		logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("success_update_config", configPath), color.FgCyan)
+	}
 
 	vari.Config = ReadCurrConfig()
 	return nil
@@ -109,7 +113,7 @@ func getInst() model.Config {
 
 	ini.MapTo(&vari.Config, vari.ConfigPath)
 
-	if vari.Config.Version != constant.ConfigVer { // old config file, re-init
+	if vari.Config.Version < constant.ConfigVer { // old config file, re-init
 		if vari.Config.Language != "en" && vari.Config.Language != "zh" {
 			vari.Config.Language = "en"
 		}

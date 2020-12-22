@@ -481,7 +481,7 @@
     },
     {
       "id": "success_update_config",
-      "translation": "success to update config file %s."
+      "translation": "Successfully update config file %s."
     },
     {
       "id": "perm_deny",
