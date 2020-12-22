@@ -83,12 +83,13 @@ func (s *UpgradeService) RestartVersion(version string) (err error) {
 	_, err = fileUtils.CopyFile(newExePath, currExePath)
 
 	cmdStr := constant.AppName
+	port := strconv.Itoa(vari.Port)
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
 		cmdStr += ".exe"
-		cmd = exec.Command("cmd", "/C", cmdStr)
+		cmd = exec.Command("cmd", "/C", cmdStr, " -p ", port)
 	} else {
-		cmd = exec.Command("/bin/bash", "-c", cmdStr)
+		cmd = exec.Command("/bin/bash", "-c", cmdStr, " -p ", port)
 	}
 	cmd.Dir = vari.ZTFDir
 
