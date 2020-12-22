@@ -4,7 +4,7 @@ import constant "github.com/easysoft/zentaoatf/src/utils/const"
 
 const (
 	HeartBeatInterval    = 5
-	CheckUpgradeInterval = 5
+	CheckUpgradeInterval = 15
 
 	AgentRunTime = 30 * 60
 	AgentLogDir  = "log-agent"

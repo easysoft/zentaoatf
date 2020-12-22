@@ -16,6 +16,7 @@ import (
 	"github.com/fatih/color"
 	"gopkg.in/ini.v1"
 	"os"
+	"path"
 	"reflect"
 	"strings"
 )
@@ -84,7 +85,7 @@ func SaveConfig(conf model.Config) error {
 		configPath = vari.ServerWorkDir + constant.ConfigFile
 	}
 
-	fileUtils.MkDirIfNeeded(vari.ServerWorkDir + "conf")
+	fileUtils.MkDirIfNeeded(path.Dir(configPath))
 
 	conf.Version = constant.ConfigVer
 
@@ -92,6 +93,7 @@ func SaveConfig(conf model.Config) error {
 	cfg.ReflectFrom(&conf)
 
 	cfg.SaveTo(configPath)
+	logUtils.PrintToWithColor(fmt.Sprintf("success to update config file %s.", configPath), color.FgCyan)
 
 	vari.Config = ReadCurrConfig()
 	return nil

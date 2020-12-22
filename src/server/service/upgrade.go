@@ -11,10 +11,10 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
+	"github.com/inconshreveable/go-update"
 	"github.com/mholt/archiver/v3"
 	"github.com/sirupsen/logrus"
 	"os"
-	"os/exec"
 	"strconv"
 	"strings"
 )
@@ -76,41 +76,55 @@ func (s *UpgradeService) RestartVersion(version string) (err error) {
 	}
 	logrus.Println(currExePath)
 
-	if !vari.IsDebug {
-		err = os.Rename(currExePath, bakExePath)
-	}
-
-	_, err = fileUtils.CopyFile(newExePath, currExePath)
-
-	cmdStr := constant.AppName
-	port := strconv.Itoa(vari.Port)
-	var cmd *exec.Cmd
-	if commonUtils.IsWin() {
-		cmdStr += ".exe"
-		cmd = exec.Command("cmd", "/C", cmdStr, " -p ", port)
-	} else {
-		cmd = exec.Command("/bin/bash", "-c", cmdStr, " -p ", port)
-	}
-	cmd.Dir = vari.ZTFDir
-
-	err = cmd.Start()
+	rd, _ := os.Open(newExePath)
+	err = update.Apply(rd, update.Options{OldSavePath: bakExePath})
 	if err != nil {
-		logUtils.PrintToWithColor("fail to start new app, err: "+err.Error(), color.FgRed)
-		return
-	}
-
-	err = cmd.Wait()
-	if err != nil {
-		logUtils.PrintToWithColor("fail to start new app, err: "+err.Error(), color.FgRed)
-		return
+		logUtils.PrintToWithColor(fmt.Sprintf("fail to update from version %.1f to %s., err: %s",
+			vari.Config.Version, version, err.Error()), color.FgRed)
 	} else {
-		logUtils.PrintToWithColor("success to start update to new version "+version, color.FgCyan)
+		logUtils.PrintToWithColor(fmt.Sprintf("success to update from version %.1f to %s.",
+			vari.Config.Version, version), color.FgCyan)
 
+		// update config file
 		vari.Config.Version, _ = strconv.ParseFloat(version, 64)
 		configUtils.SaveConfig(vari.Config)
 	}
 
-	os.Exit(0)
+	//if !vari.IsDebug {
+	//	err = os.Rename(currExePath, bakExePath)
+	//}
+	//
+	//_, err = fileUtils.CopyFile(newExePath, currExePath)
+	//
+	//cmdStr := constant.AppName
+	//port := strconv.Itoa(vari.Port)
+	//var cmd *exec.Cmd
+	//if commonUtils.IsWin() {
+	//	cmdStr += ".exe"
+	//	cmd = exec.Command("cmd", "/C", cmdStr, " -p ", port)
+	//} else {
+	//	cmd = exec.Command("/bin/bash", "-c", cmdStr, " -p ", port)
+	//}
+	//cmd.Dir = vari.ZTFDir
+	//
+	//err = cmd.Start()
+	//if err != nil {
+	//	logUtils.PrintToWithColor("fail to start new app, err: "+err.Error(), color.FgRed)
+	//	return
+	//}
+	//
+	//err = cmd.Wait()
+	//if err != nil {
+	//	logUtils.PrintToWithColor("fail to start new app, err: "+err.Error(), color.FgRed)
+	//	return
+	//} else {
+	//	logUtils.PrintToWithColor("success to start update to new version "+version, color.FgCyan)
+	//
+	//	vari.Config.Version, _ = strconv.ParseFloat(version, 64)
+	//	configUtils.SaveConfig(vari.Config)
+	//}
+	//
+	//os.Exit(0)
 
 	return
 }
