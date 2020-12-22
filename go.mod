@@ -5,7 +5,6 @@ go 1.12
 require golang.org/x/text v0.3.2
 
 require (
-	bitbucket.org/kardianos/osext v0.0.0-20181027061946-15c52d0993e9
 	github.com/ajg/form v1.5.1
 	github.com/awesome-gocui/gocui v0.6.0
 	github.com/bitly/go-simplejson v0.5.0
