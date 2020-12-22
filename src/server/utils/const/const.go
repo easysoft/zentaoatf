@@ -3,7 +3,7 @@ package serverConst
 import constant "github.com/easysoft/zentaoatf/src/utils/const"
 
 const (
-	HeartBeatInterval    = 5
+	HeartBeatInterval    = 15
 	CheckUpgradeInterval = 15
 
 	AgentRunTime = 30 * 60
