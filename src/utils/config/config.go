@@ -95,7 +95,7 @@ func SaveConfig(conf model.Config) error {
 	cfg.ReflectFrom(&conf)
 
 	cfg.SaveTo(configPath)
-	if i118Utils.I118Prt == nil {
+	if i118Utils.I118Prt == nil { // first time, i118 may not be init.
 		logUtils.PrintToWithColor(fmt.Sprintf("Successfully update config file %s.", configPath), color.FgCyan)
 	} else {
 		logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("success_update_config", configPath), color.FgCyan)

@@ -35,7 +35,7 @@ func Download(uri string, dst string) error {
 	if err != nil {
 		logUtils.PrintTo(i118Utils.I118Prt.Sprintf("download_write_fail", dst, err.Error()))
 	} else {
-		logUtils.PrintTof("download_success", uri, dst)
+		logUtils.PrintTo(i118Utils.I118Prt.Sprintf("download_success", uri, dst))
 	}
 
 	return err

@@ -1,12 +1,14 @@
 package commonUtils
 
 import (
+	"bitbucket.org/kardianos/osext"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils/const"
 	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/emirpasic/gods/maps"
 	"net"
 	"os"
+	"os/exec"
 	"path"
 	"path/filepath"
 	"reflect"
@@ -190,4 +192,12 @@ func getIpType(IP net.IP) string {
 		}
 	}
 	return ""
+}
+
+func Restart() error {
+	name, err := osext.Executable()
+	if err != nil {
+		return err
+	}
+	return exec.Command(name, os.Args[1:]...).Start()
 }

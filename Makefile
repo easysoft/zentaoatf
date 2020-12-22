@@ -69,6 +69,4 @@ upload_to:
 	@echo 'upload...'
 	@find ${QINIU_DIR} -name ".DS_Store" -type f -delete
 	@qshell qupload2 --src-dir=${QINIU_DIR} --bucket=download --thread-count=10 --log-file=qshell.log \
-					--skip-path-prefixes=zendata --rescan-local
-	@qshell qupload2 --src-dir=/Users/aaron/work/zentao/qiniu/ --bucket=download --thread-count=10 --log-file=qshell.log \
-					--skip-path-prefixes=zendata,ztf --rescan-local --overwrite
+					--skip-path-prefixes=zendata --rescan-local --overwrite

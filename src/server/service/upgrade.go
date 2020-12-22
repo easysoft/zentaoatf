@@ -90,6 +90,8 @@ func (s *UpgradeService) RestartVersion(version string) (err error) {
 		// update config file
 		vari.Config.Version, _ = strconv.ParseFloat(version, 64)
 		configUtils.SaveConfig(vari.Config)
+
+		commonUtils.Restart()
 	}
 
 	return
