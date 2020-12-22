@@ -2,10 +2,10 @@ package service
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/server/domain"
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 )
@@ -25,7 +25,7 @@ func (s *ConfigService) Update(req domain.ReqData) {
 	reqStr, _ := json.Marshal(req.Data)
 	err := json.Unmarshal(reqStr, &conf)
 	if err != nil {
-		logUtils.PrintTo(fmt.Sprintf("error: %v", err))
+		logUtils.PrintTo(i118Utils.I118Prt.Sprintf("fail_parse_req", err))
 		return
 	}
 

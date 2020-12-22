@@ -435,6 +435,64 @@
     {
       "id": "server_response",
       "translation": "生成%d条记录，耗时%d秒。"
+    },
+
+    {
+      "id": "fail_parse_req",
+      "translation": "解析请求对象失败，错误 %s。"
+    },
+    {
+      "id": "has_jobs",
+      "translation": "已有%d个任务等待执行。"
+    },
+    {
+      "id": "success_add_tak",
+      "translation": "添加任务成功。"
+    },
+    {
+      "id": "success_heart_beat",
+      "translation": "发送心跳请求成功。"
+    },
+    {
+      "id": "fail_heart_beat",
+      "translation": "发送心跳请求失败。"
+    },
+    {
+      "id": "find_new_ver",
+      "translation": "发现新版本%s。"
+    },
+    {
+      "id": "success_upgrade",
+      "translation": "成功从版本%.1f升级到%s。"
+    },
+    {
+      "id": "fail_upgrade",
+      "translation": "失败升级版本从%.1f到%s，错误 %s。"
+    },
+
+    {
+      "id": "download_fail",
+      "translation": "下载文件失败 %s，错误 %s。"
+    },
+    {
+      "id": "download_read_fail",
+      "translation": "读取下载文件%s失败，错误 %s。"
+    },
+    {
+      "id": "download_write_fail",
+      "translation": "写入下载文件%s失败，错误 %s。"
+    },
+    {
+      "id": "download_success",
+      "translation": "成功下载文件%s到%s。"
+    },
+    {
+      "id": "success_update_config",
+      "translation": "成功更新配置文件%s。"
+    },
+    {
+      "id": "perm_deny",
+      "translation": "文件%s权限不足，建议切换工作目录。"
     }
   ]
 }

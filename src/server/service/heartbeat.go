@@ -6,6 +6,7 @@ import (
 	serverConst "github.com/easysoft/zentaoatf/src/server/utils/const"
 	"github.com/easysoft/zentaoatf/src/service/client"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
@@ -41,9 +42,9 @@ func (s *HeartBeatService) HeartBeat(isBusy bool) {
 
 	_, ok := client.PostObject(url, data, false)
 	if ok {
-		logUtils.PrintTo("heart beat success")
+		logUtils.PrintTo(i118Utils.I118Prt.Sprintf("success_heart_beat"))
 	} else {
-		logUtils.PrintTo("heart beat fail")
+		logUtils.PrintTo(i118Utils.I118Prt.Sprintf("fail_heart_beat"))
 	}
 
 	return

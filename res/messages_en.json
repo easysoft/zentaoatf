@@ -368,7 +368,7 @@
 
     {
       "id": "success_to_clean_logs",
-      "translation": "Successflly cleaned all logs."
+      "translation": "Successfully cleaned all logs."
     },
     {
       "id": "success_sort_steps",
@@ -376,7 +376,7 @@
     },
     {
       "id": "success_add_to_path",
-      "translation": "Successflly added ztf commands to PATH environment variable."
+      "translation": "Successfully added ztf commands to PATH environment variable."
     },
 
     {
@@ -428,6 +428,64 @@
     {
       "id": "server_response",
       "translation": "Create %d records in %d sec."
+    },
+
+    {
+      "id": "fail_parse_req",
+      "translation": "Fail to parse request object, err %s."
+    },
+    {
+      "id": "has_jobs",
+      "translation": "Already has %d jobs to be done."
+    },
+    {
+      "id": "success_add_tak",
+      "translation": "Successfully add task."
+    },
+    {
+      "id": "success_heart_beat",
+      "translation": "Successfully send heartbeat request."
+    },
+    {
+      "id": "fail_heart_beat",
+      "translation": "Fail to send heartbeat request."
+    },
+    {
+      "id": "find_new_ver",
+      "translation": "Find new version %s"
+    },
+    {
+      "id": "success_upgrade",
+      "translation": "Successfully  to update from version %.1f to %s."
+    },
+    {
+      "id": "fail_upgrade",
+      "translation": "Fail to update from version %.1f to %s., err: %s."
+    },
+
+    {
+      "id": "download_fail",
+      "translation": "Download %s fail, error: %s."
+    },
+    {
+      "id": "download_read_fail",
+      "translation": "Read download file %s fail, error: %s."
+    },
+    {
+      "id": "download_write_fail",
+      "translation": "Write download file %s fail, error: %s."
+    },
+    {
+      "id": "download_success",
+      "translation": "Successfully download %s to %s."
+    },
+    {
+      "id": "success_update_config",
+      "translation": "success to update config file %s."
+    },
+    {
+      "id": "perm_deny",
+      "translation": "Permission denied to file %s, please change work dir."
     }
   ]
 }

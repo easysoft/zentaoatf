@@ -95,7 +95,7 @@ func SaveConfig(conf model.Config) error {
 	cfg.ReflectFrom(&conf)
 
 	cfg.SaveTo(configPath)
-	logUtils.PrintToWithColor(fmt.Sprintf("success to update config file %s.", configPath), color.FgCyan)
+	logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("success_update_config", configPath), color.FgCyan)
 
 	vari.Config = ReadCurrConfig()
 	return nil
@@ -126,7 +126,7 @@ func CheckConfigPermission() {
 	err := fileUtils.MkDirIfNeeded(vari.ZTFDir + "conf")
 	if err != nil {
 		logUtils.PrintToWithColor(
-			fmt.Sprintf("Permission denied to open %s for write. Please change work dir.", vari.ZTFDir), color.FgRed)
+			i118Utils.I118Prt.Sprintf("perm_deny", vari.ZTFDir), color.FgRed)
 		os.Exit(0)
 	}
 }

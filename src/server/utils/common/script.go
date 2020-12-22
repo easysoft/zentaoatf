@@ -4,32 +4,40 @@ import (
 	"archive/zip"
 	"fmt"
 	errUtils "github.com/easysoft/zentaoatf/src/utils/err"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/mholt/archiver/v3"
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"time"
 )
 
 func Download(uri string, dst string) error {
-	logUtils.PrintTo(fmt.Sprintf("download file from %s.\n", uri))
+	if strings.Index(uri, "?") < 0 {
+		uri += "?"
+	} else {
+		uri += "&"
+	}
+	uri += fmt.Sprintf("&r=%d", time.Now().Unix())
+
 	res, err := http.Get(uri)
 	if err != nil {
-		logUtils.PrintTo(err.Error())
+		logUtils.PrintTo(i118Utils.I118Prt.Sprintf("download_fail", uri, err.Error()))
 	}
 	defer res.Body.Close()
 	bytes, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		logUtils.PrintTof("download fail, error: %s.\n", err.Error())
+		logUtils.PrintTo(i118Utils.I118Prt.Sprintf("download_read_fail", uri, err.Error()))
 	}
-	logUtils.PrintTof("size of download: %d\n", len(bytes))
 
 	err = ioutil.WriteFile(dst, bytes, 0666)
 	if err != nil {
-		logUtils.PrintTof("write download file fail, error: %s.\n", err.Error())
+		logUtils.PrintTo(i118Utils.I118Prt.Sprintf("download_write_fail", dst, err.Error()))
 	} else {
-		logUtils.PrintTof("download %s to %s.\n", uri, dst)
+		logUtils.PrintTof("download_success", uri, dst)
 	}
+
 	return err
 }
 
@@ -40,7 +48,7 @@ func GetZipSingleDir(path string) string {
 		if f.IsDir() {
 			zfh, ok := f.Header.(zip.FileHeader)
 			if ok {
-				logUtils.PrintTo("file: " + zfh.Name)
+				//logUtils.PrintTo("file: " + zfh.Name)
 
 				if folder == "" && zfh.Name != "__MACOSX" {
 					folder = zfh.Name

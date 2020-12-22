@@ -8,6 +8,7 @@ import (
 	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
@@ -35,8 +36,9 @@ func (s *UpgradeService) CheckUpgrade() {
 	content := strings.TrimSpace(fileUtils.ReadFile(pth))
 	version, _ := strconv.ParseFloat(content, 64)
 	if vari.Config.Version < version {
-		versionStr := fmt.Sprintf("%.1f", version)
+		logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("find_new_ver", content), color.FgCyan)
 
+		versionStr := fmt.Sprintf("%.1f", version)
 		err := s.DownloadVersion(versionStr)
 		if err == nil {
 			s.RestartVersion(versionStr)
@@ -79,52 +81,16 @@ func (s *UpgradeService) RestartVersion(version string) (err error) {
 	rd, _ := os.Open(newExePath)
 	err = update.Apply(rd, update.Options{OldSavePath: bakExePath})
 	if err != nil {
-		logUtils.PrintToWithColor(fmt.Sprintf("fail to update from version %.1f to %s., err: %s",
+		logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("fail_upgrade",
 			vari.Config.Version, version, err.Error()), color.FgRed)
 	} else {
-		logUtils.PrintToWithColor(fmt.Sprintf("success to update from version %.1f to %s.",
+		logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("success_upgrade",
 			vari.Config.Version, version), color.FgCyan)
 
 		// update config file
 		vari.Config.Version, _ = strconv.ParseFloat(version, 64)
 		configUtils.SaveConfig(vari.Config)
 	}
-
-	//if !vari.IsDebug {
-	//	err = os.Rename(currExePath, bakExePath)
-	//}
-	//
-	//_, err = fileUtils.CopyFile(newExePath, currExePath)
-	//
-	//cmdStr := constant.AppName
-	//port := strconv.Itoa(vari.Port)
-	//var cmd *exec.Cmd
-	//if commonUtils.IsWin() {
-	//	cmdStr += ".exe"
-	//	cmd = exec.Command("cmd", "/C", cmdStr, " -p ", port)
-	//} else {
-	//	cmd = exec.Command("/bin/bash", "-c", cmdStr, " -p ", port)
-	//}
-	//cmd.Dir = vari.ZTFDir
-	//
-	//err = cmd.Start()
-	//if err != nil {
-	//	logUtils.PrintToWithColor("fail to start new app, err: "+err.Error(), color.FgRed)
-	//	return
-	//}
-	//
-	//err = cmd.Wait()
-	//if err != nil {
-	//	logUtils.PrintToWithColor("fail to start new app, err: "+err.Error(), color.FgRed)
-	//	return
-	//} else {
-	//	logUtils.PrintToWithColor("success to start update to new version "+version, color.FgCyan)
-	//
-	//	vari.Config.Version, _ = strconv.ParseFloat(version, 64)
-	//	configUtils.SaveConfig(vari.Config)
-	//}
-	//
-	//os.Exit(0)
 
 	return
 }
