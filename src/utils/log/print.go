@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/fatih/color"
 	"os"
@@ -20,7 +21,7 @@ func PrintUsage() {
 	PrintToWithColor("Usage: ", color.FgCyan)
 
 	usage := fileUtils.ReadResData(usageFile)
-	exeFile := "ztf"
+	exeFile := constant.AppName
 	if commonUtils.IsWin() {
 		exeFile += ".exe"
 	}
@@ -33,8 +34,8 @@ func PrintUsage() {
 		regx, _ := regexp.Compile(`\\`)
 		sample = regx.ReplaceAllString(sample, "/")
 
-		regx, _ = regexp.Compile(`ztf.exe`)
-		sample = regx.ReplaceAllString(sample, "ztf")
+		regx, _ = regexp.Compile(constant.AppName + `.exe`)
+		sample = regx.ReplaceAllString(sample, constant.AppName)
 
 		regx, _ = regexp.Compile(`/bat/`)
 		sample = regx.ReplaceAllString(sample, "/shell/")

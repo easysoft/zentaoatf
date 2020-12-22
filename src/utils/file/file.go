@@ -150,25 +150,25 @@ func ReadResData(path string) string {
 	return jsonStr
 }
 
-func GetZTFDir() string { // where ztf command in
-	var dir string
+func GetZTFDir() (dir string, isDebug bool) { // where ztf command in
 	arg1 := strings.ToLower(os.Args[0])
 
 	name := filepath.Base(arg1)
-	if strings.Index(name, "ztf") == 0 && strings.Index(arg1, "go-build") < 0 {
+	if strings.Index(name, constant.AppName) == 0 && strings.Index(arg1, "go-build") < 0 {
 		p, _ := exec.LookPath(os.Args[0])
 		if strings.Index(p, string(os.PathSeparator)) > -1 {
 			dir = p[:strings.LastIndex(p, string(os.PathSeparator))]
 		}
 	} else { // debug
 		dir, _ = os.Getwd()
+		isDebug = true
 	}
 
 	dir, _ = filepath.Abs(dir)
 	dir = AddPathSepIfNeeded(dir)
 
 	//fmt.Printf("Debug: Launch %s in %s \n", arg1, dir)
-	return dir
+	return
 }
 
 func GetLogDir() string {

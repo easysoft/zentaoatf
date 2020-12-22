@@ -158,7 +158,7 @@ func runCases(cases []string) {
 	var report = model.TestReport{Env: commonUtils.GetOs(),
 		Pass: 0, Fail: 0, Total: 0, FuncResult: make([]model.FuncResult, 0)}
 	report.TestType = "func"
-	report.TestFrame = "ztf"
+	report.TestFrame = constant.AppName
 
 	pathMaxWidth := 0
 	numbMaxWidth := 0

@@ -16,7 +16,7 @@ import (
 	"strings"
 )
 
-func ExeShell(cmdStr string) (string, error) {
+func ExeSysCmd(cmdStr string) (string, error) {
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
 		cmd = exec.Command(cmdStr)
@@ -31,8 +31,27 @@ func ExeShell(cmdStr string) (string, error) {
 
 	return out.String(), err
 }
+func ExeAppInDir(cmdStr string, dir string) (string, error) {
+	var cmd *exec.Cmd
+	if commonUtils.IsWin() {
+		cmd = exec.Command("cmd", "/C", cmdStr)
+	} else {
+		cmd = exec.Command("/bin/bash", "-c", cmdStr)
+	}
 
-func ExeShellWithOutput(cmdStr string) []string {
+	if dir != "" {
+		cmd.Dir = dir
+	}
+
+	var out bytes.Buffer
+	cmd.Stdout = &out
+
+	err := cmd.Run()
+
+	return out.String(), err
+}
+
+func ExeAppWithOutput(cmdStr string) []string {
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
 		cmd = exec.Command("cmd", "/C", cmdStr)

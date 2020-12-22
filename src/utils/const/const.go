@@ -5,13 +5,17 @@ import (
 	"os"
 )
 
+const (
+	AppName   = "ztf"
+	ConfigVer = 1.0
+)
+
 var (
 	PthSep = string(os.PathSeparator)
 
-	ConfigVer  = 1.0
-	ConfigFile = fmt.Sprintf("conf%sztf.conf", string(os.PathSeparator))
+	ConfigFile = fmt.Sprintf("conf%s%s.conf", string(os.PathSeparator), AppName)
 
-	UrlZentaoSettings = "zentaoSettings"
+	UrlZenTaoSettings = "zentaoSettings"
 	UrlImportProject  = "importProject"
 	UrlSubmitResult   = "submitResults"
 	UrlReportBug      = "reportBug"

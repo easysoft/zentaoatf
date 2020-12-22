@@ -9,7 +9,7 @@ import (
 
 func RunUnitTest(cmdStr string) string {
 	startTime := time2.Now().Unix()
-	shellUtils.ExeShellWithOutput(cmdStr)
+	shellUtils.ExeAppWithOutput(cmdStr)
 	endTime := time2.Now().Unix()
 
 	testSuites, resultDir := testingService.RetrieveUnitResult()

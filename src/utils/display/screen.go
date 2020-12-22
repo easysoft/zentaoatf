@@ -17,7 +17,7 @@ func GetScreenSize() (int, int) {
 
 	if commonUtils.IsWin() {
 		cmd = "mode" // tested for win7
-		out, _ := shellUtils.ExeShell(cmd)
+		out, _ := shellUtils.ExeSysCmd(cmd)
 
 		//out := `设备状态 CON:
 		//		---------

@@ -6,6 +6,7 @@ import (
 )
 
 var (
+	IsDebug        bool
 	Config         = model.Config{}
 	Cui            *gocui.Gui
 	MainViewHeight int

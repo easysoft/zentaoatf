@@ -73,7 +73,7 @@ func AddSlashForUrl(url string) string {
 	return url
 }
 
-func IngoreFile(path string) bool {
+func IgnoreFile(path string) bool {
 	path = filepath.Base(path)
 
 	if strings.Index(path, ".") == 0 ||

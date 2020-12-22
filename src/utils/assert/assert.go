@@ -57,7 +57,7 @@ func GetAllScriptsInDir(path string, files *[]string) error {
 
 	for _, fi := range dir {
 		name := fi.Name()
-		if commonUtils.IngoreFile(name) {
+		if commonUtils.IgnoreFile(name) {
 			continue
 		}
 
@@ -85,7 +85,7 @@ func GetScriptByIdsInDir(dirPth string, idMap map[int]string, files *[]string) e
 
 	sep := string(os.PathSeparator)
 
-	if commonUtils.IngoreFile(dirPth) {
+	if commonUtils.IgnoreFile(dirPth) {
 		return nil
 	}
 

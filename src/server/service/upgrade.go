@@ -5,9 +5,16 @@ import (
 	serverUtils "github.com/easysoft/zentaoatf/src/server/utils/common"
 	serverConst "github.com/easysoft/zentaoatf/src/server/utils/const"
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
+	configUtils "github.com/easysoft/zentaoatf/src/utils/config"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
+	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
+	"github.com/fatih/color"
 	"github.com/mholt/archiver/v3"
+	"github.com/sirupsen/logrus"
+	"os"
+	"os/exec"
 	"strconv"
 	"strings"
 )
@@ -28,12 +35,16 @@ func (s *UpgradeService) CheckUpgrade() {
 	content := strings.TrimSpace(fileUtils.ReadFile(pth))
 	version, _ := strconv.ParseFloat(content, 64)
 	if vari.Config.Version < version {
-		s.Upgrade(version)
+		versionStr := fmt.Sprintf("%.1f", version)
+
+		err := s.DownloadVersion(versionStr)
+		if err == nil {
+			s.RestartVersion(versionStr)
+		}
 	}
 }
 
-func (s *UpgradeService) Upgrade(ver float64) (err error) {
-	version := fmt.Sprintf("%.1f", ver)
+func (s *UpgradeService) DownloadVersion(version string) (err error) {
 
 	os := commonUtils.GetOs()
 	if commonUtils.IsWin() {
@@ -46,9 +57,59 @@ func (s *UpgradeService) Upgrade(ver float64) (err error) {
 	err = serverUtils.Download(url, pth)
 
 	if err == nil {
+		fileUtils.RmDir(dir)
 		fileUtils.MkDirIfNeeded(dir)
-		archiver.Unarchive(pth, dir)
+		err = archiver.Unarchive(pth, dir)
 	}
+
+	return
+}
+
+func (s *UpgradeService) RestartVersion(version string) (err error) {
+	currExePath := vari.ZTFDir + constant.AppName
+	bakExePath := currExePath + "_bak"
+	newExePath := vari.AgentLogDir + version + constant.PthSep + constant.AppName + constant.PthSep + constant.AppName
+	if commonUtils.IsWin() {
+		currExePath += ".exe"
+		bakExePath += ".exe"
+		newExePath += ".exe"
+	}
+	logrus.Println(currExePath)
+
+	if !vari.IsDebug {
+		err = os.Rename(currExePath, bakExePath)
+	}
+
+	_, err = fileUtils.CopyFile(newExePath, currExePath)
+
+	cmdStr := constant.AppName
+	var cmd *exec.Cmd
+	if commonUtils.IsWin() {
+		cmdStr += ".exe"
+		cmd = exec.Command("cmd", "/C", cmdStr)
+	} else {
+		cmd = exec.Command("/bin/bash", "-c", cmdStr)
+	}
+	cmd.Dir = vari.ZTFDir
+
+	err = cmd.Start()
+	if err != nil {
+		logUtils.PrintToWithColor("fail to start new app, err: "+err.Error(), color.FgRed)
+		return
+	}
+
+	err = cmd.Wait()
+	if err != nil {
+		logUtils.PrintToWithColor("fail to start new app, err: "+err.Error(), color.FgRed)
+		return
+	} else {
+		logUtils.PrintToWithColor("success to start update to new version "+version, color.FgCyan)
+
+		vari.Config.Version, _ = strconv.ParseFloat(version, 64)
+		configUtils.SaveConfig(vari.Config)
+	}
+
+	os.Exit(0)
 
 	return
 }

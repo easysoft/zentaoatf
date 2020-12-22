@@ -21,7 +21,7 @@ import (
 )
 
 func InitConfig() {
-	vari.ZTFDir = fileUtils.GetZTFDir()
+	vari.ZTFDir, vari.IsDebug = fileUtils.GetZTFDir()
 	CheckConfigPermission()
 
 	vari.ConfigPath = vari.ZTFDir + constant.ConfigFile
