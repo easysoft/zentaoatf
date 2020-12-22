@@ -15,7 +15,7 @@ import (
 )
 
 func GetSysInfo() (info serverModel.SysInfo) {
-	info.AgentDir = vari.AgentDir
+	info.AgentDir = vari.ZTFDir
 
 	info.SysArch = runtime.GOARCH
 	info.SysCores = runtime.GOMAXPROCS(0)

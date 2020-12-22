@@ -49,6 +49,10 @@ func PrintTo(str string) {
 	output := color.Output
 	fmt.Fprint(output, str+"\n")
 }
+func PrintTof(format string, params ...interface{}) {
+	output := color.Output
+	fmt.Fprintf(output, format+"\n", params...)
+}
 
 func PrintToWithColor(msg string, attr color.Attribute) {
 	output := color.Output

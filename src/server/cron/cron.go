@@ -11,49 +11,57 @@ import (
 type CronService struct {
 	heartBeatService *service.HeartBeatService
 
-	buildService *service.BuildService
-	taskService  *service.TaskService
-	execService  *service.ExecService
+	buildService   *service.BuildService
+	taskService    *service.TaskService
+	execService    *service.ExecService
+	upgradeService *service.UpgradeService
 }
 
 func NewCronService(heartBeatService *service.HeartBeatService,
 	buildService *service.BuildService, taskService *service.TaskService,
-	execService *service.ExecService) *CronService {
+	execService *service.ExecService, upgradeService *service.UpgradeService) *CronService {
 	return &CronService{heartBeatService: heartBeatService,
-		buildService: buildService, taskService: taskService, execService: execService}
+		buildService: buildService, taskService: taskService, execService: execService, upgradeService: upgradeService}
 }
 
 func (s *CronService) Init() {
 	cronUtils.AddTaskFuc(
 		"HeartBeat",
-
 		fmt.Sprintf("@every %ds", serverConst.HeartBeatInterval),
-		func() {
-			if serverUtils.IsVmAgent() { // vm
-				// is running，register busy
-				if s.taskService.CheckRunning() {
-					s.heartBeatService.HeartBeat(true)
-					return
-				}
-
-				// no task to run, register idle
-				if s.taskService.GetSize() == 0 {
-					s.heartBeatService.HeartBeat(false)
-					return
-				}
-
-				// has task to run，register busy, then run
-				build := s.taskService.Peek()
-				s.heartBeatService.HeartBeat(true)
-
-				// run
-				s.taskService.Start()
-
-				s.execService.Exec(build)
-
-				s.taskService.Remove()
-				s.taskService.End()
-			}
-		},
+		func() { s.heartBeat() },
 	)
+
+	cronUtils.AddTaskFuc(
+		"CheckUpgrade",
+		fmt.Sprintf("@every %ds", serverConst.CheckUpgradeInterval),
+		func() { s.upgradeService.CheckUpgrade() },
+	)
+}
+
+func (s *CronService) heartBeat() {
+	if serverUtils.IsVmAgent() { // vm
+		// is running，register busy
+		if s.taskService.CheckRunning() {
+			s.heartBeatService.HeartBeat(true)
+			return
+		}
+
+		// no task to run, register idle
+		if s.taskService.GetSize() == 0 {
+			s.heartBeatService.HeartBeat(false)
+			return
+		}
+
+		// has task to run，register busy, then run
+		build := s.taskService.Peek()
+		s.heartBeatService.HeartBeat(true)
+
+		// run
+		s.taskService.Start()
+
+		s.execService.Exec(build)
+
+		s.taskService.Remove()
+		s.taskService.End()
+	}
 }

@@ -11,34 +11,24 @@ import (
 	"strings"
 )
 
-func Download(url string, dst string) {
-	if d, err := HTTPDownload(url); err == nil {
-		logUtils.PrintTo(fmt.Sprintf("downloaded %s.\n", url))
-		if WriteDownloadFile(dst, d) == nil {
-			logUtils.PrintTo(fmt.Sprintf("saved %s as %s\n", url, dst))
-		}
-	}
-}
-func HTTPDownload(uri string) ([]byte, error) {
+func Download(uri string, dst string) error {
 	logUtils.PrintTo(fmt.Sprintf("download file from %s.\n", uri))
 	res, err := http.Get(uri)
 	if err != nil {
 		logUtils.PrintTo(err.Error())
 	}
 	defer res.Body.Close()
-	d, err := ioutil.ReadAll(res.Body)
+	bytes, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		logUtils.PrintTo(err.Error())
 	}
-	logUtils.PrintTo(fmt.Sprintf("ReadFile: Size of download: %d\n", len(d)))
-	return d, err
-}
+	logUtils.PrintTof("size of download: %d\n", len(bytes))
 
-func WriteDownloadFile(dst string, d []byte) error {
-	logUtils.PrintTo(fmt.Sprintf("WriteFile: Size of download: %d\n", len(d)))
-	err := ioutil.WriteFile(dst, d, 0444)
+	err = ioutil.WriteFile(dst, bytes, 0666)
 	if err != nil {
-		logUtils.PrintTo(err.Error())
+		logUtils.PrintTof("download fail, error: %s.\n", err.Error())
+	} else {
+		logUtils.PrintTof("download %s to %s.\n", uri, dst)
 	}
 	return err
 }

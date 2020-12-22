@@ -1,4 +1,4 @@
-VERSION=2.0
+VERSION=1.8
 PROJECT=ztf
 QINIU_DIR=/Users/aaron/work/zentao/qiniu/
 QINIU_DIST_DIR=${QINIU_DIR}${PROJECT}/${VERSION}/
@@ -12,7 +12,10 @@ BIN_WIN32=${BIN_OUT}win32/zd/
 BIN_LINUX=${BIN_OUT}linux/zd/
 BIN_MAC=${BIN_OUT}mac/zd/
 
-default: gen_version_file upload_to
+default: update_version_in_config gen_version_file upload_to
+
+update_version_in_config:
+	@gsed -i "s/Version.*/Version = ${VERSION}/" conf/ztf.conf
 
 gen_version_file:
 	@echo 'gen version'

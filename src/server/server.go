@@ -36,8 +36,9 @@ func NewServer() *Server {
 	taskService := service.NewTaskService()
 	buildService := service.NewBuildService(taskService)
 	execService := service.NewExecService()
+	upgradeService := service.NewUpgradeService()
 
-	cronService := cron.NewCronService(heartBeatService, buildService, taskService, execService)
+	cronService := cron.NewCronService(heartBeatService, buildService, taskService, execService, upgradeService)
 	cronService.Init()
 
 	return &Server{commonService: commonService, configService: configService, agentService: agentService,
@@ -48,12 +49,8 @@ func NewServer() *Server {
 func (s *Server) Init() {
 	vari.IP, vari.MAC = serverUtils.GetIp()
 
-	if vari.AgentDir != "" {
-		return
-	}
-
-	home, _ := serverUtils.GetUserHome()
-	vari.AgentDir = fileUtils.AddPathSepIfNeeded(home + constant.PthSep + serverConst.AgentDir)
+	vari.AgentLogDir = vari.ZTFDir + serverConst.AgentLogDir + constant.PthSep
+	fileUtils.MkDirIfNeeded(vari.AgentLogDir)
 }
 
 func (s *Server) Run() {

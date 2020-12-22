@@ -8,7 +8,7 @@ import (
 var (
 	PthSep = string(os.PathSeparator)
 
-	ConfigVer  = 1
+	ConfigVer  = 1.0
 	ConfigFile = fmt.Sprintf("conf%sztf.conf", string(os.PathSeparator))
 
 	UrlZentaoSettings = "zentaoSettings"
