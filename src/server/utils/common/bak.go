@@ -9,6 +9,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"io/ioutil"
 	"path"
+	"regexp"
 	"time"
 )
 
@@ -28,27 +29,33 @@ func BakLog(src string) {
 
 	removeHistoryLog(vari.AgentLogDir)
 }
-func removeHistoryLog(dir string) {
-	files, err := ioutil.ReadDir(dir)
-	if err != nil {
-		return
-	}
+func removeHistoryLog(root string) {
+	dirs, _ := ioutil.ReadDir(root)
 
-	for _, fi := range files {
-		name := fi.Name()
+	for _, dir := range dirs {
+		name := dir.Name()
+		pass, _ := regexp.MatchString(`^[0-9]{4}-[0-9]{2}-[0-9]{2}$`, name)
+		if !pass {
+			continue
+		}
+
 		tm, err := dateUtils.StrToDate(name)
 		if err == nil && time.Now().Unix()-tm.Unix() > 7*24*3600 {
-			fileUtils.RmDir(dir + name)
+			fileUtils.RmDir(root + name)
 		}
 	}
 }
 
 func ListHistoryLog() (ret []map[string]string) {
-
 	dirs, _ := ioutil.ReadDir(vari.AgentLogDir)
 
 	for _, dir := range dirs {
 		dirName := dir.Name()
+		pass, _ := regexp.MatchString(`^[0-9]{4}-[0-9]{2}-[0-9]{2}$`, dirName)
+		if !pass {
+			continue
+		}
+
 		files, _ := ioutil.ReadDir(vari.AgentLogDir + dirName)
 
 		for _, fi := range files {

@@ -20,13 +20,13 @@ func Download(uri string, dst string) error {
 	defer res.Body.Close()
 	bytes, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		logUtils.PrintTo(err.Error())
+		logUtils.PrintTof("download fail, error: %s.\n", err.Error())
 	}
 	logUtils.PrintTof("size of download: %d\n", len(bytes))
 
 	err = ioutil.WriteFile(dst, bytes, 0666)
 	if err != nil {
-		logUtils.PrintTof("download fail, error: %s.\n", err.Error())
+		logUtils.PrintTof("write download file fail, error: %s.\n", err.Error())
 	} else {
 		logUtils.PrintTof("download %s to %s.\n", uri, dst)
 	}

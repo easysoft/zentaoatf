@@ -9,5 +9,5 @@ const (
 
 	QiNiuURL         = "https://dl.cnezsoft.com/ztf/"
 	AgentUpgradeURL  = QiNiuURL + "version.txt"
-	AgentDownloadURL = QiNiuURL + "%s/%s/zd.zip"
+	AgentDownloadURL = QiNiuURL + "%s/%s/ztf.zip"
 )

@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/yosssi/gohtml"
+	"log"
+	"regexp"
 )
 
 func cleanup() {
@@ -10,6 +11,11 @@ func cleanup() {
 }
 
 func main() {
+	pass, _ := regexp.MatchString(`^[0-9]{4}-[0-9]{2}-[0-9]{2}$`, "2020-12-18")
+	if pass {
+		log.Print(pass)
+	}
+
 	//c := make(chan os.Signal)
 	//signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	//go func() {
@@ -32,6 +38,6 @@ func main() {
 	//	log.Println(fmt.Sprintf("%v", testSuite))
 	//}
 
-	html := "<html><head><title>Website Title</title></head><body><div class=\"random-class\"><h1>I like pie</h1><p>It's true!</p></div></body></html>"
-	fmt.Println(gohtml.FormatWithLineNo(html))
+	//html := "<html><head><title>Website Title</title></head><body><div class=\"random-class\"><h1>I like pie</h1><p>It's true!</p></div></body></html>"
+	//fmt.Println(gohtml.FormatWithLineNo(html))
 }

@@ -7,6 +7,7 @@ import (
 	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
+	"github.com/mholt/archiver/v3"
 	"strconv"
 	"strings"
 )
@@ -31,7 +32,7 @@ func (s *UpgradeService) CheckUpgrade() {
 	}
 }
 
-func (s *UpgradeService) Upgrade(ver float64) {
+func (s *UpgradeService) Upgrade(ver float64) (err error) {
 	version := fmt.Sprintf("%.1f", ver)
 
 	os := commonUtils.GetOs()
@@ -40,7 +41,14 @@ func (s *UpgradeService) Upgrade(ver float64) {
 	}
 	url := fmt.Sprintf(serverConst.AgentDownloadURL, version, os)
 
-	pth := vari.AgentLogDir + version + ".zip"
-	serverUtils.Download(url, pth)
+	dir := vari.AgentLogDir + version
+	pth := dir + ".zip"
+	err = serverUtils.Download(url, pth)
 
+	if err == nil {
+		fileUtils.MkDirIfNeeded(dir)
+		archiver.Unarchive(pth, dir)
+	}
+
+	return
 }
