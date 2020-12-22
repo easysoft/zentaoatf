@@ -493,6 +493,10 @@
     {
       "id": "perm_deny",
       "translation": "文件%s权限不足，建议切换工作目录。"
+    },
+    {
+      "id": "fail_unzip",
+      "translation": "解压文件%s失败。"
     }
   ]
 }

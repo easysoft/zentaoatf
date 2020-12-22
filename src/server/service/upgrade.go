@@ -62,6 +62,10 @@ func (s *UpgradeService) DownloadVersion(version string) (err error) {
 		fileUtils.RmDir(dir)
 		fileUtils.MkDirIfNeeded(dir)
 		err = archiver.Unarchive(pth, dir)
+
+		if err != nil {
+			logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("fail_unzip", pth), color.FgCyan)
+		}
 	}
 
 	return

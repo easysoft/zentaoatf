@@ -2,7 +2,7 @@ package service
 
 import (
 	serverModel "github.com/easysoft/zentaoatf/src/server/domain"
-	commonUtils "github.com/easysoft/zentaoatf/src/server/utils/common"
+	"github.com/easysoft/zentaoatf/src/server/utils/common"
 	serverConst "github.com/easysoft/zentaoatf/src/server/utils/const"
 	"github.com/easysoft/zentaoatf/src/service/client"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
@@ -25,7 +25,7 @@ func NewHeartBeatService() *HeartBeatService {
 
 func (s *HeartBeatService) HeartBeat(isBusy bool) {
 	if sysInfo.OsName == "" {
-		sysInfo = commonUtils.GetSysInfo()
+		sysInfo = serverUtils.GetSysInfo()
 	}
 
 	// send request

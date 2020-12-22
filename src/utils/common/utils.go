@@ -6,6 +6,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/const"
 	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/emirpasic/gods/maps"
+	"log"
 	"net"
 	"os"
 	"os/exec"
@@ -196,8 +197,16 @@ func getIpType(IP net.IP) string {
 
 func Restart() error {
 	name, err := osext.Executable()
+	log.Println("Try to restart " + name)
+
 	if err != nil {
+		log.Println("Restart error 1 " + err.Error())
 		return err
 	}
-	return exec.Command(name, os.Args[1:]...).Start()
+	err = exec.Command(name, os.Args[1:]...).Start()
+	if err != nil {
+		log.Println("Restart error 2 " + err.Error())
+	}
+
+	return err
 }

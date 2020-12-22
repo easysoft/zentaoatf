@@ -32,7 +32,7 @@ func (s *CronService) Init() {
 	)
 
 	cronUtils.AddTaskFuc(
-		"CheckUpgrade",
+		"CheckUpdate",
 		fmt.Sprintf("@every %ds", serverConst.CheckUpgradeInterval),
 		func() {
 			if s.taskService.CheckRunning() { // ignore if task is running

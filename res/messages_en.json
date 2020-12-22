@@ -456,11 +456,11 @@
     },
     {
       "id": "success_upgrade",
-      "translation": "Successfully  to update from version %.1f to %s."
+      "translation": "Successfully upgrade from version %.1f to %s."
     },
     {
       "id": "fail_upgrade",
-      "translation": "Fail to update from version %.1f to %s., err: %s."
+      "translation": "Fail to upgrade from version %.1f to %s., err: %s."
     },
 
     {
@@ -486,6 +486,10 @@
     {
       "id": "perm_deny",
       "translation": "Permission denied to file %s, please change work dir."
+    },
+    {
+      "id": "fail_unzip",
+      "translation": "Fail to unzip file %s."
     }
   ]
 }
