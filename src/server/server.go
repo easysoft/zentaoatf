@@ -107,7 +107,7 @@ func (s *Server) get(writer http.ResponseWriter, req *http.Request) (resp domain
 	case "listHistory":
 		resp.Data = s.taskService.ListHistory()
 
-	case "down":
+	case "download":
 		Download(writer, params["f"])
 
 	case "":

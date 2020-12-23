@@ -1,18 +1,18 @@
 package domain
 
 type SysInfo struct {
-	AgentDir string `json:"agentDir"`
+	AgentDir string `json:"agentDir,omitempty"`
 
-	SysArch  string `json:"sysArch"`
-	SysCores int    `json:"sysCores"`
+	SysArch  string `json:"sysArch,omitempty"`
+	SysCores int    `json:"sysCores,omitempty"`
 
-	OsType    string `json:"osType"`
-	OsName    string `json:"osName"`
-	OsVersion string `json:"osVersion"`
+	OsType    string `json:"osType,omitempty"`
+	OsName    string `json:"osName,omitempty"`
+	OsVersion string `json:"osVersion,omitempty"`
 
-	Local string `json:"local"`
-	Lang  string `json:"lang"`
+	Local string `json:"local,omitempty"`
+	Lang  string `json:"lang,omitempty"`
 
-	IP  string `json:"ip"`
-	MAC string `json:"mac"`
+	IP  string `json:"ip,omitempty"`
+	MAC string `json:"mac,omitempty"`
 }

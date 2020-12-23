@@ -422,7 +422,7 @@
 
     {
       "id": "start_server",
-      "translation": "正在启动ZTF HTTP服务，按CTRL+C键退出。请调用http://%s:%s/获取更多信息。"
+      "translation": "启动HTTP服务于http://%s:%s，按CTRL+C键退出。\n请访问https://ztf.im/book/ztf/api获取更多信息。"
     },
     {
       "id": "start_server_fail",

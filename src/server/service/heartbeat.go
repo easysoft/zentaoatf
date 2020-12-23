@@ -31,7 +31,7 @@ func (s *HeartBeatService) HeartBeat(isBusy bool) {
 	// send request
 	zentaoService.GetConfig(vari.Config.Url)
 
-	url := vari.Config.Url + zentaoUtils.GenApiUri("agent", "heartBeat", "")
+	url := vari.Config.Url + zentaoUtils.GenApiUri("agent", "heartbeat", "")
 	data := map[string]interface{}{"type": vari.Platform, "sys": sysInfo}
 
 	status := serverConst.VmActive

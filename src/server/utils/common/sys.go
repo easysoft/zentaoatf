@@ -33,6 +33,9 @@ func GetSysInfo() (info serverModel.SysInfo) {
 	info.IP = vari.IP
 	info.MAC = vari.MAC
 
+	//jsonStr, _ := json.Marshal(info)
+	//logUtils.PrintTo(string(jsonStr))
+
 	return
 }
 

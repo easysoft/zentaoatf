@@ -6,49 +6,49 @@ import (
 )
 
 type Build struct {
-	Debug     bool     `json:"debug"`
-	ProductId string   `json:"productId"`
-	SuiteId   string   `json:"suiteId"`
-	TaskId    string   `json:"taskId"`
-	Files     []string `json:"files"`
+	Debug     bool     `json:"debug,omitempty"`
+	ProductId string   `json:"productId,omitempty"`
+	SuiteId   string   `json:"suiteId,omitempty"`
+	TaskId    string   `json:"taskId,omitempty"`
+	Files     []string `json:"files,omitempty"`
 
-	UnitTestType string `json:"unitTestType"`
-	UnitTestTool string `json:"unitTestTool"`
-	UnitTestCmd  string `json:"unitTestCmd"`
+	UnitTestType string `json:"unitTestType,omitempty"`
+	UnitTestTool string `json:"unitTestTool,omitempty"`
+	UnitTestCmd  string `json:"unitTestCmd,omitempty"`
 
-	WorkDir    string `json:"workDir"`
-	ProjectDir string `json:"projectDir"`
-	AppPath    string `json:"appPath"`
+	WorkDir    string `json:"workDir",omitempty`
+	ProjectDir string `json:"projectDir,omitempty"`
+	AppPath    string `json:"appPath,omitempty"`
 
-	ID           uint   `json:"id"`
-	QueueId      uint   `json:"queueId"`
-	Priority     int    `json:"priority"`
-	NodeIp       string `json:"priority"`
-	NodePort     int    `json:"nodePort"`
-	DeviceSerial string `json:"deviceSerial"`
-	DeviceIp     string `json:"deviceIp"`
+	ID           uint   `json:"id,omitempty"`
+	QueueId      uint   `json:"queueId,omitempty"`
+	Priority     int    `json:"priority,omitempty"`
+	NodeIp       string `json:"priority,omitempty"`
+	NodePort     int    `json:"nodePort,omitempty"`
+	DeviceSerial string `json:"deviceSerial,omitempty"`
+	DeviceIp     string `json:"deviceIp,omitempty"`
 
-	BuildType             serverConst.BuildType   `json:"buildType"`
-	AppiumPort            int                     `json:"appiumPort"`
-	SeleniumDriverType    serverConst.BrowserType `json:"seleniumDriverType"`
-	SeleniumDriverVersion string                  `json:"seleniumDriverVersion"`
-	SeleniumDriverPath    string                  `json:"seleniumDriverPath"`
+	BuildType             serverConst.BuildType   `json:"buildType,omitempty"`
+	AppiumPort            int                     `json:"appiumPort,omitempty"`
+	SeleniumDriverType    serverConst.BrowserType `json:"seleniumDriverType,omitempty"`
+	SeleniumDriverVersion string                  `json:"seleniumDriverVersion,omitempty"`
+	SeleniumDriverPath    string                  `json:"seleniumDriverPath,omitempty"`
 
-	ScriptUrl   string `json:"scriptUrl"`
-	ScmAddress  string `json:"scmAddress"`
-	ScmAccount  string `json:"scmAccount"`
-	ScmPassword string `json:"scmPassword"`
+	ScriptUrl   string `json:"scriptUrl,omitempty"`
+	ScmAddress  string `json:"scmAddress,omitempty"`
+	ScmAccount  string `json:"scmAccount,omitempty"`
+	ScmPassword string `json:"scmPassword,omitempty"`
 
-	AppUrl          string `json:"appUrl"`
-	BuildCommands   string `json:"buildCommands"`
-	ResultFiles     string `json:"resultFiles"`
-	KeepResultFiles MyBool `json:"keepResultFiles"`
-	ResultPath      string `json:"resultPath"`
-	ResultMsg       string `json:"resultMsg"`
+	AppUrl          string `json:"appUrl,omitempty"`
+	BuildCommands   string `json:"buildCommands,omitempty"`
+	ResultFiles     string `json:"resultFiles,omitempty"`
+	KeepResultFiles MyBool `json:"keepResultFiles,omitempty"`
+	ResultPath      string `json:"resultPath,omitempty"`
+	ResultMsg       string `json:"resultMsg,omitempty"`
 
-	StartTime time.Time `json:"startTime"`
-	EndTime   time.Time `json:"endTime"`
+	StartTime time.Time `json:"startTime,omitempty"`
+	EndTime   time.Time `json:"endTime,omitempty"`
 
-	Progress serverConst.BuildProgress `json:"progress"`
-	Status   serverConst.BuildStatus   `json:"status"`
+	Progress serverConst.BuildProgress `json:"progress,omitempty"`
+	Status   serverConst.BuildStatus   `json:"status,omitempty"`
 }

@@ -3,9 +3,9 @@ package domain
 import serverConst "github.com/easysoft/zentaoatf/src/server/utils/const"
 
 type OptResult struct {
-	Code    int         `json:"code"`
-	Msg     string      `json:"msg"`
-	Payload interface{} `json:"payload"`
+	Code    int         `json:"code,omitempty"`
+	Msg     string      `json:"msg,omitempty"`
+	Payload interface{} `json:"payload,omitempty"`
 }
 
 func (result *OptResult) Success(msg string) {
