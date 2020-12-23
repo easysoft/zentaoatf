@@ -15,8 +15,8 @@ import (
 
 func BakLog(src string) {
 	now := time.Now()
-	dateStr := dateUtils.DateStr(now)
-	timeStr := dateUtils.TimeStr(now)
+	dateStr := dateUtils.DateStrNoSep(now)
+	timeStr := dateUtils.TimeStrNoSep(now)
 	dateDir := vari.AgentLogDir + dateStr + constant.PthSep
 	dist := dateDir + timeStr + ".zip"
 
@@ -34,12 +34,12 @@ func removeHistoryLog(root string) {
 
 	for _, dir := range dirs {
 		name := dir.Name()
-		pass, _ := regexp.MatchString(`^[0-9]{4}-[0-9]{2}-[0-9]{2}$`, name)
+		pass, _ := regexp.MatchString(`^[0-9]{8}$`, name)
 		if !pass {
 			continue
 		}
 
-		tm, err := dateUtils.StrToDate(name)
+		tm, err := time.Parse("20060102", name)
 		if err == nil && time.Now().Unix()-tm.Unix() > 7*24*3600 {
 			fileUtils.RmDir(root + name)
 		}
@@ -51,7 +51,7 @@ func ListHistoryLog() (ret []map[string]string) {
 
 	for _, dir := range dirs {
 		dirName := dir.Name()
-		pass, _ := regexp.MatchString(`^[0-9]{4}-[0-9]{2}-[0-9]{2}$`, dirName)
+		pass, _ := regexp.MatchString(`^[0-9]{8}$`, dirName)
 		if !pass {
 			continue
 		}
@@ -64,7 +64,7 @@ func ListHistoryLog() (ret []map[string]string) {
 				continue
 			}
 
-			item := map[string]string{"name": dirName + constant.PthSep + name}
+			item := map[string]string{"name": dirName + "-" + name}
 			ret = append(ret, item)
 		}
 	}

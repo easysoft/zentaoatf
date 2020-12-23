@@ -16,6 +16,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 )
 
 type Server struct {
@@ -162,7 +163,7 @@ func (s *Server) post(req *http.Request) (resp domain.RespData, err error) {
 
 func Download(w http.ResponseWriter, fi string) {
 	logDir := vari.ZTFDir + "log-agent" + constant.PthSep
-	file, _ := os.Open(logDir + fi)
+	file, _ := os.Open(logDir + strings.Replace(fi, "-", "/", 1))
 	defer file.Close()
 
 	fileHeader := make([]byte, 512)

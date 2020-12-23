@@ -71,7 +71,7 @@ func (s *TaskService) ListHistory() (data []map[string]string) {
 	data = serverUtils.ListHistoryLog()
 
 	for key, item := range data {
-		data[key]["url"] = fmt.Sprintf("http://%s:%s/down?f=%s", vari.IP, strconv.Itoa(vari.Port), item["name"])
+		data[key]["url"] = fmt.Sprintf("http://%s:%s/download?f=%s", vari.IP, strconv.Itoa(vari.Port), item["name"])
 	}
 
 	return

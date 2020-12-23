@@ -3,8 +3,8 @@ package serverConst
 import constant "github.com/easysoft/zentaoatf/src/utils/const"
 
 const (
-	HeartBeatInterval    = 15
-	CheckUpgradeInterval = 15
+	HeartBeatInterval    = 60
+	CheckUpgradeInterval = 30
 
 	AgentRunTime = 30 * 60
 	AgentLogDir  = "log-agent"
