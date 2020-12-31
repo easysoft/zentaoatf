@@ -10,6 +10,7 @@ import (
 	serverConst "github.com/easysoft/zentaoatf/src/server/utils/const"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
+	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"io"
 	"io/ioutil"
@@ -51,7 +52,10 @@ func (s *Server) Init() {
 	vari.IP, vari.MAC = serverUtils.GetIp()
 
 	vari.AgentLogDir = vari.ZTFDir + serverConst.AgentLogDir + constant.PthSep
-	fileUtils.MkDirIfNeeded(vari.AgentLogDir)
+	err := fileUtils.MkDirIfNeeded(vari.AgentLogDir)
+	if err != nil {
+		logUtils.PrintTof("mkdir %s error %s", vari.AgentLogDir, err.Error())
+	}
 }
 
 func (s *Server) Run() {
