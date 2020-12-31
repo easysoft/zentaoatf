@@ -59,6 +59,7 @@ for var in 1 2
       cd $DIR
       nohup ./ztf -P $PARAM_PORT > nohup.log 2&>zenops-agent-$nowDate.log &
 
+      rm -f "$DIR/.upgraded"
       echo ""
       break
 
