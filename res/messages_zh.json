@@ -457,6 +457,7 @@
       "id": "fail_heart_beat",
       "translation": "发送心跳请求失败。"
     },
+
     {
       "id": "find_new_ver",
       "translation": "发现新版本%s。"

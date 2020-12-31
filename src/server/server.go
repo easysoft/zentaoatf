@@ -51,7 +51,7 @@ func NewServer() *Server {
 func (s *Server) Init() {
 	vari.IP, vari.MAC = serverUtils.GetIp()
 
-	vari.AgentLogDir = vari.ZTFDir + serverConst.AgentLogDir + constant.PthSep
+	vari.AgentLogDir = vari.ExeDir + serverConst.AgentLogDir + constant.PthSep
 	err := fileUtils.MkDirIfNeeded(vari.AgentLogDir)
 	if err != nil {
 		logUtils.PrintTof("mkdir %s error %s", vari.AgentLogDir, err.Error())
@@ -166,7 +166,7 @@ func (s *Server) post(req *http.Request) (resp domain.RespData, err error) {
 }
 
 func Download(w http.ResponseWriter, fi string) {
-	logDir := vari.ZTFDir + "log-agent" + constant.PthSep
+	logDir := vari.ExeDir + "log-agent" + constant.PthSep
 	file, _ := os.Open(logDir + strings.Replace(fi, "-", "/", 1))
 	defer file.Close()
 

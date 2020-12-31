@@ -172,7 +172,7 @@ func GetZTFDir() (dir string, isDebug bool) { // where ztf command in
 }
 
 func GetLogDir() string {
-	path := vari.ZTFDir + constant.LogDir
+	path := vari.ExeDir + constant.LogDir
 	if vari.ServerWorkDir != "" {
 		path = vari.ServerWorkDir + constant.LogDir
 	}

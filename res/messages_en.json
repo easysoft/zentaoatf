@@ -450,6 +450,7 @@
       "id": "fail_heart_beat",
       "translation": "Fail to send heartbeat request."
     },
+
     {
       "id": "find_new_ver",
       "translation": "Find new version %s"

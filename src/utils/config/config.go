@@ -22,10 +22,10 @@ import (
 )
 
 func InitConfig() {
-	vari.ZTFDir, vari.IsDebug = fileUtils.GetZTFDir()
+	vari.ExeDir, vari.IsDebug = fileUtils.GetZTFDir()
 	CheckConfigPermission()
 
-	vari.ConfigPath = vari.ZTFDir + constant.ConfigFile
+	vari.ConfigPath = vari.ExeDir + constant.ConfigFile
 	vari.Config = getInst()
 
 	// screen size
@@ -125,12 +125,12 @@ func getInst() model.Config {
 }
 
 func CheckConfigPermission() {
-	//err := syscall.Access(vari.ZTFDir, syscall.O_RDWR)
+	//err := syscall.Access(vari.ExeDir, syscall.O_RDWR)
 
-	err := fileUtils.MkDirIfNeeded(vari.ZTFDir + "conf")
+	err := fileUtils.MkDirIfNeeded(vari.ExeDir + "conf")
 	if err != nil {
 		logUtils.PrintToWithColor(
-			i118Utils.I118Prt.Sprintf("perm_deny", vari.ZTFDir), color.FgRed)
+			i118Utils.I118Prt.Sprintf("perm_deny", vari.ExeDir), color.FgRed)
 		os.Exit(0)
 	}
 }

@@ -16,7 +16,6 @@ import (
 	"github.com/fatih/color"
 	"github.com/inconshreveable/go-update"
 	"github.com/mholt/archiver/v3"
-	"github.com/sirupsen/logrus"
 	"os"
 	"strconv"
 	"strings"
@@ -91,7 +90,7 @@ func (s *UpgradeService) DownloadFile(version string) (pass bool, err error) {
 }
 
 func (s *UpgradeService) RestartVersion(version string) (err error) {
-	currExePath := vari.ZTFDir + constant.AppName
+	currExePath := vari.ExeDir + constant.AppName
 	bakExePath := currExePath + "_bak"
 	newExePath := vari.AgentLogDir + version + constant.PthSep + constant.AppName + constant.PthSep + constant.AppName
 	if commonUtils.IsWin() {
@@ -99,7 +98,7 @@ func (s *UpgradeService) RestartVersion(version string) (err error) {
 		bakExePath += ".exe"
 		newExePath += ".exe"
 	}
-	logrus.Println(currExePath)
+	logUtils.PrintTo(currExePath)
 
 	rd, _ := os.Open(newExePath)
 	err = update.Apply(rd, update.Options{OldSavePath: bakExePath})

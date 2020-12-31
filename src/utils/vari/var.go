@@ -12,7 +12,7 @@ var (
 	MainViewHeight int
 
 	ConfigPath       string
-	ZTFDir           string
+	ExeDir           string
 	ServerWorkDir    string
 	ServerProjectDir string
 	LogDir           string
