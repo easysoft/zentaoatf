@@ -45,9 +45,11 @@ compile_mac:
 
 copy_files:
 	@echo 'start copy files'
-	@cp -r {conf,runtime,demo} ${BIN_DIR}
 
-	@for platform in `ls ${BIN_OUT}`; do cp -r {bin/conf,bin/runtime,bin/demo} "${BIN_OUT}$${platform}/${BINARY}"; done
+	@cp -r {xdoc/check_service.*,conf,runtime,demo} ${BIN_DIR}
+	@chmod +x bin/check_service.sh
+	@for platform in `ls ${BIN_OUT}`; \
+		do cp -r {bin/check_service.*,bin/conf,bin/runtime,bin/demo} "${BIN_OUT}$${platform}/${BINARY}"; done
 
 package:
 	@echo 'start package'

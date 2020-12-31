@@ -1,0 +1,1 @@
+*/1 * * * * ./check_service.sh ztf 8848 >> check_service.log
