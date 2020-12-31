@@ -490,6 +490,10 @@
     {
       "id": "fail_unzip",
       "translation": "Fail to unzip file %s."
+    },
+    {
+      "id": "fail_md5_check",
+      "translation": "Check file %s MD5 failed."
     }
   ]
 }

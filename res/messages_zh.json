@@ -497,6 +497,10 @@
     {
       "id": "fail_unzip",
       "translation": "解压文件%s失败。"
+    },
+    {
+      "id": "fail_md5_check",
+      "translation": "验证文件%s的MD5失败。"
     }
   ]
 }

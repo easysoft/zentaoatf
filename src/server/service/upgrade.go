@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	serverUtils "github.com/easysoft/zentaoatf/src/server/utils/common"
 	serverConst "github.com/easysoft/zentaoatf/src/server/utils/const"
@@ -10,6 +11,7 @@ import (
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
+	shellUtils "github.com/easysoft/zentaoatf/src/utils/shell"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
 	"github.com/inconshreveable/go-update"
@@ -31,7 +33,7 @@ func NewUpgradeService() *UpgradeService {
 
 func (s *UpgradeService) CheckUpgrade() {
 	pth := vari.AgentLogDir + "version.txt"
-	serverUtils.Download(serverConst.AgentUpgradeURL, pth)
+	serverUtils.Download(serverConst.AgentVersionURL, pth)
 
 	content := strings.TrimSpace(fileUtils.ReadFile(pth))
 	version, _ := strconv.ParseFloat(content, 64)
@@ -39,15 +41,14 @@ func (s *UpgradeService) CheckUpgrade() {
 		logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("find_new_ver", content), color.FgCyan)
 
 		versionStr := fmt.Sprintf("%.1f", version)
-		err := s.DownloadVersion(versionStr)
-		if err == nil {
+		pass, err := s.DownloadFile(versionStr)
+		if pass && err == nil {
 			s.RestartVersion(versionStr)
 		}
 	}
 }
 
-func (s *UpgradeService) DownloadVersion(version string) (err error) {
-
+func (s *UpgradeService) DownloadFile(version string) (pass bool, err error) {
 	os := commonUtils.GetOs()
 	if commonUtils.IsWin() {
 		os = fmt.Sprintf("%s%d", os, strconv.IntSize)
@@ -55,17 +56,35 @@ func (s *UpgradeService) DownloadVersion(version string) (err error) {
 	url := fmt.Sprintf(serverConst.AgentDownloadURL, version, os)
 
 	dir := vari.AgentLogDir + version
+
 	pth := dir + ".zip"
 	err = serverUtils.Download(url, pth)
+	if err != nil {
+		return
+	}
 
-	if err == nil {
-		fileUtils.RmDir(dir)
-		fileUtils.MkDirIfNeeded(dir)
-		err = archiver.Unarchive(pth, dir)
+	md5Url := url + ".md5"
+	md5Pth := pth + ".md5"
+	err = serverUtils.Download(md5Url, md5Pth)
+	if err != nil {
+		return
+	}
 
-		if err != nil {
-			logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("fail_unzip", pth), color.FgCyan)
-		}
+	pass = s.checkMd5(pth, md5Pth)
+	if !pass {
+		msg := i118Utils.I118Prt.Sprintf("fail_md5_check", pth)
+		logUtils.PrintToWithColor(msg, color.FgCyan)
+		err = errors.New(msg)
+		return
+	}
+
+	fileUtils.RmDir(dir)
+	fileUtils.MkDirIfNeeded(dir)
+	err = archiver.Unarchive(pth, dir)
+
+	if err != nil {
+		logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("fail_unzip", pth), color.FgCyan)
+		return
 	}
 
 	return
@@ -97,4 +116,11 @@ func (s *UpgradeService) RestartVersion(version string) (err error) {
 	}
 
 	return
+}
+
+func (s *UpgradeService) checkMd5(filePth, md5Pth string) (pass bool) {
+	expectVal := fileUtils.ReadFile(md5Pth)
+	actualVal, _ := shellUtils.ExeSysCmd("md5sum " + filePth + " | awk '{print $1}'")
+
+	return strings.TrimSpace(actualVal) == strings.TrimSpace(expectVal)
 }

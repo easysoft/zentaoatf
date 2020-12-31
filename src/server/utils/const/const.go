@@ -10,6 +10,6 @@ const (
 	AgentLogDir  = "log-agent"
 
 	QiNiuURL         = "https://dl.cnezsoft.com/" + constant.AppName + "/"
-	AgentUpgradeURL  = QiNiuURL + "version.txt"
+	AgentVersionURL  = QiNiuURL + "version.txt"
 	AgentDownloadURL = QiNiuURL + "%s/%s/" + constant.AppName + ".zip"
 )
