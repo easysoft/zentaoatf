@@ -31,15 +31,16 @@ if [ -z "$PARAM_PORT" ]; then
     fi
 fi
 
+# just upgraded
 if [ -f "$DIR/.upgraded"]; then
   echo upgraded, force to restart.
-  PORT="-1" # cause service be killed
+  PORT="-1" # different port cause service be killed and restart
 fi
 
 for var in 1 2
 do
 
-  if [ -z "$PORT" ]; then # is empty, start service
+  if [ -z "$PORT" ]; then # empty, start service
 
     echo $nowTime start service on port $PARAM_PORT in dir $DIR.
     cd $DIR
@@ -51,11 +52,11 @@ do
 
   else
 
-    if [ $PORT = $PARAM_PORT ]; then
+    if [ $PORT = $PARAM_PORT ]; then # do nothing
       echo service is still alive
       echo sleep $interval second the $var time.
       sleep $interval
-    else
+    else # kill current service
       echo kill service on port $PORT.
       ps -ef | grep "$PARAM_NAME" | grep -v "grep" | grep -v ".sh" | awk '{print $2}' | xargs kill -9
       PORT="" # cause service started in the next iteration
