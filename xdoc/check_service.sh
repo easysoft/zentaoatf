@@ -18,6 +18,7 @@ DIR="$( cd "$( dirname "$0"  )" && pwd  )"
 PORT=`ps -ef | grep "$PARAM_NAME" | grep -v "grep" | grep -v ".sh" | awk '{print $10}'`
 echo name: $PARAM_NAME, dir: $DIR, port $PORT
 
+# init $PARAM_PORT
 if [ -z "$PARAM_PORT" ]; then
     if [ -z "$PORT" ]; then
       if [ "$PARAM_NAME" = "ztf" ]; then
