@@ -405,3 +405,41 @@ type RobotStatus struct {
 	StartTime string `xml:"starttime,attr"`
 	EndTime   string `xml:"endtime,attr"`
 }
+
+// cypress
+var CypressResults = "results"
+
+type CypressTestsuites struct {
+	XMLName    xml.Name           `xml:"testsuites"`
+	Text       string             `xml:",chardata"`
+	Name       string             `xml:"name,attr"`
+	Time       string             `xml:"time,attr"`
+	Tests      string             `xml:"tests,attr"`
+	Failures   string             `xml:"failures,attr"`
+	Testsuites []CypressTestsuite `xml:"testsuite"`
+}
+
+type CypressTestsuite struct {
+	Text      string            `xml:",chardata"`
+	Name      string            `xml:"name,attr"`
+	Timestamp string            `xml:"timestamp,attr"`
+	Tests     string            `xml:"tests,attr"`
+	File      string            `xml:"file,attr"`
+	Time      float64           `xml:"time,attr"`
+	Failures  string            `xml:"failures,attr"`
+	Testcases []CypressTestcase `xml:"testcase"`
+}
+
+type CypressTestcase struct {
+	Text      string           `xml:",chardata"`
+	Name      string           `xml:"name,attr"`
+	Time      float64          `xml:"time,attr"`
+	Classname string           `xml:"classname,attr"`
+	Failures  []CypressFailure `xml:"failure"`
+}
+
+type CypressFailure struct {
+	Text    string `xml:",chardata"`
+	Message string `xml:"message,attr"`
+	Type    string `xml:"type,attr"`
+}

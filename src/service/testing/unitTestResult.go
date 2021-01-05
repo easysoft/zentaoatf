@@ -22,7 +22,7 @@ func RetrieveUnitResult() (suites []model.UnitTestSuite, resultDir string) {
 		resultDir = fmt.Sprintf("target%ssurefire-reports%s", constant.PthSep, constant.PthSep)
 	} else if vari.UnitTestType == constant.UnitTestTypeTestNG && vari.UnitTestTool == constant.UnitTestToolMvn {
 		resultDir = fmt.Sprintf("target%ssurefire-reports%sjunitreports", constant.PthSep, constant.PthSep)
-	} else if vari.UnitTestType == constant.UnitTestTypeRobot {
+	} else if vari.UnitTestType == constant.UnitTestTypeRobot || vari.UnitTestType == constant.UnitTestTypeCypress {
 		resultDir = vari.UnitTestResults
 	} else {
 		resultDir = vari.UnitTestResult
@@ -102,6 +102,12 @@ func RetrieveUnitResult() (suites []model.UnitTestSuite, resultDir string) {
 			err = xml.Unmarshal([]byte(content), &robotResult)
 			if err == nil {
 				testSuite = ConvertRobotResult(robotResult)
+			}
+		} else if vari.UnitTestType == "cypress" {
+			cyResult := model.CypressTestsuites{}
+			err = xml.Unmarshal([]byte(content), &cyResult)
+			if err == nil {
+				testSuite = ConvertCyResult(cyResult)
 			}
 		}
 
@@ -372,4 +378,44 @@ func RetrieveRobotTests(suite model.RobotSuite, tests *[]model.RobotTest) {
 	for _, test := range suite.Tests {
 		*tests = append(*tests, test)
 	}
+}
+
+func ConvertCyResult(result model.CypressTestsuites) model.UnitTestSuite {
+	testSuite := model.UnitTestSuite{}
+
+	for _, suite := range result.Testsuites {
+		if suite.Name == "Root Suite" {
+			continue
+		}
+
+		templ := "20060102 15:04:05.000"
+		duration := suite.Time
+		startTime, _ := time.ParseInLocation(templ, suite.Timestamp, time.Local)
+		//endTime := time.Unix(startTime.Unix() + int64(duration), 0)
+
+		testSuite.Duration = int64(duration)
+		testSuite.Time = float32(startTime.Unix())
+
+		for _, cs := range suite.Testcases {
+			caseResult := model.UnitResult{}
+			caseResult.TestSuite = suite.Name
+			caseResult.Title = cs.Name
+			caseResult.Duration = float32(cs.Time)
+
+			if len(cs.Failures) > 0 {
+				caseResult.Status = "fail"
+
+				fail := model.Failure{}
+				fail.Type = cs.Failures[0].Type
+				fail.Desc = cs.Failures[0].Message
+				caseResult.Failure = &fail
+			} else {
+				caseResult.Status = "pass"
+			}
+
+			testSuite.TestCases = append(testSuite.TestCases, caseResult)
+		}
+	}
+
+	return testSuite
 }
