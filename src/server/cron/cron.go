@@ -11,17 +11,16 @@ import (
 type CronService struct {
 	heartBeatService *service.HeartBeatService
 
-	buildService   *service.BuildService
-	taskService    *service.TaskService
-	execService    *service.ExecService
-	upgradeService *service.UpgradeService
+	buildService *service.BuildService
+	taskService  *service.TaskService
+	execService  *service.ExecService
 }
 
 func NewCronService(heartBeatService *service.HeartBeatService,
 	buildService *service.BuildService, taskService *service.TaskService,
-	execService *service.ExecService, upgradeService *service.UpgradeService) *CronService {
+	execService *service.ExecService) *CronService {
 	return &CronService{heartBeatService: heartBeatService,
-		buildService: buildService, taskService: taskService, execService: execService, upgradeService: upgradeService}
+		buildService: buildService, taskService: taskService, execService: execService}
 }
 
 func (s *CronService) Init() {
@@ -38,8 +37,6 @@ func (s *CronService) Init() {
 			if s.taskService.CheckRunning() { // ignore if task is running
 				return
 			}
-
-			s.upgradeService.CheckUpgrade()
 		},
 	)
 }

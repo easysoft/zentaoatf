@@ -38,9 +38,8 @@ func NewServer() *Server {
 	taskService := service.NewTaskService()
 	buildService := service.NewBuildService(taskService)
 	execService := service.NewExecService()
-	upgradeService := service.NewUpgradeService()
 
-	cronService := cron.NewCronService(heartBeatService, buildService, taskService, execService, upgradeService)
+	cronService := cron.NewCronService(heartBeatService, buildService, taskService, execService)
 	cronService.Init()
 
 	return &Server{commonService: commonService, configService: configService, agentService: agentService,
