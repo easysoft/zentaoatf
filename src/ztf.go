@@ -153,6 +153,7 @@ func main() {
 		logUtils.PrintUsage()
 
 	default: // run
+		flagSet.Parse(os.Args[1:])
 		if vari.Port != 0 {
 			vari.RunMode = constant.RunModeServer
 			startServer()

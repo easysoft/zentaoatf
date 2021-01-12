@@ -1,4 +1,4 @@
-VERSION=2.1
+VERSION=2.2.1
 PROJECT=ztf
 QINIU_DIR=/Users/aaron/work/zentao/qiniu/
 QINIU_DIST_DIR=${QINIU_DIR}${PROJECT}/${VERSION}/
@@ -46,10 +46,9 @@ compile_mac:
 copy_files:
 	@echo 'start copy files'
 
-	@cp -r {xdoc/check_service.*,conf,runtime,demo} ${BIN_DIR}
-	@chmod +x bin/check_service.sh
+	@cp -r {conf,runtime,demo} ${BIN_DIR}
 	@for platform in `ls ${BIN_OUT}`; \
-		do cp -r {bin/check_service.*,bin/conf,bin/runtime,bin/demo} "${BIN_OUT}$${platform}/${BINARY}"; done
+		do cp -r {bin/conf,bin/runtime,bin/demo} "${BIN_OUT}$${platform}/${BINARY}"; done
 
 package:
 	@echo 'start package'
