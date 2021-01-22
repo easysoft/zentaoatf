@@ -95,6 +95,8 @@ func generateTestStepAndScript(teststeps []model.TestStep, steps *[]string, inde
 	nestedSteps := make([]model.TestStep, 0)
 	currGroup := model.TestStep{}
 	idx := 0
+
+	// convert steps to nested
 	for true {
 		if idx >= len(teststeps) {
 			break
@@ -157,9 +159,10 @@ func generateTestStepAndScript(teststeps []model.TestStep, steps *[]string, inde
 	}
 
 	stepNumb := 1
+	// print nested steps, only one level
 	for _, group := range nestedSteps {
 		if group.Id == "-1" { // [group]
-			*steps = append(*steps, "\n[group]")
+			*steps = append(*steps, fmt.Sprintf("\n[group]"))
 
 			for _, child := range group.Children {
 				*steps = append(*steps,
@@ -171,7 +174,7 @@ func generateTestStepAndScript(teststeps []model.TestStep, steps *[]string, inde
 
 				stepNumb++
 			}
-		} else {
+		} else { // [1. title]
 			*steps = append(*steps, "\n"+fmt.Sprintf("[%d. %s]", stepNumb, group.Desc))
 
 			for childNo, child := range group.Children {
