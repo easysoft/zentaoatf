@@ -57,14 +57,6 @@ func IsMac() bool {
 	return GetOs() == "mac"
 }
 
-func IsRelease() bool {
-	if _, err := os.Stat("res"); os.IsNotExist(err) {
-		return true
-	}
-
-	return false
-}
-
 func AddSlashForUrl(url string) string {
 	if strings.LastIndex(url, "/") < len(url)-1 {
 		url += "/"
@@ -190,4 +182,16 @@ func getIpType(IP net.IP) string {
 		}
 	}
 	return ""
+}
+
+func IsRelease() bool {
+	arg1 := strings.ToLower(os.Args[0])
+	name := filepath.Base(arg1)
+	return strings.Index(name, constant.AppName) == 0 && strings.Index(arg1, "go-build") < 0
+
+	//if _, err := os.Stat("res"); os.IsNotExist(err) {
+	//	return true
+	//}
+	//
+	//return false
 }

@@ -151,10 +151,7 @@ func ReadResData(path string) string {
 }
 
 func GetZTFDir() (dir string, isDebug bool) { // where ztf command in
-	arg1 := strings.ToLower(os.Args[0])
-
-	name := filepath.Base(arg1)
-	if strings.Index(name, constant.AppName) == 0 && strings.Index(arg1, "go-build") < 0 {
+	if commonUtils.IsRelease() { // release
 		p, _ := exec.LookPath(os.Args[0])
 		if strings.Index(p, string(os.PathSeparator)) > -1 {
 			dir = p[:strings.LastIndex(p, string(os.PathSeparator))]
