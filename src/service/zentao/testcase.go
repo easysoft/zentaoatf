@@ -66,19 +66,7 @@ func ListCaseByProduct(baseUrl string, productId string) []model.TestCase {
 			caseId := cs.Id
 
 			csWithSteps := GetCaseById(baseUrl, caseId)
-
-			// get order keys
-			keys := make([]int, 0, len(csWithSteps.Steps))
-			for k := range csWithSteps.Steps {
-				keys = append(keys, k)
-			}
-			sort.Ints(keys)
-
-			stepArr := make([]model.TestStep, 0)
-			for _, key := range keys {
-				step := csWithSteps.Steps[key]
-				stepArr = append(stepArr, step)
-			}
+			stepArr := genCaseSteps(csWithSteps)
 			caseArr = append(caseArr, model.TestCase{Id: caseId, Product: cs.Product, Module: cs.Module,
 				Title: cs.Title, StepArr: stepArr})
 		}
@@ -112,8 +100,10 @@ func ListCaseByModule(baseUrl string, productId string, moduleId string) []model
 			caseId := cs.Id
 
 			csWithSteps := GetCaseById(baseUrl, caseId)
+			stepArr := genCaseSteps(csWithSteps)
+
 			caseArr = append(caseArr, model.TestCase{Id: caseId, Product: cs.Product, Module: cs.Module,
-				Title: cs.Title, StepArr: csWithSteps.StepArr})
+				Title: cs.Title, StepArr: stepArr})
 		}
 
 		return caseArr
@@ -144,8 +134,10 @@ func ListCaseBySuite(baseUrl string, suiteId string) []model.TestCase {
 			caseId := cs.Id
 
 			csWithSteps := GetCaseById(baseUrl, caseId)
+			stepArr := genCaseSteps(csWithSteps)
+
 			caseArr = append(caseArr, model.TestCase{Id: caseId, Product: cs.Product, Module: cs.Module,
-				Title: cs.Title, StepArr: csWithSteps.StepArr})
+				Title: cs.Title, StepArr: stepArr})
 		}
 
 		return caseArr
@@ -177,14 +169,32 @@ func ListCaseByTask(baseUrl string, taskId string) []model.TestCase {
 			caseId := cs.Case
 
 			csWithSteps := GetCaseById(baseUrl, caseId)
+			stepArr := genCaseSteps(csWithSteps)
+
 			caseArr = append(caseArr, model.TestCase{Id: caseId, Product: cs.Product, Module: cs.Module,
-				Title: cs.Title, StepArr: csWithSteps.StepArr})
+				Title: cs.Title, StepArr: stepArr})
 		}
 
 		return caseArr
 	}
 
 	return nil
+}
+
+func genCaseSteps(csWithSteps model.TestCase) (ret []model.TestStep) {
+	// get order keys
+	keys := make([]int, 0, len(csWithSteps.Steps))
+	for k := range csWithSteps.Steps {
+		keys = append(keys, k)
+	}
+	sort.Ints(keys)
+
+	for _, key := range keys {
+		step := csWithSteps.Steps[key]
+		ret = append(ret, step)
+	}
+
+	return
 }
 
 func GetCaseById(baseUrl string, caseId string) model.TestCase {

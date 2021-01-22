@@ -44,7 +44,7 @@ func Generate(productId string, moduleId string, suiteId string, taskId string, 
 		targetDir = fileUtils.AbsolutePath(targetDir)
 
 		// 2. organize by module
-		byModule := true
+		byModule := false
 		if !isReady {
 			stdinUtils.InputForBool(&byModule, byModule, "co_organize_by_module")
 		}
