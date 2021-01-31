@@ -5,6 +5,7 @@ import (
 	"github.com/easysoft/zentaoatf/res"
 	"github.com/easysoft/zentaoatf/src/utils/common"
 	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 	"io/ioutil"
@@ -64,6 +65,10 @@ func ReadI18nJson(file string) string {
 }
 
 func InitRes(jsonPath string) {
+	if !fileUtils.FileExist(jsonPath) { // run unit test in another project dir when debug with ide only
+		jsonPath = "/Users/aaron/rd/project/zentao/go/ztf/" + jsonPath
+	}
+
 	var i18n I18n
 	str := ReadI18nJson(jsonPath)
 	json.Unmarshal([]byte(str), &i18n)

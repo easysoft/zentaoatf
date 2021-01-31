@@ -45,7 +45,7 @@ func main() {
 		os.Exit(0)
 	}()
 
-	flagSet = flag.NewFlagSet("atf", flag.ContinueOnError)
+	flagSet = flag.NewFlagSet("ztf", flag.ContinueOnError)
 
 	flagSet.StringVar(&vari.Interpreter, "interp", "", "")
 	flagSet.StringVar(&vari.Interpreter, "interpreter", "", "")
