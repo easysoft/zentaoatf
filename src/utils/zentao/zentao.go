@@ -175,13 +175,13 @@ func GetCaseInfo(file string) (bool, int, int, string) {
 //	}
 //
 //	if independentExpect {
-//		expectArr = ReadExpectIndependentArr(expectIndependentContent)
+//		expectArr = ReadExpectIndependentArrObsolete(expectIndependentContent)
 //	}
 //
 //	return cpStepArr, expectArr
 //}
 
-func ReadExpectIndependentArr(content string) [][]string {
+func ReadExpectIndependentArrObsolete(content string) [][]string {
 	lines := strings.Split(content, "\n")
 
 	ret := make([][]string, 0)
@@ -212,7 +212,7 @@ func ReadExpectIndependentArr(content string) [][]string {
 	return ret
 }
 
-func ReadExpectIndependentArrNew(content string) [][]string {
+func ReadExpectIndependentArr(content string) [][]string {
 	lines := strings.Split(content, "\n")
 
 	ret := make([][]string, 0)
@@ -252,7 +252,7 @@ func ReadExpectIndependentArrNew(content string) [][]string {
 	return ret
 }
 
-func ReadLogArr(content string) (isSkip bool, ret [][]string) {
+func ReadLogArrObsolete(content string) (isSkip bool, ret [][]string) {
 	lines := strings.Split(content, "\n")
 
 	ret = make([][]string, 0)
@@ -297,7 +297,7 @@ func ReadLogArr(content string) (isSkip bool, ret [][]string) {
 	return
 }
 
-func ReadLogArrNew(content string) (isSkip bool, ret [][]string) {
+func ReadLogArr(content string) (isSkip bool, ret [][]string) {
 	lines := strings.Split(content, "\n")
 
 	ret = make([][]string, 0)

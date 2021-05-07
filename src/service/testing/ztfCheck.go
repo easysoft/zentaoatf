@@ -22,18 +22,18 @@ func CheckCaseResult(file string, logs string, report *model.TestReport, idx int
 	isIndependent, expectIndependentContent := zentaoUtils.GetDependentExpect(file)
 	if isIndependent {
 		if isOldFormat {
-			expectMap = scriptUtils.GetExpectMapFromIndependentFile(expectMap, expectIndependentContent, false)
+			expectMap = scriptUtils.GetExpectMapFromIndependentFileObsolete(expectMap, expectIndependentContent, false)
 		} else {
-			expectMap = scriptUtils.GetExpectMapFromIndependentFileNew(expectMap, expectIndependentContent, false)
+			expectMap = scriptUtils.GetExpectMapFromIndependentFile(expectMap, expectIndependentContent, false)
 		}
 	}
 
 	skip := false
 	actualArr := make([][]string, 0)
 	if isOldFormat {
-		skip, actualArr = zentaoUtils.ReadLogArr(logs)
+		skip, actualArr = zentaoUtils.ReadLogArrObsolete(logs)
 	} else {
-		skip, actualArr = zentaoUtils.ReadLogArrNew(logs)
+		skip, actualArr = zentaoUtils.ReadLogArr(logs)
 	}
 
 	language := langUtils.GetLangByFile(file)

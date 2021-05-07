@@ -25,11 +25,11 @@ func GetStepAndExpectMap(file string) (stepMap, stepTypeMap, expectMap maps.Map,
 
 		if isOldFormat {
 			groupBlockArr := getGroupBlockArr(lines)
-			groupArr := getStepNestedArr(groupBlockArr)
-			_, stepMap, stepTypeMap, expectMap = getSortedTextFromNestedSteps(groupArr)
+			groupArr := getStepNestedArrObsolete(groupBlockArr)
+			_, stepMap, stepTypeMap, expectMap = getSortedTextFromNestedStepsObsolete(groupArr)
 		} else {
-			groupArr := getStepNestedArrNew(lines)
-			_, stepMap, stepTypeMap, expectMap = getSortedTextFromNestedStepsNew(groupArr)
+			groupArr := getStepNestedArr(lines)
+			_, stepMap, stepTypeMap, expectMap = getSortedTextFromNestedSteps(groupArr)
 		}
 
 		return
@@ -49,8 +49,8 @@ func SortFile(file string) {
 		lines := strings.Split(content, "\n")
 
 		groupBlockArr := getGroupBlockArr(lines)
-		groupArr := getStepNestedArr(groupBlockArr)
-		stepsTxt, _, _, _ = getSortedTextFromNestedSteps(groupArr)
+		groupArr := getStepNestedArrObsolete(groupBlockArr)
+		stepsTxt, _, _, _ = getSortedTextFromNestedStepsObsolete(groupArr)
 
 		// replace info
 		from := ""
@@ -112,7 +112,7 @@ func getGroupBlockArr(lines []string) [][]string {
 	return groupBlockArr
 }
 
-func getStepNestedArr(blocks [][]string) []model.TestStep {
+func getStepNestedArrObsolete(blocks [][]string) []model.TestStep {
 	ret := make([]model.TestStep, 0)
 
 	for _, block := range blocks {
@@ -136,7 +136,7 @@ func getStepNestedArr(blocks [][]string) []model.TestStep {
 	return ret
 }
 
-func getStepNestedArrNew(lines []string) (ret []model.TestStep) {
+func getStepNestedArr(lines []string) (ret []model.TestStep) {
 	parent := model.TestStep{}
 	increase := 0
 	for index := 0; index < len(lines); index++ {
@@ -311,7 +311,7 @@ func isGroup(str string) bool {
 	return ret
 }
 
-func getSortedTextFromNestedSteps(groups []model.TestStep) (string, maps.Map, maps.Map, maps.Map) {
+func getSortedTextFromNestedStepsObsolete(groups []model.TestStep) (string, maps.Map, maps.Map, maps.Map) {
 	ret := make([]string, 0)
 	stepMap := linkedhashmap.New()
 	stepTypeMap := linkedhashmap.New()
@@ -420,7 +420,7 @@ func getSortedTextFromNestedSteps(groups []model.TestStep) (string, maps.Map, ma
 	return strings.Join(ret, "\n"), stepMap, stepTypeMap, expectMap
 }
 
-func getSortedTextFromNestedStepsNew(groups []model.TestStep) (ret string, stepMap, stepTypeMap, expectMap maps.Map) {
+func getSortedTextFromNestedSteps(groups []model.TestStep) (ret string, stepMap, stepTypeMap, expectMap maps.Map) {
 	arr := make([]string, 0)
 	stepMap = linkedhashmap.New()
 	stepTypeMap = linkedhashmap.New()
@@ -514,10 +514,10 @@ func printMutiStepOrExpect(str string) string {
 	return strings.Join(ret, "\r\n")
 }
 
-func GetExpectMapFromIndependentFile(expectMap maps.Map, content string, withEmptyExpect bool) maps.Map {
+func GetExpectMapFromIndependentFileObsolete(expectMap maps.Map, content string, withEmptyExpect bool) maps.Map {
 	retMap := linkedhashmap.New()
 
-	expectArr := zentaoUtils.ReadExpectIndependentArr(content)
+	expectArr := zentaoUtils.ReadExpectIndependentArrObsolete(content)
 
 	idx := 0
 	for _, keyIfs := range expectMap.Keys() {
@@ -539,10 +539,10 @@ func GetExpectMapFromIndependentFile(expectMap maps.Map, content string, withEmp
 	return retMap
 }
 
-func GetExpectMapFromIndependentFileNew(expectMap maps.Map, content string, withEmptyExpect bool) maps.Map {
+func GetExpectMapFromIndependentFile(expectMap maps.Map, content string, withEmptyExpect bool) maps.Map {
 	retMap := linkedhashmap.New()
 
-	expectArr := zentaoUtils.ReadExpectIndependentArrNew(content)
+	expectArr := zentaoUtils.ReadExpectIndependentArr(content)
 
 	idx := 0
 	for _, keyIfs := range expectMap.Keys() {
