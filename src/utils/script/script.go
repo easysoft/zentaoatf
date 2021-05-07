@@ -141,7 +141,7 @@ func getStepNestedArrNew(lines []string) (ret []model.TestStep) {
 	increase := 0
 	for index := 0; index < len(lines); index++ {
 		line := lines[index]
-		if strings.TrimSpace(line) == "" {
+		if strings.TrimSpace(line) == "" || strings.TrimSpace(line) == ">>" || strings.TrimSpace(line) == "<<" {
 			continue
 		}
 

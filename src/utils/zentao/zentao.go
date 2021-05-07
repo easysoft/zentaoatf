@@ -324,7 +324,10 @@ func ReadLogArrNew(content string) (isSkip bool, ret [][]string) {
 
 				ret = append(ret, temp)
 				cpArr = make([]string, 0)
+				model = ""
 			}
+		} else if line == "<<" {
+			continue
 		} else {
 			model = "single"
 
