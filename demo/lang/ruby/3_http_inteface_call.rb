@@ -1,26 +1,24 @@
 #!/usr/bin/env ruby
 =begin
-[case]
+
 title=check remote interface response
 cid=0
 pid=0
 
-[group]
-  1. Send a request to interface http://xxx 
-  2. Retrieve sessionID field from response json 
-  3. Check its format >> `^[a-z0-9]{26}`
+1. Send a request to interface http://xxx
+2. Retrieve sessionID field from response json
+3. Check its format >> `^[a-z0-9]{26}`
 
-[esac]
 =end
 
 require "open-uri"
 require "json"
 
-uri = 'http://pms.zentao.net/?mode=getconfig'
+uri = 'http://max.demo.zentao.net/pms/?mode=getconfig'
 html = nil
 open(uri) do |http|
   html = http.read
 end
 
 json = JSON.parse(html)   # need json library (gem install json)
-puts '>> ' + json['sessionID']
+puts json['sessionID']
