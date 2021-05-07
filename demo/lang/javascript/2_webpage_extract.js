@@ -10,9 +10,9 @@ pid=0
 
 */
 
-var https = require('https');
+var http = require('http');
 
-https.get('https://back.zcorp.cc/pms/user-login.html', function(req) {
+http.get('http://max.demo.zentao.net/user-login-Lw==.html', function(req) {
     let html = '', image = '';
 
     req.on('data', function(data) {

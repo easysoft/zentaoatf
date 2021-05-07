@@ -10,9 +10,9 @@ pid=0
 
 */
 
-var https = require('https');
+var http = require('http');
 
-https.get('https://back.zcorp.cc/pms/?mode=getconfig', function(req) {
+http.get('http://max.demo.zentao.net/pms/?mode=getconfig', function(req) {
     let jsonStr = '';
 
     req.on('data', function(data) {

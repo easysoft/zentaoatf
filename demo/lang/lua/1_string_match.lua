@@ -1,6 +1,5 @@
 #!/usr/bin/env lua
 --[[
-[case]
 title=check string matches pattern
 cid=0
 pid=0
@@ -10,9 +9,8 @@ pid=0
   2. regular expression match >> `1\d{10}`
   3. format string match >> `%s%d`
 
-[esac]
 ]]
 
-print(">> hello");
-print(">> 13905120512");
-print(">> abc123");
+print("hello");
+print("13905120512");
+print("abc123");
