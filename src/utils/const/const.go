@@ -54,4 +54,17 @@ var (
 	RunModeCommon  = "common"
 	RunModeServer  = "server"
 	RunModeRequest = "request"
+
+	LangCommentsMap = map[string][]string{
+		"bat":        {"", ""},
+		"javascript": {"", ""},
+		"lua":        {"", ""},
+		"perl":       {"", ""},
+		"php":        {"/\\*{2,}", "\\*{1,}/"},
+		"python":     {"", ""},
+		"ruby":       {"", ""},
+		"shell":      {"", ""},
+		"tcl":        {"", ""},
+		"autoit":     {"", ""},
+	}
 )

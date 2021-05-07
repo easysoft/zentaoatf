@@ -5,6 +5,7 @@ import (
 	assertUtils "github.com/easysoft/zentaoatf/src/utils/assert"
 	scriptUtils "github.com/easysoft/zentaoatf/src/utils/script"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
+	"log"
 )
 
 func CommitCases(files []string) {
@@ -14,7 +15,8 @@ func CommitCases(files []string) {
 		pass, id, _, title := zentaoUtils.GetCaseInfo(cs)
 
 		if pass {
-			stepMap, stepTypeMap, expectMap := scriptUtils.GetStepAndExpectMap(cs)
+			stepMap, stepTypeMap, expectMap, isOldFormat := scriptUtils.GetStepAndExpectMap(cs)
+			log.Println(isOldFormat)
 
 			isIndependent, expectIndependentContent := zentaoUtils.GetDependentExpect(cs)
 			if isIndependent {

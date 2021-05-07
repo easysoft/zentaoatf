@@ -33,6 +33,8 @@ func InitConfig() {
 
 	// internationalization
 	i118Utils.InitI118(vari.Config.Language)
+
+	vari.ScriptExtToNameMap = langUtils.GetExtToNameMap()
 }
 
 func InitScreenSize() {

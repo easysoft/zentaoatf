@@ -32,7 +32,6 @@ func GetCaseByDirAndFile(files []string) []string {
 }
 
 func GetAllScriptsInDir(path string, files *[]string) error {
-
 	if !fileUtils.IsDir(path) { // first call, param is file
 		regx := langUtils.GetSupportLanguageExtRegx()
 
@@ -166,8 +165,6 @@ func GetFailedCasesDirectlyFromTestResult(resultFile string) []string {
 }
 
 func GetScriptType(scripts []string) []string {
-	vari.ScriptExtToNameMap = langUtils.GetExtToNameMap()
-
 	exts := make([]string, 0)
 	for _, script := range scripts {
 		ext := path.Ext(script)

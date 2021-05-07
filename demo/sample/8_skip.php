@@ -1,22 +1,14 @@
 #!/usr/bin/env php
 <?php
 /**
-[case]
-title=skip
-cid=-1
-pid=0
 
-[group]
-  1. step 1 >> expect 1
+title = skip
+cid   = 1
+pid   = 0
 
-[2. group title 3]
-  2.1 step >> expect 2.1
-  2.2 step >> expect 2.2
-
-[esac]
+1. step 1 >> expect 1
+2. step 2 >> expect 2
 */
 
-checkPreCondition() || print("skip\n");
-print(">> ...\n");
-
-function checkPreCondition(){}
+print("skip\n");
+print("...\n");

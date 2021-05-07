@@ -1,4 +1,8 @@
->> expect 1
+expect 1
+
+expect 3
 >>
-expect 3.1.1
-expect 3.1.2
+expect 4 line 1
+
+expect 4 line 2
+<<

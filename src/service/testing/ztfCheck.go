@@ -17,17 +17,28 @@ import (
 )
 
 func CheckCaseResult(file string, logs string, report *model.TestReport, idx int, total int, secs string, pathMaxWidth int, numbMaxWidth int) {
-	_, _, expectMap := scriptUtils.GetStepAndExpectMap(file)
+	_, _, expectMap, isOldFormat := scriptUtils.GetStepAndExpectMap(file)
 
 	isIndependent, expectIndependentContent := zentaoUtils.GetDependentExpect(file)
 	if isIndependent {
-		expectMap = scriptUtils.GetExpectMapFromIndependentFile(expectMap, expectIndependentContent, false)
+		if isOldFormat {
+			expectMap = scriptUtils.GetExpectMapFromIndependentFile(expectMap, expectIndependentContent, false)
+		} else {
+			expectMap = scriptUtils.GetExpectMapFromIndependentFileNew(expectMap, expectIndependentContent, false)
+		}
 	}
 
-	skip, actualArr := zentaoUtils.ReadLogArr(logs)
+	skip := false
+	actualArr := make([][]string, 0)
+	if isOldFormat {
+		skip, actualArr = zentaoUtils.ReadLogArr(logs)
+	} else {
+		skip, actualArr = zentaoUtils.ReadLogArrNew(logs)
+	}
 
 	language := langUtils.GetLangByFile(file)
-	ValidateCaseResult(file, language, expectMap, skip, actualArr, report, idx, total, secs, pathMaxWidth, numbMaxWidth)
+	ValidateCaseResult(file, language, expectMap, skip, actualArr, report,
+		idx, total, secs, pathMaxWidth, numbMaxWidth)
 }
 
 func ValidateCaseResult(scriptFile string, langType string,
@@ -43,7 +54,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 	if skip {
 		caseResult = constant.SKIP.String()
 	} else {
-		indx := 0
+		idx := 0
 
 		for _, numbInterf := range expectMap.Keys() { // iterate by checkpoints
 			expectInterf, _ := expectMap.Get(numbInterf)
@@ -59,8 +70,8 @@ func ValidateCaseResult(scriptFile string, langType string,
 
 			expectLines := strings.Split(expect, "\n")
 			var actualLines []string
-			if len(actualArr) > indx {
-				actualLines = actualArr[indx]
+			if len(actualArr) > idx {
+				actualLines = actualArr[idx]
 			}
 
 			stepResult, checkpointLogs := ValidateStepResult(langType, expectLines, actualLines)
@@ -70,7 +81,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 				caseResult = constant.FAIL.String()
 			}
 
-			indx++
+			idx++
 		}
 	}
 

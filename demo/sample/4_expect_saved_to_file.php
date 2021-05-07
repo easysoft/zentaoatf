@@ -1,32 +1,23 @@
 #!/usr/bin/env php
 <?php
 /**
-[case]
-title=step multi_lines
+
+title = expect in .exp file
 cid=0
 pid=0
 
-[group]
-  1. step 1 >>
-  2. step 2
+1. step 1 >>
+2. step 2
 
-[3. group title 3]
-  [3.1. steps]
-    step 3.1.1
-    step 3.1.2
-  [3.1. expects]
-    >>
+3. step 3
+   >>
 
-[esac]
+4. step 4
+   >>
 */
 
-checkStep1() || print(">> expect 1\n");
+print("expect 1\n");
+print("expect 3\n");
 
-if (checkStep3() || true) {
-    print(">>\n");
-    print("expect 3.1.1\n");
-    print("expect 3.1.2\n");
-}
-
-function checkStep1(){}
-function checkStep3(){}
+// step 4: two expect lines in .exp file for single >> symbol in definition.
+print(">>\n expect 4 line 1\n\n expect 4 line 2\n <<\n");
