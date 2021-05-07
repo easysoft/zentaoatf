@@ -361,7 +361,7 @@ func ReadCaseInfo(content, lang string, isOldFormat bool) (info, checkpoints str
 	if isOldFormat {
 		regStr = `(?s)\[case\]((?U:.*pid.*))\n(.*)\[esac\]`
 	} else {
-		regStr = fmt.Sprintf(`(?s)%s((?U:.*pid.*))\n(.*)%s`,
+		regStr = fmt.Sprintf(`(?sm)%s((?U:.*pid.*))\n(.*)%s`,
 			constant.LangCommentsMap[lang][0], constant.LangCommentsMap[lang][1])
 	}
 	myExp := regexp.MustCompile(regStr)

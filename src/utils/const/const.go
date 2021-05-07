@@ -56,15 +56,14 @@ var (
 	RunModeRequest = "request"
 
 	LangCommentsMap = map[string][]string{
-		"bat":        {"", ""},
-		"javascript": {"", ""},
-		"lua":        {"", ""},
-		"perl":       {"", ""},
-		"php":        {"/\\*{2,}", "\\*{1,}/"},
-		"python":     {"", ""},
-		"ruby":       {"", ""},
-		"shell":      {"", ""},
-		"tcl":        {"", ""},
-		"autoit":     {"", ""},
+		"bat":        {"^\\s*goto start\\s*$", "^\\s*:start\\s*$"},
+		"javascript": {"^\\s*/\\*{2,}\\s*$", "^\\s*\\*{1,}/\\s*$"},
+		"lua":        {"^\\s*--\\[\\[\\s*$", "^\\s*\\]\\]\\s*$"},
+		"perl":       {"^\\s*=pod\\s*$", "^\\s*=cut\\s*$"},
+		"php":        {"^\\s*/\\*{2,}\\s*$", "^\\s*\\*{1,}/\\s*$"},
+		"python":     {"^\\s*'''\\s*$", "^\\s*'''\\s*$"},
+		"ruby":       {"^\\s*=begin\\s*$", "^\\s*=end\\s*$"},
+		"shell":      {"^\\s*:<<!\\s*$", "^\\s*!\\s*$"},
+		"tcl":        {"^\\s*set case {", "^\\s*}"},
 	}
 )
