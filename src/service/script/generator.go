@@ -35,18 +35,19 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 	moduleId := cs.Module
 	caseTitle := cs.Title
 
-	//if vari.ZentaoCaseFileds.Modules[moduleId] != "" {
-	//	modulePath = vari.ZentaoCaseFileds.Modules[moduleId] + string(os.PathSeparator)
-	//	modulePath = modulePath[1:]
-	//}
-
 	fileUtils.MkDirIfNeeded(targetDir)
 	modulePath := ""
 	if byModule && moduleId != "0" {
 		modulePath = moduleId + string(os.PathSeparator)
 	}
 
+	content := ""
+	isOldFormat := false
 	scriptFile := fmt.Sprintf(targetDir+"%s%s%s.%s", modulePath, prefix, caseId, langUtils.LangMap[langType]["extName"])
+	if fileUtils.FileExist(scriptFile) { // update title and steps
+		content = fileUtils.ReadFile(scriptFile)
+		isOldFormat = strings.Index(content, "[esac]") > -1
+	}
 
 	*caseIds = append(*caseIds, caseId)
 
@@ -64,7 +65,11 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 	stepDisplayMaxWidth := 0
 	computerTestStepWidth(cs.StepArr, &stepDisplayMaxWidth, StepWidth)
 
-	generateTestStepAndScript(cs.StepArr, &steps, &independentExpects, independentFile)
+	if isOldFormat {
+		generateTestStepAndScriptObsolete(cs.StepArr, &steps, &independentExpects, independentFile)
+	} else {
+		generateTestStepAndScript(cs.StepArr, &steps, &independentExpects, independentFile)
+	}
 	info = append(info, strings.Join(steps, "\n"))
 
 	if independentFile {
@@ -73,36 +78,37 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 	}
 
 	if fileUtils.FileExist(scriptFile) { // update title and steps
-		content := fileUtils.ReadFile(scriptFile)
+		regStr := fmt.Sprintf(`(?sm)%s((?U:.*pid.*))\n(.*)%s`,
+			constant.LangCommentsMap[langType][0], constant.LangCommentsMap[langType][1])
 
 		// replace info
-		re, _ := regexp.Compile(`(?s)\[case\].*\[esac\]`)
-		content = re.ReplaceAllString(content, "[case]\n"+strings.Join(info, "\n")+"\n\n[esac]")
+		re, _ := regexp.Compile(regStr)
+		out := re.ReplaceAllString(content, "\n/**\n\n"+
+			strings.Join(info, "\n")+"\n\n*/\n")
 
-		fileUtils.WriteFile(scriptFile, content)
+		fileUtils.WriteFile(scriptFile, out)
 		return
 	}
 
 	path := fmt.Sprintf("res%stemplate%s", string(os.PathSeparator), string(os.PathSeparator))
 	template := fileUtils.ReadResData(path + langType + ".tpl")
 
-	content := fmt.Sprintf(template, strings.Join(info, "\n"), srcCode)
-
-	fileUtils.WriteFile(scriptFile, content)
+	out := fmt.Sprintf(template, strings.Join(info, "\n"), srcCode)
+	fileUtils.WriteFile(scriptFile, out)
 }
 
-func generateTestStepAndScript(teststeps []model.TestStep, steps *[]string, independentExpects *[]string, independentFile bool) {
+func generateTestStepAndScriptObsolete(testSteps []model.TestStep, steps *[]string, independentExpects *[]string, independentFile bool) {
 	nestedSteps := make([]model.TestStep, 0)
 	currGroup := model.TestStep{}
 	idx := 0
 
 	// convert steps to nested
 	for true {
-		if idx >= len(teststeps) {
+		if idx >= len(testSteps) {
 			break
 		}
 
-		ts := teststeps[idx]
+		ts := testSteps[idx]
 		if ts.Parent == "0" && ts.Type != "group" { // flat step
 			currGroup = model.TestStep{Id: "-1", Desc: "group", Children: make([]model.TestStep, 0)}
 			currGroup.Children = append(currGroup.Children, ts)
@@ -110,16 +116,16 @@ func generateTestStepAndScript(teststeps []model.TestStep, steps *[]string, inde
 
 			mutiLine := false
 			for true {
-				if idx >= len(teststeps) {
+				if idx >= len(testSteps) {
 					currGroup.MutiLine = mutiLine
 					nestedSteps = append(nestedSteps, currGroup)
 					break
 				}
 
-				child := teststeps[idx]
+				child := testSteps[idx]
 				if child.Type != "group" { // flat step
 					if !mutiLine {
-						mutiLine = zentaoService.IsMutiLine(child)
+						mutiLine = zentaoService.IsMultiLine(child)
 					}
 
 					currGroup.Children = append(currGroup.Children, child)
@@ -136,15 +142,15 @@ func generateTestStepAndScript(teststeps []model.TestStep, steps *[]string, inde
 
 			mutiLine := false
 			for true {
-				if idx >= len(teststeps) {
+				if idx >= len(testSteps) {
 					nestedSteps = append(nestedSteps, currGroup)
 					break
 				}
 
-				child := teststeps[idx]
+				child := testSteps[idx]
 				if child.Type != "group" && child.Parent == ts.Id { // child step
 					if !mutiLine {
-						mutiLine = zentaoService.IsMutiLine(child)
+						mutiLine = zentaoService.IsMultiLine(child)
 					}
 
 					currGroup.Children = append(currGroup.Children, child)
@@ -188,6 +194,43 @@ func generateTestStepAndScript(teststeps []model.TestStep, steps *[]string, inde
 
 			stepNumb++
 		}
+	}
+}
+
+func generateTestStepAndScript(testSteps []model.TestStep, steps *[]string, independentExpects *[]string, independentFile bool) {
+	nestedSteps := make([]model.TestStep, 0)
+
+	// convert steps to nested
+	for index := 0; index < len(testSteps); index++ {
+		ts := testSteps[index]
+		item := model.TestStep{Desc: ts.Desc, Expect: ts.Expect, Children: make([]model.TestStep, 0)}
+
+		if ts.Type == "group" {
+			nestedSteps = append(nestedSteps, item)
+		} else if ts.Type == "item" {
+			nestedSteps[len(nestedSteps)-1].Children = append(nestedSteps[len(nestedSteps)-1].Children, item)
+		} else if ts.Type == "step" {
+			nestedSteps = append(nestedSteps, item)
+		}
+	}
+
+	// print nested steps, only one level
+	stepNumb := 1
+	*steps = append(*steps, "")
+	for _, item := range nestedSteps {
+		numbStr := fmt.Sprintf("%d", stepNumb)
+		*steps = append(*steps, zentaoService.GetCaseContent(item, numbStr, independentFile, false)...)
+
+		for childNo, child := range item.Children {
+			numbStr := fmt.Sprintf("%d.%d", stepNumb, childNo+1)
+			*steps = append(*steps, zentaoService.GetCaseContent(child, numbStr, independentFile, true)...)
+
+			if independentFile && strings.TrimSpace(child.Expect) != "" {
+				*independentExpects = append(*independentExpects, getExcepts(child.Expect))
+			}
+		}
+
+		stepNumb++
 	}
 }
 

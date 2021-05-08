@@ -292,7 +292,7 @@ func CommitCase(caseId int, title string, stepMap maps.Map, stepTypeMap maps.Map
 	}
 }
 
-func IsMutiLine(step model.TestStep) bool {
+func IsMultiLine(step model.TestStep) bool {
 	if strings.Index(step.Desc, "\n") > -1 || strings.Index(step.Expect, "\n") > -1 {
 		return true
 	}
@@ -300,32 +300,58 @@ func IsMutiLine(step model.TestStep) bool {
 	return false
 }
 
-func GetCaseContent(stepObj model.TestStep, seq string, independentFile bool, mutiLine bool) []string {
+func GetCaseContent(stepObj model.TestStep, seq string, independentFile bool, isChild bool) []string {
 	lines := make([]string, 0)
 
 	step := strings.TrimSpace(stepObj.Desc)
 	expect := strings.TrimSpace(stepObj.Expect)
 
-	if independentFile {
-		if mutiLine {
-			expect = ">>"
-		} else {
-			expect = ""
-		}
-	}
+	stepStr := getStepContent(step, isChild)
+	expectStr := getExpectContent(expect, isChild, independentFile)
 
-	if mutiLine {
-		lines = append(lines, fmt.Sprintf("  [%s. steps] \n%s \n  [%s. expects] \n%s",
-			seq, addPrefixSpace(step, 4), seq, addPrefixSpace(expect, 4)))
-	} else {
-		if strings.TrimSpace(stepObj.Expect) == "" {
-			lines = append(lines, fmt.Sprintf("  %s %s", seq, step))
-		} else {
-			lines = append(lines, fmt.Sprintf("  %s %s >> %s", seq, step, expect))
-		}
-	}
+	lines = append(lines, stepStr+expectStr)
 
 	return lines
+}
+
+func getStepContent(str string, isChild bool) (ret string) {
+	str = strings.TrimSpace(str)
+
+	rpl := "\n"
+	if isChild {
+		rpl = "\n" + "  "
+	}
+	ret = strings.ReplaceAll(str, "\r\n", rpl)
+	if isChild {
+		ret = "  " + ret
+	}
+
+	return
+}
+func getExpectContent(str string, isChild bool, independentFile bool) (ret string) {
+	str = strings.TrimSpace(str)
+	if str == "" {
+		return
+	}
+
+	isMultiLine := strings.Count(str, "\r\n") > 0
+	if !isMultiLine {
+		if independentFile {
+			ret = str
+		} else {
+			ret = " >> " + str
+		}
+	} else {
+		rpl := "\r\n" + "  "
+
+		if independentFile {
+			ret = ">>\n" + strings.ReplaceAll(str, "\r\n", rpl) + "\n<<"
+		} else {
+			ret = " >> " + strings.ReplaceAll(str, "\r\n", rpl) + "\n<<"
+		}
+	}
+
+	return
 }
 
 func addPrefixSpace(str string, numb int) string {
