@@ -17,3 +17,9 @@ checkStep3() || print("expect 3\n");
 
 function checkStep1(){}
 function checkStep3(){}
+
+stdErr('it is stderr msg');
+
+function stdErr($msg) {
+    fwrite(STDERR, "$msg\n");
+}

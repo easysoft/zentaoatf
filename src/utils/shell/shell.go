@@ -94,7 +94,7 @@ func ExeAppWithOutput(cmdStr string) []string {
 	return output
 }
 
-func ExecScriptFile(filePath string) string {
+func ExecScriptFile(filePath string) (string, string) {
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
 		lang := langUtils.GetLangByFile(filePath)
@@ -134,26 +134,46 @@ func ExecScriptFile(filePath string) string {
 		cmd.Dir = vari.ServerWorkDir
 	}
 
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		fmt.Println(err)
-		return fmt.Sprint(err)
+	if cmd == nil {
+		msg := "error cmd is nil"
+		logUtils.Screen(msg)
+		return "", fmt.Sprint(msg)
+	}
+
+	stdout, err1 := cmd.StdoutPipe()
+	stderr, err2 := cmd.StderrPipe()
+
+	if err1 != nil {
+		fmt.Println(err1)
+		return "", fmt.Sprint(err1)
+	} else if err2 != nil {
+		fmt.Println(err2)
+		return "", fmt.Sprint(err2)
 	}
 
 	cmd.Start()
 
-	reader := bufio.NewReader(stdout)
-	output := make([]string, 0)
+	reader1 := bufio.NewReader(stdout)
+	output1 := make([]string, 0)
 	for {
-		line, err2 := reader.ReadString('\n')
+		line, err2 := reader1.ReadString('\n')
 		if err2 != nil || io.EOF == err2 {
 			break
 		}
-		//logUtils.Trace(strings.TrimRight(line, "\n"))
-		output = append(output, line)
+		output1 = append(output1, line)
+	}
+
+	reader2 := bufio.NewReader(stderr)
+	output2 := make([]string, 0)
+	for {
+		line, err2 := reader2.ReadString('\n')
+		if err2 != nil || io.EOF == err2 {
+			break
+		}
+		output2 = append(output2, line)
 	}
 
 	cmd.Wait()
 
-	return strings.Join(output, "")
+	return strings.Join(output1, ""), strings.Join(output2, "")
 }

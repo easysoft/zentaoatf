@@ -58,8 +58,10 @@ func InitLogger() *logrus.Logger {
 	Logger.Out = ioutil.Discard
 
 	pathMap := lfshook.PathMap{
-		logrus.WarnLevel:  vari.LogDir + "log.txt",
-		logrus.ErrorLevel: vari.LogDir + "result.txt",
+		logrus.InfoLevel: vari.LogDir + "log.txt",
+		logrus.WarnLevel: vari.LogDir + "result.txt",
+
+		logrus.ErrorLevel: vari.LogDir + "err.txt",
 	}
 
 	Logger.Hooks.Add(lfshook.NewHook(
@@ -76,9 +78,12 @@ func Screen(msg string) {
 	PrintTo(msg)
 }
 func Log(msg string) {
-	Logger.Warnln(msg)
+	Logger.Infoln(msg)
 }
 func Result(msg string) {
+	Logger.Warnln(msg)
+}
+func Error(msg string) {
 	Logger.Errorln(msg)
 }
 

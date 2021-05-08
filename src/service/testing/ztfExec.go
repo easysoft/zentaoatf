@@ -46,12 +46,15 @@ func ExeScript(file string, report *model.TestReport, idx int, total int, pathMa
 	logUtils.Log("===start " + file + " at " + startTime.Format("2006-01-02 15:04:05"))
 	logs := ""
 
-	output := shellUtils.ExecScriptFile(file)
-	output = strings.Trim(output, "\n")
+	out, err := shellUtils.ExecScriptFile(file)
+	out = strings.Trim(out, "\n")
 
-	if output != "" {
-		logUtils.Log(output)
-		logs = output
+	if out != "" {
+		logUtils.Log(out)
+		logs = out
+	}
+	if err != "" {
+		logUtils.Error(err)
 	}
 
 	entTime := time.Now()

@@ -32,6 +32,7 @@ var (
 	suiteId   string
 
 	noNeedConfirm bool
+	debug         string
 
 	flagSet *flag.FlagSet
 )
@@ -85,13 +86,21 @@ func main() {
 
 	flagSet.StringVar(&vari.UnitTestResult, "result", "", "")
 
+	flagSet.StringVar(&debug, "debug", "", "")
+
 	if len(os.Args) == 1 {
 		os.Args = append(os.Args, "run", ".")
 	}
 
 	switch os.Args[1] {
 	case "run", "-r":
+		debug, os.Args = commonUtils.GetDebugParamForRun(os.Args)
+		os.Setenv("debug", debug)
+		//log.Println("===" + os.Getenv("debug"))
 		run(os.Args)
+
+	case "expect":
+		action.GenExpectFiles(os.Args)
 
 	case "checkout", "co":
 		if err := flagSet.Parse(os.Args[2:]); err == nil {

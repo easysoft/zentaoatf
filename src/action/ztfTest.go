@@ -11,7 +11,6 @@ import (
 	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
-	stringUtils "github.com/easysoft/zentaoatf/src/utils/string"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/mattn/go-runewidth"
@@ -113,47 +112,7 @@ func getCaseBySuiteFile(file string, dir string) []string {
 }
 
 func runCases(cases []string) {
-	casesToRun := make([]string, 0)
-	casesToIgnore := make([]string, 0)
-
-	// config interpreter if needed
-	if commonUtils.IsWin() {
-		conf := configUtils.ReadCurrConfig()
-		configChanged := configUtils.InputForScriptInterpreter(cases, &conf, "run")
-		if configChanged {
-			configUtils.SaveConfig(conf)
-		}
-	}
-
-	conf := configUtils.ReadCurrConfig()
-	for _, cs := range cases {
-		if commonUtils.IsWin() {
-			if path.Ext(cs) == ".sh" { // filter by os
-				continue
-			}
-
-			ext := path.Ext(cs)
-			if ext != "" {
-				ext = ext[1:]
-			}
-			lang := vari.ScriptExtToNameMap[ext]
-			interpreter := commonUtils.GetFieldVal(conf, stringUtils.Ucfirst(lang))
-			if interpreter == "-" && vari.Interpreter == "" { // not to ignore if interpreter set
-				interpreter = ""
-
-				casesToIgnore = append(casesToIgnore, cs)
-			}
-			if lang != "bat" && interpreter == "" { // ignore the ones with no interpreter set
-				continue
-			}
-		} else if !commonUtils.IsWin() { // filter by os
-			if path.Ext(cs) == ".bat" {
-				continue
-			}
-		}
-
-		casesToRun = append(casesToRun, cs)
-	}
+	casesToRun, casesToIgnore := filterCases(cases)
 
 	var report = model.TestReport{Env: commonUtils.GetOs(),
 		Pass: 0, Fail: 0, Total: 0, FuncResult: make([]model.FuncResult, 0)}
