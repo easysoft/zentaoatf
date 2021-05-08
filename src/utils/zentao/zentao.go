@@ -83,7 +83,7 @@ func GetCaseInfo(file string) (bool, int, int, string) {
 	if isOldFormat {
 		regStr = `(?s)\[case\](.*)\[esac\]`
 	} else {
-		regStr = fmt.Sprintf(`(?Us)%s(.*)%s`,
+		regStr = fmt.Sprintf(`(?sm)%s((?U:.*pid.*))\n(.*)%s`,
 			constant.LangCommentsMap[lang][0], constant.LangCommentsMap[lang][1])
 	}
 	myExp := regexp.MustCompile(regStr)

@@ -12,18 +12,17 @@ pid=0
 3. steps
     step 3.1.1
     step 3.1.2
-  [3.1. expects]
+  3.1. expects
 
-  [3.2. steps]
+  3.2. steps
     step 3.2.1
     step 3.2.2
-  [3.2. expects]
+  3.2. expects
     expect 3.2.1
     expect 3.2.2
 
-[group]
-  4. step 4
-  5. step 5 >> expect 5
+4. step 4
+5. step 5 >> expect 5
 
 */
 

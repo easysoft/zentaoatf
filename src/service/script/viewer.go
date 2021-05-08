@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/src/model"
 	"github.com/easysoft/zentaoatf/src/utils/common"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/file"
 	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
+	langUtils "github.com/easysoft/zentaoatf/src/utils/lang"
 	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
 	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
 	"github.com/fatih/color"
@@ -120,14 +122,26 @@ func View(cases []string, keywords string) {
 
 func Brief(file string, keywords string) (bool, []string) {
 	content := fileUtils.ReadFile(file)
+	lang := langUtils.GetLangByFile(file)
+	isOldFormat := strings.Index(content, "[esac]") > -1
 
-	myExp := regexp.MustCompile(
-		`\[case\][\S\s]*` +
+	regStr := ""
+	if isOldFormat {
+		regStr = `\[case\][\S\s]*` +
 			`title=([^\n]*)\n+` +
 			`cid=([^\n]*)\n+` +
 			`pid=([^\n]*)\n+` +
 			`([\S\s]*)\n*` +
-			`\[esac\]`)
+			`\[esac\]`
+	} else {
+		regStr = fmt.Sprintf(`(?sm)%s[\S\s]*`+
+			`title=([^\n]*)\n+`+
+			`cid=([^\n]*)\n+`+
+			`pid=([^\n]*)\n+`+
+			`([\S\s]*)\n*%s`,
+			constant.LangCommentsMap[lang][0], constant.LangCommentsMap[lang][1])
+	}
+	myExp := regexp.MustCompile(regStr)
 	arr := myExp.FindStringSubmatch(content)
 
 	if len(arr) > 2 {

@@ -140,11 +140,11 @@ func main() {
 	case "set", "-set":
 		action.Set()
 
-	case "sort", "-sort":
-		files := fileUtils.GetFilesFromParams(os.Args[2:])
-		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
-			action.Sort(files)
-		}
+	//case "sort", "-sort":
+	//	files := fileUtils.GetFilesFromParams(os.Args[2:])
+	//	if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
+	//		action.Sort(files)
+	//	}
 
 	case "clean", "-clean", "-c":
 		action.Clean()
