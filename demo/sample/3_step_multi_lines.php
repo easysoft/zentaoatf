@@ -6,7 +6,7 @@ title=step multi lines
 cid=0
 pid=0
 
-1. steps
+steps
   step 1.1
   step 1.2 >>
     expect 1.2 line 1

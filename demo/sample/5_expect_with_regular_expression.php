@@ -6,10 +6,10 @@ title=expect with regx by using backquote `
 cid=0
 pid=0
 
-1. mobile phone >> `^1[0-9]\d{9}$`
-2. email        >> `^.+@.+\..+$`
-3. web url      >> `^https?.+\..+`
-4. ip address   >> `(\d+)\.(\d+)\.(\d+)\.(\d+)`
+mobile phone >> `^1[0-9]\d{9}$`
+email        >> `^.+@.+\..+$`
+web url      >> `^https?.+\..+`
+ip address   >> `(\d+)\.(\d+)\.(\d+)\.(\d+)`
 
 */
 

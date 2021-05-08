@@ -6,12 +6,12 @@ title=expect with format string by using backquote `
 cid=0
 pid=0
 
-1. string              >> `^%s$`
-2. integer             >> `^%d$`
-3. signed integer      >> `^%i$`
-4. hexadecimal number  >> `^%x$`
-5. float               >> `^%f$`
-6. char                >> `^%c$`
+string              >> `^%s$`
+integer             >> `^%d$`
+signed integer      >> `^%i$`
+hexadecimal number  >> `^%x$`
+float               >> `^%f$`
+char                >> `^%c$`
 
 */
 

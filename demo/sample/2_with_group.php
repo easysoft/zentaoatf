@@ -6,12 +6,12 @@ title=with multi groups
 cid=0
 pid=0
 
-1. step 1 >> expect 1
-2. step 2 >> expect 2
+step 1 >> expect 1
+step 2 >> expect 2
 
-3. steps
-  3.1 step >> expect 3.1
-  3.2 step >> expect 3.2
+steps
+  step >> expect 3.1
+  step >> expect 3.2
 
 */
 

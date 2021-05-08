@@ -13,33 +13,6 @@ import (
 	"strings"
 )
 
-//func GenSuperApiUri(model string, methd string, params [][]string) string {
-//	var sep string
-//	if vari.RequestType == constant.RequestTypePathInfo {
-//		sep = ","
-//	} else {
-//		sep = "&"
-//	}
-//
-//	paramStr := "" // format is key1=val1&key2=val2
-//	i := 0
-//	for _, p := range params {
-//		if i > 0 {
-//			paramStr += sep
-//		}
-//		paramStr += p[0] + "=" + p[1]
-//		i++
-//	}
-//
-//	var uri string
-//	if vari.RequestType == constant.RequestTypePathInfo {
-//		uri = fmt.Sprintf("api-getmodel-%s-%s-%s.json", model, methd, paramStr)
-//	} else {
-//		uri = fmt.Sprintf("index.php?m=api&f=getmodel&model=%s&methodName=%s&params=%s&t=json", model, methd, paramStr)
-//	}
-//	return uri
-//}
-
 func GenApiUri(module string, methd string, param string) string {
 	var uri string
 

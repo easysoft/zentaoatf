@@ -34,5 +34,4 @@ $>ztf.exe view demo\lang\bat\1_string_match.bat      查看指定路径的测试
 $>ztf.exe -v demo\lang\bat -k 0                      查看指定路径下，ID为0的脚本。
 $>ztf.exe -v demo\lang\bat -k word                   查看指定路径下，标题包含'pattern'的脚本。
 
-$>ztf.exe sort demo\sample\2_with_group.php          将脚本的步骤重新排序，支持多个目录和文件参数项，缩写-s。
 $>ztf.exe clean                                      清除所有测试执行日志，缩写-c。

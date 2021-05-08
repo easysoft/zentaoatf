@@ -15,11 +15,6 @@ var (
 
 	ConfigFile = fmt.Sprintf("conf%s%s.conf", string(os.PathSeparator), AppName)
 
-	UrlZenTaoSettings = "zentaoSettings"
-	UrlImportProject  = "importProject"
-	UrlSubmitResult   = "submitResults"
-	UrlReportBug      = "reportBug"
-
 	ExtNameSuite  = "cs"
 	ExtNameJson   = "json"
 	ExtNameResult = "txt"
