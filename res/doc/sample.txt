@@ -20,7 +20,7 @@ $>ztf.exe run demo\appium\android.php --interp runtime\php\php7\php.exe
                                                      执行ZTF自带Appium脚本，使用指定PHP解释器。
 $>ztf.exe junit -p 1 mvn clean package test          执行junit单元测试脚本，
                                                      更多请参照https://www.ztesting.net/book/ztf-doc/junit-33.html
-
+$>ztf.exe expect demo\sample\1_simple.php            在脚本1_simple.php的同目录下，生成.exp期待结果文件。
 $>ztf.exe ci product01\tc-1.py                       将脚本里修改的用例信息，同步到禅道系统。
 $>ztf.exe cr log\001 -p 1                            提交测试结果到禅道系统编号为1的产品。
 $>ztf.exe cr log\001 -p 1 -t 1 -y                    提交测试结果到禅道系统。使用-t提供TaskID、或-y忽略确认时，不需要确认。
@@ -35,3 +35,4 @@ $>ztf.exe -v demo\lang\bat -k 0                      查看指定路径下，ID�
 $>ztf.exe -v demo\lang\bat -k word                   查看指定路径下，标题包含'pattern'的脚本。
 
 $>ztf.exe clean                                      清除所有测试执行日志，缩写-c。
+$>ztf.exe -P 8848                                    运行Web服务于指定的端口。

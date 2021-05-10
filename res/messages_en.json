@@ -415,7 +415,7 @@
 
     {
       "id": "start_server",
-      "translation": "Start HTTP service on http://%s:%s, press CTRL+C to exist.\nPlease access https://ztf.im/book/ztf/api for more information."
+      "translation": "Start HTTP service on http://%s:%s, press CTRL+C to exist.\nPlease access https://ztf.im/book/ztf/agent-exec-124.html for more information."
     },
     {
       "id": "start_server_fail",

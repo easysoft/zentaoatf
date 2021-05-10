@@ -1,15 +1,13 @@
 #!/usr/bin/env php
 <?php
 /**
-[case]
+
 title=use ztf to run selenium test
 cid=0
 pid=0
 
-[group]
-  1. check webpage title >> 禅道_百度搜索
+1. check webpage title >> 禅道_百度搜索
 
-[esac]
 */
 
 namespace Facebook\WebDriver;
@@ -53,7 +51,7 @@ $driver-> wait(10, 500)-> until(WebDriverExpectedCondition::titleContains('禅�
 
 $title = $driver->getTitle();
 //if (isWindows()) $title = iconv("UTF-8","GB2312", $title);
-print(">> $title\n");
+print("$title\n");
 
 $driver->close();
 

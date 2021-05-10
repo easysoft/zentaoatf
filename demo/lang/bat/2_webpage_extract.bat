@@ -15,7 +15,6 @@ pid=0
 for /f "delims=" %%a in ('curl -s  "http://max.demo.zentao.net/user-login-Lw==.html" ^| findstr/irc:"<img src="') do (
     set var=%%a
 )
-
 for /f "tokens=1 delims='" %%i in ("!var!") do (
     set var2=%%~i
 )
