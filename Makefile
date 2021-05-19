@@ -11,6 +11,7 @@ BIN_WIN64=${BIN_OUT}win64/${BINARY}/
 BIN_WIN32=${BIN_OUT}win32/${BINARY}/
 BIN_LINUX=${BIN_OUT}linux/${BINARY}/
 BIN_MAC=${BIN_OUT}mac/${BINARY}/
+BIN_ARM=${BIN_OUT}arm/${BINARY}/
 
 default: update_version_in_config gen_version_file prepare_res compile_all copy_files package
 
@@ -18,6 +19,7 @@ win64: update_version_in_config gen_version_file prepare_res compile_win64 copy_
 win32: update_version_in_config gen_version_file prepare_res compile_win32 copy_files package
 linux: update_version_in_config gen_version_file prepare_res compile_linux copy_files package
 mac: update_version_in_config gen_version_file prepare_res compile_mac copy_files package
+arm: update_version_in_config gen_version_file prepare_res compile_arm copy_files package
 upload: upload_to
 
 prepare_res:
@@ -25,7 +27,7 @@ prepare_res:
 	@go-bindata -o=res/res.go -pkg=res res/...
 	@rm -rf ${BIN_DIR} && mkdir -p ${BIN_DIR}
 
-compile_all: compile_win64 compile_win32 compile_linux compile_mac
+compile_all: compile_win64 compile_win32 compile_linux compile_mac compile_arm
 
 compile_win64:
 	@echo 'start compile win64'
@@ -42,6 +44,10 @@ compile_linux:
 compile_mac:
 	@echo 'start compile mac'
 	@CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ${BIN_MAC}${BINARY} src/ztf.go
+
+compile_arm:
+	@echo 'start compile arm'
+	@CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=5 go build -o ${BIN_ARM}${BINARY} src/ztf.go
 
 copy_files:
 	@echo 'start copy files'
