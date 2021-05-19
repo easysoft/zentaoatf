@@ -206,6 +206,7 @@ func run(args []string) {
 		}
 
 		cmd := strings.Join(args[start:], " ")
+
 		action.RunUnitTest(cmd)
 	} else { // func test
 		files := fileUtils.GetFilesFromParams(args[2:])

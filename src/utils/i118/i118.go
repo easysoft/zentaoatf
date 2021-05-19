@@ -65,8 +65,12 @@ func ReadI18nJson(file string) string {
 }
 
 func InitRes(jsonPath string) {
-	if !fileUtils.FileExist(jsonPath) { // run unit test in another project dir when debug with ide only
-		jsonPath = "/Users/aaron/rd/project/zentao/go/ztf/" + jsonPath
+	if !fileUtils.FileExist(jsonPath) { // for debug with ide only, run unit test in another project dir
+		if commonUtils.IsWin() {
+			jsonPath = "C:\\dev\\project\\go\\ztf\\" + jsonPath
+		} else {
+			jsonPath = "/Users/aaron/rd/project/zentao/go/ztf/" + jsonPath
+		}
 	}
 
 	var i18n I18n
