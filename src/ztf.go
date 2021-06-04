@@ -100,7 +100,8 @@ func main() {
 		run(os.Args)
 
 	case "expect":
-		action.GenExpectFiles(os.Args)
+		files := fileUtils.GetFilesFromParams(os.Args[2:])
+		action.GenExpectFiles(files)
 
 	case "checkout", "co":
 		if err := flagSet.Parse(os.Args[2:]); err == nil {

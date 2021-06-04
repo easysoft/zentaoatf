@@ -141,7 +141,8 @@ func getStepNestedArr(lines []string) (ret []model.TestStep) {
 	increase := 0
 	for index := 0; index < len(lines); index++ {
 		line := lines[index]
-		if strings.TrimSpace(line) == "" || strings.TrimSpace(line) == ">>" || strings.TrimSpace(line) == "<<" {
+		lineTrim := strings.TrimSpace(line)
+		if lineTrim == "" || lineTrim == ">>" || lineTrim == "<<" {
 			continue
 		}
 
@@ -177,14 +178,14 @@ func strToStep(str string, nextLines []string) (ret model.TestStep, increase int
 		return
 	}
 
-	if strings.Index(str, ">>") > -1 { // test if it has multi-line expect
+	if strings.Index(str, ">>") > -1 { // will test if it has multi-line expect
 		for index, line := range nextLines {
-			if strings.Index(line, ">>") > -1 {
-				expect = ""
-				break
-			}
+			//if strings.Index(line, ">>") > -1 {
+			//	expect = ""
+			//	break
+			//}
 
-			if strings.Index(line, "<<") > -1 {
+			if strings.Index(line, "<<") > -1 || strings.TrimSpace(line) == ">>" {
 				increase = index
 				break
 			}
