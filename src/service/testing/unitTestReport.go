@@ -108,7 +108,7 @@ func GenUnitTestReport(cases []model.UnitResult, classNameMaxWidth int, timeVal 
 		i118Utils.I118Prt.Sprintf("run_scripts",
 			report.Total, report.Duration, secTag,
 			passStr, failStr, skipStr,
-			vari.LogDir+"result.txt",
+			" "+vari.LogDir+"result.txt ",
 		))
 
 	// 输出到屏幕
@@ -116,7 +116,7 @@ func GenUnitTestReport(cases []model.UnitResult, classNameMaxWidth int, timeVal 
 		i118Utils.I118Prt.Sprintf("run_scripts",
 			report.Total, report.Duration, secTag,
 			color.GreenString(passStr), color.RedString(failStr), color.YellowString(skipStr),
-			vari.LogDir+"result.txt",
+			" "+vari.LogDir+"result.txt ",
 		))
 
 	json, _ := json.Marshal(report)

@@ -98,14 +98,14 @@ func GenZTFTestReport(report model.TestReport, pathMaxWidth int) {
 		i118Utils.I118Prt.Sprintf("run_scripts",
 			report.Total, report.Duration, secTag,
 			passStr, failStr, skipStr,
-			vari.LogDir+"result.txt",
+			" "+vari.LogDir+"result.txt ",
 		))
 	// 打印到屏幕
 	logUtils.Screen("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
 		i118Utils.I118Prt.Sprintf("run_scripts",
 			report.Total, report.Duration, secTag,
 			color.GreenString(passStr), color.RedString(failStr), color.YellowString(skipStr),
-			vari.LogDir+"result.txt",
+			" "+vari.LogDir+"result.txt ",
 		))
 
 	//println("===" + vari.LogDir)
