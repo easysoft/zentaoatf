@@ -57,7 +57,7 @@ func GetCaseInfo(file string) (bool, int, int, string) {
 		regStr = `(?s)\[case\](.*)\[esac\]`
 	} else {
 		regStr = fmt.Sprintf(`(?sm)%s((?U:.*pid.*))\n(.*)%s`,
-			constant.LangCommentsMap[lang][0], constant.LangCommentsMap[lang][1])
+			constant.LangCommentsRegxMap[lang][0], constant.LangCommentsRegxMap[lang][1])
 	}
 	myExp := regexp.MustCompile(regStr)
 	arr := myExp.FindStringSubmatch(content)
@@ -335,7 +335,7 @@ func ReadCaseInfo(content, lang string, isOldFormat bool) (info, checkpoints str
 		regStr = `(?s)\[case\]((?U:.*pid.*))\n(.*)\[esac\]`
 	} else {
 		regStr = fmt.Sprintf(`(?sm)%s((?U:.*pid.*))\n(.*)%s`,
-			constant.LangCommentsMap[lang][0], constant.LangCommentsMap[lang][1])
+			constant.LangCommentsRegxMap[lang][0], constant.LangCommentsRegxMap[lang][1])
 	}
 	myExp := regexp.MustCompile(regStr)
 	arr := myExp.FindStringSubmatch(content)

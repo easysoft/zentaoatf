@@ -1,0 +1,212 @@
+package action
+
+import (
+	"fmt"
+	"github.com/easysoft/zentaoatf/src/model"
+	assertUtils "github.com/easysoft/zentaoatf/src/utils/assert"
+	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
+	i118Utils "github.com/easysoft/zentaoatf/src/utils/i118"
+	langUtils "github.com/easysoft/zentaoatf/src/utils/lang"
+	logUtils "github.com/easysoft/zentaoatf/src/utils/log"
+	zentaoUtils "github.com/easysoft/zentaoatf/src/utils/zentao"
+	"regexp"
+	"strings"
+)
+
+const (
+	groupTag = "group:"
+	stepTag  = "step:"
+)
+
+func Extract(files []string) error {
+	logUtils.InitLogger()
+
+	cases := assertUtils.GetCaseByDirAndFile(files)
+
+	if len(cases) < 1 {
+		logUtils.PrintTo("\n" + i118Utils.I118Prt.Sprintf("no_cases"))
+		return nil
+	}
+
+	for _, file := range cases {
+		stepObjs := extractFromComments(file)
+		steps := prepareSteps(stepObjs)
+		desc := prepareDesc(steps, file)
+		replaceCaseDesc(desc, file)
+	}
+
+	return nil
+}
+func prepareSteps(stepObjs []*model.TestStep) (steps []string) {
+	for _, stepObj := range stepObjs {
+		line := stepObj.Desc
+
+		if len(stepObj.Children) == 0 && stepObj.Expect != "" {
+			if stepObj.MutiLine {
+				line += " >>\n" + stepObj.Expect + ">>\n"
+			} else {
+				line += " >> " + stepObj.Expect
+			}
+		}
+
+		steps = append(steps, line)
+
+		for _, childObj := range stepObj.Children {
+			lineChild := childObj.Desc + " >> " + childObj.Expect
+			steps = append(steps, lineChild)
+		}
+		if len(stepObj.Children) > 0 {
+			steps = append(steps, "")
+		}
+	}
+
+	return
+}
+
+func extractFromComments(file string) (stepObjs []*model.TestStep) {
+	lang := langUtils.GetLangByFile(file)
+	content := fileUtils.ReadFile(file)
+
+	findCaseTag := false
+	start := false
+	inGroup := false
+
+	lines := strings.Split(content, "\n")
+	for index := 0; index < len(lines); index++ {
+		line := lines[index]
+		lowerLine := strings.ToLower(line)
+
+		if strings.Index(lowerLine, "cid") > -1 {
+			findCaseTag = true
+			continue
+		}
+		if findCaseTag && !start {
+			if !isCommentEndTag(line, lang) {
+				continue
+			}
+
+			start = true
+			continue
+		}
+		if !start {
+			continue
+		}
+
+		if strings.Index(lowerLine, groupTag) > -1 { // is group
+			groupName, _ := getName(line, groupTag, lang)
+			stepObj := model.TestStep{Desc: groupName}
+			stepObjs = append(stepObjs, &stepObj)
+			inGroup = true
+
+			continue
+		}
+
+		if strings.Index(lowerLine, stepTag) > -1 {
+			isMuti := false
+			stepName, expect := getName(line, stepTag, lang)
+			if expect == "" {
+				moreExpect, increase := parseMutiStep(lang, lines[index+1:])
+				if increase > 0 {
+					expect = moreExpect
+					index += increase
+					isMuti = true
+				}
+			}
+
+			stepObj := model.TestStep{Desc: stepName, Expect: expect, MutiLine: isMuti}
+
+			if inGroup {
+				stepObjs[len(stepObjs)-1].Children = append(stepObjs[len(stepObjs)-1].Children, stepObj)
+
+				if strings.Index(line, "]]") > -1 {
+					inGroup = false
+				}
+			} else {
+				stepObjs = append(stepObjs, &stepObj)
+			}
+		}
+	}
+	return
+}
+
+func prepareDesc(steps []string, file string) (desc string) {
+	pass, caseId, productId, title := zentaoUtils.GetCaseInfo(file)
+	if !pass {
+		return
+	}
+
+	info := make([]string, 0)
+	info = append(info, fmt.Sprintf("title=%s", title))
+	info = append(info, fmt.Sprintf("cid=%d", caseId))
+	info = append(info, fmt.Sprintf("pid=%d", productId))
+	info = append(info, "\n"+strings.Join(steps, "\n"))
+
+	desc = strings.Join(info, "\n")
+	return
+}
+
+func replaceCaseDesc(desc, file string) {
+	content := fileUtils.ReadFile(file)
+	lang := langUtils.GetLangByFile(file)
+
+	regStr := fmt.Sprintf(`(?smU)%s((?U:.*pid.*))\n(.*)%s`,
+		constant.LangCommentsRegxMap[lang][0], constant.LangCommentsRegxMap[lang][1])
+
+	re, _ := regexp.Compile(regStr)
+	out := re.ReplaceAllString(content, "\n/**\n\n"+desc+"\n\n*/\n")
+
+	fileUtils.WriteFile(file, out)
+}
+
+func getName(line, str, lang string) (name, expect string) {
+	lowerLine := strings.ToLower(line)
+
+	idx := strings.Index(lowerLine, str)
+	name = line[idx+len(str):]
+
+	if strings.Index(str, "step:") > -1 {
+		arr := strings.Split(name, ">>")
+		if len(arr) > 1 {
+			name = strings.TrimSpace(arr[0])
+			expect = strings.TrimSpace(arr[1])
+		}
+	}
+
+	regx, _ := regexp.Compile(constant.LangCommentsTagMap[lang][1])
+	name = strings.TrimSpace(regx.ReplaceAllString(name, ""))
+	expect = strings.TrimSpace(regx.ReplaceAllString(expect, ""))
+
+	return
+}
+
+func parseMutiStep(lang string, nextLines []string) (ret string, increase int) {
+	for index, line := range nextLines {
+		if isCommentStartTag(line, lang) || isCommentEndTag(line, lang) {
+			break
+		}
+
+		if strings.Index(line, "<<") > -1 || strings.TrimSpace(line) == ">>" {
+			increase = index
+			break
+		}
+
+		ret += strings.TrimSpace(line) + "\n"
+	}
+
+	if increase == 0 { // multi-line
+		ret = ""
+	}
+
+	return
+}
+
+func isCommentStartTag(str, lang string) (pass bool) {
+	pass, _ = regexp.MatchString(constant.LangCommentsRegxMap[lang][0], str)
+	return
+}
+
+func isCommentEndTag(str, lang string) (pass bool) {
+	pass, _ = regexp.MatchString(constant.LangCommentsRegxMap[lang][1], str)
+	return
+}

@@ -79,7 +79,7 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 
 	if fileUtils.FileExist(scriptFile) { // update title and steps
 		regStr := fmt.Sprintf(`(?sm)%s((?U:.*pid.*))\n(.*)%s`,
-			constant.LangCommentsMap[langType][0], constant.LangCommentsMap[langType][1])
+			constant.LangCommentsRegxMap[langType][0], constant.LangCommentsRegxMap[langType][1])
 
 		// replace info
 		re, _ := regexp.Compile(regStr)

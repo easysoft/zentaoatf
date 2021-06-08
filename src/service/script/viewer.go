@@ -139,7 +139,7 @@ func Brief(file string, keywords string) (bool, []string) {
 			`cid=([^\n]*)\n+`+
 			`pid=([^\n]*)\n+`+
 			`([\S\s]*)\n*%s`,
-			constant.LangCommentsMap[lang][0], constant.LangCommentsMap[lang][1])
+			constant.LangCommentsRegxMap[lang][0], constant.LangCommentsRegxMap[lang][1])
 	}
 	myExp := regexp.MustCompile(regStr)
 	arr := myExp.FindStringSubmatch(content)

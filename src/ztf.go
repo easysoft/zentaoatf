@@ -99,6 +99,10 @@ func main() {
 		//log.Println("===" + os.Getenv("debug"))
 		run(os.Args)
 
+	case "extract":
+		files := fileUtils.GetFilesFromParams(os.Args[2:])
+		action.Extract(files)
+
 	case "expect":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
 		action.GenExpectFiles(files)

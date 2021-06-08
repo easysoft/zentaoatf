@@ -59,9 +59,9 @@ func SortFile(file string) {
 			from = `(?s)\[case\].*\[esac\]`
 			to = "[case]\n" + info + "\n" + stepsTxt + "\n\n[esac]"
 		} else {
-			from = fmt.Sprintf(`(?s)%s.*%s`, constant.LangCommentsMap[lang][0], constant.LangCommentsMap[lang][1])
+			from = fmt.Sprintf(`(?s)%s.*%s`, constant.LangCommentsRegxMap[lang][0], constant.LangCommentsRegxMap[lang][1])
 			to = fmt.Sprintf("%s\n"+info+"\n"+stepsTxt+"\n\n%s",
-				constant.LangCommentsMap[lang][0], constant.LangCommentsMap[lang][1])
+				constant.LangCommentsRegxMap[lang][0], constant.LangCommentsRegxMap[lang][1])
 		}
 		re, _ := regexp.Compile(from)
 		script := re.ReplaceAllString(txt, to)

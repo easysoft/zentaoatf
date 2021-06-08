@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/**
+/*
 title=check string matches pattern
 cid=0
 pid=0
