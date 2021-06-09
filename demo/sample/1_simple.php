@@ -12,7 +12,7 @@ step3 >> expect 3
 
 */
 
-checkStep1() || print("expect 0\n");
+checkStep1() || print("expect 1\n");
 checkStep3() || print("expect 3\n");
 
 function checkStep1(){}

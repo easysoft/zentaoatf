@@ -439,6 +439,9 @@ func getSortedTextFromNestedSteps(groups []model.TestStep) (ret string, stepMap,
 		stepMap.Put(numbStr, stepTxt)
 
 		expectTxt := strings.TrimSpace(group.Expect)
+		expectTxt = strings.TrimRight(expectTxt, "]]")
+		expectTxt = strings.TrimSpace(expectTxt)
+
 		expectMap.Put(numbStr, expectTxt)
 
 		if expectTxt != "" {
