@@ -21,6 +21,7 @@ $>ztf.exe run demo\appium\android.php --interp runtime\php\php7\php.exe
 $>ztf.exe junit -p 1 mvn clean package test          执行junit单元测试脚本，
                                                      更多请参照https://www.ztesting.net/book/ztf-doc/junit-33.html
 $>ztf.exe expect demo\sample\1_simple.php            在脚本1_simple.php的同目录下，生成.exp期待结果文件。
+$>ztf.exe extract demo\sample\8_extract_desc.php     提取脚本中的注释，生成用例步骤和期待结果。
 $>ztf.exe ci product01\tc-1.py                       将脚本里修改的用例信息，同步到禅道系统。
 $>ztf.exe cr log\001 -p 1                            提交测试结果到禅道系统编号为1的产品。
 $>ztf.exe cr log\001 -p 1 -t 1 -y                    提交测试结果到禅道系统。使用-t提供TaskID、或-y忽略确认时，不需要确认。
