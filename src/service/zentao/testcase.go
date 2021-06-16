@@ -345,9 +345,9 @@ func getExpectContent(str string, isChild bool, independentFile bool) (ret strin
 		rpl := "\r\n" + "  "
 
 		if independentFile {
-			ret = ">>\n" + strings.ReplaceAll(str, "\r\n", rpl) + "\n<<"
+			ret = ">>\n" + strings.ReplaceAll(str, "\r\n", rpl) + "\n>>"
 		} else {
-			ret = " >> " + strings.ReplaceAll(str, "\r\n", rpl) + "\n<<"
+			ret = " >> " + strings.ReplaceAll(str, "\r\n", rpl) + "\n>>"
 		}
 	}
 

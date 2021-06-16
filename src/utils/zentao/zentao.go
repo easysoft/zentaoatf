@@ -198,10 +198,10 @@ func ReadExpectIndependentArr(content string) [][]string {
 		if line == ">>" { // more than one line
 			model = "multi"
 			cpArr = make([]string, 0)
-		} else if model == "multi" { // in >> and << in multi line mode
+		} else if model == "multi" { // in >> and >> in multi line mode
 			cpArr = append(cpArr, line)
 
-			if idx == len(lines)-1 || strings.Index(lines[idx+1], "<<") > -1 {
+			if idx == len(lines)-1 || strings.Index(lines[idx+1], ">>") > -1 {
 				temp := make([]string, 0)
 				temp = append(temp, strings.Join(cpArr, " | "))
 
@@ -209,7 +209,7 @@ func ReadExpectIndependentArr(content string) [][]string {
 				cpArr = make([]string, 0)
 				model = ""
 			}
-		} else if line == "<<" {
+		} else if line == ">>" {
 			continue
 		} else {
 			model = "single"
@@ -277,8 +277,8 @@ func ReadLogArr(content string) (isSkip bool, ret [][]string) {
 	var cpArr []string
 
 	model := ""
-	for idx, line := range lines {
-		line = strings.TrimSpace(line)
+	for idx := 0; idx < len(lines); idx++ {
+		line := strings.TrimSpace(lines[idx])
 
 		if line == "skip" {
 			isSkip = true
@@ -288,18 +288,20 @@ func ReadLogArr(content string) (isSkip bool, ret [][]string) {
 		if line == ">>" { // more than one line
 			model = "multi"
 			cpArr = make([]string, 0)
-		} else if model == "multi" { // in >> and << in multi line mode
+		} else if model == "multi" { // in >> and >> in multi line mode
 			cpArr = append(cpArr, line)
 
-			if idx == len(lines)-1 || strings.Index(lines[idx+1], "<<") > -1 {
+			if idx == len(lines)-1 || strings.Index(lines[idx+1], ">>") > -1 {
 				temp := make([]string, 0)
 				temp = append(temp, strings.Join(cpArr, " | "))
 
 				ret = append(ret, temp)
 				cpArr = make([]string, 0)
+
+				idx = idx + 1
 				model = ""
 			}
-		} else if line == "<<" {
+		} else if line == ">>" {
 			continue
 		} else {
 			model = "single"

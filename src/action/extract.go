@@ -39,7 +39,7 @@ func Extract(files []string) error {
 	return nil
 }
 func prepareSteps(stepObjs []*model.TestStep) (steps []string) {
-	for _, stepObj := range stepObjs {
+	for index, stepObj := range stepObjs {
 		line := stepObj.Desc
 
 		if len(stepObj.Children) == 0 && stepObj.Expect != "" {
@@ -53,10 +53,11 @@ func prepareSteps(stepObjs []*model.TestStep) (steps []string) {
 		steps = append(steps, line)
 
 		for _, childObj := range stepObj.Children {
-			lineChild := childObj.Desc + " >> " + childObj.Expect
+			lineChild := "  " + childObj.Desc + " >> " + childObj.Expect
 			steps = append(steps, lineChild)
 		}
-		if len(stepObj.Children) > 0 {
+
+		if (index < len(stepObjs)-1 && len(stepObj.Children) == 0 && len(stepObjs[index+1].Children) > 0) || len(stepObj.Children) > 0 {
 			steps = append(steps, "")
 		}
 	}
@@ -117,11 +118,12 @@ func extractFromComments(file string) (stepObjs []*model.TestStep) {
 			stepObj := model.TestStep{Desc: stepName, Expect: expect, MutiLine: isMuti}
 
 			if inGroup {
-				stepObjs[len(stepObjs)-1].Children = append(stepObjs[len(stepObjs)-1].Children, stepObj)
-
 				if strings.Index(line, "]]") > -1 {
 					inGroup = false
+					stepObj.Expect = strings.TrimRight(strings.TrimSpace(stepObj.Expect), "]]")
 				}
+
+				stepObjs[len(stepObjs)-1].Children = append(stepObjs[len(stepObjs)-1].Children, stepObj)
 			} else {
 				stepObjs = append(stepObjs, &stepObj)
 			}
@@ -186,12 +188,12 @@ func parseMutiStep(lang string, nextLines []string) (ret string, increase int) {
 			break
 		}
 
-		if strings.Index(line, "<<") > -1 || strings.TrimSpace(line) == ">>" {
+		if strings.TrimSpace(line) == ">>" {
 			increase = index
 			break
 		}
 
-		ret += strings.TrimSpace(line) + "\n"
+		ret += "  " + strings.TrimSpace(line) + "\n"
 	}
 
 	if increase == 0 { // multi-line

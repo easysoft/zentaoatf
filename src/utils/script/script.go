@@ -142,18 +142,18 @@ func getStepNestedArr(lines []string) (ret []model.TestStep) {
 	for index := 0; index < len(lines); index++ {
 		line := lines[index]
 		lineTrim := strings.TrimSpace(line)
-		if lineTrim == "" || lineTrim == ">>" || lineTrim == "<<" {
+		if lineTrim == "" || lineTrim == ">>" {
 			continue
 		}
 
 		if strings.Index(line, " ") != 0 {
-			parent, increase = strToStep(line, lines[index+1:])
+			parent, increase = parserNextLines(line, lines[index+1:])
 			index += increase
 
 			ret = append(ret, parent)
-		} else {
+		} else { // 有缩进
 			child := model.TestStep{}
-			child, increase = strToStep(line, lines[index+1:])
+			child, increase = parserNextLines(line, lines[index+1:])
 			index += increase
 
 			if parent.Desc != "" {
@@ -164,7 +164,7 @@ func getStepNestedArr(lines []string) (ret []model.TestStep) {
 
 	return
 }
-func strToStep(str string, nextLines []string) (ret model.TestStep, increase int) {
+func parserNextLines(str string, nextLines []string) (ret model.TestStep, increase int) {
 	arr := strings.Split(str, ">>")
 	desc := strings.TrimSpace(arr[0])
 
@@ -173,20 +173,20 @@ func strToStep(str string, nextLines []string) (ret model.TestStep, increase int
 		expect = strings.TrimSpace(arr[1])
 	}
 
-	if len(arr) == 1 || expect != "" { // no or single line expect
+	if strings.Index(str, ">>") < 0 || expect != "" { // no >> or single line expect
 		ret = model.TestStep{Desc: desc, Expect: expect}
 		return
 	}
 
 	if strings.Index(str, ">>") > -1 { // will test if it has multi-line expect
 		for index, line := range nextLines {
-			//if strings.Index(line, ">>") > -1 {
-			//	expect = ""
-			//	break
-			//}
-
-			if strings.Index(line, "<<") > -1 || strings.TrimSpace(line) == ">>" {
+			if strings.TrimSpace(line) == ">>" {
 				increase = index
+				break
+			}
+
+			if strings.Index(line, ">>") > -1 {
+				expect = ""
 				break
 			}
 
@@ -429,7 +429,7 @@ func getSortedTextFromNestedSteps(groups []model.TestStep) (ret string, stepMap,
 
 	for idx1, group := range groups {
 		numbStr := getNumbStr(idx1+1, -1)
-		stepType := "item"
+		stepType := "step"
 		if len(group.Children) > 0 {
 			stepType = "group"
 		}

@@ -11,11 +11,11 @@ steps
   step 1.2 >>
     expect 1.2 line 1
     expect 1.2 line 2
-  <<
+  >>
 
 */
 
 print(">>\n");
 print("expect 1.2 line 1\n");
 print("expect 1.2 line 2\n");
-print("<<\n");
+print(">>\n");

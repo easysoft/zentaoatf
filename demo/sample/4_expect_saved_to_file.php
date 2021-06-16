@@ -22,4 +22,4 @@ print("expect 1\n");
 print("expect 3\n");
 
 // step 4: two expect lines in .exp file for single >> symbol in definition.
-print(">>\n expect 4 line 1\n\n expect 4 line 2\n <<\n");
+print(">>\n expect 4 line 1\n\n expect 4 line 2\n >>\n");
