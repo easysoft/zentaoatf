@@ -12,7 +12,7 @@ pid=0
 group2
   2.1 >> expect 2.1
   2.2 >> expect 2.2
-  2.3 >> expect 2.3  
+  2.3 >> expect 2.3
 
 multi line expect >>
   expect 3.1
@@ -23,7 +23,6 @@ multi line expect >>
 5 >> expect 5
 
 */
-
 
 // Step: 1    >> expect 1
 print("expect 1\n");
