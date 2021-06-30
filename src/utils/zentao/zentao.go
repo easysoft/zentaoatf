@@ -65,6 +65,8 @@ func GetCaseInfo(file string) (bool, int, int, string) {
 		caseInfo = arr[1]
 	}
 
+	caseInfo += "\n"
+
 	myExp = regexp.MustCompile(`[\S\s]*cid=\s*([^\n]*?)\s*\n`)
 	arr = myExp.FindStringSubmatch(caseInfo)
 	if len(arr) > 1 {

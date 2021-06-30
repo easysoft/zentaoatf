@@ -156,7 +156,7 @@ func replaceCaseDesc(desc, file string) {
 		constant.LangCommentsRegxMap[lang][0], constant.LangCommentsRegxMap[lang][1])
 
 	re, _ := regexp.Compile(regStr)
-	out := re.ReplaceAllString(content, "\n/**\n\n"+desc+"\n\n*/\n")
+	out := re.ReplaceAllString(content, "\n/**\n\n"+desc+"\n\n*/")
 
 	fileUtils.WriteFile(file, out)
 }
