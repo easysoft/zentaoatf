@@ -15,24 +15,24 @@ import (
 )
 
 func GetStepAndExpectMap(file string) (stepMap, stepTypeMap, expectMap maps.Map, isOldFormat bool) {
-	if fileUtils.FileExist(file) {
-		lang := langUtils.GetLangByFile(file)
-		txt := fileUtils.ReadFile(file)
-
-		isOldFormat = strings.Index(txt, "[esac]") > -1
-		_, checkpoints := zentaoUtils.ReadCaseInfo(txt, lang, isOldFormat)
-		lines := strings.Split(checkpoints, "\n")
-
-		if isOldFormat {
-			groupBlockArr := getGroupBlockArr(lines)
-			groupArr := getStepNestedArrObsolete(groupBlockArr)
-			_, stepMap, stepTypeMap, expectMap = getSortedTextFromNestedStepsObsolete(groupArr)
-		} else {
-			groupArr := getStepNestedArr(lines)
-			_, stepMap, stepTypeMap, expectMap = getSortedTextFromNestedSteps(groupArr)
-		}
-
+	if !fileUtils.FileExist(file) {
 		return
+	}
+
+	lang := langUtils.GetLangByFile(file)
+	txt := fileUtils.ReadFile(file)
+
+	isOldFormat = strings.Index(txt, "[esac]") > -1
+	_, checkpoints := zentaoUtils.ReadCaseInfo(txt, lang, isOldFormat)
+	lines := strings.Split(checkpoints, "\n")
+
+	if isOldFormat {
+		groupBlockArr := getGroupBlockArr(lines)
+		groupArr := getStepNestedArrObsolete(groupBlockArr)
+		_, stepMap, stepTypeMap, expectMap = getSortedTextFromNestedStepsObsolete(groupArr)
+	} else {
+		groupArr := getStepNestedArr(lines)
+		_, stepMap, stepTypeMap, expectMap = getSortedTextFromNestedSteps(groupArr)
 	}
 
 	return
@@ -150,6 +150,9 @@ func getStepNestedArr(lines []string) (ret []model.TestStep) {
 			parent, increase = parserNextLines(line, lines[index+1:])
 			index += increase
 
+			if strings.TrimSpace(parent.Expect) == "" && strings.Index(line, ">>") > -1 {
+				parent.Expect = constant.ExpectResultPass
+			}
 			ret = append(ret, parent)
 		} else { // 有缩进
 			child := model.TestStep{}
@@ -157,6 +160,10 @@ func getStepNestedArr(lines []string) (ret []model.TestStep) {
 			index += increase
 
 			if parent.Desc != "" {
+				if strings.TrimSpace(child.Expect) == "" && strings.Index(line, ">>") > -1 {
+					child.Expect = constant.ExpectResultPass
+				}
+
 				ret[len(ret)-1].Children = append(ret[len(ret)-1].Children, child)
 			}
 		}

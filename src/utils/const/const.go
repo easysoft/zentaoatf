@@ -32,7 +32,8 @@ var (
 	MinWidth  = 130
 	MinHeight = 36
 
-	CmdViewHeight = 10
+	CmdViewHeight    = 10
+	ExpectResultPass = "pass"
 
 	RequestTypePathInfo = "PATH_INFO"
 
