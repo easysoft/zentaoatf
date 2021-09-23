@@ -21,6 +21,7 @@ multi line expect >>
 
 4 >> expect 4
 5 >> expect 5
+e() >> expect 6
 
 */
 
@@ -44,3 +45,12 @@ print(">>\n");
 
 print("expect 4\n"); // step: 4  >> expect 4
 print("expect 5\n"); // step: 5  >> expect 5
+
+p("expect 6\n") && e('expect 6'); // e('') also be treat as a expect result
+
+function p($msg) {
+    print($msg);
+    return true;
+}
+function e($msg) {
+}

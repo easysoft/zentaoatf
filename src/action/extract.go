@@ -15,8 +15,9 @@ import (
 )
 
 const (
-	groupTag = "group:"
-	stepTag  = "step:"
+	groupTag  = "group:"
+	stepTag   = "step:"
+	funcRegex = `(?U)e\(['"](.+)['"]\)`
 )
 
 func Extract(files []string) error {
@@ -33,6 +34,7 @@ func Extract(files []string) error {
 		stepObjs := extractFromComments(file)
 		steps := prepareSteps(stepObjs)
 		desc := prepareDesc(steps, file)
+
 		replaceCaseDesc(desc, file)
 	}
 
@@ -82,6 +84,7 @@ func extractFromComments(file string) (stepObjs []*model.TestStep) {
 			findCaseTag = true
 			continue
 		}
+
 		if findCaseTag && !start {
 			if !isCommentEndTag(line, lang) {
 				continue
@@ -128,6 +131,14 @@ func extractFromComments(file string) (stepObjs []*model.TestStep) {
 				stepObjs = append(stepObjs, &stepObj)
 			}
 		}
+
+		myExp := regexp.MustCompile(funcRegex)
+		arr := myExp.FindStringSubmatch(line)
+		if len(arr) > 1 {
+			stepObj := model.TestStep{Desc: "e()", Expect: arr[1], MutiLine: false}
+			stepObjs = append(stepObjs, &stepObj)
+		}
+
 	}
 	return
 }
