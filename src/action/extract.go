@@ -15,9 +15,12 @@ import (
 )
 
 const (
-	groupTag  = "group:"
-	stepTag   = "step:"
-	funcRegex = `(?U)e\(['"](.+)['"]\)`
+	groupTag = "group:"
+	stepTag  = "step:"
+
+	funcRegex               = `(?U)e\(['"](.+)['"]\)`
+	singleLineCommentsRegex = `.*(?://|#)(.+)$`
+	mutiLineCommentsRegex   = `/\*+(.+)\*+/`
 )
 
 func Extract(files []string) error {
@@ -132,13 +135,35 @@ func extractFromComments(file string) (stepObjs []*model.TestStep) {
 			}
 		}
 
+		// find e() function and its comments, for zentao user only
 		myExp := regexp.MustCompile(funcRegex)
 		arr := myExp.FindStringSubmatch(line)
+
 		if len(arr) > 1 {
-			stepObj := model.TestStep{Desc: "e()", Expect: arr[1], MutiLine: false}
+			expect := arr[1]
+			desc := ""
+
+			myExp := regexp.MustCompile(singleLineCommentsRegex)
+			arr2 := myExp.FindStringSubmatch(line)
+			if len(arr2) > 1 { // find single line comments on right
+				desc = strings.TrimSpace(arr2[1])
+			} else {
+				preLine := strings.TrimSpace(lines[index-1])
+				arr3 := myExp.FindStringSubmatch(preLine)
+				if len(arr3) > 1 { // find single line comments on top
+					desc = strings.TrimSpace(arr3[1])
+				} else {
+					myExp := regexp.MustCompile(mutiLineCommentsRegex)
+					arr4 := myExp.FindStringSubmatch(preLine)
+					if len(arr4) > 1 { // find muti line comments on top
+						desc = strings.TrimSpace(arr4[1])
+					}
+				}
+			}
+
+			stepObj := model.TestStep{Desc: desc, Expect: expect, MutiLine: false}
 			stepObjs = append(stepObjs, &stepObj)
 		}
-
 	}
 	return
 }

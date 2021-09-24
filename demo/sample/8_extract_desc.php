@@ -21,7 +21,10 @@ multi line expect >>
 
 4 >> expect 4
 5 >> expect 5
-e() >> expect 6
+step 6 >> expect 6
+step 7 >> expect 7
+step 8 >> expect 8
+step 9 >> expect 9
 
 */
 
@@ -46,7 +49,12 @@ print(">>\n");
 print("expect 4\n"); // step: 4  >> expect 4
 print("expect 5\n"); // step: 5  >> expect 5
 
-p("expect 6\n") && e('expect 6'); // e('') also be treat as a expect result
+p("expect 6\n") && e('expect 6'); // step 6
+p("expect 7\n") && e('expect 7'); # step 7
+// step 8
+p("expect 8\n") && e('expect 8');
+/** step 9 */
+p("expect 9\n") && e('expect 9');
 
 function p($msg) {
     print($msg);
