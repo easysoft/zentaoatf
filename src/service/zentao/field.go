@@ -18,7 +18,10 @@ import (
 
 func GetBugFiledOptions(productId int) {
 	conf := configUtils.ReadCurrConfig()
-	Login(conf.Url, conf.Account, conf.Password)
+	ok := Login(conf.Url, conf.Account, conf.Password)
+	if !ok {
+		return
+	}
 
 	// $productID, $projectID = 0
 	params := ""

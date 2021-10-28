@@ -30,7 +30,10 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 	}
 
 	conf := configUtils.ReadCurrConfig()
-	Login(conf.Url, conf.Account, conf.Password)
+	ok := Login(conf.Url, conf.Account, conf.Password)
+	if !ok {
+		return
+	}
 
 	report.ZentaoData = os.Getenv("ZENTAO_DATA")
 	report.BuildUrl = os.Getenv("BUILD_URL")

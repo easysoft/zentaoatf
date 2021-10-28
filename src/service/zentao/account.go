@@ -15,10 +15,10 @@ func Login(baseUrl string, account string, password string) bool {
 	ok := GetConfig(baseUrl)
 
 	if !ok {
+		logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("fail_to_login"), color.FgRed)
 		return false
 	}
 
-	// $referer = '', $from = ''
 	uri := ""
 	if vari.RequestType == constant.RequestTypePathInfo {
 		uri = "user-login.json"
@@ -52,21 +52,32 @@ func GetConfig(baseUrl string) bool {
 		return true
 	}
 
+	// get config
 	url := baseUrl + "?mode=getconfig"
-
 	body, ok := client.Get(url)
-
-	if ok {
-		json, _ := simplejson.NewJson([]byte(body))
-
-		vari.ZenTaoVersion, _ = json.Get("version").String()
-		vari.SessionId, _ = json.Get("sessionID").String()
-		vari.SessionVar, _ = json.Get("sessionVar").String()
-		vari.RequestType, _ = json.Get("requestType").String()
-		vari.RequestFix, _ = json.Get("requestFix").String()
-
-		return true
-	} else {
+	if !ok {
 		return false
 	}
+
+	json, _ := simplejson.NewJson([]byte(body))
+	vari.ZenTaoVersion, _ = json.Get("version").String()
+	vari.SessionId, _ = json.Get("sessionID").String()
+	vari.SessionVar, _ = json.Get("sessionVar").String()
+	vari.RequestType, _ = json.Get("requestType").String()
+	vari.RequestFix, _ = json.Get("requestFix").String()
+
+	// check site path by calling login interface
+	uri := ""
+	if vari.RequestType == constant.RequestTypePathInfo {
+		uri = "user-login.json"
+	} else {
+		uri = "index.php?m=user&f=login&t=json"
+	}
+	url = baseUrl + uri
+	body, ok = client.Get(url)
+	if !ok {
+		return false
+	}
+
+	return true
 }

@@ -68,12 +68,16 @@ func PrepareBug(resultDir string, caseIdStr string) (model.Bug, string) {
 	return model.Bug{}, ""
 }
 
-func CommitBug() (bool, string) {
+func CommitBug() (ok bool, msg string) {
 	bug := vari.CurrBug
 	stepIds := vari.CurrBugStepIds
 
 	conf := configUtils.ReadCurrConfig()
-	Login(conf.Url, conf.Account, conf.Password)
+	ok = Login(conf.Url, conf.Account, conf.Password)
+	if !ok {
+		msg = "login failed"
+		return
+	}
 
 	productId := bug.Product
 	bug.Steps = strings.Replace(bug.Steps, " ", "&nbsp;", -1)
@@ -95,22 +99,28 @@ func CommitBug() (bool, string) {
 
 	body, ok := client.PostObject(url, bug, true)
 	if !ok {
-		return false, ""
+		msg = "post request failed"
+		return
 	}
 
 	json, err1 := simplejson.NewJson([]byte(body))
 	if err1 != nil {
-		return false, ""
+		ok = false
+		msg = "parse json failed"
+		return
 	}
 
 	msg, err2 := json.Get("message").String()
 	if err2 != nil {
-		return false, ""
+		ok = false
+		msg = "parse json failed"
+		return
 	}
 
-	if msg == "" {
-		return true, i118Utils.I118Prt.Sprintf("success_to_report_bug", bug.Case)
+	if ok {
+		msg = i118Utils.I118Prt.Sprintf("success_to_report_bug", bug.Case)
+		return
 	} else {
-		return false, msg
+		return
 	}
 }

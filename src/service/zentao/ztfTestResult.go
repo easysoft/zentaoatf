@@ -11,7 +11,10 @@ import (
 
 func CommitZTFTestResult(resultDir string, productId string, taskId string, noNeedConfirm bool) {
 	conf := configUtils.ReadCurrConfig()
-	Login(conf.Url, conf.Account, conf.Password)
+	ok := Login(conf.Url, conf.Account, conf.Password)
+	if !ok {
+		return
+	}
 
 	report := testingService.GetZTFTestReportForSubmit(resultDir)
 
