@@ -89,7 +89,6 @@ func PostObject(url string, params interface{}, useFormFormat bool) (string, boo
 	jsonStr, _ := json.Marshal(params)
 	if vari.Verbose {
 		logUtils.Screen(i118Utils.I118Prt.Sprintf("server_address") + url)
-		logUtils.Screen(i118Utils.I118Prt.Sprintf("server_params") + string(jsonStr))
 	}
 
 	client := &http.Client{}
@@ -100,6 +99,10 @@ func PostObject(url string, params interface{}, useFormFormat bool) (string, boo
 		// convert data to post fomat
 		re3, _ := regexp.Compile(`([^&]*?)=`)
 		val = re3.ReplaceAllStringFunc(string(val), replacePostData)
+	}
+
+	if vari.Verbose {
+		logUtils.Screen(i118Utils.I118Prt.Sprintf("server_params") + val)
 	}
 
 	req, reqErr := http.NewRequest("POST", url, strings.NewReader(val))
@@ -167,6 +170,10 @@ func PostStr(url string, params map[string]string) (msg string, ok bool) {
 		}
 		paramStr = paramStr + pkey + "=" + pval
 		idx++
+	}
+
+	if vari.Verbose {
+		logUtils.Screen(i118Utils.I118Prt.Sprintf("server_params") + paramStr)
 	}
 
 	req, reqErr := http.NewRequest("POST", url, strings.NewReader(paramStr))

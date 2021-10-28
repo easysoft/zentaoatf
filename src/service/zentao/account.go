@@ -8,6 +8,7 @@ import (
 	"github.com/easysoft/zentaoatf/src/utils/log"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"
+	"strings"
 )
 
 func Login(baseUrl string, account string, password string) bool {
@@ -30,16 +31,17 @@ func Login(baseUrl string, account string, password string) bool {
 	params["account"] = account
 	params["password"] = password
 
-	var log string
-	_, ok = client.PostStr(url, params)
+	var body string
+	body, ok = client.PostStr(url, params)
+	if ok && strings.Index(body, "title") > 0 { // use PostObject to login again for new system
+		_, ok = client.PostObject(url, params, true)
+	}
 	if ok {
 		if vari.Verbose {
-			log = i118Utils.I118Prt.Sprintf("success_to_login")
-			logUtils.Screen(log)
+			logUtils.Screen(i118Utils.I118Prt.Sprintf("success_to_login"))
 		}
 	} else {
-		log = i118Utils.I118Prt.Sprintf("fail_to_login")
-		logUtils.PrintToCmd(log, color.FgRed)
+		logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("fail_to_login"), color.FgRed)
 	}
 
 	return ok
@@ -57,6 +59,7 @@ func GetConfig(baseUrl string) bool {
 	if ok {
 		json, _ := simplejson.NewJson([]byte(body))
 
+		vari.ZenTaoVersion, _ = json.Get("version").String()
 		vari.SessionId, _ = json.Get("sessionID").String()
 		vari.SessionVar, _ = json.Get("sessionVar").String()
 		vari.RequestType, _ = json.Get("requestType").String()
