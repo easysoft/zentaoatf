@@ -24,8 +24,12 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 		}
 	}
 
+	if report.Total == 0 {
+		logUtils.Screen(color.CyanString(i118Utils.I118Prt.Sprintf("ignore_to_submit_result_no_result_empty")))
+		return
+	}
 	if vari.ProductId == "" {
-		logUtils.Screen(color.CyanString(i118Utils.I118Prt.Sprintf("ignore_to_submit_result")))
+		logUtils.Screen(color.CyanString(i118Utils.I118Prt.Sprintf("ignore_to_submit_result_no_product_id")))
 		return
 	}
 

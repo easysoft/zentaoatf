@@ -395,7 +395,11 @@
       "translation": "提交测试结果到禅道失败"
     },
     {
-      "id": "ignore_to_submit_result",
+      "id": "ignore_to_submit_result_no_result_empty",
+      "translation": "测试结果为空，忽略。"
+    },
+    {
+      "id": "ignore_to_submit_result_no_product_id",
       "translation": "您未提供productId，忽略提交测试结果。"
     },
 
