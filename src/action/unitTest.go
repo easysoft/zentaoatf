@@ -12,7 +12,7 @@ func RunUnitTest(cmdStr string) string {
 	shellUtils.ExeAppWithOutput(cmdStr)
 	endTime := time2.Now().Unix()
 
-	testSuites, resultDir := testingService.RetrieveUnitResult()
+	testSuites, resultDir := testingService.RetrieveUnitResult(startTime)
 	cases, classNameMaxWidth, time := testingService.ParserUnitTestResult(testSuites)
 
 	if time == 0 {

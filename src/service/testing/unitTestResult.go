@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-func RetrieveUnitResult() (suites []model.UnitTestSuite, resultDir string) {
+func RetrieveUnitResult(startTime int64) (suites []model.UnitTestSuite, resultDir string) {
 	resultFiles := make([]string, 0)
 
 	if vari.UnitTestType == constant.UnitTestTypeJunit && vari.UnitTestTool == constant.UnitTestToolMvn {
@@ -40,7 +40,7 @@ func RetrieveUnitResult() (suites []model.UnitTestSuite, resultDir string) {
 			for _, fi := range dir {
 				name := fi.Name()
 				ext := path.Ext(name)
-				if ext == ".xml" {
+				if ext == ".xml" && fi.ModTime().Unix() >= startTime {
 					resultFiles = append(resultFiles, resultDir+name)
 				}
 			}
