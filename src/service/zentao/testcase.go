@@ -280,14 +280,14 @@ func CommitCase(caseId int, title string, stepMap maps.Map, stepTypeMap maps.Map
 	logUtils.PrintToCmd(string(json), -1)
 
 	var yes bool
-	logUtils.PrintToWithColor("\n"+i118Utils.I118Prt.Sprintf("case_update_confirm", caseId, title), -1)
+	logUtils.PrintToWithColor("\n"+i118Utils.Sprintf("case_update_confirm", caseId, title), -1)
 	stdinUtils.InputForBool(&yes, true, "want_to_continue")
 
 	if yes {
 		_, ok = client.PostObject(url, requestObj, true)
 
 		if ok {
-			logUtils.PrintTo(i118Utils.I118Prt.Sprintf("success_to_commit_case", caseId) + "\n")
+			logUtils.PrintTo(i118Utils.Sprintf("success_to_commit_case", caseId) + "\n")
 		}
 	}
 }

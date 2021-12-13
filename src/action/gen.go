@@ -57,13 +57,13 @@ func Generate(productId string, moduleId string, suiteId string, taskId string, 
 
 		count, err := scriptUtils.Generate(cases, scriptLang, independentFile, targetDir, byModule, prefix)
 		if err == nil {
-			logUtils.PrintTo(i118Utils.I118Prt.Sprintf("success_to_generate", count, targetDir) + "\n")
+			logUtils.PrintTo(i118Utils.Sprintf("success_to_generate", count, targetDir) + "\n")
 		} else {
 			logUtils.PrintToWithColor(err.Error(), color.FgRed)
 		}
 	} else {
 		if !loginFail {
-			logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("no_cases"), color.FgRed)
+			logUtils.PrintToWithColor(i118Utils.Sprintf("no_cases"), color.FgRed)
 		}
 	}
 }

@@ -118,7 +118,7 @@ func CommitBug() (ok bool, msg string) {
 	}
 
 	if ok {
-		msg = i118Utils.I118Prt.Sprintf("success_to_report_bug", bug.Case)
+		msg = i118Utils.Sprintf("success_to_report_bug", bug.Case)
 		return
 	} else {
 		return

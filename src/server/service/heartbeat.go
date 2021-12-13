@@ -42,9 +42,9 @@ func (s *HeartBeatService) HeartBeat(isBusy bool) {
 
 	_, ok := client.PostObject(url, data, false)
 	if ok {
-		logUtils.PrintTo(i118Utils.I118Prt.Sprintf("success_heart_beat"))
+		logUtils.PrintTo(i118Utils.Sprintf("success_heart_beat"))
 	} else {
-		logUtils.PrintTo(i118Utils.I118Prt.Sprintf("fail_heart_beat"))
+		logUtils.PrintTo(i118Utils.Sprintf("fail_heart_beat"))
 	}
 
 	return

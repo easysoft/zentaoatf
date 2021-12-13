@@ -55,7 +55,7 @@ func GenerateTestCaseScript(cs model.TestCase, langType string, independentFile 
 	steps := make([]string, 0)
 	independentExpects := make([]string, 0)
 	srcCode := fmt.Sprintf("%s %s", langUtils.LangMap[langType]["commentsTag"],
-		i118Utils.I118Prt.Sprintf("find_example", string(os.PathSeparator), langType))
+		i118Utils.Sprintf("find_example", string(os.PathSeparator), langType))
 
 	info = append(info, fmt.Sprintf("title=%s", caseTitle))
 	info = append(info, fmt.Sprintf("cid=%s", caseId))

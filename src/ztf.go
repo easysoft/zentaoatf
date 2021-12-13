@@ -225,7 +225,7 @@ func run(args []string) {
 			}
 
 			if vari.Interpreter != "" {
-				logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("run_with_specific_interpreter", vari.Interpreter), color.FgCyan)
+				logUtils.PrintToWithColor(i118Utils.Sprintf("run_with_specific_interpreter", vari.Interpreter), color.FgCyan)
 			}
 			action.RunZTFTest(files, suiteId, taskId)
 		} else {
@@ -236,7 +236,7 @@ func run(args []string) {
 
 func startServer() {
 	vari.IP = commonUtils.GetIp()
-	logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("start_server", vari.IP, strconv.Itoa(vari.Port)), color.FgCyan)
+	logUtils.PrintToWithColor(i118Utils.Sprintf("start_server", vari.IP, strconv.Itoa(vari.Port)), color.FgCyan)
 
 	server := server.NewServer()
 	server.Init()

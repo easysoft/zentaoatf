@@ -15,7 +15,7 @@ func Login(baseUrl string, account string, password string) bool {
 	ok := GetConfig(baseUrl)
 
 	if !ok {
-		logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("fail_to_login"), color.FgRed)
+		logUtils.PrintToCmd(i118Utils.Sprintf("fail_to_login"), color.FgRed)
 		return false
 	}
 
@@ -38,10 +38,10 @@ func Login(baseUrl string, account string, password string) bool {
 	}
 	if ok {
 		if vari.Verbose {
-			logUtils.Screen(i118Utils.I118Prt.Sprintf("success_to_login"))
+			logUtils.Screen(i118Utils.Sprintf("success_to_login"))
 		}
 	} else {
-		logUtils.PrintToCmd(i118Utils.I118Prt.Sprintf("fail_to_login"), color.FgRed)
+		logUtils.PrintToCmd(i118Utils.Sprintf("fail_to_login"), color.FgRed)
 	}
 
 	return ok

@@ -44,7 +44,7 @@ func InitScreenSize() {
 }
 
 func PrintCurrConfig() {
-	logUtils.PrintToWithColor("\n"+i118Utils.I118Prt.Sprintf("current_config"), color.FgCyan)
+	logUtils.PrintToWithColor("\n"+i118Utils.Sprintf("current_config"), color.FgCyan)
 
 	val := reflect.ValueOf(vari.Config)
 	typeOfS := val.Type()
@@ -100,7 +100,7 @@ func SaveConfig(conf model.Config) error {
 	if i118Utils.I118Prt == nil { // first time, i118 may not be init.
 		logUtils.PrintToWithColor(fmt.Sprintf("Successfully update config file %s.", configPath), color.FgCyan)
 	} else {
-		logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("success_update_config", configPath), color.FgCyan)
+		logUtils.PrintToWithColor(i118Utils.Sprintf("success_update_config", configPath), color.FgCyan)
 	}
 
 	vari.Config = ReadCurrConfig()
@@ -132,7 +132,7 @@ func CheckConfigPermission() {
 	err := fileUtils.MkDirIfNeeded(vari.ExeDir + "conf")
 	if err != nil {
 		logUtils.PrintToWithColor(
-			i118Utils.I118Prt.Sprintf("perm_deny", vari.ExeDir), color.FgRed)
+			i118Utils.Sprintf("perm_deny", vari.ExeDir), color.FgRed)
 		os.Exit(0)
 	}
 }
@@ -148,7 +148,7 @@ func InputForSet() {
 
 	var configSite bool
 
-	logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("begin_config"), color.FgCyan)
+	logUtils.PrintToWithColor(i118Utils.Sprintf("begin_config"), color.FgCyan)
 
 	enCheck := ""
 	var numb string
@@ -202,7 +202,7 @@ func CheckRequestConfig() {
 func InputForRequest() {
 	conf := ReadCurrConfig()
 
-	logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("need_config"), color.FgCyan)
+	logUtils.PrintToWithColor(i118Utils.Sprintf("need_config"), color.FgCyan)
 
 	conf.Url = stdinUtils.GetInput("(http://.*)", conf.Url, "enter_url", conf.Url)
 	conf.Account = stdinUtils.GetInput("(.{2,})", conf.Account, "enter_account", conf.Account)
@@ -231,8 +231,8 @@ func InputForScriptInterpreter(scripts []string, config *model.Config, from stri
 		}
 		sampleOrDefaultTips := ""
 		if deflt == "" {
-			sampleOrDefaultTips = i118Utils.I118Prt.Sprintf("for_example", langUtils.LangMap[lang]["interpreter"]) + " " +
-				i118Utils.I118Prt.Sprintf("empty_to_ignore")
+			sampleOrDefaultTips = i118Utils.Sprintf("for_example", langUtils.LangMap[lang]["interpreter"]) + " " +
+				i118Utils.Sprintf("empty_to_ignore")
 		} else {
 			sampleOrDefaultTips = deflt
 		}

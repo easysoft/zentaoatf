@@ -23,19 +23,19 @@ func Download(uri string, dst string) error {
 
 	res, err := http.Get(uri)
 	if err != nil {
-		logUtils.PrintTo(i118Utils.I118Prt.Sprintf("download_fail", uri, err.Error()))
+		logUtils.PrintTo(i118Utils.Sprintf("download_fail", uri, err.Error()))
 	}
 	defer res.Body.Close()
 	bytes, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		logUtils.PrintTo(i118Utils.I118Prt.Sprintf("download_read_fail", uri, err.Error()))
+		logUtils.PrintTo(i118Utils.Sprintf("download_read_fail", uri, err.Error()))
 	}
 
 	err = ioutil.WriteFile(dst, bytes, 0666)
 	if err != nil {
-		logUtils.PrintTo(i118Utils.I118Prt.Sprintf("download_write_fail", dst, err.Error()))
+		logUtils.PrintTo(i118Utils.Sprintf("download_write_fail", dst, err.Error()))
 	} else {
-		logUtils.PrintTo(i118Utils.I118Prt.Sprintf("download_success", uri, dst))
+		logUtils.PrintTo(i118Utils.Sprintf("download_success", uri, dst))
 	}
 
 	return err

@@ -37,11 +37,11 @@ func ColoredStatus(status string) string {
 
 	switch temp {
 	case "pass":
-		return color.GreenString(i118Utils.I118Prt.Sprintf(temp))
+		return color.GreenString(i118Utils.Sprintf(temp))
 	case "fail":
-		return color.RedString(i118Utils.I118Prt.Sprintf(temp))
+		return color.RedString(i118Utils.Sprintf(temp))
 	case "skip":
-		return color.YellowString(i118Utils.I118Prt.Sprintf(temp))
+		return color.YellowString(i118Utils.Sprintf(temp))
 	}
 
 	return status

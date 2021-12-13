@@ -499,6 +499,19 @@
     {
       "id": "fail_md5_check",
       "translation": "Check file %s MD5 failed."
+    },
+
+    {
+      "id": "fail_to_upload_file",
+      "translation": "Fail to upload file: %s."
+    },
+    {
+      "id": "fail_to_parse_upload_file_response",
+      "translation": "Fail to parse upload file response: %s."
+    },
+    {
+      "id": "upload_file_result",
+      "translation": "Upload file result: %s，%s."
     }
   ]
 }

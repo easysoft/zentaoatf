@@ -506,6 +506,19 @@
     {
       "id": "fail_md5_check",
       "translation": "验证文件%s的MD5失败。"
+    },
+
+    {
+      "id": "fail_to_upload_file",
+      "translation": "上传文件失败：%s。"
+    },
+    {
+      "id": "fail_to_parse_upload_file_response",
+      "translation": "解析上传文件响应失败：%s。"
+    },
+    {
+      "id": "upload_file_result",
+      "translation": "上传文件响应结果：%s，%s。"
     }
   ]
 }

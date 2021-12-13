@@ -22,14 +22,14 @@ func (s *BuildService) Add(req domain.ReqData) (reply domain.OptResult) {
 	reqStr, _ := json.Marshal(req.Data)
 	err := json.Unmarshal(reqStr, &build)
 	if err != nil {
-		logUtils.PrintTo(i118Utils.I118Prt.Sprintf("fail_parse_req", err))
+		logUtils.PrintTo(i118Utils.Sprintf("fail_parse_req", err))
 		return
 	}
 
 	size := s.taskService.GetSize()
 	if size == 0 {
 		s.taskService.Add(build)
-		logUtils.PrintTo(i118Utils.I118Prt.Sprintf("success_add_tak"))
+		logUtils.PrintTo(i118Utils.Sprintf("success_add_tak"))
 		reply.Success("Success to add task.")
 	} else {
 		reply.Fail(fmt.Sprintf("Already has %d jobs to be done.", size))

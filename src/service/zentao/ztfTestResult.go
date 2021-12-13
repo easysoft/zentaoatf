@@ -24,8 +24,8 @@ func CommitZTFTestResult(resultDir string, productId string, taskId string, noNe
 
 	if taskId == "" && !noNeedConfirm {
 		taskId = stdinUtils.GetInput("\\d*", "",
-			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("task_id")+
-				i118Utils.I118Prt.Sprintf("task_id_empty_to_create"))
+			i118Utils.Sprintf("pls_enter")+" "+i118Utils.Sprintf("task_id")+
+				i118Utils.Sprintf("task_id_empty_to_create"))
 	}
 
 	taskIdInt, _ := strconv.Atoi(taskId)

@@ -29,7 +29,7 @@ func Extract(files []string) error {
 	cases := assertUtils.GetCaseByDirAndFile(files)
 
 	if len(cases) < 1 {
-		logUtils.PrintTo("\n" + i118Utils.I118Prt.Sprintf("no_cases"))
+		logUtils.PrintTo("\n" + i118Utils.Sprintf("no_cases"))
 		return nil
 	}
 

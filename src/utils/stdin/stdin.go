@@ -39,17 +39,17 @@ func InputForCheckout(productId *string, moduleId *string, suiteId *string, task
 	coType = strings.ToLower(coType)
 	if coType == "1" {
 		*productId = GetInput("\\d+", *productId,
-			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("product_id")+": "+*productId)
+			i118Utils.Sprintf("pls_enter")+" "+i118Utils.Sprintf("product_id")+": "+*productId)
 
 		*moduleId = GetInput("\\d*", *moduleId,
-			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("module_id")+": "+*moduleId)
+			i118Utils.Sprintf("pls_enter")+" "+i118Utils.Sprintf("module_id")+": "+*moduleId)
 
 	} else if coType == "2" {
 		*suiteId = GetInput("\\d+", *suiteId,
-			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("suite_id")+": "+*suiteId)
+			i118Utils.Sprintf("pls_enter")+" "+i118Utils.Sprintf("suite_id")+": "+*suiteId)
 	} else if coType == "3" {
 		*taskId = GetInput("\\d+", *taskId,
-			i118Utils.I118Prt.Sprintf("pls_enter")+" "+i118Utils.I118Prt.Sprintf("task_id")+": "+*taskId)
+			i118Utils.Sprintf("pls_enter")+" "+i118Utils.Sprintf("task_id")+": "+*taskId)
 	}
 
 	InputForBool(independentFile, false, "enter_co_independent")
@@ -72,7 +72,7 @@ func InputForCheckout(productId *string, moduleId *string, suiteId *string, task
 }
 
 func InputForDir(dir *string, dft string, i118Key string) {
-	*dir = GetInput("is_dir", dft, "enter_dir", i118Utils.I118Prt.Sprintf(i118Key))
+	*dir = GetInput("is_dir", dft, "enter_dir", i118Utils.Sprintf(i118Key))
 }
 
 func InputForBool(in *bool, defaultVal bool, fmtStr string, fmtParam ...interface{}) {
@@ -101,7 +101,7 @@ func InputForBool(in *bool, defaultVal bool, fmtStr string, fmtParam ...interfac
 func GetInput(regx string, defaultVal string, fmtStr string, params ...interface{}) string {
 	var ret string
 
-	msg := i118Utils.I118Prt.Sprintf(fmtStr, params...)
+	msg := i118Utils.Sprintf(fmtStr, params...)
 
 	for {
 		logUtils.PrintToWithColor("\n"+msg, color.FgCyan)
@@ -138,7 +138,7 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 			return ret
 		} else {
 			ret = ""
-			logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf(msg), color.FgRed)
+			logUtils.PrintToWithColor(i118Utils.Sprintf(msg), color.FgRed)
 		}
 	}
 }
@@ -146,7 +146,7 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 func GetInputForScriptInterpreter(defaultVal string, fmtStr string, params ...interface{}) string {
 	var ret string
 
-	msg := i118Utils.I118Prt.Sprintf(fmtStr, params...)
+	msg := i118Utils.Sprintf(fmtStr, params...)
 
 	for {
 		logUtils.PrintToWithColor(msg, color.FgCyan)
@@ -179,7 +179,7 @@ func GetInputForScriptInterpreter(defaultVal string, fmtStr string, params ...in
 			return ret
 		} else {
 			ret = ""
-			logUtils.PrintToWithColor(i118Utils.I118Prt.Sprintf("invalid_input"), color.FgRed)
+			logUtils.PrintToWithColor(i118Utils.Sprintf("invalid_input"), color.FgRed)
 		}
 	}
 }

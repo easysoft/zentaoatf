@@ -25,11 +25,11 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 	}
 
 	if report.Total == 0 {
-		logUtils.Screen(color.CyanString(i118Utils.I118Prt.Sprintf("ignore_to_submit_result_no_result_empty")))
+		logUtils.Screen(color.CyanString(i118Utils.Sprintf("ignore_to_submit_result_no_result_empty")))
 		return
 	}
 	if vari.ProductId == "" {
-		logUtils.Screen(color.CyanString(i118Utils.I118Prt.Sprintf("ignore_to_submit_result_no_product_id")))
+		logUtils.Screen(color.CyanString(i118Utils.Sprintf("ignore_to_submit_result_no_product_id")))
 		return
 	}
 
@@ -65,11 +65,11 @@ func CommitTestResult(report model.TestReport, testTaskId int) {
 
 	msg := "\n"
 	if ok {
-		msg += color.GreenString(i118Utils.I118Prt.Sprintf("success_to_submit_test_result"))
+		msg += color.GreenString(i118Utils.Sprintf("success_to_submit_test_result"))
 	} else {
-		msg = i118Utils.I118Prt.Sprintf("fail_to_submit_test_result")
+		msg = i118Utils.Sprintf("fail_to_submit_test_result")
 		if strings.Index(resp, "login") > -1 {
-			msg = i118Utils.I118Prt.Sprintf("fail_to_login")
+			msg = i118Utils.Sprintf("fail_to_login")
 		}
 		msg = color.RedString(msg)
 	}

@@ -68,9 +68,9 @@ func GenUnitTestReport(cases []model.UnitResult, classNameMaxWidth int, timeVal 
 	}
 
 	logUtils.Result("\n" + logUtils.GetWholeLine(time.Now().Format("2006-01-02 15:04:05")+" "+
-		i118Utils.I118Prt.Sprintf("found_scripts", strconv.Itoa(len(cases)))+postFix, "="))
+		i118Utils.Sprintf("found_scripts", strconv.Itoa(len(cases)))+postFix, "="))
 	logUtils.Screen("\n" + logUtils.GetWholeLine(time.Now().Format("2006-01-02 15:04:05")+" "+
-		i118Utils.I118Prt.Sprintf("found_scripts", color.CyanString(strconv.Itoa(len(cases))))+postFix, "="))
+		i118Utils.Sprintf("found_scripts", color.CyanString(strconv.Itoa(len(cases))))+postFix, "="))
 
 	if report.Total == 0 {
 		return report
@@ -84,11 +84,11 @@ func GenUnitTestReport(cases []model.UnitResult, classNameMaxWidth int, timeVal 
 		format := "(%" + width + "d/%d) %s [%s] [%" + width + "d. %s] (%.3fs)"
 		logUtils.Screen(fmt.Sprintf(format, idx+1, report.Total, statusColor, testSuite, cs.Id, cs.Title, cs.Duration))
 		logUtils.Result(fmt.Sprintf(format, idx+1, report.Total,
-			i118Utils.I118Prt.Sprintf(cs.Status), testSuite, cs.Id, cs.Title, cs.Duration))
+			i118Utils.Sprintf(cs.Status), testSuite, cs.Id, cs.Title, cs.Duration))
 	}
 
 	if report.Fail > 0 {
-		logUtils.ScreenAndResult("\n" + i118Utils.I118Prt.Sprintf("failed_scripts"))
+		logUtils.ScreenAndResult("\n" + i118Utils.Sprintf("failed_scripts"))
 		logUtils.Screen(strings.Join(failedCaseLines, "\n"))
 		logUtils.Result(strings.Join(failedCaseLinesDesc, "\n"))
 	}
@@ -99,13 +99,13 @@ func GenUnitTestReport(cases []model.UnitResult, classNameMaxWidth int, timeVal 
 	}
 
 	fmtStr := "%d(%.1f%%) %s"
-	passStr := fmt.Sprintf(fmtStr, report.Pass, float32(report.Pass*100/report.Total), i118Utils.I118Prt.Sprintf("pass"))
-	failStr := fmt.Sprintf(fmtStr, report.Fail, float32(report.Fail*100/report.Total), i118Utils.I118Prt.Sprintf("fail"))
-	skipStr := fmt.Sprintf(fmtStr, report.Skip, float32(report.Skip*100/report.Total), i118Utils.I118Prt.Sprintf("skip"))
+	passStr := fmt.Sprintf(fmtStr, report.Pass, float32(report.Pass*100/report.Total), i118Utils.Sprintf("pass"))
+	failStr := fmt.Sprintf(fmtStr, report.Fail, float32(report.Fail*100/report.Total), i118Utils.Sprintf("fail"))
+	skipStr := fmt.Sprintf(fmtStr, report.Skip, float32(report.Skip*100/report.Total), i118Utils.Sprintf("skip"))
 
 	// 输出到文件
 	logUtils.Result("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
-		i118Utils.I118Prt.Sprintf("run_scripts",
+		i118Utils.Sprintf("run_scripts",
 			report.Total, report.Duration, secTag,
 			passStr, failStr, skipStr,
 			" "+vari.LogDir+"result.txt ",
@@ -113,7 +113,7 @@ func GenUnitTestReport(cases []model.UnitResult, classNameMaxWidth int, timeVal 
 
 	// 输出到屏幕
 	logUtils.Screen("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
-		i118Utils.I118Prt.Sprintf("run_scripts",
+		i118Utils.Sprintf("run_scripts",
 			report.Total, report.Duration, secTag,
 			color.GreenString(passStr), color.RedString(failStr), color.YellowString(skipStr),
 			" "+vari.LogDir+"result.txt ",

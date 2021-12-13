@@ -64,7 +64,7 @@ func RunZTFTest(files []string, suiteIdStr, taskIdStr string) error {
 	}
 
 	if len(cases) < 1 {
-		logUtils.PrintTo("\n" + i118Utils.I118Prt.Sprintf("no_cases"))
+		logUtils.PrintTo("\n" + i118Utils.Sprintf("no_cases"))
 		return nil
 	}
 

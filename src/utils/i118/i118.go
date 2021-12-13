@@ -13,6 +13,11 @@ import (
 
 var I118Prt *message.Printer
 
+func Sprintf(tmpl string, params ...interface{}) (ret string) {
+	ret = I118Prt.Sprintf(tmpl, params...)
+	return
+}
+
 func InitI118(lang string) {
 	//var once sync.Once
 	//once.Do(func() {

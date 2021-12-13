@@ -25,7 +25,7 @@ func (s *ConfigService) Update(req domain.ReqData) {
 	reqStr, _ := json.Marshal(req.Data)
 	err := json.Unmarshal(reqStr, &conf)
 	if err != nil {
-		logUtils.PrintTo(i118Utils.I118Prt.Sprintf("fail_parse_req", err))
+		logUtils.PrintTo(i118Utils.Sprintf("fail_parse_req", err))
 		return
 	}
 

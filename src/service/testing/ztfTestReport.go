@@ -58,7 +58,7 @@ func GenZTFTestReport(report model.TestReport, pathMaxWidth int) {
 					stepNumb++
 
 					step.Id = strings.TrimRight(step.Id, ".")
-					status := i118Utils.I118Prt.Sprintf(commonUtils.BoolToPass(step.Status))
+					status := i118Utils.Sprintf(commonUtils.BoolToPass(step.Status))
 					failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("Step %s: %s", step.Id, status))
 
 					for idx1, cp := range step.CheckPoints {
@@ -72,12 +72,12 @@ func GenZTFTestReport(report model.TestReport, pathMaxWidth int) {
 					}
 				}
 			} else {
-				failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "   "+i118Utils.I118Prt.Sprintf("no_checkpoints"))
+				failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "   "+i118Utils.Sprintf("no_checkpoints"))
 			}
 		}
 	}
 	if failedCount > 0 {
-		logUtils.ScreenAndResult("\n" + i118Utils.I118Prt.Sprintf("failed_scripts"))
+		logUtils.ScreenAndResult("\n" + i118Utils.Sprintf("failed_scripts"))
 		logUtils.Screen(strings.Join(failedCaseLines, "\n"))
 		logUtils.Result(strings.Join(failedCaseLinesWithCheckpoint, "\n"))
 	}
@@ -89,20 +89,20 @@ func GenZTFTestReport(report model.TestReport, pathMaxWidth int) {
 
 	// 生成统计行
 	fmtStr := "%d(%.1f%%) %s"
-	passStr := fmt.Sprintf(fmtStr, report.Pass, float32(report.Pass*100/report.Total), i118Utils.I118Prt.Sprintf("pass"))
-	failStr := fmt.Sprintf(fmtStr, report.Fail, float32(report.Fail*100/report.Total), i118Utils.I118Prt.Sprintf("fail"))
-	skipStr := fmt.Sprintf(fmtStr, report.Skip, float32(report.Skip*100/report.Total), i118Utils.I118Prt.Sprintf("skip"))
+	passStr := fmt.Sprintf(fmtStr, report.Pass, float32(report.Pass*100/report.Total), i118Utils.Sprintf("pass"))
+	failStr := fmt.Sprintf(fmtStr, report.Fail, float32(report.Fail*100/report.Total), i118Utils.Sprintf("fail"))
+	skipStr := fmt.Sprintf(fmtStr, report.Skip, float32(report.Skip*100/report.Total), i118Utils.Sprintf("skip"))
 
 	// 打印到结果文件
 	logUtils.Result("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
-		i118Utils.I118Prt.Sprintf("run_scripts",
+		i118Utils.Sprintf("run_scripts",
 			report.Total, report.Duration, secTag,
 			passStr, failStr, skipStr,
 			" "+vari.LogDir+"result.txt ",
 		))
 	// 打印到屏幕
 	logUtils.Screen("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
-		i118Utils.I118Prt.Sprintf("run_scripts",
+		i118Utils.Sprintf("run_scripts",
 			report.Total, report.Duration, secTag,
 			color.GreenString(passStr), color.RedString(failStr), color.YellowString(skipStr),
 			" "+vari.LogDir+"result.txt ",
