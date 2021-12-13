@@ -1,10 +1,6 @@
 #comments-start
 
-title=autoit test
-cid=0
-pid=0
-
-1. check nodepad content >> something
+Open Notepad, enter and save text.
 
 #comments-end
 
