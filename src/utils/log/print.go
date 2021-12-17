@@ -3,9 +3,9 @@ package logUtils
 import (
 	"encoding/json"
 	"fmt"
-	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
-	constant "github.com/easysoft/zentaoatf/src/utils/const"
-	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
+	"github.com/easysoft/zentaoatf/src/utils/common"
+	"github.com/easysoft/zentaoatf/src/utils/const"
+	"github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/fatih/color"
 	"os"
 	"regexp"

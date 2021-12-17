@@ -2,8 +2,8 @@ package logUtils
 
 import (
 	"fmt"
-	constant "github.com/easysoft/zentaoatf/src/utils/const"
-	fileUtils "github.com/easysoft/zentaoatf/src/utils/file"
+	"github.com/easysoft/zentaoatf/src/utils/const"
+	"github.com/easysoft/zentaoatf/src/utils/file"
 	"github.com/easysoft/zentaoatf/src/utils/i118"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/fatih/color"

@@ -3,8 +3,8 @@ package fileUtils
 import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/res"
-	commonUtils "github.com/easysoft/zentaoatf/src/utils/common"
-	constant "github.com/easysoft/zentaoatf/src/utils/const"
+	"github.com/easysoft/zentaoatf/src/utils/common"
+	"github.com/easysoft/zentaoatf/src/utils/const"
 	"github.com/easysoft/zentaoatf/src/utils/vari"
 	"github.com/mholt/archiver/v3"
 	"io"
