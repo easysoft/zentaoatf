@@ -33,7 +33,7 @@ func Login(baseUrl string, account string, password string) bool {
 
 	var body string
 	body, ok = client.PostStr(url, params)
-	if ok && strings.Index(body, "title") > 0 { // use PostObject to login again for new system
+	if !ok || (ok && strings.Index(body, "title") > 0) { // use PostObject to login again for new system
 		_, ok = client.PostObject(url, params, true)
 	}
 	if ok {
