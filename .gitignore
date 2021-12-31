@@ -1,0 +1,22 @@
+# ext
+*.dll
+*.db
+*.exe
+*.log
+*.out
+*.txt
+*.yaml
+.air.*
+*.jpg
+
+# file
+latest_log
+rbac_model.conf
+
+#dir
+tmp/
+example/tmp/
+example/www
+logs/
+.idea/
+

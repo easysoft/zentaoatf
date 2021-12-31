@@ -1,0 +1,23 @@
+{
+    "clearData": true,
+    "sqlType": "mysql",
+    "cacheType": "redis",
+    "level": "debug",
+    "addr": "127.0.0.1:8085",
+    "sys": {
+        "adminPassword": "password"
+    },
+    "db": {
+        "host": "127.0.0.1",
+        "port": "3306",
+        "dbName": "deeptest",
+        "userName": "root",
+        "password": "P2ssw0rd",
+        "logMode": true
+    },
+    "cache": {
+        "host": "127.0.0.1",
+        "port": "6379",
+        "password": "P2ssw0rd",
+    }
+}
