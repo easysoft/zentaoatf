@@ -2,7 +2,7 @@
   <div>
     <a-dropdown>
         <span class="dropDown">
-            <icon-svg type="global-outlined" width="1.2" height="1.2"></icon-svg>
+            <icon-svg type="global-outlined" :width="1.2" :height="1.2"></icon-svg>
         </span>
         <template #overlay>
             <a-menu class="menu" @click="changeLang" :selectedKeys="[locale]">
