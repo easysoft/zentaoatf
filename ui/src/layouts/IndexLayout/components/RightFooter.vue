@@ -24,7 +24,8 @@ export default defineComponent({
 </script>
 <style lang="less" scoped>
 .indexlayout-right-footer {
-  height: 50px;
+  height: 32px;
+  line-height: 32px;
   overflow: hidden;
   text-align: center;
   font-size: 14px;

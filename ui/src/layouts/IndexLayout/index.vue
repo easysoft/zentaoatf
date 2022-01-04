@@ -15,8 +15,7 @@
             >              
             </right-top>
             <div class="indexlayout-right-main">
-                  <router-view></router-view>
-                <right-footer></right-footer>
+              <router-view></router-view>
             </div>
         </div>
 
@@ -36,7 +35,6 @@ import { mergeUnique as ArrayMergeUnique } from '@/utils/array';
 import useTitle from '@/composables/useTitle';
 import IndexLayoutRoutes from './routes';
 import RightTop from '@/layouts/IndexLayout/components/RightTop.vue';
-import RightFooter from '@/layouts/IndexLayout/components/RightFooter.vue';
 
 interface IndexLayoutSetupData {
   collapsed: ComputedRef<boolean>;
@@ -56,7 +54,6 @@ export default defineComponent({
     name: 'IndexLayout',
     components: {
         RightTop,
-        RightFooter,
     },
     setup(): IndexLayoutSetupData {
       const store = useStore<{
