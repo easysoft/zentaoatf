@@ -30,7 +30,7 @@ func (s *ProjectService) FindById(id uint) (model.Project, error) {
 	return s.ProjectRepo.FindById(id)
 }
 
-func (s *ProjectService) Create(project  model.Project) (uint, error) {
+func (s *ProjectService) Create(project model.Project) (uint, error) {
 	return s.ProjectRepo.Create(project)
 }
 
@@ -40,4 +40,11 @@ func (s *ProjectService) Update(id uint, project model.Project) error {
 
 func (s *ProjectService) DeleteById(id uint) error {
 	return s.ProjectRepo.BatchDelete(id)
+}
+
+func (s *ProjectService) GetByUser() (projects []model.Project, currProject model.Project, err error) {
+	projects, err = s.ProjectRepo.ListProjectByUser()
+	currProject, err = s.ProjectRepo.GetCurrProjectByUser()
+
+	return
 }

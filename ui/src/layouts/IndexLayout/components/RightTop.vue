@@ -24,6 +24,7 @@
                 </div>
             </div>
             <div class="indexlayout-top-menu-right">
+              <right-top-project></right-top-project>
               <select-lang class="indexlayout-top-selectlang" />
             </div>
         </div>
@@ -35,13 +36,15 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, PropType, Ref, toRefs } from "vue";
+import { computed, ComputedRef, defineComponent, onMounted, PropType, Ref, toRefs } from "vue";
 import { useI18n } from "vue-i18n";
+
 import { BreadcrumbType, RoutesDataItem } from '@/utils/routes';
 import BreadCrumbs from '@/components/BreadCrumbs/index.vue';
 import SelectLang from '@/components/SelectLang/index.vue';
 import ALink from '@/components/ALink/index.vue';
 import useTopMenuWidth from "../composables/useTopMenuWidth";
+import RightTopProject from './RightTopProject.vue';
 
 interface RightTopSetupData {
   t: (key: string | number) => string;
@@ -55,6 +58,7 @@ export default defineComponent({
       ALink,
       BreadCrumbs,
       SelectLang,
+      RightTopProject,
     },
     props: {
       collapsed: {
@@ -98,7 +102,7 @@ export default defineComponent({
       return {
         t,
         topMenuCon,
-        topMenuWidth
+        topMenuWidth,
       }
     }
 })
@@ -158,7 +162,7 @@ export default defineComponent({
     }
 
     .indexlayout-top-menu-right {
-      width: 50px;
+      width: 200px;
       .indexlayout-top-selectlang {
         padding-left: 10px;
         line-height: 50px;

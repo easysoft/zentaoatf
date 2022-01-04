@@ -203,6 +203,7 @@ func (webServer *WebServer) Run() {
 		fmt.Printf("初始化路由错误： %v\n", err)
 		panic(err)
 	}
+
 	// 添加上传文件路径
 	webServer.app.Listen(
 		webServer.addr,

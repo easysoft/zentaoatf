@@ -23,6 +23,7 @@ func main() {
 		return
 	}
 	injectModule(webServer)
+
 	webServer.Run()
 }
 

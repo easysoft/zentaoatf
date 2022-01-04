@@ -167,3 +167,19 @@ func (r *ProjectRepo) FindByName(name string, ids ...uint) (po model.Project, er
 
 	return
 }
+
+func (r *ProjectRepo) ListProjectByUser() (projects []model.Project, err error) {
+	err = r.DB.Model(&model.Project{}).
+		Where("NOT deleted").
+		Find(&projects).Error
+
+	return
+}
+
+func (r *ProjectRepo) GetCurrProjectByUser() (currProject model.Project, err error) {
+	err = r.DB.Model(&model.Project{}).
+		Where("is_default").
+		First(&currProject).Error
+
+	return
+}
