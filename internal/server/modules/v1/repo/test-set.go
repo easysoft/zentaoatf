@@ -14,8 +14,7 @@ import (
 )
 
 type TestSetRepo struct {
-	DB       *gorm.DB  `inject:""`
-	RoleRepo *RoleRepo `inject:""`
+	DB *gorm.DB `inject:""`
 }
 
 func NewTestSetRepo() *TestSetRepo {
@@ -65,7 +64,7 @@ func (r *TestSetRepo) FindById(id uint) (po model.TestSet, err error) {
 	return
 }
 
-func (r *TestSetRepo) Create(po model.TestSet) (id uint, err  error) {
+func (r *TestSetRepo) Create(po model.TestSet) (id uint, err error) {
 	if _, err := r.FindByName(po.Name); !errors.Is(err, gorm.ErrRecordNotFound) {
 		return 0, fmt.Errorf("%d", domain.BizErrNameExist.Code)
 	}

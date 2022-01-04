@@ -5,29 +5,24 @@
 import NProgress from 'nprogress'; // progress bar
 import 'nprogress/nprogress.css'; // progress bar style
 NProgress.configure({ showSpinner: false, easing: 'ease', speed: 1000 }); // NProgress Configuration
- 
+
 import { createRouter, createWebHashHistory } from 'vue-router';
 import { RoutesDataItem } from "@/utils/routes";
-import settings from "@/config/settings";
-
-import SecurityLayout from '@/layouts/SecurityLayout.vue';
 
 import IndexLayoutRoutes from '@/layouts/IndexLayout/routes';
 import IndexLayout from '@/layouts/IndexLayout/index.vue';
-
-import UserLayoutRoutes from '@/layouts/UserLayout/routes';
-import UserLayout from '@/layouts/UserLayout/index.vue';
+import BlankLayout from "@/layouts/BlankLayout.vue";
 
 const routes: RoutesDataItem[] = [
   {
     title: 'empty',
     path: '/',
-    component: SecurityLayout,
+    component: BlankLayout,
     children: [
       {
         title: 'empty',
         path: '/',
-        redirect: settings.homeRouteItem.path,
+        redirect: '/script/list',
         component: IndexLayout,
         children: IndexLayoutRoutes
       },
@@ -37,13 +32,6 @@ const routes: RoutesDataItem[] = [
         component: () => import('@/views/refresh/index.vue'),
       },
     ]
-  },  
-  {
-    title: 'empty',
-    path: '/user',
-    redirect: '/user/login',
-    component: UserLayout,
-    children: UserLayoutRoutes
   },
   {
     title: 'app.global.menu.notfound',

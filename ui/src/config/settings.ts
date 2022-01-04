@@ -9,37 +9,27 @@ export interface SettingsType {
      * 站点名称
      */
     siteTitle: string;
-  
+
     /**
      * 顶部菜单开启
      */
     topNavEnable: boolean;
-  
+
     /**
      * 头部固定开启
      */
     headFixed: boolean;
 
     /**
-     * tab菜单开启
-     */
-     tabNavEnable: boolean;
-
-     /**
-     * 站点首页路由
-     */
-    homeRouteItem: RoutesDataItem;
-  
-    /**
      * 站点本地存储Token 的 Key值
      */
     siteTokenKey: string;
-  
+
     /**
      * Ajax请求头发送Token 的 Key值
      */
     ajaxHeadersTokenKey: string;
-  
+
     /**
      * Ajax返回值不参加统一验证的api地址
      */
@@ -50,18 +40,11 @@ export interface SettingsType {
      */
     iconfontUrl: string[];
 }
-  
+
 const settings: SettingsType = {
     siteTitle: 'ADMIN-ANTD-VUE',
     topNavEnable: true,
     headFixed: true,
-    tabNavEnable: true,
-    homeRouteItem: {
-        icon: 'control',
-        title: 'index-layout.menu.home.workplace',
-        path: '/home/workplace',
-        component: ()=> import('@/views/home/index.vue')
-    },
     siteTokenKey: 'admin_antd_vue_token',
     // ajaxHeadersTokenKey: 'x-token',
     ajaxHeadersTokenKey: 'Authorization',

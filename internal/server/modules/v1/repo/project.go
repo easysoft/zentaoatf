@@ -14,8 +14,7 @@ import (
 )
 
 type ProjectRepo struct {
-	DB       *gorm.DB  `inject:""`
-	RoleRepo *RoleRepo `inject:""`
+	DB *gorm.DB `inject:""`
 }
 
 func NewProjectRepo() *ProjectRepo {

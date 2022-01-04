@@ -49,10 +49,6 @@ const errorHandler = (error: any) => {
               message: `提示`,
               description: customCodeMessage[code] || msg || 'Error',
             });
-      
-            if (code === 4001) {
-                router.replace('/user/login');
-            }
         }
     } else if (message === 'CancelToken') {
         // 取消请求 Token
@@ -99,18 +95,6 @@ request.interceptors.request.use(
             config.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
         }
 
-        // 添加jwt token
-        const jwtToken = await getToken();
-        if (jwtToken) {
-            config.headers[settings.ajaxHeadersTokenKey] = 'Bearer ' + jwtToken;
-        }
-
-        // 修改示例请求指向mock地址
-        const url = config.url || '';
-        if (url.indexOf('/home') > -1 || url.indexOf('/pages') > -1) {
-            config.baseURL = '/api';
-        }
-
         // 加随机数清除缓存
         config.params = { ...config.params, ts: Date.now() };
 
@@ -137,11 +121,6 @@ request.interceptors.response.use(
                 response,
                 message: 'CustomError',
             });
-        }
-
-        // 重置刷新token
-        if (token) {
-            await setToken(token);
         }
 
         return response;

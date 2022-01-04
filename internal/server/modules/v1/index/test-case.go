@@ -18,7 +18,7 @@ func NewTestCaseModule() *TestCaseModule {
 // Party 用例
 func (m *TestCaseModule) Party() module.WebModule {
 	handler := func(index iris.Party) {
-		index.Use(middleware.InitCheck(), middleware.JwtHandler(), middleware.OperationRecord(), middleware.Casbin())
+		index.Use(middleware.InitCheck())
 		index.Get("/", m.TestCaseCtrl.Query).Name = "用例查询"
 		index.Get("/{id:uint}", m.TestCaseCtrl.Get).Name = "用例详情"
 		index.Post("/", m.TestCaseCtrl.Create).Name = "创建用例"

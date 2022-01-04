@@ -1,22 +1,11 @@
 <template>
     <div id="indexlayout">
-        <left
-          :collapsed="collapsed"
-          :topNavEnable="topNavEnable"
-          :belongTopMenu="belongTopMenu"
-          :selectedKeys="selectedKeys"
-          :openKeys="leftOpenKeys"
-          :menuData="permissionMenuData"
-          :onOpenChange="onOpenChange"
-        >          
-        </left>
         <div
           id="indexlayout-right"
           :class="{'fiexd-header': headFixed}"
         >
             <right-top
               :collapsed="collapsed"
-              :tabNavEnable="tabNavEnable"
               :topNavEnable="topNavEnable"
               :belongTopMenu="belongTopMenu"
               :toggleCollapsed="toggleCollapsed"
@@ -26,14 +15,10 @@
             >              
             </right-top>
             <div class="indexlayout-right-main">
-                <permission :roles="routeItem.roles">
                   <router-view></router-view>
-                </permission>
                 <right-footer></right-footer>
             </div>
         </div>
-
-        <settings></settings>
 
     </div>
 </template>
@@ -42,25 +27,20 @@ import { defineComponent, computed, ComputedRef, watch, ref, Ref, nextTick } fro
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
 import { StateType as GlobalStateType } from '@/store/global';
-import { StateType as UserStateType } from "@/store/user";
 import { 
   vueRoutes, RoutesDataItem, getRouteItem, getSelectLeftMenuPath, 
   formatRoutePathTheParents, getRouteBelongTopMenu, getBreadcrumbRoutes, 
-  BreadcrumbType, getPermissionMenuData
+  BreadcrumbType
 } from '@/utils/routes';
 import { mergeUnique as ArrayMergeUnique } from '@/utils/array';
 import useTitle from '@/composables/useTitle';
 import IndexLayoutRoutes from './routes';
-import Permission from '@/components/Permission/index.vue';
-import Left from '@/layouts/IndexLayout/components/Left.vue';
 import RightTop from '@/layouts/IndexLayout/components/RightTop.vue';
 import RightFooter from '@/layouts/IndexLayout/components/RightFooter.vue';
-import Settings from '@/layouts/IndexLayout/components/Settings.vue';
 
 interface IndexLayoutSetupData {
   collapsed: ComputedRef<boolean>;
   toggleCollapsed: () => void;
-  tabNavEnable: ComputedRef<boolean>;
   topNavEnable: ComputedRef<boolean>;
   belongTopMenu: ComputedRef<string>;
   headFixed: ComputedRef<boolean>;  
@@ -75,16 +55,12 @@ interface IndexLayoutSetupData {
 export default defineComponent({
     name: 'IndexLayout',
     components: {
-        Permission,
-        Left,
         RightTop,
         RightFooter,
-        Settings
     },
     setup(): IndexLayoutSetupData {
       const store = useStore<{
         global: GlobalStateType;
-        user: UserStateType;
       }>(); 
       const route = useRoute();
 
@@ -95,7 +71,7 @@ export default defineComponent({
       const routeItem = computed<RoutesDataItem>(()=> getRouteItem(route.path, menuData));
 
       // 有权限的菜单
-      const permissionMenuData = computed<RoutesDataItem[]>(()=> getPermissionMenuData(store.state.user.currentUser.roles, menuData));
+      const permissionMenuData = computed<RoutesDataItem[]>(()=> { return menuData });
 
       // 当前路由的顶部菜单path
       const belongTopMenu = computed<string>(()=>getRouteBelongTopMenu(routeItem.value))
@@ -108,9 +84,6 @@ export default defineComponent({
       const toggleCollapsed = (): void => {
         store.commit('global/changeLayoutCollapsed', !collapsed.value);
       }
-
-      // 右侧顶部tabNav是否开启
-      const tabNavEnable = computed<boolean>(()=> store.state.global.tabNavEnable);
 
       // 右侧顶部导航是否开启
       const topNavEnable = computed<boolean>(()=> store.state.global.topNavEnable);
@@ -153,7 +126,6 @@ export default defineComponent({
       return {
         collapsed,
         toggleCollapsed,
-        tabNavEnable,
         topNavEnable,
         belongTopMenu,
         headFixed, 

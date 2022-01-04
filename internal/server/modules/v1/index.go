@@ -12,20 +12,14 @@ import (
 
 type IndexModule struct {
 	TestModule *index.TestModule `inject:""`
-	DataModule *index.DataModule `inject:""`
 	FileModule *index.FileModule `inject:""`
-
-	AccountModule *index.AccountModule `inject:""`
-	UserModule    *index.UserModule    `inject:""`
-	RoleModule    *index.RoleModule    `inject:""`
-	PermModule    *index.PermModule    `inject:""`
 
 	ProductModule *index.ProductModule `inject:""`
 	ProjectModule *index.ProjectModule `inject:""`
 
 	TestScriptModule *index.TestScriptModule `inject:""`
-	TestSuiteModule *index.TestSuiteModule `inject:""`
-	TestSetModule *index.TestSetModule `inject:""`
+	TestSuiteModule  *index.TestSuiteModule  `inject:""`
+	TestSetModule    *index.TestSetModule    `inject:""`
 }
 
 func NewIndexModule() *IndexModule {
@@ -45,12 +39,9 @@ func (m *IndexModule) Party() module.WebModule {
 	}
 	modules := []module.WebModule{
 		m.TestModule.Party(),
-		m.DataModule.Party(),
 		m.FileModule.Party(),
-		m.AccountModule.Party(),
-		m.RoleModule.Party(),
-		m.PermModule.Party(),
-		m.UserModule.Party(),
+
+		m.ProjectModule.Party(),
 		m.TestScriptModule.Party(),
 	}
 	return module.NewModule(serverConsts.ApiPath, handler, modules...)

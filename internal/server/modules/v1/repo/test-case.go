@@ -13,8 +13,7 @@ import (
 )
 
 type TestCaseRepo struct {
-	DB       *gorm.DB  `inject:""`
-	RoleRepo *RoleRepo `inject:""`
+	DB *gorm.DB `inject:""`
 }
 
 func NewTestCaseRepo() *TestCaseRepo {
