@@ -1,7 +1,8 @@
 <template>
+  <div>
     <a-dropdown>
         <span class="dropDown">
-            <icon-svg type="language-outline" ></icon-svg>
+            <icon-svg type="global-outlined" width="1.2" height="1.2"></icon-svg>
         </span>
         <template #overlay>
             <a-menu class="menu" @click="changeLang" :selectedKeys="[locale]">
@@ -14,6 +15,7 @@
             </a-menu>
         </template>
     </a-dropdown>
+  </div>
 </template>
 <script lang="ts">
 import { defineComponent, WritableComputedRef } from "vue";
@@ -71,5 +73,6 @@ export default defineComponent({
 }
 .dropDown {
   cursor: pointer;
+  font-size: 20px;
 }
 </style>

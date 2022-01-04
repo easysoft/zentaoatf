@@ -1,5 +1,5 @@
 <template>
-    <svg class="svg-icon" aria-hidden="true">
+    <svg :width="width + 'em'" :height="height + 'em'" class="svg-icon" aria-hidden="true">
         <use :xlink:href="`#${type}`" />
     </svg>
 </template>
@@ -27,14 +27,22 @@ export default defineComponent({
         type: {
             type: String,
             required: true
-        }
+        },
+      width: {
+        type: Number,
+        required: false,
+        default: 1
+      },
+      height: {
+        type: Number,
+        required: false,
+        default: 1
+      }
     }
 });
 </script>
 <style lang="less" scoped>
 .svg-icon {
-  width: 1em;
-  height: 1em;
   vertical-align: -0.15em;
   fill: currentColor;
   overflow: hidden;

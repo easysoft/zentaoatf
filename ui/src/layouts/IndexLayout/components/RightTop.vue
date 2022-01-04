@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="indexlayout-top-menu-right">
-              <right-top-project></right-top-project>
+              <right-top-project class="indexlayout-top-selectproject"></right-top-project>
               <select-lang class="indexlayout-top-selectlang" />
             </div>
         </div>
@@ -162,10 +162,14 @@ export default defineComponent({
     }
 
     .indexlayout-top-menu-right {
-      width: 200px;
+      display: flex;
+      width: 220px;
+      .indexlayout-top-selectproject {
+        padding: 10px;
+      }
+
       .indexlayout-top-selectlang {
-        padding-left: 10px;
-        line-height: 50px;
+        padding: 12px 10px;
       }
     }
 
