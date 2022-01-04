@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
 )
 
@@ -23,15 +24,15 @@ func (s *TestScriptService) Paginate(req serverDomain.TestScriptReqPaginate) (re
 	return
 }
 
-func (s *TestScriptService) FindById(id uint) (serverDomain.TestScriptResponse, error) {
+func (s *TestScriptService) FindById(id uint) (model.TestScript, error) {
 	return s.TestScriptRepo.FindById(id)
 }
 
-func (s *TestScriptService) Create(testScript serverDomain.TestScriptRequest) (uint, error) {
+func (s *TestScriptService) Create(testScript model.TestScript) (uint, error) {
 	return s.TestScriptRepo.Create(testScript)
 }
 
-func (s *TestScriptService) Update(id uint, testScript serverDomain.TestScriptRequest) error {
+func (s *TestScriptService) Update(id uint, testScript model.TestScript) error {
 	return s.TestScriptRepo.Update(id, testScript)
 }
 

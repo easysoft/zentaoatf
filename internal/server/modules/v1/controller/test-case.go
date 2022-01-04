@@ -5,6 +5,7 @@ import (
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/core/web/validate"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	"strings"
 
@@ -61,7 +62,7 @@ func (c *TestCaseCtrl) Get(ctx iris.Context) {
 
 // Create 添加
 func (c *TestCaseCtrl) Create(ctx iris.Context) {
-	req := serverDomain.TestCaseRequest{}
+	req := model.TestCase{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		errs := validate.ValidRequest(err)
 		if len(errs) > 0 {
@@ -91,7 +92,7 @@ func (c *TestCaseCtrl) Update(ctx iris.Context) {
 		return
 	}
 
-	var req serverDomain.TestCaseRequest
+	var req model.TestCase
 	if err := ctx.ReadJSON(&req); err != nil {
 		errs := validate.ValidRequest(err)
 		if len(errs) > 0 {

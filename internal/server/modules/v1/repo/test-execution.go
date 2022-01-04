@@ -13,18 +13,18 @@ import (
 	"gorm.io/gorm"
 )
 
-type TestScriptRepo struct {
+type TestExecutionRepo struct {
 	DB *gorm.DB `inject:""`
 }
 
-func NewTestScriptRepo() *TestScriptRepo {
-	return &TestScriptRepo{}
+func NewTestExecutionRepo() *TestExecutionRepo {
+	return &TestExecutionRepo{}
 }
 
-func (r *TestScriptRepo) Paginate(req serverDomain.TestScriptReqPaginate) (data domain.PageData, err error) {
+func (r *TestExecutionRepo) Paginate(req serverDomain.TestExecutionReqPaginate) (data domain.PageData, err error) {
 	var count int64
 
-	db := r.DB.Model(&model.TestScript{}).Where("NOT deleted")
+	db := r.DB.Model(&model.TestExecution{}).Where("NOT deleted")
 
 	if req.Keywords != "" {
 		db = db.Where("name LIKE ?", fmt.Sprintf("%%%s%%", req.Keywords))
@@ -39,24 +39,24 @@ func (r *TestScriptRepo) Paginate(req serverDomain.TestScriptReqPaginate) (data 
 		return
 	}
 
-	testScripts := make([]*model.TestScript, 0)
+	testExecutions := make([]*model.TestExecution, 0)
 
 	err = db.
 		Scopes(dao.PaginateScope(req.Page, req.PageSize, req.Order, req.Field)).
-		Find(&testScripts).Error
+		Find(&testExecutions).Error
 	if err != nil {
 		logUtils.Errorf("query product error", zap.String("error:", err.Error()))
 		return
 	}
 
-	data.Populate(testScripts, count, req.Page, req.PageSize)
+	data.Populate(testExecutions, count, req.Page, req.PageSize)
 
 	return
 }
 
-func (r *TestScriptRepo) FindById(id uint) (model.TestScript, error) {
-	product := model.TestScript{}
-	err := r.DB.Model(&model.TestScript{}).Where("id = ?", id).First(&product).Error
+func (r *TestExecutionRepo) FindById(id uint) (model.TestExecution, error) {
+	product := model.TestExecution{}
+	err := r.DB.Model(&model.TestExecution{}).Where("id = ?", id).First(&product).Error
 	if err != nil {
 		logUtils.Errorf("find product by id error", zap.String("error:", err.Error()))
 		return product, err
@@ -65,12 +65,12 @@ func (r *TestScriptRepo) FindById(id uint) (model.TestScript, error) {
 	return product, nil
 }
 
-func (r *TestScriptRepo) Create(po model.TestScript) (id uint, err error) {
+func (r *TestExecutionRepo) Create(po model.TestExecution) (id uint, err error) {
 	if _, err := r.FindByName(po.Name); !errors.Is(err, gorm.ErrRecordNotFound) {
 		return 0, fmt.Errorf("%d", domain.BizErrNameExist.Code)
 	}
 
-	err = r.DB.Model(&model.TestScript{}).Create(&po).Error
+	err = r.DB.Model(&model.TestExecution{}).Create(&po).Error
 	if err != nil {
 		logUtils.Errorf("add product error", zap.String("error:", err.Error()))
 		return 0, err
@@ -81,8 +81,8 @@ func (r *TestScriptRepo) Create(po model.TestScript) (id uint, err error) {
 	return
 }
 
-func (r *TestScriptRepo) Update(id uint, po model.TestScript) (err error) {
-	err = r.DB.Model(&model.TestScript{}).Where("id = ?", id).Updates(&po).Error
+func (r *TestExecutionRepo) Update(id uint, po model.TestExecution) (err error) {
+	err = r.DB.Model(&model.TestExecution{}).Where("id = ?", id).Updates(&po).Error
 	if err != nil {
 		logUtils.Errorf("update product error", zap.String("error:", err.Error()))
 		return err
@@ -91,19 +91,19 @@ func (r *TestScriptRepo) Update(id uint, po model.TestScript) (err error) {
 	return
 }
 
-func (r *TestScriptRepo) DeleteById(id uint) (err error) {
-	err = r.DB.Model(&model.TestScript{}).Where("id = ?", id).
+func (r *TestExecutionRepo) DeleteById(id uint) (err error) {
+	err = r.DB.Model(&model.TestExecution{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"deleted": true}).Error
 	if err != nil {
-		logUtils.Errorf("delete script by id error", zap.String("error:", err.Error()))
+		logUtils.Errorf("delete execution by id error", zap.String("error:", err.Error()))
 		return
 	}
 
 	return
 }
 
-func (r *TestScriptRepo) FindByName(name string, ids ...uint) (po model.TestScript, err error) {
-	db := r.DB.Model(&model.TestScript{}).Where("name = ?", name)
+func (r *TestExecutionRepo) FindByName(name string, ids ...uint) (po model.TestExecution, err error) {
+	db := r.DB.Model(&model.TestExecution{}).Where("name = ?", name)
 	if len(ids) == 1 {
 		db.Where("id != ?", ids[0])
 	}

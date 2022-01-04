@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
 )
 
@@ -23,18 +24,18 @@ func (s *TestCaseService) Paginate(req serverDomain.TestCaseReqPaginate) (ret do
 	return
 }
 
-func (s *TestCaseService) FindById(id uint) (serverDomain.TestCaseResponse, error) {
+func (s *TestCaseService) FindById(id uint) (model.TestCase, error) {
 	return s.TestCaseRepo.FindById(id)
 }
 
-func (s *TestCaseService) Create(testCase serverDomain.TestCaseRequest) (uint, error) {
+func (s *TestCaseService) Create(testCase model.TestCase) (uint, error) {
 	return s.TestCaseRepo.Create(testCase)
 }
 
-func (s *TestCaseService) Update(id uint, testCase serverDomain.TestCaseRequest) error {
+func (s *TestCaseService) Update(id uint, testCase model.TestCase) error {
 	return s.TestCaseRepo.Update(id, testCase)
 }
 
 func (s *TestCaseService) DeleteById(id uint) error {
-	return s.TestCaseRepo.BatchDelete(id)
+	return s.TestCaseRepo.DeleteById(id)
 }

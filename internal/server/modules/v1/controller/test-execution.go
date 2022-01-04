@@ -13,18 +13,18 @@ import (
 	"go.uber.org/zap"
 )
 
-type TestScriptCtrl struct {
-	TestScriptService *service.TestScriptService `inject:""`
+type TestExecutionCtrl struct {
+	TestExecutionService *service.TestExecutionService `inject:""`
 	BaseCtrl
 }
 
-func NewTestScriptCtrl() *TestScriptCtrl {
-	return &TestScriptCtrl{}
+func NewTestExecutionCtrl() *TestExecutionCtrl {
+	return &TestExecutionCtrl{}
 }
 
 // Query 分页列表
-func (c *TestScriptCtrl) List(ctx iris.Context) {
-	var req serverDomain.TestScriptReqPaginate
+func (c *TestExecutionCtrl) List(ctx iris.Context) {
+	var req serverDomain.TestExecutionReqPaginate
 	if err := ctx.ReadQuery(&req); err != nil {
 		errs := validate.ValidRequest(err)
 		if len(errs) > 0 {
@@ -35,7 +35,7 @@ func (c *TestScriptCtrl) List(ctx iris.Context) {
 	}
 	req.ConvertParams()
 
-	data, err := c.TestScriptService.Paginate(req)
+	data, err := c.TestExecutionService.Paginate(req)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return
@@ -45,7 +45,7 @@ func (c *TestScriptCtrl) List(ctx iris.Context) {
 }
 
 // Get 详情
-func (c *TestScriptCtrl) Get(ctx iris.Context) {
+func (c *TestExecutionCtrl) Get(ctx iris.Context) {
 	var reqId domain.ReqId
 	if err := ctx.ReadParams(&reqId); err != nil {
 		logUtils.Errorf("参数解析失败", zap.String("错误:", err.Error()))
@@ -53,17 +53,17 @@ func (c *TestScriptCtrl) Get(ctx iris.Context) {
 		return
 	}
 
-	script, err := c.TestScriptService.FindById(reqId.Id)
+	execution, err := c.TestExecutionService.FindById(reqId.Id)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: domain.SystemErr.Msg})
 		return
 	}
-	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: script, Msg: domain.NoErr.Msg})
+	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: execution, Msg: domain.NoErr.Msg})
 }
 
 // Create 添加
-func (c *TestScriptCtrl) Create(ctx iris.Context) {
-	req := model.TestScript{}
+func (c *TestExecutionCtrl) Create(ctx iris.Context) {
+	req := model.TestExecution{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		errs := validate.ValidRequest(err)
 		if len(errs) > 0 {
@@ -72,7 +72,7 @@ func (c *TestScriptCtrl) Create(ctx iris.Context) {
 			return
 		}
 	}
-	id, err := c.TestScriptService.Create(req)
+	id, err := c.TestExecutionService.Create(req)
 	if err != nil {
 		ctx.JSON(domain.Response{
 			Code: c.ErrCode(err),
@@ -85,7 +85,7 @@ func (c *TestScriptCtrl) Create(ctx iris.Context) {
 }
 
 // Update 更新
-func (c *TestScriptCtrl) Update(ctx iris.Context) {
+func (c *TestExecutionCtrl) Update(ctx iris.Context) {
 	var reqId domain.ReqId
 	if err := ctx.ReadParams(&reqId); err != nil {
 		logUtils.Errorf("参数解析失败", zap.String("错误:", err.Error()))
@@ -93,7 +93,7 @@ func (c *TestScriptCtrl) Update(ctx iris.Context) {
 		return
 	}
 
-	var req model.TestScript
+	var req model.TestExecution
 	if err := ctx.ReadJSON(&req); err != nil {
 		errs := validate.ValidRequest(err)
 		if len(errs) > 0 {
@@ -103,7 +103,7 @@ func (c *TestScriptCtrl) Update(ctx iris.Context) {
 		}
 	}
 
-	err := c.TestScriptService.Update(reqId.Id, req)
+	err := c.TestExecutionService.Update(reqId.Id, req)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return
@@ -112,14 +112,14 @@ func (c *TestScriptCtrl) Update(ctx iris.Context) {
 }
 
 // Delete 删除
-func (c *TestScriptCtrl) Delete(ctx iris.Context) {
+func (c *TestExecutionCtrl) Delete(ctx iris.Context) {
 	var req domain.ReqId
 	if err := ctx.ReadParams(&req); err != nil {
 		logUtils.Errorf("参数解析失败", zap.String("错误:", err.Error()))
 		ctx.JSON(domain.Response{Code: domain.ParamErr.Code, Data: nil, Msg: domain.ParamErr.Msg})
 		return
 	}
-	err := c.TestScriptService.DeleteById(req.Id)
+	err := c.TestExecutionService.DeleteById(req.Id)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return
