@@ -1,28 +1,17 @@
 <template>
     <div class="indexlayout-right-footer">
       <div class="footer-links">
-        <a
-          href="http://demo.admin-antd-vue.liqingsong.cc"
-          target="_blank"
-          rel="noreferrer"
-        >
-          DEMO
+        <a href="https://ztf.im/ztf.html" target="_blank">
+          下载
         </a>
-        <a
-          href="https://github.com/lqsong/admin-antd-vue"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Github
+        <a href="https://ztf.im/book/ztf/ztf-about-26.html" target="_blank">
+          帮助
         </a>
-        <a href="http://liqingsong.cc" target="_blank" rel="noreferrer">
-          博客
-        </a>
-        <a href="http://www.wyxgn.com" target="_blank" rel="noreferrer">
-          网页小功能
+        <a href="https://github.com/easysoft/ztf" target="_blank">
+          源码
         </a>
       </div>
-      <div>Copyright © 2020 LIQINGSONG.CC, All Rights Reserved</div>
+<!--      <div>Copyright © 2019-2022 青岛易软天创, All Rights Reserved</div>-->
     </div>
 </template>
 <script lang="ts">
