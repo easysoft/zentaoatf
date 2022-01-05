@@ -1,18 +1,25 @@
-import {app} from 'electron';
 import path from 'path';
 import {spawn} from 'child_process';
+import {app} from 'electron';
+import express from 'express';
 
 let _ztfServerProcess;
 
 export function startZtfServer() {
+    if (process.env.SKIP_SERVER) {
+        return Promise.resolve();
+    }
     if (_ztfServerProcess) {
         return Promise.resolve(_ztfServerProcess);
     }
 
-    const {SERVER_EXE_PATH} = process.env;
-    if (SERVER_EXE_PATH) {
+    let {SERVER_EXE_PATH: serverExePath} = process.env;
+    if (serverExePath) {
+        if (!path.isAbsolute(serverExePath)) {
+            serverExePath = path.resolve(app.getAppPath(), serverExePath);
+        }
         return new Promise((resolve) => {
-            _ztfServerProcess = spawn(SERVER_EXE_PATH);
+            _ztfServerProcess = spawn(serverExePath);
             _ztfServerProcess.on('close', () => {
                 _ztfServerProcess = null;
             });
@@ -30,8 +37,16 @@ export function startZtfServer() {
         });
         cmd.stdout.on('data', data => {
             const dataString = String(data);
-            if (dataString.includes('Now listening on: http')) {
-                resolve(_ztfServerProcess);
+            const lines = dataString.split('\n');
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                if (line.includes('Now listening on: http')) {
+                    resolve(line.split('Now listening on:')[1].trim());
+                    break;
+                } else if (line.startsWith('[ERRO]')) {
+                    reject(new Error(`Start ztf server failed with error: ${line.substring('[ERRO]'.length)}`));
+                    break;
+                }
             }
         });
         cmd.on('error', spawnError => {
@@ -42,34 +57,55 @@ export function startZtfServer() {
     });
 }
 
-let _uiServerProcess;
+let _uiServerApp;
 
 export function getUIServerUrl() {
-    if (_uiServerProcess) {
-        return Promise.resolve(_uiServerProcess);
+    if (_uiServerApp) {
+        return Promise.resolve();
     }
 
-    const {UI_SERVER_PATH} = process.env;
-    if (UI_SERVER_PATH) {
-        return new Promise((resolve) => {
-            _uiServerProcess = spawn(UI_SERVER_PATH);
-            _uiServerProcess.on('close', () => {
-                _uiServerProcess = null;
+    let {UI_SERVER_URL: uiServerUrl} = process.env;
+    if (uiServerUrl) {
+        if (/^https?:\/\//.test(uiServerUrl)) {
+            return Promise.resolve(uiServerUrl);
+        }
+        return new Promise((resolve, reject) => {
+            if (!path.isAbsolute(uiServerUrl)) {
+                uiServerUrl = path.resolve(app.getAppPath(), uiServerUrl);
+            }
+
+            console.log(`>> Starting UI serer at ${uiServerUrl}`);
+
+            const uiServer = express();
+            uiServer.use(express.static(uiServerUrl));
+            const server = uiServer.listen(process.env.UI_SERVER_PORT || 8000, serverError => {
+                if (serverError) {
+                    console.error('>>> Start ui server failed with error', serverError);
+                    _uiServerApp = null;
+                    reject(serverError);
+                } else {
+                    const address = server.address();
+                    console.log(`>> UI server started successfully on http://localhost:${address.port}.`);
+                    resolve(`http://localhost:${address.port}`);
+                }
             });
-            resolve(_uiServerProcess);
-        });
+            server.on('close', () => {
+                _uiServerApp = null;
+            });
+            _uiServerApp = uiServer;
+        })
     }
 
     return new Promise((resolve, reject) => {
+        console.log('>> Starting UI development serve...');
+
         let resolved = false;
-        const cwd = path.resolve(app.getAppPath(), '../ui');
-        console.log('Get UI server url with cwd: ', cwd);
         const cmd = spawn('npm', ['run', 'serve'], {
-            cwd,
+            cwd: path.resolve(app.getAppPath(), '../ui'),
             shell: true,
         });
         cmd.on('close', () => {
-            _uiServerProcess = null;
+            _uiServerApp = null;
         });
         cmd.stdout.on('data', data => {
             if (resolved) {
@@ -80,10 +116,12 @@ export function getUIServerUrl() {
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
                 if (line.includes('App running at:')) {
-                    const nextLine = lines[i + 1];
+                    const nextLine = lines[i + 1] || lines[i + 2];
                     const url = nextLine.split('Local:   ')[1];
-                    resolved = true;
-                    resolve(url);
+                    if (url) {
+                        resolved = true;
+                        resolve(url);
+                    }
                     break;
                 }
             }
@@ -92,6 +130,6 @@ export function getUIServerUrl() {
             console.error('>>> Get ui server url failed with error', spawnError);
             reject(spawnError)
         });
-        _uiServerProcess = cmd;
+        _uiServerApp = cmd;
     });
 }

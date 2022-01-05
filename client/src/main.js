@@ -20,16 +20,33 @@ const createWindow = (url) => {
   mainWindow.webContents.openDevTools();
 };
 
-async function startApp() {
-  await startZtfServer();
 
-  console.log('>> ZTF Server started successfully.');
+let _starting = false;
+
+async function startApp() {
+  if (_starting) {
+    return;
+  }
+  _starting = true;
+
+  console.log('>> Starting ZTF Server...');
+
+  try {
+    const ztfServerUrl = await startZtfServer();
+    console.log(`>> ZTF Server started successfully: ${ztfServerUrl}`);
+  } catch (error) {
+    console.error('>> Start ztf server failed: ' + error);
+    process.exit(1);
+    return;
+  }
 
   const url = await getUIServerUrl();
 
   console.log('>> UI server url is', url);
 
   createWindow(url);
+
+  _starting = false;
 }
 
 // This method will be called when Electron has finished
