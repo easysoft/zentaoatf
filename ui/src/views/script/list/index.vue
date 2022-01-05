@@ -3,9 +3,9 @@
       <div class="main">
         <div class="left">
           <a-tree
-            checkable
             :tree-data="scriptTree"
             :replace-fields="replaceFields"
+            @select="selectNode"
           >
           </a-tree>
         </div>
@@ -25,6 +25,7 @@ import {ProjectData} from "@/store/project";
 interface ListScriptPageSetupData {
   scriptTree: ComputedRef<any[]>;
   replaceFields: any,
+  selectNode: (keys, e) => void;
 }
 
 export default defineComponent({
@@ -43,9 +44,16 @@ export default defineComponent({
         console.log('onMounted')
       })
 
+
+      const selectNode = (selectedKeys, e) => {
+        if (e.selectedNodes.length === 0) return
+        console.log('selectNode', e.selectedNodes[0].props.path)
+      }
+
       return {
         scriptTree,
         replaceFields,
+        selectNode,
       }
     }
 
