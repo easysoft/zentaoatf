@@ -24,15 +24,13 @@ func UcFirst(str string) string {
 	}
 	return ""
 }
+func UcAll(str string) string {
+	ret := ""
 
-func StrInArr(str string, arr []string) bool {
-	for _, s := range arr {
-		if str == s {
-			return true
-		}
+	for _, v := range str {
+		ret += string(unicode.ToUpper(v))
 	}
-
-	return false
+	return ret
 }
 
 func RandStr(n int) string {
@@ -98,4 +96,14 @@ func SnakeCase(str string) string {
 	snake := matchFirstCap.ReplaceAllString(str, "${1}_${2}")
 	snake = matchAllCap.ReplaceAllString(snake, "${1}_${2}")
 	return strings.ToLower(snake)
+}
+
+func FindInArr(str string, arr []string) bool {
+	for _, s := range arr {
+		if str == s {
+			return true
+		}
+	}
+
+	return false
 }

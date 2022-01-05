@@ -8,4 +8,6 @@ const (
 	App       = "ztf"
 	AppServer = "server"
 	AppAgent  = "agent"
+
+	RequestTypePathInfo = "PATH_INFO"
 )

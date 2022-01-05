@@ -82,7 +82,7 @@ func (s *ProjectService) GetByUser() (projects []model.Project, currProject mode
 		return
 	}
 
-	asset, err = s.AssetService.LoadScripts(serverConfig.CONFIG.System.WorkDir)
+	asset, err = s.AssetService.LoadScripts(currProject.Path)
 
 	return
 }

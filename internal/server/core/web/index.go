@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
+	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
 	"github.com/aaronchen2k/deeptest/internal/server/core/log"
 	"github.com/aaronchen2k/deeptest/internal/server/core/module"
@@ -60,6 +61,7 @@ func Init() *WebServer {
 	serverConfig.Init()
 	serverLog.Init()
 	i118Utils.Init(serverConfig.CONFIG.System.Language, consts.AppServer)
+	langUtils.GetExtToNameMap()
 
 	app := iris.New()
 	app.Validator = validator.New() //参数验证
