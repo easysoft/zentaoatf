@@ -87,3 +87,9 @@ typings/
 
 # Electron-Forge
 out/
+
+# ZTF binary
+bin/
+
+# ZTF UI
+ui/

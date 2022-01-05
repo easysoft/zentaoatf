@@ -29,8 +29,6 @@ async function startApp() {
   }
   _starting = true;
 
-  console.log('>> Starting ZTF Server...');
-
   try {
     const ztfServerUrl = await startZtfServer();
     console.log(`>> ZTF Server started successfully: ${ztfServerUrl}`);

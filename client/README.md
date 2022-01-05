@@ -46,7 +46,7 @@ UI_SERVER_URL=../ui/dist UI_SERVER_PORT=8000 npm run start
 **模式三：自定义 ZTF 服务执行文件路径**
 
 ```
-SERVER_EXE_PATH=bin/ztf npm run start
+SERVER_EXE_PATH=bin/darwin/ztf npm run start
 ```
 
 **模式四：跳过启动 ZTF 服务，使用外部 ZTF 服务**
@@ -82,6 +82,13 @@ npm run package
 ```
 
 参考：https://www.electronforge.io/cli#package
+
+打包之前确保如下目录有相应的资源文件：
+
+* `client/ui/`：包含 UI 服务相关的所有文件，并且包含 `client/ui/index.html` 文件，作为 UI 服务入口；
+* `client/bin/win32/`：包含适用于 Windows 的 ZTF 程序；
+* `client/bin/darwin/`：包含适用于 macOS 的 ZTF 程序；
+* `client/bin/linux/`：包含适用于 Linux 的 ZTF 程序；
 
 ## 发布
 
