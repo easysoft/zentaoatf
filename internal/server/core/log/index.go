@@ -1,9 +1,9 @@
-package serverZap
+package serverLog
 
 import (
 	myZap "github.com/aaronchen2k/deeptest/internal/pkg/core/zap"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	"github.com/aaronchen2k/deeptest/internal/server/consts"
+	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
 
 	"github.com/snowlyg/helper/dir"
 	"go.uber.org/zap"
@@ -17,11 +17,11 @@ var level zapcore.Level
 func Init() {
 	var logger *zap.Logger
 
-	if !dir.IsExist(serverConsts.CONFIG.Zap.Director) { // 判断是否有Director文件夹
-		dir.InsureDir(serverConsts.CONFIG.Zap.Director)
+	if !dir.IsExist(serverConfig.CONFIG.Zap.Director) { // 判断是否有Director文件夹
+		dir.InsureDir(serverConfig.CONFIG.Zap.Director)
 	}
 
-	switch serverConsts.CONFIG.Zap.Level { // 初始化配置文件的Level
+	switch serverConfig.CONFIG.Zap.Level { // 初始化配置文件的Level
 	case "debug":
 		level = zap.DebugLevel
 	case "info":
@@ -45,7 +45,7 @@ func Init() {
 	} else {
 		logger = zap.New(myZap.GetEncoderCore(level))
 	}
-	if serverConsts.CONFIG.Zap.ShowLine {
+	if serverConfig.CONFIG.Zap.ShowLine {
 		logger = logger.WithOptions(zap.AddCaller())
 	}
 

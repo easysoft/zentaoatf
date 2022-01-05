@@ -8,7 +8,8 @@ import (
 )
 
 type ProjectService struct {
-	ProjectRepo *repo.ProjectRepo `inject:""`
+	ProjectRepo  *repo.ProjectRepo `inject:""`
+	AssetService *AssetService     `inject:""`
 }
 
 func NewProjectService() *ProjectService {
@@ -43,8 +44,12 @@ func (s *ProjectService) DeleteById(id uint) error {
 }
 
 func (s *ProjectService) GetByUser() (projects []model.Project, currProject model.Project, err error) {
-	projects, err = s.ProjectRepo.ListProjectByUser()
 	currProject, err = s.ProjectRepo.GetCurrProjectByUser()
+	if err != nil {
+
+	}
+
+	projects, err = s.ProjectRepo.ListProjectByUser()
 
 	return
 }

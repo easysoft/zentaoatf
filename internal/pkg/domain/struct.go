@@ -2,7 +2,7 @@ package domain
 
 import (
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
-	serverConsts "github.com/aaronchen2k/deeptest/internal/server/consts"
+	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
 )
 
 // Model
@@ -27,7 +27,7 @@ type PaginateReq struct {
 
 func (r *PaginateReq) ConvertParams() {
 	r.Field = stringUtils.SnakeCase(r.Field)
-	r.Order = serverConsts.SortMap[r.Order]
+	r.Order = serverConfig.SortMap[r.Order]
 }
 
 // Response

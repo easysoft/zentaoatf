@@ -3,7 +3,9 @@ package consts
 import "os"
 
 const (
-	PthSep           = string(os.PathSeparator)
-	ConfigFileServer = "server.yaml"
-	ConfigFileAgent  = "agent.yaml"
+	PthSep = string(os.PathSeparator)
+
+	App       = "ztf"
+	AppServer = "server"
+	AppAgent  = "agent"
 )

@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"github.com/aaronchen2k/deeptest/internal/server/consts"
+	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
 	"github.com/aaronchen2k/deeptest/internal/server/core/module"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/index"
 	"time"
@@ -30,10 +30,10 @@ func NewIndexModule() *IndexModule {
 // Party v1 模块
 func (m *IndexModule) Party() module.WebModule {
 	handler := func(v1 iris.Party) {
-		if !serverConsts.CONFIG.Limit.Disable {
+		if !serverConfig.CONFIG.Limit.Disable {
 			limitV1 := rate.Limit(
-				serverConsts.CONFIG.Limit.Limit,
-				serverConsts.CONFIG.Limit.Burst,
+				serverConfig.CONFIG.Limit.Limit,
+				serverConfig.CONFIG.Limit.Burst,
 				rate.PurgeEvery(time.Minute, 5*time.Minute))
 			v1.Use(limitV1)
 		}
@@ -46,5 +46,5 @@ func (m *IndexModule) Party() module.WebModule {
 		m.TestScriptModule.Party(),
 		m.TestExecutionModule.Party(),
 	}
-	return module.NewModule(serverConsts.ApiPath, handler, modules...)
+	return module.NewModule(serverConfig.ApiPath, handler, modules...)
 }

@@ -12,10 +12,7 @@ import (
 
 var I118Prt *message.Printer
 
-func InitI118(lang string, app string) {
-	//var once sync.Once
-	//once.Do(func() {
-
+func Init(lang string, app string) {
 	langRes := filepath.Join("res", app, lang, "messages.json")
 
 	bytes, _ := resUtils.ReadRes(langRes)
@@ -26,7 +23,6 @@ func InitI118(lang string, app string) {
 	} else {
 		I118Prt = message.NewPrinter(language.AmericanEnglish)
 	}
-	//})
 }
 
 type I18n struct {

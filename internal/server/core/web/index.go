@@ -3,12 +3,11 @@ package web
 import (
 	stdContext "context"
 	"fmt"
-	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	"github.com/aaronchen2k/deeptest/internal/server/consts"
-	"github.com/aaronchen2k/deeptest/internal/server/core/cache"
+	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
+	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
+	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
+	"github.com/aaronchen2k/deeptest/internal/server/core/log"
 	"github.com/aaronchen2k/deeptest/internal/server/core/module"
-	"github.com/aaronchen2k/deeptest/internal/server/core/viper"
-	serverZap "github.com/aaronchen2k/deeptest/internal/server/core/zap"
 	myWs "github.com/aaronchen2k/deeptest/internal/server/modules/v1/controller"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	gorillaWs "github.com/gorilla/websocket"
@@ -58,18 +57,13 @@ type WebServer struct {
 
 // Init 初始化web服务
 func Init() *WebServer {
-	serverViper.Init()
-	serverZap.Init()
-
-	err := cache.Init()
-	if err != nil {
-		logUtils.Errorf("init redis cache failed, error %s", err.Error())
-		return nil
-	}
+	serverConfig.Init()
+	serverLog.Init()
+	i118Utils.Init(serverConfig.CONFIG.System.Language, consts.AppServer)
 
 	app := iris.New()
 	app.Validator = validator.New() //参数验证
-	app.Logger().SetLevel(serverConsts.CONFIG.System.Level)
+	app.Logger().SetLevel(serverConfig.CONFIG.System.Level)
 	idleConnClosed := make(chan struct{})
 	iris.RegisterOnInterrupt(func() { //优雅退出
 		timeout := 10 * time.Second
@@ -79,31 +73,31 @@ func Init() *WebServer {
 		close(idleConnClosed)
 	})
 
-	if serverConsts.CONFIG.System.Addr == "" { // 默认 8085
-		serverConsts.CONFIG.System.Addr = "127.0.0.1:8085"
+	if serverConfig.CONFIG.System.Addr == "" { // 默认 8085
+		serverConfig.CONFIG.System.Addr = "127.0.0.1:8085"
 	}
 
-	if serverConsts.CONFIG.System.StaticPath == "" { // 默认 /static/upload
-		serverConsts.CONFIG.System.StaticPath = "/static/upload"
+	if serverConfig.CONFIG.System.StaticPath == "" { // 默认 /static/upload
+		serverConfig.CONFIG.System.StaticPath = "/static/upload"
 	}
 
-	if serverConsts.CONFIG.System.StaticPrefix == "" { // 默认 /upload
-		serverConsts.CONFIG.System.StaticPrefix = "/upload"
+	if serverConfig.CONFIG.System.StaticPrefix == "" { // 默认 /upload
+		serverConfig.CONFIG.System.StaticPrefix = "/upload"
 	}
 
-	if serverConsts.CONFIG.System.WebPath == "" { // 默认 /./dist
-		serverConsts.CONFIG.System.WebPath = "./dist"
+	if serverConfig.CONFIG.System.WebPath == "" { // 默认 /./dist
+		serverConfig.CONFIG.System.WebPath = "./dist"
 	}
 
-	if serverConsts.CONFIG.System.TimeFormat == "" { // 默认 80
-		serverConsts.CONFIG.System.TimeFormat = time.RFC3339
+	if serverConfig.CONFIG.System.TimeFormat == "" { // 默认 80
+		serverConfig.CONFIG.System.TimeFormat = time.RFC3339
 	}
 
 	// init grpc
 	mvc.New(app)
 
 	// init websocket
-	websocketAPI := app.Party(serverConsts.WsPath)
+	websocketAPI := app.Party(serverConfig.WsPath)
 	m := mvc.New(websocketAPI)
 	m.Register(
 		&service.PrefixedLogger{Prefix: ""},
@@ -115,11 +109,11 @@ func Init() *WebServer {
 
 	return &WebServer{
 		app:               app,
-		addr:              serverConsts.CONFIG.System.Addr,
-		timeFormat:        serverConsts.CONFIG.System.TimeFormat,
-		staticPrefix:      serverConsts.CONFIG.System.StaticPrefix,
-		staticPath:        serverConsts.CONFIG.System.StaticPath,
-		webPath:           serverConsts.CONFIG.System.WebPath,
+		addr:              serverConfig.CONFIG.System.Addr,
+		timeFormat:        serverConfig.CONFIG.System.TimeFormat,
+		staticPrefix:      serverConfig.CONFIG.System.StaticPrefix,
+		staticPath:        serverConfig.CONFIG.System.StaticPath,
+		webPath:           serverConfig.CONFIG.System.WebPath,
 		idleConnsClosed:   idleConnClosed,
 		globalMiddlewares: []context.Handler{},
 	}

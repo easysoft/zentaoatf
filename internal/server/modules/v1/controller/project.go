@@ -135,5 +135,6 @@ func (c *ProjectCtrl) GetByUser(ctx iris.Context) {
 	}
 
 	ret := iris.Map{"projects": projects, "currProject": currProject}
+
 	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: ret, Msg: domain.NoErr.Msg})
 }

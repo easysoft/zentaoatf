@@ -1,8 +1,6 @@
-package serverConsts
+package serverConfig
 
 const (
-	CasbinFileName = "rbac_model.conf" // casbin 规则文件名称
-
 	WebCheckInterval = 60 * 60
 
 	WsDefaultNameSpace = "default"
@@ -11,10 +9,6 @@ const (
 
 	ApiPath = "/api/v1"
 	WsPath  = ApiPath + "/ws"
-
-	AdminUserName     = "admin"
-	AdminUserPassword = "password"
-	AdminRoleName     = "admin"
 )
 
 var (

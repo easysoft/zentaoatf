@@ -1,14 +1,14 @@
 package dao
 
 import (
-	"github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
+	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
+	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm/schema"
 	"gorm.io/plugin/dbresolver"
 	"path/filepath"
-	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -59,6 +59,6 @@ func GetDB() *gorm.DB {
 }
 
 func DBFile() string {
-	path := filepath.Join(fileUtils.GetExeDir(), strings.ToLower("ztf.db"))
+	path := filepath.Join(serverConfig.CONFIG.System.WorkDir, consts.App+".db")
 	return path
 }

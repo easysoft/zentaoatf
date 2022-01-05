@@ -4,7 +4,7 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	_logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	shellUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/shell"
-	"github.com/aaronchen2k/deeptest/internal/server/consts"
+	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
@@ -27,7 +27,7 @@ type WsCtrl struct {
 }
 
 func NewWsCtrl() *WsCtrl {
-	inst := &WsCtrl{Namespace: serverConsts.WsDefaultNameSpace}
+	inst := &WsCtrl{Namespace: serverConfig.WsDefaultNameSpace}
 	return inst
 }
 
@@ -87,7 +87,7 @@ func (c *WsCtrl) SendMsgByKey(key, value string, msg websocket.Message) {
 
 func (c *WsCtrl) TestWs(ctx iris.Context) {
 	data := map[string]interface{}{"action": "taskUpdate", "taskId": 1, "msg": ""}
-	c.WebSocketService.Broadcast(serverConsts.WsDefaultNameSpace, serverConsts.WsDefaultRoom, serverConsts.WsEvent, data)
+	c.WebSocketService.Broadcast(serverConfig.WsDefaultNameSpace, serverConfig.WsDefaultRoom, serverConfig.WsEvent, data)
 
 	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: nil, Msg: domain.NoErr.Msg})
 }

@@ -123,35 +123,6 @@ func GetFilesFromParams(arguments []string) []string {
 	return ret
 }
 
-func GetExeDir() string { // where ztf command in
-	var dir string
-	arg1 := strings.ToLower(os.Args[0])
-
-	name := filepath.Base(arg1)
-	if strings.Index(name, "ztf") == 0 && strings.Index(arg1, "go-build") < 0 {
-		p, _ := exec.LookPath(os.Args[0])
-		if strings.Index(p, consts.PthSep) > -1 {
-			dir = p[:strings.LastIndex(p, consts.PthSep)]
-		}
-	} else { // debug
-		dir, _ = os.Getwd()
-	}
-
-	dir, _ = filepath.Abs(dir)
-	dir = AddPathSepIfNeeded(dir)
-
-	//fmt.Printf("Debug: UpdateStatus %s in %s \n", arg1, dir)
-	return dir
-}
-
-func GetWorkDir() string { // where ztf command in
-	dir, _ := os.Getwd()
-	dir, _ = filepath.Abs(dir)
-	dir = AddPathSepIfNeeded(dir)
-
-	return dir
-}
-
 func CopyFile(src, dst string) (int64, error) {
 	sourceFileStat, err := os.Stat(src)
 	if err != nil {
@@ -211,4 +182,33 @@ func AddSepIfNeeded(pth string) string {
 		pth += consts.PthSep
 	}
 	return pth
+}
+
+func GetWorkDir() string { // where we run file in
+	dir, _ := os.Getwd()
+
+	dir, _ = filepath.Abs(dir)
+	dir = AddSepIfNeeded(dir)
+
+	return dir
+}
+
+func GetExeDir(workDir string) string { // where zd.exe file in
+	var dir string
+	arg1 := strings.ToLower(os.Args[0])
+
+	name := filepath.Base(arg1)
+	if strings.Index(name, "zd") == 0 && strings.Index(arg1, "go-build") < 0 {
+		p, _ := exec.LookPath(os.Args[0])
+		if strings.Index(p, string(os.PathSeparator)) > -1 {
+			dir = p[:strings.LastIndex(p, string(os.PathSeparator))]
+		}
+	} else { // debug
+		dir = workDir
+	}
+
+	dir, _ = filepath.Abs(dir)
+	dir = AddSepIfNeeded(dir)
+
+	return dir
 }
