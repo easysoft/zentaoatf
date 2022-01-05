@@ -183,3 +183,11 @@ func (r *ProjectRepo) GetCurrProjectByUser() (currProject model.Project, err err
 
 	return
 }
+
+func (r *ProjectRepo) RemoveDefaultTag() (err error) {
+	err = r.DB.Model(&model.Project{}).
+		Where("true").
+		Update("is_default", false).Error
+
+	return err
+}

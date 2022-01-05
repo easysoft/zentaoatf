@@ -128,13 +128,13 @@ func (c *ProjectCtrl) Delete(ctx iris.Context) {
 }
 
 func (c *ProjectCtrl) GetByUser(ctx iris.Context) {
-	projects, currProject, err := c.ProjectService.GetByUser()
+	projects, currProject, asset, err := c.ProjectService.GetByUser()
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
 
-	ret := iris.Map{"projects": projects, "currProject": currProject}
+	ret := iris.Map{"projects": projects, "currProject": currProject, "asset": asset}
 
 	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: ret, Msg: domain.NoErr.Msg})
 }

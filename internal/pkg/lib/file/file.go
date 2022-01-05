@@ -166,8 +166,16 @@ func GetExtName(pathOrUrl string) string {
 
 	return pathOrUrl[index:]
 }
+func GetDirName(pth string) (name string) {
+	pth = strings.Trim(pth, consts.PthSep)
+	index := strings.LastIndex(pth, consts.PthSep)
+	name = pth[index:]
+	name = strings.Trim(name, consts.PthSep)
 
-func GetAbosutePath(pth string) string {
+	return name
+}
+
+func GetAbsolutePath(pth string) string {
 	if !IsAbosutePath(pth) {
 		pth, _ = filepath.Abs(pth)
 	}
