@@ -17,7 +17,7 @@ import {ProjectData} from "@/store/project";
 
 interface RightTopProject {
   projects: ComputedRef<any[]>;
-  currProject: ComputedRef<any>;
+  currProject: ComputedRef;
 
   selectProject: () => void;
 }

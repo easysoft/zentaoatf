@@ -1,37 +1,28 @@
 <template>
-    <div id="indexlayout-right-top" :class="{'topNavEnable': !topNavEnable }">
+    <div id="indexlayout-right-top">
         <div class="indexlayout-right-top-top">
             <div class="indexlayout-flexible">
               ZTF自动化测试工具
             </div>
             <div class="indexlayout-top-menu">
                 <div ref="topMenuCon" :style="{width: topMenuWidth}">
-                    <template v-if="topNavEnable">
-                      <template v-for="(item, key) in menuData">
-                        <a-link
-                          :key="key"
-                          v-if="!item.hidden"
-                          :to="item.path"
-                          :class="{'active': belongTopMenu === item.path }"
-                          class="indexlayout-top-menu-li"
-                        >
-                        {{t(item.title)}}
-                        </a-link>
-                      </template>
-                    </template>
-
-                    <bread-crumbs v-else class="breadcrumb" :list="breadCrumbs"></bread-crumbs>
+                  <template v-for="(item, key) in menuData">
+                    <a-link
+                      :key="key"
+                      v-if="!item.hidden"
+                      :to="item.path"
+                      :class="{'active': belongTopMenu === item.path }"
+                      class="indexlayout-top-menu-li"
+                    >
+                    {{t(item.title)}}
+                    </a-link>
+                  </template>
                 </div>
             </div>
             <div class="indexlayout-top-menu-right">
               <right-top-project class="indexlayout-top-selectproject"></right-top-project>
               <select-lang class="indexlayout-top-selectlang" />
             </div>
-        </div>
-        <div v-if="topNavEnable" class="indexlayout-right-top-bot">
-            <div class="indexlayout-right-top-bot-home">
-            </div>
-            <bread-crumbs class="breadcrumb" :list="breadCrumbs"></bread-crumbs>
         </div>
     </div>
 </template>
@@ -56,7 +47,6 @@ export default defineComponent({
     name: 'RightTop',
     components: {
       ALink,
-      BreadCrumbs,
       SelectLang,
       RightTopProject,
     },
@@ -111,7 +101,7 @@ export default defineComponent({
 @import '../../../assets/css/global.less';
 #indexlayout-right-top {
   width: 100%;
-  height: (@headerHeight + @headerBreadcrumbHeight);
+  height: @headerHeight;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
   z-index: 9;
   .indexlayout-right-top-top {
@@ -165,7 +155,7 @@ export default defineComponent({
       display: flex;
       width: 220px;
       .indexlayout-top-selectproject {
-        padding: 10px;
+        padding: 10px 0;
       }
 
       .indexlayout-top-selectlang {
@@ -190,27 +180,6 @@ export default defineComponent({
     .breadcrumb {
       line-height: @headerBreadcrumbHeight;
       margin-left: 10px;
-    }
-  }
-  &.topNavEnable {
-    height: (@headerHeight + @headerTabNavHeight);
-    .indexlayout-right-top-top {
-      background-color: #ffffff;
-      color: @text-color;
-      .indexlayout-flexible {
-        &:hover {
-          background-color: @mainBgColor;
-          color: @heading-color;
-        }
-      }
-      .indexlayout-top-menu-right {
-        .indexlayout-top-message {
-          color: @heading-color;
-        }
-        .indexlayout-top-usermenu {
-          color: @heading-color;
-        }
-      }
     }
   }
 }

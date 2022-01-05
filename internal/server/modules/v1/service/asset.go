@@ -30,7 +30,7 @@ func (s *AssetService) LoadScripts(dir string) (asset serverDomain.TestAsset, er
 		dir = filepath.Join(dir, "demo")
 	}
 
-	asset = serverDomain.TestAsset{Path: dir, IsDir: true}
+	asset = serverDomain.TestAsset{Path: dir, Title: fileUtils.GetDirName(dir), IsDir: true}
 	s.GetAllScriptsInDir(dir, &asset)
 
 	jsn, _ := json.Marshal(asset)

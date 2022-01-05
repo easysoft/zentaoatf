@@ -2,10 +2,12 @@ import { Mutation, Action } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 import {queryProject} from "@/services/project";
+import {ComputedRef} from "vue";
 
 export interface ProjectData {
   projects: any[];
   currProject: any;
+  scriptTree: any[];
 }
 
 export interface ModuleType extends StoreModuleType<ProjectData> {
@@ -20,7 +22,8 @@ export interface ModuleType extends StoreModuleType<ProjectData> {
 
 const initState: ProjectData = {
   projects: [],
-  currProject: {}
+  currProject: {},
+  scriptTree: [],
 }
 
 const StoreModel: ModuleType = {
@@ -35,6 +38,7 @@ const StoreModel: ModuleType = {
 
       state.projects = payload.projects;
       state.currProject = payload.currProject;
+      state.scriptTree = [payload.scriptTree];
     }
   },
   actions: {
