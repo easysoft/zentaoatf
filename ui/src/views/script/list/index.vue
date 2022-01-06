@@ -5,8 +5,13 @@
           <a-tree
             :tree-data="scriptTree"
             :replace-fields="replaceFields"
+            show-icon
             @select="selectNode"
           >
+            <template #icon="slotProps">
+              <icon-svg v-if="slotProps.isDir" type="folder-outlined"></icon-svg>
+              <icon-svg v-if="!slotProps.isDir" type="file-outlined"></icon-svg>
+            </template>
           </a-tree>
         </div>
 
@@ -20,6 +25,7 @@
 <script lang="ts">
 import {ComputedRef, defineComponent, ref, Ref, reactive, computed, onMounted} from "vue";
 import {useStore} from "vuex";
+import IconSvg from "@/components/IconSvg";
 import {ProjectData} from "@/store/project";
 
 interface ListScriptPageSetupData {
@@ -31,6 +37,7 @@ interface ListScriptPageSetupData {
 export default defineComponent({
     name: 'ScriptListPage',
     components: {
+      IconSvg
     },
     setup(): ListScriptPageSetupData {
       const replaceFields = {

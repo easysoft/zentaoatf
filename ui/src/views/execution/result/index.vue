@@ -11,16 +11,6 @@
         <a-button type="link" @click="() => back()">返回</a-button>
       </template>
 
-      <div class="execution">
-        <div class="title">测试步骤</div>
-        <div class="desc">
-          <div v-for="(step, index) in execution.steps" :key="index" class="step">
-            <div class="cmd">{{step.action}} {{step.selector}}  {{step.value}}</div>
-            <div class="capture" style="border: 3px cornflowerblue;"><img :src="step.image"></div>
-          </div>
-        </div>
-      </div>
-
       <br /> <!--WebSocket Test-->
       <div>
         <div><a-input id="input" type="text" v-model:value="wsMsg.in" /></div>
@@ -48,9 +38,6 @@ interface DesignExecutionPageSetupData {
   execution: ExecutionItem;
 
   loading: Ref<boolean>;
-  getExecution:  (current: number) => Promise<void>;
-  record: () => void;
-  playback: () => void;
   back: () => void;
 
   wsMsg: any,
@@ -68,26 +55,6 @@ export default defineComponent({
 
       const id = +router.currentRoute.value.params.id
       console.log('id', id)
-      const getExecution = async (id: number): Promise<void> => {
-        loading.value = true;
-        // await store.dispatch('ListExecution/getExecution', {
-        // });
-        loading.value = false;
-      }
-
-      const record = ():void =>  {
-        console.log('record')
-
-        window.postMessage({
-          scope: ScopeDeeptest,
-          content: {
-            act: ActionRecordStart,
-          }
-        }, "*");
-      }
-      const playback = ():void =>  {
-        console.log('playback')
-      }
 
       const back = ():void =>  {
         router.push(`/~/execution/list`)
@@ -111,27 +78,6 @@ export default defineComponent({
       WebSocket.init(proxy)
 
       onMounted(() => {
-        const eventNode = document.getElementById(EventNodeId)
-        if (eventNode) {
-          eventNode.addEventListener(EventName, function () {
-            const msg = JSON.parse(eventNode.innerText);
-            console.log('====', msg);
-
-            if (msg.scope !== ScopeDeeptest && msg.content.act !== ActionRecordedMsg) {
-              return
-            }
-
-            const data :StepItem = msg.content.data
-            execution.steps.push({
-              action: data.action,
-              selector: data.selector,
-              value: data.value? data.value:'',
-              image: data.image,
-            })
-          });
-        }
-
-        getExecution(1);
         if (init) {
           proxy.$sub(WsEventName, (data) => {
             console.log(data[0].msg);
@@ -150,9 +96,6 @@ export default defineComponent({
       return {
         execution,
         loading,
-        getExecution,
-        record,
-        playback,
         back,
         wsMsg,
         sendWs,

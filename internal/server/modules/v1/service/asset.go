@@ -8,6 +8,7 @@ import (
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	zentaoUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/zentao"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	"github.com/kataras/iris/v12"
 	"io/ioutil"
 	"path/filepath"
 	"regexp"
@@ -30,7 +31,7 @@ func (s *AssetService) LoadScripts(dir string) (asset serverDomain.TestAsset, er
 		dir = filepath.Join(dir, "demo")
 	}
 
-	asset = serverDomain.TestAsset{Path: dir, Title: fileUtils.GetDirName(dir), IsDir: true}
+	asset = serverDomain.TestAsset{Path: dir, Title: fileUtils.GetDirName(dir), IsDir: true, Slots: iris.Map{"icon": "icon"}}
 	s.GetAllScriptsInDir(dir, &asset)
 
 	jsn, _ := json.Marshal(asset)
@@ -78,7 +79,8 @@ func (s *AssetService) addScript(pth string, parent *serverDomain.TestAsset) {
 	if pass {
 		pass = zentaoUtils.CheckFileIsScript(pth)
 		if pass {
-			childScript := &serverDomain.TestAsset{Path: pth, Title: fileUtils.GetFileName(pth), IsDir: false}
+			childScript := &serverDomain.TestAsset{Path: pth, Title: fileUtils.GetFileName(pth),
+				IsDir: false, Slots: iris.Map{"icon": "icon"}}
 
 			parent.Children = append(parent.Children, childScript)
 			parent.ScriptCount += 1
@@ -86,7 +88,8 @@ func (s *AssetService) addScript(pth string, parent *serverDomain.TestAsset) {
 	}
 }
 func (s *AssetService) addDir(pth string, parent *serverDomain.TestAsset) (dirNode *serverDomain.TestAsset) {
-	dirNode = &serverDomain.TestAsset{Path: pth, Title: fileUtils.GetDirName(pth), IsDir: true}
+	dirNode = &serverDomain.TestAsset{Path: pth, Title: fileUtils.GetDirName(pth),
+		IsDir: true, Slots: iris.Map{"icon": "icon"}}
 	parent.Children = append(parent.Children, dirNode)
 
 	return
