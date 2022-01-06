@@ -7,7 +7,7 @@ module.exports = {
     outputDir: 'dist',
     productionSourceMap: false,
     devServer: {
-        public: 'localhost',
+        host: 'localhost',
         port: VUE_APP_PORT || 8000,
         disableHostCheck: true,
         // 配置反向代理
