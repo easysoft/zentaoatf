@@ -28,9 +28,10 @@ export function startZtfServer() {
             serverExePath = path.resolve(app.getAppPath(), serverExePath);
         }
         return new Promise((resolve, reject) => {
-            console.log(`>> Starting ZTF Server from exe path with command "${serverExePath} -P 8085"...`);
+            const cwd = process.env.SERVER_CWD_PATH || path.dirname(serverExePath);
+            console.log(`>> Starting ZTF Server from exe path with command "${serverExePath} -P 8085" in "${cwd}"...`);
             const cmd = spawn(serverExePath, ['-P', '8085'], {
-                cwd: path.dirname(serverExePath),
+                cwd,
                 shell: true,
             });
             cmd.on('close', (code) => {
@@ -72,9 +73,10 @@ export function startZtfServer() {
     }
 
     return new Promise((resolve, reject) => {
-        console.log(`>> Starting ZTF development server from source with command "go run main.go -P 8085"`);
+        const cwd = process.env.SERVER_CWD_PATH || path.resolve(app.getAppPath(), '../');
+        console.log(`>> Starting ZTF development server from source with command "go run cmd/server/main.go -P 8085" in "${cwd}"`);
         const cmd = spawn('go', ['run', 'main.go', '-P', '8085'], {
-            cwd: path.resolve(app.getAppPath(), '../cmd/server'),
+            cwd,
             shell: true,
         });
         cmd.on('close', (code) => {
