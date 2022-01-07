@@ -13,6 +13,7 @@ import (
 var I118Prt *message.Printer
 
 func Init(lang string, app string) {
+
 	langRes := filepath.Join("res", app, lang, "messages.json")
 
 	bytes, _ := resUtils.ReadRes(langRes)

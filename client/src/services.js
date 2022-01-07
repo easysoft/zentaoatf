@@ -39,6 +39,7 @@ export function startZtfServer() {
                 const lines = dataString.split('\n');
                 for (let i = 0; i < lines.length; i++) {
                     const line = lines[i];
+                    console.log('\t>', line);
                     if (line.includes('Now listening on: http')) {
                         resolve(line.split('Now listening on:')[1].trim());
                         break;
@@ -73,6 +74,7 @@ export function startZtfServer() {
             const lines = dataString.split('\n');
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
+                console.log('\t>', line);
                 if (line.includes('Now listening on: http')) {
                     resolve(line.split('Now listening on:')[1].trim());
                     break;
@@ -152,6 +154,7 @@ export function getUIServerUrl() {
             const lines = dataString.split('\n');
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
+                console.log('\t>', line);
                 if (line.includes('App running at:')) {
                     const nextLine = lines[i + 1] || lines[i + 2];
                     if (!nextLine) {

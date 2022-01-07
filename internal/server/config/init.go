@@ -27,6 +27,7 @@ func Init() {
 	VIPER.SetConfigType("yaml")
 
 	configRes := filepath.Join("res", consts.AppServer+".yaml")
+
 	yamlDefault, _ := resUtils.ReadRes(configRes)
 
 	if err := VIPER.ReadConfig(bytes.NewBuffer(yamlDefault)); err != nil {

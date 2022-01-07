@@ -22,6 +22,7 @@ func main() {
 	if webServer == nil {
 		return
 	}
+
 	injectModule(webServer)
 
 	webServer.Run()

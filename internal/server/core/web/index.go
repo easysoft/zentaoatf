@@ -60,7 +60,9 @@ type WebServer struct {
 func Init() *WebServer {
 	serverConfig.Init()
 	serverLog.Init()
+
 	i118Utils.Init(serverConfig.CONFIG.System.Language, consts.AppServer)
+
 	langUtils.GetExtToNameMap()
 
 	app := iris.New()
@@ -74,26 +76,6 @@ func Init() *WebServer {
 		app.Shutdown(ctx) // close all hosts
 		close(idleConnClosed)
 	})
-
-	if serverConfig.CONFIG.System.Addr == "" { // 默认 8085
-		serverConfig.CONFIG.System.Addr = "127.0.0.1:8085"
-	}
-
-	if serverConfig.CONFIG.System.StaticPath == "" { // 默认 /static/upload
-		serverConfig.CONFIG.System.StaticPath = "/static/upload"
-	}
-
-	if serverConfig.CONFIG.System.StaticPrefix == "" { // 默认 /upload
-		serverConfig.CONFIG.System.StaticPrefix = "/upload"
-	}
-
-	if serverConfig.CONFIG.System.WebPath == "" { // 默认 /./dist
-		serverConfig.CONFIG.System.WebPath = "./dist"
-	}
-
-	if serverConfig.CONFIG.System.TimeFormat == "" { // 默认 80
-		serverConfig.CONFIG.System.TimeFormat = time.RFC3339
-	}
 
 	// init grpc
 	mvc.New(app)
