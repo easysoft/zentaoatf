@@ -5,7 +5,7 @@
               ZTF自动化测试工具
             </div>
             <div class="indexlayout-top-menu">
-                <div ref="topMenuCon" :style="{width: topMenuWidth}">
+                <div ref="topMenuCon" style="width: 100%">
                   <template v-for="(item, key) in menuData">
                     <a-link
                       :key="key"
@@ -40,7 +40,6 @@ import RightTopProject from './RightTopProject.vue';
 interface RightTopSetupData {
   t: (key: string | number) => string;
   topMenuCon: Ref;
-  topMenuWidth: Ref;
 }
 
 export default defineComponent({
@@ -87,12 +86,11 @@ export default defineComponent({
       const { t } = useI18n();
       const { topNavEnable } = toRefs(props);
 
-      const { topMenuCon, topMenuWidth } = useTopMenuWidth(topNavEnable);
+      const { topMenuCon } = useTopMenuWidth(topNavEnable);
 
       return {
         t,
         topMenuCon,
-        topMenuWidth,
       }
     }
 })
