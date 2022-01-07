@@ -24,10 +24,11 @@ npm run start
 
 在调试模式下可以通过制定环境变量来设置 ZTF UI 服务访问地址和 ZTF 可执行程序位置。
 
-* `UI_SERVER_URL`: ZTF UI 服务访问地址或静态资源文件目录，如果不指定会自动进入 `../ui/` 目录执行 `npm run serve` 获取开发服务器地址；
-* `UI_SERVER_PORT`: ZTF UI 服务端口，如果不指定则使用 `8000`；
-* `SERVER_EXE_PATH`：ZTF 服务可执行文件位置，如果不指定则会自动进入 `../cmd/server/` 目录下执行 `go run main.go -p 8085` 启动 ZTF 服务器。
-* `SKIP_SERVER`: 跳过启动 ZTF 服务，适用于 ZTF 服务已经在外部启动的情况。
+* `UI_SERVER_URL`：ZTF UI 服务访问地址或静态资源文件目录，如果不指定会自动进入 `../ui/` 目录执行 `npm run serve` 获取开发服务器地址；
+* `UI_SERVER_PORT`：ZTF UI 服务端口，如果不指定则使用 `8000`；
+* `SERVER_EXE_PATH`：ZTF 服务可执行文件位置（相对于 `/client` 目录），如果不指定则会自动进入 `../cmd/server/` 目录下执行 `go run main.go -p 8085` 启动 ZTF 服务器。
+* `SERVER_CWD_PATH`：ZTF 服务运行目录；
+* `SKIP_SERVER`：跳过启动 ZTF 服务，适用于 ZTF 服务已经在外部启动的情况。
 
 ### 特殊调试模式
 
