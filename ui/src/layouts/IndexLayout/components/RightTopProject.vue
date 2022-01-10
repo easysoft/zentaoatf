@@ -1,50 +1,88 @@
 <template>
-  <a-select
-      ref="select"
-      v-model:value="currProject.id"
-      :bordered="true"
-      style="width: 160px"
-      @change="selectProject"
-  >
-    <a-select-option v-for="item in projects" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
-  </a-select>
+  <div>
+    <a-select
+        ref="select"
+        v-model:value="currProject.path"
+        :bordered="true"
+        style="width: 160px"
+        @change="selectProject"
+    >
+      <a-select-option v-for="item in projects" :key="item.id" :value="item.path">{{ item.name }}</a-select-option>
+    </a-select>
+
+    <dir-selection
+        :visible="selectionFormVisible"
+        :onCancel="() => setSelectionFormVisible(false)"
+        :onSubmit="selectionSubmit"
+    />
+  </div>
 </template>
+
 <script lang="ts">
-import {computed, ComputedRef, defineComponent, onMounted} from "vue";
+import {computed, ComputedRef, defineComponent, onMounted, Ref, ref} from "vue";
 import {useStore} from "vuex";
 
 import {ProjectData} from "@/store/project";
+import {Execution} from "@/views/execution/data";
+import {Props} from "ant-design-vue/lib/form/useForm";
+import {message} from "ant-design-vue";
+import DirSelection from "@/views/component/file/DirSelection.vue";
 
 interface RightTopProject {
   projects: ComputedRef<any[]>;
   currProject: ComputedRef;
 
-  selectProject: () => void;
+  selectProject: (value: string) => void;
+  selectionFormVisible: Ref<boolean>;
+  setSelectionFormVisible:  (val: boolean) => void;
+  selectionSubmit: (parentDir: string) => Promise<void>;
 }
 
 export default defineComponent({
   name: 'RightTopProjectSelection',
-  components: {},
+  components: {DirSelection},
   setup(): RightTopProject {
     const store = useStore<{ project: ProjectData }>();
 
     const projects = computed<any[]>(() => store.state.project.projects);
     const currProject = computed<any>(() => store.state.project.currProject);
 
-    store.dispatch('project/fetchProject');
+    store.dispatch('project/fetchProject', '');
 
     onMounted(() => {
       console.log('onMounted')
     })
 
-    const selectProject = (): void => {
-      console.log('selectProject')
+    const selectProject = (value): void => {
+      console.log('selectProject', value)
+
+      if (value === '') {
+        setSelectionFormVisible(true)
+      } else {
+        store.dispatch('project/fetchProject', value);
+      }
+    }
+
+    const selectionFormVisible = ref<boolean>(false);
+    const setSelectionFormVisible = (val: boolean) => {
+      selectionFormVisible.value = val;
+    };
+
+    const selectionSubmit = async (parentDir: string) => {
+      console.log('selectionSubmit', parentDir)
+
+      await store.dispatch('project/fetchProject', parentDir);
+
+      setSelectionFormVisible(false);
     }
 
     return {
       selectProject,
       projects,
-      currProject
+      currProject,
+      selectionFormVisible,
+      setSelectionFormVisible,
+      selectionSubmit,
     }
   }
 })

@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
+	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
 	"github.com/aaronchen2k/deeptest/internal/server/core/web/validate"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
@@ -128,7 +129,13 @@ func (c *ProjectCtrl) Delete(ctx iris.Context) {
 }
 
 func (c *ProjectCtrl) GetByUser(ctx iris.Context) {
-	projects, currProject, asset, err := c.ProjectService.GetByUser()
+	currProjectPath := ctx.URLParam("currProject")
+
+	if currProjectPath == "" {
+		currProjectPath = serverConfig.CONFIG.System.WorkDir
+	}
+
+	projects, currProject, asset, err := c.ProjectService.GetByUser(currProjectPath)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return

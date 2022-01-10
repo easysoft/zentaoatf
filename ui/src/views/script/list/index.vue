@@ -11,7 +11,7 @@
 
           <a-tree
             ref="tree"
-            :tree-data="scriptTree"
+            :tree-data="treeData"
             :replace-fields="replaceFields"
             show-icon
             @select="selectNode"
@@ -39,7 +39,7 @@ import IconSvg from "@/components/IconSvg";
 import {ProjectData} from "@/store/project";
 
 interface ListScriptPageSetupData {
-  scriptTree: ComputedRef<any[]>;
+  treeData: ComputedRef<any[]>;
   replaceFields: any,
   selectNode: (keys, e) => void;
   isExpand: Ref<boolean>;
@@ -61,10 +61,11 @@ export default defineComponent({
 
       let isExpand = ref(false);
       const store = useStore<{ project: ProjectData }>();
-      const scriptTree = computed<any>(() => store.state.project.scriptTree);
+      const treeData = computed<any>(() => store.state.project.scriptTree);
+      let expandedKeys = computed<any>(() => store.state.project.scriptTreeOpenKeys);
 
       let tree = ref(null)
-      const expandedKeys = ref<string[]>([]);
+
       onMounted(()=> {
         console.log('onMounted', tree)
       })
@@ -75,33 +76,17 @@ export default defineComponent({
       }
 
       const expandNode = (e) => {
-        console.log('expandNode', expandedKeys.value)
+        console.log('expandNode')
       }
       const expandOrNot = (e) => {
         console.log('expandOrNot')
         isExpand.value = !isExpand.value
-        expandedKeys.value = []
 
-        if (isExpand.value) {
-          getOpenKeys(scriptTree.value[0])
-          console.log('expandNode', expandedKeys.value)
-        }
-      }
-
-      const getOpenKeys = (node) => {
-        if (!node) return
-
-        console.log(node.path)
-        expandedKeys.value.push(node.path)
-        if (node.children) {
-          node.children.forEach((item, index) => {
-            getOpenKeys(item)
-          })
-        }
+        store.dispatch('project/genOpenKeys', isExpand.value);
       }
 
       return {
-        scriptTree,
+        treeData,
         replaceFields,
         selectNode,
         isExpand,

@@ -191,3 +191,13 @@ func (r *ProjectRepo) RemoveDefaultTag() (err error) {
 
 	return err
 }
+
+func (r *ProjectRepo) SetCurrProject(pth string) (err error) {
+	r.RemoveDefaultTag()
+
+	err = r.DB.Model(&model.Project{}).
+		Where("path = ?", pth).
+		Update("is_default", true).Error
+
+	return err
+}
