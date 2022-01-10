@@ -3,15 +3,16 @@ import { Script, QueryParams } from './data.d';
 
 const apiPath = 'scripts';
 
-export async function query(params?: QueryParams): Promise<any> {
+export async function get(path: string): Promise<any> {
+    const params = {path: path}
+
     return request({
-        url: `/${apiPath}`,
-        method: 'get',
-        params,
+        url: `/scripts/get`,
+        params
     });
 }
 
-export async function create(params: Omit<Script, 'id'>): Promise<any> {
+export async function create(params: Partial<Script>): Promise<any> {
     return request({
         url: `/${apiPath}`,
         method: 'POST',
@@ -19,7 +20,7 @@ export async function create(params: Omit<Script, 'id'>): Promise<any> {
     });
 }
 
-export async function update(id: number, params: Omit<Script, 'id'>): Promise<any> {
+export async function update(id: number, params: Partial<Script>): Promise<any> {
     return request({
         url: `/${apiPath}/${id}`,
         method: 'PUT',
@@ -32,8 +33,4 @@ export async function remove(id: number): Promise<any> {
         url: `/${apiPath}/${id}`,
         method: 'delete',
     });
-}
-
-export async function detail(id: number): Promise<any> {
-    return request({url: `/scripts/${id}`});
 }

@@ -1,88 +1,54 @@
 import { Mutation, Action } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
-import { Script, QueryResult, QueryParams, PaginationConfig } from './data.d';
+import { Script } from './data.d';
 import {
-    query, remove, create, detail, update,
+    get, create, update, remove
 } from './service';
 
-export interface StateType {
-    queryResult: QueryResult;
-    detailResult: Partial<Script>;
+export interface ScriptData {
+    detail: Partial<Script>;
 }
 
-export interface ModuleType extends StoreModuleType<StateType> {
-    state: StateType;
+export interface ModuleType extends StoreModuleType<ScriptData> {
+    state: ScriptData;
     mutations: {
-        setList: Mutation<StateType>;
-        setItem: Mutation<StateType>;
+        setItem: Mutation<ScriptData>;
     };
     actions: {
-        queryScript: Action<StateType, StateType>;
-        deleteScript: Action<StateType, StateType>;
-        createScript: Action<StateType, StateType>;
-        getScript: Action<StateType, StateType>;
-        updateScript: Action<StateType, StateType>;
+        deleteScript: Action<ScriptData, ScriptData>;
+        createScript: Action<ScriptData, ScriptData>;
+        getScript: Action<ScriptData, ScriptData>;
+        updateScript: Action<ScriptData, ScriptData>;
     };
 }
-const initState: StateType = {
-    queryResult: {
-        list: [],
-        pagination: {
-            total: 0,
-            current: 1,
-            pageSize: 10,
-            showSizeChanger: true,
-            showQuickJumper: true,
-        },
-    },
-    detailResult: {},
+const initState: ScriptData = {
+    detail: {},
 };
 
 const StoreModel: ModuleType = {
     namespaced: true,
-    name: 'ListScript',
+    name: 'script',
     state: {
         ...initState
     },
     mutations: {
-        setList(state, payload) {
-            state.queryResult = payload;
-        },
         setItem(state, payload) {
-            state.detailResult = payload;
+            state.detail = payload;
         },
     },
     actions: {
-        async queryScript({ commit }, params: QueryParams ) {
-            try {
-                const response: ResponseData = await query(params);
-                if (response.code != 0) return;
-
-                const data = response.data;
-
-                commit('setList',{
-                    ...initState.queryResult,
-                    list: data.result || [],
-                    pagination: {
-                        ...initState.queryResult.pagination,
-                        current: params.page,
-                        pageSize: params.pageSize,
-                        total: data.total || 0,
-                    },
-                });
+        async getScript({ commit }, script: any ) {
+            if (script.isDir) {
+                commit('setItem', {});
                 return true;
-            } catch (error) {
-                return false;
             }
-        },
-        async deleteScript({ commit }, payload: number ) {
-            try {
-                await remove(payload);
-                return true;
-            } catch (error) {
-                return false;
-            }
+
+            const response: ResponseData = await get(script.path);
+            const { data } = response;
+            commit('setItem',data);
+            return true;
+
         },
         async createScript({ commit }, payload: Pick<Script, "name" | "desc"> ) {
             try {
@@ -92,23 +58,19 @@ const StoreModel: ModuleType = {
                 return false;
             }
         },
-        async getScript({ commit }, payload: number ) {
+        async updateScript({ commit }, payload: Script ) {
             try {
-                const response: ResponseData = await detail(payload);
-                const { data } = response;
-                commit('setItem',{
-                    ...initState.detailResult,
-                    ...data,
-                });
+                const { id, ...params } = payload;
+                await update(id, { ...params });
                 return true;
             } catch (error) {
                 return false;
             }
         },
-        async updateScript({ commit }, payload: Script ) {
+
+        async deleteScript({ commit }, payload: number ) {
             try {
-                const { id, ...params } = payload;
-                await update(id, { ...params });
+                await remove(payload);
                 return true;
             } catch (error) {
                 return false;

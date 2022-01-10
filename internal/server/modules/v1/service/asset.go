@@ -8,6 +8,7 @@ import (
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	zentaoUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/zentao"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/kataras/iris/v12"
 	"io/ioutil"
 	"path/filepath"
@@ -36,6 +37,12 @@ func (s *AssetService) LoadScripts(dir string) (asset serverDomain.TestAsset, er
 
 	jsn, _ := json.Marshal(asset)
 	logUtils.Infof(string(jsn))
+
+	return
+}
+
+func (s *AssetService) GetScript(pth string) (script model.TestScript, err error) {
+	script.Code = fileUtils.ReadFile(pth)
 
 	return
 }

@@ -2,6 +2,7 @@ export interface Script {
   id: number;
   name: string;
   desc: string;
+  content: string
 }
 
 export interface QueryResult {
@@ -25,14 +26,8 @@ export interface PaginationConfig {
 }
 
 
-export type ScriptItem = {
-  steps: StepItem[];
-}
-export type StepItem = {
-  action: string;
-  selector: string;
-  value: string;
-  image: string;
+export type Script = {
+  content: string,
 }
 
 export type DeepTestMsg = {

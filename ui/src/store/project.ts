@@ -8,18 +8,15 @@ export interface ProjectData {
   projects: any[]
   currProject: any
   scriptTree: any[]
-  scriptTreeOpenKeys: string[]
 }
 
 export interface ModuleType extends StoreModuleType<ProjectData> {
   state: ProjectData;
   mutations: {
     saveProjects: Mutation<ProjectData>;
-    saveOpenKeys: Mutation<ProjectData>;
   };
   actions: {
     fetchProject: Action<ProjectData, ProjectData>;
-    genOpenKeys: Action<ProjectData, ProjectData>
   };
 }
 
@@ -27,7 +24,6 @@ const initState: ProjectData = {
   projects: [],
   currProject: {},
   scriptTree: [],
-  scriptTreeOpenKeys: [],
 }
 
 const StoreModel: ModuleType = {
@@ -43,18 +39,7 @@ const StoreModel: ModuleType = {
       state.projects = [...payload.projects, {id: 0, name: '其他', path: ''}];
       state.currProject = payload.currProject;
       state.scriptTree = [payload.scriptTree];
-
-      state.scriptTreeOpenKeys = []
-      state.scriptTreeOpenKeys.push(payload.scriptTree.path)
     },
-
-    saveOpenKeys(state, isExpand) {
-      state.scriptTreeOpenKeys = []
-      console.log('saveOpenKeys', isExpand)
-      if (isExpand) {
-        getOpenKeys(state.scriptTree[0], state.scriptTreeOpenKeys)
-      }
-    }
   },
   actions: {
     async fetchProject({ commit }, currProjectPath) {
@@ -68,27 +53,6 @@ const StoreModel: ModuleType = {
         return false;
       }
     },
-    async genOpenKeys({ commit }, isExpand) {
-      try {
-        console.log('genOpenKeys', isExpand)
-        commit('saveOpenKeys', isExpand);
-
-        return true;
-      } catch (error) {
-        return false;
-      }
-    }
-  }
-}
-
-const getOpenKeys = (node, keys) => {
-  if (!node) return
-
-  keys.push(node.path)
-  if (node.children) {
-    node.children.forEach((item, index) => {
-      getOpenKeys(item, keys)
-    })
   }
 }
 

@@ -1,22 +1,23 @@
 <template>
-    <div class="indexlayout-main-conent">
-      <div class="main">
-        <div class="left">
-          <div class="toolbar">
-            <a-button @click="expandOrNot" type="link">
-              <span v-if="!isExpand">展开全部</span>
-              <span v-if="isExpand">收缩全部</span>
-            </a-button>
-          </div>
+  <div class="indexlayout-main-conent">
+    <div id="main">
+      <div id="left">
+        <div class="toolbar">
+          <a-button @click="expandOrNot" type="link">
+            <span v-if="!isExpand">展开全部</span>
+            <span v-if="isExpand">收缩全部</span>
+          </a-button>
+        </div>
 
+        <div class="tree-panel">
           <a-tree
-            ref="tree"
-            :tree-data="treeData"
-            :replace-fields="replaceFields"
-            show-icon
-            @select="selectNode"
-            @expand="expandNode"
-            v-model:expandedKeys="expandedKeys"
+              ref="tree"
+              :tree-data="treeData"
+              :replace-fields="replaceFields"
+              show-icon
+              @expand="expandNode"
+              @select="selectNode"
+              v-model:expandedKeys="expandedKeys"
           >
             <template #icon="slotProps">
               <icon-svg v-if="slotProps.isDir" type="folder-outlined"></icon-svg>
@@ -24,78 +25,108 @@
             </template>
           </a-tree>
         </div>
+      </div>
 
-        <div class="content">
-          CONTENT
+      <div id="resize"></div>
+
+      <div id="content">
+        <div class="toolbar"></div>
+        <div class="panel">
+          <pre><code>{{ script.code }}</code></pre>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
-import {ComputedRef, defineComponent, ref, Ref, reactive, computed, onMounted} from "vue";
+import {computed, ComputedRef, defineComponent, onMounted, ref, Ref} from "vue";
 import {useStore} from "vuex";
 import IconSvg from "@/components/IconSvg";
 import {ProjectData} from "@/store/project";
+import {ScriptData} from "../store";
+import {resizeWidth} from "@/utils/dom";
 
 interface ListScriptPageSetupData {
   treeData: ComputedRef<any[]>;
   replaceFields: any,
+  expandNode: (expandedKeys: string[], e: any) => void;
   selectNode: (keys, e) => void;
   isExpand: Ref<boolean>;
   expandOrNot: (e) => void;
-  expandNode: (e) => void;
   expandedKeys: Ref<string[]>
-  tree: Ref<any>;
+  tree: Ref;
+  script: any
 }
 
 export default defineComponent({
-    name: 'ScriptListPage',
-    components: {
-      IconSvg
-    },
-    setup(): ListScriptPageSetupData {
-      const replaceFields = {
-        key: 'path',
-      };
+  name: 'ScriptListPage',
+  components: {
+    IconSvg
+  },
+  setup(): ListScriptPageSetupData {
+    const replaceFields = {
+      key: 'path',
+    };
 
-      let isExpand = ref(false);
-      const store = useStore<{ project: ProjectData }>();
-      const treeData = computed<any>(() => store.state.project.scriptTree);
-      let expandedKeys = computed<any>(() => store.state.project.scriptTreeOpenKeys);
+    let isExpand = ref(false);
+    const store = useStore<{ project: ProjectData }>();
+    const treeData = computed<any>(() => store.state.project.scriptTree);
+    const expandedKeys = ref<string[]>([]);
+    let tree = ref(null)
 
-      let tree = ref(null)
+    const storeScript = useStore<{ script: ScriptData }>();
+    const script = computed<any>(() => storeScript.state.script.detail);
 
-      onMounted(()=> {
-        console.log('onMounted', tree)
-      })
+    onMounted(() => {
+      console.log('onMounted', tree)
+      resizeWidth('main', 'left', 'resize', 'content')
+    })
 
-      const selectNode = (selectedKeys, e) => {
-        if (e.selectedNodes.length === 0) return
-        console.log('selectNode', e.selectedNodes[0].props.path)
-      }
+    const expandNode = (keys: string[], e: any) => {
+      console.log('expandNode', keys[0], e)
+    }
 
-      const expandNode = (e) => {
-        console.log('expandNode')
-      }
-      const expandOrNot = (e) => {
-        console.log('expandOrNot')
-        isExpand.value = !isExpand.value
+    const selectNode = (selectedKeys, e) => {
+      console.log('selectNode', e.selectedNodes)
+      if (e.selectedNodes.length === 0) return
 
-        store.dispatch('project/genOpenKeys', isExpand.value);
-      }
+      storeScript.dispatch('script/getScript', e.selectedNodes[0].props);
+    }
 
-      return {
-        treeData,
-        replaceFields,
-        selectNode,
-        isExpand,
-        expandOrNot,
-        expandNode,
-        tree,
-        expandedKeys,
+    const expandOrNot = (e) => {
+      console.log('expandOrNot')
+      isExpand.value = !isExpand.value
+
+      expandedKeys.value = []
+      if (isExpand.value) {
+        getOpenKeys(treeData.value[0])
       }
     }
+
+    const getOpenKeys = (node) => {
+      if (!node) return
+
+      expandedKeys.value.push(node.path)
+      if (node.children) {
+        node.children.forEach((item, index) => {
+          getOpenKeys(item)
+        })
+      }
+    }
+
+    return {
+      treeData,
+      replaceFields,
+      expandNode,
+      selectNode,
+      isExpand,
+      expandOrNot,
+      tree,
+      expandedKeys,
+      script,
+    }
+  }
 
 })
 </script>
@@ -105,29 +136,64 @@ export default defineComponent({
   margin: 0px;
   height: 100%;
 
-  .main {
-    display: flex;
+  #main {
     height: 100%;
-    .left {
-      padding: 6px;
-      width: 300px;
+    width: 100%;
+
+    #left {
+      float:left;
+      width: calc(20% - 3px);
       height: 100%;
-      border-right: 1px solid #D0D7DE;
+      padding: 3px;
+
       .toolbar {
+        padding: 0;
         text-align: right;
+        border-bottom: 1px solid #D0D7DE;
+
         .ant-btn-link {
           padding: 0px 5px;
           color: #1890ff;
         }
       }
-      .ant-tree {
-        font-size: 16px;
+
+      .tree-panel {
+        height: calc(100% - 35px);
+        overflow: auto;
+
+        .ant-tree {
+          font-size: 16px;
+        }
+      }
+
+    }
+
+    #resize {
+      float:left;
+      width: 2px;
+      height: 100%;
+      background-color: #D0D7DE;
+      cursor: ew-resize;
+
+      &.active {
+        background-color: #a9aeb4;
       }
     }
-    .content {
+
+    #content {
+      float:left;
+      width: 80%;
+      height: 100%;
       padding: 15px;
       flex: 1;
-      height: 100%;
+
+      .toolbar {
+        height: 20px;
+      }
+
+      .panel {
+        padding: 6px;
+      }
     }
   }
 }
