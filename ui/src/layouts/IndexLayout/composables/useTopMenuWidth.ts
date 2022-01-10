@@ -14,6 +14,8 @@ export default function useTopMenuWidth(topNavEnable: ComputedRef<boolean> | Ref
     const topMenuWidth = ref<string>('auto');
 
       const setWidth = async () => {
+          console.log('===')
+
         await nextTick();
         if (topMenuCon.value && topNavEnable.value) {
             let width = 0;

@@ -2,11 +2,21 @@
     <div class="indexlayout-main-conent">
       <div class="main">
         <div class="left">
+          <div class="toolbar">
+            <a-button @click="expandOrNot" type="link">
+              <span v-if="!isExpand">展开全部</span>
+              <span v-if="isExpand">收缩全部</span>
+            </a-button>
+          </div>
+
           <a-tree
+            ref="tree"
             :tree-data="scriptTree"
             :replace-fields="replaceFields"
             show-icon
             @select="selectNode"
+            @expand="expandNode"
+            v-model:expandedKeys="expandedKeys"
           >
             <template #icon="slotProps">
               <icon-svg v-if="slotProps.isDir" type="folder-outlined"></icon-svg>
@@ -32,6 +42,11 @@ interface ListScriptPageSetupData {
   scriptTree: ComputedRef<any[]>;
   replaceFields: any,
   selectNode: (keys, e) => void;
+  isExpand: Ref<boolean>;
+  expandOrNot: (e) => void;
+  expandNode: (e) => void;
+  expandedKeys: Ref<string[]>
+  tree: Ref<any>;
 }
 
 export default defineComponent({
@@ -41,26 +56,59 @@ export default defineComponent({
     },
     setup(): ListScriptPageSetupData {
       const replaceFields = {
-        key: 'title',
+        key: 'path',
       };
 
+      let isExpand = ref(false);
       const store = useStore<{ project: ProjectData }>();
       const scriptTree = computed<any>(() => store.state.project.scriptTree);
 
+      let tree = ref(null)
+      const expandedKeys = ref<string[]>([]);
       onMounted(()=> {
-        console.log('onMounted')
+        console.log('onMounted', tree)
       })
-
 
       const selectNode = (selectedKeys, e) => {
         if (e.selectedNodes.length === 0) return
         console.log('selectNode', e.selectedNodes[0].props.path)
       }
 
+      const expandNode = (e) => {
+        console.log('expandNode', expandedKeys.value)
+      }
+      const expandOrNot = (e) => {
+        console.log('expandOrNot')
+        isExpand.value = !isExpand.value
+        expandedKeys.value = []
+
+        if (isExpand.value) {
+          getOpenKeys(scriptTree.value[0])
+          console.log('expandNode', expandedKeys.value)
+        }
+      }
+
+      const getOpenKeys = (node) => {
+        if (!node) return
+
+        console.log(node.path)
+        expandedKeys.value.push(node.path)
+        if (node.children) {
+          node.children.forEach((item, index) => {
+            getOpenKeys(item)
+          })
+        }
+      }
+
       return {
         scriptTree,
         replaceFields,
         selectNode,
+        isExpand,
+        expandOrNot,
+        expandNode,
+        tree,
+        expandedKeys,
       }
     }
 
@@ -80,6 +128,13 @@ export default defineComponent({
       width: 300px;
       height: 100%;
       border-right: 1px solid #D0D7DE;
+      .toolbar {
+        text-align: right;
+        .ant-btn-link {
+          padding: 0px 5px;
+          color: #1890ff;
+        }
+      }
       .ant-tree {
         font-size: 16px;
       }
