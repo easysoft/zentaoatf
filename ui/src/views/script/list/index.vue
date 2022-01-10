@@ -80,7 +80,7 @@ export default defineComponent({
 
     onMounted(() => {
       console.log('onMounted', tree)
-      resizeWidth('main', 'left', 'resize', 'content')
+      resizeWidth('main', 'left', 'resize', 'content', 260, 800)
     })
 
     const expandNode = (keys: string[], e: any) => {
@@ -137,12 +137,12 @@ export default defineComponent({
   height: 100%;
 
   #main {
+    display: flex;
     height: 100%;
     width: 100%;
 
     #left {
-      float:left;
-      width: calc(20% - 3px);
+      width: 260px;
       height: 100%;
       padding: 3px;
 
@@ -181,7 +181,6 @@ export default defineComponent({
     }
 
     #content {
-      float:left;
       width: 80%;
       height: 100%;
       padding: 15px;
