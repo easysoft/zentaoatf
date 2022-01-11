@@ -12,7 +12,7 @@
 
     <dir-selection
         :visible="selectionFormVisible"
-        :onCancel="() => setSelectionFormVisible(false)"
+        :onCancel="selectionCancel"
         :onSubmit="selectionSubmit"
     />
   </div>
@@ -36,6 +36,7 @@ interface RightTopProject {
   selectionFormVisible: Ref<boolean>;
   setSelectionFormVisible:  (val: boolean) => void;
   selectionSubmit: (parentDir: string) => Promise<void>;
+  selectionCancel: () => void;
 }
 
 export default defineComponent({
@@ -75,6 +76,10 @@ export default defineComponent({
 
       setSelectionFormVisible(false);
     }
+    const selectionCancel = () => {
+      store.dispatch('project/fetchProject', currProject.value.path);
+      setSelectionFormVisible(false);
+    }
 
     return {
       selectProject,
@@ -83,6 +88,7 @@ export default defineComponent({
       selectionFormVisible,
       setSelectionFormVisible,
       selectionSubmit,
+      selectionCancel,
     }
   }
 })

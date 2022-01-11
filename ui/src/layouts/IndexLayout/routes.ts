@@ -12,7 +12,7 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
       {
         title: 'index-layout.menu.script.list',
         path: 'list',
-        component: () => import('@/views/script/list/index.vue'),
+        component: () => import('@/views/script/index/main.vue'),
         hidden: true,
       },
       {

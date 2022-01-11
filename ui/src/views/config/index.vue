@@ -62,7 +62,6 @@ export default defineComponent({
     const formRef = ref();
 
     let model = reactive<Partial<Config>>(currConfig.value);
-
     watch(currConfig,(currConfig)=> {
       _.extend(model, currConfig)
     })

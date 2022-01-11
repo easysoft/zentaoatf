@@ -3,10 +3,16 @@
     <div id="main">
       <div id="left">
         <div class="toolbar">
-          <a-button @click="expandOrNot" type="link">
-            <span v-if="!isExpand">展开全部</span>
-            <span v-if="isExpand">收缩全部</span>
-          </a-button>
+          <div class="left">
+            <a-button @click="expandAll" type="link">从禅道导出</a-button>
+            <a-button @click="expandAll" type="link">同步到禅道</a-button>
+          </div>
+          <div class="right">
+            <a-button @click="expandAll" type="link">
+              <span v-if="!isExpand">展开全部</span>
+              <span v-if="isExpand">收缩全部</span>
+            </a-button>
+          </div>
         </div>
 
         <div class="tree-panel">
@@ -30,7 +36,9 @@
       <div id="resize"></div>
 
       <div id="content">
-        <div class="toolbar"></div>
+        <div class="toolbar">
+          <a-button @click="expandAll" type="primary">执行</a-button>
+        </div>
         <div class="panel">
           <pre><code>{{ script.code }}</code></pre>
         </div>
@@ -40,12 +48,13 @@
 </template>
 
 <script lang="ts">
-import {computed, ComputedRef, defineComponent, onMounted, ref, Ref} from "vue";
+import {computed, ComputedRef, defineComponent, onMounted, ref, Ref, watch} from "vue";
 import {useStore} from "vuex";
 import IconSvg from "@/components/IconSvg";
 import {ProjectData} from "@/store/project";
 import {ScriptData} from "../store";
 import {resizeWidth} from "@/utils/dom";
+import _ from "lodash";
 
 interface ListScriptPageSetupData {
   treeData: ComputedRef<any[]>;
@@ -53,7 +62,7 @@ interface ListScriptPageSetupData {
   expandNode: (expandedKeys: string[], e: any) => void;
   selectNode: (keys, e) => void;
   isExpand: Ref<boolean>;
-  expandOrNot: (e) => void;
+  expandAll: (e) => void;
   expandedKeys: Ref<string[]>
   tree: Ref;
   script: any
@@ -73,6 +82,25 @@ export default defineComponent({
     const store = useStore<{ project: ProjectData }>();
     const treeData = computed<any>(() => store.state.project.scriptTree);
     const expandedKeys = ref<string[]>([]);
+
+    const getOpenKeys = (treeNode, isAll) => {
+      if (!treeNode) return
+
+      expandedKeys.value.push(treeNode.path)
+      if (treeNode.children && isAll) {
+        treeNode.children.forEach((item, index) => {
+          getOpenKeys(item, isAll)
+        })
+      }
+    }
+
+    expandedKeys.value = []
+    getOpenKeys(treeData.value[0], false)
+    watch(treeData,(currConfig)=> {
+      expandedKeys.value = []
+      getOpenKeys(treeData.value[0], false)
+    })
+
     let tree = ref(null)
 
     const storeScript = useStore<{ script: ScriptData }>();
@@ -80,7 +108,7 @@ export default defineComponent({
 
     onMounted(() => {
       console.log('onMounted', tree)
-      resizeWidth('main', 'left', 'resize', 'content', 260, 800)
+      resizeWidth('main', 'left', 'resize', 'content', 280, 800)
     })
 
     const expandNode = (keys: string[], e: any) => {
@@ -94,24 +122,13 @@ export default defineComponent({
       storeScript.dispatch('script/getScript', e.selectedNodes[0].props);
     }
 
-    const expandOrNot = (e) => {
-      console.log('expandOrNot')
+    const expandAll = (e) => {
+      console.log('expandAll')
       isExpand.value = !isExpand.value
 
       expandedKeys.value = []
       if (isExpand.value) {
-        getOpenKeys(treeData.value[0])
-      }
-    }
-
-    const getOpenKeys = (node) => {
-      if (!node) return
-
-      expandedKeys.value.push(node.path)
-      if (node.children) {
-        node.children.forEach((item, index) => {
-          getOpenKeys(item)
-        })
+        getOpenKeys(treeData.value[0], true)
       }
     }
 
@@ -121,7 +138,7 @@ export default defineComponent({
       expandNode,
       selectNode,
       isExpand,
-      expandOrNot,
+      expandAll,
       tree,
       expandedKeys,
       script,
@@ -147,12 +164,19 @@ export default defineComponent({
       padding: 3px;
 
       .toolbar {
-        padding: 0;
-        text-align: right;
+        display: flex;
+        padding: 0 3px;
         border-bottom: 1px solid #D0D7DE;
 
+        .left {
+          flex: 1;
+        }
+        .right {
+          width: 70px;
+          text-align: right;
+        }
         .ant-btn-link {
-          padding: 0px 5px;
+          padding: 0px 3px;
           color: #1890ff;
         }
       }
@@ -183,15 +207,18 @@ export default defineComponent({
     #content {
       width: 80%;
       height: 100%;
-      padding: 15px;
       flex: 1;
 
       .toolbar {
-        height: 20px;
+        padding: 5px 10px;
+        height: 46px;
+        text-align: right;
       }
 
       .panel {
         padding: 6px;
+        height: calc(100% - 46px);
+        overflow: auto;
       }
     }
   }
