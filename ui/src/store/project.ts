@@ -7,6 +7,7 @@ import {ComputedRef} from "vue";
 export interface ProjectData {
   projects: any[]
   currProject: any
+  currConfig: any
   scriptTree: any[]
 }
 
@@ -23,6 +24,7 @@ export interface ModuleType extends StoreModuleType<ProjectData> {
 const initState: ProjectData = {
   projects: [],
   currProject: {},
+  currConfig: {},
   scriptTree: [],
 }
 
@@ -38,6 +40,7 @@ const StoreModel: ModuleType = {
 
       state.projects = [...payload.projects, {id: 0, name: '其他', path: ''}];
       state.currProject = payload.currProject;
+      state.currConfig = payload.currConfig;
       state.scriptTree = [payload.scriptTree];
     },
   },

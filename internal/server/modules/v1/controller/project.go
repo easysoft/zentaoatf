@@ -1,6 +1,7 @@
 package controller
 
 import (
+	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
@@ -141,13 +142,16 @@ func (c *ProjectCtrl) GetByUser(ctx iris.Context) {
 		return
 	}
 
-	ret := iris.Map{"projects": projects, "currProject": currProject, "scriptTree": asset}
+	serverConfig.ProjectConfig = serverConfig.ReadConfig(currProject.Path)
+
+	ret := iris.Map{"projects": projects, "currProject": currProject,
+		"currConfig": serverConfig.ProjectConfig, "scriptTree": asset}
 
 	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: ret, Msg: domain.NoErr.Msg})
 }
 
 func (c *ProjectCtrl) SaveConfig(ctx iris.Context) {
-	req := serverDomain.ProjectConfig{}
+	req := commDomain.ProjectConfig{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		errs := validate.ValidRequest(err)
 		if len(errs) > 0 {

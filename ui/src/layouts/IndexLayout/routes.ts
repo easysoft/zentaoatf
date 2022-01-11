@@ -50,7 +50,7 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
     icon: 'execution',
     title: 'index-layout.menu.config',
     path: '/config',
-    component: () => import('@/views/config/zentao/index.vue'),
+    component: () => import('@/views/config/index.vue'),
   },
 
 ];

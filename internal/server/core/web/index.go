@@ -62,7 +62,6 @@ func Init() *WebServer {
 	serverLog.Init()
 
 	i118Utils.Init(serverConfig.CONFIG.System.Language, commConsts.AppServer)
-
 	langUtils.GetExtToNameMap()
 
 	app := iris.New()

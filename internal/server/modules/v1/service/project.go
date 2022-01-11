@@ -1,18 +1,19 @@
 package service
 
 import (
+	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
+	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
 )
 
 type ProjectService struct {
-	ProjectRepo   *repo.ProjectRepo `inject:""`
-	AssetService  *AssetService     `inject:""`
-	ConfigService *ConfigService    `inject:""`
+	ProjectRepo  *repo.ProjectRepo `inject:""`
+	AssetService *AssetService     `inject:""`
 }
 
 func NewProjectService() *ProjectService {
@@ -88,13 +89,13 @@ func (s *ProjectService) GetByUser(currProjectPath string) (projects []model.Pro
 	return
 }
 
-func (s *ProjectService) SaveConfig(config serverDomain.ProjectConfig) (err error) {
+func (s *ProjectService) SaveConfig(config commDomain.ProjectConfig) (err error) {
 	currProject, err := s.ProjectRepo.GetCurrProjectByUser()
 	if err != nil {
 		return
 	}
 
-	s.ConfigService.SaveConfig(config, currProject.Path)
+	serverConfig.SaveConfig(config, currProject.Path)
 
 	return
 }

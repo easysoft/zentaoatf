@@ -13,7 +13,7 @@ export async function queryProject(currProjectPath: string): Promise<any> {
     });
 }
 
-export async function saveConfig(params: Config): Promise<any> {
+export async function saveConfig(params: Partial<Config>): Promise<any> {
     return request({
         url: `/${apiPath}/saveConfig`,
         method: 'POST',
