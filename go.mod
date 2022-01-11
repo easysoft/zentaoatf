@@ -67,6 +67,7 @@ require (
 	google.golang.org/grpc v1.41.0 // indirect
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.1.0 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
+	gopkg.in/ini.v1 v1.63.0 // indirect
 	gorm.io/driver/mysql v1.1.2
 	gorm.io/driver/sqlite v1.2.6 // indirect
 	gorm.io/gorm v1.22.3

@@ -3,10 +3,10 @@ package web
 import (
 	stdContext "context"
 	"fmt"
-	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
-	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
-	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
-	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
+	"github.com/aaronchen2k/deeptest/internal/comm/consts"
+	"github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
+	"github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
+	"github.com/aaronchen2k/deeptest/internal/server/config"
 	"github.com/aaronchen2k/deeptest/internal/server/core/log"
 	"github.com/aaronchen2k/deeptest/internal/server/core/module"
 	myWs "github.com/aaronchen2k/deeptest/internal/server/modules/v1/controller"
@@ -61,7 +61,7 @@ func Init() *WebServer {
 	serverConfig.Init()
 	serverLog.Init()
 
-	i118Utils.Init(serverConfig.CONFIG.System.Language, consts.AppServer)
+	i118Utils.Init(serverConfig.CONFIG.System.Language, commConsts.AppServer)
 
 	langUtils.GetExtToNameMap()
 

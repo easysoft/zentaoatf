@@ -1,5 +1,6 @@
 
-export function resizeWidth(mainId, leftId, resizeId, contentId, leftMin, rightMin) {
+export function resizeWidth(mainId: string, leftId: string, resizeId: string, contentId: string,
+                            leftMin: number, rightMin: number): boolean {
     const main = document.getElementById(mainId) as any;
     const left = document.getElementById(leftId) as any;
     const resize = document.getElementById(resizeId) as any;
@@ -37,4 +38,6 @@ export function resizeWidth(mainId, leftId, resizeId, contentId, leftMin, rightM
         resize.setCapture && resize.setCapture(); //该函数在属于以后线程的指定窗口里设置鼠标捕捉
         return false;
     };
+
+    return true
 }

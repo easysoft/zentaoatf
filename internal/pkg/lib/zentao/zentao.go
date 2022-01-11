@@ -2,9 +2,9 @@ package zentaoUtils
 
 import (
 	"fmt"
-	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
-	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
-	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
+	"github.com/aaronchen2k/deeptest/internal/comm/consts"
+	"github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
+	"github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	"path"
 	"path/filepath"
 	"regexp"
@@ -15,7 +15,7 @@ import (
 func GenApiUri(module string, methd string, param string) string {
 	var uri string
 
-	if consts.RequestType == consts.RequestTypePathInfo {
+	if commConsts.RequestType == commConsts.RequestTypePathInfo {
 		uri = fmt.Sprintf("%s-%s-%s.json", module, methd, param)
 	} else {
 		uri = fmt.Sprintf("index.php?m=%s&f=%s&%s&t=json", module, methd, param)

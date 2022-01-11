@@ -9,3 +9,10 @@ type ProjectReqPaginate struct {
 	Keywords string `json:"keywords"`
 	Enabled  string `json:"enabled"`
 }
+
+type ProjectConfig struct {
+	Version  string `json:"version"`
+	Url      string `json:"url"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+}

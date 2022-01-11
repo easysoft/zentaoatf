@@ -1,4 +1,4 @@
-package consts
+package commConsts
 
 type FieldSource string
 

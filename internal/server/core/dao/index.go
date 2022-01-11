@@ -1,9 +1,9 @@
 package dao
 
 import (
-	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
+	"github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
+	"github.com/aaronchen2k/deeptest/internal/server/config"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm/schema"
@@ -59,6 +59,6 @@ func GetDB() *gorm.DB {
 }
 
 func DBFile() string {
-	path := filepath.Join(serverConfig.CONFIG.System.WorkDir, consts.App+".db")
+	path := filepath.Join(serverConfig.CONFIG.System.WorkDir, commConsts.App+".db")
 	return path
 }

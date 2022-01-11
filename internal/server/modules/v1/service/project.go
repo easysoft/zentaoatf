@@ -10,8 +10,9 @@ import (
 )
 
 type ProjectService struct {
-	ProjectRepo  *repo.ProjectRepo `inject:""`
-	AssetService *AssetService     `inject:""`
+	ProjectRepo   *repo.ProjectRepo `inject:""`
+	AssetService  *AssetService     `inject:""`
+	ConfigService *ConfigService    `inject:""`
 }
 
 func NewProjectService() *ProjectService {
@@ -83,6 +84,17 @@ func (s *ProjectService) GetByUser(currProjectPath string) (projects []model.Pro
 	}
 
 	asset, err = s.AssetService.LoadScripts(currProject.Path)
+
+	return
+}
+
+func (s *ProjectService) SaveConfig(config serverDomain.ProjectConfig) (err error) {
+	currProject, err := s.ProjectRepo.GetCurrProjectByUser()
+	if err != nil {
+		return
+	}
+
+	s.ConfigService.SaveConfig(config, currProject.Path)
 
 	return
 }

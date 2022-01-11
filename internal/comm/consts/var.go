@@ -1,3 +1,5 @@
-package consts
+package commConsts
 
-var ()
+var (
+	RequestType string
+)

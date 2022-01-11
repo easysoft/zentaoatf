@@ -3,10 +3,10 @@ package serverConfig
 import (
 	"bytes"
 	"fmt"
-	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
-	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
-	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
-	resUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/res"
+	"github.com/aaronchen2k/deeptest/internal/comm/consts"
+	"github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
+	"github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
+	"github.com/aaronchen2k/deeptest/internal/pkg/lib/res"
 	"github.com/spf13/viper"
 	"path/filepath"
 )
@@ -19,14 +19,14 @@ func Init() {
 
 	if CONFIG.System.Verbose {
 		fmt.Printf("launch %s%s in %s\n",
-			CONFIG.System.ExeDir, consts.App, CONFIG.System.WorkDir)
+			CONFIG.System.ExeDir, commConsts.App, CONFIG.System.WorkDir)
 	}
 
 	v := viper.New()
 	VIPER = v
 	VIPER.SetConfigType("yaml")
 
-	configRes := filepath.Join("res", consts.AppServer+".yaml")
+	configRes := filepath.Join("res", commConsts.AppServer+".yaml")
 
 	yamlDefault, _ := resUtils.ReadRes(configRes)
 

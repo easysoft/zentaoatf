@@ -26,6 +26,7 @@ func (m *ProjectModule) Party() module.WebModule {
 		index.Delete("/{id:uint}", m.ProjectCtrl.Delete).Name = "删除项目"
 
 		index.Get("/listByUser", m.ProjectCtrl.GetByUser).Name = "获取用户参与的项目"
+		index.Post("/saveConfig", m.ProjectCtrl.SaveConfig).Name = "保存项目配置"
 	}
 	return module.NewModule("/projects", handler)
 }

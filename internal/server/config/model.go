@@ -12,6 +12,7 @@ type Config struct {
 }
 
 type System struct {
+	Version      string `mapstructure:"version" json:"version" yaml:"version"`
 	Level        string `mapstructure:"level" json:"level" yaml:"level"` // debug,release,test
 	Addr         string `mapstructure:"addr" json:"addr" yaml:"addr"`
 	StaticPrefix string `mapstructure:"static-prefix" json:"staticPrefix" yaml:"static-prefix"`

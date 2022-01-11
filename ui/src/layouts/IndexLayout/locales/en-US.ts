@@ -7,4 +7,6 @@ export default {
   'index-layout.menu.execution': 'Execution',
   'index-layout.menu.execution.history': 'Execution History',
   'index-layout.menu.execution.result': 'Execution Result',
+
+  'index-layout.menu.config': 'Config',
 };
