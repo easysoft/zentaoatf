@@ -1,5 +1,5 @@
 export interface SyncSettings {
-  productId: number
+  productId: string
   moduleId: string
   suiteId: string
   taskId: string

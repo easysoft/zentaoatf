@@ -4,7 +4,8 @@
   <a-card title="从禅道同步">
     <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-item label="产品" v-bind="validateInfos.productId">
-        <a-select v-model:value="model.productId" @change="selectProduct">
+        <a-select v-model:value="model.productId">
+          <a-select-option key="0" value="0">&nbsp;</a-select-option>
           <a-select-option v-for="item in products" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
         </a-select>
       </a-form-item>
@@ -110,17 +111,33 @@ export default defineComponent({
 
     const formRef = ref();
 
-    const model = reactive<SyncSettings>({} as SyncSettings);
+    const model = reactive<SyncSettings>({
+      productId: '',
+      moduleId: '',
+      suiteId: '',
+      taskId: '',
+      lang: '',
+      independentFile: false
+    });
     const rules = reactive({
       productId: [
-        { required: true, type: 'number', message: '请选择产品', trigger: 'change' },
+        { required: true, type: 'string', message: '请选择产品', trigger: 'change',
+          validator: async (rule: any, value: string) => {
+          alert(1)
+            if (!value) {
+              throw new Error('请选择项目');
+            }
+          }
+        },
       ],
     });
 
-    const { resetFields, validate, validateInfos } = useForm(model, rules);
+    const { resetFields, validate, validateInfos, validateField } = useForm(model, rules);
 
     const selectProduct = (item) => {
       console.log('selectProduct', item)
+      if (!item) return
+
       store.dispatch('zentao/fetchModules', item)
       store.dispatch('zentao/fetchSuites', item)
       store.dispatch('zentao/fetchTasks', item)
@@ -129,7 +146,7 @@ export default defineComponent({
     const syncFromZentao = () => {
       validate()
         .then(() => {
-          console.log(model);
+          console.log('then', model);
         })
         .catch(err => {
           console.log('error', err);
