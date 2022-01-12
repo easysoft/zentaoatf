@@ -2,7 +2,6 @@ import { Mutation, Action } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 import {queryProject} from "@/services/project";
-import {ComputedRef} from "vue";
 
 export interface ProjectData {
   projects: any[]

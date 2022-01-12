@@ -12,14 +12,14 @@ import (
 )
 
 func Init() {
-	CONFIG.System.IsRelease = commonUtils.IsRelease()
+	commConsts.IsRelease = commonUtils.IsRelease()
 
-	CONFIG.System.WorkDir = fileUtils.GetWorkDir()
-	CONFIG.System.ExeDir = fileUtils.GetExeDir(CONFIG.System.WorkDir)
+	commConsts.WorkDir = fileUtils.GetWorkDir()
+	commConsts.ExeDir = fileUtils.GetExeDir(commConsts.WorkDir)
 
-	if CONFIG.System.Verbose {
+	if commConsts.Verbose {
 		fmt.Printf("launch %s%s in %s\n",
-			CONFIG.System.ExeDir, commConsts.App, CONFIG.System.WorkDir)
+			commConsts.ExeDir, commConsts.App, commConsts.WorkDir)
 	}
 
 	v := viper.New()

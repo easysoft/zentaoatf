@@ -1,6 +1,7 @@
 package controller
 
 import (
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
@@ -133,7 +134,7 @@ func (c *ProjectCtrl) GetByUser(ctx iris.Context) {
 	currProjectPath := ctx.URLParam("currProject")
 
 	if currProjectPath == "" {
-		currProjectPath = serverConfig.CONFIG.System.WorkDir
+		currProjectPath = commConsts.WorkDir
 	}
 
 	projects, currProject, asset, err := c.ProjectService.GetByUser(currProjectPath)
@@ -142,10 +143,10 @@ func (c *ProjectCtrl) GetByUser(ctx iris.Context) {
 		return
 	}
 
-	serverConfig.ProjectConfig = serverConfig.ReadConfig(currProject.Path)
+	commConsts.ProjectConfig = serverConfig.ReadConfig(currProject.Path)
 
 	ret := iris.Map{"projects": projects, "currProject": currProject,
-		"currConfig": serverConfig.ProjectConfig, "scriptTree": asset}
+		"currConfig": commConsts.ProjectConfig, "scriptTree": asset}
 
 	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: ret, Msg: domain.NoErr.Msg})
 }

@@ -41,6 +41,13 @@ func Errorf(str string, args ...interface{}) {
 }
 
 func PrintUnicode(str []byte) {
+	msg := ConvertUnicode(str)
+
+	Logger.Info(msg)
+	log.Print(msg)
+}
+
+func ConvertUnicode(str []byte) string {
 	var a interface{}
 
 	temp := strings.Replace(string(str), "\\\\", "\\", -1)
@@ -54,6 +61,5 @@ func PrintUnicode(str []byte) {
 		msg = temp
 	}
 
-	Logger.Info(msg)
-	log.Print(msg)
+	return msg
 }

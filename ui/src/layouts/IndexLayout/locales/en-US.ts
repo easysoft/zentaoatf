@@ -8,5 +8,6 @@ export default {
   'index-layout.menu.execution.history': 'Execution History',
   'index-layout.menu.execution.result': 'Execution Result',
 
-  'index-layout.menu.config': 'Config',
+  'index-layout.menu.config': 'Configuration',
+  'index-layout.menu.sync': 'Synchronization',
 };

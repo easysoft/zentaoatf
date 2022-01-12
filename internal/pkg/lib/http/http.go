@@ -3,20 +3,20 @@ package httpUtils
 import (
 	"encoding/json"
 	"fmt"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
-	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
-	"github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
+	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
+	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	"github.com/ajg/form"
+	"github.com/yosssi/gohtml"
 	"io/ioutil"
 	"net/http"
+	"regexp"
 	"strings"
 )
 
-func Get(url string) (interface{}, bool) {
-	return GetObj(url, "farm")
-}
-
-func GetObj(url string, requestTo string) (interface{}, bool) {
+func Get(url string) (ret []byte, ok bool) {
 	client := &http.Client{}
 
 	if consts.Verbose {
@@ -26,49 +26,54 @@ func GetObj(url string, requestTo string) (interface{}, bool) {
 	req, reqErr := http.NewRequest("GET", url, nil)
 	if reqErr != nil {
 		logUtils.Error(reqErr.Error())
-		return nil, false
+		ok = false
+		return
 	}
 
 	resp, respErr := client.Do(req)
-
 	if respErr != nil {
 		logUtils.Error(respErr.Error())
-		return nil, false
+		ok = false
+		return
 	}
 
-	bodyStr, _ := ioutil.ReadAll(resp.Body)
+	bodyBytes, _ := ioutil.ReadAll(resp.Body)
 	if consts.Verbose {
-		logUtils.PrintUnicode(bodyStr)
+		logUtils.PrintUnicode(bodyBytes)
 	}
 	defer resp.Body.Close()
 
-	if requestTo == "farm" {
-		var bodyJson domain.RpcResp
-		jsonErr := json.Unmarshal(bodyStr, &bodyJson)
-		if jsonErr != nil {
-			if strings.Index(string(bodyStr), "<html>") > -1 {
-				logUtils.Error(i118Utils.Sprintf("wrong_response_format", "html"))
-				return nil, false
-			} else {
-				logUtils.Error(jsonErr.Error())
-				return nil, false
+	var zentaoResp serverDomain.ZentaoResp
+	jsonErr := json.Unmarshal(bodyBytes, &zentaoResp)
+	if jsonErr != nil {
+		if strings.Index(string(bodyBytes), "<html>") > -1 {
+			if commConsts.Verbose {
+				logUtils.Errorf(i118Utils.Sprintf("server_return") + " HTML - " + gohtml.FormatWithLineNo(string(bodyBytes)))
 			}
-		}
-		code := bodyJson.Code
-		return bodyJson.Payload, code == consts.ResultCodeSuccess
-	} else {
-		var bodyJson map[string]interface{}
-		jsonErr := json.Unmarshal(bodyStr, &bodyJson)
-		if jsonErr != nil {
-			logUtils.Error(jsonErr.Error())
-			return nil, false
+			return
 		} else {
-			return bodyJson, true
+			if commConsts.Verbose {
+				logUtils.Infof(jsonErr.Error())
+			}
+			return
 		}
 	}
+
+	defer resp.Body.Close()
+
+	status := zentaoResp.Status
+	if status == "" { // 非嵌套结构
+		ret = bodyBytes
+		ok = true
+	} else { // 嵌套结构
+		ret = []byte(zentaoResp.Data)
+		ok = status == "success"
+	}
+
+	return
 }
 
-func Post(url string, params interface{}) (interface{}, bool) {
+func Post(url string, params interface{}, useFormFormat bool) (ret []byte, ok bool) {
 	if consts.Verbose {
 		logUtils.Info(url)
 	}
@@ -77,13 +82,21 @@ func Post(url string, params interface{}) (interface{}, bool) {
 	paramStr, err := json.Marshal(params)
 	if err != nil {
 		logUtils.Error(err.Error())
-		return nil, false
+		return
 	}
 
-	req, reqErr := http.NewRequest("POST", url, strings.NewReader(string(paramStr)))
+	val := string(paramStr)
+	if useFormFormat {
+		val, _ = form.EncodeToString(params)
+		// convert data to post fomat
+		re3, _ := regexp.Compile(`([^&]*?)=`)
+		val = re3.ReplaceAllStringFunc(val, replacePostData)
+	}
+
+	req, reqErr := http.NewRequest("POST", url, strings.NewReader(val))
 	if reqErr != nil {
 		logUtils.Error(reqErr.Error())
-		return nil, false
+		return
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -91,21 +104,114 @@ func Post(url string, params interface{}) (interface{}, bool) {
 	resp, respErr := client.Do(req)
 	if respErr != nil {
 		logUtils.Error(respErr.Error())
-		return nil, false
+		return
 	}
 
-	bodyStr, _ := ioutil.ReadAll(resp.Body)
+	bodyBytes, _ := ioutil.ReadAll(resp.Body)
 	if consts.Verbose {
-		logUtils.PrintUnicode(bodyStr)
+		logUtils.PrintUnicode(bodyBytes)
 	}
+	defer resp.Body.Close()
 
-	var result domain.RpcResp
-	json.Unmarshal(bodyStr, &result)
+	var zentaoResp serverDomain.ZentaoResp
+	jsonErr := json.Unmarshal(bodyBytes, &zentaoResp)
+	if jsonErr != nil {
+		if strings.Index(string(bodyBytes), "<html>") > -1 {
+			if commConsts.Verbose {
+				logUtils.Errorf(i118Utils.Sprintf("server_return") + " HTML - " + gohtml.FormatWithLineNo(string(bodyBytes)))
+			}
+			return
+		} else {
+			if commConsts.Verbose {
+				logUtils.Infof(jsonErr.Error())
+			}
+			return
+		}
+	}
 
 	defer resp.Body.Close()
 
-	code := result.Code
-	return result, code == consts.ResultCodeSuccess
+	status := zentaoResp.Status
+	if status == "" { // 非嵌套结构
+		ret = bodyBytes
+		ok = true
+	} else { // 嵌套结构
+		ret = []byte(zentaoResp.Data)
+		ok = status == "success"
+	}
+
+	return
+}
+
+func PostStr(url string, params map[string]string) (ret []byte, ok bool) {
+	if commConsts.Verbose {
+		logUtils.Infof(i118Utils.Sprintf("server_address") + url)
+	}
+	client := &http.Client{}
+
+	paramStr := ""
+	idx := 0
+	for pkey, pval := range params {
+		if idx > 0 {
+			paramStr += "&"
+		}
+		paramStr = paramStr + pkey + "=" + pval
+		idx++
+	}
+
+	if commConsts.Verbose {
+		logUtils.Infof(i118Utils.Sprintf("server_params") + paramStr)
+	}
+
+	req, reqErr := http.NewRequest("POST", url, strings.NewReader(paramStr))
+	if reqErr != nil {
+		if commConsts.Verbose {
+			logUtils.Infof(reqErr.Error())
+		}
+		ok = false
+		return
+	}
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("cookie", commConsts.SessionVar+"="+commConsts.SessionId)
+
+	resp, respErr := client.Do(req)
+	if respErr != nil {
+		if commConsts.Verbose {
+			logUtils.Infof(respErr.Error())
+		}
+		ok = false
+		return
+	}
+
+	bodyStr, _ := ioutil.ReadAll(resp.Body)
+	if commConsts.Verbose {
+		logUtils.Infof(i118Utils.Sprintf("server_return") + logUtils.ConvertUnicode(bodyStr))
+	}
+
+	var zentaoResp serverDomain.ZentaoResp
+	jsonErr := json.Unmarshal(bodyStr, &zentaoResp)
+	if jsonErr != nil {
+		if commConsts.Verbose {
+			if strings.Index(url, "login") == -1 { // jsonErr caused by login request return a html
+				logUtils.Infof(jsonErr.Error())
+			}
+		}
+		ok = false
+		return
+	}
+
+	defer resp.Body.Close()
+
+	status := zentaoResp.Status
+	if status == "" { // 非嵌套结构
+		ret = bodyStr
+	} else { // 嵌套结构
+		ret = []byte(zentaoResp.Data)
+		ok = status == "success"
+	}
+
+	return
 }
 
 func GenUrl(server string, path string) string {
@@ -119,4 +225,14 @@ func UpdateUrl(url string) string {
 		url += "/"
 	}
 	return url
+}
+
+func replacePostData(str string) string {
+	str = strings.ToLower(str[:1]) + str[1:]
+
+	if strings.Index(str, ".") > -1 {
+		str = strings.Replace(str, ".", "[", -1)
+		str = strings.Replace(str, "=", "]=", -1)
+	}
+	return str
 }

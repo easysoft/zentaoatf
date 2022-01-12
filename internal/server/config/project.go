@@ -13,9 +13,9 @@ import (
 
 func ReadConfig(projectPath string) (config domain.ProjectConfig) {
 	pth := filepath.Join(projectPath, commConsts.ConfigDir, commConsts.ConfigFile)
+	ini.MapTo(&config, pth)
 
 	config.Url = commonUtils.AddSlashForUrl(config.Url)
-	ini.MapTo(&config, pth)
 
 	return config
 }

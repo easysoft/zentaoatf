@@ -9,4 +9,5 @@ export default {
   'index-layout.menu.execution.result': '执行结果',
 
   'index-layout.menu.config': '配置',
+  'index-layout.menu.sync': '同步',
 };

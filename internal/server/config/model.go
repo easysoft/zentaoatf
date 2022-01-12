@@ -20,12 +20,6 @@ type System struct {
 	WebPath      string `mapstructure:"web-path" json:"webPath" yaml:"web-path"`
 	DbType       string `mapstructure:"db-type" json:"dbType" yaml:"db-type"`
 	TimeFormat   string `mapstructure:"time-format" json:"timeFormat" yaml:"time-format"`
-
-	Language  string `json:"language"`
-	Verbose   bool   `json:"verbose"`
-	IsRelease bool   `json:"isRelease"`
-	ExeDir    string `json:"exeDir"`
-	WorkDir   string `json:"workDir"`
 }
 
 type Limit struct {

@@ -5,8 +5,6 @@ const (
 	AppServer = "server"
 	AppAgent  = "agent"
 
-	RequestTypePathInfo = "PATH_INFO"
-
 	ConfigDir  = "conf"
 	ConfigFile = "ztf.conf"
 )

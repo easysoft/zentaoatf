@@ -7,10 +7,12 @@
                  @blur="validate('url', { trigger: 'blur' }).catch(() => {})" placeholder="https://zentao.site.com" />
       </a-form-item>
       <a-form-item label="用户名" v-bind="validateInfos.username">
-        <a-input v-model:value="model.username" placeholder="" />
+        <a-input v-model:value="model.username"
+                 @blur="validate('username', { trigger: 'blur' }).catch(() => {})" placeholder="" />
       </a-form-item>
       <a-form-item label="密码" v-bind="validateInfos.password">
-        <a-input v-model:value="model.password" placeholder="" />
+        <a-input v-model:value="model.password"
+                 @blur="validate('password', { trigger: 'blur' }).catch(() => {})" placeholder="" />
       </a-form-item>
 
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">

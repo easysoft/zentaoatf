@@ -3,8 +3,10 @@ module github.com/aaronchen2k/deeptest
 go 1.16
 
 require (
+	github.com/ajg/form v1.5.1 // indirect
 	github.com/apache/thrift v0.15.0 // indirect
 	github.com/armon/go-metrics v0.3.9 // indirect
+	github.com/bitly/go-simplejson v0.5.0 // indirect
 	github.com/casbin/casbin/v2 v2.37.2
 	github.com/casbin/gorm-adapter/v3 v3.4.2
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
@@ -57,6 +59,7 @@ require (
 	github.com/spf13/viper v1.8.1
 	github.com/tjfoc/gmsm v1.4.1 // indirect
 	github.com/valyala/fastrand v1.1.0 // indirect
+	github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4 // indirect
 	go.uber.org/zap v1.19.1
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
 	golang.org/x/mod v0.5.1 // indirect

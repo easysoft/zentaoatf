@@ -47,10 +47,17 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
   },
 
   {
-    icon: 'execution',
+    icon: 'config',
     title: 'index-layout.menu.config',
     path: '/config',
     component: () => import('@/views/config/index.vue'),
+  },
+
+  {
+    icon: 'sync',
+    title: 'index-layout.menu.sync',
+    path: '/sync',
+    component: () => import('@/views/sync/index.vue'),
   },
 
 ];
