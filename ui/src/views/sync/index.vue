@@ -24,14 +24,16 @@
         </a-select>
       </a-form-item>
       <a-form-item label="语言" v-bind="validateInfos.lang">
-        <a-input v-model:value="model.lang" />
+        <a-select v-model:value="model.lang">
+          <a-select-option v-for="item in langs" :key="item.code" :value="item.code">{{ item.name }}</a-select-option>
+        </a-select>
       </a-form-item>
       <a-form-item label="期待结果为独立文件">
-        <a-input v-model:value="model.independentFile" />
+        <a-switch v-model:checked="model.independentFile" />
       </a-form-item>
 
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click.prevent="syncFromZentao">执行</a-button>
+        <a-button type="primary" @click.prevent="syncFromZentao">提交</a-button>
         <a-button style="margin-left: 10px" @click="resetFields">重置</a-button>
       </a-form-item>
     </a-form>
@@ -41,7 +43,7 @@
     <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
 
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click.prevent="syncToZentao">执行</a-button>
+        <a-button type="primary" @click.prevent="syncToZentao">提交</a-button>
       </a-form-item>
     </a-form>
   </a-card>
@@ -74,6 +76,7 @@ interface ConfigFormSetupData {
   syncToZentao:  () => void;
   resetFields:  () => void;
 
+  langs: ComputedRef<any[]>;
   products: ComputedRef<any[]>;
   modules: ComputedRef<any[]>;
   suites: ComputedRef<any[]>;
@@ -92,13 +95,16 @@ export default defineComponent({
     const currConfig = computed<any>(() => storeProject.state.project.currConfig);
 
     const store = useStore<{zentao: ZentaoData}>();
+    const langs = computed<any[]>(() => store.state.zentao.langs);
     const products = computed<any[]>(() => store.state.zentao.products);
     const modules = computed<any[]>(() => store.state.zentao.modules);
     const suites = computed<any[]>(() => store.state.zentao.suites);
     const tasks = computed<any[]>(() => store.state.zentao.tasks);
 
+    store.dispatch('zentao/fetchLangs')
     store.dispatch('zentao/fetchProducts')
     watch(currConfig, (currConfig)=> {
+      store.dispatch('zentao/fetchLangs')
       store.dispatch('zentao/fetchProducts')
     })
 
@@ -146,6 +152,7 @@ export default defineComponent({
       syncToZentao,
 
       model,
+      langs,
       products,
       modules,
       suites,

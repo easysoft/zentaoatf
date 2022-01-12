@@ -15,6 +15,16 @@ func NewZentaoCtrl() *ZentaoCtrl {
 	return &ZentaoCtrl{}
 }
 
+func (c *ZentaoCtrl) ListLang(ctx iris.Context) {
+	data, err := c.ZentaoService.ListLang()
+	if err != nil {
+		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
+		return
+	}
+
+	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: data, Msg: domain.NoErr.Msg})
+}
+
 func (c *ZentaoCtrl) ListProduct(ctx iris.Context) {
 	data, err := c.ZentaoService.ListProduct()
 	if err != nil {

@@ -1,9 +1,10 @@
 import { Mutation, Action } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
-import { queryProduct, queryModule, querySuite, queryTask } from "./service";
+import { queryLang, queryProduct, queryModule, querySuite, queryTask } from "./service";
 
 export interface ZentaoData {
+    langs: any[]
     products: any[]
     modules: any[]
     suites: any[]
@@ -13,12 +14,14 @@ export interface ZentaoData {
 export interface ModuleType extends StoreModuleType<ZentaoData> {
     state: ZentaoData;
     mutations: {
+        saveLangs: Mutation<any>;
         saveProducts: Mutation<any>;
         saveModules: Mutation<any>;
         saveSuites: Mutation<any>;
         saveTasks: Mutation<any>;
     };
     actions: {
+        fetchLangs: Action<ZentaoData, ZentaoData>;
         fetchProducts: Action<ZentaoData, ZentaoData>;
         fetchModules: Action<ZentaoData, ZentaoData>;
         fetchSuites: Action<ZentaoData, ZentaoData>;
@@ -27,6 +30,7 @@ export interface ModuleType extends StoreModuleType<ZentaoData> {
 }
 
 const initState: ZentaoData = {
+    langs: [],
     products: [],
     modules: [],
     suites: [],
@@ -40,6 +44,10 @@ const StoreModel: ModuleType = {
         ...initState
     },
     mutations: {
+        saveLangs(state, payload) {
+            console.log('payload', payload)
+            state.langs = payload
+        },
         saveProducts(state, payload) {
             console.log('payload', payload)
             state.products = payload
@@ -61,6 +69,17 @@ const StoreModel: ModuleType = {
         },
     },
     actions: {
+        async fetchLangs({ commit }) {
+            try {
+                const response: ResponseData = await queryLang();
+                const { data } = response;
+                commit('saveLangs', data)
+
+                return true;
+            } catch (error) {
+                return false;
+            }
+        },
         async fetchProducts({ commit }) {
             try {
                 const response: ResponseData = await queryProduct();

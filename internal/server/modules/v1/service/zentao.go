@@ -7,6 +7,7 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/comm/domain"
 	httpUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/http"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
+	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	zentaoUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/zentao"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
@@ -22,6 +23,14 @@ type ZentaoService struct {
 
 func NewZentaoService() *ZentaoService {
 	return &ZentaoService{}
+}
+
+func (s *ZentaoService) ListLang() (langs []serverDomain.ZentaoLang, err error) {
+	for key, _ := range langUtils.LangMap {
+		langs = append(langs, serverDomain.ZentaoLang{Code: key, Name: key})
+	}
+
+	return
 }
 
 func (s *ZentaoService) ListProduct() (products []serverDomain.ZentaoProduct, err error) {

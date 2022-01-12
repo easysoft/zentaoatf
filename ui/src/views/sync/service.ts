@@ -2,13 +2,17 @@ import request from '@/utils/request';
 
 const apiPath = 'zentao';
 
-export async function queryProduct(): Promise<any> {
-    const params = {}
+export async function queryLang(): Promise<any> {
+    return request({
+        url: `/${apiPath}/listLang`,
+        method: 'GET',
+    });
+}
 
+export async function queryProduct(): Promise<any> {
     return request({
         url: `/${apiPath}/listProduct`,
         method: 'GET',
-        params,
     });
 }
 

@@ -5,6 +5,11 @@ type ZentaoResp struct {
 	Data   string
 }
 
+type ZentaoLang struct {
+	Code string `json:"code"`
+	Name string `json:"name"`
+}
+
 type ZentaoProduct struct {
 	Id   int    `json:"id"`
 	Name string `json:"name"`
