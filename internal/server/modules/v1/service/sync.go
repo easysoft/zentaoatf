@@ -7,6 +7,9 @@ import (
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
+	zentaoUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/zentao"
+	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/script"
+	"log"
 	"strconv"
 )
 
@@ -57,7 +60,23 @@ func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, projectPa
 }
 
 func (s *SyncService) SyncToZentao(projectPath string) (err error) {
-	files := s.AssetService.LoadScriptByProject(projectPath)
+	caseFiles := s.AssetService.LoadScriptByProject(projectPath)
+
+	for _, cs := range caseFiles {
+		pass, id, _, title := zentaoUtils.GetCaseInfo(cs)
+
+		if pass {
+			stepMap, stepTypeMap, expectMap, isOldFormat := scriptUtils.GetStepAndExpectMap(cs)
+			log.Println(isOldFormat)
+
+			isIndependent, expectIndependentContent := zentaoUtils.GetDependentExpect(cs)
+			if isIndependent {
+				expectMap = scriptUtils.GetExpectMapFromIndependentFileObsolete(expectMap, expectIndependentContent, true)
+			}
+
+			s.ZtfCaseService.CommitCase(id, title, stepMap, stepTypeMap, expectMap)
+		}
+	}
 
 	return
 }

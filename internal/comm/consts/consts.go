@@ -12,4 +12,6 @@ const (
 	ExtNameSuite  = "cs"
 	ExtNameJson   = "json"
 	ExtNameResult = "txt"
+
+	ExpectResultPass = "pass"
 )

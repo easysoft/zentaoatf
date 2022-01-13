@@ -312,68 +312,6 @@ func (s *ZtfCaseService) CommitCase(caseId int, title string, stepMap maps.Map, 
 	}
 }
 
-func (s *ZtfCaseService) IsMultiLine(step commDomain.ZtfStep) bool {
-	if strings.Index(step.Desc, "\n") > -1 || strings.Index(step.Expect, "\n") > -1 {
-		return true
-	}
-
-	return false
-}
-
-func (s *ZtfCaseService) GetCaseContent(stepObj commDomain.ZtfStep, seq string, independentFile bool, isChild bool) []string {
-	lines := make([]string, 0)
-
-	step := strings.TrimSpace(stepObj.Desc)
-	expect := strings.TrimSpace(stepObj.Expect)
-
-	stepStr := s.getStepContent(step, isChild)
-	expectStr := s.getExpectContent(expect, isChild, independentFile)
-
-	lines = append(lines, stepStr+expectStr)
-
-	return lines
-}
-
-func (s *ZtfCaseService) getStepContent(str string, isChild bool) (ret string) {
-	str = strings.TrimSpace(str)
-
-	rpl := "\n"
-	if isChild {
-		rpl = "\n" + "  "
-	}
-	ret = strings.ReplaceAll(str, "\r\n", rpl)
-	if isChild {
-		ret = "  " + ret
-	}
-
-	return
-}
-func (s *ZtfCaseService) getExpectContent(str string, isChild bool, independentFile bool) (ret string) {
-	str = strings.TrimSpace(str)
-	if str == "" {
-		return
-	}
-
-	isMultiLine := strings.Count(str, "\r\n") > 0
-	if !isMultiLine {
-		if independentFile {
-			ret = str
-		} else {
-			ret = " >> " + str
-		}
-	} else {
-		rpl := "\r\n" + "  "
-
-		if independentFile {
-			ret = ">>\n" + strings.ReplaceAll(str, "\r\n", rpl) + "\n>>"
-		} else {
-			ret = " >> " + strings.ReplaceAll(str, "\r\n", rpl) + "\n>>"
-		}
-	}
-
-	return
-}
-
 func (s *ZtfCaseService) addPrefixSpace(str string, numb int) string {
 	arr := strings.Split(str, "\r\n")
 
