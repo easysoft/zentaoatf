@@ -1,4 +1,4 @@
-package domain
+package commDomain
 
 type SyncSettings struct {
 	ProductId       int    `json:"productId"`

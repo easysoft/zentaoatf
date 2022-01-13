@@ -6,7 +6,7 @@ import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { notification } from "ant-design-vue";
 import router from '@/config/routes';
 import settings from '@/config/settings';
-import { getToken, setToken } from '@/utils/localToken';
+import { getCache, setCache } from '@/utils/localCache';
 
 export interface ResponseData {
     code: number;
@@ -96,7 +96,8 @@ request.interceptors.request.use(
         }
 
         // 加随机数清除缓存
-        config.params = { ...config.params, ts: Date.now() };
+        const projectPath = await getCache(settings.currProject);
+        config.params = { ...config.params, currProject: projectPath, ts: Date.now() };
 
         console.log('=== request ===', config)
         return config;

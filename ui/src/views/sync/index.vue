@@ -11,16 +11,19 @@
       </a-form-item>
       <a-form-item label="模块" v-bind="validateInfos.moduleId">
         <a-select v-model:value="model.moduleId">
+          <a-select-option key="" value="">&nbsp;</a-select-option>
           <a-select-option v-for="item in modules" :key="item.id" :value="item.id"><span v-html="item.name"></span></a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item label="套件" v-bind="validateInfos.suiteId">
         <a-select v-model:value="model.suiteId">
+          <a-select-option key="" value="">&nbsp;</a-select-option>
           <a-select-option v-for="item in suites" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item label="任务" v-bind="validateInfos.taskId">
         <a-select v-model:value="model.taskId">
+          <a-select-option key="" value="">&nbsp;</a-select-option>
           <a-select-option v-for="item in tasks" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
         </a-select>
       </a-form-item>
@@ -115,12 +118,9 @@ export default defineComponent({
 
     const model = reactive<SyncSettings>({
       productId: '',
-      moduleId: '',
-      suiteId: '',
-      taskId: '',
-      lang: '',
+      lang: 'python',
       independentFile: false
-    });
+    } as SyncSettings);
     const rules = reactive({
       productId: [
         { required: true, message: '请选择产品', trigger: 'change',

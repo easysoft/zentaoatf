@@ -30,7 +30,7 @@ func (c *TestScriptCtrl) Get(ctx iris.Context) {
 		return
 	}
 
-	script, err := c.AssetService.GetScript(scriptPath)
+	script, err := c.AssetService.GetScriptContent(scriptPath)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: domain.SystemErr.Msg})
 		return

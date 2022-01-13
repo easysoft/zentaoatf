@@ -26,6 +26,11 @@ export interface SettingsType {
     siteTokenKey: string;
 
     /**
+     * 站点本地存储当前项目 的 Key值
+     */
+    currProject: string;
+
+    /**
      * Ajax请求头发送Token 的 Key值
      */
     ajaxHeadersTokenKey: string;
@@ -46,6 +51,7 @@ const settings: SettingsType = {
     topNavEnable: true,
     headFixed: true,
     siteTokenKey: 'admin_antd_vue_token',
+    currProject: 'currProject',
     // ajaxHeadersTokenKey: 'x-token',
     ajaxHeadersTokenKey: 'Authorization',
     ajaxResponseNoVerifyUrl: [

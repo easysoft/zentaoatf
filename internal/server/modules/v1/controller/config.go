@@ -22,6 +22,8 @@ func NewConfigCtrl() *ConfigCtrl {
 }
 
 func (c *ConfigCtrl) SaveConfig(ctx iris.Context) {
+	projectPath := ctx.URLParam("currProject")
+
 	req := commDomain.ProjectConf{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		errs := validate.ValidRequest(err)
@@ -32,7 +34,7 @@ func (c *ConfigCtrl) SaveConfig(ctx iris.Context) {
 		}
 	}
 
-	err := c.ConfigService.SaveConfig(req)
+	err := c.ConfigService.SaveConfig(req, projectPath)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: c.ErrCode(err), Data: nil})
 		return

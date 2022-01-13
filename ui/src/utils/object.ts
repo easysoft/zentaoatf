@@ -42,5 +42,14 @@ export function  equalObject(obj1: Object, obj2: Object): boolean {
     }
 
     return !obj1Keys.some(key => obj1[key] != obj2[key])
-    
+}
+
+export function removeEmptyField(obj: Object): any {
+    Object.keys(obj).forEach(key => {
+        if (obj[key] === '') {
+            delete obj[key]
+        }
+    })
+
+    return obj
 }

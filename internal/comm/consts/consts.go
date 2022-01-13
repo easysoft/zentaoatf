@@ -5,6 +5,11 @@ const (
 	AppServer = "server"
 	AppAgent  = "agent"
 
-	ConfigDir  = "conf"
-	ConfigFile = "ztf.conf"
+	ConfigVersion = "3.0"
+	ConfigDir     = "conf"
+	ConfigFile    = "ztf.conf"
+
+	ExtNameSuite  = "cs"
+	ExtNameJson   = "json"
+	ExtNameResult = "txt"
 )

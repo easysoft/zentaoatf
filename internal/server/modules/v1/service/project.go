@@ -45,7 +45,7 @@ func (s *ProjectService) DeleteById(id uint) error {
 	return s.ProjectRepo.BatchDelete(id)
 }
 
-func (s *ProjectService) GetByUser(currProjectPath string) (projects []model.Project, currProject model.Project, asset serverDomain.TestAsset, err error) {
+func (s *ProjectService) GetByUser(currProjectPath string) (projects []model.Project, currProject model.Project, scriptTree serverDomain.TestAsset, err error) {
 	projects, err = s.ProjectRepo.ListProjectByUser()
 
 	found := false
@@ -82,7 +82,7 @@ func (s *ProjectService) GetByUser(currProjectPath string) (projects []model.Pro
 		return
 	}
 
-	asset, err = s.AssetService.LoadScripts(currProject.Path)
+	scriptTree, err = s.AssetService.LoadScriptTree(currProject.Path)
 
 	return
 }

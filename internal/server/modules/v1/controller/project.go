@@ -4,7 +4,6 @@ import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
 	"github.com/aaronchen2k/deeptest/internal/server/core/web/validate"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
@@ -17,6 +16,7 @@ import (
 
 type ProjectCtrl struct {
 	ProjectService *service.ProjectService `inject:""`
+	ConfigService  *service.ConfigService  `inject:""`
 	BaseCtrl
 }
 
@@ -130,22 +130,22 @@ func (c *ProjectCtrl) Delete(ctx iris.Context) {
 }
 
 func (c *ProjectCtrl) GetByUser(ctx iris.Context) {
-	currProjectPath := ctx.URLParam("currProject")
+	projectPath := ctx.URLParam("currProject")
 
-	if currProjectPath == "" {
-		currProjectPath = commConsts.WorkDir
+	if projectPath == "" {
+		projectPath = commConsts.WorkDir
 	}
 
-	projects, currProject, asset, err := c.ProjectService.GetByUser(currProjectPath)
+	projects, currProject, scriptTree, err := c.ProjectService.GetByUser(projectPath)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
 
-	commConsts.ProjectConfig = serverConfig.ReadConfig(currProject.Path)
+	currProjectConfig := c.ConfigService.ReadFromFile(currProject.Path)
 
 	ret := iris.Map{"projects": projects, "currProject": currProject,
-		"currConfig": commConsts.ProjectConfig, "scriptTree": asset}
+		"currConfig": currProjectConfig, "scriptTree": scriptTree}
 
 	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: ret, Msg: domain.NoErr.Msg})
 }

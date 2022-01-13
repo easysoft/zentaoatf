@@ -22,7 +22,7 @@ func NewAssetService() *AssetService {
 	return &AssetService{}
 }
 
-func (s *AssetService) LoadScripts(dir string) (asset serverDomain.TestAsset, err error) {
+func (s *AssetService) LoadScriptTree(dir string) (asset serverDomain.TestAsset, err error) {
 	if !fileUtils.FileExist(dir) {
 		logUtils.Errorf("dir %s not exist", dir)
 		return
@@ -33,7 +33,7 @@ func (s *AssetService) LoadScripts(dir string) (asset serverDomain.TestAsset, er
 	}
 
 	asset = serverDomain.TestAsset{Path: dir, Title: fileUtils.GetDirName(dir), IsDir: true, Slots: iris.Map{"icon": "icon"}}
-	s.GetAllScriptsInDir(dir, &asset)
+	s.LoadScriptNodesInDir(dir, &asset)
 
 	jsn, _ := json.Marshal(asset)
 	logUtils.Infof(string(jsn))
@@ -41,13 +41,19 @@ func (s *AssetService) LoadScripts(dir string) (asset serverDomain.TestAsset, er
 	return
 }
 
-func (s *AssetService) GetScript(pth string) (script model.TestScript, err error) {
+func (s *AssetService) LoadScriptByProject(projectPath string) (scriptFiles []string) {
+	s.LoadScriptListInDir(projectPath, &scriptFiles)
+
+	return
+}
+
+func (s *AssetService) GetScriptContent(pth string) (script model.TestScript, err error) {
 	script.Code = fileUtils.ReadFile(pth)
 
 	return
 }
 
-func (s *AssetService) GetAllScriptsInDir(childPath string, parent *serverDomain.TestAsset) (err error) {
+func (s *AssetService) LoadScriptNodesInDir(childPath string, parent *serverDomain.TestAsset) (err error) {
 	if !fileUtils.IsDir(childPath) { // is file
 		s.addScript(childPath, parent)
 		return
@@ -70,9 +76,39 @@ func (s *AssetService) GetAllScriptsInDir(childPath string, parent *serverDomain
 		if grandson.IsDir() { // 目录, 递归遍历
 			dirNode := s.addDir(childPath, parent)
 
-			s.GetAllScriptsInDir(childPath, dirNode)
+			s.LoadScriptNodesInDir(childPath, dirNode)
 		} else {
 			s.addScript(childPath, parent)
+		}
+	}
+
+	return
+}
+
+func (s *AssetService) LoadScriptListInDir(childPath string, filePaths *[]string) (err error) {
+	if !fileUtils.IsDir(childPath) { // is file
+		*filePaths = append(*filePaths, childPath)
+		return
+	}
+
+	childPath = fileUtils.AddPathSepIfNeeded(fileUtils.AbsolutePath(childPath))
+
+	list, err := ioutil.ReadDir(childPath)
+	if err != nil {
+		return err
+	}
+
+	for _, grandson := range list {
+		name := grandson.Name()
+		if commonUtils.IgnoreFile(name) {
+			continue
+		}
+
+		childPath := childPath + name
+		if grandson.IsDir() { // 目录, 递归遍历
+			s.LoadScriptListInDir(childPath, filePaths)
+		} else {
+			*filePaths = append(*filePaths, childPath)
 		}
 	}
 

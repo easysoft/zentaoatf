@@ -2,6 +2,8 @@ import { Mutation, Action } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 import {queryProject} from "@/services/project";
+import {setCache} from "@/utils/localCache";
+import settings from '@/config/settings';
 
 export interface ProjectData {
   projects: any[]
@@ -37,10 +39,13 @@ const StoreModel: ModuleType = {
     saveProjects(state, payload) {
       console.log('payload', payload)
 
+      setCache(settings.currProject, payload.currProject.path);
+
       state.projects = [...payload.projects, {id: 0, name: '其他', path: ''}];
       state.currProject = payload.currProject;
       state.currConfig = payload.currConfig;
       state.scriptTree = [payload.scriptTree];
+
     },
   },
   actions: {

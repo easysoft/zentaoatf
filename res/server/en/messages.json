@@ -4,6 +4,10 @@
     {
       "id": "for_example",
       "translation": "e.g. %s"
+    },
+    {
+      "id": "find_example",
+      "translation": "Examples in 'demo%s%s'"
     }
   ]
 }

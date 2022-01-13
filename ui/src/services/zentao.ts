@@ -17,7 +17,7 @@ export async function queryProduct(): Promise<any> {
     });
 }
 
-export async function queryModule(productId): Promise<any> {
+export async function queryModule(productId: string): Promise<any> {
     const params = {productId: productId}
 
     return request({
@@ -27,7 +27,7 @@ export async function queryModule(productId): Promise<any> {
     });
 }
 
-export async function querySuite(productId): Promise<any> {
+export async function querySuite(productId: string): Promise<any> {
     const params = {productId: productId}
 
     return request({
@@ -37,7 +37,7 @@ export async function querySuite(productId): Promise<any> {
     });
 }
 
-export async function queryTask(productId): Promise<any> {
+export async function queryTask(productId: string): Promise<any> {
     const params = {productId: productId}
 
     return request({

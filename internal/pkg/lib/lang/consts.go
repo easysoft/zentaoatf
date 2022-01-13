@@ -3,10 +3,10 @@ package langUtils
 var (
 	LangCommentsTagMap = map[string][]string{
 		"bat":        {"goto start", ":start"},
-		"javascript": {"/\\*{1,}", "\\*{1,}/"},
+		"javascript": {"/\\*", "\\*/"},
 		"lua":        {"--\\[\\[", "\\]\\]"},
 		"perl":       {"=pod", "=cut"},
-		"php":        {"/\\*{1,}", "\\*{1,}/"},
+		"php":        {"/\\*", "\\*/"},
 		"python":     {"'''", "'''"},
 		"ruby":       {"=begin", "=end"},
 		"shell":      {":<<!", "!"},

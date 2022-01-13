@@ -4,12 +4,8 @@ import (
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	"github.com/aaronchen2k/deeptest/internal/server/core/web/validate"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
-	"strings"
-
 	"github.com/kataras/iris/v12"
-	"go.uber.org/zap"
 )
 
 type SyncCtrl struct {
@@ -22,17 +18,18 @@ func NewSyncCtrl() *SyncCtrl {
 }
 
 func (c *SyncCtrl) SyncFromZentao(ctx iris.Context) {
+	projectPath := ctx.URLParam("currProject")
+
 	req := commDomain.SyncSettings{}
-	if err := ctx.ReadJSON(&req); err != nil {
-		errs := validate.ValidRequest(err)
-		if len(errs) > 0 {
-			logUtils.Errorf("参数验证失败", zap.String("错误", strings.Join(errs, ";")))
-			ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: strings.Join(errs, ";")})
-			return
-		}
+	err := ctx.ReadJSON(&req)
+
+	if err != nil {
+		logUtils.Errorf("参数验证失败 %s", err.Error())
+		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
+		return
 	}
 
-	err := c.SyncService.SyncFromZentao(req)
+	err = c.SyncService.SyncFromZentao(req, projectPath)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: c.ErrCode(err), Data: nil})
 		return
@@ -42,7 +39,9 @@ func (c *SyncCtrl) SyncFromZentao(ctx iris.Context) {
 }
 
 func (c *SyncCtrl) SyncToZentao(ctx iris.Context) {
-	err := c.SyncService.SyncToZentao()
+	projectPath := ctx.URLParam("currProject")
+
+	err := c.SyncService.SyncToZentao(projectPath)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: c.ErrCode(err), Data: nil})
 		return

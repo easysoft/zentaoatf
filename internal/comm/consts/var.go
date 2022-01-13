@@ -1,12 +1,8 @@
 package commConsts
 
-import "github.com/aaronchen2k/deeptest/internal/comm/domain"
-
 var (
-	ProjectConfig domain.ProjectConf
-
 	Language  = "zh"
-	Verbose   bool
+	Verbose   = true
 	IsRelease bool
 	ExeDir    string
 	WorkDir   string

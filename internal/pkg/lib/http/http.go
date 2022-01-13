@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
@@ -17,11 +16,14 @@ import (
 )
 
 func Get(url string) (ret []byte, ok bool) {
-	client := &http.Client{}
-
-	if consts.Verbose {
+	if strings.Index(url, "mode=getconfig") < 0 {
+		url = AddToken(url)
+	}
+	if commConsts.Verbose {
 		logUtils.Info(url)
 	}
+
+	client := &http.Client{}
 
 	req, reqErr := http.NewRequest("GET", url, nil)
 	if reqErr != nil {
@@ -38,7 +40,7 @@ func Get(url string) (ret []byte, ok bool) {
 	}
 
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
-	if consts.Verbose {
+	if commConsts.Verbose {
 		logUtils.PrintUnicode(bodyBytes)
 	}
 	defer resp.Body.Close()
@@ -74,8 +76,10 @@ func Get(url string) (ret []byte, ok bool) {
 }
 
 func Post(url string, params interface{}, useFormFormat bool) (ret []byte, ok bool) {
-	if consts.Verbose {
-		logUtils.Info(url)
+	url = AddToken(url)
+
+	if commConsts.Verbose {
+		logUtils.Infof(i118Utils.Sprintf("server_address") + url)
 	}
 	client := &http.Client{}
 
@@ -108,7 +112,7 @@ func Post(url string, params interface{}, useFormFormat bool) (ret []byte, ok bo
 	}
 
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
-	if consts.Verbose {
+	if commConsts.Verbose {
 		logUtils.PrintUnicode(bodyBytes)
 	}
 	defer resp.Body.Close()
@@ -144,6 +148,8 @@ func Post(url string, params interface{}, useFormFormat bool) (ret []byte, ok bo
 }
 
 func PostStr(url string, params map[string]string) (ret []byte, ok bool) {
+	url = AddToken(url)
+
 	if commConsts.Verbose {
 		logUtils.Infof(i118Utils.Sprintf("server_address") + url)
 	}
@@ -235,4 +241,27 @@ func replacePostData(str string) string {
 		str = strings.Replace(str, "=", "]=", -1)
 	}
 	return str
+}
+
+func AddToken(url string) (ret string) {
+	address := url
+	hash := ""
+
+	index := strings.Index(url, "#")
+	if index > 0 {
+		address = url[:index]
+		hash = url[index:]
+	}
+
+	paramPir := commConsts.SessionVar + "=" + commConsts.SessionId
+
+	if commConsts.RequestType == commConsts.PathInfo {
+		address = address + "?" + paramPir
+	} else {
+		address = address + "&" + paramPir
+	}
+
+	ret = address + "&XDEBUG_SESSION_START=PHPSTORM" + hash
+
+	return
 }

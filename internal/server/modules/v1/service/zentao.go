@@ -18,7 +18,9 @@ import (
 )
 
 type ZentaoService struct {
-	ProjectRepo *repo.ProjectRepo `inject:""`
+	ProjectRepo    *repo.ProjectRepo `inject:""`
+	ProjectService *ProjectService   `inject:""`
+	ConfigService  *ConfigService    `inject:""`
 }
 
 func NewZentaoService() *ZentaoService {
@@ -33,11 +35,11 @@ func (s *ZentaoService) ListLang() (langs []serverDomain.ZentaoLang, err error) 
 	return
 }
 
-func (s *ZentaoService) ListProduct() (products []serverDomain.ZentaoProduct, err error) {
-	s.Login(commConsts.ProjectConfig)
+func (s *ZentaoService) ListProduct(projectPath string) (products []serverDomain.ZentaoProduct, err error) {
+	config := s.ConfigService.LoadByProjectPath(projectPath)
+	s.Login(config)
 
-	url := commConsts.ProjectConfig.Url + zentaoUtils.GenApiUri("product", "all", "")
-	url = s.AddToken(url)
+	url := config.Url + zentaoUtils.GenApiUri("product", "all", "")
 	bytes, ok := httpUtils.Get(url)
 
 	if !ok {
@@ -56,7 +58,9 @@ func (s *ZentaoService) ListProduct() (products []serverDomain.ZentaoProduct, er
 	return
 }
 
-func (s *ZentaoService) ListModuleByProduct(productId int) (modules []serverDomain.ZentaoModule, err error) {
+func (s *ZentaoService) ListModuleByProduct(productId int, projectPath string) (modules []serverDomain.ZentaoModule, err error) {
+	config := s.ConfigService.LoadByProjectPath(projectPath)
+	s.Login(config)
 	// tree-browse-1-story.html#app=product
 
 	params := ""
@@ -66,8 +70,8 @@ func (s *ZentaoService) ListModuleByProduct(productId int) (modules []serverDoma
 		params = fmt.Sprintf("rootID=%d&viewType=story", productId)
 	}
 
-	url := commConsts.ProjectConfig.Url + zentaoUtils.GenApiUri("tree", "browse", params)
-	url = s.AddToken(url) + "#app=product"
+	url := config.Url + zentaoUtils.GenApiUri("tree", "browse", params)
+	url += "#app=product"
 
 	bytes, ok := httpUtils.Get(url)
 	if !ok {
@@ -106,7 +110,10 @@ func (s *ZentaoService) GenModuleData(mp map[string]interface{}, modules *[]serv
 	}
 }
 
-func (s *ZentaoService) ListSuiteByProduct(productId int) (suites []serverDomain.ZentaoSuite, err error) {
+func (s *ZentaoService) ListSuiteByProduct(productId int, projectPath string) (suites []serverDomain.ZentaoSuite, err error) {
+	config := s.ConfigService.LoadByProjectPath(projectPath)
+	s.Login(config)
+
 	params := ""
 	if commConsts.RequestType == commConsts.PathInfo {
 		params = fmt.Sprintf("%d", productId)
@@ -114,8 +121,7 @@ func (s *ZentaoService) ListSuiteByProduct(productId int) (suites []serverDomain
 		params = fmt.Sprintf("productID=%d", productId)
 	}
 
-	url := commConsts.ProjectConfig.Url + zentaoUtils.GenApiUri("testsuite", "browse", params)
-	url = s.AddToken(url)
+	url := config.Url + zentaoUtils.GenApiUri("testsuite", "browse", params)
 
 	bytes, ok := httpUtils.Get(url)
 	if !ok {
@@ -138,7 +144,10 @@ func (s *ZentaoService) ListSuiteByProduct(productId int) (suites []serverDomain
 	return
 }
 
-func (s *ZentaoService) ListTaskByProduct(productId int) (tasks []serverDomain.ZentaoTask, err error) {
+func (s *ZentaoService) ListTaskByProduct(productId int, projectPath string) (tasks []serverDomain.ZentaoTask, err error) {
+	config := s.ConfigService.LoadByProjectPath(projectPath)
+	s.Login(config)
+
 	params := ""
 	if commConsts.RequestType == commConsts.PathInfo {
 		params = fmt.Sprintf("%d", productId)
@@ -146,8 +155,7 @@ func (s *ZentaoService) ListTaskByProduct(productId int) (tasks []serverDomain.Z
 		params = fmt.Sprintf("productID=%d", productId)
 	}
 
-	url := commConsts.ProjectConfig.Url + zentaoUtils.GenApiUri("testtask", "browse", params)
-	url = s.AddToken(url)
+	url := config.Url + zentaoUtils.GenApiUri("testtask", "browse", params)
 	bytes, ok := httpUtils.Get(url)
 
 	if !ok {
@@ -170,7 +178,7 @@ func (s *ZentaoService) ListTaskByProduct(productId int) (tasks []serverDomain.Z
 	return
 }
 
-func (s *ZentaoService) Login(config domain.ProjectConf) bool {
+func (s *ZentaoService) Login(config commDomain.ProjectConf) bool {
 	ok := s.GetConfig(config.Url)
 	if !ok {
 		logUtils.Infof(i118Utils.Sprintf("fail_to_login"))
@@ -184,7 +192,6 @@ func (s *ZentaoService) Login(config domain.ProjectConf) bool {
 		uri = "index.php?m=user&f=login&t=json"
 	}
 	url := config.Url + uri
-	url = s.AddToken(url)
 
 	params := make(map[string]string)
 	params["account"] = config.Username
@@ -240,15 +247,4 @@ func (s *ZentaoService) GetConfig(baseUrl string) bool {
 	}
 
 	return true
-}
-
-func (s *ZentaoService) AddToken(url string) (ret string) {
-	if commConsts.RequestType == commConsts.PathInfo {
-		ret = url + "?" + commConsts.SessionVar + "=" + commConsts.SessionId
-	} else {
-		ret = url + "&" + commConsts.SessionVar + "=" + commConsts.SessionId
-	}
-	ret = ret + "&XDEBUG_SESSION_START=PHPSTORM"
-
-	return
 }
