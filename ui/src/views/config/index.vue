@@ -33,10 +33,9 @@ import _ from "lodash";
 const useForm = Form.useForm;
 
 import { Config } from './data.d';
-import {saveConfig} from "@/services/project";
+import {saveConfig} from "./service";
 import {useStore} from "vuex";
 import {ProjectData} from "@/store/project";
-import {Execution} from "@/views/execution/data";
 
 interface ConfigFormSetupData {
   currConfig: any
@@ -107,7 +106,7 @@ export default defineComponent({
               });
             } else {
               notification.error({
-                message: `保存配置错误`,
+                message: `保存配置失败`,
                 description: json.msg,
               });
             }

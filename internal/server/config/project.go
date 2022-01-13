@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 )
 
-func ReadConfig(projectPath string) (config domain.ProjectConfig) {
+func ReadConfig(projectPath string) (config domain.ProjectConf) {
 	pth := filepath.Join(projectPath, commConsts.ConfigDir, commConsts.ConfigFile)
 	ini.MapTo(&config, pth)
 
@@ -20,7 +20,7 @@ func ReadConfig(projectPath string) (config domain.ProjectConfig) {
 	return config
 }
 
-func SaveConfig(config domain.ProjectConfig, projectPath string) (err error) {
+func SaveConfig(config domain.ProjectConf, projectPath string) (err error) {
 	pth := filepath.Join(projectPath, commConsts.ConfigDir, commConsts.ConfigFile)
 	fileUtils.MkDirIfNeeded(path.Dir(pth))
 

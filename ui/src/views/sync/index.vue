@@ -4,14 +4,14 @@
   <a-card title="从禅道同步">
     <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-item label="产品" v-bind="validateInfos.productId">
-        <a-select v-model:value="model.productId">
-          <a-select-option key="0" value="0">&nbsp;</a-select-option>
-          <a-select-option v-for="item in products" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+        <a-select v-model:value="model.productId" @change="selectProduct">
+          <a-select-option key="" value="">&nbsp;</a-select-option>
+          <a-select-option v-for="item in products" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item label="模块" v-bind="validateInfos.moduleId">
         <a-select v-model:value="model.moduleId">
-          <a-select-option v-for="item in modules" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+          <a-select-option v-for="item in modules" :key="item.id" :value="item.id"><span v-html="item.name"></span></a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item label="套件" v-bind="validateInfos.suiteId">
@@ -34,7 +34,7 @@
       </a-form-item>
 
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click.prevent="syncFromZentao">提交</a-button>
+        <a-button type="primary" @click.prevent="syncFromZentaoSubmit">提交</a-button>
         <a-button style="margin-left: 10px" @click="resetFields">重置</a-button>
       </a-form-item>
     </a-form>
@@ -44,7 +44,7 @@
     <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
 
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click.prevent="syncToZentao">提交</a-button>
+        <a-button type="primary" @click.prevent="syncToZentaoSubmit">提交</a-button>
       </a-form-item>
     </a-form>
   </a-card>
@@ -62,8 +62,10 @@ const useForm = Form.useForm;
 
 import { SyncSettings } from './data.d';
 import {useStore} from "vuex";
-import {ZentaoData} from "./store";
 import {ProjectData} from "@/store/project";
+import {ZentaoData} from "@/store/zentao";
+import {saveConfig} from "@/views/config/service";
+import {syncFromZentao, syncToZentao} from "@/views/sync/service";
 
 interface ConfigFormSetupData {
   formRef: any
@@ -73,8 +75,8 @@ interface ConfigFormSetupData {
   wrapperCol: any
   validate: any
   validateInfos: validateInfos
-  syncFromZentao:  () => void;
-  syncToZentao:  () => void;
+  syncFromZentaoSubmit:  () => void;
+  syncToZentaoSubmit:  () => void;
   resetFields:  () => void;
 
   langs: ComputedRef<any[]>;
@@ -121,14 +123,16 @@ export default defineComponent({
     });
     const rules = reactive({
       productId: [
-        { required: true, type: 'string', message: '请选择产品', trigger: 'change',
-          validator: async (rule: any, value: string) => {
-          alert(1)
+        { required: true, message: '请选择产品', trigger: 'change',
+          validator: async (rule: any, value: any) => {
             if (!value) {
               throw new Error('请选择项目');
             }
           }
         },
+      ],
+      lang: [
+        { required: true, message: '请选择语言', trigger: 'change'}
       ],
     });
 
@@ -143,18 +147,47 @@ export default defineComponent({
       store.dispatch('zentao/fetchTasks', item)
     };
 
-    const syncFromZentao = () => {
+    const syncFromZentaoSubmit = () => {
+      console.log('syncFromZentaoSubmit')
+
       validate()
         .then(() => {
           console.log('then', model);
+          syncFromZentao(model).then((json) => {
+            console.log('json', json)
+            if (json.code === 0) {
+              notification.success({
+                message: `同步成功`,
+              });
+            } else {
+              notification.error({
+                message: `同步失败`,
+                description: json.msg,
+              });
+            }
+          })
         })
         .catch(err => {
           console.log('error', err);
         });
     };
 
-    const syncToZentao = () => {
-      console.log('syncToZentao')
+    const syncToZentaoSubmit = () => {
+      console.log('syncToZentaoSubmit')
+
+      syncToZentao().then((json) => {
+        console.log('json', json)
+        if (json.code === 0) {
+          notification.success({
+            message: `同步成功`,
+          });
+        } else {
+          notification.error({
+            message: `同步失败`,
+            description: json.msg,
+          });
+        }
+      })
     };
 
     return {
@@ -165,8 +198,8 @@ export default defineComponent({
       resetFields,
       validate,
       validateInfos,
-      syncFromZentao,
-      syncToZentao,
+      syncFromZentaoSubmit,
+      syncToZentaoSubmit,
 
       model,
       langs,

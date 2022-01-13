@@ -1,11 +1,9 @@
 package service
 
 import (
-	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
@@ -85,17 +83,6 @@ func (s *ProjectService) GetByUser(currProjectPath string) (projects []model.Pro
 	}
 
 	asset, err = s.AssetService.LoadScripts(currProject.Path)
-
-	return
-}
-
-func (s *ProjectService) SaveConfig(config commDomain.ProjectConfig) (err error) {
-	currProject, err := s.ProjectRepo.GetCurrProjectByUser()
-	if err != nil {
-		return
-	}
-
-	serverConfig.SaveConfig(config, currProject.Path)
 
 	return
 }

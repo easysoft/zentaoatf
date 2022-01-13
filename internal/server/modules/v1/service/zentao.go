@@ -91,7 +91,7 @@ func (s *ZentaoService) GenModuleData(mp map[string]interface{}, modules *[]serv
 
 	idStr := mp["id"].(string)
 	id, _ := strconv.Atoi(idStr)
-	name := strings.Repeat("-", mpLevel) + mp["name"].(string)
+	name := strings.Repeat("&nbsp;", mpLevel*3) + mp["name"].(string)
 	*modules = append(*modules, serverDomain.ZentaoModule{Id: id, Name: name})
 
 	if mp["children"] == nil {
@@ -170,7 +170,7 @@ func (s *ZentaoService) ListTaskByProduct(productId int) (tasks []serverDomain.Z
 	return
 }
 
-func (s *ZentaoService) Login(config domain.ProjectConfig) bool {
+func (s *ZentaoService) Login(config domain.ProjectConf) bool {
 	ok := s.GetConfig(config.Url)
 	if !ok {
 		logUtils.Infof(i118Utils.Sprintf("fail_to_login"))

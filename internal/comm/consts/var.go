@@ -3,7 +3,7 @@ package commConsts
 import "github.com/aaronchen2k/deeptest/internal/comm/domain"
 
 var (
-	ProjectConfig domain.ProjectConfig
+	ProjectConfig domain.ProjectConf
 
 	Language  = "zh"
 	Verbose   bool

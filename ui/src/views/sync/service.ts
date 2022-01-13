@@ -1,47 +1,20 @@
 import request from '@/utils/request';
+import {Config} from "@/views/config/data";
+import {SyncSettings} from "@/views/sync/data";
 
-const apiPath = 'zentao';
+const apiPath = 'sync';
 
-export async function queryLang(): Promise<any> {
+export async function syncFromZentao(params: SyncSettings): Promise<any> {
     return request({
-        url: `/${apiPath}/listLang`,
-        method: 'GET',
+        url: `/${apiPath}/syncFromZentao`,
+        method: 'POST',
+        data: params,
     });
 }
 
-export async function queryProduct(): Promise<any> {
+export async function syncToZentao(): Promise<any> {
     return request({
-        url: `/${apiPath}/listProduct`,
-        method: 'GET',
-    });
-}
-
-export async function queryModule(productId): Promise<any> {
-    const params = {productId: productId}
-
-    return request({
-        url: `/${apiPath}/listModule`,
-        method: 'GET',
-        params,
-    });
-}
-
-export async function querySuite(productId): Promise<any> {
-    const params = {productId: productId}
-
-    return request({
-        url: `/${apiPath}/listSuite`,
-        method: 'GET',
-        params,
-    });
-}
-
-export async function queryTask(productId): Promise<any> {
-    const params = {productId: productId}
-
-    return request({
-        url: `/${apiPath}/listTask`,
-        method: 'GET',
-        params,
+        url: `/${apiPath}/syncToZentao`,
+        method: 'POST',
     });
 }

@@ -1,7 +1,7 @@
 import { Mutation, Action } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
-import { queryLang, queryProduct, queryModule, querySuite, queryTask } from "./service";
+import { queryLang, queryProduct, queryModule, querySuite, queryTask } from "../services/zentao";
 
 export interface ZentaoData {
     langs: any[]

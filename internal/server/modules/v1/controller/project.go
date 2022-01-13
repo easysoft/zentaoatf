@@ -2,7 +2,6 @@ package controller
 
 import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
@@ -149,24 +148,4 @@ func (c *ProjectCtrl) GetByUser(ctx iris.Context) {
 		"currConfig": commConsts.ProjectConfig, "scriptTree": asset}
 
 	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: ret, Msg: domain.NoErr.Msg})
-}
-
-func (c *ProjectCtrl) SaveConfig(ctx iris.Context) {
-	req := commDomain.ProjectConfig{}
-	if err := ctx.ReadJSON(&req); err != nil {
-		errs := validate.ValidRequest(err)
-		if len(errs) > 0 {
-			logUtils.Errorf("参数验证失败", zap.String("错误", strings.Join(errs, ";")))
-			ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: strings.Join(errs, ";")})
-			return
-		}
-	}
-
-	err := c.ProjectService.SaveConfig(req)
-	if err != nil {
-		ctx.JSON(domain.Response{Code: c.ErrCode(err), Data: nil})
-		return
-	}
-
-	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: nil, Msg: domain.NoErr.Msg})
 }
