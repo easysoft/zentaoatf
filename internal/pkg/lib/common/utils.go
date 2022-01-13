@@ -134,3 +134,9 @@ func AddSlashForUrl(url string) string {
 
 	return url
 }
+
+func ChangeScriptForDebug(dir *string) {
+	if !IsRelease() { // debug in ide
+		*dir = filepath.Join(*dir, "demo", "sample")
+	}
+}

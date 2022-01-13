@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
@@ -11,7 +12,6 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/kataras/iris/v12"
 	"io/ioutil"
-	"path/filepath"
 	"regexp"
 )
 
@@ -28,9 +28,7 @@ func (s *AssetService) LoadScriptTree(dir string) (asset serverDomain.TestAsset,
 		return
 	}
 
-	if !commonUtils.IsRelease() { // debug in ide
-		dir = filepath.Join(dir, "demo")
-	}
+	commonUtils.ChangeScriptForDebug(&dir)
 
 	asset = serverDomain.TestAsset{Path: dir, Title: fileUtils.GetDirName(dir), IsDir: true, Slots: iris.Map{"icon": "icon"}}
 	s.LoadScriptNodesInDir(dir, &asset)
@@ -42,6 +40,8 @@ func (s *AssetService) LoadScriptTree(dir string) (asset serverDomain.TestAsset,
 }
 
 func (s *AssetService) LoadScriptByProject(projectPath string) (scriptFiles []string) {
+	commonUtils.ChangeScriptForDebug(&projectPath)
+
 	s.LoadScriptListInDir(projectPath, &scriptFiles)
 
 	return
@@ -85,34 +85,50 @@ func (s *AssetService) LoadScriptNodesInDir(childPath string, parent *serverDoma
 	return
 }
 
-func (s *AssetService) LoadScriptListInDir(childPath string, filePaths *[]string) (err error) {
-	if !fileUtils.IsDir(childPath) { // is file
-		*filePaths = append(*filePaths, childPath)
-		return
+func (s *AssetService) LoadScriptListInDir(path string, files *[]string) error {
+	regx := langUtils.GetSupportLanguageExtRegx()
+
+	if !fileUtils.IsDir(path) { // first call, param is file
+		pass, _ := regexp.MatchString(`.*\.`+regx+`$`, path)
+		if pass {
+			pass = zentaoUtils.CheckFileIsScript(path)
+			if pass {
+				*files = append(*files, path)
+			}
+		}
+
+		return nil
 	}
 
-	childPath = fileUtils.AddPathSepIfNeeded(fileUtils.AbsolutePath(childPath))
+	path = fileUtils.AbsolutePath(path)
 
-	list, err := ioutil.ReadDir(childPath)
+	dir, err := ioutil.ReadDir(path)
 	if err != nil {
 		return err
 	}
 
-	for _, grandson := range list {
-		name := grandson.Name()
+	for _, fi := range dir {
+		name := fi.Name()
 		if commonUtils.IgnoreFile(name) {
 			continue
 		}
 
-		childPath := childPath + name
-		if grandson.IsDir() { // 目录, 递归遍历
-			s.LoadScriptListInDir(childPath, filePaths)
+		if fi.IsDir() { // 目录, 递归遍历
+			s.LoadScriptListInDir(path+name+consts.PthSep, files)
 		} else {
-			*filePaths = append(*filePaths, childPath)
+			path := path + name
+			pass, _ := regexp.MatchString("^*.\\."+regx+"$", path)
+
+			if pass {
+				pass = zentaoUtils.CheckFileIsScript(path)
+				if pass {
+					*files = append(*files, path)
+				}
+			}
 		}
 	}
 
-	return
+	return nil
 }
 
 func (s *AssetService) addScript(pth string, parent *serverDomain.TestAsset) {

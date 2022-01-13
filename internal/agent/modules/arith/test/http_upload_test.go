@@ -3,14 +3,12 @@ package rpc
 import (
 	"encoding/json"
 	"github.com/aaronchen2k/deeptest/internal/comm/domain"
-	"github.com/aaronchen2k/deeptest/internal/pkg/core/zap"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	httpUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/http"
 	"testing"
 )
 
 func TestUpload(t *testing.T) {
-	myZap.Init()
 	result := commDomain.TestResult{Name: "RasaResult Title"}
 
 	zipFile := "/Users/aaron/testResult.zip"
