@@ -52,11 +52,12 @@
 
 <script lang="ts">
 import {computed, ComputedRef, defineComponent, onMounted, ref, Ref, watch} from "vue";
-import {Form} from "ant-design-vue";
+import {Form, notification} from "ant-design-vue";
 import {useRouter} from "vue-router";
 import {useStore} from "vuex";
 import {ProjectData} from "@/store/project";
 import IconSvg from "@/components/IconSvg";
+import {execCase} from "@/views/execution/exec/service";
 
 const useForm = Form.useForm;
 
@@ -75,7 +76,7 @@ interface ExecCasePageSetupData {
   expandedKeys: Ref<string[]>
   tree: Ref;
 
-  exec: () => void;
+  exec: (keys) => void;
   back: () => void;
 }
 
@@ -144,6 +145,15 @@ export default defineComponent({
 
     const exec = ():void =>  {
       console.log("exec")
+      if (checkedKeys.value.length == 0) return
+      execCase(checkedKeys.value).then((json) => {
+        console.log('json', json)
+        if (json.code === 0) {
+          notification.success({
+            message: `开始执行`,
+          });
+        }
+      })
     }
     const back = ():void =>  {
       router.push(`/execution/history`)
