@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
@@ -9,7 +10,7 @@ import (
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	zentaoUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/zentao"
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/script"
-	"log"
+	"path/filepath"
 	"strconv"
 )
 
@@ -59,22 +60,25 @@ func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, projectPa
 	return
 }
 
-func (s *SyncService) SyncToZentao(projectPath string) (err error) {
-	caseFiles := s.AssetService.LoadScriptByProject(projectPath)
+func (s *SyncService) SyncToZentao(projectPath string, commitProductId int) (err error) {
+	productPath := filepath.Join(projectPath, fmt.Sprintf("product%d", commitProductId))
+	caseFiles := s.AssetService.LoadScriptByProject(productPath)
 
 	for _, cs := range caseFiles {
 		pass, id, _, title := zentaoUtils.GetCaseInfo(cs)
 
 		if pass {
 			stepMap, stepTypeMap, expectMap, isOldFormat := scriptUtils.GetStepAndExpectMap(cs)
-			log.Println(isOldFormat)
+			if commConsts.Verbose {
+				logUtils.Infof("isOldFormat = ", isOldFormat)
+			}
 
 			isIndependent, expectIndependentContent := zentaoUtils.GetDependentExpect(cs)
 			if isIndependent {
 				expectMap = scriptUtils.GetExpectMapFromIndependentFileObsolete(expectMap, expectIndependentContent, true)
 			}
 
-			s.ZtfCaseService.CommitCase(id, title, stepMap, stepTypeMap, expectMap)
+			s.ZtfCaseService.CommitCase(id, title, stepMap, stepTypeMap, expectMap, projectPath)
 		}
 	}
 

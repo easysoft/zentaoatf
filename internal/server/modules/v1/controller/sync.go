@@ -1,11 +1,13 @@
 package controller
 
 import (
+	"fmt"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
+	"strconv"
 )
 
 type SyncCtrl struct {
@@ -40,8 +42,17 @@ func (c *SyncCtrl) SyncFromZentao(ctx iris.Context) {
 
 func (c *SyncCtrl) SyncToZentao(ctx iris.Context) {
 	projectPath := ctx.URLParam("currProject")
+	commitProductIdStr := ctx.URLParam("commitProductId")
+	commitProductId, _ := strconv.Atoi(commitProductIdStr)
 
-	err := c.SyncService.SyncToZentao(projectPath)
+	if commitProductId == 0 {
+		msg := fmt.Sprintf("参数验证失败")
+		logUtils.Errorf(msg)
+		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: msg})
+		return
+	}
+
+	err := c.SyncService.SyncToZentao(projectPath, commitProductId)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: c.ErrCode(err), Data: nil})
 		return

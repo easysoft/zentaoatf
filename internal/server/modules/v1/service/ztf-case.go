@@ -230,13 +230,8 @@ func (s *ZtfCaseService) GetCaseById(baseUrl string, caseId string) commDomain.Z
 	return commDomain.ZtfCase{}
 }
 
-func (s *ZtfCaseService) GetCaseIdsBySuite(suiteId int, idMap *map[int]string) {
-	currProject, err := s.ProjectRepo.GetCurrProjectByUser()
-	if err != nil {
-		return
-	}
-
-	config := s.ConfigService.ReadFromFile(currProject.Path)
+func (s *ZtfCaseService) GetCaseIdsBySuite(suiteId int, idMap *map[int]string, projectPath string) {
+	config := s.ConfigService.LoadByProjectPath(projectPath)
 
 	ok := s.ZentaoService.Login(config)
 	if !ok {
@@ -251,13 +246,8 @@ func (s *ZtfCaseService) GetCaseIdsBySuite(suiteId int, idMap *map[int]string) {
 	}
 }
 
-func (s *ZtfCaseService) GetCaseIdsByTask(taskId int, idMap *map[int]string) {
-	currProject, err := s.ProjectRepo.GetCurrProjectByUser()
-	if err != nil {
-		return
-	}
-
-	config := s.ConfigService.ReadFromFile(currProject.Path)
+func (s *ZtfCaseService) GetCaseIdsByTask(taskId int, idMap *map[int]string, projectPath string) {
+	config := s.ConfigService.LoadByProjectPath(projectPath)
 
 	ok := s.ZentaoService.Login(config)
 	if !ok {
@@ -272,13 +262,9 @@ func (s *ZtfCaseService) GetCaseIdsByTask(taskId int, idMap *map[int]string) {
 	}
 }
 
-func (s *ZtfCaseService) CommitCase(caseId int, title string, stepMap maps.Map, stepTypeMap maps.Map, expectMap maps.Map) {
-	currProject, err := s.ProjectRepo.GetCurrProjectByUser()
-	if err != nil {
-		return
-	}
-
-	config := s.ConfigService.ReadFromFile(currProject.Path)
+func (s *ZtfCaseService) CommitCase(caseId int, title string,
+	stepMap maps.Map, stepTypeMap maps.Map, expectMap maps.Map, projectPath string) {
+	config := s.ConfigService.LoadByProjectPath(projectPath)
 
 	ok := s.ZentaoService.Login(config)
 	if !ok {

@@ -45,6 +45,12 @@
 
   <a-card title="同步到禅道">
     <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
+      <a-form-item label="产品" v-bind="validateInfosCommit.productId">
+        <a-select v-model:value="modelCommit.productId">
+          <a-select-option key="" value="">&nbsp;</a-select-option>
+          <a-select-option v-for="item in products" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
+        </a-select>
+      </a-form-item>
 
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
         <a-button type="primary" @click.prevent="syncToZentaoSubmit">提交</a-button>
@@ -67,20 +73,19 @@ import { SyncSettings } from './data.d';
 import {useStore} from "vuex";
 import {ProjectData} from "@/store/project";
 import {ZentaoData} from "@/store/zentao";
-import {saveConfig} from "@/views/config/service";
 import {syncFromZentao, syncToZentao} from "@/views/sync/service";
 
 interface ConfigFormSetupData {
   formRef: any
   model: SyncSettings
   rules: any
+
   labelCol: any
   wrapperCol: any
   validate: any
   validateInfos: validateInfos
-  syncFromZentaoSubmit:  () => void;
-  syncToZentaoSubmit:  () => void;
   resetFields:  () => void;
+  syncFromZentaoSubmit:  () => void;
 
   langs: ComputedRef<any[]>;
   products: ComputedRef<any[]>;
@@ -88,6 +93,13 @@ interface ConfigFormSetupData {
   suites: ComputedRef<any[]>;
   tasks: ComputedRef<any[]>;
   selectProduct:  (item) => void;
+
+  modelCommit: SyncSettings
+  rulesCommit: any
+  syncToZentaoSubmit:  () => void;
+  validateCommit: any
+  validateInfosCommit: validateInfos
+  resetFieldsCommit:  () => void;
 }
 
 export default defineComponent({
@@ -121,6 +133,10 @@ export default defineComponent({
       lang: 'python',
       independentFile: false
     } as SyncSettings);
+    const modelCommit = reactive<SyncSettings>({
+      productId: '',
+    } as SyncSettings);
+
     const rules = reactive({
       productId: [
         { required: true, message: '请选择产品', trigger: 'change',
@@ -135,8 +151,24 @@ export default defineComponent({
         { required: true, message: '请选择语言', trigger: 'change'}
       ],
     });
+    const rulesCommit = reactive({
+      productId: [
+        { required: true, message: '请选择产品', trigger: 'change',
+          validator: async (rule: any, value: any) => {
+            if (!value) {
+              throw new Error('请选择项目');
+            }
+          }
+        },
+      ]
+    })
 
-    const { resetFields, validate, validateInfos, validateField } = useForm(model, rules);
+    const { resetFields, validate, validateInfos } = useForm(model, rules);
+
+    const commitForm = useForm(modelCommit, rulesCommit);
+    const resetFieldsCommit = commitForm.resetFields
+    const validateCommit = commitForm.validate
+    const validateInfosCommit = commitForm.validateInfos
 
     const selectProduct = (item) => {
       console.log('selectProduct', item)
@@ -175,19 +207,26 @@ export default defineComponent({
     const syncToZentaoSubmit = () => {
       console.log('syncToZentaoSubmit')
 
-      syncToZentao().then((json) => {
-        console.log('json', json)
-        if (json.code === 0) {
-          notification.success({
-            message: `同步成功`,
-          });
-        } else {
-          notification.error({
-            message: `同步失败`,
-            description: json.msg,
-          });
-        }
-      })
+      validateCommit()
+        .then(() => {
+          console.log('then', modelCommit);
+          syncToZentao(modelCommit.productId).then((json) => {
+            console.log('json', json)
+            if (json.code === 0) {
+              notification.success({
+                message: `同步成功`,
+              });
+            } else {
+              notification.error({
+                message: `同步失败`,
+                description: json.msg,
+              });
+            }
+          })
+        })
+        .catch(err => {
+          console.log('error', err);
+        });
     };
 
     return {
@@ -195,11 +234,10 @@ export default defineComponent({
       labelCol: { span: 6 },
       wrapperCol: { span: 12 },
       rules,
-      resetFields,
       validate,
       validateInfos,
+      resetFields,
       syncFromZentaoSubmit,
-      syncToZentaoSubmit,
 
       model,
       langs,
@@ -208,6 +246,13 @@ export default defineComponent({
       suites,
       tasks,
       selectProduct,
+
+      modelCommit,
+      rulesCommit,
+      validateCommit,
+      validateInfosCommit,
+      resetFieldsCommit,
+      syncToZentaoSubmit,
     }
 
   }

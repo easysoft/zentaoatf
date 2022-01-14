@@ -103,7 +103,8 @@ func Post(url string, params interface{}, useFormFormat bool) (ret []byte, ok bo
 		return
 	}
 
-	req.Header.Set("Content-Type", "application/json")
+	//req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, respErr := client.Do(req)
 	if respErr != nil {

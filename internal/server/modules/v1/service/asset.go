@@ -40,8 +40,6 @@ func (s *AssetService) LoadScriptTree(dir string) (asset serverDomain.TestAsset,
 }
 
 func (s *AssetService) LoadScriptByProject(projectPath string) (scriptFiles []string) {
-	commonUtils.ChangeScriptForDebug(&projectPath)
-
 	s.LoadScriptListInDir(projectPath, &scriptFiles)
 
 	return

@@ -13,9 +13,11 @@ export async function syncFromZentao(params: SyncSettings): Promise<any> {
     });
 }
 
-export async function syncToZentao(): Promise<any> {
+export async function syncToZentao(commitProductId): Promise<any> {
+    const params = {commitProductId: commitProductId}
     return request({
         url: `/${apiPath}/syncToZentao`,
         method: 'POST',
+        params
     });
 }
