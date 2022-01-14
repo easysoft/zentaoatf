@@ -3,10 +3,7 @@
     <div id="main">
       <div id="left">
         <div class="toolbar">
-          <div class="left">
-            <a-button @click="expandAll" type="link">从禅道导出</a-button>
-            <a-button @click="expandAll" type="link">同步到禅道</a-button>
-          </div>
+          <div class="left"></div>
           <div class="right">
             <a-button @click="expandAll" type="link">
               <span v-if="!isExpand">展开全部</span>
@@ -54,7 +51,6 @@ import IconSvg from "@/components/IconSvg";
 import {ProjectData} from "@/store/project";
 import {ScriptData} from "../store";
 import {resizeWidth} from "@/utils/dom";
-import _ from "lodash";
 
 interface ListScriptPageSetupData {
   treeData: ComputedRef<any[]>;
@@ -159,7 +155,7 @@ export default defineComponent({
     width: 100%;
 
     #left {
-      width: 260px;
+      width: 380px;
       height: 100%;
       padding: 3px;
 
@@ -216,7 +212,7 @@ export default defineComponent({
       }
 
       .panel {
-        padding: 6px;
+        padding: 16px;
         height: calc(100% - 46px);
         overflow: auto;
       }

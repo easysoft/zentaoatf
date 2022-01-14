@@ -41,7 +41,7 @@ const StoreModel: ModuleType = {
 
       setCache(settings.currProject, payload.currProject.path);
 
-      state.projects = [...payload.projects, {id: 0, name: '其他', path: ''}];
+      state.projects = [...payload.projects];
       state.currProject = payload.currProject;
       state.currConfig = payload.currConfig;
       state.scriptTree = [payload.scriptTree];

@@ -2,13 +2,21 @@
     <div class="indexlayout-main-conent">
         <a-card :bordered="false">
             <template #title>
-                <a-button type="primary" @click="() => setCreateFormVisible(true)">新建脚本</a-button>
+                测试执行
             </template>
             <template #extra>
-              <a-select @change="onSearch" v-model:value="queryParams.enabled" :options="statusArr" placeholder="状态">
-              </a-select>
-              <a-input-search @change="onSearch" @search="onSearch" v-model:value="queryParams.keywords"
-                              placeholder="请输入" style="width:270px;margin-left: 16px;" />
+              <div class="opt">
+                <a-select @change="onSearch" v-model:value="queryParams.enabled" :options="statusArr">
+                </a-select>
+                <a-input-search @change="onSearch" @search="onSearch" v-model:value="queryParams.keywords"
+                                placeholder="输入关键字搜索" style="width:270px;margin-left: 16px;" />
+
+                <span class="space"></span>
+
+                <a-button @click="execCase" type="primary">执行用例</a-button>
+                <a-button @click="execSuite" type="primary">执行套件</a-button>
+                <a-button @click="execTask" type="primary">执行任务</a-button>
+              </div>
             </template>
 
             <div>
@@ -112,6 +120,9 @@ interface ListExecutionPageSetupData {
   deleteExecution:  (id: number) => void;
 
   onSearch:  () => void;
+  execCase:  () => void;
+  execSuite:  () => void;
+  execTask:  () => void;
 }
 
 export default defineComponent({
@@ -123,7 +134,7 @@ export default defineComponent({
     setup(): ListExecutionPageSetupData {
       const statusArr = ref<SelectTypes['options']>([
           {
-            label: '所有',
+            label: '所有状态',
             value: '',
           },
           {
@@ -141,7 +152,7 @@ export default defineComponent({
 
       const list = computed<Execution[]>(() => store.state.ListExecution.queryResult.list);
       let pagination = computed<PaginationConfig>(() => store.state.ListExecution.queryResult.pagination);
-      let queryParams = reactive<QueryParams>({keywords: '', enabled: '1',
+      let queryParams = reactive<QueryParams>({keywords: '', enabled: '',
         page: pagination.value.current, pageSize: pagination.value.pageSize});
 
       const columns =[
@@ -266,14 +277,24 @@ export default defineComponent({
         });
       }
 
-      // 搜索
+      onMounted(()=> {
+        getList(1);
+      })
+
       const onSearch = debounce(() =>  {
         getList(1)
       }, 500);
 
-      onMounted(()=> {
-        getList(1);
-      })
+      const execCase = () =>  {
+        console.log("execCase")
+        router.push(`/execution/exec/case`)
+      }
+      const execSuite = () =>  {
+        console.log("execSuite")
+      }
+      const execTask = () =>  {
+        console.log("execSuite")
+      }
 
       return {
         statusArr,
@@ -300,8 +321,23 @@ export default defineComponent({
         deleteExecution,
 
         onSearch,
+        execCase,
+        execSuite,
+        execTask,
       }
     }
 
 })
 </script>
+
+<style lang="less" scoped>
+  .opt {
+    .space {
+      display: inline-block;
+      width: 50px;
+    }
+    .ant-btn {
+      margin-left: 12px;
+    }
+  }
+</style>

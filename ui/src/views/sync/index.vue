@@ -1,7 +1,7 @@
 <template>
   <div class="main">
 
-  <a-card title="从禅道同步">
+  <a-card title="从禅道同步用例信息">
     <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-item label="产品" v-bind="validateInfos.productId">
         <a-select v-model:value="model.productId" @change="selectProduct">
@@ -43,7 +43,7 @@
     </a-form>
   </a-card>
 
-  <a-card title="同步到禅道">
+  <a-card title="同步用例信息到禅道">
     <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-item label="产品" v-bind="validateInfosCommit.productId">
         <a-select v-model:value="modelCommit.productId">

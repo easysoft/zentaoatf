@@ -29,10 +29,9 @@ import {defineComponent, onMounted, onBeforeUnmount, getCurrentInstance, Compute
 import { useStore } from 'vuex';
 import {StateType as ListStateType} from "@/views/execution/store";
 import {useRouter} from "vue-router";
-import {ActionRecordStart, EventName, EventNodeId, ScopeDeeptest, ActionRecordedMsg} from "@/utils/const";
 import {WebSocket, WsEventName} from "@/services/websocket";
 import {getToken} from "@/utils/localToken";
-import {ExecutionItem, StepItem} from "@/views/execution/data";
+import {ExecutionItem} from "@/views/execution/data";
 
 interface DesignExecutionPageSetupData {
   execution: ExecutionItem;
@@ -57,7 +56,7 @@ export default defineComponent({
       console.log('id', id)
 
       const back = ():void =>  {
-        router.push(`/~/execution/list`)
+        router.push(`/execution/list`)
       }
 
       let init = true;

@@ -38,6 +38,44 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         hidden: true,
       },
       {
+        title: 'index-layout.menu.execution',
+        path: 'exec',
+        component: BlankLayout,
+        hidden: true,
+        children: [
+          {
+            title: 'index-layout.menu.execution.execCase',
+            path: 'case',
+            component: () => import('@/views/execution/exec/case.vue'),
+            hidden: true,
+          },
+          {
+            title: 'index-layout.menu.execution.execSuite',
+            path: 'suite',
+            component: () => import('@/views/execution/exec/suite.vue'),
+            hidden: true,
+          },
+          {
+            title: 'index-layout.menu.execution.execTask',
+            path: 'task',
+            component: () => import('@/views/execution/exec/task.vue'),
+            hidden: true,
+          },
+        ]
+      },
+      {
+        title: 'index-layout.menu.execution.result',
+        path: 'result/:id',
+        component: () => import('@/views/execution/result/index.vue'),
+        hidden: true,
+      },
+      {
+        title: 'index-layout.menu.execution.result',
+        path: 'result/:id',
+        component: () => import('@/views/execution/result/index.vue'),
+        hidden: true,
+      },
+      {
         title: 'index-layout.menu.execution.result',
         path: 'result/:id',
         component: () => import('@/views/execution/result/index.vue'),
