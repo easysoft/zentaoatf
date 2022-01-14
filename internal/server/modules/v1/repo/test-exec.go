@@ -13,18 +13,18 @@ import (
 	"gorm.io/gorm"
 )
 
-type TestExecutionRepo struct {
+type TestExecRepo struct {
 	DB *gorm.DB `inject:""`
 }
 
-func NewTestExecutionRepo() *TestExecutionRepo {
-	return &TestExecutionRepo{}
+func NewTestExecRepo() *TestExecRepo {
+	return &TestExecRepo{}
 }
 
-func (r *TestExecutionRepo) Paginate(req serverDomain.TestExecutionReqPaginate) (data domain.PageData, err error) {
+func (r *TestExecRepo) Paginate(req serverDomain.TestExecReqPaginate) (data domain.PageData, err error) {
 	var count int64
 
-	db := r.DB.Model(&model.TestExecution{}).Where("NOT deleted")
+	db := r.DB.Model(&model.TestExec{}).Where("NOT deleted")
 
 	if req.Keywords != "" {
 		db = db.Where("name LIKE ?", fmt.Sprintf("%%%s%%", req.Keywords))
@@ -39,7 +39,7 @@ func (r *TestExecutionRepo) Paginate(req serverDomain.TestExecutionReqPaginate) 
 		return
 	}
 
-	testExecutions := make([]*model.TestExecution, 0)
+	testExecutions := make([]*model.TestExec, 0)
 
 	err = db.
 		Scopes(dao.PaginateScope(req.Page, req.PageSize, req.Order, req.Field)).
@@ -54,9 +54,9 @@ func (r *TestExecutionRepo) Paginate(req serverDomain.TestExecutionReqPaginate) 
 	return
 }
 
-func (r *TestExecutionRepo) FindById(id uint) (model.TestExecution, error) {
-	product := model.TestExecution{}
-	err := r.DB.Model(&model.TestExecution{}).Where("id = ?", id).First(&product).Error
+func (r *TestExecRepo) FindById(id uint) (model.TestExec, error) {
+	product := model.TestExec{}
+	err := r.DB.Model(&model.TestExec{}).Where("id = ?", id).First(&product).Error
 	if err != nil {
 		logUtils.Errorf("find product by id error", zap.String("error:", err.Error()))
 		return product, err
@@ -65,12 +65,12 @@ func (r *TestExecutionRepo) FindById(id uint) (model.TestExecution, error) {
 	return product, nil
 }
 
-func (r *TestExecutionRepo) Create(po model.TestExecution) (id uint, err error) {
+func (r *TestExecRepo) Create(po model.TestExec) (id uint, err error) {
 	if _, err := r.FindByName(po.Name); !errors.Is(err, gorm.ErrRecordNotFound) {
 		return 0, fmt.Errorf("%d", domain.BizErrNameExist.Code)
 	}
 
-	err = r.DB.Model(&model.TestExecution{}).Create(&po).Error
+	err = r.DB.Model(&model.TestExec{}).Create(&po).Error
 	if err != nil {
 		logUtils.Errorf("add product error", zap.String("error:", err.Error()))
 		return 0, err
@@ -81,8 +81,8 @@ func (r *TestExecutionRepo) Create(po model.TestExecution) (id uint, err error) 
 	return
 }
 
-func (r *TestExecutionRepo) Update(id uint, po model.TestExecution) (err error) {
-	err = r.DB.Model(&model.TestExecution{}).Where("id = ?", id).Updates(&po).Error
+func (r *TestExecRepo) Update(id uint, po model.TestExec) (err error) {
+	err = r.DB.Model(&model.TestExec{}).Where("id = ?", id).Updates(&po).Error
 	if err != nil {
 		logUtils.Errorf("update product error", zap.String("error:", err.Error()))
 		return err
@@ -91,8 +91,8 @@ func (r *TestExecutionRepo) Update(id uint, po model.TestExecution) (err error) 
 	return
 }
 
-func (r *TestExecutionRepo) DeleteById(id uint) (err error) {
-	err = r.DB.Model(&model.TestExecution{}).Where("id = ?", id).
+func (r *TestExecRepo) DeleteById(id uint) (err error) {
+	err = r.DB.Model(&model.TestExec{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"deleted": true}).Error
 	if err != nil {
 		logUtils.Errorf("delete execution by id error", zap.String("error:", err.Error()))
@@ -102,8 +102,8 @@ func (r *TestExecutionRepo) DeleteById(id uint) (err error) {
 	return
 }
 
-func (r *TestExecutionRepo) FindByName(name string, ids ...uint) (po model.TestExecution, err error) {
-	db := r.DB.Model(&model.TestExecution{}).Where("name = ?", name)
+func (r *TestExecRepo) FindByName(name string, ids ...uint) (po model.TestExec, err error) {
+	db := r.DB.Model(&model.TestExec{}).Where("name = ?", name)
 	if len(ids) == 1 {
 		db.Where("id != ?", ids[0])
 	}

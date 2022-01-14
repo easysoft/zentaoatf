@@ -20,10 +20,10 @@ type IndexModule struct {
 	ProductModule *index.ProductModule `inject:""`
 	ProjectModule *index.ProjectModule `inject:""`
 
-	TestScriptModule    *index.TestScriptModule    `inject:""`
-	TestExecutionModule *index.TestExecutionModule `inject:""`
-	TestSuiteModule     *index.TestSuiteModule     `inject:""`
-	TestSetModule       *index.TestSetModule       `inject:""`
+	TestScriptModule *index.TestScriptModule `inject:""`
+	TestExecModule   *index.TestExecModule   `inject:""`
+	TestSuiteModule  *index.TestSuiteModule  `inject:""`
+	TestSetModule    *index.TestSetModule    `inject:""`
 }
 
 func NewIndexModule() *IndexModule {
@@ -50,7 +50,7 @@ func (m *IndexModule) Party() module.WebModule {
 		m.SyncModule.Party(),
 		m.ProjectModule.Party(),
 		m.TestScriptModule.Party(),
-		m.TestExecutionModule.Party(),
+		m.TestExecModule.Party(),
 	}
 	return module.NewModule(serverConfig.ApiPath, handler, modules...)
 }

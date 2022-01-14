@@ -4,7 +4,7 @@ var (
 	Models = []interface{}{
 		&Project{},
 		&TestCase{},
-		&TestExecution{},
+		&TestExec{},
 		&TestScript{},
 		&TestSuite{},
 		&TestSet{},

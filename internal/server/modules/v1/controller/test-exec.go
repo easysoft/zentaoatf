@@ -13,18 +13,18 @@ import (
 	"go.uber.org/zap"
 )
 
-type TestExecutionCtrl struct {
-	TestExecutionService *service.TestExecutionService `inject:""`
+type TestExecCtrl struct {
+	TestExecService *service.TestExecService `inject:""`
 	BaseCtrl
 }
 
-func NewTestExecutionCtrl() *TestExecutionCtrl {
-	return &TestExecutionCtrl{}
+func NewTestExecCtrl() *TestExecCtrl {
+	return &TestExecCtrl{}
 }
 
 // Query 分页列表
-func (c *TestExecutionCtrl) List(ctx iris.Context) {
-	var req serverDomain.TestExecutionReqPaginate
+func (c *TestExecCtrl) List(ctx iris.Context) {
+	var req serverDomain.TestExecReqPaginate
 	if err := ctx.ReadQuery(&req); err != nil {
 		errs := validate.ValidRequest(err)
 		if len(errs) > 0 {
@@ -35,7 +35,7 @@ func (c *TestExecutionCtrl) List(ctx iris.Context) {
 	}
 	req.ConvertParams()
 
-	data, err := c.TestExecutionService.Paginate(req)
+	data, err := c.TestExecService.Paginate(req)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return
@@ -45,7 +45,7 @@ func (c *TestExecutionCtrl) List(ctx iris.Context) {
 }
 
 // Get 详情
-func (c *TestExecutionCtrl) Get(ctx iris.Context) {
+func (c *TestExecCtrl) Get(ctx iris.Context) {
 	var reqId domain.ReqId
 	if err := ctx.ReadParams(&reqId); err != nil {
 		logUtils.Errorf("参数解析失败", zap.String("错误:", err.Error()))
@@ -53,7 +53,7 @@ func (c *TestExecutionCtrl) Get(ctx iris.Context) {
 		return
 	}
 
-	execution, err := c.TestExecutionService.FindById(reqId.Id)
+	execution, err := c.TestExecService.FindById(reqId.Id)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: domain.SystemErr.Msg})
 		return
@@ -61,31 +61,21 @@ func (c *TestExecutionCtrl) Get(ctx iris.Context) {
 	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: execution, Msg: domain.NoErr.Msg})
 }
 
-// Create 添加
-func (c *TestExecutionCtrl) Create(ctx iris.Context) {
-	req := model.TestExecution{}
+// ExecCase 添加
+func (c *TestExecCtrl) ExecCase(ctx iris.Context) {
+	req := serverDomain.TestExec{}
+
 	if err := ctx.ReadJSON(&req); err != nil {
-		errs := validate.ValidRequest(err)
-		if len(errs) > 0 {
-			logUtils.Errorf("参数验证失败", zap.String("错误", strings.Join(errs, ";")))
-			ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: strings.Join(errs, ";")})
-			return
-		}
-	}
-	id, err := c.TestExecutionService.Create(req)
-	if err != nil {
-		ctx.JSON(domain.Response{
-			Code: c.ErrCode(err),
-			Data: nil,
-		})
+		logUtils.Errorf("参数验证失败", err.Error())
+		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
 
-	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: iris.Map{"id": id}, Msg: domain.NoErr.Msg})
+	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: nil, Msg: domain.NoErr.Msg})
 }
 
 // Update 更新
-func (c *TestExecutionCtrl) Update(ctx iris.Context) {
+func (c *TestExecCtrl) Update(ctx iris.Context) {
 	var reqId domain.ReqId
 	if err := ctx.ReadParams(&reqId); err != nil {
 		logUtils.Errorf("参数解析失败", zap.String("错误:", err.Error()))
@@ -93,7 +83,7 @@ func (c *TestExecutionCtrl) Update(ctx iris.Context) {
 		return
 	}
 
-	var req model.TestExecution
+	var req model.TestExec
 	if err := ctx.ReadJSON(&req); err != nil {
 		errs := validate.ValidRequest(err)
 		if len(errs) > 0 {
@@ -103,7 +93,7 @@ func (c *TestExecutionCtrl) Update(ctx iris.Context) {
 		}
 	}
 
-	err := c.TestExecutionService.Update(reqId.Id, req)
+	err := c.TestExecService.Update(reqId.Id, req)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return
@@ -112,14 +102,14 @@ func (c *TestExecutionCtrl) Update(ctx iris.Context) {
 }
 
 // Delete 删除
-func (c *TestExecutionCtrl) Delete(ctx iris.Context) {
+func (c *TestExecCtrl) Delete(ctx iris.Context) {
 	var req domain.ReqId
 	if err := ctx.ReadParams(&req); err != nil {
 		logUtils.Errorf("参数解析失败", zap.String("错误:", err.Error()))
 		ctx.JSON(domain.Response{Code: domain.ParamErr.Code, Data: nil, Msg: domain.ParamErr.Msg})
 		return
 	}
-	err := c.TestExecutionService.DeleteById(req.Id)
+	err := c.TestExecService.DeleteById(req.Id)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return

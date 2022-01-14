@@ -5,10 +5,11 @@ import {removeEmptyField} from "@/utils/object";
 
 const apiPath = 'exec';
 
-export async function execCase(params: string[]): Promise<any> {
+export async function execCase(scriptPaths: string[]): Promise<any> {
+    const data = {cases: scriptPaths}
     return request({
         url: `/${apiPath}/execCase`,
         method: 'POST',
-        params
+        data: data,
     });
 }
