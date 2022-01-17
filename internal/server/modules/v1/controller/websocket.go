@@ -66,7 +66,7 @@ func (c *WsCtrl) OnChat(msg websocket.Message) (err error) {
 		c.SendMsgByKey(result, "please wait previous request is in process", msg)
 	} else {
 		ch = make(chan int)
-		go shellUtils.ExeShellCallback(ch, "~/loop.sh", "", c.SendMsg, msg)
+		go shellUtils.ExeShellCallback(ch, "/Users/aaron/work/testing/res/loop.sh", "", c.SendMsg, msg)
 	}
 
 	return

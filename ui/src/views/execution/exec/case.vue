@@ -61,13 +61,16 @@
 </template>
 
 <script lang="ts">
-import {computed, ComputedRef, defineComponent, onMounted, ref, Ref, watch} from "vue";
+import {computed, ComputedRef, defineComponent, onMounted, reactive, ref, Ref, watch, getCurrentInstance} from "vue";
 import {Form, notification} from "ant-design-vue";
 import {useRouter} from "vue-router";
 import {useStore} from "vuex";
 import {ProjectData} from "@/store/project";
 import IconSvg from "@/components/IconSvg";
 import {execCase} from "@/views/execution/exec/service";
+import {getCache} from "@/utils/localCache";
+import settings from "@/config/settings";
+import {WebSocket, WsEventName} from "@/services/websocket";
 
 const useForm = Form.useForm;
 
@@ -85,6 +88,9 @@ interface ExecCasePageSetupData {
   checkedKeys: Ref<string[]>
   expandedKeys: Ref<string[]>
   tree: Ref;
+
+  wsMsg: any,
+  sendWs: () => void;
 
   exec: (keys) => void;
   back: () => void;
@@ -128,6 +134,32 @@ export default defineComponent({
     })
 
     let tree = ref(null)
+
+    let init = true;
+    let wsMsg = reactive({in: '', out: ''});
+
+    let room: string | null = ''
+    getCache(settings.currProject).then((token) => {
+      room = token
+    })
+
+    const sendWs = () => {
+      console.log('sendWs');
+      WebSocket.sentMsg(room, wsMsg.in);
+      wsMsg.out = wsMsg.out + 'client: ' + wsMsg.in + '\n';
+    };
+
+    const { proxy } = getCurrentInstance() as any;
+    WebSocket.init(proxy)
+
+    if (init) {
+      proxy.$sub(WsEventName, (data) => {
+        console.log(data[0].msg);
+        wsMsg.out = wsMsg.out + 'server: ' + data[0].msg + '\n';
+        console.log(wsMsg.out);
+      });
+      init = false;
+    }
 
     onMounted(() => {
       console.log('onMounted', tree)
@@ -183,6 +215,9 @@ export default defineComponent({
       expandedKeys,
       selectedKeys,
       checkedKeys,
+
+      wsMsg,
+      sendWs,
 
       exec,
       back,
