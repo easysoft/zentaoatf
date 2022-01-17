@@ -11,6 +11,7 @@ import (
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	zentaoUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/zentao"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
+	configUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/config"
 	"github.com/emirpasic/gods/maps"
 	"sort"
 	"strconv"
@@ -18,7 +19,6 @@ import (
 )
 
 type ZtfCaseService struct {
-	ConfigService *ConfigService    `inject:""`
 	ZentaoService *ZentaoService    `inject:""`
 	ProjectRepo   *repo.ProjectRepo `inject:""`
 }
@@ -30,7 +30,7 @@ func (s *ZtfCaseService) NewZtfCaseService() *ZtfCaseService {
 func (s *ZtfCaseService) LoadTestCases(productId, moduleId, suiteId, taskId int, projectPath string) (
 	cases []commDomain.ZtfCase, loginFail bool) {
 
-	config := s.ConfigService.LoadByProjectPath(projectPath)
+	config := configUtils.LoadByProjectPath(projectPath)
 
 	ok := s.ZentaoService.Login(config)
 	if !ok {
@@ -231,7 +231,7 @@ func (s *ZtfCaseService) GetCaseById(baseUrl string, caseId string) commDomain.Z
 }
 
 func (s *ZtfCaseService) GetCaseIdsBySuite(suiteId int, idMap *map[int]string, projectPath string) {
-	config := s.ConfigService.LoadByProjectPath(projectPath)
+	config := configUtils.LoadByProjectPath(projectPath)
 
 	ok := s.ZentaoService.Login(config)
 	if !ok {
@@ -247,7 +247,7 @@ func (s *ZtfCaseService) GetCaseIdsBySuite(suiteId int, idMap *map[int]string, p
 }
 
 func (s *ZtfCaseService) GetCaseIdsByTask(taskId int, idMap *map[int]string, projectPath string) {
-	config := s.ConfigService.LoadByProjectPath(projectPath)
+	config := configUtils.LoadByProjectPath(projectPath)
 
 	ok := s.ZentaoService.Login(config)
 	if !ok {
@@ -264,7 +264,7 @@ func (s *ZtfCaseService) GetCaseIdsByTask(taskId int, idMap *map[int]string, pro
 
 func (s *ZtfCaseService) CommitCase(caseId int, title string,
 	stepMap maps.Map, stepTypeMap maps.Map, expectMap maps.Map, projectPath string) {
-	config := s.ConfigService.LoadByProjectPath(projectPath)
+	config := configUtils.LoadByProjectPath(projectPath)
 
 	ok := s.ZentaoService.Login(config)
 	if !ok {

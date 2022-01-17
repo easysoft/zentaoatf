@@ -7,11 +7,10 @@ import (
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
+	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
-	"github.com/fatih/color"
 	"github.com/mattn/go-runewidth"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -77,9 +76,9 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int, projectPath
 		}
 	}
 	if failedCount > 0 {
-		logUtils.ScreenAndResult("\n" + i118Utils.Sprintf("failed_scripts"))
-		logUtils.Screen(strings.Join(failedCaseLines, "\n"))
-		logUtils.Result(strings.Join(failedCaseLinesWithCheckpoint, "\n"))
+		logUtils.Infof("\n" + i118Utils.Sprintf("failed_scripts"))
+		logUtils.Infof(strings.Join(failedCaseLines, "\n"))
+		logUtils.Infof(strings.Join(failedCaseLinesWithCheckpoint, "\n"))
 	}
 
 	secTag := ""
@@ -96,7 +95,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int, projectPath
 	logFile := filepath.Join(projectPath, commConsts.LogDir, "result.txt")
 
 	// 打印到结果文件
-	logUtils.Result("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
+	logUtils.Infof("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
 		i118Utils.Sprintf("run_scripts",
 			report.Total, report.Duration, secTag,
 			passStr, failStr, skipStr,

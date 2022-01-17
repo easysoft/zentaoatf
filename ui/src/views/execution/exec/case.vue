@@ -17,13 +17,13 @@
             </div>
           </template>
 
-          <div>
+          <div class="main">
 <!--            <div class="toolbar">
               <div class="left"></div>
               <div class="right"></div>
             </div>-->
 
-            <div class="tree-panel">
+            <div class="left">
               <a-tree
                   ref="tree"
                   :tree-data="treeData"
@@ -43,6 +43,16 @@
                   <icon-svg v-if="!slotProps.isDir" type="file-outlined"></icon-svg>
                 </template>
               </a-tree>
+            </div>
+
+            <div id="resize"></div>
+
+            <div class="content">
+              <div><a-input id="input" type="text" v-model:value="wsMsg.in" /></div>
+              <div><a-button id="sendBtn" @click="sendWs">Send</a-button></div>
+              <div>
+                <pre>{{ wsMsg.out }}</pre>
+              </div>
             </div>
           </div>
 
@@ -211,13 +221,33 @@ export default defineComponent({
   }
 }
 
-.tree-panel {
-  height: calc(100% - 35px);
-  overflow: auto;
+.main {
+  display: flex;
+  .left {
+    width: 360px;
+    height: calc(100% - 35px);
+    overflow: auto;
 
-  .ant-tree {
-    font-size: 16px;
+    .ant-tree {
+      font-size: 16px;
+    }
   }
+  .resize {
+    width: 2px;
+    height: 100%;
+    background-color: #D0D7DE;
+    cursor: ew-resize;
+
+    &.active {
+      background-color: #a9aeb4;
+    }
+  }
+  .content {
+    flex: 1;
+    height: 100%;
+  }
+
 }
+
 
 </style>

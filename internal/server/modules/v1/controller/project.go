@@ -8,6 +8,7 @@ import (
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
+	configUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/config"
 	"strings"
 
 	"github.com/kataras/iris/v12"
@@ -16,7 +17,6 @@ import (
 
 type ProjectCtrl struct {
 	ProjectService *service.ProjectService `inject:""`
-	ConfigService  *service.ConfigService  `inject:""`
 	BaseCtrl
 }
 
@@ -142,7 +142,7 @@ func (c *ProjectCtrl) GetByUser(ctx iris.Context) {
 		return
 	}
 
-	currProjectConfig := c.ConfigService.ReadFromFile(currProject.Path)
+	currProjectConfig := configUtils.ReadFromFile(currProject.Path)
 
 	ret := iris.Map{"projects": projects, "currProject": currProject,
 		"currConfig": currProjectConfig, "scriptTree": scriptTree}

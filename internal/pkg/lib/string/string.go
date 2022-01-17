@@ -2,7 +2,7 @@ package stringUtils
 
 import (
 	"encoding/base64"
-	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/jameskeane/bcrypt"
 	"math/rand"
 	"regexp"
@@ -111,8 +111,8 @@ func FindInArr(str string, arr []string) bool {
 
 func BoolToPass(b bool) string {
 	if b {
-		return consts.PASS.String()
+		return commConsts.PASS.String()
 	} else {
-		return consts.FAIL.String()
+		return commConsts.FAIL.String()
 	}
 }

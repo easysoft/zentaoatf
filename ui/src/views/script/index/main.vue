@@ -189,7 +189,6 @@ export default defineComponent({
     }
 
     #resize {
-      float:left;
       width: 2px;
       height: 100%;
       background-color: #D0D7DE;

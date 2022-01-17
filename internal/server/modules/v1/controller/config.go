@@ -5,7 +5,7 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/core/web/validate"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
+	configUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/config"
 	"strings"
 
 	"github.com/kataras/iris/v12"
@@ -13,7 +13,6 @@ import (
 )
 
 type ConfigCtrl struct {
-	ConfigService *service.ConfigService `inject:""`
 	BaseCtrl
 }
 
@@ -34,7 +33,7 @@ func (c *ConfigCtrl) SaveConfig(ctx iris.Context) {
 		}
 	}
 
-	err := c.ConfigService.SaveConfig(req, projectPath)
+	err := configUtils.SaveConfig(req, projectPath)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: c.ErrCode(err), Data: nil})
 		return
