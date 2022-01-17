@@ -1,67 +1,62 @@
 <template>
-    <div class="indexlayout-main-conent">
-        <a-card :bordered="false">
-          <template #title>
-            执行用例
-          </template>
-
-          <template #extra>
-            <div class="opt">
+  <div class="indexlayout-main-conent">
+      <div id="main">
+        <div id="left">
+          <div class="toolbar">
+            <div class="left"></div>
+            <div class="right">
               <a-button @click="expandAll" type="link">
                 <span v-if="!isExpand">展开全部</span>
                 <span v-if="isExpand">收缩全部</span>
               </a-button>
-
-              <a-button type="primary" @click="exec">执行</a-button>
-              <a-button @click="back()">返回</a-button>
-            </div>
-          </template>
-
-          <div class="main">
-<!--            <div class="toolbar">
-              <div class="left"></div>
-              <div class="right"></div>
-            </div>-->
-
-            <div class="left">
-              <a-tree
-                  ref="tree"
-                  :tree-data="treeData"
-                  :replace-fields="replaceFields"
-                  checkable
-                  show-icon
-                  @expand="expandNode"
-                  @select="selectNode"
-                  @check="checkNode"
-
-                  v-model:selectedKeys="selectedKeys"
-                  v-model:checkedKeys="checkedKeys"
-                  v-model:expandedKeys="expandedKeys"
-              >
-                <template #icon="slotProps">
-                  <icon-svg v-if="slotProps.isDir" type="folder-outlined"></icon-svg>
-                  <icon-svg v-if="!slotProps.isDir" type="file-outlined"></icon-svg>
-                </template>
-              </a-tree>
-            </div>
-
-            <div id="resize"></div>
-
-            <div class="content">
-              <div><a-input id="input" type="text" v-model:value="wsMsg.in" /></div>
-              <div><a-button id="sendBtn" @click="sendWs">Send</a-button></div>
-              <div>
-                <pre>{{ wsMsg.out }}</pre>
-              </div>
             </div>
           </div>
 
-        </a-card>
-    </div>
+          <div class="tree-panel">
+            <a-tree
+                ref="tree"
+                :tree-data="treeData"
+                :replace-fields="replaceFields"
+                checkable
+                show-icon
+                @expand="expandNode"
+                @select="selectNode"
+                @check="checkNode"
+
+                v-model:selectedKeys="selectedKeys"
+                v-model:checkedKeys="checkedKeys"
+                v-model:expandedKeys="expandedKeys"
+            >
+              <template #icon="slotProps">
+                <icon-svg v-if="slotProps.isDir" type="folder-outlined"></icon-svg>
+                <icon-svg v-if="!slotProps.isDir" type="file-outlined"></icon-svg>
+              </template>
+            </a-tree>
+          </div>
+        </div>
+
+        <div id="resize"></div>
+
+        <div id="content">
+          <div class="toolbar">
+            <a-button type="primary" @click="exec">执行</a-button>
+            <a-button @click="back()">返回</a-button>
+          </div>
+          <div class="panel">
+            <div>
+              <a-input id="input" type="text" v-model:value="wsMsg.in"/>
+            </div>
+            <div>
+              <pre>{{ wsMsg.out }}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
 </template>
 
 <script lang="ts">
-import {computed, ComputedRef, defineComponent, onMounted, reactive, ref, Ref, watch, getCurrentInstance} from "vue";
+import {computed, ComputedRef, defineComponent, getCurrentInstance, onMounted, reactive, Ref, ref, watch} from "vue";
 import {Form, notification} from "ant-design-vue";
 import {useRouter} from "vue-router";
 import {useStore} from "vuex";
@@ -71,6 +66,7 @@ import {execCase} from "@/views/execution/exec/service";
 import {getCache} from "@/utils/localCache";
 import settings from "@/config/settings";
 import {WebSocket, WsEventName} from "@/services/websocket";
+import {resizeWidth} from "@/utils/dom";
 
 const useForm = Form.useForm;
 
@@ -90,8 +86,6 @@ interface ExecCasePageSetupData {
   tree: Ref;
 
   wsMsg: any,
-  sendWs: () => void;
-
   exec: (keys) => void;
   back: () => void;
 }
@@ -128,7 +122,7 @@ export default defineComponent({
     }
 
     getOpenKeys(treeData.value[0], false)
-    watch(treeData,(currConfig)=> {
+    watch(treeData, (currConfig) => {
       expandedKeys.value = []
       getOpenKeys(treeData.value[0], false)
     })
@@ -143,13 +137,7 @@ export default defineComponent({
       room = token
     })
 
-    const sendWs = () => {
-      console.log('sendWs');
-      WebSocket.sentMsg(room, wsMsg.in);
-      wsMsg.out = wsMsg.out + 'client: ' + wsMsg.in + '\n';
-    };
-
-    const { proxy } = getCurrentInstance() as any;
+    const {proxy} = getCurrentInstance() as any;
     WebSocket.init(proxy)
 
     if (init) {
@@ -163,6 +151,7 @@ export default defineComponent({
 
     onMounted(() => {
       console.log('onMounted', tree)
+      resizeWidth('main', 'left', 'resize', 'content', 280, 800)
     })
 
     const expandNode = (keys: string[], e: any) => {
@@ -185,8 +174,12 @@ export default defineComponent({
       }
     }
 
-    const exec = ():void =>  {
+    const exec = (): void => {
       console.log("exec")
+
+      WebSocket.sentMsg(room, wsMsg.in)
+      wsMsg.out = wsMsg.out + 'client: ' + wsMsg.in + '\n'
+
       if (checkedKeys.value.length == 0) return
       execCase(checkedKeys.value).then((json) => {
         console.log('json', json)
@@ -197,7 +190,7 @@ export default defineComponent({
         }
       })
     }
-    const back = ():void =>  {
+    const back = (): void => {
       router.push(`/execution/history`)
     }
 
@@ -217,7 +210,6 @@ export default defineComponent({
       checkedKeys,
 
       wsMsg,
-      sendWs,
 
       exec,
       back,
@@ -228,61 +220,82 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-.opt {
-  .space {
-    display: inline-block;
-    width: 50px;
-  }
-  .ant-btn {
-    margin-left: 12px;
-  }
-}
+.indexlayout-main-conent {
+  margin: 0px;
+  height: 100%;
+  #main {
+    display: flex;
+    height: 100%;
 
-.toolbar {
-  display: flex;
-  padding: 0 3px;
-  border-bottom: 1px solid #D0D7DE;
+    #left {
+      width: 380px;
+      height: 100%;
+      padding: 3px;
 
-  .left {
-    flex: 1;
-  }
-  .right {
-    width: 70px;
-    text-align: right;
-  }
-  .ant-btn-link {
-    padding: 0px 3px;
-    color: #1890ff;
-  }
-}
+      .toolbar {
+        display: flex;
+        padding: 0 3px;
+        border-bottom: 1px solid #D0D7DE;
 
-.main {
-  display: flex;
-  .left {
-    width: 360px;
-    height: calc(100% - 35px);
-    overflow: auto;
+        .left {
+          flex: 1;
+        }
 
-    .ant-tree {
-      font-size: 16px;
+        .right {
+          width: 70px;
+          text-align: right;
+        }
+
+        .ant-btn-link {
+          padding: 0px 3px;
+          color: #1890ff;
+        }
+      }
+    }
+
+    #resize {
+      width: 2px;
+      height: 100%;
+      background-color: #D0D7DE;
+      cursor: ew-resize;
+
+      &.active {
+        background-color: #a9aeb4;
+      }
+    }
+
+    #resize {
+      width: 2px;
+      height: 100%;
+      background-color: #D0D7DE;
+      cursor: ew-resize;
+
+      &.active {
+        background-color: #a9aeb4;
+      }
+    }
+
+    #content {
+      width: 80%;
+      height: 100%;
+      flex: 1;
+
+      .toolbar {
+        padding: 5px 10px;
+        height: 46px;
+        text-align: right;
+
+        .ant-btn {
+          margin-left: 8px;
+        }
+      }
+
+      .panel {
+        padding: 0 16px;
+        height: calc(100% - 46px);
+        overflow: auto;
+      }
     }
   }
-  .resize {
-    width: 2px;
-    height: 100%;
-    background-color: #D0D7DE;
-    cursor: ew-resize;
-
-    &.active {
-      background-color: #a9aeb4;
-    }
-  }
-  .content {
-    flex: 1;
-    height: 100%;
-  }
-
 }
-
-
 </style>

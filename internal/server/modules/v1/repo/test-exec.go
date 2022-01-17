@@ -31,7 +31,7 @@ func (r *TestExecRepo) Paginate(req serverDomain.TestExecReqPaginate, projectPat
 	}
 
 	db := r.DB.Model(&model.TestExec{}).
-		Where("projectId = ?", project.ID).
+		Where("project_id = ?", project.ID).
 		Where("NOT deleted")
 
 	if req.Keywords != "" {

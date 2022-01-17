@@ -185,7 +185,6 @@ export default defineComponent({
           font-size: 16px;
         }
       }
-
     }
 
     #resize {
