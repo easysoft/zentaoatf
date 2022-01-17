@@ -1,7 +1,7 @@
 import request from '@/utils/request';
 import { Execution, QueryParams } from './data.d';
 
-const apiPath = 'executions';
+const apiPath = 'exec';
 
 export async function query(params?: QueryParams): Promise<any> {
     return request({

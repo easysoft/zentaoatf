@@ -24,9 +24,6 @@ import {computed, ComputedRef, defineComponent, onMounted, Ref, ref} from "vue";
 import {useStore} from "vuex";
 
 import {ProjectData} from "@/store/project";
-import {Execution} from "@/views/execution/data";
-import {Props} from "ant-design-vue/lib/form/useForm";
-import {message} from "ant-design-vue";
 import DirSelection from "@/views/component/file/DirSelection.vue";
 
 interface RightTopProject {

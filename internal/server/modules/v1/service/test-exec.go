@@ -1,6 +1,7 @@
 package service
 
 import (
+	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
@@ -15,8 +16,9 @@ func NewTestExecService() *TestExecService {
 	return &TestExecService{}
 }
 
-func (s *TestExecService) Paginate(req serverDomain.TestExecReqPaginate) (ret domain.PageData, err error) {
-	ret, err = s.TestExecRepo.Paginate(req)
+func (s *TestExecService) Paginate(req serverDomain.TestExecReqPaginate, projectPath string) (
+	ret domain.PageData, err error) {
+	ret, err = s.TestExecRepo.Paginate(req, projectPath)
 	if err != nil {
 		return
 	}
@@ -38,4 +40,16 @@ func (s *TestExecService) Update(id uint, testExecution model.TestExec) error {
 
 func (s *TestExecService) DeleteById(id uint) error {
 	return s.TestExecRepo.DeleteById(id)
+}
+
+func GetZTFTestReports(projectPath string) (reports []commDomain.ZtfReport) {
+	//resultPath := resultDir + "result.json"
+	//
+	//content := fileUtils.ReadFile(resultPath)
+	//content = strings.Replace(content, "\n", "", -1)
+	//
+	//var report model.TestReport
+	//json.Unmarshal([]byte(content), &report)
+
+	return
 }

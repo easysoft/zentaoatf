@@ -1,4 +1,4 @@
-package service
+package configUtils
 
 import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
@@ -6,21 +6,14 @@ import (
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
+	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
 	"gopkg.in/ini.v1"
 	"path"
 	"path/filepath"
+	"reflect"
 )
 
-type ConfigService struct {
-	ProjectRepo *repo.ProjectRepo `inject:""`
-}
-
-func NewConfigService() *ConfigService {
-	return &ConfigService{}
-}
-
-func (s *ConfigService) LoadByProjectPath(projectPath string) (config commDomain.ProjectConf) {
+func LoadByProjectPath(projectPath string) (config commDomain.ProjectConf) {
 	pth := filepath.Join(projectPath, commConsts.ConfigDir, commConsts.ConfigFile)
 	ini.MapTo(&config, pth)
 
@@ -29,13 +22,13 @@ func (s *ConfigService) LoadByProjectPath(projectPath string) (config commDomain
 	return config
 }
 
-func (s *ConfigService) SaveConfig(config commDomain.ProjectConf, projectPath string) (err error) {
-	s.SaveToFile(config, projectPath)
+func SaveConfig(config commDomain.ProjectConf, projectPath string) (err error) {
+	SaveToFile(config, projectPath)
 
 	return
 }
 
-func (s *ConfigService) ReadFromFile(projectPath string) (config commDomain.ProjectConf) {
+func ReadFromFile(projectPath string) (config commDomain.ProjectConf) {
 	pth := filepath.Join(projectPath, commConsts.ConfigDir, commConsts.ConfigFile)
 	ini.MapTo(&config, pth)
 
@@ -44,7 +37,7 @@ func (s *ConfigService) ReadFromFile(projectPath string) (config commDomain.Proj
 	return config
 }
 
-func (s *ConfigService) SaveToFile(config commDomain.ProjectConf, projectPath string) (err error) {
+func SaveToFile(config commDomain.ProjectConf, projectPath string) (err error) {
 	pth := filepath.Join(projectPath, commConsts.ConfigDir, commConsts.ConfigFile)
 	fileUtils.MkDirIfNeeded(path.Dir(pth))
 
@@ -57,4 +50,13 @@ func (s *ConfigService) SaveToFile(config commDomain.ProjectConf, projectPath st
 	logUtils.Infof("Successfully update config file %s.", pth)
 
 	return nil
+}
+
+func GetFieldVal(config commDomain.ProjectConf, key string) string {
+	key = stringUtils.UcFirst(key)
+
+	immutable := reflect.ValueOf(config)
+	val := immutable.FieldByName(key).String()
+
+	return val
 }

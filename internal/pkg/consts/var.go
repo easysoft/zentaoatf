@@ -1,3 +1,5 @@
 package consts
 
-var ()
+var (
+	ScreenWidth int
+)

@@ -14,17 +14,25 @@ import (
 )
 
 type TestExecRepo struct {
-	DB *gorm.DB `inject:""`
+	DB          *gorm.DB     `inject:""`
+	ProjectRepo *ProjectRepo `inject:""`
 }
 
 func NewTestExecRepo() *TestExecRepo {
 	return &TestExecRepo{}
 }
 
-func (r *TestExecRepo) Paginate(req serverDomain.TestExecReqPaginate) (data domain.PageData, err error) {
+func (r *TestExecRepo) Paginate(req serverDomain.TestExecReqPaginate, projectPath string) (data domain.PageData, err error) {
 	var count int64
 
-	db := r.DB.Model(&model.TestExec{}).Where("NOT deleted")
+	project, err := r.ProjectRepo.FindByPath(projectPath)
+	if err != nil {
+		return
+	}
+
+	db := r.DB.Model(&model.TestExec{}).
+		Where("projectId = ?", project.ID).
+		Where("NOT deleted")
 
 	if req.Keywords != "" {
 		db = db.Where("name LIKE ?", fmt.Sprintf("%%%s%%", req.Keywords))

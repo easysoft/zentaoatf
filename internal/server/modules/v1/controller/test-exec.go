@@ -7,6 +7,8 @@ import (
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
+	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/exec"
+	reportUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/report"
 	"strings"
 
 	"github.com/kataras/iris/v12"
@@ -24,18 +26,17 @@ func NewTestExecCtrl() *TestExecCtrl {
 
 // Query 分页列表
 func (c *TestExecCtrl) List(ctx iris.Context) {
+	projectPath := ctx.URLParam("currProject")
+
 	var req serverDomain.TestExecReqPaginate
 	if err := ctx.ReadQuery(&req); err != nil {
-		errs := validate.ValidRequest(err)
-		if len(errs) > 0 {
-			logUtils.Errorf("参数验证失败", zap.String("错误", strings.Join(errs, ";")))
-			ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: strings.Join(errs, ";")})
-			return
-		}
+		logUtils.Errorf("参数验证失败", err.Error())
+		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
+		return
 	}
 	req.ConvertParams()
 
-	data, err := c.TestExecService.Paginate(req)
+	data, err := c.TestExecService.Paginate(req, projectPath)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return
@@ -63,6 +64,7 @@ func (c *TestExecCtrl) Get(ctx iris.Context) {
 
 // ExecCase 添加
 func (c *TestExecCtrl) ExecCase(ctx iris.Context) {
+	projectPath := ctx.URLParam("currProject")
 	req := serverDomain.TestExec{}
 
 	if err := ctx.ReadJSON(&req); err != nil {
@@ -70,6 +72,9 @@ func (c *TestExecCtrl) ExecCase(ctx iris.Context) {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
+
+	report, pathMaxWidth, _ := scriptUtils.ExecCase(req, projectPath)
+	reportUtils.GenZTFTestReport(report, pathMaxWidth, projectPath)
 
 	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: nil, Msg: domain.NoErr.Msg})
 }

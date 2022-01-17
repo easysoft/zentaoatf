@@ -118,10 +118,10 @@ export default defineComponent({
     };
 
     return {
-      currConfig,
-      formRef,
       labelCol: { span: 4 },
       wrapperCol: { span: 14 },
+      currConfig,
+      formRef,
       model,
       rules,
       resetFields,

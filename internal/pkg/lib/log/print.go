@@ -3,9 +3,11 @@ package logUtils
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	"go.uber.org/zap"
 	"log"
 	"strings"
+	"unicode/utf8"
 )
 
 var Logger *zap.Logger
@@ -62,4 +64,20 @@ func ConvertUnicode(str []byte) string {
 	}
 
 	return msg
+}
+
+func GetWholeLine(msg string, char string) string {
+	prefixLen := (consts.ScreenWidth - utf8.RuneCountInString(msg) - 2) / 2
+	if prefixLen <= 0 { // no width in debug mode
+		prefixLen = 6
+	}
+	postfixLen := consts.ScreenWidth - utf8.RuneCountInString(msg) - 2 - prefixLen - 1
+	if postfixLen <= 0 { // no width in debug mode
+		postfixLen = 6
+	}
+
+	preFixStr := strings.Repeat(char, prefixLen)
+	postFixStr := strings.Repeat(char, postfixLen)
+
+	return fmt.Sprintf("%s %s %s", preFixStr, msg, postFixStr)
 }

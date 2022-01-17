@@ -1,5 +1,4 @@
 import request from '@/utils/request';
-import {Config} from "@/views/config/data";
 
 const apiPath = 'projects';
 

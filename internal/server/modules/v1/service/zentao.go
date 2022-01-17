@@ -12,6 +12,7 @@ import (
 	zentaoUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/zentao"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
+	configUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/config"
 	"github.com/bitly/go-simplejson"
 	"strconv"
 	"strings"
@@ -20,7 +21,6 @@ import (
 type ZentaoService struct {
 	ProjectRepo    *repo.ProjectRepo `inject:""`
 	ProjectService *ProjectService   `inject:""`
-	ConfigService  *ConfigService    `inject:""`
 }
 
 func NewZentaoService() *ZentaoService {
@@ -36,7 +36,7 @@ func (s *ZentaoService) ListLang() (langs []serverDomain.ZentaoLang, err error) 
 }
 
 func (s *ZentaoService) ListProduct(projectPath string) (products []serverDomain.ZentaoProduct, err error) {
-	config := s.ConfigService.LoadByProjectPath(projectPath)
+	config := configUtils.LoadByProjectPath(projectPath)
 	s.Login(config)
 
 	url := config.Url + zentaoUtils.GenApiUri("product", "all", "")
@@ -59,7 +59,7 @@ func (s *ZentaoService) ListProduct(projectPath string) (products []serverDomain
 }
 
 func (s *ZentaoService) ListModuleByProduct(productId int, projectPath string) (modules []serverDomain.ZentaoModule, err error) {
-	config := s.ConfigService.LoadByProjectPath(projectPath)
+	config := configUtils.LoadByProjectPath(projectPath)
 	s.Login(config)
 	// tree-browse-1-story.html#app=product
 
@@ -111,7 +111,7 @@ func (s *ZentaoService) GenModuleData(mp map[string]interface{}, modules *[]serv
 }
 
 func (s *ZentaoService) ListSuiteByProduct(productId int, projectPath string) (suites []serverDomain.ZentaoSuite, err error) {
-	config := s.ConfigService.LoadByProjectPath(projectPath)
+	config := configUtils.LoadByProjectPath(projectPath)
 	s.Login(config)
 
 	params := ""
@@ -145,7 +145,7 @@ func (s *ZentaoService) ListSuiteByProduct(productId int, projectPath string) (s
 }
 
 func (s *ZentaoService) ListTaskByProduct(productId int, projectPath string) (tasks []serverDomain.ZentaoTask, err error) {
-	config := s.ConfigService.LoadByProjectPath(projectPath)
+	config := configUtils.LoadByProjectPath(projectPath)
 	s.Login(config)
 
 	params := ""

@@ -168,6 +168,18 @@ func (r *ProjectRepo) FindByName(name string, ids ...uint) (po model.Project, er
 	return
 }
 
+func (r *ProjectRepo) FindByPath(projectPath string) (po model.Project, err error) {
+	db := r.DB.Model(&model.Project{}).Where("path = ?", projectPath)
+
+	err = db.First(&po).Error
+	if err != nil {
+		logUtils.Errorf("find project by path error", err.Error())
+		return
+	}
+
+	return
+}
+
 func (r *ProjectRepo) ListProjectByUser() (projects []model.Project, err error) {
 	err = r.DB.Model(&model.Project{}).
 		Where("NOT deleted").
