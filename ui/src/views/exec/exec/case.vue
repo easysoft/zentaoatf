@@ -38,8 +38,8 @@
         <div id="resize"></div>
 
         <div id="content">
-          <div class="toolbar">
-            <a-button @click="exec" type="primary">执行</a-button>
+          <div class="toolbar">{{isRunning}}
+            <a-button :disabled="isRunning" @click="exec" type="primary">执行</a-button>
             <a-button @click="stop">停止</a-button>
             <a-button @click="back" type="link">返回</a-button>
           </div>
@@ -84,6 +84,7 @@ interface ExecCasePageSetupData {
   wsMsg: any,
   exec: (keys) => void;
   stop: (keys) => void;
+  isRunning: Ref<boolean>;
   back: () => void;
 }
 
@@ -127,6 +128,7 @@ export default defineComponent({
     let tree = ref(null)
 
     let init = true;
+    let isRunning = ref(false);
     let wsMsg = reactive({in: '', out: ''});
 
     let room: string | null = ''
@@ -149,7 +151,12 @@ export default defineComponent({
     if (init) {
       proxy.$sub(WsEventName, (data) => {
         console.log(data[0].msg);
-        const msg = data[0].msg.replace(/^"+/,'').replace(/"+$/,'')
+        const jsn = JSON.parse(data[0].msg)
+        if ('isRunning' in jsn) {
+          isRunning.value = jsn.isRunning
+        }
+        let msg = jsn.msg
+        msg = msg.replace(/^"+/,'').replace(/"+$/,'')
 
         wsMsg.out = wsMsg.out + i++ + '. ' + msg + '\n';
         scroll()
@@ -160,6 +167,7 @@ export default defineComponent({
     onMounted(() => {
       console.log('onMounted', tree)
       resizeWidth('main', 'left', 'resize', 'content', 280, 800)
+      initWsConn()
     })
 
     const expandNode = (keys: string[], e: any) => {
@@ -184,12 +192,17 @@ export default defineComponent({
 
     const exec = (): void => {
       console.log("exec")
-      if (checkedKeys.value.length == 0) return
+      if (checkedKeys.value.length == 0) {
+        wsMsg.out += '请选择用例执行。\n'
+        return
+      }
 
       getCache(settings.currProject).then (
           (projectPath) => {
             const msg = {act: 'execCase', projectPath: projectPath, cases: checkedKeys.value}
             console.log('msg', msg)
+
+            wsMsg.out += '\n'
             WebSocket.sentMsg(room, JSON.stringify(msg))
           }
       )
@@ -199,6 +212,16 @@ export default defineComponent({
       getCache(settings.currProject).then (
           (projectPath) => {
             const msg = {act: 'execStop', projectPath: projectPath}
+            console.log('msg', msg)
+            WebSocket.sentMsg(room, JSON.stringify(msg))
+          }
+      )
+    }
+    const initWsConn = (): void => {
+      console.log("initWsConn")
+      getCache(settings.currProject).then (
+          (projectPath) => {
+            const msg = {act: 'init', projectPath: projectPath}
             console.log('msg', msg)
             WebSocket.sentMsg(room, JSON.stringify(msg))
           }
@@ -228,6 +251,7 @@ export default defineComponent({
 
       exec,
       stop,
+      isRunning,
       back,
     }
   }

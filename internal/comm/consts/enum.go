@@ -29,6 +29,7 @@ func (e ResultStatus) String() string {
 type ExecCmd string
 
 const (
+	ExecInit ExecCmd = "init"
 	ExecStop ExecCmd = "execStop"
 
 	ExecCase   ExecCmd = "execCase"

@@ -249,6 +249,22 @@
       "translation": "命令为空。"
     },
     {
+      "id": "success_to_conn",
+      "translation": "连接成功"
+    },
+    {
+      "id": "start_to_run",
+      "translation": "开始执行任务 ...。"
+    },
+    {
+      "id": "stopping_previous",
+      "translation": "正在停止上一个任务...。"
+    },
+    {
+      "id": "pls_stop_previous",
+      "translation": "请先终止上一个任务。"
+    },
+    {
       "id": "exit_exec",
       "translation": "退出执行。"
     },
@@ -415,6 +431,10 @@
       "translation": "您未提供productId，忽略提交测试结果。"
     },
 
+    {
+      "id": "wrong_req_params",
+      "translation": "错误的请求参数：%s。\n"
+    },
     {
       "id": "server_address",
       "translation": "\n请求地址：\n"
