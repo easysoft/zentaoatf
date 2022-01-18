@@ -226,8 +226,8 @@ func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
 		line, err2 := reader1.ReadString('\n')
 		if line != "" {
 			printToWs(line, wsMsg)
-			logUtils.ExecConsolef(-1, line)
-			logUtils.ExecFilef(line)
+			logUtils.ExecConsole(1, line)
+			logUtils.ExecFile(line)
 
 			isTerminal = true
 		}
