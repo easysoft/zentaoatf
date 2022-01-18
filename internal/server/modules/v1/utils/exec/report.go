@@ -5,6 +5,7 @@ import (
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
+	dateUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/date"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
@@ -102,13 +103,15 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 
 	logFile := filepath.Join(projectPath, commConsts.LogDirName, "result.txt")
 
-	// 打印到结果文件
-	logUtils.ExecResultf("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
+	// 执行%d个用例，耗时%d秒%s。%s，%s，%s。报告%s。
+	msg := "\n" + dateUtils.DateTimeStr(time.Now()) + " " +
 		i118Utils.Sprintf("run_scripts",
 			report.Total, report.Duration, secTag,
-			passStr, failStr, skipStr,
-			" "+logFile,
-		))
+			passStr, failStr, skipStr, " "+logFile,
+		)
+	printToWs(msg, wsMsg)
+	logUtils.ExecConsole(color.FgCyan, msg)
+	logUtils.ExecResult(msg)
 
 	//report.ProductId, _ = strconv.Atoi(vari.ProductId)
 	json, _ := json.Marshal(report)

@@ -43,12 +43,7 @@
             <a-button @click="back()">返回</a-button>
           </div>
           <div class="panel">
-            <div>
-              <a-input id="input" type="text" v-model:value="wsMsg.in"/>
-            </div>
-            <div>
-              <pre>{{ wsMsg.out }}</pre>
-            </div>
+            <pre style="height: 100%;">{{ wsMsg.out }}</pre>
           </div>
         </div>
       </div>
@@ -143,8 +138,9 @@ export default defineComponent({
     if (init) {
       proxy.$sub(WsEventName, (data) => {
         console.log(data[0].msg);
-        wsMsg.out = wsMsg.out + data[0].msg + '\n';
-        console.log(wsMsg.out);
+        const msg = data[0].msg.replace(/^"+/,'').replace(/"+$/,'')
+
+        wsMsg.out = wsMsg.out + msg + '\n';
       });
       init = false;
     }

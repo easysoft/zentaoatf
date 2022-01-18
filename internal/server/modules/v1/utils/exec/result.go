@@ -109,8 +109,6 @@ func ValidateCaseResult(scriptFile string, langType string,
 		Path: scriptFile, Status: caseResult, Steps: stepLogs}
 	report.FuncResult = append(report.FuncResult, cs)
 
-	// print case result to console
-	statusColor := "PASS" // logUtils.ColoredStatus(cs.Status)
 	width := strconv.Itoa(len(strconv.Itoa(total)))
 	numbWidth := strconv.Itoa(numbMaxWidth)
 
@@ -123,12 +121,11 @@ func ValidateCaseResult(scriptFile string, langType string,
 	}
 
 	format := "(%" + width + "d/%d) %s [%s] [%" + numbWidth + "d. %s] (%ss)"
-	msg := fmt.Sprintf(format, idx+1, total, statusColor, path, cs.Id, cs.Title, secs)
-	msg += fmt.Sprintf(format, idx+1, total, i118Utils.Sprintf(cs.Status), path, cs.Id, cs.Title, secs)
+	msg := fmt.Sprintf(format, idx+1, total, i118Utils.Sprintf(cs.Status), path, cs.Id, cs.Title, secs)
 
 	printToWs(msg, wsMsg)
 	logUtils.ExecConsolef(color.FgCyan, msg)
-	logUtils.ExecFile(msg)
+	logUtils.ExecResultf(msg)
 }
 
 func ValidateStepResult(langType string, expectLines []string, actualLines []string) (bool, []commDomain.CheckPointLog) {

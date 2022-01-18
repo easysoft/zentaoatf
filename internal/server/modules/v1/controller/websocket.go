@@ -9,6 +9,7 @@ import (
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/exec"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
+	"strings"
 )
 
 const (
@@ -84,7 +85,8 @@ func (c *WsCtrl) OnChat(msg websocket.Message) (err error) {
 }
 
 func (c *WsCtrl) SendExecMsg(info string, msg websocket.Message) {
-	logUtils.Infof("WebSocket SendMsg: room=%s, msg=%s", msg.Room, string(msg.Body))
+	logUtils.Infof("WebSocket SendMsg: room=%s, info=%s, msg=%s", msg.Room, info, string(msg.Body))
+	info = strings.Trim(info, "\n")
 	c.WebSocketService.Broadcast(msg.Namespace, msg.Room, msg.Event, info)
 }
 

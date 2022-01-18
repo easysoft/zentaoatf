@@ -21,16 +21,16 @@ func Init() {
 
 	// print to console
 	var err error
+	config.EncoderConfig.EncodeLevel = nil
+	config.DisableCaller = true
+	config.EncoderConfig.TimeKey = ""
 	logUtils.LoggerStandard, err = config.Build()
 	if err != nil {
 		log.Println("init console logger fail " + err.Error())
 	}
 
 	// print to console without detail
-	config.EncoderConfig.EncodeLevel = nil
 	config.DisableStacktrace = true
-	config.DisableCaller = true
-	config.EncoderConfig.TimeKey = ""
 	logUtils.LoggerExecConsole, err = config.Build()
 	if err != nil {
 		log.Println("init exec console logger fail " + err.Error())
