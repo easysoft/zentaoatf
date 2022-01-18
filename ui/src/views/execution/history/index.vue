@@ -80,7 +80,8 @@
 <script lang="ts">
 import {ComputedRef, defineComponent, ref, Ref, reactive, computed, onMounted} from "vue";
 import { SelectTypes } from 'ant-design-vue/es/select';
-import {Execution, QueryParams, PaginationConfig} from '../data.d';
+import {Execution} from '../data.d';
+import {QueryParams, PaginationConfig} from '@/types/data.d';
 import {useStore} from "vuex";
 
 import { Props } from 'ant-design-vue/lib/form/useForm';
@@ -150,7 +151,7 @@ export default defineComponent({
       const router = useRouter();
       const store = useStore<{ ListExecution: ListStateType}>();
 
-      const list = computed<Execution[]>(() => store.state.ListExecution.queryResult.list);
+      const list = computed<Execution[]>(() => store.state.ListExecution.queryResult.data);
       let pagination = computed<PaginationConfig>(() => store.state.ListExecution.queryResult.pagination);
       let queryParams = reactive<QueryParams>({keywords: '', enabled: '',
         page: pagination.value.current, pageSize: pagination.value.pageSize});

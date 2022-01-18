@@ -2,12 +2,516 @@
   "language": "en-US",
   "messages": [
     {
+      "id": "windows_permission",
+      "translation": "In Windows, open cmd window as the admin"
+    },
+
+    {
       "id": "for_example",
       "translation": "e.g. %s"
     },
     {
+      "id": "total",
+      "translation": "Total"
+    },
+    {
+      "id": "pass",
+      "translation": "Pass"
+    },
+    {
+      "id": "fail",
+      "translation": "Fail"
+    },
+    {
+      "id": "skip",
+      "translation": "Skip"
+    },
+
+    {
+      "id": "product_id",
+      "translation": "Product Id"
+    },
+    {
+      "id": "module_id",
+      "translation": "Module Id"
+    },
+    {
+      "id": "suite_id",
+      "translation": "Suite Id"
+    },
+    {
+      "id": "task_id",
+      "translation": "Test Request Id"
+    },
+
+    {
+      "id": "test_case",
+      "translation": "Test Case"
+    },
+    {
+      "id": "test_suite",
+      "translation": "Test Suite"
+    },
+    {
+      "id": "test_script",
+      "translation": "Test Script"
+    },
+    {
+      "id": "result",
+      "translation": "Result"
+    },
+    {
+      "id": "script",
+      "translation": "Script"
+    },
+    {
+      "id": "step",
+      "translation": "Step"
+    },
+    {
+      "id": "steps",
+      "translation": "Steps"
+    },
+    {
+      "id": "checkpoint",
+      "translation": "Checkpoint"
+    },
+    {
+      "id": "expect_result",
+      "translation": "Expected Result"
+    },
+    {
+      "id": "actual_result",
+      "translation": "Actual Result"
+    },
+    {
+      "id": "content",
+      "translation": "Content"
+    },
+    {
+      "id": "module",
+      "translation": "Module"
+    },
+    {
+      "id": "category",
+      "translation": "Category"
+    },
+    {
+      "id": "version",
+      "translation": "Version"
+    },
+    {
+      "id": "severity",
+      "translation": "Severity"
+    },
+    {
+      "id": "priority",
+      "translation": "Priority"
+    },
+    {
+      "id": "title_cannot_be_empty",
+      "translation": "Title cannot be empty."
+    },
+
+    {
+      "id": "need_config",
+      "translation": "You need to config ZenTao connection before checkout, type 'exit' to quit."
+    },
+    {
+      "id": "begin_config",
+      "translation": "Begin configuring, type 'exit' to quit."
+    },
+
+    {
+      "id": "want_to_continue",
+      "translation": "Do you want to continue? (y/n, default is Yes)"
+    },
+    {
+      "id": "case_update_confirm",
+      "translation": "Will commit cases below to Zentao:\n %d. %s"
+    },
+    {
+      "id": "enter_dir",
+      "translation": "Enter %s dir:"
+    },
+    {
+      "id": "where_to_store_script",
+      "translation": "Where to store scripts? Default is '%s'"
+    },
+    {
+      "id": "dir_not_exist",
+      "translation": "Dir does not exist"
+    },
+    {
+      "id": "enter_language",
+      "translation": "Enter the language you want to use:\n1. English %s\n2. Chinese %s"
+    },
+    {
+      "id": "config_zentao_site",
+      "translation": "Do you want to config Zentao site? (y/n, default is Yes)"
+    },
+    {
+      "id": "enter_url",
+      "translation": "Zentao site url: %s"
+    },
+    {
+      "id": "enter_account",
+      "translation": "Zentao account: %s"
+    },
+    {
+      "id": "enter_password",
+      "translation": "Zentao password: %s"
+    },
+    {
+      "id": "enter_co_type",
+      "translation": "Import test cases from?\n1. Product %s\n2. Suite %s\n3. Task %s"
+    },
+    {
+      "id": "enter_co_independent",
+      "translation": "Save expected results in a separate file? (y/n, default is No)"
+    },
+    {
+      "id": "enter_co_language",
+      "translation": "Select script language:\n%s"
+    },
+    {
+      "id": "co_organize_by_module",
+      "translation": "Organize test scripts by module? (y/n, default is Yes)"
+    },
+    {
+      "id": "co_script_prefix",
+      "translation": "Enter script name prefix: default is empty."
+    },
+
+    {
+      "id": "enter_case_id_for_report_bug",
+      "translation": "Which case do you want to report bug for? Type 'exit' to quit."
+    },
+    {
+      "id": "confirm_commit_result",
+      "translation": "Continue to commit results below? (y/n, default is Yes)\n%s"
+    },
+
+    {
+      "id": "invalid_input",
+      "translation": "Invalid input. Try again."
+    },
+    {
+      "id": "zentao_config_success",
+      "translation": "Successfully config Zentao connection."
+    },
+    {
+      "id": "zentao_config_fail",
+      "translation": "Failed to config Zentao connection."
+    },
+
+    {
+      "id": "current_config",
+      "translation": "Current config:"
+    },
+    {
+      "id": "config_script_interpreter",
+      "translation": "Do you want to config script interpreter? (y/n, default is Yes)"
+    },
+    {
+      "id": "set_script_interpreter",
+      "translation": "Please set script interpreter for %s: %s"
+    },
+    {
+      "id": "empty_to_ignore",
+      "translation": "(Ignore it if empty)"
+    },
+
+    {
+      "id": "en",
+      "translation": "English"
+    },
+    {
+      "id": "zh",
+      "translation": "Chinese"
+    },
+    {
+      "id": "support_language",
+      "translation": "Only en(%s) and zh(%s) language is acceptable."
+    },
+    {
+      "id": "no_cases",
+      "translation": "No test cases."
+    },
+
+    {
+      "id": "success_to_login",
+      "translation": "Success to login."
+    },
+    {
+      "id": "fail_to_login",
+      "translation": "Failed to login."
+    },
+
+    {
+      "id": "start_execution",
+      "translation": "Start execution"
+    },
+    {
+      "id": "end_execution",
+      "translation": "End execution"
+    },
+    {
+      "id": "found_scripts",
+      "translation": "Found %s test cases"
+    },
+    {
+      "id": "ignore_scripts",
+      "translation": "Ignore %s scripts with no interpreter set"
+    },
+    {
+      "id": "failed_scripts",
+      "translation": "Failed scripts:"
+    },
+
+    {
+      "id": "start_case",
+      "translation": "Start Case %s at %s"
+    },
+    {
+      "id": "end_case",
+      "translation": "End Case %s at %s, %d secs"
+    },
+    {
+      "id": "run_scripts",
+      "translation": "Run %d scripts in %d sec%s, %s, %s, %s. Report %s"
+    },
+    {
+      "id": "no_interpreter_for_run",
+      "translation": "Skip script %s since interpreter for %s not found."
+    },
+
+    {
+      "id": "no_checkpoints",
+      "translation": "No checkpoints."
+    },
+
+    {
+      "id": "only_support_script_language",
+      "translation": "Only support %s."
+    },
+    {
+      "id": "total_test_case",
+      "translation": "Total %d test cases."
+    },
+
+    {
+      "id": "is_checkpoint",
+      "translation": "What begin with '@' has checkpoint steps."
+    },
+    {
       "id": "find_example",
       "translation": "Examples in 'demo%s%s'"
+    },
+    {
+      "id": "expect_result_here",
+      "translation": "Expected Results. It can be more than one line."
+    },
+    {
+      "id": "actual_result_here",
+      "translation": "Actual results."
+    },
+    {
+      "id": "success_to_generate",
+      "translation": "Successfully generated %d test scripts in '%s'."
+    },
+    {
+      "id": "success_to_commit_case",
+      "translation": "Successfully committed case %d."
+    },
+    {
+      "id": "success_to_report_bug",
+      "translation": "Success to report bug for case %s."
+    },
+    {
+      "id": "success_to_commit_result",
+      "translation": "Successfully committed the result for case %d"
+    },
+
+    {
+      "id": "pls_enter",
+      "translation": "Please enter"
+    },
+    {
+      "id": "submit",
+      "translation": "Submit"
+    },
+    {
+      "id": "save",
+      "translation": "Save"
+    },
+    {
+      "id": "cancel",
+      "translation": "Cancel"
+    },
+    {
+      "id": "close",
+      "translation": "Close"
+    },
+    {
+      "id": "help_key_bind",
+      "translation": "HELP"
+    },
+    {
+      "id": "help_show",
+      "translation": "CTRL+H: Show/Hide help"
+    },
+    {
+      "id": "help_exit",
+      "translation": "CTRL+C: Exit"
+    },
+
+    {
+      "id": "success_to_clean_logs",
+      "translation": "Successfully cleaned all logs."
+    },
+    {
+      "id": "success_sort_steps",
+      "translation": "Successfully sorted steps for %d scripts."
+    },
+    {
+      "id": "success_add_to_path",
+      "translation": "Successfully added ztf commands to PATH environment variable."
+    },
+
+    {
+      "id": "success_to_submit_test_result",
+      "translation": "Submitted test results to ZenTao."
+    },
+    {
+      "id": "fail_to_submit_test_result",
+      "translation": "Failed to submit test results to ZenTao."
+    },
+    {
+      "id": "ignore_to_submit_result_no_result_empty",
+      "translation": "Ignore to submit test result since it's empty."
+    },
+    {
+      "id": "ignore_to_submit_result_no_product_id",
+      "translation": "Ignore to submit test result without productId provided."
+    },
+
+    {
+      "id": "server_address",
+      "translation": "\nRequest Address:\n"
+    },
+    {
+      "id": "server_params",
+      "translation": "Request Params:\n"
+    },
+    {
+      "id": "server_return",
+      "translation": "Server Return:\n"
+    },
+    {
+      "id": "task_id_empty_to_create",
+      "translation": ", create a new one if the default is empty."
+    },
+    {
+      "id": "run_with_specific_interpreter",
+      "translation": "Run all test scripts with specific interpreter %s."
+    },
+
+    {
+      "id": "start_server",
+      "translation": "Start HTTP service on http://%s:%s, press CTRL+C to exist.\nPlease access https://ztf.im/book/ztf/agent-exec-124.html for more information."
+    },
+    {
+      "id": "start_server_fail",
+      "translation": "Fail to start ZenData HTTP service, please confirm port %s is available."
+    },
+    {
+      "id": "server_request",
+      "translation": "\nGot %s request %s. "
+    },
+    {
+      "id": "server_response",
+      "translation": "Create %d records in %d sec."
+    },
+
+    {
+      "id": "fail_parse_req",
+      "translation": "Fail to parse request object, err %s."
+    },
+    {
+      "id": "has_jobs",
+      "translation": "Already has %d jobs to be done."
+    },
+    {
+      "id": "success_add_tak",
+      "translation": "Successfully add task."
+    },
+    {
+      "id": "success_heart_beat",
+      "translation": "Successfully send heartbeat request."
+    },
+    {
+      "id": "fail_heart_beat",
+      "translation": "Fail to send heartbeat request."
+    },
+
+    {
+      "id": "find_new_ver",
+      "translation": "Find new version %s"
+    },
+    {
+      "id": "success_upgrade",
+      "translation": "Successfully upgrade from version %.1f to %s."
+    },
+    {
+      "id": "fail_upgrade",
+      "translation": "Fail to upgrade from version %.1f to %s., err: %s."
+    },
+
+    {
+      "id": "download_fail",
+      "translation": "Download %s fail, error: %s."
+    },
+    {
+      "id": "download_read_fail",
+      "translation": "Read download file %s fail, error: %s."
+    },
+    {
+      "id": "download_write_fail",
+      "translation": "Write download file %s fail, error: %s."
+    },
+    {
+      "id": "download_success",
+      "translation": "Successfully download %s to %s."
+    },
+    {
+      "id": "success_update_config",
+      "translation": "Successfully update config file %s."
+    },
+    {
+      "id": "perm_deny",
+      "translation": "Permission denied to file %s, please change work dir."
+    },
+    {
+      "id": "fail_unzip",
+      "translation": "Fail to unzip file %s."
+    },
+    {
+      "id": "fail_md5_check",
+      "translation": "Check file %s MD5 failed."
+    },
+
+    {
+      "id": "fail_to_upload_file",
+      "translation": "Fail to upload file: %s."
+    },
+    {
+      "id": "fail_to_parse_upload_file_response",
+      "translation": "Fail to parse upload file response: %s."
+    },
+    {
+      "id": "upload_file_result",
+      "translation": "Upload file result: %s，%s."
     }
   ]
 }

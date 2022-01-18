@@ -25,3 +25,16 @@ const (
 func (e ResultStatus) String() string {
 	return string(e)
 }
+
+type ExecCmd string
+
+const (
+	ExecCase   ExecCmd = "execCase"
+	ExecModule ExecCmd = "execModule"
+	ExecSuite  ExecCmd = "execSuite"
+	ExecTask   ExecCmd = "execTask"
+)
+
+func (e ExecCmd) String() string {
+	return string(e)
+}

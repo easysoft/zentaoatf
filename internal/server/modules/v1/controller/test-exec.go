@@ -7,8 +7,6 @@ import (
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
-	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/exec"
-	reportUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/report"
 	"strings"
 
 	"github.com/kataras/iris/v12"
@@ -60,23 +58,6 @@ func (c *TestExecCtrl) Get(ctx iris.Context) {
 		return
 	}
 	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: execution, Msg: domain.NoErr.Msg})
-}
-
-// ExecCase 添加
-func (c *TestExecCtrl) ExecCase(ctx iris.Context) {
-	projectPath := ctx.URLParam("currProject")
-	req := serverDomain.TestExec{}
-
-	if err := ctx.ReadJSON(&req); err != nil {
-		logUtils.Errorf("参数验证失败", err.Error())
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
-		return
-	}
-
-	report, pathMaxWidth, _ := scriptUtils.ExecCase(req, projectPath)
-	reportUtils.GenZTFTestReport(report, pathMaxWidth, projectPath)
-
-	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: nil, Msg: domain.NoErr.Msg})
 }
 
 // Update 更新

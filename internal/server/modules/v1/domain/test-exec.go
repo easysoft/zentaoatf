@@ -9,8 +9,3 @@ type TestExecReqPaginate struct {
 	Keywords string `json:"keywords"`
 	Enabled  string `json:"enabled"`
 }
-
-type TestExec struct {
-	Name  string   `json:"name"`
-	Cases []string `json:"cases"`
-}

@@ -125,7 +125,9 @@ func ExeShellWithEnvVarsAndOutputInDir(cmdStr, dir string, envVars []string) ([]
 	return output, nil
 }
 
-func ExeShellCallback(ch chan int, cmdStr, dir string, fun func(s string, msg websocket.Message), msg websocket.Message) (err error) {
+func ExeShellCallback(ch chan int, cmdStr, dir string,
+	fun func(info string, msg websocket.Message), msg websocket.Message) (err error) {
+
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
 		cmd = exec.Command("cmd", "/C", cmdStr)

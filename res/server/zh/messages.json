@@ -2,12 +2,523 @@
   "language": "zh",
   "messages": [
     {
+      "id": "windows_permission",
+      "translation": "Windows系统下，需以管理员身份打开cmd命令行窗口。"
+    },
+    {
       "id": "for_example",
       "translation": "例如 %s"
     },
     {
+      "id": "total",
+      "translation": "合计"
+    },
+    {
+      "id": "pass",
+      "translation": "通过"
+    },
+    {
+      "id": "fail",
+      "translation": "失败"
+    },
+    {
+      "id": "skip",
+      "translation": "忽略"
+    },
+
+    {
+      "id": "product_id",
+      "translation": "产品Id"
+    },
+    {
+      "id": "module_id",
+      "translation": "模块Id"
+    },
+    {
+      "id": "suite_id",
+      "translation": "套件Id"
+    },
+    {
+      "id": "task_id",
+      "translation": "测试任务Id"
+    },
+
+    {
+      "id": "test_case",
+      "translation": "用例"
+    },
+    {
+      "id": "test_suite",
+      "translation": "测试套件"
+    },
+    {
+      "id": "test_script",
+      "translation": "测试脚本"
+    },
+    {
+      "id": "result",
+      "translation": "结果"
+    },
+    {
+      "id": "script",
+      "translation": "脚本"
+    },
+    {
+      "id": "step",
+      "translation": "步骤"
+    },
+    {
+      "id": "checkpoint",
+      "translation": "验证点"
+    },
+    {
+      "id": "expect_result",
+      "translation": "期待结果"
+    },
+    {
+      "id": "actual_result",
+      "translation": "实际结果"
+    },
+    {
+      "id": "content",
+      "translation": "内容"
+    },
+    {
+      "id": "module",
+      "translation": "模块"
+    },
+    {
+      "id": "category",
+      "translation": "目录"
+    },
+    {
+      "id": "version",
+      "translation": "版本"
+    },
+    {
+      "id": "severity",
+      "translation": "严重级别"
+    },
+    {
+      "id": "priority",
+      "translation": "紧急程度"
+    },
+    {
+      "id": "title_cannot_be_empty",
+      "translation": "标题不能为空。"
+    },
+
+    {
+      "id": "need_config",
+      "translation": "在导出用例之前，您需要先配置禅道站点。"
+    },
+    {
+      "id": "begin_config",
+      "translation": "开始配置, 输入'exit'退出。"
+    },
+
+    {
+      "id": "want_to_continue",
+      "translation": "确认继续？（y/n, 默认Yes）"
+    },
+    {
+      "id": "case_update_confirm",
+      "translation": "以下用例信息将被更新到禅道:\n %d. %s"
+    },
+    {
+      "id": "enter_dir",
+      "translation": "输入%s目录："
+    },
+    {
+      "id": "where_to_store_script",
+      "translation": "请输入脚本保存目录: 默认为%s"
+    },
+    {
+      "id": "co_organize_by_module",
+      "translation": "是否希望按模块ID组织脚本目录结构？（y/n, 默认Yes）"
+    },
+    {
+      "id": "co_script_prefix",
+      "translation": "请输入脚本前缀，默认为空。"
+    },
+
+    {
+      "id": "dir_not_exist",
+      "translation": "目录不存在"
+    },
+    {
+      "id": "enter_language",
+      "translation": "请输入你期望使用的语言:\n1. 英文 %s\n2. 中文 %s"
+    },
+    {
+      "id": "config_zentao_site",
+      "translation": "现在开始配置同禅道系统的同步参数？（y/n, 默认Yes）"
+    },
+    {
+      "id": "enter_url",
+      "translation": "请输入禅道站点网址：%s"
+    },
+    {
+      "id": "enter_account",
+      "translation": "请输入登录账号：%s"
+    },
+    {
+      "id": "enter_password",
+      "translation": "请输入账号密码：%s"
+    },
+    {
+      "id": "enter_co_type",
+      "translation": "请选择用例来源\n1. 产品 %s\n2. 套件 %s\n3. 任务 %s"
+    },
+    {
+      "id": "enter_co_independent",
+      "translation": "是否将用例期待结果保存在独立的文件中？（y/n, 默认No）"
+    },
+    {
+      "id": "enter_co_language",
+      "translation": "请选择脚本语言\n%s"
+    },
+    {
+      "id": "enter_case_id_for_report_bug",
+      "translation": "请输入您想提交缺陷的用例ID，输入'exit'退出"
+    },
+    {
+      "id": "confirm_commit_result",
+      "translation": "确认提交以下结果信息？（y/n, 默认Yes）\n%s"
+    },
+
+    {
+      "id": "invalid_input",
+      "translation": "无效数据，请重新输入。"
+    },
+    {
+      "id": "zentao_config_success",
+      "translation": "禅道系统连接配置成功。"
+    },
+    {
+      "id": "zentao_config_fail",
+      "translation": "禅道系统连接配置失败。"
+    },
+    {
+      "id": "current_config",
+      "translation": "当前配置："
+    },
+    {
+      "id": "config_script_interpreter",
+      "translation": "现在配置脚本的解释程序？（y/n, 默认Yes）"
+    },
+    {
+      "id": "set_script_interpreter",
+      "translation": "请设置%s脚本的解释程序: %s"
+    },
+    {
+      "id": "empty_to_ignore",
+      "translation": "（输入空忽略）"
+    },
+
+    {
+      "id": "en",
+      "translation": "英文"
+    },
+    {
+      "id": "zh",
+      "translation": "中文"
+    },
+    {
+      "id": "support_language",
+      "translation": "只支持语言en(%s)和zh(%s)。"
+    },
+    {
+      "id": "no_cases",
+      "translation": "未找到测试用例。"
+    },
+    {
+      "id": "success_to_login",
+      "translation": "登录成功。"
+    },
+    {
+      "id": "fail_to_login",
+      "translation": "登录失败。"
+    },
+    {
+      "id": "start_execution",
+      "translation": "开始执行。"
+    },
+    {
+      "id": "end_execution",
+      "translation": "结束执行。"
+    },
+    {
+      "id": "found_scripts",
+      "translation": "发现%s个用例"
+    },
+    {
+      "id": "ignore_scripts",
+      "translation": "忽略%s个未设置解析器的脚本"
+    },
+    {
+      "id": "failed_scripts",
+      "translation": "失败用例："
+    },
+
+    {
+      "id": "start_case",
+      "translation": "开始用例 %s %s。"
+    },
+    {
+      "id": "end_case",
+      "translation": "结束用例 %s %s，耗时%d秒。"
+    },
+
+    {
+      "id": "run_scripts",
+      "translation": "执行%d个用例，耗时%d秒%s。%s，%s，%s。报告%s。"
+    },
+    {
+      "id": "no_interpreter_for_run",
+      "translation": "由于未配置%s语言的解释程序，跳过脚本%s"
+    },
+
+    {
+      "id": "time_from_to",
+      "translation": "从%s到%s, 耗时%d秒。"
+    },
+
+    {
+      "id": "no_checkpoints",
+      "translation": "没有验证点。"
+    },
+
+    {
+      "id": "steps",
+      "translation": "步骤"
+    },
+    {
+      "id": "only_support_script_language",
+      "translation": "只支持脚本语言%s。"
+    },
+    {
+      "id": "total_test_case",
+      "translation": "合计%d个测试用例。"
+    },
+
+    {
+      "id": "is_checkpoint",
+      "translation": "@开头的为含验证点的步骤。"
+    },
+    {
       "id": "find_example",
       "translation": "访问'demo%s%s'获取更多帮助"
+    },
+    {
+      "id": "expect_result_here",
+      "translation": "期望结果, 可以有多行。"
+    },
+    {
+      "id": "actual_result_here",
+      "translation": "输出验证点实际结果。"
+    },
+    {
+      "id": "success_to_generate",
+      "translation": "成功创建%d个测试脚本, 目录: '%s'。"
+    },
+    {
+      "id": "success_to_commit_case",
+      "translation": "成功更新用例%d"
+    },
+    {
+      "id": "success_to_report_bug",
+      "translation": "成功为用例%s提交缺陷"
+    },
+    {
+      "id": "success_to_commit_result",
+      "translation": "成功为用例%d提交结果"
+    },
+
+    {
+      "id": "or",
+      "translation": "或"
+    },
+    {
+      "id": "zentao_url",
+      "translation": "禅道地址"
+    },
+
+    {
+      "id": "pls_enter",
+      "translation": "请输入"
+    },
+    {
+      "id": "submit",
+      "translation": "提交"
+    },
+    {
+      "id": "save",
+      "translation": "保存"
+    },
+    {
+      "id": "cancel",
+      "translation": "取消"
+    },
+    {
+      "id": "close",
+      "translation": "关闭"
+    },
+    {
+      "id": "help_key_bind",
+      "translation": "帮助"
+    },
+    {
+      "id": "help_exit",
+      "translation": "CTRL+C: 退出"
+    },
+
+    {
+      "id": "success_to_clean_logs",
+      "translation": "成功删除所有日志。"
+    },
+    {
+      "id": "success_sort_steps",
+      "translation": "成功对%d个脚本进行步骤重排。"
+    },
+    {
+      "id": "success_add_to_path",
+      "translation": "成功将ztf命令加入用户PATH环境变量。"
+    },
+
+    {
+      "id": "success_to_submit_test_result",
+      "translation": "提交测试结果到禅道成功。"
+    },
+    {
+      "id": "fail_to_submit_test_result",
+      "translation": "提交测试结果到禅道失败"
+    },
+    {
+      "id": "ignore_to_submit_result_no_result_empty",
+      "translation": "测试结果为空，忽略。"
+    },
+    {
+      "id": "ignore_to_submit_result_no_product_id",
+      "translation": "您未提供productId，忽略提交测试结果。"
+    },
+
+    {
+      "id": "server_address",
+      "translation": "\n请求地址：\n"
+    },
+    {
+      "id": "server_params",
+      "translation": "请求参数：\n"
+    },
+    {
+      "id": "server_return",
+      "translation": "服务返回：\n"
+    },
+    {
+      "id": "task_id_empty_to_create",
+      "translation": "，默认为空则新建。"
+    },
+    {
+      "id": "run_with_specific_interpreter",
+      "translation": "将使用您指定的解释器运行脚本 %s。"
+    },
+
+    {
+      "id": "start_server",
+      "translation": "启动HTTP服务于http://%s:%s，按CTRL+C键退出。\n请访问https://ztf.im/book/ztf/agent-exec-124.html获取更多信息。"
+    },
+    {
+      "id": "start_server_fail",
+      "translation": "ZenData HTTP服务启动失败，请确认端口%s有效。"
+    },
+    {
+      "id": "server_request",
+      "translation": "\n收到%s请求 %s。"
+    },
+    {
+      "id": "server_response",
+      "translation": "生成%d条记录，耗时%d秒。"
+    },
+
+    {
+      "id": "fail_parse_req",
+      "translation": "解析请求对象失败，错误 %s。"
+    },
+    {
+      "id": "has_jobs",
+      "translation": "已有%d个任务等待执行。"
+    },
+    {
+      "id": "success_add_tak",
+      "translation": "添加任务成功。"
+    },
+    {
+      "id": "success_heart_beat",
+      "translation": "发送心跳请求成功。"
+    },
+    {
+      "id": "fail_heart_beat",
+      "translation": "发送心跳请求失败。"
+    },
+
+    {
+      "id": "find_new_ver",
+      "translation": "发现新版本%s。"
+    },
+    {
+      "id": "success_upgrade",
+      "translation": "成功从版本%.1f升级到%s。"
+    },
+    {
+      "id": "fail_upgrade",
+      "translation": "失败升级版本从%.1f到%s，错误 %s。"
+    },
+
+    {
+      "id": "download_fail",
+      "translation": "下载文件失败 %s，错误 %s。"
+    },
+    {
+      "id": "download_read_fail",
+      "translation": "读取下载文件%s失败，错误 %s。"
+    },
+    {
+      "id": "download_write_fail",
+      "translation": "写入下载文件%s失败，错误 %s。"
+    },
+    {
+      "id": "download_success",
+      "translation": "成功下载文件%s到%s。"
+    },
+    {
+      "id": "success_update_config",
+      "translation": "成功更新配置文件%s。"
+    },
+    {
+      "id": "perm_deny",
+      "translation": "文件%s权限不足，建议切换工作目录。"
+    },
+    {
+      "id": "fail_unzip",
+      "translation": "解压文件%s失败。"
+    },
+    {
+      "id": "fail_md5_check",
+      "translation": "验证文件%s的MD5失败。"
+    },
+
+    {
+      "id": "fail_to_upload_file",
+      "translation": "上传文件失败：%s。"
+    },
+    {
+      "id": "fail_to_parse_upload_file_response",
+      "translation": "解析上传文件响应失败：%s。"
+    },
+    {
+      "id": "upload_file_result",
+      "translation": "上传文件响应结果：%s，%s。"
     }
   ]
 }

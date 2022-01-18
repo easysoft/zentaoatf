@@ -176,20 +176,18 @@ export default defineComponent({
 
     const exec = (): void => {
       console.log("exec")
-
-      WebSocket.sentMsg(room, wsMsg.in)
-      wsMsg.out = wsMsg.out + 'client: ' + wsMsg.in + '\n'
-
       if (checkedKeys.value.length == 0) return
-      execCase(checkedKeys.value).then((json) => {
-        console.log('json', json)
-        if (json.code === 0) {
-          notification.success({
-            message: `开始执行`,
-          });
-        }
-      })
+
+      getCache(settings.currProject).then (
+          (projectPath) => {
+            const msg = {act: 'execCase', projectPath: projectPath, cases: checkedKeys.value}
+            console.log('msg', msg)
+            WebSocket.sentMsg(room, JSON.stringify(msg))
+            wsMsg.out = wsMsg.out + 'client: ' + wsMsg.in + '\n'
+          }
+      )
     }
+
     const back = (): void => {
       router.push(`/execution/history`)
     }

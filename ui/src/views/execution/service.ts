@@ -1,5 +1,6 @@
 import request from '@/utils/request';
-import { Execution, QueryParams } from './data.d';
+import { Execution } from './data.d';
+import { QueryParams } from '@/types/data.d';
 
 const apiPath = 'exec';
 

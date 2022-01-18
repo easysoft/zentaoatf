@@ -1,7 +1,8 @@
 import { Mutation, Action } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
-import { Execution, QueryResult, QueryParams, PaginationConfig } from './data.d';
+import { Execution } from './data.d';
+import { QueryResult, QueryParams, PaginationConfig } from '@/types/data.d';
 import {
     query, remove, create, detail, update,
 } from './service';
@@ -27,7 +28,7 @@ export interface ModuleType extends StoreModuleType<StateType> {
 }
 const initState: StateType = {
     queryResult: {
-        list: [],
+        data: [],
         pagination: {
             total: 0,
             current: 1,

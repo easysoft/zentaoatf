@@ -15,6 +15,7 @@ import (
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	configUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/config"
 	resultUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/result"
+	"github.com/kataras/iris/v12/websocket"
 	"github.com/mattn/go-runewidth"
 	"io"
 	"os"
@@ -25,7 +26,18 @@ import (
 	"time"
 )
 
-func ExecCase(req serverDomain.TestExec, projectPath string) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
+func Exec(ch chan int, fun func(info string, msg websocket.Message), req serverDomain.WsMsg, msg websocket.Message) (
+	err error) {
+	if req.Act == commConsts.ExecCase {
+		ExecCase(ch, fun, req, msg)
+	}
+
+	return
+}
+
+func ExecCase(ch chan int, fun func(info string, msg websocket.Message), req serverDomain.WsMsg, msg websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
+
+	projectPath := req.ProjectPath
 	conf := configUtils.LoadByProjectPath(projectPath)
 
 	casesToRun, casesToIgnore := filterCases(req.Cases, conf)
@@ -49,45 +61,14 @@ func ExecCase(req serverDomain.TestExec, projectPath string) (report commDomain.
 		}
 	}
 
-	ExeScripts(casesToRun, casesToIgnore, projectPath, conf, &report, pathMaxWidth, numbMaxWidth)
+	ExeScripts(casesToRun, casesToIgnore, projectPath, conf, &report, pathMaxWidth, numbMaxWidth, ch, fun, msg)
 
 	return
 }
 
-func filterCases(cases []string, conf commDomain.ProjectConf) (casesToRun, casesToIgnore []string) {
-	for _, cs := range cases {
-		if commonUtils.IsWin() {
-			if path.Ext(cs) == ".sh" { // filter by os
-				continue
-			}
+func ExeScripts(casesToRun []string, casesToIgnore []string, projectPath string, conf commDomain.ProjectConf,
+	report *commDomain.ZtfReport, pathMaxWidth int, numbMaxWidth int, ch chan int, fun func(info string, msg websocket.Message), msg websocket.Message) {
 
-			ext := path.Ext(cs)
-			if ext != "" {
-				ext = ext[1:]
-			}
-			lang := langUtils.ScriptExtToNameMap[ext]
-			interpreter := configUtils.GetFieldVal(conf, stringUtils.UcFirst(lang))
-			if interpreter == "-" || interpreter == "" {
-				interpreter = ""
-				casesToIgnore = append(casesToIgnore, cs)
-			}
-			if lang != "bat" && interpreter == "" { // ignore the ones with no interpreter set
-				continue
-			}
-
-		} else if !commonUtils.IsWin() { // filter by os
-			if path.Ext(cs) == ".bat" {
-				continue
-			}
-		}
-
-		casesToRun = append(casesToRun, cs)
-	}
-
-	return
-}
-
-func ExeScripts(casesToRun []string, casesToIgnore []string, projectPath string, conf commDomain.ProjectConf, report *commDomain.ZtfReport, pathMaxWidth int, numbMaxWidth int) {
 	now := time.Now()
 	startTime := now.Unix()
 	report.StartTime = startTime
@@ -97,14 +78,16 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, projectPath string,
 		postFix = "."
 	}
 
-	logUtils.Infof(i118Utils.Sprintf("found_scripts", strconv.Itoa(len(casesToRun)))+postFix, "=")
+	temp := i118Utils.Sprintf("found_scripts", strconv.Itoa(len(casesToRun))) + postFix
+	fun(temp, msg)
 
 	if len(casesToIgnore) > 0 {
-		logUtils.Infof(i118Utils.Sprintf("ignore_scripts", strconv.Itoa(len(casesToIgnore))) + postFix)
+		temp := i118Utils.Sprintf("ignore_scripts", strconv.Itoa(len(casesToIgnore))) + postFix
+		fun(temp, msg)
 	}
 
 	for idx, file := range casesToRun {
-		ExeScript(file, projectPath, conf, report, idx, len(casesToRun), pathMaxWidth, numbMaxWidth)
+		ExeScript(file, projectPath, conf, report, idx, len(casesToRun), pathMaxWidth, numbMaxWidth, ch, fun, msg)
 	}
 
 	endTime := time.Now().Unix()
@@ -112,13 +95,15 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, projectPath string,
 	report.Duration = endTime - startTime
 }
 
-func ExeScript(file, projectPath string, conf commDomain.ProjectConf, report *commDomain.ZtfReport, idx int, total int, pathMaxWidth int, numbMaxWidth int) {
+func ExeScript(file, projectPath string, conf commDomain.ProjectConf, report *commDomain.ZtfReport, idx,
+	total, pathMaxWidth, numbMaxWidth int, ch chan int, fun func(s string, msg websocket.Message), msg websocket.Message) {
+
 	startTime := time.Now()
 
-	logUtils.Infof("===start " + file + " at " + startTime.Format("2006-01-02 15:04:05"))
+	fun("===start "+file+" at "+startTime.Format("2006-01-02 15:04:05"), msg)
 	logs := ""
 
-	out, err := ExecScriptFile(file, projectPath, conf)
+	out, err := ExecScriptFile(file, projectPath, conf, ch, fun, msg)
 	out = strings.Trim(out, "\n")
 
 	if out != "" {
@@ -140,7 +125,8 @@ func ExeScript(file, projectPath string, conf commDomain.ProjectConf, report *co
 	}
 }
 
-func ExecScriptFile(filePath, projectPath string, conf commDomain.ProjectConf) (string, string) {
+func ExecScriptFile(filePath, projectPath string, conf commDomain.ProjectConf,
+	ch chan int, fun func(s string, msg websocket.Message), msg websocket.Message) (ret1 string, ret2 string) {
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
 		lang := langUtils.GetLangByFile(filePath)
@@ -196,10 +182,23 @@ func ExecScriptFile(filePath, projectPath string, conf commDomain.ProjectConf) (
 	output1 := make([]string, 0)
 	for {
 		line, err2 := reader1.ReadString('\n')
+		if line != "" {
+			fun(line, msg)
+		}
+
 		if err2 != nil || io.EOF == err2 {
 			break
 		}
 		output1 = append(output1, line)
+
+		select {
+		case <-ch:
+			fmt.Println("exiting...")
+			ch <- 1
+			break
+		default:
+			fmt.Println("continue...")
+		}
 	}
 
 	reader2 := bufio.NewReader(stderr)
@@ -214,5 +213,40 @@ func ExecScriptFile(filePath, projectPath string, conf commDomain.ProjectConf) (
 
 	cmd.Wait()
 
-	return strings.Join(output1, ""), strings.Join(output2, "")
+	ret1 = strings.Join(output1, "")
+	ret2 = strings.Join(output2, "")
+	return
+}
+
+func filterCases(cases []string, conf commDomain.ProjectConf) (casesToRun, casesToIgnore []string) {
+	for _, cs := range cases {
+		if commonUtils.IsWin() {
+			if path.Ext(cs) == ".sh" { // filter by os
+				continue
+			}
+
+			ext := path.Ext(cs)
+			if ext != "" {
+				ext = ext[1:]
+			}
+			lang := langUtils.ScriptExtToNameMap[ext]
+			interpreter := configUtils.GetFieldVal(conf, stringUtils.UcFirst(lang))
+			if interpreter == "-" || interpreter == "" {
+				interpreter = ""
+				casesToIgnore = append(casesToIgnore, cs)
+			}
+			if lang != "bat" && interpreter == "" { // ignore the ones with no interpreter set
+				continue
+			}
+
+		} else if !commonUtils.IsWin() { // filter by os
+			if path.Ext(cs) == ".bat" {
+				continue
+			}
+		}
+
+		casesToRun = append(casesToRun, cs)
+	}
+
+	return
 }

@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-import { Script, QueryParams } from './data.d';
+import { Script } from './data.d';
 
 const apiPath = 'scripts';
 

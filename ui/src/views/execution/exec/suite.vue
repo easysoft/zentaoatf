@@ -9,7 +9,7 @@
 <script lang="ts">
 import {ComputedRef, defineComponent, ref, Ref, reactive, computed, onMounted} from "vue";
 import { SelectTypes } from 'ant-design-vue/es/select';
-import {Execution, QueryParams, PaginationConfig} from '../data.d';
+import {Execution} from '../data.d';
 import {useStore} from "vuex";
 
 import { Props } from 'ant-design-vue/lib/form/useForm';
