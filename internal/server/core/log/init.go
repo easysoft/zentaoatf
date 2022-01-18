@@ -1,8 +1,10 @@
 package serverLog
 
 import (
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
+	"log"
 	"path/filepath"
 
 	"github.com/snowlyg/helper/dir"
@@ -11,11 +13,47 @@ import (
 )
 
 func Init() {
-	var level zapcore.Level
-
 	if !dir.IsExist(serverConfig.CONFIG.Zap.Director) { // 判断是否有Director文件夹
 		dir.InsureDir(serverConfig.CONFIG.Zap.Director)
 	}
+
+	config := getLogConfig()
+
+	// print console
+	var err error
+	logUtils.LoggerConsole, err = config.Build()
+	if err != nil {
+		log.Println("init console logger fail " + err.Error())
+	}
+}
+
+func InitExecLog(projectPath string) {
+	config := getLogConfig()
+
+	commConsts.ExecLogDir = logUtils.GetLogDir(projectPath)
+
+	// print to exec log file
+	config.EncoderConfig.EncodeLevel = nil
+	config.OutputPaths = []string{filepath.Join(commConsts.ExecLogDir, "log.txt")}
+	var err error
+	logUtils.LoggerLog, err = config.Build()
+	if err != nil {
+		log.Println("init console logger fail " + err.Error())
+	}
+
+	// print to test result file
+	config.DisableCaller = true
+	config.DisableStacktrace = true
+	config.EncoderConfig.TimeKey = ""
+	config.OutputPaths = []string{filepath.Join(commConsts.ExecLogDir, "result.txt")}
+	logUtils.LoggerResult, err = config.Build()
+	if err != nil {
+		log.Println("init console logger fail " + err.Error())
+	}
+}
+
+func getLogConfig() (config zap.Config) {
+	var level zapcore.Level
 
 	switch serverConfig.CONFIG.Zap.Level { // 初始化配置文件的Level
 	case "debug":
@@ -51,10 +89,10 @@ func Init() {
 		EncodeCaller:   zapcore.FullCallerEncoder, // 全路径编码器
 	}
 
-	config := zap.Config{
+	config = zap.Config{
 		Level:       zap.NewAtomicLevelAt(level), // 日志级别
 		Development: true,                        // 开发模式，堆栈跟踪
-		//Encoding:         "json",                                              // 输出格式 console 或 json
+		//Encoding:         "json",               // 输出格式 console 或 json
 		Encoding:         "console",          // 输出格式 console 或 json
 		EncoderConfig:    encoderConfig,      // 编码器配置
 		OutputPaths:      []string{"stdout"}, // 输出到指定文件 stdout（标准输出，正常颜色） stderr（错误输出，红色）
@@ -63,19 +101,5 @@ func Init() {
 	}
 	config.EncoderConfig.EncodeLevel = zapcore.LowercaseColorLevelEncoder //这里可以指定颜色
 
-	// print console
-	logUtils.LoggerConsole, _ = config.Build()
-
-	// print to exec log file
-	config.EncoderConfig.EncodeLevel = nil
-	config.OutputPaths = []string{filepath.Join(serverConfig.CONFIG.Zap.Director, "log.txt")}
-	logUtils.LoggerLog, _ = config.Build()
-
-	// print to test result file
-	config.DisableCaller = true
-	config.DisableStacktrace = true
-	config.EncoderConfig.TimeKey = ""
-	config.OutputPaths = []string{filepath.Join(serverConfig.CONFIG.Zap.Director, "result.txt")}
-	logUtils.LoggerResult, _ = config.Build()
-
+	return
 }

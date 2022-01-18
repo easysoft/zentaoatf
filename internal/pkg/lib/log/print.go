@@ -35,17 +35,17 @@ func Errorf(str string, args ...interface{}) {
 	LoggerConsole.Error(msg)
 }
 
-func Log(str string) {
+func ExecLog(str string) {
 	LoggerLog.Info(str)
 }
-func Logf(str string, args ...interface{}) {
+func ExecLogf(str string, args ...interface{}) {
 	msg := fmt.Sprintf(str, args...)
 	LoggerLog.Info(msg)
 }
-func Result(str string) {
+func ExecResult(str string) {
 	LoggerResult.Info(str)
 }
-func Resultf(str string, args ...interface{}) {
+func ExecResultf(str string, args ...interface{}) {
 	msg := fmt.Sprintf(str, args...)
 	LoggerResult.Info(msg)
 }

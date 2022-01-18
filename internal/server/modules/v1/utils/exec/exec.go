@@ -12,6 +12,7 @@ import (
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
 	zentaoUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/zentao"
+	serverLog "github.com/aaronchen2k/deeptest/internal/server/core/log"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	configUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/config"
 	resultUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/result"
@@ -28,6 +29,13 @@ import (
 
 func Exec(ch chan int, fun func(info string, msg websocket.Message), req serverDomain.WsMsg, msg websocket.Message) (
 	err error) {
+
+	serverLog.InitExecLog(req.ProjectPath)
+
+	logUtils.Infof("===")
+	logUtils.ExecLogf("===")
+	logUtils.ExecResultf("===")
+
 	if req.Act == commConsts.ExecCase {
 		ExecCase(ch, fun, req, msg)
 	}

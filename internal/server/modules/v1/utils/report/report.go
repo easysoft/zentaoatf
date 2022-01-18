@@ -92,7 +92,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int, projectPath
 	failStr := fmt.Sprintf(fmtStr, report.Fail, float32(report.Fail*100/report.Total), i118Utils.Sprintf("fail"))
 	skipStr := fmt.Sprintf(fmtStr, report.Skip, float32(report.Skip*100/report.Total), i118Utils.Sprintf("skip"))
 
-	logFile := filepath.Join(projectPath, commConsts.LogDir, "result.txt")
+	logFile := filepath.Join(projectPath, commConsts.LogDirName, "result.txt")
 
 	// 打印到结果文件
 	logUtils.Infof("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
