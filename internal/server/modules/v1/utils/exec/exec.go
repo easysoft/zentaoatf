@@ -37,11 +37,6 @@ func Exec(ch chan int, fun func(info string, msg websocket.Message), req serverD
 
 	serverLog.InitExecLog(req.ProjectPath)
 
-	//logUtils.Infof("===")
-	//logUtils.ExecConsolef(color.FgRed, "===")
-	//logUtils.ExecFilef("===")
-	//logUtils.ExecResultf("===")
-
 	if req.Act == commConsts.ExecCase {
 		ExecCase(ch, fun, req, msg)
 	}
@@ -126,7 +121,7 @@ func ExeScript(scriptFile, projectPath string, conf commDomain.ProjectConf, repo
 	logUtils.ExecFilef(startMsg)
 
 	logs := ""
-	stdOutput, errOutput := ExecScriptFile(scriptFile, projectPath, conf, ch, printToWs, wsMsg)
+	stdOutput, errOutput := RunScript(scriptFile, projectPath, conf, ch, printToWs, wsMsg)
 	stdOutput = strings.Trim(stdOutput, "\n")
 
 	if stdOutput != "" {
@@ -154,7 +149,7 @@ func ExeScript(scriptFile, projectPath string, conf commDomain.ProjectConf, repo
 	}
 }
 
-func ExecScriptFile(filePath, projectPath string, conf commDomain.ProjectConf,
+func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
 	ch chan int, printToWs func(s string, wsMsg websocket.Message), wsMsg websocket.Message) (
 	stdOutput string, errOutput string) {
 
@@ -231,7 +226,7 @@ func ExecScriptFile(filePath, projectPath string, conf commDomain.ProjectConf,
 		line, err2 := reader1.ReadString('\n')
 		if line != "" {
 			printToWs(line, wsMsg)
-			logUtils.ExecConsolef(color.FgRed, line)
+			logUtils.ExecConsolef(-1, line)
 			logUtils.ExecFilef(line)
 
 			isTerminal = true
