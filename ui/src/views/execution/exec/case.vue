@@ -143,7 +143,7 @@ export default defineComponent({
     if (init) {
       proxy.$sub(WsEventName, (data) => {
         console.log(data[0].msg);
-        wsMsg.out = wsMsg.out + 'server: ' + data[0].msg + '\n';
+        wsMsg.out = wsMsg.out + data[0].msg + '\n';
         console.log(wsMsg.out);
       });
       init = false;
@@ -183,7 +183,7 @@ export default defineComponent({
             const msg = {act: 'execCase', projectPath: projectPath, cases: checkedKeys.value}
             console.log('msg', msg)
             WebSocket.sentMsg(room, JSON.stringify(msg))
-            wsMsg.out = wsMsg.out + 'client: ' + wsMsg.in + '\n'
+            // wsMsg.out = wsMsg.out + 'client: ' + wsMsg.in + '\n'
           }
       )
     }

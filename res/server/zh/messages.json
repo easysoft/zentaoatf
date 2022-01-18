@@ -241,12 +241,24 @@
       "translation": "登录失败。"
     },
     {
+      "id": "exec_cmd_fail",
+      "translation": "执行命令%s失败，错误%s。"
+    },
+    {
+      "id": "cmd_empty",
+      "translation": "命令为空。"
+    },
+    {
+      "id": "exit_exec",
+      "translation": "退出执行。"
+    },
+    {
       "id": "start_execution",
-      "translation": "开始执行。"
+      "translation": "开始执行%s于%s。"
     },
     {
       "id": "end_execution",
-      "translation": "结束执行。"
+      "translation": "结束执行%s于%s。"
     },
     {
       "id": "found_scripts",
@@ -276,7 +288,7 @@
     },
     {
       "id": "no_interpreter_for_run",
-      "translation": "由于未配置%s语言的解释程序，跳过脚本%s"
+      "translation": "未配置%s语言的解释程序，跳过脚本%s."
     },
 
     {

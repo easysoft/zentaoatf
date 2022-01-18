@@ -4,55 +4,70 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
+	"github.com/fatih/color"
 	"go.uber.org/zap"
 	"strings"
 	"unicode/utf8"
 )
 
-var LoggerConsole *zap.Logger
-var LoggerLog *zap.Logger
-var LoggerResult *zap.Logger
+var LoggerStandard *zap.Logger
+var LoggerExecConsole *zap.Logger
+
+var LoggerExecFile *zap.Logger
+var LoggerExecResult *zap.Logger
 
 func Info(str string) {
-	LoggerConsole.Info(str)
+	LoggerStandard.Info(str)
 }
 func Infof(str string, args ...interface{}) {
 	msg := fmt.Sprintf(str, args...)
-	LoggerConsole.Info(msg)
+	LoggerStandard.Info(msg)
 }
 func Warn(str string) {
-	LoggerConsole.Warn(str)
+	LoggerStandard.Warn(str)
 }
 func Warnf(str string, args ...interface{}) {
 	msg := fmt.Sprintf(str, args...)
-	LoggerConsole.Warn(msg)
+	LoggerStandard.Warn(msg)
 }
 func Error(str string) {
-	LoggerConsole.Error(str)
+	LoggerStandard.Error(str)
 }
 func Errorf(str string, args ...interface{}) {
 	msg := fmt.Sprintf(str, args...)
-	LoggerConsole.Error(msg)
+	LoggerStandard.Error(msg)
 }
 
-func ExecLog(str string) {
-	LoggerLog.Info(str)
+func ExecConsole(attr color.Attribute, str string) {
+	msg := color.New(attr).Sprintf(str)
+	LoggerExecConsole.Info(msg)
 }
-func ExecLogf(str string, args ...interface{}) {
+func ExecConsolef(clr color.Attribute, str string, args ...interface{}) {
 	msg := fmt.Sprintf(str, args...)
-	LoggerLog.Info(msg)
+	msg = color.New(clr).Sprintf(msg)
+
+	LoggerExecConsole.Info(msg)
 }
+
+func ExecFile(str string) {
+	LoggerExecFile.Info(str)
+}
+func ExecFilef(str string, args ...interface{}) {
+	msg := fmt.Sprintf(str, args...)
+	LoggerExecFile.Info(msg)
+}
+
 func ExecResult(str string) {
-	LoggerResult.Info(str)
+	LoggerExecResult.Info(str)
 }
 func ExecResultf(str string, args ...interface{}) {
 	msg := fmt.Sprintf(str, args...)
-	LoggerResult.Info(msg)
+	LoggerExecResult.Info(msg)
 }
 
 func PrintUnicode(str []byte) {
 	msg := ConvertUnicode(str)
-	LoggerConsole.Info(msg)
+	LoggerStandard.Info(msg)
 }
 
 func ConvertUnicode(str []byte) string {

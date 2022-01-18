@@ -22,7 +22,7 @@ func ReadRes(path string) (ret []byte, err error) {
 	dir, _ := os.Getwd()
 
 	msg := fmt.Sprintf("isRelease=%t, path=%s, dir=%s", isRelease, path, dir)
-	if logUtils.LoggerConsole != nil {
+	if logUtils.LoggerStandard != nil {
 		logUtils.Info(msg)
 	} else {
 		log.Println(msg)

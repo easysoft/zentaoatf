@@ -19,11 +19,21 @@ func Init() {
 
 	config := getLogConfig()
 
-	// print console
+	// print to console
 	var err error
-	logUtils.LoggerConsole, err = config.Build()
+	logUtils.LoggerStandard, err = config.Build()
 	if err != nil {
 		log.Println("init console logger fail " + err.Error())
+	}
+
+	// print to console without detail
+	config.EncoderConfig.EncodeLevel = nil
+	config.DisableStacktrace = true
+	config.DisableCaller = true
+	config.EncoderConfig.TimeKey = ""
+	logUtils.LoggerExecConsole, err = config.Build()
+	if err != nil {
+		log.Println("init exec console logger fail " + err.Error())
 	}
 }
 
@@ -36,19 +46,20 @@ func InitExecLog(projectPath string) {
 	config.EncoderConfig.EncodeLevel = nil
 	config.OutputPaths = []string{filepath.Join(commConsts.ExecLogDir, "log.txt")}
 	var err error
-	logUtils.LoggerLog, err = config.Build()
+	logUtils.LoggerExecFile, err = config.Build()
 	if err != nil {
-		log.Println("init console logger fail " + err.Error())
+		log.Println("init exec file logger fail " + err.Error())
 	}
 
-	// print to test result file
 	config.DisableCaller = true
 	config.DisableStacktrace = true
 	config.EncoderConfig.TimeKey = ""
+
+	// print to test result file
 	config.OutputPaths = []string{filepath.Join(commConsts.ExecLogDir, "result.txt")}
-	logUtils.LoggerResult, err = config.Build()
+	logUtils.LoggerExecResult, err = config.Build()
 	if err != nil {
-		log.Println("init console logger fail " + err.Error())
+		log.Println("init exec result logger fail " + err.Error())
 	}
 }
 

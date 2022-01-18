@@ -1,4 +1,4 @@
-package resultUtils
+package scriptUtils
 
 import (
 	"fmt"
@@ -10,16 +10,21 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/zentao"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/script"
 	"github.com/emirpasic/gods/maps"
+	"github.com/fatih/color"
+	"github.com/kataras/iris/v12/websocket"
 	"github.com/mattn/go-runewidth"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
-func CheckCaseResult(file string, logs string, report *commDomain.ZtfReport, idx int, total int, secs string, pathMaxWidth int, numbMaxWidth int) {
-	_, _, expectMap, isOldFormat := scriptUtils.GetStepAndExpectMap(file)
+func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfReport, idx int,
+	total int, secs string, pathMaxWidth int, numbMaxWidth int,
+	printToWs func(info string, wsMsg websocket.Message), wsMsg websocket.Message) {
 
-	isIndependent, expectIndependentContent := zentaoUtils.GetDependentExpect(file)
+	_, _, expectMap, isOldFormat := scriptUtils.GetStepAndExpectMap(scriptFile)
+
+	isIndependent, expectIndependentContent := zentaoUtils.GetDependentExpect(scriptFile)
 	if isIndependent {
 		if isOldFormat {
 			expectMap = scriptUtils.GetExpectMapFromIndependentFileObsolete(expectMap, expectIndependentContent, false)
@@ -36,14 +41,16 @@ func CheckCaseResult(file string, logs string, report *commDomain.ZtfReport, idx
 		skip, actualArr = zentaoUtils.ReadLogArr(logs)
 	}
 
-	language := langUtils.GetLangByFile(file)
-	ValidateCaseResult(file, language, expectMap, skip, actualArr, report,
-		idx, total, secs, pathMaxWidth, numbMaxWidth)
+	language := langUtils.GetLangByFile(scriptFile)
+	ValidateCaseResult(scriptFile, language, expectMap, skip, actualArr, report,
+		idx, total, secs, pathMaxWidth, numbMaxWidth,
+		printToWs, wsMsg)
 }
 
 func ValidateCaseResult(scriptFile string, langType string,
 	expectMap maps.Map, skip bool, actualArr [][]string, report *commDomain.ZtfReport,
-	idx int, total int, secs string, pathMaxWidth int, numbMaxWidth int) {
+	idx int, total int, secs string, pathMaxWidth int, numbMaxWidth int,
+	printToWs func(info string, wsMsg websocket.Message), wsMsg websocket.Message) {
 
 	_, caseId, productId, title := zentaoUtils.GetCaseInfo(scriptFile)
 
@@ -116,8 +123,12 @@ func ValidateCaseResult(scriptFile string, langType string,
 	}
 
 	format := "(%" + width + "d/%d) %s [%s] [%" + numbWidth + "d. %s] (%ss)"
-	logUtils.Infof(fmt.Sprintf(format, idx+1, total, statusColor, path, cs.Id, cs.Title, secs))
-	logUtils.Infof(fmt.Sprintf(format, idx+1, total, i118Utils.Sprintf(cs.Status), path, cs.Id, cs.Title, secs))
+	msg := fmt.Sprintf(format, idx+1, total, statusColor, path, cs.Id, cs.Title, secs)
+	msg += fmt.Sprintf(format, idx+1, total, i118Utils.Sprintf(cs.Status), path, cs.Id, cs.Title, secs)
+
+	printToWs(msg, wsMsg)
+	logUtils.ExecConsolef(color.FgCyan, msg)
+	logUtils.ExecFile(msg)
 }
 
 func ValidateStepResult(langType string, expectLines []string, actualLines []string) (bool, []commDomain.CheckPointLog) {

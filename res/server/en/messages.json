@@ -247,14 +247,26 @@
       "id": "fail_to_login",
       "translation": "Failed to login."
     },
+    {
+      "id": "exec_cmd_fail",
+      "translation": "Fail to exec cmd %s, error is %s."
+    },
 
     {
+      "id": "exit_exec",
+      "translation": "Exit execution."
+    },
+    {
+      "id": "cmd_empty",
+      "translation": "Command is empty."
+    },
+    {
       "id": "start_execution",
-      "translation": "Start execution"
+      "translation": "Start execution %s at %s."
     },
     {
       "id": "end_execution",
-      "translation": "End execution"
+      "translation": "End execution %s at %s."
     },
     {
       "id": "found_scripts",
@@ -283,7 +295,7 @@
     },
     {
       "id": "no_interpreter_for_run",
-      "translation": "Skip script %s since interpreter for %s not found."
+      "translation": "No interpreter for %s, skip script %s s."
     },
 
     {

@@ -1,4 +1,4 @@
-package reportUtils
+package scriptUtils
 
 import (
 	"encoding/json"
@@ -9,13 +9,17 @@ import (
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
+	"github.com/fatih/color"
+	"github.com/kataras/iris/v12/websocket"
 	"github.com/mattn/go-runewidth"
 	"path/filepath"
 	"strings"
 	"time"
 )
 
-func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int, projectPath string) {
+func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
+	projectPath string, printToWs func(info string, wsMsg websocket.Message), wsMsg websocket.Message) {
+
 	if len(report.FuncResult) == 0 {
 		return
 	}
@@ -76,9 +80,13 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int, projectPath
 		}
 	}
 	if failedCount > 0 {
-		logUtils.Infof("\n" + i118Utils.Sprintf("failed_scripts"))
-		logUtils.Infof(strings.Join(failedCaseLines, "\n"))
-		logUtils.Infof(strings.Join(failedCaseLinesWithCheckpoint, "\n"))
+		msg := "\n" + i118Utils.Sprintf("failed_scripts")
+		msg += strings.Join(failedCaseLines, "\n")
+		msg += strings.Join(failedCaseLinesWithCheckpoint, "\n")
+
+		printToWs(msg, wsMsg)
+		logUtils.ExecConsolef(color.FgRed, msg)
+		logUtils.ExecFile(msg)
 	}
 
 	secTag := ""
@@ -95,7 +103,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int, projectPath
 	logFile := filepath.Join(projectPath, commConsts.LogDirName, "result.txt")
 
 	// 打印到结果文件
-	logUtils.Infof("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
+	logUtils.ExecResultf("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
 		i118Utils.Sprintf("run_scripts",
 			report.Total, report.Duration, secTag,
 			passStr, failStr, skipStr,
