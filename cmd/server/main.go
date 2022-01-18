@@ -16,12 +16,12 @@ import (
 // @contact.url https://github.com/easysoft/zentaoatf/issues
 // @contact.email 462626@qq.com
 func main() {
-	cron.NewServerCron().Init()
-
 	webServer := web.Init()
 	if webServer == nil {
 		return
 	}
+
+	cron.NewServerCron().Init()
 
 	injectModule(webServer)
 

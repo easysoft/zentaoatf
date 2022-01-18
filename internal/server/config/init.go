@@ -18,8 +18,7 @@ func Init() {
 	commConsts.ExeDir = fileUtils.GetExeDir(commConsts.WorkDir)
 
 	if commConsts.Verbose {
-		fmt.Printf("launch %s%s in %s\n",
-			commConsts.ExeDir, commConsts.App, commConsts.WorkDir)
+		fmt.Printf("\nlaunch %s%s in %s\n", commConsts.ExeDir, commConsts.App, commConsts.WorkDir)
 	}
 
 	v := viper.New()

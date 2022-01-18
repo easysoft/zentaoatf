@@ -5,48 +5,54 @@ import (
 	"fmt"
 	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	"go.uber.org/zap"
-	"log"
 	"strings"
 	"unicode/utf8"
 )
 
-var Logger *zap.Logger
+var LoggerConsole *zap.Logger
+var LoggerLog *zap.Logger
+var LoggerResult *zap.Logger
 
 func Info(str string) {
-	Logger.Info(str)
-	log.Println(str)
+	LoggerConsole.Info(str)
 }
 func Infof(str string, args ...interface{}) {
 	msg := fmt.Sprintf(str, args...)
-	Logger.Info(msg)
-	log.Println(msg)
+	LoggerConsole.Info(msg)
 }
-
 func Warn(str string) {
-	Logger.Warn(str)
-	log.Println(str)
+	LoggerConsole.Warn(str)
 }
 func Warnf(str string, args ...interface{}) {
 	msg := fmt.Sprintf(str, args...)
-	Logger.Warn(msg)
-	log.Println(msg)
+	LoggerConsole.Warn(msg)
 }
-
 func Error(str string) {
-	Logger.Error(str)
-	log.Println(str)
+	LoggerConsole.Error(str)
 }
 func Errorf(str string, args ...interface{}) {
 	msg := fmt.Sprintf(str, args...)
-	Logger.Error(msg)
-	log.Printf(msg + "\n")
+	LoggerConsole.Error(msg)
+}
+
+func Log(str string) {
+	LoggerLog.Info(str)
+}
+func Logf(str string, args ...interface{}) {
+	msg := fmt.Sprintf(str, args...)
+	LoggerLog.Info(msg)
+}
+func Result(str string) {
+	LoggerResult.Info(str)
+}
+func Resultf(str string, args ...interface{}) {
+	msg := fmt.Sprintf(str, args...)
+	LoggerResult.Info(msg)
 }
 
 func PrintUnicode(str []byte) {
 	msg := ConvertUnicode(str)
-
-	Logger.Info(msg)
-	log.Print(msg)
+	LoggerConsole.Info(msg)
 }
 
 func ConvertUnicode(str []byte) string {

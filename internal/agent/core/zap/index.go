@@ -49,5 +49,5 @@ func Init() {
 		logger = logger.WithOptions(zap.AddCaller())
 	}
 
-	logUtils.Logger = logger
+	logUtils.LoggerConsole = logger
 }
