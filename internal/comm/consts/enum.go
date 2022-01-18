@@ -29,6 +29,8 @@ func (e ResultStatus) String() string {
 type ExecCmd string
 
 const (
+	ExecStop ExecCmd = "execStop"
+
 	ExecCase   ExecCmd = "execCase"
 	ExecModule ExecCmd = "execModule"
 	ExecSuite  ExecCmd = "execSuite"

@@ -39,8 +39,9 @@
 
         <div id="content">
           <div class="toolbar">
-            <a-button type="primary" @click="exec">执行</a-button>
-            <a-button @click="back()">返回</a-button>
+            <a-button @click="exec" type="primary">执行</a-button>
+            <a-button @click="stop">停止</a-button>
+            <a-button @click="back" type="link">返回</a-button>
           </div>
           <div class="panel">
             <pre id="logs">{{ wsMsg.out }}</pre>
@@ -57,7 +58,7 @@ import {useRouter} from "vue-router";
 import {useStore} from "vuex";
 import {ProjectData} from "@/store/project";
 import IconSvg from "@/components/IconSvg";
-import {execCase} from "@/views/execution/exec/service";
+import {execCase} from "@/views/exec/exec/service";
 import {getCache} from "@/utils/localCache";
 import settings from "@/config/settings";
 import {WebSocket, WsEventName} from "@/services/websocket";
@@ -82,6 +83,7 @@ interface ExecCasePageSetupData {
 
   wsMsg: any,
   exec: (keys) => void;
+  stop: (keys) => void;
   back: () => void;
 }
 
@@ -189,7 +191,16 @@ export default defineComponent({
             const msg = {act: 'execCase', projectPath: projectPath, cases: checkedKeys.value}
             console.log('msg', msg)
             WebSocket.sentMsg(room, JSON.stringify(msg))
-            // wsMsg.out = wsMsg.out + 'client: ' + wsMsg.in + '\n'
+          }
+      )
+    }
+    const stop = (): void => {
+      console.log("stop")
+      getCache(settings.currProject).then (
+          (projectPath) => {
+            const msg = {act: 'execStop', projectPath: projectPath}
+            console.log('msg', msg)
+            WebSocket.sentMsg(room, JSON.stringify(msg))
           }
       )
     }
@@ -216,6 +227,7 @@ export default defineComponent({
       wsMsg,
 
       exec,
+      stop,
       back,
     }
   }

@@ -27,11 +27,11 @@
 <script lang="ts">
 import {defineComponent, onMounted, onBeforeUnmount, getCurrentInstance, ComputedRef, Ref, ref, reactive} from "vue";
 import { useStore } from 'vuex';
-import {StateType as ListStateType} from "@/views/execution/store";
+import {StateType as ListStateType} from "@/views/exec/store";
 import {useRouter} from "vue-router";
 import {WebSocket, WsEventName} from "@/services/websocket";
 import {getToken} from "@/utils/localToken";
-import {ExecutionItem} from "@/views/execution/data";
+import {ExecutionItem} from "@/views/exec/data";
 
 interface DesignExecutionPageSetupData {
   execution: ExecutionItem;

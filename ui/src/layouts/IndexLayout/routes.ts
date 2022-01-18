@@ -27,14 +27,14 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
   {
     icon: 'execution',
     title: 'index-layout.menu.execution',
-    path: '/execution',
-    redirect: '/execution/history',
+    path: '/exec',
+    redirect: '/exec/history',
     component: BlankLayout,
     children: [
       {
         title: 'index-layout.menu.execution.history',
         path: 'history',
-        component: () => import('@/views/execution/history/index.vue'),
+        component: () => import('@/views/exec/history/index.vue'),
         hidden: true,
       },
       {
@@ -46,19 +46,19 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
           {
             title: 'index-layout.menu.execution.execCase',
             path: 'case',
-            component: () => import('@/views/execution/exec/case.vue'),
+            component: () => import('@/views/exec/exec/case.vue'),
             hidden: true,
           },
           {
             title: 'index-layout.menu.execution.execSuite',
             path: 'suite',
-            component: () => import('@/views/execution/exec/suite.vue'),
+            component: () => import('@/views/exec/exec/suite.vue'),
             hidden: true,
           },
           {
             title: 'index-layout.menu.execution.execTask',
             path: 'task',
-            component: () => import('@/views/execution/exec/task.vue'),
+            component: () => import('@/views/exec/exec/task.vue'),
             hidden: true,
           },
         ]
@@ -66,19 +66,19 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
       {
         title: 'index-layout.menu.execution.result',
         path: 'result/:id',
-        component: () => import('@/views/execution/result/index.vue'),
+        component: () => import('@/views/exec/result/index.vue'),
         hidden: true,
       },
       {
         title: 'index-layout.menu.execution.result',
         path: 'result/:id',
-        component: () => import('@/views/execution/result/index.vue'),
+        component: () => import('@/views/exec/result/index.vue'),
         hidden: true,
       },
       {
         title: 'index-layout.menu.execution.result',
         path: 'result/:id',
-        component: () => import('@/views/execution/result/index.vue'),
+        component: () => import('@/views/exec/result/index.vue'),
         hidden: true,
       },
     ],

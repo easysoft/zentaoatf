@@ -29,7 +29,7 @@ import (
 )
 
 var (
-	Ch chan int
+	IsRunning = false
 )
 
 func Exec(ch chan int, fun func(info string, msg websocket.Message), req serverDomain.WsMsg, msg websocket.Message) (
@@ -257,6 +257,8 @@ func ExecScriptFile(filePath, projectPath string, conf commDomain.ProjectConf,
 	cmd.Wait()
 
 XX:
+	IsRunning = false
+
 	errOutputArr := make([]string, 0)
 	if !isTerminal {
 		reader2 := bufio.NewReader(stderr)

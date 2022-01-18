@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/config"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
@@ -58,24 +59,30 @@ func (c *WsCtrl) OnChat(msg websocket.Message) (err error) {
 	ctx := websocket.GetContext(c.Conn)
 	logUtils.Infof("WebSocket OnChat: remote address=%s, room=%s, msg=%s", ctx.RemoteAddr(), msg.Room, string(msg.Body))
 
-	if ch != nil {
-		ch <- 1
-		ch = nil
-		c.SendMsgByKey(result, "try to stop previous request...", msg)
-	} else {
-		ch = make(chan int)
-
-		req := serverDomain.WsMsg{}
-		err = json.Unmarshal(msg.Body, &req)
-		if err != nil {
-			logUtils.Errorf("参数验证失败", err.Error())
-			resp := websocket.Message{Body: []byte(err.Error())}
-			c.SendMsgByKey(result, "please wait previous request is in process", resp)
-			return
+	req := serverDomain.WsMsg{}
+	err = json.Unmarshal(msg.Body, &req)
+	if err != nil {
+		logUtils.Errorf("参数验证失败", err.Error())
+		resp := websocket.Message{Body: []byte(err.Error())}
+		c.SendMsgByKey(result, "please wait previous request is in process", resp)
+		return
+	}
+	act := req.Act
+	if act == commConsts.ExecStop {
+		if !scriptUtils.IsRunning {
+			ch = nil
+		} else {
+			ch <- 1
+			ch = nil
 		}
 
+		c.SendMsgByKey(result, "try to stop previous execution ...", msg)
+		return
+	} else if act == commConsts.ExecCase {
+		ch = make(chan int)
 		//go shellUtils.ExeShellCallback(ch, "/Users/aaron/work/testing/res/loop.sh", "", c.SendMsg, msg)
 		go scriptUtils.Exec(ch, c.SendExecMsg, req, msg)
+		scriptUtils.IsRunning = true
 	}
 
 	return
