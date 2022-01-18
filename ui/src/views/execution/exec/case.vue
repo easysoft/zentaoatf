@@ -305,7 +305,8 @@ export default defineComponent({
           height: calc(100% - 10px);
           width: 100%;
           overflow-y: auto;
-          word-wrap:break-word;
+          white-space: pre-wrap;
+          word-wrap: break-word;
         }
       }
     }

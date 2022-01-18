@@ -108,7 +108,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		i118Utils.Sprintf("run_scripts",
 			report.Total, report.Duration, secTag,
 			passStr, failStr, skipStr, " "+logFile,
-		)
+		) + "\n"
 	printToWs(msg, wsMsg)
 	logUtils.ExecConsole(color.FgCyan, msg)
 	logUtils.ExecResult(msg)
