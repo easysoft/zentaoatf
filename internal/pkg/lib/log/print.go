@@ -39,12 +39,12 @@ func Errorf(str string, args ...interface{}) {
 }
 
 func ExecConsole(attr color.Attribute, str string) {
-	msg := color.New(attr).Sprintf(str)
+	msg := color.New(attr).Sprint(str)
 	LoggerExecConsole.Info(msg)
 }
 func ExecConsolef(clr color.Attribute, str string, args ...interface{}) {
 	msg := fmt.Sprintf(str, args...)
-	msg = color.New(clr).Sprintf(msg)
+	msg = color.New(clr).Sprint(msg)
 
 	LoggerExecConsole.Info(msg)
 }

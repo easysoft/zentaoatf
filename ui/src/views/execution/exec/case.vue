@@ -43,7 +43,7 @@
             <a-button @click="back()">返回</a-button>
           </div>
           <div class="panel">
-            <pre style="height: 100%;">{{ wsMsg.out }}</pre>
+            <pre id="logs">{{ wsMsg.out }}</pre>
           </div>
         </div>
       </div>
@@ -131,16 +131,26 @@ export default defineComponent({
     getCache(settings.currProject).then((token) => {
       room = token
     })
+    const scroll = () => {
+      const elem = document.getElementById('logs')
+      if (elem) {
+        setTimeout(function(){
+          elem.scrollTop = elem.scrollHeight + 100;
+        },200);
+      }
+    }
 
     const {proxy} = getCurrentInstance() as any;
     WebSocket.init(proxy)
 
+    let i = 0
     if (init) {
       proxy.$sub(WsEventName, (data) => {
         console.log(data[0].msg);
         const msg = data[0].msg.replace(/^"+/,'').replace(/"+$/,'')
 
-        wsMsg.out = wsMsg.out + msg + '\n';
+        wsMsg.out = wsMsg.out + i++ + '. ' + msg + '\n';
+        scroll()
       });
       init = false;
     }
@@ -286,8 +296,17 @@ export default defineComponent({
 
       .panel {
         padding: 0 16px;
-        height: calc(100% - 46px);
+        height: calc(100% - 50px);
         overflow: auto;
+
+        #logs {
+          margin: 0;
+          padding: 0;
+          height: calc(100% - 10px);
+          width: 100%;
+          overflow-y: auto;
+          word-wrap:break-word;
+        }
       }
     }
   }

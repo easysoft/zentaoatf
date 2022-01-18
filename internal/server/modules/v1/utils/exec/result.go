@@ -124,8 +124,8 @@ func ValidateCaseResult(scriptFile string, langType string,
 	msg := fmt.Sprintf(format, idx+1, total, i118Utils.Sprintf(cs.Status), path, cs.Id, cs.Title, secs)
 
 	printToWs(msg, wsMsg)
-	logUtils.ExecConsolef(color.FgCyan, msg)
-	logUtils.ExecResultf(msg)
+	logUtils.ExecConsole(color.FgCyan, msg)
+	logUtils.ExecResult(msg)
 }
 
 func ValidateStepResult(langType string, expectLines []string, actualLines []string) (bool, []commDomain.CheckPointLog) {

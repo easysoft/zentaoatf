@@ -28,6 +28,10 @@ import (
 	"time"
 )
 
+var (
+	Ch chan int
+)
+
 func Exec(ch chan int, fun func(info string, msg websocket.Message), req serverDomain.WsMsg, msg websocket.Message) (
 	err error) {
 
@@ -220,6 +224,7 @@ func ExecScriptFile(filePath, projectPath string, conf commDomain.ProjectConf,
 
 	cmd.Start()
 
+	isTerminal := false
 	reader1 := bufio.NewReader(stdout)
 	stdOutputArr := make([]string, 0)
 	for {
@@ -228,6 +233,8 @@ func ExecScriptFile(filePath, projectPath string, conf commDomain.ProjectConf,
 			printToWs(line, wsMsg)
 			logUtils.ExecConsolef(color.FgRed, line)
 			logUtils.ExecFilef(line)
+
+			isTerminal = true
 		}
 
 		if err2 != nil || io.EOF == err2 {
@@ -242,23 +249,26 @@ func ExecScriptFile(filePath, projectPath string, conf commDomain.ProjectConf,
 			logUtils.ExecConsolef(color.FgCyan, msg)
 			logUtils.ExecFilef(msg)
 
-			ch <- 1
-			break
+			goto XX
 		default:
 		}
 	}
 
-	reader2 := bufio.NewReader(stderr)
-	errOutputArr := make([]string, 0)
-	for {
-		line, err2 := reader2.ReadString('\n')
-		if err2 != nil || io.EOF == err2 {
-			break
-		}
-		errOutputArr = append(errOutputArr, line)
-	}
-
 	cmd.Wait()
+
+XX:
+	errOutputArr := make([]string, 0)
+	if !isTerminal {
+		reader2 := bufio.NewReader(stderr)
+
+		for {
+			line, err2 := reader2.ReadString('\n')
+			if err2 != nil || io.EOF == err2 {
+				break
+			}
+			errOutputArr = append(errOutputArr, line)
+		}
+	}
 
 	stdOutput = strings.Join(stdOutputArr, "")
 	errOutput = strings.Join(errOutputArr, "")

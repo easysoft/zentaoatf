@@ -86,8 +86,7 @@ func Init() *WebServer {
 		&service.PrefixedLogger{Prefix: ""},
 	)
 	m.HandleWebsocket(myWs.NewWsCtrl())
-	websocketServer := websocket.New(
-		gorilla.Upgrader(gorillaWs.Upgrader{CheckOrigin: func(*http.Request) bool { return true }}), m)
+	websocketServer := websocket.New(gorilla.Upgrader(gorillaWs.Upgrader{CheckOrigin: func(*http.Request) bool { return true }}), m)
 	websocketAPI.Get("/", websocket.Handler(websocketServer))
 
 	return &WebServer{

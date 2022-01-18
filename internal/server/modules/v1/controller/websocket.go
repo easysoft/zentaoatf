@@ -7,7 +7,6 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/exec"
-	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
 	"strings"
 )
@@ -61,9 +60,7 @@ func (c *WsCtrl) OnChat(msg websocket.Message) (err error) {
 
 	if ch != nil {
 		ch <- 1
-		<-ch
 		ch = nil
-
 		c.SendMsgByKey(result, "try to stop previous request...", msg)
 	} else {
 		ch = make(chan int)
@@ -101,9 +98,4 @@ func (c *WsCtrl) SendMsgByKey(key, value string, msg websocket.Message) {
 
 	logUtils.Infof("WebSocket SendMsg: room=%s, msg=%s", msg.Room, string(msg.Body))
 	c.WebSocketService.Broadcast(msg.Namespace, msg.Room, msg.Event, data)
-}
-
-func (c *WsCtrl) TestWs(ctx iris.Context) {
-	data := map[string]interface{}{"action": "taskUpdate", "taskId": 1, "msg": ""}
-	c.WebSocketService.Broadcast(serverConfig.WsDefaultNameSpace, serverConfig.WsDefaultRoom, serverConfig.WsEvent, data)
 }

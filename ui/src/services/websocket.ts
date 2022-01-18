@@ -60,20 +60,15 @@ export class WebSocket {
   static sentMsg(roomName, msg) {
     console.log(`send msg to room ${roomName}`)
 
-    if (!WebSocket.conn.room(roomName)) {
-      WebSocket.conn.leaveAll()
+    WebSocket.conn.leaveAll().then(() =>
+        WebSocket.conn.joinRoom(roomName).then((room) => {
+          console.log(`success to join room ${roomName}`)
+          WebSocket.conn.room(roomName).emit('OnChat', msg)
 
-      WebSocket.conn.joinRoom(roomName).then((room) => {
-
-        console.log(`success to join room ${roomName}`)
-        WebSocket.conn.room(roomName).emit('OnChat', msg)
-
-      }).catch(err => {
-        console.log(`fail to join room ${roomName}`, err)
-      })
-    } else {
-      WebSocket.conn.room(roomName).emit('OnChat', msg)
-    }
+        }).catch(err => {
+          console.log(`fail to join room ${roomName}`, err)
+        })
+    )
   }
 }
 
