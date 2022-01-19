@@ -1,5 +1,19 @@
 <template>
   <div class="indexlayout-main-conent">
+
+    <a-card :bordered="false">
+      <template #title>
+        执行套件
+      </template>
+      <template #extra>
+        <div class="opt">
+          <a-button v-if="isRunning == 'false'" @click="exec" type="primary">执行</a-button>
+          <a-button v-if="isRunning == 'true'" @click="stop" type="primary">停止</a-button>
+
+          <a-button @click="back" type="link">返回</a-button>
+        </div>
+      </template>
+
       <div id="main">
         <div id="left">
           <div class="toolbar">
@@ -38,19 +52,15 @@
         <div id="resize"></div>
 
         <div id="content">
-          <div class="toolbar">{{isRunning}}
-            <a-button v-if="isRunning == 'false'" @click="exec" type="primary">执行</a-button>
-            <a-button v-if="isRunning == 'true'" @click="stop" type="primary">停止</a-button>
-
-            <a-button @click="back" type="link">返回</a-button>
-          </div>
-          <div class="panel">
-            <div id="logs">
-              <span v-html="wsMsg.out"></span>
-            </div>
+          <div id="logs">
+            <span v-html="wsMsg.out"></span>
           </div>
         </div>
       </div>
+
+    </a-card>
+
+
   </div>
 </template>
 
@@ -65,7 +75,7 @@ import {execCase} from "@/views/exec/exec/service";
 import {getCache} from "@/utils/localCache";
 import settings from "@/config/settings";
 import {WebSocket, WsEventName} from "@/services/websocket";
-import {PrefixSpace, resizeWidth, SetWidth} from "@/utils/dom";
+import {PrefixSpace, resizeWidth, scroll, SetWidth} from "@/utils/dom";
 
 const useForm = Form.useForm;
 
@@ -92,7 +102,7 @@ interface ExecCasePageSetupData {
 }
 
 export default defineComponent({
-  name: 'ExecutionListPage',
+  name: 'ExecutionCasePage',
   components: {
     IconSvg
   },
@@ -129,63 +139,6 @@ export default defineComponent({
     })
 
     let tree = ref(null)
-
-    let init = true;
-    let isRunning = ref('');
-    let wsMsg = reactive({in: '', out: ''});
-
-    let room: string | null = ''
-    getCache(settings.currProject).then((token) => {
-      room = token
-    })
-    const scroll = () => {
-      const elem = document.getElementById('logs')
-      if (elem) {
-        console.log('scroll')
-        setTimeout(function(){
-          elem.scrollTop = elem.scrollHeight + 100;
-        },300);
-      }
-    }
-
-    const {proxy} = getCurrentInstance() as any;
-    WebSocket.init(proxy)
-
-    let i = 1
-    if (init) {
-      proxy.$sub(WsEventName, (data) => {
-        console.log(data[0].msg);
-        const jsn = JSON.parse(data[0].msg)
-
-        if ('isRunning' in jsn) {
-          isRunning.value = jsn.isRunning
-        }
-
-        let msg = jsn.msg
-        msg = msg.replace(/^"+/,'').replace(/"+$/,'')
-        msg = SetWidth(i++ + '. ', 30) + `<span>${msg}</span>`;
-
-        let sty = ''
-        if (jsn.category === 'exec') {
-          sty = 'color: #009688;'
-        } else if (jsn.category === 'output') {
-          // sty = 'font-style: italic;'
-        }
-
-        msg = `<div style="${sty}"> ${msg} </div>`
-        wsMsg.out += msg
-
-       scroll()
-      });
-      init = false;
-    }
-
-    onMounted(() => {
-      console.log('onMounted', tree)
-      resizeWidth('main', 'left', 'resize', 'content', 280, 800)
-      initWsConn()
-    })
-
     const expandNode = (keys: string[], e: any) => {
       console.log('expandNode', keys[0], e)
     }
@@ -205,6 +158,53 @@ export default defineComponent({
         getOpenKeys(treeData.value[0], true)
       }
     }
+
+    let init = true;
+    let isRunning = ref('');
+    let wsMsg = reactive({in: '', out: ''});
+
+    let room: string | null = ''
+    getCache(settings.currProject).then((token) => {
+      room = token
+    })
+
+    const {proxy} = getCurrentInstance() as any;
+    WebSocket.init(proxy)
+
+    let i = 1
+    if (init) {
+      proxy.$sub(WsEventName, (data) => {
+        console.log(data[0].msg);
+        const jsn = JSON.parse(data[0].msg)
+
+        if ('isRunning' in jsn) {
+          isRunning.value = jsn.isRunning
+        }
+
+        let msg = jsn.msg
+        msg = msg.replace(/^"+/,'').replace(/"+$/,'')
+        msg = SetWidth(i++ + '. ', 40) + `<span>${msg}</span>`;
+
+        let sty = ''
+        if (jsn.category === 'exec') {
+          sty = 'color: #009688;'
+        } else if (jsn.category === 'output') {
+          // sty = 'font-style: italic;'
+        }
+
+        msg = `<div style="${sty}"> ${msg} </div>`
+        wsMsg.out += msg
+
+        scroll('logs')
+      });
+      init = false;
+    }
+
+    onMounted(() => {
+      console.log('onMounted', tree)
+      resizeWidth('main', 'left', 'resize', 'content', 280, 800)
+      initWsConn()
+    })
 
     const exec = (): void => {
       console.log("exec")
@@ -245,7 +245,7 @@ export default defineComponent({
     }
 
     const back = (): void => {
-      router.push(`/execution/history`)
+      router.push(`/exec/history`)
     }
 
     return {
@@ -332,35 +332,20 @@ export default defineComponent({
     }
 
     #content {
-      width: 80%;
-      height: 100%;
       flex: 1;
+      height: 100%;
+      padding: 16px;
+      overflow: auto;
 
-      .toolbar {
-        padding: 5px 10px;
-        height: 46px;
-        text-align: right;
-
-        .ant-btn {
-          margin-left: 8px;
-        }
-      }
-
-      .panel {
-        padding: 0 16px;
-        height: calc(100% - 50px);
-        overflow: auto;
-
-        #logs {
-          margin: 0;
-          padding: 0;
-          height: calc(100% - 10px);
-          width: 100%;
-          overflow-y: auto;
-          white-space: pre-wrap;
-          word-wrap: break-word;
-          font-family:monospace;
-        }
+      #logs {
+        margin: 0;
+        padding: 0;
+        height: calc(100% - 10px);
+        width: 100%;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-family:monospace;
       }
     }
   }

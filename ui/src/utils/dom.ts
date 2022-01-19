@@ -51,3 +51,12 @@ export function PrefixZero(num, n) {
 export function PrefixSpace(num, n) {
     return (Array(n).join(' ') + num).slice(-n);
 }
+
+export function scroll(id) {
+    const elem = document.getElementById(id)
+    if (elem) {
+        setTimeout(function(){
+            elem.scrollTop = elem.scrollHeight + 100;
+        },300);
+    }
+}

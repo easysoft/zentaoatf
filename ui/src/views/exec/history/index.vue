@@ -45,13 +45,13 @@
                 </template>
                 <template #action="{ record }">
                   <a-button type="link"
-                            @click="() => designExecution(record.id)"
-                            :loading="getLoading.includes(record.id)">设计</a-button>
+                            @click="() => viewExec(record.id)"
+                            :loading="getLoading.includes(record.id)">查看</a-button>
                   <a-button type="link"
-                            @click="() => editExecution(record.id)"
+                            @click="() => editExec(record.id)"
                             :loading="getLoading.includes(record.id)">编辑</a-button>
                   <a-button type="link"
-                            @click="() => deleteExecution(record.id)"
+                            @click="() => deleteExec(record.id)"
                             :loading="deleteLoading.includes(record.id)">删除</a-button>
                 </template>
 
@@ -95,7 +95,7 @@ import {StateType as ListStateType} from "../store";
 import debounce from "lodash.debounce";
 import {useRoute, useRouter} from "vue-router";
 
-interface ListExecutionPageSetupData {
+interface ListExecPageSetupData {
   statusArr,
   queryParams,
   columns: any;
@@ -109,8 +109,8 @@ interface ListExecutionPageSetupData {
   createSubmit: (values: Omit<Execution, 'id'>, resetFields: (newValues?: Props | undefined) => void) => Promise<void>;
 
   getLoading: Ref<number[]>;
-  designExecution: (id: number) => void;
-  editExecution: (id: number) => Promise<void>;
+  viewExec: (id: number) => void;
+  editExec: (id: number) => Promise<void>;
   item: ComputedRef<Partial<Execution>>;
   updateFormVisible: Ref<boolean>;
   updateFormCancel:  () => void;
@@ -118,7 +118,7 @@ interface ListExecutionPageSetupData {
   updateSubmit:  (values: Execution, resetFields: (newValues?: Props | undefined) => void) => Promise<void>;
 
   deleteLoading: Ref<number[]>;
-  deleteExecution:  (id: number) => void;
+  deleteExec:  (id: number) => void;
 
   onSearch:  () => void;
   execCase:  () => void;
@@ -127,12 +127,12 @@ interface ListExecutionPageSetupData {
 }
 
 export default defineComponent({
-    name: 'ExecutionListPage',
+    name: 'ExecListPage',
     components: {
       CreateForm,
       UpdateForm
     },
-    setup(): ListExecutionPageSetupData {
+    setup(): ListExecPageSetupData {
       const statusArr = ref<SelectTypes['options']>([
           {
             label: '所有状态',
@@ -208,7 +208,7 @@ export default defineComponent({
       // 创建弹框 - 提交
       const createSubmit = async (values: Omit<Execution, 'id'>, resetFields: (newValues?: Props | undefined) => void) => {
         createSubmitLoading.value = true;
-        const res: boolean = await store.dispatch('ListExecution/createExecution',values);
+        const res: boolean = await store.dispatch('ListExecution/createExec',values);
         if(res === true) {
           resetFields();
           setCreateFormVisible(false);
@@ -232,7 +232,7 @@ export default defineComponent({
       // 更新弹框 - 提交
       const updateSubmit = async (values: Execution, resetFields: (newValues?: Props | undefined) => void) => {
         updateSubmitLoading.value = true;
-        const res: boolean = await store.dispatch('ListExecution/updateExecution',values);
+        const res: boolean = await store.dispatch('ListExecution/updateExec',values);
         if(res === true) {
           updateFormCancel();
           message.success('编辑成功！');
@@ -244,9 +244,9 @@ export default defineComponent({
       const item = computed<Partial<Execution>>(() => store.state.ListExecution.detailResult);
       // 编辑
       const getLoading = ref<number[]>([]);
-      const editExecution = async (id: number) => {
+      const editExec = async (id: number) => {
         getLoading.value = [id];
-        const res: boolean = await store.dispatch('ListExecution/getExecution',id);
+        const res: boolean = await store.dispatch('ListExecution/getExec',id);
         if(res===true) {
           setUpdateFormVisible(true);
         }
@@ -254,13 +254,13 @@ export default defineComponent({
       }
 
       // 设计
-      const designExecution = (id: number) => {
+      const viewExec = (id: number) => {
         router.push(`/~/execution/design/${id}`)
       }
 
       // 删除
       const deleteLoading = ref<number[]>([]);
-      const deleteExecution = (id: number) => {
+      const deleteExec = (id: number) => {
         Modal.confirm({
           title: '删除脚本',
           content: '确定删除吗？',
@@ -268,7 +268,7 @@ export default defineComponent({
           cancelText: '取消',
           onOk: async () => {
             deleteLoading.value = [id];
-            const res: boolean = await store.dispatch('ListExecution/deleteExecution',id);
+            const res: boolean = await store.dispatch('ListExecution/deleteExec',id);
             if (res === true) {
               message.success('删除成功！');
               await getList(pagination.value.current);
@@ -288,13 +288,15 @@ export default defineComponent({
 
       const execCase = () =>  {
         console.log("execCase")
-        router.push(`/execution/exec/case`)
+        router.push(`/exec/exec/case`)
       }
       const execSuite = () =>  {
         console.log("execSuite")
+        router.push(`/exec/exec/suite`)
       }
       const execTask = () =>  {
         console.log("execSuite")
+        router.push(`/exec/exec/task`)
       }
 
       return {
@@ -311,15 +313,15 @@ export default defineComponent({
         createSubmitLoading,
         createSubmit,
         getLoading,
-        designExecution,
-        editExecution,
+        viewExec,
+        editExec,
         item,
         updateFormVisible,
         updateFormCancel,
         updateSubmitLoading,
         updateSubmit,
         deleteLoading,
-        deleteExecution,
+        deleteExec,
 
         onSearch,
         execCase,
