@@ -39,8 +39,9 @@
 
         <div id="content">
           <div class="toolbar">{{isRunning}}
-            <a-button :disabled="isRunning" @click="exec" type="primary">执行</a-button>
-            <a-button @click="stop">停止</a-button>
+            <a-button v-if="!isRunning" @click="exec" type="primary">执行</a-button>
+            <a-button v-if="isRunning" @click="stop" type="primary">停止</a-button>
+
             <a-button @click="back" type="link">返回</a-button>
           </div>
           <div class="panel">
@@ -193,7 +194,7 @@ export default defineComponent({
     const exec = (): void => {
       console.log("exec")
       if (checkedKeys.value.length == 0) {
-        wsMsg.out += '请选择用例执行。\n'
+        wsMsg.out += '请选择需要执行的用例。\n'
         return
       }
 

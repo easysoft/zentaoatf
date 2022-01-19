@@ -42,7 +42,7 @@ func (s *TestExecService) DeleteById(id uint) error {
 	return s.TestExecRepo.DeleteById(id)
 }
 
-func (s *TestExecService) Exec(req serverDomain.WsMsg) {
+func (s *TestExecService) Exec(req serverDomain.WsReq) {
 
 }
 

@@ -28,11 +28,7 @@ import (
 	"time"
 )
 
-var (
-	IsRunning = false
-)
-
-func Exec(ch chan int, fun func(info string, msg websocket.Message), req serverDomain.WsMsg, msg websocket.Message) (
+func Exec(ch chan int, fun func(info string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
 	err error) {
 
 	serverLog.InitExecLog(req.ProjectPath)
@@ -44,7 +40,7 @@ func Exec(ch chan int, fun func(info string, msg websocket.Message), req serverD
 	return
 }
 
-func ExecCase(ch chan int, fun func(info string, msg websocket.Message), req serverDomain.WsMsg, msg websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
+func ExecCase(ch chan int, fun func(info string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
 
 	projectPath := req.ProjectPath
 	conf := configUtils.LoadByProjectPath(projectPath)
@@ -252,7 +248,7 @@ func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
 	cmd.Wait()
 
 XX:
-	IsRunning = false
+	SetRunning(false)
 
 	errOutputArr := make([]string, 0)
 	if !isTerminal {
