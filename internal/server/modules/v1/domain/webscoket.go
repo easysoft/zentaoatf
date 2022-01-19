@@ -9,6 +9,7 @@ type WsReq struct {
 }
 
 type WsResp struct {
-	Msg       string `json:"msg"`
-	IsRunning bool   `json:"isRunning,omitempty"`
+	Msg       string                   `json:"msg"`
+	IsRunning string                   `json:"isRunning,omitempty"`
+	Category  commConsts.WsMsgCategory `json:"category"`
 }

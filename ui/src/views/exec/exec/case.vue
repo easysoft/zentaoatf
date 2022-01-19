@@ -39,13 +39,13 @@
 
         <div id="content">
           <div class="toolbar">{{isRunning}}
-            <a-button v-if="!isRunning" @click="exec" type="primary">执行</a-button>
-            <a-button v-if="isRunning" @click="stop" type="primary">停止</a-button>
+            <a-button v-if="isRunning == 'false'" @click="exec" type="primary">执行</a-button>
+            <a-button v-if="isRunning == 'true'" @click="stop" type="primary">停止</a-button>
 
             <a-button @click="back" type="link">返回</a-button>
           </div>
           <div class="panel">
-            <pre id="logs">{{ wsMsg.out }}</pre>
+            <span id="logs" v-html="wsMsg.out"></span>
           </div>
         </div>
       </div>
@@ -63,7 +63,7 @@ import {execCase} from "@/views/exec/exec/service";
 import {getCache} from "@/utils/localCache";
 import settings from "@/config/settings";
 import {WebSocket, WsEventName} from "@/services/websocket";
-import {resizeWidth} from "@/utils/dom";
+import {PrefixSpace, resizeWidth, SetWidth} from "@/utils/dom";
 
 const useForm = Form.useForm;
 
@@ -85,7 +85,7 @@ interface ExecCasePageSetupData {
   wsMsg: any,
   exec: (keys) => void;
   stop: (keys) => void;
-  isRunning: Ref<boolean>;
+  isRunning: Ref<string>;
   back: () => void;
 }
 
@@ -129,7 +129,7 @@ export default defineComponent({
     let tree = ref(null)
 
     let init = true;
-    let isRunning = ref(false);
+    let isRunning = ref('');
     let wsMsg = reactive({in: '', out: ''});
 
     let room: string | null = ''
@@ -148,19 +148,31 @@ export default defineComponent({
     const {proxy} = getCurrentInstance() as any;
     WebSocket.init(proxy)
 
-    let i = 0
+    let i = 1
     if (init) {
       proxy.$sub(WsEventName, (data) => {
         console.log(data[0].msg);
         const jsn = JSON.parse(data[0].msg)
+
         if ('isRunning' in jsn) {
           isRunning.value = jsn.isRunning
         }
+
         let msg = jsn.msg
         msg = msg.replace(/^"+/,'').replace(/"+$/,'')
+        msg = SetWidth(i++ + '. ', 30) + `<span>${msg}</span>`;
 
-        wsMsg.out = wsMsg.out + i++ + '. ' + msg + '\n';
-        scroll()
+        let sty = ''
+        if (jsn.category === 'exec') {
+          sty = 'color: #009688;'
+        } else if (jsn.category === 'output') {
+          // sty = 'font-style: italic;'
+        }
+
+        msg = `<div style="${sty}"> ${msg} </div>`
+        wsMsg.out += msg
+
+       scroll()
       });
       init = false;
     }
@@ -344,6 +356,7 @@ export default defineComponent({
           overflow-y: auto;
           white-space: pre-wrap;
           word-wrap: break-word;
+          font-family:monospace;
         }
       }
     }

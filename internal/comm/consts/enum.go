@@ -41,3 +41,16 @@ const (
 func (e ExecCmd) String() string {
 	return string(e)
 }
+
+type WsMsgCategory string
+
+const (
+	Communication WsMsgCategory = "communication"
+	Exec          WsMsgCategory = "exec"
+	Output        WsMsgCategory = "output"
+	Unknown       WsMsgCategory = ""
+)
+
+func (e WsMsgCategory) String() string {
+	return string(e)
+}

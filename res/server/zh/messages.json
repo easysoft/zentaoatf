@@ -254,11 +254,11 @@
     },
     {
       "id": "start_to_run",
-      "translation": "开始执行任务 ...。"
+      "translation": "开始执行任务 ..."
     },
     {
       "id": "stopping_previous",
-      "translation": "正在停止上一个任务...。"
+      "translation": "正在停止任务 ..."
     },
     {
       "id": "pls_stop_previous",
