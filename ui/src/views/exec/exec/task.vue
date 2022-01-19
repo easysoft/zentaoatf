@@ -238,6 +238,10 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
+.indexlayout-main-conent {
+  height: calc(100% - 50px);
+}
+
 #main {
   display: flex;
   height: 100%;
