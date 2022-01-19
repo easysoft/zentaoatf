@@ -15,11 +15,29 @@
 
           <div id="main">
             <div id="left">
+              <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
+
+                <a-form-item label="产品" v-bind="validateInfos.productId">
+                  <a-select v-model:value="model.productId" @change="selectProduct">
+                    <a-select-option key="" value="">&nbsp;</a-select-option>
+                    <a-select-option v-for="item in products" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
+                  </a-select>
+                </a-form-item>
+
+                <a-form-item label="任务" v-bind="validateInfos.taskId">
+                  <a-select v-model:value="model.taskId">
+                    <a-select-option key="" value="">&nbsp;</a-select-option>
+                    <a-select-option v-for="item in tasks" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+                  </a-select>
+                </a-form-item>
+
+              </a-form>
             </div>
 
             <div id="resize"></div>
 
             <div id="content">
+
             </div>
           </div>
         </a-card>
@@ -27,21 +45,17 @@
 </template>
 
 <script lang="ts">
-import {ComputedRef, defineComponent, ref, Ref, reactive, computed, onMounted, getCurrentInstance} from "vue";
-import { SelectTypes } from 'ant-design-vue/es/select';
-import {Execution} from '../data.d';
-import {useStore} from "vuex";
-
-import { Props } from 'ant-design-vue/lib/form/useForm';
-import { message, Modal, Form } from "ant-design-vue";
+import {ComputedRef, defineComponent, ref, Ref, reactive, computed, onMounted, getCurrentInstance, watch} from "vue";
+import { validateInfos } from 'ant-design-vue/lib/form/useForm';
+import {message, Form} from 'ant-design-vue';
 const useForm = Form.useForm;
 
-import CreateForm from './components/CreateForm.vue';
-import UpdateForm from './components/UpdateForm.vue';
+import { ExecutionBy } from '../data.d';
+import {useStore} from "vuex";
+import {ProjectData} from "@/store/project";
+import {ZentaoData} from "@/store/zentao";
 
-import {StateType as ListStateType} from "../store";
-import debounce from "lodash.debounce";
-import {useRoute, useRouter} from "vue-router";
+import {useRouter} from "vue-router";
 import {getCache} from "@/utils/localCache";
 import settings from "@/config/settings";
 import {WebSocket, WsEventName} from "@/services/websocket";
@@ -55,6 +69,14 @@ interface ExecCasePageSetupData {
   stop: (keys) => void;
   isRunning: Ref<string>;
   back: () => void;
+
+  labelCol: any
+  wrapperCol: any
+  validate: any
+  validateInfos: validateInfos,
+  products: ComputedRef<any[]>;
+  tasks: ComputedRef<any[]>;
+  selectProduct:  (item) => void;
 }
 
 export default defineComponent({
@@ -62,8 +84,46 @@ export default defineComponent({
     components: {
     },
     setup(): ExecCasePageSetupData {
+      const storeProject = useStore<{ project: ProjectData }>();
+      const currConfig = computed<any>(() => storeProject.state.project.currConfig);
+
+      const store = useStore<{zentao: ZentaoData}>();
+      const products = computed<any[]>(() => store.state.zentao.products);
+      const tasks = computed<any[]>(() => store.state.zentao.tasks);
+
+      store.dispatch('zentao/fetchProducts')
+      watch(currConfig, (currConfig)=> {
+        store.dispatch('zentao/fetchProducts')
+      })
+
+      const formRef = ref();
+
+      const model = reactive<ExecutionBy>({
+        productId: '',
+      } as ExecutionBy);
+
+      const rules = reactive({
+        productId: [
+          { required: true, message: '请选择产品', trigger: 'change',
+            validator: async (rule: any, value: any) => {
+              if (!value) {
+                throw new Error('请选择产品');
+              }
+            }
+          },
+        ],
+      });
+
+      const { resetFields, validate, validateInfos } = useForm(model, rules);
+
+      const selectProduct = (item) => {
+        console.log('selectProduct', item)
+        if (!item) return
+
+        store.dispatch('zentao/fetchTasks', item)
+      };
+
       const router = useRouter();
-      const model = {}
 
       let init = true;
       let isRunning = ref('');
@@ -153,8 +213,22 @@ export default defineComponent({
       return {
         model,
         wsMsg,
+
+        formRef,
+        labelCol: { span: 6 },
+        wrapperCol: { span: 16 },
+        rules,
+        validate,
+        validateInfos,
+        resetFields,
+
+        products,
+        tasks,
+        selectProduct,
+
         exec,
         stop,
+
         isRunning,
         back,
       }
@@ -171,7 +245,7 @@ export default defineComponent({
   #left {
     width: 380px;
     height: 100%;
-    padding: 3px;
+    padding: 20px 3px;
   }
 
   #resize {

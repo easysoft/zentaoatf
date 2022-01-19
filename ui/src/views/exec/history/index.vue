@@ -14,6 +14,7 @@
                 <span class="space"></span>
 
                 <a-button @click="execCase" type="primary">执行用例</a-button>
+                <a-button @click="execModule" type="primary">执行模块</a-button>
                 <a-button @click="execSuite" type="primary">执行套件</a-button>
                 <a-button @click="execTask" type="primary">执行任务</a-button>
               </div>
@@ -122,6 +123,7 @@ interface ListExecPageSetupData {
 
   onSearch:  () => void;
   execCase:  () => void;
+  execModule:  () => void;
   execSuite:  () => void;
   execTask:  () => void;
 }
@@ -290,6 +292,10 @@ export default defineComponent({
         console.log("execCase")
         router.push(`/exec/exec/case`)
       }
+      const execModule = () =>  {
+        console.log("execModule")
+        router.push(`/exec/exec/module`)
+      }
       const execSuite = () =>  {
         console.log("execSuite")
         router.push(`/exec/exec/suite`)
@@ -325,6 +331,7 @@ export default defineComponent({
 
         onSearch,
         execCase,
+        execModule,
         execSuite,
         execTask,
       }

@@ -142,7 +142,7 @@ export default defineComponent({
         { required: true, message: '请选择产品', trigger: 'change',
           validator: async (rule: any, value: any) => {
             if (!value) {
-              throw new Error('请选择项目');
+              throw new Error('请选择产品');
             }
           }
         },

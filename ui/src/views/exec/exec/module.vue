@@ -24,10 +24,10 @@
                   </a-select>
                 </a-form-item>
 
-                <a-form-item label="套件" v-bind="validateInfos.suiteId">
-                  <a-select v-model:value="model.suiteId">
+                <a-form-item label="模块" v-bind="validateInfos.moduleId">
+                  <a-select v-model:value="model.moduleId">
                     <a-select-option key="" value="">&nbsp;</a-select-option>
-                    <a-select-option v-for="item in suites" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+                    <a-select-option v-for="item in modules" :key="item.id" :value="item.id"><span v-html="item.name"></span></a-select-option>
                   </a-select>
                 </a-form-item>
 
@@ -76,7 +76,7 @@ interface ExecCasePageSetupData {
   validate: any
   validateInfos: validateInfos,
   products: ComputedRef<any[]>;
-  suites: ComputedRef<any[]>;
+  modules: ComputedRef<any[]>;
   selectProduct:  (item) => void;
 }
 
@@ -90,7 +90,7 @@ export default defineComponent({
 
       const store = useStore<{zentao: ZentaoData}>();
       const products = computed<any[]>(() => store.state.zentao.products);
-      const suites = computed<any[]>(() => store.state.zentao.suites);
+      const modules = computed<any[]>(() => store.state.zentao.modules);
 
       store.dispatch('zentao/fetchProducts')
       watch(currConfig, (currConfig)=> {
@@ -121,7 +121,7 @@ export default defineComponent({
         console.log('selectProduct', item)
         if (!item) return
 
-        store.dispatch('zentao/fetchSuites', item)
+        store.dispatch('zentao/fetchModules', item)
       };
 
       const router = useRouter();
@@ -224,7 +224,7 @@ export default defineComponent({
         resetFields,
 
         products,
-        suites,
+        modules,
         selectProduct,
 
         exec,

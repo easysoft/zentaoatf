@@ -70,6 +70,7 @@ export class WebSocket {
   }
   static sentMsg(roomName, msg) {
     console.log(`send msg to room ${roomName}`)
+    if (!WebSocket.conn) return
 
     WebSocket.conn.leaveAll().then(() =>
         this.joinRoomAndSend(roomName, msg)

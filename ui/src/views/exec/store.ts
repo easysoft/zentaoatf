@@ -2,7 +2,7 @@ import { Mutation, Action } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 import { Execution } from './data.d';
-import { QueryResult, QueryParams, PaginationConfig } from '@/types/data.d';
+import { QueryResult, QueryParams } from '@/types/data.d';
 import {
     query, remove, create, detail, update,
 } from './service';

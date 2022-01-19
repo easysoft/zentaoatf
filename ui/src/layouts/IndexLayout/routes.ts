@@ -50,6 +50,12 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
             hidden: true,
           },
           {
+            title: 'index-layout.menu.execution.execModule',
+            path: 'module',
+            component: () => import('@/views/exec/exec/module.vue'),
+            hidden: true,
+          },
+          {
             title: 'index-layout.menu.execution.execSuite',
             path: 'suite',
             component: () => import('@/views/exec/exec/suite.vue'),
