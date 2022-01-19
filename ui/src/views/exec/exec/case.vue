@@ -45,7 +45,9 @@
             <a-button @click="back" type="link">返回</a-button>
           </div>
           <div class="panel">
-            <span id="logs" v-html="wsMsg.out"></span>
+            <div id="logs">
+              <span v-html="wsMsg.out"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -139,9 +141,10 @@ export default defineComponent({
     const scroll = () => {
       const elem = document.getElementById('logs')
       if (elem) {
+        console.log('scroll')
         setTimeout(function(){
           elem.scrollTop = elem.scrollHeight + 100;
-        },200);
+        },300);
       }
     }
 
