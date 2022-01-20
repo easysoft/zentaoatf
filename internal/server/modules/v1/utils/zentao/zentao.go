@@ -6,6 +6,7 @@ import (
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/aaronchen2k/deeptest/internal/comm/domain"
+	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	httpUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/http"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
@@ -284,14 +285,35 @@ func GetConfig(baseUrl string) bool {
 	return true
 }
 
-func GetCasesByModule(moduleId int, projectPath string) (cases []string) {
+func GetCasesByModule(productId int, moduleId int, projectPath string) (cases []string) {
 	config := configUtils.LoadByProjectPath(projectPath)
 	ok := Login(config)
 	if !ok {
 		return
 	}
 
-	testcases := ListCaseByModule(config.Url, moduleId)
+	testcases := ListCaseByModule(config.Url, productId, moduleId)
+
+	caseIdMap := map[int]string{}
+	for _, tc := range testcases {
+		id, _ := strconv.Atoi(tc.Id)
+		caseIdMap[id] = ""
+	}
+
+	commonUtils.ChangeScriptForDebug(&projectPath)
+	scriptUtils.GetScriptByIdsInDir(projectPath, caseIdMap, &cases)
+
+	return
+}
+
+func GetCasesBySuite(productId int, suiteId int, projectPath string) (cases []string) {
+	config := configUtils.LoadByProjectPath(projectPath)
+	ok := Login(config)
+	if !ok {
+		return
+	}
+
+	testcases := ListCaseBySuite(config.Url, productId, suiteId)
 
 	caseIdMap := map[int]string{}
 	for _, tc := range testcases {
@@ -303,33 +325,14 @@ func GetCasesByModule(moduleId int, projectPath string) (cases []string) {
 	return
 }
 
-func GetCasesBySuite(suiteId int, projectPath string) (cases []string) {
+func GetCasesByTask(productId int, taskId int, projectPath string) (cases []string) {
 	config := configUtils.LoadByProjectPath(projectPath)
 	ok := Login(config)
 	if !ok {
 		return
 	}
 
-	testcases := ListCaseBySuite(config.Url, suiteId)
-
-	caseIdMap := map[int]string{}
-	for _, tc := range testcases {
-		id, _ := strconv.Atoi(tc.Id)
-		caseIdMap[id] = ""
-	}
-	scriptUtils.GetScriptByIdsInDir(projectPath, caseIdMap, &cases)
-
-	return
-}
-
-func GetCasesByTask(taskId int, projectPath string) (cases []string) {
-	config := configUtils.LoadByProjectPath(projectPath)
-	ok := Login(config)
-	if !ok {
-		return
-	}
-
-	testcases := ListCaseByTask(config.Url, taskId)
+	testcases := ListCaseByTask(config.Url, productId, taskId)
 
 	caseIdMap := map[int]string{}
 	for _, tc := range testcases {
@@ -342,26 +345,26 @@ func GetCasesByTask(taskId int, projectPath string) (cases []string) {
 	return
 }
 
-func ListCaseByModule(baseUrl string, moduleId int) []commDomain.ZtfCase {
+func ListCaseByModule(baseUrl string, productId, moduleId int) []commDomain.ZtfCase {
 	// $productID = 0, $branch = '', $browseType = 'bymodule', $param = 0, $orderBy = 'id_desc', $recTotal = 0, $recPerPage = 20, $pageID = 1, $projectID = 0)
 	// testcase-browse-1--byModule-19
 
 	params := ""
 	if commConsts.RequestType == commConsts.PathInfo {
-		params = fmt.Sprintf("0--bymodule-%d-id_asc-0-10000-1-0", moduleId)
+		params = fmt.Sprintf("%d--bymodule-%d-id_asc-0-10000-1-0", productId, moduleId)
 	} else {
-		params = fmt.Sprintf("browseType=bymodule&param=%d&orderBy=id_desc&recTotal=0&recPerPage=10000", moduleId)
+		params = fmt.Sprintf("productID=%d&browseType=bymodule&param=%d&orderBy=id_desc&recTotal=0&recPerPage=10000", productId, moduleId)
 	}
 
 	url := baseUrl + GenApiUri("testcase", "browse", params)
 	bytes, ok := httpUtils.Get(url)
 
 	if ok {
-		var suite commDomain.ZtfModule
-		json.Unmarshal(bytes, &suite)
+		var module commDomain.ZtfModule
+		json.Unmarshal(bytes, &module)
 
 		caseArr := make([]commDomain.ZtfCase, 0)
-		for _, cs := range suite.Cases {
+		for _, cs := range module.Cases {
 			caseId := cs.Id
 
 			csWithSteps := GetCaseById(baseUrl, caseId)
@@ -377,7 +380,7 @@ func ListCaseByModule(baseUrl string, moduleId int) []commDomain.ZtfCase {
 	return nil
 }
 
-func ListCaseBySuite(baseUrl string, suiteId int) []commDomain.ZtfCase {
+func ListCaseBySuite(baseUrl string, productId, suiteId int) []commDomain.ZtfCase {
 	// $suiteID, $orderBy = 'id_desc', $recTotal = 0, $recPerPage = 20, $pageID = 1
 
 	params := ""
@@ -411,7 +414,7 @@ func ListCaseBySuite(baseUrl string, suiteId int) []commDomain.ZtfCase {
 	return nil
 }
 
-func ListCaseByTask(baseUrl string, taskId int) []commDomain.ZtfCase {
+func ListCaseByTask(baseUrl string, productId, taskId int) []commDomain.ZtfCase {
 	// $taskID, $browseType = 'all', $param = 0,
 	// $orderBy = 'id_desc', $recTotal = 0, $recPerPage = 20, $pageID = 1
 

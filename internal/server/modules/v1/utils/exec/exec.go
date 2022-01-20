@@ -54,19 +54,19 @@ func ExecCase(ch chan int, fun func(info string, msg websocket.Message), req ser
 
 func ExecModule(ch chan int, fun func(info string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	cases := zentaoUtils.GetCasesByModule(req.ModuleId, req.ProjectPath)
+	cases := zentaoUtils.GetCasesByModule(req.ProductId, req.ModuleId, req.ProjectPath)
 	return Run(ch, fun, req.ProjectPath, cases, msg)
 }
 
 func ExecSuite(ch chan int, fun func(info string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	cases := zentaoUtils.GetCasesBySuite(req.SuiteId, req.ProjectPath)
+	cases := zentaoUtils.GetCasesBySuite(req.ProductId, req.SuiteId, req.ProjectPath)
 	return Run(ch, fun, req.ProjectPath, cases, msg)
 }
 
 func ExecTask(ch chan int, fun func(info string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	cases := zentaoUtils.GetCasesByTask(req.TaskId, req.ProjectPath)
+	cases := zentaoUtils.GetCasesByTask(req.ProductId, req.TaskId, req.ProjectPath)
 	return Run(ch, fun, req.ProjectPath, cases, msg)
 }
 

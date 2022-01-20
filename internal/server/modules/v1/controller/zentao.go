@@ -34,7 +34,7 @@ func (c *ZentaoCtrl) ListModule(ctx iris.Context) {
 		return
 	}
 
-	data, err := zentaoUtils.ListModuleByProduct(productId, projectPath)
+	data, err := zentaoUtils.ListModuleForCase(productId, projectPath)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return

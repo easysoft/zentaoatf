@@ -14,7 +14,6 @@ import (
 	"github.com/emirpasic/gods/maps"
 	"github.com/emirpasic/gods/maps/linkedhashmap"
 	"io/ioutil"
-	"os"
 	"path"
 	"path/filepath"
 	"regexp"
@@ -1241,7 +1240,7 @@ func GetDependentExpect(file string) (bool, string) {
 func GetScriptByIdsInDir(dirPth string, idMap map[int]string, files *[]string) error {
 	dirPth = fileUtils.AbsolutePath(dirPth)
 
-	sep := string(os.PathSeparator)
+	sep := consts.PthSep
 
 	if commonUtils.IgnoreFile(dirPth) {
 		return nil
