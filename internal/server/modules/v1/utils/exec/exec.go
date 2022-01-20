@@ -127,13 +127,13 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, projectPath string,
 	}
 
 	temp := i118Utils.Sprintf("found_scripts", strconv.Itoa(len(casesToRun))) + postFix
-	sendOutputMsg(temp, "", wsMsg)
+	sendExecMsg(temp, "", wsMsg)
 	logUtils.ExecConsolef(color.FgCyan, temp)
 	logUtils.ExecResult(temp)
 
 	if len(casesToIgnore) > 0 {
 		temp := i118Utils.Sprintf("ignore_scripts", strconv.Itoa(len(casesToIgnore))) + postFix
-		sendOutputMsg(temp, "", wsMsg)
+		sendExecMsg(temp, "", wsMsg)
 		logUtils.ExecConsolef(color.FgCyan, temp)
 		logUtils.ExecResult(temp)
 	}
@@ -166,7 +166,7 @@ func ExeScript(scriptFile, projectPath string, conf commDomain.ProjectConf, repo
 	startTime := time.Now()
 
 	startMsg := i118Utils.Sprintf("start_execution", scriptFile, dateUtils.DateTimeStr(startTime))
-	sendOutputMsg(startMsg, "", wsMsg)
+	sendExecMsg(startMsg, "", wsMsg)
 	logUtils.ExecConsolef(-1, startMsg)
 	logUtils.ExecFilef(startMsg)
 
@@ -187,7 +187,7 @@ func ExeScript(scriptFile, projectPath string, conf commDomain.ProjectConf, repo
 	secs := fmt.Sprintf("%.2f", float32(entTime.Sub(startTime)/time.Second))
 
 	endMsg := i118Utils.Sprintf("end_execution", scriptFile, dateUtils.DateTimeStr(entTime))
-	sendOutputMsg(endMsg, "", wsMsg)
+	sendExecMsg(endMsg, "", wsMsg)
 	logUtils.ExecConsolef(-1, endMsg)
 	logUtils.ExecFilef(endMsg)
 

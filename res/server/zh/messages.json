@@ -303,8 +303,12 @@
     },
 
     {
-      "id": "run_scripts",
-      "translation": "执行%d个用例，耗时%d秒%s。%s，%s，%s。报告%s。"
+      "id": "run_result",
+      "translation": "执行%d个用例，耗时%d秒%s。%s，%s，%s。"
+    },
+    {
+      "id": "run_report",
+      "translation": "报告%s。"
     },
     {
       "id": "no_interpreter_for_run",

@@ -122,7 +122,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 	format := "(%" + width + "d/%d) %s [%s] [%" + numbWidth + "d. %s] (%ss)"
 	msg := fmt.Sprintf(format, idx+1, total, i118Utils.Sprintf(cs.Status), path, cs.Id, cs.Title, secs)
 
-	sendOutMsg(msg, "", wsMsg)
+	sendExecMsg(msg, "", wsMsg)
 	logUtils.ExecConsole(color.FgCyan, msg)
 	logUtils.ExecResult(msg)
 }

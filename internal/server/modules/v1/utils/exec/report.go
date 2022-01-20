@@ -85,7 +85,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		msg += strings.Join(failedCaseLines, "\n")
 		msg += strings.Join(failedCaseLinesWithCheckpoint, "\n")
 
-		sendOutMsg(msg, "", wsMsg)
+		sendExecMsg(msg, "", wsMsg)
 		logUtils.ExecConsolef(color.FgRed, msg)
 		logUtils.ExecFile(msg)
 	}
@@ -104,12 +104,17 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	logFile := filepath.Join(projectPath, commConsts.LogDirName, "result.txt")
 
 	// 执行%d个用例，耗时%d秒%s。%s，%s，%s。报告%s。
-	msg := "\n" + dateUtils.DateTimeStr(time.Now()) + " " +
-		i118Utils.Sprintf("run_scripts",
+	msg := dateUtils.DateTimeStr(time.Now()) + " " +
+		i118Utils.Sprintf("run_result",
 			report.Total, report.Duration, secTag,
-			passStr, failStr, skipStr, " "+logFile,
-		) + "\n"
-	sendOutMsg(msg, "", wsMsg)
+			passStr, failStr, skipStr,
+		)
+	sendExecMsg(msg, "", wsMsg)
+	logUtils.ExecConsole(color.FgCyan, msg)
+	logUtils.ExecResult(msg)
+
+	msg = "                    " + i118Utils.Sprintf("run_report", logFile) + "\n"
+	sendExecMsg(msg, "", wsMsg)
 	logUtils.ExecConsole(color.FgCyan, msg)
 	logUtils.ExecResult(msg)
 

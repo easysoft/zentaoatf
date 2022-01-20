@@ -256,6 +256,19 @@ export default defineComponent({
   #content {
     flex: 1;
     height: 100%;
+    padding: 16px;
+    overflow: auto;
+
+    #logs {
+      margin: 0;
+      padding: 0;
+      height: calc(100% - 10px);
+      width: 100%;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family:monospace;
+    }
   }
 }
 </style>
