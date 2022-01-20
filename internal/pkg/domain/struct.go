@@ -59,6 +59,7 @@ type ErrMsg struct {
 
 var (
 	NoErr         = ErrMsg{0, "请求成功"}
+	CommonErr     = ErrMsg{1001, "请求失败"}
 	NeedInitErr   = ErrMsg{2001, "前往初始化数据库"}
 	AuthErr       = ErrMsg{4001, "会话超时，请重新登录！"}
 	AuthExpireErr = ErrMsg{4002, "token 过期，请刷新token"}

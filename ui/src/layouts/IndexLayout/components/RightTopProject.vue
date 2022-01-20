@@ -12,9 +12,9 @@
     </a-select>
 
     <dir-selection
-        :visible="selectionFormVisible"
-        :onCancel="selectionCancel"
-        :onSubmit="selectionSubmit"
+        :visible="formVisible"
+        :onCancel="cancel"
+        :onSubmit="submit"
     />
   </div>
 </template>
@@ -25,20 +25,21 @@ import {useStore} from "vuex";
 
 import {ProjectData} from "@/store/project";
 import DirSelection from "@/views/component/file/DirSelection.vue";
+import {createProject} from "@/services/project";
 
 interface RightTopProject {
   projects: ComputedRef<any[]>;
   currProject: ComputedRef;
 
   selectProject: (value: string) => void;
-  selectionFormVisible: Ref<boolean>;
-  setSelectionFormVisible:  (val: boolean) => void;
-  selectionSubmit: (parentDir: string) => Promise<void>;
-  selectionCancel: () => void;
+  formVisible: Ref<boolean>;
+  setFormVisible:  (val: boolean) => void;
+  submit: (parentDir: string) => Promise<void>;
+  cancel: () => void;
 }
 
 export default defineComponent({
-  name: 'RightTopProjectSelection',
+  name: 'RightTopProject',
   components: {DirSelection},
   setup(): RightTopProject {
     const store = useStore<{ project: ProjectData }>();
@@ -56,37 +57,37 @@ export default defineComponent({
       console.log('selectProject', value)
 
       if (value === '') {
-        setSelectionFormVisible(true)
+        setFormVisible(true)
       } else {
         store.dispatch('project/fetchProject', value);
       }
     }
 
-    const selectionFormVisible = ref<boolean>(false);
-    const setSelectionFormVisible = (val: boolean) => {
-      selectionFormVisible.value = val;
+    const formVisible = ref<boolean>(false);
+    const setFormVisible = (val: boolean) => {
+      formVisible.value = val;
     };
 
-    const selectionSubmit = async (parentDir: string) => {
-      console.log('selectionSubmit', parentDir)
-
-      await store.dispatch('project/fetchProject', parentDir);
-
-      setSelectionFormVisible(false);
+    const submit = async (parentDir: string) => {
+      console.log('submit', parentDir)
+      createProject(parentDir).then(() => {
+        store.dispatch('project/fetchProject', parentDir);
+        setFormVisible(false);
+      }).catch(err => { console.log('') })
     }
-    const selectionCancel = () => {
+    const cancel = () => {
       store.dispatch('project/fetchProject', currProject.value.path);
-      setSelectionFormVisible(false);
+      setFormVisible(false);
     }
 
     return {
       selectProject,
       projects,
       currProject,
-      selectionFormVisible,
-      setSelectionFormVisible,
-      selectionSubmit,
-      selectionCancel,
+      formVisible,
+      setFormVisible,
+      submit,
+      cancel,
     }
   }
 })

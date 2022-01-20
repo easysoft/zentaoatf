@@ -1,6 +1,8 @@
 package service
 
 import (
+	"errors"
+	"fmt"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
@@ -33,8 +35,16 @@ func (s *ProjectService) FindById(id uint) (model.Project, error) {
 	return s.ProjectRepo.FindById(id)
 }
 
-func (s *ProjectService) Create(project model.Project) (uint, error) {
-	return s.ProjectRepo.Create(project)
+func (s *ProjectService) Create(project model.Project) (id uint, err error) {
+	po, _ := s.ProjectRepo.FindByPath(fileUtils.AddPathSepIfNeeded(project.Path))
+
+	if po.ID != 0 {
+		err = errors.New(fmt.Sprintf("路径为%s的项目已存在。", project.Path))
+		return
+	}
+
+	id, _ = s.ProjectRepo.Create(project)
+	return
 }
 
 func (s *ProjectService) Update(id uint, project model.Project) error {
