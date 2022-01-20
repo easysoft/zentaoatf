@@ -1,7 +1,6 @@
 import request from '@/utils/request';
 import { Execution } from './data.d';
 import { QueryParams } from '@/types/data.d';
-import {SetWidth} from "@/utils/dom";
 
 const apiPath = 'exec';
 
@@ -54,4 +53,8 @@ export function genExecInfo(jsn: any, i: number): string {
     msg = `<div style="${sty}"> ${msg} </div>`
 
     return msg
+}
+
+export function SetWidth(content, width) {
+    return `<span style="display: inline-block; width: ${width}px; text-align: right; padding-right: 6px;">${content}</span>`;
 }

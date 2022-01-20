@@ -42,9 +42,6 @@ export function resizeWidth(mainId: string, leftId: string, resizeId: string, co
     return true
 }
 
-export function SetWidth(content, width) {
-    return `<span style="display: inline-block; width: ${width}px; text-align: right;">${content}</span>`;
-}
 export function PrefixZero(num, n) {
     return (Array(n).join('0') + num).slice(-n);
 }
