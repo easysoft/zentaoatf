@@ -42,7 +42,7 @@ export async function detail(id: number): Promise<any> {
 
 export function genExecInfo(jsn: any, i: number): string {
     let msg = jsn.msg.replace(/^"+/,'').replace(/"+$/,'')
-    msg = SetWidth(i++ + '. ', 40) + `<span>${msg}</span>`;
+    msg = SetWidth(i + '. ', 40) + `<span>${msg}</span>`;
 
     let sty = ''
     if (jsn.category === 'exec') {

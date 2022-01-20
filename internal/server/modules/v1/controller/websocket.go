@@ -62,8 +62,7 @@ func (c *WsCtrl) OnChat(wsMsg websocket.Message) (err error) {
 	err = json.Unmarshal(wsMsg.Body, &req)
 	if err != nil {
 		msg := i118Utils.Sprintf("wrong_req_params", err.Error())
-		data := serverDomain.WsResp{Msg: msg}
-		c.SendExecMsg(data, wsMsg)
+		c.SendExecMsg(msg, "", wsMsg)
 		logUtils.ExecConsole(color.FgRed, msg)
 		return
 	}
@@ -72,24 +71,27 @@ func (c *WsCtrl) OnChat(wsMsg websocket.Message) (err error) {
 
 	if act == commConsts.ExecInit {
 		msg := i118Utils.Sprintf("success_to_conn")
-		data := serverDomain.WsResp{Msg: msg, IsRunning: strconv.FormatBool(scriptUtils.GetRunning())}
-		c.SendExecMsg(data, wsMsg)
+		c.SendExecMsg(msg, strconv.FormatBool(scriptUtils.GetRunning()), wsMsg)
 		logUtils.ExecConsole(color.FgCyan, msg)
 		return
 	}
 
 	if act == commConsts.ExecStop {
-		if !scriptUtils.GetRunning() {
-			ch = nil
-		} else {
-			ch <- 1
-			ch = nil
+		if ch != nil {
+			if !scriptUtils.GetRunning() {
+				ch = nil
+			} else {
+				ch <- 1
+				ch <- 1
+				ch <- 1
+				ch = nil
+			}
 		}
+
 		scriptUtils.SetRunning(false)
 
-		msg := i118Utils.Sprintf("stopping_previous")
-		data := serverDomain.WsResp{Msg: msg, IsRunning: "false"}
-		c.SendExecMsg(data, wsMsg)
+		msg := i118Utils.Sprintf("end_task")
+		c.SendExecMsg(msg, "false", wsMsg)
 		logUtils.ExecConsole(color.FgCyan, msg)
 		return
 	}
@@ -97,8 +99,7 @@ func (c *WsCtrl) OnChat(wsMsg websocket.Message) (err error) {
 	if (act == commConsts.ExecCase || act == commConsts.ExecModule ||
 		act == commConsts.ExecSuite || act == commConsts.ExecTask) && scriptUtils.GetRunning() {
 		msg := i118Utils.Sprintf("pls_stop_previous")
-		data := serverDomain.WsResp{Msg: msg, IsRunning: "true"}
-		c.SendExecMsg(data, wsMsg)
+		c.SendExecMsg(msg, "true", wsMsg)
 		logUtils.ExecConsole(color.FgRed, msg)
 
 		return
@@ -106,18 +107,21 @@ func (c *WsCtrl) OnChat(wsMsg websocket.Message) (err error) {
 
 	ch = make(chan int, 1)
 	//go shellUtils.ExeShellCallback(ch, "/Users/aaron/work/testing/res/loop.sh", "", c.SendExecMsg, wsMsg)
-	go scriptUtils.Exec(ch, c.SendOutputMsg, req, wsMsg)
+	go func() {
+		scriptUtils.Exec(ch, c.SendOutputMsg, c.SendExecMsg, req, wsMsg)
+		scriptUtils.SetRunning(false)
+	}()
+
 	scriptUtils.SetRunning(true)
 
-	msg := i118Utils.Sprintf("start_to_run")
-	data := serverDomain.WsResp{Msg: msg, IsRunning: "true"}
-	c.SendExecMsg(data, wsMsg)
+	msg := i118Utils.Sprintf("start_task")
+	c.SendExecMsg(msg, "true", wsMsg)
 	logUtils.ExecConsole(color.FgCyan, msg)
 
 	return
 }
 
-func (c *WsCtrl) SendOutputMsg(msg string, wsMsg websocket.Message) {
+func (c *WsCtrl) SendOutputMsg(msg, isRunning string, wsMsg websocket.Message) {
 	logUtils.Infof("WebSocket SendExecMsg: room=%s, info=%s, msg=%s", wsMsg.Room, msg, string(wsMsg.Body))
 
 	msg = strings.Trim(msg, "\n")
@@ -126,10 +130,11 @@ func (c *WsCtrl) SendOutputMsg(msg string, wsMsg websocket.Message) {
 	c.WebSocketService.Broadcast(wsMsg.Namespace, wsMsg.Room, wsMsg.Event, data)
 }
 
-func (c *WsCtrl) SendExecMsg(data serverDomain.WsResp, msg websocket.Message) {
-	logUtils.Infof("WebSocket SendExecMsg: room=%s, msg=%s", msg.Room, string(msg.Body))
+func (c *WsCtrl) SendExecMsg(msg, isRunning string, wsMsg websocket.Message) {
+	logUtils.Infof("WebSocket SendExecMsg: room=%s, msg=%s", wsMsg.Room, string(wsMsg.Body))
 
-	data.Category = commConsts.Exec
+	data := serverDomain.WsResp{Msg: msg, IsRunning: isRunning,
+		Category: commConsts.Exec}
 
-	c.WebSocketService.Broadcast(msg.Namespace, msg.Room, msg.Event, data)
+	c.WebSocketService.Broadcast(wsMsg.Namespace, wsMsg.Room, wsMsg.Event, data)
 }

@@ -257,20 +257,24 @@
       "translation": "Success to connect."
     },
     {
-      "id": "start_to_run",
-      "translation": "Start to run task ..."
+      "id": "start_task",
+      "translation": "Start task."
     },
     {
-      "id": "stopping_previous",
-      "translation": "Stopping previous task ..."
+      "id": "end_task",
+      "translation": "End task."
     },
     {
       "id": "pls_stop_previous",
       "translation": "Please stop previous task firstly."
     },
     {
-      "id": "exit_exec",
-      "translation": "Exit execution."
+      "id": "exit_exec_curr",
+      "translation": "Exit current case."
+    },
+    {
+      "id": "exit_exec_all",
+      "translation": "Exit follow-up case."
     },
     {
       "id": "cmd_empty",

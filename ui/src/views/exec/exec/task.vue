@@ -149,6 +149,7 @@ export default defineComponent({
           }
 
           wsMsg.out += genExecInfo(jsn, i)
+          i++
           scroll('logs')
         });
         init = false;

@@ -19,7 +19,7 @@ import (
 )
 
 func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
-	projectPath string, printToWs func(info string, wsMsg websocket.Message), wsMsg websocket.Message) {
+	projectPath string, sendOutMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), wsMsg websocket.Message) {
 
 	if len(report.FuncResult) == 0 {
 		return
@@ -85,7 +85,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		msg += strings.Join(failedCaseLines, "\n")
 		msg += strings.Join(failedCaseLinesWithCheckpoint, "\n")
 
-		printToWs(msg, wsMsg)
+		sendOutMsg(msg, "", wsMsg)
 		logUtils.ExecConsolef(color.FgRed, msg)
 		logUtils.ExecFile(msg)
 	}
@@ -109,7 +109,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 			report.Total, report.Duration, secTag,
 			passStr, failStr, skipStr, " "+logFile,
 		) + "\n"
-	printToWs(msg, wsMsg)
+	sendOutMsg(msg, "", wsMsg)
 	logUtils.ExecConsole(color.FgCyan, msg)
 	logUtils.ExecResult(msg)
 

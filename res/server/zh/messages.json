@@ -250,23 +250,27 @@
     },
     {
       "id": "success_to_conn",
-      "translation": "连接成功"
+      "translation": "连接成功。"
     },
     {
-      "id": "start_to_run",
-      "translation": "开始执行任务 ..."
+      "id": "start_task",
+      "translation": "开始任务。"
     },
     {
-      "id": "stopping_previous",
-      "translation": "正在停止任务 ..."
+      "id": "end_task",
+      "translation": "结束任务。"
     },
     {
       "id": "pls_stop_previous",
       "translation": "请先终止上一个任务。"
     },
     {
-      "id": "exit_exec",
-      "translation": "退出执行。"
+      "id": "exit_exec_curr",
+      "translation": "退出当前用例。"
+    },
+    {
+      "id": "exit_exec_all",
+      "translation": "放弃后续用例。"
     },
     {
       "id": "start_execution",

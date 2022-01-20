@@ -19,7 +19,7 @@ import (
 
 func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfReport, idx int,
 	total int, secs string, pathMaxWidth int, numbMaxWidth int,
-	printToWs func(info string, wsMsg websocket.Message), wsMsg websocket.Message) {
+	sendOutMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), wsMsg websocket.Message) {
 
 	_, _, expectMap, isOldFormat := scriptUtils.GetStepAndExpectMap(scriptFile)
 
@@ -43,13 +43,13 @@ func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfRepor
 	language := langUtils.GetLangByFile(scriptFile)
 	ValidateCaseResult(scriptFile, language, expectMap, skip, actualArr, report,
 		idx, total, secs, pathMaxWidth, numbMaxWidth,
-		printToWs, wsMsg)
+		sendOutMsg, sendExecMsg, wsMsg)
 }
 
 func ValidateCaseResult(scriptFile string, langType string,
 	expectMap maps.Map, skip bool, actualArr [][]string, report *commDomain.ZtfReport,
 	idx int, total int, secs string, pathMaxWidth int, numbMaxWidth int,
-	printToWs func(info string, wsMsg websocket.Message), wsMsg websocket.Message) {
+	sendOutMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), wsMsg websocket.Message) {
 
 	_, caseId, productId, title := scriptUtils.GetCaseInfo(scriptFile)
 
@@ -122,7 +122,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 	format := "(%" + width + "d/%d) %s [%s] [%" + numbWidth + "d. %s] (%ss)"
 	msg := fmt.Sprintf(format, idx+1, total, i118Utils.Sprintf(cs.Status), path, cs.Id, cs.Title, secs)
 
-	printToWs(msg, wsMsg)
+	sendOutMsg(msg, "", wsMsg)
 	logUtils.ExecConsole(color.FgCyan, msg)
 	logUtils.ExecResult(msg)
 }
