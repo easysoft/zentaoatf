@@ -32,11 +32,11 @@ func ListProduct(projectPath string) (products []serverDomain.ZentaoProduct, err
 	config := configUtils.LoadByProjectPath(projectPath)
 	Login(config)
 
-	// $productID = 0, $branch = 0, $browseType = '', $param = 0, $storyType = 'story', $orderBy = '',
-	// $recTotal = 0, $recPerPage = 20, $pageID = 1, $projectID = 0)
+	// $productID = 0, $branch = 0, $browseType = '', $param = 0, $storyType = 'story',
+	// $orderBy = '', $recTotal = 0, $recPerPage = 20, $pageID = 1, $projectID = 0)
 	params := ""
 	if commConsts.RequestType == commConsts.PathInfo {
-		params = fmt.Sprintf("0-0--0--id_asc-0-10000-1-0")
+		params = fmt.Sprintf("0-0----id_asc-0-10000-1-0")
 	} else {
 		params = fmt.Sprintf("orderBy=id_desc&recTotal=0&recPerPage=10000")
 	}
@@ -186,9 +186,9 @@ func ListTaskByProduct(productId int, projectPath string) (tasks []serverDomain.
 	// $productID = 0, $branch = '', $type = 'local,totalStatus', $orderBy = 'id_desc', $recTotal = 0, $recPerPage = 20, $pageID = 1, $beginTime = 0, $endTime = 0)
 	params := ""
 	if commConsts.RequestType == commConsts.PathInfo {
-		params = fmt.Sprintf("%d---id_asc-0-10000-1", productId)
+		params = fmt.Sprintf("%d--local,totalStatus-id_asc-0-10000-1", productId)
 	} else {
-		params = fmt.Sprintf("productID=%d&orderBy=id_desc&recTotal=0&recPerPage=10000", productId)
+		params = fmt.Sprintf("productID=%d&type=local,totalStatus&orderBy=id_desc&recTotal=0&recPerPage=10000", productId)
 	}
 
 	url := config.Url + GenApiUri("testtask", "browse", params)
@@ -320,6 +320,8 @@ func GetCasesBySuite(productId int, suiteId int, projectPath string) (cases []st
 		id, _ := strconv.Atoi(tc.Id)
 		caseIdMap[id] = ""
 	}
+
+	commonUtils.ChangeScriptForDebug(&projectPath)
 	scriptUtils.GetScriptByIdsInDir(projectPath, caseIdMap, &cases)
 
 	return
@@ -340,6 +342,7 @@ func GetCasesByTask(productId int, taskId int, projectPath string) (cases []stri
 		caseIdMap[id] = ""
 	}
 
+	commonUtils.ChangeScriptForDebug(&projectPath)
 	scriptUtils.GetScriptByIdsInDir(projectPath, caseIdMap, &cases)
 
 	return
@@ -420,7 +423,7 @@ func ListCaseByTask(baseUrl string, productId, taskId int) []commDomain.ZtfCase 
 
 	params := ""
 	if commConsts.RequestType == commConsts.PathInfo {
-		params = fmt.Sprintf("%d-all-0-id_asc-0-10000-1", taskId)
+		params = fmt.Sprintf("%d-bymodule-0-id_asc-0-10000-1", taskId)
 	} else {
 		params = fmt.Sprintf("taskID=%d&browseType=all&param=0&orderBy=id_desc&recTotal=0&recPerPage=10000", taskId)
 	}
