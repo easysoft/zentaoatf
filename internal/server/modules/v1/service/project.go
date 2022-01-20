@@ -7,11 +7,11 @@ import (
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
+	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/script"
 )
 
 type ProjectService struct {
-	ProjectRepo  *repo.ProjectRepo `inject:""`
-	AssetService *AssetService     `inject:""`
+	ProjectRepo *repo.ProjectRepo `inject:""`
 }
 
 func NewProjectService() *ProjectService {
@@ -82,7 +82,7 @@ func (s *ProjectService) GetByUser(currProjectPath string) (projects []model.Pro
 		return
 	}
 
-	scriptTree, err = s.AssetService.LoadScriptTree(currProject.Path)
+	scriptTree, err = scriptUtils.LoadScriptTree(currProject.Path)
 
 	return
 }

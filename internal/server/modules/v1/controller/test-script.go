@@ -6,6 +6,7 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/server/core/web/validate"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
+	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/script"
 	"strings"
 
 	"github.com/kataras/iris/v12"
@@ -14,7 +15,6 @@ import (
 
 type TestScriptCtrl struct {
 	TestScriptService *service.TestScriptService `inject:""`
-	AssetService      *service.AssetService      `inject:""`
 	BaseCtrl
 }
 
@@ -30,7 +30,7 @@ func (c *TestScriptCtrl) Get(ctx iris.Context) {
 		return
 	}
 
-	script, err := c.AssetService.GetScriptContent(scriptPath)
+	script, err := scriptUtils.GetScriptContent(scriptPath)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: domain.SystemErr.Msg})
 		return

@@ -43,6 +43,7 @@ type ZtfCaseInSuite struct {
 	Title   string
 	Product string
 	Suite   string
+	Module  string
 }
 
 type ZtfTask struct {

@@ -7,7 +7,6 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	"github.com/aaronchen2k/deeptest/internal/pkg/lib/zentao"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/script"
 	"github.com/emirpasic/gods/maps"
 	"github.com/fatih/color"
@@ -24,7 +23,7 @@ func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfRepor
 
 	_, _, expectMap, isOldFormat := scriptUtils.GetStepAndExpectMap(scriptFile)
 
-	isIndependent, expectIndependentContent := zentaoUtils.GetDependentExpect(scriptFile)
+	isIndependent, expectIndependentContent := scriptUtils.GetDependentExpect(scriptFile)
 	if isIndependent {
 		if isOldFormat {
 			expectMap = scriptUtils.GetExpectMapFromIndependentFileObsolete(expectMap, expectIndependentContent, false)
@@ -36,9 +35,9 @@ func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfRepor
 	skip := false
 	actualArr := make([][]string, 0)
 	if isOldFormat {
-		skip, actualArr = zentaoUtils.ReadLogArrObsolete(logs)
+		skip, actualArr = scriptUtils.ReadLogArrObsolete(logs)
 	} else {
-		skip, actualArr = zentaoUtils.ReadLogArr(logs)
+		skip, actualArr = scriptUtils.ReadLogArr(logs)
 	}
 
 	language := langUtils.GetLangByFile(scriptFile)
@@ -52,7 +51,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 	idx int, total int, secs string, pathMaxWidth int, numbMaxWidth int,
 	printToWs func(info string, wsMsg websocket.Message), wsMsg websocket.Message) {
 
-	_, caseId, productId, title := zentaoUtils.GetCaseInfo(scriptFile)
+	_, caseId, productId, title := scriptUtils.GetCaseInfo(scriptFile)
 
 	stepLogs := make([]commDomain.StepLog, 0)
 	caseResult := commConsts.PASS.String()

@@ -8,7 +8,6 @@ import (
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	zentaoUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/zentao"
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/script"
 	"path/filepath"
 	"strconv"
@@ -17,7 +16,6 @@ import (
 type SyncService struct {
 	ZtfScriptService *ZtfScriptService `inject:""`
 	ZtfCaseService   *ZtfCaseService   `inject:""`
-	AssetService     *AssetService     `inject:""`
 }
 
 func NewSyncService() *SyncService {
@@ -62,10 +60,10 @@ func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, projectPa
 
 func (s *SyncService) SyncToZentao(projectPath string, commitProductId int) (err error) {
 	productPath := filepath.Join(projectPath, fmt.Sprintf("product%d", commitProductId))
-	caseFiles := s.AssetService.LoadScriptByProject(productPath)
+	caseFiles := scriptUtils.LoadScriptByProject(productPath)
 
 	for _, cs := range caseFiles {
-		pass, id, _, title := zentaoUtils.GetCaseInfo(cs)
+		pass, id, _, title := scriptUtils.GetCaseInfo(cs)
 
 		if pass {
 			stepMap, stepTypeMap, expectMap, isOldFormat := scriptUtils.GetStepAndExpectMap(cs)
@@ -73,7 +71,7 @@ func (s *SyncService) SyncToZentao(projectPath string, commitProductId int) (err
 				logUtils.Infof("isOldFormat = ", isOldFormat)
 			}
 
-			isIndependent, expectIndependentContent := zentaoUtils.GetDependentExpect(cs)
+			isIndependent, expectIndependentContent := scriptUtils.GetDependentExpect(cs)
 			if isIndependent {
 				expectMap = scriptUtils.GetExpectMapFromIndependentFileObsolete(expectMap, expectIndependentContent, true)
 			}

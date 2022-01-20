@@ -12,10 +12,11 @@ import (
 	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
-	zentaoUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/zentao"
 	serverLog "github.com/aaronchen2k/deeptest/internal/server/core/log"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	configUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/config"
+	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/script"
+	zentaoUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/zentao"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/mattn/go-runewidth"
@@ -35,24 +36,67 @@ func Exec(ch chan int, fun func(info string, msg websocket.Message), req serverD
 
 	if req.Act == commConsts.ExecCase {
 		ExecCase(ch, fun, req, msg)
+	} else if req.Act == commConsts.ExecModule {
+		ExecModule(ch, fun, req, msg)
+	} else if req.Act == commConsts.ExecSuite {
+		ExecSuite(ch, fun, req, msg)
+	} else if req.Act == commConsts.ExecTask {
+		ExecTask(ch, fun, req, msg)
 	}
 
 	return
 }
 
 func ExecCase(ch chan int, fun func(info string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
+	cases := req.Cases
+	return Run(ch, fun, req.ProjectPath, cases, msg)
+}
 
-	projectPath := req.ProjectPath
+func ExecModule(ch chan int, fun func(info string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
+	report commDomain.ZtfReport, pathMaxWidth int, err error) {
+	cases := zentaoUtils.GetCasesByModule(req.ModuleId, req.ProjectPath)
+	return Run(ch, fun, req.ProjectPath, cases, msg)
+}
+
+func ExecSuite(ch chan int, fun func(info string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
+	report commDomain.ZtfReport, pathMaxWidth int, err error) {
+	cases := zentaoUtils.GetCasesBySuite(req.SuiteId, req.ProjectPath)
+	return Run(ch, fun, req.ProjectPath, cases, msg)
+}
+
+func ExecTask(ch chan int, fun func(info string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
+	report commDomain.ZtfReport, pathMaxWidth int, err error) {
+	cases := zentaoUtils.GetCasesByTask(req.TaskId, req.ProjectPath)
+	return Run(ch, fun, req.ProjectPath, cases, msg)
+}
+
+func Run(ch chan int, fun func(info string, msg websocket.Message), projectPath string, cases []string, msg websocket.Message) (
+	report commDomain.ZtfReport, pathMaxWidth int, err error) {
+
 	conf := configUtils.LoadByProjectPath(projectPath)
 
-	casesToRun, casesToIgnore := filterCases(req.Cases, conf)
+	casesToRun, casesToIgnore := filterCases(cases, conf)
 
+	numbMaxWidth := 0
+	numbMaxWidth, pathMaxWidth = getNumbMaxWidth(casesToRun)
+	report = genReport()
+
+	ExeScripts(casesToRun, casesToIgnore, projectPath, conf, &report, pathMaxWidth, numbMaxWidth, ch, fun, msg)
+	GenZTFTestReport(report, pathMaxWidth, projectPath, fun, msg)
+
+	return
+}
+
+func genReport() (report commDomain.ZtfReport) {
 	report = commDomain.ZtfReport{Env: commonUtils.GetOs(),
 		Pass: 0, Fail: 0, Total: 0, FuncResult: make([]commDomain.FuncResult, 0)}
 	report.TestType = "func"
 	report.TestFrame = commConsts.AppServer
 
-	numbMaxWidth := 0
+	return
+}
+
+func getNumbMaxWidth(casesToRun []string) (numbMaxWidth, pathMaxWidth int) {
 	for _, cs := range casesToRun {
 		lent := runewidth.StringWidth(cs)
 		if lent > pathMaxWidth {
@@ -60,14 +104,11 @@ func ExecCase(ch chan int, fun func(info string, msg websocket.Message), req ser
 		}
 
 		content := fileUtils.ReadFile(cs)
-		caseId := zentaoUtils.ReadCaseId(content)
+		caseId := scriptUtils.ReadCaseId(content)
 		if len(caseId) > numbMaxWidth {
 			numbMaxWidth = len(caseId)
 		}
 	}
-
-	ExeScripts(casesToRun, casesToIgnore, projectPath, conf, &report, pathMaxWidth, numbMaxWidth, ch, fun, msg)
-	GenZTFTestReport(report, pathMaxWidth, projectPath, fun, msg)
 
 	return
 }

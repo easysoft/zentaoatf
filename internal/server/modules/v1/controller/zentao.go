@@ -2,12 +2,11 @@ package controller
 
 import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
+	zentaoUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/zentao"
 	"github.com/kataras/iris/v12"
 )
 
 type ZentaoCtrl struct {
-	ZentaoService *service.ZentaoService `inject:""`
 	BaseCtrl
 }
 
@@ -18,7 +17,7 @@ func NewZentaoCtrl() *ZentaoCtrl {
 func (c *ZentaoCtrl) ListProduct(ctx iris.Context) {
 	projectPath := ctx.URLParam("currProject")
 
-	data, err := c.ZentaoService.ListProduct(projectPath)
+	data, err := zentaoUtils.ListProduct(projectPath)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return
@@ -35,7 +34,7 @@ func (c *ZentaoCtrl) ListModule(ctx iris.Context) {
 		return
 	}
 
-	data, err := c.ZentaoService.ListModuleByProduct(productId, projectPath)
+	data, err := zentaoUtils.ListModuleByProduct(productId, projectPath)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return
@@ -52,7 +51,7 @@ func (c *ZentaoCtrl) ListSuite(ctx iris.Context) {
 		return
 	}
 
-	data, err := c.ZentaoService.ListSuiteByProduct(productId, projectPath)
+	data, err := zentaoUtils.ListSuiteByProduct(productId, projectPath)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return
@@ -69,7 +68,7 @@ func (c *ZentaoCtrl) ListTask(ctx iris.Context) {
 		return
 	}
 
-	data, err := c.ZentaoService.ListTaskByProduct(productId, projectPath)
+	data, err := zentaoUtils.ListTaskByProduct(productId, projectPath)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return
@@ -79,7 +78,7 @@ func (c *ZentaoCtrl) ListTask(ctx iris.Context) {
 }
 
 func (c *ZentaoCtrl) ListLang(ctx iris.Context) {
-	data, err := c.ZentaoService.ListLang()
+	data, err := zentaoUtils.ListLang()
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return
