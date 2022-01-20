@@ -85,6 +85,7 @@ func (c *WsCtrl) OnChat(wsMsg websocket.Message) (err error) {
 			ch <- 1
 			ch = nil
 		}
+		scriptUtils.SetRunning(false)
 
 		msg := i118Utils.Sprintf("stopping_previous")
 		data := serverDomain.WsResp{Msg: msg, IsRunning: "false"}
@@ -93,7 +94,8 @@ func (c *WsCtrl) OnChat(wsMsg websocket.Message) (err error) {
 		return
 	}
 
-	if act == commConsts.ExecCase && scriptUtils.GetRunning() {
+	if (act == commConsts.ExecCase || act == commConsts.ExecModule ||
+		act == commConsts.ExecSuite || act == commConsts.ExecTask) && scriptUtils.GetRunning() {
 		msg := i118Utils.Sprintf("pls_stop_previous")
 		data := serverDomain.WsResp{Msg: msg, IsRunning: "true"}
 		c.SendExecMsg(data, wsMsg)
@@ -102,7 +104,7 @@ func (c *WsCtrl) OnChat(wsMsg websocket.Message) (err error) {
 		return
 	}
 
-	ch = make(chan int)
+	ch = make(chan int, 1)
 	//go shellUtils.ExeShellCallback(ch, "/Users/aaron/work/testing/res/loop.sh", "", c.SendExecMsg, wsMsg)
 	go scriptUtils.Exec(ch, c.SendOutputMsg, req, wsMsg)
 	scriptUtils.SetRunning(true)

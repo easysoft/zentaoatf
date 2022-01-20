@@ -139,13 +139,7 @@ export default defineComponent({
 
     const rules = reactive({
       productId: [
-        { required: true, message: '请选择产品', trigger: 'change',
-          validator: async (rule: any, value: any) => {
-            if (!value) {
-              throw new Error('请选择产品');
-            }
-          }
-        },
+        { required: true, message: '请选择产品'},
       ],
       lang: [
         { required: true, message: '请选择语言', trigger: 'change'}
@@ -153,13 +147,7 @@ export default defineComponent({
     });
     const rulesCommit = reactive({
       productId: [
-        { required: true, message: '请选择产品', trigger: 'change',
-          validator: async (rule: any, value: any) => {
-            if (!value) {
-              throw new Error('请选择项目');
-            }
-          }
-        },
+        { required: true, message: '请选择产品' },
       ]
     })
 
@@ -199,9 +187,7 @@ export default defineComponent({
             }
           })
         })
-        .catch(err => {
-          console.log('error', err);
-        });
+        .catch(err => {console.log('validate fail', err)});
     };
 
     const syncToZentaoSubmit = () => {

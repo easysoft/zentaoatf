@@ -37,7 +37,9 @@
             <div id="resize"></div>
 
             <div id="content">
-
+              <div id="logs">
+                <span v-html="wsMsg.out"></span>
+              </div>
             </div>
           </div>
         </a-card>
@@ -60,6 +62,7 @@ import {getCache} from "@/utils/localCache";
 import settings from "@/config/settings";
 import {WebSocket, WsEventName} from "@/services/websocket";
 import {resizeWidth, scroll, SetWidth} from "@/utils/dom";
+import {genExecInfo} from "@/views/exec/service";
 
 interface ExecCasePageSetupData {
   model: any
@@ -100,17 +103,15 @@ export default defineComponent({
 
       const model = reactive<ExecutionBy>({
         productId: '',
+        taskId: '',
       } as ExecutionBy);
 
       const rules = reactive({
         productId: [
-          { required: true, message: '请选择产品', trigger: 'change',
-            validator: async (rule: any, value: any) => {
-              if (!value) {
-                throw new Error('请选择产品');
-              }
-            }
-          },
+          { required: true, message: '请选择产品' },
+        ],
+        taskId: [
+          { required: true, message: '请选择任务' },
         ],
       });
 
@@ -126,7 +127,7 @@ export default defineComponent({
       const router = useRouter();
 
       let init = true;
-      let isRunning = ref('');
+      let isRunning = ref('false');
       let wsMsg = reactive({in: '', out: ''});
 
       let room: string | null = ''
@@ -147,20 +148,7 @@ export default defineComponent({
             isRunning.value = jsn.isRunning
           }
 
-          let msg = jsn.msg
-          msg = msg.replace(/^"+/,'').replace(/"+$/,'')
-          msg = SetWidth(i++ + '. ', 40) + `<span>${msg}</span>`;
-
-          let sty = ''
-          if (jsn.category === 'exec') {
-            sty = 'color: #009688;'
-          } else if (jsn.category === 'output') {
-            // sty = 'font-style: italic;'
-          }
-
-          msg = `<div style="${sty}"> ${msg} </div>`
-          wsMsg.out += msg
-
+          wsMsg.out += genExecInfo(jsn, i)
           scroll('logs')
         });
         init = false;
@@ -174,16 +162,17 @@ export default defineComponent({
 
       const exec = (): void => {
         console.log("exec")
+        validate().then(() => {
+          getCache(settings.currProject).then(
+              (projectPath) => {
+                const msg = Object.assign({act: 'execTask', projectPath: projectPath}, model)
+                console.log('msg', msg)
 
-        getCache(settings.currProject).then (
-            (projectPath) => {
-              const msg = {act: 'execTask', projectPath: projectPath}
-              console.log('msg', msg)
-
-              wsMsg.out += '\n'
-              WebSocket.sentMsg(room, JSON.stringify(msg))
-            }
-        )
+                wsMsg.out += '\n'
+                WebSocket.sentMsg(room, JSON.stringify(msg))
+              }
+          )
+        }).catch(err => {console.log('validate fail', err)});
       }
       const stop = (): void => {
         console.log("stop")

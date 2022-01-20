@@ -76,6 +76,7 @@ import {getCache} from "@/utils/localCache";
 import settings from "@/config/settings";
 import {WebSocket, WsEventName} from "@/services/websocket";
 import {PrefixSpace, resizeWidth, scroll, SetWidth} from "@/utils/dom";
+import {genExecInfo} from "@/views/exec/service";
 
 const useForm = Form.useForm;
 
@@ -160,7 +161,7 @@ export default defineComponent({
     }
 
     let init = true;
-    let isRunning = ref('');
+    let isRunning = ref('false');
     let wsMsg = reactive({in: '', out: ''});
 
     let room: string | null = ''
@@ -181,20 +182,7 @@ export default defineComponent({
           isRunning.value = jsn.isRunning
         }
 
-        let msg = jsn.msg
-        msg = msg.replace(/^"+/,'').replace(/"+$/,'')
-        msg = SetWidth(i++ + '. ', 40) + `<span>${msg}</span>`;
-
-        let sty = ''
-        if (jsn.category === 'exec') {
-          sty = 'color: #009688;'
-        } else if (jsn.category === 'output') {
-          // sty = 'font-style: italic;'
-        }
-
-        msg = `<div style="${sty}"> ${msg} </div>`
-        wsMsg.out += msg
-
+        wsMsg.out += genExecInfo(jsn, i)
         scroll('logs')
       });
       init = false;

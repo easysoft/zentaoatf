@@ -1,6 +1,7 @@
 import request from '@/utils/request';
 import { Execution } from './data.d';
 import { QueryParams } from '@/types/data.d';
+import {SetWidth} from "@/utils/dom";
 
 const apiPath = 'exec';
 
@@ -37,4 +38,20 @@ export async function remove(id: number): Promise<any> {
 
 export async function detail(id: number): Promise<any> {
     return request({url: `/executions/${id}`});
+}
+
+export function genExecInfo(jsn: any, i: number): string {
+    let msg = jsn.msg.replace(/^"+/,'').replace(/"+$/,'')
+    msg = SetWidth(i++ + '. ', 40) + `<span>${msg}</span>`;
+
+    let sty = ''
+    if (jsn.category === 'exec') {
+        sty = 'color: #009688;'
+    } else if (jsn.category === 'output') {
+        // sty = 'font-style: italic;'
+    }
+
+    msg = `<div style="${sty}"> ${msg} </div>`
+
+    return msg
 }
