@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-import { Execution } from './data.d';
+import {Execution, WsMsg} from './data.d';
 import { QueryParams } from '@/types/data.d';
 
 const apiPath = 'exec';
@@ -39,7 +39,7 @@ export async function detail(id: number): Promise<any> {
     return request({url: `/executions/${id}`});
 }
 
-export function genExecInfo(jsn: any, i: number): string {
+export function genExecInfo(jsn: WsMsg, i: number): string {
     let msg = jsn.msg.replace(/^"+/,'').replace(/"+$/,'')
     msg = SetWidth(i + '. ', 40) + `<span>${msg}</span>`;
 
@@ -55,6 +55,6 @@ export function genExecInfo(jsn: any, i: number): string {
     return msg
 }
 
-export function SetWidth(content, width) {
+export function SetWidth(content: string, width: number): string{
     return `<span style="display: inline-block; width: ${width}px; text-align: right; padding-right: 6px;">${content}</span>`;
 }

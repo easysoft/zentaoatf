@@ -62,7 +62,7 @@ import {useRouter} from "vue-router";
 import {getCache} from "@/utils/localCache";
 import settings from "@/config/settings";
 import {WebSocket, WsEventName} from "@/services/websocket";
-import {resizeWidth, scroll, SetWidth} from "@/utils/dom";
+import {resizeWidth, scroll} from "@/utils/dom";
 import {genExecInfo} from "@/views/exec/service";
 
 interface ExecCasePageSetupData {
@@ -76,8 +76,10 @@ interface ExecCasePageSetupData {
 
   labelCol: any
   wrapperCol: any
+  rules: any
   validate: any
   validateInfos: validateInfos,
+  resetFields:  () => void;
   products: ComputedRef<any[]>;
   modules: ComputedRef<any[]>;
   selectProduct:  (item) => void;
@@ -100,12 +102,10 @@ export default defineComponent({
         store.dispatch('zentao/fetchProducts')
       })
 
-      const formRef = ref();
-
-      const model = reactive<ExecutionBy>({
+      const model = reactive<any>({
         productId: '',
         moduleId: '',
-      } as ExecutionBy);
+      });
 
       const rules = reactive({
         productId: [
@@ -131,9 +131,9 @@ export default defineComponent({
       let isRunning = ref('false');
       let wsMsg = reactive({in: '', out: ''});
 
-      let room: string | null = ''
+      let room = ''
       getCache(settings.currProject).then((token) => {
-        room = token
+        room = token || ''
       })
 
       const {proxy} = getCurrentInstance() as any;
@@ -205,7 +205,6 @@ export default defineComponent({
         model,
         wsMsg,
 
-        formRef,
         labelCol: { span: 6 },
         wrapperCol: { span: 16 },
         rules,

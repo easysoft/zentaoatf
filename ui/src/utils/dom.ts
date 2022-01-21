@@ -42,14 +42,14 @@ export function resizeWidth(mainId: string, leftId: string, resizeId: string, co
     return true
 }
 
-export function PrefixZero(num, n) {
+export function PrefixZero(num: number, n: number): string {
     return (Array(n).join('0') + num).slice(-n);
 }
-export function PrefixSpace(num, n) {
+export function PrefixSpace(num: number, n: number): string {
     return (Array(n).join(' ') + num).slice(-n);
 }
 
-export function scroll(id) {
+export function scroll(id: string): void {
     const elem = document.getElementById(id)
     if (elem) {
         setTimeout(function(){

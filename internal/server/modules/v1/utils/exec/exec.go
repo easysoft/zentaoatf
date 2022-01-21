@@ -87,32 +87,6 @@ func Run(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, ms
 	return
 }
 
-func genReport() (report commDomain.ZtfReport) {
-	report = commDomain.ZtfReport{Env: commonUtils.GetOs(),
-		Pass: 0, Fail: 0, Total: 0, FuncResult: make([]commDomain.FuncResult, 0)}
-	report.TestType = "func"
-	report.TestFrame = commConsts.AppServer
-
-	return
-}
-
-func getNumbMaxWidth(casesToRun []string) (numbMaxWidth, pathMaxWidth int) {
-	for _, cs := range casesToRun {
-		lent := runewidth.StringWidth(cs)
-		if lent > pathMaxWidth {
-			pathMaxWidth = lent
-		}
-
-		content := fileUtils.ReadFile(cs)
-		caseId := scriptUtils.ReadCaseId(content)
-		if len(caseId) > numbMaxWidth {
-			numbMaxWidth = len(caseId)
-		}
-	}
-
-	return
-}
-
 func ExeScripts(casesToRun []string, casesToIgnore []string, projectPath string, conf commDomain.ProjectConf,
 	report *commDomain.ZtfReport, pathMaxWidth int, numbMaxWidth int, ch chan int,
 	sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message), wsMsg websocket.Message) {
@@ -348,6 +322,32 @@ func filterCases(cases []string, conf commDomain.ProjectConf) (casesToRun, cases
 		}
 
 		casesToRun = append(casesToRun, cs)
+	}
+
+	return
+}
+
+func genReport() (report commDomain.ZtfReport) {
+	report = commDomain.ZtfReport{Env: commonUtils.GetOs(),
+		Pass: 0, Fail: 0, Total: 0, FuncResult: make([]commDomain.FuncResult, 0)}
+	report.TestType = "func"
+	report.TestFrame = commConsts.AppServer
+
+	return
+}
+
+func getNumbMaxWidth(casesToRun []string) (numbMaxWidth, pathMaxWidth int) {
+	for _, cs := range casesToRun {
+		lent := runewidth.StringWidth(cs)
+		if lent > pathMaxWidth {
+			pathMaxWidth = lent
+		}
+
+		content := fileUtils.ReadFile(cs)
+		caseId := scriptUtils.ReadCaseId(content)
+		if len(caseId) > numbMaxWidth {
+			numbMaxWidth = len(caseId)
+		}
 	}
 
 	return

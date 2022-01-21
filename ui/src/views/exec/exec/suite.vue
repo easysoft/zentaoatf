@@ -62,10 +62,10 @@ import {useRouter} from "vue-router";
 import {getCache} from "@/utils/localCache";
 import settings from "@/config/settings";
 import {WebSocket, WsEventName} from "@/services/websocket";
-import {resizeWidth, scroll, SetWidth} from "@/utils/dom";
+import {resizeWidth, scroll} from "@/utils/dom";
 import {genExecInfo} from "@/views/exec/service";
 
-interface ExecCasePageSetupData {
+interface ExecSuitePageSetupData {
   model: any
 
   wsMsg: any,
@@ -76,7 +76,9 @@ interface ExecCasePageSetupData {
 
   labelCol: any
   wrapperCol: any
+  rules: any
   validate: any
+  resetFields:  () => void;
   validateInfos: validateInfos,
   products: ComputedRef<any[]>;
   suites: ComputedRef<any[]>;
@@ -87,7 +89,7 @@ export default defineComponent({
     name: 'ExecutionSuitePage',
     components: {
     },
-    setup(): ExecCasePageSetupData {
+    setup(): ExecSuitePageSetupData {
       const storeProject = useStore<{ project: ProjectData }>();
       const currConfig = computed<any>(() => storeProject.state.project.currConfig);
 
@@ -99,8 +101,6 @@ export default defineComponent({
       watch(currConfig, (currConfig)=> {
         store.dispatch('zentao/fetchProducts')
       })
-
-      const formRef = ref();
 
       const model = reactive<ExecutionBy>({
         productId: '',
@@ -131,9 +131,9 @@ export default defineComponent({
       let isRunning = ref('false');
       let wsMsg = reactive({in: '', out: ''});
 
-      let room: string | null = ''
+      let room = ''
       getCache(settings.currProject).then((token) => {
-        room = token
+        room = token || ''
       })
 
       const {proxy} = getCurrentInstance() as any;
@@ -205,7 +205,6 @@ export default defineComponent({
         model,
         wsMsg,
 
-        formRef,
         labelCol: { span: 6 },
         wrapperCol: { span: 16 },
         rules,

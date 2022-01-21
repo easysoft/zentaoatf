@@ -62,9 +62,9 @@ export default defineComponent({
       let init = true;
       let wsMsg = reactive({in: '', out: ''});
 
-      let room: string | null = ''
+      let room = ''
       getToken().then((token) => {
-        room = token
+        room = token || ''
       })
 
       const sendWs = () => {

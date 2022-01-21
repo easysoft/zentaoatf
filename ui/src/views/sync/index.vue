@@ -172,7 +172,6 @@ export default defineComponent({
 
       validate()
         .then(() => {
-          console.log('then', model);
           syncFromZentao(model).then((json) => {
             console.log('json', json)
             if (json.code === 0) {

@@ -1,6 +1,7 @@
 import * as neffos from 'neffos.js';
 import { getCurrentInstance } from 'vue';
 import {NSConn} from "neffos.js";
+import {ComponentInternalInstance, ComponentPublicInstance} from "@vue/runtime-core";
 
 const WebSocketPath = 'api/v1/ws';
 export const WebSocketBaseDev = 'ws://127.0.0.1:8085/';
@@ -20,7 +21,7 @@ export const WsDefaultNameSpace = 'default'
 export class WebSocket {
   static conn: NSConn
 
-  static async init(proxy: any) {
+  static async init(proxy: ComponentPublicInstance | any): Promise<any> {
     console.log(`init websocket`)
     if (!WebSocket.conn) {
       try {
@@ -57,7 +58,7 @@ export class WebSocket {
     return WebSocket
   }
 
-  static joinRoomAndSend(roomName, msg) {
+  static joinRoomAndSend(roomName: string, msg: string): void {
     if (!WebSocket.conn) return
 
     WebSocket.conn.joinRoom(roomName).then((room) => {
@@ -68,7 +69,7 @@ export class WebSocket {
       console.log(`fail to join room ${roomName}`, err)
     })
   }
-  static sentMsg(roomName, msg) {
+  static sentMsg(roomName: string, msg: string): void {
     console.log(`send msg to room ${roomName}`)
     if (!WebSocket.conn) return
 
@@ -78,7 +79,7 @@ export class WebSocket {
   }
 }
 
-export function getWebSocketApi () {
+export function getWebSocketApi (): string {
   const isProd = process.env.NODE_ENV === 'production'
 
   let wsUri = ''

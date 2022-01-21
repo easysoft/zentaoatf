@@ -75,8 +75,9 @@ import {execCase} from "@/views/exec/exec/service";
 import {getCache} from "@/utils/localCache";
 import settings from "@/config/settings";
 import {WebSocket, WsEventName} from "@/services/websocket";
-import {PrefixSpace, resizeWidth, scroll, SetWidth} from "@/utils/dom";
+import {PrefixSpace, resizeWidth, scroll} from "@/utils/dom";
 import {genExecInfo} from "@/views/exec/service";
+import {WsMsg} from "@/views/exec/data";
 
 const useForm = Form.useForm;
 
@@ -164,9 +165,9 @@ export default defineComponent({
     let isRunning = ref('false');
     let wsMsg = reactive({in: '', out: ''});
 
-    let room: string | null = ''
+    let room = ''
     getCache(settings.currProject).then((token) => {
-      room = token
+      room = token || ''
     })
 
     const {proxy} = getCurrentInstance() as any;
@@ -176,7 +177,7 @@ export default defineComponent({
     if (init) {
       proxy.$sub(WsEventName, (data) => {
         console.log(data[0].msg);
-        const jsn = JSON.parse(data[0].msg)
+        const jsn = JSON.parse(data[0].msg) as WsMsg
 
         if ('isRunning' in jsn) {
           isRunning.value = jsn.isRunning
