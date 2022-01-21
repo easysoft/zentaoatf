@@ -14,10 +14,13 @@
         
         <a-form :labelCol="{ span: 4 }" :wrapper-col="{span:20}">
             <a-form-item label="脚本语言" v-bind="validateInfos.lang">
-                <a-input v-model:value="modelRef.lang" placeholder="" />
+              <a-select v-model:value="modelRef.lang">
+                <a-select-option key="" value="">&nbsp;</a-select-option>
+                <a-select-option v-for="item in languages" :key="item" :value="item">{{languageMap[item]}}</a-select-option>
+              </a-select>
             </a-form-item>
             <a-form-item label="解析器路径" v-bind="validateInfos.value">
-                <a-input v-model:value="modelRef.value" placeholder="" />
+                <a-input v-model:value="modelRef.val" placeholder="" />
             </a-form-item>
         </a-form>
 
@@ -45,6 +48,12 @@ export default defineComponent({
             type: Boolean,
             required: true
         },
+      languages: {
+        required: true
+      },
+      languageMap: {
+        required: true
+      },
         onCancel: {
             type: Function,
             required: true
@@ -66,7 +75,7 @@ export default defineComponent({
         const modelRef = reactive({lang: '', value: ''} as any)
         const rulesRef = reactive({
           lang: [ { required: true, message: '请输入语言' } ],
-          value: [ { required: true, message: '请输入解析器可执行文件路径' } ],
+          val: [ { required: true, message: '请输入解析器可执行文件路径' } ],
         });
 
         const { resetFields, validate, validateInfos } = useForm(modelRef, rulesRef);

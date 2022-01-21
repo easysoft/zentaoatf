@@ -6,7 +6,7 @@ export async function queryProject(currProjectPath: string): Promise<any> {
     const params = {currProject: currProjectPath}
 
     return request({
-        url: `/${apiPath}/listByUser`,
+        url: `/${apiPath}/getByUser`,
         method: 'GET',
         params,
     });

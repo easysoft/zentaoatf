@@ -4,6 +4,7 @@ import { ResponseData } from '@/utils/request';
 import {queryProject} from "@/services/project";
 import {setCache} from "@/utils/localCache";
 import settings from '@/config/settings';
+import {saveConfig} from "@/services/config";
 
 export interface ProjectData {
   projects: any[]
@@ -19,6 +20,7 @@ export interface ModuleType extends StoreModuleType<ProjectData> {
   };
   actions: {
     fetchProject: Action<ProjectData, ProjectData>;
+    saveConfig: Action<ProjectData, ProjectData>;
   };
 }
 
@@ -45,13 +47,23 @@ const StoreModel: ModuleType = {
       state.currProject = payload.currProject;
       state.currConfig = payload.currConfig;
       state.scriptTree = [payload.scriptTree];
-
     },
   },
   actions: {
     async fetchProject({ commit }, currProjectPath) {
       try {
         const response: ResponseData = await queryProject(currProjectPath);
+        const { data } = response;
+        commit('saveProjects', data || 0);
+
+        return true;
+      } catch (error) {
+        return false;
+      }
+    },
+    async saveConfig({ commit }, config) {
+      try {
+        const response: ResponseData = await saveConfig(config);
         const { data } = response;
         commit('saveProjects', data || 0);
 

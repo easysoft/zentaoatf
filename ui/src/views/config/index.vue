@@ -18,28 +18,31 @@
       <a-form-item label="执行器">
         <div>
           <a-row class="interpreter-header">
-            <a-col :span="10" class="t-center t-bord">语言</a-col>
-            <a-col :span="10" class="t-center t-bord">解析器</a-col>
+            <a-col :span="8" class="t-center t-bord">语言</a-col>
+            <a-col :span="8" class="t-center t-bord">解析器</a-col>
             <a-col :span="4" class="t-center t-bord">
-              <a-button @click="setCreateFormVisible(true)" type="link" size="small">新建</a-button>
+              <a-button @click="addInterpreter" type="link" size="small">新建</a-button>
             </a-col>
           </a-row>
+
           <a-row  v-for="item in interpreters" :key="item.id" class="interpreter-item">
-            <a-col :span="10" class="t-center t-bord">
+            <a-col :span="8" class="t-center t-bord">
               {{item.lang}}
             </a-col>
-            <a-col :span="10" class="t-center t-bord">
-              {{item.value}}
+            <a-col :span="8" class="t-center t-bord">
+              {{item.val}}
             </a-col>
             <a-col :span="4" class="t-center t-bord">
-              <a-button type="link" size="small">编辑</a-button>
+              <icon-svg @click="editInterpreter(item)" type="edit" class="t-icon"></icon-svg> &nbsp;
+              <icon-svg type="close" class="t-icon"></icon-svg>
             </a-col>
           </a-row>
+
         </div>
       </a-form-item>
 
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click.prevent="submitForm">保存</a-button>
+        <a-button type="primary" @click.prevent="submitForm">保存</a-button> &nbsp;
         <a-button style="margin-left: 10px" @click="resetFields">重置</a-button>
       </a-form-item>
     </a-form>
@@ -50,6 +53,8 @@
         :onCancel="() => setCreateFormVisible(false)"
         :onSubmitLoading="createSubmitLoading"
         :onSubmit="createSubmit"
+        :languages="languages"
+        :languageMap="languageMap"
     />
 
     <update-form
@@ -59,13 +64,14 @@
         :onCancel="() => updateFormCancel()"
         :onSubmitLoading="updateSubmitLoading"
         :onSubmit="updateSubmit"
+        :languageMap="languageMap"
     />
 
   </a-card>
 
 </template>
 <script lang="ts">
-import {defineComponent, ref, reactive, computed, watch, ComputedRef, Ref} from "vue";
+import {defineComponent, ref, reactive, computed, watch, ComputedRef, Ref, toRaw, toRef} from "vue";
 import { useI18n } from "vue-i18n";
 
 import { Props, validateInfos } from 'ant-design-vue/lib/form/useForm';
@@ -74,14 +80,15 @@ import _ from "lodash";
 const useForm = Form.useForm;
 
 import {Config} from './data.d';
-import {saveConfig} from "./service";
 import {useStore} from "vuex";
 import {ProjectData} from "@/store/project";
 import CreateForm from './create.vue';
 import UpdateForm from './update.vue';
+import {getInterpretersFromConfig} from "@/views/config/service";
+import IconSvg from "@/components/IconSvg/index";
 
 interface ConfigFormSetupData {
-  currConfig: any
+  currConfigRef: Ref
   model: Partial<Config>
   rules: any
   labelCol: any
@@ -91,34 +98,52 @@ interface ConfigFormSetupData {
   submitForm:  () => void;
   resetFields:  () => void;
 
+  languages: Ref
+  languageMap: Ref
   interpreters: Ref
   interpreter: Ref
 
+  createSubmitLoading: Ref<boolean>;
   createFormVisible: Ref<boolean>;
   setCreateFormVisible:  (val: boolean) => void;
-  createSubmitLoading: Ref<boolean>;
+  addInterpreter: () => void;
   createSubmit: (values: any, resetFields: (newValues?: Props | undefined) => void) => Promise<void>;
 
-  updateFormVisible: Ref<boolean>;
-  updateFormCancel:  () => void;
   updateSubmitLoading: Ref<boolean>;
+  updateFormVisible: Ref<boolean>;
+  editInterpreter: (item) => void;
+  updateFormCancel:  () => void;
   updateSubmit:  (values: any, resetFields: (newValues?: Props | undefined) => void) => Promise<void>;
 }
 
 export default defineComponent({
   name: 'ConfigForm',
   components: {
-    CreateForm, UpdateForm,
+    IconSvg, CreateForm, UpdateForm,
   },
   setup(props): ConfigFormSetupData {
     const { t } = useI18n();
 
     const store = useStore<{ project: ProjectData }>();
-    const currConfig = computed<any>(() => store.state.project.currConfig);
+    const currConfigRef = computed<any>(() => store.state.project.currConfig);
 
-    let model = reactive<Partial<Config>>(currConfig.value);
-    watch(currConfig,(currConfig)=> {
+    let interpreter = reactive<any>({})
+    let interpreters = ref<any>({})
+    let languages = ref<any>({})
+    let languageMap = ref<any>({})
+
+    const getInterpreters = (currConfig) => {
+      const data = getInterpretersFromConfig(currConfig)
+      interpreters.value = data.interpreters
+      languages.value = data.languages
+      languageMap.value = data.languageMap
+    }
+    getInterpreters(currConfigRef.value)
+
+    let model = reactive<any>(currConfigRef.value);
+    watch(currConfigRef,(currConfig)=> {
       _.extend(model, currConfig)
+      getInterpreters(currConfig)
     })
 
     const rules = reactive({
@@ -152,8 +177,9 @@ export default defineComponent({
       validate()
         .then(() => {
           console.log(model);
-          saveConfig(model).then((json) => {
+          store.dispatch('project/saveConfig', model).then((json) => {
             console.log('json', json)
+
             if (json.code === 0) {
               notification.success({
                 message: `保存配置成功`,
@@ -171,15 +197,16 @@ export default defineComponent({
         });
     };
 
-    // 解析器
-    const interpreters = reactive<any>({})
-    const interpreter = reactive<any>({})
     // 新建
     const createFormVisible = ref<boolean>(false);
     const setCreateFormVisible = (val: boolean) => {
       createFormVisible.value = val;
     };
     const createSubmitLoading = ref<boolean>(false);
+    const addInterpreter = () => {
+      interpreter = {}
+      setCreateFormVisible(true)
+    }
     const createSubmit = async (values: any, resetFields: (newValues?: Props | undefined) => void) => {
       createSubmitLoading.value = true;
 
@@ -198,6 +225,10 @@ export default defineComponent({
       setUpdateFormVisible(false);
     }
     const updateSubmitLoading = ref<boolean>(false);
+    const editInterpreter = (item) => {
+      interpreter.value = item
+      setUpdateFormVisible(true)
+    }
     const updateSubmit = async (values: any, resetFields: (newValues?: Props | undefined) => void) => {
       updateSubmitLoading.value = true;
 
@@ -210,7 +241,7 @@ export default defineComponent({
     return {
       labelCol: { span: 4 },
       wrapperCol: { span: 14 },
-      currConfig,
+      currConfigRef,
       model,
 
       rules,
@@ -219,17 +250,21 @@ export default defineComponent({
       validateInfos,
       submitForm,
 
+      languages,
+      languageMap,
       interpreters,
       interpreter,
 
-      createFormVisible,
       setCreateFormVisible,
       createSubmitLoading,
+      createFormVisible,
+      addInterpreter,
       createSubmit,
 
+      updateSubmitLoading,
       updateFormVisible,
       updateFormCancel,
-      updateSubmitLoading,
+      editInterpreter,
       updateSubmit,
     }
 

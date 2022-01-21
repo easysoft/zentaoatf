@@ -14,16 +14,16 @@
 
     <a-form :labelCol="{ span: 4 }" :wrapper-col="{span:20}">
       <a-form-item label="脚本语言" v-bind="validateInfos.lang">
-        <a-input v-model:value="modelRef.lang" placeholder=""/>
+        {{languageMap[modelRef.lang]}}
       </a-form-item>
-      <a-form-item label="解析器路径" v-bind="validateInfos.value">
-        <a-input v-model:value="modelRef.value" placeholder=""/>
+      <a-form-item label="解析器路径" v-bind="validateInfos.val">
+        <a-input v-model:value="modelRef.val" placeholder=""/>
       </a-form-item>
     </a-form>
   </a-modal>
 </template>
 <script lang="ts">
-import {defineComponent, PropType, reactive, Ref} from "vue";
+import {defineComponent, onMounted, PropType, reactive, Ref} from "vue";
 import {useI18n} from "vue-i18n";
 
 import {Props, validateInfos} from 'ant-design-vue/lib/form/useForm';
@@ -48,6 +48,9 @@ export default defineComponent({
       type: Object as PropType<any>,
       required: true
     },
+    languageMap: {
+      required: true
+    },
     onCancel: {
       type: Function,
       required: true
@@ -65,10 +68,14 @@ export default defineComponent({
   setup(props): UpdateFormSetupData {
     const {t} = useI18n();
 
-    const modelRef = reactive({lang: '', value: ''} as any)
+    let modelRef = reactive<any>({
+      lang: props.values.value.lang || '',
+      val: props.values.value.val || '',
+    });
+
     const rulesRef = reactive({
       lang: [{required: true, message: '请输入语言'}],
-      value: [{required: true, message: '请输入解析器可执行文件路径'}],
+      val: [{required: true, message: '请输入解析器可执行文件路径'}],
     });
 
     const {resetFields, validate, validateInfos} = useForm(modelRef, rulesRef);
