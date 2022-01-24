@@ -5,6 +5,7 @@ import (
 	"fmt"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
+	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
@@ -98,6 +99,7 @@ func (s *ProjectService) GetByUser(currProjectPath string) (
 	scriptTree, err = scriptUtils.LoadScriptTree(currProject.Path)
 
 	currProjectConfig = configUtils.ReadFromFile(currProject.Path)
+	currProjectConfig.IsWin = commonUtils.IsWin()
 
 	return
 }

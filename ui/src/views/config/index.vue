@@ -15,7 +15,7 @@
                  @blur="validate('password', { trigger: 'blur' }).catch(() => {})" placeholder="" />
       </a-form-item>
 
-      <a-form-item label="执行器">
+      <a-form-item v-if="currConfigRef.isWin" label="执行器">
         <div>
           <a-row class="interpreter-header">
             <a-col :span="4" class="t-center t-bord">语言</a-col>
@@ -213,9 +213,9 @@ export default defineComponent({
       setCreateFormVisible(true)
     }
     const createSubmit = async (values: any, resetFields: (newValues?: Props | undefined) => void) => {
-      createSubmitLoading.value = true;
+      // createSubmitLoading.value = true;
       currConfigRef.value[values.lang] = values.val
-      createSubmitLoading.value = false;
+      // createSubmitLoading.value = false;
       setCreateFormVisible(false)
     }
 
@@ -233,9 +233,7 @@ export default defineComponent({
       setUpdateFormVisible(true)
     }
     const updateSubmit = async (values: any, resetFields: (newValues?: Props | undefined) => void) => {
-      updateSubmitLoading.value = true;
       currConfigRef.value[values.lang] = values.val
-      updateSubmitLoading.value = false;
       setUpdateFormVisible(false)
     }
     const deleteInterpreter = (item) => {

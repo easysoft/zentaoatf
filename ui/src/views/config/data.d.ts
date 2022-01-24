@@ -12,6 +12,9 @@ export interface Config {
   ruby:       string
   tcl:        string
   autoit:     string
+
+  version: string
+  isWin: boolean
 }
 
 export interface Interpreter {
