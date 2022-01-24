@@ -5,6 +5,7 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/core/web/validate"
+	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	configUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/config"
 	"strings"
 
@@ -14,6 +15,7 @@ import (
 
 type ConfigCtrl struct {
 	BaseCtrl
+	ProjectService *service.ProjectService `inject:""`
 }
 
 func NewConfigCtrl() *ConfigCtrl {
@@ -39,5 +41,14 @@ func (c *ConfigCtrl) SaveConfig(ctx iris.Context) {
 		return
 	}
 
-	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: nil, Msg: domain.NoErr.Msg})
+	projects, currProject, currProjectConfig, scriptTree, err := c.ProjectService.GetByUser(projectPath)
+	if err != nil {
+		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
+		return
+	}
+
+	ret := iris.Map{"projects": projects, "currProject": currProject,
+		"currConfig": currProjectConfig, "scriptTree": scriptTree}
+
+	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: ret, Msg: domain.NoErr.Msg})
 }

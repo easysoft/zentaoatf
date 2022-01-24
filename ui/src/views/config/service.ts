@@ -27,3 +27,17 @@ export function createInterpreter(interpreters: Ref<Interpreter[]>, item: Interp
     interpreters.value.push(item)
     return interpreters
 }
+export function updateInterpreter(interpreters: Ref<Interpreter[]>, interpreter: Interpreter): Ref<Interpreter[]> {
+    interpreters.value.forEach((item, i) => {
+        if (item.lang === item.lang) {
+            item.val = interpreter.val
+        }
+    })
+    return interpreters
+}
+export function setInterpreter(config: Ref<Config>, interpreters: Ref<Interpreter[]>): Ref<Config> {
+    interpreters.value.forEach((item, i) => {
+        config[item.lang] = item.val
+    })
+    return config
+}

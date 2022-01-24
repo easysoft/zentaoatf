@@ -3,12 +3,14 @@ package service
 import (
 	"errors"
 	"fmt"
+	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
+	configUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/config"
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/script"
 )
 
@@ -55,7 +57,8 @@ func (s *ProjectService) DeleteById(id uint) error {
 	return s.ProjectRepo.BatchDelete(id)
 }
 
-func (s *ProjectService) GetByUser(currProjectPath string) (projects []model.Project, currProject model.Project, scriptTree serverDomain.TestAsset, err error) {
+func (s *ProjectService) GetByUser(currProjectPath string) (
+	projects []model.Project, currProject model.Project, currProjectConfig commDomain.ProjectConf, scriptTree serverDomain.TestAsset, err error) {
 	projects, err = s.ProjectRepo.ListProjectByUser()
 
 	found := false
@@ -93,6 +96,8 @@ func (s *ProjectService) GetByUser(currProjectPath string) (projects []model.Pro
 	}
 
 	scriptTree, err = scriptUtils.LoadScriptTree(currProject.Path)
+
+	currProjectConfig = configUtils.ReadFromFile(currProject.Path)
 
 	return
 }

@@ -84,7 +84,7 @@ import {useStore} from "vuex";
 import {ProjectData} from "@/store/project";
 import CreateForm from './create.vue';
 import UpdateForm from './update.vue';
-import {createInterpreter, getInterpretersFromConfig} from "@/views/config/service";
+import {createInterpreter, getInterpretersFromConfig, setInterpreter, updateInterpreter} from "@/views/config/service";
 import IconSvg from "@/components/IconSvg/index";
 
 interface ConfigFormSetupData {
@@ -172,10 +172,10 @@ export default defineComponent({
     });
 
     const { resetFields, validate, validateInfos } = useForm(model, rules);
-
     const submitForm = () => {
       validate()
         .then(() => {
+          setInterpreter(model, interpreters)
           console.log(model);
           store.dispatch('project/saveConfig', model).then((json) => {
             console.log('json', json)
@@ -197,7 +197,7 @@ export default defineComponent({
         });
     };
 
-    // 新建
+    // 新建解析器
     const createFormVisible = ref<boolean>(false);
     const setCreateFormVisible = (val: boolean) => {
       createFormVisible.value = val;
@@ -210,15 +210,13 @@ export default defineComponent({
     const createSubmit = async (values: any, resetFields: (newValues?: Props | undefined) => void) => {
       createSubmitLoading.value = true;
 
-      console.log('1', interpreters)
       createInterpreter(interpreters, values)
-      console.log('2', interpreters)
 
       createSubmitLoading.value = false;
       setCreateFormVisible(false)
     }
 
-    // 更新
+    // 更新解析器
     const updateFormVisible = ref<boolean>(false);
     const setUpdateFormVisible = (val: boolean) => {
       updateFormVisible.value = val;
@@ -228,16 +226,15 @@ export default defineComponent({
     }
     const updateSubmitLoading = ref<boolean>(false);
     const editInterpreter = (item) => {
-      console.log(item)
       interpreter.value = item
-      console.log(interpreter)
+
       setUpdateFormVisible(true)
     }
     const updateSubmit = async (values: any, resetFields: (newValues?: Props | undefined) => void) => {
       updateSubmitLoading.value = true;
 
       console.log(values)
-
+      updateInterpreter(interpreters, values)
 
       updateSubmitLoading.value = false;
       setUpdateFormVisible(false)

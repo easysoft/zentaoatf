@@ -8,7 +8,6 @@ import (
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
-	configUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/config"
 	"strings"
 
 	"github.com/kataras/iris/v12"
@@ -133,13 +132,11 @@ func (c *ProjectCtrl) GetByUser(ctx iris.Context) {
 		projectPath = commConsts.WorkDir
 	}
 
-	projects, currProject, scriptTree, err := c.ProjectService.GetByUser(projectPath)
+	projects, currProject, currProjectConfig, scriptTree, err := c.ProjectService.GetByUser(projectPath)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
-
-	currProjectConfig := configUtils.ReadFromFile(currProject.Path)
 
 	ret := iris.Map{"projects": projects, "currProject": currProject,
 		"currConfig": currProjectConfig, "scriptTree": scriptTree}

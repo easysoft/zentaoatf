@@ -54,7 +54,7 @@ const StoreModel: ModuleType = {
       try {
         const response: ResponseData = await queryProject(currProjectPath);
         const { data } = response;
-        commit('saveProjects', data || 0);
+        commit('saveProjects', data || {});
 
         return true;
       } catch (error) {
@@ -62,15 +62,12 @@ const StoreModel: ModuleType = {
       }
     },
     async saveConfig({ commit }, config) {
-      try {
-        const response: ResponseData = await saveConfig(config);
-        const { data } = response;
-        commit('saveProjects', data || 0);
+      const resp: ResponseData = await saveConfig(config);
+      console.log('&&&')
+      const { data } = resp;
+      commit('saveProjects', data);
 
-        return true;
-      } catch (error) {
-        return false;
-      }
+      return resp;
     },
   }
 }
