@@ -34,7 +34,7 @@
             </a-col>
             <a-col :span="2" class="t-center t-bord">
               <icon-svg @click="editInterpreter(item)" type="edit" class="t-icon"></icon-svg> &nbsp;
-              <icon-svg type="close" class="t-icon"></icon-svg>
+              <icon-svg @click="deleteInterpreter(item)" type="close" class="t-icon"></icon-svg>
             </a-col>
           </a-row>
 
@@ -84,7 +84,10 @@ import {useStore} from "vuex";
 import {ProjectData} from "@/store/project";
 import CreateForm from './create.vue';
 import UpdateForm from './update.vue';
-import {createInterpreter, getInterpretersFromConfig, setInterpreter, updateInterpreter} from "@/views/config/service";
+import {
+  getInterpretersFromConfig,
+  setInterpreter,
+} from "@/views/config/service";
 import IconSvg from "@/components/IconSvg/index";
 
 interface ConfigFormSetupData {
@@ -112,6 +115,7 @@ interface ConfigFormSetupData {
   updateSubmitLoading: Ref<boolean>;
   updateFormVisible: Ref<boolean>;
   editInterpreter: (item) => void;
+  deleteInterpreter: (item) => void;
   updateFormCancel:  () => void;
   updateSubmit:  (values: any, resetFields: (newValues?: Props | undefined) => void) => Promise<void>;
 }
@@ -141,10 +145,11 @@ export default defineComponent({
     getInterpreters(currConfigRef.value)
 
     let model = reactive<any>(currConfigRef.value);
-    watch(currConfigRef,(currConfig)=> {
-      _.extend(model, currConfig)
-      getInterpreters(currConfig)
-    })
+    watch(currConfigRef,()=> {
+      console.log('watch currConfigRef', currConfigRef)
+      _.extend(model, currConfigRef.value)
+      getInterpreters(currConfigRef.value)
+    }, {deep: true})
 
     const rules = reactive({
       url: [
@@ -209,9 +214,7 @@ export default defineComponent({
     }
     const createSubmit = async (values: any, resetFields: (newValues?: Props | undefined) => void) => {
       createSubmitLoading.value = true;
-
-      createInterpreter(interpreters, values)
-
+      currConfigRef.value[values.lang] = values.val
       createSubmitLoading.value = false;
       setCreateFormVisible(false)
     }
@@ -227,17 +230,16 @@ export default defineComponent({
     const updateSubmitLoading = ref<boolean>(false);
     const editInterpreter = (item) => {
       interpreter.value = item
-
       setUpdateFormVisible(true)
     }
     const updateSubmit = async (values: any, resetFields: (newValues?: Props | undefined) => void) => {
       updateSubmitLoading.value = true;
-
-      console.log(values)
-      updateInterpreter(interpreters, values)
-
+      currConfigRef.value[values.lang] = values.val
       updateSubmitLoading.value = false;
       setUpdateFormVisible(false)
+    }
+    const deleteInterpreter = (item) => {
+      delete currConfigRef.value[item.lang]
     }
 
     return {
@@ -267,6 +269,7 @@ export default defineComponent({
       updateFormVisible,
       updateFormCancel,
       editInterpreter,
+      deleteInterpreter,
       updateSubmit,
     }
 

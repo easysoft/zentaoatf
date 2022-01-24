@@ -23,18 +23,6 @@ export function getInterpretersFromConfig(currConfig: any): any {
     return {interpreters: interpreters, languages: languages, languageMap: languageMap}
 }
 
-export function createInterpreter(interpreters: Ref<Interpreter[]>, item: Interpreter): Ref<Interpreter[]> {
-    interpreters.value.push(item)
-    return interpreters
-}
-export function updateInterpreter(interpreters: Ref<Interpreter[]>, interpreter: Interpreter): Ref<Interpreter[]> {
-    interpreters.value.forEach((item, i) => {
-        if (item.lang === item.lang) {
-            item.val = interpreter.val
-        }
-    })
-    return interpreters
-}
 export function setInterpreter(config: Ref<Config>, interpreters: Ref<Interpreter[]>): Ref<Config> {
     interpreters.value.forEach((item, i) => {
         config[item.lang] = item.val
