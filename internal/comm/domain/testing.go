@@ -119,14 +119,12 @@ type ZtfBug struct {
 }
 
 type ZtfReport struct {
-	Env       string `json:"env"`
+	Env       string `json:"env,omitempty"`
 	TestType  string `json:"testType"`
 	TestFrame string `json:"testFrame"`
 
-	ProductId  int    `json:"productId"`
-	TaskId     int    `json:"taskId"`
-	ZentaoData string `json:"zentaoData"`
-	BuildUrl   string `json:"buildUrl"`
+	ProductId int `json:"productId,omitempty"`
+	TaskId    int `json:"taskId,omitempty"`
 
 	Pass      int   `json:"pass"`
 	Fail      int   `json:"fail"`
@@ -136,8 +134,8 @@ type ZtfReport struct {
 	EndTime   int64 `json:"endTime"`
 	Duration  int64 `json:"duration"`
 
-	FuncResult []FuncResult `json:"funcResult"`
-	UnitResult []UnitResult `json:"unitResult"`
+	FuncResult []FuncResult `json:"funcResult,omitempty"`
+	UnitResult []UnitResult `json:"unitResult,omitempty"`
 }
 
 type FuncResult struct {

@@ -101,8 +101,6 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	failStr := fmt.Sprintf(fmtStr, report.Fail, float32(report.Fail*100/report.Total), i118Utils.Sprintf("fail"))
 	skipStr := fmt.Sprintf(fmtStr, report.Skip, float32(report.Skip*100/report.Total), i118Utils.Sprintf("skip"))
 
-	logFile := filepath.Join(projectPath, commConsts.LogDirName, "result.txt")
-
 	// 执行%d个用例，耗时%d秒%s。%s，%s，%s。报告%s。
 	msg := dateUtils.DateTimeStr(time.Now()) + " " +
 		i118Utils.Sprintf("run_result",
@@ -113,12 +111,15 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	logUtils.ExecConsole(color.FgCyan, msg)
 	logUtils.ExecResult(msg)
 
-	msg = "                    " + i118Utils.Sprintf("run_report", logFile) + "\n"
-	sendExecMsg(msg, "", wsMsg)
+	resultPath := filepath.Join(commConsts.ExecLogDir, "result.txt")
+	msg = "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
+
+	sendExecMsg(msg, "false", wsMsg)
 	logUtils.ExecConsole(color.FgCyan, msg)
 	logUtils.ExecResult(msg)
 
 	//report.ProductId, _ = strconv.Atoi(vari.ProductId)
-	json, _ := json.Marshal(report)
-	fileUtils.WriteFile(logFile, string(json))
+	json, _ := json.MarshalIndent(report, "", "\t")
+	jsonPath := filepath.Join(commConsts.ExecLogDir, "result.json")
+	fileUtils.WriteFile(jsonPath, string(json))
 }

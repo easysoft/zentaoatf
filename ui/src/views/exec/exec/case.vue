@@ -7,7 +7,7 @@
       </template>
       <template #extra>
         <div class="opt">
-          <a-button v-if="isRunning == 'false'" @click="exec" type="primary">执行</a-button>
+          <a-button v-if="isRunning == 'false'" :disabled="checkedKeys.length == 0" @click="exec" type="primary">执行</a-button>
           <a-button v-if="isRunning == 'true'" @click="stop" type="primary">停止</a-button>
 
           <a-button @click="back" type="link">返回</a-button>

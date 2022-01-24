@@ -1,11 +1,6 @@
 package serverDomain
 
-import (
-	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
-)
-
-type TestExecReqPaginate struct {
-	domain.PaginateReq
+type TestExecReq struct {
 	Keywords string `json:"keywords"`
 	Enabled  string `json:"enabled"`
 }
