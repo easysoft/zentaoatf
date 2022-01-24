@@ -15,13 +15,13 @@
 
             <div>
               <a-table
-                  row-key="name"
+                  row-key="seq"
                   :columns="columns"
                   :data-source="list"
                   :loading="loading"
                   :pagination="false"
               >
-                <template #name="{ text }">
+                <template #seq="{ text }">
                   {{text}}
                 </template>
                 <template #startTime="{ record }">
@@ -39,7 +39,7 @@
                 <template #action="{ record }">
                   <a-button type="link" @click="() => viewExec(record)">查看</a-button>
                   <a-button type="link" @click="() => deleteExec(record)"
-                            :loading="deleteLoading.includes(record.id)">删除</a-button>
+                            :loading="deleteLoading.includes(record.seq)">删除</a-button>
                 </template>
 
               </a-table>
@@ -103,7 +103,7 @@ export default defineComponent({
         },
         {
           title: '名称',
-          dataIndex: 'name',
+          dataIndex: 'seq',
         },
         {
           title: '开始时间',
@@ -141,7 +141,7 @@ export default defineComponent({
 
       // 查看
       const viewExec = (item) => {
-        router.push(`/~/execution/result/${item.name}`)
+        router.push(`/~/execution/history/${item.seq}`)
       }
 
       // 删除
@@ -153,8 +153,8 @@ export default defineComponent({
           okText: '确认',
           cancelText: '取消',
           onOk: async () => {
-            deleteLoading.value = [item.name];
-            const res: boolean = await store.dispatch('ListExecution/deleteExecution', item.name);
+            deleteLoading.value = [item.seq];
+            const res: boolean = await store.dispatch('ListExecution/deleteExecution', item.seq);
             if (res === true) {
               message.success('删除成功！');
               await getList();

@@ -26,8 +26,8 @@ func (s *TestExecService) List(projectPath string) (ret []serverDomain.TestRepor
 
 	dir := filepath.Join(projectPath, commConsts.LogDirName)
 
-	for _, name := range reportFiles {
-		pth := filepath.Join(dir, name, commConsts.ResultJson)
+	for _, seq := range reportFiles {
+		pth := filepath.Join(dir, seq, commConsts.ResultJson)
 
 		content := fileUtils.ReadFileBuf(pth)
 		var report commDomain.ZtfReport
@@ -35,7 +35,7 @@ func (s *TestExecService) List(projectPath string) (ret []serverDomain.TestRepor
 
 		var summary serverDomain.TestReportSummary
 		copier.Copy(&summary, report)
-		summary.Name = name
+		summary.Seq = seq
 		ret = append(ret, summary)
 	}
 
@@ -46,10 +46,10 @@ func (s *TestExecService) Get(path string) (exec model.TestExec, err error) {
 	return
 }
 
-func (s *TestExecService) Delete(projectPath string, name string) (err error) {
+func (s *TestExecService) Delete(projectPath string, seq string) (err error) {
 	dir := filepath.Join(projectPath, commConsts.LogDirName)
 
-	di := filepath.Join(dir, name)
+	di := filepath.Join(dir, seq)
 	err = fileUtils.RmDir(di)
 
 	return

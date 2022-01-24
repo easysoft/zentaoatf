@@ -28,13 +28,12 @@ export async function update(id: number, params: Omit<Execution, 'id'>): Promise
     });
 }
 
-export async function remove(name: string): Promise<any> {
-    const params = {name: name}
+export async function remove(seq: string): Promise<any> {
+    const params = {seq: seq}
 
     return request({
-        url: `/${apiPath}`,
+        url: `/${apiPath}/${seq}`,
         method: 'delete',
-        params,
     });
 }
 

@@ -49,15 +49,15 @@ func (c *TestExecCtrl) Get(ctx iris.Context) {
 // Delete 删除
 func (c *TestExecCtrl) Delete(ctx iris.Context) {
 	projectPath := ctx.URLParam("currProject")
-	name := ctx.URLParam("name")
+	seq := ctx.Params().Get("seq")
 
-	if projectPath == "" || name == "" {
+	if projectPath == "" || seq == "" {
 		logUtils.Errorf("参数解析失败")
 		ctx.JSON(domain.Response{Code: domain.ParamErr.Code, Data: nil, Msg: domain.ParamErr.Msg})
 		return
 	}
 
-	err := c.TestExecService.Delete(projectPath, name)
+	err := c.TestExecService.Delete(projectPath, seq)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return

@@ -38,6 +38,13 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         hidden: true,
       },
       {
+        title: 'index-layout.menu.execution.result',
+        path: 'history/:seq',
+        component: () => import('@/views/exec/result/index.vue'),
+        hidden: true,
+      },
+
+      {
         title: 'index-layout.menu.execution',
         path: 'exec',
         component: BlankLayout,
@@ -68,24 +75,6 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
             hidden: true,
           },
         ]
-      },
-      {
-        title: 'index-layout.menu.execution.result',
-        path: 'result/:id',
-        component: () => import('@/views/exec/result/index.vue'),
-        hidden: true,
-      },
-      {
-        title: 'index-layout.menu.execution.result',
-        path: 'result/:id',
-        component: () => import('@/views/exec/result/index.vue'),
-        hidden: true,
-      },
-      {
-        title: 'index-layout.menu.execution.result',
-        path: 'result/:id',
-        component: () => import('@/views/exec/result/index.vue'),
-        hidden: true,
       },
     ],
   },

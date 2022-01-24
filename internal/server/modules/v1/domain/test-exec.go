@@ -6,7 +6,7 @@ type TestExecReq struct {
 }
 
 type TestReportSummary struct {
-	Name     string `json:"name"`
+	Seq      string `json:"seq"`
 	Env      string `json:"env,omitempty"`
 	TestType string `json:"testType"`
 
