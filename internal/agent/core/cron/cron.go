@@ -2,10 +2,10 @@ package agentCron
 
 import (
 	"fmt"
+	agentConfig "github.com/aaronchen2k/deeptest/internal/agent/config"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/cron"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/date"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	"github.com/aaronchen2k/deeptest/internal/server/consts"
 	"github.com/kataras/iris/v12"
 	"sync"
 	"time"
@@ -26,12 +26,12 @@ func (s *AgentCron) Init() {
 
 	cronUtils.AddTask(
 		"check",
-		fmt.Sprintf("@every %ds", serverConsts.WebCheckInterval),
+		fmt.Sprintf("@every %ds", agentConfig.AgentCheckInterval),
 		func() {
 			isRunning, _ := s.syncMap.Load("isRunning")
 			lastCompletedTime, _ := s.syncMap.Load("lastCompletedTime")
 
-			if isRunning.(bool) || time.Now().Unix()-lastCompletedTime.(int64) < serverConsts.WebCheckInterval {
+			if isRunning.(bool) || time.Now().Unix()-lastCompletedTime.(int64) < agentConfig.AgentCheckInterval {
 				logUtils.Infof("skip this iteration " + dateUtils.DateTimeStr(time.Now()))
 				return
 			}

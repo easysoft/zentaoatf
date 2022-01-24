@@ -18,21 +18,21 @@
       <a-form-item label="执行器">
         <div>
           <a-row class="interpreter-header">
-            <a-col :span="8" class="t-center t-bord">语言</a-col>
-            <a-col :span="8" class="t-center t-bord">解析器</a-col>
-            <a-col :span="4" class="t-center t-bord">
+            <a-col :span="4" class="t-center t-bord">语言</a-col>
+            <a-col :span="18" class="t-center t-bord">解析器</a-col>
+            <a-col :span="2" class="t-center t-bord">
               <a-button @click="addInterpreter" type="link" size="small">新建</a-button>
             </a-col>
           </a-row>
 
           <a-row  v-for="item in interpreters" :key="item.lang" class="interpreter-item">
-            <a-col :span="8" class="t-center t-bord">
-              {{item.lang}}
+            <a-col :span="4" class="t-bord">
+              {{languageMap[item.lang]}}
             </a-col>
-            <a-col :span="8" class="t-center t-bord">
+            <a-col :span="18" class="t-bord">
               {{item.val}}
             </a-col>
-            <a-col :span="4" class="t-center t-bord">
+            <a-col :span="2" class="t-center t-bord">
               <icon-svg @click="editInterpreter(item)" type="edit" class="t-icon"></icon-svg> &nbsp;
               <icon-svg type="close" class="t-icon"></icon-svg>
             </a-col>
@@ -277,13 +277,13 @@ export default defineComponent({
 <style lang="less" scoped>
 
 .interpreter-header {
-  margin: 5px 50px;
+  margin: 5px 30px;
   padding-bottom: 6px;
   border-bottom: 1px solid #f0f0f0;
 }
 
 .interpreter-item {
-  margin: 5px 50px;
+  margin: 5px 30px;
 
 }
 

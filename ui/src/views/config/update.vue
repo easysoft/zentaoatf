@@ -8,8 +8,8 @@
       width="600px"
   >
     <template #footer>
-      <a-button key="back" @click="() => onCancel()">取消</a-button>
       <a-button key="submit" type="primary" :loading="onSubmitLoading" @click="onFinish">提交</a-button>
+      <a-button key="back" @click="() => onCancel()">取消</a-button>
     </template>
 
     <a-form :labelCol="{ span: 4 }" :wrapper-col="{span:20}">
