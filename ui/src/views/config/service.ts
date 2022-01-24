@@ -1,5 +1,6 @@
 import request from '@/utils/request';
-import { Config } from './data.d';
+import {Ref} from "vue";
+import {Config, Interpreter} from './data.d';
 import {Languages} from "@/utils/const";
 
 const apiPath = 'config';
@@ -22,3 +23,7 @@ export function getInterpretersFromConfig(currConfig: any): any {
     return {interpreters: interpreters, languages: languages, languageMap: languageMap}
 }
 
+export function createInterpreter(interpreters: Ref<Interpreter[]>, item: Interpreter): Ref<Interpreter[]> {
+    interpreters.value.push(item)
+    return interpreters
+}

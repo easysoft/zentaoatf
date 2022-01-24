@@ -25,7 +25,7 @@
             </a-col>
           </a-row>
 
-          <a-row  v-for="item in interpreters" :key="item.id" class="interpreter-item">
+          <a-row  v-for="item in interpreters" :key="item.lang" class="interpreter-item">
             <a-col :span="8" class="t-center t-bord">
               {{item.lang}}
             </a-col>
@@ -60,7 +60,7 @@
     <update-form
         v-if="updateFormVisible===true"
         :visible="updateFormVisible"
-        :values="interpreter"
+        :model="interpreter"
         :onCancel="() => updateFormCancel()"
         :onSubmitLoading="updateSubmitLoading"
         :onSubmit="updateSubmit"
@@ -79,12 +79,12 @@ import {message, Form, notification} from 'ant-design-vue';
 import _ from "lodash";
 const useForm = Form.useForm;
 
-import {Config} from './data.d';
+import {Config, Interpreter} from './data.d';
 import {useStore} from "vuex";
 import {ProjectData} from "@/store/project";
 import CreateForm from './create.vue';
 import UpdateForm from './update.vue';
-import {getInterpretersFromConfig} from "@/views/config/service";
+import {createInterpreter, getInterpretersFromConfig} from "@/views/config/service";
 import IconSvg from "@/components/IconSvg/index";
 
 interface ConfigFormSetupData {
@@ -100,8 +100,8 @@ interface ConfigFormSetupData {
 
   languages: Ref
   languageMap: Ref
-  interpreters: Ref
-  interpreter: Ref
+  interpreters: Ref<Interpreter[]>
+  interpreter: Ref<Interpreter>
 
   createSubmitLoading: Ref<boolean>;
   createFormVisible: Ref<boolean>;
@@ -127,8 +127,8 @@ export default defineComponent({
     const store = useStore<{ project: ProjectData }>();
     const currConfigRef = computed<any>(() => store.state.project.currConfig);
 
-    let interpreter = reactive<any>({})
-    let interpreters = ref<any>({})
+    let interpreter = reactive<any>({} as Interpreter)
+    let interpreters = ref<any>([] as Interpreter[])
     let languages = ref<any>({})
     let languageMap = ref<any>({})
 
@@ -204,13 +204,15 @@ export default defineComponent({
     };
     const createSubmitLoading = ref<boolean>(false);
     const addInterpreter = () => {
-      interpreter = {}
+      interpreter.value = {}
       setCreateFormVisible(true)
     }
     const createSubmit = async (values: any, resetFields: (newValues?: Props | undefined) => void) => {
       createSubmitLoading.value = true;
 
-      console.log(values)
+      console.log('1', interpreters)
+      createInterpreter(interpreters, values)
+      console.log('2', interpreters)
 
       createSubmitLoading.value = false;
       setCreateFormVisible(false)
@@ -226,13 +228,16 @@ export default defineComponent({
     }
     const updateSubmitLoading = ref<boolean>(false);
     const editInterpreter = (item) => {
+      console.log(item)
       interpreter.value = item
+      console.log(interpreter)
       setUpdateFormVisible(true)
     }
     const updateSubmit = async (values: any, resetFields: (newValues?: Props | undefined) => void) => {
       updateSubmitLoading.value = true;
 
       console.log(values)
+
 
       updateSubmitLoading.value = false;
       setUpdateFormVisible(false)

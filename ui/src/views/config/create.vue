@@ -33,10 +33,11 @@ import { useI18n } from "vue-i18n";
 
 import { Props, validateInfos } from 'ant-design-vue/lib/form/useForm';
 import { message, Form } from 'ant-design-vue';
+import {Interpreter} from "@/views/config/data";
 const useForm = Form.useForm;
 
 interface CreateInterpreterFormSetupData {
-  modelRef: Ref
+  modelRef: Ref<Interpreter>
   validateInfos: validateInfos;
   onFinish: () => Promise<void>;
 }
@@ -72,7 +73,7 @@ export default defineComponent({
     setup(props): CreateInterpreterFormSetupData {
         const { t } = useI18n();
 
-        const modelRef = reactive({lang: '', value: ''} as any)
+        const modelRef = reactive<any>({lang: '', val: ''} as Interpreter)
         const rulesRef = reactive({
           lang: [ { required: true, message: '请输入语言' } ],
           val: [ { required: true, message: '请输入解析器可执行文件路径' } ],

@@ -28,11 +28,12 @@ import {useI18n} from "vue-i18n";
 
 import {Props, validateInfos} from 'ant-design-vue/lib/form/useForm';
 import {Form, message} from 'ant-design-vue';
+import {Interpreter} from "@/views/config/data";
 
 const useForm = Form.useForm;
 
 interface UpdateFormSetupData {
-  modelRef: Ref;
+  modelRef: Ref<Interpreter>;
   validateInfos: validateInfos;
   onFinish: () => Promise<void>;
 }
@@ -44,7 +45,7 @@ export default defineComponent({
       type: Boolean,
       required: true
     },
-    values: {
+    model: {
       type: Object as PropType<any>,
       required: true
     },
@@ -68,9 +69,11 @@ export default defineComponent({
   setup(props): UpdateFormSetupData {
     const {t} = useI18n();
 
+    console.log('props.model', props.model)
+
     let modelRef = reactive<any>({
-      lang: props.values.value.lang || '',
-      val: props.values.value.val || '',
+      lang: props.model.value.lang || '',
+      val: props.model.value.val || '',
     });
 
     const rulesRef = reactive({

@@ -3,3 +3,8 @@ export interface Config {
   username: string;
   password: string;
 }
+
+export interface Interpreter {
+  lang: string;
+  val: string;
+}
