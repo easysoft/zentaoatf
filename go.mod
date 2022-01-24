@@ -7,7 +7,6 @@ require (
 	github.com/apache/thrift v0.15.0 // indirect
 	github.com/armon/go-metrics v0.3.9 // indirect
 	github.com/bitly/go-simplejson v0.5.0 // indirect
-	github.com/casbin/casbin/v2 v2.37.2
 	github.com/casbin/gorm-adapter/v3 v3.4.2
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/dsnet/compress v0.0.2-0.20210315054119-f66993602bf5 // indirect
@@ -33,6 +32,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/iris-contrib/middleware/cors v0.0.0-20210110101738-6d0a4d799b5d
 	github.com/jameskeane/bcrypt v0.0.0-20120420032655-c3cd44c1e20f // indirect
+	github.com/jinzhu/copier v0.3.5 // indirect
 	github.com/jonboulle/clockwork v0.2.2 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kataras/iris/v12 v12.2.0-alpha3
@@ -72,7 +72,6 @@ require (
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.1.0 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/ini.v1 v1.63.0 // indirect
-	gorm.io/driver/mysql v1.1.2
 	gorm.io/driver/sqlite v1.2.6 // indirect
 	gorm.io/gorm v1.22.3
 	gorm.io/plugin/dbresolver v1.1.0 // indirect

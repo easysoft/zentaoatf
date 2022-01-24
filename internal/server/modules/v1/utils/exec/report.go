@@ -13,6 +13,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/mattn/go-runewidth"
+	"io/ioutil"
 	"path/filepath"
 	"strings"
 	"time"
@@ -111,7 +112,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	logUtils.ExecConsole(color.FgCyan, msg)
 	logUtils.ExecResult(msg)
 
-	resultPath := filepath.Join(commConsts.ExecLogDir, "result.txt")
+	resultPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)
 	msg = "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
 
 	sendExecMsg(msg, "false", wsMsg)
@@ -120,6 +121,19 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 
 	//report.ProductId, _ = strconv.Atoi(vari.ProductId)
 	json, _ := json.MarshalIndent(report, "", "\t")
-	jsonPath := filepath.Join(commConsts.ExecLogDir, "result.json")
+	jsonPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultJson)
 	fileUtils.WriteFile(jsonPath, string(json))
+}
+
+func ListReport(projectPath string) (reportFiles []string) {
+	dir := filepath.Join(projectPath, commConsts.LogDirName)
+
+	files, _ := ioutil.ReadDir(dir)
+	for _, fi := range files {
+		if fi.IsDir() {
+			reportFiles = append(reportFiles, fi.Name())
+		}
+	}
+
+	return
 }

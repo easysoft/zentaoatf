@@ -22,7 +22,7 @@ func (m *TestExecModule) Party() module.WebModule {
 
 		index.Get("/", m.TestExecCtrl.List).Name = "执行列表"
 		index.Get("/{id:uint}", m.TestExecCtrl.Get).Name = "执行详情"
-		index.Delete("/{id:uint}", m.TestExecCtrl.Delete).Name = "删除执行"
+		index.Delete("/", m.TestExecCtrl.Delete).Name = "删除执行"
 	}
 	return module.NewModule("/exec", handler)
 }

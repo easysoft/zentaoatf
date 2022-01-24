@@ -15,27 +15,30 @@
 
             <div>
               <a-table
-                  row-key="id"
+                  row-key="name"
                   :columns="columns"
                   :data-source="list"
                   :loading="loading"
+                  :pagination="false"
               >
-                <template #name="{ text, record  }">
-                  <a :href="record.href" target="_blank">{{text}}</a>
+                <template #name="{ text }">
+                  {{text}}
                 </template>
-                <template #status="{ record }">
-                  <a-tag v-if="record.disabled == 0" color="green">启用</a-tag>
-                  <a-tag v-else color="cyan">禁用</a-tag>
+                <template #startTime="{ record }">
+                  {{ momentTime(record.startTime) }}
+                </template>
+                <template #duration="{ record }">
+                  {{record.duration}}秒
+                </template>
+                <template #result="{ record }">
+                  合计{{record.total}}：
+                  <span class="t-pass">{{record.pass}}（{{percent(record.pass, record.total)}}）通过</span>，
+                  <span class="t-fail">{{record.fail}}（{{percent(record.fail, record.total)}}）失败</span>，
+                  <span class="t-skip">{{record.skip}}（{{percent(record.skip, record.total)}}）忽略</span>。
                 </template>
                 <template #action="{ record }">
-                  <a-button type="link"
-                            @click="() => viewExec(record.id)"
-                            :loading="getLoading.includes(record.id)">查看</a-button>
-                  <a-button type="link"
-                            @click="() => editExec(record.id)"
-                            :loading="getLoading.includes(record.id)">编辑</a-button>
-                  <a-button type="link"
-                            @click="() => deleteExec(record.id)"
+                  <a-button type="link" @click="() => viewExec(record)">查看</a-button>
+                  <a-button type="link" @click="() => deleteExec(record)"
                             :loading="deleteLoading.includes(record.id)">删除</a-button>
                 </template>
 
@@ -59,68 +62,63 @@ const useForm = Form.useForm;
 import {StateType as ListStateType} from "../store";
 import debounce from "lodash.debounce";
 import {useRouter} from "vue-router";
+import moment from 'moment';
 
-interface ListExecPageSetupData {
+interface ListExecSetupData {
   columns: any;
   list: ComputedRef<Execution[]>;
   loading: Ref<boolean>;
   getList:  () => Promise<void>;
-  viewExec: (id: number) => void;
+  viewExec: (item) => void;
 
-  deleteLoading: Ref<number[]>;
-  deleteExec:  (id: number) => void;
+  deleteLoading: Ref<string[]>;
+  deleteExec:  (item) => void;
 
   execCase:  () => void;
   execModule:  () => void;
   execSuite:  () => void;
   execTask:  () => void;
+  momentTime: (tm) => string;
+  percent: (numb, total) => string;
 }
 
 export default defineComponent({
     name: 'ExecListPage',
     components: {
     },
-    setup(): ListExecPageSetupData {
-      const statusArr = ref<SelectTypes['options']>([
-          {
-            label: '所有状态',
-            value: '',
-          },
-          {
-            label: '启用',
-            value: '1',
-          },
-          {
-            label: '禁用',
-            value: '0',
-          },
-        ]);
-
-      const router = useRouter();
-      const store = useStore<{ ListExecution: ListStateType}>();
-
-      const list = computed<Execution[]>(() => store.state.ListExecution.queryResult.data);
+    setup(): ListExecSetupData {
+      const momentTime = (tm) => {
+        return moment.unix(tm).format("YYYY-MM-DD HH:mm:ss")
+      }
+      const percent = (numb, total) => {
+        return Number(numb / total * 100).toFixed(2) + '%'
+      }
 
       const columns =[
         {
           title: '序号',
           dataIndex: 'index',
-          width: 80,
+          width: 150,
           customRender: ({text, index}: { text: any; index: number}) => index + 1,
         },
         {
           title: '名称',
           dataIndex: 'name',
-          slots: { customRender: 'name' },
         },
         {
-          title: '描述',
-          dataIndex: 'desc',
+          title: '开始时间',
+          dataIndex: 'startTime',
+          slots: { customRender: 'startTime' },
         },
         {
-          title: '状态',
-          dataIndex: 'status',
-          slots: { customRender: 'status' },
+          title: '耗时',
+          dataIndex: 'duration',
+          slots: { customRender: 'duration' },
+        },
+        {
+          title: '结果',
+          dataIndex: 'result',
+          slots: { customRender: 'result' },
         },
         {
           title: '操作',
@@ -130,30 +128,33 @@ export default defineComponent({
         },
       ];
 
+      const router = useRouter();
+      const store = useStore<{ ListExecution: ListStateType}>();
+
+      const list = computed<any[]>(() => store.state.ListExecution.listResult);
       const loading = ref<boolean>(true);
       const getList = async (): Promise<void> => {
         loading.value = true;
-
-        await store.dispatch('ListExecution/queryExecution', {});
+        await store.dispatch('ListExecution/listExecution', {});
         loading.value = false;
       }
 
       // 查看
-      const viewExec = (id: number) => {
-        router.push(`/~/execution/result/${id}`)
+      const viewExec = (item) => {
+        router.push(`/~/execution/result/${item.name}`)
       }
 
       // 删除
-      const deleteLoading = ref<number[]>([]);
-      const deleteExec = (id: number) => {
+      const deleteLoading = ref<string[]>([]);
+      const deleteExec = (item) => {
         Modal.confirm({
           title: '删除脚本',
           content: '确定删除吗？',
           okText: '确认',
           cancelText: '取消',
           onOk: async () => {
-            deleteLoading.value = [id];
-            const res: boolean = await store.dispatch('ListExecution/deleteExec',id);
+            deleteLoading.value = [item.name];
+            const res: boolean = await store.dispatch('ListExecution/deleteExecution', item.name);
             if (res === true) {
               message.success('删除成功！');
               await getList();
@@ -198,6 +199,8 @@ export default defineComponent({
         execModule,
         execSuite,
         execTask,
+        momentTime,
+        percent,
       }
     }
 

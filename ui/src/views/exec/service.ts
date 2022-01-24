@@ -4,7 +4,7 @@ import { QueryParams } from '@/types/data.d';
 
 const apiPath = 'exec';
 
-export async function query(params?: QueryParams): Promise<any> {
+export async function list(params?: QueryParams): Promise<any> {
     return request({
         url: `/${apiPath}`,
         method: 'get',
@@ -28,10 +28,13 @@ export async function update(id: number, params: Omit<Execution, 'id'>): Promise
     });
 }
 
-export async function remove(id: number): Promise<any> {
+export async function remove(name: string): Promise<any> {
+    const params = {name: name}
+
     return request({
-        url: `/${apiPath}/${id}`,
+        url: `/${apiPath}`,
         method: 'delete',
+        params,
     });
 }
 

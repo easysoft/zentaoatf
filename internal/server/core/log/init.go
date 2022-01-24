@@ -44,7 +44,7 @@ func InitExecLog(projectPath string) {
 
 	// print to exec log file
 	config.EncoderConfig.EncodeLevel = nil
-	config.OutputPaths = []string{filepath.Join(commConsts.ExecLogDir, "log.txt")}
+	config.OutputPaths = []string{filepath.Join(commConsts.ExecLogDir, commConsts.LogText)}
 	var err error
 	logUtils.LoggerExecFile, err = config.Build()
 	if err != nil {
@@ -56,7 +56,7 @@ func InitExecLog(projectPath string) {
 	config.EncoderConfig.TimeKey = ""
 
 	// print to test result file
-	config.OutputPaths = []string{filepath.Join(commConsts.ExecLogDir, "result.txt")}
+	config.OutputPaths = []string{filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)}
 	logUtils.LoggerExecResult, err = config.Build()
 	if err != nil {
 		log.Println("init exec result logger fail " + err.Error())

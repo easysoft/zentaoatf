@@ -10,9 +10,10 @@ const (
 	ConfigFile    = "ztf.conf"
 	LogDirName    = "log"
 
-	ExtNameSuite  = "cs"
-	ExtNameJson   = "json"
-	ExtNameResult = "txt"
+	ExtNameSuite = "cs"
+	LogText      = "log.txt"
+	ResultText   = "result.txt"
+	ResultJson   = "result.json"
 
 	ExpectResultPass = "pass"
 )
