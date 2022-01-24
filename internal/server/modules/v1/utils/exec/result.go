@@ -21,7 +21,7 @@ func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfRepor
 	total int, secs string, pathMaxWidth int, numbMaxWidth int,
 	sendOutMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), wsMsg websocket.Message) {
 
-	_, _, expectMap, isOldFormat := scriptUtils.GetStepAndExpectMap(scriptFile)
+	stepMap, _, expectMap, isOldFormat := scriptUtils.GetStepAndExpectMap(scriptFile)
 
 	isIndependent, expectIndependentContent := scriptUtils.GetDependentExpect(scriptFile)
 	if isIndependent {
@@ -41,13 +41,13 @@ func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfRepor
 	}
 
 	language := langUtils.GetLangByFile(scriptFile)
-	ValidateCaseResult(scriptFile, language, expectMap, skip, actualArr, report,
+	ValidateCaseResult(scriptFile, language, stepMap, expectMap, skip, actualArr, report,
 		idx, total, secs, pathMaxWidth, numbMaxWidth,
 		sendOutMsg, sendExecMsg, wsMsg)
 }
 
 func ValidateCaseResult(scriptFile string, langType string,
-	expectMap maps.Map, skip bool, actualArr [][]string, report *commDomain.ZtfReport,
+	stepMap, expectMap maps.Map, skip bool, actualArr [][]string, report *commDomain.ZtfReport,
 	idx int, total int, secs string, pathMaxWidth int, numbMaxWidth int,
 	sendOutMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), wsMsg websocket.Message) {
 
@@ -62,11 +62,13 @@ func ValidateCaseResult(scriptFile string, langType string,
 	} else {
 		idx := 0
 
-		for _, numbInterf := range expectMap.Keys() { // iterate by checkpoints
-			expectInterf, _ := expectMap.Get(numbInterf)
+		for _, numbObj := range expectMap.Keys() { // iterate by checkpoints
+			stepObj, _ := stepMap.Get(numbObj)
+			expectObj, _ := expectMap.Get(numbObj)
 
-			numb := strings.TrimSpace(numbInterf.(string))
-			expect := strings.TrimSpace(expectInterf.(string))
+			numb := strings.TrimSpace(numbObj.(string))
+			stepName := strings.TrimSpace(stepObj.(string))
+			expect := strings.TrimSpace(expectObj.(string))
 
 			if expect == "" {
 				continue
@@ -81,7 +83,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 			}
 
 			stepResult, checkpointLogs := ValidateStepResult(langType, expectLines, actualLines)
-			stepLog := commDomain.StepLog{Id: numb, Status: stepResult, CheckPoints: checkpointLogs}
+			stepLog := commDomain.StepLog{Id: numb, Name: stepName, Status: stepResult, CheckPoints: checkpointLogs}
 			stepLogs = append(stepLogs, stepLog)
 			if !stepResult {
 				caseResult = commConsts.FAIL.String()

@@ -2,22 +2,14 @@
   <div class="indexlayout-main-conent">
     <a-card :bordered="false">
       <template #title>
-        <div>
-          <a-button type="primary" @click="() => record()" id="com-deeptest-record" class="act-btn">录制</a-button>
-          <a-button @click="() => playback()" class="act-btn">播放</a-button>
-        </div>
+       执行结果详情
       </template>
       <template #extra>
         <a-button type="link" @click="() => back()">返回</a-button>
       </template>
 
-      <br /> <!--WebSocket Test-->
-      <div>
-        <div><a-input id="input" type="text" v-model:value="wsMsg.in" /></div>
-        <div><a-button id="sendBtn" @click="sendWs">Send</a-button></div>
-        <div>
-          <pre>{{ wsMsg.out }}</pre>
-        </div>
+      <div class="main">
+        细节
       </div>
 
     </a-card>
@@ -52,11 +44,11 @@ export default defineComponent({
       const execution = reactive<ExecutionItem>({steps: []})
       const loading = ref<boolean>(true);
 
-      const id = +router.currentRoute.value.params.id
-      console.log('id', id)
+      const seq = +router.currentRoute.value.params.seq
+      console.log('seq', seq)
 
       const back = ():void =>  {
-        router.push(`/execution/list`)
+        router.push(`/exec/history`)
       }
 
       let init = true;
@@ -104,28 +96,7 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-  .act-btn {
-    margin-right: 20px;
-  }
-
-  .execution {
-    .title {
-      font-weight: bolder;
-    }
-    .desc {
-      .step {
-        display: flex;
-        .cmd {
-          flex: 1;
-        }
-        .capture {
-          width: 600px;
-
-          img {
-            height: 50px;
-          }
-        }
-      }
-    }
+  .main {
+    padding: 20px;
   }
 </style>

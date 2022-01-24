@@ -37,8 +37,8 @@
                   <span class="t-skip">{{record.skip}}（{{percent(record.skip, record.total)}}）忽略</span>。
                 </template>
                 <template #action="{ record }">
-                  <a-button type="link" @click="() => viewExec(record)">查看</a-button>
-                  <a-button type="link" @click="() => deleteExec(record)"
+                  <a-button @click="() => viewExec(record)" type="link" size="small">查看</a-button>
+                  <a-button @click="() => deleteExec(record)" type="link" size="small"
                             :loading="deleteLoading.includes(record.seq)">删除</a-button>
                 </template>
 
@@ -141,7 +141,7 @@ export default defineComponent({
 
       // 查看
       const viewExec = (item) => {
-        router.push(`/~/execution/history/${item.seq}`)
+        router.push(`/exec/history/${item.seq}`)
       }
 
       // 删除
