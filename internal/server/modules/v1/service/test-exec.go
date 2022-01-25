@@ -7,7 +7,7 @@ import (
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
-	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/exec"
+	analysisUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/analysis"
 	"github.com/jinzhu/copier"
 	"path/filepath"
 )
@@ -21,7 +21,7 @@ func NewTestExecService() *TestExecService {
 }
 
 func (s *TestExecService) List(projectPath string) (ret []serverDomain.TestReportSummary, err error) {
-	reportFiles := scriptUtils.ListReport(projectPath)
+	reportFiles := analysisUtils.ListReport(projectPath)
 
 	dir := filepath.Join(projectPath, commConsts.LogDirName)
 
@@ -45,13 +45,7 @@ func (s *TestExecService) List(projectPath string) (ret []serverDomain.TestRepor
 }
 
 func (s *TestExecService) Get(projectPath string, seq string) (report commDomain.ZtfReport, err error) {
-	dir := filepath.Join(projectPath, commConsts.LogDirName)
-	pth := filepath.Join(dir, seq, commConsts.ResultJson)
-
-	content := fileUtils.ReadFileBuf(pth)
-	err = json.Unmarshal(content, &report)
-
-	return
+	return analysisUtils.GetReport(projectPath, seq)
 }
 
 func (s *TestExecService) Delete(projectPath string, seq string) (err error) {

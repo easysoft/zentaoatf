@@ -12,7 +12,6 @@ import (
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/mattn/go-runewidth"
-	"io/ioutil"
 	"path/filepath"
 	"strings"
 	"time"
@@ -122,17 +121,4 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	json, _ := json.MarshalIndent(report, "", "\t")
 	jsonPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultJson)
 	fileUtils.WriteFile(jsonPath, string(json))
-}
-
-func ListReport(projectPath string) (reportFiles []string) {
-	dir := filepath.Join(projectPath, commConsts.LogDirName)
-
-	files, _ := ioutil.ReadDir(dir)
-	for _, fi := range files {
-		if fi.IsDir() {
-			reportFiles = append(reportFiles, fi.Name())
-		}
-	}
-
-	return
 }

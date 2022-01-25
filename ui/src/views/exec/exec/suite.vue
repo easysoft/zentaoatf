@@ -2,7 +2,7 @@
     <div class="indexlayout-main-conent">
         <a-card :bordered="false">
           <template #title>
-            执行套件
+            <span v-if="model.scope">重新</span>执行套件
           </template>
           <template #extra>
             <div class="opt">
@@ -20,14 +20,21 @@
                 <a-form-item label="产品" v-bind="validateInfos.productId">
                   <a-select v-model:value="model.productId" @change="selectProduct">
                     <a-select-option key="" value="">&nbsp;</a-select-option>
-                    <a-select-option v-for="item in products" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
+                    <a-select-option v-for="item in products" :key="item.id" :value="item.id+''">{{item.name}}</a-select-option>
                   </a-select>
                 </a-form-item>
 
                 <a-form-item label="套件" v-bind="validateInfos.suiteId">
                   <a-select v-model:value="model.suiteId">
                     <a-select-option key="" value="">&nbsp;</a-select-option>
-                    <a-select-option v-for="item in suites" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+                    <a-select-option v-for="item in suites" :key="item.id" :value="item.id+''">{{ item.name }}</a-select-option>
+                  </a-select>
+                </a-form-item>
+
+                <a-form-item label="范围" v-if="model.productId">
+                  <a-select v-model:value="model.scope">
+                    <a-select-option key="all" value="all">所有</a-select-option>
+                    <a-select-option key="fail" value="fail">仅失败用例</a-select-option>
                   </a-select>
                 </a-form-item>
 
@@ -67,6 +74,7 @@ import {genExecInfo} from "@/views/exec/service";
 
 interface ExecSuitePageSetupData {
   model: any
+  seq: string
 
   wsMsg: any,
   exec: (keys) => void;
@@ -90,6 +98,17 @@ export default defineComponent({
     components: {
     },
     setup(): ExecSuitePageSetupData {
+      const router = useRouter();
+      let productId = router.currentRoute.value.params.productId
+      productId = productId == '0' ? '' : productId + ''
+      let suiteId = router.currentRoute.value.params.suiteId
+      suiteId = suiteId == '0' ? '' : suiteId + ''
+      let seq = router.currentRoute.value.params.seq
+      seq = seq === '-' ? '' : seq
+      let scope = router.currentRoute.value.params.scope
+      scope = scope === '-' ? '' : scope
+      console.log(productId, suiteId, scope)
+
       const storeProject = useStore<{ project: ProjectData }>();
       const currConfig = computed<any>(() => storeProject.state.project.currConfig);
 
@@ -103,9 +122,11 @@ export default defineComponent({
       })
 
       const model = reactive<ExecutionBy>({
-        productId: '',
-        suiteId: '',
-      } as ExecutionBy);
+        productId: productId,
+        suiteId: suiteId,
+        seq: seq,
+        scope: scope,
+      });
 
       const rules = reactive({
         productId: [
@@ -119,13 +140,12 @@ export default defineComponent({
       const { resetFields, validate, validateInfos } = useForm(model, rules);
 
       const selectProduct = (item) => {
-        console.log('selectProduct', item)
         if (!item) return
-
         store.dispatch('zentao/fetchSuites', item)
       };
-
-      const router = useRouter();
+      if (productId !== '' && suiteId !== '') {
+        selectProduct(productId)
+      }
 
       let init = true;
       let isRunning = ref('false');
@@ -203,6 +223,7 @@ export default defineComponent({
 
       return {
         model,
+        seq,
         wsMsg,
 
         labelCol: { span: 6 },

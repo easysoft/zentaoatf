@@ -5,7 +5,11 @@
        执行结果详情
       </template>
       <template #extra>
-        <a-button type="link" @click="() => back()">返回</a-button>
+        <div class="opt">
+          <a-button @click="exec('all')" type="primary">重新执行所有用例</a-button>
+          <a-button @click="exec('fail')" type="primary">重新执行失败用例</a-button>
+          <a-button type="link" @click="() => back()">返回</a-button>
+        </div>
       </template>
 
       <div class="main">
@@ -14,6 +18,8 @@
           <a-col :span="4">{{ testEnv(report.testEnv) }}</a-col>
           <a-col :span="2" class="t-bord t-label-right">测试类型</a-col>
           <a-col :span="4">{{ testType(report.testType) }}</a-col>
+          <a-col :span="2" class="t-bord t-label-right">执行类型</a-col>
+          <a-col :span="4">{{ execBy(report.execBy) }}</a-col>
         </a-row>
         <a-row>
           <a-col :span="2" class="t-bord t-label-right">开始时间</a-col>
@@ -89,15 +95,17 @@ import { useStore } from 'vuex';
 import {StateType as ListStateType} from "@/views/exec/store";
 import {useRouter} from "vue-router";
 import {momentTimeDef, percentDef} from "@/utils/datetime";
-import { resultStatusDef, testEnvDef, testTypeDef} from "@/utils/testing";
+import {execByDef, resultStatusDef, testEnvDef, testTypeDef} from "@/utils/testing";
 
 interface DesignExecutionPageSetupData {
   report: Ref;
   columns: any[]
 
   loading: Ref<boolean>;
+  exec: () => void;
   back: () => void;
 
+  execBy: (item) => string;
   momentTime: (tm) => string;
   percent: (numb, total) => string;
   testEnv: (code) => string;
@@ -108,6 +116,7 @@ interface DesignExecutionPageSetupData {
 export default defineComponent({
     name: 'ExecutionResultPage',
     setup(): DesignExecutionPageSetupData {
+      const execBy = execByDef
       const momentTime = momentTimeDef
       const percent = percentDef
       const testEnv = testEnvDef
@@ -143,6 +152,7 @@ export default defineComponent({
 
       const report = computed<any[]>(() => store.state.History.item);
       const loading = ref<boolean>(true);
+      console.log(report)
 
       const seq = router.currentRoute.value.params.seq
 
@@ -153,6 +163,16 @@ export default defineComponent({
       }
       get(seq)
 
+      const exec = (scope):void =>  {
+        console.log(report)
+
+        const productId = report.value.productId
+        const execBy = report.value.execBy
+        const execById = report.value.execById
+
+        if (execBy === 'case') router.push(`/exec/run/${execBy}/${seq}/${scope}`)
+        else router.push(`/exec/run/${execBy}/${productId}/${execById}/${seq}/${scope}`)
+      }
       const back = ():void =>  {
         router.push(`/exec/history`)
       }
@@ -165,7 +185,10 @@ export default defineComponent({
         report,
         columns,
         loading,
+        exec,
         back,
+
+        execBy,
         momentTime,
         percent,
         testEnv,

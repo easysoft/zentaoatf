@@ -40,3 +40,19 @@ func (e TestType) String() string {
 func (TestType) Get(testType string) TestType {
 	return TestType(testType)
 }
+
+type ExecBy string
+
+const (
+	Case   ExecBy = "case"
+	Module ExecBy = "module"
+	Suite  ExecBy = "suite"
+	Task   ExecBy = "task"
+)
+
+func (e ExecBy) String() string {
+	return string(e)
+}
+func (ExecBy) Get(testType string) ExecBy {
+	return ExecBy(testType)
+}

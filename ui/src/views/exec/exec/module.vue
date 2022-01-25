@@ -2,7 +2,7 @@
     <div class="indexlayout-main-conent">
         <a-card :bordered="false">
           <template #title>
-            执行套件
+            <span v-if="seq">重新</span>执行套件
           </template>
           <template #extra>
             <div class="opt">
@@ -20,14 +20,21 @@
                 <a-form-item label="产品" v-bind="validateInfos.productId">
                   <a-select v-model:value="model.productId" @change="selectProduct">
                     <a-select-option key="" value="">&nbsp;</a-select-option>
-                    <a-select-option v-for="item in products" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
+                    <a-select-option v-for="item in products" :key="item.id" :value="item.id+''">{{item.name}}</a-select-option>
                   </a-select>
                 </a-form-item>
 
                 <a-form-item label="模块" v-bind="validateInfos.moduleId">
                   <a-select v-model:value="model.moduleId">
                     <a-select-option key="" value="">&nbsp;</a-select-option>
-                    <a-select-option v-for="item in modules" :key="item.id" :value="item.id"><span v-html="item.name"></span></a-select-option>
+                    <a-select-option v-for="item in modules" :key="item.id" :value="item.id+''"><span v-html="item.name"></span></a-select-option>
+                  </a-select>
+                </a-form-item>
+
+                <a-form-item label="范围" v-if="model.scope">
+                  <a-select v-model:value="model.scope">
+                    <a-select-option key="all" value="all">所有</a-select-option>
+                    <a-select-option key="fail" value="fail">仅失败用例</a-select-option>
                   </a-select>
                 </a-form-item>
 
@@ -53,7 +60,6 @@ import { validateInfos } from 'ant-design-vue/lib/form/useForm';
 import {message, Form} from 'ant-design-vue';
 const useForm = Form.useForm;
 
-import { ExecutionBy } from '../data.d';
 import {useStore} from "vuex";
 import {ProjectData} from "@/store/project";
 import {ZentaoData} from "@/store/zentao";
@@ -67,6 +73,7 @@ import {genExecInfo} from "@/views/exec/service";
 
 interface ExecCasePageSetupData {
   model: Ref;
+  seq: string
 
   wsMsg: any,
   exec: (keys) => void;
@@ -82,7 +89,7 @@ interface ExecCasePageSetupData {
   resetFields:  () => void;
   products: ComputedRef<any[]>;
   modules: ComputedRef<any[]>;
-  selectProduct:  (item) => void;
+  selectProduct:  (id) => void;
 }
 
 export default defineComponent({
@@ -90,6 +97,17 @@ export default defineComponent({
     components: {
     },
     setup(): ExecCasePageSetupData {
+      const router = useRouter();
+      let productId = router.currentRoute.value.params.productId
+      productId = productId == '0' ? '' : productId+''
+      let moduleId = router.currentRoute.value.params.moduleId
+      moduleId = moduleId == '0' ? '' : moduleId+''
+      let seq = router.currentRoute.value.params.seq
+      seq = seq === '-' ? '' : seq
+      let scope = router.currentRoute.value.params.scope
+      scope = scope === '-' ? '' : scope
+      console.log(productId, moduleId, scope)
+
       const storeProject = useStore<{ project: ProjectData }>();
       const currConfig = computed<any>(() => storeProject.state.project.currConfig);
 
@@ -103,8 +121,10 @@ export default defineComponent({
       })
 
       const model = reactive<any>({
-        productId: '',
-        moduleId: '',
+        productId: productId,
+        moduleId: moduleId,
+        seq: seq,
+        scope: scope,
       });
 
       const rules = reactive({
@@ -118,14 +138,13 @@ export default defineComponent({
 
       const { resetFields, validate, validateInfos } = useForm(model, rules);
 
-      const selectProduct = (item) => {
-        console.log('selectProduct', item)
-        if (!item) return
-
-        store.dispatch('zentao/fetchModules', item)
-      };
-
-      const router = useRouter();
+      const selectProduct = (id) => {
+        if (!id) return
+        store.dispatch('zentao/fetchModules', id)
+      }
+      if (productId !== '' && moduleId !== '') {
+        selectProduct(productId)
+      }
 
       let init = true;
       let isRunning = ref('false');
@@ -203,6 +222,7 @@ export default defineComponent({
 
       return {
         model,
+        seq,
         wsMsg,
 
         labelCol: { span: 6 },

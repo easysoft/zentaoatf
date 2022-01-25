@@ -19,12 +19,23 @@ export async function get(seq: string): Promise<any> {
 }
 
 export async function remove(seq: string): Promise<any> {
-    const params = {seq: seq}
-
     return request({
         url: `/${apiPath}/${seq}`,
         method: 'delete',
     });
+}
+
+export function getCaseIdsFromReport(report: any, scope: string): string[] {
+    const ret = new Array<string>()
+
+    report.funcResult.forEach(item => {
+        const path = item.path
+        const status = item.status
+        const selected = scope === 'all' || scope === status
+        if (path && selected) ret.push(path)
+    })
+
+    return ret
 }
 
 export function genExecInfo(jsn: WsMsg, i: number): string {

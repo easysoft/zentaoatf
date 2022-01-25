@@ -40,37 +40,37 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
       {
         title: 'index-layout.menu.execution.result',
         path: 'history/:seq',
-        component: () => import('@/views/exec/result/index.vue'),
+        component: () => import('@/views/exec/history/result.vue'),
         hidden: true,
       },
 
       {
         title: 'index-layout.menu.execution',
-        path: 'exec',
+        path: 'run',
         component: BlankLayout,
         hidden: true,
         children: [
           {
             title: 'index-layout.menu.execution.execCase',
-            path: 'case',
+            path: 'case/:seq/:scope',
             component: () => import('@/views/exec/exec/case.vue'),
             hidden: true,
           },
           {
             title: 'index-layout.menu.execution.execModule',
-            path: 'module',
+            path: 'module/:productId/:moduleId/:seq/:scope',
             component: () => import('@/views/exec/exec/module.vue'),
             hidden: true,
           },
           {
             title: 'index-layout.menu.execution.execSuite',
-            path: 'suite',
+            path: 'suite/:productId/:suiteId/:seq/:scope',
             component: () => import('@/views/exec/exec/suite.vue'),
             hidden: true,
           },
           {
             title: 'index-layout.menu.execution.execTask',
-            path: 'task',
+            path: 'task/:productId/:taskId/:seq/:scope',
             component: () => import('@/views/exec/exec/task.vue'),
             hidden: true,
           },

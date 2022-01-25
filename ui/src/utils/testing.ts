@@ -1,5 +1,14 @@
 import moment from "moment";
 
+const execByMap = {
+    case: '选用例',
+    module: '按模块',
+    suite: '按套件',
+    task: '按任务',
+}
+export function execByDef(code) {
+    return execByMap[code]
+}
 export function momentTimeDef(tm) {
     return moment.unix(tm).format("YYYY-MM-DD HH:mm:ss")
 }

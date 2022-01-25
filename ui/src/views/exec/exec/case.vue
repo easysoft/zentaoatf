@@ -3,7 +3,7 @@
 
     <a-card :bordered="false">
       <template #title>
-        执行套件
+        <span v-if="seq">重新</span>执行用例
       </template>
       <template #extra>
         <div class="opt">
@@ -76,13 +76,14 @@ import {getCache} from "@/utils/localCache";
 import settings from "@/config/settings";
 import {WebSocket, WsEventName} from "@/services/websocket";
 import {PrefixSpace, resizeWidth, scroll} from "@/utils/dom";
-import {genExecInfo} from "@/views/exec/service";
+import {genExecInfo, get, getCaseIdsFromReport} from "@/views/exec/service";
 import {WsMsg} from "@/views/exec/data";
 
 const useForm = Form.useForm;
 
 interface ExecCasePageSetupData {
   model: any
+  seq: string
 
   treeData: ComputedRef<any[]>;
   replaceFields: any,
@@ -110,6 +111,12 @@ export default defineComponent({
   },
   setup(): ExecCasePageSetupData {
     const router = useRouter();
+    let seq = router.currentRoute.value.params.seq
+    seq = seq === '-' ? '' : seq
+    let scope = router.currentRoute.value.params.scope
+    scope = scope === '-' ? '' : scope
+    console.log(seq, scope)
+
     const model = {}
 
     const replaceFields = {
@@ -121,7 +128,19 @@ export default defineComponent({
     const treeData = computed<any>(() => store.state.project.scriptTree);
     const expandedKeys = ref<string[]>([]);
     const selectedKeys = ref<string[]>([]);
-    const checkedKeys = ref<string[]>([]);
+    const checkedKeys = ref<string[]>([])
+
+    const selectCasesFromReport = async (): Promise<void> => {
+      if (!seq) return
+
+      get(seq).then((json) => {
+        setTimeout(() => { // wait tree init completed
+          checkedKeys.value = getCaseIdsFromReport(json.data, scope)
+          console.log('selectedKeys', checkedKeys.value)
+        }, 300)
+      })
+    }
+    selectCasesFromReport(seq)
 
     const getOpenKeys = (treeNode, isAll) => {
       if (!treeNode) return
@@ -240,6 +259,7 @@ export default defineComponent({
 
     return {
       model,
+      seq,
 
       treeData,
       replaceFields,

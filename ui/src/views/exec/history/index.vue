@@ -24,6 +24,9 @@
                 <template #seq="{ text }">
                   {{text}}
                 </template>
+                <template #execBy="{ record }">
+                  {{ execBy(record.execBy) }}
+                </template>
                 <template #startTime="{ record }">
                   {{ momentTime(record.startTime) }}
                 </template>
@@ -59,6 +62,7 @@ const useForm = Form.useForm;
 import {StateType} from "../store";
 import {useRouter} from "vue-router";
 import {momentTimeDef, percentDef} from "@/utils/datetime";
+import {execByDef} from "@/utils/testing";
 
 interface ListExecSetupData {
   columns: any;
@@ -74,6 +78,8 @@ interface ListExecSetupData {
   execModule:  () => void;
   execSuite:  () => void;
   execTask:  () => void;
+
+  execBy: (item) => string;
   momentTime: (tm) => string;
   percent: (numb, total) => string;
 }
@@ -83,6 +89,7 @@ export default defineComponent({
     components: {
     },
     setup(): ListExecSetupData {
+      const execBy = execByDef
       const momentTime = momentTimeDef
       const percent = percentDef
 
@@ -92,6 +99,11 @@ export default defineComponent({
           dataIndex: 'index',
           width: 150,
           customRender: ({text, index}: { text: any; index: number}) => index + 1,
+        },
+        {
+          title: '执行类型',
+          dataIndex: 'execBy',
+          slots: { customRender: 'execBy' },
         },
         {
           title: '名称',
@@ -162,19 +174,19 @@ export default defineComponent({
 
       const execCase = () =>  {
         console.log("execCase")
-        router.push(`/exec/exec/case`)
+        router.push(`/exec/run/case/-/-`)
       }
       const execModule = () =>  {
         console.log("execModule")
-        router.push(`/exec/exec/module`)
+        router.push(`/exec/run/module/0/0/-/-`)
       }
       const execSuite = () =>  {
         console.log("execSuite")
-        router.push(`/exec/exec/suite`)
+        router.push(`/exec/run/suite/0/0/-/-`)
       }
       const execTask = () =>  {
         console.log("execSuite")
-        router.push(`/exec/exec/task`)
+        router.push(`/exec/run/task/0/0/-/-`)
       }
 
       return {
@@ -191,6 +203,8 @@ export default defineComponent({
         execModule,
         execSuite,
         execTask,
+
+        execBy,
         momentTime,
         percent,
       }
@@ -200,13 +214,5 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-  .opt {
-    .space {
-      display: inline-block;
-      width: 50px;
-    }
-    .ant-btn {
-      margin-left: 12px;
-    }
-  }
+
 </style>

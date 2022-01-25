@@ -124,8 +124,9 @@ type ZtfReport struct {
 	TestType  consts.TestType `json:"testType"`
 	TestFrame string          `json:"testFrame"`
 
-	ProductId int `json:"productId,omitempty"`
-	TaskId    int `json:"taskId,omitempty"`
+	ProductId int           `json:"productId,omitempty"`
+	ExecBy    consts.ExecBy `json:"execBy,omitempty"`
+	ExecById  int           `json:"execById,omitempty"`
 
 	Pass      int   `json:"pass"`
 	Fail      int   `json:"fail"`

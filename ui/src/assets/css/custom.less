@@ -1,0 +1,104 @@
+@import '~ant-design-vue/dist/antd.less';
+@import './antd-variables.less';
+@import './variables.less';
+@import './mixin.less';
+
+.t-icon {
+    cursor: pointer;
+}
+.t-bord{
+    font-weight: bold;
+}
+.t-center{
+    text-align: center;
+}
+.t-right{
+    text-align: right;
+}
+.t-pass, t-true {
+    color: green;
+}
+.t-fail, t-false {
+    color: red;
+}
+.t-skip {
+    color: gray;
+}
+
+.ant-row {
+    margin: 10px 0;
+    .t-label-right{
+        padding-right: 20px;
+        text-align: right;
+    }
+}
+
+.opt {
+    .space {
+        display: inline-block;
+        width: 50px;
+    }
+    .ant-btn {
+        margin-left: 12px;
+    }
+}
+
+.ant-card {
+    height: 100%;
+
+    .ant-card-head {
+        .ant-card-head-title {
+            padding: 8px 0;
+        }
+        .ant-card-extra {
+            padding: 8px 0;
+        }
+    }
+    .ant-card-body {
+        padding: 0px;
+        height: calc(100% - 50px);
+    }
+}
+
+/* 滚动条 */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    background: transparent;
+    border-radius: 5px;
+}
+
+/* 滚动条两端按钮 */
+::-webkit-scrollbar-button {
+    width: 0;
+    height: 0;
+}
+
+/* 外层轨道 */
+::-webkit-scrollbar-track {
+    border-radius: 5px;
+}
+
+/* 内层轨道，它会覆盖外层轨道的样式 */
+::-webkit-scrollbar-track-piece {
+    width: 4px;
+    margin: 0 -2px 0;
+}
+
+/* 滑块 */
+::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    min-height: 60px;
+    min-width: 60px;
+    border-radius: 5px;
+}
+
+/* 纵向滑块悬浮 */
+::-webkit-scrollbar-thumb:vertical:hover {
+    background-color: #333;
+}
+
+/* 横向滑块悬浮 */
+::-webkit-scrollbar-thumb:horizontal:hover {
+    background-color: #333;
+}

@@ -15,6 +15,7 @@ import (
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
 	serverLog "github.com/aaronchen2k/deeptest/internal/server/core/log"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	analysisUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/analysis"
 	configUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/config"
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/script"
 	zentaoUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/zentao"
@@ -50,28 +51,38 @@ func Exec(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, m
 
 func ExecCase(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
 	cases := req.Cases
-	return Run(ch, sendOutputMsg, sendExecMsg, req.ProjectPath, cases, msg)
+	return Run(ch, sendOutputMsg, sendExecMsg, req.ProjectPath, 0, 0, consts.Case, cases, msg)
 }
 
 func ExecModule(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	cases := zentaoUtils.GetCasesByModule(req.ProductId, req.ModuleId, req.ProjectPath)
-	return Run(ch, sendOutputMsg, sendExecMsg, req.ProjectPath, cases, msg)
+
+	cases := zentaoUtils.GetCasesByModule(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.ModuleId), req.ProjectPath)
+
+	if req.Seq != "" {
+		cases = analysisUtils.FilterCaseByResult(cases, req)
+	}
+
+	return Run(ch, sendOutputMsg, sendExecMsg, req.ProjectPath,
+		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.ModuleId), consts.Module, cases, msg)
 }
 
 func ExecSuite(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	cases := zentaoUtils.GetCasesBySuite(req.ProductId, req.SuiteId, req.ProjectPath)
-	return Run(ch, sendOutputMsg, sendExecMsg, req.ProjectPath, cases, msg)
+	cases := zentaoUtils.GetCasesBySuite(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId), req.ProjectPath)
+	return Run(ch, sendOutputMsg, sendExecMsg, req.ProjectPath,
+		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId), consts.Suite, cases, msg)
 }
 
 func ExecTask(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	cases := zentaoUtils.GetCasesByTask(req.ProductId, req.TaskId, req.ProjectPath)
-	return Run(ch, sendOutputMsg, sendExecMsg, req.ProjectPath, cases, msg)
+	cases := zentaoUtils.GetCasesByTask(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId), req.ProjectPath)
+	return Run(ch, sendOutputMsg, sendExecMsg, req.ProjectPath,
+		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId), consts.Task, cases, msg)
 }
 
-func Run(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message), projectPath string, cases []string, msg websocket.Message) (
+func Run(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message),
+	projectPath string, productId, id int, by consts.ExecBy, cases []string, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 
 	conf := configUtils.LoadByProjectPath(projectPath)
@@ -80,7 +91,7 @@ func Run(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, ms
 
 	numbMaxWidth := 0
 	numbMaxWidth, pathMaxWidth = getNumbMaxWidth(casesToRun)
-	report = genReport()
+	report = genReport(productId, id, by)
 
 	ExeScripts(casesToRun, casesToIgnore, projectPath, conf, &report, pathMaxWidth, numbMaxWidth, ch, sendOutputMsg, sendExecMsg, msg)
 	GenZTFTestReport(report, pathMaxWidth, projectPath, sendOutputMsg, sendExecMsg, msg)
@@ -328,9 +339,11 @@ func filterCases(cases []string, conf commDomain.ProjectConf) (casesToRun, cases
 	return
 }
 
-func genReport() (report commDomain.ZtfReport) {
-	report = commDomain.ZtfReport{TestEnv: commonUtils.GetOs(),
+func genReport(productId, id int, by consts.ExecBy) (report commDomain.ZtfReport) {
+	report = commDomain.ZtfReport{
+		TestEnv: commonUtils.GetOs(), ExecBy: by, ExecById: id, ProductId: productId,
 		Pass: 0, Fail: 0, Total: 0, FuncResult: make([]commDomain.FuncResult, 0)}
+
 	report.TestType = consts.TestFunc
 	report.TestFrame = commConsts.AppServer
 
