@@ -5,6 +5,7 @@ import (
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
+	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	dateUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/date"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
@@ -328,9 +329,9 @@ func filterCases(cases []string, conf commDomain.ProjectConf) (casesToRun, cases
 }
 
 func genReport() (report commDomain.ZtfReport) {
-	report = commDomain.ZtfReport{Env: commonUtils.GetOs(),
+	report = commDomain.ZtfReport{TestEnv: commonUtils.GetOs(),
 		Pass: 0, Fail: 0, Total: 0, FuncResult: make([]commDomain.FuncResult, 0)}
-	report.TestType = "func"
+	report.TestType = consts.TestFunc
 	report.TestFrame = commConsts.AppServer
 
 	return

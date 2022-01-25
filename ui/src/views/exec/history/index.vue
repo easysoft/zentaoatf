@@ -17,7 +17,7 @@
               <a-table
                   row-key="seq"
                   :columns="columns"
-                  :data-source="list"
+                  :data-source="models"
                   :loading="loading"
                   :pagination="false"
               >
@@ -50,25 +50,21 @@
 
 <script lang="ts">
 import {ComputedRef, defineComponent, ref, Ref, reactive, computed, onMounted} from "vue";
-import { SelectTypes } from 'ant-design-vue/es/select';
 import {Execution} from '../data.d';
-import {QueryParams, PaginationConfig} from '@/types/data.d';
 import {useStore} from "vuex";
 
-import { Props } from 'ant-design-vue/lib/form/useForm';
 import { message, Modal, Form } from "ant-design-vue";
 const useForm = Form.useForm;
 
-import {StateType as ListStateType} from "../store";
-import debounce from "lodash.debounce";
+import {StateType} from "../store";
 import {useRouter} from "vue-router";
-import moment from 'moment';
+import {momentTimeDef, percentDef} from "@/utils/datetime";
 
 interface ListExecSetupData {
   columns: any;
-  list: ComputedRef<Execution[]>;
+  models: ComputedRef<Execution[]>;
   loading: Ref<boolean>;
-  getList:  () => Promise<void>;
+  list:  () => Promise<void>;
   viewExec: (item) => void;
 
   deleteLoading: Ref<string[]>;
@@ -87,13 +83,8 @@ export default defineComponent({
     components: {
     },
     setup(): ListExecSetupData {
-      const momentTime = (tm) => {
-        return moment.unix(tm).format("YYYY-MM-DD HH:mm:ss")
-      }
-      const percent = (numb, total) => {
-        if (total == 0) return '0%'
-        return Number(numb / total * 100).toFixed(2) + '%'
-      }
+      const momentTime = momentTimeDef
+      const percent = percentDef
 
       const columns =[
         {
@@ -130,13 +121,13 @@ export default defineComponent({
       ];
 
       const router = useRouter();
-      const store = useStore<{ ListExecution: ListStateType}>();
+      const store = useStore<{ History: StateType}>();
 
-      const list = computed<any[]>(() => store.state.ListExecution.listResult);
+      const models = computed<any[]>(() => store.state.History.items);
       const loading = ref<boolean>(true);
-      const getList = async (): Promise<void> => {
+      const list = async (): Promise<void> => {
         loading.value = true;
-        await store.dispatch('ListExecution/listExecution', {});
+        await store.dispatch('History/list', {});
         loading.value = false;
       }
 
@@ -150,15 +141,15 @@ export default defineComponent({
       const deleteExec = (item) => {
         Modal.confirm({
           title: '删除脚本',
-          content: '确定删除吗？',
+          content: `确定删除编号"${item.seq}"的执行结果吗？`,
           okText: '确认',
           cancelText: '取消',
           onOk: async () => {
             deleteLoading.value = [item.seq];
-            const res: boolean = await store.dispatch('ListExecution/deleteExecution', item.seq);
+            const res: boolean = await store.dispatch('History/delete', item.seq);
             if (res === true) {
               message.success('删除成功！');
-              await getList();
+              await list();
             }
             deleteLoading.value = [];
           }
@@ -166,7 +157,7 @@ export default defineComponent({
       }
 
       onMounted(()=> {
-        getList();
+        list();
       })
 
       const execCase = () =>  {
@@ -188,9 +179,9 @@ export default defineComponent({
 
       return {
         columns,
-        list,
+        models,
         loading,
-        getList,
+        list,
 
         viewExec,
         deleteLoading,

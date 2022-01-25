@@ -6,7 +6,6 @@ import (
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/exec"
 	"github.com/jinzhu/copier"
@@ -31,7 +30,10 @@ func (s *TestExecService) List(projectPath string) (ret []serverDomain.TestRepor
 
 		content := fileUtils.ReadFileBuf(pth)
 		var report commDomain.ZtfReport
-		json.Unmarshal(content, &report)
+		err1 := json.Unmarshal(content, &report)
+		if err1 != nil {
+			continue
+		}
 
 		var summary serverDomain.TestReportSummary
 		copier.Copy(&summary, report)
@@ -42,7 +44,13 @@ func (s *TestExecService) List(projectPath string) (ret []serverDomain.TestRepor
 	return
 }
 
-func (s *TestExecService) Get(path string) (exec model.TestExec, err error) {
+func (s *TestExecService) Get(projectPath string, seq string) (report commDomain.ZtfReport, err error) {
+	dir := filepath.Join(projectPath, commConsts.LogDirName)
+	pth := filepath.Join(dir, seq, commConsts.ResultJson)
+
+	content := fileUtils.ReadFileBuf(pth)
+	err = json.Unmarshal(content, &report)
+
 	return
 }
 

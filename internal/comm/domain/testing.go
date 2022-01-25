@@ -3,6 +3,7 @@ package commDomain
 import (
 	"encoding/xml"
 	"fmt"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	"time"
 )
@@ -119,9 +120,9 @@ type ZtfBug struct {
 }
 
 type ZtfReport struct {
-	Env       string `json:"env,omitempty"`
-	TestType  string `json:"testType"`
-	TestFrame string `json:"testFrame"`
+	TestEnv   consts.OsType   `json:"testEnv,omitempty"`
+	TestType  consts.TestType `json:"testType"`
+	TestFrame string          `json:"testFrame"`
 
 	ProductId int `json:"productId,omitempty"`
 	TaskId    int `json:"taskId,omitempty"`
@@ -139,26 +140,26 @@ type ZtfReport struct {
 }
 
 type FuncResult struct {
-	Id        int    `json:"id"`
-	ProductId int    `json:"productId"`
-	Path      string `json:"path"`
-	Status    string `json:"status"`
-	Title     string `json:"title"`
+	Id        int                     `json:"id"`
+	ProductId int                     `json:"productId"`
+	Path      string                  `json:"path"`
+	Status    commConsts.ResultStatus `json:"status"`
+	Title     string                  `json:"title"`
 
 	Steps []StepLog `json:"steps"`
 }
 type StepLog struct {
-	Id     string `json:"id"`
-	Name   string `json:"name"`
-	Status bool   `json:"status"`
+	Id     string                  `json:"id"`
+	Name   string                  `json:"name"`
+	Status commConsts.ResultStatus `json:"status"`
 
 	CheckPoints []CheckPointLog `json:"checkPoints"`
 }
 type CheckPointLog struct {
-	Numb   int    `json:"numb"`
-	Expect string `json:"expect"`
-	Actual string `json:"actual"`
-	Status bool   `json:"status"`
+	Numb   int                     `json:"numb"`
+	Expect string                  `json:"expect"`
+	Actual string                  `json:"actual"`
+	Status commConsts.ResultStatus `json:"status"`
 }
 
 // 单元测试

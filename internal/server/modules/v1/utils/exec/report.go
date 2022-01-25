@@ -9,7 +9,6 @@ import (
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/mattn/go-runewidth"
@@ -53,7 +52,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 			if len(cs.Steps) > 0 {
 				stepNumb := 0
 				for _, step := range cs.Steps {
-					if step.Status {
+					if step.Status == commConsts.PASS {
 						continue
 					}
 
@@ -63,7 +62,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 					stepNumb++
 
 					step.Id = strings.TrimRight(step.Id, ".")
-					status := i118Utils.Sprintf(stringUtils.BoolToPass(step.Status))
+					status := i118Utils.Sprintf(step.Status)
 					failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("Step %s: %s", step.Id, status))
 
 					for idx1, cp := range step.CheckPoints {

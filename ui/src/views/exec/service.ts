@@ -12,19 +12,9 @@ export async function list(params?: QueryParams): Promise<any> {
     });
 }
 
-export async function create(params: Omit<Execution, 'id'>): Promise<any> {
+export async function get(seq: string): Promise<any> {
     return request({
-        url: `/${apiPath}`,
-        method: 'POST',
-        data: params,
-    });
-}
-
-export async function update(id: number, params: Omit<Execution, 'id'>): Promise<any> {
-    return request({
-        url: `/${apiPath}/${id}`,
-        method: 'PUT',
-        data: params,
+        url: `/${apiPath}/${seq}`
     });
 }
 
@@ -35,10 +25,6 @@ export async function remove(seq: string): Promise<any> {
         url: `/${apiPath}/${seq}`,
         method: 'delete',
     });
-}
-
-export async function detail(id: number): Promise<any> {
-    return request({url: `/executions/${id}`});
 }
 
 export function genExecInfo(jsn: WsMsg, i: number): string {

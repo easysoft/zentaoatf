@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
@@ -31,16 +32,19 @@ func (c *TestExecCtrl) List(ctx iris.Context) {
 
 // Get 详情
 func (c *TestExecCtrl) Get(ctx iris.Context) {
-	resultPath := ctx.URLParam("resultPath")
-	if resultPath == "" {
+	projectPath := ctx.URLParam("currProject")
+	seq := ctx.Params().Get("seq")
+
+	if seq == "" {
 		logUtils.Errorf("参数解析失败")
 		ctx.JSON(domain.Response{Code: domain.ParamErr.Code, Data: nil, Msg: domain.ParamErr.Msg})
 		return
 	}
 
-	exec, err := c.TestExecService.Get(resultPath)
+	exec, err := c.TestExecService.Get(projectPath, seq)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: domain.SystemErr.Msg})
+		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil,
+			Msg: fmt.Sprintf("获取编号为%s的日志失败。", seq)})
 		return
 	}
 	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: exec, Msg: domain.NoErr.Msg})

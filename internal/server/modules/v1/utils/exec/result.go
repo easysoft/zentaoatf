@@ -54,11 +54,11 @@ func ValidateCaseResult(scriptFile string, langType string,
 	_, caseId, productId, title := scriptUtils.GetCaseInfo(scriptFile)
 
 	stepLogs := make([]commDomain.StepLog, 0)
-	caseResult := commConsts.PASS.String()
+	caseResult := commConsts.PASS
 	noExpects := true
 
 	if skip {
-		caseResult = commConsts.SKIP.String()
+		caseResult = commConsts.SKIP
 	} else {
 		idx := 0
 
@@ -83,10 +83,10 @@ func ValidateCaseResult(scriptFile string, langType string,
 			}
 
 			stepResult, checkpointLogs := ValidateStepResult(langType, expectLines, actualLines)
-			stepLog := commDomain.StepLog{Id: numb, Name: stepName, Status: stepResult, CheckPoints: checkpointLogs}
+			stepLog := commDomain.StepLog{Id: strings.TrimRight(numb, "."), Name: stepName, Status: stepResult, CheckPoints: checkpointLogs}
 			stepLogs = append(stepLogs, stepLog)
-			if !stepResult {
-				caseResult = commConsts.FAIL.String()
+			if stepResult == commConsts.FAIL {
+				caseResult = commConsts.FAIL
 			}
 
 			idx++
@@ -94,14 +94,14 @@ func ValidateCaseResult(scriptFile string, langType string,
 	}
 
 	if noExpects {
-		caseResult = commConsts.SKIP.String()
+		caseResult = commConsts.SKIP
 	}
 
-	if caseResult == commConsts.FAIL.String() {
+	if caseResult == commConsts.FAIL {
 		report.Fail = report.Fail + 1
-	} else if caseResult == commConsts.PASS.String() {
+	} else if caseResult == commConsts.PASS {
 		report.Pass = report.Pass + 1
-	} else if caseResult == commConsts.SKIP.String() {
+	} else if caseResult == commConsts.SKIP {
 		report.Skip = report.Skip + 1
 	}
 	report.Total = report.Total + 1
@@ -122,17 +122,18 @@ func ValidateCaseResult(scriptFile string, langType string,
 	}
 
 	format := "(%" + width + "d/%d) %s [%s] [%" + numbWidth + "d. %s] (%ss)"
-	msg := fmt.Sprintf(format, idx+1, total, i118Utils.Sprintf(cs.Status), path, cs.Id, cs.Title, secs)
+
+	status := i118Utils.Sprintf(cs.Status.String())
+	msg := fmt.Sprintf(format, idx+1, total, status, path, cs.Id, cs.Title, secs)
 
 	sendExecMsg(msg, "", wsMsg)
 	logUtils.ExecConsole(color.FgCyan, msg)
 	logUtils.ExecResult(msg)
 }
 
-func ValidateStepResult(langType string, expectLines []string, actualLines []string) (bool, []commDomain.CheckPointLog) {
-	stepResult := true
-
-	checkpointLogs := make([]commDomain.CheckPointLog, 0)
+func ValidateStepResult(langType string, expectLines []string, actualLines []string) (
+	stepResult commConsts.ResultStatus, checkpointLogs []commDomain.CheckPointLog) {
+	stepResult = commConsts.PASS
 
 	indx2 := 0
 	for _, expect := range expectLines {
@@ -151,10 +152,10 @@ func ValidateStepResult(langType string, expectLines []string, actualLines []str
 		}
 
 		if !pass {
-			stepResult = false
+			stepResult = commConsts.FAIL
 		}
 
-		cp := commDomain.CheckPointLog{Numb: indx2 + 1, Status: pass, Expect: expect, Actual: log}
+		cp := commDomain.CheckPointLog{Numb: indx2 + 1, Status: stepResult, Expect: expect, Actual: log}
 		checkpointLogs = append(checkpointLogs, cp)
 
 		indx2++

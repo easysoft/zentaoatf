@@ -4,64 +4,64 @@ import { ResponseData } from '@/utils/request';
 import { Execution } from './data.d';
 import { QueryResult, QueryParams } from '@/types/data.d';
 import {
-    list, remove, create, detail, update,
+    list, get, remove,
 } from './service';
 
 export interface StateType {
-    listResult: any[];
-    detailResult: Partial<Execution>;
+    items: any[];
+    item: Partial<Execution>;
 }
 
 export interface ModuleType extends StoreModuleType<StateType> {
     state: StateType;
     mutations: {
-        setList: Mutation<StateType>;
+        setItems: Mutation<StateType>;
         setItem: Mutation<StateType>;
     };
     actions: {
-        listExecution: Action<StateType, StateType>;
-        deleteExecution: Action<StateType, StateType>;
-        getExecution: Action<StateType, StateType>;
+        list: Action<StateType, StateType>;
+        get: Action<StateType, StateType>;
+        delete: Action<StateType, StateType>;
     };
 }
 const initState: StateType = {
-    listResult: [],
-    detailResult: {},
+    items: [],
+    item: {},
 };
 
 const StoreModel: ModuleType = {
     namespaced: true,
-    name: 'ListExecution',
+    name: 'History',
     state: {
         ...initState
     },
     mutations: {
-        setList(state, payload) {
-            state.listResult = payload;
+        setItems(state, payload) {
+            state.items = payload;
         },
         setItem(state, payload) {
-            state.detailResult = payload;
+            state.item = payload;
         },
     },
     actions: {
-        async listExecution({ commit }, params: QueryParams ) {
+        async list({ commit }, params: QueryParams ) {
             try {
                 const response: ResponseData = await list(params);
                 if (response.code != 0) return;
                 const data = response.data;
-                commit('setList', data);
+                commit('setItems', data);
 
                 return true;
             } catch (error) {
                 return false;
             }
         },
-        async getExecution({ commit }, payload: number ) {
+        async get({ commit }, payload: string ) {
             try {
-                const response: ResponseData = await detail(payload);
+                const response: ResponseData = await get(payload);
                 const { data } = response;
                 commit('setItem',{
-                    ...initState.detailResult,
+                    ...initState.item,
                     ...data,
                 });
                 return true;
@@ -69,10 +69,10 @@ const StoreModel: ModuleType = {
                 return false;
             }
         },
-        async deleteExecution({ commit }, payload: string ) {
+        async delete({ commit }, payload: string ) {
             try {
                 await remove(payload);
-                await this.dispatch('ListExecution/listExecution', {})
+                await this.dispatch('History/list', {})
 
                 return true;
             } catch (error) {
