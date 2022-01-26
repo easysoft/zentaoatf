@@ -5,8 +5,8 @@ import commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 type WsReq struct {
 	Act commConsts.ExecCmd `json:"act"`
 
-	Seq   string `json:"seq"`
-	Scope string `json:"scope"`
+	Seq   string                  `json:"seq"`
+	Scope commConsts.ResultStatus `json:"scope"`
 
 	Cases       []string `json:"cases"`
 	ProductId   string   `json:"productId"`

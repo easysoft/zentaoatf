@@ -102,7 +102,7 @@ interface DesignExecutionPageSetupData {
   columns: any[]
 
   loading: Ref<boolean>;
-  exec: () => void;
+  exec: (scope) => void;
   back: () => void;
 
   execBy: (item) => string;
@@ -150,7 +150,7 @@ export default defineComponent({
         },
       ]
 
-      const report = computed<any[]>(() => store.state.History.item);
+      const report = computed<any>(() => store.state.History.item);
       const loading = ref<boolean>(true);
       console.log(report)
 
@@ -161,7 +161,7 @@ export default defineComponent({
         await store.dispatch('History/get', seq);
         loading.value = false;
       }
-      get(seq)
+      get()
 
       const exec = (scope):void =>  {
         console.log(report)

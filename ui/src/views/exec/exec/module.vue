@@ -98,13 +98,13 @@ export default defineComponent({
     },
     setup(): ExecCasePageSetupData {
       const router = useRouter();
-      let productId = router.currentRoute.value.params.productId
+      let productId = router.currentRoute.value.params.productId as string
       productId = productId == '0' ? '' : productId+''
-      let moduleId = router.currentRoute.value.params.moduleId
+      let moduleId = router.currentRoute.value.params.moduleId as string
       moduleId = moduleId == '0' ? '' : moduleId+''
-      let seq = router.currentRoute.value.params.seq
+      let seq = router.currentRoute.value.params.seq as string
       seq = seq === '-' ? '' : seq
-      let scope = router.currentRoute.value.params.scope
+      let scope = router.currentRoute.value.params.scope as string
       scope = scope === '-' ? '' : scope
       console.log(productId, moduleId, scope)
 

@@ -59,7 +59,6 @@ import { validateInfos } from 'ant-design-vue/lib/form/useForm';
 import {message, Form} from 'ant-design-vue';
 const useForm = Form.useForm;
 
-import { ExecutionBy } from '../data.d';
 import {useStore} from "vuex";
 import {ProjectData} from "@/store/project";
 import {ZentaoData} from "@/store/zentao";
@@ -98,13 +97,13 @@ export default defineComponent({
     },
     setup(): ExecTaskPageSetupData {
       const router = useRouter();
-      let productId = router.currentRoute.value.params.productId
+      let productId = router.currentRoute.value.params.productId as string
       productId = productId == '0' ? '' : productId + ''
-      let taskId = router.currentRoute.value.params.taskId
+      let taskId = router.currentRoute.value.params.taskId as string
       taskId = taskId == '0' ? '' : taskId + ''
-      let seq = router.currentRoute.value.params.seq
+      let seq = router.currentRoute.value.params.seq as string
       seq = seq === '-' ? '' : seq
-      let scope = router.currentRoute.value.params.scope
+      let scope = router.currentRoute.value.params.scope as string
       scope = scope === '-' ? '' : scope
       console.log(productId, taskId, scope)
 
@@ -120,7 +119,7 @@ export default defineComponent({
         store.dispatch('zentao/fetchProducts')
       })
 
-      const model = reactive<ExecutionBy>({
+      const model = reactive<any>({
         productId: productId,
         taskId: taskId,
         seq: seq,

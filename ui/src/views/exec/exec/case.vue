@@ -111,9 +111,9 @@ export default defineComponent({
   },
   setup(): ExecCasePageSetupData {
     const router = useRouter();
-    let seq = router.currentRoute.value.params.seq
+    let seq = router.currentRoute.value.params.seq  as string
     seq = seq === '-' ? '' : seq
-    let scope = router.currentRoute.value.params.scope
+    let scope = router.currentRoute.value.params.scope as string
     scope = scope === '-' ? '' : scope
     console.log(seq, scope)
 
@@ -140,7 +140,7 @@ export default defineComponent({
         }, 300)
       })
     }
-    selectCasesFromReport(seq)
+    selectCasesFromReport()
 
     const getOpenKeys = (treeNode, isAll) => {
       if (!treeNode) return

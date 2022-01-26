@@ -20,9 +20,9 @@ import (
 func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	projectPath string, sendOutMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), wsMsg websocket.Message) {
 
-	if len(report.FuncResult) == 0 {
-		return
-	}
+	//if len(report.FuncResult) == 0 {
+	//	return
+	//}
 
 	// print failed case
 	failedCount := 0
@@ -96,9 +96,18 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 
 	// 生成统计行
 	fmtStr := "%d(%.1f%%) %s"
-	passStr := fmt.Sprintf(fmtStr, report.Pass, float32(report.Pass*100/report.Total), i118Utils.Sprintf("pass"))
-	failStr := fmt.Sprintf(fmtStr, report.Fail, float32(report.Fail*100/report.Total), i118Utils.Sprintf("fail"))
-	skipStr := fmt.Sprintf(fmtStr, report.Skip, float32(report.Skip*100/report.Total), i118Utils.Sprintf("skip"))
+	passRate := 0
+	failRate := 0
+	skipRate := 0
+	if report.Total > 0 {
+		passRate = report.Pass * 100 / report.Total
+		failRate = report.Fail * 100 / report.Total
+		skipRate = report.Skip * 100 / report.Total
+	}
+
+	passStr := fmt.Sprintf(fmtStr, report.Pass, float32(passRate), i118Utils.Sprintf("pass"))
+	failStr := fmt.Sprintf(fmtStr, report.Fail, float32(failRate), i118Utils.Sprintf("fail"))
+	skipStr := fmt.Sprintf(fmtStr, report.Skip, float32(skipRate), i118Utils.Sprintf("skip"))
 
 	// 执行%d个用例，耗时%d秒%s。%s，%s，%s。报告%s。
 	msg := dateUtils.DateTimeStr(time.Now()) + " " +

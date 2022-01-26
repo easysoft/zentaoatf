@@ -47,7 +47,7 @@ export interface SettingsType {
 }
 
 const settings: SettingsType = {
-    siteTitle: 'ADMIN-ANTD-VUE',
+    siteTitle: 'ZTF',
     topNavEnable: true,
     headFixed: true,
     siteTokenKey: 'admin_antd_vue_token',

@@ -1,24 +1,35 @@
 package analysisUtils
 
 import (
-	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
-	"path"
-	"strings"
 )
 
-func FilterCaseByResult(cases []string, req serverDomain.WsReq) []string { // scope: all | fail
+func FilterCaseByResult(cases []string, req serverDomain.WsReq) (ret []string) { // scope: all | fail
 	scope := req.Scope
+	caseIdMap, _ := getCaseIdMapFromReport(req)
 
-	report, err := GetReport(req.ProjectPath, req.Seq)
-
-	cases := make([]string, 0)
-
-	for _, cs := range report.FuncResult {
-		if cs.Status != "pass" {
-			cases = append(cases, cs.Path)
+	for _, cs := range cases {
+		if scope.String() == "all" || (scope == caseIdMap[cs]) {
+			ret = append(ret, cs)
 		}
 	}
 
-	return cases
+	return
+}
+
+func getCaseIdMapFromReport(req serverDomain.WsReq) (ret map[string]commConsts.ResultStatus, err error) {
+	report, err := GetReport(req.ProjectPath, req.Seq)
+	if err != nil {
+		logUtils.Errorf("fail to get case ids for %s %s", req.ProjectPath, req.Seq)
+		return
+	}
+
+	ret = map[string]commConsts.ResultStatus{}
+	for _, cs := range report.FuncResult {
+		ret[cs.Path] = cs.Status
+	}
+
+	return
 }

@@ -70,6 +70,11 @@ func ExecModule(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning str
 func ExecSuite(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 	cases := zentaoUtils.GetCasesBySuite(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId), req.ProjectPath)
+
+	if req.Seq != "" {
+		cases = analysisUtils.FilterCaseByResult(cases, req)
+	}
+
 	return Run(ch, sendOutputMsg, sendExecMsg, req.ProjectPath,
 		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId), consts.Suite, cases, msg)
 }
@@ -77,6 +82,11 @@ func ExecSuite(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning stri
 func ExecTask(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 	cases := zentaoUtils.GetCasesByTask(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId), req.ProjectPath)
+
+	if req.Seq != "" {
+		cases = analysisUtils.FilterCaseByResult(cases, req)
+	}
+
 	return Run(ch, sendOutputMsg, sendExecMsg, req.ProjectPath,
 		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId), consts.Task, cases, msg)
 }
