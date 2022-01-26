@@ -42,13 +42,13 @@
                   </a-select>
                 </a-form-item>
 
-                <a-form-item label="提交到禅道" v-bind="validateInfos.submitResult">
-                  <a-switch v-model:checked="model.submitResult" />
-                </a-form-item>
-
                 <a-form-item label="测试命令" v-bind="validateInfos.cmd">
                   <a-textarea v-model:value="model.cmd" placeholder="mvn clean package test"
                               :auto-size="{ minRows: 3, maxRows: 6 }" />
+                </a-form-item>
+
+                <a-form-item label="提交到禅道" v-bind="validateInfos.submitResult">
+                  <a-switch v-model:checked="model.submitResult" />
                 </a-form-item>
 
               </a-form>
@@ -127,22 +127,6 @@ export default defineComponent({
         store.dispatch('zentao/fetchProducts')
       })
 
-      const model = reactive<any>({});
-
-      const rules = reactive({
-        productId: [
-          { required: true, message: '请选择产品' },
-        ],
-        framework: [
-          { required: true, message: '请选择单元测试框架' },
-        ],
-        cmd: [
-          { required: true, message: '请输入所要执行的命令' },
-        ],
-      });
-
-      const { resetFields, validate, validateInfos } = useForm(model, rules);
-
       let init = true;
       let isRunning = ref('false');
       let wsMsg = reactive({in: '', out: ''});
@@ -177,6 +161,22 @@ export default defineComponent({
         resizeWidth('main', 'left', 'resize', 'content', 280, 800)
         initWsConn()
       })
+
+      const model = reactive<any>({productId: '', framework: '', cmd: ''});
+
+      const rules = reactive({
+        productId: [
+          { required: true, message: '请选择产品' },
+        ],
+        framework: [
+          { required: true, message: '请选择单元测试框架' },
+        ],
+        cmd: [
+          { required: true, message: '请输入所要执行的命令' },
+        ],
+      });
+
+      const { resetFields, validate, validateInfos } = useForm(model, rules);
 
       const exec = (): void => {
         console.log("exec")
