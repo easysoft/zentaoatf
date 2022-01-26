@@ -6,10 +6,16 @@
             </template>
             <template #extra>
               <div class="opt">
-                <a-button @click="execCase" type="primary">执行用例</a-button>
-                <a-button @click="execModule" type="primary">执行模块</a-button>
-                <a-button @click="execSuite" type="primary">执行套件</a-button>
-                <a-button @click="execTask" type="primary">执行任务</a-button>
+                <template v-if="currProject.type === 'func'">
+                  <a-button @click="execCase" type="primary">执行用例</a-button>
+                  <a-button @click="execModule" type="primary">执行模块</a-button>
+                  <a-button @click="execSuite" type="primary">执行套件</a-button>
+                  <a-button @click="execTask" type="primary">执行任务</a-button>
+                </template>
+
+                <template v-if="currProject.type === 'unit'">
+                  <a-button @click="execUnit" type="primary">执行单元测试</a-button>
+                </template>
               </div>
             </template>
 
@@ -40,7 +46,7 @@
                   <span class="t-skip">{{record.skip}}（{{percent(record.skip, record.total)}}）忽略</span>。
                 </template>
                 <template #action="{ record }">
-                  <a-button @click="() => viewExec(record)" type="link" size="small">查看</a-button>
+                  <a-button @click="() => viewResult(record)" type="link" size="small">查看</a-button>
                   <a-button @click="() => deleteExec(record)" type="link" size="small"
                             :loading="deleteLoading.includes(record.seq)">删除</a-button>
                 </template>
@@ -63,13 +69,16 @@ import {StateType} from "../store";
 import {useRouter} from "vue-router";
 import {momentTimeDef, percentDef} from "@/utils/datetime";
 import {execByDef} from "@/utils/testing";
+import {ProjectData} from "@/store/project";
 
 interface ListExecSetupData {
+  currProject: ComputedRef;
+
   columns: any;
   models: ComputedRef<Execution[]>;
   loading: Ref<boolean>;
   list:  () => Promise<void>;
-  viewExec: (item) => void;
+  viewResult: (item) => void;
 
   deleteLoading: Ref<string[]>;
   deleteExec:  (item) => void;
@@ -78,6 +87,7 @@ interface ListExecSetupData {
   execModule:  () => void;
   execSuite:  () => void;
   execTask:  () => void;
+  execUnit:  () => void;
 
   execBy: (item) => string;
   momentTime: (tm) => string;
@@ -89,6 +99,9 @@ export default defineComponent({
     components: {
     },
     setup(): ListExecSetupData {
+      const projectStore = useStore<{ project: ProjectData }>();
+      const currProject = computed<any>(() => projectStore.state.project.currProject);
+
       const execBy = execByDef
       const momentTime = momentTimeDef
       const percent = percentDef
@@ -144,8 +157,9 @@ export default defineComponent({
       }
 
       // 查看
-      const viewExec = (item) => {
-        router.push(`/exec/history/${item.seq}`)
+      const viewResult = (item) => {
+        if (item.testType === 'func') router.push(`/exec/history/${item.testType}/${item.seq}`)
+        else router.push(`/exec/history/${item.testType}`)
       }
 
       // 删除
@@ -189,13 +203,20 @@ export default defineComponent({
         router.push(`/exec/run/task/0/0/-/-`)
       }
 
+      const execUnit = () =>  {
+        console.log("execUnit")
+        router.push(`/exec/run/unit`)
+      }
+
       return {
+        currProject,
+
         columns,
         models,
         loading,
         list,
 
-        viewExec,
+        viewResult,
         deleteLoading,
         deleteExec,
 
@@ -203,6 +224,7 @@ export default defineComponent({
         execModule,
         execSuite,
         execTask,
+        execUnit,
 
         execBy,
         momentTime,

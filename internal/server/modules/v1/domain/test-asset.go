@@ -1,6 +1,8 @@
 package serverDomain
 
-import "github.com/kataras/iris/v12"
+import (
+	"github.com/kataras/iris/v12"
+)
 
 type TestAsset struct {
 	Title string `json:"title"`

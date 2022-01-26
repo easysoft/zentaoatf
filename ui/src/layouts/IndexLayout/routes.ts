@@ -38,9 +38,15 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         hidden: true,
       },
       {
-        title: 'index-layout.menu.execution.result',
-        path: 'history/:seq',
-        component: () => import('@/views/exec/history/result.vue'),
+        title: 'index-layout.menu.execution.result.func',
+        path: 'history/func/:seq',
+        component: () => import('@/views/exec/history/result-func.vue'),
+        hidden: true,
+      },
+      {
+        title: 'index-layout.menu.execution.result.unit',
+        path: 'history/unit',
+        component: () => import('@/views/exec/history/result-unit.vue'),
         hidden: true,
       },
 
@@ -72,6 +78,12 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
             title: 'index-layout.menu.execution.execTask',
             path: 'task/:productId/:taskId/:seq/:scope',
             component: () => import('@/views/exec/exec/task.vue'),
+            hidden: true,
+          },
+          {
+            title: 'index-layout.menu.execution.execUnit',
+            path: 'unit',
+            component: () => import('@/views/exec/exec/unit.vue'),
             hidden: true,
           },
         ]

@@ -15,7 +15,7 @@
                  @blur="validate('password', { trigger: 'blur' }).catch(() => {})" placeholder="" />
       </a-form-item>
 
-      <a-form-item v-if="currConfigRef.isWin" label="执行器">
+      <a-form-item v-if="currProject.type === 'func' && currConfigRef.isWin" label="执行器">
         <div>
           <a-row class="interpreter-header">
             <a-col :span="4" class="t-center t-bord">语言</a-col>
@@ -47,7 +47,7 @@
       </a-form-item>
     </a-form>
 
-    <create-form
+    <create-interpreter-form
         v-if="createFormVisible===true"
         :visible="createFormVisible"
         :onCancel="() => setCreateFormVisible(false)"
@@ -57,7 +57,7 @@
         :languageMap="languageMap"
     />
 
-    <update-form
+    <update-interpreter-form
         v-if="updateFormVisible===true"
         :visible="updateFormVisible"
         :model="interpreter"
@@ -82,15 +82,17 @@ const useForm = Form.useForm;
 import {Config, Interpreter} from './data.d';
 import {useStore} from "vuex";
 import {ProjectData} from "@/store/project";
-import CreateForm from './create.vue';
-import UpdateForm from './update.vue';
+import CreateInterpreterForm from './interpreter/create.vue';
+import UpdateInterpreterForm from './interpreter/update.vue';
 import {
   getInterpretersFromConfig,
   setInterpreter,
-} from "@/views/config/service";
+} from "@/utils/testing";
 import IconSvg from "@/components/IconSvg/index";
 
 interface ConfigFormSetupData {
+  currProject: ComputedRef;
+
   currConfigRef: Ref
   model: Partial<Config>
   rules: any
@@ -123,13 +125,14 @@ interface ConfigFormSetupData {
 export default defineComponent({
   name: 'ConfigForm',
   components: {
-    IconSvg, CreateForm, UpdateForm,
+    IconSvg, CreateInterpreterForm, UpdateInterpreterForm,
   },
   setup(props): ConfigFormSetupData {
     const { t } = useI18n();
 
     const store = useStore<{ project: ProjectData }>();
     const currConfigRef = computed<any>(() => store.state.project.currConfig);
+    const currProject = computed<any>(() => store.state.project.currProject);
 
     let interpreter = reactive<any>({} as Interpreter)
     let interpreters = ref<any>([] as Interpreter[])
@@ -244,6 +247,7 @@ export default defineComponent({
       labelCol: { span: 4 },
       wrapperCol: { span: 14 },
       currConfigRef,
+      currProject,
       model,
 
       rules,

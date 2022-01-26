@@ -5,7 +5,6 @@ import (
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
-	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	dateUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/date"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
@@ -51,7 +50,7 @@ func Exec(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, m
 
 func ExecCase(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
 	cases := req.Cases
-	return Run(ch, sendOutputMsg, sendExecMsg, req.ProjectPath, 0, 0, consts.Case, cases, msg)
+	return Run(ch, sendOutputMsg, sendExecMsg, req.ProjectPath, 0, 0, commConsts.Case, cases, msg)
 }
 
 func ExecModule(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
@@ -64,7 +63,7 @@ func ExecModule(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning str
 	}
 
 	return Run(ch, sendOutputMsg, sendExecMsg, req.ProjectPath,
-		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.ModuleId), consts.Module, cases, msg)
+		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.ModuleId), commConsts.Module, cases, msg)
 }
 
 func ExecSuite(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
@@ -76,7 +75,7 @@ func ExecSuite(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning stri
 	}
 
 	return Run(ch, sendOutputMsg, sendExecMsg, req.ProjectPath,
-		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId), consts.Suite, cases, msg)
+		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId), commConsts.Suite, cases, msg)
 }
 
 func ExecTask(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
@@ -88,11 +87,11 @@ func ExecTask(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning strin
 	}
 
 	return Run(ch, sendOutputMsg, sendExecMsg, req.ProjectPath,
-		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId), consts.Task, cases, msg)
+		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId), commConsts.Task, cases, msg)
 }
 
 func Run(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message),
-	projectPath string, productId, id int, by consts.ExecBy, cases []string, msg websocket.Message) (
+	projectPath string, productId, id int, by commConsts.ExecBy, cases []string, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 
 	conf := configUtils.LoadByProjectPath(projectPath)
@@ -349,13 +348,13 @@ func filterCases(cases []string, conf commDomain.ProjectConf) (casesToRun, cases
 	return
 }
 
-func genReport(productId, id int, by consts.ExecBy) (report commDomain.ZtfReport) {
+func genReport(productId, id int, by commConsts.ExecBy) (report commDomain.ZtfReport) {
 	report = commDomain.ZtfReport{
 		TestEnv: commonUtils.GetOs(), ExecBy: by, ExecById: id, ProductId: productId,
 		Pass: 0, Fail: 0, Total: 0, FuncResult: make([]commDomain.FuncResult, 0)}
 
-	report.TestType = consts.TestFunc
-	report.TestFrame = commConsts.AppServer
+	report.TestType = commConsts.TestFunc
+	report.TestFramework = commConsts.AppServer
 
 	return
 }

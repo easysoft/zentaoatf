@@ -43,7 +43,7 @@ interface CreateInterpreterFormSetupData {
 }
 
 export default defineComponent({
-    name: 'CreateForm',
+    name: 'CreateInterpreterForm',
     props: {
         visible: {
             type: Boolean,
@@ -55,18 +55,18 @@ export default defineComponent({
       languageMap: {
         required: true
       },
-        onCancel: {
-            type: Function,
-            required: true
-        },
-        onSubmitLoading: {
-            type: Boolean,
-            required: true
-        },
-        onSubmit: {
-            type: Function as PropType<(values: any, resetFields: (newValues?: Props | undefined) => void) => void>,
-            required: true
-        }
+      onCancel: {
+          type: Function,
+          required: true
+      },
+      onSubmitLoading: {
+          type: Boolean,
+          required: true
+      },
+      onSubmit: {
+          type: Function as PropType<(values: any, resetFields: (newValues?: Props | undefined) => void) => void>,
+          required: true
+      }
     },
     components: {
     },

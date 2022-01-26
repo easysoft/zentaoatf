@@ -65,8 +65,9 @@ func (r *ProjectRepo) FindById(id uint) (po model.Project, err error) {
 }
 
 func (r *ProjectRepo) Create(project model.Project) (id uint, err error) {
-	if _, err := r.FindByName(project.Name); !errors.Is(err, gorm.ErrRecordNotFound) {
-		return 0, fmt.Errorf("%d", domain.BizErrNameExist.Code)
+	po, err := r.FindByName(project.Name)
+	if po.ID != 0 {
+		return 0, errors.New(fmt.Sprintf("名称为%s的项目已存在", project.Name))
 	}
 
 	err = r.DB.Model(&model.Project{}).Create(&project).Error

@@ -2,7 +2,7 @@ package commonUtils
 
 import (
 	"fmt"
-	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/emirpasic/gods/maps"
 	"net"
 	"os"
@@ -31,13 +31,13 @@ func RemoveBlankLine(str string) string {
 	return ret
 }
 
-func GetOs() consts.OsType {
+func GetOs() commConsts.OsType {
 	osName := runtime.GOOS
 
 	if osName == "darwin" {
-		return consts.OsMac
+		return commConsts.OsMac
 	} else {
-		return consts.OsType(osName)
+		return commConsts.OsType(osName)
 	}
 }
 func IsWin() bool {

@@ -95,9 +95,11 @@ request.interceptors.request.use(
             config.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
         }
 
-        // 加随机数清除缓存
-        const projectPath = await getCache(settings.currProject);
-        config.params = { ...config.params, currProject: projectPath, ts: Date.now() };
+        config.params = { ...config.params, ts: Date.now() };
+        if (!config.params.currProject) {
+            const projectPath = await getCache(settings.currProject);
+            config.params = { ...config.params, currProject: projectPath };
+        }
 
         console.log('=== request ===', config)
         return config;

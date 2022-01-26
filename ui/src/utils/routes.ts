@@ -90,8 +90,6 @@ import { equalObject } from "./object";
  */
 export const getRouteItem = (pathname: string, routesData: RoutesDataItem[]): RoutesDataItem => {
 
-  console.log('getRouteItem', getRouteItem)
-
   let item: RoutesDataItem = { title: '', path: '', redirect: '', roles: [] };
 
   for (let index = 0, len = routesData.length; index < len; index += 1) {

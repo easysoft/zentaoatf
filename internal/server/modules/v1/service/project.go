@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"fmt"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
@@ -39,14 +40,22 @@ func (s *ProjectService) FindById(id uint) (model.Project, error) {
 }
 
 func (s *ProjectService) Create(project model.Project) (id uint, err error) {
-	po, _ := s.ProjectRepo.FindByPath(fileUtils.AddPathSepIfNeeded(project.Path))
+	if !fileUtils.IsDir(project.Path) {
+		err = errors.New(fmt.Sprintf("路径为%s不是目录。", project.Path))
+		return
+	}
 
+	po, _ := s.ProjectRepo.FindByPath(fileUtils.AddPathSepIfNeeded(project.Path))
 	if po.ID != 0 {
 		err = errors.New(fmt.Sprintf("路径为%s的项目已存在。", project.Path))
 		return
 	}
 
-	id, _ = s.ProjectRepo.Create(project)
+	if project.Name == "" {
+		project.Name = fileUtils.GetDirName(project.Path)
+	}
+
+	id, err = s.ProjectRepo.Create(project)
 	return
 }
 
@@ -96,7 +105,9 @@ func (s *ProjectService) GetByUser(currProjectPath string) (
 		return
 	}
 
-	scriptTree, err = scriptUtils.LoadScriptTree(currProject.Path)
+	if currProject.Type == commConsts.TestFunc {
+		scriptTree, err = scriptUtils.LoadScriptTree(currProject.Path)
+	}
 
 	currProjectConfig = configUtils.ReadFromFile(currProject.Path)
 	currProjectConfig.IsWin = commonUtils.IsWin()

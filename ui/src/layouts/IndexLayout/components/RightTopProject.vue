@@ -11,10 +11,10 @@
       <a-select-option key="" value="">新建</a-select-option>
     </a-select>
 
-    <dir-selection
-        :visible="formVisible"
-        :onCancel="cancel"
-        :onSubmit="submit"
+    <project-create-form
+      :visible="formVisible"
+      :onCancel="cancel"
+      :onSubmit="createProject"
     />
   </div>
 </template>
@@ -24,7 +24,7 @@ import {computed, ComputedRef, defineComponent, onMounted, Ref, ref} from "vue";
 import {useStore} from "vuex";
 
 import {ProjectData} from "@/store/project";
-import DirSelection from "@/views/component/file/DirSelection.vue";
+import ProjectCreateForm from "@/views/component/project/Create.vue";
 import {createProject} from "@/services/project";
 
 interface RightTopProject {
@@ -34,13 +34,13 @@ interface RightTopProject {
   selectProject: (value: string) => void;
   formVisible: Ref<boolean>;
   setFormVisible:  (val: boolean) => void;
-  submit: (parentDir: string) => Promise<void>;
+  createProject: (project: any) => Promise<void>;
   cancel: () => void;
 }
 
 export default defineComponent({
   name: 'RightTopProject',
-  components: {DirSelection},
+  components: {ProjectCreateForm},
   setup(): RightTopProject {
     const store = useStore<{ project: ProjectData }>();
 
@@ -59,7 +59,7 @@ export default defineComponent({
       if (value === '') {
         setFormVisible(true)
       } else {
-        store.dispatch('project/fetchProject', value);
+        store.dispatch('project/fetchProject', value)
       }
     }
 
@@ -68,10 +68,10 @@ export default defineComponent({
       formVisible.value = val;
     };
 
-    const submit = async (parentDir: string) => {
-      console.log('submit', parentDir)
-      createProject(parentDir).then(() => {
-        store.dispatch('project/fetchProject', parentDir);
+    const createProject = async (project: any) => {
+      console.log('createProject', project)
+      createProject(project).then(() => {
+        store.dispatch('project/fetchProject', project.path);
         setFormVisible(false);
       }).catch(err => { console.log('') })
     }
@@ -86,7 +86,7 @@ export default defineComponent({
       currProject,
       formVisible,
       setFormVisible,
-      submit,
+      createProject,
       cancel,
     }
   }

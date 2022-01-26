@@ -6,11 +6,13 @@ export default {
 
   'index-layout.menu.execution': '执行',
   'index-layout.menu.execution.history': '执行历史',
-  'index-layout.menu.execution.result': '执行结果',
+  'index-layout.menu.execution.result.func': '功能测试结果',
+  'index-layout.menu.execution.result.unit': '单元测试结果',
   'index-layout.menu.execution.execCase': '执行用例',
   'index-layout.menu.execution.execModule': '执行模块',
   'index-layout.menu.execution.execSuite': '执行套件',
   'index-layout.menu.execution.execTask': '执行任务',
+  'index-layout.menu.execution.execUnit': '执行单元测试',
 
   'index-layout.menu.config': '配置',
   'index-layout.menu.sync': '同步',

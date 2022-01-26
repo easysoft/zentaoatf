@@ -6,6 +6,8 @@ export function resizeWidth(mainId: string, leftId: string, resizeId: string, co
     const resize = document.getElementById(resizeId) as any;
     const content = document.getElementById(contentId) as any;
 
+    if (!resize) return false
+
     // 鼠标按下事件
     resize.onmousedown = function (e) {
         //色彩高亮

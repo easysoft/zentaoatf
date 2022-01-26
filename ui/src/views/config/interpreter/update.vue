@@ -32,14 +32,14 @@ import {Interpreter} from "@/views/config/data";
 
 const useForm = Form.useForm;
 
-interface UpdateFormSetupData {
+interface UpdateInterpreterFormSetupData {
   modelRef: Ref<Interpreter>;
   validateInfos: validateInfos;
   onFinish: () => Promise<void>;
 }
 
 export default defineComponent({
-  name: 'UpdateForm',
+  name: 'UpdateInterpreterForm',
   props: {
     visible: {
       type: Boolean,
@@ -66,7 +66,7 @@ export default defineComponent({
     }
   },
   components: {},
-  setup(props): UpdateFormSetupData {
+  setup(props): UpdateInterpreterFormSetupData {
     const {t} = useI18n();
 
     console.log('props.model', props.model)

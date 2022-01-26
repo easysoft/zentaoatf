@@ -1,4 +1,72 @@
 import moment from "moment";
+import {AutoTestTools, ScriptLanguages, UnitTestFrameworks, UnitTestTools} from "@/utils/const";
+import {Ref} from "vue";
+import {Config, Interpreter} from "@/views/config/data";
+
+export function getInterpretersFromConfig(currConfig: any): any {
+    const interpreters: any[] = []
+    const languages: string[] = []
+    const languageMap = {}
+
+    ScriptLanguages.forEach(item => {
+        const lang = item.toLowerCase()
+        languageMap[lang] = item
+
+        if (currConfig && currConfig[lang] && currConfig[lang].trim() != '') {
+            interpreters.push({ lang: lang, val: currConfig[lang] })
+        } else {
+            languages.push(lang)
+        }
+    })
+    return {interpreters: interpreters, languages: languages, languageMap: languageMap}
+}
+
+export function setInterpreter(config: Ref<Config>, interpreters: Ref<Interpreter[]>): Ref<Config> {
+    interpreters.value.forEach((item, i) => {
+        config[item.lang] = item.val
+    })
+    return config
+}
+
+export function getUnitTestFrameworks(): any {
+    const list = new Array<string>()
+    const map = {}
+    UnitTestFrameworks.forEach((item) => {
+        const lowerCase = item.toLowerCase()
+        list.push(lowerCase)
+        map[lowerCase] = item
+    })
+
+    return {list: list, map: map}
+}
+export function getUnitTestTools(): any {
+    const data = {}
+    const map = {}
+
+    Object.keys(UnitTestTools).forEach((key) => {
+        if (! (key in data)) data[key] = []
+
+        UnitTestTools[key].forEach(item => {
+            const lowerCase = item.toLowerCase()
+            data[key].push(lowerCase)
+            map[lowerCase] = item
+        })
+    })
+
+    return {data: data, map: map}
+}
+
+export function getAutoTestTools(): any {
+    const list = new Array<string>()
+    const map = {}
+    AutoTestTools.forEach((item) => {
+        const lowerCase = item.toLowerCase()
+        list.push(lowerCase)
+        map[lowerCase] = item
+    })
+
+    return {list: list, map: map}
+}
 
 const execByMap = {
     case: '选用例',

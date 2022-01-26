@@ -1,6 +1,8 @@
 package serverDomain
 
-import "github.com/aaronchen2k/deeptest/internal/pkg/consts"
+import (
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+)
 
 type TestExecReq struct {
 	Keywords string `json:"keywords"`
@@ -12,9 +14,9 @@ type TestReportSummary struct {
 	Env      string `json:"env,omitempty"`
 	TestType string `json:"testType"`
 
-	ProductId int           `json:"productId,omitempty"`
-	ExecBy    consts.ExecBy `json:"execBy,omitempty"`
-	ExecById  int           `json:"execById,omitempty"`
+	ProductId int               `json:"productId,omitempty"`
+	ExecBy    commConsts.ExecBy `json:"execBy,omitempty"`
+	ExecById  int               `json:"execById,omitempty"`
 
 	Pass      int   `json:"pass"`
 	Fail      int   `json:"fail"`

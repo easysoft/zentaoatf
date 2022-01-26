@@ -3,7 +3,7 @@ export const EventName = 'deeptest-event-from-chrome'
 
 export const ScopeDeeptest = 'scope-com-deeptest'
 
-export const Languages = [
+export const ScriptLanguages = [
     'Python',
     'PHP',
     'Ruby',
@@ -12,4 +12,27 @@ export const Languages = [
     'TCL',
     'Perl',
     'AutoIt'
+]
+
+export const UnitTestFrameworks = [
+    'JUnit',
+    'TestNG',
+    'PHPUnit',
+    'PyTest',
+    'Jest',
+    'CppUnit',
+    'GTest',
+    'QTest',
+]
+export const UnitTestTools = {
+    junit: ['Maven'],
+    testng: ['Maven'],
+}
+
+export const AutoTestTools = [
+    'AutoIt',
+    'Selenium',
+    'Appium',
+    'RobotFramework',
+    'Cypress',
 ]

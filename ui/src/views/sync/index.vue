@@ -1,5 +1,10 @@
 <template>
-  <div class="main">
+  <div v-if="currProject.type === 'unit'" class="panel">
+    此为单元测试项目，不需要同步。
+  </div>
+
+  <div v-if="currProject.type === 'func'">
+    <div class="main">
 
   <a-card title="从禅道同步用例信息">
     <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
@@ -59,7 +64,7 @@
   </a-card>
 
   </div>
-
+  </div>
 </template>
 <script lang="ts">
 import {defineComponent, ref, reactive, computed, watch, ComputedRef} from "vue";
@@ -76,6 +81,8 @@ import {ZentaoData} from "@/store/zentao";
 import {syncFromZentao, syncToZentao} from "@/views/sync/service";
 
 interface ConfigFormSetupData {
+  currProject: ComputedRef;
+
   formRef: any
   model: SyncSettings
   rules: any
@@ -111,6 +118,7 @@ export default defineComponent({
 
     const storeProject = useStore<{ project: ProjectData }>();
     const currConfig = computed<any>(() => storeProject.state.project.currConfig);
+    const currProject = computed<any>(() => storeProject.state.project.currProject);
 
     const store = useStore<{zentao: ZentaoData}>();
     const langs = computed<any[]>(() => store.state.zentao.langs);
@@ -215,6 +223,8 @@ export default defineComponent({
     };
 
     return {
+      currProject,
+
       formRef,
       labelCol: { span: 6 },
       wrapperCol: { span: 12 },
@@ -245,6 +255,10 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
+.panel {
+  padding: 20px;
+}
+
 .main {
   padding: 0 20%;
 }

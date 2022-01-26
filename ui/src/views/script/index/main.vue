@@ -1,43 +1,49 @@
 <template>
   <div class="indexlayout-main-conent">
-    <div id="main">
-      <div id="left">
-        <div class="toolbar">
-          <div class="left"></div>
-          <div class="right">
-            <a-button @click="expandAll" type="link">
-              <span v-if="!isExpand">展开全部</span>
-              <span v-if="isExpand">收缩全部</span>
-            </a-button>
+    <div v-if="currProject.type === 'unit'" class="panel">
+      此为单元测试项目，无脚本显示。
+    </div>
+
+    <div v-if="currProject.type === 'func'">
+      <div id="main">
+        <div id="left">
+          <div class="toolbar">
+            <div class="left"></div>
+            <div class="right">
+              <a-button @click="expandAll" type="link">
+                <span v-if="!isExpand">展开全部</span>
+                <span v-if="isExpand">收缩全部</span>
+              </a-button>
+            </div>
+          </div>
+
+          <div class="tree-panel">
+            <a-tree
+                ref="tree"
+                :tree-data="treeData"
+                :replace-fields="replaceFields"
+                show-icon
+                @expand="expandNode"
+                @select="selectNode"
+                v-model:expandedKeys="expandedKeys"
+            >
+              <template #icon="slotProps">
+                <icon-svg v-if="slotProps.isDir" type="folder-outlined"></icon-svg>
+                <icon-svg v-if="!slotProps.isDir" type="file-outlined"></icon-svg>
+              </template>
+            </a-tree>
           </div>
         </div>
 
-        <div class="tree-panel">
-          <a-tree
-              ref="tree"
-              :tree-data="treeData"
-              :replace-fields="replaceFields"
-              show-icon
-              @expand="expandNode"
-              @select="selectNode"
-              v-model:expandedKeys="expandedKeys"
-          >
-            <template #icon="slotProps">
-              <icon-svg v-if="slotProps.isDir" type="folder-outlined"></icon-svg>
-              <icon-svg v-if="!slotProps.isDir" type="file-outlined"></icon-svg>
-            </template>
-          </a-tree>
-        </div>
-      </div>
+        <div id="resize"></div>
 
-      <div id="resize"></div>
-
-      <div id="content">
-        <div class="toolbar">
-          <a-button @click="expandAll" type="primary">执行</a-button>
-        </div>
-        <div class="panel">
-          <pre><code>{{ script.code }}</code></pre>
+        <div id="content">
+          <div class="toolbar">
+            <a-button @click="expandAll" type="primary">执行</a-button>
+          </div>
+          <div class="panel">
+            <pre><code>{{ script.code }}</code></pre>
+          </div>
         </div>
       </div>
     </div>
@@ -53,6 +59,7 @@ import {ScriptData} from "../store";
 import {resizeWidth} from "@/utils/dom";
 
 interface ListScriptPageSetupData {
+  currProject: ComputedRef;
   treeData: ComputedRef<any[]>;
   replaceFields: any,
   expandNode: (expandedKeys: string[], e: any) => void;
@@ -76,6 +83,7 @@ export default defineComponent({
 
     let isExpand = ref(false);
     const store = useStore<{ project: ProjectData }>();
+    const currProject = computed<any>(() => store.state.project.currProject);
     const treeData = computed<any>(() => store.state.project.scriptTree);
     const expandedKeys = ref<string[]>([]);
 
@@ -129,6 +137,7 @@ export default defineComponent({
     }
 
     return {
+      currProject,
       treeData,
       replaceFields,
       expandNode,
@@ -148,6 +157,10 @@ export default defineComponent({
 .indexlayout-main-conent {
   margin: 0px;
   height: 100%;
+
+  .panel {
+    padding: 20px;
+  }
 
   #main {
     display: flex;
