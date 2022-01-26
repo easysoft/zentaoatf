@@ -23,7 +23,7 @@ func LoadScriptTree(dir string) (asset serverDomain.TestAsset, err error) {
 	commonUtils.ChangeScriptForDebug(&dir)
 
 	asset = serverDomain.TestAsset{Path: dir, Title: fileUtils.GetDirName(dir), IsDir: true, Slots: iris.Map{"icon": "icon"}}
-	LoadScriptNodesInDir(dir, &asset)
+	LoadScriptNodesInDir(dir, &asset, 0)
 
 	jsn, _ := json.Marshal(asset)
 	logUtils.Infof(string(jsn))
@@ -32,7 +32,7 @@ func LoadScriptTree(dir string) (asset serverDomain.TestAsset, err error) {
 }
 
 func LoadScriptByProject(projectPath string) (scriptFiles []string) {
-	LoadScriptListInDir(projectPath, &scriptFiles)
+	LoadScriptListInDir(projectPath, &scriptFiles, 0)
 
 	return
 }
@@ -43,7 +43,7 @@ func GetScriptContent(pth string) (script model.TestScript, err error) {
 	return
 }
 
-func LoadScriptNodesInDir(childPath string, parent *serverDomain.TestAsset) (err error) {
+func LoadScriptNodesInDir(childPath string, parent *serverDomain.TestAsset, level int) (err error) {
 	if !fileUtils.IsDir(childPath) { // is file
 		addScript(childPath, parent)
 		return
@@ -63,10 +63,10 @@ func LoadScriptNodesInDir(childPath string, parent *serverDomain.TestAsset) (err
 		}
 
 		childPath := childPath + name
-		if grandson.IsDir() { // 目录, 递归遍历
+		if grandson.IsDir() && level < 3 { // 目录, 递归遍历
 			dirNode := addDir(childPath, parent)
 
-			LoadScriptNodesInDir(childPath, dirNode)
+			LoadScriptNodesInDir(childPath, dirNode, level+1)
 		} else {
 			addScript(childPath, parent)
 		}
@@ -75,7 +75,7 @@ func LoadScriptNodesInDir(childPath string, parent *serverDomain.TestAsset) (err
 	return
 }
 
-func LoadScriptListInDir(path string, files *[]string) error {
+func LoadScriptListInDir(path string, files *[]string, level int) error {
 	regx := langUtils.GetSupportLanguageExtRegx()
 
 	if !fileUtils.IsDir(path) { // first call, param is file
@@ -103,8 +103,8 @@ func LoadScriptListInDir(path string, files *[]string) error {
 			continue
 		}
 
-		if fi.IsDir() { // 目录, 递归遍历
-			LoadScriptListInDir(path+name+consts.PthSep, files)
+		if fi.IsDir() && level < 3 { // 目录, 递归遍历
+			LoadScriptListInDir(path+name+consts.PthSep, files, level+1)
 		} else {
 			path := path + name
 			pass, _ := regexp.MatchString("^*.\\."+regx+"$", path)
