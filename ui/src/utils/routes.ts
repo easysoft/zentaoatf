@@ -89,6 +89,9 @@ import { equalObject } from "./object";
  * @param routesData routes
  */
 export const getRouteItem = (pathname: string, routesData: RoutesDataItem[]): RoutesDataItem => {
+
+  console.log('getRouteItem', getRouteItem)
+
   let item: RoutesDataItem = { title: '', path: '', redirect: '', roles: [] };
 
   for (let index = 0, len = routesData.length; index < len; index += 1) {
@@ -98,8 +101,8 @@ export const getRouteItem = (pathname: string, routesData: RoutesDataItem[]): Ro
       item = element;
       break;
     } else if (element.path.indexOf(':') > 0)  {
-      const reg = new RegExp("((.+)(:[^/]+)(.*))","gmi");
-      const path = element.path.replace(reg,"$2.+$4")
+      const reg = new RegExp("(:[^/]+)","gmi");
+      const path = element.path.replaceAll(reg,".+")
       const pass = new RegExp(path).test(pathname)
 
       if (pass) {
