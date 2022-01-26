@@ -14,6 +14,12 @@ type WsReq struct {
 	SuiteId     string   `json:"suiteId"`
 	TaskId      string   `json:"taskId"`
 	ProjectPath string   `json:"projectPath"`
+
+	// for no-ztf testing like unittest etc.
+	Framework    commConsts.UnitTestFramework `json:"framework"`
+	Tool         commConsts.UnitTestFramework `json:"tool"`
+	Cmd          string                       `json:"cmd"`
+	SubmitResult bool                         `json:"submitResult"`
 }
 
 type WsResp struct {

@@ -36,6 +36,8 @@ const (
 	ExecModule ExecCmd = "execModule"
 	ExecSuite  ExecCmd = "execSuite"
 	ExecTask   ExecCmd = "execTask"
+
+	ExecUnit ExecCmd = "execUnit"
 )
 
 func (e ExecCmd) String() string {

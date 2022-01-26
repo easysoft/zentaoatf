@@ -42,8 +42,13 @@
                   </a-select>
                 </a-form-item>
 
+                <a-form-item label="提交到禅道" v-bind="validateInfos.submitResult">
+                  <a-switch v-model:checked="model.submitResult" />
+                </a-form-item>
+
                 <a-form-item label="测试命令" v-bind="validateInfos.cmd">
-                  <a-textarea v-model:value="model.cmd" :auto-size="{ minRows: 3, maxRows: 6 }" />
+                  <a-textarea v-model:value="model.cmd" placeholder="mvn clean package test"
+                              :auto-size="{ minRows: 3, maxRows: 6 }" />
                 </a-form-item>
 
               </a-form>
@@ -81,23 +86,24 @@ import {genExecInfo} from "@/views/exec/service";
 import {getUnitTestFrameworks, getUnitTestTools} from "@/utils/testing";
 
 interface ExecCasePageSetupData {
+  labelCol: any
+  wrapperCol: any
+
   model: Ref;
+  products: ComputedRef<any[]>;
   unitTestFrameworks: Ref
   unitTestTools: Ref
 
   wsMsg: any,
   exec: (keys) => void;
   stop: (keys) => void;
-  isRunning: Ref<string>;
   back: () => void;
+  isRunning: Ref<string>;
 
-  labelCol: any
-  wrapperCol: any
   rules: any
   validate: any
   validateInfos: validateInfos,
   resetFields:  () => void;
-  products: ComputedRef<any[]>;
 }
 
 export default defineComponent({
@@ -174,10 +180,11 @@ export default defineComponent({
 
       const exec = (): void => {
         console.log("exec")
+
         validate().then(() => {
           getCache(settings.currProject).then(
               (projectPath) => {
-                const msg = Object.assign({act: 'execModule', projectPath: projectPath}, model)
+                const msg = Object.assign({act: 'execUnit', projectPath: projectPath}, model)
                 console.log('msg', msg)
 
                 wsMsg.out += '\n'
@@ -212,24 +219,23 @@ export default defineComponent({
       }
 
       return {
+        labelCol: { span: 6 },
+        wrapperCol: { span: 16 },
+
+        products,
         model,
         unitTestFrameworks,
         unitTestTools,
         wsMsg,
 
-        labelCol: { span: 6 },
-        wrapperCol: { span: 16 },
         rules,
         validate,
         validateInfos,
         resetFields,
 
-        products,
-
+        isRunning,
         exec,
         stop,
-
-        isRunning,
         back,
       }
     }
