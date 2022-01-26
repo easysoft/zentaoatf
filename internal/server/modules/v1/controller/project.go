@@ -65,7 +65,6 @@ func (c *ProjectCtrl) Get(ctx iris.Context) {
 func (c *ProjectCtrl) Create(ctx iris.Context) {
 	req := model.Project{}
 	err := ctx.ReadJSON(&req)
-	req.Path = strings.TrimSpace(req.Path)
 
 	if err != nil || req.Path == "" {
 		logUtils.Errorf("参数验证失败 %s", err.Error())
@@ -73,6 +72,7 @@ func (c *ProjectCtrl) Create(ctx iris.Context) {
 		return
 	}
 
+	req.Path = strings.TrimSpace(req.Path)
 	id, err := c.ProjectService.Create(req)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.CommonErr.Code, Msg: err.Error()})

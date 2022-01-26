@@ -20,7 +20,7 @@
         <a-form-item label="项目类型" v-bind="validateInfos.type">
           <a-select v-model:value="modelRef.type">
             <a-select-option key="func" value="func">ZTF自动化</a-select-option>
-            <a-select-option key="unit" value="func">单元测试</a-select-option>
+            <a-select-option key="unit" value="unit">单元测试</a-select-option>
           </a-select>
         </a-form-item>
 
@@ -36,9 +36,11 @@ import {defineComponent, onMounted, PropType, reactive, ref, Ref} from "vue";
 import {Interpreter} from "@/views/config/data";
 import {useI18n} from "vue-i18n";
 import {Form} from "ant-design-vue";
+import { validateInfos } from 'ant-design-vue/lib/form/useForm';
 
 interface ProjectCreateFormSetupData {
   modelRef: Ref<Interpreter>
+  validateInfos: validateInfos
   onFinish: () => Promise<void>;
 }
 
@@ -66,19 +68,18 @@ export default defineComponent({
 
     const modelRef = reactive<any>({path: '', type: 'func'})
     const rulesRef = reactive({
-      path: [ { required: true, message: '请项目完整路径' } ],
+      path: [ { required: true, message: '请输入项目完整路径' } ],
       type: [ { required: true, message: '请选择项目类型' } ],
     });
 
-    const { validate } = Form.useForm(modelRef, rulesRef);
+    const { validate, validateInfos } = Form.useForm(modelRef, rulesRef);
 
     const onFinish = async () => {
       console.log('onFinish')
 
-      validate()
-        .then(() => {
-          props.onSubmit(modelRef);
-        })
+      validate().then(() => {
+        props.onSubmit(modelRef);
+      }).catch(err => { console.log('') })
     }
 
     onMounted(()=> {
@@ -87,6 +88,7 @@ export default defineComponent({
 
     return {
       modelRef,
+      validateInfos,
       onFinish
     }
   }

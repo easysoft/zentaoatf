@@ -14,7 +14,7 @@
     <project-create-form
       :visible="formVisible"
       :onCancel="cancel"
-      :onSubmit="createProject"
+      :onSubmit="submitForm"
     />
   </div>
 </template>
@@ -24,7 +24,7 @@ import {computed, ComputedRef, defineComponent, onMounted, Ref, ref} from "vue";
 import {useStore} from "vuex";
 
 import {ProjectData} from "@/store/project";
-import ProjectCreateForm from "@/views/component/project/Create.vue";
+import ProjectCreateForm from "@/views/component/project/create.vue";
 import {createProject} from "@/services/project";
 
 interface RightTopProject {
@@ -34,7 +34,7 @@ interface RightTopProject {
   selectProject: (value: string) => void;
   formVisible: Ref<boolean>;
   setFormVisible:  (val: boolean) => void;
-  createProject: (project: any) => Promise<void>;
+  submitForm: (project: any) => Promise<void>;
   cancel: () => void;
 }
 
@@ -46,7 +46,6 @@ export default defineComponent({
 
     const projects = computed<any[]>(() => store.state.project.projects);
     const currProject = computed<any>(() => store.state.project.currProject);
-
     store.dispatch('project/fetchProject', '');
 
     onMounted(() => {
@@ -68,8 +67,8 @@ export default defineComponent({
       formVisible.value = val;
     };
 
-    const createProject = async (project: any) => {
-      console.log('createProject', project)
+    const submitForm = async (project: any) => {
+      console.log('submitForm', project)
       createProject(project).then(() => {
         store.dispatch('project/fetchProject', project.path);
         setFormVisible(false);
@@ -86,7 +85,7 @@ export default defineComponent({
       currProject,
       formVisible,
       setFormVisible,
-      createProject,
+      submitForm,
       cancel,
     }
   }

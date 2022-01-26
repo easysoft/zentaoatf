@@ -12,9 +12,7 @@ export async function queryProject(currProjectPath: string): Promise<any> {
     });
 }
 
-export async function createProject(projectPath: string): Promise<any> {
-    const data = {path: projectPath}
-
+export async function createProject(data: string): Promise<any> {
     return request({
         url: `/${apiPath}`,
         method: 'post',
