@@ -120,9 +120,10 @@ type ZtfBug struct {
 }
 
 type ZtfReport struct {
-	TestEnv       commConsts.OsType   `json:"testEnv,omitempty"`
-	TestType      commConsts.TestType `json:"testType"`
-	TestFramework string              `json:"testFramework"`
+	TestEnv       commConsts.OsType            `json:"testEnv,omitempty"`
+	TestType      commConsts.TestType          `json:"testType"`
+	TestFramework commConsts.UnitTestFramework `json:"testFramework"`
+	TestTool      commConsts.UnitTestTool      `json:"testTool"`
 
 	ProductId int               `json:"productId,omitempty"`
 	ExecBy    commConsts.ExecBy `json:"execBy,omitempty"`

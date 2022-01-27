@@ -29,12 +29,12 @@ import (
 	"time"
 )
 
-func ExecCase(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
+func ExecCase(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
 	cases := req.Cases
 	return RunZtf(ch, sendOutputMsg, sendExecMsg, req.ProjectPath, 0, 0, commConsts.Case, cases, msg)
 }
 
-func ExecModule(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
+func ExecModule(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 
 	cases := zentaoUtils.GetCasesByModule(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.ModuleId), req.ProjectPath)
@@ -47,7 +47,7 @@ func ExecModule(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning str
 		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.ModuleId), commConsts.Module, cases, msg)
 }
 
-func ExecSuite(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
+func ExecSuite(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 	cases := zentaoUtils.GetCasesBySuite(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId), req.ProjectPath)
 
@@ -59,7 +59,7 @@ func ExecSuite(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning stri
 		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId), commConsts.Suite, cases, msg)
 }
 
-func ExecTask(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
+func ExecTask(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 	cases := zentaoUtils.GetCasesByTask(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId), req.ProjectPath)
 
@@ -71,7 +71,7 @@ func ExecTask(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning strin
 		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId), commConsts.Task, cases, msg)
 }
 
-func RunZtf(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message),
+func RunZtf(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message),
 	projectPath string, productId, id int, by commConsts.ExecBy, cases []string, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 

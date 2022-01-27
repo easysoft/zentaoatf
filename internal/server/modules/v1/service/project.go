@@ -38,6 +38,9 @@ func (s *ProjectService) Paginate(req serverDomain.ProjectReqPaginate) (ret doma
 func (s *ProjectService) FindById(id uint) (model.Project, error) {
 	return s.ProjectRepo.FindById(id)
 }
+func (s *ProjectService) FindByPath(projectPath string) (po model.Project, err error) {
+	return s.ProjectRepo.FindByPath(projectPath)
+}
 
 func (s *ProjectService) Create(project model.Project) (id uint, err error) {
 	if !fileUtils.IsDir(project.Path) {

@@ -17,7 +17,7 @@ type WsReq struct {
 
 	// for no-ztf testing like unittest etc.
 	Framework    commConsts.UnitTestFramework `json:"framework"`
-	Tool         commConsts.UnitTestFramework `json:"tool"`
+	Tool         commConsts.UnitTestTool      `json:"tool"`
 	Cmd          string                       `json:"cmd"`
 	SubmitResult bool                         `json:"submitResult"`
 }

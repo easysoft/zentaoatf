@@ -1,7 +1,6 @@
 package service
 
 import (
-	"encoding/json"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
@@ -14,6 +13,7 @@ import (
 
 type TestExecService struct {
 	TestExecRepo *repo.TestExecRepo `inject:""`
+	ProjectRepo  *repo.ProjectRepo  `inject:""`
 }
 
 func NewTestExecService() *TestExecService {
@@ -21,22 +21,24 @@ func NewTestExecService() *TestExecService {
 }
 
 func (s *TestExecService) List(projectPath string) (ret []serverDomain.TestReportSummary, err error) {
+	project, err := s.ProjectRepo.FindByPath(projectPath)
+
 	reportFiles := analysisUtils.ListReport(projectPath)
 
-	dir := filepath.Join(projectPath, commConsts.LogDirName)
-
 	for _, seq := range reportFiles {
-		pth := filepath.Join(dir, seq, commConsts.ResultJson)
+		var summary serverDomain.TestReportSummary
 
-		content := fileUtils.ReadFileBuf(pth)
-		var report commDomain.ZtfReport
-		err1 := json.Unmarshal(content, &report)
-		if err1 != nil {
-			continue
+		if project.Type == commConsts.TestFunc {
+			report, err1 := analysisUtils.GetReport(projectPath, seq)
+			if err1 != nil { // ignore wrong json result
+				continue
+			}
+			copier.Copy(&summary, report)
+
+		} else if project.Type == commConsts.TestUnit {
+
 		}
 
-		var summary serverDomain.TestReportSummary
-		copier.Copy(&summary, report)
 		summary.Seq = seq
 		ret = append(ret, summary)
 	}

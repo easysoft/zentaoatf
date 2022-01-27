@@ -16,7 +16,7 @@ import (
 )
 
 func ExecUnit(ch chan int, sendOutputMsg,
-	sendExecMsg func(info, isRunning string, msg websocket.Message),
+	sendExecMsg func(info, isRunning string, wsMsg websocket.Message),
 	req serverDomain.WsReq, wsMsg websocket.Message) (resultDir string, err error) {
 
 	startTime := time.Now()
@@ -33,19 +33,9 @@ func ExecUnit(ch chan int, sendOutputMsg,
 	logUtils.ExecConsolef(-1, endMsg)
 	logUtils.ExecFilef(endMsg)
 
-	//endTime := time.Now().Unix()
-
-	//testSuites, resultDir := RetrieveUnitResult(startTime)
-	//cases, classNameMaxWidth, time := ParserUnitTestResult(testSuites)
-	//
-	//if time == 0 {
-	//	time = float32(endTime - startTime)
-	//}
-	//
-	//report := GenUnitTestReport(cases, classNameMaxWidth, time)
+	report := GenUnitTestReport(req, startTime.Unix(), entTime.Unix(), ch, sendOutputMsg, sendExecMsg, wsMsg)
+	logUtils.Infof("#v", report)
 	//CommitTestResult(report, 0)
-
-	return
 
 	return
 }

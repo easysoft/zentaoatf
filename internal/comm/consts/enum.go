@@ -114,6 +114,12 @@ const (
 	CppUnit UnitTestFramework = "cppunit"
 	GTest   UnitTestFramework = "gtest"
 	QTest   UnitTestFramework = "qtest"
+
+	AutoIt         UnitTestFramework = "autoit"
+	Selenium       UnitTestFramework = "selenium"
+	Appium         UnitTestFramework = "appium"
+	RobotFramework UnitTestFramework = "robotframework"
+	Cypress        UnitTestFramework = "cypress"
 )
 
 func (e UnitTestFramework) String() string {
@@ -123,19 +129,15 @@ func (UnitTestFramework) Get(str string) UnitTestFramework {
 	return UnitTestFramework(str)
 }
 
-type AutoTestTool string
+type UnitTestTool string
 
 const (
-	AutoIt         AutoTestTool = "autoit"
-	Selenium       AutoTestTool = "selenium"
-	Appium         AutoTestTool = "appium"
-	RobotFramework AutoTestTool = "robotframework"
-	Cypress        AutoTestTool = "cypress"
+	Maven UnitTestTool = "maven"
 )
 
-func (e AutoTestTool) String() string {
+func (e UnitTestTool) String() string {
 	return string(e)
 }
-func (AutoTestTool) Get(str string) AutoTestTool {
-	return AutoTestTool(str)
+func (UnitTestTool) Get(str string) UnitTestTool {
+	return UnitTestTool(str)
 }

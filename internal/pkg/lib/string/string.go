@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/jameskeane/bcrypt"
+	"github.com/mattn/go-runewidth"
 	"math/rand"
 	"regexp"
 	"strconv"
@@ -115,4 +116,15 @@ func BoolToPass(b bool) string {
 	} else {
 		return commConsts.FAIL.String()
 	}
+}
+
+func AddPostfix(str string, width int, ch string) string {
+	lent := runewidth.StringWidth(str)
+
+	if width > lent {
+		postFix := strings.Repeat(ch, width-lent)
+		str += postFix
+	}
+
+	return str
 }

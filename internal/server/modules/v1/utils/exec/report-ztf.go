@@ -20,10 +20,6 @@ import (
 func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	projectPath string, sendOutMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), wsMsg websocket.Message) {
 
-	//if len(report.FuncResult) == 0 {
-	//	return
-	//}
-
 	// print failed case
 	failedCount := 0
 	failedCaseLines := make([]string, 0)
@@ -89,12 +85,12 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		logUtils.ExecFile(msg)
 	}
 
+	// 生成统计行
 	secTag := ""
 	if commConsts.Language == "en" && report.Duration > 1 {
 		secTag = "s"
 	}
 
-	// 生成统计行
 	fmtStr := "%d(%.1f%%) %s"
 	passRate := 0
 	failRate := 0

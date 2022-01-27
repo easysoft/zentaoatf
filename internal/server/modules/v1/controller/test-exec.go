@@ -10,6 +10,7 @@ import (
 
 type TestExecCtrl struct {
 	TestExecService *service.TestExecService `inject:""`
+
 	BaseCtrl
 }
 
