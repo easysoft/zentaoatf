@@ -12,6 +12,7 @@
                       v-if="!item.hidden"
                       :to="item.path"
                       :class="{'active': belongTopMenu === item.path }"
+                      :id="pathToId(item.path)"
                       class="indexlayout-top-menu-li"
                     >
                     {{t(item.title)}}
@@ -40,6 +41,7 @@ import RightTopProject from './RightTopProject.vue';
 interface RightTopSetupData {
   t: (key: string | number) => string;
   topMenuCon: Ref;
+  pathToId: (val) => void
 }
 
 export default defineComponent({
@@ -87,10 +89,14 @@ export default defineComponent({
       const { topNavEnable } = toRefs(props);
 
       const { topMenuCon } = useTopMenuWidth(topNavEnable);
+      const pathToId = (path) => {
+        return path.replaceAll('/', 'menu-')
+      }
 
       return {
         t,
         topMenuCon,
+        pathToId,
       }
     }
 })

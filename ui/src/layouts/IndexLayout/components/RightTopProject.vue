@@ -20,12 +20,13 @@
 </template>
 
 <script lang="ts">
-import {computed, ComputedRef, defineComponent, onMounted, Ref, ref} from "vue";
+import {computed, ComputedRef, defineComponent, onMounted, Ref, ref, watch} from "vue";
 import {useStore} from "vuex";
 
 import {ProjectData} from "@/store/project";
 import ProjectCreateForm from "@/views/component/project/create.vue";
 import {createProject} from "@/services/project";
+import {addClass, removeClass} from "@/utils/dom";
 
 interface RightTopProject {
   projects: ComputedRef<any[]>;
@@ -48,8 +49,24 @@ export default defineComponent({
     const currProject = computed<any>(() => store.state.project.currProject);
     store.dispatch('project/fetchProject', '');
 
+    const hideMenu = () => {
+      const scriptMenu = document.getElementById('menu-script')
+      if (currProject.value.type === 'unit') addClass(scriptMenu, 't-hidden')
+      else removeClass(scriptMenu,'t-hidden')
+
+      const scriptSync = document.getElementById('menu-sync')
+      if (currProject.value.type === 'unit') addClass(scriptSync,'t-hidden')
+      else removeClass(scriptSync,'t-hidden')
+    }
+
+    watch(currProject,()=> {
+      console.log('watch currProject', currProject)
+      hideMenu()
+    }, {deep: true})
+
     onMounted(() => {
       console.log('onMounted')
+      hideMenu()
     })
 
     const selectProject = (value): void => {

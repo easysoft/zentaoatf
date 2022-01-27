@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import {ComputedRef, defineComponent, ref, Ref, reactive, computed, onMounted} from "vue";
+import {ComputedRef, defineComponent, ref, Ref, reactive, computed, onMounted, watch} from "vue";
 import {Execution} from '../data.d';
 import {useStore} from "vuex";
 
@@ -155,6 +155,12 @@ export default defineComponent({
         await store.dispatch('History/list', {});
         loading.value = false;
       }
+      list();
+
+      watch(currProject,()=> {
+        console.log('watch currProject', currProject)
+        list()
+      }, {deep: true})
 
       // 查看
       const viewResult = (item) => {
@@ -181,10 +187,6 @@ export default defineComponent({
           }
         });
       }
-
-      onMounted(()=> {
-        list();
-      })
 
       const execCase = () =>  {
         console.log("execCase")

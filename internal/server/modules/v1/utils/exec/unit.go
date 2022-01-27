@@ -89,7 +89,7 @@ func RunUnitTest(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning st
 	isTerminal := false
 	reader1 := bufio.NewReader(stdout)
 	for {
-		line, err2 := reader1.ReadString('\n')
+		line, err3 := reader1.ReadString('\n')
 		if line != "" {
 			sendOutputMsg(line, "", wsMsg)
 			logUtils.ExecConsole(1, line)
@@ -98,7 +98,7 @@ func RunUnitTest(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning st
 			isTerminal = true
 		}
 
-		if err2 != nil || io.EOF == err2 {
+		if err3 != nil || io.EOF == err3 {
 			break
 		}
 

@@ -59,3 +59,22 @@ export function scroll(id: string): void {
         },300);
     }
 }
+
+export function hasClass( elements, cName ){
+    if (!elements) return false
+    return !!elements.className.match( new RegExp( "(\\s|^)" + cName + "(\\s|$)") )
+}
+export function addClass( elements, cName ){
+    console.log(elements)
+
+    if (!elements) return
+    if( !hasClass( elements,cName ) ){
+        elements.className += " " + cName
+    }
+}
+export function removeClass( elements, cName ){
+    if (!elements) return
+    if( hasClass( elements,cName ) ){
+        elements.className = elements.className.replace( new RegExp( "(\\s|^)" + cName + "(\\s|$)" ), " " )
+    }
+}
