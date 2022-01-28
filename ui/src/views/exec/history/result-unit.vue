@@ -6,6 +6,8 @@
       </template>
       <template #extra>
         <div class="opt">
+          <a-button @click="submitResult()">提交结果到禅道</a-button>
+
           <a-button type="link" @click="() => back()">返回</a-button>
         </div>
       </template>
@@ -96,6 +98,7 @@ interface DesignExecutionPageSetupData {
 
   loading: Ref<boolean>;
   exec: (scope) => void;
+  submitResult: () => void;
   back: () => void;
 
   visibleMap: Ref
@@ -183,6 +186,10 @@ export default defineComponent({
         else router.push(`/exec/run/${execBy}/${productId}/${execById}/${seq}/${scope}`)
       }
 
+      const submitResult = ():void => {
+        console.log('submitResult')
+      }
+
       const showInfo = (id):void =>  {
         visibleMap[id] = true
       }
@@ -203,6 +210,7 @@ export default defineComponent({
         columns,
         loading,
         exec,
+        submitResult,
         back,
 
         visibleMap,

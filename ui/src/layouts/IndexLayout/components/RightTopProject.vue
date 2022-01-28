@@ -21,12 +21,13 @@
 
 <script lang="ts">
 import {computed, ComputedRef, defineComponent, onMounted, Ref, ref, watch} from "vue";
+import {useRouter} from "vue-router";
 import {useStore} from "vuex";
 
 import {ProjectData} from "@/store/project";
 import ProjectCreateForm from "@/views/component/project/create.vue";
 import {createProject} from "@/services/project";
-import {addClass, removeClass} from "@/utils/dom";
+import {addClass, hideMenu, removeClass} from "@/utils/dom";
 
 interface RightTopProject {
   projects: ComputedRef<any[]>;
@@ -43,30 +44,30 @@ export default defineComponent({
   name: 'RightTopProject',
   components: {ProjectCreateForm},
   setup(): RightTopProject {
+    const router = useRouter();
     const store = useStore<{ project: ProjectData }>();
 
     const projects = computed<any[]>(() => store.state.project.projects);
     const currProject = computed<any>(() => store.state.project.currProject);
     store.dispatch('project/fetchProject', '');
 
-    const hideMenu = () => {
-      const scriptMenu = document.getElementById('menu-script')
-      if (currProject.value.type === 'unit') addClass(scriptMenu, 't-hidden')
-      else removeClass(scriptMenu,'t-hidden')
-
-      const scriptSync = document.getElementById('menu-sync')
-      if (currProject.value.type === 'unit') addClass(scriptSync,'t-hidden')
-      else removeClass(scriptSync,'t-hidden')
+    const switchProject = (newProject) => {
+      const routerPath = router.currentRoute.value.path
+      if (routerPath.indexOf('/exec/history/') > -1
+          || (newProject.type === 'unit' && (routerPath === '/sync' || routerPath === '/script/list'))) {
+        router.push(`/exec/history`) // will call hideMenu on this page
+      } else {
+        hideMenu(newProject)
+      }
     }
 
-    watch(currProject,()=> {
-      console.log('watch currProject', currProject)
-      hideMenu()
+    watch(currProject, (newProject, oldVal)=> {
+      console.log('watch currProject', newProject.type)
+      switchProject(newProject)
     }, {deep: true})
 
     onMounted(() => {
       console.log('onMounted')
-      hideMenu()
     })
 
     const selectProject = (value): void => {

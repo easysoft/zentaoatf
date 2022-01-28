@@ -65,8 +65,6 @@ export function hasClass( elements, cName ){
     return !!elements.className.match( new RegExp( "(\\s|^)" + cName + "(\\s|$)") )
 }
 export function addClass( elements, cName ){
-    console.log(elements)
-
     if (!elements) return
     if( !hasClass( elements,cName ) ){
         elements.className += " " + cName
@@ -82,4 +80,14 @@ export function removeClass( elements, cName ){
 export function jsonStrDef(obj) {
     const msg = JSON.stringify(obj)
     return msg
+}
+
+export function hideMenu (newVal) {
+    const scriptMenu = document.getElementById('menu-script')
+    if (newVal.type === 'unit') addClass(scriptMenu, 't-hidden')
+    else removeClass(scriptMenu,'t-hidden')
+
+    const scriptSync = document.getElementById('menu-sync')
+    if (newVal.type === 'unit') addClass(scriptSync,'t-hidden')
+    else removeClass(scriptSync,'t-hidden')
 }

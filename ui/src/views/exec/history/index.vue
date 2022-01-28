@@ -70,6 +70,7 @@ import {useRouter} from "vue-router";
 import {momentTimeDef, percentDef} from "@/utils/datetime";
 import {execByDef} from "@/utils/testing";
 import {ProjectData} from "@/store/project";
+import {hideMenu} from "@/utils/dom";
 
 interface ListExecSetupData {
   currProject: ComputedRef;
@@ -157,10 +158,15 @@ export default defineComponent({
       }
       list();
 
-      watch(currProject,()=> {
-        console.log('watch currProject', currProject)
+      watch(currProject, (newProject, oldVal) => {
+        console.log('watch currProject', newProject)
         list()
       }, {deep: true})
+
+      onMounted(() => {
+        console.log('onMounted')
+        hideMenu(currProject.value) // jump from not available page for unittest
+      })
 
       // 查看
       const viewResult = (item) => {

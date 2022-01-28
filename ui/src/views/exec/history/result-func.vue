@@ -8,6 +8,10 @@
         <div class="opt">
           <a-button @click="exec('all')" type="primary">重新执行所有用例</a-button>
           <a-button @click="exec('fail')" type="primary">重新执行失败用例</a-button>
+
+          <a-button @click="submitResult()">提交结果到禅道</a-button>
+          <a-button @click="submitBug()">提交缺陷到禅道</a-button>
+
           <a-button type="link" @click="() => back()">返回</a-button>
         </div>
       </template>
@@ -103,6 +107,8 @@ interface DesignExecutionPageSetupData {
 
   loading: Ref<boolean>;
   exec: (scope) => void;
+  submitResult: () => void;
+  submitBug: () => void;
   back: () => void;
 
   execBy: (item) => string;
@@ -173,6 +179,13 @@ export default defineComponent({
         if (execBy === 'case') router.push(`/exec/run/${execBy}/${seq}/${scope}`)
         else router.push(`/exec/run/${execBy}/${productId}/${execById}/${seq}/${scope}`)
       }
+      const submitResult = ():void => {
+        console.log('submitResult')
+      }
+      const submitBug = ():void => {
+        console.log('submitBug')
+      }
+
       const back = ():void =>  {
         router.push(`/exec/history`)
       }
@@ -186,6 +199,8 @@ export default defineComponent({
         columns,
         loading,
         exec,
+        submitResult,
+        submitBug,
         back,
 
         execBy,
