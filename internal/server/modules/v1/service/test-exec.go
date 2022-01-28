@@ -21,23 +21,16 @@ func NewTestExecService() *TestExecService {
 }
 
 func (s *TestExecService) List(projectPath string) (ret []serverDomain.TestReportSummary, err error) {
-	project, err := s.ProjectRepo.FindByPath(projectPath)
-
 	reportFiles := analysisUtils.ListReport(projectPath)
 
 	for _, seq := range reportFiles {
 		var summary serverDomain.TestReportSummary
 
-		if project.Type == commConsts.TestFunc {
-			report, err1 := analysisUtils.GetReport(projectPath, seq)
-			if err1 != nil { // ignore wrong json result
-				continue
-			}
-			copier.Copy(&summary, report)
-
-		} else if project.Type == commConsts.TestUnit {
-
+		report, err1 := analysisUtils.GetReport(projectPath, seq)
+		if err1 != nil { // ignore wrong json result
+			continue
 		}
+		copier.Copy(&summary, report)
 
 		summary.Seq = seq
 		ret = append(ret, summary)

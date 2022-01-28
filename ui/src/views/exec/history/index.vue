@@ -31,7 +31,7 @@
                   {{text}}
                 </template>
                 <template #execBy="{ record }">
-                  {{ execBy(record.execBy) }}
+                  {{ execBy(record) }}
                 </template>
                 <template #startTime="{ record }">
                   {{ momentTime(record.startTime) }}
@@ -164,8 +164,7 @@ export default defineComponent({
 
       // 查看
       const viewResult = (item) => {
-        if (item.testType === 'func') router.push(`/exec/history/${item.testType}/${item.seq}`)
-        else router.push(`/exec/history/${item.testType}`)
+        router.push(`/exec/history/${item.testType}/${item.seq}`)
       }
 
       // 删除

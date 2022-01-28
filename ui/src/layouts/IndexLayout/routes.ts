@@ -45,7 +45,7 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
       },
       {
         title: 'index-layout.menu.execution.result.unit',
-        path: 'history/unit',
+        path: 'history/unit/:seq',
         component: () => import('@/views/exec/history/result-unit.vue'),
         hidden: true,
       },

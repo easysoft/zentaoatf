@@ -173,7 +173,7 @@ type UnitTestSuite struct {
 	Time     float32 `xml:"time,attr"`
 
 	Properties Properties   `xml:"properties"`
-	ZtfScripts []UnitResult `xml:"testcase"`
+	Cases      []UnitResult `xml:"testcase"`
 }
 type UnitResult struct {
 	Title     string `json:"title" xml:"name,attr"`
@@ -204,8 +204,8 @@ type Property struct {
 
 // phpunit xml
 type PhpUnitSuites struct {
-	XMLName    xml.Name `xml:"tests"`
-	ZtfScripts []struct {
+	XMLName xml.Name `xml:"tests"`
+	Cases   []struct {
 		Title     string `xml:"prettifiedMethodName,attr"`
 		TestSuite string `xml:"prettifiedClassName,attr"`
 		Fail      string `xml:"exceptionMessage,attr"`
@@ -222,8 +222,8 @@ type PhpUnitSuites struct {
 type PyTestSuites struct {
 	XMLName    xml.Name `xml:"testsuites"`
 	TestSuites []struct {
-		Title      string `xml:"name,attr"`
-		ZtfScripts []struct {
+		Title string `xml:"name,attr"`
+		Cases []struct {
 			Title     string  `xml:"name,attr"`
 			TestSuite string  `xml:"classname,attr"`
 			Duration  float32 `xml:"time,attr"`
@@ -251,8 +251,8 @@ type JestSuites struct {
 	XMLName    xml.Name `xml:"testsuites"`
 	Title      string   `xml:"name,attr"`
 	TestSuites []struct {
-		Title      string       `xml:"name,attr"`
-		ZtfScripts []UnitResult `xml:"testcase"`
+		Title string       `xml:"name,attr"`
+		Cases []UnitResult `xml:"testcase"`
 
 		Duration int
 	} `xml:"testsuite"`
@@ -265,8 +265,8 @@ type JestSuites struct {
 type GTestSuites struct {
 	XMLName    xml.Name `xml:"testsuites"`
 	TestSuites []struct {
-		Title      string `xml:"name,attr"`
-		ZtfScripts []struct {
+		Title string `xml:"name,attr"`
+		Cases []struct {
 			Title     string  `xml:"name,attr"`
 			TestSuite string  `xml:"classname,attr"`
 			Duration  float32 `xml:"time,attr"`
@@ -290,7 +290,7 @@ type QTestSuites struct {
 	XMLName xml.Name `xml:"testsuite"`
 	Name    string   `json:"name" xml:"name,attr"`
 
-	ZtfScripts []struct {
+	Cases []struct {
 		Title  string `json:"name" xml:"name,attr"`
 		Result string `json:"result" xml:"result,attr"`
 
@@ -309,11 +309,11 @@ type CppUnitSuites struct {
 	XMLName xml.Name `xml:"TestRun"`
 
 	SuccessfulTests struct {
-		ZtfScripts []CppUnitTest `json:"test" xml:"Tests"`
+		Cases []CppUnitTest `json:"test" xml:"Tests"`
 	} `json:"successfulTests" xml:"SuccessfulTests"`
 
 	FailedTests struct {
-		ZtfScripts []CppUnitTest `json:"test" xml:"FailedTest"`
+		Cases []CppUnitTest `json:"test" xml:"FailedTest"`
 	} `json:"failedTests" xml:"FailedTests"`
 
 	Duration int

@@ -281,7 +281,7 @@ func ParserUnitTestResult(testSuites []commDomain.UnitTestSuite) (
 			dur += suite.Time
 		}
 
-		for _, cs := range suite.ZtfScripts {
+		for _, cs := range suite.Cases {
 			cs.Id = idx
 
 			if cs.Failure != nil {
@@ -311,7 +311,7 @@ func ConvertJestResult(jestSuite commDomain.JestSuites) commDomain.UnitTestSuite
 	testSuite.Time = jestSuite.Time
 
 	for _, suite := range jestSuite.TestSuites {
-		for _, cs := range testSuite.ZtfScripts {
+		for _, cs := range testSuite.Cases {
 			caseResult := commDomain.UnitResult{}
 			caseResult.Title = cs.Title
 			caseResult.Duration = cs.Duration
@@ -324,7 +324,7 @@ func ConvertJestResult(jestSuite commDomain.JestSuites) commDomain.UnitTestSuite
 
 			caseResult.Failure = cs.Failure
 
-			testSuite.ZtfScripts = append(testSuite.ZtfScripts, caseResult)
+			testSuite.Cases = append(testSuite.Cases, caseResult)
 		}
 	}
 
@@ -335,7 +335,7 @@ func ConvertPhpUnitResult(phpUnitSuite commDomain.PhpUnitSuites) commDomain.Unit
 	testSuite := commDomain.UnitTestSuite{}
 
 	var total float32 = 0
-	for _, cs := range phpUnitSuite.ZtfScripts {
+	for _, cs := range phpUnitSuite.Cases {
 		caseResult := commDomain.UnitResult{}
 		caseResult.Title = cs.Title
 		caseResult.Duration = cs.Time
@@ -354,7 +354,7 @@ func ConvertPhpUnitResult(phpUnitSuite commDomain.PhpUnitSuites) commDomain.Unit
 			caseResult.Failure = &fail
 		}
 
-		testSuite.ZtfScripts = append(testSuite.ZtfScripts, caseResult)
+		testSuite.Cases = append(testSuite.Cases, caseResult)
 	}
 	testSuite.Duration = int64(total)
 	testSuite.Time = total
@@ -369,7 +369,7 @@ func ConvertPyTestResult(pytestSuites commDomain.PyTestSuites) commDomain.UnitTe
 	for _, suite := range pytestSuites.TestSuites {
 		total += suite.Time
 
-		for _, cs := range suite.ZtfScripts {
+		for _, cs := range suite.Cases {
 			caseResult := commDomain.UnitResult{}
 			caseResult.Title = cs.Title
 			caseResult.Duration = cs.Duration
@@ -392,7 +392,7 @@ func ConvertPyTestResult(pytestSuites commDomain.PyTestSuites) commDomain.UnitTe
 				caseResult.Failure = &fail
 			}
 
-			testSuite.ZtfScripts = append(testSuite.ZtfScripts, caseResult)
+			testSuite.Cases = append(testSuite.Cases, caseResult)
 
 		}
 	}
@@ -408,7 +408,7 @@ func ConvertGTestResult(gTestSuite commDomain.GTestSuites) commDomain.UnitTestSu
 	testSuite.Time = gTestSuite.Time
 
 	for _, suite := range gTestSuite.TestSuites {
-		for _, cs := range suite.ZtfScripts {
+		for _, cs := range suite.Cases {
 			caseResult := commDomain.UnitResult{}
 			caseResult.Title = cs.Title
 			caseResult.Duration = cs.Duration
@@ -425,7 +425,7 @@ func ConvertGTestResult(gTestSuite commDomain.GTestSuites) commDomain.UnitTestSu
 				caseResult.Failure = &fail
 			}
 
-			testSuite.ZtfScripts = append(testSuite.ZtfScripts, caseResult)
+			testSuite.Cases = append(testSuite.Cases, caseResult)
 
 		}
 	}
@@ -436,7 +436,7 @@ func ConvertGTestResult(gTestSuite commDomain.GTestSuites) commDomain.UnitTestSu
 func ConvertCppUnitResult(cppunitSuite commDomain.CppUnitSuites) commDomain.UnitTestSuite {
 	testSuite := commDomain.UnitTestSuite{}
 
-	for _, cs := range cppunitSuite.FailedTests.ZtfScripts {
+	for _, cs := range cppunitSuite.FailedTests.Cases {
 		caseResult := commDomain.UnitResult{}
 		caseResult.Id = cs.Id
 		caseResult.Title = cs.Title
@@ -446,15 +446,15 @@ func ConvertCppUnitResult(cppunitSuite commDomain.CppUnitSuites) commDomain.Unit
 		fail.Desc = cs.Message
 		caseResult.Failure = &fail
 
-		testSuite.ZtfScripts = append(testSuite.ZtfScripts, caseResult)
+		testSuite.Cases = append(testSuite.Cases, caseResult)
 	}
 
-	for _, cs := range cppunitSuite.SuccessfulTests.ZtfScripts {
+	for _, cs := range cppunitSuite.SuccessfulTests.Cases {
 		caseResult := commDomain.UnitResult{}
 		caseResult.Id = cs.Id
 		caseResult.Title = cs.Title
 
-		testSuite.ZtfScripts = append(testSuite.ZtfScripts, caseResult)
+		testSuite.Cases = append(testSuite.Cases, caseResult)
 	}
 
 	return testSuite
@@ -463,7 +463,7 @@ func ConvertCppUnitResult(cppunitSuite commDomain.CppUnitSuites) commDomain.Unit
 func ConvertQTestResult(qTestSuite commDomain.QTestSuites) commDomain.UnitTestSuite {
 	testSuite := commDomain.UnitTestSuite{}
 
-	for _, cs := range qTestSuite.ZtfScripts {
+	for _, cs := range qTestSuite.Cases {
 		caseResult := commDomain.UnitResult{}
 		caseResult.TestSuite = qTestSuite.Name
 		caseResult.Title = cs.Title
@@ -476,7 +476,7 @@ func ConvertQTestResult(qTestSuite commDomain.QTestSuites) commDomain.UnitTestSu
 			caseResult.Failure = &fail
 		}
 
-		testSuite.ZtfScripts = append(testSuite.ZtfScripts, caseResult)
+		testSuite.Cases = append(testSuite.Cases, caseResult)
 	}
 
 	return testSuite
@@ -518,7 +518,7 @@ func ConvertRobotResult(result commDomain.RobotResult) commDomain.UnitTestSuite 
 			caseResult.Failure = &fail
 		}
 
-		testSuite.ZtfScripts = append(testSuite.ZtfScripts, caseResult)
+		testSuite.Cases = append(testSuite.Cases, caseResult)
 	}
 
 	return testSuite
@@ -567,7 +567,7 @@ func ConvertCyResult(result commDomain.CypressTestsuites) commDomain.UnitTestSui
 				caseResult.Status = "pass"
 			}
 
-			testSuite.ZtfScripts = append(testSuite.ZtfScripts, caseResult)
+			testSuite.Cases = append(testSuite.Cases, caseResult)
 		}
 	}
 

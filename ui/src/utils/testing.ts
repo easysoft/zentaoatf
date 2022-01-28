@@ -74,8 +74,25 @@ const execByMap = {
     suite: '按套件',
     task: '按任务',
 }
-export function execByDef(code) {
-    return execByMap[code]
+const testToolMap = {
+    junit: 'JUnit',
+    testng: 'TestNG',
+    phpunit: 'PHPUnit',
+    pytest: 'PyTest',
+    jest: 'Jest',
+    cppunit: 'CppUnit',
+    gtest: 'GTest',
+    qtest: 'QTest',
+
+    autoit: 'AutoIt',
+    selenium: 'Selenium',
+    appium: 'Appium',
+    robotframework: 'RobotFramework',
+    cypress: 'Cypress',
+}
+export function execByDef(record) {
+    if (record.execBy) return execByMap[record.execBy]
+    else return testToolMap[record.testFramework]
 }
 export function momentTimeDef(tm) {
     return moment.unix(tm).format("YYYY-MM-DD HH:mm:ss")

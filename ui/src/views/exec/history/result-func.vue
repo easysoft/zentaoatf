@@ -19,7 +19,7 @@
           <a-col :span="2" class="t-bord t-label-right">测试类型</a-col>
           <a-col :span="4">{{ testType(report.testType) }}</a-col>
           <a-col :span="2" class="t-bord t-label-right">执行类型</a-col>
-          <a-col :span="4">{{ execBy(report.execBy) }}</a-col>
+          <a-col :span="4">{{ execBy(report) }}</a-col>
         </a-row>
         <a-row>
           <a-col :span="2" class="t-bord t-label-right">开始时间</a-col>

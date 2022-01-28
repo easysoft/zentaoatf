@@ -78,3 +78,8 @@ export function removeClass( elements, cName ){
         elements.className = elements.className.replace( new RegExp( "(\\s|^)" + cName + "(\\s|$)" ), " " )
     }
 }
+
+export function jsonStrDef(obj) {
+    const msg = JSON.stringify(obj)
+    return msg
+}

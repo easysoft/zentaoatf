@@ -6,8 +6,6 @@
       </template>
       <template #extra>
         <div class="opt">
-          <a-button @click="exec('all')" type="primary">重新执行所有用例</a-button>
-          <a-button @click="exec('fail')" type="primary">重新执行失败用例</a-button>
           <a-button type="link" @click="() => back()">返回</a-button>
         </div>
       </template>
@@ -19,7 +17,7 @@
           <a-col :span="2" class="t-bord t-label-right">测试类型</a-col>
           <a-col :span="4">{{ testType(report.testType) }}</a-col>
           <a-col :span="2" class="t-bord t-label-right">执行类型</a-col>
-          <a-col :span="4">{{ execBy(report.execBy) }}</a-col>
+          <a-col :span="4">{{ execBy(report) }}</a-col>
         </a-row>
         <a-row>
           <a-col :span="2" class="t-bord t-label-right">开始时间</a-col>
@@ -43,39 +41,33 @@
         <a-row><a-col :span="2" class="t-bord t-label-right">用例详情</a-col></a-row>
         <a-row>
           <a-col :span="2"></a-col>
-          <a-col :span="18">
-          <template v-for="result in report.funcResult" :key="result.id">
-            <div>{{result.id}}. {{result.path}}
-              <span :class="'t-'+result.status">{{resultStatus(result.status)}}</span>
-            </div>
-
+          <a-col :span="22">
             <a-table
                 :columns="columns"
-                :data-source="result.steps"
+                :data-source="report.unitResult"
                 row-key="id"
                 :pagination="false">
               <template #seq="{ record }">
                 {{record.id}}
               </template>
-              <template #name="{ record }">
-                {{ record.name }}
+              <template #duration="{ record }">
+                {{record.duration}}
               </template>
               <template #status="{ record }">
                 <span :class="'t-'+record.status">{{ resultStatus(record.status) }}</span>
               </template>
-              <template #checkPoints="{ record }">
-                <div v-for="item in record.checkPoints" :key="item.numb">
-                  {{ item.numb }}.&nbsp;
-                  <span :class="'t-'+result.status">{{ resultStatus(item.status) }}</span>
-                  &nbsp;&nbsp;&nbsp;
-                  "{{ item.expect }}"
-                  "{{ item.actual }}"
-                </div>
+              <template #info="{ record }">
+                <template v-if="record.failure">
+                  <a-button type="link" @click="showInfo(record.id)">查看错误</a-button>
+                  <a-modal v-model:visible="visibleMap[record.id]" width="1000px"
+                           @ok="closeInfo(record.id)"
+                           title="错误信息" >
+                    <p>{{jsonStr(record.failure)}}</p>
+                  </a-modal>
+                </template>
               </template>
             </a-table>
-          </template>
           </a-col>
-          <a-col :span="2"></a-col>
         </a-row>
       </div>
 
@@ -89,13 +81,14 @@ import {
   onMounted,
   Ref,
   ref,
-  computed
+  computed, reactive
 } from "vue";
 import { useStore } from 'vuex';
 import {StateType as ListStateType} from "@/views/exec/store";
 import {useRouter} from "vue-router";
 import {momentTimeDef, percentDef} from "@/utils/datetime";
 import {execByDef, resultStatusDef, testEnvDef, testTypeDef} from "@/utils/testing";
+import {jsonStrDef} from "@/utils/dom";
 
 interface DesignExecutionPageSetupData {
   report: Ref;
@@ -105,12 +98,17 @@ interface DesignExecutionPageSetupData {
   exec: (scope) => void;
   back: () => void;
 
-  execBy: (item) => string;
+  visibleMap: Ref
+  showInfo: (id) => void;
+  closeInfo: (id) => void;
+
+  execBy: (record) => string;
   momentTime: (tm) => string;
   percent: (numb, total) => string;
   testEnv: (code) => string;
   testType: (code) => string;
   resultStatus: (code) => string;
+  jsonStr: (record) => string;
 }
 
 export default defineComponent({
@@ -122,6 +120,8 @@ export default defineComponent({
       const testEnv = testEnvDef
       const testType = testTypeDef
       const resultStatus = resultStatusDef
+      const jsonStr = jsonStrDef
+      const visibleMap = reactive<any>({})
 
       const router = useRouter();
       const store = useStore<{ History: ListStateType}>();
@@ -134,9 +134,18 @@ export default defineComponent({
           customRender: ({text, index}: { text: any; index: number}) => index + 1,
         },
         {
-          title: '步骤',
-          dataIndex: 'name',
-          slots: { customRender: 'name' },
+          title: '用例',
+          dataIndex: 'title',
+          slots: { customRender: 'title' },
+        },
+        {
+          title: '套件',
+          dataIndex: 'testSuite',
+        },
+        {
+          title: '耗时（秒）',
+          dataIndex: 'duration',
+          slots: { customRender: 'duration' },
         },
         {
           title: '状态',
@@ -144,17 +153,17 @@ export default defineComponent({
           slots: { customRender: 'status' },
         },
         {
-          title: '检查点（编号 状态 期待结果 实际结果）',
-          dataIndex: 'checkPoints',
-          slots: { customRender: 'checkPoints' },
+          title: '信息',
+          dataIndex: 'info',
+          slots: { customRender: 'info' },
         },
       ]
 
       const report = computed<any>(() => store.state.History.item);
       const loading = ref<boolean>(true);
-      console.log(report)
 
       const seq = router.currentRoute.value.params.seq
+      console.log('seq', seq)
 
       const get = async (): Promise<void> => {
         loading.value = true;
@@ -173,6 +182,14 @@ export default defineComponent({
         if (execBy === 'case') router.push(`/exec/run/${execBy}/${seq}/${scope}`)
         else router.push(`/exec/run/${execBy}/${productId}/${execById}/${seq}/${scope}`)
       }
+
+      const showInfo = (id):void =>  {
+        visibleMap[id] = true
+      }
+      const closeInfo = (id):void =>  {
+        visibleMap[id] = false
+      }
+
       const back = ():void =>  {
         router.push(`/exec/history`)
       }
@@ -188,12 +205,17 @@ export default defineComponent({
         exec,
         back,
 
+        visibleMap,
+        showInfo,
+        closeInfo,
+
         execBy,
         momentTime,
         percent,
         testEnv,
         testType,
         resultStatus,
+        jsonStr,
       }
     }
 })

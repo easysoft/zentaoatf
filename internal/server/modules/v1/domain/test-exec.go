@@ -10,9 +10,11 @@ type TestExecReq struct {
 }
 
 type TestReportSummary struct {
-	Seq      string `json:"seq"`
-	Env      string `json:"env,omitempty"`
-	TestType string `json:"testType"`
+	Seq           string                       `json:"seq"`
+	TestEnv       commConsts.OsType            `json:"testEnv,omitempty"`
+	TestType      commConsts.TestType          `json:"testType"`
+	TestFramework commConsts.UnitTestFramework `json:"testFramework"`
+	TestTool      commConsts.UnitTestTool      `json:"testTool"`
 
 	ProductId int               `json:"productId,omitempty"`
 	ExecBy    commConsts.ExecBy `json:"execBy,omitempty"`
