@@ -251,6 +251,7 @@ export default defineComponent({
     }
     const openBugForm = (cs) => {
       console.log('openBugForm', cs)
+      if (cs.productId === 0) cs.productId = ''
       bugFormData.value = cs
       setBugFormVisible(true)
     }
@@ -258,7 +259,6 @@ export default defineComponent({
       console.log('submitBugForm', formData)
 
       const data = Object.assign({seq: seq}, formData)
-      console.log('data', data)
       submitBugToZentao(data).then((json) => {
         console.log('json', json)
         if (json.code === 0) {

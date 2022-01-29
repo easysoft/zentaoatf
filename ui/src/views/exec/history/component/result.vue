@@ -8,7 +8,7 @@
   >
     <template #footer>
       <a-button key="back" @click="() => onCancel()">取消</a-button>
-      <a-button key="submit" type="primary" @click="onFinish">确定</a-button>
+      <a-button key="submit" type="primary" @click="onFinish">提交</a-button>
     </template>
 
     <div>

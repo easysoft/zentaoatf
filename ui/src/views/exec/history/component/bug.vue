@@ -9,7 +9,7 @@
   >
     <template #footer>
       <a-button key="back" @click="() => onCancel()">取消</a-button>
-      <a-button key="submit" type="primary" @click="onFinish">确定</a-button>
+      <a-button key="submit" type="primary" @click="onFinish">提交</a-button>
     </template>
 
     <div>
@@ -56,6 +56,10 @@
           </a-select>
         </a-form-item>
 
+        <a-form-item label="步骤">
+          <a-textarea v-model:value="modelRef.steps" :auto-size="{ minRows: 5, maxRows: 8 }" />
+        </a-form-item>
+
       </a-form>
 
     </div>
@@ -74,7 +78,7 @@ import {
 const useForm = Form.useForm;
 
 interface BugFormSetupData {
-  modelRef: Ref<Interpreter>
+  modelRef: Ref
   onFinish: () => Promise<void>;
 
   labelCol: any
@@ -121,7 +125,7 @@ export default defineComponent({
       ],
     });
 
-    const modelRef = reactive<any>({productId: props.model.productId + '' || ''})
+    const modelRef = reactive<any>({})
 
     let products = ref([])
     let modules = ref([])
@@ -140,9 +144,16 @@ export default defineComponent({
     getProductData()
 
     const getBugData = () => {
-      if (modelRef.value.productId) return
-      getDataForBugSubmition(modelRef.value.productId).then((jsn) => {
-        products.value = jsn.data
+      if (!modelRef.productId) return
+
+      getDataForBugSubmition(props.model).then((jsn) => {
+        modelRef.value.steps = jsn.data.steps.join('\n')
+
+        modules.value = jsn.data.fields.modules
+        categories.value = jsn.data.fields.categories
+        versions.value = jsn.data.fields.versions
+        severities.value = jsn.data.fields.severities
+        priorities.value = jsn.data.fields.priorities
       })
     }
     getBugData()

@@ -51,9 +51,9 @@ export default defineComponent({
     const currProject = computed<any>(() => store.state.project.currProject);
     store.dispatch('project/fetchProject', '');
 
-    const switchProject = (newProject) => {
+    const switchProject = (newProject, oldProject) => {
       const routerPath = router.currentRoute.value.path
-      if (routerPath.indexOf('/exec/history/') > -1
+      if ( (oldProject.id && oldProject.id !== newProject.id && routerPath.indexOf('/exec/history/') > -1)
           || (newProject.type === 'unit' && (routerPath === '/sync' || routerPath === '/script/list'))) {
         router.push(`/exec/history`) // will call hideMenu on this page
       } else {
@@ -61,9 +61,9 @@ export default defineComponent({
       }
     }
 
-    watch(currProject, (newProject, oldVal)=> {
+    watch(currProject, (newProject, oldProject)=> {
       console.log('watch currProject', newProject.type)
-      switchProject(newProject)
+      switchProject(newProject, oldProject)
     }, {deep: true})
 
     onMounted(() => {

@@ -214,7 +214,20 @@ func ListTaskByProduct(productId int, projectPath string) (tasks []serverDomain.
 	return
 }
 
-func GetBugFiledOptions(productId int, projectPath string) (bugFields commDomain.ZentaoBugFields, err error) {
+func GetBugFiledOptions(req commDomain.FuncResult, projectPath string) (steps, ids []string,
+	bugFields commDomain.ZentaoBugFields, err error) {
+
+	// steps data
+	for _, step := range req.Steps {
+		if step.Status == commConsts.FAIL {
+			ids = append(ids, step.Id+"_")
+		}
+
+		stepsContent := GetStepText(step)
+		steps = append(steps, stepsContent)
+	}
+
+	// field options
 	config := configUtils.LoadByProjectPath(projectPath)
 	ok := Login(config)
 	if !ok {
@@ -224,9 +237,9 @@ func GetBugFiledOptions(productId int, projectPath string) (bugFields commDomain
 	// $productID, $projectID = 0
 	params := ""
 	if commConsts.RequestType == commConsts.PathInfo {
-		params = fmt.Sprintf("%d-0", productId)
+		params = fmt.Sprintf("%d-0", req.ProductId)
 	} else {
-		params = fmt.Sprintf("productID=%d", productId)
+		params = fmt.Sprintf("productID=%d", req.ProductId)
 	}
 
 	url := config.Url + GenApiUri("bug", "ajaxGetBugFieldOptions", params)
@@ -256,6 +269,25 @@ func GetBugFiledOptions(productId int, projectPath string) (bugFields commDomain
 	}
 
 	return
+}
+func GetStepText(step commDomain.StepLog) string {
+	stepResults := make([]string, 0)
+
+	stepTxt := fmt.Sprintf("%s %s\n", step.Id, step.Status)
+
+	for _, checkpoint := range step.CheckPoints {
+		text := fmt.Sprintf(
+			" Checkpoint: %s\n"+
+				"  Expect\n"+
+				"   %s\n"+
+				"  Actual\n"+
+				"   %s",
+			checkpoint.Status, checkpoint.Expect, checkpoint.Actual)
+
+		stepResults = append(stepResults, text)
+	}
+
+	return stepTxt + strings.Join(stepResults, "\n") + "\n"
 }
 
 func Login(config commDomain.ProjectConf) bool {

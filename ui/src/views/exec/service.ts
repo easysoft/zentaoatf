@@ -65,9 +65,12 @@ export function submitResultToZentao(data: any): Promise<any> {
         data: data,
     });
 }
-export function submitBugToZentao(seq: string): Promise<any> {
+export function submitBugToZentao(data: any): Promise<any> {
+    const bugData = {}
+
     return request({
-        url: `/bug/${seq}`,
+        url: `/bug`,
         method: 'post',
+        data: bugData,
     });
 }

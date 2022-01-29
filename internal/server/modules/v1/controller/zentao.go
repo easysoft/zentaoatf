@@ -1,7 +1,9 @@
 package controller
 
 import (
+	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
+	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	zentaoUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/zentao"
 	"github.com/kataras/iris/v12"
 )
@@ -79,13 +81,16 @@ func (c *ZentaoCtrl) ListTask(ctx iris.Context) {
 
 func (c *ZentaoCtrl) GetDataForBugSubmition(ctx iris.Context) {
 	projectPath := ctx.URLParam("currProject")
-	productId, err := ctx.URLParamInt("productId")
-	if err != nil {
+
+	req := commDomain.FuncResult{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		logUtils.Errorf("参数验证失败 %s", err.Error())
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
 
-	data, _ := zentaoUtils.GetBugFiledOptions(productId, projectPath)
+	steps, ids, fields, _ := zentaoUtils.GetBugFiledOptions(req, projectPath)
+	data := iris.Map{"steps": steps, "ids": ids, "fields": fields}
 
 	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: data, Msg: domain.NoErr.Msg})
 }
