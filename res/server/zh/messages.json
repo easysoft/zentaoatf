@@ -428,7 +428,7 @@
     },
     {
       "id": "fail_to_submit_test_result",
-      "translation": "提交测试结果到禅道失败"
+      "translation": "提交测试结果到禅道失败，错误%s。"
     },
     {
       "id": "ignore_to_submit_result_no_result_empty",

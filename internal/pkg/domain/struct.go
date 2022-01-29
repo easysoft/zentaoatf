@@ -64,8 +64,8 @@ var (
 	AuthErr       = ErrMsg{4001, "会话超时，请重新登录！"}
 	AuthExpireErr = ErrMsg{4002, "token 过期，请刷新token"}
 	AuthActionErr = ErrMsg{4003, "权限错误"}
-	ParamErr      = ErrMsg{4004, "参数解析失败，请联系管理员"}
-	SystemErr     = ErrMsg{5000, "系统错误，请联系管理员"}
+	ParamErr      = ErrMsg{4004, "参数解析失败"}
+	SystemErr     = ErrMsg{5000, "系统错误"}
 	DataEmptyErr  = ErrMsg{5001, "数据为空"}
 	TokenCacheErr = ErrMsg{5002, "TOKEN CACHE 错误"}
 

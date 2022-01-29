@@ -20,25 +20,17 @@ func NewTestResultCtrl() *TestResultCtrl {
 // Submit 提交
 func (c *TestResultCtrl) Submit(ctx iris.Context) {
 	projectPath := ctx.URLParam("currProject")
-	req := serverDomain.ZentaoResult{}
-	if err := ctx.ReadJSON(&req); err != nil {
-		logUtils.Errorf("参数验证失败，错误%s", err.Error())
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
-		return
-	}
-
-	if req.Seq == "" {
-		logUtils.Errorf("参数解析失败")
-		ctx.JSON(domain.Response{Code: domain.ParamErr.Code, Data: nil, Msg: domain.ParamErr.Msg})
-		return
-	}
-
-	err := c.TestResultService.Submit(req, projectPath)
+	req := serverDomain.ZentaoResultSubmitReq{}
+	err := ctx.ReadJSON(&req)
 	if err != nil {
-		ctx.JSON(domain.Response{
-			Code: c.ErrCode(err),
-			Data: nil,
-		})
+		logUtils.Errorf("参数验证失败，错误%s", err.Error())
+		ctx.JSON(domain.Response{Code: domain.ParamErr.Code, Data: nil, Msg: err.Error()})
+		return
+	}
+
+	err = c.TestResultService.Submit(req, projectPath)
+	if err != nil {
+		ctx.JSON(domain.Response{Code: domain.CommonErr.Code, Msg: err.Error()})
 		return
 	}
 

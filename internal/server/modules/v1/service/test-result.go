@@ -13,13 +13,13 @@ func NewTestResultService() *TestResultService {
 	return &TestResultService{}
 }
 
-func (s *TestResultService) Submit(result serverDomain.ZentaoResult, projectPath string) (err error) {
+func (s *TestResultService) Submit(result serverDomain.ZentaoResultSubmitReq, projectPath string) (err error) {
 	report, err := analysisUtils.ReadReport(projectPath, result.Seq)
 	if err != nil {
 		return
 	}
 
-	zentaoUtils.CommitResult(report, result, projectPath)
+	err = zentaoUtils.CommitResult(report, result, projectPath)
 
 	return
 }

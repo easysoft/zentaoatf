@@ -97,7 +97,6 @@ import {jsonStrDef} from "@/utils/dom";
 import {notification} from "ant-design-vue";
 import {submitResultToZentao} from "@/views/exec/service";
 import ResultForm from './component/result.vue'
-import {queryProduct} from "@/services/zentao";
 
 interface UnitTestResultPageSetupData {
   report: Ref;
