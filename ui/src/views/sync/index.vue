@@ -141,6 +141,7 @@ export default defineComponent({
       lang: 'python',
       independentFile: false
     } as SyncSettings);
+
     const modelCommit = reactive<SyncSettings>({
       productId: '',
     } as SyncSettings);

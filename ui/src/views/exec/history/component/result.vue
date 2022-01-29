@@ -103,7 +103,7 @@ export default defineComponent({
     }
 
     const onFinish = async () => {
-      console.log('onFinish', modelRef.value)
+      console.log('onFinish', modelRef)
 
       validate().then(() => {
         props.onSubmit(modelRef);

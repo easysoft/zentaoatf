@@ -125,7 +125,7 @@ export default defineComponent({
       ],
     });
 
-    const modelRef = reactive<any>({})
+    const modelRef = reactive<any>({} as any)
 
     let products = ref([])
     let modules = ref([])
@@ -147,7 +147,7 @@ export default defineComponent({
       if (!modelRef.productId) return
 
       getDataForBugSubmition(props.model).then((jsn) => {
-        modelRef.value.steps = jsn.data.steps.join('\n')
+        modelRef.steps = jsn.data.steps.join('\n')
 
         modules.value = jsn.data.fields.modules
         categories.value = jsn.data.fields.categories
@@ -164,7 +164,7 @@ export default defineComponent({
     }
 
     const onFinish = async () => {
-      console.log('onFinish', modelRef.value)
+      console.log('onFinish', modelRef)
 
       validate().then(() => {
         props.onSubmit(modelRef);
