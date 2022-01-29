@@ -11,6 +11,7 @@ import (
 
 type FileCtrl struct {
 	FileService *service.FileService `inject:""`
+	BaseCtrl
 }
 
 func NewFileCtrl() *FileCtrl {

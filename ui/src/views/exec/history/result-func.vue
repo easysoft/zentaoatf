@@ -101,7 +101,7 @@ import {useRouter} from "vue-router";
 import {momentTimeDef, percentDef} from "@/utils/datetime";
 import {execByDef, resultStatusDef, testEnvDef, testTypeDef} from "@/utils/testing";
 
-interface DesignExecutionPageSetupData {
+interface UnitTestResultPageSetupData {
   report: Ref;
   columns: any[]
 
@@ -120,8 +120,8 @@ interface DesignExecutionPageSetupData {
 }
 
 export default defineComponent({
-    name: 'ExecutionResultPage',
-    setup(): DesignExecutionPageSetupData {
+    name: 'UnitTestResultPage',
+    setup(): UnitTestResultPageSetupData {
       const execBy = execByDef
       const momentTime = momentTimeDef
       const percent = percentDef

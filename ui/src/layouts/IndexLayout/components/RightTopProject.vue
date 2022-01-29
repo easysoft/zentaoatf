@@ -27,7 +27,7 @@ import {useStore} from "vuex";
 import {ProjectData} from "@/store/project";
 import ProjectCreateForm from "@/views/component/project/create.vue";
 import {createProject} from "@/services/project";
-import {addClass, hideMenu, removeClass} from "@/utils/dom";
+import {hideMenu} from "@/utils/dom";
 
 interface RightTopProject {
   projects: ComputedRef<any[]>;

@@ -241,7 +241,7 @@ func Login(config commDomain.ProjectConf) bool {
 
 	if ok {
 		if commConsts.Verbose {
-			logUtils.Infof(i118Utils.Sprintf("success_to_login"), bodyBytes)
+			logUtils.Infof(i118Utils.Sprintf("success_to_login"), string(bodyBytes))
 		}
 	} else {
 		logUtils.Errorf(i118Utils.Sprintf("fail_to_login"))

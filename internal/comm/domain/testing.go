@@ -126,8 +126,13 @@ type ZtfReport struct {
 	TestTool      commConsts.UnitTestTool      `json:"testTool"`
 
 	ProductId int               `json:"productId,omitempty"`
+	TaskId    int               `json:"taskId,omitempty"`
 	ExecBy    commConsts.ExecBy `json:"execBy,omitempty"`
 	ExecById  int               `json:"execById,omitempty"`
+
+	// run with ci tool
+	ZentaoData string `json:"zentaoData"`
+	BuildUrl   string `json:"buildUrl"`
 
 	Pass      int   `json:"pass"`
 	Fail      int   `json:"fail"`

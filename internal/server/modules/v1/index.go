@@ -11,7 +11,6 @@ import (
 )
 
 type IndexModule struct {
-	TestModule *index.TestModule `inject:""`
 	FileModule *index.FileModule `inject:""`
 
 	ZentaoModule  *index.ZentaoModule  `inject:""`
@@ -22,6 +21,8 @@ type IndexModule struct {
 
 	TestScriptModule *index.TestScriptModule `inject:""`
 	TestExecModule   *index.TestExecModule   `inject:""`
+	TestResultModule *index.TestResultModule `inject:""`
+	TestBugModule    *index.TestBugModule    `inject:""`
 	TestSuiteModule  *index.TestSuiteModule  `inject:""`
 	TestSetModule    *index.TestSetModule    `inject:""`
 }
@@ -42,7 +43,6 @@ func (m *IndexModule) Party() module.WebModule {
 		}
 	}
 	modules := []module.WebModule{
-		m.TestModule.Party(),
 		m.FileModule.Party(),
 
 		m.ZentaoModule.Party(),
@@ -51,6 +51,8 @@ func (m *IndexModule) Party() module.WebModule {
 		m.ProjectModule.Party(),
 		m.TestScriptModule.Party(),
 		m.TestExecModule.Party(),
+		m.TestBugModule.Party(),
+		m.TestResultModule.Party(),
 	}
 	return module.NewModule(serverConfig.ApiPath, handler, modules...)
 }

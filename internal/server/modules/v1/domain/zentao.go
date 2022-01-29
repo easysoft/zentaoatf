@@ -29,3 +29,9 @@ type ZentaoTask struct {
 	Id   int    `json:"id"`
 	Name string `json:"name"`
 }
+
+type ZentaoResult struct {
+	Seq       string `json:"seq"`
+	ProductId string `json:"productId"`
+	TaskId    string `json:"taskId"`
+}

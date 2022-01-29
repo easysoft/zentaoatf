@@ -22,7 +22,7 @@ func ListReport(projectPath string) (reportFiles []string) {
 	return
 }
 
-func GetReport(projectPath string, seq string) (report commDomain.ZtfReport, err error) {
+func ReadReport(projectPath string, seq string) (report commDomain.ZtfReport, err error) {
 	pth := filepath.Join(projectPath, commConsts.LogDirName, seq, commConsts.ResultJson)
 
 	content := fileUtils.ReadFileBuf(pth)

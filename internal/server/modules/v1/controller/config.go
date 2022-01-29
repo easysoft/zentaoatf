@@ -14,8 +14,8 @@ import (
 )
 
 type ConfigCtrl struct {
-	BaseCtrl
 	ProjectService *service.ProjectService `inject:""`
+	BaseCtrl
 }
 
 func NewConfigCtrl() *ConfigCtrl {

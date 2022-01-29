@@ -26,7 +26,7 @@ func (s *TestExecService) List(projectPath string) (ret []serverDomain.TestRepor
 	for _, seq := range reportFiles {
 		var summary serverDomain.TestReportSummary
 
-		report, err1 := analysisUtils.GetReport(projectPath, seq)
+		report, err1 := analysisUtils.ReadReport(projectPath, seq)
 		if err1 != nil { // ignore wrong json result
 			continue
 		}
@@ -40,7 +40,7 @@ func (s *TestExecService) List(projectPath string) (ret []serverDomain.TestRepor
 }
 
 func (s *TestExecService) Get(projectPath string, seq string) (report commDomain.ZtfReport, err error) {
-	return analysisUtils.GetReport(projectPath, seq)
+	return analysisUtils.ReadReport(projectPath, seq)
 }
 
 func (s *TestExecService) Delete(projectPath string, seq string) (err error) {
