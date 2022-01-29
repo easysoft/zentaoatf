@@ -46,3 +46,13 @@ export async function queryTask(productId: string): Promise<any> {
         params,
     });
 }
+
+export async function getDataForBugSubmition(productId: string): Promise<any> {
+    const params = {productId: productId}
+
+    return request({
+        url: `/${apiPath}/getDataForBugSubmition`,
+        method: 'GET',
+        params,
+    });
+}

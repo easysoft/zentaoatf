@@ -214,6 +214,50 @@ func ListTaskByProduct(productId int, projectPath string) (tasks []serverDomain.
 	return
 }
 
+func GetBugFiledOptions(productId int, projectPath string) (bugFields commDomain.ZentaoBugFields, err error) {
+	config := configUtils.LoadByProjectPath(projectPath)
+	ok := Login(config)
+	if !ok {
+		return
+	}
+
+	// $productID, $projectID = 0
+	params := ""
+	if commConsts.RequestType == commConsts.PathInfo {
+		params = fmt.Sprintf("%d-0", productId)
+	} else {
+		params = fmt.Sprintf("productID=%d", productId)
+	}
+
+	url := config.Url + GenApiUri("bug", "ajaxGetBugFieldOptions", params)
+	bytes, ok := httpUtils.Get(url)
+	if ok {
+		jsonData := &simplejson.Json{}
+		jsonData, err = simplejson.NewJson(bytes)
+
+		if err != nil {
+			return
+		}
+
+		mp, _ := jsonData.Get("modules").Map()
+		bugFields.Modules = fieldMapToListOrderByInt(mp)
+
+		mp, _ = jsonData.Get("categories").Map()
+		bugFields.Categories = fieldMapToListOrderByStr(mp, false)
+
+		mp, _ = jsonData.Get("versions").Map()
+		bugFields.Versions = fieldMapToListOrderByStr(mp, true)
+
+		mp, _ = jsonData.Get("severities").Map()
+		bugFields.Severities = fieldMapToListOrderByInt(mp)
+
+		arr, _ := jsonData.Get("priorities").Array()
+		bugFields.Priorities = fieldArrToListKeyStr(arr, true)
+	}
+
+	return
+}
+
 func Login(config commDomain.ProjectConf) bool {
 	ok := GetConfig(config.Url)
 	if !ok {
@@ -490,4 +534,79 @@ func GetCaseById(baseUrl string, caseId string) commDomain.ZtfCase {
 	}
 
 	return commDomain.ZtfCase{}
+}
+
+func fieldMapToListOrderByInt(mp map[string]interface{}) []commDomain.BugOption {
+	arr := make([]commDomain.BugOption, 0)
+
+	keys := make([]int, 0)
+	for key, _ := range mp {
+		keyint, _ := strconv.Atoi(key)
+		keys = append(keys, keyint)
+	}
+
+	sort.Ints(keys)
+
+	for _, key := range keys {
+		keyStr := strconv.Itoa(key)
+		name := strings.TrimSpace(mp[keyStr].(string))
+		if name == "" {
+			name = "-"
+		}
+
+		opt := commDomain.BugOption{Id: keyStr, Name: name}
+		arr = append(arr, opt)
+	}
+
+	return arr
+}
+
+func fieldMapToListOrderByStr(mp map[string]interface{}, notNull bool) []commDomain.BugOption {
+	arr := make([]commDomain.BugOption, 0)
+
+	keys := make([]string, 0)
+	for key, _ := range mp {
+		keys = append(keys, key)
+	}
+
+	sort.Strings(keys)
+
+	for _, key := range keys {
+		name := strings.TrimSpace(mp[key].(string))
+		if name == "" {
+			if notNull {
+				continue
+			}
+		}
+
+		opt := commDomain.BugOption{Id: key, Name: name}
+		arr = append(arr, opt)
+	}
+
+	return arr
+}
+
+func fieldArrToListKeyStr(arr0 []interface{}, notNull bool) []commDomain.BugOption {
+	arr := make([]commDomain.BugOption, 0)
+
+	keys := make([]string, 0)
+	for _, val := range arr0 {
+		keys = append(keys, val.(string))
+	}
+
+	sort.Strings(keys)
+
+	for _, val := range arr0 {
+		name := val.(string)
+		if name == "" {
+			if notNull {
+				continue
+			}
+		}
+
+		opt := commDomain.BugOption{Id: val.(string), Name: name}
+		arr = append(arr, opt)
+	}
+
+	return arr
 }

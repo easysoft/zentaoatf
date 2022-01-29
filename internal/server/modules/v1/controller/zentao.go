@@ -77,6 +77,19 @@ func (c *ZentaoCtrl) ListTask(ctx iris.Context) {
 	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: data, Msg: domain.NoErr.Msg})
 }
 
+func (c *ZentaoCtrl) GetDataForBugSubmition(ctx iris.Context) {
+	projectPath := ctx.URLParam("currProject")
+	productId, err := ctx.URLParamInt("productId")
+	if err != nil {
+		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
+		return
+	}
+
+	data, _ := zentaoUtils.GetBugFiledOptions(productId, projectPath)
+
+	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: data, Msg: domain.NoErr.Msg})
+}
+
 func (c *ZentaoCtrl) ListLang(ctx iris.Context) {
 	data, err := zentaoUtils.ListLang()
 	if err != nil {

@@ -63,9 +63,10 @@
               <template #info="{ record }">
                 <template v-if="record.failure">
                   <a-button type="link" @click="showInfo(record.id)">查看错误</a-button>
-                  <a-modal v-model:visible="visibleMap[record.id]" width="1000px"
+                  <a-modal v-model:visible="visibleMap[record.id]"
                            @ok="closeInfo(record.id)"
-                           title="错误信息">
+                           title="错误信息"
+                           width="1000px">
                     <p>{{ jsonStr(record.failure) }}</p>
                   </a-modal>
                 </template>

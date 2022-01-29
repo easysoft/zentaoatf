@@ -1,6 +1,6 @@
 <template>
   <a-modal
-      title="新建项目"
+      title="提交结果到禅道"
       :destroy-on-close="true"
       :mask-closable="false"
       :visible="true"
@@ -81,7 +81,7 @@ export default defineComponent({
       ],
     });
 
-    const modelRef = reactive<any>({})
+    const modelRef = reactive<any>({productId: '', taskId: ''})
     let products = ref([])
     let tasks = ref([])
 
