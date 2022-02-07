@@ -89,13 +89,13 @@ func (c *ZentaoCtrl) GetDataForBugSubmition(ctx iris.Context) {
 		return
 	}
 
-	ids, fields, err := zentaoUtils.GetBugFiledOptions(req, projectPath)
+	fields, err := zentaoUtils.GetBugFiledOptions(req, projectPath)
 	if err != nil {
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: "获取禅道缺陷属性失败"})
 		return
 	}
 
-	data := iris.Map{"ids": ids, "fields": fields}
+	data := iris.Map{"fields": fields}
 
 	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: data, Msg: domain.NoErr.Msg})
 }

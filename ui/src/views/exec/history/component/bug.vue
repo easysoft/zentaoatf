@@ -159,8 +159,6 @@ export default defineComponent({
       if (!modelRef.value.product) return
 
       getDataForBugSubmition(props.model).then((jsn) => {
-        modelRef.value.ids = jsn.data.fields.ids
-
         modules.value = jsn.data.fields.modules
         categories.value = jsn.data.fields.categories
         versions.value = jsn.data.fields.versions
@@ -178,7 +176,7 @@ export default defineComponent({
       console.log('onFinish', modelRef)
 
       validate().then(() => {
-        props.onSubmit(modelRef);
+        props.onSubmit(modelRef.value);
       }).catch(err => { console.log('') })
     }
 

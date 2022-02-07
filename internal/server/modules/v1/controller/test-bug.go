@@ -52,10 +52,7 @@ func (c *TestBugCtrl) Submit(ctx iris.Context) {
 
 	err := c.TestBugService.Submit(req, projectPath)
 	if err != nil {
-		ctx.JSON(domain.Response{
-			Code: c.ErrCode(err),
-			Data: nil,
-		})
+		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
 

@@ -23,8 +23,8 @@ func CommitBug(bug commDomain.ZtfBug, projectPath string) (err error) {
 
 	// bug-create-1-0-caseID=1,version=3,resultID=93,runID=0,stepIdList=9_12_
 	// bug-create-1-0-caseID=1,version=3,resultID=84,runID=6,stepIdList=9_12_,testtask=2,projectID=1,buildID=1
-	extras := fmt.Sprintf("caseID=%s,version=%s,resultID=0,runID=0,stepIdList=%s,testtask=%s",
-		bug.Case, bug.Version, bug.StepIds, bug.Task)
+	extras := fmt.Sprintf("caseID=%s,version=%s,stepIdList=%s",
+		bug.Case, bug.Version, bug.StepIds)
 
 	// $productID, $branch = '', $extras = ''
 	params := ""
@@ -33,16 +33,13 @@ func CommitBug(bug commDomain.ZtfBug, projectPath string) (err error) {
 	} else {
 		params = fmt.Sprintf("productID=%s&branch=0&$extras=%s", bug.Product, extras)
 	}
-	params = ""
+	//params = ""
 	url := config.Url + GenApiUri("bug", "create", params)
 
-	bytes, ok := httpUtils.Post(url, bug, true)
-	if ok {
-		err = GetRespErr(bytes, "fail_to_report_bug")
-	}
+	_, ok := httpUtils.Post(url, bug, false)
 
 	msg := ""
-	if err == nil {
+	if ok {
 		msg = i118Utils.Sprintf("success_to_report_bug", bug.Case)
 	} else {
 		msg = color.RedString(err.Error())
@@ -84,9 +81,8 @@ func PrepareBug(projectPath, seq string, caseIdStr string) (bug commDomain.ZtfBu
 			Title:   cs.Title,
 			Product: strconv.Itoa(cs.ProductId), Case: strconv.Itoa(cs.Id),
 			Uid: uuid.NewV4().String(), CaseVersion: "0", OldTaskID: "0",
-			Steps:   strings.Join(steps, "\n"),
-			StepIds: stepIds,
-			Version: "trunk", Severity: "3", Pri: "3",
+			Steps: strings.Join(steps, "\n"), StepIds: stepIds,
+			Version: "trunk", Severity: "3", Pri: "3", OpenedBuild: map[string]string{"0": "trunk"},
 		}
 		return
 	}

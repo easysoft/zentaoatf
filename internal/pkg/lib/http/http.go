@@ -118,32 +118,7 @@ func Post(url string, params interface{}, useFormFormat bool) (ret []byte, ok bo
 	}
 	defer resp.Body.Close()
 
-	var zentaoResp serverDomain.ZentaoResp
-	jsonErr := json.Unmarshal(bodyBytes, &zentaoResp)
-	if jsonErr != nil {
-		if strings.Index(string(bodyBytes), "<html>") > -1 {
-			if commConsts.Verbose {
-				logUtils.Errorf(i118Utils.Sprintf("server_return") + " HTML - " + gohtml.FormatWithLineNo(string(bodyBytes)))
-			}
-			return
-		} else {
-			if commConsts.Verbose {
-				logUtils.Infof(jsonErr.Error())
-			}
-			return
-		}
-	}
-
-	defer resp.Body.Close()
-
-	status := zentaoResp.Status
-	if status == "" { // 非嵌套结构
-		ret = bodyBytes
-		ok = true
-	} else { // 嵌套结构
-		ret = []byte(zentaoResp.Data)
-		ok = status == "success"
-	}
+	ret, ok = GetRespErr(bodyBytes, url)
 
 	return
 }
@@ -191,31 +166,9 @@ func PostStr(url string, params map[string]string) (ret []byte, ok bool) {
 		return
 	}
 
-	bodyStr, _ := ioutil.ReadAll(resp.Body)
+	bytes, _ := ioutil.ReadAll(resp.Body)
 	if commConsts.Verbose {
-		logUtils.Infof(i118Utils.Sprintf("server_return") + logUtils.ConvertUnicode(bodyStr))
-	}
-
-	var zentaoResp serverDomain.ZentaoResp
-	jsonErr := json.Unmarshal(bodyStr, &zentaoResp)
-	if jsonErr != nil {
-		if commConsts.Verbose {
-			if strings.Index(url, "login") == -1 { // jsonErr caused by login request return a html
-				logUtils.Infof(jsonErr.Error())
-			}
-		}
-		ok = false
-		return
-	}
-
-	defer resp.Body.Close()
-
-	status := zentaoResp.Status
-	if status == "" { // 非嵌套结构
-		ret = bodyStr
-	} else { // 嵌套结构
-		ret = []byte(zentaoResp.Data)
-		ok = status == "success"
+		logUtils.Infof(i118Utils.Sprintf("server_return") + logUtils.ConvertUnicode(bytes))
 	}
 
 	return
@@ -263,6 +216,40 @@ func AddToken(url string) (ret string) {
 	}
 
 	ret = address + "&XDEBUG_SESSION_START=PHPSTORM" + hash
+
+	return
+}
+
+func GetRespErr(bytes []byte, url string) (ret []byte, ok bool) {
+	ret = bytes
+
+	var zentaoResp serverDomain.ZentaoResp
+	jsonErr := json.Unmarshal(bytes, &zentaoResp)
+	if jsonErr != nil {
+		if commConsts.Verbose {
+			if strings.Index(url, "login") < 0 { // jsonErr caused by login request return a html
+				logUtils.Infof(jsonErr.Error())
+			}
+		}
+		ok = false
+		return
+	}
+
+	// 嵌套结构，map[status:success, data:{}]
+	status := zentaoResp.Status
+	if status != "" {
+		ret = []byte(zentaoResp.Data)
+		ok = status == "success"
+		return
+	}
+
+	// 非嵌套结构，map[result:success]
+	var respData = serverDomain.ZentaoRespData{}
+	err := json.Unmarshal(bytes, &respData)
+
+	if err == nil && (respData.Result != "" && respData.Result != "success") {
+		ok = false
+	}
 
 	return
 }

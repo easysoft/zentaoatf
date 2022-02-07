@@ -30,7 +30,9 @@ func GetRespErr(bytes []byte, key string) (err error) {
 
 	var respData = serverDomain.ZentaoRespData{}
 	err = json.Unmarshal(bytes, &respData)
-	if err == nil && respData.Result != "success" {
+
+	// map[result:success] or map[status:success, data:{}]
+	if err == nil && (respData.Result != "" || respData.Result != "success") {
 		msg := i118Utils.Sprintf(key, respData.Message)
 		err = errors.New(msg)
 	}

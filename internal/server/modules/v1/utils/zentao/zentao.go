@@ -214,14 +214,8 @@ func ListTaskByProduct(productId int, projectPath string) (tasks []serverDomain.
 	return
 }
 
-func GetBugFiledOptions(req commDomain.FuncResult, projectPath string) (ids []string,
+func GetBugFiledOptions(req commDomain.FuncResult, projectPath string) (
 	bugFields commDomain.ZentaoBugFields, err error) {
-
-	for _, step := range req.Steps {
-		if step.Status == commConsts.FAIL {
-			ids = append(ids, step.Id+"_")
-		}
-	}
 
 	// field options
 	config := configUtils.LoadByProjectPath(projectPath)

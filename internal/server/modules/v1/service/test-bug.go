@@ -13,7 +13,7 @@ func NewTestBugService() *TestBugService {
 }
 
 func (s *TestBugService) Submit(bug commDomain.ZtfBug, projectPath string) (err error) {
-	zentaoUtils.CommitBug(bug, projectPath)
+	err = zentaoUtils.CommitBug(bug, projectPath)
 
 	return
 }
