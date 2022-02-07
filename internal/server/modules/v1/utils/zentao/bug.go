@@ -10,37 +10,40 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/analysis"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/config"
 	"github.com/fatih/color"
+	"github.com/jinzhu/copier"
 	uuid "github.com/satori/go.uuid"
 	"strconv"
 	"strings"
 )
 
-func CommitBug(bug commDomain.ZtfBug, projectPath string) (err error) {
+func CommitBug(ztfBug commDomain.ZtfBug, projectPath string) (err error) {
 	config := configUtils.LoadByProjectPath(projectPath)
 	Login(config)
 
-	bug.Steps = strings.Replace(bug.Steps, " ", "&nbsp;", -1)
+	ztfBug.Steps = strings.Replace(ztfBug.Steps, " ", "&nbsp;", -1)
 
-	// bug-create-1-0-caseID=1,version=3,resultID=93,runID=0,stepIdList=9_12_
-	// bug-create-1-0-caseID=1,version=3,resultID=84,runID=6,stepIdList=9_12_,testtask=2,projectID=1,buildID=1
+	// ztfBug-create-1-0-caseID=1,version=3,resultID=93,runID=0,stepIdList=9_12_
+	// ztfBug-create-1-0-caseID=1,version=3,resultID=84,runID=6,stepIdList=9_12_,testtask=2,projectID=1,buildID=1
 	extras := fmt.Sprintf("caseID=%s,version=%s,resultID=0,runID=0,stepIdList=%s",
-		bug.Case, bug.Version, bug.StepIds)
+		ztfBug.Case, ztfBug.Version, ztfBug.StepIds)
 
 	// $productID, $branch = '', $extras = ''
 	params := ""
 	if commConsts.RequestType == commConsts.PathInfo {
-		params = fmt.Sprintf("%s-0-%s", bug.Product, extras)
+		params = fmt.Sprintf("%s-0-%s", ztfBug.Product, extras)
 	} else {
-		params = fmt.Sprintf("productID=%s&branch=0&$extras=%s", bug.Product, extras)
+		params = fmt.Sprintf("productID=%s&branch=0&$extras=%s", ztfBug.Product, extras)
 	}
-	//params = ""
-	url := config.Url + GenApiUri("bug", "create", params)
+	params = ""
+	url := config.Url + GenApiUri("ztfBug", "create", params)
 
-	ret, ok := httpUtils.Post(url, bug, false)
+	bug := commDomain.ZentaoBug{}
+	copier.Copy(&bug, ztfBug)
+	ret, ok := httpUtils.Post(url, bug, true)
 
 	msg := ""
 	if ok {
-		msg = i118Utils.Sprintf("success_to_report_bug", bug.Case)
+		msg = i118Utils.Sprintf("success_to_report_bug", ztfBug.Case)
 	} else {
 		msg = color.RedString(string(ret))
 	}
@@ -80,9 +83,10 @@ func PrepareBug(projectPath, seq string, caseIdStr string) (bug commDomain.ZtfBu
 		bug = commDomain.ZtfBug{
 			Title:   cs.Title,
 			Product: strconv.Itoa(cs.ProductId), Case: strconv.Itoa(cs.Id),
-			Uid: uuid.NewV4().String(), CaseVersion: "0", OldTaskID: "0",
+			Uid:   uuid.NewV4().String(),
 			Steps: strings.Join(steps, "\n"), StepIds: stepIds,
-			Version: "trunk", Severity: "3", Pri: "3", OpenedBuild: map[string]string{"0": "trunk"},
+			Version: "trunk", Severity: "3", Pri: "3",
+			OpenedBuild: map[string]string{"0": "trunk"}, CaseVersion: "0", OldTaskID: "0",
 		}
 		return
 	}

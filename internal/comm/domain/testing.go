@@ -102,13 +102,13 @@ type ZtfStep struct {
 }
 
 type ZtfBug struct {
-	Title   string `json:"title"`
-	StepIds string `json:"ids"`
+	Title string `json:"title"`
+	Type  string `json:"type"`
+
+	StepIds string `json:"ids"` // for to
 
 	Product  string `json:"product"`
 	Module   string `json:"module"`
-	Task     string `json:"task"`
-	Type     string `json:"type"`
 	Severity string `json:"severity"`
 	Pri      string `json:"pri"`
 	Version  string `json:"version"`
@@ -116,9 +116,26 @@ type ZtfBug struct {
 	Case  string `json:"case"`
 	Steps string `json:"steps"`
 
+	Uid         string            `json:"uid"`
 	OpenedBuild map[string]string `json:"openedBuild"`
 	CaseVersion string            `json:"caseVersion"`
+	OldTaskID   string            `json:"oldTaskID"`
+}
+type ZentaoBug struct {
+	Title string `json:"title"`
+	Type  string `json:"type"`
+
+	Product  string `json:"product"`
+	Module   string `json:"module"`
+	Severity string `json:"severity"`
+	Pri      string `json:"pri"`
+
+	Case  string `json:"case"`
+	Steps string `json:"steps"`
+
 	Uid         string            `json:"uid"`
+	OpenedBuild map[string]string `json:"openedBuild"`
+	CaseVersion string            `json:"caseVersion"`
 	OldTaskID   string            `json:"oldTaskID"`
 }
 
