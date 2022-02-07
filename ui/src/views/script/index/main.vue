@@ -4,8 +4,7 @@
       此为单元测试项目，无脚本显示。
     </div>
 
-    <div v-if="currProject.type === 'func'">
-      <div id="main">
+      <div id="main" v-if="currProject.type === 'func'">
         <div id="left">
           <div class="toolbar">
             <div class="left"></div>
@@ -47,7 +46,6 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts">

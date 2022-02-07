@@ -3,8 +3,7 @@
     此为单元测试项目，不需要同步。
   </div>
 
-  <div v-if="currProject.type === 'func'">
-    <div class="main">
+  <div class="main" v-if="currProject.type === 'func'">
 
   <a-card title="从禅道同步用例信息">
     <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
@@ -63,7 +62,6 @@
     </a-form>
   </a-card>
 
-  </div>
   </div>
 </template>
 <script lang="ts">
