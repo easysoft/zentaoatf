@@ -1,110 +1,95 @@
 package zentaoUtils
 
-/*func CommitBug(bug commDomain.ZtfBug) (err error) {
-	bug := vari.CurrBug
-	stepIds := vari.CurrBugStepIds
+import (
+	"fmt"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+	"github.com/aaronchen2k/deeptest/internal/comm/domain"
+	httpUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/http"
+	"github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
+	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
+	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/analysis"
+	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/config"
+	"github.com/fatih/color"
+	uuid "github.com/satori/go.uuid"
+	"strconv"
+	"strings"
+)
 
-	conf := configUtils.ReadCurrConfig()
-	ok = Login(conf.Url, conf.Account, conf.Password)
-	if !ok {
-		msg = "login failed"
-		return
-	}
+func CommitBug(bug commDomain.ZtfBug, projectPath string) (err error) {
+	config := configUtils.LoadByProjectPath(projectPath)
+	Login(config)
 
-	productId := bug.Product
 	bug.Steps = strings.Replace(bug.Steps, " ", "&nbsp;", -1)
 
 	// bug-create-1-0-caseID=1,version=3,resultID=93,runID=0,stepIdList=9_12_
 	// bug-create-1-0-caseID=1,version=3,resultID=84,runID=6,stepIdList=9_12_,testtask=2,projectID=1,buildID=1
-	extras := fmt.Sprintf("caseID=%s,version=0,resultID=0,runID=0,stepIdList=%s",
-		bug.Case, stepIds)
+	extras := fmt.Sprintf("caseID=%s,version=%s,resultID=0,runID=0,stepIdList=%s,testtask=%s",
+		bug.Case, bug.Version, bug.StepIds, bug.Task)
 
 	// $productID, $branch = '', $extras = ''
 	params := ""
-	if vari.RequestType == constant.RequestTypePathInfo {
-		params = fmt.Sprintf("%s-0-%s", productId, extras)
+	if commConsts.RequestType == commConsts.PathInfo {
+		params = fmt.Sprintf("%s-0-%s", bug.Product, extras)
 	} else {
-		params = fmt.Sprintf("productID=%s&branch=0&$extras=%s", productId, extras)
+		params = fmt.Sprintf("productID=%s&branch=0&$extras=%s", bug.Product, extras)
 	}
 	params = ""
-	url := conf.Url + zentaoUtils.GenApiUri("bug", "create", params)
+	url := config.Url + GenApiUri("bug", "create", params)
 
-	body, ok := client.PostObject(url, bug, true)
-	if !ok {
-		msg = "post request failed"
-		return
-	}
-
-	json, err1 := simplejson.NewJson([]byte(body))
-	if err1 != nil {
-		ok = false
-		msg = "parse json failed"
-		return
-	}
-
-	msg, err2 := json.Get("message").String()
-	if err2 != nil {
-		ok = false
-		msg = "parse json failed"
-		return
-	}
-
+	bytes, ok := httpUtils.Post(url, bug, true)
 	if ok {
-		msg = i118Utils.Sprintf("success_to_report_bug", bug.Case)
-		return
-	} else {
-		return
+		err = GetRespErr(bytes, "fail_to_report_bug")
 	}
+
+	msg := ""
+	if err == nil {
+		msg = i118Utils.Sprintf("success_to_report_bug", bug.Case)
+	} else {
+		msg = color.RedString(err.Error())
+	}
+	logUtils.Info(msg)
+
+	return
 }
 
-func PrepareBug(resultDir string, caseIdStr string) (commDomain.ZtfBug, string) {
+func PrepareBug(projectPath, seq string, caseIdStr string) (bug commDomain.ZtfBug) {
 	caseId, err := strconv.Atoi(caseIdStr)
 
 	if err != nil {
-		return model.Bug{}, ""
+		return
 	}
 
-	report := testingService.GetZTFTestReportForSubmit(resultDir)
+	report, err := analysisUtils.ReadReport(projectPath, seq)
+	if err != nil {
+		return
+	}
+
 	for _, cs := range report.FuncResult {
 		if cs.Id != caseId {
 			continue
 		}
 
-		product := cs.ProductId
-		GetBugFiledOptions(product)
-
-		title := cs.Title
-		module := GetFirstNoEmptyVal(vari.ZenTaoBugFields.Modules)
-		typ := GetFirstNoEmptyVal(vari.ZenTaoBugFields.Categories)
-		openedBuild := map[string]string{"0": "trunk"}
-		severity := GetFirstNoEmptyVal(vari.ZenTaoBugFields.Severities)
-		priority := GetFirstNoEmptyVal(vari.ZenTaoBugFields.Priorities)
-
-		caseId := cs.Id
-
-		uid := uuid.NewV4().String()
-		caseVersion := "0"
-		oldTaskID := "0"
-
-		stepIds := ""
 		steps := make([]string, 0)
+		stepIds := ""
 		for _, step := range cs.Steps {
-			if !step.Status {
+			if step.Status == commConsts.FAIL {
 				stepIds += step.Id + "_"
 			}
 
-			stepsContent := testingService.GetStepText(step)
+			stepsContent := GetStepText(step)
 			steps = append(steps, stepsContent)
 		}
 
-		bug := model.Bug{Title: title,
-			Module: module, Type: typ, OpenedBuild: openedBuild, Severity: severity, Pri: priority,
-			Product: strconv.Itoa(product), Case: strconv.Itoa(caseId),
-			Steps: strings.Join(steps, "\n"),
-			Uid:   uid, CaseVersion: caseVersion, OldTaskID: oldTaskID,
+		bug = commDomain.ZtfBug{
+			Title:   cs.Title,
+			Product: strconv.Itoa(cs.ProductId), Case: strconv.Itoa(cs.Id),
+			Uid: uuid.NewV4().String(), CaseVersion: "0", OldTaskID: "0",
+			Steps:   strings.Join(steps, "\n"),
+			StepIds: stepIds,
+			Version: "trunk", Severity: "3", Pri: "3",
 		}
-		return bug, stepIds
+		return
 	}
 
-	return model.Bug{}, ""
-}*/
+	return
+}

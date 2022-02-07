@@ -25,7 +25,8 @@ func (m *ZentaoModule) Party() module.WebModule {
 		index.Get("/listModule", m.ZentaoCtrl.ListModule).Name = "模块列表"
 		index.Get("/listSuite", m.ZentaoCtrl.ListSuite).Name = "套件列表"
 		index.Get("/listTask", m.ZentaoCtrl.ListTask).Name = "任务列表"
-		index.Post("/getDataForBugSubmition", m.ZentaoCtrl.GetDataForBugSubmition).Name = "任务列表"
+
+		index.Post("/getDataForBugSubmition", m.ZentaoCtrl.GetDataForBugSubmition).Name = "获取缺陷属性数据"
 	}
 	return module.NewModule("/zentao", handler)
 }

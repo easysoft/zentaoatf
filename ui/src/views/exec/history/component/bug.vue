@@ -14,43 +14,47 @@
 
     <div>
       <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
-        <a-form-item label="产品" v-bind="validateInfos.productId">
-          <a-select v-model:value="modelRef.productId" @change="selectProduct">
+        <a-form-item label="标题" v-bind="validateInfos.title">
+          <a-input v-model:value="modelRef.title" />
+        </a-form-item>
+
+        <a-form-item label="产品" v-bind="validateInfos.product">
+          <a-select v-model:value="modelRef.product" @change="selectProduct">
             <a-select-option key="" value="">&nbsp;</a-select-option>
             <a-select-option v-for="item in products" :key="item.id" :value="item.id+''">{{item.name}}</a-select-option>
           </a-select>
         </a-form-item>
 
-        <a-form-item label="模块" v-bind="validateInfos.moduleId">
-          <a-select v-model:value="modelRef.moduleId">
+        <a-form-item label="模块">
+          <a-select v-model:value="modelRef.module">
             <a-select-option key="" value="">&nbsp;</a-select-option>
             <a-select-option v-for="item in modules" :key="item.id" :value="item.id+''">{{ item.name }}</a-select-option>
           </a-select>
         </a-form-item>
 
         <a-form-item label="分类">
-          <a-select v-model:value="modelRef.categoryId">
+          <a-select v-model:value="modelRef.type">
             <a-select-option key="" value="">&nbsp;</a-select-option>
             <a-select-option v-for="item in categories" :key="item.id" :value="item.id+''">{{ item.name }}</a-select-option>
           </a-select>
         </a-form-item>
 
         <a-form-item label="版本">
-          <a-select v-model:value="modelRef.versionId">
+          <a-select v-model:value="modelRef.version">
             <a-select-option key="" value="">&nbsp;</a-select-option>
             <a-select-option v-for="item in versions" :key="item.id" :value="item.id+''">{{ item.name }}</a-select-option>
           </a-select>
         </a-form-item>
 
         <a-form-item label="严重程度">
-          <a-select v-model:value="modelRef.severityId">
+          <a-select v-model:value="modelRef.severity">
             <a-select-option key="" value="">&nbsp;</a-select-option>
             <a-select-option v-for="item in severities" :key="item.id" :value="item.id+''">{{ item.name }}</a-select-option>
           </a-select>
         </a-form-item>
 
         <a-form-item label="优先级">
-          <a-select v-model:value="modelRef.priorityId">
+          <a-select v-model:value="modelRef.pri">
             <a-select-option key="" value="">&nbsp;</a-select-option>
             <a-select-option v-for="item in priorities" :key="item.id" :value="item.id+''">{{ item.name }}</a-select-option>
           </a-select>
@@ -73,6 +77,7 @@ import {Interpreter} from "@/views/config/data";
 import { validateInfos } from 'ant-design-vue/lib/form/useForm';
 import {Form} from 'ant-design-vue';
 import {
+  getBugSteps,
   getDataForBugSubmition, queryProduct,
 } from "@/services/zentao";
 const useForm = Form.useForm;
@@ -117,15 +122,15 @@ export default defineComponent({
 
   setup(props): BugFormSetupData {
     const rules = reactive({
-      productId: [
-        { required: true, message: '请选择产品' },
+      title: [
+        { required: true, message: '请输入标题' },
       ],
-      taskId: [
-        { required: true, message: '请选择任务' },
+      product: [
+        { required: true, message: '请选择产品' },
       ],
     });
 
-    const modelRef = reactive<any>({} as any)
+    const modelRef = ref<any>({})
 
     let products = ref([])
     let modules = ref([])
@@ -142,12 +147,19 @@ export default defineComponent({
       })
     }
     getProductData()
-
     const getBugData = () => {
-      if (!modelRef.productId) return
+      getBugSteps(props.model).then((jsn) => {
+        modelRef.value = jsn.data
+        getBugFields()
+      })
+    }
+    getBugData()
+
+    const getBugFields = () => {
+      if (!modelRef.value.product) return
 
       getDataForBugSubmition(props.model).then((jsn) => {
-        modelRef.steps = jsn.data.steps.join('\n')
+        modelRef.value.ids = jsn.data.fields.ids
 
         modules.value = jsn.data.fields.modules
         categories.value = jsn.data.fields.categories
@@ -156,11 +168,10 @@ export default defineComponent({
         priorities.value = jsn.data.fields.priorities
       })
     }
-    getBugData()
 
     const selectProduct = (item) => {
       if (!item) return
-      getBugData()
+      getBugFields()
     }
 
     const onFinish = async () => {

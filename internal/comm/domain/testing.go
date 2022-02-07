@@ -102,21 +102,24 @@ type ZtfStep struct {
 }
 
 type ZtfBug struct {
-	Title string `json:"title"`
+	Title   string `json:"title"`
+	StepIds string `json:"ids"`
 
-	Module      int               `json:"module"`
-	Type        string            `json:"type"`
+	Product  string `json:"product"`
+	Module   string `json:"module"`
+	Task     string `json:"task"`
+	Type     string `json:"type"`
+	Severity string `json:"severity"`
+	Pri      string `json:"pri"`
+	Version  string `json:"version"`
+
+	Case  string `json:"case"`
+	Steps string `json:"steps"`
+
 	OpenedBuild map[string]string `json:"openedBuild"`
-	Severity    string            `json:"severity"`
-	Pri         string            `json:"pri"`
-
-	Product int    `json:"product"`
-	Case    string `json:"case"`
-	Steps   string `json:"steps"`
-
-	Uid         string `json:"uid"`
-	CaseVersion string `json:"caseVersion"`
-	OldTaskID   string `json:"oldTaskID"`
+	CaseVersion string            `json:"caseVersion"`
+	Uid         string            `json:"uid"`
+	OldTaskID   string            `json:"oldTaskID"`
 }
 
 type ZtfReport struct {
@@ -154,6 +157,7 @@ type FuncResult struct {
 	Title     string                  `json:"title"`
 
 	Steps []StepLog `json:"steps"`
+	Seq   string    `json:"seq"`
 }
 type StepLog struct {
 	Id     string                  `json:"id"`

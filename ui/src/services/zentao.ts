@@ -2,6 +2,7 @@ import request from '@/utils/request';
 import {Config} from "@/views/config/data";
 
 const apiPath = 'zentao';
+const apiPathBug = 'bug';
 
 export async function queryLang(): Promise<any> {
     return request({
@@ -44,6 +45,14 @@ export async function queryTask(productId: string): Promise<any> {
         url: `/${apiPath}/listTask`,
         method: 'GET',
         params,
+    });
+}
+
+export function getBugSteps(data: any): Promise<any> {
+    return request({
+        url: `/${apiPathBug}/getBugSteps`,
+        method: 'POST',
+        data: data,
     });
 }
 

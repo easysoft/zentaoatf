@@ -5,7 +5,9 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
+	zentaoUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/zentao"
 	"github.com/kataras/iris/v12"
+	"strconv"
 )
 
 type TestBugCtrl struct {
@@ -17,29 +19,30 @@ func NewTestBugCtrl() *TestBugCtrl {
 	return &TestBugCtrl{}
 }
 
-// Gen 生成缺陷
-func (c *TestBugCtrl) Gen(ctx iris.Context) {
-	req := commDomain.ZtfBug{}
-	if err := ctx.ReadJSON(&req); err != nil {
-		logUtils.Errorf("参数验证失败，错误%s", err.Error())
+func (c *TestBugCtrl) GetBugData(ctx iris.Context) {
+	projectPath := ctx.URLParam("currProject")
+
+	req := commDomain.FuncResult{}
+	err := ctx.ReadJSON(&req)
+	if err != nil {
+		logUtils.Errorf("参数验证失败 %s", err.Error())
 		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
 
-	err := c.TestBugService.Submit(req)
+	bug := zentaoUtils.PrepareBug(projectPath, req.Seq, strconv.Itoa(req.Id))
+
 	if err != nil {
-		ctx.JSON(domain.Response{
-			Code: c.ErrCode(err),
-			Data: nil,
-		})
+		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: "获取禅道缺陷步骤失败"})
 		return
 	}
 
-	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: nil, Msg: domain.NoErr.Msg})
+	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: bug, Msg: domain.NoErr.Msg})
 }
 
 // Submit 提交
 func (c *TestBugCtrl) Submit(ctx iris.Context) {
+	projectPath := ctx.URLParam("currProject")
 	req := commDomain.ZtfBug{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		logUtils.Errorf("参数验证失败，错误%s", err.Error())
@@ -47,7 +50,7 @@ func (c *TestBugCtrl) Submit(ctx iris.Context) {
 		return
 	}
 
-	err := c.TestBugService.Submit(req)
+	err := c.TestBugService.Submit(req, projectPath)
 	if err != nil {
 		ctx.JSON(domain.Response{
 			Code: c.ErrCode(err),

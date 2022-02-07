@@ -214,17 +214,13 @@ func ListTaskByProduct(productId int, projectPath string) (tasks []serverDomain.
 	return
 }
 
-func GetBugFiledOptions(req commDomain.FuncResult, projectPath string) (steps, ids []string,
+func GetBugFiledOptions(req commDomain.FuncResult, projectPath string) (ids []string,
 	bugFields commDomain.ZentaoBugFields, err error) {
 
-	// steps data
 	for _, step := range req.Steps {
 		if step.Status == commConsts.FAIL {
 			ids = append(ids, step.Id+"_")
 		}
-
-		stepsContent := GetStepText(step)
-		steps = append(steps, stepsContent)
 	}
 
 	// field options
@@ -270,6 +266,7 @@ func GetBugFiledOptions(req commDomain.FuncResult, projectPath string) (steps, i
 
 	return
 }
+
 func GetStepText(step commDomain.StepLog) string {
 	stepResults := make([]string, 0)
 

@@ -66,11 +66,9 @@ export function submitResultToZentao(data: any): Promise<any> {
     });
 }
 export function submitBugToZentao(data: any): Promise<any> {
-    const bugData = {}
-
     return request({
         url: `/bug`,
         method: 'post',
-        data: bugData,
+        data: data,
     });
 }

@@ -2,9 +2,9 @@ package analysisUtils
 
 import (
 	"encoding/json"
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
-	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
+	"github.com/aaronchen2k/deeptest/internal/comm/consts"
+	"github.com/aaronchen2k/deeptest/internal/comm/domain"
+	"github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	"io/ioutil"
 	"path/filepath"
 )

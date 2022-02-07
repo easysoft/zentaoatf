@@ -251,7 +251,8 @@ export default defineComponent({
     }
     const openBugForm = (cs) => {
       console.log('openBugForm', cs)
-      if (cs.productId === 0) cs.productId = ''
+      if (cs.product === 0) cs.product = ''
+      cs.seq = seq
       bugFormData.value = cs
       setBugFormVisible(true)
     }

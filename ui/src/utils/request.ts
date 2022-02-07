@@ -101,7 +101,7 @@ request.interceptors.request.use(
             config.params = { ...config.params, currProject: projectPath };
         }
 
-        console.log('=== request ===', config)
+        console.log('=== request ===', config.url, config)
         return config;
     },
     /* error=> {} */ // 已在 export default catch
@@ -113,7 +113,7 @@ request.interceptors.request.use(
  */
 request.interceptors.response.use(
     async (response: AxiosResponse) => {
-        console.log('=== response ===', response)
+        console.log('=== response ===', response.config.url, response)
 
         const res: ResponseData = response.data;
         const { code, token } = res;

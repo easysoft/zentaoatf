@@ -1,9 +1,9 @@
 package analysisUtils
 
 import (
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	"github.com/aaronchen2k/deeptest/internal/comm/consts"
+	"github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
+	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 )
 
 func FilterCaseByResult(cases []string, req serverDomain.WsReq) (ret []string) { // scope: all | fail

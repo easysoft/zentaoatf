@@ -361,6 +361,10 @@
       "translation": "Successfully committed case %d."
     },
     {
+      "id": "fail_to_report_bug",
+      "translation": "Fail to report bug, err %s."
+    },
+    {
       "id": "success_to_report_bug",
       "translation": "Success to report bug for case %s."
     },
