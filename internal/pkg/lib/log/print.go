@@ -79,7 +79,8 @@ func ConvertUnicode(str []byte) string {
 
 	var msg string
 	if err == nil {
-		msg = fmt.Sprint(a)
+		bytes, _ := json.Marshal(a)
+		msg = string(bytes)
 	} else {
 		msg = temp
 	}

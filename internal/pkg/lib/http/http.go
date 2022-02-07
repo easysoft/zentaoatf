@@ -75,7 +75,7 @@ func Get(url string) (ret []byte, ok bool) {
 	return
 }
 
-func Post(url string, params interface{}, useFormFormat bool) (ret []byte, ok bool) {
+func Post(url string, data interface{}, useFormFormat bool) (ret []byte, ok bool) {
 	url = AddToken(url)
 
 	if commConsts.Verbose {
@@ -83,21 +83,25 @@ func Post(url string, params interface{}, useFormFormat bool) (ret []byte, ok bo
 	}
 	client := &http.Client{}
 
-	paramStr, err := json.Marshal(params)
+	dataBytes, err := json.Marshal(data)
 	if err != nil {
 		logUtils.Error(err.Error())
 		return
 	}
 
-	val := string(paramStr)
+	dataStr := string(dataBytes)
 	if useFormFormat {
-		val, _ = form.EncodeToString(params)
+		dataStr, _ = form.EncodeToString(data)
 		// convert data to post fomat
 		re3, _ := regexp.Compile(`([^&]*?)=`)
-		val = re3.ReplaceAllStringFunc(val, replacePostData)
+		dataStr = re3.ReplaceAllStringFunc(dataStr, replacePostData)
 	}
 
-	req, reqErr := http.NewRequest("POST", url, strings.NewReader(val))
+	if commConsts.Verbose {
+		logUtils.Infof(dataStr)
+	}
+
+	req, reqErr := http.NewRequest("POST", url, strings.NewReader(dataStr))
 	if reqErr != nil {
 		logUtils.Error(reqErr.Error())
 		return
