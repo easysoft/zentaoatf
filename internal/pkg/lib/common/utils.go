@@ -141,3 +141,22 @@ func ChangeScriptForDebug(dir *string) {
 		*dir = filepath.Join(*dir, "demo", "sample")
 	}
 }
+
+func GetDebugParamForRun(args []string) (debug string, ret []string) {
+	index := -1
+	for i, item := range args {
+		if item == "-debug" || item == "--debug" {
+			index = i
+			break
+		}
+	}
+
+	if index > -1 && len(args) > index+1 {
+		debug = args[index+1]
+		ret = append(args[0:index], args[index+2:]...)
+	} else {
+		ret = args
+	}
+
+	return
+}

@@ -141,3 +141,12 @@ func (e UnitTestTool) String() string {
 func (UnitTestTool) Get(str string) UnitTestTool {
 	return UnitTestTool(str)
 }
+
+type Platform string
+
+const (
+	Android Platform = "android"
+	Ios     Platform = "ios"
+	Host    Platform = "host"
+	Vm      Platform = "vm"
+)

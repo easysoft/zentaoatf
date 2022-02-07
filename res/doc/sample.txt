@@ -1,0 +1,39 @@
+$>ztf.exe run demo\lang\bat\1_string_match.bat       执行演示测试用例。
+$>ztf.exe set                                        根据系统提示，设置语言、禅道地址、账号等，Windows下会提示输入语言解释程序。
+$>ztf.exe co                                         交互式导出禅道测试用例，将提示用户输入导出类型和编号。
+$>ztf.exe co -product 1 -language python             导出编号为1的产品测试用例，使用python语言，缩写-p -l。
+$>ztf.exe co -p 1 -m 15 -l python                    导出产品编号为1、模块编号为15的测试用例。
+$>ztf.exe co -s 1 -l python -i true                  导出编号为1的套件所含测试用例，期待结果保存在独立文件中。
+$>ztf.exe co -t 1 -l python                          导出编号为1的测试单所含用例。
+$>ztf.exe up -t 1 -l python                          更新编号为1的测试单所含用例的信息。
+
+$>ztf.exe run demo\lang\bat                          执行目录bat下的脚本，支持多个目录和文件参数项。
+$>ztf.exe run product01 product01\all.cs             执行all.cs测试套件的用例，脚本在product01目录中。
+$>ztf.exe run log\001\result.txt                     执行result.txt结果文件中的失败用例。
+$>ztf.exe run product01 -suite 1                     执行禅道系统中编号为1的套件，脚本在product01目录，缩写-s。
+$>ztf.exe run -task 1                                执行禅道系统中编号为1的任务，脚本在当期目录, 缩写-t。
+
+$>ztf.exe run demo\autoit                            执行ZTF自带AutoIT脚本。
+$>ztf.exe run demo\selenium\chrome.php --interp runtime\php\php7\php.exe
+                                                     执行ZTF自带Selenium脚本，使用指定PHP解释器。
+$>ztf.exe run demo\appium\android.php --interp runtime\php\php7\php.exe
+                                                     执行ZTF自带Appium脚本，使用指定PHP解释器。
+$>ztf.exe junit -p 1 mvn clean package test          执行junit单元测试脚本，
+                                                     更多请参照https://www.ztesting.net/book/ztf-doc/junit-33.html
+$>ztf.exe expect demo\sample\1_simple.php            在脚本1_simple.php的同目录下，生成.exp期待结果文件。
+$>ztf.exe extract demo\sample\8_extract_desc.php     提取脚本中的注释，生成用例步骤和期待结果。
+$>ztf.exe ci product01\tc-1.py                       将脚本里修改的用例信息，同步到禅道系统。
+$>ztf.exe cr log\001 -p 1                            提交测试结果到禅道系统编号为1的产品。
+$>ztf.exe cr log\001 -p 1 -t 1 -y                    提交测试结果到禅道系统。使用-t提供TaskID、或-y忽略确认时，不需要确认。
+$>ztf.exe cb log\001                                 提交测试结果中失败用例为缺陷。
+
+$>ztf.exe list demo\lang\bat                         列出目录bat下的所有脚本文件，支持多个目录和文件参数项。
+$>ztf.exe ls demo\lang\bat -k 0                      列出指定路径下，ID为0的脚本。
+$>ztf.exe -l demo\lang\bat -k pattern                列出指定路径下，标题包含'pattern'的脚本。
+
+$>ztf.exe view demo\lang\bat\1_string_match.bat      查看指定路径的测试脚本，支持多个参数项。
+$>ztf.exe -v demo\lang\bat -k 0                      查看指定路径下，ID为0的脚本。
+$>ztf.exe -v demo\lang\bat -k word                   查看指定路径下，标题包含'pattern'的脚本。
+
+$>ztf.exe clean                                      清除所有测试执行日志，缩写-c。
+$>ztf.exe -P 8848                                    运行Web服务于指定的端口。
