@@ -98,7 +98,7 @@ func Post(url string, data interface{}, useFormFormat bool) (ret []byte, ok bool
 	}
 
 	if commConsts.Verbose {
-		logUtils.Infof(dataStr)
+		logUtils.PrintUnicode([]byte(dataStr))
 	}
 
 	req, reqErr := http.NewRequest("POST", url, strings.NewReader(dataStr))
@@ -116,7 +116,12 @@ func Post(url string, data interface{}, useFormFormat bool) (ret []byte, ok bool
 		return
 	}
 
-	bodyBytes, _ := ioutil.ReadAll(resp.Body)
+	bodyBytes, ioErr := ioutil.ReadAll(resp.Body)
+	if ioErr != nil {
+		logUtils.Error(ioErr.Error())
+		return
+	}
+
 	if commConsts.Verbose {
 		logUtils.PrintUnicode(bodyBytes)
 	}
@@ -226,6 +231,10 @@ func AddToken(url string) (ret string) {
 
 func GetRespErr(bytes []byte, url string) (ret []byte, ok bool) {
 	ret = bytes
+
+	if len(bytes) == 0 {
+		return
+	}
 
 	var zentaoResp serverDomain.ZentaoResp
 	jsonErr := json.Unmarshal(bytes, &zentaoResp)
