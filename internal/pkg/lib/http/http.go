@@ -98,7 +98,7 @@ func Post(url string, data interface{}, useFormFormat bool) (ret []byte, ok bool
 	}
 
 	if commConsts.Verbose {
-		logUtils.Infof(dataStr)
+		logUtils.PrintUnicode(dataBytes)
 	}
 
 	req, reqErr := http.NewRequest("POST", url, strings.NewReader(dataStr))
