@@ -8,6 +8,18 @@ import (
 	"strings"
 )
 
+func ZipDir(dist string, dir string) error {
+	dir = RemovePathSepIfNeeded(dir)
+
+	paths := make([]string, 0)
+	paths = append(paths, dir)
+
+	zip := archiver.NewZip()
+	err := zip.Archive(paths, dist)
+
+	return err
+}
+
 func ZipFiles(dist string, dir string, files []string) error {
 	dir = AddPathSepIfNeeded(dir)
 

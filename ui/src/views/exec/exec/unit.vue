@@ -33,7 +33,8 @@
                   </a-select>
                 </a-form-item>
 
-                <a-form-item label="测试工具" v-bind="validateInfos.tool">
+                <a-form-item label="测试工具" v-if="model.framework=='junit' || model.framework=='testng'"
+                             v-bind="validateInfos.tool">
                   <a-select v-model:value="model.tool">
                     <a-select-option key="" value="">&nbsp;</a-select-option>
                     <a-select-option v-for="item in unitTestTools.data[model.framework]" :key="item" :value="item">
@@ -162,7 +163,7 @@ export default defineComponent({
         initWsConn()
       })
 
-      const model = reactive<any>({productId: '', framework: '', cmd: ''});
+      const model = reactive<any>({productId: '', tool: '', framework: '', cmd: ''});
 
       const rules = reactive({
         productId: [
@@ -170,6 +171,9 @@ export default defineComponent({
         ],
         framework: [
           { required: true, message: '请选择单元测试框架' },
+        ],
+        tool: [
+          { required: true, message: '请选择构建工具' },
         ],
         cmd: [
           { required: true, message: '请输入所要执行的命令' },
