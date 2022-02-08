@@ -4,9 +4,9 @@ import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
+	analysisUtils "github.com/aaronchen2k/deeptest/internal/server/modules/utils/analysis"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
-	analysisUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/analysis"
 	"github.com/jinzhu/copier"
 	"path/filepath"
 )

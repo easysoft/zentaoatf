@@ -2,8 +2,8 @@ package service
 
 import (
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
+	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/utils/script"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
-	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/script"
 )
 
 type ZtfScriptService struct {

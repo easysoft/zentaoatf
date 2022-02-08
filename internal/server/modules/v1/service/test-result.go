@@ -1,9 +1,9 @@
 package service
 
 import (
+	analysisUtils "github.com/aaronchen2k/deeptest/internal/server/modules/utils/analysis"
+	zentaoUtils "github.com/aaronchen2k/deeptest/internal/server/modules/utils/zentao"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
-	analysisUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/analysis"
-	zentaoUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/zentao"
 )
 
 type TestResultService struct {
