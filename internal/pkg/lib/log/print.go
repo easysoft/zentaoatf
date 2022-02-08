@@ -113,3 +113,8 @@ func PrintToWithColor(msg string, attr color.Attribute) {
 		color.New(attr).Fprintf(output, msg+"\n")
 	}
 }
+
+func PrintTo(str string) {
+	output := color.Output
+	fmt.Fprint(output, str+"\n")
+}

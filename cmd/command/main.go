@@ -4,6 +4,8 @@ import (
 	"flag"
 	"github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/aaronchen2k/deeptest/internal/comm/vari"
+	"github.com/aaronchen2k/deeptest/internal/command"
+	"github.com/aaronchen2k/deeptest/internal/command/action"
 	_consts "github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
@@ -94,7 +96,8 @@ func main() {
 		os.Setenv("debug", debug)
 		//log.Println("===" + os.Getenv("debug"))
 		run(os.Args)
-
+	case "set", "-set":
+		action.Set()
 	case "help", "-h", "-help", "--help":
 		resUtils.PrintUsage()
 
@@ -167,15 +170,14 @@ func run(args []string) {
 			}
 			//action.RunZTFTest(files, suiteId, taskId)
 		} else {
-			//logUtils.PrintUsage()
+			resUtils.PrintUsage()
 		}
 	}
 }
 
 func init() {
 	cleanup()
-
-	//configUtils.InitConfig()
+	command.InitConfig()
 }
 
 func cleanup() {
