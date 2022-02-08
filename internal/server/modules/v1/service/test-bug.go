@@ -2,7 +2,7 @@ package service
 
 import (
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
-	zentaoUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/zentao"
+	zentaoUtils "github.com/aaronchen2k/deeptest/internal/server/modules/utils/zentao"
 )
 
 type TestBugService struct {

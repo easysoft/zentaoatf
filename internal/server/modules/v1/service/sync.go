@@ -8,7 +8,7 @@ import (
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/script"
+	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/utils/script"
 	"path/filepath"
 	"strconv"
 )

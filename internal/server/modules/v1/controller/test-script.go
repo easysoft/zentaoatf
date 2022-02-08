@@ -4,9 +4,9 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/core/web/validate"
+	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/utils/script"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
-	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/v1/utils/script"
 	"strings"
 
 	"github.com/kataras/iris/v12"
