@@ -266,7 +266,7 @@ export default defineComponent({
           notification.success({
             message: '提交成功',
           });
-          setResultFormVisible(false)
+          setBugFormVisible(false)
         } else {
           notification.error({
             message: '提交失败',
