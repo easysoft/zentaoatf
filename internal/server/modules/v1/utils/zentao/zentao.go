@@ -264,15 +264,15 @@ func GetBugFiledOptions(req commDomain.FuncResult, projectPath string) (
 func GetStepText(step commDomain.StepLog) string {
 	stepResults := make([]string, 0)
 
-	stepTxt := fmt.Sprintf("%s %s\n", step.Id, step.Status)
+	stepTxt := fmt.Sprintf("步骤%s： %s %s\n", step.Id, step.Name, step.Status)
 
 	for _, checkpoint := range step.CheckPoints {
 		text := fmt.Sprintf(
-			" Checkpoint: %s\n"+
-				"  Expect\n"+
-				"   %s\n"+
-				"  Actual\n"+
-				"   %s",
+			"  检查点：%s\n"+
+				"    期待结果：\n"+
+				"      %s\n"+
+				"    实际结果：\n"+
+				"      %s",
 			checkpoint.Status, checkpoint.Expect, checkpoint.Actual)
 
 		stepResults = append(stepResults, text)

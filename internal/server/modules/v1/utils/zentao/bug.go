@@ -21,9 +21,11 @@ func CommitBug(ztfBug commDomain.ZtfBug, projectPath string) (err error) {
 	Login(config)
 
 	ztfBug.Steps = strings.Replace(ztfBug.Steps, " ", "&nbsp;", -1)
+	ztfBug.Steps = strings.Replace(ztfBug.Steps, "\n", "<br />", -1)
 
-	// ztfBug-create-1-0-caseID=1,version=3,resultID=93,runID=0,stepIdList=9_12_
-	// ztfBug-create-1-0-caseID=1,version=3,resultID=84,runID=6,stepIdList=9_12_,testtask=2,projectID=1,buildID=1
+	// bug-create-1-0-caseID=1,version=3,resultID=93,runID=0,stepIdList=9_12_
+	// bug-create-1-0-caseID=1,version=3,resultID=84,runID=6,stepIdList=9_12_,testtask=2,projectID=1,buildID=1
+	// http://zentaopms.deeptest.com/bug-create-1-0-moduleID=0.html
 	extras := fmt.Sprintf("caseID=%s,version=%s,resultID=0,runID=0,stepIdList=%s",
 		ztfBug.Case, ztfBug.Version, ztfBug.StepIds)
 
@@ -34,8 +36,8 @@ func CommitBug(ztfBug commDomain.ZtfBug, projectPath string) (err error) {
 	} else {
 		params = fmt.Sprintf("productID=%s&branch=0&$extras=%s", ztfBug.Product, extras)
 	}
-	params = ""
-	url := config.Url + GenApiUri("ztfBug", "create", params)
+	//params = ""
+	url := config.Url + GenApiUri("bug", "create", params)
 
 	bug := commDomain.ZentaoBug{}
 	copier.Copy(&bug, ztfBug)
