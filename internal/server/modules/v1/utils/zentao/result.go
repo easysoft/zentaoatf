@@ -24,13 +24,13 @@ func CommitResult(report commDomain.ZtfReport, result serverDomain.ZentaoResultS
 	Login(config)
 
 	url := config.Url + GenApiUri("ci", "commitResult", "")
-	_, ok := httpUtils.Post(url, report, false)
+	ret, ok := httpUtils.Post(url, report, false)
 
 	msg := ""
 	if ok {
 		msg = color.GreenString(i118Utils.Sprintf("success_to_submit_test_result"))
 	} else {
-		msg = color.RedString(err.Error())
+		msg = color.RedString(string(ret))
 	}
 	logUtils.Info(msg)
 

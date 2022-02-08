@@ -28,7 +28,10 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 	ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), wsMsg websocket.Message) (
 	report commDomain.ZtfReport) {
 
-	testSuites := RetrieveUnitResult(req.ProjectPath, startTime, req.Framework, req.Tool)
+	testSuites, zipDir := RetrieveUnitResult(req.ProjectPath, startTime, req.Framework, req.Tool)
+	unitResultPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultZip)
+	fileUtils.ZipDir(unitResultPath, zipDir)
+
 	cases, classNameMaxWidth, duration := ParserUnitTestResult(testSuites)
 
 	if duration == 0 {
@@ -158,22 +161,27 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 	return
 }
 
-func RetrieveUnitResult(projectPath string, startTime int64,
-	testFramework commConsts.UnitTestFramework, testTool commConsts.UnitTestTool) (suites []commDomain.UnitTestSuite) {
-	resultFiles := make([]string, 0)
+func RetrieveUnitResult(projectPath string, startTime int64, testFramework commConsts.UnitTestFramework, testTool commConsts.UnitTestTool) (
+	suites []commDomain.UnitTestSuite, zipDir string) {
 
 	resultDir := ""
+	resultFiles := make([]string, 0)
 
 	if testFramework == commConsts.JUnit && testTool == commConsts.Maven {
 		resultDir = filepath.Join("target", "surefire-reports")
+		zipDir = resultDir
 	} else if testFramework == commConsts.TestNG && testTool == commConsts.Maven {
 		resultDir = filepath.Join("target", "surefire-reports", "junitreports")
+		zipDir = filepath.Dir(resultDir)
 	} else if testFramework == commConsts.RobotFramework || testFramework == commConsts.Cypress {
 		resultDir = "results"
+		zipDir = resultDir
 	} else {
 		resultDir = "results"
+		zipDir = resultDir
 	}
 
+	zipDir = filepath.Join(projectPath, zipDir)
 	resultDir = filepath.Join(projectPath, resultDir)
 	resultFiles, _ = GetSuiteFiles(resultDir, startTime)
 

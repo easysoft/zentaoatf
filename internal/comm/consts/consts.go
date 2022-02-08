@@ -14,6 +14,7 @@ const (
 	LogText      = "log.txt"
 	ResultText   = "result.txt"
 	ResultJson   = "result.json"
+	ResultZip    = "result.zip"
 
 	ExpectResultPass = "pass"
 )

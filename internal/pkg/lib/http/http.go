@@ -41,7 +41,8 @@ func Get(url string) (ret []byte, ok bool) {
 
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
 	if commConsts.Verbose {
-		logUtils.PrintUnicode(bodyBytes)
+		logUtils.Infof(i118Utils.Sprintf("request_response"))
+		logUtils.Infof(logUtils.ConvertUnicode(bodyBytes))
 	}
 	defer resp.Body.Close()
 
@@ -50,7 +51,7 @@ func Get(url string) (ret []byte, ok bool) {
 	if jsonErr != nil {
 		if strings.Index(string(bodyBytes), "<html>") > -1 {
 			if commConsts.Verbose {
-				logUtils.Errorf(i118Utils.Sprintf("server_return") + " HTML - " + gohtml.FormatWithLineNo(string(bodyBytes)))
+				logUtils.Errorf(i118Utils.Sprintf("request_response") + " HTML - " + gohtml.FormatWithLineNo(string(bodyBytes)))
 			}
 			return
 		} else {
@@ -98,7 +99,8 @@ func Post(url string, data interface{}, useFormFormat bool) (ret []byte, ok bool
 	}
 
 	if commConsts.Verbose {
-		logUtils.PrintUnicode([]byte(dataStr))
+		logUtils.Infof(i118Utils.Sprintf("request_content"))
+		logUtils.Infof(dataStr)
 	}
 
 	req, reqErr := http.NewRequest("POST", url, strings.NewReader(dataStr))
@@ -123,8 +125,10 @@ func Post(url string, data interface{}, useFormFormat bool) (ret []byte, ok bool
 	}
 
 	if commConsts.Verbose {
-		logUtils.PrintUnicode(bodyBytes)
+		logUtils.Infof(i118Utils.Sprintf("request_response"))
+		logUtils.Infof(logUtils.ConvertUnicode(bodyBytes))
 	}
+
 	defer resp.Body.Close()
 
 	ret, ok = GetRespErr(bodyBytes, url)
@@ -151,7 +155,8 @@ func PostStr(url string, params map[string]string) (ret []byte, ok bool) {
 	}
 
 	if commConsts.Verbose {
-		logUtils.Infof(i118Utils.Sprintf("server_params") + paramStr)
+		logUtils.Infof(i118Utils.Sprintf("request_content"))
+		logUtils.Infof(paramStr)
 	}
 
 	req, reqErr := http.NewRequest("POST", url, strings.NewReader(paramStr))
@@ -175,9 +180,10 @@ func PostStr(url string, params map[string]string) (ret []byte, ok bool) {
 		return
 	}
 
-	bytes, _ := ioutil.ReadAll(resp.Body)
+	bodyBytes, _ := ioutil.ReadAll(resp.Body)
 	if commConsts.Verbose {
-		logUtils.Infof(i118Utils.Sprintf("server_return") + logUtils.ConvertUnicode(bytes))
+		logUtils.Infof(i118Utils.Sprintf("request_response"))
+		logUtils.Infof(logUtils.ConvertUnicode(bodyBytes))
 	}
 
 	return

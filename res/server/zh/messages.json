@@ -452,12 +452,12 @@
       "translation": "\n请求地址：\n"
     },
     {
-      "id": "server_params",
-      "translation": "请求参数：\n"
+      "id": "request_content",
+      "translation": "\n请求内容：\n"
     },
     {
-      "id": "server_return",
-      "translation": "服务返回：\n"
+      "id": "request_response",
+      "translation": "\n服务返回：\n"
     },
     {
       "id": "task_id_empty_to_create",

@@ -104,6 +104,14 @@ func AddPathSepIfNeeded(pth string) string {
 	}
 	return pth
 }
+func RemovePathSepIfNeeded(pth string) string {
+	sep := consts.PthSep
+
+	if strings.LastIndex(pth, sep) == len(pth)-1 {
+		pth = pth[:len(pth)-1]
+	}
+	return pth
+}
 
 func GetFilesFromParams(arguments []string) []string {
 	ret := make([]string, 0)
