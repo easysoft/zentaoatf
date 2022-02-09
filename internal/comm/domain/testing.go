@@ -140,10 +140,10 @@ type ZentaoBug struct {
 }
 
 type ZtfReport struct {
-	TestEnv       commConsts.OsType            `json:"testEnv,omitempty"`
-	TestType      commConsts.TestType          `json:"testType"`
-	TestFramework commConsts.UnitTestFramework `json:"testFramework"`
-	TestTool      commConsts.UnitTestTool      `json:"testTool"`
+	TestEnv   commConsts.OsType    `json:"testEnv,omitempty"`
+	TestType  commConsts.TestType  `json:"testType"`
+	TestTool  commConsts.TestTool  `json:"testTool"`
+	BuildTool commConsts.BuildTool `json:"buildTool"`
 
 	ProductId int               `json:"productId,omitempty"`
 	TaskId    int               `json:"taskId,omitempty"`

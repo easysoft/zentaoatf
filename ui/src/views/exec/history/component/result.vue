@@ -20,7 +20,7 @@
           </a-select>
         </a-form-item>
 
-        <a-form-item label="任务" v-bind="validateInfos.taskId">
+        <a-form-item label="任务">
           <a-select v-model:value="modelRef.taskId">
             <a-select-option key="" value="">&nbsp;</a-select-option>
             <a-select-option v-for="item in tasks" :key="item.id" :value="item.id+''">{{ item.name }}</a-select-option>
@@ -75,9 +75,6 @@ export default defineComponent({
     const rules = reactive({
       productId: [
         { required: true, message: '请选择产品' },
-      ],
-      taskId: [
-        { required: true, message: '请选择任务' },
       ],
     });
 

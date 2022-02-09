@@ -89,6 +89,7 @@ import {
   setInterpreter,
 } from "@/utils/testing";
 import IconSvg from "@/components/IconSvg/index";
+import throttle from "lodash.debounce";
 
 interface ConfigFormSetupData {
   currProject: ComputedRef;
@@ -139,12 +140,12 @@ export default defineComponent({
     let languages = ref<any>({})
     let languageMap = ref<any>({})
 
-    const getInterpreters = (currConfig) => {
+    const getInterpreters = throttle((currConfig) => {
       const data = getInterpretersFromConfig(currConfig)
       interpreters.value = data.interpreters
       languages.value = data.languages
       languageMap.value = data.languageMap
-    }
+    }, 600)
     getInterpreters(currConfigRef.value)
 
     let model = reactive<any>(currConfigRef.value);

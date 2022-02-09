@@ -21,7 +21,8 @@ func (c *ZentaoCtrl) ListProduct(ctx iris.Context) {
 
 	data, err := zentaoUtils.ListProduct(projectPath)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: "获取禅道产品失败"})
+		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil,
+			Msg: "获取禅道产品失败，" + err.Error() + "。"})
 		return
 	}
 

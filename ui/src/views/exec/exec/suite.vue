@@ -70,6 +70,7 @@ import settings from "@/config/settings";
 import {WebSocket, WsEventName} from "@/services/websocket";
 import {resizeWidth, scroll} from "@/utils/dom";
 import {genExecInfo} from "@/views/exec/service";
+import throttle from "lodash.debounce";
 
 interface ExecSuitePageSetupData {
   model: any
@@ -115,9 +116,12 @@ export default defineComponent({
       const products = computed<any[]>(() => store.state.zentao.products);
       const suites = computed<any[]>(() => store.state.zentao.suites);
 
-      store.dispatch('zentao/fetchProducts')
-      watch(currConfig, (currConfig)=> {
+      const fetchProducts = throttle((): void => {
         store.dispatch('zentao/fetchProducts')
+      }, 600)
+      fetchProducts()
+      watch(currConfig, ()=> {
+        fetchProducts()
       })
 
       const model = reactive<any>({

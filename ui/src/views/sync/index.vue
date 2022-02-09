@@ -77,6 +77,7 @@ import {useStore} from "vuex";
 import {ProjectData} from "@/store/project";
 import {ZentaoData} from "@/store/zentao";
 import {syncFromZentao, syncToZentao} from "@/views/sync/service";
+import throttle from "lodash.debounce";
 
 interface ConfigFormSetupData {
   currProject: ComputedRef;
@@ -125,11 +126,13 @@ export default defineComponent({
     const suites = computed<any[]>(() => store.state.zentao.suites);
     const tasks = computed<any[]>(() => store.state.zentao.tasks);
 
-    store.dispatch('zentao/fetchLangs')
-    store.dispatch('zentao/fetchProducts')
-    watch(currConfig, (currConfig)=> {
+    const fetchProducts = throttle((): void => {
       store.dispatch('zentao/fetchLangs')
       store.dispatch('zentao/fetchProducts')
+    }, 600)
+    fetchProducts()
+    watch(currConfig, ()=> {
+      fetchProducts()
     })
 
     const formRef = ref();

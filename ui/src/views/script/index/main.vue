@@ -55,6 +55,7 @@ import IconSvg from "@/components/IconSvg";
 import {ProjectData} from "@/store/project";
 import {ScriptData} from "../store";
 import {resizeWidth} from "@/utils/dom";
+import throttle from "lodash.debounce";
 
 interface ListScriptPageSetupData {
   currProject: ComputedRef;
@@ -85,7 +86,7 @@ export default defineComponent({
     const treeData = computed<any>(() => store.state.project.scriptTree);
     const expandedKeys = ref<string[]>([]);
 
-    const getOpenKeys = (treeNode, isAll) => {
+    const getOpenKeys = throttle((treeNode, isAll) => {
       if (!treeNode) return
 
       expandedKeys.value.push(treeNode.path)
@@ -94,7 +95,7 @@ export default defineComponent({
           getOpenKeys(item, isAll)
         })
       }
-    }
+    }, 600)
 
     expandedKeys.value = []
     getOpenKeys(treeData.value[0], false)

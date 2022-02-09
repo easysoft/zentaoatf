@@ -19,7 +19,7 @@ func (s *TestResultService) Submit(result serverDomain.ZentaoResultSubmitReq, pr
 		return
 	}
 
-	err = zentaoUtils.CommitResult(report, result, projectPath)
+	err = zentaoUtils.CommitResult(report, result.ProductId, result.TaskId, projectPath)
 
 	return
 }

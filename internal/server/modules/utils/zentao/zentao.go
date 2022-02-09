@@ -30,6 +30,11 @@ func ListLang() (langs []serverDomain.ZentaoLang, err error) {
 
 func ListProduct(projectPath string) (products []serverDomain.ZentaoProduct, err error) {
 	config := configUtils.LoadByProjectPath(projectPath)
+	if config.Url == "" {
+		err = errors.New("请先完成项目配置")
+		return
+	}
+
 	Login(config)
 
 	// $productID = 0, $branch = 0, $browseType = '', $param = 0, $storyType = 'story',
@@ -45,7 +50,7 @@ func ListProduct(projectPath string) (products []serverDomain.ZentaoProduct, err
 	bytes, ok := httpUtils.Get(url)
 
 	if !ok {
-		err = errors.New("product-all fail")
+		err = errors.New("请检查项目配置")
 		return
 	}
 

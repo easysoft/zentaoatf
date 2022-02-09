@@ -78,6 +78,7 @@ import {WebSocket, WsEventName} from "@/services/websocket";
 import {PrefixSpace, resizeWidth, scroll} from "@/utils/dom";
 import {genExecInfo, get, getCaseIdsFromReport} from "@/views/exec/service";
 import {WsMsg} from "@/views/exec/data";
+import throttle from "lodash.debounce";
 
 const useForm = Form.useForm;
 
@@ -142,7 +143,7 @@ export default defineComponent({
     }
     selectCasesFromReport()
 
-    const getOpenKeys = (treeNode, isAll) => {
+    const getOpenKeys = throttle((treeNode, isAll) => {
       if (!treeNode) return
 
       expandedKeys.value.push(treeNode.path)
@@ -151,7 +152,7 @@ export default defineComponent({
           getOpenKeys(item, isAll)
         })
       }
-    }
+    }, 600)
 
     getOpenKeys(treeData.value[0], false)
     watch(treeData, (currConfig) => {
