@@ -117,7 +117,9 @@ export default defineComponent({
       const suites = computed<any[]>(() => store.state.zentao.suites);
 
       const fetchProducts = throttle((): void => {
-        store.dispatch('zentao/fetchProducts')
+        store.dispatch('zentao/fetchProducts').catch((error) => {
+          if (error.response.data.code === 10100) router.push(`/config`)
+        })
       }, 600)
       fetchProducts()
       watch(currConfig, ()=> {

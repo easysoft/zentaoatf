@@ -84,11 +84,11 @@ const testToolMap = {
     gtest: 'GTest',
     qtest: 'QTest',
 
-    autoit: 'AutoIt',
-    selenium: 'Selenium',
-    appium: 'Appium',
     robotframework: 'RobotFramework',
     cypress: 'Cypress',
+    // autoit: 'AutoIt',
+    // selenium: 'Selenium',
+    // appium: 'Appium',
 }
 export function execByDef(record) {
     if (record.execBy) return execByMap[record.execBy]

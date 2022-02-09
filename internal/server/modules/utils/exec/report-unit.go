@@ -69,13 +69,11 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 		}
 		report.Total++
 
-		if startTime == 0 {
-			if report.StartTime == 0 || cs.StartTime < report.StartTime {
-				report.StartTime = cs.StartTime
-			}
-			if cs.EndTime > report.EndTime {
-				report.EndTime = cs.EndTime
-			}
+		if cs.StartTime < report.StartTime {
+			report.StartTime = cs.StartTime
+		}
+		if cs.EndTime > report.EndTime {
+			report.EndTime = cs.EndTime
 		}
 	}
 	report.UnitResult = cases

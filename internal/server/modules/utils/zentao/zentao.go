@@ -41,12 +41,12 @@ func ListProduct(projectPath string) (products []serverDomain.ZentaoProduct, err
 	// $orderBy = '', $recTotal = 0, $recPerPage = 20, $pageID = 1, $projectID = 0)
 	params := ""
 	if commConsts.RequestType == commConsts.PathInfo {
-		params = fmt.Sprintf("0-0----id_asc-0-10000-1-0")
+		params = fmt.Sprintf("-----id_asc-0-10000-1-0")
 	} else {
-		params = fmt.Sprintf("orderBy=id_desc&recTotal=0&recPerPage=10000")
+		params = fmt.Sprintf("orderBy=id_asc&recTotal=0&recPerPage=10000")
 	}
 
-	url := config.Url + GenApiUri("product", "all", params)
+	url := config.Url + GenApiUri("product", "browse", params)
 	bytes, ok := httpUtils.Get(url)
 
 	if !ok {
@@ -153,12 +153,12 @@ func ListSuiteByProduct(productId int, projectPath string) (suites []serverDomai
 	config := configUtils.LoadByProjectPath(projectPath)
 	Login(config)
 
-	// $productID = 0, $orderBy = 'id_desc', $recTotal = 0, $recPerPage = 20, $pageID = 1
+	// $productID = 0, $orderBy = 'id_asc', $recTotal = 0, $recPerPage = 20, $pageID = 1
 	params := ""
 	if commConsts.RequestType == commConsts.PathInfo {
 		params = fmt.Sprintf("%d-id_asc-0-10000-1", productId)
 	} else {
-		params = fmt.Sprintf("productID=%d&orderBy=id_desc&recTotal=0&recPerPage=10000", productId)
+		params = fmt.Sprintf("productID=%d&orderBy=id_asc&recTotal=0&recPerPage=10000", productId)
 	}
 
 	url := config.Url + GenApiUri("testsuite", "browse", params)
@@ -188,12 +188,12 @@ func ListTaskByProduct(productId int, projectPath string) (tasks []serverDomain.
 	config := configUtils.LoadByProjectPath(projectPath)
 	Login(config)
 
-	// $productID = 0, $branch = '', $type = 'local,totalStatus', $orderBy = 'id_desc', $recTotal = 0, $recPerPage = 20, $pageID = 1, $beginTime = 0, $endTime = 0)
+	// $productID = 0, $branch = '', $type = 'local,totalStatus', $orderBy = 'id_asc', $recTotal = 0, $recPerPage = 20, $pageID = 1, $beginTime = 0, $endTime = 0)
 	params := ""
 	if commConsts.RequestType == commConsts.PathInfo {
 		params = fmt.Sprintf("%d--local,totalStatus-id_asc-0-10000-1", productId)
 	} else {
-		params = fmt.Sprintf("productID=%d&type=local,totalStatus&orderBy=id_desc&recTotal=0&recPerPage=10000", productId)
+		params = fmt.Sprintf("productID=%d&type=local,totalStatus&orderBy=id_asc&recTotal=0&recPerPage=10000", productId)
 	}
 
 	url := config.Url + GenApiUri("testtask", "browse", params)
@@ -421,14 +421,14 @@ func GetCasesByTask(productId int, taskId int, projectPath string) (cases []stri
 }
 
 func ListCaseByModule(baseUrl string, productId, moduleId int) []commDomain.ZtfCase {
-	// $productID = 0, $branch = '', $browseType = 'bymodule', $param = 0, $orderBy = 'id_desc', $recTotal = 0, $recPerPage = 20, $pageID = 1, $projectID = 0)
+	// $productID = 0, $branch = '', $browseType = 'bymodule', $param = 0, $orderBy = 'id_asc', $recTotal = 0, $recPerPage = 20, $pageID = 1, $projectID = 0)
 	// testcase-browse-1--byModule-19
 
 	params := ""
 	if commConsts.RequestType == commConsts.PathInfo {
 		params = fmt.Sprintf("%d--bymodule-%d-id_asc-0-10000-1-0", productId, moduleId)
 	} else {
-		params = fmt.Sprintf("productID=%d&browseType=bymodule&param=%d&orderBy=id_desc&recTotal=0&recPerPage=10000", productId, moduleId)
+		params = fmt.Sprintf("productID=%d&browseType=bymodule&param=%d&orderBy=id_asc&recTotal=0&recPerPage=10000", productId, moduleId)
 	}
 
 	url := baseUrl + GenApiUri("testcase", "browse", params)
@@ -456,13 +456,13 @@ func ListCaseByModule(baseUrl string, productId, moduleId int) []commDomain.ZtfC
 }
 
 func ListCaseBySuite(baseUrl string, productId, suiteId int) []commDomain.ZtfCase {
-	// $suiteID, $orderBy = 'id_desc', $recTotal = 0, $recPerPage = 20, $pageID = 1
+	// $suiteID, $orderBy = 'id_asc', $recTotal = 0, $recPerPage = 20, $pageID = 1
 
 	params := ""
 	if commConsts.RequestType == commConsts.PathInfo {
 		params = fmt.Sprintf("%d-id_asc-0-10000-1", suiteId)
 	} else {
-		params = fmt.Sprintf("suiteID=%d&orderBy=id_desc&recTotal=0&recPerPage=10000", suiteId)
+		params = fmt.Sprintf("suiteID=%d&orderBy=id_asc&recTotal=0&recPerPage=10000", suiteId)
 	}
 
 	url := baseUrl + GenApiUri("testsuite", "view", params)
@@ -491,13 +491,13 @@ func ListCaseBySuite(baseUrl string, productId, suiteId int) []commDomain.ZtfCas
 
 func ListCaseByTask(baseUrl string, productId, taskId int) []commDomain.ZtfCase {
 	// $taskID, $browseType = 'all', $param = 0,
-	// $orderBy = 'id_desc', $recTotal = 0, $recPerPage = 20, $pageID = 1
+	// $orderBy = 'id_asc', $recTotal = 0, $recPerPage = 20, $pageID = 1
 
 	params := ""
 	if commConsts.RequestType == commConsts.PathInfo {
 		params = fmt.Sprintf("%d-bymodule-0-id_asc-0-10000-1", taskId)
 	} else {
-		params = fmt.Sprintf("taskID=%d&browseType=all&param=0&orderBy=id_desc&recTotal=0&recPerPage=10000", taskId)
+		params = fmt.Sprintf("taskID=%d&browseType=all&param=0&orderBy=id_asc&recTotal=0&recPerPage=10000", taskId)
 	}
 
 	url := baseUrl + GenApiUri("testtask", "cases", params)

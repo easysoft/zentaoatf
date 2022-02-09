@@ -19,6 +19,9 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId string, project
 	report.ZentaoData = os.Getenv("ZENTAO_DATA")
 	report.BuildUrl = os.Getenv("BUILD_URL")
 
+	// remove it, will cause zentao testtask not display
+	report.TestType = ""
+
 	config := configUtils.LoadByProjectPath(projectPath)
 	Login(config)
 

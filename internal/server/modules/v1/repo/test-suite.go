@@ -66,7 +66,7 @@ func (r *TestSuiteRepo) FindById(id uint) (testSuite model.TestSuite, err error)
 
 func (r *TestSuiteRepo) Create(testSuite model.TestSuite) (id uint, err error) {
 	if _, err := r.FindByName(testSuite.Name); !errors.Is(err, gorm.ErrRecordNotFound) {
-		return 0, fmt.Errorf("%d", domain.BizErrNameExist.Code)
+		return 0, fmt.Errorf("%d", domain.BizErrNameNotExist.Code)
 	}
 
 	err = r.DB.Model(&model.TestSuite{}).Create(&testSuite).Error

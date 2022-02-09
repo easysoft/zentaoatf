@@ -34,7 +34,7 @@
                   {{ execBy(record) }}
                 </template>
                 <template #startTime="{ record }">
-                  {{ momentTime(record.startTime) }}
+                  <span v-if="record.startTime">{{ momentTime(record.startTime) }}</span>
                 </template>
                 <template #duration="{ record }">
                   {{record.duration}}秒

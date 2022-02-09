@@ -66,7 +66,7 @@ func (r *TestSetRepo) FindById(id uint) (po model.TestSet, err error) {
 
 func (r *TestSetRepo) Create(po model.TestSet) (id uint, err error) {
 	if _, err := r.FindByName(po.Name); !errors.Is(err, gorm.ErrRecordNotFound) {
-		return 0, fmt.Errorf("%d", domain.BizErrNameExist.Code)
+		return 0, fmt.Errorf("%d", domain.BizErrNameNotExist.Code)
 	}
 
 	err = r.DB.Model(&model.TestSet{}).Create(&po).Error

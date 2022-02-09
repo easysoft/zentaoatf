@@ -67,7 +67,7 @@ func (r *TestScriptRepo) FindById(id uint) (model.TestScript, error) {
 
 func (r *TestScriptRepo) Create(po model.TestScript) (id uint, err error) {
 	if _, err := r.FindByName(po.Name); !errors.Is(err, gorm.ErrRecordNotFound) {
-		return 0, fmt.Errorf("%d", domain.BizErrNameExist.Code)
+		return 0, fmt.Errorf("%d", domain.BizErrNameNotExist.Code)
 	}
 
 	err = r.DB.Model(&model.TestScript{}).Create(&po).Error
