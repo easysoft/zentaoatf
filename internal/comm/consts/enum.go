@@ -141,3 +141,12 @@ func (e BuildTool) String() string {
 func (BuildTool) Get(str string) BuildTool {
 	return BuildTool(str)
 }
+
+type Platform string
+
+const (
+	Android Platform = "android"
+	Ios     Platform = "ios"
+	Host    Platform = "host"
+	Vm      Platform = "vm"
+)

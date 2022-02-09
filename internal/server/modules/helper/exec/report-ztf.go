@@ -80,7 +80,10 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		msg += strings.Join(failedCaseLines, "\n")
 		msg += strings.Join(failedCaseLinesWithCheckpoint, "\n")
 
-		sendExecMsg(msg, "", wsMsg)
+		if commConsts.ComeFrom != "cmd" {
+			sendExecMsg(msg, "", wsMsg)
+		}
+
 		logUtils.ExecConsolef(color.FgRed, msg)
 		logUtils.ExecFile(msg)
 	}
@@ -111,14 +114,21 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 			report.Total, report.Duration, secTag,
 			passStr, failStr, skipStr,
 		)
-	sendExecMsg(msg, "", wsMsg)
+
+	if commConsts.ComeFrom != "cmd" {
+		sendExecMsg(msg, "", wsMsg)
+	}
+
 	logUtils.ExecConsole(color.FgCyan, msg)
 	logUtils.ExecResult(msg)
 
 	resultPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)
 	msg = "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
 
-	sendExecMsg(msg, "false", wsMsg)
+	if commConsts.ComeFrom != "cmd" {
+		sendExecMsg(msg, "false", wsMsg)
+	}
+
 	logUtils.ExecConsole(color.FgCyan, msg)
 	logUtils.ExecResult(msg)
 

@@ -89,7 +89,11 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 	}
 
 	temp := i118Utils.Sprintf("found_scripts", strconv.Itoa(len(cases))) + postFix
-	sendExecMsg(temp, "", wsMsg)
+
+	if commConsts.ComeFrom != "cmd" {
+		sendExecMsg(temp, "", wsMsg)
+	}
+
 	logUtils.ExecConsolef(color.FgCyan, temp)
 	logUtils.ExecResult(temp)
 
@@ -99,7 +103,11 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 
 		format := "(%" + width + "d/%d) %s [%s] [%" + width + "d. %s] (%.3fs)"
 		msg := fmt.Sprintf(format, idx+1, report.Total, cs.Status, testSuite, cs.Id, cs.Title, cs.Duration)
-		sendExecMsg(msg, "", wsMsg)
+
+		if commConsts.ComeFrom != "cmd" {
+			sendExecMsg(msg, "", wsMsg)
+		}
+
 		logUtils.ExecConsolef(color.FgCyan, temp)
 		logUtils.ExecResult(msg)
 	}
@@ -109,7 +117,10 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 		msg += strings.Join(failedCaseLines, "\n")
 		msg += strings.Join(failedCaseLinesDesc, "\n")
 
-		sendExecMsg(msg, "", wsMsg)
+		if commConsts.ComeFrom != "cmd" {
+			sendExecMsg(msg, "", wsMsg)
+		}
+
 		logUtils.ExecConsolef(color.FgCyan, temp)
 		logUtils.ExecResult(msg)
 	}
@@ -140,7 +151,10 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 			report.Total, report.Duration, secTag,
 			passStr, failStr, skipStr,
 		)
-	sendExecMsg(msg, "", wsMsg)
+
+	if commConsts.ComeFrom != "cmd" {
+		sendExecMsg(msg, "", wsMsg)
+	}
 	logUtils.ExecConsole(color.FgCyan, msg)
 	logUtils.ExecResult(msg)
 
@@ -148,6 +162,10 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 	msg = "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
 
 	sendExecMsg(msg, "false", wsMsg)
+	if commConsts.ComeFrom != "cmd" {
+		sendExecMsg(msg, "false", wsMsg)
+	}
+
 	logUtils.ExecConsole(color.FgCyan, msg)
 	logUtils.ExecResult(msg)
 

@@ -103,13 +103,18 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, projectPath string,
 	}
 
 	temp := i118Utils.Sprintf("found_scripts", strconv.Itoa(len(casesToRun))) + postFix
-	sendExecMsg(temp, "", wsMsg)
+	if commConsts.ComeFrom != "cmd" {
+		sendExecMsg(temp, "", wsMsg)
+	}
 	logUtils.ExecConsolef(color.FgCyan, temp)
 	logUtils.ExecResult(temp)
 
 	if len(casesToIgnore) > 0 {
 		temp := i118Utils.Sprintf("ignore_scripts", strconv.Itoa(len(casesToIgnore))) + postFix
-		sendExecMsg(temp, "", wsMsg)
+		if commConsts.ComeFrom != "cmd" {
+			sendExecMsg(temp, "", wsMsg)
+		}
+
 		logUtils.ExecConsolef(color.FgCyan, temp)
 		logUtils.ExecResult(temp)
 	}
@@ -120,7 +125,10 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, projectPath string,
 		select {
 		case <-ch:
 			msg := i118Utils.Sprintf("exit_exec_all")
-			sendExecMsg(msg, "", wsMsg)
+			if commConsts.ComeFrom != "cmd" {
+        sendExecMsg(msg, "", wsMsg)
+			}
+			
 			logUtils.ExecConsolef(color.FgCyan, msg)
 			logUtils.ExecFilef(msg)
 
@@ -142,7 +150,11 @@ func ExeScript(scriptFile, projectPath string, conf commDomain.ProjectConf, repo
 	startTime := time.Now()
 
 	startMsg := i118Utils.Sprintf("start_execution", scriptFile, dateUtils.DateTimeStr(startTime))
-	sendExecMsg(startMsg, "", wsMsg)
+
+	if commConsts.ComeFrom != "cmd" {
+		sendExecMsg(startMsg, "", wsMsg)
+	}
+
 	logUtils.ExecConsolef(-1, startMsg)
 	logUtils.ExecFilef(startMsg)
 
@@ -163,7 +175,10 @@ func ExeScript(scriptFile, projectPath string, conf commDomain.ProjectConf, repo
 	secs := fmt.Sprintf("%.2f", float32(entTime.Sub(startTime)/time.Second))
 
 	endMsg := i118Utils.Sprintf("end_execution", scriptFile, dateUtils.DateTimeStr(entTime))
-	sendExecMsg(endMsg, "", wsMsg)
+	if commConsts.ComeFrom != "cmd" {
+		sendExecMsg(endMsg, "", wsMsg)
+	}
+
 	logUtils.ExecConsolef(-1, endMsg)
 	logUtils.ExecFilef(endMsg)
 
@@ -251,7 +266,10 @@ func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
 	for {
 		line, err2 := reader1.ReadString('\n')
 		if line != "" {
-			sendOutputMsg(line, "", wsMsg)
+
+			if commConsts.ComeFrom != "cmd" {
+				sendOutputMsg(line, "", wsMsg)
+			}
 			logUtils.ExecConsole(1, line)
 			logUtils.ExecFile(line)
 
@@ -266,7 +284,11 @@ func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
 		select {
 		case <-ch:
 			msg := i118Utils.Sprintf("exit_exec_curr")
-			sendExecMsg(msg, "", wsMsg)
+
+			if commConsts.ComeFrom != "cmd" {
+        sendExecMsg(msg, "", wsMsg)
+			}
+			
 			logUtils.ExecConsolef(color.FgCyan, msg)
 			logUtils.ExecFilef(msg)
 
