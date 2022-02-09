@@ -2,14 +2,14 @@ package action
 
 import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+	"github.com/aaronchen2k/deeptest/internal/command"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	_scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/exec"
-	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/script"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/kataras/iris/v12/websocket"
 )
 
-func RunZTFTest(file []string, suiteIdStr, taskIdStr string) error {
+func RunZTFTest(file []string, suiteIdStr, taskIdStr string, actionModule *command.IndexModule) error {
 	cases := make([]string, 0)
 	req := serverDomain.WsReq{
 		ProjectPath: commConsts.WorkDir,
@@ -27,14 +27,14 @@ func RunZTFTest(file []string, suiteIdStr, taskIdStr string) error {
 	} else {
 		req.Act = commConsts.ExecCase
 	}
-
 	if !fileUtils.IsDir(file[0]) {
-		req.Cases = append(req.Cases, file[0])
+		cases = append(cases, file[0])
 	} else {
-		scriptTree, _ := scriptUtils.LoadScriptTree(commConsts.WorkDir)
+		_, _, _, scriptTree, _ := actionModule.ProjectService.GetByUser(commConsts.WorkDir)
 		cases = GetCasesFromChildren(scriptTree.Children)
-		req.Cases = cases
 	}
+
+	req.Cases = cases
 
 	_scriptUtils.Exec(nil, nil, nil, req, msg)
 

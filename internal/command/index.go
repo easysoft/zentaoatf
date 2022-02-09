@@ -8,8 +8,6 @@ import (
 	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
 	serverLog "github.com/aaronchen2k/deeptest/internal/server/core/log"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
-	"github.com/facebookgo/inject"
-	"github.com/sirupsen/logrus"
 )
 
 func InitConfig() {
@@ -29,26 +27,9 @@ func InitConfig() {
 }
 
 type IndexModule struct {
-	ZtfCaseService *service.ZtfCaseService `inject:""`
+	ProjectService *service.ProjectService `inject:""`
 }
 
 func NewIndexModule() *IndexModule {
 	return &IndexModule{}
-}
-
-func InjectModule() (indexModule *IndexModule) {
-	var g inject.Graph
-	indexModule = NewIndexModule()
-
-	// inject objects
-	if err := g.Provide(
-		&inject.Object{Value: indexModule},
-	); err != nil {
-		logrus.Fatalf("provide usecase objects to the Graph: %v", err)
-	}
-	err := g.Populate()
-	if err != nil {
-		logrus.Fatalf("populate the incomplete Objects: %v", err)
-	}
-	return
 }

@@ -13,7 +13,10 @@ import (
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	resUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/res"
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
+	"github.com/aaronchen2k/deeptest/internal/server/core/dao"
+	"github.com/facebookgo/inject"
 	"github.com/fatih/color"
+	"github.com/sirupsen/logrus"
 	"os"
 	"os/signal"
 	"syscall"
@@ -89,7 +92,6 @@ func main() {
 	if len(os.Args) == 1 {
 		os.Args = append(os.Args, "run", ".")
 	}
-
 	switch os.Args[1] {
 	case "run", "-r":
 		debug, os.Args = commonUtils.GetDebugParamForRun(os.Args)
@@ -122,6 +124,8 @@ func main() {
 }
 
 func run(args []string) {
+	actionModule := injectModule()
+
 	if len(args) >= 3 && stringUtils.FindInArr(args[2], _consts.UnitTestTypes) { // unit test
 		// junit -p 1 mvn clean package test
 		vari.UnitTestType = args[2]
@@ -169,7 +173,7 @@ func run(args []string) {
 				msgStr := i118Utils.Sprintf("run_with_specific_interpreter", vari.Interpreter)
 				logUtils.ExecConsolef(color.FgCyan, msgStr)
 			}
-			action.RunZTFTest(files, suiteId, taskId)
+			action.RunZTFTest(files, suiteId, taskId, actionModule)
 		} else {
 			resUtils.PrintUsage()
 		}
@@ -183,4 +187,22 @@ func init() {
 
 func cleanup() {
 	color.Unset()
+}
+
+func injectModule() (actionModule *command.IndexModule) {
+	var g inject.Graph
+	actionModule = command.NewIndexModule()
+
+	// inject objects
+	if err := g.Provide(
+		&inject.Object{Value: dao.GetDB()},
+		&inject.Object{Value: actionModule},
+	); err != nil {
+		logrus.Fatalf("provide usecase objects to the Graph: %v", err)
+	}
+	err := g.Populate()
+	if err != nil {
+		logrus.Fatalf("populate the incomplete Objects: %v", err)
+	}
+	return
 }
