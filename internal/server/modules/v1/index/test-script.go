@@ -21,6 +21,8 @@ func (m *TestScriptModule) Party() module.WebModule {
 		index.Use(middleware.InitCheck())
 
 		index.Get("/get", m.TestScriptCtrl.Get).Name = "脚本详情"
+		index.Get("/extract", m.TestScriptCtrl.Extract).Name = "抽取脚本"
+
 		index.Post("/", m.TestScriptCtrl.Create).Name = "创建脚本"
 		index.Put("/{id:uint}", m.TestScriptCtrl.Update).Name = "更新脚本"
 		index.Delete("/{id:uint}", m.TestScriptCtrl.Delete).Name = "删除脚本"

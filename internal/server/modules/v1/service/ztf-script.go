@@ -2,7 +2,7 @@ package service
 
 import (
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
-	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/utils/script"
+	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/script"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
 )
 

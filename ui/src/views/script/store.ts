@@ -3,7 +3,7 @@ import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 import { Script } from './data.d';
 import {
-    get, create, update, remove
+    get, extract, create, update, remove
 } from './service';
 
 export interface ScriptData {
@@ -16,10 +16,12 @@ export interface ModuleType extends StoreModuleType<ScriptData> {
         setItem: Mutation<ScriptData>;
     };
     actions: {
-        deleteScript: Action<ScriptData, ScriptData>;
-        createScript: Action<ScriptData, ScriptData>;
         getScript: Action<ScriptData, ScriptData>;
+        extractScript: Action<ScriptData, ScriptData>;
+
+        createScript: Action<ScriptData, ScriptData>;
         updateScript: Action<ScriptData, ScriptData>;
+        deleteScript: Action<ScriptData, ScriptData>;
     };
 }
 const initState: ScriptData = {
@@ -48,8 +50,16 @@ const StoreModel: ModuleType = {
             const { data } = response;
             commit('setItem',data);
             return true;
-
         },
+        async extractScript({ commit }, script: any ) {
+            if (script.isDir) return true
+
+            const response: ResponseData = await extract(script.path)
+            const { data } = response
+            commit('setItem', data)
+            return true
+        },
+
         async createScript({ commit }, payload: Pick<Script, "name" | "desc"> ) {
             try {
                 await create(payload);

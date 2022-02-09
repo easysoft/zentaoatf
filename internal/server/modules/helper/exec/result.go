@@ -7,7 +7,7 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/utils/script"
+	"github.com/aaronchen2k/deeptest/internal/server/modules/helper/script"
 	"github.com/emirpasic/gods/maps"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12/websocket"

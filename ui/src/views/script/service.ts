@@ -12,6 +12,15 @@ export async function get(path: string): Promise<any> {
     });
 }
 
+export async function extract(path: string): Promise<any> {
+    const params = {path: path}
+
+    return request({
+        url: `/scripts/extract`,
+        params
+    });
+}
+
 export async function create(params: Partial<Script>): Promise<any> {
     return request({
         url: `/${apiPath}`,

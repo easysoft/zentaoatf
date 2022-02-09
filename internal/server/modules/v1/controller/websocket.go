@@ -6,7 +6,7 @@ import (
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/config"
-	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/utils/exec"
+	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/exec"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	"github.com/fatih/color"

@@ -4,48 +4,48 @@
       此为单元测试项目，无脚本显示。
     </div>
 
-      <div id="main" v-if="currProject.type === 'func'">
-        <div id="left">
-          <div class="toolbar">
-            <div class="left"></div>
-            <div class="right">
-              <a-button @click="expandAll" type="link">
-                <span v-if="!isExpand">展开全部</span>
-                <span v-if="isExpand">收缩全部</span>
-              </a-button>
-            </div>
-          </div>
-
-          <div class="tree-panel">
-            <a-tree
-                ref="tree"
-                :tree-data="treeData"
-                :replace-fields="replaceFields"
-                show-icon
-                @expand="expandNode"
-                @select="selectNode"
-                v-model:expandedKeys="expandedKeys"
-            >
-              <template #icon="slotProps">
-                <icon-svg v-if="slotProps.isDir" type="folder-outlined"></icon-svg>
-                <icon-svg v-if="!slotProps.isDir" type="file-outlined"></icon-svg>
-              </template>
-            </a-tree>
+    <div id="main" v-if="currProject.type === 'func'">
+      <div id="left">
+        <div class="toolbar">
+          <div class="left"></div>
+          <div class="right">
+            <a-button @click="expandAll" type="link">
+              <span v-if="!isExpand">展开全部</span>
+              <span v-if="isExpand">收缩全部</span>
+            </a-button>
           </div>
         </div>
 
-        <div id="resize"></div>
+        <div class="tree-panel">
+          <a-tree
+              ref="tree"
+              :tree-data="treeData"
+              :replace-fields="replaceFields"
+              show-icon
+              @expand="expandNode"
+              @select="selectNode"
+              v-model:expandedKeys="expandedKeys"
+          >
+            <template #icon="slotProps">
+              <icon-svg v-if="slotProps.isDir" type="folder-outlined"></icon-svg>
+              <icon-svg v-if="!slotProps.isDir" type="file-outlined"></icon-svg>
+            </template>
+          </a-tree>
+        </div>
+      </div>
 
-        <div id="content">
-          <div class="toolbar">
-            <a-button @click="expandAll" type="primary">执行</a-button>
-          </div>
-          <div class="panel">
-            <pre><code>{{ script.code }}</code></pre>
-          </div>
+      <div id="resize"></div>
+
+      <div id="content">
+        <div class="toolbar">
+          <a-button @click="extract" type="primary">提取步骤</a-button>
+        </div>
+        <div class="panel">
+          <pre><code>{{ script.code }}</code></pre>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -56,18 +56,22 @@ import {ProjectData} from "@/store/project";
 import {ScriptData} from "../store";
 import {resizeWidth} from "@/utils/dom";
 import throttle from "lodash.debounce";
+import {message, notification} from "ant-design-vue";
 
 interface ListScriptPageSetupData {
   currProject: ComputedRef;
   treeData: ComputedRef<any[]>;
   replaceFields: any,
-  expandNode: (expandedKeys: string[], e: any) => void;
-  selectNode: (keys, e) => void;
-  isExpand: Ref<boolean>;
-  expandAll: (e) => void;
-  expandedKeys: Ref<string[]>
   tree: Ref;
   script: any
+
+  isExpand: Ref<boolean>;
+  expandNode: (expandedKeys: string[], e: any) => void;
+  selectNode: (keys, e) => void;
+
+  expandAll: (e) => void;
+  extract: () => void;
+  expandedKeys: Ref<string[]>
 }
 
 export default defineComponent({
@@ -80,6 +84,7 @@ export default defineComponent({
       key: 'path',
     };
 
+    let selectedNode = {} as any
     let isExpand = ref(false);
     const store = useStore<{ project: ProjectData }>();
     const currProject = computed<any>(() => store.state.project.currProject);
@@ -99,7 +104,7 @@ export default defineComponent({
 
     expandedKeys.value = []
     getOpenKeys(treeData.value[0], false)
-    watch(treeData,(currConfig)=> {
+    watch(treeData, (currConfig) => {
       expandedKeys.value = []
       getOpenKeys(treeData.value[0], false)
     })
@@ -121,8 +126,9 @@ export default defineComponent({
     const selectNode = (selectedKeys, e) => {
       console.log('selectNode', e.selectedNodes)
       if (e.selectedNodes.length === 0) return
+      selectedNode = e.selectedNodes[0]
 
-      storeScript.dispatch('script/getScript', e.selectedNodes[0].props);
+      storeScript.dispatch('script/getScript', selectedNode.props)
     }
 
     const expandAll = (e) => {
@@ -134,6 +140,18 @@ export default defineComponent({
         getOpenKeys(treeData.value[0], true)
       }
     }
+    const extract = () => {
+      console.log('extract', selectedNode.props)
+      storeScript.dispatch('script/extractScript', selectedNode.props).then(() => {
+        notification.success({
+          message: `提取注释为测试步骤和验证点成功！`,
+        })
+      }).catch(() => {
+        notification.error({
+          message: `提取注释为测试步骤和验证点失败！`,
+        });
+      })
+    }
 
     return {
       currProject,
@@ -143,6 +161,7 @@ export default defineComponent({
       selectNode,
       isExpand,
       expandAll,
+      extract,
       tree,
       expandedKeys,
       script,
@@ -179,10 +198,12 @@ export default defineComponent({
         .left {
           flex: 1;
         }
+
         .right {
           width: 70px;
           text-align: right;
         }
+
         .ant-btn-link {
           padding: 0px 3px;
           color: #1890ff;
