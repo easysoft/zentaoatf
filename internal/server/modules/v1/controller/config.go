@@ -5,7 +5,7 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/core/web/validate"
-	configUtils "github.com/aaronchen2k/deeptest/internal/server/modules/utils/config"
+	configUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/config"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	"strings"
 

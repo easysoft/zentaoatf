@@ -41,7 +41,7 @@ var (
 )
 
 func PrintUsage() {
-	logUtils.PrintToWithColor("Usage: ", color.FgCyan)
+	logUtils.ExecConsolef(color.FgCyan, "Usage: ")
 
 	usageData, _ := ReadRes(usageFile)
 	exeFile := commConsts.App
@@ -51,7 +51,7 @@ func PrintUsage() {
 	usage := fmt.Sprintf(string(usageData), exeFile)
 	fmt.Printf("%s\n", usage)
 
-	logUtils.PrintToWithColor("\nExample: ", color.FgCyan)
+	logUtils.ExecConsole(color.FgCyan, "\nExample: ")
 	sampleData, _ := ReadRes(sampleFile)
 	sample := ""
 	if !commonUtils.IsWin() {

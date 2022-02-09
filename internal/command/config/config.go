@@ -10,7 +10,7 @@ import (
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
-	configUtils "github.com/aaronchen2k/deeptest/internal/server/modules/utils/config"
+	configUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/config"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
 	"github.com/fatih/color"
 	"os"
@@ -27,8 +27,8 @@ func CheckConfigPermission() {
 
 	err := fileUtils.MkDirIfNeeded(commConsts.ExeDir + "conf")
 	if err != nil {
-		logUtils.PrintToWithColor(
-			i118Utils.Sprintf("perm_deny", commConsts.ExeDir), color.FgRed)
+		msg := i118Utils.Sprintf("perm_deny", commConsts.ExeDir)
+		logUtils.ExecConsolef(color.FgRed, msg)
 		os.Exit(0)
 	}
 }
@@ -39,12 +39,31 @@ func InitScreenSize() {
 	vari.ScreenHeight = h
 }
 
+func CheckRequestConfig() {
+	conf := configUtils.LoadByProjectPath(commConsts.WorkDir)
+	if conf.Url == "" || conf.Username == "" || conf.Password == "" {
+		InputForRequest()
+	}
+}
+
+func InputForRequest() {
+	conf := configUtils.LoadByProjectPath(commConsts.WorkDir)
+
+	logUtils.ExecConsole(color.FgCyan, i118Utils.Sprintf("need_config"))
+
+	conf.Url = stdinUtils.GetInput("(http://.*)", conf.Url, "enter_url", conf.Url)
+	conf.Username = stdinUtils.GetInput("(.{2,})", conf.Username, "enter_account", conf.Username)
+	conf.Password = stdinUtils.GetInput("(.{2,})", conf.Password, "enter_password", conf.Password)
+
+	configUtils.SaveToFile(conf, commConsts.WorkDir)
+}
+
 func InputForSet() {
 	conf := configUtils.ReadFromFile(commConsts.WorkDir)
 
 	var configSite bool
 
-	logUtils.PrintToWithColor(i118Utils.Sprintf("begin_config"), color.FgCyan)
+	logUtils.ExecConsole(color.FgCyan, i118Utils.Sprintf("begin_config"))
 
 	enCheck := ""
 	var numb string
@@ -88,7 +107,7 @@ func InputForSet() {
 }
 
 func PrintCurrConfig() {
-	logUtils.PrintToWithColor("\n"+i118Utils.Sprintf("current_config"), color.FgCyan)
+	logUtils.ExecConsole(color.FgCyan, "\n"+i118Utils.Sprintf("current_config"))
 
 	val := reflect.ValueOf(vari.Config)
 	typeOfS := val.Type()

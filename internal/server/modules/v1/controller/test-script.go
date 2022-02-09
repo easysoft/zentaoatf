@@ -4,7 +4,7 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/core/web/validate"
-	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/utils/script"
+	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/script"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	"strings"

@@ -103,18 +103,3 @@ func GetWholeLine(msg string, char string) string {
 
 	return fmt.Sprintf("%s %s %s", preFixStr, msg, postFixStr)
 }
-
-func PrintToWithColor(msg string, attr color.Attribute) {
-	output := color.Output
-
-	if attr == -1 {
-		fmt.Fprint(output, msg+"\n")
-	} else {
-		color.New(attr).Fprintf(output, msg+"\n")
-	}
-}
-
-func PrintTo(str string) {
-	output := color.Output
-	fmt.Fprint(output, str+"\n")
-}

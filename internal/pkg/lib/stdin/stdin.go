@@ -2,7 +2,6 @@ package stdinUtils
 
 import (
 	"bufio"
-	"fmt"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
@@ -25,7 +24,7 @@ func InputForBool(in *bool, defaultVal bool, fmtStr string, fmtParam ...interfac
 		} else {
 			msg = "no"
 		}
-		logUtils.PrintTo(msg)
+		logUtils.Info(msg)
 		return
 	}
 
@@ -42,14 +41,14 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 	msg := i118Utils.Sprintf(fmtStr, params...)
 
 	for {
-		logUtils.PrintToWithColor("\n"+msg, color.FgCyan)
+		logUtils.ExecConsole(color.FgCyan, "\n"+msg)
 		Scanf(&ret)
 		ret = strings.TrimSpace(ret)
 
 		if ret == "" && defaultVal != "" {
 			ret = defaultVal
 
-			logUtils.PrintTo(ret)
+			logUtils.Info(ret)
 		}
 
 		temp := strings.ToLower(ret)
@@ -76,48 +75,7 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 			return ret
 		} else {
 			ret = ""
-			logUtils.PrintToWithColor(i118Utils.Sprintf(msg), color.FgRed)
-		}
-	}
-}
-
-func GetInputForScriptInterpreter(defaultVal string, fmtStr string, params ...interface{}) string {
-	var ret string
-
-	msg := i118Utils.Sprintf(fmtStr, params...)
-
-	for {
-		logUtils.PrintToWithColor(msg, color.FgCyan)
-		Scanf(&ret)
-
-		ret = strings.TrimSpace(ret)
-
-		if ret == "" && defaultVal != "" {
-			ret = defaultVal
-
-			logUtils.PrintToWithColor(ret, -1)
-		}
-
-		if ret == "exit" {
-			color.Unset()
-			os.Exit(0)
-		}
-
-		if ret == "" { // ignore to set
-			return "-"
-		}
-
-		sep := string(os.PathSeparator)
-		if sep == `\` {
-			sep = `\\`
-		}
-		reg := fmt.Sprintf(".*%s+[^%s]+", sep, sep)
-		pass, _ := regexp.MatchString(reg, ret)
-		if pass {
-			return ret
-		} else {
-			ret = ""
-			logUtils.PrintToWithColor(i118Utils.Sprintf("invalid_input"), color.FgRed)
+			logUtils.ExecConsole(color.FgRed, i118Utils.Sprintf(msg))
 		}
 	}
 }
