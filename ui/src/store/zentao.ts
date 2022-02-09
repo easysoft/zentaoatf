@@ -81,15 +81,11 @@ const StoreModel: ModuleType = {
             }
         },
         async fetchProducts({ commit }) {
-            try {
-                const response: ResponseData = await queryProduct();
-                const { data } = response;
-                commit('saveProducts', data)
+            const response: ResponseData = await queryProduct();
+            const { data } = response;
+            commit('saveProducts', data)
 
-                return true;
-            } catch (error) {
-                return false;
-            }
+            return true;
         },
         async fetchModules({ commit }, productId) {
             try {

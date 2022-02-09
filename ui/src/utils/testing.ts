@@ -1,5 +1,5 @@
 import moment from "moment";
-import {AutoTestTools, ScriptLanguages, UnitTestFrameworks, UnitTestTools} from "@/utils/const";
+import {AutoTestTools, ScriptLanguages, TestTools, BuildTools} from "@/utils/const";
 import {Ref} from "vue";
 import {Config, Interpreter} from "@/views/config/data";
 
@@ -31,7 +31,7 @@ export function setInterpreter(config: Ref<Config>, interpreters: Ref<Interprete
 export function getUnitTestFrameworks(): any {
     const list = new Array<string>()
     const map = {}
-    UnitTestFrameworks.forEach((item) => {
+    TestTools.forEach((item) => {
         const lowerCase = item.toLowerCase()
         list.push(lowerCase)
         map[lowerCase] = item
@@ -43,10 +43,10 @@ export function getUnitTestTools(): any {
     const data = {}
     const map = {}
 
-    Object.keys(UnitTestTools).forEach((key) => {
+    Object.keys(BuildTools).forEach((key) => {
         if (! (key in data)) data[key] = []
 
-        UnitTestTools[key].forEach(item => {
+        BuildTools[key].forEach(item => {
             const lowerCase = item.toLowerCase()
             data[key].push(lowerCase)
             map[lowerCase] = item
@@ -84,15 +84,15 @@ const testToolMap = {
     gtest: 'GTest',
     qtest: 'QTest',
 
-    autoit: 'AutoIt',
-    selenium: 'Selenium',
-    appium: 'Appium',
     robotframework: 'RobotFramework',
     cypress: 'Cypress',
+    // autoit: 'AutoIt',
+    // selenium: 'Selenium',
+    // appium: 'Appium',
 }
 export function execByDef(record) {
     if (record.execBy) return execByMap[record.execBy]
-    else return testToolMap[record.testFramework]
+    else return testToolMap[record.testTool]
 }
 export function momentTimeDef(tm) {
     return moment.unix(tm).format("YYYY-MM-DD HH:mm:ss")

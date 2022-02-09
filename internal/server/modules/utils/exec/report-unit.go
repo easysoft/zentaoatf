@@ -28,7 +28,7 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 	ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), wsMsg websocket.Message) (
 	report commDomain.ZtfReport) {
 
-	testSuites, zipDir := RetrieveUnitResult(req.ProjectPath, startTime, req.Framework, req.Tool)
+	testSuites, zipDir := RetrieveUnitResult(req.ProjectPath, startTime, req.TestTool, req.BuildTool)
 	unitResultPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultZip)
 	fileUtils.ZipDir(unitResultPath, zipDir)
 
@@ -39,11 +39,11 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 	}
 
 	report = commDomain.ZtfReport{
-		TestEnv:       commonUtils.GetOs(),
-		TestType:      commConsts.TestUnit,
-		TestFramework: req.Framework,
-		TestTool:      req.Tool,
-		Pass:          0, Fail: 0, Total: 0}
+		TestEnv:   commonUtils.GetOs(),
+		TestType:  commConsts.TestUnit,
+		TestTool:  req.TestTool,
+		BuildTool: req.BuildTool,
+		Pass:      0, Fail: 0, Total: 0}
 
 	failedCount := 0
 	failedCaseLines := make([]string, 0)
@@ -69,13 +69,11 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 		}
 		report.Total++
 
-		if startTime == 0 {
-			if report.StartTime == 0 || cs.StartTime < report.StartTime {
-				report.StartTime = cs.StartTime
-			}
-			if cs.EndTime > report.EndTime {
-				report.EndTime = cs.EndTime
-			}
+		if cs.StartTime < report.StartTime {
+			report.StartTime = cs.StartTime
+		}
+		if cs.EndTime > report.EndTime {
+			report.EndTime = cs.EndTime
 		}
 	}
 	report.UnitResult = cases
@@ -178,19 +176,19 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 	return
 }
 
-func RetrieveUnitResult(projectPath string, startTime int64, testFramework commConsts.UnitTestFramework, testTool commConsts.UnitTestTool) (
+func RetrieveUnitResult(projectPath string, startTime int64, testTool commConsts.TestTool, buildTool commConsts.BuildTool) (
 	suites []commDomain.UnitTestSuite, zipDir string) {
 
 	resultDir := ""
 	resultFiles := make([]string, 0)
 
-	if testFramework == commConsts.JUnit && testTool == commConsts.Maven {
+	if testTool == commConsts.JUnit && buildTool == commConsts.Maven {
 		resultDir = filepath.Join("target", "surefire-reports")
 		zipDir = resultDir
-	} else if testFramework == commConsts.TestNG && testTool == commConsts.Maven {
+	} else if testTool == commConsts.TestNG && buildTool == commConsts.Maven {
 		resultDir = filepath.Join("target", "surefire-reports", "junitreports")
 		zipDir = filepath.Dir(resultDir)
-	} else if testFramework == commConsts.RobotFramework || testFramework == commConsts.Cypress {
+	} else if testTool == commConsts.RobotFramework || testTool == commConsts.Cypress {
 		resultDir = "results"
 		zipDir = resultDir
 	} else {
@@ -203,7 +201,7 @@ func RetrieveUnitResult(projectPath string, startTime int64, testFramework commC
 	resultFiles, _ = GetSuiteFiles(resultDir, startTime)
 
 	for _, file := range resultFiles {
-		testSuite, err := GetTestSuite(file, testFramework)
+		testSuite, err := GetTestSuite(file, testTool)
 
 		if err == nil {
 			suites = append(suites, testSuite)
@@ -233,46 +231,46 @@ func GetSuiteFiles(resultDir string, startTime int64) (resultFiles []string, err
 	return
 }
 
-func GetTestSuite(xmlFile string, testFramework commConsts.UnitTestFramework) (
+func GetTestSuite(xmlFile string, testTool commConsts.TestTool) (
 	testSuite commDomain.UnitTestSuite, err error) {
 
 	content := fileUtils.ReadFile(xmlFile)
 
-	if testFramework == commConsts.JUnit || testFramework == commConsts.TestNG {
+	if testTool == commConsts.JUnit || testTool == commConsts.TestNG {
 		testSuite = commDomain.UnitTestSuite{}
 		err = xml.Unmarshal([]byte(content), &testSuite)
 
-	} else if testFramework == commConsts.PHPUnit {
+	} else if testTool == commConsts.PHPUnit {
 		phpTestSuite := commDomain.PhpUnitSuites{}
 		err = xml.Unmarshal([]byte(content), &phpTestSuite)
 		if err == nil {
 			testSuite = ConvertPhpUnitResult(phpTestSuite)
 		}
-	} else if testFramework == commConsts.PyTest {
+	} else if testTool == commConsts.PyTest {
 		pyTestSuite := commDomain.PyTestSuites{}
 		err = xml.Unmarshal([]byte(content), &pyTestSuite)
 		if err == nil {
 			testSuite = ConvertPyTestResult(pyTestSuite)
 		}
-	} else if testFramework == commConsts.Jest {
+	} else if testTool == commConsts.Jest {
 		jestSuite := commDomain.JestSuites{}
 		err = xml.Unmarshal([]byte(content), &jestSuite)
 		if err == nil {
 			testSuite = ConvertJestResult(jestSuite)
 		}
-	} else if testFramework == commConsts.GTest {
+	} else if testTool == commConsts.GTest {
 		gTestSuite := commDomain.GTestSuites{}
 		err = xml.Unmarshal([]byte(content), &gTestSuite)
 		if err == nil {
 			testSuite = ConvertGTestResult(gTestSuite)
 		}
-	} else if testFramework == commConsts.QTest {
+	} else if testTool == commConsts.QTest {
 		qTestSuite := commDomain.QTestSuites{}
 		err = xml.Unmarshal([]byte(content), &qTestSuite)
 		if err == nil {
 			testSuite = ConvertQTestResult(qTestSuite)
 		}
-	} else if testFramework == commConsts.CppUnit {
+	} else if testTool == commConsts.CppUnit {
 		content = strings.Replace(content, "ISO-8859-1", "UTF-8", -1)
 
 		cppUnitSuites := commDomain.CppUnitSuites{}
@@ -280,13 +278,13 @@ func GetTestSuite(xmlFile string, testFramework commConsts.UnitTestFramework) (
 		if err == nil {
 			testSuite = ConvertCppUnitResult(cppUnitSuites)
 		}
-	} else if testFramework == commConsts.RobotFramework {
+	} else if testTool == commConsts.RobotFramework {
 		robotResult := commDomain.RobotResult{}
 		err = xml.Unmarshal([]byte(content), &robotResult)
 		if err == nil {
 			testSuite = ConvertRobotResult(robotResult)
 		}
-	} else if testFramework == commConsts.Cypress {
+	} else if testTool == commConsts.Cypress {
 		cyResult := commDomain.CypressTestsuites{}
 		err = xml.Unmarshal([]byte(content), &cyResult)
 		if err == nil {

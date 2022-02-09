@@ -14,7 +14,7 @@ export const ScriptLanguages = [
     'AutoIt'
 ]
 
-export const UnitTestFrameworks = [
+export const TestTools = [
     'JUnit',
     'TestNG',
     'PHPUnit',
@@ -23,8 +23,11 @@ export const UnitTestFrameworks = [
     'CppUnit',
     'GTest',
     'QTest',
+
+    'RobotFramework',
+    'Cypress',
 ]
-export const UnitTestTools = {
+export const BuildTools = {
     junit: ['Maven'],
     testng: ['Maven'],
 }

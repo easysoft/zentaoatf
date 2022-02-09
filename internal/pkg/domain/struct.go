@@ -69,5 +69,6 @@ var (
 	DataEmptyErr  = ErrMsg{5001, "数据为空"}
 	TokenCacheErr = ErrMsg{5002, "TOKEN CACHE 错误"}
 
-	BizErrNameExist = ErrMsg{10100, "biz.err.name_exist"}
+	BizErrNameNotExist   = ErrMsg{10000, "名称不存在"}
+	BizErrProjectNotInit = ErrMsg{10100, "项目未初始化"}
 )

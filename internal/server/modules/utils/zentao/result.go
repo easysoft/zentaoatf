@@ -6,19 +6,21 @@ import (
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	configUtils "github.com/aaronchen2k/deeptest/internal/server/modules/utils/config"
-	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/fatih/color"
 	"os"
 	"strconv"
 )
 
-func CommitResult(report commDomain.ZtfReport, result serverDomain.ZentaoResultSubmitReq, projectPath string) (err error) {
-	report.ProductId, _ = strconv.Atoi(result.ProductId)
-	report.TaskId, _ = strconv.Atoi(result.TaskId)
+func CommitResult(report commDomain.ZtfReport, productId, taskId string, projectPath string) (err error) {
+	report.ProductId, _ = strconv.Atoi(productId)
+	report.TaskId, _ = strconv.Atoi(taskId)
 
 	// for ci tool
 	report.ZentaoData = os.Getenv("ZENTAO_DATA")
 	report.BuildUrl = os.Getenv("BUILD_URL")
+
+	// remove it, will cause zentao testtask not display
+	report.TestType = ""
 
 	config := configUtils.LoadByProjectPath(projectPath)
 	Login(config)

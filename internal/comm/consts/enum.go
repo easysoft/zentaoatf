@@ -103,43 +103,43 @@ func (ExecBy) Get(str string) ExecBy {
 	return ExecBy(str)
 }
 
-type UnitTestFramework string
+type TestTool string
 
 const (
-	JUnit   UnitTestFramework = "junit"
-	TestNG  UnitTestFramework = "testng"
-	PHPUnit UnitTestFramework = "phpunit"
-	PyTest  UnitTestFramework = "pytest"
-	Jest    UnitTestFramework = "jest"
-	CppUnit UnitTestFramework = "cppunit"
-	GTest   UnitTestFramework = "gtest"
-	QTest   UnitTestFramework = "qtest"
+	JUnit   TestTool = "junit"
+	TestNG  TestTool = "testng"
+	PHPUnit TestTool = "phpunit"
+	PyTest  TestTool = "pytest"
+	Jest    TestTool = "jest"
+	CppUnit TestTool = "cppunit"
+	GTest   TestTool = "gtest"
+	QTest   TestTool = "qtest"
 
-	AutoIt         UnitTestFramework = "autoit"
-	Selenium       UnitTestFramework = "selenium"
-	Appium         UnitTestFramework = "appium"
-	RobotFramework UnitTestFramework = "robotframework"
-	Cypress        UnitTestFramework = "cypress"
+	AutoIt         TestTool = "autoit"
+	Selenium       TestTool = "selenium"
+	Appium         TestTool = "appium"
+	RobotFramework TestTool = "robotframework"
+	Cypress        TestTool = "cypress"
 )
 
-func (e UnitTestFramework) String() string {
+func (e TestTool) String() string {
 	return string(e)
 }
-func (UnitTestFramework) Get(str string) UnitTestFramework {
-	return UnitTestFramework(str)
+func (TestTool) Get(str string) TestTool {
+	return TestTool(str)
 }
 
-type UnitTestTool string
+type BuildTool string
 
 const (
-	Maven UnitTestTool = "maven"
+	Maven BuildTool = "maven"
 )
 
-func (e UnitTestTool) String() string {
+func (e BuildTool) String() string {
 	return string(e)
 }
-func (UnitTestTool) Get(str string) UnitTestTool {
-	return UnitTestTool(str)
+func (BuildTool) Get(str string) BuildTool {
+	return BuildTool(str)
 }
 
 type Platform string

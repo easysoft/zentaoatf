@@ -66,7 +66,7 @@ func (r *ProductRepo) FindById(id uint) (po model.Product, err error) {
 
 func (r *ProductRepo) Create(product model.Product) (id uint, err error) {
 	if _, err := r.FindByName(product.Name); !errors.Is(err, gorm.ErrRecordNotFound) {
-		return 0, fmt.Errorf("%d", domain.BizErrNameExist.Code)
+		return 0, fmt.Errorf("%d", domain.BizErrNameNotExist.Code)
 	}
 
 	err = r.DB.Model(&model.Product{}).Create(&product).Error

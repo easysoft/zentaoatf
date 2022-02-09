@@ -7,6 +7,7 @@ import (
 	dateUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/date"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
+	zentaoUtils "github.com/aaronchen2k/deeptest/internal/server/modules/utils/zentao"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12/websocket"
@@ -44,7 +45,10 @@ func ExecUnit(ch chan int, sendOutputMsg,
 
 	report := GenUnitTestReport(req, startTime.Unix(), entTime.Unix(), ch, sendOutputMsg, sendExecMsg, wsMsg)
 	logUtils.Infof("#v", report)
-	//CommitTestResult(report, 0)
+
+	if req.SubmitResult {
+		err = zentaoUtils.CommitResult(report, req.ProductId, "0", req.ProjectPath)
+	}
 
 	return
 }

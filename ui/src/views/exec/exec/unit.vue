@@ -24,8 +24,8 @@
                   </a-select>
                 </a-form-item>
 
-                <a-form-item label="测试框架" v-bind="validateInfos.framework">
-                  <a-select v-model:value="model.framework">
+                <a-form-item label="框架/工具" v-bind="validateInfos.testTool">
+                  <a-select v-model:value="model.testTool">
                     <a-select-option key="" value="">&nbsp;</a-select-option>
                     <a-select-option v-for="item in unitTestFrameworks.list" :key="item" :value="item">
                       {{unitTestFrameworks.map[item]}}
@@ -33,11 +33,11 @@
                   </a-select>
                 </a-form-item>
 
-                <a-form-item label="测试工具" v-if="model.framework=='junit' || model.framework=='testng'"
-                             v-bind="validateInfos.tool">
-                  <a-select v-model:value="model.tool">
+                <a-form-item label="构建工具" v-if="model.testTool=='junit' || model.testTool=='testng'"
+                             v-bind="validateInfos.buildTool">
+                  <a-select v-model:value="model.buildTool">
                     <a-select-option key="" value="">&nbsp;</a-select-option>
-                    <a-select-option v-for="item in unitTestTools.data[model.framework]" :key="item" :value="item">
+                    <a-select-option v-for="item in unitTestTools.data[model.testTool]" :key="item" :value="item">
                       {{unitTestTools.map[item]}}
                     </a-select-option>
                   </a-select>
@@ -85,6 +85,7 @@ import {WebSocket, WsEventName} from "@/services/websocket";
 import {resizeWidth, scroll} from "@/utils/dom";
 import {genExecInfo} from "@/views/exec/service";
 import {getUnitTestFrameworks, getUnitTestTools} from "@/utils/testing";
+import throttle from "lodash.debounce";
 
 interface ExecCasePageSetupData {
   labelCol: any
@@ -123,9 +124,14 @@ export default defineComponent({
       const store = useStore<{zentao: ZentaoData}>();
       const products = computed<any[]>(() => store.state.zentao.products);
 
-      store.dispatch('zentao/fetchProducts')
+      const fetchProducts = throttle((): void => {
+        store.dispatch('zentao/fetchProducts').catch((error) => {
+          if (error.response.data.code === 10100) router.push(`/config`)
+        })
+      }, 600)
+      fetchProducts()
       watch(currConfig, ()=> {
-        store.dispatch('zentao/fetchProducts')
+        fetchProducts()
       })
 
       let init = true;
@@ -163,16 +169,16 @@ export default defineComponent({
         initWsConn()
       })
 
-      const model = reactive<any>({productId: '', tool: '', framework: '', cmd: ''});
+      const model = reactive<any>({productId: '', testTool: '', buildTool: '', cmd: ''});
 
       const rules = reactive({
         productId: [
           { required: true, message: '请选择产品' },
         ],
-        framework: [
-          { required: true, message: '请选择单元测试框架' },
+        testTool: [
+          { required: true, message: '请选择测试工具' },
         ],
-        tool: [
+        buildTool: [
           { required: true, message: '请选择构建工具' },
         ],
         cmd: [

@@ -14,13 +14,13 @@
     <div>
       <a-form :labelCol="{ span: 4 }" :wrapper-col="{span:20}">
         <a-form-item label="项目路径" v-bind="validateInfos.path">
-          <a-input v-model:value="modelRef.path" placeholder="" />
+          <a-input v-model:value="modelRef.path" placeholder="请输入项目所在绝对路径" />
         </a-form-item>
 
         <a-form-item label="项目类型" v-bind="validateInfos.type">
           <a-select v-model:value="modelRef.type">
-            <a-select-option key="func" value="func">ZTF自动化</a-select-option>
-            <a-select-option key="unit" value="unit">单元测试</a-select-option>
+            <a-select-option key="func" value="func">ZTF自动化测试</a-select-option>
+            <a-select-option key="unit" value="unit">其他自动化和单元测试</a-select-option>
           </a-select>
         </a-form-item>
 

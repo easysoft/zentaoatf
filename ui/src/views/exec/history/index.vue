@@ -14,7 +14,7 @@
                 </template>
 
                 <template v-if="currProject.type === 'unit'">
-                  <a-button @click="execUnit" type="primary">执行单元测试</a-button>
+                  <a-button @click="execUnit" type="primary">执行单元或自动化测试</a-button>
                 </template>
               </div>
             </template>
@@ -34,7 +34,7 @@
                   {{ execBy(record) }}
                 </template>
                 <template #startTime="{ record }">
-                  {{ momentTime(record.startTime) }}
+                  <span v-if="record.startTime">{{ momentTime(record.startTime) }}</span>
                 </template>
                 <template #duration="{ record }">
                   {{record.duration}}秒
@@ -71,6 +71,7 @@ import {momentTimeDef, percentDef} from "@/utils/datetime";
 import {execByDef} from "@/utils/testing";
 import {ProjectData} from "@/store/project";
 import {hideMenu} from "@/utils/dom";
+import throttle from "lodash.debounce";
 
 interface ListExecSetupData {
   currProject: ComputedRef;
@@ -78,7 +79,7 @@ interface ListExecSetupData {
   columns: any;
   models: ComputedRef<Execution[]>;
   loading: Ref<boolean>;
-  list:  () => Promise<void>;
+  list:  () => void
   viewResult: (item) => void;
 
   deleteLoading: Ref<string[]>;
@@ -151,11 +152,11 @@ export default defineComponent({
 
       const models = computed<any[]>(() => store.state.History.items);
       const loading = ref<boolean>(true);
-      const list = async (): Promise<void> => {
+      const list = throttle(async () => {
         loading.value = true;
         await store.dispatch('History/list', {});
         loading.value = false;
-      }
+      }, 600)
       list();
 
       watch(currProject, (newProject, oldVal) => {

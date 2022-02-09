@@ -355,7 +355,7 @@ func genReport(productId, id int, by commConsts.ExecBy) (report commDomain.ZtfRe
 		Pass: 0, Fail: 0, Total: 0, FuncResult: make([]commDomain.FuncResult, 0)}
 
 	report.TestType = commConsts.TestFunc
-	report.TestFramework = commConsts.AppServer
+	report.TestTool = commConsts.AppServer
 
 	return
 }

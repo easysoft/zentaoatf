@@ -8,6 +8,7 @@ type WsReq struct {
 	Seq   string                  `json:"seq"`
 	Scope commConsts.ResultStatus `json:"scope"`
 
+	// for ztf testing
 	Cases       []string `json:"cases"`
 	ProductId   string   `json:"productId"`
 	ModuleId    string   `json:"moduleId"`
@@ -15,11 +16,12 @@ type WsReq struct {
 	TaskId      string   `json:"taskId"`
 	ProjectPath string   `json:"projectPath"`
 
-	// for no-ztf testing like unittest etc.
-	Framework    commConsts.UnitTestFramework `json:"framework"`
-	Tool         commConsts.UnitTestTool      `json:"tool"`
-	Cmd          string                       `json:"cmd"`
-	SubmitResult bool                         `json:"submitResult"`
+	// for unit, automation testing
+	TestTool  commConsts.TestTool  `json:"testTool"`
+	BuildTool commConsts.BuildTool `json:"buildTool"`
+	Cmd       string               `json:"cmd"`
+
+	SubmitResult bool `json:"submitResult"`
 }
 
 type WsResp struct {

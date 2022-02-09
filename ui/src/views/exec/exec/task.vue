@@ -69,6 +69,7 @@ import settings from "@/config/settings";
 import {WebSocket, WsEventName} from "@/services/websocket";
 import {resizeWidth, scroll} from "@/utils/dom";
 import {genExecInfo} from "@/views/exec/service";
+import throttle from "lodash.debounce";
 
 interface ExecTaskPageSetupData {
   model: any
@@ -114,9 +115,14 @@ export default defineComponent({
       const products = computed<any[]>(() => store.state.zentao.products);
       const tasks = computed<any[]>(() => store.state.zentao.tasks);
 
-      store.dispatch('zentao/fetchProducts')
-      watch(currConfig, (currConfig)=> {
-        store.dispatch('zentao/fetchProducts')
+      const fetchProducts = throttle((): void => {
+        store.dispatch('zentao/fetchProducts').catch((error) => {
+          if (error.response.data.code === 10100) router.push(`/config`)
+        })
+      }, 600)
+      fetchProducts()
+      watch(currConfig, ()=> {
+        fetchProducts()
       })
 
       const model = reactive<any>({
