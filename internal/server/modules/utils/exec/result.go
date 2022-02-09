@@ -126,7 +126,10 @@ func ValidateCaseResult(scriptFile string, langType string,
 	status := i118Utils.Sprintf(cs.Status.String())
 	msg := fmt.Sprintf(format, idx+1, total, status, path, cs.Id, cs.Title, secs)
 
-	sendExecMsg(msg, "", wsMsg)
+	if commConsts.ComeFrom != "cmd" {
+		sendExecMsg(msg, "", wsMsg)
+	}
+
 	logUtils.ExecConsole(color.FgCyan, msg)
 	logUtils.ExecResult(msg)
 }

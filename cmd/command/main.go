@@ -168,7 +168,7 @@ func run(args []string) {
 			if vari.Interpreter != "" {
 				logUtils.PrintToWithColor(i118Utils.Sprintf("run_with_specific_interpreter", vari.Interpreter), color.FgCyan)
 			}
-			//action.RunZTFTest(files, suiteId, taskId)
+			action.RunZTFTest(files, suiteId, taskId)
 		} else {
 			resUtils.PrintUsage()
 		}

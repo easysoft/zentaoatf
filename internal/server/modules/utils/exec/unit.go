@@ -3,6 +3,7 @@ package scriptUtils
 import (
 	"bufio"
 	"errors"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	dateUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/date"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
@@ -21,7 +22,11 @@ func ExecUnit(ch chan int, sendOutputMsg,
 
 	startTime := time.Now()
 	startMsg := i118Utils.Sprintf("start_execution", req.Cmd, dateUtils.DateTimeStr(startTime))
-	sendExecMsg(startMsg, "", wsMsg)
+
+	if commConsts.ComeFrom != "cmd" {
+		sendExecMsg(startMsg, "", wsMsg)
+	}
+
 	logUtils.ExecConsolef(-1, startMsg)
 	logUtils.ExecFilef(startMsg)
 
@@ -29,7 +34,11 @@ func ExecUnit(ch chan int, sendOutputMsg,
 
 	entTime := time.Now()
 	endMsg := i118Utils.Sprintf("end_execution", req.Cmd, dateUtils.DateTimeStr(entTime))
-	sendExecMsg(endMsg, "false", wsMsg)
+
+	if commConsts.ComeFrom != "cmd" {
+		sendExecMsg(endMsg, "false", wsMsg)
+	}
+
 	logUtils.ExecConsolef(-1, endMsg)
 	logUtils.ExecFilef(endMsg)
 
@@ -95,7 +104,11 @@ func RunUnitTest(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning st
 		select {
 		case <-ch:
 			msg := i118Utils.Sprintf("exit_exec_curr")
-			sendExecMsg(msg, "", wsMsg)
+
+			if commConsts.ComeFrom != "cmd" {
+				sendExecMsg(msg, "", wsMsg)
+			}
+
 			logUtils.ExecConsolef(color.FgCyan, msg)
 			logUtils.ExecFilef(msg)
 

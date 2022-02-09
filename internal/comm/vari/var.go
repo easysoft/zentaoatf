@@ -1,8 +1,10 @@
 package vari
 
+import commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
+
 var (
 	IsDebug bool
-	//Config         = model.Config{}
+	Config  = commDomain.ProjectConf{}
 	//Cui            *gocui.Gui
 	MainViewHeight int
 

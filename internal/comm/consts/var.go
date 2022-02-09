@@ -13,4 +13,5 @@ var (
 	SessionId     string
 	SessionVar    string
 	RequestFix    string
+	ComeFrom      = "cmd"
 )

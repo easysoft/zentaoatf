@@ -3,7 +3,7 @@ package agentViper
 import (
 	"bytes"
 	"fmt"
-	"github.com/aaronchen2k/deeptest/internal/agent/consts"
+	agentConfig "github.com/aaronchen2k/deeptest/internal/agent/config"
 	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	myZap "github.com/aaronchen2k/deeptest/internal/pkg/core/zap"
 	"github.com/fsnotify/fsnotify"
@@ -19,8 +19,8 @@ func Init() {
 	fmt.Printf("配置文件路径为%s\n", config)
 
 	v := viper.New()
-	agentConsts.VIPER = v
-	agentConsts.VIPER.SetConfigType("yaml")
+	agentConfig.VIPER = v
+	agentConfig.VIPER.SetConfigType("yaml")
 
 	if !dir.IsExist(config) { //没有配置文件，写入默认配置
 		var yamlDefault = []byte(`
@@ -39,38 +39,38 @@ zap:
  stacktrace-key: stacktrace
  log-in-console: true`)
 
-		if err := agentConsts.VIPER.ReadConfig(bytes.NewBuffer(yamlDefault)); err != nil {
+		if err := agentConfig.VIPER.ReadConfig(bytes.NewBuffer(yamlDefault)); err != nil {
 			panic(fmt.Errorf("读取默认配置文件错误: %w ", err))
 		}
 
-		if err := agentConsts.VIPER.Unmarshal(&agentConsts.CONFIG); err != nil {
+		if err := agentConfig.VIPER.Unmarshal(&agentConfig.CONFIG); err != nil {
 			panic(fmt.Errorf("同步配置文件错误: %w ", err))
 		}
 
-		if err := agentConsts.VIPER.WriteConfigAs(config); err != nil {
+		if err := agentConfig.VIPER.WriteConfigAs(config); err != nil {
 			panic(fmt.Errorf("写入配置文件错误: %w ", err))
 		}
 		return
 	}
 
 	// 存在配置文件，读取配置文件内容
-	agentConsts.VIPER.SetConfigFile(config)
-	err := agentConsts.VIPER.ReadInConfig()
+	agentConfig.VIPER.SetConfigFile(config)
+	err := agentConfig.VIPER.ReadInConfig()
 	if err != nil {
 		panic(fmt.Errorf("读取配置错误: %w ", err))
 	}
 
 	// 监控配置文件变化
-	agentConsts.VIPER.WatchConfig()
-	agentConsts.VIPER.OnConfigChange(func(e fsnotify.Event) {
+	agentConfig.VIPER.WatchConfig()
+	agentConfig.VIPER.OnConfigChange(func(e fsnotify.Event) {
 		fmt.Println("配置发生变化:", e.Name)
-		if err := agentConsts.VIPER.Unmarshal(&agentConsts.CONFIG); err != nil {
+		if err := agentConfig.VIPER.Unmarshal(&agentConfig.CONFIG); err != nil {
 			fmt.Println(err)
 		}
 	})
-	if err := v.Unmarshal(&agentConsts.CONFIG); err != nil {
+	if err := v.Unmarshal(&agentConfig.CONFIG); err != nil {
 		fmt.Println(err)
 	}
 
-	myZap.ZapInst = agentConsts.CONFIG.Zap
+	myZap.ZapInst = agentConfig.CONFIG.Zap
 }
