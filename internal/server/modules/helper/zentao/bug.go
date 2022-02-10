@@ -9,6 +9,7 @@ import (
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/helper/analysis"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/helper/config"
+	"github.com/bitly/go-simplejson"
 	"github.com/fatih/color"
 	"github.com/jinzhu/copier"
 	uuid "github.com/satori/go.uuid"
@@ -78,7 +79,7 @@ func PrepareBug(projectPath, seq string, caseIdStr string) (bug commDomain.ZtfBu
 				stepIds += step.Id + "_"
 			}
 
-			stepsContent := GetStepText(step)
+			stepsContent := GenBugStepText(step)
 			steps = append(steps, stepsContent)
 		}
 
@@ -91,6 +92,73 @@ func PrepareBug(projectPath, seq string, caseIdStr string) (bug commDomain.ZtfBu
 			OpenedBuild: map[string]string{"0": "trunk"}, CaseVersion: "0", OldTaskID: "0",
 		}
 		return
+	}
+
+	return
+}
+
+func GenBugStepText(step commDomain.StepLog) string {
+	stepResults := make([]string, 0)
+
+	stepTxt := fmt.Sprintf("步骤%s： %s %s\n", step.Id, step.Name, step.Status)
+
+	for _, checkpoint := range step.CheckPoints {
+		text := fmt.Sprintf(
+			"  检查点：%s\n"+
+				"    期待结果：\n"+
+				"      %s\n"+
+				"    实际结果：\n"+
+				"      %s",
+			checkpoint.Status, checkpoint.Expect, checkpoint.Actual)
+
+		stepResults = append(stepResults, text)
+	}
+
+	return stepTxt + strings.Join(stepResults, "\n") + "\n"
+}
+
+func GetBugFiledOptions(req commDomain.FuncResult, projectPath string) (
+	bugFields commDomain.ZentaoBugFields, err error) {
+
+	// field options
+	config := configUtils.LoadByProjectPath(projectPath)
+	ok := Login(config)
+	if !ok {
+		return
+	}
+
+	// $productID, $projectID = 0
+	params := ""
+	if commConsts.RequestType == commConsts.PathInfo {
+		params = fmt.Sprintf("%d-0", req.ProductId)
+	} else {
+		params = fmt.Sprintf("productID=%d", req.ProductId)
+	}
+
+	url := config.Url + GenApiUri("bug", "ajaxGetBugFieldOptions", params)
+	bytes, ok := httpUtils.Get(url)
+	if ok {
+		jsonData := &simplejson.Json{}
+		jsonData, err = simplejson.NewJson(bytes)
+
+		if err != nil {
+			return
+		}
+
+		mp, _ := jsonData.Get("modules").Map()
+		bugFields.Modules = fieldMapToListOrderByInt(mp)
+
+		mp, _ = jsonData.Get("categories").Map()
+		bugFields.Categories = fieldMapToListOrderByStr(mp, false)
+
+		mp, _ = jsonData.Get("versions").Map()
+		bugFields.Versions = fieldMapToListOrderByStr(mp, true)
+
+		mp, _ = jsonData.Get("severities").Map()
+		bugFields.Severities = fieldMapToListOrderByInt(mp)
+
+		arr, _ := jsonData.Get("priorities").Array()
+		bugFields.Priorities = fieldArrToListKeyStr(arr, true)
 	}
 
 	return
