@@ -74,18 +74,18 @@ func main() {
 	flagSet.StringVar(&keywords, "keywords", "", "")
 
 	flagSet.BoolVar(&noNeedConfirm, "y", false, "")
-	flagSet.BoolVar(&vari.Verbose, "verbose", false, "")
+	flagSet.BoolVar(&commConsts.Verbose, "verbose", false, "")
 
-	flagSet.IntVar(&vari.Port, "P", 0, "")
-	flagSet.IntVar(&vari.Port, "port", 0, "")
-	flagSet.StringVar(&vari.Platform, "M", string(commConsts.Vm), "")
+	flagSet.IntVar(&commConsts.Port, "P", 0, "")
+	flagSet.IntVar(&commConsts.Port, "port", 0, "")
+	flagSet.StringVar(&commConsts.Platform, "M", string(commConsts.Vm), "")
 
 	var placeholder string
 	flagSet.StringVar(&placeholder, "h", "", "")
 	flagSet.StringVar(&placeholder, "r", "", "")
 	flagSet.StringVar(&placeholder, "v", "", "")
 
-	flagSet.StringVar(&vari.UnitTestResult, "result", "", "")
+	flagSet.StringVar(&commConsts.UnitTestResult, "result", "", "")
 
 	flagSet.StringVar(&debug, "debug", "", "")
 	actionModule := injectModule()
@@ -101,7 +101,7 @@ func main() {
 
 	case "checkout", "co":
 		if err := flagSet.Parse(os.Args[2:]); err == nil {
-			action.Generate(productId, moduleId, suiteId, taskId, independentFile, language, actionModule)
+			action.Generate(productId, moduleId, suiteId, taskId, independentFile, commConsts.Language, actionModule)
 		}
 
 	case "set", "-set":
@@ -126,7 +126,7 @@ func run(args []string, actionModule *command.IndexModule) {
 
 	if len(args) >= 3 && stringUtils.FindInArr(args[2], _consts.UnitTestTypes) { // unit test
 		// junit -p 1 mvn clean package test
-		vari.UnitTestType = args[2]
+		commConsts.UnitTestType = args[2]
 		end := 8
 		if end > len(args)-1 {
 			end = len(args) - 1
@@ -134,23 +134,23 @@ func run(args []string, actionModule *command.IndexModule) {
 		flagSet.Parse(args[3:])
 
 		start := 3
-		if vari.UnitTestResult != "" {
+		if commConsts.UnitTestResult != "" {
 			start = start + 2
 		} else {
-			vari.UnitTestResult = "./"
+			commConsts.UnitTestResult = "./"
 		}
 		if productId != "" {
 			start = start + 2
-			vari.ProductId = productId
+			commConsts.ProductId = productId
 		}
-		if vari.Verbose {
+		if commConsts.Verbose {
 			start = start + 1
 		}
 
 		if args[start] == _consts.UnitTestToolMvn {
-			vari.UnitTestTool = _consts.UnitTestToolMvn
+			commConsts.UnitTestTool = _consts.UnitTestToolMvn
 		} else if args[start] == _consts.UnitTestToolRobot {
-			vari.UnitTestTool = _consts.UnitTestToolRobot
+			commConsts.UnitTestTool = _consts.UnitTestToolRobot
 		}
 
 		//cmd := strings.Join(args[start:], " ") todo unittest
@@ -161,14 +161,14 @@ func run(args []string, actionModule *command.IndexModule) {
 
 		err := flagSet.Parse(args[len(files)+2:])
 		if err == nil {
-			vari.ProductId = productId
+			commConsts.ProductId = productId
 
 			if len(files) == 0 {
 				files = append(files, ".")
 			}
 
-			if vari.Interpreter != "" {
-				msgStr := i118Utils.Sprintf("run_with_specific_interpreter", vari.Interpreter)
+			if commConsts.Interpreter != "" {
+				msgStr := i118Utils.Sprintf("run_with_specific_interpreter", commConsts.Interpreter)
 				logUtils.ExecConsolef(color.FgCyan, msgStr)
 			}
 			action.RunZTFTest(files, suiteId, taskId, actionModule)
