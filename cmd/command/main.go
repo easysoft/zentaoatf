@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"github.com/aaronchen2k/deeptest/internal/comm/consts"
-	"github.com/aaronchen2k/deeptest/internal/comm/vari"
 	"github.com/aaronchen2k/deeptest/internal/command"
 	"github.com/aaronchen2k/deeptest/internal/command/action"
 	_consts "github.com/aaronchen2k/deeptest/internal/pkg/consts"
@@ -49,8 +48,8 @@ func main() {
 
 	flagSet = flag.NewFlagSet("ztf", flag.ContinueOnError)
 
-	flagSet.StringVar(&vari.Interpreter, "interp", "", "")
-	flagSet.StringVar(&vari.Interpreter, "interpreter", "", "")
+	flagSet.StringVar(&commConsts.Interpreter, "interp", "", "")
+	flagSet.StringVar(&commConsts.Interpreter, "interpreter", "", "")
 
 	flagSet.StringVar(&productId, "p", "", "")
 	flagSet.StringVar(&productId, "product", "", "")

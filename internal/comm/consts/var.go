@@ -47,5 +47,6 @@ var (
 	IP          string
 	MAC         string
 	Port        int
+	Platform    string
 	AgentLogDir string
 )
