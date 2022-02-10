@@ -13,5 +13,6 @@ var (
 	SessionId     string
 	SessionVar    string
 	RequestFix    string
-	ComeFrom      = "server"
+
+	ComeFrom string
 )
