@@ -24,7 +24,7 @@ func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool
 	fileUtils.MkDirIfNeeded(targetDir)
 	modulePath := ""
 	if byModule && moduleId != "0" {
-		modulePath = fmt.Sprintf("%d%s", moduleId, consts.PthSep)
+		modulePath = fmt.Sprintf("%s%s", moduleId, consts.PthSep)
 	}
 
 	content := ""
