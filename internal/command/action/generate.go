@@ -6,21 +6,14 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/command"
 	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
-	"os"
 )
 
 func Generate(productId string, moduleId string, suiteId string, taskId string, independentFile bool, scriptLang string, actionModule *command.IndexModule) {
-
-	isReady := false
 	if (productId != "" || moduleId != "" || suiteId != "" || taskId != "") && scriptLang != "" {
-		isReady = true
+		//isReady = true
 	} else {
 		stdinUtils.InputForCheckout(&productId, &moduleId, &suiteId, &taskId,
 			&independentFile, &scriptLang)
-	}
-	targetDir := "product" + productId + string(os.PathSeparator)
-	if !isReady {
-		targetDir = stdinUtils.GetInput("", targetDir, "where_to_store_script", targetDir)
 	}
 
 	settings := commDomain.SyncSettings{
