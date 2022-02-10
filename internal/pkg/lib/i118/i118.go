@@ -18,7 +18,7 @@ func Init(lang string, app string) {
 	bytes, _ := resUtils.ReadRes(langRes)
 	InitResFromAsset(bytes)
 
-	if lang == "zh" {
+	if lang == "zh-CN" {
 		I118Prt = message.NewPrinter(language.SimplifiedChinese)
 	} else {
 		I118Prt = message.NewPrinter(language.AmericanEnglish)
