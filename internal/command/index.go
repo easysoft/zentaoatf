@@ -23,11 +23,14 @@ func InitConfig() {
 	i118Utils.Init(commConsts.Language, commConsts.AppServer)
 
 	langUtils.GetExtToNameMap()
+
+	commConsts.ComeFrom = "cmd"
 	return
 }
 
 type IndexModule struct {
 	ProjectService *service.ProjectService `inject:""`
+	SyncService    *service.SyncService    `inject:""`
 }
 
 func NewIndexModule() *IndexModule {

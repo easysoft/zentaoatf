@@ -87,7 +87,7 @@ func main() {
 	flagSet.StringVar(&vari.UnitTestResult, "result", "", "")
 
 	flagSet.StringVar(&debug, "debug", "", "")
-
+	actionModule := injectModule()
 	if len(os.Args) == 1 {
 		os.Args = append(os.Args, "run", ".")
 	}
@@ -96,34 +96,32 @@ func main() {
 		debug, os.Args = commonUtils.GetDebugParamForRun(os.Args)
 		os.Setenv("debug", debug)
 		//log.Println("===" + os.Getenv("debug"))
-		run(os.Args)
+		run(os.Args, actionModule)
+
+	case "checkout", "co":
+		if err := flagSet.Parse(os.Args[2:]); err == nil {
+			action.Generate(productId, moduleId, suiteId, taskId, independentFile, commConsts.Language, actionModule)
+		}
+
 	case "set", "-set":
 		action.Set()
+
 	case "help", "-h", "-help", "--help":
 		resUtils.PrintUsage()
 
 	default: // run
-		//flagSet.Parse(os.Args[1:])
-		//if vari.Port != 0 {
-		//	vari.RunMode = constant.RunModeServer
-		//	startServer()
-		//
-		//	return
-		//}
-
 		if len(os.Args) > 1 {
 			args := []string{os.Args[0], "run"}
 			args = append(args, os.Args[1:]...)
 
-			run(args)
+			run(args, actionModule)
 		} else {
 			resUtils.PrintUsage()
 		}
 	}
 }
 
-func run(args []string) {
-	actionModule := injectModule()
+func run(args []string, actionModule *command.IndexModule) {
 
 	if len(args) >= 3 && stringUtils.FindInArr(args[2], _consts.UnitTestTypes) { // unit test
 		// junit -p 1 mvn clean package test
