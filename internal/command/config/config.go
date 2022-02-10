@@ -6,7 +6,7 @@ import (
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
-	"github.com/aaronchen2k/deeptest/internal/comm/vari"
+	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/display"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
@@ -38,8 +38,8 @@ func CheckConfigPermission() {
 
 func InitScreenSize() {
 	w, h := display.GetScreenSize()
-	vari.ScreenWidth = w
-	vari.ScreenHeight = h
+	consts.ScreenWidth = w
+	consts.ScreenHeight = h
 }
 
 func CheckRequestConfig() {
@@ -111,10 +111,10 @@ func InputForSet() {
 
 func PrintCurrConfig() {
 	logUtils.ExecConsole(color.FgCyan, "\n"+i118Utils.Sprintf("current_config"))
-
-	val := reflect.ValueOf(vari.Config)
+	conf := configUtils.LoadByProjectPath(commConsts.WorkDir)
+	val := reflect.ValueOf(conf)
 	typeOfS := val.Type()
-	for i := 0; i < reflect.ValueOf(vari.Config).NumField(); i++ {
+	for i := 0; i < reflect.ValueOf(conf).NumField(); i++ {
 		if !commonUtils.IsWin() && i > 4 {
 			break
 		}
