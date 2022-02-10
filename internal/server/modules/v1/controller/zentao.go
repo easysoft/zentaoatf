@@ -1,10 +1,9 @@
 package controller
 
 import (
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	zentaoUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
-	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
-	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/kataras/iris/v12"
 )
 
@@ -21,63 +20,62 @@ func (c *ZentaoCtrl) ListProduct(ctx iris.Context) {
 
 	data, err := zentaoUtils.ListProduct(projectPath)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.BizErrProjectNotInit.Code, Data: nil,
-			Msg: "获取禅道产品失败，" + err.Error() + "。"})
+		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
 		return
 	}
 
-	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: data, Msg: domain.NoErr.Msg})
+	ctx.JSON(c.SuccessResp(data))
 }
 
 func (c *ZentaoCtrl) ListModule(ctx iris.Context) {
 	projectPath := ctx.URLParam("currProject")
 	productId, err := ctx.URLParamInt("productId")
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
+		c.ErrResp(commConsts.ParamErr, err.Error())
 		return
 	}
 
 	data, err := zentaoUtils.ListModuleForCase(productId, projectPath)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: "获取禅道模块失败"})
+		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
 		return
 	}
 
-	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: data, Msg: domain.NoErr.Msg})
+	ctx.JSON(c.SuccessResp(data))
 }
 
 func (c *ZentaoCtrl) ListSuite(ctx iris.Context) {
 	projectPath := ctx.URLParam("currProject")
 	productId, err := ctx.URLParamInt("productId")
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
+		c.ErrResp(commConsts.ParamErr, err.Error())
 		return
 	}
 
 	data, err := zentaoUtils.ListSuiteByProduct(productId, projectPath)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: "获取禅道套件失败"})
+		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
 		return
 	}
 
-	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: data, Msg: domain.NoErr.Msg})
+	ctx.JSON(c.SuccessResp(data))
 }
 
 func (c *ZentaoCtrl) ListTask(ctx iris.Context) {
 	projectPath := ctx.URLParam("currProject")
 	productId, err := ctx.URLParamInt("productId")
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
+		c.ErrResp(commConsts.ParamErr, err.Error())
 		return
 	}
 
 	data, err := zentaoUtils.ListTaskByProduct(productId, projectPath)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: "获取禅道任务失败"})
+		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
 		return
 	}
 
-	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: data, Msg: domain.NoErr.Msg})
+	ctx.JSON(c.SuccessResp(data))
 }
 
 func (c *ZentaoCtrl) GetDataForBugSubmition(ctx iris.Context) {
@@ -85,28 +83,27 @@ func (c *ZentaoCtrl) GetDataForBugSubmition(ctx iris.Context) {
 
 	req := commDomain.FuncResult{}
 	if err := ctx.ReadJSON(&req); err != nil {
-		logUtils.Errorf("参数验证失败 %s", err.Error())
-		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
+		c.ErrResp(commConsts.ParamErr, err.Error())
 		return
 	}
 
 	fields, err := zentaoUtils.GetBugFiledOptions(req, projectPath)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: "获取禅道缺陷属性失败"})
+		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
 		return
 	}
 
 	data := iris.Map{"fields": fields}
 
-	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: data, Msg: domain.NoErr.Msg})
+	ctx.JSON(c.SuccessResp(data))
 }
 
 func (c *ZentaoCtrl) ListLang(ctx iris.Context) {
 	data, err := zentaoUtils.ListLang()
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
+		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
 		return
 	}
 
-	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: data, Msg: domain.NoErr.Msg})
+	ctx.JSON(c.SuccessResp(data))
 }

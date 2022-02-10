@@ -1,10 +1,8 @@
 package controller
 
 import (
-	"fmt"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
-	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
-	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
 	"strconv"
@@ -24,20 +22,18 @@ func (c *SyncCtrl) SyncFromZentao(ctx iris.Context) {
 
 	req := commDomain.SyncSettings{}
 	err := ctx.ReadJSON(&req)
-
 	if err != nil {
-		logUtils.Errorf("参数验证失败 %s", err.Error())
-		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
+		c.ErrResp(commConsts.ParamErr, err.Error())
 		return
 	}
 
 	err = c.SyncService.SyncFromZentao(req, projectPath)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: c.ErrCode(err), Data: nil})
+		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
 		return
 	}
 
-	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: nil, Msg: domain.NoErr.Msg})
+	ctx.JSON(c.SuccessResp(nil))
 }
 
 func (c *SyncCtrl) SyncToZentao(ctx iris.Context) {
@@ -46,17 +42,15 @@ func (c *SyncCtrl) SyncToZentao(ctx iris.Context) {
 	commitProductId, _ := strconv.Atoi(commitProductIdStr)
 
 	if commitProductId == 0 {
-		msg := fmt.Sprintf("参数验证失败")
-		logUtils.Errorf(msg)
-		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: msg})
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, ""))
 		return
 	}
 
 	err := c.SyncService.SyncToZentao(projectPath, commitProductId)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: c.ErrCode(err), Data: nil})
+		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
 		return
 	}
 
-	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: nil, Msg: domain.NoErr.Msg})
+	ctx.JSON(c.SuccessResp(nil))
 }

@@ -50,19 +50,3 @@ func (d *PageData) Populate(result interface{}, total int64, page, pageSize int)
 	d.Page = page
 	d.PageSize = pageSize
 }
-
-// ErrMsg
-type ErrMsg struct {
-	Code int64  `json:"code"`
-	Msg  string `json:"message"`
-}
-
-var (
-	NoErr      = ErrMsg{0, "请求成功"}
-	RequestErr = ErrMsg{200, "请求失败"}
-	ParamErr   = ErrMsg{100, "参数错误"}
-
-	NeedInitErr          = ErrMsg{1000, "数据未初始化"}
-	BizErrProjectNotInit = ErrMsg{2000, "项目未初始化"}
-	BizErrNameNotExist   = ErrMsg{3000, "未找到该名称的记录"}
-)

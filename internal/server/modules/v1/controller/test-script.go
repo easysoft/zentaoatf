@@ -1,8 +1,9 @@
 package controller
 
 import (
+	"fmt"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
-	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
 )
@@ -20,23 +21,24 @@ func NewTestScriptCtrl() *TestScriptCtrl {
 func (c *TestScriptCtrl) Get(ctx iris.Context) {
 	scriptPath := ctx.URLParam("path")
 	if scriptPath == "" {
-		ctx.JSON(domain.Response{Code: domain.ParamErr.Code, Data: nil, Msg: "参数解析失败"})
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, fmt.Sprintf("参数%s不合法", "path")))
 		return
 	}
 
 	script, err := scriptUtils.GetScriptContent(scriptPath)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: domain.RequestErr.Msg})
+		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
 		return
 	}
-	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: script, Msg: domain.NoErr.Msg})
+	ctx.JSON(c.SuccessResp(script))
 }
 
 // Get 详情
 func (c *TestScriptCtrl) Extract(ctx iris.Context) {
 	scriptPath := ctx.URLParam("path")
+
 	if scriptPath == "" {
-		ctx.JSON(domain.Response{Code: domain.ParamErr.Code, Data: nil, Msg: "参数解析失败"})
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, fmt.Sprintf("参数%s不合法", "path")))
 		return
 	}
 
@@ -44,8 +46,8 @@ func (c *TestScriptCtrl) Extract(ctx iris.Context) {
 
 	script, err := scriptUtils.GetScriptContent(scriptPath)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: domain.RequestErr.Msg})
+		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
 		return
 	}
-	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: script, Msg: domain.NoErr.Msg})
+	ctx.JSON(c.SuccessResp(script))
 }
