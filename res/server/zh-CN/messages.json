@@ -35,6 +35,31 @@
     },
 
     {
+      "id": "ws_namespace_connected",
+      "translation": "WebSocket OnNamespaceConnected: ConnID=%s, Room=%s。"
+    },
+    {
+      "id": "ws_namespace_disconnected",
+      "translation": "WebSocket OnNamespaceDisconnect: ConnID=%s"
+    },
+    {
+      "id": "ws_onchat",
+      "translation": "WebSocket OnChat: remote address=%s, room=%s, wsMsg=%s。"
+    },
+    {
+      "id": "ws_send_exec_msg",
+      "translation": "WebSocket SendExecMsg: room=%s, msg=%s。"
+    },
+    {
+      "id": "ws_connected",
+      "translation": "已成功连接WebSocket。"
+    },
+    {
+      "id": "ws_disconnected",
+      "translation": "已断开WebSocket连接。"
+    },
+
+    {
       "id": "windows_permission",
       "translation": "Windows系统下，需以管理员身份打开cmd命令行窗口。"
     },
@@ -156,7 +181,7 @@
     },
     {
       "id": "case_update_confirm",
-      "translation": "以下用例信息将被更新到禅道:\n %d. %s"
+      "translation": "以下用例信息将被更新到禅道:\n %d, %s"
     },
     {
       "id": "enter_dir",
@@ -181,7 +206,7 @@
     },
     {
       "id": "enter_language",
-      "translation": "请输入你期望使用的语言:\n1. 英文 %s\n2. 中文 %s"
+      "translation": "请输入你期望使用的语言:\n1。 英文 %s\n2。 中文 %s"
     },
     {
       "id": "config_zentao_site",
@@ -201,7 +226,7 @@
     },
     {
       "id": "enter_co_type",
-      "translation": "请选择用例来源\n1. 产品 %s\n2. 套件 %s\n3. 任务 %s"
+      "translation": "请选择用例来源\n1。 产品 %s\n2。 套件 %s\n3。 任务 %s"
     },
     {
       "id": "enter_co_independent",
@@ -345,7 +370,7 @@
     },
     {
       "id": "no_interpreter_for_run",
-      "translation": "未配置%s语言的解释程序，跳过脚本%s."
+      "translation": "未配置%s语言的解释程序，跳过脚本%s。"
     },
 
     {

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/exec"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
@@ -34,7 +35,7 @@ func NewWsCtrl() *WsCtrl {
 func (c *WsCtrl) OnNamespaceConnected(msg websocket.Message) error {
 	c.WebSocketService.SetConn(c.Conn)
 
-	logUtils.Infof("WebSocket OnNamespaceConnected: ConnID=%s, Room=%s", c.Conn.ID(), msg.Room)
+	logUtils.Infof(i118Utils.Sprintf("ws_namespace_connected", c.Conn.ID(), msg.Room))
 
 	data := serverDomain.WsResp{Msg: "from server: connected to websocket"}
 	c.WebSocketService.Broadcast(msg.Namespace, "", "OnVisit", data)
@@ -45,9 +46,9 @@ func (c *WsCtrl) OnNamespaceConnected(msg websocket.Message) error {
 // This will call the "OnVisit" event on all clients, except the current one,
 // it can't because it's left but for any case use this type of design.
 func (c *WsCtrl) OnNamespaceDisconnect(msg websocket.Message) error {
-	logUtils.Infof("WebSocket OnNamespaceDisconnect: ConnID=%s", c.Conn.ID())
+	logUtils.Infof(i118Utils.Sprintf("ws_namespace_disconnected", c.Conn.ID()))
 
-	data := serverDomain.WsResp{Msg: "from server: disconnected to websocket"}
+	data := serverDomain.WsResp{Msg: fmt.Sprintf("ws_connected")}
 	c.WebSocketService.Broadcast(msg.Namespace, "", "OnVisit", data)
 	return nil
 }
@@ -56,7 +57,7 @@ func (c *WsCtrl) OnNamespaceDisconnect(msg websocket.Message) error {
 // including the current one, with the 'newCount' variable.
 func (c *WsCtrl) OnChat(wsMsg websocket.Message) (err error) {
 	ctx := websocket.GetContext(c.Conn)
-	logUtils.Infof("WebSocket OnChat: remote address=%s, room=%s, wsMsg=%s", ctx.RemoteAddr(), wsMsg.Room, string(wsMsg.Body))
+	logUtils.Infof(i118Utils.Sprintf("ws_onchat", ctx.RemoteAddr(), wsMsg.Room, string(wsMsg.Body)))
 
 	req := serverDomain.WsReq{}
 	err = json.Unmarshal(wsMsg.Body, &req)
@@ -121,7 +122,7 @@ func (c *WsCtrl) OnChat(wsMsg websocket.Message) (err error) {
 }
 
 func (c *WsCtrl) SendOutputMsg(msg, isRunning string, wsMsg websocket.Message) {
-	logUtils.Infof("WebSocket SendExecMsg: room=%s, info=%s, msg=%s", wsMsg.Room, msg, string(wsMsg.Body))
+	logUtils.Infof(i118Utils.Sprintf("ws_send_exec_msg", wsMsg.Room, msg, string(wsMsg.Body)))
 
 	msg = strings.Trim(msg, "\n")
 	data := serverDomain.WsResp{Msg: msg, Category: commConsts.Output}

@@ -39,6 +39,31 @@
     },
 
     {
+      "id": "ws_namespace_connected",
+      "translation": "WebSocket OnNamespaceConnected: ConnID=%s, Room=%s."
+    },
+    {
+      "id": "ws_namespace_disconnected",
+      "translation": "WebSocket OnNamespaceDisconnect: ConnID=%s"
+    },
+    {
+      "id": "ws_onchat",
+      "translation": "WebSocket OnChat: remote address=%s, room=%s, wsMsg=%s."
+    },
+    {
+      "id": "ws_send_exec_msg",
+      "translation": "WebSocket SendExecMsg: room=%s, msg=%s."
+    },
+    {
+      "id": "ws_connected",
+      "translation": "You are connected to websocket."
+    },
+    {
+      "id": "ws_disconnected",
+      "translation": "You are disconnected to websocket."
+    },
+
+    {
       "id": "for_example",
       "translation": "e.g. %s"
     },
