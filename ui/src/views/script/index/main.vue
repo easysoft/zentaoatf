@@ -1,7 +1,7 @@
 <template>
   <div class="indexlayout-main-conent">
     <div v-if="currProject.type === 'unit'" class="panel">
-      此为单元测试项目，无脚本显示。
+      {{ t('no_script_for_unittest') }}
     </div>
 
     <div id="main" v-if="currProject.type === 'func'">
@@ -10,8 +10,8 @@
           <div class="left"></div>
           <div class="right">
             <a-button @click="expandAll" type="link">
-              <span v-if="!isExpand">展开全部</span>
-              <span v-if="isExpand">收缩全部</span>
+              <span v-if="!isExpand">{{ t('expand_all') }}</span>
+              <span v-if="isExpand">{{ t('collapse_all') }}</span>
             </a-button>
           </div>
         </div>
@@ -38,7 +38,7 @@
 
       <div id="content">
         <div class="toolbar">
-          <a-button @click="extract" type="primary">提取步骤</a-button>
+          <a-button @click="extract" type="primary">{{ t('extract_step') }}</a-button>
         </div>
         <div class="panel">
           <pre><code>{{ script.code }}</code></pre>

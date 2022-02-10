@@ -14,6 +14,5 @@ export default {
     'save_success': '保存成功',
     'save_fail': '保存失败',
 
-
     'wrong_url': '请输入正确的的URL地址，以http或https开头。',
 };

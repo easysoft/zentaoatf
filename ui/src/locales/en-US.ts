@@ -10,4 +10,9 @@ export default {
     'confirm': 'Confirm',
     'save': 'Save',
     'create': 'Create',
+
+    'save_success': 'Save successfully.',
+    'save_fail': 'Save failed.',
+
+    'wrong_url': 'Please input right ZenTao URL.',
 };
