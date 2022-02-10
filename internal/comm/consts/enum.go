@@ -1,5 +1,20 @@
 package commConsts
 
+type ResponseCode struct {
+	Code int64  `json:"code"`
+	Key  string `json:"message"`
+}
+
+var (
+	Success  = ResponseCode{0, "request_success"}
+	Failure  = ResponseCode{100, "request_failure"}
+	ParamErr = ResponseCode{200, "parm_error"}
+
+	NeedInitErr          = ResponseCode{1000, "data_not_init"}
+	BizErrProjectNotInit = ResponseCode{2000, "project_not_init"}
+	BizErrNameNotExist   = ResponseCode{3000, "record_not_found_by_name"}
+)
+
 type ZentaoRequestType string
 
 const (

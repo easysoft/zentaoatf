@@ -14,6 +14,7 @@ import (
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
+	"strings"
 )
 
 type ProjectService struct {
@@ -43,6 +44,8 @@ func (s *ProjectService) FindByPath(projectPath string) (po model.Project, err e
 }
 
 func (s *ProjectService) Create(project model.Project) (id uint, err error) {
+	project.Path = strings.TrimSpace(project.Path)
+
 	if !fileUtils.IsDir(project.Path) {
 		err = errors.New(fmt.Sprintf("路径为%s不是目录。", project.Path))
 		return

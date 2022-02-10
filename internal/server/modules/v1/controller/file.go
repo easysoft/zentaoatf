@@ -1,12 +1,10 @@
 package controller
 
 import (
-	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
-	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
-	"go.uber.org/zap"
 )
 
 type FileCtrl struct {
@@ -22,18 +20,17 @@ func NewFileCtrl() *FileCtrl {
 func (c *FileCtrl) Upload(ctx iris.Context) {
 	f, fh, err := ctx.FormFile("file")
 	if err != nil {
-		logUtils.Errorf("文件上传失败", zap.String("ctx.FormFile(\"file\")", err.Error()))
-		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
+		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
 		return
 	}
 	defer f.Close()
 
 	data, err := c.FileService.UploadFile(ctx, fh)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
+		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
 		return
 	}
-	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: data, Msg: domain.NoErr.Msg})
+	ctx.JSON(c.SuccessResp(data))
 }
 
 // ListDir 列出目录
@@ -44,6 +41,7 @@ func (c *FileCtrl) ListDir(ctx iris.Context) {
 		var err error
 		parentDir, err = fileUtils.GetUserHome()
 		if err != nil {
+			c.ErrResp(commConsts.Failure, err.Error())
 			return
 		}
 	}
@@ -51,8 +49,8 @@ func (c *FileCtrl) ListDir(ctx iris.Context) {
 	data, err := c.FileService.LoadDirs(parentDir)
 
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
+		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
 		return
 	}
-	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: data, Msg: domain.NoErr.Msg})
+	ctx.JSON(c.SuccessResp(data))
 }

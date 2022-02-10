@@ -2,6 +2,38 @@
   "language": "en-US",
   "messages": [
     {
+    "id": "request_success",
+    "translation": "Success"
+    },
+    {
+      "id": "request_failure",
+      "translation": "Failure"
+    },
+    {
+      "id": "parm_error",
+      "translation": "Parameter error"
+    },
+    {
+      "id": "data_not_init",
+      "translation": "Data not init"
+    },
+    {
+      "id": "project_not_init",
+      "translation": "Project not init"
+    },
+    {
+      "id": "record_not_found_by_name",
+      "translation": "Record not found with name %s"
+    },
+    {
+      "id": "log_seq_not_found:, ",
+      "translation": "Record not found with name %s"
+    },
+    {
+      "id": "parm_not_right:, ",
+      "translation": "Parameter %s not right"
+    },
+    {
       "id": "windows_permission",
       "translation": "In Windows, open cmd window as the admin"
     },

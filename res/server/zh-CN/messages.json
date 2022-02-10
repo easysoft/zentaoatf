@@ -2,6 +2,39 @@
   "language": "zh",
   "messages": [
     {
+      "id": "request_success",
+      "translation": "请求成功"
+    },
+    {
+      "id": "request_failure",
+      "translation": "请求失败"
+    },
+    {
+      "id": "parm_error",
+      "translation": "参数错误"
+    },
+    {
+      "id": "data_not_init",
+      "translation": "数据为初始化"
+    },
+    {
+      "id": "project_not_init",
+      "translation": "项目为初始化"
+    },
+    {
+      "id": "record_not_found_by_name",
+      "translation": "未找到名为%s的记录"
+    },
+    {
+      "id": "log_seq_not_found:, ",
+      "translation": "获取编号为%s的日志失败"
+    },
+    {
+      "id": "parm_not_right:, ",
+      "translation": "参数%s不合法"
+    },
+
+    {
       "id": "windows_permission",
       "translation": "Windows系统下，需以管理员身份打开cmd命令行窗口。"
     },
