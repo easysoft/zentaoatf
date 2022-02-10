@@ -1,9 +1,10 @@
 package commConsts
 
 const (
-	App       = "ztf"
-	AppServer = "server"
-	AppAgent  = "agent"
+	App        = "ztf"
+	AppServer  = "server"
+	AppAgent   = "agent"
+	AppCommand = "cmd"
 
 	ConfigVersion = "3.0"
 	ConfigDir     = "conf"

@@ -60,3 +60,12 @@ func GetFieldVal(config commDomain.ProjectConf, key string) string {
 
 	return val
 }
+
+func SetFieldVal(config *commDomain.ProjectConf, key string, val string) string {
+	key = stringUtils.UcFirst(key)
+
+	mutable := reflect.ValueOf(config).Elem()
+	mutable.FieldByName(key).SetString(val)
+
+	return val
+}

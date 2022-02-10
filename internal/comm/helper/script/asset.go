@@ -7,9 +7,11 @@ import (
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
+	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/kataras/iris/v12"
 	"io/ioutil"
+	"path"
 	"regexp"
 )
 
@@ -141,4 +143,21 @@ func addDir(pth string, parent *serverDomain.TestAsset) (dirNode *serverDomain.T
 	parent.Children = append(parent.Children, dirNode)
 
 	return
+}
+
+func GetScriptType(scripts []string) []string {
+	exts := make([]string, 0)
+	for _, script := range scripts {
+		ext := path.Ext(script)
+		if ext != "" {
+			ext = ext[1:]
+			name := langUtils.ScriptExtToNameMap[ext]
+
+			if !stringUtils.FindInArr(name, exts) {
+				exts = append(exts, name)
+			}
+		}
+	}
+
+	return exts
 }
