@@ -4,9 +4,9 @@
  */
 import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { notification } from "ant-design-vue";
-import router from '@/config/routes';
 import settings from '@/config/settings';
 import { getCache, setCache } from '@/utils/localCache';
+import i18n from "@/config/i18n";
 
 export interface ResponseData {
     code: number;
@@ -98,7 +98,7 @@ request.interceptors.request.use(
         config.params = { ...config.params, ts: Date.now() };
         if (!config.params.currProject) {
             const projectPath = await getCache(settings.currProject);
-            config.params = { ...config.params, currProject: projectPath };
+            config.params = { ...config.params, currProject: projectPath, lang: i18n.global.locale.value };
         }
 
         console.log('=== request ===', config.url, config)

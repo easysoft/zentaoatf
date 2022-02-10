@@ -33,13 +33,13 @@ func (c *ZentaoCtrl) ListModule(ctx iris.Context) {
 	projectPath := ctx.URLParam("currProject")
 	productId, err := ctx.URLParamInt("productId")
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
 
 	data, err := zentaoUtils.ListModuleForCase(productId, projectPath)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: "获取禅道模块失败"})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: "获取禅道模块失败"})
 		return
 	}
 
@@ -50,13 +50,13 @@ func (c *ZentaoCtrl) ListSuite(ctx iris.Context) {
 	projectPath := ctx.URLParam("currProject")
 	productId, err := ctx.URLParamInt("productId")
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
 
 	data, err := zentaoUtils.ListSuiteByProduct(productId, projectPath)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: "获取禅道套件失败"})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: "获取禅道套件失败"})
 		return
 	}
 
@@ -67,13 +67,13 @@ func (c *ZentaoCtrl) ListTask(ctx iris.Context) {
 	projectPath := ctx.URLParam("currProject")
 	productId, err := ctx.URLParamInt("productId")
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
 
 	data, err := zentaoUtils.ListTaskByProduct(productId, projectPath)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: "获取禅道任务失败"})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: "获取禅道任务失败"})
 		return
 	}
 
@@ -86,13 +86,13 @@ func (c *ZentaoCtrl) GetDataForBugSubmition(ctx iris.Context) {
 	req := commDomain.FuncResult{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		logUtils.Errorf("参数验证失败 %s", err.Error())
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
 
 	fields, err := zentaoUtils.GetBugFiledOptions(req, projectPath)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: "获取禅道缺陷属性失败"})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: "获取禅道缺陷属性失败"})
 		return
 	}
 
@@ -104,7 +104,7 @@ func (c *ZentaoCtrl) GetDataForBugSubmition(ctx iris.Context) {
 func (c *ZentaoCtrl) ListLang(ctx iris.Context) {
 	data, err := zentaoUtils.ListLang()
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
 

@@ -23,7 +23,6 @@ import (
 )
 
 var (
-	language        string
 	independentFile bool
 	keywords        string
 
@@ -64,8 +63,8 @@ func main() {
 	flagSet.StringVar(&taskId, "t", "", "")
 	flagSet.StringVar(&taskId, "taskId", "", "")
 
-	flagSet.StringVar(&language, "l", "", "")
-	flagSet.StringVar(&language, "language", "", "")
+	flagSet.StringVar(&commConsts.Language, "l", "", "")
+	flagSet.StringVar(&commConsts.Language, "language", "", "")
 
 	flagSet.BoolVar(&independentFile, "i", false, "")
 	flagSet.BoolVar(&independentFile, "independent", false, "")

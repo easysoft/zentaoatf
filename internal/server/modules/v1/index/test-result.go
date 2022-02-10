@@ -19,6 +19,7 @@ func NewTestResultModule() *TestResultModule {
 func (m *TestResultModule) Party() module.WebModule {
 	handler := func(index iris.Party) {
 		index.Use(middleware.InitCheck())
+
 		index.Post("/", m.TestResultCtrl.Submit).Name = "提交测试结果"
 	}
 	return module.NewModule("/result", handler)

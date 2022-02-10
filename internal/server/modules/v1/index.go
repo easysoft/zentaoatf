@@ -16,15 +16,12 @@ type IndexModule struct {
 	ZentaoModule  *index.ZentaoModule  `inject:""`
 	ConfigModule  *index.ConfigModule  `inject:""`
 	SyncModule    *index.SyncModule    `inject:""`
-	ProductModule *index.ProductModule `inject:""`
 	ProjectModule *index.ProjectModule `inject:""`
 
 	TestScriptModule *index.TestScriptModule `inject:""`
 	TestExecModule   *index.TestExecModule   `inject:""`
 	TestResultModule *index.TestResultModule `inject:""`
 	TestBugModule    *index.TestBugModule    `inject:""`
-	TestSuiteModule  *index.TestSuiteModule  `inject:""`
-	TestSetModule    *index.TestSetModule    `inject:""`
 }
 
 func NewIndexModule() *IndexModule {

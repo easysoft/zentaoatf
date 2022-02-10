@@ -1,11 +1,10 @@
 package serverDomain
 
-import (
-	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
-)
+type TestScript struct {
+	Version int    `json:"version"`
+	Name    string `json:"name"`
+	Code    string `json:"code"`
+	Desc    string `json:"desc"`
 
-type TestScriptReqPaginate struct {
-	domain.PaginateReq
-	Keywords string `json:"keywords"`
-	Enabled  string `json:"enabled"`
+	ProjectId uint `json:"projectId"`
 }

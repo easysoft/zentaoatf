@@ -30,7 +30,7 @@ func (c *TestResultCtrl) Submit(ctx iris.Context) {
 
 	err = c.TestResultService.Submit(req, projectPath)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.CommonErr.Code, Msg: err.Error()})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Msg: err.Error()})
 		return
 	}
 

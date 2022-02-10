@@ -17,7 +17,7 @@ const (
 
 	funcRegex               = `(?U)e\(['"](.+)['"]\)`
 	singleLineCommentsRegex = `.*(?://|#)(.+)$`
-	mutiLineCommentsRegex   = `/\*+(.+)\*+/`
+	multiLineCommentsRegex  = `/\*+(.+)\*+/`
 )
 
 func Extract(scriptPaths []string) error {
@@ -146,7 +146,7 @@ func extractFromComments(file string) (stepObjs []*commDomain.ZtfStep) {
 				if len(arr3) > 1 { // find single line comments on top
 					desc = strings.TrimSpace(arr3[1])
 				} else {
-					myExp := regexp.MustCompile(mutiLineCommentsRegex)
+					myExp := regexp.MustCompile(multiLineCommentsRegex)
 					arr4 := myExp.FindStringSubmatch(preLine)
 					if len(arr4) > 1 { // find muti line comments on top
 						desc = strings.TrimSpace(arr4[1])

@@ -19,6 +19,7 @@ func NewSyncModule() *SyncModule {
 func (m *SyncModule) Party() module.WebModule {
 	handler := func(index iris.Party) {
 		index.Use(middleware.InitCheck())
+
 		index.Post("/syncFromZentao", m.SyncCtrl.SyncFromZentao).Name = "从禅道导出脚本"
 		index.Post("/syncToZentao", m.SyncCtrl.SyncToZentao).Name = "更新脚本到禅道"
 	}

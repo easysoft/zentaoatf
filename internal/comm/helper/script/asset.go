@@ -8,7 +8,6 @@ import (
 	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/kataras/iris/v12"
 	"io/ioutil"
 	"regexp"
@@ -37,7 +36,7 @@ func LoadScriptByProject(projectPath string) (scriptFiles []string) {
 	return
 }
 
-func GetScriptContent(pth string) (script model.TestScript, err error) {
+func GetScriptContent(pth string) (script serverDomain.TestScript, err error) {
 	script.Code = fileUtils.ReadFile(pth)
 
 	return

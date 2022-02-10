@@ -12,8 +12,7 @@ import (
 )
 
 type TestExecService struct {
-	TestExecRepo *repo.TestExecRepo `inject:""`
-	ProjectRepo  *repo.ProjectRepo  `inject:""`
+	ProjectRepo *repo.ProjectRepo `inject:""`
 }
 
 func NewTestExecService() *TestExecService {
