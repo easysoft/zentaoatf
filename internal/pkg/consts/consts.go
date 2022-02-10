@@ -19,13 +19,6 @@ var (
 	ExtNameJson   = "json"
 	ExtNameResult = "txt"
 
-	LanguageDefault = "en"
-	LanguageEN      = "en"
-	LanguageZH      = "zh"
-
-	EnRes = fmt.Sprintf("res%smessages_en.json", PthSep)
-	ZhRes = fmt.Sprintf("res%smessages_zh.json", PthSep)
-
 	LogDir = fmt.Sprintf("log%s", PthSep)
 
 	LeftWidth = 36

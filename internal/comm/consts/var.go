@@ -1,7 +1,10 @@
 package commConsts
 
 var (
-	Language   = "zh-CN"
+	LanguageZh = "zh"
+	LanguageEn = "en"
+	Language   = LanguageZh
+
 	Verbose    = true
 	IsRelease  bool
 	ExeDir     string

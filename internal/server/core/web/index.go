@@ -7,7 +7,6 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	"github.com/aaronchen2k/deeptest/internal/server/config"
-	"github.com/aaronchen2k/deeptest/internal/server/core/log"
 	"github.com/aaronchen2k/deeptest/internal/server/core/module"
 	myWs "github.com/aaronchen2k/deeptest/internal/server/modules/v1/controller"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
@@ -59,9 +58,9 @@ type WebServer struct {
 // Init 初始化web服务
 func Init() *WebServer {
 	serverConfig.Init()
-	serverLog.Init()
-
+	serverConfig.InitLog()
 	i118Utils.Init(commConsts.Language, commConsts.AppServer)
+
 	langUtils.GetExtToNameMap()
 
 	app := iris.New()

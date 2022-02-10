@@ -72,7 +72,7 @@ func InputForSet() {
 		numb = "1"
 	}
 	zhCheck := ""
-	if conf.Language == "zh" {
+	if conf.Language == commConsts.LanguageZh {
 		zhCheck = "*"
 		numb = "2"
 	}
@@ -80,9 +80,9 @@ func InputForSet() {
 	numbSelected := stdinUtils.GetInput("(1|2)", numb, "enter_language", enCheck, zhCheck)
 
 	if numbSelected == "1" {
-		conf.Language = "en"
+		conf.Language = commConsts.LanguageEn
 	} else {
-		conf.Language = "zh"
+		conf.Language = commConsts.LanguageZh
 	}
 
 	stdinUtils.InputForBool(&configSite, true, "config_zentao_site")

@@ -1,9 +1,8 @@
-package serverLog
+package serverConfig
 
 import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
 	"log"
 	"path/filepath"
 
@@ -12,9 +11,9 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-func Init() {
-	if !dir.IsExist(serverConfig.CONFIG.Zap.Director) { // 判断是否有Director文件夹
-		dir.InsureDir(serverConfig.CONFIG.Zap.Director)
+func InitLog() {
+	if !dir.IsExist(CONFIG.Zap.Director) { // 判断是否有Director文件夹
+		dir.InsureDir(CONFIG.Zap.Director)
 	}
 
 	config := getLogConfig()
@@ -66,7 +65,7 @@ func InitExecLog(projectPath string) {
 func getLogConfig() (config zap.Config) {
 	var level zapcore.Level
 
-	switch serverConfig.CONFIG.Zap.Level { // 初始化配置文件的Level
+	switch CONFIG.Zap.Level { // 初始化配置文件的Level
 	case "debug":
 		level = zap.DebugLevel
 	case "info":
