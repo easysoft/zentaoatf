@@ -68,7 +68,7 @@ func GetConfig(baseUrl string) bool {
 	commConsts.SessionId, _ = json.Get("sessionID").String()
 	commConsts.SessionVar, _ = json.Get("sessionVar").String()
 	requestType, _ := json.Get("requestType").String()
-	commConsts.RequestType = commConsts.ZentaoRequestType(requestType)
+	commConsts.RequestType = requestType
 	commConsts.RequestFix, _ = json.Get("requestFix").String()
 
 	// check site path by calling login interface

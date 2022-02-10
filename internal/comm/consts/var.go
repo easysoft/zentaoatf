@@ -10,12 +10,42 @@ var (
 	ExeDir     string
 	WorkDir    string
 	ExecLogDir string
+	LogDir     string
 
-	RequestType   ZentaoRequestType
+	RequestType string
+	ComeFrom    string
+)
+
+var (
+	ConfigPath       string
+	ServerWorkDir    string
+	ServerProjectDir string
+
+	UnitTestType    string
+	UnitTestTool    string
+	UnitTestResult  string
+	UnitTestResults = "results"
+	ProductId       string
+
 	ZenTaoVersion string
-	SessionId     string
 	SessionVar    string
+	SessionId     string
 	RequestFix    string
 
-	ComeFrom string
+	ScriptExtToNameMap map[string]string
+	CurrScriptFile     string // scripts/tc-001.py
+	CurrResultDate     string // 2019-08-15T173802
+	CurrCaseId         int    // 2019-08-15T173802
+
+	ScreenWidth    int
+	ScreenHeight   int
+	CurrBugStepIds string
+	Interpreter    string
+
+	// server
+	RunMode     string
+	IP          string
+	MAC         string
+	Port        int
+	AgentLogDir string
 )

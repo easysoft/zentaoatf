@@ -17,4 +17,7 @@ const (
 	ResultZip    = "result.zip"
 
 	ExpectResultPass = "pass"
+
+	PathInfo = "PATH_INFO"
+	Get      = "GET"
 )

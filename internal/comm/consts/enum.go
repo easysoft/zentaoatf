@@ -15,18 +15,6 @@ var (
 	BizErrNameNotExist   = ResponseCode{3000, "record_not_found_by_name"}
 )
 
-type ZentaoRequestType string
-
-const (
-	PathInfo ZentaoRequestType = "PATH_INFO"
-	Get      ZentaoRequestType = "GET"
-	Empty    ZentaoRequestType = ""
-)
-
-func (e ZentaoRequestType) String() string {
-	return string(e)
-}
-
 type ResultStatus string
 
 const (
