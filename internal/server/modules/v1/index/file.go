@@ -20,6 +20,7 @@ func NewFileModule() *FileModule {
 func (m *FileModule) Party() module.WebModule {
 	handler := func(index iris.Party) {
 		index.Use(middleware.InitCheck())
+
 		index.Post("/upload", iris.LimitRequestBodySize(serverConfig.CONFIG.MaxSize+1<<20), m.FileCtrl.Upload).Name = "上传文件"
 		index.Get("/listDir", m.FileCtrl.ListDir).Name = "获取目录文件"
 	}

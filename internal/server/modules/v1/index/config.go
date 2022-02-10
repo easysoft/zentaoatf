@@ -19,6 +19,7 @@ func NewConfigModule() *ConfigModule {
 func (m *ConfigModule) Party() module.WebModule {
 	handler := func(index iris.Party) {
 		index.Use(middleware.InitCheck())
+
 		index.Post("/saveConfig", m.ConfigCtrl.SaveConfig).Name = "保存项目配置"
 	}
 	return module.NewModule("/config", handler)
