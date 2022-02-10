@@ -1,16 +1,16 @@
 <template>
 
-  <a-card title="修改配置">
+  <a-card :title="t('edit_config')">
     <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-item label="禅道地址" v-bind="validateInfos.url">
+      <a-form-item :label="t('zentao_url')" v-bind="validateInfos.url">
         <a-input v-model:value="model.url"
                  @blur="validate('url', { trigger: 'blur' }).catch(() => {})" placeholder="https://zentao.site.com" />
       </a-form-item>
-      <a-form-item label="用户名" v-bind="validateInfos.username">
+      <a-form-item :label="t('username')" v-bind="validateInfos.username">
         <a-input v-model:value="model.username"
                  @blur="validate('username', { trigger: 'blur' }).catch(() => {})" placeholder="" />
       </a-form-item>
-      <a-form-item label="密码" v-bind="validateInfos.password">
+      <a-form-item :label="t('password')" v-bind="validateInfos.password">
         <a-input v-model:value="model.password"
                  @blur="validate('password', { trigger: 'blur' }).catch(() => {})" placeholder="" />
       </a-form-item>
@@ -18,10 +18,10 @@
       <a-form-item v-if="currProject.type === 'func' && currConfigRef.isWin" label="执行器">
         <div>
           <a-row class="interpreter-header">
-            <a-col :span="4" class="t-center t-bord">语言</a-col>
-            <a-col :span="18" class="t-center t-bord">解析器</a-col>
+            <a-col :span="4" class="t-center t-bord">{{t('script_lang')}}</a-col>
+            <a-col :span="18" class="t-center t-bord">{{t('interpreter')}}</a-col>
             <a-col :span="2" class="t-center t-bord">
-              <a-button @click="addInterpreter" type="link" size="small">新建</a-button>
+              <a-button @click="addInterpreter" type="link" size="small">{{ t('create') }}</a-button>
             </a-col>
           </a-row>
 
@@ -42,8 +42,8 @@
       </a-form-item>
 
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click.prevent="submitForm">保存</a-button> &nbsp;
-        <a-button style="margin-left: 10px" @click="resetFields">重置</a-button>
+        <a-button type="primary" @click.prevent="submitForm">{{t('save')}}</a-button> &nbsp;
+        <a-button style="margin-left: 10px" @click="resetFields">{{t('reset')}}</a-button>
       </a-form-item>
     </a-form>
 
@@ -163,21 +163,21 @@ export default defineComponent({
           trigger: 'blur',
           validator: async (rule: any, value: string) => {
             if (value === '' || !value) {
-              throw new Error('请输入禅道地址');
+              throw new Error(t('pls_zentao_url'));
             }
 
             const regx = /(http?|https):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/i
             if (!regx.test(value)) {
-              throw new Error('请输入http或https开头的禅道地址');
+              throw new Error(t('wrong_url'));
             }
           }
         },
       ],
       username: [
-        { required: true, message: '请输入用户名', trigger: 'blur' },
+        { required: true, message: t('pls_username'), trigger: 'blur' },
       ],
       password: [
-        { required: true, message: '请输入密码', trigger: 'blur' },
+        { required: true, message: t('pls_password'), trigger: 'blur' },
       ],
     });
 
@@ -188,15 +188,13 @@ export default defineComponent({
           setInterpreter(model, interpreters)
           console.log(model);
           store.dispatch('project/saveConfig', model).then((json) => {
-            console.log('json', json)
-
             if (json.code === 0) {
               notification.success({
-                message: `保存配置成功`,
+                message: t('save_success'),
               });
             } else {
               notification.error({
-                message: `保存配置失败`,
+                message: t('save_fail'),
                 description: json.msg,
               });
             }

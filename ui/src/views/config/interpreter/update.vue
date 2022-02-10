@@ -2,21 +2,21 @@
   <a-modal
       :destroy-on-close="true"
       :mask-closable="false"
-      title="编辑解析器"
+      :title="t('edit_interpreter')"
       :visible="visible"
       :onCancel="onCancel"
       width="600px"
   >
     <template #footer>
-      <a-button key="submit" type="primary" :loading="onSubmitLoading" @click="onFinish">提交</a-button>
-      <a-button key="back" @click="() => onCancel()">取消</a-button>
+      <a-button key="submit" type="primary" :loading="onSubmitLoading" @click="onFinish">{{t('save')}}</a-button>
+      <a-button key="back" @click="() => onCancel()">{{t('cancel')}}</a-button>
     </template>
 
     <a-form :labelCol="{ span: 4 }" :wrapper-col="{span:20}">
-      <a-form-item label="脚本语言" v-bind="validateInfos.lang">
+      <a-form-item :label="t('script_lang')" v-bind="validateInfos.lang">
         {{languageMap[modelRef.lang]}}
       </a-form-item>
-      <a-form-item label="解析器路径" v-bind="validateInfos.val">
+      <a-form-item :label="t('interpreter_path')" v-bind="validateInfos.val">
         <a-input v-model:value="modelRef.val" placeholder=""/>
       </a-form-item>
     </a-form>
@@ -70,16 +70,14 @@ export default defineComponent({
   setup(props): UpdateInterpreterFormSetupData {
     const {t} = useI18n();
 
-    console.log('props.model', props.model)
-
     let modelRef = reactive<any>({
       lang: props.model.value.lang || '',
       val: props.model.value.val || '',
     });
 
     const rulesRef = reactive({
-      lang: [{required: true, message: '请输入语言'}],
-      val: [{required: true, message: '请输入解析器可执行文件路径'}],
+      lang: [{required: true, message: 'pls_input_lang'}],
+      val: [{required: true, message: t('pls_input_interpreter_path')}],
     });
 
     const {resetFields, validate, validateInfos} = useForm(modelRef, rulesRef);
