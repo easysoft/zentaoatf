@@ -35,5 +35,6 @@ func Init() {
 	if err := VIPER.Unmarshal(&CONFIG); err != nil {
 		panic(fmt.Errorf("同步配置文件错误: %w ", err))
 	}
+
 	return
 }
