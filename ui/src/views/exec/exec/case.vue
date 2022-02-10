@@ -79,10 +79,12 @@ import {PrefixSpace, resizeWidth, scroll} from "@/utils/dom";
 import {genExecInfo, get, getCaseIdsFromReport} from "@/views/exec/service";
 import {WsMsg} from "@/views/exec/data";
 import throttle from "lodash.debounce";
+import {useI18n} from "vue-i18n";
 
 const useForm = Form.useForm;
 
 interface ExecCasePageSetupData {
+  t: (key: string | number) => string;
   model: any
   seq: string
 
@@ -111,6 +113,8 @@ export default defineComponent({
     IconSvg
   },
   setup(): ExecCasePageSetupData {
+    const { t } = useI18n();
+
     const router = useRouter();
     let seq = router.currentRoute.value.params.seq  as string
     seq = seq === '-' ? '' : seq
@@ -259,6 +263,7 @@ export default defineComponent({
     }
 
     return {
+      t,
       model,
       seq,
 

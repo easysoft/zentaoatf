@@ -86,8 +86,10 @@ import {resizeWidth, scroll} from "@/utils/dom";
 import {genExecInfo} from "@/views/exec/service";
 import {getUnitTestFrameworks, getUnitTestTools} from "@/utils/testing";
 import throttle from "lodash.debounce";
+import {useI18n} from "vue-i18n";
 
 interface ExecCasePageSetupData {
+  t: (key: string | number) => string;
   labelCol: any
   wrapperCol: any
 
@@ -113,6 +115,8 @@ export default defineComponent({
     components: {
     },
     setup(): ExecCasePageSetupData {
+      const { t } = useI18n();
+
       const router = useRouter();
 
       const unitTestFrameworks = getUnitTestFrameworks()
@@ -229,6 +233,7 @@ export default defineComponent({
       }
 
       return {
+        t,
         labelCol: { span: 6 },
         wrapperCol: { span: 16 },
 

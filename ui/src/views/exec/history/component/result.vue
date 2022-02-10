@@ -39,9 +39,11 @@ import {Interpreter} from "@/views/config/data";
 import { validateInfos } from 'ant-design-vue/lib/form/useForm';
 import {message, Form} from 'ant-design-vue';
 import {queryProduct, queryTask} from "@/services/zentao";
+import {useI18n} from "vue-i18n";
 const useForm = Form.useForm;
 
 interface ResultFormSetupData {
+  t: (key: string | number) => string;
   modelRef: Ref<Interpreter>
   onFinish: () => Promise<void>;
 
@@ -72,6 +74,8 @@ export default defineComponent({
   components: {},
 
   setup(props): ResultFormSetupData {
+    const { t } = useI18n();
+
     const rules = reactive({
       productId: [
         { required: true, message: '请选择产品' },
@@ -112,6 +116,7 @@ export default defineComponent({
     })
 
     return {
+      t,
       labelCol: { span: 6 },
       wrapperCol: { span: 16 },
       rules,

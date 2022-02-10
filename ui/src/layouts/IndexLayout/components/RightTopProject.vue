@@ -28,8 +28,10 @@ import {ProjectData} from "@/store/project";
 import ProjectCreateForm from "@/views/component/project/create.vue";
 import {createProject} from "@/services/project";
 import {hideMenu} from "@/utils/dom";
+import {useI18n} from "vue-i18n";
 
 interface RightTopProject {
+  t: (key: string | number) => string;
   projects: ComputedRef<any[]>;
   currProject: ComputedRef;
 
@@ -44,6 +46,8 @@ export default defineComponent({
   name: 'RightTopProject',
   components: {ProjectCreateForm},
   setup(): RightTopProject {
+    const { t } = useI18n();
+
     const router = useRouter();
     const store = useStore<{ project: ProjectData }>();
 
@@ -99,6 +103,7 @@ export default defineComponent({
     }
 
     return {
+      t,
       selectProject,
       projects,
       currProject,

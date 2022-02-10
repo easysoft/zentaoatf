@@ -98,8 +98,10 @@ import {jsonStrDef} from "@/utils/dom";
 import {notification} from "ant-design-vue";
 import {submitResultToZentao} from "@/views/exec/service";
 import ResultForm from './component/result.vue'
+import {useI18n} from "vue-i18n";
 
 interface UnitTestResultPageSetupData {
+  t: (key: string | number) => string;
   report: Ref;
   columns: any[]
 
@@ -134,6 +136,8 @@ export default defineComponent({
   },
 
   setup(): UnitTestResultPageSetupData {
+    const { t } = useI18n();
+
     const execBy = execByDef
     const momentTime = momentTimeDef
     const percent = percentDef
@@ -253,6 +257,7 @@ export default defineComponent({
     })
 
     return {
+      t,
       report,
       columns,
       loading,

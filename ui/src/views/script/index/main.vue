@@ -57,8 +57,10 @@ import {ScriptData} from "../store";
 import {resizeWidth} from "@/utils/dom";
 import throttle from "lodash.debounce";
 import {message, notification} from "ant-design-vue";
+import {useI18n} from "vue-i18n";
 
 interface ListScriptPageSetupData {
+  t: (key: string | number) => string;
   currProject: ComputedRef;
   treeData: ComputedRef<any[]>;
   replaceFields: any,
@@ -80,6 +82,8 @@ export default defineComponent({
     IconSvg
   },
   setup(): ListScriptPageSetupData {
+    const { t } = useI18n();
+
     const replaceFields = {
       key: 'path',
     };
@@ -154,6 +158,7 @@ export default defineComponent({
     }
 
     return {
+      t,
       currProject,
       treeData,
       replaceFields,

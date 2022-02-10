@@ -92,6 +92,7 @@ import IconSvg from "@/components/IconSvg/index";
 import throttle from "lodash.debounce";
 
 interface ConfigFormSetupData {
+  t: (key: string | number) => string;
   currProject: ComputedRef;
 
   currConfigRef: Ref
@@ -245,6 +246,7 @@ export default defineComponent({
     }
 
     return {
+      t,
       labelCol: { span: 4 },
       wrapperCol: { span: 14 },
       currConfigRef,

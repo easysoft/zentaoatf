@@ -37,6 +37,7 @@ import {Interpreter} from "@/views/config/data";
 const useForm = Form.useForm;
 
 interface CreateInterpreterFormSetupData {
+  t: (key: string | number) => string;
   modelRef: Ref<Interpreter>
   validateInfos: validateInfos;
   onFinish: () => Promise<void>;
@@ -89,6 +90,7 @@ export default defineComponent({
         }
         
         return {
+          t,
           modelRef,
           validateInfos,
           onFinish

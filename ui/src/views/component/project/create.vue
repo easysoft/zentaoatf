@@ -39,6 +39,7 @@ import {Form} from "ant-design-vue";
 import { validateInfos } from 'ant-design-vue/lib/form/useForm';
 
 interface ProjectCreateFormSetupData {
+  t: (key: string | number) => string;
   modelRef: Ref<Interpreter>
   validateInfos: validateInfos
   onFinish: () => Promise<void>;
@@ -87,6 +88,7 @@ export default defineComponent({
     })
 
     return {
+      t,
       modelRef,
       validateInfos,
       onFinish

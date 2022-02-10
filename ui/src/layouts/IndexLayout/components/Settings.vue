@@ -1,6 +1,6 @@
 <template>
-    <div 
-        :style="{
+  <div
+      :style="{
           position: 'fixed',
           display: 'block',
           width: '45px',
@@ -13,100 +13,104 @@
           cursor: 'pointer',
           borderRadius: '5px 0 0 5px',
         }"
-        @click="show" 
-    >
-        <SettingOutlined :style="{ fontSize: '20px', color: '#fcfcfc' }" />
-    </div>
-    <a-drawer
-        title="系统布局配置"
-        :visible="visible"
-        @close="close"
-        :bodyStyle="{ padding: '10px' }"
-    >
-        <a-list size="small">
-            <a-list-item>
-                <template #actions>
-                    <a-switch :checked="topNavEnable" @change="onChangeTopNavEnable" />
-                </template>
-                启用顶部导航
-            </a-list-item>
-            <a-list-item>
-                <template #actions>
-                    <a-switch :checked="headFixed" @change="onChangeHeadFixed" :disabled="disabledHeadFixed" />
-                </template>
-                固定右侧头部
-            </a-list-item>
-        </a-list>
-    </a-drawer>
+      @click="show"
+  >
+    <SettingOutlined :style="{ fontSize: '20px', color: '#fcfcfc' }"/>
+  </div>
+  <a-drawer
+      title="系统布局配置"
+      :visible="visible"
+      @close="close"
+      :bodyStyle="{ padding: '10px' }"
+  >
+    <a-list size="small">
+      <a-list-item>
+        <template #actions>
+          <a-switch :checked="topNavEnable" @change="onChangeTopNavEnable"/>
+        </template>
+        启用顶部导航
+      </a-list-item>
+      <a-list-item>
+        <template #actions>
+          <a-switch :checked="headFixed" @change="onChangeHeadFixed" :disabled="disabledHeadFixed"/>
+        </template>
+        固定右侧头部
+      </a-list-item>
+    </a-list>
+  </a-drawer>
 </template>
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, Ref, ref } from "vue";
-import { useStore } from 'vuex';
-import { StateType as GlobalStateType } from '@/store/global';
-import { SettingOutlined } from '@ant-design/icons-vue';
+import {computed, ComputedRef, defineComponent, Ref, ref} from "vue";
+import {useStore} from 'vuex';
+import {StateType as GlobalStateType} from '@/store/global';
+import {SettingOutlined} from '@ant-design/icons-vue';
+import {useI18n} from "vue-i18n";
 
 interface SettingsSetupData {
-    visible: Ref<boolean>;
-    close: () => void;
-    show: () => void;
-    topNavEnable: ComputedRef<boolean>;
-    onChangeTopNavEnable: (v: boolean) => void;
-    headFixed: Ref<boolean>;
-    onChangeHeadFixed: (v: boolean) => void;
-    disabledHeadFixed: Ref<boolean>;
+  t: (key: string | number) => string;
+  visible: Ref<boolean>;
+  close: () => void;
+  show: () => void;
+  topNavEnable: ComputedRef<boolean>;
+  onChangeTopNavEnable: (v: boolean) => void;
+  headFixed: Ref<boolean>;
+  onChangeHeadFixed: (v: boolean) => void;
+  disabledHeadFixed: Ref<boolean>;
 }
 
 export default defineComponent({
-    name: 'Settings',
-    components: {
-        SettingOutlined
-    },
-    setup(): SettingsSetupData {
-        
-        const store = useStore<{global: GlobalStateType}>(); 
+  name: 'Settings',
+  components: {
+    SettingOutlined
+  },
+  setup(): SettingsSetupData {
+    const {t} = useI18n();
 
-        const visible = ref<boolean>(false);
-        // 关闭
-        const close = (): void => {
-            visible.value = false;
-        }
-        // 显示
-        const show = (): void => {
-            visible.value = true;
-        }
+    const store = useStore<{ global: GlobalStateType }>();
 
-        // 固定右侧头部
-        const disabledHeadFixed = ref<boolean>(true);
-        const headFixed = computed<boolean>(()=> store.state.global.headFixed);
-        const onChangeHeadFixed = (v: boolean): void => {
-            store.commit('global/setHeadFixed', v);
-        }
+    const visible = ref<boolean>(false);
+    // 关闭
+    const close = (): void => {
+      visible.value = false;
+    }
+    // 显示
+    const show = (): void => {
+      visible.value = true;
+    }
 
-        // 启用顶部导航
-        const topNavEnable = computed<boolean>(()=> store.state.global.topNavEnable);
-        const onChangeTopNavEnable = (v: boolean): void => {
-            store.commit('global/setTopNavEnable', v);
+    // 固定右侧头部
+    const disabledHeadFixed = ref<boolean>(true);
+    const headFixed = computed<boolean>(() => store.state.global.headFixed);
+    const onChangeHeadFixed = (v: boolean): void => {
+      store.commit('global/setHeadFixed', v);
+    }
 
-            if (v) {
-                disabledHeadFixed.value = true;
-                onChangeHeadFixed(true);
-            } else {
-                disabledHeadFixed.value = false;
-            }
+    // 启用顶部导航
+    const topNavEnable = computed<boolean>(() => store.state.global.topNavEnable);
+    const onChangeTopNavEnable = (v: boolean): void => {
+      store.commit('global/setTopNavEnable', v);
 
-        }
-
-        return {
-            visible,
-            close,
-            show,
-            topNavEnable,
-            onChangeTopNavEnable,
-            headFixed,
-            onChangeHeadFixed,
-            disabledHeadFixed
-        }
+      if (v) {
+        disabledHeadFixed.value = true;
+        onChangeHeadFixed(true);
+      } else {
+        disabledHeadFixed.value = false;
+      }
 
     }
+
+    return {
+      t,
+      visible,
+      close,
+      show,
+      topNavEnable,
+      onChangeTopNavEnable,
+      headFixed,
+      onChangeHeadFixed,
+      disabledHeadFixed
+    }
+
+  }
 })
 </script>

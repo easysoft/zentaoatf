@@ -80,9 +80,11 @@ import {
   getBugSteps,
   getDataForBugSubmition, queryProduct,
 } from "@/services/zentao";
+import {useI18n} from "vue-i18n";
 const useForm = Form.useForm;
 
 interface BugFormSetupData {
+  t: (key: string | number) => string;
   modelRef: Ref
   onFinish: () => Promise<void>;
 
@@ -121,6 +123,8 @@ export default defineComponent({
   components: {},
 
   setup(props): BugFormSetupData {
+    const { t } = useI18n();
+
     const rules = reactive({
       title: [
         { required: true, message: '请输入标题' },
@@ -185,6 +189,7 @@ export default defineComponent({
     })
 
     return {
+      t,
       labelCol: { span: 6 },
       wrapperCol: { span: 16 },
       rules,

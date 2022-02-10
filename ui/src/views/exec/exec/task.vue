@@ -70,8 +70,10 @@ import {WebSocket, WsEventName} from "@/services/websocket";
 import {resizeWidth, scroll} from "@/utils/dom";
 import {genExecInfo} from "@/views/exec/service";
 import throttle from "lodash.debounce";
+import {useI18n} from "vue-i18n";
 
 interface ExecTaskPageSetupData {
+  t: (key: string | number) => string;
   model: any
   seq: string
 
@@ -97,6 +99,8 @@ export default defineComponent({
     components: {
     },
     setup(): ExecTaskPageSetupData {
+      const { t } = useI18n();
+
       const router = useRouter();
       let productId = router.currentRoute.value.params.productId as string
       productId = productId == '0' ? '' : productId + ''
@@ -226,6 +230,7 @@ export default defineComponent({
       }
 
       return {
+        t,
         model,
         seq,
         wsMsg,

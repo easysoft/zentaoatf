@@ -72,8 +72,10 @@ import {execByDef} from "@/utils/testing";
 import {ProjectData} from "@/store/project";
 import {hideMenu} from "@/utils/dom";
 import throttle from "lodash.debounce";
+import {useI18n} from "vue-i18n";
 
 interface ListExecSetupData {
+  t: (key: string | number) => string;
   currProject: ComputedRef;
 
   columns: any;
@@ -101,6 +103,8 @@ export default defineComponent({
     components: {
     },
     setup(): ListExecSetupData {
+      const { t } = useI18n();
+
       const projectStore = useStore<{ project: ProjectData }>();
       const currProject = computed<any>(() => projectStore.state.project.currProject);
 
@@ -217,6 +221,7 @@ export default defineComponent({
       }
 
       return {
+        t,
         currProject,
 
         columns,

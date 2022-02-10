@@ -80,6 +80,7 @@ import {syncFromZentao, syncToZentao} from "@/views/sync/service";
 import throttle from "lodash.debounce";
 
 interface ConfigFormSetupData {
+  t: (key: string | number) => string;
   currProject: ComputedRef;
 
   formRef: any
@@ -225,6 +226,7 @@ export default defineComponent({
     };
 
     return {
+      t,
       currProject,
 
       formRef,
