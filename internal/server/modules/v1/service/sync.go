@@ -16,7 +16,7 @@ import (
 
 type SyncService struct {
 	TestScriptService *TestScriptService `inject:""`
-	ZtfCaseService    *ZtfCaseService    `inject:""`
+	TestCaseService   *TestCaseService   `inject:""`
 }
 
 func NewSyncService() *SyncService {
@@ -36,7 +36,7 @@ func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, projectPa
 		return
 	}
 
-	cases, loginFail := s.ZtfCaseService.LoadTestCases(productId, moduleId, suiteId, taskId, projectPath)
+	cases, loginFail := s.TestCaseService.LoadTestCases(productId, moduleId, suiteId, taskId, projectPath)
 
 	if cases != nil && len(cases) > 0 {
 		productId, _ = strconv.Atoi(cases[0].Product)
