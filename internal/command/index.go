@@ -20,7 +20,7 @@ func InitConfig() {
 	commandConfig.InitScreenSize()
 
 	// internationalization
-	i118Utils.Init(commConsts.Language, commConsts.AppServer)
+	i118Utils.Init(commConsts.Language, commConsts.AppCommand)
 
 	langUtils.GetExtToNameMap()
 

@@ -3,7 +3,6 @@ package i118Utils
 import (
 	"encoding/json"
 	"fmt"
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/res"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
@@ -19,7 +18,7 @@ func Init(lang string, app string) {
 	bytes, _ := resUtils.ReadRes(langRes)
 	InitResFromAsset(bytes)
 
-	if lang == commConsts.LanguageZh {
+	if lang == "zh" {
 		I118Prt = message.NewPrinter(language.SimplifiedChinese)
 	} else {
 		I118Prt = message.NewPrinter(language.AmericanEnglish)
