@@ -26,7 +26,7 @@ func (c *TestScriptCtrl) Get(ctx iris.Context) {
 
 	script, err := scriptUtils.GetScriptContent(scriptPath)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: domain.SystemErr.Msg})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: domain.RequestErr.Msg})
 		return
 	}
 	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: script, Msg: domain.NoErr.Msg})
@@ -44,7 +44,7 @@ func (c *TestScriptCtrl) Extract(ctx iris.Context) {
 
 	script, err := scriptUtils.GetScriptContent(scriptPath)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: domain.SystemErr.Msg})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: domain.RequestErr.Msg})
 		return
 	}
 	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: script, Msg: domain.NoErr.Msg})

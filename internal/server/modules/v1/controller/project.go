@@ -30,7 +30,7 @@ func (c *ProjectCtrl) List(ctx iris.Context) {
 		errs := validate.ValidRequest(err)
 		if len(errs) > 0 {
 			logUtils.Errorf("参数验证失败", zap.String("错误", strings.Join(errs, ";")))
-			ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: strings.Join(errs, ";")})
+			ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: strings.Join(errs, ";")})
 			return
 		}
 	}
@@ -38,7 +38,7 @@ func (c *ProjectCtrl) List(ctx iris.Context) {
 
 	data, err := c.ProjectService.Paginate(req)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
 
@@ -55,7 +55,7 @@ func (c *ProjectCtrl) Get(ctx iris.Context) {
 	}
 	product, err := c.ProjectService.FindById(req.Id)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: domain.SystemErr.Msg})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: domain.RequestErr.Msg})
 		return
 	}
 	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: product, Msg: domain.NoErr.Msg})
@@ -68,14 +68,14 @@ func (c *ProjectCtrl) Create(ctx iris.Context) {
 
 	if err != nil || req.Path == "" {
 		logUtils.Errorf("参数验证失败 %s", err.Error())
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: "参数验证失败"})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: "参数验证失败"})
 		return
 	}
 
 	req.Path = strings.TrimSpace(req.Path)
 	id, err := c.ProjectService.Create(req)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.CommonErr.Code, Msg: err.Error()})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Msg: err.Error()})
 		return
 	}
 
@@ -96,14 +96,14 @@ func (c *ProjectCtrl) Update(ctx iris.Context) {
 		errs := validate.ValidRequest(err)
 		if len(errs) > 0 {
 			logUtils.Errorf("参数验证失败", zap.String("错误", strings.Join(errs, ";")))
-			ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: strings.Join(errs, ";")})
+			ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: strings.Join(errs, ";")})
 			return
 		}
 	}
 
 	err := c.ProjectService.Update(reqId.Id, req)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
 	ctx.JSON(domain.Response{Code: domain.NoErr.Code, Data: nil, Msg: domain.NoErr.Msg})
@@ -119,7 +119,7 @@ func (c *ProjectCtrl) Delete(ctx iris.Context) {
 	}
 	err := c.ProjectService.DeleteById(req.Id)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
 
@@ -135,7 +135,7 @@ func (c *ProjectCtrl) GetByUser(ctx iris.Context) {
 
 	projects, currProject, currProjectConfig, scriptTree, err := c.ProjectService.GetByUser(projectPath)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
 

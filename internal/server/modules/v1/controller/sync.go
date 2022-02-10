@@ -27,7 +27,7 @@ func (c *SyncCtrl) SyncFromZentao(ctx iris.Context) {
 
 	if err != nil {
 		logUtils.Errorf("参数验证失败 %s", err.Error())
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
 
@@ -48,7 +48,7 @@ func (c *SyncCtrl) SyncToZentao(ctx iris.Context) {
 	if commitProductId == 0 {
 		msg := fmt.Sprintf("参数验证失败")
 		logUtils.Errorf(msg)
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: msg})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: msg})
 		return
 	}
 

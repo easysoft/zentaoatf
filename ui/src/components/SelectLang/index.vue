@@ -39,7 +39,7 @@ export default defineComponent({
 
         const { locale }  = useI18n();
        
-        const locales: string[] = ['zh-CN', 'zh-TW', 'en-US'];
+        const locales: string[] = ['zh-CN', 'en-US'];
         const languageLabels: {[key: string]: string} = {
             'zh-CN': '简体中文',
             'en-US': 'English',

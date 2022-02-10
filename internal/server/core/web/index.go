@@ -3,8 +3,6 @@ package web
 import (
 	stdContext "context"
 	"fmt"
-	"github.com/aaronchen2k/deeptest/internal/comm/consts"
-	"github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	"github.com/aaronchen2k/deeptest/internal/server/config"
 	"github.com/aaronchen2k/deeptest/internal/server/core/log"
@@ -61,7 +59,6 @@ func Init() *WebServer {
 	serverConfig.Init()
 	serverLog.Init()
 
-	i118Utils.Init(commConsts.Language, commConsts.AppServer)
 	langUtils.GetExtToNameMap()
 
 	app := iris.New()

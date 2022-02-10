@@ -23,7 +23,7 @@ func (c *TestExecCtrl) List(ctx iris.Context) {
 
 	data, err := c.TestExecService.List(projectPath)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
 
@@ -43,7 +43,7 @@ func (c *TestExecCtrl) Get(ctx iris.Context) {
 
 	exec, err := c.TestExecService.Get(projectPath, seq)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil,
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil,
 			Msg: fmt.Sprintf("获取编号为%s的日志失败。", seq)})
 		return
 	}
@@ -63,7 +63,7 @@ func (c *TestExecCtrl) Delete(ctx iris.Context) {
 
 	err := c.TestExecService.Delete(projectPath, seq)
 	if err != nil {
-		ctx.JSON(domain.Response{Code: domain.SystemErr.Code, Data: nil, Msg: err.Error()})
+		ctx.JSON(domain.Response{Code: domain.RequestErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
 

@@ -49,7 +49,8 @@ export default defineComponent({
 
     const projects = computed<any[]>(() => store.state.project.projects);
     const currProject = computed<any>(() => store.state.project.currProject);
-    store.dispatch('project/fetchProject', '');
+
+    store.dispatch('project/fetchProject', '')
 
     const switchProject = (newProject, oldProject) => {
       const routerPath = router.currentRoute.value.path
