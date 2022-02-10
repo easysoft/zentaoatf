@@ -7,8 +7,8 @@
       :onCancel="onCancel"
   >
     <template #footer>
-      <a-button key="back" @click="() => onCancel()">取消</a-button>
-      <a-button key="submit" type="primary" @click="onFinish">确定</a-button>
+      <a-button key="submit" type="primary" @click="onFinish">{{t('save')}}</a-button>
+      <a-button key="back" @click="() => onCancel()">{{t('cancel')}}</a-button>
     </template>
 
     <div>

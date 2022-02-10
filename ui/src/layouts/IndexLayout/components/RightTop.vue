@@ -2,7 +2,7 @@
     <div id="indexlayout-right-top">
         <div class="indexlayout-right-top-top">
             <div class="indexlayout-flexible">
-              ZTF自动化测试工具
+              {{t('ztf_name_full')}}
             </div>
             <div class="indexlayout-top-menu">
                 <div ref="topMenuCon" style="width: 100%">

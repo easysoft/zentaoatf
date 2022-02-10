@@ -8,7 +8,7 @@
         @change="selectProject"
     >
       <a-select-option v-for="item in projects" :key="item.id" :value="item.path">{{ item.name }}</a-select-option>
-      <a-select-option key="" value="">新建</a-select-option>
+      <a-select-option key="" value="">{{ t('create') }}</a-select-option>
     </a-select>
 
     <project-create-form
