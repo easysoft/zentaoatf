@@ -1,5 +1,5 @@
 {
-  "language": "zh",
+  "language": "zh-CN",
   "messages": [
     {
       "id": "request_success",
@@ -33,7 +33,6 @@
       "id": "parm_not_right:, ",
       "translation": "参数%s不合法"
     },
-
     {
       "id": "ws_namespace_connected",
       "translation": "WebSocket OnNamespaceConnected: ConnID=%s, Room=%s。"
@@ -58,7 +57,6 @@
       "id": "ws_disconnected",
       "translation": "已断开WebSocket连接。"
     },
-
     {
       "id": "windows_permission",
       "translation": "Windows系统下，需以管理员身份打开cmd命令行窗口。"
@@ -83,7 +81,6 @@
       "id": "skip",
       "translation": "忽略"
     },
-
     {
       "id": "product_id",
       "translation": "产品Id"
@@ -100,7 +97,6 @@
       "id": "task_id",
       "translation": "测试任务Id"
     },
-
     {
       "id": "test_case",
       "translation": "用例"
@@ -165,7 +161,6 @@
       "id": "title_cannot_be_empty",
       "translation": "标题不能为空。"
     },
-
     {
       "id": "need_config",
       "translation": "在导出用例之前，您需要先配置禅道站点。"
@@ -174,7 +169,6 @@
       "id": "begin_config",
       "translation": "开始配置, 输入'exit'退出。"
     },
-
     {
       "id": "want_to_continue",
       "translation": "确认继续？（y/n, 默认Yes）"
@@ -199,7 +193,6 @@
       "id": "co_script_prefix",
       "translation": "请输入脚本前缀，默认为空。"
     },
-
     {
       "id": "dir_not_exist",
       "translation": "目录不存在"
@@ -244,7 +237,6 @@
       "id": "confirm_commit_result",
       "translation": "确认提交以下结果信息？（y/n, 默认Yes）\n%s"
     },
-
     {
       "id": "invalid_input",
       "translation": "无效数据，请重新输入。"
@@ -273,7 +265,6 @@
       "id": "empty_to_ignore",
       "translation": "（输入空忽略）"
     },
-
     {
       "id": "en",
       "translation": "英文"
@@ -350,7 +341,6 @@
       "id": "failed_scripts",
       "translation": "失败用例："
     },
-
     {
       "id": "start_case",
       "translation": "开始用例 %s %s。"
@@ -359,7 +349,6 @@
       "id": "end_case",
       "translation": "结束用例 %s %s，耗时%d秒。"
     },
-
     {
       "id": "run_result",
       "translation": "执行%d个用例，耗时%d秒%s。%s，%s，%s。"
@@ -372,17 +361,14 @@
       "id": "no_interpreter_for_run",
       "translation": "未配置%s语言的解释程序，跳过脚本%s。"
     },
-
     {
       "id": "time_from_to",
       "translation": "从%s到%s, 耗时%d秒。"
     },
-
     {
       "id": "no_checkpoints",
       "translation": "没有验证点。"
     },
-
     {
       "id": "steps",
       "translation": "步骤"
@@ -395,7 +381,6 @@
       "id": "total_test_case",
       "translation": "合计%d个测试用例。"
     },
-
     {
       "id": "is_checkpoint",
       "translation": "@开头的为含验证点的步骤。"
@@ -432,7 +417,6 @@
       "id": "success_to_commit_result",
       "translation": "成功为用例%d提交结果"
     },
-
     {
       "id": "or",
       "translation": "或"
@@ -441,7 +425,6 @@
       "id": "zentao_url",
       "translation": "禅道地址"
     },
-
     {
       "id": "pls_enter",
       "translation": "请输入"
@@ -470,7 +453,6 @@
       "id": "help_exit",
       "translation": "CTRL+C: 退出"
     },
-
     {
       "id": "success_to_clean_logs",
       "translation": "成功删除所有日志。"
@@ -483,7 +465,6 @@
       "id": "success_add_to_path",
       "translation": "成功将ztf命令加入用户PATH环境变量。"
     },
-
     {
       "id": "success_to_submit_test_result",
       "translation": "提交测试结果到禅道成功。"
@@ -500,7 +481,6 @@
       "id": "ignore_to_submit_result_no_product_id",
       "translation": "您未提供productId，忽略提交测试结果。"
     },
-
     {
       "id": "wrong_req_params",
       "translation": "错误的请求参数：%s。\n"
@@ -525,7 +505,6 @@
       "id": "run_with_specific_interpreter",
       "translation": "将使用您指定的解释器运行脚本 %s。"
     },
-
     {
       "id": "start_server",
       "translation": "启动HTTP服务于http://%s:%s，按CTRL+C键退出。\n请访问https://ztf.im/book/ztf/agent-exec-124.html获取更多信息。"
@@ -542,7 +521,6 @@
       "id": "server_response",
       "translation": "生成%d条记录，耗时%d秒。"
     },
-
     {
       "id": "fail_parse_req",
       "translation": "解析请求对象失败，错误 %s。"
@@ -563,7 +541,6 @@
       "id": "fail_heart_beat",
       "translation": "发送心跳请求失败。"
     },
-
     {
       "id": "find_new_ver",
       "translation": "发现新版本%s。"
@@ -576,7 +553,6 @@
       "id": "fail_upgrade",
       "translation": "失败升级版本从%.1f到%s，错误 %s。"
     },
-
     {
       "id": "download_fail",
       "translation": "下载文件失败 %s，错误 %s。"
@@ -609,7 +585,6 @@
       "id": "fail_md5_check",
       "translation": "验证文件%s的MD5失败。"
     },
-
     {
       "id": "fail_to_upload_file",
       "translation": "上传文件失败：%s。"
