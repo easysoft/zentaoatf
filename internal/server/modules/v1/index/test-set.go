@@ -19,11 +19,6 @@ func NewTestSetModule() *TestSetModule {
 func (m *TestSetModule) Party() module.WebModule {
 	handler := func(index iris.Party) {
 		index.Use(middleware.InitCheck())
-		index.Get("/", m.TestSetCtrl.List).Name = "测试集查询"
-		index.Get("/{id:uint}", m.TestSetCtrl.Get).Name = "测试集详情"
-		index.Post("/", m.TestSetCtrl.Create).Name = "创建测试集"
-		index.Post("/{id:uint}", m.TestSetCtrl.Update).Name = "编辑测试集"
-		index.Delete("/{id:uint}", m.TestSetCtrl.Delete).Name = "删除测试集"
 	}
 	return module.NewModule("/sets", handler)
 }
