@@ -1,3 +1,6 @@
 export default {
-  'index-layout.menu.execution': '执行',
+  'no_sync_for_unittest': '单元测试项目不需要同步',
+  'sync_from_zentao': '从禅道同步用例信息',
+  'sync_to_zentao': '同步用例信息到禅道',
+
 };

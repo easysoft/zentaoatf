@@ -3,6 +3,13 @@ export default {
     'app.global.menu.notfound': 'Not Found',
     'app.global.form.validatefields.catch': 'The validation did not pass, please check the input',
 
+    'independent_expect': 'Save Expect Result in Independent File',
+    'product': 'Product',
+    'module': 'Module',
+    'suite': 'Suite',
+    'task': 'Task',
+    'lang': 'Language',
+
     'ztf_name_full': 'ZTF Automated Tool',
     'submit': 'Submit',
     'cancel': 'Cancel',
@@ -15,4 +22,8 @@ export default {
     'save_fail': 'Save failed.',
 
     'wrong_url': 'Please input right ZenTao URL.',
+    'pls_product': 'Please select product.',
+    'pls_lang': 'Please select language.',
+    'sync_success': 'Sync successfully.',
+    'sync_fail': 'Sync failed.',
 };

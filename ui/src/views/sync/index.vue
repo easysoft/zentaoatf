@@ -1,45 +1,44 @@
 <template>
   <div v-if="currProject.type === 'unit'" class="panel">
-    此为单元测试项目，不需要同步。
+    {{ t('no_sync_for_unittest') }}
   </div>
 
   <div class="main" v-if="currProject.type === 'func'">
 
-  <a-card title="从禅道同步用例信息">
+  <a-card :title="t('sync_from_zentao')">
     <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-item label="产品" v-bind="validateInfos.productId">
+      <a-form-item :label="t('product')" v-bind="validateInfos.productId">
         <a-select v-model:value="model.productId" @change="selectProduct">
           <a-select-option key="" value="">&nbsp;</a-select-option>
           <a-select-option v-for="item in products" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item label="模块" v-bind="validateInfos.moduleId">
+      <a-form-item :label="t('module')" v-bind="validateInfos.moduleId">
         <a-select v-model:value="model.moduleId">
           <a-select-option key="" value="">&nbsp;</a-select-option>
           <a-select-option v-for="item in modules" :key="item.id" :value="item.id"><span v-html="item.name"></span></a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item label="套件" v-bind="validateInfos.suiteId">
+      <a-form-item :label="t('suite')" v-bind="validateInfos.suiteId">
         <a-select v-model:value="model.suiteId">
           <a-select-option key="" value="">&nbsp;</a-select-option>
           <a-select-option v-for="item in suites" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item label="任务" v-bind="validateInfos.taskId">
+      <a-form-item :label="t('task')" v-bind="validateInfos.taskId">
         <a-select v-model:value="model.taskId">
           <a-select-option key="" value="">&nbsp;</a-select-option>
           <a-select-option v-for="item in tasks" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item label="语言" v-bind="validateInfos.lang">
+      <a-form-item :label="t('lang')" v-bind="validateInfos.lang">
         <a-select v-model:value="model.lang">
           <a-select-option v-for="item in langs" :key="item.code" :value="item.code">{{ item.name }}</a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item label="期待结果为独立文件">
+      <a-form-item :label="t('independent_expect')">
         <a-switch v-model:checked="model.independentFile" />
       </a-form-item>
-
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
         <a-button type="primary" @click.prevent="syncFromZentaoSubmit">提交</a-button>
         <a-button style="margin-left: 10px" @click="resetFields">重置</a-button>
@@ -47,9 +46,9 @@
     </a-form>
   </a-card>
 
-  <a-card title="同步用例信息到禅道">
+  <a-card :title="t('sync_to_zentao')">
     <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-item label="产品" v-bind="validateInfosCommit.productId">
+      <a-form-item :label="t('product')" v-bind="validateInfosCommit.productId">
         <a-select v-model:value="modelCommit.productId">
           <a-select-option key="" value="">&nbsp;</a-select-option>
           <a-select-option v-for="item in products" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
@@ -57,7 +56,7 @@
       </a-form-item>
 
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click.prevent="syncToZentaoSubmit">提交</a-button>
+        <a-button type="primary" @click.prevent="syncToZentaoSubmit">{{ t('submit') }}</a-button>
       </a-form-item>
     </a-form>
   </a-card>
@@ -150,15 +149,15 @@ export default defineComponent({
 
     const rules = reactive({
       productId: [
-        { required: true, message: '请选择产品'},
+        { required: true, message: t('pls_product')},
       ],
       lang: [
-        { required: true, message: '请选择语言', trigger: 'change'}
+        { required: true, message: t('pls_lang'), trigger: 'change'}
       ],
     });
     const rulesCommit = reactive({
       productId: [
-        { required: true, message: '请选择产品' },
+        { required: true, message: t('pls_product') },
       ]
     })
 
@@ -210,11 +209,11 @@ export default defineComponent({
             console.log('json', json)
             if (json.code === 0) {
               notification.success({
-                message: `同步成功`,
+                message: t('sync_success'),
               });
             } else {
               notification.error({
-                message: `同步失败`,
+                message: t('sync_fail'),
                 description: json.msg,
               });
             }
