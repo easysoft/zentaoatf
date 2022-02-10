@@ -9,13 +9,14 @@ import (
 	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/script"
+	zentaoUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/zentao"
 	"path/filepath"
 	"strconv"
 )
 
 type SyncService struct {
-	ZtfScriptService *ZtfScriptService `inject:""`
-	ZtfCaseService   *ZtfCaseService   `inject:""`
+	TestScriptService *TestScriptService `inject:""`
+	ZtfCaseService    *ZtfCaseService    `inject:""`
 }
 
 func NewSyncService() *SyncService {
@@ -43,7 +44,7 @@ func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, projectPa
 		prefix := ""
 		byModule := moduleId > 0
 
-		count, err := s.ZtfScriptService.Generate(cases, lang, independentFile, byModule, targetDir, prefix)
+		count, err := s.TestScriptService.GenerateScripts(cases, lang, independentFile, byModule, targetDir, prefix)
 		if err == nil {
 			logUtils.Infof(i118Utils.Sprintf("success_to_generate", count, targetDir))
 		} else {
@@ -76,7 +77,7 @@ func (s *SyncService) SyncToZentao(projectPath string, commitProductId int) (err
 				expectMap = scriptUtils.GetExpectMapFromIndependentFileObsolete(expectMap, expectIndependentContent, true)
 			}
 
-			s.ZtfCaseService.CommitCase(id, title, stepMap, stepTypeMap, expectMap, projectPath)
+			zentaoUtils.CommitCase(id, title, stepMap, stepTypeMap, expectMap, projectPath)
 		}
 	}
 
