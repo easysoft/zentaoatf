@@ -2,10 +2,10 @@ package zentaoUtils
 
 import (
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
+	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
 	httpUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/http"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	configUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/config"
 	"github.com/fatih/color"
 	"os"
 	"strconv"

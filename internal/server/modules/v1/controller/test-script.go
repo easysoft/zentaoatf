@@ -1,8 +1,8 @@
 package controller
 
 import (
+	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
-	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/script"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
 )

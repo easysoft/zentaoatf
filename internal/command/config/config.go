@@ -3,6 +3,7 @@ package commandConfig
 import (
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
 	"github.com/aaronchen2k/deeptest/internal/comm/vari"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/display"
@@ -10,7 +11,6 @@ import (
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
-	configUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/config"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
 	"github.com/fatih/color"
 	"os"

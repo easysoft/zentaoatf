@@ -1,8 +1,8 @@
 package service
 
 import (
-	analysisUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/analysis"
-	zentaoUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/zentao"
+	analysisUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/analysis"
+	zentaoUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 )
 

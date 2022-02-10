@@ -3,8 +3,8 @@ package service
 import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
+	analysisUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/analysis"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
-	analysisUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/analysis"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
 	"github.com/jinzhu/copier"

@@ -2,8 +2,8 @@ package service
 
 import (
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
-	configUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/config"
-	zentaoUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/zentao"
+	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
+	zentaoUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 )
 
 type TestCaseService struct {

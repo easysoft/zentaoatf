@@ -5,6 +5,10 @@ import (
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
+	analysisUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/analysis"
+	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
+	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
+	zentaoUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	dateUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/date"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
@@ -12,10 +16,6 @@ import (
 	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
-	analysisUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/analysis"
-	configUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/config"
-	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/script"
-	zentaoUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/zentao"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12/websocket"
@@ -126,9 +126,9 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, projectPath string,
 		case <-ch:
 			msg := i118Utils.Sprintf("exit_exec_all")
 			if commConsts.ComeFrom != "cmd" {
-        sendExecMsg(msg, "", wsMsg)
+				sendExecMsg(msg, "", wsMsg)
 			}
-			
+
 			logUtils.ExecConsolef(color.FgCyan, msg)
 			logUtils.ExecFilef(msg)
 
@@ -286,9 +286,9 @@ func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
 			msg := i118Utils.Sprintf("exit_exec_curr")
 
 			if commConsts.ComeFrom != "cmd" {
-        sendExecMsg(msg, "", wsMsg)
+				sendExecMsg(msg, "", wsMsg)
 			}
-			
+
 			logUtils.ExecConsolef(color.FgCyan, msg)
 			logUtils.ExecFilef(msg)
 

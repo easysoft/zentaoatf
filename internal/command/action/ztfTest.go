@@ -2,9 +2,9 @@ package action
 
 import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+	_scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/exec"
 	"github.com/aaronchen2k/deeptest/internal/command"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
-	_scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/exec"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/kataras/iris/v12/websocket"
 )

@@ -2,7 +2,7 @@ package service
 
 import (
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
-	scriptUtils "github.com/aaronchen2k/deeptest/internal/server/modules/helper/script"
+	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
 )
 
 type TestScriptService struct {
