@@ -11,6 +11,15 @@ export async function queryProject(currProjectPath: string): Promise<any> {
         params,
     });
 }
+export async function deleteProject(currProjectPath: string): Promise<any> {
+    const params = {path: currProjectPath}
+
+    return request({
+        url: `/${apiPath}`,
+        method: 'DELETE',
+        params,
+    });
+}
 
 export async function createProject(data: string): Promise<any> {
     return request({

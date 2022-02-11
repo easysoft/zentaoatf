@@ -158,9 +158,6 @@ export default defineComponent({
     .indexlayout-top-menu-right {
       display: flex;
       width: 220px;
-      .indexlayout-top-selectproject {
-        padding: 10px 0;
-      }
 
       .indexlayout-top-selectlang {
         padding: 12px 10px;

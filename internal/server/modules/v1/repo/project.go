@@ -55,7 +55,10 @@ func (r *ProjectRepo) Paginate(req serverDomain.ProjectReqPaginate) (data domain
 }
 
 func (r *ProjectRepo) FindById(id uint) (po model.Project, err error) {
-	err = r.DB.Model(&model.Project{}).Where("id = ?", id).First(&po).Error
+	err = r.DB.Model(&model.Project{}).
+		Where("id = ?", id).
+		Where("NOT deleted").
+		First(&po).Error
 	if err != nil {
 		logUtils.Errorf("find project by id error", zap.String("error:", err.Error()))
 		return
@@ -91,32 +94,10 @@ func (r *ProjectRepo) Update(id uint, project model.Project) error {
 	return nil
 }
 
-func (r *ProjectRepo) BatchDelete(id uint) (err error) {
-	ids, err := r.GetChildrenIds(id)
-	if err != nil {
-		return err
-	}
-
-	r.DB.Transaction(func(tx *gorm.DB) (err error) {
-		err = r.DeleteChildren(ids, tx)
-		if err != nil {
-			return
-		}
-
-		err = r.DeleteById(id, tx)
-		if err != nil {
-			return
-		}
-
-		return
-	})
-
-	return
-}
-
-func (r *ProjectRepo) DeleteById(id uint, tx *gorm.DB) (err error) {
-	err = tx.Model(&model.Project{}).Where("id = ?", id).
-		Updates(map[string]interface{}{"deleted": true}).Error
+func (r *ProjectRepo) DeleteByPath(pth string) (err error) {
+	err = r.DB.Where("path = ?", pth).
+		Delete(&model.Project{}).
+		Error
 	if err != nil {
 		logUtils.Errorf("delete project by id error", zap.String("error:", err.Error()))
 		return
@@ -125,38 +106,10 @@ func (r *ProjectRepo) DeleteById(id uint, tx *gorm.DB) (err error) {
 	return
 }
 
-func (r *ProjectRepo) DeleteChildren(ids []int, tx *gorm.DB) (err error) {
-	err = tx.Model(&model.Project{}).Where("id IN (?)", ids).
-		Updates(map[string]interface{}{"deleted": true}).Error
-	if err != nil {
-		logUtils.Errorf("batch delete project error", zap.String("error:", err.Error()))
-		return err
-	}
-
-	return nil
-}
-
-func (r *ProjectRepo) GetChildrenIds(id uint) (ids []int, err error) {
-	tmpl := `
-		WITH RECURSIVE project AS (
-			SELECT * FROM biz_project WHERE id = %d
-			UNION ALL
-			SELECT child.* FROM biz_project child, project WHERE child.parent_id = project.id
-		)
-		SELECT id FROM project WHERE id != %d
-    `
-	sql := fmt.Sprintf(tmpl, id, id)
-	err = r.DB.Raw(sql).Scan(&ids).Error
-	if err != nil {
-		logUtils.Errorf("get children project error", zap.String("error:", err.Error()))
-		return
-	}
-
-	return
-}
-
 func (r *ProjectRepo) FindByName(name string, ids ...uint) (po model.Project, err error) {
-	db := r.DB.Model(&model.Project{}).Where("name = ?", name)
+	db := r.DB.Model(&model.Project{}).
+		Where("NOT deleted").
+		Where("name = ?", name)
 	if len(ids) == 1 {
 		db.Where("id != ?", ids[0])
 	}
@@ -192,6 +145,7 @@ func (r *ProjectRepo) ListProjectByUser() (projects []model.Project, err error) 
 func (r *ProjectRepo) GetCurrProjectByUser() (currProject model.Project, err error) {
 	err = r.DB.Model(&model.Project{}).
 		Where("is_default").
+		Where("NOT deleted").
 		First(&currProject).Error
 
 	return
@@ -207,6 +161,17 @@ func (r *ProjectRepo) RemoveDefaultTag() (err error) {
 
 func (r *ProjectRepo) SetCurrProject(pth string) (err error) {
 	r.RemoveDefaultTag()
+
+	if pth == "" {
+		po := model.Project{}
+		err := r.DB.Model(&model.Project{}).
+			Where("NOT deleted").
+			Order("id DESC").
+			First(&po).Error
+		if err == nil {
+			pth = po.Path
+		}
+	}
 
 	err = r.DB.Model(&model.Project{}).
 		Where("path = ?", pth).

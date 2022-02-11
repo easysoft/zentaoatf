@@ -2,7 +2,6 @@ package controller
 
 import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
@@ -57,12 +56,13 @@ func (c *ProjectCtrl) Create(ctx iris.Context) {
 
 // Delete 删除
 func (c *ProjectCtrl) Delete(ctx iris.Context) {
-	var req domain.ReqId
-	if err := ctx.ReadParams(&req); err != nil {
-		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
+	projectPath := ctx.URLParam("path")
+
+	if projectPath == "" {
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, "path"))
 		return
 	}
-	err := c.ProjectService.DeleteById(req.Id)
+	err := c.ProjectService.DeleteByPath(projectPath)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
 		return

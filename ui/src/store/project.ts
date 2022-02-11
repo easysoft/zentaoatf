@@ -1,7 +1,7 @@
 import { Mutation, Action } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
-import {queryProject} from "@/services/project";
+import {queryProject, deleteProject} from "@/services/project";
 import {setCache} from "@/utils/localCache";
 import settings from '@/config/settings';
 import {saveConfig} from "@/services/config";
@@ -20,6 +20,7 @@ export interface ModuleType extends StoreModuleType<ProjectData> {
   };
   actions: {
     fetchProject: Action<ProjectData, ProjectData>;
+    removeProject: Action<ProjectData, ProjectData>;
     saveConfig: Action<ProjectData, ProjectData>;
   };
 }
@@ -53,6 +54,19 @@ const StoreModel: ModuleType = {
     async fetchProject({ commit }, currProjectPath) {
       try {
         const response: ResponseData = await queryProject(currProjectPath);
+        const { data } = response;
+        commit('saveProjects', data || {});
+
+        return true;
+      } catch (error) {
+        return false;
+      }
+    },
+    async removeProject({ commit }, currProjectPath) {
+      try {
+        await deleteProject(currProjectPath);
+
+        const response: ResponseData = await queryProject('');
         const { data } = response;
         commit('saveProjects', data || {});
 
