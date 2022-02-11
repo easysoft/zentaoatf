@@ -60,7 +60,13 @@ func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, projectPa
 }
 
 func (s *SyncService) SyncToZentao(projectPath string, commitProductId int) (err error) {
-	productPath := filepath.Join(projectPath, fmt.Sprintf("product%d", commitProductId))
+	productPath := ""
+	if commConsts.ComeFrom == "cmd" {
+		productPath = fileUtils.RemovePathSepIfNeeded(projectPath)
+		projectPath = commConsts.WorkDir
+	} else {
+		productPath = filepath.Join(projectPath, fmt.Sprintf("product%d", commitProductId))
+	}
 	caseFiles := scriptUtils.LoadScriptByProject(productPath)
 
 	for _, cs := range caseFiles {
