@@ -11,6 +11,7 @@ import (
 	httpUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/http"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
+	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
 	"github.com/emirpasic/gods/maps"
 	"sort"
 	"strconv"
@@ -288,9 +289,17 @@ func CommitCase(caseId int, title string,
 		logUtils.Infof(string(json))
 	}
 
-	_, ok = httpUtils.Post(url, requestObj, true)
-	if ok {
-		logUtils.Infof(i118Utils.Sprintf("success_to_commit_case", caseId) + "\n")
+	yes := true
+	if commConsts.ComeFrom == "cmd" {
+		logUtils.ExecConsole(1, "\n"+i118Utils.Sprintf("case_update_confirm", caseId, title))
+		stdinUtils.InputForBool(&yes, true, "want_to_continue")
+	}
+
+	if yes {
+		_, ok = httpUtils.Post(url, requestObj, true)
+		if ok {
+			logUtils.Infof(i118Utils.Sprintf("success_to_commit_case", caseId) + "\n")
+		}
 	}
 }
 
