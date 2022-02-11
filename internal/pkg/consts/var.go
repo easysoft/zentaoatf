@@ -1,5 +1,6 @@
 package consts
 
 var (
-	ScreenWidth int
+	ScreenWidth  int
+	ScreenHeight int
 )

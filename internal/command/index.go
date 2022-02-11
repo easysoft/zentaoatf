@@ -6,13 +6,11 @@ import (
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
-	serverLog "github.com/aaronchen2k/deeptest/internal/server/core/log"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 )
 
 func InitConfig() {
-	serverConfig.Init()
-	serverLog.Init()
+	serverConfig.InitLog()
 
 	commandConfig.CheckConfigPermission()
 
@@ -20,7 +18,7 @@ func InitConfig() {
 	commandConfig.InitScreenSize()
 
 	// internationalization
-	i118Utils.Init(commConsts.Language, commConsts.AppCommand)
+	i118Utils.Init(commConsts.Language, commConsts.AppServer)
 
 	langUtils.GetExtToNameMap()
 
