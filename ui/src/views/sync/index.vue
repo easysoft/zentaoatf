@@ -5,78 +5,79 @@
 
   <div class="main" v-if="currProject.type === 'func'">
 
-  <a-card :title="t('sync_from_zentao')">
-    <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-item :label="t('product')" v-bind="validateInfos.productId">
-        <a-select v-model:value="model.productId" @change="selectProduct">
-          <a-select-option key="" value="">&nbsp;</a-select-option>
-          <a-select-option v-for="item in products" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item :label="t('module')" v-bind="validateInfos.moduleId">
-        <a-select v-model:value="model.moduleId">
-          <a-select-option key="" value="">&nbsp;</a-select-option>
-          <a-select-option v-for="item in modules" :key="item.id" :value="item.id"><span v-html="item.name"></span></a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item :label="t('suite')" v-bind="validateInfos.suiteId">
-        <a-select v-model:value="model.suiteId">
-          <a-select-option key="" value="">&nbsp;</a-select-option>
-          <a-select-option v-for="item in suites" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item :label="t('task')" v-bind="validateInfos.taskId">
-        <a-select v-model:value="model.taskId">
-          <a-select-option key="" value="">&nbsp;</a-select-option>
-          <a-select-option v-for="item in tasks" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item :label="t('lang')" v-bind="validateInfos.lang">
-        <a-select v-model:value="model.lang">
-          <a-select-option v-for="item in langs" :key="item.code" :value="item.code">{{ item.name }}</a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item :label="t('independent_expect')">
-        <a-switch v-model:checked="model.independentFile" />
-      </a-form-item>
-      <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click.prevent="syncFromZentaoSubmit">提交</a-button>
-        <a-button style="margin-left: 10px" @click="resetFields">重置</a-button>
-      </a-form-item>
-    </a-form>
-  </a-card>
+    <a-card :title="t('sync_from_zentao')">
+      <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
+        <a-form-item :label="t('product')" v-bind="validateInfos.productId">
+          <a-select v-model:value="model.productId" @change="selectProduct">
+            <a-select-option key="" value="">&nbsp;</a-select-option>
+            <a-select-option v-for="item in products" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item :label="t('module')" v-bind="validateInfos.moduleId">
+          <a-select v-model:value="model.moduleId">
+            <a-select-option key="" value="">&nbsp;</a-select-option>
+            <a-select-option v-for="item in modules" :key="item.id" :value="item.id"><span v-html="item.name"></span>
+            </a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item :label="t('suite')" v-bind="validateInfos.suiteId">
+          <a-select v-model:value="model.suiteId">
+            <a-select-option key="" value="">&nbsp;</a-select-option>
+            <a-select-option v-for="item in suites" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item :label="t('task')" v-bind="validateInfos.taskId">
+          <a-select v-model:value="model.taskId">
+            <a-select-option key="" value="">&nbsp;</a-select-option>
+            <a-select-option v-for="item in tasks" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item :label="t('lang')" v-bind="validateInfos.lang">
+          <a-select v-model:value="model.lang">
+            <a-select-option v-for="item in langs" :key="item.code" :value="item.code">{{ item.name }}</a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item :label="t('independent_expect')">
+          <a-switch v-model:checked="model.independentFile"/>
+        </a-form-item>
+        <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
+          <a-button type="primary" @click.prevent="syncFromZentaoSubmit">提交</a-button>
+          <a-button style="margin-left: 10px" @click="resetFields">重置</a-button>
+        </a-form-item>
+      </a-form>
+    </a-card>
 
-  <a-card :title="t('sync_to_zentao')">
-    <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-item :label="t('product')" v-bind="validateInfosCommit.productId">
-        <a-select v-model:value="modelCommit.productId">
-          <a-select-option key="" value="">&nbsp;</a-select-option>
-          <a-select-option v-for="item in products" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
-        </a-select>
-      </a-form-item>
+    <a-card :title="t('sync_to_zentao')">
+      <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
+        <a-form-item :label="t('product')" v-bind="validateInfosCommit.productId">
+          <a-select v-model:value="modelCommit.productId">
+            <a-select-option key="" value="">&nbsp;</a-select-option>
+            <a-select-option v-for="item in products" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+          </a-select>
+        </a-form-item>
 
-      <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click.prevent="syncToZentaoSubmit">{{ t('submit') }}</a-button>
-      </a-form-item>
-    </a-form>
-  </a-card>
+        <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
+          <a-button type="primary" @click.prevent="syncToZentaoSubmit">{{ t('submit') }}</a-button>
+        </a-form-item>
+      </a-form>
+    </a-card>
 
   </div>
 </template>
 <script lang="ts">
-import {defineComponent, ref, reactive, computed, watch, ComputedRef} from "vue";
-import { useI18n } from "vue-i18n";
+import {computed, ComputedRef, defineComponent, reactive, ref, watch} from "vue";
+import {useI18n} from "vue-i18n";
 
-import { Props, validateInfos } from 'ant-design-vue/lib/form/useForm';
-import {message, Form, notification} from 'ant-design-vue';
-const useForm = Form.useForm;
-
-import { SyncSettings } from './data.d';
+import {validateInfos} from 'ant-design-vue/lib/form/useForm';
+import {Form, notification} from 'ant-design-vue';
+import {SyncSettings} from './data.d';
 import {useStore} from "vuex";
 import {ProjectData} from "@/store/project";
 import {ZentaoData} from "@/store/zentao";
 import {syncFromZentao, syncToZentao} from "@/views/sync/service";
 import throttle from "lodash.debounce";
+
+const useForm = Form.useForm;
 
 interface ConfigFormSetupData {
   t: (key: string | number) => string;
@@ -90,36 +91,35 @@ interface ConfigFormSetupData {
   wrapperCol: any
   validate: any
   validateInfos: validateInfos
-  resetFields:  () => void;
-  syncFromZentaoSubmit:  () => void;
+  resetFields: () => void;
+  syncFromZentaoSubmit: () => void;
 
   langs: ComputedRef<any[]>;
   products: ComputedRef<any[]>;
   modules: ComputedRef<any[]>;
   suites: ComputedRef<any[]>;
   tasks: ComputedRef<any[]>;
-  selectProduct:  (item) => void;
+  selectProduct: (item) => void;
 
   modelCommit: SyncSettings
   rulesCommit: any
-  syncToZentaoSubmit:  () => void;
+  syncToZentaoSubmit: () => void;
   validateCommit: any
   validateInfosCommit: validateInfos
-  resetFieldsCommit:  () => void;
+  resetFieldsCommit: () => void;
 }
 
 export default defineComponent({
   name: 'ConfigFormForm',
-  components: {
-  },
+  components: {},
   setup(props): ConfigFormSetupData {
-    const { t } = useI18n();
+    const {t} = useI18n();
 
     const storeProject = useStore<{ project: ProjectData }>();
     const currConfig = computed<any>(() => storeProject.state.project.currConfig);
     const currProject = computed<any>(() => storeProject.state.project.currProject);
 
-    const store = useStore<{zentao: ZentaoData}>();
+    const store = useStore<{ zentao: ZentaoData }>();
     const langs = computed<any[]>(() => store.state.zentao.langs);
     const products = computed<any[]>(() => store.state.zentao.products);
     const modules = computed<any[]>(() => store.state.zentao.modules);
@@ -131,7 +131,7 @@ export default defineComponent({
       store.dispatch('zentao/fetchProducts')
     }, 600)
     fetchProducts()
-    watch(currConfig, ()=> {
+    watch(currConfig, () => {
       fetchProducts()
     })
 
@@ -149,19 +149,19 @@ export default defineComponent({
 
     const rules = reactive({
       productId: [
-        { required: true, message: t('pls_product')},
+        {required: true, message: t('pls_product')},
       ],
       lang: [
-        { required: true, message: t('pls_lang'), trigger: 'change'}
+        {required: true, message: t('pls_lang'), trigger: 'change'}
       ],
     });
     const rulesCommit = reactive({
       productId: [
-        { required: true, message: t('pls_product') },
+        {required: true, message: t('pls_product')},
       ]
     })
 
-    const { resetFields, validate, validateInfos } = useForm(model, rules);
+    const {resetFields, validate, validateInfos} = useForm(model, rules);
 
     const commitForm = useForm(modelCommit, rulesCommit);
     const resetFieldsCommit = commitForm.resetFields
@@ -181,47 +181,49 @@ export default defineComponent({
       console.log('syncFromZentaoSubmit')
 
       validate()
-        .then(() => {
-          syncFromZentao(model).then((json) => {
-            console.log('json', json)
-            if (json.code === 0) {
-              notification.success({
-                message: `同步成功`,
-              });
-            } else {
-              notification.error({
-                message: `同步失败`,
-                description: json.msg,
-              });
-            }
+          .then(() => {
+            syncFromZentao(model).then((json) => {
+              console.log('json', json)
+              if (json.code === 0) {
+                notification.success({
+                  message: `同步成功`,
+                });
+              } else {
+                notification.error({
+                  message: `同步失败`,
+                  description: json.msg,
+                });
+              }
+            })
           })
-        })
-        .catch(err => {console.log('validate fail', err)});
+          .catch(err => {
+            console.log('validate fail', err)
+          });
     };
 
     const syncToZentaoSubmit = () => {
       console.log('syncToZentaoSubmit')
 
       validateCommit()
-        .then(() => {
-          console.log('then', modelCommit);
-          syncToZentao(modelCommit.productId).then((json) => {
-            console.log('json', json)
-            if (json.code === 0) {
-              notification.success({
-                message: t('sync_success'),
-              });
-            } else {
-              notification.error({
-                message: t('sync_fail'),
-                description: json.msg,
-              });
-            }
+          .then(() => {
+            console.log('then', modelCommit);
+            syncToZentao(modelCommit.productId).then((json) => {
+              console.log('json', json)
+              if (json.code === 0) {
+                notification.success({
+                  message: t('sync_success'),
+                });
+              } else {
+                notification.error({
+                  message: t('sync_fail'),
+                  description: json.msg,
+                });
+              }
+            })
           })
-        })
-        .catch(err => {
-          console.log('error', err);
-        });
+          .catch(err => {
+            console.log('error', err);
+          });
     };
 
     return {
@@ -229,8 +231,8 @@ export default defineComponent({
       currProject,
 
       formRef,
-      labelCol: { span: 6 },
-      wrapperCol: { span: 12 },
+      labelCol: {span: 6},
+      wrapperCol: {span: 12},
       rules,
       validate,
       validateInfos,
@@ -263,6 +265,6 @@ export default defineComponent({
 }
 
 .main {
-  padding: 0 20%;
+  padding: 50px 20% 0 20%;
 }
 </style>
