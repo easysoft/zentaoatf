@@ -2,19 +2,19 @@
     <div class="indexlayout-main-conent">
         <a-card :bordered="false">
             <template #title>
-                测试执行
+              {{ t('test_exec') }}
             </template>
             <template #extra>
               <div class="opt">
                 <template v-if="currProject.type === 'func'">
-                  <a-button @click="execCase" type="primary">执行用例</a-button>
-                  <a-button @click="execModule" type="primary">执行模块</a-button>
-                  <a-button @click="execSuite" type="primary">执行套件</a-button>
-                  <a-button @click="execTask" type="primary">执行任务</a-button>
+                  <a-button @click="execCase" type="primary">{{t('exec')}}{{t('case')}}</a-button>
+                  <a-button @click="execModule" type="primary">{{t('exec')}}{{t('module')}}</a-button>
+                  <a-button @click="execSuite" type="primary">{{t('exec')}}{{t('suite')}}</a-button>
+                  <a-button @click="execTask" type="primary">{{t('exec')}}{{t('task')}}</a-button>
                 </template>
 
                 <template v-if="currProject.type === 'unit'">
-                  <a-button @click="execUnit" type="primary">执行单元或自动化测试</a-button>
+                  <a-button @click="execUnit" type="primary">{{t('execute_unit_or_automated')}}</a-button>
                 </template>
               </div>
             </template>
@@ -41,14 +41,14 @@
                 </template>
                 <template #result="{ record }">
                   合计{{record.total}}：
-                  <span class="t-pass">{{record.pass}}（{{percent(record.pass, record.total)}}）通过</span>，
-                  <span class="t-fail">{{record.fail}}（{{percent(record.fail, record.total)}}）失败</span>，
-                  <span class="t-skip">{{record.skip}}（{{percent(record.skip, record.total)}}）忽略</span>。
+                  <span class="t-pass">{{record.pass}}（{{percent(record.pass, record.total)}}）{{ t('pass') }}</span>，
+                  <span class="t-fail">{{record.fail}}（{{percent(record.fail, record.total)}}）{{ t('fail') }}</span>，
+                  <span class="t-skip">{{record.skip}}（{{percent(record.skip, record.total)}}）{{ t('ignore') }}</span>。
                 </template>
                 <template #action="{ record }">
-                  <a-button @click="() => viewResult(record)" type="link" size="small">查看</a-button>
+                  <a-button @click="() => viewResult(record)" type="link" size="small">{{ t('view') }}</a-button>
                   <a-button @click="() => deleteExec(record)" type="link" size="small"
-                            :loading="deleteLoading.includes(record.seq)">删除</a-button>
+                            :loading="deleteLoading.includes(record.seq)">{{ t('delete') }}</a-button>
                 </template>
 
               </a-table>
@@ -114,37 +114,37 @@ export default defineComponent({
 
       const columns =[
         {
-          title: '序号',
+          title: t('index'),
           dataIndex: 'index',
           width: 150,
           customRender: ({text, index}: { text: any; index: number}) => index + 1,
         },
         {
-          title: '执行类型',
+          title: t('exec_type'),
           dataIndex: 'execBy',
           slots: { customRender: 'execBy' },
         },
         {
-          title: '名称',
+          title: t('exec_type'),
           dataIndex: 'seq',
         },
         {
-          title: '开始时间',
+          title: t('start_time'),
           dataIndex: 'startTime',
           slots: { customRender: 'startTime' },
         },
         {
-          title: '耗时',
+          title: t('duration'),
           dataIndex: 'duration',
           slots: { customRender: 'duration' },
         },
         {
-          title: '结果',
+          title: t('result'),
           dataIndex: 'result',
           slots: { customRender: 'result' },
         },
         {
-          title: '操作',
+          title: t('opt'),
           key: 'action',
           width: 260,
           slots: { customRender: 'action' },
@@ -182,15 +182,14 @@ export default defineComponent({
       const deleteLoading = ref<string[]>([]);
       const deleteExec = (item) => {
         Modal.confirm({
-          title: '删除脚本',
-          content: `确定删除编号"${item.seq}"的执行结果吗？`,
-          okText: '确认',
-          cancelText: '取消',
+          title: t('confirm_to_delete_result'),
+          okText: t('confirm'),
+          cancelText: t('cancel'),
           onOk: async () => {
             deleteLoading.value = [item.seq];
             const res: boolean = await store.dispatch('History/delete', item.seq);
             if (res === true) {
-              message.success('删除成功！');
+              message.success(t('delete_success'));
               await list();
             }
             deleteLoading.value = [];

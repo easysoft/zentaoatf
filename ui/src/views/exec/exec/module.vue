@@ -2,14 +2,14 @@
     <div class="indexlayout-main-conent">
         <a-card :bordered="false">
           <template #title>
-            <span v-if="seq">重新</span>执行套件
+            {{t('exec')}}{{t('module')}}
           </template>
           <template #extra>
             <div class="opt">
-              <a-button v-if="isRunning == 'false'" @click="exec" type="primary">执行</a-button>
-              <a-button v-if="isRunning == 'true'" @click="stop" type="primary">停止</a-button>
+              <a-button v-if="isRunning == 'false'" @click="exec" type="primary">{{t('exec')}}</a-button>
+              <a-button v-if="isRunning == 'true'" @click="stop" type="primary">{{t('stop')}}</a-button>
 
-              <a-button @click="back" type="link">返回</a-button>
+              <a-button @click="back" type="link">{{t('back')}}</a-button>
             </div>
           </template>
 
@@ -17,24 +17,24 @@
             <div id="left">
               <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
 
-                <a-form-item label="产品" v-bind="validateInfos.productId">
+                <a-form-item :label="t('product')" v-bind="validateInfos.productId">
                   <a-select v-model:value="model.productId" @change="selectProduct">
                     <a-select-option key="" value="">&nbsp;</a-select-option>
                     <a-select-option v-for="item in products" :key="item.id" :value="item.id+''">{{item.name}}</a-select-option>
                   </a-select>
                 </a-form-item>
 
-                <a-form-item label="模块" v-bind="validateInfos.moduleId">
+                <a-form-item :label="t('module')" v-bind="validateInfos.moduleId">
                   <a-select v-model:value="model.moduleId">
                     <a-select-option key="" value="">&nbsp;</a-select-option>
                     <a-select-option v-for="item in modules" :key="item.id" :value="item.id+''"><span v-html="item.name"></span></a-select-option>
                   </a-select>
                 </a-form-item>
 
-                <a-form-item label="范围" v-if="model.scope">
+                <a-form-item :label="t('scope')" v-if="model.scope">
                   <a-select v-model:value="model.scope">
-                    <a-select-option key="all" value="all">所有</a-select-option>
-                    <a-select-option key="fail" value="fail">仅失败用例</a-select-option>
+                    <a-select-option key="all" value="all">{{t('all')}}</a-select-option>
+                    <a-select-option key="fail" value="fail">{{t('only_failed')}}</a-select-option>
                   </a-select>
                 </a-form-item>
 
@@ -139,10 +139,10 @@ export default defineComponent({
 
       const rules = reactive({
         productId: [
-          { required: true, message: '请选择产品' },
+          { required: true, message: t('pls_product') },
         ],
         moduleId: [
-          { required: true, message: '请选择模块' },
+          { required: true, message: t('pls_module') },
         ],
       });
 

@@ -1,6 +1,6 @@
 <template>
   <a-modal
-      title="提交缺陷到禅道"
+      :title="t('submit_bug_to_zentao')"
       :destroy-on-close="true"
       :mask-closable="false"
       :visible="true"
@@ -8,59 +8,59 @@
       width="800px"
   >
     <template #footer>
-      <a-button key="back" @click="() => onCancel()">取消</a-button>
-      <a-button key="submit" type="primary" @click="onFinish">提交</a-button>
+      <a-button key="submit" type="primary" @click="onFinish">{{ t('submit') }}</a-button>
+      <a-button key="back" @click="() => onCancel()">{{ t('cancel') }}</a-button>
     </template>
 
     <div>
       <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
-        <a-form-item label="标题" v-bind="validateInfos.title">
+        <a-form-item :label="t('title')" v-bind="validateInfos.title">
           <a-input v-model:value="modelRef.title" />
         </a-form-item>
 
-        <a-form-item label="产品" v-bind="validateInfos.product">
+        <a-form-item :label="t('product')" v-bind="validateInfos.product">
           <a-select v-model:value="modelRef.product" @change="selectProduct">
             <a-select-option key="" value="">&nbsp;</a-select-option>
             <a-select-option v-for="item in products" :key="item.id" :value="item.id+''">{{item.name}}</a-select-option>
           </a-select>
         </a-form-item>
 
-        <a-form-item label="模块">
+        <a-form-item :label="t('module')">
           <a-select v-model:value="modelRef.module">
             <a-select-option key="" value="">&nbsp;</a-select-option>
             <a-select-option v-for="item in modules" :key="item.id" :value="item.id+''">{{ item.name }}</a-select-option>
           </a-select>
         </a-form-item>
 
-        <a-form-item label="分类">
+        <a-form-item :label="t('category')">
           <a-select v-model:value="modelRef.type">
             <a-select-option key="" value="">&nbsp;</a-select-option>
             <a-select-option v-for="item in categories" :key="item.id" :value="item.id+''">{{ item.name }}</a-select-option>
           </a-select>
         </a-form-item>
 
-        <a-form-item label="版本">
+        <a-form-item :label="t('version')">
           <a-select v-model:value="modelRef.version">
             <a-select-option key="" value="">&nbsp;</a-select-option>
             <a-select-option v-for="item in versions" :key="item.id" :value="item.id+''">{{ item.name }}</a-select-option>
           </a-select>
         </a-form-item>
 
-        <a-form-item label="严重程度">
+        <a-form-item :label="t('severity')">
           <a-select v-model:value="modelRef.severity">
             <a-select-option key="" value="">&nbsp;</a-select-option>
             <a-select-option v-for="item in severities" :key="item.id" :value="item.id+''">{{ item.name }}</a-select-option>
           </a-select>
         </a-form-item>
 
-        <a-form-item label="优先级">
+        <a-form-item :label="t('priority')">
           <a-select v-model:value="modelRef.pri">
             <a-select-option key="" value="">&nbsp;</a-select-option>
             <a-select-option v-for="item in priorities" :key="item.id" :value="item.id+''">{{ item.name }}</a-select-option>
           </a-select>
         </a-form-item>
 
-        <a-form-item label="步骤">
+        <a-form-item :label="t('step')">
           <a-textarea v-model:value="modelRef.steps" :auto-size="{ minRows: 5, maxRows: 8 }" />
         </a-form-item>
 
@@ -127,10 +127,10 @@ export default defineComponent({
 
     const rules = reactive({
       title: [
-        { required: true, message: '请输入标题' },
+        { required: true, message: t('pls_title') },
       ],
       product: [
-        { required: true, message: '请选择产品' },
+        { required: true, message: t('pls_product') },
       ],
     });
 
