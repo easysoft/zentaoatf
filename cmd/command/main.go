@@ -106,6 +106,12 @@ func main() {
 	case "set", "-set":
 		action.Set()
 
+	case "ci":
+		files := fileUtils.GetFilesFromParams(os.Args[2:])
+		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
+			action.CommitCases(files, actionModule)
+		}
+
 	case "help", "-h", "-help", "--help":
 		resUtils.PrintUsage()
 
