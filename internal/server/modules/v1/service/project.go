@@ -69,8 +69,15 @@ func (s *ProjectService) Update(id uint, project model.Project) error {
 	return s.ProjectRepo.Update(id, project)
 }
 
-func (s *ProjectService) DeleteById(id uint) error {
-	return s.ProjectRepo.BatchDelete(id)
+func (s *ProjectService) DeleteByPath(pth string) (err error) {
+	err = s.ProjectRepo.DeleteByPath(pth)
+	if err != nil {
+		return
+	}
+
+	err = s.ProjectRepo.SetCurrProject("")
+
+	return
 }
 
 func (s *ProjectService) GetByUser(currProjectPath string) (

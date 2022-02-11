@@ -22,7 +22,7 @@ func (m *ProjectModule) Party() module.WebModule {
 
 		index.Get("/", m.ProjectCtrl.List).Name = "项目列表"
 		index.Post("/", m.ProjectCtrl.Create).Name = "创建项目"
-		index.Delete("/{id:uint}", m.ProjectCtrl.Delete).Name = "删除项目"
+		index.Delete("/", m.ProjectCtrl.Delete).Name = "删除项目"
 
 		index.Get("/getByUser", m.ProjectCtrl.GetByUser).Name = "获取用户参与的项目"
 	}

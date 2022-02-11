@@ -1,15 +1,31 @@
 <template>
   <div>
-    <a-select
-        ref="select"
-        v-model:value="currProject.path"
-        :bordered="true"
-        style="width: 160px"
-        @change="selectProject"
-    >
-      <a-select-option v-for="item in projects" :key="item.id" :value="item.path">{{ item.name }}</a-select-option>
-      <a-select-option key="" value="">{{ t('create') }}</a-select-option>
-    </a-select>
+    <a-dropdown class="dropdown" :trigger="['click']">
+      <a class=" t-link-btn" @click.prevent>
+        <span class="name">{{currProject.name}}</span>
+        <DownOutlined />
+      </a>
+      <template #overlay>
+        <a-menu class="menu">
+          <a-menu-item  v-for="item in projects" :key="item.path">
+            <template v-if="currProject.path !== item.path">
+              <div class="line">
+                <div class="t-link name" @click="selectProject(item)">{{ item.name }}</div>
+                <div class="space"></div>
+                <div class="t-link icon" @click="removeProject(item)">
+                  <icon-svg type="close"></icon-svg>
+                </div>
+              </div>
+            </template>
+          </a-menu-item>
+
+          <a-menu-divider />
+          <a-menu-item key="">
+            <div class="t-link name" @click="selectProject('')">{{ t('create') }}</div>
+          </a-menu-item>
+        </a-menu>
+      </template>
+    </a-dropdown>
 
     <project-create-form
       :visible="formVisible"
@@ -23,19 +39,21 @@
 import {computed, ComputedRef, defineComponent, onMounted, Ref, ref, watch} from "vue";
 import {useRouter} from "vue-router";
 import {useStore} from "vuex";
-
+import IconSvg from "@/components/IconSvg/index";
 import {ProjectData} from "@/store/project";
 import ProjectCreateForm from "@/views/component/project/create.vue";
 import {createProject} from "@/services/project";
 import {hideMenu} from "@/utils/dom";
 import {useI18n} from "vue-i18n";
+import { DownOutlined } from '@ant-design/icons-vue';
 
 interface RightTopProject {
   t: (key: string | number) => string;
   projects: ComputedRef<any[]>;
   currProject: ComputedRef;
 
-  selectProject: (value: string) => void;
+  selectProject: (item) => void;
+  removeProject: (item) => void;
   formVisible: Ref<boolean>;
   setFormVisible:  (val: boolean) => void;
   submitForm: (project: any) => Promise<void>;
@@ -44,7 +62,7 @@ interface RightTopProject {
 
 export default defineComponent({
   name: 'RightTopProject',
-  components: {ProjectCreateForm},
+  components: {DownOutlined, ProjectCreateForm, IconSvg},
   setup(): RightTopProject {
     const { t } = useI18n();
 
@@ -75,13 +93,22 @@ export default defineComponent({
       console.log('onMounted')
     })
 
-    const selectProject = (value): void => {
-      console.log('selectProject', value)
+    const selectProject = (item): void => {
+      console.log('selectProject', item)
 
-      if (value === '') {
+      if (!item) {
         setFormVisible(true)
       } else {
-        store.dispatch('project/fetchProject', value)
+        store.dispatch('project/fetchProject', item.path)
+      }
+    }
+    const removeProject = (item): void => {
+      console.log('removeProject', item)
+
+      if (item.key === '') {
+        setFormVisible(true)
+      } else {
+        store.dispatch('project/removeProject', item.path)
       }
     }
 
@@ -105,6 +132,7 @@ export default defineComponent({
     return {
       t,
       selectProject,
+      removeProject,
       projects,
       currProject,
       formVisible,
@@ -115,3 +143,51 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="less">
+.dropdown {
+  display: inline-block;
+  padding: 13px 0;
+  width: 150px;
+  font-size: 15px !important;
+  text-align: right;
+
+  .name {
+    display: inline-block;
+    width: 130px;
+    line-height: 15px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-right: 3px;
+  }
+  .anticon-down {
+    font-size: 16px !important;
+  }
+}
+
+.menu {
+  .ant-dropdown-menu-item {
+    cursor: default;
+    .ant-dropdown-menu-title-content {
+      cursor: default;
+      .line {
+        display: flex;
+        .name {
+          flex: 1;
+          margin-top: 3px;
+          font-size: 16px;
+        }
+        .space {
+          width: 20px;
+        }
+        .icon {
+          width: 15px;
+          font-size: 10px;
+        }
+      }
+
+    }
+  }
+
+}
+</style>

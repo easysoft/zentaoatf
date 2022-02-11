@@ -121,7 +121,7 @@ export default defineComponent({
 
       const fetchProducts = throttle((): void => {
         store.dispatch('zentao/fetchProducts').catch((error) => {
-          if (error.response.data.code === 10100) router.push(`/config`)
+          if (error.response.data.code === 2000) router.push(`/config`)
         })
       }, 600)
       fetchProducts()
