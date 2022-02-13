@@ -1,6 +1,7 @@
 package zentaoUtils
 
 import (
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
 	httpUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/http"
@@ -20,7 +21,9 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId string, project
 	report.BuildUrl = os.Getenv("BUILD_URL")
 
 	// remove it, will cause zentao testtask not display
-	report.TestType = ""
+	if commConsts.ComeFrom != "cmd" {
+		report.TestType = ""
+	}
 
 	config := configUtils.LoadByProjectPath(projectPath)
 	Login(config)

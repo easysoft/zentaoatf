@@ -112,6 +112,13 @@ func main() {
 			action.CommitCases(files, actionModule)
 		}
 
+	case "cr":
+		//files := fileUtils.GetFilesFromParams(os.Args[2:])
+		files := os.Args[2:]
+		if err := flagSet.Parse(os.Args[len(files):]); err == nil {
+			action.CommitZTFTestResult(files, productId, taskId, noNeedConfirm, actionModule)
+		}
+
 	case "help", "-h", "-help", "--help":
 		resUtils.PrintUsage()
 
