@@ -2,46 +2,46 @@
   <div class="indexlayout-main-conent">
     <a-card :bordered="false">
       <template #title>
-        执行结果详情
+        {{t('test_result')}}
       </template>
       <template #extra>
         <div class="opt">
-          <a-button @click="openResultForm()" type="primary">提交结果到禅道</a-button>
+          <a-button @click="openResultForm()" type="primary">{{ t('submit_result_to_zentao') }}</a-button>
 
-          <a-button type="link" @click="() => back()">返回</a-button>
+          <a-button type="link" @click="() => back()">{{ t('back') }}</a-button>
         </div>
       </template>
 
       <div class="main">
         <a-row>
-          <a-col :span="2" class="t-bord t-label-right">测试环境</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('test_env') }}</a-col>
           <a-col :span="4">{{ testEnv(report.testEnv) }}</a-col>
-          <a-col :span="2" class="t-bord t-label-right">测试类型</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('test_type') }}</a-col>
           <a-col :span="4">{{ testType(report.testType) }}</a-col>
-          <a-col :span="2" class="t-bord t-label-right">执行类型</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('exec_type') }}</a-col>
           <a-col :span="4">{{ execBy(report) }}</a-col>
         </a-row>
         <a-row>
-          <a-col :span="2" class="t-bord t-label-right">开始时间</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('start_time') }}</a-col>
           <a-col :span="4">{{ momentTime(report.startTime) }}</a-col>
-          <a-col :span="2" class="t-bord t-label-right">结束时间</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('end_time') }}</a-col>
           <a-col :span="4">{{ momentTime(report.endTime) }}</a-col>
-          <a-col :span="2" class="t-bord t-label-right">耗时</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('duration') }}</a-col>
           <a-col :span="4">{{ report.duration }}秒</a-col>
         </a-row>
         <a-row>
-          <a-col :span="2" class="t-bord t-label-right">用例数</a-col>
-          <a-col :span="4">{{ momentTime(report.startTime) }}</a-col>
-          <a-col :span="2" class="t-bord t-label-right">通过</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('case_num') }}</a-col>
+          <a-col :span="4">{{ report.total }}</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('pass') }}</a-col>
           <a-col :span="4">{{ report.pass }}（{{ percent(report.pass, report.total) }}）</a-col>
-          <a-col :span="2" class="t-bord t-label-right">失败</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('fail') }}</a-col>
           <a-col :span="4">{{ report.fail }}（{{ percent(report.fail, report.total) }}）</a-col>
-          <a-col :span="2" class="t-bord t-label-right">跳过</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('skip') }}</a-col>
           <a-col :span="4">{{ report.skip }}（{{ percent(report.skip, report.total) }}）</a-col>
         </a-row>
 
         <a-row>
-          <a-col :span="2" class="t-bord t-label-right">用例详情</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('case_detail') }}</a-col>
         </a-row>
         <a-row>
           <a-col :span="2"></a-col>
@@ -62,10 +62,10 @@
               </template>
               <template #info="{ record }">
                 <template v-if="record.failure">
-                  <a-button type="link" @click="showInfo(record.id)">查看错误</a-button>
+                  <a-button type="link" @click="showInfo(record.id)">{{t('view_error')}}</a-button>
                   <a-modal v-model:visible="visibleMap[record.id]"
+                           :title="t('error_detail')"
                            @ok="closeInfo(record.id)"
-                           title="错误信息"
                            width="1000px">
                     <p>{{ jsonStr(record.failure) }}</p>
                   </a-modal>
@@ -158,26 +158,26 @@ export default defineComponent({
         customRender: ({text, index}: { text: any; index: number }) => index + 1,
       },
       {
-        title: '用例',
+        title: t('index'),
         dataIndex: 'title',
         slots: {customRender: 'title'},
       },
       {
-        title: '套件',
+        title: t('suite'),
         dataIndex: 'testSuite',
       },
       {
-        title: '耗时（秒）',
+        title: t('duration_sec'),
         dataIndex: 'duration',
         slots: {customRender: 'duration'},
       },
       {
-        title: '状态',
+        title: t('status'),
         dataIndex: 'status',
         slots: {customRender: 'status'},
       },
       {
-        title: '信息',
+        title: t('info'),
         dataIndex: 'info',
         slots: {customRender: 'info'},
       },
@@ -226,12 +226,12 @@ export default defineComponent({
         console.log('json', json)
         if (json.code === 0) {
           notification.success({
-            message: '提交成功',
+            message: t('submit_success'),
           });
           setResultFormVisible(false)
         } else {
           notification.error({
-            message: '提交失败',
+            message: t('submit_failed'),
             description: json.msg,
           });
         }

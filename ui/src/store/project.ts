@@ -62,9 +62,9 @@ const StoreModel: ModuleType = {
         return false;
       }
     },
-    async removeProject({ commit }, currProjectPath) {
+    async removeProject({ commit }, selectedProjectPath) {
       try {
-        await deleteProject(currProjectPath);
+        await deleteProject(selectedProjectPath);
 
         const response: ResponseData = await queryProject('');
         const { data } = response;

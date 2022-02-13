@@ -3,14 +3,15 @@
 
     <a-card :bordered="false">
       <template #title>
-        <span v-if="seq">重新</span>执行用例
+        {{t('exec')}}{{t('case')}}
       </template>
+
       <template #extra>
         <div class="opt">
-          <a-button v-if="isRunning == 'false'" :disabled="checkedKeys.length == 0" @click="exec" type="primary">执行</a-button>
-          <a-button v-if="isRunning == 'true'" @click="stop" type="primary">停止</a-button>
+          <a-button v-if="isRunning == 'false'" :disabled="checkedKeys.length == 0" @click="exec" type="primary">{{ t('exec') }}</a-button>
+          <a-button v-if="isRunning == 'true'" @click="stop" type="primary">{{t('stop')}}</a-button>
 
-          <a-button @click="back" type="link">返回</a-button>
+          <a-button @click="back" type="link">{{ t('back') }}</a-button>
         </div>
       </template>
 
@@ -20,8 +21,8 @@
             <div class="left"></div>
             <div class="right">
               <a-button @click="expandAll" type="link">
-                <span v-if="!isExpand">展开全部</span>
-                <span v-if="isExpand">收缩全部</span>
+                <span v-if="!isExpand">{{ t('expand_all') }}</span>
+                <span v-if="isExpand">{{ t('collapse_all') }}</span>
               </a-button>
             </div>
           </div>
@@ -141,7 +142,6 @@ export default defineComponent({
       get(seq).then((json) => {
         setTimeout(() => { // wait tree init completed
           checkedKeys.value = getCaseIdsFromReport(json.data, scope)
-          console.log('selectedKeys', checkedKeys.value)
         }, 300)
       })
     }
@@ -223,7 +223,7 @@ export default defineComponent({
     const exec = (): void => {
       console.log("exec")
       if (checkedKeys.value.length == 0) {
-        wsMsg.out += '请选择需要执行的用例。\n'
+        wsMsg.out += t('pls_select_case') + '\n'
         return
       }
 

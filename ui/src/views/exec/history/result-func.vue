@@ -2,48 +2,48 @@
   <div class="indexlayout-main-conent">
     <a-card :bordered="false">
       <template #title>
-        执行结果详情
+        {{t('test_result')}}
       </template>
       <template #extra>
         <div class="opt">
-          <a-button @click="exec('all')" type="primary">重新执行所有用例</a-button>
-          <a-button @click="exec('fail')" type="primary">重新执行失败用例</a-button>
+          <a-button @click="exec('all')" type="primary">{{ t('re_exec_all') }}</a-button>
+          <a-button @click="exec('fail')" type="primary">{{ t('re_exec_failed') }}</a-button>
 
-          <a-button @click="openResultForm()">提交结果到禅道</a-button>
-          <a-button type="link" @click="() => back()">返回</a-button>
+          <a-button @click="openResultForm()">{{ t('submit_result_to_zentao') }}</a-button>
+          <a-button type="link" @click="() => back()">{{ t('back') }}</a-button>
         </div>
       </template>
 
       <div class="main">
         <a-row>
-          <a-col :span="2" class="t-bord t-label-right">测试环境</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('test_env') }}</a-col>
           <a-col :span="4">{{ testEnv(report.testEnv) }}</a-col>
-          <a-col :span="2" class="t-bord t-label-right">测试类型</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('test_type') }}</a-col>
           <a-col :span="4">{{ testType(report.testType) }}</a-col>
-          <a-col :span="2" class="t-bord t-label-right">执行类型</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('exec_type') }}</a-col>
           <a-col :span="4">{{ execBy(report) }}</a-col>
         </a-row>
         <a-row>
-          <a-col :span="2" class="t-bord t-label-right">开始时间</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('start_time') }}</a-col>
           <a-col :span="4">{{ momentTime(report.startTime) }}</a-col>
-          <a-col :span="2" class="t-bord t-label-right">结束时间</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('end_time') }}</a-col>
           <a-col :span="4">{{ momentTime(report.endTime) }}</a-col>
-          <a-col :span="2" class="t-bord t-label-right">耗时</a-col>
-          <a-col :span="4">{{ report.duration }}秒</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('duration') }}</a-col>
+          <a-col :span="4">{{ report.duration }}{{ t('sec') }}</a-col>
         </a-row>
         <a-row>
-          <a-col :span="2" class="t-bord t-label-right">用例数</a-col>
-          <a-col :span="4">{{ momentTime(report.startTime) }}</a-col>
-          <a-col :span="2" class="t-bord t-label-right">通过</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('case_num') }}</a-col>
+          <a-col :span="4">{{ report.startTime }}</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('pass') }}</a-col>
           <a-col :span="4">{{ report.pass }}（{{ percent(report.pass, report.total) }}）</a-col>
-          <a-col :span="2" class="t-bord t-label-right">失败</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('fail') }}</a-col>
           <a-col :span="4">{{ report.fail }}（{{ percent(report.fail, report.total) }}）</a-col>
-          <a-col :span="2" class="t-bord t-label-right">跳过</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('skip') }}</a-col>
           <a-col :span="4">{{ report.skip }}（{{ percent(report.skip, report.total) }}）</a-col>
         </a-row>
 
         <a-row>
-          <a-col :span="2" class="t-bord t-label-right">用例详情</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('case_detail') }}</a-col>
         </a-row>
         <a-row>
           <a-col :span="2"></a-col>
@@ -56,7 +56,7 @@
                   <span :class="'t-'+cs.status">{{ resultStatus(cs.status) }}</span>
                 </div>
                 <div class="buttons" v-if="cs.status==='fail'">
-                  <a-button @click="openBugForm(cs)">提交缺陷到禅道</a-button>
+                  <a-button @click="openBugForm(cs)">{{ t('submit_bug_to_zentao') }}</a-button>
                 </div>
               </div>
 
@@ -169,23 +169,23 @@ export default defineComponent({
 
     const columns = [
       {
-        title: '序号',
+        title: t('index'),
         dataIndex: 'seq',
         width: 150,
         customRender: ({text, index}: { text: any; index: number }) => index + 1,
       },
       {
-        title: '步骤',
+        title: t('step'),
         dataIndex: 'name',
         slots: {customRender: 'name'},
       },
       {
-        title: '状态',
+        title: t('status'),
         dataIndex: 'status',
         slots: {customRender: 'status'},
       },
       {
-        title: '检查点（编号 状态 期待结果 实际结果）',
+        title: t('checkpoint'),
         dataIndex: 'checkPoints',
         slots: {customRender: 'checkPoints'},
       },
@@ -232,12 +232,12 @@ export default defineComponent({
         console.log('json', json)
         if (json.code === 0) {
           notification.success({
-            message: '提交成功',
+            message: t('submit_success'),
           });
           setResultFormVisible(false)
         } else {
           notification.error({
-            message: '提交失败',
+            message: t('submit_failed'),
             description: json.msg,
           });
         }
@@ -268,12 +268,12 @@ export default defineComponent({
         console.log('json', json)
         if (json.code === 0) {
           notification.success({
-            message: '提交成功',
+            message: t('submit_success'),
           });
           setBugFormVisible(false)
         } else {
           notification.error({
-            message: '提交失败',
+            message: t('submit_failed'),
             description: json.msg,
           });
         }

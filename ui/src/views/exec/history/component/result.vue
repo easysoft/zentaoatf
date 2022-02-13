@@ -1,26 +1,26 @@
 <template>
   <a-modal
-      title="提交结果到禅道"
+      :title="t('submit_result_to_zentao')"
       :destroy-on-close="true"
       :mask-closable="false"
       :visible="true"
       :onCancel="onCancel"
   >
     <template #footer>
-      <a-button key="back" @click="() => onCancel()">取消</a-button>
-      <a-button key="submit" type="primary" @click="onFinish">提交</a-button>
+      <a-button key="back" @click="() => onCancel()">{{t('cancel')}}</a-button>
+      <a-button key="submit" type="primary" @click="onFinish">t('submit')</a-button>
     </template>
 
     <div>
       <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
-        <a-form-item label="产品" v-bind="validateInfos.productId">
+        <a-form-item :label="t('product')" v-bind="validateInfos.productId">
           <a-select v-model:value="modelRef.productId" @change="selectProduct">
             <a-select-option key="" value="">&nbsp;</a-select-option>
             <a-select-option v-for="item in products" :key="item.id" :value="item.id+''">{{item.name}}</a-select-option>
           </a-select>
         </a-form-item>
 
-        <a-form-item label="任务">
+        <a-form-item :label="t('task')">
           <a-select v-model:value="modelRef.taskId">
             <a-select-option key="" value="">&nbsp;</a-select-option>
             <a-select-option v-for="item in tasks" :key="item.id" :value="item.id+''">{{ item.name }}</a-select-option>
@@ -78,7 +78,7 @@ export default defineComponent({
 
     const rules = reactive({
       productId: [
-        { required: true, message: '请选择产品' },
+        { required: true, message: t('pls_product') },
       ],
     });
 

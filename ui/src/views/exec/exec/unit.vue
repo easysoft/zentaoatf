@@ -2,14 +2,14 @@
     <div class="indexlayout-main-conent">
         <a-card :bordered="false">
           <template #title>
-            执行单元测试
+            {{t('exec')}}{{t('unit_test')}}
           </template>
           <template #extra>
             <div class="opt">
-              <a-button v-if="isRunning == 'false'" @click="exec" type="primary">执行</a-button>
-              <a-button v-if="isRunning == 'true'" @click="stop" type="primary">停止</a-button>
+              <a-button v-if="isRunning == 'false'" @click="exec" type="primary">{{t('exec')}}</a-button>
+              <a-button v-if="isRunning == 'true'" @click="stop" type="primary">{{t('stop')}}</a-button>
 
-              <a-button @click="back" type="link">返回</a-button>
+              <a-button @click="back" type="link">{{t('back')}}</a-button>
             </div>
           </template>
 
@@ -17,14 +17,14 @@
             <div id="left">
               <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
 
-                <a-form-item label="产品" v-bind="validateInfos.productId">
+                <a-form-item :label="t('product')" v-bind="validateInfos.productId">
                   <a-select v-model:value="model.productId">
                     <a-select-option key="" value="">&nbsp;</a-select-option>
                     <a-select-option v-for="item in products" :key="item.id" :value="item.id+''">{{item.name}}</a-select-option>
                   </a-select>
                 </a-form-item>
 
-                <a-form-item label="框架/工具" v-bind="validateInfos.testTool">
+                <a-form-item :label="t('framework_tool')" v-bind="validateInfos.testTool">
                   <a-select v-model:value="model.testTool">
                     <a-select-option key="" value="">&nbsp;</a-select-option>
                     <a-select-option v-for="item in unitTestFrameworks.list" :key="item" :value="item">
@@ -33,7 +33,7 @@
                   </a-select>
                 </a-form-item>
 
-                <a-form-item label="构建工具" v-if="model.testTool=='junit' || model.testTool=='testng'"
+                <a-form-item :label="t('build_tool')" v-if="model.testTool=='junit' || model.testTool=='testng'"
                              v-bind="validateInfos.buildTool">
                   <a-select v-model:value="model.buildTool">
                     <a-select-option key="" value="">&nbsp;</a-select-option>
@@ -43,12 +43,12 @@
                   </a-select>
                 </a-form-item>
 
-                <a-form-item label="测试命令" v-bind="validateInfos.cmd">
+                <a-form-item :label="t('test_cmd')" v-bind="validateInfos.cmd">
                   <a-textarea v-model:value="model.cmd" placeholder="mvn clean package test"
                               :auto-size="{ minRows: 3, maxRows: 6 }" />
                 </a-form-item>
 
-                <a-form-item label="提交到禅道" v-bind="validateInfos.submitResult">
+                <a-form-item :label="t('submit_to_zentao')" v-bind="validateInfos.submitResult">
                   <a-switch v-model:checked="model.submitResult" />
                 </a-form-item>
 
@@ -177,16 +177,16 @@ export default defineComponent({
 
       const rules = reactive({
         productId: [
-          { required: true, message: '请选择产品' },
+          { required: true, message: t('pls_product') },
         ],
         testTool: [
-          { required: true, message: '请选择测试工具' },
+          { required: true, message: t('pls_test_tool') },
         ],
         buildTool: [
-          { required: true, message: '请选择构建工具' },
+          { required: true, message: t('pls_build_tool') },
         ],
         cmd: [
-          { required: true, message: '请输入所要执行的命令' },
+          { required: true, message: t('pls_cmd') },
         ],
       });
 
