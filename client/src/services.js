@@ -21,7 +21,7 @@ export function startZtfServer() {
     if (!serverExePath && !DEBUG) {
         const platform = os.platform(); // 'darwin', 'linux', 'win32'
         const exePath = `bin/${platform}/ztf${platform === 'win32' ? '.exe' : ''}`;
-        serverExePath = path.resolve(process.resourcesPath, exePath);
+        serverExePath = path.join(process.resourcesPath, exePath);
     }
     if (serverExePath) {
         if (!path.isAbsolute(serverExePath)) {
