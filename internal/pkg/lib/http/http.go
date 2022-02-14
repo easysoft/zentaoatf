@@ -268,6 +268,8 @@ func GetRespErr(bytes []byte, url string) (ret []byte, ok bool) {
 
 	if err == nil && (respData.Result != "" && respData.Result != "success") {
 		ok = false
+	} else {
+		ok = true
 	}
 
 	return
