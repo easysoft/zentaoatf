@@ -41,8 +41,8 @@
           <a-switch v-model:checked="model.independentFile"/>
         </a-form-item>
         <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-          <a-button type="primary" @click.prevent="syncFromZentaoSubmit">提交</a-button>
-          <a-button style="margin-left: 10px" @click="resetFields">重置</a-button>
+          <a-button type="primary" @click.prevent="syncFromZentaoSubmit">{{ t('submit') }}</a-button>
+          <a-button style="margin-left: 10px" @click="resetFieldsFrom">{{ t('reset') }}</a-button>
         </a-form-item>
       </a-form>
     </a-card>
@@ -58,6 +58,7 @@
 
         <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
           <a-button type="primary" @click.prevent="syncToZentaoSubmit">{{ t('submit') }}</a-button>
+          <a-button style="margin-left: 10px" @click="resetFieldsTo">{{ t('reset') }}</a-button>
         </a-form-item>
       </a-form>
     </a-card>
@@ -91,8 +92,8 @@ interface ConfigFormSetupData {
   wrapperCol: any
   validate: any
   validateInfos: validateInfos
-  resetFields: () => void;
   syncFromZentaoSubmit: () => void;
+  resetFieldsFrom: () => void;
 
   langs: ComputedRef<any[]>;
   products: ComputedRef<any[]>;
@@ -106,7 +107,7 @@ interface ConfigFormSetupData {
   syncToZentaoSubmit: () => void;
   validateCommit: any
   validateInfosCommit: validateInfos
-  resetFieldsCommit: () => void;
+  resetFieldsTo: () => void;
 }
 
 export default defineComponent({
@@ -161,10 +162,13 @@ export default defineComponent({
       ]
     })
 
-    const {resetFields, validate, validateInfos} = useForm(model, rules);
+    const syncFromForm = useForm(model, rules);
+    const resetFieldsFrom = syncFromForm.resetFields
+    const  validate = syncFromForm.validate
+    const  validateInfos = syncFromForm.validateInfos
 
     const commitForm = useForm(modelCommit, rulesCommit);
-    const resetFieldsCommit = commitForm.resetFields
+    const resetFieldsTo = commitForm.resetFields
     const validateCommit = commitForm.validate
     const validateInfosCommit = commitForm.validateInfos
 
@@ -236,7 +240,7 @@ export default defineComponent({
       rules,
       validate,
       validateInfos,
-      resetFields,
+      resetFieldsFrom,
       syncFromZentaoSubmit,
 
       model,
@@ -251,7 +255,7 @@ export default defineComponent({
       rulesCommit,
       validateCommit,
       validateInfosCommit,
-      resetFieldsCommit,
+      resetFieldsTo,
       syncToZentaoSubmit,
     }
 
