@@ -1,6 +1,6 @@
 {
-  "name": "ztf-client",
-  "productName": "ztf-client",
+  "name": "ztf",
+  "productName": "ztf",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": ".webpack/main",
