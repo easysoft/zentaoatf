@@ -8,7 +8,7 @@
   >
     <template #footer>
       <a-button key="back" @click="() => onCancel()">{{t('cancel')}}</a-button>
-      <a-button key="submit" type="primary" @click="onFinish">t('submit')</a-button>
+      <a-button key="submit" type="primary" @click="onFinish">{{t('submit')}}</a-button>
     </template>
 
     <div>

@@ -38,7 +38,7 @@
           <a-col :span="4">{{ report.pass }}（{{ percent(report.pass, report.total) }}）</a-col>
           <a-col :span="2" class="t-bord t-label-right">{{ t('fail') }}</a-col>
           <a-col :span="4">{{ report.fail }}（{{ percent(report.fail, report.total) }}）</a-col>
-          <a-col :span="2" class="t-bord t-label-right">{{ t('skip') }}</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('ignore') }}</a-col>
           <a-col :span="4">{{ report.skip }}（{{ percent(report.skip, report.total) }}）</a-col>
         </a-row>
 
