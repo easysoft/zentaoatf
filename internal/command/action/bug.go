@@ -5,6 +5,7 @@ import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	analysisUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/analysis"
 	"github.com/aaronchen2k/deeptest/internal/command"
+	"github.com/aaronchen2k/deeptest/internal/command/ui/page"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
@@ -48,8 +49,7 @@ func CommitBug(files []string, actionModule *command.IndexModule) {
 			os.Exit(0)
 		} else {
 			if stringUtils.FindInArr(caseId, ids) {
-				// todo handle for input
-
+				page.CuiReportBug(resultDir, caseId, actionModule)
 			} else {
 				logUtils.ExecConsole(color.FgRed, i118Utils.Sprintf("invalid_input"))
 			}

@@ -1,5 +1,9 @@
 package commConsts
 
+import (
+	"github.com/awesome-gocui/gocui"
+)
+
 var (
 	LanguageZh = "zh"
 	LanguageEn = "en"
@@ -17,6 +21,8 @@ var (
 )
 
 var (
+	Cui              *gocui.Gui
+	MainViewHeight   int
 	ConfigPath       string
 	ServerWorkDir    string
 	ServerProjectDir string

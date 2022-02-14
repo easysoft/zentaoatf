@@ -45,11 +45,29 @@ func CommitBug(ztfBug commDomain.ZtfBug, projectPath string) (err error) {
 	ret, ok := httpUtils.Post(url, bug, true)
 
 	msg := ""
+
 	if ok {
 		msg = i118Utils.Sprintf("success_to_report_bug", ztfBug.Case)
 	} else {
 		msg = color.RedString(string(ret))
 	}
+
+	if commConsts.ComeFrom == "cmd" {
+		msgView, _ := commConsts.Cui.View("reportBugMsg")
+		msgView.Clear()
+		if ok {
+			color.New(color.FgGreen).Fprintf(msgView, msg)
+
+			commConsts.Cui.DeleteView("submitInput")
+
+			cancelReportBugInput, _ := commConsts.Cui.View("cancelReportBugInput")
+			cancelReportBugInput.Clear()
+			fmt.Fprint(cancelReportBugInput, " "+i118Utils.Sprintf("close"))
+		} else {
+			color.New(color.FgMagenta).Fprintf(msgView, msg)
+		}
+	}
+
 	logUtils.Info(msg)
 
 	return
