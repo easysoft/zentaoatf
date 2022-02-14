@@ -10,6 +10,7 @@ import (
 )
 
 func InitConfig() {
+	serverConfig.Init()
 	serverConfig.InitLog()
 
 	commandConfig.CheckConfigPermission()
@@ -27,8 +28,9 @@ func InitConfig() {
 }
 
 type IndexModule struct {
-	ProjectService *service.ProjectService `inject:""`
-	SyncService    *service.SyncService    `inject:""`
+	ProjectService    *service.ProjectService    `inject:""`
+	SyncService       *service.SyncService       `inject:""`
+	TestResultService *service.TestResultService `inject:""`
 }
 
 func NewIndexModule() *IndexModule {
