@@ -46,7 +46,7 @@ export function startZtfServer() {
                 for (let i = 0; i < lines.length; i++) {
                     const line = lines[i];
                     if (DEBUG) {
-                        logInfo('\t', line);
+                        logInfo('\t' + line);
                     }
                     if (line.includes('Now listening on: http')) {
                         resolve(line.split('Now listening on:')[1].trim());
@@ -91,7 +91,7 @@ export function startZtfServer() {
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
                 if (DEBUG) {
-                    logInfo('\t', line);
+                    logInfo('\t' + line);
                 }
                 if (line.includes('Now listening on: http')) {
                     resolve(line.split('Now listening on:')[1].trim());
@@ -183,15 +183,15 @@ export function getUIServerUrl() {
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
                 if (DEBUG) {
-                    logInfo('\t', line);
+                    logInfo('\t' + line);
                 }
                 if (line.includes('App running at:')) {
                     const nextLine = lines[i + 1] || lines[i + 2];
                     if (DEBUG) {
-                        logInfo('\t', nextLine);
+                        logInfo('\t' + nextLine);
                     }
                     if (!nextLine) {
-                        console.error('\t', `Cannot grabing running address after line "${line}".`);
+                        console.error('\t' + `Cannot grabing running address after line "${line}".`);
                         throw new Error(`Cannot grabing running address after line "${line}".`);
                     }
                     const url = nextLine.split('Local:   ')[1];

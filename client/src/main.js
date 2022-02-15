@@ -44,7 +44,7 @@ async function startApp() {
 
   const url = await getUIServerUrl();
 
-  logInfo('>> UI server url is', url);
+  logInfo(`>> UI server url is ${url}`);
 
   createWindow(url);
 
