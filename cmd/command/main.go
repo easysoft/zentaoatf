@@ -5,6 +5,7 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/aaronchen2k/deeptest/internal/command"
 	"github.com/aaronchen2k/deeptest/internal/command/action"
+	commandConfig "github.com/aaronchen2k/deeptest/internal/command/config"
 	_consts "github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
@@ -101,6 +102,10 @@ func main() {
 	case "extract":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
 		action.Extract(files)
+
+	case "expect":
+		files := fileUtils.GetFilesFromParams(os.Args[2:])
+		action.GenExpectFiles(files)
 
 	case "checkout", "co":
 		if err := flagSet.Parse(os.Args[2:]); err == nil {
@@ -223,7 +228,7 @@ func run(args []string, actionModule *command.IndexModule) {
 
 func init() {
 	cleanup()
-	command.InitConfig()
+	commandConfig.Init()
 }
 
 func cleanup() {

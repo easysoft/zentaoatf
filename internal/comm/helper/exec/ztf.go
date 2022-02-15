@@ -77,7 +77,7 @@ func RunZtf(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string,
 
 	conf := configUtils.LoadByProjectPath(projectPath)
 
-	casesToRun, casesToIgnore := filterCases(cases, conf)
+	casesToRun, casesToIgnore := FilterCases(cases, conf)
 
 	numbMaxWidth := 0
 	numbMaxWidth, pathMaxWidth = getNumbMaxWidth(casesToRun)
@@ -318,7 +318,7 @@ ExitCurrCase:
 	return
 }
 
-func filterCases(cases []string, conf commDomain.ProjectConf) (casesToRun, casesToIgnore []string) {
+func FilterCases(cases []string, conf commDomain.ProjectConf) (casesToRun, casesToIgnore []string) {
 	for _, cs := range cases {
 		if commonUtils.IsWin() {
 			if path.Ext(cs) == ".sh" { // filter by os
