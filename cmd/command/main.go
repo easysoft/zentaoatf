@@ -125,6 +125,16 @@ func main() {
 			action.CommitBug(files, actionModule)
 		}
 
+	case "list", "ls", "-l":
+		files := fileUtils.GetFilesFromParams(os.Args[2:])
+		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
+			if len(files) == 0 {
+				files = append(files, ".")
+			}
+
+			action.List(files, keywords, actionModule)
+		}
+
 	case "help", "-h", "-help", "--help":
 		resUtils.PrintUsage()
 

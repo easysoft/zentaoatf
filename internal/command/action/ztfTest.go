@@ -31,7 +31,7 @@ func RunZTFTest(file []string, suiteIdStr, taskIdStr string, actionModule *comma
 		cases = append(cases, file[0])
 	} else {
 		_, _, _, scriptTree, _ := actionModule.ProjectService.GetByUser(commConsts.WorkDir)
-		cases = GetCasesFromChildren(scriptTree.Children)
+		cases = getCasesFromChildren(scriptTree.Children)
 	}
 
 	req.Cases = cases
@@ -42,13 +42,13 @@ func RunZTFTest(file []string, suiteIdStr, taskIdStr string, actionModule *comma
 }
 
 // 扁平化
-func GetCasesFromChildren(scripts []*serverDomain.TestAsset) (cases []string) {
+func getCasesFromChildren(scripts []*serverDomain.TestAsset) (cases []string) {
 	for _, v := range scripts {
 		if v.Path != "" {
 			cases = append(cases, v.Path)
 		}
 		if v.Children != nil {
-			GetCasesFromChildren(v.Children)
+			getCasesFromChildren(v.Children)
 		}
 	}
 	return
