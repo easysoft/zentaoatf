@@ -57,7 +57,9 @@ func (c *ProjectCtrl) GetByUser(ctx iris.Context) {
 	projectPath := ctx.URLParam("currProject")
 
 	if projectPath == "" {
-		data := iris.Map{"projects": make([]model.Project, 0),
+		projects, _ := c.ProjectService.ListProjectByUser()
+		data := iris.Map{
+			"projects":    projects,
 			"currProject": model.Project{},
 			"currConfig":  commDomain.ProjectConf{},
 			"scriptTree":  serverDomain.TestAsset{}}

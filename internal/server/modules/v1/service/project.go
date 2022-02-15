@@ -80,6 +80,12 @@ func (s *ProjectService) DeleteByPath(pth string) (err error) {
 	return
 }
 
+func (s *ProjectService) ListProjectByUser() (projects []model.Project, err error) {
+	projects, err = s.ProjectRepo.ListProjectByUser()
+
+	return
+}
+
 func (s *ProjectService) GetByUser(currProjectPath string) (
 	projects []model.Project, currProject model.Project, currProjectConfig commDomain.ProjectConf, scriptTree serverDomain.TestAsset, err error) {
 	projects, err = s.ProjectRepo.ListProjectByUser()
