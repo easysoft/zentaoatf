@@ -20,7 +20,6 @@ func (m *ProjectModule) Party() module.WebModule {
 	handler := func(index iris.Party) {
 		index.Use(middleware.InitCheck())
 
-		index.Get("/", m.ProjectCtrl.List).Name = "项目列表"
 		index.Post("/", m.ProjectCtrl.Create).Name = "创建项目"
 		index.Delete("/", m.ProjectCtrl.Delete).Name = "删除项目"
 

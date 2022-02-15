@@ -213,39 +213,42 @@ func GetWorkDir() string { // where we run file in
 	return dir
 }
 
-func GetExeDir(workDir string) string { // where zd.exe file in
-	var dir string
-	arg1 := strings.ToLower(os.Args[0])
+//func GetExeDir(workDir string) string { // where zd.exe file in
+//	var dir string
+//	arg1 := strings.ToLower(os.Args[0])
+//
+//	name := filepath.Base(arg1)
+//	if strings.Index(name, "zd") == 0 && strings.Index(arg1, "go-build") < 0 {
+//		p, _ := exec.LookPath(os.Args[0])
+//		if strings.Index(p, string(os.PathSeparator)) > -1 {
+//			dir = p[:strings.LastIndex(p, string(os.PathSeparator))]
+//		}
+//	} else { // debug
+//		dir = workDir
+//	}
+//
+//	dir, _ = filepath.Abs(dir)
+//	dir = AddSepIfNeeded(dir)
+//
+//	return dir
+//}
 
-	name := filepath.Base(arg1)
-	if strings.Index(name, "zd") == 0 && strings.Index(arg1, "go-build") < 0 {
-		p, _ := exec.LookPath(os.Args[0])
-		if strings.Index(p, string(os.PathSeparator)) > -1 {
-			dir = p[:strings.LastIndex(p, string(os.PathSeparator))]
-		}
-	} else { // debug
-		dir = workDir
-	}
-
-	dir, _ = filepath.Abs(dir)
-	dir = AddSepIfNeeded(dir)
-
-	return dir
-}
-
-func GetUserHome() (string, error) {
+func GetUserHome() (dir string, err error) {
 	user, err := user.Current()
 	if nil == err {
-		return user.HomeDir, nil
+		dir = user.HomeDir
+	} else { // cross compile support
+
+		if "windows" == runtime.GOOS { // windows
+			dir, err = homeWindows()
+		} else { // Unix-like system, so just assume Unix
+			dir, err = homeUnix()
+		}
 	}
 
-	// cross compile support
-	if "windows" == runtime.GOOS {
-		return homeWindows()
-	}
+	dir = AddSepIfNeeded(dir)
 
-	// Unix-like system, so just assume Unix
-	return homeUnix()
+	return
 }
 
 func homeUnix() (string, error) {

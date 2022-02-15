@@ -14,11 +14,15 @@ import (
 func Init() {
 	commConsts.IsRelease = commonUtils.IsRelease()
 
-	commConsts.WorkDir = fileUtils.GetWorkDir()
-	commConsts.ExeDir = fileUtils.GetExeDir(commConsts.WorkDir)
+	//commConsts.ExeDir = fileUtils.GetExeDir(commConsts.WorkDir)
+	commConsts.WorkDir = GetServerWorDir()
+
+	if commConsts.IsRelease {
+		commConsts.Verbose = true
+	}
 
 	if commConsts.Verbose {
-		fmt.Printf("\nlaunch %s%s in %s\n", commConsts.ExeDir, commConsts.App, commConsts.WorkDir)
+		fmt.Printf("\nlaunch %s%s in %s\n", "", commConsts.App, commConsts.WorkDir)
 	}
 
 	v := viper.New()
@@ -35,6 +39,16 @@ func Init() {
 	if err := VIPER.Unmarshal(&CONFIG); err != nil {
 		panic(fmt.Errorf("同步配置文件错误: %w ", err))
 	}
+
+	return
+}
+
+func GetServerWorDir() (ret string) {
+	home, _ := fileUtils.GetUserHome()
+	ret = filepath.Join(home, commConsts.App)
+
+	ret = fileUtils.AddPathSepIfNeeded(ret)
+	fileUtils.MkDirIfNeeded(ret)
 
 	return
 }

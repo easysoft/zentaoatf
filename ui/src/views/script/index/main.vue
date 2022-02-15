@@ -1,5 +1,9 @@
 <template>
-  <div class="indexlayout-main-conent">
+  <div v-if="!currProject.path">
+    <a-empty :image="simpleImage" :description="t('pls_create_project')"/>
+  </div>
+
+  <div v-if="currProject.path" class="indexlayout-main-conent">
     <div v-if="currProject.type === 'unit'" class="panel">
       {{ t('no_script_for_unittest') }}
     </div>
@@ -56,7 +60,7 @@ import {ProjectData} from "@/store/project";
 import {ScriptData} from "../store";
 import {resizeWidth} from "@/utils/dom";
 import throttle from "lodash.debounce";
-import {message, notification} from "ant-design-vue";
+import {Empty, message, notification} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
 
 interface ListScriptPageSetupData {
@@ -74,6 +78,7 @@ interface ListScriptPageSetupData {
   expandAll: (e) => void;
   extract: () => void;
   expandedKeys: Ref<string[]>
+  simpleImage: any
 }
 
 export default defineComponent({
@@ -170,6 +175,7 @@ export default defineComponent({
       tree,
       expandedKeys,
       script,
+      simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
     }
   }
 

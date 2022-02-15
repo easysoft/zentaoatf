@@ -7,6 +7,10 @@
   "scripts": {
     "start": "NODE_ENV=development electron-forge start",
     "package": "electron-forge package",
+    "package-mac": "npm run package",
+    "package-linux": "npm run package -- --platform=linux",
+    "package-win64": "npm run package -- --platform=win32 --arch=ia32",
+    "package-win32": "npm run package -- --platform=win32 --arch=x64",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\""
@@ -30,6 +34,7 @@
     "@vercel/webpack-asset-relocator-loader": "^1.7.0",
     "css-loader": "^6.5.1",
     "electron": "16.0.6",
+    "electron-packager": "^15.4.0",
     "node-loader": "^2.0.0",
     "style-loader": "^3.3.1"
   },

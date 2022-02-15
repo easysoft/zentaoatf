@@ -99,7 +99,7 @@ func (s *ProjectService) GetByUser(currProjectPath string) (
 		}
 
 		name := fileUtils.GetDirName(currProjectPath)
-		newLocalProject := model.Project{Path: currProjectPath, Name: name}
+		newLocalProject := model.Project{Path: currProjectPath, Name: name, Type: commConsts.TestFunc}
 
 		_, err = s.ProjectRepo.Create(newLocalProject)
 		if err != nil {

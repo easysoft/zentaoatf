@@ -33,7 +33,7 @@ func GetCasesByModule(productId int, moduleId int, projectPath string) (cases []
 		caseIdMap[id] = ""
 	}
 
-	commonUtils.ChangeScriptForDebug(&projectPath)
+	//commonUtils.ChangeScriptForDebug(&projectPath)
 	scriptUtils.GetScriptByIdsInDir(projectPath, caseIdMap, &cases)
 
 	return
@@ -54,7 +54,7 @@ func GetCasesBySuite(productId int, suiteId int, projectPath string) (cases []st
 		caseIdMap[id] = ""
 	}
 
-	commonUtils.ChangeScriptForDebug(&projectPath)
+	//commonUtils.ChangeScriptForDebug(&projectPath)
 	scriptUtils.GetScriptByIdsInDir(projectPath, caseIdMap, &cases)
 
 	return
@@ -75,7 +75,7 @@ func GetCasesByTask(productId int, taskId int, projectPath string) (cases []stri
 		caseIdMap[id] = ""
 	}
 
-	commonUtils.ChangeScriptForDebug(&projectPath)
+	//commonUtils.ChangeScriptForDebug(&projectPath)
 	scriptUtils.GetScriptByIdsInDir(projectPath, caseIdMap, &cases)
 
 	return

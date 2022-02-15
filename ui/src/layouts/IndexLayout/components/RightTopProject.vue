@@ -1,7 +1,11 @@
 <template>
   <div>
-    <a-dropdown class="dropdown" :trigger="['click']">
-      <a class=" t-link-btn" @click.prevent>
+    <div v-if="projects.length == 0" class="create-link" @click="selectProject('')">
+      {{ t('create_project') }}
+    </div>
+
+    <a-dropdown v-if="projects.length > 0" class="dropdown">
+      <a class="t-link-btn" @click.prevent>
         <span class="name">{{currProject.name}}</span>
         <DownOutlined />
       </a>
@@ -21,7 +25,7 @@
 
           <a-menu-divider />
           <a-menu-item key="">
-            <div class="t-link name" @click="selectProject('')">{{ t('create') }}</div>
+            <div class="t-link name" @click="selectProject('')">{{ t('create_project') }}</div>
           </a-menu-item>
         </a-menu>
       </template>
@@ -145,6 +149,12 @@ export default defineComponent({
 </script>
 
 <style lang="less">
+.create-link {
+  padding: 14px 10px;
+  width: 150px;
+  cursor: pointer;
+  text-align: right;
+}
 .dropdown {
   display: inline-block;
   padding: 13px 0;

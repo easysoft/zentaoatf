@@ -2,6 +2,7 @@ package controller
 
 import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
@@ -15,25 +16,6 @@ type ProjectCtrl struct {
 
 func NewProjectCtrl() *ProjectCtrl {
 	return &ProjectCtrl{}
-}
-
-// Query 分页列表
-func (c *ProjectCtrl) List(ctx iris.Context) {
-	var req serverDomain.ProjectReqPaginate
-	err := ctx.ReadQuery(&req)
-	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
-		return
-	}
-	req.ConvertParams()
-
-	data, err := c.ProjectService.Paginate(req)
-	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
-		return
-	}
-
-	ctx.JSON(c.SuccessResp(data))
 }
 
 // Create 添加
@@ -75,7 +57,13 @@ func (c *ProjectCtrl) GetByUser(ctx iris.Context) {
 	projectPath := ctx.URLParam("currProject")
 
 	if projectPath == "" {
-		projectPath = commConsts.WorkDir
+		data := iris.Map{"projects": make([]model.Project, 0),
+			"currProject": model.Project{},
+			"currConfig":  commDomain.ProjectConf{},
+			"scriptTree":  serverDomain.TestAsset{}}
+
+		ctx.JSON(c.SuccessResp(data))
+		return
 	}
 
 	projects, currProject, currProjectConfig, scriptTree, err := c.ProjectService.GetByUser(projectPath)
