@@ -12,53 +12,28 @@ import (
 )
 
 func InitLog() {
+	CONFIG.Zap.Director = filepath.Join(commConsts.WorkDir, CONFIG.Zap.Director)
 	if !dir.IsExist(CONFIG.Zap.Director) { // 判断是否有Director文件夹
 		dir.InsureDir(CONFIG.Zap.Director)
 	}
 
-	config := getLogConfig()
+	zapConfig := getLogConfig()
 
 	// print to console
 	var err error
-	config.EncoderConfig.EncodeLevel = nil
-	config.DisableCaller = true
-	config.EncoderConfig.TimeKey = ""
-	logUtils.LoggerStandard, err = config.Build()
+	zapConfig.EncoderConfig.EncodeLevel = nil
+	zapConfig.DisableCaller = true
+	zapConfig.EncoderConfig.TimeKey = ""
+	logUtils.LoggerStandard, err = zapConfig.Build()
 	if err != nil {
 		log.Println("init console logger fail " + err.Error())
 	}
 
 	// print to console without detail
-	config.DisableStacktrace = true
-	logUtils.LoggerExecConsole, err = config.Build()
+	zapConfig.DisableStacktrace = true
+	logUtils.LoggerExecConsole, err = zapConfig.Build()
 	if err != nil {
 		log.Println("init exec console logger fail " + err.Error())
-	}
-}
-
-func InitExecLog(projectPath string) {
-	config := getLogConfig()
-
-	commConsts.ExecLogDir = logUtils.GetLogDir(projectPath)
-
-	// print to exec log file
-	config.EncoderConfig.EncodeLevel = nil
-	config.OutputPaths = []string{filepath.Join(commConsts.ExecLogDir, commConsts.LogText)}
-	var err error
-	logUtils.LoggerExecFile, err = config.Build()
-	if err != nil {
-		log.Println("init exec file logger fail " + err.Error())
-	}
-
-	config.DisableCaller = true
-	config.DisableStacktrace = true
-	config.EncoderConfig.TimeKey = ""
-
-	// print to test result file
-	config.OutputPaths = []string{filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)}
-	logUtils.LoggerExecResult, err = config.Build()
-	if err != nil {
-		log.Println("init exec result logger fail " + err.Error())
 	}
 }
 
@@ -103,13 +78,40 @@ func getLogConfig() (config zap.Config) {
 		Level:       zap.NewAtomicLevelAt(level), // 日志级别
 		Development: true,                        // 开发模式，堆栈跟踪
 		//Encoding:         "json",               // 输出格式 console 或 json
-		Encoding:         "console",          // 输出格式 console 或 json
-		EncoderConfig:    encoderConfig,      // 编码器配置
-		OutputPaths:      []string{"stdout"}, // 输出到指定文件 stdout（标准输出，正常颜色） stderr（错误输出，红色）
-		ErrorOutputPaths: []string{"stderr"},
+		Encoding:         "console",                                                          // 输出格式 console 或 json
+		EncoderConfig:    encoderConfig,                                                      // 编码器配置
+		OutputPaths:      []string{"stdout", filepath.Join(CONFIG.Zap.Director, "info.log")}, // stdout（标准输出，正常颜色）
+		ErrorOutputPaths: []string{"stderr", filepath.Join(CONFIG.Zap.Director, "err.log")},  // stderr（错误输出，红色）
 		//InitialFields:    map[string]interface{}{"test_machine": "pc1"}, // 初始化字段
 	}
 	config.EncoderConfig.EncodeLevel = zapcore.LowercaseColorLevelEncoder //这里可以指定颜色
 
 	return
+}
+
+// 执行日志，用于具体的测试执行
+func InitExecLog(projectPath string) {
+	config := getLogConfig()
+
+	commConsts.ExecLogDir = logUtils.GetLogDir(projectPath)
+
+	// print to exec log file
+	config.EncoderConfig.EncodeLevel = nil
+	config.OutputPaths = []string{filepath.Join(commConsts.ExecLogDir, commConsts.LogText)}
+	var err error
+	logUtils.LoggerExecFile, err = config.Build()
+	if err != nil {
+		log.Println("init exec file logger fail " + err.Error())
+	}
+
+	config.DisableCaller = true
+	config.DisableStacktrace = true
+	config.EncoderConfig.TimeKey = ""
+
+	// print to test result file
+	config.OutputPaths = []string{filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)}
+	logUtils.LoggerExecResult, err = config.Build()
+	if err != nil {
+		log.Println("init exec result logger fail " + err.Error())
+	}
 }

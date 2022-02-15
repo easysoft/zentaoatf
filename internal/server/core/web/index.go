@@ -56,7 +56,7 @@ type WebServer struct {
 }
 
 // Init 初始化web服务
-func Init() *WebServer {
+func Init(port int) *WebServer {
 	serverConfig.Init()
 	serverConfig.InitLog()
 	i118Utils.Init(commConsts.Language, commConsts.AppServer)
@@ -88,6 +88,9 @@ func Init() *WebServer {
 	websocketServer := websocket.New(gorilla.Upgrader(gorillaWs.Upgrader{CheckOrigin: func(*http.Request) bool { return true }}), m)
 	websocketAPI.Get("/", websocket.Handler(websocketServer))
 
+	if port != 0 {
+		serverConfig.CONFIG.System.Addr = fmt.Sprintf(":%d", port)
+	}
 	return &WebServer{
 		app:               app,
 		addr:              serverConfig.CONFIG.System.Addr,

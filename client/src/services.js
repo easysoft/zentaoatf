@@ -37,6 +37,7 @@ export function startZtfServer() {
             cmd.on('close', (code) => {
                 console.log(`>> ZTF server closed with code ${code}`);
                 _ztfServerProcess = null;
+                cmd.kill()
             });
             cmd.stdout.on('data', data => {
                 const dataString = String(data);
@@ -110,6 +111,10 @@ export function startZtfServer() {
         });
         _ztfServerProcess = cmd;
     });
+}
+
+export function killZtfServer() {
+    _ztfServerProcess.kill('SIGINT');
 }
 
 let _uiServerApp;
