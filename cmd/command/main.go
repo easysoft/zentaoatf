@@ -98,6 +98,10 @@ func main() {
 		//log.Println("===" + os.Getenv("debug"))
 		run(os.Args, actionModule)
 
+	case "extract":
+		files := fileUtils.GetFilesFromParams(os.Args[2:])
+		action.Extract(files)
+
 	case "checkout", "co":
 		if err := flagSet.Parse(os.Args[2:]); err == nil {
 			action.Generate(productId, moduleId, suiteId, taskId, independentFile, language, actionModule)
