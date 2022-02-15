@@ -6,6 +6,7 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
+	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/config"
 	"github.com/aaronchen2k/deeptest/internal/server/core/module"
 	myWs "github.com/aaronchen2k/deeptest/internal/server/modules/v1/controller"
@@ -15,6 +16,7 @@ import (
 	"github.com/kataras/neffos/gorilla"
 	"net/http"
 	"path/filepath"
+	"strings"
 	"sync"
 	"testing"
 	"time"
@@ -182,7 +184,9 @@ func (webServer *WebServer) Run() {
 		panic(err)
 	}
 
-	// 添加上传文件路径
+	logUtils.Info(i118Utils.Sprintf("start_server", "localhost",
+		strings.Replace(webServer.addr, ":", "", -1)))
+
 	webServer.app.Listen(
 		webServer.addr,
 		iris.WithoutInterruptHandler,
