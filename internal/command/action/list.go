@@ -4,7 +4,6 @@ import (
 	"fmt"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
-	"github.com/aaronchen2k/deeptest/internal/command"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/fatih/color"
@@ -14,8 +13,14 @@ import (
 	"time"
 )
 
-func List(files []string, keywords string, actionModule *command.IndexModule) {
-	cases := scriptUtils.LoadScriptByProject(files[0])
+func List(files []string, keywords string) {
+	var cases []string
+	for _, v1 := range files {
+		group := scriptUtils.LoadScriptByProject(v1)
+		for _, v2 := range group {
+			cases = append(cases, v2)
+		}
+	}
 	keywords = strings.TrimSpace(keywords)
 	scriptArr := make([]commDomain.FuncResult, 0)
 	pathMaxWidth := 0
