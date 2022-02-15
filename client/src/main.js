@@ -1,5 +1,5 @@
 import {app, BrowserWindow} from 'electron';
-import {getUIServerUrl, startZtfServer, killZtfServer} from './services';
+import {getUIServerUrl, startZtfServer, killZtfServer} from './service';
 import {logInfo, logErr} from './log';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
