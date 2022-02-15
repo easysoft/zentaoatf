@@ -3,6 +3,7 @@ import {spawn} from 'child_process';
 import os from 'os';
 import {app} from 'electron';
 import express from 'express';
+import {logInfo, logErr} from './log';
 
 const DEBUG = process.env.NODE_ENV === 'development';
 
@@ -10,7 +11,7 @@ let _ztfServerProcess;
 
 export function startZtfServer() {
     if (process.env.SKIP_SERVER) {
-        console.log(`>> Skip to start ZTF Server by env "SKIP_SERVER=${process.env.SKIP_SERVER}".`);
+        logInfo(`>> Skip to start ZTF Server by env "SKIP_SERVER=${process.env.SKIP_SERVER}".`);
         return Promise.resolve();
     }
     if (_ztfServerProcess) {
@@ -29,13 +30,13 @@ export function startZtfServer() {
         }
         return new Promise((resolve, reject) => {
             const cwd = process.env.SERVER_CWD_PATH || path.dirname(serverExePath);
-            console.log(`>> Starting ZTF Server from exe path with command "${serverExePath} -P 8085" in "${cwd}"...`);
+            logInfo(`>> Starting ZTF Server from exe path with command "${serverExePath} -P 8085" in "${cwd}"...`);
             const cmd = spawn(serverExePath, ['-P', '8085'], {
                 cwd,
                 shell: true,
             });
             cmd.on('close', (code) => {
-                console.log(`>> ZTF server closed with code ${code}`);
+                logInfo(`>> ZTF server closed with code ${code}`);
                 _ztfServerProcess = null;
                 cmd.kill()
             });
@@ -45,7 +46,7 @@ export function startZtfServer() {
                 for (let i = 0; i < lines.length; i++) {
                     const line = lines[i];
                     if (DEBUG) {
-                        console.log('\t', line);
+                        logInfo('\t', line);
                     }
                     if (line.includes('Now listening on: http')) {
                         resolve(line.split('Now listening on:')[1].trim());
@@ -75,13 +76,13 @@ export function startZtfServer() {
 
     return new Promise((resolve, reject) => {
         const cwd = process.env.SERVER_CWD_PATH || path.resolve(app.getAppPath(), '../');
-        console.log(`>> Starting ZTF development server from source with command "go run cmd/server/main.go -P 8085" in "${cwd}"`);
+        logInfo(`>> Starting ZTF development server from source with command "go run cmd/server/main.go -P 8085" in "${cwd}"`);
         const cmd = spawn('go', ['run', 'main.go', '-P', '8085'], {
             cwd,
             shell: true,
         });
         cmd.on('close', (code) => {
-            console.log(`>> ZTF server closed with code ${code}`);
+            logInfo(`>> ZTF server closed with code ${code}`);
             _ztfServerProcess = null;
         });
         cmd.stdout.on('data', data => {
@@ -90,7 +91,7 @@ export function startZtfServer() {
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
                 if (DEBUG) {
-                    console.log('\t', line);
+                    logInfo('\t', line);
                 }
                 if (line.includes('Now listening on: http')) {
                     resolve(line.split('Now listening on:')[1].trim());
@@ -139,7 +140,7 @@ export function getUIServerUrl() {
             }
 
             const port = process.env.UI_SERVER_PORT || 8000;
-            console.log(`>> Starting UI serer at ${uiServerUrl} with port ${port}`);
+            logInfo(`>> Starting UI serer at ${uiServerUrl} with port ${port}`);
 
             const uiServer = express();
             uiServer.use(express.static(uiServerUrl));
@@ -149,7 +150,7 @@ export function getUIServerUrl() {
                     _uiServerApp = null;
                     reject(serverError);
                 } else {
-                    console.log(`>> UI server started successfully on http://localhost:${port}.`);
+                    logInfo(`>> UI server started successfully on http://localhost:${port}.`);
                     resolve(`http://localhost:${port}`);
                 }
             });
@@ -162,7 +163,7 @@ export function getUIServerUrl() {
 
     return new Promise((resolve, reject) => {
         const cwd = path.resolve(app.getAppPath(), '../ui');
-        console.log(`>> Starting UI development server with command "npm run serve" in "${cwd}"...`);
+        logInfo(`>> Starting UI development server with command "npm run serve" in "${cwd}"...`);
 
         let resolved = false;
         const cmd = spawn('npm', ['run', 'serve'], {
@@ -170,7 +171,7 @@ export function getUIServerUrl() {
             shell: true,
         });
         cmd.on('close', (code) => {
-            console.log(`>> ZTF server closed with code ${code}`);
+            logInfo(`>> ZTF server closed with code ${code}`);
             _uiServerApp = null;
         });
         cmd.stdout.on('data', data => {
@@ -182,12 +183,12 @@ export function getUIServerUrl() {
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
                 if (DEBUG) {
-                    console.log('\t', line);
+                    logInfo('\t', line);
                 }
                 if (line.includes('App running at:')) {
                     const nextLine = lines[i + 1] || lines[i + 2];
                     if (DEBUG) {
-                        console.log('\t', nextLine);
+                        logInfo('\t', nextLine);
                     }
                     if (!nextLine) {
                         console.error('\t', `Cannot grabing running address after line "${line}".`);
@@ -210,14 +211,4 @@ export function getUIServerUrl() {
         });
         _uiServerApp = cmd;
     });
-}
-
-
-const logger = require('electron-log');
-logger.transports.file.resolvePath = () => require("path").join(require("os").homedir(), 'ztf', 'log', 'electron.log');
-export function logInfo(str) {
-    logger.info(str);
-}
-export function logErr(str) {
-    logger.error(str);
 }

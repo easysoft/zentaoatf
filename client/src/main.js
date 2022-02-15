@@ -1,5 +1,6 @@
 import {app, BrowserWindow} from 'electron';
-import {getUIServerUrl, startZtfServer, killZtfServer, logInfo, logErr} from './services';
+import {getUIServerUrl, startZtfServer, killZtfServer} from './services';
+import {logInfo, logErr} from './log';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -43,7 +44,7 @@ async function startApp() {
 
   const url = await getUIServerUrl();
 
-  console.log('>> UI server url is', url);
+  logInfo('>> UI server url is', url);
 
   createWindow(url);
 
