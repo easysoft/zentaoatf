@@ -132,7 +132,13 @@ func main() {
 				files = append(files, ".")
 			}
 
-			action.List(files, keywords, actionModule)
+			action.List(files, keywords)
+		}
+
+	case "view", "-v":
+		files := fileUtils.GetFilesFromParams(os.Args[2:])
+		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
+			action.View(files, keywords)
 		}
 
 	case "help", "-h", "-help", "--help":
