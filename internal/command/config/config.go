@@ -23,9 +23,9 @@ import (
 )
 
 func CheckConfigPermission() {
-	err := fileUtils.MkDirIfNeeded(commConsts.ExeDir + "conf")
+	err := fileUtils.MkDirIfNeeded(commConsts.WorkDir + "conf")
 	if err != nil {
-		msg := i118Utils.Sprintf("perm_deny", commConsts.ExeDir)
+		msg := i118Utils.Sprintf("perm_deny", commConsts.WorkDir)
 		logUtils.ExecConsolef(color.FgRed, msg)
 		os.Exit(0)
 	}
@@ -33,6 +33,8 @@ func CheckConfigPermission() {
 
 func InitConfig() {
 	commConsts.IsRelease = commonUtils.IsRelease()
+
+	CheckConfigPermission()
 	commConsts.WorkDir = fileUtils.GetWorkDir()
 	commConsts.ConfigPath = commConsts.WorkDir + commConsts.ConfigFile
 	serverConfig.InitExecLog(commConsts.WorkDir)
