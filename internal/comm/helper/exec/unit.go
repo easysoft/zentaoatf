@@ -61,8 +61,9 @@ func RunUnitTest(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning st
 
 	if cmd == nil {
 		msgStr := i118Utils.Sprintf("cmd_empty")
-
-		sendOutputMsg(msgStr, "", wsMsg)
+		if commConsts.ComeFrom != "cmd" {
+			sendOutputMsg(msgStr, "", wsMsg)
+		}
 		logUtils.ExecConsolef(color.FgRed, msgStr)
 		logUtils.ExecFilef(msgStr)
 
@@ -74,13 +75,17 @@ func RunUnitTest(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning st
 	stderr, err2 := cmd.StderrPipe()
 
 	if err1 != nil {
-		sendOutputMsg(err1.Error(), "", wsMsg)
+		if commConsts.ComeFrom != "cmd" {
+			sendOutputMsg(err1.Error(), "", wsMsg)
+		}
 		logUtils.ExecConsolef(color.FgRed, err1.Error())
 		logUtils.ExecFilef(err1.Error())
 
 		return
 	} else if err2 != nil {
-		sendOutputMsg(err2.Error(), "", wsMsg)
+		if commConsts.ComeFrom != "cmd" {
+			sendOutputMsg(err2.Error(), "", wsMsg)
+		}
 		logUtils.ExecConsolef(color.FgRed, err2.Error())
 		logUtils.ExecFilef(err2.Error())
 
@@ -140,7 +145,9 @@ ExitUnitTest:
 	errOutput := strings.Join(errOutputArr, "")
 
 	if errOutput != "" {
-		sendOutputMsg(errOutput, "", wsMsg)
+		if commConsts.ComeFrom != "cmd" {
+			sendOutputMsg(errOutput, "", wsMsg)
+		}
 		logUtils.ExecConsolef(-1, errOutput)
 		logUtils.ExecFilef(errOutput)
 	}
