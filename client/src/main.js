@@ -1,5 +1,5 @@
 import {app, BrowserWindow} from 'electron';
-import {getUIServerUrl, startZtfServer} from './services';
+import {getUIServerUrl, startZtfServer, killZtfServer} from './services';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -8,16 +8,20 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 
 const createWindow = (url) => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-  });
+  // const mainWindow = new BrowserWindow({
+  //   width: 1200,
+  //   height: 800,
+  // });
+
+  const mainWindow = new BrowserWindow({show: false})
+  mainWindow.maximize()
+  mainWindow.show()
 
   // and load the index.html of the app.
   mainWindow.loadURL(url);
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools({mode: 'bottom'});
 };
 
 
@@ -56,9 +60,10 @@ app.on('ready', startApp);
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+  // if (process.platform !== 'darwin') {
     app.quit();
-  }
+    killZtfServer();
+  // }
 });
 
 app.on('activate', () => {

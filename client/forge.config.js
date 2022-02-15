@@ -1,5 +1,11 @@
 module.exports = {
+    electronPackagerConfig: {
+        "name": "ztf2",
+        "icon": "./ui/favicon.ico"
+    },
     packagerConfig: {
+        "name": "ztf",
+        "icon": "./icon/favicon",
         extraResource: [
             './bin',
             './ui'

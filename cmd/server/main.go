@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/core/cron"
 	"github.com/aaronchen2k/deeptest/internal/server/core/dao"
@@ -16,7 +17,10 @@ import (
 // @contact.url https://github.com/easysoft/zentaoatf/issues
 // @contact.email 462626@qq.com
 func main() {
-	webServer := web.Init()
+	port := flag.Int("P", 0, "服务端口")
+	flag.Parse()
+
+	webServer := web.Init(*port)
 	if webServer == nil {
 		return
 	}
