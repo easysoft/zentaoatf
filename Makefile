@@ -27,19 +27,19 @@ compile_all: compile_win64 compile_win32 compile_linux compile_mac
 
 compile_win64:
 	@echo 'start compile win64'
-	@CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build -o ${BIN_WIN64}ztf.exe cmd/server/main.go
+	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 go build -x -v -ldflags "-s -w" -o ${BIN_WIN64}${BINARY}.exe cmd/server/main.go
 
 compile_win32:
 	@echo 'start compile win32'
-	@CGO_ENABLED=1 GOOS=windows GOARCH=386 go build -o ${BIN_WIN32}ztf.exe cmd/server/main.go
+	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 go build -x -v -ldflags "-s -w" -o ${BIN_WIN32}${BINARY}.exe cmd/server/main.go
 
 compile_linux:
 	@echo 'start compile linux'
-	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o ${BIN_LINUX}ztf cmd/server/main.go
+	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ go build -o ${BIN_LINUX}${BINARY} cmd/server/main.go
 
 compile_mac:
 	@echo 'start compile mac'
-	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -o ${BIN_MAC}ztf cmd/server/main.go
+	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -o ${BIN_MAC}${BINARY} cmd/server/main.go
 
 copy_files:
 	@echo 'start copy files'
