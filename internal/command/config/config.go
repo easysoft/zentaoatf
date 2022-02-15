@@ -7,13 +7,11 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/display"
-	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
 	"github.com/fatih/color"
-	"os"
 	"reflect"
 )
 
@@ -21,16 +19,16 @@ type ConfigCtrl struct {
 	ProjectRepo *repo.ProjectRepo `inject:""`
 }
 
-func CheckConfigPermission() {
-	//err := syscall.Access(vari.ExeDir, syscall.O_RDWR)
-
-	err := fileUtils.MkDirIfNeeded(commConsts.ExeDir + "conf")
-	if err != nil {
-		msg := i118Utils.Sprintf("perm_deny", commConsts.ExeDir)
-		logUtils.ExecConsolef(color.FgRed, msg)
-		os.Exit(0)
-	}
-}
+//func CheckConfigPermission() {
+//	//err := syscall.Access(vari.ExeDir, syscall.O_RDWR)
+//
+//	err := fileUtils.MkDirIfNeeded(commConsts.ExeDir + "conf")
+//	if err != nil {
+//		msg := i118Utils.Sprintf("perm_deny", commConsts.ExeDir)
+//		logUtils.ExecConsolef(color.FgRed, msg)
+//		os.Exit(0)
+//	}
+//}
 
 func InitScreenSize() {
 	w, h := display.GetScreenSize()

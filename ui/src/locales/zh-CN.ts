@@ -82,6 +82,8 @@ export default {
     'expand_all': '展开全部',
     'collapse_all': '收缩全部',
     'wrong_url': '请输入正确的的URL地址，以http或https开头。',
+    'create_project': '新建项目',
+    'pls_create_project': '请点击右上角链接新建项目',
     'pls_product': '请选择产品',
     'pls_lang': '请选择语言',
     'sync_success': '同步成功',

@@ -88,7 +88,6 @@ export default defineComponent({
       // 右侧顶部是否固定
       const headFixed = computed<boolean>(()=> store.state.global.headFixed);
 
-
       // 左侧选择菜单key
       const selectedKeys = computed<string[]>(()=>{
         const selectedKey = getSelectLeftMenuPath(routeItem.value);

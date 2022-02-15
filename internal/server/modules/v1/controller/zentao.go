@@ -4,6 +4,7 @@ import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	zentaoUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
+	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/kataras/iris/v12"
 )
 
@@ -17,6 +18,10 @@ func NewZentaoCtrl() *ZentaoCtrl {
 
 func (c *ZentaoCtrl) ListProduct(ctx iris.Context) {
 	projectPath := ctx.URLParam("currProject")
+	if projectPath == "" {
+		ctx.JSON(c.SuccessResp(make([]serverDomain.ZentaoProduct, 0)))
+		return
+	}
 
 	data, err := zentaoUtils.ListProduct(projectPath)
 	if err != nil {

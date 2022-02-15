@@ -1,6 +1,9 @@
 <template>
+  <div v-if="!currProject.path">
+    <a-empty :image="simpleImage" :description="t('pls_create_project')"/>
+  </div>
 
-  <a-card :title="t('edit_config')">
+  <a-card v-if="currProject.path" :title="t('edit_config')">
     <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-item :label="t('zentao_url')" v-bind="validateInfos.url">
         <a-input v-model:value="model.url"
@@ -75,7 +78,7 @@ import {defineComponent, ref, reactive, computed, watch, ComputedRef, Ref, toRaw
 import { useI18n } from "vue-i18n";
 
 import { Props, validateInfos } from 'ant-design-vue/lib/form/useForm';
-import {message, Form, notification} from 'ant-design-vue';
+import {message, Form, notification, Empty} from 'ant-design-vue';
 import _ from "lodash";
 const useForm = Form.useForm;
 
@@ -122,6 +125,7 @@ interface ConfigFormSetupData {
   deleteInterpreter: (item) => void;
   updateFormCancel:  () => void;
   updateSubmit:  (values: any, resetFields: (newValues?: Props | undefined) => void) => Promise<void>;
+  simpleImage: any
 }
 
 export default defineComponent({
@@ -274,6 +278,7 @@ export default defineComponent({
       editInterpreter,
       deleteInterpreter,
       updateSubmit,
+      simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
     }
 
   }

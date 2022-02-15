@@ -20,10 +20,15 @@ var (
 
 // GetDB 数据库单例
 func GetDB() *gorm.DB {
+	if db != nil {
+		return db
+	}
+
 	conn := DBFile()
 	dialector := sqlite.Open(conn)
 
-	db, err := gorm.Open(dialector, &gorm.Config{
+	var err error
+	db, err = gorm.Open(dialector, &gorm.Config{
 		SkipDefaultTransaction: false,
 		Logger:                 logger.Default.LogMode(logger.Info),
 		NamingStrategy: schema.NamingStrategy{

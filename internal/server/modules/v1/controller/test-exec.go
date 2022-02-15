@@ -2,6 +2,7 @@ package controller
 
 import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
 )
@@ -18,6 +19,11 @@ func NewTestExecCtrl() *TestExecCtrl {
 // List 分页列表
 func (c *TestExecCtrl) List(ctx iris.Context) {
 	projectPath := ctx.URLParam("currProject")
+
+	if projectPath == "" {
+		ctx.JSON(c.SuccessResp(make([]serverDomain.TestReportSummary, 0)))
+		return
+	}
 
 	data, err := c.TestExecService.List(projectPath)
 	if err != nil {

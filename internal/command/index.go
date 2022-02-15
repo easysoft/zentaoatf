@@ -13,7 +13,7 @@ func InitConfig() {
 	serverConfig.Init()
 	serverConfig.InitLog()
 
-	commandConfig.CheckConfigPermission()
+	//commandConfig.CheckConfigPermission()
 
 	// screen size
 	commandConfig.InitScreenSize()

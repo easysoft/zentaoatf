@@ -21,7 +21,7 @@ func LoadScriptTree(dir string) (asset serverDomain.TestAsset, err error) {
 		return
 	}
 
-	commonUtils.ChangeScriptForDebug(&dir)
+	//commonUtils.ChangeScriptForDebug(&dir)
 
 	asset = serverDomain.TestAsset{Path: dir, Title: fileUtils.GetDirName(dir), IsDir: true, Slots: iris.Map{"icon": "icon"}}
 	LoadScriptNodesInDir(dir, &asset, 0)

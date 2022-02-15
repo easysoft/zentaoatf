@@ -11,7 +11,6 @@
     "package-linux": "npm run package -- --platform=linux",
     "package-win64": "npm run package -- --platform=win32 --arch=ia32",
     "package-win32": "npm run package -- --platform=win32 --arch=x64",
-    "package-all": "npm run package -- --platform=all --arch=all",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\""
