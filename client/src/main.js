@@ -1,5 +1,6 @@
 import {app, BrowserWindow} from 'electron';
-import {getUIServerUrl, startZtfServer, killZtfServer} from './services';
+import {getUIServerUrl, startZtfServer, killZtfServer} from './service';
+import {logInfo, logErr} from './log';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -24,7 +25,6 @@ const createWindow = (url) => {
   mainWindow.webContents.openDevTools({mode: 'bottom'});
 };
 
-
 let _starting = false;
 
 async function startApp() {
@@ -35,16 +35,16 @@ async function startApp() {
 
   try {
     const ztfServerUrl = await startZtfServer();
-    console.log(`>> ZTF Server started successfully: ${ztfServerUrl}`);
+    logInfo(`>> ZTF Server started successfully: ${ztfServerUrl}`);
   } catch (error) {
-    console.error('>> Start ztf server failed: ' + error);
+    logErr('>> Start ztf server failed: ' + error);
     process.exit(1);
     return;
   }
 
   const url = await getUIServerUrl();
 
-  console.log('>> UI server url is', url);
+  logInfo(`>> UI server url is ${url}`);
 
   createWindow(url);
 
