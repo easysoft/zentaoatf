@@ -106,6 +106,11 @@ func main() {
 	case "set", "-set":
 		action.Set()
 
+	case "update", "up":
+		if err := flagSet.Parse(os.Args[2:]); err == nil {
+			action.Generate(productId, moduleId, suiteId, taskId, independentFile, language, actionModule)
+		}
+
 	case "ci":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
