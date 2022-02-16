@@ -49,7 +49,7 @@ func CommitBug(ztfBug commDomain.ZtfBug, projectPath string) (err error) {
 	if err == nil {
 		msg = i118Utils.Sprintf("success_to_report_bug", ztfBug.Case)
 	} else {
-		msg = color.RedString(err.Error())
+		msg = color.RedString("commit bug failed, error: %s.", err.Error())
 	}
 
 	if commConsts.ComeFrom == "cmd" {

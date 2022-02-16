@@ -32,12 +32,12 @@ func Download(url string, dst string) (err error) {
 func HTTPDownload(uri string) ([]byte, error) {
 	res, err := http.Get(uri)
 	if err != nil {
-		logUtils.Infof(color.RedString(err.Error()))
+		logUtils.Infof(color.RedString("download file failed, error: %s.", err.Error()))
 	}
 	defer res.Body.Close()
 	d, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		logUtils.Infof(color.RedString(err.Error()))
+		logUtils.Infof(color.RedString("read downloaded file failed, error: %s.", err.Error()))
 	}
 	return d, err
 }
@@ -45,7 +45,7 @@ func HTTPDownload(uri string) ([]byte, error) {
 func WriteDownloadFile(dst string, d []byte) error {
 	err := ioutil.WriteFile(dst, d, 0444)
 	if err != nil {
-		logUtils.Infof(color.RedString(err.Error()))
+		logUtils.Infof(color.RedString("write download file failed, error: %s.", err.Error()))
 	}
 	return err
 }

@@ -35,7 +35,7 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId string, project
 	if err == nil {
 		msg = color.GreenString(i118Utils.Sprintf("success_to_submit_test_result"))
 	} else {
-		msg = color.RedString(string(ret))
+		msg = color.RedString("commit result failed, error: %s.", err.Error())
 		err = errors.New(string(ret))
 	}
 	logUtils.Info(msg)

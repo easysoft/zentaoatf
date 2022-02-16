@@ -6,7 +6,6 @@ import (
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/fatih/color"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -24,7 +23,7 @@ func (r *ProjectRepo) FindById(id uint) (po model.Project, err error) {
 		Where("NOT deleted").
 		First(&po).Error
 	if err != nil {
-		logUtils.Errorf("find project by id error", zap.String("error:", err.Error()))
+		logUtils.Errorf(color.RedString("find project by id failed, error: %s.", err.Error()))
 		return
 	}
 
@@ -39,7 +38,7 @@ func (r *ProjectRepo) Create(project model.Project) (id uint, err error) {
 
 	err = r.DB.Model(&model.Project{}).Create(&project).Error
 	if err != nil {
-		logUtils.Errorf("create project error", zap.String("error:", err.Error()))
+		logUtils.Errorf(color.RedString("create project failed, error: %s.", err.Error()))
 		return 0, err
 	}
 
@@ -51,7 +50,7 @@ func (r *ProjectRepo) Create(project model.Project) (id uint, err error) {
 func (r *ProjectRepo) Update(id uint, project model.Project) error {
 	err := r.DB.Model(&model.Project{}).Where("id = ?", id).Updates(&project).Error
 	if err != nil {
-		logUtils.Errorf("update project error", zap.String("error:", err.Error()))
+		logUtils.Errorf(color.RedString("update project failed, error: %s.", err.Error()))
 		return err
 	}
 
@@ -63,7 +62,7 @@ func (r *ProjectRepo) DeleteByPath(pth string) (err error) {
 		Delete(&model.Project{}).
 		Error
 	if err != nil {
-		logUtils.Errorf(color.RedString("delete project error", err.Error()))
+		logUtils.Errorf(color.RedString("delete project failed, error: %s.", err.Error()))
 		return
 	}
 

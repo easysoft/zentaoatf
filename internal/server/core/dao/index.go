@@ -39,7 +39,7 @@ func GetDB() *gorm.DB {
 	})
 
 	if err != nil {
-		logUtils.Infof(color.RedString(err.Error()))
+		logUtils.Infof(color.RedString("open db failed, error: %s.", err.Error()))
 	}
 
 	_ = db.Use(
@@ -57,7 +57,7 @@ func GetDB() *gorm.DB {
 		model.Models...,
 	)
 	if err != nil {
-		logUtils.Infof(color.RedString(err.Error()))
+		logUtils.Infof(color.RedString("migrate models failed, error: %s.", err.Error()))
 	}
 
 	return db
