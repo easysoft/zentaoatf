@@ -5,6 +5,7 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/aaronchen2k/deeptest/internal/command"
 	"github.com/aaronchen2k/deeptest/internal/command/action"
+	commandConfig "github.com/aaronchen2k/deeptest/internal/command/config"
 	_consts "github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
@@ -98,6 +99,14 @@ func main() {
 		//log.Println("===" + os.Getenv("debug"))
 		run(os.Args, actionModule)
 
+	case "extract":
+		files := fileUtils.GetFilesFromParams(os.Args[2:])
+		action.Extract(files)
+
+	case "expect":
+		files := fileUtils.GetFilesFromParams(os.Args[2:])
+		action.GenExpectFiles(files)
+
 	case "checkout", "co":
 		if err := flagSet.Parse(os.Args[2:]); err == nil {
 			action.Generate(productId, moduleId, suiteId, taskId, independentFile, language, actionModule)
@@ -105,6 +114,11 @@ func main() {
 
 	case "set", "-set":
 		action.Set()
+
+	case "update", "up":
+		if err := flagSet.Parse(os.Args[2:]); err == nil {
+			action.Generate(productId, moduleId, suiteId, taskId, independentFile, language, actionModule)
+		}
 
 	case "ci":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
@@ -214,7 +228,7 @@ func run(args []string, actionModule *command.IndexModule) {
 
 func init() {
 	cleanup()
-	command.InitConfig()
+	commandConfig.Init()
 }
 
 func cleanup() {

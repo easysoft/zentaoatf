@@ -77,7 +77,7 @@ func RunZtf(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string,
 
 	conf := configUtils.LoadByProjectPath(projectPath)
 
-	casesToRun, casesToIgnore := filterCases(cases, conf)
+	casesToRun, casesToIgnore := FilterCases(cases, conf)
 
 	numbMaxWidth := 0
 	numbMaxWidth, pathMaxWidth = getNumbMaxWidth(casesToRun)
@@ -166,7 +166,9 @@ func ExeScript(scriptFile, projectPath string, conf commDomain.ProjectConf, repo
 		logs = stdOutput
 	}
 	if errOutput != "" {
-		sendOutputMsg(errOutput, "", wsMsg)
+		if commConsts.ComeFrom != "cmd" {
+			sendOutputMsg(errOutput, "", wsMsg)
+		}
 		logUtils.ExecConsolef(-1, errOutput)
 		logUtils.ExecFilef(errOutput)
 	}
@@ -212,7 +214,9 @@ func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
 			cmd = exec.Command("cmd", "/C", filePath)
 		} else {
 			msg := i118Utils.I118Prt.Sprintf("no_interpreter_for_run", lang, filePath)
-			sendOutputMsg(msg, "", wsMsg)
+			if commConsts.ComeFrom != "cmd" {
+				sendOutputMsg(msg, "", wsMsg)
+			}
 			logUtils.ExecConsolef(-1, msg)
 			logUtils.ExecFilef(msg)
 		}
@@ -220,7 +224,9 @@ func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
 		err := os.Chmod(filePath, 0777)
 		if err != nil {
 			msg := i118Utils.I118Prt.Sprintf("exec_cmd_fail", filePath, err.Error())
-			sendOutputMsg(msg, "", wsMsg)
+			if commConsts.ComeFrom != "cmd" {
+				sendOutputMsg(msg, "", wsMsg)
+			}
 			logUtils.ExecConsolef(-1, msg)
 			logUtils.ExecFilef(msg)
 		}
@@ -233,8 +239,9 @@ func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
 
 	if cmd == nil {
 		msgStr := i118Utils.Sprintf("cmd_empty")
-
-		sendOutputMsg(msgStr, "", wsMsg)
+		if commConsts.ComeFrom != "cmd" {
+			sendOutputMsg(msgStr, "", wsMsg)
+		}
 		logUtils.ExecConsolef(color.FgRed, msgStr)
 		logUtils.ExecFilef(msgStr)
 
@@ -245,13 +252,17 @@ func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
 	stderr, err2 := cmd.StderrPipe()
 
 	if err1 != nil {
-		sendOutputMsg(err1.Error(), "", wsMsg)
+		if commConsts.ComeFrom != "cmd" {
+			sendOutputMsg(err1.Error(), "", wsMsg)
+		}
 		logUtils.ExecConsolef(color.FgRed, err1.Error())
 		logUtils.ExecFilef(err1.Error())
 
 		return "", err1.Error()
 	} else if err2 != nil {
-		sendOutputMsg(err2.Error(), "", wsMsg)
+		if commConsts.ComeFrom != "cmd" {
+			sendOutputMsg(err2.Error(), "", wsMsg)
+		}
 		logUtils.ExecConsolef(color.FgRed, err2.Error())
 		logUtils.ExecFilef(err2.Error())
 
@@ -318,7 +329,7 @@ ExitCurrCase:
 	return
 }
 
-func filterCases(cases []string, conf commDomain.ProjectConf) (casesToRun, casesToIgnore []string) {
+func FilterCases(cases []string, conf commDomain.ProjectConf) (casesToRun, casesToIgnore []string) {
 	for _, cs := range cases {
 		if commonUtils.IsWin() {
 			if path.Ext(cs) == ".sh" { // filter by os
