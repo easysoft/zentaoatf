@@ -155,6 +155,9 @@ func main() {
 			action.View(files, keywords)
 		}
 
+	case "clean", "-clean", "-c":
+		action.Clean()
+
 	case "help", "-h", "-help", "--help":
 		resUtils.PrintUsage()
 
