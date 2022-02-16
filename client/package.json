@@ -9,8 +9,8 @@
     "package": "electron-forge package",
     "package-mac": "npm run package",
     "package-linux": "npm run package -- --platform=linux",
-    "package-win64": "npm run package -- --platform=win32 --arch=ia32",
-    "package-win32": "npm run package -- --platform=win32 --arch=x64",
+    "package-win64": "npm run package -- --platform=win32 --arch=x64",
+    "package-win32": "npm run package -- --platform=win32 --arch=ia32",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\""
