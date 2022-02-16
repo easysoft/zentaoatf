@@ -11,8 +11,6 @@
     "svgo": "svgo -f src/assets/iconsvg --config=src/assets/iconsvg/svgo.yml"
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-build-decoupled-document": "^23.1.0",
-    "@ckeditor/ckeditor5-vue": "^2.0.1",
     "@toast-ui/editor": "^2.5.3",
     "ant-design-vue": "^2.2.8",
     "axios": "^0.21.4",

@@ -8,7 +8,6 @@ import (
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
 	"gopkg.in/ini.v1"
-	"path"
 	"path/filepath"
 	"reflect"
 )
@@ -39,7 +38,7 @@ func ReadFromFile(projectPath string) (config commDomain.ProjectConf) {
 
 func SaveToFile(config commDomain.ProjectConf, projectPath string) (err error) {
 	pth := filepath.Join(projectPath, commConsts.ConfigDir, commConsts.ConfigFile)
-	fileUtils.MkDirIfNeeded(path.Dir(pth))
+	fileUtils.MkDirIfNeeded(filepath.Dir(pth))
 
 	config.Version = commConsts.ConfigVersion
 
