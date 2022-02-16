@@ -121,7 +121,8 @@ func IgnoreFile(path string) bool {
 	path = filepath.Base(path)
 
 	if strings.Index(path, ".") == 0 ||
-		path == "bin" || path == "release" || path == "logs" || path == "xdoc" {
+		path == "bin" || path == "release" || path == "logs" || path == "xdoc" ||
+		path == "log" || path == "conf" {
 		return true
 	} else {
 		return false
