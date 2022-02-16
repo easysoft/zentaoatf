@@ -9,6 +9,7 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/ajg/form"
+	"github.com/fatih/color"
 	"github.com/yosssi/gohtml"
 	"io/ioutil"
 	"net/http"
@@ -243,9 +244,10 @@ func GetRespErr(bytes []byte, url string) (ret []byte, err error) {
 	var zentaoResp serverDomain.ZentaoResp
 	err = json.Unmarshal(bytes, &zentaoResp)
 	if err != nil {
+		err = errors.New("Wrong Zentao response, unmarshal to serverDomain.ZentaoResp failed: " + err.Error())
 		if commConsts.Verbose {
 			if strings.Index(url, "login") < 0 { // jsonErr caused by login request return a html
-				logUtils.Infof(err.Error())
+				logUtils.Infof(color.RedString(err.Error()))
 			}
 		}
 		return
