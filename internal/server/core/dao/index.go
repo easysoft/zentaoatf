@@ -4,6 +4,7 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
+	"github.com/fatih/color"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm/schema"
 	"gorm.io/plugin/dbresolver"
@@ -38,7 +39,7 @@ func GetDB() *gorm.DB {
 	})
 
 	if err != nil {
-		logUtils.Info(err.Error())
+		logUtils.Infof(color.RedString(err.Error()))
 	}
 
 	_ = db.Use(
@@ -56,7 +57,7 @@ func GetDB() *gorm.DB {
 		model.Models...,
 	)
 	if err != nil {
-		logUtils.Info(err.Error())
+		logUtils.Infof(color.RedString(err.Error()))
 	}
 
 	return db

@@ -7,7 +7,6 @@ import (
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
-	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
@@ -23,17 +22,6 @@ type ProjectService struct {
 
 func NewProjectService() *ProjectService {
 	return &ProjectService{}
-}
-
-func (s *ProjectService) Paginate(req serverDomain.ProjectReqPaginate) (ret domain.PageData, err error) {
-
-	ret, err = s.ProjectRepo.Paginate(req)
-
-	if err != nil {
-		return
-	}
-
-	return
 }
 
 func (s *ProjectService) FindById(id uint) (model.Project, error) {

@@ -6,6 +6,7 @@ import (
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	"github.com/fatih/color"
 	"io/ioutil"
 	"mime/multipart"
 	"path/filepath"
@@ -38,12 +39,12 @@ func (s *FileService) UploadFile(ctx iris.Context, fh *multipart.FileHeader) (ir
 	path := filepath.Join(dir.GetCurrentAbPath(), "static", "upload", "images")
 	err = dir.InsureDir(path)
 	if err != nil {
-		logUtils.Errorf("文件上传失败", zap.String("dir.InsureDir", err.Error()))
+		logUtils.Infof(color.RedString("文件上传失败 %s", err.Error()))
 		return nil, err
 	}
 	_, err = ctx.SaveFormFile(fh, filepath.Join(path, filename))
 	if err != nil {
-		logUtils.Errorf("文件上传失败", zap.String("ctx.SaveFormFile", "保存文件到本地"))
+		logUtils.Infof(color.RedString("文件上传失败 %s", err.Error()))
 		return nil, err
 	}
 
@@ -103,13 +104,14 @@ func (s *FileService) addDir(pth string, parent *serverDomain.TestAsset) (dirNod
 func GetFileName(name string) (string, error) {
 	fns := strings.Split(strings.TrimLeft(name, "./"), ".")
 	if len(fns) != 2 {
-		logUtils.Errorf("文件上传失败", zap.String("trings.Split", name))
+		logUtils.Infof(color.RedString("文件上传失败 %s", "文件名错误"))
 		return "", ErrEmpty
 	}
 	ext := fns[1]
 	md5, err := dir.MD5(name)
 	if err != nil {
-		logUtils.Errorf("文件上传失败", zap.String("dir.MD5", err.Error()))
+
+		logUtils.Errorf("文件上传失败", zap.String("trings.Split", name))
 		return "", err
 	}
 	return str.Join(md5, ".", ext), nil

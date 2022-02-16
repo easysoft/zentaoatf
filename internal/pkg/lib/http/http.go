@@ -29,13 +29,13 @@ func Get(url string) (ret []byte, err error) {
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		logUtils.Error(err.Error())
+		logUtils.Infof(color.RedString(err.Error()))
 		return
 	}
 
 	resp, err := client.Do(req)
 	if err != nil {
-		logUtils.Error(err.Error())
+		logUtils.Infof(color.RedString(err.Error()))
 		return
 	}
 
@@ -56,7 +56,7 @@ func Get(url string) (ret []byte, err error) {
 			return
 		} else {
 			if commConsts.Verbose {
-				logUtils.Infof(err.Error())
+				logUtils.Infof(color.RedString(err.Error()))
 			}
 			return
 		}
@@ -87,7 +87,7 @@ func Post(url string, data interface{}, useFormFormat bool) (ret []byte, err err
 
 	dataBytes, err := json.Marshal(data)
 	if err != nil {
-		logUtils.Error(err.Error())
+		logUtils.Infof(color.RedString(err.Error()))
 		return
 	}
 
@@ -106,7 +106,7 @@ func Post(url string, data interface{}, useFormFormat bool) (ret []byte, err err
 
 	req, err := http.NewRequest("POST", url, strings.NewReader(dataStr))
 	if err != nil {
-		logUtils.Error(err.Error())
+		logUtils.Infof(color.RedString(err.Error()))
 		return
 	}
 
@@ -115,13 +115,13 @@ func Post(url string, data interface{}, useFormFormat bool) (ret []byte, err err
 
 	resp, err := client.Do(req)
 	if err != nil {
-		logUtils.Error(err.Error())
+		logUtils.Infof(color.RedString(err.Error()))
 		return
 	}
 
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		logUtils.Error(err.Error())
+		logUtils.Infof(color.RedString(err.Error()))
 		return
 	}
 
@@ -163,7 +163,7 @@ func PostStr(url string, params map[string]string) (ret []byte, err error) {
 	req, err := http.NewRequest("POST", url, strings.NewReader(paramStr))
 	if err != nil {
 		if commConsts.Verbose {
-			logUtils.Infof(err.Error())
+			logUtils.Infof(color.RedString(err.Error()))
 		}
 		return
 	}
@@ -174,7 +174,7 @@ func PostStr(url string, params map[string]string) (ret []byte, err error) {
 	resp, err := client.Do(req)
 	if err != nil {
 		if commConsts.Verbose {
-			logUtils.Infof(err.Error())
+			logUtils.Infof(color.RedString(err.Error()))
 		}
 		return
 	}

@@ -3,12 +3,9 @@ package repo
 import (
 	"errors"
 	"fmt"
-	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
-	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	"github.com/aaronchen2k/deeptest/internal/server/core/dao"
-	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
+	"github.com/fatih/color"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -19,39 +16,6 @@ type ProjectRepo struct {
 
 func NewProjectRepo() *ProjectRepo {
 	return &ProjectRepo{}
-}
-
-func (r *ProjectRepo) Paginate(req serverDomain.ProjectReqPaginate) (data domain.PageData, err error) {
-	var count int64
-
-	db := r.DB.Model(&model.Project{}).Where("NOT deleted")
-
-	if req.Keywords != "" {
-		db = db.Where("name LIKE ?", fmt.Sprintf("%%%s%%", req.Keywords))
-	}
-	if req.Enabled != "" {
-		db = db.Where("disabled = ?", commonUtils.IsDisable(req.Enabled))
-	}
-
-	err = db.Count(&count).Error
-	if err != nil {
-		logUtils.Errorf("count project error", zap.String("error:", err.Error()))
-		return
-	}
-
-	pos := make([]*model.Project, 0)
-
-	err = db.
-		Scopes(dao.PaginateScope(req.Page, req.PageSize, req.Order, req.Field)).
-		Find(&pos).Error
-	if err != nil {
-		logUtils.Errorf("query project error", zap.String("error:", err.Error()))
-		return
-	}
-
-	data.Populate(pos, count, req.Page, req.PageSize)
-
-	return
 }
 
 func (r *ProjectRepo) FindById(id uint) (po model.Project, err error) {
@@ -75,7 +39,7 @@ func (r *ProjectRepo) Create(project model.Project) (id uint, err error) {
 
 	err = r.DB.Model(&model.Project{}).Create(&project).Error
 	if err != nil {
-		logUtils.Errorf("add project error", zap.String("error:", err.Error()))
+		logUtils.Errorf("create project error", zap.String("error:", err.Error()))
 		return 0, err
 	}
 
@@ -99,7 +63,7 @@ func (r *ProjectRepo) DeleteByPath(pth string) (err error) {
 		Delete(&model.Project{}).
 		Error
 	if err != nil {
-		logUtils.Errorf("delete project by id error", zap.String("error:", err.Error()))
+		logUtils.Errorf(color.RedString("delete project error", err.Error()))
 		return
 	}
 
@@ -114,10 +78,6 @@ func (r *ProjectRepo) FindByName(name string, ids ...uint) (po model.Project, er
 		db.Where("id != ?", ids[0])
 	}
 	err = db.First(&po).Error
-	if err != nil {
-		logUtils.Errorf("find project by name error", zap.String("name:", name), zap.Uints("ids:", ids), zap.String("error:", err.Error()))
-		return
-	}
 
 	return
 }
