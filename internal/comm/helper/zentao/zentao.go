@@ -16,11 +16,11 @@ import (
 	"strings"
 )
 
-func Login(config commDomain.ProjectConf) bool {
-	ok := GetConfig(config.Url)
-	if !ok {
+func Login(config commDomain.ProjectConf) (err error) {
+	err = GetConfig(config.Url)
+	if err != nil {
 		logUtils.Infof(i118Utils.Sprintf("fail_to_login"))
-		return false
+		return
 	}
 
 	uri := ""
@@ -36,12 +36,12 @@ func Login(config commDomain.ProjectConf) bool {
 	params["password"] = config.Password
 
 	var bodyBytes []byte
-	bodyBytes, ok = httpUtils.PostStr(url, params)
-	if !ok || (ok && strings.Index(string(bodyBytes), "title") > 0) { // use PostObject to login again for new system
-		_, ok = httpUtils.Post(url, params, true)
+	bodyBytes, err = httpUtils.PostStr(url, params)
+	if err != nil || (err == nil && strings.Index(string(bodyBytes), "title") > 0) { // use PostObject to login again for new system
+		_, err = httpUtils.Post(url, params, true)
 	}
 
-	if ok {
+	if err == nil {
 		if commConsts.Verbose {
 			logUtils.Info(i118Utils.Sprintf("success_to_login"))
 		}
@@ -49,18 +49,18 @@ func Login(config commDomain.ProjectConf) bool {
 		logUtils.Errorf(i118Utils.Sprintf("fail_to_login"))
 	}
 
-	return ok
+	return
 }
 
-func GetConfig(baseUrl string) bool {
+func GetConfig(baseUrl string) (err error) {
 	//if commConsts.RequestType != "" {
 	//	return true
 	//}
 
 	url := baseUrl + "?mode=getconfig"
-	bytes, ok := httpUtils.Get(url)
-	if !ok {
-		return false
+	bytes, err := httpUtils.Get(url)
+	if err != nil {
+		return
 	}
 
 	json, _ := simplejson.NewJson(bytes)
@@ -79,12 +79,12 @@ func GetConfig(baseUrl string) bool {
 		uri = "index.php?m=user&f=login&t=json"
 	}
 	url = baseUrl + uri
-	bytes, ok = httpUtils.Get(url)
-	if !ok {
-		return false
+	bytes, err = httpUtils.Get(url)
+	if err != nil {
+		return
 	}
 
-	return true
+	return
 }
 
 func ListLang() (langs []serverDomain.ZentaoLang, err error) {
@@ -102,7 +102,10 @@ func ListProduct(projectPath string) (products []serverDomain.ZentaoProduct, err
 		return
 	}
 
-	Login(config)
+	err = Login(config)
+	if err != nil {
+		return
+	}
 
 	// $productID = 0, $branch = 0, $browseType = '', $param = 0, $storyType = 'story',
 	// $orderBy = '', $recTotal = 0, $recPerPage = 20, $pageID = 1, $projectID = 0)
@@ -114,15 +117,15 @@ func ListProduct(projectPath string) (products []serverDomain.ZentaoProduct, err
 	}
 
 	url := config.Url + GenApiUri("product", "browse", params)
-	bytes, ok := httpUtils.Get(url)
+	bytes, err := httpUtils.Get(url)
 
-	if !ok {
+	if err != nil {
 		err = errors.New("请检查项目配置")
 		return
 	}
 
 	jsn, _ := simplejson.NewJson(bytes)
-	productMap, _ := jsn.Get("products").Map()
+	productMap, err := jsn.Get("products").Map()
 
 	for key, val := range productMap {
 		id, _ := strconv.Atoi(key)
@@ -134,9 +137,12 @@ func ListProduct(projectPath string) (products []serverDomain.ZentaoProduct, err
 
 func ListModuleByProduct(productId int, projectPath string) (modules []serverDomain.ZentaoModule, err error) {
 	config := configUtils.LoadByProjectPath(projectPath)
-	Login(config)
-	// tree-browse-1-story.html#app=product
+	err = Login(config)
+	if err != nil {
+		return
+	}
 
+	// tree-browse-1-story.html#app=product
 	params := ""
 	if commConsts.RequestType == commConsts.PathInfo {
 		params = fmt.Sprintf("%d-story", productId)
@@ -147,9 +153,8 @@ func ListModuleByProduct(productId int, projectPath string) (modules []serverDom
 	url := config.Url + GenApiUri("tree", "browse", params)
 	url += "#app=product"
 
-	bytes, ok := httpUtils.Get(url)
-	if !ok {
-		err = errors.New("tree-browse-story fail")
+	bytes, err := httpUtils.Get(url)
+	if err != nil {
 		return
 	}
 
@@ -166,7 +171,10 @@ func ListModuleByProduct(productId int, projectPath string) (modules []serverDom
 
 func ListModuleForCase(productId int, projectPath string) (modules []serverDomain.ZentaoModule, err error) {
 	config := configUtils.LoadByProjectPath(projectPath)
-	Login(config)
+	err = Login(config)
+	if err != nil {
+		return
+	}
 
 	// tree-browse-1-case-0-0-qa.html
 	params := ""
@@ -179,9 +187,8 @@ func ListModuleForCase(productId int, projectPath string) (modules []serverDomai
 	url := config.Url + GenApiUri("tree", "browse", params)
 	url += "#app=product"
 
-	bytes, ok := httpUtils.Get(url)
-	if !ok {
-		err = errors.New("tree-browse-story fail")
+	bytes, err := httpUtils.Get(url)
+	if err != nil {
 		return
 	}
 
@@ -218,7 +225,10 @@ func GenModuleData(mp map[string]interface{}, modules *[]serverDomain.ZentaoModu
 
 func ListSuiteByProduct(productId int, projectPath string) (suites []serverDomain.ZentaoSuite, err error) {
 	config := configUtils.LoadByProjectPath(projectPath)
-	Login(config)
+	err = Login(config)
+	if err != nil {
+		return
+	}
 
 	// $productID = 0, $orderBy = 'id_asc', $recTotal = 0, $recPerPage = 20, $pageID = 1
 	params := ""
@@ -230,8 +240,8 @@ func ListSuiteByProduct(productId int, projectPath string) (suites []serverDomai
 
 	url := config.Url + GenApiUri("testsuite", "browse", params)
 
-	bytes, ok := httpUtils.Get(url)
-	if !ok {
+	bytes, err := httpUtils.Get(url)
+	if err != nil {
 		err = errors.New("testsuite-browse fail")
 		return
 	}
@@ -253,7 +263,10 @@ func ListSuiteByProduct(productId int, projectPath string) (suites []serverDomai
 
 func ListTaskByProduct(productId int, projectPath string) (tasks []serverDomain.ZentaoTask, err error) {
 	config := configUtils.LoadByProjectPath(projectPath)
-	Login(config)
+	err = Login(config)
+	if err != nil {
+		return
+	}
 
 	// $productID = 0, $branch = '', $type = 'local,totalStatus', $orderBy = 'id_asc', $recTotal = 0, $recPerPage = 20, $pageID = 1, $beginTime = 0, $endTime = 0)
 	params := ""
@@ -264,9 +277,9 @@ func ListTaskByProduct(productId int, projectPath string) (tasks []serverDomain.
 	}
 
 	url := config.Url + GenApiUri("testtask", "browse", params)
-	bytes, ok := httpUtils.Get(url)
+	bytes, err := httpUtils.Get(url)
 
-	if !ok {
+	if err != nil {
 		err = errors.New("testsuite-browse fail")
 		return
 	}

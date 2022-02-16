@@ -18,10 +18,10 @@ import (
 	"strings"
 )
 
-func GetCasesByModule(productId int, moduleId int, projectPath string) (cases []string) {
+func GetCasesByModule(productId int, moduleId int, projectPath string) (cases []string, err error) {
 	config := configUtils.LoadByProjectPath(projectPath)
-	ok := Login(config)
-	if !ok {
+	err = Login(config)
+	if err != nil {
 		return
 	}
 
@@ -39,10 +39,10 @@ func GetCasesByModule(productId int, moduleId int, projectPath string) (cases []
 	return
 }
 
-func GetCasesBySuite(productId int, suiteId int, projectPath string) (cases []string) {
+func GetCasesBySuite(productId int, suiteId int, projectPath string) (cases []string, err error) {
 	config := configUtils.LoadByProjectPath(projectPath)
-	ok := Login(config)
-	if !ok {
+	err = Login(config)
+	if err != nil {
 		return
 	}
 
@@ -60,10 +60,10 @@ func GetCasesBySuite(productId int, suiteId int, projectPath string) (cases []st
 	return
 }
 
-func GetCasesByTask(productId int, taskId int, projectPath string) (cases []string) {
+func GetCasesByTask(productId int, taskId int, projectPath string) (cases []string, err error) {
 	config := configUtils.LoadByProjectPath(projectPath)
-	ok := Login(config)
-	if !ok {
+	err = Login(config)
+	if err != nil {
 		return
 	}
 
@@ -93,9 +93,9 @@ func ListCaseByProduct(baseUrl string, productId int) []commDomain.ZtfCase {
 	}
 
 	url := baseUrl + GenApiUri("testcase", "browse", params)
-	dataStr, ok := httpUtils.Get(url)
+	dataStr, err := httpUtils.Get(url)
 
-	if ok {
+	if err == nil {
 		var product commDomain.ZtfProduct
 		json.Unmarshal(dataStr, &product)
 
@@ -127,9 +127,9 @@ func ListCaseByModule(baseUrl string, productId, moduleId int) []commDomain.ZtfC
 	}
 
 	url := baseUrl + GenApiUri("testcase", "browse", params)
-	bytes, ok := httpUtils.Get(url)
+	bytes, err := httpUtils.Get(url)
 
-	if ok {
+	if err == nil {
 		var module commDomain.ZtfModule
 		json.Unmarshal(bytes, &module)
 
@@ -161,9 +161,9 @@ func ListCaseBySuite(baseUrl string, productId, suiteId int) []commDomain.ZtfCas
 	}
 
 	url := baseUrl + GenApiUri("testsuite", "view", params)
-	bytes, ok := httpUtils.Get(url)
+	bytes, err := httpUtils.Get(url)
 
-	if ok {
+	if err == nil {
 		var suite commDomain.ZtfSuite
 		json.Unmarshal(bytes, &suite)
 
@@ -196,9 +196,9 @@ func ListCaseByTask(baseUrl string, productId, taskId int) []commDomain.ZtfCase 
 	}
 
 	url := baseUrl + GenApiUri("testtask", "cases", params)
-	bytes, ok := httpUtils.Get(url)
+	bytes, err := httpUtils.Get(url)
 
-	if ok {
+	if err == nil {
 		var task commDomain.ZtfTask
 		json.Unmarshal(bytes, &task)
 
@@ -246,9 +246,9 @@ func GetCaseById(baseUrl string, caseId string) commDomain.ZtfCase {
 	}
 
 	url := baseUrl + GenApiUri("testcase", "view", params)
-	bytes, ok := httpUtils.Get(url)
+	bytes, err := httpUtils.Get(url)
 
-	if ok {
+	if err == nil {
 		var csw commDomain.ZtfCaseWrapper
 		json.Unmarshal(bytes, &csw)
 
@@ -260,11 +260,11 @@ func GetCaseById(baseUrl string, caseId string) commDomain.ZtfCase {
 }
 
 func CommitCase(caseId int, title string,
-	stepMap maps.Map, stepTypeMap maps.Map, expectMap maps.Map, projectPath string) {
+	stepMap maps.Map, stepTypeMap maps.Map, expectMap maps.Map, projectPath string) (err error) {
 	config := configUtils.LoadByProjectPath(projectPath)
 
-	ok := Login(config)
-	if !ok {
+	err = Login(config)
+	if err != nil {
 		return
 	}
 
@@ -283,7 +283,10 @@ func CommitCase(caseId int, title string,
 		"stepType": commonUtils.LinkedMapToMap(stepTypeMap),
 		"expects":  commonUtils.LinkedMapToMap(expectMap)}
 
-	json, _ := json.Marshal(requestObj)
+	json, err := json.Marshal(requestObj)
+	if err != nil {
+		return
+	}
 
 	if commConsts.Verbose {
 		logUtils.Infof(string(json))
@@ -296,11 +299,13 @@ func CommitCase(caseId int, title string,
 	}
 
 	if yes {
-		_, ok = httpUtils.Post(url, requestObj, true)
-		if ok {
+		_, err = httpUtils.Post(url, requestObj, true)
+		if err == nil {
 			logUtils.Infof(i118Utils.Sprintf("success_to_commit_case", caseId) + "\n")
 		}
 	}
+
+	return
 }
 
 func fieldMapToListOrderByInt(mp map[string]interface{}) []commDomain.BugOption {

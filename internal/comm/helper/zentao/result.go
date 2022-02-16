@@ -1,6 +1,7 @@
 package zentaoUtils
 
 import (
+	"errors"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
@@ -29,13 +30,14 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId string, project
 	Login(config)
 
 	url := config.Url + GenApiUri("ci", "commitResult", "")
-	ret, ok := httpUtils.Post(url, report, false)
+	ret, err := httpUtils.Post(url, report, false)
 
 	msg := ""
-	if ok {
+	if err == nil {
 		msg = color.GreenString(i118Utils.Sprintf("success_to_submit_test_result"))
 	} else {
 		msg = color.RedString(string(ret))
+		err = errors.New(string(ret))
 	}
 	logUtils.Info(msg)
 

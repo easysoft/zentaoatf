@@ -2,6 +2,7 @@ package httpUtils
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
@@ -15,7 +16,7 @@ import (
 	"strings"
 )
 
-func Get(url string) (ret []byte, ok bool) {
+func Get(url string) (ret []byte, err error) {
 	if strings.Index(url, "mode=getconfig") < 0 {
 		url = AddToken(url)
 	}
@@ -25,17 +26,15 @@ func Get(url string) (ret []byte, ok bool) {
 
 	client := &http.Client{}
 
-	req, reqErr := http.NewRequest("GET", url, nil)
-	if reqErr != nil {
-		logUtils.Error(reqErr.Error())
-		ok = false
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		logUtils.Error(err.Error())
 		return
 	}
 
-	resp, respErr := client.Do(req)
-	if respErr != nil {
-		logUtils.Error(respErr.Error())
-		ok = false
+	resp, err := client.Do(req)
+	if err != nil {
+		logUtils.Error(err.Error())
 		return
 	}
 
@@ -47,8 +46,8 @@ func Get(url string) (ret []byte, ok bool) {
 	defer resp.Body.Close()
 
 	var zentaoResp serverDomain.ZentaoResp
-	jsonErr := json.Unmarshal(bodyBytes, &zentaoResp)
-	if jsonErr != nil {
+	err = json.Unmarshal(bodyBytes, &zentaoResp)
+	if err != nil {
 		if strings.Index(string(bodyBytes), "<html>") > -1 {
 			if commConsts.Verbose {
 				logUtils.Errorf(i118Utils.Sprintf("request_response") + " HTML - " + gohtml.FormatWithLineNo(string(bodyBytes)))
@@ -56,7 +55,7 @@ func Get(url string) (ret []byte, ok bool) {
 			return
 		} else {
 			if commConsts.Verbose {
-				logUtils.Infof(jsonErr.Error())
+				logUtils.Infof(err.Error())
 			}
 			return
 		}
@@ -67,16 +66,17 @@ func Get(url string) (ret []byte, ok bool) {
 	status := zentaoResp.Status
 	if status == "" { // 非嵌套结构
 		ret = bodyBytes
-		ok = true
 	} else { // 嵌套结构
 		ret = []byte(zentaoResp.Data)
-		ok = status == "success"
+		if status != "success" {
+			err = errors.New(zentaoResp.Data)
+		}
 	}
 
 	return
 }
 
-func Post(url string, data interface{}, useFormFormat bool) (ret []byte, ok bool) {
+func Post(url string, data interface{}, useFormFormat bool) (ret []byte, err error) {
 	url = AddToken(url)
 
 	if commConsts.Verbose {
@@ -103,24 +103,24 @@ func Post(url string, data interface{}, useFormFormat bool) (ret []byte, ok bool
 		logUtils.Infof(dataStr)
 	}
 
-	req, reqErr := http.NewRequest("POST", url, strings.NewReader(dataStr))
-	if reqErr != nil {
-		logUtils.Error(reqErr.Error())
+	req, err := http.NewRequest("POST", url, strings.NewReader(dataStr))
+	if err != nil {
+		logUtils.Error(err.Error())
 		return
 	}
 
 	//req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	resp, respErr := client.Do(req)
-	if respErr != nil {
-		logUtils.Error(respErr.Error())
+	resp, err := client.Do(req)
+	if err != nil {
+		logUtils.Error(err.Error())
 		return
 	}
 
-	bodyBytes, ioErr := ioutil.ReadAll(resp.Body)
-	if ioErr != nil {
-		logUtils.Error(ioErr.Error())
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		logUtils.Error(err.Error())
 		return
 	}
 
@@ -131,12 +131,12 @@ func Post(url string, data interface{}, useFormFormat bool) (ret []byte, ok bool
 
 	defer resp.Body.Close()
 
-	ret, ok = GetRespErr(bodyBytes, url)
+	ret, err = GetRespErr(bodyBytes, url)
 
 	return
 }
 
-func PostStr(url string, params map[string]string) (ret []byte, ok bool) {
+func PostStr(url string, params map[string]string) (ret []byte, err error) {
 	url = AddToken(url)
 
 	if commConsts.Verbose {
@@ -159,24 +159,22 @@ func PostStr(url string, params map[string]string) (ret []byte, ok bool) {
 		logUtils.Infof(paramStr)
 	}
 
-	req, reqErr := http.NewRequest("POST", url, strings.NewReader(paramStr))
-	if reqErr != nil {
+	req, err := http.NewRequest("POST", url, strings.NewReader(paramStr))
+	if err != nil {
 		if commConsts.Verbose {
-			logUtils.Infof(reqErr.Error())
+			logUtils.Infof(err.Error())
 		}
-		ok = false
 		return
 	}
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("cookie", commConsts.SessionVar+"="+commConsts.SessionId)
 
-	resp, respErr := client.Do(req)
-	if respErr != nil {
+	resp, err := client.Do(req)
+	if err != nil {
 		if commConsts.Verbose {
-			logUtils.Infof(respErr.Error())
+			logUtils.Infof(err.Error())
 		}
-		ok = false
 		return
 	}
 
@@ -235,7 +233,7 @@ func AddToken(url string) (ret string) {
 	return
 }
 
-func GetRespErr(bytes []byte, url string) (ret []byte, ok bool) {
+func GetRespErr(bytes []byte, url string) (ret []byte, err error) {
 	ret = bytes
 
 	if len(bytes) == 0 {
@@ -243,14 +241,13 @@ func GetRespErr(bytes []byte, url string) (ret []byte, ok bool) {
 	}
 
 	var zentaoResp serverDomain.ZentaoResp
-	jsonErr := json.Unmarshal(bytes, &zentaoResp)
-	if jsonErr != nil {
+	err = json.Unmarshal(bytes, &zentaoResp)
+	if err != nil {
 		if commConsts.Verbose {
 			if strings.Index(url, "login") < 0 { // jsonErr caused by login request return a html
-				logUtils.Infof(jsonErr.Error())
+				logUtils.Infof(err.Error())
 			}
 		}
-		ok = false
 		return
 	}
 
@@ -258,18 +255,18 @@ func GetRespErr(bytes []byte, url string) (ret []byte, ok bool) {
 	status := zentaoResp.Status
 	if status != "" {
 		ret = []byte(zentaoResp.Data)
-		ok = status == "success"
+		if status == "success" {
+			err = errors.New(zentaoResp.Data)
+		}
 		return
 	}
 
 	// 非嵌套结构，map[result:success]
 	var respData = serverDomain.ZentaoRespData{}
-	err := json.Unmarshal(bytes, &respData)
+	err = json.Unmarshal(bytes, &respData)
 
 	if err == nil && (respData.Result != "" && respData.Result != "success") {
-		ok = false
-	} else {
-		ok = true
+		err = errors.New(string(bytes))
 	}
 
 	return
