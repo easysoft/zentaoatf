@@ -47,7 +47,7 @@ func SaveToFile(config commDomain.ProjectConf, projectPath string) (err error) {
 	cfg.ReflectFrom(&config)
 
 	cfg.SaveTo(pth)
-	logUtils.Infof("Successfully update config file %s.", pth)
+	logUtils.Infof("Success to update config file %s.", pth)
 
 	return nil
 }
