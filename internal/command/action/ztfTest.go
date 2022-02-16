@@ -3,10 +3,14 @@ package action
 import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	_scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/exec"
+	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
+	zentaoUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 	"github.com/aaronchen2k/deeptest/internal/command"
-	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
+	commandConfig "github.com/aaronchen2k/deeptest/internal/command/config"
+	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/kataras/iris/v12/websocket"
+	"strconv"
 )
 
 func RunZTFTest(file []string, suiteIdStr, taskIdStr string, actionModule *command.IndexModule) error {
@@ -19,7 +23,7 @@ func RunZTFTest(file []string, suiteIdStr, taskIdStr string, actionModule *comma
 	if suiteIdStr != "" { // run with suite id
 		req.SuiteId = suiteIdStr
 		req.Act = commConsts.ExecSuite
-
+		cases = getCaseBySuiteId(suiteIdStr, file[0])
 	} else if taskIdStr != "" { // run with task id,
 		req.TaskId = taskIdStr
 		req.Act = commConsts.ExecTask
@@ -27,12 +31,12 @@ func RunZTFTest(file []string, suiteIdStr, taskIdStr string, actionModule *comma
 	} else {
 		req.Act = commConsts.ExecCase
 	}
-	if !fileUtils.IsDir(file[0]) {
-		cases = append(cases, file[0])
-	} else {
-		_, _, _, scriptTree, _ := actionModule.ProjectService.GetByUser(commConsts.WorkDir)
-		cases = getCasesFromChildren(scriptTree.Children)
-	}
+	//if !fileUtils.IsDir(file[0]) {
+	//	cases = append(cases, file[0])
+	//} else {
+	//	_, _, _, scriptTree, _ := actionModule.ProjectService.GetByUser(commConsts.WorkDir)
+	//	cases = getCasesFromChildren(scriptTree.Children)
+	//}
 
 	req.Cases = cases
 
@@ -52,4 +56,16 @@ func getCasesFromChildren(scripts []*serverDomain.TestAsset) (cases []string) {
 		}
 	}
 	return
+}
+func getCaseBySuiteId(id string, dir string) []string {
+	caseIdMap := map[int]string{}
+	cases := make([]string, 0)
+
+	suiteId, err := strconv.Atoi(id)
+	if err == nil && suiteId > 0 {
+		commandConfig.CheckRequestConfig()
+		cases, err = zentaoUtils.GetCasesBySuite(0, stringUtils.ParseInt(id), dir)
+	}
+	scriptUtils.GetScriptByIdsInDir(dir, caseIdMap, &cases)
+	return cases
 }
