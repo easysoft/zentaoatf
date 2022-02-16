@@ -14,7 +14,6 @@ import (
 	"github.com/kataras/iris/v12/websocket"
 	"path"
 	"strconv"
-	"strings"
 )
 
 func RunZTFTest(files []string, suiteIdStr, taskIdStr string, actionModule *command.IndexModule) error {
@@ -43,7 +42,7 @@ func RunZTFTest(files []string, suiteIdStr, taskIdStr string, actionModule *comm
 
 			cases = getCaseBySuiteFile(suite, dir)
 		} else if result != "" { // run from failed result file
-			//cases = assertUtils.GetFailedCasesDirectlyFromTestResult(result)
+			cases = scriptUtils.GetFailedCasesDirectlyFromTestResult(result)
 		} else { // run files
 			for _, v1 := range files {
 				if fileUtils.IsDir(v1) {
@@ -127,24 +126,8 @@ func getCaseBySuiteFile(file string, dir string) []string {
 	caseIdMap := map[int]string{}
 	cases := make([]string, 0)
 
-	GetCaseIdsInSuiteFile(file, &caseIdMap)
+	scriptUtils.GetCaseIdsInSuiteFile(file, &caseIdMap)
 	scriptUtils.GetScriptByIdsInDir(dir, caseIdMap, &cases)
 
 	return cases
-}
-
-func GetCaseIdsInSuiteFile(name string, fileIdMap *map[int]string) {
-	content := fileUtils.ReadFile(name)
-
-	for _, line := range strings.Split(content, "\n") {
-		idStr := strings.TrimSpace(line)
-		if idStr == "" {
-			continue
-		}
-
-		id, err := strconv.Atoi(idStr)
-		if err == nil {
-			(*fileIdMap)[id] = ""
-		}
-	}
 }

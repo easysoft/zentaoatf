@@ -1050,3 +1050,19 @@ func GetScriptByIdsInDir(dirPth string, idMap map[int]string, files *[]string) e
 
 	return nil
 }
+
+func GetCaseIdsInSuiteFile(name string, fileIdMap *map[int]string) {
+	content := fileUtils.ReadFile(name)
+
+	for _, line := range strings.Split(content, "\n") {
+		idStr := strings.TrimSpace(line)
+		if idStr == "" {
+			continue
+		}
+
+		id, err := strconv.Atoi(idStr)
+		if err == nil {
+			(*fileIdMap)[id] = ""
+		}
+	}
+}
