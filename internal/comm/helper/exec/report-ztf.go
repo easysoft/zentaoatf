@@ -57,7 +57,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 					stepNumb++
 
 					step.Id = strings.TrimRight(step.Id, ".")
-					status := i118Utils.Sprintf(step.Status)
+					status := i118Utils.Sprintf(string(step.Status))
 					failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("Step %s: %s", step.Id, status))
 
 					for idx1, cp := range step.CheckPoints {
