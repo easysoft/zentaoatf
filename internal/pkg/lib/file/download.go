@@ -2,8 +2,9 @@ package fileUtils
 
 import (
 	"fmt"
-	_i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
-	_logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
+	"github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
+	"github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
+	"github.com/fatih/color"
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
@@ -17,11 +18,11 @@ func Download(url string, dst string) (err error) {
 	var data []byte
 	data, err = HTTPDownload(url)
 	if err == nil {
-		_logUtils.Info(_i118Utils.Sprintf("file_downloaded", url))
+		logUtils.Info(i118Utils.Sprintf("file_downloaded", url))
 
 		err = WriteDownloadFile(dst, data)
 		if err == nil {
-			_logUtils.Info(_i118Utils.Sprintf("file_download_saved", url, dst))
+			logUtils.Info(i118Utils.Sprintf("file_download_saved", url, dst))
 		}
 	}
 
@@ -31,12 +32,12 @@ func Download(url string, dst string) (err error) {
 func HTTPDownload(uri string) ([]byte, error) {
 	res, err := http.Get(uri)
 	if err != nil {
-		_logUtils.Error(err.Error())
+		logUtils.Infof(color.RedString("download file failed, error: %s.", err.Error()))
 	}
 	defer res.Body.Close()
 	d, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		_logUtils.Error(err.Error())
+		logUtils.Infof(color.RedString("read downloaded file failed, error: %s.", err.Error()))
 	}
 	return d, err
 }
@@ -44,7 +45,7 @@ func HTTPDownload(uri string) ([]byte, error) {
 func WriteDownloadFile(dst string, d []byte) error {
 	err := ioutil.WriteFile(dst, d, 0444)
 	if err != nil {
-		_logUtils.Error(err.Error())
+		logUtils.Infof(color.RedString("write download file failed, error: %s.", err.Error()))
 	}
 	return err
 }

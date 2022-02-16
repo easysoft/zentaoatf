@@ -41,6 +41,43 @@ func InitLog() {
 	}
 }
 
+// 执行日志，用于具体的测试执行
+func InitExecLog(projectPath string) {
+	commConsts.ExecLogDir = logUtils.GetLogDir(projectPath)
+	config := getLogConfig()
+	config.EncoderConfig.EncodeLevel = nil
+
+	// print to test log file
+	logPath := filepath.Join(commConsts.ExecLogDir, commConsts.LogText)
+	if commonUtils.IsWin() {
+		logPath = filepath.Join("winfile:///", logPath)
+		zap.RegisterSink("winfile", newWinFileSink)
+	}
+
+	config.OutputPaths = []string{logPath}
+	var err error
+	logUtils.LoggerExecFile, err = config.Build()
+	if err != nil {
+		log.Println("init exec file logger fail " + err.Error())
+	}
+
+	config.DisableCaller = true
+	config.DisableStacktrace = true
+	config.EncoderConfig.TimeKey = ""
+
+	// print to test result file
+	logPathResult := filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)
+	if commonUtils.IsWin() {
+		logPathResult = filepath.Join("winfile:///", logPathResult)
+		zap.RegisterSink("winfile", newWinFileSink)
+	}
+	config.OutputPaths = []string{logPathResult}
+	logUtils.LoggerExecResult, err = config.Build()
+	if err != nil {
+		log.Println("init exec result logger fail " + err.Error())
+	}
+}
+
 func getLogConfig() (config zap.Config) {
 	var level zapcore.Level
 
@@ -101,33 +138,6 @@ func getLogConfig() (config zap.Config) {
 	config.ErrorOutputPaths = []string{"stderr", logPathErr}
 
 	return
-}
-
-// 执行日志，用于具体的测试执行
-func InitExecLog(projectPath string) {
-	config := getLogConfig()
-
-	commConsts.ExecLogDir = logUtils.GetLogDir(projectPath)
-
-	// print to exec log file
-	config.EncoderConfig.EncodeLevel = nil
-	config.OutputPaths = []string{filepath.Join(commConsts.ExecLogDir, commConsts.LogText)}
-	var err error
-	logUtils.LoggerExecFile, err = config.Build()
-	if err != nil {
-		log.Println("init exec file logger fail " + err.Error())
-	}
-
-	config.DisableCaller = true
-	config.DisableStacktrace = true
-	config.EncoderConfig.TimeKey = ""
-
-	// print to test result file
-	config.OutputPaths = []string{filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)}
-	logUtils.LoggerExecResult, err = config.Build()
-	if err != nil {
-		log.Println("init exec result logger fail " + err.Error())
-	}
 }
 
 func newWinFileSink(u *url.URL) (zap.Sink, error) {

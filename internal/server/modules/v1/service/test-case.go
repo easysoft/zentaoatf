@@ -18,8 +18,8 @@ func (s *TestCaseService) LoadTestCases(productId, moduleId, suiteId, taskId int
 
 	config := configUtils.LoadByProjectPath(projectPath)
 
-	ok := zentaoUtils.Login(config)
-	if !ok {
+	err := zentaoUtils.Login(config)
+	if err != nil {
 		loginFail = true
 		return
 	}

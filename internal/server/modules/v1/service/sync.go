@@ -10,6 +10,7 @@ import (
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
+	"github.com/fatih/color"
 	"path/filepath"
 	"strconv"
 )
@@ -48,7 +49,7 @@ func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, projectPa
 		if err == nil {
 			logUtils.Infof(i118Utils.Sprintf("success_to_generate", count, targetDir))
 		} else {
-			logUtils.Infof(err.Error())
+			logUtils.Infof(color.RedString(err.Error()))
 		}
 	} else {
 		if !loginFail {

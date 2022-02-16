@@ -37,7 +37,10 @@ func ExecCase(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning strin
 func ExecModule(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 
-	cases := zentaoUtils.GetCasesByModule(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.ModuleId), req.ProjectPath)
+	cases, err := zentaoUtils.GetCasesByModule(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.ModuleId), req.ProjectPath)
+	if err != nil {
+		return
+	}
 
 	if req.Seq != "" {
 		cases = analysisUtils.FilterCaseByResult(cases, req)
@@ -49,7 +52,7 @@ func ExecModule(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning str
 
 func ExecSuite(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	cases := zentaoUtils.GetCasesBySuite(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId), req.ProjectPath)
+	cases, err := zentaoUtils.GetCasesBySuite(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId), req.ProjectPath)
 
 	if req.Seq != "" {
 		cases = analysisUtils.FilterCaseByResult(cases, req)
@@ -61,7 +64,10 @@ func ExecSuite(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning stri
 
 func ExecTask(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	cases := zentaoUtils.GetCasesByTask(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId), req.ProjectPath)
+	cases, err := zentaoUtils.GetCasesByTask(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId), req.ProjectPath)
+	if err != nil {
+		return
+	}
 
 	if req.Seq != "" {
 		cases = analysisUtils.FilterCaseByResult(cases, req)

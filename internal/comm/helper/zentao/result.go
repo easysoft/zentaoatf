@@ -1,7 +1,7 @@
 package zentaoUtils
 
 import (
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+	"errors"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
 	httpUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/http"
@@ -21,21 +21,22 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId string, project
 	report.BuildUrl = os.Getenv("BUILD_URL")
 
 	// remove it, will cause zentao testtask not display
-	if commConsts.ComeFrom != "cmd" {
-		report.TestType = ""
-	}
+	//if commConsts.ComeFrom != "cmd" {
+	//	report.TestType = ""
+	//}
 
 	config := configUtils.LoadByProjectPath(projectPath)
 	Login(config)
 
 	url := config.Url + GenApiUri("ci", "commitResult", "")
-	ret, ok := httpUtils.Post(url, report, false)
+	ret, err := httpUtils.Post(url, report, false)
 
 	msg := ""
-	if ok {
+	if err == nil {
 		msg = color.GreenString(i118Utils.Sprintf("success_to_submit_test_result"))
 	} else {
-		msg = color.RedString(string(ret))
+		msg = color.RedString("commit result failed, error: %s.", err.Error())
+		err = errors.New(string(ret))
 	}
 	logUtils.Info(msg)
 

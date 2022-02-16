@@ -42,20 +42,20 @@ func CommitBug(ztfBug commDomain.ZtfBug, projectPath string) (err error) {
 
 	bug := commDomain.ZentaoBug{}
 	copier.Copy(&bug, ztfBug)
-	ret, ok := httpUtils.Post(url, bug, true)
+	_, err = httpUtils.Post(url, bug, true)
 
 	msg := ""
 
-	if ok {
+	if err == nil {
 		msg = i118Utils.Sprintf("success_to_report_bug", ztfBug.Case)
 	} else {
-		msg = color.RedString(string(ret))
+		msg = color.RedString("commit bug failed, error: %s.", err.Error())
 	}
 
 	if commConsts.ComeFrom == "cmd" {
 		msgView, _ := commConsts.Cui.View("reportBugMsg")
 		msgView.Clear()
-		if ok {
+		if err == nil {
 			color.New(color.FgGreen).Fprintf(msgView, msg)
 
 			commConsts.Cui.DeleteView("submitInput")
@@ -140,8 +140,8 @@ func GetBugFiledOptions(req commDomain.FuncResult, projectPath string) (
 
 	// field options
 	config := configUtils.LoadByProjectPath(projectPath)
-	ok := Login(config)
-	if !ok {
+	err = Login(config)
+	if err != nil {
 		return
 	}
 
@@ -154,8 +154,8 @@ func GetBugFiledOptions(req commDomain.FuncResult, projectPath string) (
 	}
 
 	url := config.Url + GenApiUri("bug", "ajaxGetBugFieldOptions", params)
-	bytes, ok := httpUtils.Get(url)
-	if ok {
+	bytes, err := httpUtils.Get(url)
+	if err == nil {
 		jsonData := &simplejson.Json{}
 		jsonData, err = simplejson.NewJson(bytes)
 
