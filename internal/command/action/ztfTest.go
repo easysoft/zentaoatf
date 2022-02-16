@@ -9,7 +9,6 @@ import (
 	commandConfig "github.com/aaronchen2k/deeptest/internal/command/config"
 	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
-	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/kataras/iris/v12/websocket"
 	"path"
@@ -30,7 +29,7 @@ func RunZTFTest(files []string, suiteIdStr, taskIdStr string, actionModule *comm
 	} else if taskIdStr != "" { // run with task id,
 		req.TaskId = taskIdStr
 		req.Act = commConsts.ExecTask
-
+		cases = getCaseByTaskId(taskIdStr, files[0])
 	} else {
 		suite, dir := isRunWithSuiteFile(files)
 		result := isRunWithResultFile(files)
@@ -39,7 +38,6 @@ func RunZTFTest(files []string, suiteIdStr, taskIdStr string, actionModule *comm
 			if dir == "" { // not found dir in files param
 				dir = fileUtils.AbsolutePath(".")
 			}
-
 			cases = getCaseBySuiteFile(suite, dir)
 		} else if result != "" { // run from failed result file
 			cases = scriptUtils.GetFailedCasesDirectlyFromTestResult(result)
@@ -59,24 +57,11 @@ func RunZTFTest(files []string, suiteIdStr, taskIdStr string, actionModule *comm
 	}
 
 	req.Cases = cases
-
 	_scriptUtils.Exec(nil, nil, nil, req, msg)
 
 	return nil
 }
 
-// 扁平化
-func getCasesFromChildren(scripts []*serverDomain.TestAsset) (cases []string) {
-	for _, v := range scripts {
-		if v.Path != "" {
-			cases = append(cases, v.Path)
-		}
-		if v.Children != nil {
-			getCasesFromChildren(v.Children)
-		}
-	}
-	return
-}
 func getCaseBySuiteId(id string, dir string) []string {
 	caseIdMap := map[int]string{}
 	cases := make([]string, 0)
@@ -84,8 +69,22 @@ func getCaseBySuiteId(id string, dir string) []string {
 	suiteId, err := strconv.Atoi(id)
 	if err == nil && suiteId > 0 {
 		commandConfig.CheckRequestConfig()
-		cases, err = zentaoUtils.GetCasesBySuite(0, stringUtils.ParseInt(id), dir)
+		cases, err = zentaoUtils.GetCasesBySuite(0, suiteId, dir)
 	}
+	scriptUtils.GetScriptByIdsInDir(dir, caseIdMap, &cases)
+	return cases
+}
+
+func getCaseByTaskId(id string, dir string) []string {
+	caseIdMap := map[int]string{}
+	cases := make([]string, 0)
+
+	taskId, err := strconv.Atoi(id)
+	if err == nil && taskId > 0 {
+		commandConfig.CheckRequestConfig()
+		cases, err = zentaoUtils.GetCasesByTask(0, taskId, dir)
+	}
+
 	scriptUtils.GetScriptByIdsInDir(dir, caseIdMap, &cases)
 	return cases
 }
