@@ -158,10 +158,29 @@ export default defineComponent({
       }
     }, 600)
 
+    const nodeTypeMap = {}
+    const getNodeTypeMap = throttle((node): void => {
+      nodeTypeMap[node.path] = !node.isDir
+
+      if (!node.children) return
+      node.children.forEach(c => {
+        getNodeTypeMap(c)
+      })
+    }, 300)
+    const getLeafNodeKeys = (): string[] => {
+      const arr = [] as string[]
+      checkedKeys.value.forEach(k => {
+        if (nodeTypeMap[k]) arr.push(k)
+      })
+      return arr
+    }
+
     getOpenKeys(treeData.value[0], false)
+    getNodeTypeMap(treeData.value[0])
     watch(treeData, (currConfig) => {
       expandedKeys.value = []
       getOpenKeys(treeData.value[0], false)
+      getNodeTypeMap(treeData.value[0])
     })
 
     let tree = ref(null)
@@ -229,7 +248,8 @@ export default defineComponent({
 
       getCache(settings.currProject).then (
           (projectPath) => {
-            const msg = {act: 'execCase', projectPath: projectPath, cases: checkedKeys.value}
+            const leafNodeKeys = getLeafNodeKeys()
+            const msg = {act: 'execCase', projectPath: projectPath, cases: leafNodeKeys}
             console.log('msg', msg)
 
             wsMsg.out += '\n'
@@ -237,6 +257,7 @@ export default defineComponent({
           }
       )
     }
+
     const stop = (): void => {
       console.log("stop")
       getCache(settings.currProject).then (

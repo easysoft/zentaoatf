@@ -5,11 +5,12 @@ import {app} from 'electron';
 import express from 'express';
 import {logInfo, logErr} from './log';
 
+const psTree = require('ps-tree');
 const DEBUG = process.env.NODE_ENV === 'development';
 const isWin = /^win/.test(process.platform);
-const isLinux = /^linux/.test(process.platform);
 const isMac = /^darwin/.test(process.platform);
 let _ztfServerProcess;
+let _ztfSubProcessIds = [];
 
 export function startZtfServer() {
     if (process.env.SKIP_SERVER) {
@@ -74,6 +75,15 @@ export function startZtfServer() {
             });
             _ztfServerProcess = cmd;
             logInfo(`>> _ztfServerProcess = ${_ztfServerProcess.pid}`)
+
+            psTree(_ztfServerProcess.pid, function (err, children) {
+                _ztfSubProcessIds = [_ztfServerProcess.pid].concat(
+                    children.map(function (p) {
+                        return p.PID;
+                    })
+                );
+                logInfo(`>> _ztfSubProcessIds = ${_ztfSubProcessIds}`)
+            });
         });
     }
 
@@ -222,31 +232,18 @@ export function killZtfServer() {
             });
     } else if (isMac) {
         logInfo(`>> isMac`);
-        _ztfServerProcess.kill();
+        if (_ztfServerProcess) _ztfServerProcess.kill();
     } else {
         logInfo(`>> isLinux`);
-        kill(_ztfServerProcess.pid);
-    }
-}
-
-const psTree = require('ps-tree');
-function kill(pid, signal, callback) {
-    signal = signal || 'SIGKILL';
-    callback = callback || function () {};
-
-    psTree(pid, function (err, children) {
-        [pid].concat(
-            children.map(function (p) {
-                return p.PID;
-            })
-        ).forEach(function (tpid) {
-            logInfo(`>> ${tpid}`)
+        _ztfSubProcessIds.forEach(function (tpid) {
+            logInfo(`>> kill ${tpid}`)
             try {
-                process.kill(tpid, signal)
+                process.kill(tpid, 'SIGKILL')
             } catch (ex) {
                 logErr(`>> ` + ex)
             }
         });
-        callback();
-    });
-};
+    }
+}
+
+
