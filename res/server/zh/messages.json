@@ -15,7 +15,11 @@
     },
     {
       "id": "data_not_init",
-      "translation": "数据为初始化"
+      "translation": "数据未初始化"
+    },
+    {
+      "id": "pls_config_project",
+      "translation": "请先完成项目配置"
     },
     {
       "id": "project_config_err",

@@ -7,6 +7,8 @@ import {logInfo, logErr} from './log';
 
 const DEBUG = process.env.NODE_ENV === 'development';
 const isWin = /^win/.test(process.platform);
+const isLinux = /^linux/.test(process.platform);
+const isMac = /^darwin/.test(process.platform);
 let _ztfServerProcess;
 
 export function startZtfServer() {
@@ -71,6 +73,7 @@ export function startZtfServer() {
                 reject(spawnError)
             });
             _ztfServerProcess = cmd;
+            logInfo(`>> _ztfServerProcess = ${_ztfServerProcess.pid}`)
         });
     }
 
@@ -112,22 +115,6 @@ export function startZtfServer() {
         });
         _ztfServerProcess = cmd;
     });
-}
-
-export function killZtfServer() {
-    if(!isWin) {
-        _ztfServerProcess.kill('SIGINT');
-        kill(_ztfServerProcess.pid);
-    } else {
-        const cp = require('child_process');
-        cp.exec('taskkill /PID ' + _ztfServerProcess.pid + ' /T /F', function (error, stdout, stderr) {
-            // console.log('stdout: ' + stdout);
-            // console.log('stderr: ' + stderr);
-            // if(error !== null) {
-            //      console.log('exec error: ' + error);
-            // }
-        });
-    }
 }
 
 let _uiServerApp;
@@ -225,27 +212,42 @@ export function getUIServerUrl() {
     });
 }
 
-const psTree = require('ps-tree');
-
-function kill (pid, signal, callback) {
-    signal   = signal || 'SIGKILL';
-    callback = callback || function () {};
-    const killTree = true;
-    if(killTree) {
-        psTree(pid, function (err, children) {
-            [pid].concat(
-                children.map(function (p) {
-                    return p.PID;
-                })
-            ).forEach(function (tpid) {
-                try { process.kill(tpid, signal) }
-                catch (ex) { }
+export function killZtfServer() {
+    if (isWin) {
+        logInfo(`>> isWin`);
+        const cp = require('child_process');
+        cp.exec('taskkill /PID ' + _ztfServerProcess.pid + ' /T /F',
+            function (error, stdout, stderr) {
+                // console.log('stdout: ' + stdout + ', stderr: ' + stderr);
+                // if(error !== null) console.log('exec error: ' + error);
             });
-            callback();
-        });
+    } else if (isMac) {
+        logInfo(`>> isMac`);
+        _ztfServerProcess.kill();
     } else {
-        try { process.kill(pid, signal) }
-        catch (ex) { }
-        callback();
+        logInfo(`>> isLinux`);
+        kill(_ztfServerProcess.pid);
     }
+}
+
+const psTree = require('ps-tree');
+function kill(pid, signal, callback) {
+    signal = signal || 'SIGKILL';
+    callback = callback || function () {};
+
+    psTree(pid, function (err, children) {
+        [pid].concat(
+            children.map(function (p) {
+                return p.PID;
+            })
+        ).forEach(function (tpid) {
+            logInfo(`>> ${tpid}`)
+            try {
+                process.kill(tpid, signal)
+            } catch (ex) {
+                logErr(`>> ` + ex)
+            }
+        });
+        callback();
+    });
 };

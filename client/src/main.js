@@ -69,7 +69,6 @@ app.on('window-all-closed', () => {
 
 app.on('before-quit',function(){
   logInfo(`>> Event before-quit`)
-  killZtfServer();
 })
 
 app.on('will-quit',function(){
@@ -78,6 +77,7 @@ app.on('will-quit',function(){
 
 app.on('quit',function(){
   logInfo(`>> Event quit`)
+  killZtfServer();
 })
 
 app.on('activate', () => {
@@ -89,6 +89,3 @@ app.on('activate', () => {
     startApp();
   }
 });
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.

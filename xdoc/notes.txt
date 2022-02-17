@@ -24,6 +24,7 @@ cd client && npm run package-win64 && cd ..
 
 make compile_linux
 cd client && npm run package-linux && cd ..
+scp -r client/out/ztf-linux-x64/ 192.168.0.114:/home/aaron
 
 make compile_mac
 cd client && npm run package-mac && cd ..
