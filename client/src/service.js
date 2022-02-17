@@ -218,8 +218,7 @@ export function killZtfServer() {
         const cp = require('child_process');
         cp.exec('taskkill /PID ' + _ztfServerProcess.pid + ' /T /F',
             function (error, stdout, stderr) {
-                // console.log('stdout: ' + stdout + ', stderr: ' + stderr);
-                // if(error !== null) console.log('exec error: ' + error);
+                // logInfo('stdout: ' + stdout + '; stderr: ' + stderr + '; error: ' + error + '.');
             });
     } else if (isMac) {
         logInfo(`>> isMac`);
