@@ -2,6 +2,7 @@ package scriptUtils
 
 import (
 	"encoding/json"
+	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
@@ -13,6 +14,7 @@ import (
 	"io/ioutil"
 	"path"
 	"regexp"
+	"strings"
 )
 
 func LoadScriptTree(dir string) (asset serverDomain.TestAsset, err error) {
@@ -160,4 +162,31 @@ func GetScriptType(scripts []string) []string {
 	}
 
 	return exts
+}
+
+func GetFailedCasesDirectlyFromTestResult(resultFile string) []string {
+	cases := make([]string, 0)
+
+	extName := path.Ext(resultFile)
+
+	if extName == "."+consts.ExtNameResult {
+		resultFile = strings.Replace(resultFile, extName, "."+consts.ExtNameJson, -1)
+	}
+
+	//if vari.ServerProjectDir != "" {
+	//	resultFile = vari.ServerProjectDir + resultFile
+	//}
+
+	content := fileUtils.ReadFile(resultFile)
+
+	var report commDomain.ZtfReport
+	json.Unmarshal([]byte(content), &report)
+
+	for _, cs := range report.FuncResult {
+		if cs.Status != "pass" {
+			cases = append(cases, cs.Path)
+		}
+	}
+
+	return cases
 }

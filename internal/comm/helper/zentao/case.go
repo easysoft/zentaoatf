@@ -40,7 +40,13 @@ func GetCasesByModule(productId int, moduleId int, projectPath string) (cases []
 }
 
 func GetCasesBySuite(productId int, suiteId int, projectPath string) (cases []string, err error) {
-	config := configUtils.LoadByProjectPath(projectPath)
+	config := commDomain.ProjectConf{}
+	if commConsts.ComeFrom == "cmd" {
+		config = configUtils.LoadByProjectPath(commConsts.WorkDir)
+	} else {
+		config = configUtils.LoadByProjectPath(projectPath)
+	}
+
 	err = Login(config)
 	if err != nil {
 		return
@@ -61,7 +67,13 @@ func GetCasesBySuite(productId int, suiteId int, projectPath string) (cases []st
 }
 
 func GetCasesByTask(productId int, taskId int, projectPath string) (cases []string, err error) {
-	config := configUtils.LoadByProjectPath(projectPath)
+	config := commDomain.ProjectConf{}
+	if commConsts.ComeFrom == "cmd" {
+		config = configUtils.LoadByProjectPath(commConsts.WorkDir)
+	} else {
+		config = configUtils.LoadByProjectPath(projectPath)
+	}
+
 	err = Login(config)
 	if err != nil {
 		return
