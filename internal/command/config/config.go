@@ -22,22 +22,11 @@ import (
 	"reflect"
 )
 
-func CheckConfigPermission() {
-	err := fileUtils.MkDirIfNeeded(commConsts.WorkDir + "conf")
-	if err != nil {
-		msg := i118Utils.Sprintf("perm_deny", commConsts.WorkDir)
-		logUtils.ExecConsolef(color.FgRed, msg)
-		os.Exit(0)
-	}
-}
-
 func InitConfig() {
 	commConsts.IsRelease = commonUtils.IsRelease()
 
-	CheckConfigPermission()
 	commConsts.WorkDir = fileUtils.GetWorkDir()
 	commConsts.ConfigPath = commConsts.WorkDir + commConsts.ConfigFile
-	serverConfig.InitExecLog(commConsts.WorkDir)
 
 	if commConsts.Verbose {
 		fmt.Printf("\nlaunch %s%s in %s\n", "", commConsts.App, commConsts.WorkDir)
@@ -65,7 +54,7 @@ func Init() {
 	InitConfig()
 	serverConfig.InitLog()
 
-	//commandConfig.CheckConfigPermission()
+	CheckConfigPermission()
 
 	// screen size
 	InitScreenSize()
@@ -77,6 +66,15 @@ func Init() {
 
 	commConsts.ComeFrom = "cmd"
 	return
+}
+
+func CheckConfigPermission() {
+	err := fileUtils.MkDirIfNeeded(commConsts.WorkDir + "conf")
+	if err != nil {
+		msg := i118Utils.Sprintf("perm_deny", commConsts.WorkDir)
+		logUtils.ExecConsolef(color.FgRed, msg)
+		os.Exit(0)
+	}
 }
 func InitScreenSize() {
 	w, h := display.GetScreenSize()
