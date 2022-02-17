@@ -18,8 +18,8 @@
       "translation": "Data not init"
     },
     {
-      "id": "project_not_init",
-      "translation": "Project not init"
+      "id": "project_config_err",
+      "translation": "Project config error"
     },
     {
       "id": "record_not_found_by_name",

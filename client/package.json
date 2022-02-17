@@ -40,6 +40,8 @@
   },
   "dependencies": {
     "electron-log": "^4.4.6",
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-squirrel-startup": "^1.0.0",
+    "find-process": "^1.4.7",
+    "ps-tree": "^1.2.0"
   }
 }

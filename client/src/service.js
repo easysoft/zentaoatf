@@ -6,7 +6,7 @@ import express from 'express';
 import {logInfo, logErr} from './log';
 
 const DEBUG = process.env.NODE_ENV === 'development';
-
+const isWin = /^win/.test(process.platform);
 let _ztfServerProcess;
 
 export function startZtfServer() {
@@ -115,7 +115,19 @@ export function startZtfServer() {
 }
 
 export function killZtfServer() {
-    _ztfServerProcess.kill('SIGINT');
+    if(!isWin) {
+        _ztfServerProcess.kill('SIGINT');
+        kill(_ztfServerProcess.pid);
+    } else {
+        const cp = require('child_process');
+        cp.exec('taskkill /PID ' + _ztfServerProcess.pid + ' /T /F', function (error, stdout, stderr) {
+            // console.log('stdout: ' + stdout);
+            // console.log('stderr: ' + stderr);
+            // if(error !== null) {
+            //      console.log('exec error: ' + error);
+            // }
+        });
+    }
 }
 
 let _uiServerApp;
@@ -212,3 +224,28 @@ export function getUIServerUrl() {
         _uiServerApp = cmd;
     });
 }
+
+const psTree = require('ps-tree');
+
+function kill (pid, signal, callback) {
+    signal   = signal || 'SIGKILL';
+    callback = callback || function () {};
+    const killTree = true;
+    if(killTree) {
+        psTree(pid, function (err, children) {
+            [pid].concat(
+                children.map(function (p) {
+                    return p.PID;
+                })
+            ).forEach(function (tpid) {
+                try { process.kill(tpid, signal) }
+                catch (ex) { }
+            });
+            callback();
+        });
+    } else {
+        try { process.kill(pid, signal) }
+        catch (ex) { }
+        callback();
+    }
+};

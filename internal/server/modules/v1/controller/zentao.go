@@ -25,7 +25,7 @@ func (c *ZentaoCtrl) ListProduct(ctx iris.Context) {
 
 	data, err := zentaoUtils.ListProduct(projectPath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.BizErrProjectNotInit, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.BizErrProjectConfig, err.Error()))
 		return
 	}
 

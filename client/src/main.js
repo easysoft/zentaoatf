@@ -60,13 +60,29 @@ app.on('ready', startApp);
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
+  logInfo(`>> Event window-all-closed`)
+
   // if (process.platform !== 'darwin') {
     app.quit();
-    killZtfServer();
   // }
 });
 
+app.on('before-quit',function(){
+  logInfo(`>> Event before-quit`)
+  killZtfServer();
+})
+
+app.on('will-quit',function(){
+  logInfo(`>> Event will-quit`)
+})
+
+app.on('quit',function(){
+  logInfo(`>> Event quit`)
+})
+
 app.on('activate', () => {
+  logInfo(`>> Event activate`)
+
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
