@@ -18,8 +18,8 @@
       "translation": "数据为初始化"
     },
     {
-      "id": "project_not_init",
-      "translation": "项目未初始化"
+      "id": "project_config_err",
+      "translation": "项目配置错误"
     },
     {
       "id": "record_not_found_by_name",

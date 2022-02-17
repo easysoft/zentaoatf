@@ -1,0 +1,31 @@
+select t1.id,t1.parent_id,t2.*,
+ if(find_in_set(parent_id, @pids) > 0, @pids := concat(@pids, ',', id), 0) as ischild
+ from (
+      select id,parent_id from biz_product t where t.deleted = '0' order by parent_id, id
+     ) t1,
+     (select @pids := 1) t2
+
+cd internal/comm/grpc/proto
+protoc --go_out=. \
+  --go_opt=paths=source_relative \
+  --go-grpc_out=. \
+  --go-grpc_opt=paths=source_relative \
+  greater/greater.proto
+
+安装打包工具
+npm install --save-dev electron-packager
+
+打包
+cd ui && yarn build --dest ../client/ui && cd ..
+
+go-bindata -o=res/res.go -pkg=res res/...
+make compile_win64
+cd client && npm run package-win64 && cd ..
+
+make compile_linux
+cd client && npm run package-linux && cd ..
+
+make compile_mac
+cd client && npm run package-mac && cd ..
+
+client/out/ztf-darwin-x64/ztf.app/Contents/MacOS/ztf

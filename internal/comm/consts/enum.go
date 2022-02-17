@@ -10,9 +10,9 @@ var (
 	Failure  = ResponseCode{100, "request_failure"}
 	ParamErr = ResponseCode{200, "parm_error"}
 
-	NeedInitErr          = ResponseCode{1000, "data_not_init"}
-	BizErrProjectNotInit = ResponseCode{2000, "project_not_init"}
-	BizErrNameNotExist   = ResponseCode{3000, "record_not_found_by_name"}
+	NeedInitErr         = ResponseCode{1000, "data_not_init"}
+	BizErrProjectConfig = ResponseCode{2000, "project_config_err"}
+	BizErrNameNotExist  = ResponseCode{3000, "record_not_found_by_name"}
 )
 
 type ResultStatus string
