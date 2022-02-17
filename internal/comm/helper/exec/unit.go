@@ -99,7 +99,9 @@ func RunUnitTest(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning st
 	for {
 		line, err3 := reader1.ReadString('\n')
 		if line != "" {
-			sendOutputMsg(line, "", wsMsg)
+			if commConsts.ComeFrom != "cmd" {
+				sendOutputMsg(line, "", wsMsg)
+			}
 			logUtils.ExecConsole(1, line)
 			logUtils.ExecFile(line)
 
