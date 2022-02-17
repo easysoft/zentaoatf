@@ -98,7 +98,7 @@ func ListLang() (langs []serverDomain.ZentaoLang, err error) {
 func ListProduct(projectPath string) (products []serverDomain.ZentaoProduct, err error) {
 	config := configUtils.LoadByProjectPath(projectPath)
 	if config.Url == "" {
-		err = errors.New("请先完成项目配置")
+		err = errors.New(i118Utils.Sprintf("pls_config_project"))
 		return
 	}
 
@@ -120,7 +120,6 @@ func ListProduct(projectPath string) (products []serverDomain.ZentaoProduct, err
 	bytes, err := httpUtils.Get(url)
 
 	if err != nil {
-		err = errors.New("请检查项目配置")
 		return
 	}
 
@@ -242,7 +241,6 @@ func ListSuiteByProduct(productId int, projectPath string) (suites []serverDomai
 
 	bytes, err := httpUtils.Get(url)
 	if err != nil {
-		err = errors.New("testsuite-browse fail")
 		return
 	}
 
@@ -280,7 +278,6 @@ func ListTaskByProduct(productId int, projectPath string) (tasks []serverDomain.
 	bytes, err := httpUtils.Get(url)
 
 	if err != nil {
-		err = errors.New("testsuite-browse fail")
 		return
 	}
 

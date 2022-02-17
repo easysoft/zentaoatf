@@ -36,7 +36,7 @@ func (c *ZentaoCtrl) ListModule(ctx iris.Context) {
 	projectPath := ctx.URLParam("currProject")
 	productId, err := ctx.URLParamInt("productId")
 	if err != nil {
-		c.ErrResp(commConsts.ParamErr, err.Error())
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
 		return
 	}
 
@@ -53,7 +53,7 @@ func (c *ZentaoCtrl) ListSuite(ctx iris.Context) {
 	projectPath := ctx.URLParam("currProject")
 	productId, err := ctx.URLParamInt("productId")
 	if err != nil {
-		c.ErrResp(commConsts.ParamErr, err.Error())
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
 		return
 	}
 
@@ -70,7 +70,7 @@ func (c *ZentaoCtrl) ListTask(ctx iris.Context) {
 	projectPath := ctx.URLParam("currProject")
 	productId, err := ctx.URLParamInt("productId")
 	if err != nil {
-		c.ErrResp(commConsts.ParamErr, err.Error())
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
 		return
 	}
 
@@ -88,7 +88,7 @@ func (c *ZentaoCtrl) GetDataForBugSubmition(ctx iris.Context) {
 
 	req := commDomain.FuncResult{}
 	if err := ctx.ReadJSON(&req); err != nil {
-		c.ErrResp(commConsts.ParamErr, err.Error())
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
 		return
 	}
 
