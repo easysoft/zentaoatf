@@ -8,11 +8,14 @@ import (
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
+	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
 	"github.com/kataras/iris/v12/websocket"
 	"path/filepath"
 )
 
 func GenExpectFiles(files []string) error {
+	serverConfig.InitExecLog(commConsts.ExecLogDir)
+
 	var cases []string
 	for _, v1 := range files {
 		group := scriptUtils.LoadScriptByProject(v1)
