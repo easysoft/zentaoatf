@@ -161,7 +161,6 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 	resultPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)
 	msg = "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
 
-	sendExecMsg(msg, "false", wsMsg)
 	if commConsts.ComeFrom != "cmd" {
 		sendExecMsg(msg, "false", wsMsg)
 	}

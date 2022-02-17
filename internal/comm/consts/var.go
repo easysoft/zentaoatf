@@ -28,7 +28,8 @@ var (
 	ServerProjectDir string
 
 	UnitTestType    string
-	UnitTestTool    string
+	UnitBuildTool   BuildTool
+	UnitTestTool    TestTool
 	UnitTestResult  string
 	UnitTestResults = "results"
 	ProductId       string

@@ -19,6 +19,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 )
 
@@ -199,14 +200,16 @@ func run(args []string, actionModule *command.IndexModule) {
 		}
 
 		if args[start] == _consts.UnitTestToolMvn {
-			commConsts.UnitTestTool = _consts.UnitTestToolMvn
+			commConsts.UnitTestTool = commConsts.JUnit
+			commConsts.UnitBuildTool = commConsts.Maven
 		} else if args[start] == _consts.UnitTestToolRobot {
-			commConsts.UnitTestTool = _consts.UnitTestToolRobot
+			commConsts.UnitTestTool = commConsts.RobotFramework
+			commConsts.UnitBuildTool = commConsts.Maven
 		}
 
-		//cmd := strings.Join(args[start:], " ") todo unittest
-		//
-		//action.RunUnitTest(cmd)
+		cmd := strings.Join(args[start:], " ")
+
+		action.RunUnitTest(cmd)
 	} else { // func test
 		files := fileUtils.GetFilesFromParams(args[2:])
 
