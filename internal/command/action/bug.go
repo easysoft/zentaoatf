@@ -3,9 +3,10 @@ package action
 import (
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	analysisUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/analysis"
+	zentaoUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 	"github.com/aaronchen2k/deeptest/internal/command"
-	"github.com/aaronchen2k/deeptest/internal/command/ui/page"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
@@ -14,6 +15,11 @@ import (
 	"os"
 	"strconv"
 	"strings"
+)
+
+var (
+	bug       commDomain.ZtfBug
+	bugFields commDomain.ZentaoBugFields
 )
 
 func CommitBug(files []string, actionModule *command.IndexModule) {
@@ -49,7 +55,7 @@ func CommitBug(files []string, actionModule *command.IndexModule) {
 			os.Exit(0)
 		} else {
 			if stringUtils.FindInArr(caseId, ids) {
-				page.CuiReportBug(resultDir, caseId, actionModule)
+				reportBug(resultDir, caseId)
 			} else {
 				logUtils.ExecConsole(color.FgRed, i118Utils.Sprintf("invalid_input"))
 			}
@@ -70,4 +76,40 @@ func coloredStatus(status commConsts.ResultStatus) string {
 	}
 
 	return status.String()
+}
+
+func reportBug(resultDir string, caseId string) error {
+	bug = zentaoUtils.PrepareBug(commConsts.WorkDir, resultDir, caseId)
+	req := commDomain.FuncResult{
+		ProductId: stringUtils.ParseInt(bug.Product),
+	}
+	bugFields, _ = zentaoUtils.GetBugFiledOptions(req, commConsts.WorkDir)
+	bug.Module = "/"
+	bug.Severity = "3"
+	bug.Pri = "3"
+	bug.Type = getFirstNoEmptyVal(bugFields.Categories)
+	bug.Version = getNameById(bug.Version, bugFields.Versions)
+
+	err := zentaoUtils.CommitBug(bug, commConsts.WorkDir)
+	return err
+}
+
+func getFirstNoEmptyVal(options []commDomain.BugOption) string {
+	for _, opt := range options {
+		if opt.Name != "" {
+			return opt.Id
+		}
+	}
+
+	return ""
+}
+
+func getNameById(id string, options []commDomain.BugOption) string {
+	for _, opt := range options {
+		if opt.Id == id {
+			return opt.Name
+		}
+	}
+
+	return ""
 }

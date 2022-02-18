@@ -52,22 +52,6 @@ func CommitBug(ztfBug commDomain.ZtfBug, projectPath string) (err error) {
 		msg = color.RedString("commit bug failed, error: %s.", err.Error())
 	}
 
-	if commConsts.ComeFrom == "cmd" {
-		msgView, _ := commConsts.Cui.View("reportBugMsg")
-		msgView.Clear()
-		if err == nil {
-			color.New(color.FgGreen).Fprintf(msgView, msg)
-
-			commConsts.Cui.DeleteView("submitInput")
-
-			cancelReportBugInput, _ := commConsts.Cui.View("cancelReportBugInput")
-			cancelReportBugInput.Clear()
-			fmt.Fprint(cancelReportBugInput, " "+i118Utils.Sprintf("close"))
-		} else {
-			color.New(color.FgMagenta).Fprintf(msgView, msg)
-		}
-	}
-
 	logUtils.Info(msg)
 
 	return
