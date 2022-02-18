@@ -126,6 +126,10 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, projectPath string,
 	}
 
 	for idx, file := range casesToRun {
+		if fileUtils.IsDir(file) {
+			continue
+		}
+
 		ExeScript(file, projectPath, conf, report, idx, len(casesToRun), pathMaxWidth, numbMaxWidth, ch, sendOutputMsg, sendExecMsg, wsMsg)
 
 		select {

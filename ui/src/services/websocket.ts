@@ -82,19 +82,27 @@ export class WebSocket {
 export function getWebSocketApi (): string {
   const isProd = process.env.NODE_ENV === 'production'
 
+  const loc = window.location
+  console.log(loc)
+  console.log(loc.hostname)
+
   let wsUri = ''
   if (!isProd) {
     wsUri = WebSocketBaseDev
   } else {
     const loc = window.location
 
-    if (loc.protocol === 'https:') {
-      wsUri = 'wss:'
+    if (loc.hostname === 'localhost') { // run in electron or dev machine
+      wsUri = WebSocketBaseDev
     } else {
-      wsUri = 'ws:'
+      if (loc.protocol === 'https:') {
+        wsUri = 'wss:'
+      } else {
+        wsUri = 'ws:'
+      }
+      wsUri += '//' + loc.host
+      wsUri += loc.pathname
     }
-    wsUri += '//' + loc.host
-    wsUri += loc.pathname
   }
 
   return wsUri + WebSocketPath
