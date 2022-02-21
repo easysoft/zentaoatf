@@ -15,34 +15,48 @@
       <div class="main">
         <a-row>
           <a-col :span="2" class="t-bord t-label-right">{{ t('test_env') }}</a-col>
-          <a-col :span="4">{{ testEnv(report.testEnv) }}</a-col>
-          <a-col :span="2" class="t-bord t-label-right">{{ t('test_type') }}</a-col>
-          <a-col :span="4">{{ testType(report.testType) }}</a-col>
-          <a-col :span="2" class="t-bord t-label-right">{{ t('exec_type') }}</a-col>
-          <a-col :span="4">{{ execBy(report) }}</a-col>
-        </a-row>
-        <a-row>
+          <a-col :span="6">{{ testEnv(report.testEnv) }}</a-col>
+
           <a-col :span="2" class="t-bord t-label-right">{{ t('start_time') }}</a-col>
-          <a-col :span="4">{{ momentTime(report.startTime) }}</a-col>
-          <a-col :span="2" class="t-bord t-label-right">{{ t('end_time') }}</a-col>
-          <a-col :span="4">{{ momentTime(report.endTime) }}</a-col>
-          <a-col :span="2" class="t-bord t-label-right">{{ t('duration') }}</a-col>
-          <a-col :span="4">{{ report.duration }}秒</a-col>
-        </a-row>
-        <a-row>
+          <a-col :span="6">{{ momentTime(report.startTime) }}</a-col>
+
           <a-col :span="2" class="t-bord t-label-right">{{ t('case_num') }}</a-col>
-          <a-col :span="4">{{ report.total }}</a-col>
+          <a-col :span="6">{{ report.total }}</a-col>
+        </a-row>
+
+        <a-row>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('test_type') }}</a-col>
+          <a-col :span="6">{{ testType(report.testType) }}</a-col>
+
+          <a-col :span="2" class="t-bord t-label-right">{{ t('end_time') }}</a-col>
+          <a-col :span="6">{{ momentTime(report.endTime) }}</a-col>
+
           <a-col :span="2" class="t-bord t-label-right">{{ t('pass') }}</a-col>
-          <a-col :span="4">{{ report.pass }}（{{ percent(report.pass, report.total) }}）</a-col>
+          <a-col :span="6" class="t-pass">{{ report.pass }}（{{ percent(report.pass, report.total) }}）</a-col>
+        </a-row>
+
+        <a-row>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('exec_type') }}</a-col>
+          <a-col :span="6">{{ execBy(report) }}</a-col>
+
+          <a-col :span="2" class="t-bord t-label-right">{{ t('duration') }}</a-col>
+          <a-col :span="6">{{ report.duration }}秒</a-col>
+
           <a-col :span="2" class="t-bord t-label-right">{{ t('fail') }}</a-col>
-          <a-col :span="4">{{ report.fail }}（{{ percent(report.fail, report.total) }}）</a-col>
+          <a-col :span="6" class="t-fail">{{ report.fail }}（{{ percent(report.fail, report.total) }}）</a-col>
+        </a-row>
+
+        <a-row>
+          <a-col :span="16"></a-col>
+
           <a-col :span="2" class="t-bord t-label-right">{{ t('ignore') }}</a-col>
-          <a-col :span="4">{{ report.skip }}（{{ percent(report.ignore, report.total) }}）</a-col>
+          <a-col :span="6" class="t-skip">{{ report.skip }}（{{ percent(report.ignore, report.total) }}）</a-col>
         </a-row>
 
         <a-row>
           <a-col :span="2" class="t-bord t-label-right">{{ t('case_detail') }}</a-col>
         </a-row>
+
         <a-row>
           <a-col :span="2"></a-col>
           <a-col :span="22">
@@ -58,7 +72,10 @@
                 {{ record.duration }}
               </template>
               <template #status="{ record }">
-                <span :class="'t-'+record.status">{{ resultStatus(record.status) }}</span>
+                <span :class="'t-'+record.status">
+                  <span class="dot"><icon-svg type="dot" /></span>
+                  <span>{{ resultStatus(record.status) }}</span>
+                </span>
               </template>
               <template #info="{ record }">
                 <template v-if="record.failure">
@@ -99,6 +116,7 @@ import {notification} from "ant-design-vue";
 import {submitResultToZentao} from "@/views/exec/service";
 import ResultForm from './component/result.vue'
 import {useI18n} from "vue-i18n";
+import IconSvg from "@/components/IconSvg/index";
 
 interface UnitTestResultPageSetupData {
   t: (key: string | number) => string;
@@ -132,7 +150,8 @@ interface UnitTestResultPageSetupData {
 export default defineComponent({
   name: 'UnitTestResultPage',
   components: {
-    ResultForm
+    ResultForm,
+    IconSvg,
   },
 
   setup(): UnitTestResultPageSetupData {
@@ -290,5 +309,10 @@ export default defineComponent({
 <style lang="less" scoped>
 .main {
   padding: 20px;
+}
+.dot {
+  margin-right: 5px;
+  font-size: 8px;
+  vertical-align: 2px
 }
 </style>

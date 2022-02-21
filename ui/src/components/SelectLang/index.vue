@@ -9,10 +9,10 @@
                 <template v-for="item in locales" :key="item">
                   <template v-if="item !== locale">
                     <a-menu-item  @click="changeLang(item)">
-                      <span role="img" :aria-label="languageLabels[item]">
-                          {{languageIcons[item]}}
+                      <span class="t-link">
+                        <span role="img" :aria-label="languageLabels[item]">{{languageIcons[item]}}</span>
+                        {{languageLabels[item]}}
                       </span>
-                      {{languageLabels[item]}}
                     </a-menu-item>
                   </template>
                 </template>

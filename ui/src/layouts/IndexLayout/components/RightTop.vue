@@ -1,8 +1,9 @@
 <template>
     <div id="indexlayout-right-top">
         <div class="indexlayout-right-top-top">
-            <div class="indexlayout-flexible">
-              {{t('ztf_name_full')}}
+            <div @click="gotoSite" class="indexlayout-flexible">
+              <span class="log"><img src="../../../assets/images/logo.png"></span>
+              <span class="title">{{t('ztf_name_full')}}</span>
             </div>
             <div class="indexlayout-top-project">
               <right-top-project class="indexlayout-top-selectproject"></right-top-project>
@@ -44,6 +45,7 @@ interface RightTopSetupData {
   t: (key: string | number) => string;
   topMenuCon: Ref;
   pathToId: (val) => void
+  gotoSite: (val) => void
 }
 
 export default defineComponent({
@@ -95,10 +97,15 @@ export default defineComponent({
         return path.replaceAll('/', 'menu-')
       }
 
+      const gotoSite =() => {
+        window.open('https://ztf.im','_blank')
+      }
+
       return {
         t,
         topMenuCon,
         pathToId,
+        gotoSite,
       }
     }
 })
@@ -126,6 +133,17 @@ export default defineComponent({
       &:hover {
         background-color: @menu-dark-bg;
         color: @menu-dark-highlight-color;
+      }
+      .log {
+        img {
+          vertical-align: -5px
+        }
+      }
+      .title {
+        display: inline-block;
+        margin-left: 8px;
+        padding-top: 3px;
+        line-height: 28px;
       }
     }
 
@@ -170,7 +188,7 @@ export default defineComponent({
 
   }
   .indexlayout-top-project {
-    margin-right: 12px;
+    margin-right: 16px;
   }
   .indexlayout-right-top-bot {
     display: flex;

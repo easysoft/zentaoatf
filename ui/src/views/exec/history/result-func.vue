@@ -17,29 +17,41 @@
       <div class="main">
         <a-row>
           <a-col :span="2" class="t-bord t-label-right">{{ t('test_env') }}</a-col>
-          <a-col :span="4">{{ testEnv(report.testEnv) }}</a-col>
-          <a-col :span="2" class="t-bord t-label-right">{{ t('test_type') }}</a-col>
-          <a-col :span="4">{{ testType(report.testType) }}</a-col>
-          <a-col :span="2" class="t-bord t-label-right">{{ t('exec_type') }}</a-col>
-          <a-col :span="4">{{ execBy(report) }}</a-col>
-        </a-row>
-        <a-row>
+          <a-col :span="6">{{ testEnv(report.testEnv) }}</a-col>
+
           <a-col :span="2" class="t-bord t-label-right">{{ t('start_time') }}</a-col>
-          <a-col :span="4">{{ momentTime(report.startTime) }}</a-col>
-          <a-col :span="2" class="t-bord t-label-right">{{ t('end_time') }}</a-col>
-          <a-col :span="4">{{ momentTime(report.endTime) }}</a-col>
-          <a-col :span="2" class="t-bord t-label-right">{{ t('duration') }}</a-col>
-          <a-col :span="4">{{ report.duration }}{{ t('sec') }}</a-col>
+          <a-col :span="6">{{ momentTime(report.startTime) }}</a-col>
+
+          <a-col :span="2" class="t-bord t-label-right">{{ t('case_num') }}</a-col>
+          <a-col :span="6">{{ report.total }}</a-col>
         </a-row>
         <a-row>
-          <a-col :span="2" class="t-bord t-label-right">{{ t('case_num') }}</a-col>
-          <a-col :span="4">{{ report.startTime }}</a-col>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('test_type') }}</a-col>
+          <a-col :span="6">{{ testType(report.testType) }}</a-col>
+
+          <a-col :span="2" class="t-bord t-label-right">{{ t('end_time') }}</a-col>
+          <a-col :span="6">{{ momentTime(report.endTime) }}</a-col>
+
           <a-col :span="2" class="t-bord t-label-right">{{ t('pass') }}</a-col>
-          <a-col :span="4">{{ report.pass }}（{{ percent(report.pass, report.total) }}）</a-col>
+          <a-col :span="6" class="t-pass">{{ report.pass }}（{{ percent(report.pass, report.total) }}）</a-col>
+        </a-row>
+
+        <a-row>
+          <a-col :span="2" class="t-bord t-label-right">{{ t('exec_type') }}</a-col>
+          <a-col :span="6">{{ execBy(report) }}</a-col>
+
+          <a-col :span="2" class="t-bord t-label-right">{{ t('duration') }}</a-col>
+          <a-col :span="6">{{ report.duration }}{{ t('sec') }}</a-col>
+
           <a-col :span="2" class="t-bord t-label-right">{{ t('fail') }}</a-col>
-          <a-col :span="4">{{ report.fail }}（{{ percent(report.fail, report.total) }}）</a-col>
+          <a-col :span="6" class="t-fail">{{ report.fail }}（{{ percent(report.fail, report.total) }}）</a-col>
+        </a-row>
+
+        <a-row>
+          <a-col :span="16"></a-col>
+
           <a-col :span="2" class="t-bord t-label-right">{{ t('ignore') }}</a-col>
-          <a-col :span="4">{{ report.skip }}（{{ percent(report.skip, report.total) }}）</a-col>
+          <a-col :span="6" class="t-skip">{{ report.skip }}（{{ percent(report.skip, report.total) }}）</a-col>
         </a-row>
 
         <a-row>
@@ -49,11 +61,14 @@
           <a-col :span="2"></a-col>
           <a-col :span="22">
             <template v-for="cs in report.funcResult" :key="cs.id">
-
               <div class="case-info">
                 <div class="info">
                   <span>{{ cs.id }}. {{ cs.path }}</span> &nbsp;
-                  <span :class="'t-'+cs.status">{{ resultStatus(cs.status) }}</span>
+                  <span :class="'t-'+cs.status">
+                    <icon-svg type="pass" v-if="cs.status==='pass'"></icon-svg>
+                    <icon-svg type="fail" v-if="cs.status==='fail'"></icon-svg>
+                    <icon-svg type="skip" v-if="cs.status==='skip'"></icon-svg>
+                  </span>
                 </div>
                 <div class="buttons" v-if="cs.status==='fail'">
                   <a-button @click="openBugForm(cs)">{{ t('submit_bug_to_zentao') }}</a-button>
@@ -72,13 +87,20 @@
                   {{ record.name }}
                 </template>
                 <template #status="{ record }">
-                  <span :class="'t-'+record.status">{{ resultStatus(record.status) }}</span>
+                  <span :class="'t-'+record.status">
+                    <span class="dot"><icon-svg type="dot" /></span>
+                    <span>{{ resultStatus(record.status) }}</span>
+                  </span>
                 </template>
                 <template #checkPoints="{ record }">
-                  <div v-for="item in record.checkPoints" :key="item.numb">
-                    {{ item.numb }}.&nbsp;
-                    <span :class="'t-'+item.status">{{ resultStatus(item.status) }}</span> &nbsp;
-                    <span>"{{ item.expect }}"</span> / <span>"{{ item.actual }}"</span>
+                  <div v-for="checkPoint in record.checkPoints" :key="checkPoint.numb">
+                    {{ checkPoint.numb }}.&nbsp;
+                    <span :class="'t-'+checkPoint.status">
+                      {{ resultStatus(checkPoint.status) }}
+                    </span> &nbsp;
+                    <span>"{{ checkPoint.expect }}"</span>
+                    /
+                    <span :class="'t-'+checkPoint.status">"{{ checkPoint.actual }}"</span>
                   </div>
                 </template>
               </a-table>
@@ -117,6 +139,7 @@ import {notification} from "ant-design-vue";
 import ResultForm from "@/views/exec/history/component/result.vue";
 import BugForm from "@/views/exec/history/component/bug.vue";
 import {useI18n} from "vue-i18n";
+import IconSvg from "@/components/IconSvg/index";
 
 interface UnitTestResultPageSetupData {
   t: (key: string | number) => string;
@@ -152,6 +175,7 @@ export default defineComponent({
   name: 'UnitTestResultPage',
   components: {
     ResultForm, BugForm,
+    IconSvg,
   },
 
   setup(): UnitTestResultPageSetupData {
@@ -326,6 +350,11 @@ export default defineComponent({
 <style lang="less" scoped>
 .main {
   padding: 20px;
+}
+.dot {
+  margin-right: 5px;
+  font-size: 8px;
+  vertical-align: 2px
 }
 
 .case-info {

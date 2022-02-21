@@ -11,10 +11,35 @@
       <template #extra>
         <div class="opt">
           <template v-if="currProject.type === 'func'">
-            <a-button @click="execCase" type="primary">{{ t('exec') }}{{ t('case') }}</a-button>
-            <a-button @click="execModule" type="primary">{{ t('exec') }}{{ t('module') }}</a-button>
-            <a-button @click="execSuite" type="primary">{{ t('exec') }}{{ t('suite') }}</a-button>
-            <a-button @click="execTask" type="primary">{{ t('exec') }}{{ t('task') }}</a-button>
+            <a-button @click="execCase" type="primary" class="exec-button">
+              <span class="exec-icon"><icon-svg type="exec"></icon-svg></span>
+              <span class="exec-text">{{ t('exec') }}{{ t('case') }}</span>
+            </a-button>
+
+            <a-dropdown>
+              <a-button type="primary" class="exec-button">
+                <span class="button-text">
+                  <span class="exec-icon"><icon-svg type="exec"></icon-svg></span>
+                  <span class="exec-text">{{ t('exec') }}</span>
+                </span>
+                <icon-svg type="down"></icon-svg>
+              </a-button>
+
+              <template #overlay>
+                <a-menu class="menu">
+                  <a-menu-item @click="execModule" class="t-link">
+                    <span class="t-link">{{ t('module') }}</span>
+                  </a-menu-item>
+                  <a-menu-item @click="execSuite" class="t-link">
+                    <span class="t-link">{{ t('suite') }}</span>
+                  </a-menu-item>
+                  <a-menu-item @click="execTask" class="t-link">
+                    <span class="t-link">{{ t('task') }}</span>
+                  </a-menu-item>
+                </a-menu>
+              </template>
+            </a-dropdown>
+
           </template>
 
           <template v-if="currProject.type === 'unit'">
@@ -44,10 +69,21 @@
             {{ record.duration }}秒
           </template>
           <template #result="{ record }">
-            合计{{ record.total }}：
-            <span class="t-pass">{{ record.pass }}（{{ percent(record.pass, record.total) }}）{{ t('pass') }}</span>，
-            <span class="t-fail">{{ record.fail }}（{{ percent(record.fail, record.total) }}）{{ t('fail') }}</span>，
-            <span class="t-skip">{{ record.skip }}（{{ percent(record.skip, record.total) }}）{{ t('ignore') }}</span>。
+            <span class="t-pass t-status">
+              {{ record.pass }}&nbsp;
+              <icon-svg type="pass"></icon-svg>&nbsp;
+              ({{ percent(record.pass, record.total) }})
+            </span>
+            <span class="t-fail t-status">
+              {{ record.fail }}&nbsp;
+              <icon-svg type="fail"></icon-svg>&nbsp;
+              ({{ percent(record.fail, record.total) }})
+            </span>
+            <span class="t-skip t-status">
+              {{ record.skip }}&nbsp;
+              <icon-svg type="skip"></icon-svg>&nbsp;
+              ({{ percent(record.skip, record.total) }})
+            </span>
           </template>
           <template #action="{ record }">
             <a-button @click="() => viewResult(record)" type="link" size="small">{{ t('view') }}</a-button>
@@ -76,6 +112,7 @@ import {ProjectData} from "@/store/project";
 import {hideMenu} from "@/utils/dom";
 import throttle from "lodash.debounce";
 import {useI18n} from "vue-i18n";
+import IconSvg from "@/components/IconSvg/index";
 
 const useForm = Form.useForm;
 
@@ -106,7 +143,9 @@ interface ListExecSetupData {
 
 export default defineComponent({
   name: 'ExecListPage',
-  components: {},
+  components: {
+    IconSvg,
+  },
   setup(): ListExecSetupData {
     const {t} = useI18n();
 
@@ -254,5 +293,16 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
+.exec-button {
+  padding-left: 23px;
+  .exec-icon {
+    display: inline-block;
+    margin-right: 5px;
+  }
+  .button-text {
+    display: inline-block;
+    margin-right: 6px;
+  }
+}
 
 </style>
