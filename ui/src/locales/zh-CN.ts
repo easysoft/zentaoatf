@@ -7,6 +7,8 @@ export default {
 
     'scope': '范围', //
     'name': '名称', //
+    'path': '路径',
+    'type': '类型',
     'start_time': '开始时间', //
     'end_time': '结束时间', //
     'result': '结果', //
@@ -55,6 +57,7 @@ export default {
     'cancel': '取消',
     'reset': '重置',
     'confirm': '确定',
+    'confirm_delete': '确认删除{name}？',
     'save': '保存',
     'create': '新建',
     'view':  '查看', //
@@ -98,4 +101,10 @@ export default {
     'pls_build_tool':  '请选择构建工具', //
     'pls_cmd':  '请输入所要执行的命令', //
 
+    'project_path':  '项目完整路径',
+    'use_dir_name':  '不填写将以目录命名',
+    'test_type_ztf':  'ZTF自动化测试',
+    'test_type_other':  '其他自动化和单元测试',
+    'pls_project_path':  '请输入项目完整路径',
+    'pls_project_type':  '请选择项目类型',
 };

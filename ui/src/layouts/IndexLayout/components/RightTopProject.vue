@@ -7,25 +7,29 @@
     <a-dropdown v-if="projects.length > 0" class="dropdown">
       <a class="t-link-btn" @click.prevent>
         <span class="name">{{currProject.name}}</span>
-        <DownOutlined />
+        <span class="icon2"><icon-svg type="down"></icon-svg></span>
       </a>
       <template #overlay>
         <a-menu class="menu">
-          <a-menu-item  v-for="item in projects" :key="item.path">
-            <template v-if="currProject.path !== item.path">
-              <div class="line">
-                <div class="t-link name" @click="selectProject(item)">{{ item.name }}</div>
-                <div class="space"></div>
-                <div class="t-link icon" @click="removeProject(item)">
-                  <icon-svg type="close"></icon-svg>
+          <template v-for="item in projects" :key="item.path">
+            <a-menu-item v-if="currProject.path !== item.path">
+                <div class="line">
+                  <div class="t-link name" @click="selectProject(item)">{{ item.name }}</div>
+                  <div class="space"></div>
+                  <div class="t-link icon" @click="setDeleteModel(item)">
+                    <icon-svg type="delete" class="menu-icon"></icon-svg>
+                  </div>
                 </div>
-              </div>
-            </template>
-          </a-menu-item>
+            </a-menu-item>
+          </template>
 
-          <a-menu-divider />
-          <a-menu-item key="">
-            <div class="t-link name" @click="selectProject('')">{{ t('create_project') }}</div>
+          <a-menu-divider v-if="projects.length > 1"/>
+
+          <a-menu-item key="" class="create">
+            <span class="t-link name" @click="selectProject('')">
+              <icon-svg type="add" class="menu-icon"></icon-svg>
+              {{ t('create_project') }}
+            </span>
           </a-menu-item>
         </a-menu>
       </template>
@@ -36,6 +40,17 @@
       :onCancel="cancel"
       :onSubmit="submitForm"
     />
+
+    <a-modal
+        v-model:visible="deleteVisible"
+        title="Modal"
+        :ok-text="t('confirm')"
+        :cancel-text="t('cancel')"
+        @ok="removeProject"
+    >
+      <p>{{t('confirm_delete', {name: deleteModel.path})}}</p>
+    </a-modal>
+
   </div>
 </template>
 
@@ -62,11 +77,15 @@ interface RightTopProject {
   setFormVisible:  (val: boolean) => void;
   submitForm: (project: any) => Promise<void>;
   cancel: () => void;
+
+  deleteModel: Ref
+  deleteVisible: Ref<boolean>;
+  setDeleteModel: (val, model) => void;
 }
 
 export default defineComponent({
   name: 'RightTopProject',
-  components: {DownOutlined, ProjectCreateForm, IconSvg},
+  components: {ProjectCreateForm, IconSvg},
   setup(): RightTopProject {
     const { t } = useI18n();
 
@@ -106,14 +125,24 @@ export default defineComponent({
         store.dispatch('project/fetchProject', item.path)
       }
     }
-    const removeProject = (item): void => {
-      console.log('removeProject', item)
 
-      if (item.key === '') {
-        setFormVisible(true)
+    let deleteVisible = ref(false)
+    let deleteModel = ref({} as any)
+    const setDeleteModel = (model: any) => {
+      if (model) {
+        deleteModel.value = model;
+        deleteVisible.value = true;
       } else {
-        store.dispatch('project/removeProject', item.path)
+        deleteVisible.value = false
       }
+    }
+    const removeProject = (): void => {
+      console.log('removeProject', deleteModel)
+
+      store.dispatch('project/removeProject', deleteModel.value.path).then(() => {
+        deleteModel.value = {}
+        deleteVisible.value = false
+      })
     }
 
     const formVisible = ref<boolean>(false);
@@ -143,6 +172,10 @@ export default defineComponent({
       setFormVisible,
       submitForm,
       cancel,
+
+      deleteVisible,
+      deleteModel,
+      setDeleteModel,
     }
   }
 })
@@ -157,7 +190,7 @@ export default defineComponent({
 }
 .dropdown {
   display: inline-block;
-  padding: 13px 0;
+  padding-top: 13px;
   width: 150px;
   font-size: 15px !important;
   text-align: right;
@@ -165,13 +198,18 @@ export default defineComponent({
   .name {
     display: inline-block;
     width: 130px;
-    line-height: 15px;
     text-overflow: ellipsis;
     overflow: hidden;
-    margin-right: 3px;
+    margin-right: 5px;
+  }
+  .icon2 {
+    .svg-icon {
+      vertical-align: 0.15em !important;
+    }
   }
   .anticon-down {
     font-size: 16px !important;
+    line-height: 20px;
   }
 }
 
@@ -192,10 +230,15 @@ export default defineComponent({
         }
         .icon {
           width: 15px;
-          font-size: 10px;
+          font-size: 16px;
+          line-height: 28px;
         }
       }
 
+    }
+
+    &.create {
+      text-align: center;
     }
   }
 

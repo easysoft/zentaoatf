@@ -289,13 +289,13 @@ export default defineComponent({
       seq,
 
       treeData,
+      tree,
       replaceFields,
       expandNode,
       selectNode,
       checkNode,
       isExpand,
       expandAll,
-      tree,
       expandedKeys,
       selectedKeys,
       checkedKeys,
@@ -343,17 +343,6 @@ export default defineComponent({
           padding: 0px 3px;
           color: #1890ff;
         }
-      }
-    }
-
-    #resize {
-      width: 2px;
-      height: 100%;
-      background-color: #D0D7DE;
-      cursor: ew-resize;
-
-      &.active {
-        background-color: #a9aeb4;
       }
     }
 

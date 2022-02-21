@@ -2,7 +2,7 @@
   <a-modal
       :destroy-on-close="true"
       :mask-closable="false"
-      title="新建项目"
+      :title="t('create_project')"
       :visible="visible"
       :onCancel="onCancel"
   >
@@ -13,14 +13,18 @@
 
     <div>
       <a-form :labelCol="{ span: 4 }" :wrapper-col="{span:20}">
-        <a-form-item label="项目路径" v-bind="validateInfos.path">
-          <a-input v-model:value="modelRef.path" placeholder="请输入项目所在绝对路径" />
+        <a-form-item :label="t('path')" v-bind="validateInfos.path" :placeholder="t('project_path')">
+          <a-input v-model:value="modelRef.path" />
         </a-form-item>
 
-        <a-form-item label="项目类型" v-bind="validateInfos.type">
+        <a-form-item :label="t('name')">
+          <a-input v-model:value="modelRef.name" :placeholder="t('use_dir_name')"/>
+        </a-form-item>
+
+        <a-form-item :label="t('type')" v-bind="validateInfos.type">
           <a-select v-model:value="modelRef.type">
-            <a-select-option key="func" value="func">ZTF自动化测试</a-select-option>
-            <a-select-option key="unit" value="unit">其他自动化和单元测试</a-select-option>
+            <a-select-option key="func" value="func">{{t('test_type_ztf')}}</a-select-option>
+            <a-select-option key="unit" value="unit">{{t('test_type_other')}}</a-select-option>
           </a-select>
         </a-form-item>
 
@@ -69,8 +73,8 @@ export default defineComponent({
 
     const modelRef = reactive<any>({path: '', type: 'func'})
     const rulesRef = reactive({
-      path: [ { required: true, message: '请输入项目完整路径' } ],
-      type: [ { required: true, message: '请选择项目类型' } ],
+      path: [ { required: true, message: t('pls_project_path') } ],
+      type: [ { required: true, message: t('pls_project_type') } ],
     });
 
     const { validate, validateInfos } = Form.useForm(modelRef, rulesRef);

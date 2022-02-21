@@ -4,6 +4,9 @@
             <div class="indexlayout-flexible">
               {{t('ztf_name_full')}}
             </div>
+            <div class="indexlayout-top-project">
+              <right-top-project class="indexlayout-top-selectproject"></right-top-project>
+            </div>
             <div class="indexlayout-top-menu">
                 <div ref="topMenuCon" style="width: 100%">
                   <template v-for="(item, key) in menuData">
@@ -21,7 +24,6 @@
                 </div>
             </div>
             <div class="indexlayout-top-menu-right">
-              <right-top-project class="indexlayout-top-selectproject"></right-top-project>
               <select-lang class="indexlayout-top-selectlang" />
             </div>
         </div>
@@ -157,7 +159,7 @@ export default defineComponent({
 
     .indexlayout-top-menu-right {
       display: flex;
-      width: 220px;
+      width: 90px;
 
       .indexlayout-top-selectlang {
         padding: 12px 10px;
@@ -166,6 +168,9 @@ export default defineComponent({
 
     .scrollbar();
 
+  }
+  .indexlayout-top-project {
+    margin-right: 12px;
   }
   .indexlayout-right-top-bot {
     display: flex;

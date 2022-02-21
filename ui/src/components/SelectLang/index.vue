@@ -2,16 +2,20 @@
   <div>
     <a-dropdown>
         <span class="dropDown">
-            <icon-svg type="global-outlined" :width="1.2" :height="1.2"></icon-svg>
+          {{languageLabels[locale]}}
         </span>
         <template #overlay>
-            <a-menu class="menu" @click="changeLang" :selectedKeys="[locale]">
-                <a-menu-item v-for="item in locales" :key="item">
-                    <span role="img" :aria-label="languageLabels[item]">
-                        {{languageIcons[item]}}
-                    </span>  
-                    {{languageLabels[item]}}
-                </a-menu-item>                
+            <a-menu class="menu">
+                <template v-for="item in locales" :key="item">
+                  <template v-if="item !== locale">
+                    <a-menu-item  @click="changeLang(item)">
+                      <span role="img" :aria-label="languageLabels[item]">
+                          {{languageIcons[item]}}
+                      </span>
+                      {{languageLabels[item]}}
+                    </a-menu-item>
+                  </template>
+                </template>
             </a-menu>
         </template>
     </a-dropdown>
@@ -26,14 +30,13 @@ interface SelectLangSetupData {
     locales: string[];
     languageLabels: {[key: string]: string};
     languageIcons: {[key: string]: string};
-    changeLang: ({ key }: any) => void;
+    changeLang: (key) => void;
     locale: WritableComputedRef<string>;
 }
 
 export default defineComponent({
     name: 'SelectLang',
     components: {
-        IconSvg
     },
     setup(): SelectLangSetupData {
 
@@ -50,7 +53,10 @@ export default defineComponent({
         };
 
         // 切换语言
-        const changeLang = ({ key }: any): void => setI18nLanguage(key);
+        const changeLang = (key): void => {
+          console.log(key)
+          setI18nLanguage(key);
+        }
 
         return {
             locales,
@@ -72,7 +78,9 @@ export default defineComponent({
   }
 }
 .dropDown {
+  display: inline-block;
+  width: 90px;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 14px;
 }
 </style>

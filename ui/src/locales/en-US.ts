@@ -7,6 +7,8 @@ export default {
 
     'scope': 'Scope', //
     'name': 'Name', //
+    'path': 'Path',
+    'type': 'Type',
     'start_time': 'Start Time', //
     'end_time': 'End Time', //
     'result': 'Result', //
@@ -56,6 +58,7 @@ export default {
     'cancel': 'Cancel',
     'reset': 'Reset',
     'confirm': 'Confirm',
+    'confirm_delete': 'Confirm to delete {name}?',
     'save': 'Save',
     'create': 'Create',
     'view':  'View', //
@@ -96,4 +99,11 @@ export default {
     'pls_test_tool':  'Please test tool.', //
     'pls_build_tool':  'Please build tool.', //
     'pls_cmd':  'Please input the command.', //
+
+    'project_path':  'Input project full path',
+    'use_dir_name':  'Use dir name if empty',
+    'test_type_ztf':  'ZTF Testing',
+    'test_type_other':  'Other Automated or Unit Test',
+    'pls_project_path':  'Please input project full path.',
+    'pls_project_type':  'Please input project type.',
 };
