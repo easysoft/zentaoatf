@@ -5,15 +5,14 @@ import (
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/exec"
+	websocketUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/websocket"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/config"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12/websocket"
 	"strconv"
-	"strings"
 )
 
 var (
@@ -23,8 +22,6 @@ var (
 type WsCtrl struct {
 	Namespace         string
 	*websocket.NSConn `stateless:"true"`
-
-	WebSocketService *service.WebSocketService `inject:""`
 }
 
 func NewWsCtrl() *WsCtrl {
@@ -33,12 +30,12 @@ func NewWsCtrl() *WsCtrl {
 }
 
 func (c *WsCtrl) OnNamespaceConnected(msg websocket.Message) error {
-	c.WebSocketService.SetConn(c.Conn)
+	websocketUtils.SetConn(c.Conn)
 
 	logUtils.Infof(i118Utils.Sprintf("ws_namespace_connected", c.Conn.ID(), msg.Room))
 
 	data := serverDomain.WsResp{Msg: "from server: connected to websocket"}
-	c.WebSocketService.Broadcast(msg.Namespace, "", "OnVisit", data)
+	websocketUtils.Broadcast(msg.Namespace, "", "OnVisit", data)
 	return nil
 }
 
@@ -49,7 +46,7 @@ func (c *WsCtrl) OnNamespaceDisconnect(msg websocket.Message) error {
 	logUtils.Infof(i118Utils.Sprintf("ws_namespace_disconnected", c.Conn.ID()))
 
 	data := serverDomain.WsResp{Msg: fmt.Sprintf("ws_connected")}
-	c.WebSocketService.Broadcast(msg.Namespace, "", "OnVisit", data)
+	websocketUtils.Broadcast(msg.Namespace, "", "OnVisit", data)
 	return nil
 }
 
@@ -63,7 +60,7 @@ func (c *WsCtrl) OnChat(wsMsg websocket.Message) (err error) {
 	err = json.Unmarshal(wsMsg.Body, &req)
 	if err != nil {
 		msg := i118Utils.Sprintf("wrong_req_params", err.Error())
-		c.SendExecMsg(msg, "", wsMsg)
+		websocketUtils.SendExecMsg(msg, "", wsMsg)
 		logUtils.ExecConsole(color.FgRed, msg)
 		return
 	}
@@ -72,7 +69,7 @@ func (c *WsCtrl) OnChat(wsMsg websocket.Message) (err error) {
 
 	if act == commConsts.ExecInit {
 		msg := i118Utils.Sprintf("success_to_conn")
-		c.SendExecMsg(msg, strconv.FormatBool(scriptUtils.GetRunning()), wsMsg)
+		websocketUtils.SendExecMsg(msg, strconv.FormatBool(scriptUtils.GetRunning()), wsMsg)
 		logUtils.ExecConsole(color.FgCyan, msg)
 		return
 	}
@@ -92,7 +89,7 @@ func (c *WsCtrl) OnChat(wsMsg websocket.Message) (err error) {
 		scriptUtils.SetRunning(false)
 
 		msg := i118Utils.Sprintf("end_task")
-		c.SendExecMsg(msg, "false", wsMsg)
+		websocketUtils.SendExecMsg(msg, "false", wsMsg)
 		logUtils.ExecConsole(color.FgCyan, msg)
 		return
 	}
@@ -100,7 +97,7 @@ func (c *WsCtrl) OnChat(wsMsg websocket.Message) (err error) {
 	if scriptUtils.GetRunning() && (act == commConsts.ExecCase || act == commConsts.ExecModule ||
 		act == commConsts.ExecSuite || act == commConsts.ExecTask || act == commConsts.ExecUnit) {
 		msg := i118Utils.Sprintf("pls_stop_previous")
-		c.SendExecMsg(msg, "true", wsMsg)
+		websocketUtils.SendExecMsg(msg, "true", wsMsg)
 		logUtils.ExecConsole(color.FgRed, msg)
 
 		return
@@ -108,33 +105,15 @@ func (c *WsCtrl) OnChat(wsMsg websocket.Message) (err error) {
 
 	ch = make(chan int, 1)
 	go func() {
-		scriptUtils.Exec(ch, c.SendOutputMsg, c.SendExecMsg, req, wsMsg)
+		scriptUtils.Exec(ch, req, wsMsg)
 		scriptUtils.SetRunning(false)
 	}()
 
 	scriptUtils.SetRunning(true)
 
 	msg := i118Utils.Sprintf("start_task")
-	c.SendExecMsg(msg, "true", wsMsg)
+	websocketUtils.SendExecMsg(msg, "true", wsMsg)
 	logUtils.ExecConsole(color.FgCyan, msg)
 
 	return
-}
-
-func (c *WsCtrl) SendOutputMsg(msg, isRunning string, wsMsg websocket.Message) {
-	logUtils.Infof(i118Utils.Sprintf("ws_send_exec_msg", wsMsg.Room, msg, string(wsMsg.Body)))
-
-	msg = strings.Trim(msg, "\n")
-	data := serverDomain.WsResp{Msg: msg, Category: commConsts.Output}
-
-	c.WebSocketService.Broadcast(wsMsg.Namespace, wsMsg.Room, wsMsg.Event, data)
-}
-
-func (c *WsCtrl) SendExecMsg(msg, isRunning string, wsMsg websocket.Message) {
-	logUtils.Infof("WebSocket SendExecMsg: room=%s, msg=%s", wsMsg.Room, string(wsMsg.Body))
-
-	data := serverDomain.WsResp{Msg: msg, IsRunning: isRunning,
-		Category: commConsts.Exec}
-
-	c.WebSocketService.Broadcast(wsMsg.Namespace, wsMsg.Room, wsMsg.Event, data)
 }

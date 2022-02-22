@@ -4,13 +4,13 @@ import (
 	stdContext "context"
 	"fmt"
 	"github.com/aaronchen2k/deeptest/internal/comm/consts"
+	websocketUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/websocket"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/config"
 	"github.com/aaronchen2k/deeptest/internal/server/core/module"
 	myWs "github.com/aaronchen2k/deeptest/internal/server/modules/v1/controller"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	gorillaWs "github.com/gorilla/websocket"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/kataras/neffos/gorilla"
@@ -84,7 +84,7 @@ func Init(port int) *WebServer {
 	websocketAPI := app.Party(serverConfig.WsPath)
 	m := mvc.New(websocketAPI)
 	m.Register(
-		&service.PrefixedLogger{Prefix: ""},
+		&websocketUtils.PrefixedLogger{Prefix: ""},
 	)
 	m.HandleWebsocket(myWs.NewWsCtrl())
 	websocketServer := websocket.New(gorilla.Upgrader(gorillaWs.Upgrader{CheckOrigin: func(*http.Request) bool { return true }}), m)

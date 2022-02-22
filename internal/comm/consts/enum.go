@@ -53,6 +53,7 @@ const (
 	Communication WsMsgCategory = "communication"
 	Exec          WsMsgCategory = "exec"
 	Output        WsMsgCategory = "output"
+	Error         WsMsgCategory = "error"
 	Unknown       WsMsgCategory = ""
 )
 

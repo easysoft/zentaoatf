@@ -5,6 +5,7 @@ import (
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
+	websocketUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/websocket"
 	dateUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/date"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
@@ -18,7 +19,7 @@ import (
 )
 
 func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
-	projectPath string, sendOutMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), wsMsg websocket.Message) {
+	projectPath string, wsMsg websocket.Message) {
 
 	// print failed case
 	failedCount := 0
@@ -81,7 +82,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		msg += strings.Join(failedCaseLinesWithCheckpoint, "\n")
 
 		if commConsts.ComeFrom != "cmd" {
-			sendExecMsg(msg, "", wsMsg)
+			websocketUtils.SendExecMsg(commConsts.MsgErrPrefix+msg, "", wsMsg)
 		}
 
 		logUtils.ExecConsolef(color.FgRed, msg)
@@ -116,7 +117,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		)
 
 	if commConsts.ComeFrom != "cmd" {
-		sendExecMsg(msg, "", wsMsg)
+		websocketUtils.SendExecMsg(msg, "", wsMsg)
 	}
 
 	logUtils.ExecConsole(color.FgCyan, msg)
@@ -126,7 +127,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	msg = "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
 
 	if commConsts.ComeFrom != "cmd" {
-		sendExecMsg(msg, "false", wsMsg)
+		websocketUtils.SendExecMsg(msg, "false", wsMsg)
 	}
 
 	logUtils.ExecConsole(color.FgCyan, msg)

@@ -121,10 +121,8 @@ export default defineComponent({
     seq = seq === '-' ? '' : seq
     let scope = router.currentRoute.value.params.scope as string
     scope = scope === '-' ? '' : scope
-    console.log(seq, scope)
 
     const model = {}
-
     const replaceFields = {
       key: 'path',
     };
@@ -159,24 +157,29 @@ export default defineComponent({
     }, 600)
 
     const nodeTypeMap = {}
-    const getNodeTypeMap = throttle((node): void => {
-      nodeTypeMap[node.path] = !node.isDir
+    const getNodeTypeMap = (node): void => {
+      console.log('tttt')
+      if (!node) return
 
-      if (!node.children) return
-      node.children.forEach(c => {
-        getNodeTypeMap(c)
-      })
-    }, 300)
+      nodeTypeMap[node.path] = !node.isDir
+      if (node.children) {
+        node.children.forEach(c => {
+          getNodeTypeMap(c)
+        })
+      }
+    }
     const getLeafNodeKeys = (): string[] => {
-      const arr = [] as string[]
+      let arr = [] as string[]
       checkedKeys.value.forEach(k => {
-        if (nodeTypeMap[k]) arr.push(k)
+        if (nodeTypeMap[k]) {
+          arr.push(k)
+        }
       })
       return arr
     }
 
-    getOpenKeys(treeData.value[0], false)
-    getNodeTypeMap(treeData.value[0])
+    // getOpenKeys(treeData.value[0], false)
+    // getNodeTypeMap(treeData.value[0])
     watch(treeData, (currConfig) => {
       expandedKeys.value = []
       getOpenKeys(treeData.value[0], false)

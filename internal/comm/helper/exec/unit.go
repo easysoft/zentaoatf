@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+	websocketUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/websocket"
 	zentaoUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 	dateUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/date"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
@@ -17,33 +18,32 @@ import (
 	"time"
 )
 
-func ExecUnit(ch chan int, sendOutputMsg,
-	sendExecMsg func(info, isRunning string, wsMsg websocket.Message),
+func ExecUnit(ch chan int,
 	req serverDomain.WsReq, wsMsg websocket.Message) (resultDir string, err error) {
 
 	startTime := time.Now()
 	startMsg := i118Utils.Sprintf("start_execution", req.Cmd, dateUtils.DateTimeStr(startTime))
 
 	if commConsts.ComeFrom != "cmd" {
-		sendExecMsg(startMsg, "", wsMsg)
+		websocketUtils.SendExecMsg(startMsg, "", wsMsg)
 	}
 
 	logUtils.ExecConsolef(-1, startMsg)
 	logUtils.ExecFilef(startMsg)
 
-	RunUnitTest(ch, sendOutputMsg, sendExecMsg, req.Cmd, req.ProjectPath, wsMsg)
+	RunUnitTest(ch, req.Cmd, req.ProjectPath, wsMsg)
 
 	entTime := time.Now()
 	endMsg := i118Utils.Sprintf("end_execution", req.Cmd, dateUtils.DateTimeStr(entTime))
 
 	if commConsts.ComeFrom != "cmd" {
-		sendExecMsg(endMsg, "false", wsMsg)
+		websocketUtils.SendExecMsg(endMsg, "false", wsMsg)
 	}
 
 	logUtils.ExecConsolef(-1, endMsg)
 	logUtils.ExecFilef(endMsg)
 
-	report := GenUnitTestReport(req, startTime.Unix(), entTime.Unix(), ch, sendOutputMsg, sendExecMsg, wsMsg)
+	report := GenUnitTestReport(req, startTime.Unix(), entTime.Unix(), ch, wsMsg)
 	logUtils.Infof("#v", report)
 
 	if req.SubmitResult {
@@ -53,8 +53,7 @@ func ExecUnit(ch chan int, sendOutputMsg,
 	return
 }
 
-func RunUnitTest(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message),
-	cmdStr, projectPath string, wsMsg websocket.Message) (err error) {
+func RunUnitTest(ch chan int, cmdStr, projectPath string, wsMsg websocket.Message) (err error) {
 
 	cmd := exec.Command("/bin/bash", "-c", cmdStr)
 	cmd.Dir = projectPath
@@ -62,7 +61,7 @@ func RunUnitTest(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning st
 	if cmd == nil {
 		msgStr := i118Utils.Sprintf("cmd_empty")
 		if commConsts.ComeFrom != "cmd" {
-			sendOutputMsg(msgStr, "", wsMsg)
+			websocketUtils.SendOutputMsg(msgStr, "", wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, msgStr)
 		logUtils.ExecFilef(msgStr)
@@ -76,7 +75,7 @@ func RunUnitTest(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning st
 
 	if err1 != nil {
 		if commConsts.ComeFrom != "cmd" {
-			sendOutputMsg(err1.Error(), "", wsMsg)
+			websocketUtils.SendOutputMsg(err1.Error(), "", wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, err1.Error())
 		logUtils.ExecFilef(err1.Error())
@@ -84,7 +83,7 @@ func RunUnitTest(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning st
 		return
 	} else if err2 != nil {
 		if commConsts.ComeFrom != "cmd" {
-			sendOutputMsg(err2.Error(), "", wsMsg)
+			websocketUtils.SendOutputMsg(err2.Error(), "", wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, err2.Error())
 		logUtils.ExecFilef(err2.Error())
@@ -100,7 +99,7 @@ func RunUnitTest(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning st
 		line, err3 := reader1.ReadString('\n')
 		if line != "" {
 			if commConsts.ComeFrom != "cmd" {
-				sendOutputMsg(line, "", wsMsg)
+				websocketUtils.SendOutputMsg(line, "", wsMsg)
 			}
 			logUtils.ExecConsole(1, line)
 			logUtils.ExecFile(line)
@@ -117,7 +116,7 @@ func RunUnitTest(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning st
 			msg := i118Utils.Sprintf("exit_exec_curr")
 
 			if commConsts.ComeFrom != "cmd" {
-				sendExecMsg(msg, "", wsMsg)
+				websocketUtils.SendExecMsg(msg, "", wsMsg)
 			}
 
 			logUtils.ExecConsolef(color.FgCyan, msg)
@@ -148,7 +147,7 @@ ExitUnitTest:
 
 	if errOutput != "" {
 		if commConsts.ComeFrom != "cmd" {
-			sendOutputMsg(errOutput, "", wsMsg)
+			websocketUtils.SendOutputMsg(errOutput, "", wsMsg)
 		}
 		logUtils.ExecConsolef(-1, errOutput)
 		logUtils.ExecFilef(errOutput)

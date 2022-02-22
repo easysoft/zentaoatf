@@ -8,6 +8,7 @@ import (
 	analysisUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/analysis"
 	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
+	websocketUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/websocket"
 	zentaoUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	dateUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/date"
@@ -29,12 +30,12 @@ import (
 	"time"
 )
 
-func ExecCase(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
+func ExecCase(ch chan int, req serverDomain.WsReq, msg websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
 	cases := req.Cases
-	return RunZtf(ch, sendOutputMsg, sendExecMsg, req.ProjectPath, 0, 0, commConsts.Case, cases, msg)
+	return RunZtf(ch, req.ProjectPath, 0, 0, commConsts.Case, cases, msg)
 }
 
-func ExecModule(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
+func ExecModule(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 
 	cases, err := zentaoUtils.GetCasesByModule(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.ModuleId), req.ProjectPath)
@@ -46,11 +47,11 @@ func ExecModule(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning str
 		cases = analysisUtils.FilterCaseByResult(cases, req)
 	}
 
-	return RunZtf(ch, sendOutputMsg, sendExecMsg, req.ProjectPath,
+	return RunZtf(ch, req.ProjectPath,
 		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.ModuleId), commConsts.Module, cases, msg)
 }
 
-func ExecSuite(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
+func ExecSuite(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 	cases, err := zentaoUtils.GetCasesBySuite(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId), req.ProjectPath)
 
@@ -58,11 +59,11 @@ func ExecSuite(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning stri
 		cases = analysisUtils.FilterCaseByResult(cases, req)
 	}
 
-	return RunZtf(ch, sendOutputMsg, sendExecMsg, req.ProjectPath,
+	return RunZtf(ch, req.ProjectPath,
 		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId), commConsts.Suite, cases, msg)
 }
 
-func ExecTask(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
+func ExecTask(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 	cases, err := zentaoUtils.GetCasesByTask(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId), req.ProjectPath)
 	if err != nil {
@@ -73,11 +74,11 @@ func ExecTask(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning strin
 		cases = analysisUtils.FilterCaseByResult(cases, req)
 	}
 
-	return RunZtf(ch, sendOutputMsg, sendExecMsg, req.ProjectPath,
+	return RunZtf(ch, req.ProjectPath,
 		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId), commConsts.Task, cases, msg)
 }
 
-func RunZtf(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message),
+func RunZtf(ch chan int,
 	projectPath string, productId, id int, by commConsts.ExecBy, cases []string, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 
@@ -89,15 +90,15 @@ func RunZtf(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string,
 	numbMaxWidth, pathMaxWidth = getNumbMaxWidth(casesToRun)
 	report = genReport(productId, id, by)
 
-	ExeScripts(casesToRun, casesToIgnore, projectPath, conf, &report, pathMaxWidth, numbMaxWidth, ch, sendOutputMsg, sendExecMsg, msg)
-	GenZTFTestReport(report, pathMaxWidth, projectPath, sendOutputMsg, sendExecMsg, msg)
+	ExeScripts(casesToRun, casesToIgnore, projectPath, conf, &report, pathMaxWidth, numbMaxWidth, ch, msg)
+	GenZTFTestReport(report, pathMaxWidth, projectPath, msg)
 
 	return
 }
 
 func ExeScripts(casesToRun []string, casesToIgnore []string, projectPath string, conf commDomain.ProjectConf,
-	report *commDomain.ZtfReport, pathMaxWidth int, numbMaxWidth int, ch chan int,
-	sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message), wsMsg websocket.Message) {
+	report *commDomain.ZtfReport, pathMaxWidth int, numbMaxWidth int,
+	ch chan int, wsMsg websocket.Message) {
 
 	now := time.Now()
 	startTime := now.Unix()
@@ -110,7 +111,7 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, projectPath string,
 
 	temp := i118Utils.Sprintf("found_scripts", strconv.Itoa(len(casesToRun))) + postFix
 	if commConsts.ComeFrom != "cmd" {
-		sendExecMsg(temp, "", wsMsg)
+		websocketUtils.SendExecMsg(temp, "", wsMsg)
 	}
 	logUtils.ExecConsolef(color.FgCyan, temp)
 	logUtils.ExecResult(temp)
@@ -118,7 +119,7 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, projectPath string,
 	if len(casesToIgnore) > 0 {
 		temp := i118Utils.Sprintf("ignore_scripts", strconv.Itoa(len(casesToIgnore))) + postFix
 		if commConsts.ComeFrom != "cmd" {
-			sendExecMsg(temp, "", wsMsg)
+			websocketUtils.SendExecMsg(temp, "", wsMsg)
 		}
 
 		logUtils.ExecConsolef(color.FgCyan, temp)
@@ -130,13 +131,13 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, projectPath string,
 			continue
 		}
 
-		ExeScript(file, projectPath, conf, report, idx, len(casesToRun), pathMaxWidth, numbMaxWidth, ch, sendOutputMsg, sendExecMsg, wsMsg)
+		ExeScript(file, projectPath, conf, report, idx, len(casesToRun), pathMaxWidth, numbMaxWidth, ch, wsMsg)
 
 		select {
 		case <-ch:
 			msg := i118Utils.Sprintf("exit_exec_all")
 			if commConsts.ComeFrom != "cmd" {
-				sendExecMsg(msg, "", wsMsg)
+				websocketUtils.SendExecMsg(msg, "", wsMsg)
 			}
 
 			logUtils.ExecConsolef(color.FgCyan, msg)
@@ -155,21 +156,21 @@ ExitAllCase:
 
 func ExeScript(scriptFile, projectPath string, conf commDomain.ProjectConf, report *commDomain.ZtfReport, idx,
 	total, pathMaxWidth, numbMaxWidth int,
-	ch chan int, sendOutputMsg, sendExecMsg func(s, isRunning string, msg websocket.Message), wsMsg websocket.Message) {
+	ch chan int, wsMsg websocket.Message) {
 
 	startTime := time.Now()
 
 	startMsg := i118Utils.Sprintf("start_execution", scriptFile, dateUtils.DateTimeStr(startTime))
 
 	if commConsts.ComeFrom != "cmd" {
-		sendExecMsg(startMsg, "", wsMsg)
+		websocketUtils.SendExecMsg(startMsg, "", wsMsg)
 	}
 
 	logUtils.ExecConsolef(-1, startMsg)
 	logUtils.ExecFilef(startMsg)
 
 	logs := ""
-	stdOutput, errOutput := RunScript(scriptFile, projectPath, conf, ch, sendOutputMsg, sendExecMsg, wsMsg)
+	stdOutput, errOutput := RunScript(scriptFile, projectPath, conf, ch, wsMsg)
 	stdOutput = strings.Trim(stdOutput, "\n")
 
 	if stdOutput != "" {
@@ -177,7 +178,7 @@ func ExeScript(scriptFile, projectPath string, conf commDomain.ProjectConf, repo
 	}
 	if errOutput != "" {
 		if commConsts.ComeFrom != "cmd" {
-			sendOutputMsg(errOutput, "", wsMsg)
+			websocketUtils.SendOutputMsg(errOutput, "", wsMsg)
 		}
 		logUtils.ExecConsolef(-1, errOutput)
 		logUtils.ExecFilef(errOutput)
@@ -188,14 +189,13 @@ func ExeScript(scriptFile, projectPath string, conf commDomain.ProjectConf, repo
 
 	endMsg := i118Utils.Sprintf("end_execution", scriptFile, dateUtils.DateTimeStr(entTime))
 	if commConsts.ComeFrom != "cmd" {
-		sendExecMsg(endMsg, "", wsMsg)
+		websocketUtils.SendExecMsg(endMsg, "", wsMsg)
 	}
 
 	logUtils.ExecConsolef(-1, endMsg)
 	logUtils.ExecFilef(endMsg)
 
-	CheckCaseResult(scriptFile, logs, report, idx, total, secs, pathMaxWidth, numbMaxWidth,
-		sendOutputMsg, sendExecMsg, wsMsg)
+	CheckCaseResult(scriptFile, logs, report, idx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg)
 
 	if idx < total-1 {
 		logUtils.Infof("")
@@ -203,7 +203,7 @@ func ExeScript(scriptFile, projectPath string, conf commDomain.ProjectConf, repo
 }
 
 func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
-	ch chan int, sendOutputMsg, sendExecMsg func(s, isRunning string, wsMsg websocket.Message), wsMsg websocket.Message) (
+	ch chan int, wsMsg websocket.Message) (
 	stdOutput string, errOutput string) {
 
 	var cmd *exec.Cmd
@@ -225,7 +225,7 @@ func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
 		} else {
 			msg := i118Utils.I118Prt.Sprintf("no_interpreter_for_run", lang, filePath)
 			if commConsts.ComeFrom != "cmd" {
-				sendOutputMsg(msg, "", wsMsg)
+				websocketUtils.SendOutputMsg(msg, "", wsMsg)
 			}
 			logUtils.ExecConsolef(-1, msg)
 			logUtils.ExecFilef(msg)
@@ -235,7 +235,7 @@ func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
 		if err != nil {
 			msg := i118Utils.I118Prt.Sprintf("exec_cmd_fail", filePath, err.Error())
 			if commConsts.ComeFrom != "cmd" {
-				sendOutputMsg(msg, "", wsMsg)
+				websocketUtils.SendOutputMsg(msg, "", wsMsg)
 			}
 			logUtils.ExecConsolef(-1, msg)
 			logUtils.ExecFilef(msg)
@@ -250,7 +250,7 @@ func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
 	if cmd == nil {
 		msgStr := i118Utils.Sprintf("cmd_empty")
 		if commConsts.ComeFrom != "cmd" {
-			sendOutputMsg(msgStr, "", wsMsg)
+			websocketUtils.SendOutputMsg(msgStr, "", wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, msgStr)
 		logUtils.ExecFilef(msgStr)
@@ -263,7 +263,7 @@ func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
 
 	if err1 != nil {
 		if commConsts.ComeFrom != "cmd" {
-			sendOutputMsg(err1.Error(), "", wsMsg)
+			websocketUtils.SendOutputMsg(err1.Error(), "", wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, err1.Error())
 		logUtils.ExecFilef(err1.Error())
@@ -271,7 +271,7 @@ func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
 		return "", err1.Error()
 	} else if err2 != nil {
 		if commConsts.ComeFrom != "cmd" {
-			sendOutputMsg(err2.Error(), "", wsMsg)
+			websocketUtils.SendOutputMsg(err2.Error(), "", wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, err2.Error())
 		logUtils.ExecFilef(err2.Error())
@@ -289,7 +289,7 @@ func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
 		if line != "" {
 
 			if commConsts.ComeFrom != "cmd" {
-				sendOutputMsg(line, "", wsMsg)
+				websocketUtils.SendOutputMsg(line, "", wsMsg)
 			}
 			logUtils.ExecConsole(1, line)
 			logUtils.ExecFile(line)
@@ -307,7 +307,7 @@ func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
 			msg := i118Utils.Sprintf("exit_exec_curr")
 
 			if commConsts.ComeFrom != "cmd" {
-				sendExecMsg(msg, "", wsMsg)
+				websocketUtils.SendExecMsg(msg, "", wsMsg)
 			}
 
 			logUtils.ExecConsolef(color.FgCyan, msg)

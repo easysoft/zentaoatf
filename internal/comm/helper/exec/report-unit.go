@@ -6,6 +6,7 @@ import (
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
+	websocketUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/websocket"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	dateUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/date"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
@@ -25,7 +26,7 @@ import (
 )
 
 func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
-	ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), wsMsg websocket.Message) (
+	ch chan int, wsMsg websocket.Message) (
 	report commDomain.ZtfReport) {
 
 	testSuites, zipDir := RetrieveUnitResult(req.ProjectPath, startTime, req.TestTool, req.BuildTool)
@@ -91,7 +92,7 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 	temp := i118Utils.Sprintf("found_scripts", strconv.Itoa(len(cases))) + postFix
 
 	if commConsts.ComeFrom != "cmd" {
-		sendExecMsg(temp, "", wsMsg)
+		websocketUtils.SendExecMsg(temp, "", wsMsg)
 	}
 
 	logUtils.ExecConsolef(color.FgCyan, temp)
@@ -105,7 +106,7 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 		msg := fmt.Sprintf(format, idx+1, report.Total, cs.Status, testSuite, cs.Id, cs.Title, cs.Duration)
 
 		if commConsts.ComeFrom != "cmd" {
-			sendExecMsg(msg, "", wsMsg)
+			websocketUtils.SendExecMsg(msg, "", wsMsg)
 		}
 
 		logUtils.ExecConsolef(color.FgCyan, temp)
@@ -118,7 +119,7 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 		msg += strings.Join(failedCaseLinesDesc, "\n")
 
 		if commConsts.ComeFrom != "cmd" {
-			sendExecMsg(msg, "", wsMsg)
+			websocketUtils.SendExecMsg(commConsts.MsgErrPrefix+msg, "", wsMsg)
 		}
 
 		logUtils.ExecConsolef(color.FgCyan, temp)
@@ -153,7 +154,7 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 		)
 
 	if commConsts.ComeFrom != "cmd" {
-		sendExecMsg(msg, "", wsMsg)
+		websocketUtils.SendExecMsg(msg, "", wsMsg)
 	}
 	logUtils.ExecConsole(color.FgCyan, msg)
 	logUtils.ExecResult(msg)
@@ -162,7 +163,7 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 	msg = "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
 
 	if commConsts.ComeFrom != "cmd" {
-		sendExecMsg(msg, "false", wsMsg)
+		websocketUtils.SendExecMsg(msg, "false", wsMsg)
 	}
 
 	logUtils.ExecConsole(color.FgCyan, msg)

@@ -7,21 +7,21 @@ import (
 	"github.com/kataras/iris/v12/websocket"
 )
 
-func Exec(ch chan int, sendOutputMsg, sendExecMsg func(info, isRunning string, msg websocket.Message), req serverDomain.WsReq, msg websocket.Message) (
+func Exec(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 	err error) {
 
 	serverConfig.InitExecLog(req.ProjectPath)
 
 	if req.Act == commConsts.ExecCase {
-		ExecCase(ch, sendOutputMsg, sendExecMsg, req, msg)
+		ExecCase(ch, req, msg)
 	} else if req.Act == commConsts.ExecModule {
-		ExecModule(ch, sendOutputMsg, sendExecMsg, req, msg)
+		ExecModule(ch, req, msg)
 	} else if req.Act == commConsts.ExecSuite {
-		ExecSuite(ch, sendOutputMsg, sendExecMsg, req, msg)
+		ExecSuite(ch, req, msg)
 	} else if req.Act == commConsts.ExecTask {
-		ExecTask(ch, sendOutputMsg, sendExecMsg, req, msg)
+		ExecTask(ch, req, msg)
 	} else if req.Act == commConsts.ExecUnit {
-		ExecUnit(ch, sendOutputMsg, sendExecMsg, req, msg)
+		ExecUnit(ch, req, msg)
 	}
 
 	return

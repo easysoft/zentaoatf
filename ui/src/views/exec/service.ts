@@ -44,9 +44,9 @@ export function genExecInfo(jsn: WsMsg, i: number): string {
 
     let sty = ''
     if (jsn.category === 'exec') {
-        sty = 'color: #009688;'
-    } else if (jsn.category === 'output') {
-        // sty = 'font-style: italic;'
+        sty = 'color: #68BB8D;'
+    } else if (jsn.category === 'error') {
+        sty = 'color: #FC2C25;'
     }
 
     msg = `<div style="${sty}"> ${msg} </div>`

@@ -5,6 +5,7 @@ import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/aaronchen2k/deeptest/internal/comm/domain"
 	"github.com/aaronchen2k/deeptest/internal/comm/helper/script"
+	websocketUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/websocket"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
@@ -19,7 +20,7 @@ import (
 
 func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfReport, idx int,
 	total int, secs string, pathMaxWidth int, numbMaxWidth int,
-	sendOutMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), wsMsg websocket.Message) {
+	wsMsg websocket.Message) {
 
 	stepMap, _, expectMap, isOldFormat := scriptUtils.GetStepAndExpectMap(scriptFile)
 
@@ -42,14 +43,13 @@ func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfRepor
 
 	language := langUtils.GetLangByFile(scriptFile)
 	ValidateCaseResult(scriptFile, language, stepMap, expectMap, skip, actualArr, report,
-		idx, total, secs, pathMaxWidth, numbMaxWidth,
-		sendOutMsg, sendExecMsg, wsMsg)
+		idx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg)
 }
 
 func ValidateCaseResult(scriptFile string, langType string,
 	stepMap, expectMap maps.Map, skip bool, actualArr [][]string, report *commDomain.ZtfReport,
 	idx int, total int, secs string, pathMaxWidth int, numbMaxWidth int,
-	sendOutMsg, sendExecMsg func(info, isRunning string, wsMsg websocket.Message), wsMsg websocket.Message) {
+	wsMsg websocket.Message) {
 
 	_, caseId, productId, title := scriptUtils.GetCaseInfo(scriptFile)
 
@@ -127,7 +127,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 	msg := fmt.Sprintf(format, idx+1, total, status, path, cs.Id, cs.Title, secs)
 
 	if commConsts.ComeFrom != "cmd" {
-		sendExecMsg(msg, "", wsMsg)
+		websocketUtils.SendExecMsg(msg, "", wsMsg)
 	}
 
 	logUtils.ExecConsole(color.FgCyan, msg)
