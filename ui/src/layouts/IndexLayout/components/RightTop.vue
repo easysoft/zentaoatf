@@ -122,7 +122,7 @@ export default defineComponent({
     width: 100%;
     height: @headerHeight;
     background-color: @menu-dark-bg;
-    color: #c0c4cc;
+    color: #FFFFFF;
     .indexlayout-flexible {
       margin: 0 16px;
       width: auto;
@@ -159,14 +159,13 @@ export default defineComponent({
         padding: 0 15px;
         height: @headerHeight;
         text-decoration: none;
-        color: #c0c4cc;
+        color: #FFFFFF;
         font-size: 15px;
         border-bottom: solid 3px transparent;
         &:hover,
         &.active {
-          background-color: @menu-dark-bg;
+          background-color: @menu-dark-bg-active;
           color: @menu-dark-highlight-color;
-          border-bottom-color: @primary-color;
         }
       }
 

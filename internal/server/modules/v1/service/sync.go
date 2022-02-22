@@ -29,6 +29,8 @@ func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, projectPa
 	moduleId := settings.ModuleId
 	suiteId := settings.SuiteId
 	taskId := settings.TaskId
+
+	byModule := settings.ByModule
 	independentFile := settings.IndependentFile
 	lang := settings.Lang
 
@@ -41,11 +43,9 @@ func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, projectPa
 
 	if cases != nil && len(cases) > 0 {
 		productId, _ = strconv.Atoi(cases[0].Product)
-		targetDir := fileUtils.AddPathSepIfNeeded(fmt.Sprintf("product%d", productId))
-		prefix := ""
-		byModule := moduleId > 0
+		targetDir := fileUtils.AddPathSepIfNeeded(filepath.Join(projectPath, fmt.Sprintf("product%d", productId)))
 
-		count, err := s.TestScriptService.GenerateScripts(cases, lang, independentFile, byModule, targetDir, prefix)
+		count, err := s.TestScriptService.GenerateScripts(cases, lang, independentFile, byModule, targetDir)
 		if err == nil {
 			logUtils.Infof(i118Utils.Sprintf("success_to_generate", count, targetDir))
 		} else {

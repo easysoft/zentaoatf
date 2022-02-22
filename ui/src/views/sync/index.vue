@@ -7,65 +7,71 @@
     <div v-if="currProject.type === 'unit'" class="panel">
       {{ t('no_sync_for_unittest') }}
     </div>
+
     <div class="main" v-if="currProject.type === 'func'">
+      <a-tabs>
+        <a-tab-pane key="1" :tab="t('sync_from_zentao')">
+            <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
+              <a-form-item :label="t('product')" v-bind="validateInfosFrom.productId">
+                <a-select v-model:value="modelFrom.productId" @change="selectProduct">
+                  <a-select-option key="" value="">&nbsp;</a-select-option>
+                  <a-select-option v-for="item in products" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+                </a-select>
+              </a-form-item>
+              <a-form-item :label="t('module')" v-bind="validateInfosFrom.moduleId">
+                <a-select v-model:value="modelFrom.moduleId">
+                  <a-select-option key="" value="">&nbsp;</a-select-option>
+                  <a-select-option v-for="item in modules" :key="item.id" :value="item.id"><span v-html="item.name"></span>
+                  </a-select-option>
+                </a-select>
+              </a-form-item>
+              <a-form-item :label="t('suite')" v-bind="validateInfosFrom.suiteId">
+                <a-select v-model:value="modelFrom.suiteId">
+                  <a-select-option key="" value="">&nbsp;</a-select-option>
+                  <a-select-option v-for="item in suites" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+                </a-select>
+              </a-form-item>
+              <a-form-item :label="t('task')" v-bind="validateInfosFrom.taskId">
+                <a-select v-model:value="modelFrom.taskId">
+                  <a-select-option key="" value="">&nbsp;</a-select-option>
+                  <a-select-option v-for="item in tasks" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+                </a-select>
+              </a-form-item>
+              <a-form-item :label="t('lang')" v-bind="validateInfosFrom.lang">
+                <a-select v-model:value="modelFrom.lang">
+                  <a-select-option v-for="item in langs" :key="item.code" :value="item.code">{{ item.name }}</a-select-option>
+                </a-select>
+              </a-form-item>
 
-      <a-card :title="t('sync_from_zentao')">
-        <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
-          <a-form-item :label="t('product')" v-bind="validateInfos.productId">
-            <a-select v-model:value="model.productId" @change="selectProduct">
-              <a-select-option key="" value="">&nbsp;</a-select-option>
-              <a-select-option v-for="item in products" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
-            </a-select>
-          </a-form-item>
-          <a-form-item :label="t('module')" v-bind="validateInfos.moduleId">
-            <a-select v-model:value="model.moduleId">
-              <a-select-option key="" value="">&nbsp;</a-select-option>
-              <a-select-option v-for="item in modules" :key="item.id" :value="item.id"><span v-html="item.name"></span>
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-          <a-form-item :label="t('suite')" v-bind="validateInfos.suiteId">
-            <a-select v-model:value="model.suiteId">
-              <a-select-option key="" value="">&nbsp;</a-select-option>
-              <a-select-option v-for="item in suites" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
-            </a-select>
-          </a-form-item>
-          <a-form-item :label="t('task')" v-bind="validateInfos.taskId">
-            <a-select v-model:value="model.taskId">
-              <a-select-option key="" value="">&nbsp;</a-select-option>
-              <a-select-option v-for="item in tasks" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
-            </a-select>
-          </a-form-item>
-          <a-form-item :label="t('lang')" v-bind="validateInfos.lang">
-            <a-select v-model:value="model.lang">
-              <a-select-option v-for="item in langs" :key="item.code" :value="item.code">{{ item.name }}</a-select-option>
-            </a-select>
-          </a-form-item>
-          <a-form-item :label="t('independent_expect')">
-            <a-switch v-model:checked="model.independentFile"/>
-          </a-form-item>
-          <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-            <a-button type="primary" @click.prevent="syncFromZentaoSubmit">{{ t('submit') }}</a-button>
-            <a-button style="margin-left: 10px" @click="resetFieldsFrom">{{ t('reset') }}</a-button>
-          </a-form-item>
-        </a-form>
-      </a-card>
+              <a-form-item :label="t('independent_by_module')">
+                <a-switch v-model:checked="modelFrom.byModule"/>
+              </a-form-item>
+              <a-form-item :label="t('independent_expect')">
+                <a-switch v-model:checked="modelFrom.independentFile"/>
+              </a-form-item>
+              <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
+                <a-button type="primary" @click.prevent="syncFromZentaoSubmit">{{ t('submit') }}</a-button>
+                <a-button style="margin-left: 10px" @click="resetFieldsFrom">{{ t('reset') }}</a-button>
+              </a-form-item>
+            </a-form>
+        </a-tab-pane>
 
-      <a-card :title="t('sync_to_zentao')">
-        <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
-          <a-form-item :label="t('product')" v-bind="validateInfosCommit.productId">
-            <a-select v-model:value="modelCommit.productId">
-              <a-select-option key="" value="">&nbsp;</a-select-option>
-              <a-select-option v-for="item in products" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
-            </a-select>
-          </a-form-item>
+        <a-tab-pane key="2" :tab="t('sync_to_zentao')" force-render>
+            <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
+              <a-form-item :label="t('product')" v-bind="validateInfosTo.productId">
+                <a-select v-model:value="modelTo.productId">
+                  <a-select-option key="" value="">&nbsp;</a-select-option>
+                  <a-select-option v-for="item in products" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+                </a-select>
+              </a-form-item>
 
-          <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-            <a-button type="primary" @click.prevent="syncToZentaoSubmit">{{ t('submit') }}</a-button>
-            <a-button style="margin-left: 10px" @click="resetFieldsTo">{{ t('reset') }}</a-button>
-          </a-form-item>
-        </a-form>
-      </a-card>
+              <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
+                <a-button type="primary" @click.prevent="syncToZentaoSubmit">{{ t('submit') }}</a-button>
+                <a-button style="margin-left: 10px" @click="resetFieldsTo">{{ t('reset') }}</a-button>
+              </a-form-item>
+            </a-form>
+        </a-tab-pane>
+      </a-tabs>
 
     </div>
   </div>
@@ -90,16 +96,10 @@ interface ConfigFormSetupData {
   t: (key: string | number) => string;
   currProject: ComputedRef;
 
-  formRef: any
-  model: SyncSettings
-  rules: any
-
   labelCol: any
   wrapperCol: any
-  validate: any
-  validateInfos: validateInfos
-  syncFromZentaoSubmit: () => void;
-  resetFieldsFrom: () => void;
+  simpleImage: any
+  formRef: any
 
   langs: ComputedRef<any[]>;
   products: ComputedRef<any[]>;
@@ -108,13 +108,19 @@ interface ConfigFormSetupData {
   tasks: ComputedRef<any[]>;
   selectProduct: (item) => void;
 
-  modelCommit: SyncSettings
-  rulesCommit: any
+  modelFrom: SyncSettings
+  rulesFrom: any
+  validateFrom: any
+  validateInfosFrom: validateInfos
+  syncFromZentaoSubmit: () => void;
+  resetFieldsFrom: () => void;
+
+  modelTo: SyncSettings
+  rulesTo: any
+  validateTo: any
+  validateInfosTo: validateInfos
   syncToZentaoSubmit: () => void;
-  validateCommit: any
-  validateInfosCommit: validateInfos
   resetFieldsTo: () => void;
-  simpleImage: any
 }
 
 export default defineComponent({
@@ -148,17 +154,12 @@ export default defineComponent({
 
     const formRef = ref();
 
-    const model = reactive<SyncSettings>({
+    const modelFrom = reactive<SyncSettings>({
       productId: '',
       lang: 'python',
       independentFile: false
     } as SyncSettings);
-
-    const modelCommit = reactive<SyncSettings>({
-      productId: '',
-    } as SyncSettings);
-
-    const rules = reactive({
+    const rulesFrom = reactive({
       productId: [
         {required: true, message: t('pls_product')},
       ],
@@ -166,21 +167,22 @@ export default defineComponent({
         {required: true, message: t('pls_lang'), trigger: 'change'}
       ],
     });
-    const rulesCommit = reactive({
+
+    const syncFromForm = useForm(modelFrom, rulesFrom);
+    const resetFieldsFrom = syncFromForm.resetFields
+    const validateFrom = syncFromForm.validate
+    const validateInfosFrom = syncFromForm.validateInfos
+
+    const modelTo = reactive<SyncSettings>({productId: ''} as SyncSettings);
+    const rulesTo = reactive({
       productId: [
         {required: true, message: t('pls_product')},
       ]
     })
-
-    const syncFromForm = useForm(model, rules);
-    const resetFieldsFrom = syncFromForm.resetFields
-    const  validate = syncFromForm.validate
-    const  validateInfos = syncFromForm.validateInfos
-
-    const commitForm = useForm(modelCommit, rulesCommit);
-    const resetFieldsTo = commitForm.resetFields
-    const validateCommit = commitForm.validate
-    const validateInfosCommit = commitForm.validateInfos
+    const syncToForm = useForm(modelTo, rulesTo);
+    const resetFieldsTo = syncToForm.resetFields
+    const validateTo = syncToForm.validate
+    const validateInfosTo = syncToForm.validateInfos
 
     const selectProduct = (item) => {
       console.log('selectProduct', item)
@@ -194,9 +196,9 @@ export default defineComponent({
     const syncFromZentaoSubmit = () => {
       console.log('syncFromZentaoSubmit')
 
-      validate()
+      validateFrom()
           .then(() => {
-            syncFromZentao(model).then((json) => {
+            syncFromZentao(modelFrom).then((json) => {
               console.log('json', json)
               if (json.code === 0) {
                 notification.success({
@@ -218,10 +220,10 @@ export default defineComponent({
     const syncToZentaoSubmit = () => {
       console.log('syncToZentaoSubmit')
 
-      validateCommit()
+      validateTo()
           .then(() => {
-            console.log('then', modelCommit);
-            syncToZentao(modelCommit.productId).then((json) => {
+            console.log('then', modelTo);
+            syncToZentao(modelTo.productId).then((json) => {
               console.log('json', json)
               if (json.code === 0) {
                 notification.success({
@@ -247,13 +249,13 @@ export default defineComponent({
       formRef,
       labelCol: {span: 6},
       wrapperCol: {span: 12},
-      rules,
-      validate,
-      validateInfos,
+      rulesFrom,
+      validateFrom,
+      validateInfosFrom,
       resetFieldsFrom,
       syncFromZentaoSubmit,
 
-      model,
+      modelFrom,
       langs,
       products,
       modules,
@@ -261,10 +263,10 @@ export default defineComponent({
       tasks,
       selectProduct,
 
-      modelCommit,
-      rulesCommit,
-      validateCommit,
-      validateInfosCommit,
+      modelTo,
+      rulesTo,
+      validateTo,
+      validateInfosTo,
       resetFieldsTo,
       syncToZentaoSubmit,
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,

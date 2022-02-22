@@ -53,7 +53,7 @@
         <div id="resize"></div>
 
         <div id="content">
-          <div id="logs">
+          <div id="logs" class="logs">
             <span v-html="wsMsg.out"></span>
           </div>
         </div>

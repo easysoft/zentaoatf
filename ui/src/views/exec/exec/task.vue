@@ -44,7 +44,7 @@
             <div id="resize"></div>
 
             <div id="content">
-              <div id="logs">
+              <div id="logs" class="logs">
                 <span v-html="wsMsg.out"></span>
               </div>
             </div>
@@ -295,9 +295,6 @@ export default defineComponent({
       height: calc(100% - 10px);
       width: 100%;
       overflow-y: auto;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      font-family:monospace;
     }
   }
 }

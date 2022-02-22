@@ -9,27 +9,28 @@ import (
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	resUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/res"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
 func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool, caseIds *[]string,
-	targetDir string, byModule bool, prefix string) {
+	targetDir string, byModule bool) {
 	caseId := cs.Id
 	productId := cs.Product
 	moduleId := cs.Module
 	caseTitle := cs.Title
 
-	fileUtils.MkDirIfNeeded(targetDir)
-	modulePath := ""
-	if byModule && moduleId != "0" {
-		modulePath = fmt.Sprintf("%s%s", moduleId, consts.PthSep)
+	if byModule {
+		targetDir = filepath.Join(targetDir, moduleId)
 	}
+
+	fileUtils.MkDirIfNeeded(targetDir)
 
 	content := ""
 	isOldFormat := false
-	scriptFile := fmt.Sprintf(targetDir+"%s%s%s.%s", modulePath, prefix, caseId, langUtils.LangMap[langType]["extName"])
+	scriptFile := filepath.Join(targetDir, fmt.Sprintf("%s.%s", caseId, langUtils.LangMap[langType]["extName"]))
 	if fileUtils.FileExist(scriptFile) { // update title and steps
 		content = fileUtils.ReadFile(scriptFile)
 		isOldFormat = strings.Index(content, "[esac]") > -1

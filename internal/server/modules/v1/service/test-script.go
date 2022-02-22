@@ -16,7 +16,7 @@ func NewTestScriptService() *TestScriptService {
 }
 
 func (s *TestScriptService) GenerateScripts(cases []commDomain.ZtfCase, langType string, independentFile bool,
-	byModule bool, targetDir string, prefix string) (int, error) {
+	byModule bool, targetDir string) (int, error) {
 	caseIds := make([]string, 0)
 
 	if commConsts.ComeFrom == "cmd" { // from cmd
@@ -26,7 +26,7 @@ func (s *TestScriptService) GenerateScripts(cases []commDomain.ZtfCase, langType
 	targetDir = fileUtils.AbsolutePath(targetDir)
 
 	for _, cs := range cases {
-		scriptUtils.GenerateScript(cs, langType, independentFile, &caseIds, targetDir, byModule, prefix)
+		scriptUtils.GenerateScript(cs, langType, independentFile, &caseIds, targetDir, byModule)
 	}
 
 	scriptUtils.GenSuite(caseIds, targetDir)

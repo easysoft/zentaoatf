@@ -36,6 +36,7 @@ export default {
     'suite': '套件',
     'task': '任务',
     'lang': '语言',
+    'independent_by_module': '按模块组织用例',
     'independent_expect': '期待结果为独立文件',
 
     'unit_test':  '单元测试', //
