@@ -12,7 +12,6 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12/websocket"
-	"strconv"
 )
 
 var (
@@ -69,7 +68,7 @@ func (c *WsCtrl) OnChat(wsMsg websocket.Message) (err error) {
 
 	if act == commConsts.ExecInit {
 		msg := i118Utils.Sprintf("success_to_conn")
-		websocketUtils.SendExecMsg(msg, strconv.FormatBool(scriptUtils.GetRunning()), wsMsg)
+		//websocketUtils.SendExecMsg(msg, strconv.FormatBool(scriptUtils.GetRunning()), wsMsg)
 		logUtils.ExecConsole(color.FgCyan, msg)
 		return
 	}

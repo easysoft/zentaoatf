@@ -92,6 +92,9 @@ export default {
     'sync_success': 'Sync successfully.',
     'sync_fail': 'Sync failed.',
     'delete_success':  'Delete successfully.', //
+    'ws_conn_success': 'Connect to WebSocket successfully.',
+    'ws_conn_fail': 'Connect to WebSocket failed.',
+
     'pls_title':  'Please input title.', //
     'pls_select_case':  'Please select cases.', //
     'pls_module':  'Please select module.', //

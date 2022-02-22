@@ -34,6 +34,7 @@ export class WebSocket {
 
               console.log('connected to namespace: ' + msg.Namespace)
               WebSocket.conn = nsConn
+              proxy.$pub(WsEventName, {msg: '{"conn": "success"}'});
             },
             _OnNamespaceDisconnect: (_nsConn, msg) => {
               console.log('disconnected from namespace: ' + msg.Namespace)
@@ -52,7 +53,8 @@ export class WebSocket {
         await conn.connect(WsDefaultNameSpace)
 
       } catch (err) {
-        console.log(err)
+        console.log('failed connect to websocket', err)
+        proxy.$pub(WsEventName, {msg: '{"conn": "fail"}'});
       }
     }
     return WebSocket

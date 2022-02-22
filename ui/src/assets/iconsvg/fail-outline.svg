@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>图片备份 26</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="执行（执行用例失败用例）" transform="translate(-433.000000, -138.000000)" stroke="#EB4141">
+            <g id="图片备份-26" transform="translate(443.000000, 148.000000) rotate(-180.000000) translate(-443.000000, -148.000000) translate(433.000000, 138.000000)">
+                <g id="arrow-right-circle" transform="translate(2.083333, 2.083333)">
+                    <circle id="椭圆形" cx="7.91666667" cy="7.91666667" r="7.91666667"></circle>
+                    <g id="编组" transform="translate(5.416667, 5.416667)">
+                        <line x1="5" y1="5" x2="0.104645361" y2="0.104645361" id="路径-10"></line>
+                        <line x1="5" y1="5" x2="0.104645361" y2="0.104645361" id="路径-10备份" transform="translate(2.552323, 2.552323) scale(-1, 1) translate(-2.552323, -2.552323) "></line>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -292,7 +292,7 @@ export default defineComponent({
     #logs {
       margin: 0;
       padding: 0;
-      height: calc(100% - 10px);
+      height: calc(100% - 0px);
       width: 100%;
       overflow-y: auto;
     }
