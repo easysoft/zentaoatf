@@ -11,6 +11,7 @@
     "svgo": "svgo -f src/assets/iconsvg --config=src/assets/iconsvg/svgo.yml"
   },
   "dependencies": {
+    "@highlightjs/vue-plugin": "^2.1.0",
     "@toast-ui/editor": "^2.5.3",
     "ant-design-vue": "^2.2.8",
     "axios": "^0.21.4",

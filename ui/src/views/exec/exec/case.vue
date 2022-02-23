@@ -236,7 +236,6 @@ export default defineComponent({
       proxy.$sub(WsEventName, (data) => {
         console.log(data[0].msg);
         const jsn = JSON.parse(data[0].msg) as WsMsg
-        console.log(jsn);
 
         if (jsn.conn) { // ws connection status updated
           wsStatus.value = jsn.conn
@@ -327,11 +326,11 @@ export default defineComponent({
       selectedKeys,
       checkedKeys,
 
-      hideWsStatus,
       exec,
       stop,
       isRunning,
       back,
+      hideWsStatus,
     }
   }
 

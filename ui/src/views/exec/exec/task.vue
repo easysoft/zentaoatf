@@ -44,7 +44,18 @@
             <div id="resize"></div>
 
             <div id="content">
-              <div id="logs" class="logs">
+              <div v-if="wsStatus === 'success'" class="ws-status" :class="wsStatus">
+                <icon-svg type="pass-outline" />
+                <span class="text">{{t('ws_conn_success')}}</span>
+                <span @click="hideWsStatus" class="icon-close"><icon-svg type="close" /></span>
+              </div>
+              <div v-if="wsStatus === 'fail'" class="ws-status" :class="wsStatus">
+                <icon-svg type="fail-outline" />
+                <span class="text">{{t('ws_conn_success')}}</span>
+                <span @click="hideWsStatus" class="icon-close"><icon-svg type="close" /></span>
+              </div>
+
+              <div id="logs" class="logs" :class="{ 'with-status': wsStatus }">
                 <span v-html="wsMsg.out"></span>
               </div>
             </div>
@@ -71,6 +82,7 @@ import {resizeWidth, scroll} from "@/utils/dom";
 import {genExecInfo} from "@/views/exec/service";
 import throttle from "lodash.debounce";
 import {useI18n} from "vue-i18n";
+import IconSvg from "@/components/IconSvg/index";
 
 interface ExecTaskPageSetupData {
   t: (key: string | number) => string;
@@ -78,9 +90,12 @@ interface ExecTaskPageSetupData {
   seq: string
 
   wsMsg: any,
+  wsStatus: Ref<string>,
+
   exec: (keys) => void;
   stop: (keys) => void;
   isRunning: Ref<string>;
+  hideWsStatus: () => void;
   back: () => void;
 
   labelCol: any
@@ -97,6 +112,7 @@ interface ExecTaskPageSetupData {
 export default defineComponent({
     name: 'ExecutionTaskPage',
     components: {
+      IconSvg
     },
     setup(): ExecTaskPageSetupData {
       const { t } = useI18n();
@@ -119,12 +135,12 @@ export default defineComponent({
       const products = computed<any[]>(() => store.state.zentao.products);
       const tasks = computed<any[]>(() => store.state.zentao.tasks);
 
-      const fetchProducts = throttle((): void => {
+      const fetchProducts = (): void => {
         store.dispatch('zentao/fetchProducts').catch((error) => {
           if (error.response.data.code === 2000) router.push(`/config`)
         })
-      }, 600)
-      fetchProducts()
+      }
+      // fetchProducts()
       watch(currConfig, ()=> {
         fetchProducts()
       })
@@ -167,11 +183,17 @@ export default defineComponent({
       const {proxy} = getCurrentInstance() as any;
       WebSocket.init(proxy)
 
+      let wsStatus = ref('')
       let i = 1
       if (init) {
         proxy.$sub(WsEventName, (data) => {
           console.log(data[0].msg);
           const jsn = JSON.parse(data[0].msg)
+
+          if (jsn.conn) { // ws connection status updated
+            wsStatus.value = jsn.conn
+            return
+          }
 
           if ('isRunning' in jsn) {
             isRunning.value = jsn.isRunning
@@ -182,6 +204,9 @@ export default defineComponent({
           scroll('logs')
         });
         init = false;
+      }
+      const hideWsStatus = (): void => {
+        wsStatus.value = ''
       }
 
       onMounted(() => {
@@ -234,6 +259,7 @@ export default defineComponent({
         model,
         seq,
         wsMsg,
+        wsStatus,
 
         labelCol: { span: 6 },
         wrapperCol: { span: 16 },
@@ -251,6 +277,7 @@ export default defineComponent({
 
         isRunning,
         back,
+        hideWsStatus,
       }
     }
 
@@ -286,15 +313,57 @@ export default defineComponent({
   #content {
     flex: 1;
     height: 100%;
-    padding: 16px;
-    overflow: auto;
+    padding: 0px;
+
+    .ws-status {
+      padding-left: 8px;
+      height: 44px;
+      line-height: 44px;
+      color: #333333;
+
+      &.success {
+        background-color: #DAF7E9;
+        svg {
+          color: #DAF7E9;
+        }
+      }
+      &.error {
+        background-color: #FFD6D0;
+        svg {
+          color: #FFD6D0;
+        }
+      }
+
+      .text {
+        display: inline-block;
+        margin-left: 5px;
+      }
+      .icon-close {
+        position: absolute;
+        padding: 5px;
+        line-height: 34px;
+        right: 15px;
+        cursor: pointer;
+        svg {
+          font-size: 8px;
+          color: #333333;
+        }
+      }
+    }
 
     #logs {
       margin: 0;
-      padding: 0;
-      height: calc(100% - 0px);
+      padding: 10px;
       width: 100%;
       overflow-y: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family:monospace;
+
+      height: 100%;
+      &.with-status {
+        height: calc(100% - 45px);
+      }
     }
   }
 }
