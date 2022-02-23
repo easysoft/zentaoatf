@@ -145,7 +145,7 @@ export default defineComponent({
 #indexlayout-right {
   position: relative;
   flex: 1;
-  overflow: auto;
+  overflow: hidden;
   background-color: @mainBgColor;
   &.fiexd-header {
     display: flex;

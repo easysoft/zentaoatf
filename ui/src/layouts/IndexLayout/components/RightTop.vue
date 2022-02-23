@@ -35,7 +35,6 @@ import { computed, ComputedRef, defineComponent, onMounted, PropType, Ref, toRef
 import { useI18n } from "vue-i18n";
 
 import { BreadcrumbType, RoutesDataItem } from '@/utils/routes';
-import BreadCrumbs from '@/components/BreadCrumbs/index.vue';
 import SelectLang from '@/components/SelectLang/index.vue';
 import ALink from '@/components/ALink/index.vue';
 import useTopMenuWidth from "../composables/useTopMenuWidth";

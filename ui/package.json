@@ -11,7 +11,7 @@
     "svgo": "svgo -f src/assets/iconsvg --config=src/assets/iconsvg/svgo.yml"
   },
   "dependencies": {
-    "@highlightjs/vue-plugin": "^2.1.0",
+    "@highlightjs/vue-plugin": "2.0.1",
     "@toast-ui/editor": "^2.5.3",
     "ant-design-vue": "^2.2.8",
     "axios": "^0.21.4",
@@ -19,6 +19,7 @@
     "echarts": "^4.9.0",
     "localforage": "^1.10.0",
     "lodash.debounce": "^4.0.8",
+    "lodash.throttle": "^4.1.1",
     "neffos.js": "^0.1.25",
     "nprogress": "^0.2.0",
     "vue": "^3.2.18",

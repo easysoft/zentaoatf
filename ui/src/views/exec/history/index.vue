@@ -110,7 +110,7 @@ import {momentTimeDef, percentDef} from "@/utils/datetime";
 import {execByDef} from "@/utils/testing";
 import {ProjectData} from "@/store/project";
 import {hideMenu} from "@/utils/dom";
-import throttle from "lodash.debounce";
+import throttle from "lodash.throttle";
 import {useI18n} from "vue-i18n";
 import IconSvg from "@/components/IconSvg/index";
 
@@ -158,19 +158,13 @@ export default defineComponent({
 
     const columns = [
       {
-        title: t('index'),
-        dataIndex: 'index',
-        width: 150,
-        customRender: ({text, index}: { text: any; index: number }) => index + 1,
+        title: t('no'),
+        dataIndex: 'seq',
       },
       {
         title: t('exec_type'),
         dataIndex: 'execBy',
         slots: {customRender: 'execBy'},
-      },
-      {
-        title: t('exec_type'),
-        dataIndex: 'seq',
       },
       {
         title: t('start_time'),

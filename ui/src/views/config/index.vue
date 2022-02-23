@@ -92,7 +92,7 @@ import {
   setInterpreter,
 } from "@/utils/testing";
 import IconSvg from "@/components/IconSvg/index";
-import throttle from "lodash.debounce";
+import throttle from "lodash.throttle";
 
 interface ConfigFormSetupData {
   t: (key: string | number) => string;

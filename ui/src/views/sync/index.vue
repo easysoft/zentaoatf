@@ -87,7 +87,7 @@ import {useStore} from "vuex";
 import {ProjectData} from "@/store/project";
 import {ZentaoData} from "@/store/zentao";
 import {syncFromZentao, syncToZentao} from "@/views/sync/service";
-import throttle from "lodash.debounce";
+import throttle from "lodash.throttle";
 import {useRouter} from "vue-router";
 
 const useForm = Form.useForm;

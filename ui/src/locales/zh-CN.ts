@@ -5,6 +5,7 @@ export default {
 
     'ztf_name_full': 'ZTF自动化测试工具',
 
+    'no': '编号',
     'scope': '范围', //
     'name': '名称', //
     'path': '路径',

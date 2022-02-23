@@ -45,7 +45,7 @@
           <a-button @click="extract" type="primary">{{ t('extract_step') }}</a-button>
         </div>
         <div class="panel">
-          <pre><code>{{ script.code }}</code></pre>
+          <highlightjs v-if="scriptCode" autodetect :code="scriptCode" />
         </div>
       </div>
     </div>
@@ -59,9 +59,11 @@ import IconSvg from "@/components/IconSvg";
 import {ProjectData} from "@/store/project";
 import {ScriptData} from "../store";
 import {resizeWidth} from "@/utils/dom";
-import throttle from "lodash.debounce";
 import {Empty, message, notification} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
+import 'highlight.js/lib/common';
+import hljsVuePlugin from "@highlightjs/vue-plugin";
+import 'highlight.js/styles/googlecode.css'
 
 interface ListScriptPageSetupData {
   t: (key: string | number) => string;
@@ -69,7 +71,8 @@ interface ListScriptPageSetupData {
   treeData: ComputedRef<any[]>;
   replaceFields: any,
   tree: Ref;
-  script: any
+  script: ComputedRef
+  scriptCode: Ref<string>;
 
   isExpand: Ref<boolean>;
   expandNode: (expandedKeys: string[], e: any) => void;
@@ -84,7 +87,8 @@ interface ListScriptPageSetupData {
 export default defineComponent({
   name: 'ScriptListPage',
   components: {
-    IconSvg
+    IconSvg,
+    highlightjs: hljsVuePlugin.component
   },
   setup(): ListScriptPageSetupData {
     const { t } = useI18n();
@@ -100,16 +104,15 @@ export default defineComponent({
     const treeData = computed<any>(() => store.state.project.scriptTree);
     const expandedKeys = ref<string[]>([]);
 
-    const getOpenKeys = throttle((treeNode, isAll) => {
+    const getOpenKeys = (treeNode, isAll) => {
       if (!treeNode) return
-
       expandedKeys.value.push(treeNode.path)
       if (treeNode.children && isAll) {
         treeNode.children.forEach((item, index) => {
           getOpenKeys(item, isAll)
         })
       }
-    }, 600)
+    }
 
     expandedKeys.value = []
     getOpenKeys(treeData.value[0], false)
@@ -121,7 +124,8 @@ export default defineComponent({
     let tree = ref(null)
 
     const storeScript = useStore<{ script: ScriptData }>();
-    const script = computed<any>(() => storeScript.state.script.detail);
+    let script = computed<any>(() => storeScript.state.script.detail);
+    let scriptCode = ref('')
 
     onMounted(() => {
       console.log('onMounted', tree)
@@ -137,7 +141,11 @@ export default defineComponent({
       if (e.selectedNodes.length === 0) return
       selectedNode = e.selectedNodes[0]
 
-      storeScript.dispatch('script/getScript', selectedNode.props)
+      scriptCode.value = ''
+      storeScript.dispatch('script/getScript', selectedNode.props).then(() => {
+        console.log('===', script)
+        scriptCode.value = script.value.code
+      })
     }
 
     const expandAll = (e) => {
@@ -175,6 +183,7 @@ export default defineComponent({
       tree,
       expandedKeys,
       script,
+      scriptCode,
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
     }
   }
@@ -254,7 +263,7 @@ export default defineComponent({
       }
 
       .panel {
-        padding: 16px;
+        padding: 0 16px 0 12px;
         height: calc(100% - 46px);
         overflow: auto;
       }

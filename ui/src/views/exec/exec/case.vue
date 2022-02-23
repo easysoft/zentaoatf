@@ -89,7 +89,7 @@ import {WebSocket, WsEventName} from "@/services/websocket";
 import {PrefixSpace, resizeWidth, scroll} from "@/utils/dom";
 import {genExecInfo, get, getCaseIdsFromReport} from "@/views/exec/service";
 import {WsMsg} from "@/views/exec/data";
-import throttle from "lodash.debounce";
+import throttle from "lodash.throttle";
 import {useI18n} from "vue-i18n";
 
 const useForm = Form.useForm;

@@ -80,7 +80,6 @@ import settings from "@/config/settings";
 import {WebSocket, WsEventName} from "@/services/websocket";
 import {resizeWidth, scroll} from "@/utils/dom";
 import {genExecInfo} from "@/views/exec/service";
-import throttle from "lodash.debounce";
 import {useI18n} from "vue-i18n";
 import IconSvg from "@/components/IconSvg/index";
 
