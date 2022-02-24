@@ -1,0 +1,7 @@
+expect 1
+expect 3
+>>
+ expect 4 line 1
+
+ expect 4 line 2
+ >>
