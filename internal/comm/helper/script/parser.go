@@ -8,7 +8,6 @@ import (
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
-	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
 	"github.com/emirpasic/gods/maps"
 	"github.com/emirpasic/gods/maps/linkedhashmap"
 	"io/ioutil"
@@ -34,23 +33,6 @@ func ReplaceCaseDesc(desc, file string) {
 	out := re.ReplaceAllString(content, newDesc)
 
 	fileUtils.WriteFile(file, out)
-}
-
-func getExcepts(str string, independentFile bool) (ret string) {
-	str = stringUtils.TrimAll(str)
-	arr := strings.Split(str, "\n")
-
-	ret = str
-
-	if len(arr) == 1 && !independentFile {
-		ret = ">> " + str
-	} else if len(arr) == 1 && independentFile {
-		ret = str
-	} else {
-		ret = ">>\n" + str
-	}
-
-	return
 }
 
 func GetStepAndExpectMap(file string) (stepMap, stepTypeMap, expectMap maps.Map, isOldFormat bool) {
@@ -612,8 +594,8 @@ func GetExpectMapFromIndependentFile(expectMap maps.Map, content string, withEmp
 	return retMap
 }
 
-func GetCaseContent(stepObj commDomain.ZtfStep, seq string, independentFile bool, isChild bool) []string {
-	lines := make([]string, 0)
+func GetCaseContent(stepObj commDomain.ZtfStep, seq string, independentFile bool, isChild bool) (
+	stepContent, expectContent string) {
 
 	step := strings.TrimSpace(stepObj.Desc)
 	expect := strings.TrimSpace(stepObj.Expect)
@@ -621,15 +603,18 @@ func GetCaseContent(stepObj commDomain.ZtfStep, seq string, independentFile bool
 	stepStr := getStepContent(step, isChild)
 	expectStr := getExpectContent(expect, isChild, independentFile)
 
-	line := ""
 	if !independentFile {
-		line = stepStr + expectStr
+		stepContent = stepStr + expectStr
 	} else {
-		line = stepStr + " >>"
+		stepContent = stepStr
+		if stepObj.Children == nil || len(stepObj.Children) == 0 {
+			stepContent += " >>"
+		}
 	}
-	lines = append(lines, line)
 
-	return lines
+	expectContent = expectStr
+
+	return
 }
 
 func getStepContent(str string, isChild bool) (ret string) {
@@ -652,20 +637,38 @@ func getExpectContent(str string, isChild bool, independentFile bool) (ret strin
 		return
 	}
 
-	isMultiLine := strings.Count(str, "\r\n") > 0
-	if !isMultiLine {
+	isSingleLine := strings.Count(str, "\r\n") == 0
+	if isSingleLine {
 		if independentFile {
 			ret = str
 		} else {
 			ret = " >> " + str
 		}
-	} else {
+	} else { // multi-line
 		rpl := "\r\n"
 
+		space := "  "
+		spaceBeforeTerminator := ""
+		spaceBeforeText := space
+		if isChild {
+			spaceBeforeTerminator = space
+			spaceBeforeText = strings.Repeat(space, 2)
+		}
+
 		if independentFile {
-			ret = ">>\n" + strings.ReplaceAll(str, rpl, rpl+"  ") + "\n>>"
+			//>>
+			//	expect 1.2 line 1
+			//	expect 1.2 line 2
+			//>>
+			ret = ">>\n" + space + strings.ReplaceAll(str, rpl, rpl+space) + "\n>>"
 		} else {
-			ret = " >> " + strings.ReplaceAll(str, rpl, rpl+"  ") + "\n>>"
+			//step 1.2 >>
+			//	expect 1.2 line 1
+			//  expect 1.2 line 2
+			//>>
+			ret = " >> \n" + spaceBeforeText +
+				strings.ReplaceAll(str, rpl, rpl+spaceBeforeText) +
+				"\n" + spaceBeforeTerminator + ">>"
 		}
 	}
 

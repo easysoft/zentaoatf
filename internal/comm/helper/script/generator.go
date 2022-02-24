@@ -150,11 +150,11 @@ func generateTestStepAndScriptObsolete(testSteps []commDomain.ZtfStep, steps *[]
 			*steps = append(*steps, fmt.Sprintf("\n[group]"))
 
 			for _, child := range group.Children {
-				*steps = append(*steps,
-					GetCaseContent(child, strconv.Itoa(stepNumb), independentFile, group.MultiLine)...)
+				stepContent, expectContent := GetCaseContent(child, strconv.Itoa(stepNumb), independentFile, group.MultiLine)
+				*steps = append(*steps, stepContent)
 
 				if independentFile && strings.TrimSpace(child.Expect) != "" {
-					*independentExpects = append(*independentExpects, getExcepts(child.Expect, false))
+					*independentExpects = append(*independentExpects, expectContent)
 				}
 
 				stepNumb++
@@ -164,10 +164,12 @@ func generateTestStepAndScriptObsolete(testSteps []commDomain.ZtfStep, steps *[]
 
 			for childNo, child := range group.Children {
 				numbStr := fmt.Sprintf("%d.%d", stepNumb, childNo+1)
-				*steps = append(*steps, GetCaseContent(child, numbStr, independentFile, group.MultiLine)...)
+
+				stepContent, expectContent := GetCaseContent(child, numbStr, independentFile, group.MultiLine)
+				*steps = append(*steps, stepContent)
 
 				if independentFile && strings.TrimSpace(child.Expect) != "" {
-					*independentExpects = append(*independentExpects, getExcepts(child.Expect, false))
+					*independentExpects = append(*independentExpects, expectContent)
 				}
 			}
 
@@ -198,21 +200,19 @@ func generateTestStepAndScript(testSteps []commDomain.ZtfStep, steps *[]string, 
 	*steps = append(*steps, "")
 	for _, item := range nestedSteps {
 		numbStr := fmt.Sprintf("%d", stepNumb)
-		stepLines1 := GetCaseContent(item, numbStr, independentFile, false)
-		*steps = append(*steps, stepLines1...)
+		stepLines1, expects1 := GetCaseContent(item, numbStr, independentFile, false)
+		*steps = append(*steps, stepLines1)
 
 		if independentFile && strings.TrimSpace(item.Expect) != "" {
-			expects1 := getExcepts(item.Expect, independentFile)
 			*independentExpects = append(*independentExpects, expects1)
 		}
 
 		for childNo, child := range item.Children {
 			numbStr := fmt.Sprintf("%d.%d", stepNumb, childNo+1)
-			stepLines2 := GetCaseContent(child, numbStr, independentFile, true)
-			*steps = append(*steps, stepLines2...)
+			stepLines2, expects2 := GetCaseContent(child, numbStr, independentFile, true)
+			*steps = append(*steps, stepLines2)
 
 			if independentFile && strings.TrimSpace(child.Expect) != "" {
-				expects2 := getExcepts(child.Expect, independentFile)
 				*independentExpects = append(*independentExpects, expects2)
 			}
 		}
