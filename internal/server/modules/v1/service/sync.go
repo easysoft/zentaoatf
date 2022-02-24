@@ -79,11 +79,6 @@ func (s *SyncService) SyncToZentao(projectPath string, commitProductId int) (err
 				logUtils.Infof("isOldFormat = ", isOldFormat)
 			}
 
-			isIndependent, expectIndependentContent := scriptUtils.GetDependentExpect(cs)
-			if isIndependent {
-				expectMap = scriptUtils.GetExpectMapFromIndependentFileObsolete(expectMap, expectIndependentContent, true)
-			}
-
 			zentaoUtils.CommitCase(id, title, stepMap, stepTypeMap, expectMap, projectPath)
 		}
 	}

@@ -56,6 +56,20 @@ func GetStepAndExpectMap(file string) (stepMap, stepTypeMap, expectMap maps.Map,
 		_, stepMap, stepTypeMap, expectMap = getSortedTextFromNestedSteps(groupArr)
 	}
 
+	isIndependent, expectIndependentContent := GetDependentExpect(file)
+	if isIndependent {
+		if isOldFormat {
+			expectMap = GetExpectMapFromIndependentFileObsolete(expectMap, expectIndependentContent, false)
+		} else {
+			expectMap = GetExpectMapFromIndependentFile(expectMap, expectIndependentContent, false)
+		}
+	}
+
+	return
+}
+
+func GetExpectMap(file string) (expectMap maps.Map, ok bool) {
+
 	return
 }
 
@@ -217,7 +231,7 @@ func parserNextLines(str string, nextLines []string) (ret commDomain.ZtfStep, in
 			}
 
 			if len(expect) > 0 {
-				expect += " | "
+				expect += "\r\n"
 			}
 			expect += strings.TrimSpace(line)
 		}
@@ -581,8 +595,8 @@ func GetExpectMapFromIndependentFile(expectMap maps.Map, content string, withEmp
 		key := strings.TrimSpace(keyIfs.(string))
 		value := strings.TrimSpace(valueIfs.(string))
 
-		if value == "" && len(expectArr) > idx {
-			retMap.Put(key, strings.Join(expectArr[idx], " | "))
+		if value == "pass" && len(expectArr) > idx {
+			retMap.Put(key, strings.Join(expectArr[idx], "\r\n"))
 			idx++
 		} else {
 			if withEmptyExpect {
@@ -846,33 +860,47 @@ func ReadExpectIndependentArrObsolete(content string) [][]string {
 }
 
 func ReadExpectIndependentArr(content string) [][]string {
+	//正常显示6
+	//E2.16
+	//>>
+	//  E2.2 - 16
+	//  E2.2 - 26
+	//>>
+	//>>
+	//  E3 - 16
+	//  E3 - 26
+	//>>
+
 	lines := strings.Split(content, "\n")
 
 	ret := make([][]string, 0)
 	var cpArr []string
 
-	model := ""
-	for idx, line := range lines {
-		line = strings.TrimSpace(line)
+	currModel := ""
+	idx := 0
+	for idx < len(lines) {
+		line := strings.TrimSpace(lines[idx])
 
 		if line == ">>" { // more than one line
-			model = "multi"
+			currModel = "multi"
 			cpArr = make([]string, 0)
-		} else if model == "multi" { // in >> and >> in multi line mode
+		} else if currModel == "multi" { // in >> and >> in multi line mode
 			cpArr = append(cpArr, line)
 
-			if idx == len(lines)-1 || strings.Index(lines[idx+1], ">>") > -1 {
+			if idx == len(lines)-1 || strings.Index(lines[idx+1], ">>") > -1 { // end multi line
 				temp := make([]string, 0)
-				temp = append(temp, strings.Join(cpArr, " | "))
+				temp = append(temp, strings.Join(cpArr, "\r\n"))
 
 				ret = append(ret, temp)
 				cpArr = make([]string, 0)
-				model = ""
+				currModel = ""
+
+				idx += 1
 			}
 		} else if line == ">>" {
 			continue
 		} else {
-			model = "single"
+			currModel = "single"
 
 			line = strings.TrimSpace(line)
 
@@ -880,6 +908,8 @@ func ReadExpectIndependentArr(content string) [][]string {
 			ret = append(ret, cpArr)
 			cpArr = make([]string, 0)
 		}
+
+		idx += 1
 	}
 
 	return ret
