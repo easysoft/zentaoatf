@@ -88,6 +88,8 @@ export default {
     'collapse_all': '收缩全部',
     'wrong_url': '请输入正确的的URL地址，以http或https开头。',
     'create_project': '新建项目',
+    'extract_success': '提取注释为测试步骤和验证点成功。',
+    'extract_fail': '提取注释为测试步骤和验证点失败。',
     'pls_create_project': '请点击右上角链接新建项目',
     'pls_product': '请选择产品',
     'pls_lang': '请选择语言',

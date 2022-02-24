@@ -2,15 +2,15 @@ package langUtils
 
 var (
 	LangCommentsTagMap = map[string][]string{
-		"bat":        {"goto start", ":start"},
-		"javascript": {"/\\*", "\\*/"},
-		"lua":        {"--\\[\\[", "\\]\\]"},
-		"perl":       {"=pod", "=cut"},
-		"php":        {"/\\*", "\\*/"},
+		"bat":        {`goto start`, `:start`},
+		"javascript": {`/*`, `*/`},
+		"lua":        {`--[[`, `]]`},
+		"perl":       {`=pod`, `=cut`},
+		"php":        {`/**`, `*/`},
 		"python":     {"'''", "'''"},
-		"ruby":       {"=begin", "=end"},
-		"shell":      {":<<!", "!"},
-		"tcl":        {"set case {", "}"},
+		"ruby":       {`=begin`, `=end`},
+		"shell":      {`:<<!`, `!`},
+		"tcl":        {`set case {`, `}`},
 	}
 
 	LangCommentsRegxMap = map[string][]string{

@@ -87,6 +87,8 @@ export default {
 
     'wrong_url': 'Please input right ZenTao URL.',
     'create_project': 'Create Project',
+    'extract_success': 'Extract comments to test steps and checkpoints successfully.',
+    'extract_fail': 'Extract comments to test steps and checkpoints failed.',
     'pls_create_project': 'Please create project to continue.',
     'pls_product': 'Please select product.',
     'pls_lang': 'Please select language.',

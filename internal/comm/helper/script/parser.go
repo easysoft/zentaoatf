@@ -19,16 +19,38 @@ import (
 	"strings"
 )
 
-func getExcepts(str string) string {
-	str = stringUtils.TrimAll(str)
+func ReplaceCaseDesc(desc, file string) {
+	content := fileUtils.ReadFile(file)
+	lang := langUtils.GetLangByFile(file)
 
+	regStr := fmt.Sprintf(`(?smU)%s((?U:.*pid.*))\n(.*)%s`,
+		langUtils.LangCommentsRegxMap[lang][0], langUtils.LangCommentsRegxMap[lang][1])
+	re, _ := regexp.Compile(regStr)
+
+	newDesc := fmt.Sprintf("\n%s\n\n"+desc+"\n\n%s",
+		langUtils.LangCommentsTagMap[lang][0],
+		langUtils.LangCommentsTagMap[lang][1])
+
+	out := re.ReplaceAllString(content, newDesc)
+
+	fileUtils.WriteFile(file, out)
+}
+
+func getExcepts(str string, independentFile bool) (ret string) {
+	str = stringUtils.TrimAll(str)
 	arr := strings.Split(str, "\n")
 
-	if len(arr) == 1 {
-		return ">> " + str
+	ret = str
+
+	if len(arr) == 1 && !independentFile {
+		ret = ">> " + str
+	} else if len(arr) == 1 && independentFile {
+		ret = str
 	} else {
-		return ">>\n" + str
+		ret = ">>\n" + str
 	}
+
+	return
 }
 
 func GetStepAndExpectMap(file string) (stepMap, stepTypeMap, expectMap maps.Map, isOldFormat bool) {
@@ -599,7 +621,13 @@ func GetCaseContent(stepObj commDomain.ZtfStep, seq string, independentFile bool
 	stepStr := getStepContent(step, isChild)
 	expectStr := getExpectContent(expect, isChild, independentFile)
 
-	lines = append(lines, stepStr+expectStr)
+	line := ""
+	if !independentFile {
+		line = stepStr + expectStr
+	} else {
+		line = stepStr + " >>"
+	}
+	lines = append(lines, line)
 
 	return lines
 }
@@ -632,12 +660,12 @@ func getExpectContent(str string, isChild bool, independentFile bool) (ret strin
 			ret = " >> " + str
 		}
 	} else {
-		rpl := "\r\n" + "  "
+		rpl := "\r\n"
 
 		if independentFile {
-			ret = ">>\n" + strings.ReplaceAll(str, "\r\n", rpl) + "\n>>"
+			ret = ">>\n" + strings.ReplaceAll(str, rpl, rpl+"  ") + "\n>>"
 		} else {
-			ret = " >> " + strings.ReplaceAll(str, "\r\n", rpl) + "\n>>"
+			ret = " >> " + strings.ReplaceAll(str, rpl, rpl+"  ") + "\n>>"
 		}
 	}
 

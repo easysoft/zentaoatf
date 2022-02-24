@@ -204,7 +204,7 @@ export default defineComponent({
   }
   .icon2 {
     .svg-icon {
-      vertical-align: 0.15em !important;
+      vertical-align: 3px !important;
     }
   }
   .anticon-down {

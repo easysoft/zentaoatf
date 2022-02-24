@@ -10,7 +10,6 @@ import (
 	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	resUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/res"
 	"path/filepath"
-	"regexp"
 	"strconv"
 	"strings"
 )
@@ -65,19 +64,8 @@ func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool
 	}
 
 	if fileUtils.FileExist(scriptFile) { // update title and steps
-		regStr := fmt.Sprintf(`(?sm)%s((?U:.*pid.*))\n(.*)%s`,
-			langUtils.LangCommentsRegxMap[langType][0], langUtils.LangCommentsRegxMap[langType][1])
-
-		// replace info
-		re, _ := regexp.Compile(regStr)
-		newContent := fmt.Sprintf("\n%s\n\n%s\n\n%s\n",
-			langUtils.LangCommentsTagMap[langType][0],
-			strings.Join(info, "\n"),
-			langUtils.LangCommentsTagMap[langType][1])
-
-		out := re.ReplaceAllString(content, newContent)
-
-		fileUtils.WriteFile(scriptFile, out)
+		newContent := strings.Join(info, "\n")
+		ReplaceCaseDesc(newContent, scriptFile)
 		return
 	}
 
@@ -166,7 +154,7 @@ func generateTestStepAndScriptObsolete(testSteps []commDomain.ZtfStep, steps *[]
 					GetCaseContent(child, strconv.Itoa(stepNumb), independentFile, group.MultiLine)...)
 
 				if independentFile && strings.TrimSpace(child.Expect) != "" {
-					*independentExpects = append(*independentExpects, getExcepts(child.Expect))
+					*independentExpects = append(*independentExpects, getExcepts(child.Expect, false))
 				}
 
 				stepNumb++
@@ -179,7 +167,7 @@ func generateTestStepAndScriptObsolete(testSteps []commDomain.ZtfStep, steps *[]
 				*steps = append(*steps, GetCaseContent(child, numbStr, independentFile, group.MultiLine)...)
 
 				if independentFile && strings.TrimSpace(child.Expect) != "" {
-					*independentExpects = append(*independentExpects, getExcepts(child.Expect))
+					*independentExpects = append(*independentExpects, getExcepts(child.Expect, false))
 				}
 			}
 
@@ -210,14 +198,22 @@ func generateTestStepAndScript(testSteps []commDomain.ZtfStep, steps *[]string, 
 	*steps = append(*steps, "")
 	for _, item := range nestedSteps {
 		numbStr := fmt.Sprintf("%d", stepNumb)
-		*steps = append(*steps, GetCaseContent(item, numbStr, independentFile, false)...)
+		stepLines1 := GetCaseContent(item, numbStr, independentFile, false)
+		*steps = append(*steps, stepLines1...)
+
+		if independentFile && strings.TrimSpace(item.Expect) != "" {
+			expects1 := getExcepts(item.Expect, independentFile)
+			*independentExpects = append(*independentExpects, expects1)
+		}
 
 		for childNo, child := range item.Children {
 			numbStr := fmt.Sprintf("%d.%d", stepNumb, childNo+1)
-			*steps = append(*steps, GetCaseContent(child, numbStr, independentFile, true)...)
+			stepLines2 := GetCaseContent(child, numbStr, independentFile, true)
+			*steps = append(*steps, stepLines2...)
 
 			if independentFile && strings.TrimSpace(child.Expect) != "" {
-				*independentExpects = append(*independentExpects, getExcepts(child.Expect))
+				expects2 := getExcepts(child.Expect, independentFile)
+				*independentExpects = append(*independentExpects, expects2)
 			}
 		}
 

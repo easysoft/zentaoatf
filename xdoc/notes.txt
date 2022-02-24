@@ -15,7 +15,7 @@ protoc --go_out=. \
 安装打包工具
 npm install --save-dev electron-packager
 
-打包
+打包客户端
 cd ui && yarn build --dest ../client/ui && cd ..
 
 go-bindata -o=res/res.go -pkg=res res/...

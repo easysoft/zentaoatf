@@ -31,7 +31,7 @@ func Extract(scriptPaths []string) error {
 		steps := prepareSteps(stepObjs)
 		desc := prepareDesc(steps, pth)
 
-		replaceCaseDesc(desc, pth)
+		ReplaceCaseDesc(desc, pth)
 	}
 
 	return nil
@@ -177,19 +177,6 @@ func prepareDesc(steps []string, file string) (desc string) {
 	return
 }
 
-func replaceCaseDesc(desc, file string) {
-	content := fileUtils.ReadFile(file)
-	lang := langUtils.GetLangByFile(file)
-
-	regStr := fmt.Sprintf(`(?smU)%s((?U:.*pid.*))\n(.*)%s`,
-		langUtils.LangCommentsRegxMap[lang][0], langUtils.LangCommentsRegxMap[lang][1])
-
-	re, _ := regexp.Compile(regStr)
-	out := re.ReplaceAllString(content, "\n/**\n\n"+desc+"\n\n*/")
-
-	fileUtils.WriteFile(file, out)
-}
-
 func getName(line, str, lang string) (name, expect string) {
 	lowerLine := strings.ToLower(line)
 
@@ -204,9 +191,8 @@ func getName(line, str, lang string) (name, expect string) {
 		}
 	}
 
-	regx, _ := regexp.Compile(langUtils.LangCommentsTagMap[lang][1])
-	name = strings.TrimSpace(regx.ReplaceAllString(name, ""))
-	expect = strings.TrimSpace(regx.ReplaceAllString(expect, ""))
+	name = strings.TrimSpace(strings.Replace(name, langUtils.LangCommentsTagMap[lang][1], "", -1))
+	expect = strings.TrimSpace(strings.Replace(expect, langUtils.LangCommentsTagMap[lang][1], "", -1))
 
 	return
 }

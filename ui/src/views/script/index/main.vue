@@ -159,13 +159,16 @@ export default defineComponent({
     }
     const extract = () => {
       console.log('extract', selectedNode.props)
+
+      scriptCode.value = ''
       storeScript.dispatch('script/extractScript', selectedNode.props).then(() => {
+        scriptCode.value = script.value.code
         notification.success({
-          message: `提取注释为测试步骤和验证点成功！`,
+          message: t('extract_success'),
         })
       }).catch(() => {
         notification.error({
-          message: `提取注释为测试步骤和验证点失败！`,
+          message: t('extract_fail'),
         });
       })
     }
