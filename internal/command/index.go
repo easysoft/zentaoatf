@@ -5,10 +5,7 @@ import (
 )
 
 type IndexModule struct {
-	ProjectService    *service.ProjectService    `inject:""`
-	SyncService       *service.SyncService       `inject:""`
-	TestResultService *service.TestResultService `inject:""`
-	TestBugService    *service.TestBugService    `inject:""`
+	SyncService *service.SyncService `inject:""`
 }
 
 func NewIndexModule() *IndexModule {

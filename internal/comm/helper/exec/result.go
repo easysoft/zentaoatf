@@ -1,4 +1,4 @@
-package execUtils
+package execHelper
 
 import (
 	"fmt"
@@ -22,23 +22,23 @@ func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfRepor
 	total int, secs string, pathMaxWidth int, numbMaxWidth int,
 	wsMsg websocket.Message) {
 
-	stepMap, _, expectMap, isOldFormat := scriptUtils.GetStepAndExpectMap(scriptFile)
+	stepMap, _, expectMap, isOldFormat := scriptHelper.GetStepAndExpectMap(scriptFile)
 
-	isIndependent, expectIndependentContent := scriptUtils.GetDependentExpect(scriptFile)
+	isIndependent, expectIndependentContent := scriptHelper.GetDependentExpect(scriptFile)
 	if isIndependent {
 		if isOldFormat {
-			expectMap = scriptUtils.GetExpectMapFromIndependentFileObsolete(expectMap, expectIndependentContent, false)
+			expectMap = scriptHelper.GetExpectMapFromIndependentFileObsolete(expectMap, expectIndependentContent, false)
 		} else {
-			expectMap = scriptUtils.GetExpectMapFromIndependentFile(expectMap, expectIndependentContent, false)
+			expectMap = scriptHelper.GetExpectMapFromIndependentFile(expectMap, expectIndependentContent, false)
 		}
 	}
 
 	skip := false
 	actualArr := make([][]string, 0)
 	if isOldFormat {
-		skip, actualArr = scriptUtils.ReadLogArrObsolete(logs)
+		skip, actualArr = scriptHelper.ReadLogArrObsolete(logs)
 	} else {
-		skip, actualArr = scriptUtils.ReadLogArr(logs)
+		skip, actualArr = scriptHelper.ReadLogArr(logs)
 	}
 
 	language := langUtils.GetLangByFile(scriptFile)
@@ -51,7 +51,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 	idx int, total int, secs string, pathMaxWidth int, numbMaxWidth int,
 	wsMsg websocket.Message) {
 
-	_, caseId, productId, title := scriptUtils.GetCaseInfo(scriptFile)
+	_, caseId, productId, title := scriptHelper.GetCaseInfo(scriptFile)
 
 	stepLogs := make([]commDomain.StepLog, 0)
 	caseResult := commConsts.PASS

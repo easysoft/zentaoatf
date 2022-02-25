@@ -1,11 +1,11 @@
-package zentaoUtils
+package zentaoHelper
 
 import (
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/aaronchen2k/deeptest/internal/comm/domain"
 	"github.com/aaronchen2k/deeptest/internal/comm/helper/analysis"
-	"github.com/aaronchen2k/deeptest/internal/comm/helper/config"
+	configHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
 	httpUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/http"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
@@ -18,7 +18,7 @@ import (
 )
 
 func CommitBug(ztfBug commDomain.ZtfBug, projectPath string) (err error) {
-	config := configUtils.LoadByProjectPath(projectPath)
+	config := configHelper.LoadByProjectPath(projectPath)
 	Login(config)
 
 	ztfBug.Steps = strings.Replace(ztfBug.Steps, " ", "&nbsp;", -1)
@@ -64,7 +64,7 @@ func PrepareBug(projectPath, seq string, caseIdStr string) (bug commDomain.ZtfBu
 		return
 	}
 
-	report, err := analysisUtils.ReadReport(projectPath, seq)
+	report, err := analysisHelper.ReadReport(projectPath, seq)
 	if err != nil {
 		return
 	}
@@ -123,7 +123,7 @@ func GetBugFiledOptions(req commDomain.FuncResult, projectPath string) (
 	bugFields commDomain.ZentaoBugFields, err error) {
 
 	// field options
-	config := configUtils.LoadByProjectPath(projectPath)
+	config := configHelper.LoadByProjectPath(projectPath)
 	err = Login(config)
 	if err != nil {
 		return

@@ -1,4 +1,4 @@
-package scriptUtils
+package scriptHelper
 
 import (
 	"fmt"
@@ -9,10 +9,30 @@ import (
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	resUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/res"
+	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
 	"path/filepath"
 	"strconv"
 	"strings"
 )
+
+func GenerateScripts(cases []commDomain.ZtfCase, langType string, independentFile bool,
+	byModule bool, targetDir string) (int, error) {
+	caseIds := make([]string, 0)
+
+	if commConsts.ComeFrom == "cmd" { // from cmd
+		targetDir = stdinUtils.GetInput("", targetDir, "where_to_store_script", targetDir)
+		stdinUtils.InputForBool(&byModule, byModule, "co_organize_by_module")
+	}
+	targetDir = fileUtils.AbsolutePath(targetDir)
+
+	for _, cs := range cases {
+		GenerateScript(cs, langType, independentFile, &caseIds, targetDir, byModule)
+	}
+
+	GenSuite(caseIds, targetDir)
+
+	return len(cases), nil
+}
 
 func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool, caseIds *[]string,
 	targetDir string, byModule bool) {

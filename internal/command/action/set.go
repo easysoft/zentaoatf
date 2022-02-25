@@ -1,8 +1,8 @@
 package action
 
 import (
+	stdinUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/stdin"
 	commandConfig "github.com/aaronchen2k/deeptest/internal/command/config"
-	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
 )
 
 func Set() {

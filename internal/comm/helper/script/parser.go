@@ -1,4 +1,4 @@
-package scriptUtils
+package scriptHelper
 
 import (
 	"fmt"

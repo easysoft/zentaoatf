@@ -2,6 +2,8 @@ package action
 
 import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+	analysisUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/analysis"
+	zentaoUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 	"github.com/aaronchen2k/deeptest/internal/command"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
@@ -26,5 +28,10 @@ func CommitZTFTestResult(files []string, productId string, taskId string, noNeed
 		TaskId:    taskId,
 		Seq:       resultDir,
 	}
-	actionModule.TestResultService.Submit(result, commConsts.WorkDir)
+
+	report, err := analysisUtils.ReadReport(commConsts.WorkDir, result.Seq)
+	if err != nil {
+		return
+	}
+	err = zentaoUtils.CommitResult(report, result.ProductId, result.TaskId, commConsts.WorkDir)
 }

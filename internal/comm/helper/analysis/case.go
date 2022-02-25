@@ -1,4 +1,4 @@
-package analysisUtils
+package analysisHelper
 
 import (
 	"github.com/aaronchen2k/deeptest/internal/comm/consts"

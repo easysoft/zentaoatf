@@ -6,7 +6,6 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/comm/helper/script"
 	"github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 	"github.com/aaronchen2k/deeptest/internal/command"
-	"github.com/aaronchen2k/deeptest/internal/command/config"
 	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
@@ -40,11 +39,11 @@ func RunZTFTest(files []string, suiteIdStr, taskIdStr string, actionModule *comm
 			}
 			cases = getCaseBySuiteFile(suite, dir)
 		} else if result != "" { // run from failed result file
-			cases = scriptUtils.GetFailedCasesDirectlyFromTestResult(result)
+			cases = scriptHelper.GetFailedCasesDirectlyFromTestResult(result)
 		} else { // run files
 			for _, v1 := range files {
 				if fileUtils.IsDir(v1) {
-					temps := scriptUtils.LoadScriptByProject(v1)
+					temps := scriptHelper.LoadScriptByProject(v1)
 					for _, v2 := range temps {
 						cases = append(cases, v2)
 					}
@@ -57,7 +56,7 @@ func RunZTFTest(files []string, suiteIdStr, taskIdStr string, actionModule *comm
 	}
 
 	req.Cases = cases
-	execUtils.Exec(nil, req, msg)
+	execHelper.Exec(nil, req, msg)
 
 	return nil
 }
@@ -68,10 +67,9 @@ func getCaseBySuiteId(id string, dir string) []string {
 
 	suiteId, err := strconv.Atoi(id)
 	if err == nil && suiteId > 0 {
-		commandConfig.CheckRequestConfig()
-		cases, err = zentaoUtils.GetCasesBySuite(0, suiteId, dir)
+		cases, err = zentaoHelper.GetCasesBySuite(0, suiteId, dir)
 	}
-	scriptUtils.GetScriptByIdsInDir(dir, caseIdMap, &cases)
+	scriptHelper.GetScriptByIdsInDir(dir, caseIdMap, &cases)
 	return cases
 }
 
@@ -81,11 +79,10 @@ func getCaseByTaskId(id string, dir string) []string {
 
 	taskId, err := strconv.Atoi(id)
 	if err == nil && taskId > 0 {
-		commandConfig.CheckRequestConfig()
-		cases, err = zentaoUtils.GetCasesByTask(0, taskId, dir)
+		cases, err = zentaoHelper.GetCasesByTask(0, taskId, dir)
 	}
 
-	scriptUtils.GetScriptByIdsInDir(dir, caseIdMap, &cases)
+	scriptHelper.GetScriptByIdsInDir(dir, caseIdMap, &cases)
 	return cases
 }
 
@@ -125,8 +122,8 @@ func getCaseBySuiteFile(file string, dir string) []string {
 	caseIdMap := map[int]string{}
 	cases := make([]string, 0)
 
-	scriptUtils.GetCaseIdsInSuiteFile(file, &caseIdMap)
-	scriptUtils.GetScriptByIdsInDir(dir, caseIdMap, &cases)
+	scriptHelper.GetCaseIdsInSuiteFile(file, &caseIdMap)
+	scriptHelper.GetScriptByIdsInDir(dir, caseIdMap, &cases)
 
 	return cases
 }

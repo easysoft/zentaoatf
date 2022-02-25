@@ -9,7 +9,6 @@ import (
 	"github.com/aaronchen2k/deeptest/res"
 	"github.com/fatih/color"
 	"io/ioutil"
-	"log"
 	"os"
 	"regexp"
 )
@@ -21,15 +20,6 @@ func ReadRes(path string) (ret []byte, err error) {
 		ret, err = res.Asset(path)
 	} else {
 		ret, err = ioutil.ReadFile(path)
-	}
-
-	dir, _ := os.Getwd()
-
-	msg := fmt.Sprintf("isRelease=%t, path=%s, dir=%s", isRelease, path, dir)
-	if logUtils.LoggerStandard != nil {
-		logUtils.Info(msg)
-	} else {
-		log.Println(msg)
 	}
 
 	return

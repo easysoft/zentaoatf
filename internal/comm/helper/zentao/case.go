@@ -1,4 +1,4 @@
-package zentaoUtils
+package zentaoHelper
 
 import (
 	"encoding/json"
@@ -17,6 +17,30 @@ import (
 	"strconv"
 	"strings"
 )
+
+func LoadTestCases(productId, moduleId, suiteId, taskId int, projectPath string) (
+	cases []commDomain.ZtfCase, loginFail bool) {
+
+	config := configUtils.LoadByProjectPath(projectPath)
+
+	err := Login(config)
+	if err != nil {
+		loginFail = true
+		return
+	}
+
+	if moduleId != 0 {
+		cases = ListCaseByModule(config.Url, productId, moduleId)
+	} else if suiteId != 0 {
+		cases = ListCaseBySuite(config.Url, 0, suiteId)
+	} else if taskId != 0 {
+		cases = ListCaseByTask(config.Url, 0, taskId)
+	} else if productId != 0 {
+		cases = ListCaseByProduct(config.Url, productId)
+	}
+
+	return
+}
 
 func GetCasesByModule(productId int, moduleId int, projectPath string) (cases []string, err error) {
 	config := configUtils.LoadByProjectPath(projectPath)

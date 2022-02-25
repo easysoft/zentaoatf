@@ -13,7 +13,6 @@ import (
 	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	resUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/res"
-	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
 	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
 	"github.com/fatih/color"
 	"github.com/spf13/viper"
@@ -82,12 +81,12 @@ func InitScreenSize() {
 	consts.ScreenHeight = h
 }
 
-func CheckRequestConfig() {
-	conf := configUtils.LoadByProjectPath(commConsts.WorkDir)
-	if conf.Url == "" || conf.Username == "" || conf.Password == "" {
-		stdinUtils.InputForRequest()
-	}
-}
+//func CheckRequestConfig() {
+//	conf := configUtils.LoadByProjectPath(commConsts.WorkDir)
+//	if conf.Url == "" || conf.Username == "" || conf.Password == "" {
+//		stdinUtils.InputForRequest()
+//	}
+//}
 
 func PrintCurrConfig() {
 	logUtils.ExecConsole(color.FgCyan, "\n"+i118Utils.Sprintf("current_config"))

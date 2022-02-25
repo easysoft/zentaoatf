@@ -1,4 +1,4 @@
-package analysisUtils
+package analysisHelper
 
 import (
 	"encoding/json"
