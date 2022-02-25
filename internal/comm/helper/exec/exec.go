@@ -1,4 +1,4 @@
-package scriptUtils
+package execUtils
 
 import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"

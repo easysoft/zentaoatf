@@ -1,4 +1,4 @@
-package scriptUtils
+package execUtils
 
 import (
 	"fmt"

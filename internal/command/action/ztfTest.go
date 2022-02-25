@@ -1,15 +1,15 @@
 package action
 
 import (
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	_scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/exec"
-	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
-	zentaoUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
+	"github.com/aaronchen2k/deeptest/internal/comm/consts"
+	"github.com/aaronchen2k/deeptest/internal/comm/helper/exec"
+	"github.com/aaronchen2k/deeptest/internal/comm/helper/script"
+	"github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 	"github.com/aaronchen2k/deeptest/internal/command"
-	commandConfig "github.com/aaronchen2k/deeptest/internal/command/config"
+	"github.com/aaronchen2k/deeptest/internal/command/config"
 	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
-	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
-	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	"github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
+	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/kataras/iris/v12/websocket"
 	"path"
 	"strconv"
@@ -57,7 +57,7 @@ func RunZTFTest(files []string, suiteIdStr, taskIdStr string, actionModule *comm
 	}
 
 	req.Cases = cases
-	_scriptUtils.Exec(nil, nil, nil, req, msg)
+	execUtils.Exec(nil, req, msg)
 
 	return nil
 }

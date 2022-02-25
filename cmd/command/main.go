@@ -7,7 +7,6 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/command/action"
 	commandConfig "github.com/aaronchen2k/deeptest/internal/command/config"
 	_consts "github.com/aaronchen2k/deeptest/internal/pkg/consts"
-	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
@@ -34,7 +33,6 @@ var (
 	suiteId   string
 
 	noNeedConfirm bool
-	debug         string
 
 	flagSet *flag.FlagSet
 )
@@ -49,9 +47,6 @@ func main() {
 	}()
 
 	flagSet = flag.NewFlagSet("ztf", flag.ContinueOnError)
-
-	flagSet.StringVar(&commConsts.Interpreter, "interp", "", "")
-	flagSet.StringVar(&commConsts.Interpreter, "interpreter", "", "")
 
 	flagSet.StringVar(&productId, "p", "", "")
 	flagSet.StringVar(&productId, "product", "", "")
@@ -71,34 +66,25 @@ func main() {
 	flagSet.BoolVar(&independentFile, "i", false, "")
 	flagSet.BoolVar(&independentFile, "independent", false, "")
 
+	flagSet.StringVar(&commConsts.Interpreter, "I", "", "")
+	flagSet.StringVar(&commConsts.Interpreter, "interpreter", "", "")
+
 	flagSet.StringVar(&keywords, "k", "", "")
 	flagSet.StringVar(&keywords, "keywords", "", "")
 
 	flagSet.BoolVar(&noNeedConfirm, "y", false, "")
 	flagSet.BoolVar(&commConsts.Verbose, "verbose", false, "")
 
-	flagSet.IntVar(&commConsts.Port, "P", 0, "")
-	flagSet.IntVar(&commConsts.Port, "port", 0, "")
-	flagSet.StringVar(&commConsts.Platform, "M", string(commConsts.Vm), "")
-
-	var placeholder string
-	flagSet.StringVar(&placeholder, "h", "", "")
-	flagSet.StringVar(&placeholder, "r", "", "")
-	flagSet.StringVar(&placeholder, "v", "", "")
-
 	flagSet.StringVar(&commConsts.UnitTestResult, "result", "", "")
 
-	flagSet.StringVar(&debug, "debug", "", "")
 	actionModule := injectModule()
 	if len(os.Args) == 1 {
 		os.Args = append(os.Args, "run", ".")
 	}
+
 	switch os.Args[1] {
-	case "run", "-r":
-		debug, os.Args = commonUtils.GetDebugParamForRun(os.Args)
-		os.Setenv("debug", debug)
-		//log.Println("===" + os.Getenv("debug"))
-		run(os.Args, actionModule)
+	case "set", "-set":
+		action.Set()
 
 	case "extract":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
@@ -113,14 +99,6 @@ func main() {
 			action.Generate(productId, moduleId, suiteId, taskId, independentFile, language, actionModule)
 		}
 
-	case "set", "-set":
-		action.Set()
-
-	case "update", "up":
-		if err := flagSet.Parse(os.Args[2:]); err == nil {
-			action.Generate(productId, moduleId, suiteId, taskId, independentFile, language, actionModule)
-		}
-
 	case "ci":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
@@ -128,14 +106,13 @@ func main() {
 		}
 
 	case "cr":
-		//files := fileUtils.GetFilesFromParams(os.Args[2:])
-		files := os.Args[2:]
+		files := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[len(files):]); err == nil {
 			action.CommitZTFTestResult(files, productId, taskId, noNeedConfirm, actionModule)
 		}
 
 	case "cb":
-		files := os.Args[2:]
+		files := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[len(files):]); err == nil {
 			action.CommitBug(files, actionModule)
 		}
@@ -162,6 +139,9 @@ func main() {
 	case "help", "-h", "-help", "--help":
 		resUtils.PrintUsage()
 
+	case "run", "-r":
+		run(os.Args, actionModule)
+
 	default: // run
 		if len(os.Args) > 1 {
 			args := []string{os.Args[0], "run"}
@@ -175,7 +155,6 @@ func main() {
 }
 
 func run(args []string, actionModule *command.IndexModule) {
-
 	if len(args) >= 3 && stringUtils.FindInArr(args[2], _consts.UnitTestTypes) { // unit test
 		// junit -p 1 mvn clean package test
 		commConsts.UnitTestType = args[2]

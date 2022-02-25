@@ -22,5 +22,5 @@ func RunUnitTest(cmdStr string) {
 	}
 
 	msg := websocket.Message{}
-	_scriptUtils.Exec(nil, nil, nil, req, msg)
+	_scriptUtils.Exec(nil, req, msg)
 }

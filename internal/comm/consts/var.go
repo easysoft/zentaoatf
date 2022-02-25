@@ -53,7 +53,5 @@ var (
 	RunMode     string
 	IP          string
 	MAC         string
-	Port        int
-	Platform    string
 	AgentLogDir string
 )

@@ -44,7 +44,7 @@ func dryRunScripts(casesToRun []string) {
 func dryRunScript(file string) {
 	conf := configUtils.LoadByProjectPath(commConsts.WorkDir)
 	wsMsg := websocket.Message{}
-	out, _ := _scriptUtils.RunScript(file, commConsts.WorkDir, conf, nil, nil, nil, wsMsg)
+	out, _ := _scriptUtils.RunScript(file, commConsts.WorkDir, conf, nil, wsMsg)
 
 	expFile := filepath.Join(filepath.Dir(file), fileUtils.GetFileNameWithoutExt(file)+".exp")
 	fileUtils.WriteFile(expFile, out)
