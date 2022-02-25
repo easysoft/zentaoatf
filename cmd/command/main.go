@@ -55,10 +55,10 @@ func main() {
 	flagSet.StringVar(&moduleId, "module", "", "")
 
 	flagSet.StringVar(&suiteId, "s", "", "")
-	flagSet.StringVar(&suiteId, "suiteId", "", "")
+	flagSet.StringVar(&suiteId, "suite", "", "")
 
 	flagSet.StringVar(&taskId, "t", "", "")
-	flagSet.StringVar(&taskId, "taskId", "", "")
+	flagSet.StringVar(&taskId, "task", "", "")
 
 	flagSet.StringVar(&language, "l", "", "")
 	flagSet.StringVar(&language, "language", "", "")
@@ -156,59 +156,67 @@ func main() {
 
 func run(args []string, actionModule *command.IndexModule) {
 	if len(args) >= 3 && stringUtils.FindInArr(args[2], _consts.UnitTestTypes) { // unit test
-		// junit -p 1 mvn clean package test
-		commConsts.UnitTestType = args[2]
-		end := 8
-		if end > len(args)-1 {
-			end = len(args) - 1
-		}
-		flagSet.Parse(args[3:])
-
-		start := 3
-		if commConsts.UnitTestResult != "" {
-			start = start + 2
-		} else {
-			commConsts.UnitTestResult = "./"
-		}
-		if productId != "" {
-			start = start + 2
-			commConsts.ProductId = productId
-		}
-		if commConsts.Verbose {
-			start = start + 1
-		}
-
-		if args[start] == _consts.UnitTestToolMvn {
-			commConsts.UnitTestTool = commConsts.JUnit
-			commConsts.UnitBuildTool = commConsts.Maven
-		} else if args[start] == _consts.UnitTestToolRobot {
-			commConsts.UnitTestTool = commConsts.RobotFramework
-			commConsts.UnitBuildTool = commConsts.Maven
-		}
-
-		cmd := strings.Join(args[start:], " ")
-
-		action.RunUnitTest(cmd)
+		runUnitTest(args, actionModule)
 	} else { // func test
-		files := fileUtils.GetFilesFromParams(args[2:])
-
-		err := flagSet.Parse(args[len(files)+2:])
-		if err == nil {
-			commConsts.ProductId = productId
-
-			if len(files) == 0 {
-				files = append(files, ".")
-			}
-
-			if commConsts.Interpreter != "" {
-				msgStr := i118Utils.Sprintf("run_with_specific_interpreter", commConsts.Interpreter)
-				logUtils.ExecConsolef(color.FgCyan, msgStr)
-			}
-			action.RunZTFTest(files, suiteId, taskId, actionModule)
-		} else {
-			resUtils.PrintUsage()
-		}
+		runFuncTest(args, actionModule)
 	}
+}
+
+func runFuncTest(args []string, actionModule *command.IndexModule) {
+	files := fileUtils.GetFilesFromParams(args[2:])
+
+	err := flagSet.Parse(args[len(files)+2:])
+	if err == nil {
+		commConsts.ProductId = productId
+
+		if len(files) == 0 {
+			files = append(files, ".")
+		}
+
+		if commConsts.Interpreter != "" {
+			msgStr := i118Utils.Sprintf("run_with_specific_interpreter", commConsts.Interpreter)
+			logUtils.ExecConsolef(color.FgCyan, msgStr)
+		}
+		action.RunZTFTest(files, suiteId, taskId, actionModule)
+	} else {
+		resUtils.PrintUsage()
+	}
+}
+
+func runUnitTest(args []string, actionModule *command.IndexModule) {
+	// junit -p 1 mvn clean package test
+	commConsts.UnitTestType = args[2]
+	end := 8
+	if end > len(args)-1 {
+		end = len(args) - 1
+	}
+	flagSet.Parse(args[3:])
+
+	start := 3
+	if commConsts.UnitTestResult != "" {
+		start = start + 2
+	} else {
+		commConsts.UnitTestResult = "./"
+	}
+	if productId != "" {
+		start = start + 2
+		commConsts.ProductId = productId
+	}
+	if commConsts.Verbose {
+		start = start + 1
+	}
+
+	if args[start] == _consts.UnitTestToolMvn {
+		commConsts.UnitTestTool = commConsts.JUnit
+		commConsts.UnitBuildTool = commConsts.Maven
+	} else if args[start] == _consts.UnitTestToolRobot {
+		commConsts.UnitTestTool = commConsts.RobotFramework
+		commConsts.UnitBuildTool = commConsts.Maven
+	}
+
+	cmd := strings.Join(args[start:], " ")
+
+	action.RunUnitTest(cmd)
 }
 
 func init() {
