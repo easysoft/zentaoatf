@@ -139,7 +139,7 @@ export default defineComponent({
           if (error.response.data.code === 2000) router.push(`/config`)
         })
       }
-      // fetchProducts()
+      fetchProducts()
       watch(currConfig, ()=> {
         fetchProducts()
       })

@@ -44,6 +44,8 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 		TestType:  commConsts.TestUnit,
 		TestTool:  req.TestTool,
 		BuildTool: req.BuildTool,
+		StartTime: startTime,
+		EndTime:   endTime,
 		Pass:      0, Fail: 0, Total: 0}
 
 	failedCount := 0
@@ -70,9 +72,9 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 		}
 		report.Total++
 
-		if cs.StartTime < report.StartTime {
-			report.StartTime = cs.StartTime
-		}
+		//if cs.StartTime < report.StartTime {
+		//	report.StartTime = cs.StartTime
+		//}
 		if cs.EndTime > report.EndTime {
 			report.EndTime = cs.EndTime
 		}

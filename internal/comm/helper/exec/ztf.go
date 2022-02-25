@@ -164,9 +164,9 @@ func ExeScript(scriptFile, projectPath string, conf commDomain.ProjectConf, repo
 
 	if commConsts.ComeFrom != "cmd" {
 		websocketUtils.SendExecMsg(startMsg, "", wsMsg)
+		logUtils.ExecConsolef(-1, startMsg)
 	}
 
-	logUtils.ExecConsolef(-1, startMsg)
 	logUtils.ExecFilef(startMsg)
 
 	logs := ""
@@ -190,16 +190,16 @@ func ExeScript(scriptFile, projectPath string, conf commDomain.ProjectConf, repo
 	endMsg := i118Utils.Sprintf("end_execution", scriptFile, dateUtils.DateTimeStr(entTime))
 	if commConsts.ComeFrom != "cmd" {
 		websocketUtils.SendExecMsg(endMsg, "", wsMsg)
+		logUtils.ExecConsolef(-1, endMsg)
 	}
 
-	logUtils.ExecConsolef(-1, endMsg)
 	logUtils.ExecFilef(endMsg)
 
 	CheckCaseResult(scriptFile, logs, report, idx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg)
 
-	if idx < total-1 {
-		logUtils.Infof("")
-	}
+	//if idx < total-1 {
+	//logUtils.Infof("")
+	//}
 }
 
 func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
@@ -251,8 +251,9 @@ func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
 		msgStr := i118Utils.Sprintf("cmd_empty")
 		if commConsts.ComeFrom != "cmd" {
 			websocketUtils.SendOutputMsg(msgStr, "", wsMsg)
+			logUtils.ExecConsolef(color.FgRed, msgStr)
 		}
-		logUtils.ExecConsolef(color.FgRed, msgStr)
+
 		logUtils.ExecFilef(msgStr)
 
 		return "", msgStr
@@ -290,8 +291,9 @@ func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
 
 			if commConsts.ComeFrom != "cmd" {
 				websocketUtils.SendOutputMsg(line, "", wsMsg)
+				logUtils.ExecConsole(1, line)
 			}
-			logUtils.ExecConsole(1, line)
+
 			logUtils.ExecFile(line)
 
 			isTerminal = true
