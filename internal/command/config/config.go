@@ -29,7 +29,6 @@ func InitConfig() {
 
 	if commConsts.Verbose {
 		fmt.Printf("\nlaunch %s%s in %s\n", "", commConsts.App, commConsts.WorkDir)
-
 	}
 	v := viper.New()
 	serverConfig.VIPER = v

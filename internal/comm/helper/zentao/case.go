@@ -42,34 +42,31 @@ func LoadTestCases(productId, moduleId, suiteId, taskId int, projectPath string)
 	return
 }
 
-func GetCasesByModule(productId int, moduleId int, projectPath string) (cases []string, err error) {
-	config := configUtils.LoadByProjectPath(projectPath)
+func GetCasesByModule(productId int, moduleId int, projectPath, scriptDir string) (cases []string, err error) {
+	config := commDomain.ProjectConf{}
+	config = configUtils.LoadByProjectPath(projectPath)
+
 	err = Login(config)
 	if err != nil {
 		return
 	}
 
 	testcases := ListCaseByModule(config.Url, productId, moduleId)
-
-	caseIdMap := map[int]string{}
+	zentaoCaseIdMap := map[int]string{}
 	for _, tc := range testcases {
 		id, _ := strconv.Atoi(tc.Id)
-		caseIdMap[id] = ""
+		zentaoCaseIdMap[id] = ""
 	}
 
 	//commonUtils.ChangeScriptForDebug(&projectPath)
-	scriptUtils.GetScriptByIdsInDir(projectPath, caseIdMap, &cases)
+	scriptUtils.GetScriptByIdsInDir(scriptDir, zentaoCaseIdMap, &cases)
 
 	return
 }
 
-func GetCasesBySuite(productId int, suiteId int, projectPath string) (cases []string, err error) {
+func GetCasesBySuite(productId int, suiteId int, projectPath, scriptDir string) (cases []string, err error) {
 	config := commDomain.ProjectConf{}
-	if commConsts.ComeFrom == "cmd" {
-		config = configUtils.LoadByProjectPath(commConsts.WorkDir)
-	} else {
-		config = configUtils.LoadByProjectPath(projectPath)
-	}
+	config = configUtils.LoadByProjectPath(projectPath)
 
 	err = Login(config)
 	if err != nil {
@@ -85,18 +82,14 @@ func GetCasesBySuite(productId int, suiteId int, projectPath string) (cases []st
 	}
 
 	//commonUtils.ChangeScriptForDebug(&projectPath)
-	scriptUtils.GetScriptByIdsInDir(projectPath, caseIdMap, &cases)
+	scriptUtils.GetScriptByIdsInDir(scriptDir, caseIdMap, &cases)
 
 	return
 }
 
-func GetCasesByTask(productId int, taskId int, projectPath string) (cases []string, err error) {
+func GetCasesByTask(productId int, taskId int, projectPath, scriptDir string) (cases []string, err error) {
 	config := commDomain.ProjectConf{}
-	if commConsts.ComeFrom == "cmd" {
-		config = configUtils.LoadByProjectPath(commConsts.WorkDir)
-	} else {
-		config = configUtils.LoadByProjectPath(projectPath)
-	}
+	config = configUtils.LoadByProjectPath(projectPath)
 
 	err = Login(config)
 	if err != nil {
@@ -112,7 +105,7 @@ func GetCasesByTask(productId int, taskId int, projectPath string) (cases []stri
 	}
 
 	//commonUtils.ChangeScriptForDebug(&projectPath)
-	scriptUtils.GetScriptByIdsInDir(projectPath, caseIdMap, &cases)
+	scriptUtils.GetScriptByIdsInDir(scriptDir, caseIdMap, &cases)
 
 	return
 }
@@ -159,7 +152,8 @@ func ListCaseByModule(baseUrl string, productId, moduleId int) []commDomain.ZtfC
 	if commConsts.RequestType == commConsts.PathInfo {
 		params = fmt.Sprintf("%d--bymodule-%d-id_asc-0-10000-1-0", productId, moduleId)
 	} else {
-		params = fmt.Sprintf("productID=%d&browseType=bymodule&param=%d&orderBy=id_asc&recTotal=0&recPerPage=10000", productId, moduleId)
+		params = fmt.Sprintf("productID=%d&browseType=bymodule&param=%d&orderBy=id_asc&recTotal=0&recPerPage=10000",
+			productId, moduleId)
 	}
 
 	url := baseUrl + GenApiUri("testcase", "browse", params)

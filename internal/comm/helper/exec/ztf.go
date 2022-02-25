@@ -38,7 +38,8 @@ func ExecCase(ch chan int, req serverDomain.WsReq, msg websocket.Message) (repor
 func ExecModule(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 
-	cases, err := zentaoUtils.GetCasesByModule(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.ModuleId), req.ProjectPath)
+	cases, err := zentaoUtils.GetCasesByModule(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.ModuleId),
+		req.ProjectPath, req.ScriptDirParamFromCmdLine)
 	if err != nil {
 		return
 	}
@@ -53,7 +54,8 @@ func ExecModule(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 
 func ExecSuite(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	cases, err := zentaoUtils.GetCasesBySuite(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId), req.ProjectPath)
+	cases, err := zentaoUtils.GetCasesBySuite(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId),
+		req.ProjectPath, req.ScriptDirParamFromCmdLine)
 
 	if req.Seq != "" {
 		cases = analysisUtils.FilterCaseByResult(cases, req)
@@ -65,7 +67,8 @@ func ExecSuite(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 
 func ExecTask(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	cases, err := zentaoUtils.GetCasesByTask(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId), req.ProjectPath)
+	cases, err := zentaoUtils.GetCasesByTask(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId),
+		req.ProjectPath, req.ScriptDirParamFromCmdLine)
 	if err != nil {
 		return
 	}

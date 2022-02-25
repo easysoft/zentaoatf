@@ -12,6 +12,10 @@ func Exec(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 
 	serverConfig.InitExecLog(req.ProjectPath)
 
+	if req.ScriptDirParamFromCmdLine == "" {
+		req.ScriptDirParamFromCmdLine = req.ProjectPath
+	}
+
 	if req.Act == commConsts.ExecCase {
 		ExecCase(ch, req, msg)
 	} else if req.Act == commConsts.ExecModule {

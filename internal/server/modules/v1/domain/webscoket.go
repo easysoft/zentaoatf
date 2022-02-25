@@ -9,12 +9,13 @@ type WsReq struct {
 	Scope commConsts.ResultStatus `json:"scope"`
 
 	// for ztf testing
-	Cases       []string `json:"cases"`
-	ProductId   string   `json:"productId"`
-	ModuleId    string   `json:"moduleId"`
-	SuiteId     string   `json:"suiteId"`
-	TaskId      string   `json:"taskId"`
-	ProjectPath string   `json:"projectPath"`
+	Cases                     []string `json:"cases"`
+	ProductId                 string   `json:"productId"`
+	ModuleId                  string   `json:"moduleId"`
+	SuiteId                   string   `json:"suiteId"`
+	TaskId                    string   `json:"taskId"`
+	ProjectPath               string   `json:"projectPath"`
+	ScriptDirParamFromCmdLine string   `json:"-"`
 
 	// for unit, automation testing
 	TestTool  commConsts.TestTool  `json:"testTool"`

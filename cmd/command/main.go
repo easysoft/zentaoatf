@@ -6,13 +6,12 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/command"
 	"github.com/aaronchen2k/deeptest/internal/command/action"
 	commandConfig "github.com/aaronchen2k/deeptest/internal/command/config"
-	_consts "github.com/aaronchen2k/deeptest/internal/pkg/consts"
+	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	resUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/res"
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
-	"github.com/aaronchen2k/deeptest/internal/server/core/dao"
 	"github.com/facebookgo/inject"
 	"github.com/fatih/color"
 	"github.com/sirupsen/logrus"
@@ -155,7 +154,7 @@ func main() {
 }
 
 func run(args []string, actionModule *command.IndexModule) {
-	if len(args) >= 3 && stringUtils.FindInArr(args[2], _consts.UnitTestTypes) { // unit test
+	if len(args) >= 3 && stringUtils.FindInArr(args[2], consts.UnitTestTypes) { // unit test
 		runUnitTest(args, actionModule)
 	} else { // func test
 		runFuncTest(args, actionModule)
@@ -177,7 +176,7 @@ func runFuncTest(args []string, actionModule *command.IndexModule) {
 			msgStr := i118Utils.Sprintf("run_with_specific_interpreter", commConsts.Interpreter)
 			logUtils.ExecConsolef(color.FgCyan, msgStr)
 		}
-		action.RunZTFTest(files, suiteId, taskId, actionModule)
+		action.RunZTFTest(files, moduleId, suiteId, taskId, actionModule)
 	} else {
 		resUtils.PrintUsage()
 	}
@@ -206,10 +205,10 @@ func runUnitTest(args []string, actionModule *command.IndexModule) {
 		start = start + 1
 	}
 
-	if args[start] == _consts.UnitTestToolMvn {
+	if args[start] == consts.UnitTestToolMvn {
 		commConsts.UnitTestTool = commConsts.JUnit
 		commConsts.UnitBuildTool = commConsts.Maven
-	} else if args[start] == _consts.UnitTestToolRobot {
+	} else if args[start] == consts.UnitTestToolRobot {
 		commConsts.UnitTestTool = commConsts.RobotFramework
 		commConsts.UnitBuildTool = commConsts.Maven
 	}
@@ -234,7 +233,6 @@ func injectModule() (actionModule *command.IndexModule) {
 
 	// inject objects
 	if err := g.Provide(
-		&inject.Object{Value: dao.GetDB()},
 		&inject.Object{Value: actionModule},
 	); err != nil {
 		logrus.Fatalf("provide usecase objects to the Graph: %v", err)

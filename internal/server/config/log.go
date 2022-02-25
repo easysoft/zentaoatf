@@ -121,7 +121,6 @@ func getLogConfig() (config zap.Config) {
 		logPathInfo = filepath.Join("winfile:///", logPathInfo)
 		logPathErr = filepath.Join("winfile:///", logPathErr)
 	}
-	log.Printf("%s %s", logPathInfo, logPathErr)
 
 	config = zap.Config{
 		Level:         zap.NewAtomicLevelAt(level), // 日志级别

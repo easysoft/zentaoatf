@@ -9,7 +9,7 @@ var (
 	LanguageEn = "en"
 	Language   = LanguageZh
 
-	Verbose   = true
+	Verbose   = false
 	IsRelease bool
 	//ExeDir     string
 	WorkDir    string
