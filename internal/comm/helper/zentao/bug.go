@@ -64,7 +64,7 @@ func PrepareBug(projectPath, seq string, caseIdStr string) (bug commDomain.ZtfBu
 		return
 	}
 
-	report, err := analysisHelper.ReadReport(projectPath, seq)
+	report, err := analysisHelper.ReadReportByProjectSeq(projectPath, seq)
 	if err != nil {
 		return
 	}

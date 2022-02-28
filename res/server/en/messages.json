@@ -468,6 +468,14 @@
       "translation": "Successfully cleaned all logs."
     },
     {
+      "id": "success_to_create_expect",
+      "translation": "Success to create independent expect results file."
+    },
+    {
+      "id": "success_to_extract_step",
+      "translation": "Success to extract test steps and results."
+    },
+    {
       "id": "success_sort_steps",
       "translation": "Successfully sorted steps for %d scripts."
     },

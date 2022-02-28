@@ -85,13 +85,12 @@ func main() {
 	case "set", "-set":
 		action.Set()
 
-	case "extract":
-		files := fileUtils.GetFilesFromParams(os.Args[2:])
-		action.Extract(files)
-
 	case "expect":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
 		action.GenExpectFiles(files)
+	case "extract":
+		files := fileUtils.GetFilesFromParams(os.Args[2:])
+		action.Extract(files)
 
 	case "checkout", "co":
 		if err := flagSet.Parse(os.Args[2:]); err == nil {

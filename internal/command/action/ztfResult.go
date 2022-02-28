@@ -8,6 +8,7 @@ import (
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	"path/filepath"
 )
 
 func CommitZTFTestResult(files []string, productId string, taskId string, noNeedConfirm bool, actionModule *command.IndexModule) {
@@ -29,7 +30,7 @@ func CommitZTFTestResult(files []string, productId string, taskId string, noNeed
 		Seq:       resultDir,
 	}
 
-	report, err := analysisUtils.ReadReport(commConsts.WorkDir, result.Seq)
+	report, err := analysisUtils.ReadReportByPath(filepath.Join(result.Seq, commConsts.ResultJson))
 	if err != nil {
 		return
 	}

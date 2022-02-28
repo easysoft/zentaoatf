@@ -27,6 +27,10 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	failedCaseLinesWithCheckpoint := make([]string, 0)
 
 	for _, cs := range report.FuncResult {
+		if report.ProductId == 0 && cs.ProductId > 0 {
+			report.ProductId = cs.ProductId
+		}
+
 		if cs.Status == "fail" {
 			if failedCount > 0 {
 				failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "")

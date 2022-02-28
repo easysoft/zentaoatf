@@ -14,7 +14,7 @@ func NewTestResultService() *TestResultService {
 }
 
 func (s *TestResultService) Submit(result serverDomain.ZentaoResultSubmitReq, projectPath string) (err error) {
-	report, err := analysisUtils.ReadReport(projectPath, result.Seq)
+	report, err := analysisUtils.ReadReportByProjectSeq(projectPath, result.Seq)
 	if err != nil {
 		return
 	}

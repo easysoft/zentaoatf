@@ -23,7 +23,7 @@ func ListReport(projectPath string) (reportFiles []string) {
 	return
 }
 
-func ReadReport(projectPath string, seq string) (report commDomain.ZtfReport, err error) {
+func ReadReportByProjectSeq(projectPath string, seq string) (report commDomain.ZtfReport, err error) {
 	pth := ""
 	if commConsts.ComeFrom == "cmd" {
 		pth = filepath.Join(projectPath, seq, commConsts.ResultJson)
@@ -31,6 +31,10 @@ func ReadReport(projectPath string, seq string) (report commDomain.ZtfReport, er
 		pth = filepath.Join(projectPath, commConsts.LogDirName, seq, commConsts.ResultJson)
 	}
 
+	return ReadReportByPath(pth)
+}
+
+func ReadReportByPath(pth string) (report commDomain.ZtfReport, err error) {
 	content := fileUtils.ReadFileBuf(pth)
 	if commConsts.ComeFrom == "cmd" {
 		contentData := strings.Replace(string(content), "\n", "", -1)

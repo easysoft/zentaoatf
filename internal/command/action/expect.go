@@ -32,6 +32,7 @@ func GenExpectFiles(files []string) error {
 	casesToRun, _ := _scriptUtils.FilterCases(cases, conf)
 
 	dryRunScripts(casesToRun)
+	logUtils.Info(i118Utils.Sprintf("success_to_create_expect"))
 
 	return nil
 }

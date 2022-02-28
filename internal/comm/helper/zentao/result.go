@@ -13,7 +13,9 @@ import (
 )
 
 func CommitResult(report commDomain.ZtfReport, productId, taskId string, projectPath string) (err error) {
-	report.ProductId, _ = strconv.Atoi(productId)
+	if productId != "" {
+		report.ProductId, _ = strconv.Atoi(productId)
+	}
 	report.TaskId, _ = strconv.Atoi(taskId)
 
 	// for ci tool

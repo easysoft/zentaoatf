@@ -462,6 +462,14 @@
       "translation": "成功删除所有日志。"
     },
     {
+      "id": "success_to_create_expect",
+      "translation": "成功创建独立的期待结果文件。"
+    },
+    {
+      "id": "success_to_extract_step",
+      "translation": "成功从注释提取步骤和期待结果。"
+    },
+    {
       "id": "success_sort_steps",
       "translation": "成功对%d个脚本进行步骤重排。"
     },
