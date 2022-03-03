@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const bodyParser = require('body-parser')
 const { NODE_ENV, VUE_APP_PORT, VUE_APP_MOCK } = process.env;
+
 module.exports = {
     publicPath: '/',
     outputDir: 'dist',
@@ -38,7 +39,7 @@ module.exports = {
         externals: {
             // 'vue': 'Vue',
             // 'vue-router': 'VueRouter',
-        }
+        },
     },
     chainWebpack(config) {
 

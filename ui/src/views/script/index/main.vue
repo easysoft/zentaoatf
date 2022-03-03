@@ -45,7 +45,8 @@
           <a-button @click="extract" type="primary">{{ t('extract_step') }}</a-button>
         </div>
         <div class="panel">
-          <highlightjs v-if="scriptCode" autodetect :code="scriptCode" />
+          <div id="monaco"></div>
+<!--          <highlightjs v-if="scriptCode" autodetect :code="scriptCode" />-->
         </div>
       </div>
     </div>
@@ -53,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import {computed, ComputedRef, defineComponent, onMounted, ref, Ref, watch} from "vue";
+import {computed, ComputedRef, defineComponent, onMounted, onUnmounted, ref, Ref, watch} from "vue";
 import {useStore} from "vuex";
 import IconSvg from "@/components/IconSvg";
 import {ProjectData} from "@/store/project";
@@ -61,9 +62,12 @@ import {ScriptData} from "../store";
 import {resizeWidth} from "@/utils/dom";
 import {Empty, message, notification} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
-import 'highlight.js/lib/common';
-import hljsVuePlugin from "@highlightjs/vue-plugin";
-import 'highlight.js/styles/googlecode.css'
+
+// import 'highlight.js/lib/common';
+// import hljsVuePlugin from "@highlightjs/vue-plugin";
+// import 'highlight.js/styles/googlecode.css'
+
+import * as monaco from 'monaco-editor';
 
 interface ListScriptPageSetupData {
   t: (key: string | number) => string;
@@ -88,7 +92,7 @@ export default defineComponent({
   name: 'ScriptListPage',
   components: {
     IconSvg,
-    highlightjs: hljsVuePlugin.component
+    // highlightjs: hljsVuePlugin.component
   },
   setup(): ListScriptPageSetupData {
     const { t } = useI18n();
@@ -136,6 +140,15 @@ export default defineComponent({
       console.log('expandNode', keys[0], e)
     }
 
+    let monacoInstance: any
+    const disposeEditor = () => {
+      console.log('disposeEditor')
+      if (monacoInstance) monacoInstance.dispose();
+    }
+    onUnmounted(() => {
+      console.log('onUnmounted', tree)
+      disposeEditor()
+    })
     const selectNode = (selectedKeys, e) => {
       console.log('selectNode', e.selectedNodes)
       if (e.selectedNodes.length === 0) return
@@ -145,6 +158,12 @@ export default defineComponent({
       storeScript.dispatch('script/getScript', selectedNode.props).then(() => {
         console.log('===', script)
         scriptCode.value = script.value.code
+
+        disposeEditor()
+        monacoInstance = monaco.editor.create(document.getElementById("monaco") as HTMLElement,{
+          value: script.value.code,
+          language:"php"
+        })
       })
     }
 
@@ -272,5 +291,9 @@ export default defineComponent({
       }
     }
   }
+}
+
+#monaco {
+  height: 100%;
 }
 </style>
