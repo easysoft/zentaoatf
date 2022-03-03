@@ -20,7 +20,7 @@
           </a-select>
         </a-form-item>
 
-        <a-form-item :label="t('task')">
+        <a-form-item v-if="resultData.testType === 'func'" :label="t('task')">
           <a-select v-model:value="modelRef.taskId">
             <a-select-option key="" value="">&nbsp;</a-select-option>
             <a-select-option v-for="item in tasks" :key="item.id" :value="item.id+''">{{ item.name }}</a-select-option>
@@ -61,6 +61,9 @@ interface ResultFormSetupData {
 export default defineComponent({
   name: 'ResultForm',
   props: {
+    resultData: {
+      required: true
+    },
     onCancel: {
       type: Function,
       required: true

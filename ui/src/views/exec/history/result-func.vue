@@ -117,9 +117,10 @@
       </div>
 
       <result-form
-          v-if="resultFormVisible"
-          :onSubmit="submitResultForm"
-          :onCancel="cancelResultForm"
+        v-if="resultFormVisible"
+        :resultData="resultFormData"
+        :onSubmit="submitResultForm"
+        :onCancel="cancelResultForm"
       />
       <bug-form
           v-if="bugFormVisible"
@@ -155,6 +156,7 @@ interface UnitTestResultPageSetupData {
   exec: (scope) => void;
   back: () => void;
 
+  resultFormData: Ref
   resultFormVisible: Ref<boolean>;
   setResultFormVisible: (val: boolean) => void;
   openResultForm: () => void
@@ -244,12 +246,14 @@ export default defineComponent({
     }
 
     // 提交结果
+    const resultFormData = ref({})
     const resultFormVisible = ref<boolean>(false);
     const setResultFormVisible = (val: boolean) => {
       resultFormVisible.value = val;
     }
     const openResultForm = () => {
       console.log('openResultForm')
+      resultFormData.value = report.value
       setResultFormVisible(true)
     }
     const submitResultForm = (formData) => {
@@ -328,6 +332,7 @@ export default defineComponent({
       exec,
       back,
 
+      resultFormData,
       resultFormVisible,
       setResultFormVisible,
       openResultForm,

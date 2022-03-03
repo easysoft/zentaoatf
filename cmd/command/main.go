@@ -10,7 +10,6 @@ import (
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	resUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/res"
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
 	"github.com/facebookgo/inject"
 	"github.com/fatih/color"
@@ -135,7 +134,7 @@ func main() {
 		action.Clean()
 
 	case "help", "-h", "-help", "--help":
-		resUtils.PrintUsage()
+		action.PrintUsage()
 
 	case "run", "-r":
 		run(os.Args, actionModule)
@@ -147,7 +146,7 @@ func main() {
 
 			run(args, actionModule)
 		} else {
-			resUtils.PrintUsage()
+			action.PrintUsage()
 		}
 	}
 }
@@ -177,7 +176,7 @@ func runFuncTest(args []string, actionModule *command.IndexModule) {
 		}
 		action.RunZTFTest(files, moduleId, suiteId, taskId, actionModule)
 	} else {
-		resUtils.PrintUsage()
+		action.PrintUsage()
 	}
 }
 

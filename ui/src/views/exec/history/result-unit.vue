@@ -95,7 +95,7 @@
 
       <result-form
           v-if="resultFormVisible"
-          :data="resultFormData"
+          :resultData="resultFormData"
           :onSubmit="submitResultForm"
           :onCancel="cancelResultForm"
       />
@@ -233,6 +233,7 @@ export default defineComponent({
 
     const openResultForm = () => {
       console.log('openResultForm')
+      resultFormData.value = report.value
       setResultFormVisible(true)
     }
 

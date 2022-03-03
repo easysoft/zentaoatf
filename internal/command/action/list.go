@@ -44,8 +44,8 @@ func List(files []string, keywords string) {
 	total := len(scriptArr)
 	width := strconv.Itoa(len(strconv.Itoa(total)))
 
-	logUtils.Info(time.Now().Format("2006-01-02 15:04:05") + " " +
-		i118Utils.Sprintf("found_scripts", color.CyanString(strconv.Itoa(total))) + "\n")
+	logUtils.Info("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
+		i118Utils.Sprintf("found_scripts", color.CyanString(strconv.Itoa(total))))
 
 	for idx, cs := range scriptArr {
 		//format := "(%" + width + "d/%d) [%s] %d.%s"
@@ -62,6 +62,7 @@ func List(files []string, keywords string) {
 		format := "(%" + width + "d/%d) [%s] [%" + numbWidth + "d. %s]"
 		logUtils.Info(fmt.Sprintf(format, idx+1, total, path, cs.Id, cs.Title))
 	}
+	logUtils.Info("")
 }
 
 func SummaryObj(file string, keywords string) (bool, commDomain.FuncResult) {

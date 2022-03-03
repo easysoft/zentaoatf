@@ -2,6 +2,15 @@
   "language": "zh",
   "messages": [
     {
+      "id": "usage",
+      "translation": "帮助："
+    },
+    {
+      "id": "example",
+      "translation": "示例："
+    },
+
+    {
       "id": "request_success",
       "translation": "请求成功"
     },

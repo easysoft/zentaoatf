@@ -2,6 +2,15 @@
   "language": "en",
   "messages": [
     {
+      "id": "usage",
+      "translation": "Usage:"
+    },
+    {
+      "id": "example",
+      "translation": "Example:"
+    },
+
+    {
     "id": "request_success",
     "translation": "Success"
     },
