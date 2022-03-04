@@ -3,54 +3,23 @@ import cp, {execSync, spawn} from 'child_process';
 import os from 'os';
 import {app} from 'electron';
 import express from 'express';
+const psTree = require('ps-tree');
+const { killPortProcess } = require('kill-port-process');
+
+import {portClient, portServer, uuid} from './consts';
 import {logInfo, logErr} from './log';
 
-const psTree = require('ps-tree');
 const DEBUG = process.env.NODE_ENV === 'development';
 const isWin = /^win/.test(process.platform);
 const isMac = /^darwin/.test(process.platform);
-const uuid = 'ZTF@1CF17A46-B136-4AEB-96B4-F21C8200EF5A~'
-const port = 8085
+
 let _ztfServerProcess;
 let _ztfSubProcessIds = [];
 
-export function checkZtfPort() {
-    let cmd = ''
-    if (!isWin) {
-        cmd = `lsof -i:${port} | grep :${port}`
-    } else {
-        cmd = `netstat -aon`
-    }
-
-    const cp = require('child_process');
-    const stdout = cp.execSync(cmd).toString().trim()
-    const msg = `exec ${cmd}, stdout: ${stdout}`
-    console.log(msg);
-    logInfo(msg)
-
-    if (stdout.indexOf(':' + port) > -1) {
-        if (stdout.indexOf(uuid) < 0) {
-            const msg = 'Port ${port} is used by another process. exit.'
-            console.log(msg);
-            logErr(msg);
-            return false
-        }
-
-        const msg = 'Port ${port} is used by ztf process. kill previous one.'
-        console.log(msg);
-        logInfo(msg);
-
-        killZtfServer()
-    } else {
-        return true
-    }
-}
-
 export function startZtfServer() {
-    const pass = checkZtfPort()
-    if (!pass) {
-        return
-    }
+    (async () => {
+        await killPortProcess([portClient, portServer])
+    })();
 
     if (process.env.SKIP_SERVER) {
         logInfo(`>> Skip to start ZTF Server by env "SKIP_SERVER=${process.env.SKIP_SERVER}".`);
@@ -72,8 +41,8 @@ export function startZtfServer() {
         }
         return new Promise((resolve, reject) => {
             const cwd = process.env.SERVER_CWD_PATH || path.dirname(serverExePath);
-            logInfo(`>> Starting ZTF Server from exe path with command "${serverExePath} -P 8085" in "${cwd}"...`);
-            const cmd = spawn(serverExePath, ['-p', '8085', "-uuid", uuid], {
+            logInfo(`>> Starting ZTF Server from exe path with command "${serverExePath} -P ${portServer}" in "${cwd}"...`);
+            const cmd = spawn(serverExePath, ['-p', portServer, "-uuid", uuid], {
                 cwd,
                 shell: true,
             });
@@ -187,7 +156,7 @@ export function getUIServerUrl() {
                 uiServerUrl = path.resolve(app.getAppPath(), uiServerUrl);
             }
 
-            const port = process.env.UI_SERVER_PORT || 8000;
+            const port = process.env.UI_SERVER_PORT || portClient;
             logInfo(`>> Starting UI serer at ${uiServerUrl} with port ${port}`);
 
             const uiServer = express();

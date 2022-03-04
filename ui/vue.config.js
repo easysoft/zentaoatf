@@ -2,7 +2,7 @@
 const bodyParser = require('body-parser')
 const { NODE_ENV, VUE_APP_PORT, VUE_APP_MOCK } = process.env;
 
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
+// const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 
 module.exports = {
     publicPath: '/',
@@ -75,11 +75,11 @@ module.exports = {
 
         config.resolve.alias.set('vue-i18n', 'vue-i18n/dist/vue-i18n.cjs.js')
 
-        config.plugin('monaco-editor').use(MonacoWebpackPlugin, [
-            {
-                // Languages are loaded on demand at runtime
-                languages: ['json', 'javascript', 'html', 'xml']
-            }
-        ])
+        // config.plugin('monaco-editor').use(MonacoWebpackPlugin, [
+        //     {
+        //         // Languages are loaded on demand at runtime
+        //         languages: ['json', 'javascript', 'html', 'xml']
+        //     }
+        // ])
     }
 }
