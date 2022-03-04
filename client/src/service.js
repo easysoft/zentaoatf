@@ -4,6 +4,7 @@ import os from 'os';
 import {app} from 'electron';
 import express from 'express';
 const psTree = require('ps-tree');
+const { killPortProcess } = require('kill-port-process');
 
 import {portClient, portServer, uuid} from './consts';
 import {logInfo, logErr} from './log';
@@ -16,6 +17,10 @@ let _ztfServerProcess;
 let _ztfSubProcessIds = [];
 
 export function startZtfServer() {
+    (async () => {
+        await killPortProcess([portClient, portServer])
+    })();
+
     if (process.env.SKIP_SERVER) {
         logInfo(`>> Skip to start ZTF Server by env "SKIP_SERVER=${process.env.SKIP_SERVER}".`);
         return Promise.resolve();
