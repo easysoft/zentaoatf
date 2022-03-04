@@ -10,8 +10,39 @@ const DEBUG = process.env.NODE_ENV === 'development';
 const isWin = /^win/.test(process.platform);
 const isMac = /^darwin/.test(process.platform);
 const uuid = 'ZTF@1CF17A46-B136-4AEB-96B4-F21C8200EF5A~'
+const port = 8085
 let _ztfServerProcess;
 let _ztfSubProcessIds = [];
+
+export function checkZtfPort() {
+    let cmd = ''
+    if (!isWin) {
+        cmd = 'lsof -i:${port} | grep ${port}'
+    } else {
+        cmd = 'netstat -aon | findstr ${port}'
+    }
+
+    const cp = require('child_process');
+    const stdout = cp.execSync(cmd).toString().trim()
+    console.log('exec ${cmd}, stdout: ${stdout}');
+
+    if (stdout.indexOf(port + '') > -1) {
+        if (stdout.indexOf(uuid) < 0) {
+            const msg = 'Port ${port} is used by another process. exit.'
+            console.log(msg);
+            logErr(msg);
+            return false
+        }
+
+        const msg = 'Port ${port} is used by ztf process. kill previous one.'
+        console.log(msg);
+        logInfo(msg);
+
+        killZtfServer()
+    } else {
+        return true
+    }
+}
 
 export function startZtfServer() {
     if (process.env.SKIP_SERVER) {
@@ -238,6 +269,8 @@ export function killZtfServer() {
         logInfo(`>> is windows`);
 			
         const cmd = 'WMIC path win32_process  where "Commandline like \'%%' + uuid + '%%\'" get Processid,Caption';
+        logInfo(`list process cmd : ${cmd}`);
+
         const cp = require('child_process');
         cp.exec(cmd, function (error, stdout, stderr) {
             // console.log('stdout: ' + stdout + '; stderr: ' + stderr + '; error: ' + error + '.');
@@ -252,7 +285,9 @@ export function killZtfServer() {
                     console.log(`pid=${pid}`);
 
                     const cpKill = require('child_process');
-                    cpKill.exec(`taskkill /F /pid ${pid}`, function (error, stdout, stderr) {
+                    const killCmd = `taskkill /F /pid ${pid}`
+                    logInfo(`list cmd : ${killCmd}`);
+                    cpKill.exec(killCmd, function (error, stdout, stderr) {
                         console.log('stdout: ' + stdout + '; stderr: ' + stderr + '; error: ' + error + '.');
                     });
                 }
