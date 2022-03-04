@@ -1,5 +1,5 @@
 import path from 'path';
-import cp, {exec, spawn} from 'child_process';
+import cp, {execSync, spawn} from 'child_process';
 import os from 'os';
 import {app} from 'electron';
 import express from 'express';
@@ -22,8 +22,7 @@ export function checkZtfPort() {
         cmd = 'netstat -aon | findstr ${port}'
     }
 
-    const cp = require('child_process');
-    const stdout = cp.execSync(cmd).toString().trim()
+    const stdout = execSync(cmd).toString().trim()
     console.log('exec ${cmd}, stdout: ${stdout}');
 
     if (stdout.indexOf(port + '') > -1) {
@@ -267,64 +266,44 @@ export function killZtfServer() {
         });
     } else {
         logInfo(`>> is windows`);
-			
+
         const cmd = 'WMIC path win32_process  where "Commandline like \'%%' + uuid + '%%\'" get Processid,Caption';
         let msg = `list process cmd : ${cmd}`
         console.log(msg);
         logInfo(msg);
 
-        const cp = require('child_process');
-        const stdout = cp.execSync(cmd).toString().trim()
+        const stdout = execSync(cmd, {windowsHide: true}).toString().trim()
         msg = `exec ${cmd}, stdout: ${stdout}`
         console.log(msg);
         logInfo(msg)
 
+        let pid = 0
         const lines = stdout.split('\n')
         lines.forEach(function(line){
             line = line.trim()
             console.log(`<${line}>`)
             logInfo(`<${line}>`)
-            const columns = line.split(/\s/)
+            const cols = line.split(/\s/)
 
-            if (columns.length > 2) {
-                const pid = columns[2].trim()
-                console.log(`pid=${pid}`);
-                logInfo(`pid=${pid}`)
+            if (line.indexOf('ztf') > -1 && cols.length > 3) {
+                const col3 = cols[3].trim()
+                console.log(`col3=${col3}`);
+                logInfo(`col3=${col3}`)
 
-                if (pid && parseInt(pid, 10) === pid) {
-                    const killCmd = `taskkill /F /pid ${pid}`
-
-                    const cp = require('child_process');
-                    const stdout = cp.execSync(killCmd).toString().trim()
-                    msg = `exec ${cmd}, stdout: ${stdout}`
-                    console.log(msg);
-                    logInfo(msg)
+                if (col3 && parseInt(col3, 10)) {
+                    pid = parseInt(col3, 10)
                 }
             }
         });
-    }
 
-    // if (isWin) {
-    //     logInfo(`>> isWin`);
-    //     const cp = require('child_process');
-    //     cp.exec('taskkill /PID ' + _ztfServerProcess.pid + ' /T /F',
-    //         function (error, stdout, stderr) {
-    //             // logInfo('stdout: ' + stdout + '; stderr: ' + stderr + '; error: ' + error + '.');
-    //         });
-    // } else if (isMac) {
-    //     logInfo(`>> isMac`);
-    //     if (_ztfServerProcess) _ztfServerProcess.kill();
-    // } else {
-    //     logInfo(`>> isLinux`);
-    //     _ztfSubProcessIds.forEach(function (tpid) {
-    //         logInfo(`>> kill ${tpid}`)
-    //         try {
-    //             process.kill(tpid, 'SIGKILL')
-    //         } catch (ex) {
-    //             logErr(`>> ` + ex)
-    //         }
-    //     });
-    // }
+        if (pid && pid > 0) {
+            const killCmd = `taskkill /F /pid ${pid}`
+            const out = execSync(`taskkill /F /pid ${pid}`, {windowsHide: true}).toString().trim()
+            msg = `exec ${killCmd}, stdout: ${out}`
+            console.log(msg);
+            logInfo(msg)
+        }
+    }
 }
 
 
