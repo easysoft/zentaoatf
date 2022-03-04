@@ -1,6 +1,8 @@
 import {app, BrowserWindow} from 'electron';
 import {getUIServerUrl, startZtfServer, killZtfServer} from './service';
 import {logInfo, logErr} from './log';
+import {killPortProcess} from "kill-port-process";
+import {portClient, portServer} from "./consts";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -34,6 +36,7 @@ async function startApp() {
   _starting = true;
 
   try {
+    await killPortProcess([portClient, portServer])
     const ztfServerUrl = await startZtfServer();
     logInfo(`>> ZTF Server started successfully: ${ztfServerUrl}`);
   } catch (error) {
