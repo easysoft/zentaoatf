@@ -41,7 +41,7 @@ export function startZtfServer() {
         }
         return new Promise((resolve, reject) => {
             const cwd = process.env.SERVER_CWD_PATH || path.dirname(serverExePath);
-            logInfo(`>> Starting ZTF Server from exe path with command "${serverExePath} -P ${portServer}" in "${cwd}"...`);
+            logInfo(`>> Starting ZTF Server from exe path with command "${serverExePath} -p ${portServer}" in "${cwd}"...`);
             const cmd = spawn(serverExePath, ['-p', portServer, "-uuid", uuid], {
                 cwd,
                 shell: true,
@@ -97,8 +97,8 @@ export function startZtfServer() {
 
     return new Promise((resolve, reject) => {
         const cwd = process.env.SERVER_CWD_PATH || path.resolve(app.getAppPath(), '../');
-        logInfo(`>> Starting ZTF development server from source with command "go run cmd/server/main.go -P 8085" in "${cwd}"`);
-        const cmd = spawn('go', ['run', 'main.go', '-P', '8085'], {
+        logInfo(`>> Starting ZTF development server from source with command "go run cmd/server/main.go -p ${portServer}" in "${cwd}"`);
+        const cmd = spawn('go', ['run', 'main.go', '-p', portServer], {
             cwd,
             shell: true,
         });

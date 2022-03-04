@@ -22,8 +22,8 @@ var (
 // @contact.url https://github.com/easysoft/zentaoatf/issues
 // @contact.email 462626@qq.com
 func main() {
-	port = *flag.Int("p", 0, "服务端口")
-	uuid = *flag.String("uuid", "", "区分服务进程的唯一ID")
+	flag.IntVar(&port, "p", 0, "服务端口")
+	flag.StringVar(&uuid, "uuid", "", "区分服务进程的唯一ID")
 	flag.Parse()
 
 	webServer := web.Init(port)
