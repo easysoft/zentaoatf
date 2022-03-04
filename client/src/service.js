@@ -17,15 +17,18 @@ let _ztfSubProcessIds = [];
 export function checkZtfPort() {
     let cmd = ''
     if (!isWin) {
-        cmd = 'lsof -i:${port} | grep ${port}'
+        cmd = `lsof -i:${port} | grep :${port}`
     } else {
-        cmd = 'netstat -aon | findstr ${port}'
+        cmd = `netstat -aon`
     }
 
-    const stdout = execSync(cmd).toString().trim()
-    console.log('exec ${cmd}, stdout: ${stdout}');
+    const cp = require('child_process');
+    const stdout = cp.execSync(cmd).toString().trim()
+    const msg = `exec ${cmd}, stdout: ${stdout}`
+    console.log(msg);
+    logInfo(msg)
 
-    if (stdout.indexOf(port + '') > -1) {
+    if (stdout.indexOf(':' + port) > -1) {
         if (stdout.indexOf(uuid) < 0) {
             const msg = 'Port ${port} is used by another process. exit.'
             console.log(msg);
@@ -44,6 +47,11 @@ export function checkZtfPort() {
 }
 
 export function startZtfServer() {
+    const pass = checkZtfPort()
+    if (!pass) {
+        return
+    }
+
     if (process.env.SKIP_SERVER) {
         logInfo(`>> Skip to start ZTF Server by env "SKIP_SERVER=${process.env.SKIP_SERVER}".`);
         return Promise.resolve();

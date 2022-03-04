@@ -67,7 +67,7 @@ import {useI18n} from "vue-i18n";
 // import hljsVuePlugin from "@highlightjs/vue-plugin";
 // import 'highlight.js/styles/googlecode.css'
 
-import * as monaco from 'monaco-editor';
+// import * as monaco from 'monaco-editor';
 
 interface ListScriptPageSetupData {
   t: (key: string | number) => string;
@@ -140,14 +140,14 @@ export default defineComponent({
       console.log('expandNode', keys[0], e)
     }
 
-    let monacoInstance: any
-    const disposeEditor = () => {
-      console.log('disposeEditor')
-      if (monacoInstance) monacoInstance.dispose();
-    }
+    // let monacoInstance: any
+    // const disposeEditor = () => {
+    //   console.log('disposeEditor')
+    //   if (monacoInstance) monacoInstance.dispose();
+    // }
     onUnmounted(() => {
       console.log('onUnmounted', tree)
-      disposeEditor()
+      // disposeEditor()
     })
     const selectNode = (selectedKeys, e) => {
       console.log('selectNode', e.selectedNodes)
@@ -159,11 +159,11 @@ export default defineComponent({
         console.log('===', script)
         scriptCode.value = script.value.code
 
-        disposeEditor()
-        monacoInstance = monaco.editor.create(document.getElementById("monaco") as HTMLElement,{
-          value: script.value.code,
-          language:"php"
-        })
+        // disposeEditor()
+        // monacoInstance = monaco.editor.create(document.getElementById("monaco") as HTMLElement,{
+        //   value: script.value.code,
+        //   language:"php"
+        // })
       })
     }
 
