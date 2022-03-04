@@ -11,16 +11,22 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var (
+	port = 0
+	uuid = ""
+)
+
 // @title ZTF服务端API文档
 // @version 1.0
 // @contact.name API Support
 // @contact.url https://github.com/easysoft/zentaoatf/issues
 // @contact.email 462626@qq.com
 func main() {
-	port := flag.Int("P", 0, "服务端口")
+	port = *flag.Int("p", 0, "服务端口")
+	uuid = *flag.String("uuid", "", "区分服务进程的唯一ID")
 	flag.Parse()
 
-	webServer := web.Init(*port)
+	webServer := web.Init(port)
 	if webServer == nil {
 		return
 	}

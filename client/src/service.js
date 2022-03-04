@@ -1,5 +1,5 @@
 import path from 'path';
-import {spawn} from 'child_process';
+import cp, {spawn} from 'child_process';
 import os from 'os';
 import {app} from 'electron';
 import express from 'express';
@@ -9,6 +9,7 @@ const psTree = require('ps-tree');
 const DEBUG = process.env.NODE_ENV === 'development';
 const isWin = /^win/.test(process.platform);
 const isMac = /^darwin/.test(process.platform);
+const uuid = 'ZTF@1CF17A46-B136-4AEB-96B4-F21C8200EF5A~'
 let _ztfServerProcess;
 let _ztfSubProcessIds = [];
 
@@ -34,7 +35,7 @@ export function startZtfServer() {
         return new Promise((resolve, reject) => {
             const cwd = process.env.SERVER_CWD_PATH || path.dirname(serverExePath);
             logInfo(`>> Starting ZTF Server from exe path with command "${serverExePath} -P 8085" in "${cwd}"...`);
-            const cmd = spawn(serverExePath, ['-P', '8085'], {
+            const cmd = spawn(serverExePath, ['-p', '8085', "-uuid", uuid], {
                 cwd,
                 shell: true,
             });
@@ -223,27 +224,63 @@ export function getUIServerUrl() {
 }
 
 export function killZtfServer() {
-    if (isWin) {
-        logInfo(`>> isWin`);
+    let cmd = ''
+    if (!isWin) {
+        logInfo(`>> no windows`);
+
+        cmd = `ps -ef | grep ${uuid} | grep -v "\-\-%s" | grep -v "grep" | awk '{print $2}' | xargs kill -9`
+        logInfo(`kill cmd : ${cmd}`);
         const cp = require('child_process');
-        cp.exec('taskkill /PID ' + _ztfServerProcess.pid + ' /T /F',
-            function (error, stdout, stderr) {
-                // logInfo('stdout: ' + stdout + '; stderr: ' + stderr + '; error: ' + error + '.');
-            });
-    } else if (isMac) {
-        logInfo(`>> isMac`);
-        if (_ztfServerProcess) _ztfServerProcess.kill();
+        cp.exec(cmd, function (error, stdout, stderr) {
+            logInfo(`stdout: ${stdout}; stderr: ${stderr}; error: ${error}`);
+        });
     } else {
-        logInfo(`>> isLinux`);
-        _ztfSubProcessIds.forEach(function (tpid) {
-            logInfo(`>> kill ${tpid}`)
-            try {
-                process.kill(tpid, 'SIGKILL')
-            } catch (ex) {
-                logErr(`>> ` + ex)
-            }
+        logInfo(`>> is windows`);
+			
+        const cmd = 'WMIC path win32_process  where "Commandline like \'%%' + uuid + '%%\'" get Processid,Caption';
+        const cp = require('child_process');
+        cp.exec(cmd, function (error, stdout, stderr) {
+            // console.log('stdout: ' + stdout + '; stderr: ' + stderr + '; error: ' + error + '.');
+            const lines = stdout.split('\n')
+            lines.forEach(function(line){
+                line = line.trim()
+                console.log('<' + line + '>')
+                const columns = line.split(/\s/)
+
+                if (columns.length > 2) {
+                    const pid = columns[2].trim()
+                    console.log(`pid=${pid}`);
+
+                    const cpKill = require('child_process');
+                    cpKill.exec(`taskkill /F /pid ${pid}`, function (error, stdout, stderr) {
+                        console.log('stdout: ' + stdout + '; stderr: ' + stderr + '; error: ' + error + '.');
+                    });
+                }
+            });
         });
     }
+
+    // if (isWin) {
+    //     logInfo(`>> isWin`);
+    //     const cp = require('child_process');
+    //     cp.exec('taskkill /PID ' + _ztfServerProcess.pid + ' /T /F',
+    //         function (error, stdout, stderr) {
+    //             // logInfo('stdout: ' + stdout + '; stderr: ' + stderr + '; error: ' + error + '.');
+    //         });
+    // } else if (isMac) {
+    //     logInfo(`>> isMac`);
+    //     if (_ztfServerProcess) _ztfServerProcess.kill();
+    // } else {
+    //     logInfo(`>> isLinux`);
+    //     _ztfSubProcessIds.forEach(function (tpid) {
+    //         logInfo(`>> kill ${tpid}`)
+    //         try {
+    //             process.kill(tpid, 'SIGKILL')
+    //         } catch (ex) {
+    //             logErr(`>> ` + ex)
+    //         }
+    //     });
+    // }
 }
 
 
