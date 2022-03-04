@@ -1,5 +1,5 @@
 import path from 'path';
-import cp, {spawn} from 'child_process';
+import cp, {exec, spawn} from 'child_process';
 import os from 'os';
 import {app} from 'electron';
 import express from 'express';
@@ -269,29 +269,38 @@ export function killZtfServer() {
         logInfo(`>> is windows`);
 			
         const cmd = 'WMIC path win32_process  where "Commandline like \'%%' + uuid + '%%\'" get Processid,Caption';
-        logInfo(`list process cmd : ${cmd}`);
+        let msg = `list process cmd : ${cmd}`
+        console.log(msg);
+        logInfo(msg);
 
         const cp = require('child_process');
-        cp.exec(cmd, function (error, stdout, stderr) {
-            // console.log('stdout: ' + stdout + '; stderr: ' + stderr + '; error: ' + error + '.');
-            const lines = stdout.split('\n')
-            lines.forEach(function(line){
-                line = line.trim()
-                console.log('<' + line + '>')
-                const columns = line.split(/\s/)
+        const stdout = cp.execSync(cmd).toString().trim()
+        msg = `exec ${cmd}, stdout: ${stdout}`
+        console.log(msg);
+        logInfo(msg)
 
-                if (columns.length > 2) {
-                    const pid = columns[2].trim()
-                    console.log(`pid=${pid}`);
+        const lines = stdout.split('\n')
+        lines.forEach(function(line){
+            line = line.trim()
+            console.log(`<${line}>`)
+            logInfo(`<${line}>`)
+            const columns = line.split(/\s/)
 
-                    const cpKill = require('child_process');
+            if (columns.length > 2) {
+                const pid = columns[2].trim()
+                console.log(`pid=${pid}`);
+                logInfo(`pid=${pid}`)
+
+                if (pid && parseInt(pid, 10) === pid) {
                     const killCmd = `taskkill /F /pid ${pid}`
-                    logInfo(`list cmd : ${killCmd}`);
-                    cpKill.exec(killCmd, function (error, stdout, stderr) {
-                        console.log('stdout: ' + stdout + '; stderr: ' + stderr + '; error: ' + error + '.');
-                    });
+
+                    const cp = require('child_process');
+                    const stdout = cp.execSync(killCmd).toString().trim()
+                    msg = `exec ${cmd}, stdout: ${stdout}`
+                    console.log(msg);
+                    logInfo(msg)
                 }
-            });
+            }
         });
     }
 
