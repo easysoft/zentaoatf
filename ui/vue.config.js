@@ -2,7 +2,7 @@
 const bodyParser = require('body-parser')
 const { NODE_ENV, VUE_APP_PORT, VUE_APP_MOCK } = process.env;
 
-// const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 
 module.exports = {
     publicPath: '/',
@@ -35,14 +35,35 @@ module.exports = {
             }
         }
     },
-    // 修改webpack的配置
+
+    transpileDependencies: [],
     configureWebpack: {
         // 不需要打包的插件
         externals: {
             // 'vue': 'Vue',
             // 'vue-router': 'VueRouter',
         },
+        module: {
+            rules: [
+                {
+                    test: /\.(sa|sc|c)ss$/,
+                    use: [
+                        'vue-style-loader',
+                        'style-loader',
+                        'css-loader',
+                        'sass-loader',
+                        'postcss-loader',
+                    ]
+                },
+                {
+                    test: /\.ttf$/,
+                    use: ['file-loader']
+                }
+            ],
+        },
+        // plugins: [new MonacoWebpackPlugin()],
     },
+
     chainWebpack(config) {
 
         // 内置的 svg Rule 添加 exclude
@@ -75,11 +96,11 @@ module.exports = {
 
         config.resolve.alias.set('vue-i18n', 'vue-i18n/dist/vue-i18n.cjs.js')
 
-        // config.plugin('monaco-editor').use(MonacoWebpackPlugin, [
-        //     {
-        //         // Languages are loaded on demand at runtime
-        //         languages: ['json', 'javascript', 'html', 'xml']
-        //     }
-        // ])
+        config.plugin('monaco-editor').use(MonacoWebpackPlugin, [
+            {
+                // Languages are loaded on demand at runtime
+                languages: ['json', 'javascript', 'html', 'xml']
+            }
+        ])
     }
 }
