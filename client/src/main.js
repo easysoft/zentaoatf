@@ -14,7 +14,7 @@ const createWindow = (url) => {
   //   height: 800,
   // });
 
-  const mainWindow = new BrowserWindow({show: false})
+  const mainWindow = new BrowserWindow({show: false, webPreferences: {nodeIntegration: true, contextIsolation: false}})
   mainWindow.maximize()
   mainWindow.show()
 
@@ -33,14 +33,14 @@ async function startApp() {
   }
   _starting = true;
 
-  try {
-    const ztfServerUrl = await startZtfServer();
-    logInfo(`>> ZTF Server started successfully: ${ztfServerUrl}`);
-  } catch (error) {
-    logErr('>> Start ztf server failed: ' + error);
-    process.exit(1);
-    return;
-  }
+  // try {
+  //   const ztfServerUrl = await startZtfServer();
+  //   logInfo(`>> ZTF Server started successfully: ${ztfServerUrl}`);
+  // } catch (error) {
+  //   logErr('>> Start ztf server failed: ' + error);
+  //   process.exit(1);
+  //   return;
+  // }
 
   const url = await getUIServerUrl();
 
