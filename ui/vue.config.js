@@ -43,24 +43,24 @@ module.exports = {
             // 'vue': 'Vue',
             // 'vue-router': 'VueRouter',
         },
-        module: {
-            rules: [
-                {
-                    test: /\.(sa|sc|c)ss$/,
-                    use: [
-                        'vue-style-loader',
-                        'style-loader',
-                        'css-loader',
-                        'sass-loader',
-                        'postcss-loader',
-                    ]
-                },
-                {
-                    test: /\.ttf$/,
-                    use: ['file-loader']
-                }
-            ],
-        },
+        // module: {
+        //     rules: [
+        //         {
+        //             test: /\.(sa|sc|c)ss$/,
+        //             use: [
+        //                 'vue-style-loader',
+        //                 'style-loader',
+        //                 'css-loader',
+        //                 'sass-loader',
+        //                 'postcss-loader',
+        //             ]
+        //         },
+        //         {
+        //             test: /\.ttf$/,
+        //             use: ['file-loader']
+        //         }
+        //     ],
+        // },
         // plugins: [new MonacoWebpackPlugin()],
     },
 
