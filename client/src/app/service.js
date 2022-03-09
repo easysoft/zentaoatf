@@ -6,8 +6,8 @@ import express from 'express';
 const psTree = require('ps-tree');
 const { killPortProcess } = require('kill-port-process');
 
-import {portClient, portServer, uuid} from './consts';
-import {logInfo, logErr} from './log';
+import {portClient, portServer, uuid} from './utils/consts';
+import {logInfo, logErr} from './utils/log';
 
 const DEBUG = process.env.NODE_ENV === 'development';
 const isWin = /^win/.test(process.platform);
