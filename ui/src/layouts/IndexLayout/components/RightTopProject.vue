@@ -121,6 +121,18 @@ export default defineComponent({
 
       if (!item) {
         setFormVisible(true)
+
+        // if (window.require) {
+        //   const {dialog} = window.require('@electron/remote');
+        //   dialog.showOpenDialog({
+        //     properties: ['openDirectory']
+        //   }).then(result => {
+        //     console.log(result.canceled)
+        //     console.log(result.filePaths)
+        //   }).catch(err => {
+        //     console.log(err)
+        //   })
+        // }
       } else {
         store.dispatch('project/fetchProject', item.path)
       }

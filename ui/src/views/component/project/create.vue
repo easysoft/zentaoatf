@@ -14,7 +14,21 @@
     <div>
       <a-form :labelCol="{ span: 4 }" :wrapper-col="{span:20}">
         <a-form-item :label="t('path')" v-bind="validateInfos.path" :placeholder="t('project_path')">
-          <a-input v-model:value="modelRef.path" />
+          <a-input-search
+              v-if="isElectron"
+              v-model:value="modelRef.path"
+              @search="selectDir"
+              spellcheck="false"
+          >
+            <template #enterButton>
+              <a-button>选择</a-button>
+            </template>
+          </a-input-search>
+
+          <a-input
+              v-if="!isElectron"
+              v-model:value="modelRef.path"
+              spellcheck="false" />
         </a-form-item>
 
         <a-form-item :label="t('name')">
@@ -44,6 +58,8 @@ import { validateInfos } from 'ant-design-vue/lib/form/useForm';
 
 interface ProjectCreateFormSetupData {
   t: (key: string | number) => string;
+  isElectron: Ref<boolean>;
+  selectDir: () => void;
   modelRef: Ref<Interpreter>
   validateInfos: validateInfos
   onFinish: () => Promise<void>;
@@ -71,13 +87,31 @@ export default defineComponent({
   setup(props): ProjectCreateFormSetupData {
     const { t } = useI18n();
 
-    const modelRef = reactive<any>({path: '', type: 'func'})
+    const modelRef = ref<any>({path: '', type: 'func'})
     const rulesRef = reactive({
       path: [ { required: true, message: t('pls_project_path') } ],
       type: [ { required: true, message: t('pls_project_type') } ],
     });
 
     const { validate, validateInfos } = Form.useForm(modelRef, rulesRef);
+
+    const isElectron = ref(!!window.require)
+    const selectDir = () => {
+      console.log('selectDir')
+
+      if (isElectron.value) {
+        const {dialog} = window.require('@electron/remote');
+        dialog.showOpenDialog({
+          properties: ['openDirectory']
+        }).then(result => {
+          if (result.filePaths && result.filePaths.length > 0) {
+            modelRef.value.path = result.filePaths[0]
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      }
+    }
 
     const onFinish = async () => {
       console.log('onFinish')
@@ -93,6 +127,8 @@ export default defineComponent({
 
     return {
       t,
+      isElectron,
+      selectDir,
       modelRef,
       validateInfos,
       onFinish

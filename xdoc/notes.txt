@@ -30,3 +30,11 @@ make compile_mac
 cd client && npm run package-mac && cd ..
 
 client/out/ztf-darwin-x64/ztf.app/Contents/MacOS/ztf
+
+接口：
+用户信息
+产品树状列表（我参与的，其他的分开）
+模块列表
+套件列表
+任务列表
+用例树状列表（按模块组织，可以根据模块、套件、任务过滤）

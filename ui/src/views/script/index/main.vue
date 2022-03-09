@@ -45,8 +45,12 @@
           <a-button @click="extract" type="primary">{{ t('extract_step') }}</a-button>
         </div>
         <div class="panel">
-          <div id="monaco"></div>
-<!--          <highlightjs v-if="scriptCode" autodetect :code="scriptCode" />-->
+          <MonacoEditor
+              v-if="scriptCode !== ''"
+              class="editor"
+              :value="scriptCode"
+              :language="lang"
+          />
         </div>
       </div>
     </div>
@@ -63,11 +67,7 @@ import {resizeWidth} from "@/utils/dom";
 import {Empty, message, notification} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
 
-// import 'highlight.js/lib/common';
-// import hljsVuePlugin from "@highlightjs/vue-plugin";
-// import 'highlight.js/styles/googlecode.css'
-
-// import * as monaco from 'monaco-editor';
+import MonacoEditor from 'monaco-editor-vue3'
 
 interface ListScriptPageSetupData {
   t: (key: string | number) => string;
@@ -77,6 +77,7 @@ interface ListScriptPageSetupData {
   tree: Ref;
   script: ComputedRef
   scriptCode: Ref<string>;
+  lang: Ref<string>;
 
   isExpand: Ref<boolean>;
   expandNode: (expandedKeys: string[], e: any) => void;
@@ -92,7 +93,7 @@ export default defineComponent({
   name: 'ScriptListPage',
   components: {
     IconSvg,
-    // highlightjs: hljsVuePlugin.component
+    MonacoEditor,
   },
   setup(): ListScriptPageSetupData {
     const { t } = useI18n();
@@ -130,6 +131,7 @@ export default defineComponent({
     const storeScript = useStore<{ script: ScriptData }>();
     let script = computed<any>(() => storeScript.state.script.detail);
     let scriptCode = ref('')
+    let lang = ref('')
 
     onMounted(() => {
       console.log('onMounted', tree)
@@ -151,19 +153,16 @@ export default defineComponent({
     })
     const selectNode = (selectedKeys, e) => {
       console.log('selectNode', e.selectedNodes)
-      if (e.selectedNodes.length === 0) return
+      if (e.selectedNodes.length === 0 || e.selectedNodes[0].props.isDir) {
+        scriptCode.value = ''
+        return
+      }
       selectedNode = e.selectedNodes[0]
 
       scriptCode.value = ''
       storeScript.dispatch('script/getScript', selectedNode.props).then(() => {
-        console.log('===', script)
         scriptCode.value = script.value.code
-
-        // disposeEditor()
-        // monacoInstance = monaco.editor.create(document.getElementById("monaco") as HTMLElement,{
-        //   value: script.value.code,
-        //   language:"php"
-        // })
+        lang.value = script.value.lang
       })
     }
 
@@ -206,6 +205,7 @@ export default defineComponent({
       expandedKeys,
       script,
       scriptCode,
+      lang,
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
     }
   }
@@ -213,7 +213,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .indexlayout-main-conent {
   margin: 0px;
   height: 100%;
@@ -292,8 +292,10 @@ export default defineComponent({
     }
   }
 }
+</style>
 
-#monaco {
-  height: 100%;
+<style lang="less">
+.monaco-editor {
+  padding: 10px 0;
 }
 </style>

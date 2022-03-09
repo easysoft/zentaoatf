@@ -35,7 +35,7 @@ npm run start
 **模式一：使用外部 UI 服务**
 
 ```
-UI_SERVER_URL=http://localhost:8000 npm run start
+SKIP_SERVER=1 UI_SERVER_URL=http://localhost:8000 npm run start
 ```
 
 **模式二：使用本地 UI 静态文件目录**

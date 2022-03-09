@@ -43,25 +43,6 @@ module.exports = {
             // 'vue': 'Vue',
             // 'vue-router': 'VueRouter',
         },
-        // module: {
-        //     rules: [
-        //         {
-        //             test: /\.(sa|sc|c)ss$/,
-        //             use: [
-        //                 'vue-style-loader',
-        //                 'style-loader',
-        //                 'css-loader',
-        //                 'sass-loader',
-        //                 'postcss-loader',
-        //             ]
-        //         },
-        //         {
-        //             test: /\.ttf$/,
-        //             use: ['file-loader']
-        //         }
-        //     ],
-        // },
-        // plugins: [new MonacoWebpackPlugin()],
     },
 
     chainWebpack(config) {
@@ -99,7 +80,7 @@ module.exports = {
         config.plugin('monaco-editor').use(MonacoWebpackPlugin, [
             {
                 // Languages are loaded on demand at runtime
-                languages: ['json', 'javascript', 'html', 'xml']
+                languages: ['javascript', 'php']
             }
         ])
     }

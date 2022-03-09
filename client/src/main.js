@@ -14,7 +14,12 @@ const createWindow = (url) => {
   //   height: 800,
   // });
 
+  require('@electron/remote/main').initialize()
+
   const mainWindow = new BrowserWindow({show: false, webPreferences: {nodeIntegration: true, contextIsolation: false}})
+
+  require("@electron/remote/main").enable(mainWindow.webContents)
+
   mainWindow.maximize()
   mainWindow.show()
 
@@ -63,7 +68,7 @@ app.on('window-all-closed', () => {
   logInfo(`>> Event window-all-closed`)
 
   // if (process.platform !== 'darwin') {
-    app.quit();
+  app.quit();
   // }
 });
 

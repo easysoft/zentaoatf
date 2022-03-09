@@ -42,6 +42,18 @@ func LoadScriptByProject(projectPath string) (scriptFiles []string) {
 
 func GetScriptContent(pth string) (script serverDomain.TestScript, err error) {
 	script.Code = fileUtils.ReadFile(pth)
+	script.Lang = getScriptLang(pth)
+
+	return
+}
+func getScriptLang(pth string) (lang string) {
+	extName := strings.TrimLeft(fileUtils.GetExtName(pth), ".")
+	for key, val := range langUtils.LangMap {
+		if extName == val["extName"] {
+			lang = key
+			return
+		}
+	}
 
 	return
 }
