@@ -6,14 +6,12 @@ import {getUIServerUrl, startZtfServer, killZtfServer} from "./service";
 
 export default class ZtfApp {
     constructor(entryPath) {
-        this._windows = new Map();
+        this.startZtfServer()
 
+        this._windows = new Map();
         setEntryPath(entryPath);
         this.bindElectronEvents();
-
         logInfo(`>> ZtfApp: created, entry path is "${entryPath}".`);
-
-        startZtfServer()
     }
 
     async startZtfServer() {
@@ -23,7 +21,7 @@ export default class ZtfApp {
         } catch (error) {
             logErr('>> Start ztf server failed: ' + error);
             process.exit(1);
-            return;
+            return
         }
     }
 

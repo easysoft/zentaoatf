@@ -14,7 +14,6 @@ const isWin = /^win/.test(process.platform);
 const isMac = /^darwin/.test(process.platform);
 
 let _ztfServerProcess;
-let _ztfSubProcessIds = [];
 
 export function startZtfServer() {
     (async () => {
@@ -48,6 +47,10 @@ export function startZtfServer() {
                 cwd,
                 shell: true,
             });
+
+            _ztfServerProcess = cmd;
+            logInfo(`>> ztf server process = ${_ztfServerProcess.pid}`)
+
             cmd.on('close', (code) => {
                 logInfo(`>> ZTF server closed with code ${code}`);
                 _ztfServerProcess = null;
@@ -82,17 +85,6 @@ export function startZtfServer() {
             cmd.on('error', spawnError => {
                 console.error('>>> Start ztf server failed with error', spawnError);
                 reject(spawnError)
-            });
-            _ztfServerProcess = cmd;
-            logInfo(`>> _ztfServerProcess = ${_ztfServerProcess.pid}`)
-
-            psTree(_ztfServerProcess.pid, function (err, children) {
-                _ztfSubProcessIds = [_ztfServerProcess.pid].concat(
-                    children.map(function (p) {
-                        return p.PID;
-                    })
-                );
-                logInfo(`>> _ztfSubProcessIds = ${_ztfSubProcessIds}`)
             });
         });
     }
