@@ -17,16 +17,16 @@ export default class ZtfApp {
     async startZtfServer() {
         try {
             const ztfServerUrl = await startZtfServer();
-            logInfo(`>> ZTF Server started successfully: ${ztfServerUrl}`);
+            logInfo(`>> ZtfServer started successfully: ${ztfServerUrl}`);
         } catch (error) {
-            logErr('>> Start ztf server failed: ' + error);
+            logErr('>> ZtfServer started failed: ' + error);
             process.exit(1);
-            return
+            return;
         }
     }
 
     showAndFocus() {
-        logInfo(`>> AppWindow[${this.name}]: show and focus`);
+        logInfo(`>> ZtfApp: AppWindow[${this.name}]: show and focus`);
 
         const {browserWindow} = this;
         if (browserWindow.isMinimized()) {

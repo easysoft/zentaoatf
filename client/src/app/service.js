@@ -15,10 +15,8 @@ const isMac = /^darwin/.test(process.platform);
 
 let _ztfServerProcess;
 
-export function startZtfServer() {
-    (async () => {
-        await killPortProcess([portClient, portServer])
-    })();
+export async function startZtfServer() {
+    // await killPortProcess([portClient, portServer])
 
     if (process.env.SKIP_SERVER) {
         logInfo(`>> Skip to start ZTF Server by env "SKIP_SERVER=${process.env.SKIP_SERVER}".`);
