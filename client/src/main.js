@@ -7,4 +7,6 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 }
 
 const ztfApp = new ZtfApp(__dirname);
-app.on('ready', ztfApp.ready);
+app.on('ready', () => {
+  ztfApp.ready()
+});

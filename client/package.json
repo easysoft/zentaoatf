@@ -2,7 +2,7 @@
   "name": "ztf",
   "productName": "ztf",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "ztf",
   "main": ".webpack/main",
   "scripts": {
     "start": "NODE_ENV=development electron-forge start",
@@ -17,10 +17,10 @@
   },
   "keywords": [],
   "author": {
-    "name": "Hao Sun",
-    "email": "sunhao@easycorp.ltd"
+    "name": "Aaron Chen",
+    "email": "chenqi@easycorp.ltd"
   },
-  "license": "MIT",
+  "license": "GPL3",
   "config": {
     "forge": "./forge.config.js"
   },

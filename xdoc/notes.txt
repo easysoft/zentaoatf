@@ -19,6 +19,7 @@ npm install --save-dev electron-packager
 cd ui && yarn build --dest ../client/ui && cd ..
 
 go-bindata -o=res/res.go -pkg=res res/...
+
 make compile_win64
 cd client && npm run package-win64 && cd ..
 

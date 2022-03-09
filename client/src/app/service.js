@@ -41,8 +41,10 @@ export function startZtfServer() {
         }
         return new Promise((resolve, reject) => {
             const cwd = process.env.SERVER_CWD_PATH || path.dirname(serverExePath);
-            logInfo(`>> Starting ZTF Server from exe path with command "${serverExePath} -p ${portServer}" in "${cwd}"...`);
-            const cmd = spawn(serverExePath, ['-p', portServer, "-uuid", uuid], {
+            logInfo(`>> Starting ZTF Server from exe path with command ` +
+                `"${serverExePath} -p ${portServer} -uuid ${uuid}" in "${cwd}"...`);
+
+            const cmd = spawn(serverExePath, ['-p', portServer, '-uuid', uuid], {
                 cwd,
                 shell: true,
             });
@@ -235,8 +237,9 @@ export function killZtfServer() {
     if (!isWin) {
         logInfo(`>> no windows`);
 
-        cmd = `ps -ef | grep ${uuid} | grep -v "\-\-%s" | grep -v "grep" | awk '{print $2}' | xargs kill -9`
+        cmd = `ps -ef | grep ${uuid} | grep -v "grep" | awk '{print $2}' | xargs kill -9`
         logInfo(`kill cmd : ${cmd}`);
+
         const cp = require('child_process');
         cp.exec(cmd, function (error, stdout, stderr) {
             logInfo(`stdout: ${stdout}; stderr: ${stderr}; error: ${error}`);
