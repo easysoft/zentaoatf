@@ -1,10 +1,10 @@
+import {app} from 'electron';
+import os from 'os';
 import path from 'path';
 import {execSync, spawn} from 'child_process';
-import os from 'os';
-import {app} from 'electron';
 
-import {IS_WINDOWS_OS} from "../utils/env";
 import {DEBUG, portServer, uuid} from '../utils/consts';
+import {IS_WINDOWS_OS} from "../utils/env";
 import {logErr, logInfo} from '../utils/log';
 
 let _ztfProcess;

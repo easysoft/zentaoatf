@@ -1,6 +1,6 @@
 import {app} from 'electron';
-import {spawn} from 'child_process';
 import path from 'path';
+import {spawn} from 'child_process';
 import express from 'express';
 
 import {DEBUG, portClient} from '../utils/consts';

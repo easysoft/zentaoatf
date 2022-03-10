@@ -1,10 +1,10 @@
 import {app} from "electron";
 import path from "path";
-
 const fs = require('fs');
+
 import {DEBUG} from '../utils/consts';
-import LangHelper from '../utils/lang';
 import {logInfo} from "../utils/log";
+import LangHelper from '../utils/lang';
 
 const langHelper = new LangHelper();
 
