@@ -10,7 +10,7 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 
 logInfo(`DEBUG=${DEBUG}`)
 
-const ztfApp = new ZtfApp(__dirname);
+const ztfApp = new ZtfApp();
 app.on('ready', () => {
   ztfApp.ready()
 });

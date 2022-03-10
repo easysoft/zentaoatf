@@ -1,19 +1,18 @@
 import {app, BrowserWindow, Menu, shell} from 'electron';
 
-import {IS_MAC_OSX, setEntryPath} from './utils/env';
+import {IS_MAC_OSX} from './utils/env';
 import Lang, {initLang} from './core/lang';
 
 import {logInfo, logErr} from './utils/log';
 import {getUIServerUrl, startZtfServer, killZtfServer} from "./service";
 
 export default class ZtfApp {
-    constructor(entryPath) {
+    constructor() {
         this.startZtfServer()
 
         this._windows = new Map();
-        setEntryPath(entryPath);
         this.bindElectronEvents();
-        logInfo(`>> ztf app created, entry path is "${entryPath}".`);
+        logInfo(`>> ztf app created`);
     }
 
     async startZtfServer() {
