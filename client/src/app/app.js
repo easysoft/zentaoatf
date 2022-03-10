@@ -79,12 +79,12 @@ export default class ZtfApp {
         mainWin.focus();
     }
 
-    async ready() {
+    ready() {
         logInfo('>> ztf app ready.');
 
         initLang()
-        await this.openOrCreateWindow();
         this.buildAppMenu();
+        this.openOrCreateWindow()
     }
 
     quit() {
