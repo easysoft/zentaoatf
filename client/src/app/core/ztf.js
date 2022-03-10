@@ -5,7 +5,7 @@ import {app} from 'electron';
 
 import {IS_WINDOWS_OS} from "../utils/env";
 import {DEBUG, portServer, uuid} from '../utils/consts';
-import {logInfo} from '../utils/log';
+import {logErr, logInfo} from '../utils/log';
 
 let _ztfProcess;
 
@@ -55,7 +55,7 @@ export async function startZtfServer() {
                     if (DEBUG) {
                         logInfo('\t' + line);
                     }
-                    if (line.includes('now listening on: http')) {
+                    if (line.includes('Now listening on: http')) {
                         resolve(line.split('Now listening on:')[1].trim());
                         if (!DEBUG) {
                             break;
@@ -66,7 +66,7 @@ export async function startZtfServer() {
                             break;
                         }
                     } else if (line.startsWith('[ERRO]')) {
-                        reject(new Error(`start ztf server failed with error: ${line.substring('[ERRO]'.length)}`));
+                        reject(new Error(`start ztf server failed, error: ${line.substring('[ERRO]'.length)}`));
                         if (!DEBUG) {
                             break;
                         }
@@ -74,7 +74,7 @@ export async function startZtfServer() {
                 }
             });
             cmd.on('error', spawnError => {
-                console.error('>>> start ztf server failed with error', spawnError);
+                logErr('>>> start ztf server failed with error', spawnError);
                 reject(spawnError)
             });
         });
@@ -99,13 +99,13 @@ export async function startZtfServer() {
                 if (DEBUG) {
                     logInfo('\t' + line);
                 }
-                if (line.includes('now listening on: http')) {
-                    resolve(line.split('now listening on:')[1].trim());
+                if (line.includes('Now listening on: http')) {
+                    resolve(line.split('Now listening on:')[1].trim());
                     if (!DEBUG) {
                         break;
                     }
                 } else if (line.startsWith('[ERRO]')) {
-                    reject(new Error(`start ztf server failed with error: ${line.substring('[ERRO]'.length)}`));
+                    reject(new Error(`start ztf server failed, error: ${line.substring('[ERRO]'.length)}`));
                     if (!DEBUG) {
                         break;
                     }

@@ -10,22 +10,16 @@ import main from "@electron/remote/main";
 
 export default class ZtfApp {
     constructor() {
-        this.startZtfServer()
-
         this._windows = new Map();
-        this.bindElectronEvents();
-        logInfo(`>> ztf app created`);
-    }
 
-    async startZtfServer() {
-        try {
-            const ztfServerUrl = await startZtfServer();
-            logInfo(`>> ztf server started successfully: ${ztfServerUrl}`);
-        } catch (error) {
-            logErr('>> ztf server started failed: ' + error);
+        startZtfServer().then((ztfServerUrl)=> {
+            logInfo(`>> ztf server started successfully on : ${ztfServerUrl}`);
+            this.bindElectronEvents();
+        }).catch((err) => {
+            logErr('>> ztf server started failed, err: ' + error);
             process.exit(1);
             return;
-        }
+        })
     }
 
     showAndFocus() {
