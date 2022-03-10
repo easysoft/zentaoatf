@@ -1,6 +1,5 @@
 import TextMap from './text-map';
 import {formatString} from './string';
-import {logInfo} from "./log";
 
 /**
  * 语言访问辅助类

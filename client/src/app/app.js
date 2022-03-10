@@ -1,6 +1,5 @@
 import {app, BrowserWindow, Menu, shell} from 'electron';
 
-import {DEBUG} from './utils/consts';
 import {IS_MAC_OSX, setEntryPath} from './utils/env';
 import Lang, {initLang} from './core/lang';
 
@@ -14,22 +13,22 @@ export default class ZtfApp {
         this._windows = new Map();
         setEntryPath(entryPath);
         this.bindElectronEvents();
-        logInfo(`>> ZtfApp: created, entry path is "${entryPath}".`);
+        logInfo(`>> ztf app created, entry path is "${entryPath}".`);
     }
 
     async startZtfServer() {
         try {
             const ztfServerUrl = await startZtfServer();
-            logInfo(`>> ZtfServer started successfully: ${ztfServerUrl}`);
+            logInfo(`>> ztf server started successfully: ${ztfServerUrl}`);
         } catch (error) {
-            logErr('>> ZtfServer started failed: ' + error);
+            logErr('>> ztf server started failed: ' + error);
             process.exit(1);
             return;
         }
     }
 
     showAndFocus() {
-        logInfo(`>> ZtfApp: AppWindow[${this.name}]: show and focus`);
+        logInfo(`>> ztf app: AppWindow[${this.name}]: show and focus`);
 
         const {browserWindow} = this;
         if (browserWindow.isMinimized()) {
@@ -82,7 +81,7 @@ export default class ZtfApp {
     }
 
     async ready() {
-        logInfo('>> ZtfApp: ready.');
+        logInfo('>> ztf app ready.');
 
         initLang()
         this.openOrCreateWindow();
@@ -95,17 +94,17 @@ export default class ZtfApp {
 
     bindElectronEvents() {
         app.on('window-all-closed', () => {
-            logInfo(`>> Event window-all-closed`)
+            logInfo(`>> event: window-all-closed`)
             app.quit();
         });
 
         app.on('quit', () => {
-            logInfo(`>> Event quit`)
+            logInfo(`>> event: quit`)
             this.quit();
         });
 
         app.on('activate', () => {
-            logInfo('>> ElectronApp: activate');
+            logInfo('>> event: activate');
 
             // 在 OS X 系统上，可能存在所有应用窗口关闭了，但是程序还没关闭，此时如果收到激活应用请求需要
             // 重新打开应用窗口并创建应用菜单
@@ -119,7 +118,7 @@ export default class ZtfApp {
     }
 
     buildAppMenu() {
-        logInfo('>> ZtfApp: build application menu.');
+        logInfo('>> ztf app: build application menu.');
 
         if (!IS_MAC_OSX) {
             return;

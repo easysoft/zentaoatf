@@ -29,7 +29,10 @@ let extraLangData = null;
  */
 const loadLangData = (langName) => {
     let pth = `lang/${langName}.json`
-    pth = path.join(process.resourcesPath, pth)
+    if (!DEBUG) {
+        pth = path.join(process.resourcesPath, pth)
+    }
+
     logInfo(`===load language res ${pth}===`)
 
     const buf = fs.readFileSync(pth)

@@ -11,7 +11,6 @@ export const IS_MAC_OSX = process.platform === 'darwin';
  * @private
  */
 export const IS_WINDOWS_OS = process.platform === 'win32';
-
 /**
  * 是否是 Linux 系统
  * @type {boolean}
