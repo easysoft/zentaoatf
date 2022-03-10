@@ -33,7 +33,7 @@ const loadLangData = (langName) => {
         pth = path.join(process.resourcesPath, pth)
     }
 
-    logInfo(`===load language res ${pth}===`)
+    logInfo(`load language res from ${pth}`)
 
     const buf = fs.readFileSync(pth)
     const obj = JSON.parse(buf.toString())
