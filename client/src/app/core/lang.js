@@ -4,7 +4,7 @@ const fs = require('fs');
 
 import {DEBUG, WORK_DIR} from '../utils/consts';
 
-import LangHelper from '../utils/lang-helper';
+import LangHelper from '../utils/lang';
 import {logInfo} from "../utils/log";
 import path from "path";
 
