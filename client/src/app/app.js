@@ -13,10 +13,10 @@ export default class ZtfApp {
         this._windows = new Map();
 
         startZtfServer().then((ztfServerUrl)=> {
-            logInfo(`>> ztf server started successfully on : ${ztfServerUrl}`);
+            if (ztfServerUrl) logInfo(`>> ztf server started successfully on : ${ztfServerUrl}`);
             this.bindElectronEvents();
         }).catch((err) => {
-            logErr('>> ztf server started failed, err: ' + error);
+            logErr('>> ztf server started failed, err: ' + err);
             process.exit(1);
             return;
         })
