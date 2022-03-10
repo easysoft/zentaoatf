@@ -6,6 +6,7 @@ import Lang, {initLang} from './core/lang';
 import {logInfo, logErr} from './utils/log';
 import {startUIService} from "./core/ui";
 import {startZtfServer, killZtfServer} from "./core/ztf";
+import main from "@electron/remote/main";
 
 export default class ZtfApp {
     constructor() {
@@ -43,13 +44,14 @@ export default class ZtfApp {
     async createWindow() {
         process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
-        require('@electron/remote/main').initialize()
+        const remote = require('@electron/remote/main')
+        remote.initialize()
 
         const mainWin = new BrowserWindow({
             show: false,
             webPreferences: {nodeIntegration: true, contextIsolation: false}
         })
-        require("@electron/remote/main").enable(mainWin.webContents)
+        remote.enable(mainWin.webContents)
 
         mainWin.maximize()
         mainWin.show()
