@@ -1,6 +1,9 @@
 import {app, BrowserWindow, Menu, shell} from 'electron';
 
+import {DEBUG} from './utils/consts';
 import {IS_MAC_OSX, setEntryPath} from './utils/env';
+import Lang, {initLang} from './core/lang';
+
 import {logInfo, logErr} from './utils/log';
 import {getUIServerUrl, startZtfServer, killZtfServer} from "./service";
 
@@ -38,26 +41,25 @@ export default class ZtfApp {
         browserWindow.focus();
     }
 
-    createWindow() {
+    async createWindow() {
         process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
         require('@electron/remote/main').initialize()
 
-        const mainWindow = new BrowserWindow({
+        const mainWin = new BrowserWindow({
             show: false,
             webPreferences: {nodeIntegration: true, contextIsolation: false}
         })
-        require("@electron/remote/main").enable(mainWindow.webContents)
+        require("@electron/remote/main").enable(mainWin.webContents)
 
-        mainWindow.maximize()
-        mainWindow.show()
+        mainWin.maximize()
+        mainWin.show()
 
-        this._windows.set('main', mainWindow);
+        this._windows.set('main', mainWin.l);
 
-        getUIServerUrl().then((url) => {
-            mainWindow.loadURL(url);
-            mainWindow.webContents.openDevTools({mode: 'bottom'});
-        })
+        const url = await getUIServerUrl()
+        await mainWin.loadURL(url);
+        mainWin.webContents.openDevTools({mode: 'bottom'});
     };
 
     openOrCreateWindow() {
@@ -79,8 +81,10 @@ export default class ZtfApp {
         mainWin.focus();
     }
 
-    ready() {
+    async ready() {
         logInfo('>> ZtfApp: ready.');
+
+        initLang()
         this.openOrCreateWindow();
         this.buildAppMenu();
     }
@@ -115,6 +119,8 @@ export default class ZtfApp {
     }
 
     buildAppMenu() {
+        logInfo('>> ZtfApp: build application menu.');
+
         if (!IS_MAC_OSX) {
             return;
         }
@@ -124,52 +130,52 @@ export default class ZtfApp {
                 label: 'ZTF',
                 submenu: [
                     {
-                        label: '关于',
+                        label: Lang.string('app.about'),
                         selector: 'orderFrontStandardAboutPanel:'
                     }, {
-                        label: '退出',
+                        label: Lang.string('app.exit'),
                         accelerator: 'Command+Q',
                         click: () => {
-                            this.quit();
+                            app.quit();
                         }
                     }
                 ]
             },
             {
-                label: '编辑',
+                label: Lang.string('app.edit'),
                 submenu: [{
-                    label: '撤销',
+                    label: Lang.string('app.undo'),
                     accelerator: 'Command+Z',
                     selector: 'undo:'
                 }, {
-                    label: '重做',
+                    label: Lang.string('app.redo'),
                     accelerator: 'Shift+Command+Z',
                     selector: 'redo:'
                 }, {
                     type: 'separator'
                 }, {
-                    label: '剪切',
+                    label: Lang.string('app.cut'),
                     accelerator: 'Command+X',
                     selector: 'cut:'
                 }, {
-                    label: '复制',
+                    label: Lang.string('app.copy'),
                     accelerator: 'Command+C',
                     selector: 'copy:'
                 }, {
-                    label: '黏贴',
+                    label: Lang.string('app.paste'),
                     accelerator: 'Command+V',
                     selector: 'paste:'
                 }, {
-                    label: '选择所有',
+                    label: Lang.string('app.select_all'),
                     accelerator: 'Command+A',
                     selector: 'selectAll:'
                 }]
             },
             {
-                label: '查看',
+                label: Lang.string('app.view'),
                 submenu:  [
                     {
-                        label: '切换全屏',
+                        label: Lang.string('app.switch_to_full_screen'),
                         accelerator: 'Ctrl+Command+F',
                         click: () => {
                             const mainWin = this._windows.get('main');
@@ -179,15 +185,15 @@ export default class ZtfApp {
                 ]
             },
             {
-                label: '窗口',
+                label: Lang.string('app.window'),
                 submenu: [
                     {
-                        label: '最小化',
+                        label: Lang.string('app.minimize'),
                         accelerator: 'Command+M',
                         selector: 'performMiniaturize:'
                     },
                     {
-                        label: '关闭',
+                        label: Lang.string('app.close'),
                         accelerator: 'Command+W',
                         selector: 'performClose:'
                     },
@@ -195,15 +201,15 @@ export default class ZtfApp {
                         type: 'separator'
                     },
                     {
-                        label: '全部置于顶层',
+                        label: Lang.string('app.bring_all_to_front'),
                         selector: 'arrangeInFront:'
                     }
                 ]
             },
             {
-                label: '帮助',
+                label: Lang.string('app.help'),
                 submenu: [{
-                    label: '网站',
+                    label: Lang.string('app.website'),
                     click: () => {
                         shell.openExternal('http://ztf.im');
                     }
@@ -212,7 +218,5 @@ export default class ZtfApp {
 
         const menu = Menu.buildFromTemplate(template);
         Menu.setApplicationMenu(menu);
-
-        logInfo('>> ZtfApp: build application menu.');
     }
 }
