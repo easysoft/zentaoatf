@@ -6,6 +6,7 @@ import {DEBUG, WORK_DIR} from '../utils/consts';
 
 import LangHelper from '../utils/lang-helper';
 import {logInfo} from "../utils/log";
+import path from "path";
 
 /**
  * 语言访问辅助对象
@@ -27,9 +28,10 @@ let extraLangData = null;
  * @returns {Promise} 使用 Promise 异步返回处理结果
  */
 const loadLangData = (langName) => {
-    logInfo('===load language data===')
+    let pth = `lang/${langName}.json`
+    pth = path.join(process.resourcesPath, pth)
+    logInfo(`===load language res ${pth}===`)
 
-    const pth = `${WORK_DIR}/lang/${langName}.json`
     const buf = fs.readFileSync(pth)
     const obj = JSON.parse(buf.toString())
     return obj
@@ -103,23 +105,6 @@ export const getStringFromObject = (obj, defaultString) => {
     }
     return obj === undefined ? defaultString : obj;
 };
-
-/**
- * 尝试获取一个当前可用的语言访问辅助对象
- * @return {Promise<LangHelper>} 使用 Promise 返回语言访问辅助对象
- */
-export const tryGetLang = () => new Promise((resolve) => {
-    if (DEBUG && platform.isType('electron') && process.env.ENTRY === 'conference') {
-        import('./conference/conference-independent-server').then(conferenceServer => {
-            const {Lang: conferenceLang} = conferenceServer;
-            resolve(conferenceLang);
-        }).catch(() => {
-            resolve(langHelper);
-        });
-    } else {
-        resolve(langHelper);
-    }
-});
 
 Object.assign(langHelper, {
     getStringFromObject,

@@ -8,7 +8,8 @@ module.exports = {
         "icon": "./icon/favicon",
         extraResource: [
             './bin',
-            './ui'
+            './ui',
+            './lang'
         ]
     },
     makers: [
