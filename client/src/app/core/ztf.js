@@ -2,13 +2,12 @@ import path from 'path';
 import {execSync, spawn} from 'child_process';
 import os from 'os';
 import {app} from 'electron';
-import express from 'express';
 
-import {DEBUG, portClient, portServer, uuid} from './utils/consts';
-import {logInfo, logDebug} from './utils/log';
-import {IS_WINDOWS_OS} from "./utils/env";
+import {IS_WINDOWS_OS} from "../utils/env";
+import {DEBUG, portServer, uuid} from '../utils/consts';
+import {logInfo} from '../utils/log';
 
-let _ztfServerProcess;
+let _ztfProcess;
 
 export async function startZtfServer() {
     // await killPortProcess([portClient, portServer])
@@ -16,8 +15,8 @@ export async function startZtfServer() {
         logInfo(`>> skip to start ztf Server by env "SKIP_SERVER=${process.env.SKIP_SERVER}".`);
         return Promise.resolve();
     }
-    if (_ztfServerProcess) {
-        return Promise.resolve(_ztfServerProcess);
+    if (_ztfProcess) {
+        return Promise.resolve(_ztfProcess);
     }
 
     let {SERVER_EXE_PATH: serverExePath} = process.env;
@@ -40,12 +39,12 @@ export async function startZtfServer() {
                 shell: true,
             });
 
-            _ztfServerProcess = cmd;
-            logInfo(`>> ztf server process = ${_ztfServerProcess.pid}`)
+            _ztfProcess = cmd;
+            logInfo(`>> ztf server process = ${_ztfProcess.pid}`)
 
             cmd.on('close', (code) => {
                 logInfo(`>> ztf server closed with code ${code}`);
-                _ztfServerProcess = null;
+                _ztfProcess = null;
                 cmd.kill()
             });
             cmd.stdout.on('data', data => {
@@ -90,7 +89,7 @@ export async function startZtfServer() {
         });
         cmd.on('close', (code) => {
             logInfo(`>> ztf server closed with code ${code}`);
-            _ztfServerProcess = null;
+            _ztfProcess = null;
         });
         cmd.stdout.on('data', data => {
             const dataString = String(data);
@@ -117,102 +116,7 @@ export async function startZtfServer() {
             console.error('>>> start ztf server failed with error', spawnError);
             reject(spawnError)
         });
-        _ztfServerProcess = cmd;
-    });
-}
-
-let _uiServerApp;
-
-export function getUIServerUrl() {
-    if (_uiServerApp) {
-        return Promise.resolve();
-    }
-
-    let {UI_SERVER_URL: uiServerUrl} = process.env;
-    if (!uiServerUrl && !DEBUG) {
-        uiServerUrl = path.resolve(process.resourcesPath, 'ui');
-    }
-
-    if (uiServerUrl) {
-        if (/^https?:\/\//.test(uiServerUrl)) {
-            return Promise.resolve(uiServerUrl);
-        }
-        return new Promise((resolve, reject) => {
-            if (!path.isAbsolute(uiServerUrl)) {
-                uiServerUrl = path.resolve(app.getAppPath(), uiServerUrl);
-            }
-
-            const port = process.env.UI_SERVER_PORT || portClient;
-            logInfo(`>> starting ui serer at ${uiServerUrl} with port ${port}`);
-
-            const uiServer = express();
-            uiServer.use(express.static(uiServerUrl));
-            const server = uiServer.listen(port, serverError => {
-                if (serverError) {
-                    console.error('>>> start ui server failed with error', serverError);
-                    _uiServerApp = null;
-                    reject(serverError);
-                } else {
-                    logInfo(`>> ui server started successfully on http://localhost:${port}.`);
-                    resolve(`http://localhost:${port}`);
-                }
-            });
-            server.on('close', () => {
-                _uiServerApp = null;
-            });
-            _uiServerApp = uiServer;
-        })
-    }
-
-    return new Promise((resolve, reject) => {
-        const cwd = path.resolve(app.getAppPath(), '../ui');
-        logInfo(`>> starting ui development server with command "npm run serve" in "${cwd}"...`);
-
-        let resolved = false;
-        const cmd = spawn('npm', ['run', 'serve'], {
-            cwd,
-            shell: true,
-        });
-        cmd.on('close', (code) => {
-            logInfo(`>> ztf server closed with code ${code}`);
-            _uiServerApp = null;
-        });
-        cmd.stdout.on('data', data => {
-            if (resolved) {
-                return;
-            }
-            const dataString = String(data);
-            const lines = dataString.split('\n');
-            for (let i = 0; i < lines.length; i++) {
-                const line = lines[i];
-                if (DEBUG) {
-                    logInfo('\t' + line);
-                }
-                if (line.includes('App running at:')) {
-                    const nextLine = lines[i + 1] || lines[i + 2];
-                    if (DEBUG) {
-                        logInfo('\t' + nextLine);
-                    }
-                    if (!nextLine) {
-                        console.error('\t' + `Cannot grabing running address after line "${line}".`);
-                        throw new Error(`Cannot grabing running address after line "${line}".`);
-                    }
-                    const url = nextLine.split('Local:   ')[1];
-                    if (url) {
-                        resolved = true;
-                        resolve(url);
-                    }
-                    if (!DEBUG) {
-                        break;
-                    }
-                }
-            }
-        });
-        cmd.on('error', spawnError => {
-            console.error('>>> get ui server url failed with error', spawnError);
-            reject(spawnError)
-        });
-        _uiServerApp = cmd;
+        _ztfProcess = cmd;
     });
 }
 
@@ -263,5 +167,3 @@ export function killZtfServer() {
         }
     }
 }
-
-

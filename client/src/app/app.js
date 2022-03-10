@@ -4,7 +4,8 @@ import {IS_MAC_OSX} from './utils/env';
 import Lang, {initLang} from './core/lang';
 
 import {logInfo, logErr} from './utils/log';
-import {getUIServerUrl, startZtfServer, killZtfServer} from "./service";
+import {startUIService} from "./core/ui";
+import {startZtfServer, killZtfServer} from "./core/ztf";
 
 export default class ZtfApp {
     constructor() {
@@ -55,7 +56,7 @@ export default class ZtfApp {
 
         this._windows.set('main', mainWin.l);
 
-        const url = await getUIServerUrl()
+        const url = await startUIService()
         await mainWin.loadURL(url);
         mainWin.webContents.openDevTools({mode: 'bottom'});
     };

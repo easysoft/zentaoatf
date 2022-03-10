@@ -1,12 +1,10 @@
 import {app} from "electron";
+import path from "path";
 
 const fs = require('fs');
-
-import {DEBUG, WORK_DIR} from '../utils/consts';
-
+import {DEBUG} from '../utils/consts';
 import LangHelper from '../utils/lang';
 import {logInfo} from "../utils/log";
-import path from "path";
 
 const langHelper = new LangHelper();
 
@@ -22,7 +20,7 @@ export const initLang = () => {
     loadLanguage(langName)
 };
 
-export const loadLanguage = async (langName) => {
+export const loadLanguage = (langName) => {
     if (!langName) {
         return
     }
@@ -42,8 +40,8 @@ const loadLangData = (langName) => {
     logInfo(`load language res from ${pth}`)
 
     const buf = fs.readFileSync(pth)
-    const obj = JSON.parse(buf.toString())
-    return obj
+    const data = JSON.parse(buf.toString())
+    return data
 }
 
 if (DEBUG) {
