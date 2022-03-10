@@ -1,12 +1,12 @@
 import {app, BrowserWindow, Menu, shell} from 'electron';
+import main from "@electron/remote/main";
 
+import {DEBUG} from './utils/consts';
 import {IS_MAC_OSX} from './utils/env';
 import Lang, {initLang} from './core/lang';
-
 import {logInfo, logErr} from './utils/log';
 import {startUIService} from "./core/ui";
 import {startZtfServer, killZtfServer} from "./core/ztf";
-import main from "@electron/remote/main";
 
 export default class ZtfApp {
     constructor() {
@@ -38,14 +38,14 @@ export default class ZtfApp {
     async createWindow() {
         process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
-        const remote = require('@electron/remote/main')
-        remote.initialize()
+        const remoteMain = require('@electron/remote/main')
+        remoteMain.initialize()
 
         const mainWin = new BrowserWindow({
             show: false,
             webPreferences: {nodeIntegration: true, contextIsolation: false}
         })
-        remote.enable(mainWin.webContents)
+        remoteMain.enable(mainWin.webContents)
 
         mainWin.maximize()
         mainWin.show()
@@ -54,7 +54,10 @@ export default class ZtfApp {
 
         const url = await startUIService()
         await mainWin.loadURL(url);
-        mainWin.webContents.openDevTools({mode: 'bottom'});
+
+        if (DEBUG) {
+            mainWin.webContents.openDevTools({mode: 'bottom'});
+        }
     };
 
     openOrCreateWindow() {
