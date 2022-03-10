@@ -60,12 +60,12 @@ export default class ZtfApp {
         }
     };
 
-    openOrCreateWindow() {
+    async openOrCreateWindow() {
         const mainWin = this._windows.get('main');
         if (mainWin) {
             this.showAndFocus(mainWin)
         } else {
-            this.createWindow();
+            await this.createWindow();
         }
     }
 
@@ -83,7 +83,7 @@ export default class ZtfApp {
         logInfo('>> ztf app ready.');
 
         initLang()
-        this.openOrCreateWindow();
+        await this.openOrCreateWindow();
         this.buildAppMenu();
     }
 
@@ -107,8 +107,9 @@ export default class ZtfApp {
 
             // 在 OS X 系统上，可能存在所有应用窗口关闭了，但是程序还没关闭，此时如果收到激活应用请求需要
             // 重新打开应用窗口并创建应用菜单
-            this.openOrCreateWindow();
-            this.buildAppMenu();
+            this.openOrCreateWindow().then(() => {
+                this.buildAppMenu();
+            })
         });
     }
 
