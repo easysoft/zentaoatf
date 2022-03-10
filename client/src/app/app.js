@@ -60,12 +60,12 @@ export default class ZtfApp {
         }
     };
 
-    async openOrCreateWindow() {
+    openOrCreateWindow() {
         const mainWin = this._windows.get('main');
         if (mainWin) {
             this.showAndFocus(mainWin)
         } else {
-            await this.createWindow();
+            this.createWindow();
         }
     }
 
