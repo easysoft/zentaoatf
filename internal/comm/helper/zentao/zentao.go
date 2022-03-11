@@ -1,6 +1,7 @@
 package zentaoHelper
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
@@ -15,42 +16,6 @@ import (
 	"strconv"
 	"strings"
 )
-
-func Login(config commDomain.ProjectConf) (err error) {
-	err = GetConfig(config.Url)
-	if err != nil {
-		logUtils.Infof(i118Utils.Sprintf("fail_to_login"))
-		return
-	}
-
-	uri := ""
-	if commConsts.RequestType == commConsts.PathInfo {
-		uri = "user-login.json"
-	} else {
-		uri = "index.php?m=user&f=login&t=json"
-	}
-	url := config.Url + uri
-
-	params := make(map[string]string)
-	params["account"] = config.Username
-	params["password"] = config.Password
-
-	var bodyBytes []byte
-	bodyBytes, err = httpUtils.PostStr(url, params)
-	if err != nil || (err == nil && strings.Index(string(bodyBytes), "title") > 0) { // use PostObject to login again for new system
-		_, err = httpUtils.Post(url, params, true)
-	}
-
-	if err == nil {
-		if commConsts.Verbose {
-			logUtils.Info(i118Utils.Sprintf("success_to_login"))
-		}
-	} else {
-		logUtils.Errorf(i118Utils.Sprintf("fail_to_login"))
-	}
-
-	return
-}
 
 func GetConfig(baseUrl string) (err error) {
 	//if commConsts.RequestType != "" {
@@ -87,6 +52,39 @@ func GetConfig(baseUrl string) (err error) {
 	return
 }
 
+func Login(config commDomain.ProjectConf) (err error) {
+	err = GetConfig(config.Url)
+	if err != nil {
+		logUtils.Infof(i118Utils.Sprintf("fail_to_login"))
+		return
+	}
+
+	url := GenApiUrl("tokens", nil, config.Url)
+
+	params := map[string]string{
+		"account":  config.Username,
+		"password": config.Password,
+	}
+	bodyBytes, err := httpUtils.Post(url, params)
+	if err != nil {
+		logUtils.Errorf(i118Utils.Sprintf("fail_to_login"))
+	}
+
+	if commConsts.Verbose {
+		logUtils.Info(i118Utils.Sprintf("success_to_login") + string(bodyBytes))
+	}
+
+	jsn, _ := simplejson.NewJson(bodyBytes)
+	mp, _ := jsn.Map()
+
+	val, ok := mp["token"]
+	if ok {
+		commConsts.SessionId = val.(string)
+	}
+
+	return
+}
+
 func ListLang() (langs []serverDomain.ZentaoLang, err error) {
 	for key, _ := range langUtils.LangMap {
 		langs = append(langs, serverDomain.ZentaoLang{Code: key, Name: key})
@@ -107,62 +105,29 @@ func ListProduct(projectPath string) (products []serverDomain.ZentaoProduct, err
 		return
 	}
 
-	// $productID = 0, $branch = 0, $browseType = '', $param = 0, $storyType = 'story',
-	// $orderBy = '', $recTotal = 0, $recPerPage = 20, $pageID = 1, $projectID = 0)
-	params := ""
-	if commConsts.RequestType == commConsts.PathInfo {
-		params = fmt.Sprintf("-----id_asc-0-10000-1-0")
-	} else {
-		params = fmt.Sprintf("orderBy=id_asc&recTotal=0&recPerPage=10000")
-	}
-
-	url := config.Url + GenApiUri("product", "browse", params)
+	url := GenApiUrl("products", nil, config.Url)
 	bytes, err := httpUtils.Get(url)
 
 	if err != nil {
 		return
 	}
 
-	jsn, _ := simplejson.NewJson(bytes)
-	productMap, err := jsn.Get("products").Map()
-
-	for key, val := range productMap {
-		id, _ := strconv.Atoi(key)
-		products = append(products, serverDomain.ZentaoProduct{Id: id, Name: val.(string)})
+	jsn, err := simplejson.NewJson(bytes)
+	if err != nil {
+		return
 	}
-
-	return
-}
-
-func ListModuleByProduct(productId int, projectPath string) (modules []serverDomain.ZentaoModule, err error) {
-	config := configUtils.LoadByProjectPath(projectPath)
-	err = Login(config)
+	items, err := jsn.Get("products").Array()
 	if err != nil {
 		return
 	}
 
-	// tree-browse-1-story.html#app=product
-	params := ""
-	if commConsts.RequestType == commConsts.PathInfo {
-		params = fmt.Sprintf("%d-story", productId)
-	} else {
-		params = fmt.Sprintf("rootID=%d&viewType=story", productId)
-	}
+	for _, item := range items {
+		productMap, _ := item.(map[string]interface{})
 
-	url := config.Url + GenApiUri("tree", "browse", params)
-	url += "#app=product"
+		id, _ := productMap["id"].(json.Number).Int64()
+		name, _ := productMap["name"].(string)
 
-	bytes, err := httpUtils.Get(url)
-	if err != nil {
-		return
-	}
-
-	jsn, _ := simplejson.NewJson(bytes)
-	arr, _ := jsn.Get("tree").Array()
-	for _, item := range arr {
-		mp := item.(map[string]interface{})
-		mp["level"] = 0
-		GenModuleData(mp, &modules)
+		products = append(products, serverDomain.ZentaoProduct{Id: int(id), Name: name})
 	}
 
 	return
@@ -183,7 +148,7 @@ func ListModuleForCase(productId int, projectPath string) (modules []serverDomai
 		params = fmt.Sprintf("rootID=%d&viewType=case&from=qa", productId)
 	}
 
-	url := config.Url + GenApiUri("tree", "browse", params)
+	url := config.Url + GenApiUriOld("tree", "browse", params)
 	url += "#app=product"
 
 	bytes, err := httpUtils.Get(url)
@@ -237,7 +202,7 @@ func ListSuiteByProduct(productId int, projectPath string) (suites []serverDomai
 		params = fmt.Sprintf("productID=%d&orderBy=id_asc&recTotal=0&recPerPage=10000", productId)
 	}
 
-	url := config.Url + GenApiUri("testsuite", "browse", params)
+	url := config.Url + GenApiUriOld("testsuite", "browse", params)
 
 	bytes, err := httpUtils.Get(url)
 	if err != nil {
@@ -261,36 +226,42 @@ func ListSuiteByProduct(productId int, projectPath string) (suites []serverDomai
 
 func ListTaskByProduct(productId int, projectPath string) (tasks []serverDomain.ZentaoTask, err error) {
 	config := configUtils.LoadByProjectPath(projectPath)
+	if config.Url == "" {
+		err = errors.New(i118Utils.Sprintf("pls_config_project"))
+		return
+	}
+
 	err = Login(config)
 	if err != nil {
 		return
 	}
 
-	// $productID = 0, $branch = '', $type = 'local,totalStatus', $orderBy = 'id_asc', $recTotal = 0, $recPerPage = 20, $pageID = 1, $beginTime = 0, $endTime = 0)
-	params := ""
-	if commConsts.RequestType == commConsts.PathInfo {
-		params = fmt.Sprintf("%d--local,totalStatus-id_asc-0-10000-1", productId)
-	} else {
-		params = fmt.Sprintf("productID=%d&type=local,totalStatus&orderBy=id_asc&recTotal=0&recPerPage=10000", productId)
+	params := map[string]interface{}{
+		"product": productId,
+		"limit":   10000,
 	}
-
-	url := config.Url + GenApiUri("testtask", "browse", params)
+	url := GenApiUrl("testtasks", params, config.Url)
 	bytes, err := httpUtils.Get(url)
-
 	if err != nil {
 		return
 	}
 
-	jsn, _ := simplejson.NewJson(bytes)
-	mp, _ := jsn.Get("tasks").Map()
-	for _, item := range mp {
-		mp := item.(map[string]interface{})
+	jsn, err := simplejson.NewJson(bytes)
+	if err != nil {
+		return
+	}
+	items, err := jsn.Get("testtasks").Array()
+	if err != nil {
+		return
+	}
 
-		idStr := mp["id"].(string)
-		id, _ := strconv.Atoi(idStr)
-		name := mp["name"].(string)
+	for _, item := range items {
+		taskMap, _ := item.(map[string]interface{})
 
-		tasks = append(tasks, serverDomain.ZentaoTask{Id: id, Name: name})
+		id, _ := taskMap["id"].(json.Number).Int64()
+		name, _ := taskMap["name"].(string)
+
+		tasks = append(tasks, serverDomain.ZentaoTask{Id: int(id), Name: name})
 	}
 
 	return

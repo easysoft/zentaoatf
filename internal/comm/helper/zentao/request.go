@@ -7,10 +7,35 @@ import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	"path"
 	"strings"
 )
 
-func GenApiUri(module string, methd string, param string) string {
+const (
+	ApiPath = "api.php/v1/"
+)
+
+func GenApiUrl(pth string, params map[string]interface{}, baseUrl string) (url string) {
+	uri := path.Join(ApiPath, pth)
+
+	index := 0
+	for key, val := range params {
+		if index == 0 {
+			uri += "?"
+		} else {
+			uri += "&"
+		}
+
+		uri += fmt.Sprintf("%v=%v", key, val)
+		index++
+	}
+
+	url = baseUrl + uri
+
+	return
+}
+
+func GenApiUriOld(module string, methd string, param string) string {
 	var uri string
 
 	if commConsts.RequestType == commConsts.PathInfo {

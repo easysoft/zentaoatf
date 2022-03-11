@@ -35,7 +35,8 @@ var (
 	ProductId       string
 
 	ZenTaoVersion string
-	SessionVar    string
+	Token         = "Token"
+	SessionVar    = "zentaosid"
 	SessionId     string
 	RequestFix    string
 

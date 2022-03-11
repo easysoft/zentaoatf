@@ -38,11 +38,11 @@ func CommitBug(ztfBug commDomain.ZtfBug, projectPath string) (err error) {
 		params = fmt.Sprintf("productID=%s&branch=0&$extras=%s", ztfBug.Product, extras)
 	}
 	//params = ""
-	url := config.Url + GenApiUri("bug", "create", params)
+	url := config.Url + GenApiUriOld("bug", "create", params)
 
 	bug := commDomain.ZentaoBug{}
 	copier.Copy(&bug, ztfBug)
-	_, err = httpUtils.Post(url, bug, true)
+	_, err = httpUtils.PostWithFormat(url, bug, true)
 
 	msg := ""
 
@@ -137,7 +137,7 @@ func GetBugFiledOptions(req commDomain.FuncResult, projectPath string) (
 		params = fmt.Sprintf("productID=%d", req.ProductId)
 	}
 
-	url := config.Url + GenApiUri("bug", "ajaxGetBugFieldOptions", params)
+	url := config.Url + GenApiUriOld("bug", "ajaxGetBugFieldOptions", params)
 	bytes, err := httpUtils.Get(url)
 	if err == nil {
 		jsonData := &simplejson.Json{}

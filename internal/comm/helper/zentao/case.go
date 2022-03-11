@@ -121,7 +121,7 @@ func ListCaseByProduct(baseUrl string, productId int) []commDomain.ZtfCase {
 		params = fmt.Sprintf("productID=%d&branch=&browseType=byModule&param=0&orderBy=id_desc&recTotal=0&recPerPage=10000", productId)
 	}
 
-	url := baseUrl + GenApiUri("testcase", "browse", params)
+	url := baseUrl + GenApiUriOld("testcase", "browse", params)
 	dataStr, err := httpUtils.Get(url)
 
 	if err == nil {
@@ -156,7 +156,7 @@ func ListCaseByModule(baseUrl string, productId, moduleId int) []commDomain.ZtfC
 			productId, moduleId)
 	}
 
-	url := baseUrl + GenApiUri("testcase", "browse", params)
+	url := baseUrl + GenApiUriOld("testcase", "browse", params)
 	bytes, err := httpUtils.Get(url)
 
 	if err == nil {
@@ -190,7 +190,7 @@ func ListCaseBySuite(baseUrl string, productId, suiteId int) []commDomain.ZtfCas
 		params = fmt.Sprintf("suiteID=%d&orderBy=id_asc&recTotal=0&recPerPage=10000", suiteId)
 	}
 
-	url := baseUrl + GenApiUri("testsuite", "view", params)
+	url := baseUrl + GenApiUriOld("testsuite", "view", params)
 	bytes, err := httpUtils.Get(url)
 
 	if err == nil {
@@ -225,7 +225,7 @@ func ListCaseByTask(baseUrl string, productId, taskId int) []commDomain.ZtfCase 
 		params = fmt.Sprintf("taskID=%d&browseType=all&param=0&orderBy=id_asc&recTotal=0&recPerPage=10000", taskId)
 	}
 
-	url := baseUrl + GenApiUri("testtask", "cases", params)
+	url := baseUrl + GenApiUriOld("testtask", "cases", params)
 	bytes, err := httpUtils.Get(url)
 
 	if err == nil {
@@ -265,28 +265,18 @@ func genCaseSteps(csWithSteps commDomain.ZtfCase) (ret []commDomain.ZtfStep) {
 	return
 }
 
-func GetCaseById(baseUrl string, caseId string) commDomain.ZtfCase {
-	// $caseID, $version = 0, $from = 'testcase', $taskID = 0
+func GetCaseById(baseUrl string, caseId string) (cs commDomain.ZtfCase) {
+	uri := fmt.Sprintf("/testcases/%s", caseId)
+	url := GenApiUrl(uri, nil, baseUrl)
 
-	params := ""
-	if commConsts.RequestType == commConsts.PathInfo {
-		params = fmt.Sprintf("%s-0-testcase-0", caseId)
-	} else {
-		params = fmt.Sprintf("caseID=%s&version=0&$from=testcase&taskID=0", caseId)
-	}
-
-	url := baseUrl + GenApiUri("testcase", "view", params)
 	bytes, err := httpUtils.Get(url)
-
-	if err == nil {
-		var csw commDomain.ZtfCaseWrapper
-		json.Unmarshal(bytes, &csw)
-
-		cs := csw.Case
-		return cs
+	if err != nil {
+		return
 	}
 
-	return commDomain.ZtfCase{}
+	json.Unmarshal(bytes, &cs)
+
+	return
 }
 
 func CommitCase(caseId int, title string,
@@ -306,7 +296,7 @@ func CommitCase(caseId int, title string,
 		params = fmt.Sprintf("caseID=%d&comment=0", caseId)
 	}
 
-	url := config.Url + GenApiUri("testcase", "edit", params)
+	url := config.Url + GenApiUriOld("testcase", "edit", params)
 
 	requestObj := map[string]interface{}{"title": title,
 		"steps":    commonUtils.LinkedMapToMap(stepMap),
@@ -329,7 +319,7 @@ func CommitCase(caseId int, title string,
 	}
 
 	if yes {
-		_, err = httpUtils.Post(url, requestObj, true)
+		_, err = httpUtils.PostWithFormat(url, requestObj, true)
 		if err == nil {
 			logUtils.Infof(i118Utils.Sprintf("success_to_commit_case", caseId) + "\n")
 		}

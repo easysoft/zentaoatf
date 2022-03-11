@@ -30,8 +30,8 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId string, project
 	config := configUtils.LoadByProjectPath(projectPath)
 	Login(config)
 
-	url := config.Url + GenApiUri("ci", "commitResult", "")
-	ret, err := httpUtils.Post(url, report, false)
+	url := config.Url + GenApiUriOld("ci", "commitResult", "")
+	ret, err := httpUtils.PostWithFormat(url, report, false)
 
 	msg := ""
 	if err == nil {

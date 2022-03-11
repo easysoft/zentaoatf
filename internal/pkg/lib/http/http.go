@@ -18,9 +18,6 @@ import (
 )
 
 func Get(url string) (ret []byte, err error) {
-	if strings.Index(url, "mode=getconfig") < 0 {
-		url = AddToken(url)
-	}
 	if commConsts.Verbose {
 		logUtils.Info(url)
 	}
@@ -31,6 +28,10 @@ func Get(url string) (ret []byte, err error) {
 	if err != nil {
 		logUtils.Infof(color.RedString("get request failed, error: %s.", err.Error()))
 		return
+	}
+
+	if strings.Index(url, "user-login") < 0 && strings.Index(url, "mode=getconfig") < 0 {
+		req.Header.Add(commConsts.Token, commConsts.SessionId)
 	}
 
 	resp, err := client.Do(req)
@@ -82,7 +83,61 @@ func Get(url string) (ret []byte, err error) {
 	return
 }
 
-func Post(url string, data interface{}, useFormFormat bool) (ret []byte, err error) {
+func Post(url string, data interface{}) (ret []byte, err error) {
+	if commConsts.Verbose {
+		logUtils.Infof(i118Utils.Sprintf("server_address") + url)
+	}
+	client := &http.Client{}
+
+	dataBytes, err := json.Marshal(data)
+	if err != nil {
+		logUtils.Infof(color.RedString("marshal request failed, error: %s.", err.Error()))
+		return
+	}
+
+	dataStr := string(dataBytes)
+	if commConsts.Verbose {
+		logUtils.Infof(i118Utils.Sprintf("request_content"))
+		logUtils.Infof(dataStr)
+	}
+
+	req, err := http.NewRequest("POST", url, strings.NewReader(dataStr))
+	if err != nil {
+		logUtils.Infof(color.RedString("post request failed, error: %s.", err.Error()))
+		return
+	}
+
+	if strings.Index(url, "/tokens") < 0 {
+		req.Header.Add(commConsts.Token, commConsts.SessionId)
+	}
+	//req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		logUtils.Infof(color.RedString("post request failed, error: %s.", err.Error()))
+		return
+	}
+
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		logUtils.Infof(color.RedString("read response failed, error: %s.", err.Error()))
+		return
+	}
+
+	if commConsts.Verbose {
+		logUtils.Infof(i118Utils.Sprintf("request_response"))
+		logUtils.Infof(logUtils.ConvertUnicode(bodyBytes))
+	}
+
+	defer resp.Body.Close()
+
+	ret, err = GetRespErr(bodyBytes, url)
+
+	return
+}
+
+func PostWithFormat(url string, data interface{}, useFormFormat bool) (ret []byte, err error) {
 	url = AddToken(url)
 
 	if commConsts.Verbose {
@@ -233,7 +288,7 @@ func AddToken(url string) (ret string) {
 
 	paramPir := commConsts.SessionVar + "=" + commConsts.SessionId
 
-	if commConsts.RequestType == commConsts.PathInfo {
+	if commConsts.RequestType == commConsts.PathInfo && strings.Index(address, "?") < 0 {
 		address = address + "?" + paramPir
 	} else {
 		address = address + "&" + paramPir
