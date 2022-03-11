@@ -315,6 +315,15 @@ func ParserUnitTestResult(testSuites []commDomain.UnitTestSuite) (
 
 				cs.Failure.Desc = strings.Replace(cs.Failure.Desc, "<![CDATA[", "", -1)
 				cs.Failure.Desc = strings.Replace(cs.Failure.Desc, "]]>", "", -1)
+			} else if cs.ErrorContent != "" {
+				cs.Status = "fail"
+
+				if cs.Failure == nil {
+					cs.Failure = &commDomain.Failure{}
+				}
+				cs.ErrorContent = strings.Replace(cs.ErrorContent, "<![CDATA[", "", -1)
+				cs.ErrorContent = strings.Replace(cs.ErrorContent, "]]>", "", -1)
+				cs.Failure.Desc = cs.ErrorType + ": " + cs.ErrorContent
 			} else {
 				cs.Status = "pass"
 			}

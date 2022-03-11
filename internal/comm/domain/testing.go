@@ -211,6 +211,9 @@ type UnitResult struct {
 	Duration float32  `json:"duration" xml:"time,attr"`
 	Failure  *Failure `json:"failure" xml:"failure,omitempty"`
 
+	ErrorType    string `json:"errorType" xml:"type,attr,omitempty"`
+	ErrorContent string `json:"errorContent" xml:"error,omitempty"`
+
 	Id     int    `json:"id"`
 	Status string `json:"status"`
 }
