@@ -1,44 +1,35 @@
 <template>
-    <div id="indexlayout-right-top">
-        <div class="indexlayout-right-top-top">
-            <div @click="gotoSite" class="indexlayout-flexible">
-              <span class="log"><img src="../../../assets/images/logo.png"></span>
-              <span class="title">{{t('ztf_name_full')}}</span>
+    <div id="right-top">
+        <div class="right-top-top">
+
+            <div @click="gotoSite" class="logo-wrapper">
+              <span class="logo"><img src="../../../assets/images/logo.png"></span>
             </div>
-            <div class="indexlayout-top-project">
-              <right-top-project class="indexlayout-top-selectproject"></right-top-project>
+
+            <div class="top-project-wrapper">
+              <right-top-project class="top-select-project"></right-top-project>
             </div>
-            <div class="indexlayout-top-menu">
-                <div ref="topMenuCon" style="width: 100%">
-                  <template v-for="(item, key) in menuData">
-                    <a-link
-                      :key="key"
-                      v-if="!item.hidden"
-                      :to="item.path"
-                      :class="{'active': belongTopMenu === item.path }"
-                      :id="pathToId(item.path)"
-                      class="indexlayout-top-menu-li"
-                    >
-                    {{t(item.title)}}
-                    </a-link>
-                  </template>
-                </div>
+
+            <div class="menu-wrapper">
+              <RightTopMenu :menuData="menuData" :belongTopMenu="belongTopMenu"></RightTopMenu>
             </div>
-            <div class="indexlayout-top-menu-right">
-              <select-lang class="indexlayout-top-selectlang" />
+
+            <div class="settings-wrapper">
+              <RightTopSettings />
             </div>
         </div>
     </div>
 </template>
+
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, onMounted, PropType, Ref, toRefs } from "vue";
+import { defineComponent, PropType, Ref, toRefs } from "vue";
 import { useI18n } from "vue-i18n";
 
 import { BreadcrumbType, RoutesDataItem } from '@/utils/routes';
-import SelectLang from '@/components/SelectLang/index.vue';
-import ALink from '@/components/ALink/index.vue';
+import RightTopSettings from './RightTopSettings.vue';
 import useTopMenuWidth from "../composables/useTopMenuWidth";
 import RightTopProject from './RightTopProject.vue';
+import RightTopMenu from './RightTopMenu.vue';
 
 interface RightTopSetupData {
   t: (key: string | number) => string;
@@ -50,9 +41,8 @@ interface RightTopSetupData {
 export default defineComponent({
     name: 'RightTop',
     components: {
-      ALink,
-      SelectLang,
-      RightTopProject,
+      RightTopSettings,
+      RightTopProject, RightTopMenu,
     },
     props: {
       collapsed: {
@@ -109,21 +99,25 @@ export default defineComponent({
     }
 })
 </script>
-<style lang="less">
+
+<style lang="less" scoped>
 @import '../../../assets/css/global.less';
-#indexlayout-right-top {
+
+#right-top {
   width: 100%;
   height: @headerHeight;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
   z-index: 9;
-  .indexlayout-right-top-top {
+
+  .right-top-top {
     display: flex;
     width: 100%;
     height: @headerHeight;
     background-color: @menu-dark-bg;
     color: #FFFFFF;
-    .indexlayout-flexible {
-      margin: 0 16px;
+
+    .logo-wrapper {
+      margin: 0 30px 0 30px;
       width: auto;
       height: @headerHeight;
       line-height: @headerHeight;
@@ -133,9 +127,10 @@ export default defineComponent({
         background-color: @menu-dark-bg;
         color: @menu-dark-highlight-color;
       }
-      .log {
+      .logo {
         img {
-          vertical-align: -5px
+          height: 30px;
+          vertical-align: -10px
         }
       }
       .title {
@@ -146,62 +141,18 @@ export default defineComponent({
       }
     }
 
-    .indexlayout-top-menu {
-      height: @headerHeight;
-      line-height: @headerHeight;
-      flex: 1;
-      /* display: flex; */
-      overflow: hidden;
-      overflow-x: auto;
-      .indexlayout-top-menu-li {
-        display: inline-block;
-        padding: 0 15px;
-        height: @headerHeight;
-        text-decoration: none;
-        color: #FFFFFF;
-        font-size: 15px;
-        border-bottom: solid 3px transparent;
-        &:hover,
-        &.active {
-          background-color: @menu-dark-bg-active;
-          color: @menu-dark-highlight-color;
-        }
-      }
-
-      .breadcrumb {
-        line-height: @headerHeight;
-      }
+    .top-project-wrapper {
+      margin-right: 16px;
+      width: 320px;
     }
 
-    .indexlayout-top-menu-right {
+    .menu-wrapper {
+      flex: 1;
+    }
+
+    .settings-wrapper {
       display: flex;
       width: 90px;
-
-      .indexlayout-top-selectlang {
-        padding: 12px 10px;
-      }
-    }
-
-    .scrollbar();
-
-  }
-  .indexlayout-top-project {
-    margin-right: 16px;
-  }
-  .indexlayout-right-top-bot {
-    display: flex;
-    width: 100%;
-    height: @headerBreadcrumbHeight;
-    background-color: @mainBgColor;
-    .indexlayout-right-top-bot-home {
-      width: @headerBreadcrumbHeight;
-      height: @headerBreadcrumbHeight;
-      line-height: @headerBreadcrumbHeight;
-      text-align: center;
-    }
-    .breadcrumb {
-      line-height: @headerBreadcrumbHeight;
-      margin-left: 10px;
     }
   }
 }

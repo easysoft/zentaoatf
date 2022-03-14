@@ -99,6 +99,23 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
     component: () => import('@/views/sync/index.vue'),
   },
 
+  {
+    icon: '',
+    title: 'empty',
+    path: '/site',
+    redirect: '/site/list',
+    component: BlankLayout,
+    hidden: true,
+    children: [
+      {
+        title: 'index-layout.menu.script.list',
+        path: 'list',
+        component: () => import('@/views/site/index.vue'),
+        hidden: true,
+      },
+    ],
+  },
+
 ];
 
 export default IndexLayoutRoutes;

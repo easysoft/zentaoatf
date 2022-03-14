@@ -81,12 +81,12 @@ func coloredStatus(status commConsts.ResultStatus) string {
 func reportBug(resultDir string, caseId string) error {
 	bug = zentaoUtils.PrepareBug(commConsts.WorkDir, resultDir, caseId)
 	req := commDomain.FuncResult{
-		ProductId: stringUtils.ParseInt(bug.Product),
+		ProductId: bug.Product,
 	}
 	bugFields, _ = zentaoUtils.GetBugFiledOptions(req, commConsts.WorkDir)
-	bug.Module = "/"
-	bug.Severity = "3"
-	bug.Pri = "3"
+	//bug.Module = 0
+	bug.Severity = 3
+	bug.Pri = 3
 	bug.Type = getFirstNoEmptyVal(bugFields.Categories)
 	bug.Version = getNameById(bug.Version, bugFields.Versions)
 

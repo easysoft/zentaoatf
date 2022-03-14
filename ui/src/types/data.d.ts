@@ -4,7 +4,7 @@ export interface WsMsg {
 }
 
 export interface QueryResult {
-  data: Execution[];
+  data: any[];
   pagination: PaginationConfig;
 }
 

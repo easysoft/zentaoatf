@@ -18,6 +18,64 @@ import (
 	"strings"
 )
 
+func CommitCase(caseId int, title string,
+	stepMap maps.Map, stepTypeMap maps.Map, expectMap maps.Map, projectPath string) (err error) {
+	config := configUtils.LoadByProjectPath(projectPath)
+
+	err = Login(config)
+	if err != nil {
+		return
+	}
+
+	uri := fmt.Sprintf("/testcases/%d", caseId)
+	url := GenApiUrl(uri, nil, config.Url)
+
+	requestObj := map[string]interface{}{
+		"type":     "feature",
+		"title":    title,
+		"steps":    commonUtils.LinkedMapToMap(stepMap),
+		"stepType": commonUtils.LinkedMapToMap(stepTypeMap),
+		"expects":  commonUtils.LinkedMapToMap(expectMap)}
+
+	json, err := json.Marshal(requestObj)
+	if err != nil {
+		return
+	}
+
+	if commConsts.Verbose {
+		logUtils.Infof(string(json))
+	}
+
+	yes := true
+	if commConsts.ComeFrom == "cmd" {
+		logUtils.ExecConsole(1, "\n"+i118Utils.Sprintf("case_update_confirm", caseId, title))
+		stdinUtils.InputForBool(&yes, true, "want_to_continue")
+	}
+
+	if yes {
+		_, err = httpUtils.PostWithFormat(url, requestObj, true)
+		if err == nil {
+			logUtils.Infof(i118Utils.Sprintf("success_to_commit_case", caseId) + "\n")
+		}
+	}
+
+	return
+}
+
+func GetCaseById(baseUrl string, caseId int) (cs commDomain.ZtfCase) {
+	uri := fmt.Sprintf("/testcases/%d", caseId)
+	url := GenApiUrl(uri, nil, baseUrl)
+
+	bytes, err := httpUtils.Get(url)
+	if err != nil {
+		return
+	}
+
+	json.Unmarshal(bytes, &cs)
+
+	return
+}
+
 func LoadTestCases(productId, moduleId, suiteId, taskId int, projectPath string) (
 	cases []commDomain.ZtfCase, loginFail bool) {
 
@@ -247,69 +305,6 @@ func genCaseSteps(csWithSteps commDomain.ZtfCase) (ret []commDomain.ZtfStep) {
 	for _, key := range keys {
 		step := csWithSteps.Steps[key]
 		ret = append(ret, step)
-	}
-
-	return
-}
-
-func GetCaseById(baseUrl string, caseId int) (cs commDomain.ZtfCase) {
-	uri := fmt.Sprintf("/testcases/%d", caseId)
-	url := GenApiUrl(uri, nil, baseUrl)
-
-	bytes, err := httpUtils.Get(url)
-	if err != nil {
-		return
-	}
-
-	json.Unmarshal(bytes, &cs)
-
-	return
-}
-
-func CommitCase(caseId int, title string,
-	stepMap maps.Map, stepTypeMap maps.Map, expectMap maps.Map, projectPath string) (err error) {
-	config := configUtils.LoadByProjectPath(projectPath)
-
-	err = Login(config)
-	if err != nil {
-		return
-	}
-
-	// $caseID, $comment = false
-	params := ""
-	if commConsts.RequestType == commConsts.PathInfo {
-		params = fmt.Sprintf("%d-0", caseId)
-	} else {
-		params = fmt.Sprintf("caseID=%d&comment=0", caseId)
-	}
-
-	url := config.Url + GenApiUriOld("testcase", "edit", params)
-
-	requestObj := map[string]interface{}{"title": title,
-		"steps":    commonUtils.LinkedMapToMap(stepMap),
-		"stepType": commonUtils.LinkedMapToMap(stepTypeMap),
-		"expects":  commonUtils.LinkedMapToMap(expectMap)}
-
-	json, err := json.Marshal(requestObj)
-	if err != nil {
-		return
-	}
-
-	if commConsts.Verbose {
-		logUtils.Infof(string(json))
-	}
-
-	yes := true
-	if commConsts.ComeFrom == "cmd" {
-		logUtils.ExecConsole(1, "\n"+i118Utils.Sprintf("case_update_confirm", caseId, title))
-		stdinUtils.InputForBool(&yes, true, "want_to_continue")
-	}
-
-	if yes {
-		_, err = httpUtils.PostWithFormat(url, requestObj, true)
-		if err == nil {
-			logUtils.Infof(i118Utils.Sprintf("success_to_commit_case", caseId) + "\n")
-		}
 	}
 
 	return

@@ -110,13 +110,13 @@ type ZtfBug struct {
 
 	StepIds string `json:"ids"` // for to
 
-	Product  string `json:"product"`
-	Module   string `json:"module"`
-	Severity string `json:"severity"`
-	Pri      string `json:"pri"`
+	Product  int    `json:"product"`
+	Module   int    `json:"module"`
+	Severity int    `json:"severity"`
+	Pri      int    `json:"pri"`
 	Version  string `json:"version"`
 
-	Case  string `json:"case"`
+	Case  int    `json:"case"`
 	Steps string `json:"steps"`
 
 	Uid         string            `json:"uid"`
@@ -128,12 +128,12 @@ type ZentaoBug struct {
 	Title string `json:"title"`
 	Type  string `json:"type"`
 
-	Product  string `json:"product"`
-	Module   string `json:"module"`
-	Severity string `json:"severity"`
-	Pri      string `json:"pri"`
+	Product  int `json:"product"`
+	Module   int `json:"module"`
+	Severity int `json:"severity"`
+	Pri      int `json:"pri"`
 
-	Case  string `json:"case"`
+	Case  int    `json:"case"`
 	Steps string `json:"steps"`
 
 	Uid         string            `json:"uid"`

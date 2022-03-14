@@ -4,7 +4,12 @@
       {{ t('create_project') }}
     </div>
 
-    <a-dropdown v-if="projects.length > 0" class="dropdown">
+    <!-- zentao site selection -->
+    <a-dropdown
+        v-if="projects.length > 0"
+        :dropdownMatchSelectWidth="false"
+        class="dropdown-list">
+
       <a class="t-link-btn" @click.prevent>
         <span class="name">{{currProject.name}}</span>
         <span class="icon2"><icon-svg type="down"></icon-svg></span>
@@ -20,6 +25,42 @@
                     <icon-svg type="delete" class="menu-icon"></icon-svg>
                   </div>
                 </div>
+            </a-menu-item>
+          </template>
+
+          <a-menu-divider v-if="projects.length > 1"/>
+
+          <a-menu-item key="" class="create">
+            <span class="t-link name" @click="selectProject('')">
+              <icon-svg type="add" class="menu-icon"></icon-svg>
+              {{ t('create_project') }}
+            </span>
+          </a-menu-item>
+        </a-menu>
+      </template>
+    </a-dropdown>
+
+    <!-- zentao product selection -->
+    <a-dropdown
+        v-if="projects.length > 0"
+        :dropdownMatchSelectWidth="false"
+        class="dropdown-list">
+
+      <a class="t-link-btn" @click.prevent>
+        <span class="name">{{currProject.name}}</span>
+        <span class="icon2"><icon-svg type="down"></icon-svg></span>
+      </a>
+      <template #overlay>
+        <a-menu class="menu">
+          <template v-for="item in projects" :key="item.path">
+            <a-menu-item v-if="currProject.path !== item.path">
+              <div class="line">
+                <div class="t-link name" @click="selectProject(item)">{{ item.name }}</div>
+                <div class="space"></div>
+                <div class="t-link icon" @click="setDeleteModel(item)">
+                  <icon-svg type="delete" class="menu-icon"></icon-svg>
+                </div>
+              </div>
             </a-menu-item>
           </template>
 
@@ -64,7 +105,6 @@ import ProjectCreateForm from "@/views/component/project/create.vue";
 import {createProject} from "@/services/project";
 import {hideMenu} from "@/utils/dom";
 import {useI18n} from "vue-i18n";
-import { DownOutlined } from '@ant-design/icons-vue';
 
 interface RightTopProject {
   t: (key: string | number) => string;
@@ -121,18 +161,6 @@ export default defineComponent({
 
       if (!item) {
         setFormVisible(true)
-
-        // if (window.require) {
-        //   const {dialog} = window.require('@electron/remote');
-        //   dialog.showOpenDialog({
-        //     properties: ['openDirectory']
-        //   }).then(result => {
-        //     console.log(result.canceled)
-        //     console.log(result.filePaths)
-        //   }).catch(err => {
-        //     console.log(err)
-        //   })
-        // }
       } else {
         store.dispatch('project/fetchProject', item.path)
       }
@@ -200,28 +228,19 @@ export default defineComponent({
   cursor: pointer;
   text-align: right;
 }
-.dropdown {
+.dropdown-list {
   display: inline-block;
+  margin-right: 26px;
   padding-top: 13px;
-  width: 150px;
   font-size: 15px !important;
-  text-align: right;
 
   .name {
-    display: inline-block;
-    width: 130px;
-    text-overflow: ellipsis;
-    overflow: hidden;
     margin-right: 5px;
   }
   .icon2 {
     .svg-icon {
-      vertical-align: 3px !important;
+      vertical-align: -3px !important;
     }
-  }
-  .anticon-down {
-    font-size: 16px !important;
-    line-height: 20px;
   }
 }
 
