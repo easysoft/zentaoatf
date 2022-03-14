@@ -13,6 +13,8 @@ import (
 type IndexModule struct {
 	FileModule *index.FileModule `inject:""`
 
+	SiteModule *index.SiteModule `inject:""`
+
 	ZentaoModule  *index.ZentaoModule  `inject:""`
 	ConfigModule  *index.ConfigModule  `inject:""`
 	SyncModule    *index.SyncModule    `inject:""`
@@ -42,6 +44,7 @@ func (m *IndexModule) Party() module.WebModule {
 	modules := []module.WebModule{
 		m.FileModule.Party(),
 
+		m.SiteModule.Party(),
 		m.ZentaoModule.Party(),
 		m.ConfigModule.Party(),
 		m.SyncModule.Party(),
