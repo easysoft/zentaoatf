@@ -42,20 +42,20 @@ func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool
 	caseTitle := cs.Title
 
 	if byModule {
-		targetDir = filepath.Join(targetDir, moduleId)
+		targetDir = filepath.Join(targetDir, strconv.Itoa(moduleId))
 	}
 
 	fileUtils.MkDirIfNeeded(targetDir)
 
 	content := ""
 	isOldFormat := false
-	scriptFile := filepath.Join(targetDir, fmt.Sprintf("%s.%s", caseId, langUtils.LangMap[langType]["extName"]))
+	scriptFile := filepath.Join(targetDir, fmt.Sprintf("%d.%s", caseId, langUtils.LangMap[langType]["extName"]))
 	if fileUtils.FileExist(scriptFile) { // update title and steps
 		content = fileUtils.ReadFile(scriptFile)
 		isOldFormat = strings.Index(content, "[esac]") > -1
 	}
 
-	*caseIds = append(*caseIds, caseId)
+	*caseIds = append(*caseIds, strconv.Itoa(caseId))
 
 	info := make([]string, 0)
 	steps := make([]string, 0)
@@ -69,12 +69,12 @@ func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool
 
 	StepWidth := 20
 	stepDisplayMaxWidth := 0
-	computerTestStepWidth(cs.StepArr, &stepDisplayMaxWidth, StepWidth)
+	computerTestStepWidth(cs.Steps, &stepDisplayMaxWidth, StepWidth)
 
 	if isOldFormat {
-		generateTestStepAndScriptObsolete(cs.StepArr, &steps, &independentExpects, independentFile)
+		generateTestStepAndScriptObsolete(cs.Steps, &steps, &independentExpects, independentFile)
 	} else {
-		generateTestStepAndScript(cs.StepArr, &steps, &independentExpects, independentFile)
+		generateTestStepAndScript(cs.Steps, &steps, &independentExpects, independentFile)
 	}
 	info = append(info, strings.Join(steps, "\n"))
 

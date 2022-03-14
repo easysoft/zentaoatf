@@ -54,8 +54,7 @@ func GetCasesByModule(productId int, moduleId int, projectPath, scriptDir string
 	testcases := ListCaseByModule(config.Url, productId, moduleId)
 	zentaoCaseIdMap := map[int]string{}
 	for _, tc := range testcases {
-		id, _ := strconv.Atoi(tc.Id)
-		zentaoCaseIdMap[id] = ""
+		zentaoCaseIdMap[tc.Id] = ""
 	}
 
 	//commonUtils.ChangeScriptForDebug(&projectPath)
@@ -77,8 +76,7 @@ func GetCasesBySuite(productId int, suiteId int, projectPath, scriptDir string) 
 
 	caseIdMap := map[int]string{}
 	for _, tc := range testcases {
-		id, _ := strconv.Atoi(tc.Id)
-		caseIdMap[id] = ""
+		caseIdMap[tc.Id] = ""
 	}
 
 	//commonUtils.ChangeScriptForDebug(&projectPath)
@@ -100,8 +98,7 @@ func GetCasesByTask(productId int, taskId int, projectPath, scriptDir string) (c
 
 	caseIdMap := map[int]string{}
 	for _, tc := range testcases {
-		id, _ := strconv.Atoi(tc.Id)
-		caseIdMap[id] = ""
+		caseIdMap[tc.Id] = ""
 	}
 
 	//commonUtils.ChangeScriptForDebug(&projectPath)
@@ -110,38 +107,28 @@ func GetCasesByTask(productId int, taskId int, projectPath, scriptDir string) (c
 	return
 }
 
-func ListCaseByProduct(baseUrl string, productId int) []commDomain.ZtfCase {
-	// $productID=productId, $branch = '', $browseType = 'byModule', $param=moduleId,
-	// $orderBy='id_desc', $recTotal=0, $recPerPage=10000, $pageID=1)
+func ListCaseByProduct(baseUrl string, productId int) (caseArr []commDomain.ZtfCase) {
+	uri := fmt.Sprintf("/products/%d/testcases", productId)
+	url := GenApiUrl(uri, nil, baseUrl)
 
-	params := ""
-	if commConsts.RequestType == commConsts.PathInfo {
-		params = fmt.Sprintf("%d--byModule-all-id_asc-0-10000-1", productId)
-	} else {
-		params = fmt.Sprintf("productID=%d&branch=&browseType=byModule&param=0&orderBy=id_desc&recTotal=0&recPerPage=10000", productId)
-	}
-
-	url := baseUrl + GenApiUriOld("testcase", "browse", params)
 	dataStr, err := httpUtils.Get(url)
-
-	if err == nil {
-		var product commDomain.ZtfProduct
-		json.Unmarshal(dataStr, &product)
-
-		caseArr := make([]commDomain.ZtfCase, 0)
-		for _, cs := range product.Cases {
-			caseId := cs.Id
-
-			csWithSteps := GetCaseById(baseUrl, caseId)
-			stepArr := genCaseSteps(csWithSteps)
-			caseArr = append(caseArr, commDomain.ZtfCase{Id: caseId, Product: cs.Product, Module: cs.Module,
-				Title: cs.Title, StepArr: stepArr})
-		}
-
-		return caseArr
+	if err != nil {
+		return
 	}
 
-	return nil
+	var cases commDomain.ZtfRespTestCases
+	json.Unmarshal(dataStr, &cases)
+
+	for _, cs := range cases.Cases {
+		caseId := cs.Id
+
+		csWithSteps := GetCaseById(baseUrl, caseId)
+		stepArr := genCaseSteps(csWithSteps)
+		caseArr = append(caseArr, commDomain.ZtfCase{Id: caseId, Product: cs.Product, Module: cs.Module,
+			Title: cs.Title, Steps: stepArr})
+	}
+
+	return caseArr
 }
 
 func ListCaseByModule(baseUrl string, productId, moduleId int) []commDomain.ZtfCase {
@@ -171,7 +158,7 @@ func ListCaseByModule(baseUrl string, productId, moduleId int) []commDomain.ZtfC
 			stepArr := genCaseSteps(csWithSteps)
 
 			caseArr = append(caseArr, commDomain.ZtfCase{Id: caseId, Product: cs.Product, Module: cs.Module,
-				Title: cs.Title, StepArr: stepArr})
+				Title: cs.Title, Steps: stepArr})
 		}
 
 		return caseArr
@@ -205,7 +192,7 @@ func ListCaseBySuite(baseUrl string, productId, suiteId int) []commDomain.ZtfCas
 			stepArr := genCaseSteps(csWithSteps)
 
 			caseArr = append(caseArr, commDomain.ZtfCase{Id: caseId, Product: cs.Product, Module: cs.Module,
-				Title: cs.Title, StepArr: stepArr})
+				Title: cs.Title, Steps: stepArr})
 		}
 
 		return caseArr
@@ -240,7 +227,7 @@ func ListCaseByTask(baseUrl string, productId, taskId int) []commDomain.ZtfCase 
 			stepArr := genCaseSteps(csWithSteps)
 
 			caseArr = append(caseArr, commDomain.ZtfCase{Id: caseId, Product: cs.Product, Module: cs.Module,
-				Title: cs.Title, StepArr: stepArr})
+				Title: cs.Title, Steps: stepArr})
 		}
 
 		return caseArr
@@ -265,8 +252,8 @@ func genCaseSteps(csWithSteps commDomain.ZtfCase) (ret []commDomain.ZtfStep) {
 	return
 }
 
-func GetCaseById(baseUrl string, caseId string) (cs commDomain.ZtfCase) {
-	uri := fmt.Sprintf("/testcases/%s", caseId)
+func GetCaseById(baseUrl string, caseId int) (cs commDomain.ZtfCase) {
+	uri := fmt.Sprintf("/testcases/%d", caseId)
 	url := GenApiUrl(uri, nil, baseUrl)
 
 	bytes, err := httpUtils.Get(url)

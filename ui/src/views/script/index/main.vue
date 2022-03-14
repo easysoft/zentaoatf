@@ -50,6 +50,7 @@
               class="editor"
               :value="scriptCode"
               :language="lang"
+              :options="editorOptions"
           />
         </div>
       </div>
@@ -67,7 +68,8 @@ import {resizeWidth} from "@/utils/dom";
 import {Empty, message, notification} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
 
-import MonacoEditor from 'monaco-editor-vue3'
+import {MonacoOptions} from "@/utils/const";
+import MonacoEditor from "@/components/Editor/MonacoEditor.vue";
 
 interface ListScriptPageSetupData {
   t: (key: string | number) => string;
@@ -75,9 +77,11 @@ interface ListScriptPageSetupData {
   treeData: ComputedRef<any[]>;
   replaceFields: any,
   tree: Ref;
+
   script: ComputedRef
   scriptCode: Ref<string>;
   lang: Ref<string>;
+  editorOptions: Ref
 
   isExpand: Ref<boolean>;
   expandNode: (expandedKeys: string[], e: any) => void;
@@ -132,6 +136,7 @@ export default defineComponent({
     let script = computed<any>(() => storeScript.state.script.detail);
     let scriptCode = ref('')
     let lang = ref('')
+    const editorOptions = ref(MonacoOptions)
 
     onMounted(() => {
       console.log('onMounted', tree)
@@ -142,14 +147,8 @@ export default defineComponent({
       console.log('expandNode', keys[0], e)
     }
 
-    // let monacoInstance: any
-    // const disposeEditor = () => {
-    //   console.log('disposeEditor')
-    //   if (monacoInstance) monacoInstance.dispose();
-    // }
     onUnmounted(() => {
       console.log('onUnmounted', tree)
-      // disposeEditor()
     })
     const selectNode = (selectedKeys, e) => {
       console.log('selectNode', e.selectedNodes)
@@ -206,6 +205,7 @@ export default defineComponent({
       script,
       scriptCode,
       lang,
+      editorOptions,
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
     }
   }

@@ -36,29 +36,10 @@ func GetConfig(baseUrl string) (err error) {
 	commConsts.RequestType = requestType
 	commConsts.RequestFix, _ = json.Get("requestFix").String()
 
-	// check site path by calling login interface
-	uri := ""
-	if commConsts.RequestType == commConsts.PathInfo {
-		uri = "user-login.json"
-	} else {
-		uri = "index.php?m=user&f=login&t=json"
-	}
-	url = baseUrl + uri
-	bytes, err = httpUtils.Get(url)
-	if err != nil {
-		return
-	}
-
 	return
 }
 
 func Login(config commDomain.ProjectConf) (err error) {
-	err = GetConfig(config.Url)
-	if err != nil {
-		logUtils.Infof(i118Utils.Sprintf("fail_to_login"))
-		return
-	}
-
 	url := GenApiUrl("tokens", nil, config.Url)
 
 	params := map[string]string{

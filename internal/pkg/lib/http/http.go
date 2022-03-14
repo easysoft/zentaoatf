@@ -10,7 +10,6 @@ import (
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/ajg/form"
 	"github.com/fatih/color"
-	"github.com/yosssi/gohtml"
 	"io/ioutil"
 	"net/http"
 	"regexp"
@@ -35,12 +34,13 @@ func Get(url string) (ret []byte, err error) {
 	}
 
 	resp, err := client.Do(req)
+	defer resp.Body.Close()
 	if err != nil {
 		logUtils.Infof(color.RedString("get request failed, error: %s.", err.Error()))
 		return
 	}
 
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	ret, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
 		logUtils.Infof(color.RedString("read response failed, error ", err.Error()))
 		return
@@ -48,36 +48,7 @@ func Get(url string) (ret []byte, err error) {
 
 	if commConsts.Verbose {
 		logUtils.Infof(i118Utils.Sprintf("request_response"))
-		logUtils.Infof(logUtils.ConvertUnicode(bodyBytes))
-	}
-	defer resp.Body.Close()
-
-	var zentaoResp serverDomain.ZentaoResp
-	err = json.Unmarshal(bodyBytes, &zentaoResp)
-	if err != nil {
-		if strings.Index(string(bodyBytes), "<html>") > -1 {
-			if commConsts.Verbose {
-				logUtils.Errorf(i118Utils.Sprintf("request_response") + " HTML - " + gohtml.FormatWithLineNo(string(bodyBytes)))
-			}
-			return
-		} else {
-			if commConsts.Verbose {
-				logUtils.Infof(color.RedString("unmarshal response failed, error: %s.", err.Error()))
-			}
-			return
-		}
-	}
-
-	defer resp.Body.Close()
-
-	status := zentaoResp.Status
-	if status == "" { // 非嵌套结构
-		ret = bodyBytes
-	} else { // 嵌套结构
-		ret = []byte(zentaoResp.Data)
-		if status != "success" {
-			err = errors.New(zentaoResp.Data)
-		}
+		logUtils.Infof(logUtils.ConvertUnicode(ret))
 	}
 
 	return
@@ -119,7 +90,8 @@ func Post(url string, data interface{}) (ret []byte, err error) {
 		return
 	}
 
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	ret, err = ioutil.ReadAll(resp.Body)
+	defer resp.Body.Close()
 	if err != nil {
 		logUtils.Infof(color.RedString("read response failed, error: %s.", err.Error()))
 		return
@@ -127,12 +99,8 @@ func Post(url string, data interface{}) (ret []byte, err error) {
 
 	if commConsts.Verbose {
 		logUtils.Infof(i118Utils.Sprintf("request_response"))
-		logUtils.Infof(logUtils.ConvertUnicode(bodyBytes))
+		logUtils.Infof(logUtils.ConvertUnicode(ret))
 	}
-
-	defer resp.Body.Close()
-
-	ret, err = GetRespErr(bodyBytes, url)
 
 	return
 }

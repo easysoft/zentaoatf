@@ -12,7 +12,6 @@ import (
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/fatih/color"
 	"path/filepath"
-	"strconv"
 )
 
 type SyncService struct {
@@ -42,7 +41,7 @@ func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, projectPa
 	cases, loginFail := s.TestCaseService.LoadTestCases(productId, moduleId, suiteId, taskId, projectPath)
 
 	if cases != nil && len(cases) > 0 {
-		productId, _ = strconv.Atoi(cases[0].Product)
+		productId = cases[0].Product
 		targetDir := fileUtils.AddPathSepIfNeeded(filepath.Join(projectPath, fmt.Sprintf("product%d", productId)))
 
 		count, err := s.TestScriptService.GenerateScripts(cases, lang, independentFile, byModule, targetDir)

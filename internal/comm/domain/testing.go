@@ -8,79 +8,82 @@ import (
 	"time"
 )
 
-type ZtfProduct struct {
-	Id   string
-	Code string
-	Name string
+type ZtfRespTestCases struct {
+	Cases []ZtfCaseInModule `json:"testcases"`
+}
 
-	Cases map[int]ZtfCaseInModule
+type ZtfProduct struct {
+	Id int
+	//Code string
+	//Name string
+
+	Cases map[int]ZtfCaseInModule `json:"testcases"`
 }
 
 type ZtfModule struct {
-	Id   string
-	Code string
-	Name string
+	Id    int
+	Code  string
+	Title string
 
 	Cases map[int]ZtfCaseInModule
 }
 type ZtfCaseInModule struct {
-	Id      string
+	Id      int
 	Title   string
-	Product string
-	Module  string
+	Product int
+	Module  int
 }
 
 type ZtfSuite struct {
-	Id      string
+	Id      int
 	Code    string
 	Name    string
-	Product string
+	Product int
 
 	Cases map[int]ZtfCaseInSuite
 }
 
 type ZtfCaseInSuite struct {
-	Id      string
+	Id      int
 	Title   string
-	Product string
-	Suite   string
-	Module  string
+	Product int
+	Suite   int
+	Module  int
 }
 
 type ZtfTask struct {
-	Id      string
+	Id      int
 	Code    string
 	Name    string
-	Product string
-	Project string
+	Product int
+	Project int
 
 	Runs map[int]ZtfCaseInTask
 }
 
 type ZtfCaseInTask struct {
-	Id      string // runId in task
+	Id      int // runId in task
 	Title   string
-	Case    string // real caseId
-	Product string
-	Module  string
+	Case    int // real caseId
+	Product int
+	Module  int
 }
 
 type ZtfCaseNoStepArr struct {
-	Id      string
-	Product string
-	Module  string
+	Id      int
+	Product int
+	Module  int
 
 	Title string
 	Steps map[int]ZtfStep
 }
 type ZtfCase struct {
-	Id      string
-	Product string
-	Module  string
+	Id      int
+	Product int
+	Module  int
 
-	Title   string
-	Steps   map[int]ZtfStep
-	StepArr []ZtfStep `json tag -`
+	Title string
+	Steps []ZtfStep `json:"steps"`
 }
 type ZtfCaseWrapper struct {
 	From string

@@ -39,3 +39,12 @@ export const AutoTestTools = [
     'RobotFramework',
     'Cypress',
 ]
+
+export const MonacoOptions = {
+    colorDecorators: true,
+    lineHeight: 24,
+    tabSize: 2,
+    autoIndent: true,
+    formatOnPaste: true,
+    formatOnType: true
+}
