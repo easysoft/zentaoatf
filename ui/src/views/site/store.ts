@@ -66,7 +66,7 @@ const StoreModel: ModuleType = {
             }
         },
         async get({ commit }, id: number ) {
-            let data = {}
+            let data = {name:'', url: '', username: '', password: ''}
             if (id) {
                 const response: ResponseData = await get(id);
                 data = response.data;

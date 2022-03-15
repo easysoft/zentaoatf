@@ -2,20 +2,20 @@
   <a-card :title="t('edit_site')">
     <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-item :label="t('name')" v-bind="validateInfos.name">
-        <a-input v-model:value="model.name"
+        <a-input v-model:value="modelRef.name"
                  @blur="validate('name', { trigger: 'blur' }).catch(() => {})" />
       </a-form-item>
 
       <a-form-item :label="t('zentao_url')" v-bind="validateInfos.url">
-        <a-input v-model:value="model.url"
+        <a-input v-model:value="modelRef.url"
                  @blur="validate('url', { trigger: 'blur' }).catch(() => {})" placeholder="https://zentao.site.com" />
       </a-form-item>
       <a-form-item :label="t('username')" v-bind="validateInfos.username">
-        <a-input v-model:value="model.username"
+        <a-input v-model:value="modelRef.username"
                  @blur="validate('username', { trigger: 'blur' }).catch(() => {})" placeholder="" />
       </a-form-item>
       <a-form-item :label="t('password')" v-bind="validateInfos.password">
-        <a-input-password v-model:value="model.password"
+        <a-input-password v-model:value="modelRef.password"
                  @blur="validate('password', { trigger: 'blur' }).catch(() => {})" placeholder="" />
       </a-form-item>
 
@@ -29,7 +29,7 @@
 
 </template>
 <script lang="ts">
-import {defineComponent, ref, reactive, computed,  Ref, toRaw, toRef} from "vue";
+import {defineComponent, ref, reactive, computed, Ref,watch, ComputedRef} from "vue";
 import {useRouter} from "vue-router";
 import { useI18n } from "vue-i18n";
 
@@ -39,11 +39,11 @@ const useForm = Form.useForm;
 
 import {useStore} from "vuex";
 import {StateType} from "@/views/site/store";
+import _ from "lodash";
 
 interface SiteFormSetupData {
   t: (key: string | number) => string;
-  model: Ref
-  rules: any
+  modelRef: ComputedRef;
   labelCol: any
   wrapperCol: any
   validate: any
@@ -61,7 +61,7 @@ export default defineComponent({
     const router = useRouter();
 
     const store = useStore<{ Site: StateType }>();
-    const model = computed(() => store.state.Site.detailResult);
+    const modelRef = computed(() => store.state.Site.detailResult);
 
     const get = async (id: number): Promise<void> => {
       await store.dispatch('Site/get', id);
@@ -97,28 +97,27 @@ export default defineComponent({
       ],
     });
 
-    const { resetFields, validate, validateInfos } = useForm(model, rules);
+    const { resetFields, validate, validateInfos } = useForm(modelRef, rules);
     const submitForm = () => {
       validate()
         .then(() => {
-          console.log(model);
-          store.dispatch('Site/save', model.value).then((success) => {
+          console.log(modelRef.value);
+          store.dispatch('Site/save', modelRef.value).then((success) => {
             if (success) {
-              notification.success({
-                message: t('save_success'),
-              });
+              notification.success({ message: t('save_success') });
+              router.push(`/site/list`)
             }
           })
         })
+      .catch((e) => {console.log('')})
     };
 
     return {
       t,
       labelCol: { span: 4 },
       wrapperCol: { span: 14 },
-      model,
+      modelRef,
 
-      rules,
       resetFields,
       validate,
       validateInfos,
