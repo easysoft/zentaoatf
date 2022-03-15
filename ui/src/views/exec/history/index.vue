@@ -106,7 +106,7 @@ import {useStore} from "vuex";
 import {Empty, Form, message, Modal} from "ant-design-vue";
 import {StateType} from "../store";
 import {useRouter} from "vue-router";
-import {momentTimeDef, percentDef} from "@/utils/datetime";
+import {momentUnixDef, percentDef} from "@/utils/datetime";
 import {execByDef} from "@/utils/testing";
 import {ProjectData} from "@/store/project";
 import {hideMenu} from "@/utils/dom";
@@ -153,7 +153,7 @@ export default defineComponent({
     const currProject = computed<any>(() => projectStore.state.project.currProject);
 
     const execBy = execByDef
-    const momentTime = momentTimeDef
+    const momentTime = momentUnixDef
     const percent = percentDef
 
     const columns = [

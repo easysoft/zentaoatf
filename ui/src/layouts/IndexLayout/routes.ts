@@ -100,7 +100,7 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
   },
 
   {
-    icon: '',
+    icon: 'sync',
     title: 'empty',
     path: '/site',
     redirect: '/site/list',

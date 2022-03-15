@@ -4,7 +4,7 @@ export interface WsMsg {
 }
 
 export interface QueryResult {
-  data: any[];
+  result: any[];
   pagination: PaginationConfig;
 }
 
@@ -17,7 +17,7 @@ export interface QueryParams {
 
 export interface PaginationConfig {
   total: number;
-  current: number;
+  page: number;
   pageSize: number;
   showSizeChanger: boolean;
   showQuickJumper: boolean;

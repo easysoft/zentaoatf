@@ -7,7 +7,7 @@
             </div>
 
             <div class="top-project-wrapper">
-              <right-top-project class="top-select-project"></right-top-project>
+              <RightTopProject class="top-select-project"></RightTopProject>
             </div>
 
             <div class="menu-wrapper">

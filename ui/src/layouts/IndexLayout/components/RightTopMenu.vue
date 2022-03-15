@@ -1,7 +1,7 @@
 <template>
   <div ref="topMenuCon" class="top-menu" style="width: 100%">
     <template v-for="(item, key) in menuData">
-      <a-link
+      <ALink
           :key="key"
           v-if="!item.hidden"
           :to="item.path"
@@ -10,23 +10,16 @@
           class="top-menu-li"
       >
         {{t(item.title)}}
-      </a-link>
+      </ALink>
     </template>
   </div>
 </template>
 
 <script lang="ts">
 import {computed, ComputedRef, defineComponent, onMounted, PropType, Ref, ref, watch} from "vue";
-import {useRouter} from "vue-router";
-import {useStore} from "vuex";
-import IconSvg from "@/components/IconSvg/index";
-import {ProjectData} from "@/store/project";
-import ProjectCreateForm from "@/views/component/project/create.vue";
-import {createProject} from "@/services/project";
-import {hideMenu} from "@/utils/dom";
 import {useI18n} from "vue-i18n";
-import { DownOutlined } from '@ant-design/icons-vue';
 import {RoutesDataItem} from "@/utils/routes";
+import ALink from "@/components/ALink/index.vue";
 
 interface RightTopMenuSetupData {
   t: (key: string | number) => string;
@@ -34,8 +27,10 @@ interface RightTopMenuSetupData {
 }
 
 export default defineComponent({
-  name: 'RightTopProject',
-  components: {},
+  name: 'RightTopMenu',
+  components: {
+    ALink
+  },
   props: {
     menuData: {
       type: Array as PropType<RoutesDataItem[]>,

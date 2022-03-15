@@ -39,7 +39,6 @@ const useForm = Form.useForm;
 
 import {useStore} from "vuex";
 import {StateType} from "@/views/site/store";
-import _ from "lodash";
 
 interface SiteFormSetupData {
   t: (key: string | number) => string;

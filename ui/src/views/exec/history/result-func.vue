@@ -138,7 +138,7 @@ import {computed, defineComponent, onMounted, ref, Ref} from "vue";
 import {useStore} from 'vuex';
 import {StateType as ListStateType} from "@/views/exec/store";
 import {useRouter} from "vue-router";
-import {momentTimeDef, percentDef} from "@/utils/datetime";
+import {momentUnixDef, percentDef} from "@/utils/datetime";
 import {execByDef, resultStatusDef, testEnvDef, testTypeDef} from "@/utils/testing";
 import {submitResultToZentao, submitBugToZentao} from "@/views/exec/service";
 import {notification} from "ant-design-vue";
@@ -189,7 +189,7 @@ export default defineComponent({
     const { t } = useI18n();
 
     const execBy = execByDef
-    const momentTime = momentTimeDef
+    const momentTime = momentUnixDef
     const percent = percentDef
     const testEnv = testEnvDef
     const testType = testTypeDef

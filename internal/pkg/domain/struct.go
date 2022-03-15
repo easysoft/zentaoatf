@@ -39,6 +39,10 @@ type Response struct {
 type PageData struct {
 	Result interface{} `json:"result"`
 
+	Pagination Pagination `json:"pagination"`
+}
+
+type Pagination struct {
 	Total    int `json:"total"`
 	Page     int `json:"page"`
 	PageSize int `json:"pageSize"`
@@ -46,7 +50,8 @@ type PageData struct {
 
 func (d *PageData) Populate(result interface{}, total int64, page, pageSize int) {
 	d.Result = result
-	d.Total = int(total)
-	d.Page = page
-	d.PageSize = pageSize
+
+	d.Pagination.Total = int(total)
+	d.Pagination.Page = page
+	d.Pagination.PageSize = pageSize
 }

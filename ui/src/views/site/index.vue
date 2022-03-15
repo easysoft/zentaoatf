@@ -21,7 +21,7 @@
 
       <div>
         <a-table
-            row-key="seq"
+            row-key="id"
             :columns="columns"
             :data-source="models"
             :loading="loading"
@@ -36,38 +36,14 @@
                 },
             }"
         >
-          <template #seq="{ text }">
-            {{ text }}
+
+          <template #createdAt="{ record }">
+            <span v-if="record.createdAt">{{ momentUtc(record.createdAt) }}</span>
           </template>
-          <template #execBy="{ record }">
-            {{ execBy(record) }}
-          </template>
-          <template #startTime="{ record }">
-            <span v-if="record.startTime">{{ momentTime(record.startTime) }}</span>
-          </template>
-          <template #duration="{ record }">
-            {{ record.duration }}秒
-          </template>
-          <template #result="{ record }">
-            <span class="t-pass t-status">
-              {{ record.pass }}&nbsp;
-              <icon-svg type="pass"></icon-svg>&nbsp;
-              ({{ percent(record.pass, record.total) }})
-            </span>
-            <span class="t-fail t-status">
-              {{ record.fail }}&nbsp;
-              <icon-svg type="fail"></icon-svg>&nbsp;
-              ({{ percent(record.fail, record.total) }})
-            </span>
-            <span class="t-skip t-status">
-              {{ record.skip }}&nbsp;
-              <icon-svg type="skip"></icon-svg>&nbsp;
-              ({{ percent(record.skip, record.total) }})
-            </span>
-          </template>
+
           <template #action="{ record }">
-            <a-button @click="() => viewResult(record)" type="link" size="small">{{ t('view') }}</a-button>
-            <a-button @click="() => deleteExec(record)" type="link" size="small"
+            <a-button @click="() => edit(record.id)" type="link" size="small">{{ t('view') }}</a-button>
+            <a-button @click="() => record(record)" type="link" size="small"
                       :loading="removeLoading.includes(record.seq)">{{ t('delete') }}
             </a-button>
           </template>
@@ -85,9 +61,8 @@ import {useStore} from "vuex";
 import {Empty, Form, message, Modal} from "ant-design-vue";
 import {StateType} from "./store";
 import {useRouter} from "vue-router";
-import {momentTimeDef} from "@/utils/datetime";
+import {momentUtcDef} from "@/utils/datetime";
 import {useI18n} from "vue-i18n";
-import IconSvg from "@/components/IconSvg/index";
 import {PaginationConfig, QueryParams} from "@/types/data";
 import debounce from "lodash.debounce";
 
@@ -110,18 +85,17 @@ interface SiteListSetupData {
   remove: (item) => void;
 
   onSearch: () => void;
-  momentTime: (tm) => string;
+  momentUtc: (tm) => string;
   simpleImage: any
 }
 
 export default defineComponent({
   name: 'SiteListPage',
   components: {
-    IconSvg,
   },
   setup(): SiteListSetupData {
     const {t} = useI18n();
-    const momentTime = momentTimeDef
+    const momentUtc = momentUtcDef
 
     const onSearch = debounce(() => {
       getList(1)
@@ -134,7 +108,10 @@ export default defineComponent({
     const columns = [
       {
         title: t('no'),
-        dataIndex: 'seq',
+        dataIndex: 'index',
+        width: 80,
+        customRender: ({text, index}: { text: any; index: number }) =>
+            (pagination.value.page - 1) * pagination.value.pageSize + index + 1,
       },
       {
         title: t('name'),
@@ -150,8 +127,8 @@ export default defineComponent({
       },
       {
         title: t('create_time'),
-        dataIndex: 'createTime',
-        slots: {customRender: 'createTime'},
+        dataIndex: 'createdAt',
+        slots: {customRender: 'createdAt'},
       },
       {
         title: t('opt'),
@@ -177,27 +154,26 @@ export default defineComponent({
 
     const router = useRouter();
     const store = useStore<{ Site: StateType }>();
-    const models = computed<any[]>(() => store.state.Site.queryResult.data);
+    const models = computed<any[]>(() => store.state.Site.queryResult.result);
     const pagination = computed<PaginationConfig>(() => store.state.Site.queryResult.pagination);
     const queryParams = ref<QueryParams>({
-      keywords: '', enabled: '1',
-      page: pagination.value.current, pageSize: pagination.value.pageSize
+      keywords: '', enabled: '1', page: pagination.value.page, pageSize: pagination.value.pageSize
     });
 
     const loading = ref<boolean>(true);
-    const getList = (current: number) => {
+    const getList = (page: number) => {
       loading.value = true;
       store.dispatch('Site/list', {
         keywords: queryParams.value.keywords,
         enabled: queryParams.value.enabled,
         pageSize: pagination.value.pageSize,
-        page: current});
+        page: page});
       loading.value = false;
     }
+    getList(1);
 
     onMounted(() => {
       console.log('onMounted')
-      getList(1);
     })
 
     const edit = (id) => {
@@ -216,7 +192,7 @@ export default defineComponent({
           const res: boolean = await store.dispatch('History/delete', item.seq);
           if (res === true) {
             message.success(t('delete_success'));
-            await getList(pagination.value.current);
+            await getList(pagination.value.page);
           }
           removeLoading.value = [];
         }
@@ -239,7 +215,7 @@ export default defineComponent({
       remove,
 
       onSearch,
-      momentTime,
+      momentUtc,
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
     }
   }

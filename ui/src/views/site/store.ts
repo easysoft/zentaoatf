@@ -26,10 +26,10 @@ export interface ModuleType extends StoreModuleType<StateType> {
 }
 const initState: StateType = {
     queryResult: {
-        data: [],
+        result: [],
         pagination: {
             total: 0,
-            current: 1,
+            page: 1,
             pageSize: 10,
             showSizeChanger: true,
             showQuickJumper: true,
@@ -56,9 +56,12 @@ const StoreModel: ModuleType = {
         async list({ commit }, params: QueryParams ) {
             try {
                 const response: ResponseData = await list(params);
-                if (response.code != 0) return;
+                if (response.code != 0) {
+                    return;
+                }
                 const data = response.data;
                 commit('setQueryResult', data);
+                console.log('sdfdsf', data)
 
                 return true;
             } catch (error) {
