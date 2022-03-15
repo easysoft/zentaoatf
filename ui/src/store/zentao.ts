@@ -1,9 +1,10 @@
 import { Mutation, Action } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
-import { queryLang, queryProduct, queryModule, querySuite, queryTask } from "../services/zentao";
+import {getProfile, queryLang, queryProduct, queryModule, querySuite, queryTask} from "../services/zentao";
 
 export interface ZentaoData {
+    profile: any
     langs: any[]
     products: any[]
     modules: any[]
@@ -14,6 +15,7 @@ export interface ZentaoData {
 export interface ModuleType extends StoreModuleType<ZentaoData> {
     state: ZentaoData;
     mutations: {
+        saveProfile: Mutation<any>;
         saveLangs: Mutation<any>;
         saveProducts: Mutation<any>;
         saveModules: Mutation<any>;
@@ -21,6 +23,7 @@ export interface ModuleType extends StoreModuleType<ZentaoData> {
         saveTasks: Mutation<any>;
     };
     actions: {
+        getProfile: Action<ZentaoData, ZentaoData>;
         fetchLangs: Action<ZentaoData, ZentaoData>;
         fetchProducts: Action<ZentaoData, ZentaoData>;
         fetchModules: Action<ZentaoData, ZentaoData>;
@@ -30,6 +33,7 @@ export interface ModuleType extends StoreModuleType<ZentaoData> {
 }
 
 const initState: ZentaoData = {
+    profile: {},
     langs: [],
     products: [],
     modules: [],
@@ -44,6 +48,10 @@ const StoreModel: ModuleType = {
         ...initState
     },
     mutations: {
+        saveProfile(state, payload) {
+            console.log('payload', payload)
+            state.profile = payload
+        },
         saveLangs(state, payload) {
             console.log('payload', payload)
             state.langs = payload
@@ -69,6 +77,19 @@ const StoreModel: ModuleType = {
         },
     },
     actions: {
+        async getProfile({ commit }) {
+            try {
+                const response: ResponseData = await getProfile();
+                const { data } = response;
+                // data.avatar = ''
+                commit('saveProfile', data)
+
+                return true;
+            } catch (error) {
+                return false;
+            }
+        },
+
         async fetchLangs({ commit }) {
             try {
                 const response: ResponseData = await queryLang();

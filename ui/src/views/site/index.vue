@@ -16,7 +16,10 @@
 
       </template>
       <template #extra>
-        <a-button type="primary" @click="() => edit(0)">新建禅道站点</a-button>
+        <a-button type="primary" @click="() => edit(0)">
+          <template #icon><PlusCircleOutlined /></template>
+          新建站点
+        </a-button>
       </template>
 
       <div>
@@ -59,6 +62,8 @@ import {computed, ComputedRef, defineComponent, onMounted, ref, Ref, watch} from
 import {useStore} from "vuex";
 
 import {Empty, Form, message, Modal} from "ant-design-vue";
+import { PlusCircleOutlined } from '@ant-design/icons-vue';
+
 import {StateType} from "./store";
 import {useRouter} from "vue-router";
 import {momentUtcDef} from "@/utils/datetime";
@@ -92,6 +97,7 @@ interface SiteListSetupData {
 export default defineComponent({
   name: 'SiteListPage',
   components: {
+    PlusCircleOutlined,
   },
   setup(): SiteListSetupData {
     const {t} = useI18n();

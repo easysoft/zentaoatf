@@ -4,6 +4,13 @@ import {Config} from "@/views/config/data";
 const apiPath = 'zentao';
 const apiPathBug = 'bug';
 
+export async function getProfile(): Promise<any> {
+    return request({
+        url: `/${apiPath}/getProfile`,
+        method: 'GET',
+    });
+}
+
 export async function queryLang(): Promise<any> {
     return request({
         url: `/${apiPath}/listLang`,

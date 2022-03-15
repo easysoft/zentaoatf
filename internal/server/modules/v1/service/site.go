@@ -24,12 +24,19 @@ func (s *SiteService) Get(id uint) (site model.Site, err error) {
 	return s.SiteRepo.Get(id)
 }
 
-func (s *SiteService) Create(site model.Site) (uint, error) {
-	return s.SiteRepo.Create(site)
+func (s *SiteService) Create(site model.Site) (id uint, err error) {
+	id, err = s.SiteRepo.Create(site)
+
+	//err = configUtils.UpdateSite(site, projectPath)
+
+	return
 }
 
-func (s *SiteService) Update(site model.Site) error {
-	return s.SiteRepo.Update(site)
+func (s *SiteService) Update(site model.Site) (err error) {
+	err = s.SiteRepo.Update(site)
+
+	//err = configUtils.UpdateSite(site, projectPath)
+	return
 }
 
 func (s *SiteService) Delete(id uint) error {

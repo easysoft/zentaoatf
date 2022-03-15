@@ -21,6 +21,7 @@ func (m *ZentaoModule) Party() module.WebModule {
 		index.Use(middleware.InitCheck())
 
 		index.Get("/listLang", m.ZentaoCtrl.ListLang).Name = "脚本语言列表"
+		index.Get("/getProfile", m.ZentaoCtrl.GetProfile).Name = "脚本语言列表"
 		index.Get("/listProduct", m.ZentaoCtrl.ListProduct).Name = "产品列表"
 		index.Get("/listModule", m.ZentaoCtrl.ListModule).Name = "模块列表"
 		index.Get("/listSuite", m.ZentaoCtrl.ListSuite).Name = "套件列表"

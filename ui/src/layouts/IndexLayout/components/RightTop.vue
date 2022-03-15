@@ -2,8 +2,13 @@
     <div id="right-top">
         <div class="right-top-top">
 
-            <div @click="gotoSite" class="logo-wrapper">
-              <span class="logo"><img src="../../../assets/images/logo.png"></span>
+            <div @click="gotoSite" class="avatar-wrapper">
+              <div v-if="profile.avatar" class="avatar avatar-img" :style="{'background-image': 'url('+profile.avatar+')'}">
+              </div>
+
+              <div v-if="!profile.avatar" class="avatar avatar-text">
+                  {{nameFirstCap(profile)}}
+              </div>
             </div>
 
             <div class="top-project-wrapper">
@@ -22,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, Ref, toRefs } from "vue";
+import {computed, defineComponent, PropType, Ref, toRefs, ComputedRef} from "vue";
 import { useI18n } from "vue-i18n";
 
 import { BreadcrumbType, RoutesDataItem } from '@/utils/routes';
@@ -30,12 +35,18 @@ import RightTopSettings from './RightTopSettings.vue';
 import useTopMenuWidth from "../composables/useTopMenuWidth";
 import RightTopProject from './RightTopProject.vue';
 import RightTopMenu from './RightTopMenu.vue';
+import {useStore} from "vuex";
+import {ZentaoData} from "@/store/zentao";
+import {nameFirstCapDef} from "@/utils/string";
 
 interface RightTopSetupData {
   t: (key: string | number) => string;
+  profile: ComputedRef;
+
   topMenuCon: Ref;
   pathToId: (val) => void
   gotoSite: (val) => void
+  nameFirstCap: (name) => string
 }
 
 export default defineComponent({
@@ -79,6 +90,11 @@ export default defineComponent({
     },
     setup(props): RightTopSetupData {
       const { t } = useI18n();
+
+      const store = useStore<{ zentao: ZentaoData }>();
+      const profile = computed<any[]>(() => store.state.zentao.profile);
+      store.dispatch('zentao/getProfile');
+
       const { topNavEnable } = toRefs(props);
 
       const { topMenuCon } = useTopMenuWidth(topNavEnable);
@@ -89,12 +105,15 @@ export default defineComponent({
       const gotoSite =() => {
         window.open('https://ztf.im','_blank')
       }
+      const nameFirstCap = nameFirstCapDef
 
       return {
         t,
+        profile,
         topMenuCon,
         pathToId,
         gotoSite,
+        nameFirstCap,
       }
     }
 })
@@ -116,7 +135,7 @@ export default defineComponent({
     background-color: @menu-dark-bg;
     color: #FFFFFF;
 
-    .logo-wrapper {
+    .avatar-wrapper {
       margin: 0 30px 0 30px;
       width: auto;
       height: @headerHeight;
@@ -127,14 +146,22 @@ export default defineComponent({
         background-color: @menu-dark-bg;
         color: @menu-dark-highlight-color;
       }
-      .logo {
-        img {
-          height: 30px;
-          vertical-align: -10px
+      .avatar {
+        height: 30px;
+        width: 30px;
+        background-size: cover;
+        border-radius: 50%;
+        margin-top: 8px;
+        &.avatar-img {
+
+        }
+        &.avatar-text {
+          line-height: 30px;
+          background-color: hsl(55, 40%, 60%);
         }
       }
+
       .title {
-        display: inline-block;
         margin-left: 8px;
         padding-top: 3px;
         line-height: 28px;

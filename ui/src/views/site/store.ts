@@ -61,7 +61,6 @@ const StoreModel: ModuleType = {
                 }
                 const data = response.data;
                 commit('setQueryResult', data);
-                console.log('sdfdsf', data)
 
                 return true;
             } catch (error) {

@@ -6,7 +6,7 @@
 
     <template #extra>
       <div class="opt">
-        <a-button @click="back" type="link">{{ t('back') }}</a-button>
+        <a-button @click="back">{{ t('back') }}</a-button>
       </div>
     </template>
 

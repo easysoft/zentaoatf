@@ -7,6 +7,7 @@ import (
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
+	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"gopkg.in/ini.v1"
 	"path/filepath"
 	"reflect"
@@ -19,6 +20,18 @@ func LoadByProjectPath(projectPath string) (config commDomain.ProjectConf) {
 	config.Url = commonUtils.AddSlashForUrl(config.Url)
 
 	return config
+}
+
+func UpdateSite(site model.Site, projectPath string) (err error) {
+	config := LoadByProjectPath(projectPath)
+
+	config.Url = site.Url
+	config.Username = site.Username
+	config.Password = site.Password
+
+	SaveToFile(config, projectPath)
+
+	return
 }
 
 func SaveConfig(config commDomain.ProjectConf, projectPath string) (err error) {
