@@ -11,9 +11,17 @@ export async function list(params?: QueryParams): Promise<any> {
     });
 }
 
-export async function get(seq: string): Promise<any> {
+export async function get(seq: number): Promise<any> {
     return request({
         url: `/${apiPath}/${seq}`
+    });
+}
+
+export async function save(params: any): Promise<any> {
+    return request({
+        url: `/${apiPath}`,
+        method: params.id? 'PUT': 'POST',
+        data: params,
     });
 }
 

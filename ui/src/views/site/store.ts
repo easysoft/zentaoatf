@@ -3,7 +3,7 @@ import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 import { QueryParams, QueryResult } from '@/types/data.d';
 import {
-    list, get, remove,
+    list, get, save, remove,
 } from './service';
 
 export interface StateType {
@@ -20,6 +20,7 @@ export interface ModuleType extends StoreModuleType<StateType> {
     actions: {
         list: Action<StateType, StateType>;
         get: Action<StateType, StateType>;
+        save: Action<StateType, StateType>;
         delete: Action<StateType, StateType>;
     };
 }
@@ -64,11 +65,18 @@ const StoreModel: ModuleType = {
                 return false;
             }
         },
-        async get({ commit }, payload: string ) {
+        async get({ commit }, id: number ) {
+            let data = {}
+            if (id) {
+                const response: ResponseData = await get(id);
+                data = response.data;
+            }
+            commit('setDetailResult',data);
+            return true;
+        },
+        async save({ commit }, payload) {
             try {
-                const response: ResponseData = await get(payload);
-                const { data } = response;
-                commit('setDetailResult',data);
+                await save(payload);
                 return true;
             } catch (error) {
                 return false;

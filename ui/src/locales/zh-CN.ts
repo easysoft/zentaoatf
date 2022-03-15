@@ -23,8 +23,12 @@ export default {
     'step':  '步骤', 
     'status':  '状态', 
     'all':  '所有', 
-    'only_failed':  '仅失败用例', 
-    
+    'only_failed':  '仅失败用例',
+
+    'zentao_site': '禅道站点',
+    'edit_site': '编辑站点',
+    'zentao_config': '站点配置',
+    'sync': '同步',
     'edit_config': '修改配置',
     'zentao_url': '禅道地址',
     'username': '用户名',
@@ -34,6 +38,21 @@ export default {
     'interpreter': '解析器',
     'interpreter_path': '解析器路径',
     'script_lang': '脚本语言',
+
+    'script': '脚本',
+    'script.list': '脚本列表',
+    'script.view': '查看脚本',
+    'script.edit': '编辑脚本',
+
+    'execution': '执行',
+    'execution.history': '执行历史',
+    'execution.result.func': '功能测试结果',
+    'execution.result.unit': '单元测试结果',
+    'execution.execCase': '执行用例',
+    'execution.execModule': '执行模块',
+    'execution.execSuite': '执行套件',
+    'execution.execTask': '执行任务',
+    'execution.execUnit': '执行单元测试',
 
     'duration':  '耗时', 
     'duration_sec':  '耗时（秒）', 

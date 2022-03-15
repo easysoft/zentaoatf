@@ -20,9 +20,11 @@ func (m *SiteModule) Party() module.WebModule {
 	handler := func(index iris.Party) {
 		index.Use(middleware.InitCheck())
 
-		index.Get("/", m.SiteCtrl.List).Name = "执行列表"
-		index.Get("/{seq:string}", m.SiteCtrl.Get).Name = "执行详情"
-		index.Delete("/{seq:string}", m.SiteCtrl.Delete).Name = "删除执行"
+		index.Get("/", m.SiteCtrl.List).Name = "列表"
+		index.Get("/{id:int}", m.SiteCtrl.Get).Name = "详情"
+		index.Post("/{id:int}", m.SiteCtrl.Create).Name = "保存"
+		index.Put("/{id:int}", m.SiteCtrl.Update).Name = "保存"
+		index.Delete("/{id:int}", m.SiteCtrl.Delete).Name = "删除"
 	}
 	return module.NewModule("/sites", handler)
 }

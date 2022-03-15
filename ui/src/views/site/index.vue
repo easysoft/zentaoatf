@@ -4,7 +4,7 @@
       <template #title>
         <div class="t-card-toolbar">
           <div class="left">
-            禅道站点列表
+            {{t('zentao_site')}}
           </div>
           <div class="right">
             <a-select @change="onSearch" v-model:value="queryParams.enabled" :options="statusArr" class="status-select">
@@ -105,6 +105,7 @@ interface SiteListSetupData {
   loading: Ref<boolean>;
   getList: (curr) => void
 
+  edit: (id) => void;
   removeLoading: Ref<string[]>;
   remove: (item) => void;
 
@@ -199,6 +200,11 @@ export default defineComponent({
       getList(1);
     })
 
+    const edit = (id) => {
+      console.log('edit')
+      router.push(`/site/edit/${id}`)
+    }
+
     const removeLoading = ref<string[]>([]);
     const remove = (item) => {
       Modal.confirm({
@@ -228,6 +234,7 @@ export default defineComponent({
       models,
       loading,
       getList,
+      edit,
       removeLoading,
       remove,
 

@@ -3,6 +3,7 @@ package controller
 import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
 )
@@ -16,16 +17,14 @@ func NewSiteCtrl() *SiteCtrl {
 	return &SiteCtrl{}
 }
 
-// List 分页列表
 func (c *SiteCtrl) List(ctx iris.Context) {
-	projectPath := ctx.URLParam("currProject")
-
-	if projectPath == "" {
-		ctx.JSON(c.SuccessResp(make([]serverDomain.TestReportSummary, 0)))
+	var req serverDomain.ReqPaginate
+	if err := ctx.ReadQuery(&req); err != nil {
+		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
 		return
 	}
 
-	data, err := c.SiteService.List(projectPath)
+	data, err := c.SiteService.Paginate(req)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
 		return
@@ -34,35 +33,59 @@ func (c *SiteCtrl) List(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(data))
 }
 
-// Get 详情
 func (c *SiteCtrl) Get(ctx iris.Context) {
-	projectPath := ctx.URLParam("currProject")
-
-	seq := ctx.Params().Get("seq")
-	if seq == "" {
-		c.ErrResp(commConsts.ParamErr, "seq")
-		return
-	}
-
-	exec, err := c.SiteService.Get(projectPath, seq)
+	id, err := ctx.Params().GetInt("id")
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
 		return
 	}
-	ctx.JSON(c.SuccessResp(exec))
+
+	po, err := c.SiteService.Get(uint(id))
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		return
+	}
+	ctx.JSON(c.SuccessResp(po))
 }
 
-// Delete 删除
-func (c *SiteCtrl) Delete(ctx iris.Context) {
-	projectPath := ctx.URLParam("currProject")
+func (c *SiteCtrl) Create(ctx iris.Context) {
+	req := model.Site{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+	}
 
-	seq := ctx.Params().Get("seq")
-	if seq == "" {
-		c.ErrResp(commConsts.ParamErr, "seq")
+	id, err := c.SiteService.Create(req)
+	if err != nil {
+		c.ErrResp(commConsts.Failure, err.Error())
 		return
 	}
 
-	err := c.SiteService.Delete(projectPath, seq)
+	ctx.JSON(c.SuccessResp(iris.Map{"id": id}))
+}
+
+func (c *SiteCtrl) Update(ctx iris.Context) {
+	req := model.Site{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+	}
+
+	err := c.SiteService.Update(req)
+	if err != nil {
+		c.ErrResp(commConsts.Failure, err.Error())
+		return
+	}
+
+	ctx.JSON(c.SuccessResp(iris.Map{"id": req.ID}))
+}
+
+func (c *SiteCtrl) Delete(ctx iris.Context) {
+	id, err := ctx.Params().GetInt("id")
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		return
+	}
+
+	err = c.SiteService.Delete(uint(id))
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
 		return

@@ -1,9 +1,5 @@
 <template>
-  <div v-if="!currProject.path">
-    <a-empty :image="simpleImage" :description="t('pls_create_project')"/>
-  </div>
-
-  <a-card v-if="currProject.path" :title="t('edit_config')">
+  <a-card :title="t('edit_site')">
     <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-item :label="t('zentao_url')" v-bind="validateInfos.url">
         <a-input v-model:value="model.url"
@@ -28,25 +24,19 @@
 
 </template>
 <script lang="ts">
-import {defineComponent, ref, reactive, computed, watch, ComputedRef, Ref, toRaw, toRef} from "vue";
+import {defineComponent, ref, reactive, computed,  Ref, toRaw, toRef} from "vue";
+import {useRouter} from "vue-router";
 import { useI18n } from "vue-i18n";
 
-import { Props, validateInfos } from 'ant-design-vue/lib/form/useForm';
-import {message, Form, notification, Empty} from 'ant-design-vue';
-import _ from "lodash";
+import { validateInfos } from 'ant-design-vue/lib/form/useForm';
+import {Form, notification} from 'ant-design-vue';
 const useForm = Form.useForm;
 
 import {useStore} from "vuex";
-import {ProjectData} from "@/store/project";
-import CreateInterpreterForm from './interpreter/create.vue';
-import UpdateInterpreterForm from './interpreter/update.vue';
-import IconSvg from "@/components/IconSvg/index";
+import {StateType} from "@/views/site/store";
 
 interface SiteFormSetupData {
   t: (key: string | number) => string;
-  currProject: ComputedRef;
-
-  currSiteRef: Ref
   model: Ref
   rules: any
   labelCol: any
@@ -55,25 +45,6 @@ interface SiteFormSetupData {
   validateInfos: validateInfos
   submitForm:  () => void;
   resetFields:  () => void;
-
-  languages: Ref
-  languageMap: Ref
-  interpreters: Ref<[]>
-  interpreter: Ref
-
-  createSubmitLoading: Ref<boolean>;
-  createFormVisible: Ref<boolean>;
-  setCreateFormVisible:  (val: boolean) => void;
-  addInterpreter: () => void;
-  createSubmit: (values: any, resetFields: (newValues?: Props | undefined) => void) => Promise<void>;
-
-  updateSubmitLoading: Ref<boolean>;
-  updateFormVisible: Ref<boolean>;
-  editInterpreter: (item) => void;
-  deleteInterpreter: (item) => void;
-  updateFormCancel:  () => void;
-  updateSubmit:  (values: any, resetFields: (newValues?: Props | undefined) => void) => Promise<void>;
-  simpleImage: any
 }
 
 export default defineComponent({
@@ -82,12 +53,16 @@ export default defineComponent({
   },
   setup(props): SiteFormSetupData {
     const { t } = useI18n();
+    const router = useRouter();
 
-    const store = useStore<{ project: ProjectData }>();
-    const currSiteRef = computed<any>(() => store.state.project.currSite);
-    const currProject = computed<any>(() => store.state.project.currProject);
+    const store = useStore<{ Site: StateType }>();
+    const model = computed(() => store.state.Site.detailResult);
 
-    let model = reactive<any>(currSiteRef.value);
+    const get = async (id: number): Promise<void> => {
+      await store.dispatch('Site/get', id);
+    }
+    const id = +router.currentRoute.value.params.id
+    get(id)
 
     const rules = reactive({
       url: [
@@ -119,7 +94,7 @@ export default defineComponent({
       validate()
           .then(() => {
             console.log(model);
-            store.dispatch('project/saveSite', model).then((json) => {
+            store.dispatch('Site/save', model).then((json) => {
               if (json.code === 0) {
                 notification.success({
                   message: t('save_success'),
@@ -141,8 +116,6 @@ export default defineComponent({
       t,
       labelCol: { span: 4 },
       wrapperCol: { span: 14 },
-      currSiteRef,
-      currProject,
       model,
 
       rules,
@@ -150,7 +123,6 @@ export default defineComponent({
       validate,
       validateInfos,
       submitForm,
-      simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
     }
 
   }

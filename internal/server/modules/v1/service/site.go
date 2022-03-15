@@ -1,52 +1,37 @@
 package service
 
 import (
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
-	analysisUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/analysis"
-	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
+	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
-	"github.com/jinzhu/copier"
-	"path/filepath"
 )
 
 type SiteService struct {
-	ProjectRepo *repo.ProjectRepo `inject:""`
+	SiteRepo *repo.SiteRepo `inject:""`
 }
 
 func NewSiteService() *SiteService {
 	return &SiteService{}
 }
 
-func (s *SiteService) List(projectPath string) (ret []serverDomain.TestReportSummary, err error) {
-	reportFiles := analysisUtils.ListReport(projectPath)
-
-	for _, seq := range reportFiles {
-		var summary serverDomain.TestReportSummary
-
-		report, err1 := analysisUtils.ReadReportByProjectSeq(projectPath, seq)
-		if err1 != nil { // ignore wrong json result
-			continue
-		}
-		copier.Copy(&summary, report)
-
-		summary.Seq = seq
-		ret = append(ret, summary)
-	}
-
+func (s *SiteService) Paginate(req serverDomain.ReqPaginate) (ret domain.PageData, err error) {
+	ret, err = s.SiteRepo.Paginate(req)
 	return
 }
 
-func (s *SiteService) Get(projectPath string, seq string) (report commDomain.ZtfReport, err error) {
-	return analysisUtils.ReadReportByProjectSeq(projectPath, seq)
+func (s *SiteService) Get(id uint) (site model.Site, err error) {
+	return s.SiteRepo.Get(id)
 }
 
-func (s *SiteService) Delete(projectPath string, seq string) (err error) {
-	dir := filepath.Join(projectPath, commConsts.LogDirName)
+func (s *SiteService) Create(site model.Site) (uint, error) {
+	return s.SiteRepo.Create(site)
+}
 
-	di := filepath.Join(dir, seq)
-	err = fileUtils.RmDir(di)
+func (s *SiteService) Update(site model.Site) error {
+	return s.SiteRepo.Update(site)
+}
 
-	return
+func (s *SiteService) Delete(id uint) error {
+	return s.SiteRepo.Delete(id)
 }

@@ -4,13 +4,13 @@ import BlankLayout from '@/layouts/BlankLayout.vue';
 const IndexLayoutRoutes: Array<RoutesDataItem> = [
   {
     icon: 'script',
-    title: 'index-layout.menu.script',
+    title: 'script',
     path: '/script',
     redirect: '/script/list',
     component: BlankLayout,
     children: [
       {
-        title: 'index-layout.menu.script.list',
+        title: 'script.list',
         path: 'list',
         component: () => import('@/views/script/index/main.vue'),
         hidden: true,
@@ -20,62 +20,62 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
 
   {
     icon: 'execution',
-    title: 'index-layout.menu.execution',
+    title: 'execution',
     path: '/exec',
     redirect: '/exec/history',
     component: BlankLayout,
     children: [
       {
-        title: 'index-layout.menu.execution.history',
+        title: 'execution.history',
         path: 'history',
         component: () => import('@/views/exec/history/index.vue'),
         hidden: true,
       },
       {
-        title: 'index-layout.menu.execution.result.func',
+        title: 'execution.result.func',
         path: 'history/func/:seq',
         component: () => import('@/views/exec/history/result-func.vue'),
         hidden: true,
       },
       {
-        title: 'index-layout.menu.execution.result.unit',
+        title: 'execution.result.unit',
         path: 'history/unit/:seq',
         component: () => import('@/views/exec/history/result-unit.vue'),
         hidden: true,
       },
 
       {
-        title: 'index-layout.menu.execution',
+        title: 'execution',
         path: 'run',
         component: BlankLayout,
         hidden: true,
         children: [
           {
-            title: 'index-layout.menu.execution.execCase',
+            title: 'execution.execCase',
             path: 'case/:seq/:scope',
             component: () => import('@/views/exec/exec/case.vue'),
             hidden: true,
           },
           {
-            title: 'index-layout.menu.execution.execModule',
+            title: 'execution.execModule',
             path: 'module/:productId/:moduleId/:seq/:scope',
             component: () => import('@/views/exec/exec/module.vue'),
             hidden: true,
           },
           {
-            title: 'index-layout.menu.execution.execSuite',
+            title: 'execution.execSuite',
             path: 'suite/:productId/:suiteId/:seq/:scope',
             component: () => import('@/views/exec/exec/suite.vue'),
             hidden: true,
           },
           {
-            title: 'index-layout.menu.execution.execTask',
+            title: 'execution.execTask',
             path: 'task/:productId/:taskId/:seq/:scope',
             component: () => import('@/views/exec/exec/task.vue'),
             hidden: true,
           },
           {
-            title: 'index-layout.menu.execution.execUnit',
+            title: 'execution.execUnit',
             path: 'unit',
             component: () => import('@/views/exec/exec/unit.vue'),
             hidden: true,
@@ -87,14 +87,14 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
 
   {
     icon: 'config',
-    title: 'index-layout.menu.config',
+    title: 'zentao_config',
     path: '/config',
     component: () => import('@/views/config/index.vue'),
   },
 
   {
     icon: 'sync',
-    title: 'index-layout.menu.sync',
+    title: 'sync',
     path: '/sync',
     component: () => import('@/views/sync/index.vue'),
   },
@@ -108,9 +108,15 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
     hidden: true,
     children: [
       {
-        title: 'index-layout.menu.script.list',
+        title: 'zentao_site',
         path: 'list',
         component: () => import('@/views/site/index.vue'),
+        hidden: true,
+      },
+      {
+        title: 'edit_site',
+        path: 'edit/:id',
+        component: () => import('@/views/site/edit.vue'),
         hidden: true,
       },
     ],

@@ -3,9 +3,14 @@ package repo
 import (
 	"errors"
 	"fmt"
+	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
+	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
+	"github.com/aaronchen2k/deeptest/internal/server/core/dao"
+	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/fatih/color"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -17,15 +22,40 @@ func NewSiteRepo() *SiteRepo {
 	return &SiteRepo{}
 }
 
-func (r *SiteRepo) List() (sites []model.Site, err error) {
-	err = r.DB.Model(&model.Site{}).
-		Where("NOT deleted").
-		Find(&sites).Error
+func (r *SiteRepo) Paginate(req serverDomain.ReqPaginate) (data domain.PageData, err error) {
+	var count int64
+
+	db := r.DB.Model(&model.Site{}).Where("NOT deleted")
+
+	if req.Keywords != "" {
+		db = db.Where("name LIKE ?", fmt.Sprintf("%%%s%%", req.Keywords))
+	}
+	if req.Enabled != "" {
+		db = db.Where("disabled = ?", commonUtils.IsDisable(req.Enabled))
+	}
+
+	err = db.Count(&count).Error
+	if err != nil {
+		logUtils.Errorf("count project error", zap.String("error:", err.Error()))
+		return
+	}
+
+	pos := make([]*model.Site, 0)
+
+	err = db.
+		Scopes(dao.PaginateScope(req.Page, req.PageSize, req.Order, req.Field)).
+		Find(&pos).Error
+	if err != nil {
+		logUtils.Errorf("query project error", zap.String("error:", err.Error()))
+		return
+	}
+
+	data.Populate(pos, count, req.Page, req.PageSize)
 
 	return
 }
 
-func (r *SiteRepo) FindById(id uint) (po model.Site, err error) {
+func (r *SiteRepo) Get(id uint) (po model.Site, err error) {
 	err = r.DB.Model(&model.Site{}).
 		Where("id = ?", id).
 		Where("NOT deleted").
@@ -55,27 +85,26 @@ func (r *SiteRepo) Create(project model.Site) (id uint, err error) {
 	return
 }
 
-func (r *SiteRepo) Update(id uint, project model.Site) error {
-	po, err := r.FindDuplicate(project.Name, project.Url, id)
+func (r *SiteRepo) Update(site model.Site) error {
+	po, err := r.FindDuplicate(site.Name, site.Url, site.ID)
 	if po.ID != 0 {
-		return errors.New(fmt.Sprintf("站点%s(%s)已存在", project.Name, project.Url))
+		return errors.New(fmt.Sprintf("站点%s(%s)已存在", site.Name, site.Url))
 	}
 
-	err = r.DB.Model(&model.Site{}).Where("id = ?", id).Updates(&project).Error
+	err = r.DB.Model(&model.Site{}).Where("id = ?", site.ID).Updates(&site).Error
 	if err != nil {
-		logUtils.Errorf(color.RedString("update project failed, error: %s.", err.Error()))
+		logUtils.Errorf(color.RedString("update site failed, error: %s.", err.Error()))
 		return err
 	}
 
 	return nil
 }
 
-func (r *SiteRepo) DeleteByPath(pth string) (err error) {
-	err = r.DB.Where("path = ?", pth).
-		Delete(&model.Site{}).
-		Error
+func (r *SiteRepo) Delete(id uint) (err error) {
+	err = r.DB.Model(&model.Site{}).Where("id = ?", id).
+		Updates(map[string]interface{}{"deleted": true}).Error
 	if err != nil {
-		logUtils.Errorf(color.RedString("delete project failed, error: %s.", err.Error()))
+		logUtils.Errorf("delete site by id error", zap.String("error:", err.Error()))
 		return
 	}
 
