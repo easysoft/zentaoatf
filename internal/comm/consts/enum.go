@@ -7,8 +7,8 @@ type ResponseCode struct {
 
 var (
 	Success  = ResponseCode{0, "request_success"}
-	Failure  = ResponseCode{100, "request_failure"}
-	ParamErr = ResponseCode{200, "parm_error"}
+	CommErr  = ResponseCode{100, "comm_err"}
+	ParamErr = ResponseCode{200, "param_error"}
 
 	NeedInitErr         = ResponseCode{1000, "data_not_init"}
 	BizErrProjectConfig = ResponseCode{2000, "project_config_err"}

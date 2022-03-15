@@ -19,7 +19,7 @@ export async function get(seq: number): Promise<any> {
 
 export async function save(params: any): Promise<any> {
     return request({
-        url: `/${apiPath}`,
+        url: `/${apiPath}` + (params.id ? `/${params.id}` : ''),
         method: params.id? 'PUT': 'POST',
         data: params,
     });

@@ -38,13 +38,13 @@ func (c *TestBugCtrl) Submit(ctx iris.Context) {
 	projectPath := ctx.URLParam("currProject")
 	req := commDomain.ZtfBug{}
 	if err := ctx.ReadJSON(&req); err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
 	err := c.TestBugService.Submit(req, projectPath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 

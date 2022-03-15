@@ -22,8 +22,8 @@ func (m *SiteModule) Party() module.WebModule {
 
 		index.Get("/", m.SiteCtrl.List).Name = "列表"
 		index.Get("/{id:int}", m.SiteCtrl.Get).Name = "详情"
-		index.Post("/{id:int}", m.SiteCtrl.Create).Name = "保存"
-		index.Put("/{id:int}", m.SiteCtrl.Update).Name = "保存"
+		index.Post("/", m.SiteCtrl.Create).Name = "新建"
+		index.Put("/{id:int}", m.SiteCtrl.Update).Name = "更新"
 		index.Delete("/{id:int}", m.SiteCtrl.Delete).Name = "删除"
 	}
 	return module.NewModule("/sites", handler)

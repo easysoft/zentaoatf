@@ -15,11 +15,11 @@
       "translation": "请求成功"
     },
     {
-      "id": "request_failure",
-      "translation": "请求失败"
+      "id": "comm_err",
+      "translation": ""
     },
     {
-      "id": "parm_error",
+      "id": "param_error",
       "translation": "参数错误"
     },
     {

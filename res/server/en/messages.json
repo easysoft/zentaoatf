@@ -15,11 +15,11 @@
     "translation": "Success"
     },
     {
-      "id": "request_failure",
-      "translation": "Failure"
+      "id": "comm_err",
+      "translation": ""
     },
     {
-      "id": "parm_error",
+      "id": "param_error",
       "translation": "Parameter error"
     },
     {

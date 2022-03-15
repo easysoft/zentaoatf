@@ -20,14 +20,14 @@ func NewFileCtrl() *FileCtrl {
 func (c *FileCtrl) Upload(ctx iris.Context) {
 	f, fh, err := ctx.FormFile("file")
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 	defer f.Close()
 
 	data, err := c.FileService.UploadFile(ctx, fh)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 	ctx.JSON(c.SuccessResp(data))
@@ -41,7 +41,7 @@ func (c *FileCtrl) ListDir(ctx iris.Context) {
 		var err error
 		parentDir, err = fileUtils.GetUserHome()
 		if err != nil {
-			c.ErrResp(commConsts.Failure, err.Error())
+			c.ErrResp(commConsts.CommErr, err.Error())
 			return
 		}
 	}
@@ -49,7 +49,7 @@ func (c *FileCtrl) ListDir(ctx iris.Context) {
 	data, err := c.FileService.LoadDirs(parentDir)
 
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 	ctx.JSON(c.SuccessResp(data))

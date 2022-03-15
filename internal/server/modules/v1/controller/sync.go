@@ -29,7 +29,7 @@ func (c *SyncCtrl) SyncFromZentao(ctx iris.Context) {
 
 	err = c.SyncService.SyncFromZentao(req, projectPath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
@@ -48,7 +48,7 @@ func (c *SyncCtrl) SyncToZentao(ctx iris.Context) {
 
 	err := c.SyncService.SyncToZentao(projectPath, commitProductId)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 

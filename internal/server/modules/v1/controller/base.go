@@ -26,7 +26,13 @@ func (c *BaseCtrl) ErrResp(err commConsts.ResponseCode, msg string) (ret domain.
 }
 
 func (c *BaseCtrl) ErrMsg(err commConsts.ResponseCode, msg string) (ret string) {
-	ret = i118Utils.Sprintf(err.Key) + "-" + msg
+	ret = i118Utils.Sprintf(err.Key)
+
+	if ret != "" {
+		ret += ": "
+	}
+
+	ret += msg
 
 	return
 }

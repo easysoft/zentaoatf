@@ -92,24 +92,10 @@ export default defineComponent({
     const { resetFields, validate, validateInfos } = useForm(model, rules);
     const submitForm = () => {
       validate()
-          .then(() => {
-            console.log(model);
-            store.dispatch('Site/save', model).then((json) => {
-              if (json.code === 0) {
-                notification.success({
-                  message: t('save_success'),
-                });
-              } else {
-                notification.error({
-                  message: t('save_fail'),
-                  description: json.msg,
-                });
-              }
-            })
-          })
-          .catch(err => {
-            console.log('error', err);
-          });
+        .then(() => {
+          console.log(model);
+          store.dispatch('Site/save', model.value)
+        })
     };
 
     return {

@@ -27,7 +27,7 @@ func (c *TestExecCtrl) List(ctx iris.Context) {
 
 	data, err := c.TestExecService.List(projectPath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
@@ -46,7 +46,7 @@ func (c *TestExecCtrl) Get(ctx iris.Context) {
 
 	exec, err := c.TestExecService.Get(projectPath, seq)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 	ctx.JSON(c.SuccessResp(exec))
@@ -64,7 +64,7 @@ func (c *TestExecCtrl) Delete(ctx iris.Context) {
 
 	err := c.TestExecService.Delete(projectPath, seq)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 

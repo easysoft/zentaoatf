@@ -29,7 +29,7 @@ func (c *ProjectCtrl) Create(ctx iris.Context) {
 
 	_, err = c.ProjectService.Create(req)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
@@ -46,7 +46,7 @@ func (c *ProjectCtrl) Delete(ctx iris.Context) {
 	}
 	err := c.ProjectService.DeleteByPath(projectPath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
@@ -70,7 +70,7 @@ func (c *ProjectCtrl) GetByUser(ctx iris.Context) {
 
 	projects, currProject, currProjectConfig, scriptTree, err := c.ProjectService.GetByUser(projectPath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 

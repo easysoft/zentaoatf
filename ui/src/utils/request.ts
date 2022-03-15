@@ -35,7 +35,6 @@ const serverCodeMessage: {[key: number]: string} = {
  * 异常处理程序
  */
 const errorHandler = (error: any) => {
-
     const { response, message } = error;
     if (message === 'CustomError') {
         // 自定义错误
@@ -46,7 +45,7 @@ const errorHandler = (error: any) => {
         const noVerifyBool = settings.ajaxResponseNoVerifyUrl.includes(reqUrl);
         if (!noVerifyBool) {
             notification.error({
-              message: `提示`,
+              message: `请求失败`,
               description: customCodeMessage[code] || msg || 'Error',
             });
         }

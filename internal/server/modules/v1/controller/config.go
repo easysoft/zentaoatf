@@ -29,13 +29,13 @@ func (c *ConfigCtrl) SaveConfig(ctx iris.Context) {
 
 	err = configUtils.SaveConfig(req, projectPath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
 	projects, currProject, currProjectConfig, scriptTree, err := c.ProjectService.GetByUser(projectPath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 

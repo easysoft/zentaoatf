@@ -42,7 +42,7 @@ func (c *ZentaoCtrl) ListModule(ctx iris.Context) {
 
 	data, err := zentaoUtils.ListModuleForCase(productId, projectPath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
@@ -59,7 +59,7 @@ func (c *ZentaoCtrl) ListSuite(ctx iris.Context) {
 
 	data, err := zentaoUtils.ListSuiteByProduct(productId, projectPath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
@@ -76,7 +76,7 @@ func (c *ZentaoCtrl) ListTask(ctx iris.Context) {
 
 	data, err := zentaoUtils.ListTaskByProduct(productId, projectPath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
@@ -94,7 +94,7 @@ func (c *ZentaoCtrl) GetDataForBugSubmition(ctx iris.Context) {
 
 	fields, err := zentaoUtils.GetBugFiledOptions(req, projectPath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
@@ -106,7 +106,7 @@ func (c *ZentaoCtrl) GetDataForBugSubmition(ctx iris.Context) {
 func (c *ZentaoCtrl) ListLang(ctx iris.Context) {
 	data, err := zentaoUtils.ListLang()
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.Failure, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
