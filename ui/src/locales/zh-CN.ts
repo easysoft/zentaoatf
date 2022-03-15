@@ -128,7 +128,8 @@ export default {
     'ws_conn_success': 'WebSocket连接成功。',
     'ws_conn_fail': 'WebSocket连接失败。',
 
-    'pls_title':  '请输入标题', 
+    'pls_title':  '请输入标题',
+    'pls_name':  '请输入名称',
     'pls_select_case':  '请选择需要执行的用例', 
     'pls_module':  '请选择模块', 
     'pls_suite':  '请选择套件', 

@@ -126,7 +126,8 @@ export default {
     'ws_conn_success': 'Connect to WebSocket successfully.',
     'ws_conn_fail': 'Connect to WebSocket failed.',
 
-    'pls_title':  'Please input title.', 
+    'pls_title':  'Please input title.',
+    'pls_name':  'Please input name.',
     'pls_select_case':  'Please select cases.', 
     'pls_module':  'Please select module.', 
     'pls_suite':  'Please select suite.', 

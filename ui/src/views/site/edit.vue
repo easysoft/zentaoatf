@@ -1,6 +1,11 @@
 <template>
   <a-card :title="t('edit_site')">
     <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
+      <a-form-item :label="t('name')" v-bind="validateInfos.name">
+        <a-input v-model:value="model.name"
+                 @blur="validate('name', { trigger: 'blur' }).catch(() => {})" />
+      </a-form-item>
+
       <a-form-item :label="t('zentao_url')" v-bind="validateInfos.url">
         <a-input v-model:value="model.url"
                  @blur="validate('url', { trigger: 'blur' }).catch(() => {})" placeholder="https://zentao.site.com" />
@@ -10,7 +15,7 @@
                  @blur="validate('username', { trigger: 'blur' }).catch(() => {})" placeholder="" />
       </a-form-item>
       <a-form-item :label="t('password')" v-bind="validateInfos.password">
-        <a-input v-model:value="model.password"
+        <a-input-password v-model:value="model.password"
                  @blur="validate('password', { trigger: 'blur' }).catch(() => {})" placeholder="" />
       </a-form-item>
 
@@ -65,6 +70,9 @@ export default defineComponent({
     get(id)
 
     const rules = reactive({
+      name: [
+        { required: true, message: t('pls_name'), trigger: 'blur' },
+      ],
       url: [
         {
           required: true,
@@ -94,7 +102,13 @@ export default defineComponent({
       validate()
         .then(() => {
           console.log(model);
-          store.dispatch('Site/save', model.value)
+          store.dispatch('Site/save', model.value).then((success) => {
+            if (success) {
+              notification.success({
+                message: t('save_success'),
+              });
+            }
+          })
         })
     };
 

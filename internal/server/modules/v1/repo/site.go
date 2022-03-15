@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
+	httpUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/http"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/core/dao"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
@@ -36,7 +37,7 @@ func (r *SiteRepo) Paginate(req serverDomain.ReqPaginate) (data domain.PageData,
 
 	err = db.Count(&count).Error
 	if err != nil {
-		logUtils.Errorf("count project error", zap.String("error:", err.Error()))
+		logUtils.Errorf("count site error", zap.String("error:", err.Error()))
 		return
 	}
 
@@ -46,7 +47,7 @@ func (r *SiteRepo) Paginate(req serverDomain.ReqPaginate) (data domain.PageData,
 		Scopes(dao.PaginateScope(req.Page, req.PageSize, req.Order, req.Field)).
 		Find(&pos).Error
 	if err != nil {
-		logUtils.Errorf("query project error", zap.String("error:", err.Error()))
+		logUtils.Errorf("query site error", zap.String("error:", err.Error()))
 		return
 	}
 
@@ -68,19 +69,21 @@ func (r *SiteRepo) Get(id uint) (po model.Site, err error) {
 	return
 }
 
-func (r *SiteRepo) Create(project model.Site) (id uint, err error) {
-	po, err := r.FindDuplicate(project.Name, project.Url, 0)
+func (r *SiteRepo) Create(site model.Site) (id uint, err error) {
+	site.Url = httpUtils.AddSepIfNeeded(site.Url)
+
+	po, err := r.FindDuplicate(site.Name, site.Url, 0)
 	if po.ID != 0 {
-		return 0, errors.New(fmt.Sprintf("站点%s(%s)已存在", project.Name, project.Url))
+		return 0, errors.New(fmt.Sprintf("站点%s（%s）已存在", site.Name, site.Url))
 	}
 
-	err = r.DB.Model(&model.Site{}).Create(&project).Error
+	err = r.DB.Model(&model.Site{}).Create(&site).Error
 	if err != nil {
-		logUtils.Errorf(color.RedString("create project failed, error: %s.", err.Error()))
+		logUtils.Errorf(color.RedString("create site failed, error: %s.", err.Error()))
 		return 0, err
 	}
 
-	id = project.ID
+	id = site.ID
 
 	return
 }
