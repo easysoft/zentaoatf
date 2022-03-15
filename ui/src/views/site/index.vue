@@ -42,8 +42,8 @@
           </template>
 
           <template #action="{ record }">
-            <a-button @click="() => edit(record.id)" type="link" size="small">{{ t('view') }}</a-button>
-            <a-button @click="() => record(record)" type="link" size="small"
+            <a-button @click="() => edit(record.id)" type="link" size="small">{{ t('edit') }}</a-button>
+            <a-button @click="() => remove(record.id)" type="link" size="small"
                       :loading="removeLoading.includes(record.seq)">{{ t('delete') }}
             </a-button>
           </template>
@@ -82,7 +82,7 @@ interface SiteListSetupData {
 
   edit: (id) => void;
   removeLoading: Ref<string[]>;
-  remove: (item) => void;
+  remove: (id) => void;
 
   onSearch: () => void;
   momentUtc: (tm) => string;
@@ -182,14 +182,14 @@ export default defineComponent({
     }
 
     const removeLoading = ref<string[]>([]);
-    const remove = (item) => {
+    const remove = (id) => {
       Modal.confirm({
-        title: t('confirm_to_delete_result'),
+        title: t('confirm_to_delete_site'),
         okText: t('confirm'),
         cancelText: t('cancel'),
         onOk: async () => {
-          removeLoading.value = [item.seq];
-          const res: boolean = await store.dispatch('History/delete', item.seq);
+          removeLoading.value = [id];
+          const res: boolean = await store.dispatch('Site/delete', id);
           if (res === true) {
             message.success(t('delete_success'));
             await getList(pagination.value.page);

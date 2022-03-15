@@ -1,5 +1,15 @@
 <template>
-  <a-card :title="t('edit_site')">
+  <a-card>
+    <template #title>
+      {{t('edit_site')}}
+    </template>
+
+    <template #extra>
+      <div class="opt">
+        <a-button @click="back" type="link">{{ t('back') }}</a-button>
+      </div>
+    </template>
+
     <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-item :label="t('name')" v-bind="validateInfos.name">
         <a-input v-model:value="modelRef.name"
@@ -49,6 +59,7 @@ interface SiteFormSetupData {
   validateInfos: validateInfos
   submitForm:  () => void;
   resetFields:  () => void;
+  back:  () => void;
 }
 
 export default defineComponent({
@@ -111,6 +122,11 @@ export default defineComponent({
       .catch((e) => {console.log('')})
     };
 
+    const back = () => {
+      console.log('back')
+      router.push(`/site/list`)
+    }
+
     return {
       t,
       labelCol: { span: 4 },
@@ -121,6 +137,7 @@ export default defineComponent({
       validate,
       validateInfos,
       submitForm,
+      back,
     }
 
   }
