@@ -21,11 +21,11 @@ var (
 )
 
 var (
-	Cui              *gocui.Gui
-	MainViewHeight   int
-	ConfigPath       string
-	ServerWorkDir    string
-	ServerProjectDir string
+	Cui                *gocui.Gui
+	MainViewHeight     int
+	ConfigPath         string
+	ServerWorkDir      string
+	ServerWorkspaceDir string
 
 	UnitTestType    string
 	UnitBuildTool   BuildTool

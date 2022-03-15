@@ -10,10 +10,10 @@ import (
 func Exec(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 	err error) {
 
-	serverConfig.InitExecLog(req.ProjectPath)
+	serverConfig.InitExecLog(req.WorkspacePath)
 
 	if req.ScriptDirParamFromCmdLine == "" {
-		req.ScriptDirParamFromCmdLine = req.ProjectPath
+		req.ScriptDirParamFromCmdLine = req.WorkspacePath
 	}
 
 	if req.Act == commConsts.ExecCase {

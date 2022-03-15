@@ -1,14 +1,14 @@
 <template>
-  <div v-if="!currProject.path">
-    <a-empty :image="simpleImage" :description="t('pls_create_project')"/>
+  <div v-if="!currWorkspace.path">
+    <a-empty :image="simpleImage" :description="t('pls_create_workspace')"/>
   </div>
 
-  <div v-if="currProject.path">
-    <div v-if="currProject.type === 'unit'" class="panel">
+  <div v-if="currWorkspace.path">
+    <div v-if="currWorkspace.type === 'unit'" class="panel">
       {{ t('no_sync_for_unittest') }}
     </div>
 
-    <div class="main" v-if="currProject.type === 'func'">
+    <div class="main" v-if="currWorkspace.type === 'func'">
       <a-tabs>
         <a-tab-pane key="1" :tab="t('sync_from_zentao')">
             <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
@@ -84,7 +84,7 @@ import {validateInfos} from 'ant-design-vue/lib/form/useForm';
 import {Empty, Form, notification} from 'ant-design-vue';
 import {SyncSettings} from './data.d';
 import {useStore} from "vuex";
-import {ProjectData} from "@/store/project";
+import {WorkspaceData} from "@/store/workspace";
 import {ZentaoData} from "@/store/zentao";
 import {syncFromZentao, syncToZentao} from "@/views/sync/service";
 import throttle from "lodash.throttle";
@@ -94,7 +94,7 @@ const useForm = Form.useForm;
 
 interface ConfigFormSetupData {
   t: (key: string | number) => string;
-  currProject: ComputedRef;
+  currWorkspace: ComputedRef;
 
   labelCol: any
   wrapperCol: any
@@ -130,9 +130,9 @@ export default defineComponent({
     const {t} = useI18n();
     const router = useRouter();
 
-    const storeProject = useStore<{ project: ProjectData }>();
-    const currConfig = computed<any>(() => storeProject.state.project.currConfig);
-    const currProject = computed<any>(() => storeProject.state.project.currProject);
+    const storeWorkspace = useStore<{ workspace: WorkspaceData }>();
+    const currConfig = computed<any>(() => storeWorkspace.state.workspace.currConfig);
+    const currWorkspace = computed<any>(() => storeWorkspace.state.workspace.currWorkspace);
 
     const store = useStore<{ zentao: ZentaoData }>();
     const langs = computed<any[]>(() => store.state.zentao.langs);
@@ -244,7 +244,7 @@ export default defineComponent({
 
     return {
       t,
-      currProject,
+      currWorkspace,
 
       formRef,
       labelCol: {span: 6},

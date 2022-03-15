@@ -71,7 +71,7 @@ import {message, Form} from 'ant-design-vue';
 const useForm = Form.useForm;
 
 import {useStore} from "vuex";
-import {ProjectData} from "@/store/project";
+import {WorkspaceData} from "@/store/workspace";
 import {ZentaoData} from "@/store/zentao";
 
 import {useRouter} from "vue-router";
@@ -127,8 +127,8 @@ export default defineComponent({
       scope = scope === '-' ? '' : scope
       console.log(productId, taskId, scope)
 
-      const storeProject = useStore<{ project: ProjectData }>();
-      const currConfig = computed<any>(() => storeProject.state.project.currConfig);
+      const storeWorkspace = useStore<{ workspace: WorkspaceData }>();
+      const currConfig = computed<any>(() => storeWorkspace.state.workspace.currConfig);
 
       const store = useStore<{zentao: ZentaoData}>();
       const products = computed<any[]>(() => store.state.zentao.products);
@@ -175,7 +175,7 @@ export default defineComponent({
       let wsMsg = reactive({in: '', out: ''});
 
       let room = ''
-      getCache(settings.currProject).then((token) => {
+      getCache(settings.currWorkspace).then((token) => {
         room = token || ''
       })
 
@@ -217,9 +217,9 @@ export default defineComponent({
       const exec = (): void => {
         console.log("exec")
         validate().then(() => {
-          getCache(settings.currProject).then(
-              (projectPath) => {
-                const msg = Object.assign({act: 'execTask', projectPath: projectPath}, model)
+          getCache(settings.currWorkspace).then(
+              (workspacePath) => {
+                const msg = Object.assign({act: 'execTask', workspacePath:workspacePath}, model)
                 console.log('msg', msg)
 
                 wsMsg.out += '\n'
@@ -230,9 +230,9 @@ export default defineComponent({
       }
       const stop = (): void => {
         console.log("stop")
-        getCache(settings.currProject).then (
-            (projectPath) => {
-              const msg = {act: 'execStop', projectPath: projectPath}
+        getCache(settings.currWorkspace).then (
+            (workspacePath) => {
+              const msg = {act: 'execStop', workspacePath: workspacePath}
               console.log('msg', msg)
               WebSocket.sentMsg(room, JSON.stringify(msg))
             }
@@ -240,9 +240,9 @@ export default defineComponent({
       }
       const initWsConn = (): void => {
         console.log("initWsConn")
-        getCache(settings.currProject).then (
-            (projectPath) => {
-              const msg = {act: 'init', projectPath: projectPath}
+        getCache(settings.currWorkspace).then (
+            (workspacePath) => {
+              const msg = {act: 'init', workspacePath: workspacePath}
               console.log('msg', msg)
               WebSocket.sentMsg(room, JSON.stringify(msg))
             }

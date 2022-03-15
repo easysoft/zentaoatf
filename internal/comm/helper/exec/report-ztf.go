@@ -19,7 +19,7 @@ import (
 )
 
 func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
-	projectPath string, wsMsg websocket.Message) {
+	workspacePath string, wsMsg websocket.Message) {
 
 	// print failed case
 	failedCount := 0

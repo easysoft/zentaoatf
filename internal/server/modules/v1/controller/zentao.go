@@ -17,15 +17,15 @@ func NewZentaoCtrl() *ZentaoCtrl {
 }
 
 func (c *ZentaoCtrl) GetProfile(ctx iris.Context) {
-	projectPath := ctx.URLParam("currProject")
-	if projectPath == "" {
+	workspacePath := ctx.URLParam("currWorkspace")
+	if workspacePath == "" {
 		ctx.JSON(c.SuccessResp(make([]serverDomain.ZentaoProduct, 0)))
 		return
 	}
 
-	data, err := zentaoHelper.GetProfile(projectPath)
+	data, err := zentaoHelper.GetProfile(workspacePath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.BizErrProjectConfig, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.BizErrWorkspaceConfig, err.Error()))
 		return
 	}
 
@@ -33,15 +33,15 @@ func (c *ZentaoCtrl) GetProfile(ctx iris.Context) {
 }
 
 func (c *ZentaoCtrl) ListProduct(ctx iris.Context) {
-	projectPath := ctx.URLParam("currProject")
-	if projectPath == "" {
+	workspacePath := ctx.URLParam("currWorkspace")
+	if workspacePath == "" {
 		ctx.JSON(c.SuccessResp(make([]serverDomain.ZentaoProduct, 0)))
 		return
 	}
 
-	data, err := zentaoHelper.ListProduct(projectPath)
+	data, err := zentaoHelper.ListProduct(workspacePath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.BizErrProjectConfig, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.BizErrWorkspaceConfig, err.Error()))
 		return
 	}
 
@@ -49,14 +49,14 @@ func (c *ZentaoCtrl) ListProduct(ctx iris.Context) {
 }
 
 func (c *ZentaoCtrl) ListModule(ctx iris.Context) {
-	projectPath := ctx.URLParam("currProject")
+	workspacePath := ctx.URLParam("currWorkspace")
 	productId, err := ctx.URLParamInt("productId")
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
 		return
 	}
 
-	data, err := zentaoHelper.ListModuleForCase(productId, projectPath)
+	data, err := zentaoHelper.ListModuleForCase(productId, workspacePath)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
@@ -66,14 +66,14 @@ func (c *ZentaoCtrl) ListModule(ctx iris.Context) {
 }
 
 func (c *ZentaoCtrl) ListSuite(ctx iris.Context) {
-	projectPath := ctx.URLParam("currProject")
+	workspacePath := ctx.URLParam("currWorkspace")
 	productId, err := ctx.URLParamInt("productId")
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
 		return
 	}
 
-	data, err := zentaoHelper.ListSuiteByProduct(productId, projectPath)
+	data, err := zentaoHelper.ListSuiteByProduct(productId, workspacePath)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
@@ -83,14 +83,14 @@ func (c *ZentaoCtrl) ListSuite(ctx iris.Context) {
 }
 
 func (c *ZentaoCtrl) ListTask(ctx iris.Context) {
-	projectPath := ctx.URLParam("currProject")
+	workspacePath := ctx.URLParam("currWorkspace")
 	productId, err := ctx.URLParamInt("productId")
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
 		return
 	}
 
-	data, err := zentaoHelper.ListTaskByProduct(productId, projectPath)
+	data, err := zentaoHelper.ListTaskByProduct(productId, workspacePath)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
@@ -100,7 +100,7 @@ func (c *ZentaoCtrl) ListTask(ctx iris.Context) {
 }
 
 func (c *ZentaoCtrl) GetDataForBugSubmition(ctx iris.Context) {
-	projectPath := ctx.URLParam("currProject")
+	workspacePath := ctx.URLParam("currWorkspace")
 
 	req := commDomain.FuncResult{}
 	if err := ctx.ReadJSON(&req); err != nil {
@@ -108,7 +108,7 @@ func (c *ZentaoCtrl) GetDataForBugSubmition(ctx iris.Context) {
 		return
 	}
 
-	fields, err := zentaoHelper.GetBugFiledOptions(req, projectPath)
+	fields, err := zentaoHelper.GetBugFiledOptions(req, workspacePath)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return

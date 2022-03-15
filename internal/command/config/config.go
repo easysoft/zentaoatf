@@ -81,7 +81,7 @@ func InitScreenSize() {
 }
 
 //func CheckRequestConfig() {
-//	conf := configUtils.LoadByProjectPath(commConsts.WorkDir)
+//	conf := configUtils.LoadByWorkspacePath(commConsts.WorkDir)
 //	if conf.Url == "" || conf.Username == "" || conf.Password == "" {
 //		stdinUtils.InputForRequest()
 //	}
@@ -89,7 +89,7 @@ func InitScreenSize() {
 
 func PrintCurrConfig() {
 	logUtils.ExecConsole(color.FgCyan, "\n"+i118Utils.Sprintf("current_config"))
-	conf := configUtils.LoadByProjectPath(commConsts.WorkDir)
+	conf := configUtils.LoadByWorkspacePath(commConsts.WorkDir)
 	val := reflect.ValueOf(conf)
 	typeOfS := val.Type()
 	for i := 0; i < reflect.ValueOf(conf).NumField(); i++ {

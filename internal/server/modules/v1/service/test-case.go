@@ -12,8 +12,8 @@ func NewTestCaseService() *TestCaseService {
 	return &TestCaseService{}
 }
 
-func (s *TestCaseService) LoadTestCases(productId, moduleId, suiteId, taskId int, projectPath string) (
+func (s *TestCaseService) LoadTestCases(productId, moduleId, suiteId, taskId int, workspacePath string) (
 	cases []commDomain.ZtfCase, loginFail bool) {
 
-	return zentaoUtils.LoadTestCases(productId, moduleId, suiteId, taskId, projectPath)
+	return zentaoUtils.LoadTestCases(productId, moduleId, suiteId, taskId, workspacePath)
 }

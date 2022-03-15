@@ -31,7 +31,7 @@ func CommitBug(files []string, actionModule *command.IndexModule) {
 	}
 	//resultDir = fileUtils.AddPathSepIfNeeded(resultDir)
 
-	report, err := analysisUtils.ReadReportByProjectSeq(commConsts.WorkDir, resultDir)
+	report, err := analysisUtils.ReadReportByWorkspaceSeq(commConsts.WorkDir, resultDir)
 	if err != nil {
 		return
 	}

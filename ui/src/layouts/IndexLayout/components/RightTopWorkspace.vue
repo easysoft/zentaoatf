@@ -1,25 +1,25 @@
 <template>
   <div>
-    <div v-if="projects.length == 0" class="create-link" @click="selectProject('')">
-      {{ t('create_project') }}
+    <div v-if="workspaces.length == 0" class="create-link" @click="selectWorkspace('')">
+      {{ t('create_workspace') }}
     </div>
 
     <!-- zentao site selection -->
     <a-dropdown
-        v-if="projects.length > 0"
+        v-if="workspaces.length > 0"
         :dropdownMatchSelectWidth="false"
         class="dropdown-list">
 
       <a class="t-link-btn" @click.prevent>
-        <span class="name">{{currProject.name}}</span>
+        <span class="name">{{currWorkspace.name}}</span>
         <span class="icon2"><icon-svg type="down"></icon-svg></span>
       </a>
       <template #overlay>
         <a-menu class="menu">
-          <template v-for="item in projects" :key="item.path">
-            <a-menu-item v-if="currProject.path !== item.path">
+          <template v-for="item in workspaces" :key="item.path">
+            <a-menu-item v-if="currWorkspace.path !== item.path">
                 <div class="line">
-                  <div class="t-link name" @click="selectProject(item)">{{ item.name }}</div>
+                  <div class="t-link name" @click="selectWorkspace(item)">{{ item.name }}</div>
                   <div class="space"></div>
                   <div class="t-link icon" @click="setDeleteModel(item)">
                     <icon-svg type="delete" class="menu-icon"></icon-svg>
@@ -28,12 +28,12 @@
             </a-menu-item>
           </template>
 
-          <a-menu-divider v-if="projects.length > 1"/>
+          <a-menu-divider v-if="workspaces.length > 1"/>
 
           <a-menu-item key="" class="create">
-            <span class="t-link name" @click="selectProject('')">
+            <span class="t-link name" @click="selectWorkspace('')">
               <icon-svg type="add" class="menu-icon"></icon-svg>
-              {{ t('create_project') }}
+              {{ t('create_workspace') }}
             </span>
           </a-menu-item>
         </a-menu>
@@ -42,20 +42,20 @@
 
     <!-- zentao product selection -->
     <a-dropdown
-        v-if="projects.length > 0"
+        v-if="workspaces.length > 0"
         :dropdownMatchSelectWidth="false"
         class="dropdown-list">
 
       <a class="t-link-btn" @click.prevent>
-        <span class="name">{{currProject.name}}</span>
+        <span class="name">{{currWorkspace.name}}</span>
         <span class="icon2"><icon-svg type="down"></icon-svg></span>
       </a>
       <template #overlay>
         <a-menu class="menu">
-          <template v-for="item in projects" :key="item.path">
-            <a-menu-item v-if="currProject.path !== item.path">
+          <template v-for="item in workspaces" :key="item.path">
+            <a-menu-item v-if="currWorkspace.path !== item.path">
               <div class="line">
-                <div class="t-link name" @click="selectProject(item)">{{ item.name }}</div>
+                <div class="t-link name" @click="selectWorkspace(item)">{{ item.name }}</div>
                 <div class="space"></div>
                 <div class="t-link icon" @click="setDeleteModel(item)">
                   <icon-svg type="delete" class="menu-icon"></icon-svg>
@@ -64,19 +64,19 @@
             </a-menu-item>
           </template>
 
-          <a-menu-divider v-if="projects.length > 1"/>
+          <a-menu-divider v-if="workspaces.length > 1"/>
 
           <a-menu-item key="" class="create">
-            <span class="t-link name" @click="selectProject('')">
+            <span class="t-link name" @click="selectWorkspace('')">
               <icon-svg type="add" class="menu-icon"></icon-svg>
-              {{ t('create_project') }}
+              {{ t('create_workspace') }}
             </span>
           </a-menu-item>
         </a-menu>
       </template>
     </a-dropdown>
 
-    <project-create-form
+    <workspace-create-form
       :visible="formVisible"
       :onCancel="cancel"
       :onSubmit="submitForm"
@@ -87,7 +87,7 @@
         title="Modal"
         :ok-text="t('confirm')"
         :cancel-text="t('cancel')"
-        @ok="removeProject"
+        @ok="removeWorkspace"
     >
       <p>{{t('confirm_delete', {name: deleteModel.path})}}</p>
     </a-modal>
@@ -100,22 +100,22 @@ import {computed, ComputedRef, defineComponent, onMounted, Ref, ref, watch} from
 import {useRouter} from "vue-router";
 import {useStore} from "vuex";
 import IconSvg from "@/components/IconSvg/index";
-import {ProjectData} from "@/store/project";
-import ProjectCreateForm from "@/views/component/project/create.vue";
-import {createProject} from "@/services/project";
+import {WorkspaceData} from "@/store/workspace";
+import WorkspaceCreateForm from "@/views/component/workspace/create.vue";
+import {createWorkspace} from "@/services/workspace";
 import {hideMenu} from "@/utils/dom";
 import {useI18n} from "vue-i18n";
 
-interface RightTopProject {
+interface RightTopWorkspace {
   t: (key: string | number) => string;
-  projects: ComputedRef<any[]>;
-  currProject: ComputedRef;
+  workspaces: ComputedRef<any[]>;
+  currWorkspace: ComputedRef;
 
-  selectProject: (item) => void;
-  removeProject: (item) => void;
+  selectWorkspace: (item) => void;
+  removeWorkspace: (item) => void;
   formVisible: Ref<boolean>;
   setFormVisible:  (val: boolean) => void;
-  submitForm: (project: any) => Promise<void>;
+  submitForm: (workspace: any) => Promise<void>;
   cancel: () => void;
 
   deleteModel: Ref
@@ -124,45 +124,45 @@ interface RightTopProject {
 }
 
 export default defineComponent({
-  name: 'RightTopProject',
-  components: {ProjectCreateForm, IconSvg},
-  setup(): RightTopProject {
+  name: 'RightTopWorkspace',
+  components: {WorkspaceCreateForm, IconSvg},
+  setup(): RightTopWorkspace {
     const { t } = useI18n();
 
     const router = useRouter();
-    const store = useStore<{ project: ProjectData }>();
+    const store = useStore<{ workspace: WorkspaceData }>();
 
-    const projects = computed<any[]>(() => store.state.project.projects);
-    const currProject = computed<any>(() => store.state.project.currProject);
+    const workspaces = computed<any[]>(() => store.state.workspace.workspaces);
+    const currWorkspace = computed<any>(() => store.state.workspace.currWorkspace);
 
-    store.dispatch('project/fetchProject', '')
+    store.dispatch('workspace/fetchWorkspace', '')
 
-    const switchProject = (newProject, oldProject) => {
+    const switchWorkspace = (newWorkspace, oldWorkspace) => {
       const routerPath = router.currentRoute.value.path
-      if ( (oldProject.id && oldProject.id !== newProject.id && routerPath.indexOf('/exec/history/') > -1)
-          || (newProject.type === 'unit' && (routerPath === '/sync' || routerPath === '/script/list'))) {
+      if ( (oldWorkspace.id && oldWorkspace.id !== newWorkspace.id && routerPath.indexOf('/exec/history/') > -1)
+          || (newWorkspace.type === 'unit' && (routerPath === '/sync' || routerPath === '/script/list'))) {
         router.push(`/exec/history`) // will call hideMenu on this page
       } else {
-        hideMenu(newProject)
+        hideMenu(newWorkspace)
       }
     }
 
-    watch(currProject, (newProject, oldProject)=> {
-      console.log('watch currProject', newProject.type)
-      switchProject(newProject, oldProject)
+    watch(currWorkspace, (newWorkspace, oldWorkspace)=> {
+      console.log('watch currWorkspace', newWorkspace.type)
+      switchWorkspace(newWorkspace, oldWorkspace)
     }, {deep: true})
 
     onMounted(() => {
       console.log('onMounted')
     })
 
-    const selectProject = (item): void => {
-      console.log('selectProject', item)
+    const selectWorkspace = (item): void => {
+      console.log('selectWorkspace', item)
 
       if (!item) {
         setFormVisible(true)
       } else {
-        store.dispatch('project/fetchProject', item.path)
+        store.dispatch('workspace/fetchWorkspace', item.path)
       }
     }
 
@@ -176,10 +176,10 @@ export default defineComponent({
         deleteVisible.value = false
       }
     }
-    const removeProject = (): void => {
-      console.log('removeProject', deleteModel)
+    const removeWorkspace = (): void => {
+      console.log('removeWorkspace', deleteModel)
 
-      store.dispatch('project/removeProject', deleteModel.value.path).then(() => {
+      store.dispatch('workspace/removeWorkspace', deleteModel.value.path).then(() => {
         deleteModel.value = {}
         deleteVisible.value = false
       })
@@ -190,24 +190,24 @@ export default defineComponent({
       formVisible.value = val;
     };
 
-    const submitForm = async (project: any) => {
-      console.log('submitForm', project)
-      createProject(project).then(() => {
-        store.dispatch('project/fetchProject', project.path);
+    const submitForm = async (workspace: any) => {
+      console.log('submitForm', workspace)
+      createWorkspace(workspace).then(() => {
+        store.dispatch('workspace/fetchWorkspace', workspace.path);
         setFormVisible(false);
       }).catch(err => { console.log('') })
     }
     const cancel = () => {
-      store.dispatch('project/fetchProject', currProject.value.path);
+      store.dispatch('workspace/fetchWorkspace', currWorkspace.value.path);
       setFormVisible(false);
     }
 
     return {
       t,
-      selectProject,
-      removeProject,
-      projects,
-      currProject,
+      selectWorkspace,
+      removeWorkspace,
+      workspaces,
+      currWorkspace,
       formVisible,
       setFormVisible,
       submitForm,

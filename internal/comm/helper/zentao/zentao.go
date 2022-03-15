@@ -39,7 +39,7 @@ func GetConfig(baseUrl string) (err error) {
 	return
 }
 
-func Login(config commDomain.ProjectConf) (err error) {
+func Login(config commDomain.WorkspaceConf) (err error) {
 	url := GenApiUrl("tokens", nil, config.Url)
 
 	params := map[string]string{
@@ -74,10 +74,10 @@ func ListLang() (langs []serverDomain.ZentaoLang, err error) {
 	return
 }
 
-func ListProduct(projectPath string) (products []serverDomain.ZentaoProduct, err error) {
-	config := configUtils.LoadByProjectPath(projectPath)
+func ListProduct(workspacePath string) (products []serverDomain.ZentaoProduct, err error) {
+	config := configUtils.LoadByWorkspacePath(workspacePath)
 	if config.Url == "" {
-		err = errors.New(i118Utils.Sprintf("pls_config_project"))
+		err = errors.New(i118Utils.Sprintf("pls_config_workspace"))
 		return
 	}
 
@@ -114,8 +114,8 @@ func ListProduct(projectPath string) (products []serverDomain.ZentaoProduct, err
 	return
 }
 
-func ListModuleForCase(productId int, projectPath string) (modules []serverDomain.ZentaoModule, err error) {
-	config := configUtils.LoadByProjectPath(projectPath)
+func ListModuleForCase(productId int, workspacePath string) (modules []serverDomain.ZentaoModule, err error) {
+	config := configUtils.LoadByWorkspacePath(workspacePath)
 	err = Login(config)
 	if err != nil {
 		return
@@ -168,8 +168,8 @@ func GenModuleData(mp map[string]interface{}, modules *[]serverDomain.ZentaoModu
 	}
 }
 
-func ListSuiteByProduct(productId int, projectPath string) (suites []serverDomain.ZentaoSuite, err error) {
-	config := configUtils.LoadByProjectPath(projectPath)
+func ListSuiteByProduct(productId int, workspacePath string) (suites []serverDomain.ZentaoSuite, err error) {
+	config := configUtils.LoadByWorkspacePath(workspacePath)
 	err = Login(config)
 	if err != nil {
 		return
@@ -205,10 +205,10 @@ func ListSuiteByProduct(productId int, projectPath string) (suites []serverDomai
 	return
 }
 
-func ListTaskByProduct(productId int, projectPath string) (tasks []serverDomain.ZentaoTask, err error) {
-	config := configUtils.LoadByProjectPath(projectPath)
+func ListTaskByProduct(productId int, workspacePath string) (tasks []serverDomain.ZentaoTask, err error) {
+	config := configUtils.LoadByWorkspacePath(workspacePath)
 	if config.Url == "" {
-		err = errors.New(i118Utils.Sprintf("pls_config_project"))
+		err = errors.New(i118Utils.Sprintf("pls_config_workspace"))
 		return
 	}
 

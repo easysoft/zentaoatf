@@ -7,5 +7,5 @@ type TestScript struct {
 	Desc    string `json:"desc"`
 	Lang    string `json:"lang"`
 
-	ProjectId uint `json:"projectId"`
+	WorkspaceId uint `json:"workspaceId"`
 }

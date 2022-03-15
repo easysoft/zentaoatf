@@ -17,7 +17,7 @@ import (
 	"strings"
 )
 
-func InputForScriptInterpreter(scripts []string, config *commDomain.ProjectConf, from string) bool {
+func InputForScriptInterpreter(scripts []string, config *commDomain.WorkspaceConf, from string) bool {
 	configChanged := false
 	langs := scriptUtils.GetScriptType(scripts)
 
@@ -132,7 +132,7 @@ func InputForSet() {
 		var configInterpreter bool
 		stdinUtils.InputForBool(&configInterpreter, true, "config_script_interpreter")
 		if configInterpreter {
-			scripts := scriptUtils.LoadScriptByProject(commConsts.WorkDir)
+			scripts := scriptUtils.LoadScriptByWorkspace(commConsts.WorkDir)
 			InputForScriptInterpreter(scripts, &conf, "set")
 		}
 	}
@@ -157,7 +157,7 @@ func getZenTaoBaseUrl(url string) string {
 }
 
 //func InputForRequest() {
-//	conf := configUtils.LoadByProjectPath(commConsts.WorkDir)
+//	conf := configUtils.LoadByWorkspacePath(commConsts.WorkDir)
 //
 //	logUtils.ExecConsole(color.FgCyan, i118Utils.Sprintf("need_config"))
 //

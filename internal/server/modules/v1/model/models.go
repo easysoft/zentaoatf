@@ -2,7 +2,7 @@ package model
 
 var (
 	Models = []interface{}{
-		&Project{},
+		&Workspace{},
 		&Site{},
 	}
 )

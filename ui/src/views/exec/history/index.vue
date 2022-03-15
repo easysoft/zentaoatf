@@ -1,16 +1,16 @@
 <template>
-  <div v-if="!currProject.path">
-    <a-empty :image="simpleImage" :description="t('pls_create_project')"/>
+  <div v-if="!currWorkspace.path">
+    <a-empty :image="simpleImage" :description="t('pls_create_workspace')"/>
   </div>
 
-  <div v-if="currProject.path" class="indexlayout-main-conent">
+  <div v-if="currWorkspace.path" class="indexlayout-main-conent">
     <a-card :bordered="false">
       <template #title>
         {{ t('test_exec') }}
       </template>
       <template #extra>
         <div class="opt">
-          <template v-if="currProject.type === 'func'">
+          <template v-if="currWorkspace.type === 'func'">
             <a-button @click="execCase" type="primary" class="exec-button">
               <span class="exec-icon"><icon-svg type="exec"></icon-svg></span>
               <span class="exec-text">{{ t('exec') }}{{ t('case') }}</span>
@@ -42,7 +42,7 @@
 
           </template>
 
-          <template v-if="currProject.type === 'unit'">
+          <template v-if="currWorkspace.type === 'unit'">
             <a-button @click="execUnit" type="primary">{{ t('execute_unit_or_automated') }}</a-button>
           </template>
         </div>
@@ -108,7 +108,7 @@ import {StateType} from "../store";
 import {useRouter} from "vue-router";
 import {momentUnixDef, percentDef} from "@/utils/datetime";
 import {execByDef} from "@/utils/testing";
-import {ProjectData} from "@/store/project";
+import {WorkspaceData} from "@/store/workspace";
 import {hideMenu} from "@/utils/dom";
 import throttle from "lodash.throttle";
 import {useI18n} from "vue-i18n";
@@ -118,7 +118,7 @@ const useForm = Form.useForm;
 
 interface ListExecSetupData {
   t: (key: string | number) => string;
-  currProject: ComputedRef;
+  currWorkspace: ComputedRef;
 
   columns: any;
   models: ComputedRef<Execution[]>;
@@ -149,8 +149,8 @@ export default defineComponent({
   setup(): ListExecSetupData {
     const {t} = useI18n();
 
-    const projectStore = useStore<{ project: ProjectData }>();
-    const currProject = computed<any>(() => projectStore.state.project.currProject);
+    const workspaceStore = useStore<{ workspace: WorkspaceData }>();
+    const currWorkspace = computed<any>(() => workspaceStore.state.workspace.currWorkspace);
 
     const execBy = execByDef
     const momentTime = momentUnixDef
@@ -201,14 +201,14 @@ export default defineComponent({
     }, 600)
     list();
 
-    watch(currProject, (newProject, oldVal) => {
-      console.log('watch currProject', newProject)
+    watch(currWorkspace, (newWorkspace, oldVal) => {
+      console.log('watch currWorkspace', newWorkspace)
       list()
     }, {deep: true})
 
     onMounted(() => {
       console.log('onMounted')
-      hideMenu(currProject.value) // jump from not available page for unittest
+      hideMenu(currWorkspace.value) // jump from not available page for unittest
     })
 
     // 查看
@@ -259,7 +259,7 @@ export default defineComponent({
 
     return {
       t,
-      currProject,
+      currWorkspace,
 
       columns,
       models,

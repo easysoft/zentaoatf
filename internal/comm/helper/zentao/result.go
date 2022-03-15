@@ -12,7 +12,7 @@ import (
 	"strconv"
 )
 
-func CommitResult(report commDomain.ZtfReport, productId, taskId string, projectPath string) (err error) {
+func CommitResult(report commDomain.ZtfReport, productId, taskId string, workspacePath string) (err error) {
 	if productId != "" {
 		report.ProductId, _ = strconv.Atoi(productId)
 	}
@@ -27,7 +27,7 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId string, project
 	//	report.TestType = ""
 	//}
 
-	config := configUtils.LoadByProjectPath(projectPath)
+	config := configUtils.LoadByWorkspacePath(workspacePath)
 	Login(config)
 
 	url := config.Url + GenApiUriOld("ci", "commitResult", "")

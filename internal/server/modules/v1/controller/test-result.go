@@ -18,7 +18,7 @@ func NewTestResultCtrl() *TestResultCtrl {
 
 // Submit 提交
 func (c *TestResultCtrl) Submit(ctx iris.Context) {
-	projectPath := ctx.URLParam("currProject")
+	workspacePath := ctx.URLParam("currWorkspace")
 
 	req := serverDomain.ZentaoResultSubmitReq{}
 	err := ctx.ReadJSON(&req)
@@ -27,7 +27,7 @@ func (c *TestResultCtrl) Submit(ctx iris.Context) {
 		return
 	}
 
-	err = c.TestResultService.Submit(req, projectPath)
+	err = c.TestResultService.Submit(req, workspacePath)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return

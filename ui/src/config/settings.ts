@@ -20,14 +20,14 @@ export interface SettingsType {
     headFixed: boolean;
 
     /**
-     * 站点本地存储Token 的 Key值
+     * 站点本地存储Token的Key值
      */
     siteTokenKey: string;
 
     /**
-     * 站点本地存储当前项目 的 Key值
+     * 站点本地存储当前工作目录的Key值
      */
-    currProject: string;
+    currWorkspace: string;
 
     /**
      * Ajax请求头发送Token 的 Key值
@@ -50,7 +50,7 @@ const settings: SettingsType = {
     topNavEnable: true,
     headFixed: true,
     siteTokenKey: 'admin_antd_vue_token',
-    currProject: 'currProject',
+    currWorkspace: 'currWorkspace',
     // ajaxHeadersTokenKey: 'x-token',
     ajaxHeadersTokenKey: 'Authorization',
     ajaxResponseNoVerifyUrl: [

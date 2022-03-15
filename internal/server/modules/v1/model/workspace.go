@@ -2,7 +2,7 @@ package model
 
 import commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 
-type Project struct {
+type Workspace struct {
 	BaseModel
 
 	Type commConsts.TestType `json:"type"`
@@ -13,6 +13,6 @@ type Project struct {
 	IsDefault bool `json:"isDefault"`
 }
 
-func (Project) TableName() string {
-	return "biz_project"
+func (Workspace) TableName() string {
+	return "biz_workspace"
 }

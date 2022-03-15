@@ -17,8 +17,8 @@ import (
 	"strings"
 )
 
-func CommitBug(ztfBug commDomain.ZtfBug, projectPath string) (err error) {
-	config := configHelper.LoadByProjectPath(projectPath)
+func CommitBug(ztfBug commDomain.ZtfBug, workspacePath string) (err error) {
+	config := configHelper.LoadByWorkspacePath(workspacePath)
 	Login(config)
 
 	ztfBug.Steps = strings.Replace(ztfBug.Steps, " ", "&nbsp;", -1)
@@ -44,14 +44,14 @@ func CommitBug(ztfBug commDomain.ZtfBug, projectPath string) (err error) {
 	return
 }
 
-func PrepareBug(projectPath, seq string, caseIdStr string) (bug commDomain.ZtfBug) {
+func PrepareBug(workspacePath, seq string, caseIdStr string) (bug commDomain.ZtfBug) {
 	caseId, err := strconv.Atoi(caseIdStr)
 
 	if err != nil {
 		return
 	}
 
-	report, err := analysisHelper.ReadReportByProjectSeq(projectPath, seq)
+	report, err := analysisHelper.ReadReportByWorkspaceSeq(workspacePath, seq)
 	if err != nil {
 		return
 	}
@@ -106,17 +106,17 @@ func GenBugStepText(step commDomain.StepLog) string {
 	return stepTxt + strings.Join(stepResults, "\n") + "\n"
 }
 
-func GetBugFiledOptions(req commDomain.FuncResult, projectPath string) (
+func GetBugFiledOptions(req commDomain.FuncResult, workspacePath string) (
 	bugFields commDomain.ZentaoBugFields, err error) {
 
 	// field options
-	config := configHelper.LoadByProjectPath(projectPath)
+	config := configHelper.LoadByWorkspacePath(workspacePath)
 	err = Login(config)
 	if err != nil {
 		return
 	}
 
-	// $productID, $projectID = 0
+	// $productID, $workspaceID = 0
 	params := ""
 	if commConsts.RequestType == commConsts.PathInfo {
 		params = fmt.Sprintf("%d-0", req.ProductId)

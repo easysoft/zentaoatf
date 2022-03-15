@@ -32,14 +32,14 @@ import (
 
 func ExecCase(ch chan int, req serverDomain.WsReq, msg websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
 	cases := req.Cases
-	return RunZtf(ch, req.ProjectPath, 0, 0, commConsts.Case, cases, msg)
+	return RunZtf(ch, req.WorkspacePath, 0, 0, commConsts.Case, cases, msg)
 }
 
 func ExecModule(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 
 	cases, err := zentaoUtils.GetCasesByModule(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.ModuleId),
-		req.ProjectPath, req.ScriptDirParamFromCmdLine)
+		req.WorkspacePath, req.ScriptDirParamFromCmdLine)
 	if err != nil {
 		return
 	}
@@ -48,27 +48,27 @@ func ExecModule(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 		cases = analysisUtils.FilterCaseByResult(cases, req)
 	}
 
-	return RunZtf(ch, req.ProjectPath,
+	return RunZtf(ch, req.WorkspacePath,
 		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.ModuleId), commConsts.Module, cases, msg)
 }
 
 func ExecSuite(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 	cases, err := zentaoUtils.GetCasesBySuite(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId),
-		req.ProjectPath, req.ScriptDirParamFromCmdLine)
+		req.WorkspacePath, req.ScriptDirParamFromCmdLine)
 
 	if req.Seq != "" {
 		cases = analysisUtils.FilterCaseByResult(cases, req)
 	}
 
-	return RunZtf(ch, req.ProjectPath,
+	return RunZtf(ch, req.WorkspacePath,
 		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId), commConsts.Suite, cases, msg)
 }
 
 func ExecTask(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 	cases, err := zentaoUtils.GetCasesByTask(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId),
-		req.ProjectPath, req.ScriptDirParamFromCmdLine)
+		req.WorkspacePath, req.ScriptDirParamFromCmdLine)
 	if err != nil {
 		return
 	}
@@ -77,15 +77,15 @@ func ExecTask(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 		cases = analysisUtils.FilterCaseByResult(cases, req)
 	}
 
-	return RunZtf(ch, req.ProjectPath,
+	return RunZtf(ch, req.WorkspacePath,
 		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId), commConsts.Task, cases, msg)
 }
 
 func RunZtf(ch chan int,
-	projectPath string, productId, id int, by commConsts.ExecBy, cases []string, msg websocket.Message) (
+	workspacePath string, productId, id int, by commConsts.ExecBy, cases []string, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 
-	conf := configUtils.LoadByProjectPath(projectPath)
+	conf := configUtils.LoadByWorkspacePath(workspacePath)
 
 	casesToRun, casesToIgnore := FilterCases(cases, conf)
 
@@ -93,13 +93,13 @@ func RunZtf(ch chan int,
 	numbMaxWidth, pathMaxWidth = getNumbMaxWidth(casesToRun)
 	report = genReport(productId, id, by)
 
-	ExeScripts(casesToRun, casesToIgnore, projectPath, conf, &report, pathMaxWidth, numbMaxWidth, ch, msg)
-	GenZTFTestReport(report, pathMaxWidth, projectPath, msg)
+	ExeScripts(casesToRun, casesToIgnore, workspacePath, conf, &report, pathMaxWidth, numbMaxWidth, ch, msg)
+	GenZTFTestReport(report, pathMaxWidth, workspacePath, msg)
 
 	return
 }
 
-func ExeScripts(casesToRun []string, casesToIgnore []string, projectPath string, conf commDomain.ProjectConf,
+func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath string, conf commDomain.WorkspaceConf,
 	report *commDomain.ZtfReport, pathMaxWidth int, numbMaxWidth int,
 	ch chan int, wsMsg websocket.Message) {
 
@@ -134,7 +134,7 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, projectPath string,
 			continue
 		}
 
-		ExeScript(file, projectPath, conf, report, idx, len(casesToRun), pathMaxWidth, numbMaxWidth, ch, wsMsg)
+		ExeScript(file, workspacePath, conf, report, idx, len(casesToRun), pathMaxWidth, numbMaxWidth, ch, wsMsg)
 
 		select {
 		case <-ch:
@@ -157,7 +157,7 @@ ExitAllCase:
 	report.Duration = endTime - startTime
 }
 
-func ExeScript(scriptFile, projectPath string, conf commDomain.ProjectConf, report *commDomain.ZtfReport, idx,
+func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, report *commDomain.ZtfReport, idx,
 	total, pathMaxWidth, numbMaxWidth int,
 	ch chan int, wsMsg websocket.Message) {
 
@@ -173,7 +173,7 @@ func ExeScript(scriptFile, projectPath string, conf commDomain.ProjectConf, repo
 	logUtils.ExecFilef(startMsg)
 
 	logs := ""
-	stdOutput, errOutput := RunScript(scriptFile, projectPath, conf, ch, wsMsg)
+	stdOutput, errOutput := RunScript(scriptFile, workspacePath, conf, ch, wsMsg)
 	stdOutput = strings.Trim(stdOutput, "\n")
 
 	if stdOutput != "" {
@@ -205,7 +205,7 @@ func ExeScript(scriptFile, projectPath string, conf commDomain.ProjectConf, repo
 	//}
 }
 
-func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
+func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	ch chan int, wsMsg websocket.Message) (
 	stdOutput string, errOutput string) {
 
@@ -248,7 +248,7 @@ func RunScript(filePath, projectPath string, conf commDomain.ProjectConf,
 		cmd = exec.Command("/bin/bash", "-c", filePath)
 	}
 
-	cmd.Dir = projectPath
+	cmd.Dir = workspacePath
 
 	if cmd == nil {
 		msgStr := i118Utils.Sprintf("cmd_empty")
@@ -344,7 +344,7 @@ ExitCurrCase:
 	return
 }
 
-func FilterCases(cases []string, conf commDomain.ProjectConf) (casesToRun, casesToIgnore []string) {
+func FilterCases(cases []string, conf commDomain.WorkspaceConf) (casesToRun, casesToIgnore []string) {
 	for _, cs := range cases {
 		if commonUtils.IsWin() {
 			if path.Ext(cs) == ".sh" { // filter by os

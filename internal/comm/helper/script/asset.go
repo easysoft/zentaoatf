@@ -34,8 +34,8 @@ func LoadScriptTree(dir string) (asset serverDomain.TestAsset, err error) {
 	return
 }
 
-func LoadScriptByProject(projectPath string) (scriptFiles []string) {
-	LoadScriptListInDir(projectPath, &scriptFiles, 0)
+func LoadScriptByWorkspace(workspacePath string) (scriptFiles []string) {
+	LoadScriptListInDir(workspacePath, &scriptFiles, 0)
 
 	return
 }
@@ -185,8 +185,8 @@ func GetFailedCasesDirectlyFromTestResult(resultFile string) []string {
 		resultFile = strings.Replace(resultFile, extName, "."+consts.ExtNameJson, -1)
 	}
 
-	//if vari.ServerProjectDir != "" {
-	//	resultFile = vari.ServerProjectDir + resultFile
+	//if vari.ServerWorkspaceDir != "" {
+	//	resultFile = vari.ServerWorkspaceDir + resultFile
 	//}
 
 	content := fileUtils.ReadFile(resultFile)

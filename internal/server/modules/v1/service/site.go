@@ -27,7 +27,7 @@ func (s *SiteService) Get(id uint) (site model.Site, err error) {
 func (s *SiteService) Create(site model.Site) (id uint, err error) {
 	id, err = s.SiteRepo.Create(site)
 
-	//err = configUtils.UpdateSite(site, projectPath)
+	//err = configUtils.UpdateSite(site, workspacePath)
 
 	return
 }
@@ -35,7 +35,7 @@ func (s *SiteService) Create(site model.Site) (id uint, err error) {
 func (s *SiteService) Update(site model.Site) (err error) {
 	err = s.SiteRepo.Update(site)
 
-	//err = configUtils.UpdateSite(site, projectPath)
+	//err = configUtils.UpdateSite(site, workspacePath)
 	return
 }
 

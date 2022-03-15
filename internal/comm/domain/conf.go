@@ -1,6 +1,6 @@
 package commDomain
 
-type ProjectConf struct {
+type WorkspaceConf struct {
 	Language string `json:"language"`
 	Url      string `json:"url"`
 	Username string `json:"username"`

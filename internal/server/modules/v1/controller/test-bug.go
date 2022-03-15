@@ -19,7 +19,7 @@ func NewTestBugCtrl() *TestBugCtrl {
 }
 
 func (c *TestBugCtrl) GetBugData(ctx iris.Context) {
-	projectPath := ctx.URLParam("currProject")
+	workspacePath := ctx.URLParam("currWorkspace")
 
 	req := commDomain.FuncResult{}
 	err := ctx.ReadJSON(&req)
@@ -28,21 +28,21 @@ func (c *TestBugCtrl) GetBugData(ctx iris.Context) {
 		return
 	}
 
-	bug := zentaoUtils.PrepareBug(projectPath, req.Seq, strconv.Itoa(req.Id))
+	bug := zentaoUtils.PrepareBug(workspacePath, req.Seq, strconv.Itoa(req.Id))
 
 	ctx.JSON(c.SuccessResp(bug))
 }
 
 // Submit 提交
 func (c *TestBugCtrl) Submit(ctx iris.Context) {
-	projectPath := ctx.URLParam("currProject")
+	workspacePath := ctx.URLParam("currWorkspace")
 	req := commDomain.ZtfBug{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
-	err := c.TestBugService.Submit(req, projectPath)
+	err := c.TestBugService.Submit(req, workspacePath)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return

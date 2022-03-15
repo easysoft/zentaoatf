@@ -52,11 +52,11 @@ type ZtfCaseInSuite struct {
 }
 
 type ZtfTask struct {
-	Id      int
-	Code    string
-	Name    string
-	Product int
-	Project int
+	Id        int
+	Code      string
+	Name      string
+	Product   int
+	Workspace int
 
 	Runs map[int]ZtfCaseInTask
 }

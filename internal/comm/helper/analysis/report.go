@@ -10,8 +10,8 @@ import (
 	"strings"
 )
 
-func ListReport(projectPath string) (reportFiles []string) {
-	dir := filepath.Join(projectPath, commConsts.LogDirName)
+func ListReport(workspacePath string) (reportFiles []string) {
+	dir := filepath.Join(workspacePath, commConsts.LogDirName)
 
 	files, _ := ioutil.ReadDir(dir)
 	for _, fi := range files {
@@ -23,12 +23,12 @@ func ListReport(projectPath string) (reportFiles []string) {
 	return
 }
 
-func ReadReportByProjectSeq(projectPath string, seq string) (report commDomain.ZtfReport, err error) {
+func ReadReportByWorkspaceSeq(workspacePath string, seq string) (report commDomain.ZtfReport, err error) {
 	pth := ""
 	if commConsts.ComeFrom == "cmd" {
-		pth = filepath.Join(projectPath, seq, commConsts.ResultJson)
+		pth = filepath.Join(workspacePath, seq, commConsts.ResultJson)
 	} else {
-		pth = filepath.Join(projectPath, commConsts.LogDirName, seq, commConsts.ResultJson)
+		pth = filepath.Join(workspacePath, commConsts.LogDirName, seq, commConsts.ResultJson)
 	}
 
 	return ReadReportByPath(pth)

@@ -42,8 +42,8 @@ func InitLog() {
 }
 
 // 执行日志，用于具体的测试执行
-func InitExecLog(projectPath string) {
-	commConsts.ExecLogDir = logUtils.GetLogDir(projectPath)
+func InitExecLog(workspacePath string) {
+	commConsts.ExecLogDir = logUtils.GetLogDir(workspacePath)
 	config := getLogConfig()
 	config.EncoderConfig.EncodeLevel = nil
 

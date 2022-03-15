@@ -18,7 +18,7 @@ func GenExpectFiles(files []string) error {
 
 	var cases []string
 	for _, v1 := range files {
-		group := scriptUtils.LoadScriptByProject(v1)
+		group := scriptUtils.LoadScriptByWorkspace(v1)
 		for _, v2 := range group {
 			cases = append(cases, v2)
 		}
@@ -28,7 +28,7 @@ func GenExpectFiles(files []string) error {
 		logUtils.Info("\n" + i118Utils.Sprintf("no_cases"))
 		return nil
 	}
-	conf := configUtils.LoadByProjectPath(commConsts.WorkDir)
+	conf := configUtils.LoadByWorkspacePath(commConsts.WorkDir)
 	casesToRun, _ := _scriptUtils.FilterCases(cases, conf)
 
 	dryRunScripts(casesToRun)
@@ -43,7 +43,7 @@ func dryRunScripts(casesToRun []string) {
 	}
 }
 func dryRunScript(file string) {
-	conf := configUtils.LoadByProjectPath(commConsts.WorkDir)
+	conf := configUtils.LoadByWorkspacePath(commConsts.WorkDir)
 	wsMsg := websocket.Message{}
 	out, _ := _scriptUtils.RunScript(file, commConsts.WorkDir, conf, nil, wsMsg)
 

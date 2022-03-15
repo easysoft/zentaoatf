@@ -20,9 +20,9 @@ func FilterCaseByResult(cases []string, req serverDomain.WsReq) (ret []string) {
 }
 
 func getCaseIdMapFromReport(req serverDomain.WsReq) (ret map[string]commConsts.ResultStatus, err error) {
-	report, err := ReadReportByProjectSeq(req.ProjectPath, req.Seq)
+	report, err := ReadReportByWorkspaceSeq(req.WorkspacePath, req.Seq)
 	if err != nil {
-		logUtils.Errorf("fail to get case ids for %s %s", req.ProjectPath, req.Seq)
+		logUtils.Errorf("fail to get case ids for %s %s", req.WorkspacePath, req.Seq)
 		return
 	}
 

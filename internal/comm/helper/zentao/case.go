@@ -19,8 +19,8 @@ import (
 )
 
 func CommitCase(caseId int, title string,
-	stepMap maps.Map, stepTypeMap maps.Map, expectMap maps.Map, projectPath string) (err error) {
-	config := configUtils.LoadByProjectPath(projectPath)
+	stepMap maps.Map, stepTypeMap maps.Map, expectMap maps.Map, workspacePath string) (err error) {
+	config := configUtils.LoadByWorkspacePath(workspacePath)
 
 	err = Login(config)
 	if err != nil {
@@ -76,10 +76,10 @@ func GetCaseById(baseUrl string, caseId int) (cs commDomain.ZtfCase) {
 	return
 }
 
-func LoadTestCases(productId, moduleId, suiteId, taskId int, projectPath string) (
+func LoadTestCases(productId, moduleId, suiteId, taskId int, workspacePath string) (
 	cases []commDomain.ZtfCase, loginFail bool) {
 
-	config := configUtils.LoadByProjectPath(projectPath)
+	config := configUtils.LoadByWorkspacePath(workspacePath)
 
 	err := Login(config)
 	if err != nil {
@@ -100,9 +100,9 @@ func LoadTestCases(productId, moduleId, suiteId, taskId int, projectPath string)
 	return
 }
 
-func GetCasesByModule(productId int, moduleId int, projectPath, scriptDir string) (cases []string, err error) {
-	config := commDomain.ProjectConf{}
-	config = configUtils.LoadByProjectPath(projectPath)
+func GetCasesByModule(productId int, moduleId int, workspacePath, scriptDir string) (cases []string, err error) {
+	config := commDomain.WorkspaceConf{}
+	config = configUtils.LoadByWorkspacePath(workspacePath)
 
 	err = Login(config)
 	if err != nil {
@@ -115,15 +115,15 @@ func GetCasesByModule(productId int, moduleId int, projectPath, scriptDir string
 		zentaoCaseIdMap[tc.Id] = ""
 	}
 
-	//commonUtils.ChangeScriptForDebug(&projectPath)
+	//commonUtils.ChangeScriptForDebug(&workspacePath)
 	scriptUtils.GetScriptByIdsInDir(scriptDir, zentaoCaseIdMap, &cases)
 
 	return
 }
 
-func GetCasesBySuite(productId int, suiteId int, projectPath, scriptDir string) (cases []string, err error) {
-	config := commDomain.ProjectConf{}
-	config = configUtils.LoadByProjectPath(projectPath)
+func GetCasesBySuite(productId int, suiteId int, workspacePath, scriptDir string) (cases []string, err error) {
+	config := commDomain.WorkspaceConf{}
+	config = configUtils.LoadByWorkspacePath(workspacePath)
 
 	err = Login(config)
 	if err != nil {
@@ -137,15 +137,15 @@ func GetCasesBySuite(productId int, suiteId int, projectPath, scriptDir string) 
 		caseIdMap[tc.Id] = ""
 	}
 
-	//commonUtils.ChangeScriptForDebug(&projectPath)
+	//commonUtils.ChangeScriptForDebug(&workspacePath)
 	scriptUtils.GetScriptByIdsInDir(scriptDir, caseIdMap, &cases)
 
 	return
 }
 
-func GetCasesByTask(productId int, taskId int, projectPath, scriptDir string) (cases []string, err error) {
-	config := commDomain.ProjectConf{}
-	config = configUtils.LoadByProjectPath(projectPath)
+func GetCasesByTask(productId int, taskId int, workspacePath, scriptDir string) (cases []string, err error) {
+	config := commDomain.WorkspaceConf{}
+	config = configUtils.LoadByWorkspacePath(workspacePath)
 
 	err = Login(config)
 	if err != nil {
@@ -159,7 +159,7 @@ func GetCasesByTask(productId int, taskId int, projectPath, scriptDir string) (c
 		caseIdMap[tc.Id] = ""
 	}
 
-	//commonUtils.ChangeScriptForDebug(&projectPath)
+	//commonUtils.ChangeScriptForDebug(&workspacePath)
 	scriptUtils.GetScriptByIdsInDir(scriptDir, caseIdMap, &cases)
 
 	return
@@ -190,7 +190,7 @@ func ListCaseByProduct(baseUrl string, productId int) (caseArr []commDomain.ZtfC
 }
 
 func ListCaseByModule(baseUrl string, productId, moduleId int) []commDomain.ZtfCase {
-	// $productID = 0, $branch = '', $browseType = 'bymodule', $param = 0, $orderBy = 'id_asc', $recTotal = 0, $recPerPage = 20, $pageID = 1, $projectID = 0)
+	// $productID = 0, $branch = '', $browseType = 'bymodule', $param = 0, $orderBy = 'id_asc', $recTotal = 0, $recPerPage = 20, $pageID = 1, $workspaceID = 0)
 	// testcase-browse-1--byModule-19
 
 	params := ""

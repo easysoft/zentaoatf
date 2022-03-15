@@ -18,7 +18,7 @@ import (
 func View(files []string, keywords string) {
 	var cases []string
 	for _, v1 := range files {
-		group := scriptUtils.LoadScriptByProject(v1)
+		group := scriptUtils.LoadScriptByWorkspace(v1)
 		for _, v2 := range group {
 			cases = append(cases, v2)
 		}

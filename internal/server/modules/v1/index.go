@@ -15,10 +15,10 @@ type IndexModule struct {
 
 	SiteModule *index.SiteModule `inject:""`
 
-	ZentaoModule  *index.ZentaoModule  `inject:""`
-	ConfigModule  *index.ConfigModule  `inject:""`
-	SyncModule    *index.SyncModule    `inject:""`
-	ProjectModule *index.ProjectModule `inject:""`
+	ZentaoModule    *index.ZentaoModule    `inject:""`
+	ConfigModule    *index.ConfigModule    `inject:""`
+	SyncModule      *index.SyncModule      `inject:""`
+	WorkspaceModule *index.WorkspaceModule `inject:""`
 
 	TestScriptModule *index.TestScriptModule `inject:""`
 	TestExecModule   *index.TestExecModule   `inject:""`
@@ -48,7 +48,7 @@ func (m *IndexModule) Party() module.WebModule {
 		m.ZentaoModule.Party(),
 		m.ConfigModule.Party(),
 		m.SyncModule.Party(),
-		m.ProjectModule.Party(),
+		m.WorkspaceModule.Party(),
 		m.TestScriptModule.Party(),
 		m.TestExecModule.Party(),
 		m.TestBugModule.Party(),

@@ -23,7 +23,7 @@ func NewSyncService() *SyncService {
 	return &SyncService{}
 }
 
-func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, projectPath string) (err error) {
+func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, workspacePath string) (err error) {
 	productId := settings.ProductId
 	moduleId := settings.ModuleId
 	suiteId := settings.SuiteId
@@ -38,11 +38,11 @@ func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, projectPa
 		return
 	}
 
-	cases, loginFail := s.TestCaseService.LoadTestCases(productId, moduleId, suiteId, taskId, projectPath)
+	cases, loginFail := s.TestCaseService.LoadTestCases(productId, moduleId, suiteId, taskId, workspacePath)
 
 	if cases != nil && len(cases) > 0 {
 		productId = cases[0].Product
-		targetDir := fileUtils.AddPathSepIfNeeded(filepath.Join(projectPath, fmt.Sprintf("product%d", productId)))
+		targetDir := fileUtils.AddPathSepIfNeeded(filepath.Join(workspacePath, fmt.Sprintf("product%d", productId)))
 
 		count, err := s.TestScriptService.GenerateScripts(cases, lang, independentFile, byModule, targetDir)
 		if err == nil {
@@ -59,15 +59,15 @@ func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, projectPa
 	return
 }
 
-func (s *SyncService) SyncToZentao(projectPath string, commitProductId int) (err error) {
+func (s *SyncService) SyncToZentao(workspacePath string, commitProductId int) (err error) {
 	productPath := ""
 	if commConsts.ComeFrom == "cmd" {
-		productPath = fileUtils.RemovePathSepIfNeeded(projectPath)
-		projectPath = commConsts.WorkDir
+		productPath = fileUtils.RemovePathSepIfNeeded(workspacePath)
+		workspacePath = commConsts.WorkDir
 	} else {
-		productPath = filepath.Join(projectPath, fmt.Sprintf("product%d", commitProductId))
+		productPath = filepath.Join(workspacePath, fmt.Sprintf("product%d", commitProductId))
 	}
-	caseFiles := scriptUtils.LoadScriptByProject(productPath)
+	caseFiles := scriptUtils.LoadScriptByWorkspace(productPath)
 
 	for _, cs := range caseFiles {
 		pass, id, _, title := scriptUtils.GetCaseInfo(cs)
@@ -78,7 +78,7 @@ func (s *SyncService) SyncToZentao(projectPath string, commitProductId int) (err
 				logUtils.Infof("isOldFormat = ", isOldFormat)
 			}
 
-			zentaoUtils.CommitCase(id, title, stepMap, stepTypeMap, expectMap, projectPath)
+			zentaoUtils.CommitCase(id, title, stepMap, stepTypeMap, expectMap, workspacePath)
 		}
 	}
 

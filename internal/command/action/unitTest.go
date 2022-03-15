@@ -10,12 +10,12 @@ import (
 
 func RunUnitTest(cmdStr string) {
 	req := serverDomain.WsReq{
-		ProductId:   commConsts.ProductId,
-		ProjectPath: commConsts.WorkDir,
-		Act:         commConsts.ExecUnit,
-		Cmd:         cmdStr,
-		TestTool:    commConsts.UnitTestTool,
-		BuildTool:   commConsts.UnitBuildTool,
+		ProductId:     commConsts.ProductId,
+		WorkspacePath: commConsts.WorkDir,
+		Act:           commConsts.ExecUnit,
+		Cmd:           cmdStr,
+		TestTool:      commConsts.UnitTestTool,
+		BuildTool:     commConsts.UnitBuildTool,
 	}
 	if stringUtils.ParseInt(req.ProductId) != 0 {
 		req.SubmitResult = true

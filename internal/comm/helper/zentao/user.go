@@ -8,8 +8,8 @@ import (
 	"github.com/bitly/go-simplejson"
 )
 
-func GetProfile(projectPath string) (profile commDomain.ZentaoUserProfile, err error) {
-	config := configUtils.LoadByProjectPath(projectPath)
+func GetProfile(workspacePath string) (profile commDomain.ZentaoUserProfile, err error) {
+	config := configUtils.LoadByWorkspacePath(workspacePath)
 
 	err = Login(config)
 	if err != nil {

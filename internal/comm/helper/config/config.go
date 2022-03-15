@@ -13,8 +13,8 @@ import (
 	"reflect"
 )
 
-func LoadByProjectPath(projectPath string) (config commDomain.ProjectConf) {
-	pth := filepath.Join(projectPath, commConsts.ConfigDir, commConsts.ConfigFile)
+func LoadByWorkspacePath(workspacePath string) (config commDomain.WorkspaceConf) {
+	pth := filepath.Join(workspacePath, commConsts.ConfigDir, commConsts.ConfigFile)
 	ini.MapTo(&config, pth)
 
 	config.Url = commonUtils.AddSlashForUrl(config.Url)
@@ -22,26 +22,26 @@ func LoadByProjectPath(projectPath string) (config commDomain.ProjectConf) {
 	return config
 }
 
-func UpdateSite(site model.Site, projectPath string) (err error) {
-	config := LoadByProjectPath(projectPath)
+func UpdateSite(site model.Site, workspacePath string) (err error) {
+	config := LoadByWorkspacePath(workspacePath)
 
 	config.Url = site.Url
 	config.Username = site.Username
 	config.Password = site.Password
 
-	SaveToFile(config, projectPath)
+	SaveToFile(config, workspacePath)
 
 	return
 }
 
-func SaveConfig(config commDomain.ProjectConf, projectPath string) (err error) {
-	SaveToFile(config, projectPath)
+func SaveConfig(config commDomain.WorkspaceConf, workspacePath string) (err error) {
+	SaveToFile(config, workspacePath)
 
 	return
 }
 
-func ReadFromFile(projectPath string) (config commDomain.ProjectConf) {
-	pth := filepath.Join(projectPath, commConsts.ConfigDir, commConsts.ConfigFile)
+func ReadFromFile(workspacePath string) (config commDomain.WorkspaceConf) {
+	pth := filepath.Join(workspacePath, commConsts.ConfigDir, commConsts.ConfigFile)
 	ini.MapTo(&config, pth)
 
 	config.Url = commonUtils.AddSlashForUrl(config.Url)
@@ -49,8 +49,8 @@ func ReadFromFile(projectPath string) (config commDomain.ProjectConf) {
 	return config
 }
 
-func SaveToFile(config commDomain.ProjectConf, projectPath string) (err error) {
-	pth := filepath.Join(projectPath, commConsts.ConfigDir, commConsts.ConfigFile)
+func SaveToFile(config commDomain.WorkspaceConf, workspacePath string) (err error) {
+	pth := filepath.Join(workspacePath, commConsts.ConfigDir, commConsts.ConfigFile)
 	fileUtils.MkDirIfNeeded(filepath.Dir(pth))
 
 	config.Version = commConsts.ConfigVersion
@@ -64,7 +64,7 @@ func SaveToFile(config commDomain.ProjectConf, projectPath string) (err error) {
 	return nil
 }
 
-func GetFieldVal(config commDomain.ProjectConf, key string) string {
+func GetFieldVal(config commDomain.WorkspaceConf, key string) string {
 	key = stringUtils.UcFirst(key)
 
 	immutable := reflect.ValueOf(config)
@@ -73,7 +73,7 @@ func GetFieldVal(config commDomain.ProjectConf, key string) string {
 	return val
 }
 
-func SetFieldVal(config *commDomain.ProjectConf, key string, val string) string {
+func SetFieldVal(config *commDomain.WorkspaceConf, key string, val string) string {
 	key = stringUtils.UcFirst(key)
 
 	mutable := reflect.ValueOf(config).Elem()

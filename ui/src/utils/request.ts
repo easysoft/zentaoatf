@@ -95,9 +95,9 @@ request.interceptors.request.use(
         }
 
         config.params = { ...config.params, ts: Date.now() };
-        if (!config.params.currProject) {
-            const projectPath = await getCache(settings.currProject);
-            config.params = { ...config.params, currProject: projectPath, lang: i18n.global.locale.value };
+        if (!config.params.currWorkspace) {
+            const workspacePath = await getCache(settings.currWorkspace);
+            config.params = { ...config.params, currWorkspace: workspacePath, lang: i18n.global.locale.value };
         }
 
         console.log('=== request ===', config.url, config)

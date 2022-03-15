@@ -12,8 +12,8 @@ func NewTestBugService() *TestBugService {
 	return &TestBugService{}
 }
 
-func (s *TestBugService) Submit(bug commDomain.ZtfBug, projectPath string) (err error) {
-	err = zentaoUtils.CommitBug(bug, projectPath)
+func (s *TestBugService) Submit(bug commDomain.ZtfBug, workspacePath string) (err error) {
+	err = zentaoUtils.CommitBug(bug, workspacePath)
 
 	return
 }

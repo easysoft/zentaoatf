@@ -14,7 +14,7 @@ import (
 
 func RunZTFTest(files []string, moduleIdStr, suiteIdStr, taskIdStr string, actionModule *command.IndexModule) error {
 	req := serverDomain.WsReq{
-		ProjectPath:               commConsts.WorkDir,
+		WorkspacePath:             commConsts.WorkDir,
 		ScriptDirParamFromCmdLine: files[0],
 	}
 	msg := websocket.Message{}
@@ -45,7 +45,7 @@ func RunZTFTest(files []string, moduleIdStr, suiteIdStr, taskIdStr string, actio
 		} else { // run files
 			for _, v1 := range files {
 				if fileUtils.IsDir(v1) {
-					temps := scriptHelper.LoadScriptByProject(v1)
+					temps := scriptHelper.LoadScriptByWorkspace(v1)
 					for _, v2 := range temps {
 						cases = append(cases, v2)
 					}

@@ -13,8 +13,8 @@ import (
 	"strings"
 )
 
-func GetLogDir(projectPath string) string {
-	pth := filepath.Join(projectPath, commConsts.LogDirName)
+func GetLogDir(workspacePath string) string {
+	pth := filepath.Join(workspacePath, commConsts.LogDirName)
 
 	d, _ := ioutil.ReadDir(pth)
 

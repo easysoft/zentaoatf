@@ -80,7 +80,7 @@ import {computed, ComputedRef, defineComponent, getCurrentInstance, onMounted, r
 import {Form, notification} from "ant-design-vue";
 import {useRouter} from "vue-router";
 import {useStore} from "vuex";
-import {ProjectData} from "@/store/project";
+import {WorkspaceData} from "@/store/workspace";
 import IconSvg from "@/components/IconSvg";
 import {execCase} from "@/views/exec/exec/service";
 import {getCache} from "@/utils/localCache";
@@ -140,8 +140,8 @@ export default defineComponent({
     };
 
     let isExpand = ref(false);
-    const store = useStore<{ project: ProjectData }>();
-    const treeData = computed<any>(() => store.state.project.scriptTree);
+    const store = useStore<{ workspace: WorkspaceData }>();
+    const treeData = computed<any>(() => store.state.workspace.scriptTree);
     const expandedKeys = ref<string[]>([]);
     const selectedKeys = ref<string[]>([]);
     const checkedKeys = ref<string[]>([])
@@ -223,7 +223,7 @@ export default defineComponent({
     let wsMsg = reactive({in: '', out: ''});
 
     let room = ''
-    getCache(settings.currProject).then((token) => {
+    getCache(settings.currWorkspace).then((token) => {
       room = token || ''
     })
 
@@ -255,9 +255,9 @@ export default defineComponent({
 
     const initWsConn = (): void => {
       console.log("initWsConn")
-      getCache(settings.currProject).then (
-          (projectPath) => {
-            const msg = {act: 'init', projectPath: projectPath}
+      getCache(settings.currWorkspace).then (
+          (workspacePath) => {
+            const msg = {act: 'init', workspacePath: workspacePath}
             console.log('msg', msg)
             WebSocket.sentMsg(room, JSON.stringify(msg))
           }
@@ -280,10 +280,10 @@ export default defineComponent({
         return
       }
 
-      getCache(settings.currProject).then (
-          (projectPath) => {
+      getCache(settings.currWorkspace).then (
+          (workspacePath) => {
             const leafNodeKeys = getLeafNodeKeys()
-            const msg = {act: 'execCase', projectPath: projectPath, cases: leafNodeKeys}
+            const msg = {act: 'execCase', workspacePath: workspacePath, cases: leafNodeKeys}
             console.log('msg', msg)
 
             wsMsg.out += '\n'
@@ -294,9 +294,9 @@ export default defineComponent({
 
     const stop = (): void => {
       console.log("stop")
-      getCache(settings.currProject).then (
-          (projectPath) => {
-            const msg = {act: 'execStop', projectPath: projectPath}
+      getCache(settings.currWorkspace).then (
+          (workspacePath) => {
+            const msg = {act: 'execStop', workspacePath: workspacePath}
             console.log('msg', msg)
             WebSocket.sentMsg(room, JSON.stringify(msg))
           }

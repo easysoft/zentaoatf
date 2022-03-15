@@ -1,14 +1,14 @@
 <template>
-  <div v-if="!currProject.path">
-    <a-empty :image="simpleImage" :description="t('pls_create_project')"/>
+  <div v-if="!currWorkspace.path">
+    <a-empty :image="simpleImage" :description="t('pls_create_workspace')"/>
   </div>
 
-  <div v-if="currProject.path" class="indexlayout-main-conent">
-    <div v-if="currProject.type === 'unit'" class="panel">
+  <div v-if="currWorkspace.path" class="indexlayout-main-conent">
+    <div v-if="currWorkspace.type === 'unit'" class="panel">
       {{ t('no_script_for_unittest') }}
     </div>
 
-    <div id="main" v-if="currProject.type === 'func'">
+    <div id="main" v-if="currWorkspace.type === 'func'">
       <div id="left">
         <div class="toolbar">
           <div class="left"></div>
@@ -62,7 +62,7 @@
 import {computed, ComputedRef, defineComponent, onMounted, onUnmounted, ref, Ref, watch} from "vue";
 import {useStore} from "vuex";
 import IconSvg from "@/components/IconSvg";
-import {ProjectData} from "@/store/project";
+import {WorkspaceData} from "@/store/workspace";
 import {ScriptData} from "../store";
 import {resizeWidth} from "@/utils/dom";
 import {Empty, message, notification} from "ant-design-vue";
@@ -73,7 +73,7 @@ import MonacoEditor from "@/components/Editor/MonacoEditor.vue";
 
 interface ListScriptPageSetupData {
   t: (key: string | number) => string;
-  currProject: ComputedRef;
+  currWorkspace: ComputedRef;
   treeData: ComputedRef<any[]>;
   replaceFields: any,
   tree: Ref;
@@ -108,9 +108,9 @@ export default defineComponent({
 
     let selectedNode = {} as any
     let isExpand = ref(false);
-    const store = useStore<{ project: ProjectData }>();
-    const currProject = computed<any>(() => store.state.project.currProject);
-    const treeData = computed<any>(() => store.state.project.scriptTree);
+    const store = useStore<{ workspace: WorkspaceData }>();
+    const currWorkspace = computed<any>(() => store.state.workspace.currWorkspace);
+    const treeData = computed<any>(() => store.state.workspace.scriptTree);
     const expandedKeys = ref<string[]>([]);
 
     const getOpenKeys = (treeNode, isAll) => {
@@ -192,7 +192,7 @@ export default defineComponent({
 
     return {
       t,
-      currProject,
+      currWorkspace,
       treeData,
       replaceFields,
       expandNode,

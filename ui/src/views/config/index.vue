@@ -1,9 +1,9 @@
 <template>
-  <div v-if="!currProject.path">
-    <a-empty :image="simpleImage" :description="t('pls_create_project')"/>
+  <div v-if="!currWorkspace.path">
+    <a-empty :image="simpleImage" :description="t('pls_create_workspace')"/>
   </div>
 
-  <a-card v-if="currProject.path" :title="t('edit_config')">
+  <a-card v-if="currWorkspace.path" :title="t('edit_config')">
     <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-item :label="t('zentao_url')" v-bind="validateInfos.url">
         <a-input v-model:value="model.url"
@@ -18,7 +18,7 @@
                  @blur="validate('password', { trigger: 'blur' }).catch(() => {})" placeholder="" />
       </a-form-item>
 
-      <a-form-item v-if="currProject.type === 'func' && currConfigRef.isWin" label="执行器">
+      <a-form-item v-if="currWorkspace.type === 'func' && currConfigRef.isWin" label="执行器">
         <div>
           <a-row class="interpreter-header">
             <a-col :span="4" class="t-center t-bord">{{t('script_lang')}}</a-col>
@@ -84,7 +84,7 @@ const useForm = Form.useForm;
 
 import {Config, Interpreter} from './data.d';
 import {useStore} from "vuex";
-import {ProjectData} from "@/store/project";
+import {WorkspaceData} from "@/store/workspace";
 import CreateInterpreterForm from './interpreter/create.vue';
 import UpdateInterpreterForm from './interpreter/update.vue';
 import {
@@ -96,7 +96,7 @@ import throttle from "lodash.throttle";
 
 interface ConfigFormSetupData {
   t: (key: string | number) => string;
-  currProject: ComputedRef;
+  currWorkspace: ComputedRef;
 
   currConfigRef: Ref
   model: Partial<Config>
@@ -136,9 +136,9 @@ export default defineComponent({
   setup(props): ConfigFormSetupData {
     const { t } = useI18n();
 
-    const store = useStore<{ project: ProjectData }>();
-    const currConfigRef = computed<any>(() => store.state.project.currConfig);
-    const currProject = computed<any>(() => store.state.project.currProject);
+    const store = useStore<{ workspace: WorkspaceData }>();
+    const currConfigRef = computed<any>(() => store.state.workspace.currConfig);
+    const currWorkspace = computed<any>(() => store.state.workspace.currWorkspace);
 
     let interpreter = reactive<any>({} as Interpreter)
     let interpreters = ref<any>([] as Interpreter[])
@@ -191,7 +191,7 @@ export default defineComponent({
         .then(() => {
           setInterpreter(model, interpreters)
           console.log(model);
-          store.dispatch('project/saveConfig', model).then((json) => {
+          store.dispatch('workspace/saveConfig', model).then((json) => {
             if (json.code === 0) {
               notification.success({
                 message: t('save_success'),
@@ -252,7 +252,7 @@ export default defineComponent({
       labelCol: { span: 4 },
       wrapperCol: { span: 14 },
       currConfigRef,
-      currProject,
+      currWorkspace,
       model,
 
       rules,

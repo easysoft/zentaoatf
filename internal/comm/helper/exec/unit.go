@@ -31,7 +31,7 @@ func ExecUnit(ch chan int,
 	logUtils.ExecConsolef(-1, startMsg)
 	logUtils.ExecFilef(startMsg)
 
-	RunUnitTest(ch, req.Cmd, req.ProjectPath, wsMsg)
+	RunUnitTest(ch, req.Cmd, req.WorkspacePath, wsMsg)
 
 	entTime := time.Now()
 	endMsg := i118Utils.Sprintf("end_execution", req.Cmd, dateUtils.DateTimeStr(entTime))
@@ -47,16 +47,16 @@ func ExecUnit(ch chan int,
 	logUtils.Infof("#v", report)
 
 	if req.SubmitResult {
-		err = zentaoUtils.CommitResult(report, req.ProductId, "0", req.ProjectPath)
+		err = zentaoUtils.CommitResult(report, req.ProductId, "0", req.WorkspacePath)
 	}
 
 	return
 }
 
-func RunUnitTest(ch chan int, cmdStr, projectPath string, wsMsg websocket.Message) (err error) {
+func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg websocket.Message) (err error) {
 
 	cmd := exec.Command("/bin/bash", "-c", cmdStr)
-	cmd.Dir = projectPath
+	cmd.Dir = workspacePath
 
 	if cmd == nil {
 		msgStr := i118Utils.Sprintf("cmd_empty")

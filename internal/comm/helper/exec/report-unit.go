@@ -29,7 +29,7 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 	ch chan int, wsMsg websocket.Message) (
 	report commDomain.ZtfReport) {
 
-	testSuites, zipDir := RetrieveUnitResult(req.ProjectPath, startTime, req.TestTool, req.BuildTool)
+	testSuites, zipDir := RetrieveUnitResult(req.WorkspacePath, startTime, req.TestTool, req.BuildTool)
 	unitResultPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultZip)
 	fileUtils.ZipDir(unitResultPath, zipDir)
 
@@ -179,7 +179,7 @@ func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
 	return
 }
 
-func RetrieveUnitResult(projectPath string, startTime int64, testTool commConsts.TestTool, buildTool commConsts.BuildTool) (
+func RetrieveUnitResult(workspacePath string, startTime int64, testTool commConsts.TestTool, buildTool commConsts.BuildTool) (
 	suites []commDomain.UnitTestSuite, zipDir string) {
 
 	resultDir := ""
@@ -199,8 +199,8 @@ func RetrieveUnitResult(projectPath string, startTime int64, testTool commConsts
 		zipDir = resultDir
 	}
 
-	zipDir = filepath.Join(projectPath, zipDir)
-	resultDir = filepath.Join(projectPath, resultDir)
+	zipDir = filepath.Join(workspacePath, zipDir)
+	resultDir = filepath.Join(workspacePath, resultDir)
 	resultFiles, _ = GetSuiteFiles(resultDir, startTime)
 
 	for _, file := range resultFiles {

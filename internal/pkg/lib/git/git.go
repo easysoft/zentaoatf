@@ -2,7 +2,7 @@ package gitUtils
 
 import "strings"
 
-func GetGitProjectName(gitUrl string) string {
+func GetGitWorkspaceName(gitUrl string) string {
 	index := strings.LastIndex(gitUrl, "/")
 
 	name := gitUrl[index+1:]

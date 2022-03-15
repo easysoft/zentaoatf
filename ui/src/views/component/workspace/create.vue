@@ -2,7 +2,7 @@
   <a-modal
       :destroy-on-close="true"
       :mask-closable="false"
-      :title="t('create_project')"
+      :title="t('create_workspace')"
       :visible="visible"
       :onCancel="onCancel"
   >
@@ -13,7 +13,7 @@
 
     <div>
       <a-form :labelCol="{ span: 4 }" :wrapper-col="{span:20}">
-        <a-form-item :label="t('path')" v-bind="validateInfos.path" :placeholder="t('project_path')">
+        <a-form-item :label="t('path')" v-bind="validateInfos.path" :placeholder="t('workspace_path')">
           <a-input-search
               v-if="isElectron"
               v-model:value="modelRef.path"
@@ -56,7 +56,7 @@ import {useI18n} from "vue-i18n";
 import {Form} from "ant-design-vue";
 import { validateInfos } from 'ant-design-vue/lib/form/useForm';
 
-interface ProjectCreateFormSetupData {
+interface WorkspaceCreateFormSetupData {
   t: (key: string | number) => string;
   isElectron: Ref<boolean>;
   selectDir: () => void;
@@ -66,7 +66,7 @@ interface ProjectCreateFormSetupData {
 }
 
 export default defineComponent({
-  name: 'ProjectCreateForm',
+  name: 'WorkspaceCreateForm',
   props: {
     visible: {
       type: Boolean,
@@ -84,13 +84,13 @@ export default defineComponent({
 
   components: {},
 
-  setup(props): ProjectCreateFormSetupData {
+  setup(props): WorkspaceCreateFormSetupData {
     const { t } = useI18n();
 
     const modelRef = ref<any>({path: '', type: 'func'})
     const rulesRef = reactive({
-      path: [ { required: true, message: t('pls_project_path') } ],
-      type: [ { required: true, message: t('pls_project_type') } ],
+      path: [ { required: true, message: t('pls_workspace_path') } ],
+      type: [ { required: true, message: t('pls_workspace_type') } ],
     });
 
     const { validate, validateInfos } = Form.useForm(modelRef, rulesRef);

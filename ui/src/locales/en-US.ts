@@ -116,10 +116,10 @@ export default {
     'save_fail': 'Save failed.',
 
     'wrong_url': 'Please input right ZenTao URL.',
-    'create_project': 'Create Project',
+    'create_workspace': 'Create Workspace',
     'extract_success': 'Extract comments to test steps and checkpoints successfully.',
     'extract_fail': 'Extract comments to test steps and checkpoints failed.',
-    'pls_create_project': 'Please create project to continue.',
+    'pls_create_workspace': 'Please create workspace to continue.',
     'pls_product': 'Please select product.',
     'pls_lang': 'Please select language.',
     'sync_success': 'Sync successfully.',
@@ -138,12 +138,12 @@ export default {
     'pls_build_tool':  'Please build tool.', 
     'pls_cmd':  'Please input the command.', 
 
-    'project_path':  'Input project full path',
+    'workspace_path':  'Input workspace full path',
     'use_dir_name':  'Use dir name if empty',
     'test_type_ztf':  'ZTF Testing',
     'test_type_other':  'Other Automated or Unit Test',
-    'pls_project_path':  'Please input project full path.',
-    'pls_project_type':  'Please input project type.',
+    'pls_workspace_path':  'Please input workspace full path.',
+    'pls_workspace_type':  'Please input workspace type.',
 
     'pls_zentao_url': 'Please input ZenTao URL',
     'pls_username': 'Please input user name.',

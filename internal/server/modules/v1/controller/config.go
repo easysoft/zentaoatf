@@ -9,7 +9,7 @@ import (
 )
 
 type ConfigCtrl struct {
-	ProjectService *service.ProjectService `inject:""`
+	WorkspaceService *service.WorkspaceService `inject:""`
 	BaseCtrl
 }
 
@@ -18,29 +18,29 @@ func NewConfigCtrl() *ConfigCtrl {
 }
 
 func (c *ConfigCtrl) SaveConfig(ctx iris.Context) {
-	projectPath := ctx.URLParam("currProject")
+	workspacePath := ctx.URLParam("currWorkspace")
 
-	req := commDomain.ProjectConf{}
+	req := commDomain.WorkspaceConf{}
 	err := ctx.ReadJSON(&req)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
 		return
 	}
 
-	err = configUtils.SaveConfig(req, projectPath)
+	err = configUtils.SaveConfig(req, workspacePath)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
-	projects, currProject, currProjectConfig, scriptTree, err := c.ProjectService.GetByUser(projectPath)
+	workspaces, currWorkspace, currWorkspaceConfig, scriptTree, err := c.WorkspaceService.GetByUser(workspacePath)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
-	data := iris.Map{"projects": projects, "currProject": currProject,
-		"currConfig": currProjectConfig, "scriptTree": scriptTree}
+	data := iris.Map{"workspaces": workspaces, "currWorkspace": currWorkspace,
+		"currConfig": currWorkspaceConfig, "scriptTree": scriptTree}
 
 	ctx.JSON(c.SuccessResp(data))
 }

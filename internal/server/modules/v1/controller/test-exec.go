@@ -18,14 +18,14 @@ func NewTestExecCtrl() *TestExecCtrl {
 
 // List 分页列表
 func (c *TestExecCtrl) List(ctx iris.Context) {
-	projectPath := ctx.URLParam("currProject")
+	workspacePath := ctx.URLParam("currWorkspace")
 
-	if projectPath == "" {
+	if workspacePath == "" {
 		ctx.JSON(c.SuccessResp(make([]serverDomain.TestReportSummary, 0)))
 		return
 	}
 
-	data, err := c.TestExecService.List(projectPath)
+	data, err := c.TestExecService.List(workspacePath)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
@@ -36,7 +36,7 @@ func (c *TestExecCtrl) List(ctx iris.Context) {
 
 // Get 详情
 func (c *TestExecCtrl) Get(ctx iris.Context) {
-	projectPath := ctx.URLParam("currProject")
+	workspacePath := ctx.URLParam("currWorkspace")
 
 	seq := ctx.Params().Get("seq")
 	if seq == "" {
@@ -44,7 +44,7 @@ func (c *TestExecCtrl) Get(ctx iris.Context) {
 		return
 	}
 
-	exec, err := c.TestExecService.Get(projectPath, seq)
+	exec, err := c.TestExecService.Get(workspacePath, seq)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
@@ -54,7 +54,7 @@ func (c *TestExecCtrl) Get(ctx iris.Context) {
 
 // Delete 删除
 func (c *TestExecCtrl) Delete(ctx iris.Context) {
-	projectPath := ctx.URLParam("currProject")
+	workspacePath := ctx.URLParam("currWorkspace")
 
 	seq := ctx.Params().Get("seq")
 	if seq == "" {
@@ -62,7 +62,7 @@ func (c *TestExecCtrl) Delete(ctx iris.Context) {
 		return
 	}
 
-	err := c.TestExecService.Delete(projectPath, seq)
+	err := c.TestExecService.Delete(workspacePath, seq)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return

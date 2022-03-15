@@ -9,25 +9,25 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
-type ProjectCtrl struct {
-	ProjectService *service.ProjectService `inject:""`
+type WorkspaceCtrl struct {
+	WorkspaceService *service.WorkspaceService `inject:""`
 	BaseCtrl
 }
 
-func NewProjectCtrl() *ProjectCtrl {
-	return &ProjectCtrl{}
+func NewWorkspaceCtrl() *WorkspaceCtrl {
+	return &WorkspaceCtrl{}
 }
 
 // Create 添加
-func (c *ProjectCtrl) Create(ctx iris.Context) {
-	req := model.Project{}
+func (c *WorkspaceCtrl) Create(ctx iris.Context) {
+	req := model.Workspace{}
 	err := ctx.ReadJSON(&req)
 	if err != nil || req.Path == "" {
 		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
 		return
 	}
 
-	_, err = c.ProjectService.Create(req)
+	_, err = c.WorkspaceService.Create(req)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
@@ -37,14 +37,14 @@ func (c *ProjectCtrl) Create(ctx iris.Context) {
 }
 
 // Delete 删除
-func (c *ProjectCtrl) Delete(ctx iris.Context) {
-	projectPath := ctx.URLParam("path")
+func (c *WorkspaceCtrl) Delete(ctx iris.Context) {
+	workspacePath := ctx.URLParam("path")
 
-	if projectPath == "" {
+	if workspacePath == "" {
 		ctx.JSON(c.ErrResp(commConsts.ParamErr, "path"))
 		return
 	}
-	err := c.ProjectService.DeleteByPath(projectPath)
+	err := c.WorkspaceService.DeleteByPath(workspacePath)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
@@ -53,29 +53,29 @@ func (c *ProjectCtrl) Delete(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(nil))
 }
 
-func (c *ProjectCtrl) GetByUser(ctx iris.Context) {
-	projectPath := ctx.URLParam("currProject")
+func (c *WorkspaceCtrl) GetByUser(ctx iris.Context) {
+	workspacePath := ctx.URLParam("currWorkspace")
 
-	if projectPath == "" {
-		projects, _ := c.ProjectService.ListProjectByUser()
+	if workspacePath == "" {
+		workspaces, _ := c.WorkspaceService.ListWorkspaceByUser()
 		data := iris.Map{
-			"projects":    projects,
-			"currProject": model.Project{},
-			"currConfig":  commDomain.ProjectConf{},
-			"scriptTree":  serverDomain.TestAsset{}}
+			"workspaces":    workspaces,
+			"currWorkspace": model.Workspace{},
+			"currConfig":    commDomain.WorkspaceConf{},
+			"scriptTree":    serverDomain.TestAsset{}}
 
 		ctx.JSON(c.SuccessResp(data))
 		return
 	}
 
-	projects, currProject, currProjectConfig, scriptTree, err := c.ProjectService.GetByUser(projectPath)
+	workspaces, currWorkspace, currWorkspaceConfig, scriptTree, err := c.WorkspaceService.GetByUser(workspacePath)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
-	data := iris.Map{"projects": projects, "currProject": currProject,
-		"currConfig": currProjectConfig, "scriptTree": scriptTree}
+	data := iris.Map{"workspaces": workspaces, "currWorkspace": currWorkspace,
+		"currConfig": currWorkspaceConfig, "scriptTree": scriptTree}
 
 	ctx.JSON(c.SuccessResp(data))
 }

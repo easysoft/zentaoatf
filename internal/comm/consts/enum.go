@@ -10,9 +10,9 @@ var (
 	CommErr  = ResponseCode{100, "comm_err"}
 	ParamErr = ResponseCode{200, "param_error"}
 
-	NeedInitErr         = ResponseCode{1000, "data_not_init"}
-	BizErrProjectConfig = ResponseCode{2000, "project_config_err"}
-	BizErrNameNotExist  = ResponseCode{3000, "record_not_found_by_name"}
+	NeedInitErr           = ResponseCode{1000, "data_not_init"}
+	BizErrWorkspaceConfig = ResponseCode{2000, "workspace_config_err"}
+	BizErrNameNotExist    = ResponseCode{3000, "record_not_found_by_name"}
 )
 
 type ResultStatus string

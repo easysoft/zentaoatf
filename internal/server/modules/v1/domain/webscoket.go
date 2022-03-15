@@ -14,7 +14,7 @@ type WsReq struct {
 	ModuleId                  string   `json:"moduleId"`
 	SuiteId                   string   `json:"suiteId"`
 	TaskId                    string   `json:"taskId"`
-	ProjectPath               string   `json:"projectPath"`
+	WorkspacePath             string   `json:"workspacePath"`
 	ScriptDirParamFromCmdLine string   `json:"-"`
 
 	// for unit, automation testing
