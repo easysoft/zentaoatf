@@ -50,7 +50,7 @@ func (s *SiteService) LoadSites(currSiteId int) (sites []serverDomain.ZentaoSite
 		return
 	}
 
-	pos := pageData.Result.([]model.Site)
+	pos := pageData.Result.([]*model.Site)
 
 	var first serverDomain.ZentaoSite
 	for idx, item := range pos {

@@ -34,7 +34,7 @@ func (c *ZentaoCtrl) GetProfile(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(data))
 }
 
-func (c *ZentaoCtrl) listSiteAndProduct(ctx iris.Context) {
+func (c *ZentaoCtrl) ListSiteAndProduct(ctx iris.Context) {
 	currSiteId, _ := ctx.URLParamInt("currSiteId")
 	currProductId, _ := ctx.URLParamInt("currProductId")
 

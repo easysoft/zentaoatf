@@ -77,7 +77,7 @@ func ListLang() (langs []serverDomain.ZentaoLang, err error) {
 func LoadSiteProduct(currSite serverDomain.ZentaoSite, currProductId int) (
 	products []serverDomain.ZentaoProduct, currProduct serverDomain.ZentaoProduct, err error) {
 
-	if currSite.Id == 0 {
+	if currSite.Url == "" {
 		return
 	}
 
