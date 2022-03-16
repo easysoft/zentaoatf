@@ -4,43 +4,6 @@
       {{ t('create_workspace') }}
     </div>
 
-    <!-- zentao site selection -->
-    <a-dropdown
-        v-if="workspaces.length > 0"
-        :dropdownMatchSelectWidth="false"
-        class="dropdown-list">
-
-      <a class="t-link-btn" @click.prevent>
-        <span class="name">{{currWorkspace.name}}</span>
-        <span class="icon2"><icon-svg type="down"></icon-svg></span>
-      </a>
-      <template #overlay>
-        <a-menu class="menu">
-          <template v-for="item in workspaces" :key="item.path">
-            <a-menu-item v-if="currWorkspace.path !== item.path">
-                <div class="line">
-                  <div class="t-link name" @click="selectWorkspace(item)">{{ item.name }}</div>
-                  <div class="space"></div>
-                  <div class="t-link icon" @click="setDeleteModel(item)">
-                    <icon-svg type="delete" class="menu-icon"></icon-svg>
-                  </div>
-                </div>
-            </a-menu-item>
-          </template>
-
-          <a-menu-divider v-if="workspaces.length > 1"/>
-
-          <a-menu-item key="" class="create">
-            <span class="t-link name" @click="selectWorkspace('')">
-              <icon-svg type="add" class="menu-icon"></icon-svg>
-              {{ t('create_workspace') }}
-            </span>
-          </a-menu-item>
-        </a-menu>
-      </template>
-    </a-dropdown>
-
-    <!-- zentao product selection -->
     <a-dropdown
         v-if="workspaces.length > 0"
         :dropdownMatchSelectWidth="false"

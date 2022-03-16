@@ -11,8 +11,8 @@
               </div>
             </div>
 
-            <div class="top-workspace-wrapper">
-              <RightTopWorkspace class="top-select-workspace"></RightTopWorkspace>
+            <div class="top-site-wrapper">
+              <RightTopSiteProduct></RightTopSiteProduct>
             </div>
 
             <div class="menu-wrapper">
@@ -33,7 +33,7 @@ import { useI18n } from "vue-i18n";
 import { BreadcrumbType, RoutesDataItem } from '@/utils/routes';
 import RightTopSettings from './RightTopSettings.vue';
 import useTopMenuWidth from "../composables/useTopMenuWidth";
-import RightTopWorkspace from './RightTopWorkspace.vue';
+import RightTopSiteProduct from './RightTopSiteProduct.vue';
 import RightTopMenu from './RightTopMenu.vue';
 import {useStore} from "vuex";
 import {ZentaoData} from "@/store/zentao";
@@ -53,7 +53,7 @@ export default defineComponent({
     name: 'RightTop',
     components: {
       RightTopSettings,
-      RightTopWorkspace, RightTopMenu,
+      RightTopSiteProduct, RightTopMenu,
     },
     props: {
       collapsed: {
@@ -168,7 +168,7 @@ export default defineComponent({
       }
     }
 
-    .top-workspace-wrapper {
+    .top-site-wrapper {
       margin-right: 16px;
       width: 320px;
     }

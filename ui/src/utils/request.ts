@@ -95,7 +95,15 @@ request.interceptors.request.use(
         }
 
         config.params = { ...config.params, ts: Date.now() };
-        if (!config.params.currWorkspace) {
+        if (!config.params[settings.currSiteId]) {
+            const workspacePath = await getCache(settings.currSiteId);
+            config.params = { ...config.params, currSiteId: workspacePath, lang: i18n.global.locale.value };
+        }
+        if (!config.params[settings.currProductId]) {
+            const workspacePath = await getCache(settings.currProductId);
+            config.params = { ...config.params, currProductId: workspacePath, lang: i18n.global.locale.value };
+        }
+        if (!config.params[settings.currWorkspace]) {
             const workspacePath = await getCache(settings.currWorkspace);
             config.params = { ...config.params, currWorkspace: workspacePath, lang: i18n.global.locale.value };
         }

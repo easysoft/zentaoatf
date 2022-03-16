@@ -20,6 +20,13 @@ type ZentaoLang struct {
 	Name string `json:"name"`
 }
 
+type ZentaoSite struct {
+	Id       int    `json:"id"`
+	Name     string `json:"name"`
+	Url      string `json:"url"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
 type ZentaoProduct struct {
 	Id   int    `json:"id"`
 	Name string `json:"name"`

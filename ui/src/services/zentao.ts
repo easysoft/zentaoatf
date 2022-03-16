@@ -1,8 +1,17 @@
 import request from '@/utils/request';
 import {Config} from "@/views/config/data";
+import {QueryParams} from "@/types/data";
 
 const apiPath = 'zentao';
 const apiPathBug = 'bug';
+
+export async function queryLang(): Promise<any> {
+    return request({
+        url: `/${apiPath}/listLang`,
+        method: 'GET',
+    });
+}
+
 
 export async function getProfile(): Promise<any> {
     return request({
@@ -11,10 +20,11 @@ export async function getProfile(): Promise<any> {
     });
 }
 
-export async function queryLang(): Promise<any> {
+export async function querySiteAndProduct(params?: QueryParams): Promise<any> {
     return request({
-        url: `/${apiPath}/listLang`,
-        method: 'GET',
+        url: `/${apiPath}/listSiteAndProduct`,
+        method: 'get',
+        params,
     });
 }
 

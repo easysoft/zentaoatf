@@ -24,9 +24,8 @@ export interface SettingsType {
      */
     siteTokenKey: string;
 
-    /**
-     * 站点本地存储当前工作目录的Key值
-     */
+    currSiteId: string;
+    currProductId: string;
     currWorkspace: string;
 
     /**
@@ -50,8 +49,11 @@ const settings: SettingsType = {
     topNavEnable: true,
     headFixed: true,
     siteTokenKey: 'admin_antd_vue_token',
+
+    currSiteId: 'currSiteId',
+    currProductId: 'currProductId',
     currWorkspace: 'currWorkspace',
-    // ajaxHeadersTokenKey: 'x-token',
+
     ajaxHeadersTokenKey: 'Authorization',
     ajaxResponseNoVerifyUrl: [
         '/account/login', // 用户登录

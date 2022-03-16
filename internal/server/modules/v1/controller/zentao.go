@@ -5,10 +5,12 @@ import (
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	zentaoHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
 )
 
 type ZentaoCtrl struct {
+	SiteService *service.SiteService `inject:""`
 	BaseCtrl
 }
 
@@ -19,7 +21,7 @@ func NewZentaoCtrl() *ZentaoCtrl {
 func (c *ZentaoCtrl) GetProfile(ctx iris.Context) {
 	workspacePath := ctx.URLParam("currWorkspace")
 	if workspacePath == "" {
-		ctx.JSON(c.SuccessResp(make([]serverDomain.ZentaoProduct, 0)))
+		ctx.JSON(c.SuccessResp(iris.Map{}))
 		return
 	}
 
@@ -29,6 +31,22 @@ func (c *ZentaoCtrl) GetProfile(ctx iris.Context) {
 		return
 	}
 
+	ctx.JSON(c.SuccessResp(data))
+}
+
+func (c *ZentaoCtrl) listSiteAndProduct(ctx iris.Context) {
+	currSiteId, _ := ctx.URLParamInt("currSiteId")
+	currProductId, _ := ctx.URLParamInt("currProductId")
+
+	sites, currSite, _ := c.SiteService.LoadSites(currSiteId)
+
+	products, currProduct, err := zentaoHelper.LoadSiteProduct(currSite, currProductId)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.BizErrWorkspaceConfig, err.Error()))
+		return
+	}
+
+	data := iris.Map{"sites": sites, "currSite": currSite, "products": products, "currProduct": currProduct}
 	ctx.JSON(c.SuccessResp(data))
 }
 

@@ -1,12 +1,20 @@
 import { Mutation, Action } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
-import {getProfile, queryLang, queryProduct, queryModule, querySuite, queryTask} from "../services/zentao";
+import {queryLang, querySiteAndProduct, getProfile, queryProduct, queryModule, querySuite, queryTask} from "../services/zentao";
+import {setCache} from "@/utils/localCache";
+import settings from "@/config/settings";
 
 export interface ZentaoData {
-    profile: any
     langs: any[]
+
+    profile: any
+
+    sites: any[]
     products: any[]
+    currSite: any
+    currProduct: any
+
     modules: any[]
     suites: any[]
     tasks: any[]
@@ -15,16 +23,21 @@ export interface ZentaoData {
 export interface ModuleType extends StoreModuleType<ZentaoData> {
     state: ZentaoData;
     mutations: {
-        saveProfile: Mutation<any>;
         saveLangs: Mutation<any>;
+
+        saveProfile: Mutation<any>;
+
+        saveSitesAndProducts: Mutation<any>;
         saveProducts: Mutation<any>;
         saveModules: Mutation<any>;
         saveSuites: Mutation<any>;
         saveTasks: Mutation<any>;
     };
     actions: {
-        getProfile: Action<ZentaoData, ZentaoData>;
         fetchLangs: Action<ZentaoData, ZentaoData>;
+        getProfile: Action<ZentaoData, ZentaoData>;
+
+        fetchSitesAndProducts: Action<ZentaoData, ZentaoData>;
         fetchProducts: Action<ZentaoData, ZentaoData>;
         fetchModules: Action<ZentaoData, ZentaoData>;
         fetchSuites: Action<ZentaoData, ZentaoData>;
@@ -33,9 +46,15 @@ export interface ModuleType extends StoreModuleType<ZentaoData> {
 }
 
 const initState: ZentaoData = {
-    profile: {},
     langs: [],
+
+    profile: {},
+
+    sites: [],
     products: [],
+    currSite: {},
+    currProduct: {},
+
     modules: [],
     suites: [],
     tasks: [],
@@ -48,13 +67,20 @@ const StoreModel: ModuleType = {
         ...initState
     },
     mutations: {
+        saveLangs(state, payload) {
+            console.log('payload', payload)
+            state.langs = payload
+        },
         saveProfile(state, payload) {
             console.log('payload', payload)
             state.profile = payload
         },
-        saveLangs(state, payload) {
-            console.log('payload', payload)
-            state.langs = payload
+        saveSitesAndProducts(state, payload) {
+            state.sites = payload.sites;
+            state.products = payload.products;
+
+            setCache(settings.currSiteId, payload.currSite.id);
+            setCache(settings.currProductId, payload.currProduct.id);
         },
         saveProducts(state, payload) {
             console.log('payload', payload)
@@ -77,6 +103,18 @@ const StoreModel: ModuleType = {
         },
     },
     actions: {
+        async fetchLangs({ commit }) {
+            try {
+                const response: ResponseData = await queryLang();
+                const { data } = response;
+                commit('saveLangs', data)
+
+                return true;
+            } catch (error) {
+                return false;
+            }
+        },
+
         async getProfile({ commit }) {
             try {
                 const response: ResponseData = await getProfile();
@@ -89,17 +127,12 @@ const StoreModel: ModuleType = {
                 return false;
             }
         },
+        async fetchSitesAndProducts({ commit }) {
+            const response: ResponseData = await querySiteAndProduct();
+            const { data } = response;
+            commit('saveSitesAndProducts', data)
 
-        async fetchLangs({ commit }) {
-            try {
-                const response: ResponseData = await queryLang();
-                const { data } = response;
-                commit('saveLangs', data)
-
-                return true;
-            } catch (error) {
-                return false;
-            }
+            return true;
         },
         async fetchProducts({ commit }) {
             const response: ResponseData = await queryProduct();
