@@ -77,60 +77,31 @@ func ListLang() (langs []serverDomain.ZentaoLang, err error) {
 func LoadSiteProduct(currSite serverDomain.ZentaoSite, currProductId int) (
 	products []serverDomain.ZentaoProduct, currProduct serverDomain.ZentaoProduct, err error) {
 
-	if currSite.Url == "" {
+	if currSite.Id == 0 {
 		return
 	}
-
 	config := commDomain.WorkspaceConf{
 		Url:      currSite.Url,
 		Username: currSite.Username,
 		Password: currSite.Password,
 	}
-	if config.Url == "" {
-		err = errors.New(i118Utils.Sprintf("pls_config_workspace"))
-		return
-	}
 
-	err = Login(config)
-	if err != nil {
-		return
-	}
-
-	url := GenApiUrl("products", nil, config.Url)
-	bytes, err := httpUtils.Get(url)
-
-	if err != nil {
-		return
-	}
-
-	jsn, err := simplejson.NewJson(bytes)
-	if err != nil {
-		return
-	}
-	items, err := jsn.Get("products").Array()
-	if err != nil {
-		return
-	}
+	products, err = loadProduct(config)
 
 	var first serverDomain.ZentaoProduct
-	for idx, item := range items {
-		productMap, _ := item.(map[string]interface{})
-		id, _ := productMap["id"].(json.Number).Int64()
-		name, _ := productMap["name"].(string)
-		product := serverDomain.ZentaoProduct{Id: int(id), Name: name}
+	for idx, product := range products {
+		product := serverDomain.ZentaoProduct{Id: product.Id, Name: product.Name}
 
-		if int64(currProductId) == id {
+		if currProductId == product.Id {
 			currProduct = product
 		}
 
 		if idx == 0 {
 			first = product
 		}
-
-		products = append(products, product)
 	}
 
-	if currProduct.Id == 0 && len(items) > 0 { // not found, use the first one
+	if currProduct.Id == 0 { // not found, use the first one
 		currProduct = first
 	}
 
@@ -139,6 +110,10 @@ func LoadSiteProduct(currSite serverDomain.ZentaoSite, currProductId int) (
 
 func ListProduct(workspacePath string) (products []serverDomain.ZentaoProduct, err error) {
 	config := configUtils.LoadByWorkspacePath(workspacePath)
+	return loadProduct(config)
+}
+
+func loadProduct(config commDomain.WorkspaceConf) (products []serverDomain.ZentaoProduct, err error) {
 	if config.Url == "" {
 		err = errors.New(i118Utils.Sprintf("pls_config_workspace"))
 		return
