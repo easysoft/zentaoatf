@@ -61,7 +61,7 @@
 import {computed, ComputedRef, defineComponent, onMounted, ref, Ref, watch} from "vue";
 import {useStore} from "vuex";
 
-import {Empty, Form, message, Modal} from "ant-design-vue";
+import {Empty, Form, message, Modal, notification} from "ant-design-vue";
 import { PlusCircleOutlined } from '@ant-design/icons-vue';
 
 import {StateType} from "./store";
@@ -70,6 +70,7 @@ import {momentUtcDef} from "@/utils/datetime";
 import {useI18n} from "vue-i18n";
 import {PaginationConfig, QueryParams} from "@/types/data";
 import debounce from "lodash.debounce";
+import {ZentaoData} from "@/store/zentao";
 
 const useForm = Form.useForm;
 
@@ -159,6 +160,7 @@ export default defineComponent({
     ]);
 
     const router = useRouter();
+    const zentaoStore = useStore<{ zentao: ZentaoData }>();
     const store = useStore<{ Site: StateType }>();
     const models = computed<any[]>(() => store.state.Site.queryResult.result);
     const pagination = computed<PaginationConfig>(() => store.state.Site.queryResult.pagination);
@@ -193,14 +195,15 @@ export default defineComponent({
         title: t('confirm_to_delete_site'),
         okText: t('confirm'),
         cancelText: t('cancel'),
-        onOk: async () => {
+        onOk: () => {
           removeLoading.value = [id];
-          const res: boolean = await store.dispatch('Site/delete', id);
-          if (res === true) {
-            message.success(t('delete_success'));
-            await getList(pagination.value.page);
-          }
-          removeLoading.value = [];
+          store.dispatch('Site/delete', id).then((success) => {
+            zentaoStore.dispatch('zentao/fetchSitesAndProducts').then((success) => {
+              message.success(t('delete_success'));
+              getList(pagination.value.page)
+              removeLoading.value = [];
+            })
+          })
         }
       });
     }

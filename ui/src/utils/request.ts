@@ -96,16 +96,17 @@ request.interceptors.request.use(
 
         config.params = { ...config.params, ts: Date.now() };
         if (!config.params[settings.currSiteId]) {
-            const workspacePath = await getCache(settings.currSiteId);
-            config.params = { ...config.params, currSiteId: workspacePath, lang: i18n.global.locale.value };
+            const currSiteId = await getCache(settings.currSiteId);
+            config.params = { ...config.params, [settings.currSiteId]: currSiteId, lang: i18n.global.locale.value };
         }
         if (!config.params[settings.currProductId]) {
-            const workspacePath = await getCache(settings.currProductId);
-            config.params = { ...config.params, currProductId: workspacePath, lang: i18n.global.locale.value };
+            const mp = await getCache(settings.currProductIdBySite);
+            const currProductId = mp ? mp[config.params[settings.currSiteId]] : 0
+            config.params = { ...config.params, [settings.currProductId]: currProductId, lang: i18n.global.locale.value };
         }
         if (!config.params[settings.currWorkspace]) {
             const workspacePath = await getCache(settings.currWorkspace);
-            config.params = { ...config.params, currWorkspace: workspacePath, lang: i18n.global.locale.value };
+            config.params = { ...config.params, [settings.currWorkspace]: workspacePath, lang: i18n.global.locale.value };
         }
 
         console.log('=== request ===', config.url, config)

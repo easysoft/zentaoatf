@@ -1,6 +1,7 @@
 import request from '@/utils/request';
 import {Config} from "@/views/config/data";
 import {QueryParams} from "@/types/data";
+import settings from "@/config/settings";
 
 const apiPath = 'zentao';
 const apiPathBug = 'bug';
@@ -20,7 +21,7 @@ export async function getProfile(): Promise<any> {
     });
 }
 
-export async function querySiteAndProduct(params?: QueryParams): Promise<any> {
+export async function querySiteAndProduct(params): Promise<any> {
     return request({
         url: `/${apiPath}/listSiteAndProduct`,
         method: 'get',

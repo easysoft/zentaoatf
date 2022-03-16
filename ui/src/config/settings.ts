@@ -26,6 +26,7 @@ export interface SettingsType {
 
     currSiteId: string;
     currProductId: string;
+    currProductIdBySite: string;
     currWorkspace: string;
 
     /**
@@ -52,6 +53,7 @@ const settings: SettingsType = {
 
     currSiteId: 'currSiteId',
     currProductId: 'currProductId',
+    currProductIdBySite: 'currProductIdBySite',
     currWorkspace: 'currWorkspace',
 
     ajaxHeadersTokenKey: 'Authorization',

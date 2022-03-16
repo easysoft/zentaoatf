@@ -87,6 +87,9 @@ func LoadSiteProduct(currSite serverDomain.ZentaoSite, currProductId int) (
 	}
 
 	products, err = loadProduct(config)
+	if err != nil {
+		products = make([]serverDomain.ZentaoProduct, 0)
+	}
 
 	var first serverDomain.ZentaoProduct
 	for idx, product := range products {

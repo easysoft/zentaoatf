@@ -1,18 +1,18 @@
 <template>
-  <div>
+  <div v-if="sites.length > 0">
     <!-- zentao site selection -->
     <a-dropdown
         :dropdownMatchSelectWidth="false"
         class="dropdown-list">
 
       <a class="t-link-btn" @click.prevent>
-        <span class="name">{{currSite.name}}</span>
+        <span class="name">{{ currSite.name }}</span>
         <span class="icon2"><icon-svg type="down"></icon-svg></span>
       </a>
       <template #overlay>
-        <a-menu class="menu">
-          <template v-for="item in sites" :key="item.path">
-            <a-menu-item v-if="currSite.path !== item.path">
+        <a-menu v-if="sites.length > 1" class="menu">
+          <template v-for="item in sites" :key="item.id">
+            <a-menu-item v-if="currSite.id !== item.id">
                 <div class="line">
                   <div class="t-link name" @click="selectSite(item)">{{ item.name }}</div>
                 </div>
@@ -28,13 +28,13 @@
         class="dropdown-list">
 
       <a class="t-link-btn" @click.prevent>
-        <span class="name">{{currProduct.name}}</span>
+        <span class="name">{{currProduct.name ? currProduct.name : '无'}}</span>
         <span class="icon2"><icon-svg type="down"></icon-svg></span>
       </a>
       <template #overlay>
-        <a-menu class="menu">
-          <template v-for="item in workspaces" :key="item.path">
-            <a-menu-item v-if="currProduct.path !== item.path">
+        <a-menu v-if="products.length > 1" class="menu">
+          <template v-for="item in products" :key="item.id">
+            <a-menu-item v-if="currProduct.id !== item.id">
               <div class="line">
                 <div class="t-link name" @click="selectProduct(item)">{{ item.name }}</div>
               </div>
@@ -82,17 +82,19 @@ export default defineComponent({
     const currSite = computed<any>(() => store.state.zentao.currSite);
     const currProduct = computed<any>(() => store.state.zentao.currProduct);
 
-    store.dispatch('zentao/fetchSitesAndProducts')
+    store.dispatch('zentao/fetchSitesAndProducts', {})
 
     onMounted(() => {
       console.log('onMounted')
     })
 
-    const selectSite = (item): void => {
-      console.log('selectSite', item)
+    const selectSite = (site): void => {
+      console.log('selectSite', site)
+      store.dispatch('zentao/fetchSitesAndProducts', {currSiteId: site.id})
     }
-    const selectProduct = (item): void => {
-      console.log('selectProduct', item)
+    const selectProduct = (product): void => {
+      console.log('selectProduct', product)
+      store.dispatch('zentao/fetchSitesAndProducts', {currProductId: product.id})
     }
 
     return {

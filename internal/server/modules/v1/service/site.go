@@ -56,6 +56,7 @@ func (s *SiteService) LoadSites(currSiteId int) (sites []serverDomain.ZentaoSite
 	for idx, item := range pos {
 		site := serverDomain.ZentaoSite{
 			Id:       int(item.ID),
+			Name:     item.Name,
 			Url:      item.Url,
 			Username: item.Username,
 			Password: item.Password,

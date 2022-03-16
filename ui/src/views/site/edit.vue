@@ -49,6 +49,7 @@ const useForm = Form.useForm;
 
 import {useStore} from "vuex";
 import {StateType} from "@/views/site/store";
+import {ZentaoData} from "@/store/zentao";
 
 interface SiteFormSetupData {
   t: (key: string | number) => string;
@@ -69,6 +70,8 @@ export default defineComponent({
   setup(props): SiteFormSetupData {
     const { t } = useI18n();
     const router = useRouter();
+
+    const zentaoStore = useStore<{ zentao: ZentaoData }>();
 
     const store = useStore<{ Site: StateType }>();
     const modelRef = computed(() => store.state.Site.detailResult);
@@ -113,10 +116,10 @@ export default defineComponent({
         .then(() => {
           console.log(modelRef.value);
           store.dispatch('Site/save', modelRef.value).then((success) => {
-            if (success) {
+            zentaoStore.dispatch('zentao/fetchSitesAndProducts').then((success) => {
               notification.success({ message: t('save_success') });
               router.push(`/site/list`)
-            }
+            })
           })
         })
       .catch((e) => {console.log('')})

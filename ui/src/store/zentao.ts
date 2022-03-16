@@ -2,7 +2,7 @@ import { Mutation, Action } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 import {queryLang, querySiteAndProduct, getProfile, queryProduct, queryModule, querySuite, queryTask} from "../services/zentao";
-import {setCache} from "@/utils/localCache";
+import {getCache, setCache} from "@/utils/localCache";
 import settings from "@/config/settings";
 
 export interface ZentaoData {
@@ -75,12 +75,19 @@ const StoreModel: ModuleType = {
             console.log('payload', payload)
             state.profile = payload
         },
-        saveSitesAndProducts(state, payload) {
+        async saveSitesAndProducts(state, payload) {
             state.sites = payload.sites;
             state.products = payload.products;
 
+            state.currSite = payload.currSite;
+            state.currProduct = payload.currProduct;
+
             setCache(settings.currSiteId, payload.currSite.id);
-            setCache(settings.currProductId, payload.currProduct.id);
+
+            let mp = await getCache(settings.currProductIdBySite);
+            if (!mp) mp = {}
+            mp[payload.currSite.id + ''] = payload.currProduct.id
+            setCache(settings.currProductIdBySite, mp);
         },
         saveProducts(state, payload) {
             console.log('payload', payload)
@@ -127,8 +134,9 @@ const StoreModel: ModuleType = {
                 return false;
             }
         },
-        async fetchSitesAndProducts({ commit }) {
-            const response: ResponseData = await querySiteAndProduct();
+
+        async fetchSitesAndProducts({ commit }, payload) {
+            const response: ResponseData = await querySiteAndProduct(payload);
             const { data } = response;
             commit('saveSitesAndProducts', data)
 
