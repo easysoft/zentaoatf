@@ -100,7 +100,35 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
   },
 
   {
-    icon: 'sync',
+    icon: 'empty',
+    title: 'workspace',
+    path: '/workspace',
+    redirect: '/workspace/list',
+    component: BlankLayout,
+    children: [
+      {
+        title: 'workspace',
+        path: 'list',
+        component: () => import('@/views/workspace/index.vue'),
+        hidden: true,
+      },
+      {
+        title: 'create_workspace',
+        path: 'edit/:id',
+        component: () => import('@/views/workspace/edit.vue'),
+        hidden: true,
+      },
+      {
+        title: 'edit_workspace',
+        path: 'edit/:id',
+        component: () => import('@/views/workspace/edit.vue'),
+        hidden: true,
+      },
+    ],
+  },
+
+  {
+    icon: 'empty',
     title: 'empty',
     path: '/site',
     redirect: '/site/list',
@@ -111,6 +139,12 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         title: 'zentao_site',
         path: 'list',
         component: () => import('@/views/site/index.vue'),
+        hidden: true,
+      },
+      {
+        title: 'create_site',
+        path: 'create/:id',
+        component: () => import('@/views/site/edit.vue'),
         hidden: true,
       },
       {

@@ -56,7 +56,7 @@ import {hideMenu} from "@/utils/dom";
 import {useI18n} from "vue-i18n";
 import {ZentaoData} from "@/store/zentao";
 
-interface RightTopSiteProduct {
+interface TopSiteProductSetupData {
   t: (key: string | number) => string;
   sites: ComputedRef<any[]>;
   products: ComputedRef<any[]>;
@@ -68,9 +68,9 @@ interface RightTopSiteProduct {
 }
 
 export default defineComponent({
-  name: 'RightTopSiteProduct',
+  name: 'TopSiteProduct',
   components: {IconSvg},
-  setup(): RightTopSiteProduct {
+  setup(): TopSiteProductSetupData {
     const { t } = useI18n();
 
     const router = useRouter();

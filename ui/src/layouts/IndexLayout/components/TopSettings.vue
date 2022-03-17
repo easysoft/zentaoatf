@@ -24,18 +24,18 @@ import {useI18n} from "vue-i18n";
 import IconSvg from "@/components/IconSvg";
 import {useRouter} from "vue-router";
 
-interface SelectLangSetupData {
+interface SettingsSetupData {
   setSite: () => void;
   setEnv: () => void;
   setLang: () => void;
 }
 
 export default defineComponent({
-  name: 'SelectLang',
+  name: 'Settings',
   components: {
     IconSvg
   },
-  setup(): SelectLangSetupData {
+  setup(): SettingsSetupData {
     const router = useRouter();
 
     const setSite = (): void => {

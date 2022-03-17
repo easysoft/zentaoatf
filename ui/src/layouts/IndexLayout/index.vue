@@ -4,7 +4,7 @@
           id="indexlayout-right"
           :class="{'fiexd-header': headFixed}"
         >
-            <right-top
+            <Top
               :collapsed="collapsed"
               :topNavEnable="topNavEnable"
               :belongTopMenu="belongTopMenu"
@@ -13,7 +13,7 @@
               :menuData="permissionMenuData"
               :routeItem="routeItem"
             >              
-            </right-top>
+            </Top>
             <div class="indexlayout-right-main">
               <router-view></router-view>
             </div>
@@ -34,7 +34,7 @@ import {
 import { mergeUnique as ArrayMergeUnique } from '@/utils/array';
 import useTitle from '@/composables/useTitle';
 import IndexLayoutRoutes from './routes';
-import RightTop from '@/layouts/IndexLayout/components/RightTop.vue';
+import Top from './components/Top.vue';
 
 interface IndexLayoutSetupData {
   collapsed: ComputedRef<boolean>;
@@ -53,7 +53,7 @@ interface IndexLayoutSetupData {
 export default defineComponent({
     name: 'IndexLayout',
     components: {
-        RightTop,
+        Top,
     },
     setup(): IndexLayoutSetupData {
       const store = useStore<{

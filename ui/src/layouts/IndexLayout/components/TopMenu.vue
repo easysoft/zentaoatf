@@ -21,13 +21,13 @@ import {useI18n} from "vue-i18n";
 import {RoutesDataItem} from "@/utils/routes";
 import ALink from "@/components/ALink/index.vue";
 
-interface RightTopMenuSetupData {
+interface TopMenuSetupData {
   t: (key: string | number) => string;
   pathToId: (val) => void
 }
 
 export default defineComponent({
-  name: 'RightTopMenu',
+  name: 'TopMenu',
   components: {
     ALink
   },
@@ -44,7 +44,7 @@ export default defineComponent({
     },
   },
 
-  setup(): RightTopMenuSetupData {
+  setup(): TopMenuSetupData {
     const { t } = useI18n();
 
     const pathToId = (path) => {

@@ -11,16 +11,16 @@
               </div>
             </div>
 
-            <div class="top-site-wrapper">
-              <RightTopSiteProduct></RightTopSiteProduct>
+            <div class="top-site-product-wrapper">
+              <TopSiteProduct></TopSiteProduct>
             </div>
 
             <div class="menu-wrapper">
-              <RightTopMenu :menuData="menuData" :belongTopMenu="belongTopMenu"></RightTopMenu>
+              <TopMenu :menuData="menuData" :belongTopMenu="belongTopMenu"></TopMenu>
             </div>
 
             <div class="settings-wrapper">
-              <RightTopSettings />
+              <TopSettings />
             </div>
         </div>
     </div>
@@ -31,15 +31,18 @@ import {computed, defineComponent, PropType, Ref, toRefs, ComputedRef} from "vue
 import { useI18n } from "vue-i18n";
 
 import { BreadcrumbType, RoutesDataItem } from '@/utils/routes';
-import RightTopSettings from './RightTopSettings.vue';
+
 import useTopMenuWidth from "../composables/useTopMenuWidth";
-import RightTopSiteProduct from './RightTopSiteProduct.vue';
-import RightTopMenu from './RightTopMenu.vue';
+
 import {useStore} from "vuex";
 import {ZentaoData} from "@/store/zentao";
 import {nameFirstCapDef} from "@/utils/string";
 
-interface RightTopSetupData {
+import TopMenu from './TopMenu.vue';
+import TopSiteProduct from './TopSiteProduct.vue';
+import TopSettings from './TopSettings.vue';
+
+interface TopSetupData {
   t: (key: string | number) => string;
   profile: ComputedRef;
 
@@ -50,10 +53,9 @@ interface RightTopSetupData {
 }
 
 export default defineComponent({
-    name: 'RightTop',
+    name: 'Top',
     components: {
-      RightTopSettings,
-      RightTopSiteProduct, RightTopMenu,
+      TopMenu, TopSiteProduct, TopSettings
     },
     props: {
       collapsed: {
@@ -88,7 +90,7 @@ export default defineComponent({
         required: true
       }
     },
-    setup(props): RightTopSetupData {
+    setup(props): TopSetupData {
       const { t } = useI18n();
 
       const store = useStore<{ zentao: ZentaoData }>();
@@ -168,7 +170,7 @@ export default defineComponent({
       }
     }
 
-    .top-site-wrapper {
+    .top-site-product-wrapper {
       margin-right: 16px;
       width: 320px;
     }

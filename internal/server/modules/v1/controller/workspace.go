@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
@@ -18,22 +19,71 @@ func NewWorkspaceCtrl() *WorkspaceCtrl {
 	return &WorkspaceCtrl{}
 }
 
-// Create 添加
-func (c *WorkspaceCtrl) Create(ctx iris.Context) {
-	req := model.Workspace{}
-	err := ctx.ReadJSON(&req)
-	if err != nil || req.Path == "" {
-		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
+func (c *WorkspaceCtrl) List(ctx iris.Context) {
+	currProductId, _ := ctx.URLParamInt("currProductId")
+	if currProductId <= 0 {
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, fmt.Sprintf("参数%s不合法", "currProductId")))
 		return
 	}
 
-	_, err = c.WorkspaceService.Create(req)
+	var req serverDomain.ReqPaginate
+	if err := ctx.ReadQuery(&req); err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	data, err := c.WorkspaceService.Paginate(req)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
-	ctx.JSON(c.SuccessResp(nil))
+	ctx.JSON(c.SuccessResp(data))
+}
+
+func (c *WorkspaceCtrl) Get(ctx iris.Context) {
+	id, err := ctx.Params().GetInt("id")
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	po, err := c.WorkspaceService.FindById(uint(id))
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+	ctx.JSON(c.SuccessResp(po))
+}
+
+func (c *WorkspaceCtrl) Create(ctx iris.Context) {
+	req := model.Workspace{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+	}
+
+	id, err := c.WorkspaceService.Create(req)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	ctx.JSON(c.SuccessResp(iris.Map{"id": id}))
+}
+
+func (c *WorkspaceCtrl) Update(ctx iris.Context) {
+	req := model.Workspace{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+	}
+
+	err := c.WorkspaceService.Update(req)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	ctx.JSON(c.SuccessResp(iris.Map{"id": req.ID}))
 }
 
 // Delete 删除

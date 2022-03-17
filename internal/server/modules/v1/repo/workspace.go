@@ -3,9 +3,14 @@ package repo
 import (
 	"errors"
 	"fmt"
+	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
+	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
+	"github.com/aaronchen2k/deeptest/internal/server/core/dao"
+	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/fatih/color"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -15,6 +20,39 @@ type WorkspaceRepo struct {
 
 func NewWorkspaceRepo() *WorkspaceRepo {
 	return &WorkspaceRepo{}
+}
+
+func (r *WorkspaceRepo) Paginate(req serverDomain.ReqPaginate) (data domain.PageData, err error) {
+	var count int64
+
+	db := r.DB.Model(&model.Workspace{}).Where("NOT deleted")
+
+	if req.Keywords != "" {
+		db = db.Where("name LIKE ?", fmt.Sprintf("%%%s%%", req.Keywords))
+	}
+	if req.Enabled != "" {
+		db = db.Where("disabled = ?", commonUtils.IsDisable(req.Enabled))
+	}
+
+	err = db.Count(&count).Error
+	if err != nil {
+		logUtils.Errorf("count site error", zap.String("error:", err.Error()))
+		return
+	}
+
+	pos := make([]*model.Workspace, 0)
+
+	err = db.
+		Scopes(dao.PaginateScope(req.Page, req.PageSize, req.Order, req.Field)).
+		Find(&pos).Error
+	if err != nil {
+		logUtils.Errorf("query site error", zap.String("error:", err.Error()))
+		return
+	}
+
+	data.Populate(pos, count, req.Page, req.PageSize)
+
+	return
 }
 
 func (r *WorkspaceRepo) FindById(id uint) (po model.Workspace, err error) {
@@ -30,27 +68,32 @@ func (r *WorkspaceRepo) FindById(id uint) (po model.Workspace, err error) {
 	return
 }
 
-func (r *WorkspaceRepo) Create(workspace model.Workspace) (id uint, err error) {
-	po, err := r.FindByName(workspace.Name)
+func (r *WorkspaceRepo) Create(site model.Workspace) (id uint, err error) {
+	po, err := r.FindDuplicate(site.Name, site.Path, 0)
 	if po.ID != 0 {
-		return 0, errors.New(fmt.Sprintf("名称为%s的项目已存在", workspace.Name))
+		return 0, errors.New(fmt.Sprintf("工作目录%s（%s）已存在", site.Name, site.Path))
 	}
 
-	err = r.DB.Model(&model.Workspace{}).Create(&workspace).Error
+	err = r.DB.Model(&model.Workspace{}).Create(&site).Error
 	if err != nil {
-		logUtils.Errorf(color.RedString("create workspace failed, error: %s.", err.Error()))
+		logUtils.Errorf(color.RedString("create site failed, error: %s.", err.Error()))
 		return 0, err
 	}
 
-	id = workspace.ID
+	id = site.ID
 
 	return
 }
 
-func (r *WorkspaceRepo) Update(id uint, workspace model.Workspace) error {
-	err := r.DB.Model(&model.Workspace{}).Where("id = ?", id).Updates(&workspace).Error
+func (r *WorkspaceRepo) Update(site model.Workspace) error {
+	po, err := r.FindDuplicate(site.Name, site.Path, site.ID)
+	if po.ID != 0 {
+		return errors.New(fmt.Sprintf("工作目录%s(%s)已存在", site.Name, site.Path))
+	}
+
+	err = r.DB.Model(&model.Workspace{}).Where("id = ?", site.ID).Updates(&site).Error
 	if err != nil {
-		logUtils.Errorf(color.RedString("update workspace failed, error: %s.", err.Error()))
+		logUtils.Errorf(color.RedString("update site failed, error: %s.", err.Error()))
 		return err
 	}
 
@@ -89,6 +132,19 @@ func (r *WorkspaceRepo) FindByPath(workspacePath string) (po model.Workspace, er
 		logUtils.Errorf("find workspace by path error", err.Error())
 		return
 	}
+
+	return
+}
+
+func (r *WorkspaceRepo) FindDuplicate(name, url string, id uint) (po model.Workspace, err error) {
+	db := r.DB.Model(&model.Workspace{}).
+		Where("NOT deleted").
+		Where("name = ? OR path = ?", name, url)
+
+	if id != 0 {
+		db.Where("id != ?", id)
+	}
+	err = db.First(&po).Error
 
 	return
 }

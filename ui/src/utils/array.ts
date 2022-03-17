@@ -27,3 +27,13 @@ export function unique<T>(arr: Array<T>): Array<T> {
   }
   return array;
 }
+
+export function arrToMap(arr: any[]): any {
+  const ret  = {}
+
+  arr.forEach(item => {
+    const key = item.key ? item.key : item.value
+    ret[key] = item
+  })
+  return ret;
+}

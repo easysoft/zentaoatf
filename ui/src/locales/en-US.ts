@@ -26,6 +26,7 @@ export default {
     'only_failed':  'Only Failed',
 
     'zentao_site': 'Zentao Site',
+    'create_site': 'Create Site',
     'edit_site': 'Edit Site',
     'zentao_config': 'Site Config',
     'edit_config': 'Edit Config',
@@ -52,6 +53,9 @@ export default {
     'execution.execSuite': 'Execute By Suite',
     'execution.execTask': 'Execute By Task',
     'execution.execUnit': 'Execute UnitTest',
+    'workspace': 'WorkDir',
+    'create_workspace': 'Create WorkDir',
+    'edit_workspace': 'Edit WorkDir',
 
     'duration':  'Duration', 
     'duration_sec':  'Duration(sec)', 
@@ -93,7 +97,8 @@ export default {
     'create': 'Create',
     'view':  'View',
     'edit': 'Edit',
-    'delete':  'Delete', 
+    'delete':  'Delete',
+    'select':  'Select',
     'pass':  'Pass', 
     'fail':  'Fail', 
     'ignore':  'Ignore', 
@@ -116,7 +121,6 @@ export default {
     'save_fail': 'Save failed.',
 
     'wrong_url': 'Please input right ZenTao URL.',
-    'create_workspace': 'Create Workspace',
     'extract_success': 'Extract comments to test steps and checkpoints successfully.',
     'extract_fail': 'Extract comments to test steps and checkpoints failed.',
     'pls_create_workspace': 'Please create workspace to continue.',

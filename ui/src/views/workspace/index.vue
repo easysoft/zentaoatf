@@ -4,7 +4,7 @@
       <template #title>
         <div class="t-card-toolbar">
           <div class="left">
-            {{t('zentao_site')}}
+            {{t('workspace')}}
           </div>
           <div class="right">
             <a-select @change="onSearch" v-model:value="queryParams.enabled" :options="statusArr" class="status-select">
@@ -18,7 +18,7 @@
       <template #extra>
         <a-button type="primary" @click="create()">
           <template #icon><PlusCircleOutlined /></template>
-          {{t('create_site')}}
+          {{t('create_workspace')}}
         </a-button>
       </template>
 
@@ -78,7 +78,7 @@ import {disableStatusMap} from "@/utils/const";
 
 const useForm = Form.useForm;
 
-interface SiteListSetupData {
+interface WorkspaceListSetupData {
   t: (key: string | number) => string;
 
   statusArr: Ref,
@@ -102,11 +102,11 @@ interface SiteListSetupData {
 }
 
 export default defineComponent({
-  name: 'SiteListPage',
+  name: 'WorkspaceListPage',
   components: {
     PlusCircleOutlined,
   },
-  setup(): SiteListSetupData {
+  setup(): WorkspaceListSetupData {
     const {t} = useI18n();
     const momentUtc = momentUtcDef
     const disableStatus = disableStatusDef
@@ -132,12 +132,8 @@ export default defineComponent({
         dataIndex: 'name',
       },
       {
-        title: t('zentao_url'),
-        dataIndex: 'url',
-      },
-      {
-        title: t('username'),
-        dataIndex: 'username',
+        title: t('path'),
+        dataIndex: 'path',
       },
       {
         title: t('status'),
@@ -160,9 +156,9 @@ export default defineComponent({
 
     const router = useRouter();
     const zentaoStore = useStore<{ zentao: ZentaoData }>();
-    const store = useStore<{ Site: StateType }>();
-    const models = computed<any[]>(() => store.state.Site.queryResult.result);
-    const pagination = computed<PaginationConfig>(() => store.state.Site.queryResult.pagination);
+    const store = useStore<{ Workspace: StateType }>();
+    const models = computed<any[]>(() => store.state.Workspace.queryResult.result);
+    const pagination = computed<PaginationConfig>(() => store.state.Workspace.queryResult.pagination);
     const queryParams = ref<QueryParams>({
       keywords: '', enabled: '1', page: pagination.value.page, pageSize: pagination.value.pageSize
     });
@@ -170,7 +166,7 @@ export default defineComponent({
     const loading = ref<boolean>(true);
     const getList = (page: number) => {
       loading.value = true;
-      store.dispatch('Site/list', {
+      store.dispatch('Workspace/list', {
         keywords: queryParams.value.keywords,
         enabled: queryParams.value.enabled,
         pageSize: pagination.value.pageSize,
@@ -185,23 +181,23 @@ export default defineComponent({
 
     const create = () => {
       console.log('create')
-      router.push(`/site/edit/0`)
+      router.push(`/workspace/edit/0`)
     }
     const edit = (id) => {
       console.log('edit')
-      router.push(`/site/edit/${id}`)
+      router.push(`/workspace/edit/${id}`)
     }
 
     const removeLoading = ref<string[]>([]);
     const remove = (id) => {
       Modal.confirm({
-        title: t('confirm_to_delete_site'),
+        title: t('confirm_to_delete_workspace'),
         okText: t('confirm'),
         cancelText: t('cancel'),
         onOk: () => {
           removeLoading.value = [id];
-          store.dispatch('Site/delete', id).then((success) => {
-            zentaoStore.dispatch('zentao/fetchSitesAndProducts').then((success) => {
+          store.dispatch('Workspace/delete', id).then((success) => {
+            zentaoStore.dispatch('zentao/fetchWorkspacesAndProducts').then((success) => {
               message.success(t('delete_success'));
               getList(pagination.value.page)
               removeLoading.value = [];

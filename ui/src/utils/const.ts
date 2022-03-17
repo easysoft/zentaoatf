@@ -48,3 +48,67 @@ export const MonacoOptions = {
     formatOnPaste: true,
     formatOnType: true
 }
+
+export const disableStatusMap = [
+    {
+        label: '所有状态',
+        value: '',
+    },
+    {
+        label: '启用',
+        value: '1',
+    },
+    {
+        label: '禁用',
+        value: '0',
+    },
+]
+
+export const ztfTestTypesDef = [{
+        label: 'ZTF',
+        value: 'ztf',
+    },
+]
+
+export const unitTestTypesDef = [
+    {
+        label: 'JUnit',
+        value: 'junit',
+        cmd: '',
+    },
+    {
+        label: 'TestNG',
+        value: 'testng',
+        cmd: '',
+    },
+    {
+        label: 'PHPUnit',
+        value: 'phpunit',
+        cmd: '',
+    },
+    {
+        label: 'PyTest',
+        value: 'pytest',
+        cmd: '',
+    },
+    {
+        label: 'Jest',
+        value: 'jest',
+        cmd: '',
+    },
+    {
+        label: 'CppUnit',
+        value: 'cppunit',
+        cmd: '',
+    },
+    {
+        label: 'GTest',
+        value: 'gtest',
+        cmd: '',
+    },
+    {
+        label: 'QTest',
+        value: 'qtest',
+        cmd: '',
+    },
+]

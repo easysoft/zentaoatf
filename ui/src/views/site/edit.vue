@@ -1,7 +1,7 @@
 <template>
   <a-card>
     <template #title>
-      {{t('edit_site')}}
+      {{ modelRef.id > 0 ? t('edit_site') : t('create_site')}}
     </template>
 
     <template #extra>
@@ -22,11 +22,11 @@
       </a-form-item>
       <a-form-item :label="t('username')" v-bind="validateInfos.username">
         <a-input v-model:value="modelRef.username"
-                 @blur="validate('username', { trigger: 'blur' }).catch(() => {})" placeholder="" />
+                 @blur="validate('username', { trigger: 'blur' }).catch(() => {})" />
       </a-form-item>
       <a-form-item :label="t('password')" v-bind="validateInfos.password">
         <a-input-password v-model:value="modelRef.password"
-                 @blur="validate('password', { trigger: 'blur' }).catch(() => {})" placeholder="" />
+                 @blur="validate('password', { trigger: 'blur' }).catch(() => {})" />
       </a-form-item>
 
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
