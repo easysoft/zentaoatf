@@ -78,6 +78,7 @@ interface WorkspaceFormSetupData {
   validate: any
   validateInfos: validateInfos
   selectType:  (item) => void;
+  selectDir: () => void
   submitForm:  () => void;
   resetFields:  () => void;
   back:  () => void;
@@ -127,6 +128,23 @@ export default defineComponent({
       modelRef.value.cmd = cmdMap.value[modelRef.value.type].cmd
     }
 
+    const selectDir = () => {
+      console.log('selectDir')
+
+      if (isElectron.value) {
+        const {dialog} = window.require('@electron/remote');
+        dialog.showOpenDialog({
+          properties: ['openDirectory']
+        }).then(result => {
+          if (result.filePaths && result.filePaths.length > 0) {
+            modelRef.value.path = result.filePaths[0]
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      }
+    }
+
     const { resetFields, validate, validateInfos } = useForm(modelRef, rules);
     const submitForm = () => {
       validate()
@@ -161,6 +179,7 @@ export default defineComponent({
       validate,
       validateInfos,
       selectType,
+      selectDir,
       submitForm,
       back,
     }

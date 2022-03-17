@@ -154,3 +154,12 @@ const (
 	Host    PlatformType = "host"
 	Vm      PlatformType = "vm"
 )
+
+type TreeNodeType string
+
+const (
+	Root      TreeNodeType = "root"
+	Workspace TreeNodeType = "workspace"
+	Dir       TreeNodeType = "dir"
+	File      TreeNodeType = "file"
+)

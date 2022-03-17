@@ -8,7 +8,7 @@ type Workspace struct {
 	Path      string              `json:"path"`
 	Name      string              `json:"name"`
 	Desc      string              `json:"desc" gorm:"column:descr"`
-	Type      commConsts.TestType `json:"type" gorm:"default:ztf"`
+	Type      commConsts.TestTool `json:"type" gorm:"default:ztf"`
 	Cmd       string              `json:"cmd"`
 	ProductId uint                `json:"productId"`
 

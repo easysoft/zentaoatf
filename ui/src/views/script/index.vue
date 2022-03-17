@@ -1,14 +1,6 @@
 <template>
-  <div v-if="!currWorkspace.path">
-    <a-empty :image="simpleImage" :description="t('pls_create_workspace')"/>
-  </div>
-
-  <div v-if="currWorkspace.path" class="indexlayout-main-conent">
-    <div v-if="currWorkspace.type === 'unit'" class="panel">
-      {{ t('no_script_for_unittest') }}
-    </div>
-
-    <div id="main" v-if="currWorkspace.type === 'func'">
+  <div class="indexlayout-main-conent">
+    <div id="main">
       <div id="left">
         <div class="toolbar">
           <div class="left"></div>
@@ -31,8 +23,11 @@
               v-model:expandedKeys="expandedKeys"
           >
             <template #icon="slotProps">
-              <icon-svg v-if="slotProps.isDir" type="folder-outlined"></icon-svg>
-              <icon-svg v-if="!slotProps.isDir" type="file-outlined"></icon-svg>
+              <DatabaseOutlined v-if="slotProps.type==='workspace'" />
+              <FolderOutlined v-if="slotProps.type==='dir' && !slotProps.expanded" />
+              <FolderOpenOutlined v-if="slotProps.type==='dir' && slotProps.expanded" />
+
+              <FileOutlined v-if="slotProps.type==='file'" />
             </template>
           </a-tree>
         </div>
@@ -62,18 +57,20 @@
 import {computed, ComputedRef, defineComponent, onMounted, onUnmounted, ref, Ref, watch} from "vue";
 import {useStore} from "vuex";
 import {useI18n} from "vue-i18n";
-import IconSvg from "@/components/IconSvg";
-import {WorkspaceData} from "@/store/workspace";
+import { CodeOutlined, DatabaseOutlined, FolderOutlined, FolderOpenOutlined, FileOutlined} from '@ant-design/icons-vue';
+
 import {ScriptData} from "./store";
 import {resizeWidth} from "@/utils/dom";
 import {Empty, message, notification} from "ant-design-vue";
 
 import {MonacoOptions} from "@/utils/const";
 import MonacoEditor from "@/components/Editor/MonacoEditor.vue";
+import {ZentaoData} from "@/store/zentao";
 
 interface ListScriptPageSetupData {
   t: (key: string | number) => string;
-  currWorkspace: ComputedRef;
+  currSite: ComputedRef;
+  currProduct: ComputedRef;
   treeData: ComputedRef<any[]>;
   replaceFields: any,
   tree: Ref;
@@ -96,7 +93,7 @@ interface ListScriptPageSetupData {
 export default defineComponent({
   name: 'ScriptListPage',
   components: {
-    IconSvg,
+    DatabaseOutlined, FolderOutlined, FolderOpenOutlined, FileOutlined,
     MonacoEditor,
   },
   setup(): ListScriptPageSetupData {
@@ -108,9 +105,12 @@ export default defineComponent({
 
     let selectedNode = {} as any
     let isExpand = ref(false);
-    const store = useStore<{ workspace: WorkspaceData }>();
-    const currWorkspace = computed<any>(() => store.state.workspace.currWorkspace);
-    const treeData = computed<any>(() => store.state.workspace.scriptTree);
+
+    const zentaoStore = useStore<{ zentao: ZentaoData }>();
+    const currSite = computed<any>(() => zentaoStore.state.zentao.currSite);
+    const currProduct = computed<any>(() => zentaoStore.state.zentao.currProduct);
+    const treeData = computed<any>(() => zentaoStore.state.zentao.testScripts);
+
     const expandedKeys = ref<string[]>([]);
 
     const getOpenKeys = (treeNode, isAll) => {
@@ -192,7 +192,8 @@ export default defineComponent({
 
     return {
       t,
-      currWorkspace,
+      currSite,
+      currProduct,
       treeData,
       replaceFields,
       expandNode,
@@ -230,7 +231,7 @@ export default defineComponent({
     #left {
       width: 380px;
       height: 100%;
-      padding: 3px;
+      padding: 3px 0 0 3px;
 
       .toolbar {
         display: flex;

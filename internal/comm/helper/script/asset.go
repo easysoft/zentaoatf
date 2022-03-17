@@ -2,6 +2,7 @@ package scriptHelper
 
 import (
 	"encoding/json"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
@@ -25,7 +26,7 @@ func LoadScriptTree(dir string) (asset serverDomain.TestAsset, err error) {
 
 	//commonUtils.ChangeScriptForDebug(&dir)
 
-	asset = serverDomain.TestAsset{Path: dir, Title: fileUtils.GetDirName(dir), IsDir: true, Slots: iris.Map{"icon": "icon"}}
+	asset = serverDomain.TestAsset{Path: dir, Title: fileUtils.GetDirName(dir), Type: commConsts.Workspace, Slots: iris.Map{"icon": "icon"}}
 	LoadScriptNodesInDir(dir, &asset, 0)
 
 	jsn, _ := json.Marshal(asset)
@@ -144,7 +145,7 @@ func addScript(pth string, parent *serverDomain.TestAsset) {
 		pass = CheckFileIsScript(pth)
 		if pass {
 			childScript := &serverDomain.TestAsset{Path: pth, Title: fileUtils.GetFileName(pth),
-				IsDir: false, Slots: iris.Map{"icon": "icon"}}
+				Type: commConsts.File, Slots: iris.Map{"icon": "icon"}}
 
 			parent.Children = append(parent.Children, childScript)
 			parent.ScriptCount += 1
@@ -153,7 +154,7 @@ func addScript(pth string, parent *serverDomain.TestAsset) {
 }
 func addDir(pth string, parent *serverDomain.TestAsset) (dirNode *serverDomain.TestAsset) {
 	dirNode = &serverDomain.TestAsset{Path: pth, Title: fileUtils.GetDirName(pth),
-		IsDir: true, Slots: iris.Map{"icon": "icon"}}
+		Type: commConsts.Dir, Slots: iris.Map{"icon": "icon"}}
 	parent.Children = append(parent.Children, dirNode)
 
 	return

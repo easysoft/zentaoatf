@@ -92,7 +92,7 @@ func (s *WorkspaceService) GetByUser(currWorkspacePath string) (
 		}
 
 		name := fileUtils.GetDirName(currWorkspacePath)
-		newLocalWorkspace := model.Workspace{Path: currWorkspacePath, Name: name, Type: commConsts.TestFunc}
+		newLocalWorkspace := model.Workspace{Path: currWorkspacePath, Name: name, Type: commConsts.ZTF}
 
 		_, err = s.WorkspaceRepo.Create(newLocalWorkspace)
 		if err != nil {
@@ -111,7 +111,7 @@ func (s *WorkspaceService) GetByUser(currWorkspacePath string) (
 		return
 	}
 
-	if currWorkspace.Type == commConsts.TestFunc {
+	if currWorkspace.Type == commConsts.ZTF {
 		scriptTree, err = scriptUtils.LoadScriptTree(currWorkspace.Path)
 	}
 

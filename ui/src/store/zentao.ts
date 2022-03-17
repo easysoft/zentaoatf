@@ -12,6 +12,7 @@ export interface ZentaoData {
 
     sites: any[]
     products: any[]
+    testScripts: any[]
     currSite: any
     currProduct: any
 
@@ -52,6 +53,7 @@ const initState: ZentaoData = {
 
     sites: [],
     products: [],
+    testScripts: [],
     currSite: {},
     currProduct: {},
 
@@ -78,10 +80,12 @@ const StoreModel: ModuleType = {
         async saveSitesAndProducts(state, payload) {
             state.sites = payload.sites;
             state.products = payload.products;
+            state.testScripts = [payload.testScripts];
 
             state.currSite = payload.currSite;
             state.currProduct = payload.currProduct;
 
+            // cache current site and product
             setCache(settings.currSiteId, payload.currSite.id);
 
             let mp = await getCache(settings.currProductIdBySite);

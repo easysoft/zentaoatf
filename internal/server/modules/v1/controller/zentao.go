@@ -10,7 +10,8 @@ import (
 )
 
 type ZentaoCtrl struct {
-	SiteService *service.SiteService `inject:""`
+	SiteService       *service.SiteService       `inject:""`
+	TestScriptService *service.TestScriptService `inject:""`
 	BaseCtrl
 }
 
@@ -39,10 +40,12 @@ func (c *ZentaoCtrl) ListSiteAndProduct(ctx iris.Context) {
 	currProductId, _ := ctx.URLParamInt("currProductId")
 
 	sites, currSite, _ := c.SiteService.LoadSites(currSiteId)
-
 	products, currProduct, _ := zentaoHelper.LoadSiteProduct(currSite, currProductId)
 
-	data := iris.Map{"sites": sites, "currSite": currSite, "products": products, "currProduct": currProduct}
+	testScripts, _ := c.TestScriptService.LoadTestScriptsBySiteProduct(currSite, currProduct)
+
+	data := iris.Map{"sites": sites, "products": products, "testScripts": testScripts,
+		"currSite": currSite, "currProduct": currProduct}
 	ctx.JSON(c.SuccessResp(data))
 }
 

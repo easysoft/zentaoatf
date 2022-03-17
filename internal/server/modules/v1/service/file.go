@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
@@ -56,7 +57,7 @@ func (s *FileService) LoadDirs(dir string) (asset serverDomain.TestAsset, err er
 		return
 	}
 
-	asset = serverDomain.TestAsset{Path: dir, Title: fileUtils.GetDirName(dir), IsDir: true, Slots: iris.Map{"icon": "icon"}}
+	asset = serverDomain.TestAsset{Path: dir, Title: fileUtils.GetDirName(dir), Type: commConsts.Dir, Slots: iris.Map{"icon": "icon"}}
 	s.GetAllChildren(dir, &asset)
 
 	return
@@ -93,7 +94,7 @@ func (s *FileService) GetAllChildren(childPath string, parent *serverDomain.Test
 
 func (s *FileService) addDir(pth string, parent *serverDomain.TestAsset) (dirNode *serverDomain.TestAsset) {
 	dirNode = &serverDomain.TestAsset{Path: pth, Title: fileUtils.GetDirName(pth),
-		IsDir: true, Slots: iris.Map{"icon": "icon"}}
+		Type: commConsts.Dir, Slots: iris.Map{"icon": "icon"}}
 	parent.Children = append(parent.Children, dirNode)
 
 	return

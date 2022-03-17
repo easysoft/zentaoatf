@@ -44,7 +44,7 @@ func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, workspace
 		productId = cases[0].Product
 		targetDir := fileUtils.AddPathSepIfNeeded(filepath.Join(workspacePath, fmt.Sprintf("product%d", productId)))
 
-		count, err := s.TestScriptService.GenerateScripts(cases, lang, independentFile, byModule, targetDir)
+		count, err := scriptUtils.GenerateScripts(cases, lang, independentFile, byModule, targetDir)
 		if err == nil {
 			logUtils.Infof(i118Utils.Sprintf("success_to_generate", count, targetDir))
 		} else {
