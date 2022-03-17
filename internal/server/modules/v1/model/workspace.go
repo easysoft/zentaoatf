@@ -5,10 +5,12 @@ import commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 type Workspace struct {
 	BaseModel
 
-	Type commConsts.TestType `json:"type"`
-	Path string              `json:"path"`
-	Name string              `json:"name"`
-	Desc string              `json:"desc" gorm:"column:descr"`
+	Path      string              `json:"path"`
+	Name      string              `json:"name"`
+	Desc      string              `json:"desc" gorm:"column:descr"`
+	Type      commConsts.TestType `json:"type" gorm:"default:ztf"`
+	Cmd       string              `json:"cmd"`
+	ProductId uint                `json:"productId"`
 
 	IsDefault bool `json:"isDefault"`
 }

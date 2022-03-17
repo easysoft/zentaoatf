@@ -100,8 +100,8 @@ func (r *WorkspaceRepo) Update(site model.Workspace) error {
 	return nil
 }
 
-func (r *WorkspaceRepo) DeleteByPath(pth string) (err error) {
-	err = r.DB.Where("path = ?", pth).
+func (r *WorkspaceRepo) Delete(id uint) (err error) {
+	err = r.DB.Where("id = ?", id).
 		Delete(&model.Workspace{}).
 		Error
 	if err != nil {

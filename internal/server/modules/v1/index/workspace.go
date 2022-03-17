@@ -24,7 +24,7 @@ func (m *WorkspaceModule) Party() module.WebModule {
 		index.Get("/{id:int}", m.WorkspaceCtrl.Get).Name = "详情"
 		index.Post("/", m.WorkspaceCtrl.Create).Name = "新建"
 		index.Put("/{id:int}", m.WorkspaceCtrl.Update).Name = "更新"
-		index.Delete("/", m.WorkspaceCtrl.Delete).Name = "删除"
+		index.Delete("/{id:int}", m.WorkspaceCtrl.Delete).Name = "删除"
 
 		index.Get("/getByUser", m.WorkspaceCtrl.GetByUser).Name = "获取用户参与的项目"
 	}

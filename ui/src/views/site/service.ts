@@ -25,9 +25,9 @@ export async function save(params: any): Promise<any> {
     });
 }
 
-export async function remove(seq: string): Promise<any> {
+export async function remove(id: number): Promise<any> {
     return request({
-        url: `/${apiPath}/${seq}`,
+        url: `/${apiPath}/${id}`,
         method: 'delete',
     });
 }

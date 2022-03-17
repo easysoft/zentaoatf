@@ -76,21 +76,6 @@ func (OsType) Get(osName string) OsType {
 	return OsType(osName)
 }
 
-type TestType string
-
-const (
-	TestFunc TestType = "func"
-	TestUnit TestType = "unit"
-	TestAuto TestType = "auto"
-)
-
-func (e TestType) String() string {
-	return string(e)
-}
-func (TestType) Get(str string) TestType {
-	return TestType(str)
-}
-
 type ExecBy string
 
 const (
@@ -107,9 +92,24 @@ func (ExecBy) Get(str string) ExecBy {
 	return ExecBy(str)
 }
 
+type TestType string
+
+const (
+	TestFunc TestType = "func"
+	TestUnit TestType = "unit"
+)
+
+func (e TestType) String() string {
+	return string(e)
+}
+func (TestType) Get(str string) TestType {
+	return TestType(str)
+}
+
 type TestTool string
 
 const (
+	ZTF     TestTool = "ztf"
 	JUnit   TestTool = "junit"
 	TestNG  TestTool = "testng"
 	PHPUnit TestTool = "phpunit"

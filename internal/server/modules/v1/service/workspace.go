@@ -1,6 +1,8 @@
 package service
 
 import (
+	"errors"
+	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
@@ -27,12 +29,6 @@ func (s *WorkspaceService) Paginate(req serverDomain.ReqPaginate) (ret domain.Pa
 	return
 }
 
-func (s *WorkspaceService) Create(workspace model.Workspace) (id uint, err error) {
-	id, err = s.WorkspaceRepo.Create(workspace)
-
-	return
-}
-
 func (s *WorkspaceService) FindById(id uint) (model.Workspace, error) {
 	return s.WorkspaceRepo.FindById(id)
 }
@@ -40,13 +36,28 @@ func (s *WorkspaceService) FindByPath(workspacePath string) (po model.Workspace,
 	return s.WorkspaceRepo.FindByPath(workspacePath)
 }
 
+func (s *WorkspaceService) Create(workspace model.Workspace) (id uint, err error) {
+	if !fileUtils.IsDir(workspace.Path) {
+		err = errors.New(fmt.Sprintf("目录%s不存在", workspace.Path))
+		return
+	}
+
+	id, err = s.WorkspaceRepo.Create(workspace)
+
+	return
+}
 func (s *WorkspaceService) Update(workspace model.Workspace) (err error) {
+	if !fileUtils.IsDir(workspace.Path) {
+		err = errors.New(fmt.Sprintf("目录%s不存在", workspace.Path))
+		return
+	}
+
 	err = s.WorkspaceRepo.Update(workspace)
 	return
 }
 
-func (s *WorkspaceService) DeleteByPath(pth string) (err error) {
-	err = s.WorkspaceRepo.DeleteByPath(pth)
+func (s *WorkspaceService) Delete(id uint) (err error) {
+	err = s.WorkspaceRepo.Delete(id)
 	if err != nil {
 		return
 	}

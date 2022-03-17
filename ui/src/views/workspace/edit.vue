@@ -37,8 +37,9 @@
       </a-form-item>
 
       <a-form-item v-if="showCmd" :label="t('test_cmd')" v-bind="validateInfos.cmd">
-        <a-textarea v-model:value="modelRef.cmd" placeholder="mvn clean package test"
+        <a-textarea v-model:value="modelRef.cmd"
                     :auto-size="{ minRows: 3, maxRows: 6 }" />
+        <span>使用客户端执行测试时，-p参数的值会被替换成当前产品的ID。命令行执行时，请提供产品ID的数字。</span>
       </a-form-item>
 
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
@@ -109,11 +110,21 @@ export default defineComponent({
       name: [{ required: true, message: t('pls_name'), trigger: 'blur' }],
       path: [{ required: true, message: t('pls_workspace_path'), trigger: 'blur' }],
       type: [{ required: true, message: t('pls_workspace_type') }],
-      cmd: [{ required: true, message: t('pls_cmd'), trigger: 'blur' }],
+      cmd: [
+        {
+          trigger: 'blur',
+          validator: async (rule: any, value: string) => {
+            if (modelRef.value.type !== 'ztf' && (value === '' || !value)) {
+              throw new Error(t('pls_cmd'));
+            }
+          }
+        },
+      ],
     });
 
     const selectType = (item) => {
       console.log('selectType', item)
+      modelRef.value.cmd = cmdMap.value[modelRef.value.type].cmd
     }
 
     const { resetFields, validate, validateInfos } = useForm(modelRef, rules);
@@ -122,13 +133,13 @@ export default defineComponent({
         .then(() => {
           console.log(modelRef.value);
           store.dispatch('Workspace/save', modelRef.value).then((success) => {
-            zentaoStore.dispatch('zentao/fetchWorkspacesAndProducts').then((success) => {
-              notification.success({ message: t('save_success') });
+            if (success) {
+              notification.success({message: t('save_success')});
               router.push(`/workspace/list`)
-            })
+            }
           })
         })
-      .catch((e) => {console.log('')})
+      .catch((e) => {console.log(e)})
     };
 
     const back = () => {

@@ -61,12 +61,12 @@
 <script lang="ts">
 import {computed, ComputedRef, defineComponent, onMounted, onUnmounted, ref, Ref, watch} from "vue";
 import {useStore} from "vuex";
+import {useI18n} from "vue-i18n";
 import IconSvg from "@/components/IconSvg";
 import {WorkspaceData} from "@/store/workspace";
-import {ScriptData} from "../store";
+import {ScriptData} from "./store";
 import {resizeWidth} from "@/utils/dom";
 import {Empty, message, notification} from "ant-design-vue";
-import {useI18n} from "vue-i18n";
 
 import {MonacoOptions} from "@/utils/const";
 import MonacoEditor from "@/components/Editor/MonacoEditor.vue";

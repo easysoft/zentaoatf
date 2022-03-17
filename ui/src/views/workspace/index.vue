@@ -48,7 +48,7 @@
 
           <template #action="{ record }">
             <a-button @click="() => edit(record.id)" type="link" size="small">{{ t('edit') }}</a-button>
-            <a-button @click="() => remove(record.id)" type="link" size="small"
+            <a-button @click="() => remove(record)" type="link" size="small"
                       :loading="removeLoading.includes(record.seq)">{{ t('delete') }}
             </a-button>
           </template>
@@ -93,7 +93,7 @@ interface WorkspaceListSetupData {
   create: () => void;
   edit: (id) => void;
   removeLoading: Ref<string[]>;
-  remove: (id) => void;
+  remove: (item) => void;
 
   onSearch: () => void;
   disableStatus: (val) => string;
@@ -189,19 +189,20 @@ export default defineComponent({
     }
 
     const removeLoading = ref<string[]>([]);
-    const remove = (id) => {
+    const remove = (item) => {
+      console.log(item)
       Modal.confirm({
-        title: t('confirm_to_delete_workspace'),
+        title: t('confirm_to_delete_workspace', {p: item.name}),
         okText: t('confirm'),
         cancelText: t('cancel'),
         onOk: () => {
-          removeLoading.value = [id];
-          store.dispatch('Workspace/delete', id).then((success) => {
-            zentaoStore.dispatch('zentao/fetchWorkspacesAndProducts').then((success) => {
+          removeLoading.value = [item.id];
+          store.dispatch('Workspace/delete', item.id).then((success) => {
+            if (success) {
               message.success(t('delete_success'));
               getList(pagination.value.page)
-              removeLoading.value = [];
-            })
+            }
+            removeLoading.value = [];
           })
         }
       });

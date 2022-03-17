@@ -6,13 +6,13 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
     icon: 'script',
     title: 'script',
     path: '/script',
-    redirect: '/script/list',
+    redirect: '/script/index',
     component: BlankLayout,
     children: [
       {
-        title: 'script.list',
-        path: 'list',
-        component: () => import('@/views/script/index/main.vue'),
+        title: 'script',
+        path: 'index',
+        component: () => import('@/views/script/index.vue'),
         hidden: true,
       },
     ],

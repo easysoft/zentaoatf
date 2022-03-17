@@ -84,10 +84,10 @@ const StoreModel: ModuleType = {
                 return false;
             }
         },
-        async delete({ commit }, payload: string ) {
+        async delete({ commit }, id: number ) {
             try {
-                await remove(payload);
-                await this.dispatch('History/list', {})
+                await remove(id);
+                await this.dispatch('Workspace/list', {})
 
                 return true;
             } catch (error) {

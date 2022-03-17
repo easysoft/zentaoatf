@@ -57,11 +57,18 @@ func (c *WorkspaceCtrl) Get(ctx iris.Context) {
 }
 
 func (c *WorkspaceCtrl) Create(ctx iris.Context) {
+	currProductId, _ := ctx.URLParamInt("currProductId")
+	if currProductId <= 0 {
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, fmt.Sprintf("参数%s不合法", "currProductId")))
+		return
+	}
+
 	req := model.Workspace{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 	}
 
+	req.ProductId = uint(currProductId)
 	id, err := c.WorkspaceService.Create(req)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
@@ -72,11 +79,18 @@ func (c *WorkspaceCtrl) Create(ctx iris.Context) {
 }
 
 func (c *WorkspaceCtrl) Update(ctx iris.Context) {
+	currProductId, _ := ctx.URLParamInt("currProductId")
+	if currProductId <= 0 {
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, fmt.Sprintf("参数%s不合法", "currProductId")))
+		return
+	}
+
 	req := model.Workspace{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 	}
 
+	req.ProductId = uint(currProductId)
 	err := c.WorkspaceService.Update(req)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
@@ -88,13 +102,13 @@ func (c *WorkspaceCtrl) Update(ctx iris.Context) {
 
 // Delete 删除
 func (c *WorkspaceCtrl) Delete(ctx iris.Context) {
-	workspacePath := ctx.URLParam("path")
+	workspaceId, _ := ctx.Params().GetInt("id")
 
-	if workspacePath == "" {
-		ctx.JSON(c.ErrResp(commConsts.ParamErr, "path"))
+	if workspaceId <= 0 {
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, "id"))
 		return
 	}
-	err := c.WorkspaceService.DeleteByPath(workspacePath)
+	err := c.WorkspaceService.Delete(uint(workspaceId))
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
