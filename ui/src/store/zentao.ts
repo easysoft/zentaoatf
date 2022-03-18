@@ -4,6 +4,7 @@ import { ResponseData } from '@/utils/request';
 import {queryLang, querySiteAndProduct, getProfile, queryProduct, queryModule, querySuite, queryTask} from "../services/zentao";
 import {getCache, setCache} from "@/utils/localCache";
 import settings from "@/config/settings";
+import {setCurrProductIdBySite, setCurrSiteId} from "@/utils/cache";
 
 export interface ZentaoData {
     langs: any[]
@@ -15,6 +16,7 @@ export interface ZentaoData {
     testScripts: any[]
     currSite: any
     currProduct: any
+    scriptLoaded: boolean
 
     modules: any[]
     suites: any[]
@@ -56,6 +58,7 @@ const initState: ZentaoData = {
     testScripts: [],
     currSite: {},
     currProduct: {},
+    scriptLoaded: false,
 
     modules: [],
     suites: [],
@@ -80,18 +83,17 @@ const StoreModel: ModuleType = {
         async saveSitesAndProducts(state, payload) {
             state.sites = payload.sites;
             state.products = payload.products;
-            state.testScripts = [payload.testScripts];
+            if (payload.testScripts)  {
+                state.testScripts = [payload.testScripts];
+                state.scriptLoaded = true
+            }
 
             state.currSite = payload.currSite;
             state.currProduct = payload.currProduct;
 
             // cache current site and product
-            setCache(settings.currSiteId, payload.currSite.id);
-
-            let mp = await getCache(settings.currProductIdBySite);
-            if (!mp) mp = {}
-            mp[payload.currSite.id + ''] = payload.currProduct.id
-            setCache(settings.currProductIdBySite, mp);
+            await setCurrSiteId(payload.currSite.id);
+            await setCurrProductIdBySite(settings.currProductIdBySite, payload.currProduct.id);
         },
         saveProducts(state, payload) {
             console.log('payload', payload)

@@ -74,6 +74,8 @@ export default defineComponent({
     const { t } = useI18n();
 
     const router = useRouter();
+    const needLoadScript = router.currentRoute.value.path === '/script/index'
+
     const store = useStore<{ zentao: ZentaoData }>();
 
     const sites = computed<any[]>(() => store.state.zentao.sites);
@@ -82,7 +84,7 @@ export default defineComponent({
     const currSite = computed<any>(() => store.state.zentao.currSite);
     const currProduct = computed<any>(() => store.state.zentao.currProduct);
 
-    store.dispatch('zentao/fetchSitesAndProducts', {})
+    store.dispatch('zentao/fetchSitesAndProducts', {needLoadScript: needLoadScript})
 
     onMounted(() => {
       console.log('onMounted')
@@ -94,7 +96,7 @@ export default defineComponent({
     }
     const selectProduct = (product): void => {
       console.log('selectProduct', product)
-      store.dispatch('zentao/fetchSitesAndProducts', {currProductId: product.id})
+      store.dispatch('zentao/fetchSitesAndProducts', {currProductId: product.id, needLoadScript: needLoadScript})
     }
 
     return {

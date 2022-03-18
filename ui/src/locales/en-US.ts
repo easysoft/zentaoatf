@@ -121,6 +121,8 @@ export default {
     'save_success': 'Save successfully.',
     'save_fail': 'Save failed.',
 
+    'expand_all': 'Expand',
+    'collapse_all': 'Collapse',
     'wrong_url': 'Please input right ZenTao URL.',
     'extract_success': 'Extract comments to test steps and checkpoints successfully.',
     'extract_fail': 'Extract comments to test steps and checkpoints failed.',
@@ -132,6 +134,8 @@ export default {
     'delete_success':  'Delete successfully.', 
     'ws_conn_success': 'Connect to WebSocket successfully.',
     'ws_conn_fail': 'Connect to WebSocket failed.',
+    'no_script_for_unittest': 'No scriptS for Unit Test.',
+    'extract_step': 'Extract Steps',
 
     'pls_title':  'Please input title.',
     'pls_name':  'Please input name.',

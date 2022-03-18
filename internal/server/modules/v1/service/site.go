@@ -23,6 +23,17 @@ func (s *SiteService) Paginate(req serverDomain.ReqPaginate) (ret domain.PageDat
 func (s *SiteService) Get(id uint) (site model.Site, err error) {
 	return s.SiteRepo.Get(id)
 }
+func (s *SiteService) GetDomainObject(id uint) (site serverDomain.ZentaoSite, err error) {
+	po, _ := s.SiteRepo.Get(id)
+
+	site = serverDomain.ZentaoSite{
+		Url:      po.Url,
+		Username: po.Username,
+		Password: po.Password,
+	}
+
+	return
+}
 
 func (s *SiteService) Create(site model.Site) (id uint, err error) {
 	id, err = s.SiteRepo.Create(site)

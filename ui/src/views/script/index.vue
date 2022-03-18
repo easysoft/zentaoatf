@@ -3,7 +3,33 @@
     <div id="main">
       <div id="left">
         <div class="toolbar">
-          <div class="left"></div>
+          <div class="left">
+            <a-select
+                ref="select"
+                v-model:value="filerType"
+                @change="selectFilerType"
+                style="width: 90px"
+                :bordered="false"
+            >
+              <a-select-option value="workspace">按目录</a-select-option>
+              <a-select-option value="module">按模块</a-select-option>
+              <a-select-option value="suite">按套件</a-select-option>
+              <a-select-option value="task">按任务</a-select-option>
+            </a-select>
+
+            <a-select
+                ref="select"
+                v-model:value="filerValue"
+                @change="selectFilerValue"
+                style="width: 120px"
+                :bordered="false"
+                :dropdownMatchSelectWidth="false"
+            >
+              <a-select-option v-for="item in filerItems" :key="item.id" :value="item.id">
+                {{item.name}}
+              </a-select-option>
+            </a-select>
+          </div>
           <div class="right">
             <a-button @click="expandAll" type="link">
               <span v-if="!isExpand">{{ t('expand_all') }}</span>
@@ -66,6 +92,7 @@ import {Empty, message, notification} from "ant-design-vue";
 import {MonacoOptions} from "@/utils/const";
 import MonacoEditor from "@/components/Editor/MonacoEditor.vue";
 import {ZentaoData} from "@/store/zentao";
+import {getScriptFilters} from "@/utils/cache";
 
 interface ListScriptPageSetupData {
   t: (key: string | number) => string;
@@ -74,6 +101,12 @@ interface ListScriptPageSetupData {
   treeData: ComputedRef<any[]>;
   replaceFields: any,
   tree: Ref;
+
+  filerItems: Ref<[]>
+  filerType: Ref
+  filerValue: Ref
+  selectFilerType: (v) => void;
+  selectFilerValue: (v) => void;
 
   script: ComputedRef
   scriptCode: Ref<string>;
@@ -107,9 +140,30 @@ export default defineComponent({
     let isExpand = ref(false);
 
     const zentaoStore = useStore<{ zentao: ZentaoData }>();
+    let scriptLoaded = computed<any>(() => zentaoStore.state.zentao.scriptLoaded);
     const currSite = computed<any>(() => zentaoStore.state.zentao.currSite);
     const currProduct = computed<any>(() => zentaoStore.state.zentao.currProduct);
     const treeData = computed<any>(() => zentaoStore.state.zentao.testScripts);
+
+    console.log(`treeData loaded ${scriptLoaded.value}`, treeData.value.length)
+    if (!scriptLoaded.value) { // switch to current page
+      zentaoStore.dispatch('zentao/fetchSitesAndProducts', {needLoadScript: true})
+    }
+
+    let filerItems = ref([] as any)
+    const filerType = ref('')
+    const filerValue = ref('')
+    getScriptFilters().then( (filter) => {
+      filerType.value = filter.by
+      filerValue.value = filter.val
+      // filerItems =
+    })
+    const selectFilerType = (val) => {
+      console.log('selectFilerType')
+    }
+    const selectFilerValue = (val) => {
+      console.log('selectFilerValue')
+    }
 
     const expandedKeys = ref<string[]>([]);
 
@@ -195,6 +249,13 @@ export default defineComponent({
       currSite,
       currProduct,
       treeData,
+      filerItems,
+
+      filerType,
+      filerValue,
+      selectFilerType,
+      selectFilerValue,
+
       replaceFields,
       expandNode,
       selectNode,

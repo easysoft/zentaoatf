@@ -1,4 +1,5 @@
 import { RoutesDataItem } from "@/utils/routes";
+import {getScriptFilters} from "@/utils/cache";
 
 /**
  * 站点配置
@@ -28,6 +29,7 @@ export interface SettingsType {
     currProductId: string;
     currProductIdBySite: string;
     currWorkspace: string;
+    scriptFilters: string;
 
     /**
      * Ajax请求头发送Token 的 Key值
@@ -55,6 +57,7 @@ const settings: SettingsType = {
     currProductId: 'currProductId',
     currProductIdBySite: 'currProductIdBySite',
     currWorkspace: 'currWorkspace',
+    scriptFilters: 'scriptFilters',
 
     ajaxHeadersTokenKey: 'Authorization',
     ajaxResponseNoVerifyUrl: [

@@ -7,6 +7,7 @@ import { notification } from "ant-design-vue";
 import settings from '@/config/settings';
 import { getCache, setCache } from '@/utils/localCache';
 import i18n from "@/config/i18n";
+import {getCurrProductIdBySite, getCurrSiteId} from "@/utils/cache";
 
 export interface ResponseData {
     code: number;
@@ -96,18 +97,20 @@ request.interceptors.request.use(
 
         config.params = { ...config.params, ts: Date.now() };
         if (!config.params[settings.currSiteId]) {
-            const currSiteId = await getCache(settings.currSiteId);
+            const currSiteId = await getCurrSiteId();
             config.params = { ...config.params, [settings.currSiteId]: currSiteId, lang: i18n.global.locale.value };
         }
         if (!config.params[settings.currProductId]) {
-            const mp = await getCache(settings.currProductIdBySite);
-            const currProductId = mp ? mp[config.params[settings.currSiteId]] : 0
+            const currProductId = await getCurrProductIdBySite(config.params[settings.currSiteId])
             config.params = { ...config.params, [settings.currProductId]: currProductId, lang: i18n.global.locale.value };
         }
-        if (!config.params[settings.currWorkspace]) {
-            const workspacePath = await getCache(settings.currWorkspace);
-            config.params = { ...config.params, [settings.currWorkspace]: workspacePath, lang: i18n.global.locale.value };
-        }
+
+        console.log(`currSiteId=${config.params[settings.currSiteId]}, currProductId=${config.params[settings.currProductId]}`)
+
+        // if (!config.params[settings.currWorkspace]) {
+        //     const workspacePath = await getCache(settings.currWorkspace);
+        //     config.params = { ...config.params, [settings.currWorkspace]: workspacePath, lang: i18n.global.locale.value };
+        // }
 
         console.log('=== request ===', config.url, config)
         return config;

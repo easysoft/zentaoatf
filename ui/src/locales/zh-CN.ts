@@ -121,8 +121,8 @@ export default {
     'save_success': '保存成功',
     'save_fail': '保存失败',
 
-    'expand_all': '展开全部',
-    'collapse_all': '收缩全部',
+    'expand_all': '展开',
+    'collapse_all': '收缩',
     'wrong_url': '请输入正确的的URL地址，以http或https开头。',
     'extract_success': '提取注释为测试步骤和验证点成功。',
     'extract_fail': '提取注释为测试步骤和验证点失败。',
@@ -134,6 +134,8 @@ export default {
     'delete_success':  '删除成功', 
     'ws_conn_success': 'WebSocket连接成功。',
     'ws_conn_fail': 'WebSocket连接失败。',
+    'no_script_for_unittest': '此为单元测试工作目录，无ZTF脚本。',
+    'extract_step': '提取步骤',
 
     'pls_title':  '请输入标题',
     'pls_name':  '请输入名称',
