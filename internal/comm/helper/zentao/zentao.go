@@ -115,7 +115,6 @@ func ListProduct(workspacePath string) (products []serverDomain.ZentaoProduct, e
 	config := configUtils.LoadByWorkspacePath(workspacePath)
 	return loadProduct(config)
 }
-
 func loadProduct(config commDomain.WorkspaceConf) (products []serverDomain.ZentaoProduct, err error) {
 	if config.Url == "" {
 		err = errors.New(i118Utils.Sprintf("pls_config_workspace"))
@@ -155,8 +154,11 @@ func loadProduct(config commDomain.WorkspaceConf) (products []serverDomain.Zenta
 	return
 }
 
-func ListModuleForCase(productId int, workspacePath string) (modules []serverDomain.ZentaoModule, err error) {
+func ListModule(productId int, workspacePath string) (modules []serverDomain.ZentaoModule, err error) {
 	config := configUtils.LoadByWorkspacePath(workspacePath)
+	return LoadModule(productId, config)
+}
+func LoadModule(productId int, config commDomain.WorkspaceConf) (modules []serverDomain.ZentaoModule, err error) {
 	err = Login(config)
 	if err != nil {
 		return
@@ -183,34 +185,17 @@ func ListModuleForCase(productId int, workspacePath string) (modules []serverDom
 	for _, item := range arr {
 		mp := item.(map[string]interface{})
 		mp["level"] = 0
-		GenModuleData(mp, &modules)
+		genModuleData(mp, &modules)
 	}
 
 	return
 }
 
-func GenModuleData(mp map[string]interface{}, modules *[]serverDomain.ZentaoModule) {
-	mpLevel := mp["level"].(int)
-
-	idStr := mp["id"].(string)
-	id, _ := strconv.Atoi(idStr)
-	name := strings.Repeat("&nbsp;", mpLevel*3) + mp["name"].(string)
-	*modules = append(*modules, serverDomain.ZentaoModule{Id: id, Name: name})
-
-	if mp["children"] == nil {
-		return
-	}
-
-	children := mp["children"].([]interface{})
-	for _, child := range children {
-		childMap := child.(map[string]interface{})
-		childMap["level"] = mp["level"].(int) + 1
-		GenModuleData(childMap, modules)
-	}
-}
-
-func ListSuiteByProduct(productId int, workspacePath string) (suites []serverDomain.ZentaoSuite, err error) {
+func ListSuite(productId int, workspacePath string) (products []serverDomain.ZentaoSuite, err error) {
 	config := configUtils.LoadByWorkspacePath(workspacePath)
+	return LoadSuite(productId, config)
+}
+func LoadSuite(productId int, config commDomain.WorkspaceConf) (suites []serverDomain.ZentaoSuite, err error) {
 	err = Login(config)
 	if err != nil {
 		return
@@ -246,8 +231,11 @@ func ListSuiteByProduct(productId int, workspacePath string) (suites []serverDom
 	return
 }
 
-func ListTaskByProduct(productId int, workspacePath string) (tasks []serverDomain.ZentaoTask, err error) {
+func ListTask(productId int, workspacePath string) (products []serverDomain.ZentaoTask, err error) {
 	config := configUtils.LoadByWorkspacePath(workspacePath)
+	return LoadTask(productId, config)
+}
+func LoadTask(productId int, config commDomain.WorkspaceConf) (tasks []serverDomain.ZentaoTask, err error) {
 	if config.Url == "" {
 		err = errors.New(i118Utils.Sprintf("pls_config_workspace"))
 		return
@@ -287,4 +275,24 @@ func ListTaskByProduct(productId int, workspacePath string) (tasks []serverDomai
 	}
 
 	return
+}
+
+func genModuleData(mp map[string]interface{}, modules *[]serverDomain.ZentaoModule) {
+	mpLevel := mp["level"].(int)
+
+	idStr := mp["id"].(string)
+	id, _ := strconv.Atoi(idStr)
+	name := strings.Repeat("&nbsp;", mpLevel*3) + mp["name"].(string)
+	*modules = append(*modules, serverDomain.ZentaoModule{Id: id, Name: name})
+
+	if mp["children"] == nil {
+		return
+	}
+
+	children := mp["children"].([]interface{})
+	for _, child := range children {
+		childMap := child.(map[string]interface{})
+		childMap["level"] = mp["level"].(int) + 1
+		genModuleData(childMap, modules)
+	}
 }

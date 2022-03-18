@@ -30,6 +30,7 @@ export interface SettingsType {
     currProductIdBySite: string;
     currWorkspace: string;
     scriptFilters: string;
+    expandedKeys: string;
 
     /**
      * Ajax请求头发送Token 的 Key值
@@ -58,6 +59,7 @@ const settings: SettingsType = {
     currProductIdBySite: 'currProductIdBySite',
     currWorkspace: 'currWorkspace',
     scriptFilters: 'scriptFilters',
+    expandedKeys: 'expandedKeys',
 
     ajaxHeadersTokenKey: 'Authorization',
     ajaxResponseNoVerifyUrl: [

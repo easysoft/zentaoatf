@@ -78,7 +78,7 @@ func (c *ZentaoCtrl) ListModule(ctx iris.Context) {
 		return
 	}
 
-	data, err := zentaoHelper.ListModuleForCase(productId, workspacePath)
+	data, err := zentaoHelper.ListModule(productId, workspacePath)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
@@ -95,7 +95,7 @@ func (c *ZentaoCtrl) ListSuite(ctx iris.Context) {
 		return
 	}
 
-	data, err := zentaoHelper.ListSuiteByProduct(productId, workspacePath)
+	data, err := zentaoHelper.ListSuite(productId, workspacePath)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
@@ -112,7 +112,7 @@ func (c *ZentaoCtrl) ListTask(ctx iris.Context) {
 		return
 	}
 
-	data, err := zentaoHelper.ListTaskByProduct(productId, workspacePath)
+	data, err := zentaoHelper.ListTask(productId, workspacePath)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return

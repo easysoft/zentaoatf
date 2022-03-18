@@ -21,7 +21,7 @@
                 ref="select"
                 v-model:value="filerValue"
                 @change="selectFilerValue"
-                style="width: 120px"
+                style="width: 200px"
                 :bordered="false"
                 :dropdownMatchSelectWidth="false"
             >
@@ -92,8 +92,9 @@ import {Empty, message, notification} from "ant-design-vue";
 import {MonacoOptions} from "@/utils/const";
 import MonacoEditor from "@/components/Editor/MonacoEditor.vue";
 import {ZentaoData} from "@/store/zentao";
-import {getScriptFilters, setScriptFilters} from "@/utils/cache";
+import {cacheExpandedKeys, getScriptFilters, retrieveExpandedKeys, setScriptFilters} from "@/utils/cache";
 import {listFilterItems} from "@/views/script/service";
+import _ from "lodash";
 
 interface ListScriptPageSetupData {
   t: (key: string | number) => string;
@@ -146,6 +147,19 @@ export default defineComponent({
     const currProduct = computed<any>(() => zentaoStore.state.zentao.currProduct);
     const treeData = computed<any>(() => zentaoStore.state.zentao.testScripts);
 
+    watch(treeData, (currConfig) => {
+      console.log('watch treeData', treeData.value)
+      retrieveExpandedKeys().then(async keys => {
+        console.log('keys', keys, expandedKeys.value)
+        if (keys) expandedKeys.value = keys
+
+        if (!expandedKeys.value || expandedKeys.value.length === 0) {
+          getOpenKeys(treeData.value[0], false) // expend first level folder
+          await cacheExpandedKeys(expandedKeys.value)
+        }
+      })
+    }, {deep: true})
+
     console.log(`treeData loaded ${scriptLoaded.value}`, treeData.value.length)
     if (!scriptLoaded.value) { // switch to current page
       zentaoStore.dispatch('zentao/fetchSitesAndProducts', {needLoadScript: true})
@@ -160,7 +174,6 @@ export default defineComponent({
       filerType.value = filter.by
       filerValue.value = filter.val
       listFilterItems(filerType.value).then((data) => {
-        console.log('ksjdhfdsf', data)
         filerItems.value = data.data
       })
     }
@@ -190,10 +203,6 @@ export default defineComponent({
 
     expandedKeys.value = []
     getOpenKeys(treeData.value[0], false)
-    watch(treeData, (currConfig) => {
-      expandedKeys.value = []
-      getOpenKeys(treeData.value[0], false)
-    })
 
     let tree = ref(null)
 
@@ -207,10 +216,6 @@ export default defineComponent({
       console.log('onMounted', tree)
       resizeWidth('main', 'left', 'resize', 'content', 280, 800)
     })
-
-    const expandNode = (keys: string[], e: any) => {
-      console.log('expandNode', keys[0], e)
-    }
 
     onUnmounted(() => {
       console.log('onUnmounted', tree)
@@ -230,15 +235,20 @@ export default defineComponent({
       })
     }
 
+    const expandNode = (keys: string[], e: any) => {
+      console.log('expandNode', expandedKeys.value)
+      cacheExpandedKeys(expandedKeys.value)
+    }
     const expandAll = (e) => {
-      console.log('expandAll')
       isExpand.value = !isExpand.value
 
       expandedKeys.value = []
-      if (isExpand.value) {
-        getOpenKeys(treeData.value[0], true)
-      }
+      if (isExpand.value) getOpenKeys(treeData.value[0], true)
+
+      console.log('expandAll', expandedKeys.value)
+      cacheExpandedKeys(expandedKeys.value)
     }
+
     const extract = () => {
       console.log('extract', selectedNode.props)
 

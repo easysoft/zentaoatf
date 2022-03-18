@@ -43,6 +43,17 @@ export const setScriptFilters = async (by, val) => {
 
   if (val) mp[by] = val
 
-  console.log('---', mp)
   await setCache(settings.scriptFilters, mp);
+}
+
+export const cacheExpandedKeys = async (keys) => {
+  console.log('cacheExpandedKeys', keys)
+
+  const arr = [...keys]
+  await setCache(settings.expandedKeys, arr);
+}
+export const retrieveExpandedKeys = async () => {
+  console.log('retrieveExpandedKeys')
+  const keys = await getCache(settings.expandedKeys);
+  return [...keys]
 }
