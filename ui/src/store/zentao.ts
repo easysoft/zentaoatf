@@ -86,6 +86,8 @@ const StoreModel: ModuleType = {
             if (payload.testScripts)  {
                 state.testScripts = [payload.testScripts];
                 state.scriptLoaded = true
+            } else {
+                state.scriptLoaded = false
             }
 
             state.currSite = payload.currSite;

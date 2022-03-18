@@ -92,11 +92,11 @@ export default defineComponent({
 
     const selectSite = (site): void => {
       console.log('selectSite', site)
-      store.dispatch('zentao/fetchSitesAndProducts', {currSiteId: site.id})
+      store.dispatch('zentao/fetchSitesAndProducts', {currSiteId: site.id, needLoadScript: true})
     }
     const selectProduct = (product): void => {
       console.log('selectProduct', product)
-      store.dispatch('zentao/fetchSitesAndProducts', {currProductId: product.id, needLoadScript: needLoadScript})
+      store.dispatch('zentao/fetchSitesAndProducts', {currProductId: product.id, needLoadScript: true})
     }
 
     return {
