@@ -195,9 +195,9 @@ func (r *WorkspaceRepo) SetCurrWorkspace(pth string) (err error) {
 	return err
 }
 
-func (r *WorkspaceRepo) ListWorkspacesByProduct(productId int) (pos []model.Workspace, err error) {
+func (r *WorkspaceRepo) ListWorkspacesByProduct(siteId, productId int) (pos []model.Workspace, err error) {
 	err = r.DB.Model(&model.Workspace{}).
-		Where("product_id = ?", productId).
+		Where("site_id = ? AND product_id = ?", siteId, productId).
 		Where("NOT deleted AND NOT disabled").
 		Find(&pos).Error
 

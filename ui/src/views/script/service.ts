@@ -2,12 +2,21 @@ import request from '@/utils/request';
 import { Script } from './data.d';
 
 const apiPath = 'scripts';
+const apiPathFilters = 'filters';
+
+export async function listFilterItems(filerType: string): Promise<any> {
+    const params = {filerType: filerType}
+    return request({
+        url: `/${apiPathFilters}/listItems`,
+        params
+    });
+}
 
 export async function get(path: string): Promise<any> {
     const params = {path: path}
 
     return request({
-        url: `/scripts/get`,
+        url: `/${apiPath}/get`,
         params
     });
 }
@@ -16,7 +25,7 @@ export async function extract(path: string): Promise<any> {
     const params = {path: path}
 
     return request({
-        url: `/scripts/extract`,
+        url: `/${apiPath}/extract`,
         params
     });
 }

@@ -57,7 +57,9 @@ func (c *WorkspaceCtrl) Get(ctx iris.Context) {
 }
 
 func (c *WorkspaceCtrl) Create(ctx iris.Context) {
+	currSiteId, _ := ctx.URLParamInt("currSiteId")
 	currProductId, _ := ctx.URLParamInt("currProductId")
+
 	if currProductId <= 0 {
 		ctx.JSON(c.ErrResp(commConsts.ParamErr, fmt.Sprintf("参数%s不合法", "currProductId")))
 		return
@@ -68,6 +70,7 @@ func (c *WorkspaceCtrl) Create(ctx iris.Context) {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 	}
 
+	req.SiteId = uint(currSiteId)
 	req.ProductId = uint(currProductId)
 	id, err := c.WorkspaceService.Create(req)
 	if err != nil {
@@ -79,6 +82,7 @@ func (c *WorkspaceCtrl) Create(ctx iris.Context) {
 }
 
 func (c *WorkspaceCtrl) Update(ctx iris.Context) {
+	currSiteId, _ := ctx.URLParamInt("currSiteId")
 	currProductId, _ := ctx.URLParamInt("currProductId")
 	if currProductId <= 0 {
 		ctx.JSON(c.ErrResp(commConsts.ParamErr, fmt.Sprintf("参数%s不合法", "currProductId")))
@@ -90,6 +94,7 @@ func (c *WorkspaceCtrl) Update(ctx iris.Context) {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 	}
 
+	req.SiteId = uint(currSiteId)
 	req.ProductId = uint(currProductId)
 	err := c.WorkspaceService.Update(req)
 	if err != nil {

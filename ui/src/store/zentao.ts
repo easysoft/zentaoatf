@@ -16,7 +16,9 @@ export interface ZentaoData {
     testScripts: any[]
     currSite: any
     currProduct: any
+
     scriptLoaded: boolean
+    filerItems: any[]
 
     modules: any[]
     suites: any[]
@@ -58,7 +60,9 @@ const initState: ZentaoData = {
     testScripts: [],
     currSite: {},
     currProduct: {},
+
     scriptLoaded: false,
+    filerItems: [],
 
     modules: [],
     suites: [],
@@ -83,11 +87,12 @@ const StoreModel: ModuleType = {
         async saveSitesAndProducts(state, payload) {
             state.sites = payload.sites;
             state.products = payload.products;
-            if (payload.testScripts)  {
+            state.scriptLoaded = payload.needLoadScript
+
+            if (state.scriptLoaded)  {
                 state.testScripts = [payload.testScripts];
-                state.scriptLoaded = true
             } else {
-                state.scriptLoaded = false
+                state.testScripts = [];
             }
 
             state.currSite = payload.currSite;
@@ -146,6 +151,9 @@ const StoreModel: ModuleType = {
         async fetchSitesAndProducts({ commit }, payload) {
             const response: ResponseData = await querySiteAndProduct(payload);
             const { data } = response;
+
+            data.needLoadScript = payload.needLoadScript
+
             commit('saveSitesAndProducts', data)
 
             return true;

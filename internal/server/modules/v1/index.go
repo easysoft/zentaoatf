@@ -20,6 +20,7 @@ type IndexModule struct {
 	SyncModule      *index.SyncModule      `inject:""`
 	WorkspaceModule *index.WorkspaceModule `inject:""`
 
+	TestFilterModule *index.TestFilterModule `inject:""`
 	TestScriptModule *index.TestScriptModule `inject:""`
 	TestExecModule   *index.TestExecModule   `inject:""`
 	TestResultModule *index.TestResultModule `inject:""`
@@ -49,6 +50,8 @@ func (m *IndexModule) Party() module.WebModule {
 		m.ConfigModule.Party(),
 		m.SyncModule.Party(),
 		m.WorkspaceModule.Party(),
+
+		m.TestFilterModule.Party(),
 		m.TestScriptModule.Party(),
 		m.TestExecModule.Party(),
 		m.TestBugModule.Party(),

@@ -37,10 +37,12 @@ export const getScriptFilters = async () => {
 }
 export const setScriptFilters = async (by, val) => {
   let mp = await getCache(settings.scriptFilters);
-
   if (!mp) mp = {}
-  mp.by = by
-  mp[by] = val
 
+  mp.by = by
+
+  if (val) mp[by] = val
+
+  console.log('---', mp)
   await setCache(settings.scriptFilters, mp);
 }

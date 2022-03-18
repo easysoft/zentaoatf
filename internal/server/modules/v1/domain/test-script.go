@@ -9,3 +9,8 @@ type TestScript struct {
 
 	WorkspaceId uint `json:"workspaceId"`
 }
+
+type FilterItem struct {
+	Label string `json:"label"`
+	Value int    `json:"value"`
+}

@@ -25,8 +25,8 @@
                 :bordered="false"
                 :dropdownMatchSelectWidth="false"
             >
-              <a-select-option v-for="item in filerItems" :key="item.id" :value="item.id">
-                {{item.name}}
+              <a-select-option v-for="item in filerItems" :key="item.value" :value="item.value">
+                {{item.label}}
               </a-select-option>
             </a-select>
           </div>
@@ -92,7 +92,8 @@ import {Empty, message, notification} from "ant-design-vue";
 import {MonacoOptions} from "@/utils/const";
 import MonacoEditor from "@/components/Editor/MonacoEditor.vue";
 import {ZentaoData} from "@/store/zentao";
-import {getScriptFilters} from "@/utils/cache";
+import {getScriptFilters, setScriptFilters} from "@/utils/cache";
+import {listFilterItems} from "@/views/script/service";
 
 interface ListScriptPageSetupData {
   t: (key: string | number) => string;
@@ -153,16 +154,26 @@ export default defineComponent({
     let filerItems = ref([] as any)
     const filerType = ref('')
     const filerValue = ref('')
-    getScriptFilters().then( (filter) => {
+
+    const loadFilterItems = async () => {
+      const filter = await getScriptFilters()
       filerType.value = filter.by
       filerValue.value = filter.val
-      // filerItems =
-    })
-    const selectFilerType = (val) => {
-      console.log('selectFilerType')
+      listFilterItems(filerType.value).then((data) => {
+        console.log('ksjdhfdsf', data)
+        filerItems.value = data.data
+      })
     }
-    const selectFilerValue = (val) => {
-      console.log('selectFilerValue')
+    loadFilterItems()
+
+    const selectFilerType = async (val) => {
+      console.log('selectFilerType', val)
+      await setScriptFilters(val, null)
+      await loadFilterItems()
+    }
+    const selectFilerValue = async (val) => {
+      console.log('selectFilerValue', val)
+      await setScriptFilters(filerType.value, val)
     }
 
     const expandedKeys = ref<string[]>([]);

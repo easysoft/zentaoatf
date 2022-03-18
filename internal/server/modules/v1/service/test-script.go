@@ -10,6 +10,7 @@ import (
 
 type TestScriptService struct {
 	WorkspaceRepo *repo.WorkspaceRepo `inject:""`
+	SiteService   *SiteService        `inject:""`
 }
 
 func NewTestScriptService() *TestScriptService {
@@ -19,7 +20,7 @@ func NewTestScriptService() *TestScriptService {
 func (s *TestScriptService) LoadTestScriptsBySiteProduct(site serverDomain.ZentaoSite, product serverDomain.ZentaoProduct) (
 	root serverDomain.TestAsset, err error) {
 
-	workspaces, _ := s.WorkspaceRepo.ListWorkspacesByProduct(product.Id)
+	workspaces, _ := s.WorkspaceRepo.ListWorkspacesByProduct(site.Id, product.Id)
 
 	root = serverDomain.TestAsset{Path: "", Title: "测试脚本", Type: commConsts.Root, Slots: iris.Map{"icon": "icon"}}
 	for _, workspace := range workspaces {

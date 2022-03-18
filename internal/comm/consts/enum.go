@@ -163,3 +163,12 @@ const (
 	Dir       TreeNodeType = "dir"
 	File      TreeNodeType = "file"
 )
+
+type ScriptFilterType string
+
+const (
+	FilterWorkspace ScriptFilterType = "workspace"
+	FilterModule    ScriptFilterType = "module"
+	FilterSuite     ScriptFilterType = "suite"
+	FilterTask      ScriptFilterType = "task"
+)
