@@ -38,6 +38,7 @@ func (c *ZentaoCtrl) GetProfile(ctx iris.Context) {
 func (c *ZentaoCtrl) ListSiteAndProductWithScripts(ctx iris.Context) {
 	currSiteId, _ := ctx.URLParamInt("currSiteId")
 	currProductId, _ := ctx.URLParamInt("currProductId")
+	workspaceId, _ := ctx.URLParamInt("workspaceId")
 	needLoadScript, _ := ctx.URLParamBool("needLoadScript")
 
 	sites, currSite, _ := c.SiteService.LoadSites(currSiteId)
@@ -47,7 +48,7 @@ func (c *ZentaoCtrl) ListSiteAndProductWithScripts(ctx iris.Context) {
 		"currSite": currSite, "currProduct": currProduct}
 
 	if needLoadScript {
-		testScripts, _ := c.TestScriptService.LoadTestScriptsBySiteProduct(currSite, currProduct)
+		testScripts, _ := c.TestScriptService.LoadTestScriptsBySiteProduct(currSite, currProduct, workspaceId)
 		data["testScripts"] = testScripts
 	}
 

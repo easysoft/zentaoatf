@@ -201,7 +201,7 @@ export default defineComponent({
         onOk: () => {
           removeLoading.value = [id];
           store.dispatch('Site/delete', id).then((success) => {
-            zentaoStore.dispatch('zentao/fetchSitesAndProducts').then((success) => {
+            zentaoStore.dispatch('zentao/fetchSitesAndProductWithScripts').then((success) => {
               message.success(t('delete_success'));
               getList(pagination.value.page)
               removeLoading.value = [];

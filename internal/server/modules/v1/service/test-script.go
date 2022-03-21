@@ -17,14 +17,18 @@ func NewTestScriptService() *TestScriptService {
 	return &TestScriptService{}
 }
 
-func (s *TestScriptService) LoadTestScriptsBySiteProduct(site serverDomain.ZentaoSite, product serverDomain.ZentaoProduct) (
-	root serverDomain.TestAsset, err error) {
+func (s *TestScriptService) LoadTestScriptsBySiteProduct(
+	site serverDomain.ZentaoSite, product serverDomain.ZentaoProduct, workspaceId int) (root serverDomain.TestAsset, err error) {
 
 	workspaces, _ := s.WorkspaceRepo.ListWorkspacesByProduct(site.Id, product.Id)
 
 	root = serverDomain.TestAsset{Path: "", Title: "测试脚本", Type: commConsts.Root, Slots: iris.Map{"icon": "icon"}}
 	for _, workspace := range workspaces {
 		if workspace.Type == commConsts.ZTF {
+			if workspaceId > 0 && uint(workspaceId) != workspace.ID {
+				continue
+			}
+
 			scriptsInDir, _ := scriptUtils.LoadScriptTree(workspace.Path)
 
 			root.Children = append(root.Children, &scriptsInDir)

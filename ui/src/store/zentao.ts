@@ -32,7 +32,7 @@ export interface ModuleType extends StoreModuleType<ZentaoData> {
 
         saveProfile: Mutation<any>;
 
-        saveSitesAndProducts: Mutation<any>;
+        saveSitesAndProductWithScripts: Mutation<any>;
         saveProducts: Mutation<any>;
         saveModules: Mutation<any>;
         saveSuites: Mutation<any>;
@@ -42,7 +42,7 @@ export interface ModuleType extends StoreModuleType<ZentaoData> {
         fetchLangs: Action<ZentaoData, ZentaoData>;
         getProfile: Action<ZentaoData, ZentaoData>;
 
-        fetchSitesAndProducts: Action<ZentaoData, ZentaoData>;
+        fetchSitesAndProductWithScripts: Action<ZentaoData, ZentaoData>;
         fetchProducts: Action<ZentaoData, ZentaoData>;
         fetchModules: Action<ZentaoData, ZentaoData>;
         fetchSuites: Action<ZentaoData, ZentaoData>;
@@ -84,7 +84,7 @@ const StoreModel: ModuleType = {
             console.log('payload', payload)
             state.profile = payload
         },
-        async saveSitesAndProducts(state, payload) {
+        async saveSitesAndProductWithScripts(state, payload) {
             state.sites = payload.sites;
             state.products = payload.products;
             state.scriptLoaded = payload.needLoadScript
@@ -148,13 +148,13 @@ const StoreModel: ModuleType = {
             }
         },
 
-        async fetchSitesAndProducts({ commit }, payload) {
+        async fetchSitesAndProductWithScripts({ commit }, payload) {
             const response: ResponseData = await querySiteAndProduct(payload);
             const { data } = response;
 
             data.needLoadScript = payload.needLoadScript
 
-            commit('saveSitesAndProducts', data)
+            commit('saveSitesAndProductWithScripts', data)
 
             return true;
         },

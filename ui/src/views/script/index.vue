@@ -1,5 +1,5 @@
 <template>
-  <div class="indexlayout-main-conent">
+  <div class="script-main">
     <div id="main">
       <div id="left">
         <div class="toolbar">
@@ -63,9 +63,9 @@
 
       <div id="content">
         <div class="toolbar">
-          <a-button @click="extract" type="primary">{{ t('extract_step') }}</a-button>
+          <a-button @click="extract" type="primary" size="small">{{ t('extract_step') }}</a-button>
         </div>
-        <div class="panel">
+        <div class="editor-panel">
           <MonacoEditor
               v-if="scriptCode !== ''"
               class="editor"
@@ -150,7 +150,7 @@ export default defineComponent({
     watch(treeData, (currConfig) => {
       console.log('watch treeData', treeData.value)
       retrieveExpandedKeys().then(async keys => {
-        console.log('keys', keys, expandedKeys.value)
+        console.log('keys')
         if (keys) expandedKeys.value = keys
 
         if (!expandedKeys.value || expandedKeys.value.length === 0) {
@@ -160,11 +160,6 @@ export default defineComponent({
       })
     }, {deep: true})
 
-    console.log(`treeData loaded ${scriptLoaded.value}`, treeData.value.length)
-    if (!scriptLoaded.value) { // switch to current page
-      zentaoStore.dispatch('zentao/fetchSitesAndProducts', {needLoadScript: true})
-    }
-
     let filerItems = ref([] as any)
     const filerType = ref('')
     const filerValue = ref('')
@@ -173,20 +168,36 @@ export default defineComponent({
       const filter = await getScriptFilters()
       filerType.value = filter.by
       filerValue.value = filter.val
-      listFilterItems(filerType.value).then((data) => {
-        filerItems.value = data.data
-      })
+      const result = await listFilterItems(filerType.value)
+      filerItems.value = result.data
     }
-    loadFilterItems()
+
+    const loadScripts = async () => {
+      console.log('----------------- filerType.value', filerType.value)
+
+      const params = {needLoadScript: true} as any
+      if (filerType.value === 'workspace') params.workspaceId = filerValue.value
+
+      zentaoStore.dispatch('zentao/fetchSitesAndProductWithScripts', params)
+    }
+
+    loadFilterItems().then(() => {
+      console.log(`treeData loaded ${scriptLoaded.value}`, treeData.value.length)
+      if (!scriptLoaded.value) { // switch to current page
+        loadScripts()
+      }
+    })
 
     const selectFilerType = async (val) => {
       console.log('selectFilerType', val)
       await setScriptFilters(val, null)
       await loadFilterItems()
+      await loadScripts()
     }
     const selectFilerValue = async (val) => {
       console.log('selectFilerValue', val)
       await setScriptFilters(filerType.value, val)
+      await loadScripts()
     }
 
     const expandedKeys = ref<string[]>([]);
@@ -236,16 +247,16 @@ export default defineComponent({
     }
 
     const expandNode = (keys: string[], e: any) => {
-      console.log('expandNode', expandedKeys.value)
+      console.log('expandNode', keys)
       cacheExpandedKeys(expandedKeys.value)
     }
     const expandAll = (e) => {
+      console.log('expandAll')
       isExpand.value = !isExpand.value
 
       expandedKeys.value = []
       if (isExpand.value) getOpenKeys(treeData.value[0], true)
 
-      console.log('expandAll', expandedKeys.value)
       cacheExpandedKeys(expandedKeys.value)
     }
 
@@ -297,13 +308,9 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-.indexlayout-main-conent {
+.script-main {
   margin: 0px;
   height: 100%;
-
-  .panel {
-    padding: 20px;
-  }
 
   #main {
     display: flex;
@@ -363,12 +370,12 @@ export default defineComponent({
 
       .toolbar {
         padding: 5px 10px;
-        height: 46px;
+        height: 36px;
         text-align: right;
       }
 
-      .panel {
-        padding: 0 16px 0 12px;
+      .editor-panel {
+        padding: 0 6px 0 8px;
         height: calc(100% - 46px);
         overflow: auto;
       }

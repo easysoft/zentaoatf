@@ -116,7 +116,7 @@ export default defineComponent({
         .then(() => {
           console.log(modelRef.value);
           store.dispatch('Site/save', modelRef.value).then((success) => {
-            zentaoStore.dispatch('zentao/fetchSitesAndProducts').then((success) => {
+            zentaoStore.dispatch('zentao/fetchSitesAndProductWithScripts').then((success) => {
               notification.success({ message: t('save_success') });
               router.push(`/site/list`)
             })

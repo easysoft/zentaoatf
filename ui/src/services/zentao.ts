@@ -23,7 +23,7 @@ export async function getProfile(): Promise<any> {
 
 export async function querySiteAndProduct(params): Promise<any> {
     return request({
-        url: `/${apiPath}/listSiteAndProduct`,
+        url: `/${apiPath}/listSiteAndProductWithScripts`,
         method: 'get',
         params,
     });

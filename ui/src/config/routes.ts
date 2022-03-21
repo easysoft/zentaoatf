@@ -22,7 +22,7 @@ const routes: RoutesDataItem[] = [
       {
         title: 'empty',
         path: '/',
-        redirect: '/script/list',
+        redirect: '/script/index',
         component: IndexLayout,
         children: IndexLayoutRoutes
       },
