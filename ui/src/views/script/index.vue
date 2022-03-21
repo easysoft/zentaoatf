@@ -5,13 +5,11 @@
         <div class="toolbar">
           <div class="left">
             <a-select
-                ref="select"
                 v-model:value="filerType"
                 @change="selectFilerType"
                 style="width: 120px"
-                :bordered="false"
             >
-              <a-select-option value="">过滤器类型</a-select-option>
+              <a-select-option value=""></a-select-option>
               <a-select-option value="workspace">按目录</a-select-option>
               <a-select-option value="module">按模块</a-select-option>
               <a-select-option value="suite">按套件</a-select-option>
@@ -19,19 +17,32 @@
             </a-select>
 
             <a-select
-                ref="select"
+                v-if="filerType !== 'module'"
                 v-model:value="filerValue"
                 @change="selectFilerValue"
-                style="width: 160px"
-                :bordered="false"
+                style="width: 180px"
                 :dropdownMatchSelectWidth="false"
             >
-              <a-select-option value="">过滤器取值</a-select-option>
+              <a-select-option value=""></a-select-option>
               <a-select-option v-for="item in filerItems" :key="item.value" :value="item.value">
                 {{item.label}}
               </a-select-option>
             </a-select>
+
+            <a-tree-select
+                v-if="filerType === 'module'"
+                :tree-data="filerItems"
+                v-model:value="filerValue"
+                :replaceFields="{title:'name', key:'id', value: 'id', children:'children'}"
+                @change="selectFilerValue"
+                :treeDefaultExpandAll="true"
+                :dropdownMatchSelectWidth="false"
+                style="width: 180px"
+            >
+            </a-tree-select>
+
           </div>
+
           <div class="right">
             <a-button @click="expandAll" type="link">
               <span v-if="!isExpand">{{ t('expand_all') }}</span>
@@ -179,8 +190,7 @@ export default defineComponent({
     const loadScripts = async () => {
       console.log(`=== filerType: ${filerType.value}, filerValue: ${filerValue.value}`)
 
-      const params = {needLoadScript: true} as any
-      if (filerType.value === 'workspace') params.workspaceId = filerValue.value
+      const params = {filerType: filerType.value, filerValue: filerValue.value} as any
       store.dispatch('script/listScript', params)
     }
     loadScripts()
@@ -328,6 +338,9 @@ export default defineComponent({
 
         .left {
           flex: 1;
+          .ant-select-tree-switcher {
+            display: none;
+          }
         }
 
         .right {
@@ -387,4 +400,8 @@ export default defineComponent({
 .monaco-editor {
   padding: 10px 0;
 }
+
+//.ant-select-tree li span.ant-select-tree-switcher {
+//  display: none !important;
+//}
 </style>

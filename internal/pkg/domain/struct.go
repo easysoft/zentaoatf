@@ -55,3 +55,10 @@ func (d *PageData) Populate(result interface{}, total int64, page, pageSize int)
 	d.Pagination.Page = page
 	d.Pagination.PageSize = pageSize
 }
+
+type NestedItem struct {
+	Id       int           `json:"id"`
+	Name     string        `json:"name"`
+	Parent   int           `json:"parent"`
+	Children []*NestedItem `json:"children"`
+}

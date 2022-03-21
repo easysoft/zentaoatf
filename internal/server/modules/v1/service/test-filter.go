@@ -4,6 +4,7 @@ import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	zentaoHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
+	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
 )
@@ -18,7 +19,7 @@ func NewTestFilterService() *TestFilterService {
 }
 
 func (s *TestFilterService) ListFilterItems(filerType commConsts.ScriptFilterType,
-	siteId int, productId int) (ret []serverDomain.FilterItem, err error) {
+	siteId int, productId int) (ret interface{}, err error) {
 
 	if filerType == commConsts.FilterWorkspace {
 		ret, err = s.ListWorkspaceFilter(siteId, productId)
@@ -54,13 +55,8 @@ func (s *TestFilterService) ListWorkspaceFilter(siteId int, productId int) (ret 
 	return
 }
 
-func (s *TestFilterService) ListModuleFilter(config commDomain.WorkspaceConf, productId int) (ret []serverDomain.FilterItem, err error) {
-	modules, _ := zentaoHelper.LoadModule(productId, config)
-
-	for _, item := range modules {
-		filterItem := serverDomain.FilterItem{Label: item.Name, Value: item.Id}
-		ret = append(ret, filterItem)
-	}
+func (s *TestFilterService) ListModuleFilter(config commDomain.WorkspaceConf, productId int) (ret []*domain.NestedItem, err error) {
+	ret, _ = zentaoHelper.LoadModule(productId, config)
 
 	return
 }

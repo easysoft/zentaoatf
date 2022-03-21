@@ -21,9 +21,11 @@ func NewTestScriptCtrl() *TestScriptCtrl {
 func (c *TestScriptCtrl) List(ctx iris.Context) {
 	currSiteId, _ := ctx.URLParamInt("currSiteId")
 	currProductId, _ := ctx.URLParamInt("currProductId")
-	workspaceId, _ := ctx.URLParamInt("workspaceId")
 
-	testScripts, _ := c.TestScriptService.LoadTestScriptsBySiteProduct(currSiteId, currProductId, workspaceId)
+	filerType := ctx.URLParam("filerType")
+	filerValue, _ := ctx.URLParamInt("filerValue")
+
+	testScripts, _ := c.TestScriptService.LoadTestScriptsBySiteProduct(currSiteId, currProductId, filerType, filerValue)
 
 	ctx.JSON(c.SuccessResp(testScripts))
 }

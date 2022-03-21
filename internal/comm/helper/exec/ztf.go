@@ -38,7 +38,7 @@ func ExecCase(ch chan int, req serverDomain.WsReq, msg websocket.Message) (repor
 func ExecModule(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 
-	cases, err := zentaoUtils.GetCasesByModule(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.ModuleId),
+	cases, err := zentaoUtils.GetCasesByModuleInDir(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.ModuleId),
 		req.WorkspacePath, req.ScriptDirParamFromCmdLine)
 	if err != nil {
 		return
@@ -54,7 +54,7 @@ func ExecModule(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 
 func ExecSuite(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	cases, err := zentaoUtils.GetCasesBySuite(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId),
+	cases, err := zentaoUtils.GetCasesBySuiteInDir(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId),
 		req.WorkspacePath, req.ScriptDirParamFromCmdLine)
 
 	if req.Seq != "" {
@@ -67,7 +67,7 @@ func ExecSuite(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 
 func ExecTask(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	cases, err := zentaoUtils.GetCasesByTask(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId),
+	cases, err := zentaoUtils.GetCasesByTaskInDir(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId),
 		req.WorkspacePath, req.ScriptDirParamFromCmdLine)
 	if err != nil {
 		return

@@ -7,14 +7,13 @@ import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/aaronchen2k/deeptest/internal/comm/domain"
 	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
+	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	httpUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/http"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/bitly/go-simplejson"
-	"strconv"
-	"strings"
 )
 
 func GetConfig(baseUrl string) (err error) {
@@ -154,11 +153,11 @@ func loadProduct(config commDomain.WorkspaceConf) (products []serverDomain.Zenta
 	return
 }
 
-func ListModule(productId int, workspacePath string) (modules []serverDomain.ZentaoModule, err error) {
+func ListModule(productId int, workspacePath string) (modules []*domain.NestedItem, err error) {
 	config := configUtils.LoadByWorkspacePath(workspacePath)
 	return LoadModule(productId, config)
 }
-func LoadModule(productId int, config commDomain.WorkspaceConf) (modules []serverDomain.ZentaoModule, err error) {
+func LoadModule(productId int, config commDomain.WorkspaceConf) (modules []*domain.NestedItem, err error) {
 	err = Login(config)
 	if err != nil {
 		return
@@ -183,35 +182,28 @@ func LoadModule(productId int, config commDomain.WorkspaceConf) (modules []serve
 	}
 
 	jsn, _ := simplejson.NewJson(bytes)
-	arr, _ := jsn.Get("tree").Array()
+	arr, _ := jsn.Get("modules").Array()
+
+	modules = make([]*domain.NestedItem, 0)
 	for _, item := range arr {
-		mp := item.(map[string]interface{})
-		mp["level"] = 0
-		genModuleData(mp, &modules)
+		genNestedData(item, &modules)
 	}
 
 	return
 }
 
-func ListSuite(productId int, workspacePath string) (products []serverDomain.ZentaoSuite, err error) {
+func ListSuite(productId int, workspacePath string) (products []domain.NestedItem, err error) {
 	config := configUtils.LoadByWorkspacePath(workspacePath)
 	return LoadSuite(productId, config)
 }
-func LoadSuite(productId int, config commDomain.WorkspaceConf) (suites []serverDomain.ZentaoSuite, err error) {
+func LoadSuite(productId int, config commDomain.WorkspaceConf) (suites []domain.NestedItem, err error) {
 	err = Login(config)
 	if err != nil {
 		return
 	}
 
-	// $productID = 0, $orderBy = 'id_asc', $recTotal = 0, $recPerPage = 20, $pageID = 1
-	params := ""
-	if commConsts.RequestType == commConsts.PathInfo {
-		params = fmt.Sprintf("%d-id_asc-0-10000-1", productId)
-	} else {
-		params = fmt.Sprintf("productID=%d&orderBy=id_asc&recTotal=0&recPerPage=10000", productId)
-	}
-
-	url := config.Url + GenApiUriOld("testsuite", "browse", params)
+	uri := fmt.Sprintf("products/%d/testsuites", productId)
+	url := GenApiUrl(uri, nil, config.Url)
 
 	bytes, err := httpUtils.Get(url)
 	if err != nil {
@@ -219,25 +211,18 @@ func LoadSuite(productId int, config commDomain.WorkspaceConf) (suites []serverD
 	}
 
 	jsn, _ := simplejson.NewJson(bytes)
-	mp, _ := jsn.Get("suites").Map()
-	for _, item := range mp {
-		mp := item.(map[string]interface{})
+	arr, _ := jsn.Get("testsuites").Array()
 
-		idStr := mp["id"].(string)
-		id, _ := strconv.Atoi(idStr)
-		name := mp["name"].(string)
-
-		suites = append(suites, serverDomain.ZentaoSuite{Id: id, Name: name})
-	}
+	suites, _ = GenPlatItems(arr)
 
 	return
 }
 
-func ListTask(productId int, workspacePath string) (products []serverDomain.ZentaoTask, err error) {
+func ListTask(productId int, workspacePath string) (products []domain.NestedItem, err error) {
 	config := configUtils.LoadByWorkspacePath(workspacePath)
 	return LoadTask(productId, config)
 }
-func LoadTask(productId int, config commDomain.WorkspaceConf) (tasks []serverDomain.ZentaoTask, err error) {
+func LoadTask(productId int, config commDomain.WorkspaceConf) (tasks []domain.NestedItem, err error) {
 	if config.Url == "" {
 		err = errors.New(i118Utils.Sprintf("pls_config_workspace"))
 		return
@@ -258,34 +243,35 @@ func LoadTask(productId int, config commDomain.WorkspaceConf) (tasks []serverDom
 		return
 	}
 
-	jsn, err := simplejson.NewJson(bytes)
-	if err != nil {
-		return
-	}
-	items, err := jsn.Get("testtasks").Array()
-	if err != nil {
-		return
-	}
+	jsn, _ := simplejson.NewJson(bytes)
+	arr, _ := jsn.Get("testtasks").Array()
 
-	for _, item := range items {
-		taskMap, _ := item.(map[string]interface{})
+	tasks, _ = GenPlatItems(arr)
 
-		id, _ := taskMap["id"].(json.Number).Int64()
-		name, _ := taskMap["name"].(string)
+	return
+}
 
-		tasks = append(tasks, serverDomain.ZentaoTask{Id: int(id), Name: name})
+func GenPlatItems(arr []interface{}) (ret []domain.NestedItem, err error) {
+	for _, iterf := range arr {
+		temp := iterf.(map[string]interface{})
+		id64, _ := temp["id"].(json.Number).Int64()
+
+		item := domain.NestedItem{Id: int(id64), Name: temp["name"].(string)}
+		ret = append(ret, item)
 	}
 
 	return
 }
 
-func genModuleData(mp map[string]interface{}, modules *[]serverDomain.ZentaoModule) {
-	mpLevel := mp["level"].(int)
+func genNestedData(interf interface{}, items *[]*domain.NestedItem) {
+	mp := interf.(map[string]interface{})
 
-	idStr := mp["id"].(string)
-	id, _ := strconv.Atoi(idStr)
-	name := strings.Repeat("&nbsp;", mpLevel*3) + mp["name"].(string)
-	*modules = append(*modules, serverDomain.ZentaoModule{Id: id, Name: name})
+	idNum := mp["id"].(json.Number)
+	id, _ := idNum.Int64()
+	name := mp["name"].(string)
+	item := &domain.NestedItem{Id: int(id), Name: name}
+
+	*items = append(*items, item)
 
 	if mp["children"] == nil {
 		return
@@ -293,8 +279,31 @@ func genModuleData(mp map[string]interface{}, modules *[]serverDomain.ZentaoModu
 
 	children := mp["children"].([]interface{})
 	for _, child := range children {
-		childMap := child.(map[string]interface{})
-		childMap["level"] = mp["level"].(int) + 1
-		genModuleData(childMap, modules)
+		genNestedData(child, &item.Children)
 	}
+}
+
+func GenNestedItemUsingParentId(arr []interface{}) (ret []*domain.NestedItem, err error) {
+	mp := map[int]*domain.NestedItem{}
+
+	for _, iterf := range arr {
+		temp := iterf.(map[string]interface{})
+		id64, _ := temp["id"].(json.Number).Int64()
+		parent64, _ := temp["parent"].(json.Number).Int64()
+
+		item := domain.NestedItem{Id: int(id64), Name: temp["name"].(string), Parent: int(parent64)}
+		mp[item.Id] = &item
+
+		if item.Parent == 0 {
+			ret = append(ret, &item)
+		}
+	}
+
+	for _, item := range mp {
+		if item.Parent > 0 {
+			mp[item.Parent].Children = append(mp[item.Parent].Children, item)
+		}
+	}
+
+	return
 }

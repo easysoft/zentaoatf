@@ -2,8 +2,7 @@ import { Mutation, Action } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 import {queryLang, querySiteAndProduct, getProfile, queryProduct, queryModule, querySuite, queryTask} from "../services/zentao";
-import {getCache, setCache} from "@/utils/localCache";
-import settings from "@/config/settings";
+
 import {setCurrProductIdBySite, setCurrSiteId} from "@/utils/cache";
 
 export interface ZentaoData {
