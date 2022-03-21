@@ -164,16 +164,18 @@ func LoadModule(productId int, config commDomain.WorkspaceConf) (modules []serve
 		return
 	}
 
-	// tree-browse-1-case-0-0-qa.html
-	params := ""
-	if commConsts.RequestType == commConsts.PathInfo {
-		params = fmt.Sprintf("%d-case-0-0-qa", productId)
-	} else {
-		params = fmt.Sprintf("rootID=%d&viewType=case&from=qa", productId)
+	if config.Url == "" {
+		err = errors.New(i118Utils.Sprintf("pls_config_workspace"))
+		return
 	}
 
-	url := config.Url + GenApiUriOld("tree", "browse", params)
-	url += "#app=product"
+	err = Login(config)
+	if err != nil {
+		return
+	}
+
+	uri := fmt.Sprintf("products/%d?fields=modules", productId)
+	url := GenApiUrl(uri, nil, config.Url)
 
 	bytes, err := httpUtils.Get(url)
 	if err != nil {

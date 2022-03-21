@@ -26,12 +26,13 @@ func (c *WorkspaceCtrl) List(ctx iris.Context) {
 		return
 	}
 
-	var req serverDomain.ReqPaginate
+	var req serverDomain.WorkspaceReqPaginate
 	if err := ctx.ReadQuery(&req); err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
+	req.ProductId = currProductId
 	data, err := c.WorkspaceService.Paginate(req)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))

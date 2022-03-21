@@ -100,7 +100,7 @@ const StoreModel: ModuleType = {
 
             // cache current site and product
             await setCurrSiteId(payload.currSite.id);
-            await setCurrProductIdBySite(settings.currProductIdBySite, payload.currProduct.id);
+            await setCurrProductIdBySite(state.currSite.id, payload.currProduct.id);
         },
         saveProducts(state, payload) {
             console.log('payload', payload)

@@ -24,7 +24,7 @@ func NewWorkspaceService() *WorkspaceService {
 	return &WorkspaceService{}
 }
 
-func (s *WorkspaceService) Paginate(req serverDomain.ReqPaginate) (ret domain.PageData, err error) {
+func (s *WorkspaceService) Paginate(req serverDomain.WorkspaceReqPaginate) (ret domain.PageData, err error) {
 	ret, err = s.WorkspaceRepo.Paginate(req)
 	return
 }

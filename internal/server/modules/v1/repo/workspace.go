@@ -22,10 +22,12 @@ func NewWorkspaceRepo() *WorkspaceRepo {
 	return &WorkspaceRepo{}
 }
 
-func (r *WorkspaceRepo) Paginate(req serverDomain.ReqPaginate) (data domain.PageData, err error) {
+func (r *WorkspaceRepo) Paginate(req serverDomain.WorkspaceReqPaginate) (data domain.PageData, err error) {
 	var count int64
 
-	db := r.DB.Model(&model.Workspace{}).Where("NOT deleted")
+	db := r.DB.Model(&model.Workspace{}).
+		Where("product_id = ?", req.ProductId).
+		Where("NOT deleted")
 
 	if req.Keywords != "" {
 		db = db.Where("name LIKE ?", fmt.Sprintf("%%%s%%", req.Keywords))
