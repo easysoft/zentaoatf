@@ -12,6 +12,13 @@ export async function listFilterItems(filerType: string): Promise<any> {
     });
 }
 
+export async function list(params): Promise<any> {
+    return request({
+        url: `/${apiPath}/list`,
+        params
+    });
+}
+
 export async function get(path: string): Promise<any> {
     const params = {path: path}
 

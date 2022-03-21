@@ -8,9 +8,10 @@
                 ref="select"
                 v-model:value="filerType"
                 @change="selectFilerType"
-                style="width: 90px"
+                style="width: 120px"
                 :bordered="false"
             >
+              <a-select-option value="">过滤器类型</a-select-option>
               <a-select-option value="workspace">按目录</a-select-option>
               <a-select-option value="module">按模块</a-select-option>
               <a-select-option value="suite">按套件</a-select-option>
@@ -21,10 +22,11 @@
                 ref="select"
                 v-model:value="filerValue"
                 @change="selectFilerValue"
-                style="width: 200px"
+                style="width: 160px"
                 :bordered="false"
                 :dropdownMatchSelectWidth="false"
             >
+              <a-select-option value="">过滤器取值</a-select-option>
               <a-select-option v-for="item in filerItems" :key="item.value" :value="item.value">
                 {{item.label}}
               </a-select-option>
@@ -92,9 +94,8 @@ import {Empty, message, notification} from "ant-design-vue";
 import {MonacoOptions} from "@/utils/const";
 import MonacoEditor from "@/components/Editor/MonacoEditor.vue";
 import {ZentaoData} from "@/store/zentao";
-import {cacheExpandedKeys, getScriptFilters, retrieveExpandedKeys, setScriptFilters} from "@/utils/cache";
+import {cacheExpandedKeys, retrieveExpandedKeys} from "@/utils/cache";
 import {listFilterItems} from "@/views/script/service";
-import _ from "lodash";
 
 interface ListScriptPageSetupData {
   t: (key: string | number) => string;
@@ -142,10 +143,23 @@ export default defineComponent({
     let isExpand = ref(false);
 
     const zentaoStore = useStore<{ zentao: ZentaoData }>();
-    let scriptLoaded = computed<any>(() => zentaoStore.state.zentao.scriptLoaded);
     const currSite = computed<any>(() => zentaoStore.state.zentao.currSite);
     const currProduct = computed<any>(() => zentaoStore.state.zentao.currProduct);
-    const treeData = computed<any>(() => zentaoStore.state.zentao.testScripts);
+
+    const store = useStore<{ script: ScriptData }>();
+    const treeData = computed<any>(() => store.state.script.list);
+
+    const filerType = ref('')
+    const filerValue = ref('')
+
+    watch(currProduct, () => {
+      console.log('watch currProduct', currProduct.value.id)
+
+      filerType.value = ''
+      filerValue.value = ''
+
+      loadScripts()
+    }, {deep: true})
 
     watch(treeData, (currConfig) => {
       console.log('watch treeData', treeData.value)
@@ -161,42 +175,27 @@ export default defineComponent({
     }, {deep: true})
 
     let filerItems = ref([] as any)
-    const filerType = ref('')
-    const filerValue = ref('')
+
+    const loadScripts = async () => {
+      console.log(`=== filerType: ${filerType.value}, filerValue: ${filerValue.value}`)
+
+      const params = {needLoadScript: true} as any
+      if (filerType.value === 'workspace') params.workspaceId = filerValue.value
+      store.dispatch('script/listScript', params)
+    }
+    loadScripts()
 
     const loadFilterItems = async () => {
-      const filter = await getScriptFilters()
-      filerType.value = filter.by
-      filerValue.value = filter.val
       const result = await listFilterItems(filerType.value)
       filerItems.value = result.data
     }
 
-    const loadScripts = async () => {
-      console.log('----------------- filerType.value', filerType.value)
-
-      const params = {needLoadScript: true} as any
-      if (filerType.value === 'workspace') params.workspaceId = filerValue.value
-
-      zentaoStore.dispatch('zentao/fetchSitesAndProductWithScripts', params)
-    }
-
-    loadFilterItems().then(() => {
-      console.log(`treeData loaded ${scriptLoaded.value}`, treeData.value.length)
-      if (!scriptLoaded.value) { // switch to current page
-        loadScripts()
-      }
-    })
-
     const selectFilerType = async (val) => {
       console.log('selectFilerType', val)
-      await setScriptFilters(val, null)
-      await loadFilterItems()
-      await loadScripts()
+      loadFilterItems()
     }
     const selectFilerValue = async (val) => {
       console.log('selectFilerValue', val)
-      await setScriptFilters(filerType.value, val)
       await loadScripts()
     }
 

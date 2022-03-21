@@ -13,12 +13,8 @@ export interface ZentaoData {
 
     sites: any[]
     products: any[]
-    testScripts: any[]
     currSite: any
     currProduct: any
-
-    scriptLoaded: boolean
-    filerItems: any[]
 
     modules: any[]
     suites: any[]
@@ -32,7 +28,7 @@ export interface ModuleType extends StoreModuleType<ZentaoData> {
 
         saveProfile: Mutation<any>;
 
-        saveSitesAndProductWithScripts: Mutation<any>;
+        saveSitesAndProduct: Mutation<any>;
         saveProducts: Mutation<any>;
         saveModules: Mutation<any>;
         saveSuites: Mutation<any>;
@@ -42,7 +38,7 @@ export interface ModuleType extends StoreModuleType<ZentaoData> {
         fetchLangs: Action<ZentaoData, ZentaoData>;
         getProfile: Action<ZentaoData, ZentaoData>;
 
-        fetchSitesAndProductWithScripts: Action<ZentaoData, ZentaoData>;
+        fetchSitesAndProduct: Action<ZentaoData, ZentaoData>;
         fetchProducts: Action<ZentaoData, ZentaoData>;
         fetchModules: Action<ZentaoData, ZentaoData>;
         fetchSuites: Action<ZentaoData, ZentaoData>;
@@ -57,12 +53,8 @@ const initState: ZentaoData = {
 
     sites: [],
     products: [],
-    testScripts: [],
     currSite: {},
     currProduct: {},
-
-    scriptLoaded: false,
-    filerItems: [],
 
     modules: [],
     suites: [],
@@ -84,23 +76,17 @@ const StoreModel: ModuleType = {
             console.log('payload', payload)
             state.profile = payload
         },
-        async saveSitesAndProductWithScripts(state, payload) {
+        async saveSitesAndProduct(state, payload) {
             state.sites = payload.sites;
             state.products = payload.products;
-            state.scriptLoaded = payload.needLoadScript
-
-            if (state.scriptLoaded)  {
-                state.testScripts = [payload.testScripts];
-            } else {
-                state.testScripts = [];
-            }
-
-            state.currSite = payload.currSite;
-            state.currProduct = payload.currProduct;
 
             // cache current site and product
             await setCurrSiteId(payload.currSite.id);
             await setCurrProductIdBySite(state.currSite.id, payload.currProduct.id);
+
+            // must after saving to cache since, since will file a event to load new data by new value in other pages.
+            state.currSite = payload.currSite;
+            state.currProduct = payload.currProduct;
         },
         saveProducts(state, payload) {
             console.log('payload', payload)
@@ -148,13 +134,11 @@ const StoreModel: ModuleType = {
             }
         },
 
-        async fetchSitesAndProductWithScripts({ commit }, payload) {
+        async fetchSitesAndProduct({ commit }, payload) {
             const response: ResponseData = await querySiteAndProduct(payload);
             const { data } = response;
 
-            data.needLoadScript = payload.needLoadScript
-
-            commit('saveSitesAndProductWithScripts', data)
+            commit('saveSitesAndProduct', data)
 
             return true;
         },

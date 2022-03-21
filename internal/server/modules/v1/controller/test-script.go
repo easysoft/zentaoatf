@@ -17,6 +17,17 @@ func NewTestScriptCtrl() *TestScriptCtrl {
 	return &TestScriptCtrl{}
 }
 
+// List 列表
+func (c *TestScriptCtrl) List(ctx iris.Context) {
+	currSiteId, _ := ctx.URLParamInt("currSiteId")
+	currProductId, _ := ctx.URLParamInt("currProductId")
+	workspaceId, _ := ctx.URLParamInt("workspaceId")
+
+	testScripts, _ := c.TestScriptService.LoadTestScriptsBySiteProduct(currSiteId, currProductId, workspaceId)
+
+	ctx.JSON(c.SuccessResp(testScripts))
+}
+
 // Get 详情
 func (c *TestScriptCtrl) Get(ctx iris.Context) {
 	scriptPath := ctx.URLParam("path")

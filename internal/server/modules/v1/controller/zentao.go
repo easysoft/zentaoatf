@@ -35,22 +35,15 @@ func (c *ZentaoCtrl) GetProfile(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(data))
 }
 
-func (c *ZentaoCtrl) ListSiteAndProductWithScripts(ctx iris.Context) {
+func (c *ZentaoCtrl) ListSiteAndProduct(ctx iris.Context) {
 	currSiteId, _ := ctx.URLParamInt("currSiteId")
 	currProductId, _ := ctx.URLParamInt("currProductId")
-	workspaceId, _ := ctx.URLParamInt("workspaceId")
-	needLoadScript, _ := ctx.URLParamBool("needLoadScript")
 
 	sites, currSite, _ := c.SiteService.LoadSites(currSiteId)
 	products, currProduct, _ := zentaoHelper.LoadSiteProduct(currSite, currProductId)
 
 	data := iris.Map{"sites": sites, "products": products,
 		"currSite": currSite, "currProduct": currProduct}
-
-	if needLoadScript {
-		testScripts, _ := c.TestScriptService.LoadTestScriptsBySiteProduct(currSite, currProduct, workspaceId)
-		data["testScripts"] = testScripts
-	}
 
 	ctx.JSON(c.SuccessResp(data))
 }

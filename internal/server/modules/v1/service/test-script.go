@@ -18,9 +18,9 @@ func NewTestScriptService() *TestScriptService {
 }
 
 func (s *TestScriptService) LoadTestScriptsBySiteProduct(
-	site serverDomain.ZentaoSite, product serverDomain.ZentaoProduct, workspaceId int) (root serverDomain.TestAsset, err error) {
+	siteId, productId, workspaceId int) (root serverDomain.TestAsset, err error) {
 
-	workspaces, _ := s.WorkspaceRepo.ListWorkspacesByProduct(site.Id, product.Id)
+	workspaces, _ := s.WorkspaceRepo.ListWorkspacesByProduct(siteId, productId)
 
 	root = serverDomain.TestAsset{Path: "", Title: "测试脚本", Type: commConsts.Root, Slots: iris.Map{"icon": "icon"}}
 	for _, workspace := range workspaces {

@@ -155,7 +155,10 @@ export default defineComponent({
     const statusArr = ref(disableStatusMap);
 
     const router = useRouter();
+
     const zentaoStore = useStore<{ zentao: ZentaoData }>();
+    const currProduct = computed<any>(() => zentaoStore.state.zentao.currProduct);
+
     const store = useStore<{ Workspace: StateType }>();
     const models = computed<any[]>(() => store.state.Workspace.queryResult.result);
     const pagination = computed<PaginationConfig>(() => store.state.Workspace.queryResult.pagination);
@@ -174,6 +177,11 @@ export default defineComponent({
       loading.value = false;
     }
     getList(1);
+
+    watch(currProduct, () => {
+      console.log('watch currProduct', currProduct.value.id)
+      getList(1);
+    }, {deep: true})
 
     onMounted(() => {
       console.log('onMounted')

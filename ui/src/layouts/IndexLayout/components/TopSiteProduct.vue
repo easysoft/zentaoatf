@@ -51,8 +51,6 @@ import {computed, ComputedRef, defineComponent, onMounted, Ref, ref, watch} from
 import {useRouter} from "vue-router";
 import {useStore} from "vuex";
 import IconSvg from "@/components/IconSvg/index";
-import SiteProductCreateForm from "@/views/component/workspace/create.vue";
-import {hideMenu} from "@/utils/dom";
 import {useI18n} from "vue-i18n";
 import {ZentaoData} from "@/store/zentao";
 
@@ -84,7 +82,7 @@ export default defineComponent({
     const currSite = computed<any>(() => store.state.zentao.currSite);
     const currProduct = computed<any>(() => store.state.zentao.currProduct);
 
-    store.dispatch('zentao/fetchSitesAndProductWithScripts', {needLoadScript: needLoadScript})
+    store.dispatch('zentao/fetchSitesAndProduct', {})
 
     onMounted(() => {
       console.log('onMounted')
@@ -92,11 +90,11 @@ export default defineComponent({
 
     const selectSite = (site): void => {
       console.log('selectSite', site)
-      store.dispatch('zentao/fetchSitesAndProductWithScripts', {currSiteId: site.id, needLoadScript: true})
+      store.dispatch('zentao/fetchSitesAndProduct', {currSiteId: site.id})
     }
     const selectProduct = (product): void => {
       console.log('selectProduct', product)
-      store.dispatch('zentao/fetchSitesAndProductWithScripts', {currProductId: product.id, needLoadScript: true})
+      store.dispatch('zentao/fetchSitesAndProduct', {currProductId: product.id})
     }
 
     return {

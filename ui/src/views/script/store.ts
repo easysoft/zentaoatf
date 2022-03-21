@@ -3,19 +3,22 @@ import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 import { Script } from './data.d';
 import {
-    get, extract, create, update, remove
+    list, get, extract, create, update, remove
 } from './service';
 
 export interface ScriptData {
+    list: [];
     detail: Partial<Script>;
 }
 
 export interface ModuleType extends StoreModuleType<ScriptData> {
     state: ScriptData;
     mutations: {
+        setList: Mutation<ScriptData>;
         setItem: Mutation<ScriptData>;
     };
     actions: {
+        listScript: Action<ScriptData, ScriptData>;
         getScript: Action<ScriptData, ScriptData>;
         extractScript: Action<ScriptData, ScriptData>;
 
@@ -25,6 +28,7 @@ export interface ModuleType extends StoreModuleType<ScriptData> {
     };
 }
 const initState: ScriptData = {
+    list: [],
     detail: {},
 };
 
@@ -35,11 +39,21 @@ const StoreModel: ModuleType = {
         ...initState
     },
     mutations: {
+        setList(state, payload) {
+            state.list = payload;
+        },
         setItem(state, payload) {
             state.detail = payload;
         },
     },
     actions: {
+        async listScript({ commit }, playload: any ) {
+            const response: ResponseData = await list(playload);
+            const { data } = response;
+            commit('setList', [data]);
+            return true;
+        },
+
         async getScript({ commit }, script: any ) {
             if (script.isDir) {
                 commit('setItem', {});

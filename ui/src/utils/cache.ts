@@ -23,28 +23,28 @@ export const setCurrProductIdBySite = async (currSiteId, currProductId) => {
 }
 
 // script filters
-export const getScriptFilters = async () => {
-  const mp = await getCache(settings.scriptFilters);
-
-  if (!mp) {
-    return {by: 'workspace', val: ''}
-  }
-
-  const by = mp.by
-  const val = mp[by]
-
-  return {by: by, val: val}
-}
-export const setScriptFilters = async (by, val) => {
-  let mp = await getCache(settings.scriptFilters);
-  if (!mp) mp = {}
-
-  mp.by = by
-
-  if (val) mp[by] = val
-
-  await setCache(settings.scriptFilters, mp);
-}
+// export const getScriptFilters = async () => {
+//   const mp = await getCache(settings.scriptFilters);
+//
+//   if (!mp) {
+//     return {by: 'workspace', val: ''}
+//   }
+//
+//   const by = mp.by
+//   const val = mp[by]
+//
+//   return {by: by, val: val}
+// }
+// export const setScriptFilters = async (by, val) => {
+//   let mp = await getCache(settings.scriptFilters);
+//   if (!mp) mp = {}
+//
+//   mp.by = by
+//
+//   if (val) mp[by] = val
+//
+//   await setCache(settings.scriptFilters, mp);
+// }
 
 export const cacheExpandedKeys = async (keys) => {
   console.log('cacheExpandedKeys', keys)

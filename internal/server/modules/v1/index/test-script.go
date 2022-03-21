@@ -20,6 +20,7 @@ func (m *TestScriptModule) Party() module.WebModule {
 	handler := func(index iris.Party) {
 		index.Use(middleware.InitCheck())
 
+		index.Get("/list", m.TestScriptCtrl.List).Name = "脚本列表"
 		index.Get("/get", m.TestScriptCtrl.Get).Name = "脚本详情"
 		index.Get("/extract", m.TestScriptCtrl.Extract).Name = "抽取脚本"
 	}
