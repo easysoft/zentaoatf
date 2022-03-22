@@ -14,7 +14,8 @@ export default {
     'start_time': '开始时间', 
     'end_time': '结束时间', 
     'result': '结果',
-    'exec_result': '执行结果',
+    'test_result': '测试结果',
+    'test_result_detail':  '结果详情',
     'opt':  '操作', 
     'title':  '标题', 
     'category':  '分类', 
@@ -42,6 +43,7 @@ export default {
     'script_lang': '脚本语言',
 
     'script': '脚本',
+    'test_script': '测试脚本',
     'script.list': '脚本列表',
     'script.view': '查看脚本',
     'script.edit': '编辑脚本',
@@ -80,7 +82,6 @@ export default {
     'build_tool':  '构建工具', 
     'test_cmd':  '测试命令', 
 
-    'test_result':  '执行结果详情', 
     're_exec':  '重新执行', 
     're_exec_all':  '重新执行所有用例', 
     're_exec_failed':  '重新执行失败用例', 

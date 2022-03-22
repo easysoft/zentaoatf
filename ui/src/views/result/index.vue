@@ -2,7 +2,7 @@
   <div class="indexlayout-main-conent">
     <a-card :bordered="false">
       <template #title>
-        {{ t('exec_result') }}
+        {{ t('test_result') }}
       </template>
       <template #extra>
       </template>

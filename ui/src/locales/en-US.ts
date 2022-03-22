@@ -14,8 +14,9 @@ export default {
     'start_time': 'Start Time', 
     'end_time': 'End Time', 
     'result': 'Result',
-    'exec_result': 'Test Result',
-    'opt':  'opt', 
+    'test_result': 'Test Result',
+    'test_result_detail':  'Result Detail',
+    'opt':  'opt',
     'title':  'Title', 
     'category':  'Category', 
     'version':  'Version', 
@@ -41,6 +42,7 @@ export default {
     'script_lang': 'Script Language',
 
     'script': 'Script',
+    'test_script': 'Script',
     'script.list': 'Script List',
     'script.view': 'View Script',
     'script.edit': 'Edit Script',
@@ -80,7 +82,6 @@ export default {
     'build_tool':  'Build Tool', 
     'test_cmd':  'Test Command', 
 
-    'test_result':  'Result Detail', 
     're_exec':  'Retest', 
     're_exec_all':  'Retest All Cases', 
     're_exec_failed':  'Retest Failed Cases', 

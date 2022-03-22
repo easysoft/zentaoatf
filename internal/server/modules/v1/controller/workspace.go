@@ -4,6 +4,7 @@ import (
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
+	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
@@ -22,7 +23,7 @@ func NewWorkspaceCtrl() *WorkspaceCtrl {
 func (c *WorkspaceCtrl) List(ctx iris.Context) {
 	currProductId, _ := ctx.URLParamInt("currProductId")
 	if currProductId <= 0 {
-		ctx.JSON(c.ErrResp(commConsts.ParamErr, fmt.Sprintf("参数%s不合法", "currProductId")))
+		ctx.JSON(c.SuccessResp(domain.PageData{}))
 		return
 	}
 

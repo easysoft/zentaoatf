@@ -4,13 +4,13 @@ import BlankLayout from '@/layouts/BlankLayout.vue';
 const IndexLayoutRoutes: Array<RoutesDataItem> = [
   {
     icon: 'script',
-    title: 'script',
+    title: 'test_script',
     path: '/script',
     redirect: '/script/index',
     component: BlankLayout,
     children: [
       {
-        title: 'script',
+        title: 'test_script',
         path: 'index',
         component: () => import('@/views/script/index.vue'),
         hidden: true,
@@ -20,13 +20,13 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
 
   {
     icon: 'result',
-    title: 'result',
+    title: 'test_result',
     path: '/result',
     redirect: '/result/list',
     component: BlankLayout,
     children: [
       {
-        title: 'exec_result',
+        title: 'test_result',
         path: 'list',
         component: () => import('@/views/result/index.vue'),
         hidden: true,
