@@ -28,16 +28,18 @@ func (s *TestScriptService) LoadTestScriptsBySiteProduct(
 	// load scripts from disk
 	root = serverDomain.TestAsset{Path: "", Title: "测试脚本", Type: commConsts.Root, Slots: iris.Map{"icon": "icon"}}
 	for _, workspace := range workspaces {
-		if workspace.Type == commConsts.ZTF {
-			if filerType == string(commConsts.FilterWorkspace) &&
-				(filerValue > 0 && uint(filerValue) != workspace.ID) { // filter by workspace
-				continue
-			}
-
-			scriptsInDir, _ := scriptUtils.LoadScriptTree(workspace.Path, scriptIdsFromZentao)
-
-			root.Children = append(root.Children, &scriptsInDir)
+		if workspace.Type != commConsts.ZTF {
+			continue
 		}
+
+		if filerType == string(commConsts.FilterWorkspace) &&
+			(filerValue > 0 && uint(filerValue) != workspace.ID) { // filter by workspace
+			continue
+		}
+
+		scriptsInDir, _ := scriptUtils.LoadScriptTree(workspace.Path, scriptIdsFromZentao)
+
+		root.Children = append(root.Children, &scriptsInDir)
 	}
 
 	if filerType == string(commConsts.FilterWorkspace) || filerValue == 0 {

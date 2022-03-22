@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="site-main">
     <a-card :bordered="false">
       <template #title>
         <div class="t-card-toolbar">
@@ -31,13 +31,14 @@
             :pagination="{
                 ...pagination,
                 onChange: (page) => {
-                    getList(page);
+                    list(page);
                 },
                 onShowSizeChange: (page, size) => {
                     pagination.pageSize = size
-                    getList(page);
+                    list(page);
                 },
             }"
+            :locale="localeConf"
         >
           <template #status="{ record }">
             {{ disableStatus(record.disabled) }}
@@ -75,6 +76,7 @@ import debounce from "lodash.debounce";
 import {ZentaoData} from "@/store/zentao";
 import {disableStatusDef} from "@/utils/decorator";
 import {disableStatusMap} from "@/utils/const";
+import {getInitStatus, setInitStatus} from "@/utils/cache";
 
 const useForm = Form.useForm;
 
@@ -88,7 +90,7 @@ interface SiteListSetupData {
   columns: any;
   models: ComputedRef<any[]>;
   loading: Ref<boolean>;
-  getList: (curr) => void
+  list: (curr) => void
 
   create: () => void;
   edit: (id) => void;
@@ -99,6 +101,7 @@ interface SiteListSetupData {
   disableStatus: (val) => string;
   momentUtc: (tm) => string;
   simpleImage: any
+  localeConf: any
 }
 
 export default defineComponent({
@@ -111,12 +114,20 @@ export default defineComponent({
     const momentUtc = momentUtcDef
     const disableStatus = disableStatusDef
 
-    const onSearch = debounce(() => {
-      getList(1)
-    }, 500);
+    const localeConf = {} as any
+    getInitStatus().then((initStatus) => {
+      console.log('initStatus', initStatus)
+      if (!initStatus) {
+        localeConf.emptyText = '初次使用，请点击右上按钮新建禅道站点。'
+
+        setTimeout(() => {
+          setInitStatus()
+        }, 1000)
+      }
+    })
 
     onMounted(() => {
-      getList(1);
+      console.log('onMounted')
     })
 
     const columns = [
@@ -168,7 +179,7 @@ export default defineComponent({
     });
 
     const loading = ref<boolean>(true);
-    const getList = (page: number) => {
+    const list = (page: number) => {
       loading.value = true;
       store.dispatch('Site/list', {
         keywords: queryParams.value.keywords,
@@ -177,7 +188,11 @@ export default defineComponent({
         page: page});
       loading.value = false;
     }
-    getList(1);
+    list(1);
+
+    const onSearch = debounce(() => {
+      list(1)
+    }, 500);
 
     onMounted(() => {
       console.log('onMounted')
@@ -203,7 +218,7 @@ export default defineComponent({
           store.dispatch('Site/delete', id).then((success) => {
             zentaoStore.dispatch('zentao/fetchSitesAndProduct').then((success) => {
               message.success(t('delete_success'));
-              getList(pagination.value.page)
+              list(pagination.value.page)
               removeLoading.value = [];
             })
           })
@@ -221,7 +236,7 @@ export default defineComponent({
       columns,
       models,
       loading,
-      getList,
+      list,
       create,
       edit,
       removeLoading,
@@ -231,15 +246,21 @@ export default defineComponent({
       disableStatus,
       momentUtc,
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
+      localeConf,
     }
   }
 
 })
 </script>
 
-<style lang="less" scoped>
-.ant-card-extra {
-
+<style lang="less">
+.site-main {
+  .ant-table-placeholder {
+    color: #000c17;
+  }
 }
 
+</style>
+
+<style lang="less" scoped>
 </style>

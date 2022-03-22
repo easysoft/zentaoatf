@@ -18,14 +18,16 @@ func NewTestExecCtrl() *TestExecCtrl {
 
 // List 分页列表
 func (c *TestExecCtrl) List(ctx iris.Context) {
-	workspacePath := ctx.URLParam("currWorkspace")
+	currSiteId, _ := ctx.URLParamInt("currSiteId")
+	currProductId, _ := ctx.URLParamInt("currProductId")
 
-	if workspacePath == "" {
-		ctx.JSON(c.SuccessResp(make([]serverDomain.TestReportSummary, 0)))
+	var req serverDomain.ReqPaginate
+	if err := ctx.ReadQuery(&req); err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
-	data, err := c.TestExecService.List(workspacePath)
+	data, err := c.TestExecService.Paginate(currSiteId, currProductId, req)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return

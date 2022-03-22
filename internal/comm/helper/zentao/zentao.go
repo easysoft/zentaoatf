@@ -78,6 +78,7 @@ func LoadSiteProduct(currSite serverDomain.ZentaoSite, currProductId int) (
 	products []serverDomain.ZentaoProduct, currProduct serverDomain.ZentaoProduct, err error) {
 
 	if currSite.Id == 0 {
+		products = []serverDomain.ZentaoProduct{}
 		return
 	}
 	config := commDomain.WorkspaceConf{
@@ -142,6 +143,7 @@ func loadProduct(config commDomain.WorkspaceConf) (products []serverDomain.Zenta
 		return
 	}
 
+	products = []serverDomain.ZentaoProduct{}
 	for _, item := range items {
 		productMap, _ := item.(map[string]interface{})
 

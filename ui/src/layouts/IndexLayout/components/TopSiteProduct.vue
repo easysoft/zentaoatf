@@ -53,6 +53,7 @@ import {useStore} from "vuex";
 import IconSvg from "@/components/IconSvg/index";
 import {useI18n} from "vue-i18n";
 import {ZentaoData} from "@/store/zentao";
+import {getInitStatus} from "@/utils/cache";
 
 interface TopSiteProductSetupData {
   t: (key: string | number) => string;
@@ -70,9 +71,7 @@ export default defineComponent({
   components: {IconSvg},
   setup(): TopSiteProductSetupData {
     const { t } = useI18n();
-
     const router = useRouter();
-    const needLoadScript = false // router.currentRoute.value.path === '/script/index'
 
     const store = useStore<{ zentao: ZentaoData }>();
 
@@ -83,6 +82,19 @@ export default defineComponent({
     const currProduct = computed<any>(() => store.state.zentao.currProduct);
 
     store.dispatch('zentao/fetchSitesAndProduct', {})
+
+    watch(currSite, ()=> {
+      console.log(`watch currSite id = ${currSite.value.id}`)
+
+      if (currSite.value.id <= 0) {
+        getInitStatus().then((initStatus) => {
+          console.log('initStatus', initStatus)
+          if (!initStatus) {
+            router.push(`/site/list`)
+          }
+        })
+      }
+    })
 
     onMounted(() => {
       console.log('onMounted')

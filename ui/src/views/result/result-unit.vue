@@ -113,7 +113,7 @@ import {momentUnixDef, percentDef} from "@/utils/datetime";
 import {execByDef, resultStatusDef, testEnvDef, testTypeDef} from "@/utils/testing";
 import {jsonStrDef} from "@/utils/dom";
 import {notification} from "ant-design-vue";
-import {submitResultToZentao} from "@/views/exec/service";
+import {submitResultToZentao} from "./service";
 import ResultForm from './component/result.vue'
 import {useI18n} from "vue-i18n";
 import IconSvg from "@/components/IconSvg/index";

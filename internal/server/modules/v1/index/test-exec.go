@@ -24,5 +24,5 @@ func (m *TestExecModule) Party() module.WebModule {
 		index.Get("/{seq:string}", m.TestExecCtrl.Get).Name = "执行详情"
 		index.Delete("/{seq:string}", m.TestExecCtrl.Delete).Name = "删除执行"
 	}
-	return module.NewModule("/exec", handler)
+	return module.NewModule("/results", handler)
 }

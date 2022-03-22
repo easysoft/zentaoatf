@@ -140,10 +140,10 @@ import {StateType as ListStateType} from "@/views/exec/store";
 import {useRouter} from "vue-router";
 import {momentUnixDef, percentDef} from "@/utils/datetime";
 import {execByDef, resultStatusDef, testEnvDef, testTypeDef} from "@/utils/testing";
-import {submitResultToZentao, submitBugToZentao} from "@/views/exec/service";
+import {submitResultToZentao, submitBugToZentao} from "./service";
 import {notification} from "ant-design-vue";
-import ResultForm from "@/views/exec/history/component/result.vue";
-import BugForm from "@/views/exec/history/component/bug.vue";
+import ResultForm from "./component/result.vue";
+import BugForm from "./component/bug.vue";
 import {useI18n} from "vue-i18n";
 import IconSvg from "@/components/IconSvg/index";
 

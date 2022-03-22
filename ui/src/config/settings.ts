@@ -1,3 +1,4 @@
+import {getInitStatus} from "@/utils/cache";
 
 /**
  * 站点配置
@@ -23,6 +24,7 @@ export interface SettingsType {
      */
     siteTokenKey: string;
 
+    initStatus: string;
     currSiteId: string;
     currProductId: string;
     currProductIdBySite: string;
@@ -52,6 +54,7 @@ const settings: SettingsType = {
     headFixed: true,
     siteTokenKey: 'admin_antd_vue_token',
 
+    initStatus: 'initStatus',
     currSiteId: 'currSiteId',
     currProductId: 'currProductId',
     currProductIdBySite: 'currProductIdBySite',

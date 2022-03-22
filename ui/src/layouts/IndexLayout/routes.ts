@@ -19,32 +19,32 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
   },
 
   {
-    icon: 'execution',
-    title: 'execution',
-    path: '/exec',
-    redirect: '/exec/history',
+    icon: 'result',
+    title: 'result',
+    path: '/result',
+    redirect: '/result/list',
     component: BlankLayout,
     children: [
       {
-        title: 'execution.history',
-        path: 'history',
-        component: () => import('@/views/exec/history/index.vue'),
+        title: 'exec_result',
+        path: 'list',
+        component: () => import('@/views/result/index.vue'),
         hidden: true,
       },
       {
         title: 'execution.result.func',
         path: 'history/func/:seq',
-        component: () => import('@/views/exec/history/result-func.vue'),
+        component: () => import('@/views/result/result-func.vue'),
         hidden: true,
       },
       {
         title: 'execution.result.unit',
         path: 'history/unit/:seq',
-        component: () => import('@/views/exec/history/result-unit.vue'),
+        component: () => import('@/views/result/result-unit.vue'),
         hidden: true,
       },
 
-      {
+     /* {
         title: 'execution',
         path: 'run',
         component: BlankLayout,
@@ -81,22 +81,8 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
             hidden: true,
           },
         ]
-      },
+      },*/
     ],
-  },
-
-  {
-    icon: 'config',
-    title: 'zentao_config',
-    path: '/config',
-    component: () => import('@/views/config/index.vue'),
-  },
-
-  {
-    icon: 'sync',
-    title: 'sync',
-    path: '/sync',
-    component: () => import('@/views/sync/index.vue'),
   },
 
   {

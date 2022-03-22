@@ -2,6 +2,14 @@
 import {getCache, setCache} from './localCache';
 import settings from '@/config/settings';
 
+export const getInitStatus = async () => {
+  const initStatus = await getCache(settings.initStatus);
+  return initStatus
+}
+export const setInitStatus = async () => {
+  await setCache(settings.initStatus, true);
+}
+
 export const getCurrSiteId = async () => {
   const currSiteId = await getCache(settings.currSiteId);
   return currSiteId

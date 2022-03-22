@@ -4,6 +4,7 @@ import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	analysisUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/analysis"
+	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
@@ -19,21 +20,46 @@ func NewTestExecService() *TestExecService {
 	return &TestExecService{}
 }
 
-func (s *TestExecService) List(workspacePath string) (ret []serverDomain.TestReportSummary, err error) {
-	reportFiles := analysisUtils.ListReport(workspacePath)
+func (s *TestExecService) Paginate(siteId, productId int, req serverDomain.ReqPaginate) (
+	data domain.PageData, err error) {
 
-	for _, seq := range reportFiles {
-		var summary serverDomain.TestReportSummary
+	reports := []serverDomain.TestReportSummary{}
 
-		report, err1 := analysisUtils.ReadReportByWorkspaceSeq(workspacePath, seq)
-		if err1 != nil { // ignore wrong json result
+	workspaces, _ := s.WorkspaceRepo.ListWorkspacesByProduct(siteId, productId)
+
+	pageNo := req.Page
+	pageSize := req.PageSize
+	jumpNo := pageNo * pageSize
+
+	count := 0
+	for _, workspace := range workspaces {
+		if workspace.Type != commConsts.ZTF {
 			continue
 		}
-		copier.Copy(&summary, report)
 
-		summary.Seq = seq
-		ret = append(ret, summary)
+		reportFiles := analysisUtils.ListReport(workspace.Path)
+		for _, seq := range reportFiles {
+			if count < jumpNo || len(reports) >= pageSize {
+				count += 1
+				continue
+			}
+
+			var summary serverDomain.TestReportSummary
+
+			report, err1 := analysisUtils.ReadReportByWorkspaceSeq(workspace.Path, seq)
+			if err1 != nil { // ignore wrong json result
+				continue
+			}
+			copier.Copy(&summary, report)
+
+			summary.Seq = seq
+			reports = append(reports, summary)
+
+			count += 1
+		}
 	}
+
+	data.Populate(reports, int64(count), req.Page, req.PageSize)
 
 	return
 }
