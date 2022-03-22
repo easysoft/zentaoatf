@@ -109,7 +109,7 @@ func GetCaseIdsInZentaoModule(productId int, moduleId int, config commDomain.Wor
 		return
 	}
 
-	uri := fmt.Sprintf("/products/%d/testcases?module=:%d", productId, moduleId)
+	uri := fmt.Sprintf("/products/%d/testcases?module=%d", productId, moduleId)
 	url := GenApiUrl(uri, nil, config.Url)
 
 	bytes, err := httpUtils.Get(url)
@@ -136,6 +136,79 @@ func GetCaseIdsInZentaoModule(productId int, moduleId int, config commDomain.Wor
 
 	return
 }
+
+func GetCaseIdsInZentaoSuite(productId int, suiteId int, config commDomain.WorkspaceConf) (
+	caseIdMap map[int]string, err error) {
+
+	err = Login(config)
+	if err != nil {
+		return
+	}
+
+	uri := fmt.Sprintf("/testsuites/%d", suiteId)
+	url := GenApiUrl(uri, nil, config.Url)
+
+	bytes, err := httpUtils.Get(url)
+	if err != nil {
+		return
+	}
+
+	jsn, err := simplejson.NewJson(bytes)
+	if err != nil {
+		return
+	}
+	items, err := jsn.Get("testcases").Array()
+	if err != nil {
+		return
+	}
+
+	caseIdMap = map[int]string{}
+	for _, item := range items {
+		mp, _ := item.(map[string]interface{})
+		id, _ := mp["id"].(json.Number).Int64()
+
+		caseIdMap[int(id)] = ""
+	}
+
+	return
+}
+
+func GetCaseIdsInZentaoTask(productId int, taskId int, config commDomain.WorkspaceConf) (
+	caseIdMap map[int]string, err error) {
+
+	err = Login(config)
+	if err != nil {
+		return
+	}
+
+	uri := fmt.Sprintf("/testtasks/%d", taskId)
+	url := GenApiUrl(uri, nil, config.Url)
+
+	bytes, err := httpUtils.Get(url)
+	if err != nil {
+		return
+	}
+
+	jsn, err := simplejson.NewJson(bytes)
+	if err != nil {
+		return
+	}
+	items, err := jsn.Get("testcases").Array()
+	if err != nil {
+		return
+	}
+
+	caseIdMap = map[int]string{}
+	for _, item := range items {
+		mp, _ := item.(map[string]interface{})
+		id, _ := mp["case"].(json.Number).Int64()
+
+		caseIdMap[int(id)] = ""
+	}
+
+	return
+}
+
 func GetCasesByModuleInDir(productId int, moduleId int, workspacePath, scriptDir string) (cases []string, err error) {
 	config := commDomain.WorkspaceConf{}
 	config = configUtils.LoadByWorkspacePath(workspacePath)

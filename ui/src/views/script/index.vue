@@ -17,10 +17,9 @@
             </a-select>
 
             <a-select
-                v-if="filerType !== 'module'"
                 v-model:value="filerValue"
                 @change="selectFilerValue"
-                style="width: 180px"
+                style="width: 160px"
                 :dropdownMatchSelectWidth="false"
             >
               <a-select-option value=""></a-select-option>
@@ -28,19 +27,6 @@
                 {{item.label}}
               </a-select-option>
             </a-select>
-
-            <a-tree-select
-                v-if="filerType === 'module'"
-                :tree-data="filerItems"
-                v-model:value="filerValue"
-                :replaceFields="{title:'name', key:'id', value: 'id', children:'children'}"
-                @change="selectFilerValue"
-                :treeDefaultExpandAll="true"
-                :dropdownMatchSelectWidth="false"
-                style="width: 180px"
-            >
-            </a-tree-select>
-
           </div>
 
           <div class="right">
@@ -196,13 +182,20 @@ export default defineComponent({
     loadScripts()
 
     const loadFilterItems = async () => {
+      filerValue.value = ''
+      if (!filerType.value) {
+        filerItems.value = []
+        return
+      }
+
       const result = await listFilterItems(filerType.value)
       filerItems.value = result.data
     }
 
     const selectFilerType = async (val) => {
       console.log('selectFilerType', val)
-      loadFilterItems()
+      await loadFilterItems()
+      await loadScripts()
     }
     const selectFilerValue = async (val) => {
       console.log('selectFilerValue', val)

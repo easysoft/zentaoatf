@@ -14,6 +14,7 @@ import (
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/bitly/go-simplejson"
+	"path"
 )
 
 func GetConfig(baseUrl string) (err error) {
@@ -153,11 +154,11 @@ func loadProduct(config commDomain.WorkspaceConf) (products []serverDomain.Zenta
 	return
 }
 
-func ListModule(productId int, workspacePath string) (modules []*domain.NestedItem, err error) {
+func ListModule(productId int, workspacePath string) (modules []domain.NestedItem, err error) {
 	config := configUtils.LoadByWorkspacePath(workspacePath)
 	return LoadModule(productId, config)
 }
-func LoadModule(productId int, config commDomain.WorkspaceConf) (modules []*domain.NestedItem, err error) {
+func LoadModule(productId int, config commDomain.WorkspaceConf) (modules []domain.NestedItem, err error) {
 	err = Login(config)
 	if err != nil {
 		return
@@ -184,12 +185,31 @@ func LoadModule(productId int, config commDomain.WorkspaceConf) (modules []*doma
 	jsn, _ := simplejson.NewJson(bytes)
 	arr, _ := jsn.Get("modules").Array()
 
-	modules = make([]*domain.NestedItem, 0)
+	modules = make([]domain.NestedItem, 0)
 	for _, item := range arr {
-		genNestedData(item, &modules)
+		genModuleData(item, "", &modules)
 	}
 
 	return
+}
+
+func genModuleData(interf interface{}, parentName string, modules *[]domain.NestedItem) {
+	mp := interf.(map[string]interface{})
+
+	idNum := mp["id"].(json.Number)
+	id, _ := idNum.Int64()
+	name := path.Join("/", parentName, mp["name"].(string))
+	*modules = append(*modules, domain.NestedItem{Id: int(id), Name: name})
+
+	if mp["children"] == nil {
+		return
+	}
+
+	children := mp["children"].([]interface{})
+	for _, child := range children {
+		childMap := child.(map[string]interface{})
+		genModuleData(childMap, name, modules)
+	}
 }
 
 func ListSuite(productId int, workspacePath string) (products []domain.NestedItem, err error) {
@@ -258,51 +278,6 @@ func GenPlatItems(arr []interface{}) (ret []domain.NestedItem, err error) {
 
 		item := domain.NestedItem{Id: int(id64), Name: temp["name"].(string)}
 		ret = append(ret, item)
-	}
-
-	return
-}
-
-func genNestedData(interf interface{}, items *[]*domain.NestedItem) {
-	mp := interf.(map[string]interface{})
-
-	idNum := mp["id"].(json.Number)
-	id, _ := idNum.Int64()
-	name := mp["name"].(string)
-	item := &domain.NestedItem{Id: int(id), Name: name}
-
-	*items = append(*items, item)
-
-	if mp["children"] == nil {
-		return
-	}
-
-	children := mp["children"].([]interface{})
-	for _, child := range children {
-		genNestedData(child, &item.Children)
-	}
-}
-
-func GenNestedItemUsingParentId(arr []interface{}) (ret []*domain.NestedItem, err error) {
-	mp := map[int]*domain.NestedItem{}
-
-	for _, iterf := range arr {
-		temp := iterf.(map[string]interface{})
-		id64, _ := temp["id"].(json.Number).Int64()
-		parent64, _ := temp["parent"].(json.Number).Int64()
-
-		item := domain.NestedItem{Id: int(id64), Name: temp["name"].(string), Parent: int(parent64)}
-		mp[item.Id] = &item
-
-		if item.Parent == 0 {
-			ret = append(ret, &item)
-		}
-	}
-
-	for _, item := range mp {
-		if item.Parent > 0 {
-			mp[item.Parent].Children = append(mp[item.Parent].Children, item)
-		}
 	}
 
 	return

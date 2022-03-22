@@ -15,19 +15,18 @@ import (
 	"io/ioutil"
 	"path"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
-func LoadScriptTree(dir string) (asset serverDomain.TestAsset, err error) {
+func LoadScriptTree(dir string, scriptIdsFromZentao map[int]string) (asset serverDomain.TestAsset, err error) {
 	if !fileUtils.FileExist(dir) {
 		logUtils.Errorf("dir %s not exist", dir)
 		return
 	}
 
-	//commonUtils.ChangeScriptForDebug(&dir)
-
 	asset = serverDomain.TestAsset{Path: dir, Title: fileUtils.GetDirName(dir), Type: commConsts.Workspace, Slots: iris.Map{"icon": "icon"}}
-	LoadScriptNodesInDir(dir, &asset, 0)
+	loadScriptNodesInDir(dir, &asset, 0, scriptIdsFromZentao)
 
 	jsn, _ := json.Marshal(asset)
 	logUtils.Infof(string(jsn))
@@ -59,7 +58,7 @@ func getScriptLang(pth string) (lang string) {
 	return
 }
 
-func LoadScriptNodesInDir(childPath string, parent *serverDomain.TestAsset, level int) (err error) {
+func loadScriptNodesInDir(childPath string, parent *serverDomain.TestAsset, level int, scriptIdsFromZentao map[int]string) (err error) {
 	if !fileUtils.IsDir(childPath) { // is file
 		addScript(childPath, parent)
 		return
@@ -82,9 +81,27 @@ func LoadScriptNodesInDir(childPath string, parent *serverDomain.TestAsset, leve
 		if grandson.IsDir() && level < 3 { // 目录, 递归遍历
 			dirNode := addDir(childPath, parent)
 
-			LoadScriptNodesInDir(childPath, dirNode, level+1)
+			loadScriptNodesInDir(childPath, dirNode, level+1, scriptIdsFromZentao)
 		} else {
-			addScript(childPath, parent)
+			if scriptIdsFromZentao == nil {
+				addScript(childPath, parent)
+				continue
+			}
+
+			content := fileUtils.ReadFile(childPath)
+			caseIdStr := ReadCaseId(content)
+
+			if caseIdStr == "" {
+				addScript(childPath, parent)
+				continue
+			}
+
+			caseId, _ := strconv.Atoi(caseIdStr)
+			_, ok := scriptIdsFromZentao[caseId]
+
+			if ok {
+				addScript(childPath, parent)
+			}
 		}
 	}
 

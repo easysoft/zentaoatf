@@ -154,7 +154,7 @@ func getStepNestedArrObsolete(blocks [][]string) (ret []commDomain.ZtfStep) {
 
 		if isStepsIdent(block[1]) { // muti line
 			group.MultiLine = true
-			childs := loadMutiLineSteps(block[1:])
+			childs := loadMultiLineSteps(block[1:])
 
 			group.Children = append(group.Children, childs...)
 		} else {
@@ -245,7 +245,7 @@ func parserNextLines(str string, nextLines []string) (ret commDomain.ZtfStep, in
 	return
 }
 
-func loadMutiLineSteps(arr []string) []commDomain.ZtfStep {
+func loadMultiLineSteps(arr []string) []commDomain.ZtfStep {
 	childs := make([]commDomain.ZtfStep, 0)
 
 	child := commDomain.ZtfStep{}
@@ -307,7 +307,7 @@ func loadMutiLineSteps(arr []string) []commDomain.ZtfStep {
 }
 
 func loadSingleLineSteps(arr []string) []commDomain.ZtfStep {
-	childs := make([]commDomain.ZtfStep, 0)
+	children := make([]commDomain.ZtfStep, 0)
 
 	for _, line := range arr {
 		line = strings.TrimSpace(line)
@@ -320,10 +320,10 @@ func loadSingleLineSteps(arr []string) []commDomain.ZtfStep {
 
 		child := commDomain.ZtfStep{Desc: sections[0], Expect: expect}
 
-		childs = append(childs, child)
+		children = append(children, child)
 	}
 
-	return childs
+	return children
 }
 
 func isGroupIdent(str string) bool {

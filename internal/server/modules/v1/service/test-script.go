@@ -22,24 +22,36 @@ func NewTestScriptService() *TestScriptService {
 func (s *TestScriptService) LoadTestScriptsBySiteProduct(
 	siteId, productId int, filerType string, filerValue int) (root serverDomain.TestAsset, err error) {
 
+	scriptIdsFromZentao := s.getScriptIdsFromZentao(siteId, productId, filerType, filerValue)
 	workspaces, _ := s.WorkspaceRepo.ListWorkspacesByProduct(siteId, productId)
 
 	// load scripts from disk
 	root = serverDomain.TestAsset{Path: "", Title: "测试脚本", Type: commConsts.Root, Slots: iris.Map{"icon": "icon"}}
 	for _, workspace := range workspaces {
 		if workspace.Type == commConsts.ZTF {
-			if filerType == string(commConsts.FilterWorkspace) && uint(filerValue) != workspace.ID { // filter by workspace
+			if filerType == string(commConsts.FilterWorkspace) &&
+				(filerValue > 0 && uint(filerValue) != workspace.ID) { // filter by workspace
 				continue
 			}
 
-			scriptsInDir, _ := scriptUtils.LoadScriptTree(workspace.Path)
+			scriptsInDir, _ := scriptUtils.LoadScriptTree(workspace.Path, scriptIdsFromZentao)
 
 			root.Children = append(root.Children, &scriptsInDir)
 		}
 	}
 
-	if filerType == string(commConsts.FilterWorkspace) {
+	if filerType == string(commConsts.FilterWorkspace) || filerValue == 0 {
 		return
+	}
+
+	return
+}
+
+func (s *TestScriptService) getScriptIdsFromZentao(siteId, productId int, filerType string, filerValue int) (
+	ret map[int]string) {
+
+	if filerType == "" || filerValue < 0 {
+		return nil
 	}
 
 	// get script ids from zentao
@@ -50,25 +62,13 @@ func (s *TestScriptService) LoadTestScriptsBySiteProduct(
 		Password: currSite.Password,
 	}
 
-	caseIdsInZentao := map[int]string{}
 	if filerType == string(commConsts.FilterModule) {
-		caseIdsInZentao, _ = zentaoHelper.GetCaseIdsInZentaoModule(productId, filerValue, config)
-	} else if filerType == string(commConsts.FilterWorkspace) {
-
-	} else if filerType == string(commConsts.FilterWorkspace) {
-
+		ret, _ = zentaoHelper.GetCaseIdsInZentaoModule(productId, filerValue, config)
+	} else if filerType == string(commConsts.FilterSuite) {
+		ret, _ = zentaoHelper.GetCaseIdsInZentaoSuite(productId, filerValue, config)
+	} else if filerType == string(commConsts.FilterTask) {
+		ret, _ = zentaoHelper.GetCaseIdsInZentaoTask(productId, filerValue, config)
 	}
-
-	// filter scripts by the zentao ids
-	root = s.filterScriptsByCaseId(root, caseIdsInZentao)
-
-	return
-}
-
-func (s *TestScriptService) filterScriptsByCaseId(root serverDomain.TestAsset, caseIdsInZentao map[int]string) (
-	ret serverDomain.TestAsset) {
-
-	ret = root
 
 	return
 }
