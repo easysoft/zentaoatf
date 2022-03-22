@@ -35,7 +35,7 @@ func ReplaceCaseDesc(desc, file string) {
 	fileUtils.WriteFile(file, out)
 }
 
-func GetStepAndExpectMap(file string) (stepMap, stepTypeMap, expectMap maps.Map, isOldFormat bool) {
+func GetStepAndExpectMap(file string) (steps []commDomain.ZentaoCaseStep, isOldFormat bool) {
 	if !fileUtils.FileExist(file) {
 		return
 	}
@@ -50,60 +50,55 @@ func GetStepAndExpectMap(file string) (stepMap, stepTypeMap, expectMap maps.Map,
 	if isOldFormat {
 		groupBlockArr := getGroupBlockArr(lines)
 		groupArr := getStepNestedArrObsolete(groupBlockArr)
-		_, stepMap, stepTypeMap, expectMap = getSortedTextFromNestedStepsObsolete(groupArr)
+		_, steps = getSortedTextFromNestedStepsObsolete(groupArr)
 	} else {
 		groupArr := getStepNestedArr(lines)
-		_, stepMap, stepTypeMap, expectMap = getSortedTextFromNestedSteps(groupArr)
+		_, steps = getSortedTextFromNestedSteps(groupArr)
 	}
 
 	isIndependent, expectIndependentContent := GetDependentExpect(file)
 	if isIndependent {
 		if isOldFormat {
-			expectMap = GetExpectMapFromIndependentFileObsolete(expectMap, expectIndependentContent, false)
+			GetExpectMapFromIndependentFileObsolete(&steps, expectIndependentContent, false)
 		} else {
-			expectMap = GetExpectMapFromIndependentFile(expectMap, expectIndependentContent, false)
+			GetExpectMapFromIndependentFile(&steps, expectIndependentContent, false)
 		}
 	}
 
 	return
 }
 
-func GetExpectMap(file string) (expectMap maps.Map, ok bool) {
-
-	return
-}
-
-func SortFile(file string) {
-	stepsTxt := ""
-
-	if fileUtils.FileExist(file) {
-		txt := fileUtils.ReadFile(file)
-		lang := langUtils.GetLangByFile(file)
-		isOldFormat := strings.Index(txt, "[esac]") > -1
-		info, content := ReadCaseInfo(txt, lang, isOldFormat)
-		lines := strings.Split(content, "\n")
-
-		groupBlockArr := getGroupBlockArr(lines)
-		groupArr := getStepNestedArrObsolete(groupBlockArr)
-		stepsTxt, _, _, _ = getSortedTextFromNestedStepsObsolete(groupArr)
-
-		// replace info
-		from := ""
-		to := ""
-		if isOldFormat {
-			from = `(?s)\[case\].*\[esac\]`
-			to = "[case]\n" + info + "\n" + stepsTxt + "\n\n[esac]"
-		} else {
-			from = fmt.Sprintf(`(?s)%s.*%s`, langUtils.LangCommentsRegxMap[lang][0], langUtils.LangCommentsRegxMap[lang][1])
-			to = fmt.Sprintf("%s\n"+info+"\n"+stepsTxt+"\n\n%s",
-				langUtils.LangCommentsRegxMap[lang][0], langUtils.LangCommentsRegxMap[lang][1])
-		}
-		re, _ := regexp.Compile(from)
-		script := re.ReplaceAllString(txt, to)
-
-		fileUtils.WriteFile(file, script)
-	}
-}
+//func SortFile(file string) {
+//	stepsTxt := ""
+//
+//	if fileUtils.FileExist(file) {
+//		txt := fileUtils.ReadFile(file)
+//		lang := langUtils.GetLangByFile(file)
+//		isOldFormat := strings.Index(txt, "[esac]") > -1
+//		info, content := ReadCaseInfo(txt, lang, isOldFormat)
+//		lines := strings.Split(content, "\n")
+//
+//		groupBlockArr := getGroupBlockArr(lines)
+//		groupArr := getStepNestedArrObsolete(groupBlockArr)
+//		stepsTxt, _, _, _ = getSortedTextFromNestedStepsObsolete(groupArr)
+//
+//		// replace info
+//		from := ""
+//		to := ""
+//		if isOldFormat {
+//			from = `(?s)\[case\].*\[esac\]`
+//			to = "[case]\n" + info + "\n" + stepsTxt + "\n\n[esac]"
+//		} else {
+//			from = fmt.Sprintf(`(?s)%s.*%s`, langUtils.LangCommentsRegxMap[lang][0], langUtils.LangCommentsRegxMap[lang][1])
+//			to = fmt.Sprintf("%s\n"+info+"\n"+stepsTxt+"\n\n%s",
+//				langUtils.LangCommentsRegxMap[lang][0], langUtils.LangCommentsRegxMap[lang][1])
+//		}
+//		re, _ := regexp.Compile(from)
+//		script := re.ReplaceAllString(txt, to)
+//
+//		fileUtils.WriteFile(file, script)
+//	}
+//}
 
 func getGroupBlockArr(lines []string) [][]string {
 	groupBlockArr := make([][]string, 0)
@@ -352,11 +347,8 @@ func isGroup(str string) bool {
 	return ret
 }
 
-func getSortedTextFromNestedStepsObsolete(groups []commDomain.ZtfStep) (string, maps.Map, maps.Map, maps.Map) {
+func getSortedTextFromNestedStepsObsolete(groups []commDomain.ZtfStep) (stepsText string, steps []commDomain.ZentaoCaseStep) {
 	ret := make([]string, 0)
-	stepMap := linkedhashmap.New()
-	stepTypeMap := linkedhashmap.New()
-	expectMap := linkedhashmap.New()
 
 	groupNumb := 1
 	for _, group := range groups {
@@ -366,8 +358,7 @@ func getSortedTextFromNestedStepsObsolete(groups []commDomain.ZtfStep) (string, 
 			ret = append(ret, "\n"+desc)
 
 			for idx, child := range group.Children { // level 1 item
-				numbStr := getNumbStr(groupNumb, -1)
-				stepTypeMap.Put(numbStr, "item")
+				step := commDomain.ZentaoCaseStep{}
 
 				if group.MultiLine {
 					// steps
@@ -376,7 +367,8 @@ func getSortedTextFromNestedStepsObsolete(groups []commDomain.ZtfStep) (string, 
 
 					stepTxt := printMutiStepOrExpect(child.Desc)
 					ret = append(ret, stepTxt)
-					stepMap.Put(numbStr, stepTxt)
+
+					step.Desc = stepTxt
 
 					// expects
 					tag = replaceNumb("[expects]", groupNumb, -1, true)
@@ -387,15 +379,18 @@ func getSortedTextFromNestedStepsObsolete(groups []commDomain.ZtfStep) (string, 
 					if idx < len(group.Children)-1 {
 						ret = append(ret, "")
 					}
-					expectMap.Put(numbStr, expectTxt)
+
+					step.Expect = expectTxt
 				} else {
 					stepTxt := strings.TrimSpace(child.Desc)
 					stepTxtWithNumb := replaceNumb(stepTxt, groupNumb, -1, false)
-					stepMap.Put(numbStr, stepTxt)
+
+					step.Desc = stepTxt
 
 					expectTxt := child.Expect
 					expectTxt = strings.TrimSpace(expectTxt)
-					expectMap.Put(numbStr, expectTxt)
+
+					step.Expect = expectTxt
 
 					if expectTxt != "" {
 						expectTxt = ">> " + expectTxt
@@ -404,21 +399,27 @@ func getSortedTextFromNestedStepsObsolete(groups []commDomain.ZtfStep) (string, 
 					ret = append(ret, fmt.Sprintf("  %s %s", stepTxtWithNumb, expectTxt))
 				}
 
+				steps = append(steps, step)
+
 				groupNumb++
 			}
 		} else {
+			groupStep := commDomain.ZentaoCaseStep{}
+
 			desc = replaceNumb(group.Desc, groupNumb, -1, true)
 			ret = append(ret, "\n"+desc)
 
-			numbStr := getNumbStr(groupNumb, -1)
-			stepMap.Put(numbStr, getGroupName(group.Desc))
-			stepTypeMap.Put(numbStr, "group")
-			expectMap.Put(numbStr, "")
+			groupStep.Type = commConsts.Group
+			groupStep.Desc = getGroupName(group.Desc)
+			groupStep.Expect = ""
+
+			steps = append(steps, groupStep)
 
 			childNumb := 1
 			for _, child := range group.Children {
-				numbStr := getNumbStr(groupNumb, childNumb)
-				stepTypeMap.Put(numbStr, "item")
+				itemStep := commDomain.ZentaoCaseStep{}
+
+				itemStep.Type = commConsts.Item
 
 				if group.MultiLine {
 					// steps
@@ -427,7 +428,8 @@ func getSortedTextFromNestedStepsObsolete(groups []commDomain.ZtfStep) (string, 
 
 					stepTxt := printMutiStepOrExpect(child.Desc)
 					ret = append(ret, stepTxt)
-					stepMap.Put(numbStr, stepTxt)
+
+					itemStep.Desc = stepTxt
 
 					// expects
 					tag = replaceNumb("[expects]", groupNumb, childNumb, true)
@@ -435,14 +437,15 @@ func getSortedTextFromNestedStepsObsolete(groups []commDomain.ZtfStep) (string, 
 
 					expectTxt := printMutiStepOrExpect(child.Expect)
 					ret = append(ret, expectTxt)
-					expectMap.Put(numbStr, expectTxt)
+
+					itemStep.Expect = expectTxt
 				} else {
 					stepTxt := strings.TrimSpace(child.Desc)
-					stepMap.Put(numbStr, stepTxt)
+					itemStep.Desc = stepTxt
 
 					expectTxt := child.Expect
 					expectTxt = strings.TrimSpace(expectTxt)
-					expectMap.Put(numbStr, expectTxt)
+					itemStep.Expect = expectTxt
 
 					if expectTxt != "" {
 						expectTxt = ">> " + expectTxt
@@ -458,46 +461,51 @@ func getSortedTextFromNestedStepsObsolete(groups []commDomain.ZtfStep) (string, 
 		}
 	}
 
-	return strings.Join(ret, "\n"), stepMap, stepTypeMap, expectMap
+	stepsText = strings.Join(ret, "\n")
+
+	return
 }
 
-func getSortedTextFromNestedSteps(groups []commDomain.ZtfStep) (ret string, stepMap, stepTypeMap, expectMap maps.Map) {
+func getSortedTextFromNestedSteps(groups []commDomain.ZtfStep) (ret string, steps []commDomain.ZentaoCaseStep) {
 	arr := make([]string, 0)
-	stepMap = linkedhashmap.New()
-	stepTypeMap = linkedhashmap.New()
-	expectMap = linkedhashmap.New()
 
-	for idx1, group := range groups {
-		numbStr := getNumbStr(idx1+1, -1)
-		stepType := "step"
+	for _, group := range groups {
+		step := commDomain.ZentaoCaseStep{}
+
+		stepType := commConsts.Item
 		if len(group.Children) > 0 {
-			stepType = "group"
+			stepType = commConsts.Group
 		}
-		stepTypeMap.Put(numbStr, stepType)
+		step.Type = stepType
 
 		stepTxt := strings.TrimSpace(group.Desc)
-		stepMap.Put(numbStr, stepTxt)
+		step.Desc = stepTxt
 
 		expectTxt := strings.TrimSpace(group.Expect)
 		expectTxt = strings.TrimRight(expectTxt, "]]")
 		expectTxt = strings.TrimSpace(expectTxt)
 
-		expectMap.Put(numbStr, expectTxt)
+		step.Expect = expectTxt
+
+		steps = append(steps, step)
 
 		if expectTxt != "" {
 			expectTxt = ">> " + expectTxt
 		}
 		arr = append(arr, fmt.Sprintf("  %s %s", stepTxt, expectTxt))
 
-		for idx2, child := range group.Children {
-			numbStr := getNumbStr(idx1+1, idx2+1)
-			stepTypeMap.Put(numbStr, "item")
+		for _, child := range group.Children {
+			stepChild := commDomain.ZentaoCaseStep{}
+
+			stepChild.Type = commConsts.Item
 
 			stepTxt := strings.TrimSpace(child.Desc)
-			stepMap.Put(numbStr, stepTxt)
+			stepChild.Desc = stepTxt
 
 			expectTxt := strings.TrimSpace(child.Expect)
-			expectMap.Put(numbStr, expectTxt)
+			stepChild.Expect = expectTxt
+
+			steps = append(steps, step)
 
 			if expectTxt != "" {
 				expectTxt = ">> " + expectTxt
@@ -558,49 +566,32 @@ func printMutiStepOrExpect(str string) string {
 	return strings.Join(ret, "\r\n")
 }
 
-func GetExpectMapFromIndependentFileObsolete(expectMap maps.Map, content string, withEmptyExpect bool) maps.Map {
-	retMap := linkedhashmap.New()
-
+func GetExpectMapFromIndependentFileObsolete(steps *[]commDomain.ZentaoCaseStep, content string, withEmptyExpect bool) {
 	expectArr := ReadExpectIndependentArrObsolete(content)
 
-	idx := 0
-	for _, keyIfs := range expectMap.Keys() {
-		valueIfs, _ := expectMap.Get(keyIfs)
-
-		key := strings.TrimSpace(keyIfs.(string))
-		value := strings.TrimSpace(valueIfs.(string))
-
-		if value == "" && len(expectArr) > idx {
-			retMap.Put(key, strings.Join(expectArr[idx], "\r\n"))
-			idx++
+	for idx, step := range *steps {
+		if len(expectArr) > idx {
+			step.Expect = strings.Join(expectArr[idx], "\r\n")
 		} else {
 			if withEmptyExpect {
-				retMap.Put(key, "")
+				step.Expect = ""
 			}
 		}
 	}
-
-	return retMap
 }
 
-func GetExpectMapFromIndependentFile(expectMap maps.Map, content string, withEmptyExpect bool) maps.Map {
+func GetExpectMapFromIndependentFile(steps *[]commDomain.ZentaoCaseStep, content string, withEmptyExpect bool) maps.Map {
 	retMap := linkedhashmap.New()
 
 	expectArr := ReadExpectIndependentArr(content)
 
-	idx := 0
-	for _, keyIfs := range expectMap.Keys() {
-		valueIfs, _ := expectMap.Get(keyIfs)
-
-		key := strings.TrimSpace(keyIfs.(string))
-		value := strings.TrimSpace(valueIfs.(string))
-
-		if value == "pass" && len(expectArr) > idx {
-			retMap.Put(key, strings.Join(expectArr[idx], "\r\n"))
+	for idx, step := range *steps {
+		if len(expectArr) > idx { // && value == "pass"  {
+			step.Expect = strings.Join(expectArr[idx], "\r\n")
 			idx++
 		} else {
 			if withEmptyExpect {
-				retMap.Put(key, "")
+				step.Expect = ""
 			}
 		}
 	}

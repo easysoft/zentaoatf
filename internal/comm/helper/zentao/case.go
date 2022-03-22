@@ -7,20 +7,18 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/comm/domain"
 	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
-	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	httpUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/http"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
 	"github.com/bitly/go-simplejson"
-	"github.com/emirpasic/gods/maps"
 	"sort"
 	"strconv"
 	"strings"
 )
 
 func CommitCase(caseId int, title string,
-	stepMap maps.Map, stepTypeMap maps.Map, expectMap maps.Map, workspacePath string) (err error) {
+	steps []commDomain.ZentaoCaseStep, workspacePath string) (err error) {
 	config := configUtils.LoadByWorkspacePath(workspacePath)
 
 	err = Login(config)
@@ -32,11 +30,10 @@ func CommitCase(caseId int, title string,
 	url := GenApiUrl(uri, nil, config.Url)
 
 	requestObj := map[string]interface{}{
-		"type":     "feature",
-		"title":    title,
-		"steps":    commonUtils.LinkedMapToMap(stepMap),
-		"stepType": commonUtils.LinkedMapToMap(stepTypeMap),
-		"expects":  commonUtils.LinkedMapToMap(expectMap)}
+		"type":  "feature",
+		"title": title,
+		"steps": steps,
+	}
 
 	json, err := json.Marshal(requestObj)
 	if err != nil {

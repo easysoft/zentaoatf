@@ -73,12 +73,12 @@ func (s *SyncService) SyncToZentao(workspacePath string, commitProductId int) (e
 		pass, id, _, title := scriptUtils.GetCaseInfo(cs)
 
 		if pass {
-			stepMap, stepTypeMap, expectMap, isOldFormat := scriptUtils.GetStepAndExpectMap(cs)
+			steps, isOldFormat := scriptUtils.GetStepAndExpectMap(cs)
 			if commConsts.Verbose {
 				logUtils.Infof("isOldFormat = ", isOldFormat)
 			}
 
-			zentaoUtils.CommitCase(id, title, stepMap, stepTypeMap, expectMap, workspacePath)
+			zentaoUtils.CommitCase(id, title, steps, workspacePath)
 		}
 	}
 

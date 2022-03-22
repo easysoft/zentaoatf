@@ -76,6 +76,13 @@ func (OsType) Get(osName string) OsType {
 	return OsType(osName)
 }
 
+type CaseStepType string
+
+const (
+	Group CaseStepType = "group"
+	Item  CaseStepType = "item"
+)
+
 type ExecBy string
 
 const (

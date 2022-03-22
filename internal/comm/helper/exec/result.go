@@ -9,7 +9,6 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	"github.com/emirpasic/gods/maps"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/mattn/go-runewidth"
@@ -22,14 +21,14 @@ func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfRepor
 	total int, secs string, pathMaxWidth int, numbMaxWidth int,
 	wsMsg websocket.Message) {
 
-	stepMap, _, expectMap, isOldFormat := scriptHelper.GetStepAndExpectMap(scriptFile)
+	steps, isOldFormat := scriptHelper.GetStepAndExpectMap(scriptFile)
 
 	isIndependent, expectIndependentContent := scriptHelper.GetDependentExpect(scriptFile)
 	if isIndependent {
 		if isOldFormat {
-			expectMap = scriptHelper.GetExpectMapFromIndependentFileObsolete(expectMap, expectIndependentContent, false)
+			scriptHelper.GetExpectMapFromIndependentFileObsolete(&steps, expectIndependentContent, false)
 		} else {
-			expectMap = scriptHelper.GetExpectMapFromIndependentFile(expectMap, expectIndependentContent, false)
+			scriptHelper.GetExpectMapFromIndependentFile(&steps, expectIndependentContent, false)
 		}
 	}
 
@@ -42,12 +41,12 @@ func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfRepor
 	}
 
 	language := langUtils.GetLangByFile(scriptFile)
-	ValidateCaseResult(scriptFile, language, stepMap, expectMap, skip, actualArr, report,
+	ValidateCaseResult(scriptFile, language, steps, skip, actualArr, report,
 		idx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg)
 }
 
 func ValidateCaseResult(scriptFile string, langType string,
-	stepMap, expectMap maps.Map, skip bool, actualArr [][]string, report *commDomain.ZtfReport,
+	steps []commDomain.ZentaoCaseStep, skip bool, actualArr [][]string, report *commDomain.ZtfReport,
 	idx int, total int, secs string, pathMaxWidth int, numbMaxWidth int,
 	wsMsg websocket.Message) {
 
@@ -60,15 +59,9 @@ func ValidateCaseResult(scriptFile string, langType string,
 	if skip {
 		caseResult = commConsts.SKIP
 	} else {
-		idx := 0
-
-		for _, numbObj := range expectMap.Keys() { // iterate by checkpoints
-			stepObj, _ := stepMap.Get(numbObj)
-			expectObj, _ := expectMap.Get(numbObj)
-
-			numb := strings.TrimSpace(numbObj.(string))
-			stepName := strings.TrimSpace(stepObj.(string))
-			expect := strings.TrimSpace(expectObj.(string))
+		for idx, step := range steps { // iterate by checkpoints
+			stepName := strings.TrimSpace(step.Desc)
+			expect := strings.TrimSpace(step.Expect)
 
 			if expect == "" {
 				continue
@@ -83,7 +76,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 			}
 
 			stepResult, checkpointLogs := ValidateStepResult(langType, expectLines, actualLines)
-			stepLog := commDomain.StepLog{Id: strings.TrimRight(numb, "."), Name: stepName, Status: stepResult, CheckPoints: checkpointLogs}
+			stepLog := commDomain.StepLog{Id: strconv.Itoa(idx), Name: stepName, Status: stepResult, CheckPoints: checkpointLogs}
 			stepLogs = append(stepLogs, stepLog)
 			if stepResult == commConsts.FAIL {
 				caseResult = commConsts.FAIL
