@@ -4,7 +4,7 @@
       <template #title>
         <div class="t-card-toolbar">
           <div class="left">
-            {{t('workspace')}}
+            {{ t('workspace') }}
           </div>
           <div class="right">
             <a-select @change="onSearch" v-model:value="queryParams.enabled" :options="statusArr" class="status-select">
@@ -17,8 +17,10 @@
 
       <template #extra>
         <a-button v-if="currProduct?.id" type="primary" @click="create()">
-          <template #icon><PlusCircleOutlined /></template>
-          {{t('create_workspace')}}
+          <template #icon>
+            <PlusCircleOutlined/>
+          </template>
+          {{ t('create_workspace') }}
         </a-button>
       </template>
 
@@ -63,8 +65,8 @@
 import {computed, ComputedRef, defineComponent, onMounted, ref, Ref, watch} from "vue";
 import {useStore} from "vuex";
 
-import {Empty, Form, message, Modal, notification} from "ant-design-vue";
-import { PlusCircleOutlined } from '@ant-design/icons-vue';
+import {Empty, Form, message, Modal} from "ant-design-vue";
+import {PlusCircleOutlined} from '@ant-design/icons-vue';
 
 import {StateType} from "./store";
 import {useRouter} from "vue-router";
@@ -85,7 +87,7 @@ interface WorkspaceListSetupData {
   queryParams: Ref,
   pagination: ComputedRef<PaginationConfig>;
 
-  columns: any;
+  columns: Ref<any[]>;
   currProduct: ComputedRef
   models: ComputedRef<any[]>;
   loading: Ref<boolean>;
@@ -108,7 +110,7 @@ export default defineComponent({
     PlusCircleOutlined,
   },
   setup(): WorkspaceListSetupData {
-    const {t} = useI18n();
+    const {t, locale} = useI18n();
     const momentUtc = momentUtcDef
     const disableStatus = disableStatusDef
 
@@ -120,39 +122,49 @@ export default defineComponent({
       getList(1);
     })
 
-    const columns = [
-      {
+    watch(locale, () => {
+      console.log('watch locale', locale)
+      setColumns()
+    }, {deep: true})
+
+    const columns = ref([] as any[])
+    const setColumns = () => {
+      columns.value = [
+        {
         title: t('no'),
         dataIndex: 'index',
         width: 80,
         customRender: ({text, index}: { text: any; index: number }) =>
             (pagination.value.page - 1) * pagination.value.pageSize + index + 1,
-      },
-      {
-        title: t('name'),
-        dataIndex: 'name',
-      },
-      {
-        title: t('path'),
-        dataIndex: 'path',
-      },
-      {
-        title: t('status'),
-        dataIndex: 'status',
-        slots: {customRender: 'status'},
-      },
-      {
-        title: t('create_time'),
-        dataIndex: 'createdAt',
-        slots: {customRender: 'createdAt'},
-      },
-      {
-        title: t('opt'),
-        key: 'action',
-        width: 260,
-        slots: {customRender: 'action'},
-      },
-    ];
+        },
+        {
+          title: t('name'),
+          dataIndex: 'name',
+        },
+        {
+          title: t('path'),
+          dataIndex: 'path',
+        },
+        {
+          title: t('status'),
+          dataIndex: 'status',
+          slots: {customRender: 'status'},
+        },
+        {
+          title: t('create_time'),
+          dataIndex: 'createdAt',
+          slots: {customRender: 'createdAt'},
+        },
+        {
+          title: t('opt'),
+          key: 'action',
+          width: 260,
+          slots: {customRender: 'action'},
+        },
+      ]
+    }
+    setColumns()
+
     const statusArr = ref(disableStatusMap);
 
     const router = useRouter();
@@ -174,7 +186,8 @@ export default defineComponent({
         keywords: queryParams.value.keywords,
         enabled: queryParams.value.enabled,
         pageSize: pagination.value.pageSize,
-        page: page});
+        page: page
+      });
       loading.value = false;
     }
     getList(1);

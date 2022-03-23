@@ -87,7 +87,7 @@ interface SiteListSetupData {
   queryParams: Ref,
   pagination: ComputedRef<PaginationConfig>;
 
-  columns: any;
+  columns: Ref<any[]>;
   models: ComputedRef<any[]>;
   loading: Ref<boolean>;
   list: (curr) => void
@@ -110,7 +110,7 @@ export default defineComponent({
     PlusCircleOutlined,
   },
   setup(): SiteListSetupData {
-    const {t} = useI18n();
+    const {t, locale} = useI18n();
     const momentUtc = momentUtcDef
     const disableStatus = disableStatusDef
 
@@ -130,43 +130,53 @@ export default defineComponent({
       console.log('onMounted')
     })
 
-    const columns = [
-      {
-        title: t('no'),
-        dataIndex: 'index',
-        width: 80,
-        customRender: ({text, index}: { text: any; index: number }) =>
-            (pagination.value.page - 1) * pagination.value.pageSize + index + 1,
-      },
-      {
-        title: t('name'),
-        dataIndex: 'name',
-      },
-      {
-        title: t('zentao_url'),
-        dataIndex: 'url',
-      },
-      {
-        title: t('username'),
-        dataIndex: 'username',
-      },
-      {
-        title: t('status'),
-        dataIndex: 'status',
-        slots: {customRender: 'status'},
-      },
-      {
-        title: t('create_time'),
-        dataIndex: 'createdAt',
-        slots: {customRender: 'createdAt'},
-      },
-      {
-        title: t('opt'),
-        key: 'action',
-        width: 260,
-        slots: {customRender: 'action'},
-      },
-    ];
+    watch(locale, () => {
+      console.log('watch locale', locale)
+      setColumns()
+    }, {deep: true})
+
+    const columns = ref([] as any[])
+    const setColumns = () => {
+      columns.value = [
+        {
+          title: t('no'),
+          dataIndex: 'index',
+          width: 80,
+          customRender: ({text, index}: { text: any; index: number }) =>
+              (pagination.value.page - 1) * pagination.value.pageSize + index + 1,
+        },
+        {
+          title: t('name'),
+          dataIndex: 'name',
+        },
+        {
+          title: t('zentao_url'),
+          dataIndex: 'url',
+        },
+        {
+          title: t('username'),
+          dataIndex: 'username',
+        },
+        {
+          title: t('status'),
+          dataIndex: 'status',
+          slots: {customRender: 'status'},
+        },
+        {
+          title: t('create_time'),
+          dataIndex: 'createdAt',
+          slots: {customRender: 'createdAt'},
+        },
+        {
+          title: t('opt'),
+          key: 'action',
+          width: 260,
+          slots: {customRender: 'action'},
+        },
+      ]
+    }
+    setColumns()
+
     const statusArr = ref(disableStatusMap);
 
     const router = useRouter();
