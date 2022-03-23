@@ -10,7 +10,6 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	httpUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/http"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
-	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/bitly/go-simplejson"
@@ -67,7 +66,7 @@ func Login(config commDomain.WorkspaceConf) (err error) {
 }
 
 func ListLang() (langs []serverDomain.ZentaoLang, err error) {
-	for key, _ := range langUtils.LangMap {
+	for key, _ := range commConsts.LangMap {
 		langs = append(langs, serverDomain.ZentaoLang{Code: key, Name: key})
 	}
 

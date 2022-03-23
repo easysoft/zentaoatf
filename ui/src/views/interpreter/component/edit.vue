@@ -3,12 +3,13 @@
     <a-form-item :label="t('script_lang')" v-bind="validateInfos.lang">
       <a-select v-model:value="modelRef.lang">
         <a-select-option key="" value="">&nbsp;</a-select-option>
-        <a-select-option v-for="item in languages" :key="item" :value="item">{{ languageMap[item] }}</a-select-option>
+        <a-select-option v-for="item in languages" :key="item" :value="item">{{ languageMap[item].name }}</a-select-option>
       </a-select>
     </a-form-item>
 
     <a-form-item :label="t('interpreter_path')" v-bind="validateInfos.path">
-      <a-input-search v-if="isElectron" v-model:value="modelRef.path" @search="selectDir" spellcheck="false"
+      <a-input-search v-if="isElectron" v-model:value="modelRef.path"
+                      @search="selectDir" spellcheck="false"
                       @blur="validate('path', { trigger: 'blur' }).catch(() => {})">
         <template #enterButton>
           <a-button>选择</a-button>
@@ -17,6 +18,8 @@
 
       <a-input v-if="!isElectron" v-model:value="modelRef.path" spellcheck="false"
                @blur="validate('path', { trigger: 'blur' }).catch(() => {})"/>
+
+      <span v-if="interpreterPath">例如：{{interpreterPath}}</span>
     </a-form-item>
 
     <a-form-item :wrapper-col="{ span: wrapperCol.span, offset: labelCol.span }">
@@ -28,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, reactive, ref, Ref, PropType} from "vue";
+import {defineComponent, reactive, ref, Ref, PropType, computed, ComputedRef} from "vue";
 import {useI18n} from "vue-i18n";
 
 import {validateInfos} from 'ant-design-vue/lib/form/useForm';
@@ -42,9 +45,11 @@ interface EditInterpreterFormSetupData {
   t: (key: string | number) => string;
   validate: any
   validateInfos: validateInfos;
+  selectDir: () => void
   save: () => Promise<void>;
   reset: () => Promise<void>;
 
+  interpreterPath: Ref<string>
   modelRef: Ref;
   languages: Ref<[]>,
   languageMap: Ref,
@@ -74,9 +79,17 @@ export default defineComponent({
 
     let languages = ref<any>({})
     let languageMap = ref<any>({})
-    const data = getInterpreters()
-    languages.value = data.languages
-    languageMap.value = data.languageMap
+
+    const getInterpretersA = async () => {
+      const data = await getInterpreters()
+      languages.value = data.languages
+      languageMap.value = data.languageMap
+    }
+    getInterpretersA()
+
+    const interpreterPath = computed(() => {
+      return languageMap.value[modelRef.value.lang]?.interpreter
+    })
 
     let modelRef = ref<any>({
       id: props.model.value.id,
@@ -90,6 +103,24 @@ export default defineComponent({
     });
 
     const {resetFields, validate, validateInfos} = useForm(modelRef, rulesRef);
+
+
+    const selectDir = () => {
+      console.log('selectDir')
+
+      if (isElectron.value) {
+        const {dialog} = window.require('@electron/remote');
+        dialog.showOpenDialog({
+          properties: ['openDirectory']
+        }).then(result => {
+          if (result.filePaths && result.filePaths.length > 0) {
+            modelRef.value.path = result.filePaths[0]
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      }
+    }
 
     const save = async () => {
       validate()
@@ -110,9 +141,11 @@ export default defineComponent({
       t,
       isElectron,
 
+      interpreterPath,
       validate,
       validateInfos,
       modelRef,
+      selectDir,
       save,
       reset,
 

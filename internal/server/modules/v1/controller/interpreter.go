@@ -16,6 +16,16 @@ func NewInterpreterCtrl() *InterpreterCtrl {
 	return &InterpreterCtrl{}
 }
 
+func (c *InterpreterCtrl) GetLangSettings(ctx iris.Context) {
+	data, err := c.InterpreterService.GetLangSettings()
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	ctx.JSON(c.SuccessResp(data))
+}
+
 func (c *InterpreterCtrl) List(ctx iris.Context) {
 	data, err := c.InterpreterService.List()
 	if err != nil {

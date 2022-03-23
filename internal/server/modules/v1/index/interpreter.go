@@ -25,6 +25,9 @@ func (m *InterpreterModule) Party() module.WebModule {
 		index.Post("/", m.InterpreterCtrl.Create).Name = "新建"
 		index.Put("/{id:int}", m.InterpreterCtrl.Update).Name = "更新"
 		index.Delete("/{id:int}", m.InterpreterCtrl.Delete).Name = "删除"
+
+		index.Get("/getLangSettings", m.InterpreterCtrl.GetLangSettings).Name = "获取语言配置项"
+
 	}
 	return module.NewModule("/interpreters", handler)
 }

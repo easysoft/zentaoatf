@@ -4,11 +4,11 @@ import (
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
+	langHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/lang"
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
 	zentaoUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
-	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/fatih/color"
 	"path/filepath"
@@ -33,7 +33,7 @@ func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, workspace
 	independentFile := settings.IndependentFile
 	lang := settings.Lang
 
-	ok := langUtils.CheckSupportLanguages(lang)
+	ok := langHelper.CheckSupportLanguages(lang)
 	if !ok {
 		return
 	}

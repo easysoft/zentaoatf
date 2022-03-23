@@ -2,9 +2,9 @@ package stdinUtils
 
 import (
 	"bufio"
+	langHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/lang"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
-	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"strconv"
 
@@ -128,7 +128,7 @@ func InputForCheckout(productId *string, moduleId *string, suiteId *string, task
 
 	InputForBool(independentFile, false, "enter_co_independent")
 
-	numbs, names, labels := langUtils.GetSupportLanguageOptions(nil)
+	numbs, names, labels := langHelper.GetSupportLanguageOptions(nil)
 	fmtParam := make([]string, 0)
 	dft := ""
 	for idx, label := range labels {

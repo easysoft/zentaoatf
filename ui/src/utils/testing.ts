@@ -1,17 +1,25 @@
 import moment from "moment";
 import {AutoTestTools, ScriptLanguages, TestTools, BuildTools} from "@/utils/const";
+import request from "@/utils/request";
 
-export function getInterpreters(): any {
-    const languages: string[] = []
-    const languageMap = {}
-
-    ScriptLanguages.forEach(item => {
-        const lang = item.toLowerCase()
-        languages.push(lang)
-        languageMap[lang] = item
+export async function getInterpreters() {
+    const json: any = await request({
+        url: '/interpreters/getLangSettings',
+        method: 'GET',
     })
 
-    return {languages: languages, languageMap: languageMap}
+    if (json.code === 0) {
+        const data = json.data
+        return data
+    }
+
+    // ScriptLanguages.forEach(name => {
+    //     const key = name.toLowerCase()
+    //     languages.push(key)
+    //     languageMap[key] = {name: name, path: path}
+    // })
+
+    return {languages: [], languageMap: {}}
 }
 
 export function getUnitTestFrameworks(): any {

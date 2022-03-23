@@ -7,7 +7,6 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
-	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	resUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/res"
 	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
 	"path/filepath"
@@ -49,7 +48,7 @@ func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool
 
 	content := ""
 	isOldFormat := false
-	scriptFile := filepath.Join(targetDir, fmt.Sprintf("%d.%s", caseId, langUtils.LangMap[langType]["extName"]))
+	scriptFile := filepath.Join(targetDir, fmt.Sprintf("%d.%s", caseId, commConsts.LangMap[langType]["extName"]))
 	if fileUtils.FileExist(scriptFile) { // update title and steps
 		content = fileUtils.ReadFile(scriptFile)
 		isOldFormat = strings.Index(content, "[esac]") > -1
@@ -60,7 +59,7 @@ func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool
 	info := make([]string, 0)
 	steps := make([]string, 0)
 	independentExpects := make([]string, 0)
-	srcCode := fmt.Sprintf("%s %s", langUtils.LangMap[langType]["commentsTag"],
+	srcCode := fmt.Sprintf("%s %s", commConsts.LangMap[langType]["commentsTag"],
 		i118Utils.Sprintf("find_example", consts.PthSep, langType))
 
 	info = append(info, fmt.Sprintf("title=%s", caseTitle))

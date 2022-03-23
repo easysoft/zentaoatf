@@ -7,6 +7,7 @@ import (
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	analysisUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/analysis"
 	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
+	langHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/lang"
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
 	websocketUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/websocket"
 	zentaoUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
@@ -14,7 +15,6 @@ import (
 	dateUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/date"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
-	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
@@ -211,7 +211,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
-		lang := langUtils.GetLangByFile(filePath)
+		lang := langHelper.GetLangByFile(filePath)
 
 		scriptInterpreter := ""
 		if strings.ToLower(lang) != "bat" {
@@ -355,7 +355,7 @@ func FilterCases(cases []string, conf commDomain.WorkspaceConf) (casesToRun, cas
 			if ext != "" {
 				ext = ext[1:]
 			}
-			lang := langUtils.ScriptExtToNameMap[ext]
+			lang := commConsts.ScriptExtToNameMap[ext]
 			interpreter := configUtils.GetFieldVal(conf, stringUtils.UcFirst(lang))
 			if interpreter == "-" || interpreter == "" {
 				interpreter = ""

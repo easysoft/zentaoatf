@@ -4,10 +4,10 @@ import (
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/aaronchen2k/deeptest/internal/comm/domain"
+	langHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/lang"
 	"github.com/aaronchen2k/deeptest/internal/comm/helper/script"
 	websocketUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/websocket"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
-	"github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12/websocket"
@@ -40,7 +40,7 @@ func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfRepor
 		skip, actualArr = scriptHelper.ReadLogArr(logs)
 	}
 
-	language := langUtils.GetLangByFile(scriptFile)
+	language := langHelper.GetLangByFile(scriptFile)
 	ValidateCaseResult(scriptFile, language, steps, skip, actualArr, report,
 		idx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg)
 }

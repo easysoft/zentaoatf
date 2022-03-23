@@ -2,10 +2,11 @@ package scriptHelper
 
 import (
 	"fmt"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
+	langHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/lang"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
-	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"regexp"
 	"strings"
@@ -64,7 +65,7 @@ func prepareSteps(stepObjs []*commDomain.ZtfStep) (steps []string) {
 }
 
 func extractFromComments(file string) (stepObjs []*commDomain.ZtfStep) {
-	lang := langUtils.GetLangByFile(file)
+	lang := langHelper.GetLangByFile(file)
 	content := fileUtils.ReadFile(file)
 
 	findCaseTag := false
@@ -191,8 +192,8 @@ func getName(line, str, lang string) (name, expect string) {
 		}
 	}
 
-	name = strings.TrimSpace(strings.Replace(name, langUtils.LangCommentsTagMap[lang][1], "", -1))
-	expect = strings.TrimSpace(strings.Replace(expect, langUtils.LangCommentsTagMap[lang][1], "", -1))
+	name = strings.TrimSpace(strings.Replace(name, commConsts.LangCommentsTagMap[lang][1], "", -1))
+	expect = strings.TrimSpace(strings.Replace(expect, commConsts.LangCommentsTagMap[lang][1], "", -1))
 
 	return
 }
@@ -219,11 +220,11 @@ func parseMutiStep(lang string, nextLines []string) (ret string, increase int) {
 }
 
 func isCommentStartTag(str, lang string) (pass bool) {
-	pass, _ = regexp.MatchString(langUtils.LangCommentsRegxMap[lang][0], str)
+	pass, _ = regexp.MatchString(commConsts.LangCommentsRegxMap[lang][0], str)
 	return
 }
 
 func isCommentEndTag(str, lang string) (pass bool) {
-	pass, _ = regexp.MatchString(langUtils.LangCommentsRegxMap[lang][1], str)
+	pass, _ = regexp.MatchString(commConsts.LangCommentsRegxMap[lang][1], str)
 	return
 }

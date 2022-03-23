@@ -4,9 +4,9 @@ import (
 	stdContext "context"
 	"fmt"
 	"github.com/aaronchen2k/deeptest/internal/comm/consts"
+	langHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/lang"
 	websocketUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/websocket"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
-	"github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/config"
 	"github.com/aaronchen2k/deeptest/internal/server/core/module"
@@ -63,7 +63,7 @@ func Init(port int) *WebServer {
 	serverConfig.InitLog()
 	i118Utils.Init(commConsts.Language, commConsts.AppServer)
 
-	langUtils.GetExtToNameMap()
+	langHelper.GetExtToNameMap()
 
 	app := iris.New()
 	app.Validator = validator.New() //参数验证

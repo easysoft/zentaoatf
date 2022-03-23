@@ -23,7 +23,7 @@
         :pagination="false"
     >
       <template #lang="{ record }">
-        {{languageMap[record.lang]}}
+        {{languageMap[record.lang].name}}
       </template>
 
       <template #createdAt="{ record }">
@@ -101,8 +101,11 @@ export default defineComponent({
     const momentUtc = momentUtcDef
 
     let languageMap = ref<any>({})
-    const data = getInterpreters()
-    languageMap.value = data.languageMap
+    const getInterpretersA = async () => {
+      const data = await getInterpreters()
+      languageMap.value = data.languageMap
+    }
+    getInterpretersA()
 
     let interpreters = ref<any>([])
     let interpreter = reactive<any>({})

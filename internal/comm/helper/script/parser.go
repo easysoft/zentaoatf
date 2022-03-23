@@ -4,10 +4,10 @@ import (
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
+	langHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/lang"
 	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
-	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	"github.com/emirpasic/gods/maps"
 	"github.com/emirpasic/gods/maps/linkedhashmap"
 	"io/ioutil"
@@ -20,15 +20,15 @@ import (
 
 func ReplaceCaseDesc(desc, file string) {
 	content := fileUtils.ReadFile(file)
-	lang := langUtils.GetLangByFile(file)
+	lang := langHelper.GetLangByFile(file)
 
 	regStr := fmt.Sprintf(`(?smU)%s((?U:.*pid.*))\n(.*)%s`,
-		langUtils.LangCommentsRegxMap[lang][0], langUtils.LangCommentsRegxMap[lang][1])
+		commConsts.LangCommentsRegxMap[lang][0], commConsts.LangCommentsRegxMap[lang][1])
 	re, _ := regexp.Compile(regStr)
 
 	newDesc := fmt.Sprintf("\n%s\n\n"+desc+"\n\n%s",
-		langUtils.LangCommentsTagMap[lang][0],
-		langUtils.LangCommentsTagMap[lang][1])
+		commConsts.LangCommentsTagMap[lang][0],
+		commConsts.LangCommentsTagMap[lang][1])
 
 	out := re.ReplaceAllString(content, newDesc)
 
@@ -40,7 +40,7 @@ func GetStepAndExpectMap(file string) (steps []commDomain.ZentaoCaseStep, isOldF
 		return
 	}
 
-	lang := langUtils.GetLangByFile(file)
+	lang := langHelper.GetLangByFile(file)
 	txt := fileUtils.ReadFile(file)
 
 	isOldFormat = strings.Index(txt, "[esac]") > -1
@@ -714,13 +714,13 @@ func GetCaseInfo(file string) (bool, int, int, string) {
 	}
 
 	caseInfo := ""
-	lang := langUtils.GetLangByFile(file)
+	lang := langHelper.GetLangByFile(file)
 	regStr := ""
 	if isOldFormat {
 		regStr = `(?s)\[case\](.*)\[esac\]`
 	} else {
 		regStr = fmt.Sprintf(`(?sm)%s((?U:.*pid.*))\n(.*)%s`,
-			langUtils.LangCommentsRegxMap[lang][0], langUtils.LangCommentsRegxMap[lang][1])
+			commConsts.LangCommentsRegxMap[lang][0], commConsts.LangCommentsRegxMap[lang][1])
 	}
 	myExp := regexp.MustCompile(regStr)
 	arr := myExp.FindStringSubmatch(content)
@@ -1018,7 +1018,7 @@ func ReadCaseInfo(content, lang string, isOldFormat bool) (info, checkpoints str
 		regStr = `(?s)\[case\]((?U:.*pid.*))\n(.*)\[esac\]`
 	} else {
 		regStr = fmt.Sprintf(`(?smU)%s((?U:.*pid.*))\n(.*)%s`,
-			langUtils.LangCommentsRegxMap[lang][0], langUtils.LangCommentsRegxMap[lang][1])
+			commConsts.LangCommentsRegxMap[lang][0], commConsts.LangCommentsRegxMap[lang][1])
 	}
 	myExp := regexp.MustCompile(regStr)
 	arr := myExp.FindStringSubmatch(content)
@@ -1080,7 +1080,7 @@ func GetScriptByIdsInDir(dirPth string, idMap map[int]string, files *[]string) e
 		if fi.IsDir() { // 目录, 递归遍历
 			GetScriptByIdsInDir(dirPth+name+sep, idMap, files)
 		} else {
-			regx := langUtils.GetSupportLanguageExtRegx()
+			regx := langHelper.GetSupportLanguageExtRegx()
 			pass, _ := regexp.MatchString("^*.\\."+regx+"$", name)
 
 			if !pass {

@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
+	langHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/lang"
 	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
-	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
@@ -48,7 +48,7 @@ func GetScriptContent(pth string) (script serverDomain.TestScript, err error) {
 }
 func getScriptLang(pth string) (lang string) {
 	extName := strings.TrimLeft(fileUtils.GetExtName(pth), ".")
-	for key, val := range langUtils.LangMap {
+	for key, val := range commConsts.LangMap {
 		if extName == val["extName"] {
 			lang = key
 			return
@@ -109,7 +109,7 @@ func loadScriptNodesInDir(childPath string, parent *serverDomain.TestAsset, leve
 }
 
 func LoadScriptListInDir(path string, files *[]string, level int) error {
-	regx := langUtils.GetSupportLanguageExtRegx()
+	regx := langHelper.GetSupportLanguageExtRegx()
 
 	if !fileUtils.IsDir(path) { // first call, param is file
 		pass, _ := regexp.MatchString(`.*\.`+regx+`$`, path)
@@ -155,7 +155,7 @@ func LoadScriptListInDir(path string, files *[]string, level int) error {
 }
 
 func addScript(pth string, parent *serverDomain.TestAsset) {
-	regx := langUtils.GetSupportLanguageExtRegx()
+	regx := langHelper.GetSupportLanguageExtRegx()
 	pass, _ := regexp.MatchString("^*.\\."+regx+"$", pth)
 
 	if pass {
@@ -183,7 +183,7 @@ func GetScriptType(scripts []string) []string {
 		ext := path.Ext(script)
 		if ext != "" {
 			ext = ext[1:]
-			name := langUtils.ScriptExtToNameMap[ext]
+			name := commConsts.ScriptExtToNameMap[ext]
 
 			if !stringUtils.FindInArr(name, exts) {
 				exts = append(exts, name)

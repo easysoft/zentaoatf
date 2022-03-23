@@ -3,6 +3,8 @@ package service
 import (
 	"errors"
 	"fmt"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+	langHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/lang"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
@@ -47,4 +49,24 @@ func (s *InterpreterService) Update(site model.Interpreter) (err error) {
 
 func (s *InterpreterService) Delete(id uint) error {
 	return s.InterpreterRepo.Delete(id)
+}
+
+func (s *InterpreterService) GetLangSettings() (mp map[string]interface{}, err error) {
+	langs := langHelper.GetSupportLanguageArrSort()
+
+	mpData := map[string]map[string]string{}
+	for _, lang := range langs {
+		subMap := map[string]string{
+			"name":        commConsts.LangMap[lang]["name"],
+			"interpreter": commConsts.LangMap[lang]["interpreter"],
+			"versionCmd":  commConsts.LangMap[lang]["versionCmd"],
+		}
+		mpData[lang] = subMap
+	}
+
+	mp = map[string]interface{}{}
+	mp["languages"] = langs
+	mp["languageMap"] = mpData
+
+	return
 }
