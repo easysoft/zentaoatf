@@ -36,10 +36,11 @@ export default {
     'zentao_url': '禅道地址',
     'username': '用户名',
     'password': '密码',
-    'create_interpreter': '新建解析器',
-    'edit_interpreter': '编辑解析器',
-    'interpreter': '解析器',
-    'interpreter_path': '解析器路径',
+
+    'interpreter': '运行环境',
+    'create_interpreter': '新建运行环境',
+    'edit_interpreter': '编辑运行环境',
+    'interpreter_path': '可执行文件路径',
     'script_lang': '脚本语言',
 
     'script': '脚本',
@@ -160,5 +161,5 @@ export default {
     'pls_username': '请输入用户名',
     'pls_password': '请输入密码',
     'pls_input_lang': '请输入语言',
-    'pls_input_interpreter_path': '请输入解析器可执行文件路径',
+    'pls_input_interpreter_path': '请输入可执行文件路径',
 };

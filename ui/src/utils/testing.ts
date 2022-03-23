@@ -1,31 +1,17 @@
 import moment from "moment";
 import {AutoTestTools, ScriptLanguages, TestTools, BuildTools} from "@/utils/const";
-import {Ref} from "vue";
-import {Config, Interpreter} from "@/views/config/data";
 
-export function getInterpretersFromConfig(currConfig: any): any {
-    const interpreters: any[] = []
+export function getInterpreters(): any {
     const languages: string[] = []
     const languageMap = {}
 
     ScriptLanguages.forEach(item => {
         const lang = item.toLowerCase()
+        languages.push(lang)
         languageMap[lang] = item
-
-        if (currConfig && currConfig[lang] && currConfig[lang].trim() != '') {
-            interpreters.push({ lang: lang, val: currConfig[lang] })
-        } else {
-            languages.push(lang)
-        }
     })
-    return {interpreters: interpreters, languages: languages, languageMap: languageMap}
-}
 
-export function setInterpreter(config: Ref<Config>, interpreters: Ref<Interpreter[]>): Ref<Config> {
-    interpreters.value.forEach((item, i) => {
-        config[item.lang] = item.val
-    })
-    return config
+    return {languages: languages, languageMap: languageMap}
 }
 
 export function getUnitTestFrameworks(): any {

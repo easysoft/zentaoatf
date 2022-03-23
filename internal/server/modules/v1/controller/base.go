@@ -3,7 +3,6 @@ package controller
 import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
-	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 )
 
 type BaseCtrl struct {
@@ -26,11 +25,11 @@ func (c *BaseCtrl) ErrResp(err commConsts.ResponseCode, msg string) (ret domain.
 }
 
 func (c *BaseCtrl) ErrMsg(err commConsts.ResponseCode, msg string) (ret string) {
-	ret = i118Utils.Sprintf(err.Message)
-
-	if ret != "" {
-		ret += ": "
-	}
+	//ret = i118Utils.Sprintf(err.Message)
+	//
+	//if ret != "" {
+	//	ret += ": "
+	//}
 
 	ret += msg
 

@@ -60,6 +60,7 @@ export default defineComponent({
     }
     const setEnv = (): void => {
       console.log('setEnv')
+      router.push(`/interpreter/list`)
     }
     const setLang = (): void => {
       console.log('setLang')

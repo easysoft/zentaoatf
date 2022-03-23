@@ -13,12 +13,12 @@ import (
 type IndexModule struct {
 	FileModule *index.FileModule `inject:""`
 
-	SiteModule *index.SiteModule `inject:""`
+	ZentaoModule *index.ZentaoModule `inject:""`
+	SiteModule   *index.SiteModule   `inject:""`
 
-	ZentaoModule    *index.ZentaoModule    `inject:""`
-	ConfigModule    *index.ConfigModule    `inject:""`
-	SyncModule      *index.SyncModule      `inject:""`
-	WorkspaceModule *index.WorkspaceModule `inject:""`
+	InterpreterModule *index.InterpreterModule `inject:""`
+	SyncModule        *index.SyncModule        `inject:""`
+	WorkspaceModule   *index.WorkspaceModule   `inject:""`
 
 	TestFilterModule *index.TestFilterModule `inject:""`
 	TestScriptModule *index.TestScriptModule `inject:""`
@@ -45,9 +45,9 @@ func (m *IndexModule) Party() module.WebModule {
 	modules := []module.WebModule{
 		m.FileModule.Party(),
 
-		m.SiteModule.Party(),
 		m.ZentaoModule.Party(),
-		m.ConfigModule.Party(),
+		m.SiteModule.Party(),
+		m.InterpreterModule.Party(),
 		m.SyncModule.Party(),
 		m.WorkspaceModule.Party(),
 

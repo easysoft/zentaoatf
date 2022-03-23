@@ -115,7 +115,7 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
 
   {
     icon: 'empty',
-    title: 'empty',
+    title: 'site',
     path: '/site',
     redirect: '/site/list',
     component: BlankLayout,
@@ -142,6 +142,22 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
     ],
   },
 
+  {
+    icon: 'empty',
+    title: 'interpreter',
+    path: '/interpreter',
+    redirect: '/interpreter/list',
+    component: BlankLayout,
+    hidden: true,
+    children: [
+      {
+        title: 'interpreter',
+        path: 'list',
+        component: () => import('@/views/interpreter/index.vue'),
+        hidden: true,
+      },
+    ],
+  },
 ];
 
 export default IndexLayoutRoutes;
