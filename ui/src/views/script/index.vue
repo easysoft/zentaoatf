@@ -19,7 +19,7 @@
             <a-select
                 v-model:value="filerValue"
                 @change="selectFilerValue"
-                style="width: 160px"
+                style="width: 200px"
                 :dropdownMatchSelectWidth="false"
             >
               <a-select-option value=""></a-select-option>
@@ -39,6 +39,7 @@
 
         <div class="tree-panel">
           <a-tree
+              v-if="treeData.children"
               ref="tree"
               :tree-data="treeData"
               :replace-fields="replaceFields"
@@ -55,6 +56,8 @@
               <FileOutlined v-if="slotProps.type==='file'" />
             </template>
           </a-tree>
+
+          <a-empty v-if="!treeData.children" :image="simpleImage"/>
         </div>
       </div>
 
@@ -96,7 +99,7 @@ import {Empty, message, notification} from "ant-design-vue";
 import {MonacoOptions} from "@/utils/const";
 import MonacoEditor from "@/components/Editor/MonacoEditor.vue";
 import {ZentaoData} from "@/store/zentao";
-import {cacheExpandedKeys, retrieveExpandedKeys} from "@/utils/cache";
+import {cacheExpandedKeys, getScriptFilters, retrieveExpandedKeys, setScriptFilters} from "@/utils/cache";
 import {listFilterItems} from "@/views/script/service";
 
 interface ListScriptPageSetupData {
@@ -156,11 +159,7 @@ export default defineComponent({
 
     watch(currProduct, () => {
       console.log('watch currProduct', currProduct.value.id)
-
-      filerType.value = ''
-      filerValue.value = ''
-
-      loadScripts()
+      init()
     }, {deep: true})
 
     watch(treeData, (currConfig) => {
@@ -187,6 +186,11 @@ export default defineComponent({
     loadScripts()
 
     const loadFilterItems = async () => {
+      if (!filerType.value) {
+        const data = await getScriptFilters()
+        filerType.value = data.by
+      }
+
       filerValue.value = ''
       if (!filerType.value) {
         filerItems.value = []
@@ -197,8 +201,16 @@ export default defineComponent({
       filerItems.value = result.data
     }
 
+    const init = async () => {
+      console.log('init')
+      loadFilterItems()
+      loadScripts()
+    }
+    init()
+
     const selectFilerType = async (val) => {
       console.log('selectFilerType', val)
+      await setScriptFilters(val, '')
       await loadFilterItems()
       await loadScripts()
     }
@@ -342,7 +354,7 @@ export default defineComponent({
         }
 
         .right {
-          width: 70px;
+          width: 40px;
           text-align: right;
         }
 
