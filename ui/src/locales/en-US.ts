@@ -56,7 +56,7 @@ export default {
     'execution.execSuite': 'Execute By Suite',
     'execution.execTask': 'Execute By Task',
     'execution.execUnit': 'Execute UnitTest',
-    'workspace': 'WorkDir',
+    'workspace': 'Work Dir',
     'create_workspace': 'Create WorkDir',
     'edit_workspace': 'Edit WorkDir',
 

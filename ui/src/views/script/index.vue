@@ -1,6 +1,6 @@
 <template>
   <div class="script-main">
-    <div id="main">
+    <div v-if="currProduct.id" id="main">
       <div id="left">
         <div class="toolbar">
           <div class="left">
@@ -76,6 +76,9 @@
           />
         </div>
       </div>
+    </div>
+    <div v-if="!currProduct.id">
+      <a-empty :image="simpleImage"/>
     </div>
   </div>
 </template>

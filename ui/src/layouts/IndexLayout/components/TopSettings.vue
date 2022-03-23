@@ -16,27 +16,43 @@
       </template>
 
     </a-dropdown>
+
+    <a-modal v-model:visible="selectLangVisible" title="请选择语言">
+      <div>
+        <TopSelectLang></TopSelectLang>
+      </div>
+      <template #footer>
+        <a-button key="back" @click="selectLangVisible=false">关闭</a-button>
+      </template>
+    </a-modal>
+
   </div>
 </template>
 <script lang="ts">
-import {defineComponent, WritableComputedRef} from "vue";
+import {defineComponent, ref, Ref} from "vue";
 import {useI18n} from "vue-i18n";
 import IconSvg from "@/components/IconSvg";
 import {useRouter} from "vue-router";
+
+import TopSelectLang from "./TopSelectLang.vue";
 
 interface SettingsSetupData {
   setSite: () => void;
   setEnv: () => void;
   setLang: () => void;
+
+  selectLangVisible: Ref<boolean>
 }
 
 export default defineComponent({
   name: 'Settings',
   components: {
-    IconSvg
+    IconSvg, TopSelectLang
   },
   setup(): SettingsSetupData {
     const router = useRouter();
+
+    const selectLangVisible = ref(false)
 
     const setSite = (): void => {
       console.log('setSite')
@@ -47,12 +63,14 @@ export default defineComponent({
     }
     const setLang = (): void => {
       console.log('setLang')
+      selectLangVisible.value = true
     }
 
     return {
       setSite,
       setEnv,
       setLang,
+      selectLangVisible,
     }
   }
 })

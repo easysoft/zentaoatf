@@ -64,6 +64,8 @@ export const cacheExpandedKeys = async (keys) => {
 }
 export const retrieveExpandedKeys = async () => {
   console.log('retrieveExpandedKeys')
-  const keys = await getCache(settings.expandedKeys);
+  let keys = await getCache(settings.expandedKeys);
+
+  if (!keys) keys = []
   return [...keys]
 }
