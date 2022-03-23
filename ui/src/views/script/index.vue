@@ -62,8 +62,10 @@
 
       <div id="content">
         <div class="toolbar">
-          <a-button @click="extract" type="primary" size="small">{{ t('extract_step') }}</a-button>
+          <a-button v-if="scriptCode !== ''"
+                    @click="extract" type="primary" size="small">{{ t('extract_step') }}</a-button>
         </div>
+
         <div class="editor-panel">
           <MonacoEditor
               v-if="scriptCode !== ''"

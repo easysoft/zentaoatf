@@ -24,6 +24,8 @@ export const getCurrProductIdBySite = async (currSiteId) => {
   return currProductId
 }
 export const setCurrProductIdBySite = async (currSiteId, currProductId) => {
+  if (!currSiteId) return
+
   let mp = await getCache(settings.currProductIdBySite);
   if (!mp) mp = {}
   mp[currSiteId + ''] = currProductId

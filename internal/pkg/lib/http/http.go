@@ -9,6 +9,7 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/ajg/form"
+	"github.com/bitly/go-simplejson"
 	"github.com/fatih/color"
 	"io/ioutil"
 	"net/http"
@@ -49,6 +50,16 @@ func Get(url string) (ret []byte, err error) {
 	if commConsts.Verbose {
 		logUtils.Infof(i118Utils.Sprintf("request_response"))
 		logUtils.Infof(logUtils.ConvertUnicode(ret))
+	}
+
+	jsn, err := simplejson.NewJson(ret)
+	if err != nil {
+		return
+	}
+	errMsg, _ := jsn.Get("error").String()
+	if strings.ToLower(errMsg) == "unauthorized" {
+		err = errors.New(commConsts.UnAuthorizedErr.Message)
+		return
 	}
 
 	return
@@ -100,6 +111,16 @@ func Post(url string, data interface{}) (ret []byte, err error) {
 	if commConsts.Verbose {
 		logUtils.Infof(i118Utils.Sprintf("request_response"))
 		logUtils.Infof(logUtils.ConvertUnicode(ret))
+	}
+
+	jsn, err := simplejson.NewJson(ret)
+	if err != nil {
+		return
+	}
+	errMsg, _ := jsn.Get("error").String()
+	if strings.ToLower(errMsg) == "unauthorized" {
+		err = errors.New(commConsts.UnAuthorizedErr.Message)
+		return
 	}
 
 	return

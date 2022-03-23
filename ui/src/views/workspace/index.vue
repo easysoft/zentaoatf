@@ -13,10 +13,10 @@
                             placeholder="输入关键字搜索" style="width:270px;margin-left: 16px;"/>
           </div>
         </div>
-
       </template>
+
       <template #extra>
-        <a-button type="primary" @click="create()">
+        <a-button v-if="currProduct?.id" type="primary" @click="create()">
           <template #icon><PlusCircleOutlined /></template>
           {{t('create_workspace')}}
         </a-button>
@@ -86,6 +86,7 @@ interface WorkspaceListSetupData {
   pagination: ComputedRef<PaginationConfig>;
 
   columns: any;
+  currProduct: ComputedRef
   models: ComputedRef<any[]>;
   loading: Ref<boolean>;
   getList: (curr) => void
@@ -223,6 +224,7 @@ export default defineComponent({
       queryParams,
       pagination,
 
+      currProduct,
       columns,
       models,
       loading,

@@ -1,18 +1,19 @@
 package commConsts
 
 type ResponseCode struct {
-	Code int64  `json:"code"`
-	Key  string `json:"message"`
+	Code    int64  `json:"code"`
+	Message string `json:"message"`
 }
 
 var (
-	Success  = ResponseCode{0, "request_success"}
-	CommErr  = ResponseCode{100, "comm_err"}
-	ParamErr = ResponseCode{200, "param_error"}
+	Success         = ResponseCode{0, "request success"}
+	CommErr         = ResponseCode{100, "common err"}
+	ParamErr        = ResponseCode{200, "param error"}
+	UnAuthorizedErr = ResponseCode{401, "unauthorized"}
 
-	NeedInitErr           = ResponseCode{1000, "data_not_init"}
-	BizErrWorkspaceConfig = ResponseCode{2000, "workspace_config_err"}
-	BizErrNameNotExist    = ResponseCode{3000, "record_not_found_by_name"}
+	NeedInitErr         = ResponseCode{1000, "data not init"}
+	BizErrZentaoRequest = ResponseCode{2000, "zentao request err"}
+	BizErrNameNotExist  = ResponseCode{3000, "record not found"}
 )
 
 type ResultStatus string

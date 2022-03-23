@@ -28,7 +28,7 @@ func (c *ZentaoCtrl) GetProfile(ctx iris.Context) {
 
 	data, err := zentaoHelper.GetProfile(workspacePath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.BizErrWorkspaceConfig, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
 		return
 	}
 
@@ -40,7 +40,12 @@ func (c *ZentaoCtrl) ListSiteAndProduct(ctx iris.Context) {
 	currProductId, _ := ctx.URLParamInt("currProductId")
 
 	sites, currSite, _ := c.SiteService.LoadSites(currSiteId)
-	products, currProduct, _ := zentaoHelper.LoadSiteProduct(currSite, currProductId)
+	products, currProduct, err := zentaoHelper.LoadSiteProduct(currSite, currProductId)
+
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
+		return
+	}
 
 	data := iris.Map{"sites": sites, "products": products,
 		"currSite": currSite, "currProduct": currProduct}
@@ -57,7 +62,7 @@ func (c *ZentaoCtrl) ListProduct(ctx iris.Context) {
 
 	data, err := zentaoHelper.ListProduct(workspacePath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.BizErrWorkspaceConfig, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
 		return
 	}
 
@@ -74,7 +79,7 @@ func (c *ZentaoCtrl) ListModule(ctx iris.Context) {
 
 	data, err := zentaoHelper.ListModule(productId, workspacePath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
 		return
 	}
 
@@ -91,7 +96,7 @@ func (c *ZentaoCtrl) ListSuite(ctx iris.Context) {
 
 	data, err := zentaoHelper.ListSuite(productId, workspacePath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
 		return
 	}
 
@@ -108,7 +113,7 @@ func (c *ZentaoCtrl) ListTask(ctx iris.Context) {
 
 	data, err := zentaoHelper.ListTask(productId, workspacePath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
 		return
 	}
 
@@ -126,7 +131,7 @@ func (c *ZentaoCtrl) GetDataForBugSubmition(ctx iris.Context) {
 
 	fields, err := zentaoHelper.GetBugFiledOptions(req, workspacePath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
 		return
 	}
 

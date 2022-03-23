@@ -89,7 +89,7 @@ func LoadSiteProduct(currSite serverDomain.ZentaoSite, currProductId int) (
 
 	products, err = loadProduct(config)
 	if err != nil {
-		products = make([]serverDomain.ZentaoProduct, 0)
+		return
 	}
 
 	var first serverDomain.ZentaoProduct

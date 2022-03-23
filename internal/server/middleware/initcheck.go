@@ -15,7 +15,7 @@ func InitCheck() iris.Handler {
 	return func(ctx *context.Context) {
 		if dao.GetDB() == nil {
 			ctx.StopWithJSON(http.StatusOK,
-				domain.Response{Code: commConsts.NeedInitErr.Code, Msg: i118Utils.Sprintf(commConsts.NeedInitErr.Key)})
+				domain.Response{Code: commConsts.NeedInitErr.Code, Msg: i118Utils.Sprintf(commConsts.NeedInitErr.Message)})
 			return
 		}
 
