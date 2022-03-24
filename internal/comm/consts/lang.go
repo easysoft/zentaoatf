@@ -41,7 +41,7 @@ var (
 			"commentsTag":  "--",
 			"printGrammar": "print('#')",
 			"interpreter":  "C:\\Program Files (x86)\\Lua\\5.1\\lua.exe",
-			"whereCmd":     "where lua",
+			"whereCmd":     "where lua*.exe",
 			"versionCmd":   "-v",
 		},
 		"perl": {
