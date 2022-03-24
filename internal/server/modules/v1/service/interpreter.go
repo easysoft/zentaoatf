@@ -10,6 +10,7 @@ import (
 	shellUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/shell"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
+	"regexp"
 	"strings"
 )
 
@@ -108,7 +109,7 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 		return
 	}
 
-	info = strings.Split(info, "\\r\\n")[0]
+	info = regexp.MustCompile("\r?\n").Split(info, -1)[0]
 
 	mp["path"] = path
 	mp["info"] = info
