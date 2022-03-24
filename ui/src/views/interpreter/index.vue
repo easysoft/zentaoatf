@@ -9,13 +9,19 @@
 
     </template>
     <template #extra>
-      <a-button type="primary" @click="create()">
+      <a-button v-if="interpreters" @click="create()" type="primary">
         <template #icon><PlusCircleOutlined /></template>
         {{t('create_interpreter')}}
       </a-button>
     </template>
 
+    <div v-if="!interpreters" style="padding: 20px;">
+      非Windows平台中，请参照<a-link to="https://ztf.im/book/ztf/ztf-about-26.html">此文</a-link>将可执行文件加入PATH变量中，
+      即可在任意目录中执行测试，不需要为各种语言设置运行环境。
+    </div>
+
     <a-table
+        v-if="interpreters"
         row-key="id"
         :columns="columns"
         :data-source="interpreters"
@@ -68,6 +74,7 @@ import EditInterpreterForm from './component/edit.vue';
 import {getLangSettings} from "./service";
 import {listInterpreter, removeInterpreter} from "@/views/interpreter/service";
 import {momentUtcDef} from "@/utils/datetime";
+import ALink from "@/components/ALink/index.vue";
 
 interface InterpreterListSetupData {
   t: (key: string | number) => string;
@@ -94,6 +101,7 @@ interface InterpreterListSetupData {
 export default defineComponent({
   name: 'InterpreterList',
   components: {
+    ALink,
     EditInterpreterForm, PlusCircleOutlined,
   },
   setup(props): InterpreterListSetupData {

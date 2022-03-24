@@ -14,6 +14,7 @@ var (
 	NeedInitErr         = ResponseCode{1000, "data not init"}
 	BizErrZentaoRequest = ResponseCode{2000, "zentao request err"}
 	BizErrNameNotExist  = ResponseCode{3000, "record not found"}
+	NotAvailable        = ResponseCode{4000, "not available"}
 )
 
 type ResultStatus string

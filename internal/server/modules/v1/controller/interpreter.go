@@ -2,6 +2,7 @@ package controller
 
 import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
@@ -39,6 +40,11 @@ func (c *InterpreterCtrl) GetLangInterpreter(ctx iris.Context) {
 }
 
 func (c *InterpreterCtrl) List(ctx iris.Context) {
+	if !commonUtils.IsWin() {
+		ctx.JSON(c.SuccessResp(nil))
+		return
+	}
+
 	data, err := c.InterpreterService.List()
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))

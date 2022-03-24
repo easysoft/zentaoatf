@@ -5,6 +5,7 @@ import (
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	langHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/lang"
+	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	shellUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/shell"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
@@ -54,16 +55,23 @@ func (s *InterpreterService) Delete(id uint) error {
 }
 
 func (s *InterpreterService) GetLangSettings() (mp map[string]interface{}, err error) {
-	langs := langHelper.GetSupportLanguageArrSort()
+	allLangs := langHelper.GetSupportLanguageArrSort()
 
+	langs := []string{}
 	mpData := map[string]map[string]string{}
-	for _, lang := range langs {
+	for _, lang := range allLangs {
+		mp := commConsts.LangMap[lang]
+		if mp["interpreter"] == "" {
+			continue
+		}
+
 		subMap := map[string]string{
-			"name":        commConsts.LangMap[lang]["name"],
-			"interpreter": commConsts.LangMap[lang]["interpreter"],
-			"versionCmd":  commConsts.LangMap[lang]["versionCmd"],
+			"name":        mp["name"],
+			"interpreter": mp["interpreter"],
+			"versionCmd":  mp["versionCmd"],
 		}
 		mpData[lang] = subMap
+		langs = append(langs, lang)
 	}
 
 	mp = map[string]interface{}{}
@@ -74,6 +82,8 @@ func (s *InterpreterService) GetLangSettings() (mp map[string]interface{}, err e
 }
 
 func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]interface{}, err error) {
+	mp = map[string]interface{}{}
+
 	langSettings := commConsts.LangMap[language]
 	whereCmd := strings.TrimSpace(langSettings["whereCmd"])
 	versionCmd := strings.TrimSpace(langSettings["versionCmd"])
@@ -81,7 +91,7 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 	path := langSettings["interpreter"]
 	info := ""
 
-	if whereCmd == "" {
+	if !commonUtils.IsWin() || whereCmd == "" {
 		return
 	}
 
@@ -97,7 +107,6 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 		return
 	}
 
-	mp = map[string]interface{}{}
 	mp["path"] = path
 	mp["info"] = info
 
