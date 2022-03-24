@@ -40,7 +40,7 @@ var (
 			"extName":      "lua",
 			"commentsTag":  "--",
 			"printGrammar": "print('#')",
-			"interpreter":  "C:\\Program Files (x86)\\Lua\\5.1\\lua.exe",
+			"interpreter":  "C:\\lua-5.3.6_Win32_bin",
 			"whereCmd":     "where lua*.exe",
 			"versionCmd":   "-v",
 		},

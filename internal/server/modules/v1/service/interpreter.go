@@ -98,10 +98,7 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 		return
 	}
 
-	output, err := shellUtils.ExeSysCmd(whereCmd)
-	if err != nil {
-		return
-	}
+	output, _ := shellUtils.ExeSysCmd(whereCmd)
 
 	path = strings.TrimSpace(output)
 	path = s.GetFirstNoEmptyLine(path, ".exe")
