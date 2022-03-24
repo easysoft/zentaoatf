@@ -95,13 +95,13 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 		return
 	}
 
-	output, err := shellUtils.ExecWinCmd(whereCmd)
+	output, err := shellUtils.ExeSysCmd(whereCmd)
 	if err != nil {
 		return
 	}
 
 	path = strings.TrimSpace(output)
-	cmd := fmt.Sprintf(versionCmd, "\""+path+"\"")
+	cmd := fmt.Sprintf(versionCmd, path)
 
 	info, err = shellUtils.ExecWinCmd(cmd)
 	if err != nil {
