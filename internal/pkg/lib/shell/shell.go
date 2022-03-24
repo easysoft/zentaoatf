@@ -16,8 +16,8 @@ import (
 	"strings"
 )
 
-func Exec(cmdStr string) (string, error) {
-	cmd := exec.Command(cmdStr)
+func ExecWinCmd(cmdStr string) (string, error) {
+	cmd := exec.Command("cmd", "/C", cmdStr)
 
 	var out bytes.Buffer
 	cmd.Stdout = &out
