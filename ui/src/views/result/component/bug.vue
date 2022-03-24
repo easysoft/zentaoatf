@@ -73,7 +73,6 @@
 
 <script lang="ts">
 import {defineComponent, onMounted, PropType, reactive, ref, Ref} from "vue";
-import {Interpreter} from "@/views/config/data";
 import { validateInfos } from 'ant-design-vue/lib/form/useForm';
 import {Form} from 'ant-design-vue';
 import {

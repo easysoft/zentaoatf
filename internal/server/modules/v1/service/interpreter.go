@@ -102,7 +102,7 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 
 	path = output
 
-	info, err = shellUtils.ExeSysCmd(fmt.Sprintf(versionCmd, path))
+	info, err = shellUtils.ExeSysCmd(fmt.Sprintf(versionCmd, "\""+path+"\""))
 	if err != nil {
 		return
 	}

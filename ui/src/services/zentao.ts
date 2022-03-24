@@ -1,7 +1,4 @@
 import request from '@/utils/request';
-import {Config} from "@/views/config/data";
-import {QueryParams} from "@/types/data";
-import settings from "@/config/settings";
 
 const apiPath = 'zentao';
 const apiPathBug = 'bug';

@@ -35,7 +35,6 @@
 
 <script lang="ts">
 import {ComputedRef, defineComponent, onMounted, PropType, reactive, ref, Ref} from "vue";
-import {Interpreter} from "@/views/config/data";
 import { validateInfos } from 'ant-design-vue/lib/form/useForm';
 import {message, Form} from 'ant-design-vue';
 import {queryProduct, queryTask} from "@/services/zentao";
@@ -44,7 +43,7 @@ const useForm = Form.useForm;
 
 interface ResultFormSetupData {
   t: (key: string | number) => string;
-  modelRef: Ref<Interpreter>
+  modelRef: Ref
   onFinish: () => Promise<void>;
 
   labelCol: any
