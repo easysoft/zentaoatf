@@ -20,9 +20,9 @@
                @blur="validate('path', { trigger: 'blur' }).catch(() => {})"/>
 
       <div v-if="languageSettings?.path" class="t-italic">
-        <div>当前{{modelRef.lang}}运行环境：</div>
-        <div>路径{{languageSettings.path}}</div>
-        <div>信息{{languageSettings.info}}</div>
+        <div>当前{{languageMap[modelRef.lang]?.name}}运行环境：</div>
+        <div>{{languageSettings.path}}</div>
+        <div>{{languageSettings.info}}</div>
       </div>
 
       <div v-if="!languageSettings?.path && interpreterPath" class="t-italic">

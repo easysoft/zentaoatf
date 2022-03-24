@@ -18,6 +18,8 @@ export async function getLangSettings() {
 }
 
 export async function getLangInterpreter(lang) {
+    if (lang === '') return {path: '', info: ''}
+
     const params = {language: lang}
     const json: any = await request({
         url: '/interpreters/getLangInterpreter',

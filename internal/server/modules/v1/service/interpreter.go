@@ -10,6 +10,7 @@ import (
 	shellUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/shell"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
+	"os"
 	"regexp"
 	"strings"
 )
@@ -102,7 +103,9 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 	}
 
 	path = strings.TrimSpace(output)
-	cmd := fmt.Sprintf(versionCmd, path)
+	os.Setenv("ZTF_TMP_INTERPRETER", path)
+
+	cmd := fmt.Sprintf(versionCmd, "%ZTF_TMP_INTERPRETER%")
 
 	info, err = shellUtils.ExecWinCmd(cmd)
 	if err != nil {
