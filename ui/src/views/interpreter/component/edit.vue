@@ -19,16 +19,7 @@
       <a-input v-if="!isElectron" v-model:value="modelRef.path" spellcheck="false"
                @blur="validate('path', { trigger: 'blur' }).catch(() => {})"/>
 
-      <div v-if="languageSettings?.path" class="t-italic">
-        <div>当前{{languageMap[modelRef.lang]?.name}}运行环境：</div>
-        <div>{{languageSettings.path}}</div>
-        <div>{{languageSettings.info}}</div>
-      </div>
-
-      <div v-if="!languageSettings?.path && interpreterPath" class="t-italic">
-        <div>{{languageMap[modelRef.lang]?.name}}可执行文件的路径类似：</div>
-        <div>{{interpreterPath}}</div>
-      </div>
+      <div v-html="interpreterInfo" class="t-italic"></div>
 
     </a-form-item>
 
@@ -60,11 +51,10 @@ interface EditInterpreterFormSetupData {
   save: () => Promise<void>;
   reset: () => Promise<void>;
 
-  interpreterPath: Ref<string>
+  interpreterInfo: Ref<string>
   modelRef: Ref;
   languages: Ref<[]>,
   languageMap: Ref,
-  languageSettings: Ref
 
   isElectron: Ref<boolean>;
   labelCol: any
@@ -100,9 +90,7 @@ export default defineComponent({
     }
     getInterpretersA()
 
-    const interpreterPath = computed(() => {
-      return languageMap.value[modelRef.value.lang]?.interpreter
-    })
+    const interpreterInfo = ref('')
 
     let modelRef = ref<any>({
       id: props.model.value.id,
@@ -119,7 +107,21 @@ export default defineComponent({
 
     const selectLang = async (item) => {
       console.log('selectLang', item)
-      languageSettings.value = await getLangInterpreter(item)
+
+      if (item === '') {
+        interpreterInfo.value = ''
+        return
+      }
+
+      const langName = languageMap.value[item].name
+      const data = await getLangInterpreter(item)
+
+      if (data.path) {
+        interpreterInfo.value = `<b>${langName}可执行文件：</b><br/>${data.path}<br/>${data.info}`
+      } else {
+        const samplePath = languageMap.value[modelRef.value.lang]?.interpreter
+        interpreterInfo.value = `<b>未找到${langName}可执行文件，请参考以下位置：</b><br/>${samplePath}`
+      }
     }
 
     const selectDir = () => {
@@ -158,7 +160,7 @@ export default defineComponent({
       t,
       isElectron,
 
-      interpreterPath,
+      interpreterInfo,
       validate,
       validateInfos,
       modelRef,
@@ -169,7 +171,6 @@ export default defineComponent({
 
       languages,
       languageMap,
-      languageSettings,
       labelCol: {span: 6},
       wrapperCol: {span: 18},
     }

@@ -104,6 +104,9 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 	}
 
 	path = strings.TrimSpace(output)
+	if path == "" {
+		return
+	}
 
 	var cmd *exec.Cmd
 	if language == "tcl" {
