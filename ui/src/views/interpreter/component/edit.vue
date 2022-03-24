@@ -120,7 +120,7 @@ export default defineComponent({
         interpreterInfo.value = `<b>${langName}可执行文件：</b><br/>${data.path}<br/>${data.info}`
       } else {
         const samplePath = languageMap.value[modelRef.value.lang]?.interpreter
-        interpreterInfo.value = `<b>${langName}可执行默认安装在以下位置：</b><br/>${samplePath}`
+        interpreterInfo.value = `<b>${langName}可执行文件默认安装在以下位置：</b><br/>${samplePath}`
       }
     }
 

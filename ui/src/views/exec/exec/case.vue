@@ -309,8 +309,6 @@ export default defineComponent({
 
     return {
       t,
-      wsMsg,
-      wsStatus,
       model,
       seq,
 
@@ -325,11 +323,13 @@ export default defineComponent({
       expandedKeys,
       selectedKeys,
       checkedKeys,
+      back,
 
+      wsMsg,
+      wsStatus,
+      isRunning,
       exec,
       stop,
-      isRunning,
-      back,
       hideWsStatus,
     }
   }

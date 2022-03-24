@@ -44,6 +44,51 @@ export function resizeWidth(mainId: string, leftId: string, resizeId: string, co
     return true
 }
 
+export function resizeHeight(contentId: string, topId: string, splitterId: string, bottomId: string,
+                             topMin: number, bottomMin: number, gap: number): boolean {
+    const content = document.getElementById(contentId) as any;
+    const top = document.getElementById(topId) as any;
+    const splitter = document.getElementById(splitterId) as any;
+    const bottom = document.getElementById(bottomId) as any;
+
+    if (!splitter) return false
+
+    // 鼠标按下事件
+    splitter.onmousedown = function (e) {
+        //色彩高亮
+        splitter.classList.add('active');
+        const startY = e.clientY - gap;
+
+        // 鼠标拖动事件
+        document.onmousemove = function (e) {
+            splitter.top = startY;
+            const endY = e.clientY - gap;
+            let moveLen = splitter.top + (endY - startY); // （endY-startY）=挪动的间隔。splitter.top+挪动的间隔=上边区域最初的高度
+            const maxT = content.clientHeight - splitter.offsetHeight; // 容器高度 - 下边区域的宽度 = 上边区域的宽度
+            if (moveLen < topMin) moveLen = topMin; // 下边区域的最小宽度
+            if (moveLen > maxT - bottomMin) moveLen = maxT - bottomMin; //上边区域最小高度
+            splitter.style.top = moveLen; // 设置上边区域的高度
+
+            top.style.height = (moveLen / content.clientHeight) * 100 + '%';
+            bottom.style.height = ((content.clientHeight - moveLen) / content.clientHeight - 0.008) * 100 + '%';
+        };
+
+        // 鼠标松开事件
+        document.onmouseup = function (evt) {
+            splitter.classList.remove('active'); //色彩复原
+
+            document.onmousemove = null;
+            document.onmouseup = null;
+            splitter.releaseCapture && splitter.releaseCapture(); //当你不在须要持续取得鼠标音讯就要应该调用ReleaseCapture()开释掉
+        };
+
+        splitter.setCapture && splitter.setCapture(); //该函数在属于以后线程的指定窗口里设置鼠标捕捉
+        return false;
+    };
+
+    return true
+}
+
 export function PrefixZero(num: number, n: number): string {
     return (Array(n).join('0') + num).slice(-n);
 }
