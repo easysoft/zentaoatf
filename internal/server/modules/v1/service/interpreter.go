@@ -108,6 +108,8 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 		return
 	}
 
+	info = strings.Split(info, "\\r\\n")[0]
+
 	mp["path"] = path
 	mp["info"] = info
 
