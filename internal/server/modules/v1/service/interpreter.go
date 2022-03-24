@@ -91,7 +91,7 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 	whereCmd := strings.TrimSpace(langSettings["whereCmd"])
 	versionCmd := strings.TrimSpace(langSettings["versionCmd"])
 
-	path := langSettings["interpreter"]
+	paths := langSettings["interpreter"]
 	info := ""
 
 	if !commonUtils.IsWin() || whereCmd == "" {
@@ -103,17 +103,18 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 		return
 	}
 
-	path = strings.TrimSpace(output)
-	path = strings.TrimSpace(output)
-	if path == "" || strings.Index(path, ".exe") != len(path)-4 {
+	paths = strings.TrimSpace(output)
+	paths = s.GetFirstNoEmptyLine(paths, ".exe")
+
+	if paths == "" || strings.Index(paths, ".exe") != len(paths)-4 {
 		return
 	}
 
 	var cmd *exec.Cmd
 	if language == "tcl" {
-		cmd = exec.Command("cmd", "/C", versionCmd, "|", path)
+		cmd = exec.Command("cmd", "/C", versionCmd, "|", paths)
 	} else {
-		cmd = exec.Command("cmd", "/C", path, versionCmd)
+		cmd = exec.Command("cmd", "/C", paths, versionCmd)
 	}
 
 	var out bytes.Buffer
@@ -123,19 +124,27 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 		return
 	}
 
-	info = out.String()
+	info = s.GetFirstNoEmptyLine(out.String(), "")
 
-	arr := regexp.MustCompile("\r?\n").Split(info, -1)
+	mp["paths"] = paths
+	mp["info"] = info
+
+	return
+}
+
+func (s *InterpreterService) GetFirstNoEmptyLine(text, find string) (ret string) {
+	arr := regexp.MustCompile("\r?\n").Split(text, -1)
 	for _, item := range arr {
 		item = strings.TrimSpace(item)
-		if item != "" {
-			info = item
+		if item == "" {
+			continue
+		}
+
+		if find == "" || (find != "" && strings.Contains(item, find)) {
+			ret = item
 			break
 		}
 	}
-
-	mp["path"] = path
-	mp["info"] = info
 
 	return
 }
