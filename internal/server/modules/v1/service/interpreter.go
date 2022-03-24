@@ -104,7 +104,8 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 	}
 
 	path = strings.TrimSpace(output)
-	if path == "" {
+	path = strings.TrimSpace(output)
+	if path == "" || strings.Index(path, ".exe") != len(path)-4 {
 		return
 	}
 
