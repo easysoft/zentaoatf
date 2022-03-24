@@ -33,7 +33,7 @@ var (
 			"printGrammar": "console.log(\"#\")",
 			"interpreter":  "C:\\Program Files\\nodejs\\node.exe",
 			"whereCmd":     "where node",
-			"versionCmd":   "%s -v",
+			"versionCmd":   "-v",
 		},
 		"lua": {
 			"name":         "Lua",
@@ -42,7 +42,7 @@ var (
 			"printGrammar": "print('#')",
 			"interpreter":  "C:\\Program Files (x86)\\Lua\\5.1\\lua.exe",
 			"whereCmd":     "where lua",
-			"versionCmd":   "%s -v",
+			"versionCmd":   "-v",
 		},
 		"perl": {
 			"name":         "Perl",
@@ -51,7 +51,7 @@ var (
 			"printGrammar": "print \"#\\n\";",
 			"interpreter":  "C:\\Perl64\\bin\\perl.exe",
 			"whereCmd":     "where perl",
-			"versionCmd":   "%s -v",
+			"versionCmd":   "-v",
 		},
 		"php": {
 			"name":         "PHP",
@@ -60,7 +60,7 @@ var (
 			"printGrammar": "echo \"#\\n\";",
 			"interpreter":  "C:\\php-7.3.9-Win32-VC15-x64\\php.exe",
 			"whereCmd":     "where php",
-			"versionCmd":   "%s -v",
+			"versionCmd":   "-v",
 		},
 		"python": {
 			"name":         "Python",
@@ -69,7 +69,7 @@ var (
 			"printGrammar": "print(\"#\")",
 			"interpreter":  "C:\\Users\\admin\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe",
 			"whereCmd":     "where python",
-			"versionCmd":   "%s --version",
+			"versionCmd":   "--version",
 		},
 		"ruby": {
 			"name":         "Ruby",
@@ -78,7 +78,7 @@ var (
 			"printGrammar": "print(\"#\\n\")",
 			"interpreter":  "C:\\Ruby26-x64\\bin\\ruby.exe",
 			"whereCmd":     "where ruby",
-			"versionCmd":   "%s -v",
+			"versionCmd":   "-v",
 		},
 		"tcl": {
 			"name":         "TCL",
@@ -87,7 +87,7 @@ var (
 			"printGrammar": "set hello \"#\"; \n puts [set hello];",
 			"interpreter":  "C:\\ActiveTcl\\bin\\tclsh.exe",
 			"whereCmd":     "where tclsh",
-			"versionCmd":   "echo puts $tcl_version;exit 0 | %s",
+			"versionCmd":   "echo puts $tcl_version;exit 0",
 		},
 	}
 

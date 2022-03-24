@@ -1,6 +1,7 @@
 package service
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
@@ -10,7 +11,7 @@ import (
 	shellUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/shell"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
-	"os"
+	"os/exec"
 	"regexp"
 	"strings"
 )
@@ -103,14 +104,22 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 	}
 
 	path = strings.TrimSpace(output)
-	os.Setenv("ZTF_TMP_INTERPRETER", path)
 
-	cmd := fmt.Sprintf(versionCmd, "%ZTF_TMP_INTERPRETER%")
+	var cmd *exec.Cmd
+	if language == "tcl" {
+		cmd = exec.Command("cmd", "/C", versionCmd, "|", path)
+	} else {
+		cmd = exec.Command("cmd", "/C", path, versionCmd)
+	}
 
-	info, err = shellUtils.ExecWinCmd(cmd)
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err = cmd.Run()
 	if err != nil {
 		return
 	}
+
+	info = out.String()
 
 	arr := regexp.MustCompile("\r?\n").Split(info, -1)
 	for _, item := range arr {
