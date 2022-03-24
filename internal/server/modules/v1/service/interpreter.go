@@ -91,7 +91,7 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 	whereCmd := strings.TrimSpace(langSettings["whereCmd"])
 	versionCmd := strings.TrimSpace(langSettings["versionCmd"])
 
-	paths := langSettings["interpreter"]
+	path := langSettings["interpreter"]
 	info := ""
 
 	if !commonUtils.IsWin() || whereCmd == "" {
@@ -103,18 +103,18 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 		return
 	}
 
-	paths = strings.TrimSpace(output)
-	paths = s.GetFirstNoEmptyLine(paths, ".exe")
+	path = strings.TrimSpace(output)
+	path = s.GetFirstNoEmptyLine(path, ".exe")
 
-	if paths == "" || strings.Index(paths, ".exe") != len(paths)-4 {
+	if path == "" || strings.Index(path, ".exe") != len(path)-4 {
 		return
 	}
 
 	var cmd *exec.Cmd
 	if language == "tcl" {
-		cmd = exec.Command("cmd", "/C", versionCmd, "|", paths)
+		cmd = exec.Command("cmd", "/C", versionCmd, "|", path)
 	} else {
-		cmd = exec.Command("cmd", "/C", paths, versionCmd)
+		cmd = exec.Command("cmd", "/C", path, versionCmd)
 	}
 
 	var out bytes.Buffer
@@ -126,7 +126,7 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 
 	info = s.GetFirstNoEmptyLine(out.String(), "")
 
-	mp["paths"] = paths
+	mp["path"] = path
 	mp["info"] = info
 
 	return
