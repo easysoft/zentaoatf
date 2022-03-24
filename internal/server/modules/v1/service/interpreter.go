@@ -101,8 +101,9 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 	}
 
 	path = strings.TrimSpace(output)
+	cmd := "\"" + path + "\""
 
-	info, err = shellUtils.ExeSysCmd(fmt.Sprintf(versionCmd, "\""+path+"\""))
+	info, err = shellUtils.Exec(fmt.Sprintf(versionCmd, cmd))
 	if err != nil {
 		return
 	}

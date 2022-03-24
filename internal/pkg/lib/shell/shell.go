@@ -16,6 +16,19 @@ import (
 	"strings"
 )
 
+func Exec(cmdStr string) (string, error) {
+	cmd := exec.Command(cmdStr)
+
+	var out bytes.Buffer
+	cmd.Stdout = &out
+
+	err := cmd.Run()
+
+	output := out.String()
+
+	return output, err
+}
+
 func ExeSysCmd(cmdStr string) (string, error) {
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
