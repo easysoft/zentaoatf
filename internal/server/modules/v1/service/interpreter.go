@@ -109,7 +109,14 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 		return
 	}
 
-	info = regexp.MustCompile("\r?\n").Split(info, -1)[0]
+	arr := regexp.MustCompile("\r?\n").Split(info, -1)
+	for _, item := range arr {
+		item = strings.TrimSpace(item)
+		if item != "" {
+			info = item
+			break
+		}
+	}
 
 	mp["path"] = path
 	mp["info"] = info
