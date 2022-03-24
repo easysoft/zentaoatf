@@ -26,6 +26,18 @@ func (c *InterpreterCtrl) GetLangSettings(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(data))
 }
 
+func (c *InterpreterCtrl) GetLangInterpreter(ctx iris.Context) {
+	language := ctx.URLParam("language")
+
+	data, err := c.InterpreterService.GetLangInterpreter(language)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	ctx.JSON(c.SuccessResp(data))
+}
+
 func (c *InterpreterCtrl) List(ctx iris.Context) {
 	data, err := c.InterpreterService.List()
 	if err != nil {

@@ -6,8 +6,10 @@ import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	langHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/lang"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
+	shellUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/shell"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
+	"strings"
 )
 
 type InterpreterService struct {
@@ -67,6 +69,37 @@ func (s *InterpreterService) GetLangSettings() (mp map[string]interface{}, err e
 	mp = map[string]interface{}{}
 	mp["languages"] = langs
 	mp["languageMap"] = mpData
+
+	return
+}
+
+func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]interface{}, err error) {
+	langSettings := commConsts.LangMap[language]
+	whereCmd := strings.TrimSpace(langSettings["whereCmd"])
+	versionCmd := strings.TrimSpace(langSettings["versionCmd"])
+
+	path := langSettings["interpreter"]
+	info := ""
+
+	if whereCmd == "" {
+		return
+	}
+
+	output, err := shellUtils.ExeSysCmd(whereCmd)
+	if err != nil {
+		return
+	}
+
+	path = output
+
+	info, err = shellUtils.ExeSysCmd(fmt.Sprintf(versionCmd, path))
+	if err != nil {
+		return
+	}
+
+	mp = map[string]interface{}{}
+	mp["path"] = path
+	mp["info"] = info
 
 	return
 }

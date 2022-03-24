@@ -43,7 +43,7 @@
         v-if="formVisible"
         :visible="true"
         :onCancel="onCancel"
-        width="600px"
+        width="800px"
         :destroy-on-close="true"
         :mask-closable="false"
     >
@@ -65,7 +65,7 @@ import {message, Empty} from 'ant-design-vue';
 
 import EditInterpreterForm from './component/edit.vue';
 
-import {getInterpreters} from "@/utils/testing";
+import {getLangSettings} from "./service";
 import {listInterpreter, removeInterpreter} from "@/views/interpreter/service";
 import {momentUtcDef} from "@/utils/datetime";
 
@@ -102,7 +102,7 @@ export default defineComponent({
 
     let languageMap = ref<any>({})
     const getInterpretersA = async () => {
-      const data = await getInterpreters()
+      const data = await getLangSettings()
       languageMap.value = data.languageMap
     }
     getInterpretersA()

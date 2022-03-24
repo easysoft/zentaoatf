@@ -1,7 +1,7 @@
 <template>
   <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
     <a-form-item :label="t('script_lang')" v-bind="validateInfos.lang">
-      <a-select v-model:value="modelRef.lang">
+      <a-select v-model:value="modelRef.lang" @change="selectLang">
         <a-select-option key="" value="">&nbsp;</a-select-option>
         <a-select-option v-for="item in languages" :key="item" :value="item">{{ languageMap[item].name }}</a-select-option>
       </a-select>
@@ -19,7 +19,17 @@
       <a-input v-if="!isElectron" v-model:value="modelRef.path" spellcheck="false"
                @blur="validate('path', { trigger: 'blur' }).catch(() => {})"/>
 
-      <span v-if="interpreterPath">例如：{{interpreterPath}}</span>
+      <div v-if="languageSettings?.path" class="t-italic">
+        <div>当前{{modelRef.lang}}运行环境：</div>
+        <div>路径{{languageSettings.path}}</div>
+        <div>信息{{languageSettings.info}}</div>
+      </div>
+
+      <div v-if="!languageSettings?.path && interpreterPath" class="t-italic">
+        <div>{{languageMap[modelRef.lang]?.name}}可执行文件的路径类似：</div>
+        <div>{{interpreterPath}}</div>
+      </div>
+
     </a-form-item>
 
     <a-form-item :wrapper-col="{ span: wrapperCol.span, offset: labelCol.span }">
@@ -36,8 +46,8 @@ import {useI18n} from "vue-i18n";
 
 import {validateInfos} from 'ant-design-vue/lib/form/useForm';
 import {Form} from 'ant-design-vue';
-import {saveInterpreter} from "@/views/interpreter/service";
-import {getInterpreters} from "@/utils/testing";
+import {getLangInterpreter, saveInterpreter} from "@/views/interpreter/service";
+import {getLangSettings} from "../service";
 
 const useForm = Form.useForm;
 
@@ -45,6 +55,7 @@ interface EditInterpreterFormSetupData {
   t: (key: string | number) => string;
   validate: any
   validateInfos: validateInfos;
+  selectLang: (v) => void
   selectDir: () => void
   save: () => Promise<void>;
   reset: () => Promise<void>;
@@ -53,6 +64,7 @@ interface EditInterpreterFormSetupData {
   modelRef: Ref;
   languages: Ref<[]>,
   languageMap: Ref,
+  languageSettings: Ref
 
   isElectron: Ref<boolean>;
   labelCol: any
@@ -77,11 +89,12 @@ export default defineComponent({
     const {t} = useI18n();
     const isElectron = ref(!!window.require)
 
-    let languages = ref<any>({})
-    let languageMap = ref<any>({})
+    const languages = ref<any>({})
+    const languageMap = ref<any>({})
+    const languageSettings = ref({})
 
     const getInterpretersA = async () => {
-      const data = await getInterpreters()
+      const data = await getLangSettings()
       languages.value = data.languages
       languageMap.value = data.languageMap
     }
@@ -104,6 +117,10 @@ export default defineComponent({
 
     const {resetFields, validate, validateInfos} = useForm(modelRef, rulesRef);
 
+    const selectLang = async (item) => {
+      console.log('selectLang', item)
+      languageSettings.value = await getLangInterpreter(item)
+    }
 
     const selectDir = () => {
       console.log('selectDir')
@@ -145,12 +162,14 @@ export default defineComponent({
       validate,
       validateInfos,
       modelRef,
+      selectLang,
       selectDir,
       save,
       reset,
 
       languages,
       languageMap,
+      languageSettings,
       labelCol: {span: 6},
       wrapperCol: {span: 18},
     }

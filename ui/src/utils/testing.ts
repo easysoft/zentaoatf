@@ -2,26 +2,6 @@ import moment from "moment";
 import {AutoTestTools, ScriptLanguages, TestTools, BuildTools} from "@/utils/const";
 import request from "@/utils/request";
 
-export async function getInterpreters() {
-    const json: any = await request({
-        url: '/interpreters/getLangSettings',
-        method: 'GET',
-    })
-
-    if (json.code === 0) {
-        const data = json.data
-        return data
-    }
-
-    // ScriptLanguages.forEach(name => {
-    //     const key = name.toLowerCase()
-    //     languages.push(key)
-    //     languageMap[key] = {name: name, path: path}
-    // })
-
-    return {languages: [], languageMap: {}}
-}
-
 export function getUnitTestFrameworks(): any {
     const list = new Array<string>()
     const map = {}

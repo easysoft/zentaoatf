@@ -32,7 +32,8 @@ var (
 			"commentsTag":  "//",
 			"printGrammar": "console.log(\"#\")",
 			"interpreter":  "C:\\Program Files\\nodejs\\node.exe",
-			"versionCmd":   "node -v",
+			"whereCmd":     "where node",
+			"versionCmd":   "%s -v",
 		},
 		"lua": {
 			"name":         "Lua",
@@ -40,7 +41,8 @@ var (
 			"commentsTag":  "--",
 			"printGrammar": "print('#')",
 			"interpreter":  "C:\\Program Files (x86)\\Lua\\5.1\\lua.exe",
-			"versionCmd":   "lua -v",
+			"whereCmd":     "where lua",
+			"versionCmd":   "%s -v",
 		},
 		"perl": {
 			"name":         "Perl",
@@ -48,7 +50,8 @@ var (
 			"commentsTag":  "#",
 			"printGrammar": "print \"#\\n\";",
 			"interpreter":  "C:\\Perl64\\bin\\perl.exe",
-			"versionCmd":   "perl -v",
+			"whereCmd":     "where perl",
+			"versionCmd":   "%s -v",
 		},
 		"php": {
 			"name":         "PHP",
@@ -56,7 +59,8 @@ var (
 			"commentsTag":  "//",
 			"printGrammar": "echo \"#\\n\";",
 			"interpreter":  "C:\\php-7.3.9-Win32-VC15-x64\\php.exe",
-			"versionCmd":   "php -v",
+			"whereCmd":     "where php",
+			"versionCmd":   "%s -v",
 		},
 		"python": {
 			"name":         "Python",
@@ -64,7 +68,8 @@ var (
 			"commentsTag":  "#",
 			"printGrammar": "print(\"#\")",
 			"interpreter":  "C:\\Users\\admin\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe",
-			"versionCmd":   "python --version",
+			"whereCmd":     "where python",
+			"versionCmd":   "%s --version",
 		},
 		"ruby": {
 			"name":         "Ruby",
@@ -72,7 +77,8 @@ var (
 			"commentsTag":  "#",
 			"printGrammar": "print(\"#\\n\")",
 			"interpreter":  "C:\\Ruby26-x64\\bin\\ruby.exe",
-			"versionCmd":   "ruby -v",
+			"whereCmd":     "where ruby",
+			"versionCmd":   "%s -v",
 		},
 		"tcl": {
 			"name":         "TCL",
@@ -80,7 +86,8 @@ var (
 			"commentsTag":  "#",
 			"printGrammar": "set hello \"#\"; \n puts [set hello];",
 			"interpreter":  "C:\\ActiveTcl\\bin\\tclsh.exe",
-			"versionCmd":   "echo puts $tcl_version;exit 0 | tclsh",
+			"whereCmd":     "where tclsh",
+			"versionCmd":   "echo puts $tcl_version;exit 0 | %s",
 		},
 	}
 
