@@ -85,9 +85,7 @@ func (s *InterpreterService) GetLangSettings() (mp map[string]interface{}, err e
 	return
 }
 
-func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]interface{}, err error) {
-	mp = map[string]interface{}{}
-
+func (s *InterpreterService) GetLangInterpreter(language string) (list []map[string]interface{}, err error) {
 	langSettings := commConsts.LangMap[language]
 	whereCmd := strings.TrimSpace(langSettings["whereCmd"])
 	versionCmd := strings.TrimSpace(langSettings["versionCmd"])
@@ -97,8 +95,11 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 
 	if language == "autoit" {
 		if fileUtils.IsDir(filepath.Dir(path)) {
+			mp := map[string]interface{}{}
 			mp["path"] = path
 			mp["info"] = "AutoIt V3"
+
+			list = append(list, mp)
 		}
 
 		return
@@ -109,37 +110,42 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 	}
 
 	output, _ := shellUtils.ExeSysCmd(whereCmd)
+	pathArr := s.GetNoEmptyLines(strings.TrimSpace(output), ".exe", false)
 
-	path = strings.TrimSpace(output)
-	path = s.GetFirstNoEmptyLine(path, ".exe")
+	for _, path := range pathArr {
+		if strings.Index(path, ".exe") != len(path)-4 {
+			continue
+		}
 
-	if path == "" || strings.Index(path, ".exe") != len(path)-4 {
-		return
+		var cmd *exec.Cmd
+		if language == "tcl" {
+			cmd = exec.Command("cmd", "/C", versionCmd, "|", path)
+		} else {
+			cmd = exec.Command("cmd", "/C", path, versionCmd)
+		}
+
+		var out bytes.Buffer
+		cmd.Stdout = &out
+		err = cmd.Run()
+		if err != nil {
+			return
+		}
+
+		infoArr := s.GetNoEmptyLines(out.String(), "", true)
+		if len(infoArr) > 0 {
+			info = infoArr[0]
+		}
+
+		mp := map[string]interface{}{}
+		mp["path"] = path
+		mp["info"] = info
+		list = append(list, mp)
 	}
-
-	var cmd *exec.Cmd
-	if language == "tcl" {
-		cmd = exec.Command("cmd", "/C", versionCmd, "|", path)
-	} else {
-		cmd = exec.Command("cmd", "/C", path, versionCmd)
-	}
-
-	var out bytes.Buffer
-	cmd.Stdout = &out
-	err = cmd.Run()
-	if err != nil {
-		return
-	}
-
-	info = s.GetFirstNoEmptyLine(out.String(), "")
-
-	mp["path"] = path
-	mp["info"] = info
 
 	return
 }
 
-func (s *InterpreterService) GetFirstNoEmptyLine(text, find string) (ret string) {
+func (s *InterpreterService) GetNoEmptyLines(text, find string, getOne bool) (ret []string) {
 	arr := regexp.MustCompile("\r?\n").Split(text, -1)
 	for _, item := range arr {
 		item = strings.TrimSpace(item)
@@ -148,8 +154,11 @@ func (s *InterpreterService) GetFirstNoEmptyLine(text, find string) (ret string)
 		}
 
 		if find == "" || (find != "" && strings.Contains(item, find)) {
-			ret = item
-			break
+			ret = append(ret, item)
+
+			if getOne {
+				break
+			}
 		}
 	}
 

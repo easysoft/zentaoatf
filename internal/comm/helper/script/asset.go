@@ -11,6 +11,7 @@ import (
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/kataras/iris/v12"
 	"io/ioutil"
 	"path"
@@ -19,14 +20,23 @@ import (
 	"strings"
 )
 
-func LoadScriptTree(dir string, scriptIdsFromZentao map[int]string) (asset serverDomain.TestAsset, err error) {
-	if !fileUtils.FileExist(dir) {
-		logUtils.Errorf("dir %s not exist", dir)
+func LoadScriptTree(workspace model.Workspace, scriptIdsFromZentao map[int]string) (asset serverDomain.TestAsset, err error) {
+	workspaceId := int(workspace.ID)
+	workspaceDir := workspace.Path
+
+	if !fileUtils.FileExist(workspaceDir) {
+		logUtils.Errorf("workspaceDir %s not exist", workspaceDir)
 		return
 	}
 
-	asset = serverDomain.TestAsset{Path: dir, Title: fileUtils.GetDirName(dir), Type: commConsts.Workspace, Slots: iris.Map{"icon": "icon"}}
-	loadScriptNodesInDir(dir, &asset, 0, scriptIdsFromZentao)
+	asset = serverDomain.TestAsset{
+		Type:        commConsts.Workspace,
+		WorkspaceId: workspaceId,
+		Path:        workspaceDir,
+		Title:       fileUtils.GetDirName(workspaceDir),
+		Slots:       iris.Map{"icon": "icon"}}
+
+	loadScriptNodesInDir(workspaceDir, &asset, 0, scriptIdsFromZentao)
 
 	jsn, _ := json.Marshal(asset)
 	logUtils.Infof(string(jsn))
@@ -40,9 +50,11 @@ func LoadScriptByWorkspace(workspacePath string) (scriptFiles []string) {
 	return
 }
 
-func GetScriptContent(pth string) (script serverDomain.TestScript, err error) {
+func GetScriptContent(pth string, workspaceId int) (script serverDomain.TestScript, err error) {
+	script.Path = pth
 	script.Code = fileUtils.ReadFile(pth)
 	script.Lang = getScriptLang(pth)
+	script.WorkspaceId = workspaceId
 
 	return
 }
@@ -161,8 +173,12 @@ func addScript(pth string, parent *serverDomain.TestAsset) {
 	if pass {
 		pass = CheckFileIsScript(pth)
 		if pass {
-			childScript := &serverDomain.TestAsset{Path: pth, Title: fileUtils.GetFileName(pth),
-				Type: commConsts.File, Slots: iris.Map{"icon": "icon"}}
+			childScript := &serverDomain.TestAsset{
+				Type:        commConsts.File,
+				WorkspaceId: parent.WorkspaceId,
+				Path:        pth,
+				Title:       fileUtils.GetFileName(pth),
+				Slots:       iris.Map{"icon": "icon"}}
 
 			parent.Children = append(parent.Children, childScript)
 			parent.ScriptCount += 1
@@ -170,8 +186,12 @@ func addScript(pth string, parent *serverDomain.TestAsset) {
 	}
 }
 func addDir(pth string, parent *serverDomain.TestAsset) (dirNode *serverDomain.TestAsset) {
-	dirNode = &serverDomain.TestAsset{Path: pth, Title: fileUtils.GetDirName(pth),
-		Type: commConsts.Dir, Slots: iris.Map{"icon": "icon"}}
+	dirNode = &serverDomain.TestAsset{
+		Type:        commConsts.Dir,
+		WorkspaceId: parent.WorkspaceId,
+		Path:        pth,
+		Title:       fileUtils.GetDirName(pth),
+		Slots:       iris.Map{"icon": "icon"}}
 	parent.Children = append(parent.Children, dirNode)
 
 	return

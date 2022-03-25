@@ -112,7 +112,7 @@ func (s *WorkspaceService) GetByUser(currWorkspacePath string) (
 	}
 
 	if currWorkspace.Type == commConsts.ZTF {
-		scriptTree, err = scriptUtils.LoadScriptTree(currWorkspace.Path, nil)
+		scriptTree, err = scriptUtils.LoadScriptTree(currWorkspace, nil)
 	}
 
 	currWorkspaceConfig = configUtils.ReadFromFile(currWorkspace.Path)

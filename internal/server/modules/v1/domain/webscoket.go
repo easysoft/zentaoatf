@@ -14,6 +14,7 @@ type WsReq struct {
 	ModuleId                  string   `json:"moduleId"`
 	SuiteId                   string   `json:"suiteId"`
 	TaskId                    string   `json:"taskId"`
+	WorkspaceId               int      `json:"workspaceId"`
 	WorkspacePath             string   `json:"workspacePath"`
 	ScriptDirParamFromCmdLine string   `json:"-"`
 

@@ -19,8 +19,8 @@ export async function list(params): Promise<any> {
     });
 }
 
-export async function get(path: string): Promise<any> {
-    const params = {path: path}
+export async function get(path: string, workspaceId: number): Promise<any> {
+    const params = {path: path, workspaceId: workspaceId}
 
     return request({
         url: `/${apiPath}/get`,
@@ -28,8 +28,8 @@ export async function get(path: string): Promise<any> {
     });
 }
 
-export async function extract(path: string): Promise<any> {
-    const params = {path: path}
+export async function extract(path: string, workspaceId: number): Promise<any> {
+    const params = {path: path, workspaceId: workspaceId}
 
     return request({
         url: `/${apiPath}/extract`,

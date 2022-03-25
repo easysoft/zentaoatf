@@ -37,7 +37,7 @@ func (s *TestScriptService) LoadTestScriptsBySiteProduct(
 			continue
 		}
 
-		scriptsInDir, _ := scriptUtils.LoadScriptTree(workspace.Path, scriptIdsFromZentao)
+		scriptsInDir, _ := scriptUtils.LoadScriptTree(workspace, scriptIdsFromZentao)
 
 		root.Children = append(root.Children, &scriptsInDir)
 	}

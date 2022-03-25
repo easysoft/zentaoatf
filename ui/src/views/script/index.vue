@@ -98,9 +98,6 @@ export default defineComponent({
   setup() {
     const { t } = useI18n();
 
-    let selectedNode = {} as any
-    let isExpand = ref(false);
-
     const zentaoStore = useStore<{ zentao: ZentaoData }>();
     const currSite = computed<any>(() => zentaoStore.state.zentao.currSite);
     const currProduct = computed<any>(() => zentaoStore.state.zentao.currProduct);
@@ -117,6 +114,30 @@ export default defineComponent({
       console.log('watch script', script)
       scriptCode.value = script.value.code
     }, {deep: true})
+
+    const execSingle = () => {
+      console.log('exec', script.value)
+
+      const msg = {act: 'execCase', workspaceId: script.value.workspaceId, cases: [script.value.path]}
+      console.log('msg', msg)
+
+      wsMsg.out += '\n'
+      WebSocket.sentMsg(room, JSON.stringify(msg))
+    }
+
+    const extract = () => {
+      console.log('extract', script.value)
+
+      scriptStore.dispatch('script/extractScript', script.value).then(() => {
+        notification.success({
+          message: t('extract_success'),
+        })
+      }).catch(() => {
+        notification.error({
+          message: t('extract_fail'),
+        });
+      })
+    }
 
     // websocket
     let init = true;
@@ -179,39 +200,11 @@ export default defineComponent({
       }, 600)
     })
 
-    const execSingle = () => {
-      console.log('exec', selectedNode.props)
-
-      const msg = {act: 'execCase', workspacePath: 'workspacePath', cases: [selectedNode.props.path]}
-      console.log('msg', msg)
-
-      wsMsg.out += '\n'
-      WebSocket.sentMsg(room, JSON.stringify(msg))
-    }
-
-    const extract = () => {
-      console.log('extract', selectedNode.props)
-
-      scriptCode.value = ''
-      scriptStore.dispatch('script/extractScript', selectedNode.props).then(() => {
-        scriptCode.value = script.value.code
-        notification.success({
-          message: t('extract_success'),
-        })
-      }).catch(() => {
-        notification.error({
-          message: t('extract_fail'),
-        });
-      })
-    }
-
     return {
       t,
       currSite,
       currProduct,
 
-      isExpand,
-      extract,
       tree,
       script,
       scriptCode,
@@ -220,6 +213,7 @@ export default defineComponent({
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
 
       execSingle,
+      extract,
       stop,
       hideWsStatus,
       wsMsg,

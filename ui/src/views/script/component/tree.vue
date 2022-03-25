@@ -195,16 +195,13 @@ export default defineComponent({
     const selectNode = (selectedKeys, e) => {
       console.log('selectNode', e.selectedNodes)
 
-      let scriptPath = null
+      let data = null
 
       if (e.selectedNodes.length > 0) {
-        const nodeProp = e.selectedNodes[0].props
-        if (!nodeProp.isDir) {
-          scriptPath = nodeProp.path
-        }
+        data = e.selectedNodes[0].props
       }
 
-      scriptStore.dispatch('script/getScript', scriptPath)
+      scriptStore.dispatch('script/getScript', data)
     }
 
     const expandNode = (keys: string[], e: any) => {

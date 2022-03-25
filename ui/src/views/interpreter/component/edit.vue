@@ -19,6 +19,11 @@
       <a-input v-if="!isElectron" v-model:value="modelRef.path" spellcheck="false"
                @blur="validate('path', { trigger: 'blur' }).catch(() => {})"/>
 
+      <a-select v-model:value="modelRef.path">
+        <a-select-option value="">请选择</a-select-option>
+        <a-select-option v-for="item in languages" :key="item" :value="item">请选择</a-select-option>
+      </a-select>
+
       <div v-html="interpreterInfo" class="t-italic"></div>
 
     </a-form-item>
@@ -42,25 +47,6 @@ import {getLangSettings} from "../service";
 
 const useForm = Form.useForm;
 
-interface EditInterpreterFormSetupData {
-  t: (key: string | number) => string;
-  validate: any
-  validateInfos: validateInfos;
-  selectLang: (v) => void
-  selectDir: () => void
-  save: () => Promise<void>;
-  reset: () => Promise<void>;
-
-  interpreterInfo: Ref<string>
-  modelRef: Ref;
-  languages: Ref<[]>,
-  languageMap: Ref,
-
-  isElectron: Ref<boolean>;
-  labelCol: any
-  wrapperCol: any
-}
-
 export default defineComponent({
   name: 'EditInterpreterForm',
   props: {
@@ -75,13 +61,12 @@ export default defineComponent({
     },
   },
   components: {},
-  setup(props): EditInterpreterFormSetupData {
+  setup(props) {
     const {t} = useI18n();
     const isElectron = ref(!!window.require)
 
     const languages = ref<any>({})
     const languageMap = ref<any>({})
-    const languageSettings = ref({})
 
     const getInterpretersA = async () => {
       const data = await getLangSettings()
@@ -90,7 +75,7 @@ export default defineComponent({
     }
     getInterpretersA()
 
-    const interpreterInfo = ref('')
+    const interpreterInfos = ref([])
 
     let modelRef = ref<any>({
       id: props.model.value.id,
@@ -109,19 +94,11 @@ export default defineComponent({
       console.log('selectLang', item)
 
       if (item === '') {
-        interpreterInfo.value = ''
+        interpreterInfos.value = []
         return
       }
 
-      const langName = languageMap.value[item].name
-      const data = await getLangInterpreter(item)
-
-      if (data.path) {
-        interpreterInfo.value = `<b>${langName}可执行文件：</b><br/>${data.path}<br/>${data.info}`
-      } else {
-        const samplePath = languageMap.value[modelRef.value.lang]?.interpreter
-        interpreterInfo.value = `<b>${langName}可执行文件默认安装在以下位置：</b><br/>${samplePath}`
-      }
+      interpreterInfos.value = await getLangInterpreter(item)
     }
 
     const selectDir = () => {
@@ -160,7 +137,7 @@ export default defineComponent({
       t,
       isElectron,
 
-      interpreterInfo,
+      interpreterInfos,
       validate,
       validateInfos,
       modelRef,

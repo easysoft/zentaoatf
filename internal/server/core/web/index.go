@@ -9,11 +9,15 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/config"
+	"github.com/aaronchen2k/deeptest/internal/server/core/dao"
 	"github.com/aaronchen2k/deeptest/internal/server/core/module"
+	v1 "github.com/aaronchen2k/deeptest/internal/server/modules/v1"
 	myWs "github.com/aaronchen2k/deeptest/internal/server/modules/v1/controller"
+	"github.com/facebookgo/inject"
 	gorillaWs "github.com/gorilla/websocket"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/kataras/neffos/gorilla"
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"path/filepath"
 	"strings"
@@ -81,19 +85,23 @@ func Init(port int) *WebServer {
 	mvc.New(app)
 
 	// init websocket
+	websocketCtrl := myWs.NewWebSocketCtrl()
+	injectWsModule(websocketCtrl)
+
 	websocketAPI := app.Party(serverConfig.WsPath)
 	m := mvc.New(websocketAPI)
 	m.Register(
 		&websocketUtils.PrefixedLogger{Prefix: ""},
 	)
-	m.HandleWebsocket(myWs.NewWsCtrl())
+	m.HandleWebsocket(websocketCtrl)
 	websocketServer := websocket.New(gorilla.Upgrader(gorillaWs.Upgrader{CheckOrigin: func(*http.Request) bool { return true }}), m)
 	websocketAPI.Get("/", websocket.Handler(websocketServer))
 
+	// init http
 	if port != 0 {
 		serverConfig.CONFIG.System.Addr = fmt.Sprintf(":%d", port)
 	}
-	return &WebServer{
+	webServer := &WebServer{
 		app:               app,
 		addr:              serverConfig.CONFIG.System.Addr,
 		timeFormat:        serverConfig.CONFIG.System.TimeFormat,
@@ -102,6 +110,50 @@ func Init(port int) *WebServer {
 		webPath:           serverConfig.CONFIG.System.WebPath,
 		idleConnsClosed:   idleConnClosed,
 		globalMiddlewares: []context.Handler{},
+	}
+
+	injectModule(webServer)
+
+	return webServer
+}
+
+func injectModule(ws *WebServer) {
+	var g inject.Graph
+	g.Logger = logrus.StandardLogger()
+
+	indexModule := v1.NewIndexModule()
+
+	// inject objects
+	if err := g.Provide(
+		&inject.Object{Value: dao.GetDB()},
+		&inject.Object{Value: indexModule},
+	); err != nil {
+		logrus.Fatalf("provide usecase objects to the Graph: %v", err)
+	}
+	err := g.Populate()
+	if err != nil {
+		logrus.Fatalf("populate the incomplete Objects: %v", err)
+	}
+
+	ws.AddModule(indexModule.Party())
+
+	logUtils.Infof("start server")
+}
+
+func injectWsModule(websocketCtrl *myWs.WebSocketCtrl) {
+	var g inject.Graph
+	g.Logger = logrus.StandardLogger()
+
+	// inject objects
+	if err := g.Provide(
+		&inject.Object{Value: dao.GetDB()},
+		&inject.Object{Value: websocketCtrl},
+	); err != nil {
+		logrus.Fatalf("provide usecase objects to the Graph: %v", err)
+	}
+	err := g.Populate()
+	if err != nil {
+		logrus.Fatalf("populate the incomplete Objects: %v", err)
 	}
 }
 

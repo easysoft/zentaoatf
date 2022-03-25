@@ -33,12 +33,14 @@ func (c *TestScriptCtrl) List(ctx iris.Context) {
 // Get 详情
 func (c *TestScriptCtrl) Get(ctx iris.Context) {
 	scriptPath := ctx.URLParam("path")
+	workspaceId, _ := ctx.URLParamInt("workspaceId")
+
 	if scriptPath == "" {
 		ctx.JSON(c.ErrResp(commConsts.ParamErr, fmt.Sprintf("参数%s不合法", "path")))
 		return
 	}
 
-	script, err := scriptUtils.GetScriptContent(scriptPath)
+	script, err := scriptUtils.GetScriptContent(scriptPath, workspaceId)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
@@ -49,6 +51,7 @@ func (c *TestScriptCtrl) Get(ctx iris.Context) {
 // Get 详情
 func (c *TestScriptCtrl) Extract(ctx iris.Context) {
 	scriptPath := ctx.URLParam("path")
+	workspaceId, _ := ctx.URLParamInt("workspaceId")
 
 	if scriptPath == "" {
 		ctx.JSON(c.ErrResp(commConsts.ParamErr, fmt.Sprintf("参数%s不合法", "path")))
@@ -57,7 +60,7 @@ func (c *TestScriptCtrl) Extract(ctx iris.Context) {
 
 	scriptUtils.Extract([]string{scriptPath})
 
-	script, err := scriptUtils.GetScriptContent(scriptPath)
+	script, err := scriptUtils.GetScriptContent(scriptPath, workspaceId)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return

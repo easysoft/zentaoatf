@@ -7,7 +7,8 @@ type TestScript struct {
 	Desc    string `json:"desc"`
 	Lang    string `json:"lang"`
 
-	WorkspaceId uint `json:"workspaceId"`
+	Path        string `json:"path"`
+	WorkspaceId int    `json:"workspaceId"`
 }
 
 type FilterItem struct {

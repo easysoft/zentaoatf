@@ -14,5 +14,6 @@ type TestAsset struct {
 	ScriptCount int                     `json:"scriptCount"`
 	Slots       iris.Map                `json:"slots"`
 
-	Children []*TestAsset `json:"children"`
+	WorkspaceId int          `json:"workspaceId"`
+	Children    []*TestAsset `json:"children"`
 }
