@@ -98,7 +98,7 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 	if language == "autoit" {
 		if fileUtils.IsDir(filepath.Dir(path)) {
 			mp["path"] = path
-			mp["info"] = "AutoIt3.X"
+			mp["info"] = "AutoIt V3"
 		}
 
 		return

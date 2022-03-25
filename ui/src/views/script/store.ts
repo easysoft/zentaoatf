@@ -54,15 +54,15 @@ const StoreModel: ModuleType = {
             return true;
         },
 
-        async getScript({ commit }, script: any ) {
-            if (script.isDir) {
-                commit('setItem', {});
+        async getScript({ commit }, scriptPath: string ) {
+            if (!scriptPath) {
+                commit('setItem', null);
                 return true;
             }
 
-            const response: ResponseData = await get(script.path);
+            const response: ResponseData = await get(scriptPath);
             const { data } = response;
-            commit('setItem',data);
+            commit('setItem', data);
             return true;
         },
         async extractScript({ commit }, script: any ) {
