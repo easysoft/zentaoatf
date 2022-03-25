@@ -24,6 +24,8 @@ export interface SettingsType {
      */
     siteTokenKey: string;
 
+    eventExec: string;
+
     initStatus: string;
     currSiteId: string;
     currProductId: string;
@@ -53,6 +55,8 @@ const settings: SettingsType = {
     topNavEnable: true,
     headFixed: true,
     siteTokenKey: 'admin_antd_vue_token',
+
+    eventExec: 'eventExec',
 
     initStatus: 'initStatus',
     currSiteId: 'currSiteId',

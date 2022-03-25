@@ -1,43 +1,20 @@
 <template>
-  <div class="script-main">
-    <div v-if="currProduct.id" id="main">
-      <div id="left">
-        <ScriptTreePage></ScriptTreePage>
-      </div>
+  <div id="exec-log-main">
+    <div v-if="wsStatus === 'success'" class="ws-status" :class="wsStatus">
+      <CheckOutlined />
 
-      <div id="splitter-h"></div>
-
-      <div id="right">
-        <div class="toolbar">
-          <template v-if="scriptCode !== ''">
-            <a-button @click="execSingle" type="primary">{{ t('exec') }}</a-button>
-
-            <a-button @click="extract">{{ t('extract_step') }}</a-button>
-          </template>
-        </div>
-
-        <div id="right-content">
-          <div id="editor-panel">
-            <MonacoEditor
-                v-if="scriptCode !== ''"
-                class="editor"
-                :value="scriptCode"
-                :language="lang"
-                :options="editorOptions"
-            />
-          </div>
-
-          <div id="splitter-v"></div>
-
-          <div id="logs-panel">
-            <ScriptExecLogPage></ScriptExecLogPage>
-          </div>
-        </div>
-
-      </div>
+      <span class="text">{{t('ws_conn_success')}}</span>
+      <span @click="hideWsStatus" class="icon-close"><CloseCircleOutlined /></span>
     </div>
-    <div v-if="!currProduct.id">
-      <a-empty :image="simpleImage"/>
+    <div v-if="wsStatus === 'fail'" class="ws-status" :class="wsStatus">
+      <CloseOutlined />
+
+      <span class="text">{{t('ws_conn_success')}}</span>
+      <span @click="hideWsStatus" class="icon-close"><CloseCircleOutlined /></span>
+    </div>
+
+    <div id="logs" class="logs" :class="{ 'with-status': wsStatus }">
+      <span v-html="wsMsg.out"></span>
     </div>
   </div>
 </template>
@@ -46,7 +23,9 @@
 import {
   computed,
   defineComponent,
-  onMounted, onBeforeUnmount,
+  getCurrentInstance, onBeforeUnmount,
+  onMounted,
+  reactive,
   ref,
   watch
 } from "vue";
@@ -54,24 +33,20 @@ import {useStore} from "vuex";
 import {useI18n} from "vue-i18n";
 import { CloseCircleOutlined, CheckOutlined, CloseOutlined} from '@ant-design/icons-vue';
 
-import {ScriptData} from "./store";
+import {ScriptData} from "../store";
 import {resizeWidth, resizeHeight, scroll} from "@/utils/dom";
-import {Empty, message, notification} from "ant-design-vue";
-
-import {MonacoOptions} from "@/utils/const";
-import bus from "@/utils/eventBus"
-import MonacoEditor from "@/components/Editor/MonacoEditor.vue";
 import {ZentaoData} from "@/store/zentao";
-
-import ScriptTreePage from "./component/tree.vue";
-import ScriptExecLogPage from "./component/execLog.vue";
+import {WebSocket, WsEventName} from "@/services/websocket";
+import {getCache} from "@/utils/localCache";
 import settings from "@/config/settings";
+import {WsMsg} from "@/views/exec/data";
+import {genExecInfo} from "@/views/exec/service";
+import bus from "@/utils/eventBus";
 
 export default defineComponent({
-  name: 'ScriptListPage',
+  name: 'ScriptExecLogPage',
   components: {
-    ScriptTreePage, ScriptExecLogPage,
-    MonacoEditor,
+   CheckOutlined, CloseOutlined, CloseCircleOutlined,
   },
   setup() {
     const { t } = useI18n();
@@ -80,65 +55,120 @@ export default defineComponent({
     const currSite = computed<any>(() => zentaoStore.state.zentao.currSite);
     const currProduct = computed<any>(() => zentaoStore.state.zentao.currProduct);
 
-    let tree = ref(null)
-
     const scriptStore = useStore<{ script: ScriptData }>();
     let script = computed<any>(() => scriptStore.state.script.detail);
-    let scriptCode = ref('')
-    let lang = ref('')
-    const editorOptions = ref(MonacoOptions)
 
-    watch(script, () => {
-      console.log('watch script', script)
-      scriptCode.value = script.value.code
+    watch(currProduct, () => {
+      console.log('watch currProduct', currProduct)
     }, {deep: true})
 
-    const execSingle = () => {
-      console.log('exec', script.value)
+    // websocket
+    let init = true;
+    let isRunning = ref('false');
+    let wsMsg = reactive({in: '', out: ''});
 
-      const data = [script.value]
-      bus.emit(settings.eventExec, data);
+    let room = ''
+    getCache(settings.currWorkspace).then((token) => {
+      room = token || ''
+    })
+
+    const {proxy} = getCurrentInstance() as any;
+    WebSocket.init(proxy)
+
+    let wsStatus = ref('')
+    let i = 1
+    if (init) {
+      proxy.$sub(WsEventName, (data) => {
+        console.log(data[0].msg);
+        const jsn = JSON.parse(data[0].msg) as WsMsg
+
+        if (jsn.conn) { // ws connection status updated
+          wsStatus.value = jsn.conn
+          return
+        }
+
+        if ('isRunning' in jsn) {
+          isRunning.value = jsn.isRunning
+        }
+
+        wsMsg.out += genExecInfo(jsn, i)
+        i++
+        scroll('logs')
+      });
+      init = false;
     }
 
-    const extract = () => {
-      console.log('extract', script.value)
-
-      scriptStore.dispatch('script/extractScript', script.value).then(() => {
-        notification.success({
-          message: t('extract_success'),
-        })
-      }).catch(() => {
-        notification.error({
-          message: t('extract_fail'),
-        });
-      })
+    const initWsConn = (): void => {
+      console.log("initWsConn")
+      getCache(settings.currWorkspace).then (
+          (workspacePath) => {
+            const msg = {act: 'init', workspacePath: workspacePath}
+            console.log('msg', msg)
+            WebSocket.sentMsg(room, JSON.stringify(msg))
+          }
+      )
+    }
+    const hideWsStatus = (): void => {
+      wsStatus.value = ''
     }
 
     onMounted(() => {
-      console.log('onMounted', tree)
+      console.log('onMounted')
+      bus.on(settings.eventExec, exec);
 
-      setTimeout(() => {
-        resizeWidth('main', 'left', 'splitter-h', 'right', 280, 800)
-        resizeHeight('right-content', 'editor-panel', 'splitter-v', 'logs-panel',
-            100, 100, 90)
-      }, 600)
+      initWsConn()
     })
+    onBeforeUnmount( () => {
+      bus.off(settings.eventExec, exec);
+    })
+
+    const exec = (scripts: any) => {
+      console.log('exec', scripts)
+
+      const workspaceIds = [] as number[]
+      const mp = {}
+      scripts.forEach((item) => {
+        if (!mp[item.workspaceId]) {
+          mp[item.workspaceId] = []
+          workspaceIds.push(item.workspaceId)
+        }
+
+        mp[item.workspaceId].push(item.path)
+      })
+
+      const sets = [] as any[]
+      workspaceIds.forEach((workspaceId) => {
+        const set = {workspaceId: workspaceId, cases: mp[workspaceId]}
+        sets.push(set)
+      })
+
+      const msg = {act: 'execCase', testSets: sets}
+      console.log('msg', msg)
+
+      wsMsg.out += '\n'
+      // WebSocket.sentMsg(room, JSON.stringify(msg))
+    }
+
+    const checkoutCases = () => {
+      console.log('checkoutCases')
+    }
+    const checkinCases = () => {
+      console.log('checkinCases')
+    }
 
     return {
       t,
       currSite,
       currProduct,
 
-      tree,
       script,
-      scriptCode,
-      lang,
-      editorOptions,
-      simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
-
-      execSingle,
-      extract,
+      exec,
+      checkoutCases,
       stop,
+      hideWsStatus,
+      wsMsg,
+      wsStatus,
+      isRunning,
     }
   }
 

@@ -10,6 +10,12 @@ import (
 func Exec(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 	err error) {
 
+	// TODO: exec by test sets
+	if req.WorkspaceId != 0 {
+		po, _ := c.WorkspaceService.FindById(uint(req.WorkspaceId))
+		req.WorkspacePath = po.Path
+	}
+
 	serverConfig.InitExecLog(req.WorkspacePath)
 
 	if req.ScriptDirParamFromCmdLine == "" {

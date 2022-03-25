@@ -23,6 +23,7 @@ export class WebSocket {
 
   static async init(proxy: ComponentPublicInstance | any): Promise<any> {
     console.log(`init websocket`)
+
     if (!WebSocket.conn) {
       try {
         const conn = await neffos.dial(getWebSocketApi(), {
@@ -36,12 +37,15 @@ export class WebSocket {
               WebSocket.conn = nsConn
               proxy.$pub(WsEventName, {msg: '{"conn": "success"}'});
             },
+
             _OnNamespaceDisconnect: (_nsConn, msg) => {
               console.log('disconnected from namespace: ' + msg.Namespace)
             },
+
             OnVisit: (_nsConn, msg) => {
               console.log('OnVisit', msg)
             },
+
             // implement in webpage
             OnChat: (_nsConn, msg) => {
               console.log('OnChat in util cls', msg, msg.Room + ': response ' + msg.Body)
@@ -71,6 +75,7 @@ export class WebSocket {
       console.log(`fail to join room ${roomName}`, err)
     })
   }
+
   static sentMsg(roomName: string, msg: string): void {
     console.log(`send msg to room ${roomName}`)
     if (!WebSocket.conn) return

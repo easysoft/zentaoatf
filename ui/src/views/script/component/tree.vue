@@ -63,7 +63,7 @@
     <div class="actions">
       <a-button @click="checkoutCases">导出禅道用例</a-button>
       <a-button :disabled="checkedKeys.length === 0" @click="checkinCases">更新禅道用例</a-button>
-      <a-button :disabled="checkedKeys.length === 0" @click="execSelected">{{ t('exec') }}</a-button>
+      <a-button :disabled="checkedKeys.length === 0" @click="execSelected">执行选中</a-button>
     </div>
   </div>
 </template>
@@ -85,9 +85,11 @@ import {ScriptData} from "../store";
 import {Empty, message, notification} from "ant-design-vue";
 import { DatabaseOutlined, FolderOutlined, FolderOpenOutlined, FileOutlined} from '@ant-design/icons-vue';
 
+import bus from "@/utils/eventBus";
 import {ZentaoData} from "@/store/zentao";
 import {cacheExpandedKeys, getScriptFilters, retrieveExpandedKeys, setScriptFilters} from "@/utils/cache";
 import {listFilterItems} from "@/views/script/service";
+import settings from "@/config/settings";
 
 export default defineComponent({
   name: 'ScriptTreePage',
@@ -118,6 +120,9 @@ export default defineComponent({
 
     watch(treeData, (currConfig) => {
       console.log('watch treeData', treeData.value)
+
+      getNodeMap(treeData.value[0])
+
       retrieveExpandedKeys().then(async keys => {
         console.log('keys')
         if (keys) expandedKeys.value = keys
@@ -201,6 +206,9 @@ export default defineComponent({
 
     const execSelected = () => {
       console.log('execSelected')
+
+      const leafNodes = getLeafNodes()
+      bus.emit(settings.eventExec, leafNodes);
     }
     const checkoutCases = () => {
       console.log('checkoutCases')
@@ -233,6 +241,27 @@ export default defineComponent({
       if (isExpand.value) getOpenKeys(treeData.value[0], true)
 
       cacheExpandedKeys(expandedKeys.value)
+    }
+
+    const nodeMap = {}
+    const getNodeMap = (node): void => {
+      if (!node) return
+
+      nodeMap[node.path] = node
+      if (node.children) {
+        node.children.forEach(c => {
+          getNodeMap(c)
+        })
+      }
+    }
+    const getLeafNodes = (): string[] => {
+      let arr = [] as string[]
+      checkedKeys.value.forEach(k => {
+        if (!nodeMap[k].isDir) {
+          arr.push(nodeMap[k])
+        }
+      })
+      return arr
     }
 
     return {

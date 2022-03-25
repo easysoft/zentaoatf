@@ -19,6 +19,7 @@
     "localforage": "^1.10.0",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
+    "mitt": "^3.0.0",
     "monaco-editor": "^0.25.2",
     "monaco-editor-webpack-plugin": "^6.0.0",
     "neffos.js": "^0.1.25",

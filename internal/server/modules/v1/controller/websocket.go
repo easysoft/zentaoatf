@@ -104,11 +104,6 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 		return
 	}
 
-	if req.WorkspaceId != 0 {
-		po, _ := c.WorkspaceService.FindById(uint(req.WorkspaceId))
-		req.WorkspacePath = po.Path
-	}
-
 	ch = make(chan int, 1)
 	go func() {
 		scriptUtils.Exec(ch, req, wsMsg)

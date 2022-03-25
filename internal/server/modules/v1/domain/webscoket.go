@@ -9,14 +9,13 @@ type WsReq struct {
 	Scope commConsts.ResultStatus `json:"scope"`
 
 	// for ztf testing
-	Cases                     []string `json:"cases"`
-	ProductId                 string   `json:"productId"`
-	ModuleId                  string   `json:"moduleId"`
-	SuiteId                   string   `json:"suiteId"`
-	TaskId                    string   `json:"taskId"`
-	WorkspaceId               int      `json:"workspaceId"`
-	WorkspacePath             string   `json:"workspacePath"`
-	ScriptDirParamFromCmdLine string   `json:"-"`
+	TestSets []TestSet `json:"testSets"`
+
+	ProductId                 string `json:"productId"`
+	ModuleId                  string `json:"moduleId"`
+	SuiteId                   string `json:"suiteId"`
+	TaskId                    string `json:"taskId"`
+	ScriptDirParamFromCmdLine string `json:"-"`
 
 	// for unit, automation testing
 	TestTool  commConsts.TestTool  `json:"testTool"`
@@ -24,6 +23,12 @@ type WsReq struct {
 	Cmd       string               `json:"cmd"`
 
 	SubmitResult bool `json:"submitResult"`
+}
+
+type TestSet struct {
+	WorkspaceId   int      `json:"workspaceId"`
+	WorkspacePath string   `json:"workspacePath"`
+	Cases         []string `json:"cases"`
 }
 
 type WsResp struct {
