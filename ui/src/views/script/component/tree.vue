@@ -34,16 +34,19 @@
         </a-button>
       </div>
     </div>
+
     <div class="tree-panel">
       <a-tree
           v-if="!treeDataEmpty"
-          ref="tree"
           :tree-data="treeData"
+          v-model:expandedKeys="expandedKeys"
+          v-model:checkedKeys="checkedKeys"
+
           :replace-fields="replaceFields"
           show-icon
+          checkable
           @expand="expandNode"
           @select="selectNode"
-          v-model:expandedKeys="expandedKeys"
       >
         <template #icon="slotProps">
           <DatabaseOutlined v-if="slotProps.type==='workspace'" />
@@ -56,7 +59,13 @@
 
       <a-empty v-if="treeDataEmpty" :image="simpleImage"/>
     </div>
+
+    <div class="actions">
+      <a-button @click="checkoutCases">导出禅道用例</a-button>
+      <a-button :disabled="checkedKeys.length === 0" @click="checkinCases">更新禅道用例</a-button>
+      <a-button :disabled="checkedKeys.length === 0" @click="execSelected">{{ t('exec') }}</a-button>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -165,7 +174,6 @@ export default defineComponent({
     }
 
     const expandedKeys = ref<string[]>([]);
-
     const getOpenKeys = (treeNode, isAll) => {
       if (!treeNode) return
       expandedKeys.value.push(treeNode.path)
@@ -175,15 +183,14 @@ export default defineComponent({
         })
       }
     }
-
-    expandedKeys.value = []
     getOpenKeys(treeData.value[0], false)
+
+    const checkedKeys = ref<string[]>([])
 
     const replaceFields = {
       key: 'path',
     };
 
-    let selectedNode = {} as any
     let isExpand = ref(false);
 
     let tree = ref(null)
@@ -191,6 +198,16 @@ export default defineComponent({
     onMounted(() => {
       console.log('onMounted', tree)
     })
+
+    const execSelected = () => {
+      console.log('execSelected')
+    }
+    const checkoutCases = () => {
+      console.log('checkoutCases')
+    }
+    const checkinCases = () => {
+      console.log('checkinCases')
+    }
 
     const selectNode = (selectedKeys, e) => {
       console.log('selectNode', e.selectedNodes)
@@ -234,10 +251,14 @@ export default defineComponent({
       replaceFields,
       expandNode,
       selectNode,
+      execSelected,
+      checkoutCases,
+      checkinCases,
       isExpand,
       expandAll,
       tree,
       expandedKeys,
+      checkedKeys,
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
     }
   }
@@ -248,43 +269,55 @@ export default defineComponent({
 <style lang="less" scoped>
 
 .tree-main {
-      width: 380px;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
 
-      height: 100%;
-      padding: 3px 0 0 3px;
+  .toolbar {
+    display: flex;
+    padding: 4px 3px;
+    height: 40px;
+    //border-bottom: 1px solid #D0D7DE;
 
-      .toolbar {
-        display: flex;
-        padding: 0 3px;
-        border-bottom: 1px solid #D0D7DE;
-
-        .left {
-          flex: 1;
-          .ant-select-tree-switcher {
-            display: none;
-          }
-        }
-
-        .right {
-          width: 40px;
-          text-align: right;
-        }
-
-        .ant-btn-link {
-          padding: 0px 3px;
-          color: #1890ff;
-        }
-      }
-
-      .tree-panel {
-        height: calc(100% - 35px);
-        overflow: auto;
-
-        .ant-tree {
-          font-size: 16px;
-        }
+    .left {
+      flex: 1;
+      .ant-select-tree-switcher {
+        display: none;
       }
     }
+
+    .right {
+      width: 40px;
+      text-align: right;
+    }
+
+    .ant-btn-link {
+      padding: 0px 3px;
+      color: #1890ff;
+    }
+  }
+
+  .tree-panel {
+    flex: 1;
+    overflow: auto;
+
+    .ant-tree {
+      font-size: 16px;
+    }
+  }
+
+  .actions {
+    padding: 4px;
+    height: 40px;
+    text-align: center;
+
+    .ant-btn {
+      margin: 0 5px;
+    }
+  }
+}
 
 </style>
 

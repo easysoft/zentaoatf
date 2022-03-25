@@ -1,9 +1,6 @@
 <template>
     <div id="indexlayout">
-        <div
-          id="indexlayout-right"
-          :class="{'fiexd-header': headFixed}"
-        >
+        <div id="indexlayout-right">
             <Top
               :collapsed="collapsed"
               :topNavEnable="topNavEnable"
@@ -41,7 +38,6 @@ interface IndexLayoutSetupData {
   toggleCollapsed: () => void;
   topNavEnable: ComputedRef<boolean>;
   belongTopMenu: ComputedRef<string>;
-  headFixed: ComputedRef<boolean>;  
   selectedKeys: ComputedRef<string[]>;
   leftOpenKeys: Ref<string[]>;
   breadCrumbs: ComputedRef<BreadcrumbType[]>;
@@ -85,9 +81,6 @@ export default defineComponent({
       // 右侧顶部导航是否开启
       const topNavEnable = computed<boolean>(()=> store.state.global.topNavEnable);
 
-      // 右侧顶部是否固定
-      const headFixed = computed<boolean>(()=> store.state.global.headFixed);
-
       // 左侧选择菜单key
       const selectedKeys = computed<string[]>(()=>{
         const selectedKey = getSelectLeftMenuPath(routeItem.value);
@@ -124,7 +117,6 @@ export default defineComponent({
         toggleCollapsed,
         topNavEnable,
         belongTopMenu,
-        headFixed, 
         selectedKeys,
         leftOpenKeys,
         breadCrumbs,
@@ -147,13 +139,13 @@ export default defineComponent({
   flex: 1;
   overflow: hidden;
   background-color: @mainBgColor;
-  &.fiexd-header {
-    display: flex;
-    flex-direction: column;
-    .indexlayout-right-main {
-      flex: 1;
-      overflow: auto;
-    }
+
+  display: flex;
+  flex-direction: column;
+  .indexlayout-right-main {
+    flex: 1;
+    overflow: auto;
+    background-color: @mainBgColor;
   }
 }
 .indexlayout-main-conent {

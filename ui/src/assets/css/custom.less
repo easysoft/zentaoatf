@@ -106,11 +106,13 @@ body {
 }
 
 /* 滚动条 */
+@outWidth: 4px;
+@innerWidth: 3px;
 ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: @outWidth;
+    height: @outWidth;
     background: transparent;
-    border-radius: 5px;
+    border-radius: @outWidth;
 }
 
 /* 滚动条两端按钮 */
@@ -121,29 +123,29 @@ body {
 
 /* 外层轨道 */
 ::-webkit-scrollbar-track {
-    border-radius: 5px;
+    border-radius: @outWidth;
 }
 
 /* 内层轨道，它会覆盖外层轨道的样式 */
 ::-webkit-scrollbar-track-piece {
-    width: 4px;
+    width: @innerWidth;
     margin: 0 -2px 0;
 }
 
 /* 滑块 */
 ::-webkit-scrollbar-thumb {
-    background-color: #ccc;
+    background-color: #ECF0F1;
     min-height: 60px;
     min-width: 60px;
-    border-radius: 5px;
+    border-radius: @outWidth;
 }
 
 /* 纵向滑块悬浮 */
 ::-webkit-scrollbar-thumb:vertical:hover {
-    background-color: #333;
+    background-color: #BDC3C7;
 }
 
 /* 横向滑块悬浮 */
 ::-webkit-scrollbar-thumb:horizontal:hover {
-    background-color: #333;
+    background-color: #BDC3C7;
 }

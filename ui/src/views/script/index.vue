@@ -10,9 +10,9 @@
       <div id="right">
         <div class="toolbar">
           <template v-if="scriptCode !== ''">
-            <a-button @click="execSingle" type="primary" size="small">{{ t('exec') }}</a-button>
+            <a-button @click="execSingle" type="primary">{{ t('exec') }}</a-button>
 
-            <a-button @click="extract" type="primary" size="small">{{ t('extract_step') }}</a-button>
+            <a-button @click="extract">{{ t('extract_step') }}</a-button>
           </template>
         </div>
 
@@ -239,39 +239,7 @@ export default defineComponent({
       width: 380px;
 
       height: 100%;
-      padding: 3px 0 0 3px;
-
-      .toolbar {
-        display: flex;
-        padding: 0 3px;
-        border-bottom: 1px solid #D0D7DE;
-
-        .left {
-          flex: 1;
-          .ant-select-tree-switcher {
-            display: none;
-          }
-        }
-
-        .right {
-          width: 40px;
-          text-align: right;
-        }
-
-        .ant-btn-link {
-          padding: 0px 3px;
-          color: #1890ff;
-        }
-      }
-
-      .tree-panel {
-        height: calc(100% - 35px);
-        overflow: auto;
-
-        .ant-tree {
-          font-size: 16px;
-        }
-      }
+      padding: 0;
     }
 
     #splitter-h {
@@ -290,8 +258,8 @@ export default defineComponent({
       height: 100%;
 
       .toolbar {
-        padding: 5px 10px;
-        height: 36px;
+        padding: 4px 10px;
+        height: 40px;
         text-align: right;
 
         .ant-btn {
@@ -300,7 +268,7 @@ export default defineComponent({
       }
 
       #right-content {
-        height: calc(100% - 46px);
+        height: calc(100% - 50px);
 
         display: flex;
         flex-direction: column;
@@ -310,7 +278,6 @@ export default defineComponent({
 
           padding: 0 6px 0 8px;
           overflow: auto;
-          background-color: #fff;
         }
 
         #splitter-v {
@@ -326,7 +293,6 @@ export default defineComponent({
 
         #logs-panel {
           height: 160px;
-          background-color: #fff;
 
           .ws-status {
             padding-left: 8px;

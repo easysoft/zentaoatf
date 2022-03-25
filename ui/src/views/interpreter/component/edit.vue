@@ -22,7 +22,7 @@
 
     <a-form-item :wrapper-col="{ span: wrapperCol.span, offset: labelCol.span }">
       <a-select v-if="interpreterInfos.length > 0" v-model:value="selectedInterpreter" @change="selectInterpreter">
-        <a-select-option value="">{{interpreterInfos.length}}项可选择</a-select-option>
+        <a-select-option value="">找到 {{interpreterInfos.length}} 项可选</a-select-option>
         <a-select-option v-for="item in interpreterInfos" :key="item.path" :value="item.path">
           {{ item.info }}
         </a-select-option>
