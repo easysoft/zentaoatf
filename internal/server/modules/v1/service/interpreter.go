@@ -12,6 +12,7 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
 	"os/exec"
+	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -104,6 +105,15 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 	path = s.GetFirstNoEmptyLine(path, ".exe")
 
 	if path == "" || strings.Index(path, ".exe") != len(path)-4 {
+		return
+	}
+
+	if language == "autoit" {
+		if fileUtils.IsDir(filepath.Dir(path)) {
+			mp["path"] = path
+			mp["info"] = "AutoIt3.X"
+		}
+
 		return
 	}
 
