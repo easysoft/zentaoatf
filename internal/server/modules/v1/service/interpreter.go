@@ -95,6 +95,15 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 	path := langSettings["interpreter"]
 	info := ""
 
+	if language == "autoit" {
+		if fileUtils.IsDir(filepath.Dir(path)) {
+			mp["path"] = path
+			mp["info"] = "AutoIt3.X"
+		}
+
+		return
+	}
+
 	if !commonUtils.IsWin() || whereCmd == "" {
 		return
 	}
@@ -105,15 +114,6 @@ func (s *InterpreterService) GetLangInterpreter(language string) (mp map[string]
 	path = s.GetFirstNoEmptyLine(path, ".exe")
 
 	if path == "" || strings.Index(path, ".exe") != len(path)-4 {
-		return
-	}
-
-	if language == "autoit" {
-		if fileUtils.IsDir(filepath.Dir(path)) {
-			mp["path"] = path
-			mp["info"] = "AutoIt3.X"
-		}
-
 		return
 	}
 
