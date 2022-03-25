@@ -116,6 +116,9 @@ func (s *InterpreterService) GetLangInterpreter(language string) (list []map[str
 		if strings.Index(path, ".exe") != len(path)-4 {
 			continue
 		}
+		if language == "lua" && strings.Index(path, "luac") > -1 { // compile exec file
+			continue
+		}
 
 		var cmd *exec.Cmd
 		if language == "tcl" {

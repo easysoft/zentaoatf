@@ -18,14 +18,15 @@
 
       <a-input v-if="!isElectron" v-model:value="modelRef.path" spellcheck="false"
                @blur="validate('path', { trigger: 'blur' }).catch(() => {})"/>
+    </a-form-item>
 
-      <a-select v-model:value="modelRef.path">
-        <a-select-option value="">请选择</a-select-option>
-        <a-select-option v-for="item in languages" :key="item" :value="item">请选择</a-select-option>
+    <a-form-item :wrapper-col="{ span: wrapperCol.span, offset: labelCol.span }">
+      <a-select v-if="interpreterInfos.length > 0" v-model:value="selectedInterpreter" @change="selectInterpreter">
+        <a-select-option value="">{{interpreterInfos.length}}项可选择</a-select-option>
+        <a-select-option v-for="item in interpreterInfos" :key="item.path" :value="item.path">
+          {{ item.info }}
+        </a-select-option>
       </a-select>
-
-      <div v-html="interpreterInfo" class="t-italic"></div>
-
     </a-form-item>
 
     <a-form-item :wrapper-col="{ span: wrapperCol.span, offset: labelCol.span }">
@@ -93,12 +94,21 @@ export default defineComponent({
     const selectLang = async (item) => {
       console.log('selectLang', item)
 
+      modelRef.value.path = ''
+      selectedInterpreter.value = ''
+
       if (item === '') {
         interpreterInfos.value = []
         return
       }
 
       interpreterInfos.value = await getLangInterpreter(item)
+      console.log(interpreterInfos.value)
+    }
+    const selectedInterpreter = ref('')
+    const selectInterpreter= async (item) => {
+      console.log('selectInterpreter', item)
+      modelRef.value.path = item
     }
 
     const selectDir = () => {
@@ -142,6 +152,8 @@ export default defineComponent({
       validateInfos,
       modelRef,
       selectLang,
+      selectInterpreter,
+      selectedInterpreter,
       selectDir,
       save,
       reset,
