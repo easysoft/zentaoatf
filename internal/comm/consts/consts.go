@@ -16,7 +16,6 @@ const (
 	ResultText   = "result.txt"
 	ResultJson   = "result.json"
 	ResultZip    = "result.zip"
-	MsgErrPrefix = "ERROR:"
 
 	ExpectResultPass = "pass"
 

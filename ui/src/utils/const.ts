@@ -112,3 +112,10 @@ export const unitTestTypesDef = [
         cmd: ' ztf cppunit -p ${product_id} ./MathTest',
     },
 ]
+
+export const logLevelMap = {
+    output: {code: 100, color: '#95a5a6'},
+    run: {code: 200, color: '#1890ff'},
+    result: {code: 300, color: '#68BB8D'},
+    error: {code: 400, color: '#FC2C25'},
+}

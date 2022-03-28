@@ -40,6 +40,7 @@
           v-if="!treeDataEmpty"
           :tree-data="treeData"
           v-model:expandedKeys="expandedKeys"
+          v-model:selectedKeys="selectedKeys"
           v-model:checkedKeys="checkedKeys"
 
           :replace-fields="replaceFields"
@@ -47,6 +48,7 @@
           checkable
           @expand="expandNode"
           @select="selectNode"
+          @check="checkNode"
       >
         <template #icon="slotProps">
           <DatabaseOutlined v-if="slotProps.type==='workspace'" />
@@ -190,6 +192,7 @@ export default defineComponent({
     }
     getOpenKeys(treeData.value[0], false)
 
+    const selectedKeys = ref<string[]>([])
     const checkedKeys = ref<string[]>([])
 
     const replaceFields = {
@@ -207,6 +210,10 @@ export default defineComponent({
     const execSelected = () => {
       console.log('execSelected')
 
+      // not to select any node
+      selectedKeys.value = []
+      scriptStore.dispatch('script/getScript', null)
+
       const leafNodes = getLeafNodes()
       bus.emit(settings.eventExec, leafNodes);
     }
@@ -218,7 +225,7 @@ export default defineComponent({
     }
 
     const selectNode = (selectedKeys, e) => {
-      console.log('selectNode', e.selectedNodes)
+      console.log('selectNode', selectedKeys)
 
       let data = null
 
@@ -227,6 +234,9 @@ export default defineComponent({
       }
 
       scriptStore.dispatch('script/getScript', data)
+    }
+    const checkNode = () => {
+      console.log('checkNode', checkedKeys)
     }
 
     const expandNode = (keys: string[], e: any) => {
@@ -280,6 +290,7 @@ export default defineComponent({
       replaceFields,
       expandNode,
       selectNode,
+      checkNode,
       execSelected,
       checkoutCases,
       checkinCases,
@@ -287,6 +298,7 @@ export default defineComponent({
       expandAll,
       tree,
       expandedKeys,
+      selectedKeys,
       checkedKeys,
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
     }

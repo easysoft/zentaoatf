@@ -1,11 +1,11 @@
 <template>
   <div id="exec-log-main">
-
     <div v-if="wsStatus === 'success'" class="ws-status" :class="wsStatus">
       <CheckOutlined />
       <span class="text">{{t('ws_conn_success')}}</span>
       <span @click="hideWsStatus" class="icon-close"><CloseCircleOutlined /></span>
     </div>
+
     <div v-if="wsStatus === 'fail'" class="ws-status" :class="wsStatus">
       <CloseOutlined />
       <span class="text">{{t('ws_conn_success')}}</span>
@@ -13,7 +13,18 @@
     </div>
 
     <div id="logs" class="logs" :class="{ 'with-status': wsStatus }">
-      <div class="content"  v-html="wsMsg.out"></div>
+      <div class="log-level">
+        <a-select
+            v-model:value="logLevel"
+            size="small"
+        >
+          <a-select-option value="result">显示结果信息</a-select-option>
+          <a-select-option value="run">显示执行信息</a-select-option>
+          <a-select-option value="output">显示详细日志</a-select-option>
+        </a-select>
+      </div>
+
+      <div id="content"  v-html="wsMsg.out"></div>
     </div>
 
   </div>
@@ -58,6 +69,8 @@ export default defineComponent({
     const scriptStore = useStore<{ script: ScriptData }>();
     let script = computed<any>(() => scriptStore.state.script.detail);
 
+    const logLevel = ref('result')
+
     watch(currProduct, () => {
       console.log('watch currProduct', currProduct)
     }, {deep: true})
@@ -75,11 +88,11 @@ export default defineComponent({
     const {proxy} = getCurrentInstance() as any;
     WebSocket.init(proxy)
 
-    let wsStatus = ref('')
+    let wsStatus = ref('success')
     let i = 1
     if (init) {
       proxy.$sub(WsEventName, (data) => {
-        console.log(data[0].msg);
+        console.log('---', data[0].msg);
         const jsn = JSON.parse(data[0].msg) as WsMsg
 
         if (jsn.conn) { // ws connection status updated
@@ -91,8 +104,11 @@ export default defineComponent({
           isRunning.value = jsn.isRunning
         }
 
-        wsMsg.out += genExecInfo(jsn, i)
-        i++
+        const msg = genExecInfo(jsn, i, logLevel.value)
+        if (msg) {
+          wsMsg.out += msg
+          i++
+        }
         scroll('content')
       });
       init = false;
@@ -161,6 +177,7 @@ export default defineComponent({
       currSite,
       currProduct,
 
+      logLevel,
       script,
       exec,
       checkoutCases,
@@ -218,6 +235,7 @@ export default defineComponent({
   #logs {
     margin: 0;
     padding: 10px;
+    position: relative;
     width: 100%;
     overflow-y: auto;
     white-space: pre-wrap;
@@ -227,6 +245,13 @@ export default defineComponent({
     height: 100%;
     &.with-status {
       height: calc(100% - 45px);
+    }
+
+    .log-level {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 130px;
     }
 
     #content {

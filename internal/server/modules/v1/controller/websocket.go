@@ -61,7 +61,7 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 	err = json.Unmarshal(wsMsg.Body, &req)
 	if err != nil {
 		msg := i118Utils.Sprintf("wrong_req_params", err.Error())
-		websocketUtils.SendExecMsg(msg, "", wsMsg)
+		websocketUtils.SendExecMsg(msg, "", commConsts.Error, wsMsg)
 		logUtils.ExecConsole(color.FgRed, msg)
 		return
 	}
@@ -90,7 +90,7 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 		scriptUtils.SetRunning(false)
 
 		msg := i118Utils.Sprintf("end_task")
-		websocketUtils.SendExecMsg(msg, "false", wsMsg)
+		websocketUtils.SendExecMsg(msg, "false", commConsts.Run, wsMsg)
 		logUtils.ExecConsole(color.FgCyan, msg)
 		return
 	}
@@ -98,7 +98,7 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 	if scriptUtils.GetRunning() && (act == commConsts.ExecCase || act == commConsts.ExecModule ||
 		act == commConsts.ExecSuite || act == commConsts.ExecTask || act == commConsts.ExecUnit) {
 		msg := i118Utils.Sprintf("pls_stop_previous")
-		websocketUtils.SendExecMsg(msg, "true", wsMsg)
+		websocketUtils.SendExecMsg(msg, "true", commConsts.Error, wsMsg)
 		logUtils.ExecConsole(color.FgRed, msg)
 
 		return
@@ -134,7 +134,7 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 	scriptUtils.SetRunning(true)
 
 	msg := i118Utils.Sprintf("start_task")
-	websocketUtils.SendExecMsg(msg, "true", wsMsg)
+	websocketUtils.SendExecMsg(msg, "true", commConsts.Run, wsMsg)
 	logUtils.ExecConsole(color.FgCyan, msg)
 
 	return

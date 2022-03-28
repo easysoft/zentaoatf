@@ -14,9 +14,9 @@ import (
 )
 
 func GetLogDir(workspacePath string) string {
-	pth := filepath.Join(workspacePath, commConsts.LogDirName)
+	logDir := filepath.Join(workspacePath, commConsts.LogDirName)
 
-	d, _ := ioutil.ReadDir(pth)
+	d, _ := ioutil.ReadDir(logDir)
 
 	regx := `^\d\d\d$`
 
@@ -40,18 +40,18 @@ func GetLogDir(workspacePath string) string {
 	if numb >= 9 {
 		numb = 0
 
-		tempDir := pth[:len(pth)-1] + "-bak" + string(os.PathSeparator) + pth[len(pth):]
-		childDir := pth + "bak" + string(os.PathSeparator) + pth[len(pth):]
+		tempDir := logDir[:len(logDir)-1] + "-bak" + string(os.PathSeparator) + logDir[len(logDir):]
+		childDir := logDir + "-bak" + string(os.PathSeparator) + logDir[len(logDir):]
 
 		os.RemoveAll(childDir)
-		os.Rename(pth, tempDir)
+		os.Rename(logDir, tempDir)
 
 		err := os.Rename(tempDir, childDir)
 		_ = err
 	}
 
 	num := getLogNumb(numb + 1)
-	ret := addPathSepIfNeeded(filepath.Join(pth, num))
+	ret := addPathSepIfNeeded(filepath.Join(logDir, num))
 
 	if !dir.IsExist(ret) { // 判断是否有Director文件夹
 		dir.InsureDir(ret)

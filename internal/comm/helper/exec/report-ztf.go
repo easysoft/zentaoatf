@@ -81,16 +81,16 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		}
 	}
 	if failedCount > 0 {
-		msg := "\n" + i118Utils.Sprintf("failed_scripts")
-		msg += strings.Join(failedCaseLines, "\n")
-		msg += strings.Join(failedCaseLinesWithCheckpoint, "\n")
+		msgFail := "\n" + i118Utils.Sprintf("failed_scripts")
+		msgFail += strings.Join(failedCaseLines, "\n")
+		msgFail += strings.Join(failedCaseLinesWithCheckpoint, "\n")
 
 		if commConsts.ComeFrom != "cmd" {
-			websocketUtils.SendExecMsg(commConsts.MsgErrPrefix+msg, "", wsMsg)
+			websocketUtils.SendExecMsg(msgFail, "", commConsts.Error, wsMsg)
 		}
 
-		logUtils.ExecConsolef(color.FgRed, msg)
-		logUtils.ExecFile(msg)
+		logUtils.ExecConsolef(color.FgRed, msgFail)
+		logUtils.ExecFile(msgFail)
 	}
 
 	// 生成统计行
@@ -114,28 +114,28 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	skipStr := fmt.Sprintf(fmtStr, report.Skip, float32(skipRate), i118Utils.Sprintf("skip"))
 
 	// 执行%d个用例，耗时%d秒%s。%s，%s，%s。报告%s。
-	msg := dateUtils.DateTimeStr(time.Now()) + " " +
+	msgRun := dateUtils.DateTimeStr(time.Now()) + " " +
 		i118Utils.Sprintf("run_result",
 			report.Total, report.Duration, secTag,
 			passStr, failStr, skipStr,
 		)
 
 	if commConsts.ComeFrom != "cmd" {
-		websocketUtils.SendExecMsg(msg, "", wsMsg)
+		websocketUtils.SendExecMsg(msgRun, "", commConsts.Result, wsMsg)
 	}
 
-	logUtils.ExecConsole(color.FgCyan, msg)
-	logUtils.ExecResult(msg)
+	logUtils.ExecConsole(color.FgCyan, msgRun)
+	logUtils.ExecResult(msgRun)
 
 	resultPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)
-	msg = "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
+	msgReport := "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
 
 	if commConsts.ComeFrom != "cmd" {
-		websocketUtils.SendExecMsg(msg, "false", wsMsg)
+		websocketUtils.SendExecMsg(msgReport, "false", commConsts.Result, wsMsg)
 	}
 
-	logUtils.ExecConsole(color.FgCyan, msg)
-	logUtils.ExecResult(msg)
+	logUtils.ExecConsole(color.FgCyan, msgReport)
+	logUtils.ExecResult(msgReport)
 
 	//report.ProductId, _ = strconv.Atoi(vari.ProductId)
 	json, _ := json.MarshalIndent(report, "", "\t")

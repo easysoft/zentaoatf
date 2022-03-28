@@ -91,41 +91,40 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 		postFix = "."
 	}
 
-	temp := i118Utils.Sprintf("found_scripts", strconv.Itoa(len(cases))) + postFix
-
+	msgFound := i118Utils.Sprintf("found_scripts", strconv.Itoa(len(cases))) + postFix
 	if commConsts.ComeFrom != "cmd" {
-		websocketUtils.SendExecMsg(temp, "", wsMsg)
+		websocketUtils.SendExecMsg(msgFound, "", commConsts.Result, wsMsg)
 	}
 
-	logUtils.ExecConsolef(color.FgCyan, temp)
-	logUtils.ExecResult(temp)
+	logUtils.ExecConsolef(color.FgCyan, msgFound)
+	logUtils.ExecResult(msgFound)
 
 	width := strconv.Itoa(len(strconv.Itoa(report.Total)))
 	for idx, cs := range cases {
 		testSuite := stringUtils.AddPostfix(cs.TestSuite, classNameMaxWidth, " ")
 
 		format := "(%" + width + "d/%d) %s [%s] [%" + width + "d. %s] (%.3fs)"
-		msg := fmt.Sprintf(format, idx+1, report.Total, cs.Status, testSuite, cs.Id, cs.Title, cs.Duration)
+		msgCase := fmt.Sprintf(format, idx+1, report.Total, cs.Status, testSuite, cs.Id, cs.Title, cs.Duration)
 
 		if commConsts.ComeFrom != "cmd" {
-			websocketUtils.SendExecMsg(msg, "", wsMsg)
+			websocketUtils.SendExecMsg(msgCase, "", commConsts.Result, wsMsg)
 		}
 
-		logUtils.ExecConsolef(color.FgCyan, temp)
-		logUtils.ExecResult(msg)
+		logUtils.ExecConsolef(color.FgCyan, msgCase)
+		logUtils.ExecResult(msgCase)
 	}
 
 	if report.Fail > 0 {
-		msg := "\n" + i118Utils.Sprintf("failed_scripts")
-		msg += strings.Join(failedCaseLines, "\n")
-		msg += strings.Join(failedCaseLinesDesc, "\n")
+		msgFail := "\n" + i118Utils.Sprintf("failed_scripts")
+		msgFail += strings.Join(failedCaseLines, "\n")
+		msgFail += strings.Join(failedCaseLinesDesc, "\n")
 
 		if commConsts.ComeFrom != "cmd" {
-			websocketUtils.SendExecMsg(commConsts.MsgErrPrefix+msg, "", wsMsg)
+			websocketUtils.SendExecMsg(msgFail, "", commConsts.Error, wsMsg)
 		}
 
-		logUtils.ExecConsolef(color.FgCyan, temp)
-		logUtils.ExecResult(msg)
+		logUtils.ExecConsolef(color.FgCyan, msgFail)
+		logUtils.ExecResult(msgFail)
 	}
 
 	// 生成统计行
@@ -149,27 +148,27 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 	skipStr := fmt.Sprintf(fmtStr, report.Skip, float32(skipRate), i118Utils.Sprintf("skip"))
 
 	// 执行%d个用例，耗时%d秒%s。%s，%s，%s。报告%s。
-	msg := dateUtils.DateTimeStr(time.Now()) + " " +
+	msgRun := dateUtils.DateTimeStr(time.Now()) + " " +
 		i118Utils.Sprintf("run_result",
 			report.Total, report.Duration, secTag,
 			passStr, failStr, skipStr,
 		)
 
 	if commConsts.ComeFrom != "cmd" {
-		websocketUtils.SendExecMsg(msg, "", wsMsg)
+		websocketUtils.SendExecMsg(msgRun, "", commConsts.Result, wsMsg)
 	}
-	logUtils.ExecConsole(color.FgCyan, msg)
-	logUtils.ExecResult(msg)
+	logUtils.ExecConsole(color.FgCyan, msgRun)
+	logUtils.ExecResult(msgRun)
 
 	resultPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)
-	msg = "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
+	msgReport := "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
 
 	if commConsts.ComeFrom != "cmd" {
-		websocketUtils.SendExecMsg(msg, "false", wsMsg)
+		websocketUtils.SendExecMsg(msgReport, "false", commConsts.Result, wsMsg)
 	}
 
-	logUtils.ExecConsole(color.FgCyan, msg)
-	logUtils.ExecResult(msg)
+	logUtils.ExecConsole(color.FgCyan, msgReport)
+	logUtils.ExecResult(msgReport)
 
 	//report.ProductId, _ = strconv.Atoi(vari.ProductId)
 	json, _ := json.MarshalIndent(report, "", "\t")

@@ -121,7 +121,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 	msg := fmt.Sprintf(format, scriptIdx+1, total, status, path, cs.Id, cs.Title, secs)
 
 	if commConsts.ComeFrom != "cmd" {
-		websocketUtils.SendExecMsg(msg, "", wsMsg)
+		websocketUtils.SendExecMsg(msg, "", commConsts.Result, wsMsg)
 	}
 
 	logUtils.ExecConsole(color.FgCyan, msg)

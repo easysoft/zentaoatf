@@ -25,14 +25,9 @@ func SendOutputMsg(msg, isRunning string, wsMsg websocket.Message) {
 	Broadcast(wsMsg.Namespace, wsMsg.Room, wsMsg.Event, data)
 }
 
-func SendExecMsg(msg, isRunning string, wsMsg websocket.Message) {
+func SendExecMsg(msg, isRunning string, category commConsts.WsMsgCategory, wsMsg websocket.Message) {
 	logUtils.Infof("WebSocket SendExecMsg: room=%s, msg=%s", wsMsg.Room, string(wsMsg.Body))
 
-	category := commConsts.Exec
-	if strings.Index(msg, commConsts.MsgErrPrefix) == 0 {
-		category = commConsts.Error
-		msg = strings.TrimLeft(msg, commConsts.MsgErrPrefix)
-	}
 	data := serverDomain.WsResp{Msg: msg, IsRunning: isRunning, Category: category}
 
 	Broadcast(wsMsg.Namespace, wsMsg.Room, wsMsg.Event, data)

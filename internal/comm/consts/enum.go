@@ -52,10 +52,13 @@ func (e ExecCmd) String() string {
 type WsMsgCategory string
 
 const (
+	Output WsMsgCategory = "output"
+
+	Run    WsMsgCategory = "run"
+	Result WsMsgCategory = "result"
+	Error  WsMsgCategory = "error"
+
 	Communication WsMsgCategory = "communication"
-	Exec          WsMsgCategory = "exec"
-	Output        WsMsgCategory = "output"
-	Error         WsMsgCategory = "error"
 	Unknown       WsMsgCategory = ""
 )
 

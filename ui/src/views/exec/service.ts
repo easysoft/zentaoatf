@@ -1,6 +1,7 @@
 import request from '@/utils/request';
 import {Execution, WsMsg} from './data.d';
 import { QueryParams } from '@/types/data.d';
+import {logLevelMap} from "@/utils/const";
 
 const apiPath = 'exec';
 
@@ -38,17 +39,16 @@ export function getCaseIdsFromReport(report: any, scope: string): string[] {
     return ret
 }
 
-export function genExecInfo(jsn: WsMsg, i: number): string {
+export function genExecInfo(jsn: WsMsg, i: number, logLevel: string): string {
+    console.log('===', logLevelMap[logLevel].code, logLevelMap[jsn.category].code)
+    if (logLevelMap[jsn.category].code < logLevelMap[logLevel].code) {
+        return ''
+    }
+
     let msg = jsn.msg.replace(/^"+/,'').replace(/"+$/,'')
     msg = SetWidth(i + '. ', 40) + `<span>${msg}</span>`;
 
-    let sty = ''
-    if (jsn.category === 'exec') {
-        sty = 'color: #68BB8D;'
-    } else if (jsn.category === 'error') {
-        sty = 'color: #FC2C25;'
-    }
-
+    const sty = 'color: ' + logLevelMap[jsn.category].color + ';'
     msg = `<div style="${sty}"> ${msg} </div>`
 
     return msg

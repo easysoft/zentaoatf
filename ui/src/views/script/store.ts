@@ -8,7 +8,7 @@ import {
 
 export interface ScriptData {
     list: [];
-    detail: Partial<Script>;
+    detail: any;
 }
 
 export interface ModuleType extends StoreModuleType<ScriptData> {
@@ -29,7 +29,7 @@ export interface ModuleType extends StoreModuleType<ScriptData> {
 }
 const initState: ScriptData = {
     list: [],
-    detail: {},
+    detail: null,
 };
 
 const StoreModel: ModuleType = {
@@ -55,7 +55,7 @@ const StoreModel: ModuleType = {
         },
 
         async getScript({ commit }, script: any ) {
-            if (!script || script.isDir) {
+            if (!script || script.type !== 'file') {
                 commit('setItem', null);
                 return true;
             }

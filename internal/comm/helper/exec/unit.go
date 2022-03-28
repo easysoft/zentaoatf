@@ -25,7 +25,7 @@ func ExecUnit(ch chan int,
 	startMsg := i118Utils.Sprintf("start_execution", req.Cmd, dateUtils.DateTimeStr(startTime))
 
 	if commConsts.ComeFrom != "cmd" {
-		websocketUtils.SendExecMsg(startMsg, "", wsMsg)
+		websocketUtils.SendExecMsg(startMsg, "", commConsts.Run, wsMsg)
 	}
 
 	logUtils.ExecConsolef(-1, startMsg)
@@ -37,7 +37,7 @@ func ExecUnit(ch chan int,
 	endMsg := i118Utils.Sprintf("end_execution", req.Cmd, dateUtils.DateTimeStr(entTime))
 
 	if commConsts.ComeFrom != "cmd" {
-		websocketUtils.SendExecMsg(endMsg, "false", wsMsg)
+		websocketUtils.SendExecMsg(endMsg, "false", commConsts.Run, wsMsg)
 	}
 
 	logUtils.ExecConsolef(-1, endMsg)
@@ -116,7 +116,7 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg websocket.Mess
 			msg := i118Utils.Sprintf("exit_exec_curr")
 
 			if commConsts.ComeFrom != "cmd" {
-				websocketUtils.SendExecMsg(msg, "", wsMsg)
+				websocketUtils.SendExecMsg(msg, "", commConsts.Run, wsMsg)
 			}
 
 			logUtils.ExecConsolef(color.FgCyan, msg)

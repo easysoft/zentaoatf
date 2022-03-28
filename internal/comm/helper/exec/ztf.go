@@ -30,55 +30,55 @@ import (
 	"time"
 )
 
-func ExecCase(ch chan int, req serverDomain.TestSet, msg websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	cases := req.Cases
-	return RunZtf(ch, req.WorkspacePath, 0, 0, commConsts.Case, cases, msg)
+func ExecCase(ch chan int, testSet serverDomain.TestSet, msg websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
+	cases := testSet.Cases
+	return RunZtf(ch, testSet.WorkspacePath, 0, 0, commConsts.Case, cases, msg)
 }
 
-func ExecModule(ch chan int, req serverDomain.TestSet, msg websocket.Message) (
+func ExecModule(ch chan int, testSet serverDomain.TestSet, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 
-	cases, err := zentaoUtils.GetCasesByModuleInDir(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.ModuleId),
-		req.WorkspacePath, req.ScriptDirParamFromCmdLine)
+	cases, err := zentaoUtils.GetCasesByModuleInDir(stringUtils.ParseInt(testSet.ProductId), stringUtils.ParseInt(testSet.ModuleId),
+		testSet.WorkspacePath, testSet.ScriptDirParamFromCmdLine)
 	if err != nil {
 		return
 	}
 
-	if req.Seq != "" {
-		cases = analysisUtils.FilterCaseByResult(cases, req)
+	if testSet.Seq != "" {
+		cases = analysisUtils.FilterCaseByResult(cases, testSet)
 	}
 
-	return RunZtf(ch, req.WorkspacePath,
-		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.ModuleId), commConsts.Module, cases, msg)
+	return RunZtf(ch, testSet.WorkspacePath,
+		stringUtils.ParseInt(testSet.ProductId), stringUtils.ParseInt(testSet.ModuleId), commConsts.Module, cases, msg)
 }
 
-func ExecSuite(ch chan int, req serverDomain.TestSet, msg websocket.Message) (
+func ExecSuite(ch chan int, testSet serverDomain.TestSet, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	cases, err := zentaoUtils.GetCasesBySuiteInDir(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId),
-		req.WorkspacePath, req.ScriptDirParamFromCmdLine)
+	cases, err := zentaoUtils.GetCasesBySuiteInDir(stringUtils.ParseInt(testSet.ProductId), stringUtils.ParseInt(testSet.SuiteId),
+		testSet.WorkspacePath, testSet.ScriptDirParamFromCmdLine)
 
-	if req.Seq != "" {
-		cases = analysisUtils.FilterCaseByResult(cases, req)
+	if testSet.Seq != "" {
+		cases = analysisUtils.FilterCaseByResult(cases, testSet)
 	}
 
-	return RunZtf(ch, req.WorkspacePath,
-		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId), commConsts.Suite, cases, msg)
+	return RunZtf(ch, testSet.WorkspacePath,
+		stringUtils.ParseInt(testSet.ProductId), stringUtils.ParseInt(testSet.SuiteId), commConsts.Suite, cases, msg)
 }
 
-func ExecTask(ch chan int, req serverDomain.TestSet, msg websocket.Message) (
+func ExecTask(ch chan int, testSet serverDomain.TestSet, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	cases, err := zentaoUtils.GetCasesByTaskInDir(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId),
-		req.WorkspacePath, req.ScriptDirParamFromCmdLine)
+	cases, err := zentaoUtils.GetCasesByTaskInDir(stringUtils.ParseInt(testSet.ProductId), stringUtils.ParseInt(testSet.TaskId),
+		testSet.WorkspacePath, testSet.ScriptDirParamFromCmdLine)
 	if err != nil {
 		return
 	}
 
-	if req.Seq != "" {
-		cases = analysisUtils.FilterCaseByResult(cases, req)
+	if testSet.Seq != "" {
+		cases = analysisUtils.FilterCaseByResult(cases, testSet)
 	}
 
-	return RunZtf(ch, req.WorkspacePath,
-		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId), commConsts.Task, cases, msg)
+	return RunZtf(ch, testSet.WorkspacePath,
+		stringUtils.ParseInt(testSet.ProductId), stringUtils.ParseInt(testSet.TaskId), commConsts.Task, cases, msg)
 }
 
 func RunZtf(ch chan int,
@@ -112,17 +112,17 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 		postFix = "."
 	}
 
-	temp := i118Utils.Sprintf("found_scripts", strconv.Itoa(len(casesToRun))) + postFix
+	msg := i118Utils.Sprintf("found_scripts", strconv.Itoa(len(casesToRun))) + postFix
 	if commConsts.ComeFrom != "cmd" {
-		websocketUtils.SendExecMsg(temp, "", wsMsg)
+		websocketUtils.SendExecMsg(msg, "", commConsts.Run, wsMsg)
 	}
-	logUtils.ExecConsolef(color.FgCyan, temp)
-	logUtils.ExecResult(temp)
+	logUtils.ExecConsolef(color.FgCyan, msg)
+	logUtils.ExecResult(msg)
 
 	if len(casesToIgnore) > 0 {
 		temp := i118Utils.Sprintf("ignore_scripts", strconv.Itoa(len(casesToIgnore))) + postFix
 		if commConsts.ComeFrom != "cmd" {
-			websocketUtils.SendExecMsg(temp, "", wsMsg)
+			websocketUtils.SendExecMsg(temp, "", commConsts.Run, wsMsg)
 		}
 
 		logUtils.ExecConsolef(color.FgCyan, temp)
@@ -140,7 +140,7 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 		case <-ch:
 			msg := i118Utils.Sprintf("exit_exec_all")
 			if commConsts.ComeFrom != "cmd" {
-				websocketUtils.SendExecMsg(msg, "", wsMsg)
+				websocketUtils.SendExecMsg(msg, "", commConsts.Run, wsMsg)
 			}
 
 			logUtils.ExecConsolef(color.FgCyan, msg)
@@ -166,7 +166,7 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 	startMsg := i118Utils.Sprintf("start_execution", scriptFile, dateUtils.DateTimeStr(startTime))
 
 	if commConsts.ComeFrom != "cmd" {
-		websocketUtils.SendExecMsg(startMsg, "", wsMsg)
+		websocketUtils.SendExecMsg(startMsg, "", commConsts.Run, wsMsg)
 		logUtils.ExecConsolef(-1, startMsg)
 	}
 
@@ -192,7 +192,7 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 
 	endMsg := i118Utils.Sprintf("end_execution", scriptFile, dateUtils.DateTimeStr(entTime))
 	if commConsts.ComeFrom != "cmd" {
-		websocketUtils.SendExecMsg(endMsg, "", wsMsg)
+		websocketUtils.SendExecMsg(endMsg, "", commConsts.Run, wsMsg)
 		logUtils.ExecConsolef(-1, endMsg)
 	}
 
@@ -312,7 +312,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			msg := i118Utils.Sprintf("exit_exec_curr")
 
 			if commConsts.ComeFrom != "cmd" {
-				websocketUtils.SendExecMsg(msg, "", wsMsg)
+				websocketUtils.SendExecMsg(msg, "", commConsts.Run, wsMsg)
 			}
 
 			logUtils.ExecConsolef(color.FgCyan, msg)

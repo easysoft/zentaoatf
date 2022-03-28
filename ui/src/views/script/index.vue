@@ -17,21 +17,29 @@
         </div>
 
         <div id="right-content">
-          <div id="editor-panel">
-            <MonacoEditor
-                v-if="scriptCode !== ''"
-                class="editor"
-                :value="scriptCode"
-                :language="lang"
-                :options="editorOptions"
-            />
-          </div>
+          <template v-if="script">
+            <div id="editor-panel">
+              <MonacoEditor
+                  v-if="scriptCode !== ''"
+                  class="editor"
+                  :value="scriptCode"
+                  :language="lang"
+                  :options="editorOptions"
+              />
+            </div>
 
-          <div id="splitter-v"></div>
+            <div id="splitter-v"></div>
 
-          <div id="logs-panel">
-            <ScriptExecLogPage></ScriptExecLogPage>
-          </div>
+            <div id="logs-panel">
+              <ScriptExecLogPage></ScriptExecLogPage>
+            </div>
+          </template>
+
+          <template v-if="!script">
+            <div class="logs-panel">
+              <ScriptExecLogPage></ScriptExecLogPage>
+            </div>
+          </template>
         </div>
 
       </div>
@@ -46,17 +54,16 @@
 import {
   computed,
   defineComponent,
-  onMounted, onBeforeUnmount,
+  onMounted,
   ref,
   watch
 } from "vue";
 import {useStore} from "vuex";
 import {useI18n} from "vue-i18n";
-import { CloseCircleOutlined, CheckOutlined, CloseOutlined} from '@ant-design/icons-vue';
 
 import {ScriptData} from "./store";
-import {resizeWidth, resizeHeight, scroll} from "@/utils/dom";
-import {Empty, message, notification} from "ant-design-vue";
+import {resizeWidth, resizeHeight} from "@/utils/dom";
+import {Empty, notification} from "ant-design-vue";
 
 import {MonacoOptions} from "@/utils/const";
 import bus from "@/utils/eventBus"
@@ -90,7 +97,13 @@ export default defineComponent({
 
     watch(script, () => {
       console.log('watch script', script)
-      scriptCode.value = script.value.code
+      if (script.value) {
+        scriptCode.value = script.value.code
+        lang.value = script.value.lang
+      } else {
+        scriptCode.value = ''
+        lang.value = ''
+      }
     }, {deep: true})
 
     const execSingle = () => {
@@ -163,13 +176,13 @@ export default defineComponent({
     }
 
     #splitter-h {
-      width: 2px;
+      width: 0px;
+      border: solid 1px #D0D7DE;
       height: 100%;
-      background-color: #D0D7DE;
       cursor: ew-resize;
 
       &.active {
-        background-color: #a9aeb4;
+        border-color: #a9aeb4;
       }
     }
 
@@ -264,6 +277,10 @@ export default defineComponent({
               height: calc(100% - 45px);
             }
           }
+        }
+
+        .logs-panel {
+          height: 100%;
         }
       }
     }
