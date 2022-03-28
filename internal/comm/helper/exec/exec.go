@@ -10,28 +10,26 @@ import (
 func Exec(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 	err error) {
 
-	// TODO: exec by test sets
-	if req.WorkspaceId != 0 {
-		po, _ := c.WorkspaceService.FindById(uint(req.WorkspaceId))
-		req.WorkspacePath = po.Path
-	}
+	testSets := req.TestSets
 
-	serverConfig.InitExecLog(req.WorkspacePath)
+	for _, testSet := range testSets {
+		serverConfig.InitExecLog(testSet.WorkspacePath)
 
-	if req.ScriptDirParamFromCmdLine == "" {
-		req.ScriptDirParamFromCmdLine = req.WorkspacePath
-	}
+		if req.ScriptDirParamFromCmdLine == "" {
+			req.ScriptDirParamFromCmdLine = testSet.WorkspacePath
+		}
 
-	if req.Act == commConsts.ExecCase {
-		ExecCase(ch, req, msg)
-	} else if req.Act == commConsts.ExecModule {
-		ExecModule(ch, req, msg)
-	} else if req.Act == commConsts.ExecSuite {
-		ExecSuite(ch, req, msg)
-	} else if req.Act == commConsts.ExecTask {
-		ExecTask(ch, req, msg)
-	} else if req.Act == commConsts.ExecUnit {
-		ExecUnit(ch, req, msg)
+		if req.Act == commConsts.ExecCase {
+			ExecCase(ch, testSet, msg)
+		} else if req.Act == commConsts.ExecModule {
+			ExecModule(ch, testSet, msg)
+		} else if req.Act == commConsts.ExecSuite {
+			ExecSuite(ch, testSet, msg)
+		} else if req.Act == commConsts.ExecTask {
+			ExecTask(ch, testSet, msg)
+		} else if req.Act == commConsts.ExecUnit {
+			ExecUnit(ch, testSet, msg)
+		}
 	}
 
 	return

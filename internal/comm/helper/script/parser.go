@@ -505,7 +505,7 @@ func getSortedTextFromNestedSteps(groups []commDomain.ZtfStep) (ret string, step
 			expectTxt := strings.TrimSpace(child.Expect)
 			stepChild.Expect = expectTxt
 
-			steps = append(steps, step)
+			steps = append(steps, stepChild)
 
 			if expectTxt != "" {
 				expectTxt = ">> " + expectTxt
@@ -974,7 +974,7 @@ func ReadLogArr(content string) (isSkip bool, ret [][]string) {
 
 			if idx == len(lines)-1 || strings.Index(lines[idx+1], ">>") > -1 {
 				temp := make([]string, 0)
-				temp = append(temp, strings.Join(cpArr, " | "))
+				temp = append(temp, cpArr...)
 
 				ret = append(ret, temp)
 				cpArr = make([]string, 0)

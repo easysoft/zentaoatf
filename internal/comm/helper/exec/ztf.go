@@ -30,12 +30,12 @@ import (
 	"time"
 )
 
-func ExecCase(ch chan int, req serverDomain.WsReq, msg websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
+func ExecCase(ch chan int, req serverDomain.TestSet, msg websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
 	cases := req.Cases
 	return RunZtf(ch, req.WorkspacePath, 0, 0, commConsts.Case, cases, msg)
 }
 
-func ExecModule(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
+func ExecModule(ch chan int, req serverDomain.TestSet, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 
 	cases, err := zentaoUtils.GetCasesByModuleInDir(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.ModuleId),
@@ -52,7 +52,7 @@ func ExecModule(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.ModuleId), commConsts.Module, cases, msg)
 }
 
-func ExecSuite(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
+func ExecSuite(ch chan int, req serverDomain.TestSet, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 	cases, err := zentaoUtils.GetCasesBySuiteInDir(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId),
 		req.WorkspacePath, req.ScriptDirParamFromCmdLine)
@@ -65,7 +65,7 @@ func ExecSuite(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 		stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.SuiteId), commConsts.Suite, cases, msg)
 }
 
-func ExecTask(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
+func ExecTask(ch chan int, req serverDomain.TestSet, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 	cases, err := zentaoUtils.GetCasesByTaskInDir(stringUtils.ParseInt(req.ProductId), stringUtils.ParseInt(req.TaskId),
 		req.WorkspacePath, req.ScriptDirParamFromCmdLine)
@@ -157,7 +157,7 @@ ExitAllCase:
 	report.Duration = endTime - startTime
 }
 
-func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, report *commDomain.ZtfReport, idx,
+func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, report *commDomain.ZtfReport, scriptIdx,
 	total, pathMaxWidth, numbMaxWidth int,
 	ch chan int, wsMsg websocket.Message) {
 
@@ -198,9 +198,9 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 
 	logUtils.ExecFilef(endMsg)
 
-	CheckCaseResult(scriptFile, logs, report, idx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg)
+	CheckCaseResult(scriptFile, logs, report, scriptIdx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg)
 
-	//if idx < total-1 {
+	//if scriptIdx < total-1 {
 	//logUtils.Infof("")
 	//}
 }

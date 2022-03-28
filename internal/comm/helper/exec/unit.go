@@ -19,7 +19,7 @@ import (
 )
 
 func ExecUnit(ch chan int,
-	req serverDomain.WsReq, wsMsg websocket.Message) (resultDir string, err error) {
+	req serverDomain.TestSet, wsMsg websocket.Message) (resultDir string, err error) {
 
 	startTime := time.Now()
 	startMsg := i118Utils.Sprintf("start_execution", req.Cmd, dateUtils.DateTimeStr(startTime))

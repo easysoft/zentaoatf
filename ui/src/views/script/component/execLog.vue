@@ -146,7 +146,7 @@ export default defineComponent({
       console.log('msg', msg)
 
       wsMsg.out += '\n'
-      // WebSocket.sentMsg(room, JSON.stringify(msg))
+      WebSocket.sentMsg(room, JSON.stringify(msg))
     }
 
     const checkoutCases = () => {

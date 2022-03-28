@@ -104,6 +104,27 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 		return
 	}
 
+	for idx, _ := range req.TestSets {
+		testSet := &req.TestSets[idx]
+		if testSet.WorkspaceId != 0 {
+			po, _ := c.WorkspaceService.FindById(uint(testSet.WorkspaceId))
+			testSet.WorkspacePath = po.Path
+		}
+
+		testSet.Scope = req.Scope
+		testSet.Seq = req.Seq
+		testSet.ProductId = req.ProductId
+		testSet.ModuleId = req.ModuleId
+		testSet.SuiteId = req.SuiteId
+		testSet.TaskId = req.TaskId
+		testSet.ScriptDirParamFromCmdLine = req.ScriptDirParamFromCmdLine
+
+		testSet.TestTool = req.TestTool
+		testSet.BuildTool = req.BuildTool
+		testSet.Cmd = req.Cmd
+		testSet.SubmitResult = req.SubmitResult
+	}
+
 	ch = make(chan int, 1)
 	go func() {
 		scriptUtils.Exec(ch, req, wsMsg)

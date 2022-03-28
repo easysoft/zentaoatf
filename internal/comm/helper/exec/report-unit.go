@@ -25,7 +25,7 @@ import (
 	"time"
 )
 
-func GenUnitTestReport(req serverDomain.WsReq, startTime, endTime int64,
+func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 	ch chan int, wsMsg websocket.Message) (
 	report commDomain.ZtfReport) {
 

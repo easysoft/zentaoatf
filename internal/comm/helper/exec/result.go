@@ -17,7 +17,7 @@ import (
 	"strings"
 )
 
-func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfReport, idx int,
+func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfReport, scriptIdx int,
 	total int, secs string, pathMaxWidth int, numbMaxWidth int,
 	wsMsg websocket.Message) {
 
@@ -42,12 +42,12 @@ func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfRepor
 
 	language := langHelper.GetLangByFile(scriptFile)
 	ValidateCaseResult(scriptFile, language, steps, skip, actualArr, report,
-		idx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg)
+		scriptIdx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg)
 }
 
 func ValidateCaseResult(scriptFile string, langType string,
 	steps []commDomain.ZentaoCaseStep, skip bool, actualArr [][]string, report *commDomain.ZtfReport,
-	idx int, total int, secs string, pathMaxWidth int, numbMaxWidth int,
+	scriptIdx int, total int, secs string, pathMaxWidth int, numbMaxWidth int,
 	wsMsg websocket.Message) {
 
 	_, caseId, productId, title := scriptHelper.GetCaseInfo(scriptFile)
@@ -59,7 +59,8 @@ func ValidateCaseResult(scriptFile string, langType string,
 	if skip {
 		caseResult = commConsts.SKIP
 	} else {
-		for idx, step := range steps { // iterate by checkpoints
+		stepIdxToCheck := 0
+		for _, step := range steps { // iterate by checkpoints
 			stepName := strings.TrimSpace(step.Desc)
 			expect := strings.TrimSpace(step.Expect)
 
@@ -71,18 +72,18 @@ func ValidateCaseResult(scriptFile string, langType string,
 
 			expectLines := strings.Split(expect, "\n")
 			var actualLines []string
-			if len(actualArr) > idx {
-				actualLines = actualArr[idx]
+			if len(actualArr) > stepIdxToCheck {
+				actualLines = actualArr[stepIdxToCheck]
 			}
 
 			stepResult, checkpointLogs := ValidateStepResult(langType, expectLines, actualLines)
-			stepLog := commDomain.StepLog{Id: strconv.Itoa(idx), Name: stepName, Status: stepResult, CheckPoints: checkpointLogs}
+			stepLog := commDomain.StepLog{Id: strconv.Itoa(stepIdxToCheck), Name: stepName, Status: stepResult, CheckPoints: checkpointLogs}
 			stepLogs = append(stepLogs, stepLog)
 			if stepResult == commConsts.FAIL {
 				caseResult = commConsts.FAIL
 			}
 
-			idx++
+			stepIdxToCheck++
 		}
 	}
 
@@ -117,7 +118,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 	format := "(%" + width + "d/%d) %s [%s] [%" + numbWidth + "d. %s] (%ss)"
 
 	status := i118Utils.Sprintf(cs.Status.String())
-	msg := fmt.Sprintf(format, idx+1, total, status, path, cs.Id, cs.Title, secs)
+	msg := fmt.Sprintf(format, scriptIdx+1, total, status, path, cs.Id, cs.Title, secs)
 
 	if commConsts.ComeFrom != "cmd" {
 		websocketUtils.SendExecMsg(msg, "", wsMsg)
@@ -131,14 +132,15 @@ func ValidateStepResult(langType string, expectLines []string, actualLines []str
 	stepResult commConsts.ResultStatus, checkpointLogs []commDomain.CheckPointLog) {
 	stepResult = commConsts.PASS
 
-	indx2 := 0
+	idx := 0
 	for _, expect := range expectLines {
 		log := "N/A"
-		if len(actualLines) > indx2 {
-			log = actualLines[indx2]
+		if len(actualLines) > idx {
+			log = strings.TrimSpace(actualLines[idx])
 		}
 
 		expect = strings.TrimSpace(expect)
+
 		var pass bool
 		if expect[:1] == "`" && expect[len(expect)-1:] == "`" {
 			expect = expect[1 : len(expect)-1]
@@ -151,10 +153,10 @@ func ValidateStepResult(langType string, expectLines []string, actualLines []str
 			stepResult = commConsts.FAIL
 		}
 
-		cp := commDomain.CheckPointLog{Numb: indx2 + 1, Status: stepResult, Expect: expect, Actual: log}
+		cp := commDomain.CheckPointLog{Numb: idx + 1, Status: stepResult, Expect: expect, Actual: log}
 		checkpointLogs = append(checkpointLogs, cp)
 
-		indx2++
+		idx++
 	}
 
 	return stepResult, checkpointLogs

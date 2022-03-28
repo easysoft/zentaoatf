@@ -6,7 +6,7 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 )
 
-func FilterCaseByResult(cases []string, req serverDomain.WsReq) (ret []string) { // scope: all | fail
+func FilterCaseByResult(cases []string, req serverDomain.TestSet) (ret []string) { // scope: all | fail
 	scope := req.Scope
 	caseIdMap, _ := getCaseIdMapFromReport(req)
 
@@ -19,7 +19,7 @@ func FilterCaseByResult(cases []string, req serverDomain.WsReq) (ret []string) {
 	return
 }
 
-func getCaseIdMapFromReport(req serverDomain.WsReq) (ret map[string]commConsts.ResultStatus, err error) {
+func getCaseIdMapFromReport(req serverDomain.TestSet) (ret map[string]commConsts.ResultStatus, err error) {
 	report, err := ReadReportByWorkspaceSeq(req.WorkspacePath, req.Seq)
 	if err != nil {
 		logUtils.Errorf("fail to get case ids for %s %s", req.WorkspacePath, req.Seq)
