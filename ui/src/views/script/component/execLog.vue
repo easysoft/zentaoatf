@@ -1,21 +1,21 @@
 <template>
   <div id="exec-log-main">
+
     <div v-if="wsStatus === 'success'" class="ws-status" :class="wsStatus">
       <CheckOutlined />
-
       <span class="text">{{t('ws_conn_success')}}</span>
       <span @click="hideWsStatus" class="icon-close"><CloseCircleOutlined /></span>
     </div>
     <div v-if="wsStatus === 'fail'" class="ws-status" :class="wsStatus">
       <CloseOutlined />
-
       <span class="text">{{t('ws_conn_success')}}</span>
       <span @click="hideWsStatus" class="icon-close"><CloseCircleOutlined /></span>
     </div>
 
     <div id="logs" class="logs" :class="{ 'with-status': wsStatus }">
-      <span v-html="wsMsg.out"></span>
+      <div class="content"  v-html="wsMsg.out"></div>
     </div>
+
   </div>
 </template>
 
@@ -34,7 +34,7 @@ import {useI18n} from "vue-i18n";
 import { CloseCircleOutlined, CheckOutlined, CloseOutlined} from '@ant-design/icons-vue';
 
 import {ScriptData} from "../store";
-import {resizeWidth, resizeHeight, scroll} from "@/utils/dom";
+import {scroll} from "@/utils/dom";
 import {ZentaoData} from "@/store/zentao";
 import {WebSocket, WsEventName} from "@/services/websocket";
 import {getCache} from "@/utils/localCache";
@@ -93,7 +93,7 @@ export default defineComponent({
 
         wsMsg.out += genExecInfo(jsn, i)
         i++
-        scroll('logs')
+        scroll('content')
       });
       init = false;
     }
@@ -176,133 +176,67 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-.script-main {
-  margin: 0px;
+#exec-log-main {
   height: 100%;
 
-  #main {
-    display: flex;
-    height: 100%;
+  .ws-status {
+    padding-left: 8px;
+    height: 44px;
+    line-height: 44px;
+    color: #333333;
+
+    &.success {
+      background-color: #DAF7E9;
+      svg {
+        color: #DAF7E9;
+      }
+    }
+    &.error {
+      background-color: #FFD6D0;
+      svg {
+        color: #FFD6D0;
+      }
+    }
+
+    .text {
+      display: inline-block;
+      margin-left: 5px;
+    }
+    .icon-close {
+      position: absolute;
+      padding: 5px;
+      line-height: 34px;
+      right: 15px;
+      cursor: pointer;
+      svg {
+        font-size: 8px;
+        color: #333333;
+      }
+    }
+  }
+
+  #logs {
+    margin: 0;
+    padding: 10px;
     width: 100%;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family:monospace;
 
-    #left {
-      width: 380px;
-
-      height: 100%;
-      padding: 0;
+    height: 100%;
+    &.with-status {
+      height: calc(100% - 45px);
     }
 
-    #splitter-h {
-      width: 2px;
+    #content {
       height: 100%;
-      background-color: #D0D7DE;
-      cursor: ew-resize;
-
-      &.active {
-        background-color: #a9aeb4;
-      }
-    }
-
-    #right {
-      flex: 1;
-      height: 100%;
-
-      .toolbar {
-        padding: 4px 10px;
-        height: 40px;
-        text-align: right;
-
-        .ant-btn {
-          margin: 0 5px;
-        }
-      }
-
-      #right-content {
-        height: calc(100% - 50px);
-
-        display: flex;
-        flex-direction: column;
-
-        #editor-panel {
-          flex: 1;
-
-          padding: 0 6px 0 8px;
-          overflow: auto;
-        }
-
-        #splitter-v {
-          width: 100%;
-          height: 2px;
-          background-color: #D0D7DE;
-          cursor: ns-resize;
-
-          &.active {
-            background-color: #a9aeb4;
-          }
-        }
-
-        #logs-panel {
-          height: 160px;
-
-          .ws-status {
-            padding-left: 8px;
-            height: 44px;
-            line-height: 44px;
-            color: #333333;
-
-            &.success {
-              background-color: #DAF7E9;
-              svg {
-                color: #DAF7E9;
-              }
-            }
-            &.error {
-              background-color: #FFD6D0;
-              svg {
-                color: #FFD6D0;
-              }
-            }
-
-            .text {
-              display: inline-block;
-              margin-left: 5px;
-            }
-            .icon-close {
-              position: absolute;
-              padding: 5px;
-              line-height: 34px;
-              right: 15px;
-              cursor: pointer;
-              svg {
-                font-size: 8px;
-                color: #333333;
-              }
-            }
-          }
-
-          #logs {
-            margin: 0;
-            padding: 10px;
-            width: 100%;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            font-family:monospace;
-
-            height: 100%;
-            &.with-status {
-              height: calc(100% - 45px);
-            }
-          }
-        }
-      }
+      overflow-y: auto;
     }
   }
 }
 </style>
 
 <style lang="less">
-.monaco-editor {
-  padding: 10px 0;
-}
+
 </style>
