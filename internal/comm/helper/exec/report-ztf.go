@@ -121,7 +121,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		)
 
 	if commConsts.ComeFrom != "cmd" {
-		websocketUtils.SendExecMsg(msgRun, "", commConsts.Result, wsMsg)
+		websocketUtils.SendExecMsg(msgRun, "", commConsts.Run, wsMsg)
 	}
 
 	logUtils.ExecConsole(color.FgCyan, msgRun)
@@ -131,7 +131,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	msgReport := "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
 
 	if commConsts.ComeFrom != "cmd" {
-		websocketUtils.SendExecMsg(msgReport, "false", commConsts.Result, wsMsg)
+		websocketUtils.SendExecMsg(msgReport, "false", commConsts.Run, wsMsg)
 	}
 
 	logUtils.ExecConsole(color.FgCyan, msgReport)

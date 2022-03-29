@@ -11,16 +11,18 @@ export async function list(params: any): Promise<any> {
     });
 }
 
-export async function get(seq: string): Promise<any> {
+export async function get(params: any): Promise<any> {
     return request({
-        url: `/${apiPath}/${seq}`
+        url: `/${apiPath}/${params.workspaceId}/${params.seq}`,
+
     });
 }
 
-export async function remove(seq: string): Promise<any> {
+export async function remove(params: any): Promise<any> {
     return request({
-        url: `/${apiPath}/${seq}`,
+        url: `/${apiPath}`,
         method: 'delete',
+        params
     });
 }
 

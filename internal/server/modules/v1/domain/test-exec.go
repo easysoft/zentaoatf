@@ -16,9 +16,10 @@ type TestReportSummary struct {
 	TestTool  commConsts.TestTool  `json:"testTool"`
 	BuildTool commConsts.BuildTool `json:"buildTool"`
 
-	ProductId int               `json:"productId,omitempty"`
-	ExecBy    commConsts.ExecBy `json:"execBy,omitempty"`
-	ExecById  int               `json:"execById,omitempty"`
+	ProductId   int               `json:"productId,omitempty"`
+	WorkspaceId int               `json:"workspaceId,omitempty"`
+	ExecBy      commConsts.ExecBy `json:"execBy,omitempty"`
+	ExecById    int               `json:"execById,omitempty"`
 
 	Pass      int   `json:"pass"`
 	Fail      int   `json:"fail"`

@@ -114,8 +114,8 @@ export const unitTestTypesDef = [
 ]
 
 export const logLevelMap = {
-    output: {code: 100, color: '#95a5a6'},
-    run: {code: 200, color: '#1890ff'},
-    result: {code: 300, color: '#68BB8D'},
-    error: {code: 400, color: '#FC2C25'},
+    output: {code: 100},
+    run: {code: 200},
+    result: {code: 300},
+    error: {code: 400},
 }

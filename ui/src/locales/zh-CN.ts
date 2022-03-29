@@ -6,6 +6,7 @@ export default {
     'ztf_name_full': 'ZTF自动化测试工具',
 
     'no': '编号',
+    'index': '索引',
     'scope': '范围', 
     'name': '名称', 
     'path': '路径',
@@ -101,6 +102,7 @@ export default {
     'view':  '查看',
     'edit': '编辑',
     'delete':  '删除',
+    'remove': '删除',
     'select':  '选择',
     'pass':  '通过', 
     'fail':  '失败', 

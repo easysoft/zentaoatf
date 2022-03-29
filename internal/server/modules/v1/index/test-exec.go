@@ -21,8 +21,8 @@ func (m *TestExecModule) Party() module.WebModule {
 		index.Use(middleware.InitCheck())
 
 		index.Get("/", m.TestExecCtrl.List).Name = "执行列表"
-		index.Get("/{seq:string}", m.TestExecCtrl.Get).Name = "执行详情"
-		index.Delete("/{seq:string}", m.TestExecCtrl.Delete).Name = "删除执行"
+		index.Get("/{workspaceId:int}/{seq:string}", m.TestExecCtrl.Get).Name = "执行详情"
+		index.Delete("/", m.TestExecCtrl.Delete).Name = "删除执行"
 	}
 	return module.NewModule("/results", handler)
 }

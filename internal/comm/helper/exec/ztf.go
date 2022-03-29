@@ -107,12 +107,7 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 	startTime := now.Unix()
 	report.StartTime = startTime
 
-	postFix := ":"
-	if len(casesToRun) == 0 {
-		postFix = "."
-	}
-
-	msg := i118Utils.Sprintf("found_scripts", strconv.Itoa(len(casesToRun))) + postFix
+	msg := i118Utils.Sprintf("found_scripts", len(casesToRun), workspacePath)
 	if commConsts.ComeFrom != "cmd" {
 		websocketUtils.SendExecMsg(msg, "", commConsts.Run, wsMsg)
 	}
@@ -120,7 +115,7 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 	logUtils.ExecResult(msg)
 
 	if len(casesToIgnore) > 0 {
-		temp := i118Utils.Sprintf("ignore_scripts", strconv.Itoa(len(casesToIgnore))) + postFix
+		temp := i118Utils.Sprintf("ignore_scripts", strconv.Itoa(len(casesToIgnore)))
 		if commConsts.ComeFrom != "cmd" {
 			websocketUtils.SendExecMsg(temp, "", commConsts.Run, wsMsg)
 		}

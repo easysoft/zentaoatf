@@ -96,7 +96,7 @@ func GetLangByFile(filePath string) string {
 	ext := path.Ext(filePath)
 	ext = ext[1:]
 
-	lang := commConsts.ScriptExtToNameMap[ext]
+	lang, _ := commConsts.ScriptExtToNameMap[ext]
 
 	return lang
 }

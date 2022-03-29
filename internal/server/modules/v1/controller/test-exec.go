@@ -38,15 +38,15 @@ func (c *TestExecCtrl) List(ctx iris.Context) {
 
 // Get 详情
 func (c *TestExecCtrl) Get(ctx iris.Context) {
-	workspacePath := ctx.URLParam("currWorkspace")
-
+	workspaceId, _ := ctx.Params().GetInt("workspaceId")
 	seq := ctx.Params().Get("seq")
-	if seq == "" {
-		c.ErrResp(commConsts.ParamErr, "seq")
+
+	if workspaceId == 0 || seq == "" {
+		c.ErrResp(commConsts.ParamErr, "workspaceId and seq")
 		return
 	}
 
-	exec, err := c.TestExecService.Get(workspacePath, seq)
+	exec, err := c.TestExecService.Get(workspaceId, seq)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
@@ -56,15 +56,15 @@ func (c *TestExecCtrl) Get(ctx iris.Context) {
 
 // Delete 删除
 func (c *TestExecCtrl) Delete(ctx iris.Context) {
-	workspacePath := ctx.URLParam("currWorkspace")
+	workspaceId, _ := ctx.URLParamInt("workspaceId")
+	seq := ctx.URLParam("seq")
 
-	seq := ctx.Params().Get("seq")
-	if seq == "" {
-		c.ErrResp(commConsts.ParamErr, "seq")
+	if workspaceId == 0 || seq == "" {
+		c.ErrResp(commConsts.ParamErr, "workspaceId and seq")
 		return
 	}
 
-	err := c.TestExecService.Delete(workspacePath, seq)
+	err := c.TestExecService.Delete(workspaceId, seq)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return

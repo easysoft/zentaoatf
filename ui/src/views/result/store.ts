@@ -66,18 +66,15 @@ const StoreModel: ModuleType = {
                 return false;
             }
         },
-        async get({ commit }, seq: string ) {
-            let data = {}
-            if (seq) {
-                const response: ResponseData = await get(seq);
-                data = response.data;
-            }
+        async get({ commit }, params: any ) {
+            const response: ResponseData = await get(params);
+            const data = response.data;
             commit('setDetailResult',data);
             return true;
         },
-        async delete({ commit }, seq: string ) {
+        async delete({ commit }, data: any ) {
             try {
-                await remove(seq);
+                await remove(data);
                 await this.dispatch('Site/list', {})
 
                 return true;

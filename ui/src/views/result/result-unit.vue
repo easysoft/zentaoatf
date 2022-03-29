@@ -107,7 +107,7 @@
 <script lang="ts">
 import {computed, defineComponent, onMounted, reactive, Ref, ref} from "vue";
 import {useStore} from 'vuex';
-import {StateType as ListStateType} from "@/views/exec/store";
+import {StateType} from "./store";
 import {useRouter} from "vue-router";
 import {momentUnixDef, percentDef} from "@/utils/datetime";
 import {execByDef, resultStatusDef, testEnvDef, testTypeDef} from "@/utils/testing";
@@ -118,35 +118,6 @@ import ResultForm from './component/result.vue'
 import {useI18n} from "vue-i18n";
 import IconSvg from "@/components/IconSvg/index";
 
-interface UnitTestResultPageSetupData {
-  t: (key: string | number) => string;
-  report: Ref;
-  columns: any[]
-
-  loading: Ref<boolean>;
-  exec: (scope) => void;
-  back: () => void;
-
-  visibleMap: Ref
-  showInfo: (id) => void;
-  closeInfo: (id) => void;
-
-  resultFormData: Ref
-  resultFormVisible: Ref<boolean>;
-  setResultFormVisible: (val: boolean) => void;
-  openResultForm: () => void
-  submitResultForm: (model) => void
-  cancelResultForm: () => void;
-
-  execBy: (record) => string;
-  momentTime: (tm) => string;
-  percent: (numb, total) => string;
-  testEnv: (code) => string;
-  testType: (code) => string;
-  resultStatus: (code) => string;
-  jsonStr: (record) => string;
-}
-
 export default defineComponent({
   name: 'UnitTestResultPage',
   components: {
@@ -154,7 +125,7 @@ export default defineComponent({
     IconSvg,
   },
 
-  setup(): UnitTestResultPageSetupData {
+  setup() {
     const { t } = useI18n();
 
     const execBy = execByDef
@@ -167,7 +138,7 @@ export default defineComponent({
     const visibleMap = reactive<any>({})
 
     const router = useRouter();
-    const store = useStore<{ History: ListStateType }>();
+    const store = useStore<{ result: StateType }>();
 
     const columns = [
       {
@@ -202,14 +173,14 @@ export default defineComponent({
       },
     ]
 
-    const report = computed<any>(() => store.state.History.item);
+    const report = computed<any>(() => store.state.result.detailResult);
     const loading = ref<boolean>(true);
 
     const seq = router.currentRoute.value.params.seq as string
 
     const get = async (): Promise<void> => {
       loading.value = true;
-      await store.dispatch('History/get', seq);
+      await store.dispatch('result/get', seq);
       loading.value = false;
     }
     get()
@@ -269,7 +240,7 @@ export default defineComponent({
     }
 
     const back = (): void => {
-      router.push(`/exec/history`)
+      router.push(`/result/list`)
     }
 
     onMounted(() => {

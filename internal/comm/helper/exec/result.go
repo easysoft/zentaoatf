@@ -121,7 +121,11 @@ func ValidateCaseResult(scriptFile string, langType string,
 	msg := fmt.Sprintf(format, scriptIdx+1, total, status, path, cs.Id, cs.Title, secs)
 
 	if commConsts.ComeFrom != "cmd" {
-		websocketUtils.SendExecMsg(msg, "", commConsts.Result, wsMsg)
+		status := commConsts.Result
+		if cs.Status == commConsts.FAIL {
+			status = commConsts.Error
+		}
+		websocketUtils.SendExecMsg(msg, "", status, wsMsg)
 	}
 
 	logUtils.ExecConsole(color.FgCyan, msg)
@@ -142,7 +146,7 @@ func ValidateStepResult(langType string, expectLines []string, actualLines []str
 		expect = strings.TrimSpace(expect)
 
 		var pass bool
-		if expect[:1] == "`" && expect[len(expect)-1:] == "`" {
+		if len(expect) >= 2 && expect[:1] == "`" && expect[len(expect)-1:] == "`" {
 			expect = expect[1 : len(expect)-1]
 			pass = MatchString(expect, log, langType)
 		} else {

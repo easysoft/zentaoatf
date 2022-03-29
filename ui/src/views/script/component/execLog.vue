@@ -13,18 +13,35 @@
     </div>
 
     <div id="logs" class="logs" :class="{ 'with-status': wsStatus }">
-      <div class="log-level">
+      <div class="log-filters">
         <a-select
             v-model:value="logLevel"
             size="small"
         >
-          <a-select-option value="result">显示结果信息</a-select-option>
-          <a-select-option value="run">显示执行信息</a-select-option>
+          <a-select-option value="result">显示结果日志</a-select-option>
+          <a-select-option value="run">显示执行日志</a-select-option>
           <a-select-option value="output">显示详细日志</a-select-option>
+        </a-select>
+
+        <a-select
+            v-model:value="logStatus"
+            size="small"
+        >
+          <a-select-option value="">所有结果</a-select-option>
+          <a-select-option value="pass">成功结果</a-select-option>
+          <a-select-option value="fail">失败结果</a-select-option>
         </a-select>
       </div>
 
-      <div id="content"  v-html="wsMsg.out"></div>
+      <div id="content" :class="['status-'+logStatus, 'category-'+logLevel]">
+        {{ void (count = 1) }}
+        <div v-for="(item, index) in wsMsg.out" :key="index" :class="['category-'+item.category, 'item']">
+          <div class="no-span">{{ count }}. </div>
+          <div class="msg-span">{{ item.msg }}</div>
+
+          <template v-if="hideInfo(item)"> {{ void (count++) }}</template>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -53,6 +70,7 @@ import settings from "@/config/settings";
 import {WsMsg} from "@/views/exec/data";
 import {genExecInfo} from "@/views/exec/service";
 import bus from "@/utils/eventBus";
+import {logLevelMap} from "@/utils/const";
 
 export default defineComponent({
   name: 'ScriptExecLogPage',
@@ -70,6 +88,7 @@ export default defineComponent({
     let script = computed<any>(() => scriptStore.state.script.detail);
 
     const logLevel = ref('result')
+    const logStatus = ref('')
 
     watch(currProduct, () => {
       console.log('watch currProduct', currProduct)
@@ -78,7 +97,7 @@ export default defineComponent({
     // websocket
     let init = true;
     let isRunning = ref('false');
-    let wsMsg = reactive({in: '', out: ''});
+    let wsMsg = reactive({in: '', out: [] as any[]});
 
     let room = ''
     getCache(settings.currWorkspace).then((token) => {
@@ -89,7 +108,7 @@ export default defineComponent({
     WebSocket.init(proxy)
 
     let wsStatus = ref('success')
-    let i = 1
+
     if (init) {
       proxy.$sub(WsEventName, (data) => {
         console.log('---', data[0].msg);
@@ -104,10 +123,9 @@ export default defineComponent({
           isRunning.value = jsn.isRunning
         }
 
-        const msg = genExecInfo(jsn, i, logLevel.value)
+        const msg = genExecInfo(jsn)
         if (msg) {
-          wsMsg.out += msg
-          i++
+          wsMsg.out.push(jsn)
         }
         scroll('content')
       });
@@ -126,6 +144,37 @@ export default defineComponent({
     }
     const hideWsStatus = (): void => {
       wsStatus.value = ''
+    }
+
+    const hideInfo = (item): boolean => {
+      let ret = false
+
+      const levelCode = logLevelMap[logLevel.value].code
+      const itemCode = logLevelMap[item.category].code
+
+      if (!item.category || !logLevelMap[item.category]) {
+        ret = true
+      } else {
+        ret = levelCode <= itemCode
+      }
+
+      if (logStatus.value === 'pass') {
+        console.log('===', item.category)
+
+        if (item.category === 'result') {
+          return true
+        } else {
+          return false
+        }
+      } else if (logStatus.value === 'fail') {
+        if (item.category === 'error') {
+          return true
+        } else {
+          return false
+        }
+      }
+
+      return ret
     }
 
     onMounted(() => {
@@ -161,7 +210,7 @@ export default defineComponent({
       const msg = {act: 'execCase', testSets: sets}
       console.log('msg', msg)
 
-      wsMsg.out += '\n'
+      // wsMsg.out.push({msg: ''})
       WebSocket.sentMsg(room, JSON.stringify(msg))
     }
 
@@ -178,11 +227,13 @@ export default defineComponent({
       currProduct,
 
       logLevel,
+      logStatus,
       script,
       exec,
       checkoutCases,
       stop,
       hideWsStatus,
+      hideInfo,
       wsMsg,
       wsStatus,
       isRunning,
@@ -191,6 +242,45 @@ export default defineComponent({
 
 })
 </script>
+
+<style lang="less">
+#content {
+  .category-output { color: #95a5a6 }
+  .category-run { color: #1890ff }
+  .category-result { color: #68BB8D }
+  .category-error { color: #FC2C25 }
+
+  &.category-run {
+    .category-output { display: none !important; }
+  }
+  &.category-result {
+    .category-output, .category-run { display: none !important; }
+  }
+  &.category-error {
+    .category-output, .category-run, .category-result { display: none !important; }
+  }
+
+  &.status-pass {
+    .category-error { display: none !important; }
+  }
+  &.status-fail {
+    .category-output, .category-run, .category-result { display: none !important; }
+  }
+
+  .item {
+    display: flex;
+
+    .no-span {
+      width: 60px;
+      text-align: right;
+    }
+
+    .msg-span {
+      flex: 1;
+    }
+  }
+}
+</style>
 
 <style lang="less" scoped>
 #exec-log-main {
@@ -247,16 +337,29 @@ export default defineComponent({
       height: calc(100% - 45px);
     }
 
-    .log-level {
+    .log-filters {
       position: absolute;
       top: 5px;
       right: 5px;
-      width: 130px;
+      width: 230px;
+      .ant-select {
+        margin: 0 3px;
+      }
     }
 
     #content {
       height: 100%;
       overflow-y: auto;
+
+      .item {
+        .no-span {
+          display: inline-block;
+          text-align: right;
+          min-width: 50px;
+          text-align: right;
+        }
+      }
+
     }
   }
 }

@@ -39,23 +39,9 @@ export function getCaseIdsFromReport(report: any, scope: string): string[] {
     return ret
 }
 
-export function genExecInfo(jsn: WsMsg, i: number, logLevel: string): string {
-    console.log('===', logLevelMap[logLevel].code, logLevelMap[jsn.category].code)
-    if (logLevelMap[jsn.category].code < logLevelMap[logLevel].code) {
-        return ''
-    }
-
-    let msg = jsn.msg.replace(/^"+/,'').replace(/"+$/,'')
-    msg = SetWidth(i + '. ', 40) + `<span>${msg}</span>`;
-
-    const sty = 'color: ' + logLevelMap[jsn.category].color + ';'
-    msg = `<div style="${sty}"> ${msg} </div>`
-
-    return msg
-}
-
-export function SetWidth(content: string, width: number): string{
-    return `<span style="display: inline-block; width: ${width}px; text-align: right; padding-right: 6px;">${content}</span>`;
+export function genExecInfo(jsn: WsMsg) : WsMsg {
+    jsn.msg = jsn.msg.replace(/^"+/,'').replace(/"+$/,'')
+    return jsn
 }
 
 export function submitResultToZentao(data: any): Promise<any> {

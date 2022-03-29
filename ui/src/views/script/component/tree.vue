@@ -265,9 +265,10 @@ export default defineComponent({
       }
     }
     const getLeafNodes = (): string[] => {
+      console.log('nodeMap', nodeMap)
       let arr = [] as string[]
       checkedKeys.value.forEach(k => {
-        if (!nodeMap[k].isDir) {
+        if (nodeMap[k].type === 'file') {
           arr.push(nodeMap[k])
         }
       })

@@ -33,13 +33,13 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
       },
       {
         title: 'execution.result.func',
-        path: 'history/func/:seq',
+        path: 'func/:workspaceId/:seq',
         component: () => import('@/views/result/result-func.vue'),
         hidden: true,
       },
       {
         title: 'execution.result.unit',
-        path: 'history/unit/:seq',
+        path: 'unit/:workspaceId/:seq',
         component: () => import('@/views/result/result-unit.vue'),
         hidden: true,
       },

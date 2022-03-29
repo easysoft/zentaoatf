@@ -28,6 +28,7 @@ func SendOutputMsg(msg, isRunning string, wsMsg websocket.Message) {
 func SendExecMsg(msg, isRunning string, category commConsts.WsMsgCategory, wsMsg websocket.Message) {
 	logUtils.Infof("WebSocket SendExecMsg: room=%s, msg=%s", wsMsg.Room, string(wsMsg.Body))
 
+	msg = strings.TrimSpace(msg)
 	data := serverDomain.WsResp{Msg: msg, IsRunning: isRunning, Category: category}
 
 	Broadcast(wsMsg.Namespace, wsMsg.Room, wsMsg.Event, data)

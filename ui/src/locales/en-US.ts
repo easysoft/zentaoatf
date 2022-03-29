@@ -6,6 +6,7 @@ export default {
     'ztf_name_full': 'ZTF Automated Tool',
 
     'no': 'NO.',
+    'index': 'Index',
     'scope': 'Scope', 
     'name': 'Name', 
     'path': 'Path',

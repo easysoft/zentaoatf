@@ -344,11 +344,11 @@
     },
     {
       "id": "found_scripts",
-      "translation": "发现%s个用例"
+      "translation": "发现%d个用例在目录%s中。"
     },
     {
       "id": "ignore_scripts",
-      "translation": "忽略%s个未设置解析器的脚本"
+      "translation": "忽略%s个未设置解析器的脚本。"
     },
     {
       "id": "failed_scripts",

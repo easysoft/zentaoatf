@@ -27,7 +27,7 @@ func (s *TestExecService) Paginate(siteId, productId int, req serverDomain.ReqPa
 
 	workspaces, _ := s.WorkspaceRepo.ListWorkspacesByProduct(siteId, productId)
 
-	pageNo := req.Page
+	pageNo := req.Page - 1
 	pageSize := req.PageSize
 	jumpNo := pageNo * pageSize
 
@@ -44,7 +44,7 @@ func (s *TestExecService) Paginate(siteId, productId int, req serverDomain.ReqPa
 				continue
 			}
 
-			var summary serverDomain.TestReportSummary
+			summary := serverDomain.TestReportSummary{WorkspaceId: int(workspace.ID)}
 
 			report, err1 := analysisUtils.ReadReportByWorkspaceSeq(workspace.Path, seq)
 			if err1 != nil { // ignore wrong json result
@@ -64,12 +64,15 @@ func (s *TestExecService) Paginate(siteId, productId int, req serverDomain.ReqPa
 	return
 }
 
-func (s *TestExecService) Get(workspacePath string, seq string) (report commDomain.ZtfReport, err error) {
-	return analysisUtils.ReadReportByWorkspaceSeq(workspacePath, seq)
+func (s *TestExecService) Get(workspaceId int, seq string) (report commDomain.ZtfReport, err error) {
+	workspace, _ := s.WorkspaceRepo.FindById(uint(workspaceId))
+
+	return analysisUtils.ReadReportByWorkspaceSeq(workspace.Path, seq)
 }
 
-func (s *TestExecService) Delete(workspacePath string, seq string) (err error) {
-	dir := filepath.Join(workspacePath, commConsts.LogDirName)
+func (s *TestExecService) Delete(workspaceId int, seq string) (err error) {
+	workspace, _ := s.WorkspaceRepo.FindById(uint(workspaceId))
+	dir := filepath.Join(workspace.Path, commConsts.LogDirName)
 
 	di := filepath.Join(dir, seq)
 	err = fileUtils.RmDir(di)

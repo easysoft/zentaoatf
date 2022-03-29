@@ -356,11 +356,11 @@
     },
     {
       "id": "found_scripts",
-      "translation": "Found %s test cases"
+      "translation": "Found %d test cases in dir %s."
     },
     {
       "id": "ignore_scripts",
-      "translation": "Ignore %s scripts with no interpreter set"
+      "translation": "Ignore %s scripts with no interpreter."
     },
     {
       "id": "failed_scripts",

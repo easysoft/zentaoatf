@@ -75,8 +75,6 @@ import {StateType} from "./store";
 import {useRouter} from "vue-router";
 import {momentUnixDef, momentUtcDef, percentDef} from "@/utils/datetime";
 import {execByDef} from "@/utils/testing";
-import {WorkspaceData} from "@/store/workspace";
-import {hideMenu} from "@/utils/dom";
 import {useI18n} from "vue-i18n";
 import IconSvg from "@/components/IconSvg/index";
 import {PaginationConfig, QueryParams} from "@/types/data";
@@ -189,21 +187,22 @@ export default defineComponent({
 
     // 查看
     const view = (item) => {
-      router.push(`/exec/history/${item.testType}/${item.seq}`)
+      router.push(`/result/${item.testType}/${item.workspaceId}/${item.seq}`)
     }
 
     // 删除
     const removeLoading = ref<string[]>([]);
     const remove = (item) => {
       Modal.confirm({
-        title: t('confirm_to_remove_result'),
+        title: t('confirm_to_delete_result'),
         okText: t('confirm'),
         cancelText: t('cancel'),
         onOk: async () => {
           removeLoading.value = [item.seq];
-          const res: boolean = await store.dispatch('History/remove', item.seq);
+          const res: boolean = await store.dispatch('result/delete',
+              {workspaceId: item.workspaceId, seq: item.seq});
           if (res === true) {
-            message.success(t('remove_success'));
+            message.success(t('delete_success'));
             await list(1);
           }
           removeLoading.value = [];

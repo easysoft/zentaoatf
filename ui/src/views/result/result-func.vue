@@ -136,7 +136,7 @@
 <script lang="ts">
 import {computed, defineComponent, onMounted, ref, Ref} from "vue";
 import {useStore} from 'vuex';
-import {StateType as ListStateType} from "@/views/exec/store";
+import {StateType} from "./store";
 import {useRouter} from "vue-router";
 import {momentUnixDef, percentDef} from "@/utils/datetime";
 import {execByDef, resultStatusDef, testEnvDef, testTypeDef} from "@/utils/testing";
@@ -147,37 +147,6 @@ import BugForm from "./component/bug.vue";
 import {useI18n} from "vue-i18n";
 import IconSvg from "@/components/IconSvg/index";
 
-interface UnitTestResultPageSetupData {
-  t: (key: string | number) => string;
-  report: Ref;
-  columns: any[]
-
-  loading: Ref<boolean>;
-  exec: (scope) => void;
-  back: () => void;
-
-  resultFormData: Ref
-  resultFormVisible: Ref<boolean>;
-  setResultFormVisible: (val: boolean) => void;
-  openResultForm: () => void
-  submitResultForm: (model) => void
-  cancelResultForm: () => void;
-
-  bugFormData: Ref
-  bugFormVisible: Ref
-  setBugFormVisible: (id, val) => void;
-  openBugForm: (cs) => void
-  submitBugForm: (model) => void
-  cancelBugForm: () => void;
-
-  execBy: (item) => string;
-  momentTime: (tm) => string;
-  percent: (numb, total) => string;
-  testEnv: (code) => string;
-  testType: (code) => string;
-  resultStatus: (code) => string;
-}
-
 export default defineComponent({
   name: 'UnitTestResultPage',
   components: {
@@ -185,7 +154,7 @@ export default defineComponent({
     IconSvg,
   },
 
-  setup(): UnitTestResultPageSetupData {
+  setup() {
     const { t } = useI18n();
 
     const execBy = execByDef
@@ -196,11 +165,10 @@ export default defineComponent({
     const resultStatus = resultStatusDef
 
     const router = useRouter();
-    const store = useStore<{ History: ListStateType }>();
 
     const columns = [
       {
-        title: t('index'),
+        title: t('no'),
         dataIndex: 'seq',
         width: 150,
         customRender: ({text, index}: { text: any; index: number }) => index + 1,
@@ -222,14 +190,17 @@ export default defineComponent({
       },
     ]
 
-    const report = computed<any>(() => store.state.History.item);
+    const store = useStore<{ result: StateType }>();
+    const report = computed<any>(() => store.state.result.detailResult);
     const loading = ref<boolean>(true);
 
+    const workspaceId= router.currentRoute.value.params.workspaceId
     const seq = router.currentRoute.value.params.seq
 
     const get = async (): Promise<void> => {
       loading.value = true;
-      await store.dispatch('History/get', seq);
+      await store.dispatch('result/get', {workspaceId: workspaceId, seq: seq});
+      console.log('===', report)
       loading.value = false;
     }
     get()
@@ -317,7 +288,7 @@ export default defineComponent({
     }
 
     const back = (): void => {
-      router.push(`/exec/history`)
+      router.push(`/result/list`)
     }
 
     onMounted(() => {
