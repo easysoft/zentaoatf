@@ -11,49 +11,7 @@
     <div class="main" v-if="currWorkspace.type === 'func'">
       <a-tabs>
         <a-tab-pane key="1" :tab="t('sync_from_zentao')">
-            <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
-              <a-form-item :label="t('product')" v-bind="validateInfosFrom.productId">
-                <a-select v-model:value="modelFrom.productId" @change="selectProduct">
-                  <a-select-option key="" value="">&nbsp;</a-select-option>
-                  <a-select-option v-for="item in products" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
-                </a-select>
-              </a-form-item>
-              <a-form-item :label="t('module')" v-bind="validateInfosFrom.moduleId">
-                <a-select v-model:value="modelFrom.moduleId">
-                  <a-select-option key="" value="">&nbsp;</a-select-option>
-                  <a-select-option v-for="item in modules" :key="item.id" :value="item.id"><span v-html="item.name"></span>
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-              <a-form-item :label="t('suite')" v-bind="validateInfosFrom.suiteId">
-                <a-select v-model:value="modelFrom.suiteId">
-                  <a-select-option key="" value="">&nbsp;</a-select-option>
-                  <a-select-option v-for="item in suites" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
-                </a-select>
-              </a-form-item>
-              <a-form-item :label="t('task')" v-bind="validateInfosFrom.taskId">
-                <a-select v-model:value="modelFrom.taskId">
-                  <a-select-option key="" value="">&nbsp;</a-select-option>
-                  <a-select-option v-for="item in tasks" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
-                </a-select>
-              </a-form-item>
-              <a-form-item :label="t('lang')" v-bind="validateInfosFrom.lang">
-                <a-select v-model:value="modelFrom.lang">
-                  <a-select-option v-for="item in langs" :key="item.code" :value="item.code">{{ item.name }}</a-select-option>
-                </a-select>
-              </a-form-item>
 
-              <a-form-item :label="t('independent_by_module')">
-                <a-switch v-model:checked="modelFrom.byModule"/>
-              </a-form-item>
-              <a-form-item :label="t('independent_expect')">
-                <a-switch v-model:checked="modelFrom.independentFile"/>
-              </a-form-item>
-              <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-                <a-button type="primary" @click.prevent="syncFromZentaoSubmit">{{ t('submit') }}</a-button>
-                <a-button style="margin-left: 10px" @click="resetFieldsFrom">{{ t('reset') }}</a-button>
-              </a-form-item>
-            </a-form>
         </a-tab-pane>
 
         <a-tab-pane key="2" :tab="t('sync_to_zentao')" force-render>
@@ -92,41 +50,10 @@ import {useRouter} from "vue-router";
 
 const useForm = Form.useForm;
 
-interface ConfigFormSetupData {
-  t: (key: string | number) => string;
-  currWorkspace: ComputedRef;
-
-  labelCol: any
-  wrapperCol: any
-  simpleImage: any
-  formRef: any
-
-  langs: ComputedRef<any[]>;
-  products: ComputedRef<any[]>;
-  modules: ComputedRef<any[]>;
-  suites: ComputedRef<any[]>;
-  tasks: ComputedRef<any[]>;
-  selectProduct: (item) => void;
-
-  modelFrom: SyncSettings
-  rulesFrom: any
-  validateFrom: any
-  validateInfosFrom: validateInfos
-  syncFromZentaoSubmit: () => void;
-  resetFieldsFrom: () => void;
-
-  modelTo: SyncSettings
-  rulesTo: any
-  validateTo: any
-  validateInfosTo: validateInfos
-  syncToZentaoSubmit: () => void;
-  resetFieldsTo: () => void;
-}
-
 export default defineComponent({
   name: 'ConfigFormForm',
   components: {},
-  setup(props): ConfigFormSetupData {
+  setup(props) {
     const {t} = useI18n();
     const router = useRouter();
 

@@ -15,6 +15,12 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         component: () => import('@/views/script/index.vue'),
         hidden: true,
       },
+      {
+        title: 'test_script',
+        path: 'index/:workspace/:seq/:scope',
+        component: () => import('@/views/script/index.vue'),
+        hidden: true,
+      },
     ],
   },
 

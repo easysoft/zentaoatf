@@ -67,17 +67,31 @@
       <a-button :disabled="checkedKeys.length === 0" @click="checkinCases">更新禅道用例</a-button>
       <a-button :disabled="checkedKeys.length === 0" @click="execSelected">执行选中</a-button>
     </div>
+
+    <a-modal
+        :title="fromTitle"
+        v-if="fromVisible"
+        :visible="true"
+        :onCancel="onCancel"
+        width="800px"
+        :destroy-on-close="true"
+        :mask-closable="false"
+        :footer="null"
+    >
+      <SyncFromZentao
+          :onClose="onSave"
+      />
+    </a-modal>
+
   </div>
 </template>
 
 <script lang="ts">
 import {
   computed,
-  ComputedRef,
   defineComponent,
   onMounted,
   ref,
-  Ref,
   watch
 } from "vue";
 import {useStore} from "vuex";
@@ -90,16 +104,35 @@ import { DatabaseOutlined, FolderOutlined, FolderOpenOutlined, FileOutlined} fro
 import bus from "@/utils/eventBus";
 import {ZentaoData} from "@/store/zentao";
 import {cacheExpandedKeys, getScriptFilters, retrieveExpandedKeys, setScriptFilters} from "@/utils/cache";
-import {listFilterItems} from "@/views/script/service";
+import {genWorkspaceToScriptsMap, listFilterItems, syncToZentao} from "../service";
 import settings from "@/config/settings";
+import {getCaseIdsFromReport} from "../service";
+import {useRouter} from "vue-router";
+
+import SyncFromZentao from "./syncFromZentao.vue"
 
 export default defineComponent({
   name: 'ScriptTreePage',
   components: {
+    SyncFromZentao,
     DatabaseOutlined, FolderOutlined, FolderOpenOutlined, FileOutlined,
   },
-  setup() {
+  props: {
+  },
+
+  setup(props) {
     const { t } = useI18n();
+
+    const fromTitle = ref('从禅道同步用例')
+    const fromVisible = ref(false)
+
+    const router = useRouter();
+    let workspace = router.currentRoute.value.params.workspace  as string
+    workspace = workspace === '-' ? '' : workspace
+    let seq = router.currentRoute.value.params.seq  as string
+    seq = seq === '-' ? '' : seq
+    let scope = router.currentRoute.value.params.scope as string
+    scope = scope === '-' ? '' : scope
 
     const zentaoStore = useStore<{ zentao: ZentaoData }>();
     const currSite = computed<any>(() => zentaoStore.state.zentao.currSite);
@@ -114,6 +147,15 @@ export default defineComponent({
     const filerValue = ref('')
 
     const scriptStore = useStore<{ script: ScriptData }>();
+
+    const selectCasesFromReport = async (): Promise<void> => {
+      if (!seq) return
+
+      getCaseIdsFromReport(workspace, seq, scope).then((json) => {
+         checkedKeys.value = json.data
+      })
+    }
+    selectCasesFromReport()
 
     watch(currProduct, () => {
       console.log('watch currProduct', currProduct.value.id)
@@ -210,18 +252,47 @@ export default defineComponent({
     const execSelected = () => {
       console.log('execSelected')
 
-      // not to select any node
+      // cancel selecting any nodes
       selectedKeys.value = []
       scriptStore.dispatch('script/getScript', null)
 
       const leafNodes = getLeafNodes()
       bus.emit(settings.eventExec, leafNodes);
     }
+
     const checkoutCases = () => {
       console.log('checkoutCases')
+      fromVisible.value = true
     }
+    const onSave = async () => {
+      console.log('onSave')
+      fromVisible.value = false
+      loadScripts()
+    }
+    const onCancel = async () => {
+      console.log('onCancel')
+      fromVisible.value = false
+    }
+
     const checkinCases = () => {
       console.log('checkinCases')
+
+      const leafNodes = getLeafNodes()
+      const sets = genWorkspaceToScriptsMap(leafNodes)
+      console.log('sets', sets)
+
+      syncToZentao(sets).then((json) => {
+        if (json.code === 0) {
+          notification.success({
+            message: `同步成功`,
+          });
+        } else {
+          notification.error({
+            message: `同步失败`,
+            description: json.msg,
+          });
+        }
+      })
     }
 
     const selectNode = (selectedKeys, e) => {
@@ -277,6 +348,7 @@ export default defineComponent({
 
     return {
       t,
+
       currSite,
       currProduct,
       treeData,
@@ -302,6 +374,11 @@ export default defineComponent({
       selectedKeys,
       checkedKeys,
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
+
+      fromTitle,
+      fromVisible,
+      onSave,
+      onCancel,
     }
   }
 

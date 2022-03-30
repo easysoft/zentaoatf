@@ -13,6 +13,18 @@ import (
 	"reflect"
 )
 
+func LoadBySite(site model.Site) (config commDomain.WorkspaceConf) {
+	config = commDomain.WorkspaceConf{
+		Url:      site.Url,
+		Username: site.Username,
+		Password: site.Password,
+	}
+
+	config.Url = commonUtils.AddSlashForUrl(config.Url)
+
+	return config
+}
+
 func LoadByWorkspacePath(workspacePath string) (config commDomain.WorkspaceConf) {
 	pth := filepath.Join(workspacePath, commConsts.ConfigDir, commConsts.ConfigFile)
 	ini.MapTo(&config, pth)

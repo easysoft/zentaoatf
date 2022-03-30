@@ -76,6 +76,7 @@ import {WsMsg} from "@/views/exec/data";
 import {genExecInfo} from "@/views/exec/service";
 import bus from "@/utils/eventBus";
 import {logLevelMap} from "@/utils/const";
+import {genWorkspaceToScriptsMap} from "@/views/script/service";
 
 export default defineComponent({
   name: 'ScriptExecLogPage',
@@ -197,23 +198,7 @@ export default defineComponent({
     const exec = (scripts: any) => {
       console.log('exec', scripts)
 
-      const workspaceIds = [] as number[]
-      const mp = {}
-      scripts.forEach((item) => {
-        if (!mp[item.workspaceId]) {
-          mp[item.workspaceId] = []
-          workspaceIds.push(item.workspaceId)
-        }
-
-        mp[item.workspaceId].push(item.path)
-      })
-
-      const sets = [] as any[]
-      workspaceIds.forEach((workspaceId) => {
-        const set = {workspaceId: workspaceId, cases: mp[workspaceId]}
-        sets.push(set)
-      })
-
+      const sets = genWorkspaceToScriptsMap(scripts)
       const msg = {act: 'execCase', testSets: sets}
       console.log('msg', msg)
 

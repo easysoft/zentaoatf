@@ -70,14 +70,17 @@ func (c *ZentaoCtrl) ListProduct(ctx iris.Context) {
 }
 
 func (c *ZentaoCtrl) ListModule(ctx iris.Context) {
-	workspacePath := ctx.URLParam("currWorkspace")
-	productId, err := ctx.URLParamInt("productId")
+	siteId, err := ctx.URLParamInt("currSiteId")
+	productId, err := ctx.URLParamInt("currProductId")
+
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
 		return
 	}
 
-	data, err := zentaoHelper.ListModule(productId, workspacePath)
+	site, _ := c.SiteService.Get(uint(siteId))
+
+	data, err := zentaoHelper.ListModule(productId, site)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
 		return
@@ -87,14 +90,16 @@ func (c *ZentaoCtrl) ListModule(ctx iris.Context) {
 }
 
 func (c *ZentaoCtrl) ListSuite(ctx iris.Context) {
-	workspacePath := ctx.URLParam("currWorkspace")
-	productId, err := ctx.URLParamInt("productId")
+	siteId, err := ctx.URLParamInt("currSiteId")
+	productId, err := ctx.URLParamInt("currProductId")
+
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
 		return
 	}
 
-	data, err := zentaoHelper.ListSuite(productId, workspacePath)
+	site, _ := c.SiteService.Get(uint(siteId))
+	data, err := zentaoHelper.ListSuite(productId, site)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
 		return
@@ -104,14 +109,16 @@ func (c *ZentaoCtrl) ListSuite(ctx iris.Context) {
 }
 
 func (c *ZentaoCtrl) ListTask(ctx iris.Context) {
-	workspacePath := ctx.URLParam("currWorkspace")
-	productId, err := ctx.URLParamInt("productId")
+	siteId, err := ctx.URLParamInt("currSiteId")
+	productId, err := ctx.URLParamInt("currProductId")
+
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
 		return
 	}
 
-	data, err := zentaoHelper.ListTask(productId, workspacePath)
+	site, _ := c.SiteService.Get(uint(siteId))
+	data, err := zentaoHelper.ListTask(productId, site)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
 		return

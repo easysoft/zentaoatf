@@ -3,6 +3,7 @@ package action
 import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
+	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
 	"github.com/aaronchen2k/deeptest/internal/command"
 	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
@@ -38,6 +39,8 @@ func Generate(productId string, moduleId string, suiteId string, taskId string, 
 		settings.ProductId = stringUtils.ParseInt(productId)
 	}
 
-	actionModule.SyncService.SyncFromZentao(settings, commConsts.WorkDir)
+	config := configUtils.LoadByWorkspacePath(commConsts.WorkDir)
+
+	actionModule.SyncService.SyncFromZentao(settings, config, commConsts.WorkDir)
 
 }

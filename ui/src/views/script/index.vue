@@ -73,6 +73,7 @@ import {ZentaoData} from "@/store/zentao";
 import ScriptTreePage from "./component/tree.vue";
 import ScriptExecLogPage from "./component/execLog.vue";
 import settings from "@/config/settings";
+import SyncFromZentao from "./component/syncFromZentao.vue";
 
 export default defineComponent({
   name: 'ScriptListPage',

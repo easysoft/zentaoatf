@@ -50,7 +50,7 @@ func (c *WorkspaceCtrl) Get(ctx iris.Context) {
 		return
 	}
 
-	po, err := c.WorkspaceService.FindById(uint(id))
+	po, err := c.WorkspaceService.Get(uint(id))
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
@@ -147,6 +147,23 @@ func (c *WorkspaceCtrl) GetByUser(ctx iris.Context) {
 
 	data := iris.Map{"workspaces": workspaces, "currWorkspace": currWorkspace,
 		"currConfig": currWorkspaceConfig, "scriptTree": scriptTree}
+
+	ctx.JSON(c.SuccessResp(data))
+}
+
+func (c *WorkspaceCtrl) ListByProduct(ctx iris.Context) {
+	currSiteId, _ := ctx.URLParamInt("currSiteId")
+	currProductId, _ := ctx.URLParamInt("currProductId")
+	if currProductId <= 0 {
+		ctx.JSON(c.SuccessResp(domain.PageData{}))
+		return
+	}
+
+	data, err := c.WorkspaceService.ListByProduct(currSiteId, currProductId)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
 
 	ctx.JSON(c.SuccessResp(data))
 }

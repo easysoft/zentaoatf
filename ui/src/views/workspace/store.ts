@@ -3,28 +3,31 @@ import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 import { QueryParams, QueryResult } from '@/types/data.d';
 import {
-    list, get, save, remove,
+    query, listByProduct, get, save, remove,
 } from './service';
 
-export interface StateType {
+export interface WorkspaceData {
     queryResult: QueryResult;
+    listResult: any[];
     detailResult: any;
 }
 
-export interface ModuleType extends StoreModuleType<StateType> {
-    state: StateType;
+export interface ModuleType extends StoreModuleType<WorkspaceData> {
+    state: WorkspaceData;
     mutations: {
-        setQueryResult: Mutation<StateType>;
-        setDetailResult: Mutation<StateType>;
+        setQueryResult: Mutation<WorkspaceData>;
+        setListResult: Mutation<WorkspaceData>;
+        setDetailResult: Mutation<WorkspaceData>;
     };
     actions: {
-        list: Action<StateType, StateType>;
-        get: Action<StateType, StateType>;
-        save: Action<StateType, StateType>;
-        delete: Action<StateType, StateType>;
+        query: Action<WorkspaceData, WorkspaceData>;
+        list: Action<WorkspaceData, WorkspaceData>;
+        get: Action<WorkspaceData, WorkspaceData>;
+        save: Action<WorkspaceData, WorkspaceData>;
+        delete: Action<WorkspaceData, WorkspaceData>;
     };
 }
-const initState: StateType = {
+const initState: WorkspaceData = {
     queryResult: {
         result: [],
         pagination: {
@@ -35,6 +38,7 @@ const initState: StateType = {
             showQuickJumper: true,
         },
     },
+    listResult: [],
     detailResult: {},
 };
 
@@ -48,19 +52,36 @@ const StoreModel: ModuleType = {
         setQueryResult(state, payload) {
             state.queryResult = payload;
         },
+        setListResult(state, payload) {
+            state.listResult = payload;
+        },
         setDetailResult(state, payload) {
             state.detailResult = payload;
         },
     },
     actions: {
-        async list({ commit }, params: QueryParams ) {
+        async query({ commit }, params: QueryParams ) {
             try {
-                const response: ResponseData = await list(params);
+                const response: ResponseData = await query(params);
                 if (response.code != 0) {
                     return;
                 }
                 const data = response.data;
                 commit('setQueryResult', data);
+
+                return true;
+            } catch (error) {
+                return false;
+            }
+        },
+        async list({ commit }, productId: number ) {
+            try {
+                const response: ResponseData = await listByProduct(productId);
+                if (response.code != 0) {
+                    return;
+                }
+                const data = response.data;
+                commit('setListResult', data);
 
                 return true;
             } catch (error) {

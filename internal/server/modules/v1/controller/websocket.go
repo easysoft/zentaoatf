@@ -107,7 +107,7 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 	for idx, _ := range req.TestSets {
 		testSet := &req.TestSets[idx]
 		if testSet.WorkspaceId != 0 {
-			po, _ := c.WorkspaceService.FindById(uint(testSet.WorkspaceId))
+			po, _ := c.WorkspaceService.Get(uint(testSet.WorkspaceId))
 			testSet.WorkspacePath = po.Path
 		}
 

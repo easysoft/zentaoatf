@@ -18,8 +18,7 @@ import (
 )
 
 func CommitCase(caseId int, title string,
-	steps []commDomain.ZentaoCaseStep, workspacePath string) (err error) {
-	config := configUtils.LoadByWorkspacePath(workspacePath)
+	steps []commDomain.ZentaoCaseStep, config commDomain.WorkspaceConf) (err error) {
 
 	err = Login(config)
 	if err != nil {
@@ -51,7 +50,7 @@ func CommitCase(caseId int, title string,
 	}
 
 	if yes {
-		_, err = httpUtils.PostWithFormat(url, requestObj, true)
+		_, err = httpUtils.Put(url, requestObj)
 		if err == nil {
 			logUtils.Infof(i118Utils.Sprintf("success_to_commit_case", caseId) + "\n")
 		}
@@ -74,10 +73,8 @@ func GetCaseById(baseUrl string, caseId int) (cs commDomain.ZtfCase) {
 	return
 }
 
-func LoadTestCases(productId, moduleId, suiteId, taskId int, workspacePath string) (
-	cases []commDomain.ZtfCase, loginFail bool) {
-
-	config := configUtils.LoadByWorkspacePath(workspacePath)
+func LoadTestCases(productId, moduleId, suiteId, taskId int,
+	config commDomain.WorkspaceConf) (cases []commDomain.ZtfCase, loginFail bool) {
 
 	err := Login(config)
 	if err != nil {

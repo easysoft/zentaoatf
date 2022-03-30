@@ -13,20 +13,20 @@ import (
 	"path/filepath"
 )
 
-type TestExecService struct {
+type TestHistoryService struct {
 	WorkspaceRepo *repo.WorkspaceRepo `inject:""`
 }
 
-func NewTestExecService() *TestExecService {
-	return &TestExecService{}
+func NewTestHistoryService() *TestHistoryService {
+	return &TestHistoryService{}
 }
 
-func (s *TestExecService) Paginate(siteId, productId int, req serverDomain.ReqPaginate) (
+func (s *TestHistoryService) Paginate(siteId, productId int, req serverDomain.ReqPaginate) (
 	data domain.PageData, err error) {
 
 	reports := []serverDomain.TestReportSummary{}
 
-	workspaces, _ := s.WorkspaceRepo.ListWorkspacesByProduct(siteId, productId)
+	workspaces, _ := s.WorkspaceRepo.ListByProduct(siteId, productId)
 
 	pageNo := req.Page - 1
 	pageSize := req.PageSize
@@ -67,13 +67,13 @@ func (s *TestExecService) Paginate(siteId, productId int, req serverDomain.ReqPa
 	return
 }
 
-func (s *TestExecService) Get(workspaceId int, seq string) (report commDomain.ZtfReport, err error) {
+func (s *TestHistoryService) Get(workspaceId int, seq string) (report commDomain.ZtfReport, err error) {
 	workspace, _ := s.WorkspaceRepo.FindById(uint(workspaceId))
 
 	return analysisUtils.ReadReportByWorkspaceSeq(workspace.Path, seq)
 }
 
-func (s *TestExecService) Delete(workspaceId int, seq string) (err error) {
+func (s *TestHistoryService) Delete(workspaceId int, seq string) (err error) {
 	workspace, _ := s.WorkspaceRepo.FindById(uint(workspaceId))
 	dir := filepath.Join(workspace.Path, commConsts.LogDirName)
 

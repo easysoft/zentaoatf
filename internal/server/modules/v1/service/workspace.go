@@ -29,10 +29,14 @@ func (s *WorkspaceService) Paginate(req serverDomain.WorkspaceReqPaginate) (ret 
 	return
 }
 
-func (s *WorkspaceService) FindById(id uint) (model.Workspace, error) {
+func (s *WorkspaceService) ListWorkspacesByProduct(siteId, productId int) (pos []model.Workspace, err error) {
+	return s.WorkspaceRepo.ListByProduct(siteId, productId)
+}
+
+func (s *WorkspaceService) Get(id uint) (model.Workspace, error) {
 	return s.WorkspaceRepo.FindById(id)
 }
-func (s *WorkspaceService) FindByPath(workspacePath string) (po model.Workspace, err error) {
+func (s *WorkspaceService) GetByPath(workspacePath string) (po model.Workspace, err error) {
 	return s.WorkspaceRepo.FindByPath(workspacePath)
 }
 
@@ -119,4 +123,8 @@ func (s *WorkspaceService) GetByUser(currWorkspacePath string) (
 	currWorkspaceConfig.IsWin = commonUtils.IsWin()
 
 	return
+}
+
+func (s *WorkspaceService) ListByProduct(siteId, productId int) (pos []model.Workspace, err error) {
+	return s.WorkspaceRepo.ListByProduct(siteId, productId)
 }

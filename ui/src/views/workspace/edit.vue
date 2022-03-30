@@ -61,7 +61,7 @@ import {Form, notification} from 'ant-design-vue';
 const useForm = Form.useForm;
 
 import {useStore} from "vuex";
-import {StateType} from "@/views/workspace/store";
+import {WorkspaceData} from "@/views/workspace/store";
 import {ZentaoData} from "@/store/zentao";
 import {arrToMap} from "@/utils/array";
 import {ztfTestTypesDef, unitTestTypesDef} from "@/utils/const";
@@ -95,9 +95,7 @@ export default defineComponent({
     const testTypes = ref([...ztfTestTypesDef, ...unitTestTypesDef])
     const cmdMap = ref(arrToMap(testTypes.value))
 
-    const zentaoStore = useStore<{ zentao: ZentaoData }>();
-
-    const store = useStore<{ Workspace: StateType }>();
+    const store = useStore<{ Workspace: WorkspaceData }>();
     const modelRef = computed(() => store.state.Workspace.detailResult);
     const showCmd = computed(() => { return modelRef.value.type !== 'ztf' })
 

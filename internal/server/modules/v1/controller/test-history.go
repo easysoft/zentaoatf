@@ -7,17 +7,17 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
-type TestExecCtrl struct {
-	TestExecService *service.TestExecService `inject:""`
+type TestHistoryCtrl struct {
+	TestHistoryService *service.TestHistoryService `inject:""`
 	BaseCtrl
 }
 
-func NewTestExecCtrl() *TestExecCtrl {
-	return &TestExecCtrl{}
+func NewTestHistoryCtrl() *TestHistoryCtrl {
+	return &TestHistoryCtrl{}
 }
 
 // List 分页列表
-func (c *TestExecCtrl) List(ctx iris.Context) {
+func (c *TestHistoryCtrl) List(ctx iris.Context) {
 	currSiteId, _ := ctx.URLParamInt("currSiteId")
 	currProductId, _ := ctx.URLParamInt("currProductId")
 
@@ -27,7 +27,7 @@ func (c *TestExecCtrl) List(ctx iris.Context) {
 		return
 	}
 
-	data, err := c.TestExecService.Paginate(currSiteId, currProductId, req)
+	data, err := c.TestHistoryService.Paginate(currSiteId, currProductId, req)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
@@ -37,7 +37,7 @@ func (c *TestExecCtrl) List(ctx iris.Context) {
 }
 
 // Get 详情
-func (c *TestExecCtrl) Get(ctx iris.Context) {
+func (c *TestHistoryCtrl) Get(ctx iris.Context) {
 	workspaceId, _ := ctx.Params().GetInt("workspaceId")
 	seq := ctx.Params().Get("seq")
 
@@ -46,7 +46,7 @@ func (c *TestExecCtrl) Get(ctx iris.Context) {
 		return
 	}
 
-	exec, err := c.TestExecService.Get(workspaceId, seq)
+	exec, err := c.TestHistoryService.Get(workspaceId, seq)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
@@ -55,7 +55,7 @@ func (c *TestExecCtrl) Get(ctx iris.Context) {
 }
 
 // Delete 删除
-func (c *TestExecCtrl) Delete(ctx iris.Context) {
+func (c *TestHistoryCtrl) Delete(ctx iris.Context) {
 	workspaceId, _ := ctx.URLParamInt("workspaceId")
 	seq := ctx.URLParam("seq")
 
@@ -64,7 +64,7 @@ func (c *TestExecCtrl) Delete(ctx iris.Context) {
 		return
 	}
 
-	err := c.TestExecService.Delete(workspaceId, seq)
+	err := c.TestHistoryService.Delete(workspaceId, seq)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return

@@ -146,6 +146,7 @@ import ResultForm from "./component/result.vue";
 import BugForm from "./component/bug.vue";
 import {useI18n} from "vue-i18n";
 import IconSvg from "@/components/IconSvg/index";
+import {get, getCaseIdsFromReport} from "@/views/exec/service";
 
 export default defineComponent({
   name: 'UnitTestResultPage',
@@ -194,7 +195,7 @@ export default defineComponent({
     const report = computed<any>(() => store.state.result.detailResult);
     const loading = ref<boolean>(true);
 
-    const workspaceId= router.currentRoute.value.params.workspaceId
+    const workspaceId = router.currentRoute.value.params.workspaceId
     const seq = router.currentRoute.value.params.seq
 
     const get = async (): Promise<void> => {
@@ -212,8 +213,10 @@ export default defineComponent({
       const execBy = report.value.execBy
       const execById = report.value.execById
 
-      if (execBy === 'case') router.push(`/exec/run/${execBy}/${seq}/${scope}`)
-      else router.push(`/exec/run/${execBy}/${productId}/${execById}/${seq}/${scope}`)
+      if (execBy === 'case')
+        router.push(`/script/index/${workspaceId}/${seq}/${scope}`)
+      else
+        router.push(`/script/index/${execBy}/${productId}/${execById}/${seq}/${scope}`)
     }
 
     // 提交结果

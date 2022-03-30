@@ -148,9 +148,10 @@ const StoreModel: ModuleType = {
 
             return true;
         },
-        async fetchModules({ commit }, productId) {
+
+        async fetchModules({ commit }, params) {
             try {
-                const response: ResponseData = await queryModule(productId);
+                const response: ResponseData = await queryModule(params);
                 const { data } = response;
                 commit('saveModules', data || 0);
 
@@ -159,9 +160,9 @@ const StoreModel: ModuleType = {
                 return false;
             }
         },
-        async fetchSuites({ commit }, productId) {
+        async fetchSuites({ commit }, params) {
             try {
-                const response: ResponseData = await querySuite(productId);
+                const response: ResponseData = await querySuite(params);
                 const { data } = response;
                 commit('saveSuites', data || 0);
 
@@ -170,9 +171,9 @@ const StoreModel: ModuleType = {
                 return false;
             }
         },
-        async fetchTasks({ commit }, productId) {
+        async fetchTasks({ commit }, params) {
             try {
-                const response: ResponseData = await queryTask(productId);
+                const response: ResponseData = await queryTask(params);
                 const { data } = response;
                 commit('saveTasks', data || 0);
 

@@ -68,7 +68,7 @@ import {useStore} from "vuex";
 import {Empty, Form, message, Modal} from "ant-design-vue";
 import {PlusCircleOutlined} from '@ant-design/icons-vue';
 
-import {StateType} from "./store";
+import {WorkspaceData} from "./store";
 import {useRouter} from "vue-router";
 import {momentUtcDef} from "@/utils/datetime";
 import {useI18n} from "vue-i18n";
@@ -172,7 +172,7 @@ export default defineComponent({
     const zentaoStore = useStore<{ zentao: ZentaoData }>();
     const currProduct = computed<any>(() => zentaoStore.state.zentao.currProduct);
 
-    const store = useStore<{ Workspace: StateType }>();
+    const store = useStore<{ Workspace: WorkspaceData }>();
     const models = computed<any[]>(() => store.state.Workspace.queryResult.result);
     const pagination = computed<PaginationConfig>(() => store.state.Workspace.queryResult.pagination);
     const queryParams = ref<QueryParams>({
@@ -182,7 +182,7 @@ export default defineComponent({
     const loading = ref<boolean>(true);
     const getList = (page: number) => {
       loading.value = true;
-      store.dispatch('Workspace/list', {
+      store.dispatch('Workspace/query', {
         keywords: queryParams.value.keywords,
         enabled: queryParams.value.enabled,
         pageSize: pagination.value.pageSize,

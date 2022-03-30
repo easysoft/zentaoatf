@@ -66,6 +66,13 @@ func Get(url string) (ret []byte, err error) {
 }
 
 func Post(url string, data interface{}) (ret []byte, err error) {
+	return PostOrPut(url, "POST", data)
+}
+func Put(url string, data interface{}) (ret []byte, err error) {
+	return PostOrPut(url, "PUT", data)
+}
+
+func PostOrPut(url string, method string, data interface{}) (ret []byte, err error) {
 	if commConsts.Verbose {
 		logUtils.Infof(i118Utils.Sprintf("server_address") + url)
 	}
@@ -83,7 +90,7 @@ func Post(url string, data interface{}) (ret []byte, err error) {
 		logUtils.Infof(dataStr)
 	}
 
-	req, err := http.NewRequest("POST", url, strings.NewReader(dataStr))
+	req, err := http.NewRequest(method, url, strings.NewReader(dataStr))
 	if err != nil {
 		logUtils.Infof(color.RedString("post request failed, error: %s.", err.Error()))
 		return

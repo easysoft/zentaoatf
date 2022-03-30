@@ -12,6 +12,7 @@ import (
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/bitly/go-simplejson"
 	"path"
 )
@@ -155,8 +156,8 @@ func loadProduct(config commDomain.WorkspaceConf) (products []serverDomain.Zenta
 	return
 }
 
-func ListModule(productId int, workspacePath string) (modules []domain.NestedItem, err error) {
-	config := configUtils.LoadByWorkspacePath(workspacePath)
+func ListModule(productId int, site model.Site) (modules []domain.NestedItem, err error) {
+	config := configUtils.LoadBySite(site)
 	return LoadModule(productId, config)
 }
 func LoadModule(productId int, config commDomain.WorkspaceConf) (modules []domain.NestedItem, err error) {
@@ -213,8 +214,8 @@ func genModuleData(interf interface{}, parentName string, modules *[]domain.Nest
 	}
 }
 
-func ListSuite(productId int, workspacePath string) (products []domain.NestedItem, err error) {
-	config := configUtils.LoadByWorkspacePath(workspacePath)
+func ListSuite(productId int, site model.Site) (products []domain.NestedItem, err error) {
+	config := configUtils.LoadBySite(site)
 	return LoadSuite(productId, config)
 }
 func LoadSuite(productId int, config commDomain.WorkspaceConf) (suites []domain.NestedItem, err error) {
@@ -239,8 +240,8 @@ func LoadSuite(productId int, config commDomain.WorkspaceConf) (suites []domain.
 	return
 }
 
-func ListTask(productId int, workspacePath string) (products []domain.NestedItem, err error) {
-	config := configUtils.LoadByWorkspacePath(workspacePath)
+func ListTask(productId int, site model.Site) (products []domain.NestedItem, err error) {
+	config := configUtils.LoadBySite(site)
 	return LoadTask(productId, config)
 }
 func LoadTask(productId int, config commDomain.WorkspaceConf) (tasks []domain.NestedItem, err error) {

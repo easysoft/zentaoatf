@@ -44,7 +44,7 @@ func (s *TestFilterService) ListFilterItems(filerType commConsts.ScriptFilterTyp
 }
 
 func (s *TestFilterService) ListWorkspaceFilter(siteId int, productId int) (ret []serverDomain.FilterItem, err error) {
-	workspaces, err := s.WorkspaceRepo.ListWorkspacesByProduct(siteId, productId)
+	workspaces, err := s.WorkspaceRepo.ListByProduct(siteId, productId)
 
 	for _, item := range workspaces {
 		filterItem := serverDomain.FilterItem{Label: item.Name, Value: int(item.ID)}

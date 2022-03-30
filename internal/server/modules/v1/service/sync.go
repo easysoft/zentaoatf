@@ -10,20 +10,23 @@ import (
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
+	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
 	"github.com/fatih/color"
 	"path/filepath"
 )
 
 type SyncService struct {
-	TestScriptService *TestScriptService `inject:""`
-	TestCaseService   *TestCaseService   `inject:""`
+	WorkspaceRepo     *repo.WorkspaceRepo `inject:""`
+	TestScriptService *TestScriptService  `inject:""`
+	TestCaseService   *TestCaseService    `inject:""`
+	SiteService       *SiteService        `inject:""`
 }
 
 func NewSyncService() *SyncService {
 	return &SyncService{}
 }
 
-func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, workspacePath string) (err error) {
+func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, config commDomain.WorkspaceConf, workspacePath string) (err error) {
 	productId := settings.ProductId
 	moduleId := settings.ModuleId
 	suiteId := settings.SuiteId
@@ -38,7 +41,7 @@ func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, workspace
 		return
 	}
 
-	cases, loginFail := s.TestCaseService.LoadTestCases(productId, moduleId, suiteId, taskId, workspacePath)
+	cases, loginFail := s.TestCaseService.LoadTestCases(productId, moduleId, suiteId, taskId, config)
 
 	if cases != nil && len(cases) > 0 {
 		productId = cases[0].Product
@@ -59,26 +62,25 @@ func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, workspace
 	return
 }
 
-func (s *SyncService) SyncToZentao(workspacePath string, commitProductId int) (err error) {
-	productPath := ""
+func (s *SyncService) SyncToZentao(cases []string, workspacePath string, commitProductId int, config commDomain.WorkspaceConf) (err error) {
+	pth := ""
 	if commConsts.ComeFrom == "cmd" {
-		productPath = fileUtils.RemovePathSepIfNeeded(workspacePath)
+		pth = fileUtils.RemovePathSepIfNeeded(workspacePath)
 		workspacePath = commConsts.WorkDir
 	} else {
-		productPath = filepath.Join(workspacePath, fmt.Sprintf("product%d", commitProductId))
+		pth = filepath.Join(workspacePath, fmt.Sprintf("product%d", commitProductId))
 	}
-	caseFiles := scriptUtils.LoadScriptByWorkspace(productPath)
 
-	for _, cs := range caseFiles {
+	if cases == nil { // from command line
+		cases = scriptUtils.LoadScriptByWorkspace(pth)
+	}
+
+	for _, cs := range cases {
 		pass, id, _, title := scriptUtils.GetCaseInfo(cs)
 
 		if pass {
-			steps, isOldFormat := scriptUtils.GetStepAndExpectMap(cs)
-			if commConsts.Verbose {
-				logUtils.Infof("isOldFormat = ", isOldFormat)
-			}
-
-			zentaoUtils.CommitCase(id, title, steps, workspacePath)
+			steps, _ := scriptUtils.GetStepAndExpectMap(cs)
+			zentaoUtils.CommitCase(id, title, steps, config)
 		}
 	}
 

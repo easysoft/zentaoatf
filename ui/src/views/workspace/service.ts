@@ -3,9 +3,19 @@ import { QueryParams } from '@/types/data.d';
 
 const apiPath = 'workspaces';
 
-export async function list(params?: QueryParams): Promise<any> {
+export async function query(params?: QueryParams): Promise<any> {
     return request({
         url: `/${apiPath}`,
+        method: 'get',
+        params,
+    });
+}
+
+export async function listByProduct(productId: number): Promise<any> {
+    const params = {productId: productId}
+
+    return request({
+        url: `/${apiPath}/listByProduct`,
         method: 'get',
         params,
     });

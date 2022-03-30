@@ -26,17 +26,13 @@ export async function remove(params: any): Promise<any> {
     });
 }
 
-export function getCaseIdsFromReport(report: any, scope: string): string[] {
-    const ret = new Array<string>()
-
-    report.funcResult.forEach(item => {
-        const path = item.path
-        const status = item.status
-        const selected = scope === 'all' || scope === status
-        if (path && selected) ret.push(path)
-    })
-
-    return ret
+export function getCaseIdsFromReport(workspace, seq, scope) {
+    const params = {workspaceId: workspace, seq: seq, scope: scope}
+    return request({
+        url: `/${apiPath}/getCaseIdsFromReport`,
+        method: 'get',
+        params,
+    });
 }
 
 export function genExecInfo(jsn: WsMsg, i: number): string {

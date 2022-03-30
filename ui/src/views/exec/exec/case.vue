@@ -151,7 +151,7 @@ export default defineComponent({
 
       get(seq).then((json) => {
         setTimeout(() => { // wait tree init completed
-          checkedKeys.value = getCaseIdsFromReport(json.data, scope)
+          // checkedKeys.value = getCaseIdsFromReport(json.data, scope)
         }, 300)
       })
     }

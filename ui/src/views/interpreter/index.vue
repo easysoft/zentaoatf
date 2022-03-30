@@ -52,12 +52,12 @@
         width="800px"
         :destroy-on-close="true"
         :mask-closable="false"
+        :footer="false"
     >
       <EditInterpreterForm
           :model="interpreter"
           :onClose="onSave"
       />
-      <template #footer><span></span></template>
     </a-modal>
 
   </a-card>
@@ -76,35 +76,13 @@ import {listInterpreter, removeInterpreter} from "@/views/interpreter/service";
 import {momentUtcDef} from "@/utils/datetime";
 import ALink from "@/components/ALink/index.vue";
 
-interface InterpreterListSetupData {
-  t: (key: string | number) => string;
-
-  columns: Ref<any[]>;
-  loading: Ref<boolean>;
-  languageMap: Ref,
-  interpreters: Ref<[]>
-  interpreter: Ref
-
-  formTitle: ComputedRef<string>
-  formVisible: Ref<boolean>
-  setFormVisible: (val) => void;
-  create: () => void;
-  edit: (item) => void;
-  remove: (item) => void;
-  onSave: () => void;
-  onCancel: () => void;
-
-  simpleImage: any
-  momentUtc: (tm) => string;
-}
-
 export default defineComponent({
   name: 'InterpreterList',
   components: {
     ALink,
     EditInterpreterForm, PlusCircleOutlined,
   },
-  setup(props): InterpreterListSetupData {
+  setup(props) {
     const {t, locale} = useI18n();
     const momentUtc = momentUtcDef
 

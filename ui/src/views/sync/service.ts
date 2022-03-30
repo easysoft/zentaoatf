@@ -1,20 +1,18 @@
 import request from '@/utils/request';
-import {Config} from "@/views/config/data";
 import {SyncSettings} from "@/views/sync/data";
 import {removeEmptyField} from "@/utils/object";
 
 const apiPath = 'sync';
 
-export async function syncFromZentao(params: SyncSettings): Promise<any> {
+export async function syncFromZentao(settings: SyncSettings): Promise<any> {
     return request({
         url: `/${apiPath}/syncFromZentao`,
         method: 'POST',
-        data: removeEmptyField(params),
     });
 }
 
-export async function syncToZentao(commitProductId: string): Promise<any> {
-    const params = {commitProductId: commitProductId}
+export async function syncToZentao(): Promise<any> {
+    const params = {}
     return request({
         url: `/${apiPath}/syncToZentao`,
         method: 'POST',

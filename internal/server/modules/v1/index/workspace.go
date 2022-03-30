@@ -21,6 +21,7 @@ func (m *WorkspaceModule) Party() module.WebModule {
 		index.Use(middleware.InitCheck())
 
 		index.Get("/", m.WorkspaceCtrl.List).Name = "列表"
+		index.Get("/listByProduct", m.WorkspaceCtrl.ListByProduct).Name = "列表"
 		index.Get("/{id:int}", m.WorkspaceCtrl.Get).Name = "详情"
 		index.Post("/", m.WorkspaceCtrl.Create).Name = "新建"
 		index.Put("/{id:int}", m.WorkspaceCtrl.Update).Name = "更新"

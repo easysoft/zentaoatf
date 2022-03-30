@@ -11,8 +11,9 @@ import (
 )
 
 type TestScriptService struct {
-	WorkspaceRepo *repo.WorkspaceRepo `inject:""`
-	SiteService   *SiteService        `inject:""`
+	WorkspaceRepo      *repo.WorkspaceRepo `inject:""`
+	SiteService        *SiteService        `inject:""`
+	TestHistoryService *TestHistoryService `inject:""`
 }
 
 func NewTestScriptService() *TestScriptService {
@@ -23,7 +24,7 @@ func (s *TestScriptService) LoadTestScriptsBySiteProduct(
 	siteId, productId int, filerType string, filerValue int) (root serverDomain.TestAsset, err error) {
 
 	scriptIdsFromZentao := s.getScriptIdsFromZentao(siteId, productId, filerType, filerValue)
-	workspaces, _ := s.WorkspaceRepo.ListWorkspacesByProduct(siteId, productId)
+	workspaces, _ := s.WorkspaceRepo.ListByProduct(siteId, productId)
 
 	// load scripts from disk
 	root = serverDomain.TestAsset{Path: "", Title: "测试脚本", Type: commConsts.Root, Slots: iris.Map{"icon": "icon"}}
@@ -70,6 +71,25 @@ func (s *TestScriptService) getScriptIdsFromZentao(siteId, productId int, filerT
 		ret, _ = zentaoHelper.GetCaseIdsInZentaoSuite(productId, filerValue, config)
 	} else if filerType == string(commConsts.FilterTask) {
 		ret, _ = zentaoHelper.GetCaseIdsInZentaoTask(productId, filerValue, config)
+	}
+
+	return
+}
+
+func (s *TestScriptService) GetCaseIdsFromReport(workspaceId int, seq, scope string) (caseIds []string, err error) {
+	report, err := s.TestHistoryService.Get(workspaceId, seq)
+
+	if err != nil {
+		return
+	}
+
+	for _, cs := range report.FuncResult {
+		path := cs.Path
+		status := cs.Status
+
+		if path != "" && (scope == "all" || scope == status.String()) {
+			caseIds = append(caseIds, path)
+		}
 	}
 
 	return
