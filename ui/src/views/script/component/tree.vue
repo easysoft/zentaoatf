@@ -103,7 +103,7 @@ import { DatabaseOutlined, FolderOutlined, FolderOpenOutlined, FileOutlined} fro
 
 import bus from "@/utils/eventBus";
 import {ZentaoData} from "@/store/zentao";
-import {cacheExpandedKeys, getScriptFilters, retrieveExpandedKeys, setScriptFilters} from "@/utils/cache";
+import {setExpandedKeys, getScriptFilters, getExpandedKeys, setScriptFilters} from "@/utils/cache";
 import {genWorkspaceToScriptsMap, listFilterItems, syncToZentao} from "../service";
 import settings from "@/config/settings";
 import {getCaseIdsFromReport} from "../service";
@@ -167,13 +167,13 @@ export default defineComponent({
 
       getNodeMap(treeData.value[0])
 
-      retrieveExpandedKeys().then(async keys => {
+      getExpandedKeys(currSite.value.id, currProduct.value.id).then(async keys => {
         console.log('keys')
         if (keys) expandedKeys.value = keys
 
         if (!expandedKeys.value || expandedKeys.value.length === 0) {
           getOpenKeys(treeData.value[0], false) // expend first level folder
-          await cacheExpandedKeys(expandedKeys.value)
+          await setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
         }
       })
     }, {deep: true})
@@ -188,20 +188,32 @@ export default defineComponent({
     }
     loadScripts()
 
+    // filters
     const loadFilterItems = async () => {
+      const data = await getScriptFilters(currSite.value.id, currProduct.value.id)
+
       if (!filerType.value) {
-        const data = await getScriptFilters()
         filerType.value = data.by
       }
+      filerValue.value = data.val
 
-      filerValue.value = ''
-      if (!filerType.value) {
-        filerItems.value = []
-        return
+      if (filerType.value) {
+        const result = await listFilterItems(filerType.value)
+        filerItems.value = result.data
       }
+    }
+    const selectFilerType = async (type) => {
+      console.log('selectFilerType', type)
+      await setScriptFilters(currSite.value.id, currProduct.value.id, type, '')
 
-      const result = await listFilterItems(filerType.value)
-      filerItems.value = result.data
+      await loadFilterItems()
+      await loadScripts()
+    }
+    const selectFilerValue = async (val) => {
+      console.log('selectFilerValue', val)
+      await setScriptFilters(currSite.value.id, currProduct.value.id, filerType.value, val)
+
+      await loadScripts()
     }
 
     const initData = async () => {
@@ -210,17 +222,6 @@ export default defineComponent({
       loadScripts()
     }
     initData()
-
-    const selectFilerType = async (val) => {
-      console.log('selectFilerType', val)
-      await setScriptFilters(val, '')
-      await loadFilterItems()
-      await loadScripts()
-    }
-    const selectFilerValue = async (val) => {
-      console.log('selectFilerValue', val)
-      await loadScripts()
-    }
 
     const expandedKeys = ref<string[]>([]);
     const getOpenKeys = (treeNode, isAll) => {
@@ -312,7 +313,7 @@ export default defineComponent({
 
     const expandNode = (keys: string[], e: any) => {
       console.log('expandNode', keys)
-      cacheExpandedKeys(expandedKeys.value)
+      setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
     }
     const expandAll = (e) => {
       console.log('expandAll')
@@ -321,7 +322,7 @@ export default defineComponent({
       expandedKeys.value = []
       if (isExpand.value) getOpenKeys(treeData.value[0], true)
 
-      cacheExpandedKeys(expandedKeys.value)
+      setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
     }
 
     const nodeMap = {}
