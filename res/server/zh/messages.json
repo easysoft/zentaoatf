@@ -344,7 +344,7 @@
     },
     {
       "id": "found_scripts",
-      "translation": "发现%d个用例在目录%s中。"
+      "translation": "发现%d个用例在工作目录%s中。"
     },
     {
       "id": "ignore_scripts",

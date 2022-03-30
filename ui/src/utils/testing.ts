@@ -43,7 +43,7 @@ export function getAutoTestTools(): any {
 }
 
 const execByMap = {
-    case: '选用例',
+    case: '按用例',
     module: '按模块',
     suite: '按套件',
     task: '按任务',

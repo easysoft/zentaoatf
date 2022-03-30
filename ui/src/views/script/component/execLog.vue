@@ -36,10 +36,15 @@
       <div id="content" :class="['status-'+logStatus, 'category-'+logLevel]">
         {{ void (count = 1) }}
         <div v-for="(item, index) in wsMsg.out" :key="index" :class="['category-'+item.category, 'item']">
-          <div class="no-span">{{ count }}. </div>
-          <div class="msg-span">{{ item.msg }}</div>
+          <div class="no-span">
+            <span v-if="item.msg">{{ count }}. </span>
+          </div>
+          <div class="msg-span">
+            <span v-if="item.msg">{{ item.msg }}</span>
+            <span v-if="!item.msg">&nbsp;</span>
+          </div>
 
-          <template v-if="hideInfo(item)"> {{ void (count++) }}</template>
+          <template v-if="addCount(item)"> {{ void (count++) }}</template>
         </div>
       </div>
     </div>
@@ -125,7 +130,7 @@ export default defineComponent({
 
         const msg = genExecInfo(jsn)
         if (msg) {
-          wsMsg.out.push(jsn)
+          wsMsg.out.push(msg)
         }
         scroll('content')
       });
@@ -146,8 +151,10 @@ export default defineComponent({
       wsStatus.value = ''
     }
 
-    const hideInfo = (item): boolean => {
+    const addCount = (item): boolean => {
       let ret = false
+
+      if (!item.msg) return false
 
       const levelCode = logLevelMap[logLevel.value].code
       const itemCode = logLevelMap[item.category].code
@@ -233,7 +240,7 @@ export default defineComponent({
       checkoutCases,
       stop,
       hideWsStatus,
-      hideInfo,
+      addCount,
       wsMsg,
       wsStatus,
       isRunning,

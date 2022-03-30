@@ -20,7 +20,7 @@ func Exec(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 		}
 
 		if req.Act == commConsts.ExecCase {
-			ExecCase(ch, testSet, msg)
+			ExecCases(ch, testSet, msg)
 		} else if req.Act == commConsts.ExecModule {
 			ExecModule(ch, testSet, msg)
 		} else if req.Act == commConsts.ExecSuite {

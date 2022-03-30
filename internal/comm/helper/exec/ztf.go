@@ -30,7 +30,7 @@ import (
 	"time"
 )
 
-func ExecCase(ch chan int, testSet serverDomain.TestSet, msg websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
+func ExecCases(ch chan int, testSet serverDomain.TestSet, msg websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
 	cases := testSet.Cases
 	return RunZtf(ch, testSet.WorkspacePath, 0, 0, commConsts.Case, cases, msg)
 }
@@ -82,7 +82,7 @@ func ExecTask(ch chan int, testSet serverDomain.TestSet, msg websocket.Message) 
 }
 
 func RunZtf(ch chan int,
-	workspacePath string, productId, id int, by commConsts.ExecBy, cases []string, msg websocket.Message) (
+	workspacePath string, productId, id int, by commConsts.ExecBy, cases []string, wsMsg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 
 	conf := configUtils.LoadByWorkspacePath(workspacePath)
@@ -93,8 +93,10 @@ func RunZtf(ch chan int,
 	numbMaxWidth, pathMaxWidth = getNumbMaxWidth(casesToRun)
 	report = genReport(productId, id, by)
 
-	ExeScripts(casesToRun, casesToIgnore, workspacePath, conf, &report, pathMaxWidth, numbMaxWidth, ch, msg)
-	GenZTFTestReport(report, pathMaxWidth, workspacePath, msg)
+	ExeScripts(casesToRun, casesToIgnore, workspacePath, conf, &report, pathMaxWidth, numbMaxWidth, ch, wsMsg)
+	GenZTFTestReport(report, pathMaxWidth, workspacePath, wsMsg)
+
+	websocketUtils.SendExecMsg("", "", commConsts.Run, wsMsg)
 
 	return
 }

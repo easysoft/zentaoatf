@@ -356,7 +356,7 @@
     },
     {
       "id": "found_scripts",
-      "translation": "Found %d test cases in dir %s."
+      "translation": "Found %d test cases in work dir %s."
     },
     {
       "id": "ignore_scripts",

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	analysisUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/analysis"
@@ -52,7 +53,9 @@ func (s *TestExecService) Paginate(siteId, productId int, req serverDomain.ReqPa
 			}
 			copier.Copy(&summary, report)
 
+			summary.No = fmt.Sprintf("%d-%s", workspace.ID, seq)
 			summary.Seq = seq
+			summary.WorkspaceName = workspace.Name
 			reports = append(reports, summary)
 
 			count += 1

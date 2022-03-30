@@ -9,18 +9,18 @@
 
       <div>
         <a-table
-            row-key="seq"
+            row-key="no"
             :columns="columns"
             :data-source="models"
             :loading="loading"
             :pagination="{
                 ...pagination,
                 onChange: (page) => {
-                    getList(page);
+                    list(page);
                 },
                 onShowSizeChange: (page, size) => {
                     pagination.pageSize = size
-                    getList(page);
+                    list(page);
                 },
             }"
         >
@@ -31,7 +31,7 @@
             {{ execBy(record) }}
           </template>
           <template #startTime="{ record }">
-            <span v-if="record.startTime">{{ momentUtc(record.startTime) }}</span>
+            <span v-if="record.startTime">{{ momentTime(record.startTime) }}</span>
           </template>
           <template #duration="{ record }">
             {{ record.duration }}秒
@@ -73,7 +73,7 @@ import {useStore} from "vuex";
 import {Empty, Form, message, Modal} from "ant-design-vue";
 import {StateType} from "./store";
 import {useRouter} from "vue-router";
-import {momentUnixDef, momentUtcDef, percentDef} from "@/utils/datetime";
+import {momentUnixDef, percentDef} from "@/utils/datetime";
 import {execByDef} from "@/utils/testing";
 import {useI18n} from "vue-i18n";
 import IconSvg from "@/components/IconSvg/index";
@@ -84,38 +84,14 @@ import {disableStatusDef} from "@/utils/decorator";
 
 const useForm = Form.useForm;
 
-interface ListResultSetupData {
-  t: (key: string | number) => string;
-
-  statusArr: Ref,
-  queryParams: Ref,
-  pagination: ComputedRef<PaginationConfig>;
-
-  columns: any;
-  models: ComputedRef<any[]>;
-  loading: Ref<boolean>;
-  list: (v) => void
-  view: (item) => void;
-  removeLoading: Ref<string[]>;
-  remove: (id) => void;
-
-  onSearch: () => void;
-  disableStatus: (val) => string;
-  momentUtc: (tm) => string;
-
-  execBy: (item) => string;
-  percent: (numb, total) => string;
-  simpleImage: any
-}
-
 export default defineComponent({
   name: 'ResultListPage',
   components: {
     IconSvg,
   },
-  setup(): ListResultSetupData {
+  setup() {
     const {t} = useI18n();
-    const momentUtc = momentUtcDef
+    const momentTime = momentUnixDef
     const disableStatus = disableStatusDef
 
     const execBy = execByDef
@@ -123,7 +99,11 @@ export default defineComponent({
 
     const columns = [
       {
-        title: t('no'),
+        title: '工作目录',
+        dataIndex: 'workspaceName',
+      },
+      {
+        title: '序号',
         dataIndex: 'seq',
       },
       {
@@ -228,7 +208,7 @@ export default defineComponent({
 
       onSearch,
       disableStatus,
-      momentUtc,
+      momentTime,
 
       execBy,
       percent,
