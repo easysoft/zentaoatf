@@ -58,6 +58,20 @@
         </a-table>
       </div>
     </a-card>
+
+    <a-modal
+        :title="t('confirm_to_delete_workspace')"
+        v-if="confirmVisible"
+        :visible="true"
+        :destroy-on-close="true"
+    >
+      <template #footer>
+        <div :class="{'t-dir-right': !isWin}" class="t-right">
+          <a-button @click="removeConfirmed()" type="primary" class="t-btn-gap">{{ t('confirm') }}</a-button>
+          <a-button @click="confirmVisible = false" class="t-btn-gap">{{ t('cancel') }}</a-button>
+        </div>
+      </template>
+    </a-modal>
   </div>
 </template>
 
@@ -77,42 +91,23 @@ import debounce from "lodash.debounce";
 import {ZentaoData} from "@/store/zentao";
 import {disableStatusDef} from "@/utils/decorator";
 import {disableStatusMap} from "@/utils/const";
+import {isWindows} from "@/utils/comm";
 
 const useForm = Form.useForm;
-
-interface WorkspaceListSetupData {
-  t: (key: string | number) => string;
-
-  statusArr: Ref,
-  queryParams: Ref,
-  pagination: ComputedRef<PaginationConfig>;
-
-  columns: Ref<any[]>;
-  currProduct: ComputedRef
-  models: ComputedRef<any[]>;
-  loading: Ref<boolean>;
-  getList: (curr) => void
-
-  create: () => void;
-  edit: (id) => void;
-  removeLoading: Ref<string[]>;
-  remove: (item) => void;
-
-  onSearch: () => void;
-  disableStatus: (val) => string;
-  momentUtc: (tm) => string;
-  simpleImage: any
-}
 
 export default defineComponent({
   name: 'WorkspaceListPage',
   components: {
     PlusCircleOutlined,
   },
-  setup(): WorkspaceListSetupData {
+  setup() {
     const {t, locale} = useI18n();
+    const isWin = isWindows()
     const momentUtc = momentUtcDef
     const disableStatus = disableStatusDef
+
+    const confirmVisible = ref(false)
+    const model = ref({} as any)
 
     const onSearch = debounce(() => {
       getList(1)
@@ -212,26 +207,25 @@ export default defineComponent({
 
     const removeLoading = ref<string[]>([]);
     const remove = (item) => {
-      console.log(item)
-      Modal.confirm({
-        title: t('confirm_to_delete_workspace', {p: item.name}),
-        okText: t('confirm'),
-        cancelText: t('cancel'),
-        onOk: () => {
-          removeLoading.value = [item.id];
-          store.dispatch('Workspace/delete', item.id).then((success) => {
-            if (success) {
-              message.success(t('delete_success'));
-              getList(pagination.value.page)
-            }
-            removeLoading.value = [];
-          })
+      model.value = item
+      confirmVisible.value = true
+    }
+    const removeConfirmed = async () => {
+      removeLoading.value = [model.value.id];
+      store.dispatch('Workspace/delete', model.value.id).then((success) => {
+        if (success) {
+          message.success(t('delete_success'));
+          getList(pagination.value.page)
+
+          removeLoading.value = [];
+          confirmVisible.value = false
         }
-      });
+      })
     }
 
     return {
       t,
+      isWin,
 
       statusArr,
       queryParams,
@@ -245,7 +239,9 @@ export default defineComponent({
       create,
       edit,
       removeLoading,
+      confirmVisible,
       remove,
+      removeConfirmed,
 
       onSearch,
       disableStatus,

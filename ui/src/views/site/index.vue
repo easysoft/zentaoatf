@@ -57,6 +57,20 @@
         </a-table>
       </div>
     </a-card>
+
+    <a-modal
+        :title="t('confirm_to_delete_site')"
+        v-if="confirmVisible"
+        :visible="true"
+        :destroy-on-close="true"
+    >
+      <template #footer>
+        <div :class="{'t-dir-right': !isWin}" class="t-right">
+          <a-button @click="removeConfirmed()" type="primary" class="t-btn-gap">{{ t('confirm') }}</a-button>
+          <a-button @click="confirmVisible = false" class="t-btn-gap">{{ t('cancel') }}</a-button>
+        </div>
+      </template>
+    </a-modal>
   </div>
 </template>
 
@@ -77,40 +91,18 @@ import {ZentaoData} from "@/store/zentao";
 import {disableStatusDef} from "@/utils/decorator";
 import {disableStatusMap} from "@/utils/const";
 import {getInitStatus, setInitStatus} from "@/utils/cache";
+import {isWindows} from "@/utils/comm";
 
 const useForm = Form.useForm;
-
-interface SiteListSetupData {
-  t: (key: string | number) => string;
-
-  statusArr: Ref,
-  queryParams: Ref,
-  pagination: ComputedRef<PaginationConfig>;
-
-  columns: Ref<any[]>;
-  models: ComputedRef<any[]>;
-  loading: Ref<boolean>;
-  list: (curr) => void
-
-  create: () => void;
-  edit: (id) => void;
-  removeLoading: Ref<string[]>;
-  remove: (id) => void;
-
-  onSearch: () => void;
-  disableStatus: (val) => string;
-  momentUtc: (tm) => string;
-  simpleImage: any
-  localeConf: any
-}
 
 export default defineComponent({
   name: 'SiteListPage',
   components: {
     PlusCircleOutlined,
   },
-  setup(): SiteListSetupData {
+  setup() {
     const {t, locale} = useI18n();
+    const isWin = isWindows()
     const momentUtc = momentUtcDef
     const disableStatus = disableStatusDef
 
@@ -188,6 +180,9 @@ export default defineComponent({
       keywords: '', enabled: '1', page: pagination.value.page, pageSize: pagination.value.pageSize
     });
 
+    const confirmVisible = ref(false)
+    const model = ref({} as any)
+
     const loading = ref<boolean>(true);
     const list = (page: number) => {
       loading.value = true;
@@ -218,26 +213,26 @@ export default defineComponent({
     }
 
     const removeLoading = ref<string[]>([]);
-    const remove = (id) => {
-      Modal.confirm({
-        title: t('confirm_to_delete_site'),
-        okText: t('confirm'),
-        cancelText: t('cancel'),
-        onOk: () => {
-          removeLoading.value = [id];
-          store.dispatch('Site/delete', id).then((success) => {
-            zentaoStore.dispatch('zentao/fetchSitesAndProduct').then((success) => {
-              message.success(t('delete_success'));
-              list(pagination.value.page)
-              removeLoading.value = [];
-            })
-          })
-        }
-      });
+    const remove = (item) => {
+      model.value = item
+      confirmVisible.value = true
+    }
+    const removeConfirmed = async () => {
+      removeLoading.value = [model.value.id];
+      store.dispatch('Site/delete', model.value.id).then((success) => {
+        zentaoStore.dispatch('zentao/fetchSitesAndProduct').then((success) => {
+          message.success(t('delete_success'));
+          list(pagination.value.page)
+
+          removeLoading.value = [];
+          confirmVisible.value = false
+        })
+      })
     }
 
     return {
       t,
+      isWin,
 
       statusArr,
       queryParams,
@@ -250,7 +245,9 @@ export default defineComponent({
       create,
       edit,
       removeLoading,
+      confirmVisible,
       remove,
+      removeConfirmed,
 
       onSearch,
       disableStatus,

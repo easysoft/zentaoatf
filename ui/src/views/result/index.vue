@@ -63,6 +63,20 @@
         </a-table>
       </div>
     </a-card>
+
+    <a-modal
+        :title="t('confirm_to_delete_result')"
+        v-if="confirmVisible"
+        :visible="true"
+        :destroy-on-close="true"
+    >
+      <template #footer>
+        <div :class="{'t-dir-right': !isWin}" class="t-right">
+          <a-button @click="removeConfirmed()" type="primary" class="t-btn-gap">{{ t('confirm') }}</a-button>
+          <a-button @click="confirmVisible = false" class="t-btn-gap">{{ t('cancel') }}</a-button>
+        </div>
+      </template>
+    </a-modal>
   </div>
 </template>
 
@@ -81,6 +95,7 @@ import {PaginationConfig, QueryParams} from "@/types/data";
 import {disableStatusMap} from "@/utils/const";
 import debounce from "lodash.debounce";
 import {disableStatusDef} from "@/utils/decorator";
+import {isWindows} from "@/utils/comm";
 
 const useForm = Form.useForm;
 
@@ -91,6 +106,7 @@ export default defineComponent({
   },
   setup() {
     const {t} = useI18n();
+    const isWin = isWindows()
     const momentTime = momentUnixDef
     const disableStatus = disableStatusDef
 
@@ -145,6 +161,9 @@ export default defineComponent({
       keywords: '', enabled: '1', page: pagination.value.page, pageSize: pagination.value.pageSize
     });
 
+    const confirmVisible = ref(false)
+    const model = ref({} as any)
+
     const loading = ref<boolean>(true);
     const list = (page: number) => {
       loading.value = true;
@@ -173,25 +192,24 @@ export default defineComponent({
     // 删除
     const removeLoading = ref<string[]>([]);
     const remove = (item) => {
-      Modal.confirm({
-        title: t('confirm_to_delete_result'),
-        okText: t('confirm'),
-        cancelText: t('cancel'),
-        onOk: async () => {
-          removeLoading.value = [item.seq];
-          const res: boolean = await store.dispatch('result/delete',
-              {workspaceId: item.workspaceId, seq: item.seq});
-          if (res === true) {
-            message.success(t('delete_success'));
-            await list(1);
-          }
-          removeLoading.value = [];
-        }
-      });
+      model.value = item
+      confirmVisible.value = true
+    }
+    const removeConfirmed = async () => {
+      removeLoading.value = [model.value.seq];
+      const res: boolean = await store.dispatch('result/delete',
+          {workspaceId: model.value.workspaceId, seq: model.value.seq});
+      if (res === true) {
+        message.success(t('delete_success'));
+        await list(1);
+      }
+      removeLoading.value = []
+      confirmVisible.value = false
     }
 
     return {
       t,
+      isWin,
 
       statusArr,
       queryParams,
@@ -204,7 +222,9 @@ export default defineComponent({
 
       view,
       removeLoading,
+      confirmVisible,
       remove,
+      removeConfirmed,
 
       onSearch,
       disableStatus,

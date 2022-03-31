@@ -22,7 +22,7 @@
         <TopSelectLang></TopSelectLang>
       </div>
       <template #footer>
-        <a-button key="back" @click="selectLangVisible=false">关闭</a-button>
+        <a-button @click="selectLangVisible=false" type="primary">确定</a-button>
       </template>
     </a-modal>
 

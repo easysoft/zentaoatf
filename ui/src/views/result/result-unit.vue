@@ -80,12 +80,19 @@
               <template #info="{ record }">
                 <template v-if="record.failure">
                   <a-button type="link" @click="showInfo(record.id)">{{t('view_error')}}</a-button>
-                  <a-modal v-model:visible="visibleMap[record.id]"
-                           :title="t('error_detail')"
-                           @ok="closeInfo(record.id)"
-                           width="1000px">
+
+                  <a-modal
+                      v-model:visible="visibleMap[record.id]"
+                      :title="t('error_detail')"
+                      width="1000px">
+
                     <p>{{ jsonStr(record.failure) }}</p>
+
+                    <template #footer>
+                      <a-button @click="closeInfo(record.id)" type="primary">确定</a-button>
+                    </template>
                   </a-modal>
+
                 </template>
               </template>
             </a-table>

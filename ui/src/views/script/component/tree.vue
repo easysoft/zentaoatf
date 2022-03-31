@@ -110,6 +110,7 @@ import {getCaseIdsFromReport} from "../service";
 import {useRouter} from "vue-router";
 
 import SyncFromZentao from "./syncFromZentao.vue"
+import {isWindows} from "@/utils/comm";
 
 export default defineComponent({
   name: 'ScriptTreePage',
@@ -122,6 +123,7 @@ export default defineComponent({
 
   setup(props) {
     const { t } = useI18n();
+    const isWin = isWindows()
 
     const fromTitle = ref('从禅道同步用例')
     const fromVisible = ref(false)
@@ -349,6 +351,7 @@ export default defineComponent({
 
     return {
       t,
+      isWin,
 
       currSite,
       currProduct,

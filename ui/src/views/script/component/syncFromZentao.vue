@@ -45,9 +45,10 @@
       <a-switch v-model:checked="model.independentFile"/>
     </a-form-item>
 
-    <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-      <a-button type="primary" @click.prevent="syncFromZentaoSubmit">{{ t('submit') }}</a-button>
-      <a-button style="margin-left: 10px" @click="resetFieldsFrom">{{ t('reset') }}</a-button>
+    <a-form-item :wrapper-col="{ span: wrapperCol.span, offset: labelCol.span }"
+                 :class="{'t-dir-right': !isWin}" class="t-right">
+      <a-button type="primary" @click.prevent="syncFromZentaoSubmit" class="t-btn-gap">{{ t('submit') }}</a-button>
+      <a-button @click="resetFieldsFrom" class="t-btn-gap">{{ t('reset') }}</a-button>
     </a-form-item>
 
   </a-form>
@@ -64,6 +65,7 @@ import {SyncSettings} from "@/views/sync/data";
 import {useRouter} from "vue-router";
 import {WorkspaceData} from "../../workspace/store";
 import {syncFromZentao} from "@/views/script/service";
+import {isWindows} from "@/utils/comm";
 
 const useForm = Form.useForm;
 
@@ -78,6 +80,7 @@ export default defineComponent({
   components: {},
   setup(props) {
     const {t} = useI18n();
+    const isWin = isWindows()
     const router = useRouter();
 
     const workspaceStore = useStore<{ Workspace: WorkspaceData }>();
@@ -148,6 +151,7 @@ export default defineComponent({
 
     return {
       t,
+      isWin,
 
       formRef,
       labelCol: {span: 6},

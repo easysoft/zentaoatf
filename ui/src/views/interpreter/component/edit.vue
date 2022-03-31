@@ -29,9 +29,10 @@
       </a-select>
     </a-form-item>
 
-    <a-form-item :wrapper-col="{ span: wrapperCol.span, offset: labelCol.span }">
-      <a-button type="primary" @click.prevent="save">{{ t('save') }}</a-button> &nbsp;
-      <a-button style="margin-left: 10px" @click="reset">{{ t('reset') }}</a-button>
+    <a-form-item :wrapper-col="{ span: wrapperCol.span, offset: labelCol.span }"
+                 :class="{'t-dir-right': !isWin}" class="t-right">
+      <a-button type="primary" @click.prevent="save" class="t-btn-gap">{{ t('save') }}</a-button> &nbsp;
+      <a-button @click="reset" class="t-btn-gap">{{ t('reset') }}</a-button>
     </a-form-item>
 
   </a-form>
@@ -41,10 +42,10 @@
 import {defineComponent, reactive, ref, Ref, PropType, computed, ComputedRef} from "vue";
 import {useI18n} from "vue-i18n";
 
-import {validateInfos} from 'ant-design-vue/lib/form/useForm';
 import {Form} from 'ant-design-vue';
 import {getLangInterpreter, saveInterpreter} from "@/views/interpreter/service";
 import {getLangSettings} from "../service";
+import { isWindows} from "@/utils/comm";
 
 const useForm = Form.useForm;
 
@@ -64,6 +65,7 @@ export default defineComponent({
   components: {},
   setup(props) {
     const {t} = useI18n();
+    const isWin = isWindows()
     const isElectron = ref(!!window.require)
 
     const languages = ref<any>({})
@@ -145,6 +147,7 @@ export default defineComponent({
 
     return {
       t,
+      isWin,
       isElectron,
 
       interpreterInfos,

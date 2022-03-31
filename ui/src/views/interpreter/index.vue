@@ -52,7 +52,7 @@
         width="800px"
         :destroy-on-close="true"
         :mask-closable="false"
-        :footer="false"
+        :footer="null"
     >
       <EditInterpreterForm
           :model="interpreter"

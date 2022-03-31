@@ -5,13 +5,9 @@
       :mask-closable="false"
       :visible="true"
       :onCancel="onCancel"
+      :footer="null"
       width="800px"
   >
-    <template #footer>
-      <a-button key="submit" type="primary" @click="onFinish">{{ t('submit') }}</a-button>
-      <a-button key="back" @click="() => onCancel()">{{ t('cancel') }}</a-button>
-    </template>
-
     <div>
       <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
         <a-form-item :label="t('title')" v-bind="validateInfos.title">
@@ -56,6 +52,12 @@
           <a-textarea v-model:value="modelRef.steps" :auto-size="{ minRows: 5, maxRows: 8 }" />
         </a-form-item>
 
+        <a-form-item :wrapper-col="{ span: wrapperCol.span, offset: labelCol.span }"
+                     :class="{'t-dir-right': !isWin}" class="t-right">
+          <a-button type="primary" @click="onFinish" class="t-btn-gap">{{ t('submit') }}</a-button>
+          <a-button @click="() => onCancel()" class="t-btn-gap">{{ t('cancel') }}</a-button>
+        </a-form-item>
+
       </a-form>
 
     </div>
@@ -68,6 +70,7 @@ import {defineComponent, onMounted, PropType, reactive, ref, Ref} from "vue";
 import {Form} from 'ant-design-vue';
 import { prepareBugData, prepareBugFields } from "@/services/zentao";
 import {useI18n} from "vue-i18n";
+import {isWindows} from "@/utils/comm";
 const useForm = Form.useForm;
 
 export default defineComponent({
@@ -91,6 +94,7 @@ export default defineComponent({
 
   setup(props) {
     const { t } = useI18n();
+    const isWin = isWindows()
 
     const rules = reactive({
       title: [
@@ -147,6 +151,7 @@ export default defineComponent({
 
     return {
       t,
+      isWin,
       labelCol: { span: 6 },
       wrapperCol: { span: 16 },
       rules,

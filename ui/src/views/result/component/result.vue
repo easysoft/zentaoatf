@@ -5,12 +5,8 @@
       :mask-closable="false"
       :visible="true"
       :onCancel="onCancel"
+      :footer="null"
   >
-    <template #footer>
-      <a-button key="back" @click="() => onCancel()">{{t('cancel')}}</a-button>
-      <a-button key="submit" type="primary" @click="onFinish">{{t('submit')}}</a-button>
-    </template>
-
     <div>
       <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
         <a-form-item :label="t('product')" v-bind="validateInfos.productId">
@@ -26,6 +22,13 @@
             <a-select-option v-for="item in tasks" :key="item.id" :value="item.id+''">{{ item.name }}</a-select-option>
           </a-select>
         </a-form-item>
+
+        <a-form-item :wrapper-col="{ span: wrapperCol.span, offset: labelCol.span }"
+                     :class="{'t-dir-right': !isWin}" class="t-right">
+          <a-button type="primary" @click="onFinish" class="t-btn-gap">{{t('submit')}}</a-button>
+          <a-button @click="() => onCancel()" class="t-btn-gap">{{t('cancel')}}</a-button>
+        </a-form-item>
+
       </a-form>
 
     </div>
@@ -39,23 +42,8 @@ import { validateInfos } from 'ant-design-vue/lib/form/useForm';
 import {message, Form} from 'ant-design-vue';
 import {queryProduct, queryTask} from "@/services/zentao";
 import {useI18n} from "vue-i18n";
+import {isWindows} from "@/utils/comm";
 const useForm = Form.useForm;
-
-interface ResultFormSetupData {
-  t: (key: string | number) => string;
-  modelRef: Ref
-  onFinish: () => Promise<void>;
-
-  labelCol: any
-  wrapperCol: any
-  rules: any
-  validate: any
-  validateInfos: validateInfos,
-  resetFields:  () => void;
-  products: Ref<any[]>;
-  tasks: Ref<any[]>;
-  selectProduct:  (item) => void;
-}
 
 export default defineComponent({
   name: 'ResultForm',
@@ -75,8 +63,9 @@ export default defineComponent({
 
   components: {},
 
-  setup(props): ResultFormSetupData {
+  setup(props) {
     const { t } = useI18n();
+    const isWin = isWindows()
 
     const rules = reactive({
       productId: [
@@ -119,6 +108,7 @@ export default defineComponent({
 
     return {
       t,
+      isWin,
       labelCol: { span: 6 },
       wrapperCol: { span: 16 },
       rules,
