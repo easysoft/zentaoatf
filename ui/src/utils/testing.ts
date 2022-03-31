@@ -93,8 +93,9 @@ export function testTypeDef(code) {
     return testTypeMap[code]
 }
 export function resultStatusDef(code) {
-    if (code === true || code === 'pass')
-    return '通过'
-
-    return '失败'
+    if (code === true || code === 'pass') {
+        return 'pass'
+    } else {
+        return 'fail'
+    }
 }

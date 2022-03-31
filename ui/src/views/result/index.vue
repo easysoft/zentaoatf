@@ -105,7 +105,7 @@ export default defineComponent({
     IconSvg,
   },
   setup() {
-    const {t} = useI18n();
+    const {t, locale} = useI18n();
     const isWin = isWindows()
     const momentTime = momentUnixDef
     const disableStatus = disableStatusDef
@@ -113,42 +113,51 @@ export default defineComponent({
     const execBy = execByDef
     const percent = percentDef
 
-    const columns = [
-      {
-        title: '工作目录',
-        dataIndex: 'workspaceName',
-      },
-      {
-        title: '序号',
-        dataIndex: 'seq',
-      },
-      {
-        title: t('exec_type'),
-        dataIndex: 'execBy',
-        slots: {customRender: 'execBy'},
-      },
-      {
-        title: t('start_time'),
-        dataIndex: 'startTime',
-        slots: {customRender: 'startTime'},
-      },
-      {
-        title: t('duration'),
-        dataIndex: 'duration',
-        slots: {customRender: 'duration'},
-      },
-      {
-        title: t('result'),
-        dataIndex: 'result',
-        slots: {customRender: 'result'},
-      },
-      {
-        title: t('opt'),
-        key: 'action',
-        width: 260,
-        slots: {customRender: 'action'},
-      },
-    ];
+    watch(locale, () => {
+      console.log('watch locale', locale)
+      setColumns()
+    }, {deep: true})
+
+    const columns = ref([] as any[])
+    const setColumns = () => {
+      columns.value = [
+        {
+          title: '工作目录',
+          dataIndex: 'workspaceName',
+        },
+        {
+          title: '序号',
+          dataIndex: 'seq',
+        },
+        {
+          title: t('exec_type'),
+          dataIndex: 'execBy',
+          slots: {customRender: 'execBy'},
+        },
+        {
+          title: t('start_time'),
+          dataIndex: 'startTime',
+          slots: {customRender: 'startTime'},
+        },
+        {
+          title: t('duration'),
+          dataIndex: 'duration',
+          slots: {customRender: 'duration'},
+        },
+        {
+          title: t('result'),
+          dataIndex: 'result',
+          slots: {customRender: 'result'},
+        },
+        {
+          title: t('opt'),
+          key: 'action',
+          width: 260,
+          slots: {customRender: 'action'},
+        },
+      ];
+    }
+    setColumns()
 
     const statusArr = ref(disableStatusMap);
 

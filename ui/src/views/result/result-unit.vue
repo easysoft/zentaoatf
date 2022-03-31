@@ -112,7 +112,7 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, onMounted, reactive, Ref, ref} from "vue";
+import {computed, defineComponent, onMounted, reactive, Ref, ref, watch} from "vue";
 import {useStore} from 'vuex';
 import {StateType} from "./store";
 import {useRouter} from "vue-router";
@@ -133,52 +133,65 @@ export default defineComponent({
   },
 
   setup() {
-    const { t } = useI18n();
+    const { t, locale } = useI18n();
 
     const execBy = execByDef
     const momentTime = momentUnixDef
     const percent = percentDef
     const testEnv = testEnvDef
     const testType = testTypeDef
-    const resultStatus = resultStatusDef
+    const resultStatus = (code) => {
+      const s = resultStatusDef(code)
+      return t(s)
+    }
+
     const jsonStr = jsonStrDef
     const visibleMap = reactive<any>({})
 
     const router = useRouter();
     const store = useStore<{ result: StateType }>();
 
-    const columns = [
-      {
-        title: '序号',
-        dataIndex: 'seq',
-        width: 150,
-        customRender: ({text, index}: { text: any; index: number }) => index + 1,
-      },
-      {
-        title: t('index'),
-        dataIndex: 'title',
-        slots: {customRender: 'title'},
-      },
-      {
-        title: t('suite'),
-        dataIndex: 'testSuite',
-      },
-      {
-        title: t('duration_sec'),
-        dataIndex: 'duration',
-        slots: {customRender: 'duration'},
-      },
-      {
-        title: t('status'),
-        dataIndex: 'status',
-        slots: {customRender: 'status'},
-      },
-      {
-        title: t('info'),
-        dataIndex: 'info',
-        slots: {customRender: 'info'},
-      },
-    ]
+    watch(locale, () => {
+      console.log('watch locale', locale)
+      setColumns()
+    }, {deep: true})
+
+    const columns = ref([] as any[])
+    const setColumns = () => {
+      columns.value = [
+        {
+          title: '序号',
+          dataIndex: 'seq',
+          width: 150,
+          customRender: ({text, index}: { text: any; index: number }) => index + 1,
+        },
+        {
+          title: t('index'),
+          dataIndex: 'title',
+          slots: {customRender: 'title'},
+        },
+        {
+          title: t('suite'),
+          dataIndex: 'testSuite',
+        },
+        {
+          title: t('duration_sec'),
+          dataIndex: 'duration',
+          slots: {customRender: 'duration'},
+        },
+        {
+          title: t('status'),
+          dataIndex: 'status',
+          slots: {customRender: 'status'},
+        },
+        {
+          title: t('info'),
+          dataIndex: 'info',
+          slots: {customRender: 'info'},
+        },
+      ]
+    }
+    setColumns()
 
     const report = computed<any>(() => store.state.result.detailResult);
     const loading = ref<boolean>(true);

@@ -102,7 +102,7 @@
                     {{ checkPoint.numb }}.&nbsp;
                     <span :class="'t-'+checkPoint.status">
                       {{ resultStatus(checkPoint.status) }}
-                    </span> &nbsp;
+                    </span>
                     <span>"{{ checkPoint.expect }}"</span>
                     /
                     <span :class="'t-'+checkPoint.status">"{{ checkPoint.actual }}"</span>
@@ -134,7 +134,7 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, onMounted, ref, Ref} from "vue";
+import {computed, defineComponent, onMounted, ref, Ref, watch} from "vue";
 import {useStore} from 'vuex';
 import {StateType} from "./store";
 import {useRouter} from "vue-router";
@@ -156,40 +156,52 @@ export default defineComponent({
   },
 
   setup() {
-    const { t } = useI18n();
+    const { t, locale } = useI18n();
 
     const execBy = execByDef
     const momentTime = momentUnixDef
     const percent = percentDef
     const testEnv = testEnvDef
     const testType = testTypeDef
-    const resultStatus = resultStatusDef
+    const resultStatus = (code) => {
+      const s = resultStatusDef(code)
+      return t(s)
+    }
 
     const router = useRouter();
 
-    const columns = [
-      {
-        title: t('no'),
-        dataIndex: 'seq',
-        width: 150,
-        customRender: ({text, index}: { text: any; index: number }) => index + 1,
-      },
-      {
-        title: t('step'),
-        dataIndex: 'name',
-        slots: {customRender: 'name'},
-      },
-      {
-        title: t('status'),
-        dataIndex: 'status',
-        slots: {customRender: 'status'},
-      },
-      {
-        title: t('checkpoint'),
-        dataIndex: 'checkPoints',
-        slots: {customRender: 'checkPoints'},
-      },
-    ]
+    watch(locale, () => {
+      console.log('watch locale', locale)
+      setColumns()
+    }, {deep: true})
+
+    const columns = ref([] as any[])
+    const setColumns = () => {
+      columns.value = [
+        {
+          title: t('no'),
+          dataIndex: 'seq',
+          width: 150,
+          customRender: ({text, index}: { text: any; index: number }) => index + 1,
+        },
+        {
+          title: t('step'),
+          dataIndex: 'name',
+          slots: {customRender: 'name'},
+        },
+        {
+          title: t('status'),
+          dataIndex: 'status',
+          slots: {customRender: 'status'},
+        },
+        {
+          title: t('checkpoint'),
+          dataIndex: 'checkPoints',
+          slots: {customRender: 'checkPoints'},
+        },
+      ]
+    }
+    setColumns()
 
     const store = useStore<{ result: StateType }>();
     const report = computed<any>(() => store.state.result.detailResult);
