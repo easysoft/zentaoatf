@@ -1,6 +1,9 @@
 package commDomain
 
-import commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+import (
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+	"github.com/kataras/iris/v12"
+)
 
 type ZentaoUserProfile struct {
 	Id       int    `json:"id"`
@@ -14,4 +17,16 @@ type ZentaoCaseStep struct {
 	Type   commConsts.CaseStepType `json:"type"`
 	Desc   string                  `json:"desc"`
 	Expect string                  `json:"expect"`
+}
+
+type BugOptionsWrapper struct {
+	Options BugOptions `json:"options"`
+}
+
+type BugOptions struct {
+	Type     iris.Map      `json:"type"`
+	Pri      []interface{} `json:"pri"`
+	Severity iris.Map      `json:"severity"`
+	Modules  iris.Map      `json:"modules"`
+	Build    iris.Map      `json:"build"`
 }

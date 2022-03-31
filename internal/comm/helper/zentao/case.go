@@ -414,7 +414,7 @@ func fieldMapToListOrderByInt(mp map[string]interface{}) []commDomain.BugOption 
 			name = "-"
 		}
 
-		opt := commDomain.BugOption{Id: keyStr, Name: name}
+		opt := commDomain.BugOption{Code: keyStr, Name: name}
 		arr = append(arr, opt)
 	}
 
@@ -433,13 +433,11 @@ func fieldMapToListOrderByStr(mp map[string]interface{}, notNull bool) []commDom
 
 	for _, key := range keys {
 		name := strings.TrimSpace(mp[key].(string))
-		if name == "" {
-			if notNull {
-				continue
-			}
+		if name == "" && notNull {
+			continue
 		}
 
-		opt := commDomain.BugOption{Id: key, Name: name}
+		opt := commDomain.BugOption{Code: key, Name: name}
 		arr = append(arr, opt)
 	}
 
@@ -464,7 +462,7 @@ func fieldArrToListKeyStr(arr0 []interface{}, notNull bool) []commDomain.BugOpti
 			}
 		}
 
-		opt := commDomain.BugOption{Id: val.(string), Name: name}
+		opt := commDomain.BugOption{Code: val.(string), Name: name}
 		arr = append(arr, opt)
 	}
 

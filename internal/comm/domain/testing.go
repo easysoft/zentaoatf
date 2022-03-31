@@ -110,20 +110,20 @@ type ZtfBug struct {
 
 	StepIds string `json:"ids"` // for to
 
-	Product  int    `json:"product"`
-	Module   int    `json:"module"`
-	Severity int    `json:"severity"`
-	Pri      int    `json:"pri"`
-	Version  string `json:"version"`
+	Product  int `json:"product"`
+	Module   int `json:"module"`
+	Severity int `json:"severity"`
+	Pri      int `json:"pri"`
 
 	Case  int    `json:"case"`
 	Steps string `json:"steps"`
 
-	Uid         string            `json:"uid"`
-	OpenedBuild map[string]string `json:"openedBuild"`
-	CaseVersion string            `json:"caseVersion"`
-	OldTaskID   string            `json:"oldTaskID"`
+	Uid         string   `json:"uid"`
+	OpenedBuild []string `json:"openedBuild"`
+	CaseVersion string   `json:"caseVersion"`
+	OldTaskID   string   `json:"oldTaskID"`
 }
+
 type ZentaoBug struct {
 	Title string `json:"title"`
 	Type  string `json:"type"`
@@ -136,10 +136,10 @@ type ZentaoBug struct {
 	Case  int    `json:"case"`
 	Steps string `json:"steps"`
 
-	Uid         string            `json:"uid"`
-	OpenedBuild map[string]string `json:"openedBuild"`
-	CaseVersion string            `json:"caseVersion"`
-	OldTaskID   string            `json:"oldTaskID"`
+	Uid         string   `json:"uid"`
+	OpenedBuild []string `json:"openedBuild"`
+	CaseVersion string   `json:"caseVersion"`
+	OldTaskID   string   `json:"oldTaskID"`
 }
 
 type ZtfReport struct {
@@ -147,6 +147,9 @@ type ZtfReport struct {
 	TestType  commConsts.TestType  `json:"testType"`
 	TestTool  commConsts.TestTool  `json:"testTool"`
 	BuildTool commConsts.BuildTool `json:"buildTool"`
+
+	WorkspaceId int    `json:"workspaceId,omitempty"`
+	Seq         string `json:"seq,omitempty"`
 
 	ProductId int               `json:"productId,omitempty"`
 	TaskId    int               `json:"taskId,omitempty"`
@@ -170,14 +173,16 @@ type ZtfReport struct {
 }
 
 type FuncResult struct {
-	Id        int                     `json:"id"`
+	Id          int    `json:"id"`
+	WorkspaceId int    `json:"workspaceId"`
+	Seq         string `json:"seq"`
+
 	ProductId int                     `json:"productId"`
 	Path      string                  `json:"path"`
 	Status    commConsts.ResultStatus `json:"status"`
 	Title     string                  `json:"title"`
 
 	Steps []StepLog `json:"steps"`
-	Seq   string    `json:"seq"`
 }
 type StepLog struct {
 	Id     string                  `json:"id"`

@@ -63,18 +63,17 @@ export async function queryTask(productId: string): Promise<any> {
     });
 }
 
-export function getBugSteps(data: any): Promise<any> {
+export function prepareBugData(data: any): Promise<any> {
     return request({
-        url: `/${apiPathBug}/getBugSteps`,
+        url: `/${apiPathBug}/prepareBugData`,
         method: 'POST',
         data: data,
     });
 }
 
-export async function getDataForBugSubmition(data: any): Promise<any> {
+export async function prepareBugFields(): Promise<any> {
     return request({
-        url: `/${apiPath}/getDataForBugSubmition`,
-        method: 'POST',
-        data: data,
+        url: `/${apiPath}/prepareBugFields`,
+        method: 'GET',
     });
 }

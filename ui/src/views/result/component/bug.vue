@@ -18,45 +18,37 @@
           <a-input v-model:value="modelRef.title" />
         </a-form-item>
 
-        <a-form-item :label="t('product')" v-bind="validateInfos.product">
-          <a-select v-model:value="modelRef.product" @change="selectProduct">
-            <a-select-option key="" value="">&nbsp;</a-select-option>
-            <a-select-option v-for="item in products" :key="item.id" :value="item.id+''">{{item.name}}</a-select-option>
-          </a-select>
-        </a-form-item>
-
         <a-form-item :label="t('module')">
           <a-select v-model:value="modelRef.module">
             <a-select-option key="" value="">&nbsp;</a-select-option>
-            <a-select-option v-for="item in modules" :key="item.id" :value="item.id+''">{{ item.name }}</a-select-option>
+            <a-select-option v-for="item in modules" :key="item.code" :value="item.code+''">{{ item.name }}</a-select-option>
           </a-select>
         </a-form-item>
 
         <a-form-item :label="t('category')">
           <a-select v-model:value="modelRef.type">
             <a-select-option key="" value="">&nbsp;</a-select-option>
-            <a-select-option v-for="item in categories" :key="item.id" :value="item.id+''">{{ item.name }}</a-select-option>
+            <a-select-option v-for="item in types" :key="item.code" :value="item.code+''">{{ item.name }}</a-select-option>
           </a-select>
         </a-form-item>
 
         <a-form-item :label="t('version')">
-          <a-select v-model:value="modelRef.version">
-            <a-select-option key="" value="">&nbsp;</a-select-option>
-            <a-select-option v-for="item in versions" :key="item.id" :value="item.id+''">{{ item.name }}</a-select-option>
+          <a-select v-model:value="modelRef.openedBuild" mode="multiple">
+            <a-select-option v-for="item in builds" :key="item.code" :value="item.code+''">{{ item.name }}</a-select-option>
           </a-select>
         </a-form-item>
 
         <a-form-item :label="t('severity')">
           <a-select v-model:value="modelRef.severity">
             <a-select-option key="" value="">&nbsp;</a-select-option>
-            <a-select-option v-for="item in severities" :key="item.id" :value="item.id+''">{{ item.name }}</a-select-option>
+            <a-select-option v-for="item in severities" :key="item.code" :value="item.code+''">{{ item.name }}</a-select-option>
           </a-select>
         </a-form-item>
 
         <a-form-item :label="t('priority')">
           <a-select v-model:value="modelRef.pri">
             <a-select-option key="" value="">&nbsp;</a-select-option>
-            <a-select-option v-for="item in priorities" :key="item.id" :value="item.id+''">{{ item.name }}</a-select-option>
+            <a-select-option v-for="item in priorities" :key="item.code" :value="item.code+''">{{ item.name }}</a-select-option>
           </a-select>
         </a-form-item>
 
@@ -73,34 +65,10 @@
 
 <script lang="ts">
 import {defineComponent, onMounted, PropType, reactive, ref, Ref} from "vue";
-import { validateInfos } from 'ant-design-vue/lib/form/useForm';
 import {Form} from 'ant-design-vue';
-import {
-  getBugSteps,
-  getDataForBugSubmition, queryProduct,
-} from "@/services/zentao";
+import { prepareBugData, prepareBugFields } from "@/services/zentao";
 import {useI18n} from "vue-i18n";
 const useForm = Form.useForm;
-
-interface BugFormSetupData {
-  t: (key: string | number) => string;
-  modelRef: Ref
-  onFinish: () => Promise<void>;
-
-  labelCol: any
-  wrapperCol: any
-  rules: any
-  validate: any
-  validateInfos: validateInfos,
-  resetFields:  () => void;
-  products: Ref<any[]>;
-  modules: Ref<any[]>;
-  categories: Ref<any[]>;
-  versions: Ref<any[]>;
-  severities: Ref<any[]>;
-  priorities: Ref<any[]>;
-  selectProduct:  (item) => void;
-}
 
 export default defineComponent({
   name: 'BugForm',
@@ -121,7 +89,7 @@ export default defineComponent({
 
   components: {},
 
-  setup(props): BugFormSetupData {
+  setup(props) {
     const { t } = useI18n();
 
     const rules = reactive({
@@ -135,44 +103,34 @@ export default defineComponent({
 
     const modelRef = ref<any>({})
 
-    let products = ref([])
     let modules = ref([])
-    let categories = ref([])
-    let versions = ref([])
+    let types = ref([])
+    let builds = ref([])
     let severities = ref([])
     let priorities = ref([])
 
     const { resetFields, validate, validateInfos } = useForm(modelRef, rules);
 
-    const getProductData = () => {
-      queryProduct().then((jsn) => {
-        products.value = jsn.data
-      })
-    }
-    getProductData()
     const getBugData = () => {
-      getBugSteps(props.model).then((jsn) => {
+      prepareBugData(props.model).then((jsn) => {
         modelRef.value = jsn.data
+        modelRef.value.module = ''
+        modelRef.value.severity = ''+modelRef.value.severity
+        modelRef.value.pri = ''+modelRef.value.pri
+
         getBugFields()
       })
     }
     getBugData()
 
     const getBugFields = () => {
-      if (!modelRef.value.product) return
-
-      getDataForBugSubmition(props.model).then((jsn) => {
-        modules.value = jsn.data.fields.modules
-        categories.value = jsn.data.fields.categories
-        versions.value = jsn.data.fields.versions
-        severities.value = jsn.data.fields.severities
-        priorities.value = jsn.data.fields.priorities
+      prepareBugFields().then((jsn) => {
+        modules.value = jsn.data.modules
+        types.value = jsn.data.type
+        builds.value = jsn.data.build
+        severities.value = jsn.data.severity
+        priorities.value = jsn.data.pri
       })
-    }
-
-    const selectProduct = (item) => {
-      if (!item) return
-      getBugFields()
     }
 
     const onFinish = async () => {
@@ -196,13 +154,11 @@ export default defineComponent({
       validateInfos,
       resetFields,
 
-      products,
       modules,
-      categories,
-      versions,
+      types,
+      builds,
       severities,
       priorities,
-      selectProduct,
 
       modelRef,
       onFinish,

@@ -2,7 +2,6 @@ package controller
 
 import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	zentaoHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
@@ -10,8 +9,8 @@ import (
 )
 
 type ZentaoCtrl struct {
-	SiteService       *service.SiteService       `inject:""`
-	TestScriptService *service.TestScriptService `inject:""`
+	SiteService    *service.SiteService    `inject:""`
+	TestBugService *service.TestBugService `inject:""`
 	BaseCtrl
 }
 
@@ -55,6 +54,7 @@ func (c *ZentaoCtrl) ListSiteAndProduct(ctx iris.Context) {
 
 func (c *ZentaoCtrl) ListProduct(ctx iris.Context) {
 	workspacePath := ctx.URLParam("currWorkspace")
+
 	if workspacePath == "" {
 		ctx.JSON(c.SuccessResp(make([]serverDomain.ZentaoProduct, 0)))
 		return
@@ -127,22 +127,16 @@ func (c *ZentaoCtrl) ListTask(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(data))
 }
 
-func (c *ZentaoCtrl) GetDataForBugSubmition(ctx iris.Context) {
-	workspacePath := ctx.URLParam("currWorkspace")
+func (c *ZentaoCtrl) PrepareBugFields(ctx iris.Context) {
+	siteId, _ := ctx.URLParamInt("currSiteId")
+	productId, _ := ctx.URLParamInt("currProductId")
 
-	req := commDomain.FuncResult{}
-	if err := ctx.ReadJSON(&req); err != nil {
-		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
+	if siteId == 0 || productId == 0 {
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, "siteId or productId"))
 		return
 	}
 
-	fields, err := zentaoHelper.GetBugFiledOptions(req, workspacePath)
-	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
-		return
-	}
-
-	data := iris.Map{"fields": fields}
+	data, _ := c.TestBugService.GetBugFields(siteId, productId)
 
 	ctx.JSON(c.SuccessResp(data))
 }

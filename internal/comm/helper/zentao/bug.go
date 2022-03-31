@@ -1,15 +1,14 @@
 package zentaoHelper
 
 import (
+	"encoding/json"
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/aaronchen2k/deeptest/internal/comm/domain"
 	"github.com/aaronchen2k/deeptest/internal/comm/helper/analysis"
-	configHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
 	httpUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/http"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	"github.com/bitly/go-simplejson"
 	"github.com/fatih/color"
 	"github.com/jinzhu/copier"
 	uuid "github.com/satori/go.uuid"
@@ -17,8 +16,7 @@ import (
 	"strings"
 )
 
-func CommitBug(ztfBug commDomain.ZtfBug, workspacePath string) (err error) {
-	config := configHelper.LoadByWorkspacePath(workspacePath)
+func CommitBug(ztfBug commDomain.ZtfBug, config commDomain.WorkspaceConf) (err error) {
 	Login(config)
 
 	ztfBug.Steps = strings.Replace(ztfBug.Steps, " ", "&nbsp;", -1)
@@ -73,12 +71,12 @@ func PrepareBug(workspacePath, seq string, caseIdStr string) (bug commDomain.Ztf
 		}
 
 		bug = commDomain.ZtfBug{
-			Title:   cs.Title,
-			Product: cs.ProductId, Case: cs.Id,
+			Title: cs.Title,
+			Case:  cs.Id,
 			Uid:   uuid.NewV4().String(),
 			Steps: strings.Join(steps, "\n"), StepIds: stepIds,
-			Version: "trunk", Severity: 3, Pri: 3,
-			OpenedBuild: map[string]string{"0": "trunk"}, CaseVersion: "0", OldTaskID: "0",
+			Type: "codeerror", Severity: 3, Pri: 3, OpenedBuild: []string{"trunk"},
+			CaseVersion: "0", OldTaskID: "0",
 		}
 		return
 	}
@@ -106,49 +104,33 @@ func GenBugStepText(step commDomain.StepLog) string {
 	return stepTxt + strings.Join(stepResults, "\n") + "\n"
 }
 
-func GetBugFiledOptions(req commDomain.FuncResult, workspacePath string) (
+func GetBugFiledOptions(config commDomain.WorkspaceConf, productId int) (
 	bugFields commDomain.ZentaoBugFields, err error) {
 
-	// field options
-	config := configHelper.LoadByWorkspacePath(workspacePath)
 	err = Login(config)
 	if err != nil {
 		return
 	}
 
-	// $productID, $workspaceID = 0
-	params := ""
-	if commConsts.RequestType == commConsts.PathInfo {
-		params = fmt.Sprintf("%d-0", req.ProductId)
-	} else {
-		params = fmt.Sprintf("productID=%d", req.ProductId)
-	}
+	uri := fmt.Sprintf("/options/bug?product=%d", productId)
+	url := GenApiUrl(uri, nil, config.Url)
 
-	url := config.Url + GenApiUriOld("bug", "ajaxGetBugFieldOptions", params)
 	bytes, err := httpUtils.Get(url)
-	if err == nil {
-		jsonData := &simplejson.Json{}
-		jsonData, err = simplejson.NewJson(bytes)
-
-		if err != nil {
-			return
-		}
-
-		mp, _ := jsonData.Get("modules").Map()
-		bugFields.Modules = fieldMapToListOrderByInt(mp)
-
-		mp, _ = jsonData.Get("categories").Map()
-		bugFields.Categories = fieldMapToListOrderByStr(mp, false)
-
-		mp, _ = jsonData.Get("versions").Map()
-		bugFields.Versions = fieldMapToListOrderByStr(mp, true)
-
-		mp, _ = jsonData.Get("severities").Map()
-		bugFields.Severities = fieldMapToListOrderByInt(mp)
-
-		arr, _ := jsonData.Get("priorities").Array()
-		bugFields.Priorities = fieldArrToListKeyStr(arr, true)
+	bugOptionsWrapper := commDomain.BugOptionsWrapper{}
+	if err != nil {
+		return
 	}
+
+	err = json.Unmarshal(bytes, &bugOptionsWrapper)
+	if err != nil {
+		return
+	}
+
+	bugFields.Types = fieldMapToListOrderByStr(bugOptionsWrapper.Options.Type, false)
+	bugFields.Pri = fieldArrToListKeyStr(bugOptionsWrapper.Options.Pri, false)
+	bugFields.Severity = fieldMapToListOrderByInt(bugOptionsWrapper.Options.Severity)
+	bugFields.Modules = fieldMapToListOrderByInt(bugOptionsWrapper.Options.Modules)
+	bugFields.Build = fieldMapToListOrderByStr(bugOptionsWrapper.Options.Build, true)
 
 	return
 }

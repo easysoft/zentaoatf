@@ -5,6 +5,7 @@ import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	analysisUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/analysis"
+	configHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
 	zentaoUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 	"github.com/aaronchen2k/deeptest/internal/command"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
@@ -80,24 +81,25 @@ func coloredStatus(status commConsts.ResultStatus) string {
 
 func reportBug(resultDir string, caseId string) error {
 	bug = zentaoUtils.PrepareBug(commConsts.WorkDir, resultDir, caseId)
-	req := commDomain.FuncResult{
-		ProductId: bug.Product,
-	}
-	bugFields, _ = zentaoUtils.GetBugFiledOptions(req, commConsts.WorkDir)
+
+	config := configHelper.LoadByWorkspacePath(commConsts.WorkDir)
+
+	bugFields, _ = zentaoUtils.GetBugFiledOptions(config, bug.Product)
+
 	//bug.Module = 0
 	bug.Severity = 3
 	bug.Pri = 3
-	bug.Type = getFirstNoEmptyVal(bugFields.Categories)
-	bug.Version = getNameById(bug.Version, bugFields.Versions)
+	bug.Type = getFirstNoEmptyVal(bugFields.Types)
+	bug.Version = getNameById(bug.Version, bugFields.Build)
 
-	err := zentaoUtils.CommitBug(bug, commConsts.WorkDir)
+	err := zentaoUtils.CommitBug(bug, config)
 	return err
 }
 
 func getFirstNoEmptyVal(options []commDomain.BugOption) string {
 	for _, opt := range options {
 		if opt.Name != "" {
-			return opt.Id
+			return opt.Code
 		}
 	}
 
@@ -106,7 +108,7 @@ func getFirstNoEmptyVal(options []commDomain.BugOption) string {
 
 func getNameById(id string, options []commDomain.BugOption) string {
 	for _, opt := range options {
-		if opt.Id == id {
+		if opt.Code == id {
 			return opt.Name
 		}
 	}

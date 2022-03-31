@@ -1,15 +1,14 @@
 package commDomain
 
 type ZentaoBugFields struct {
-	Modules    []BugOption `json:"modules"`
-	Categories []BugOption `json:"categories"`
-	Versions   []BugOption `json:"versions"`
-	Severities []BugOption `json:"severities"`
-	Priorities []BugOption `json:"priorities"`
+	Types    []BugOption `json:"type"`
+	Pri      []BugOption `json:"pri"`
+	Severity []BugOption `json:"severity"`
+	Modules  []BugOption `json:"modules"`
+	Build    []BugOption `json:"build"`
 }
 
 type BugOption struct {
-	Id   string `json:"id"`
 	Code string `json:"code"`
 	Name string `json:"name"`
 }

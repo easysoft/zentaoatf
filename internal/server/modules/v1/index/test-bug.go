@@ -20,7 +20,7 @@ func (m *TestBugModule) Party() module.WebModule {
 	handler := func(index iris.Party) {
 		index.Use(middleware.InitCheck())
 
-		index.Post("/getBugSteps", m.TestBugCtrl.GetBugData).Name = "获取缺陷步骤"
+		index.Post("/prepareBugData", m.TestBugCtrl.PrepareBugData).Name = "获取缺陷步骤"
 		index.Post("/", m.TestBugCtrl.Submit).Name = "提交缺陷"
 	}
 	return module.NewModule("/bug", handler)

@@ -263,14 +263,23 @@ export default defineComponent({
     const openBugForm = (cs) => {
       console.log('openBugForm', cs)
       if (cs.product === 0) cs.product = ''
-      cs.seq = seq
+      cs.workspaceId = report.value.workspaceId
+      cs.seq = report.value.seq
       bugFormData.value = cs
       setBugFormVisible(true)
     }
     const submitBugForm = (formData) => {
       console.log('submitBugForm', formData)
 
-      const data = Object.assign({seq: seq}, formData)
+      const data = Object.assign({
+        workspaceId: report.value.workspaceId,
+        seq: report.value.seq
+      }, formData)
+
+      data.module = parseInt(data.module)
+      data.severity = parseInt(data.severity)
+      data.pri = parseInt(data.pri)
+
       submitBugToZentao(data).then((json) => {
         console.log('json', json)
         if (json.code === 0) {

@@ -55,6 +55,7 @@ func (s *TestHistoryService) Paginate(siteId, productId int, req serverDomain.Re
 
 			summary.No = fmt.Sprintf("%d-%s", workspace.ID, seq)
 			summary.Seq = seq
+			summary.WorkspaceId = int(workspace.ID)
 			summary.WorkspaceName = workspace.Name
 			reports = append(reports, summary)
 
@@ -69,8 +70,11 @@ func (s *TestHistoryService) Paginate(siteId, productId int, req serverDomain.Re
 
 func (s *TestHistoryService) Get(workspaceId int, seq string) (report commDomain.ZtfReport, err error) {
 	workspace, _ := s.WorkspaceRepo.FindById(uint(workspaceId))
+	report, err = analysisUtils.ReadReportByWorkspaceSeq(workspace.Path, seq)
+	report.WorkspaceId = workspaceId
+	report.Seq = seq
 
-	return analysisUtils.ReadReportByWorkspaceSeq(workspace.Path, seq)
+	return
 }
 
 func (s *TestHistoryService) Delete(workspaceId int, seq string) (err error) {
