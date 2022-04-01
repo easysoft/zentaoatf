@@ -11,10 +11,10 @@ type WsReq struct {
 	// for ztf testing
 	TestSets []TestSet `json:"testSets"`
 
-	ProductId                 string `json:"productId"`
-	ModuleId                  string `json:"moduleId"`
-	SuiteId                   string `json:"suiteId"`
-	TaskId                    string `json:"taskId"`
+	ProductId                 int    `json:"productId"`
+	ModuleId                  int    `json:"moduleId"`
+	SuiteId                   int    `json:"suiteId"`
+	TaskId                    int    `json:"taskId"`
 	ScriptDirParamFromCmdLine string `json:"-"`
 
 	// for unit, automation testing
@@ -32,10 +32,10 @@ type TestSet struct {
 
 	Seq                       string                  `json:"seq"`
 	Scope                     commConsts.ResultStatus `json:"scope"`
-	ProductId                 string                  `json:"productId"`
-	ModuleId                  string                  `json:"moduleId"`
-	SuiteId                   string                  `json:"suiteId"`
-	TaskId                    string                  `json:"taskId"`
+	ProductId                 int                     `json:"productId"`
+	ModuleId                  int                     `json:"moduleId"`
+	SuiteId                   int                     `json:"suiteId"`
+	TaskId                    int                     `json:"taskId"`
 	ScriptDirParamFromCmdLine string                  `json:"-"`
 
 	// for unit, automation testing

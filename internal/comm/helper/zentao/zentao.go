@@ -48,7 +48,8 @@ func Login(config commDomain.WorkspaceConf) (err error) {
 	}
 	bodyBytes, err := httpUtils.Post(url, params)
 	if err != nil {
-		logUtils.Errorf(i118Utils.Sprintf("fail_to_login"))
+		logUtils.Info(i118Utils.Sprintf("fail_to_login"))
+		return
 	}
 
 	if commConsts.Verbose {
@@ -56,6 +57,9 @@ func Login(config commDomain.WorkspaceConf) (err error) {
 	}
 
 	jsn, _ := simplejson.NewJson(bodyBytes)
+	if jsn == nil {
+		return
+	}
 	mp, _ := jsn.Map()
 
 	val, ok := mp["token"]

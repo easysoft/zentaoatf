@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-import { Script } from './data.d';
+import {WsMsg} from './data.d';
 import {SyncSettings} from "@/views/sync/data";
 import {removeEmptyField} from "@/utils/object";
 
@@ -39,7 +39,7 @@ export async function extract(path: string, workspaceId: number): Promise<any> {
     });
 }
 
-export async function create(params: Partial<Script>): Promise<any> {
+export async function create(params: any): Promise<any> {
     return request({
         url: `/${apiPath}`,
         method: 'POST',
@@ -47,7 +47,7 @@ export async function create(params: Partial<Script>): Promise<any> {
     });
 }
 
-export async function update(id: number, params: Partial<Script>): Promise<any> {
+export async function update(id: number, params: any): Promise<any> {
     return request({
         url: `/${apiPath}/${id}`,
         method: 'PUT',
@@ -62,13 +62,9 @@ export async function remove(id: number): Promise<any> {
     });
 }
 
-export function getCaseIdsFromReport(workspace, seq, scope) {
-    const params = {workspaceId: workspace, seq: seq, scope: scope}
-    return request({
-        url: `/${apiPath}/getCaseIdsFromReport`,
-        method: 'get',
-        params,
-    });
+export function genExecInfo(jsn: WsMsg) : WsMsg {
+    jsn.msg = jsn.msg.replace(/^"+/,'').replace(/"+$/,'')
+    return jsn
 }
 
 export async function syncFromZentao(params: SyncSettings): Promise<any> {

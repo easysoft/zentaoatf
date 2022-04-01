@@ -9,13 +9,6 @@
   >
     <div>
       <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
-        <a-form-item :label="t('product')" v-bind="validateInfos.productId">
-          <a-select v-model:value="modelRef.productId" @change="selectProduct">
-            <a-select-option key="" value="">&nbsp;</a-select-option>
-            <a-select-option v-for="item in products" :key="item.id" :value="item.id+''">{{item.name}}</a-select-option>
-          </a-select>
-        </a-form-item>
-
         <a-form-item v-if="resultData.testType === 'func'" :label="t('task')">
           <a-select v-model:value="modelRef.taskId">
             <a-select-option key="" value="">&nbsp;</a-select-option>
@@ -37,12 +30,14 @@
 </template>
 
 <script lang="ts">
-import {ComputedRef, defineComponent, onMounted, PropType, reactive, ref, Ref} from "vue";
+import {computed, ComputedRef, defineComponent, onMounted, PropType, reactive, ref, Ref} from "vue";
 import { validateInfos } from 'ant-design-vue/lib/form/useForm';
 import {message, Form} from 'ant-design-vue';
 import {queryProduct, queryTask} from "@/services/zentao";
 import {useI18n} from "vue-i18n";
 import {isWindows} from "@/utils/comm";
+import {useStore} from "vuex";
+import {ZentaoData} from "@/store/zentao";
 const useForm = Form.useForm;
 
 export default defineComponent({
@@ -67,32 +62,23 @@ export default defineComponent({
     const { t } = useI18n();
     const isWin = isWindows()
 
+    const zentaoStore = useStore<{ zentao: ZentaoData }>();
+    const currProduct = computed<any>(() => zentaoStore.state.zentao.currProduct);
+
     const rules = reactive({
-      productId: [
-        { required: true, message: t('pls_product') },
-      ],
     });
 
-    const modelRef = reactive<any>({productId: '', taskId: ''})
-    let products = ref([])
+    const modelRef = reactive<any>({taskId: ''})
     let tasks = ref([])
 
     const { resetFields, validate, validateInfos } = useForm(modelRef, rules);
 
-    const listProduct = () => {
-      queryProduct().then((jsn) => {
-        products.value = jsn.data
-      })
-    }
-    listProduct()
-
-    const selectProduct = (item) => {
-      if (!item) return
-
-      queryTask(item).then((jsn) => {
+    const listTask = () => {
+      queryTask(currProduct.value.id).then((jsn) => {
         tasks.value = jsn.data
       })
     }
+    listTask()
 
     const onFinish = async () => {
       console.log('onFinish', modelRef)
@@ -116,10 +102,7 @@ export default defineComponent({
       validateInfos,
       resetFields,
 
-      products,
       tasks,
-      selectProduct,
-
       modelRef,
       onFinish,
     }

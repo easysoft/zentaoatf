@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
 	websocketUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/websocket"
 	zentaoUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 	dateUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/date"
@@ -47,7 +48,8 @@ func ExecUnit(ch chan int,
 	logUtils.Infof("#v", report)
 
 	if req.SubmitResult {
-		err = zentaoUtils.CommitResult(report, req.ProductId, "0", req.WorkspacePath)
+		config := configUtils.LoadByWorkspacePath(req.WorkspacePath)
+		err = zentaoUtils.CommitResult(report, req.ProductId, 0, config)
 	}
 
 	return

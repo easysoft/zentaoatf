@@ -38,7 +38,7 @@ func ExecCases(ch chan int, testSet serverDomain.TestSet, msg websocket.Message)
 func ExecModule(ch chan int, testSet serverDomain.TestSet, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 
-	cases, err := zentaoUtils.GetCasesByModuleInDir(stringUtils.ParseInt(testSet.ProductId), stringUtils.ParseInt(testSet.ModuleId),
+	cases, err := zentaoUtils.GetCasesByModuleInDir(testSet.ProductId, testSet.ModuleId,
 		testSet.WorkspacePath, testSet.ScriptDirParamFromCmdLine)
 	if err != nil {
 		return
@@ -48,13 +48,12 @@ func ExecModule(ch chan int, testSet serverDomain.TestSet, msg websocket.Message
 		cases = analysisUtils.FilterCaseByResult(cases, testSet)
 	}
 
-	return RunZtf(ch, testSet.WorkspacePath,
-		stringUtils.ParseInt(testSet.ProductId), stringUtils.ParseInt(testSet.ModuleId), commConsts.Module, cases, msg)
+	return RunZtf(ch, testSet.WorkspacePath, testSet.ProductId, testSet.ModuleId, commConsts.Module, cases, msg)
 }
 
 func ExecSuite(ch chan int, testSet serverDomain.TestSet, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	cases, err := zentaoUtils.GetCasesBySuiteInDir(stringUtils.ParseInt(testSet.ProductId), stringUtils.ParseInt(testSet.SuiteId),
+	cases, err := zentaoUtils.GetCasesBySuiteInDir(testSet.ProductId, testSet.SuiteId,
 		testSet.WorkspacePath, testSet.ScriptDirParamFromCmdLine)
 
 	if testSet.Seq != "" {
@@ -62,12 +61,12 @@ func ExecSuite(ch chan int, testSet serverDomain.TestSet, msg websocket.Message)
 	}
 
 	return RunZtf(ch, testSet.WorkspacePath,
-		stringUtils.ParseInt(testSet.ProductId), stringUtils.ParseInt(testSet.SuiteId), commConsts.Suite, cases, msg)
+		testSet.ProductId, testSet.SuiteId, commConsts.Suite, cases, msg)
 }
 
 func ExecTask(ch chan int, testSet serverDomain.TestSet, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	cases, err := zentaoUtils.GetCasesByTaskInDir(stringUtils.ParseInt(testSet.ProductId), stringUtils.ParseInt(testSet.TaskId),
+	cases, err := zentaoUtils.GetCasesByTaskInDir(testSet.ProductId, testSet.TaskId,
 		testSet.WorkspacePath, testSet.ScriptDirParamFromCmdLine)
 	if err != nil {
 		return
@@ -78,7 +77,7 @@ func ExecTask(ch chan int, testSet serverDomain.TestSet, msg websocket.Message) 
 	}
 
 	return RunZtf(ch, testSet.WorkspacePath,
-		stringUtils.ParseInt(testSet.ProductId), stringUtils.ParseInt(testSet.TaskId), commConsts.Task, cases, msg)
+		testSet.ProductId, testSet.TaskId, commConsts.Task, cases, msg)
 }
 
 func RunZtf(ch chan int,

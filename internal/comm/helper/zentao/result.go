@@ -2,21 +2,20 @@ package zentaoHelper
 
 import (
 	"errors"
+	"fmt"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
-	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
 	httpUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/http"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/fatih/color"
 	"os"
-	"strconv"
 )
 
-func CommitResult(report commDomain.ZtfReport, productId, taskId string, workspacePath string) (err error) {
-	if productId != "" {
-		report.ProductId, _ = strconv.Atoi(productId)
+func CommitResult(report commDomain.ZtfReport, productId, taskId int, config commDomain.WorkspaceConf) (err error) {
+	if productId != 0 {
+		report.ProductId = productId
 	}
-	report.TaskId, _ = strconv.Atoi(taskId)
+	report.TaskId = taskId
 
 	// for ci tool
 	report.ZentaoData = os.Getenv("ZENTAO_DATA")
@@ -27,11 +26,12 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId string, workspa
 	//	report.TestType = ""
 	//}
 
-	config := configUtils.LoadByWorkspacePath(workspacePath)
 	Login(config)
 
-	url := config.Url + GenApiUriOld("ci", "commitResult", "")
-	ret, err := httpUtils.PostWithFormat(url, report, false)
+	uri := fmt.Sprintf("/ciresults")
+	url := GenApiUrl(uri, nil, config.Url)
+
+	ret, err := httpUtils.Post(url, report)
 
 	msg := ""
 	if err == nil {

@@ -11,9 +11,9 @@ import (
 )
 
 type TestScriptService struct {
-	WorkspaceRepo      *repo.WorkspaceRepo `inject:""`
-	SiteService        *SiteService        `inject:""`
-	TestHistoryService *TestHistoryService `inject:""`
+	WorkspaceRepo     *repo.WorkspaceRepo `inject:""`
+	SiteService       *SiteService        `inject:""`
+	TestResultService *TestResultService  `inject:""`
 }
 
 func NewTestScriptService() *TestScriptService {
@@ -77,7 +77,7 @@ func (s *TestScriptService) getScriptIdsFromZentao(siteId, productId int, filerT
 }
 
 func (s *TestScriptService) GetCaseIdsFromReport(workspaceId int, seq, scope string) (caseIds []string, err error) {
-	report, err := s.TestHistoryService.Get(workspaceId, seq)
+	report, err := s.TestResultService.Get(workspaceId, seq)
 
 	if err != nil {
 		return

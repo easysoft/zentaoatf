@@ -106,7 +106,7 @@ import {ZentaoData} from "@/store/zentao";
 import {setExpandedKeys, getScriptFilters, getExpandedKeys, setScriptFilters} from "@/utils/cache";
 import {genWorkspaceToScriptsMap, listFilterItems, syncToZentao} from "../service";
 import settings from "@/config/settings";
-import {getCaseIdsFromReport} from "../service";
+import {getCaseIdsFromReport} from "@/services/report";
 import {useRouter} from "vue-router";
 
 import SyncFromZentao from "./syncFromZentao.vue"

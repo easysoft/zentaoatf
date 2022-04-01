@@ -1,10 +1,8 @@
-export interface Script {
-  id: number;
-  name: string;
-  desc: string;
-  content: string
-}
 
-export type Script = {
-  content: string,
+
+export interface WsMsg {
+  msg:       string
+  isRunning: string
+  category:  string
+  conn: string
 }

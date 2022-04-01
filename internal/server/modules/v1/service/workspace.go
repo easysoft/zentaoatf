@@ -34,7 +34,7 @@ func (s *WorkspaceService) ListWorkspacesByProduct(siteId, productId int) (pos [
 }
 
 func (s *WorkspaceService) Get(id uint) (model.Workspace, error) {
-	return s.WorkspaceRepo.FindById(id)
+	return s.WorkspaceRepo.Get(id)
 }
 func (s *WorkspaceService) GetByPath(workspacePath string) (po model.Workspace, err error) {
 	return s.WorkspaceRepo.FindByPath(workspacePath)

@@ -122,6 +122,7 @@
         :onSubmit="submitResultForm"
         :onCancel="cancelResultForm"
       />
+
       <bug-form
           v-if="bugFormVisible"
           :model="bugFormData"
@@ -140,13 +141,15 @@ import {StateType} from "./store";
 import {useRouter} from "vue-router";
 import {momentUnixDef, percentDef} from "@/utils/datetime";
 import {execByDef, resultStatusDef, testEnvDef, testTypeDef} from "@/utils/testing";
-import {submitResultToZentao, submitBugToZentao} from "./service";
+
 import {notification} from "ant-design-vue";
 import ResultForm from "./component/result.vue";
 import BugForm from "./component/bug.vue";
 import {useI18n} from "vue-i18n";
 import IconSvg from "@/components/IconSvg/index";
-import {get, getCaseIdsFromReport} from "@/views/exec/service";
+
+import {submitResultToZentao} from "./service";
+import {submitBugToZentao} from "@/services/bug";
 
 export default defineComponent({
   name: 'UnitTestResultPage',
@@ -245,8 +248,13 @@ export default defineComponent({
     const submitResultForm = (formData) => {
       console.log('submitResultForm', formData)
 
-      const data = Object.assign({seq: seq}, formData)
-      console.log('data', data)
+      const data = Object.assign({
+        workspaceId: report.value.workspaceId,
+        seq: report.value.seq
+      }, formData)
+
+      data.taskId = parseInt(data.taskId)
+
       submitResultToZentao(data).then((json) => {
         console.log('json', json)
         if (json.code === 0) {

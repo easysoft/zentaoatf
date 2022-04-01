@@ -72,11 +72,10 @@ import {ZentaoData} from "@/store/zentao";
 import {WebSocket, WsEventName} from "@/services/websocket";
 import {getCache} from "@/utils/localCache";
 import settings from "@/config/settings";
-import {WsMsg} from "@/views/exec/data";
-import {genExecInfo} from "@/views/exec/service";
 import bus from "@/utils/eventBus";
 import {logLevelMap} from "@/utils/const";
-import {genWorkspaceToScriptsMap} from "@/views/script/service";
+import {WsMsg} from "../data";
+import {genExecInfo, genWorkspaceToScriptsMap} from "../service";
 
 export default defineComponent({
   name: 'ScriptExecLogPage',

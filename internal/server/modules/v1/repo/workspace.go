@@ -57,7 +57,7 @@ func (r *WorkspaceRepo) Paginate(req serverDomain.WorkspaceReqPaginate) (data do
 	return
 }
 
-func (r *WorkspaceRepo) FindById(id uint) (po model.Workspace, err error) {
+func (r *WorkspaceRepo) Get(id uint) (po model.Workspace, err error) {
 	err = r.DB.Model(&model.Workspace{}).
 		Where("id = ?", id).
 		Where("NOT deleted").

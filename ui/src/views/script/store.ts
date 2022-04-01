@@ -1,7 +1,7 @@
 import { Mutation, Action } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
-import { Script } from './data.d';
+
 import {
     list, get, extract, create, update, remove
 } from './service';
@@ -74,7 +74,7 @@ const StoreModel: ModuleType = {
             return true
         },
 
-        async createScript({ commit }, payload: Pick<Script, "name" | "desc"> ) {
+        async createScript({ commit }, payload: any) {
             try {
                 await create(payload);
                 return true;
@@ -82,7 +82,7 @@ const StoreModel: ModuleType = {
                 return false;
             }
         },
-        async updateScript({ commit }, payload: Script ) {
+        async updateScript({ commit }, payload: any ) {
             try {
                 const { id, ...params } = payload;
                 await update(id, { ...params });

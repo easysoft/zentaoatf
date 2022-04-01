@@ -10,9 +10,10 @@ type ZentaoRespData struct {
 }
 
 type ZentaoResultSubmitReq struct {
-	Seq       string `json:"seq"`
-	ProductId string `json:"productId"`
-	TaskId    string `json:"taskId"`
+	Seq         string `json:"seq"`
+	WorkspaceId int    `json:"workspaceId"`
+	ProductId   int    `json:"productId"`
+	TaskId      int    `json:"taskId"`
 }
 
 type ZentaoLang struct {

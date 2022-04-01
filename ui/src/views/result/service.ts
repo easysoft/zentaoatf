@@ -26,12 +26,11 @@ export async function remove(params: any): Promise<any> {
     });
 }
 
-export function getCaseIdsFromReport(workspace, seq, scope) {
-    const params = {workspaceId: workspace, seq: seq, scope: scope}
+export function submitResultToZentao(data: any): Promise<any> {
     return request({
-        url: `/${apiPath}/getCaseIdsFromReport`,
-        method: 'get',
-        params,
+        url: `${apiPath}`,
+        method: 'post',
+        data: data,
     });
 }
 
@@ -55,17 +54,3 @@ export function SetWidth(content: string, width: number): string{
     return `<span style="display: inline-block; width: ${width}px; text-align: right; padding-right: 6px;">${content}</span>`;
 }
 
-export function submitResultToZentao(data: any): Promise<any> {
-    return request({
-        url: `/result`,
-        method: 'post',
-        data: data,
-    });
-}
-export function submitBugToZentao(data: any): Promise<any> {
-    return request({
-        url: `/bug`,
-        method: 'post',
-        data: data,
-    });
-}
