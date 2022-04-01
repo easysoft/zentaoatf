@@ -42,16 +42,6 @@ import TopMenu from './TopMenu.vue';
 import TopSiteProduct from './TopSiteProduct.vue';
 import TopSettings from './TopSettings.vue';
 
-interface TopSetupData {
-  t: (key: string | number) => string;
-  profile: ComputedRef;
-
-  topMenuCon: Ref;
-  pathToId: (val) => void
-  gotoSite: (val) => void
-  nameFirstCap: (name) => string
-}
-
 export default defineComponent({
     name: 'Top',
     components: {
@@ -90,7 +80,7 @@ export default defineComponent({
         required: true
       }
     },
-    setup(props): TopSetupData {
+    setup(props) {
       const { t } = useI18n();
 
       const store = useStore<{ Zentao: ZentaoData }>();

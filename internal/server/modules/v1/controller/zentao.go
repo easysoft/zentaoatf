@@ -2,6 +2,7 @@ package controller
 
 import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+	configHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
 	zentaoHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
@@ -19,13 +20,15 @@ func NewZentaoCtrl() *ZentaoCtrl {
 }
 
 func (c *ZentaoCtrl) GetProfile(ctx iris.Context) {
-	workspacePath := ctx.URLParam("currWorkspace")
-	if workspacePath == "" {
-		ctx.JSON(c.SuccessResp(iris.Map{}))
+	currSiteId, _ := ctx.URLParamInt("currSiteId")
+	if currSiteId == 0 {
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, "currSiteId"))
 		return
 	}
 
-	data, err := zentaoHelper.GetProfile(workspacePath)
+	site, _ := c.SiteService.Get(uint(currSiteId))
+	config := configHelper.LoadBySite(site)
+	data, err := zentaoHelper.GetProfile(config)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
 		return

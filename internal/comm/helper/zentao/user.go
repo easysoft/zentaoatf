@@ -3,14 +3,11 @@ package zentaoHelper
 import (
 	"encoding/json"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
-	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
 	httpUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/http"
 	"github.com/bitly/go-simplejson"
 )
 
-func GetProfile(workspacePath string) (profile commDomain.ZentaoUserProfile, err error) {
-	config := configUtils.LoadByWorkspacePath(workspacePath)
-
+func GetProfile(config commDomain.WorkspaceConf) (profile commDomain.ZentaoUserProfile, err error) {
 	err = Login(config)
 	if err != nil {
 		return
