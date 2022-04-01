@@ -2,16 +2,16 @@
     <div class="indexlayout-right-footer">
       <div class="footer-links">
         <a href="https://ztf.im/ztf.html" target="_blank">
-          下载
+          {{t('download')}}
         </a>
         <a href="https://ztf.im/book/ztf/ztf-about-26.html" target="_blank">
-          帮助
+          {{t('help')}}
         </a>
         <a href="https://github.com/easysoft/ztf" target="_blank">
-          源码
+          {{t('src')}}
         </a>
       </div>
-<!--      <div>Copyright © 2019-2022 青岛易软天创, All Rights Reserved</div>-->
+      <div>Copyright © 2019-2022 青岛易软天创, All Rights Reserved</div>
     </div>
 </template>
 <script lang="ts">

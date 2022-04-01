@@ -85,7 +85,7 @@
                   :data-source="cs.steps"
                   row-key="id"
                   :pagination="false">
-                <template #seq="{ record }">
+                <template #no="{ record }">
                   {{ record.id }}
                 </template>
                 <template #name="{ record }">
@@ -183,7 +183,7 @@ export default defineComponent({
       columns.value = [
         {
           title: t('no'),
-          dataIndex: 'seq',
+          dataIndex: 'no',
           width: 150,
           customRender: ({text, index}: { text: any; index: number }) => index + 1,
         },
@@ -206,8 +206,8 @@ export default defineComponent({
     }
     setColumns()
 
-    const store = useStore<{ result: StateType }>();
-    const report = computed<any>(() => store.state.result.detailResult);
+    const store = useStore<{ Result: StateType }>();
+    const report = computed<any>(() => store.state.Result.detailResult);
     const loading = ref<boolean>(true);
 
     const workspaceId = router.currentRoute.value.params.workspaceId
@@ -215,7 +215,7 @@ export default defineComponent({
 
     const get = async (): Promise<void> => {
       loading.value = true;
-      await store.dispatch('result/get', {workspaceId: workspaceId, seq: seq});
+      await store.dispatch('Result/get', {workspaceId: workspaceId, seq: seq});
       console.log('===', report)
       loading.value = false;
     }

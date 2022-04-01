@@ -17,27 +17,6 @@
   >
     <SettingOutlined :style="{ fontSize: '20px', color: '#fcfcfc' }"/>
   </div>
-  <a-drawer
-      title="系统布局配置"
-      :visible="visible"
-      @close="close"
-      :bodyStyle="{ padding: '10px' }"
-  >
-    <a-list size="small">
-      <a-list-item>
-        <template #actions>
-          <a-switch :checked="topNavEnable" @change="onChangeTopNavEnable"/>
-        </template>
-        启用顶部导航
-      </a-list-item>
-      <a-list-item>
-        <template #actions>
-          <a-switch :checked="headFixed" @change="onChangeHeadFixed" :disabled="disabledHeadFixed"/>
-        </template>
-        固定右侧头部
-      </a-list-item>
-    </a-list>
-  </a-drawer>
 </template>
 <script lang="ts">
 import {computed, ComputedRef, defineComponent, Ref, ref} from "vue";
@@ -66,7 +45,7 @@ export default defineComponent({
   setup(): SettingsSetupData {
     const {t} = useI18n();
 
-    const store = useStore<{ global: GlobalStateType }>();
+    const store = useStore<{ Global: GlobalStateType }>();
 
     const visible = ref<boolean>(false);
     // 关闭
@@ -80,15 +59,15 @@ export default defineComponent({
 
     // 固定右侧头部
     const disabledHeadFixed = ref<boolean>(true);
-    const headFixed = computed<boolean>(() => store.state.global.headFixed);
+    const headFixed = computed<boolean>(() => store.state.Global.headFixed);
     const onChangeHeadFixed = (v: boolean): void => {
-      store.commit('global/setHeadFixed', v);
+      store.commit('Global/setHeadFixed', v);
     }
 
     // 启用顶部导航
-    const topNavEnable = computed<boolean>(() => store.state.global.topNavEnable);
+    const topNavEnable = computed<boolean>(() => store.state.Global.topNavEnable);
     const onChangeTopNavEnable = (v: boolean): void => {
-      store.commit('global/setTopNavEnable', v);
+      store.commit('Global/setTopNavEnable', v);
 
       if (v) {
         disabledHeadFixed.value = true;

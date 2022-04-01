@@ -62,7 +62,7 @@ const initState: ZentaoData = {
 
 const StoreModel: ModuleType = {
     namespaced: true,
-    name: 'zentao',
+    name: 'Zentao',
     state: {
         ...initState
     },

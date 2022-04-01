@@ -2,8 +2,7 @@
   <div>
     <a-radio-group name="radioGroup" v-model:value="locale">
       <a-radio v-for="item in locales" @change="changeLang(item)" :key="item" :value="item" :style="radioStyle">
-
-        <span role="img" :aria-label="languageLabels[item]">{{ languageIcons[item] }}</span>
+<!--        <span role="img" :aria-label="languageLabels[item]">{{ languageIcons[item] }}</span>-->
         <span style="margin-left: 5px;">{{ languageLabels[item] }}</span>
       </a-radio>
     </a-radio-group>
@@ -14,19 +13,10 @@ import {defineComponent, WritableComputedRef, Ref, ref} from "vue";
 import {setI18nLanguage} from "@/config/i18n";
 import {useI18n} from "vue-i18n";
 
-interface SelectLangSetupData {
-  locales: string[];
-  languageLabels: { [key: string]: string };
-  languageIcons: { [key: string]: string };
-  changeLang: (key) => void;
-  locale: WritableComputedRef<string>;
-  radioStyle: Ref
-}
-
 export default defineComponent({
   name: 'SelectLang',
   components: {},
-  setup(): SelectLangSetupData {
+  setup() {
     const {locale} = useI18n();
 
     const radioStyle = ref({
@@ -45,7 +35,6 @@ export default defineComponent({
       'en-US': '🇺🇸',
     };
 
-    // 切换语言
     const changeLang = (key): void => {
       console.log(key)
       setI18nLanguage(key);

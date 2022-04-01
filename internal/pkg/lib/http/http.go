@@ -41,9 +41,18 @@ func Get(url string) (ret []byte, err error) {
 		return
 	}
 
+	if !IsSuccessCode(resp.StatusCode) {
+		logUtils.Infof(color.RedString("read response failed, StatusCode: %d.", resp.StatusCode))
+		return
+	}
+
 	ret, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
 		logUtils.Infof(color.RedString("read response failed, error ", err.Error()))
+		return
+	}
+
+	if len(ret) == 0 {
 		return
 	}
 
@@ -108,10 +117,19 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 		return
 	}
 
+	if !IsSuccessCode(resp.StatusCode) {
+		logUtils.Infof(color.RedString("read response failed, StatusCode: %d.", resp.StatusCode))
+		return
+	}
+
 	ret, err = ioutil.ReadAll(resp.Body)
 	defer resp.Body.Close()
 	if err != nil {
 		logUtils.Infof(color.RedString("read response failed, error: %s.", err.Error()))
+		return
+	}
+
+	if len(ret) == 0 {
 		return
 	}
 
@@ -333,4 +351,8 @@ func GetRespErr(bytes []byte, url string) (ret []byte, err error) {
 	}
 
 	return
+}
+
+func IsSuccessCode(code int) (success bool) {
+	return code >= 200 && code <= 299
 }

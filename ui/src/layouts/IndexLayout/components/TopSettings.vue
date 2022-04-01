@@ -3,26 +3,26 @@
     <a-dropdown class="dropdown-list">
 
       <a class="t-link-btn" @click.prevent>
-        <span class="name">设置</span>
+        <span class="name">{{t('settings')}}</span>
         <span class="icon2"><icon-svg type="down"></icon-svg></span>
       </a>
 
       <template #overlay>
         <a-menu class="menu">
-          <a-menu-item @click="setSite"><span class="t-link">禅道站点</span></a-menu-item>
-          <a-menu-item @click="setEnv"><span class="t-link">运行环境</span></a-menu-item>
-          <a-menu-item @click="setLang"><span class="t-link">界面语言</span></a-menu-item>
+          <a-menu-item @click="setSite"><span class="t-link">{{t('zentao_site')}}</span></a-menu-item>
+          <a-menu-item @click="setEnv"><span class="t-link">{{ t('interpreter') }}</span></a-menu-item>
+          <a-menu-item @click="setLang"><span class="t-link">{{t('ui_lang')}}</span></a-menu-item>
         </a-menu>
       </template>
 
     </a-dropdown>
 
-    <a-modal v-model:visible="selectLangVisible" title="请选择语言">
+    <a-modal v-model:visible="selectLangVisible" :title="t('select_ui_lang')">
       <div>
         <TopSelectLang></TopSelectLang>
       </div>
       <template #footer>
-        <a-button @click="selectLangVisible=false" type="primary">确定</a-button>
+        <a-button @click="selectLangVisible=false" type="primary">{{t('close')}}</a-button>
       </template>
     </a-modal>
 
@@ -36,20 +36,13 @@ import {useRouter} from "vue-router";
 
 import TopSelectLang from "./TopSelectLang.vue";
 
-interface SettingsSetupData {
-  setSite: () => void;
-  setEnv: () => void;
-  setLang: () => void;
-
-  selectLangVisible: Ref<boolean>
-}
-
 export default defineComponent({
   name: 'Settings',
   components: {
     IconSvg, TopSelectLang
   },
-  setup(): SettingsSetupData {
+  setup() {
+    const { t } = useI18n();
     const router = useRouter();
 
     const selectLangVisible = ref(false)
@@ -68,6 +61,7 @@ export default defineComponent({
     }
 
     return {
+      t,
       setSite,
       setEnv,
       setLang,

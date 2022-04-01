@@ -34,7 +34,7 @@ const initState: ScriptData = {
 
 const StoreModel: ModuleType = {
     namespaced: true,
-    name: 'script',
+    name: 'Script',
     state: {
         ...initState
     },

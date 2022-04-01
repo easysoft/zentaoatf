@@ -8,10 +8,10 @@
             style="width: 120px"
         >
           <a-select-option value=""></a-select-option>
-          <a-select-option value="workspace">按目录</a-select-option>
-          <a-select-option value="module">按模块</a-select-option>
-          <a-select-option value="suite">按套件</a-select-option>
-          <a-select-option value="task">按任务</a-select-option>
+          <a-select-option value="workspace">{{t('by_workspace')}}</a-select-option>
+          <a-select-option value="module">{{t('by_module')}}</a-select-option>
+          <a-select-option value="suite">{{t('by_suite')}}</a-select-option>
+          <a-select-option value="task">{{t('by_task')}}</a-select-option>
         </a-select>
 
         <a-select
@@ -63,9 +63,9 @@
     </div>
 
     <div class="actions">
-      <a-button @click="checkoutCases">导出禅道用例</a-button>
-      <a-button :disabled="checkedKeys.length === 0" @click="checkinCases">更新禅道用例</a-button>
-      <a-button :disabled="checkedKeys.length === 0" @click="execSelected">执行选中</a-button>
+      <a-button @click="checkoutCases">{{t('checkout_case')}}</a-button>
+      <a-button :disabled="checkedKeys.length === 0" @click="checkinCases">{{t('checkin_case')}}</a-button>
+      <a-button :disabled="checkedKeys.length === 0" @click="execSelected">{{t('exec_selected')}}</a-button>
     </div>
 
     <a-modal
@@ -136,12 +136,12 @@ export default defineComponent({
     let scope = router.currentRoute.value.params.scope as string
     scope = scope === '-' ? '' : scope
 
-    const zentaoStore = useStore<{ zentao: ZentaoData }>();
-    const currSite = computed<any>(() => zentaoStore.state.zentao.currSite);
-    const currProduct = computed<any>(() => zentaoStore.state.zentao.currProduct);
+    const zentaoStore = useStore<{ Zentao: ZentaoData }>();
+    const currSite = computed<any>(() => zentaoStore.state.Zentao.currSite);
+    const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
 
-    const store = useStore<{ script: ScriptData }>();
-    const treeData = computed<any>(() => store.state.script.list);
+    const store = useStore<{ Script: ScriptData }>();
+    const treeData = computed<any>(() => store.state.Script.list);
     const treeDataEmpty = computed<boolean>(() => !(treeData.value.length > 0 &&
         treeData.value[0] && treeData.value[0].children))
 
@@ -186,7 +186,7 @@ export default defineComponent({
       console.log(`=== filerType: ${filerType.value}, filerValue: ${filerValue.value}`)
 
       const params = {filerType: filerType.value, filerValue: filerValue.value} as any
-      store.dispatch('script/listScript', params)
+      store.dispatch('Script/listScript', params)
     }
     loadScripts()
 
@@ -257,7 +257,7 @@ export default defineComponent({
 
       // cancel selecting any nodes
       selectedKeys.value = []
-      scriptStore.dispatch('script/getScript', null)
+      scriptStore.dispatch('Script/getScript', null)
 
       const leafNodes = getLeafNodes()
       bus.emit(settings.eventExec, leafNodes);
@@ -287,11 +287,11 @@ export default defineComponent({
       syncToZentao(sets).then((json) => {
         if (json.code === 0) {
           notification.success({
-            message: `同步成功`,
+            message: t('sync_success'),
           });
         } else {
           notification.error({
-            message: `同步失败`,
+            message: t('sync_fail'),
             description: json.msg,
           });
         }
@@ -307,7 +307,7 @@ export default defineComponent({
         data = e.selectedNodes[0].props
       }
 
-      scriptStore.dispatch('script/getScript', data)
+      scriptStore.dispatch('Script/getScript', data)
     }
     const checkNode = () => {
       console.log('checkNode', checkedKeys)

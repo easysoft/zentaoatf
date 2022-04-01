@@ -16,8 +16,7 @@
     </template>
 
     <div v-if="!interpreters" style="padding: 20px;">
-      非Windows平台中，请参照<a-link to="https://ztf.im/book/ztf/ztf-about-26.html">此文</a-link>将可执行文件加入PATH变量中，
-      即可在任意目录中执行测试，不需要为各种语言设置运行环境。
+      {{t('no_interp_1')}}<a href="https://ztf.im/book/ztf/ztf-about-26.html" target="_blank">这里</a>{{t('no_interp_2')}}
     </div>
 
     <a-table
@@ -79,7 +78,6 @@ import ALink from "@/components/ALink/index.vue";
 export default defineComponent({
   name: 'InterpreterList',
   components: {
-    ALink,
     EditInterpreterForm, PlusCircleOutlined,
   },
   setup(props) {

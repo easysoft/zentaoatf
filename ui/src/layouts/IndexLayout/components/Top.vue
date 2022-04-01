@@ -93,9 +93,9 @@ export default defineComponent({
     setup(props): TopSetupData {
       const { t } = useI18n();
 
-      const store = useStore<{ zentao: ZentaoData }>();
-      const profile = computed<any[]>(() => store.state.zentao.profile);
-      store.dispatch('zentao/getProfile');
+      const store = useStore<{ Zentao: ZentaoData }>();
+      const profile = computed<any[]>(() => store.state.Zentao.profile);
+      store.dispatch('Zentao/getProfile');
 
       const { topNavEnable } = toRefs(props);
 
@@ -180,8 +180,8 @@ export default defineComponent({
     }
 
     .settings-wrapper {
-      display: flex;
-      width: 90px;
+      width: 100px;
+      text-align: right;
     }
   }
 }

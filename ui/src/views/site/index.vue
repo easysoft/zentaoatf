@@ -10,7 +10,7 @@
             <a-select @change="onSearch" v-model:value="queryParams.enabled" :options="statusArr" class="status-select">
             </a-select>
             <a-input-search @change="onSearch" @search="onSearch" v-model:value="queryParams.keywords"
-                            placeholder="输入关键字搜索" style="width:270px;margin-left: 16px;"/>
+                            :placeholder="t('input_keyword_to_search')" style="width:270px;margin-left: 16px;"/>
           </div>
         </div>
 
@@ -110,7 +110,7 @@ export default defineComponent({
     getInitStatus().then((initStatus) => {
       console.log('initStatus', initStatus)
       if (!initStatus) {
-        localeConf.emptyText = '初次使用，请点击右上按钮新建禅道站点。'
+        localeConf.emptyText = t('pls_add_zentao_site')
 
         setTimeout(() => {
           setInitStatus()

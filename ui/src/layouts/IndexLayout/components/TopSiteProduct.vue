@@ -73,15 +73,15 @@ export default defineComponent({
     const { t } = useI18n();
     const router = useRouter();
 
-    const store = useStore<{ zentao: ZentaoData }>();
+    const store = useStore<{ Zentao: ZentaoData }>();
 
-    const sites = computed<any[]>(() => store.state.zentao.sites);
-    const products = computed<any>(() => store.state.zentao.products);
+    const sites = computed<any[]>(() => store.state.Zentao.sites);
+    const products = computed<any>(() => store.state.Zentao.products);
 
-    const currSite = computed<any>(() => store.state.zentao.currSite);
-    const currProduct = computed<any>(() => store.state.zentao.currProduct);
+    const currSite = computed<any>(() => store.state.Zentao.currSite);
+    const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
-    store.dispatch('zentao/fetchSitesAndProduct', {})
+    store.dispatch('Zentao/fetchSitesAndProduct', {})
 
     watch(currSite, ()=> {
       console.log(`watch currSite id = ${currSite.value.id}`)
@@ -102,11 +102,11 @@ export default defineComponent({
 
     const selectSite = (site): void => {
       console.log('selectSite', site)
-      store.dispatch('zentao/fetchSitesAndProduct', {currSiteId: site.id})
+      store.dispatch('Zentao/fetchSitesAndProduct', {currSiteId: site.id})
     }
     const selectProduct = (product): void => {
       console.log('selectProduct', product)
-      store.dispatch('zentao/fetchSitesAndProduct', {currProductId: product.id})
+      store.dispatch('Zentao/fetchSitesAndProduct', {currProductId: product.id})
     }
 
     return {

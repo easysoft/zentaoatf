@@ -10,7 +10,7 @@
             <a-select @change="onSearch" v-model:value="queryParams.enabled" :options="statusArr" class="status-select">
             </a-select>
             <a-input-search @change="onSearch" @search="onSearch" v-model:value="queryParams.keywords"
-                            placeholder="输入关键字搜索" style="width:270px;margin-left: 16px;"/>
+                            :placeholder="t('input_keyword_to_search')" style="width:270px;margin-left: 16px;"/>
           </div>
         </div>
       </template>
@@ -164,8 +164,8 @@ export default defineComponent({
 
     const router = useRouter();
 
-    const zentaoStore = useStore<{ zentao: ZentaoData }>();
-    const currProduct = computed<any>(() => zentaoStore.state.zentao.currProduct);
+    const zentaoStore = useStore<{ Zentao: ZentaoData }>();
+    const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
 
     const store = useStore<{ Workspace: WorkspaceData }>();
     const models = computed<any[]>(() => store.state.Workspace.queryResult.result);

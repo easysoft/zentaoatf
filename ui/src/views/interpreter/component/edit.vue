@@ -12,7 +12,7 @@
                       @search="selectDir" spellcheck="false"
                       @blur="validate('path', { trigger: 'blur' }).catch(() => {})">
         <template #enterButton>
-          <a-button>选择</a-button>
+          <a-button>{{ t('select') }}</a-button>
         </template>
       </a-input-search>
 
@@ -22,7 +22,7 @@
 
     <a-form-item :wrapper-col="{ span: wrapperCol.span, offset: labelCol.span }">
       <a-select v-if="interpreterInfos.length > 0" v-model:value="selectedInterpreter" @change="selectInterpreter">
-        <a-select-option value="">找到 {{interpreterInfos.length}} 项可选</a-select-option>
+        <a-select-option value="">{{ t('find_to_select', {num: interpreterInfos.length})}}</a-select-option>
         <a-select-option v-for="item in interpreterInfos" :key="item.path" :value="item.path">
           {{ item.info }}
         </a-select-option>

@@ -24,7 +24,7 @@
                 },
             }"
         >
-          <template #seq="{ text }">
+          <template #no="{ text }">
             {{ text }}
           </template>
           <template #execBy="{ record }">
@@ -122,11 +122,11 @@ export default defineComponent({
     const setColumns = () => {
       columns.value = [
         {
-          title: '工作目录',
+          title: t('workspace'),
           dataIndex: 'workspaceName',
         },
         {
-          title: '序号',
+          title: t('no'),
           dataIndex: 'seq',
         },
         {
@@ -162,10 +162,10 @@ export default defineComponent({
     const statusArr = ref(disableStatusMap);
 
     const router = useRouter();
-    const store = useStore<{ result: StateType }>();
+    const store = useStore<{ Result: StateType }>();
 
-    const models = computed<any[]>(() => store.state.result.queryResult.result)
-    const pagination = computed<PaginationConfig>(() => store.state.result.queryResult.pagination);
+    const models = computed<any[]>(() => store.state.Result.queryResult.result)
+    const pagination = computed<PaginationConfig>(() => store.state.Result.queryResult.pagination);
     const queryParams = ref<QueryParams>({
       keywords: '', enabled: '1', page: pagination.value.page, pageSize: pagination.value.pageSize
     });
@@ -176,7 +176,7 @@ export default defineComponent({
     const loading = ref<boolean>(true);
     const list = (page: number) => {
       loading.value = true;
-      store.dispatch('result/list', {
+      store.dispatch('Result/list', {
         keywords: queryParams.value.keywords,
         enabled: queryParams.value.enabled,
         pageSize: pagination.value.pageSize,
@@ -206,7 +206,7 @@ export default defineComponent({
     }
     const removeConfirmed = async () => {
       removeLoading.value = [model.value.seq];
-      const res: boolean = await store.dispatch('result/delete',
+      const res: boolean = await store.dispatch('Result/delete',
           {workspaceId: model.value.workspaceId, seq: model.value.seq});
       if (res === true) {
         message.success(t('delete_success'));

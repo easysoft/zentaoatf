@@ -84,14 +84,14 @@ export default defineComponent({
   setup() {
     const { t } = useI18n();
 
-    const zentaoStore = useStore<{ zentao: ZentaoData }>();
-    const currSite = computed<any>(() => zentaoStore.state.zentao.currSite);
-    const currProduct = computed<any>(() => zentaoStore.state.zentao.currProduct);
+    const zentaoStore = useStore<{ Zentao: ZentaoData }>();
+    const currSite = computed<any>(() => zentaoStore.state.Zentao.currSite);
+    const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
 
     let tree = ref(null)
 
-    const scriptStore = useStore<{ script: ScriptData }>();
-    let script = computed<any>(() => scriptStore.state.script.detail);
+    const scriptStore = useStore<{ Script: ScriptData }>();
+    let script = computed<any>(() => scriptStore.state.Script.detail);
     let scriptCode = ref('')
     let lang = ref('')
     const editorOptions = ref(MonacoOptions)

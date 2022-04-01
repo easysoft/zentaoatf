@@ -84,22 +84,22 @@ export default defineComponent({
     const router = useRouter();
 
     const workspaceStore = useStore<{ Workspace: WorkspaceData }>();
-    const zentaoStore = useStore<{ zentao: ZentaoData }>();
+    const zentaoStore = useStore<{ Zentao: ZentaoData }>();
 
-    const currSite = computed<any>(() => zentaoStore.state.zentao.currSite);
-    const currProduct = computed<any>(() => zentaoStore.state.zentao.currProduct);
+    const currSite = computed<any>(() => zentaoStore.state.Zentao.currSite);
+    const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
+    const langs = computed<any[]>(() => zentaoStore.state.Zentao.langs);
+    const modules = computed<any[]>(() => zentaoStore.state.Zentao.modules);
+    const suites = computed<any[]>(() => zentaoStore.state.Zentao.suites);
+    const tasks = computed<any[]>(() => zentaoStore.state.Zentao.tasks);
 
     const workspaces = computed<any[]>(() => workspaceStore.state.Workspace.listResult);
-    const langs = computed<any[]>(() => zentaoStore.state.zentao.langs);
-    const modules = computed<any[]>(() => zentaoStore.state.zentao.modules);
-    const suites = computed<any[]>(() => zentaoStore.state.zentao.suites);
-    const tasks = computed<any[]>(() => zentaoStore.state.zentao.tasks);
 
     const fetchData = () => {
       workspaceStore.dispatch('Workspace/list', currProduct.value.id)
-      zentaoStore.dispatch('zentao/fetchModules', {siteId: currSite.value.id, productId: currProduct.value.id})
-      zentaoStore.dispatch('zentao/fetchSuites', {siteId: currSite.value.id, productId: currProduct.value.id})
-      zentaoStore.dispatch('zentao/fetchTasks', {siteId: currSite.value.id, productId: currProduct.value.id})
+      zentaoStore.dispatch('Zentao/fetchModules', {siteId: currSite.value.id, productId: currProduct.value.id})
+      zentaoStore.dispatch('Zentao/fetchSuites', {siteId: currSite.value.id, productId: currProduct.value.id})
+      zentaoStore.dispatch('Zentao/fetchTasks', {siteId: currSite.value.id, productId: currProduct.value.id})
     }
     fetchData()
 
@@ -134,11 +134,11 @@ export default defineComponent({
               console.log('json', json)
               if (json.code === 0) {
                 notification.success({
-                  message: `同步成功`,
+                  message: t('sync_success'),
                 });
               } else {
                 notification.error({
-                  message: `同步失败`,
+                  message: t('sync_fail'),
                   description: json.msg,
                 });
               }

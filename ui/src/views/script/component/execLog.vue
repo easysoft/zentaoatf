@@ -18,19 +18,20 @@
             v-model:value="logLevel"
             size="small"
         >
-          <a-select-option value="result">显示结果日志</a-select-option>
-          <a-select-option value="run">显示执行日志</a-select-option>
-          <a-select-option value="output">显示详细日志</a-select-option>
+          <a-select-option value="result">{{ t('show_result_log') }}</a-select-option>
+          <a-select-option value="run">{{ t('show_exec_log') }}</a-select-option>
+          <a-select-option value="output">{{ t('show_detail_log') }}</a-select-option>
         </a-select>
 
         <a-select
             v-model:value="logStatus"
             size="small"
         >
-          <a-select-option value="">所有结果</a-select-option>
-          <a-select-option value="pass">成功结果</a-select-option>
-          <a-select-option value="fail">失败结果</a-select-option>
+          <a-select-option value="">{{ t('all_result') }}</a-select-option>
+          <a-select-option value="pass">{{ t('pass_result') }}</a-select-option>
+          <a-select-option value="fail">{{ t('fail_result') }}</a-select-option>
         </a-select>
+
       </div>
 
       <div id="content" :class="['status-'+logStatus, 'category-'+logLevel]">
@@ -85,12 +86,12 @@ export default defineComponent({
   setup() {
     const { t } = useI18n();
 
-    const zentaoStore = useStore<{ zentao: ZentaoData }>();
-    const currSite = computed<any>(() => zentaoStore.state.zentao.currSite);
-    const currProduct = computed<any>(() => zentaoStore.state.zentao.currProduct);
+    const zentaoStore = useStore<{ Zentao: ZentaoData }>();
+    const currSite = computed<any>(() => zentaoStore.state.Zentao.currSite);
+    const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
 
-    const scriptStore = useStore<{ script: ScriptData }>();
-    let script = computed<any>(() => scriptStore.state.script.detail);
+    const scriptStore = useStore<{ Script: ScriptData }>();
+    let script = computed<any>(() => scriptStore.state.Script.detail);
 
     const logLevel = ref('result')
     const logStatus = ref('')

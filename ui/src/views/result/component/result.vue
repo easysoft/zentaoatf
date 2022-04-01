@@ -31,7 +31,6 @@
 
 <script lang="ts">
 import {computed, ComputedRef, defineComponent, onMounted, PropType, reactive, ref, Ref} from "vue";
-import { validateInfos } from 'ant-design-vue/lib/form/useForm';
 import {message, Form} from 'ant-design-vue';
 import {queryProduct, queryTask} from "@/services/zentao";
 import {useI18n} from "vue-i18n";

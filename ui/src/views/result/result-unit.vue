@@ -65,7 +65,7 @@
                 :data-source="report.unitResult"
                 row-key="id"
                 :pagination="false">
-              <template #seq="{ record }">
+              <template #no="{ record }">
                 {{ record.id }}
               </template>
               <template #duration="{ record }">
@@ -149,7 +149,6 @@ export default defineComponent({
     const visibleMap = reactive<any>({})
 
     const router = useRouter();
-    const store = useStore<{ result: StateType }>();
 
     watch(locale, () => {
       console.log('watch locale', locale)
@@ -160,8 +159,8 @@ export default defineComponent({
     const setColumns = () => {
       columns.value = [
         {
-          title: '序号',
-          dataIndex: 'seq',
+          title: t('no'),
+          dataIndex: 'no',
           width: 150,
           customRender: ({text, index}: { text: any; index: number }) => index + 1,
         },
@@ -193,14 +192,15 @@ export default defineComponent({
     }
     setColumns()
 
-    const report = computed<any>(() => store.state.result.detailResult);
+    const store = useStore<{ Result: StateType }>();
+    const report = computed<any>(() => store.state.Result.detailResult);
     const loading = ref<boolean>(true);
 
     const seq = router.currentRoute.value.params.seq as string
 
     const get = async (): Promise<void> => {
       loading.value = true;
-      await store.dispatch('result/get', seq);
+      await store.dispatch('Result/get', seq);
       loading.value = false;
     }
     get()

@@ -39,7 +39,7 @@
       <a-form-item v-if="showCmd" :label="t('test_cmd')" v-bind="validateInfos.cmd">
         <a-textarea v-model:value="modelRef.cmd"
                     :auto-size="{ minRows: 3, maxRows: 6 }" />
-        <span>使用客户端执行测试时，-p参数的值会被替换成当前产品的ID。命令行执行时，请提供产品ID的数字。</span>
+        <span>{{ t('tips_test_cmd') }}</span>
       </a-form-item>
 
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
