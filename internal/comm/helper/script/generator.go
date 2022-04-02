@@ -63,8 +63,8 @@ func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool
 		i118Utils.Sprintf("find_example", consts.PthSep, langType))
 
 	info = append(info, fmt.Sprintf("title=%s", caseTitle))
-	info = append(info, fmt.Sprintf("cid=%s", caseId))
-	info = append(info, fmt.Sprintf("pid=%s", productId))
+	info = append(info, fmt.Sprintf("cid=%d", caseId))
+	info = append(info, fmt.Sprintf("pid=%d", productId))
 
 	StepWidth := 20
 	stepDisplayMaxWidth := 0

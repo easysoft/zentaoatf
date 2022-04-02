@@ -78,8 +78,55 @@ module.exports = {
 
         config.plugin('monaco-editor').use(MonacoWebpackPlugin, [
             {
-                // Languages are loaded on demand at runtime
-                languages: ['javascript', 'php']
+                languages: [
+                    'python',
+                    'php',
+                    'ruby',
+                    'javascript',
+                    'lua',
+                    'tcl',
+                    'perl',
+                    'bat',
+                    'shell',
+
+                    'typescript',
+                    'coffeescript',
+                    'sql',
+                    'mysql',
+                    'html',
+                    'css',
+                    'less',
+                    'scss',
+                    'xml',
+                    'yaml',
+                    'json',
+                    'ini',
+                    'dockerfile',
+                    'markdown',
+                    'plaintext',
+
+                    'c',
+                    'csharp',
+                    'cpp',
+                    'dart',
+                    'go',
+                    'java',
+                    'julia',
+                    'kotlin',
+                    'lua',
+                    'objective-c',
+                    'pascal',
+                    'perl',
+                    'pgsql',
+                    'powerquery',
+                    'powershell',
+                    'redis',
+                    'rust',
+                    'scala',
+                    'swift',
+                    'tcl',
+                    'vb',
+                ]
             }
         ])
     }

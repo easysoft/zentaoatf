@@ -91,6 +91,30 @@ func GetExtToNameMap() {
 
 	return
 }
+func GetEditorExtToLangMap() {
+	if commConsts.EditorExtToLangMap != nil { // init once
+		return
+	}
+
+	commConsts.EditorExtToLangMap = make(map[string]string, 0)
+	for key, val := range commConsts.EditorLangMap {
+		if val["name"] != "" {
+			names := strings.Split(val["name"], ",")
+			for _, name := range names {
+				commConsts.EditorExtToLangMap[name] = key
+			}
+		}
+
+		if val["extName"] != "" {
+			extNames := strings.Split(val["extName"], ",")
+			for _, ext := range extNames {
+				commConsts.EditorExtToLangMap[ext] = key
+			}
+		}
+	}
+
+	return
+}
 
 func GetLangByFile(filePath string) string {
 	ext := path.Ext(filePath)

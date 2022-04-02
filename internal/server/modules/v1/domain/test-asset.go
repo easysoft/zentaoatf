@@ -11,9 +11,14 @@ type TestAsset struct {
 	Path  string `json:"path"`
 
 	Type        commConsts.TreeNodeType `json:"type"`
+	Lang        string                  `json:"lang"`
 	ScriptCount int                     `json:"scriptCount"`
 	Slots       iris.Map                `json:"slots"`
 
-	WorkspaceId int          `json:"workspaceId"`
-	Children    []*TestAsset `json:"children"`
+	WorkspaceId   int                 `json:"workspaceId"`
+	WorkspaceType commConsts.TestTool `json:"workspaceType"`
+	Children      []*TestAsset        `json:"children"`
+
+	Checkable bool `json:"checkable"`
+	IsLeaf    bool `json:"isLeaf"`
 }

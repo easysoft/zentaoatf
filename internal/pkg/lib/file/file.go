@@ -176,7 +176,16 @@ func GetFileNameWithoutExt(pathOrUrl string) string {
 func GetExtName(pathOrUrl string) string {
 	index := strings.LastIndex(pathOrUrl, ".")
 
+	if index < 0 {
+		return ""
+	}
 	return pathOrUrl[index:]
+}
+func GetExtNameWithoutDot(pathOrUrl string) string {
+	ext := GetExtName(pathOrUrl)
+	ext = strings.TrimLeft(ext, ".")
+
+	return ext
 }
 func GetDirName(pth string) (name string) {
 	pth = strings.Trim(pth, consts.PthSep)

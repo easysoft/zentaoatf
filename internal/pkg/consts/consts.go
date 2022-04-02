@@ -30,16 +30,6 @@ var (
 
 	RequestTypePathInfo = "PATH_INFO"
 
-	AutoTestTypes       = []string{"selenium", "appium"}
-	UnitTestTypeJunit   = "junit"
-	UnitTestTypeTestNG  = "testng"
-	UnitTestTypeRobot   = "robot"
-	UnitTestTypeCypress = "cypress"
-	UnitTestTypes       = []string{UnitTestTypeJunit, UnitTestTypeTestNG, UnitTestTypeRobot, UnitTestTypeCypress,
-		"phpunit", "pytest", "jest", "cppunit", "gtest", "qtest"}
-	UnitTestToolMvn   = "mvn"
-	UnitTestToolRobot = "robot"
-
 	RunModeCommon  = "common"
 	RunModeServer  = "server"
 	RunModeRequest = "request"

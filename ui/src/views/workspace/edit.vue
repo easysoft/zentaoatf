@@ -39,7 +39,7 @@
       <a-form-item v-if="showCmd" :label="t('test_cmd')" v-bind="validateInfos.cmd">
         <a-textarea v-model:value="modelRef.cmd"
                     :auto-size="{ minRows: 3, maxRows: 6 }" />
-        <span>{{ t('tips_test_cmd') }}</span>
+        <div class="t-tips" style="margin-top: 5px;">{{ t('tips_test_cmd') }}</div>
       </a-form-item>
 
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">

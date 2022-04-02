@@ -61,7 +61,6 @@ import {useI18n} from "vue-i18n";
 import {Empty, Form, notification} from 'ant-design-vue';
 import {useStore} from "vuex";
 import {ZentaoData} from "@/store/zentao";
-import {SyncSettings} from "@/views/sync/data";
 import {useRouter} from "vue-router";
 import {WorkspaceData} from "../../workspace/store";
 import {syncFromZentao} from "@/views/script/service";
@@ -105,11 +104,11 @@ export default defineComponent({
 
     const formRef = ref();
 
-    const model = reactive<SyncSettings>({
+    const model = ref({
       workspaceId: '',
       lang: 'python',
       independentFile: false
-    } as SyncSettings);
+    });
 
     const rulesFrom = reactive({
       workspaceId: [

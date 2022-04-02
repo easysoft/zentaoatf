@@ -54,6 +54,16 @@ func (c *TestScriptCtrl) Get(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(script))
 }
 
+// LoadCodeChildren 子节点
+func (c *TestScriptCtrl) LoadCodeChildren(ctx iris.Context) {
+	dir := ctx.URLParam("dir")
+	workspaceId, _ := ctx.URLParamInt("workspaceId")
+
+	testScripts, _ := c.TestScriptService.LoadCodeChildren(dir, workspaceId)
+
+	ctx.JSON(c.SuccessResp(testScripts))
+}
+
 // Get 详情
 func (c *TestScriptCtrl) Extract(ctx iris.Context) {
 	scriptPath := ctx.URLParam("path")

@@ -22,6 +22,8 @@ func (m *TestScriptModule) Party() module.WebModule {
 
 		index.Get("/list", m.TestScriptCtrl.List).Name = "脚本列表"
 		index.Get("/get", m.TestScriptCtrl.Get).Name = "脚本详情"
+		index.Get("/loadChildren", m.TestScriptCtrl.LoadCodeChildren).Name = "脚本详情"
+
 		index.Get("/extract", m.TestScriptCtrl.Extract).Name = "抽取脚本"
 
 		index.Post("/syncFromZentao", m.TestScriptCtrl.SyncFromZentao).Name = "从禅道导出脚本"

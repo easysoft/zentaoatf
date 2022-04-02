@@ -1,6 +1,5 @@
 import request from '@/utils/request';
 import {WsMsg} from './data.d';
-import {SyncSettings} from "@/views/sync/data";
 import {removeEmptyField} from "@/utils/object";
 
 const apiPath = 'scripts';
@@ -26,6 +25,15 @@ export async function get(path: string, workspaceId: number): Promise<any> {
 
     return request({
         url: `/${apiPath}/get`,
+        params
+    });
+}
+
+export async function loadChildren(dir: string, workspaceId: number): Promise<any> {
+    const params = {dir: dir, workspaceId: workspaceId}
+
+    return request({
+        url: `/${apiPath}/loadChildren`,
         params
     });
 }
@@ -67,7 +75,7 @@ export function genExecInfo(jsn: WsMsg) : WsMsg {
     return jsn
 }
 
-export async function syncFromZentao(params: SyncSettings): Promise<any> {
+export async function syncFromZentao(params: any): Promise<any> {
     return request({
         url: `/${apiPath}/syncFromZentao`,
         method: 'POST',

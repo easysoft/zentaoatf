@@ -86,12 +86,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 		report.Duration = int64(duration)
 	}
 
-	postFix := ":"
-	if len(cases) == 0 {
-		postFix = "."
-	}
-
-	msgFound := i118Utils.Sprintf("found_scripts", strconv.Itoa(len(cases))) + postFix
+	msgFound := i118Utils.Sprintf("found_scripts", len(cases), req.WorkspacePath)
 	if commConsts.ComeFrom != "cmd" {
 		websocketUtils.SendExecMsg(msgFound, "", commConsts.Result, wsMsg)
 	}

@@ -39,6 +39,7 @@
       <a-tree
           v-if="!treeDataEmpty"
           :tree-data="treeData"
+          :load-data="onLoadData"
           v-model:expandedKeys="expandedKeys"
           v-model:selectedKeys="selectedKeys"
           v-model:checkedKeys="checkedKeys"
@@ -65,7 +66,19 @@
     <div class="actions">
       <a-button @click="checkoutCases">{{t('checkout_case')}}</a-button>
       <a-button :disabled="checkedKeys.length === 0" @click="checkinCases">{{t('checkin_case')}}</a-button>
-      <a-button :disabled="checkedKeys.length === 0" @click="execSelected">{{t('exec_selected')}}</a-button>
+
+      <a-button
+          v-if="currWorkspace.type === 'ztf'"
+          :disabled="checkedKeys.length === 0"
+          @click="execSelected">
+        {{t('exec_selected')}}
+      </a-button>
+
+      <a-button
+          v-if="currWorkspace.type !== 'ztf'"
+          @click="execUnit">
+        {{t('exec') + testToolMap[currWorkspace.type]}}
+      </a-button>
     </div>
 
     <a-modal
@@ -111,6 +124,7 @@ import {useRouter} from "vue-router";
 
 import SyncFromZentao from "./syncFromZentao.vue"
 import {isWindows} from "@/utils/comm";
+import {testToolMap} from "@/utils/testing";
 
 export default defineComponent({
   name: 'ScriptTreePage',
@@ -142,6 +156,7 @@ export default defineComponent({
 
     const store = useStore<{ Script: ScriptData }>();
     const treeData = computed<any>(() => store.state.Script.list);
+    const currWorkspace = computed<any>(() => store.state.Script.currWorkspace);
     const treeDataEmpty = computed<boolean>(() => !(treeData.value.length > 0 &&
         treeData.value[0] && treeData.value[0].children))
 
@@ -189,6 +204,12 @@ export default defineComponent({
       store.dispatch('Script/listScript', params)
     }
     loadScripts()
+
+    // 异步加载
+    const onLoadData = async (treeNode: any) => {
+      console.log('onLoadData')
+      await store.dispatch('Script/loadChildren', treeNode)
+    }
 
     // filters
     const loadFilterItems = async () => {
@@ -255,12 +276,15 @@ export default defineComponent({
     const execSelected = () => {
       console.log('execSelected')
 
-      // cancel selecting any nodes
-      selectedKeys.value = []
-      scriptStore.dispatch('Script/getScript', null)
+      selectNothing()
 
       const leafNodes = getLeafNodes()
-      bus.emit(settings.eventExec, leafNodes);
+      bus.emit(settings.eventExec, {execType: 'ztf', scripts: leafNodes});
+    }
+
+    const execUnit = () => {
+      console.log('execUnit')
+      selectNothing()
     }
 
     const checkoutCases = () => {
@@ -299,22 +323,30 @@ export default defineComponent({
     }
 
     const selectNode = (selectedKeys, e) => {
-      console.log('selectNode', selectedKeys)
+      console.log('selectNode', e.node.dataRef)
 
-      let data = null
+      if (e.node.dataRef.workspaceType !== 'ztf') checkNothing()
 
-      if (e.selectedNodes.length > 0) {
-        data = e.selectedNodes[0].props
-      }
-
-      scriptStore.dispatch('Script/getScript', data)
+      scriptStore.dispatch('Script/changeWorkspace',
+          {id: e.node.dataRef.workspaceId, type: e.node.dataRef.workspaceType})
+      scriptStore.dispatch('Script/getScript', e.node.dataRef)
     }
-    const checkNode = () => {
-      console.log('checkNode', checkedKeys)
+    const checkNode = (checkedKeys, e) => {
+      console.log('checkNode', e)
+      selectNothing()
+      scriptStore.dispatch('Script/changeWorkspace',
+          {id: e.node.dataRef.workspaceId, type: e.node.dataRef.workspaceType})
+    }
+    const selectNothing = () => {
+      selectedKeys.value = []
+      scriptStore.dispatch('Script/getScript', null)
+    }
+    const checkNothing = () => {
+      checkedKeys.value = []
     }
 
     const expandNode = (keys: string[], e: any) => {
-      console.log('expandNode', keys)
+      console.log('expandNode')
       setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
     }
     const expandAll = (e) => {
@@ -356,6 +388,8 @@ export default defineComponent({
       currSite,
       currProduct,
       treeData,
+      currWorkspace,
+      testToolMap,
       treeDataEmpty,
       filerItems,
 
@@ -365,10 +399,12 @@ export default defineComponent({
       selectFilerValue,
 
       replaceFields,
+      onLoadData,
       expandNode,
       selectNode,
       checkNode,
       execSelected,
+      execUnit,
       checkoutCases,
       checkinCases,
       isExpand,
@@ -438,6 +474,7 @@ export default defineComponent({
 
     .ant-btn {
       margin: 0 5px;
+      padding: 4px 6px;
     }
   }
 }

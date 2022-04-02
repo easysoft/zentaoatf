@@ -48,7 +48,7 @@ const execByMap = {
     suite: '按套件',
     task: '按任务',
 }
-const testToolMap = {
+export const testToolMap = {
     junit: 'JUnit',
     testng: 'TestNG',
     phpunit: 'PHPUnit',
@@ -60,9 +60,9 @@ const testToolMap = {
 
     robotframework: 'RobotFramework',
     cypress: 'Cypress',
-    // autoit: 'AutoIt',
-    // selenium: 'Selenium',
-    // appium: 'Appium',
+    autoit: 'AutoIt',
+    selenium: 'Selenium',
+    appium: 'Appium',
 }
 export function execByDef(record) {
     if (record.execBy) return execByMap[record.execBy]

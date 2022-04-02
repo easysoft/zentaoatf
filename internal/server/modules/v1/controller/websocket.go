@@ -13,6 +13,7 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12/websocket"
+	"strings"
 )
 
 var (
@@ -113,16 +114,26 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 
 		testSet.Scope = req.Scope
 		testSet.Seq = req.Seq
-		testSet.ProductId = req.ProductId
+
+		if testSet.ProductId == 0 && req.ProductId != 0 {
+			testSet.ProductId = req.ProductId
+		}
+
 		testSet.ModuleId = req.ModuleId
 		testSet.SuiteId = req.SuiteId
 		testSet.TaskId = req.TaskId
+
 		testSet.ScriptDirParamFromCmdLine = req.ScriptDirParamFromCmdLine
 
-		testSet.TestTool = req.TestTool
-		testSet.BuildTool = req.BuildTool
-		testSet.Cmd = req.Cmd
+		setTestTool(testSet, req)
+		setBuildTool(testSet, req)
+
+		if testSet.Cmd == "" && req.Cmd != "" {
+			testSet.Cmd = req.Cmd
+		}
+
 		testSet.SubmitResult = req.SubmitResult
+
 	}
 
 	ch = make(chan int, 1)
@@ -138,4 +149,25 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 	logUtils.ExecConsole(color.FgCyan, msg)
 
 	return
+}
+
+func setTestTool(testSet *serverDomain.TestSet, req serverDomain.WsReq) {
+	if testSet.TestTool == "" && req.TestTool != "" {
+		testSet.TestTool = req.TestTool
+	}
+
+	if testSet.TestTool == "" {
+		testSet.TestTool = testSet.WorkspaceType
+	}
+}
+
+func setBuildTool(testSet *serverDomain.TestSet, req serverDomain.WsReq) {
+	if testSet.BuildTool == "" && req.BuildTool != "" {
+		testSet.BuildTool = req.BuildTool
+	}
+
+	if testSet.BuildTool == "" {
+		arr := strings.Split(testSet.Cmd, " ")
+		testSet.BuildTool = commConsts.UnitBuildToolMap[strings.TrimSpace(arr[0])]
+	}
 }

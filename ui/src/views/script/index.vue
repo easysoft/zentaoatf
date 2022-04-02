@@ -8,17 +8,44 @@
       <div id="splitter-h"></div>
 
       <div id="right">
-        <div class="toolbar">
-          <template v-if="scriptCode !== ''">
-            <a-button @click="execSingle" type="primary">{{ t('exec') }}</a-button>
+        <template v-if="currWorkspace?.type === 'ztf'">
+          <div class="toolbar" v-if="scriptCode !== ''">
+              <a-button @click="execSingle" type="primary">{{ t('exec') }}</a-button>
+              <a-button @click="extract">{{ t('extract_step') }}</a-button>
+          </div>
 
-            <a-button @click="extract">{{ t('extract_step') }}</a-button>
-          </template>
-        </div>
+          <div id="right-content" class="right-content">
+            <!-- Exec Single Script -->
+            <template v-if="script">
+              <div id="editor-panel" class="editor-panel">
+                <MonacoEditor
+                    v-if="scriptCode !== ''"
+                    class="editor"
+                    :value="scriptCode"
+                    :language="lang"
+                    :options="editorOptions"
+                />
+              </div>
 
-        <div id="right-content">
-          <template v-if="script">
-            <div id="editor-panel">
+              <div id="splitter-v" class="splitter-v"></div>
+
+              <div id="logs-panel" class="logs-panel">
+                <ScriptExecLogPage></ScriptExecLogPage>
+              </div>
+            </template>
+
+            <!-- Exec Selected Script -->
+            <template v-if="!script">
+              <div class="logs-panel">
+                <ScriptExecLogPage></ScriptExecLogPage>
+              </div>
+            </template>
+          </div>
+        </template>
+
+        <template v-if="currWorkspace?.type !== 'ztf'">
+          <div class="right-content">
+            <template v-if="script">
               <MonacoEditor
                   v-if="scriptCode !== ''"
                   class="editor"
@@ -26,21 +53,30 @@
                   :language="lang"
                   :options="editorOptions"
               />
-            </div>
+            </template>
 
-            <div id="splitter-v"></div>
+            <!-- Exec Unit Test -->
+            <template v-if="!script">
+              <div class="unit-panel">
+                <a-form :model="modelUnit" layout="inline">
+                  <a-form-item label="命令">
+                    <a-input v-model:value="modelUnit.cmd" style="width:500px;"/>
+                  </a-form-item>
 
-            <div id="logs-panel">
-              <ScriptExecLogPage></ScriptExecLogPage>
-            </div>
-          </template>
+                  <a-form-item>
+                    <a-button @click="execUnit" type="primary" :disabled="!modelUnit.cmd">
+                      {{ t('exec') }}
+                    </a-button>
+                  </a-form-item>
+                </a-form>
+              </div>
 
-          <template v-if="!script">
-            <div class="logs-panel">
-              <ScriptExecLogPage></ScriptExecLogPage>
-            </div>
-          </template>
-        </div>
+              <div class="logs-panel">
+                <ScriptExecLogPage></ScriptExecLogPage>
+              </div>
+            </template>
+          </div>
+        </template>
 
       </div>
     </div>
@@ -73,7 +109,7 @@ import {ZentaoData} from "@/store/zentao";
 import ScriptTreePage from "./component/tree.vue";
 import ScriptExecLogPage from "./component/execLog.vue";
 import settings from "@/config/settings";
-import SyncFromZentao from "./component/syncFromZentao.vue";
+import {get} from "@/views/workspace/service";
 
 export default defineComponent({
   name: 'ScriptListPage',
@@ -88,9 +124,11 @@ export default defineComponent({
     const currSite = computed<any>(() => zentaoStore.state.Zentao.currSite);
     const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
 
-    let tree = ref(null)
+    let modelUnit = ref({} as any)
 
     const scriptStore = useStore<{ Script: ScriptData }>();
+    const currWorkspace = computed<any>(() => scriptStore.state.Script.currWorkspace);
+
     let script = computed<any>(() => scriptStore.state.Script.detail);
     let scriptCode = ref('')
     let lang = ref('')
@@ -98,6 +136,7 @@ export default defineComponent({
 
     watch(script, () => {
       console.log('watch script', script)
+
       if (script.value) {
         scriptCode.value = script.value.code
         lang.value = script.value.lang
@@ -107,10 +146,21 @@ export default defineComponent({
       }
     }, {deep: true})
 
+    watch(currWorkspace, () => {
+      console.log('watch currWorkspace', currWorkspace)
+      get(currWorkspace.value.id).then((json) => {
+        modelUnit.value = Object.assign({cmd: json.data.cmd}, currWorkspace.value)
+      })
+    }, {deep: true})
+
     const execSingle = () => {
       console.log('exec', script.value)
 
-      const data = [script.value]
+      bus.emit(settings.eventExec, {execType: 'ztf', scripts: [script.value]});
+    }
+    const execUnit = () => {
+      console.log('execUnit', modelUnit.value)
+      const data = Object.assign({execType: 'unit'}, modelUnit.value)
       bus.emit(settings.eventExec, data);
     }
 
@@ -129,7 +179,7 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      console.log('onMounted', tree)
+      console.log('onMounted')
 
       setTimeout(() => {
         resizeWidth('main', 'left', 'splitter-h', 'right', 280, 800)
@@ -143,7 +193,8 @@ export default defineComponent({
       currSite,
       currProduct,
 
-      tree,
+      modelUnit,
+      currWorkspace,
       script,
       scriptCode,
       lang,
@@ -151,8 +202,12 @@ export default defineComponent({
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
 
       execSingle,
+      execUnit,
       extract,
       stop,
+
+      // labelCol: { span: 3, offset: 12 },
+      // wrapperCol: { span: 3, offset: 12 },
     }
   }
 
@@ -201,7 +256,7 @@ export default defineComponent({
         }
       }
 
-      #right-content {
+      .right-content {
         height: calc(100% - 50px);
 
         display: flex;
@@ -282,6 +337,23 @@ export default defineComponent({
 
         .logs-panel {
           height: 100%;
+        }
+      }
+    }
+
+    // unit test
+    #right {
+      .right-content {
+        .unit-panel {
+          padding: 3px 5px;
+          height: 40px;
+          .ant-row {
+            margin: 0 4px;
+          }
+        }
+
+        .logs-panel {
+          height: calc(100% - 40px);
         }
       }
     }

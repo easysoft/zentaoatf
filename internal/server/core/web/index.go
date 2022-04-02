@@ -68,6 +68,7 @@ func Init(port int) *WebServer {
 	i118Utils.Init(commConsts.Language, commConsts.AppServer)
 
 	langHelper.GetExtToNameMap()
+	langHelper.GetEditorExtToLangMap()
 
 	app := iris.New()
 	app.Validator = validator.New() //参数验证

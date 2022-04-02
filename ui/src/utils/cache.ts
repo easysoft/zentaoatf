@@ -78,7 +78,7 @@ export const getExpandedKeys = async (siteId, productId) => {
     return [...keys]
 }
 export const setExpandedKeys = async (siteId, productId, keys) => {
-    console.log('setExpandedKeys', keys)
+    console.log('setExpandedKeys')
     const key = `${siteId}-${productId}`
 
     let cachedData = await getCache(settings.expandedKeys);

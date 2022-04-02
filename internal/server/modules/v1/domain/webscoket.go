@@ -26,9 +26,10 @@ type WsReq struct {
 }
 
 type TestSet struct {
-	WorkspaceId   int      `json:"workspaceId"`
-	WorkspacePath string   `json:"workspacePath"`
-	Cases         []string `json:"cases"`
+	WorkspaceId   int                 `json:"workspaceId"`
+	WorkspaceType commConsts.TestTool `json:"workspaceType"`
+	WorkspacePath string              `json:"workspacePath"`
+	Cases         []string            `json:"cases"`
 
 	Seq                       string                  `json:"seq"`
 	Scope                     commConsts.ResultStatus `json:"scope"`

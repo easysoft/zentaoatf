@@ -2,6 +2,8 @@ package commConsts
 
 var (
 	ScriptExtToNameMap map[string]string
+
+	EditorExtToLangMap map[string]string
 )
 
 var (
@@ -113,5 +115,164 @@ var (
 		"ruby":       {"^\\s*=begin\\s*$", "^\\s*=end\\s*$"},
 		"shell":      {"^\\s*:<<!\\s*$", "^\\s*!\\s*$"},
 		"tcl":        {"^\\s*set case {", "^\\s*}"},
+	}
+
+	EditorLangMap = map[string]map[string]string{
+		"markdown": {
+			"name":    "readme",
+			"extName": "md,markdown",
+		},
+		"dockerfile": {
+			"name":    "dockerfile",
+			"extName": "",
+		},
+
+		"shell": {
+			"name":    "",
+			"extName": "sh",
+		},
+		"bat": {
+			"name":    "",
+			"extName": "bat",
+		},
+
+		"javascript": {
+			"name":    "",
+			"extName": "js",
+		},
+		"lua": {
+			"name":    "",
+			"extName": "lua",
+		},
+		"perl": {
+			"name":    "",
+			"extName": "pl",
+		},
+		"php": {
+			"name":    "",
+			"extName": "php",
+		},
+		"python": {
+			"name":    "",
+			"extName": "py",
+		},
+		"ruby": {
+			"name":    "",
+			"extName": "rb",
+		},
+		"tcl": {
+			"name":    "",
+			"extName": "tl",
+		},
+
+		"typescript": {
+			"name":    "",
+			"extName": "ts,tsx",
+		},
+		"coffeescript": {
+			"name":    "",
+			"extName": "coffee",
+		},
+		"sql": {
+			"name":    "",
+			"extName": "sql",
+		},
+		"html": {
+			"name":    "",
+			"extName": "html",
+		},
+		"css": {
+			"name":    "",
+			"extName": "css",
+		},
+		"less": {
+			"name":    "",
+			"extName": "less",
+		},
+		"scss": {
+			"name":    "",
+			"extName": "scss,sass",
+		},
+		"xml": {
+			"name":    "",
+			"extName": "xml",
+		},
+		"yaml": {
+			"name":    "",
+			"extName": "yaml,yml",
+		},
+		"json": {
+			"name":    "",
+			"extName": "json",
+		},
+		"ini": {
+			"name":    "",
+			"extName": "ini",
+		},
+		"plaintext": {
+			"name":    "",
+			"extName": "txt",
+		},
+
+		"c": {
+			"name":    "",
+			"extName": "c,h",
+		},
+		"csharp": {
+			"name":    "",
+			"extName": "cs",
+		},
+		"cpp": {
+			"name":    "",
+			"extName": "cpp,cc",
+		},
+		"dart": {
+			"name":    "",
+			"extName": "dart",
+		},
+		"go": {
+			"name":    "",
+			"extName": "go",
+		},
+		"java": {
+			"name":    "",
+			"extName": "java",
+		},
+		"julia": {
+			"name":    "",
+			"extName": "jl",
+		},
+		"kotlin": {
+			"name":    "",
+			"extName": "kt",
+		},
+		"objective-c": {
+			"name":    "",
+			"extName": "m,mm",
+		},
+		"pascal": {
+			"name":    "",
+			"extName": "pas",
+		},
+		"powershell": {
+			"name":    "",
+			"extName": "ps",
+		},
+		"rust": {
+			"name":    "",
+			"extName": "rs",
+		},
+		"scala": {
+			"name":    "",
+			"extName": "scala",
+		},
+		"swift": {
+			"name":    "",
+			"extName": "swift",
+		},
+		"vb": {
+			"name":    "",
+			"extName": "vb,vbs",
+		},
 	}
 )

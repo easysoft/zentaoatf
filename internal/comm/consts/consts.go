@@ -22,3 +22,19 @@ const (
 	PathInfo = "PATH_INFO"
 	Get      = "GET"
 )
+
+var (
+	UnitBuildToolMap = map[string]BuildTool{
+		"mvn": Maven,
+	}
+
+	AutoTestTypes       = []string{"selenium", "appium"}
+	UnitTestTypeJunit   = "junit"
+	UnitTestTypeTestNG  = "testng"
+	UnitTestTypeRobot   = "robot"
+	UnitTestTypeCypress = "cypress"
+	UnitTestTypes       = []string{UnitTestTypeJunit, UnitTestTypeTestNG, UnitTestTypeRobot, UnitTestTypeCypress,
+		"phpunit", "pytest", "jest", "cppunit", "gtest", "qtest"}
+	UnitTestToolMvn   = "mvn"
+	UnitTestToolRobot = "robot"
+)

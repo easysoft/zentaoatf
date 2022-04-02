@@ -3,7 +3,8 @@ package service
 import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
-	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
+	codeHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/code"
+	"github.com/aaronchen2k/deeptest/internal/comm/helper/script"
 	zentaoHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
@@ -29,23 +30,30 @@ func (s *TestScriptService) LoadTestScriptsBySiteProduct(
 	// load scripts from disk
 	root = serverDomain.TestAsset{Path: "", Title: "测试脚本", Type: commConsts.Root, Slots: iris.Map{"icon": "icon"}}
 	for _, workspace := range workspaces {
-		if workspace.Type != commConsts.ZTF {
-			continue
-		}
 
 		if filerType == string(commConsts.FilterWorkspace) &&
 			(filerValue > 0 && uint(filerValue) != workspace.ID) { // filter by workspace
 			continue
 		}
 
-		scriptsInDir, _ := scriptUtils.LoadScriptTree(workspace, scriptIdsFromZentao)
+		var scriptsInDir serverDomain.TestAsset
+
+		if workspace.Type == commConsts.ZTF {
+			scriptsInDir, _ = scriptHelper.LoadScriptTree(workspace, scriptIdsFromZentao)
+		} else {
+			scriptsInDir, _ = codeHelper.LoadCodeTree(workspace)
+		}
 
 		root.Children = append(root.Children, &scriptsInDir)
 	}
 
-	if filerType == string(commConsts.FilterWorkspace) || filerValue == 0 {
-		return
-	}
+	return
+}
+
+func (s *TestScriptService) LoadCodeChildren(dir string, workspaceId int) (nodes []*serverDomain.TestAsset, err error) {
+	workspace, _ := s.WorkspaceRepo.Get(uint(workspaceId))
+
+	nodes, _ = codeHelper.LoadCodeNodesInDir(dir, workspaceId, workspace.Type)
 
 	return
 }

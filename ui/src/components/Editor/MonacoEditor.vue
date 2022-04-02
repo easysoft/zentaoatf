@@ -53,12 +53,16 @@ export default defineComponent({
           verticalScrollbarSize: 6,
           horizontalScrollbarSize: 6
         }})
-      this.editor = monaco.editor[this.diffEditor ? 'createDiffEditor' : 'create'](this.$el, {
+
+      const opt = {
         value: value,
         language: language,
         theme: theme,
         ...options
-      });
+      }
+      if (language) opt.language = language
+
+      this.editor = monaco.editor[this.diffEditor ? 'createDiffEditor' : 'create'](this.$el, opt);
       this.diffEditor && this._setModel(this.value, this.original);
 
       // @event `change`

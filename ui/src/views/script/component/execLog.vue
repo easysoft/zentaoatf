@@ -91,7 +91,7 @@ export default defineComponent({
     const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
 
     const scriptStore = useStore<{ Script: ScriptData }>();
-    let script = computed<any>(() => scriptStore.state.Script.detail);
+    const script = computed<any>(() => scriptStore.state.Script.detail);
 
     const logLevel = ref('result')
     const logStatus = ref('')
@@ -195,14 +195,23 @@ export default defineComponent({
       bus.off(settings.eventExec, exec);
     })
 
-    const exec = (scripts: any) => {
-      console.log('exec', scripts)
+    const exec = (data: any) => {
+      console.log('exec', data)
 
-      const sets = genWorkspaceToScriptsMap(scripts)
-      const msg = {act: 'execCase', testSets: sets}
+      const execType = data.execType
+
+      let msg = {}
+      if (execType === 'ztf') {
+        const scripts = data.scripts
+        const sets = genWorkspaceToScriptsMap(scripts)
+        msg = {act: 'execCase', testSets: sets}
+      } else if (execType === 'unit') {
+        const set = {workspaceId: data.id, workspaceType: data.type, cmd: data.cmd,
+          productId: currProduct.value.id}
+        msg = {act: 'execUnit', testSets: [set]}
+      }
+
       console.log('msg', msg)
-
-      // wsMsg.out.push({msg: ''})
       WebSocket.sentMsg(room, JSON.stringify(msg))
     }
 

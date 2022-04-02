@@ -30,11 +30,16 @@ func LoadScriptTree(workspace model.Workspace, scriptIdsFromZentao map[int]strin
 	}
 
 	asset = serverDomain.TestAsset{
-		Type:        commConsts.Workspace,
-		WorkspaceId: workspaceId,
-		Path:        workspaceDir,
-		Title:       fileUtils.GetDirName(workspaceDir),
-		Slots:       iris.Map{"icon": "icon"}}
+		Type:          commConsts.Workspace,
+		WorkspaceId:   workspaceId,
+		WorkspaceType: workspace.Type,
+		Path:          workspaceDir,
+		Title:         fileUtils.GetDirName(workspaceDir),
+		Slots:         iris.Map{"icon": "icon"},
+
+		Checkable: true,
+		IsLeaf:    false,
+	}
 
 	loadScriptNodesInDir(workspaceDir, &asset, 0, scriptIdsFromZentao)
 
@@ -60,14 +65,12 @@ func GetScriptContent(pth string, workspaceId int) (script serverDomain.TestScri
 }
 func getScriptLang(pth string) (lang string) {
 	extName := strings.TrimLeft(fileUtils.GetExtName(pth), ".")
-	for key, val := range commConsts.LangMap {
-		if extName == val["extName"] {
-			lang = key
-			return
-		}
+	if extName != "" {
+		return commConsts.EditorExtToLangMap[extName]
 	}
 
-	return
+	fileName := strings.ToLower(fileUtils.GetFileName(pth))
+	return commConsts.EditorExtToLangMap[fileName]
 }
 
 func loadScriptNodesInDir(childPath string, parent *serverDomain.TestAsset, level int, scriptIdsFromZentao map[int]string) (err error) {
@@ -174,11 +177,17 @@ func addScript(pth string, parent *serverDomain.TestAsset) {
 		pass = CheckFileIsScript(pth)
 		if pass {
 			childScript := &serverDomain.TestAsset{
-				Type:        commConsts.File,
-				WorkspaceId: parent.WorkspaceId,
-				Path:        pth,
-				Title:       fileUtils.GetFileName(pth),
-				Slots:       iris.Map{"icon": "icon"}}
+				Type: commConsts.File,
+
+				WorkspaceId:   parent.WorkspaceId,
+				WorkspaceType: parent.WorkspaceType,
+				Path:          pth,
+				Title:         fileUtils.GetFileName(pth),
+				Slots:         iris.Map{"icon": "icon"},
+
+				Checkable: true,
+				IsLeaf:    true,
+			}
 
 			parent.Children = append(parent.Children, childScript)
 			parent.ScriptCount += 1
@@ -187,11 +196,16 @@ func addScript(pth string, parent *serverDomain.TestAsset) {
 }
 func addDir(pth string, parent *serverDomain.TestAsset) (dirNode *serverDomain.TestAsset) {
 	dirNode = &serverDomain.TestAsset{
-		Type:        commConsts.Dir,
-		WorkspaceId: parent.WorkspaceId,
-		Path:        pth,
-		Title:       fileUtils.GetDirName(pth),
-		Slots:       iris.Map{"icon": "icon"}}
+		Type:          commConsts.Dir,
+		WorkspaceId:   parent.WorkspaceId,
+		WorkspaceType: parent.WorkspaceType,
+		Path:          pth,
+		Title:         fileUtils.GetDirName(pth),
+		Slots:         iris.Map{"icon": "icon"},
+
+		Checkable: true,
+		IsLeaf:    false,
+	}
 	parent.Children = append(parent.Children, dirNode)
 
 	return
