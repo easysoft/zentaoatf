@@ -10,8 +10,12 @@
       <div id="right">
         <template v-if="currWorkspace?.type === 'ztf'">
           <div class="toolbar" v-if="scriptCode !== ''">
-              <a-button @click="execSingle" type="primary">{{ t('exec') }}</a-button>
-              <a-button @click="extract">{{ t('extract_step') }}</a-button>
+            <a-button :disabled="isRunning === 'true'" @click="execSingle" type="primary" class="t-btn-gap">
+              {{ t('exec') }}
+            </a-button>
+            <a-button v-if="isRunning === 'true'" @click="execStop" class="t-btn-gap">{{ t('stop') }}</a-button>
+
+            <a-button @click="extract">{{ t('extract_step') }}</a-button>
           </div>
 
           <div id="right-content" class="right-content">
@@ -59,14 +63,25 @@
             <template v-if="!script">
               <div class="unit-panel">
                 <a-form :model="modelUnit" layout="inline">
-                  <a-form-item label="命令">
-                    <a-input v-model:value="modelUnit.cmd" style="width:500px;"/>
+                  <a-form-item :label="t('test_cmd')">
+                    <a-input
+                        v-model:value="modelUnit.cmd"
+                        @keydown.down="down"
+                        @keydown.up="up"
+                        style="width:500px;"/>
                   </a-form-item>
 
                   <a-form-item>
-                    <a-button @click="execUnit" type="primary" :disabled="!modelUnit.cmd">
+                    <a-button :disabled="isRunning === 'true' || !modelUnit.cmd" @click="execUnit" type="primary" class="t-btn-gap">
                       {{ t('exec') }}
                     </a-button>
+                    <a-button v-if="isRunning === 'true'" @click="execStop" class="t-btn-gap">
+                      {{ t('stop') }}
+                    </a-button>
+                  </a-form-item>
+
+                  <a-form-item>
+                    <span class="t-tips">{{t('cmd_nav')}}</span>
                   </a-form-item>
                 </a-form>
               </div>
@@ -110,6 +125,8 @@ import ScriptTreePage from "./component/tree.vue";
 import ScriptExecLogPage from "./component/execLog.vue";
 import settings from "@/config/settings";
 import {get} from "@/views/workspace/service";
+import {getCmdHistories, setCmdHistories} from "@/utils/cache";
+import {ExecStatus} from "@/store/exec";
 
 export default defineComponent({
   name: 'ScriptListPage',
@@ -123,6 +140,9 @@ export default defineComponent({
     const zentaoStore = useStore<{ Zentao: ZentaoData }>();
     const currSite = computed<any>(() => zentaoStore.state.Zentao.currSite);
     const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
+
+    const execStore = useStore<{ Exec: ExecStatus }>();
+    const isRunning = computed<any>(() => execStore.state.Exec.isRunning);
 
     let modelUnit = ref({} as any)
 
@@ -148,6 +168,9 @@ export default defineComponent({
 
     watch(currWorkspace, () => {
       console.log('watch currWorkspace', currWorkspace)
+
+      loadCmdHistories()
+
       get(currWorkspace.value.id).then((json) => {
         modelUnit.value = Object.assign({cmd: json.data.cmd}, currWorkspace.value)
       })
@@ -160,7 +183,18 @@ export default defineComponent({
     }
     const execUnit = () => {
       console.log('execUnit', modelUnit.value)
+
+      if (modelUnit.value.cmd !== histories.value[histories.value.length - 1]) histories.value.push(modelUnit.value.cmd)
+      if (histories.value.length > 10) histories.value = histories.value.slice(histories.value.length - 10)
+      setCmdHistories(currWorkspace.value.id, histories.value)
+      historyIndex.value = histories.value.length
+
       const data = Object.assign({execType: 'unit'}, modelUnit.value)
+      bus.emit(settings.eventExec, data);
+    }
+    const execStop = () => {
+      console.log('execStop')
+      const data = Object.assign({execType: 'stop'})
       bus.emit(settings.eventExec, data);
     }
 
@@ -176,6 +210,25 @@ export default defineComponent({
           message: t('extract_fail'),
         });
       })
+    }
+
+    const histories = ref([] as any[])
+    const historyIndex = ref(0)
+
+    const loadCmdHistories = async () => {
+      histories.value = await getCmdHistories(currWorkspace.value.id)
+      historyIndex.value = histories.value.length
+    }
+
+    const up = () => {
+      console.log('up')
+      if (historyIndex.value > 0) historyIndex.value--
+      modelUnit.value.cmd = histories.value[historyIndex.value]
+    }
+    const down = () => {
+      console.log('down')
+      if (historyIndex.value < histories.value.length - 1) historyIndex.value++
+      modelUnit.value.cmd = histories.value[historyIndex.value]
     }
 
     onMounted(() => {
@@ -201,10 +254,17 @@ export default defineComponent({
       editorOptions,
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
 
+      isRunning,
       execSingle,
+      execStop,
       execUnit,
       extract,
       stop,
+
+      histories,
+      historyIndex,
+      up,
+      down,
 
       // labelCol: { span: 3, offset: 12 },
       // wrapperCol: { span: 3, offset: 12 },

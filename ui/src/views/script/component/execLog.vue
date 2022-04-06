@@ -77,6 +77,7 @@ import bus from "@/utils/eventBus";
 import {logLevelMap} from "@/utils/const";
 import {WsMsg} from "../data";
 import {genExecInfo, genWorkspaceToScriptsMap} from "../service";
+import {ExecStatus} from "@/store/exec";
 
 export default defineComponent({
   name: 'ScriptExecLogPage',
@@ -90,6 +91,9 @@ export default defineComponent({
     const currSite = computed<any>(() => zentaoStore.state.Zentao.currSite);
     const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
 
+    const execStore = useStore<{ Exec: ExecStatus }>();
+    const isRunning = computed<any>(() => execStore.state.Exec.isRunning);
+
     const scriptStore = useStore<{ Script: ScriptData }>();
     const script = computed<any>(() => scriptStore.state.Script.detail);
 
@@ -102,13 +106,12 @@ export default defineComponent({
 
     // websocket
     let init = true;
-    let isRunning = ref('false');
     let wsMsg = reactive({in: '', out: [] as any[]});
 
-    let room = ''
-    getCache(settings.currWorkspace).then((token) => {
-      room = token || ''
-    })
+    let room = 'room'
+    // getCache(settings.currWorkspace).then((token) => {
+    //   room = token || ''
+    // })
 
     const {proxy} = getCurrentInstance() as any;
     WebSocket.init(proxy)
@@ -126,7 +129,7 @@ export default defineComponent({
         }
 
         if ('isRunning' in jsn) {
-          isRunning.value = jsn.isRunning
+          execStore.dispatch('Exec/setRunning', jsn.isRunning)
         }
 
         const msg = genExecInfo(jsn)
@@ -209,6 +212,8 @@ export default defineComponent({
         const set = {workspaceId: data.id, workspaceType: data.type, cmd: data.cmd,
           productId: currProduct.value.id}
         msg = {act: 'execUnit', testSets: [set]}
+      } else if (execType === 'stop') {
+        msg = {act: 'execStop'}
       }
 
       console.log('msg', msg)

@@ -82,8 +82,6 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 				ch = nil
 			} else {
 				ch <- 1
-				ch <- 1
-				ch <- 1
 				ch = nil
 			}
 		}
@@ -99,7 +97,7 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 	if scriptUtils.GetRunning() && (act == commConsts.ExecCase || act == commConsts.ExecModule ||
 		act == commConsts.ExecSuite || act == commConsts.ExecTask || act == commConsts.ExecUnit) {
 		msg := i118Utils.Sprintf("pls_stop_previous")
-		websocketUtils.SendExecMsg(msg, "true", commConsts.Error, wsMsg)
+		websocketUtils.SendExecMsg(msg, "true", commConsts.Run, wsMsg)
 		logUtils.ExecConsole(color.FgRed, msg)
 
 		return

@@ -67,16 +67,23 @@
       <a-button @click="checkoutCases">{{t('checkout_case')}}</a-button>
       <a-button :disabled="checkedKeys.length === 0" @click="checkinCases">{{t('checkin_case')}}</a-button>
 
-      <a-button
-          v-if="currWorkspace.type === 'ztf'"
-          :disabled="checkedKeys.length === 0"
-          @click="execSelected">
-        {{t('exec_selected')}}
-      </a-button>
+      <template v-if="currWorkspace.type === 'ztf'">
+        <a-button
+            v-if="isRunning !== 'true'"
+            :disabled="checkedKeys.length === 0"
+            @click="execSelected">
+          {{t('exec_selected')}}
+        </a-button>
+        <a-button
+            v-if="isRunning === 'true'"
+            @click="execStop">
+          {{t('stop')}}
+        </a-button>
+      </template>
 
       <a-button
           v-if="currWorkspace.type !== 'ztf'"
-          @click="execUnit">
+          @click="toExecUnit">
         {{t('exec') + testToolMap[currWorkspace.type]}}
       </a-button>
     </div>
@@ -125,6 +132,7 @@ import {useRouter} from "vue-router";
 import SyncFromZentao from "./syncFromZentao.vue"
 import {isWindows} from "@/utils/comm";
 import {testToolMap} from "@/utils/testing";
+import {ExecStatus} from "@/store/exec";
 
 export default defineComponent({
   name: 'ScriptTreePage',
@@ -153,6 +161,9 @@ export default defineComponent({
     const zentaoStore = useStore<{ Zentao: ZentaoData }>();
     const currSite = computed<any>(() => zentaoStore.state.Zentao.currSite);
     const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
+
+    const execStore = useStore<{ Exec: ExecStatus }>();
+    const isRunning = computed<any>(() => execStore.state.Exec.isRunning);
 
     const store = useStore<{ Script: ScriptData }>();
     const treeData = computed<any>(() => store.state.Script.list);
@@ -281,9 +292,14 @@ export default defineComponent({
       const leafNodes = getLeafNodes()
       bus.emit(settings.eventExec, {execType: 'ztf', scripts: leafNodes});
     }
+    const execStop = () => {
+      console.log('execStop')
+      const data = Object.assign({execType: 'stop'})
+      bus.emit(settings.eventExec, data);
+    }
 
-    const execUnit = () => {
-      console.log('execUnit')
+    const toExecUnit = () => {
+      console.log('toExecUnit')
       selectNothing()
     }
 
@@ -403,8 +419,10 @@ export default defineComponent({
       expandNode,
       selectNode,
       checkNode,
+      isRunning,
       execSelected,
-      execUnit,
+      execStop,
+      toExecUnit,
       checkoutCases,
       checkinCases,
       isExpand,

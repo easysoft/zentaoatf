@@ -68,7 +68,7 @@ export class WebSocket {
     if (!WebSocket.conn) return
 
     WebSocket.conn.joinRoom(roomName).then((room) => {
-      console.log(`success to join room ${roomName}`)
+      console.log(`success to join room "${roomName}"`)
       WebSocket.conn.room(roomName).emit('OnChat', msg)
 
     }).catch(err => {
@@ -77,7 +77,7 @@ export class WebSocket {
   }
 
   static sentMsg(roomName: string, msg: string): void {
-    console.log(`send msg to room ${roomName}`)
+    console.log(`send msg to room "${roomName}"`)
     if (!WebSocket.conn) return
 
     WebSocket.conn.leaveAll().then(() =>

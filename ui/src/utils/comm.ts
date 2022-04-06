@@ -7,3 +7,12 @@ export function isWindows(): boolean {
 
     return false
 }
+
+export function proxyArrToVal(proxyArr: any[]): any[] {
+    const items = []as any[]
+    proxyArr.forEach((item) => {
+        items.push(item)
+    })
+
+    return items
+}

@@ -89,8 +89,10 @@ export default {
     'unit_test':  'Unit Test', 
     'framework_tool':  'Framework/Tool', 
     'case_detail':  'Case Info', 
-    'build_tool':  'Build Tool', 
-    'test_cmd':  'Test Command', 
+    'build_tool':  'Build Tool',
+    'cmd': 'Command',
+    'test_cmd':  'Test Command',
+    'cmd_nav': 'Use the up and down arrow keys to move between command histories.',
 
     're_exec':  'Retest', 
     're_exec_all':  'Retest All Cases', 

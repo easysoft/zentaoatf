@@ -1,5 +1,6 @@
 import {getCache, setCache} from './localCache';
 import settings from '@/config/settings';
+import {proxyArrToVal} from "@/utils/comm";
 
 export const getInitStatus = async () => {
     const initStatus = await getCache(settings.initStatus);
@@ -90,4 +91,21 @@ export const setExpandedKeys = async (siteId, productId, keys) => {
     })
     cachedData[key] = items
     await setCache(settings.expandedKeys, cachedData);
+}
+
+export const getCmdHistories = async (workspaceId) => {
+    const mp = await getCache(settings.cmdHistories);
+    const items = mp ? mp[workspaceId] : []
+    return items
+}
+export const setCmdHistories = async (workspaceId, items) => {
+    console.log('setCmdHistories', workspaceId)
+
+    if (!workspaceId) return
+
+    let mp = await getCache(settings.cmdHistories);
+
+    if (!mp) mp = {}
+    mp[workspaceId] = proxyArrToVal(items)
+    await setCache(settings.cmdHistories, mp);
 }

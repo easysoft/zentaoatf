@@ -88,8 +88,10 @@ export default {
     'unit_test':  '单元测试', 
     'framework_tool':  '框架/工具', 
     'case_detail':  '用例详情', 
-    'build_tool':  '构建工具', 
-    'test_cmd':  '测试命令', 
+    'build_tool':  '构建工具',
+    'cmd': '命令',
+    'test_cmd':  '测试命令',
+    'cmd_nav': '使用上、下箭头键可在命令历史中导航。',
 
     're_exec':  '重新执行', 
     're_exec_all':  '重新执行所有用例', 

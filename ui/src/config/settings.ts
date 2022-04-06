@@ -1,4 +1,4 @@
-import {getInitStatus} from "@/utils/cache";
+import {getCmdHistories, getInitStatus} from "@/utils/cache";
 
 /**
  * 站点配置
@@ -33,6 +33,7 @@ export interface SettingsType {
     currWorkspace: string;
     scriptFilters: string;
     expandedKeys: string;
+    cmdHistories: string;
 
     /**
      * Ajax请求头发送Token 的 Key值
@@ -65,6 +66,7 @@ const settings: SettingsType = {
     currWorkspace: 'currWorkspace',
     scriptFilters: 'scriptFilters',
     expandedKeys: 'expandedKeys',
+    cmdHistories: 'cmdHistories',
 
     ajaxHeadersTokenKey: 'Authorization',
     ajaxResponseNoVerifyUrl: [
