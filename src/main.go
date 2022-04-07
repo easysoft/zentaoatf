@@ -161,11 +161,11 @@ func main() {
 	case "clean", "-clean", "-c":
 		action.Clean()
 
-	case "help", "-h", "-help", "--help":
-		logUtils.PrintUsage()
-
 	case "version", "--version":
 		logUtils.PrintVersion(appVersion, buildTime, goVersion, gitHash)
+
+	case "help", "-h", "-help", "--help":
+		logUtils.PrintUsage()
 
 	default: // run
 		flagSet.Parse(os.Args[1:])
