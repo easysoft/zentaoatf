@@ -13,6 +13,11 @@ BIN_LINUX=${BIN_OUT}linux/${BINARY}/
 BIN_MAC=${BIN_OUT}mac/${BINARY}/
 BIN_ARM=${BIN_OUT}arm/${BINARY}/
 
+BUILD_TIME=`git show -s --format=%cd`
+GO_VERSION=`go version`
+GIT_HASH=`git show -s --format=%H`
+BUILD_CMD=go build -ldflags "-X 'main.appVersion=${VERSION}' -X 'main.buildTime=${BUILD_TIME}' -X 'main.goVersion=${GO_VERSION}' -X 'main.gitHash=${GIT_HASH}'"
+
 default: update_version_in_config gen_version_file prepare_res compile_all copy_files package
 
 win64: update_version_in_config gen_version_file prepare_res compile_win64 copy_files package
@@ -43,7 +48,7 @@ compile_linux:
 
 compile_mac:
 	@echo 'start compile mac'
-	@CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ${BIN_MAC}${BINARY} src/main.go
+	@CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 ${BUILD_CMD} -o ${BIN_MAC}${BINARY} src/main.go
 
 compile_arm:
 	@echo 'start compile arm'

@@ -22,6 +22,11 @@ import (
 )
 
 var (
+	appVersion string
+	buildTime  string
+	goVersion  string
+	gitHash    string
+
 	language        string
 	independentFile bool
 	keywords        string
@@ -85,7 +90,6 @@ func main() {
 	flagSet.StringVar(&placeholder, "v", "", "")
 
 	flagSet.StringVar(&vari.UnitTestResult, "result", "", "")
-
 	flagSet.StringVar(&debug, "debug", "", "")
 
 	if len(os.Args) == 1 {
@@ -159,6 +163,9 @@ func main() {
 
 	case "help", "-h", "-help", "--help":
 		logUtils.PrintUsage()
+
+	case "version", "--version":
+		logUtils.PrintVersion(appVersion, buildTime, goVersion, gitHash)
 
 	default: // run
 		flagSet.Parse(os.Args[1:])

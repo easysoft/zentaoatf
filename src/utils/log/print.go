@@ -17,6 +17,13 @@ var (
 	sampleFile = fmt.Sprintf("res%sdoc%ssample.txt", string(os.PathSeparator), string(os.PathSeparator))
 )
 
+func PrintVersion(appVersion, buildTime, goVersion, gitHash string) {
+	fmt.Printf("%s \n", appVersion)
+	fmt.Printf("Build TimeStamp: %s \n", buildTime)
+	fmt.Printf("GoLang Version: %s \n", goVersion)
+	fmt.Printf("Git Commit Hash: %s \n", gitHash)
+}
+
 func PrintUsage() {
 	PrintToWithColor("Usage: ", color.FgCyan)
 
