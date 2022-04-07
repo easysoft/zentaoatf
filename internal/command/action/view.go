@@ -2,11 +2,12 @@ package action
 
 import (
 	"fmt"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+	langHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/lang"
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
-	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/fatih/color"
 	"regexp"
@@ -61,7 +62,7 @@ func view(cases []string, keywords string) {
 
 func brief(file string, keywords string) (bool, []string) {
 	content := fileUtils.ReadFile(file)
-	lang := langUtils.GetLangByFile(file)
+	lang := langHelper.GetLangByFile(file)
 	isOldFormat := strings.Index(content, "[esac]") > -1
 
 	regStr := ""
@@ -78,7 +79,7 @@ func brief(file string, keywords string) (bool, []string) {
 			`cid=([^\n]*)\n+`+
 			`pid=([^\n]*)\n+`+
 			`([\S\s]*)\n*%s`,
-			langUtils.LangCommentsRegxMap[lang][0], langUtils.LangCommentsRegxMap[lang][1])
+			commConsts.LangCommentsRegxMap[lang][0], commConsts.LangCommentsRegxMap[lang][1])
 	}
 	myExp := regexp.MustCompile(regStr)
 	arr := myExp.FindStringSubmatch(content)

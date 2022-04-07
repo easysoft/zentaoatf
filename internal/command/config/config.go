@@ -5,12 +5,12 @@ import (
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
+	langHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/lang"
 	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/display"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
-	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	resUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/res"
 	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
@@ -60,9 +60,9 @@ func Init() {
 	// internationalization
 	i118Utils.Init(commConsts.Language, commConsts.AppServer)
 
-	langUtils.GetExtToNameMap()
+	langHelper.GetExtToNameMap()
 
-	commConsts.ComeFrom = "cmd"
+	commConsts.ExecFrom = commConsts.FromCmd
 	return
 }
 

@@ -9,7 +9,7 @@ import (
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
 )
 
-func Generate(productId string, moduleId string, suiteId string, taskId string, independentFile bool, scriptLang string, actionModule *command.IndexModule) {
+func Generate(productId, moduleId, suiteId, taskId string, independentFile bool, scriptLang string, actionModule *command.IndexModule) {
 	if (productId != "" || moduleId != "" || suiteId != "" || taskId != "") && scriptLang != "" {
 		//isReady = true
 	} else {

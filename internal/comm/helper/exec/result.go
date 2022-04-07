@@ -120,7 +120,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 	status := i118Utils.Sprintf(cs.Status.String())
 	msg := fmt.Sprintf(format, scriptIdx+1, total, status, path, cs.Id, cs.Title, secs)
 
-	if commConsts.ComeFrom != "cmd" {
+	if commConsts.ExecFrom != commConsts.FromCmd {
 		status := commConsts.Result
 		if cs.Status == commConsts.FAIL {
 			status = commConsts.Error

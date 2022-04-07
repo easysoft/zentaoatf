@@ -7,6 +7,7 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/command"
 	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
+	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/kataras/iris/v12/websocket"
 	"path"
@@ -14,21 +15,23 @@ import (
 
 func RunZTFTest(files []string, moduleIdStr, suiteIdStr, taskIdStr string, actionModule *command.IndexModule) error {
 	req := serverDomain.WsReq{
-		WorkspacePath:             commConsts.WorkDir,
 		ScriptDirParamFromCmdLine: files[0],
 	}
-	msg := websocket.Message{}
+	testSet := serverDomain.TestSet{}
 
 	if moduleIdStr != "" { // run with module id
-		req.ProductId = commConsts.ProductId
-		req.ModuleId = moduleIdStr
+		testSet.ProductId = stringUtils.ParseInt(commConsts.ProductId)
+		testSet.ModuleId = stringUtils.ParseInt(moduleIdStr)
 		req.Act = commConsts.ExecModule
+
 	} else if suiteIdStr != "" { // run with suite id
-		req.SuiteId = suiteIdStr
+		testSet.SuiteId = stringUtils.ParseInt(suiteIdStr)
 		req.Act = commConsts.ExecSuite
+
 	} else if taskIdStr != "" { // run with task id,
-		req.TaskId = taskIdStr
+		testSet.TaskId = stringUtils.ParseInt(taskIdStr)
 		req.Act = commConsts.ExecTask
+
 	} else {
 		cases := make([]string, 0)
 
@@ -55,10 +58,12 @@ func RunZTFTest(files []string, moduleIdStr, suiteIdStr, taskIdStr string, actio
 			}
 		}
 
-		req.Cases = cases
+		testSet.Cases = cases
 	}
 
-	execHelper.Exec(nil, req, msg)
+	req.TestSets = append(req.TestSets, testSet)
+
+	execHelper.Exec(nil, req, websocket.Message{})
 
 	return nil
 }

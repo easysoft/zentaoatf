@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/exec"
+	execHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/exec"
 	websocketUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/websocket"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
@@ -13,7 +13,6 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12/websocket"
-	"strings"
 )
 
 var (
@@ -71,14 +70,14 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 
 	if act == commConsts.ExecInit {
 		msg := i118Utils.Sprintf("success_to_conn")
-		//websocketUtils.SendExecMsg(msg, strconv.FormatBool(scriptUtils.GetRunning()), wsMsg)
+		//websocketUtils.SendExecMsg(msg, strconv.FormatBool(execHelper.GetRunning()), wsMsg)
 		logUtils.ExecConsole(color.FgCyan, msg)
 		return
 	}
 
 	if act == commConsts.ExecStop {
 		if ch != nil {
-			if !scriptUtils.GetRunning() {
+			if !execHelper.GetRunning() {
 				ch = nil
 			} else {
 				ch <- 1
@@ -86,7 +85,7 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 			}
 		}
 
-		scriptUtils.SetRunning(false)
+		execHelper.SetRunning(false)
 
 		msg := i118Utils.Sprintf("end_task")
 		websocketUtils.SendExecMsg(msg, "false", commConsts.Run, wsMsg)
@@ -94,7 +93,7 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 		return
 	}
 
-	if scriptUtils.GetRunning() && (act == commConsts.ExecCase || act == commConsts.ExecModule ||
+	if execHelper.GetRunning() && (act == commConsts.ExecCase || act == commConsts.ExecModule ||
 		act == commConsts.ExecSuite || act == commConsts.ExecTask || act == commConsts.ExecUnit) {
 		msg := i118Utils.Sprintf("pls_stop_previous")
 		websocketUtils.SendExecMsg(msg, "true", commConsts.Run, wsMsg)
@@ -103,71 +102,28 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 		return
 	}
 
+	// populate test set's props with parent
+	execHelper.PopulateTestSetProps(&req)
 	for idx, _ := range req.TestSets {
 		testSet := &req.TestSets[idx]
+
 		if testSet.WorkspaceId != 0 {
 			po, _ := c.WorkspaceService.Get(uint(testSet.WorkspaceId))
 			testSet.WorkspacePath = po.Path
 		}
-
-		testSet.Scope = req.Scope
-		testSet.Seq = req.Seq
-
-		if testSet.ProductId == 0 && req.ProductId != 0 {
-			testSet.ProductId = req.ProductId
-		}
-
-		testSet.ModuleId = req.ModuleId
-		testSet.SuiteId = req.SuiteId
-		testSet.TaskId = req.TaskId
-
-		testSet.ScriptDirParamFromCmdLine = req.ScriptDirParamFromCmdLine
-
-		setTestTool(testSet, req)
-		setBuildTool(testSet, req)
-
-		if testSet.Cmd == "" && req.Cmd != "" {
-			testSet.Cmd = req.Cmd
-		}
-
-		if !testSet.SubmitResult && req.SubmitResult {
-			testSet.SubmitResult = req.SubmitResult
-		}
-
 	}
 
 	ch = make(chan int, 1)
 	go func() {
-		scriptUtils.Exec(ch, req, wsMsg)
-		scriptUtils.SetRunning(false)
+		execHelper.Exec(ch, req, wsMsg)
+		execHelper.SetRunning(false)
 	}()
 
-	scriptUtils.SetRunning(true)
+	execHelper.SetRunning(true)
 
 	msg := i118Utils.Sprintf("start_task")
 	websocketUtils.SendExecMsg(msg, "true", commConsts.Run, wsMsg)
 	logUtils.ExecConsole(color.FgCyan, msg)
 
 	return
-}
-
-func setTestTool(testSet *serverDomain.TestSet, req serverDomain.WsReq) {
-	if testSet.TestTool == "" && req.TestTool != "" {
-		testSet.TestTool = req.TestTool
-	}
-
-	if testSet.TestTool == "" {
-		testSet.TestTool = testSet.WorkspaceType
-	}
-}
-
-func setBuildTool(testSet *serverDomain.TestSet, req serverDomain.WsReq) {
-	if testSet.BuildTool == "" && req.BuildTool != "" {
-		testSet.BuildTool = req.BuildTool
-	}
-
-	if testSet.BuildTool == "" {
-		arr := strings.Split(testSet.Cmd, " ")
-		testSet.BuildTool = commConsts.UnitBuildToolMap[strings.TrimSpace(arr[0])]
-	}
 }

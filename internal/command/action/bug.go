@@ -6,7 +6,7 @@ import (
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	analysisUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/analysis"
 	configHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
-	zentaoUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
+	"github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 	"github.com/aaronchen2k/deeptest/internal/command"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
@@ -80,19 +80,18 @@ func coloredStatus(status commConsts.ResultStatus) string {
 }
 
 func reportBug(resultDir string, caseId string) error {
-	bug = zentaoUtils.PrepareBug(commConsts.WorkDir, resultDir, caseId)
-
 	config := configHelper.LoadByWorkspacePath(commConsts.WorkDir)
+	bugFields, _ = zentaoHelper.GetBugFiledOptions(config, bug.Product)
 
-	bugFields, _ = zentaoUtils.GetBugFiledOptions(config, bug.Product)
+	bug = zentaoHelper.PrepareBug(commConsts.WorkDir, resultDir, caseId)
 
 	//bug.Module = 0
 	bug.Severity = 3
 	bug.Pri = 3
 	bug.Type = getFirstNoEmptyVal(bugFields.Types)
-	bug.Version = getNameById(bug.Version, bugFields.Build)
+	bug.OpenedBuild = []string{getFirstNoEmptyVal(bugFields.Build)}
 
-	err := zentaoUtils.CommitBug(bug, config)
+	err := zentaoHelper.CommitBug(bug, config)
 	return err
 }
 

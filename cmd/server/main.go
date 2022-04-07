@@ -29,7 +29,7 @@ func main() {
 	flag.Parse()
 
 	switch os.Args[1] {
-	case "version", "-v", "-version", "--version":
+	case "version", "--version":
 		logUtils.PrintVersion(appVersion, buildTime, goVersion, gitHash)
 	default:
 	}

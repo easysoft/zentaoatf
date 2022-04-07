@@ -88,7 +88,7 @@ func Scanf(a *string) {
 	*a = string(data)
 }
 
-func InputForCheckout(productId *string, moduleId *string, suiteId *string, taskId *string,
+func InputForCheckout(productId, moduleId, suiteId, taskId *string,
 	independentFile *bool, scriptLang *string) {
 
 	var numb string

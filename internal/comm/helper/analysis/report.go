@@ -25,7 +25,7 @@ func ListReport(workspacePath string) (reportFiles []string) {
 
 func ReadReportByWorkspaceSeq(workspacePath string, seq string) (report commDomain.ZtfReport, err error) {
 	pth := ""
-	if commConsts.ComeFrom == "cmd" {
+	if commConsts.ExecFrom == commConsts.FromCmd {
 		pth = filepath.Join(workspacePath, seq, commConsts.ResultJson)
 	} else {
 		pth = filepath.Join(workspacePath, commConsts.LogDirName, seq, commConsts.ResultJson)
@@ -36,7 +36,7 @@ func ReadReportByWorkspaceSeq(workspacePath string, seq string) (report commDoma
 
 func ReadReportByPath(pth string) (report commDomain.ZtfReport, err error) {
 	content := fileUtils.ReadFileBuf(pth)
-	if commConsts.ComeFrom == "cmd" {
+	if commConsts.ExecFrom == commConsts.FromCmd {
 		contentData := strings.Replace(string(content), "\n", "", -1)
 		contentData = strings.ReplaceAll(contentData, "\"status\":false", "\"status\":\"fail\"")
 		contentData = strings.ReplaceAll(contentData, "\"status\":true", "\"status\":\"pass\"")

@@ -18,7 +18,7 @@ func GenerateScripts(cases []commDomain.ZtfCase, langType string, independentFil
 	byModule bool, targetDir string) (int, error) {
 	caseIds := make([]string, 0)
 
-	if commConsts.ComeFrom == "cmd" { // from cmd
+	if commConsts.ExecFrom == commConsts.FromCmd { // from cmd
 		targetDir = stdinUtils.GetInput("", targetDir, "where_to_store_script", targetDir)
 		stdinUtils.InputForBool(&byModule, byModule, "co_organize_by_module")
 	}

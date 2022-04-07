@@ -28,13 +28,25 @@ var (
 		"mvn": Maven,
 	}
 
-	AutoTestTypes       = []string{"selenium", "appium"}
+	AutoTestTypeSelenium = "selenium"
+	AutoTestTypeAppium   = "appium"
+	AutoTestTypes        = []string{AutoTestTypeSelenium, AutoTestTypeAppium}
+
 	UnitTestTypeJunit   = "junit"
 	UnitTestTypeTestNG  = "testng"
 	UnitTestTypeRobot   = "robot"
 	UnitTestTypeCypress = "cypress"
-	UnitTestTypes       = []string{UnitTestTypeJunit, UnitTestTypeTestNG, UnitTestTypeRobot, UnitTestTypeCypress,
-		"phpunit", "pytest", "jest", "cppunit", "gtest", "qtest"}
+	UnitTestPhpUnit     = "phpunit"
+	UnitTestTypePyTest  = "pytest"
+	UnitTestTypeJest    = "jest"
+	UnitTestTypeCppUnit = "cppunit"
+	UnitTestTypeGTest   = "gtest"
+	UnitTestTypeQTest   = "qtest"
+	UnitTestTypes       = []string{
+		UnitTestTypeJunit, UnitTestTypeTestNG, UnitTestTypeRobot, UnitTestTypeCypress,
+		UnitTestPhpUnit, UnitTestTypePyTest, UnitTestTypeJest, UnitTestTypeCppUnit, UnitTestTypeGTest, UnitTestTypeQTest,
+	}
+
 	UnitTestToolMvn   = "mvn"
 	UnitTestToolRobot = "robot"
 )

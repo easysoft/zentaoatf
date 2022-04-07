@@ -17,7 +17,7 @@ var (
 	LogDir     string
 
 	RequestType string
-	ComeFrom    string
+	ExecFrom    ExecFromDef
 )
 
 var (

@@ -1,5 +1,16 @@
 package commConsts
 
+type ExecFromDef string
+
+const (
+	FromCmd    ExecFromDef = "cmd"
+	FromClient ExecFromDef = "client"
+)
+
+func (e ExecFromDef) String() string {
+	return string(e)
+}
+
 type ResponseCode struct {
 	Code    int64  `json:"code"`
 	Message string `json:"message"`

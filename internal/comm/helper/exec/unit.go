@@ -25,7 +25,7 @@ func ExecUnit(ch chan int,
 	startTime := time.Now()
 	startMsg := i118Utils.Sprintf("start_execution", req.Cmd, dateUtils.DateTimeStr(startTime))
 
-	if commConsts.ComeFrom != "cmd" {
+	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketUtils.SendExecMsg(startMsg, "", commConsts.Run, wsMsg)
 	}
 
@@ -37,7 +37,7 @@ func ExecUnit(ch chan int,
 	entTime := time.Now()
 	endMsg := i118Utils.Sprintf("end_execution", req.Cmd, dateUtils.DateTimeStr(entTime))
 
-	if commConsts.ComeFrom != "cmd" {
+	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketUtils.SendExecMsg(endMsg, "false", commConsts.Run, wsMsg)
 	}
 
@@ -61,7 +61,7 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg websocket.Mess
 
 	if cmd == nil {
 		msgStr := i118Utils.Sprintf("cmd_empty")
-		if commConsts.ComeFrom != "cmd" {
+		if commConsts.ExecFrom != commConsts.FromCmd {
 			websocketUtils.SendOutputMsg(msgStr, "", wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, msgStr)
@@ -75,7 +75,7 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg websocket.Mess
 	stderr, err2 := cmd.StderrPipe()
 
 	if err1 != nil {
-		if commConsts.ComeFrom != "cmd" {
+		if commConsts.ExecFrom != commConsts.FromCmd {
 			websocketUtils.SendOutputMsg(err1.Error(), "", wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, err1.Error())
@@ -83,7 +83,7 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg websocket.Mess
 
 		return
 	} else if err2 != nil {
-		if commConsts.ComeFrom != "cmd" {
+		if commConsts.ExecFrom != commConsts.FromCmd {
 			websocketUtils.SendOutputMsg(err2.Error(), "", wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, err2.Error())
@@ -99,7 +99,7 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg websocket.Mess
 	for {
 		line, err3 := reader1.ReadString('\n')
 		if line != "" {
-			if commConsts.ComeFrom != "cmd" {
+			if commConsts.ExecFrom != commConsts.FromCmd {
 				websocketUtils.SendOutputMsg(line, "", wsMsg)
 			}
 			logUtils.ExecConsole(1, line)
@@ -116,7 +116,7 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg websocket.Mess
 		case <-ch:
 			msg := i118Utils.Sprintf("exit_exec_curr")
 
-			if commConsts.ComeFrom != "cmd" {
+			if commConsts.ExecFrom != commConsts.FromCmd {
 				websocketUtils.SendExecMsg(msg, "", commConsts.Run, wsMsg)
 			}
 
@@ -147,7 +147,7 @@ ExitUnitTest:
 	errOutput := strings.Join(errOutputArr, "")
 
 	if errOutput != "" {
-		if commConsts.ComeFrom != "cmd" {
+		if commConsts.ExecFrom != commConsts.FromCmd {
 			websocketUtils.SendOutputMsg(errOutput, "", wsMsg)
 		}
 		logUtils.ExecConsolef(-1, errOutput)

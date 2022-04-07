@@ -95,7 +95,9 @@ func RunZtf(ch chan int,
 	ExeScripts(casesToRun, casesToIgnore, workspacePath, conf, &report, pathMaxWidth, numbMaxWidth, ch, wsMsg)
 	GenZTFTestReport(report, pathMaxWidth, workspacePath, wsMsg)
 
-	websocketUtils.SendExecMsg("", "", commConsts.Run, wsMsg)
+	if commConsts.ExecFrom != commConsts.FromCmd {
+		websocketUtils.SendExecMsg("", "", commConsts.Run, wsMsg)
+	}
 
 	return
 }
@@ -109,7 +111,7 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 	report.StartTime = startTime
 
 	msg := i118Utils.Sprintf("found_scripts", len(casesToRun), workspacePath)
-	if commConsts.ComeFrom != "cmd" {
+	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketUtils.SendExecMsg(msg, "", commConsts.Run, wsMsg)
 	}
 	logUtils.ExecConsolef(color.FgCyan, msg)
@@ -117,7 +119,7 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 
 	if len(casesToIgnore) > 0 {
 		temp := i118Utils.Sprintf("ignore_scripts", strconv.Itoa(len(casesToIgnore)))
-		if commConsts.ComeFrom != "cmd" {
+		if commConsts.ExecFrom != commConsts.FromCmd {
 			websocketUtils.SendExecMsg(temp, "", commConsts.Run, wsMsg)
 		}
 
@@ -135,7 +137,7 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 		select {
 		case <-ch:
 			msg := i118Utils.Sprintf("exit_exec_all")
-			if commConsts.ComeFrom != "cmd" {
+			if commConsts.ExecFrom != commConsts.FromCmd {
 				websocketUtils.SendExecMsg(msg, "", commConsts.Run, wsMsg)
 			}
 
@@ -161,7 +163,7 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 
 	startMsg := i118Utils.Sprintf("start_execution", scriptFile, dateUtils.DateTimeStr(startTime))
 
-	if commConsts.ComeFrom != "cmd" {
+	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketUtils.SendExecMsg(startMsg, "", commConsts.Run, wsMsg)
 		logUtils.ExecConsolef(-1, startMsg)
 	}
@@ -176,7 +178,7 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 		logs = stdOutput
 	}
 	if errOutput != "" {
-		if commConsts.ComeFrom != "cmd" {
+		if commConsts.ExecFrom != commConsts.FromCmd {
 			websocketUtils.SendOutputMsg(errOutput, "", wsMsg)
 		}
 		logUtils.ExecConsolef(-1, errOutput)
@@ -187,7 +189,7 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 	secs := fmt.Sprintf("%.2f", float32(entTime.Sub(startTime)/time.Second))
 
 	endMsg := i118Utils.Sprintf("end_execution", scriptFile, dateUtils.DateTimeStr(entTime))
-	if commConsts.ComeFrom != "cmd" {
+	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketUtils.SendExecMsg(endMsg, "", commConsts.Run, wsMsg)
 		logUtils.ExecConsolef(-1, endMsg)
 	}
@@ -223,7 +225,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			cmd = exec.Command("cmd", "/C", filePath)
 		} else {
 			msg := i118Utils.I118Prt.Sprintf("no_interpreter_for_run", lang, filePath)
-			if commConsts.ComeFrom != "cmd" {
+			if commConsts.ExecFrom != commConsts.FromCmd {
 				websocketUtils.SendOutputMsg(msg, "", wsMsg)
 			}
 			logUtils.ExecConsolef(-1, msg)
@@ -233,7 +235,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		err := os.Chmod(filePath, 0777)
 		if err != nil {
 			msg := i118Utils.I118Prt.Sprintf("exec_cmd_fail", filePath, err.Error())
-			if commConsts.ComeFrom != "cmd" {
+			if commConsts.ExecFrom != commConsts.FromCmd {
 				websocketUtils.SendOutputMsg(msg, "", wsMsg)
 			}
 			logUtils.ExecConsolef(-1, msg)
@@ -248,7 +250,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 
 	if cmd == nil {
 		msgStr := i118Utils.Sprintf("cmd_empty")
-		if commConsts.ComeFrom != "cmd" {
+		if commConsts.ExecFrom != commConsts.FromCmd {
 			websocketUtils.SendOutputMsg(msgStr, "", wsMsg)
 			logUtils.ExecConsolef(color.FgRed, msgStr)
 		}
@@ -262,7 +264,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	stderr, err2 := cmd.StderrPipe()
 
 	if err1 != nil {
-		if commConsts.ComeFrom != "cmd" {
+		if commConsts.ExecFrom != commConsts.FromCmd {
 			websocketUtils.SendOutputMsg(err1.Error(), "", wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, err1.Error())
@@ -270,7 +272,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 
 		return "", err1.Error()
 	} else if err2 != nil {
-		if commConsts.ComeFrom != "cmd" {
+		if commConsts.ExecFrom != commConsts.FromCmd {
 			websocketUtils.SendOutputMsg(err2.Error(), "", wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, err2.Error())
@@ -288,7 +290,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		line, err2 := reader1.ReadString('\n')
 		if line != "" {
 
-			if commConsts.ComeFrom != "cmd" {
+			if commConsts.ExecFrom != commConsts.FromCmd {
 				websocketUtils.SendOutputMsg(line, "", wsMsg)
 				logUtils.ExecConsole(1, line)
 			}
@@ -307,7 +309,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		case <-ch:
 			msg := i118Utils.Sprintf("exit_exec_curr")
 
-			if commConsts.ComeFrom != "cmd" {
+			if commConsts.ExecFrom != commConsts.FromCmd {
 				websocketUtils.SendExecMsg(msg, "", commConsts.Run, wsMsg)
 			}
 

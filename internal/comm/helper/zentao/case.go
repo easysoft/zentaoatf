@@ -44,7 +44,7 @@ func CommitCase(caseId int, title string,
 	}
 
 	yes := true
-	if commConsts.ComeFrom == "cmd" {
+	if commConsts.ExecFrom == commConsts.FromCmd {
 		logUtils.ExecConsole(1, "\n"+i118Utils.Sprintf("case_update_confirm", caseId, title))
 		stdinUtils.InputForBool(&yes, true, "want_to_continue")
 	}

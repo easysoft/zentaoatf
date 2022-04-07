@@ -8,7 +8,6 @@ import (
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
-	langUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/lang"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
 	"github.com/fatih/color"
@@ -36,7 +35,7 @@ func InputForScriptInterpreter(scripts []string, config *commDomain.WorkspaceCon
 		}
 		sampleOrDefaultTips := ""
 		if deflt == "" {
-			sampleOrDefaultTips = i118Utils.Sprintf("for_example", langUtils.LangMap[lang]["interpreter"]) + " " +
+			sampleOrDefaultTips = i118Utils.Sprintf("for_example", commConsts.LangMap[lang]["interpreter"]) + " " +
 				i118Utils.Sprintf("empty_to_ignore")
 		} else {
 			sampleOrDefaultTips = deflt

@@ -87,7 +87,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 	}
 
 	msgFound := i118Utils.Sprintf("found_scripts", len(cases), req.WorkspacePath)
-	if commConsts.ComeFrom != "cmd" {
+	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketUtils.SendExecMsg(msgFound, "", commConsts.Result, wsMsg)
 	}
 
@@ -101,7 +101,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 		format := "(%" + width + "d/%d) %s [%s] [%" + width + "d. %s] (%.3fs)"
 		msgCase := fmt.Sprintf(format, idx+1, report.Total, cs.Status, testSuite, cs.Id, cs.Title, cs.Duration)
 
-		if commConsts.ComeFrom != "cmd" {
+		if commConsts.ExecFrom != commConsts.FromCmd {
 			websocketUtils.SendExecMsg(msgCase, "", commConsts.Result, wsMsg)
 		}
 
@@ -114,7 +114,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 		msgFail += strings.Join(failedCaseLines, "\n")
 		msgFail += strings.Join(failedCaseLinesDesc, "\n")
 
-		if commConsts.ComeFrom != "cmd" {
+		if commConsts.ExecFrom != commConsts.FromCmd {
 			websocketUtils.SendExecMsg(msgFail, "", commConsts.Error, wsMsg)
 		}
 
@@ -149,7 +149,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 			passStr, failStr, skipStr,
 		)
 
-	if commConsts.ComeFrom != "cmd" {
+	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketUtils.SendExecMsg(msgRun, "", commConsts.Result, wsMsg)
 	}
 	logUtils.ExecConsole(color.FgCyan, msgRun)
@@ -158,7 +158,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 	resultPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)
 	msgReport := "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
 
-	if commConsts.ComeFrom != "cmd" {
+	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketUtils.SendExecMsg(msgReport, "false", commConsts.Result, wsMsg)
 	}
 

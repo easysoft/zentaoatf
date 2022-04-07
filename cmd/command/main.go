@@ -6,7 +6,6 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/command"
 	"github.com/aaronchen2k/deeptest/internal/command/action"
 	commandConfig "github.com/aaronchen2k/deeptest/internal/command/config"
-	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
@@ -21,6 +20,11 @@ import (
 )
 
 var (
+	appVersion string
+	buildTime  string
+	goVersion  string
+	gitHash    string
+
 	language        string
 	independentFile bool
 	keywords        string
@@ -105,7 +109,8 @@ func main() {
 	case "cr":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[len(files):]); err == nil {
-			action.CommitZTFTestResult(files, productId, taskId, noNeedConfirm, actionModule)
+			action.CommitZTFTestResult(files, stringUtils.ParseInt(productId), stringUtils.ParseInt(taskId),
+				noNeedConfirm, actionModule)
 		}
 
 	case "cb":
@@ -133,6 +138,9 @@ func main() {
 	case "clean", "-clean", "-c":
 		action.Clean()
 
+	case "version", "--version":
+		logUtils.PrintVersion(appVersion, buildTime, goVersion, gitHash)
+
 	case "help", "-h", "-help", "--help":
 		action.PrintUsage()
 
@@ -152,9 +160,9 @@ func main() {
 }
 
 func run(args []string, actionModule *command.IndexModule) {
-	if len(args) >= 3 && stringUtils.FindInArr(args[2], consts.UnitTestTypes) { // unit test
+	if len(args) >= 3 && stringUtils.FindInArr(args[2], commConsts.UnitTestTypes) { // unit test
 		runUnitTest(args, actionModule)
-	} else { // func test
+	} else { // ztf test
 		runFuncTest(args, actionModule)
 	}
 }
@@ -203,10 +211,10 @@ func runUnitTest(args []string, actionModule *command.IndexModule) {
 		start = start + 1
 	}
 
-	if args[start] == consts.UnitTestToolMvn {
+	if args[start] == commConsts.UnitTestToolMvn {
 		commConsts.UnitTestTool = commConsts.JUnit
 		commConsts.UnitBuildTool = commConsts.Maven
-	} else if args[start] == consts.UnitTestToolRobot {
+	} else if args[start] == commConsts.UnitTestToolRobot {
 		commConsts.UnitTestTool = commConsts.RobotFramework
 		commConsts.UnitBuildTool = commConsts.Maven
 	}

@@ -85,7 +85,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		msgFail += strings.Join(failedCaseLines, "\n")
 		msgFail += strings.Join(failedCaseLinesWithCheckpoint, "\n")
 
-		if commConsts.ComeFrom != "cmd" {
+		if commConsts.ExecFrom != commConsts.FromCmd {
 			websocketUtils.SendExecMsg(msgFail, "", commConsts.Error, wsMsg)
 		}
 
@@ -120,7 +120,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 			passStr, failStr, skipStr,
 		)
 
-	if commConsts.ComeFrom != "cmd" {
+	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketUtils.SendExecMsg(msgRun, "", commConsts.Run, wsMsg)
 	}
 
@@ -130,7 +130,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	resultPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)
 	msgReport := "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
 
-	if commConsts.ComeFrom != "cmd" {
+	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketUtils.SendExecMsg(msgReport, "false", commConsts.Run, wsMsg)
 	}
 

@@ -64,7 +64,7 @@ func (s *SyncService) SyncFromZentao(settings commDomain.SyncSettings, config co
 
 func (s *SyncService) SyncToZentao(cases []string, workspacePath string, commitProductId int, config commDomain.WorkspaceConf) (err error) {
 	pth := ""
-	if commConsts.ComeFrom == "cmd" {
+	if commConsts.ExecFrom == commConsts.FromCmd {
 		pth = fileUtils.RemovePathSepIfNeeded(workspacePath)
 		workspacePath = commConsts.WorkDir
 	} else {
