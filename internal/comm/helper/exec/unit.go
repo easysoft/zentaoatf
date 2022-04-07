@@ -45,7 +45,6 @@ func ExecUnit(ch chan int,
 	logUtils.ExecFilef(endMsg)
 
 	report := GenUnitTestReport(req, startTime.Unix(), entTime.Unix(), ch, wsMsg)
-	logUtils.Infof("#v", report)
 
 	if req.SubmitResult {
 		config := configUtils.LoadByWorkspacePath(req.WorkspacePath)

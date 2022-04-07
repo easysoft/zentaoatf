@@ -14,7 +14,8 @@ export default {
     'type': '类型',
     'create_time': '创建时间',
     'start_time': '开始时间', 
-    'end_time': '结束时间', 
+    'end_time': '结束时间',
+    'test': '测试',
     'result': '结果',
     'test_result': '测试结果',
     'test_result_detail':  '结果详情',
@@ -122,7 +123,7 @@ export default {
     'test_exec':  '测试执行', 
     'execute_unit_or_automated':  '执行单元或自动化测试', 
 
-    'submit_to_zentao':  '提交到禅道', 
+    'submit_to_zentao':  '提交到禅道',
     'submit_bug_to_zentao':  '提交缺陷到禅道', 
     'submit_result_to_zentao':  '提交结果到禅道', 
     'confirm_to_delete_result':  '确定删除执行结果吗？',
@@ -168,7 +169,7 @@ export default {
     'test_type_ztf':  'ZTF自动化测试',
     'test_type_other':  '其他自动化和单元测试',
     'input_keyword_to_search': '输入关键字搜索',
-    'tips_test_cmd': '使用客户端执行测试时，-p参数的值会被替换成当前产品的ID。命令行执行时，请提供产品ID的数字。',
+    'tips_test_cmd': '命令行执行时，请输入"{cmd}"。',
     'pls_add_zentao_site': '初次使用，请点击右上按钮新建禅道站点。',
 
     'pls_create_workspace': '请点击右上角链接新建工作目录',

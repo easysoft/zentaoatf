@@ -1,6 +1,6 @@
 <template>
   <div class="script-main">
-    <div v-if="currProduct.id" id="main">
+    <div id="main">
       <div id="left">
         <ScriptTreePage></ScriptTreePage>
       </div>
@@ -8,6 +8,7 @@
       <div id="splitter-h"></div>
 
       <div id="right">
+        <!-- ZTF Test -->
         <template v-if="currWorkspace?.type === 'ztf'">
           <div class="toolbar" v-if="scriptCode !== ''">
             <a-button :disabled="isRunning === 'true'" @click="execSingle" type="primary" class="t-btn-gap">
@@ -15,7 +16,9 @@
             </a-button>
             <a-button v-if="isRunning === 'true'" @click="execStop" class="t-btn-gap">{{ t('stop') }}</a-button>
 
-            <a-button @click="extract">{{ t('extract_step') }}</a-button>
+            <a-button @click="extract" type="primary">{{ t('extract_step') }}</a-button>
+
+            <a-button @click="save" type="primary">{{ t('save') }}</a-button>
           </div>
 
           <div id="right-content" class="right-content">
@@ -24,10 +27,11 @@
               <div id="editor-panel" class="editor-panel">
                 <MonacoEditor
                     v-if="scriptCode !== ''"
-                    class="editor"
-                    :value="scriptCode"
+                    v-model:value="scriptCode"
                     :language="lang"
                     :options="editorOptions"
+                    class="editor"
+                    ref="editorRef"
                 />
               </div>
 
@@ -47,19 +51,24 @@
           </div>
         </template>
 
+        <!-- Unit Test -->
         <template v-if="currWorkspace?.type !== 'ztf'">
+          <div class="toolbar" v-if="scriptCode !== ''">
+            <a-button @click="save" type="primary">{{ t('save') }}</a-button>
+          </div>
+
           <div class="right-content">
             <template v-if="script">
               <MonacoEditor
                   v-if="scriptCode !== ''"
-                  class="editor"
-                  :value="scriptCode"
+                  v-model:value="scriptCode"
                   :language="lang"
                   :options="editorOptions"
+                  class="editor"
+                  ref="editorRef"
               />
             </template>
 
-            <!-- Exec Unit Test -->
             <template v-if="!script">
               <div class="unit-panel">
                 <a-form :model="modelUnit" layout="inline">
@@ -68,8 +77,13 @@
                         v-model:value="modelUnit.cmd"
                         @keydown.down="down"
                         @keydown.up="up"
-                        style="width:500px;"/>
+                        style="width:380px;"/>
                   </a-form-item>
+
+                  <a-form-item>
+                    <a-checkbox v-model:checked="modelUnit.submitResult">{{t('submit_result_to_zentao')}}</a-checkbox>
+                  </a-form-item>
+
 
                   <a-form-item>
                     <a-button :disabled="isRunning === 'true' || !modelUnit.cmd" @click="execUnit" type="primary" class="t-btn-gap">
@@ -94,9 +108,6 @@
         </template>
 
       </div>
-    </div>
-    <div v-if="!currProduct.id">
-      <a-empty :image="simpleImage"/>
     </div>
   </div>
 </template>
@@ -137,6 +148,8 @@ export default defineComponent({
   setup() {
     const { t } = useI18n();
 
+    let editorRef = ref(null as any)
+
     const zentaoStore = useStore<{ Zentao: ZentaoData }>();
     const currSite = computed<any>(() => zentaoStore.state.Zentao.currSite);
     const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
@@ -176,6 +189,18 @@ export default defineComponent({
       })
     }, {deep: true})
 
+    const save = () => {
+      console.log('save')
+
+      const code = editorRef.value._getValue()
+      scriptStore.dispatch('Script/updateCode',
+          {workspaceId: currWorkspace.value.id, path: script.value.path, code: code}).then(() => {
+        notification.success({
+          message: t('save_success'),
+        })
+      })
+    }
+
     const execSingle = () => {
       console.log('exec', script.value)
 
@@ -201,7 +226,7 @@ export default defineComponent({
     const extract = () => {
       console.log('extract', script.value)
 
-      scriptStore.dispatch('script/extractScript', script.value).then(() => {
+      scriptStore.dispatch('Script/extractScript', script.value).then(() => {
         notification.success({
           message: t('extract_success'),
         })
@@ -216,6 +241,8 @@ export default defineComponent({
     const historyIndex = ref(0)
 
     const loadCmdHistories = async () => {
+      if (currWorkspace.value.type === 'ztf') return
+
       histories.value = await getCmdHistories(currWorkspace.value.id)
       historyIndex.value = histories.value.length
     }
@@ -254,6 +281,7 @@ export default defineComponent({
       editorOptions,
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
 
+      save,
       isRunning,
       execSingle,
       execStop,
@@ -265,6 +293,7 @@ export default defineComponent({
       historyIndex,
       up,
       down,
+      editorRef,
 
       // labelCol: { span: 3, offset: 12 },
       // wrapperCol: { span: 3, offset: 12 },

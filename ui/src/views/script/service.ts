@@ -70,6 +70,14 @@ export async function remove(id: number): Promise<any> {
     });
 }
 
+export async function updateCode(data: any): Promise<any> {
+    return request({
+        url: `/${apiPath}/updateCode`,
+        method: 'PUT',
+        data: data,
+    });
+}
+
 export function genExecInfo(jsn: WsMsg) : WsMsg {
     jsn.msg = jsn.msg.replace(/^"+/,'').replace(/"+$/,'')
     return jsn

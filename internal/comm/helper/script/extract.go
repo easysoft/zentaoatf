@@ -107,7 +107,7 @@ func extractFromComments(file string) (stepObjs []*commDomain.ZtfStep) {
 			isMuti := false
 			stepName, expect := getName(line, stepTag, lang)
 			if expect == "" {
-				moreExpect, increase := parseMutiStep(lang, lines[index+1:])
+				moreExpect, increase := parseMultiStep(lang, lines[index+1:])
 				if increase > 0 {
 					expect = moreExpect
 					index += increase
@@ -198,7 +198,7 @@ func getName(line, str, lang string) (name, expect string) {
 	return
 }
 
-func parseMutiStep(lang string, nextLines []string) (ret string, increase int) {
+func parseMultiStep(lang string, nextLines []string) (ret string, increase int) {
 	for index, line := range nextLines {
 		if isCommentStartTag(line, lang) || isCommentEndTag(line, lang) {
 			break

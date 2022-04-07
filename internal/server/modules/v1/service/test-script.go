@@ -6,6 +6,7 @@ import (
 	codeHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/code"
 	"github.com/aaronchen2k/deeptest/internal/comm/helper/script"
 	zentaoHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
+	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
 	"github.com/kataras/iris/v12"
@@ -99,6 +100,12 @@ func (s *TestScriptService) GetCaseIdsFromReport(workspaceId int, seq, scope str
 			caseIds = append(caseIds, path)
 		}
 	}
+
+	return
+}
+
+func (s *TestScriptService) UpdateCode(script serverDomain.TestScript) (err error) {
+	fileUtils.WriteFile(script.Path, script.Code)
 
 	return
 }

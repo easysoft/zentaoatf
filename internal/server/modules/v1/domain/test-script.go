@@ -1,6 +1,7 @@
 package serverDomain
 
 type TestScript struct {
+	Id      int    `json:"id"`
 	Version int    `json:"version"`
 	Name    string `json:"name"`
 	Code    string `json:"code"`

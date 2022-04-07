@@ -16,7 +16,7 @@
       </template>
 
       <template #extra>
-        <a-button v-if="currProduct?.id" type="primary" @click="create()">
+        <a-button type="primary" @click="create()">
           <template #icon>
             <PlusCircleOutlined/>
           </template>

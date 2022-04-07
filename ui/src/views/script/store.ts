@@ -3,7 +3,7 @@ import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 
 import {
-    list, get, extract, create, update, remove, loadChildren
+    list, get, extract, create, update, remove, loadChildren, updateCode
 } from './service';
 
 export interface ScriptData {
@@ -30,6 +30,7 @@ export interface ModuleType extends StoreModuleType<ScriptData> {
         createScript: Action<ScriptData, ScriptData>;
         updateScript: Action<ScriptData, ScriptData>;
         deleteScript: Action<ScriptData, ScriptData>;
+        updateCode: Action<ScriptData, ScriptData>;
     };
 }
 const initState: ScriptData = {
@@ -116,6 +117,16 @@ const StoreModel: ModuleType = {
         async deleteScript({ commit }, payload: number ) {
             try {
                 await remove(payload);
+                return true;
+            } catch (error) {
+                return false;
+            }
+        },
+
+
+        async updateCode({ commit }, payload: any ) {
+            try {
+                await updateCode(payload);
                 return true;
             } catch (error) {
                 return false;

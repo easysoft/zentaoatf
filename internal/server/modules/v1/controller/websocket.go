@@ -130,7 +130,9 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 			testSet.Cmd = req.Cmd
 		}
 
-		testSet.SubmitResult = req.SubmitResult
+		if !testSet.SubmitResult && req.SubmitResult {
+			testSet.SubmitResult = req.SubmitResult
+		}
 
 	}
 

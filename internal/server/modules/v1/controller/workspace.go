@@ -22,10 +22,6 @@ func NewWorkspaceCtrl() *WorkspaceCtrl {
 
 func (c *WorkspaceCtrl) List(ctx iris.Context) {
 	currProductId, _ := ctx.URLParamInt("currProductId")
-	if currProductId <= 0 {
-		ctx.JSON(c.SuccessResp(domain.PageData{}))
-		return
-	}
 
 	var req serverDomain.WorkspaceReqPaginate
 	if err := ctx.ReadQuery(&req); err != nil {
@@ -61,11 +57,6 @@ func (c *WorkspaceCtrl) Get(ctx iris.Context) {
 func (c *WorkspaceCtrl) Create(ctx iris.Context) {
 	currSiteId, _ := ctx.URLParamInt("currSiteId")
 	currProductId, _ := ctx.URLParamInt("currProductId")
-
-	if currProductId <= 0 {
-		ctx.JSON(c.ErrResp(commConsts.ParamErr, fmt.Sprintf("参数%s不合法", "currProductId")))
-		return
-	}
 
 	req := model.Workspace{}
 	if err := ctx.ReadJSON(&req); err != nil {

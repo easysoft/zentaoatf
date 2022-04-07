@@ -74,42 +74,42 @@ export const unitTestTypesDef = [
     {
         label: 'JUnit',
         value: 'junit',
-        cmd: 'ztf.exe junit -p ${product_id} mvn clean package test',
+        cmd: 'ztf.exe junit -p product_id mvn clean package test',
     },
     {
         label: 'TestNG',
         value: 'testng',
-        cmd: 'ztf.exe testng -p ${product_id} mvn clean package test',
+        cmd: 'ztf.exe testng -p product_id mvn clean package test',
     },
     {
         label: 'PHPUnit',
         value: 'phpunit',
-        cmd: 'ztf.exe phpunit -p ${product_id} phpunit -c phpunit.xml --testdox-xml testresults.xml',
+        cmd: 'ztf.exe phpunit -p product_id phpunit -c phpunit.xml --testdox-xml testresults.xml',
     },
     {
         label: 'PyTest',
         value: 'pytest',
-        cmd: 'ztf.exe pytest -p ${product_id} pytest --junitxml=testresult.xml',
+        cmd: 'ztf.exe pytest -p product_id pytest --junitxml=testresult.xml',
     },
     {
         label: 'Jest',
         value: 'jest',
-        cmd: 'ztf.exe jest -p ${product_id}  ./node_modules/.bin/jest test',
+        cmd: 'ztf.exe jest -p product_id  ./node_modules/.bin/jest test',
     },
     {
         label: 'GTest',
         value: 'gtest',
-        cmd: 'ztf  gtest -p ${product_id} ./build/bin/unit_tests --gtest_output=xml:testresults.xml',
+        cmd: 'ztf  gtest -p product_id ./build/bin/unit_tests --gtest_output=xml:testresults.xml',
     },
     {
         label: 'QTest',
         value: 'qtest',
-        cmd: 'ztf qtest -p ${product_id} ./tests/QTestLibCocktailsTest -xunitxml -o testresults.xml',
+        cmd: 'ztf qtest -p product_id ./tests/QTestLibCocktailsTest -xunitxml -o testresults.xml',
     },
     {
         label: 'CppUnit',
         value: 'cppunit',
-        cmd: ' ztf cppunit -p ${product_id} ./MathTest',
+        cmd: ' ztf cppunit -p product_id ./MathTest',
     },
 ]
 

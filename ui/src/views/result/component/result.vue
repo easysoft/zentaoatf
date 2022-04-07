@@ -61,8 +61,8 @@ export default defineComponent({
     const { t } = useI18n();
     const isWin = isWindows()
 
-    const zentaoStore = useStore<{ zentao: ZentaoData }>();
-    const currProduct = computed<any>(() => zentaoStore.state.zentao.currProduct);
+    const zentaoStore = useStore<{ Zentao: ZentaoData }>();
+    const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
 
     const rules = reactive({
     });

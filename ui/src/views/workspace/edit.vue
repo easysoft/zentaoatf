@@ -37,9 +37,10 @@
       </a-form-item>
 
       <a-form-item v-if="showCmd" :label="t('test_cmd')" v-bind="validateInfos.cmd">
-        <a-textarea v-model:value="modelRef.cmd"
-                    :auto-size="{ minRows: 3, maxRows: 6 }" />
-        <div class="t-tips" style="margin-top: 5px;">{{ t('tips_test_cmd') }}</div>
+        <a-textarea v-model:value="modelRef.cmd" :auto-size="{ minRows: 3, maxRows: 6 }" />
+        <div class="t-tips" style="margin-top: 5px;">
+          <div>{{ t('tips_test_cmd', {cmd: cmdSample}) }}</div>
+        </div>
       </a-form-item>
 
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
@@ -66,34 +67,20 @@ import {ZentaoData} from "@/store/zentao";
 import {arrToMap} from "@/utils/array";
 import {ztfTestTypesDef, unitTestTypesDef} from "@/utils/const";
 
-interface WorkspaceFormSetupData {
-  t: (key: string | number) => string;
-  isElectron: Ref<boolean>;
-  testTypes: Ref<any[]>
-  cmdMap: Ref
-  showCmd: Ref<boolean>;
-  modelRef: ComputedRef;
-  labelCol: any
-  wrapperCol: any
-  validate: any
-  validateInfos: validateInfos
-  selectType:  (item) => void;
-  selectDir: () => void
-  submitForm:  () => void;
-  resetFields:  () => void;
-  back:  () => void;
-}
-
 export default defineComponent({
   name: 'WorkspaceForm',
   components: {
   },
-  setup(props): WorkspaceFormSetupData {
+  setup(props) {
     const { t } = useI18n();
     const router = useRouter();
-    const isElectron = ref(!!window.require)
+
     const testTypes = ref([...ztfTestTypesDef, ...unitTestTypesDef])
     const cmdMap = ref(arrToMap(testTypes.value))
+
+
+    const isElectron = ref(!!window.require)
+    const cmdSample = ref('')
 
     const store = useStore<{ Workspace: WorkspaceData }>();
     const modelRef = computed(() => store.state.Workspace.detailResult);
@@ -101,6 +88,7 @@ export default defineComponent({
 
     const get = async (id: number): Promise<void> => {
       await store.dispatch('Workspace/get', id);
+      selectType()
     }
     const id = +router.currentRoute.value.params.id
     get(id)
@@ -121,9 +109,11 @@ export default defineComponent({
       ],
     });
 
-    const selectType = (item) => {
-      console.log('selectType', item)
-      modelRef.value.cmd = cmdMap.value[modelRef.value.type].cmd
+    const selectType = () => {
+      console.log('selectType')
+
+      cmdSample.value = cmdMap.value[modelRef.value.type].cmd
+      modelRef.value.cmd = cmdSample.value.split('product_id')[1].trim()
     }
 
     const selectDir = () => {
@@ -166,6 +156,7 @@ export default defineComponent({
     return {
       t,
       isElectron,
+      cmdSample,
       testTypes,
       cmdMap,
       showCmd,

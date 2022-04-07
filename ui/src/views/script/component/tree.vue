@@ -84,7 +84,7 @@
       <a-button
           v-if="currWorkspace.type !== 'ztf'"
           @click="toExecUnit">
-        {{t('exec') + testToolMap[currWorkspace.type]}}
+        {{testToolMap[currWorkspace.type] + t('test')}}
       </a-button>
     </div>
 
@@ -214,7 +214,6 @@ export default defineComponent({
       const params = {filerType: filerType.value, filerValue: filerValue.value} as any
       store.dispatch('Script/listScript', params)
     }
-    loadScripts()
 
     // 异步加载
     const onLoadData = async (treeNode: any) => {
@@ -252,8 +251,8 @@ export default defineComponent({
 
     const initData = async () => {
       console.log('init')
-      loadFilterItems()
-      loadScripts()
+      await loadFilterItems()
+      await loadScripts()
     }
     initData()
 

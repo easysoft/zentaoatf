@@ -14,7 +14,8 @@ export default {
     'type': 'Type',
     'create_time': 'Create Time',
     'start_time': 'Start Time', 
-    'end_time': 'End Time', 
+    'end_time': 'End Time',
+    'test': '测试',
     'result': 'Result',
     'test_result': 'Test Result',
     'test_result_detail':  'Result Detail',
@@ -168,7 +169,7 @@ export default {
     'test_type_ztf':  'ZTF Testing',
     'test_type_other':  'Other Automated or Unit Test',
     'input_keyword_to_search': 'Input Keyword To Search',
-    'tips_test_cmd': 'Parameter -p will be replaced by current ProductId; please provide it if running with command line.',
+    'tips_test_cmd': 'Please run "{cmd}" with command line.',
     'pls_add_zentao_site': 'Please add zentao site.',
 
     'pls_create_workspace': 'Please create workspace to continue.',

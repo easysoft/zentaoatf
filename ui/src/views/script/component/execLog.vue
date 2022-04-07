@@ -209,7 +209,7 @@ export default defineComponent({
         const sets = genWorkspaceToScriptsMap(scripts)
         msg = {act: 'execCase', testSets: sets}
       } else if (execType === 'unit') {
-        const set = {workspaceId: data.id, workspaceType: data.type, cmd: data.cmd,
+        const set = {workspaceId: data.id, workspaceType: data.type, cmd: data.cmd, submitResult: data.submitResult,
           productId: currProduct.value.id}
         msg = {act: 'execUnit', testSets: [set]}
       } else if (execType === 'stop') {

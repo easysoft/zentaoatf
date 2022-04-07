@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { defineComponent, computed, toRefs } from 'vue'
+import { defineComponent, computed, toRefs, defineExpose } from 'vue'
 import * as monaco from 'monaco-editor'
 
 export default defineComponent({
@@ -34,8 +34,17 @@ export default defineComponent({
         'text-align': 'left'
       }
     })
+
+    const getValue = () => {
+      return this._getValue()
+    }
+    // defineExpose({
+    //   getValue,
+    // })
+
     return {
-      style
+      style,
+      // getValue,
     }
   },
   mounted() {

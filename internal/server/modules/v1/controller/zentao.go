@@ -21,8 +21,8 @@ func NewZentaoCtrl() *ZentaoCtrl {
 
 func (c *ZentaoCtrl) GetProfile(ctx iris.Context) {
 	currSiteId, _ := ctx.URLParamInt("currSiteId")
-	if currSiteId == 0 {
-		ctx.JSON(c.ErrResp(commConsts.ParamErr, "currSiteId"))
+	if currSiteId <= 0 {
+		ctx.JSON(c.SuccessResp(iris.Map{}))
 		return
 	}
 
@@ -40,6 +40,11 @@ func (c *ZentaoCtrl) GetProfile(ctx iris.Context) {
 func (c *ZentaoCtrl) ListSiteAndProduct(ctx iris.Context) {
 	currSiteId, _ := ctx.URLParamInt("currSiteId")
 	currProductId, _ := ctx.URLParamInt("currProductId")
+
+	if currSiteId <= 0 || currProductId <= 0 {
+		ctx.JSON(c.SuccessResp(iris.Map{}))
+		return
+	}
 
 	sites, currSite, _ := c.SiteService.LoadSites(currSiteId)
 	products, currProduct, err := zentaoHelper.LoadSiteProduct(currSite, currProductId)

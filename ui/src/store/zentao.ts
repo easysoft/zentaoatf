@@ -76,6 +76,8 @@ const StoreModel: ModuleType = {
             state.profile = payload
         },
         async saveSitesAndProduct(state, payload) {
+            if (!payload.currSite || !payload.currProduct) return
+
             state.sites = payload.sites;
             state.products = payload.products;
 
