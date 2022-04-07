@@ -31,7 +31,8 @@ func (c *TestScriptCtrl) List(ctx iris.Context) {
 	filerType := ctx.URLParam("filerType")
 	filerValue, _ := ctx.URLParamInt("filerValue")
 
-	testScripts, _ := c.TestScriptService.LoadTestScriptsBySiteProduct(currSiteId, currProductId, filerType, filerValue)
+	testScripts, _ := c.TestScriptService.LoadTestScriptsBySiteProduct(uint(currSiteId), uint(currProductId),
+		filerType, filerValue)
 
 	ctx.JSON(c.SuccessResp(testScripts))
 }

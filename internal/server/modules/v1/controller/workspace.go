@@ -2,7 +2,6 @@ package controller
 
 import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
@@ -20,6 +19,7 @@ func NewWorkspaceCtrl() *WorkspaceCtrl {
 }
 
 func (c *WorkspaceCtrl) List(ctx iris.Context) {
+	currSiteId, _ := ctx.URLParamInt("currSiteId")
 	currProductId, _ := ctx.URLParamInt("currProductId")
 
 	var req serverDomain.WorkspaceReqPaginate
@@ -29,6 +29,7 @@ func (c *WorkspaceCtrl) List(ctx iris.Context) {
 	}
 
 	req.ProductId = currProductId
+	req.SiteId = currSiteId
 	data, err := c.WorkspaceService.Paginate(req)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
@@ -110,33 +111,6 @@ func (c *WorkspaceCtrl) Delete(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(nil))
 }
 
-func (c *WorkspaceCtrl) GetByUser(ctx iris.Context) {
-	workspacePath := ctx.URLParam("currWorkspace")
-
-	if workspacePath == "" {
-		workspaces, _ := c.WorkspaceService.ListWorkspaceByUser()
-		data := iris.Map{
-			"workspaces":    workspaces,
-			"currWorkspace": model.Workspace{},
-			"currConfig":    commDomain.WorkspaceConf{},
-			"scriptTree":    serverDomain.TestAsset{}}
-
-		ctx.JSON(c.SuccessResp(data))
-		return
-	}
-
-	workspaces, currWorkspace, currWorkspaceConfig, scriptTree, err := c.WorkspaceService.GetByUser(workspacePath)
-	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
-		return
-	}
-
-	data := iris.Map{"workspaces": workspaces, "currWorkspace": currWorkspace,
-		"currConfig": currWorkspaceConfig, "scriptTree": scriptTree}
-
-	ctx.JSON(c.SuccessResp(data))
-}
-
 func (c *WorkspaceCtrl) ListByProduct(ctx iris.Context) {
 	currSiteId, _ := ctx.URLParamInt("currSiteId")
 	currProductId, _ := ctx.URLParamInt("currProductId")
@@ -145,7 +119,7 @@ func (c *WorkspaceCtrl) ListByProduct(ctx iris.Context) {
 		return
 	}
 
-	data, err := c.WorkspaceService.ListByProduct(currSiteId, currProductId)
+	data, err := c.WorkspaceService.ListByProduct(uint(currSiteId), uint(currProductId))
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return

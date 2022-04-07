@@ -95,7 +95,7 @@ func LoadTestCases(productId, moduleId, suiteId, taskId int,
 	return
 }
 
-func GetCaseIdsInZentaoModule(productId int, moduleId int, config commDomain.WorkspaceConf) (
+func GetCaseIdsInZentaoModule(productId, moduleId uint, config commDomain.WorkspaceConf) (
 	caseIdMap map[int]string, err error) {
 
 	err = Login(config)
@@ -131,7 +131,7 @@ func GetCaseIdsInZentaoModule(productId int, moduleId int, config commDomain.Wor
 	return
 }
 
-func GetCaseIdsInZentaoSuite(productId int, suiteId int, config commDomain.WorkspaceConf) (
+func GetCaseIdsInZentaoSuite(productId uint, suiteId int, config commDomain.WorkspaceConf) (
 	caseIdMap map[int]string, err error) {
 
 	err = Login(config)
@@ -167,7 +167,7 @@ func GetCaseIdsInZentaoSuite(productId int, suiteId int, config commDomain.Works
 	return
 }
 
-func GetCaseIdsInZentaoTask(productId int, taskId int, config commDomain.WorkspaceConf) (
+func GetCaseIdsInZentaoTask(productId uint, taskId int, config commDomain.WorkspaceConf) (
 	caseIdMap map[int]string, err error) {
 
 	err = Login(config)
@@ -203,7 +203,7 @@ func GetCaseIdsInZentaoTask(productId int, taskId int, config commDomain.Workspa
 	return
 }
 
-func GetCasesByModuleInDir(productId int, moduleId int, workspacePath, scriptDir string) (cases []string, err error) {
+func GetCasesByModuleInDir(productId, moduleId uint, workspacePath, scriptDir string) (cases []string, err error) {
 	config := commDomain.WorkspaceConf{}
 	config = configUtils.LoadByWorkspacePath(workspacePath)
 

@@ -24,7 +24,7 @@ func NewTestResultService() *TestResultService {
 	return &TestResultService{}
 }
 
-func (s *TestResultService) Paginate(siteId, productId int, req serverDomain.ReqPaginate) (
+func (s *TestResultService) Paginate(siteId, productId uint, req serverDomain.ReqPaginate) (
 	data domain.PageData, err error) {
 
 	reports := []serverDomain.TestReportSummary{}

@@ -8,7 +8,9 @@ import (
 )
 
 type SiteService struct {
-	SiteRepo *repo.SiteRepo `inject:""`
+	SiteRepo         *repo.SiteRepo      `inject:""`
+	WorkspaceRepo    *repo.WorkspaceRepo `inject:""`
+	WorkspaceService *WorkspaceService   `inject:""`
 }
 
 func NewSiteService() *SiteService {
@@ -36,9 +38,7 @@ func (s *SiteService) GetDomainObject(id uint) (site serverDomain.ZentaoSite, er
 }
 
 func (s *SiteService) Create(site model.Site) (id uint, err error) {
-	id, err = s.SiteRepo.Create(site)
-
-	//err = configUtils.UpdateSite(site, workspacePath)
+	id, err = s.SiteRepo.Create(&site)
 
 	return
 }
@@ -46,7 +46,11 @@ func (s *SiteService) Create(site model.Site) (id uint, err error) {
 func (s *SiteService) Update(site model.Site) (err error) {
 	err = s.SiteRepo.Update(site)
 
-	//err = configUtils.UpdateSite(site, workspacePath)
+	workspaces, _ := s.WorkspaceRepo.ListBySite(site.ID)
+	for _, item := range workspaces {
+		s.WorkspaceService.UpdateConfig(item, true)
+	}
+
 	return
 }
 
@@ -62,6 +66,11 @@ func (s *SiteService) LoadSites(currSiteId int) (sites []serverDomain.ZentaoSite
 	}
 
 	pos := pageData.Result.([]*model.Site)
+	if len(pos) == 0 {
+		s.CreateEmptySite()
+		pageData, err = s.Paginate(req)
+		pos = pageData.Result.([]*model.Site)
+	}
 
 	sites = []serverDomain.ZentaoSite{}
 	var first serverDomain.ZentaoSite
@@ -88,6 +97,16 @@ func (s *SiteService) LoadSites(currSiteId int) (sites []serverDomain.ZentaoSite
 	if currSite.Id == 0 { // not found, use the first one
 		currSite = first
 	}
+
+	return
+}
+
+func (s *SiteService) CreateEmptySite() (err error) {
+	po := model.Site{
+		Name: "未配置站点",
+		Url:  "",
+	}
+	_, err = s.SiteRepo.Create(&po)
 
 	return
 }

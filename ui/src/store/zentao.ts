@@ -76,6 +76,7 @@ const StoreModel: ModuleType = {
             state.profile = payload
         },
         async saveSitesAndProduct(state, payload) {
+            console.log('saveSitesAndProduct', payload)
             if (!payload.currSite || !payload.currProduct) return
 
             state.sites = payload.sites;
@@ -83,7 +84,7 @@ const StoreModel: ModuleType = {
 
             // cache current site and product
             await setCurrSiteId(payload.currSite.id);
-            await setCurrProductIdBySite(state.currSite.id, payload.currProduct.id);
+            await setCurrProductIdBySite(payload.currSite.id, payload.currProduct.id);
 
             // must after saving to cache since, since will file a event to load new data by new value in other pages.
             state.currSite = payload.currSite;
@@ -123,16 +124,12 @@ const StoreModel: ModuleType = {
         },
 
         async getProfile({ commit }) {
-            try {
-                const response: ResponseData = await getProfile();
-                const { data } = response;
-                // data.avatar = ''
-                commit('saveProfile', data)
+            const response: ResponseData = await getProfile();
+            const { data } = response;
+            // data.avatar = ''
+            commit('saveProfile', data)
 
-                return true;
-            } catch (error) {
-                return false;
-            }
+            return true;
         },
 
         async fetchSitesAndProduct({ commit }, payload) {

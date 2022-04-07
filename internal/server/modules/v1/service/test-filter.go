@@ -18,14 +18,14 @@ func NewTestFilterService() *TestFilterService {
 }
 
 func (s *TestFilterService) ListFilterItems(filerType commConsts.ScriptFilterType,
-	siteId int, productId int) (ret interface{}, err error) {
+	siteId, productId uint) (ret interface{}, err error) {
 
 	if filerType == commConsts.FilterWorkspace {
 		ret, err = s.ListWorkspaceFilter(siteId, productId)
 		return
 	}
 
-	site, _ := s.SiteService.GetDomainObject(uint(siteId))
+	site, _ := s.SiteService.GetDomainObject(siteId)
 	config := commDomain.WorkspaceConf{
 		Url:      site.Url,
 		Username: site.Username,
@@ -43,7 +43,7 @@ func (s *TestFilterService) ListFilterItems(filerType commConsts.ScriptFilterTyp
 	return
 }
 
-func (s *TestFilterService) ListWorkspaceFilter(siteId int, productId int) (ret []serverDomain.FilterItem, err error) {
+func (s *TestFilterService) ListWorkspaceFilter(siteId, productId uint) (ret []serverDomain.FilterItem, err error) {
 	workspaces, err := s.WorkspaceRepo.ListByProduct(siteId, productId)
 
 	for _, item := range workspaces {
@@ -54,7 +54,7 @@ func (s *TestFilterService) ListWorkspaceFilter(siteId int, productId int) (ret 
 	return
 }
 
-func (s *TestFilterService) ListModuleFilter(config commDomain.WorkspaceConf, productId int) (ret []serverDomain.FilterItem, err error) {
+func (s *TestFilterService) ListModuleFilter(config commDomain.WorkspaceConf, productId uint) (ret []serverDomain.FilterItem, err error) {
 	modules, _ := zentaoHelper.LoadModule(productId, config)
 
 	for _, item := range modules {
@@ -65,7 +65,7 @@ func (s *TestFilterService) ListModuleFilter(config commDomain.WorkspaceConf, pr
 	return
 }
 
-func (s *TestFilterService) ListSuiteFilter(config commDomain.WorkspaceConf, productId int) (ret []serverDomain.FilterItem, err error) {
+func (s *TestFilterService) ListSuiteFilter(config commDomain.WorkspaceConf, productId uint) (ret []serverDomain.FilterItem, err error) {
 	suites, _ := zentaoHelper.LoadSuite(productId, config)
 
 	for _, item := range suites {
@@ -75,7 +75,7 @@ func (s *TestFilterService) ListSuiteFilter(config commDomain.WorkspaceConf, pro
 
 	return
 }
-func (s *TestFilterService) ListTaskFilter(config commDomain.WorkspaceConf, productId int) (ret []serverDomain.FilterItem, err error) {
+func (s *TestFilterService) ListTaskFilter(config commDomain.WorkspaceConf, productId uint) (ret []serverDomain.FilterItem, err error) {
 	tasks, _ := zentaoHelper.LoadTask(productId, config)
 
 	for _, item := range tasks {

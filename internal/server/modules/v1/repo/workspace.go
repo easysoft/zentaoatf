@@ -26,6 +26,7 @@ func (r *WorkspaceRepo) Paginate(req serverDomain.WorkspaceReqPaginate) (data do
 	var count int64
 
 	db := r.DB.Model(&model.Workspace{}).
+		Where("site_id = ?", req.SiteId).
 		Where("product_id = ?", req.ProductId).
 		Where("NOT deleted")
 
@@ -152,7 +153,7 @@ func (r *WorkspaceRepo) FindDuplicate(name, url string, id, productId uint) (po 
 	return
 }
 
-func (r *WorkspaceRepo) ListWorkspaceByUser() (workspaces []model.Workspace, err error) {
+func (r *WorkspaceRepo) ListWorkspace() (workspaces []model.Workspace, err error) {
 	err = r.DB.Model(&model.Workspace{}).
 		Where("NOT deleted").
 		Find(&workspaces).Error
@@ -198,9 +199,18 @@ func (r *WorkspaceRepo) SetCurrWorkspace(pth string) (err error) {
 	return err
 }
 
-func (r *WorkspaceRepo) ListByProduct(siteId, productId int) (pos []model.Workspace, err error) {
+func (r *WorkspaceRepo) ListByProduct(siteId, productId uint) (pos []model.Workspace, err error) {
 	err = r.DB.Model(&model.Workspace{}).
 		Where("site_id = ? AND product_id = ?", siteId, productId).
+		Where("NOT deleted AND NOT disabled").
+		Find(&pos).Error
+
+	return
+}
+
+func (r *WorkspaceRepo) ListBySite(siteId uint) (pos []model.Workspace, err error) {
+	err = r.DB.Model(&model.Workspace{}).
+		Where("site_id = ?", siteId).
 		Where("NOT deleted AND NOT disabled").
 		Find(&pos).Error
 

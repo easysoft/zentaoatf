@@ -24,6 +24,7 @@
 
     <!-- zentao product selection -->
     <a-dropdown
+        v-if="products.length > 0"
         :dropdownMatchSelectWidth="false"
         class="dropdown-list">
 

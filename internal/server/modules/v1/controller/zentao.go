@@ -27,6 +27,11 @@ func (c *ZentaoCtrl) GetProfile(ctx iris.Context) {
 	}
 
 	site, _ := c.SiteService.Get(uint(currSiteId))
+	if site.Url == "" {
+		ctx.JSON(c.SuccessResp(iris.Map{}))
+		return
+	}
+
 	config := configHelper.LoadBySite(site)
 	data, err := zentaoHelper.GetProfile(config)
 	if err != nil {
@@ -40,11 +45,6 @@ func (c *ZentaoCtrl) GetProfile(ctx iris.Context) {
 func (c *ZentaoCtrl) ListSiteAndProduct(ctx iris.Context) {
 	currSiteId, _ := ctx.URLParamInt("currSiteId")
 	currProductId, _ := ctx.URLParamInt("currProductId")
-
-	if currSiteId <= 0 || currProductId <= 0 {
-		ctx.JSON(c.SuccessResp(iris.Map{}))
-		return
-	}
 
 	sites, currSite, _ := c.SiteService.LoadSites(currSiteId)
 	products, currProduct, err := zentaoHelper.LoadSiteProduct(currSite, currProductId)
@@ -88,7 +88,7 @@ func (c *ZentaoCtrl) ListModule(ctx iris.Context) {
 
 	site, _ := c.SiteService.Get(uint(siteId))
 
-	data, err := zentaoHelper.ListModule(productId, site)
+	data, err := zentaoHelper.ListModule(uint(productId), site)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
 		return
@@ -107,7 +107,7 @@ func (c *ZentaoCtrl) ListSuite(ctx iris.Context) {
 	}
 
 	site, _ := c.SiteService.Get(uint(siteId))
-	data, err := zentaoHelper.ListSuite(productId, site)
+	data, err := zentaoHelper.ListSuite(uint(productId), site)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
 		return
@@ -126,7 +126,7 @@ func (c *ZentaoCtrl) ListTask(ctx iris.Context) {
 	}
 
 	site, _ := c.SiteService.Get(uint(siteId))
-	data, err := zentaoHelper.ListTask(productId, site)
+	data, err := zentaoHelper.ListTask(uint(productId), site)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
 		return

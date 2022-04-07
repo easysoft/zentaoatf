@@ -27,7 +27,7 @@ func (c *TestResultCtrl) List(ctx iris.Context) {
 		return
 	}
 
-	data, err := c.TestResultService.Paginate(currSiteId, currProductId, req)
+	data, err := c.TestResultService.Paginate(uint(currSiteId), uint(currProductId), req)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return

@@ -3,21 +3,19 @@ package service
 import (
 	"errors"
 	"fmt"
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
-	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
-	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
 )
 
 type WorkspaceService struct {
-	WorkspaceRepo *repo.WorkspaceRepo `inject:""`
+	WorkspaceRepo      *repo.WorkspaceRepo `inject:""`
+	SiteRepo           *repo.SiteRepo      `inject:""`
+	InterpreterService *InterpreterService `inject:""`
 }
 
 func NewWorkspaceService() *WorkspaceService {
@@ -29,7 +27,7 @@ func (s *WorkspaceService) Paginate(req serverDomain.WorkspaceReqPaginate) (ret 
 	return
 }
 
-func (s *WorkspaceService) ListWorkspacesByProduct(siteId, productId int) (pos []model.Workspace, err error) {
+func (s *WorkspaceService) ListWorkspacesByProduct(siteId, productId uint) (pos []model.Workspace, err error) {
 	return s.WorkspaceRepo.ListByProduct(siteId, productId)
 }
 
@@ -47,6 +45,7 @@ func (s *WorkspaceService) Create(workspace model.Workspace) (id uint, err error
 	}
 
 	id, err = s.WorkspaceRepo.Create(workspace)
+	s.UpdateConfig(workspace, true)
 
 	return
 }
@@ -57,6 +56,8 @@ func (s *WorkspaceService) Update(workspace model.Workspace) (err error) {
 	}
 
 	err = s.WorkspaceRepo.Update(workspace)
+	s.UpdateConfig(workspace, true)
+
 	return
 }
 
@@ -71,60 +72,64 @@ func (s *WorkspaceService) Delete(id uint) (err error) {
 	return
 }
 
-func (s *WorkspaceService) ListWorkspaceByUser() (workspaces []model.Workspace, err error) {
-	workspaces, err = s.WorkspaceRepo.ListWorkspaceByUser()
-
-	return
+func (s *WorkspaceService) ListByProduct(siteId, productId uint) (pos []model.Workspace, err error) {
+	return s.WorkspaceRepo.ListByProduct(siteId, productId)
 }
 
-func (s *WorkspaceService) GetByUser(currWorkspacePath string) (
-	workspaces []model.Workspace, currWorkspace model.Workspace, currWorkspaceConfig commDomain.WorkspaceConf, scriptTree serverDomain.TestAsset, err error) {
-	workspaces, err = s.WorkspaceRepo.ListWorkspaceByUser()
+func (s *WorkspaceService) UpdateAllConfig() {
+	workspaces, _ := s.WorkspaceRepo.ListWorkspace()
 
-	found := false
-	for _, p := range workspaces {
-		if p.Path == currWorkspacePath {
-			found = true
-			break
-		}
+	for _, item := range workspaces {
+		s.UpdateConfig(item, true)
+	}
+}
+
+func (s *WorkspaceService) UpdateConfig(workspace model.Workspace, forceUpdate bool) (err error) {
+	site, _ := s.SiteRepo.Get(workspace.SiteId)
+	interps, _ := s.InterpreterService.List()
+	mp, _ := s.InterpreterService.GetMap(interps)
+
+	conf := configUtils.ReadFromFile(workspace.Path)
+	if forceUpdate || conf.Url == "" {
+		conf.Url = site.Url
+	}
+	if forceUpdate || conf.Username == "" {
+		conf.Username = site.Username
+	}
+	if forceUpdate || conf.Password == "" {
+		conf.Password = site.Password
 	}
 
-	if !found {
-		if err != nil {
-			logUtils.Errorf("db operation error %s", err.Error())
-			return
-		}
-
-		name := fileUtils.GetDirName(currWorkspacePath)
-		newLocalWorkspace := model.Workspace{Path: currWorkspacePath, Name: name, Type: commConsts.ZTF}
-
-		_, err = s.WorkspaceRepo.Create(newLocalWorkspace)
-		if err != nil {
-			logUtils.Errorf("db operation error %s", err.Error())
-			return
-		}
-
-		workspaces, err = s.WorkspaceRepo.ListWorkspaceByUser()
-	}
-
-	s.WorkspaceRepo.SetCurrWorkspace(currWorkspacePath)
-
-	currWorkspace, err = s.WorkspaceRepo.GetCurrWorkspaceByUser()
-	if err != nil {
-		logUtils.Errorf("db operation error %s", err.Error())
+	if !commonUtils.IsWin() {
 		return
 	}
 
-	if currWorkspace.Type == commConsts.ZTF {
-		scriptTree, err = scriptUtils.LoadScriptTree(currWorkspace, nil)
+	if forceUpdate || conf.Javascript == "" {
+		conf.Javascript = mp["javascript"]
+	}
+	if forceUpdate || conf.Lua == "" {
+		conf.Lua = mp["lua"]
+	}
+	if forceUpdate || conf.Perl == "" {
+		conf.Perl = mp["perl"]
+	}
+	if forceUpdate || conf.Php == "" {
+		conf.Php = mp["php"]
+	}
+	if forceUpdate || conf.Python == "" {
+		conf.Python = mp["python"]
+	}
+	if forceUpdate || conf.Ruby == "" {
+		conf.Ruby = mp["ruby"]
+	}
+	if forceUpdate || conf.Tcl == "" {
+		conf.Tcl = mp["tcl"]
+	}
+	if forceUpdate || conf.Autoit == "" {
+		conf.Autoit = mp["autoit"]
 	}
 
-	currWorkspaceConfig = configUtils.ReadFromFile(currWorkspace.Path)
-	currWorkspaceConfig.IsWin = commonUtils.IsWin()
+	configUtils.SaveToFile(conf, workspace.Path)
 
 	return
-}
-
-func (s *WorkspaceService) ListByProduct(siteId, productId int) (pos []model.Workspace, err error) {
-	return s.WorkspaceRepo.ListByProduct(siteId, productId)
 }

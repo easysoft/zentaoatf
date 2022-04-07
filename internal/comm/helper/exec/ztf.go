@@ -38,7 +38,7 @@ func ExecCases(ch chan int, testSet serverDomain.TestSet, msg websocket.Message)
 func ExecModule(ch chan int, testSet serverDomain.TestSet, msg websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 
-	cases, err := zentaoUtils.GetCasesByModuleInDir(testSet.ProductId, testSet.ModuleId,
+	cases, err := zentaoUtils.GetCasesByModuleInDir(uint(testSet.ProductId), uint(testSet.ModuleId),
 		testSet.WorkspacePath, testSet.ScriptDirParamFromCmdLine)
 	if err != nil {
 		return

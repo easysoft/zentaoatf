@@ -58,6 +58,14 @@ func (s *InterpreterService) Delete(id uint) error {
 	return s.InterpreterRepo.Delete(id)
 }
 
+func (s *InterpreterService) GetMap(pos []model.Interpreter) (mp map[string]string, err error) {
+	for _, item := range pos {
+		mp[item.Lang] = item.Path
+	}
+
+	return
+}
+
 func (s *InterpreterService) GetLangSettings() (mp map[string]interface{}, err error) {
 	allLangs := langHelper.GetSupportLanguageArrSort()
 

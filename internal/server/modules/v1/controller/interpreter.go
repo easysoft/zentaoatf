@@ -10,6 +10,7 @@ import (
 
 type InterpreterCtrl struct {
 	InterpreterService *service.InterpreterService `inject:""`
+	WorkspaceService   *service.WorkspaceService   `inject:""`
 	BaseCtrl
 }
 
@@ -81,6 +82,8 @@ func (c *InterpreterCtrl) Create(ctx iris.Context) {
 		return
 	}
 
+	c.WorkspaceService.UpdateAllConfig()
+
 	ctx.JSON(c.SuccessResp(iris.Map{"id": id}))
 }
 
@@ -95,6 +98,8 @@ func (c *InterpreterCtrl) Update(ctx iris.Context) {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
+
+	c.WorkspaceService.UpdateAllConfig()
 
 	ctx.JSON(c.SuccessResp(iris.Map{"id": req.ID}))
 }
@@ -111,6 +116,8 @@ func (c *InterpreterCtrl) Delete(ctx iris.Context) {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
+
+	c.WorkspaceService.UpdateAllConfig()
 
 	ctx.JSON(c.SuccessResp(nil))
 }

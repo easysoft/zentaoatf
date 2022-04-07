@@ -21,6 +21,6 @@ func (c *TestFilterCtrl) ListItems(ctx iris.Context) {
 	currProductId, _ := ctx.URLParamInt("currProductId")
 	filerType := ctx.URLParam("filerType")
 
-	ret, _ := c.TestFilterService.ListFilterItems(commConsts.ScriptFilterType(filerType), currSiteId, currProductId)
+	ret, _ := c.TestFilterService.ListFilterItems(commConsts.ScriptFilterType(filerType), uint(currSiteId), uint(currProductId))
 	ctx.JSON(c.SuccessResp(ret))
 }

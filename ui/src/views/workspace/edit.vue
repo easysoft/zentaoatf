@@ -112,8 +112,10 @@ export default defineComponent({
     const selectType = () => {
       console.log('selectType')
 
-      cmdSample.value = cmdMap.value[modelRef.value.type].cmd
-      modelRef.value.cmd = cmdSample.value.split('product_id')[1].trim()
+      if (modelRef.value.type !== 'ztf') {
+        cmdSample.value = cmdMap.value[modelRef.value.type].cmd
+        modelRef.value.cmd = cmdSample.value.split('product_id')[1].trim()
+      }
     }
 
     const selectDir = () => {

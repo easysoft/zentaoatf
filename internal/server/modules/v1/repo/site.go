@@ -69,7 +69,7 @@ func (r *SiteRepo) Get(id uint) (po model.Site, err error) {
 	return
 }
 
-func (r *SiteRepo) Create(site model.Site) (id uint, err error) {
+func (r *SiteRepo) Create(site *model.Site) (id uint, err error) {
 	site.Url = httpUtils.AddSepIfNeeded(site.Url)
 
 	po, err := r.FindDuplicate(site.Name, site.Url, 0)
@@ -77,7 +77,7 @@ func (r *SiteRepo) Create(site model.Site) (id uint, err error) {
 		return 0, errors.New(fmt.Sprintf("站点%s（%s）已存在", site.Name, site.Url))
 	}
 
-	err = r.DB.Model(&model.Site{}).Create(&site).Error
+	err = r.DB.Model(&model.Site{}).Create(site).Error
 	if err != nil {
 		logUtils.Errorf(color.RedString("create site failed, error: %s.", err.Error()))
 		return 0, err

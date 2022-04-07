@@ -1,10 +1,5 @@
 import { Mutation, Action } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
-import { ResponseData } from '@/utils/request';
-import {queryWorkspace, deleteWorkspace} from "@/services/workspace";
-import {setCache} from "@/utils/localCache";
-import settings from '@/config/settings';
-import {saveConfig} from "@/services/config";
 
 export interface ExecStatus {
   isRunning: string

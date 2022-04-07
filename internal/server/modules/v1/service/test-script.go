@@ -23,7 +23,7 @@ func NewTestScriptService() *TestScriptService {
 }
 
 func (s *TestScriptService) LoadTestScriptsBySiteProduct(
-	siteId, productId int, filerType string, filerValue int) (root serverDomain.TestAsset, err error) {
+	siteId, productId uint, filerType string, filerValue int) (root serverDomain.TestAsset, err error) {
 
 	scriptIdsFromZentao := s.getScriptIdsFromZentao(siteId, productId, filerType, filerValue)
 	workspaces, _ := s.WorkspaceRepo.ListByProduct(siteId, productId)
@@ -59,7 +59,7 @@ func (s *TestScriptService) LoadCodeChildren(dir string, workspaceId int) (nodes
 	return
 }
 
-func (s *TestScriptService) getScriptIdsFromZentao(siteId, productId int, filerType string, filerValue int) (
+func (s *TestScriptService) getScriptIdsFromZentao(siteId, productId uint, filerType string, filerValue int) (
 	ret map[int]string) {
 
 	if filerType == "" || filerValue < 0 {
@@ -75,7 +75,7 @@ func (s *TestScriptService) getScriptIdsFromZentao(siteId, productId int, filerT
 	}
 
 	if filerType == string(commConsts.FilterModule) {
-		ret, _ = zentaoHelper.GetCaseIdsInZentaoModule(productId, filerValue, config)
+		ret, _ = zentaoHelper.GetCaseIdsInZentaoModule(productId, uint(filerValue), config)
 	} else if filerType == string(commConsts.FilterSuite) {
 		ret, _ = zentaoHelper.GetCaseIdsInZentaoSuite(productId, filerValue, config)
 	} else if filerType == string(commConsts.FilterTask) {

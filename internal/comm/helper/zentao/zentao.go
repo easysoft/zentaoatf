@@ -81,7 +81,7 @@ func ListLang() (langs []serverDomain.ZentaoLang, err error) {
 func LoadSiteProduct(currSite serverDomain.ZentaoSite, currProductId int) (
 	products []serverDomain.ZentaoProduct, currProduct serverDomain.ZentaoProduct, err error) {
 
-	if currSite.Id == 0 {
+	if currSite.Url == "" {
 		products = []serverDomain.ZentaoProduct{}
 		return
 	}
@@ -160,11 +160,11 @@ func loadProduct(config commDomain.WorkspaceConf) (products []serverDomain.Zenta
 	return
 }
 
-func ListModule(productId int, site model.Site) (modules []domain.NestedItem, err error) {
+func ListModule(productId uint, site model.Site) (modules []domain.NestedItem, err error) {
 	config := configUtils.LoadBySite(site)
 	return LoadModule(productId, config)
 }
-func LoadModule(productId int, config commDomain.WorkspaceConf) (modules []domain.NestedItem, err error) {
+func LoadModule(productId uint, config commDomain.WorkspaceConf) (modules []domain.NestedItem, err error) {
 	err = Login(config)
 	if err != nil {
 		return
@@ -218,11 +218,11 @@ func genModuleData(interf interface{}, parentName string, modules *[]domain.Nest
 	}
 }
 
-func ListSuite(productId int, site model.Site) (products []domain.NestedItem, err error) {
+func ListSuite(productId uint, site model.Site) (products []domain.NestedItem, err error) {
 	config := configUtils.LoadBySite(site)
 	return LoadSuite(productId, config)
 }
-func LoadSuite(productId int, config commDomain.WorkspaceConf) (suites []domain.NestedItem, err error) {
+func LoadSuite(productId uint, config commDomain.WorkspaceConf) (suites []domain.NestedItem, err error) {
 	err = Login(config)
 	if err != nil {
 		return
@@ -244,11 +244,11 @@ func LoadSuite(productId int, config commDomain.WorkspaceConf) (suites []domain.
 	return
 }
 
-func ListTask(productId int, site model.Site) (products []domain.NestedItem, err error) {
+func ListTask(productId uint, site model.Site) (products []domain.NestedItem, err error) {
 	config := configUtils.LoadBySite(site)
 	return LoadTask(productId, config)
 }
-func LoadTask(productId int, config commDomain.WorkspaceConf) (tasks []domain.NestedItem, err error) {
+func LoadTask(productId uint, config commDomain.WorkspaceConf) (tasks []domain.NestedItem, err error) {
 	if config.Url == "" {
 		err = errors.New(i118Utils.Sprintf("pls_config_workspace"))
 		return
