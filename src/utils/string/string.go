@@ -17,7 +17,7 @@ func TrimAll(str string) string {
 	return str
 }
 
-func Ucfirst(str string) string {
+func UcFirst(str string) string {
 	for i, v := range str {
 		return string(unicode.ToUpper(v)) + str[i+1:]
 	}

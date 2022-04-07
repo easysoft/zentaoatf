@@ -3,12 +3,12 @@
 /**
 
 title=simple demo
-cid=1
-pid=1
+cid=8
+pid=3
 
 step1 >> expect 1
 step2 >>
-step3 >> expect 3
+step3 >> expect 33
 
 */
 

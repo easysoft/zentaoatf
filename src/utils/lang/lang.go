@@ -106,7 +106,7 @@ func GetSupportLanguageOptions(scriptExtsInDir []string) ([]string, []string, []
 		if lang == "bat" || lang == "php" {
 			lang = stringUtils.UcAll(lang)
 		} else {
-			lang = stringUtils.Ucfirst(lang)
+			lang = stringUtils.UcFirst(lang)
 		}
 
 		labels = append(labels, strconv.Itoa(idx+1)+". "+lang)

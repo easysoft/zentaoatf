@@ -105,7 +105,7 @@ func ExecScriptFile(filePath string) (string, string) {
 				scriptInterpreter = vari.Interpreter
 				fmt.Printf("use interpreter %s for script %s\n", scriptInterpreter, filePath)
 			} else {
-				scriptInterpreter = commonUtils.GetFieldVal(vari.Config, stringUtils.Ucfirst(lang))
+				scriptInterpreter = commonUtils.GetFieldVal(vari.Config, stringUtils.UcFirst(lang))
 			}
 		}
 		if scriptInterpreter != "" {

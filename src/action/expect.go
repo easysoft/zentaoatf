@@ -53,7 +53,7 @@ func filterCases(cases []string) (casesToRun, casesToIgnore []string) {
 				ext = ext[1:]
 			}
 			lang := vari.ScriptExtToNameMap[ext]
-			interpreter := commonUtils.GetFieldVal(conf, stringUtils.Ucfirst(lang))
+			interpreter := commonUtils.GetFieldVal(conf, stringUtils.UcFirst(lang))
 			if interpreter == "-" && vari.Interpreter == "" { // not to ignore if interpreter set
 				interpreter = ""
 

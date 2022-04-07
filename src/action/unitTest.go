@@ -4,22 +4,22 @@ import (
 	testingService "github.com/easysoft/zentaoatf/src/service/testing"
 	zentaoService "github.com/easysoft/zentaoatf/src/service/zentao"
 	shellUtils "github.com/easysoft/zentaoatf/src/utils/shell"
-	time2 "time"
+	"time"
 )
 
 func RunUnitTest(cmdStr string) string {
-	startTime := time2.Now().Unix()
+	startTime := time.Now().Unix()
 	shellUtils.ExeAppWithOutput(cmdStr)
-	endTime := time2.Now().Unix()
+	endTime := time.Now().Unix()
 
 	testSuites, resultDir := testingService.RetrieveUnitResult(startTime)
-	cases, classNameMaxWidth, time := testingService.ParserUnitTestResult(testSuites)
+	cases, classNameMaxWidth, duration := testingService.ParserUnitTestResult(testSuites)
 
-	if time == 0 {
-		time = float32(endTime - startTime)
+	if duration == 0 {
+		duration = float32(endTime - startTime)
 	}
 
-	report := testingService.GenUnitTestReport(cases, classNameMaxWidth, time)
+	report := testingService.GenUnitTestReport(cases, classNameMaxWidth, duration)
 
 	zentaoService.CommitTestResult(report, 0)
 

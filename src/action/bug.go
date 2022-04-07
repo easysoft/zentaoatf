@@ -36,6 +36,11 @@ func CommitBug(files []string) {
 		}
 	}
 
+	if len(ids) == 0 {
+		logUtils.PrintToWithColor("\n"+i118Utils.Sprintf("no_fail_cases"), color.FgCyan)
+		return
+	}
+
 	for {
 		logUtils.PrintToWithColor("\n"+i118Utils.Sprintf("enter_case_id_for_report_bug"), color.FgCyan)
 		logUtils.PrintToWithColor(strings.Join(lines, "\n"), -1)

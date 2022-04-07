@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-func GenUnitTestReport(cases []model.UnitResult, classNameMaxWidth int, timeVal float32) model.TestReport {
+func GenUnitTestReport(cases []model.UnitResult, classNameMaxWidth int, duration float32) model.TestReport {
 	logUtils.InitLogger()
 	report := model.TestReport{Env: commonUtils.GetOs(), Pass: 0, Fail: 0, Total: 0}
 	report.TestType = "unit"
@@ -46,7 +46,7 @@ func GenUnitTestReport(cases []model.UnitResult, classNameMaxWidth int, timeVal 
 		}
 		report.Total++
 
-		if timeVal == 0 {
+		if duration == 0 {
 			if report.StartTime == 0 || cs.StartTime < report.StartTime {
 				report.StartTime = cs.StartTime
 			}
@@ -56,10 +56,10 @@ func GenUnitTestReport(cases []model.UnitResult, classNameMaxWidth int, timeVal 
 		}
 	}
 	report.UnitResult = cases
-	if timeVal == 0 {
+	if duration == 0 {
 		report.Duration = report.EndTime - report.StartTime
 	} else {
-		report.Duration = int64(timeVal)
+		report.Duration = int64(duration)
 	}
 
 	postFix := ":"
