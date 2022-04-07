@@ -88,7 +88,7 @@ export default defineComponent({
 
     const get = async (id: number): Promise<void> => {
       await store.dispatch('Workspace/get', id);
-      selectType()
+      if (!modelRef.value.cmd) selectType()
     }
     const id = +router.currentRoute.value.params.id
     get(id)

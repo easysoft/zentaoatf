@@ -8,6 +8,7 @@
       <div id="splitter-h"></div>
 
       <div id="right">
+
         <!-- ZTF Test -->
         <template v-if="currWorkspace?.type === 'ztf'">
           <div class="toolbar" v-if="scriptCode !== ''">
@@ -53,11 +54,13 @@
 
         <!-- Unit Test -->
         <template v-if="currWorkspace?.type !== 'ztf'">
+          <!-- Save -->
           <div class="toolbar" v-if="scriptCode !== ''">
             <a-button @click="save" type="primary">{{ t('save') }}</a-button>
           </div>
 
           <div class="right-content">
+            <!-- Codes -->
             <template v-if="script">
               <MonacoEditor
                   v-if="scriptCode !== ''"
@@ -70,6 +73,7 @@
             </template>
 
             <template v-if="!script">
+              <!-- Exec -->
               <div class="unit-panel">
                 <a-form :model="modelUnit" layout="inline">
                   <a-form-item :label="t('test_cmd')">
@@ -80,10 +84,9 @@
                         style="width:380px;"/>
                   </a-form-item>
 
-                  <a-form-item>
+                  <a-form-item v-if="currProduct.id">
                     <a-checkbox v-model:checked="modelUnit.submitResult">{{t('submit_result_to_zentao')}}</a-checkbox>
                   </a-form-item>
-
 
                   <a-form-item>
                     <a-button :disabled="isRunning === 'true' || !modelUnit.cmd" @click="execUnit" type="primary" class="t-btn-gap">

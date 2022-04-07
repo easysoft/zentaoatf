@@ -6,7 +6,7 @@
       </template>
       <template #extra>
         <div class="opt">
-          <a-button @click="openResultForm()" type="primary">{{ t('submit_result_to_zentao') }}</a-button>
+          <a-button v-if="currProduct.id" @click="openResultForm()" type="primary">{{ t('submit_result_to_zentao') }}</a-button>
 
           <a-button type="link" @click="() => back()">{{ t('back') }}</a-button>
         </div>
@@ -89,7 +89,7 @@
                     <p>{{ jsonStr(record.failure) }}</p>
 
                     <template #footer>
-                      <a-button @click="closeInfo(record.id)" type="primary">确定</a-button>
+                      <a-button @click="closeInfo(record.id)" type="primary">{{t('close')}}</a-button>
                     </template>
                   </a-modal>
 
@@ -124,6 +124,7 @@ import {submitResultToZentao} from "./service";
 import ResultForm from './component/result.vue'
 import {useI18n} from "vue-i18n";
 import IconSvg from "@/components/IconSvg/index";
+import {ZentaoData} from "@/store/zentao";
 
 export default defineComponent({
   name: 'UnitTestResultPage',
@@ -134,6 +135,9 @@ export default defineComponent({
 
   setup() {
     const { t, locale } = useI18n();
+
+    const zentaoStore = useStore<{ Zentao: ZentaoData }>();
+    const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
 
     const execBy = execByDef
     const momentTime = momentUnixDef
@@ -196,11 +200,12 @@ export default defineComponent({
     const report = computed<any>(() => store.state.Result.detailResult);
     const loading = ref<boolean>(true);
 
+    const workspaceId = router.currentRoute.value.params.workspaceId
     const seq = router.currentRoute.value.params.seq as string
 
     const get = async (): Promise<void> => {
       loading.value = true;
-      await store.dispatch('Result/get', seq);
+      await store.dispatch('Result/get', {workspaceId: workspaceId, seq: seq});
       loading.value = false;
     }
     get()
@@ -269,6 +274,7 @@ export default defineComponent({
 
     return {
       t,
+      currProduct,
       report,
       columns,
       loading,

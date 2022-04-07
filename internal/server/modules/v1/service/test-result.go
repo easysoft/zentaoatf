@@ -37,9 +37,9 @@ func (s *TestResultService) Paginate(siteId, productId int, req serverDomain.Req
 
 	count := 0
 	for _, workspace := range workspaces {
-		if workspace.Type != commConsts.ZTF {
-			continue
-		}
+		//if workspace.Type != commConsts.ZTF {
+		//	continue
+		//}
 
 		reportFiles := analysisUtils.ListReport(workspace.Path)
 		for _, seq := range reportFiles {

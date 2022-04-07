@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
@@ -77,10 +76,6 @@ func (c *WorkspaceCtrl) Create(ctx iris.Context) {
 func (c *WorkspaceCtrl) Update(ctx iris.Context) {
 	currSiteId, _ := ctx.URLParamInt("currSiteId")
 	currProductId, _ := ctx.URLParamInt("currProductId")
-	if currProductId <= 0 {
-		ctx.JSON(c.ErrResp(commConsts.ParamErr, fmt.Sprintf("参数%s不合法", "currProductId")))
-		return
-	}
 
 	req := model.Workspace{}
 	if err := ctx.ReadJSON(&req); err != nil {

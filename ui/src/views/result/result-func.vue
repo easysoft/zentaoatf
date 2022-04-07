@@ -9,7 +9,7 @@
           <a-button @click="exec('all')" type="primary">{{ t('re_exec_all') }}</a-button>
           <a-button @click="exec('fail')" type="primary">{{ t('re_exec_failed') }}</a-button>
 
-          <a-button @click="openResultForm()">{{ t('submit_result_to_zentao') }}</a-button>
+          <a-button v-if="currProduct.id" @click="openResultForm()">{{ t('submit_result_to_zentao') }}</a-button>
           <a-button type="link" @click="() => back()">{{ t('back') }}</a-button>
         </div>
       </template>
@@ -150,6 +150,7 @@ import IconSvg from "@/components/IconSvg/index";
 
 import {submitResultToZentao} from "./service";
 import {submitBugToZentao} from "@/services/bug";
+import {ZentaoData} from "@/store/zentao";
 
 export default defineComponent({
   name: 'UnitTestResultPage',
@@ -160,6 +161,8 @@ export default defineComponent({
 
   setup() {
     const { t, locale } = useI18n();
+    const zentaoStore = useStore<{ Zentao: ZentaoData }>();
+    const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
 
     const execBy = execByDef
     const momentTime = momentUnixDef
@@ -216,7 +219,6 @@ export default defineComponent({
     const get = async (): Promise<void> => {
       loading.value = true;
       await store.dispatch('Result/get', {workspaceId: workspaceId, seq: seq});
-      console.log('===', report)
       loading.value = false;
     }
     get()
@@ -329,6 +331,8 @@ export default defineComponent({
 
     return {
       t,
+      currProduct,
+
       report,
       columns,
       loading,
