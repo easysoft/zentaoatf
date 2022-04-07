@@ -11,6 +11,11 @@ BIN_WIN32=${BIN_OUT}win32/
 BIN_LINUX=${BIN_OUT}linux/
 BIN_MAC=${BIN_OUT}darwin/
 
+BUILD_TIME=`git show -s --format=%cd`
+GO_VERSION=`go version`
+GIT_HASH=`git show -s --format=%H`
+BUILD_CMD=go build -ldflags "-X 'main.appVersion=${VERSION}' -X 'main.buildTime=${BUILD_TIME}' -X 'main.goVersion=${GO_VERSION}' -X 'main.gitHash=${GIT_HASH}'"
+
 default: prepare_res compile_all copy_files package
 
 win64: prepare_res compile_win64 copy_files package
@@ -27,19 +32,19 @@ compile_all: compile_win64 compile_win32 compile_linux compile_mac
 
 compile_win64:
 	@echo 'start compile win64'
-	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 go build -x -v -ldflags "-s -w" -o ${BIN_WIN32}${BINARY}.exe cmd/server/main.go
+	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 ${BUILD_CMD} -x -v -ldflags "-s -w" -o ${BIN_WIN32}${BINARY}.exe cmd/server/main.go
 
 compile_win32:
 	@echo 'start compile win32'
-	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 go build -x -v -ldflags "-s -w" -o ${BIN_WIN32}${BINARY}.exe cmd/server/main.go
+	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 ${BUILD_CMD} -x -v -ldflags "-s -w" -o ${BIN_WIN32}${BINARY}.exe cmd/server/main.go
 
 compile_linux:
 	@echo 'start compile linux'
-	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ go build -o ${BIN_LINUX}${BINARY} cmd/server/main.go
+	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ ${BUILD_CMD} -o ${BIN_LINUX}${BINARY} cmd/server/main.go
 
 compile_mac:
 	@echo 'start compile mac'
-	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -o ${BIN_MAC}${BINARY} cmd/server/main.go
+	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 ${BUILD_CMD} -o ${BIN_MAC}${BINARY} cmd/server/main.go
 
 copy_files:
 	@echo 'start copy files'
