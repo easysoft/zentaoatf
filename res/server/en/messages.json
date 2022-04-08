@@ -427,12 +427,16 @@
       "translation": "Successfully committed case %d."
     },
     {
-      "id": "fail_to_report_bug",
-      "translation": "Fail to report bug, err %s."
+      "id": "ignore_bug_without_product",
+      "translation": "Can not report a bug which product id is null."
     },
     {
       "id": "success_to_report_bug",
-      "translation": "Success to report bug for case %s."
+      "translation": "Success to report bug for case %d."
+    },
+    {
+      "id": "fail_to_report_bug",
+      "translation": "Fail to report bug, err %s."
     },
     {
       "id": "success_to_commit_result",

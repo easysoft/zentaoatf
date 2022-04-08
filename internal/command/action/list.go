@@ -2,11 +2,11 @@ package action
 
 import (
 	"fmt"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	"github.com/fatih/color"
 	"github.com/mattn/go-runewidth"
 	"strconv"
 	"strings"
@@ -45,12 +45,9 @@ func List(files []string, keywords string) {
 	width := strconv.Itoa(len(strconv.Itoa(total)))
 
 	logUtils.Info("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
-		i118Utils.Sprintf("found_scripts", color.CyanString(strconv.Itoa(total))))
+		i118Utils.Sprintf("found_scripts", total, commConsts.WorkDir))
 
 	for idx, cs := range scriptArr {
-		//format := "(%" + width + "d/%d) [%s] %d.%s"
-		//logUtils.Screen(fmt.Sprintf(format, idx+1, total, cs.Path, cs.Id, cs.Title))
-
 		path := cs.Path
 		lent := runewidth.StringWidth(path)
 

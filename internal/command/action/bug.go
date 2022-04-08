@@ -29,7 +29,6 @@ func CommitBug(files []string) {
 	} else {
 		stdinUtils.InputForDir(&resultDir, "", "result")
 	}
-	//resultDir = fileUtils.AddPathSepIfNeeded(resultDir)
 
 	report, err := analysisUtils.ReadReportByWorkspaceSeq(commConsts.WorkDir, resultDir)
 	if err != nil {
@@ -83,12 +82,6 @@ func reportBug(resultDir string, caseId string) error {
 	bugFields, _ = zentaoHelper.GetBugFiledOptions(config, bug.Product)
 
 	bug = zentaoHelper.PrepareBug(commConsts.WorkDir, resultDir, caseId)
-
-	//bug.Module = 0
-	bug.Severity = 3
-	bug.Pri = 3
-	bug.Type = getFirstNoEmptyVal(bugFields.Types)
-	bug.OpenedBuild = []string{getFirstNoEmptyVal(bugFields.Build)}
 
 	err := zentaoHelper.CommitBug(bug, config)
 	return err

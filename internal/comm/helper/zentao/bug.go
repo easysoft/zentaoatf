@@ -17,6 +17,11 @@ import (
 )
 
 func CommitBug(ztfBug commDomain.ZtfBug, config commDomain.WorkspaceConf) (err error) {
+	if ztfBug.Product == 0 {
+		logUtils.Info(color.RedString(i118Utils.Sprintf("ignore_bug_without_product")))
+		return
+	}
+
 	Login(config)
 
 	ztfBug.Steps = strings.Replace(ztfBug.Steps, " ", "&nbsp;", -1)
@@ -34,7 +39,7 @@ func CommitBug(ztfBug commDomain.ZtfBug, config commDomain.WorkspaceConf) (err e
 	if err == nil {
 		msg = i118Utils.Sprintf("success_to_report_bug", ztfBug.Case)
 	} else {
-		msg = color.RedString("commit bug failed, error: %s.", err.Error())
+		msg = color.RedString(i118Utils.Sprintf("fail_to_report_bug", err.Error()))
 	}
 
 	logUtils.Info(msg)
@@ -71,10 +76,12 @@ func PrepareBug(workspacePath, seq string, caseIdStr string) (bug commDomain.Ztf
 		}
 
 		bug = commDomain.ZtfBug{
-			Title: cs.Title,
-			Case:  cs.Id,
-			Uid:   uuid.NewV4().String(),
-			Steps: strings.Join(steps, "\n"), StepIds: stepIds,
+			Title:   cs.Title,
+			Case:    cs.Id,
+			Product: cs.ProductId,
+			Steps:   strings.Join(steps, "\n"), StepIds: stepIds,
+
+			Uid:  uuid.NewV4().String(),
 			Type: "codeerror", Severity: 3, Pri: 3, OpenedBuild: []string{"trunk"},
 			CaseVersion: "0", OldTaskID: "0",
 		}

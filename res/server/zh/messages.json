@@ -419,12 +419,16 @@
       "translation": "成功更新用例%d"
     },
     {
-      "id": "fail_to_report_bug",
-      "translation": "提交缺陷到禅道失败，错误%s。"
+      "id": "ignore_bug_without_product",
+      "translation": "缺陷引用的用例其产品字段为空，忽略。"
     },
     {
       "id": "success_to_report_bug",
-      "translation": "成功为用例%s提交缺陷"
+      "translation": "成功为用例%d提交缺陷。"
+    },
+    {
+      "id": "fail_to_report_bug",
+      "translation": "提交缺陷到禅道失败，错误%s。"
     },
     {
       "id": "success_to_commit_result",

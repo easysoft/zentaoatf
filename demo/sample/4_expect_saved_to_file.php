@@ -2,7 +2,7 @@
 <?php
 /**
 
-title = expect in .exp file
+title = expect in file
 cid=0
 pid=0
 

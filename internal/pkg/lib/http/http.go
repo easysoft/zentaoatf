@@ -118,7 +118,7 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 	}
 
 	if !IsSuccessCode(resp.StatusCode) {
-		logUtils.Infof(color.RedString("read response failed, StatusCode: %d.", resp.StatusCode))
+		logUtils.Infof(color.RedString("post request return '%s'.", resp.Status))
 		return
 	}
 
