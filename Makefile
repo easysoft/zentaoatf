@@ -36,15 +36,15 @@ compile_all: compile_win64 compile_win32 compile_linux compile_mac compile_arm
 
 compile_win64:
 	@echo 'start compile win64'
-	@CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ${BIN_WIN64}${BINARY}.exe src/main.go
+	@CGO_ENABLED=0 GOOS=windows GOARCH=amd64 ${BUILD_CMD} -o ${BIN_WIN64}${BINARY}.exe src/main.go
 
 compile_win32:
 	@echo 'start compile win32'
-	@CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o ${BIN_WIN32}${BINARY}.exe src/main.go
+	@CGO_ENABLED=0 GOOS=windows GOARCH=386 ${BUILD_CMD} -o ${BIN_WIN32}${BINARY}.exe src/main.go
 
 compile_linux:
 	@echo 'start compile linux'
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ${BIN_LINUX}${BINARY} src/main.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 ${BUILD_CMD} -o ${BIN_LINUX}${BINARY} src/main.go
 
 compile_mac:
 	@echo 'start compile mac'
@@ -52,7 +52,7 @@ compile_mac:
 
 compile_arm:
 	@echo 'start compile arm'
-	@CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=5 go build -o ${BIN_ARM}${BINARY} src/main.go
+	@CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=5 ${BUILD_CMD} -o ${BIN_ARM}${BINARY} src/main.go
 
 copy_files:
 	@echo 'start copy files'
