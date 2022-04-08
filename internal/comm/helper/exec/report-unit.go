@@ -26,7 +26,7 @@ import (
 )
 
 func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
-	ch chan int, wsMsg websocket.Message) (
+	ch chan int, wsMsg *websocket.Message) (
 	report commDomain.ZtfReport) {
 
 	testSuites, zipDir := RetrieveUnitResult(req.WorkspacePath, startTime, req.TestTool, req.BuildTool)

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
-	_commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
+	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
 	"io"
 	"io/ioutil"
 	"os"
@@ -20,7 +20,7 @@ import (
 func ReadFile(filePath string) string {
 	buf := ReadFileBuf(filePath)
 	str := string(buf)
-	str = _commonUtils.RemoveBlankLine(str)
+	str = commonUtils.RemoveBlankLine(str)
 	return str
 }
 
@@ -222,25 +222,24 @@ func GetWorkDir() string { // where we run file in
 	return dir
 }
 
-//func GetExeDir(workDir string) string { // where zd.exe file in
-//	var dir string
-//	arg1 := strings.ToLower(os.Args[0])
-//
-//	name := filepath.Base(arg1)
-//	if strings.Index(name, "zd") == 0 && strings.Index(arg1, "go-build") < 0 {
-//		p, _ := exec.LookPath(os.Args[0])
-//		if strings.Index(p, string(os.PathSeparator)) > -1 {
-//			dir = p[:strings.LastIndex(p, string(os.PathSeparator))]
-//		}
-//	} else { // debug
-//		dir = workDir
-//	}
-//
-//	dir, _ = filepath.Abs(dir)
-//	dir = AddSepIfNeeded(dir)
-//
-//	return dir
-//}
+func GetZTFDir() (dir string, isDebug bool) { // where ztf command and config in
+	if commonUtils.IsRelease() { // release
+		p, _ := exec.LookPath(os.Args[0])
+		if strings.Index(p, string(os.PathSeparator)) > -1 {
+			dir = p[:strings.LastIndex(p, string(os.PathSeparator))]
+		}
+	} else { // debug
+		dir, _ = os.Executable()
+		isDebug = true
+
+		fmt.Printf("Debug: Launch %s in %s \n", os.Args[0], dir)
+	}
+
+	dir, _ = filepath.Abs(dir)
+	dir = AddPathSepIfNeeded(dir)
+
+	return
+}
 
 func GetUserHome() (dir string, err error) {
 	user, err := user.Current()

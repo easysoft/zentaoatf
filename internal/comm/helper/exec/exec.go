@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func Exec(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
+func Exec(ch chan int, req serverDomain.WsReq, msg *websocket.Message) (
 	err error) {
 
 	testSets := req.TestSets
@@ -16,8 +16,8 @@ func Exec(ch chan int, req serverDomain.WsReq, msg websocket.Message) (
 	for _, testSet := range testSets {
 		serverConfig.InitExecLog(testSet.WorkspacePath)
 
-		if req.ScriptDirParamFromCmdLine == "" {
-			req.ScriptDirParamFromCmdLine = testSet.WorkspacePath
+		if testSet.ScriptDirParamFromCmdLine == "" {
+			testSet.ScriptDirParamFromCmdLine = req.ScriptDirParamFromCmdLine
 		}
 
 		if req.Act == commConsts.ExecCase {

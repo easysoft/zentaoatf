@@ -14,7 +14,7 @@ import (
 func Init() {
 	commConsts.IsRelease = commonUtils.IsRelease()
 
-	//commConsts.ExeDir = fileUtils.GetExeDir(commConsts.WorkDir)
+	//commConsts.ZtfDir = fileUtils.GetExeDir(commConsts.WorkDir)
 	commConsts.WorkDir = GetServerWorDir()
 
 	//if !commConsts.IsRelease {

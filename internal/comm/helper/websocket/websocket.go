@@ -16,7 +16,7 @@ var (
 	wsConn *neffos.Conn
 )
 
-func SendOutputMsg(msg, isRunning string, wsMsg websocket.Message) {
+func SendOutputMsg(msg, isRunning string, wsMsg *websocket.Message) {
 	logUtils.Infof(i118Utils.Sprintf("ws_send_exec_msg", wsMsg.Room, msg, string(wsMsg.Body)))
 
 	msg = strings.Trim(msg, "\n")
@@ -25,7 +25,7 @@ func SendOutputMsg(msg, isRunning string, wsMsg websocket.Message) {
 	Broadcast(wsMsg.Namespace, wsMsg.Room, wsMsg.Event, data)
 }
 
-func SendExecMsg(msg, isRunning string, category commConsts.WsMsgCategory, wsMsg websocket.Message) {
+func SendExecMsg(msg, isRunning string, category commConsts.WsMsgCategory, wsMsg *websocket.Message) {
 	logUtils.Infof("WebSocket SendExecMsg: room=%s, msg=%s", wsMsg.Room, string(wsMsg.Body))
 
 	msg = strings.TrimSpace(msg)

@@ -25,6 +25,7 @@ func InitConfig() {
 	commConsts.IsRelease = commonUtils.IsRelease()
 
 	commConsts.WorkDir = fileUtils.GetWorkDir()
+	commConsts.ZtfDir, _ = fileUtils.GetZTFDir()
 	commConsts.ConfigPath = commConsts.WorkDir + commConsts.ConfigFile
 
 	if commConsts.Verbose {

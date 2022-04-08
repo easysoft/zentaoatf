@@ -5,7 +5,6 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/comm/helper/exec"
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
-	"github.com/kataras/iris/v12/websocket"
 )
 
 func RunUnitTest(cmdStr string) {
@@ -26,6 +25,5 @@ func RunUnitTest(cmdStr string) {
 		TestSets: []serverDomain.TestSet{testSet},
 	}
 
-	msg := websocket.Message{}
-	execHelper.Exec(nil, req, msg)
+	execHelper.Exec(nil, req, nil)
 }

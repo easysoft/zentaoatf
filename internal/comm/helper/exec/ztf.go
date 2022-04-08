@@ -30,12 +30,12 @@ import (
 	"time"
 )
 
-func ExecCases(ch chan int, testSet serverDomain.TestSet, msg websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
+func ExecCases(ch chan int, testSet serverDomain.TestSet, msg *websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
 	cases := testSet.Cases
 	return RunZtf(ch, testSet.WorkspacePath, 0, 0, commConsts.Case, cases, msg)
 }
 
-func ExecModule(ch chan int, testSet serverDomain.TestSet, msg websocket.Message) (
+func ExecModule(ch chan int, testSet serverDomain.TestSet, msg *websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 
 	cases, err := zentaoUtils.GetCasesByModuleInDir(uint(testSet.ProductId), uint(testSet.ModuleId),
@@ -51,7 +51,7 @@ func ExecModule(ch chan int, testSet serverDomain.TestSet, msg websocket.Message
 	return RunZtf(ch, testSet.WorkspacePath, testSet.ProductId, testSet.ModuleId, commConsts.Module, cases, msg)
 }
 
-func ExecSuite(ch chan int, testSet serverDomain.TestSet, msg websocket.Message) (
+func ExecSuite(ch chan int, testSet serverDomain.TestSet, msg *websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 	cases, err := zentaoUtils.GetCasesBySuiteInDir(testSet.ProductId, testSet.SuiteId,
 		testSet.WorkspacePath, testSet.ScriptDirParamFromCmdLine)
@@ -64,7 +64,7 @@ func ExecSuite(ch chan int, testSet serverDomain.TestSet, msg websocket.Message)
 		testSet.ProductId, testSet.SuiteId, commConsts.Suite, cases, msg)
 }
 
-func ExecTask(ch chan int, testSet serverDomain.TestSet, msg websocket.Message) (
+func ExecTask(ch chan int, testSet serverDomain.TestSet, msg *websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 	cases, err := zentaoUtils.GetCasesByTaskInDir(testSet.ProductId, testSet.TaskId,
 		testSet.WorkspacePath, testSet.ScriptDirParamFromCmdLine)
@@ -81,7 +81,7 @@ func ExecTask(ch chan int, testSet serverDomain.TestSet, msg websocket.Message) 
 }
 
 func RunZtf(ch chan int,
-	workspacePath string, productId, id int, by commConsts.ExecBy, cases []string, wsMsg websocket.Message) (
+	workspacePath string, productId, id int, by commConsts.ExecBy, cases []string, wsMsg *websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 
 	conf := configUtils.LoadByWorkspacePath(workspacePath)
@@ -104,7 +104,7 @@ func RunZtf(ch chan int,
 
 func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath string, conf commDomain.WorkspaceConf,
 	report *commDomain.ZtfReport, pathMaxWidth int, numbMaxWidth int,
-	ch chan int, wsMsg websocket.Message) {
+	ch chan int, wsMsg *websocket.Message) {
 
 	now := time.Now()
 	startTime := now.Unix()
@@ -157,7 +157,7 @@ ExitAllCase:
 
 func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, report *commDomain.ZtfReport, scriptIdx,
 	total, pathMaxWidth, numbMaxWidth int,
-	ch chan int, wsMsg websocket.Message) {
+	ch chan int, wsMsg *websocket.Message) {
 
 	startTime := time.Now()
 
@@ -204,7 +204,7 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 }
 
 func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
-	ch chan int, wsMsg websocket.Message) (
+	ch chan int, wsMsg *websocket.Message) (
 	stdOutput string, errOutput string) {
 
 	var cmd *exec.Cmd

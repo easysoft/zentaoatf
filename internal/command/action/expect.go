@@ -9,7 +9,6 @@ import (
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
-	"github.com/kataras/iris/v12/websocket"
 	"path/filepath"
 )
 
@@ -44,8 +43,7 @@ func dryRunScripts(casesToRun []string) {
 }
 func dryRunScript(file string) {
 	conf := configUtils.LoadByWorkspacePath(commConsts.WorkDir)
-	wsMsg := websocket.Message{}
-	out, _ := _scriptUtils.RunScript(file, commConsts.WorkDir, conf, nil, wsMsg)
+	out, _ := _scriptUtils.RunScript(file, commConsts.WorkDir, conf, nil, nil)
 
 	expFile := filepath.Join(filepath.Dir(file), fileUtils.GetFileNameWithoutExt(file)+".exp")
 	fileUtils.WriteFile(expFile, out)

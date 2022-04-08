@@ -9,9 +9,9 @@ var (
 	LanguageEn = "en"
 	Language   = LanguageZh
 
-	Verbose   = false
-	IsRelease bool
-	//ExeDir     string
+	Verbose    = false
+	IsRelease  bool
+	ZtfDir     string
 	WorkDir    string
 	ExecLogDir string
 	LogDir     string

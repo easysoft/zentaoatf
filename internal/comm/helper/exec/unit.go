@@ -20,7 +20,7 @@ import (
 )
 
 func ExecUnit(ch chan int,
-	req serverDomain.TestSet, wsMsg websocket.Message) (resultDir string, err error) {
+	req serverDomain.TestSet, wsMsg *websocket.Message) (resultDir string, err error) {
 
 	startTime := time.Now()
 	startMsg := i118Utils.Sprintf("start_execution", req.Cmd, dateUtils.DateTimeStr(startTime))
@@ -54,7 +54,7 @@ func ExecUnit(ch chan int,
 	return
 }
 
-func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg websocket.Message) (err error) {
+func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg *websocket.Message) (err error) {
 
 	cmd := exec.Command("/bin/bash", "-c", cmdStr)
 	cmd.Dir = workspacePath

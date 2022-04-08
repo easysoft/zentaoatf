@@ -35,4 +35,3 @@ $>ztf.exe -v demo\lang\bat -k 0                      查看指定路径下，ID�
 $>ztf.exe -v demo\lang\bat -k word                   查看指定路径下，标题包含'pattern'的脚本。
 
 $>ztf.exe clean                                      清除所有测试执行日志，缩写-c。
-$>ztf.exe -P 8848                                    运行Web服务于指定的端口。

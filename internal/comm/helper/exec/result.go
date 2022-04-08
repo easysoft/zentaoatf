@@ -19,7 +19,7 @@ import (
 
 func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfReport, scriptIdx int,
 	total int, secs string, pathMaxWidth int, numbMaxWidth int,
-	wsMsg websocket.Message) {
+	wsMsg *websocket.Message) {
 
 	steps, isOldFormat := scriptHelper.GetStepAndExpectMap(scriptFile)
 
@@ -48,7 +48,7 @@ func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfRepor
 func ValidateCaseResult(scriptFile string, langType string,
 	steps []commDomain.ZentaoCaseStep, skip bool, actualArr [][]string, report *commDomain.ZtfReport,
 	scriptIdx int, total int, secs string, pathMaxWidth int, numbMaxWidth int,
-	wsMsg websocket.Message) {
+	wsMsg *websocket.Message) {
 
 	_, caseId, productId, title := scriptHelper.GetCaseInfo(scriptFile)
 

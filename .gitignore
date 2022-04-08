@@ -21,3 +21,4 @@ logs/
 .idea/
 /res/res.go
 /conf/
+/testng_*

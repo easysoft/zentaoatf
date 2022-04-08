@@ -9,7 +9,6 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
-	"github.com/kataras/iris/v12/websocket"
 	"path"
 )
 
@@ -63,7 +62,7 @@ func RunZTFTest(files []string, moduleIdStr, suiteIdStr, taskIdStr string, actio
 
 	req.TestSets = append(req.TestSets, testSet)
 
-	execHelper.Exec(nil, req, websocket.Message{})
+	execHelper.Exec(nil, req, nil)
 
 	return nil
 }
