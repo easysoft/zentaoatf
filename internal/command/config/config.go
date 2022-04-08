@@ -93,7 +93,7 @@ func PrintCurrConfig() {
 	val := reflect.ValueOf(conf)
 	typeOfS := val.Type()
 	for i := 0; i < reflect.ValueOf(conf).NumField(); i++ {
-		if !commonUtils.IsWin() && i > 4 {
+		if !commonUtils.IsWin() && i >= 4 {
 			break
 		}
 

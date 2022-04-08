@@ -85,11 +85,11 @@ func LoadTestCases(productId, moduleId, suiteId, taskId int,
 	if moduleId != 0 {
 		cases, _ = ListCaseByModule(config.Url, productId, moduleId)
 	} else if suiteId != 0 {
-		cases = ListCaseBySuite(config.Url, 0, suiteId)
+		cases, _ = ListCaseBySuite(config.Url, suiteId)
 	} else if taskId != 0 {
-		cases = ListCaseByTask(config.Url, 0, taskId)
+		cases, _ = ListCaseByTask(config.Url, taskId)
 	} else if productId != 0 {
-		cases = ListCaseByProduct(config.Url, productId)
+		cases, _ = ListCaseByProduct(config.Url, productId)
 	}
 
 	return
@@ -227,7 +227,7 @@ func GetCasesBySuiteInDir(productId int, suiteId int, workspacePath, scriptDir s
 		return
 	}
 
-	testcases := ListCaseBySuite(config.Url, productId, suiteId)
+	testcases, _ := ListCaseBySuite(config.Url, suiteId)
 
 	caseIdMap := map[int]string{}
 	for _, tc := range testcases {
@@ -249,7 +249,7 @@ func GetCasesByTaskInDir(productId int, taskId int, workspacePath, scriptDir str
 		return
 	}
 
-	testcases := ListCaseByTask(config.Url, productId, taskId)
+	testcases, _ := ListCaseByTask(config.Url, taskId)
 
 	caseIdMap := map[int]string{}
 	for _, tc := range testcases {
@@ -262,7 +262,7 @@ func GetCasesByTaskInDir(productId int, taskId int, workspacePath, scriptDir str
 	return
 }
 
-func ListCaseByProduct(baseUrl string, productId int) (caseArr []commDomain.ZtfCase) {
+func ListCaseByProduct(baseUrl string, productId int) (caseArr []commDomain.ZtfCase, err error) {
 	uri := fmt.Sprintf("/products/%d/testcases", productId)
 	url := GenApiUrl(uri, nil, baseUrl)
 
@@ -283,11 +283,11 @@ func ListCaseByProduct(baseUrl string, productId int) (caseArr []commDomain.ZtfC
 			Title: cs.Title, Steps: stepArr})
 	}
 
-	return caseArr
+	return
 }
 
 func ListCaseByModule(baseUrl string, productId, moduleId int) (caseArr []commDomain.ZtfCase, err error) {
-	uri := fmt.Sprintf("/products/%d/testcases?module=:%d", productId, moduleId)
+	uri := fmt.Sprintf("/products/%d/testcases?module=%d", productId, moduleId)
 	url := GenApiUrl(uri, nil, baseUrl)
 
 	bytes, err := httpUtils.Get(url)
@@ -295,8 +295,11 @@ func ListCaseByModule(baseUrl string, productId, moduleId int) (caseArr []commDo
 		return
 	}
 
-	var module commDomain.ZtfModule
-	json.Unmarshal(bytes, &module)
+	var module commDomain.ZtfRespTestCases
+	err = json.Unmarshal(bytes, &module)
+	if err != nil {
+		return
+	}
 
 	for _, cs := range module.Cases {
 		caseId := cs.Id
@@ -311,73 +314,60 @@ func ListCaseByModule(baseUrl string, productId, moduleId int) (caseArr []commDo
 	return
 }
 
-func ListCaseBySuite(baseUrl string, productId, suiteId int) []commDomain.ZtfCase {
-	// $suiteID, $orderBy = 'id_asc', $recTotal = 0, $recPerPage = 20, $pageID = 1
+func ListCaseBySuite(baseUrl string, suiteId int) (caseArr []commDomain.ZtfCase, err error) {
+	uri := fmt.Sprintf("/testsuites/%d", suiteId)
+	url := GenApiUrl(uri, nil, baseUrl)
 
-	params := ""
-	if commConsts.RequestType == commConsts.PathInfo {
-		params = fmt.Sprintf("%d-id_asc-0-10000-1", suiteId)
-	} else {
-		params = fmt.Sprintf("suiteID=%d&orderBy=id_asc&recTotal=0&recPerPage=10000", suiteId)
-	}
-
-	url := baseUrl + GenApiUriOld("testsuite", "view", params)
 	bytes, err := httpUtils.Get(url)
-
-	if err == nil {
-		var suite commDomain.ZtfSuite
-		json.Unmarshal(bytes, &suite)
-
-		caseArr := make([]commDomain.ZtfCase, 0)
-		for _, cs := range suite.Cases {
-			caseId := cs.Id
-
-			csWithSteps := GetCaseById(baseUrl, caseId)
-			stepArr := genCaseSteps(csWithSteps)
-
-			caseArr = append(caseArr, commDomain.ZtfCase{Id: caseId, Product: cs.Product, Module: cs.Module,
-				Title: cs.Title, Steps: stepArr})
-		}
-
-		return caseArr
+	if err != nil {
+		return
 	}
 
-	return nil
+	var suite commDomain.ZtfRespTestCases
+	err = json.Unmarshal(bytes, &suite)
+	if err != nil {
+		return
+	}
+
+	for _, cs := range suite.Cases {
+		caseId := cs.Id
+
+		csWithSteps := GetCaseById(baseUrl, caseId)
+		stepArr := genCaseSteps(csWithSteps)
+
+		caseArr = append(caseArr, commDomain.ZtfCase{Id: caseId, Product: cs.Product, Module: cs.Module,
+			Title: cs.Title, Steps: stepArr})
+	}
+
+	return
 }
 
-func ListCaseByTask(baseUrl string, productId, taskId int) []commDomain.ZtfCase {
-	// $taskID, $browseType = 'all', $param = 0,
-	// $orderBy = 'id_asc', $recTotal = 0, $recPerPage = 20, $pageID = 1
+func ListCaseByTask(baseUrl string, taskId int) (caseArr []commDomain.ZtfCase, err error) {
+	uri := fmt.Sprintf("/testtasks/%d", taskId)
+	url := GenApiUrl(uri, nil, baseUrl)
 
-	params := ""
-	if commConsts.RequestType == commConsts.PathInfo {
-		params = fmt.Sprintf("%d-all-0-id_asc-0-10000-1", taskId)
-	} else {
-		params = fmt.Sprintf("taskID=%d&browseType=all&param=0&orderBy=id_asc&recTotal=0&recPerPage=10000", taskId)
-	}
-
-	url := baseUrl + GenApiUriOld("testtask", "cases", params)
 	bytes, err := httpUtils.Get(url)
-
-	if err == nil {
-		var task commDomain.ZtfTask
-		json.Unmarshal(bytes, &task)
-
-		caseArr := make([]commDomain.ZtfCase, 0)
-		for _, cs := range task.Runs {
-			caseId := cs.Case
-
-			csWithSteps := GetCaseById(baseUrl, caseId)
-			stepArr := genCaseSteps(csWithSteps)
-
-			caseArr = append(caseArr, commDomain.ZtfCase{Id: caseId, Product: cs.Product, Module: cs.Module,
-				Title: cs.Title, Steps: stepArr})
-		}
-
-		return caseArr
+	if err != nil {
+		return
 	}
 
-	return nil
+	var task commDomain.ZtfRespTestCases
+	err = json.Unmarshal(bytes, &task)
+	if err != nil {
+		return
+	}
+
+	for _, cs := range task.Cases {
+		caseId := cs.Case
+
+		csWithSteps := GetCaseById(baseUrl, caseId)
+		stepArr := genCaseSteps(csWithSteps)
+
+		caseArr = append(caseArr, commDomain.ZtfCase{Id: caseId, Product: cs.Product, Module: cs.Module,
+			Title: cs.Title, Steps: stepArr})
+	}
+
+	return
 }
 
 func genCaseSteps(csWithSteps commDomain.ZtfCase) (ret []commDomain.ZtfStep) {

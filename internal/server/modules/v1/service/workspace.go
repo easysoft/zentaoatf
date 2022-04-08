@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"fmt"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
@@ -90,6 +91,9 @@ func (s *WorkspaceService) UpdateConfig(workspace model.Workspace, forceUpdate b
 	mp, _ := s.InterpreterService.GetMap(interps)
 
 	conf := configUtils.ReadFromFile(workspace.Path)
+	if conf.Language == "" {
+		conf.Language = commConsts.LanguageZh
+	}
 	if forceUpdate || conf.Url == "" {
 		conf.Url = site.Url
 	}
@@ -100,33 +104,31 @@ func (s *WorkspaceService) UpdateConfig(workspace model.Workspace, forceUpdate b
 		conf.Password = site.Password
 	}
 
-	if !commonUtils.IsWin() {
-		return
-	}
-
-	if forceUpdate || conf.Javascript == "" {
-		conf.Javascript = mp["javascript"]
-	}
-	if forceUpdate || conf.Lua == "" {
-		conf.Lua = mp["lua"]
-	}
-	if forceUpdate || conf.Perl == "" {
-		conf.Perl = mp["perl"]
-	}
-	if forceUpdate || conf.Php == "" {
-		conf.Php = mp["php"]
-	}
-	if forceUpdate || conf.Python == "" {
-		conf.Python = mp["python"]
-	}
-	if forceUpdate || conf.Ruby == "" {
-		conf.Ruby = mp["ruby"]
-	}
-	if forceUpdate || conf.Tcl == "" {
-		conf.Tcl = mp["tcl"]
-	}
-	if forceUpdate || conf.Autoit == "" {
-		conf.Autoit = mp["autoit"]
+	if commonUtils.IsWin() {
+		if forceUpdate || conf.Javascript == "" {
+			conf.Javascript = mp["javascript"]
+		}
+		if forceUpdate || conf.Lua == "" {
+			conf.Lua = mp["lua"]
+		}
+		if forceUpdate || conf.Perl == "" {
+			conf.Perl = mp["perl"]
+		}
+		if forceUpdate || conf.Php == "" {
+			conf.Php = mp["php"]
+		}
+		if forceUpdate || conf.Python == "" {
+			conf.Python = mp["python"]
+		}
+		if forceUpdate || conf.Ruby == "" {
+			conf.Ruby = mp["ruby"]
+		}
+		if forceUpdate || conf.Tcl == "" {
+			conf.Tcl = mp["tcl"]
+		}
+		if forceUpdate || conf.Autoit == "" {
+			conf.Autoit = mp["autoit"]
+		}
 	}
 
 	configUtils.SaveToFile(conf, workspace.Path)

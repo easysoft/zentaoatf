@@ -32,6 +32,7 @@ type ZtfCaseInModule struct {
 	Title   string
 	Product int
 	Module  int
+	Case    int // case id in task
 }
 
 type ZtfSuite struct {

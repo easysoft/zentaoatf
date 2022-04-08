@@ -97,7 +97,7 @@ func main() {
 
 	case "checkout", "co":
 		if err := flagSet.Parse(os.Args[2:]); err == nil {
-			action.Generate(productId, moduleId, suiteId, taskId, independentFile, language, actionModule)
+			action.Checkout(productId, moduleId, suiteId, taskId, independentFile, language, actionModule)
 		}
 
 	case "ci":
