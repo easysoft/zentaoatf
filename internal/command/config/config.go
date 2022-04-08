@@ -55,10 +55,8 @@ func Init() {
 
 	CheckConfigPermission()
 
-	// screen size
 	InitScreenSize()
 
-	// internationalization
 	i118Utils.Init(commConsts.Language, commConsts.AppServer)
 
 	langHelper.GetExtToNameMap()
@@ -80,13 +78,6 @@ func InitScreenSize() {
 	consts.ScreenWidth = w
 	consts.ScreenHeight = h
 }
-
-//func CheckRequestConfig() {
-//	conf := configUtils.LoadByWorkspacePath(commConsts.WorkDir)
-//	if conf.Url == "" || conf.Username == "" || conf.Password == "" {
-//		stdinUtils.InputForRequest()
-//	}
-//}
 
 func PrintCurrConfig() {
 	logUtils.ExecConsole(color.FgCyan, "\n"+i118Utils.Sprintf("current_config"))

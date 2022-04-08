@@ -5,7 +5,6 @@ import (
 	analysisUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/analysis"
 	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
 	zentaoUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
-	"github.com/aaronchen2k/deeptest/internal/command"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
@@ -13,7 +12,7 @@ import (
 	"strconv"
 )
 
-func CommitZTFTestResult(files []string, productId, taskId int, noNeedConfirm bool, actionModule *command.IndexModule) {
+func CommitZTFTestResult(files []string, productId, taskId int, noNeedConfirm bool) {
 	var resultDir string
 	if len(files) > 0 {
 		resultDir = files[0]

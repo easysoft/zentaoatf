@@ -4,12 +4,12 @@ import (
 	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
-	"github.com/aaronchen2k/deeptest/internal/command"
+	zentaoHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
 )
 
-func Checkout(productId, moduleId, suiteId, taskId string, independentFile bool, scriptLang string, actionModule *command.IndexModule) {
+func Checkout(productId, moduleId, suiteId, taskId string, independentFile bool, scriptLang string) {
 	if (productId != "" || moduleId != "" || suiteId != "" || taskId != "") && scriptLang != "" {
 		//isReady = true
 	} else {
@@ -28,6 +28,5 @@ func Checkout(productId, moduleId, suiteId, taskId string, independentFile bool,
 
 	config := configUtils.LoadByWorkspacePath(commConsts.WorkDir)
 
-	actionModule.SyncService.SyncFromZentao(settings, config, commConsts.WorkDir)
-
+	zentaoHelper.SyncFromZentao(settings, config, commConsts.WorkDir)
 }

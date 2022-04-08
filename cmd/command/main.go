@@ -3,16 +3,13 @@ package main
 import (
 	"flag"
 	"github.com/aaronchen2k/deeptest/internal/comm/consts"
-	"github.com/aaronchen2k/deeptest/internal/command"
 	"github.com/aaronchen2k/deeptest/internal/command/action"
 	commandConfig "github.com/aaronchen2k/deeptest/internal/command/config"
 	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
-	"github.com/facebookgo/inject"
 	"github.com/fatih/color"
-	"github.com/sirupsen/logrus"
 	"os"
 	"os/signal"
 	"strings"
@@ -79,7 +76,6 @@ func main() {
 
 	flagSet.StringVar(&commConsts.UnitTestResult, "result", "", "")
 
-	actionModule := injectModule()
 	if len(os.Args) == 1 {
 		os.Args = append(os.Args, "run", ".")
 	}
@@ -97,26 +93,26 @@ func main() {
 
 	case "checkout", "co":
 		if err := flagSet.Parse(os.Args[2:]); err == nil {
-			action.Checkout(productId, moduleId, suiteId, taskId, independentFile, language, actionModule)
+			action.Checkout(productId, moduleId, suiteId, taskId, independentFile, language)
 		}
 
 	case "ci":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
-			action.CommitCases(files, actionModule)
+			action.CommitCases(files)
 		}
 
 	case "cr":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[len(files):]); err == nil {
 			action.CommitZTFTestResult(files, stringUtils.ParseInt(productId), stringUtils.ParseInt(taskId),
-				noNeedConfirm, actionModule)
+				noNeedConfirm)
 		}
 
 	case "cb":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[len(files):]); err == nil {
-			action.CommitBug(files, actionModule)
+			action.CommitBug(files)
 		}
 
 	case "list", "ls", "-l":
@@ -145,29 +141,29 @@ func main() {
 		action.PrintUsage()
 
 	case "run", "-r":
-		run(os.Args, actionModule)
+		run(os.Args)
 
 	default: // run
 		if len(os.Args) > 1 {
 			args := []string{os.Args[0], "run"}
 			args = append(args, os.Args[1:]...)
 
-			run(args, actionModule)
+			run(args)
 		} else {
 			action.PrintUsage()
 		}
 	}
 }
 
-func run(args []string, actionModule *command.IndexModule) {
+func run(args []string) {
 	if len(args) >= 3 && stringUtils.FindInArr(args[2], commConsts.UnitTestTypes) { // unit test
-		runUnitTest(args, actionModule)
+		runUnitTest(args)
 	} else { // ztf test
-		runFuncTest(args, actionModule)
+		runFuncTest(args)
 	}
 }
 
-func runFuncTest(args []string, actionModule *command.IndexModule) {
+func runFuncTest(args []string) {
 	files := fileUtils.GetFilesFromParams(args[2:])
 
 	err := flagSet.Parse(args[len(files)+2:])
@@ -182,13 +178,13 @@ func runFuncTest(args []string, actionModule *command.IndexModule) {
 			msgStr := i118Utils.Sprintf("run_with_specific_interpreter", commConsts.Interpreter)
 			logUtils.ExecConsolef(color.FgCyan, msgStr)
 		}
-		action.RunZTFTest(files, moduleId, suiteId, taskId, actionModule)
+		action.RunZTFTest(files, moduleId, suiteId, taskId)
 	} else {
 		action.PrintUsage()
 	}
 }
 
-func runUnitTest(args []string, actionModule *command.IndexModule) {
+func runUnitTest(args []string) {
 	// junit -p 1 mvn clean package test
 	commConsts.UnitTestType = args[2]
 	end := 8
@@ -231,21 +227,4 @@ func init() {
 
 func cleanup() {
 	color.Unset()
-}
-
-func injectModule() (actionModule *command.IndexModule) {
-	var g inject.Graph
-	actionModule = command.NewIndexModule()
-
-	// inject objects
-	if err := g.Provide(
-		&inject.Object{Value: actionModule},
-	); err != nil {
-		logrus.Fatalf("provide usecase objects to the Graph: %v", err)
-	}
-	err := g.Populate()
-	if err != nil {
-		logrus.Fatalf("populate the incomplete Objects: %v", err)
-	}
-	return
 }

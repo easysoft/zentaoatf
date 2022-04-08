@@ -7,7 +7,6 @@ import (
 	analysisUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/analysis"
 	configHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
 	"github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
-	"github.com/aaronchen2k/deeptest/internal/command"
 	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
@@ -23,7 +22,7 @@ var (
 	bugFields commDomain.ZentaoBugFields
 )
 
-func CommitBug(files []string, actionModule *command.IndexModule) {
+func CommitBug(files []string) {
 	var resultDir string
 	if len(files) > 0 {
 		resultDir = files[0]

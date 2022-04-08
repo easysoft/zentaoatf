@@ -4,7 +4,6 @@ import (
 	"github.com/aaronchen2k/deeptest/internal/comm/consts"
 	"github.com/aaronchen2k/deeptest/internal/comm/helper/exec"
 	"github.com/aaronchen2k/deeptest/internal/comm/helper/script"
-	"github.com/aaronchen2k/deeptest/internal/command"
 	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
 	"github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
 	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
@@ -12,7 +11,7 @@ import (
 	"path"
 )
 
-func RunZTFTest(files []string, moduleIdStr, suiteIdStr, taskIdStr string, actionModule *command.IndexModule) error {
+func RunZTFTest(files []string, moduleIdStr, suiteIdStr, taskIdStr string) error {
 	req := serverDomain.WsReq{
 		ScriptDirParamFromCmdLine: files[0],
 	}
