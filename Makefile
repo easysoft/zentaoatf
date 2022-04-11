@@ -14,7 +14,7 @@ BIN_MAC=${BIN_OUT}darwin/
 BUILD_TIME=`git show -s --format=%cd`
 GO_VERSION=`go version`
 GIT_HASH=`git show -s --format=%H`
-BUILD_CMD=go build -ldflags "-X 'main.appVersion=${VERSION}' -X 'main.buildTime=${BUILD_TIME}' -X 'main.goVersion=${GO_VERSION}' -X 'main.gitHash=${GIT_HASH}'"
+BUILD_CMD=go build -ldflags "-X 'commConsts.appVersion=${VERSION}' -X 'commConsts.buildTime=${BUILD_TIME}' -X 'commConsts.goVersion=${GO_VERSION}' -X 'commConsts.gitHash=${GIT_HASH}'"
 
 default: prepare_res compile_all copy_files package
 

@@ -6,6 +6,7 @@ import (
 	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
 	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
 	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
+	zentaoHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
@@ -118,7 +119,7 @@ func (c *TestScriptCtrl) SyncFromZentao(ctx iris.Context) {
 	workspace, _ := c.WorkspaceService.Get(uint(syncSettings.WorkspaceId))
 
 	syncSettings.ProductId = currProductId
-	err = c.SyncService.SyncFromZentao(syncSettings, config, workspace.Path)
+	err = zentaoHelper.SyncFromZentao(syncSettings, config, workspace.Path)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
@@ -150,7 +151,7 @@ func (c *TestScriptCtrl) SyncToZentao(ctx iris.Context) {
 		workspaceId := set.WorkspaceId
 		workspace, _ := c.WorkspaceService.Get(uint(workspaceId))
 
-		err := c.SyncService.SyncToZentao(set.Cases, workspace.Path, currProductId, config)
+		err := zentaoHelper.SyncToZentao(set.Cases, workspace.Path, currProductId, config)
 		if err != nil {
 			ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 			return

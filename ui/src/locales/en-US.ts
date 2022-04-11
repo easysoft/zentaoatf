@@ -144,6 +144,8 @@ export default {
     'ws_conn_fail': 'Connect to WebSocket failed.',
     'no_script_for_unittest': 'No scriptS for Unit Test.',
 
+    'zentao_request_failed_title': 'Zentao Site Request Failed',
+    'zentao_request_failed_desc': 'Please check Zentao Site config is right.',
     'extract_step': 'Extract Steps',
     'extract_success': 'Extract comments to test steps and checkpoints successfully.',
     'extract_fail': 'Extract comments to test steps and checkpoints failed.',

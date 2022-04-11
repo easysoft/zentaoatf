@@ -5,6 +5,8 @@ import {queryLang, querySiteAndProduct, getProfile, queryProduct, queryModule, q
 
 import {setCurrProductIdBySite, setCurrSiteId} from "@/utils/cache";
 
+import {notification} from "ant-design-vue";
+
 export interface ZentaoData {
     langs: any[]
 
@@ -73,11 +75,11 @@ const StoreModel: ModuleType = {
         },
         saveProfile(state, payload) {
             console.log('payload', payload)
+
             state.profile = payload
         },
         async saveSitesAndProduct(state, payload) {
             console.log('saveSitesAndProduct', payload)
-            if (!payload.currSite || !payload.currProduct) return
 
             state.sites = payload.sites;
             state.products = payload.products;
@@ -138,7 +140,7 @@ const StoreModel: ModuleType = {
 
             commit('saveSitesAndProduct', data)
 
-            return true;
+            return data;
         },
         async fetchProducts({ commit }) {
             const response: ResponseData = await queryProduct();

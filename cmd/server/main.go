@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
 	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
 	"github.com/aaronchen2k/deeptest/internal/server/core/cron"
 	"github.com/aaronchen2k/deeptest/internal/server/core/web"
@@ -9,11 +10,6 @@ import (
 )
 
 var (
-	appVersion string
-	buildTime  string
-	goVersion  string
-	gitHash    string
-
 	port = 0
 	uuid = ""
 )
@@ -28,18 +24,23 @@ func main() {
 	flag.StringVar(&uuid, "uuid", "", "区分服务进程的唯一ID")
 	flag.Parse()
 
+	if len(os.Args) == 1 {
+		os.Args = append(os.Args, "run")
+	}
+
 	switch os.Args[1] {
 	case "version", "--version":
-		logUtils.PrintVersion(appVersion, buildTime, goVersion, gitHash)
-	default:
-	}
-
-	webServer := web.Init(port)
-	if webServer == nil {
+		logUtils.PrintVersion(commConsts.AppVersion, commConsts.BuildTime, commConsts.GoVersion, commConsts.GitHash)
 		return
+	default:
+		webServer := web.Init(port)
+		if webServer == nil {
+			return
+		}
+
+		cron.NewServerCron().Init()
+
+		webServer.Run()
 	}
 
-	cron.NewServerCron().Init()
-
-	webServer.Run()
 }

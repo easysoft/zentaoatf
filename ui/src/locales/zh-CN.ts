@@ -144,6 +144,8 @@ export default {
     'ws_conn_fail': 'WebSocket连接失败。',
     'no_script_for_unittest': '此为单元测试工作目录，无ZTF脚本。',
 
+    'zentao_request_failed_title': '禅道请求错误',
+    'zentao_request_failed_desc': '请检查禅道服务可用且配置正确。',
     'extract_step': '提取步骤',
     'extract_success': '提取注释为测试步骤和验证点成功。',
     'extract_fail': '提取注释为测试步骤和验证点失败。',

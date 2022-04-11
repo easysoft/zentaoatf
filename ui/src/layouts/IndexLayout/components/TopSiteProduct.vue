@@ -50,6 +50,7 @@
 <script lang="ts">
 import {computed, ComputedRef, defineComponent, onMounted, Ref, ref, watch} from "vue";
 import {useRouter} from "vue-router";
+import {notification} from 'ant-design-vue';
 import {useStore} from "vuex";
 import IconSvg from "@/components/IconSvg/index";
 import {useI18n} from "vue-i18n";
@@ -82,7 +83,9 @@ export default defineComponent({
     const currSite = computed<any>(() => store.state.Zentao.currSite);
     const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
-    store.dispatch('Zentao/fetchSitesAndProduct', {})
+    store.dispatch('Zentao/fetchSitesAndProduct', {}).then((payload) => {
+      showZentaoMsg(payload)
+    })
 
     watch(currSite, ()=> {
       console.log(`watch currSite id = ${currSite.value.id}`)
@@ -101,13 +104,27 @@ export default defineComponent({
       console.log('onMounted')
     })
 
+    const showZentaoMsg = (payload): void => {
+      if (payload.zentaoErr) {
+        notification.error({
+          message: t('zentao_request_failed_title'),
+          description: t('zentao_request_failed_desc'),
+          duration: null,
+        });
+      }
+    }
+
     const selectSite = (site): void => {
       console.log('selectSite', site)
-      store.dispatch('Zentao/fetchSitesAndProduct', {currSiteId: site.id})
+      store.dispatch('Zentao/fetchSitesAndProduct', {currSiteId: site.id}).then((payload) => {
+        showZentaoMsg(payload)
+      })
     }
     const selectProduct = (product): void => {
       console.log('selectProduct', product)
-      store.dispatch('Zentao/fetchSitesAndProduct', {currProductId: product.id})
+      store.dispatch('Zentao/fetchSitesAndProduct', {currProductId: product.id}).then((payload) => {
+        showZentaoMsg(payload)
+      })
     }
 
     return {

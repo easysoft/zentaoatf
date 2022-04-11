@@ -17,11 +17,6 @@ import (
 )
 
 var (
-	appVersion string
-	buildTime  string
-	goVersion  string
-	gitHash    string
-
 	language        string
 	independentFile bool
 	keywords        string
@@ -135,7 +130,7 @@ func main() {
 		action.Clean()
 
 	case "version", "--version":
-		logUtils.PrintVersion(appVersion, buildTime, goVersion, gitHash)
+		logUtils.PrintVersion(commConsts.AppVersion, commConsts.BuildTime, commConsts.GoVersion, commConsts.GitHash)
 
 	case "help", "-h", "-help", "--help":
 		action.PrintUsage()

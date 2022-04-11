@@ -49,12 +49,15 @@ func (c *ZentaoCtrl) ListSiteAndProduct(ctx iris.Context) {
 	sites, currSite, _ := c.SiteService.LoadSites(currSiteId)
 	products, currProduct, err := zentaoHelper.LoadSiteProduct(currSite, currProductId)
 
+	zentaoErr := false
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
-		return
+		currSite = sites[len(sites)-1]
+		zentaoErr = true
 	}
 
-	data := iris.Map{"sites": sites, "products": products,
+	data := iris.Map{
+		"zentaoErr": zentaoErr,
+		"sites":     sites, "products": products,
 		"currSite": currSite, "currProduct": currProduct}
 
 	ctx.JSON(c.SuccessResp(data))

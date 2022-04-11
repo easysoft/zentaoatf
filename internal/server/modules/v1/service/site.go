@@ -103,7 +103,7 @@ func (s *SiteService) LoadSites(currSiteId int) (sites []serverDomain.ZentaoSite
 
 func (s *SiteService) CreateEmptySite() (err error) {
 	po := model.Site{
-		Name: "未配置站点",
+		Name: "非禅道站点",
 		Url:  "",
 	}
 	_, err = s.SiteRepo.Create(&po)
