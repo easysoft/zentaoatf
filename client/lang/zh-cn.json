@@ -1,5 +1,5 @@
 {
-    "app.ztf": "ZTF",
+    "app.name": "ZTF自动化测试框架",
     "app.about": "关于",
     "app.exit": "退出",
     "app.edit": "编辑",

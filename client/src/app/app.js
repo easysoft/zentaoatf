@@ -2,6 +2,7 @@ import {app, BrowserWindow, Menu, shell} from 'electron';
 import main from "@electron/remote/main";
 
 import {DEBUG} from './utils/consts';
+import Config, {updateConfig} from './utils/config';
 import {IS_MAC_OSX} from './utils/env';
 import Lang, {initLang} from './core/lang';
 import {logInfo, logErr} from './utils/log';
@@ -10,6 +11,8 @@ import {startZtfServer, killZtfServer} from "./core/ztf";
 
 export default class ZtfApp {
     constructor() {
+        app.name = Lang.string('app.title', Config.pkg.displayName);
+
         this._windows = new Map();
 
         startZtfServer().then((ztfServerUrl)=> {
@@ -85,6 +88,7 @@ export default class ZtfApp {
         initLang()
         this.buildAppMenu();
         this.openOrCreateWindow()
+        this.setAboutPanel();
     }
 
     quit() {
@@ -128,7 +132,7 @@ export default class ZtfApp {
 
         const template = [
             {
-                label: 'ZTF',
+                label: Lang.string('app.title', Config.pkg.displayName),
                 submenu: [
                     {
                         label: Lang.string('app.about'),
@@ -221,24 +225,16 @@ export default class ZtfApp {
         Menu.setApplicationMenu(menu);
     }
 
-    getLastFocusedWindow(options) {
-        const {includeChildWindow = false, type} = options || {};
-        const appWindows = this._windows.values();
-        let lastFocusedWindow = null;
-        for (const appWin of appWindows) {
-            if (!lastFocusedWindow || appWin.focusTime > lastFocusedWindow.focusTime) {
-                if (!type || type === appWin.type) {
-                    lastFocusedWindow = appWin;
-                }
-            }
-            if (includeChildWindow) {
-                for (const childWin of appWin.childWindows.values()) {
-                    if (childWin.focusTime > lastFocusedWindow.focusTime && (!type || type === childWin.type)) {
-                        lastFocusedWindow = childWin;
-                    }
-                }
-            }
+    setAboutPanel() {
+        if (!app.setAboutPanelOptions) {
+            return;
         }
-        return lastFocusedWindow;
+        app.setAboutPanelOptions({
+            applicationName: Lang.string(Config.pkg.name) || Config.pkg.displayName,
+            applicationVersion: Config.pkg.version,
+            copyright: `${Config.pkg.copyright} ${Config.pkg.company}`,
+            credits: `Licence: ${Config.pkg.license}`,
+            version: `${Config.pkg.buildTime ? `build at ${new Date(Config.pkg.buildTime).toLocaleString()}` : ''}${DEBUG ? '[debug]' : ''}`
+        });
     }
 }
