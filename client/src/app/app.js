@@ -50,7 +50,7 @@ export default class ZtfApp {
         mainWin.maximize()
         mainWin.show()
 
-        this._windows.set('main', mainWin.l);
+        this._windows.set('main', mainWin);
 
         const url = await startUIService()
         await mainWin.loadURL(url);
@@ -180,7 +180,7 @@ export default class ZtfApp {
                         accelerator: 'Ctrl+Command+F',
                         click: () => {
                             const mainWin = this._windows.get('main');
-                            mainWin.browserWindow.setFullScreen(!mainWin.browserWindow.isFullScreen());
+                            mainWin.setFullScreen(!mainWin.isFullScreen());
                         }
                     }
                 ]
@@ -219,5 +219,26 @@ export default class ZtfApp {
 
         const menu = Menu.buildFromTemplate(template);
         Menu.setApplicationMenu(menu);
+    }
+
+    getLastFocusedWindow(options) {
+        const {includeChildWindow = false, type} = options || {};
+        const appWindows = this._windows.values();
+        let lastFocusedWindow = null;
+        for (const appWin of appWindows) {
+            if (!lastFocusedWindow || appWin.focusTime > lastFocusedWindow.focusTime) {
+                if (!type || type === appWin.type) {
+                    lastFocusedWindow = appWin;
+                }
+            }
+            if (includeChildWindow) {
+                for (const childWin of appWin.childWindows.values()) {
+                    if (childWin.focusTime > lastFocusedWindow.focusTime && (!type || type === childWin.type)) {
+                        lastFocusedWindow = childWin;
+                    }
+                }
+            }
+        }
+        return lastFocusedWindow;
     }
 }
