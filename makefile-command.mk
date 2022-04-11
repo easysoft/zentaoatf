@@ -1,7 +1,8 @@
-VERSION=1.0.0
+VERSION=3.0.0
 PROJECT=deeptest
 PACKAGE=${PROJECT}-${VERSION}
 BINARY=ztf
+MAIN_FILE=cmd/command/main.go
 BIN_DIR=client/bin/
 BIN_ZIP_DIR=${BIN_DIR}/zip/${PROJECT}/${VERSION}/
 BIN_ZIP_RELAT=../../../zip/${PROJECT}/${VERSION}/
@@ -32,19 +33,25 @@ compile_all: compile_win64 compile_win32 compile_linux compile_mac
 
 compile_win64:
 	@echo 'start compile win64'
-	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 ${BUILD_CMD} -x -v -ldflags "-s -w" -o ${BIN_WIN32}${BINARY}.exe cmd/server/main.go
+	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
+		${BUILD_CMD} -x -v -ldflags "-s -w" \
+		-o ${BIN_WIN32}${BINARY}.exe ${MAIN_FILE}
 
 compile_win32:
 	@echo 'start compile win32'
-	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 ${BUILD_CMD} -x -v -ldflags "-s -w" -o ${BIN_WIN32}${BINARY}.exe cmd/server/main.go
+	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
+   		${BUILD_CMD} -x -v -ldflags "-s -w" \
+   		-o ${BIN_WIN32}${BINARY}.exe ${MAIN_FILE}
 
 compile_linux:
 	@echo 'start compile linux'
-	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ ${BUILD_CMD} -o ${BIN_LINUX}${BINARY} cmd/server/main.go
+	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ \
+		${BUILD_CMD} -o ${BIN_LINUX}${BINARY} ${MAIN_FILE}
 
 compile_mac:
 	@echo 'start compile mac'
-	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 ${BUILD_CMD} -o ${BIN_MAC}${BINARY} cmd/server/main.go
+	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 ${BUILD_CMD} \
+		-o ${BIN_MAC}${BINARY} ${MAIN_FILE}
 
 copy_files:
 	@echo 'start copy files'
