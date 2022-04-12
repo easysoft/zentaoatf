@@ -68,18 +68,21 @@
               <template #no="{ record }">
                 {{ record.id }}
               </template>
+
               <template #duration="{ record }">
                 {{ record.duration }}
               </template>
+
               <template #status="{ record }">
                 <span :class="'t-'+record.status">
                   <span class="dot"><icon-svg type="dot" /></span>
                   <span>{{ resultStatus(record.status) }}</span>
                 </span>
               </template>
-              <template #info="{ record }">
+
+              <template #opt="{ record }">
                 <template v-if="record.failure">
-                  <a-button type="link" @click="showInfo(record.id)">{{t('view_error')}}</a-button>
+                  <span @click="showInfo(record.id)" class="t-link t-primary">{{t('view_error')}}</span>
 
                   <a-modal
                       v-model:visible="visibleMap[record.id]"
@@ -169,7 +172,7 @@ export default defineComponent({
           customRender: ({text, index}: { text: any; index: number }) => index + 1,
         },
         {
-          title: t('index'),
+          title: t('case'),
           dataIndex: 'title',
           slots: {customRender: 'title'},
         },
@@ -188,9 +191,9 @@ export default defineComponent({
           slots: {customRender: 'status'},
         },
         {
-          title: t('info'),
-          dataIndex: 'info',
-          slots: {customRender: 'info'},
+          title: t('opt'),
+          dataIndex: 'opt',
+          slots: {customRender: 'opt'},
         },
       ]
     }

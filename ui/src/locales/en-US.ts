@@ -76,7 +76,7 @@ export default {
     'sec': 'Sec', 
     'info':  'Info', 
 
-    'checkpoint':  'Checkpoint(NO. Status Expect and Actual Result）', 
+    'checkpoint':  'Checkpoint(NO, Status, Expect Result / Actual Result）',
 
     'product': 'Product',
     'case':  'Test Case',

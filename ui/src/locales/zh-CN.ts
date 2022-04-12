@@ -76,7 +76,7 @@ export default {
     'sec': '秒', 
     'info':  '信息', 
 
-    'checkpoint':  '检查点（编号 状态 期待结果 实际结果）', 
+    'checkpoint':  '检查点（编号，状态，期待结果 / 实际结果）',
     'product': '产品',
     'case':  '用例',
     'module': '模块',

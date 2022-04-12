@@ -76,7 +76,7 @@
                   </span>
                 </div>
                 <div class="buttons" v-if="cs.status==='fail'">
-                  <a-button @click="openBugForm(cs)">{{ t('submit_bug_to_zentao') }}</a-button>
+                  <a-button v-if="currProduct.id" @click="openBugForm(cs)">{{ t('submit_bug_to_zentao') }}</a-button>
                 </div>
               </div>
 
@@ -85,29 +85,35 @@
                   :data-source="cs.steps"
                   row-key="id"
                   :pagination="false">
+
                 <template #no="{ record }">
                   {{ record.id }}
                 </template>
+
                 <template #name="{ record }">
                   {{ record.name }}
                 </template>
+
                 <template #status="{ record }">
                   <span :class="'t-'+record.status">
                     <span class="dot"><icon-svg type="dot" /></span>
                     <span>{{ resultStatus(record.status) }}</span>
                   </span>
                 </template>
+
                 <template #checkPoints="{ record }">
                   <div v-for="checkPoint in record.checkPoints" :key="checkPoint.numb">
                     {{ checkPoint.numb }}.&nbsp;
                     <span :class="'t-'+checkPoint.status">
                       {{ resultStatus(checkPoint.status) }}
                     </span>
+                    &nbsp;
                     <span>"{{ checkPoint.expect }}"</span>
                     /
                     <span :class="'t-'+checkPoint.status">"{{ checkPoint.actual }}"</span>
                   </div>
                 </template>
+
               </a-table>
 
               <br/>
@@ -187,23 +193,26 @@ export default defineComponent({
         {
           title: t('no'),
           dataIndex: 'no',
-          width: 150,
+          width: 50,
           customRender: ({text, index}: { text: any; index: number }) => index + 1,
         },
         {
           title: t('step'),
           dataIndex: 'name',
           slots: {customRender: 'name'},
+          width: 150,
         },
         {
           title: t('status'),
           dataIndex: 'status',
           slots: {customRender: 'status'},
+          width: 50,
         },
         {
           title: t('checkpoint'),
           dataIndex: 'checkPoints',
           slots: {customRender: 'checkPoints'},
+          width: 250,
         },
       ]
     }

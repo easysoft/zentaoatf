@@ -2,7 +2,7 @@
   <div class="main">
     <a-dropdown class="dropdown-list">
 
-      <a class="t-link-btn" @click.prevent>
+      <a class="t-white" @click.prevent>
         <span class="name">{{t('settings')}}</span>
         <span class="icon2"><icon-svg type="down"></icon-svg></span>
       </a>

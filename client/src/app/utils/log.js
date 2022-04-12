@@ -1,6 +1,7 @@
 const logger = require('electron-log');
 import {DEBUG} from './consts';
-logger.transports.file.resolvePath = () => require("path").join(require("os").homedir(), 'ztf', 'log', 'electron.log');
+logger.transports.file.resolvePath = () =>
+    require("path").join(require("os").homedir(), 'ztf', 'log', 'electron.log');
 
 export function logDebug(str) {
     if (DEBUG) {

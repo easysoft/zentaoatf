@@ -5,7 +5,7 @@
         :dropdownMatchSelectWidth="false"
         class="dropdown-list">
 
-      <a class="t-link-btn" @click.prevent>
+      <a class="t-white" @click.prevent>
         <span class="name">{{ currSite.name }}</span>
         <span class="icon2"><icon-svg type="down"></icon-svg></span>
       </a>
@@ -28,7 +28,7 @@
         :dropdownMatchSelectWidth="false"
         class="dropdown-list">
 
-      <a class="t-link-btn" @click.prevent>
+      <a class="t-white" @click.prevent>
         <span class="name">{{currProduct.name ? currProduct.name : '无'}}</span>
         <span class="icon2"><icon-svg type="down"></icon-svg></span>
       </a>

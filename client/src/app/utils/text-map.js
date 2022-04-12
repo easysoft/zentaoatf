@@ -51,7 +51,7 @@ export default class TextMap {
      * @param  {string} defaultValue 默认文本，如果没有在找到文本则返回此值
      * @return {string} 文本
      */
-    string(name, defaultValue) {
+    string(name, defaultValue= '') {
         const value = this._data[name];
         return value === undefined ? defaultValue : value;
     }

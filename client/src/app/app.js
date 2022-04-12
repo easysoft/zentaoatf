@@ -2,10 +2,10 @@ import {app, BrowserWindow, Menu, shell} from 'electron';
 import main from "@electron/remote/main";
 
 import {DEBUG} from './utils/consts';
-import Config, {updateConfig} from './utils/config';
 import {IS_MAC_OSX} from './utils/env';
-import Lang, {initLang} from './core/lang';
 import {logInfo, logErr} from './utils/log';
+import Config, {updateConfig} from './utils/config';
+import Lang, {initLang} from './core/lang';
 import {startUIService} from "./core/ui";
 import {startZtfServer, killZtfServer} from "./core/ztf";
 
@@ -111,10 +111,8 @@ export default class ZtfApp {
 
             this.buildAppMenu();
 
-            // 在 OS X 系统上，可能存在所有应用窗口关闭了，但是程序还没关闭，此时如果收到激活应用请求需要
-            // 重新打开应用窗口并创建应用菜单
+            // 在 OS X 系统上，可能存在所有应用窗口关闭了，但是程序还没关闭，此时如果收到激活应用请求，需要重新打开应用窗口并创建应用菜单。
             this.openOrCreateWindow().then(() => {
-
             })
         });
     }
@@ -216,7 +214,7 @@ export default class ZtfApp {
                 submenu: [{
                     label: Lang.string('app.website'),
                     click: () => {
-                        shell.openExternal('http://ztf.im');
+                        shell.openExternal('https://ztf.im');
                     }
                 }]
             }];

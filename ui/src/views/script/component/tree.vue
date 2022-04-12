@@ -64,8 +64,10 @@
     </div>
 
     <div class="actions">
-      <a-button @click="checkoutCases">{{t('checkout_case')}}</a-button>
-      <a-button :disabled="checkedKeys.length === 0" @click="checkinCases">{{t('checkin_case')}}</a-button>
+      <a-button :disabled="!currProduct.id"
+                @click="checkoutCases">{{t('checkout_case')}}</a-button>
+      <a-button :disabled="!currProduct.id || checkedKeys.length === 0"
+                @click="checkinCases">{{t('checkin_case')}}</a-button>
 
       <template v-if="currWorkspace.type === 'ztf'">
         <a-button
