@@ -59,7 +59,7 @@ export const setScriptFilters = async (siteId, productId, by, val) => {
 
     const mp = cachedData[key] ? cachedData[key] : {}
     mp.by = by
-    if (val) mp[by] = val
+    mp[by] = val
 
     cachedData[key] = mp
     await setCache(settings.scriptFilters, cachedData);

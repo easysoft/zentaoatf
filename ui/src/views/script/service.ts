@@ -83,6 +83,15 @@ export function genExecInfo(jsn: WsMsg) : WsMsg {
     return jsn
 }
 
+export function getCaseIdsFromReport(workspace, seq, scope) {
+    const params = {workspaceId: workspace, seq: seq, scope: scope}
+    return request({
+        url: `/${apiPath}/getCaseIdsFromReport`,
+        method: 'get',
+        params,
+    });
+}
+
 export async function syncFromZentao(params: any): Promise<any> {
     return request({
         url: `/${apiPath}/syncFromZentao`,
