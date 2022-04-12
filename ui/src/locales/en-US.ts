@@ -197,5 +197,15 @@ export default {
     'pls_input_interpreter_path': 'Please input interpreter path.',
 
     'no_interp_1': 'No windows system, ',
-    'no_interp_2': 'please add interpreter executable file to PATH environment variable.'
+    'no_interp_2': 'please add interpreter executable file to PATH environment variable.',
+
+    'http_500': 'Internal Server Error',
+    'biz_100': 'Common Error',
+    'biz_200': 'Parameter Error',
+    'biz_401': 'UnAuthorized',
+
+    'biz_1000': 'Data Not Init',
+    'biz_2000': 'Zentao Config err',
+    'biz_4000': 'Record Not Found',
+    'biz_5000': 'Not Available',
 };

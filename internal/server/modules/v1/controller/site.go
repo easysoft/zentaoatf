@@ -51,12 +51,12 @@ func (c *SiteCtrl) Get(ctx iris.Context) {
 func (c *SiteCtrl) Create(ctx iris.Context) {
 	req := model.Site{}
 	if err := ctx.ReadJSON(&req); err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
 	}
 
 	id, err := c.SiteService.Create(req)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.ErrZentaoConfig, err.Error()))
 		return
 	}
 
@@ -66,12 +66,12 @@ func (c *SiteCtrl) Create(ctx iris.Context) {
 func (c *SiteCtrl) Update(ctx iris.Context) {
 	req := model.Site{}
 	if err := ctx.ReadJSON(&req); err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
 	}
 
 	err := c.SiteService.Update(req)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.ErrZentaoConfig, err.Error()))
 		return
 	}
 

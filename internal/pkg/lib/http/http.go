@@ -43,6 +43,7 @@ func Get(url string) (ret []byte, err error) {
 
 	if !IsSuccessCode(resp.StatusCode) {
 		logUtils.Infof(color.RedString("read response failed, StatusCode: %d.", resp.StatusCode))
+		err = errors.New(resp.Status)
 		return
 	}
 
@@ -119,6 +120,7 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 
 	if !IsSuccessCode(resp.StatusCode) {
 		logUtils.Infof(color.RedString("post request return '%s'.", resp.Status))
+		err = errors.New(resp.Status)
 		return
 	}
 

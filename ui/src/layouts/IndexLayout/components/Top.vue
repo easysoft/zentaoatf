@@ -23,6 +23,8 @@
               <TopSettings />
             </div>
         </div>
+
+      <TopNotify />
     </div>
 </template>
 
@@ -41,11 +43,12 @@ import {nameFirstCapDef} from "@/utils/string";
 import TopMenu from './TopMenu.vue';
 import TopSiteProduct from './TopSiteProduct.vue';
 import TopSettings from './TopSettings.vue';
+import TopNotify from './TopNotify.vue';
 
 export default defineComponent({
     name: 'Top',
     components: {
-      TopMenu, TopSiteProduct, TopSettings
+      TopMenu, TopSiteProduct, TopSettings, TopNotify,
     },
     props: {
       collapsed: {

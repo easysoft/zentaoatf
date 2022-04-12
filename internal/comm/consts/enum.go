@@ -17,15 +17,16 @@ type ResponseCode struct {
 }
 
 var (
-	Success         = ResponseCode{0, "request success"}
-	CommErr         = ResponseCode{100, "common err"}
-	ParamErr        = ResponseCode{200, "param error"}
-	UnAuthorizedErr = ResponseCode{401, "unauthorized"}
+	Success         = ResponseCode{0, "Request Successfully"}
+	CommErr         = ResponseCode{100, "Common Error"}
+	ParamErr        = ResponseCode{200, "Parameter Error"}
+	UnAuthorizedErr = ResponseCode{401, "UnAuthorized"}
 
-	NeedInitErr         = ResponseCode{1000, "data not init"}
-	BizErrZentaoRequest = ResponseCode{2000, "zentao request err"}
-	BizErrNameNotExist  = ResponseCode{3000, "record not found"}
-	NotAvailable        = ResponseCode{4000, "not available"}
+	NeedInitErr       = ResponseCode{1000, "Data Not Init"}
+	ErrZentaoConfig   = ResponseCode{2000, "Zentao Config Error"}
+	ErrZentaoRequest  = ResponseCode{3000, "zentao request Error"}
+	ErrRecordNotExist = ResponseCode{4000, "Record Not Found"}
+	NotAvailable      = ResponseCode{5000, "Not Available"}
 )
 
 type ResultStatus string

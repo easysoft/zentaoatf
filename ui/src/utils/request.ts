@@ -8,12 +8,18 @@ import settings from '@/config/settings';
 import { getCache, setCache } from '@/utils/localCache';
 import i18n from "@/config/i18n";
 import {getCurrProductIdBySite, getCurrSiteId} from "@/utils/cache";
+import bus from "@/utils/eventBus";
 
 export interface ResponseData {
     code: number;
     data?: any;
     msg?: string;
     token?: string;
+}
+export interface ResultErr {
+    httpCode: number;
+    resultCode: number;
+    resultMsg: string;
 }
 
 const customCodeMessage: {[key: number]: string} = {
@@ -33,45 +39,6 @@ const serverCodeMessage: {[key: number]: string} = {
 };
 
 /**
- * 异常处理程序
- */
-const errorHandler = (error: any) => {
-    const { response, message } = error;
-    if (message === 'CustomError') {
-        // 自定义错误
-        const { config, data } = response;
-        const { url, baseURL} = config;
-        const { code, msg } = data;
-        const reqUrl = url.split("?")[0].replace(baseURL, '');
-        const noVerifyBool = settings.ajaxResponseNoVerifyUrl.includes(reqUrl);
-        if (!noVerifyBool) {
-            notification.error({
-              message: `请求失败`,
-              description: customCodeMessage[code] || msg || 'Error',
-            });
-        }
-    } else if (message === 'CancelToken') {
-        // 取消请求 Token
-        // eslint-disable-next-line no-console
-        console.log(message);
-    } else if (response && response.status) {
-        const errorText = serverCodeMessage[response.status] || response.statusText;
-        const { status, request } = response;
-        notification.error({
-            message: `请求错误 ${status}: ${request.responseURL}`,
-            description: errorText,
-        });
-    } else if (!response) {
-        notification.error({
-            message: '请求失败',
-            description: '无法连接到服务器！',
-        });
-    }
-
-    return Promise.reject(error);
-}
-
-/**
  * 配置request请求时的默认参数
  */
 const request = axios.create({
@@ -84,7 +51,6 @@ const request = axios.create({
 // request.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 
 /**
- * 请求前
  * 请求拦截器
  */
 request.interceptors.request.use(
@@ -119,28 +85,44 @@ request.interceptors.request.use(
 );
 
 /**
- * 请求后
  * 响应拦截器
  */
 request.interceptors.response.use(
     async (response: AxiosResponse) => {
         console.log('=== response ===', response.config.url, response)
 
-        const res: ResponseData = response.data;
-        const { code, token } = res;
+        const data: ResponseData = response.data;
+        const { code, msg } = data;
 
         // 自定义状态码验证
         if (code !== 0) {
-            return Promise.reject({
-                response,
-                message: 'CustomError',
-            });
+            return Promise.reject(response);
         }
 
         return response;
     },
     /* error => {} */ // 已在 export default catch
 );
+
+/**
+ * 异常处理
+ */
+const errorHandler = (resp: any) => {
+    console.log(resp)
+    if (!resp) resp = {status: 500}
+
+    if (resp.status !== 200) {
+        bus.emit(settings.eventNotify, {httpCode: resp.status})
+        return
+    }
+
+    const result ={httpCode: resp.status, resultCode: resp.data.code, resultMsg: resp.data.msg} as ResultErr
+    console.log(`===`, result)
+
+    bus.emit(settings.eventNotify, result)
+
+    return Promise.reject({})
+}
 
 /** 
  * ajax 导出

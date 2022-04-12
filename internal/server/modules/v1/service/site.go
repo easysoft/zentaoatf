@@ -1,6 +1,8 @@
 package service
 
 import (
+	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
+	zentaoHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
 	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
 	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
 	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
@@ -38,12 +40,24 @@ func (s *SiteService) GetDomainObject(id uint) (site serverDomain.ZentaoSite, er
 }
 
 func (s *SiteService) Create(site model.Site) (id uint, err error) {
+	config := configUtils.LoadBySite(site)
+	err = zentaoHelper.Login(config)
+	if err != nil {
+		return
+	}
+
 	id, err = s.SiteRepo.Create(&site)
 
 	return
 }
 
 func (s *SiteService) Update(site model.Site) (err error) {
+	config := configUtils.LoadBySite(site)
+	err = zentaoHelper.Login(config)
+	if err != nil {
+		return
+	}
+
 	err = s.SiteRepo.Update(site)
 
 	workspaces, _ := s.WorkspaceRepo.ListBySite(site.ID)

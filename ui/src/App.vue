@@ -13,6 +13,7 @@ export default defineComponent({
   name: 'App',
   setup() {
     const {locale} = useI18n();
+
     const antdLocales = computed(() => antdMessages[locale.value]);
 
     onMounted(() => {

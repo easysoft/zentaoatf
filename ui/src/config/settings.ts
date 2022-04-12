@@ -25,6 +25,7 @@ export interface SettingsType {
     siteTokenKey: string;
 
     eventExec: string;
+    eventNotify: string;
 
     initStatus: string;
     currSiteId: string;
@@ -58,6 +59,7 @@ const settings: SettingsType = {
     siteTokenKey: 'admin_antd_vue_token',
 
     eventExec: 'eventExec',
+    eventNotify: 'eventNotify',
 
     initStatus: 'initStatus',
     currSiteId: 'currSiteId',

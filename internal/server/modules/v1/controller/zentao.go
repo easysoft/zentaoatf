@@ -35,7 +35,7 @@ func (c *ZentaoCtrl) GetProfile(ctx iris.Context) {
 	config := configHelper.LoadBySite(site)
 	data, err := zentaoHelper.GetProfile(config)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.ErrZentaoRequest, err.Error()))
 		return
 	}
 
@@ -73,7 +73,7 @@ func (c *ZentaoCtrl) ListProduct(ctx iris.Context) {
 
 	data, err := zentaoHelper.ListProduct(workspacePath)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.ErrZentaoRequest, err.Error()))
 		return
 	}
 
@@ -93,7 +93,7 @@ func (c *ZentaoCtrl) ListModule(ctx iris.Context) {
 
 	data, err := zentaoHelper.ListModule(uint(productId), site)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.ErrZentaoRequest, err.Error()))
 		return
 	}
 
@@ -112,7 +112,7 @@ func (c *ZentaoCtrl) ListSuite(ctx iris.Context) {
 	site, _ := c.SiteService.Get(uint(siteId))
 	data, err := zentaoHelper.ListSuite(uint(productId), site)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.ErrZentaoRequest, err.Error()))
 		return
 	}
 
@@ -131,7 +131,7 @@ func (c *ZentaoCtrl) ListTask(ctx iris.Context) {
 	site, _ := c.SiteService.Get(uint(siteId))
 	data, err := zentaoHelper.ListTask(uint(productId), site)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.BizErrZentaoRequest, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.ErrZentaoRequest, err.Error()))
 		return
 	}
 
