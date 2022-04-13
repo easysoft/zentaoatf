@@ -2,8 +2,8 @@ package fileUtils
 
 import (
 	"fmt"
-	"github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
-	"github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
+	"github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
+	"github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	"github.com/fatih/color"
 	"io/ioutil"
 	"net/http"

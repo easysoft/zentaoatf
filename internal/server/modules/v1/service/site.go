@@ -1,12 +1,12 @@
 package service
 
 import (
-	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
-	zentaoHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
-	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
-	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
+	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
+	"github.com/easysoft/zentaoatf/internal/pkg/domain"
+	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 )
 
 type SiteService struct {

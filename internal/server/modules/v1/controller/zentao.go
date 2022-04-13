@@ -1,11 +1,11 @@
 package controller
 
 import (
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	configHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
-	zentaoHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
-	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
+	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
 )
 

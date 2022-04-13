@@ -1,4 +1,4 @@
-module github.com/aaronchen2k/deeptest
+module  github.com/easysoft/zentaoatf
 
 go 1.16
 

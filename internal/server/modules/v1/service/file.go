@@ -2,11 +2,11 @@ package service
 
 import (
 	"errors"
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
-	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
-	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
+	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
+	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
+	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/fatih/color"
 	"io/ioutil"
 	"mime/multipart"

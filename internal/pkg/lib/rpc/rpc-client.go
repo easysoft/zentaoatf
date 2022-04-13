@@ -1,7 +1,7 @@
 package _rpcUtils
 
 import (
-	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
+	"github.com/easysoft/zentaoatf/internal/pkg/domain"
 )
 
 func Post(url, method, api, mtd string, args interface{}) (resp domain.RpcResp) {

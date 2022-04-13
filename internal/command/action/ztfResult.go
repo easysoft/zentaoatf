@@ -1,13 +1,13 @@
 package action
 
 import (
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	analysisUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/analysis"
-	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
-	zentaoUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
-	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
-	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
-	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	analysisUtils "github.com/easysoft/zentaoatf/internal/comm/helper/analysis"
+	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	zentaoUtils "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
+	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
+	stdinUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/stdin"
+	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"path/filepath"
 	"strconv"
 )

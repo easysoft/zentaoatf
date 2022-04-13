@@ -1,10 +1,10 @@
 package service
 
 import (
-	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
-	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
-	zentaoHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
+	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
+	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 )
 
 type TestBugService struct {

@@ -1,9 +1,9 @@
 package index
 
 import (
-	"github.com/aaronchen2k/deeptest/internal/server/core/module"
-	"github.com/aaronchen2k/deeptest/internal/server/middleware"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/controller"
+	"github.com/easysoft/zentaoatf/internal/server/core/module"
+	"github.com/easysoft/zentaoatf/internal/server/middleware"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/controller"
 	"github.com/kataras/iris/v12"
 )
 

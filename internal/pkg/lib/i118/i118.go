@@ -3,7 +3,7 @@ package i118Utils
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/aaronchen2k/deeptest/internal/pkg/lib/res"
+	"github.com/easysoft/zentaoatf/internal/pkg/lib/res"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 	"io/ioutil"

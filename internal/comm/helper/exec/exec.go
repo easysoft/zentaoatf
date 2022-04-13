@@ -1,9 +1,9 @@
 package execHelper
 
 import (
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
-	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
+	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/kataras/iris/v12/websocket"
 	"strings"
 )

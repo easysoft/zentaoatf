@@ -1,10 +1,10 @@
 package action
 
 import (
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
-	zentaoHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
-	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
+	stringUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/string"
 )
 
 func CommitCases(files []string) {

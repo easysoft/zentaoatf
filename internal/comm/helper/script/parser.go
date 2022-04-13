@@ -2,12 +2,12 @@ package scriptHelper
 
 import (
 	"fmt"
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
-	langHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/lang"
-	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
-	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
-	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
+	langHelper "github.com/easysoft/zentaoatf/internal/comm/helper/lang"
+	"github.com/easysoft/zentaoatf/internal/pkg/consts"
+	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
+	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
 	"github.com/emirpasic/gods/maps"
 	"github.com/emirpasic/gods/maps/linkedhashmap"
 	"io/ioutil"

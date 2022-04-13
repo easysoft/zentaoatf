@@ -1,4 +1,4 @@
-# zentaoatf
+# Zentao Test Framework
 ZTF is an automated testing framework written in Golang.
 
 ## Features
@@ -9,7 +9,7 @@ ZTF is an automated testing framework written in Golang.
 ## QuickStart
 ### Run from release file
 1. Download last release file from [here](https://github.com/easysoft/zentaoatf/releases);
-2. Type 'ztf/ztf.exe help' to get the help doc.
+2. Type 'ztf\ztf.exe help' to get the help doc.
 
 ### Run from Golang codes
 1. Enter 'git clone https://github.com/easysoft/zentaoatf.git' to get the source codes;

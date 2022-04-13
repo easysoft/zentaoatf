@@ -1,10 +1,10 @@
 package action
 
 import (
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	"github.com/aaronchen2k/deeptest/internal/comm/helper/exec"
-	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
-	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	"github.com/easysoft/zentaoatf/internal/comm/helper/exec"
+	stringUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/string"
+	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 )
 
 func RunUnitTest(cmdStr string) {

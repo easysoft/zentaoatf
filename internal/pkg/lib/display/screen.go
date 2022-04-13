@@ -1,8 +1,8 @@
 package display
 
 import (
-	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
-	shellUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/shell"
+	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
+	shellUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/shell"
 	"os"
 	"os/exec"
 	"regexp"

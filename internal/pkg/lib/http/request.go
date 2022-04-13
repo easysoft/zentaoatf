@@ -1,6 +1,6 @@
 package httpUtils
 
-import "github.com/aaronchen2k/deeptest/internal/pkg/consts"
+import "github.com/easysoft/zentaoatf/internal/pkg/consts"
 
 type Request struct {
 	PageSize int `json:"pageSize"`

@@ -2,7 +2,7 @@ package stringUtils
 
 import (
 	"encoding/base64"
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	"github.com/jameskeane/bcrypt"
 	"github.com/mattn/go-runewidth"
 	"math/rand"

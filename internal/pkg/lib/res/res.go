@@ -1,9 +1,9 @@
 package resUtils
 
 import (
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	"github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
-	"github.com/aaronchen2k/deeptest/res"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	"github.com/easysoft/zentaoatf/internal/pkg/lib/common"
+	"github.com/easysoft/zentaoatf/res"
 	"io/ioutil"
 	"os"
 	"path/filepath"

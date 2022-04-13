@@ -2,12 +2,12 @@ package scriptHelper
 
 import (
 	"fmt"
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
-	langHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/lang"
-	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
-	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
-	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
+	langHelper "github.com/easysoft/zentaoatf/internal/comm/helper/lang"
+	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
+	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	"regexp"
 	"strings"
 )

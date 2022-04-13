@@ -2,8 +2,8 @@ package logUtils
 
 import (
 	"fmt"
-	"github.com/aaronchen2k/deeptest/internal/comm/consts"
-	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
+	"github.com/easysoft/zentaoatf/internal/comm/consts"
+	"github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/snowlyg/helper/dir"
 	"io/ioutil"
 	"os"

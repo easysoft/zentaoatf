@@ -2,13 +2,13 @@ package controller
 
 import (
 	"fmt"
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
-	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
-	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
-	zentaoHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
-	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
+	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	scriptUtils "github.com/easysoft/zentaoatf/internal/comm/helper/script"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
+	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
 )
 

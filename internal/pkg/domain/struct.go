@@ -1,8 +1,8 @@
 package domain
 
 import (
-	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
-	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
+	stringUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/string"
+	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 )
 
 // Model

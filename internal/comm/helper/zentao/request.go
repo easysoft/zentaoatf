@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
-	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
+	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"path"
 	"strings"
 )

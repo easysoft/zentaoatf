@@ -3,10 +3,10 @@ package zentaoHelper
 import (
 	"errors"
 	"fmt"
-	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
-	httpUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/http"
-	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
-	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
+	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
+	httpUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/http"
+	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	"github.com/fatih/color"
 	"os"
 )

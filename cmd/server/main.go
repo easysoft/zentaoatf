@@ -2,10 +2,10 @@ package main
 
 import (
 	"flag"
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	"github.com/aaronchen2k/deeptest/internal/server/core/cron"
-	"github.com/aaronchen2k/deeptest/internal/server/core/web"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
+	"github.com/easysoft/zentaoatf/internal/server/core/cron"
+	"github.com/easysoft/zentaoatf/internal/server/core/web"
 	"os"
 )
 

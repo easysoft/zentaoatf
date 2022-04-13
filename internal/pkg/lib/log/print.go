@@ -3,7 +3,7 @@ package logUtils
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
+	"github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/fatih/color"
 	"go.uber.org/zap"
 	"strings"

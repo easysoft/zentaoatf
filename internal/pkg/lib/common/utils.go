@@ -2,7 +2,7 @@ package commonUtils
 
 import (
 	"fmt"
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	"github.com/emirpasic/gods/maps"
 	"net"
 	"os"

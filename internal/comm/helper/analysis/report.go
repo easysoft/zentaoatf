@@ -2,9 +2,9 @@ package analysisHelper
 
 import (
 	"encoding/json"
-	"github.com/aaronchen2k/deeptest/internal/comm/consts"
-	"github.com/aaronchen2k/deeptest/internal/comm/domain"
-	"github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
+	"github.com/easysoft/zentaoatf/internal/comm/consts"
+	"github.com/easysoft/zentaoatf/internal/comm/domain"
+	"github.com/easysoft/zentaoatf/internal/pkg/lib/file"
 	"io/ioutil"
 	"path/filepath"
 	"strings"

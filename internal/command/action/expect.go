@@ -1,14 +1,14 @@
 package action
 
 import (
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
-	_scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/exec"
-	scriptUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/script"
-	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
-	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
-	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	_scriptUtils "github.com/easysoft/zentaoatf/internal/comm/helper/exec"
+	scriptUtils "github.com/easysoft/zentaoatf/internal/comm/helper/script"
+	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
+	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
+	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	"path/filepath"
 )
 

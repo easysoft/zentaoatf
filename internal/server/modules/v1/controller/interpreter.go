@@ -1,10 +1,10 @@
 package controller
 
 import (
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
 )
 

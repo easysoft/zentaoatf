@@ -2,7 +2,7 @@ package domain
 
 import (
 	"fmt"
-	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
+	"github.com/easysoft/zentaoatf/internal/pkg/consts"
 )
 
 type RpcReq struct {

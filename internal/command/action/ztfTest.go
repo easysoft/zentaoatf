@@ -1,13 +1,13 @@
 package action
 
 import (
-	"github.com/aaronchen2k/deeptest/internal/comm/consts"
-	"github.com/aaronchen2k/deeptest/internal/comm/helper/exec"
-	"github.com/aaronchen2k/deeptest/internal/comm/helper/script"
-	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
-	"github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
-	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	"github.com/easysoft/zentaoatf/internal/comm/consts"
+	"github.com/easysoft/zentaoatf/internal/comm/helper/exec"
+	"github.com/easysoft/zentaoatf/internal/comm/helper/script"
+	"github.com/easysoft/zentaoatf/internal/pkg/consts"
+	"github.com/easysoft/zentaoatf/internal/pkg/lib/file"
+	stringUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/string"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"path"
 )
 

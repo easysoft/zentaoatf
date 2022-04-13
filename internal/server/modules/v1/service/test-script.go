@@ -1,14 +1,14 @@
 package service
 
 import (
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
-	codeHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/code"
-	"github.com/aaronchen2k/deeptest/internal/comm/helper/script"
-	zentaoHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
-	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
-	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
+	codeHelper "github.com/easysoft/zentaoatf/internal/comm/helper/code"
+	"github.com/easysoft/zentaoatf/internal/comm/helper/script"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
+	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
+	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 	"github.com/kataras/iris/v12"
 )
 

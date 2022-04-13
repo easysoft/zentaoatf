@@ -1,10 +1,10 @@
 package langHelper
 
 import (
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	i118Utils "github.com/aaronchen2k/deeptest/internal/pkg/lib/i118"
-	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	"github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
+	"github.com/easysoft/zentaoatf/internal/pkg/lib/string"
 	"path"
 	"sort"
 	"strconv"

@@ -3,14 +3,14 @@ package service
 import (
 	"errors"
 	"fmt"
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
-	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
-	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
-	fileUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
-	serverDomain "github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/model"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/repo"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	"github.com/easysoft/zentaoatf/internal/pkg/domain"
+	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
+	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
+	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 )
 
 type WorkspaceService struct {

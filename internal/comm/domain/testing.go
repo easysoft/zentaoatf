@@ -3,8 +3,8 @@ package commDomain
 import (
 	"encoding/xml"
 	"fmt"
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	"github.com/aaronchen2k/deeptest/internal/pkg/consts"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	"github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"time"
 )
 

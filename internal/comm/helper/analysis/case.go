@@ -1,9 +1,9 @@
 package analysisHelper
 
 import (
-	"github.com/aaronchen2k/deeptest/internal/comm/consts"
-	"github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/domain"
+	"github.com/easysoft/zentaoatf/internal/comm/consts"
+	"github.com/easysoft/zentaoatf/internal/pkg/lib/log"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 )
 
 func FilterCaseByResult(cases []string, req serverDomain.TestSet) (ret []string) { // scope: all | fail

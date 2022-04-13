@@ -1,6 +1,6 @@
 package serverDomain
 
-import commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
+import commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 
 type WsReq struct {
 	Act commConsts.ExecCmd `json:"act"`

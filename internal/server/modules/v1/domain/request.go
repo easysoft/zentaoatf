@@ -1,7 +1,7 @@
 package serverDomain
 
 import (
-	"github.com/aaronchen2k/deeptest/internal/pkg/domain"
+	"github.com/easysoft/zentaoatf/internal/pkg/domain"
 )
 
 type ReqPaginate struct {
@@ -9,4 +9,3 @@ type ReqPaginate struct {
 	Keywords string `json:"keywords"`
 	Enabled  string `json:"enabled"`
 }
-

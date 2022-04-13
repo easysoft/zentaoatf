@@ -1,7 +1,7 @@
 package serverConfig
 
 import (
-	myZap "github.com/aaronchen2k/deeptest/internal/pkg/core/zap"
+	myZap "github.com/easysoft/zentaoatf/internal/pkg/core/zap"
 )
 
 type Config struct {

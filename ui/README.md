@@ -1,10 +1,6 @@
-# [DeepTest.com](http://deeptest.com)
+# ZTF Client
 
-## DeepTest Software Testing Platform - Frontend
-Vue.js 3, Ant Design Vue, TypeScript, WebSocket
-
-### Quick start
-TODO
+Vue.js 3, Ant Design Vue 2, TypeScript, WebSocket
 
 ### Licenses
 All source code is licensed under the [GPLv3 License](LICENSE.md).

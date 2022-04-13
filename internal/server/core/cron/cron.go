@@ -2,10 +2,10 @@ package cron
 
 import (
 	"fmt"
-	"github.com/aaronchen2k/deeptest/internal/pkg/lib/cron"
-	"github.com/aaronchen2k/deeptest/internal/pkg/lib/date"
-	"github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
-	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
+	"github.com/easysoft/zentaoatf/internal/pkg/lib/cron"
+	"github.com/easysoft/zentaoatf/internal/pkg/lib/date"
+	"github.com/easysoft/zentaoatf/internal/pkg/lib/log"
+	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	"github.com/kataras/iris/v12"
 	"sync"
 	"time"

@@ -2,9 +2,9 @@ package zentaoHelper
 
 import (
 	"encoding/json"
-	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
-	httpUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/http"
 	"github.com/bitly/go-simplejson"
+	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
+	httpUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/http"
 )
 
 func GetProfile(config commDomain.WorkspaceConf) (profile commDomain.ZentaoUserProfile, err error) {

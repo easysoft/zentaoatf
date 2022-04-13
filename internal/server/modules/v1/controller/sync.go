@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/service"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
 )
 

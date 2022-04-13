@@ -3,10 +3,10 @@ package serverConfig
 import (
 	"bytes"
 	"fmt"
-	"github.com/aaronchen2k/deeptest/internal/comm/consts"
-	"github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
-	"github.com/aaronchen2k/deeptest/internal/pkg/lib/file"
-	"github.com/aaronchen2k/deeptest/internal/pkg/lib/res"
+	"github.com/easysoft/zentaoatf/internal/comm/consts"
+	"github.com/easysoft/zentaoatf/internal/pkg/lib/common"
+	"github.com/easysoft/zentaoatf/internal/pkg/lib/file"
+	"github.com/easysoft/zentaoatf/internal/pkg/lib/res"
 	"github.com/spf13/viper"
 	"path/filepath"
 )

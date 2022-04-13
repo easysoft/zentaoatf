@@ -1,12 +1,12 @@
 package action
 
 import (
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	commDomain "github.com/aaronchen2k/deeptest/internal/comm/domain"
-	configUtils "github.com/aaronchen2k/deeptest/internal/comm/helper/config"
-	zentaoHelper "github.com/aaronchen2k/deeptest/internal/comm/helper/zentao"
-	stdinUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/stdin"
-	stringUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/string"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
+	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
+	stdinUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/stdin"
+	stringUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/string"
 )
 
 func Checkout(productId, moduleId, suiteId, taskId string, independentFile bool, scriptLang string) {

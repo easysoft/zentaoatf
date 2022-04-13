@@ -1,9 +1,9 @@
 package v1
 
 import (
-	serverConfig "github.com/aaronchen2k/deeptest/internal/server/config"
-	"github.com/aaronchen2k/deeptest/internal/server/core/module"
-	"github.com/aaronchen2k/deeptest/internal/server/modules/v1/index"
+	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
+	"github.com/easysoft/zentaoatf/internal/server/core/module"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/index"
 	"time"
 
 	"github.com/kataras/iris/v12"

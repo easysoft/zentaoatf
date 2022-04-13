@@ -2,9 +2,9 @@ package serverConfig
 
 import (
 	"errors"
-	commConsts "github.com/aaronchen2k/deeptest/internal/comm/consts"
-	commonUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/common"
-	logUtils "github.com/aaronchen2k/deeptest/internal/pkg/lib/log"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
+	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	"log"
 	"net/url"
 	"os"
