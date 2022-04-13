@@ -2,7 +2,7 @@ package action
 
 import (
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
 	stringUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/string"
 )
@@ -13,7 +13,7 @@ func CommitCases(files []string) {
 		workspacePath = files[0]
 	}
 
-	config := configUtils.LoadByWorkspacePath(workspacePath)
+	config := configHelper.LoadByWorkspacePath(workspacePath)
 
 	zentaoHelper.SyncToZentao(nil, workspacePath, stringUtils.ParseInt(commConsts.ProductId), config)
 }

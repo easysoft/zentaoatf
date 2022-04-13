@@ -5,7 +5,7 @@ import (
 	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	execHelper "github.com/easysoft/zentaoatf/internal/comm/helper/exec"
-	websocketUtils "github.com/easysoft/zentaoatf/internal/comm/helper/websocket"
+	websocketHelper "github.com/easysoft/zentaoatf/internal/comm/helper/websocket"
 	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
 	"github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	"github.com/easysoft/zentaoatf/internal/server/config"
@@ -31,12 +31,12 @@ func NewWebSocketCtrl() *WebSocketCtrl {
 }
 
 func (c *WebSocketCtrl) OnNamespaceConnected(msg websocket.Message) error {
-	websocketUtils.SetConn(c.Conn)
+	websocketHelper.SetConn(c.Conn)
 
 	logUtils.Infof(i118Utils.Sprintf("ws_namespace_connected", c.Conn.ID(), msg.Room))
 
 	data := serverDomain.WsResp{Msg: "from server: connected to websocket"}
-	websocketUtils.Broadcast(msg.Namespace, "", "OnVisit", data)
+	websocketHelper.Broadcast(msg.Namespace, "", "OnVisit", data)
 	return nil
 }
 
@@ -47,7 +47,7 @@ func (c *WebSocketCtrl) OnNamespaceDisconnect(msg websocket.Message) error {
 	logUtils.Infof(i118Utils.Sprintf("ws_namespace_disconnected", c.Conn.ID()))
 
 	data := serverDomain.WsResp{Msg: fmt.Sprintf("ws_connected")}
-	websocketUtils.Broadcast(msg.Namespace, "", "OnVisit", data)
+	websocketHelper.Broadcast(msg.Namespace, "", "OnVisit", data)
 	return nil
 }
 
@@ -61,7 +61,7 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 	err = json.Unmarshal(wsMsg.Body, &req)
 	if err != nil {
 		msg := i118Utils.Sprintf("wrong_req_params", err.Error())
-		websocketUtils.SendExecMsg(msg, "", commConsts.Error, &wsMsg)
+		websocketHelper.SendExecMsg(msg, "", commConsts.Error, &wsMsg)
 		logUtils.ExecConsole(color.FgRed, msg)
 		return
 	}
@@ -70,7 +70,7 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 
 	if act == commConsts.ExecInit {
 		msg := i118Utils.Sprintf("success_to_conn")
-		//websocketUtils.SendExecMsg(msg, strconv.FormatBool(execHelper.GetRunning()), wsMsg)
+		//websocketHelper.SendExecMsg(msg, strconv.FormatBool(execHelper.GetRunning()), wsMsg)
 		logUtils.ExecConsole(color.FgCyan, msg)
 		return
 	}
@@ -88,7 +88,7 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 		execHelper.SetRunning(false)
 
 		msg := i118Utils.Sprintf("end_task")
-		websocketUtils.SendExecMsg(msg, "false", commConsts.Run, &wsMsg)
+		websocketHelper.SendExecMsg(msg, "false", commConsts.Run, &wsMsg)
 		logUtils.ExecConsole(color.FgCyan, msg)
 		return
 	}
@@ -96,7 +96,7 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 	if execHelper.GetRunning() && (act == commConsts.ExecCase || act == commConsts.ExecModule ||
 		act == commConsts.ExecSuite || act == commConsts.ExecTask || act == commConsts.ExecUnit) {
 		msg := i118Utils.Sprintf("pls_stop_previous")
-		websocketUtils.SendExecMsg(msg, "true", commConsts.Run, &wsMsg)
+		websocketHelper.SendExecMsg(msg, "true", commConsts.Run, &wsMsg)
 		logUtils.ExecConsole(color.FgRed, msg)
 
 		return
@@ -122,7 +122,7 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 	execHelper.SetRunning(true)
 
 	msg := i118Utils.Sprintf("start_task")
-	websocketUtils.SendExecMsg(msg, "true", commConsts.Run, &wsMsg)
+	websocketHelper.SendExecMsg(msg, "true", commConsts.Run, &wsMsg)
 	logUtils.ExecConsole(color.FgCyan, msg)
 
 	return

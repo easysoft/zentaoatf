@@ -6,8 +6,8 @@ import (
 	"github.com/bitly/go-simplejson"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	"github.com/easysoft/zentaoatf/internal/comm/domain"
-	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	scriptUtils "github.com/easysoft/zentaoatf/internal/comm/helper/script"
+	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/comm/helper/script"
 	httpUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/http"
 	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
@@ -205,7 +205,7 @@ func GetCaseIdsInZentaoTask(productId uint, taskId int, config commDomain.Worksp
 
 func GetCasesByModuleInDir(productId, moduleId uint, workspacePath, scriptDir string) (cases []string, err error) {
 	config := commDomain.WorkspaceConf{}
-	config = configUtils.LoadByWorkspacePath(workspacePath)
+	config = configHelper.LoadByWorkspacePath(workspacePath)
 
 	err = Login(config)
 	if err != nil {
@@ -213,14 +213,14 @@ func GetCasesByModuleInDir(productId, moduleId uint, workspacePath, scriptDir st
 	}
 
 	zentaoCaseIdMap, _ := GetCaseIdsInZentaoModule(productId, moduleId, config)
-	scriptUtils.GetScriptByIdsInDir(scriptDir, zentaoCaseIdMap, &cases)
+	scriptHelper.GetScriptByIdsInDir(scriptDir, zentaoCaseIdMap, &cases)
 
 	return
 }
 
 func GetCasesBySuiteInDir(productId int, suiteId int, workspacePath, scriptDir string) (cases []string, err error) {
 	config := commDomain.WorkspaceConf{}
-	config = configUtils.LoadByWorkspacePath(workspacePath)
+	config = configHelper.LoadByWorkspacePath(workspacePath)
 
 	err = Login(config)
 	if err != nil {
@@ -235,14 +235,14 @@ func GetCasesBySuiteInDir(productId int, suiteId int, workspacePath, scriptDir s
 	}
 
 	//commonUtils.ChangeScriptForDebug(&workspacePath)
-	scriptUtils.GetScriptByIdsInDir(scriptDir, caseIdMap, &cases)
+	scriptHelper.GetScriptByIdsInDir(scriptDir, caseIdMap, &cases)
 
 	return
 }
 
 func GetCasesByTaskInDir(productId int, taskId int, workspacePath, scriptDir string) (cases []string, err error) {
 	config := commDomain.WorkspaceConf{}
-	config = configUtils.LoadByWorkspacePath(workspacePath)
+	config = configHelper.LoadByWorkspacePath(workspacePath)
 
 	err = Login(config)
 	if err != nil {
@@ -257,7 +257,7 @@ func GetCasesByTaskInDir(productId int, taskId int, workspacePath, scriptDir str
 	}
 
 	//commonUtils.ChangeScriptForDebug(&workspacePath)
-	scriptUtils.GetScriptByIdsInDir(scriptDir, caseIdMap, &cases)
+	scriptHelper.GetScriptByIdsInDir(scriptDir, caseIdMap, &cases)
 
 	return
 }

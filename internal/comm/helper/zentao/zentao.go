@@ -7,7 +7,7 @@ import (
 	"github.com/bitly/go-simplejson"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	"github.com/easysoft/zentaoatf/internal/comm/domain"
-	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
 	"github.com/easysoft/zentaoatf/internal/pkg/domain"
 	httpUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/http"
 	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
@@ -118,7 +118,7 @@ func LoadSiteProduct(currSite serverDomain.ZentaoSite, currProductId int) (
 }
 
 func ListProduct(workspacePath string) (products []serverDomain.ZentaoProduct, err error) {
-	config := configUtils.LoadByWorkspacePath(workspacePath)
+	config := configHelper.LoadByWorkspacePath(workspacePath)
 	return loadProduct(config)
 }
 func loadProduct(config commDomain.WorkspaceConf) (products []serverDomain.ZentaoProduct, err error) {
@@ -162,7 +162,7 @@ func loadProduct(config commDomain.WorkspaceConf) (products []serverDomain.Zenta
 }
 
 func ListModule(productId uint, site model.Site) (modules []domain.NestedItem, err error) {
-	config := configUtils.LoadBySite(site)
+	config := configHelper.LoadBySite(site)
 	return LoadModule(productId, config)
 }
 func LoadModule(productId uint, config commDomain.WorkspaceConf) (modules []domain.NestedItem, err error) {
@@ -220,7 +220,7 @@ func genModuleData(interf interface{}, parentName string, modules *[]domain.Nest
 }
 
 func ListSuite(productId uint, site model.Site) (products []domain.NestedItem, err error) {
-	config := configUtils.LoadBySite(site)
+	config := configHelper.LoadBySite(site)
 	return LoadSuite(productId, config)
 }
 func LoadSuite(productId uint, config commDomain.WorkspaceConf) (suites []domain.NestedItem, err error) {
@@ -246,7 +246,7 @@ func LoadSuite(productId uint, config commDomain.WorkspaceConf) (suites []domain
 }
 
 func ListTask(productId uint, site model.Site) (products []domain.NestedItem, err error) {
-	config := configUtils.LoadBySite(site)
+	config := configHelper.LoadBySite(site)
 	return LoadTask(productId, config)
 }
 func LoadTask(productId uint, config commDomain.WorkspaceConf) (tasks []domain.NestedItem, err error) {

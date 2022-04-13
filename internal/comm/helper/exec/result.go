@@ -6,7 +6,7 @@ import (
 	"github.com/easysoft/zentaoatf/internal/comm/domain"
 	langHelper "github.com/easysoft/zentaoatf/internal/comm/helper/lang"
 	"github.com/easysoft/zentaoatf/internal/comm/helper/script"
-	websocketUtils "github.com/easysoft/zentaoatf/internal/comm/helper/websocket"
+	websocketHelper "github.com/easysoft/zentaoatf/internal/comm/helper/websocket"
 	"github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	"github.com/fatih/color"
@@ -125,7 +125,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 		if cs.Status == commConsts.FAIL {
 			status = commConsts.Error
 		}
-		websocketUtils.SendExecMsg(msg, "", status, wsMsg)
+		websocketHelper.SendExecMsg(msg, "", status, wsMsg)
 	}
 
 	logUtils.ExecConsole(color.FgCyan, msg)

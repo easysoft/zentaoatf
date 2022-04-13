@@ -2,7 +2,7 @@ package service
 
 import (
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
-	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 )
@@ -17,7 +17,7 @@ func NewTestBugService() *TestBugService {
 
 func (s *TestBugService) Submit(bug commDomain.ZtfBug, siteId, productId int) (err error) {
 	site, err := s.SiteRepo.Get(uint(siteId))
-	config := configUtils.LoadBySite(site)
+	config := configHelper.LoadBySite(site)
 
 	bug.Product = productId
 	err = zentaoHelper.CommitBug(bug, config)
@@ -27,7 +27,7 @@ func (s *TestBugService) Submit(bug commDomain.ZtfBug, siteId, productId int) (e
 
 func (s *TestBugService) GetBugFields(siteId, productId int) (bugFields commDomain.ZentaoBugFields, err error) {
 	site, err := s.SiteRepo.Get(uint(siteId))
-	config := configUtils.LoadBySite(site)
+	config := configHelper.LoadBySite(site)
 
 	bugFields, err = zentaoHelper.GetBugFiledOptions(config, productId)
 	return

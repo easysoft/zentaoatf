@@ -4,8 +4,8 @@ import (
 	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
-	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	scriptUtils "github.com/easysoft/zentaoatf/internal/comm/helper/script"
+	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/comm/helper/script"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
@@ -48,7 +48,7 @@ func (c *TestScriptCtrl) Get(ctx iris.Context) {
 		return
 	}
 
-	script, err := scriptUtils.GetScriptContent(scriptPath, workspaceId)
+	script, err := scriptHelper.GetScriptContent(scriptPath, workspaceId)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
@@ -93,9 +93,9 @@ func (c *TestScriptCtrl) Extract(ctx iris.Context) {
 		return
 	}
 
-	scriptUtils.Extract([]string{scriptPath})
+	scriptHelper.Extract([]string{scriptPath})
 
-	script, err := scriptUtils.GetScriptContent(scriptPath, workspaceId)
+	script, err := scriptHelper.GetScriptContent(scriptPath, workspaceId)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
@@ -115,7 +115,7 @@ func (c *TestScriptCtrl) SyncFromZentao(ctx iris.Context) {
 	}
 
 	site, _ := c.SiteService.Get(uint(currSiteId))
-	config := configUtils.LoadBySite(site)
+	config := configHelper.LoadBySite(site)
 	workspace, _ := c.WorkspaceService.Get(uint(syncSettings.WorkspaceId))
 
 	syncSettings.ProductId = currProductId
@@ -145,7 +145,7 @@ func (c *TestScriptCtrl) SyncToZentao(ctx iris.Context) {
 	}
 
 	site, _ := c.SiteService.Get(uint(currSiteId))
-	config := configUtils.LoadBySite(site)
+	config := configHelper.LoadBySite(site)
 
 	for _, set := range sets {
 		workspaceId := set.WorkspaceId

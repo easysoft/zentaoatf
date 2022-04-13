@@ -5,12 +5,12 @@ import (
 	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
-	analysisUtils "github.com/easysoft/zentaoatf/internal/comm/helper/analysis"
-	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	analysisHelper "github.com/easysoft/zentaoatf/internal/comm/helper/analysis"
+	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
 	langHelper "github.com/easysoft/zentaoatf/internal/comm/helper/lang"
-	scriptUtils "github.com/easysoft/zentaoatf/internal/comm/helper/script"
-	websocketUtils "github.com/easysoft/zentaoatf/internal/comm/helper/websocket"
-	zentaoUtils "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/comm/helper/script"
+	websocketHelper "github.com/easysoft/zentaoatf/internal/comm/helper/websocket"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
 	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
 	dateUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/date"
 	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
@@ -38,14 +38,14 @@ func ExecCases(ch chan int, testSet serverDomain.TestSet, msg *websocket.Message
 func ExecModule(ch chan int, testSet serverDomain.TestSet, msg *websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 
-	cases, err := zentaoUtils.GetCasesByModuleInDir(uint(testSet.ProductId), uint(testSet.ModuleId),
+	cases, err := zentaoHelper.GetCasesByModuleInDir(uint(testSet.ProductId), uint(testSet.ModuleId),
 		testSet.WorkspacePath, testSet.ScriptDirParamFromCmdLine)
 	if err != nil {
 		return
 	}
 
 	if testSet.Seq != "" {
-		cases = analysisUtils.FilterCaseByResult(cases, testSet)
+		cases = analysisHelper.FilterCaseByResult(cases, testSet)
 	}
 
 	return RunZtf(ch, testSet.WorkspacePath, testSet.ProductId, testSet.ModuleId, commConsts.Module, cases, msg)
@@ -53,11 +53,11 @@ func ExecModule(ch chan int, testSet serverDomain.TestSet, msg *websocket.Messag
 
 func ExecSuite(ch chan int, testSet serverDomain.TestSet, msg *websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	cases, err := zentaoUtils.GetCasesBySuiteInDir(testSet.ProductId, testSet.SuiteId,
+	cases, err := zentaoHelper.GetCasesBySuiteInDir(testSet.ProductId, testSet.SuiteId,
 		testSet.WorkspacePath, testSet.ScriptDirParamFromCmdLine)
 
 	if testSet.Seq != "" {
-		cases = analysisUtils.FilterCaseByResult(cases, testSet)
+		cases = analysisHelper.FilterCaseByResult(cases, testSet)
 	}
 
 	return RunZtf(ch, testSet.WorkspacePath,
@@ -66,14 +66,14 @@ func ExecSuite(ch chan int, testSet serverDomain.TestSet, msg *websocket.Message
 
 func ExecTask(ch chan int, testSet serverDomain.TestSet, msg *websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	cases, err := zentaoUtils.GetCasesByTaskInDir(testSet.ProductId, testSet.TaskId,
+	cases, err := zentaoHelper.GetCasesByTaskInDir(testSet.ProductId, testSet.TaskId,
 		testSet.WorkspacePath, testSet.ScriptDirParamFromCmdLine)
 	if err != nil {
 		return
 	}
 
 	if testSet.Seq != "" {
-		cases = analysisUtils.FilterCaseByResult(cases, testSet)
+		cases = analysisHelper.FilterCaseByResult(cases, testSet)
 	}
 
 	return RunZtf(ch, testSet.WorkspacePath,
@@ -84,7 +84,7 @@ func RunZtf(ch chan int,
 	workspacePath string, productId, id int, by commConsts.ExecBy, cases []string, wsMsg *websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
 
-	conf := configUtils.LoadByWorkspacePath(workspacePath)
+	conf := configHelper.LoadByWorkspacePath(workspacePath)
 
 	casesToRun, casesToIgnore := FilterCases(cases, conf)
 
@@ -96,7 +96,7 @@ func RunZtf(ch chan int,
 	GenZTFTestReport(report, pathMaxWidth, workspacePath, wsMsg)
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketUtils.SendExecMsg("", "", commConsts.Run, wsMsg)
+		websocketHelper.SendExecMsg("", "", commConsts.Run, wsMsg)
 	}
 
 	return
@@ -112,7 +112,7 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 
 	msg := i118Utils.Sprintf("found_scripts", len(casesToRun), workspacePath)
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketUtils.SendExecMsg(msg, "", commConsts.Run, wsMsg)
+		websocketHelper.SendExecMsg(msg, "", commConsts.Run, wsMsg)
 	}
 	logUtils.ExecConsolef(color.FgCyan, msg)
 	logUtils.ExecResult(msg)
@@ -120,7 +120,7 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 	if len(casesToIgnore) > 0 {
 		temp := i118Utils.Sprintf("ignore_scripts", strconv.Itoa(len(casesToIgnore)))
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketUtils.SendExecMsg(temp, "", commConsts.Run, wsMsg)
+			websocketHelper.SendExecMsg(temp, "", commConsts.Run, wsMsg)
 		}
 
 		logUtils.ExecConsolef(color.FgCyan, temp)
@@ -138,7 +138,7 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 		case <-ch:
 			msg := i118Utils.Sprintf("exit_exec_all")
 			if commConsts.ExecFrom != commConsts.FromCmd {
-				websocketUtils.SendExecMsg(msg, "", commConsts.Run, wsMsg)
+				websocketHelper.SendExecMsg(msg, "", commConsts.Run, wsMsg)
 			}
 
 			logUtils.ExecConsolef(color.FgCyan, msg)
@@ -164,7 +164,7 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 	startMsg := i118Utils.Sprintf("start_execution", scriptFile, dateUtils.DateTimeStr(startTime))
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketUtils.SendExecMsg(startMsg, "", commConsts.Run, wsMsg)
+		websocketHelper.SendExecMsg(startMsg, "", commConsts.Run, wsMsg)
 		logUtils.ExecConsolef(-1, startMsg)
 	}
 
@@ -179,7 +179,7 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 	}
 	if errOutput != "" {
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketUtils.SendOutputMsg(errOutput, "", wsMsg)
+			websocketHelper.SendOutputMsg(errOutput, "", wsMsg)
 		}
 		logUtils.ExecConsolef(-1, errOutput)
 		logUtils.ExecFilef(errOutput)
@@ -190,7 +190,7 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 
 	endMsg := i118Utils.Sprintf("end_execution", scriptFile, dateUtils.DateTimeStr(entTime))
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketUtils.SendExecMsg(endMsg, "", commConsts.Run, wsMsg)
+		websocketHelper.SendExecMsg(endMsg, "", commConsts.Run, wsMsg)
 		logUtils.ExecConsolef(-1, endMsg)
 	}
 
@@ -213,7 +213,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 
 		scriptInterpreter := ""
 		if strings.ToLower(lang) != "bat" {
-			scriptInterpreter = configUtils.GetFieldVal(conf, stringUtils.UcFirst(lang))
+			scriptInterpreter = configHelper.GetFieldVal(conf, stringUtils.UcFirst(lang))
 		}
 		if scriptInterpreter != "" {
 			if strings.Index(strings.ToLower(scriptInterpreter), "autoit") > -1 {
@@ -226,7 +226,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		} else {
 			msg := i118Utils.I118Prt.Sprintf("no_interpreter_for_run", lang, filePath)
 			if commConsts.ExecFrom != commConsts.FromCmd {
-				websocketUtils.SendOutputMsg(msg, "", wsMsg)
+				websocketHelper.SendOutputMsg(msg, "", wsMsg)
 			}
 			logUtils.ExecConsolef(-1, msg)
 			logUtils.ExecFilef(msg)
@@ -236,7 +236,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		if err != nil {
 			msg := i118Utils.I118Prt.Sprintf("exec_cmd_fail", filePath, err.Error())
 			if commConsts.ExecFrom != commConsts.FromCmd {
-				websocketUtils.SendOutputMsg(msg, "", wsMsg)
+				websocketHelper.SendOutputMsg(msg, "", wsMsg)
 			}
 			logUtils.ExecConsolef(-1, msg)
 			logUtils.ExecFilef(msg)
@@ -251,7 +251,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	if cmd == nil {
 		msgStr := i118Utils.Sprintf("cmd_empty")
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketUtils.SendOutputMsg(msgStr, "", wsMsg)
+			websocketHelper.SendOutputMsg(msgStr, "", wsMsg)
 			logUtils.ExecConsolef(color.FgRed, msgStr)
 		}
 
@@ -265,7 +265,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 
 	if err1 != nil {
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketUtils.SendOutputMsg(err1.Error(), "", wsMsg)
+			websocketHelper.SendOutputMsg(err1.Error(), "", wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, err1.Error())
 		logUtils.ExecFilef(err1.Error())
@@ -273,7 +273,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		return "", err1.Error()
 	} else if err2 != nil {
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketUtils.SendOutputMsg(err2.Error(), "", wsMsg)
+			websocketHelper.SendOutputMsg(err2.Error(), "", wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, err2.Error())
 		logUtils.ExecFilef(err2.Error())
@@ -291,7 +291,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		if line != "" {
 
 			if commConsts.ExecFrom != commConsts.FromCmd {
-				websocketUtils.SendOutputMsg(line, "", wsMsg)
+				websocketHelper.SendOutputMsg(line, "", wsMsg)
 				logUtils.ExecConsole(1, line)
 			}
 
@@ -310,7 +310,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			msg := i118Utils.Sprintf("exit_exec_curr")
 
 			if commConsts.ExecFrom != commConsts.FromCmd {
-				websocketUtils.SendExecMsg(msg, "", commConsts.Run, wsMsg)
+				websocketHelper.SendExecMsg(msg, "", commConsts.Run, wsMsg)
 			}
 
 			logUtils.ExecConsolef(color.FgCyan, msg)
@@ -354,7 +354,7 @@ func FilterCases(cases []string, conf commDomain.WorkspaceConf) (casesToRun, cas
 				ext = ext[1:]
 			}
 			lang := commConsts.ScriptExtToNameMap[ext]
-			interpreter := configUtils.GetFieldVal(conf, stringUtils.UcFirst(lang))
+			interpreter := configHelper.GetFieldVal(conf, stringUtils.UcFirst(lang))
 			if interpreter == "-" || interpreter == "" {
 				interpreter = ""
 				casesToIgnore = append(casesToIgnore, cs)
@@ -394,7 +394,7 @@ func getNumbMaxWidth(casesToRun []string) (numbMaxWidth, pathMaxWidth int) {
 		}
 
 		content := fileUtils.ReadFile(cs)
-		caseId := scriptUtils.ReadCaseId(content)
+		caseId := scriptHelper.ReadCaseId(content)
 		if len(caseId) > numbMaxWidth {
 			numbMaxWidth = len(caseId)
 		}

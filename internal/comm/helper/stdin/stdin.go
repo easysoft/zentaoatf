@@ -4,8 +4,8 @@ import (
 	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
-	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	scriptUtils "github.com/easysoft/zentaoatf/internal/comm/helper/script"
+	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/comm/helper/script"
 	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
 	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
@@ -18,14 +18,14 @@ import (
 
 func InputForScriptInterpreter(scripts []string, config *commDomain.WorkspaceConf, from string) bool {
 	configChanged := false
-	langs := scriptUtils.GetScriptType(scripts)
+	langs := scriptHelper.GetScriptType(scripts)
 
 	for _, lang := range langs {
 		if lang == "bat" || lang == "shell" {
 			continue
 		}
 
-		deflt := configUtils.GetFieldVal(*config, lang)
+		deflt := configHelper.GetFieldVal(*config, lang)
 		if from == "run" && deflt != "" { // already set when run, "-" means ignore
 			continue
 		}
@@ -44,7 +44,7 @@ func InputForScriptInterpreter(scripts []string, config *commDomain.WorkspaceCon
 		configChanged = true
 
 		inter := GetInputForScriptInterpreter(deflt, "set_script_interpreter", lang, sampleOrDefaultTips)
-		configUtils.SetFieldVal(config, lang, inter)
+		configHelper.SetFieldVal(config, lang, inter)
 	}
 
 	return configChanged
@@ -92,7 +92,7 @@ func GetInputForScriptInterpreter(defaultVal string, fmtStr string, params ...in
 }
 
 func InputForSet() {
-	conf := configUtils.ReadFromFile(commConsts.WorkDir)
+	conf := configHelper.ReadFromFile(commConsts.WorkDir)
 
 	var configSite bool
 
@@ -131,11 +131,11 @@ func InputForSet() {
 		var configInterpreter bool
 		stdinUtils.InputForBool(&configInterpreter, true, "config_script_interpreter")
 		if configInterpreter {
-			scripts := scriptUtils.LoadScriptByWorkspace(commConsts.WorkDir)
+			scripts := scriptHelper.LoadScriptByWorkspace(commConsts.WorkDir)
 			InputForScriptInterpreter(scripts, &conf, "set")
 		}
 	}
-	configUtils.SaveToFile(conf, commConsts.WorkDir)
+	configHelper.SaveToFile(conf, commConsts.WorkDir)
 }
 
 func getZenTaoBaseUrl(url string) string {
@@ -156,7 +156,7 @@ func getZenTaoBaseUrl(url string) string {
 }
 
 //func InputForRequest() {
-//	conf := configUtils.LoadByWorkspacePath(commConsts.WorkDir)
+//	conf := configHelper.LoadByWorkspacePath(commConsts.WorkDir)
 //
 //	logUtils.ExecConsole(color.FgCyan, i118Utils.Sprintf("need_config"))
 //
@@ -164,5 +164,5 @@ func getZenTaoBaseUrl(url string) string {
 //	conf.Username = GetInput("(.{2,})", conf.Username, "enter_account", conf.Username)
 //	conf.Password = GetInput("(.{2,})", conf.Password, "enter_password", conf.Password)
 //
-//	configUtils.SaveToFile(conf, commConsts.WorkDir)
+//	configHelper.SaveToFile(conf, commConsts.WorkDir)
 //}

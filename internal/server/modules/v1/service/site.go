@@ -1,7 +1,7 @@
 package service
 
 import (
-	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
 	"github.com/easysoft/zentaoatf/internal/pkg/domain"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
@@ -40,7 +40,7 @@ func (s *SiteService) GetDomainObject(id uint) (site serverDomain.ZentaoSite, er
 }
 
 func (s *SiteService) Create(site model.Site) (id uint, err error) {
-	config := configUtils.LoadBySite(site)
+	config := configHelper.LoadBySite(site)
 	err = zentaoHelper.Login(config)
 	if err != nil {
 		return
@@ -52,7 +52,7 @@ func (s *SiteService) Create(site model.Site) (id uint, err error) {
 }
 
 func (s *SiteService) Update(site model.Site) (err error) {
-	config := configUtils.LoadBySite(site)
+	config := configHelper.LoadBySite(site)
 	err = zentaoHelper.Login(config)
 	if err != nil {
 		return

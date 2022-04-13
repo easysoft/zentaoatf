@@ -5,7 +5,7 @@ import (
 	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
-	websocketUtils "github.com/easysoft/zentaoatf/internal/comm/helper/websocket"
+	websocketHelper "github.com/easysoft/zentaoatf/internal/comm/helper/websocket"
 	dateUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/date"
 	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
@@ -86,7 +86,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		msgFail += strings.Join(failedCaseLinesWithCheckpoint, "\n")
 
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketUtils.SendExecMsg(msgFail, "", commConsts.Error, wsMsg)
+			websocketHelper.SendExecMsg(msgFail, "", commConsts.Error, wsMsg)
 		}
 
 		logUtils.ExecConsolef(color.FgRed, msgFail)
@@ -121,7 +121,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		)
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketUtils.SendExecMsg(msgRun, "", commConsts.Run, wsMsg)
+		websocketHelper.SendExecMsg(msgRun, "", commConsts.Run, wsMsg)
 	}
 
 	logUtils.ExecConsole(color.FgCyan, msgRun)
@@ -131,7 +131,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	msgReport := "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketUtils.SendExecMsg(msgReport, "false", commConsts.Run, wsMsg)
+		websocketHelper.SendExecMsg(msgReport, "false", commConsts.Run, wsMsg)
 	}
 
 	logUtils.ExecConsole(color.FgCyan, msgReport)

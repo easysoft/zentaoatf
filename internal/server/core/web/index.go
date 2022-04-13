@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/internal/comm/consts"
 	langHelper "github.com/easysoft/zentaoatf/internal/comm/helper/lang"
-	websocketUtils "github.com/easysoft/zentaoatf/internal/comm/helper/websocket"
+	websocketHelper "github.com/easysoft/zentaoatf/internal/comm/helper/websocket"
 	"github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	"github.com/easysoft/zentaoatf/internal/server/config"
@@ -92,7 +92,7 @@ func Init(port int) *WebServer {
 	websocketAPI := app.Party(serverConfig.WsPath)
 	m := mvc.New(websocketAPI)
 	m.Register(
-		&websocketUtils.PrefixedLogger{Prefix: ""},
+		&websocketHelper.PrefixedLogger{Prefix: ""},
 	)
 	m.HandleWebsocket(websocketCtrl)
 	websocketServer := websocket.New(gorilla.Upgrader(gorillaWs.Upgrader{CheckOrigin: func(*http.Request) bool { return true }}), m)

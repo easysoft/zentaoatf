@@ -2,9 +2,9 @@ package action
 
 import (
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	analysisUtils "github.com/easysoft/zentaoatf/internal/comm/helper/analysis"
-	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	zentaoUtils "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
+	analysisHelper "github.com/easysoft/zentaoatf/internal/comm/helper/analysis"
+	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
 	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
 	stdinUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/stdin"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
@@ -32,11 +32,11 @@ func CommitZTFTestResult(files []string, productId, taskId int, noNeedConfirm bo
 		Seq:       resultDir,
 	}
 
-	report, err := analysisUtils.ReadReportByPath(filepath.Join(result.Seq, commConsts.ResultJson))
+	report, err := analysisHelper.ReadReportByPath(filepath.Join(result.Seq, commConsts.ResultJson))
 	if err != nil {
 		return
 	}
 
-	config := configUtils.LoadByWorkspacePath(commConsts.WorkDir)
-	err = zentaoUtils.CommitResult(report, result.ProductId, result.TaskId, config)
+	config := configHelper.LoadByWorkspacePath(commConsts.WorkDir)
+	err = zentaoHelper.CommitResult(report, result.ProductId, result.TaskId, config)
 }

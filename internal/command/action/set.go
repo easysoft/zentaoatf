@@ -1,11 +1,11 @@
 package action
 
 import (
-	stdinUtils "github.com/easysoft/zentaoatf/internal/comm/helper/stdin"
+	stdinHelper "github.com/easysoft/zentaoatf/internal/comm/helper/stdin"
 	commandConfig "github.com/easysoft/zentaoatf/internal/command/config"
 )
 
 func Set() {
-	stdinUtils.InputForSet()
+	stdinHelper.InputForSet()
 	commandConfig.PrintCurrConfig()
 }

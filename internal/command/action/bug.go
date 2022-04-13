@@ -4,7 +4,7 @@ import (
 	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
-	analysisUtils "github.com/easysoft/zentaoatf/internal/comm/helper/analysis"
+	analysisHelper "github.com/easysoft/zentaoatf/internal/comm/helper/analysis"
 	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
 	"github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
 	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
@@ -30,7 +30,7 @@ func CommitBug(files []string) {
 		stdinUtils.InputForDir(&resultDir, "", "result")
 	}
 
-	report, err := analysisUtils.ReadReportByWorkspaceSeq(commConsts.WorkDir, resultDir)
+	report, err := analysisHelper.ReadReportByWorkspaceSeq(commConsts.WorkDir, resultDir)
 	if err != nil {
 		return
 	}

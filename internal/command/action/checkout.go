@@ -3,7 +3,7 @@ package action
 import (
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
-	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
 	stdinUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/stdin"
 	stringUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/string"
@@ -26,7 +26,7 @@ func Checkout(productId, moduleId, suiteId, taskId string, independentFile bool,
 		Lang:            scriptLang,
 	}
 
-	config := configUtils.LoadByWorkspacePath(commConsts.WorkDir)
+	config := configHelper.LoadByWorkspacePath(commConsts.WorkDir)
 
 	zentaoHelper.SyncFromZentao(settings, config, commConsts.WorkDir)
 }

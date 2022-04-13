@@ -2,9 +2,9 @@ package action
 
 import (
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	_scriptUtils "github.com/easysoft/zentaoatf/internal/comm/helper/exec"
-	scriptUtils "github.com/easysoft/zentaoatf/internal/comm/helper/script"
+	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	execHelper "github.com/easysoft/zentaoatf/internal/comm/helper/exec"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/comm/helper/script"
 	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
@@ -17,7 +17,7 @@ func GenExpectFiles(files []string) error {
 
 	var cases []string
 	for _, v1 := range files {
-		group := scriptUtils.LoadScriptByWorkspace(v1)
+		group := scriptHelper.LoadScriptByWorkspace(v1)
 		for _, v2 := range group {
 			cases = append(cases, v2)
 		}
@@ -27,8 +27,8 @@ func GenExpectFiles(files []string) error {
 		logUtils.Info("\n" + i118Utils.Sprintf("no_cases"))
 		return nil
 	}
-	conf := configUtils.LoadByWorkspacePath(commConsts.WorkDir)
-	casesToRun, _ := _scriptUtils.FilterCases(cases, conf)
+	conf := configHelper.LoadByWorkspacePath(commConsts.WorkDir)
+	casesToRun, _ := execHelper.FilterCases(cases, conf)
 
 	dryRunScripts(casesToRun)
 	logUtils.Info(i118Utils.Sprintf("success_to_create_expect"))
@@ -42,8 +42,8 @@ func dryRunScripts(casesToRun []string) {
 	}
 }
 func dryRunScript(file string) {
-	conf := configUtils.LoadByWorkspacePath(commConsts.WorkDir)
-	out, _ := _scriptUtils.RunScript(file, commConsts.WorkDir, conf, nil, nil)
+	conf := configHelper.LoadByWorkspacePath(commConsts.WorkDir)
+	out, _ := execHelper.RunScript(file, commConsts.WorkDir, conf, nil, nil)
 
 	expFile := filepath.Join(filepath.Dir(file), fileUtils.GetFileNameWithoutExt(file)+".exp")
 	fileUtils.WriteFile(expFile, out)

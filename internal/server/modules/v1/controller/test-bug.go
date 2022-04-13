@@ -3,7 +3,7 @@ package controller
 import (
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
-	zentaoUtils "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
 	"strconv"
@@ -29,7 +29,7 @@ func (c *TestBugCtrl) PrepareBugData(ctx iris.Context) {
 	}
 
 	workspace, _ := c.WorkspaceService.Get(uint(req.WorkspaceId))
-	bug := zentaoUtils.PrepareBug(workspace.Path, req.Seq, strconv.Itoa(req.Id))
+	bug := zentaoHelper.PrepareBug(workspace.Path, req.Seq, strconv.Itoa(req.Id))
 
 	ctx.JSON(c.SuccessResp(bug))
 }

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
 	"github.com/easysoft/zentaoatf/internal/pkg/domain"
 	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
 	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
@@ -90,7 +90,7 @@ func (s *WorkspaceService) UpdateConfig(workspace model.Workspace, forceUpdate b
 	interps, _ := s.InterpreterService.List()
 	mp, _ := s.InterpreterService.GetMap(interps)
 
-	conf := configUtils.ReadFromFile(workspace.Path)
+	conf := configHelper.ReadFromFile(workspace.Path)
 	if conf.Language == "" {
 		conf.Language = commConsts.LanguageZh
 	}
@@ -131,7 +131,7 @@ func (s *WorkspaceService) UpdateConfig(workspace model.Workspace, forceUpdate b
 		}
 	}
 
-	configUtils.SaveToFile(conf, workspace.Path)
+	configHelper.SaveToFile(conf, workspace.Path)
 
 	return
 }

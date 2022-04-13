@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
 	langHelper "github.com/easysoft/zentaoatf/internal/comm/helper/lang"
 	"github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
@@ -81,7 +81,7 @@ func InitScreenSize() {
 
 func PrintCurrConfig() {
 	logUtils.ExecConsole(color.FgCyan, "\n"+i118Utils.Sprintf("current_config"))
-	conf := configUtils.LoadByWorkspacePath(commConsts.WorkDir)
+	conf := configHelper.LoadByWorkspacePath(commConsts.WorkDir)
 	val := reflect.ValueOf(conf)
 	typeOfS := val.Type()
 	for i := 0; i < reflect.ValueOf(conf).NumField(); i++ {

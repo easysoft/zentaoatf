@@ -4,7 +4,7 @@ import (
 	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
-	scriptUtils "github.com/easysoft/zentaoatf/internal/comm/helper/script"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/comm/helper/script"
 	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	"github.com/mattn/go-runewidth"
@@ -16,7 +16,7 @@ import (
 func List(files []string, keywords string) {
 	var cases []string
 	for _, v1 := range files {
-		group := scriptUtils.LoadScriptByWorkspace(v1)
+		group := scriptHelper.LoadScriptByWorkspace(v1)
 		for _, v2 := range group {
 			cases = append(cases, v2)
 		}
@@ -63,7 +63,7 @@ func List(files []string, keywords string) {
 }
 
 func SummaryObj(file string, keywords string) (bool, commDomain.FuncResult) {
-	pass, caseId, _, title := scriptUtils.GetCaseInfo(file)
+	pass, caseId, _, title := scriptHelper.GetCaseInfo(file)
 
 	if pass {
 		_, err := strconv.Atoi(keywords)

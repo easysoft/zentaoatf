@@ -4,9 +4,9 @@ import (
 	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
-	analysisUtils "github.com/easysoft/zentaoatf/internal/comm/helper/analysis"
-	configUtils "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	zentaoUtils "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
+	analysisHelper "github.com/easysoft/zentaoatf/internal/comm/helper/analysis"
+	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
 	"github.com/easysoft/zentaoatf/internal/pkg/domain"
 	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
@@ -41,7 +41,7 @@ func (s *TestResultService) Paginate(siteId, productId uint, req serverDomain.Re
 		//	continue
 		//}
 
-		reportFiles := analysisUtils.ListReport(workspace.Path)
+		reportFiles := analysisHelper.ListReport(workspace.Path)
 		for _, seq := range reportFiles {
 			if count < jumpNo || len(reports) >= pageSize {
 				count += 1
@@ -50,7 +50,7 @@ func (s *TestResultService) Paginate(siteId, productId uint, req serverDomain.Re
 
 			summary := serverDomain.TestReportSummary{WorkspaceId: int(workspace.ID)}
 
-			report, err1 := analysisUtils.ReadReportByWorkspaceSeq(workspace.Path, seq)
+			report, err1 := analysisHelper.ReadReportByWorkspaceSeq(workspace.Path, seq)
 			if err1 != nil { // ignore wrong json result
 				continue
 			}
@@ -73,7 +73,7 @@ func (s *TestResultService) Paginate(siteId, productId uint, req serverDomain.Re
 
 func (s *TestResultService) Get(workspaceId int, seq string) (report commDomain.ZtfReport, err error) {
 	workspace, _ := s.WorkspaceRepo.Get(uint(workspaceId))
-	report, err = analysisUtils.ReadReportByWorkspaceSeq(workspace.Path, seq)
+	report, err = analysisHelper.ReadReportByWorkspaceSeq(workspace.Path, seq)
 	report.WorkspaceId = workspaceId
 	report.Seq = seq
 
@@ -95,13 +95,13 @@ func (s *TestResultService) Submit(result serverDomain.ZentaoResultSubmitReq, si
 
 	workspace, _ := s.WorkspaceRepo.Get(uint(result.WorkspaceId))
 
-	report, err := analysisUtils.ReadReportByWorkspaceSeq(workspace.Path, result.Seq)
+	report, err := analysisHelper.ReadReportByWorkspaceSeq(workspace.Path, result.Seq)
 	if err != nil {
 		return
 	}
 
-	config := configUtils.LoadBySite(site)
-	err = zentaoUtils.CommitResult(report, result.ProductId, result.TaskId, config)
+	config := configHelper.LoadBySite(site)
+	err = zentaoHelper.CommitResult(report, result.ProductId, result.TaskId, config)
 
 	return
 }

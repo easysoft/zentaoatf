@@ -4,7 +4,7 @@ import (
 	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	langHelper "github.com/easysoft/zentaoatf/internal/comm/helper/lang"
-	scriptUtils "github.com/easysoft/zentaoatf/internal/comm/helper/script"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/comm/helper/script"
 	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
 	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
@@ -19,7 +19,7 @@ import (
 func View(files []string, keywords string) {
 	var cases []string
 	for _, v1 := range files {
-		group := scriptUtils.LoadScriptByWorkspace(v1)
+		group := scriptHelper.LoadScriptByWorkspace(v1)
 		for _, v2 := range group {
 			cases = append(cases, v2)
 		}
