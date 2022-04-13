@@ -9,9 +9,11 @@
         >
           <a-select-option value=""></a-select-option>
           <a-select-option value="workspace">{{t('by_workspace')}}</a-select-option>
-          <a-select-option value="module">{{t('by_module')}}</a-select-option>
-          <a-select-option value="suite">{{t('by_suite')}}</a-select-option>
-          <a-select-option value="task">{{t('by_task')}}</a-select-option>
+          <template v-if="currProduct.id">
+            <a-select-option value="module">{{t('by_module')}}</a-select-option>
+            <a-select-option value="suite">{{t('by_suite')}}</a-select-option>
+            <a-select-option value="task">{{t('by_task')}}</a-select-option>
+          </template>
         </a-select>
 
         <a-select
