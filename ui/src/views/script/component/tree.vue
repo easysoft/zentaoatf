@@ -182,6 +182,7 @@ export default defineComponent({
 
       getCaseIdsFromReport(workspace, seq, scope).then((json) => {
          checkedKeys.value = json.data
+        router.push(`/script/index`) // remove the params of re-test
       })
     }
     selectCasesFromReport()
@@ -339,14 +340,16 @@ export default defineComponent({
     }
 
     const selectNode = (selectedKeys, e) => {
-      console.log('selectNode', e.node.dataRef)
+      console.log('selectNode', e.node.dataRef.workspaceId)
 
       if (e.node.dataRef.workspaceType !== 'ztf') checkNothing()
 
+      scriptStore.dispatch('Script/getScript', e.node.dataRef)
+
       scriptStore.dispatch('Script/changeWorkspace',
           {id: e.node.dataRef.workspaceId, type: e.node.dataRef.workspaceType})
-      scriptStore.dispatch('Script/getScript', e.node.dataRef)
     }
+
     const checkNode = (checkedKeys, e) => {
       console.log('checkNode', e)
       selectNothing()

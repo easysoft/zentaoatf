@@ -1,6 +1,6 @@
 export default {
-    'empty': 'empty',
-    'app.global.menu.notfound': 'Not Found',
+    'empty': '空',
+    'app.global.menu.notfound': '未找到',
     'app.global.form.validatefields.catch': '验证不通过，请检查输入',
 
     'ztf_name_full': 'ZTF自动化测试工具',
