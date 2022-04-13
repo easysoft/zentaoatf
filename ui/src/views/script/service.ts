@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-import {WsMsg} from './data.d';
+import {WsMsg} from "@/types/data";
 import {removeEmptyField} from "@/utils/object";
 
 const apiPath = 'scripts';

@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-import {WsMsg} from "@/views/result/data";
+import {WsMsg} from "@/types/data";
 
 const apiPath = 'results';
 

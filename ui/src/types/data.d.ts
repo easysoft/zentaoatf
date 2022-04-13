@@ -1,11 +1,8 @@
 export interface WsMsg {
-  act: string;
-  data: any;
-}
-
-export interface QueryResult {
-  result: any[];
-  pagination: PaginationConfig;
+  msg:       string
+  isRunning: string
+  category:  string
+  conn: string
 }
 
 export interface QueryParams {
@@ -13,6 +10,11 @@ export interface QueryParams {
   enabled: string,
   page: number,
   pageSize: number,
+}
+
+export interface QueryResult {
+  result: any[];
+  pagination: PaginationConfig;
 }
 
 export interface PaginationConfig {

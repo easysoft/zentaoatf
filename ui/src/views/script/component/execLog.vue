@@ -75,7 +75,7 @@ import {getCache} from "@/utils/localCache";
 import settings from "@/config/settings";
 import bus from "@/utils/eventBus";
 import {logLevelMap} from "@/utils/const";
-import {WsMsg} from "../data";
+import {WsMsg} from "@/types/data";
 import {genExecInfo, genWorkspaceToScriptsMap} from "../service";
 import {ExecStatus} from "@/store/exec";
 
