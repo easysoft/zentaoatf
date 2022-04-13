@@ -190,7 +190,7 @@ export default defineComponent({
   }
 
   #right-content {
-    height: calc(100%);
+    height: calc(100% - 40px);
 
     display: flex;
     flex-direction: column;
