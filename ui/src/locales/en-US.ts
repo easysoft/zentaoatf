@@ -6,6 +6,10 @@ export default {
     'ztf_name_full': 'ZTF Automated Tool',
 
     'settings': 'Settings',
+    'exit': 'Exit',
+    'fullScreen': 'Full Screen',
+    'help': 'Help',
+
     'index': 'Index',
     'no': 'NO.',
     'scope': 'Scope', 
@@ -40,7 +44,6 @@ export default {
     'sync': 'Synchronization',
     'close': 'Close',
     'download': 'Download',
-    'help': 'Help',
     'src': 'Source Code',
     'zentao_url': 'ZenTao URL',
     'username': 'User Name',

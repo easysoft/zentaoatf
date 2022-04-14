@@ -6,6 +6,10 @@ export default {
     'ztf_name_full': 'ZTF自动化测试工具',
 
     'settings': '设置',
+    'exit': '退出',
+    'fullScreen': '全屏',
+    'help': '帮助',
+
     'index': '索引',
     'no': '编号',
     'scope': '范围',
@@ -39,7 +43,6 @@ export default {
     'sync': '同步',
     'close': '关闭',
     'download': '下载',
-    'help': '帮助',
     'src': '源码',
     'edit_config': '修改配置',
     'zentao_url': '禅道地址',

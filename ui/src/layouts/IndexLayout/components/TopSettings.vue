@@ -3,7 +3,7 @@
     <a-dropdown class="dropdown-list">
 
       <a class="t-white" @click.prevent>
-        <span class="name">{{t('settings')}}</span>
+        <span class="name"><SettingOutlined /></span>
         <span class="icon2"><icon-svg type="down"></icon-svg></span>
       </a>
 
@@ -12,6 +12,30 @@
           <a-menu-item @click="setSite"><span class="t-link">{{t('zentao_site')}}</span></a-menu-item>
           <a-menu-item @click="setEnv"><span class="t-link">{{ t('interpreter') }}</span></a-menu-item>
           <a-menu-item @click="setLang"><span class="t-link">{{t('ui_lang')}}</span></a-menu-item>
+
+          <template v-if="isElectron">
+            <a-menu-divider />
+
+            <a-menu-item @click="fullScreen">
+              <span class="t-link">
+                {{t('fullScreen')}}
+                <FullscreenOutlined v-if="!fullScreenDef" />
+                <FullscreenExitOutlined v-if="fullScreenDef" />
+              </span>
+            </a-menu-item>
+            <a-menu-item @click="help">
+              <span class="t-link">
+                {{ t('help') }}
+                <QuestionCircleOutlined />
+              </span>
+            </a-menu-item>
+            <a-menu-item @click="exit">
+              <span class="t-link">
+                {{t('exit')}}
+                <LogoutOutlined />
+              </span>
+            </a-menu-item>
+          </template>
         </a-menu>
       </template>
 
@@ -31,6 +55,7 @@
 <script lang="ts">
 import {defineComponent, ref, Ref} from "vue";
 import {useI18n} from "vue-i18n";
+import {SettingOutlined, FullscreenOutlined, FullscreenExitOutlined, QuestionCircleOutlined, LogoutOutlined} from '@ant-design/icons-vue';
 import IconSvg from "@/components/IconSvg";
 import {useRouter} from "vue-router";
 
@@ -39,6 +64,7 @@ import TopSelectLang from "./TopSelectLang.vue";
 export default defineComponent({
   name: 'Settings',
   components: {
+    SettingOutlined, FullscreenOutlined, FullscreenExitOutlined, QuestionCircleOutlined, LogoutOutlined,
     IconSvg, TopSelectLang
   },
   setup() {
@@ -60,12 +86,40 @@ export default defineComponent({
       selectLangVisible.value = true
     }
 
+    const isElectron = ref(!!window.require)
+    const fullScreenDef = ref(false)
+    const fullScreen = (): void => {
+      console.log('fullScreen')
+      fullScreenDef.value = !fullScreenDef.value
+
+      const remote = window.require('@electron/remote')
+      const mainWin = remote.getCurrentWindow();
+      mainWin.setFullScreen(!mainWin.isFullScreen());
+    }
+    const help = (): void => {
+      console.log('help')
+      const shell = window.require('@electron/remote').shell
+      shell.openExternal('https://ztf.im');
+    }
+    const exit = (): void => {
+      console.log('exit')
+
+      const app = window.require('@electron/remote').app
+      app.quit()
+    }
+
     return {
       t,
       setSite,
       setEnv,
       setLang,
       selectLangVisible,
+
+      isElectron,
+      fullScreenDef,
+      fullScreen,
+      help,
+      exit,
     }
   }
 })
