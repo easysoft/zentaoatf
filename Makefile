@@ -19,6 +19,9 @@ BUILD_CMD=go build -ldflags "-X 'commConsts.appVersion=${VERSION}' -X 'commConst
 
 default: prepare_res compile_all copy_files package
 
+compile_ui:
+	@cd ui && yarn build --dest ../client/ui && cd ..
+
 win64: prepare_res compile_win64 copy_files package
 win32: prepare_res compile_win32 copy_files package
 linux: prepare_res compile_linux copy_files package
@@ -38,7 +41,7 @@ compile_win64:
 		${BUILD_CMD} -x -v -ldflags "-s -w" \
 		-o ${BIN_WIN32}${BINARY}.exe ${MAIN_FILE}
 package_win64_client:
-	cd client && npm run package-win64 && cd ..
+	@cd client && npm run package-win64 && cd ..
 
 build_win32: compile_win32 package_win64_client
 compile_win32:
@@ -47,7 +50,7 @@ compile_win32:
 		${BUILD_CMD} -x -v -ldflags "-s -w" \
 		-o ${BIN_WIN32}${BINARY}.exe ${MAIN_FILE}
 package_win32_client:
-	cd client && npm run package-win32 && cd ..
+	@cd client && npm run package-win32 && cd ..
 
 build_linux: compile_linux package_linux_client
 compile_linux:
@@ -56,7 +59,7 @@ compile_linux:
 		${BUILD_CMD}
 		-o ${BIN_LINUX}${BINARY} ${MAIN_FILE}
 package_linux_client:
-	cd client && npm run package-linux && cd ..
+	@cd client && npm run package-linux && cd ..
 
 build_mac: compile_mac package_mac_client
 compile_mac:
