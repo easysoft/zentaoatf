@@ -237,7 +237,7 @@ export default defineComponent({
       filerValue.value = data.val
 
       if (!currProduct.value.id && filerType.value !== 'workspace') {
-        filerType.value = ''
+        filerType.value = 'workspace'
         filerValue.value = ''
       }
 
@@ -273,7 +273,7 @@ export default defineComponent({
       await loadScripts()
     }
     // only do it when switch from another pages, otherwise will called by watching currProduct method.
-    if (currProduct.value.id && filerValue.value.length === 0) initData()
+    if (filerValue.value.length === 0) initData()
 
     const expandedKeys = ref<string[]>([]);
     const getOpenKeys = (treeNode, isAll) => {

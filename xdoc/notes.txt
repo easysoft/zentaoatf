@@ -23,6 +23,9 @@ go-bindata -o=res/res.go -pkg=res res/...
 make compile_win64
 cd client && npm run package-win64 && cd ..
 
+make compile_win32
+cd client && npm run package-win32 && cd ..
+
 make compile_linux
 cd client && npm run package-linux && cd ..
 scp -r client/out/ztf-linux-x64/ 192.168.0.114:/home/aaron
