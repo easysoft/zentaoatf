@@ -51,7 +51,10 @@ export function resizeHeight(contentId: string, topId: string, splitterId: strin
     const splitter = document.getElementById(splitterId) as any;
     const bottom = document.getElementById(bottomId) as any;
 
-    if (!splitter) return false
+    if (!splitter) {
+        console.log('splitter', splitter)
+        return false
+    }
 
     // 鼠标按下事件
     splitter.onmousedown = function (e) {

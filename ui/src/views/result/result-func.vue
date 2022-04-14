@@ -1,5 +1,5 @@
 <template>
-  <div class="indexlayout-main-conent">
+  <div class="indexlayout-main-content">
     <a-card :bordered="false">
       <template #title>
         {{t('test_result')}}

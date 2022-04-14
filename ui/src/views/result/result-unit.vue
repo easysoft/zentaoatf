@@ -1,5 +1,5 @@
 <template>
-  <div class="indexlayout-main-conent">
+  <div class="indexlayout-main-content">
     <a-card :bordered="false">
       <template #title>
         {{t('test_result')}}
@@ -50,7 +50,7 @@
           <a-col :span="16"></a-col>
 
           <a-col :span="2" class="t-bord t-label-right">{{ t('ignore') }}</a-col>
-          <a-col :span="6" class="t-skip">{{ report.skip }}（{{ percent(report.ignore, report.total) }}）</a-col>
+          <a-col :span="6" class="t-skip">{{ report.skip }}（{{ percent(report.skip, report.total) }}）</a-col>
         </a-row>
 
         <a-row>

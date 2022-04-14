@@ -94,6 +94,11 @@ export default defineComponent({
       if (script.value) {
         scriptCode.value = script.value.code ? script.value.code : t('empty')
         lang.value = script.value.lang
+
+        setTimeout(() => {
+          resizeHeight('right-content', 'editor-panel', 'splitter-v', 'logs-panel',
+              100, 100, 90)
+        }, 600)
       } else {
         scriptCode.value = ''
         lang.value = ''
@@ -139,12 +144,7 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      console.log('onMounted')
-
-      setTimeout(() => {
-        resizeHeight('right-content', 'editor-panel', 'splitter-v', 'logs-panel',
-            100, 100, 90)
-      }, 600)
+      console.log('onMounted ztf')
     })
 
     return {
@@ -214,7 +214,7 @@ export default defineComponent({
     }
 
     #logs-panel {
-      height: 160px;
+      height: 180px;
 
       .ws-status {
         padding-left: 8px;

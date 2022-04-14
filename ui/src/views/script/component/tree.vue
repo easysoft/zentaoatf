@@ -236,6 +236,11 @@ export default defineComponent({
       }
       filerValue.value = data.val
 
+      if (!currProduct.value.id && filerType.value !== 'workspace') {
+        filerType.value = ''
+        filerValue.value = ''
+      }
+
       if (filerType.value) {
         const result = await listFilterItems(filerType.value)
         filerItems.value = result.data

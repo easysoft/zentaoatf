@@ -148,8 +148,7 @@ export default defineComponent({
     background-color: @mainBgColor;
   }
 }
-.indexlayout-main-conent {
-  margin: 24px;
+.indexlayout-main-content {
   position: relative;
 }
 </style>
