@@ -161,11 +161,11 @@ func loadProduct(config commDomain.WorkspaceConf) (products []serverDomain.Zenta
 	return
 }
 
-func ListModule(productId uint, site model.Site) (modules []domain.NestedItem, err error) {
+func ListCaseModule(productId uint, site model.Site) (modules []domain.NestedItem, err error) {
 	config := configHelper.LoadBySite(site)
-	return LoadModule(productId, config)
+	return LoadCaseModule(productId, config)
 }
-func LoadModule(productId uint, config commDomain.WorkspaceConf) (modules []domain.NestedItem, err error) {
+func LoadCaseModule(productId uint, config commDomain.WorkspaceConf) (modules []domain.NestedItem, err error) {
 	err = Login(config)
 	if err != nil {
 		return
@@ -181,7 +181,8 @@ func LoadModule(productId uint, config commDomain.WorkspaceConf) (modules []doma
 		return
 	}
 
-	uri := fmt.Sprintf("products/%d?fields=modules", productId)
+	//uri := fmt.Sprintf("products/%d?fields=modules", productId) // this is product modules
+	uri := fmt.Sprintf("modules?type=case&id=%d", productId)
 	url := GenApiUrl(uri, nil, config.Url)
 
 	bytes, err := httpUtils.Get(url)

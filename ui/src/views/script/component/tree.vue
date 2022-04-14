@@ -244,6 +244,13 @@ export default defineComponent({
       if (filerType.value) {
         const result = await listFilterItems(filerType.value)
         filerItems.value = result.data
+
+        let found = false
+        filerItems.value.forEach((item) => {
+          console.log(`${filerValue.value}, ${item.value}`)
+          if (filerValue.value === item.value) found = true
+        })
+        if (!found) filerValue.value = ''
       }
     }
     const selectFilerType = async (type) => {
@@ -265,7 +272,8 @@ export default defineComponent({
       await loadFilterItems()
       await loadScripts()
     }
-    initData()
+    // only do it when switch from another pages, otherwise will called by watching currProduct method.
+    if (currProduct.value.id && filerValue.value.length === 0) initData()
 
     const expandedKeys = ref<string[]>([]);
     const getOpenKeys = (treeNode, isAll) => {

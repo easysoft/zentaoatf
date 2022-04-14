@@ -91,7 +91,7 @@ func (c *ZentaoCtrl) ListModule(ctx iris.Context) {
 
 	site, _ := c.SiteService.Get(uint(siteId))
 
-	data, err := zentaoHelper.ListModule(uint(productId), site)
+	data, err := zentaoHelper.ListCaseModule(uint(productId), site)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.ErrZentaoRequest, err.Error()))
 		return

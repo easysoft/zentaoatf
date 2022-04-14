@@ -1,0 +1,24 @@
+产品模块
+GET /api.php/v1/products/:id?fields=modules
+
+用例模块
+/api.php/v1/modules?type=case&id=:product_id
+
+产品套件
+GET /api.php/v1/products/1/testsuites
+产品用例
+    1) 按照产品查询
+    GET /api.php/v1/products/:id/testcases
+    2) 按照模块查询
+    GET /api.php/v1/products/:id/testcases?module=:module_id
+    3）按照套件查询(查询套件详情)
+    GET /api.php/v1/testsuites/:id
+    4）按照测试单查询(查询测试单详情)
+    GET /api.php/v1/testtasks/:id
+
+提交测试结果
+POST /api.php/v1/testcases/:id/results
+{"steps": [{"result": "fail", "real": "no"}, {"result": "fail", "real": "no"}]}
+
+查看测试结果
+GET /api.php/v1/testcases/:id/results

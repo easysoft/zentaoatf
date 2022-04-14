@@ -55,7 +55,7 @@ func (s *TestFilterService) ListWorkspaceFilter(siteId, productId uint) (ret []s
 }
 
 func (s *TestFilterService) ListModuleFilter(config commDomain.WorkspaceConf, productId uint) (ret []serverDomain.FilterItem, err error) {
-	modules, _ := zentaoHelper.LoadModule(productId, config)
+	modules, _ := zentaoHelper.LoadCaseModule(productId, config)
 
 	for _, item := range modules {
 		filterItem := serverDomain.FilterItem{Label: item.Name, Value: item.Id}
