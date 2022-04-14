@@ -45,7 +45,7 @@ import {useI18n} from "vue-i18n";
 import {Form} from 'ant-design-vue';
 import {getLangInterpreter, saveInterpreter} from "@/views/interpreter/service";
 import {getLangSettings} from "../service";
-import { isWindows} from "@/utils/comm";
+import {getElectron, isWindows} from "@/utils/comm";
 
 const useForm = Form.useForm;
 
@@ -66,7 +66,7 @@ export default defineComponent({
   setup(props) {
     const {t} = useI18n();
     const isWin = isWindows()
-    const isElectron = ref(!!window.require)
+    const isElectron = ref(getElectron())
 
     const languages = ref<any>({})
     const languageMap = ref<any>({})

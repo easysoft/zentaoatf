@@ -60,6 +60,7 @@ import IconSvg from "@/components/IconSvg";
 import {useRouter} from "vue-router";
 
 import TopSelectLang from "./TopSelectLang.vue";
+import {getElectron} from "@/utils/comm";
 
 export default defineComponent({
   name: 'Settings',
@@ -86,7 +87,9 @@ export default defineComponent({
       selectLangVisible.value = true
     }
 
-    const isElectron = ref(!!window.require)
+    const isElectron = ref(getElectron())
+    console.log(`isElectron ${isElectron.value}`)
+
     const fullScreenDef = ref(false)
     const fullScreen = (): void => {
       console.log('fullScreen')
