@@ -138,7 +138,7 @@ func (c *ZentaoCtrl) ListTask(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(data))
 }
 
-func (c *ZentaoCtrl) PrepareBugFields(ctx iris.Context) {
+func (c *ZentaoCtrl) ListBugFields(ctx iris.Context) {
 	siteId, _ := ctx.URLParamInt("currSiteId")
 	productId, _ := ctx.URLParamInt("currProductId")
 

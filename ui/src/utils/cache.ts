@@ -95,7 +95,7 @@ export const setExpandedKeys = async (siteId, productId, keys) => {
 
 export const getCmdHistories = async (workspaceId) => {
     const mp = await getCache(settings.cmdHistories);
-    const items = mp ? mp[workspaceId] : []
+    const items = mp && mp[workspaceId] ? mp[workspaceId] : []
     return items
 }
 export const setCmdHistories = async (workspaceId, items) => {

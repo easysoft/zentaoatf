@@ -239,8 +239,13 @@ export default defineComponent({
     const submitResultForm = (formData) => {
       console.log('submitResultForm', formData)
 
-      const data = Object.assign({seq: seq}, formData)
-      console.log('data', data)
+      const data = Object.assign({
+        workspaceId: report.value.workspaceId,
+        seq: report.value.seq
+      }, formData)
+
+      if (data.taskId === '') data.taskId = 0
+
       submitResultToZentao(data).then((json) => {
         console.log('json', json)
         if (json.code === 0) {

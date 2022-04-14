@@ -68,7 +68,8 @@
 <script lang="ts">
 import {defineComponent, onMounted, PropType, reactive, ref, Ref} from "vue";
 import {Form} from 'ant-design-vue';
-import { prepareBugData, prepareBugFields } from "@/services/zentao";
+import { prepareBugData } from "@/services/bug";
+import { queryBugFields } from "@/services/zentao";
 import {useI18n} from "vue-i18n";
 import {isWindows} from "@/utils/comm";
 const useForm = Form.useForm;
@@ -128,7 +129,7 @@ export default defineComponent({
     getBugData()
 
     const getBugFields = () => {
-      prepareBugFields().then((jsn) => {
+      queryBugFields().then((jsn) => {
         modules.value = jsn.data.modules
         types.value = jsn.data.type
         builds.value = jsn.data.build

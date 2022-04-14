@@ -9,3 +9,11 @@ export function submitBugToZentao(data: any): Promise<any> {
         data: data,
     });
 }
+
+export function prepareBugData(data: any): Promise<any> {
+    return request({
+        url: `/${apiPath}/prepareBugData`,
+        method: 'POST',
+        data: data,
+    });
+}
