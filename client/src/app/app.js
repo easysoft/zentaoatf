@@ -46,7 +46,11 @@ export default class ZtfApp {
 
         const mainWin = new BrowserWindow({
             show: false,
-            webPreferences: {nodeIntegration: true, contextIsolation: false}
+            webPreferences: {
+                nodeIntegration: true,
+                contextIsolation: false,
+                enableRemoteModule: true,
+            }
         })
         remoteMain.enable(mainWin.webContents)
 
@@ -58,9 +62,9 @@ export default class ZtfApp {
         const url = await startUIService()
         await mainWin.loadURL(url);
 
-        if (DEBUG) {
+        // if (DEBUG) {
             mainWin.webContents.openDevTools({mode: 'bottom'});
-        }
+        // }
     };
 
     async openOrCreateWindow() {

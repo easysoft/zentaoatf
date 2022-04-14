@@ -9,7 +9,7 @@ module.exports = {
         extraResource: [
             './bin',
             './ui',
-            './lang'
+            './lang',
         ]
     },
     makers: [
