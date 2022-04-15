@@ -66,6 +66,8 @@ import {WorkspaceData} from "@/views/workspace/store";
 import {ZentaoData} from "@/store/zentao";
 import {arrToMap} from "@/utils/array";
 import {ztfTestTypesDef, unitTestTypesDef} from "@/utils/const";
+import settings from "@/config/settings";
+const { ipcRenderer } = window.require('electron')
 
 export default defineComponent({
   name: 'WorkspaceForm',
@@ -121,18 +123,12 @@ export default defineComponent({
     const selectDir = () => {
       console.log('selectDir')
 
-      if (isElectron.value) {
-        const {dialog} = window.require('@electron/remote');
-        dialog.showOpenDialog({
-          properties: ['openDirectory']
-        }).then(result => {
-          if (result.filePaths && result.filePaths.length > 0) {
-            modelRef.value.path = result.filePaths[0]
-          }
-        }).catch(err => {
-          console.log(err)
-        })
-      }
+      ipcRenderer.send(settings.electronMsg, 'selectDir')
+
+      ipcRenderer.on(settings.electronMsgReplay, (event, arg) => {
+        console.log(arg)
+        modelRef.value.path = arg
+      })
     }
 
     const { resetFields, validate, validateInfos } = useForm(modelRef, rules);

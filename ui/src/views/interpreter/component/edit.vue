@@ -9,7 +9,7 @@
 
     <a-form-item :label="t('interpreter_path')" v-bind="validateInfos.path">{{isElectron}}
       <a-input-search v-if="isElectron" v-model:value="modelRef.path"
-                      @search="selectDir" spellcheck="false"
+                      @search="selectFile" spellcheck="false"
                       @blur="validate('path', { trigger: 'blur' }).catch(() => {})">
         <template #enterButton>
           <a-button>{{ t('select') }}</a-button>
@@ -115,10 +115,10 @@ export default defineComponent({
       modelRef.value.path = item
     }
 
-    const selectDir = () => {
-      console.log('selectDir')
+    const selectFile = () => {
+      console.log('selectFile')
 
-      ipcRenderer.send(settings.electronMsg, 'selectFolder')
+      ipcRenderer.send(settings.electronMsg, 'selectFile')
 
       ipcRenderer.on(settings.electronMsgReplay, (event, arg) => {
         console.log(arg)
@@ -153,7 +153,7 @@ export default defineComponent({
       selectLang,
       selectInterpreter,
       selectedInterpreter,
-      selectDir,
+      selectFile,
       save,
       reset,
 

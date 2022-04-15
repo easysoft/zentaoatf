@@ -61,19 +61,11 @@ export default class ZtfApp {
         ipcMain.on(electronMsg, (event, arg) => {
             logInfo('msg from renderer: ' + arg)
             switch (arg) {
-                case 'selectFolder':
-                    logInfo('selectFolder')
-
-                    dialog.showOpenDialog({
-                        properties: ['openDirectory']
-                    }).then(result => {
-                        if (result.filePaths && result.filePaths.length > 0) {
-                            event.reply(electronMsgReplay, result.filePaths[0]);
-                        }
-                    }).catch(err => {
-                        logErr(err)
-                    })
-
+                case 'selectDir':
+                    this.showFolderSelection(event)
+                    break;
+                case 'selectFile':
+                    this.showFileSelection(event)
                     break;
                 case 'fullScreen':
                     const mainWin = this._windows.get('main');
@@ -146,6 +138,30 @@ export default class ZtfApp {
             this.openOrCreateWindow().then(() => {
             })
         });
+    }
+
+    showFileSelection(event) {
+        dialog.showOpenDialog({
+            properties: ['openFile']
+        }).then(result => {
+            if (result.filePaths && result.filePaths.length > 0) {
+                event.reply(electronMsgReplay, result.filePaths[0]);
+            }
+        }).catch(err => {
+            logErr(err)
+        })
+    }
+
+    showFolderSelection(event) {
+        dialog.showOpenDialog({
+            properties: ['openDirectory']
+        }).then(result => {
+            if (result.filePaths && result.filePaths.length > 0) {
+                event.reply(electronMsgReplay, result.filePaths[0]);
+            }
+        }).catch(err => {
+            logErr(err)
+        })
     }
 
     get windows() {
