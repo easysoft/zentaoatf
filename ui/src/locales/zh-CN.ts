@@ -7,7 +7,7 @@ export default {
 
     'settings': '设置',
     'exit': '退出',
-    'fullScreen': '全屏',
+    'fullScreen': '切换全屏',
     'help': '帮助',
 
     'index': '索引',

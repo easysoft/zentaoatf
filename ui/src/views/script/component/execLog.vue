@@ -1,12 +1,12 @@
 <template>
   <div id="exec-log-main">
-    <div v-if="currProduct.id && wsStatus === 'success'" class="ws-status" :class="wsStatus">
+    <div v-if="wsStatus === 'success'" class="ws-status" :class="wsStatus">
       <CheckOutlined />
       <span class="text">{{t('ws_conn_success')}}</span>
       <span @click="hideWsStatus" class="icon-close"><CloseCircleOutlined /></span>
     </div>
 
-    <div v-if="currProduct.id && wsStatus === 'fail'" class="ws-status" :class="wsStatus">
+    <div v-if="wsStatus === 'fail'" class="ws-status" :class="wsStatus">
       <CloseOutlined />
       <span class="text">{{t('ws_conn_success')}}</span>
       <span @click="hideWsStatus" class="icon-close"><CloseCircleOutlined /></span>
@@ -116,7 +116,7 @@ export default defineComponent({
     const {proxy} = getCurrentInstance() as any;
     WebSocket.init(proxy)
 
-    let wsStatus = ref('success')
+    let wsStatus = ref('')
 
     if (init) {
       proxy.$sub(WsEventName, (data) => {

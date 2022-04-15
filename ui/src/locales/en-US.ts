@@ -7,7 +7,7 @@ export default {
 
     'settings': 'Settings',
     'exit': 'Exit',
-    'fullScreen': 'Full Screen',
+    'fullScreen': 'Toggle Fullscreen',
     'help': 'Help',
 
     'index': 'Index',

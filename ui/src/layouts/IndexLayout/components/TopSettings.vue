@@ -95,12 +95,12 @@ export default defineComponent({
       console.log('fullScreen')
       fullScreenDef.value = !fullScreenDef.value
 
-      const remote = window.require('@electron/remote')
-      const mainWin = remote.getCurrentWindow();
-      mainWin.setFullScreen(!mainWin.isFullScreen());
+      const {BrowserWindow} = window.require("@electron/remote")
+      BrowserWindow.setFullScreen(!BrowserWindow.isFullScreen());
     }
     const help = (): void => {
       console.log('help')
+
       const shell = window.require('@electron/remote').shell
       shell.openExternal('https://ztf.im');
     }

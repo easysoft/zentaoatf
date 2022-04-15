@@ -11,11 +11,13 @@
     "svgo": "svgo -f src/assets/iconsvg --config=src/assets/iconsvg/svgo.yml"
   },
   "dependencies": {
+    "@electron/remote": "^2.0.8",
     "@toast-ui/editor": "^2.5.3",
     "ant-design-vue": "^2.2.8",
     "axios": "^0.21.4",
     "core-js": "^3.18.0",
     "echarts": "^4.9.0",
+    "electron": "^18.0.3",
     "localforage": "^1.10.0",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",

@@ -1,13 +1,9 @@
 import * as neffos from 'neffos.js';
-import { getCurrentInstance } from 'vue';
 import {NSConn} from "neffos.js";
-import {ComponentInternalInstance, ComponentPublicInstance} from "@vue/runtime-core";
+import {ComponentPublicInstance} from "@vue/runtime-core";
 
 const WebSocketPath = 'api/v1/ws';
-export const WebSocketBaseDev = 'ws://127.0.0.1:8085/';
-export type WsObject = {
-  conn?: any;
-};
+
 export type WsEvent = {
   room: string;
   code: string;
@@ -90,27 +86,11 @@ export function getWebSocketApi (): string {
   const isProd = process.env.NODE_ENV === 'production'
 
   const loc = window.location
-  console.log(loc)
-  console.log(loc.hostname)
+  console.log(`${isProd}, ${loc.toString()}`)
 
-  let wsUri = ''
-  if (!isProd) {
-    wsUri = WebSocketBaseDev
-  } else {
-    const loc = window.location
+  const wsUri = process.env.VUE_APP_APIHOST.replace('http', 'ws')
+  const url = wsUri + WebSocketPath
+  console.log(`websocket url = ${url}`)
 
-    if (loc.hostname === 'localhost') { // run in electron or dev machine
-      wsUri = WebSocketBaseDev
-    } else {
-      if (loc.protocol === 'https:') {
-        wsUri = 'wss:'
-      } else {
-        wsUri = 'ws:'
-      }
-      wsUri += '//' + loc.host
-      wsUri += loc.pathname
-    }
-  }
-
-  return wsUri + WebSocketPath
+  return url
 }
