@@ -9,8 +9,7 @@
 
     <a-form-item :label="t('interpreter_path')" v-bind="validateInfos.path">{{isElectron}}
       <a-input-search v-if="isElectron" v-model:value="modelRef.path"
-                      @search="selectFile" spellcheck="false"
-                      @blur="validate('path', { trigger: 'blur' }).catch(() => {})">
+                      @search="selectFile" spellcheck="false">
         <template #enterButton>
           <a-button>{{ t('select') }}</a-button>
         </template>
@@ -47,7 +46,6 @@ import settings from '@/config/settings';
 import {getLangInterpreter, saveInterpreter} from "@/views/interpreter/service";
 import {getLangSettings} from "../service";
 import {getElectron, isWindows} from "@/utils/comm";
-const { ipcRenderer } = window.require('electron')
 
 const useForm = Form.useForm;
 
@@ -89,8 +87,8 @@ export default defineComponent({
     });
 
     const rulesRef = reactive({
-      lang: [{required: true, message: t('pls_input_lang')}],
-      path: [{required: true, message: t('pls_input_interpreter_path')}],
+      lang: [{required: true, message: t('pls_input_lang'), trigger: 'blur' }],
+      path: [{required: true, message: t('pls_input_interpreter_path'), trigger: 'change' }],
     });
 
     const {resetFields, validate, validateInfos} = useForm(modelRef, rulesRef);
@@ -118,6 +116,7 @@ export default defineComponent({
     const selectFile = () => {
       console.log('selectFile')
 
+      const { ipcRenderer } = window.require('electron')
       ipcRenderer.send(settings.electronMsg, 'selectFile')
 
       ipcRenderer.on(settings.electronMsgReplay, (event, arg) => {

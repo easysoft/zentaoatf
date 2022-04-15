@@ -17,8 +17,8 @@
       </a-form-item>
 
       <a-form-item :label="t('path')" v-bind="validateInfos.path">
-        <a-input-search v-if="isElectron" v-model:value="modelRef.path" @search="selectDir" spellcheck="false"
-                        @blur="validate('path', { trigger: 'blur' }).catch(() => {})">
+        <a-input-search v-if="isElectron" v-model:value="modelRef.path"
+                        @search="selectDir" spellcheck="false">
           <template #enterButton>
             <a-button>选择</a-button>
           </template>
@@ -67,7 +67,6 @@ import {ZentaoData} from "@/store/zentao";
 import {arrToMap} from "@/utils/array";
 import {ztfTestTypesDef, unitTestTypesDef} from "@/utils/const";
 import settings from "@/config/settings";
-const { ipcRenderer } = window.require('electron')
 
 export default defineComponent({
   name: 'WorkspaceForm',
@@ -97,8 +96,8 @@ export default defineComponent({
 
     const rules = reactive({
       name: [{ required: true, message: t('pls_name'), trigger: 'blur' }],
-      path: [{ required: true, message: t('pls_workspace_path'), trigger: 'blur' }],
-      type: [{ required: true, message: t('pls_workspace_type') }],
+      path: [{ required: true, message: t('pls_workspace_path'), trigger: 'change' }],
+      type: [{ required: true, message: t('pls_workspace_type'), trigger: 'blur' }],
       cmd: [
         {
           trigger: 'blur',
@@ -123,6 +122,7 @@ export default defineComponent({
     const selectDir = () => {
       console.log('selectDir')
 
+      const { ipcRenderer } = window.require('electron')
       ipcRenderer.send(settings.electronMsg, 'selectDir')
 
       ipcRenderer.on(settings.electronMsgReplay, (event, arg) => {

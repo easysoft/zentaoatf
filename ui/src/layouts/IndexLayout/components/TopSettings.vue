@@ -62,7 +62,6 @@ import {useRouter} from "vue-router";
 import settings from '@/config/settings';
 import TopSelectLang from "./TopSelectLang.vue";
 import {getElectron} from "@/utils/comm";
-const { ipcRenderer } = window.require('electron')
 
 export default defineComponent({
   name: 'Settings',
@@ -97,14 +96,17 @@ export default defineComponent({
       console.log('fullScreen')
       fullScreenDef.value = !fullScreenDef.value
 
+      const { ipcRenderer } = window.require('electron')
       ipcRenderer.send(settings.electronMsg, 'fullScreen')
     }
     const help = (): void => {
       console.log('help')
+      const { ipcRenderer } = window.require('electron')
       ipcRenderer.send(settings.electronMsg, 'help')
     }
     const exit = (): void => {
       console.log('exit')
+      const { ipcRenderer } = window.require('electron')
       ipcRenderer.send(settings.electronMsg, 'exit')
     }
 
