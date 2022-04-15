@@ -1,77 +1,65 @@
 import { Mutation, Action } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
-import {queryWorkspace, deleteWorkspace} from "@/services/workspace";
 import {setCache} from "@/utils/localCache";
 import settings from '@/config/settings';
+import {WebSocket} from "@/services/websocket";
 
-export interface WorkspaceData {
-  workspaces: any[]
-  currWorkspace: any
-  currConfig: any
-  scriptTree: any[]
+export interface WebSocketData {
+  connStatus: string
+  room: string
 }
 
-export interface ModuleType extends StoreModuleType<WorkspaceData> {
-  state: WorkspaceData;
+export interface ModuleType extends StoreModuleType<WebSocketData> {
+  state: WebSocketData;
   mutations: {
-    saveWorkspaces: Mutation<WorkspaceData>;
+    saveConnStatus: Mutation<WebSocketData>;
+    saveRoom: Mutation<WebSocketData>;
   };
   actions: {
-    fetchWorkspace: Action<WorkspaceData, WorkspaceData>;
-    removeWorkspace: Action<WorkspaceData, WorkspaceData>;
+    connect: Action<WebSocketData, WebSocketData>;
+    changeStatus: Action<WebSocketData, WebSocketData>;
   };
 }
 
-const initState: WorkspaceData = {
-  workspaces: [],
-  currWorkspace: {},
-  currConfig: {},
-  scriptTree: [],
+const initState: WebSocketData = {
+  connStatus: '',
+  room: 'room',
 }
 
 const StoreModel: ModuleType = {
   namespaced: true,
-  name: 'workspace',
+  name: 'WebSocket',
   state: {
     ...initState
   },
   mutations: {
-    saveWorkspaces(state, payload) {
-      console.log('payload', payload)
-
-      setCache(settings.currWorkspace, payload.currWorkspace.path);
-
-      state.workspaces = [...payload.workspaces];
-      state.currWorkspace = payload.currWorkspace;
-      state.currConfig = payload.currConfig;
-      state.scriptTree = [payload.scriptTree];
+    saveConnStatus(state, payload) {
+      console.log('saveConnection', payload)
+      state.connStatus = payload
     },
+    saveRoom (state, payload) {
+      console.log('saveRoom', payload)
+      state.room = payload
+    }
   },
   actions: {
-    async fetchWorkspace({ commit }, currWorkspacePath) {
-      try {
-        const response: ResponseData = await queryWorkspace(currWorkspacePath);
-        const { data } = response;
-        commit('saveWorkspaces', data || {});
+    async connect({ commit }, room) {
+      console.log("connect to websocket")
 
-        return true;
-      } catch (error) {
-        return false;
-      }
+      await WebSocket.init()
+
+      const msg = {act: 'init'}
+      WebSocket.sentMsg(room, JSON.stringify(msg))
+
+      return true;
     },
-    async removeWorkspace({ commit }, selectedWorkspacePath) {
-      try {
-        await deleteWorkspace(selectedWorkspacePath);
+    async changeStatus({ commit }, status) {
+      console.log("changeStatus")
 
-        const response: ResponseData = await queryWorkspace('');
-        const { data } = response;
-        commit('saveWorkspaces', data || {});
+      commit('saveConnStatus', status)
 
-        return true;
-      } catch (error) {
-        return false;
-      }
+      return true;
     },
   }
 }

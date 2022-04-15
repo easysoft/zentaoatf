@@ -7,7 +7,6 @@ import Config, {updateConfig} from './utils/config';
 import Lang, {initLang} from './core/lang';
 import {startUIService} from "./core/ui";
 import {startZtfServer, killZtfServer} from "./core/ztf";
-// import {main} from "@electron/remote";
 
 export default class ZtfApp {
     constructor() {
@@ -41,10 +40,6 @@ export default class ZtfApp {
     async createWindow() {
         process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
-        const remoteMain = require('@electron/remote/main')
-        logInfo(remoteMain)
-        remoteMain.initialize()
-
         const mainWin = new BrowserWindow({
             show: false,
             webPreferences: {
@@ -53,7 +48,6 @@ export default class ZtfApp {
                 enableRemoteModule: true,
             }
         })
-        remoteMain.enable(mainWin.webContents)
 
         mainWin.maximize()
         mainWin.show()
@@ -63,25 +57,9 @@ export default class ZtfApp {
         const url = await startUIService()
         await mainWin.loadURL(url);
 
-        // const { ipcMain } = require('electron')
-        // ipcMain.on('renderer-msg', (event, arg) => {
-        //     logInfo('msg from renderer: ' + arg)
-        //     switch (arg) {
-        //         case 'fullScreen':
-        //             const mainWin = this._windows.get('main');
-        //             mainWin.setFullScreen(!mainWin.isFullScreen());
-        //             break;
-        //         case 'help':
-        //             shell.openExternal('https://ztf.im');
-        //             break;
-        //         case 'exit':
-        //             app.quit()
-        //             break;
-        //         default:
-        //     }
-        //
-        // // event.reply('main-msg', '好的');
-        // })
+        const mainRemote = require("@electron/remote/main");
+        mainRemote.initialize();
+        mainRemote.enable(mainWin.webContents);
 
         // if (DEBUG) {
             mainWin.webContents.openDevTools({mode: 'bottom'});

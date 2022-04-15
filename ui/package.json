@@ -16,8 +16,6 @@
     "ant-design-vue": "^2.2.8",
     "axios": "^0.21.4",
     "core-js": "^3.18.0",
-    "echarts": "^4.9.0",
-    "electron": "^18.0.3",
     "localforage": "^1.10.0",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
@@ -68,17 +66,7 @@
     "pre-commit": "lint-staged"
   },
   "keywords": [
-    "vue",
-    "vue3",
-    "vue3.0",
-    "vue3.x",
-    "typescript",
-    "admin",
-    "template",
-    "antd",
-    "antdv",
-    "Ant Design",
-    "Ant Design Vue"
+    "ztf"
   ],
   "lint-staged": {
     "*.{js,jsx,vue,ts,tsx}": [

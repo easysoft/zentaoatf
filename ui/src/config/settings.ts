@@ -26,6 +26,8 @@ export interface SettingsType {
 
     eventExec: string;
     eventNotify: string;
+    eventWebSocket: string,
+    webSocketRoom: string,
 
     initStatus: string;
     currSiteId: string;
@@ -60,6 +62,8 @@ const settings: SettingsType = {
 
     eventExec: 'eventExec',
     eventNotify: 'eventNotify',
+    eventWebSocket: 'eventWebSocket',
+    webSocketRoom: 'webSocketRoom',
 
     initStatus: 'initStatus',
     currSiteId: 'currSiteId',

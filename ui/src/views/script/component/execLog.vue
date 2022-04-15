@@ -1,12 +1,12 @@
 <template>
   <div id="exec-log-main">
-    <div v-if="wsStatus === 'success'" class="ws-status" :class="wsStatus">
+    <div v-if="showStatus && wsStatus === 'success'" class="ws-status" :class="wsStatus">
       <CheckOutlined />
       <span class="text">{{t('ws_conn_success')}}</span>
       <span @click="hideWsStatus" class="icon-close"><CloseCircleOutlined /></span>
     </div>
 
-    <div v-if="wsStatus === 'fail'" class="ws-status" :class="wsStatus">
+    <div v-if="showStatus && wsStatus === 'fail'" class="ws-status" :class="wsStatus">
       <CloseOutlined />
       <span class="text">{{t('ws_conn_success')}}</span>
       <span @click="hideWsStatus" class="icon-close"><CloseCircleOutlined /></span>
@@ -70,7 +70,7 @@ import { CloseCircleOutlined, CheckOutlined, CloseOutlined} from '@ant-design/ic
 import {ScriptData} from "../store";
 import {scroll} from "@/utils/dom";
 import {ZentaoData} from "@/store/zentao";
-import {WebSocket, WsEventName} from "@/services/websocket";
+import {WebSocket} from "@/services/websocket";
 import {getCache} from "@/utils/localCache";
 import settings from "@/config/settings";
 import bus from "@/utils/eventBus";
@@ -78,6 +78,7 @@ import {logLevelMap} from "@/utils/const";
 import {WsMsg} from "@/types/data";
 import {genExecInfo, genWorkspaceToScriptsMap} from "../service";
 import {ExecStatus} from "@/store/exec";
+import {WebSocketData} from "@/store/websoket";
 
 export default defineComponent({
   name: 'ScriptExecLogPage',
@@ -86,6 +87,9 @@ export default defineComponent({
   },
   setup() {
     const { t } = useI18n();
+
+    const websocketStore = useStore<{ WebSocket: WebSocketData }>();
+    const wsStatus = computed<any>(() => websocketStore.state.WebSocket.connStatus);
 
     const zentaoStore = useStore<{ Zentao: ZentaoData }>();
     const currSite = computed<any>(() => zentaoStore.state.Zentao.currSite);
@@ -105,54 +109,36 @@ export default defineComponent({
     }, {deep: true})
 
     // websocket
-    let init = true;
     let wsMsg = reactive({in: '', out: [] as any[]});
 
-    let room = 'room'
-    // getCache(settings.currWorkspace).then((token) => {
-    //   room = token || ''
-    // })
+    const getWsMsg = (data: any) => {
+      console.log('OnWebSocketEvent in ExecLog', data.msg)
 
-    const {proxy} = getCurrentInstance() as any;
-    WebSocket.init(proxy)
+      const jsn = JSON.parse(data.msg) as WsMsg
 
-    let wsStatus = ref('')
+      if (jsn.conn) { // update connection status
+        return
+      }
 
+      if ('isRunning' in jsn) {
+        execStore.dispatch('Exec/setRunning', jsn.isRunning)
+      }
+
+      const msg = genExecInfo(jsn)
+      if (msg) {
+        wsMsg.out.push(msg)
+      }
+      scroll('content')
+    }
+    let init = true;
     if (init) {
-      proxy.$sub(WsEventName, (data) => {
-        console.log('---', data[0].msg);
-        const jsn = JSON.parse(data[0].msg) as WsMsg
-
-        if (jsn.conn) { // ws connection status updated
-          wsStatus.value = jsn.conn
-          return
-        }
-
-        if ('isRunning' in jsn) {
-          execStore.dispatch('Exec/setRunning', jsn.isRunning)
-        }
-
-        const msg = genExecInfo(jsn)
-        if (msg) {
-          wsMsg.out.push(msg)
-        }
-        scroll('content')
-      });
+      bus.on(settings.eventWebSocket, getWsMsg);
       init = false;
     }
 
-    const initWsConn = (): void => {
-      console.log("initWsConn")
-      getCache(settings.currWorkspace).then (
-          (workspacePath) => {
-            const msg = {act: 'init', workspacePath: workspacePath}
-            console.log('msg', msg)
-            WebSocket.sentMsg(room, JSON.stringify(msg))
-          }
-      )
-    }
+    const showStatus = ref(true)
     const hideWsStatus = (): void => {
-      wsStatus.value = ''
+      showStatus.value = false
     }
 
     const addCount = (item): boolean => {
@@ -191,11 +177,10 @@ export default defineComponent({
     onMounted(() => {
       console.log('onMounted')
       bus.on(settings.eventExec, exec);
-
-      initWsConn()
     })
     onBeforeUnmount( () => {
       bus.off(settings.eventExec, exec);
+      bus.off(settings.eventWebSocket, getWsMsg);
     })
 
     const exec = (data: any) => {
@@ -217,14 +202,7 @@ export default defineComponent({
       }
 
       console.log('msg', msg)
-      WebSocket.sentMsg(room, JSON.stringify(msg))
-    }
-
-    const checkoutCases = () => {
-      console.log('checkoutCases')
-    }
-    const checkinCases = () => {
-      console.log('checkinCases')
+      WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg))
     }
 
     return {
@@ -236,12 +214,12 @@ export default defineComponent({
       logStatus,
       script,
       exec,
-      checkoutCases,
       stop,
       hideWsStatus,
       addCount,
       wsMsg,
       wsStatus,
+      showStatus,
       isRunning,
     }
   }

@@ -53,7 +53,7 @@
   </div>
 </template>
 <script lang="ts">
-import {defineComponent, ref, Ref} from "vue";
+import {defineComponent, ref} from "vue";
 import {useI18n} from "vue-i18n";
 import {SettingOutlined, FullscreenOutlined, FullscreenExitOutlined, QuestionCircleOutlined, LogoutOutlined} from '@ant-design/icons-vue';
 import IconSvg from "@/components/IconSvg";
@@ -61,6 +61,8 @@ import {useRouter} from "vue-router";
 
 import TopSelectLang from "./TopSelectLang.vue";
 import {getElectron} from "@/utils/comm";
+
+import * as remote from "@electron/remote"
 
 export default defineComponent({
   name: 'Settings',
@@ -90,13 +92,19 @@ export default defineComponent({
     const isElectron = ref(getElectron())
     console.log(`isElectron ${isElectron.value}`)
 
+    if (isElectron.value) {
+      console.log(`remote = `, remote)
+    }
+
     const fullScreenDef = ref(false)
     const fullScreen = (): void => {
       console.log('fullScreen')
       fullScreenDef.value = !fullScreenDef.value
 
-      const {BrowserWindow} = window.require("@electron/remote")
-      BrowserWindow.setFullScreen(!BrowserWindow.isFullScreen());
+      const remote = window.require("@electron/remote");
+      console.log(`remote = `, remote)
+      const currentWindow = remote.getCurrentWindow();
+      currentWindow.setFullScreen(!currentWindow.isFullScreen());
     }
     const help = (): void => {
       console.log('help')

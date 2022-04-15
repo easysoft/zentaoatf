@@ -1,8 +1,8 @@
 import * as neffos from 'neffos.js';
 import {NSConn} from "neffos.js";
-import {ComponentPublicInstance} from "@vue/runtime-core";
 
-const WebSocketPath = 'api/v1/ws';
+import bus from "@/utils/eventBus";
+import settings from "@/config/settings";
 
 export type WsEvent = {
   room: string;
@@ -10,14 +10,13 @@ export type WsEvent = {
   data: any;
 };
 
-export const WsEventName = 'ws_event'
 export const WsDefaultNameSpace = 'default'
 // export const WsDefaultRoom = 'default'
 
 export class WebSocket {
   static conn: NSConn
 
-  static async init(proxy: ComponentPublicInstance | any): Promise<any> {
+  static async init(): Promise<any> {
     console.log(`init websocket`)
 
     if (!WebSocket.conn) {
@@ -31,7 +30,7 @@ export class WebSocket {
 
               console.log('connected to namespace: ' + msg.Namespace)
               WebSocket.conn = nsConn
-              proxy.$pub(WsEventName, {msg: '{"conn": "success"}'});
+              bus.emit(settings.eventWebSocket, {msg: '{"conn": "success"}'});
             },
 
             _OnNamespaceDisconnect: (_nsConn, msg) => {
@@ -45,7 +44,7 @@ export class WebSocket {
             // implement in webpage
             OnChat: (_nsConn, msg) => {
               console.log('OnChat in util cls', msg, msg.Room + ': response ' + msg.Body)
-              proxy.$pub(WsEventName, {room: msg.Room, msg: msg.Body});
+              bus.emit(settings.eventWebSocket, {room: msg.Room, msg: msg.Body});
             }
           }
         })
@@ -54,7 +53,7 @@ export class WebSocket {
 
       } catch (err) {
         console.log('failed connect to websocket', err)
-        proxy.$pub(WsEventName, {msg: '{"conn": "fail"}'});
+        bus.emit(settings.eventWebSocket, {msg: '{"conn": "fail"}'});
       }
     }
     return WebSocket
@@ -69,6 +68,7 @@ export class WebSocket {
 
     }).catch(err => {
       console.log(`fail to join room ${roomName}`, err)
+      bus.emit(settings.eventWebSocket, {msg: '{"conn": "fail"}'});
     })
   }
 
@@ -87,7 +87,8 @@ export function getWebSocketApi (): string {
   const loc = window.location
   console.log(`${isProd}, ${loc.toString()}`)
 
-  const url = process.env.VUE_APP_APIHOST.replace('http', 'ws')
+  const apiHost = process.env.VUE_APP_APIHOST ? process.env.VUE_APP_APIHOST : ''
+  const url = apiHost.replace('http', 'ws') + '/ws'
   console.log(`websocket url = ${url}`)
 
   return url

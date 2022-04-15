@@ -25,6 +25,7 @@
         </div>
 
       <TopNotify />
+      <TopWebsocket />
     </div>
 </template>
 
@@ -44,11 +45,13 @@ import TopMenu from './TopMenu.vue';
 import TopSiteProduct from './TopSiteProduct.vue';
 import TopSettings from './TopSettings.vue';
 import TopNotify from './TopNotify.vue';
+import TopWebsocket from './TopWebsocket.vue';
 
 export default defineComponent({
     name: 'Top',
     components: {
-      TopMenu, TopSiteProduct, TopSettings, TopNotify,
+      TopMenu, TopSiteProduct, TopSettings,
+      TopNotify, TopWebsocket,
     },
     props: {
       collapsed: {

@@ -38,8 +38,8 @@ export function startUIService() {
                     _uiService = null;
                     reject(serverError);
                 } else {
-                    logInfo(`>> ui server started successfully on http://127.0.0.1:${port}.`);
-                    resolve(`http://127.0.0.1:${port}`);
+                    logInfo(`>> ui server started successfully on http://localhost:${port}.`);
+                    resolve(`http://localhost:${port}`);
                 }
             });
             server.on('close', () => {
