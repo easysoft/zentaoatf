@@ -101,7 +101,7 @@ export default defineComponent({
       console.log('fullScreen')
       fullScreenDef.value = !fullScreenDef.value
 
-      const remote = window.require("@electron/remote");
+      // const remote = window.require("@electron/remote");
       console.log(`remote = `, remote)
       const currentWindow = remote.getCurrentWindow();
       currentWindow.setFullScreen(!currentWindow.isFullScreen());
