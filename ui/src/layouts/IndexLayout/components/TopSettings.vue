@@ -53,7 +53,7 @@
   </div>
 </template>
 <script lang="ts">
-import {defineComponent, ref} from "vue";
+import {defineComponent, ref, Ref} from "vue";
 import {useI18n} from "vue-i18n";
 import {SettingOutlined, FullscreenOutlined, FullscreenExitOutlined, QuestionCircleOutlined, LogoutOutlined} from '@ant-design/icons-vue';
 import IconSvg from "@/components/IconSvg";
@@ -61,8 +61,7 @@ import {useRouter} from "vue-router";
 
 import TopSelectLang from "./TopSelectLang.vue";
 import {getElectron} from "@/utils/comm";
-
-import * as remote from "@electron/remote"
+const { ipcRenderer } = window.require('electron')
 
 export default defineComponent({
   name: 'Settings',
@@ -92,31 +91,23 @@ export default defineComponent({
     const isElectron = ref(getElectron())
     console.log(`isElectron ${isElectron.value}`)
 
-    if (isElectron.value) {
-      console.log(`remote = `, remote)
-    }
-
     const fullScreenDef = ref(false)
     const fullScreen = (): void => {
       console.log('fullScreen')
       fullScreenDef.value = !fullScreenDef.value
 
-      // const remote = window.require("@electron/remote");
-      console.log(`remote = `, remote)
-      const currentWindow = remote.getCurrentWindow();
-      currentWindow.setFullScreen(!currentWindow.isFullScreen());
+      ipcRenderer.send('renderer-msg', 'fullScreen')
+      // ipcRenderer.on('main-msg', (event, arg) => {
+      //   console.log(arg)
+      // })
     }
     const help = (): void => {
       console.log('help')
-
-      const shell = window.require('@electron/remote').shell
-      shell.openExternal('https://ztf.im');
+      ipcRenderer.send('renderer-msg', 'help')
     }
     const exit = (): void => {
       console.log('exit')
-
-      const app = window.require('@electron/remote').app
-      app.quit()
+      ipcRenderer.send('renderer-msg', 'exit')
     }
 
     return {
