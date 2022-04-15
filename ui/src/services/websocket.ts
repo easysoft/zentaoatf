@@ -84,12 +84,10 @@ export class WebSocket {
 
 export function getWebSocketApi (): string {
   const isProd = process.env.NODE_ENV === 'production'
-
   const loc = window.location
   console.log(`${isProd}, ${loc.toString()}`)
 
-  const wsUri = process.env.VUE_APP_APIHOST.replace('http', 'ws')
-  const url = wsUri + WebSocketPath
+  const url = process.env.VUE_APP_APIHOST.replace('http', 'ws')
   console.log(`websocket url = ${url}`)
 
   return url
