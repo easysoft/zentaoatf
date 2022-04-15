@@ -7,7 +7,7 @@
       </a-select>
     </a-form-item>
 
-    <a-form-item :label="t('interpreter_path')" v-bind="validateInfos.path">
+    <a-form-item :label="t('interpreter_path')" v-bind="validateInfos.path">{{isElectron}}
       <a-input-search v-if="isElectron" v-model:value="modelRef.path"
                       @search="selectDir" spellcheck="false"
                       @blur="validate('path', { trigger: 'blur' }).catch(() => {})">
@@ -43,9 +43,11 @@ import {defineComponent, reactive, ref, Ref, PropType, computed, ComputedRef} fr
 import {useI18n} from "vue-i18n";
 
 import {Form} from 'ant-design-vue';
+import settings from '@/config/settings';
 import {getLangInterpreter, saveInterpreter} from "@/views/interpreter/service";
 import {getLangSettings} from "../service";
 import {getElectron, isWindows} from "@/utils/comm";
+const { ipcRenderer } = window.require('electron')
 
 const useForm = Form.useForm;
 
@@ -116,18 +118,12 @@ export default defineComponent({
     const selectDir = () => {
       console.log('selectDir')
 
-      if (isElectron.value) {
-        const {dialog} = window.require('@electron/remote');
-        dialog.showOpenDialog({
-          properties: ['openDirectory']
-        }).then(result => {
-          if (result.filePaths && result.filePaths.length > 0) {
-            modelRef.value.path = result.filePaths[0]
-          }
-        }).catch(err => {
-          console.log(err)
-        })
-      }
+      ipcRenderer.send(settings.electronMsg, 'selectFolder')
+
+      ipcRenderer.on(settings.electronMsgReplay, (event, arg) => {
+        console.log(arg)
+        modelRef.value.path = arg
+      })
     }
 
     const save = async () => {

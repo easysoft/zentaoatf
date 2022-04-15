@@ -59,6 +59,7 @@ import {SettingOutlined, FullscreenOutlined, FullscreenExitOutlined, QuestionCir
 import IconSvg from "@/components/IconSvg";
 import {useRouter} from "vue-router";
 
+import settings from '@/config/settings';
 import TopSelectLang from "./TopSelectLang.vue";
 import {getElectron} from "@/utils/comm";
 const { ipcRenderer } = window.require('electron')
@@ -96,18 +97,15 @@ export default defineComponent({
       console.log('fullScreen')
       fullScreenDef.value = !fullScreenDef.value
 
-      ipcRenderer.send('renderer-msg', 'fullScreen')
-      // ipcRenderer.on('main-msg', (event, arg) => {
-      //   console.log(arg)
-      // })
+      ipcRenderer.send(settings.electronMsg, 'fullScreen')
     }
     const help = (): void => {
       console.log('help')
-      ipcRenderer.send('renderer-msg', 'help')
+      ipcRenderer.send(settings.electronMsg, 'help')
     }
     const exit = (): void => {
       console.log('exit')
-      ipcRenderer.send('renderer-msg', 'exit')
+      ipcRenderer.send(settings.electronMsg, 'exit')
     }
 
     return {

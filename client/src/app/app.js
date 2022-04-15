@@ -1,6 +1,6 @@
-import {app, BrowserWindow, ipcMain, Menu, shell} from 'electron';
+import {app, BrowserWindow, ipcMain, Menu, shell, dialog} from 'electron';
 
-import {DEBUG} from './utils/consts';
+import {DEBUG, electronMsg, electronMsgReplay} from './utils/consts';
 import {IS_MAC_OSX} from './utils/env';
 import {logInfo, logErr} from './utils/log';
 import Config, {updateConfig} from './utils/config';
@@ -58,9 +58,23 @@ export default class ZtfApp {
         await mainWin.loadURL(url);
 
         const { ipcMain } = require('electron')
-        ipcMain.on('renderer-msg', (event, arg) => {
+        ipcMain.on(electronMsg, (event, arg) => {
             logInfo('msg from renderer: ' + arg)
             switch (arg) {
+                case 'selectFolder':
+                    logInfo('selectFolder')
+
+                    dialog.showOpenDialog({
+                        properties: ['openDirectory']
+                    }).then(result => {
+                        if (result.filePaths && result.filePaths.length > 0) {
+                            event.reply(electronMsgReplay, result.filePaths[0]);
+                        }
+                    }).catch(err => {
+                        logErr(err)
+                    })
+
+                    break;
                 case 'fullScreen':
                     const mainWin = this._windows.get('main');
                     mainWin.setFullScreen(!mainWin.isFullScreen());
@@ -73,8 +87,6 @@ export default class ZtfApp {
                     break;
                 default:
             }
-
-        // event.reply('main-msg', '好的');
         })
 
         // if (DEBUG) {
@@ -138,6 +150,19 @@ export default class ZtfApp {
 
     get windows() {
         return this._windows;
+    }
+
+    setAboutPanel() {
+        if (!app.setAboutPanelOptions) {
+            return;
+        }
+        app.setAboutPanelOptions({
+            applicationName: Lang.string(Config.pkg.name) || Config.pkg.displayName,
+            applicationVersion: Config.pkg.version,
+            copyright: `${Config.pkg.copyright} ${Config.pkg.company}`,
+            credits: `Licence: ${Config.pkg.license}`,
+            version: `${Config.pkg.buildTime ? `build at ${new Date(Config.pkg.buildTime).toLocaleString()}` : ''}${DEBUG ? '[debug]' : ''}`
+        });
     }
 
     buildAppMenu() {
@@ -243,18 +268,5 @@ export default class ZtfApp {
         //
         // const menu = Menu.buildFromTemplate(template);
         // Menu.setApplicationMenu(menu);
-    }
-
-    setAboutPanel() {
-        if (!app.setAboutPanelOptions) {
-            return;
-        }
-        app.setAboutPanelOptions({
-            applicationName: Lang.string(Config.pkg.name) || Config.pkg.displayName,
-            applicationVersion: Config.pkg.version,
-            copyright: `${Config.pkg.copyright} ${Config.pkg.company}`,
-            credits: `Licence: ${Config.pkg.license}`,
-            version: `${Config.pkg.buildTime ? `build at ${new Date(Config.pkg.buildTime).toLocaleString()}` : ''}${DEBUG ? '[debug]' : ''}`
-        });
     }
 }
