@@ -46,7 +46,7 @@ func (s *WorkspaceService) Create(workspace model.Workspace) (id uint, err error
 	}
 
 	id, err = s.WorkspaceRepo.Create(workspace)
-	s.UpdateConfig(workspace, true)
+	s.UpdateConfig(workspace, "all")
 
 	return
 }
@@ -57,7 +57,7 @@ func (s *WorkspaceService) Update(workspace model.Workspace) (err error) {
 	}
 
 	err = s.WorkspaceRepo.Update(workspace)
-	s.UpdateConfig(workspace, true)
+	s.UpdateConfig(workspace, "all")
 
 	return
 }
@@ -81,11 +81,11 @@ func (s *WorkspaceService) UpdateAllConfig() {
 	workspaces, _ := s.WorkspaceRepo.ListWorkspace()
 
 	for _, item := range workspaces {
-		s.UpdateConfig(item, true)
+		s.UpdateConfig(item, "interpreter")
 	}
 }
 
-func (s *WorkspaceService) UpdateConfig(workspace model.Workspace, forceUpdate bool) (err error) {
+func (s *WorkspaceService) UpdateConfig(workspace model.Workspace, by string) (err error) {
 	site, _ := s.SiteRepo.Get(workspace.SiteId)
 	interps, _ := s.InterpreterService.List()
 	mp, _ := s.InterpreterService.GetMap(interps)
@@ -94,41 +94,22 @@ func (s *WorkspaceService) UpdateConfig(workspace model.Workspace, forceUpdate b
 	if conf.Language == "" {
 		conf.Language = commConsts.LanguageZh
 	}
-	if forceUpdate || conf.Url == "" {
+
+	if by == "all" || by == "site" {
 		conf.Url = site.Url
-	}
-	if forceUpdate || conf.Username == "" {
 		conf.Username = site.Username
-	}
-	if forceUpdate || conf.Password == "" {
 		conf.Password = site.Password
 	}
 
-	if commonUtils.IsWin() {
-		if forceUpdate || conf.Javascript == "" {
-			conf.Javascript = mp["javascript"]
-		}
-		if forceUpdate || conf.Lua == "" {
-			conf.Lua = mp["lua"]
-		}
-		if forceUpdate || conf.Perl == "" {
-			conf.Perl = mp["perl"]
-		}
-		if forceUpdate || conf.Php == "" {
-			conf.Php = mp["php"]
-		}
-		if forceUpdate || conf.Python == "" {
-			conf.Python = mp["python"]
-		}
-		if forceUpdate || conf.Ruby == "" {
-			conf.Ruby = mp["ruby"]
-		}
-		if forceUpdate || conf.Tcl == "" {
-			conf.Tcl = mp["tcl"]
-		}
-		if forceUpdate || conf.Autoit == "" {
-			conf.Autoit = mp["autoit"]
-		}
+	if by == "all" || by == "interpreter" && commonUtils.IsWin() {
+		conf.Javascript = mp["javascript"]
+		conf.Lua = mp["lua"]
+		conf.Perl = mp["perl"]
+		conf.Php = mp["php"]
+		conf.Python = mp["python"]
+		conf.Ruby = mp["ruby"]
+		conf.Tcl = mp["tcl"]
+		conf.Autoit = mp["autoit"]
 	}
 
 	configHelper.SaveToFile(conf, workspace.Path)

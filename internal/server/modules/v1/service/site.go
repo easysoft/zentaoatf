@@ -62,7 +62,7 @@ func (s *SiteService) Update(site model.Site) (err error) {
 
 	workspaces, _ := s.WorkspaceRepo.ListBySite(site.ID)
 	for _, item := range workspaces {
-		s.WorkspaceService.UpdateConfig(item, true)
+		s.WorkspaceService.UpdateConfig(item, "site")
 	}
 
 	return
