@@ -3,15 +3,19 @@ package zentaoHelper
 import (
 	"errors"
 	"fmt"
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
+	websocketHelper "github.com/easysoft/zentaoatf/internal/comm/helper/websocket"
 	httpUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/http"
 	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	"github.com/fatih/color"
+	"github.com/kataras/iris/v12/websocket"
 	"os"
 )
 
-func CommitResult(report commDomain.ZtfReport, productId, taskId int, config commDomain.WorkspaceConf) (err error) {
+func CommitResult(report commDomain.ZtfReport, productId, taskId int, config commDomain.WorkspaceConf,
+	wsMsg *websocket.Message) (err error) {
 	if productId != 0 {
 		report.ProductId = productId
 	}
@@ -34,13 +38,21 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId int, config com
 	ret, err := httpUtils.Post(url, report)
 
 	msg := ""
+	msgColor := ""
 	if err == nil {
-		msg = color.GreenString(i118Utils.Sprintf("success_to_submit_test_result"))
+		msg = i118Utils.Sprintf("success_to_submit_test_result")
+		msgColor = color.GreenString(msg)
 	} else {
-		msg = color.RedString("commit result failed, error: %s.", err.Error())
+		msg = i118Utils.Sprintf("fail_to_submit_test_result", err.Error())
+		msgColor = color.RedString(msg)
 		err = errors.New(string(ret))
 	}
-	logUtils.Info(msg)
+
+	logUtils.Info(msgColor)
+
+	if commConsts.ExecFrom != commConsts.FromCmd {
+		websocketHelper.SendExecMsg(msg, "", commConsts.Result, wsMsg)
+	}
 
 	return
 }

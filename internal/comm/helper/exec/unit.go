@@ -39,7 +39,7 @@ func ExecUnit(ch chan int,
 	endMsg := i118Utils.Sprintf("end_execution", req.Cmd, dateUtils.DateTimeStr(entTime))
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg(endMsg, "false", commConsts.Run, wsMsg)
+		websocketHelper.SendExecMsg(endMsg, "", commConsts.Run, wsMsg)
 	}
 
 	logUtils.ExecConsolef(-1, endMsg)
@@ -49,7 +49,11 @@ func ExecUnit(ch chan int,
 
 	if req.SubmitResult {
 		config := configHelper.LoadByWorkspacePath(req.WorkspacePath)
-		err = zentaoHelper.CommitResult(report, req.ProductId, 0, config)
+		err = zentaoHelper.CommitResult(report, req.ProductId, 0, config, wsMsg)
+	}
+
+	if commConsts.ExecFrom != commConsts.FromCmd {
+		websocketHelper.SendExecMsg("END", "false", commConsts.Run, wsMsg)
 	}
 
 	return

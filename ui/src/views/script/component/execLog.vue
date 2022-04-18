@@ -122,6 +122,7 @@ export default defineComponent({
       }
 
       if ('isRunning' in jsn) {
+        console.log('change isRunning to ', jsn.isRunning)
         execStore.dispatch('Exec/setRunning', jsn.isRunning)
       }
 
