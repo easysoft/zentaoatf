@@ -53,7 +53,7 @@ func ExecUnit(ch chan int,
 	}
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg("END", "false", commConsts.Run, wsMsg)
+		websocketHelper.SendExecMsg("", "false", commConsts.Run, wsMsg)
 	}
 
 	return
