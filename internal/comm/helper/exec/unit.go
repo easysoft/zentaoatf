@@ -7,6 +7,7 @@ import (
 	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/comm/helper/websocket"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
+	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
 	dateUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/date"
 	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
@@ -55,8 +56,13 @@ func ExecUnit(ch chan int,
 }
 
 func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg *websocket.Message) (err error) {
+	var cmd *exec.Cmd
+	if commonUtils.IsWin() {
+		cmd = exec.Command("cmd", "/C", cmdStr)
+	} else {
+		cmd = exec.Command("/bin/bash", "-c", cmdStr)
+	}
 
-	cmd := exec.Command("/bin/bash", "-c", cmdStr)
 	cmd.Dir = workspacePath
 
 	if cmd == nil {
