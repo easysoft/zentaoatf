@@ -56,7 +56,7 @@ build_linux: compile_linux package_linux_client
 compile_linux:
 	@echo 'start compile linux'
 	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ \
-		${BUILD_CMD}
+		${BUILD_CMD} \
 		-o ${BIN_LINUX}${BINARY} ${MAIN_FILE}
 package_linux_client:
 	@cd client && npm run package-linux && cd ..
