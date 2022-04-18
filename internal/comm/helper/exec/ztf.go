@@ -92,7 +92,10 @@ func RunZtf(ch chan int,
 	numbMaxWidth, pathMaxWidth = getNumbMaxWidth(casesToRun)
 	report = genReport(productId, id, by)
 
+	// run
 	ExeScripts(casesToRun, casesToIgnore, workspacePath, conf, &report, pathMaxWidth, numbMaxWidth, ch, wsMsg)
+
+	// gen report
 	GenZTFTestReport(report, pathMaxWidth, workspacePath, wsMsg)
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
@@ -197,10 +200,6 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 	logUtils.ExecFilef(endMsg)
 
 	CheckCaseResult(scriptFile, logs, report, scriptIdx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg)
-
-	//if scriptIdx < total-1 {
-	//logUtils.Infof("")
-	//}
 }
 
 func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,

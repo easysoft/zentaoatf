@@ -23,28 +23,31 @@ import (
 func ExecUnit(ch chan int,
 	req serverDomain.TestSet, wsMsg *websocket.Message) (resultDir string, err error) {
 
+	// start msg
 	startTime := time.Now()
 	startMsg := i118Utils.Sprintf("start_execution", req.Cmd, dateUtils.DateTimeStr(startTime))
-
 	logUtils.ExecConsolef(-1, startMsg)
 	logUtils.ExecFilef(startMsg)
 	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketHelper.SendExecMsg(startMsg, "", commConsts.Run, wsMsg)
 	}
 
+	// run
 	RunUnitTest(ch, req.Cmd, req.WorkspacePath, wsMsg)
 
+	// end msg
 	entTime := time.Now()
 	endMsg := i118Utils.Sprintf("end_execution", req.Cmd, dateUtils.DateTimeStr(entTime))
-
 	logUtils.ExecConsolef(-1, endMsg)
 	logUtils.ExecFilef(endMsg)
 	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketHelper.SendExecMsg(endMsg, "", commConsts.Run, wsMsg)
 	}
 
+	// gen report
 	report := GenUnitTestReport(req, startTime.Unix(), entTime.Unix(), ch, wsMsg)
 
+	// submit result
 	if req.SubmitResult {
 		config := configHelper.LoadByWorkspacePath(req.WorkspacePath)
 		err = zentaoHelper.CommitResult(report, req.ProductId, 0, config, wsMsg)
