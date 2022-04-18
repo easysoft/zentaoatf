@@ -17,6 +17,7 @@ npm install --save-dev electron-packager
 
 打包客户端
 cd ui && yarn build --dest ../client/ui && cd ..
+// 遇到node版本问题，执行 export NODE_OPTIONS=--openssl-legacy-provider
 
 go-bindata -o=res/res.go -pkg=res res/...
 

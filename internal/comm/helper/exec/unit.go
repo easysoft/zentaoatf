@@ -26,24 +26,22 @@ func ExecUnit(ch chan int,
 	startTime := time.Now()
 	startMsg := i118Utils.Sprintf("start_execution", req.Cmd, dateUtils.DateTimeStr(startTime))
 
+	logUtils.ExecConsolef(-1, startMsg)
+	logUtils.ExecFilef(startMsg)
 	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketHelper.SendExecMsg(startMsg, "", commConsts.Run, wsMsg)
 	}
-
-	logUtils.ExecConsolef(-1, startMsg)
-	logUtils.ExecFilef(startMsg)
 
 	RunUnitTest(ch, req.Cmd, req.WorkspacePath, wsMsg)
 
 	entTime := time.Now()
 	endMsg := i118Utils.Sprintf("end_execution", req.Cmd, dateUtils.DateTimeStr(entTime))
 
+	logUtils.ExecConsolef(-1, endMsg)
+	logUtils.ExecFilef(endMsg)
 	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketHelper.SendExecMsg(endMsg, "", commConsts.Run, wsMsg)
 	}
-
-	logUtils.ExecConsolef(-1, endMsg)
-	logUtils.ExecFilef(endMsg)
 
 	report := GenUnitTestReport(req, startTime.Unix(), entTime.Unix(), ch, wsMsg)
 

@@ -96,7 +96,7 @@ func RunZtf(ch chan int,
 	GenZTFTestReport(report, pathMaxWidth, workspacePath, wsMsg)
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg("", "", commConsts.Run, wsMsg)
+		websocketHelper.SendExecMsg("", "false", commConsts.Run, wsMsg)
 	}
 
 	return

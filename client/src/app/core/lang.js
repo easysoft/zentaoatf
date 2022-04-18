@@ -15,6 +15,8 @@ export const initLang = () => {
     langName = langName.toLowerCase()
     if (langName !== 'zh-cn' && langName.startsWith('zh-')) {
         langName = 'zh-cn';
+    } else {
+        langName = 'en';
     }
 
     loadLanguage(langName)

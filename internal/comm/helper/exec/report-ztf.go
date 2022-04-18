@@ -130,12 +130,11 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	resultPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)
 	msgReport := "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
 
-	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg(msgReport, "false", commConsts.Run, wsMsg)
-	}
-
 	logUtils.ExecConsole(color.FgCyan, msgReport)
 	logUtils.ExecResult(msgReport)
+	if commConsts.ExecFrom != commConsts.FromCmd {
+		websocketHelper.SendExecMsg(msgReport, "", commConsts.Run, wsMsg)
+	}
 
 	//report.ProductId, _ = strconv.Atoi(vari.ProductId)
 	json, _ := json.MarshalIndent(report, "", "\t")
