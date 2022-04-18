@@ -8,7 +8,7 @@
 
     <div v-if="showStatus && wsStatus === 'fail'" class="ws-status" :class="wsStatus">
       <CloseOutlined />
-      <span class="text">{{t('ws_conn_success')}}</span>
+      <span class="text">{{t('ws_conn_fail')}}</span>
       <span @click="hideWsStatus" class="icon-close"><CloseCircleOutlined /></span>
     </div>
 
@@ -117,6 +117,7 @@ export default defineComponent({
       const jsn = JSON.parse(data.msg) as WsMsg
 
       if (jsn.conn) { // update connection status
+        websocketStore.dispatch('WebSocket/changeStatus', jsn.conn)
         return
       }
 
@@ -282,7 +283,7 @@ export default defineComponent({
         color: #DAF7E9;
       }
     }
-    &.error {
+    &.fail {
       background-color: #FFD6D0;
       svg {
         color: #FFD6D0;
