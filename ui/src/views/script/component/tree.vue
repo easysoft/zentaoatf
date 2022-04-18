@@ -248,7 +248,7 @@ export default defineComponent({
         let found = false
         if (filerItems.value) {
           filerItems.value.forEach((item) => {
-            console.log(`${filerValue.value}, ${item.value}`)
+            // console.log(`${filerValue.value}, ${item.value}`)
             if (filerValue.value === item.value) found = true
           })
         }

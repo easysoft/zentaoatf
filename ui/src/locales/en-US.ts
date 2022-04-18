@@ -96,7 +96,7 @@ export default {
     'build_tool':  'Build Tool',
     'cmd': 'Command',
     'test_cmd':  'Test Command',
-    'cmd_nav': 'Use the up and down arrow keys to move between command histories.',
+    'cmd_nav': 'Use up/down keys to navigate.',
 
     're_exec':  'Retest', 
     're_exec_all':  'Retest All Cases', 
@@ -202,6 +202,7 @@ export default {
     'no_interp_1': 'No windows system, ',
     'no_interp_2': 'please add interpreter executable file to PATH environment variable.',
 
+    'http_100': 'Server Not Available',
     'http_500': 'Internal Server Error',
     'biz_100': 'Common Error',
     'biz_200': 'Parameter Error',

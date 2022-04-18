@@ -18,6 +18,7 @@ export default defineComponent({
       const { t } = useI18n();
 
       const notify = (result: any) => {
+        if (!result.httpCode) result.httpCode = 100
         const msg = result.httpCode === 200 ? t('biz_'+result.resultCode) : t('http_'+result.httpCode)
         const desc = result.resultMsg ? result.resultMsg : ''
 

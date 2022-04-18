@@ -48,8 +48,8 @@
           </template>
 
           <template #action="{ record }">
-            <a-button @click="() => edit(record.id)" type="link" size="small">{{ t('edit') }}</a-button>
-            <a-button @click="() => remove(record.id)" type="link" size="small"
+            <a-button v-if="record.url" @click="() => edit(record.id)" type="link" size="small">{{ t('edit') }}</a-button>
+            <a-button v-if="record.url" @click="() => remove(record.id)" type="link" size="small"
                       :loading="removeLoading.includes(record.seq)">{{ t('delete') }}
             </a-button>
           </template>
