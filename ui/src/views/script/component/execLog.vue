@@ -132,11 +132,6 @@ export default defineComponent({
       }
       scroll('content')
     }
-    let init = true;
-    if (init) {
-      bus.on(settings.eventWebSocket, getWsMsg);
-      init = false;
-    }
 
     const showStatus = ref(true)
     const hideWsStatus = (): void => {
@@ -179,10 +174,11 @@ export default defineComponent({
     onMounted(() => {
       console.log('onMounted')
       bus.on(settings.eventExec, exec);
+      bus.on(settings.eventWebSocketMsg, getWsMsg);
     })
     onBeforeUnmount( () => {
       bus.off(settings.eventExec, exec);
-      bus.off(settings.eventWebSocket, getWsMsg);
+      bus.off(settings.eventWebSocketMsg, getWsMsg);
     })
 
     const exec = (data: any) => {

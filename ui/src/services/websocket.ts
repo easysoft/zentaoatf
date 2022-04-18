@@ -30,7 +30,7 @@ export class WebSocket {
 
               console.log('connected to namespace: ' + msg.Namespace)
               WebSocket.conn = nsConn
-              bus.emit(settings.eventWebSocket, {msg: '{"conn": "success"}'});
+              bus.emit(settings.eventWebSocketConnStatus, {msg: '{"conn": "success"}'});
             },
 
             _OnNamespaceDisconnect: (_nsConn, msg) => {
@@ -44,7 +44,7 @@ export class WebSocket {
             // implement in webpage
             OnChat: (_nsConn, msg) => {
               console.log('OnChat in util cls', msg, msg.Room + ': response ' + msg.Body)
-              bus.emit(settings.eventWebSocket, {room: msg.Room, msg: msg.Body});
+              bus.emit(settings.eventWebSocketMsg, {room: msg.Room, msg: msg.Body});
             }
           }
         })
@@ -53,7 +53,7 @@ export class WebSocket {
 
       } catch (err) {
         console.log('failed connect to websocket', err)
-        bus.emit(settings.eventWebSocket, {msg: '{"conn": "fail"}'});
+        bus.emit(settings.eventWebSocketConnStatus, {msg: '{"conn": "fail"}'});
       }
     }
     return WebSocket
@@ -68,7 +68,7 @@ export class WebSocket {
 
     }).catch(err => {
       console.log(`fail to join room ${roomName}`, err)
-      bus.emit(settings.eventWebSocket, {msg: '{"conn": "fail"}'});
+      bus.emit(settings.eventWebSocketConnStatus, {msg: '{"conn": "fail"}'});
     })
   }
 

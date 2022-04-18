@@ -120,6 +120,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 	status := i118Utils.Sprintf(cs.Status.String())
 	msg := fmt.Sprintf(format, scriptIdx+1, total, status, path, cs.Id, cs.Title, secs)
 
+	// print each case result
 	if commConsts.ExecFrom != commConsts.FromCmd {
 		msgCategory := commConsts.Result
 		if cs.Status == commConsts.FAIL {
@@ -127,7 +128,6 @@ func ValidateCaseResult(scriptFile string, langType string,
 		}
 		websocketHelper.SendExecMsg(msg, "", msgCategory, wsMsg)
 	}
-
 	logUtils.ExecConsole(color.FgCyan, msg)
 	logUtils.ExecResult(msg)
 }

@@ -27,10 +27,10 @@ export default defineComponent({
 
       onMounted(() => {
         console.log('onMounted')
-        bus.on(settings.eventWebSocket, OnWebSocketEvent);
+        bus.on(settings.eventWebSocketConnStatus, OnWebSocketEvent);
       })
       onBeforeUnmount( () => {
-        bus.off(settings.eventWebSocket, OnWebSocketEvent);
+        bus.off(settings.eventWebSocketConnStatus, OnWebSocketEvent);
       })
 
       const OnWebSocketEvent = (data: any) => {
