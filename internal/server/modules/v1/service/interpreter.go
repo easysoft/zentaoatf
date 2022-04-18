@@ -59,6 +59,8 @@ func (s *InterpreterService) Delete(id uint) error {
 }
 
 func (s *InterpreterService) GetMap(pos []model.Interpreter) (mp map[string]string, err error) {
+	mp = map[string]string{}
+
 	for _, item := range pos {
 		mp[item.Lang] = item.Path
 	}
