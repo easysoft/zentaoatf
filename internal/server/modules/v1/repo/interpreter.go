@@ -41,7 +41,7 @@ func (r *InterpreterRepo) Get(id uint) (po model.Interpreter, err error) {
 func (r *InterpreterRepo) Create(interpreter model.Interpreter) (id uint, err error) {
 	po, err := r.FindDuplicate(interpreter.Lang, 0)
 	if po.ID != 0 {
-		return 0, errors.New(fmt.Sprintf("%s运行环境已存在", interpreter.Lang))
+		return 0, errors.New(fmt.Sprintf("%s interpreter already exist.", interpreter.Lang))
 	}
 
 	err = r.DB.Model(&model.Interpreter{}).Create(&interpreter).Error

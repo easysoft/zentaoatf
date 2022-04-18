@@ -139,7 +139,8 @@ func (s *InterpreterService) GetLangInterpreter(language string) (list []map[str
 		cmd.Stdout = &out
 		err = cmd.Run()
 		if err != nil {
-			return
+			err = nil
+			continue
 		}
 
 		infoArr := s.GetNoEmptyLines(out.String(), "", true)

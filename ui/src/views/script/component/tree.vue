@@ -246,10 +246,13 @@ export default defineComponent({
         filerItems.value = result.data
 
         let found = false
-        filerItems.value.forEach((item) => {
-          console.log(`${filerValue.value}, ${item.value}`)
-          if (filerValue.value === item.value) found = true
-        })
+        if (filerItems.value) {
+          filerItems.value.forEach((item) => {
+            console.log(`${filerValue.value}, ${item.value}`)
+            if (filerValue.value === item.value) found = true
+          })
+        }
+
         if (!found) filerValue.value = ''
       }
     }

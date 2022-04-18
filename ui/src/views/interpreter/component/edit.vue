@@ -7,7 +7,7 @@
       </a-select>
     </a-form-item>
 
-    <a-form-item :label="t('interpreter_path')" v-bind="validateInfos.path">{{isElectron}}
+    <a-form-item :label="t('interpreter_path')" v-bind="validateInfos.path">
       <a-input-search v-if="isElectron" v-model:value="modelRef.path"
                       @search="selectFile" spellcheck="false">
         <template #enterButton>
