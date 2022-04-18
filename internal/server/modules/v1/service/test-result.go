@@ -101,7 +101,7 @@ func (s *TestResultService) Submit(result serverDomain.ZentaoResultSubmitReq, si
 	}
 
 	config := configHelper.LoadBySite(site)
-	err = zentaoHelper.CommitResult(report, result.ProductId, result.TaskId, config)
+	err = zentaoHelper.CommitResult(report, result.ProductId, result.TaskId, config, nil)
 
 	return
 }
