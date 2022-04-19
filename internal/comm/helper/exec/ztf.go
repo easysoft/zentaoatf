@@ -200,7 +200,7 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 	logUtils.ExecFilef(endMsg)
 
 	for i := 0; i < 100000; i++ {
-		websocketHelper.SendExecMsg(fmt.Sprintf("------%d", i), "", commConsts.Result, &wsMsg)
+		websocketHelper.SendExecMsg(fmt.Sprintf("------%d", i), "", commConsts.Result, wsMsg)
 		time.Sleep(time.Second * 1)
 	}
 
