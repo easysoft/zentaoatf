@@ -295,6 +295,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		if line != "" {
 			if commConsts.ExecFrom != commConsts.FromCmd {
 				websocketHelper.SendOutputMsg(line, "", wsMsg)
+				time.Sleep(time.Millisecond * 100)
 				logUtils.ExecConsole(1, "-----------------------"+line)
 			}
 
