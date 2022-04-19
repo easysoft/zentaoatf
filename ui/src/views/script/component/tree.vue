@@ -55,6 +55,10 @@
           @select="selectNode"
           @check="checkNode"
       >
+        <template #title="slotProps">
+          {{slotProps.title !== 'all' ? slotProps.title : t('all')}}
+        </template>
+
         <template #icon="slotProps">
           <DatabaseOutlined v-if="slotProps.type==='workspace'" />
           <FolderOutlined v-if="slotProps.type==='dir' && !slotProps.expanded" />
@@ -138,6 +142,7 @@ import SyncFromZentao from "./syncFromZentao.vue"
 import {isWindows} from "@/utils/comm";
 import {testToolMap} from "@/utils/testing";
 import {ExecStatus} from "@/store/exec";
+import debounce from "lodash.debounce";
 
 export default defineComponent({
   name: 'ScriptTreePage',
@@ -198,25 +203,14 @@ export default defineComponent({
 
     watch(treeData, (currConfig) => {
       console.log('watch treeData', treeData.value)
-
-      treeData.value[0].title = t('test_script')
-      getNodeMap(treeData.value[0])
-
-      getExpandedKeys(currSite.value.id, currProduct.value.id).then(async keys => {
-        console.log('keys')
-        if (keys) expandedKeys.value = keys
-
-        if (!expandedKeys.value || expandedKeys.value.length === 0) {
-          getOpenKeys(treeData.value[0], false) // expend first level folder
-          await setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
-        }
-      })
+      onTreeDataChanged()
     }, {deep: true})
 
     let filerItems = ref([] as any)
 
     const loadScripts = async () => {
-      console.log(`=== filerType: ${filerType.value}, filerValue: ${filerValue.value}`)
+      console.log(`---------------- loadScripts should be executed only once`)
+      console.log(`filerType: ${filerType.value}, filerValue: ${filerValue.value}`)
 
       const params = {filerType: filerType.value, filerValue: filerValue.value} as any
       store.dispatch('Script/listScript', params)
@@ -226,6 +220,21 @@ export default defineComponent({
     const onLoadData = async (treeNode: any) => {
       console.log('onLoadData')
       await store.dispatch('Script/loadChildren', treeNode)
+    }
+
+    const onTreeDataChanged =async () => {
+      getNodeMap(treeData.value[0])
+
+      getExpandedKeys(currSite.value.id, currProduct.value.id).then(async cachedKeys => {
+        console.log('cachedKeys', currSite.value.id, currProduct.value.id, cachedKeys)
+
+        if (cachedKeys) expandedKeys.value = cachedKeys
+
+        if (!cachedKeys || cachedKeys.length === 0) {
+          getOpenKeys(treeData.value[0], false) // expend first level folder
+          await setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
+        }
+      })
     }
 
     // filters
@@ -271,11 +280,14 @@ export default defineComponent({
       await loadScripts()
     }
 
-    const initData = async () => {
+    const initData = debounce(async () => {
       console.log('init')
+      if (!currProduct.value.id) return
+
       await loadFilterItems()
       await loadScripts()
-    }
+    }, 50)
+
     // only do it when switch from another pages, otherwise will called by watching currProduct method.
     if (filerValue.value.length === 0) initData()
 
@@ -283,13 +295,15 @@ export default defineComponent({
     const getOpenKeys = (treeNode, isAll) => {
       if (!treeNode) return
       expandedKeys.value.push(treeNode.path)
+
       if (treeNode.children && isAll) {
         treeNode.children.forEach((item, index) => {
           getOpenKeys(item, isAll)
         })
       }
+
+      console.log('keys', expandedKeys.value)
     }
-    getOpenKeys(treeData.value[0], false)
 
     const selectedKeys = ref<string[]>([])
     const checkedKeys = ref<string[]>([])
@@ -304,6 +318,7 @@ export default defineComponent({
 
     onMounted(() => {
       console.log('onMounted', tree)
+      // getOpenKeys(treeData.value[0], false)
     })
 
     const execSelected = () => {

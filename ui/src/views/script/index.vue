@@ -54,8 +54,6 @@ export default defineComponent({
   setup() {
     const { t } = useI18n();
 
-    let editorRef = ref(null as any)
-
     const zentaoStore = useStore<{ Zentao: ZentaoData }>();
     const currSite = computed<any>(() => zentaoStore.state.Zentao.currSite);
     const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
