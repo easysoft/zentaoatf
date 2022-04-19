@@ -17,7 +17,8 @@ var (
 )
 
 func SendOutputMsg(msg, isRunning string, wsMsg *websocket.Message) {
-	logUtils.Infof(i118Utils.Sprintf("ws_send_exec_msg", wsMsg.Room, msg, string(wsMsg.Body)))
+	logUtils.Infof(i118Utils.Sprintf("ws_send_exec_msg", wsMsg.Room,
+		strings.ReplaceAll(strings.TrimSpace(msg), `%`, `%%`)))
 
 	msg = strings.Trim(msg, "\n")
 	data := serverDomain.WsResp{Msg: msg, Category: commConsts.Output}
@@ -26,7 +27,8 @@ func SendOutputMsg(msg, isRunning string, wsMsg *websocket.Message) {
 }
 
 func SendExecMsg(msg, isRunning string, category commConsts.WsMsgCategory, wsMsg *websocket.Message) {
-	logUtils.Infof("WebSocket SendExecMsg: room=%s, msg=%s", wsMsg.Room, string(wsMsg.Body))
+	logUtils.Infof(i118Utils.Sprintf("ws_send_exec_msg", wsMsg.Room,
+		strings.ReplaceAll(strings.TrimSpace(msg), `%`, `%%`)))
 
 	msg = strings.TrimSpace(msg)
 	data := serverDomain.WsResp{Msg: msg, IsRunning: isRunning, Category: category}

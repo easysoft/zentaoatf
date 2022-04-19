@@ -60,7 +60,7 @@
     },
     {
       "id": "ws_send_exec_msg",
-      "translation": "WebSocket SendExecMsg: room=%s, msg=%s。"
+      "translation": "WebSocket SendExecMsg: room=%s, msg=%s"
     },
     {
       "id": "ws_connected",
@@ -364,7 +364,7 @@
     },
     {
       "id": "run_result",
-      "translation": "执行%d个用例，耗时%d秒%s。%s，%s，%s。"
+      "translation": "执行%d个用例，耗时%d秒。%s，%s，%s。"
     },
     {
       "id": "run_report",

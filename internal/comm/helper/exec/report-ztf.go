@@ -94,10 +94,10 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	}
 
 	// 生成统计行
-	secTag := ""
-	if commConsts.Language == "en" && report.Duration > 1 {
-		secTag = "s"
-	}
+	//secTag := ""
+	//if commConsts.Language == "en" && report.Duration > 1 {
+	//	secTag = "s"
+	//}
 
 	fmtStr := "%d(%.1f%%) %s"
 	passRate := 0
@@ -113,10 +113,11 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	failStr := fmt.Sprintf(fmtStr, report.Fail, float32(failRate), i118Utils.Sprintf("fail"))
 	skipStr := fmt.Sprintf(fmtStr, report.Skip, float32(skipRate), i118Utils.Sprintf("skip"))
 
-	// 执行%d个用例，耗时%d秒%s。%s，%s，%s。报告%s。
+	// 执行%d个用例，耗时%d秒%s。%s，%s，%s。
+	// Run %d script in %d sec, %s, %s, %s.
 	msgRun := dateUtils.DateTimeStr(time.Now()) + " " +
 		i118Utils.Sprintf("run_result",
-			report.Total, report.Duration, secTag,
+			report.Total, report.Duration, // secTag,
 			passStr, failStr, skipStr,
 		)
 

@@ -53,7 +53,7 @@
     },
     {
       "id": "ws_namespace_disconnected",
-      "translation": "WebSocket OnNamespaceDisconnect: ConnID=%s"
+      "translation": "WebSocket OnNamespaceDisconnect: ConnID=%s."
     },
     {
       "id": "ws_onchat",
@@ -61,7 +61,7 @@
     },
     {
       "id": "ws_send_exec_msg",
-      "translation": "WebSocket SendExecMsg: room=%s, msg=%s."
+      "translation": "WebSocket SendExecMsg: room=%s, msg=%s"
     },
     {
       "id": "ws_connected",
@@ -377,7 +377,7 @@
     },
     {
       "id": "run_result",
-      "translation": "Run %d scripts in %d sec%s, %s, %s, %s."
+      "translation": "Run %d scripts in %d sec, %s, %s, %s."
     },
     {
       "id": "run_report",
