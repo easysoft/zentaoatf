@@ -102,6 +102,10 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 		return
 	}
 
+	for i := 0; i < 100000; i++ {
+		websocketHelper.SendExecMsg(fmt.Sprintf("------%d", i), "", commConsts.Result, &wsMsg)
+	}
+
 	// populate test set's props with parent
 	execHelper.PopulateTestSetProps(&req)
 	for idx, _ := range req.TestSets {
