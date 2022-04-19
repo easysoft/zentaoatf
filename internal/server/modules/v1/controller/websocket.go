@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
 	execHelper "github.com/easysoft/zentaoatf/internal/comm/helper/exec"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/comm/helper/websocket"
 	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
@@ -35,9 +36,9 @@ func (c *WebSocketCtrl) OnNamespaceConnected(wsMsg websocket.Message) error {
 
 	logUtils.Infof(i118Utils.Sprintf("ws_namespace_connected", c.Conn.ID(), wsMsg.Room))
 
-	resp := serverDomain.WsResp{Msg: "from server: connected to websocket"}
+	resp := commDomain.WsResp{Msg: "from server: connected to websocket"}
 	bytes, _ := json.Marshal(resp)
-	mqData := websocketHelper.MqMsg{Namespace: wsMsg.Namespace, Room: wsMsg.Room, Event: wsMsg.Event, Content: string(bytes)}
+	mqData := commDomain.MqMsg{Namespace: wsMsg.Namespace, Room: wsMsg.Room, Event: wsMsg.Event, Content: string(bytes)}
 	websocketHelper.PubMsg(mqData)
 	return nil
 }
@@ -48,9 +49,9 @@ func (c *WebSocketCtrl) OnNamespaceConnected(wsMsg websocket.Message) error {
 func (c *WebSocketCtrl) OnNamespaceDisconnect(wsMsg websocket.Message) error {
 	logUtils.Infof(i118Utils.Sprintf("ws_namespace_disconnected", c.Conn.ID()))
 
-	resp := serverDomain.WsResp{Msg: fmt.Sprintf("ws_connected")}
+	resp := commDomain.WsResp{Msg: fmt.Sprintf("ws_connected")}
 	bytes, _ := json.Marshal(resp)
-	mqData := websocketHelper.MqMsg{Namespace: wsMsg.Namespace, Room: wsMsg.Room, Event: wsMsg.Event, Content: string(bytes)}
+	mqData := commDomain.MqMsg{Namespace: wsMsg.Namespace, Room: wsMsg.Room, Event: wsMsg.Event, Content: string(bytes)}
 	websocketHelper.PubMsg(mqData)
 	return nil
 }

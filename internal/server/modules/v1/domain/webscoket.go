@@ -46,9 +46,3 @@ type TestSet struct {
 
 	SubmitResult bool `json:"submitResult"`
 }
-
-type WsResp struct {
-	Msg       string                   `json:"msg"`
-	IsRunning string                   `json:"isRunning,omitempty"`
-	Category  commConsts.WsMsgCategory `json:"category"`
-}

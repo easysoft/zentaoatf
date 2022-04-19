@@ -1,8 +1,8 @@
 package websocketHelper
 
 import (
-	"encoding/json"
 	"fmt"
+	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
 	"github.com/easysoft/zentaoatf/internal/pkg/core/mq"
 	"time"
 )
@@ -11,13 +11,6 @@ var (
 	mqTopic  = "WebsocketTopic"
 	mqClient *mq.Client
 )
-
-type MqMsg struct {
-	Namespace string `json:"namespace"`
-	Room      string `json:"room"`
-	Event     string `json:"event"`
-	Content   string `json:"content"`
-}
 
 func InitMq() {
 	mqClient = mq.NewClient()
@@ -35,15 +28,13 @@ func SubMsg() {
 	}
 
 	for {
-		data := mqClient.GetPayLoad(ch).(string)
-		fmt.Printf("%s get mq msg '%s'\n", mqTopic, data)
+		msg := mqClient.GetPayLoad(ch).(commDomain.MqMsg)
+		fmt.Printf("%s get mq msg '%#v'\n", mqTopic, msg.Content)
 
-		if data == "exit" {
+		if msg.Content == "exit" {
 			mqClient.Unsubscribe(mqTopic, ch)
 			break
 		} else {
-			msg := MqMsg{}
-			json.Unmarshal([]byte(data), &msg)
 			Broadcast(msg.Namespace, msg.Room, msg.Event, msg.Content)
 		}
 
@@ -51,10 +42,8 @@ func SubMsg() {
 	}
 }
 
-func PubMsg(data MqMsg) {
-	bytes, _ := json.Marshal(data)
-
-	err := mqClient.Publish(mqTopic, string(bytes))
+func PubMsg(data commDomain.MqMsg) {
+	err := mqClient.Publish(mqTopic, data)
 	if err != nil {
 		fmt.Println("pub mq message failed")
 	}

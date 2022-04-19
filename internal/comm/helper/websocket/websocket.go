@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
 	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
-	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/kataras/neffos"
 	"strings"
@@ -21,10 +21,10 @@ func SendOutputMsg(msg, isRunning string, wsMsg *websocket.Message) {
 		strings.ReplaceAll(strings.TrimSpace(msg), `%`, `%%`)))
 
 	msg = strings.Trim(msg, "\n")
-	resp := serverDomain.WsResp{Msg: msg, Category: commConsts.Output}
+	resp := commDomain.WsResp{Msg: msg, Category: commConsts.Output}
 
 	bytes, _ := json.Marshal(resp)
-	mqData := MqMsg{Namespace: wsMsg.Namespace, Room: wsMsg.Room, Event: wsMsg.Event, Content: string(bytes)}
+	mqData := commDomain.MqMsg{Namespace: wsMsg.Namespace, Room: wsMsg.Room, Event: wsMsg.Event, Content: string(bytes)}
 	PubMsg(mqData)
 }
 
@@ -33,10 +33,10 @@ func SendExecMsg(msg, isRunning string, category commConsts.WsMsgCategory, wsMsg
 		strings.ReplaceAll(strings.TrimSpace(msg), `%`, `%%`)))
 
 	msg = strings.TrimSpace(msg)
-	resp := serverDomain.WsResp{Msg: msg, IsRunning: isRunning, Category: category}
+	resp := commDomain.WsResp{Msg: msg, IsRunning: isRunning, Category: category}
 
 	bytes, _ := json.Marshal(resp)
-	mqData := MqMsg{Namespace: wsMsg.Namespace, Room: wsMsg.Room, Event: wsMsg.Event, Content: string(bytes)}
+	mqData := commDomain.MqMsg{Namespace: wsMsg.Namespace, Room: wsMsg.Room, Event: wsMsg.Event, Content: string(bytes)}
 	PubMsg(mqData)
 }
 
