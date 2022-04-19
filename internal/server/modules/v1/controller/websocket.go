@@ -13,7 +13,6 @@ import (
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12/websocket"
-	"time"
 )
 
 var (
@@ -103,10 +102,10 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 		return
 	}
 
-	for i := 0; i < 100000; i++ {
-		websocketHelper.SendExecMsg(fmt.Sprintf("------%d", i), "", commConsts.Result, &wsMsg)
-		time.Sleep(time.Second * 1)
-	}
+	//for i := 0; i < 100000; i++ {
+	//	websocketHelper.SendExecMsg(fmt.Sprintf("------%d", i), "", commConsts.Result, &wsMsg)
+	//	time.Sleep(time.Second * 1)
+	//}
 
 	// populate test set's props with parent
 	execHelper.PopulateTestSetProps(&req)

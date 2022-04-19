@@ -111,15 +111,10 @@ export default defineComponent({
     // websocket
     let wsMsg = reactive({in: '', out: [] as any[]});
 
-    const getWsMsg = (data: any) => {
-      console.log('OnWebSocketEvent in ExecLog', data.msg)
+    const onWebsocketMsgEvent = (data: any) => {
+      console.log('WebsocketMsgEvent in ExecLog', data.msg)
 
       const jsn = JSON.parse(data.msg) as WsMsg
-
-      if (jsn.conn) { // update connection status
-        websocketStore.dispatch('WebSocket/changeStatus', jsn.conn)
-        return
-      }
 
       if ('isRunning' in jsn) {
         console.log('change isRunning to ', jsn.isRunning)
@@ -174,11 +169,11 @@ export default defineComponent({
     onMounted(() => {
       console.log('onMounted')
       bus.on(settings.eventExec, exec);
-      bus.on(settings.eventWebSocketMsg, getWsMsg);
+      bus.on(settings.eventWebSocketMsg, onWebsocketMsgEvent);
     })
     onBeforeUnmount( () => {
       bus.off(settings.eventExec, exec);
-      bus.off(settings.eventWebSocketMsg, getWsMsg);
+      bus.off(settings.eventWebSocketMsg, onWebsocketMsgEvent);
     })
 
     const exec = (data: any) => {
