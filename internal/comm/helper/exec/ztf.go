@@ -293,10 +293,9 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	for {
 		line, err2 := reader1.ReadString('\n')
 		if line != "" {
-
 			if commConsts.ExecFrom != commConsts.FromCmd {
 				websocketHelper.SendOutputMsg(line, "", wsMsg)
-				logUtils.ExecConsole(1, line)
+				logUtils.ExecConsole(1, "-----------------------"+line)
 			}
 
 			logUtils.ExecFile(line)
