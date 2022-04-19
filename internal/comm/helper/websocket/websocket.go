@@ -24,7 +24,7 @@ func SendOutputMsg(msg, isRunning string, wsMsg *websocket.Message) {
 	msg = strings.Trim(msg, "\n")
 	data := serverDomain.WsResp{Msg: msg, Category: commConsts.Output}
 
-	time.Sleep(time.Millisecond * 100)
+	time.Sleep(time.Millisecond * 50)
 	Broadcast(wsMsg.Namespace, wsMsg.Room, wsMsg.Event, data)
 }
 
@@ -35,7 +35,7 @@ func SendExecMsg(msg, isRunning string, category commConsts.WsMsgCategory, wsMsg
 	msg = strings.TrimSpace(msg)
 	data := serverDomain.WsResp{Msg: msg, IsRunning: isRunning, Category: category}
 
-	time.Sleep(time.Millisecond * 100)
+	time.Sleep(time.Millisecond * 50)
 	Broadcast(wsMsg.Namespace, wsMsg.Room, wsMsg.Event, data)
 }
 
