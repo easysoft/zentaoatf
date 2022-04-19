@@ -7,7 +7,10 @@
             {{ t('workspace') }}
           </div>
           <div class="right">
-            <a-select @change="onSearch" v-model:value="queryParams.enabled" :options="statusArr" class="status-select">
+            <a-select @change="onSearch" v-model:value="queryParams.enabled" class="status-select">
+              <a-select-option v-for="item in statusArr" :key="item.value" :value="item.value">
+                {{t(item.label)}}
+              </a-select-option>
             </a-select>
             <a-input-search @change="onSearch" @search="onSearch" v-model:value="queryParams.keywords"
                             :placeholder="t('input_keyword_to_search')" style="width:270px;margin-left: 16px;"/>

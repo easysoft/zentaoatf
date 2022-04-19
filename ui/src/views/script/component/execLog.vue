@@ -301,7 +301,7 @@ export default defineComponent({
 
   #logs {
     margin: 0;
-    padding: 10px;
+    padding: 0 10px 10px 10px;
     position: relative;
     width: 100%;
     overflow-y: auto;
@@ -318,7 +318,8 @@ export default defineComponent({
       position: absolute;
       top: 5px;
       right: 5px;
-      width: 230px;
+      width: 260px;
+      text-align: right;
       .ant-select {
         margin: 0 3px;
       }

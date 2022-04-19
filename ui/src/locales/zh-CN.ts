@@ -103,7 +103,10 @@ export default {
     'test_env':  '测试环境', 
     'test_type':  '测试类型', 
     'exec_type': '执行类型', 
-    'case_num':  '用例数', 
+    'case_num':  '用例数',
+
+    'enable': '启用',
+    'disable':  '禁用',
 
     'submit': '提交',
     'cancel': '取消',

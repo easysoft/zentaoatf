@@ -56,7 +56,7 @@
           <template #action="{ record }">
             <a-button @click="() => view(record)" type="link" size="small">{{ t('view') }}</a-button>
             <a-button @click="() => remove(record)" type="link" size="small"
-                      :loading="removeLoading.includes(record.seq)">{{ t('remove') }}
+                      :loading="removeLoading.includes(record.seq)">{{ t('delete') }}
             </a-button>
           </template>
 

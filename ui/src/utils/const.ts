@@ -51,15 +51,15 @@ export const MonacoOptions = {
 
 export const disableStatusMap = [
     {
-        label: '所有状态',
+        label: 'all',
         value: '',
     },
     {
-        label: '启用',
+        label: 'enable',
         value: '1',
     },
     {
-        label: '禁用',
+        label: 'disable',
         value: '0',
     },
 ]

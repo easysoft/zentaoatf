@@ -21,7 +21,7 @@
         <a-select
             v-model:value="filerValue"
             @change="selectFilerValue"
-            style="width: 200px"
+            style="width: 180px"
             :dropdownMatchSelectWidth="false"
         >
           <a-select-option value=""></a-select-option>
@@ -199,6 +199,7 @@ export default defineComponent({
     watch(treeData, (currConfig) => {
       console.log('watch treeData', treeData.value)
 
+      treeData.value[0].title = t('test_script')
       getNodeMap(treeData.value[0])
 
       getExpandedKeys(currSite.value.id, currProduct.value.id).then(async keys => {
@@ -489,8 +490,8 @@ export default defineComponent({
     }
 
     .right {
-      width: 40px;
-      text-align: right;
+      width: 60px;
+      text-align: center;
     }
 
     .ant-btn-link {

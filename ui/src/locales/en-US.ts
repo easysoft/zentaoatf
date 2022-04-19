@@ -56,7 +56,7 @@ export default {
     'script_lang': 'Script Language',
 
     'script': 'Script',
-    'test_script': 'Script',
+    'test_script': 'Test Script',
     'script.list': 'Script List',
     'script.view': 'View Script',
     'script.edit': 'Edit Script',
@@ -104,7 +104,10 @@ export default {
     'test_env':  'Test Environment', 
     'test_type':  'Test Type', 
     'exec_type': 'Execution Type', 
-    'case_num':  'Case Number', 
+    'case_num':  'Case Number',
+
+    'enable': 'Enable',
+    'disable':  'Disable',
 
     'submit': 'Submit',
     'cancel': 'Cancel',
@@ -116,6 +119,7 @@ export default {
     'view':  'View',
     'edit': 'Edit',
     'delete':  'Delete',
+    'remove': 'Remove',
     'select':  'Select',
     'pass':  'Pass', 
     'fail':  'Fail', 

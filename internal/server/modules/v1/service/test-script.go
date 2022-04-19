@@ -29,7 +29,7 @@ func (s *TestScriptService) LoadTestScriptsBySiteProduct(
 	workspaces, _ := s.WorkspaceRepo.ListByProduct(siteId, productId)
 
 	// load scripts from disk
-	root = serverDomain.TestAsset{Path: "", Title: "测试脚本", Type: commConsts.Root, Slots: iris.Map{"icon": "icon"}}
+	root = serverDomain.TestAsset{Path: "", Title: "all", Type: commConsts.Root, Slots: iris.Map{"icon": "icon"}}
 	for _, workspace := range workspaces {
 
 		if filerType == string(commConsts.FilterWorkspace) &&
