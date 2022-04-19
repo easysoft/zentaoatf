@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	websocketHelper "github.com/easysoft/zentaoatf/internal/comm/helper/websocket"
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	"github.com/easysoft/zentaoatf/internal/server/core/cron"
 	"github.com/easysoft/zentaoatf/internal/server/core/web"
@@ -39,6 +40,7 @@ func main() {
 		}
 
 		cron.NewServerCron().Init()
+		websocketHelper.InitMq()
 
 		webServer.Run()
 	}

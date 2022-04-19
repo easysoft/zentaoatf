@@ -30,24 +30,28 @@ func NewWebSocketCtrl() *WebSocketCtrl {
 	return inst
 }
 
-func (c *WebSocketCtrl) OnNamespaceConnected(msg websocket.Message) error {
+func (c *WebSocketCtrl) OnNamespaceConnected(wsMsg websocket.Message) error {
 	websocketHelper.SetConn(c.Conn)
 
-	logUtils.Infof(i118Utils.Sprintf("ws_namespace_connected", c.Conn.ID(), msg.Room))
+	logUtils.Infof(i118Utils.Sprintf("ws_namespace_connected", c.Conn.ID(), wsMsg.Room))
 
-	data := serverDomain.WsResp{Msg: "from server: connected to websocket"}
-	websocketHelper.Broadcast(msg.Namespace, "", "OnVisit", data)
+	resp := serverDomain.WsResp{Msg: "from server: connected to websocket"}
+	bytes, _ := json.Marshal(resp)
+	mqData := websocketHelper.MqMsg{Namespace: wsMsg.Namespace, Room: wsMsg.Room, Event: wsMsg.Event, Content: string(bytes)}
+	websocketHelper.PubMsg(mqData)
 	return nil
 }
 
 // OnNamespaceDisconnect
 // This will call the "OnVisit" event on all clients, except the current one,
 // it can't because it's left but for any case use this type of design.
-func (c *WebSocketCtrl) OnNamespaceDisconnect(msg websocket.Message) error {
+func (c *WebSocketCtrl) OnNamespaceDisconnect(wsMsg websocket.Message) error {
 	logUtils.Infof(i118Utils.Sprintf("ws_namespace_disconnected", c.Conn.ID()))
 
-	data := serverDomain.WsResp{Msg: fmt.Sprintf("ws_connected")}
-	websocketHelper.Broadcast(msg.Namespace, "", "OnVisit", data)
+	resp := serverDomain.WsResp{Msg: fmt.Sprintf("ws_connected")}
+	bytes, _ := json.Marshal(resp)
+	mqData := websocketHelper.MqMsg{Namespace: wsMsg.Namespace, Room: wsMsg.Room, Event: wsMsg.Event, Content: string(bytes)}
+	websocketHelper.PubMsg(mqData)
 	return nil
 }
 

@@ -10,7 +10,6 @@ import (
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/kataras/neffos"
 	"strings"
-	"time"
 )
 
 var (
@@ -22,10 +21,11 @@ func SendOutputMsg(msg, isRunning string, wsMsg *websocket.Message) {
 		strings.ReplaceAll(strings.TrimSpace(msg), `%`, `%%`)))
 
 	msg = strings.Trim(msg, "\n")
-	data := serverDomain.WsResp{Msg: msg, Category: commConsts.Output}
+	resp := serverDomain.WsResp{Msg: msg, Category: commConsts.Output}
 
-	time.Sleep(time.Millisecond * 50)
-	Broadcast(wsMsg.Namespace, wsMsg.Room, wsMsg.Event, data)
+	bytes, _ := json.Marshal(resp)
+	mqData := MqMsg{Namespace: wsMsg.Namespace, Room: wsMsg.Room, Event: wsMsg.Event, Content: string(bytes)}
+	PubMsg(mqData)
 }
 
 func SendExecMsg(msg, isRunning string, category commConsts.WsMsgCategory, wsMsg *websocket.Message) {
@@ -33,20 +33,19 @@ func SendExecMsg(msg, isRunning string, category commConsts.WsMsgCategory, wsMsg
 		strings.ReplaceAll(strings.TrimSpace(msg), `%`, `%%`)))
 
 	msg = strings.TrimSpace(msg)
-	data := serverDomain.WsResp{Msg: msg, IsRunning: isRunning, Category: category}
+	resp := serverDomain.WsResp{Msg: msg, IsRunning: isRunning, Category: category}
 
-	time.Sleep(time.Millisecond * 50)
-	Broadcast(wsMsg.Namespace, wsMsg.Room, wsMsg.Event, data)
+	bytes, _ := json.Marshal(resp)
+	mqData := MqMsg{Namespace: wsMsg.Namespace, Room: wsMsg.Room, Event: wsMsg.Event, Content: string(bytes)}
+	PubMsg(mqData)
 }
 
-func Broadcast(namespace, room, event string, data interface{}) {
-	bytes, _ := json.Marshal(data)
-
+func Broadcast(namespace, room, event string, content string) {
 	wsConn.Server().Broadcast(nil, websocket.Message{
 		Namespace: namespace,
 		Room:      room,
 		Event:     event,
-		Body:      bytes,
+		Body:      []byte(content),
 	})
 }
 
