@@ -282,6 +282,7 @@ export default defineComponent({
 
     const initData = debounce(async () => {
       console.log('init')
+      if (!currSite.value.id) return
 
       await loadFilterItems()
       await loadScripts()
