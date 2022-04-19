@@ -3,7 +3,7 @@ package websocketHelper
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/easysoft/zentaoatf/internal/comm/mq"
+	"github.com/easysoft/zentaoatf/internal/pkg/core/mq"
 	"time"
 )
 
