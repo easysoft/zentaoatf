@@ -201,7 +201,7 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 
 	for i := 0; i < 100000; i++ {
 		websocketHelper.SendExecMsg(fmt.Sprintf("------%d", i), "", commConsts.Result, wsMsg)
-		time.Sleep(time.Second * 1)
+		time.Sleep(time.Millisecond * 100)
 	}
 
 	CheckCaseResult(scriptFile, logs, report, scriptIdx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg)
