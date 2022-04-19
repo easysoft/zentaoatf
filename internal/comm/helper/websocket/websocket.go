@@ -10,6 +10,7 @@ import (
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/kataras/neffos"
 	"strings"
+	"time"
 )
 
 var (
@@ -23,6 +24,7 @@ func SendOutputMsg(msg, isRunning string, wsMsg *websocket.Message) {
 	msg = strings.Trim(msg, "\n")
 	data := serverDomain.WsResp{Msg: msg, Category: commConsts.Output}
 
+	time.Sleep(time.Millisecond * 100)
 	Broadcast(wsMsg.Namespace, wsMsg.Room, wsMsg.Event, data)
 }
 
@@ -33,6 +35,7 @@ func SendExecMsg(msg, isRunning string, category commConsts.WsMsgCategory, wsMsg
 	msg = strings.TrimSpace(msg)
 	data := serverDomain.WsResp{Msg: msg, IsRunning: isRunning, Category: category}
 
+	time.Sleep(time.Millisecond * 100)
 	Broadcast(wsMsg.Namespace, wsMsg.Room, wsMsg.Event, data)
 }
 
