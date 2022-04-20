@@ -7,9 +7,7 @@ import (
 )
 
 const (
-	PthSep           = string(os.PathSeparator)
-	ConfigFileServer = "server.yaml"
-	ConfigFileAgent  = "agent.yaml"
+	PthSep = string(os.PathSeparator)
 )
 
 var (

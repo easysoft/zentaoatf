@@ -5,12 +5,7 @@ QINIU_DIST_DIR=${QINIU_DIR}${PROJECT}/${VERSION}/
 MAIN_FILE=cmd/server/main.go
 
 BIN_DIR=client/bin/
-
-OUT_DIR=BIN_DIR=client/out/
-OUT_WIN64=${OUT_DIR}win64/
-OUT_WIN32=${OUT_DIR}win32/
-OUT_LINUX=${OUT_DIR}linux/
-OUT_MAC=${OUT_DIR}darwin/
+OUT_DIR=client/out/
 
 BIN_ZIP_DIR=${BIN_DIR}/zip/${PROJECT}/${VERSION}/
 BIN_ZIP_RELAT=../../../zip/${PROJECT}/${VERSION}/
@@ -44,8 +39,8 @@ compile_ui:
 
 prepare_res:
 	@echo 'start prepare res'
+	@rm -rf res/res.go
 	@go-bindata -o=res/res.go -pkg=res res/...
-	@rm -rf ${BIN_DIR}
 
 build_win64: compile_win64 package_win64_client
 compile_win64:
@@ -53,10 +48,11 @@ compile_win64:
 	@rm -rf ./${BIN_DIR}/*
 	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
 		${BUILD_CMD} -x -v -ldflags "-s -w" \
-		-o ${BIN_WIN32}${PROJECT}.exe ${MAIN_FILE}
+		-o ${BIN_DIR}win64/${PROJECT}.exe ${MAIN_FILE}
 package_win64_client:
 	@cd client && npm run package-win64 && cd ..
-	@mkdir ${OUT_WIN64} && move ${OUT_DIR}/${PROJECT}-win64-x64 ${OUT_WIN64}/ztf
+	@rm -rf ${OUT_DIR}win64/${PROJECT} && mkdir ${OUT_DIR}win64/${PROJECT} && \
+		mv ${OUT_DIR}${PROJECT}-win64-x64 ${OUT_DIR}win64/ztf
 
 build_win32: compile_win32 package_win64_client
 compile_win32:
@@ -64,10 +60,11 @@ compile_win32:
 	@rm -rf ./${BIN_DIR}/*
 	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
 		${BUILD_CMD} -x -v -ldflags "-s -w" \
-		-o ${BIN_WIN32}${PROJECT}.exe ${MAIN_FILE}
+		-o ${BIN_DIR}win32/${PROJECT}.exe ${MAIN_FILE}
 package_win32_client:
 	@cd client && npm run package-win32 && cd ..
-	@mkdir ${OUT_WIN64} && move ${OUT_DIR}/${PROJECT}-win64-x64 ${OUT_WIN32}/ztf
+	@rm -rf ${OUT_DIR}win32/${PROJECT} && mkdir ${OUT_DIR}win32/${PROJECT} && \
+		mv ${OUT_DIR}${PROJECT}-win32-x64 ${OUT_DIR}win32/ztf
 
 build_linux: compile_linux package_linux_client
 compile_linux:
@@ -75,35 +72,38 @@ compile_linux:
 	@rm -rf ./${BIN_DIR}/*
 	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ \
 		${BUILD_CMD} \
-		-o ${BIN_LINUX}${PROJECT} ${MAIN_FILE}
+		-o ${BIN_DIR}linux/${PROJECT} ${MAIN_FILE}
 package_linux_client:
 	@cd client && npm run package-linux && cd ..
-	@mkdir ${OUT_WIN64} && move ${OUT_DIR}/${PROJECT}-win64-x64 ${OUT_LINUX}/ztf
+	@rm -rf ${OUT_DIR}linux/${PROJECT} && mkdir ${OUT_DIR}linux/${PROJECT} && \
+		mv ${OUT_DIR}${PROJECT}-linux-x64 ${OUT_DIR}linux/ztf
 
 build_mac: compile_mac package_mac_client
 compile_mac:
 	@echo 'start compile mac'
 	@rm -rf ./${BIN_DIR}/*
+	@echo
 	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 \
 		${BUILD_CMD} \
-		-o ${BIN_MAC}${PROJECT} ${MAIN_FILE}
+		-o ${BIN_DIR}mac/${PROJECT} ${MAIN_FILE}
 package_mac_client:
-	cd client && npm run package-mac && cd ..
-	@mkdir ${OUT_WIN64} && move ${OUT_DIR}/${PROJECT}-win64-x64 ${OUT_MAC}/${PROJECT}
+	@cd client && npm run package-mac && cd ..
+	@rm -rf ${OUT_DIR}mac && mkdir ${OUT_DIR}mac && \
+		mv ${OUT_DIR}${PROJECT}-darwin-x64 ${OUT_DIR}mac/${PROJECT}
 
 copy_files:
 	@echo 'start copy files'
 
 	@for platform in `ls ${BIN_DIR}`; \
-		do cp -r {conf,runtime,demo} "${OUT_DIR}$${platform}/${PROJECT}"; done
+		do cp -r {conf,runtime,demo} "${OUT_DIR}$${platform}"; done
 
 zip:
 	@echo 'start zip'
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
-	@for platform in `ls ${OUT_DIR}`; do mkdir -p ${QINIU_DIST_DIR}$${platform}; done
+	@for platform in `ls ${BIN_DIR}`; do mkdir -p ${QINIU_DIST_DIR}$${platform}; done
 
 	@cd ${OUT_DIR} && \
-		for platform in `ls ./`; \
+		for platform in `ls ../bin`; \
 		   do cd $${platform} && \
 		   zip -r ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip ${PROJECT} && \
 		   md5sum ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip | awk '{print $$1}' | \
