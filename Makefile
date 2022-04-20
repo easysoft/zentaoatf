@@ -1,85 +1,118 @@
-VERSION=3.0.0
-PROJECT=deeptest
-PACKAGE=${PROJECT}-${VERSION}
-BINARY=ztf
+VERSION=3.0.0_beta
+PROJECT=ztf
+QINIU_DIR=/Users/aaron/work/zentao/qiniu/
+QINIU_DIST_DIR=${QINIU_DIR}${PROJECT}/${VERSION}/
 MAIN_FILE=cmd/server/main.go
+
 BIN_DIR=client/bin/
+
+OUT_DIR=BIN_DIR=client/out/
+OUT_WIN64=${OUT_DIR}win64/
+OUT_WIN32=${OUT_DIR}win32/
+OUT_LINUX=${OUT_DIR}linux/
+OUT_MAC=${OUT_DIR}darwin/
+
 BIN_ZIP_DIR=${BIN_DIR}/zip/${PROJECT}/${VERSION}/
 BIN_ZIP_RELAT=../../../zip/${PROJECT}/${VERSION}/
-BIN_OUT=${BIN_DIR}/
-BIN_WIN64=${BIN_OUT}win64/
-BIN_WIN32=${BIN_OUT}win32/
-BIN_LINUX=${BIN_OUT}linux/
-BIN_MAC=${BIN_OUT}darwin/
 
 BUILD_TIME=`git show -s --format=%cd`
 GO_VERSION=`go version`
 GIT_HASH=`git show -s --format=%H`
 BUILD_CMD=go build -ldflags "-X 'commConsts.appVersion=${VERSION}' -X 'commConsts.buildTime=${BUILD_TIME}' -X 'commConsts.goVersion=${GO_VERSION}' -X 'commConsts.gitHash=${GIT_HASH}'"
 
-default: prepare_res compile_all copy_files package
+default: all
+
+win64: update_version prepare_res build_win64 zip
+win32: update_version prepare_res build_win32 zip
+linux: update_version prepare_res build_linux zip
+mac: update_version prepare_res build_mac zip
+
+all: update_version prepare_res build_win64 build_win32 build_linux build_mac zip
+
+update_version: update_version_in_config gen_version_file
+
+update_version_in_config:
+	@gsed -i "s/Version.*/Version = ${VERSION}/" conf/ztf.conf
+
+gen_version_file:
+	@echo 'gen version'
+	@mkdir -p ${QINIU_DIR}/${PROJECT}/
+	@echo ${VERSION} > ${QINIU_DIR}/${PROJECT}/version.txt
 
 compile_ui:
 	@cd ui && yarn build --dest ../client/ui && cd ..
-
-win64: prepare_res compile_win64 copy_files package
-win32: prepare_res compile_win32 copy_files package
-linux: prepare_res compile_linux copy_files package
-mac: prepare_res compile_mac copy_files package
 
 prepare_res:
 	@echo 'start prepare res'
 	@go-bindata -o=res/res.go -pkg=res res/...
 	@rm -rf ${BIN_DIR}
 
-compile_all: build_win64 compile_win32 compile_linux compile_mac
-
 build_win64: compile_win64 package_win64_client
 compile_win64:
 	@echo 'start compile win64'
+	@rm -rf ./${BIN_DIR}/*
 	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
 		${BUILD_CMD} -x -v -ldflags "-s -w" \
-		-o ${BIN_WIN32}${BINARY}.exe ${MAIN_FILE}
+		-o ${BIN_WIN32}${PROJECT}.exe ${MAIN_FILE}
 package_win64_client:
 	@cd client && npm run package-win64 && cd ..
+	@mkdir ${OUT_WIN64} && move ${OUT_DIR}/${PROJECT}-win64-x64 ${OUT_WIN64}/ztf
 
 build_win32: compile_win32 package_win64_client
 compile_win32:
 	@echo 'start compile win32'
+	@rm -rf ./${BIN_DIR}/*
 	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
 		${BUILD_CMD} -x -v -ldflags "-s -w" \
-		-o ${BIN_WIN32}${BINARY}.exe ${MAIN_FILE}
+		-o ${BIN_WIN32}${PROJECT}.exe ${MAIN_FILE}
 package_win32_client:
 	@cd client && npm run package-win32 && cd ..
+	@mkdir ${OUT_WIN64} && move ${OUT_DIR}/${PROJECT}-win64-x64 ${OUT_WIN32}/ztf
 
 build_linux: compile_linux package_linux_client
 compile_linux:
 	@echo 'start compile linux'
+	@rm -rf ./${BIN_DIR}/*
 	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ \
 		${BUILD_CMD} \
-		-o ${BIN_LINUX}${BINARY} ${MAIN_FILE}
+		-o ${BIN_LINUX}${PROJECT} ${MAIN_FILE}
 package_linux_client:
 	@cd client && npm run package-linux && cd ..
+	@mkdir ${OUT_WIN64} && move ${OUT_DIR}/${PROJECT}-win64-x64 ${OUT_LINUX}/ztf
 
 build_mac: compile_mac package_mac_client
 compile_mac:
 	@echo 'start compile mac'
+	@rm -rf ./${BIN_DIR}/*
 	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 \
 		${BUILD_CMD} \
-		-o ${BIN_MAC}${BINARY} ${MAIN_FILE}
+		-o ${BIN_MAC}${PROJECT} ${MAIN_FILE}
 package_mac_client:
 	cd client && npm run package-mac && cd ..
+	@mkdir ${OUT_WIN64} && move ${OUT_DIR}/${PROJECT}-win64-x64 ${OUT_MAC}/${PROJECT}
 
 copy_files:
 	@echo 'start copy files'
-	@cp -r {cmd/server/server.yml,cmd/server/perms.yml,cmd/server/rbac_model.conf} bin
-	@for subdir in `ls ${BIN_OUT}`; \
-	    do cp -r {bin/server.yml,bin/perms.yml,bin/rbac_model.conf} "${BIN_OUT}$${subdir}/ztf"; done
 
-package:
-	@echo 'start package'
+	@for platform in `ls ${BIN_DIR}`; \
+		do cp -r {conf,runtime,demo} "${OUT_DIR}$${platform}/${PROJECT}"; done
+
+zip:
+	@echo 'start zip'
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
-	@for subdir in `ls ${BIN_OUT}`; do mkdir -p ${BIN_DIR}/zip/${PROJECT}/${VERSION}/$${subdir}; done
+	@for platform in `ls ${OUT_DIR}`; do mkdir -p ${QINIU_DIST_DIR}$${platform}; done
 
-	@cd ${BIN_OUT} && \
-		for subdir in `ls ./`; do cd $${subdir} && zip -r ${BIN_ZIP_RELAT}$${subdir}/${BINARY}.zip "${BINARY}" && cd ..; done
+	@cd ${OUT_DIR} && \
+		for platform in `ls ./`; \
+		   do cd $${platform} && \
+		   zip -r ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip ${PROJECT} && \
+		   md5sum ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip | awk '{print $$1}' | \
+		          xargs echo > ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip.md5 && \
+           cd ..; \
+		done
+
+upload_to:
+	@echo 'upload...'
+	@find ${QINIU_DIR} -name ".DS_Store" -type f -delete
+	@qshell qupload2 --src-dir=${QINIU_DIR} --bucket=download --thread-count=10 --log-file=qshell.log \
+					 --skip-path-prefixes=zd,zmanager,driver --rescan-local --overwrite --check-hash
