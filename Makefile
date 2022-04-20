@@ -17,12 +17,12 @@ BUILD_CMD=go build -ldflags "-X 'commConsts.appVersion=${VERSION}' -X 'commConst
 
 default: all
 
-win64: update_version prepare_res build_win64 zip
-win32: update_version prepare_res build_win32 zip
-linux: update_version prepare_res build_linux zip
-mac: update_version prepare_res build_mac zip
+win64: update_version prepare_res build_win64
+win32: update_version prepare_res build_win32
+linux: update_version prepare_res build_linux
+mac: update_version prepare_res build_mac
 
-all: update_version prepare_res build_win64 build_win32 build_linux build_mac zip
+all: win64 win32 linux mac copy_files zip
 
 update_version: update_version_in_config gen_version_file
 
@@ -93,7 +93,6 @@ package_mac_client:
 
 copy_files:
 	@echo 'start copy files'
-
 	@for platform in `ls ${OUT_DIR}`; \
 		do cp -r {demo} "${OUT_DIR}$${platform}"; done
 
@@ -105,7 +104,7 @@ zip:
 	@cd ${OUT_DIR} && \
 		for platform in `ls ./`; \
 		   do cd $${platform} && \
-		   zip -r ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip ./ && \
+		   zip -r ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip ./* && \
 		   md5sum ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip | awk '{print $$1}' | \
 		          xargs echo > ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip.md5 && \
            cd ..; \
@@ -115,4 +114,4 @@ upload_to:
 	@echo 'upload...'
 	@find ${QINIU_DIR} -name ".DS_Store" -type f -delete
 	@qshell qupload2 --src-dir=${QINIU_DIR} --bucket=download --thread-count=10 --log-file=qshell.log \
-					 --skip-path-prefixes=z,zd,zmanager,driver --rescan-local --overwrite --check-hash
+					 --skip-path-prefixes=zz,zd,zmanager,driver --rescan-local --overwrite --check-hash

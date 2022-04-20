@@ -20,7 +20,6 @@ import (
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"path/filepath"
-	"strings"
 	"sync"
 	"testing"
 	"time"
@@ -237,8 +236,8 @@ func (webServer *WebServer) Run() {
 		panic(err)
 	}
 
-	logUtils.Info(i118Utils.Sprintf("start_server", "localhost",
-		strings.Replace(webServer.addr, ":", "", -1)))
+	//logUtils.Info(i118Utils.Sprintf("start_server", "localhost",
+	//	strings.Replace(webServer.addr, ":", "", -1)))
 
 	webServer.app.Listen(
 		webServer.addr,
