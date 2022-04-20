@@ -48,13 +48,13 @@ compile_win64:
 	@rm -rf ./${BIN_DIR}/*
 	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
 		${BUILD_CMD} -x -v -ldflags "-s -w" \
-		-o ${BIN_DIR}win64/${PROJECT}.exe ${MAIN_FILE}
+		-o ${BIN_DIR}win32/${PROJECT}.exe ${MAIN_FILE}
 package_win64_client:
 	@cd client && npm run package-win64 && cd ..
-	@rm -rf ${OUT_DIR}win64/${PROJECT} && mkdir ${OUT_DIR}win64/${PROJECT} && \
-		mv ${OUT_DIR}${PROJECT}-win64-x64 ${OUT_DIR}win64/ztf
+	@rm -rf ${OUT_DIR}win64 && mkdir ${OUT_DIR}win64 && \
+		mv ${OUT_DIR}${PROJECT}-win32-x64 ${OUT_DIR}win64/${PROJECT}
 
-build_win32: compile_win32 package_win64_client
+build_win32: compile_win32 package_win32_client
 compile_win32:
 	@echo 'start compile win32'
 	@rm -rf ./${BIN_DIR}/*
@@ -63,8 +63,8 @@ compile_win32:
 		-o ${BIN_DIR}win32/${PROJECT}.exe ${MAIN_FILE}
 package_win32_client:
 	@cd client && npm run package-win32 && cd ..
-	@rm -rf ${OUT_DIR}win32/${PROJECT} && mkdir ${OUT_DIR}win32/${PROJECT} && \
-		mv ${OUT_DIR}${PROJECT}-win32-x64 ${OUT_DIR}win32/ztf
+	@rm -rf ${OUT_DIR}win32 && mkdir ${OUT_DIR}win32 && \
+		mv ${OUT_DIR}${PROJECT}-win32-x64 ${OUT_DIR}win32/${PROJECT}
 
 build_linux: compile_linux package_linux_client
 compile_linux:
@@ -75,8 +75,8 @@ compile_linux:
 		-o ${BIN_DIR}linux/${PROJECT} ${MAIN_FILE}
 package_linux_client:
 	@cd client && npm run package-linux && cd ..
-	@rm -rf ${OUT_DIR}linux/${PROJECT} && mkdir ${OUT_DIR}linux/${PROJECT} && \
-		mv ${OUT_DIR}${PROJECT}-linux-x64 ${OUT_DIR}linux/ztf
+	@rm -rf ${OUT_DIR}linux && mkdir ${OUT_DIR}linux && \
+		mv ${OUT_DIR}${PROJECT}-linux-x64 ${OUT_DIR}linux/${PROJECT}
 
 build_mac: compile_mac package_mac_client
 compile_mac:
@@ -85,27 +85,27 @@ compile_mac:
 	@echo
 	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 \
 		${BUILD_CMD} \
-		-o ${BIN_DIR}mac/${PROJECT} ${MAIN_FILE}
+		-o ${BIN_DIR}darwin/${PROJECT} ${MAIN_FILE}
 package_mac_client:
 	@cd client && npm run package-mac && cd ..
-	@rm -rf ${OUT_DIR}mac && mkdir ${OUT_DIR}mac && \
-		mv ${OUT_DIR}${PROJECT}-darwin-x64 ${OUT_DIR}mac/${PROJECT}
+	@rm -rf ${OUT_DIR}darwin && mkdir ${OUT_DIR}darwin && \
+		mv ${OUT_DIR}${PROJECT}-darwin-x64 ${OUT_DIR}darwin/${PROJECT}
 
 copy_files:
 	@echo 'start copy files'
 
-	@for platform in `ls ${BIN_DIR}`; \
+	@for platform in `ls ${OUT_DIR}`; \
 		do cp -r {conf,runtime,demo} "${OUT_DIR}$${platform}"; done
 
 zip:
 	@echo 'start zip'
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
-	@for platform in `ls ${BIN_DIR}`; do mkdir -p ${QINIU_DIST_DIR}$${platform}; done
+	@for platform in `ls ${OUT_DIR}`; do mkdir -p ${QINIU_DIST_DIR}$${platform}; done
 
 	@cd ${OUT_DIR} && \
-		for platform in `ls ../bin`; \
+		for platform in `ls ./`; \
 		   do cd $${platform} && \
-		   zip -r ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip ${PROJECT} && \
+		   zip -r ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip ./ && \
 		   md5sum ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip | awk '{print $$1}' | \
 		          xargs echo > ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip.md5 && \
            cd ..; \
@@ -115,4 +115,4 @@ upload_to:
 	@echo 'upload...'
 	@find ${QINIU_DIR} -name ".DS_Store" -type f -delete
 	@qshell qupload2 --src-dir=${QINIU_DIR} --bucket=download --thread-count=10 --log-file=qshell.log \
-					 --skip-path-prefixes=zd,zmanager,driver --rescan-local --overwrite --check-hash
+					 --skip-path-prefixes=z,zd,zmanager,driver --rescan-local --overwrite --check-hash
