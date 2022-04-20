@@ -12,14 +12,12 @@ GO_VERSION=`go version`
 GIT_HASH=`git show -s --format=%H`
 BUILD_CMD=go build -ldflags "-X 'commConsts.appVersion=${VERSION}' -X 'commConsts.buildTime=${BUILD_TIME}' -X 'commConsts.goVersion=${GO_VERSION}' -X 'commConsts.gitHash=${GIT_HASH}'"
 
-default: all
+default: win64 win32 linux mac copy_files zip
 
 win64: update_version prepare_res build_win64
 win32: update_version prepare_res build_win32
 linux: update_version prepare_res build_linux
 mac: update_version prepare_res build_mac
-
-all: win64 win32 linux mac copy_files zip
 
 update_version: update_version_in_config gen_version_file
 

@@ -2,22 +2,21 @@ VERSION=3.0.0_beta
 PROJECT=ztf
 QINIU_DIR=/Users/aaron/work/zentao/qiniu/
 QINIU_DIST_DIR=${QINIU_DIR}${PROJECT}/${VERSION}/
-MAIN_FILE=cmd/server/main.go
+MAIN_FILE=cmd/command/main.go
 
 BIN_DIR=client/bin/
-OUT_DIR=client/out/
 
 BUILD_TIME=`git show -s --format=%cd`
 GO_VERSION=`go version`
 GIT_HASH=`git show -s --format=%H`
 BUILD_CMD=go build -ldflags "-X 'commConsts.appVersion=${VERSION}' -X 'commConsts.buildTime=${BUILD_TIME}' -X 'commConsts.goVersion=${GO_VERSION}' -X 'commConsts.gitHash=${GIT_HASH}'"
 
-default: prepare_res compile_all copy_files package
+default: update_version prepare_res compile_win64 compile_win32 compile_linux compile_mac copy_files zip
 
-win64: update_version prepare_res compile_win64
-win32: update_version prepare_res compile_win32
-linux: update_version prepare_res compile_linux
-mac: update_version prepare_res compile_mac
+win64: update_version prepare_res compile_win64 copy_files zip
+win32: update_version prepare_res compile_win32 copy_files zip
+linux: update_version prepare_res compile_linux copy_files zip
+mac:   update_version prepare_res compile_mac copy_files zip
 
 update_version: update_version_in_config gen_version_file
 update_version_in_config:
@@ -63,19 +62,25 @@ compile_mac:
 
 copy_files:
 	@echo 'start copy files'
-	@for platform in `ls ${BIN_OUT}`; \
-		do cp -r {demo,runtime} "${BIN_OUT}$${platform}"; done
+	@for platform in `ls ${BIN_DIR}`; \
+		do cp -r {demo,runtime} "${BIN_DIR}$${platform}"; done
 
-package:
-	@echo 'start package'
+zip:
+	@echo 'start zip'
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
-	@for platform in `ls ${BIN_OUT}`; do mkdir -p ${QINIU_DIST_DIR}$${platform}; done
+	@for platform in `ls ${BIN_DIR}`; do mkdir -p ${QINIU_DIST_DIR}$${platform}; done
 
-	@cd ${BIN_OUT} && \
+	@cd ${BIN_DIR} && \
 		for platform in `ls ./`; \
 		   do cd $${platform} && \
-		   zip -r ${QINIU_DIST_DIR}$${platform}/${BINARY}-cmd.zip ./* && \
-		   md5sum ${QINIU_DIST_DIR}$${platform}/${BINARY}-cmd.zip | awk '{print $$1}' | \
-		          xargs echo > ${QINIU_DIST_DIR}$${platform}/${BINARY}-cmd.zip.md5 && \
+		   zip -r ${QINIU_DIST_DIR}$${platform}/${PROJECT}-cmd.zip ./* && \
+		   md5sum ${QINIU_DIST_DIR}$${platform}/${PROJECT}-cmd.zip | awk '{print $$1}' | \
+		          xargs echo > ${QINIU_DIST_DIR}$${platform}/${PROJECT}-cmd.zip.md5 && \
            cd ..; \
 		done
+
+upload_to:
+	@echo 'upload...'
+	@find ${QINIU_DIR} -name ".DS_Store" -type f -delete
+	@qshell qupload2 --src-dir=${QINIU_DIR} --bucket=download --thread-count=10 --log-file=qshell.log \
+					 --skip-path-prefixes=zz,zd,zmanager,driver --rescan-local --overwrite --check-hash
