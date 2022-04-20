@@ -94,7 +94,7 @@ package_mac_client:
 copy_files:
 	@echo 'start copy files'
 	@for platform in `ls ${OUT_DIR}`; \
-		do cp -r {demo} "${OUT_DIR}$${platform}"; done
+		do cp -r demo "${OUT_DIR}$${platform}"; done
 
 zip:
 	@echo 'start zip'
