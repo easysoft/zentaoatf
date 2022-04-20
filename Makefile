@@ -7,9 +7,6 @@ MAIN_FILE=cmd/server/main.go
 BIN_DIR=client/bin/
 OUT_DIR=client/out/
 
-BIN_ZIP_DIR=${BIN_DIR}/zip/${PROJECT}/${VERSION}/
-BIN_ZIP_RELAT=../../../zip/${PROJECT}/${VERSION}/
-
 BUILD_TIME=`git show -s --format=%cd`
 GO_VERSION=`go version`
 GIT_HASH=`git show -s --format=%H`
