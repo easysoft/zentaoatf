@@ -64,7 +64,7 @@ compile_win32:
 package_win32_client:
 	@cd client && npm run package-win32 && cd ..
 	@rm -rf ${OUT_DIR}win32 && mkdir ${OUT_DIR}win32 && \
-		mv ${OUT_DIR}${PROJECT}-win32-x64 ${OUT_DIR}win32/${PROJECT}
+		mv ${OUT_DIR}${PROJECT}-win32-ia32 ${OUT_DIR}win32/${PROJECT}
 
 build_linux: compile_linux package_linux_client
 compile_linux:
@@ -95,7 +95,7 @@ copy_files:
 	@echo 'start copy files'
 
 	@for platform in `ls ${OUT_DIR}`; \
-		do cp -r {conf,runtime,demo} "${OUT_DIR}$${platform}"; done
+		do cp -r {demo} "${OUT_DIR}$${platform}"; done
 
 zip:
 	@echo 'start zip'
