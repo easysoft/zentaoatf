@@ -1,0 +1,25 @@
+limit:
+  disable: true
+  limit: 0
+  burst: 5
+max-size: 1024
+maxsize: 1024
+system:
+  version: 3.0
+  language: zh
+  level: debug
+  addr: :8085
+  static-prefix: /upload
+  static-path: /static/upload
+  web-path: ./static/dist
+  time-format: "2006-01-02 15:04:05"
+zap:
+  level: info
+  format: console
+  prefix: '[OP-ONLINE] '
+  director: log
+  link-name: latest_log
+  show-line: true
+  encode-level: ""
+  stacktrace-key: stacktrace
+  log-in-console: true

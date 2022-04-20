@@ -33,28 +33,24 @@ prepare_res:
 
 compile_win64:
 	@echo 'start compile win64'
-	@rm -rf ./${BIN_DIR}/*
 	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
 		${BUILD_CMD} -x -v -ldflags "-s -w" \
-		-o ${BIN_DIR}win32/${PROJECT}.exe ${MAIN_FILE}
+		-o ${BIN_DIR}win64/${PROJECT}.exe ${MAIN_FILE}
 
 compile_win32:
 	@echo 'start compile win32'
-	@rm -rf ./${BIN_DIR}/*
 	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
 		${BUILD_CMD} -x -v -ldflags "-s -w" \
 		-o ${BIN_DIR}win32/${PROJECT}.exe ${MAIN_FILE}
 
 compile_linux:
 	@echo 'start compile linux'
-	@rm -rf ./${BIN_DIR}/*
 	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ \
 		${BUILD_CMD} \
 		-o ${BIN_DIR}linux/${PROJECT} ${MAIN_FILE}
 
 compile_mac:
 	@echo 'start compile mac'
-	@rm -rf ./${BIN_DIR}/*
 	@echo
 	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 \
 		${BUILD_CMD} \
