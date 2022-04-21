@@ -49,7 +49,7 @@
 
           <template #action="{ record }">
             <a-button v-if="record.url" @click="() => edit(record.id)" type="link" size="small">{{ t('edit') }}</a-button>
-            <a-button v-if="record.url" @click="() => remove(record.id)" type="link" size="small"
+            <a-button v-if="record.url" @click="() => remove(record)" type="link" size="small"
                       :loading="removeLoading.includes(record.seq)">{{ t('delete') }}
             </a-button>
           </template>
@@ -219,8 +219,9 @@ export default defineComponent({
     }
     const removeConfirmed = async () => {
       removeLoading.value = [model.value.id];
+
       store.dispatch('Site/delete', model.value.id).then((success) => {
-        zentaoStore.dispatch('zentao/fetchSitesAndProduct').then((success) => {
+        zentaoStore.dispatch('Zentao/fetchSitesAndProduct').then((success) => {
           message.success(t('delete_success'));
           list(pagination.value.page)
 
