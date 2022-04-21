@@ -81,22 +81,21 @@ copy_files_mac:
 zip_win64:
 	@echo 'start zip win64'
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
-	@mkdir -p ${QINIU_DIST_DIR}win64; done
+	@mkdir -p ${QINIU_DIST_DIR}win64 && rm -rf ${QINIU_DIST_DIR}win64/${PROJECT}-cmd.zip
 
 	@cd ${BIN_DIR}win64 && \
-	   zip -r ${QINIU_DIST_DIR}win64/${PROJECT}-cmd.zip ./* && \
+	   zip -ry ${QINIU_DIST_DIR}win64/${PROJECT}-cmd.zip ./* && \
 	   md5sum ${QINIU_DIST_DIR}win64/${PROJECT}-cmd.zip | awk '{print $$1}' | \
 			  xargs echo > ${QINIU_DIST_DIR}win64/${PROJECT}-cmd.zip.md5 && \
 		cd ../..; \
 
-
 zip_win32:
 	@echo 'start zip win32'
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
-	@mkdir -p ${QINIU_DIST_DIR}win32; done
+	@mkdir -p ${QINIU_DIST_DIR}win32 && rm -rf ${QINIU_DIST_DIR}win32/${PROJECT}-cmd.zip
 
 	@cd ${BIN_DIR}win32 && \
-	   zip -r ${QINIU_DIST_DIR}win32/${PROJECT}-cmd.zip ./* && \
+	   zip -ry ${QINIU_DIST_DIR}win32/${PROJECT}-cmd.zip ./* && \
 	   md5sum ${QINIU_DIST_DIR}win32/${PROJECT}-cmd.zip | awk '{print $$1}' | \
 			  xargs echo > ${QINIU_DIST_DIR}win32/${PROJECT}-cmd.zip.md5 && \
 		cd ../..; \
@@ -104,10 +103,10 @@ zip_win32:
 zip_linux:
 	@echo 'start zip linux'
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
-	@mkdir -p ${QINIU_DIST_DIR}linux; done
+	@mkdir -p ${QINIU_DIST_DIR}linux && rm -rf ${QINIU_DIST_DIR}linux/${PROJECT}-cmd.zip
 
 	@cd ${BIN_DIR}linux && \
-	   zip -r ${QINIU_DIST_DIR}linux/${PROJECT}-cmd.zip ./* && \
+	   zip -ry ${QINIU_DIST_DIR}linux/${PROJECT}-cmd.zip ./* && \
 	   md5sum ${QINIU_DIST_DIR}linux/${PROJECT}-cmd.zip | awk '{print $$1}' | \
 			  xargs echo > ${QINIU_DIST_DIR}linux/${PROJECT}-cmd.zip.md5 && \
 		cd ../..; \
@@ -115,10 +114,10 @@ zip_linux:
 zip_mac:
 	@echo 'start zip mac'
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
-	@mkdir -p ${QINIU_DIST_DIR}mac; done
+	@mkdir -p ${QINIU_DIST_DIR}mac && rm -rf ${QINIU_DIST_DIR}mac/${PROJECT}-cmd.zip
 
 	@cd ${BIN_DIR}mac && \
-	   zip -r ${QINIU_DIST_DIR}mac/${PROJECT}-cmd.zip ./* && \
+	   zip -ry ${QINIU_DIST_DIR}mac/${PROJECT}-cmd.zip ./* && \
 	   md5sum ${QINIU_DIST_DIR}mac/${PROJECT}-cmd.zip | awk '{print $$1}' | \
 			  xargs echo > ${QINIU_DIST_DIR}mac/${PROJECT}-cmd.zip.md5 && \
 		cd ../..; \
