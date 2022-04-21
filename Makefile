@@ -12,12 +12,12 @@ GO_VERSION=`go version`
 GIT_HASH=`git show -s --format=%H`
 BUILD_CMD=go build -ldflags "-X 'commConsts.appVersion=${VERSION}' -X 'commConsts.buildTime=${BUILD_TIME}' -X 'commConsts.goVersion=${GO_VERSION}' -X 'commConsts.gitHash=${GIT_HASH}'"
 
-default: win64 win32 linux mac copy_files zip
+default: win64 win32 linux mac
 
-win64: update_version prepare_res build_win64
-win32: update_version prepare_res build_win32
-linux: update_version prepare_res build_linux
-mac: update_version prepare_res build_mac
+win64: update_version prepare_res build_win64 copy_files_win64 zip_win64
+win32: update_version prepare_res build_win32 copy_files_win32 zip_win32
+linux: update_version prepare_res build_linux copy_files_linux zip_linux
+mac: update_version prepare_res build_mac copy_files_mac zip_mac
 
 update_version: update_version_in_config gen_version_file
 
@@ -86,24 +86,80 @@ package_mac_client:
 	@rm -rf ${OUT_DIR}darwin && mkdir ${OUT_DIR}darwin && \
 		mv ${OUT_DIR}${PROJECT}-darwin-x64 ${OUT_DIR}darwin/${PROJECT}
 
-copy_files:
-	@echo 'start copy files'
-	@for platform in `ls ${OUT_DIR}`; \
-		do cp -r demo "${OUT_DIR}$${platform}"; done
+copy_files_win64:
+	@echo 'start copy files win64'
+	cp -r demo "${OUT_DIR}win64"
 
-zip:
-	@echo 'start zip'
+copy_files_win32:
+	@echo 'start copy files win32'
+	cp -r demo "${OUT_DIR}win32"
+
+copy_files_linux:
+	@echo 'start copy files linux'
+	cp -r demo "${OUT_DIR}linux"
+
+copy_files_mac:
+	@echo 'start copy files mac'
+	cp -r demo "${OUT_DIR}mac"
+
+#copy_files:
+#	@echo 'start copy files'
+#	@for platform in `ls ${OUT_DIR}`; \
+#		do cp -r demo "${OUT_DIR}$${platform}"; done
+
+zip_win64:
+	@echo 'start zip win64'
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
-	@for platform in `ls ${OUT_DIR}`; do mkdir -p ${QINIU_DIST_DIR}$${platform}; done
+	@mkdir -p ${QINIU_DIST_DIR}win64
+	@cd ${OUT_DIR}win64 && \
+		zip -ry ${QINIU_DIST_DIR}win64/${PROJECT}.zip ./* && \
+		md5sum ${QINIU_DIST_DIR}win64/${PROJECT}.zip | awk '{print $$1}' | \
+			xargs echo > ${QINIU_DIST_DIR}win64/${PROJECT}.zip.md5 && \
+        cd ../..; \
 
-	@cd ${OUT_DIR} && \
-		for platform in `ls ./`; \
-		   do cd $${platform} && \
-		   zip -r ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip ./* && \
-		   md5sum ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip | awk '{print $$1}' | \
-		          xargs echo > ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip.md5 && \
-           cd ..; \
-		done
+zip_win32:
+	@echo 'start zip win32'
+	@find . -name .DS_Store -print0 | xargs -0 rm -f
+	@mkdir -p ${QINIU_DIST_DIR}win32
+	@cd ${OUT_DIR}win32 && \
+		zip -ry ${QINIU_DIST_DIR}win32/${PROJECT}.zip ./* && \
+		md5sum ${QINIU_DIST_DIR}win32/${PROJECT}.zip | awk '{print $$1}' | \
+			xargs echo > ${QINIU_DIST_DIR}win32/${PROJECT}.zip.md5 && \
+        cd ../..; \
+
+zip_linux:
+	@echo 'start zip linux'
+	@find . -name .DS_Store -print0 | xargs -0 rm -f
+	@mkdir -p ${QINIU_DIST_DIR}linux
+	@cd ${OUT_DIR}linux && \
+		zip -ry ${QINIU_DIST_DIR}linux/${PROJECT}.zip ./* && \
+		md5sum ${QINIU_DIST_DIR}linux/${PROJECT}.zip | awk '{print $$1}' | \
+			xargs echo > ${QINIU_DIST_DIR}linux/${PROJECT}.zip.md5 && \
+        cd ../..; \
+
+zip_mac:
+	@echo 'start zip mac'
+	@find . -name .DS_Store -print0 | xargs -0 rm -f
+	@mkdir -p ${QINIU_DIST_DIR}mac
+	@cd ${OUT_DIR}mac && \
+		zip -ry ${QINIU_DIST_DIR}mac/${PROJECT}.zip ./* && \
+		md5sum ${QINIU_DIST_DIR}mac/${PROJECT}.zip | awk '{print $$1}' | \
+			xargs echo > ${QINIU_DIST_DIR}mac/${PROJECT}.zip.md5 && \
+        cd ../..; \
+
+#zip:
+#	@echo 'start zip'
+#	@find . -name .DS_Store -print0 | xargs -0 rm -f
+#	@for platform in `ls ${OUT_DIR}`; do mkdir -p ${QINIU_DIST_DIR}$${platform}; done
+#
+#	@cd ${OUT_DIR} && \
+#		for platform in `ls ./`; \
+#		   do cd $${platform} && \
+#		   zip -ry ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip ./* && \
+#		   md5sum ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip | awk '{print $$1}' | \
+#		          xargs echo > ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip.md5 && \
+#           cd ..; \
+#		done
 
 upload_to:
 	@echo 'upload...'
