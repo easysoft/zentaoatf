@@ -295,7 +295,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		if line != "" {
 			if commConsts.ExecFrom != commConsts.FromCmd {
 				websocketHelper.SendOutputMsg(line, "", wsMsg)
-				logUtils.ExecConsole(1, "-----------------------"+line)
+				logUtils.ExecConsole(1, line)
 			}
 
 			logUtils.ExecFile(line)
@@ -303,9 +303,15 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			isTerminal = true
 		}
 
-		if err2 != nil || io.EOF == err2 {
+		if err2 != nil {
+			logUtils.ExecConsole(1, err2.Error())
+			logUtils.ExecFile(err2.Error())
 			break
 		}
+		if io.EOF == err2 {
+			break
+		}
+
 		stdOutputArr = append(stdOutputArr, line)
 
 		select {

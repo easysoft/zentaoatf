@@ -57,6 +57,8 @@ func InitExecLog(workspacePath string) {
 	config.OutputPaths = []string{logPath}
 	var err error
 	logUtils.LoggerExecFile, err = config.Build()
+	logUtils.ExecConsole(1, "init LoggerExecFile "+logPath)
+
 	if err != nil {
 		log.Println("init exec file logger fail " + err.Error())
 	}
