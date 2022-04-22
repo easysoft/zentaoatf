@@ -50,7 +50,7 @@ compile_linux:
 		-o ${BIN_DIR}linux/${PROJECT} ${MAIN_FILE}
 
 compile_mac:
-	@echo 'start compile mac'
+	@echo 'start compile darwin'
 	@echo
 	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 \
 		${BUILD_CMD} \
@@ -69,8 +69,8 @@ copy_files_linux:
 	cp -r {demo,runtime} "${BIN_DIR}linux"
 
 copy_files_mac:
-	@echo 'start copy files mac'
-	cp -r {demo,runtime} "${BIN_DIR}mac"
+	@echo 'start copy files darwin'
+	cp -r {demo,runtime} "${BIN_DIR}darwin"
 
 #copy_files:
 #	@echo 'start copy files'
@@ -112,14 +112,14 @@ zip_linux:
 		cd ../..; \
 
 zip_mac:
-	@echo 'start zip mac'
+	@echo 'start zip darwin'
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
-	@mkdir -p ${QINIU_DIST_DIR}mac && rm -rf ${QINIU_DIST_DIR}mac/${PROJECT}-cmd.zip
+	@mkdir -p ${QINIU_DIST_DIR}darwin && rm -rf ${QINIU_DIST_DIR}darwin/${PROJECT}-cmd.zip
 
-	@cd ${BIN_DIR}mac && \
-	   zip -ry ${QINIU_DIST_DIR}mac/${PROJECT}-cmd.zip ./* && \
-	   md5sum ${QINIU_DIST_DIR}mac/${PROJECT}-cmd.zip | awk '{print $$1}' | \
-			  xargs echo > ${QINIU_DIST_DIR}mac/${PROJECT}-cmd.zip.md5 && \
+	@cd ${BIN_DIR}darwin && \
+	   zip -ry ${QINIU_DIST_DIR}darwin/${PROJECT}-cmd.zip ./* && \
+	   md5sum ${QINIU_DIST_DIR}darwin/${PROJECT}-cmd.zip | awk '{print $$1}' | \
+			  xargs echo > ${QINIU_DIST_DIR}darwin/${PROJECT}-cmd.zip.md5 && \
 		cd ../..; \
 
 #zip:
