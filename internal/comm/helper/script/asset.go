@@ -126,7 +126,7 @@ func loadScriptNodesInDir(childPath string, parent *serverDomain.TestAsset, leve
 func LoadScriptListInDir(path string, files *[]string, level int) error {
 	regx := langHelper.GetSupportLanguageExtRegx()
 
-	if !fileUtils.IsDir(path) { // first call, param is file
+	if !fileUtils.IsDir(path) { // first call, param is a file
 		pass, _ := regexp.MatchString(`.*\.`+regx+`$`, path)
 		if pass {
 			pass = CheckFileIsScript(path)

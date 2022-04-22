@@ -18,10 +18,10 @@ import (
 
 func View(files []string, keywords string) {
 	var cases []string
-	for _, v1 := range files {
-		group := scriptHelper.LoadScriptByWorkspace(v1)
-		for _, v2 := range group {
-			cases = append(cases, v2)
+	for _, f := range files {
+		group := scriptHelper.LoadScriptByWorkspace(f)
+		for _, item := range group {
+			cases = append(cases, item)
 		}
 	}
 
