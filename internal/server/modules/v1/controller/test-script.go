@@ -148,10 +148,10 @@ func (c *TestScriptCtrl) SyncToZentao(ctx iris.Context) {
 	config := configHelper.LoadBySite(site)
 
 	for _, set := range sets {
-		workspaceId := set.WorkspaceId
-		workspace, _ := c.WorkspaceService.Get(uint(workspaceId))
+		//	workspaceId := set.WorkspaceId
+		//	workspace, _ := c.WorkspaceService.Get(uint(workspaceId))
 
-		err := zentaoHelper.SyncToZentao(set.Cases, workspace.Path, currProductId, config)
+		err := zentaoHelper.SyncToZentao(set.Cases, config)
 		if err != nil {
 			ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 			return

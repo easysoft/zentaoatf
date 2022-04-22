@@ -3,17 +3,14 @@ package action
 import (
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/comm/helper/script"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
-	stringUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/string"
 )
 
 func CommitCases(files []string) {
-	var workspacePath string
-	if len(files) > 0 {
-		workspacePath = files[0]
-	}
+	cases := scriptHelper.GetCaseByDirAndFile(files)
 
-	config := configHelper.LoadByWorkspacePath(workspacePath)
+	config := configHelper.LoadByWorkspacePath(commConsts.WorkDir)
 
-	zentaoHelper.SyncToZentao(nil, workspacePath, stringUtils.ParseInt(commConsts.ProductId), config)
+	zentaoHelper.SyncToZentao(cases, config)
 }

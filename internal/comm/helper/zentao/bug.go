@@ -47,7 +47,7 @@ func CommitBug(ztfBug commDomain.ZtfBug, config commDomain.WorkspaceConf) (err e
 	return
 }
 
-func PrepareBug(workspacePath, seq string, caseIdStr string) (bug commDomain.ZtfBug) {
+func PrepareBug(workspacePath, seq string, caseIdStr string, productId int) (bug commDomain.ZtfBug) {
 	caseId, err := strconv.Atoi(caseIdStr)
 
 	if err != nil {
@@ -78,7 +78,7 @@ func PrepareBug(workspacePath, seq string, caseIdStr string) (bug commDomain.Ztf
 		bug = commDomain.ZtfBug{
 			Title:   cs.Title,
 			Case:    cs.Id,
-			Product: cs.ProductId,
+			Product: productId,
 			Steps:   strings.Join(steps, "\n"), StepIds: stepIds,
 
 			Uid:  uuid.NewV4().String(),

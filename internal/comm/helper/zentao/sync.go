@@ -2,7 +2,6 @@ package zentaoHelper
 
 import (
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
 	langHelper "github.com/easysoft/zentaoatf/internal/comm/helper/lang"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/comm/helper/script"
@@ -49,27 +48,20 @@ func SyncFromZentao(settings commDomain.SyncSettings, config commDomain.Workspac
 	return
 }
 
-func SyncToZentao(cases []string, workspacePath string, commitProductId int, config commDomain.WorkspaceConf) (err error) {
-	pth := ""
-	if commConsts.ExecFrom == commConsts.FromCmd {
-		pth = fileUtils.RemovePathSepIfNeeded(workspacePath)
-		workspacePath = commConsts.WorkDir
-	} else {
-		pth = filepath.Join(workspacePath, fmt.Sprintf("product%d", commitProductId))
-	}
-
-	if cases == nil { // from command line
-		cases = scriptHelper.LoadScriptByWorkspace(pth)
-	}
-
+func SyncToZentao(cases []string, config commDomain.WorkspaceConf) (err error) {
+	count := 0
 	for _, cs := range cases {
 		pass, id, _, title := scriptHelper.GetCaseInfo(cs)
 
-		if pass {
+		if pass && id > 0 {
 			steps, _ := scriptHelper.GetStepAndExpectMap(cs)
 			CommitCase(id, title, steps, config)
+
+			count++
 		}
 	}
+
+	logUtils.Infof(i118Utils.Sprintf("commit_cases_result", count) + "\n")
 
 	return
 }

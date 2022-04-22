@@ -22,12 +22,18 @@ var (
 	bugFields commDomain.ZentaoBugFields
 )
 
-func CommitBug(files []string) {
+func CommitBug(files []string, productId int) {
 	var resultDir string
 	if len(files) > 0 {
 		resultDir = files[0]
 	} else {
 		stdinUtils.InputForDir(&resultDir, "", "result")
+	}
+
+	if productId == 0 {
+		productIdStr := stdinUtils.GetInput("\\d+", "",
+			i118Utils.Sprintf("pls_enter")+" "+i118Utils.Sprintf("product_id"))
+		productId, _ = strconv.Atoi(productIdStr)
 	}
 
 	report, err := analysisHelper.ReadReportByWorkspaceSeq(commConsts.WorkDir, resultDir)
@@ -44,6 +50,11 @@ func CommitBug(files []string) {
 		}
 	}
 
+	if len(lines) == 0 {
+		logUtils.ExecConsole(color.FgCyan, i118Utils.Sprintf("no_failed_case_to_report_bug"))
+		return
+	}
+
 	for {
 		logUtils.ExecConsole(color.FgCyan, "\n"+i118Utils.Sprintf("enter_case_id_for_report_bug"))
 		logUtils.ExecConsole(color.FgCyan, strings.Join(lines, "\n"))
@@ -54,7 +65,7 @@ func CommitBug(files []string) {
 			os.Exit(0)
 		} else {
 			if stringUtils.FindInArr(caseId, ids) {
-				reportBug(resultDir, caseId)
+				reportBug(resultDir, caseId, productId)
 			} else {
 				logUtils.ExecConsole(color.FgRed, i118Utils.Sprintf("invalid_input"))
 			}
@@ -77,11 +88,11 @@ func coloredStatus(status commConsts.ResultStatus) string {
 	return status.String()
 }
 
-func reportBug(resultDir string, caseId string) error {
+func reportBug(resultDir string, caseId string, productId int) error {
 	config := configHelper.LoadByWorkspacePath(commConsts.WorkDir)
 	bugFields, _ = zentaoHelper.GetBugFiledOptions(config, bug.Product)
 
-	bug = zentaoHelper.PrepareBug(commConsts.WorkDir, resultDir, caseId)
+	bug = zentaoHelper.PrepareBug(commConsts.WorkDir, resultDir, caseId, productId)
 
 	err := zentaoHelper.CommitBug(bug, config)
 	return err

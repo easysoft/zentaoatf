@@ -24,7 +24,7 @@ $>ztf.exe extract demo\sample\8_extract_desc.php     提取脚本中的注释，
 $>ztf.exe ci product01\tc-1.py                       将脚本里修改的用例信息，同步到禅道系统。
 $>ztf.exe cr log\001 -p 1                            提交测试结果到禅道系统编号为1的产品。
 $>ztf.exe cr log\001 -p 1 -t 1 -y                    提交测试结果到禅道系统。使用-t提供TaskID、或-y忽略确认时，不需要确认。
-$>ztf.exe cb log\001                                 提交测试结果中失败用例为缺陷。
+$>ztf.exe cb log\001 -p 1                            提交测试结果中失败用例为缺陷。
 
 $>ztf.exe list demo\lang\bat                         列出目录bat下的所有脚本文件，支持多个目录和文件参数项。
 $>ztf.exe ls demo\lang\bat -k 0                      列出指定路径下，ID为0的脚本。

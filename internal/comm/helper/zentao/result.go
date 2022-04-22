@@ -1,6 +1,7 @@
 package zentaoHelper
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
@@ -21,7 +22,7 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId int, config com
 	}
 	report.TaskId = taskId
 
-	// for ci tool
+	// for ci tool debug
 	report.ZentaoData = os.Getenv("ZENTAO_DATA")
 	report.BuildUrl = os.Getenv("BUILD_URL")
 
@@ -34,6 +35,10 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId int, config com
 
 	uri := fmt.Sprintf("/ciresults")
 	url := GenApiUrl(uri, nil, config.Url)
+
+	jsn, _ := json.Marshal(report)
+	logUtils.Info(url)
+	logUtils.Info(string(jsn))
 
 	ret, err := httpUtils.Post(url, report)
 

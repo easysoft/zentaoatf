@@ -29,7 +29,7 @@ func (c *TestBugCtrl) PrepareBugData(ctx iris.Context) {
 	}
 
 	workspace, _ := c.WorkspaceService.Get(uint(req.WorkspaceId))
-	bug := zentaoHelper.PrepareBug(workspace.Path, req.Seq, strconv.Itoa(req.Id))
+	bug := zentaoHelper.PrepareBug(workspace.Path, req.Seq, strconv.Itoa(req.Id), 0)
 
 	ctx.JSON(c.SuccessResp(bug))
 }

@@ -250,6 +250,10 @@
     },
 
     {
+      "id": "no_failed_case_to_report_bug",
+      "translation": "No found any failed cases, exit."
+    },
+    {
       "id": "enter_case_id_for_report_bug",
       "translation": "Which case do you want to report bug for? Type 'exit' to quit."
     },
@@ -427,8 +431,12 @@
       "translation": "Successfully committed case %d."
     },
     {
+      "id": "commit_cases_result",
+      "translation": "Totally commit %d cases to Zentao."
+    },
+    {
       "id": "ignore_bug_without_product",
-      "translation": "Can not report a bug which product id is null."
+      "translation": "Case's product id is null, please use -p parameter to provide product id."
     },
     {
       "id": "success_to_report_bug",

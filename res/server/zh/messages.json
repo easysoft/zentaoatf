@@ -188,7 +188,7 @@
     },
     {
       "id": "case_update_confirm",
-      "translation": "以下用例信息将被更新到禅道:\n %d, %s"
+      "translation": "以下用例信息将被更新到禅道:\n %d. %s"
     },
     {
       "id": "enter_dir",
@@ -241,6 +241,10 @@
     {
       "id": "enter_co_language",
       "translation": "请选择脚本语言\n%s"
+    },
+    {
+      "id": "no_failed_case_to_report_bug",
+      "translation": "未发现失败的用例，退出。"
     },
     {
       "id": "enter_case_id_for_report_bug",
@@ -419,8 +423,12 @@
       "translation": "成功更新用例%d"
     },
     {
+      "id": "commit_cases_result",
+      "translation": "合计更新%d个用例到禅道。"
+    },
+    {
       "id": "ignore_bug_without_product",
-      "translation": "缺陷引用的用例其产品字段为空，忽略。"
+      "translation": "用例的产品属性为空，请使用-p参数提供产品ID。"
     },
     {
       "id": "success_to_report_bug",

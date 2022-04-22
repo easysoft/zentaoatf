@@ -254,3 +254,61 @@ func GetFailedCasesDirectlyFromTestResult(resultFile string) []string {
 
 	return cases
 }
+
+func GetCaseByDirAndFile(files []string) []string {
+	cases := make([]string, 0)
+
+	for _, file := range files {
+		GetAllScriptsInDir(file, &cases)
+	}
+
+	return cases
+}
+
+func GetAllScriptsInDir(path string, files *[]string) error {
+	if !fileUtils.IsDir(path) { // first call, param is file
+		regx := langHelper.GetSupportLanguageExtRegx()
+
+		pass, _ := regexp.MatchString(`.*\.`+regx+`$`, path)
+
+		if pass {
+			pass := CheckFileIsScript(path)
+			if pass {
+				*files = append(*files, path)
+			}
+		}
+
+		return nil
+	}
+
+	path = fileUtils.AbsolutePath(path)
+
+	dir, err := ioutil.ReadDir(path)
+	if err != nil {
+		return err
+	}
+
+	for _, fi := range dir {
+		name := fi.Name()
+		if commonUtils.IgnoreFile(name) {
+			continue
+		}
+
+		if fi.IsDir() { // 目录, 递归遍历
+			GetAllScriptsInDir(path+name+consts.PthSep, files)
+		} else {
+			path := path + name
+			regx := langHelper.GetSupportLanguageExtRegx()
+			pass, _ := regexp.MatchString("^*.\\."+regx+"$", path)
+
+			if pass {
+				pass = CheckFileIsScript(path)
+				if pass {
+					*files = append(*files, path)
+				}
+			}
+		}
+	}
+
+	return nil
+}

@@ -99,15 +99,15 @@ func main() {
 
 	case "cr":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
-		if err := flagSet.Parse(os.Args[len(files):]); err == nil {
+		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
 			action.CommitZTFTestResult(files, stringUtils.ParseInt(productId), stringUtils.ParseInt(taskId),
 				noNeedConfirm)
 		}
 
 	case "cb":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
-		if err := flagSet.Parse(os.Args[len(files):]); err == nil {
-			action.CommitBug(files)
+		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
+			action.CommitBug(files, stringUtils.ParseInt(productId))
 		}
 
 	case "list", "ls", "-l":
@@ -162,21 +162,26 @@ func runFuncTest(args []string) {
 	files := fileUtils.GetFilesFromParams(args[2:])
 
 	err := flagSet.Parse(args[len(files)+2:])
-	if err == nil {
-		commConsts.ProductId = productId
-
-		if len(files) == 0 {
-			files = append(files, ".")
-		}
-
-		if commConsts.Interpreter != "" {
-			msgStr := i118Utils.Sprintf("run_with_specific_interpreter", commConsts.Interpreter)
-			logUtils.ExecConsolef(color.FgCyan, msgStr)
-		}
-		action.RunZTFTest(files, moduleId, suiteId, taskId)
-	} else {
+	if err != nil {
 		action.PrintUsage()
+		return
 	}
+	if len(files) > 0 && files[0] != "" && !fileUtils.FileExist(files[0]) {
+		action.PrintUsage()
+		return
+	}
+
+	commConsts.ProductId = productId
+
+	if len(files) == 0 {
+		files = append(files, ".")
+	}
+
+	if commConsts.Interpreter != "" {
+		msgStr := i118Utils.Sprintf("run_with_specific_interpreter", commConsts.Interpreter)
+		logUtils.ExecConsolef(color.FgCyan, msgStr)
+	}
+	action.RunZTFTest(files, moduleId, suiteId, taskId)
 }
 
 func runUnitTest(args []string) {

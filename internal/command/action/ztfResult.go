@@ -19,6 +19,13 @@ func CommitZTFTestResult(files []string, productId, taskId int, noNeedConfirm bo
 	} else {
 		stdinUtils.InputForDir(&resultDir, "", "result")
 	}
+
+	if productId == 0 {
+		productIdStr := stdinUtils.GetInput("\\d+", "",
+			i118Utils.Sprintf("pls_enter")+" "+i118Utils.Sprintf("product_id"))
+		productId, _ = strconv.Atoi(productIdStr)
+	}
+
 	if taskId == 0 && !noNeedConfirm {
 		taskIdStr := stdinUtils.GetInput("\\d*", "",
 			i118Utils.Sprintf("pls_enter")+" "+i118Utils.Sprintf("task_id")+
