@@ -213,7 +213,7 @@ export default {
     'biz_401': 'UnAuthorized',
 
     'biz_1000': 'Data Not Init',
-    'biz_2000': 'Zentao Config err',
+    'biz_2000': 'Zentao Config Failed',
     'biz_4000': 'Record Not Found',
     'biz_5000': 'Not Available',
 };

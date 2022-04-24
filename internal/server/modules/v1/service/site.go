@@ -47,6 +47,9 @@ func (s *SiteService) Create(site model.Site) (id uint, err error) {
 	}
 
 	id, err = s.SiteRepo.Create(&site)
+	if err != nil {
+		return
+	}
 
 	return
 }
@@ -59,6 +62,9 @@ func (s *SiteService) Update(site model.Site) (err error) {
 	}
 
 	err = s.SiteRepo.Update(site)
+	if err != nil {
+		return
+	}
 
 	workspaces, _ := s.WorkspaceRepo.ListBySite(site.ID)
 	for _, item := range workspaces {

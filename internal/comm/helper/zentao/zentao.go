@@ -48,23 +48,50 @@ func Login(config commDomain.WorkspaceConf) (err error) {
 	}
 	bodyBytes, err := httpUtils.Post(url, params)
 	if err != nil {
-		logUtils.Info(i118Utils.Sprintf("fail_to_login"))
+		msg := i118Utils.Sprintf("fail_to_login_with_err", err.Error())
+
+		logUtils.Infof(msg)
+		err = errors.New(msg)
+
 		return
 	}
 
-	if commConsts.Verbose {
-		logUtils.Info(i118Utils.Sprintf("success_to_login") + string(bodyBytes))
+	jsn, err := simplejson.NewJson(bodyBytes)
+	if err != nil {
+		msg := i118Utils.Sprintf("fail_to_login_with_err", err.Error())
+
+		logUtils.Infof(msg)
+		err = errors.New(msg)
+
+		return
 	}
 
-	jsn, _ := simplejson.NewJson(bodyBytes)
 	if jsn == nil {
 		return
 	}
-	mp, _ := jsn.Map()
+	mp, err := jsn.Map()
+	if err != nil {
+		msg := i118Utils.Sprintf("fail_to_login_with_err", err.Error())
+
+		logUtils.Infof(msg)
+		err = errors.New(msg)
+
+		return
+	}
 
 	val, ok := mp["token"]
 	if ok {
 		commConsts.SessionId = val.(string)
+		logUtils.Info(i118Utils.Sprintf("success_to_login"))
+
+	} else {
+		msg := i118Utils.Sprintf("fail_to_login_with_err",
+			fmt.Sprintf("err response: %#v", string(bodyBytes)))
+
+		logUtils.Infof(msg)
+		err = errors.New(msg)
+
+		return
 	}
 
 	return
