@@ -9,8 +9,8 @@ import (
 )
 
 func Clean() {
-	path := commConsts.WorkDir + commConsts.LogDirName + consts.PthSep
-	bak := path[:len(path)-1] + "-bak" + consts.PthSep + path[len(path):]
+	path := commConsts.WorkDir + commConsts.LogDirName + consts.FilePthSep
+	bak := path[:len(path)-1] + "-bak" + consts.FilePthSep + path[len(path):]
 
 	os.RemoveAll(path)
 	os.RemoveAll(bak)

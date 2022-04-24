@@ -322,6 +322,10 @@
       "translation": "Failed to login, Zentao return: %s."
     },
     {
+      "id": "fail_to_request_zentao",
+      "translation": "Zentao request failed, return: %s."
+    },
+    {
       "id": "exec_cmd_fail",
       "translation": "Fail to exec cmd %s, error is %s."
     },

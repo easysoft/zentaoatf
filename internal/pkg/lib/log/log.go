@@ -65,7 +65,7 @@ func getLogNumb(numb int) string {
 }
 
 func addPathSepIfNeeded(pth string) string { // not to call fileUtils cycle
-	sep := consts.PthSep
+	sep := consts.FilePthSep
 
 	if strings.LastIndex(pth, sep) < len(pth)-1 {
 		pth += sep

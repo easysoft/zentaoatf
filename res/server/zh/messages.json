@@ -311,6 +311,10 @@
       "translation": "登录失败，禅道返回：%s。"
     },
     {
+      "id": "fail_to_request_zentao",
+      "translation": "禅道请求失败，返回：%s。"
+    },
+    {
       "id": "exec_cmd_fail",
       "translation": "执行命令%s失败，错误%s。"
     },

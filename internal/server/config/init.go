@@ -47,7 +47,7 @@ func GetServerWorDir() (ret string) {
 	home, _ := fileUtils.GetUserHome()
 	ret = filepath.Join(home, commConsts.App)
 
-	ret = fileUtils.AddPathSepIfNeeded(ret)
+	ret = fileUtils.AddFilePathSepIfNeeded(ret)
 	fileUtils.MkDirIfNeeded(ret)
 
 	return

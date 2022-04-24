@@ -82,30 +82,39 @@ func IsDir(f string) bool {
 }
 
 func AbsolutePath(pth string) string {
-	if !IsAbosutePath(pth) {
+	if !IsAbsolutePath(pth) {
 		pth, _ = filepath.Abs(pth)
 	}
 
-	pth = AddPathSepIfNeeded(pth)
+	pth = AddFilePathSepIfNeeded(pth)
 
 	return pth
 }
 
-func IsAbosutePath(pth string) bool {
+func IsAbsolutePath(pth string) bool {
 	return path.IsAbs(pth) ||
 		strings.Index(pth, ":") == 1 // windows
 }
 
-func AddPathSepIfNeeded(pth string) string {
-	sep := consts.PthSep
+func AddUrlPathSepIfNeeded(url string) string {
+	sep := "/"
+
+	if strings.LastIndex(url, sep) < len(url)-1 {
+		url += sep
+	}
+	return url
+}
+
+func AddFilePathSepIfNeeded(pth string) string {
+	sep := consts.FilePthSep
 
 	if strings.LastIndex(pth, sep) < len(pth)-1 {
 		pth += sep
 	}
 	return pth
 }
-func RemovePathSepIfNeeded(pth string) string {
-	sep := consts.PthSep
+func RemoveFilePathSepIfNeeded(pth string) string {
+	sep := consts.FilePthSep
 
 	if strings.LastIndex(pth, sep) == len(pth)-1 {
 		pth = pth[:len(pth)-1]
@@ -120,9 +129,9 @@ func GetFilesFromParams(arguments []string) []string {
 		if strings.Index(arg, "-") != 0 {
 			if arg == "." {
 				arg = AbsolutePath(".")
-			} else if strings.Index(arg, "."+consts.PthSep) == 0 {
+			} else if strings.Index(arg, "."+consts.FilePthSep) == 0 {
 				arg = AbsolutePath(".") + arg[2:]
-			} else if !IsAbosutePath(arg) {
+			} else if !IsAbsolutePath(arg) {
 				arg = AbsolutePath(".") + arg
 			}
 
@@ -161,7 +170,7 @@ func CopyFile(src, dst string) (int64, error) {
 }
 
 func GetFileName(pathOrUrl string) string {
-	index := strings.LastIndex(pathOrUrl, consts.PthSep)
+	index := strings.LastIndex(pathOrUrl, consts.FilePthSep)
 
 	name := pathOrUrl[index+1:]
 	return name
@@ -188,16 +197,16 @@ func GetExtNameWithoutDot(pathOrUrl string) string {
 	return ext
 }
 func GetDirName(pth string) (name string) {
-	pth = strings.Trim(pth, consts.PthSep)
-	index := strings.LastIndex(pth, consts.PthSep)
+	pth = strings.Trim(pth, consts.FilePthSep)
+	index := strings.LastIndex(pth, consts.FilePthSep)
 	name = pth[index:]
-	name = strings.Trim(name, consts.PthSep)
+	name = strings.Trim(name, consts.FilePthSep)
 
 	return name
 }
 
 func GetAbsolutePath(pth string) string {
-	if !IsAbosutePath(pth) {
+	if !IsAbsolutePath(pth) {
 		pth, _ = filepath.Abs(pth)
 	}
 
@@ -207,8 +216,8 @@ func GetAbsolutePath(pth string) string {
 }
 
 func AddSepIfNeeded(pth string) string {
-	if strings.LastIndex(pth, consts.PthSep) < len(pth)-1 {
-		pth += consts.PthSep
+	if strings.LastIndex(pth, consts.FilePthSep) < len(pth)-1 {
+		pth += consts.FilePthSep
 	}
 	return pth
 }
@@ -236,7 +245,7 @@ func GetZTFDir() (dir string, isDebug bool) { // where ztf command and config in
 	}
 
 	dir, _ = filepath.Abs(dir)
-	dir = AddPathSepIfNeeded(dir)
+	dir = AddFilePathSepIfNeeded(dir)
 
 	return
 }

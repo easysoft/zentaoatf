@@ -79,7 +79,7 @@ func loadScriptNodesInDir(childPath string, parent *serverDomain.TestAsset, leve
 		return
 	}
 
-	childPath = fileUtils.AddPathSepIfNeeded(fileUtils.AbsolutePath(childPath))
+	childPath = fileUtils.AddFilePathSepIfNeeded(fileUtils.AbsolutePath(childPath))
 
 	list, err := ioutil.ReadDir(childPath)
 	if err != nil {
@@ -152,7 +152,7 @@ func LoadScriptListInDir(path string, files *[]string, level int) error {
 		}
 
 		if fi.IsDir() && level < 3 { // 目录, 递归遍历
-			LoadScriptListInDir(path+name+consts.PthSep, files, level+1)
+			LoadScriptListInDir(path+name+consts.FilePthSep, files, level+1)
 		} else {
 			path := path + name
 			pass, _ := regexp.MatchString("^*.\\."+regx+"$", path)
@@ -295,7 +295,7 @@ func GetAllScriptsInDir(path string, files *[]string) error {
 		}
 
 		if fi.IsDir() { // 目录, 递归遍历
-			GetAllScriptsInDir(path+name+consts.PthSep, files)
+			GetAllScriptsInDir(path+name+consts.FilePthSep, files)
 		} else {
 			path := path + name
 			regx := langHelper.GetSupportLanguageExtRegx()

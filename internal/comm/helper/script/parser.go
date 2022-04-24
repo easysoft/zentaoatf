@@ -1045,7 +1045,7 @@ func ReadCaseId(content string) string {
 }
 
 func GetDependentExpect(file string) (bool, string) {
-	dir := fileUtils.AddPathSepIfNeeded(filepath.Dir(file))
+	dir := fileUtils.AddFilePathSepIfNeeded(filepath.Dir(file))
 	name := strings.Replace(filepath.Base(file), path.Ext(file), ".exp", -1)
 	expectIndependentFile := dir + name
 
@@ -1064,7 +1064,7 @@ func GetDependentExpect(file string) (bool, string) {
 func GetScriptByIdsInDir(dirPth string, idMap map[int]string, files *[]string) error {
 	dirPth = fileUtils.AbsolutePath(dirPth)
 
-	sep := consts.PthSep
+	sep := consts.FilePthSep
 
 	if commonUtils.IgnoreFile(dirPth) {
 		return nil

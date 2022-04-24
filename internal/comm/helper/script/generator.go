@@ -60,7 +60,7 @@ func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool
 	steps := make([]string, 0)
 	independentExpects := make([]string, 0)
 	srcCode := fmt.Sprintf("%s %s", commConsts.LangMap[langType]["commentsTag"],
-		i118Utils.Sprintf("find_example", consts.PthSep, langType))
+		i118Utils.Sprintf("find_example", consts.FilePthSep, langType))
 
 	info = append(info, fmt.Sprintf("title=%s", caseTitle))
 	info = append(info, fmt.Sprintf("cid=%d", caseId))
@@ -88,7 +88,7 @@ func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool
 		return
 	}
 
-	path := fmt.Sprintf("res%stemplate%s", consts.PthSep, consts.PthSep)
+	path := fmt.Sprintf("res%stemplate%s", consts.FilePthSep, consts.FilePthSep)
 	template, _ := resUtils.ReadRes(path + langType + ".tpl")
 
 	out := fmt.Sprintf(string(template), strings.Join(info, "\n"), srcCode)

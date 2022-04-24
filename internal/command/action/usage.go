@@ -14,8 +14,8 @@ import (
 )
 
 var (
-	usageFile  = fmt.Sprintf("res%sdoc%susage.txt", string(os.PathSeparator), consts.PthSep)
-	sampleFile = fmt.Sprintf("res%sdoc%ssample.txt", consts.PthSep, string(os.PathSeparator))
+	usageFile  = fmt.Sprintf("res%sdoc%susage.txt", string(os.PathSeparator), consts.FilePthSep)
+	sampleFile = fmt.Sprintf("res%sdoc%ssample.txt", consts.FilePthSep, string(os.PathSeparator))
 )
 
 func PrintUsage() {

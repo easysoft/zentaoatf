@@ -27,21 +27,20 @@ func SyncFromZentao(settings commDomain.SyncSettings, config commDomain.Workspac
 		return
 	}
 
-	cases, loginFail := LoadTestCases(productId, moduleId, suiteId, taskId, config)
+	cases, err := LoadTestCases(productId, moduleId, suiteId, taskId, config)
+	if err != nil {
+		return
+	}
 
 	if cases != nil && len(cases) > 0 {
 		productId = cases[0].Product
-		targetDir := fileUtils.AddPathSepIfNeeded(filepath.Join(workspacePath, fmt.Sprintf("product%d", productId)))
+		targetDir := fileUtils.AddFilePathSepIfNeeded(filepath.Join(workspacePath, fmt.Sprintf("product%d", productId)))
 
 		count, err := scriptHelper.GenerateScripts(cases, lang, independentFile, byModule, targetDir)
 		if err == nil {
 			logUtils.Infof(i118Utils.Sprintf("success_to_generate", count, targetDir))
 		} else {
 			logUtils.Infof(color.RedString(err.Error()))
-		}
-	} else {
-		if !loginFail {
-			logUtils.Infof(i118Utils.Sprintf("no_cases"))
 		}
 	}
 

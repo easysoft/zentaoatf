@@ -4,6 +4,7 @@ import (
 	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
 	"github.com/easysoft/zentaoatf/internal/pkg/domain"
+	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
@@ -40,6 +41,8 @@ func (s *SiteService) GetDomainObject(id uint) (site serverDomain.ZentaoSite, er
 }
 
 func (s *SiteService) Create(site model.Site) (id uint, err error) {
+	site.Url = fileUtils.AddUrlPathSepIfNeeded(site.Url)
+
 	config := configHelper.LoadBySite(site)
 	err = zentaoHelper.Login(config)
 	if err != nil {
@@ -55,6 +58,8 @@ func (s *SiteService) Create(site model.Site) (id uint, err error) {
 }
 
 func (s *SiteService) Update(site model.Site) (err error) {
+	site.Url = fileUtils.AddUrlPathSepIfNeeded(site.Url)
+
 	config := configHelper.LoadBySite(site)
 	err = zentaoHelper.Login(config)
 	if err != nil {

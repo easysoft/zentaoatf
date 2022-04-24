@@ -2,7 +2,6 @@ package zentaoHelper
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
@@ -26,11 +25,6 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId int, config com
 	report.ZentaoData = os.Getenv("ZENTAO_DATA")
 	report.BuildUrl = os.Getenv("BUILD_URL")
 
-	// remove it, will cause zentao testtask not display
-	//if commConsts.ComeFrom != "cmd" {
-	//	report.TestType = ""
-	//}
-
 	Login(config)
 
 	uri := fmt.Sprintf("/ciresults")
@@ -40,20 +34,14 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId int, config com
 	logUtils.Info(url)
 	logUtils.Info(string(jsn))
 
-	ret, err := httpUtils.Post(url, report)
-
-	msg := ""
-	msgColor := ""
-	if err == nil {
-		msg = i118Utils.Sprintf("success_to_submit_test_result")
-		msgColor = color.GreenString(msg)
-	} else {
-		msg = i118Utils.Sprintf("fail_to_submit_test_result", err.Error())
-		msgColor = color.RedString(msg)
-		err = errors.New(string(ret))
+	_, err = httpUtils.Post(url, report)
+	if err != nil {
+		err = ZentaoRequestErr(i118Utils.Sprintf("fail_to_submit_test_result", err.Error()))
+		return
 	}
 
-	logUtils.Info(msgColor)
+	msg := i118Utils.Sprintf("success_to_submit_test_result")
+	logUtils.Info(color.GreenString(msg))
 
 	if commConsts.ExecFrom != commConsts.FromCmd &&
 		wsMsg != nil { // from executing, not submit in webpage

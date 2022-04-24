@@ -18,10 +18,6 @@ import (
 )
 
 func GetConfig(baseUrl string) (err error) {
-	//if commConsts.RequestType != "" {
-	//	return true
-	//}
-
 	url := baseUrl + "?mode=getconfig"
 	bytes, err := httpUtils.Get(url)
 	if err != nil {
@@ -48,20 +44,13 @@ func Login(config commDomain.WorkspaceConf) (err error) {
 	}
 	bodyBytes, err := httpUtils.Post(url, params)
 	if err != nil {
-		msg := i118Utils.Sprintf("fail_to_login_with_err", err.Error())
-
-		logUtils.Infof(msg)
-		err = errors.New(msg)
-
+		err = ZentaoLoginErr(err.Error())
 		return
 	}
 
 	jsn, err := simplejson.NewJson(bodyBytes)
 	if err != nil {
-		msg := i118Utils.Sprintf("fail_to_login_with_err", err.Error())
-
-		logUtils.Infof(msg)
-		err = errors.New(msg)
+		err = ZentaoLoginErr(err.Error())
 
 		return
 	}
@@ -71,10 +60,7 @@ func Login(config commDomain.WorkspaceConf) (err error) {
 	}
 	mp, err := jsn.Map()
 	if err != nil {
-		msg := i118Utils.Sprintf("fail_to_login_with_err", err.Error())
-
-		logUtils.Infof(msg)
-		err = errors.New(msg)
+		err = ZentaoLoginErr(err.Error())
 
 		return
 	}
@@ -85,11 +71,7 @@ func Login(config commDomain.WorkspaceConf) (err error) {
 		logUtils.Info(i118Utils.Sprintf("success_to_login"))
 
 	} else {
-		msg := i118Utils.Sprintf("fail_to_login_with_err",
-			fmt.Sprintf("err response: %#v", string(bodyBytes)))
-
-		logUtils.Infof(msg)
-		err = errors.New(msg)
+		err = ZentaoLoginErr(fmt.Sprintf("err response: %#v", string(bodyBytes)))
 
 		return
 	}
@@ -161,17 +143,19 @@ func loadProduct(config commDomain.WorkspaceConf) (products []serverDomain.Zenta
 
 	url := GenApiUrl("products", nil, config.Url)
 	bytes, err := httpUtils.Get(url)
-
 	if err != nil {
+		err = ZentaoRequestErr(err.Error())
 		return
 	}
 
 	jsn, err := simplejson.NewJson(bytes)
 	if err != nil {
+		err = ZentaoRequestErr(err.Error())
 		return
 	}
 	items, err := jsn.Get("products").Array()
 	if err != nil {
+		err = ZentaoRequestErr(err.Error())
 		return
 	}
 
@@ -198,11 +182,6 @@ func LoadCaseModule(productId uint, config commDomain.WorkspaceConf) (modules []
 		return
 	}
 
-	if config.Url == "" {
-		err = errors.New(i118Utils.Sprintf("pls_config_workspace"))
-		return
-	}
-
 	err = Login(config)
 	if err != nil {
 		return
@@ -214,11 +193,21 @@ func LoadCaseModule(productId uint, config commDomain.WorkspaceConf) (modules []
 
 	bytes, err := httpUtils.Get(url)
 	if err != nil {
+		err = ZentaoRequestErr(err.Error())
 		return
 	}
 
-	jsn, _ := simplejson.NewJson(bytes)
-	arr, _ := jsn.Get("modules").Array()
+	jsn, err := simplejson.NewJson(bytes)
+	if err != nil {
+		err = ZentaoRequestErr(err.Error())
+		return
+	}
+
+	arr, err := jsn.Get("modules").Array()
+	if err != nil {
+		err = ZentaoRequestErr(err.Error())
+		return
+	}
 
 	modules = make([]domain.NestedItem, 0)
 	for _, item := range arr {
@@ -262,11 +251,21 @@ func LoadSuite(productId uint, config commDomain.WorkspaceConf) (suites []domain
 
 	bytes, err := httpUtils.Get(url)
 	if err != nil {
+		err = ZentaoRequestErr(err.Error())
 		return
 	}
 
-	jsn, _ := simplejson.NewJson(bytes)
-	arr, _ := jsn.Get("testsuites").Array()
+	jsn, err := simplejson.NewJson(bytes)
+	if err != nil {
+		err = ZentaoRequestErr(err.Error())
+		return
+	}
+
+	arr, err := jsn.Get("testsuites").Array()
+	if err != nil {
+		err = ZentaoRequestErr(err.Error())
+		return
+	}
 
 	suites, _ = GenPlatItems(arr)
 
@@ -295,11 +294,21 @@ func LoadTask(productId uint, config commDomain.WorkspaceConf) (tasks []domain.N
 	url := GenApiUrl("testtasks", params, config.Url)
 	bytes, err := httpUtils.Get(url)
 	if err != nil {
+		err = ZentaoRequestErr(err.Error())
 		return
 	}
 
-	jsn, _ := simplejson.NewJson(bytes)
-	arr, _ := jsn.Get("testtasks").Array()
+	jsn, err := simplejson.NewJson(bytes)
+	if err != nil {
+		err = ZentaoRequestErr(err.Error())
+		return
+	}
+
+	arr, err := jsn.Get("testtasks").Array()
+	if err != nil {
+		err = ZentaoRequestErr(err.Error())
+		return
+	}
 
 	tasks, _ = GenPlatItems(arr)
 

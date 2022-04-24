@@ -68,7 +68,7 @@ func (s *FileService) GetAllChildren(childPath string, parent *serverDomain.Test
 		return
 	}
 
-	childPath = fileUtils.AddPathSepIfNeeded(fileUtils.AbsolutePath(childPath))
+	childPath = fileUtils.AddFilePathSepIfNeeded(fileUtils.AbsolutePath(childPath))
 
 	list, err := ioutil.ReadDir(childPath)
 	if err != nil {

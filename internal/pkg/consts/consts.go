@@ -7,17 +7,17 @@ import (
 )
 
 const (
-	PthSep = string(os.PathSeparator)
+	FilePthSep = string(os.PathSeparator)
 )
 
 var (
-	ConfigFile = fmt.Sprintf("conf%s%s.conf", PthSep, commConsts.App)
+	ConfigFile = fmt.Sprintf("conf%s%s.conf", FilePthSep, commConsts.App)
 
 	ExtNameSuite  = "cs"
 	ExtNameJson   = "json"
 	ExtNameResult = "txt"
 
-	LogDir = fmt.Sprintf("log%s", PthSep)
+	LogDir = fmt.Sprintf("log%s", FilePthSep)
 
 	LeftWidth = 36
 	MinWidth  = 130
