@@ -36,6 +36,7 @@ func CommitCase(caseId int, title string,
 
 	json, err := json.Marshal(requestObj)
 	if err != nil {
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 
@@ -52,7 +53,7 @@ func CommitCase(caseId int, title string,
 	if yes {
 		_, err = httpUtils.Put(url, requestObj)
 		if err != nil {
-			err = ZentaoRequestErr(err.Error())
+			err = ZentaoRequestErr(url, err.Error())
 			return
 		}
 
@@ -72,7 +73,11 @@ func GetCaseById(baseUrl string, caseId int) (cs commDomain.ZtfCase) {
 		return
 	}
 
-	json.Unmarshal(bytes, &cs)
+	err = json.Unmarshal(bytes, &cs)
+	if err != nil {
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
+		return
+	}
 
 	return
 }
@@ -117,12 +122,12 @@ func GetCaseIdsInZentaoModule(productId, moduleId uint, config commDomain.Worksp
 
 	jsn, err := simplejson.NewJson(bytes)
 	if err != nil {
-		err = ZentaoRequestErr(err.Error())
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 	items, err := jsn.Get("testcases").Array()
 	if err != nil {
-		err = ZentaoRequestErr(err.Error())
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 
@@ -156,12 +161,12 @@ func GetCaseIdsInZentaoSuite(productId uint, suiteId int, config commDomain.Work
 
 	jsn, err := simplejson.NewJson(bytes)
 	if err != nil {
-		err = ZentaoRequestErr(err.Error())
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 	items, err := jsn.Get("testcases").Array()
 	if err != nil {
-		err = ZentaoRequestErr(err.Error())
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 
@@ -195,12 +200,12 @@ func GetCaseIdsInZentaoTask(productId uint, taskId int, config commDomain.Worksp
 
 	jsn, err := simplejson.NewJson(bytes)
 	if err != nil {
-		err = ZentaoRequestErr(err.Error())
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 	items, err := jsn.Get("testcases").Array()
 	if err != nil {
-		err = ZentaoRequestErr(err.Error())
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 
@@ -297,7 +302,7 @@ func ListCaseByProduct(baseUrl string, productId int) (caseArr []commDomain.ZtfC
 	var cases commDomain.ZtfRespTestCases
 	err = json.Unmarshal(dataStr, &cases)
 	if err != nil {
-		err = ZentaoRequestErr(err.Error())
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 
@@ -326,7 +331,7 @@ func ListCaseByModule(baseUrl string, productId, moduleId int) (caseArr []commDo
 	var module commDomain.ZtfRespTestCases
 	err = json.Unmarshal(bytes, &module)
 	if err != nil {
-		err = ZentaoRequestErr(err.Error())
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 
@@ -356,7 +361,7 @@ func ListCaseBySuite(baseUrl string, suiteId int) (caseArr []commDomain.ZtfCase,
 	var suite commDomain.ZtfRespTestCases
 	err = json.Unmarshal(bytes, &suite)
 	if err != nil {
-		err = ZentaoRequestErr(err.Error())
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 
@@ -386,7 +391,7 @@ func ListCaseByTask(baseUrl string, taskId int) (caseArr []commDomain.ZtfCase, e
 	var task commDomain.ZtfRespTestCases
 	err = json.Unmarshal(bytes, &task)
 	if err != nil {
-		err = ZentaoRequestErr(err.Error())
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 

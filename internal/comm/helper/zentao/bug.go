@@ -34,7 +34,7 @@ func CommitBug(ztfBug commDomain.ZtfBug, config commDomain.WorkspaceConf) (err e
 	copier.Copy(&bug, ztfBug)
 	_, err = httpUtils.Post(url, bug)
 	if err != nil {
-		err = ZentaoRequestErr(i118Utils.Sprintf("fail_to_report_bug", err.Error()))
+		err = ZentaoRequestErr(url, i118Utils.Sprintf("fail_to_report_bug", err.Error()))
 		return
 	}
 
@@ -121,13 +121,13 @@ func GetBugFiledOptions(config commDomain.WorkspaceConf, productId int) (
 	bytes, err := httpUtils.Get(url)
 	bugOptionsWrapper := commDomain.BugOptionsWrapper{}
 	if err != nil {
-		err = ZentaoRequestErr(err.Error())
+		err = ZentaoRequestErr(url, err.Error())
 		return
 	}
 
 	err = json.Unmarshal(bytes, &bugOptionsWrapper)
 	if err != nil {
-		err = ZentaoRequestErr(err.Error())
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 

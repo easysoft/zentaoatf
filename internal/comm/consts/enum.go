@@ -22,6 +22,7 @@ var (
 	ParamErr        = ResponseCode{200, "Parameter Error"}
 	UnAuthorizedErr = ResponseCode{401, "UnAuthorized"}
 
+	ResponseParseErr  = ResponseCode{6000, "Json Parse Error"}
 	NeedInitErr       = ResponseCode{1000, "Data Not Init"}
 	ErrZentaoConfig   = ResponseCode{2000, "Zentao Config Error"}
 	ErrZentaoRequest  = ResponseCode{3000, "zentao request Error"}

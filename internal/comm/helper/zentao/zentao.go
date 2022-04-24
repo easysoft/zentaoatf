@@ -68,7 +68,9 @@ func Login(config commDomain.WorkspaceConf) (err error) {
 	val, ok := mp["token"]
 	if ok {
 		commConsts.SessionId = val.(string)
-		logUtils.Info(i118Utils.Sprintf("success_to_login"))
+		if commConsts.Verbose {
+			logUtils.Info(i118Utils.Sprintf("success_to_login"))
+		}
 
 	} else {
 		err = ZentaoLoginErr(fmt.Sprintf("err response: %#v", string(bodyBytes)))
@@ -150,12 +152,12 @@ func loadProduct(config commDomain.WorkspaceConf) (products []serverDomain.Zenta
 
 	jsn, err := simplejson.NewJson(bytes)
 	if err != nil {
-		err = ZentaoRequestErr(err.Error())
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 	items, err := jsn.Get("products").Array()
 	if err != nil {
-		err = ZentaoRequestErr(err.Error())
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 
@@ -199,13 +201,13 @@ func LoadCaseModule(productId uint, config commDomain.WorkspaceConf) (modules []
 
 	jsn, err := simplejson.NewJson(bytes)
 	if err != nil {
-		err = ZentaoRequestErr(err.Error())
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 
 	arr, err := jsn.Get("modules").Array()
 	if err != nil {
-		err = ZentaoRequestErr(err.Error())
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 
@@ -257,13 +259,13 @@ func LoadSuite(productId uint, config commDomain.WorkspaceConf) (suites []domain
 
 	jsn, err := simplejson.NewJson(bytes)
 	if err != nil {
-		err = ZentaoRequestErr(err.Error())
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 
 	arr, err := jsn.Get("testsuites").Array()
 	if err != nil {
-		err = ZentaoRequestErr(err.Error())
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 
@@ -300,13 +302,13 @@ func LoadTask(productId uint, config commDomain.WorkspaceConf) (tasks []domain.N
 
 	jsn, err := simplejson.NewJson(bytes)
 	if err != nil {
-		err = ZentaoRequestErr(err.Error())
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 
 	arr, err := jsn.Get("testtasks").Array()
 	if err != nil {
-		err = ZentaoRequestErr(err.Error())
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 

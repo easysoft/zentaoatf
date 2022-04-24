@@ -31,7 +31,7 @@ func ZentaoRequestErr(errs ...interface{}) (err error) {
 		arr = append(arr, fmt.Sprintf("%v", item))
 	}
 
-	msg := i118Utils.Sprintf("fail_to_request_zentao", strings.Join(arr, "; "))
+	msg := i118Utils.Sprintf("fail_to_request_zentao", strings.Join(arr, ", "))
 
 	err = errors.New(msg)
 	logUtils.Infof(color.RedString(err.Error()))
