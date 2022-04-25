@@ -224,64 +224,7 @@ export default defineComponent({
     }
 
     #logs-panel {
-      height: 180px;
-
-      .ws-status {
-        padding-left: 8px;
-        height: 44px;
-        line-height: 44px;
-        color: #333333;
-
-        &.success {
-          background-color: #DAF7E9;
-
-          svg {
-            color: #DAF7E9;
-          }
-        }
-
-        &.error {
-          background-color: #FFD6D0;
-
-          svg {
-            color: #FFD6D0;
-          }
-        }
-
-        .text {
-          display: inline-block;
-          margin-left: 5px;
-        }
-
-        .icon-close {
-          position: absolute;
-          padding: 5px;
-          line-height: 34px;
-          right: 15px;
-          cursor: pointer;
-
-          svg {
-            font-size: 8px;
-            color: #333333;
-          }
-        }
-      }
-
-      #logs {
-        margin: 0;
-        padding: 10px;
-        width: 100%;
-        overflow-y: auto;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        font-family: monospace;
-
-        height: 100%;
-
-        &.with-status {
-          height: calc(100% - 45px);
-        }
-      }
+      height: 220px;
     }
 
     .logs-panel {

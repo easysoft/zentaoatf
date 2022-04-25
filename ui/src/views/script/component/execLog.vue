@@ -6,7 +6,7 @@
       <span @click="hideWsStatus" class="icon-close"><CloseCircleOutlined /></span>
     </div>
 
-    <div id="logs" class="logs" :class="{ 'with-status': wsStatus }">
+    <div id="logs" class="logs" :class="{ 'with-status': wsStatus === 'fail' }">
       <div class="log-filters">
         <a-select
             v-model:value="logLevel"
@@ -295,7 +295,7 @@ export default defineComponent({
 
   #logs {
     margin: 0;
-    padding: 0 10px 10px 10px;
+    padding: 0 10px;
     position: relative;
     width: 100%;
     overflow-y: auto;
