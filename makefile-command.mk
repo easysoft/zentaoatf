@@ -1,4 +1,4 @@
-VERSION=3.0.0_beta
+VERSION=3.0.0_beta1
 PROJECT=ztf
 QINIU_DIR=/Users/aaron/work/zentao/qiniu/
 QINIU_DIST_DIR=${QINIU_DIR}${PROJECT}/${VERSION}/
