@@ -148,7 +148,7 @@ export default {
     'wrong_url': 'Please input right ZenTao URL.',
     'delete_success':  'Delete successfully.', 
     'ws_conn_success': 'Connect to WebSocket successfully.',
-    'ws_conn_fail': 'Connect to WebSocket failed.',
+    'ws_conn_fail': 'Connect to WebSocket failed, please refresh the page to retry.',
     'no_script_for_unittest': 'No scriptS for Unit Test.',
 
     'zentao_request_failed_title': 'Zentao Site Request Failed',

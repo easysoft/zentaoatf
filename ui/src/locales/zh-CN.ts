@@ -147,7 +147,7 @@ export default {
     'wrong_url': '请输入正确的的URL地址，以http或https开头。',
     'delete_success':  '删除成功', 
     'ws_conn_success': 'WebSocket连接成功。',
-    'ws_conn_fail': 'WebSocket连接失败。',
+    'ws_conn_fail': 'WebSocket连接失败，请刷新页面重试。',
     'no_script_for_unittest': '此为单元测试工作目录，无ZTF脚本。',
 
     'zentao_request_failed_title': '禅道请求错误',

@@ -167,6 +167,7 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 	startMsg := i118Utils.Sprintf("start_execution", scriptFile, dateUtils.DateTimeStr(startTime))
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
+		websocketHelper.SendExecMsg("", "", commConsts.Run, wsMsg)
 		websocketHelper.SendExecMsg(startMsg, "", commConsts.Run, wsMsg)
 		logUtils.ExecConsolef(-1, startMsg)
 	}
@@ -205,6 +206,7 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 	//}
 
 	CheckCaseResult(scriptFile, logs, report, scriptIdx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg)
+	websocketHelper.SendExecMsg("", "", commConsts.Run, wsMsg)
 }
 
 func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
