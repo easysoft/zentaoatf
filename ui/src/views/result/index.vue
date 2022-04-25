@@ -1,12 +1,6 @@
 <template>
   <div class="indexlayout-main-content">
     <a-card :bordered="false">
-      <template #title>
-        {{ t('test_result') }}
-      </template>
-      <template #extra>
-      </template>
-
       <div>
         <a-table
             row-key="no"

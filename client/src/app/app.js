@@ -43,6 +43,7 @@ export default class ZtfApp {
 
         const mainWin = new BrowserWindow({
             show: false,
+            frame: false,
             webPreferences: {
                 nodeIntegration: true,
                 contextIsolation: false,

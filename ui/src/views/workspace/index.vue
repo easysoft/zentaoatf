@@ -1,23 +1,6 @@
 <template>
   <div>
     <a-card :bordered="false">
-      <template #title>
-        <div class="t-card-toolbar">
-          <div class="left">
-            {{ t('workspace') }}
-          </div>
-          <div class="right">
-            <a-select @change="onSearch" v-model:value="queryParams.enabled" class="status-select">
-              <a-select-option v-for="item in statusArr" :key="item.value" :value="item.value">
-                {{t(item.label)}}
-              </a-select-option>
-            </a-select>
-            <a-input-search @change="onSearch" @search="onSearch" v-model:value="queryParams.keywords"
-                            :placeholder="t('input_keyword_to_search')" style="width:270px;margin-left: 16px;"/>
-          </div>
-        </div>
-      </template>
-
       <template #extra>
         <a-button type="primary" @click="create()">
           <template #icon>
@@ -142,11 +125,6 @@ export default defineComponent({
         {
           title: t('path'),
           dataIndex: 'path',
-        },
-        {
-          title: t('status'),
-          dataIndex: 'status',
-          slots: {customRender: 'status'},
         },
         {
           title: t('create_time'),

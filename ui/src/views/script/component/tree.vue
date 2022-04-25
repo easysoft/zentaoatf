@@ -49,7 +49,6 @@
           v-model:checkedKeys="checkedKeys"
 
           :replace-fields="replaceFields"
-          show-icon
           checkable
           @expand="expandNode"
           @select="selectNode"
@@ -58,44 +57,45 @@
         <template #title="slotProps">
           {{slotProps.title !== 'all' ? slotProps.title : t('all')}}
         </template>
-
-        <template #icon="slotProps">
-          <DatabaseOutlined v-if="slotProps.type==='workspace'" />
-          <FolderOutlined v-if="slotProps.type==='dir' && !slotProps.expanded" />
-          <FolderOpenOutlined v-if="slotProps.type==='dir' && slotProps.expanded" />
-
-          <FileOutlined v-if="slotProps.type==='file'" />
-        </template>
       </a-tree>
 
       <a-empty v-if="treeDataEmpty" :image="simpleImage"/>
     </div>
 
     <div class="actions">
-      <a-button :disabled="!currProduct.id"
-                @click="checkoutCases">{{t('checkout_case')}}</a-button>
-      <a-button :disabled="!currProduct.id || checkedKeys.length === 0"
-                @click="checkinCases">{{t('checkin_case')}}</a-button>
+      <span class="btn-wrapper">
+        <a-button :disabled="!currProduct.id" @click="checkoutCases">
+          {{t('checkout_case')}}
+        </a-button>
+      </span>
 
-      <template v-if="currWorkspace.type === 'ztf'">
+      <span class="btn-wrapper">
+        <a-button :disabled="!currProduct.id || checkedKeys.length === 0" @click="checkinCases">
+          {{t('checkin_case')}}
+        </a-button>
+      </span>
+
+      <span v-if="currWorkspace.type === 'ztf'" class="btn-wrapper">
         <a-button
             v-if="isRunning !== 'true'"
             :disabled="checkedKeys.length === 0"
             @click="execSelected">
           {{t('exec_selected')}}
         </a-button>
+
         <a-button
             v-if="isRunning === 'true'"
             @click="execStop">
           {{t('stop')}}
         </a-button>
-      </template>
+      </span>
 
-      <a-button
-          v-if="currWorkspace.type !== 'ztf'"
-          @click="toExecUnit">
-        {{testToolMap[currWorkspace.type] + t('test')}}
-      </a-button>
+      <span v-if="currWorkspace.type !== 'ztf'" class="btn-wrapper">
+        <a-button
+            @click="toExecUnit">
+          {{testToolMap[currWorkspace.type] + t('test')}}
+        </a-button>
+      </span>
     </div>
 
     <a-modal
@@ -148,7 +148,6 @@ export default defineComponent({
   name: 'ScriptTreePage',
   components: {
     SyncFromZentao,
-    DatabaseOutlined, FolderOutlined, FolderOpenOutlined, FileOutlined,
   },
   props: {
   },
@@ -382,6 +381,7 @@ export default defineComponent({
 
       scriptStore.dispatch('Script/getScript', e.node.dataRef)
 
+      console.log()
       scriptStore.dispatch('Script/changeWorkspace',
           {id: e.node.dataRef.workspaceId, type: e.node.dataRef.workspaceType})
     }
@@ -529,9 +529,14 @@ export default defineComponent({
     height: 40px;
     text-align: center;
 
-    .ant-btn {
-      margin: 0 5px;
-      padding: 4px 6px;
+    .btn-wrapper {
+      width: 100px;
+
+      .ant-btn {
+        width: 96px;
+        margin: 0 5px;
+        padding: 3px 3px;
+      }
     }
   }
 }

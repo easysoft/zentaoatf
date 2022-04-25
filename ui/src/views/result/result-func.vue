@@ -1,9 +1,6 @@
 <template>
   <div class="indexlayout-main-content">
     <a-card :bordered="false">
-      <template #title>
-        {{t('test_result')}}
-      </template>
       <template #extra>
         <div class="opt">
           <a-button @click="exec('all')" type="primary">{{ t('re_exec_all') }}</a-button>

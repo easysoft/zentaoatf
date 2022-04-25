@@ -26,11 +26,12 @@
           />
         </div>
 
-        <div id="splitter-v" class="splitter-v"></div>
+        <div :hidden="!showLogPanel" id="splitter-v" class="splitter-v"></div>
 
-        <div id="logs-panel" class="logs-panel">
+        <div :hidden="!showLogPanel" id="logs-panel" class="logs-panel">
           <ScriptExecLogPage></ScriptExecLogPage>
         </div>
+
       </template>
 
       <!-- Exec Selected Script -->
@@ -45,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, onMounted, ref, watch} from "vue";
+import {computed, defineComponent, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import {useStore} from "vuex";
 import {useI18n} from "vue-i18n";
 
@@ -87,6 +88,7 @@ export default defineComponent({
     let scriptCode = ref('')
     let lang = ref('')
     const editorOptions = ref(MonacoOptions)
+    const showLogPanel = ref(false)
 
     watch(script, () => {
       console.log('watch script', script)
@@ -143,8 +145,15 @@ export default defineComponent({
       })
     }
 
+    const onExecStartEvent = () => {
+      showLogPanel.value = true
+    }
     onMounted(() => {
       console.log('onMounted ztf')
+      bus.on(settings.eventExec, onExecStartEvent)
+    })
+    onBeforeUnmount( () => {
+      bus.off(settings.eventExec, onExecStartEvent)
     })
 
     return {
@@ -165,6 +174,7 @@ export default defineComponent({
       execStop,
       extract,
       stop,
+      showLogPanel,
 
       editorRef,
     }
