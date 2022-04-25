@@ -63,36 +63,34 @@
     </div>
 
     <div class="actions">
-      <span class="btn-wrapper">
-        <a-button :disabled="!currProduct.id" @click="checkoutCases">
-          {{t('checkout_case')}}
-        </a-button>
-      </span>
+      <template v-if="currWorkspace.type === 'ztf'" >
+        <span class="btn-wrapper">
+          <a-button :hidden="!(currProduct.id)" @click="checkoutCases">
+            {{t('checkout_case')}}
+          </a-button>
+        </span>
 
-      <span class="btn-wrapper">
-        <a-button :disabled="!currProduct.id || checkedKeys.length === 0" @click="checkinCases">
-          {{t('checkin_case')}}
-        </a-button>
-      </span>
+        <span class="btn-wrapper">
+          <a-button :hidden="!(currProduct.id && checkedKeys.length > 0)" @click="checkinCases">
+            {{t('checkin_case')}}
+          </a-button>
+        </span>
 
-      <span v-if="currWorkspace.type === 'ztf'" class="btn-wrapper">
-        <a-button
-            v-if="isRunning !== 'true'"
-            :disabled="checkedKeys.length === 0"
-            @click="execSelected">
-          {{t('exec_selected')}}
-        </a-button>
+        <span class="btn-wrapper">
+          <a-button :hidden="!(checkedKeys.length > 0 && isRunning !== 'true')"
+              @click="execSelected">
+            {{t('exec_selected')}}
+          </a-button>
 
-        <a-button
-            v-if="isRunning === 'true'"
-            @click="execStop">
-          {{t('stop')}}
-        </a-button>
-      </span>
+          <a-button :hidden="!(checkedKeys.length > 0 && isRunning === 'true')"
+              @click="execStop">
+            {{t('stop')}}
+          </a-button>
+        </span>
+      </template>
 
       <span v-if="currWorkspace.type !== 'ztf'" class="btn-wrapper">
-        <a-button
-            @click="toExecUnit">
+        <a-button @click="toExecUnit">
           {{testToolMap[currWorkspace.type] + t('test')}}
         </a-button>
       </span>
@@ -381,7 +379,6 @@ export default defineComponent({
 
       scriptStore.dispatch('Script/getScript', e.node.dataRef)
 
-      console.log()
       scriptStore.dispatch('Script/changeWorkspace',
           {id: e.node.dataRef.workspaceId, type: e.node.dataRef.workspaceType})
     }
@@ -482,8 +479,24 @@ export default defineComponent({
 })
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
+.tree-main {
+  .tree-panel {
+    margin-top: -8px;
+    margin-left: -10px;
 
+    .ant-tree > li > span {
+      display: none !important;
+    }
+
+    .ant-tree {
+      font-size: 16px;
+    }
+  }
+}
+</style>
+
+<style lang="less" scoped>
 .tree-main {
   width: 100%;
   height: 100%;
@@ -518,10 +531,6 @@ export default defineComponent({
   .tree-panel {
     flex: 1;
     overflow: auto;
-
-    .ant-tree {
-      font-size: 16px;
-    }
   }
 
   .actions {
@@ -530,6 +539,7 @@ export default defineComponent({
     text-align: center;
 
     .btn-wrapper {
+      display: inline-block;
       width: 100px;
 
       .ant-btn {
