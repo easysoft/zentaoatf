@@ -25,7 +25,7 @@ func LoadScriptTree(workspace model.Workspace, scriptIdsFromZentao map[int]strin
 	workspaceDir := workspace.Path
 
 	if !fileUtils.FileExist(workspaceDir) {
-		logUtils.Errorf("workspaceDir %s not exist", workspaceDir)
+		logUtils.Infof("workspaceDir %s not exist", workspaceDir)
 		return
 	}
 

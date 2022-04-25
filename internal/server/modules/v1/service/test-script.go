@@ -45,7 +45,9 @@ func (s *TestScriptService) LoadTestScriptsBySiteProduct(
 			scriptsInDir, _ = codeHelper.LoadCodeTree(workspace)
 		}
 
-		root.Children = append(root.Children, &scriptsInDir)
+		if scriptsInDir.Title != "" {
+			root.Children = append(root.Children, &scriptsInDir)
+		}
 	}
 
 	return

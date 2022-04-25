@@ -13,9 +13,7 @@ import (
 )
 
 func Get(url string) (ret []byte, err error) {
-	if commConsts.Verbose {
-		logUtils.Infof("===DEBUG===  request: %s", url)
-	}
+	logUtils.Infof("===DEBUG===  request: %s", url)
 
 	client := &http.Client{}
 
@@ -77,9 +75,7 @@ func Put(url string, data interface{}) (ret []byte, err error) {
 }
 
 func PostOrPut(url string, method string, data interface{}) (ret []byte, err error) {
-	if commConsts.Verbose {
-		logUtils.Infof("===DEBUG===  request: %s", url)
-	}
+	logUtils.Infof("===DEBUG===  request: %s", url)
 
 	client := &http.Client{}
 
