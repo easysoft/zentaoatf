@@ -312,3 +312,14 @@ func GetAllScriptsInDir(path string, files *[]string) error {
 
 	return nil
 }
+
+func GetCaseByListInMap(caseIds []int, mp map[int]string) (cases []string) {
+	for _, id := range caseIds {
+		pth, ok := mp[id]
+		if ok && pth != "" {
+			cases = append(cases, pth)
+		}
+	}
+
+	return
+}

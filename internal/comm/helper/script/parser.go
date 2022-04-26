@@ -1061,7 +1061,7 @@ func GetDependentExpect(file string) (bool, string) {
 	return false, ""
 }
 
-func GetScriptByIdsInDir(dirPth string, idMap map[int]string, files *[]string) error {
+func GetScriptByIdsInDir(dirPth string, idMap *map[int]string) error {
 	dirPth = fileUtils.AbsolutePath(dirPth)
 
 	sep := consts.FilePthSep
@@ -1078,7 +1078,7 @@ func GetScriptByIdsInDir(dirPth string, idMap map[int]string, files *[]string) e
 	for _, fi := range dir {
 		name := fi.Name()
 		if fi.IsDir() { // 目录, 递归遍历
-			GetScriptByIdsInDir(dirPth+name+sep, idMap, files)
+			GetScriptByIdsInDir(dirPth+name+sep, idMap)
 		} else {
 			regx := langHelper.GetSupportLanguageExtRegx()
 			pass, _ := regexp.MatchString("^*.\\."+regx+"$", name)
@@ -1088,14 +1088,9 @@ func GetScriptByIdsInDir(dirPth string, idMap map[int]string, files *[]string) e
 			}
 
 			path := dirPth + name
-
 			pass, id, _, _ := GetCaseInfo(path)
 			if pass {
-				_, ok := idMap[id]
-
-				if ok {
-					*files = append(*files, path)
-				}
+				(*idMap)[id] = path
 			}
 		}
 	}
@@ -1103,7 +1098,7 @@ func GetScriptByIdsInDir(dirPth string, idMap map[int]string, files *[]string) e
 	return nil
 }
 
-func GetCaseIdsInSuiteFile(name string, fileIdMap *map[int]string) {
+func GetCaseIdsInSuiteFile(name string, ids *[]int) {
 	content := fileUtils.ReadFile(name)
 
 	for _, line := range strings.Split(content, "\n") {
@@ -1114,7 +1109,7 @@ func GetCaseIdsInSuiteFile(name string, fileIdMap *map[int]string) {
 
 		id, err := strconv.Atoi(idStr)
 		if err == nil {
-			(*fileIdMap)[id] = ""
+			*ids = append(*ids, id)
 		}
 	}
 }

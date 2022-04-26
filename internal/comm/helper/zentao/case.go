@@ -220,7 +220,7 @@ func GetCaseIdsInZentaoTask(productId uint, taskId int, config commDomain.Worksp
 	return
 }
 
-func GetCasesByModuleInDir(productId, moduleId uint, workspacePath, scriptDir string) (cases []string, err error) {
+func GetCasesByModuleInDir(productId, moduleId int, workspacePath, scriptDir string) (cases []string, err error) {
 	config := commDomain.WorkspaceConf{}
 	config = configHelper.LoadByWorkspacePath(workspacePath)
 
@@ -229,12 +229,20 @@ func GetCasesByModuleInDir(productId, moduleId uint, workspacePath, scriptDir st
 		return
 	}
 
-	zentaoCaseIdMap, err := GetCaseIdsInZentaoModule(productId, moduleId, config)
+	testcases, err := ListCaseByModule(config.Url, productId, moduleId)
 	if err != nil {
 		return
 	}
 
-	scriptHelper.GetScriptByIdsInDir(scriptDir, zentaoCaseIdMap, &cases)
+	caseIds := make([]int, 0)
+	for _, tc := range testcases {
+		caseIds = append(caseIds, tc.Id)
+	}
+
+	caseIdMap := map[int]string{}
+	scriptHelper.GetScriptByIdsInDir(scriptDir, &caseIdMap)
+
+	cases = scriptHelper.GetCaseByListInMap(caseIds, caseIdMap)
 
 	return
 }
@@ -253,13 +261,15 @@ func GetCasesBySuiteInDir(productId int, suiteId int, workspacePath, scriptDir s
 		return
 	}
 
-	caseIdMap := map[int]string{}
+	caseIds := make([]int, 0)
 	for _, tc := range testcases {
-		caseIdMap[tc.Id] = ""
+		caseIds = append(caseIds, tc.Id)
 	}
 
-	//commonUtils.ChangeScriptForDebug(&workspacePath)
-	scriptHelper.GetScriptByIdsInDir(scriptDir, caseIdMap, &cases)
+	caseIdMap := map[int]string{}
+	scriptHelper.GetScriptByIdsInDir(scriptDir, &caseIdMap)
+
+	cases = scriptHelper.GetCaseByListInMap(caseIds, caseIdMap)
 
 	return
 }
@@ -278,13 +288,15 @@ func GetCasesByTaskInDir(productId int, taskId int, workspacePath, scriptDir str
 		return
 	}
 
-	caseIdMap := map[int]string{}
+	caseIds := make([]int, 0)
 	for _, tc := range testcases {
-		caseIdMap[tc.Id] = ""
+		caseIds = append(caseIds, tc.Id)
 	}
 
-	//commonUtils.ChangeScriptForDebug(&workspacePath)
-	scriptHelper.GetScriptByIdsInDir(scriptDir, caseIdMap, &cases)
+	caseIdMap := map[int]string{}
+	scriptHelper.GetScriptByIdsInDir(scriptDir, &caseIdMap)
+
+	cases = scriptHelper.GetCaseByListInMap(caseIds, caseIdMap)
 
 	return
 }

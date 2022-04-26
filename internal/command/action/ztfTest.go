@@ -99,11 +99,13 @@ func isRunWithResultFile(files []string) string {
 }
 
 func getCaseBySuiteFile(file string, dir string) []string {
+	caseIds := make([]int, 0)
 	caseIdMap := map[int]string{}
-	cases := make([]string, 0)
 
-	scriptHelper.GetCaseIdsInSuiteFile(file, &caseIdMap)
-	scriptHelper.GetScriptByIdsInDir(dir, caseIdMap, &cases)
+	scriptHelper.GetCaseIdsInSuiteFile(file, &caseIds)
+	scriptHelper.GetScriptByIdsInDir(dir, &caseIdMap)
+
+	cases := scriptHelper.GetCaseByListInMap(caseIds, caseIdMap)
 
 	return cases
 }
