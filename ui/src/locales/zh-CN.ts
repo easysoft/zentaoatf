@@ -154,6 +154,7 @@ export default {
     'zentao_request_failed_desc': '请检查禅道服务可用且配置正确。',
     'extract_step': '提取步骤',
     'extract_success': '提取注释为测试步骤和验证点成功。',
+    'extract_none': '脚本中未发现测试步骤。',
     'extract_fail': '提取注释为测试步骤和验证点失败。',
     'sync_success': '同步成功',
     'sync_fail': '同步失败',

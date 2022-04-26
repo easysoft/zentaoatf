@@ -100,14 +100,20 @@
 
                 <template #checkPoints="{ record }">
                   <div v-for="checkPoint in record.checkPoints" :key="checkPoint.numb">
-                    {{ checkPoint.numb }}.&nbsp;
+                    <span class="checkpoint-num">
+                      {{ checkPoint.numb }}.
+                    </span>
                     <span :class="'t-'+checkPoint.status">
                       {{ resultStatus(checkPoint.status) }}
                     </span>
                     &nbsp;
-                    <span>"{{ checkPoint.expect }}"</span>
+                    (
+                    <span>{{ expectDesc(checkPoint.expect) }}</span>
                     /
-                    <span :class="'t-'+checkPoint.status">"{{ checkPoint.actual }}"</span>
+                    <span :class="'t-'+checkPoint.status">
+                      {{ actualDesc(checkPoint.actual) }}
+                    </span>
+                    )
                   </div>
                 </template>
 
@@ -143,7 +149,7 @@ import {useStore} from 'vuex';
 import {StateType} from "./store";
 import {useRouter} from "vue-router";
 import {momentUnixDef, percentDef} from "@/utils/datetime";
-import {execByDef, resultStatusDef, testEnvDef, testTypeDef} from "@/utils/testing";
+import {execByDef, resultStatusDef, testEnvDef, testTypeDef, expectDesc, actualDesc} from "@/utils/testing";
 
 import {notification} from "ant-design-vue";
 import ResultForm from "./component/result.vue";
@@ -365,6 +371,8 @@ export default defineComponent({
       testEnv,
       testType,
       resultStatus,
+      expectDesc,
+      actualDesc,
     }
   }
 })
@@ -406,5 +414,9 @@ export default defineComponent({
     width: 200px;
     text-align: right;
   }
+}
+.checkpoint-num {
+  display: inline-block;
+  width: 18px;
 }
 </style>

@@ -93,14 +93,17 @@ func (c *TestScriptCtrl) Extract(ctx iris.Context) {
 		return
 	}
 
-	scriptHelper.Extract([]string{scriptPath})
+	done, _ := scriptHelper.Extract([]string{scriptPath})
 
 	script, err := scriptHelper.GetScriptContent(scriptPath, workspaceId)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
-	ctx.JSON(c.SuccessResp(script))
+
+	ret := iris.Map{"script": script, "done": done}
+
+	ctx.JSON(c.SuccessResp(ret))
 }
 
 func (c *TestScriptCtrl) SyncFromZentao(ctx iris.Context) {

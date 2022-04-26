@@ -134,10 +134,19 @@ export default defineComponent({
     const extract = () => {
       console.log('extract', script.value)
 
-      scriptStore.dispatch('Script/extractScript', script.value).then(() => {
-        notification.success({
-          message: t('extract_success'),
-        })
+      scriptStore.dispatch('Script/extractScript', script.value).then((done) => {
+        console.log('done', done)
+
+        if (done) {
+          notification.success({
+            message: t('extract_success'),
+          })
+        } else {
+          notification.success({
+            message: t('extract_none'),
+          })
+        }
+
       }).catch(() => {
         notification.error({
           message: t('extract_fail'),

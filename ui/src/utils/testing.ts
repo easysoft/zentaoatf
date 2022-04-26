@@ -99,3 +99,10 @@ export function resultStatusDef(code) {
         return 'fail'
     }
 }
+
+export function expectDesc(str) {
+    return str === '' ? 'pass' : str
+}
+export function actualDesc(str) {
+    return str === 'N/A' ? '' : str
+}

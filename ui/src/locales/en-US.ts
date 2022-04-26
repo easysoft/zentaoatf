@@ -155,6 +155,7 @@ export default {
     'zentao_request_failed_desc': 'Please check Zentao Site config is right.',
     'extract_step': 'Extract Steps',
     'extract_success': 'Extract comments to test steps and checkpoints successfully.',
+    'extract_none': 'Not found any test steps in script comments.',
     'extract_fail': 'Extract comments to test steps and checkpoints failed.',
     'sync_success': 'Sync successfully.',
     'sync_fail': 'Sync failed.',

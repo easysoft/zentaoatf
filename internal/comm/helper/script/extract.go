@@ -21,10 +21,10 @@ const (
 	multiLineCommentsRegex  = `/\*+(.+)\*+/`
 )
 
-func Extract(scriptPaths []string) error {
+func Extract(scriptPaths []string) (done bool, err error) {
 	if len(scriptPaths) < 1 {
 		logUtils.Infof("\n" + i118Utils.Sprintf("no_cases"))
-		return nil
+		return
 	}
 
 	for _, pth := range scriptPaths {
@@ -32,10 +32,13 @@ func Extract(scriptPaths []string) error {
 		steps := prepareSteps(stepObjs)
 		desc := prepareDesc(steps, pth)
 
-		ReplaceCaseDesc(desc, pth)
+		if steps != nil && len(steps) > 0 {
+			ReplaceCaseDesc(desc, pth)
+			done = true
+		}
 	}
 
-	return nil
+	return
 }
 func prepareSteps(stepObjs []*commDomain.ZtfStep) (steps []string) {
 	for index, stepObj := range stepObjs {

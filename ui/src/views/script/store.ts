@@ -92,8 +92,9 @@ const StoreModel: ModuleType = {
 
             const response: ResponseData = await extract(script.path, script.workspaceId)
             const { data } = response
-            commit('setItem', data)
-            return true
+            commit('setItem', data.script)
+
+            return data.done
         },
 
         async createScript({ commit }, payload: any) {
