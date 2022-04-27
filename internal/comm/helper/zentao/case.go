@@ -8,10 +8,14 @@ import (
 	"github.com/easysoft/zentaoatf/internal/comm/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/comm/helper/script"
+	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
 	httpUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/http"
 	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	stdinUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/stdin"
+	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+	"github.com/kataras/iris/v12"
 	"sort"
 	"strconv"
 	"strings"
@@ -82,6 +86,94 @@ func GetCaseById(baseUrl string, caseId int) (cs commDomain.ZtfCase) {
 	return
 }
 
+func LoadTestCasesAsTree(workspace model.Workspace, scriptIdsFromZentao map[int]string, productId int, config commDomain.WorkspaceConf) (
+	root serverDomain.TestAsset, err error) {
+
+	casesInDir, _ := scriptHelper.LoadScriptTreeByDir(workspace, scriptIdsFromZentao)
+	caseMapInDir := map[int]*serverDomain.TestAsset{}
+	genCaseMap(casesInDir, &caseMapInDir)
+
+	casesFromZentao, err := LoadTestCases(productId, 0, 0, 0, config)
+	caseMapByModuleFromZentao := map[int][]commDomain.ZtfCase{}
+	for _, item := range casesFromZentao {
+		caseMapByModuleFromZentao[item.Module] = append(caseMapByModuleFromZentao[item.Module], item)
+	}
+
+	modules, err := LoadCaseModuleArr(uint(productId), config)
+
+	root = serverDomain.TestAsset{
+		Type:          commConsts.Workspace,
+		WorkspaceId:   int(workspace.ID),
+		WorkspaceType: workspace.Type,
+		Path:          workspace.Path,
+		Title:         fileUtils.GetDirName(workspace.Path),
+		Slots:         iris.Map{"icon": "icon"},
+
+		Checkable: true,
+		IsLeaf:    false,
+	}
+
+	for _, item := range modules {
+		genModuleTreeWithCases(item, caseMapInDir, caseMapByModuleFromZentao, &root)
+	}
+
+	return
+}
+
+func genCaseMap(asset serverDomain.TestAsset, mp *map[int]*serverDomain.TestAsset) {
+	if asset.CaseId > 0 {
+		(*mp)[asset.CaseId] = &asset
+	}
+
+	if asset.Children == nil {
+		return
+	}
+
+	for _, child := range asset.Children {
+		genCaseMap(*child, mp)
+	}
+
+	return
+}
+
+func genModuleTreeWithCases(moduleInterface interface{},
+	casesMapInDir map[int]*serverDomain.TestAsset, caseMapByModuleFromZentao map[int][]commDomain.ZtfCase,
+	asset *serverDomain.TestAsset) {
+
+	moduleMap := moduleInterface.(map[string]interface{})
+
+	idNum := moduleMap["id"].(json.Number)
+	id64, _ := idNum.Int64()
+	moduleId := int(id64)
+	moduleName := moduleMap["name"].(string)
+
+	// add module node
+	dirNode := scriptHelper.AddDir("", moduleName, asset)
+
+	// add cases in module
+	for _, cs := range caseMapByModuleFromZentao[moduleId] {
+		caseId := cs.Id
+		casePath := ""
+
+		// case info from dir
+		_, ok := casesMapInDir[caseId]
+		if ok {
+			casePath = casesMapInDir[caseId].Path
+		}
+
+		scriptHelper.AddScript(casePath, caseId, dirNode)
+	}
+
+	if moduleMap["children"] == nil {
+		return
+	}
+
+	children := moduleMap["children"].([]interface{})
+	for _, child := range children {
+		genModuleTreeWithCases(child, casesMapInDir, caseMapByModuleFromZentao, dirNode)
+	}
+}
+
 func LoadTestCases(productId, moduleId, suiteId, taskId int,
 	config commDomain.WorkspaceConf) (cases []commDomain.ZtfCase, err error) {
 
@@ -90,14 +182,14 @@ func LoadTestCases(productId, moduleId, suiteId, taskId int,
 		return
 	}
 
-	if moduleId != 0 {
+	if productId != 0 {
+		cases, err = ListCaseByProduct(config.Url, productId)
+	} else if moduleId != 0 {
 		cases, err = ListCaseByModule(config.Url, productId, moduleId)
 	} else if suiteId != 0 {
 		cases, err = ListCaseBySuite(config.Url, suiteId)
 	} else if taskId != 0 {
 		cases, err = ListCaseByTask(config.Url, taskId)
-	} else if productId != 0 {
-		cases, err = ListCaseByProduct(config.Url, productId)
 	}
 
 	return

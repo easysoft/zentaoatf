@@ -64,7 +64,7 @@ export default defineComponent({
     onMounted(() => {
       console.log('onMounted')
       setTimeout(() => {
-        resizeWidth('main', 'left', 'splitter-h', 'right', 280, 800)
+        resizeWidth('main', 'left', 'splitter-h', 'right', 380, 800)
       }, 600)
     })
 
@@ -87,18 +87,19 @@ export default defineComponent({
   height: 100%;
 
   #main {
-    display: flex;
     height: 100%;
     width: 100%;
 
     #left {
-      width: 380px;
+      float: left;
+      width: 30%;
 
       height: 100%;
       padding: 0;
     }
 
     #splitter-h {
+      float: left;
       width: 0px;
       border: solid 1px #D0D7DE;
       height: 100%;
@@ -110,7 +111,8 @@ export default defineComponent({
     }
 
     #right {
-      flex: 1;
+      float: left;
+      width: calc(70% - 2px);
       height: 100%;
     }
   }

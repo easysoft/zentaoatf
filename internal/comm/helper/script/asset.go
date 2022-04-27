@@ -20,7 +20,7 @@ import (
 	"strings"
 )
 
-func LoadScriptTree(workspace model.Workspace, scriptIdsFromZentao map[int]string) (asset serverDomain.TestAsset, err error) {
+func LoadScriptTreeByDir(workspace model.Workspace, scriptIdsFromZentao map[int]string) (asset serverDomain.TestAsset, err error) {
 	workspaceId := int(workspace.ID)
 	workspaceDir := workspace.Path
 
@@ -42,9 +42,6 @@ func LoadScriptTree(workspace model.Workspace, scriptIdsFromZentao map[int]strin
 	}
 
 	loadScriptNodesInDir(workspaceDir, &asset, 0, scriptIdsFromZentao)
-
-	jsn, _ := json.Marshal(asset)
-	logUtils.Infof(string(jsn))
 
 	return
 }
@@ -73,15 +70,10 @@ func getScriptLang(pth string) (lang string) {
 	return commConsts.EditorExtToLangMap[fileName]
 }
 
-func loadScriptNodesInDir(childPath string, parent *serverDomain.TestAsset, level int, scriptIdsFromZentao map[int]string) (err error) {
-	if !fileUtils.IsDir(childPath) { // is file
-		addScript(childPath, parent)
-		return
-	}
+func loadScriptNodesInDir(folder string, parent *serverDomain.TestAsset, level int, scriptIdsFromZentao map[int]string) (err error) {
+	folder = fileUtils.AddFilePathSepIfNeeded(fileUtils.AbsolutePath(folder))
 
-	childPath = fileUtils.AddFilePathSepIfNeeded(fileUtils.AbsolutePath(childPath))
-
-	list, err := ioutil.ReadDir(childPath)
+	list, err := ioutil.ReadDir(folder)
 	if err != nil {
 		return err
 	}
@@ -92,30 +84,24 @@ func loadScriptNodesInDir(childPath string, parent *serverDomain.TestAsset, leve
 			continue
 		}
 
-		childPath := childPath + name
+		childPath := folder + name
 		if grandson.IsDir() && level < 3 { // 目录, 递归遍历
-			dirNode := addDir(childPath, parent)
+			dirNode := AddDir(childPath, "", parent)
 
 			loadScriptNodesInDir(childPath, dirNode, level+1, scriptIdsFromZentao)
 		} else {
-			if scriptIdsFromZentao == nil {
-				addScript(childPath, parent)
-				continue
-			}
-
 			content := fileUtils.ReadFile(childPath)
 			caseIdStr := ReadCaseId(content)
+			caseId, _ := strconv.Atoi(caseIdStr)
 
-			if caseIdStr == "" {
-				addScript(childPath, parent)
+			if scriptIdsFromZentao == nil || caseId < 1 { // not to filter
+				AddScript(childPath, caseId, parent)
 				continue
 			}
 
-			caseId, _ := strconv.Atoi(caseIdStr)
 			_, ok := scriptIdsFromZentao[caseId]
-
 			if ok {
-				addScript(childPath, parent)
+				AddScript(childPath, caseId, parent)
 			}
 		}
 	}
@@ -169,7 +155,7 @@ func LoadScriptListInDir(path string, files *[]string, level int) error {
 	return nil
 }
 
-func addScript(pth string, parent *serverDomain.TestAsset) {
+func AddScript(pth string, caseId int, parent *serverDomain.TestAsset) {
 	regx := langHelper.GetSupportLanguageExtRegx()
 	pass, _ := regexp.MatchString("^*.\\."+regx+"$", pth)
 
@@ -177,7 +163,8 @@ func addScript(pth string, parent *serverDomain.TestAsset) {
 		pass = CheckFileIsScript(pth)
 		if pass {
 			childScript := &serverDomain.TestAsset{
-				Type: commConsts.File,
+				Type:   commConsts.File,
+				CaseId: caseId,
 
 				WorkspaceId:   parent.WorkspaceId,
 				WorkspaceType: parent.WorkspaceType,
@@ -194,13 +181,20 @@ func addScript(pth string, parent *serverDomain.TestAsset) {
 		}
 	}
 }
-func addDir(pth string, parent *serverDomain.TestAsset) (dirNode *serverDomain.TestAsset) {
+func AddDir(pth string, moduleName string, parent *serverDomain.TestAsset) (dirNode *serverDomain.TestAsset) {
+	nodeType := commConsts.Dir
+	if moduleName == "" {
+		moduleName = fileUtils.GetDirName(pth)
+	} else {
+		nodeType = commConsts.ZentaoModule
+	}
+
 	dirNode = &serverDomain.TestAsset{
-		Type:          commConsts.Dir,
+		Type:          nodeType,
 		WorkspaceId:   parent.WorkspaceId,
 		WorkspaceType: parent.WorkspaceType,
 		Path:          pth,
-		Title:         fileUtils.GetDirName(pth),
+		Title:         moduleName,
 		Slots:         iris.Map{"icon": "icon"},
 
 		Checkable: true,

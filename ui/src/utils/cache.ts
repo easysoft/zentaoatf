@@ -109,3 +109,30 @@ export const setCmdHistories = async (workspaceId, items) => {
     mp[workspaceId] = proxyArrToVal(items)
     await setCache(settings.cmdHistories, mp);
 }
+
+export const getOpenedScripts = async () => {
+    const openedScripts : string[] = await getCache(settings.openedScripts);
+    return openedScripts
+}
+export const openScript = async (script : string) => {
+    let openedScripts : string[] = await getCache(settings.openedScripts);
+    if (!openedScripts) {
+        openedScripts = [script]
+    } else {
+        openedScripts.push(script)
+    }
+
+    await setCache(settings.openedScripts, openedScripts);
+}
+export const closeScript = async (script : string) => {
+    let newValue = [] as string[]
+
+    const openedScripts : string[] = await getCache(settings.openedScripts);
+    if (openedScripts) {
+        newValue = openedScripts.filter((item) => {
+            return item !== script;
+        });
+    }
+
+    await setCache(settings.openedScripts, newValue);
+}

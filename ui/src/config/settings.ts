@@ -1,4 +1,4 @@
-import {getCmdHistories, getInitStatus} from "@/utils/cache";
+import {getCmdHistories, getInitStatus, getOpenedScripts} from "@/utils/cache";
 
 /**
  * 站点配置
@@ -40,6 +40,7 @@ export interface SettingsType {
     scriptFilters: string;
     expandedKeys: string;
     cmdHistories: string;
+    openedScripts: string;
 
     /**
      * Ajax请求头发送Token 的 Key值
@@ -79,6 +80,7 @@ const settings: SettingsType = {
     scriptFilters: 'scriptFilters',
     expandedKeys: 'expandedKeys',
     cmdHistories: 'cmdHistories',
+    openedScripts: 'openedScripts',
 
     ajaxHeadersTokenKey: 'Authorization',
     ajaxResponseNoVerifyUrl: [

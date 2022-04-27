@@ -187,6 +187,8 @@ const (
 	Workspace TreeNodeType = "workspace"
 	Dir       TreeNodeType = "dir"
 	File      TreeNodeType = "file"
+
+	ZentaoModule TreeNodeType = "module"
 )
 
 type ScriptFilterType string

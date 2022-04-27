@@ -4,7 +4,7 @@ import (
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
 	codeHelper "github.com/easysoft/zentaoatf/internal/comm/helper/code"
-	"github.com/easysoft/zentaoatf/internal/comm/helper/script"
+	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
 	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
@@ -40,7 +40,13 @@ func (s *TestScriptService) LoadTestScriptsBySiteProduct(
 		var scriptsInDir serverDomain.TestAsset
 
 		if workspace.Type == commConsts.ZTF {
-			scriptsInDir, _ = scriptHelper.LoadScriptTree(workspace, scriptIdsFromZentao)
+			//scriptsInDir, _ = scriptHelper.LoadScriptTreeByDir(workspace, scriptIdsFromZentao)
+
+			// for testing
+			site, _ := s.SiteService.Get(siteId)
+			config := configHelper.LoadBySite(site)
+			scriptsInDir, _ = zentaoHelper.LoadTestCasesAsTree(workspace, scriptIdsFromZentao, 1, config)
+
 		} else {
 			scriptsInDir, _ = codeHelper.LoadCodeTree(workspace)
 		}

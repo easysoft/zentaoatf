@@ -11,6 +11,7 @@ type TestAsset struct {
 	Path  string `json:"path"`
 
 	Type        commConsts.TreeNodeType `json:"type"`
+	CaseId      int                     `json:"caseId"`
 	Lang        string                  `json:"lang"`
 	ScriptCount int                     `json:"scriptCount"`
 	Slots       iris.Map                `json:"slots"`

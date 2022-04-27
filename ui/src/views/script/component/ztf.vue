@@ -15,15 +15,40 @@
     <div id="right-content" class="right-content">
       <!-- Exec Single Script -->
       <template v-if="script">
-        <div id="editor-panel" class="editor-panel">
-          <MonacoEditor
-              v-if="scriptCode !== ''"
-              v-model:value="scriptCode"
-              :language="lang"
-              :options="editorOptions"
-              class="editor"
-              ref="editorRef"
-          />
+        <div id="editor-panel" class="editor-panel" :forceRender="true">
+          <a-tabs :animated="true">
+            <a-tab-pane key="1" tab="脚本1">
+              <MonacoEditor
+                  v-if="scriptCode !== ''"
+                  v-model:value="scriptCode"
+                  :language="lang"
+                  :options="editorOptions"
+                  class="editor"
+                  ref="editorRef"
+              />
+            </a-tab-pane>
+            <a-tab-pane key="2" tab="脚本2" :forceRender="true">
+              <MonacoEditor
+                  v-if="scriptCodeTest !== ''"
+                  v-model:value="scriptCodeTest"
+                  language="html"
+                  :options="editorOptions"
+                  class="editor"
+                  ref="editorRef"
+              />
+            </a-tab-pane>
+            <a-tab-pane key="3" tab="脚本3" :forceRender="true">
+                <MonacoEditor
+                    v-if="scriptCodeTest !== ''"
+                    v-model:value="scriptCodeTest"
+                    language="html"
+                    :options="editorOptions"
+                    class="editor"
+                    ref="editorRef"
+                />
+            </a-tab-pane>
+          </a-tabs>
+
         </div>
 
         <div :hidden="!showLogPanel" id="splitter-v" class="splitter-v"></div>
@@ -86,6 +111,8 @@ export default defineComponent({
 
     let script = computed<any>(() => scriptStore.state.Script.detail);
     let scriptCode = ref('')
+    let scriptCodeTest = ref('<html><body><div>内容</div></body></html>')
+
     let lang = ref('')
     const editorOptions = ref(MonacoOptions)
     const showLogPanel = ref(false)
@@ -173,6 +200,7 @@ export default defineComponent({
       currWorkspace,
       script,
       scriptCode,
+      scriptCodeTest,
       lang,
       editorOptions,
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
@@ -191,6 +219,24 @@ export default defineComponent({
 
 })
 </script>
+
+<style lang="less">
+#editor-panel {
+  .ant-tabs {
+    height: 100%;
+    overflow: hidden;
+    .ant-tabs-bar {
+      margin-bottom: 3px;
+    }
+    .ant-tabs-content {
+      height: 100%;
+    }
+    .ant-tabs-tabpane {
+      height: 100%;
+    }
+  }
+}
+</style>
 
 <style lang="less" scoped>
 
@@ -219,6 +265,17 @@ export default defineComponent({
 
       padding: 0 6px 0 8px;
       overflow: auto;
+
+      .ant-tabs {
+        height: 100%;
+        .ant-tabs-content {
+          height: 100%;
+        }
+        .ant-tabs-tabpane {
+
+          height: 100%;
+        }
+      }
     }
 
     #splitter-v {

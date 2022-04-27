@@ -184,6 +184,20 @@ func LoadCaseModule(productId uint, config commDomain.WorkspaceConf) (modules []
 		return
 	}
 
+	arr, err := LoadCaseModuleArr(productId, config)
+	if err != nil {
+		return
+	}
+
+	modules = make([]domain.NestedItem, 0)
+	for _, item := range arr {
+		genModuleListData(item, "", &modules)
+	}
+
+	return
+}
+
+func LoadCaseModuleArr(productId uint, config commDomain.WorkspaceConf) (arr []interface{}, err error) {
 	err = Login(config)
 	if err != nil {
 		return
@@ -205,21 +219,16 @@ func LoadCaseModule(productId uint, config commDomain.WorkspaceConf) (modules []
 		return
 	}
 
-	arr, err := jsn.Get("modules").Array()
+	arr, err = jsn.Get("modules").Array()
 	if err != nil {
 		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
 
-	modules = make([]domain.NestedItem, 0)
-	for _, item := range arr {
-		genModuleData(item, "", &modules)
-	}
-
 	return
 }
 
-func genModuleData(interf interface{}, parentName string, modules *[]domain.NestedItem) {
+func genModuleListData(interf interface{}, parentName string, modules *[]domain.NestedItem) {
 	mp := interf.(map[string]interface{})
 
 	idNum := mp["id"].(json.Number)
@@ -234,7 +243,7 @@ func genModuleData(interf interface{}, parentName string, modules *[]domain.Nest
 	children := mp["children"].([]interface{})
 	for _, child := range children {
 		childMap := child.(map[string]interface{})
-		genModuleData(childMap, name, modules)
+		genModuleListData(childMap, name, modules)
 	}
 }
 
