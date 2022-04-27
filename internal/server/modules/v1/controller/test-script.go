@@ -10,6 +10,7 @@ import (
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
+	"strings"
 )
 
 type TestScriptCtrl struct {
@@ -45,6 +46,11 @@ func (c *TestScriptCtrl) Get(ctx iris.Context) {
 
 	if scriptPath == "" {
 		ctx.JSON(c.ErrResp(commConsts.ParamErr, fmt.Sprintf("参数%s不合法", "path")))
+		return
+	}
+
+	if strings.Index(scriptPath, "zentao") == 0 {
+		ctx.JSON(c.SuccessResp(""))
 		return
 	}
 

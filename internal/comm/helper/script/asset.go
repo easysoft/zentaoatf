@@ -2,6 +2,7 @@ package scriptHelper
 
 import (
 	"encoding/json"
+	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
 	langHelper "github.com/easysoft/zentaoatf/internal/comm/helper/lang"
@@ -95,13 +96,13 @@ func loadScriptNodesInDir(folder string, parent *serverDomain.TestAsset, level i
 			caseId, _ := strconv.Atoi(caseIdStr)
 
 			if scriptIdsFromZentao == nil || caseId < 1 { // not to filter
-				AddScript(childPath, caseId, parent)
+				AddScript(childPath, caseId, "", false, parent)
 				continue
 			}
 
 			_, ok := scriptIdsFromZentao[caseId]
 			if ok {
-				AddScript(childPath, caseId, parent)
+				AddScript(childPath, caseId, "", false, parent)
 			}
 		}
 	}
@@ -155,31 +156,49 @@ func LoadScriptListInDir(path string, files *[]string, level int) error {
 	return nil
 }
 
-func AddScript(pth string, caseId int, parent *serverDomain.TestAsset) {
-	regx := langHelper.GetSupportLanguageExtRegx()
-	pass, _ := regexp.MatchString("^*.\\."+regx+"$", pth)
-
-	if pass {
-		pass = CheckFileIsScript(pth)
-		if pass {
-			childScript := &serverDomain.TestAsset{
-				Type:   commConsts.File,
-				CaseId: caseId,
-
-				WorkspaceId:   parent.WorkspaceId,
-				WorkspaceType: parent.WorkspaceType,
-				Path:          pth,
-				Title:         fileUtils.GetFileName(pth),
-				Slots:         iris.Map{"icon": "icon"},
-
-				Checkable: true,
-				IsLeaf:    true,
-			}
-
-			parent.Children = append(parent.Children, childScript)
-			parent.ScriptCount += 1
-		}
+func AddScript(pth string, caseId int, caseNameInZentao string, showZentaoCaseWithNoScript bool, parent *serverDomain.TestAsset) {
+	title := caseNameInZentao
+	if pth != "" {
+		//title = fileUtils.GetFileName(pth)
+	} else {
+		pth = fmt.Sprintf("zentao-%d", caseId)
 	}
+
+	childScript := &serverDomain.TestAsset{
+		Type:   commConsts.File,
+		CaseId: caseId,
+
+		WorkspaceId:   parent.WorkspaceId,
+		WorkspaceType: parent.WorkspaceType,
+		Path:          pth,
+		Title:         title,
+		Slots:         iris.Map{"icon": "icon"},
+
+		Checkable: true,
+		IsLeaf:    true,
+	}
+
+	if showZentaoCaseWithNoScript {
+		parent.Children = append(parent.Children, childScript)
+		parent.ScriptCount += 1
+
+		return
+	}
+
+	regx := langHelper.GetSupportLanguageExtRegx()
+	langPass, _ := regexp.MatchString("^*.\\."+regx+"$", pth)
+
+	if !langPass {
+		return
+	}
+
+	contentOk := CheckFileIsScript(pth)
+	if !contentOk {
+		return
+	}
+
+	parent.Children = append(parent.Children, childScript)
+	parent.ScriptCount += 1
 }
 func AddDir(pth string, moduleName string, parent *serverDomain.TestAsset) (dirNode *serverDomain.TestAsset) {
 	nodeType := commConsts.Dir

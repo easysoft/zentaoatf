@@ -86,19 +86,22 @@ func GetCaseById(baseUrl string, caseId int) (cs commDomain.ZtfCase) {
 	return
 }
 
-func LoadTestCasesAsTree(workspace model.Workspace, scriptIdsFromZentao map[int]string, productId int, config commDomain.WorkspaceConf) (
-	root serverDomain.TestAsset, err error) {
+func LoadTestCasesInModuleTree(workspace model.Workspace, scriptIdsFromZentao map[int]string,
+	productId int, suiteId, taskId int, config commDomain.WorkspaceConf) (root serverDomain.TestAsset, err error) {
 
-	casesInDir, _ := scriptHelper.LoadScriptTreeByDir(workspace, scriptIdsFromZentao)
-	caseMapInDir := map[int]*serverDomain.TestAsset{}
-	genCaseMap(casesInDir, &caseMapInDir)
+	// scripts in workspace dir
+	scriptsInDir, _ := scriptHelper.LoadScriptTreeByDir(workspace, scriptIdsFromZentao)
+	scriptsMapInDir := map[int]*serverDomain.TestAsset{}
+	genScriptMap(scriptsInDir, &scriptsMapInDir)
 
-	casesFromZentao, err := LoadTestCases(productId, 0, 0, 0, config)
+	// cases in zentao by module
+	casesFromZentao, err := LoadTestCases(productId, 0, suiteId, taskId, config)
 	caseMapByModuleFromZentao := map[int][]commDomain.ZtfCase{}
 	for _, item := range casesFromZentao {
 		caseMapByModuleFromZentao[item.Module] = append(caseMapByModuleFromZentao[item.Module], item)
 	}
 
+	// modules in zentao
 	modules, err := LoadCaseModuleArr(uint(productId), config)
 
 	root = serverDomain.TestAsset{
@@ -114,13 +117,13 @@ func LoadTestCasesAsTree(workspace model.Workspace, scriptIdsFromZentao map[int]
 	}
 
 	for _, item := range modules {
-		genModuleTreeWithCases(item, caseMapInDir, caseMapByModuleFromZentao, &root)
+		genModuleTreeWithCases(item, scriptsMapInDir, caseMapByModuleFromZentao, &root)
 	}
 
 	return
 }
 
-func genCaseMap(asset serverDomain.TestAsset, mp *map[int]*serverDomain.TestAsset) {
+func genScriptMap(asset serverDomain.TestAsset, mp *map[int]*serverDomain.TestAsset) {
 	if asset.CaseId > 0 {
 		(*mp)[asset.CaseId] = &asset
 	}
@@ -130,7 +133,7 @@ func genCaseMap(asset serverDomain.TestAsset, mp *map[int]*serverDomain.TestAsse
 	}
 
 	for _, child := range asset.Children {
-		genCaseMap(*child, mp)
+		genScriptMap(*child, mp)
 	}
 
 	return
@@ -153,6 +156,7 @@ func genModuleTreeWithCases(moduleInterface interface{},
 	// add cases in module
 	for _, cs := range caseMapByModuleFromZentao[moduleId] {
 		caseId := cs.Id
+		caseNameInZentao := cs.Title
 		casePath := ""
 
 		// case info from dir
@@ -161,7 +165,8 @@ func genModuleTreeWithCases(moduleInterface interface{},
 			casePath = casesMapInDir[caseId].Path
 		}
 
-		scriptHelper.AddScript(casePath, caseId, dirNode)
+		scriptHelper.AddScript(casePath, caseId, caseNameInZentao, true, dirNode)
+		logUtils.Infof("===", cs.Title)
 	}
 
 	if moduleMap["children"] == nil {

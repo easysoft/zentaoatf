@@ -55,7 +55,9 @@
           @check="checkNode"
       >
         <template #title="slotProps">
-          {{slotProps.title !== 'all' ? slotProps.title : t('all')}}
+          <span :class="[{'no-script': noScript(slotProps.path)}]">
+            {{slotProps.title}}
+          </span>
         </template>
       </a-tree>
 
@@ -433,6 +435,13 @@ export default defineComponent({
       return arr
     }
 
+    const noScript = (str) => {
+      if (str.indexOf('zentao') == 0) {
+        return true
+      }
+      return false
+    }
+
     return {
       t,
       isWin,
@@ -473,6 +482,7 @@ export default defineComponent({
       fromVisible,
       onSave,
       onCancel,
+      noScript,
     }
   }
 
@@ -492,6 +502,10 @@ export default defineComponent({
     .ant-tree {
       font-size: 16px;
     }
+  }
+
+  .no-script {
+    color: #a9aeb4;
   }
 }
 </style>

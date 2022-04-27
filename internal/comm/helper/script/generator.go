@@ -107,8 +107,8 @@ func generateTestStepAndScriptObsolete(testSteps []commDomain.ZtfStep, steps *[]
 		}
 
 		ts := testSteps[idx]
-		if ts.Parent == "0" && ts.Type != "group" { // flat step
-			currGroup = commDomain.ZtfStep{Id: "-1", Desc: "group", Children: make([]commDomain.ZtfStep, 0)}
+		if ts.Parent == 0 && ts.Type != "group" { // flat step
+			currGroup = commDomain.ZtfStep{Id: -1, Desc: "group", Children: make([]commDomain.ZtfStep, 0)}
 			currGroup.Children = append(currGroup.Children, ts)
 			idx++
 
@@ -165,7 +165,7 @@ func generateTestStepAndScriptObsolete(testSteps []commDomain.ZtfStep, steps *[]
 	stepNumb := 1
 	// print nested steps, only one level
 	for _, group := range nestedSteps {
-		if group.Id == "-1" { // [group]
+		if group.Id == -1 { // [group]
 			*steps = append(*steps, fmt.Sprintf("\n[group]"))
 
 			for _, child := range group.Children {
@@ -242,7 +242,7 @@ func generateTestStepAndScript(testSteps []commDomain.ZtfStep, steps *[]string, 
 
 func computerTestStepWidth(steps []commDomain.ZtfStep, stepSDisplayMaxWidth *int, stepWidth int) {
 	for _, ts := range steps {
-		length := len(ts.Id)
+		length := len(strconv.Itoa(ts.Id))
 		if length > *stepSDisplayMaxWidth {
 			*stepSDisplayMaxWidth = length
 		}

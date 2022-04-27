@@ -45,7 +45,16 @@ func (s *TestScriptService) LoadTestScriptsBySiteProduct(
 			// for testing
 			site, _ := s.SiteService.Get(siteId)
 			config := configHelper.LoadBySite(site)
-			scriptsInDir, _ = zentaoHelper.LoadTestCasesAsTree(workspace, scriptIdsFromZentao, 1, config)
+
+			suiteId := 0
+			taskId := 0
+			if filerType == string(commConsts.FilterSuite) {
+				suiteId = filerValue
+			} else if filerType == string(commConsts.FilterTask) {
+				taskId = filerValue
+			}
+			scriptsInDir, _ = zentaoHelper.LoadTestCasesInModuleTree(workspace, scriptIdsFromZentao,
+				int(productId), suiteId, taskId, config)
 
 		} else {
 			scriptsInDir, _ = codeHelper.LoadCodeTree(workspace)

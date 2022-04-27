@@ -92,12 +92,12 @@ type ZtfCaseWrapper struct {
 }
 
 type ZtfStep struct {
-	Id   string
+	Id   int
 	Desc string
 
 	Expect string
 	Type   string
-	Parent string
+	Parent int
 
 	Children []ZtfStep
 	Numb     string
