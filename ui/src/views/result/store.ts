@@ -69,13 +69,15 @@ const StoreModel: ModuleType = {
         async get({ commit }, params: any ) {
             const response: ResponseData = await get(params);
             const data = response.data;
+
             commit('setDetailResult',data);
+
             return true;
         },
-        async delete({ commit }, data: any ) {
+        async delete({ commit , dispatch, state}, data: any ) {
             try {
                 await remove(data);
-                await this.dispatch('Site/list', {})
+                dispatch('list', {})
 
                 return true;
             } catch (error) {

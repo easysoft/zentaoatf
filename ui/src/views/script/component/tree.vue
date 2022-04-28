@@ -499,7 +499,6 @@ export default defineComponent({
     }
 
     .ant-tree {
-      font-size: 16px;
     }
   }
 

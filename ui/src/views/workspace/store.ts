@@ -105,10 +105,10 @@ const StoreModel: ModuleType = {
                 return false;
             }
         },
-        async delete({ commit }, id: number ) {
+        async delete({ commit , dispatch, state}, id: number ) {
             try {
                 await remove(id);
-                await this.dispatch('Workspace/list', {})
+                dispatch('list', {})
 
                 return true;
             } catch (error) {

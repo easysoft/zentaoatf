@@ -101,10 +101,10 @@ const StoreModel: ModuleType = {
             return true;
         },
 
-        async syncFromZentao({ commit }, payload: any ) {
+        async syncFromZentao({ commit, dispatch, state }, payload: any ) {
             const resp = await syncFromZentao(payload)
             if (resp.code === 0) {
-                this.dispatch('Script/listScript', this.state['Script'].queryParams)
+                await dispatch('listScript', state.queryParams)
 
                 if (resp.code === 0 && resp.data.length === 1) {
                     const getResp = await get(resp.data[0], payload.workspaceId);
