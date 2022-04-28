@@ -21,9 +21,9 @@ export async function listByProduct(productId: number): Promise<any> {
     });
 }
 
-export async function get(seq: number): Promise<any> {
+export async function get(id: number): Promise<any> {
     return request({
-        url: `/${apiPath}/${seq}`
+        url: `/${apiPath}/${id}`
     });
 }
 

@@ -36,6 +36,13 @@
         </a-select>
       </a-form-item>
 
+      <a-form-item v-if="modelRef.type === 'ztf'" :label="t('default_lang')" v-bind="validateInfos.lang">
+        <a-select v-model:value="modelRef.lang">
+          <a-select-option key="" value=""></a-select-option>
+          <a-select-option v-for="item in langs" :key="item.code" :value="item.code">{{ item.name }}</a-select-option>
+        </a-select>
+      </a-form-item>
+
       <a-form-item v-if="showCmd" :label="t('test_cmd')" v-bind="validateInfos.cmd">
         <a-textarea v-model:value="modelRef.cmd" :auto-size="{ minRows: 3, maxRows: 6 }" />
         <div class="t-tips" style="margin-top: 5px;">
@@ -79,9 +86,11 @@ export default defineComponent({
     const testTypes = ref([...ztfTestTypesDef, ...unitTestTypesDef])
     const cmdMap = ref(arrToMap(testTypes.value))
 
-
     const isElectron = ref(!!window.require)
     const cmdSample = ref('')
+
+    const zentaoStore = useStore<{ Zentao: ZentaoData }>();
+    const langs = computed<any[]>(() => zentaoStore.state.Zentao.langs);
 
     const store = useStore<{ Workspace: WorkspaceData }>();
     const modelRef = computed(() => store.state.Workspace.detailResult);
@@ -98,6 +107,7 @@ export default defineComponent({
       name: [{ required: true, message: t('pls_name'), trigger: 'blur' }],
       path: [{ required: true, message: t('pls_workspace_path'), trigger: 'change' }],
       type: [{ required: true, message: t('pls_workspace_type'), trigger: 'blur' }],
+      lang: [{ required: true, message: t('pls_input_lang'), trigger: 'blur' }],
       cmd: [
         {
           trigger: 'blur',
@@ -155,6 +165,7 @@ export default defineComponent({
       t,
       isElectron,
       cmdSample,
+      langs,
       testTypes,
       cmdMap,
       showCmd,

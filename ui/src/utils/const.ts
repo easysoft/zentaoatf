@@ -1,7 +1,5 @@
-export const EventNodeId = 'deeptest-event-node'
-export const EventName = 'deeptest-event-from-chrome'
 
-export const ScopeDeeptest = 'scope-com-deeptest'
+export const ScriptFileNotExist = 'script_file_not_exist'
 
 export const ScriptLanguages = [
     'Python',

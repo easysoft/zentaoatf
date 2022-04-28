@@ -92,6 +92,7 @@ export default defineComponent({
       const store = useStore<{ Zentao: ZentaoData }>();
       const profile = computed<any[]>(() => store.state.Zentao.profile);
       store.dispatch('Zentao/getProfile');
+      store.dispatch('Zentao/fetchLangs')
 
       const { topNavEnable } = toRefs(props);
 

@@ -3,14 +3,16 @@ import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 
 import {
-    list, get, extract, create, update, remove, loadChildren, updateCode
+    list, get, extract, create, update, remove, loadChildren, updateCode, syncFromZentao
 } from './service';
+import {ScriptFileNotExist} from "@/utils/const";
 
 export interface ScriptData {
     list: [];
     detail: any;
 
     currWorkspace: any
+    queryParams: any;
 }
 
 export interface ModuleType extends StoreModuleType<ScriptData> {
@@ -19,11 +21,13 @@ export interface ModuleType extends StoreModuleType<ScriptData> {
         setList: Mutation<ScriptData>;
         setItem: Mutation<ScriptData>;
         setWorkspace: Mutation<ScriptData>;
+        setQueryParams: Mutation<ScriptData>;
     };
     actions: {
         listScript: Action<ScriptData, ScriptData>;
         getScript: Action<ScriptData, ScriptData>;
         loadChildren: Action<ScriptData, ScriptData>;
+        syncFromZentao: Action<ScriptData, ScriptData>;
         extractScript: Action<ScriptData, ScriptData>;
         changeWorkspace: Action<ScriptData, ScriptData>;
 
@@ -37,7 +41,8 @@ const initState: ScriptData = {
     list: [],
     detail: null,
 
-    currWorkspace: {id: 0, type: 'ztf'}
+    currWorkspace: {id: 0, type: 'ztf'},
+    queryParams: {},
 };
 
 const StoreModel: ModuleType = {
@@ -56,12 +61,17 @@ const StoreModel: ModuleType = {
         setWorkspace(state, payload) {
             state.currWorkspace = payload;
         },
+        setQueryParams(state, payload) {
+            state.queryParams = payload;
+        },
     },
     actions: {
         async listScript({ commit }, playload: any ) {
             const response: ResponseData = await list(playload);
             const { data } = response;
             commit('setList', [data]);
+
+            commit('setQueryParams', playload);
             return true;
         },
         async loadChildren({ commit }, treeNode: any ) {
@@ -81,10 +91,30 @@ const StoreModel: ModuleType = {
                 return true;
             }
 
+            if (script.path.indexOf('zentao-') === 0) {
+                commit('setItem', {id: script.caseId, workspaceId: script.workspaceId, code: ScriptFileNotExist});
+                return true;
+            }
+
             const response: ResponseData = await get(script.path, script.workspaceId);
-            const { data } = response;
-            commit('setItem', data);
+            commit('setItem', response.data);
             return true;
+        },
+
+        async syncFromZentao({ commit }, payload: any ) {
+            const resp = await syncFromZentao(payload)
+            if (resp.code === 0) {
+                this.dispatch('Script/listScript', this.state['Script'].queryParams)
+
+                if (resp.code === 0 && resp.data.length === 1) {
+                    const getResp = await get(resp.data[0], payload.workspaceId);
+                    commit('setItem', getResp.data);
+                } else {
+                    commit('setItem', null);
+                }
+            }
+
+            return resp
         },
 
         async extractScript({ commit }, script: any ) {
@@ -123,7 +153,6 @@ const StoreModel: ModuleType = {
                 return false;
             }
         },
-
 
         async updateCode({ commit }, payload: any ) {
             try {

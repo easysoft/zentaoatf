@@ -86,6 +86,7 @@ export default {
     'suite': '套件',
     'task': '任务',
     'lang': '语言',
+    'default_lang': '默认语言',
     'independent_by_module': '按模块组织用例',
     'independent_expect': '期待结果为独立文件',
 
@@ -165,6 +166,7 @@ export default {
     'checkout_case': '导出禅道用例',
     'checkin_case': '更新禅道用例',
     'exec_selected': '执行选中',
+    'script_file_not_exist': '该禅道用例未有对应的脚本文件，可使用导出禅道用例功能创建。',
 
     'show_result_log': '显示结果日志',
     'show_exec_log': '显示执行日志',

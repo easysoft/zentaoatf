@@ -2,14 +2,15 @@
   <div class="ztf-script-main">
 
     <div class="toolbar" v-if="scriptCode !== ''">
-      <a-button :disabled="isRunning === 'true'" @click="execSingle" type="primary" class="t-btn-gap">
+      <a-button v-if="scriptCode !== ScriptFileNotExist && isRunning !== 'true'" @click="execSingle" type="primary" class="t-btn-gap">
         {{ t('exec') }}
       </a-button>
       <a-button v-if="isRunning === 'true'" @click="execStop" class="t-btn-gap">{{ t('stop') }}</a-button>
 
-      <a-button @click="extract" type="primary">{{ t('extract_step') }}</a-button>
+      <a-button v-if="scriptCode === ScriptFileNotExist" @click="checkout" type="primary">{{ t('checkout_case') }}</a-button>
+      <a-button v-if="scriptCode !== ScriptFileNotExist" @click="extract" type="primary">{{ t('extract_step') }}</a-button>
 
-      <a-button @click="save" type="primary">{{ t('save') }}</a-button>
+      <a-button v-if="scriptCode !== ScriptFileNotExist" @click="save" :disabled="scriptCode === ScriptFileNotExist" type="primary">{{ t('save') }}</a-button>
     </div>
 
     <div id="right-content" class="right-content">
@@ -19,13 +20,17 @@
           <a-tabs :animated="true">
             <a-tab-pane key="1" tab="脚本1">
               <MonacoEditor
-                  v-if="scriptCode !== ''"
+                  v-if="scriptCode !== '' && scriptCode !== ScriptFileNotExist"
                   v-model:value="scriptCode"
                   :language="lang"
                   :options="editorOptions"
                   class="editor"
                   ref="editorRef"
               />
+
+              <div v-if="scriptCode === ScriptFileNotExist" :class="ScriptFileNotExist">
+                {{t(ScriptFileNotExist)}}
+              </div>
             </a-tab-pane>
             <a-tab-pane key="2" tab="脚本2" :forceRender="true">
               <MonacoEditor
@@ -79,7 +84,7 @@ import {ScriptData} from "../store";
 import {resizeHeight, resizeWidth} from "@/utils/dom";
 import {Empty, notification} from "ant-design-vue";
 
-import {MonacoOptions} from "@/utils/const";
+import {MonacoOptions, ScriptFileNotExist} from "@/utils/const";
 import bus from "@/utils/eventBus"
 import MonacoEditor from "@/components/Editor/MonacoEditor.vue";
 import {ZentaoData} from "@/store/zentao";
@@ -87,6 +92,7 @@ import {ZentaoData} from "@/store/zentao";
 import ScriptExecLogPage from "./execLog.vue";
 import settings from "@/config/settings";
 import {ExecStatus} from "@/store/exec";
+import {syncFromZentao} from "@/views/script/service";
 
 export default defineComponent({
   name: 'ZtfScriptPage',
@@ -121,6 +127,13 @@ export default defineComponent({
       console.log('watch script', script)
 
       if (script.value) {
+        if (script.value.code === ScriptFileNotExist) {
+          scriptCode.value = ScriptFileNotExist
+          lang.value = ''
+
+          return
+        }
+
         scriptCode.value = script.value.code ? script.value.code : t('empty')
         lang.value = script.value.lang
 
@@ -156,6 +169,24 @@ export default defineComponent({
       console.log('execStop')
       const data = Object.assign({execType: 'stop'})
       bus.emit(settings.eventExec, data);
+    }
+
+    const checkout = () => {
+      console.log('checkout', script.value)
+
+      const data = {caseId: script.value.id, workspaceId: script.value.workspaceId}
+      scriptStore.dispatch('Script/syncFromZentao', data).then((resp => {
+        if (resp.code === 0) {
+          notification.success({
+            message: t('sync_success'),
+          });
+        } else {
+          notification.error({
+            message: t('sync_fail'),
+            description: resp.data.msg,
+          });
+        }
+      }))
     }
 
     const extract = () => {
@@ -209,11 +240,13 @@ export default defineComponent({
       isRunning,
       execSingle,
       execStop,
+      checkout,
       extract,
       stop,
       showLogPanel,
 
       editorRef,
+      ScriptFileNotExist,
     }
   }
 
@@ -222,6 +255,10 @@ export default defineComponent({
 
 <style lang="less">
 #editor-panel {
+  .script_file_not_exist {
+    padding: 10px;
+  }
+
   .ant-tabs {
     height: 100%;
     overflow: hidden;

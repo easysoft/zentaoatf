@@ -12,36 +12,52 @@ import (
 	"path/filepath"
 )
 
-func SyncFromZentao(settings commDomain.SyncSettings, config commDomain.WorkspaceConf, workspacePath string) (err error) {
+func SyncFromZentao(settings commDomain.SyncSettings, config commDomain.WorkspaceConf, workspacePath string) (
+	pths []string, err error) {
+
 	productId := settings.ProductId
 	moduleId := settings.ModuleId
 	suiteId := settings.SuiteId
 	taskId := settings.TaskId
+	caseId := settings.CaseId
 
 	byModule := settings.ByModule
 	independentFile := settings.IndependentFile
-	lang := settings.Lang
+	lang := "php" // settings.Lang
 
 	ok := langHelper.CheckSupportLanguages(lang)
 	if !ok {
 		return
 	}
 
-	cases, err := LoadTestCaseDetail(productId, moduleId, suiteId, taskId, config)
+	cases := make([]commDomain.ZtfCase, 0)
+	if caseId != 0 {
+		cs, err := GetTestCaseDetail(caseId, config)
+		if err == nil {
+			cases = append(cases, cs)
+		}
+	} else {
+		cases, err = LoadTestCaseDetail(productId, moduleId, suiteId, taskId, config)
+	}
+
 	if err != nil {
 		return
 	}
 
-	if cases != nil && len(cases) > 0 {
-		productId = cases[0].Product
-		targetDir := fileUtils.AddFilePathSepIfNeeded(filepath.Join(workspacePath, fmt.Sprintf("product%d", productId)))
+	if cases == nil || len(cases) == 0 {
+		return
+	}
 
-		count, err := scriptHelper.GenerateScripts(cases, lang, independentFile, byModule, targetDir)
-		if err == nil {
-			logUtils.Infof(i118Utils.Sprintf("success_to_generate", count, targetDir))
-		} else {
-			logUtils.Infof(color.RedString(err.Error()))
-		}
+	if productId == 0 {
+		productId = cases[0].Product
+	}
+	targetDir := fileUtils.AddFilePathSepIfNeeded(filepath.Join(workspacePath, fmt.Sprintf("product%d", productId)))
+
+	pths, err = scriptHelper.GenerateScripts(cases, lang, independentFile, byModule, targetDir)
+	if err == nil {
+		logUtils.Infof(i118Utils.Sprintf("success_to_generate", len(pths), targetDir))
+	} else {
+		logUtils.Infof(color.RedString(err.Error()))
 	}
 
 	return

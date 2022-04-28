@@ -67,7 +67,7 @@ func CommitCase(caseId int, title string,
 	return
 }
 
-func GetCaseById(baseUrl string, caseId int) (cs commDomain.ZtfCase) {
+func GetCaseById(baseUrl string, caseId int) (cs commDomain.ZtfCase, err error) {
 	uri := fmt.Sprintf("/testcases/%d", caseId)
 	url := GenApiUrl(uri, nil, baseUrl)
 
@@ -208,11 +208,22 @@ func LoadTestCaseDetail(productId, moduleId, suiteId, taskId int,
 	for _, cs := range casesResp.Cases {
 		caseId := cs.Id
 
-		csWithSteps := GetCaseById(config.Url, caseId)
-		stepArr := genCaseSteps(csWithSteps)
-		cases = append(cases, commDomain.ZtfCase{Id: caseId, Product: cs.Product, Module: cs.Module,
-			Title: cs.Title, Steps: stepArr})
+		cs, err := GetTestCaseDetail(caseId, config)
+		if err != nil {
+			continue
+		}
+
+		cases = append(cases, cs)
 	}
+
+	return
+}
+
+func GetTestCaseDetail(caseId int, config commDomain.WorkspaceConf) (cs commDomain.ZtfCase, err error) {
+	csWithSteps, err := GetCaseById(config.Url, caseId)
+	stepArr := genCaseSteps(csWithSteps)
+	cs = commDomain.ZtfCase{Id: caseId, Product: cs.Product, Module: cs.Module,
+		Title: cs.Title, Steps: stepArr}
 
 	return
 }

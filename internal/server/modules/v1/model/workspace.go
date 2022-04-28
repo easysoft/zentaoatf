@@ -9,6 +9,7 @@ type Workspace struct {
 	Name string              `json:"name"`
 	Desc string              `json:"desc" gorm:"column:descr"`
 	Type commConsts.TestTool `json:"type" gorm:"default:ztf"`
+	Lang string              `json:"lang"`
 	Cmd  string              `json:"cmd"`
 
 	SiteId    uint `json:"siteId"`

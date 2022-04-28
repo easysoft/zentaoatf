@@ -15,7 +15,7 @@ import (
 )
 
 func GenerateScripts(cases []commDomain.ZtfCase, langType string, independentFile bool,
-	byModule bool, targetDir string) (int, error) {
+	byModule bool, targetDir string) (pths []string, err error) {
 	caseIds := make([]string, 0)
 
 	if commConsts.ExecFrom == commConsts.FromCmd { // from cmd
@@ -25,16 +25,18 @@ func GenerateScripts(cases []commDomain.ZtfCase, langType string, independentFil
 	targetDir = fileUtils.AbsolutePath(targetDir)
 
 	for _, cs := range cases {
-		GenerateScript(cs, langType, independentFile, &caseIds, targetDir, byModule)
+		pth, _ := GenerateScript(cs, langType, independentFile, &caseIds, targetDir, byModule)
+		pths = append(pths, pth)
 	}
 
 	GenSuite(caseIds, targetDir)
 
-	return len(cases), nil
+	return
 }
 
 func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool, caseIds *[]string,
-	targetDir string, byModule bool) {
+	targetDir string, byModule bool) (scriptPath string, err error) {
+
 	caseId := cs.Id
 	productId := cs.Product
 	moduleId := cs.Module
@@ -48,9 +50,9 @@ func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool
 
 	content := ""
 	isOldFormat := false
-	scriptFile := filepath.Join(targetDir, fmt.Sprintf("%d.%s", caseId, commConsts.LangMap[langType]["extName"]))
-	if fileUtils.FileExist(scriptFile) { // update title and steps
-		content = fileUtils.ReadFile(scriptFile)
+	scriptPath = filepath.Join(targetDir, fmt.Sprintf("%d.%s", caseId, commConsts.LangMap[langType]["extName"]))
+	if fileUtils.FileExist(scriptPath) { // update title and steps
+		content = fileUtils.ReadFile(scriptPath)
 		isOldFormat = strings.Index(content, "[esac]") > -1
 	}
 
@@ -78,21 +80,23 @@ func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool
 	info = append(info, strings.Join(steps, "\n"))
 
 	if independentFile {
-		expectFile := ScriptToExpectName(scriptFile)
+		expectFile := ScriptToExpectName(scriptPath)
 		fileUtils.WriteFile(expectFile, strings.Join(independentExpects, "\n"))
 	}
 
-	if fileUtils.FileExist(scriptFile) { // update title and steps
+	if fileUtils.FileExist(scriptPath) { // update title and steps
 		newContent := strings.Join(info, "\n")
-		ReplaceCaseDesc(newContent, scriptFile)
+		ReplaceCaseDesc(newContent, scriptPath)
 		return
 	}
 
-	path := fmt.Sprintf("res%stemplate%s", consts.FilePthSep, consts.FilePthSep)
-	template, _ := resUtils.ReadRes(path + langType + ".tpl")
+	templatePath := fmt.Sprintf("res%stemplate%s", consts.FilePthSep, consts.FilePthSep)
+	template, _ := resUtils.ReadRes(templatePath + langType + ".tpl")
 
 	out := fmt.Sprintf(string(template), strings.Join(info, "\n"), srcCode)
-	fileUtils.WriteFile(scriptFile, out)
+	fileUtils.WriteFile(scriptPath, out)
+
+	return
 }
 
 func generateTestStepAndScriptObsolete(testSteps []commDomain.ZtfStep, steps *[]string, independentExpects *[]string, independentFile bool) {

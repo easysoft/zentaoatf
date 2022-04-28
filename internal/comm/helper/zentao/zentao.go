@@ -82,8 +82,8 @@ func Login(config commDomain.WorkspaceConf) (err error) {
 }
 
 func ListLang() (langs []serverDomain.ZentaoLang, err error) {
-	for key, _ := range commConsts.LangMap {
-		langs = append(langs, serverDomain.ZentaoLang{Code: key, Name: key})
+	for key, mp := range commConsts.LangMap {
+		langs = append(langs, serverDomain.ZentaoLang{Code: key, Name: mp["name"]})
 	}
 
 	return

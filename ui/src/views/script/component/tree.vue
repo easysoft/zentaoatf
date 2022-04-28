@@ -208,7 +208,7 @@ export default defineComponent({
     let filerItems = ref([] as any)
 
     const loadScripts = async () => {
-      console.log(`---------------- loadScripts should be executed only once`)
+      console.log(`loadScripts should be executed only once`)
       console.log(`filerType: ${filerType.value}, filerValue: ${filerValue.value}`)
 
       const params = {filerType: filerType.value, filerValue: filerValue.value} as any
@@ -346,7 +346,6 @@ export default defineComponent({
     const onSave = async () => {
       console.log('onSave')
       fromVisible.value = false
-      loadScripts()
     }
     const onCancel = async () => {
       console.log('onCancel')

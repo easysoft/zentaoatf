@@ -5,8 +5,6 @@ import {queryLang, querySiteAndProduct, getProfile, queryProduct, queryModule, q
 
 import {setCurrProductIdBySite, setCurrSiteId} from "@/utils/cache";
 
-import {notification} from "ant-design-vue";
-
 export interface ZentaoData {
     langs: any[]
 

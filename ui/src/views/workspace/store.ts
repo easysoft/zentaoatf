@@ -89,7 +89,7 @@ const StoreModel: ModuleType = {
             }
         },
         async get({ commit }, id: number ) {
-            let data = {name:'', path: '', type: 'ztf'}
+            let data = {name:'', path: '', type: 'ztf', lang: ''}
             if (id) {
                 const response: ResponseData = await get(id);
                 data = response.data;

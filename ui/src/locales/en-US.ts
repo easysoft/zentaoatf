@@ -87,6 +87,7 @@ export default {
     'suite': 'Suite',
     'task': 'Task',
     'lang': 'Language',
+    'default_lang': 'Default Language',
     'independent_by_module': 'Save Script By Module',
     'independent_expect': 'Save Expect Result in Independent File.',
 
@@ -166,6 +167,7 @@ export default {
     'checkout_case': 'Checkout Cases',
     'checkin_case': 'Checkin Cases',
     'exec_selected': 'Exec Selected',
+    'script_file_not_exist': 'No script file for this case, you may Checkout Zentao TestCase to create.',
 
     'show_result_log': 'Show Result Logs',
     'show_exec_log': 'Show Exec Logs',

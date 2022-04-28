@@ -128,13 +128,16 @@ func (c *TestScriptCtrl) SyncFromZentao(ctx iris.Context) {
 	workspace, _ := c.WorkspaceService.Get(uint(syncSettings.WorkspaceId))
 
 	syncSettings.ProductId = currProductId
-	err = zentaoHelper.SyncFromZentao(syncSettings, config, workspace.Path)
+	if syncSettings.Lang == "" {
+		syncSettings.Lang = workspace.Lang
+	}
+	pths, err := zentaoHelper.SyncFromZentao(syncSettings, config, workspace.Path)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
-	ctx.JSON(c.SuccessResp(nil))
+	ctx.JSON(c.SuccessResp(pths))
 }
 
 func (c *TestScriptCtrl) SyncToZentao(ctx iris.Context) {

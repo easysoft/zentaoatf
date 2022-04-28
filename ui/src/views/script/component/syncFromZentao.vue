@@ -2,10 +2,13 @@
   <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
 
     <a-form-item :label="t('workspace')" v-bind="validateInfosFrom.workspaceId">
-      <a-select v-model:value="model.workspaceId">
+      <a-select v-model:value="model.workspaceId" @change="selectWorkspace">
         <a-select-option key="" value="">&nbsp;</a-select-option>
-        <a-select-option v-for="item in workspaces" :key="item.id" :value="item.id"><span v-html="item.name"></span>
-        </a-select-option>
+        <template v-for="item in workspaces">
+          <a-select-option v-if="item.type === 'ztf'" :key="item.id" :value="item.id">
+            <span v-html="item.name"></span>
+          </a-select-option>
+        </template>
       </a-select>
     </a-form-item>
 
@@ -65,6 +68,8 @@ import {useRouter} from "vue-router";
 import {WorkspaceData} from "../../workspace/store";
 import {syncFromZentao} from "@/views/script/service";
 import {isWindows} from "@/utils/comm";
+import {get as getWorkspace} from "@/views/workspace/service";
+import {ScriptData} from "@/views/script/store";
 
 const useForm = Form.useForm;
 
@@ -84,6 +89,7 @@ export default defineComponent({
 
     const workspaceStore = useStore<{ Workspace: WorkspaceData }>();
     const zentaoStore = useStore<{ Zentao: ZentaoData }>();
+    const scriptStore = useStore<{ Script: ScriptData }>();
 
     const currSite = computed<any>(() => zentaoStore.state.Zentao.currSite);
     const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
@@ -124,28 +130,38 @@ export default defineComponent({
     const validateFrom = syncFromForm.validate
     const validateInfosFrom = syncFromForm.validateInfos
 
+    const selectWorkspace = () => {
+      console.log('selectWorkspace')
+      getWorkspace(parseInt(model.value.workspaceId)).then((json) => {
+        if (json.code === 0) {
+          model.value.lang = json.data.lang
+        }
+      })
+    }
+
     const syncFromZentaoSubmit = () => {
       console.log('syncFromZentaoSubmit')
 
       validateFrom()
-          .then(() => {
-            syncFromZentao(model).then((json) => {
-              console.log('json', json)
-              if (json.code === 0) {
-                notification.success({
-                  message: t('sync_success'),
-                });
-              } else {
-                notification.error({
-                  message: t('sync_fail'),
-                  description: json.msg,
-                });
-              }
-            })
-          })
-          .catch(err => {
-            console.log('validate fail', err)
-          });
+        .then(() => {
+          scriptStore.dispatch('Script/syncFromZentao', model.value).then((resp => {
+            if (resp.code === 0) {
+              notification.success({
+                message: t('sync_success'),
+              });
+              props.onClose()
+
+            } else {
+              notification.error({
+                message: t('sync_fail'),
+                description: resp.data.msg,
+              });
+            }
+          }))
+        })
+        .catch(err => {
+          console.log('validate fail', err)
+        });
     };
 
     return {
@@ -167,6 +183,7 @@ export default defineComponent({
       suites,
       tasks,
 
+      selectWorkspace,
       syncFromZentaoSubmit,
 
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
