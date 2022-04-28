@@ -27,7 +27,7 @@ func SyncFromZentao(settings commDomain.SyncSettings, config commDomain.Workspac
 		return
 	}
 
-	cases, err := LoadTestCases(productId, moduleId, suiteId, taskId, config)
+	cases, err := LoadTestCaseDetail(productId, moduleId, suiteId, taskId, config)
 	if err != nil {
 		return
 	}
