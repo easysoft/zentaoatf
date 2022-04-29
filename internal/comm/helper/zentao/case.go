@@ -165,7 +165,7 @@ func genModuleTreeWithCases(moduleInterface interface{},
 			casePath = casesMapInDir[caseId].Path
 		}
 
-		scriptHelper.AddScript(casePath, caseId, caseNameInZentao, true, dirNode)
+		scriptHelper.AddScript(moduleId, caseId, casePath, caseNameInZentao, "module", true, dirNode)
 	}
 
 	if moduleMap["children"] == nil {
@@ -186,20 +186,20 @@ func LoadTestCaseSimple(productId, moduleId, suiteId, taskId int,
 		return
 	}
 
-	if productId != 0 {
-		casesResp, err = ListCaseByProduct(config.Url, productId)
-	} else if moduleId != 0 {
+	if moduleId != 0 {
 		casesResp, err = ListCaseByModule(config.Url, productId, moduleId)
 	} else if suiteId != 0 {
 		casesResp, err = ListCaseBySuite(config.Url, suiteId)
 	} else if taskId != 0 {
 		casesResp, err = ListCaseByTask(config.Url, taskId)
+	} else if productId != 0 { // low priority at below
+		casesResp, err = ListCaseByProduct(config.Url, productId)
 	}
 
 	return
 }
 
-func LoadTestCaseDetail(productId, moduleId, suiteId, taskId int,
+func LoadTestCasesDetail(productId, moduleId, suiteId, taskId int,
 	config commDomain.WorkspaceConf) (cases []commDomain.ZtfCase, err error) {
 
 	casesResp, _ := LoadTestCaseSimple(productId, moduleId, suiteId, taskId, config)
@@ -221,8 +221,8 @@ func LoadTestCaseDetail(productId, moduleId, suiteId, taskId int,
 func GetTestCaseDetail(caseId int, config commDomain.WorkspaceConf) (cs commDomain.ZtfCase, err error) {
 	csWithSteps, err := GetCaseById(config.Url, caseId)
 	stepArr := genCaseSteps(csWithSteps)
-	cs = commDomain.ZtfCase{Id: caseId, Product: cs.Product, Module: cs.Module,
-		Title: cs.Title, Steps: stepArr}
+	cs = commDomain.ZtfCase{Id: caseId, Product: csWithSteps.Product, Module: csWithSteps.Module,
+		Title: csWithSteps.Title, Steps: stepArr}
 
 	return
 }

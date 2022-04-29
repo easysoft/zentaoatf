@@ -88,7 +88,7 @@ export default {
     'task': 'Task',
     'lang': 'Language',
     'default_lang': 'Default Language',
-    'independent_by_module': 'Save Script By Module',
+    'save_by_module': 'Save Script By Module',
     'independent_expect': 'Save Expect Result in Independent File.',
 
     'unit_test':  'Unit Test', 

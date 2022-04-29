@@ -108,6 +108,17 @@ export async function syncToZentao(sets: any[]): Promise<any> {
     });
 }
 
+export const getNodeMap = (node, mp): void => {
+    if (!node) return
+
+    mp[node.path] = node
+    if (node.children) {
+        node.children.forEach(c => {
+            getNodeMap(c, mp)
+        })
+    }
+}
+
 export function genWorkspaceToScriptsMap(scripts: any[]): any[] {
     const workspaceIds = [] as number[]
     const mp = {}
@@ -127,4 +138,53 @@ export function genWorkspaceToScriptsMap(scripts: any[]): any[] {
     })
 
     return sets
+}
+
+export function getSyncFromInfoFromMenu(key: string, node: any): any {
+    let moduleId = 0
+    let caseId = 0
+    let scriptPath = ''
+
+    if (key.indexOf('zentao-') === 0) {
+        const arr = key.split('-')
+        if (arr[1] === 'module') {
+            moduleId = parseInt(arr[2])
+        } else if (arr[1] === 'case') {
+            caseId = parseInt(arr[2])
+        }
+    } else {
+        moduleId = node.moduleId
+        caseId = node.caseId
+
+        scriptPath = key
+    }
+
+    return {
+        moduleId,
+        caseId,
+        scriptPath,
+    }
+}
+
+export const getFileNodesUnderParent = (node): string[] => {
+    console.log('getFileNodesUnderParent')
+
+    const nodeMap = {}
+    getNodeMap(node, nodeMap)
+
+    const arr = [] as string[]
+    Object.keys(nodeMap).forEach((k, v) => {
+        const node = nodeMap[k]
+        if (node.type === 'file') {
+            node.childrem = null
+            arr.push(node)
+        }
+    })
+
+    return arr
+}
+
+export function getSyncToInfoFromMenu(key: string, node: any): any {
+
+    return
 }

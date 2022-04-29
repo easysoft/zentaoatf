@@ -742,10 +742,10 @@ func GetCaseInfo(file string) (bool, int, int, string) {
 		productId, _ = strconv.Atoi(arr[1])
 	}
 
-	myExp = regexp.MustCompile(`[\S\s]*title=\s*([^\n]*?)\s*\n`)
+	myExp = regexp.MustCompile(`[\S\s]*title=([^\n]*?)\n`)
 	arr = myExp.FindStringSubmatch(caseInfo)
 	if len(arr) > 1 {
-		title = arr[1]
+		title = strings.TrimSpace(arr[1])
 	}
 
 	return pass, caseId, productId, title

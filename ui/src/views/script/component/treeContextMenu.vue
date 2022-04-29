@@ -1,36 +1,51 @@
 <template>
   <div class="dp-tree-context-menu">
     <a-menu @click="menuClick" mode="inline">
-      <a-menu-item key="rename" class="menu-item" v-if="treeNode.parentId > 0">
-        <EditOutlined />
-        <span>重命名</span>
-      </a-menu-item>
+      <template v-if="displayBy === 'workspace'">
+        <a-menu-item key="rename" class="menu-item" v-if="treeNode.type !== 'workspace'">
+          <EditOutlined />
+          <span>重命名</span>
+        </a-menu-item>
 
-      <a-menu-item key="add_brother_node" class="menu-item" v-if="treeNode.parentId > 0">
-        <PlusOutlined />
-        <span>创建兄弟节点</span>
-      </a-menu-item>
+        <a-menu-item key="add_brother_node" class="menu-item" v-if="treeNode.type !== 'workspace'">
+          <PlusOutlined />
+          <span>创建同级脚本</span>
+        </a-menu-item>
 
-      <a-menu-item key="add_child_node" class="menu-item" v-if="treeNode.isDir">
-        <PlusOutlined />
-        <span>创建子节点</span>
-      </a-menu-item>
+        <a-menu-item key="add_child_node" class="menu-item" v-if="treeNode.type !== 'file'">
+          <PlusOutlined />
+          <span>创建子级脚本</span>
+        </a-menu-item>
 
-      <a-menu-item key="add_brother_dir" class="menu-item" v-if="treeNode.parentId > 0">
-        <PlusOutlined />
-        <span>创建兄弟目录</span>
-      </a-menu-item>
+        <a-menu-item key="add_brother_dir" class="menu-item" v-if="treeNode.type !== 'workspace'">
+          <PlusOutlined />
+          <span>创建同级目录</span>
+        </a-menu-item>
 
-      <a-menu-item key="add_child_dir" class="menu-item" v-if="treeNode.isDir">
-        <PlusOutlined />
-        <span>创建子目录</span>
-      </a-menu-item>
+        <a-menu-item key="add_child_dir" class="menu-item" v-if="treeNode.type !== 'file'">
+          <PlusOutlined />
+          <span>创建子级目录</span>
+        </a-menu-item>
 
-      <a-menu-item key="remove" class="menu-item" v-if="treeNode.parentId > 0">
-        <CloseOutlined />
-        <span v-if="treeNode.isDir">删除目录</span>
-        <span v-if="!treeNode.isDir">删除节点</span>
-      </a-menu-item>
+        <a-menu-item key="remove" class="menu-item" v-if="treeNode.type !== 'workspace'">
+          <CloseOutlined />
+          <span v-if="treeNode.type === 'dir'">删除目录</span>
+          <span v-if="treeNode.type === 'file'">删除脚本</span>
+        </a-menu-item>
+
+      </template>
+
+      <template v-if="displayBy === 'module'">
+        <a-menu-item key="sync_from_zentao" class="menu-item">
+          <ArrowDownOutlined />
+          <span>从禅道同步</span>
+        </a-menu-item>
+
+        <a-menu-item key="sync_to_zentao" class="menu-item">
+          <ArrowUpOutlined />
+          <span>同步到禅道</span>
+        </a-menu-item>
+      </template>
     </a-menu>
   </div>
 </template>
@@ -39,7 +54,7 @@
 import {defineComponent, PropType, Ref} from "vue";
 import {useI18n} from "vue-i18n";
 import {Form, message} from 'ant-design-vue';
-import {EditOutlined, CloseOutlined, PlusOutlined} from "@ant-design/icons-vue";
+import {EditOutlined, CloseOutlined, PlusOutlined, ArrowDownOutlined, ArrowUpOutlined} from "@ant-design/icons-vue";
 
 const useForm = Form.useForm;
 
@@ -50,6 +65,10 @@ export default defineComponent({
       type: Object,
       required: true
     },
+    displayBy: {
+      type: String,
+      required: true
+    },
     onSubmit: {
       type: Function as PropType<(selectedKey: string, targetId: number) => void>,
       required: true
@@ -57,14 +76,15 @@ export default defineComponent({
   },
   components: {
     EditOutlined, PlusOutlined, CloseOutlined,
+    ArrowDownOutlined, ArrowUpOutlined,
   },
   setup(props) {
     const {t} = useI18n();
 
     const menuClick = (e) => {
       console.log('menuClick', e, props.treeNode)
-      const targetId = props.treeNode.id
       const key = e.key
+      const targetId = props.treeNode.path
 
       props.onSubmit(key, targetId);
     };

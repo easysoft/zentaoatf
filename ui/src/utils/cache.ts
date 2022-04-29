@@ -32,12 +32,37 @@ export const setCurrProductIdBySite = async (currSiteId, currProductId) => {
     await setCache(settings.currProductIdBySite, mp);
 }
 
+export const getScriptDisplayBy = async (siteId, productId) => {
+    console.log('getScriptDisplayBy')
+
+    const cachedData = await getCache(settings.displayBy);
+    const key = `${siteId}-${productId}`
+
+    let displayBy = 'workspace'
+    if (cachedData && cachedData[key]) {
+        displayBy = cachedData[key]
+    }
+
+    return displayBy
+}
+export const setScriptDisplayBy = async (displayBy, siteId, productId) => {
+    console.log('setScriptDisplayBy')
+
+    let cachedData = await getCache(settings.displayBy);
+    if (!cachedData) cachedData = {}
+
+    const key = `${siteId}-${productId}`
+
+    cachedData[key] = displayBy
+    await setCache(settings.displayBy, cachedData);
+}
+
 // script filters
-export const getScriptFilters = async (siteId, productId) => {
+export const getScriptFilters = async (displayBy, siteId, productId) => {
     console.log('getScriptFilters')
 
     const cachedData = await getCache(settings.scriptFilters);
-    const key = `${siteId}-${productId}`
+    const key = `${displayBy}-${siteId}-${productId}`
 
     if (!cachedData || !cachedData[key]) {
         return {by: 'workspace', val: ''}
@@ -49,13 +74,13 @@ export const getScriptFilters = async (siteId, productId) => {
 
     return {by: by, val: val}
 }
-export const setScriptFilters = async (siteId, productId, by, val) => {
+export const setScriptFilters = async (displayBy, siteId, productId, by, val) => {
     console.log('setScriptFilters')
 
     let cachedData = await getCache(settings.scriptFilters);
     if (!cachedData) cachedData = {}
 
-    const key = `${siteId}-${productId}`
+    const key = `${displayBy}-${siteId}-${productId}`
 
     const mp = cachedData[key] ? cachedData[key] : {}
     mp.by = by

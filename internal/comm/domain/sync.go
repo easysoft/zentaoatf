@@ -10,6 +10,6 @@ type SyncSettings struct {
 	CaseId    int    `json:"caseId"`
 	Lang      string `json:"lang"`
 
-	ByModule        bool `json:"byModule"`
+	SaveByModule    bool `json:"saveByModule"`
 	IndependentFile bool `json:"independentFile"`
 }

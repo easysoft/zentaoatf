@@ -37,6 +37,7 @@ export interface SettingsType {
     currProductId: string;
     currProductIdBySite: string;
     currWorkspace: string;
+    displayBy: string;
     scriptFilters: string;
     expandedKeys: string;
     cmdHistories: string;
@@ -78,6 +79,7 @@ const settings: SettingsType = {
     currProductIdBySite: 'currProductIdBySite',
     currWorkspace: 'currWorkspace',
     scriptFilters: 'scriptFilters',
+    displayBy: 'displayBy',
     expandedKeys: 'expandedKeys',
     cmdHistories: 'cmdHistories',
     openedScripts: 'openedScripts',

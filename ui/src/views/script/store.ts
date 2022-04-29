@@ -3,7 +3,7 @@ import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 
 import {
-    list, get, extract, create, update, remove, loadChildren, updateCode, syncFromZentao
+    list, get, extract, create, update, remove, loadChildren, updateCode, syncFromZentao, syncToZentao
 } from './service';
 import {ScriptFileNotExist} from "@/utils/const";
 
@@ -28,6 +28,7 @@ export interface ModuleType extends StoreModuleType<ScriptData> {
         getScript: Action<ScriptData, ScriptData>;
         loadChildren: Action<ScriptData, ScriptData>;
         syncFromZentao: Action<ScriptData, ScriptData>;
+        syncToZentao: Action<ScriptData, ScriptData>;
         extractScript: Action<ScriptData, ScriptData>;
         changeWorkspace: Action<ScriptData, ScriptData>;
 
@@ -112,6 +113,16 @@ const StoreModel: ModuleType = {
                 } else {
                     commit('setItem', null);
                 }
+            }
+
+            return resp
+        },
+
+        async syncToZentao({ commit, dispatch, state }, payload: any ) {
+            const resp = await syncToZentao(payload)
+
+            if (resp.code === 0) {
+                await dispatch('listScript', state.queryParams)
             }
 
             return resp

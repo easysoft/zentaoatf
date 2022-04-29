@@ -40,8 +40,8 @@
       </a-select>
     </a-form-item>
 
-    <a-form-item :label="t('independent_by_module')">
-      <a-switch v-model:checked="model.byModule"/>
+    <a-form-item :label="t('save_by_module')">
+      <a-switch v-model:checked="model.saveByModule"/>
     </a-form-item>
 
     <a-form-item :label="t('independent_expect')">

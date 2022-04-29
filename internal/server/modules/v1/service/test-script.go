@@ -5,6 +5,7 @@ import (
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
 	codeHelper "github.com/easysoft/zentaoatf/internal/comm/helper/code"
 	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/comm/helper/script"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
 	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
@@ -23,7 +24,7 @@ func NewTestScriptService() *TestScriptService {
 }
 
 func (s *TestScriptService) LoadTestScriptsBySiteProduct(
-	siteId, productId uint, filerType string, filerValue int) (root serverDomain.TestAsset, err error) {
+	siteId, productId uint, displayBy, filerType string, filerValue int) (root serverDomain.TestAsset, err error) {
 
 	scriptIdsFromZentao := s.getScriptIdsFromZentao(siteId, productId, filerType, filerValue)
 	workspaces, _ := s.WorkspaceRepo.ListByProduct(siteId, productId)
@@ -40,23 +41,25 @@ func (s *TestScriptService) LoadTestScriptsBySiteProduct(
 		var scriptsInDir serverDomain.TestAsset
 
 		if workspace.Type == commConsts.ZTF {
-			//scriptsInDir, _ = scriptHelper.LoadScriptTreeByDir(workspace, scriptIdsFromZentao)
+			if displayBy == "workspace" {
+				scriptsInDir, _ = scriptHelper.LoadScriptTreeByDir(workspace, scriptIdsFromZentao)
 
-			// for testing tree data by zentao modules
-			site, _ := s.SiteService.Get(siteId)
-			config := configHelper.LoadBySite(site)
+			} else if displayBy == "module" {
+				site, _ := s.SiteService.Get(siteId)
+				config := configHelper.LoadBySite(site)
 
-			suiteId := 0
-			taskId := 0
-			if filerType == string(commConsts.FilterSuite) {
-				suiteId = filerValue
-			} else if filerType == string(commConsts.FilterTask) {
-				taskId = filerValue
+				suiteId := 0
+				taskId := 0
+				if filerType == string(commConsts.FilterSuite) {
+					suiteId = filerValue
+				} else if filerType == string(commConsts.FilterTask) {
+					taskId = filerValue
+				}
+				scriptsInDir, _ = zentaoHelper.LoadTestCasesInModuleTree(workspace, scriptIdsFromZentao,
+					int(productId), suiteId, taskId, config)
 			}
-			scriptsInDir, _ = zentaoHelper.LoadTestCasesInModuleTree(workspace, scriptIdsFromZentao,
-				int(productId), suiteId, taskId, config)
 
-		} else {
+		} else if displayBy != "module" && workspace.Type != commConsts.ZTF {
 			scriptsInDir, _ = codeHelper.LoadCodeTree(workspace)
 		}
 

@@ -11,6 +11,7 @@ type TestAsset struct {
 	Path  string `json:"path"`
 
 	Type        commConsts.TreeNodeType `json:"type"`
+	ModuleId    int                     `json:"moduleId"`
 	CaseId      int                     `json:"caseId"`
 	Lang        string                  `json:"lang"`
 	ScriptCount int                     `json:"scriptCount"`

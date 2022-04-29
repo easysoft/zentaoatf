@@ -97,13 +97,13 @@ func loadScriptNodesInDir(folder string, parent *serverDomain.TestAsset, level i
 			caseId, _ := strconv.Atoi(caseIdStr)
 
 			if scriptIdsFromZentao == nil || caseId < 1 { // not to filter
-				AddScript(childPath, caseId, "", false, parent)
+				AddScript(0, caseId, childPath, "", "workspace", false, parent)
 				continue
 			}
 
 			_, ok := scriptIdsFromZentao[caseId]
 			if ok {
-				AddScript(childPath, caseId, "", false, parent)
+				AddScript(0, caseId, childPath, "", "workspace", false, parent)
 			}
 		}
 	}
@@ -157,15 +157,23 @@ func LoadScriptListInDir(path string, files *[]string, level int) error {
 	return nil
 }
 
-func AddScript(pth string, caseId int, caseNameInZentao string, showZentaoCaseWithNoScript bool, parent *serverDomain.TestAsset) {
-	title := caseNameInZentao
+func AddScript(moduleId, caseId int, pth string, caseNameInZentao, displayBy string, showZentaoCaseWithNoScript bool, parent *serverDomain.TestAsset) {
+	title := ""
+
 	if pth == "" { // is zentao case
 		pth = fmt.Sprintf(serverConfig.ZentaoCasePrefix+"%d", caseId)
 	}
 
+	if displayBy == "module" {
+		title = caseNameInZentao
+	} else {
+		title = fileUtils.GetFileName(pth)
+	}
+
 	childScript := &serverDomain.TestAsset{
-		Type:   commConsts.File,
-		CaseId: caseId,
+		Type:     commConsts.File,
+		ModuleId: moduleId,
+		CaseId:   caseId,
 
 		WorkspaceId:   parent.WorkspaceId,
 		WorkspaceType: parent.WorkspaceType,
@@ -200,15 +208,16 @@ func AddScript(pth string, caseId int, caseNameInZentao string, showZentaoCaseWi
 	parent.ScriptCount += 1
 }
 func AddDir(pth string, moduleId int, moduleName string, parent *serverDomain.TestAsset) (dirNode *serverDomain.TestAsset) {
+	var nodeType commConsts.TreeNodeType
+
+	title := ""
 	if pth == "" { // is zentao module
 		pth = fmt.Sprintf(serverConfig.ZentaoModulePrefix+"%d", moduleId)
-	}
-
-	nodeType := commConsts.Dir
-	if moduleName == "" {
-		moduleName = fileUtils.GetDirName(pth)
-	} else {
+		title = moduleName
 		nodeType = commConsts.ZentaoModule
+	} else {
+		title = fileUtils.GetDirName(pth)
+		nodeType = commConsts.Dir
 	}
 
 	dirNode = &serverDomain.TestAsset{
@@ -216,7 +225,7 @@ func AddDir(pth string, moduleId int, moduleName string, parent *serverDomain.Te
 		WorkspaceId:   parent.WorkspaceId,
 		WorkspaceType: parent.WorkspaceType,
 		Path:          pth,
-		Title:         moduleName,
+		Title:         title,
 		Slots:         iris.Map{"icon": "icon"},
 
 		Checkable: true,

@@ -11,7 +11,6 @@
           <a-select-option value="workspace">{{t('by_workspace')}}</a-select-option>
 
           <template v-if="currProduct.id">
-            <a-select-option value="module">{{t('by_module')}}</a-select-option>
             <a-select-option value="suite">{{t('by_suite')}}</a-select-option>
             <a-select-option value="task">{{t('by_task')}}</a-select-option>
           </template>
@@ -21,7 +20,7 @@
         <a-select
             v-model:value="filerValue"
             @change="selectFilerValue"
-            style="width: 180px"
+            style="width: 120px"
             :dropdownMatchSelectWidth="false"
         >
           <a-select-option value=""></a-select-option>
@@ -40,6 +39,11 @@
         <a-button @click="showCheckboxOrNot" type="link">
           <span v-if="!showCheckbox">{{ t('show_checkbox') }}</span>
           <span v-if="showCheckbox">{{ t('hide_checkbox') }}</span>
+        </a-button>
+
+        <a-button @click="onDisplayBy" type="link">
+          <span v-if="displayBy === 'workspace'">按模块</span>
+          <span v-if="displayBy === 'module'">按目录</span>
         </a-button>
       </div>
     </div>
@@ -85,10 +89,11 @@
         </template>
       </a-tree>
 
-      ={{contextNode.key}}=
-
       <div v-if="contextNode.path" :style="menuStyle">
-        <TreeContextMenu :treeNode="contextNode" :onSubmit="menuClick"/>
+        <TreeContextMenu
+            :displayBy="displayBy"
+            :treeNode="contextNode"
+            :onSubmit="menuClick"/>
       </div>
 
       <a-empty v-if="treeDataEmpty" :image="simpleImage"/>
@@ -150,7 +155,7 @@
 import {
   computed,
   defineComponent,
-  onMounted,
+  onMounted, onUnmounted,
   ref,
   watch
 } from "vue";
@@ -162,8 +167,21 @@ import {Empty, message, notification} from "ant-design-vue";
 
 import bus from "@/utils/eventBus";
 import {ZentaoData} from "@/store/zentao";
-import {setExpandedKeys, getScriptFilters, getExpandedKeys, setScriptFilters} from "@/utils/cache";
-import {genWorkspaceToScriptsMap, listFilterItems, getCaseIdsFromReport, syncToZentao} from "../service";
+import {
+  setExpandedKeys,
+  getScriptFilters,
+  getExpandedKeys,
+  setScriptFilters,
+  getScriptDisplayBy,
+  setScriptDisplayBy
+} from "@/utils/cache";
+import {
+  genWorkspaceToScriptsMap,
+  listFilterItems,
+  getCaseIdsFromReport,
+  syncToZentao,
+  getSyncFromInfoFromMenu, getSyncToInfoFromMenu, getNodeMap, getFileNodesUnderParent
+} from "../service";
 import settings from "@/config/settings";
 import {useRouter} from "vue-router";
 import {DropEvent, TreeDragEvent} from "ant-design-vue/es/tree/Tree";
@@ -247,7 +265,7 @@ export default defineComponent({
       console.log(`loadScripts should be executed only once`)
       console.log(`filerType: ${filerType.value}, filerValue: ${filerValue.value}`)
 
-      const params = {filerType: filerType.value, filerValue: filerValue.value} as any
+      const params = {displayBy: displayBy.value, filerType: filerType.value, filerValue: filerValue.value} as any
       store.dispatch('Script/listScript', params)
     }
 
@@ -272,9 +290,14 @@ export default defineComponent({
       })
     }
 
+    // display
+    const loadDisplayBy = async () => {
+      displayBy.value = await getScriptDisplayBy(currSite.value.id, currProduct.value.id)
+    }
+
     // filters
     const loadFilterItems = async () => {
-      const data = await getScriptFilters(currSite.value.id, currProduct.value.id)
+      const data = await getScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id)
 
       if (!filerType.value) {
         filerType.value = data.by
@@ -303,14 +326,14 @@ export default defineComponent({
     }
     const selectFilerType = async (type) => {
       console.log('selectFilerType', type)
-      await setScriptFilters(currSite.value.id, currProduct.value.id, type, '')
+      await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, type, '')
 
       await loadFilterItems()
       await loadScripts()
     }
     const selectFilerValue = async (val) => {
       console.log('selectFilerValue', val)
-      await setScriptFilters(currSite.value.id, currProduct.value.id, filerType.value, val)
+      await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, filerType.value, val)
 
       await loadScripts()
     }
@@ -319,6 +342,7 @@ export default defineComponent({
       console.log('init')
       if (!currSite.value.id) return
 
+      await loadDisplayBy()
       await loadFilterItems()
       await loadScripts()
     }, 50)
@@ -349,12 +373,16 @@ export default defineComponent({
 
     let isExpand = ref(false);
     let showCheckbox = ref(false)
+    let displayBy = ref('workspace')
 
     let tree = ref(null)
 
     onMounted(() => {
       console.log('onMounted', tree)
-      // getOpenKeys(treeData.value[0], false)
+      document.addEventListener("click", clearMenu)
+    })
+    onUnmounted(() => {
+      document.removeEventListener("click", clearMenu)
     })
 
     const execSelected = () => {
@@ -362,7 +390,7 @@ export default defineComponent({
 
       selectNothing()
 
-      const leafNodes = getLeafNodes()
+      const leafNodes = getCheckedFileNodes()
       bus.emit(settings.eventExec, {execType: 'ztf', scripts: leafNodes});
     }
     const execStop = () => {
@@ -392,22 +420,16 @@ export default defineComponent({
     const checkinCases = () => {
       console.log('checkinCases')
 
-      const leafNodes = getLeafNodes()
-      const sets = genWorkspaceToScriptsMap(leafNodes)
-      console.log('sets', sets)
+      const fileNodes = getCheckedFileNodes()
+      const workspaceWithScripts = genWorkspaceToScriptsMap(fileNodes)
 
-      syncToZentao(sets).then((json) => {
-        if (json.code === 0) {
-          notification.success({
-            message: t('sync_success'),
-          });
+      scriptStore.dispatch('Script/syncToZentao', workspaceWithScripts).then((resp => {
+        if (resp.code === 0) {
+          notification.success({message: t('sync_success')});
         } else {
-          notification.error({
-            message: t('sync_fail'),
-            description: json.msg,
-          });
+          notification.error({message: t('sync_fail'), description: resp.data.msg});
         }
-      })
+      }))
     }
 
     const selectNode = (keys) => {
@@ -457,6 +479,16 @@ export default defineComponent({
       showCheckbox.value = !showCheckbox.value
     }
 
+    const onDisplayBy = () => {
+      console.log('onDisplayBy')
+      if (displayBy.value === 'workspace') displayBy.value = 'module'
+      else displayBy.value = 'workspace'
+
+      setScriptDisplayBy(displayBy.value, currSite.value.id, currProduct.value.id)
+
+      loadScripts()
+    }
+
     // context menu
     let rightVisible = false
     let contextNode = ref({} as any)
@@ -465,22 +497,15 @@ export default defineComponent({
 
     const treeDataMap = {}
     const getNodeMapCall = throttle(async () => {
-      getNodeMap(treeData.value[0])
+      getNodeMap(treeData.value[0], treeDataMap)
     }, 300)
-    const getNodeMap = (node): void => {
-      if (!node) return
 
-      treeDataMap[node.path] = node
-      if (node.children) {
-        node.children.forEach(c => {
-          getNodeMap(c)
-        })
-      }
-    }
-
+    let rightClickedNodePath = ''
     const onRightClick = (e) => {
       console.log('onRightClick', e.node.dataRef.path)
       const {event, node} = e
+
+      rightClickedNodePath = node.eventKey
 
       const y = event.currentTarget.getBoundingClientRect().top
       const x = event.currentTarget.getBoundingClientRect().right
@@ -506,43 +531,72 @@ export default defineComponent({
       }
     }
 
-    const updateName = (id) => {
-      const name = editedData.value[id]
-      console.log('updateName', id, name)
-      // updateNameReq(id, name).then((json) => {
+    const updateName = (path) => {
+      const name = editedData.value[path]
+      console.log('updateName', path, name)
+      // updateNameReq(path, name).then((json) => {
       //   if (json.code === 0) {
-      //     treeDataMap[id].name = name
-      //     treeDataMap[id].isEdit = false
+      //     treeDataMap[path].name = name
+      //     treeDataMap[path].isEdit = false
       //   }
       // })
     }
-    const cancelUpdate = (id) => {
-      console.log('cancelUpdate', id)
-      treeDataMap[id].isEdit = false
+    const cancelUpdate = (path) => {
+      console.log('cancelUpdate', path)
+      treeDataMap[path].isEdit = false
     }
 
-    let targetModelId = ''
-    const menuClick = (selectedKey: string, targetId: string) => {
-      console.log('menuClick', selectedKey, targetId)
+    const menuClick = (act: string, val: string) => {
+      console.log('menuClick', act, val)
 
-      targetModelId = targetId
+      if (act === 'rename') {
+        rightClickedNodePath = val
 
-      if (selectedKey === 'rename') {
-        selectedKeys.value = [targetModelId]
+        selectedKeys.value = [rightClickedNodePath]
         selectNode(selectedKeys.value)
-        console.log('rename', treeDataMap[targetModelId])
-        editedData.value[targetModelId] = treeDataMap[targetModelId].name
+        console.log('rename', treeDataMap[rightClickedNodePath])
+        editedData.value[rightClickedNodePath] = treeDataMap[rightClickedNodePath].name
 
-        treeDataMap[targetModelId].isEdit = true
+        treeDataMap[rightClickedNodePath].isEdit = true
+        return
+      } else if (act === 'remove') {
+        rightClickedNodePath = val
+        removeNode(rightClickedNodePath)
+
+        return
+
+      } else if (act === 'sync_from_zentao') {
+        const node = treeDataMap[rightClickedNodePath]
+        const data = getSyncFromInfoFromMenu(val, node)
+        data.workspaceId = treeDataMap[rightClickedNodePath].workspaceId
+
+        scriptStore.dispatch('Script/syncFromZentao', data).then((resp => {
+          if (resp.code === 0) {
+            notification.success({message: t('sync_success')});
+          } else {
+            notification.error({message: t('sync_fail'), description: resp.data.msg});
+          }
+        }))
+
+        return
+      } else if (act === 'sync_to_zentao') {
+        const node = treeDataMap[rightClickedNodePath]
+
+        const fileNodes = getFileNodesUnderParent(node)
+        const workspaceWithScripts = genWorkspaceToScriptsMap(fileNodes)
+
+        scriptStore.dispatch('Script/syncToZentao', workspaceWithScripts).then((resp => {
+          if (resp.code === 0) {
+            notification.success({message: t('sync_success')});
+          } else {
+            notification.error({message: t('sync_fail'), description: resp.data.msg});
+          }
+        }))
+
         return
       }
 
-      if (selectedKey === 'remove') {
-        removeNode()
-        return
-      }
-
-      const arr = selectedKey.split('_')
+      const arr = act.split('_')
       addNode(arr[1], arr[2])
 
       clearMenu()
@@ -553,17 +607,17 @@ export default defineComponent({
       contextNode.value = ref({})
     }
     const addNode = (mode, type) => {
-      console.log('addNode', targetModelId)
+      console.log('addNode', rightClickedNodePath)
       store.dispatch('Interface/createInterface',
-          {mode: mode, type: type, target: targetModelId, name: type === 'dir' ? '新目录' : '新接口'})
+          {mode: mode, type: type, target: rightClickedNodePath, name: type === 'dir' ? '新目录' : '新接口'})
           .then((newNode) => {
             console.log('newNode', newNode)
             selectedKeys.value = [newNode.id] // select new node
             expandOneKey(treeDataMap, newNode.parentId, expandedKeys.value) // expend new node
           })
     }
-    const removeNode = () => {
-      store.dispatch('Interface/deleteInterface', targetModelId);
+    const removeNode = (rightClickedNodePath) => {
+      store.dispatch('Interface/deleteInterface', rightClickedNodePath);
     }
 
     const onDragEnter = (info: TreeDragEvent) => {
@@ -582,8 +636,9 @@ export default defineComponent({
       store.dispatch('Interface/moveInterface', {dragKey: dragKey, dropKey: dropKey, dropPos: dropPos});
     }
 
-    const getLeafNodes = (): string[] => {
-      console.log('treeDataMap', treeDataMap)
+    const getCheckedFileNodes = (): string[] => {
+      console.log('getCheckedFileNodes')
+
       let arr = [] as string[]
       checkedKeys.value.forEach(k => {
         if (treeDataMap[k].type === 'file') {
@@ -630,8 +685,10 @@ export default defineComponent({
       checkinCases,
       isExpand,
       showCheckbox,
+      displayBy,
       expandAllOrNot,
       showCheckboxOrNot,
+      onDisplayBy,
       tree,
       expandedKeys,
       selectedKeys,
@@ -649,7 +706,7 @@ export default defineComponent({
       menuStyle,
       treeDataMap,
       editedData,
-      targetModelId,
+      rightClickedNodePath,
       updateName,
       cancelUpdate,
       onRightClick,
@@ -706,7 +763,7 @@ export default defineComponent({
     }
 
     .right {
-      width: 120px;
+      width: 170px;
       text-align: center;
     }
 

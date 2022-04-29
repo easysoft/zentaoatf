@@ -21,7 +21,7 @@ func SyncFromZentao(settings commDomain.SyncSettings, config commDomain.Workspac
 	taskId := settings.TaskId
 	caseId := settings.CaseId
 
-	byModule := settings.ByModule
+	byModule := settings.SaveByModule
 	independentFile := settings.IndependentFile
 	lang := "php" // settings.Lang
 
@@ -37,7 +37,7 @@ func SyncFromZentao(settings commDomain.SyncSettings, config commDomain.Workspac
 			cases = append(cases, cs)
 		}
 	} else {
-		cases, err = LoadTestCaseDetail(productId, moduleId, suiteId, taskId, config)
+		cases, err = LoadTestCasesDetail(productId, moduleId, suiteId, taskId, config)
 	}
 
 	if err != nil {
