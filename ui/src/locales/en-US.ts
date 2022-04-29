@@ -146,6 +146,8 @@ export default {
 
     'expand_all': 'Expand',
     'collapse_all': 'Collapse',
+    'show_checkbox': 'Show Checkbox',
+    'hide_checkbox': 'Hide Checkbox',
     'wrong_url': 'Please input right ZenTao URL.',
     'delete_success':  'Delete successfully.', 
     'ws_conn_success': 'Connect to WebSocket successfully.',

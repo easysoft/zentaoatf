@@ -32,9 +32,14 @@
       </div>
 
       <div class="right">
-        <a-button @click="expandAll" type="link">
+        <a-button @click="expandAllOrNot" type="link">
           <span v-if="!isExpand">{{ t('expand_all') }}</span>
           <span v-if="isExpand">{{ t('collapse_all') }}</span>
+        </a-button>
+
+        <a-button @click="showCheckboxOrNot" type="link">
+          <span v-if="!showCheckbox">{{ t('show_checkbox') }}</span>
+          <span v-if="showCheckbox">{{ t('hide_checkbox') }}</span>
         </a-button>
       </div>
     </div>
@@ -49,7 +54,7 @@
           v-model:checkedKeys="checkedKeys"
 
           :replace-fields="replaceFields"
-          checkable
+          :checkable="showCheckbox"
           @expand="expandNode"
           @select="selectNode"
           @check="checkNode"
@@ -291,13 +296,13 @@ export default defineComponent({
     if (filerValue.value.length === 0) initData()
 
     const expandedKeys = ref<string[]>([]);
-    const getOpenKeys = (treeNode, isAll) => {
+    const getOpenKeys = (treeNode: any, openAll: boolean) => { // expand top one level if openAll is false
       if (!treeNode) return
       expandedKeys.value.push(treeNode.path)
 
-      if (treeNode.children && isAll) {
+      if (treeNode.children && openAll) {
         treeNode.children.forEach((item, index) => {
-          getOpenKeys(item, isAll)
+          getOpenKeys(item, openAll)
         })
       }
 
@@ -312,6 +317,7 @@ export default defineComponent({
     };
 
     let isExpand = ref(false);
+    let showCheckbox = ref(false)
 
     let tree = ref(null)
 
@@ -402,14 +408,20 @@ export default defineComponent({
       console.log('expandNode')
       setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
     }
-    const expandAll = (e) => {
-      console.log('expandAll')
+    const expandAllOrNot = (e) => {
+      console.log('expandAllOrNot')
       isExpand.value = !isExpand.value
 
       expandedKeys.value = []
       if (isExpand.value) getOpenKeys(treeData.value[0], true)
+      else getOpenKeys(treeData.value[0], false)
 
       setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
+    }
+
+    const showCheckboxOrNot = (e) => {
+      console.log('showCheckboxOrNot')
+      showCheckbox.value = !showCheckbox.value
     }
 
     const nodeMap = {}
@@ -470,7 +482,9 @@ export default defineComponent({
       checkoutCases,
       checkinCases,
       isExpand,
-      expandAll,
+      showCheckbox,
+      expandAllOrNot,
+      showCheckboxOrNot,
       tree,
       expandedKeys,
       selectedKeys,
@@ -530,7 +544,7 @@ export default defineComponent({
     }
 
     .right {
-      width: 60px;
+      width: 120px;
       text-align: center;
     }
 

@@ -145,6 +145,8 @@ export default {
 
     'expand_all': '展开',
     'collapse_all': '收缩',
+    'show_checkbox': '显示选择框',
+    'hide_checkbox': '隐藏选择框',
     'wrong_url': '请输入正确的的URL地址，以http或https开头。',
     'delete_success':  '删除成功', 
     'ws_conn_success': 'WebSocket连接成功。',
