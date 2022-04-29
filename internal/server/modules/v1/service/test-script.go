@@ -42,7 +42,7 @@ func (s *TestScriptService) LoadTestScriptsBySiteProduct(
 		if workspace.Type == commConsts.ZTF {
 			//scriptsInDir, _ = scriptHelper.LoadScriptTreeByDir(workspace, scriptIdsFromZentao)
 
-			// for testing
+			// for testing tree data by zentao modules
 			site, _ := s.SiteService.Get(siteId)
 			config := configHelper.LoadBySite(site)
 

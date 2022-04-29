@@ -11,6 +11,7 @@ import (
 	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	stringUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/string"
+	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/kataras/iris/v12"
@@ -87,7 +88,7 @@ func loadScriptNodesInDir(folder string, parent *serverDomain.TestAsset, level i
 
 		childPath := folder + name
 		if grandson.IsDir() && level < 3 { // 目录, 递归遍历
-			dirNode := AddDir(childPath, "", parent)
+			dirNode := AddDir(childPath, 0, "", parent)
 
 			loadScriptNodesInDir(childPath, dirNode, level+1, scriptIdsFromZentao)
 		} else {
@@ -158,10 +159,8 @@ func LoadScriptListInDir(path string, files *[]string, level int) error {
 
 func AddScript(pth string, caseId int, caseNameInZentao string, showZentaoCaseWithNoScript bool, parent *serverDomain.TestAsset) {
 	title := caseNameInZentao
-	if pth != "" {
-		//title = fileUtils.GetFileName(pth)
-	} else {
-		pth = fmt.Sprintf("zentao-%d", caseId)
+	if pth == "" { // is zentao case
+		pth = fmt.Sprintf(serverConfig.ZentaoCasePrefix+"%d", caseId)
 	}
 
 	childScript := &serverDomain.TestAsset{
@@ -200,7 +199,11 @@ func AddScript(pth string, caseId int, caseNameInZentao string, showZentaoCaseWi
 	parent.Children = append(parent.Children, childScript)
 	parent.ScriptCount += 1
 }
-func AddDir(pth string, moduleName string, parent *serverDomain.TestAsset) (dirNode *serverDomain.TestAsset) {
+func AddDir(pth string, moduleId int, moduleName string, parent *serverDomain.TestAsset) (dirNode *serverDomain.TestAsset) {
+	if pth == "" { // is zentao module
+		pth = fmt.Sprintf(serverConfig.ZentaoModulePrefix+"%d", moduleId)
+	}
+
 	nodeType := commConsts.Dir
 	if moduleName == "" {
 		moduleName = fileUtils.GetDirName(pth)

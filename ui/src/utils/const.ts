@@ -1,4 +1,6 @@
-
+export const ZentaoPrefix = 'zentao-'
+export const ZentaoCasePrefix = 'zentao-case-'
+export const ZentaoModulePrefix = 'zentao-module-'
 export const ScriptFileNotExist = 'script_file_not_exist'
 
 export const ScriptLanguages = [

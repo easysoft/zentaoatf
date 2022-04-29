@@ -151,7 +151,7 @@ func genModuleTreeWithCases(moduleInterface interface{},
 	moduleName := moduleMap["name"].(string)
 
 	// add module node
-	dirNode := scriptHelper.AddDir("", moduleName, asset)
+	dirNode := scriptHelper.AddDir("", moduleId, moduleName, asset)
 
 	// add cases in module
 	for _, cs := range caseMapByModuleFromZentao[moduleId] {
@@ -166,7 +166,6 @@ func genModuleTreeWithCases(moduleInterface interface{},
 		}
 
 		scriptHelper.AddScript(casePath, caseId, caseNameInZentao, true, dirNode)
-		logUtils.Infof("===", cs.Title)
 	}
 
 	if moduleMap["children"] == nil {

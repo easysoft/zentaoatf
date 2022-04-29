@@ -139,3 +139,12 @@ export function hideMenu (newVal) {
     if (newVal.type === 'unit') addClass(scriptSync,'t-hidden')
     else removeClass(scriptSync,'t-hidden')
 }
+
+export function expandOneKey(treeMap: any, key: string, expandedKeys: string[]) {
+    if (!expandedKeys.includes(key)) expandedKeys.push(key)
+
+    const parentId = treeMap[key].parentId
+    if (parentId) {
+        expandOneKey(treeMap, parentId, expandedKeys)
+    }
+}

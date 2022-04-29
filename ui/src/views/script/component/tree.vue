@@ -58,13 +58,38 @@
           @expand="expandNode"
           @select="selectNode"
           @check="checkNode"
+
+          draggable
+          @rightClick="onRightClick"
+          @dragenter="onDragEnter"
+          @drop="onDrop"
       >
+
         <template #title="slotProps">
-          <span :class="[{'no-script': noScript(slotProps.path)}]">
-            {{slotProps.title}}
+          <span v-if="!slotProps.isEdit">
+            <span :class="[{'no-script': noScript(slotProps.path)}]">
+              {{slotProps.title}}
+            </span>
+          </span>
+
+          <span v-else class="name-editor">
+            <a-input v-model:value="editedData[slotProps.id]"
+                     @keyup.enter=updateName(slotProps.id)
+                     @click.stop/>
+
+            <span class="btns">
+              <CheckOutlined @click.stop="updateName(slotProps.id)"/>
+              <CloseOutlined @click.stop="cancelUpdate(slotProps.id)"/>
+            </span>
           </span>
         </template>
       </a-tree>
+
+      ={{contextNode.key}}=
+
+      <div v-if="contextNode.path" :style="menuStyle">
+        <TreeContextMenu :treeNode="contextNode" :onSubmit="menuClick"/>
+      </div>
 
       <a-empty v-if="treeDataEmpty" :image="simpleImage"/>
     </div>
@@ -134,7 +159,6 @@ import {useI18n} from "vue-i18n";
 
 import {ScriptData} from "../store";
 import {Empty, message, notification} from "ant-design-vue";
-import { DatabaseOutlined, FolderOutlined, FolderOpenOutlined, FileOutlined} from '@ant-design/icons-vue';
 
 import bus from "@/utils/eventBus";
 import {ZentaoData} from "@/store/zentao";
@@ -142,17 +166,24 @@ import {setExpandedKeys, getScriptFilters, getExpandedKeys, setScriptFilters} fr
 import {genWorkspaceToScriptsMap, listFilterItems, getCaseIdsFromReport, syncToZentao} from "../service";
 import settings from "@/config/settings";
 import {useRouter} from "vue-router";
+import {DropEvent, TreeDragEvent} from "ant-design-vue/es/tree/Tree";
+import {CloseOutlined, CheckOutlined} from "@ant-design/icons-vue";
 
 import SyncFromZentao from "./syncFromZentao.vue"
 import {isWindows} from "@/utils/comm";
 import {testToolMap} from "@/utils/testing";
 import {ExecStatus} from "@/store/exec";
 import debounce from "lodash.debounce";
+import throttle from "lodash.debounce";
+import {expandOneKey} from "@/utils/dom";
+import TreeContextMenu from "./treeContextMenu.vue"
+import {ZentaoCasePrefix} from "@/utils/const";
 
 export default defineComponent({
   name: 'ScriptTreePage',
   components: {
-    SyncFromZentao,
+    CloseOutlined, CheckOutlined,
+    SyncFromZentao, TreeContextMenu,
   },
   props: {
   },
@@ -227,7 +258,7 @@ export default defineComponent({
     }
 
     const onTreeDataChanged =async () => {
-      getNodeMap(treeData.value[0])
+      getNodeMapCall()
 
       getExpandedKeys(currSite.value.id, currProduct.value.id).then(async cachedKeys => {
         console.log('cachedKeys', currSite.value.id, currProduct.value.id, cachedKeys)
@@ -379,15 +410,17 @@ export default defineComponent({
       })
     }
 
-    const selectNode = (selectedKeys, e) => {
-      console.log('selectNode', e.node.dataRef.workspaceId)
+    const selectNode = (keys) => {
+      console.log('selectNode', selectedKeys.value)
 
-      if (e.node.dataRef.workspaceType !== 'ztf') checkNothing()
+      const node = treeDataMap[selectedKeys.value[0]]
 
-      scriptStore.dispatch('Script/getScript', e.node.dataRef)
+      if (node.workspaceType !== 'ztf') checkNothing()
+
+      scriptStore.dispatch('Script/getScript', node)
 
       scriptStore.dispatch('Script/changeWorkspace',
-          {id: e.node.dataRef.workspaceId, type: e.node.dataRef.workspaceType})
+          {id: node.workspaceId, type: node.workspaceType})
     }
 
     const checkNode = (checkedKeys, e) => {
@@ -424,30 +457,144 @@ export default defineComponent({
       showCheckbox.value = !showCheckbox.value
     }
 
-    const nodeMap = {}
+    // context menu
+    let rightVisible = false
+    let contextNode = ref({} as any)
+    let menuStyle = ref({} as any)
+    const editedData = ref<any>({})
+
+    const treeDataMap = {}
+    const getNodeMapCall = throttle(async () => {
+      getNodeMap(treeData.value[0])
+    }, 300)
     const getNodeMap = (node): void => {
       if (!node) return
 
-      nodeMap[node.path] = node
+      treeDataMap[node.path] = node
       if (node.children) {
         node.children.forEach(c => {
           getNodeMap(c)
         })
       }
     }
+
+    const onRightClick = (e) => {
+      console.log('onRightClick', e.node.dataRef.path)
+      const {event, node} = e
+
+      const y = event.currentTarget.getBoundingClientRect().top
+      const x = event.currentTarget.getBoundingClientRect().right
+
+      const contextNodeData = treeDataMap[node.eventKey]
+      contextNode.value = {
+        pageX: x,
+        pageY: y,
+        path: node.eventKey,
+        title: node.title,
+        type: contextNodeData.type,
+        // parentId: node.dataRef.parentId
+      }
+
+      menuStyle.value = {
+        position: 'fixed',
+        maxHeight: 40,
+        textAlign: 'center',
+        left: `${x + 10}px`,
+        top: `${y + 6}px`
+        // display: 'flex',
+        // flexDirection: 'row'
+      }
+    }
+
+    const updateName = (id) => {
+      const name = editedData.value[id]
+      console.log('updateName', id, name)
+      // updateNameReq(id, name).then((json) => {
+      //   if (json.code === 0) {
+      //     treeDataMap[id].name = name
+      //     treeDataMap[id].isEdit = false
+      //   }
+      // })
+    }
+    const cancelUpdate = (id) => {
+      console.log('cancelUpdate', id)
+      treeDataMap[id].isEdit = false
+    }
+
+    let targetModelId = ''
+    const menuClick = (selectedKey: string, targetId: string) => {
+      console.log('menuClick', selectedKey, targetId)
+
+      targetModelId = targetId
+
+      if (selectedKey === 'rename') {
+        selectedKeys.value = [targetModelId]
+        selectNode(selectedKeys.value)
+        console.log('rename', treeDataMap[targetModelId])
+        editedData.value[targetModelId] = treeDataMap[targetModelId].name
+
+        treeDataMap[targetModelId].isEdit = true
+        return
+      }
+
+      if (selectedKey === 'remove') {
+        removeNode()
+        return
+      }
+
+      const arr = selectedKey.split('_')
+      addNode(arr[1], arr[2])
+
+      clearMenu()
+    }
+
+    const clearMenu = () => {
+      console.log('clearMenu')
+      contextNode.value = ref({})
+    }
+    const addNode = (mode, type) => {
+      console.log('addNode', targetModelId)
+      store.dispatch('Interface/createInterface',
+          {mode: mode, type: type, target: targetModelId, name: type === 'dir' ? '新目录' : '新接口'})
+          .then((newNode) => {
+            console.log('newNode', newNode)
+            selectedKeys.value = [newNode.id] // select new node
+            expandOneKey(treeDataMap, newNode.parentId, expandedKeys.value) // expend new node
+          })
+    }
+    const removeNode = () => {
+      store.dispatch('Interface/deleteInterface', targetModelId);
+    }
+
+    const onDragEnter = (info: TreeDragEvent) => {
+      console.log('onDragEnter', info);
+    };
+
+    const onDrop = (info: DropEvent) => {
+      console.log('onDrop', info);
+
+      const dragKey = info.dragNode.eventKey;
+      const dropKey = info.node.eventKey;
+      let dropPos = info.dropPosition > 1 ? 1 : info.dropPosition;
+      if (!treeDataMap[dropKey].isDir && dropPos === 0) dropPos = 1
+      console.log(dragKey, dropKey, dropPos);
+
+      store.dispatch('Interface/moveInterface', {dragKey: dragKey, dropKey: dropKey, dropPos: dropPos});
+    }
+
     const getLeafNodes = (): string[] => {
-      console.log('nodeMap', nodeMap)
+      console.log('treeDataMap', treeDataMap)
       let arr = [] as string[]
       checkedKeys.value.forEach(k => {
-        if (nodeMap[k].type === 'file') {
-          arr.push(nodeMap[k])
+        if (treeDataMap[k].type === 'file') {
+          arr.push(treeDataMap[k])
         }
       })
       return arr
     }
 
     const noScript = (str) => {
-      if (str.indexOf('zentao') == 0) {
+      if (str.indexOf(ZentaoCasePrefix) == 0) {
         return true
       }
       return false
@@ -496,6 +643,21 @@ export default defineComponent({
       onSave,
       onCancel,
       noScript,
+
+      rightVisible,
+      contextNode,
+      menuStyle,
+      treeDataMap,
+      editedData,
+      targetModelId,
+      updateName,
+      cancelUpdate,
+      onRightClick,
+      menuClick,
+      clearMenu,
+      removeNode,
+      onDragEnter,
+      onDrop,
     }
   }
 
