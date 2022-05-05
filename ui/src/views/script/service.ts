@@ -47,11 +47,11 @@ export async function extract(path: string, workspaceId: number): Promise<any> {
     });
 }
 
-export async function create(params: any): Promise<any> {
+export async function create(data: any): Promise<any> {
     return request({
         url: `/${apiPath}`,
         method: 'POST',
-        data: params,
+        data,
     });
 }
 
@@ -73,10 +73,13 @@ export async function updateNameReq(path: string, name: string): Promise<any> {
 }
 
 
-export async function remove(id: number): Promise<any> {
+export async function remove(path: string): Promise<any> {
+    const data = {path: path}
+
     return request({
-        url: `/${apiPath}/${id}`,
+        url: `/${apiPath}`,
         method: 'delete',
+        data,
     });
 }
 

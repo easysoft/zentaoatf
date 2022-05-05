@@ -134,6 +134,12 @@
       </span>
     </div>
 
+    <NameForm
+        v-if="nameFormVisible"
+        :onSubmit="createNode"
+        :onCancel="() => nameFormVisible = false"
+    />
+
     <a-modal
         :title="fromTitle"
         v-if="fromVisible"
@@ -180,8 +186,7 @@ import {
   genWorkspaceToScriptsMap,
   listFilterItems,
   getCaseIdsFromReport,
-  syncToZentao,
-  getSyncFromInfoFromMenu, getSyncToInfoFromMenu, getNodeMap, getFileNodesUnderParent, updateNameReq
+  getSyncFromInfoFromMenu, getNodeMap, getFileNodesUnderParent, updateNameReq
 } from "../service";
 import settings from "@/config/settings";
 import {useRouter} from "vue-router";
@@ -198,11 +203,14 @@ import {expandOneKey} from "@/utils/dom";
 import TreeContextMenu from "./treeContextMenu.vue"
 import {ZentaoCasePrefix} from "@/utils/const";
 
+import NameForm from "./nodeName.vue";
+import {isInArray} from "@/utils/array";
+
 export default defineComponent({
   name: 'ScriptTreePage',
   components: {
     CloseOutlined, CheckOutlined,
-    SyncFromZentao, TreeContextMenu,
+    TreeContextMenu, NameForm, SyncFromZentao,
   },
   props: {
   },
@@ -495,18 +503,21 @@ export default defineComponent({
     let contextNode = ref({} as any)
     let menuStyle = ref({} as any)
     const editedData = ref<any>({})
+    const nameFormVisible = ref(false)
 
     const treeDataMap = {}
     const getNodeMapCall = throttle(async () => {
       getNodeMap(treeData.value[0], treeDataMap)
     }, 300)
 
-    let rightClickedNodePath = ''
+    let rightClickedNode = {} as any
+    let createAct = ''
+
     const onRightClick = (e) => {
       console.log('onRightClick', e.node.dataRef.path)
       const {event, node} = e
 
-      rightClickedNodePath = node.eventKey
+      rightClickedNode = node.dataRef
 
       const y = event.currentTarget.getBoundingClientRect().top
       const x = event.currentTarget.getBoundingClientRect().right
@@ -518,6 +529,7 @@ export default defineComponent({
         path: node.eventKey,
         title: node.title,
         type: contextNodeData.type,
+        workspaceId: contextNodeData.workspaceId,
         // parentId: node.dataRef.parentId
       }
 
@@ -547,27 +559,42 @@ export default defineComponent({
       treeDataMap[path].isEdit = false
     }
 
-    const menuClick = (act: string, val: string) => {
-      console.log('menuClick', act, val)
+    const createNode = (model) => {
+      const arr = createAct.split('_')
+      const mode = arr[1]
+      const type = arr[2]
 
-      if (act === 'rename') {
-        rightClickedNodePath = val
+      scriptStore.dispatch('Script/createScript', {
+        name: model.name, mode: mode, type: type, target: rightClickedNode.path,
+        workspaceId: rightClickedNode.workspaceId, productId: currProduct.value.id,
+      })
+    }
 
-        selectedKeys.value = [rightClickedNodePath]
-        selectNode(selectedKeys.value)
-        editedData.value[rightClickedNodePath] = treeDataMap[rightClickedNodePath].title
-        treeDataMap[rightClickedNodePath].isEdit = true
+    const menuClick = (act: string, node: any) => {
+      console.log('menuClick', act, node)
+      createAct = act
+      rightClickedNode = node
+
+      if (isInArray(act, ['add_brother_node', 'add_child_node', 'add_brother_dir', 'add_child_dir'])) {
+        nameFormVisible.value = true
         return
+
+      } else if (act === 'rename') {
+        selectedKeys.value = [rightClickedNode.path]
+        selectNode(selectedKeys.value)
+        editedData.value[rightClickedNode.path] = treeDataMap[rightClickedNode.path].title
+        treeDataMap[rightClickedNode.path].isEdit = true
+        return
+
       } else if (act === 'remove') {
-        rightClickedNodePath = val
-        removeNode(rightClickedNodePath)
+        removeNode(rightClickedNode.path)
 
         return
 
       } else if (act === 'sync_from_zentao') {
-        const node = treeDataMap[rightClickedNodePath]
-        const data = getSyncFromInfoFromMenu(val, node)
-        data.workspaceId = treeDataMap[rightClickedNodePath].workspaceId
+        const node = treeDataMap[rightClickedNode.path]
+        const data = getSyncFromInfoFromMenu(rightClickedNode.path, node)
+        data.workspaceId = treeDataMap[rightClickedNode.path].workspaceId
 
         scriptStore.dispatch('Script/syncFromZentao', data).then((resp => {
           if (resp.code === 0) {
@@ -579,7 +606,7 @@ export default defineComponent({
 
         return
       } else if (act === 'sync_to_zentao') {
-        const node = treeDataMap[rightClickedNodePath]
+        const node = treeDataMap[rightClickedNode.path]
 
         const fileNodes = getFileNodesUnderParent(node)
         const workspaceWithScripts = genWorkspaceToScriptsMap(fileNodes)
@@ -606,17 +633,17 @@ export default defineComponent({
       contextNode.value = ref({})
     }
     const addNode = (mode, type) => {
-      console.log('addNode', rightClickedNodePath)
+      console.log('addNode', rightClickedNode.path)
       store.dispatch('Interface/createInterface',
-          {mode: mode, type: type, target: rightClickedNodePath, name: type === 'dir' ? '新目录' : '新接口'})
+          {mode: mode, type: type, target: rightClickedNode.path, name: type === 'dir' ? '新目录' : '新接口'})
           .then((newNode) => {
             console.log('newNode', newNode)
             selectedKeys.value = [newNode.id] // select new node
             expandOneKey(treeDataMap, newNode.parentId, expandedKeys.value) // expend new node
           })
     }
-    const removeNode = (rightClickedNodePath) => {
-      store.dispatch('Interface/deleteInterface', rightClickedNodePath);
+    const removeNode = (path) => {
+      store.dispatch('Script/deleteScript', path);
     }
 
     const onDragEnter = (info: TreeDragEvent) => {
@@ -663,6 +690,7 @@ export default defineComponent({
       treeData,
       currWorkspace,
       testToolMap,
+      nameFormVisible,
       treeDataEmpty,
       filerItems,
 
@@ -705,12 +733,13 @@ export default defineComponent({
       menuStyle,
       treeDataMap,
       editedData,
-      rightClickedNodePath,
+      rightClickedNode,
       updateName,
       cancelUpdate,
       onRightClick,
       menuClick,
       clearMenu,
+      createNode,
       removeNode,
       onDragEnter,
       onDrop,

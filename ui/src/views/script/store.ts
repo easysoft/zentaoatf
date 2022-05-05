@@ -156,18 +156,20 @@ const StoreModel: ModuleType = {
             }
         },
 
-        async deleteScript({ commit }, payload: number ) {
+        async updateCode({ commit }, payload: any ) {
             try {
-                await remove(payload);
+                await updateCode(payload);
                 return true;
             } catch (error) {
                 return false;
             }
         },
 
-        async updateCode({ commit }, payload: any ) {
+        async deleteScript({ commit , dispatch, state}, path: string ) {
             try {
-                await updateCode(payload);
+                await remove(path);
+                await dispatch('listScript', state.queryParams)
+
                 return true;
             } catch (error) {
                 return false;

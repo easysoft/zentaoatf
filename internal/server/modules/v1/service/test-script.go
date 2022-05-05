@@ -126,6 +126,42 @@ func (s *TestScriptService) GetCaseIdsFromReport(workspaceId int, seq, scope str
 	return
 }
 
+func (s *TestScriptService) CreateNode(req serverDomain.CreateScriptReq) (err error) {
+	name := req.Name
+	extName := fileUtils.GetExtNameWithoutDot(name)
+	mode := req.Mode
+	typ := req.Type
+	target := req.Target
+	//workspaceId := req.WorkspaceId
+	productId := req.ProductId
+
+	if !fileUtils.IsDir(target) && mode == commConsts.Child {
+		mode = commConsts.Brother
+	}
+
+	dir := ""
+	if mode == commConsts.Child {
+		dir = target
+	} else if mode == commConsts.Brother {
+		dir = filepath.Dir(target)
+	}
+
+	pth := filepath.Join(dir, name)
+	if typ == commConsts.CreateDir {
+		fileUtils.MkDirIfNeeded(pth)
+	} else {
+		if extName == "" {
+			fileUtils.WriteFile(pth, "")
+			return
+		}
+
+		lang := commConsts.ScriptExtToNameMap[fileUtils.GetExtNameWithoutDot(pth)]
+		scriptHelper.GenEmptyScript(name, lang, pth, productId)
+	}
+
+	return
+}
+
 func (s *TestScriptService) UpdateCode(script serverDomain.TestScript) (err error) {
 	fileUtils.WriteFile(script.Path, script.Code)
 
@@ -136,6 +172,12 @@ func (s *TestScriptService) UpdateName(script serverDomain.TestScript) (err erro
 	dir := filepath.Dir(script.Path)
 	newPath := filepath.Join(dir, script.Name)
 	os.Rename(script.Path, newPath)
+
+	return
+}
+
+func (s *TestScriptService) Delete(pth string) (err error) {
+	os.Remove(pth)
 
 	return
 }

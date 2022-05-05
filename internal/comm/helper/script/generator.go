@@ -99,6 +99,22 @@ func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool
 	return
 }
 
+func GenEmptyScript(name, lang, pth string, productId int) {
+	srcCode := fmt.Sprintf("%s %s", commConsts.LangMap[lang]["commentsTag"],
+		i118Utils.Sprintf("find_example", consts.FilePthSep, lang))
+
+	info := make([]string, 0)
+	info = append(info, fmt.Sprintf("title=%s", name))
+	info = append(info, fmt.Sprintf("cid=%d", 0))
+	info = append(info, fmt.Sprintf("pid=%d", productId))
+
+	templatePath := fmt.Sprintf("res%stemplate%s", consts.FilePthSep, consts.FilePthSep)
+	template, _ := resUtils.ReadRes(templatePath + lang + ".tpl")
+
+	out := fmt.Sprintf(string(template), strings.Join(info, "\n"), srcCode)
+	fileUtils.WriteFile(pth, out)
+}
+
 func generateTestStepAndScriptObsolete(testSteps []commDomain.ZtfStep, steps *[]string, independentExpects *[]string, independentFile bool) {
 	nestedSteps := make([]commDomain.ZtfStep, 0)
 	currGroup := commDomain.ZtfStep{}

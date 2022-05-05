@@ -1,3 +1,12 @@
+export function isInArray(item, arr) {
+  for(let i = 0; i < arr.length; i++){
+    if(item === arr[i]){
+      return true;
+    }
+  }
+  return false;
+}
+
 /**
  * 数组合并并去重
  * @param arr1 数组1

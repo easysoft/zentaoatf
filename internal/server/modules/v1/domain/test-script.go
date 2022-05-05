@@ -1,5 +1,7 @@
 package serverDomain
 
+import commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+
 type TestScript struct {
 	Id      int    `json:"id"`
 	Version int    `json:"version"`
@@ -15,4 +17,19 @@ type TestScript struct {
 type FilterItem struct {
 	Label string `json:"label"`
 	Value int    `json:"value"`
+}
+
+type CreateScriptReq struct {
+	Mode        commConsts.NodeCreateMode `json:"mode"`
+	Type        commConsts.NodeCreateType `json:"type"`
+	Target      string                    `json:"target"`
+	Name        string                    `json:"name"`
+	WorkspaceId int                       `json:"workspaceId"`
+	ProductId   int                       `json:"productId"`
+}
+
+type InterfaceMoveReq struct {
+	DragKey string             `json:"dragKey"`
+	DropKey string             `json:"dropKey"`
+	DropPos commConsts.DropPos `json:"dropPos"`
 }

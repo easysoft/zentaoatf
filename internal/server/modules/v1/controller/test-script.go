@@ -41,6 +41,16 @@ func (c *TestScriptCtrl) List(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(testScripts))
 }
 
+// LoadCodeChildren 子节点
+func (c *TestScriptCtrl) LoadCodeChildren(ctx iris.Context) {
+	dir := ctx.URLParam("dir")
+	workspaceId, _ := ctx.URLParamInt("workspaceId")
+
+	testScripts, _ := c.TestScriptService.LoadCodeChildren(dir, workspaceId)
+
+	ctx.JSON(c.SuccessResp(testScripts))
+}
+
 // Get 详情
 func (c *TestScriptCtrl) Get(ctx iris.Context) {
 	scriptPath := ctx.URLParam("path")
@@ -64,14 +74,20 @@ func (c *TestScriptCtrl) Get(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(script))
 }
 
-// LoadCodeChildren 子节点
-func (c *TestScriptCtrl) LoadCodeChildren(ctx iris.Context) {
-	dir := ctx.URLParam("dir")
-	workspaceId, _ := ctx.URLParamInt("workspaceId")
+func (c *TestScriptCtrl) Create(ctx iris.Context) {
+	req := serverDomain.CreateScriptReq{}
+	err := ctx.ReadJSON(&req)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+	}
 
-	testScripts, _ := c.TestScriptService.LoadCodeChildren(dir, workspaceId)
+	err = c.TestScriptService.CreateNode(req)
 
-	ctx.JSON(c.SuccessResp(testScripts))
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+	ctx.JSON(c.SuccessResp(nil))
 }
 
 func (c *TestScriptCtrl) UpdateCode(ctx iris.Context) {
@@ -108,7 +124,24 @@ func (c *TestScriptCtrl) UpdateName(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(nil))
 }
 
-// Get 详情
+func (c *TestScriptCtrl) Delete(ctx iris.Context) {
+	req := serverDomain.TestScript{}
+
+	err := ctx.ReadJSON(&req)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+	}
+
+	err = c.TestScriptService.Delete(req.Path)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	ctx.JSON(c.SuccessResp(nil))
+}
+
+// Extract 详情
 func (c *TestScriptCtrl) Extract(ctx iris.Context) {
 	scriptPath := ctx.URLParam("path")
 	workspaceId, _ := ctx.URLParamInt("workspaceId")

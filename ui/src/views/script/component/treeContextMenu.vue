@@ -70,7 +70,7 @@ export default defineComponent({
       required: true
     },
     onSubmit: {
-      type: Function as PropType<(selectedKey: string, targetId: number) => void>,
+      type: Function as PropType<(selectedKey: string, targetId: any) => void>,
       required: true
     }
   },
@@ -82,11 +82,8 @@ export default defineComponent({
     const {t} = useI18n();
 
     const menuClick = (e) => {
-      console.log('menuClick', e, props.treeNode)
-      const key = e.key
-      const targetId = props.treeNode.path
-
-      props.onSubmit(key, targetId);
+      console.log('menuClick', e.key, props.treeNode)
+      props.onSubmit(e.key, props.treeNode);
     };
 
     return {
