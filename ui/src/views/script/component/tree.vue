@@ -77,13 +77,14 @@
           </span>
 
           <span v-else class="name-editor">
-            <a-input v-model:value="editedData[slotProps.id]"
-                     @keyup.enter=updateName(slotProps.id)
-                     @click.stop/>
+            <a-input v-model:value="editedData[slotProps.path]"
+                     @keyup.enter=updateName(slotProps.path)
+                     @click.stop
+                     class="edit-input"/>
 
             <span class="btns">
-              <CheckOutlined @click.stop="updateName(slotProps.id)"/>
-              <CloseOutlined @click.stop="cancelUpdate(slotProps.id)"/>
+              <CheckOutlined @click.stop="updateName(slotProps.path)"/>
+              <CloseOutlined @click.stop="cancelUpdate(slotProps.path)"/>
             </span>
           </span>
         </template>
@@ -180,7 +181,7 @@ import {
   listFilterItems,
   getCaseIdsFromReport,
   syncToZentao,
-  getSyncFromInfoFromMenu, getSyncToInfoFromMenu, getNodeMap, getFileNodesUnderParent
+  getSyncFromInfoFromMenu, getSyncToInfoFromMenu, getNodeMap, getFileNodesUnderParent, updateNameReq
 } from "../service";
 import settings from "@/config/settings";
 import {useRouter} from "vue-router";
@@ -532,14 +533,14 @@ export default defineComponent({
     }
 
     const updateName = (path) => {
-      const name = editedData.value[path]
-      console.log('updateName', path, name)
-      // updateNameReq(path, name).then((json) => {
-      //   if (json.code === 0) {
-      //     treeDataMap[path].name = name
-      //     treeDataMap[path].isEdit = false
-      //   }
-      // })
+      const title = editedData.value[path]
+      console.log('updateName', path, title)
+      updateNameReq(path, title).then((json) => {
+        if (json.code === 0) {
+          treeDataMap[path].title = title
+          treeDataMap[path].isEdit = false
+        }
+      })
     }
     const cancelUpdate = (path) => {
       console.log('cancelUpdate', path)
@@ -554,9 +555,7 @@ export default defineComponent({
 
         selectedKeys.value = [rightClickedNodePath]
         selectNode(selectedKeys.value)
-        console.log('rename', treeDataMap[rightClickedNodePath])
-        editedData.value[rightClickedNodePath] = treeDataMap[rightClickedNodePath].name
-
+        editedData.value[rightClickedNodePath] = treeDataMap[rightClickedNodePath].title
         treeDataMap[rightClickedNodePath].isEdit = true
         return
       } else if (act === 'remove') {
@@ -732,6 +731,33 @@ export default defineComponent({
     }
 
     .ant-tree {
+      .ant-tree-node-content-wrapper {
+        display: inline-block;
+        height: 26px;
+        margin: 0;
+        padding: 0;
+      }
+      .ant-tree-title {
+        display: inline-block;
+        height: 26px;
+        margin: -2px 0 0 0;
+        padding: 0;
+
+        .name-editor {
+          display: inline-block;
+          height: 26px;
+          margin: 0;
+          padding: 0;
+
+          .edit-input {
+            height: 26px;
+            line-height: 26px;
+
+            margin: 0 3px 0 0;
+            padding: 0 5px;
+          }
+        }
+      }
     }
   }
 

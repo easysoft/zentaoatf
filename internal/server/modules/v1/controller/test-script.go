@@ -91,6 +91,23 @@ func (c *TestScriptCtrl) UpdateCode(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(nil))
 }
 
+func (c *TestScriptCtrl) UpdateName(ctx iris.Context) {
+	req := serverDomain.TestScript{}
+
+	err := ctx.ReadJSON(&req)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+	}
+
+	err = c.TestScriptService.UpdateName(req)
+
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+	ctx.JSON(c.SuccessResp(nil))
+}
+
 // Get 详情
 func (c *TestScriptCtrl) Extract(ctx iris.Context) {
 	scriptPath := ctx.URLParam("path")

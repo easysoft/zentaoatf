@@ -11,6 +11,8 @@ import (
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 	"github.com/kataras/iris/v12"
+	"os"
+	"path/filepath"
 )
 
 type TestScriptService struct {
@@ -126,6 +128,14 @@ func (s *TestScriptService) GetCaseIdsFromReport(workspaceId int, seq, scope str
 
 func (s *TestScriptService) UpdateCode(script serverDomain.TestScript) (err error) {
 	fileUtils.WriteFile(script.Path, script.Code)
+
+	return
+}
+
+func (s *TestScriptService) UpdateName(script serverDomain.TestScript) (err error) {
+	dir := filepath.Dir(script.Path)
+	newPath := filepath.Join(dir, script.Name)
+	os.Rename(script.Path, newPath)
 
 	return
 }
