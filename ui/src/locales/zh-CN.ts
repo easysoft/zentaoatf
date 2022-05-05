@@ -71,6 +71,7 @@ export default {
     'execution.execTask': '执行任务',
     'execution.execUnit': '执行单元测试',
     'workspace': '工作目录',
+    'dir': '目录',
     'create_workspace': '新建工作目录',
     'edit_workspace': '编辑工作目录',
 
@@ -113,7 +114,7 @@ export default {
     'cancel': '取消',
     'reset': '重置',
     'confirm': '确定',
-    'confirm_delete': '确认删除{name}？',
+    'confirm_delete': '确定删除名为{name}的{typ}？',
     'save': '保存',
     'create': '新建',
     'view':  '查看',

@@ -71,6 +71,7 @@ export default {
     'execution.execTask': 'Execute By Task',
     'execution.execUnit': 'Execute UnitTest',
     'workspace': 'Work Dir',
+    'dir': 'Dir',
     'create_workspace': 'Create WorkDir',
     'edit_workspace': 'Edit WorkDir',
 
@@ -114,7 +115,7 @@ export default {
     'cancel': 'Cancel',
     'reset': 'Reset',
     'confirm': 'Confirm',
-    'confirm_delete': 'Confirm to delete {name}?',
+    'confirm_delete': 'Confirm to delete {name} {typ}?',
     'save': 'Save',
     'create': 'Create',
     'view':  'View',

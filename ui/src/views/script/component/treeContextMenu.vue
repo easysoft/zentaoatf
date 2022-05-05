@@ -95,7 +95,7 @@ export default defineComponent({
 
 <style lang="less">
 .dp-tree-context-menu {
-  z-index: 9;
+  z-index: 9999;
   .ant-tree-node-content-wrapper {
     display: block !important;
   }

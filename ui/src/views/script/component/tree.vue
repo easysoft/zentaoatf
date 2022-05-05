@@ -170,7 +170,7 @@ import {useStore} from "vuex";
 import {useI18n} from "vue-i18n";
 
 import {ScriptData} from "../store";
-import {Empty, message, notification} from "ant-design-vue";
+import {Empty, Modal, notification} from "ant-design-vue";
 
 import bus from "@/utils/eventBus";
 import {ZentaoData} from "@/store/zentao";
@@ -514,7 +514,7 @@ export default defineComponent({
     let createAct = ''
 
     const onRightClick = (e) => {
-      console.log('onRightClick', e.node.dataRef.path)
+      console.log('onRightClick', e.node.dataRef)
       const {event, node} = e
 
       rightClickedNode = node.dataRef
@@ -522,14 +522,13 @@ export default defineComponent({
       const y = event.currentTarget.getBoundingClientRect().top
       const x = event.currentTarget.getBoundingClientRect().right
 
-      const contextNodeData = treeDataMap[node.eventKey]
       contextNode.value = {
         pageX: x,
         pageY: y,
-        path: node.eventKey,
-        title: node.title,
-        type: contextNodeData.type,
-        workspaceId: contextNodeData.workspaceId,
+        path: rightClickedNode.path,
+        title: rightClickedNode.title,
+        type: rightClickedNode.type,
+        workspaceId: rightClickedNode.workspaceId,
         // parentId: node.dataRef.parentId
       }
 
@@ -603,8 +602,20 @@ export default defineComponent({
         return
 
       } else if (act === 'remove') {
-        removeNode(rightClickedNode.path)
-
+        console.log('remove ', rightClickedNode)
+        const typ = rightClickedNode.type === 'file' ? t('script') : t('dir')
+        Modal.confirm({
+          title: '删除项目',
+          content: t('confirm_delete', {
+            name: rightClickedNode.title,
+            typ: typ,
+          }),
+          okText: t('confirm'),
+          cancelText: t('cancel'),
+          onOk: async () => {
+            removeNode(rightClickedNode.path)
+          }
+        });
         return
 
       } else if (act === 'sync_from_zentao') {
