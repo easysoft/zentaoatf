@@ -132,9 +132,9 @@ func (c *TestScriptCtrl) Delete(ctx iris.Context) {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 	}
 
-	err = c.TestScriptService.Delete(req.Path)
-	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.ErrDirNotEmpty, ""))
+	bizErr := c.TestScriptService.Delete(req.Path)
+	if bizErr != nil {
+		ctx.JSON(c.BizErrResp(bizErr, ""))
 		return
 	}
 

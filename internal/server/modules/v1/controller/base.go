@@ -24,6 +24,12 @@ func (c *BaseCtrl) ErrResp(err commConsts.ResponseCode, msg string) (ret domain.
 	return
 }
 
+func (c *BaseCtrl) BizErrResp(err *domain.BizError, msg string) (ret domain.Response) {
+	ret = domain.Response{Code: err.Code, Msg: msg}
+
+	return
+}
+
 func (c *BaseCtrl) ErrMsg(err commConsts.ResponseCode, msg string) (ret string) {
 	//ret = i118Utils.Sprintf(err.Message)
 	//

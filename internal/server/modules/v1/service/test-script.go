@@ -7,6 +7,7 @@ import (
 	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/comm/helper/script"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
+	"github.com/easysoft/zentaoatf/internal/pkg/domain"
 	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
@@ -176,8 +177,15 @@ func (s *TestScriptService) UpdateName(script serverDomain.TestScript) (err erro
 	return
 }
 
-func (s *TestScriptService) Delete(pth string) (err error) {
-	err = os.Remove(pth)
+func (s *TestScriptService) Delete(pth string) (bizErr *domain.BizError) {
+	err := os.Remove(pth)
+
+	_, ok := err.(*os.PathError)
+	if ok {
+		bizErr = &domain.BizError{Code: commConsts.ErrDirNotEmpty.Code}
+	} else {
+		bizErr = nil
+	}
 
 	return
 }
