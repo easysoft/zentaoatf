@@ -126,7 +126,7 @@ func (s *TestScriptService) GetCaseIdsFromReport(workspaceId int, seq, scope str
 	return
 }
 
-func (s *TestScriptService) CreateNode(req serverDomain.CreateScriptReq) (err error) {
+func (s *TestScriptService) CreateNode(req serverDomain.CreateScriptReq) (pth string, err error) {
 	name := req.Name
 	extName := fileUtils.GetExtNameWithoutDot(name)
 	mode := req.Mode
@@ -146,7 +146,7 @@ func (s *TestScriptService) CreateNode(req serverDomain.CreateScriptReq) (err er
 		dir = filepath.Dir(target)
 	}
 
-	pth := filepath.Join(dir, name)
+	pth = filepath.Join(dir, name)
 	if typ == commConsts.CreateDir {
 		fileUtils.MkDirIfNeeded(pth)
 	} else {
@@ -177,7 +177,7 @@ func (s *TestScriptService) UpdateName(script serverDomain.TestScript) (err erro
 }
 
 func (s *TestScriptService) Delete(pth string) (err error) {
-	os.Remove(pth)
+	err = os.Remove(pth)
 
 	return
 }

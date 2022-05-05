@@ -143,6 +143,8 @@ export default {
     'error_detail':  'Error Detail', 
     'save_success': 'Save successfully.',
     'save_fail': 'Save failed.',
+    'create_success': 'Create successfully.',
+    'create_fail': 'Create failed.',
 
     'expand_all': 'Expand',
     'collapse_all': 'Collapse',
@@ -218,6 +220,7 @@ export default {
     'biz_401': 'UnAuthorized',
 
     'biz_1000': 'Data Not Init',
+    'biz_1100': 'Can not delete dir that is not empty.',
     'biz_2000': 'Zentao Config Failed',
     'biz_4000': 'Record Not Found',
     'biz_5000': 'Not Available',

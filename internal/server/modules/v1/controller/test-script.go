@@ -81,13 +81,13 @@ func (c *TestScriptCtrl) Create(ctx iris.Context) {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 	}
 
-	err = c.TestScriptService.CreateNode(req)
+	pth, err := c.TestScriptService.CreateNode(req)
 
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
-	ctx.JSON(c.SuccessResp(nil))
+	ctx.JSON(c.SuccessResp(pth))
 }
 
 func (c *TestScriptCtrl) UpdateCode(ctx iris.Context) {
@@ -134,7 +134,7 @@ func (c *TestScriptCtrl) Delete(ctx iris.Context) {
 
 	err = c.TestScriptService.Delete(req.Path)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.ErrDirNotEmpty, ""))
 		return
 	}
 

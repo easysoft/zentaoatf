@@ -138,12 +138,16 @@ const StoreModel: ModuleType = {
             return data.done
         },
 
-        async createScript({ commit }, payload: any) {
+        async createScript({ commit , dispatch, state}, payload: any) {
             try {
-                await create(payload);
-                return true;
+                const jsn = await create(payload);
+                const path = jsn.data
+
+                await dispatch('listScript', state.queryParams)
+
+                return path;
             } catch (error) {
-                return false;
+                return ''
             }
         },
         async updateScript({ commit }, payload: any ) {

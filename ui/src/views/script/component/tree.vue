@@ -567,6 +567,22 @@ export default defineComponent({
       scriptStore.dispatch('Script/createScript', {
         name: model.name, mode: mode, type: type, target: rightClickedNode.path,
         workspaceId: rightClickedNode.workspaceId, productId: currProduct.value.id,
+      }).then((result) => {
+        if (result) {
+          notification.success({message: t('create_success')});
+          nameFormVisible.value = false
+
+          if (mode == 'child') {
+            expandedKeys.value.push(rightClickedNode.path)
+          }
+          if (type === 'dir') {
+            expandedKeys.value.push(result)
+          }
+          setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
+
+        } else {
+          notification.error({message: t('create_fail')});
+        }
       })
     }
 

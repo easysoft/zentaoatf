@@ -142,6 +142,8 @@ export default {
     'error_detail':  '错误详情', 
     'save_success': '保存成功',
     'save_fail': '保存失败',
+    'create_success': '创建成功',
+    'create_fail': '创建失败',
 
     'expand_all': '展开',
     'collapse_all': '收缩',
@@ -218,6 +220,7 @@ export default {
     'biz_401': '未授权',
 
     'biz_1000': '数据为初始化',
+    'biz_1100': '无法删除非空目录。',
     'biz_2000': '禅道配置失败',
     'biz_3000': '禅道请求错误',
     'biz_4000': '记录不存在',
