@@ -26,8 +26,9 @@ func (m *TestScriptModule) Party() module.WebModule {
 		index.Post("/", m.TestScriptCtrl.Create).Name = "创建脚本"
 		index.Delete("/", m.TestScriptCtrl.Delete).Name = "删除脚本"
 
-		index.Put("/updateCode", m.TestScriptCtrl.UpdateCode).Name = "更新脚本"
 		index.Put("/updateName", m.TestScriptCtrl.UpdateName).Name = "重命令脚本"
+		index.Put("/updateCode", m.TestScriptCtrl.UpdateCode).Name = "更新脚本"
+		index.Post("/moveScript", m.TestScriptCtrl.Move).Name = "移动脚本"
 		index.Get("/extract", m.TestScriptCtrl.Extract).Name = "抽取脚本"
 
 		index.Post("/syncFromZentao", m.TestScriptCtrl.SyncFromZentao).Name = "从禅道导出脚本"

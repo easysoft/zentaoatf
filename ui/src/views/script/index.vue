@@ -30,17 +30,9 @@ import {ScriptData} from "./store";
 import {resizeWidth, resizeHeight} from "@/utils/dom";
 import {Empty, notification} from "ant-design-vue";
 
-import {MonacoOptions} from "@/utils/const";
-import bus from "@/utils/eventBus"
-import MonacoEditor from "@/components/Editor/MonacoEditor.vue";
 import {ZentaoData} from "@/store/zentao";
 
 import ScriptTreePage from "./component/tree.vue";
-import ScriptExecLogPage from "./component/execLog.vue";
-import settings from "@/config/settings";
-import {get} from "@/views/workspace/service";
-import {getCmdHistories, setCmdHistories} from "@/utils/cache";
-import {ExecStatus} from "@/store/exec";
 import ZtfScriptPage from "./component/ztf.vue"
 import UnitScriptPage from "./component/unit.vue"
 

@@ -288,7 +288,7 @@ export default defineComponent({
       getNodeMapCall()
 
       getExpandedKeys(currSite.value.id, currProduct.value.id).then(async cachedKeys => {
-        console.log('cachedKeys', currSite.value.id, currProduct.value.id, cachedKeys)
+        // console.log('cachedKeys', currSite.value.id, currProduct.value.id, cachedKeys)
 
         if (cachedKeys) expandedKeys.value = cachedKeys
 
@@ -680,13 +680,23 @@ export default defineComponent({
     const onDrop = (info: DropEvent) => {
       console.log('onDrop', info);
 
-      const dragKey = info.dragNode.eventKey;
       const dropKey = info.node.eventKey;
-      let dropPos = info.dropPosition > 1 ? 1 : info.dropPosition;
-      if (!treeDataMap[dropKey].isDir && dropPos === 0) dropPos = 1
-      console.log(dragKey, dropKey, dropPos);
+      const dragKey = info.dragNode.eventKey;
+      const dropPos = info.node.pos.split('-');
+      let dropPosition = info.dropPosition - Number(dropPos[dropPos.length - 1]);
 
-      store.dispatch('Interface/moveInterface', {dragKey: dragKey, dropKey: dropKey, dropPos: dropPos});
+      if (treeDataMap[dropKey].workspaceId !== treeDataMap[dragKey].workspaceId){ // cross workspace
+        return
+      }
+
+      if (treeDataMap[dropKey].type === 'file' && dropPosition === 0) { // drop into file
+        dropPosition = 1
+      }
+
+      console.log('---', dragKey, dropKey, dropPosition);
+      store.dispatch('Script/moveScript', {
+        dragKey: dragKey, dropKey: dropKey, dropPosition: dropPosition,
+        workspaceId: treeDataMap[dropKey].workspaceId});
     }
 
     const getCheckedFileNodes = (): string[] => {
