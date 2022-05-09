@@ -1,0 +1,101 @@
+:root {
+    --color-canvas: #fff;
+    --color-surface-light: #f3f3f3;
+    --color-surface: #e7e7e7;
+    --color-surface-heavy: #d3d3d3;
+    --color-fore: #222;
+    --color-back: var(--color-canvas);
+    --color-canvas-invert: #000;
+
+    --color-primary: #007751;
+    --color-primary-pale: #f6fffa;
+    --color-green: #22c55e;
+    --color-green-pale: #dcfce7;
+    --color-red: #ff3b30;
+    --color-red-pale: #fee2e2;
+    --color-yellow: #f59e0b;
+    --color-yellow-pale: #fef3c7;
+    --color-blue: #3b82f6;
+    --color-blue-pale: #dbeafe;
+    --color-purple: #9333ea;
+    --color-purple-pale: #f3e8ff;
+    --color-gray: #52525b;
+    --color-gray-pale: #fafafa;
+
+    --color-darken-19: rgba(0, 0, 0, .95);
+    --color-darken-18: rgba(0, 0, 0, .9);
+    --color-darken-17: rgba(0, 0, 0, .85);
+    --color-darken-16: rgba(0, 0, 0, .8);
+    --color-darken-15: rgba(0, 0, 0, .75);
+    --color-darken-14: rgba(0, 0, 0, .7);
+    --color-darken-13: rgba(0, 0, 0, .65);
+    --color-darken-12: rgba(0, 0, 0, .6);
+    --color-darken-11: rgba(0, 0, 0, .55);
+    --color-darken-10: rgba(0, 0, 0, .5);
+    --color-darken-9: rgba(0, 0, 0, .45);
+    --color-darken-8: rgba(0, 0, 0, .4);
+    --color-darken-7: rgba(0, 0, 0, .35);
+    --color-darken-6: rgba(0, 0, 0, .3);
+    --color-darken-5: rgba(0, 0, 0, .25);
+    --color-darken-4: rgba(0, 0, 0, .2);
+    --color-darken-3: rgba(0, 0, 0, .15);
+    --color-darken-2: rgba(0, 0, 0, .1);
+    --color-darken-1: rgba(0, 0, 0, .05);
+    --color-darken-0: rgba(0, 0, 0, .01);
+
+    --color-lighten-19: rgba(255, 255, 255, .95);
+    --color-lighten-18: rgba(255, 255, 255, .9);
+    --color-lighten-17: rgba(255, 255, 255, .85);
+    --color-lighten-16: rgba(255, 255, 255, .8);
+    --color-lighten-15: rgba(255, 255, 255, .75);
+    --color-lighten-14: rgba(255, 255, 255, .7);
+    --color-lighten-13: rgba(255, 255, 255, .65);
+    --color-lighten-12: rgba(255, 255, 255, .6);
+    --color-lighten-11: rgba(255, 255, 255, .55);
+    --color-lighten-10: rgba(255, 255, 255, .5);
+    --color-lighten-9: rgba(255, 255, 255, .45);
+    --color-lighten-8: rgba(255, 255, 255, .4);
+    --color-lighten-7: rgba(255, 255, 255, .35);
+    --color-lighten-6: rgba(255, 255, 255, .3);
+    --color-lighten-5: rgba(255, 255, 255, .25);
+    --color-lighten-4: rgba(255, 255, 255, .2);
+    --color-lighten-3: rgba(255, 255, 255, .15);
+    --color-lighten-2: rgba(255, 255, 255, .1);
+    --color-lighten-1: rgba(255, 255, 255, .05);
+    --color-lighten-0: rgba(255, 255, 255, .01);
+
+    --color-focus: var(--color-blue);
+
+    --text-color: var(--color-fore);
+    --text-size: 13px;
+    --text-size-sm: 12px;
+    --text-size-md: 14px;
+    --text-size-lg: 16px;
+    --text-size-xl: 20px;
+
+    --border-radius: 3px;
+    --border-radius-lg: 4px;
+    --border-radius-sm: 1px;
+    --border-radius-xl: 8px;
+
+    --state-hover-bg: var(--color-darken-1);
+    --state-active-bg: var(--color-darken-2);
+
+    --navbar-height: 40px;
+
+    --space-xs: calc(var(--space-base) / 4);
+    --space-sm: calc(var(--space-base) / 2);
+    --space-base: 8px;
+    --space-lg: calc(var(--space-base) * 3 / 2);
+    --space-xl: calc(var(--space-base) * 2);
+
+    --splitter-color: var(--color-darken-2);
+    --splitter-hover-color: var(--color-darken-1);
+    --splitter-hover-size: 6px;
+
+    --pane-left-min-width: 200px;
+    --pane-center-min-width: 100px;
+    --pane-right-min-width: 200px;
+    --pane-tabs-min-height: 200px;
+    --pane-bottom-min-height: 200px;
+}

@@ -11,6 +11,7 @@ import { RoutesDataItem } from "@/utils/routes";
 
 import IndexLayoutRoutes from '@/layouts/IndexLayout/routes';
 import IndexLayout from '@/layouts/IndexLayout/index.vue';
+import MainLayout from '@/layouts/MainLayout/Main.vue';
 import BlankLayout from "@/layouts/BlankLayout.vue";
 
 const routes: RoutesDataItem[] = [
@@ -19,6 +20,11 @@ const routes: RoutesDataItem[] = [
     path: '/',
     component: BlankLayout,
     children: [
+      {
+        title: 'main',
+        path: '/main',
+        component: MainLayout
+      },
       {
         title: 'empty',
         path: '/',

@@ -11,6 +11,9 @@
     "svgo": "svgo -f src/assets/iconsvg --config=src/assets/iconsvg/svgo.yml"
   },
   "dependencies": {
+    "@iconify-icons/codicon": "^1.2.6",
+    "@iconify-icons/fluent": "^1.2.7",
+    "@iconify/vue": "^3.2.1",
     "@toast-ui/editor": "^2.5.3",
     "ant-design-vue": "^2.2.8",
     "axios": "^0.21.4",
@@ -24,6 +27,7 @@
     "neffos.js": "^0.1.25",
     "nprogress": "^0.2.0",
     "sass-loader": "^12.6.0",
+    "splitpanes": "^3.1.1",
     "vue": "^3.2.18",
     "vue-i18n": "^9.1.7",
     "vue-router": "^4.0.11",
@@ -48,7 +52,7 @@
     "body-parser": "^1.19.0",
     "chokidar": "^3.5.2",
     "eslint": "^6.8.0",
-    "eslint-plugin-vue": "^7.18.0",
+    "eslint-plugin-vue": "^8.7.1",
     "less": "^3.13.1",
     "less-loader": "^5.0.0",
     "lint-staged": "^9.5.0",
