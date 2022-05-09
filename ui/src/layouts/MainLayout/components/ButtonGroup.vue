@@ -9,20 +9,20 @@ import ButtonList from './ButtonList.vue';
 </script>
 
 <style scoped>
-.btn-group >>> .btn + .btn {
+.btn-group :deep(.btn + .btn) {
   margin-left: -1px;
   position: relative;
 }
-.btn-group >>> .btn:hover,
-.btn-group >>> .btn:focus,
-.btn-group >>> .btn:active {
+.btn-group :deep(.btn:hover),
+.btn-group :deep(.btn:focus),
+.btn-group :deep(.btn:active) {
   z-index: 1;
 }
-.btn-group >>> .btn:not(:last-child) {
+.btn-group :deep(.btn:not(:last-child)) {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
 }
-.btn-group >>> .btn:not(:first-child) {
+.btn-group :deep(.btn:not(:first-child)) {
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
 }

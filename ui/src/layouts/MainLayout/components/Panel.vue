@@ -54,7 +54,7 @@ const state = reactive({collapsed: !!props.defaultCollapsed});
   justify-content: space-between;
   padding: 0 var(--space-base);
 }
-.panel-heading >>> .toolbar {
+.panel-heading :deep(.toolbar) {
   margin-right: -6px;
 }
 .panel-body {
