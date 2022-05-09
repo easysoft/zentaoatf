@@ -3,7 +3,7 @@
     <Logo />
     <SiteNav class="space-left" />
     <BatchRunButton class="space-left" />
-    <LastTextInfo />
+    <LastTestInfo />
     <div class="gap flex-auto"></div>
     <AppToolbar />
     <LayoutToolbar />
@@ -18,7 +18,7 @@ import AppToolbar from './AppToolbar.vue';
 import LayoutToolbar from './LayoutToolbar.vue';
 import SiteNav from './SiteNav.vue';
 import BatchRunButton from './BatchRunButton.vue';
-import LastTextInfo from './LastTextInfo.vue';
+import LastTestInfo from './LastTestInfo.vue';
 </script>
 
 <style>
