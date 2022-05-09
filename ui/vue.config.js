@@ -5,7 +5,7 @@ const { VUE_APP_PORT, NODE_ENV, VUE_APP_MOCK } = process.env;
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 
 module.exports = {
-    publicPath: '/',
+    publicPath: './',
     outputDir: 'dist',
     productionSourceMap: false,
     devServer: {
