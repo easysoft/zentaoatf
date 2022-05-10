@@ -1,5 +1,5 @@
 <template>
-  <Icon class="icon" :icon="icon" :width="size" :height="size" :color="color" />
+  <Icon class="icon" :icon="icon" :width="size ?? '1.2em'" :height="size ?? '1.2em'" :color="color" />
 </template>
 
 <script setup lang="ts">
