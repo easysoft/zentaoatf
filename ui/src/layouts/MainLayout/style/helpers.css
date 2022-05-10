@@ -4,6 +4,7 @@
 .rounded-lg {border-radius: var(--border-radius-lg, 4px);}
 .rounded {border-radius: var(--border-radius, 2px);}s
 .rounded-sm {border-radius: var(--border-radius-sm, 1px);}
+.circle {border-radius: 50%;}
 
 .state {position: relative; cursor: pointer; outline: none;}
 .state::after {content: ' '; display: block; pointer-events: none; position: absolute; left: 0; right: 0; top: 0; bottom: 0; opacity: 0; visibility: hidden; background-color: var(--state-hover-bg, rgba(0,0,0,.05)); border-radius: inherit; transition: opacity .2s;}
