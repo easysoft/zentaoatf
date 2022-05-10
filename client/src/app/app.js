@@ -1,6 +1,6 @@
 import {app, BrowserWindow, ipcMain, Menu, shell, dialog} from 'electron';
 
-import {DEBUG, electronMsg, electronMsgReplay} from './utils/consts';
+import {DEBUG, electronMsg, electronMsgReplay, minimumSizeHeight, minimumSizeWidth} from './utils/consts';
 import {IS_MAC_OSX} from './utils/env';
 import {logInfo, logErr} from './utils/log';
 import Config, {updateConfig} from './utils/config';
@@ -50,6 +50,8 @@ export default class ZtfApp {
             }
         })
 
+        mainWin.setSize(minimumSizeWidth, minimumSizeHeight)
+        mainWin.setMovable(true)
         mainWin.maximize()
         mainWin.show()
 
@@ -61,6 +63,8 @@ export default class ZtfApp {
         const { ipcMain } = require('electron')
         ipcMain.on(electronMsg, (event, arg) => {
             logInfo('msg from renderer: ' + arg)
+            const mainWin = this._windows.get('main');
+
             switch (arg) {
                 case 'selectDir':
                     this.showFolderSelection(event)
@@ -68,10 +72,20 @@ export default class ZtfApp {
                 case 'selectFile':
                     this.showFileSelection(event)
                     break;
+
                 case 'fullScreen':
-                    const mainWin = this._windows.get('main');
                     mainWin.setFullScreen(!mainWin.isFullScreen());
                     break;
+                case 'minimize':
+                    mainWin.minimize();
+                    break;
+                case 'maximize':
+                    mainWin.maximize();
+                    break;
+                case 'unmaximize':
+                    mainWin.unmaximize();
+                    break;
+
                 case 'help':
                     shell.openExternal('https://ztf.im');
                     break;

@@ -35,10 +35,14 @@ import TabsContainer from './components/TabsContainer.vue';
 import ResultListPanel from './components/ResultListPanel.vue';
 </script>
 
-<style>
+<style lang="less" scoped>
 #main {
   height: 100vh;
   width: 100vw;
+
+  #mainContent {
+    -webkit-app-region: no-drag;
+  }
 }
 #leftPane {
   min-width: var(--pane-left-min-width, 200px);
