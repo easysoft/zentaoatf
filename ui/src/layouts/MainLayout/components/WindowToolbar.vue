@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import Button from './Button.vue';
 import Toolbar from './Toolbar.vue';
 import {defineComponent, ref} from "vue";
@@ -25,62 +25,41 @@ import {useRouter} from "vue-router";
 import {getElectron} from "@/utils/comm";
 import settings from "@/config/settings";
 
-export default defineComponent({
-  name: 'WindowToolbar',
+const {t} = useI18n();
+const router = useRouter();
 
-  components: {
-    Toolbar, Button,
-  },
-  setup() {
-    const {t} = useI18n();
-    const router = useRouter();
+const isElectron = ref(getElectron())
+console.log(`isElectron ${isElectron.value}`)
 
-    const isElectron = ref(getElectron())
-    console.log(`isElectron ${isElectron.value}`)
+const fullScreenDef = ref(false)
+const fullScreen = (): void => {
+  console.log('fullScreen')
+  fullScreenDef.value = !fullScreenDef.value
 
-    const fullScreenDef = ref(false)
-    const fullScreen = (): void => {
-      console.log('fullScreen')
-      fullScreenDef.value = !fullScreenDef.value
+  const { ipcRenderer } = window.require('electron')
+  ipcRenderer.send(settings.electronMsg, 'fullScreen')
+}
 
-      const { ipcRenderer } = window.require('electron')
-      ipcRenderer.send(settings.electronMsg, 'fullScreen')
-    }
+const maximizeDef = ref(true)
+const minimize = (): void => {
+  console.log('minimize')
 
-    const maximizeDef = ref(true)
-    const minimize = (): void => {
-      console.log('minimize')
+  const { ipcRenderer } = window.require('electron')
+  ipcRenderer.send(settings.electronMsg, 'minimize')
+}
+const maximize = (): void => {
+  console.log('maximize')
 
-      const { ipcRenderer } = window.require('electron')
-      ipcRenderer.send(settings.electronMsg, 'minimize')
-    }
-    const maximize = (): void => {
-      console.log('maximize')
+  const { ipcRenderer } = window.require('electron')
+  ipcRenderer.send(settings.electronMsg, maximizeDef.value ? 'unmaximize' : 'maximize')
+  maximizeDef.value = !maximizeDef.value
+}
 
-      const { ipcRenderer } = window.require('electron')
-      ipcRenderer.send(settings.electronMsg, maximizeDef.value ? 'unmaximize' : 'maximize')
-      maximizeDef.value = !maximizeDef.value
-    }
-
-    const exit = (): void => {
-      console.log('exit')
-      const { ipcRenderer } = window.require('electron')
-      ipcRenderer.send(settings.electronMsg, 'exit')
-    }
-
-    return {
-      t,
-
-      isElectron,
-      fullScreenDef,
-      fullScreen,
-      maximizeDef,
-      minimize,
-      maximize,
-      exit,
-    }
-  }
-})
+const exit = (): void => {
+  console.log('exit')
+  const { ipcRenderer } = window.require('electron')
+  ipcRenderer.send(settings.electronMsg, 'exit')
+}
 </script>
 
 <style lang="less" scoped>
