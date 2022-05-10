@@ -1,6 +1,7 @@
 body {
     color: var(--text-color, #222);
     font-size: var(--text-size, 13px);
+    line-height: var(--line-height-base);
 }
 
 .splitpanes__splitter {

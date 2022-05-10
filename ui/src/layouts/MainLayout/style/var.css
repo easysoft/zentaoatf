@@ -3,7 +3,7 @@
     --color-surface-light: #f3f3f3;
     --color-surface: #e7e7e7;
     --color-surface-heavy: #d3d3d3;
-    --color-fore: #222;
+    --color-fore: #333;
     --color-back: var(--color-canvas);
     --color-canvas-invert: #000;
 
@@ -72,6 +72,7 @@
     --text-size-md: 14px;
     --text-size-lg: 16px;
     --text-size-xl: 20px;
+    --line-height-base: 1.5384615385;
 
     --border-radius: 3px;
     --border-radius-lg: 4px;
