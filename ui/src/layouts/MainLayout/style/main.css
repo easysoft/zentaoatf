@@ -1,8 +1,8 @@
 body {
+    -webkit-app-region: drag;
     color: var(--text-color, #222);
     font-size: var(--text-size, 13px);
     line-height: var(--line-height-base);
-    -webkit-app-region: drag;
 }
 
 .splitpanes__splitter {
