@@ -104,7 +104,7 @@
 .border {border-color: var(--color-darken-5);}
 .border-light {border-color: var(--color-darken-3);}
 
-.divider {border-bottom: 1px solid var(--border-color, #d9d9d9)}
+.divider {border-bottom: 1px solid var(--color-darken-1)}
 
 .muted-off {opacity: 1;}
 .muted {opacity: .6;}
@@ -239,3 +239,15 @@
 
 .width-full {width: 100%}
 .height-full {height: 100%}
+
+.shadow-border-top    {box-shadow: 0 -1px 0 0 var(--color-darken-2);}
+.shadow-border-bottom {box-shadow: 0 1px 0 0 var(--color-darken-2);}
+.shadow-border-left   {box-shadow: -1px 0 0 0 var(--color-darken-2);}
+.shadow-border-right  {box-shadow: 1px 0 0 0 var(--color-darken-2);}
+
+.shadow-sm  {box-shadow: 0 1px 2px 0 rgba(0,0,0,.05);}
+.shadow     {box-shadow: 0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px 0 rgba(0,0,0,.06);}
+.shadow-md  {box-shadow: 0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);}
+.shadow-lg  {box-shadow: 0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -2px rgba(0,0,0,.05);}
+.shadow-xl  {box-shadow: 0 20px 25px -5px rgba(0,0,0,.1),0 10px 10px -5px rgba(0,0,0,.04);}
+.shadow-xxl {box-shadow: 0 25px 50px -12px rgba(0,0,0,.25);}

@@ -1,6 +1,6 @@
 <template>
   <div class="result-list">
-    <List compact>
+    <List compact divider>
       <ListItem
         icon="checkmark-circle"
         iconClass="text-green"

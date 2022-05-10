@@ -15,6 +15,7 @@
     "@iconify-icons/fluent": "^1.2.7",
     "@iconify/vue": "^3.2.1",
     "@toast-ui/editor": "^2.5.3",
+    "@vueuse/core": "^8.4.2",
     "ant-design-vue": "^2.2.8",
     "axios": "^0.21.4",
     "core-js": "^3.18.0",

@@ -1,7 +1,7 @@
 <template>
   <div
     class="list-item"
-    :class="{disabled, divider, state: !disabled, compact}"
+    :class="{disabled, divider, state: !disabled, compact, active}"
     @click="disabled ? null: _handleClick"
   >
     <slot name="leading" />
@@ -57,6 +57,7 @@ import Icon from './Icon.vue';
 
 export interface ListItemProps {
     disabled?: boolean,
+    active?: boolean,
     divider?: boolean,
     compact?: boolean,
     icon?: string,
@@ -109,6 +110,10 @@ function _handleClick(event) {
 .compact > .list-item,
 .list-item.compact {
   gap: var(--space-sm);
+}
+.divider > .list-item + .list-item,
+.list-item.divider + .list-item {
+  border-top: 1px solid var(--color-darken-1)
 }
 .list-item-subtitle,
 .compact > .list-item .list-item-title,

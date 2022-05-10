@@ -2,7 +2,7 @@
   <nav id="navbar" class="surface row divider gap-lg align-center padding-h">
     <Logo />
     <SiteNav class="space-left" />
-    <BatchRunButton class="space-left" />
+    <BatchRunButton />
     <LastTestInfo />
     <div class="gap flex-auto"></div>
     <AppToolbar />

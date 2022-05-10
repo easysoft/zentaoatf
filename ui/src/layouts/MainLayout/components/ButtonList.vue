@@ -2,8 +2,8 @@
   <div class="btn-list" :style="`gap:${gap ?? 8}px`">
     <template v-if="buttonPropsList">
       <Button
-        v-for="({name, ...btnProps}) in buttonPropsList"
-        :key="name"
+        v-for="({key, ...btnProps}) in buttonPropsList"
+        :key="key"
         v-bind="btnProps"
       />
     </template>
@@ -31,7 +31,7 @@ const buttonPropsList = computed(() => {
         return null;
     }
     return props.buttons.map((x, i) => ({
-        name: i,
+        key: i,
         'class': props.defaultBtnClass,
         iconClass: props.defaultIconClass,
         suffixIconClass: props.defaultSuffixIconClass,
