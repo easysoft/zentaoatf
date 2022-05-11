@@ -3,16 +3,20 @@
     class="dropdown-menu"
     :class="menuClass ?? 'shadow-lg canvas rounded'"
     :style="menuFinalStyle"
-    @click="hideOnClickMenu ? _handleClickMenu($event) : null"
+    @click="_handleClickMenu"
     ref="menuRef"
   >
     <template v-if="state.show">
       <List
         :items="items"
         :replaceFields="replaceFields"
+        :checkedKey="checkedKey"
+        :activeKey="activeKey"
+        :keyName="keyName"
         :class="listClass"
         :compact="listCompact"
         :divider="listDivider"
+        @click="emit('click', $event)"
       />
       <slot />
     </template>
@@ -20,10 +24,10 @@
 </template>
 
 <script setup lang="ts">
-import { withDefaults, defineProps, ref, reactive, onMounted, onUnmounted, computed, watchEffect } from 'vue';
+import { withDefaults, defineProps, ref, reactive, onMounted, onUnmounted, computed, defineEmits } from 'vue';
 import { useWindowSize, onClickOutside } from '@vueuse/core'
 import List from './List.vue';
-import {ListItemProps} from './ListItem.vue';
+import {ListItemProps, ListItemKey} from './ListItem.vue';
 
 export type DropdownMenuPosition = 'bottom' | 'left' | 'right' | 'top' | 'bottom-left' | 'bottom-right' | 'top-left' | 'top-right' | 'left-top' | 'left-bottom' | 'right-top' | 'right-bottom' |{left: number, top: number} | ((toggleElement: HTMLElement) => {left: number, top: number});
 
@@ -32,6 +36,9 @@ const props = withDefaults(defineProps<{
     triggerEvent?: string,
     position?: DropdownMenuPosition,
     items?: ListItemProps[] | Record<string, any>[],
+    keyName?: string,
+    checkedKey?: ListItemKey,
+    activeKey?: ListItemKey,
     replaceFields?: Record<string, string>, // {title: 'name'}
     listClass?: string,
     listCompact?: boolean,
@@ -79,6 +86,8 @@ function _handleClickMenu(event: MouseEvent) {
       _toggle(false);
     }
 }
+
+const emit = defineEmits<{(type: 'click', event: {originalEvent: Event, key: ListItemKey, item: ListItemProps | Record<string, any>}) : void}>();
 
 onClickOutside(menuRef, event => {
     if (props.hideOnClickAway && state.showed) {

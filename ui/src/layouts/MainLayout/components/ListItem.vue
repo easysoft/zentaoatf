@@ -2,7 +2,7 @@
   <div
     class="list-item"
     :class="{disabled, divider, state: !disabled, compact, active, 'has-checkmark': checked !== undefined}"
-    @click="disabled ? null: _handleClick"
+    @click="_handleClick"
   >
     <slot name="leading" />
     <Icon
@@ -11,9 +11,10 @@
       :icon="icon"
       :class="iconClass"
       :color="iconColor"
+      key="icon"
     />
     <slot name="content">
-      <div class="list-item-content">
+      <div class="list-item-content" key="content">
         <div
           v-if="title"
           class="list-item-title"
@@ -41,24 +42,27 @@
       :icon="trailingIcon"
       :class="trailingIconClass"
       :color="trailingIconColor"
+      key="trailingIcon"
     />
     <Icon
       v-if="trailingAngle"
       icon="chevron-right"
       class="list-item-trailing-angle"
+      key="trailingAngle"
     />
     <Icon
       class="list-item-checked-icon text-green"
       v-if="checked !== undefined"
       icon="checkmark"
       :class="checked ? 'checked' : 'invisible'"
+      key="checkmark"
     />
     <slot name="trailing" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, withDefaults } from 'vue';
+import { defineProps, defineEmits, withDefaults, useAttrs, use } from 'vue';
 import Icon from './Icon.vue';
 
 export interface ListItemProps {
@@ -83,14 +87,17 @@ export interface ListItemProps {
     trailingTextClass?: string,
     trailingAngle?: boolean,
     url?: string,
-    click?: (event: Event) => void
+    click?: (event: {originalEvent: Event, key: ListItemKey}) => void
 }
+
+export type ListItemKey = string | number | symbol | null;
 
 const props = withDefaults(defineProps<ListItemProps>(), {checked: undefined});
 
-const emit = defineEmits<{(event: 'click', e: Event) : void}>();
+const emit = defineEmits<{(type: 'click', event: {originalEvent: Event, key: ListItemKey}) : void}>();
+const attrs = useAttrs();
 
-function _handleClick(event) {
+function _handleClick(originalEvent) {
     if (props.disabled) {
         return;
     }
@@ -98,6 +105,7 @@ function _handleClick(event) {
     if (typeof props.url === 'string' && props.url.length) {
         window.open(props.url);
     }
+    const event = {originalEvent, key: attrs['data-key'] as ListItemKey};
     if (typeof props.click === 'function') {
         props.click(event);
     }
