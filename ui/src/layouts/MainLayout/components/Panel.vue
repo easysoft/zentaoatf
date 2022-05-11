@@ -2,9 +2,9 @@
   <div class="panel">
     <slot name="heading">
       <header
-        class="panel-heading state"
-        :class="headerClass"
-        @click="state.collapsed = !state.collapsed"
+        class="panel-heading"
+        :class="[headerClass, collapsable ? 'state' : '']"
+        @click="collapsable ? _toggle : null"
       >
         <slot name="header">
           <div class="title" :class="titleClass ?? 'strong'">{{title}}</div>
@@ -16,7 +16,7 @@
         </slot>
       </header>
     </slot>
-    <template v-if="!state.collapsed">
+    <template v-if="!state.collapsed || !collapsable">
       <slot name="body">
         <div class="panel-body" :class="bodyClass">
           <slot></slot>
@@ -43,6 +43,13 @@ const props = defineProps<{
 }>();
 
 const state = reactive({collapsed: !!props.defaultCollapsed});
+
+function _toggle(toggle) {
+    if (toggle === undefined) {
+        toggle = !state.collapsed;
+    }
+    state.collapsed = toggle;
+}
 </script>
 
 <style scoped>
