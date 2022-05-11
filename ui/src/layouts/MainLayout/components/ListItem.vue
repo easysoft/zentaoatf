@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, withDefaults, useAttrs, use } from 'vue';
+import { defineProps, defineEmits, withDefaults, useAttrs } from 'vue';
 import Icon from './Icon.vue';
 
 export interface ListItemProps {
