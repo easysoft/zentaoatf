@@ -108,22 +108,17 @@ func LoadSiteProduct(currSite serverDomain.ZentaoSite, currProductId int) (
 		return
 	}
 
-	var first serverDomain.ZentaoProduct
-	for idx, product := range products {
-		product := serverDomain.ZentaoProduct{Id: product.Id, Name: product.Name}
+	currIndex := 0
+	for idx, item := range products {
+		product := serverDomain.ZentaoProduct{Id: item.Id, Name: item.Name}
 
 		if currProductId == product.Id {
-			currProduct = product
-		}
-
-		if idx == 0 {
-			first = product
+			currIndex = idx
 		}
 	}
 
-	if currProduct.Id == 0 { // not found, use the first one
-		currProduct = first
-	}
+	currProduct = products[currIndex]
+	products[currIndex].Checked = true
 
 	return
 }

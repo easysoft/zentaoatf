@@ -27,10 +27,13 @@ type ZentaoSite struct {
 	Url      string `json:"url"`
 	Username string `json:"username"`
 	Password string `json:"password"`
+
+	Checked bool `json:"checked"`
 }
 type ZentaoProduct struct {
-	Id   int    `json:"id"`
-	Name string `json:"name"`
+	Id      int    `json:"id"`
+	Name    string `json:"name"`
+	Checked bool   `json:"checked"`
 }
 
 type ZentaoModule struct {

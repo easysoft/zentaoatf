@@ -98,7 +98,7 @@ func (s *SiteService) LoadSites(currSiteId int) (sites []serverDomain.ZentaoSite
 	}
 
 	sites = []serverDomain.ZentaoSite{}
-	var first serverDomain.ZentaoSite
+	currIndex := 0
 	for idx, item := range pos {
 		site := serverDomain.ZentaoSite{
 			Id:       int(item.ID),
@@ -109,19 +109,14 @@ func (s *SiteService) LoadSites(currSiteId int) (sites []serverDomain.ZentaoSite
 		}
 
 		if uint(currSiteId) == item.ID {
-			currSite = site
-		}
-
-		if idx == 0 {
-			first = site
+			currIndex = idx
 		}
 
 		sites = append(sites, site)
 	}
 
-	if currSite.Id == 0 { // not found, use the first one
-		currSite = first
-	}
+	currSite = sites[currIndex] // default is first one
+	sites[currIndex].Checked = true
 
 	return
 }

@@ -46,3 +46,8 @@ client/out/ztf-darwin-x64/ztf.app/Contents/MacOS/ztf
 任务列表
 用例树状列表（按模块组织，可以根据模块、套件、任务过滤）
 
+sonar-scanner \
+  -Dsonar.projectKey=ztf \
+  -Dsonar.sources=. \
+  -Dsonar.host.url=http://10.8.1.10:59000  \
+  -Dsonar.login=412093d8c90b99378b48139915fbf275509092ad
