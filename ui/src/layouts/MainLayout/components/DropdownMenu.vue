@@ -13,7 +13,7 @@
         :compact="listCompact"
         :divider="listDivider"
       />
-      <slot name="menu" />
+      <slot />
     </template>
   </div>
 </template>
@@ -210,5 +210,12 @@ onUnmounted(() => {
   z-index: 100;
   padding-top: var(--space-sm);
   padding-bottom: var(--space-sm);
+}
+.dropdown-menu :deep(.list-item) {
+  padding-left: var(--space-lg);
+  padding-right: var(--space-lg);
+}
+.dropdown-menu :deep(.list-item.has-checkmark) {
+  padding-right: var(--space-sm);
 }
 </style>

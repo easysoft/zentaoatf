@@ -1,7 +1,7 @@
 <template>
   <div
     class="list-item"
-    :class="{disabled, divider, state: !disabled, compact, active}"
+    :class="{disabled, divider, state: !disabled, compact, active, 'has-checkmark': checked !== undefined}"
     @click="disabled ? null: _handleClick"
   >
     <slot name="leading" />
@@ -47,17 +47,24 @@
       icon="chevron-right"
       class="list-item-trailing-angle"
     />
+    <Icon
+      class="list-item-checked-icon text-green"
+      v-if="checked !== undefined"
+      icon="checkmark"
+      :class="checked ? 'checked' : 'invisible'"
+    />
     <slot name="trailing" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, withDefaults } from 'vue';
 import Icon from './Icon.vue';
 
 export interface ListItemProps {
     disabled?: boolean,
     active?: boolean,
+    checked?: boolean,
     divider?: boolean,
     compact?: boolean,
     icon?: string,
@@ -79,7 +86,7 @@ export interface ListItemProps {
     click?: (event: Event) => void
 }
 
-const props = defineProps<ListItemProps>();
+const props = withDefaults(defineProps<ListItemProps>(), {checked: undefined});
 
 const emit = defineEmits<{(event: 'click', e: Event) : void}>();
 
@@ -119,6 +126,12 @@ function _handleClick(event) {
 .compact > .list-item .list-item-title,
 .list-item.compact .list-item-title {
   font-size: 0.9230769231em;
+}
+.list-item.active {
+  background-color: var(--color-primary-pale);
+}
+.list-item.active .list-item-title {
+  color: var(--color-primary);
 }
 .list-item-content {
   flex: auto;
