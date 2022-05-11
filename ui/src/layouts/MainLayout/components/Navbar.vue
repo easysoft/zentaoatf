@@ -1,7 +1,7 @@
 <template>
   <nav id="navbar" class="surface row divider gap-lg align-center padding-h">
     <Logo />
-    <SiteNav class="space-left" />
+    <SiteNav />
     <BatchRunButton />
     <LastTestInfo />
     <div class="gap flex-auto"></div>
