@@ -13,6 +13,9 @@
       :style="menuStyle"
       :position="menuPosition"
       :items="items"
+      :checkedKey="checkedKey"
+      :activeKey="activeKey"
+      :keyName="keyName"
       :replaceFields="replaceFields"
       :listClass="listClass"
       :listCompact="listCompact"
@@ -26,11 +29,14 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 import DropdownMenu, {DropdownMenuPosition} from './DropdownMenu.vue';
-import {ListItemProps} from './ListItem.vue';
+import {ListItemProps, ListItemKey} from './ListItem.vue';
 
 defineProps<{
     toggle?: object | string,
     items?: ListItemProps[] | Record<string, any>[],
+    keyName?: string,
+    checkedKey?: ListItemKey,
+    activeKey?: ListItemKey,
     replaceFields?: Record<string, string>, // {title: 'name'}
     listClass?: string,
     listCompact?: boolean,

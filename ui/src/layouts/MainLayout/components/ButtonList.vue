@@ -4,7 +4,9 @@
       <Button
         v-for="({key, ...btnProps}) in buttonPropsList"
         :key="key"
+        :data-key="key"
         v-bind="btnProps"
+        @click="_handleButtonClick"
       />
     </template>
     <slot />
@@ -12,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import {defineProps, computed, useSlots} from 'vue';
+import {defineProps, computed, defineEmits} from 'vue';
 import Button, {ButtonProps} from './Button.vue';
 
 const props = defineProps<{
@@ -32,25 +34,34 @@ const buttonPropsList = computed(() => {
         return null;
     }
     return props.buttons.map((x, i) => {
+        let item: (ButtonProps | Record<string, any>) & {key: string | number | symbol};
         if (props.replaceFields && Button.props) {
-            return Object.keys(Button.props).reduce((item, propName) => {
+            item = Object.keys(Button.props).reduce((item, propName) => {
                 const replacePropName = props.replaceFields ? props.replaceFields[propName] : null;
                 item[propName] = x[typeof replacePropName === 'string' ? replacePropName : propName];
                 return item;
-            }, {key: i})
+            }, {key: x.key !== undefined ? x.key : i});
+        } else {
+            item = {
+                key: i,
+                'class': props.defaultBtnClass,
+                iconClass: props.defaultIconClass,
+                suffixIconClass: props.defaultSuffixIconClass,
+                labelClass: props.defaultLabelIconClass,
+                iconSize: props.defaultIconSize,
+                suffixIconSize: props.defaultSuffixIconSize,
+                ...x
+            };
         }
-        return {
-            key: i,
-            'class': props.defaultBtnClass,
-            iconClass: props.defaultIconClass,
-            suffixIconClass: props.defaultSuffixIconClass,
-            labelClass: props.defaultLabelIconClass,
-            iconSize: props.defaultIconSize,
-            suffixIconSize: props.defaultSuffixIconSize,
-            ...x
-        };
+        return item;
     });
 });
+
+const emit = defineEmits<{(type: 'click', event: {originalEvent: Event, key: string | number | symbol}) : void}>();
+
+function _handleButtonClick(event) {
+    emit('click', event);
+}
 </script>
 
 <style scoped>

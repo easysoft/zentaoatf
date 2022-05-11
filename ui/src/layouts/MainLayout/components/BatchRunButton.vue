@@ -5,14 +5,17 @@
   </ButtonGroup>
   <DropdownMenu
     :items="[
-      {checked: false, name: '执行所有文件'},
-      {checked: false, name: '执行上次'},
-      {checked: true, name: '执行所有选中', active: true},
-      {checked: false, name: '执行当前打开'}
+      {key: 'all', name: '执行所有文件'},
+      {key: 'last', name: '执行上次'},
+      {key: 'select', name: '执行所有选中'},
+      {key: 'open', name: '执行当前打开'}
     ]"
+    checkedKey="select"
+    activeKey="select"
     :replaceFields="{title: 'name'}"
     toggle="#batchRunMenuToggle"
     position="bottom-right"
+    @click="_handleDropDownMenuClick"
   />
 </template>
 
@@ -20,4 +23,8 @@
 import Button from './Button.vue';
 import ButtonGroup from './ButtonGroup.vue';
 import DropdownMenu from './DropdownMenu.vue';
+
+function _handleDropDownMenuClick(event) {
+    console.log('_handleDropDownMenuClick', event);
+}
 </script>

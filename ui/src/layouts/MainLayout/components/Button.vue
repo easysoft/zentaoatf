@@ -1,5 +1,10 @@
 <template>
-  <button :class="`btn ${disabled ? 'disabled' : 'state'}${isOnlyIcon ? ' btn-only-icon' : ''}${size ? ` btn-size-${size}` : ''}${active ? ' active' : ''}`" type="button" :title="hint">
+  <button
+    :class="`btn ${disabled ? 'disabled' : 'state'}${isOnlyIcon ? ' btn-only-icon' : ''}${size ? ` btn-size-${size}` : ''}${active ? ' active' : ''}`"
+    type="button"
+    :title="hint"
+    @click="_handleClick"
+  >
     <Icon v-if="icon" class="btn-icon" :class="iconClass ?? (isOnlyIcon ? '' : 'muted')" :icon="icon" :color="iconColor" :size="iconSize ?? '1.2em'" />
     <slot>
       <span class="btn-label" :class="labelClass" v-if="label">{{label}}</span>
@@ -9,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import {defineProps, computed, useSlots} from 'vue';
+import {defineProps, computed, useSlots, defineEmits, useAttrs} from 'vue';
 import Icon from './Icon.vue';
 
 export interface ButtonProps {
@@ -34,6 +39,18 @@ const props = defineProps<ButtonProps>();
 const slots = useSlots();
 
 const isOnlyIcon = computed(() => (!props.label && !slots.default && props.icon && !props.suffixIcon));
+
+const emit = defineEmits<{(type: 'click', event: {originalEvent: Event, key: string | number | symbol | null}) : void}>();
+const attrs = useAttrs();
+
+function _handleClick(originalEvent) {
+    if (props.disabled) {
+        return;
+    }
+
+    const event = {originalEvent, key: attrs['data-key'] as (string | number | symbol | null)};
+    emit('click', event);
+}
 </script>
 
 <style scoped>
