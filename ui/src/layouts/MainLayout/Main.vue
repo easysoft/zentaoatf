@@ -3,18 +3,18 @@
     <Navbar class="flex-none" />
     <div id="mainContent" class="flex-auto">
       <Splitpanes id="mainRow">
-        <Pane id="leftPane"><WorkDirPanel /></Pane>
+        <Pane :size="20" id="leftPane"><WorkDirPanel /></Pane>
         <Pane id="centerPane">
           <Splitpanes id="centerColumn" horizontal>
             <Pane id="tabsPane">
               <TabsContainer />
             </Pane>
-            <Pane id="bottomPane">
+            <Pane :size="20" id="bottomPane">
               <LogPanel />
             </Pane>
           </Splitpanes>
         </Pane>
-        <Pane id="rightPane">
+        <Pane :size="20" id="rightPane">
           <ResultListPanel />
         </Pane>
       </Splitpanes>
