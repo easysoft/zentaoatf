@@ -5,11 +5,12 @@
   </ButtonGroup>
   <DropdownMenu
     :items="[
-      {checked: false, title: '执行所有文件'},
-      {checked: false, title: '执行上次'},
-      {checked: true, title: '执行所有选中', active: true},
-      {checked: false, title: '执行当前打开'}
+      {checked: false, name: '执行所有文件'},
+      {checked: false, name: '执行上次'},
+      {checked: true, name: '执行所有选中', active: true},
+      {checked: false, name: '执行当前打开'}
     ]"
+    :replaceFields="{title: 'name'}"
     toggle="#batchRunMenuToggle"
     position="bottom-right"
   />

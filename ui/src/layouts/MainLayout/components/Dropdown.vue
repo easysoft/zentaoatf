@@ -13,6 +13,7 @@
       :style="menuStyle"
       :position="menuPosition"
       :items="items"
+      :replaceFields="replaceFields"
       :listClass="listClass"
       :listCompact="listCompact"
       :listDivider="listDivider"
@@ -29,7 +30,8 @@ import {ListItemProps} from './ListItem.vue';
 
 defineProps<{
     toggle?: object | string,
-    items?: ListItemProps[],
+    items?: ListItemProps[] | Record<string, any>[],
+    replaceFields?: Record<string, string>, // {title: 'name'}
     listClass?: string,
     listCompact?: boolean,
     listDivider?: boolean,

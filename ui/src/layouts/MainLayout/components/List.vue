@@ -18,17 +18,27 @@ import ListItem, { ListItemProps } from './ListItem.vue';
 const props = defineProps<{
     compact?: boolean,
     divider?: boolean,
-    items?: ListItemProps[]
+    items?: ListItemProps[] | Record<string, any>[],
+    replaceFields?: Record<string, string>, // {title: 'name'}
 }>();
 
 const itemList = computed(() => {
     if (!props.items) {
         return null;
     }
-    return props.items.map((x, i) => ({
-        key: i,
-        ...x
-    }));
+    return props.items.map((x, i) => {
+        if (props.replaceFields && ListItem.props) {
+            return Object.keys(ListItem.props).reduce((item, propName) => {
+                const replacePropName = props.replaceFields ? props.replaceFields[propName] : null;
+                item[propName] = x[typeof replacePropName === 'string' ? replacePropName : propName];
+                return item;
+            }, {key: i})
+        }
+        return {
+            key: i,
+            ...x
+        };
+    });
 });
 
 </script>

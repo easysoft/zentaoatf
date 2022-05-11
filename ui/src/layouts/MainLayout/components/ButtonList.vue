@@ -16,7 +16,8 @@ import {defineProps, computed, useSlots} from 'vue';
 import Button, {ButtonProps} from './Button.vue';
 
 const props = defineProps<{
-    buttons?: ButtonProps[],
+    buttons?: ButtonProps[] | Record<string, any>[],
+    replaceFields?: Record<string, string>,
     defaultBtnClass?: string,
     defaultIconClass?: string,
     defaultIconSize?: string | number,
@@ -30,16 +31,25 @@ const buttonPropsList = computed(() => {
     if (!props.buttons) {
         return null;
     }
-    return props.buttons.map((x, i) => ({
-        key: i,
-        'class': props.defaultBtnClass,
-        iconClass: props.defaultIconClass,
-        suffixIconClass: props.defaultSuffixIconClass,
-        labelClass: props.defaultLabelIconClass,
-        iconSize: props.defaultIconSize,
-        suffixIconSize: props.defaultSuffixIconSize,
-        ...x
-    }));
+    return props.buttons.map((x, i) => {
+        if (props.replaceFields && Button.props) {
+            return Object.keys(Button.props).reduce((item, propName) => {
+                const replacePropName = props.replaceFields ? props.replaceFields[propName] : null;
+                item[propName] = x[typeof replacePropName === 'string' ? replacePropName : propName];
+                return item;
+            }, {key: i})
+        }
+        return {
+            key: i,
+            'class': props.defaultBtnClass,
+            iconClass: props.defaultIconClass,
+            suffixIconClass: props.defaultSuffixIconClass,
+            labelClass: props.defaultLabelIconClass,
+            iconSize: props.defaultIconSize,
+            suffixIconSize: props.defaultSuffixIconSize,
+            ...x
+        };
+    });
 });
 </script>
 

@@ -9,6 +9,7 @@
     <template v-if="state.show">
       <List
         :items="items"
+        :replaceFields="replaceFields"
         :class="listClass"
         :compact="listCompact"
         :divider="listDivider"
@@ -30,7 +31,8 @@ const props = withDefaults(defineProps<{
     toggle?: object | string,
     triggerEvent?: string,
     position?: DropdownMenuPosition,
-    items?: ListItemProps[],
+    items?: ListItemProps[] | Record<string, any>[],
+    replaceFields?: Record<string, string>, // {title: 'name'}
     listClass?: string,
     listCompact?: boolean,
     listDivider?: boolean,
