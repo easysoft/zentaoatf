@@ -17,7 +17,8 @@
   <DropdownMenu
       toggle="#siteMenuToggle"
       :items="sites"
-      :checked="currSite.id"
+      @click="selectSite"
+      :checkedKey="currSite.id"
       :replaceFields="replaceFields"
   >
   </DropdownMenu>
@@ -25,7 +26,7 @@
   <DropdownMenu
       toggle="#productMenuToggle"
       :items="products"
-      :checked="currProduct.id"
+      :checkedKey="currProduct.id"
       :replaceFields="replaceFields"
   />
 
@@ -85,9 +86,9 @@ const showZentaoMsg = (payload): void => {
   }
 }
 
-const selectSite = (site): void => {
-  console.log('selectSite', site)
-  store.dispatch('Zentao/fetchSitesAndProduct', {currSiteId: site.id}).then((payload) => {
+const selectSite = (item): void => {
+  console.log('selectSite', item)
+  store.dispatch('Zentao/fetchSitesAndProduct', {currSiteId: item.key}).then((payload) => {
     showZentaoMsg(payload)
   })
 }
