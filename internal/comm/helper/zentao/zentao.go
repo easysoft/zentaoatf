@@ -118,7 +118,7 @@ func LoadSiteProduct(currSite serverDomain.ZentaoSite, currProductId int) (
 	}
 
 	currProduct = products[currIndex]
-	products[currIndex].Checked = true
+	//products[currIndex].Checked = true
 
 	return
 }

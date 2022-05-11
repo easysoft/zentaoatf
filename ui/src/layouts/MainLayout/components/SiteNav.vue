@@ -17,6 +17,7 @@
   <DropdownMenu
       toggle="#siteMenuToggle"
       :items="sites"
+      :checked="currSite.id"
       :replaceFields="replaceFields"
   >
   </DropdownMenu>
@@ -24,6 +25,7 @@
   <DropdownMenu
       toggle="#productMenuToggle"
       :items="products"
+      :checked="currProduct.id"
       :replaceFields="replaceFields"
   />
 
@@ -97,6 +99,7 @@ const selectProduct = (product): void => {
 }
 
 const replaceFields = {
+  key: 'id',
   title: 'name',
 }
 

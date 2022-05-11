@@ -288,7 +288,7 @@ export default defineComponent({
       getNodeMapCall()
 
       getExpandedKeys(currSite.value.id, currProduct.value.id).then(async cachedKeys => {
-        console.log('cachedKeys', currSite.value.id, currProduct.value.id, cachedKeys)
+        console.log('cachedKeys', currSite.value.id, currProduct.value.id)
 
         if (cachedKeys) expandedKeys.value = cachedKeys
 
@@ -460,6 +460,7 @@ export default defineComponent({
       scriptStore.dispatch('Script/changeWorkspace',
           {id: e.node.dataRef.workspaceId, type: e.node.dataRef.workspaceType})
     }
+
     const selectNothing = () => {
       selectedKeys.value = []
       scriptStore.dispatch('Script/getScript', null)

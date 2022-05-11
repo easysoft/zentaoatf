@@ -116,7 +116,7 @@ func (s *SiteService) LoadSites(currSiteId int) (sites []serverDomain.ZentaoSite
 	}
 
 	currSite = sites[currIndex] // default is first one
-	sites[currIndex].Checked = true
+	//sites[currIndex].Checked = true
 
 	return
 }
