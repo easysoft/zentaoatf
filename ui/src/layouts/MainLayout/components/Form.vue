@@ -9,5 +9,7 @@
 </script>
 
 <style lang="less" scoped>
+  .z-form {
 
+  }
 </style>

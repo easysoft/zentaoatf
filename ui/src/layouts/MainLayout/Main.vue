@@ -23,10 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import './style/var.css';
-import './style/helpers.css';
-import './style/main.css';
-import './style/grid.less'
+import './style/index.less';
 import 'splitpanes/dist/splitpanes.css'
 
 import { Splitpanes, Pane } from 'splitpanes';

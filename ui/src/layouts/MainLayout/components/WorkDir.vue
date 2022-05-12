@@ -1,9 +1,14 @@
 <template>
   <div class="workdir padding muted">
     <Row :gutter="10">
-      <Column :width="30">1</Column>
-      <Column :flex="12" :offset="4">wwwwwww</Column>
+      <Col width="30px">1</Col>
+      <Col :span="3" :offset="4">111</Col>
+      <Col :flex="6" :offset="4">wwwwwww</Col>
     </Row>
+
+<!--    <FormItem label="标题" labelCol="50px" wrapperCol="20">
+      <a-input />
+    </FormItem>-->
 
     <ScriptTreePage></ScriptTreePage>
   </div>
@@ -14,12 +19,13 @@ import ScriptTreePage from "../../../views/script/component/tree.vue";
 import {useI18n} from "vue-i18n";
 import {useStore} from "vuex";
 import {ZentaoData} from "@/store/zentao";
-import {computed, onMounted} from "vue";
+import {computed, onMounted, provide} from "vue";
 import {ScriptData} from "@/views/script/store";
 import {resizeWidth} from "@/utils/dom";
 
 import Row from "./Row.vue";
-import Column from "./Column.vue";
+import Col from "./Col.vue";
+import FormItem from "./FormItem.vue";
 
 const { t } = useI18n();
 
@@ -29,6 +35,8 @@ const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
 
 const scriptStore = useStore<{ Script: ScriptData }>();
 const currWorkspace = computed<any>(() => scriptStore.state.Script.currWorkspace);
+
+provide('errors', {});
 
 onMounted(() => {
   console.log('onMounted')

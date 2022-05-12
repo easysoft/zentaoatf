@@ -9,12 +9,15 @@ import {computed, defineProps, inject} from "vue";
 import {ButtonProps} from "@/layouts/MainLayout/components/Button.vue";
 
 export interface ColumnProps {
-  width?: number,
+  width?: string,
+  span?: number,
   flex?: number,
   offset?: number,
 }
 
 const props = defineProps<ColumnProps>();
+console.log('-----------', props)
+
 let gutter = inject('gutter');
 
 const colClass = computed(() => {
@@ -36,13 +39,16 @@ const colClass = computed(() => {
 const colStyle = computed(() => {
   const style: Record<string, any> = {};
 
-  const width = typeof(props.width) === "undefined" ? -1 : props.width
+  const width = typeof(props.width) === "undefined" ? '' : props.width
+  const span = typeof(props.span) === "undefined" ? -1 : props.span
   const flex = typeof(props.flex) === "undefined" ? -1 : props.flex
 
-  if (width > 0) {
-    style.width = `${width}px`;
-  } else if (flex === 0) {
+  if (width && width !== '') {
+    style.width = width;
+  } else if (span === 0) {
     style.display = 'none';
+  } else if (flex > 0) {
+    style.flex = flex;
   }
 
   if (gutter.value > 0) {
