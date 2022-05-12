@@ -24,31 +24,29 @@ export interface FormItemProps {
   name?: string,
   label?: string,
   size?: ContrlSize,
-
-  labelCol?: string,
-  wrapperCol?: string,
 }
 
 const props = defineProps<FormItemProps>();
-
 console.log(props)
 
 let errors = inject('errors');
+let labelCol = inject('labelCol');
+let wrapperCol = inject('wrapperCol');
 
 const size = ref(props.size)
 
 const labelWidth = computed(() => {
-  return getWidth(props.labelCol);
+  return getWidth(labelCol);
 })
 const labelCls = computed(() => {
-  return getCls(props.labelCol);
+  return getCls(labelCol);
 })
 
 const wrapperWidth = computed(() => {
-  return getWidth(props.wrapperCol);
+  return getWidth(wrapperCol);
 })
 const wrapperCls = computed(() => {
-  return getCls(props.wrapperCol);
+  return getCls(wrapperCol);
 })
 
 const getWidth = (val: string) => {

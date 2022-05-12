@@ -6,9 +6,11 @@
       <Col :flex="6" :offset="4">wwwwwww</Col>
     </Row>-->
 
-    <FormItem label="标题" size="small" labelCol="50px" wrapperCol="60">
-      <a-input />
-    </FormItem>
+    <Form labelCol="50px" wrapperCol="60">
+      <FormItem label="标题" size="small">
+        <a-input />
+      </FormItem>
+    </Form>
 
     <ScriptTreePage></ScriptTreePage>
   </div>
@@ -25,6 +27,7 @@ import {resizeWidth} from "@/utils/dom";
 
 import Row from "./Row.vue";
 import Col from "./Col.vue";
+import Form from "./Form.vue";
 import FormItem from "./FormItem.vue";
 
 const { t } = useI18n();
@@ -35,8 +38,6 @@ const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
 
 const scriptStore = useStore<{ Script: ScriptData }>();
 const currWorkspace = computed<any>(() => scriptStore.state.Script.currWorkspace);
-
-provide('errors', {});
 
 onMounted(() => {
   console.log('onMounted')
