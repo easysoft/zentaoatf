@@ -13,12 +13,13 @@
             class="rounded border lighten-16"
             suffix-icon="caret-down"/>
   </ButtonGroup>
-
+{{currSite.id}}
   <DropdownMenu
       toggle="#siteMenuToggle"
       :items="sites"
       @click="selectSite"
       :checkedKey="currSite.id"
+      keyName="id"
       :replaceFields="replaceFields"
   >
   </DropdownMenu>
@@ -27,6 +28,7 @@
       toggle="#productMenuToggle"
       :items="products"
       :checkedKey="currProduct.id"
+      keyName="id"
       :replaceFields="replaceFields"
   />
 
@@ -87,7 +89,7 @@ const showZentaoMsg = (payload): void => {
 }
 
 const selectSite = (item): void => {
-  console.log('selectSite', item)
+  console.log('selectSite', item.key)
   store.dispatch('Zentao/fetchSitesAndProduct', {currSiteId: item.key}).then((payload) => {
     showZentaoMsg(payload)
   })
