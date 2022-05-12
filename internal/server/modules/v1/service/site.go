@@ -101,9 +101,9 @@ func (s *SiteService) LoadSites(currSiteId int) (sites []serverDomain.ZentaoSite
 	currIndex := 0
 	for idx, item := range pos {
 		site := serverDomain.ZentaoSite{
-			Id:   int(item.ID),
-			Name: item.Name,
-			//Url:      item.Url,
+			Id:       int(item.ID),
+			Name:     item.Name,
+			Url:      item.Url,
 			Username: item.Username,
 			Password: item.Password,
 		}
@@ -116,7 +116,6 @@ func (s *SiteService) LoadSites(currSiteId int) (sites []serverDomain.ZentaoSite
 	}
 
 	currSite = sites[currIndex] // default is first one
-	//sites[currIndex].Checked = true
 
 	return
 }

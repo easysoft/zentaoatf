@@ -49,6 +49,10 @@ func (c *ZentaoCtrl) ListSiteAndProduct(ctx iris.Context) {
 	sites, currSite, _ := c.SiteService.LoadSites(currSiteId)
 	products, currProduct, err := zentaoHelper.LoadSiteProduct(currSite, currProductId)
 
+	for idx, _ := range sites {
+		sites[idx].Url = ""
+	}
+
 	zentaoErr := false
 	if err != nil {
 		currSite = sites[len(sites)-1]

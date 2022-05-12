@@ -7,28 +7,31 @@
             iconColor="var(--color-blue)"
             iconClass="off-off"
             suffix-icon="caret-down"/>
-    <Button id="productMenuToggle"
+    <Button v-if="products.length > 0"
+            id="productMenuToggle"
             :label="currProduct.name"
             icon="cube"
             class="rounded border lighten-16"
             suffix-icon="caret-down"/>
   </ButtonGroup>
-{{currSite.id}}
+
   <DropdownMenu
       toggle="#siteMenuToggle"
       :items="sites"
-      @click="selectSite"
-      :checkedKey="currSite.id"
       keyName="id"
+      :checkedKey="currSite.id"
+      @click="selectSite"
       :replaceFields="replaceFields"
   >
   </DropdownMenu>
 
   <DropdownMenu
+      v-if="products.length > 0"
       toggle="#productMenuToggle"
       :items="products"
-      :checkedKey="currProduct.id"
       keyName="id"
+      :checkedKey="currProduct.id"
+      @click="selectProduct"
       :replaceFields="replaceFields"
   />
 
@@ -94,9 +97,9 @@ const selectSite = (item): void => {
     showZentaoMsg(payload)
   })
 }
-const selectProduct = (product): void => {
-  console.log('selectProduct', product)
-  store.dispatch('Zentao/fetchSitesAndProduct', {currProductId: product.id}).then((payload) => {
+const selectProduct = (item): void => {
+  console.log('selectProduct', item.key)
+  store.dispatch('Zentao/fetchSitesAndProduct', {currProductId: item.key}).then((payload) => {
     showZentaoMsg(payload)
   })
 }

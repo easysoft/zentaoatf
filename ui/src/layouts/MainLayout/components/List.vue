@@ -54,6 +54,7 @@ const itemList = computed(() => {
         if (item.key === props.activeKey) {
             item.active = true;
         }
+
         if (item.key === props.checkedKey) {
             item.checked = true;
         }
