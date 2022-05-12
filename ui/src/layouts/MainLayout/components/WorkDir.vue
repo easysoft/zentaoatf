@@ -1,5 +1,10 @@
 <template>
   <div class="workdir padding muted">
+    <Row type="flex">
+      <Column :width="30">1</Column>
+      <Column :span="12" :offset="4">wwwwwww</Column>
+    </Row>
+
     <ScriptTreePage></ScriptTreePage>
   </div>
 </template>
@@ -12,6 +17,9 @@ import {ZentaoData} from "@/store/zentao";
 import {computed, onMounted} from "vue";
 import {ScriptData} from "@/views/script/store";
 import {resizeWidth} from "@/utils/dom";
+
+import Row from "./Row.vue";
+import Column from "./Column.vue";
 
 const { t } = useI18n();
 

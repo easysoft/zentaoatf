@@ -26,7 +26,9 @@
 import './style/var.css';
 import './style/helpers.css';
 import './style/main.css';
+import './style/grid.less'
 import 'splitpanes/dist/splitpanes.css'
+
 import { Splitpanes, Pane } from 'splitpanes';
 import Navbar from './components/Navbar.vue';
 import WorkDirPanel from './components/WorkDirPanel.vue';
