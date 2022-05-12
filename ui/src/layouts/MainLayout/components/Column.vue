@@ -46,8 +46,8 @@ const colStyle = computed(() => {
   }
 
   if (gutter.value > 0) {
-    style.marginLeft = gutter.value / 2 + 'px';
-    style.marginRight = gutter.value / 2 + 'px';
+    style.paddingLeft = gutter.value / 2 + 'px';
+    style.paddingRight = gutter.value / 2 + 'px';
   }
 
   return style

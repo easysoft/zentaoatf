@@ -1,11 +1,11 @@
 <template>
-  <div class="z-row">
+  <div class="z-row" :style="rowStyle">
     <slot></slot>
   </div>
 </template>
 
 <script setup lang="ts">
-import {provide, defineProps, ref} from "vue";
+import {provide, defineProps, ref, computed} from "vue";
 import {ColumnProps} from "@/layouts/MainLayout/components/Column.vue";
 
 export interface RowProps {
@@ -16,6 +16,17 @@ const props = defineProps<RowProps>();
 const gutter = ref(props.gutter);
 
 provide('gutter', gutter);
+
+const rowStyle = computed(() => {
+  const style: Record<string, any> = {};
+
+  if (gutter.value > 0) {
+    style.marginLeft = gutter.value / -2 + 'px';
+    style.marginRight = gutter.value / -2 + 'px';
+  }
+
+  return style
+})
 
 </script>
 
