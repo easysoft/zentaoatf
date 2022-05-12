@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, defineProps} from "vue";
+import {computed, defineProps, inject} from "vue";
 import {ButtonProps} from "@/layouts/MainLayout/components/Button.vue";
 
 export interface ColumnProps {
@@ -15,6 +15,7 @@ export interface ColumnProps {
 }
 
 const props = defineProps<ColumnProps>();
+let gutter = inject('gutter');
 
 const colClass = computed(() => {
   const classes: string[] = [];
@@ -42,6 +43,14 @@ const colStyle = computed(() => {
     style.width = `${width}px`;
   } else if (span === 0) {
     style.display = 'none';
+  }
+
+  console.log('123', gutter.value)
+
+  if (gutter.value > 0) {
+    style.marginLeft = gutter.value / 2 + 'px';
+
+    style.marginRight = gutter.value / 2 + 'px';
   }
 
   return style

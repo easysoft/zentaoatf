@@ -5,14 +5,17 @@
 </template>
 
 <script setup lang="ts">
-import {computed, defineProps} from "vue";
+import {provide, defineProps, ref} from "vue";
 import {ColumnProps} from "@/layouts/MainLayout/components/Column.vue";
 
 export interface RowProps {
-  type?: string,
+  gutter?: number,
 }
 
 const props = defineProps<RowProps>();
+const gutter = ref(props.gutter);
+
+provide('gutter', gutter);
 
 </script>
 
