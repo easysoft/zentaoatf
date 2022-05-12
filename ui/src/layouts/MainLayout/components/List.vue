@@ -48,14 +48,14 @@ const itemList = computed(() => {
                 ...x
             };
         }
+        if (props.keyName && props.keyName !== 'key') {
+            item.key = x[props.keyName];
+        }
         if (item.key === props.activeKey) {
             item.active = true;
         }
         if (item.key === props.checkedKey) {
             item.checked = true;
-        }
-        if (props.keyName && props.keyName !== 'key') {
-            item.key = x[props.keyName];
         }
         keyItemMap.value[item.key] = x;
         return item;
