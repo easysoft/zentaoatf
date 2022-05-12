@@ -1,14 +1,14 @@
 <template>
   <div class="workdir padding muted">
-    <Row :gutter="10">
+<!--    <Row :gutter="10">
       <Col width="30px">1</Col>
       <Col :span="3" :offset="4">111</Col>
       <Col :flex="6" :offset="4">wwwwwww</Col>
-    </Row>
+    </Row>-->
 
-<!--    <FormItem label="标题" labelCol="50px" wrapperCol="20">
+    <FormItem label="标题" size="small" labelCol="50px" wrapperCol="60">
       <a-input />
-    </FormItem>-->
+    </FormItem>
 
     <ScriptTreePage></ScriptTreePage>
   </div>
