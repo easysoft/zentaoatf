@@ -22,3 +22,6 @@ logs/
 /res/res.go
 /conf/
 /testng_*
+
+#IDE
+.vscode/
