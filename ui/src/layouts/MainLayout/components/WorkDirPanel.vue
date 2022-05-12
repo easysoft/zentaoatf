@@ -19,7 +19,6 @@
           <template #menu>
             <List>
               <ListItem :checked="true">按套件</ListItem>
-
               <ListItem :checked="false">按模块</ListItem>
             </List>
           </template>
