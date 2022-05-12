@@ -5,11 +5,12 @@
   </ButtonGroup>
   <DropdownMenu
     :items="[
-      {key: 'all', name: '执行所有文件'},
-      {key: 'last', name: '执行上次'},
-      {key: 'select', name: '执行所有选中'},
-      {key: 'open', name: '执行当前打开'}
+      {id: 'all', name: '执行所有文件'},
+      {id: 'last', name: '执行上次'},
+      {id: 'select', name: '执行所有选中'},
+      {id: 'open', name: '执行当前打开'}
     ]"
+    keyName="id"
     checkedKey="select"
     activeKey="select"
     :replaceFields="{title: 'name'}"
