@@ -10,7 +10,7 @@ import {ButtonProps} from "@/layouts/MainLayout/components/Button.vue";
 
 export interface ColumnProps {
   width?: number,
-  span?: number,
+  flex?: number,
   offset?: number,
 }
 
@@ -37,19 +37,16 @@ const colStyle = computed(() => {
   const style: Record<string, any> = {};
 
   const width = typeof(props.width) === "undefined" ? -1 : props.width
-  const span = typeof(props.span) === "undefined" ? -1 : props.span
+  const flex = typeof(props.flex) === "undefined" ? -1 : props.flex
 
   if (width > 0) {
     style.width = `${width}px`;
-  } else if (span === 0) {
+  } else if (flex === 0) {
     style.display = 'none';
   }
 
-  console.log('123', gutter.value)
-
   if (gutter.value > 0) {
     style.marginLeft = gutter.value / 2 + 'px';
-
     style.marginRight = gutter.value / 2 + 'px';
   }
 

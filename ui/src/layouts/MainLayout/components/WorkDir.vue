@@ -2,7 +2,7 @@
   <div class="workdir padding muted">
     <Row :gutter="10">
       <Column :width="30">1</Column>
-      <Column :span="12" :offset="4">wwwwwww</Column>
+      <Column :flex="12" :offset="4">wwwwwww</Column>
     </Row>
 
     <ScriptTreePage></ScriptTreePage>
