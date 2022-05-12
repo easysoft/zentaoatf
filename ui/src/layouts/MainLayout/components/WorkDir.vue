@@ -1,14 +1,16 @@
 <template>
   <div class="workdir padding muted">
-    <Row :gutter="10">
+<!--    <Row :gutter="10">
       <Col width="30px">1</Col>
       <Col :span="3" :offset="4">111</Col>
       <Col :flex="6" :offset="4">wwwwwww</Col>
-    </Row>
+    </Row>-->
 
-<!--    <FormItem label="标题" labelCol="50px" wrapperCol="20">
-      <a-input />
-    </FormItem>-->
+    <Form labelCol="50px" wrapperCol="60">
+      <FormItem label="标题" size="small">
+        <a-input />
+      </FormItem>
+    </Form>
 
     <ScriptTreePage></ScriptTreePage>
   </div>
@@ -25,6 +27,7 @@ import {resizeWidth} from "@/utils/dom";
 
 import Row from "./Row.vue";
 import Col from "./Col.vue";
+import Form from "./Form.vue";
 import FormItem from "./FormItem.vue";
 
 const { t } = useI18n();
@@ -35,8 +38,6 @@ const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
 
 const scriptStore = useStore<{ Script: ScriptData }>();
 const currWorkspace = computed<any>(() => scriptStore.state.Script.currWorkspace);
-
-provide('errors', {});
 
 onMounted(() => {
   console.log('onMounted')

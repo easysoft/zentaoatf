@@ -1,9 +1,9 @@
 <template>
-  <Row class="z-form-item">
-    <Col :width="labelWidth" :flex="labelFlex" class="z-form-item-label">
+  <Row class="z-form-item" :class="[size]">
+    <Col :width="labelWidth" :class="[labelCls]" class="z-form-item-label">
       {{label}}
     </Col>
-    <Col :width="wrapperWidth" :flex="wrapperFlex" class="z-form-item-content">
+    <Col :width="wrapperWidth" :class="wrapperCls" class="z-form-item-wrapper">
       <div class="z-form-item-control">
         <slot></slot>
       </div>
@@ -17,61 +17,82 @@
 <script setup lang="ts">
 import {computed, defineProps, inject, ref} from "vue";
 import Row from "./Row.vue";
-import Col from "./Column.vue";
+import Col from "./Col.vue";
+import {ContrlSize} from "@/utils/enum";
 
 export interface FormItemProps {
   name?: string,
   label?: string,
-
-  labelCol?: string,
-  wrapperCol?: string,
+  size?: ContrlSize,
 }
 
 const props = defineProps<FormItemProps>();
-
 console.log(props)
 
 let errors = inject('errors');
+let labelCol = inject('labelCol');
+let wrapperCol = inject('wrapperCol');
+
+const size = ref(props.size)
 
 const labelWidth = computed(() => {
-  return getWidth(props.labelCol);
+  return getWidth(labelCol);
 })
-const labelFlex = computed(() => {
-  return getFlex(props.labelCol);
+const labelCls = computed(() => {
+  return getCls(labelCol);
 })
 
 const wrapperWidth = computed(() => {
-  return getWidth(props.wrapperCol);
+  return getWidth(wrapperCol);
 })
-const wrapperFlex = computed(() => {
-  return getFlex(props.wrapperCol);
+const wrapperCls = computed(() => {
+  return getCls(wrapperCol);
 })
 
 const getWidth = (val: string) => {
-  if (!val) return -1
+  if (!val) return undefined
 
   val += ''
   if (val.indexOf('px') > 0) {
     return val;
   }
 
-  return -1;
+  return undefined;
 }
-const getFlex = (val: string) => {
-  if (!val) return -1
+const getCls = (val: string) => {
+  if (!val) return undefined
 
   val += ''
   if (val.indexOf('px') < 0) {
-    return val;
+    return [`z-col-${val}`]
   }
 
-  return -1;
+  return undefined;
 }
 
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .z-form-item {
+  .z-form-item-label {
+    padding-right: 5px;
+    text-align: right;
+    line-height: 32px;
+  }
 
+  &.small {
+    .z-form-item-label {
+      line-height: 25px;
+    }
+
+    .z-form-item-wrapper {
+      .z-form-item-control {
+        input {
+          height: 25px;
+          padding: 2px 5px;
+        }
+      }
+    }
+  }
 }
 </style>
