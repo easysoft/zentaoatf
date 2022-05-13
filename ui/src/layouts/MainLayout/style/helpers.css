@@ -9,8 +9,8 @@
 .state {position: relative; cursor: pointer; outline: none;}
 .state::after {content: ' '; display: block; pointer-events: none; position: absolute; left: 0; right: 0; top: 0; bottom: 0; opacity: 0; visibility: hidden; background-color: var(--state-hover-bg, rgba(0,0,0,.05)); border-radius: inherit; transition: opacity .2s;}
 .state:hover::after {opacity: 1; visibility: visible;}
-.state:focus-within::after {box-shadow: 0 0 0 2px var(--color-focus); opacity: .75; visibility: visible; background-color: transparent;}
-.state:active::after {opacity: 1; visibility: visible; background-color: var(--state-active-bg, rgba(0,0,0,.1));}
+.state:focus-visible::after {box-shadow: 0 0 0 2px var(--color-focus); opacity: .75; visibility: visible; background-color: transparent;}
+.state:active::after {opacity: 1; visibility: visible; background-color: var(--state-active-bg, rgba(0,0,0,.1)); box-shadow: 0 0 0 2px var(--color-focus);}
 
 .clickable {cursor: pointer;}
 
