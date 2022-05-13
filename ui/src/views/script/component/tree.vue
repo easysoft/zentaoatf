@@ -450,7 +450,6 @@ export default defineComponent({
 
       scriptStore.dispatch('Script/getScript', node)
       if(node.type === 'file'){
-          console.log(node)
           store.dispatch('tabs/open', {
                 id: node.path,
                 title: node.title,
