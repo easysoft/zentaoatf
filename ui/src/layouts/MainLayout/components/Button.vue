@@ -3,7 +3,7 @@
     :class="`btn ${disabled ? 'disabled' : 'state'}${isOnlyIcon ? ' btn-only-icon' : ''}${size ? ` btn-size-${size}` : ''}${active ? ' active' : ''}`"
     type="button"
     :title="hint"
-    @click="_handleClick"
+    @click.stop="_handleClick"
   >
     <Icon v-if="icon" class="btn-icon" :class="iconClass ?? (isOnlyIcon ? '' : 'muted')" :icon="icon" :color="iconColor" :size="iconSize ?? '1.2em'" />
     <slot>
@@ -79,5 +79,11 @@ function _handleClick(originalEvent) {
 }
 .btn-only-icon > .btn-icon {
   margin: 0;
+}
+.btn-size-sm {
+  height: calc(2em - 2px);
+}
+.btn-size-sm.btn-only-icon {
+  width: calc(2em - 2px);
 }
 </style>
