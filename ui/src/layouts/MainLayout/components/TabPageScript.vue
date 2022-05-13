@@ -55,7 +55,10 @@ watch(script, () => {
 
 const editorChange = (newScriptCode) => {
     newScriptCode = newScriptCode.replace(/\n$/, '');
-    let changed = newScriptCode == scriptCode.value ? false : true;
+    let oldScriptCode = scriptCode.value;
+    oldScriptCode = oldScriptCode.replace(/\n$/, '');
+    let changed = newScriptCode == oldScriptCode ? false : true;
+    console.log(11111,newScriptCode, oldScriptCode, changed)
     scriptStore.dispatch('tabs/update', {
         id: props.tab.id,
         title: props.tab.title,
