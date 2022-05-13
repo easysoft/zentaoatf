@@ -100,7 +100,7 @@ onMounted(() => {
 
 </script>
 
-<style>
+<style scoped>
 .list-item-container{
     display: flex;
     align-items: center;
