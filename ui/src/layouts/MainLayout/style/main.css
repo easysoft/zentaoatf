@@ -5,6 +5,10 @@ body {
     line-height: var(--line-height-base);
 }
 
+button {
+    cursor: pointer;
+}
+
 .splitpanes__splitter {
     background-color: var(--splitter-color, #d9d9d9);
     position: relative;
@@ -37,3 +41,9 @@ body {
     bottom: calc(0px - var(--splitter-hover-size, 6px) / 2);
     width: 100%;
 }
+
+.z-err {
+    color: var(--color-err);
+    opacity: 1;
+}
+

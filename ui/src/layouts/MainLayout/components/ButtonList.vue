@@ -17,6 +17,8 @@
 import {defineProps, computed, defineEmits} from 'vue';
 import Button, {ButtonProps} from './Button.vue';
 
+export type ButtonListItemProps = ButtonProps;
+
 const props = defineProps<{
     buttons?: ButtonProps[] | Record<string, any>[],
     replaceFields?: Record<string, string>,

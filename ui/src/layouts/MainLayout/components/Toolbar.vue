@@ -1,11 +1,32 @@
 <template>
-  <ButtonList :gap="0" class="toolbar">
+  <ButtonList
+    class="toolbar"
+    :gap="gap"
+    :buttons="items"
+    :defaultBtnClass="defaultBtnClass"
+    :defaultIconSize="defaultIconSize"
+    @click="$emit('click', $event)"
+  >
     <slot />
   </ButtonList>
 </template>
 
 <script setup lang="ts">
-import ButtonList from './ButtonList.vue';
+import { defineProps, withDefaults } from 'vue';
+import ButtonList, {ButtonListItemProps} from './ButtonList.vue';
+
+export type ToolbarItemProps = ButtonListItemProps;
+
+withDefaults(defineProps<{
+    items?: ToolbarItemProps[] | Record<string, any>[],
+    defaultBtnClass?: string,
+    defaultIconSize?: string | number,
+    gap?: number
+}>(), {
+    defaultBtnClass: 'rounded pure',
+    defaultIconSize: '1.4em',
+    gap: 0
+});
 </script>
 
 <style scoped>

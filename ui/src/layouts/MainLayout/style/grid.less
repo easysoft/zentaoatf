@@ -1,0 +1,34 @@
+@z-prefix: z;
+@grid-columns: 24;
+
+.@{z-prefix}-row {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.loop-grid-columns(@index, @class) when (@index > 0) {
+    .@{z-prefix}-col@{class}-@{index} {
+        display: block;
+        flex: 0 0 percentage((@index / @grid-columns));
+        max-width: percentage((@index / @grid-columns));
+    }
+    .@{z-prefix}-col@{class}-offset-@{index} {
+        margin-left: percentage((@index / @grid-columns));
+    }
+    .loop-grid-columns((@index - 1), @class);
+}
+
+.loop-grid-columns(@index, @class) when (@index = 0) {
+    .@{z-prefix}-col@{class}-@{index} {
+        display: none;
+    }
+    .@{z-prefix}-col@{class}-offset-@{index} {
+        margin-left: 0;
+    }
+}
+
+.make-grid(@class: ~'') {
+    .loop-grid-columns(@grid-columns, @class);
+}
+
+.make-grid();

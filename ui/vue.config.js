@@ -9,7 +9,7 @@ module.exports = {
     outputDir: 'dist',
     productionSourceMap: false,
     devServer: {
-        host: 'localhost',
+        host: '0.0.0.0',//set minpc accessible
         port: VUE_APP_PORT || 8000,
         disableHostCheck: true,
         // 配置反向代理
