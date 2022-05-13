@@ -273,6 +273,13 @@ export default class ZtfApp {
                             selector: 'performClose:'
                         },
                         {
+                            label: 'Reload',
+                            accelerator: 'Command+R',
+                            click: () => {
+                                this._windows.get('main').webContents.reload();
+                            }
+                        },
+                        {
                             type: 'separator'
                         },
                         {
