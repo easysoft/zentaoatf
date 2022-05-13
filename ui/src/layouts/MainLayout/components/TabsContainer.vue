@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from 'vue';
+import {computed, ref, onMounted} from 'vue';
 import {useStore} from 'vuex';
 import {TabsData, PageTab} from "@/store/tabs";
 import TabsNav, {TabNavItem} from './TabsNav.vue';
@@ -74,6 +74,16 @@ function _addTestTab() {
         changed: Math.random() > 0.5,
         type: ['script', 'sites', 'settings', 'result', ''][Math.floor(Math.random() * 5)],
         data: Math.random()
+    });
+}
+
+if (process.env?.NODE_ENV === 'development') {
+    onMounted(() => {
+        Object.assign(window, {
+            $openPage: (tab: string | PageTab): void => {
+                store.dispatch('tabs/open', typeof tab === 'string' ? {id: tab, type: tab, title: tab} : tab);
+            }
+        });
     });
 }
 </script>
