@@ -9,16 +9,6 @@
     <Form labelCol="50px" wrapperCol="60">
       <FormItem name="name" label="标题" :info="validateInfos.name">
         <input v-model="modelRef.name" />
-
-        &nbsp;&nbsp;&nbsp;
-        <select>
-          <option value="1" > Miner </option>
-        </select>
-        &nbsp;&nbsp;&nbsp;
-        <input name="sex" checked type="radio" value="female"/><label>女</label>
-        &nbsp;&nbsp;&nbsp;
-        <input name='subject' type="checkbox" checked="checked" value="English"/><label>英语</label>
-
       </FormItem>
 
       <FormItem size="small">
@@ -69,12 +59,10 @@ const rulesRef = ref({
 })
 
 const { validate, reset, validateInfos } = useForm(modelRef, rulesRef);
-
 const submit = () => {
-  console.log('submit')
-
-  validate()
-  console.log(validateInfos)
+  if (validate()) {
+    console.log('TODO')
+  }
 }
 
 </script>
