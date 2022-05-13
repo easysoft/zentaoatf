@@ -1,6 +1,6 @@
 <template>
   <div class="tab-page-script">
-    <div>TabPage: 测试脚本文件</div>
+    <div>{{t('test_script')}}</div>
     <div>{{JSON.stringify(tab)}}</div>
   </div>
 </template>

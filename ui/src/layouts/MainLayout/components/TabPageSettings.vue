@@ -1,6 +1,6 @@
 <template>
   <div class="tab-page-sites">
-    <div>TabPage: 设置</div>
+    <div>{{ t('settings') }}</div>
     <div>{{JSON.stringify(tab)}}</div>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <div class="tab-page-sites">
-    <div>TabPage: 站点管理</div>
+    <div>{{t('site_management')}}</div>
     <div>{{JSON.stringify(tab)}}</div>
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
-  <Panel title="测试结果">
+  <Panel :title="t('test_result')">
     <template #toolbar-buttons>
-      <Button class="rounded pure" hint="更多操作" icon="more-vert" />
+      <Button class="rounded pure" :hint="t('more_actions')" icon="more-vert" />
     </template>
     <ResultList />
   </Panel>

@@ -1,6 +1,6 @@
 <template>
   <div class="tab-page-sites">
-    <div>TabPage: 不支持的标签页类型</div>
+    <div>TabPage</div>
     <div>{{JSON.stringify(tab)}}</div>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <div class="tab-page-sites">
-    <div>TabPage: 测试结果页面</div>
+    <div>{{t('test_result')}}</div>
     <div>{{JSON.stringify(tab)}}</div>
   </div>
 </template>
