@@ -36,6 +36,19 @@ func (c *TestResultCtrl) List(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(data))
 }
 
+func (c *TestResultCtrl) GetLatest(ctx iris.Context) {
+	currSiteId, _ := ctx.URLParamInt("currSiteId")
+	currProductId, _ := ctx.URLParamInt("currProductId")
+
+	report, err := c.TestResultService.GetLatest(uint(currSiteId), uint(currProductId))
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	ctx.JSON(c.SuccessResp(report))
+}
+
 // Get 详情
 func (c *TestResultCtrl) Get(ctx iris.Context) {
 	workspaceId, _ := ctx.Params().GetInt("workspaceId")

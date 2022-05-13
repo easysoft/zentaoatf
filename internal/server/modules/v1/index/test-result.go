@@ -21,6 +21,7 @@ func (m *TestResultModule) Party() module.WebModule {
 		index.Use(middleware.InitCheck())
 
 		index.Get("/", m.TestResultCtrl.List).Name = "执行列表"
+		index.Get("/latest", m.TestResultCtrl.GetLatest).Name = "获取最新一次执行详情"
 		index.Get("/{workspaceId:int}/{seq:string}", m.TestResultCtrl.Get).Name = "执行详情"
 		index.Delete("/", m.TestResultCtrl.Delete).Name = "删除执行"
 

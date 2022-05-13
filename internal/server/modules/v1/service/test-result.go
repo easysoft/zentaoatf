@@ -2,6 +2,9 @@ package service
 
 import (
 	"fmt"
+	"io/fs"
+	"path/filepath"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
 	analysisHelper "github.com/easysoft/zentaoatf/internal/comm/helper/analysis"
@@ -10,9 +13,9 @@ import (
 	"github.com/easysoft/zentaoatf/internal/pkg/domain"
 	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 	"github.com/jinzhu/copier"
-	"path/filepath"
 )
 
 type TestResultService struct {
@@ -67,6 +70,41 @@ func (s *TestResultService) Paginate(siteId, productId uint, req serverDomain.Re
 	}
 
 	data.Populate(reports, int64(count), req.Page, req.PageSize)
+
+	return
+}
+
+func (s *TestResultService) GetLatest(siteId, productId uint) (summary serverDomain.TestReportSummary, err error) {
+	workspaces, _ := s.WorkspaceRepo.ListByProduct(siteId, productId)
+
+	var fi fs.FileInfo
+	var ws model.Workspace
+	for _, workspace := range workspaces {
+		reportFiles := analysisHelper.ListReportByModTime(workspace.Path)
+		if len(reportFiles) == 0 {
+			continue
+		}
+
+		if fi != nil && fi.ModTime().Before(reportFiles[0].ModTime()) {
+			continue
+		}
+
+		fi = reportFiles[0]
+		ws = workspace
+	}
+
+	summary = serverDomain.TestReportSummary{WorkspaceId: int(ws.ID)}
+	seq := fi.Name()
+	report, err1 := analysisHelper.ReadReportByWorkspaceSeq(ws.Path, seq)
+	if err1 != nil { // ignore wrong json result
+		return
+	}
+
+	copier.Copy(&summary, report)
+	summary.No = fmt.Sprintf("%d-%s", ws.ID, seq)
+	summary.Seq = seq
+	summary.WorkspaceId = int(ws.ID)
+	summary.WorkspaceName = ws.Name
 
 	return
 }
