@@ -88,6 +88,8 @@
 
     --navbar-height: 40px;
 
+    --tabs-nav-height: 30px;
+
     --space-xs: calc(var(--space-base) / 4);
     --space-sm: calc(var(--space-base) / 2);
     --space-base: 8px;

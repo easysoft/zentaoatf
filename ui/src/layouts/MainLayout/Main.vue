@@ -7,7 +7,7 @@
         <Pane id="centerPane">
           <Splitpanes id="centerColumn" horizontal>
             <Pane id="tabsPane">
-              <TabsContainer />
+              <TabsContainer class="height-full" />
             </Pane>
             <Pane :size="20" id="bottomPane">
               <LogPanel />
