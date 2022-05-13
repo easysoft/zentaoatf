@@ -59,62 +59,68 @@ import lock_open from '@iconify-icons/fluent/lock-open-20-regular';
 
 const zentao = {body: '<path d="M288 576C128.942 576 0 447.058 0 288S128.942 0 288 0s288 128.942 288 288-128.942 288-288 288zm201.464-443.692c13.064 82.797-2.901 117.026-47.894 102.689-67.49-21.506-89.576-163.443-243.957-147.325-151.357 15.821-139.81 196.472-139.81 196.472s18.499-106.332 88.533-118.104c49.958-8.39 59.991 29.828 34.568 50.231-25.385 20.43-66.891 38.909-42.205 148.002 7.183 31.725-22.367 53.597-54.064 29.477-9.791-7.424-15.668-14.276-15.668-14.276s-4.512-6.072 12.063 29.351c44.227 94.486 155.813 118.795 223.357 106.7 133.318-23.867 165.099-155.026 75.473-212.91-49.818-32.187-154.888-18.029-144.344 67.812 6.198 50.453 52.842 52.875 52.842 52.875-26.092-10.171-33.266-42.31-14.421-65.294 14.421-17.581 40.643-16.187 53.959-9.887 39.084 18.471 26.45 72.31 3.257 92.975-28.919 25.742-78.432 18.906-113.933-2.891-47.383-29.09-75.051-116.4-8.686-166.466 78.488-59.194 150.316 5.195 208.225 24.453 37.286 12.404 83.905-1.07 96.747-39.426 19.141-57.151-24.042-124.459-24.042-124.459v.001z" fill="currentColor"/>', width: 576, height: 576};
 
-addIcon('lightbulb', lightbulb);
-addIcon('caret-down', caret_down);
-addIcon('caret-up', caret_up);
-addIcon('caret-left', caret_left);
-addIcon('caret-right', caret_right);
-addIcon('cube', cube);
-addIcon('run-all', run_all);
-addIcon('play', play);
-addIcon('play-circle', play_circle);
-addIcon('close-circle', close_circle);
-addIcon('window-maximize', window_maximize);
-addIcon('window-minimize', window_minimize);
-addIcon('window-restore', window_restore);
-addIcon('window-close', window_close);
-addIcon('fullscreen-on', fullscreen_on);
-addIcon('fullscreen-off', fullscreen_off);
-addIcon('search', search);
-addIcon('settings', settings);
-addIcon('more-horz', more_horz);
-addIcon('more-vert', more_vert);
-addIcon('checkmark-circle', checkmark_circle);
-addIcon('checkmark', checkmark);
-addIcon('checkbox-checked', checkbox_checked);
-addIcon('checkbox-unchecked', checkbox_unchecked);
-addIcon('zentao', zentao);
-addIcon('chevron-down', chevron_down);
-addIcon('chevron-up', chevron_up);
-addIcon('chevron-left', chevron_left);
-addIcon('chevron-right', chevron_right);
-addIcon('add', add);
-addIcon('add-circle', add_circle);
-addIcon('square-multiple', square_multiple);
-addIcon('add-square-multiple', add_square_multiple);
-addIcon('subtract-square-multiple', subtract_square_multiple);
-addIcon('dismiss-square-multiple', dismiss_square_multiple);
-addIcon('select-all-on', select_all_on);
-addIcon('save', save);
-addIcon('file', file);
-addIcon('file-text', file_text);
-addIcon('file-add', file_add);
-addIcon('file-multiple', file_multiple);
-addIcon('file-arrow-right', file_arrow_right);
-addIcon('folder', folder);
-addIcon('folder-filled', folder_filled);
-addIcon('folder-add', folder_add);
-addIcon('folder-add-filled', folder_add_filled);
-addIcon('folder-open', folder_open);
-addIcon('folder-open-filled', folder_open_filled);
-addIcon('panel-left', panel_left);
-addIcon('panel-right', panel_right);
-addIcon('panel-bottom', panel_bottom);
-addIcon('arrow-rotate-clockwise', arrow_rotate_clockwise);
-addIcon('error-circle', error_circle);
-addIcon('globe', globe);
-addIcon('text-box-search', text_box_search);
-addIcon('refresh', refresh);
-addIcon('lock-closed', lock_closed);
-addIcon('lock-open', lock_open);
-addIcon('close', window_close);
+export const icons = {
+    'lightbulb': lightbulb,
+    'caret-down': caret_down,
+    'caret-up': caret_up,
+    'caret-left': caret_left,
+    'caret-right': caret_right,
+    'cube': cube,
+    'run-all': run_all,
+    'play': play,
+    'play-circle': play_circle,
+    'close-circle': close_circle,
+    'window-maximize': window_maximize,
+    'window-minimize': window_minimize,
+    'window-restore': window_restore,
+    'window-close': window_close,
+    'fullscreen-on': fullscreen_on,
+    'fullscreen-off': fullscreen_off,
+    'search': search,
+    'settings': settings,
+    'more-horz': more_horz,
+    'more-vert': more_vert,
+    'checkmark-circle': checkmark_circle,
+    'checkmark': checkmark,
+    'checkbox-checked': checkbox_checked,
+    'checkbox-unchecked': checkbox_unchecked,
+    'zentao': zentao,
+    'chevron-down': chevron_down,
+    'chevron-up': chevron_up,
+    'chevron-left': chevron_left,
+    'chevron-right': chevron_right,
+    'add': add,
+    'add-circle': add_circle,
+    'square-multiple': square_multiple,
+    'add-square-multiple': add_square_multiple,
+    'subtract-square-multiple': subtract_square_multiple,
+    'dismiss-square-multiple': dismiss_square_multiple,
+    'select-all-on': select_all_on,
+    'save': save,
+    'file': file,
+    'file-text': file_text,
+    'file-add': file_add,
+    'file-multiple': file_multiple,
+    'file-arrow-right': file_arrow_right,
+    'folder': folder,
+    'folder-filled': folder_filled,
+    'folder-add': folder_add,
+    'folder-add-filled': folder_add_filled,
+    'folder-open': folder_open,
+    'folder-open-filled': folder_open_filled,
+    'panel-left': panel_left,
+    'panel-right': panel_right,
+    'panel-bottom': panel_bottom,
+    'arrow-rotate-clockwise': arrow_rotate_clockwise,
+    'error-circle': error_circle,
+    'globe': globe,
+    'text-box-search': text_box_search,
+    'refresh': refresh,
+    'lock-closed': lock_closed,
+    'lock-open': lock_open,
+    'close': window_close,
+}
+
+Object.entries(icons).forEach(([name, icon]) => {
+    addIcon(name, icon);
+});
