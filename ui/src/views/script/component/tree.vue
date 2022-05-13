@@ -449,6 +449,15 @@ export default defineComponent({
       if (node.workspaceType !== 'ztf') checkNothing()
 
       scriptStore.dispatch('Script/getScript', node)
+      if(node.type === 'file'){
+          store.dispatch('tabs/open', {
+                id: node.path,
+                title: node.path,
+                changed: false,
+                type: 'script',
+                data: node.path
+          });
+      }
 
       scriptStore.dispatch('Script/changeWorkspace',
           {id: node.workspaceId, type: node.workspaceType})

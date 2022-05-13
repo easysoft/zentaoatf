@@ -70,7 +70,8 @@ function _addTestTab() {
         id: `testTab-${testTabIDRef.value}`,
         title: `TestTab ${testTabIDRef.value}`,
         changed: Math.random() > 0.5,
-        type: ['script', 'sites', 'settings', 'result', ''][Math.floor(Math.random() * 5)]
+        type: ['script', 'sites', 'settings', 'result', ''][Math.floor(Math.random() * 5)],
+        data: Math.random()
     });
 }
 </script>

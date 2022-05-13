@@ -107,6 +107,7 @@ export interface TabsModuleType extends StoreModuleType<TabsData> {
         open: Action<TabsData, TabsData>,
         close: Action<TabsData, TabsData>,
         hide: Action<TabsData, TabsData>,
+        update: Action<TabsData, TabsData>,
     };
 }
 
@@ -209,7 +210,12 @@ const TabsModel: TabsModuleType = {
         },
         hide(context, payload: {id: string}) {
             context.commit('activateLast', {exceptID: payload.id});
-        }
+        },
+        update(context, payload: PageTab) {
+            const {state} = context;
+            const {id} = payload;
+            context.commit('updateTab', payload);
+            }
     }
 };
 

@@ -86,7 +86,7 @@ const StoreModel: ModuleType = {
             })
         },
 
-        async getScript({ commit }, script: any ) {
+        async getScript({ commit, dispatch }, script: any ) {
             if (!script || script.type !== 'file') {
                 commit('setItem', null);
                 return true;
