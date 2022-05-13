@@ -7,7 +7,7 @@
           class="inline-left"
           iconClass="text-green"
           v-if="item.fail==0"
-          :title="item.total > 1 ? '批量：' + item.total + '个文件' : item.no"
+          :title="item.total > 1 ? 'Workspace 1 (' + item.total + ')' : item.no"
           trailingTextClass="muted small"
         >
         </ListItem>
@@ -16,7 +16,7 @@
           class="inline-left"
           iconClass="text-red"
           v-else
-          :title="item.total > 1 ? '批量：' + item.total + '个文件' : item.no"
+          :title="item.total > 1 ? 'Workspace 1 (' + item.total + ')' : item.no"
           trailingTextClass="muted small"
         />
         <span v-if="item.checked == 0 || item.checked == undefined">{{momentTime(item.startTime, 'hh:mm')}}</span>

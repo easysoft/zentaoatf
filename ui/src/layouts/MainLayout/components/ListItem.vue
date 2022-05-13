@@ -64,6 +64,8 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, withDefaults, useAttrs } from 'vue';
 import Icon from './Icon.vue';
+import {useI18n} from "vue-i18n";
+const { t } = useI18n();
 
 export interface ListItemProps {
     disabled?: boolean,

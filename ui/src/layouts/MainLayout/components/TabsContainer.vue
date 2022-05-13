@@ -24,6 +24,8 @@ import {TabsData, PageTab} from "@/store/tabs";
 import TabsNav, {TabNavItem} from './TabsNav.vue';
 import Button from './Button.vue';
 import TabPage from './TabPage.vue';
+import {useI18n} from "vue-i18n";
+const { t } = useI18n();
 
 const store = useStore<{tabs: TabsData}>();
 

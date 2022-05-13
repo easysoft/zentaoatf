@@ -1,10 +1,8 @@
 <template>
     <div class="ztf-script-main">
-        <div id="right-content">
-            <div id="editor-panel" class="tab-page-script">
-                <MonacoEditor v-if="scriptCode !== '' && scriptCode !== ScriptFileNotExist" v-model:value="scriptCode"
-                    :language="lang" :options="editorOptions" class="editor" ref="editorRef" @change="editorChange" />
-            </div>
+        <div id="editor-panel" class="tab-page-script">
+            <MonacoEditor v-if="scriptCode !== '' && scriptCode !== ScriptFileNotExist" v-model:value="scriptCode"
+                :language="lang" :options="editorOptions" class="editor" ref="editorRef" @change="editorChange" />
         </div>
     </div>
 </template>
@@ -47,8 +45,7 @@ watch(script, () => {
         scriptCode.value = script.value.code ? script.value.code : t('empty')
         lang.value = script.value.lang
         setTimeout(() => {
-            resizeHeight('right-content', 'editor-panel', 'splitter-v', 'logs-panel',
-                100, 100, 90)
+            resizeHeight('editor-panel',100)
         }, 600)
     } else {
         scriptCode.value = ''
@@ -69,18 +66,18 @@ const editorChange = (newScriptCode) => {
 }
 </script>
 
-<style lang="less">
-#editor-panel {
-    .script_file_not_exist {
-        padding: 10px;
-    }
-}
-</style>
-
 <style lang="less" scoped>
 .ztf-script-main {
-    flex: 1;
-    height: 100%;
+    height: calc(100% - 40px);
+    display: flex;
+    flex-direction: column;
+
+    #editor-panel {
+        flex: 1;
+
+        padding: 0 6px 0 8px;
+        overflow: auto;
+    }
 
     .toolbar {
         padding: 4px 10px;
@@ -89,39 +86,6 @@ const editorChange = (newScriptCode) => {
 
         .ant-btn {
             margin: 0 5px;
-        }
-    }
-
-    #right-content {
-        height: calc(100% - 40px);
-
-        display: flex;
-        flex-direction: column;
-
-        #editor-panel {
-            flex: 1;
-
-            padding: 0 6px 0 8px;
-            overflow: auto;
-        }
-
-        #splitter-v {
-            width: 100%;
-            height: 2px;
-            background-color: #D0D7DE;
-            cursor: ns-resize;
-
-            &.active {
-                background-color: #a9aeb4;
-            }
-        }
-
-        #logs-panel {
-            height: 220px;
-        }
-
-        .logs-panel {
-            height: 100%;
         }
     }
 }

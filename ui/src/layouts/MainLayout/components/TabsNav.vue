@@ -29,6 +29,8 @@
 import { defineProps, defineEmits, watch, nextTick, ref } from 'vue';
 import Icon from './Icon.vue';
 import Toolbar, {ToolbarItemProps} from './Toolbar.vue';
+import {useI18n} from "vue-i18n";
+const { t } = useI18n();
 
 export interface TabNavItem {
     id: string;

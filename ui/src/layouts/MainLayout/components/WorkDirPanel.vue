@@ -18,8 +18,8 @@
           <Button class="rounded pure padding-sm-h" label="按套件" suffix-icon="caret-down" />
           <template #menu>
             <List>
-              <ListItem :checked="true">按套件</ListItem>
-              <ListItem :checked="false">按模块</ListItem>
+              <ListItem :checked="true">{{ t('by_suite') }}</ListItem>
+              <ListItem :checked="false">{{ t('by_task') }}</ListItem>
             </List>
           </template>
         </Dropdown>
@@ -27,12 +27,12 @@
     </template>
 
     <template #toolbar-buttons>
-      <Button @click="expandAllOrNot" class="rounded pure" hint="折叠所有" icon="subtract-square-multiple" iconSize="1.4em" />
-      <Button @click="expandAllOrNot" class="rounded pure" hint="展开所有" icon="dismiss-square-multiple" iconSize="1.4em" />
+      <Button @click="expandAllOrNot" class="rounded pure" hint="t('collapse')" icon="subtract-square-multiple" iconSize="1.4em" />
+      <Button @click="expandAllOrNot" class="rounded pure" hint="t('expand_all')" icon="dismiss-square-multiple" iconSize="1.4em" />
 
-      <Button class="rounded pure" hint="批量选择" icon="select-all-on" />
-      <Button class="rounded pure" hint="添加工作目录" icon="folder-add" />
-      <Button class="rounded pure" hint="更多操作" icon="more-vert" />
+      <Button class="rounded pure" :hint="t('batch_select')" icon="select-all-on" />
+      <Button class="rounded pure" :hint="t('create_workspace')" icon="folder-add" />
+      <Button class="rounded pure" :hint="t('more_actions')" icon="more-vert" />
     </template>
 
     <WorkDir />
@@ -69,8 +69,8 @@ const filerType = ref('')
 const filerValue = ref('')
 
 const displayTypes = ref([
-  {key: 'workspace', title: '按目录'},
-  {key: 'module', title: '按模块'},
+  {key: 'workspace', title: t('by_workspace')},
+  {key: 'module', title: t('by_module')},
 ])
 
 const loadDisplayBy = async () => {
