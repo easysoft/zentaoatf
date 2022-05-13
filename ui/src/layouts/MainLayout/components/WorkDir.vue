@@ -10,6 +10,12 @@
       <FormItem name="name" label="标题" :info="validateInfos.name">
         <input v-model="modelRef.name" />
       </FormItem>
+      <FormItem name="email" label="邮箱" :info="validateInfos.email">
+        <input v-model="modelRef.email" />
+      </FormItem>
+      <FormItem name="num" label="数字" :info="validateInfos.num">
+        <input v-model="modelRef.num" />
+      </FormItem>
 
       <FormItem size="small">
         <button @click="submit" type="button">提交</button>
@@ -55,6 +61,14 @@ const modelRef = ref({})
 const rulesRef = ref({
   name: [
     {required: true, msg: 'Please input name.'},
+  ],
+  email: [
+    {required: true, msg: 'Please input email.'},
+    {email: true, msg: 'Please check email format.'},
+  ],
+  num: [
+    {required: true, msg: 'Please input num.'},
+    {regex: '^[0-9]*$', msg: 'Please input a number.'},
   ],
 })
 

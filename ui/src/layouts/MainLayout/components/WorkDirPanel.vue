@@ -109,6 +109,10 @@ const loadScripts = async () => {
   store.dispatch('Script/listScript', params)
 }
 
+const expandAllOrNot = () => {
+  console.log('expandAllOrNot')
+}
+
 </script>
 
 <style scoped>

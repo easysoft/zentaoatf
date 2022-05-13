@@ -9,11 +9,11 @@
         <span v-if="errorMap.required" class="z-err tips">*</span>
       </div>
       <div class="z-form-item-error">
-        <span v-for="(val, key) in errorMap" :key="key">
-          <span v-for="(item, index) in val" :key="index" class="z-err">
+        <template v-for="(val, key) in errorMap" :key="key">
+          <div v-for="(item, index) in val" :key="index" class="z-err">
             {{item}}
-          </span>
-        </span>
+          </div>
+        </template>
       </div>
     </Col>
   </Row>
