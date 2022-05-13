@@ -78,6 +78,7 @@ func InitExecLog(workspacePath string) {
 	if err != nil {
 		log.Println("init exec result logger fail " + err.Error())
 	}
+
 }
 
 func getLogConfig() (config zap.Config) {
@@ -151,5 +152,5 @@ func newWinFileSink(u *url.URL) (zap.Sink, error) {
 	} else {
 		return nil, errors.New("path error")
 	}
-	return os.OpenFile(name, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+	return os.OpenFile(name, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
 }

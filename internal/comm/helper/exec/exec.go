@@ -2,7 +2,6 @@ package execHelper
 
 import (
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/kataras/iris/v12/websocket"
@@ -32,9 +31,6 @@ func Exec(ch chan int, req serverDomain.WsReq, msg *websocket.Message) (
 		} else if req.Act == commConsts.ExecUnit {
 			ExecUnit(ch, testSet, msg)
 		}
-
-		logUtils.LoggerExecFile = nil
-		logUtils.LoggerExecResult = nil
 	}
 
 	return
