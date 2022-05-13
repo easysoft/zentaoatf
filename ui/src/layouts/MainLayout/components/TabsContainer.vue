@@ -24,6 +24,8 @@ import {TabsData, PageTab} from "@/store/tabs";
 import TabsNav, {TabNavItem} from './TabsNav.vue';
 import Button from './Button.vue';
 import TabPage from './TabPage.vue';
+import {useI18n} from "vue-i18n";
+const { t } = useI18n();
 
 const store = useStore<{tabs: TabsData}>();
 
@@ -70,7 +72,8 @@ function _addTestTab() {
         id: `testTab-${testTabIDRef.value}`,
         title: `TestTab ${testTabIDRef.value}`,
         changed: Math.random() > 0.5,
-        type: ['script', 'sites', 'settings', 'result', ''][Math.floor(Math.random() * 5)]
+        type: ['script', 'sites', 'settings', 'result', ''][Math.floor(Math.random() * 5)],
+        data: Math.random()
     });
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
-  <Panel title="测试结果">
+  <Panel :title="t('test_result')">
     <template #toolbar-buttons>
-      <Button class="rounded pure" hint="更多操作" icon="more-vert" />
+      <Button class="rounded pure" :hint="t('more_actions')" icon="more-vert" />
     </template>
     <ResultList />
   </Panel>
@@ -11,6 +11,9 @@
 import Panel from './Panel.vue';
 import Button from './Button.vue';
 import ResultList from './ResultList.vue';
+import {useI18n} from "vue-i18n";
+const { t } = useI18n();
+
 </script>
 
 <style scoped>

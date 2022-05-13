@@ -31,6 +31,8 @@
 import {defineProps, reactive} from 'vue';
 import Button, {ButtonProps} from './Button.vue';
 import Toolbar from './Toolbar.vue';
+import {useI18n} from "vue-i18n";
+const { t } = useI18n();
 
 const props = defineProps<{
     title?: string,

@@ -14,6 +14,9 @@
 </template>
 
 <script setup lang="ts">
+import {useI18n} from "vue-i18n";
+const { t } = useI18n();
+
 import {defineProps, computed, defineEmits} from 'vue';
 import Button, {ButtonProps} from './Button.vue';
 

@@ -7,18 +7,19 @@
     </Row>-->
 
     <Form labelCol="50px" wrapperCol="60">
-      <FormItem name="name" label="标题" :info="validateInfos.name">
+      <FormItem name="name" :label="t('title')" :info="validateInfos.name">
         <input v-model="modelRef.name" />
       </FormItem>
-      <FormItem name="email" label="邮箱" :info="validateInfos.email">
+      <FormItem name="email" :label="t('email')" :info="validateInfos.email">
         <input v-model="modelRef.email" />
       </FormItem>
-      <FormItem name="num" label="数字" :info="validateInfos.num">
+      <FormItem name="num" :label="t('number')" :info="validateInfos.num">
         <input v-model="modelRef.num" />
       </FormItem>
 
       <FormItem size="small">
-        <button @click="submit" type="button">提交</button>
+        <button @click="submit" type="button">{{ t('submit') }}</button>
+        <button @click="reset" type="button">{{ t('reset') }}</button>
       </FormItem>
     </Form>
 

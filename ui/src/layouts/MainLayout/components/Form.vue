@@ -7,6 +7,8 @@
 <script setup lang="ts">
 import {defineProps, provide} from "vue";
 import {FormItemProps} from "@/layouts/MainLayout/components/FormItem.vue";
+import {useI18n} from "vue-i18n";
+const { t } = useI18n();
 
 export interface FormProps {
   msgs?: any[],

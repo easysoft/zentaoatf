@@ -2,15 +2,21 @@
   <div class="window-toolbar">
     <Toolbar>
       <template v-if="true">
-        <Button v-if="!fullScreenDef" @click="fullScreen" class="rounded pure" icon="fullscreen-on" hint="全屏" />
-        <Button v-if="fullScreenDef" @click="fullScreen" class="rounded pure" icon="fullscreen-off" hint="退出全屏" />
+        <Button v-if="!fullScreenDef" @click="fullScreen" class="rounded pure" icon="fullscreen-on"
+                :hint="t('fullscreen')" />
+        <Button v-if="fullScreenDef" @click="fullScreen" class="rounded pure" icon="fullscreen-off"
+                :hint="t('exit_fullscreen')" />
 
-        <Button @click="minimize" class="rounded pure" icon="window-minimize" hint="最小化" />
+        <Button @click="minimize" class="rounded pure" icon="window-minimize"
+                :hint="t('minimize')" />
 
-        <Button v-if="!maximizeDef" @click="maximize" class="rounded pure" icon="window-maximize" hint="最大化" />
-        <Button v-if="maximizeDef" @click="maximize" class="rounded pure" icon="window-restore" hint="还原" />
+        <Button v-if="!maximizeDef" @click="maximize" class="rounded pure" icon="window-maximize"
+                :hint="t('maximize')" />
+        <Button v-if="maximizeDef" @click="maximize" class="rounded pure" icon="window-restore"
+                :hint="t('restore')" />
 
-        <Button @click="exit" class="rounded pure" icon="window-close" hint="关闭窗口" />
+        <Button @click="exit" class="rounded pure" icon="window-close"
+                :hint="t('close')" />
       </template>
     </Toolbar>
   </div>

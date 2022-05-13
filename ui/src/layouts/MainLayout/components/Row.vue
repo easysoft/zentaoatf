@@ -6,7 +6,8 @@
 
 <script setup lang="ts">
 import {provide, defineProps, ref, computed} from "vue";
-import {ColumnProps} from "@/layouts/MainLayout/components/Column.vue";
+import {useI18n} from "vue-i18n";
+const { t } = useI18n();
 
 export interface RowProps {
   gutter?: number,
