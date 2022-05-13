@@ -19,6 +19,7 @@
 
       <FormItem size="small">
         <button @click="submit" type="button">提交</button>
+        <button @click="reset" type="button">重置</button>
       </FormItem>
     </Form>
 

@@ -5,6 +5,7 @@ export default {
 
     'ztf_name_full': 'ZTF自动化测试工具',
 
+    'search': '搜索',
     'settings': '设置',
     'exit': '退出',
     'fullScreen': '切换全屏',
@@ -23,6 +24,7 @@ export default {
     'result': '结果',
     'test_result': '测试结果',
     'test_result_detail':  '结果详情',
+    'view_test_result': '查看测试结果',
     'opt':  '操作', 
     'title':  '标题', 
     'category':  '分类', 
@@ -170,13 +172,17 @@ export default {
     'by_task': '按任务',
     'checkout_case': '导出禅道用例',
     'checkin_case': '更新禅道用例',
+    'exec_all': '执行所有文件',
+    'exec_previous': '执行上次',
     'exec_selected': '执行选中',
+    'exec_opened': '执行打开文件',
     'script_file_not_exist': '该禅道用例未有对应的脚本文件，可使用导出禅道用例功能创建。',
 
     'show_result_log': '显示结果日志',
     'show_exec_log': '显示执行日志',
     'show_detail_log': '显示详细日志',
     'all_result': '所有结果',
+    'previous_result': '上次结果',
     'pass_result': '成功结果',
     'fail_result': '失败结果',
 
@@ -186,8 +192,12 @@ export default {
     'test_type_other':  '其他自动化和单元测试',
     'input_keyword_to_search': '输入关键字搜索',
     'tips_test_cmd': '命令行执行时，请输入"{cmd}"。',
-    'pls_add_zentao_site': '初次使用，请点击右上按钮新建禅道站点。',
 
+    'switch_display_left_side': '切换显示左侧边栏',
+    'switch_display_bottom_side': '切换显示底部边栏',
+    'switch_display_right_side': '切换显示右侧边栏',
+
+    'pls_add_zentao_site': '初次使用，请点击右上按钮新建禅道站点。',
     'pls_create_workspace': '请点击右上角链接新建工作目录',
     'pls_product': '请选择产品',
     'pls_lang': '请选择语言',

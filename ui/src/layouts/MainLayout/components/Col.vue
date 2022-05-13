@@ -5,6 +5,9 @@
 </template>
 
 <script setup lang="ts">
+import {useI18n} from "vue-i18n";
+const { t } = useI18n();
+
 import {computed, defineProps, inject} from "vue";
 import {ButtonProps} from "@/layouts/MainLayout/components/Button.vue";
 

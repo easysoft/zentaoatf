@@ -28,6 +28,8 @@ import { withDefaults, defineProps, ref, reactive, onMounted, onUnmounted, compu
 import { useWindowSize, onClickOutside } from '@vueuse/core'
 import List from './List.vue';
 import {ListItemProps, ListItemKey} from './ListItem.vue';
+import {useI18n} from "vue-i18n";
+const { t } = useI18n();
 
 export type DropdownMenuPosition = 'bottom' | 'left' | 'right' | 'top' | 'bottom-left' | 'bottom-right' | 'top-left' | 'top-right' | 'left-top' | 'left-bottom' | 'right-top' | 'right-bottom' |{left: number, top: number} | ((toggleElement: HTMLElement) => {left: number, top: number});
 

@@ -14,6 +14,8 @@ import Panel from './Panel.vue';
 import Button from './Button.vue';
 import WorkDir from './WorkDir.vue';
 import LogList from './LogList.vue';
+import {useI18n} from "vue-i18n";
+const { t } = useI18n();
 </script>
 
 <style scoped>

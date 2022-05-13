@@ -8,6 +8,8 @@
 <script setup lang="ts">
 import { defineProps } from "vue";
 import { PageTab } from "@/store/tabs";
+import {useI18n} from "vue-i18n";
+const { t } = useI18n();
 
 defineProps<{
     tab: PageTab

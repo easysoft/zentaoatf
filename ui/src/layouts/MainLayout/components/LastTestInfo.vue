@@ -1,6 +1,6 @@
 <template>
-  <Button class="rounded border-light canvas gap-sm" hint="点击查看测试结果" @click="showDetail(model)">
-    <small class="text-muted">上次结果</small>
+  <Button class="rounded border-light canvas gap-sm" :hint="t('view_test_result')" @click="showDetail(model)">
+    <small class="text-muted">{{t('previous_result')}}</small>
     <small class="text-yellow" :key="model">{{model.duration}}s</small>
     <Icon icon="close-circle" class="text-red space-left" />
     <small class="text-red">{{model.fail}}</small>
@@ -13,13 +13,11 @@
 import Button from './Button.vue';
 import Icon from './Icon.vue';
 import {StateType} from "@/src/views/result/store";
-import {useI18n} from "vue-i18n";
 import {useRouter} from "vue-router";
 import {useStore} from "vuex";
 import {computed, onMounted} from "vue";
-
+import {useI18n} from "vue-i18n";
 const { t } = useI18n();
-const router = useRouter();
 
 const store = useStore<{ Result: StateType }>();
 const models = computed<any[]>(() => store.state.Result.queryResult.result)

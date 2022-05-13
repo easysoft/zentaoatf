@@ -17,6 +17,8 @@
 <script setup lang="ts">
 import { defineProps, computed, defineEmits, ref } from 'vue';
 import ListItem, { ListItemProps, ListItemKey } from './ListItem.vue';
+import {useI18n} from "vue-i18n";
+const { t } = useI18n();
 
 const props = defineProps<{
     compact?: boolean,

@@ -12,6 +12,8 @@ import TabPageScript from './TabPageScript.vue';
 import TabPageSettings from './TabPageSettings.vue';
 import TabPageSites from './TabPageSites.vue';
 import TabPageUnknown from './TabPageUnknown.vue';
+import {useI18n} from "vue-i18n";
+const { t } = useI18n();
 
 const PageTabComponent = {
     script: TabPageScript,

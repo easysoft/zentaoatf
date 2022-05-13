@@ -24,6 +24,8 @@ import {computed, defineProps, inject, ref} from "vue";
 import Row from "./Row.vue";
 import Col from "./Col.vue";
 import {ContrlSize} from "@/utils/enum";
+import {useI18n} from "vue-i18n";
+const { t } = useI18n();
 
 export interface FormItemProps {
   name?: string,
@@ -83,6 +85,10 @@ const getCls = (val: string) => {
 <style lang="less">
 .z-form-item {
   margin-bottom: 5px;
+
+  button {
+    margin-right: 5px;
+  }
 
   .z-form-item-label {
     padding-right: 5px;

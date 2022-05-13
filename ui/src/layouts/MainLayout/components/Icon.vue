@@ -6,6 +6,8 @@
 import { Icon } from '@iconify/vue/dist/offline';
 import { defineProps } from 'vue';
 import './icons';
+import {useI18n} from "vue-i18n";
+const { t } = useI18n();
 
 defineProps<{
     icon: string,
