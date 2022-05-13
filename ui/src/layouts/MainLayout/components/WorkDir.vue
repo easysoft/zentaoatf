@@ -1,10 +1,6 @@
 <template>
-  <div class="workdir padding muted">
-<!--    <Row :gutter="10">
-      <Col width="30px">1</Col>
-      <Col :span="3" :offset="4">111</Col>
-      <Col :flex="6" :offset="4">wwwwwww</Col>
-    </Row>-->
+  <div class="workdir">
+    <Tree :data="treeData" :checkable="checkable" ref="treeRef" />
 
     <Form labelCol="50px" wrapperCol="60">
       <FormItem name="name" :label="t('title')" :info="validateInfos.name">
@@ -32,7 +28,7 @@ import ScriptTreePage from "../../../views/script/component/tree.vue";
 import {useI18n} from "vue-i18n";
 import {useStore} from "vuex";
 import {ZentaoData} from "@/store/zentao";
-import {computed, onMounted, provide, ref} from "vue";
+import {computed, onMounted, defineExpose, ref, reactive} from "vue";
 import {ScriptData} from "@/views/script/store";
 import {resizeWidth} from "@/utils/dom";
 
@@ -41,6 +37,7 @@ import Col from "./Col.vue";
 import Form from "./Form.vue";
 import FormItem from "./FormItem.vue";
 import {useForm} from "@/utils/form";
+import Tree from "./Tree.vue";
 
 const { t } = useI18n();
 
@@ -80,6 +77,98 @@ const submit = () => {
   }
 }
 
+const treeRef = ref<{isAllCollapsed: () => boolean, toggleAllCollapsed: () => void}>();
+
+const treeData = reactive([{
+    title: 'ztf_lang_test',
+    collapsed: false,
+    checkable: false,
+    id: 'root',
+    toolbarItems: [
+        {hint: 'Add sub folder', icon: 'folder-add'},
+        {hint: 'Add file', icon: 'file-add'},
+    ],
+    children: [
+        {
+            id: '1',
+            title: 'bat',
+            children: [
+                {
+                    id: 'test',
+                    title: 'test.bat'
+                },
+                {
+                    id: 'test1',
+                    title: 'test_fast.bat'
+                }
+            ]
+        }, {
+            id: '5',
+            title: 'javascript',
+            children: []
+        }, {
+            id: '6',
+            title: 'file',
+        }
+    ]
+}, {
+    title: 'demo',
+    collapsed: true,
+    checkable: false,
+    id: 'demo',
+    children: [
+        {
+            id: 'demo1',
+            title: 'demo1.txt'
+        }
+    ]
+}, {
+    title: 'selenium',
+    collapsed: true,
+    checkable: false,
+    id: 'selenium',
+    children: [
+        {
+            id: 'selenium1',
+            title: 'vendor',
+            children: [
+                {
+                    id: 'seleniumtest',
+                    title: 'chrome.php'
+                },
+                {
+                    id: 'seleniumtest1',
+                    title: 'firefox.js'
+                }
+            ]
+        }, {
+            id: 'browser',
+            title: 'javascript',
+            children: []
+        }
+    ]
+}]);
+const checkable = ref(false);
+
+function toggleCheckable(toggle?: boolean) {
+    if (toggle === undefined) {
+        toggle = !checkable.value;
+    }
+    checkable.value = toggle;
+}
+
+defineExpose({
+    get isCheckable() {
+        return checkable.value;
+    },
+    get isAllCollapsed() {
+        return treeRef.value?.isAllCollapsed();
+    },
+    toggleAllCollapsed() {
+        return treeRef.value?.toggleAllCollapsed();
+    },
+    toggleCheckable,
+});
 </script>
 
 <style lang="less" scoped>

@@ -27,15 +27,13 @@
     </template>
 
     <template #toolbar-buttons>
-      <Button @click="expandAllOrNot" class="rounded pure" hint="t('collapse')" icon="subtract-square-multiple" iconSize="1.4em" />
-      <Button @click="expandAllOrNot" class="rounded pure" hint="t('expand_all')" icon="dismiss-square-multiple" iconSize="1.4em" />
-
-      <Button class="rounded pure" :hint="t('batch_select')" icon="select-all-on" />
       <Button class="rounded pure" :hint="t('create_workspace')" icon="folder-add" />
+      <Button class="rounded pure" :hint="t('batch_select')" icon="select-all-on" @click="_handleBatchSelectBtnClick" :active="workDirRef?.isCheckable" />
+      <Button @click="_handleToggleAllBtnClick" class="rounded pure" :hint="workDirRef?.isAllCollapsed ? t('collapse') : t('expand_all')" :icon="workDirRef?.isAllCollapsed ? 'add-square-multiple' : 'subtract-square-multiple'" iconSize="1.4em" />
       <Button class="rounded pure" :hint="t('more_actions')" icon="more-vert" />
     </template>
 
-    <WorkDir />
+    <WorkDir ref="workDirRef" />
   </Panel>
 </template>
 
@@ -109,8 +107,18 @@ const loadScripts = async () => {
   store.dispatch('Script/listScript', params)
 }
 
-const expandAllOrNot = () => {
-  console.log('expandAllOrNot')
+const workDirRef = ref<{toggleCheckable: () => void, isCheckable: boolean, toggleAllCollapsed: () => void, isAllCollapsed: boolean}>();
+
+function _handleBatchSelectBtnClick() {
+    if (workDirRef.value) {
+        workDirRef.value.toggleCheckable();
+    }
+}
+
+function _handleToggleAllBtnClick() {
+    if (workDirRef.value) {
+        workDirRef.value.toggleAllCollapsed();
+    }
 }
 
 </script>
