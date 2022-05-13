@@ -99,4 +99,6 @@
     --pane-right-min-width: 200px;
     --pane-tabs-min-height: 200px;
     --pane-bottom-min-height: 200px;
+
+    --color-err: #ff4d4f;
 }

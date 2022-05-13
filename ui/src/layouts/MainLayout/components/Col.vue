@@ -16,7 +16,6 @@ export interface ColumnProps {
 }
 
 const props = defineProps<ColumnProps>();
-console.log('-----------', props)
 
 let gutter = inject('gutter');
 

@@ -6,9 +6,14 @@
     <Col :width="wrapperWidth" :class="wrapperCls" class="z-form-item-wrapper">
       <div class="z-form-item-control">
         <slot></slot>
+        <span v-if="errorMap.required" class="z-err tips">*</span>
       </div>
       <div class="z-form-item-error">
-          {{errors[name]}}
+        <span v-for="(val, key) in errorMap" :key="key">
+          <span v-for="(item, index) in val" :key="index" class="z-err">
+            {{item}}
+          </span>
+        </span>
       </div>
     </Col>
   </Row>
@@ -23,17 +28,20 @@ import {ContrlSize} from "@/utils/enum";
 export interface FormItemProps {
   name?: string,
   label?: string,
+  info?: any,
   size?: ContrlSize,
 }
 
 const props = defineProps<FormItemProps>();
 console.log(props)
 
-let errors = inject('errors');
 let labelCol = inject('labelCol');
 let wrapperCol = inject('wrapperCol');
 
 const size = ref(props.size)
+const errorMap = computed(() => {
+  return props.info ? props.info : [];
+})
 
 const labelWidth = computed(() => {
   return getWidth(labelCol);
@@ -74,24 +82,50 @@ const getCls = (val: string) => {
 
 <style lang="less">
 .z-form-item {
+  margin-bottom: 5px;
+
   .z-form-item-label {
     padding-right: 5px;
     text-align: right;
-    line-height: 32px;
+    line-height: 28px;
+  }
+  .z-form-item-wrapper {
+    .z-form-item-control {
+      input, select {
+        height: 28px;
+        vertical-align: middle;
+      }
+      label {
+        display: inline-block;
+        padding: 0 3px;
+        line-height: 28px;
+        vertical-align: middle;
+      }
+    }
+  }
+  .tips {
+    display: inline-block;
+    margin-left: 5px;
+    line-height: 28px;
+    vertical-align: middle;
   }
 
   &.small {
     .z-form-item-label {
       line-height: 25px;
     }
-
     .z-form-item-wrapper {
       .z-form-item-control {
-        input {
+        input, select {
           height: 25px;
-          padding: 2px 5px;
+        }
+        label {
+          line-height: 25px;
         }
       }
+    }
+    .tips {
+      line-height: 25px;
     }
   }
 }

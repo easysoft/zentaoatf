@@ -9,6 +9,7 @@ import {defineProps, provide} from "vue";
 import {FormItemProps} from "@/layouts/MainLayout/components/FormItem.vue";
 
 export interface FormProps {
+  msgs?: any[],
   labelCol?: string,
   wrapperCol?: string,
 }
