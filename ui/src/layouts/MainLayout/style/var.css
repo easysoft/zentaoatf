@@ -82,7 +82,13 @@
     --state-hover-bg: var(--color-darken-1);
     --state-active-bg: var(--color-darken-2);
 
+    --scrollbar-size: 10px;
+    --scrollbar-radius: 0;
+    --scrollbar-opacity: 0.2;
+
     --navbar-height: 40px;
+
+    --tabs-nav-height: 30px;
 
     --space-xs: calc(var(--space-base) / 4);
     --space-sm: calc(var(--space-base) / 2);

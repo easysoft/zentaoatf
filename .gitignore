@@ -12,6 +12,7 @@
 # file
 latest_log
 rbac_model.conf
+cmd/server/server
 
 #dir
 tmp/
