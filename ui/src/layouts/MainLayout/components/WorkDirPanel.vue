@@ -1,5 +1,5 @@
 <template>
-  <Panel>
+  <Panel class="workdir-panel">
     <template #header>
       <ButtonList :gap="2" class="workdir-panel-nav">
         <Button id="displayByMenuToggle"
@@ -123,8 +123,19 @@ function _handleToggleAllBtnClick() {
 
 </script>
 
-<style scoped>
-.workdir-panel-nav {
-  margin-left: -6px;
+<style lang="less" >
+.workdir-panel {
+  height: 100%;
+
+  .panel-heading {
+    .workdir-panel-nav {
+      margin-left: -6px;
+    }
+  }
+
+  .panel-body {
+    height: calc(100% - 30px);
+  }
 }
+
 </style>
