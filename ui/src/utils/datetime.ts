@@ -6,6 +6,9 @@ export function momentUtcDef(tm) {
 export function momentUnixDef(tm) {
     return moment.unix(tm).format("YYYY-MM-DD HH:mm:ss")
 }
+export function momentTime(tm) {
+    return moment.unix(tm).format("HH:mm:ss")
+}
 
 export function momentUnixDefFormat(tm, format) {
     return moment.unix(tm).format(format)

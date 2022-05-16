@@ -1,6 +1,7 @@
 import request from '@/utils/request';
 import {WsMsg} from "@/types/data";
 import {removeEmptyField} from "@/utils/object";
+import {momentTime} from "@/utils/datetime";
 
 const apiPath = 'scripts';
 const apiPathFilters = 'filters';
@@ -98,9 +99,10 @@ export async function updateCode(data: any): Promise<any> {
     });
 }
 
-export function genExecInfo(jsn: WsMsg) : WsMsg {
-    jsn.msg = jsn.msg.replace(/^"+/,'').replace(/"+$/,'')
-    return jsn
+export function genExecInfo(item: WsMsg) : WsMsg {
+    item.msg = item.msg.replace(/^"+/,'').replace(/"+$/,'')
+    if (item.msg) item.time = momentTime(new Date());
+    return item
 }
 
 export function getCaseIdsFromReport(workspace, seq, scope) {

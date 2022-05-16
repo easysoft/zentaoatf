@@ -400,7 +400,7 @@ export default defineComponent({
       selectNothing()
 
       const leafNodes = getCheckedFileNodes()
-      bus.emit(settings.eventExec, {execType: 'ztf', scripts: leafNodes});
+      // bus.emit(settings.eventExec, {execType: 'ztf', scripts: leafNodes});
     }
     const execStop = () => {
       console.log('execStop')

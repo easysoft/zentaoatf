@@ -1,6 +1,7 @@
 <template>
   <main id="main" class="column single surface-light relative no-overflow">
     <Navbar class="flex-none" />
+
     <div id="mainContent" class="flex-auto">
       <Splitpanes id="mainRow">
         <Pane :size="20" id="leftPane">
@@ -13,7 +14,7 @@
             <Pane id="tabsPane">
               <TabsContainer class="height-full" />
             </Pane>
-            <Pane :size="20" id="bottomPane">
+            <Pane v-show="showLogPanel" :size="20" id="bottomPane">
               <LogPanel />
             </Pane>
           </Splitpanes>
@@ -25,6 +26,8 @@
         </Pane>
       </Splitpanes>
     </div>
+
+    <Websocket></Websocket>
   </main>
 </template>
 
@@ -38,6 +41,25 @@ import WorkDirPanel from './components/WorkDirPanel.vue';
 import LogPanel from './components/LogPanel.vue';
 import TabsContainer from './components/TabsContainer.vue';
 import ResultListPanel from './components/ResultListPanel.vue';
+import Websocket from './components/Websocket.vue';
+import settings from "@/config/settings";
+import {onBeforeUnmount, onMounted, ref} from "vue";
+import bus from "@/utils/eventBus";
+
+const showLogPanel = ref(false)
+
+const onExecStartEvent = () => {
+  console.log('onExecStartEvent')
+  showLogPanel.value = true
+}
+onMounted(() => {
+  console.log('onMounted ztf')
+  bus.on(settings.eventExec, onExecStartEvent)
+})
+onBeforeUnmount( () => {
+  bus.off(settings.eventExec, onExecStartEvent)
+})
+
 </script>
 
 <style lang="less" scoped>

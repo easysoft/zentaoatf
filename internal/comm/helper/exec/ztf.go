@@ -19,6 +19,7 @@ import (
 	stringUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/string"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/fatih/color"
+	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/mattn/go-runewidth"
 	"io"
@@ -99,7 +100,7 @@ func RunZtf(ch chan int,
 	GenZTFTestReport(report, pathMaxWidth, workspacePath, wsMsg)
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg("", "false", commConsts.Run, wsMsg)
+		websocketHelper.SendExecMsg("", "false", commConsts.Run, nil, wsMsg)
 	}
 
 	return
@@ -115,7 +116,7 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 
 	msg := i118Utils.Sprintf("found_scripts", len(casesToRun), workspacePath)
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg(msg, "", commConsts.Run, wsMsg)
+		websocketHelper.SendExecMsg(msg, "", commConsts.Run, nil, wsMsg)
 	}
 	logUtils.ExecConsolef(color.FgCyan, msg)
 	logUtils.ExecResult(msg)
@@ -123,7 +124,7 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 	if len(casesToIgnore) > 0 {
 		temp := i118Utils.Sprintf("ignore_scripts", strconv.Itoa(len(casesToIgnore)))
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketHelper.SendExecMsg(temp, "", commConsts.Run, wsMsg)
+			websocketHelper.SendExecMsg(temp, "", commConsts.Run, nil, wsMsg)
 		}
 
 		logUtils.ExecConsolef(color.FgCyan, temp)
@@ -141,7 +142,7 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 		case <-ch:
 			msg := i118Utils.Sprintf("exit_exec_all")
 			if commConsts.ExecFrom != commConsts.FromCmd {
-				websocketHelper.SendExecMsg(msg, "", commConsts.Run, wsMsg)
+				websocketHelper.SendExecMsg(msg, "", commConsts.Run, nil, wsMsg)
 			}
 
 			logUtils.ExecConsolef(color.FgCyan, msg)
@@ -167,8 +168,13 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 	startMsg := i118Utils.Sprintf("start_execution", scriptFile, dateUtils.DateTimeStr(startTime))
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg("", "", commConsts.Run, wsMsg)
-		websocketHelper.SendExecMsg(startMsg, "", commConsts.Run, wsMsg)
+		websocketHelper.SendExecMsg("", "", commConsts.Run, nil, wsMsg)
+
+		info := iris.Map{
+			"key": scriptFile,
+		}
+		websocketHelper.SendExecMsg(startMsg, "", commConsts.Run, info, wsMsg)
+
 		logUtils.ExecConsolef(-1, startMsg)
 	}
 
@@ -194,7 +200,7 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 
 	endMsg := i118Utils.Sprintf("end_execution", scriptFile, dateUtils.DateTimeStr(entTime))
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg(endMsg, "", commConsts.Run, wsMsg)
+		websocketHelper.SendExecMsg(endMsg, "", commConsts.Run, nil, wsMsg)
 		logUtils.ExecConsolef(-1, endMsg)
 	}
 
@@ -206,7 +212,6 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 	//}
 
 	CheckCaseResult(scriptFile, logs, report, scriptIdx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg)
-	websocketHelper.SendExecMsg("", "", commConsts.Run, wsMsg)
 }
 
 func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
@@ -321,7 +326,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			msg := i118Utils.Sprintf("exit_exec_curr")
 
 			if commConsts.ExecFrom != commConsts.FromCmd {
-				websocketHelper.SendExecMsg(msg, "", commConsts.Run, wsMsg)
+				websocketHelper.SendExecMsg(msg, "", commConsts.Run, nil, wsMsg)
 			}
 
 			logUtils.ExecConsolef(color.FgCyan, msg)

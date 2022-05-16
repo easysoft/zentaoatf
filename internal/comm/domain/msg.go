@@ -1,11 +1,16 @@
 package commDomain
 
-import commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+import (
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	"github.com/kataras/iris/v12"
+)
 
 type WsResp struct {
 	Msg       string                   `json:"msg"`
 	IsRunning string                   `json:"isRunning,omitempty"`
 	Category  commConsts.WsMsgCategory `json:"category"`
+
+	Info iris.Map `json:"info,omitempty"`
 }
 
 type MqMsg struct {

@@ -5,6 +5,7 @@
       <Button class="rounded pure" :hint="t('collapse_all')" icon="chevron-up" iconSize="1.5em" />
       <Button class="rounded pure" :hint="t('expand_up')" icon="more-vert" />
     </template>
+
     <LogList />
   </Panel>
 </template>
@@ -16,6 +17,9 @@ import WorkDir from './WorkDir.vue';
 import LogList from './LogList.vue';
 import {useI18n} from "vue-i18n";
 const { t } = useI18n();
+
+
+
 </script>
 
 <style scoped>

@@ -29,7 +29,7 @@ func ExecUnit(ch chan int,
 	logUtils.ExecConsolef(-1, startMsg)
 	logUtils.ExecFilef(startMsg)
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg(startMsg, "", commConsts.Run, wsMsg)
+		websocketHelper.SendExecMsg(startMsg, "", commConsts.Run, nil, wsMsg)
 	}
 
 	// run
@@ -41,7 +41,7 @@ func ExecUnit(ch chan int,
 	logUtils.ExecConsolef(-1, endMsg)
 	logUtils.ExecFilef(endMsg)
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg(endMsg, "", commConsts.Run, wsMsg)
+		websocketHelper.SendExecMsg(endMsg, "", commConsts.Run, nil, wsMsg)
 	}
 
 	// gen report
@@ -54,7 +54,7 @@ func ExecUnit(ch chan int,
 	}
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg("", "false", commConsts.Run, wsMsg)
+		websocketHelper.SendExecMsg("", "false", commConsts.Run, nil, wsMsg)
 	}
 
 	return
@@ -128,7 +128,7 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg *websocket.Mes
 			msg := i118Utils.Sprintf("exit_exec_curr")
 
 			if commConsts.ExecFrom != commConsts.FromCmd {
-				websocketHelper.SendExecMsg(msg, "", commConsts.Run, wsMsg)
+				websocketHelper.SendExecMsg(msg, "", commConsts.Run, nil, wsMsg)
 			}
 
 			logUtils.ExecConsolef(color.FgCyan, msg)

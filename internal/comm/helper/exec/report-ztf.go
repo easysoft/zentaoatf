@@ -86,7 +86,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		msgFail += strings.Join(failedCaseLinesWithCheckpoint, "\n")
 
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketHelper.SendExecMsg(msgFail, "", commConsts.Error, wsMsg)
+			websocketHelper.SendExecMsg(msgFail, "", commConsts.Error, nil, wsMsg)
 		}
 
 		logUtils.ExecConsolef(color.FgRed, msgFail)
@@ -122,7 +122,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		)
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg(msgRun, "", commConsts.Run, wsMsg)
+		websocketHelper.SendExecMsg(msgRun, "", commConsts.Run, nil, wsMsg)
 	}
 
 	logUtils.ExecConsole(color.FgCyan, msgRun)
@@ -134,7 +134,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	logUtils.ExecConsole(color.FgCyan, msgReport)
 	logUtils.ExecResult(msgReport)
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg(msgReport, "", commConsts.Run, wsMsg)
+		websocketHelper.SendExecMsg(msgReport, "", commConsts.Run, nil, wsMsg)
 	}
 
 	//report.ProductId, _ = strconv.Atoi(vari.ProductId)

@@ -162,7 +162,7 @@ export default defineComponent({
     const execSingle = () => {
       console.log('exec', script.value)
 
-      bus.emit(settings.eventExec, {execType: 'ztf', scripts: [script.value]});
+      // bus.emit(settings.eventExec, {execType: 'ztf', scripts: [script.value]});
     }
 
     const execStop = () => {

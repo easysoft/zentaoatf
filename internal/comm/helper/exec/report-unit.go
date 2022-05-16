@@ -88,7 +88,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 
 	msgFound := i118Utils.Sprintf("found_scripts", len(cases), req.WorkspacePath)
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg(msgFound, "", commConsts.Result, wsMsg)
+		websocketHelper.SendExecMsg(msgFound, "", commConsts.Result, nil, wsMsg)
 	}
 
 	logUtils.ExecConsolef(color.FgCyan, msgFound)
@@ -102,7 +102,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 		msgCase := fmt.Sprintf(format, idx+1, report.Total, cs.Status, testSuite, cs.Id, cs.Title, cs.Duration)
 
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketHelper.SendExecMsg(msgCase, "", commConsts.Result, wsMsg)
+			websocketHelper.SendExecMsg(msgCase, "", commConsts.Result, nil, wsMsg)
 		}
 
 		logUtils.ExecConsolef(color.FgCyan, msgCase)
@@ -115,7 +115,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 		msgFail += strings.Join(failedCaseLinesDesc, "\n")
 
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketHelper.SendExecMsg(msgFail, "", commConsts.Error, wsMsg)
+			websocketHelper.SendExecMsg(msgFail, "", commConsts.Error, nil, wsMsg)
 		}
 
 		logUtils.ExecConsolef(color.FgCyan, msgFail)
@@ -150,7 +150,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 		)
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg(msgRun, "", commConsts.Result, wsMsg)
+		websocketHelper.SendExecMsg(msgRun, "", commConsts.Result, nil, wsMsg)
 	}
 	logUtils.ExecConsole(color.FgCyan, msgRun)
 	logUtils.ExecResult(msgRun)
@@ -159,7 +159,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 	msgReport := "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg(msgReport, "false", commConsts.Result, wsMsg)
+		websocketHelper.SendExecMsg(msgReport, "false", commConsts.Result, nil, wsMsg)
 	}
 
 	logUtils.ExecConsole(color.FgCyan, msgReport)

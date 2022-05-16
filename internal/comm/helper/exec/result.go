@@ -10,6 +10,7 @@ import (
 	"github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	"github.com/fatih/color"
+	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/mattn/go-runewidth"
 	"regexp"
@@ -126,7 +127,12 @@ func ValidateCaseResult(scriptFile string, langType string,
 		if cs.Status == commConsts.FAIL {
 			msgCategory = commConsts.Error
 		}
-		websocketHelper.SendExecMsg(msg, "", msgCategory, wsMsg)
+
+		info := iris.Map{
+			"key":    scriptFile,
+			"status": cs.Status,
+		}
+		websocketHelper.SendExecMsg("", "", msgCategory, info, wsMsg)
 	}
 	logUtils.ExecConsole(color.FgCyan, msg)
 	logUtils.ExecResult(msg)

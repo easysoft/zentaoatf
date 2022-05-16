@@ -7,6 +7,7 @@ import (
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
 	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
+	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/kataras/neffos"
 	"strings"
@@ -28,12 +29,12 @@ func SendOutputMsg(msg, isRunning string, wsMsg *websocket.Message) {
 	PubMsg(mqData)
 }
 
-func SendExecMsg(msg, isRunning string, category commConsts.WsMsgCategory, wsMsg *websocket.Message) {
+func SendExecMsg(msg, isRunning string, category commConsts.WsMsgCategory, info iris.Map, wsMsg *websocket.Message) {
 	logUtils.Infof(i118Utils.Sprintf("ws_send_exec_msg", wsMsg.Room,
 		strings.ReplaceAll(strings.TrimSpace(msg), `%`, `%%`)))
 
 	msg = strings.TrimSpace(msg)
-	resp := commDomain.WsResp{Msg: msg, IsRunning: isRunning, Category: category}
+	resp := commDomain.WsResp{Msg: msg, IsRunning: isRunning, Category: category, Info: info}
 
 	bytes, _ := json.Marshal(resp)
 	mqData := commDomain.MqMsg{Namespace: wsMsg.Namespace, Room: wsMsg.Room, Event: wsMsg.Event, Content: string(bytes)}

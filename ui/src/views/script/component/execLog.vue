@@ -162,35 +162,35 @@ export default defineComponent({
 
     onMounted(() => {
       console.log('onMounted')
-      bus.on(settings.eventExec, exec);
+      // bus.on(settings.eventExec, exec);
       bus.on(settings.eventWebSocketMsg, onWebsocketMsgEvent);
     })
     onBeforeUnmount( () => {
-      bus.off(settings.eventExec, exec);
+      // bus.off(settings.eventExec, exec);
       bus.off(settings.eventWebSocketMsg, onWebsocketMsgEvent);
     })
 
-    const exec = (data: any) => {
-      console.log('exec', data)
-
-      const execType = data.execType
-
-      let msg = {}
-      if (execType === 'ztf') {
-        const scripts = data.scripts
-        const sets = genWorkspaceToScriptsMap(scripts)
-        msg = {act: 'execCase', testSets: sets}
-      } else if (execType === 'unit') {
-        const set = {workspaceId: data.id, workspaceType: data.type, cmd: data.cmd, submitResult: data.submitResult,
-          productId: currProduct.value.id}
-        msg = {act: 'execUnit', testSets: [set]}
-      } else if (execType === 'stop') {
-        msg = {act: 'execStop'}
-      }
-
-      console.log('msg', msg)
-      WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg))
-    }
+    // const exec = (data: any) => {
+    //   console.log('exec', data)
+    //
+    //   const execType = data.execType
+    //
+    //   let msg = {}
+    //   if (execType === 'ztf') {
+    //     const scripts = data.scripts
+    //     const sets = genWorkspaceToScriptsMap(scripts)
+    //     msg = {act: 'execCase', testSets: sets}
+    //   } else if (execType === 'unit') {
+    //     const set = {workspaceId: data.id, workspaceType: data.type, cmd: data.cmd, submitResult: data.submitResult,
+    //       productId: currProduct.value.id}
+    //     msg = {act: 'execUnit', testSets: [set]}
+    //   } else if (execType === 'stop') {
+    //     msg = {act: 'execStop'}
+    //   }
+    //
+    //   console.log('msg', msg)
+    //   WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg))
+    // }
 
     return {
       t,
@@ -200,7 +200,7 @@ export default defineComponent({
       logLevel,
       logStatus,
       script,
-      exec,
+      // exec,
       stop,
       hideWsStatus,
       addCount,
