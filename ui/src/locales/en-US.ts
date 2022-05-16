@@ -74,6 +74,8 @@ export default {
     'dir': 'Dir',
     'create_workspace': 'Create WorkDir',
     'edit_workspace': 'Edit WorkDir',
+    'create_file': 'Create file',
+    'del_file': 'Delete File',
 
     'duration':  'Duration', 
     'duration_sec':  'Duration(sec)', 

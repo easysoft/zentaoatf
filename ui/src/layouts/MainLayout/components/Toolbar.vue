@@ -29,6 +29,7 @@ withDefaults(defineProps<{
     defaultIconSize: '1.4em',
     gap: 0
 });
+
 </script>
 
 <style scoped>

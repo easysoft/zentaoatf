@@ -1,6 +1,6 @@
 <template>
     <div class="ztf-script-main">
-        <div id="editor-panel" class="tab-page-script">
+        <div id="editor-panel" class="tab-page-script editor-panel">
             <MonacoEditor v-if="scriptCode !== '' && scriptCode !== ScriptFileNotExist" v-model:value="scriptCode"
                 :language="lang" :options="editorOptions" class="editor" ref="editorRef" @change="editorChange" />
         </div>
@@ -23,7 +23,6 @@ const props = defineProps<{
     tab: PageTab
 }>();
 
-let tabMap = ref({})
 const scriptStore = useStore<{ Script: ScriptData }>();
 let script = computed<any>(() => scriptStore.state.Script.detail);
 let scriptCode = ref('')
@@ -45,7 +44,8 @@ watch(script, () => {
         scriptCode.value = script.value.code ? script.value.code : t('empty')
         lang.value = script.value.lang
         setTimeout(() => {
-            resizeHeight('editor-panel',100)
+            resizeHeight('ztf-script-main', 'editor-panel', 'splitter-v', 'logs-panel',
+              100, 100, 90)
         }, 600)
     } else {
         scriptCode.value = ''

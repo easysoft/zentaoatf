@@ -210,3 +210,27 @@ export function getSyncToInfoFromMenu(key: string, node: any): any {
 
     return
 }
+
+export function scriptTreeAddAttr(treeData) {
+    if(treeData == undefined){
+        return treeData;
+    }
+    treeData = treeData.map((item, index) => {
+        item.id = item.path;
+        if (item.isLeaf) {
+            item.toolbarItems = [
+                // { hint: 'create_file', icon: 'file-add'},
+            ];
+        } else {
+            item.toolbarItems = [
+                // {hint: 'create_workspace', icon: 'folder-add'},
+            ];
+        }
+        if (item.children != undefined && item.children.length > 0) {
+            item.children = scriptTreeAddAttr(item.children)
+        }
+        return item;
+    })
+
+    return treeData
+}

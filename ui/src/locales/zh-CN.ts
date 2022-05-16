@@ -84,6 +84,8 @@ export default {
     'dir': '目录',
     'create_workspace': '新建工作目录',
     'edit_workspace': '编辑工作目录',
+    'create_file': '新建脚本',
+    'del_file': '删除脚本',
 
     'duration':  '耗时', 
     'duration_sec':  '耗时（秒）', 
