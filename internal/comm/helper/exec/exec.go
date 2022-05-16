@@ -1,11 +1,12 @@
 package execHelper
 
 import (
+	"strings"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/kataras/iris/v12/websocket"
-	"strings"
 )
 
 func Exec(ch chan int, req serverDomain.WsReq, msg *websocket.Message) (
@@ -14,23 +15,26 @@ func Exec(ch chan int, req serverDomain.WsReq, msg *websocket.Message) (
 	testSets := req.TestSets
 
 	for _, testSet := range testSets {
-		serverConfig.InitExecLog(testSet.WorkspacePath)
+		func() {
+			serverConfig.InitExecLog(testSet.WorkspacePath)
+			defer serverConfig.SyncExecLog()
 
-		if testSet.ScriptDirParamFromCmdLine == "" {
-			testSet.ScriptDirParamFromCmdLine = req.ScriptDirParamFromCmdLine
-		}
+			if testSet.ScriptDirParamFromCmdLine == "" {
+				testSet.ScriptDirParamFromCmdLine = req.ScriptDirParamFromCmdLine
+			}
 
-		if req.Act == commConsts.ExecCase {
-			ExecCases(ch, testSet, msg)
-		} else if req.Act == commConsts.ExecModule {
-			ExecModule(ch, testSet, msg)
-		} else if req.Act == commConsts.ExecSuite {
-			ExecSuite(ch, testSet, msg)
-		} else if req.Act == commConsts.ExecTask {
-			ExecTask(ch, testSet, msg)
-		} else if req.Act == commConsts.ExecUnit {
-			ExecUnit(ch, testSet, msg)
-		}
+			if req.Act == commConsts.ExecCase {
+				ExecCases(ch, testSet, msg)
+			} else if req.Act == commConsts.ExecModule {
+				ExecModule(ch, testSet, msg)
+			} else if req.Act == commConsts.ExecSuite {
+				ExecSuite(ch, testSet, msg)
+			} else if req.Act == commConsts.ExecTask {
+				ExecTask(ch, testSet, msg)
+			} else if req.Act == commConsts.ExecUnit {
+				ExecUnit(ch, testSet, msg)
+			}
+		}() // for defer
 	}
 
 	return

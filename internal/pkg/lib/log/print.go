@@ -3,11 +3,12 @@ package logUtils
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
+	"unicode/utf8"
+
 	"github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/fatih/color"
 	"go.uber.org/zap"
-	"strings"
-	"unicode/utf8"
 )
 
 var LoggerStandard *zap.Logger
