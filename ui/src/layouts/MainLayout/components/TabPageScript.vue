@@ -70,15 +70,14 @@ const editorChange = (newScriptCode) => {
 
 <style lang="less" scoped>
 .ztf-script-main {
-    height: calc(100% - 40px);
+    height: 100%;
     display: flex;
     flex-direction: column;
 
     #editor-panel {
         flex: 1;
 
-        padding: 0 6px 0 8px;
-        overflow: auto;
+        padding: 0;
     }
 
     .toolbar {

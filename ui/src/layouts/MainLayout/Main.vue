@@ -3,8 +3,12 @@
     <Navbar class="flex-none" />
     <div id="mainContent" class="flex-auto">
       <Splitpanes id="mainRow">
-        <Pane :size="20" id="leftPane"><WorkDirPanel /></Pane>
+        <Pane :size="20" id="leftPane">
+          <WorkDirPanel />
+        </Pane>
+
         <Pane id="centerPane">
+
           <Splitpanes id="centerColumn" horizontal>
             <Pane id="tabsPane">
               <TabsContainer class="height-full" />
@@ -13,7 +17,9 @@
               <LogPanel />
             </Pane>
           </Splitpanes>
+
         </Pane>
+
         <Pane :size="20" id="rightPane">
           <ResultListPanel />
         </Pane>
@@ -40,22 +46,27 @@ import ResultListPanel from './components/ResultListPanel.vue';
   width: 100vw;
 
   #mainContent {
+    height: calc(100% - 40px);
     -webkit-app-region: no-drag;
   }
 }
 #leftPane {
   min-width: var(--pane-left-min-width, 200px);
 }
+
 #centerPane {
   min-width: var(--pane-center-min-width, 100px);
+
+  #tabsPane {
+    min-width: var(--pane-tabs-min-width, 100px);
+  }
+  #bottomPane {
+    min-width: var(--pane-bottom-min-width, 200px);
+  }
 }
+
 #rightPane {
   min-width: var(--pane-right-min-width, 200px);
 }
-#tabsPane {
-  min-width: var(--pane-tabs-min-width, 100px);
-}
-#bottomPane {
-  min-width: var(--pane-bottom-min-width, 200px);
-}
+
 </style>
