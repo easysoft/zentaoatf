@@ -696,7 +696,7 @@ export default defineComponent({
       if (!treeDataMap[dropKey].isDir && dropPos === 0) dropPos = 1
       console.log(dragKey, dropKey, dropPos);
 
-      store.dispatch('Interface/moveInterface', {dragKey: dragKey, dropKey: dropKey, dropPos: dropPos});
+      store.dispatch('Script/moveScript', {dragKey: dragKey, dropKey: dropKey, dropPos: dropPos});
     }
 
     const getCheckedFileNodes = (): string[] => {

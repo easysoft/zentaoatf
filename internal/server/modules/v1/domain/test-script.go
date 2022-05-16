@@ -28,8 +28,9 @@ type CreateScriptReq struct {
 	ProductId   int                       `json:"productId"`
 }
 
-type InterfaceMoveReq struct {
-	DragKey string             `json:"dragKey"`
-	DropKey string             `json:"dropKey"`
-	DropPos commConsts.DropPos `json:"dropPos"`
+type MoveScriptReq struct {
+	DragKey      string             `json:"dragKey"`
+	DropKey      string             `json:"dropKey"`
+	DropPosition commConsts.DropPos `json:"dropPosition"`
+	WorkspaceId  int                `json:"workspaceId"`
 }

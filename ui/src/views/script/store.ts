@@ -3,7 +3,7 @@ import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 
 import {
-    list, get, extract, create, update, remove, loadChildren, updateCode, syncFromZentao, syncToZentao
+    list, get, extract, create, update, remove, loadChildren, updateCode, syncFromZentao, syncToZentao, move
 } from './service';
 import {ScriptFileNotExist} from "@/utils/const";
 
@@ -35,6 +35,7 @@ export interface ModuleType extends StoreModuleType<ScriptData> {
         createScript: Action<ScriptData, ScriptData>;
         updateScript: Action<ScriptData, ScriptData>;
         deleteScript: Action<ScriptData, ScriptData>;
+        moveScript: Action<ScriptData, ScriptData>;
         updateCode: Action<ScriptData, ScriptData>;
     };
 }
@@ -163,6 +164,17 @@ const StoreModel: ModuleType = {
         async updateCode({ commit }, payload: any ) {
             try {
                 await updateCode(payload);
+                return true;
+            } catch (error) {
+                return false;
+            }
+        },
+
+        async moveScript({ commit , dispatch, state}, data: any ) {
+            try {
+                await move(data);
+                await dispatch('listScript', state.queryParams)
+
                 return true;
             } catch (error) {
                 return false;
