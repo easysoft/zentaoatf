@@ -65,6 +65,11 @@ func (s *TestResultService) Paginate(siteId, productId uint, req serverDomain.Re
 			summary.Seq = seq
 			summary.WorkspaceId = int(workspace.ID)
 			summary.WorkspaceName = workspace.Name
+
+			if report.Total == 1 {
+				_, summary.TestScriptName = filepath.Split(report.FuncResult[0].Path)
+			}
+
 			reports = append(reports, summary)
 
 			count += 1
@@ -95,6 +100,11 @@ func (s *TestResultService) Paginate(siteId, productId uint, req serverDomain.Re
 			summary.Seq = seq
 			summary.WorkspaceId = int(workspace.ID)
 			summary.WorkspaceName = workspace.Name
+
+			if report.Total == 1 {
+				_, summary.TestScriptName = filepath.Split(report.FuncResult[0].Path)
+			}
+
 			reports = append(reports, summary)
 
 			count += 1
@@ -137,6 +147,10 @@ func (s *TestResultService) GetLatest(siteId, productId uint) (summary serverDom
 	summary.Seq = seq
 	summary.WorkspaceId = int(ws.ID)
 	summary.WorkspaceName = ws.Name
+
+	if report.Total == 1 {
+		_, summary.TestScriptName = filepath.Split(report.FuncResult[0].Path)
+	}
 
 	return
 }

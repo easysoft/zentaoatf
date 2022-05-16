@@ -45,7 +45,18 @@ func ListReportByModTime(workspaceLogPath string) (reportFiles []fs.FileInfo) {
 
 func ReadReportByWorkspaceSeq(workspacePath string, seq string) (report commDomain.ZtfReport, err error) {
 
-	return ReadReportByWorkspaceSeq2(workspacePath, seq, false)
+	report, err = ReadReportByWorkspaceSeq2(workspacePath, seq, false)
+	if err != nil {
+		report, err2 := ReadReportByWorkspaceSeq2(workspacePath, seq, true)
+
+		if err2 != nil {
+			return report, err
+		} else {
+			return report, nil
+		}
+	}
+
+	return
 }
 
 func ReadReportByWorkspaceSeq2(workspacePath string, seq string, isBak bool) (report commDomain.ZtfReport, err error) {
