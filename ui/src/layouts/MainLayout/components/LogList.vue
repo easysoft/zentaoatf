@@ -119,7 +119,7 @@ const exec = (data: any) => {
   }
 
   console.log('exec testing', msg)
-  // WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg))
+  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg))
 }
 
 const logLevel = ref('result')

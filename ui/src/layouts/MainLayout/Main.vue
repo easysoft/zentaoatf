@@ -14,7 +14,7 @@
             <Pane id="tabsPane">
               <TabsContainer class="height-full" />
             </Pane>
-            <Pane v-show="showLogPanel" :size="20" id="bottomPane">
+            <Pane v-show="showLogPanel" :size="30" id="bottomPane">
               <LogPanel />
             </Pane>
           </Splitpanes>
@@ -83,7 +83,7 @@ onBeforeUnmount( () => {
     min-width: var(--pane-tabs-min-width, 100px);
   }
   #bottomPane {
-    min-width: var(--pane-bottom-min-width, 200px);
+    min-width: var(--pane-bottom-min-width, 100px);
   }
 }
 
