@@ -217,13 +217,11 @@ export function scriptTreeAddAttr(treeData) {
         item.id = item.path;
         if (item.isLeaf) {
             item.toolbarItems = [
-                // { hint: 'Add sub folder', icon: 'folder-add' },
-                { hint: 'create_file', icon: 'file-add'},
+                // { hint: 'create_file', icon: 'file-add'},
             ];
         } else {
             item.toolbarItems = [
-                {hint: 'create_workspace', icon: 'folder-add'},
-                // {hint: 'Add file', icon: 'file-add'},
+                // {hint: 'create_workspace', icon: 'folder-add'},
             ];
         }
         if (item.children != undefined && item.children.length > 0) {
