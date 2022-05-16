@@ -13,10 +13,10 @@ import (
 	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
 )
 
-func ListReport(workspacePath string) (reportFiles []string) {
-	dir := filepath.Join(workspacePath, commConsts.LogDirName)
+func ListReport(workspaceLogPath string) (reportFiles []string) {
+	//dir := filepath.Join(workspacePath, commConsts.LogDirName)
 
-	files, _ := ioutil.ReadDir(dir)
+	files, _ := ioutil.ReadDir(workspaceLogPath)
 	for _, fi := range files {
 		if fi.IsDir() {
 			reportFiles = append(reportFiles, fi.Name())
@@ -26,10 +26,9 @@ func ListReport(workspacePath string) (reportFiles []string) {
 	return
 }
 
-func ListReportByModTime(workspacePath string) (reportFiles []fs.FileInfo) {
-	dir := filepath.Join(workspacePath, commConsts.LogDirName)
+func ListReportByModTime(workspaceLogPath string) (reportFiles []fs.FileInfo) {
 
-	files, _ := ioutil.ReadDir(dir)
+	files, _ := ioutil.ReadDir(workspaceLogPath)
 	reportFiles = make([]fs.FileInfo, 0, len(files))
 	for _, fi := range files {
 		if fi.IsDir() {
@@ -45,6 +44,11 @@ func ListReportByModTime(workspacePath string) (reportFiles []fs.FileInfo) {
 }
 
 func ReadReportByWorkspaceSeq(workspacePath string, seq string) (report commDomain.ZtfReport, err error) {
+
+	return ReadReportByWorkspaceSeq2(workspacePath, seq, false)
+}
+
+func ReadReportByWorkspaceSeq2(workspacePath string, seq string, isBak bool) (report commDomain.ZtfReport, err error) {
 	pth := ""
 	if commConsts.ExecFrom == commConsts.FromCmd {
 		seqPath := seq
@@ -53,7 +57,11 @@ func ReadReportByWorkspaceSeq(workspacePath string, seq string) (report commDoma
 		}
 		pth = filepath.Join(seqPath, commConsts.ResultJson)
 	} else {
-		pth = filepath.Join(workspacePath, commConsts.LogDirName, seq, commConsts.ResultJson)
+		if isBak {
+			pth = filepath.Join(workspacePath, commConsts.LogBakDirName, seq, commConsts.ResultJson)
+		} else {
+			pth = filepath.Join(workspacePath, commConsts.LogDirName, seq, commConsts.ResultJson)
+		}
 	}
 
 	return ReadReportByPath(pth)
