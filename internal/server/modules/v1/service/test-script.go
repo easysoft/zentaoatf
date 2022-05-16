@@ -189,3 +189,21 @@ func (s *TestScriptService) Delete(pth string) (bizErr *domain.BizError) {
 
 	return
 }
+
+func (s *TestScriptService) Move(req serverDomain.MoveScriptReq) (err error) {
+	src := req.DragKey
+	srcName := fileUtils.GetFileName(src)
+	dist := req.DropKey
+
+	distDir := ""
+	if req.DropPosition == commConsts.Inner && fileUtils.IsDir(dist) {
+		distDir = dist
+	} else {
+		distDir = filepath.Dir(dist)
+	}
+
+	pth := filepath.Join(distDir, srcName)
+	err = os.Rename(src, pth)
+
+	return
+}

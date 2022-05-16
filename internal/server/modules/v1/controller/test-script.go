@@ -124,12 +124,30 @@ func (c *TestScriptCtrl) UpdateName(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(nil))
 }
 
+func (c *TestScriptCtrl) Move(ctx iris.Context) {
+	req := serverDomain.MoveScriptReq{}
+
+	err := ctx.ReadJSON(&req)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+	}
+
+	bizErr := c.TestScriptService.Move(req)
+	if bizErr != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	ctx.JSON(c.SuccessResp(nil))
+}
+
 func (c *TestScriptCtrl) Delete(ctx iris.Context) {
 	req := serverDomain.TestScript{}
 
 	err := ctx.ReadJSON(&req)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
 	}
 
 	bizErr := c.TestScriptService.Delete(req.Path)

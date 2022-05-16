@@ -72,6 +72,13 @@ export async function updateNameReq(path: string, name: string): Promise<any> {
     });
 }
 
+export async function move(data: any): Promise<any> {
+    return request({
+        url: `/${apiPath}/move`,
+        method: 'put',
+        data,
+    });
+}
 
 export async function remove(path: string): Promise<any> {
     const data = {path: path}
