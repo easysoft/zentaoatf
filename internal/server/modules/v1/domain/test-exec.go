@@ -23,6 +23,8 @@ type TestReportSummary struct {
 	ExecBy        commConsts.ExecBy `json:"execBy,omitempty"`
 	ExecById      int               `json:"execById,omitempty"`
 
+	TestScriptName string `json:"testScriptName,omitempty"`
+
 	Pass      int   `json:"pass"`
 	Fail      int   `json:"fail"`
 	Skip      int   `json:"skip"`

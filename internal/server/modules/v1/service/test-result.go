@@ -44,16 +44,18 @@ func (s *TestResultService) Paginate(siteId, productId uint, req serverDomain.Re
 		//	continue
 		//}
 
-		reportFiles := analysisHelper.ListReport(workspace.Path)
-		for _, seq := range reportFiles {
+		logDir := filepath.Join(workspace.Path, commConsts.LogDirName)
+		reportFiles := analysisHelper.ListReportByModTime(logDir)
+		for _, fi := range reportFiles {
 			if count < jumpNo || len(reports) >= pageSize {
 				count += 1
 				continue
 			}
 
+			seq := fi.Name()
 			summary := serverDomain.TestReportSummary{WorkspaceId: int(workspace.ID)}
 
-			report, err1 := analysisHelper.ReadReportByWorkspaceSeq(workspace.Path, seq)
+			report, err1 := analysisHelper.ReadReportByWorkspaceSeq2(workspace.Path, seq, false)
 			if err1 != nil { // ignore wrong json result
 				continue
 			}
@@ -63,6 +65,46 @@ func (s *TestResultService) Paginate(siteId, productId uint, req serverDomain.Re
 			summary.Seq = seq
 			summary.WorkspaceId = int(workspace.ID)
 			summary.WorkspaceName = workspace.Name
+
+			if report.Total == 1 {
+				_, summary.TestScriptName = filepath.Split(report.FuncResult[0].Path)
+			}
+
+			reports = append(reports, summary)
+
+			count += 1
+		}
+
+		// if the num of current log report is not enough, list bak reports.
+		reportLen := len(reports)
+		jumpNo += reportLen
+
+		logBakDir := filepath.Join(workspace.Path, commConsts.LogBakDirName)
+		bakReportFiles := analysisHelper.ListReportByModTime(logBakDir)
+		for _, fi := range bakReportFiles {
+			if count < jumpNo || len(reports) >= pageSize {
+				count += 1
+				continue
+			}
+
+			seq := fi.Name()
+			summary := serverDomain.TestReportSummary{WorkspaceId: int(workspace.ID)}
+
+			report, err1 := analysisHelper.ReadReportByWorkspaceSeq2(workspace.Path, seq, true)
+			if err1 != nil { // ignore wrong json result
+				continue
+			}
+			copier.Copy(&summary, report)
+
+			summary.No = fmt.Sprintf("%d-%s", workspace.ID, seq)
+			summary.Seq = seq
+			summary.WorkspaceId = int(workspace.ID)
+			summary.WorkspaceName = workspace.Name
+
+			if report.Total == 1 {
+				_, summary.TestScriptName = filepath.Split(report.FuncResult[0].Path)
+			}
+
 			reports = append(reports, summary)
 
 			count += 1
@@ -80,7 +122,7 @@ func (s *TestResultService) GetLatest(siteId, productId uint) (summary serverDom
 	var fi fs.FileInfo
 	var ws model.Workspace
 	for _, workspace := range workspaces {
-		reportFiles := analysisHelper.ListReportByModTime(workspace.Path)
+		reportFiles := analysisHelper.ListReportByModTime(workspace.Path + commConsts.LogDir)
 		if len(reportFiles) == 0 {
 			continue
 		}
@@ -105,6 +147,10 @@ func (s *TestResultService) GetLatest(siteId, productId uint) (summary serverDom
 	summary.Seq = seq
 	summary.WorkspaceId = int(ws.ID)
 	summary.WorkspaceName = ws.Name
+
+	if report.Total == 1 {
+		_, summary.TestScriptName = filepath.Split(report.FuncResult[0].Path)
+	}
 
 	return
 }

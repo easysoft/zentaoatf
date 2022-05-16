@@ -2,13 +2,14 @@ package serverConfig
 
 import (
 	"errors"
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
-	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	"log"
 	"net/url"
 	"os"
 	"path/filepath"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
+	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 
 	"github.com/snowlyg/helper/dir"
 	"go.uber.org/zap"
@@ -79,6 +80,19 @@ func InitExecLog(workspacePath string) {
 		log.Println("init exec result logger fail " + err.Error())
 	}
 
+}
+
+// flush buffer and release the file.
+func SyncExecLog() {
+	if logUtils.LoggerExecFile != nil {
+		logUtils.LoggerExecFile.Sync()
+		logUtils.LoggerExecFile = nil
+	}
+
+	if logUtils.LoggerExecResult != nil {
+		logUtils.LoggerExecResult.Sync()
+		logUtils.LoggerExecResult = nil
+	}
 }
 
 func getLogConfig() (config zap.Config) {

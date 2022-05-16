@@ -2,15 +2,16 @@ package logUtils
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/internal/comm/consts"
-	"github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/snowlyg/helper/dir"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	"github.com/easysoft/zentaoatf/internal/pkg/consts"
+	"github.com/snowlyg/helper/dir"
 )
 
 func GetLogDir(workspacePath string) string {
@@ -37,17 +38,23 @@ func GetLogDir(workspacePath string) string {
 		}
 	}
 
-	if numb >= 9 {
+	if numb > 9 {
 		numb = 0
 
 		tempDir := logDir[:len(logDir)-1] + "-bak" + string(os.PathSeparator) + logDir[len(logDir):]
 		childDir := logDir + "-bak" + string(os.PathSeparator) + logDir[len(logDir):]
 
-		os.RemoveAll(childDir)
-		os.Rename(logDir, tempDir)
+		if err := os.RemoveAll(childDir); err != nil {
+			panic(err)
+		}
 
-		err := os.Rename(tempDir, childDir)
-		_ = err
+		if err := os.Rename(logDir, tempDir); err != nil {
+			panic(err)
+		}
+
+		if err := os.Rename(tempDir, childDir); err != nil {
+			panic(err)
+		}
 	}
 
 	num := getLogNumb(numb + 1)
