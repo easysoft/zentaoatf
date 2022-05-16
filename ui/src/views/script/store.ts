@@ -3,7 +3,7 @@ import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 
 import {
-    list, get, extract, create, update, remove, loadChildren, updateCode, syncFromZentao, syncToZentao, move
+    list, get, extract, create, update, remove, loadChildren, updateCode, syncFromZentao, syncToZentao, move, scriptTreeAddAttr
 } from './service';
 import {ScriptFileNotExist} from "@/utils/const";
 
@@ -70,7 +70,9 @@ const StoreModel: ModuleType = {
     actions: {
         async listScript({ commit }, playload: any ) {
             const response: ResponseData = await list(playload);
-            const { data } = response;
+            const data = response.data;
+            data.id = data.path;
+            data.children = scriptTreeAddAttr(data.children);
             commit('setList', [data]);
 
             commit('setQueryParams', playload);

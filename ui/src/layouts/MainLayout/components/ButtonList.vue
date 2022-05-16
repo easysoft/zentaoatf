@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import {useI18n} from "vue-i18n";
-const { t } = useI18n();
+const { t,te } = useI18n();
 
 import {defineProps, computed, defineEmits} from 'vue';
 import Button, {ButtonProps} from './Button.vue';
@@ -40,6 +40,7 @@ const buttonPropsList = computed(() => {
     }
     return props.buttons.map((x, i) => {
         let item: (ButtonProps | Record<string, any>) & {key: string | number | symbol};
+        
         if (props.replaceFields && Button.props) {
             item = Object.keys(Button.props).reduce((item, propName) => {
                 const replacePropName = props.replaceFields ? props.replaceFields[propName] : null;
@@ -57,6 +58,10 @@ const buttonPropsList = computed(() => {
                 suffixIconSize: props.defaultSuffixIconSize,
                 ...x
             };
+        }
+
+        if(te(item.hint)){
+            item.hint = t(item.hint)
         }
         return item;
     });
