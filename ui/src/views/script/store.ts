@@ -10,6 +10,7 @@ import {ScriptFileNotExist} from "@/utils/const";
 export interface ScriptData {
     list: [];
     detail: any;
+    treeDataMap: any;
 
     currWorkspace: any
     queryParams: any;
@@ -42,6 +43,7 @@ export interface ModuleType extends StoreModuleType<ScriptData> {
 const initState: ScriptData = {
     list: [],
     detail: null,
+    treeDataMap: {},
 
     currWorkspace: {id: 0, type: 'ztf'},
     queryParams: {},
