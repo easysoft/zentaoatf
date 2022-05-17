@@ -76,6 +76,7 @@ const wsStatus = computed<any>(() => websocketStore.state.WebSocket.connStatus);
 const execStore = useStore<{ Exec: ExecStatus }>();
 const isRunning = computed<any>(() => execStore.state.Exec.isRunning);
 
+const caseCount = ref(1)
 const caseResult = ref({})
 const caseDetail = ref({})
 
@@ -97,7 +98,7 @@ const onWebsocketMsgEvent = (data: any) => {
     execStore.dispatch('Exec/setRunning', item.isRunning)
   }
 
-  item = genExecInfo(item)
+  item = genExecInfo(item, caseCount.value)
   if (item.info && item.info.key && isInArray(item.info.status, ['pass', 'fail', 'skip'])) { // set case result
     caseResult.value[item.info.key] = item.info.status
   }
@@ -119,6 +120,7 @@ onBeforeUnmount( () => {
 
 const exec = (data: any) => {
   console.log('exec', data)
+  caseCount.value++
 
   const execType = data.execType
 

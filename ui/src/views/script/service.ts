@@ -99,7 +99,9 @@ export async function updateCode(data: any): Promise<any> {
     });
 }
 
-export function genExecInfo(item: WsMsg) : WsMsg {
+export function genExecInfo(item: WsMsg, count: number) : WsMsg {
+    if (item.info) item.info.key = item.info.key + '-' + count
+
     item.msg = item.msg.replace(/^"+/,'').replace(/"+$/,'')
     if (item.msg) item.time = momentTime(new Date());
     return item

@@ -115,7 +115,7 @@ export default defineComponent({
         execStore.dispatch('Exec/setRunning', jsn.isRunning)
       }
 
-      const msg = genExecInfo(jsn)
+      const msg = genExecInfo(jsn, 0)
       if (msg) {
         wsMsg.out.push(msg)
       }
