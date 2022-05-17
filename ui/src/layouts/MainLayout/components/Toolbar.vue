@@ -5,7 +5,6 @@
     :buttons="items"
     :defaultBtnClass="defaultBtnClass"
     :defaultIconSize="defaultIconSize"
-    @click="$emit('click', $event)"
   >
     <slot />
   </ButtonList>
