@@ -63,6 +63,9 @@ const buttonPropsList = computed(() => {
         if(te(item.hint)){
             item.hint = t(item.hint)
         }
+        if(item.hintI18n!=undefined){
+            item.hint += t(item.hintI18n)
+        }
         return item;
     });
 });

@@ -1,30 +1,33 @@
 <template>
     <div class="workdir">
-        <Tree :data="treeData" :checkable="checkable" ref="treeRef" @active="selectNode" @clickToolbar="toolClick" />
-
-        <!-- <Form labelCol="50px" wrapperCol="60">
-            <FormItem name="name" :label="t('title')" :info="validateInfos.name">
+        <Tree :data="treeData" :checkable="checkable" ref="treeRef" @active="selectNode" @clickToolbar="createFileOrDir" />
+    <ZModal
+     :showModal="showModal" 
+     @onCancel="modalClose" 
+     @onOk="createNode"
+     :title="t('pls_name')"
+     >
+        <Form labelCol="50px" wrapperCol="60">
+            <FormItem name="name" :label="t('name')" :info="validateInfos.name">
                 <input v-model="modelRef.name" />
             </FormItem>
-            <FormItem name="email" :label="t('email')" :info="validateInfos.email">
-                <input v-model="modelRef.email" />
+            <FormItem v-if="currentNode.path==''" name="path" :label="t('path')" :info="validateInfos.path">
+                <input v-model="modelRef.path" />
             </FormItem>
-            <FormItem name="num" :label="t('number')" :info="validateInfos.num">
-                <input v-model="modelRef.num" />
+            <FormItem v-if="currentNode.path==''" name="type" :label="t('type')" :info="validateInfos.type">
+            <select name="type">
+                <option v-for="item in testTypes" :key="item.value" :value="item.value">{{item.label}}</option>
+            </select>
             </FormItem>
-
-            <FormItem size="small">
-                <button @click="submit" type="button">{{ t('submit') }}</button>
-                <button @click="reset" type="button">{{ t('reset') }}</button>
+            <FormItem v-if="currentNode.path==''" name="lang" :label="t('default_lang')" :info="validateInfos.lang">
+                <input v-model="modelRef.lang" />
             </FormItem>
-        </Form> -->
-
-        <!-- <ScriptTreePage></ScriptTreePage> -->
+        </Form>
+    </ZModal>
     </div>
 </template>
 
 <script setup lang="ts">
-import ScriptTreePage from "../../../views/script/component/tree.vue";
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import { ZentaoData } from "@/store/zentao";
@@ -37,6 +40,8 @@ import Form from "./Form.vue";
 import FormItem from "./FormItem.vue";
 import { useForm } from "@/utils/form";
 import Tree from "./Tree.vue";
+import ZModal from './Modal.vue';
+import {ztfTestTypesDef, unitTestTypesDef} from "@/utils/const";
 
 import {
     computed,
@@ -80,6 +85,7 @@ import { ZentaoCasePrefix } from "@/utils/const";
 
 import NameForm from "./nodeName.vue";
 import { isInArray } from "@/utils/array";
+import { isLet } from "@babel/types";
 
 
 const { t } = useI18n();
@@ -92,6 +98,8 @@ const scriptStore = useStore<{ Script: ScriptData }>();
 const currWorkspace = computed<any>(() => scriptStore.state.Script.currWorkspace);
 
 const isWin = isWindows()
+
+const testTypes = ref([...ztfTestTypesDef, ...unitTestTypesDef])
 
 const fromTitle = ref('从禅道同步用例')
 const fromVisible = ref(false)
@@ -113,6 +121,8 @@ const treeDataEmpty = computed<boolean>(() => !(treeData.value.length > 0 &&
 
 const filerType = ref('')
 const filerValue = ref('')
+const showModal = ref(false)
+const currentNode = ref({}) // parent node for create node
 
 onMounted(() => {
     console.log('onMounted')
@@ -122,10 +132,15 @@ onMounted(() => {
     }, 600)
 })
 
-const toolClick = (e) => {
-    const node = treeDataMap[e.node.id]
-    console.log(node.isLeaf);
+const createFileOrDir = (e) => {
+    const node = e.node == undefined ? treeDataMap[''] : treeDataMap[e.node.id]
+    showModal.value = true;
+    currentNode.value = node;
+    console.log(1111,currentNode)
+}
 
+const modalClose = () => {
+    showModal.value = false;
 }
 
 const modelRef = ref({})
@@ -144,11 +159,6 @@ const rulesRef = ref({
 })
 
 const { validate, reset, validateInfos } = useForm(modelRef, rulesRef);
-const submit = () => {
-    if (validate()) {
-        console.log('TODO')
-    }
-}
 
 const treeRef = ref<{ isAllCollapsed: () => boolean, toggleAllCollapsed: () => void }>();
 
@@ -488,16 +498,38 @@ const cancelUpdate = (path) => {
     treeDataMap[path].isEdit = false
 }
 
-const createNode = (model) => {
-    const arr = createAct.split('_')
-    const mode = arr[1]
-    const type = arr[2]
+const createWorkSpace = () => {
+    if(validate()){
+        console.log(modelRef.value);
+        store.dispatch('Workspace/save', modelRef.value).then((response) => {
+            console.log(response)
+            if (response) {
+                notification.success({message: t('save_success')});
+            }else{
+                notification.error({message: response});
+            }
+        })
+    }
+   
+    };
 
+
+const createNode = () => {
+    if(currentNode.value.path == ''){
+        createWorkSpace();
+        return;
+    }
+    const mode = 'child';
+    let type = 'dir';
+    if(currentNode.value.isLeaf){
+        type = 'node';
+    }
     scriptStore.dispatch('Script/createScript', {
-        name: model.name, mode: mode, type: type, target: rightClickedNode.path,
-        workspaceId: rightClickedNode.workspaceId, productId: currProduct.value.id,
+        name: modelRef.value.name, mode: mode, type: type, target: currentNode.value.path,
+        workspaceId: currentNode.value.workspaceId, productId: currProduct.value.id,
     }).then((result) => {
         if (result) {
+            showModal.value = false;
             notification.success({ message: t('create_success') });
             nameFormVisible.value = false
 
@@ -651,11 +683,12 @@ defineExpose({
         return treeRef.value?.toggleAllCollapsed();
     },
     toggleCheckable,
+    createFileOrDir
 });
 </script>
 
 <style lang="less" scoped>
 .workdir {
-    height: calc(100vh - 50px);
+    height: calc(100vh - 80px);
 }
 </style>

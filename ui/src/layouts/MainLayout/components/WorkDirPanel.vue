@@ -27,7 +27,7 @@
     </template>
 
     <template #toolbar-buttons>
-      <Button class="rounded pure" :hint="t('create_workspace')" icon="folder-add" />
+      <Button class="rounded pure" :hint="t('create_workspace')" @click="workDirRef?.createFileOrDir" icon="folder-add" />
       <Button class="rounded pure" :hint="t('batch_select')" icon="select-all-on" @click="_handleBatchSelectBtnClick" :active="workDirRef?.isCheckable" />
       <Button @click="_handleToggleAllBtnClick" class="rounded pure" :hint="workDirRef?.isAllCollapsed ? t('collapse') : t('expand_all')" :icon="workDirRef?.isAllCollapsed ? 'add-square-multiple' : 'subtract-square-multiple'" iconSize="1.4em" />
       <Button class="rounded pure" :hint="t('more_actions')" icon="more-vert" />

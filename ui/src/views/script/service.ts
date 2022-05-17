@@ -231,12 +231,15 @@ export function scriptTreeAddAttr(treeData) {
         item.id = item.path;
         if (item.isLeaf) {
             item.toolbarItems = [
-                // { hint: 'create_file', icon: 'file-add'},
+                { hint: 'create_file', icon: 'file-add'},
             ];
         } else {
             item.toolbarItems = [
-                // {hint: 'create_workspace', icon: 'folder-add'},
+                {hint: 'create_workspace', icon: 'folder-add'},
             ];
+            if(item.workspaceType != 'ztf'){
+                item.toolbarItems.push({hint: item.workspaceType, icon: 'play', hintI18n: 'test'})
+            }
         }
         if (item.children != undefined && item.children.length > 0) {
             item.children = scriptTreeAddAttr(item.children)
