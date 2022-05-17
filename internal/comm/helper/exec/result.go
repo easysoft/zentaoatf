@@ -131,19 +131,16 @@ func ValidateCaseResult(scriptFile string, langType string,
 			msgCategory = commConsts.Error
 		}
 
-		msg := ""
-		if csResult.Status == commConsts.FAIL { // send steps result msg
-			failedCheckpoints := make([]string, 0)
-			failedCount := appendFailedStepResult(csResult, &failedCheckpoints)
+		totalStepCount := len(csResult.Steps)
+		passStepCount := 0
+		failStepCount := 0
 
-			arr := []string{
-				i118Utils.Sprintf("steps_result_msg", len(csResult.Steps),
-					len(csResult.Steps)-failedCount, failedCount),
-			}
-			arr = append(arr, failedCheckpoints...)
+		failedCheckpoints := make([]string, 0)
+		passStepCount, failStepCount = appendFailedStepResult(csResult, &failedCheckpoints)
 
-			msg = strings.Join(arr, "<br/>")
-		}
+		arr := []string{i118Utils.Sprintf("steps_result_msg", totalStepCount, passStepCount, failStepCount)}
+		arr = append(arr, failedCheckpoints...)
+		msg = strings.Join(arr, "<br/>")
 
 		websocketHelper.SendExecMsg(msg, "", msgCategory,
 			iris.Map{"key": key, "status": csResult.Status}, wsMsg)

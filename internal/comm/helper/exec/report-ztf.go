@@ -95,6 +95,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		)
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
+		websocketHelper.SendExecMsg("", "", commConsts.Run, nil, wsMsg) // send new line
 		websocketHelper.SendExecMsg(msgRun, "", commConsts.Run, nil, wsMsg)
 	}
 
@@ -116,34 +117,31 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	fileUtils.WriteFile(jsonPath, string(json))
 }
 
-func appendFailedStepResult(cs commDomain.FuncResult, checkpoints *[]string) (failedCount int) {
+func appendFailedStepResult(cs commDomain.FuncResult, failedSteps *[]string) (passStepCount, failedCount int) {
 	if len(cs.Steps) > 0 {
 		for _, step := range cs.Steps {
 			if step.Status == commConsts.PASS {
+				passStepCount++
 				continue
 			}
 
-			//if failedCount > 0 {
-			//	*checkpoints = append(*checkpoints, "")
-			//}
-
 			step.Id = strings.TrimRight(step.Id, ".")
 			status := i118Utils.Sprintf(string(step.Status))
-			*checkpoints = append(*checkpoints, fmt.Sprintf("Step %s: %s", step.Id, status))
+			*failedSteps = append(*failedSteps, fmt.Sprintf("Step %s: %s", step.Id, status))
 
 			for idx1, cp := range step.CheckPoints {
 				//cpStatus := commonUtils.BoolToPass(step.Status)
-				*checkpoints = append(*checkpoints, fmt.Sprintf("[Expect] %s", cp.Expect))
-				*checkpoints = append(*checkpoints, fmt.Sprintf("[Actual] %s", cp.Actual))
+				*failedSteps = append(*failedSteps, fmt.Sprintf("[Expect] %s", cp.Expect))
+				*failedSteps = append(*failedSteps, fmt.Sprintf("[Actual] %s", cp.Actual))
 
 				if idx1 < len(step.CheckPoints)-1 {
-					*checkpoints = append(*checkpoints, "")
+					*failedSteps = append(*failedSteps, "")
 				}
 			}
 			failedCount++
 		}
 	} else {
-		*checkpoints = append(*checkpoints, "   "+i118Utils.Sprintf("no_checkpoints"))
+		*failedSteps = append(*failedSteps, "   "+i118Utils.Sprintf("no_checkpoints"))
 	}
 
 	return
