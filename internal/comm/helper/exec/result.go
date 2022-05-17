@@ -9,6 +9,7 @@ import (
 	websocketHelper "github.com/easysoft/zentaoatf/internal/comm/helper/websocket"
 	"github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
+	stringUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/string"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
@@ -50,6 +51,8 @@ func ValidateCaseResult(scriptFile string, langType string,
 	steps []commDomain.ZentaoCaseStep, skip bool, actualArr [][]string, report *commDomain.ZtfReport,
 	scriptIdx int, total int, secs string, pathMaxWidth int, numbMaxWidth int,
 	wsMsg *websocket.Message) {
+
+	key := stringUtils.Md5(scriptFile)
 
 	_, caseId, productId, title := scriptHelper.GetCaseInfo(scriptFile)
 
@@ -128,11 +131,8 @@ func ValidateCaseResult(scriptFile string, langType string,
 			msgCategory = commConsts.Error
 		}
 
-		info := iris.Map{
-			"key":    scriptFile,
-			"status": cs.Status,
-		}
-		websocketHelper.SendExecMsg("", "", msgCategory, info, wsMsg)
+		websocketHelper.SendExecMsg("", "", msgCategory,
+			iris.Map{"key": key, "status": cs.Status}, wsMsg)
 	}
 	logUtils.ExecConsole(color.FgCyan, msg)
 	logUtils.ExecResult(msg)

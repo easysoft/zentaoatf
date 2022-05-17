@@ -17,12 +17,12 @@ var (
 	wsConn *neffos.Conn
 )
 
-func SendOutputMsg(msg, isRunning string, wsMsg *websocket.Message) {
+func SendOutputMsg(msg, isRunning string, info iris.Map, wsMsg *websocket.Message) {
 	logUtils.Infof(i118Utils.Sprintf("ws_send_exec_msg", wsMsg.Room,
 		strings.ReplaceAll(strings.TrimSpace(msg), `%`, `%%`)))
 
 	msg = strings.Trim(msg, "\n")
-	resp := commDomain.WsResp{Msg: msg, Category: commConsts.Output}
+	resp := commDomain.WsResp{Msg: msg, Category: commConsts.Output, Info: info}
 
 	bytes, _ := json.Marshal(resp)
 	mqData := commDomain.MqMsg{Namespace: wsMsg.Namespace, Room: wsMsg.Room, Event: wsMsg.Event, Content: string(bytes)}

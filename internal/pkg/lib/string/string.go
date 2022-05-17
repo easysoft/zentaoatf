@@ -1,7 +1,9 @@
 package stringUtils
 
 import (
+	"crypto/md5"
 	"encoding/base64"
+	"encoding/hex"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	"github.com/jameskeane/bcrypt"
 	"github.com/mattn/go-runewidth"
@@ -127,4 +129,12 @@ func AddPostfix(str string, width int, ch string) string {
 	}
 
 	return str
+}
+
+func Md5(str string) (ret string) {
+	h := md5.New()
+	h.Write([]byte(str))
+	ret = hex.EncodeToString(h.Sum(nil))
+
+	return
 }

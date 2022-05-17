@@ -159,9 +159,13 @@ ExitAllCase:
 	report.Duration = endTime - startTime
 }
 
-func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, report *commDomain.ZtfReport, scriptIdx,
+func ExeScript(scriptFile, workspacePath string,
+	conf commDomain.WorkspaceConf,
+	report *commDomain.ZtfReport, scriptIdx,
 	total, pathMaxWidth, numbMaxWidth int,
 	ch chan int, wsMsg *websocket.Message) {
+
+	key := stringUtils.Md5(scriptFile)
 
 	startTime := time.Now()
 
@@ -169,15 +173,11 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketHelper.SendExecMsg("", "", commConsts.Run, nil, wsMsg)
-
-		info := iris.Map{
-			"key": scriptFile,
-		}
-		websocketHelper.SendExecMsg(startMsg, "", commConsts.Run, info, wsMsg)
+		websocketHelper.SendExecMsg(startMsg, "", commConsts.Run,
+			iris.Map{"key": key, "status": "start"}, wsMsg)
 
 		logUtils.ExecConsolef(-1, startMsg)
 	}
-
 	logUtils.ExecFilef(startMsg)
 
 	logs := ""
@@ -189,7 +189,7 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 	}
 	if errOutput != "" {
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketHelper.SendOutputMsg(errOutput, "", wsMsg)
+			websocketHelper.SendOutputMsg(errOutput, "", iris.Map{"key": key}, wsMsg)
 		}
 		logUtils.ExecConsolef(-1, errOutput)
 		logUtils.ExecFilef(errOutput)
@@ -200,14 +200,16 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 
 	endMsg := i118Utils.Sprintf("end_execution", scriptFile, dateUtils.DateTimeStr(entTime))
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg(endMsg, "", commConsts.Run, nil, wsMsg)
+		websocketHelper.SendExecMsg(endMsg, "", commConsts.Run,
+			iris.Map{"key": key, "status": "end"}, wsMsg)
 		logUtils.ExecConsolef(-1, endMsg)
 	}
 
 	logUtils.ExecFilef(endMsg)
 
 	//for i := 0; i < 100000; i++ {
-	//	websocketHelper.SendExecMsg(fmt.Sprintf("------%d", i), "", commConsts.Result, wsMsg)
+	//	websocketHelper.SendExecMsg(fmt.Sprintf("------%d", i), "", commConsts.Result,
+	//		iris.Map{"key": key, "status": "end"}, wsMsg)
 	//	time.Sleep(time.Millisecond * 100)
 	//}
 
@@ -217,6 +219,8 @@ func ExeScript(scriptFile, workspacePath string, conf commDomain.WorkspaceConf, 
 func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	ch chan int, wsMsg *websocket.Message) (
 	stdOutput string, errOutput string) {
+
+	key := stringUtils.Md5(filePath)
 
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
@@ -237,7 +241,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		} else {
 			msg := i118Utils.I118Prt.Sprintf("no_interpreter_for_run", lang, filePath)
 			if commConsts.ExecFrom != commConsts.FromCmd {
-				websocketHelper.SendOutputMsg(msg, "", wsMsg)
+				websocketHelper.SendOutputMsg(msg, "", iris.Map{"key": key}, wsMsg)
 			}
 			logUtils.ExecConsolef(-1, msg)
 			logUtils.ExecFilef(msg)
@@ -247,7 +251,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		if err != nil {
 			msg := i118Utils.I118Prt.Sprintf("exec_cmd_fail", filePath, err.Error())
 			if commConsts.ExecFrom != commConsts.FromCmd {
-				websocketHelper.SendOutputMsg(msg, "", wsMsg)
+				websocketHelper.SendOutputMsg(msg, "", iris.Map{"key": key}, wsMsg)
 			}
 			logUtils.ExecConsolef(-1, msg)
 			logUtils.ExecFilef(msg)
@@ -262,7 +266,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	if cmd == nil {
 		msgStr := i118Utils.Sprintf("cmd_empty")
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketHelper.SendOutputMsg(msgStr, "", wsMsg)
+			websocketHelper.SendOutputMsg(msgStr, "", iris.Map{"key": key}, wsMsg)
 			logUtils.ExecConsolef(color.FgRed, msgStr)
 		}
 
@@ -276,7 +280,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 
 	if err1 != nil {
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketHelper.SendOutputMsg(err1.Error(), "", wsMsg)
+			websocketHelper.SendOutputMsg(err1.Error(), "", iris.Map{"key": key}, wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, err1.Error())
 		logUtils.ExecFilef(err1.Error())
@@ -284,7 +288,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		return "", err1.Error()
 	} else if err2 != nil {
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketHelper.SendOutputMsg(err2.Error(), "", wsMsg)
+			websocketHelper.SendOutputMsg(err2.Error(), "", iris.Map{"key": key}, wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, err2.Error())
 		logUtils.ExecFilef(err2.Error())
@@ -301,7 +305,7 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		line, err2 := reader1.ReadString('\n')
 		if line != "" {
 			if commConsts.ExecFrom != commConsts.FromCmd {
-				websocketHelper.SendOutputMsg(line, "", wsMsg)
+				websocketHelper.SendOutputMsg(line, "", iris.Map{"key": key}, wsMsg)
 				logUtils.ExecConsole(1, line)
 			}
 
@@ -326,7 +330,8 @@ func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			msg := i118Utils.Sprintf("exit_exec_curr")
 
 			if commConsts.ExecFrom != commConsts.FromCmd {
-				websocketHelper.SendExecMsg(msg, "", commConsts.Run, nil, wsMsg)
+				websocketHelper.SendExecMsg(msg, "", commConsts.Run,
+					iris.Map{"key": key, "status": "end"}, wsMsg)
 			}
 
 			logUtils.ExecConsolef(color.FgCyan, msg)

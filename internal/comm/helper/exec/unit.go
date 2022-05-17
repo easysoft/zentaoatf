@@ -73,7 +73,7 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg *websocket.Mes
 	if cmd == nil {
 		msgStr := i118Utils.Sprintf("cmd_empty")
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketHelper.SendOutputMsg(msgStr, "", wsMsg)
+			websocketHelper.SendOutputMsg(msgStr, "", nil, wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, msgStr)
 		logUtils.ExecFilef(msgStr)
@@ -87,7 +87,7 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg *websocket.Mes
 
 	if err1 != nil {
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketHelper.SendOutputMsg(err1.Error(), "", wsMsg)
+			websocketHelper.SendOutputMsg(err1.Error(), "", nil, wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, err1.Error())
 		logUtils.ExecFilef(err1.Error())
@@ -95,7 +95,7 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg *websocket.Mes
 		return
 	} else if err2 != nil {
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketHelper.SendOutputMsg(err2.Error(), "", wsMsg)
+			websocketHelper.SendOutputMsg(err2.Error(), "", nil, wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, err2.Error())
 		logUtils.ExecFilef(err2.Error())
@@ -111,7 +111,7 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg *websocket.Mes
 		line, err3 := reader1.ReadString('\n')
 		if line != "" {
 			if commConsts.ExecFrom != commConsts.FromCmd {
-				websocketHelper.SendOutputMsg(line, "", wsMsg)
+				websocketHelper.SendOutputMsg(line, "", nil, wsMsg)
 			}
 			logUtils.ExecConsole(1, line)
 			logUtils.ExecFile(line)
@@ -159,7 +159,7 @@ ExitUnitTest:
 
 	if errOutput != "" {
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketHelper.SendOutputMsg(errOutput, "", wsMsg)
+			websocketHelper.SendOutputMsg(errOutput, "", nil, wsMsg)
 		}
 		logUtils.ExecConsolef(-1, errOutput)
 		logUtils.ExecFilef(errOutput)

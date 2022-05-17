@@ -3,12 +3,25 @@
 
     <div id="content" class="content">
       <template v-for="(item, index) in wsMsg.out" :key="index">
+        {{ void (info = item.info) }}
+        {{ void (csKey = info?.key) }}
+
         <div v-if="item.msg" class="item"
-           :class="['result-'+caseResult[item.info?.key]]">
+             :class="[
+                 csKey && caseDetail[csKey] ? 'show-detail' : '',
+
+                 csKey ? 'case-item' : '',
+                 info?.status === 'start' ? 'case-start' : '',
+                 info?.status === 'start' ? 'result-'+caseResult[csKey] : '',
+             ]">
 
           <div class="group">
-            <Icon v-if="item.info?.key" icon="chevron-right" />
-  <!--          <Icon icon="chevron-down" />-->
+            <template v-if="info?.status === 'start'">
+              <span @click="showDetail(item.info?.key)" class="link">
+                <Icon v-if="!caseDetail[csKey]" icon="chevron-right" />
+                <Icon v-if="caseDetail[csKey]" icon="chevron-down" />
+              </span>
+            </template>
           </div>
 
           <div class="sign">
@@ -20,8 +33,8 @@
           </div>
           <div class="msg-span">
             <span>{{ item.msg }}</span>
-            <span v-if="caseResult[item.info?.key]">
-              [ {{ t(caseResult[item.info?.key]) }} ]
+            <span v-if="info?.status === 'start' && caseResult[csKey]">
+              [ {{ t(caseResult[csKey]) }} ]
             </span>
           </div>
         </div>
@@ -50,6 +63,7 @@ import {WebSocket} from "@/services/websocket";
 
 import Icon from './Icon.vue';
 import {momentTime} from "@/utils/datetime";
+import {isInArray} from "@/utils/array";
 const { t } = useI18n();
 
 const zentaoStore = useStore<{ Zentao: ZentaoData }>();
@@ -63,9 +77,15 @@ const execStore = useStore<{ Exec: ExecStatus }>();
 const isRunning = computed<any>(() => execStore.state.Exec.isRunning);
 
 const caseResult = ref({})
+const caseDetail = ref({})
 
 // websocket
 let wsMsg = reactive({in: '', out: [] as any[]});
+
+const showDetail = (key) => {
+  console.log('showDetail', key)
+  caseDetail.value[key] = !caseDetail.value[key]
+}
 
 const onWebsocketMsgEvent = (data: any) => {
   console.log('WebsocketMsgEvent in ExecLog', data.msg)
@@ -78,12 +98,11 @@ const onWebsocketMsgEvent = (data: any) => {
   }
 
   item = genExecInfo(item)
-  if (item.info && item.info.key && item.info.status) {
+  if (item.info && item.info.key && isInArray(item.info.status, ['pass', 'fail', 'skip'])) { // set case result
     caseResult.value[item.info.key] = item.info.status
   }
 
   wsMsg.out.push(item)
-
   scroll('content')
 }
 
@@ -129,16 +148,29 @@ const logStatus = ref('')
 
 <style lang="less" scoped>
 .log-list {
-  .result-pass { color: #68BB8D }
-  .result-fail { color: #FC2C25 }
-
   font-family: HelveticaNeue;
   .content {
     .item {
+      &.case-item {
+        &.case-start {
+          &.result-pass { color: #68BB8D }
+          &.result-fail { color: #FC2C25 }
+        }
+        &:not(.case-start) {
+          display: none !important;
+        }
+      }
+      &.show-detail:not(.case-start) {
+        display: flex !important;
+      }
+
       .group {
         width: 16px;
         font-size: 13px;
         text-align: center;
+        .link {
+          cursor: pointer;
+        }
       }
       .sign {
         width: 30px;
