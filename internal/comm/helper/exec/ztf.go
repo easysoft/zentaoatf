@@ -197,14 +197,18 @@ func ExeScript(scriptFile, workspacePath string,
 
 	entTime := time.Now()
 	secs := fmt.Sprintf("%.2f", float32(entTime.Sub(startTime)/time.Second))
+	CheckCaseResult(scriptFile, logs, report, scriptIdx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg)
 
 	endMsg := i118Utils.Sprintf("end_execution", scriptFile, dateUtils.DateTimeStr(entTime))
 	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketHelper.SendExecMsg(endMsg, "", commConsts.Run,
 			iris.Map{"key": key, "status": "end"}, wsMsg)
+
+		// send new line
+		websocketHelper.SendExecMsg("", "", commConsts.Run, nil, wsMsg)
+
 		logUtils.ExecConsolef(-1, endMsg)
 	}
-
 	logUtils.ExecFilef(endMsg)
 
 	//for i := 0; i < 100000; i++ {
@@ -212,8 +216,6 @@ func ExeScript(scriptFile, workspacePath string,
 	//		iris.Map{"key": key, "status": "end"}, wsMsg)
 	//	time.Sleep(time.Millisecond * 100)
 	//}
-
-	CheckCaseResult(scriptFile, logs, report, scriptIdx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg)
 }
 
 func RunScript(filePath, workspacePath string, conf commDomain.WorkspaceConf,

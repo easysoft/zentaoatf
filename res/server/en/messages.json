@@ -401,6 +401,10 @@
     },
 
     {
+      "id": "steps_result_msg",
+      "translation": "Total %d steps, %d pass，%d failed."
+    },
+    {
       "id": "no_checkpoints",
       "translation": "No checkpoints."
     },

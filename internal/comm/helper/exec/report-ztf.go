@@ -26,18 +26,18 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	failedCaseLines := make([]string, 0)
 	failedCaseLinesWithCheckpoint := make([]string, 0)
 
-	for _, cs := range report.FuncResult {
-		if report.ProductId == 0 && cs.ProductId > 0 {
-			report.ProductId = cs.ProductId
+	for _, csResult := range report.FuncResult {
+		if report.ProductId == 0 && csResult.ProductId > 0 {
+			report.ProductId = csResult.ProductId
 		}
 
-		if cs.Status == "fail" {
+		if csResult.Status == "fail" {
 			if failedCount > 0 {
 				failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "")
 			}
 			failedCount++
 
-			path := cs.Path
+			path := csResult.Path
 			lent := runewidth.StringWidth(path)
 
 			if pathMaxWidth > lent {
@@ -45,39 +45,11 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 				path += postFix
 			}
 
-			line := fmt.Sprintf("[%s] %d.%s", cs.Path, cs.Id, cs.Title)
+			line := fmt.Sprintf("[%s] %d.%s", csResult.Path, csResult.Id, csResult.Title)
 			failedCaseLines = append(failedCaseLines, line)
 			failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, line)
 
-			if len(cs.Steps) > 0 {
-				stepNumb := 0
-				for _, step := range cs.Steps {
-					if step.Status == commConsts.PASS {
-						continue
-					}
-
-					if stepNumb > 0 {
-						failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "")
-					}
-					stepNumb++
-
-					step.Id = strings.TrimRight(step.Id, ".")
-					status := i118Utils.Sprintf(string(step.Status))
-					failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("Step %s: %s", step.Id, status))
-
-					for idx1, cp := range step.CheckPoints {
-						//cpStatus := commonUtils.BoolToPass(step.Status)
-						failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("[Expect] %s", cp.Expect))
-						failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, fmt.Sprintf("[Actual] %s", cp.Actual))
-
-						if idx1 < len(step.CheckPoints)-1 {
-							failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "")
-						}
-					}
-				}
-			} else {
-				failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, "   "+i118Utils.Sprintf("no_checkpoints"))
-			}
+			appendFailedStepResult(csResult, &failedCaseLinesWithCheckpoint)
 		}
 	}
 	if failedCount > 0 {
@@ -85,9 +57,10 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		msgFail += strings.Join(failedCaseLines, "\n")
 		msgFail += strings.Join(failedCaseLinesWithCheckpoint, "\n")
 
-		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketHelper.SendExecMsg(msgFail, "", commConsts.Error, nil, wsMsg)
-		}
+		// move to case result
+		//if commConsts.ExecFrom != commConsts.FromCmd {
+		//	websocketHelper.SendExecMsg(msgFail, "", commConsts.Error, nil, wsMsg)
+		//}
 
 		logUtils.ExecConsolef(color.FgRed, msgFail)
 		logUtils.ExecFile(msgFail)
@@ -141,4 +114,37 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	json, _ := json.MarshalIndent(report, "", "\t")
 	jsonPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultJson)
 	fileUtils.WriteFile(jsonPath, string(json))
+}
+
+func appendFailedStepResult(cs commDomain.FuncResult, checkpoints *[]string) (failedCount int) {
+	if len(cs.Steps) > 0 {
+		for _, step := range cs.Steps {
+			if step.Status == commConsts.PASS {
+				continue
+			}
+
+			//if failedCount > 0 {
+			//	*checkpoints = append(*checkpoints, "")
+			//}
+
+			step.Id = strings.TrimRight(step.Id, ".")
+			status := i118Utils.Sprintf(string(step.Status))
+			*checkpoints = append(*checkpoints, fmt.Sprintf("Step %s: %s", step.Id, status))
+
+			for idx1, cp := range step.CheckPoints {
+				//cpStatus := commonUtils.BoolToPass(step.Status)
+				*checkpoints = append(*checkpoints, fmt.Sprintf("[Expect] %s", cp.Expect))
+				*checkpoints = append(*checkpoints, fmt.Sprintf("[Actual] %s", cp.Actual))
+
+				if idx1 < len(step.CheckPoints)-1 {
+					*checkpoints = append(*checkpoints, "")
+				}
+			}
+			failedCount++
+		}
+	} else {
+		*checkpoints = append(*checkpoints, "   "+i118Utils.Sprintf("no_checkpoints"))
+	}
+
+	return
 }

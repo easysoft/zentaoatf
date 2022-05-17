@@ -32,7 +32,7 @@
             <span>{{ item.time }}</span>
           </div>
           <div class="msg-span">
-            <span>{{ item.msg }}</span>
+            <span v-html="item.msg"></span>
             <span v-if="info?.status === 'start' && caseResult[csKey]">
               [ {{ t(caseResult[csKey]) }} ]
             </span>
@@ -148,6 +148,18 @@ const logStatus = ref('')
 
 </script>
 
+<style lang="less">
+.log-list {
+  .result-pass {
+    color: #68BB8D
+  }
+
+  .result-fail {
+    color: #FC2C25
+  }
+}
+</style>
+
 <style lang="less" scoped>
 .log-list {
   font-family: HelveticaNeue;
@@ -155,8 +167,6 @@ const logStatus = ref('')
     .item {
       &.case-item {
         &.case-start {
-          &.result-pass { color: #68BB8D }
-          &.result-fail { color: #FC2C25 }
         }
         &:not(.case-start) {
           display: none !important;

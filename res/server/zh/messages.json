@@ -391,6 +391,10 @@
       "translation": "从%s到%s, 耗时%d秒。"
     },
     {
+      "id": "steps_result_msg",
+      "translation": "共有%d个步骤，%d个通过，%d个失败。"
+    },
+    {
       "id": "no_checkpoints",
       "translation": "没有验证点。"
     },

@@ -104,14 +104,14 @@ func ValidateCaseResult(scriptFile string, langType string,
 	}
 	report.Total = report.Total + 1
 
-	cs := commDomain.FuncResult{Id: caseId, ProductId: productId, Title: title,
+	csResult := commDomain.FuncResult{Id: caseId, ProductId: productId, Title: title,
 		Path: scriptFile, Status: caseResult, Steps: stepLogs}
-	report.FuncResult = append(report.FuncResult, cs)
+	report.FuncResult = append(report.FuncResult, csResult)
 
 	width := strconv.Itoa(len(strconv.Itoa(total)))
 	numbWidth := strconv.Itoa(numbMaxWidth)
 
-	path := cs.Path
+	path := csResult.Path
 	lent := runewidth.StringWidth(path)
 
 	if pathMaxWidth > lent {
@@ -121,18 +121,32 @@ func ValidateCaseResult(scriptFile string, langType string,
 
 	format := "(%" + width + "d/%d) %s [%s] [%" + numbWidth + "d. %s] (%ss)"
 
-	status := i118Utils.Sprintf(cs.Status.String())
-	msg := fmt.Sprintf(format, scriptIdx+1, total, status, path, cs.Id, cs.Title, secs)
+	status := i118Utils.Sprintf(csResult.Status.String())
+	msg := fmt.Sprintf(format, scriptIdx+1, total, status, path, csResult.Id, csResult.Title, secs)
 
 	// print each case result
 	if commConsts.ExecFrom != commConsts.FromCmd {
 		msgCategory := commConsts.Result
-		if cs.Status == commConsts.FAIL {
+		if csResult.Status == commConsts.FAIL {
 			msgCategory = commConsts.Error
 		}
 
-		websocketHelper.SendExecMsg("", "", msgCategory,
-			iris.Map{"key": key, "status": cs.Status}, wsMsg)
+		msg := ""
+		if csResult.Status == commConsts.FAIL { // send steps result msg
+			failedCheckpoints := make([]string, 0)
+			failedCount := appendFailedStepResult(csResult, &failedCheckpoints)
+
+			arr := []string{
+				i118Utils.Sprintf("steps_result_msg", len(csResult.Steps),
+					len(csResult.Steps)-failedCount, failedCount),
+			}
+			arr = append(arr, failedCheckpoints...)
+
+			msg = strings.Join(arr, "<br/>")
+		}
+
+		websocketHelper.SendExecMsg(msg, "", msgCategory,
+			iris.Map{"key": key, "status": csResult.Status}, wsMsg)
 	}
 	logUtils.ExecConsole(color.FgCyan, msg)
 	logUtils.ExecResult(msg)
