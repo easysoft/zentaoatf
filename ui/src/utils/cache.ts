@@ -2,6 +2,15 @@ import {getCache, setCache} from './localCache';
 import settings from '@/config/settings';
 import {proxyArrToVal} from "@/utils/comm";
 
+export const getExecBy = async () => {
+    let execBy = await getCache(settings.execBy);
+    if (!execBy) execBy = 'opened'
+    return execBy
+}
+export const setExecBy = async (execBy) => {
+    await setCache(settings.execBy, execBy);
+}
+
 export const getInitStatus = async () => {
     const initStatus = await getCache(settings.initStatus);
     return initStatus

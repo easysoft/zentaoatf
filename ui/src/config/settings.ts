@@ -33,6 +33,7 @@ export interface SettingsType {
     electronMsgReplay: string,
 
     initStatus: string;
+    execBy: string;
     currSiteId: string;
     currProductId: string;
     currProductIdBySite: string;
@@ -74,6 +75,7 @@ const settings: SettingsType = {
     electronMsgReplay: 'electronMsgReplay',
 
     initStatus: 'initStatus',
+    execBy: 'execBy',
     currSiteId: 'currSiteId',
     currProductId: 'currProductId',
     currProductIdBySite: 'currProductIdBySite',

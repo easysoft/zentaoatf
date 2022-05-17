@@ -2,8 +2,10 @@
   <nav id="navbar" class="surface row divider gap-lg align-center padding-h">
     <Logo />
     <SiteNav />
-    <BatchRunButton />
+1
+    <BatchRunButton />2
     <LastTestInfo />
+
     <div class="gap flex-auto"></div>
     <AppToolbar />
     <LayoutToolbar />
