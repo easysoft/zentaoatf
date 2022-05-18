@@ -1,13 +1,14 @@
 <template>
   <div class="tab-page-exec-unit">
-    <Form labelCol="100px" wrapperCol="60">
+    <Form labelCol="180px" wrapperCol="60">
       <FormItem name="cmd" :label="t('test_cmd')" :info="validateInfos.cmd">
         <input v-model="modelRef.cmd" @keydown="keydown"/>
       </FormItem>
       <FormItem v-if="currProduct.id" name="submitResult" :label="t('submit_result_to_zentao')">
 
       </FormItem>
-      <FormItem name="type" :label="t('type')" :info="validateInfos.type">
+
+      <FormItem>
         <a-button :disabled="isRunning === 'true' || !modelRef.cmd" @click="start" type="primary"
                   class="t-btn-gap">
           {{ t('exec') }}
@@ -16,6 +17,7 @@
           {{ t('stop') }}
         </a-button>
       </FormItem>
+
       <FormItem>
         <span class="t-tips">{{ t('cmd_nav') }}</span>
       </FormItem>
@@ -49,16 +51,8 @@ const modelRef = ref({})
 const isRunning = ref(false)
 
 const rulesRef = ref({
-  name: [
-    {required: true, msg: 'Please input name.'},
-  ],
-  email: [
-    {required: true, msg: 'Please input email.'},
-    {email: true, msg: 'Please check email format.'},
-  ],
-  num: [
-    {required: true, msg: 'Please input num.'},
-    {regex: '^[0-9]*$', msg: 'Please input a number.'},
+  cmd: [
+    {required: true, msg: 'Please input test command.'},
   ],
 })
 const {validate, reset, validateInfos} = useForm(modelRef, rulesRef);
@@ -76,6 +70,6 @@ console.log(workspaceId, workspaceType)
 
 <style lang="less" scoped>
 .tab-page-exec-unit {
-
+  padding: 16px;
 }
 </style>
