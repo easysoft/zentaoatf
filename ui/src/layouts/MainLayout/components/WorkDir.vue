@@ -117,21 +117,8 @@ onMounted(() => {
   }, 600)
 })
 
-<<<<<<< HEAD
-const createFileOrDir = (e) => {
-notification.$toast.open('You did it!');
-    const node = e.node == undefined ? treeDataMap[''] : treeDataMap[e.node.id]
-    currentNode.value = node;
-    if(e.event == undefined){
-        e.event = {key: 'createWorkspace'}
-    }
-    if(e.event.key == 'runTest'){
-        runTest(currentNode);
-    }else if(e.event.key == 'createFile' || e.event.key == 'createWorkspace'){
-        showModal.value = true;
-    }
-=======
 const onToolbarClicked = (e) => {
+    // notification.$toast.open('You did it!');
   const node = e.node == undefined ? treeDataMap[''] : treeDataMap[e.node.id]
   currentNode.value = node;
   if (e.event.key == 'runTest') {
@@ -139,7 +126,6 @@ const onToolbarClicked = (e) => {
   } else if (e.event.key == 'createFile' || e.event.key == 'createWorkspace') {
     showModal.value = true;
   }
->>>>>>> a90108372e8c038200dfdf7b308181bc01619802
 }
 
 const runTest = (node) => {
