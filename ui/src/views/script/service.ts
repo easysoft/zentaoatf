@@ -107,8 +107,9 @@ export function genExecInfo(item: WsMsg, count: number) : WsMsg {
         item.msg = setFirstLineColor(item.msg, item.info.status)
     }
 
-    item.msg = item.msg.replace(/^"+/,'').replace(/"+$/,'').
-        replaceAll('[','&nbsp;&nbsp;&nbsp;[')
+    item.msg = item.msg.replace(/^"+/,'').replace(/"+$/,'')
+        .replaceAll('\n','<br />')
+        .replaceAll('[','&nbsp;&nbsp;&nbsp;[')
     if (item.msg) item.time = momentTime(new Date());
     return item
 }

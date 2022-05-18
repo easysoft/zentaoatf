@@ -53,7 +53,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		}
 	}
 	if failedCount > 0 {
-		msgFail := "\n" + i118Utils.Sprintf("failed_scripts")
+		msgFail := "\n" + i118Utils.Sprintf("failed_scripts") + "\n"
 		msgFail += strings.Join(failedCaseLines, "\n")
 		msgFail += strings.Join(failedCaseLinesWithCheckpoint, "\n")
 

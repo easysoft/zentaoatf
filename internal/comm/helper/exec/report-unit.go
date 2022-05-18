@@ -94,7 +94,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 		status = commConsts.FAIL
 		msgCategory = commConsts.Error
 
-		msg += "\n" + i118Utils.Sprintf("failed_scripts")
+		msg += "\n" + i118Utils.Sprintf("failed_scripts") + "\n"
 		msg += strings.Join(failedCaseLines, "\n")
 		msg += strings.Join(failedCaseLinesDesc, "\n")
 
