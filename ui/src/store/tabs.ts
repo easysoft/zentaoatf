@@ -5,7 +5,7 @@ import { StoreModuleType } from "@/utils/store";
  * Page type（Test script, Test result, settings and sites）
  * 标签页页面类型（测试脚步代码、测试结果、设置、站点管理）
  */
-export type PageType = 'script' | 'result' | 'settings' | 'sites';
+export type PageType = 'script' | 'result' | 'settings' | 'sites' | 'execUnit';
 
 /**
  * Single page tab

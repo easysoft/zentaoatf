@@ -37,8 +37,8 @@ export interface FormItemProps {
 const props = defineProps<FormItemProps>();
 console.log(props)
 
-let labelCol = inject('labelCol');
-let wrapperCol = inject('wrapperCol');
+let labelCol = inject('labelCol') + '';
+let wrapperCol = inject('wrapperCol') + '';
 
 const size = ref(props.size)
 const errorMap = computed(() => {
@@ -67,7 +67,7 @@ const getWidth = (val: string) => {
     return val;
   }
 
-  return undefined;
+  return val;
 }
 const getCls = (val: string) => {
   if (!val) return undefined
@@ -98,6 +98,7 @@ const getCls = (val: string) => {
   .z-form-item-wrapper {
     .z-form-item-control {
       input, select {
+        width: 90%;
         height: 28px;
         vertical-align: middle;
       }
