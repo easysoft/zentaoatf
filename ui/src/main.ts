@@ -17,12 +17,19 @@ import i18n from '@/config/i18n';
 
 import _ from "lodash";
 import mitt, {Emitter} from "@/utils/mitt";
-
+import Toast, { PluginOptions } from "vue-toastification";
+import "vue-toastification/dist/index.css";
 const app = createApp(App)
 app.use(store);
 app.use(router)
 app.use(Antd);
 app.use(i18n);
+
+const options: PluginOptions = {
+    // You can set your default options here
+};
+app.use(Toast, options);
+
 app.mount('#app');
 
 const _emitter: Emitter = mitt();

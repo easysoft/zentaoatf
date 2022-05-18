@@ -1,6 +1,13 @@
 <template>
   <div class="workdir">
-    <Tree :data="treeData" :checkable="checkable" ref="treeRef" @active="selectNode" @clickToolbar="onToolbarClicked"/>
+    <Tree 
+      :data="treeData" 
+      :checkable="checkable" 
+      ref="treeRef" 
+      @active="selectNode" 
+      @check="checkNode" 
+      @clickToolbar="onToolbarClicked"
+    />
     <ZModal
         :showModal="showModal"
         @onCancel="modalClose"
@@ -9,18 +16,20 @@
     >
       <Form labelCol="50px" wrapperCol="60">
         <FormItem name="name" :label="t('name')" :info="validateInfos.name">
-          <input v-model="modelRef.name"/>
+          <input v-model="modelRef.name" class="form-control"/>
         </FormItem>
         <FormItem v-if="currentNode.path==''" name="path" :label="t('path')" :info="validateInfos.path">
-          <input v-model="modelRef.path"/>
+          <input v-model="modelRef.path" class="form-control"/>
         </FormItem>
         <FormItem v-if="currentNode.path==''" name="type" :label="t('type')" :info="validateInfos.type">
-          <select name="type">
+          <select name="type" v-model="modelRef.type" class="form-control">
             <option v-for="item in testTypes" :key="item.value" :value="item.value">{{ item.label }}</option>
           </select>
         </FormItem>
         <FormItem v-if="currentNode.path==''" name="lang" :label="t('default_lang')" :info="validateInfos.lang">
-          <input v-model="modelRef.lang"/>
+        <select name="type" v-model="modelRef.lang" class="form-control">
+            <option v-for="item in langs" :key="item.code" :value="item.code">{{ item.name }}</option>
+          </select>
         </FormItem>
       </Form>
     </ZModal>
@@ -38,10 +47,10 @@ import FormItem from "./FormItem.vue";
 import {useForm} from "@/utils/form";
 import Tree from "./Tree.vue";
 import ZModal from './Modal.vue';
-import {notification} from "@/utils/notification";
+import notification from "@/utils/notification";
 import {unitTestTypesDef, ZentaoCasePrefix, ztfTestTypesDef} from "@/utils/const";
 
-import {computed, defineExpose, onMounted, onUnmounted, ref, watch} from "vue";
+import {computed, defineExpose, onMounted, onUnmounted, ref, watch, getCurrentInstance} from "vue";
 
 import {Modal} from "ant-design-vue";
 
@@ -73,7 +82,6 @@ import throttle from "lodash.debounce";
 import {isInArray} from "@/utils/array";
 import {PageType} from "@/store/tabs";
 
-
 const {t} = useI18n();
 
 const zentaoStore = useStore<{ Zentao: ZentaoData }>();
@@ -86,6 +94,8 @@ const currWorkspace = computed<any>(() => scriptStore.state.Script.currWorkspace
 const isWin = isWindows()
 
 const testTypes = ref([...ztfTestTypesDef, ...unitTestTypesDef])
+zentaoStore.dispatch('Zentao/fetchLangs')
+const langs = computed<any[]>(() => zentaoStore.state.Zentao.langs);
 
 const fromTitle = ref('从禅道同步用例')
 const fromVisible = ref(false)
@@ -124,6 +134,9 @@ const onToolbarClicked = (e) => {
       {id: node.workspaceId, type: node.workspaceType})
 
   currentNode.value = node;
+  if(e.event == undefined){
+      e.event = {key : 'createWorkspace'};// create workspace
+  }
   if (e.event.key == 'runTest') {
     runTest(currentNode);
   } else if (e.event.key == 'createFile' || e.event.key == 'createWorkspace') {
@@ -153,15 +166,16 @@ const modalClose = () => {
 const modelRef = ref({})
 const rulesRef = ref({
   name: [
-    {required: true, msg: 'Please input name.'},
+    {required: true, msg: t('pls_name')},
   ],
-  email: [
-    {required: true, msg: 'Please input email.'},
-    {email: true, msg: 'Please check email format.'},
+  path: [
+    {required: true, msg: t('pls_workspace_path')},
   ],
-  num: [
-    {required: true, msg: 'Please input num.'},
-    {regex: '^[0-9]*$', msg: 'Please input a number.'},
+  lang: [
+    {required: true, msg: t('select_ui_lang')},
+  ],
+  type: [
+    {required: true, msg: t('pls_workspace_type')},
   ],
 })
 
@@ -395,11 +409,10 @@ const selectNode = (activeNode) => {
       {id: node.workspaceId, type: node.workspaceType})
 }
 
-const checkNode = (checkedKeys, e) => {
-  console.log('checkNode', e)
-  selectNothing()
-  scriptStore.dispatch('Script/changeWorkspace',
-      {id: e.node.dataRef.workspaceId, type: e.node.dataRef.workspaceType})
+const checkNode = (checkedKeys) => {
+  console.log('checkNode', checkedKeys.checked)
+//   scriptStore.dispatch('Script/changeWorkspace',
+//       {id: e.node.dataRef.workspaceId, type: e.node.dataRef.workspaceType})
 }
 
 const selectNothing = () => {
@@ -501,17 +514,15 @@ const cancelUpdate = (path) => {
 }
 
 const createWorkSpace = () => {
-  // if(validate()){
-  console.log(modelRef.value);
+  if(validate()){
   store.dispatch('Workspace/save', modelRef.value).then((response) => {
-    console.log(response)
     if (response) {
+      modelRef.value = {};
       notification.success({message: t('save_success')});
-    } else {
-      // notification.error({message: response});
+      showModal.value = false;
     }
   })
-  // }
+  }
 
 };
 
@@ -691,5 +702,41 @@ defineExpose({
 <style lang="less" scoped>
 .workdir {
   height: calc(100vh - 80px);
+}
+.form-control{
+    width: 100%;
+    color: #495057;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.z-form-item-label{
+    font-weight: 400;
+    color: #212529;
+    text-align: left;
+    box-sizing: border-box;
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    flex: 0 0 16.666667%;
+    max-width: 16.666667%;
+    padding-top: calc(.375rem + 1px);
+    padding-bottom: calc(.375rem + 1px);
+    margin-bottom: 0;
+    line-height: 1.5;
+}
+.z-form-item{
+    display: flex;
+    align-items: center;
+}
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
 }
 </style>
