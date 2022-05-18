@@ -18,6 +18,14 @@ export async function get(params: any): Promise<any> {
     });
 }
 
+export async function getLastest(params: any): Promise<any> {
+    return request({
+        url: `/${apiPath}/latest`,
+        method: 'get',
+        params,
+    });
+}
+
 export async function remove(params: any): Promise<any> {
     return request({
         url: `/${apiPath}`,

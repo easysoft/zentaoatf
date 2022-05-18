@@ -12,22 +12,19 @@
 <script setup lang="ts">
 import Button from './Button.vue';
 import Icon from './Icon.vue';
-import {StateType} from "@/src/views/result/store";
-import {useRouter} from "vue-router";
+import {StateType} from "@/views/result/store";
 import {useStore} from "vuex";
 import {computed, onMounted} from "vue";
 import {useI18n} from "vue-i18n";
 const { t } = useI18n();
 
 const store = useStore<{ Result: StateType }>();
-const models = computed<any[]>(() => store.state.Result.queryResult.result)
-var model = computed<any[]>(() => models.value.length > 0 ? models.value[0] : {})
+const model = computed<any[]>(() => store.state.Result.lastResult)
 
-const list = (page: number) => {
-    store.dispatch('Result/list', {
-    page: page});
+const latest = () => {
+    store.dispatch('Result/latest', {});
 }
-list(1);
+latest();
 
 const showDetail = (item) => {
     console.log(item)

@@ -19,6 +19,7 @@ import _ from "lodash";
 import mitt, {Emitter} from "@/utils/mitt";
 import Toast, { PluginOptions } from "vue-toastification";
 import "vue-toastification/dist/index.css";
+
 const app = createApp(App)
 app.use(store);
 app.use(router)
