@@ -42,6 +42,7 @@ import { useForm } from "@/utils/form";
 import Tree from "./Tree.vue";
 import ZModal from './Modal.vue';
 import {ztfTestTypesDef, unitTestTypesDef} from "@/utils/const";
+import {notification} from "@/utils/notification";
 
 import {
     computed,
@@ -51,7 +52,7 @@ import {
     watch
 } from "vue";
 
-import { Empty, Modal, notification } from "ant-design-vue";
+import { Empty, Modal } from "ant-design-vue";
 
 import bus from "@/utils/eventBus";
 import {
@@ -133,8 +134,12 @@ onMounted(() => {
 })
 
 const createFileOrDir = (e) => {
+notification.$toast.open('You did it!');
     const node = e.node == undefined ? treeDataMap[''] : treeDataMap[e.node.id]
     currentNode.value = node;
+    if(e.event == undefined){
+        e.event = {key: 'createWorkspace'}
+    }
     if(e.event.key == 'runTest'){
         runTest(currentNode);
     }else if(e.event.key == 'createFile' || e.event.key == 'createWorkspace'){
