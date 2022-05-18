@@ -41,7 +41,7 @@ const colClass = computed(() => {
 const colStyle = computed(() => {
   const style: Record<string, any> = {};
 
-  const width = typeof(props.width) === "undefined" ? '' : props.width
+  const width = typeof(props.width) === "undefined" ? '' : (props.width.indexOf('px') > 0 ? props.width : props.width + '%')
   const span = typeof(props.span) === "undefined" ? -1 : props.span
   const flex = typeof(props.flex) === "undefined" ? -1 : props.flex
 

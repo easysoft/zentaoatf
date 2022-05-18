@@ -11,6 +11,7 @@ import TabPageResult from './TabPageResult.vue';
 import TabPageScript from './TabPageScript.vue';
 import TabPageSettings from './TabPageSettings.vue';
 import TabPageSites from './TabPageSites.vue';
+import TabPageExecUnit from './TabPageExecUnit.vue';
 import TabPageUnknown from './TabPageUnknown.vue';
 import {useI18n} from "vue-i18n";
 const { t } = useI18n();
@@ -20,6 +21,7 @@ const PageTabComponent = {
     settings: TabPageSettings,
     result: TabPageResult,
     sites: TabPageSites,
+  execUnit: TabPageExecUnit,
     unknown: TabPageUnknown,
 };
 

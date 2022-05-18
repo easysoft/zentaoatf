@@ -80,6 +80,7 @@ import {ExecStatus} from "@/store/exec";
 import debounce from "lodash.debounce";
 import throttle from "lodash.debounce";
 import {isInArray} from "@/utils/array";
+import {PageType} from "@/store/tabs";
 
 const {t} = useI18n();
 
@@ -141,7 +142,18 @@ const onToolbarClicked = (e) => {
 }
 
 const runTest = (node) => {
-  console.log(node)
+  console.log('runTest', node.value)
+
+  store.dispatch('tabs/open', {
+    id: 'workspace-' + node.value.workspaceId,
+    title: node.value.title,
+    type: 'execUnit',
+    changed: false,
+    data: {
+      workspaceId: node.value.workspaceId,
+      workspaceType: node.value.workspaceType,
+    }
+  });
 }
 
 const modalClose = () => {
