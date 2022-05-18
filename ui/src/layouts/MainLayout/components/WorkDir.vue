@@ -119,8 +119,10 @@ onMounted(() => {
 })
 
 const onToolbarClicked = (e) => {
-    // notification.$toast.open('You did it!');
   const node = e.node == undefined ? treeDataMap[''] : treeDataMap[e.node.id]
+  scriptStore.dispatch('Script/changeWorkspace',
+      {id: node.workspaceId, type: node.workspaceType})
+
   currentNode.value = node;
   if (e.event.key == 'runTest') {
     runTest(currentNode);

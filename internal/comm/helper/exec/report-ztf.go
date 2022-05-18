@@ -95,7 +95,6 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		)
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg("", "", commConsts.Run, nil, wsMsg) // send new line
 		websocketHelper.SendExecMsg(msgRun, "", commConsts.Run, nil, wsMsg)
 	}
 

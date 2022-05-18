@@ -10,13 +10,12 @@
       </FormItem>
 
       <FormItem>
-        <a-button :disabled="isRunning === 'true' || !modelRef.cmd" @click="start" type="primary"
-                  class="t-btn-gap">
+        <Button :disabled="isRunning === 'true' || !modelRef.cmd" @click="start" class="rounded">
           {{ t('exec') }}
-        </a-button>
-        <a-button v-if="isRunning === 'true'" @click="stop" class="t-btn-gap">
+        </Button>
+        <Button v-if="isRunning === 'true'" @click="stop" class="rounded pure">
           {{ t('stop') }}
-        </a-button>
+        </Button>
       </FormItem>
 
       <FormItem>
@@ -32,6 +31,7 @@ import { PageTab } from "@/store/tabs";
 import {useI18n} from "vue-i18n";
 import {useStore} from "vuex";
 import {ZentaoData} from "@/store/zentao";
+import Button from './Button.vue';
 import {useForm} from "@/utils/form";
 const { t } = useI18n();
 
@@ -79,6 +79,11 @@ const loadWorkspaceCmd = async () => {
 const loadCmdHistories = async () => {
   histories.value = await getCmdHistories(currWorkspace.value.id)
   historyIndex.value = histories.value? histories.value.length : 0
+}
+
+if (currWorkspace.value.id > 0) {
+  loadCmdHistories()
+  loadWorkspaceCmd()
 }
 
 watch(currWorkspace, () => {

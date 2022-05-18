@@ -11,8 +11,10 @@ import (
 	dateUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/date"
 	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
+	stringUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/string"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/fatih/color"
+	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
 	"io"
 	"os/exec"
@@ -23,13 +25,17 @@ import (
 func ExecUnit(ch chan int,
 	req serverDomain.TestSet, wsMsg *websocket.Message) (resultDir string, err error) {
 
+	key := stringUtils.Md5(req.WorkspacePath)
+
 	// start msg
 	startTime := time.Now()
 	startMsg := i118Utils.Sprintf("start_execution", req.Cmd, dateUtils.DateTimeStr(startTime))
 	logUtils.ExecConsolef(-1, startMsg)
 	logUtils.ExecFilef(startMsg)
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg(startMsg, "", commConsts.Run, nil, wsMsg)
+		websocketHelper.SendExecMsg("", "", commConsts.Run, nil, wsMsg)
+		websocketHelper.SendExecMsg(startMsg, "", commConsts.Run,
+			iris.Map{"key": key, "status": "start"}, wsMsg)
 	}
 
 	// run
@@ -41,7 +47,9 @@ func ExecUnit(ch chan int,
 	logUtils.ExecConsolef(-1, endMsg)
 	logUtils.ExecFilef(endMsg)
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg(endMsg, "", commConsts.Run, nil, wsMsg)
+		websocketHelper.SendExecMsg(endMsg, "", commConsts.Run,
+			iris.Map{"key": key, "status": "end"}, wsMsg)
+		websocketHelper.SendExecMsg("", "", commConsts.Run, iris.Map{"key": key}, wsMsg)
 	}
 
 	// gen report
@@ -61,6 +69,8 @@ func ExecUnit(ch chan int,
 }
 
 func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg *websocket.Message) (err error) {
+	key := stringUtils.Md5(workspacePath)
+
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
 		cmd = exec.Command("cmd", "/C", cmdStr)
@@ -73,8 +83,9 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg *websocket.Mes
 	if cmd == nil {
 		msgStr := i118Utils.Sprintf("cmd_empty")
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketHelper.SendOutputMsg(msgStr, "", nil, wsMsg)
+			websocketHelper.SendOutputMsg(msgStr, "", iris.Map{"key": key}, wsMsg)
 		}
+
 		logUtils.ExecConsolef(color.FgRed, msgStr)
 		logUtils.ExecFilef(msgStr)
 
@@ -87,7 +98,7 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg *websocket.Mes
 
 	if err1 != nil {
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketHelper.SendOutputMsg(err1.Error(), "", nil, wsMsg)
+			websocketHelper.SendOutputMsg(err1.Error(), "", iris.Map{"key": key}, wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, err1.Error())
 		logUtils.ExecFilef(err1.Error())
@@ -95,7 +106,7 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg *websocket.Mes
 		return
 	} else if err2 != nil {
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketHelper.SendOutputMsg(err2.Error(), "", nil, wsMsg)
+			websocketHelper.SendOutputMsg(err2.Error(), "", iris.Map{"key": key}, wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, err2.Error())
 		logUtils.ExecFilef(err2.Error())
@@ -111,7 +122,7 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg *websocket.Mes
 		line, err3 := reader1.ReadString('\n')
 		if line != "" {
 			if commConsts.ExecFrom != commConsts.FromCmd {
-				websocketHelper.SendOutputMsg(line, "", nil, wsMsg)
+				websocketHelper.SendOutputMsg(line, "", iris.Map{"key": key}, wsMsg)
 			}
 			logUtils.ExecConsole(1, line)
 			logUtils.ExecFile(line)
@@ -159,7 +170,7 @@ ExitUnitTest:
 
 	if errOutput != "" {
 		if commConsts.ExecFrom != commConsts.FromCmd {
-			websocketHelper.SendOutputMsg(errOutput, "", nil, wsMsg)
+			websocketHelper.SendOutputMsg(errOutput, "", iris.Map{"key": key}, wsMsg)
 		}
 		logUtils.ExecConsolef(-1, errOutput)
 		logUtils.ExecFilef(errOutput)
