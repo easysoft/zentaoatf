@@ -3,7 +3,7 @@ import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 
 import {
-    list, get, extract, create, update, remove, loadChildren, updateCode, syncFromZentao, syncToZentao, move, scriptTreeAddAttr
+    list, get, extract, create, update, remove, loadChildren, updateCode, syncFromZentao, syncToZentao, move, scriptTreeAddAttr, getNodeMap
 } from './service';
 import {ScriptFileNotExist} from "@/utils/const";
 
@@ -58,6 +58,11 @@ const StoreModel: ModuleType = {
     mutations: {
         setList(state, payload) {
             state.list = payload;
+            const treeDataMap = {};
+            if(payload.length > 0) {
+                getNodeMap(payload[0], treeDataMap);
+            }
+            state.treeDataMap = treeDataMap;
         },
         setItem(state, payload) {
             state.detail = payload;

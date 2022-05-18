@@ -1,10 +1,19 @@
-import {createApp} from 'vue';
-import VueToast from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
+import { useToast } from "vue-toastification";
 
-export function notification() {
-    const app = createApp({});
-    app.use(VueToast);
-    app.mount('#app');
-    return app;
+const toast = useToast()
+export default {
+    success(options) {
+        console.log(options)
+        toast.success(options.message, options);
+    },
+    error(options) {
+        toast.error(options.message, options);
+    },
+    info(options) {
+        toast.info(options.message, options);
+    },
+    warning(options) {
+        toast.warning(options.message, options);
+    }
 }

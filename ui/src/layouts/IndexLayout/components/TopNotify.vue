@@ -8,7 +8,7 @@ import { useI18n } from "vue-i18n";
 
 import bus from "@/utils/eventBus";
 import settings from "@/config/settings";
-import {notification} from "ant-design-vue";
+import notification from "@/utils/notification";
 import {ResultErr} from "@/utils/request";
 
 export default defineComponent({
