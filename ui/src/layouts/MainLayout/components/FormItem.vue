@@ -97,10 +97,16 @@ const getCls = (val: string) => {
   }
   .z-form-item-wrapper {
     .z-form-item-control {
+      height: 100%;
       input, select {
         width: 90%;
         height: 28px;
         vertical-align: middle;
+      }
+      input[type="checkbox"] {
+        width: auto;
+        height: 14px;
+        margin-top: 6px;
       }
       label {
         display: inline-block;

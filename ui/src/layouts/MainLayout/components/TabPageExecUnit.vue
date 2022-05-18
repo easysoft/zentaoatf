@@ -4,8 +4,9 @@
       <FormItem name="cmd" :label="t('test_cmd')" :info="validateInfos.cmd">
         <input v-model="modelRef.cmd" @keydown="keydown"/>
       </FormItem>
-      <FormItem v-if="currProduct.id" name="submitResult" :label="t('submit_result_to_zentao')">
 
+      <FormItem v-if="currProduct.id" name="submitResult" :label="t('submit_result_to_zentao')">
+        <input v-model="modelRef.submitResult" type="checkbox">
       </FormItem>
 
       <FormItem>
@@ -59,6 +60,8 @@ const {validate, reset, validateInfos} = useForm(modelRef, rulesRef);
 
 const start = () => {
   console.log('start')
+
+  console.log(modelRef.value)
 }
 const stop = () => {
   console.log('stop')
