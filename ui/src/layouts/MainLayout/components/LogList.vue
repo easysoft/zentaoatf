@@ -13,6 +13,8 @@
                  csKey ? 'case-item' : '',
                  info?.status === 'start' ? 'case-start' : '',
                  info?.status === 'start' ? 'result-'+caseResult[csKey] : '',
+
+                 info?.status === 'start-task' ? 'z-border' : ''
              ]">
 
           <div class="group">

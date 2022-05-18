@@ -47,3 +47,9 @@ button {
     opacity: 1;
 }
 
+.z-bord{
+    font-weight: bold;
+}
+.z-border{
+    font-weight: bolder;
+}

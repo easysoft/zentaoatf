@@ -13,6 +13,7 @@ import (
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
 	"github.com/fatih/color"
+	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
 )
 
@@ -127,7 +128,8 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 	execHelper.SetRunning(true)
 
 	msg := i118Utils.Sprintf("start_task")
-	websocketHelper.SendExecMsg(msg, "true", commConsts.Run, nil, &wsMsg)
+	websocketHelper.SendExecMsg(msg, "true", commConsts.Run,
+		iris.Map{"status": "start-task"}, &wsMsg)
 	logUtils.ExecConsole(color.FgCyan, msg)
 
 	return
