@@ -134,9 +134,16 @@ onMounted(() => {
 
 const createFileOrDir = (e) => {
     const node = e.node == undefined ? treeDataMap[''] : treeDataMap[e.node.id]
-    showModal.value = true;
     currentNode.value = node;
-    console.log(1111,currentNode)
+    if(e.event.key == 'runTest'){
+        runTest(currentNode);
+    }else if(e.event.key == 'createFile' || e.event.key == 'createWorkspace'){
+        showModal.value = true;
+    }
+}
+
+const runTest = (node) => {
+    console.log(node)
 }
 
 const modalClose = () => {
@@ -499,17 +506,17 @@ const cancelUpdate = (path) => {
 }
 
 const createWorkSpace = () => {
-    if(validate()){
+    // if(validate()){
         console.log(modelRef.value);
         store.dispatch('Workspace/save', modelRef.value).then((response) => {
             console.log(response)
             if (response) {
                 notification.success({message: t('save_success')});
             }else{
-                notification.error({message: response});
+                // notification.error({message: response});
             }
         })
-    }
+    // }
    
     };
 

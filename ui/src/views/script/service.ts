@@ -232,14 +232,14 @@ export function scriptTreeAddAttr(treeData) {
         item.id = item.path;
         if (item.isLeaf) {
             item.toolbarItems = [
-                { hint: 'create_file', icon: 'file-add'},
+                { hint: 'create_file', icon: 'file-add', key: 'createFile'},
             ];
         } else {
             item.toolbarItems = [
-                {hint: 'create_workspace', icon: 'folder-add'},
+                {hint: 'create_workspace', icon: 'folder-add', key: 'createWorkspace'},
             ];
             if(item.workspaceType != 'ztf'){
-                item.toolbarItems.push({hint: item.workspaceType, icon: 'play', hintI18n: 'test'})
+                item.toolbarItems.push({hint: item.workspaceType, icon: 'play', hintI18n: 'test', key: 'runTest'})
             }
         }
         if (item.children != undefined && item.children.length > 0) {
