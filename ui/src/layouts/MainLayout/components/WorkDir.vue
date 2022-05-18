@@ -1,6 +1,6 @@
 <template>
     <div class="workdir">
-        <Tree :data="treeData" :checkable="checkable" ref="treeRef" @active="selectNode" @clickToolbar="createFileOrDir" />
+        <Tree :data="treeData" :checkable="checkable" ref="treeRef" @active="selectNode" @clickToolbar="onToolbarClicked" />
     <ZModal
      :showModal="showModal" 
      @onCancel="modalClose" 
@@ -132,7 +132,7 @@ onMounted(() => {
     }, 600)
 })
 
-const createFileOrDir = (e) => {
+const onToolbarClicked = (e) => {
     const node = e.node == undefined ? treeDataMap[''] : treeDataMap[e.node.id]
     currentNode.value = node;
     if(e.event.key == 'runTest'){
@@ -690,7 +690,7 @@ defineExpose({
         return treeRef.value?.toggleAllCollapsed();
     },
     toggleCheckable,
-    createFileOrDir
+    onToolbarClicked
 });
 </script>
 
