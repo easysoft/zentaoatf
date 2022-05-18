@@ -38,11 +38,12 @@ import FormItem from "./FormItem.vue";
 import {useForm} from "@/utils/form";
 import Tree from "./Tree.vue";
 import ZModal from './Modal.vue';
+import {notification} from "@/utils/notification";
 import {unitTestTypesDef, ZentaoCasePrefix, ztfTestTypesDef} from "@/utils/const";
 
 import {computed, defineExpose, onMounted, onUnmounted, ref, watch} from "vue";
 
-import {Modal, notification} from "ant-design-vue";
+import {Modal} from "ant-design-vue";
 
 import bus from "@/utils/eventBus";
 import {
@@ -118,6 +119,7 @@ onMounted(() => {
 })
 
 const onToolbarClicked = (e) => {
+    // notification.$toast.open('You did it!');
   const node = e.node == undefined ? treeDataMap[''] : treeDataMap[e.node.id]
   currentNode.value = node;
   if (e.event.key == 'runTest') {

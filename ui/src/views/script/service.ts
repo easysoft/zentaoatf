@@ -2,6 +2,7 @@ import request from '@/utils/request';
 import {WsMsg} from "@/types/data";
 import {removeEmptyField} from "@/utils/object";
 import {momentTime} from "@/utils/datetime";
+import {testToolMap} from "@/utils/testing";
 
 const apiPath = 'scripts';
 const apiPathFilters = 'filters';
@@ -236,10 +237,10 @@ export function scriptTreeAddAttr(treeData) {
             ];
         } else {
             item.toolbarItems = [
-                {hint: 'create_workspace', icon: 'folder-add', key: 'createWorkspace'},
+                {hint: 'create_workspace', icon: 'folder-add', key: 'createFile'},
             ];
             if(item.workspaceType != 'ztf'){
-                item.toolbarItems.push({hint: item.workspaceType, icon: 'play', hintI18n: 'test', key: 'runTest'})
+                item.toolbarItems.push({hint: testToolMap[item.workspaceType], icon: 'play', hintI18n: 'test', key: 'runTest'})
             }
         }
         if (item.children != undefined && item.children.length > 0) {

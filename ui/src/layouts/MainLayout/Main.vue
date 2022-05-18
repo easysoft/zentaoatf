@@ -45,19 +45,36 @@ import Websocket from './components/Websocket.vue';
 import settings from "@/config/settings";
 import {onBeforeUnmount, onMounted, ref} from "vue";
 import bus from "@/utils/eventBus";
+import {notification} from "ant-design-vue";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const showLogPanel = ref(false)
 
 const onExecStartEvent = () => {
   console.log('onExecStartEvent')
   showLogPanel.value = true
 }
+
+const notify = (result: any) => {
+        if (!result.httpCode) result.httpCode = 100
+        const msg = result.httpCode === 200 ? t('biz_'+result.resultCode) : t('http_'+result.httpCode)
+        const desc = result.resultMsg ? result.resultMsg : ''
+
+        notification.error({
+          message: msg,
+          description: desc,
+        });
+      }
+
 onMounted(() => {
   console.log('onMounted ztf')
   bus.on(settings.eventExec, onExecStartEvent)
+  bus.on(settings.eventNotify, notify);
 })
 onBeforeUnmount( () => {
   bus.off(settings.eventExec, onExecStartEvent)
+  bus.off(settings.eventNotify, notify);
 })
 
 </script>
