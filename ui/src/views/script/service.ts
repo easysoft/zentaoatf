@@ -101,14 +101,15 @@ export async function updateCode(data: any): Promise<any> {
 }
 
 export function genExecInfo(item: WsMsg, count: number) : WsMsg {
-    if (item.info) item.info.key = item.info.key + '-' + count
+    if (item.info) item.info.key = item.info.key ? item.info.key + '-' + count : undefined
 
     if (item.info && item.info.status)  {
         item.msg = setFirstLineColor(item.msg, item.info.status)
     }
 
-    item.msg = item.msg.replace(/^"+/,'').replace(/"+$/,'').
-        replaceAll('[','&nbsp;&nbsp;&nbsp;[')
+    item.msg = item.msg.replace(/^"+/,'').replace(/"+$/,'')
+        .replaceAll('\n','<br />')
+        .replaceAll('[','&nbsp;&nbsp;&nbsp;[')
     if (item.msg) item.time = momentTime(new Date());
     return item
 }

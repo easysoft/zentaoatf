@@ -91,7 +91,7 @@ const getCls = (val: string) => {
   }
 
   .z-form-item-label {
-    padding-right: 5px;
+    padding-right: 10px;
     text-align: right;
     line-height: 28px;
   }

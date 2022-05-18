@@ -53,7 +53,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		}
 	}
 	if failedCount > 0 {
-		msgFail := "\n" + i118Utils.Sprintf("failed_scripts")
+		msgFail := "\n" + i118Utils.Sprintf("failed_scripts") + "\n"
 		msgFail += strings.Join(failedCaseLines, "\n")
 		msgFail += strings.Join(failedCaseLinesWithCheckpoint, "\n")
 
@@ -95,7 +95,6 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		)
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg("", "", commConsts.Run, nil, wsMsg) // send new line
 		websocketHelper.SendExecMsg(msgRun, "", commConsts.Run, nil, wsMsg)
 	}
 

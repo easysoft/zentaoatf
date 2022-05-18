@@ -6,13 +6,15 @@
         {{ void (info = item.info) }}
         {{ void (csKey = info?.key) }}
 
-        <div v-if="item.msg" class="item"
+        <div class="item"
              :class="[
                  csKey && caseDetail[csKey] ? 'show-detail' : '',
 
                  csKey ? 'case-item' : '',
                  info?.status === 'start' ? 'case-start' : '',
                  info?.status === 'start' ? 'result-'+caseResult[csKey] : '',
+
+                 info?.status === 'start-task' ? 'z-border' : ''
              ]">
 
           <div class="group">
@@ -25,7 +27,8 @@
           </div>
 
           <div class="sign">
-            <Icon icon="circle" />
+            <Icon v-if="item.msg" icon="circle" />
+            <span v-else>&nbsp;</span>
           </div>
 
           <div class="time">
@@ -38,8 +41,6 @@
             </span>
           </div>
         </div>
-
-        <div v-if="!item.msg">&nbsp;</div>
 
       </template>
     </div>
