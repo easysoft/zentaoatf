@@ -57,8 +57,6 @@ import {unitTestTypesDef, ZentaoCasePrefix, ztfTestTypesDef} from "@/utils/const
 import {WorkspaceData} from "@/views/workspace/store";
 import {computed, defineExpose, onMounted, onUnmounted, ref, watch, getCurrentInstance} from "vue";
 
-import {Modal} from "ant-design-vue";
-
 import bus from "@/utils/eventBus";
 import {
   getExpandedKeys,
@@ -85,6 +83,8 @@ import {ExecStatus} from "@/store/exec";
 import debounce from "lodash.debounce";
 import throttle from "lodash.debounce";
 import {isInArray} from "@/utils/array";
+import { $vfm } from "vue-final-modal";
+import Modal from "@/utils/modal"
 
 const {t} = useI18n();
 
