@@ -77,6 +77,7 @@ const wsStatus = computed<any>(() => websocketStore.state.WebSocket.connStatus);
 const execStore = useStore<{ Exec: ExecStatus }>();
 const isRunning = computed<any>(() => execStore.state.Exec.isRunning);
 
+const cachedExecData = ref({})
 const caseCount = ref(1)
 const caseResult = ref({})
 const caseDetail = ref({})
@@ -121,10 +122,16 @@ onBeforeUnmount( () => {
 
 const exec = (data: any) => {
   console.log('exec', data)
+
+  let execType = data.execType
+  if (execType === 'previous') {
+    data = cachedExecData.value
+    execType = data.execType
+  } else {
+    cachedExecData.value = data
+  }
+
   caseCount.value++
-
-  const execType = data.execType
-
   let msg = {}
   if (execType === 'ztf') {
     const scripts = data.scripts
@@ -161,10 +168,13 @@ const logStatus = ref('')
 }
 </style>
 
-<style lang="less" scoped>
+<style lang="less">
 .log-list {
+  height: 100%;
   font-family: HelveticaNeue;
   .content {
+    height: 100%;
+    overflow-y: auto;
     .item {
       &.case-item {
         &.case-start {

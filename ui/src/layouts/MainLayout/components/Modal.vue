@@ -2,18 +2,18 @@
   <vue-final-modal
     :name="'ZModal'"
     v-model="showModalRef"
-    classes="modal-container"
-    content-class="modal-content"
+    classes="z-modal-container"
+    content-class="z-modal-content"
   >
-    <Button class="modal__close" @click="onCancel" icon="close" size="sm" />
-    <span class="modal__title">{{
+    <Button class="z-modal-close" @click="onCancel" icon="close" size="sm" />
+    <span class="z-modal-title">{{
       title == undefined ? t("title") : title
     }}</span>
-    <div class="modal__content">
+    <div class="z-modal-content">
       {{ content }}
       <slot />
     </div>
-    <div class="modal__action">
+    <div class="z-modal-action">
       <Button
         v-if="showOkBtn"
         @click="onOk"
@@ -113,33 +113,34 @@ defineExpose({
 </script>
 
 <style scoped>
-:deep(.modal-container) {
+:deep(.z-modal-container) {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-:deep(.modal-content) {
+:deep(.z-modal-content) {
   position: relative;
   display: flex;
   flex-direction: column;
   margin: 0 1rem;
   padding: 1rem;
-  border: 1px solid #e2e8f0;
   border-radius: 0.25rem;
   background: #fff;
-  min-width: 300px;
-  min-height: 200px;
+  /* min-width: 600px;
+  min-height: 200px; */
   justify-content: space-between;
 }
 
-.modal__title {
-  margin: 0 2rem 0 0;
+.z-modal-title {
+  margin: 0 2rem 1rem 0;
+  min-width: 300px;
+  justify-content: space-between;
   font-size: 1.2rem;
   font-weight: 700;
 }
 
-.modal__close {
+.z-modal-close {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
@@ -151,7 +152,7 @@ defineExpose({
   padding: 0.25rem 0.5rem;
 }
 
-.modal__action {
+.z-modal-action {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -159,7 +160,7 @@ defineExpose({
   padding: 1rem 0 0;
 }
 
-.dark-mode div::v-deep .modal-content {
+.dark-mode div::v-deep .z-modal-content {
   border-color: #2d3748;
   background-color: #1a202c;
 }

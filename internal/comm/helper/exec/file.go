@@ -118,12 +118,12 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			isTerminal = true
 		}
 
+		if err2 == io.EOF {
+			break
+		}
 		if err2 != nil {
 			logUtils.ExecConsole(1, err2.Error())
 			logUtils.ExecFile(err2.Error())
-			break
-		}
-		if io.EOF == err2 {
 			break
 		}
 

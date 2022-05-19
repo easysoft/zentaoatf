@@ -11,7 +11,7 @@ import (
 func Extract(files []string) (err error) {
 	serverConfig.InitExecLog(commConsts.ExecLogDir)
 
-	err = scriptHelper.Extract(files)
+	_, err = scriptHelper.Extract(files)
 	logUtils.Info(i118Utils.Sprintf("success_to_extract_step"))
 
 	return

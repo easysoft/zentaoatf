@@ -11,6 +11,7 @@ export interface ScriptData {
     list: [];
     detail: any;
     treeDataMap: any;
+    checkedNodes: [];
 
     currWorkspace: any
     queryParams: any;
@@ -23,6 +24,7 @@ export interface ModuleType extends StoreModuleType<ScriptData> {
         setItem: Mutation<ScriptData>;
         setWorkspace: Mutation<ScriptData>;
         setQueryParams: Mutation<ScriptData>;
+        setCheckedNodes: Mutation<ScriptData>;
     };
     actions: {
         listScript: Action<ScriptData, ScriptData>;
@@ -32,6 +34,7 @@ export interface ModuleType extends StoreModuleType<ScriptData> {
         syncToZentao: Action<ScriptData, ScriptData>;
         extractScript: Action<ScriptData, ScriptData>;
         changeWorkspace: Action<ScriptData, ScriptData>;
+        setCheckedNodes: Action<ScriptData, ScriptData>;
 
         createScript: Action<ScriptData, ScriptData>;
         updateScript: Action<ScriptData, ScriptData>;
@@ -47,6 +50,8 @@ const initState: ScriptData = {
 
     currWorkspace: {id: 0, type: 'ztf'},
     queryParams: {},
+
+    checkedNodes: [],
 };
 
 const StoreModel: ModuleType = {
@@ -72,6 +77,10 @@ const StoreModel: ModuleType = {
         },
         setQueryParams(state, payload) {
             state.queryParams = payload;
+        },
+
+        setCheckedNodes(state, payload) {
+            state.checkedNodes = payload;
         },
     },
     actions: {
@@ -203,6 +212,11 @@ const StoreModel: ModuleType = {
 
         async changeWorkspace({ commit }, payload: any ) {
             commit('setWorkspace', payload);
+            return true;
+        },
+
+        async setCheckedNodes({ commit }, payload: any ) {
+            commit('setCheckedNodes', payload);
             return true;
         },
     }

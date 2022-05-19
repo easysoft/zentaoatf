@@ -8,32 +8,56 @@
                 class="rounded pure padding-sm-h"
                 suffix-icon="caret-down"/>
 
-        <Dropdown :items="displayTypes"
+        <DropdownMenu :items="displayTypes"
                   :checkedKey="displayBy"
                   @click="onDisplayByChanged"
                   toggle="#displayByMenuToggle">
-        </Dropdown>
+        </DropdownMenu>
 
-        <Dropdown>
-          <Button class="rounded pure padding-sm-h" label="按套件" suffix-icon="caret-down" />
-          <template #menu>
-            <List>
-              <ListItem :checked="true">{{ t('by_suite') }}</ListItem>
-              <ListItem :checked="false">{{ t('by_task') }}</ListItem>
-            </List>
-          </template>
-        </Dropdown>
+        <Button id="displayByFilter"
+                :label="t('by_' + filerType)"
+                labelClass="strong"
+                class="rounded pure padding-sm-h"
+                suffix-icon="caret-down"/>
+    
+    <div class="dropdownMenu-container">
+
+        <DropdownMenu class="childMenu" toggle="#displayByFilter"
+                  id="parentMenu"
+                  :items="FilterTyles"
+                  :checkedKey="filerType"
+                  @click="onFilterTypeChanged"
+                  :hideOnClickMenu="false"
+                  >
+        </DropdownMenu>
+        <DropdownMenu class="childMenu" toggle="#parentMenu"
+                  :items="filerItems"
+                  :checkedKey="filerValue"
+                  @click="onFilterValueChanged"
+                  :hideOnClickMenu="true"
+                  :replace-fields="replaceFields"
+                  triggerEvent="click"
+                  >
+        </DropdownMenu>
+
+    </div>
       </ButtonList>
     </template>
 
     <template #toolbar-buttons>
-      <Button class="rounded pure" :hint="t('create_workspace')" @click="workDirRef?.onToolbarClicked" icon="folder-add" />
+      <Button class="rounded pure" :hint="t('create_workspace')" @click="showModal=!showModal" icon="folder-add" />
       <Button class="rounded pure" :hint="t('batch_select')" icon="select-all-on" @click="_handleBatchSelectBtnClick" :active="workDirRef?.isCheckable" />
       <Button @click="_handleToggleAllBtnClick" class="rounded pure" :hint="workDirRef?.isAllCollapsed ? t('collapse') : t('expand_all')" :icon="workDirRef?.isAllCollapsed ? 'add-square-multiple' : 'subtract-square-multiple'" iconSize="1.4em" />
       <Button class="rounded pure" :hint="t('more_actions')" icon="more-vert" />
     </template>
 
     <WorkDir ref="workDirRef" />
+    <FormWorkspace
+      :show="showModal"
+      @submit="createWorkSpace"
+      @cancel="modalClose"
+      ref="formWorkspace"
+     />
   </Panel>
 </template>
 
@@ -45,14 +69,24 @@ import Button from './Button.vue';
 import ButtonList from './ButtonList.vue';
 import WorkDir from './WorkDir.vue';
 import Dropdown from './Dropdown.vue';
+import DropdownMenu from './DropdownMenu.vue';
 import List from './List.vue';
 import ListItem from './ListItem.vue';
-import {getScriptDisplayBy, setScriptDisplayBy} from "@/utils/cache";
+import {getScriptDisplayBy, setScriptDisplayBy, setScriptFilters, getScriptFilters} from "@/utils/cache";
 import {useStore} from "vuex";
 import {ZentaoData} from "@/store/zentao";
 import debounce from "lodash.debounce";
 import {useI18n} from "vue-i18n";
 import {ScriptData} from "@/views/script/store";
+import {
+  genWorkspaceToScriptsMap,
+  listFilterItems,
+  getCaseIdsFromReport,
+  getSyncFromInfoFromMenu, getNodeMap, getFileNodesUnderParent, updateNameReq
+} from "@/views/script/service";
+import FormWorkspace from "./FormWorkspace.vue";
+import notification from "@/utils/notification";
+
 const { t } = useI18n();
 
 const zentaoStore = useStore<{ Zentao: ZentaoData }>();
@@ -63,12 +97,17 @@ const store = useStore<{ Script: ScriptData }>();
 
 let displayBy = ref('workspace')
 let isExpand = ref(false);
-const filerType = ref('')
+const filerType = ref('suite')
 const filerValue = ref('')
 
 const displayTypes = ref([
   {key: 'workspace', title: t('by_workspace')},
   {key: 'module', title: t('by_module')},
+])
+
+const FilterTyles = ref([
+  {key: 'suite', title: t('by_suite')},
+  {key: 'task', title: t('by_task')},
 ])
 
 const loadDisplayBy = async () => {
@@ -82,6 +121,42 @@ const initData = debounce(async () => {
   await loadDisplayBy()
 }, 50)
 
+const replaceFields = {
+      key: 'value',
+      title: 'label',
+    };
+
+let filerItems = ref([] as any)
+// filters
+const loadFilterItems = async () => {
+    const data = await getScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id)
+
+    if (!filerType.value) {
+        filerType.value = data.by
+    }
+    filerValue.value = data.val
+
+    if (!currProduct.value.id && filerType.value !== 'workspace') {
+    filerType.value = 'workspace'
+    filerValue.value = ''
+    }
+
+    if (filerType.value) {
+    const result = await listFilterItems(filerType.value)
+    filerItems.value = result.data
+
+    let found = false
+    if (filerItems.value) {
+        filerItems.value.forEach((item) => {
+        // console.log(`${filerValue.value}, ${item.value}`)
+        if (filerValue.value === item.value) found = true
+        })
+    }
+
+    if (!found) filerValue.value = ''
+    }
+}
+
 watch(currProduct, () => {
   console.log('watch currProduct', currProduct.value.id)
   initData()
@@ -90,14 +165,28 @@ watch(currProduct, () => {
 // only do it when switch from another pages, otherwise will called by watching currProduct method.
 if (filerValue.value.length === 0) initData()
 
-const onDisplayByChanged = () => {
+const onDisplayByChanged = (item) => {
   console.log('onDisplayBy')
-  if (displayBy.value === 'workspace') displayBy.value = 'module'
-  else displayBy.value = 'workspace'
+  displayBy.value = item.key
 
   setScriptDisplayBy(displayBy.value, currSite.value.id, currProduct.value.id)
 
   loadScripts()
+}
+
+const onFilterTypeChanged = (item) => {
+  console.log('onDisplayByFilterChanged')
+  filerType.value = item.key
+
+  loadFilterItems();
+}
+
+const onFilterValueChanged = async (item) => {
+  console.log('onDisplayByFilterChanged')
+  filerValue.value = filerItems.value[item.key].value
+
+  await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, filerType.value, filerValue.value)
+  await loadScripts()
 }
 
 const loadScripts = async () => {
@@ -108,6 +197,21 @@ const loadScripts = async () => {
 }
 
 const workDirRef = ref<{toggleCheckable: () => void, isCheckable: boolean, toggleAllCollapsed: () => void, isAllCollapsed: boolean}>();
+
+const showModal = ref(false)
+const modalClose = () => {
+  showModal.value = false;
+}
+const formWorkspace = ref(null)
+const createWorkSpace = (formData) => {
+    store.dispatch('Workspace/save', formData).then((response) => {
+        if (response) {
+            formWorkspace.value.clearFormData()
+            notification.success({message: t('save_success')});
+            showModal.value = false;
+        }
+    })
+};
 
 function _handleBatchSelectBtnClick() {
     if (workDirRef.value) {
@@ -137,5 +241,18 @@ function _handleToggleAllBtnClick() {
     height: calc(100% - 30px);
   }
 }
-
+.dropdownMenu-container {
+    display: flex;
+    position: fixed;
+    z-index: 100;
+    opacity: 1;
+    top: 69px;
+    left: 71px;
+    min-width: none!important;
+}
+.childMenu{
+    display: flex!important;;
+    position: unset!important;
+    min-width: 0!important;
+}
 </style>

@@ -105,7 +105,6 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketHelper.SendExecMsg(msg, "", msgCategory,
 			iris.Map{"key": key, "status": status}, wsMsg)
-		websocketHelper.SendExecMsg("", "", msgCategory, nil, wsMsg)
 	}
 
 	// print summary result

@@ -49,7 +49,7 @@ const tabs = computed<TabNavItem[]>(() => {
 const scriptStore = useStore<{ Script: ScriptData }>();
 const currWorkspace = computed<any>(() => scriptStore.state.Script.currWorkspace);
 const treeDataMap = computed<any>(() => scriptStore.state.Script.treeDataMap);
-const selectedNodes = []
+const selectedNodes = computed<any>(() => scriptStore.state.Script.checkedNodes);
 
 const execBy = ref('opened');
 (async function () {
@@ -61,11 +61,36 @@ function _handleDropDownMenuClick(event) {
   if (event.key) execBy.value = event.key
   console.log('_handleDropDownMenuClick', execBy.value);
 
-  if (execBy.value === 'selected' && selectedNodes.length > 0) {
-    bus.emit(settings.eventExec, { execType: 'ztf', scripts: selectedNodes });
+  if (execBy.value === 'selected') {
+    console.log(selectedNodes.value);
+
+    let arr = [] as string[]
+    Object.keys(selectedNodes.value).forEach(k => {
+      if (selectedNodes.value[k] === true && treeDataMap.value[k]?.type === 'file') {
+        arr.push(treeDataMap.value[k])
+      }
+    })
+
+    if (arr.length === 0) return
+    bus.emit(settings.eventExec, { execType: 'ztf', scripts: arr });
+
   } else if (execBy.value === 'opened') {
     const openedScripts = getOpenedScripts()
     bus.emit(settings.eventExec, { execType: 'ztf', scripts: openedScripts });
+
+  } else if (execBy.value === 'previous') {
+    bus.emit(settings.eventExec, { execType: 'previous' });
+
+  } else if (execBy.value === 'all') {
+    let arr = [] as string[]
+    Object.keys(treeDataMap.value).forEach(k => {
+      if (treeDataMap.value[k].workspaceType === 'ztf' && treeDataMap.value[k]?.type === 'file') {
+        arr.push(treeDataMap.value[k])
+      }
+    })
+
+    if (arr.length === 0) return
+    bus.emit(settings.eventExec, { execType: 'ztf', scripts: arr });
   }
 
   return

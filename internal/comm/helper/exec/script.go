@@ -28,7 +28,6 @@ func ExecScript(scriptFile, workspacePath string,
 	startMsg := i118Utils.Sprintf("start_execution", scriptFile, dateUtils.DateTimeStr(startTime))
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg("", "", commConsts.Run, nil, wsMsg)
 		websocketHelper.SendExecMsg(startMsg, "", commConsts.Run,
 			iris.Map{"key": key, "status": "start"}, wsMsg)
 
@@ -58,7 +57,6 @@ func ExecScript(scriptFile, workspacePath string,
 	endMsg := i118Utils.Sprintf("end_execution", scriptFile, dateUtils.DateTimeStr(entTime))
 	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketHelper.SendExecMsg(endMsg, "", commConsts.Run, iris.Map{"key": key, "status": "end"}, wsMsg)
-		websocketHelper.SendExecMsg("", "", commConsts.Run, nil, wsMsg)
 
 		logUtils.ExecConsolef(-1, endMsg)
 	}
