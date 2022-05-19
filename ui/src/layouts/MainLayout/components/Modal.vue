@@ -128,13 +128,13 @@ defineExpose({
   border: 1px solid #e2e8f0;
   border-radius: 0.25rem;
   background: #fff;
-  min-width: 300px;
+  min-width: 600px;
   min-height: 200px;
   justify-content: space-between;
 }
 
 .modal__title {
-  margin: 0 2rem 0 0;
+  margin: 0 2rem 1rem 0;
   font-size: 1.2rem;
   font-weight: 700;
 }

@@ -1,9 +1,9 @@
 <template>
   <Row class="z-form-item" :class="[size]">
-    <Col :width="labelWidth" :class="[labelCls]" class="z-form-item-label">
+    <Col :span="labelCol" class="z-form-item-label">
       {{label}}
     </Col>
-    <Col :width="wrapperWidth" :class="wrapperCls" class="z-form-item-wrapper">
+    <Col :span="wrapperCol" class="z-form-item-wrapper">
       <div class="z-form-item-control">
         <slot></slot>
         <span v-if="errorMap.required" class="z-err tips">*</span>
@@ -37,48 +37,16 @@ export interface FormItemProps {
 const props = defineProps<FormItemProps>();
 console.log(props)
 
-let labelCol = inject('labelCol') + '';
-let wrapperCol = inject('wrapperCol') + '';
+let labelColStr = inject('labelCol') as string
+let wrapperColStr = inject('wrapperCol') as string
+
+let labelCol = parseInt(labelColStr)
+let wrapperCol = parseInt(wrapperColStr)
 
 const size = ref(props.size)
 const errorMap = computed(() => {
   return props.info ? props.info : [];
 })
-
-const labelWidth = computed(() => {
-  return getWidth(labelCol);
-})
-const labelCls = computed(() => {
-  return getCls(labelCol);
-})
-
-const wrapperWidth = computed(() => {
-  return getWidth(wrapperCol);
-})
-const wrapperCls = computed(() => {
-  return getCls(wrapperCol);
-})
-
-const getWidth = (val: string) => {
-  if (!val) return undefined
-
-  val += ''
-  if (val.indexOf('px') > 0) {
-    return val;
-  }
-
-  return val;
-}
-const getCls = (val: string) => {
-  if (!val) return undefined
-
-  val += ''
-  if (val.indexOf('px') < 0) {
-    return [`z-col-${val}`]
-  }
-
-  return undefined;
-}
 
 </script>
 

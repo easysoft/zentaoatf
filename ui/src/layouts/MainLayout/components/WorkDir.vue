@@ -14,7 +14,7 @@
         @onOk="createNode"
         :title="t('pls_name')"
     >
-      <Form labelCol="50px" v-if="currentNode.path==''" wrapperCol="60">
+      <Form v-if="currentNode.path==''" labelCol="6" wrapperCol="16">
         <FormItem name="name" :label="t('name')" :info="wsValidateInfos.name">
           <input v-model="wsModelRef.name" class="form-control"/>
         </FormItem>
@@ -32,7 +32,8 @@
           </select>
         </FormItem>
       </Form>
-      <Form labelCol="50px" v-else wrapperCol="60">
+
+      <Form v-else labelCol="6" wrapperCol="16">
         <FormItem name="name" :label="t('name')" :info="validateInfos.name">
           <input v-model="modelRef.name" class="form-control"/>
         </FormItem>

@@ -23,8 +23,6 @@ provide('errors', {});
 provide('labelCol', props.labelCol);
 provide('wrapperCol', props.wrapperCol);
 
-
-
 </script>
 
 <style lang="less" scoped>
