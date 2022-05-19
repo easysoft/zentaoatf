@@ -33,7 +33,6 @@ func ExecUnit(ch chan int,
 	logUtils.ExecConsolef(-1, startMsg)
 	logUtils.ExecFilef(startMsg)
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg("", "", commConsts.Run, nil, wsMsg)
 		websocketHelper.SendExecMsg(startMsg, "", commConsts.Run,
 			iris.Map{"key": key, "status": "start"}, wsMsg)
 	}
@@ -49,7 +48,6 @@ func ExecUnit(ch chan int,
 	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketHelper.SendExecMsg(endMsg, "", commConsts.Run,
 			iris.Map{"key": key, "status": "end"}, wsMsg)
-		websocketHelper.SendExecMsg("", "", commConsts.Run, iris.Map{"key": key}, wsMsg)
 	}
 
 	// gen report

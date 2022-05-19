@@ -45,7 +45,6 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId int, config com
 
 	if commConsts.ExecFrom != commConsts.FromCmd &&
 		wsMsg != nil { // from executing, not submit in webpage
-		websocketHelper.SendExecMsg("", "", commConsts.Run, nil, wsMsg)
 		websocketHelper.SendExecMsg(msg, "", commConsts.Result, nil, wsMsg)
 	}
 

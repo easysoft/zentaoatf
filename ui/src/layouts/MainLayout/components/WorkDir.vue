@@ -411,8 +411,7 @@ const selectNode = (activeNode) => {
 
 const checkNode = (checkedKeys) => {
   console.log('checkNode', checkedKeys.checked)
-//   scriptStore.dispatch('Script/changeWorkspace',
-//       {id: e.node.dataRef.workspaceId, type: e.node.dataRef.workspaceType})
+  scriptStore.dispatch('Script/setCheckedNodes', checkedKeys.checked)
 }
 
 const selectNothing = () => {

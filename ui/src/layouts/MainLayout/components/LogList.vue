@@ -161,10 +161,13 @@ const logStatus = ref('')
 }
 </style>
 
-<style lang="less" scoped>
+<style lang="less">
 .log-list {
+  height: 100%;
   font-family: HelveticaNeue;
   .content {
+    height: 100%;
+    overflow-y: auto;
     .item {
       &.case-item {
         &.case-start {
