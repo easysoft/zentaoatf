@@ -19,11 +19,17 @@ import _ from "lodash";
 import mitt, {Emitter} from "@/utils/mitt";
 import Toast, { PluginOptions } from "vue-toastification";
 import "vue-toastification/dist/index.css";
+import vfmPlugin from "vue-final-modal";
+import ZModal from "@/layouts/MainLayout/components/Modal.vue";
+
 const app = createApp(App)
 app.use(store);
 app.use(router)
 app.use(Antd);
 app.use(i18n);
+
+app.component("ZModal", ZModal);
+app.use(vfmPlugin)
 
 const options: PluginOptions = {
     // You can set your default options here

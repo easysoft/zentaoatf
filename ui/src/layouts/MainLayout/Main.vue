@@ -1,5 +1,6 @@
 <template>
   <main id="main" class="column single surface-light relative no-overflow">
+    <modals-container></modals-container>
     <Navbar class="flex-none" />
 
     <div id="mainContent" class="flex-auto">

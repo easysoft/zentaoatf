@@ -8,30 +8,33 @@
       @check="checkNode" 
       @clickToolbar="onToolbarClicked"
     />
-
     <ZModal
         :showModal="showModal"
         @onCancel="modalClose"
         @onOk="createNode"
         :title="t('pls_name')"
     >
-
-      <Form labelCol="100px" wrapperCol="60">
-        <FormItem name="name" :label="t('name')" :info="validateInfos.name">
-          <input v-model="modelRef.name" class="form-control"/>
+      <Form labelCol="50px" v-if="currentNode.path==''" wrapperCol="60">
+        <FormItem name="name" :label="t('name')" :info="wsValidateInfos.name">
+          <input v-model="wsModelRef.name" class="form-control"/>
         </FormItem>
-        <FormItem v-if="currentNode.path==''" name="path" :label="t('path')" :info="validateInfos.path">
-          <input v-model="modelRef.path" class="form-control"/>
+        <FormItem name="path" :label="t('path')" :info="wsValidateInfos.path">
+          <input v-model="wsModelRef.path" class="form-control"/>
         </FormItem>
-        <FormItem v-if="currentNode.path==''" name="type" :label="t('type')" :info="validateInfos.type">
-          <select name="type" v-model="modelRef.type" class="form-control">
+        <FormItem name="type" :label="t('type')" :info="wsValidateInfos.type">
+          <select name="type" v-model="wsModelRef.type" class="form-control">
             <option v-for="item in testTypes" :key="item.value" :value="item.value">{{ item.label }}</option>
           </select>
         </FormItem>
-        <FormItem v-if="currentNode.path==''" name="lang" :label="t('default_lang')" :info="validateInfos.lang">
-        <select name="type" v-model="modelRef.lang" class="form-control">
+        <FormItem name="lang" :label="t('default_lang')" :info="wsValidateInfos.lang">
+        <select name="type" v-model="wsModelRef.lang" class="form-control">
             <option v-for="item in langs" :key="item.code" :value="item.code">{{ item.name }}</option>
           </select>
+        </FormItem>
+      </Form>
+      <Form labelCol="50px" v-else wrapperCol="60">
+        <FormItem name="name" :label="t('name')" :info="validateInfos.name">
+          <input v-model="modelRef.name" class="form-control"/>
         </FormItem>
       </Form>
     </ZModal>
@@ -51,10 +54,8 @@ import Tree from "./Tree.vue";
 import ZModal from './Modal.vue';
 import notification from "@/utils/notification";
 import {unitTestTypesDef, ZentaoCasePrefix, ztfTestTypesDef} from "@/utils/const";
-
+import {WorkspaceData} from "@/views/workspace/store";
 import {computed, defineExpose, onMounted, onUnmounted, ref, watch, getCurrentInstance} from "vue";
-
-import {Modal} from "ant-design-vue";
 
 import bus from "@/utils/eventBus";
 import {
@@ -82,7 +83,8 @@ import {ExecStatus} from "@/store/exec";
 import debounce from "lodash.debounce";
 import throttle from "lodash.debounce";
 import {isInArray} from "@/utils/array";
-import {PageType} from "@/store/tabs";
+import { $vfm } from "vue-final-modal";
+import Modal from "@/utils/modal"
 
 const {t} = useI18n();
 
@@ -116,7 +118,7 @@ const isRunning = computed<any>(() => execStore.state.Exec.isRunning);
 const store = useStore<{ Script: ScriptData }>();
 const treeDataEmpty = computed<boolean>(() => !(treeData.value.length > 0 &&
     treeData.value[0] && treeData.value[0].children))
-
+const workspaceStore = useStore<{ Workspace: WorkspaceData }>();
 const filerType = ref('')
 const filerValue = ref('')
 const showModal = ref(false)
@@ -170,6 +172,15 @@ const rulesRef = ref({
   name: [
     {required: true, msg: t('pls_name')},
   ],
+})
+
+const {validate, reset, validateInfos} = useForm(modelRef, rulesRef);
+
+const wsModelRef = ref({})
+const wsRulesRef = ref({
+  name: [
+    {required: true, msg: t('pls_name')},
+  ],
   path: [
     {required: true, msg: t('pls_workspace_path')},
   ],
@@ -180,8 +191,7 @@ const rulesRef = ref({
     {required: true, msg: t('pls_workspace_type')},
   ],
 })
-
-const {validate, reset, validateInfos} = useForm(modelRef, rulesRef);
+const {validate:wsValidate, reset:wsReset, validateInfos:wsValidateInfos} = useForm(wsModelRef, wsRulesRef);
 
 const treeRef = ref<{ isAllCollapsed: () => boolean, toggleAllCollapsed: () => void }>();
 
@@ -413,7 +423,8 @@ const selectNode = (activeNode) => {
 
 const checkNode = (checkedKeys) => {
   console.log('checkNode', checkedKeys.checked)
-  scriptStore.dispatch('Script/setCheckedNodes', checkedKeys.checked)
+//   scriptStore.dispatch('Script/changeWorkspace',
+//       {id: e.node.dataRef.workspaceId, type: e.node.dataRef.workspaceType})
 }
 
 const selectNothing = () => {
@@ -515,18 +526,17 @@ const cancelUpdate = (path) => {
 }
 
 const createWorkSpace = () => {
-  if(validate()){
-  store.dispatch('Workspace/save', modelRef.value).then((response) => {
-    if (response) {
-      modelRef.value = {};
-      notification.success({message: t('save_success')});
-      showModal.value = false;
+    if(wsValidate()){
+        console.log(workspaceStore)
+            workspaceStore.dispatch('Workspace/save', wsModelRef.value).then((response) => {
+                if (response) {
+                    wsModelRef.value = {};
+                    notification.success({message: t('save_success')});
+                    showModal.value = false;
+                }
+        })
     }
-  })
-  }
-
 };
-
 
 const createNode = () => {
   if (currentNode.value.path == '') {
@@ -538,27 +548,29 @@ const createNode = () => {
   if (currentNode.value.isLeaf) {
     type = 'node';
   }
-  scriptStore.dispatch('Script/createScript', {
-    name: modelRef.value.name, mode: mode, type: type, target: currentNode.value.path,
-    workspaceId: currentNode.value.workspaceId, productId: currProduct.value.id,
-  }).then((result) => {
-    if (result) {
-      showModal.value = false;
-      notification.success({message: t('create_success')});
-      nameFormVisible.value = false
+  if(validate()){
+    scriptStore.dispatch('Script/createScript', {
+        name: modelRef.value.name, mode: mode, type: type, target: currentNode.value.path,
+        workspaceId: currentNode.value.workspaceId, productId: currProduct.value.id,
+    }).then((result) => {
+        if (result) {
+        showModal.value = false;
+        notification.success({message: t('create_success')});
+        nameFormVisible.value = false
 
-      if (mode == 'child') {
-        expandedKeys.value.push(rightClickedNode.path)
-      }
-      if (type === 'dir') {
-        expandedKeys.value.push(result)
-      }
-      setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
+        if (mode == 'child') {
+            expandedKeys.value.push(rightClickedNode.path)
+        }
+        if (type === 'dir') {
+            expandedKeys.value.push(result)
+        }
+        setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
 
-    } else {
-      notification.error({message: t('create_fail')});
-    }
-  })
+        } else {
+        notification.error({message: t('create_fail')});
+        }
+    })
+  }
 }
 
 const menuClick = (act: string, node: any) => {

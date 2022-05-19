@@ -4,6 +4,7 @@ import { ResponseData } from '@/utils/request';
 import {deleteWorkspace, getWorkspace} from "@/services/workspace";
 import {setCache} from "@/utils/localCache";
 import settings from '@/config/settings';
+import {save} from '@/views/workspace/service';
 
 export interface WorkspaceData {
   workspaces: any[]
@@ -20,6 +21,7 @@ export interface ModuleType extends StoreModuleType<WorkspaceData> {
   actions: {
     fetchWorkspace: Action<WorkspaceData, WorkspaceData>;
     removeWorkspace: Action<WorkspaceData, WorkspaceData>;
+    save: Action<WorkspaceData, WorkspaceData>;
   };
 }
 
@@ -72,6 +74,14 @@ const StoreModel: ModuleType = {
       } catch (error) {
         return false;
       }
+    },
+    async save({ commit }, payload) {
+        try {
+            await save(payload);
+            return true;
+        } catch (error) {
+            return false;
+        }
     },
   }
 }
