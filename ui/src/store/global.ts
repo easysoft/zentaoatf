@@ -38,7 +38,7 @@ const initState: StateType = {
   collapsed: false,
   topNavEnable: settings.topNavEnable,
   headFixed: settings.headFixed,
-  logPaneOriginSize: 70, // settings.logPaneSize,
+  logPaneOriginSize: settings.logPaneSize,
   logPaneMaximized: false
 };
 
