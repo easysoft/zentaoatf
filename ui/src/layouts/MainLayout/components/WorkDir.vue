@@ -8,13 +8,14 @@
       @check="checkNode" 
       @clickToolbar="onToolbarClicked"
     />
+
     <ZModal
         :showModal="showModal"
         @onCancel="modalClose"
         @onOk="createNode"
         :title="t('pls_name')"
     >
-      <Form labelCol="50px" wrapperCol="60">
+      <Form labelCol="100px" wrapperCol="60">
         <FormItem name="name" :label="t('name')" :info="validateInfos.name">
           <input v-model="modelRef.name" class="form-control"/>
         </FormItem>

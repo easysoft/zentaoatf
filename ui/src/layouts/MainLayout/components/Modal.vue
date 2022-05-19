@@ -1,15 +1,15 @@
 <template>
-    <vue-final-modal v-model="showModal" classes="modal-container" content-class="modal-content">
-        <Button class="modal__close" @click="onCancel" icon="close" size="sm" />
-        <span class="modal__title">{{title}}</span>
-        <div class="modal__content">
+    <VueFinalModal v-model="showModal" classes="modal-container" content-class="modal-content">
+        <Button class="z-modal-close" @click="onCancel" icon="close" size="sm" />
+        <span class="z-modal-title">{{title}}</span>
+        <div class="z-modal-content">
             <slot />
         </div>
-        <div class="modal__action">
+        <div class="z-modal-action">
             <Button @click="onOk" class="btn-modal" :label="t('confirm')" />
             <Button @click="onCancel" class="btn-modal" :label="t('cancel')" />
         </div>
-    </vue-final-modal>
+    </VueFinalModal>
 </template>
 
 <script lang="ts">
@@ -25,7 +25,7 @@ import Button from './Button.vue';
 import { $vfm, VueFinalModal } from 'vue-final-modal'
 import { useI18n } from "vue-i18n";
 
-export interface ZModalProps {
+interface ZModalProps {
     showModal: boolean,
     title: string
 }
@@ -71,22 +71,22 @@ defineExpose({
     display: flex;
     flex-direction: column;
     margin: 0 1rem;
-    padding: 1rem;
+    padding: 1.5rem;
     border: 1px solid #e2e8f0;
     border-radius: 0.25rem;
     background: #fff;
-    min-width: 300px;
+    min-width: 500px;
     min-height: 200px;
     justify-content: space-between;
 }
 
-.modal__title {
-    margin: 0 2rem 0 0;
+.z-modal-title {
+    margin: 0 2rem 1rem 0;
     font-size: 1.2rem;
     font-weight: 700;
 }
 
-.modal__close {
+.z-modal-close {
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
@@ -98,7 +98,7 @@ defineExpose({
     padding: .25rem .5rem;
 }
 
-.modal__action {
+.z-modal-action {
     display: flex;
     justify-content: center;
     align-items: center;

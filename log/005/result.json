@@ -3,26 +3,25 @@
 	"testType": "func",
 	"testTool": "server",
 	"buildTool": "",
-	"productId": 1,
 	"execBy": "case",
 	"zentaoData": "",
 	"buildUrl": "",
-	"pass": 6,
-	"fail": 1,
+	"pass": 1,
+	"fail": 0,
 	"skip": 0,
-	"total": 7,
-	"startTime": 1650609717,
-	"endTime": 1650609719,
-	"duration": 2,
+	"total": 1,
+	"startTime": 1652939608,
+	"endTime": 1652939616,
+	"duration": 8,
 	"funcResult": [
 		{
 			"id": 0,
 			"workspaceId": 0,
 			"seq": "",
 			"productId": 0,
-			"path": "/Users/aaron/ztf/project/demo/sample/2_with_group.php",
+			"path": "/Users/aaron/rd/project/zentao/go/ztf/demo/sample/4_expect_saved_to_file.php",
 			"status": "pass",
-			"title": "with multi groups",
+			"title": "",
 			"steps": [
 				{
 					"id": "0",
@@ -39,109 +38,7 @@
 				},
 				{
 					"id": "1",
-					"name": "step 2",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "expect 2",
-							"actual": "expect 2",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "2",
 					"name": "step 3",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "pass",
-							"actual": "pass",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "3",
-					"name": "step",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "expect 3.1",
-							"actual": "expect 3.1",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "4",
-					"name": "step",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "expect 3.2",
-							"actual": "expect 3.2",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "5",
-					"name": "step",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "pass",
-							"actual": "pass",
-							"status": "pass"
-						}
-					]
-				}
-			]
-		},
-		{
-			"id": 1,
-			"workspaceId": 0,
-			"seq": "",
-			"productId": 1,
-			"path": "/Users/aaron/ztf/project/demo/sample/1_simple.php",
-			"status": "pass",
-			"title": "simple demo",
-			"steps": [
-				{
-					"id": "0",
-					"name": "step1",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "expect 1",
-							"actual": "expect 1",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "1",
-					"name": "step2",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "pass",
-							"actual": "pass",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "2",
-					"name": "step3",
 					"status": "pass",
 					"checkPoints": [
 						{
@@ -151,407 +48,28 @@
 							"status": "pass"
 						}
 					]
-				}
-			]
-		},
-		{
-			"id": 0,
-			"workspaceId": 0,
-			"seq": "",
-			"productId": 0,
-			"path": "/Users/aaron/ztf/project/demo/sample/3_step_multi_lines.php",
-			"status": "pass",
-			"title": "step multi lines",
-			"steps": [
-				{
-					"id": "0",
-					"name": "step 1.1",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "pass",
-							"actual": "pass",
-							"status": "pass"
-						}
-					]
 				},
 				{
-					"id": "1",
-					"name": "step 1.2",
+					"id": "2",
+					"name": "step 4",
 					"status": "pass",
 					"checkPoints": [
 						{
 							"numb": 1,
-							"expect": "expect 1.2 line 1",
-							"actual": "expect 1.2 line 1",
+							"expect": "expect 4 line 1",
+							"actual": "expect 4 line 1",
 							"status": "pass"
-						},
-						{
-							"numb": 2,
-							"expect": "expect 1.2 line 2",
-							"actual": "expect 1.2 line 2",
-							"status": "pass"
-						}
-					]
-				}
-			]
-		},
-		{
-			"id": 0,
-			"workspaceId": 0,
-			"seq": "",
-			"productId": 0,
-			"path": "/Users/aaron/ztf/project/demo/sample/4_expect_saved_to_file.php",
-			"status": "fail",
-			"title": "",
-			"steps": [
-				{
-					"id": "0",
-					"name": "step 1",
-					"status": "fail",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "step 2",
-							"actual": "expect 1",
-							"status": "fail"
 						},
 						{
 							"numb": 2,
 							"expect": "",
-							"actual": "N/A",
-							"status": "fail"
+							"actual": "",
+							"status": "pass"
 						},
 						{
 							"numb": 3,
-							"expect": "step 3",
-							"actual": "N/A",
-							"status": "fail"
-						}
-					]
-				}
-			]
-		},
-		{
-			"id": 0,
-			"workspaceId": 0,
-			"seq": "",
-			"productId": 0,
-			"path": "/Users/aaron/ztf/project/demo/sample/5_expect_with_regular_expression.php",
-			"status": "pass",
-			"title": "expect with regx by using backquote `",
-			"steps": [
-				{
-					"id": "0",
-					"name": "mobile phone",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "^1[0-9]\\d{9}$",
-							"actual": "13912345678",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "1",
-					"name": "email",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "^.+@.+\\..+$",
-							"actual": "462826@qq.com",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "2",
-					"name": "web url",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "^https?.+\\..+",
-							"actual": "https://www.zentao.net/index.html",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "3",
-					"name": "ip address",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)",
-							"actual": "192.168.0.1/24",
-							"status": "pass"
-						}
-					]
-				}
-			]
-		},
-		{
-			"id": 0,
-			"workspaceId": 0,
-			"seq": "",
-			"productId": 0,
-			"path": "/Users/aaron/ztf/project/demo/sample/6_expect_with_format_string.php",
-			"status": "pass",
-			"title": "expect with format string by using backquote `",
-			"steps": [
-				{
-					"id": "0",
-					"name": "string",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "^%s$",
-							"actual": "abc",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "1",
-					"name": "integer",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "^%d$",
-							"actual": "123",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "2",
-					"name": "signed integer",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "^%i$",
-							"actual": "-123",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "3",
-					"name": "hexadecimal number",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "^%x$",
-							"actual": "0XAF",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "4",
-					"name": "float",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "^%f$",
-							"actual": "+1.23",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "5",
-					"name": "char",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "^%c$",
-							"actual": "x",
-							"status": "pass"
-						}
-					]
-				}
-			]
-		},
-		{
-			"id": 0,
-			"workspaceId": 0,
-			"seq": "",
-			"productId": 0,
-			"path": "/Users/aaron/ztf/project/demo/sample/8_extract_desc.php",
-			"status": "pass",
-			"title": "sync step from comments",
-			"steps": [
-				{
-					"id": "0",
-					"name": "1",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "expect 1",
-							"actual": "expect 1",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "1",
-					"name": "2.1",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "expect 2.1",
-							"actual": "expect 2.1",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "2",
-					"name": "2.2",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "expect 2.2",
-							"actual": "expect 2.2",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "3",
-					"name": "2.3",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "expect 2.3",
-							"actual": "expect 2.3",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "4",
-					"name": "multi line expect",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "expect 3.1",
-							"actual": "expect 3.1",
-							"status": "pass"
-						},
-						{
-							"numb": 2,
-							"expect": "expect 3.2",
-							"actual": "expect 3.2",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "5",
-					"name": "4",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "expect 4",
-							"actual": "expect 4",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "6",
-					"name": "5",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "expect 5",
-							"actual": "expect 5",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "7",
-					"name": "step 6",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "expect 6",
-							"actual": "expect 6",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "8",
-					"name": "step 7",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "expect 7",
-							"actual": "expect 7",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "9",
-					"name": "step 8",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "expect 8",
-							"actual": "expect 8",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "10",
-					"name": "step 9",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "expect 9",
-							"actual": "expect 9",
-							"status": "pass"
-						}
-					]
-				},
-				{
-					"id": "11",
-					"name": "step 10",
-					"status": "pass",
-					"checkPoints": [
-						{
-							"numb": 1,
-							"expect": "expect 10",
-							"actual": "expect 10",
+							"expect": "expect 4 line 2",
+							"actual": "expect 4 line 2",
 							"status": "pass"
 						}
 					]

@@ -8,8 +8,6 @@ import (
 	"github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
 	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
-	"github.com/emirpasic/gods/maps"
-	"github.com/emirpasic/gods/maps/linkedhashmap"
 	"io/ioutil"
 	"path"
 	"path/filepath"
@@ -580,23 +578,22 @@ func GetExpectMapFromIndependentFileObsolete(steps *[]commDomain.ZentaoCaseStep,
 	}
 }
 
-func GetExpectMapFromIndependentFile(steps *[]commDomain.ZentaoCaseStep, content string, withEmptyExpect bool) maps.Map {
-	retMap := linkedhashmap.New()
-
+func GetExpectMapFromIndependentFile(steps *[]commDomain.ZentaoCaseStep, content string, withEmptyExpect bool) {
 	expectArr := ReadExpectIndependentArr(content)
 
-	for idx, step := range *steps {
-		if len(expectArr) > idx { // && value == "pass"  {
-			step.Expect = strings.Join(expectArr[idx], "\r\n")
-			idx++
+	index := 0
+	for idx, _ := range *steps {
+		if len(expectArr) > index && (*steps)[idx].Expect == "pass" { // not set step that has no expect
+			(*steps)[idx].Expect = strings.Join(expectArr[index], "\r\n")
+			index++
 		} else {
 			if withEmptyExpect {
-				step.Expect = ""
+				(*steps)[idx].Expect = ""
 			}
 		}
 	}
 
-	return retMap
+	return
 }
 
 func GetCaseContent(stepObj commDomain.ZtfStep, seq string, independentFile bool, isChild bool) (

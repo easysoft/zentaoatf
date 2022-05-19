@@ -70,13 +70,27 @@ function _handleDropDownMenuClick(event) {
         arr.push(treeDataMap.value[k])
       }
     })
-    console.log(arr);
+
+    if (arr.length === 0) return
     bus.emit(settings.eventExec, { execType: 'ztf', scripts: arr });
 
   } else if (execBy.value === 'opened') {
     const openedScripts = getOpenedScripts()
     bus.emit(settings.eventExec, { execType: 'ztf', scripts: openedScripts });
 
+  } else if (execBy.value === 'previous') {
+    bus.emit(settings.eventExec, { execType: 'previous' });
+
+  } else if (execBy.value === 'all') {
+    let arr = [] as string[]
+    Object.keys(treeDataMap.value).forEach(k => {
+      if (treeDataMap.value[k].workspaceType === 'ztf' && treeDataMap.value[k]?.type === 'file') {
+        arr.push(treeDataMap.value[k])
+      }
+    })
+
+    if (arr.length === 0) return
+    bus.emit(settings.eventExec, { execType: 'ztf', scripts: arr });
   }
 
   return
