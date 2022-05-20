@@ -29,6 +29,7 @@ export interface ModuleType extends StoreModuleType<StateType> {
     setTopNavEnable: Mutation<StateType>;
     setHeadFixed: Mutation<StateType>;
     setLogPaneResized:Mutation<StateType>;
+    setLogPaneSize:Mutation<StateType>
   };
   actions: {
   };
@@ -76,6 +77,15 @@ const StoreModel: ModuleType = {
     },
     setLogPaneResized(state) {
       state.logPaneMaximized = !state.logPaneMaximized
+    },
+    setLogPaneSize(state, payload) {
+      if (100 == payload) {
+        state.logPaneMaximized = true;
+        return; 
+      }
+      
+      state.logPaneOriginSize = payload;
+      state.logPaneMaximized = false;
     }
   },
   actions: {}

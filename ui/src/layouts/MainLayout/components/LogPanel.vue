@@ -3,7 +3,7 @@
     <template #toolbar-buttons>
       <Button class="rounded pure" :hint="t('collapse_all')" icon="subtract-square-multiple" iconSize="1.4em" />
       <Button class="rounded pure" :hint="t('expand_up')" icon="chevron-up" iconSize="1.5em" @click="globalStore.commit('global/setLogPaneResized')" />
-<!--      <Button class="rounded pure" :hint="t('more_actions')" icon="more-vert" />-->
+      <Button class="rounded pure" :hint="t('more_actions')" icon="more-vert" />
     </template>
 
     <LogList />
