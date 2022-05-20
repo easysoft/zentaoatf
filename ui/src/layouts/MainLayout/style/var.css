@@ -1,27 +1,59 @@
 :root {
+    /* Canvas color 画布颜色 */
     --color-canvas: #fff;
-    --color-surface-light: #f3f3f3;
-    --color-surface: #e7e7e7;
-    --color-surface-heavy: #d3d3d3;
-    --color-fore: #333;
-    --color-back: var(--color-canvas);
+
+    /* Inverse canvas color 反转画布色 */
     --color-canvas-invert: #000;
 
+    /* Component back color (light gray) 组件背景颜色（浅灰） */
+    --color-surface-light: #f3f3f3;
+
+    /* Component back color (gray) 组件背景颜色（灰） */
+    --color-surface: #e7e7e7;
+
+    /* Component back color (dark gray) 组件背景颜色（深灰） */
+    --color-surface-heavy: #d3d3d3;
+
+    /* Fore color (text color) 前景色（文字颜色） */
+    --color-fore: #333;
+
+    /* Back color 背景色 */
+    --color-back: var(--color-canvas);
+
+    /* Primary color 主要颜色（强调、品牌） */
     --color-primary: #007751;
+    /* Primary color (light) 主要颜色 - 浅色（强调、品牌） */
     --color-primary-pale: #f6fffa;
+    /* Secondary color 次要颜色 */
+    --color-secondary: #009e87;
+    /* Secondary color (light) 次要颜色 - 浅色 */
+    --color-secondary-pale: #f6fffa;
+    /* Green（积极、成功） */
     --color-green: #22c55e;
+    /* Green (light) 绿色 - 浅色（积极、成功） */
     --color-green-pale: #dcfce7;
+    /* Red 红色（消息、失败、注意） */
     --color-red: #ff3b30;
+    /* Red (light) 红色 - 浅色（消息、失败、注意） */
     --color-red-pale: #fee2e2;
+    /* Yellow 黄色（警告、注意） */
     --color-yellow: #f59e0b;
+    /* Yellow (light) 黄色 - 浅色（警告、注意） */
     --color-yellow-pale: #fef3c7;
+    /* Blue 蓝色（提示、激活） */
     --color-blue: #3b82f6;
+    /* Blue (light) 蓝色 - 浅色（提示、激活） */
     --color-blue-pale: #dbeafe;
+    /* Purple 紫色（特殊） */
     --color-purple: #9333ea;
+    /* Purple (light) 紫色 - 浅色（特殊） */
     --color-purple-pale: #f3e8ff;
+    /* Gray 灰色（弱化） */
     --color-gray: #52525b;
+    /* Gray (light) 灰色 - 浅色（弱化） */
     --color-gray-pale: #fafafa;
 
+    /* Darken levels 逐级加深 */
     --color-darken-19: rgba(0, 0, 0, .95);
     --color-darken-18: rgba(0, 0, 0, .9);
     --color-darken-17: rgba(0, 0, 0, .85);
@@ -43,6 +75,7 @@
     --color-darken-1: rgba(0, 0, 0, .05);
     --color-darken-0: rgba(0, 0, 0, .01);
 
+    /* Lighten levels 逐级变浅 */
     --color-lighten-19: rgba(255, 255, 255, .95);
     --color-lighten-18: rgba(255, 255, 255, .9);
     --color-lighten-17: rgba(255, 255, 255, .85);
@@ -64,42 +97,59 @@
     --color-lighten-1: rgba(255, 255, 255, .05);
     --color-lighten-0: rgba(255, 255, 255, .01);
 
+    /* Focus color 激活颜色 */
     --color-focus: var(--color-blue);
 
+    /* Text color 文字颜色 */
     --text-color: var(--color-fore);
+
+    /* Text sizes 文字大小 */
     --text-size: 13px;
     --text-size-sm: 12px;
     --text-size-md: 14px;
     --text-size-lg: 16px;
     --text-size-xl: 20px;
+
+    /* Line height 行高 */
     --line-height-base: 1.5384615385;
 
+    /* Border radius 圆角 */
     --border-radius: 3px;
     --border-radius-lg: 4px;
     --border-radius-sm: 1px;
     --border-radius-xl: 8px;
 
+    /* Hover state background 鼠标悬停背景色 */
     --state-hover-bg: var(--color-darken-1);
+    /* Active state background 点击激活背景色 */
     --state-active-bg: var(--color-darken-2);
 
+    /* Scrollbar size 滚动条大小 */
     --scrollbar-size: 10px;
+    /* Scrollbar radius 滚动条圆角 */
     --scrollbar-radius: 0;
+    /* Scrollbar opacity 滚动条透明度 */
     --scrollbar-opacity: 0.2;
 
+    /* Navbar height on top 顶部导航高度 */
     --navbar-height: 40px;
 
+    /* Tabs navbar height 标签页导航高度 */
     --tabs-nav-height: 30px;
 
+    /* Spaces settings 间距 */
+    --space-base: 8px;
     --space-xs: calc(var(--space-base) / 4);
     --space-sm: calc(var(--space-base) / 2);
-    --space-base: 8px;
     --space-lg: calc(var(--space-base) * 3 / 2);
     --space-xl: calc(var(--space-base) * 2);
 
+    /* Splitter settings 分割线 */
     --splitter-color: var(--color-darken-2);
     --splitter-hover-color: var(--color-darken-1);
     --splitter-hover-size: 6px;
 
+    /* Panel settings 面板设置 */
     --pane-left-min-width: 200px;
     --pane-center-min-width: 100px;
     --pane-right-min-width: 200px;
