@@ -10,7 +10,7 @@
         </Pane>
 
         <Pane id="centerPane">
-          <Splitpanes id="centerColumn" horizontal>
+          <Splitpanes id="centerColumn" horizontal v-on:resized="onSplitpanesResized($event)">
             <Pane id="tabsPane" :size='globalStore.getters["global/editorPaneSize"]'>
               <TabsContainer class="height-full" />
             </Pane>
@@ -34,7 +34,7 @@
 import './style/index.less';
 import 'splitpanes/dist/splitpanes.css'
 
-import { Splitpanes, Pane } from 'splitpanes';
+import { Splitpanes, Pane, PaneProps } from 'splitpanes';
 import Navbar from './components/Navbar.vue';
 import WorkDirPanel from './components/WorkDirPanel.vue';
 import LogPanel from './components/LogPanel.vue';
@@ -60,15 +60,20 @@ const onExecStartEvent = () => {
 }
 
 const notify = (result: any) => {
-        if (!result.httpCode) result.httpCode = 100
-        const msg = result.httpCode === 200 ? t('biz_'+result.resultCode) : t('http_'+result.httpCode)
-        const desc = result.resultMsg ? result.resultMsg : ''
+  if (!result.httpCode) result.httpCode = 100
+  const msg = result.httpCode === 200 ? t('biz_'+result.resultCode) : t('http_'+result.httpCode)
+  const desc = result.resultMsg ? result.resultMsg : ''
 
-        notification.error({
-          message: msg,
-          description: desc,
-        });
-      }
+  notification.error({
+    message: msg,
+    description: desc,
+  });
+}
+
+const onSplitpanesResized = (evt : PaneProps[]) => {
+  let logpaneProps = evt[1];
+  globalStore.commit("global/setLogPaneSize", logpaneProps.size)
+}
 
 onMounted(() => {
   console.log('onMounted ztf')
