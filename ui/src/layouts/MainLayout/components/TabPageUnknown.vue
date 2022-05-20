@@ -1,6 +1,6 @@
 <template>
   <div class="tab-page-sites">
-    <div>TabPage</div>
+    <div>Tab Unknown</div>
     <div>{{JSON.stringify(tab)}}</div>
   </div>
 </template>

@@ -9,6 +9,12 @@
         @close="_handleNavClose"
         @clickToolbar="onToolbarClick"
     />
+
+    <Button style="position: absolute; top: 50px; right: 0;" class="red" icon="add"
+            @click="_addTestTab">
+      Add test tab
+    </Button>
+
     <template v-for="tab in tabsList" :key="tab.id">
       <KeepAlive>
         <TabPage v-if="tab.id === activeID" class="flex-auto" :tab="tab"/>
@@ -98,7 +104,7 @@ function _addTestTab() {
     id: `testTab-${testTabIDRef.value}`,
     title: `TestTab ${testTabIDRef.value}`,
     changed: Math.random() > 0.5,
-    type: ['script', 'sites', 'settings', 'result', ''][Math.floor(Math.random() * 5)],
+    type: 'sites', // ['script', 'sites', 'settings', 'result', ''][Math.floor(Math.random() * 5)],
     data: Math.random()
   });
 }
@@ -158,43 +164,3 @@ if (process.env?.NODE_ENV === 'development') {
   position: relative;
 }
 </style>
-
-
-<!--
-<template>
-  <div class="script-tabs padding muted">
-    <ZtfScriptPage v-if="currWorkspace?.type === 'ztf'"></ZtfScriptPage>
-    <UnitScriptPage v-if="currWorkspace?.type !== 'ztf'"></UnitScriptPage>
-  </div>
-</template>
-
-<script setup lang="ts">
-import {computed, defineComponent, onMounted, onUnmounted, ref, watch} from "vue";
-
-import ZtfScriptPage from "../../../views/script/component/ztf.vue"
-import UnitScriptPage from "../../../views/script/component/unit.vue"
-import {useI18n} from "vue-i18n";
-import {useStore} from "vuex";
-import {ZentaoData} from "@/store/zentao";
-import {ScriptData} from "@/views/script/store";
-
-const { t } = useI18n();
-
-const zentaoStore = useStore<{ Zentao: ZentaoData }>();
-const currSite = computed<any>(() => zentaoStore.state.Zentao.currSite);
-const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
-
-const scriptStore = useStore<{ Script: ScriptData }>();
-const currWorkspace = computed<any>(() => scriptStore.state.Script.currWorkspace);
-
-</script>
-
-<style lang="less" >
-.script-tabs {
-  height: 100%;
-
-  .monaco-editor {
-    padding: 10px 0;
-  }
-}
-</style> -->

@@ -13,7 +13,6 @@ export interface SettingsType {
      * 顶部菜单开启
      */
     topNavEnable: boolean;
-
     /**
      * 头部固定开启
      */
