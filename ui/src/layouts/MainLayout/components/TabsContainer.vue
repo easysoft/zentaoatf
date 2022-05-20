@@ -9,10 +9,6 @@
         @close="_handleNavClose"
         @clickToolbar="onToolbarClick"
     />
-
-    <Button style="position: absolute; top: 50px; right: 0;" class="red" icon="add" @click="_addTestTab">Add test tab
-    </Button>
-
     <template v-for="tab in tabsList" :key="tab.id">
       <KeepAlive>
         <TabPage v-if="tab.id === activeID" class="flex-auto" :tab="tab"/>
@@ -22,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, ref} from 'vue';
+import {computed, onMounted, ref, watch} from 'vue';
 import {useStore} from 'vuex';
 import {PageTab, TabsData} from "@/store/tabs";
 import TabsNav, {TabNavItem} from './TabsNav.vue';
@@ -44,39 +40,45 @@ const items = computed<TabNavItem[]>(() => {
   return store.getters['tabs/list'];
 });
 
-const toolbarItems = computed(() => {
-  return [{
+const toolbarItemArr = [
+  {
     key: 'run',
     hint: 'Run',
     icon: 'play'
-  }, {
+  },
+  {
     key: 'save',
     hint: 'Save',
     icon: 'save'
-  }, {
-    key: 'run',
-    hint: 'More actions',
-    icon: 'more-vert'
-  }];
-});
+  }
+]
+const toolbarItems = ref([] as any[]);
 
 const tabsList = computed(() => {
   return store.getters['tabs/list'];
 });
 
-const activeID = computed(() => {
+const activeID = computed((): string => {
   return store.state.tabs.activeID;
 });
+
+watch(activeID, () => {
+  console.log('watch activeID', activeID)
+  if (activeID.value.indexOf('workspace-') === 0 || activeID.value.indexOf('result-') === 0) {
+    toolbarItems.value = []
+  } else {
+    toolbarItems.value = toolbarItemArr
+  }
+}, {deep: true})
+
 
 const testTabIDRef = ref(0);
 
 const onToolbarClick = (e) => {
   console.log('onToolbarClick', e.key, activeID.value)
-
   if (e.key === 'run') {
-    bus.emit(settings.eventExec, {execType: 'ztf',
-      scripts: [
-          { path: activeID.value, workspaceId: currWorkspace.value.id }]});
+    bus.emit(settings.eventExec,
+        {execType: 'ztf', scripts: [{ path: activeID.value, workspaceId: currWorkspace.value.id }]});
   }
 }
 
