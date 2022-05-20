@@ -7,7 +7,7 @@
 /* Radius 圆角 */
 .rounded-xl {border-radius: var(--border-radius-lg, 8px);}
 .rounded-lg {border-radius: var(--border-radius-lg, 4px);}
-.rounded    {border-radius: var(--border-radius, 2px);}s
+.rounded    {border-radius: var(--border-radius, 2px);}
 .rounded-sm {border-radius: var(--border-radius-sm, 1px);}
 .circle     {border-radius: 50%;}
 
