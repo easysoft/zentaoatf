@@ -73,10 +73,6 @@ const doSearch = (offset, limit, order, sort) => {
   }, 600);
 };
 
-const tableLoadingFinish = (elements) => {
-  table.isLoading = false;
-};
-
 doSearch(0, 10, 'id', 'asc');
 
 // Fake Data for 'asc' sortable
