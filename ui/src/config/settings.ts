@@ -19,6 +19,11 @@ export interface SettingsType {
      */
     headFixed: boolean;
 
+    /*
+     * 日志面板大小 （目前就是高度）
+     */
+    logPaneSize: number;
+
     /**
      * 站点本地存储Token的Key值
      */
@@ -64,6 +69,7 @@ const settings: SettingsType = {
     siteTitle: 'ZTF',
     topNavEnable: true,
     headFixed: true,
+    logPaneSize: 30,
     siteTokenKey: 'admin_antd_vue_token',
 
     eventExec: 'eventExec',

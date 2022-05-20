@@ -11,10 +11,10 @@
 
         <Pane id="centerPane">
           <Splitpanes id="centerColumn" horizontal>
-            <Pane id="tabsPane">
+            <Pane id="tabsPane" :size='globalStore.getters["global/editorPaneSize"]'>
               <TabsContainer class="height-full" />
             </Pane>
-            <Pane v-show="showLogPanel" :size="30" id="bottomPane">
+            <Pane v-show="showLogPanel" :size='globalStore.getters["global/logPaneSize"]' id="bottomPane">
               <LogPanel />
             </Pane>
           </Splitpanes>
@@ -46,9 +46,13 @@ import {onBeforeUnmount, onMounted, ref} from "vue";
 import bus from "@/utils/eventBus";
 import {notification} from "ant-design-vue";
 import { useI18n } from "vue-i18n";
+import {StateType} from "@/store/global"
+import { useStore } from 'vuex';
 
 const { t } = useI18n();
 const showLogPanel = ref(false)
+
+const globalStore = useStore<{global: StateType}>()
 
 const onExecStartEvent = () => {
   console.log('onExecStartEvent')
@@ -75,6 +79,7 @@ onBeforeUnmount( () => {
   bus.off(settings.eventExec, onExecStartEvent)
   bus.off(settings.eventNotify, notify);
 })
+
 
 </script>
 
