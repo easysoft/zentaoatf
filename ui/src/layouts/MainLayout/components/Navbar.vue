@@ -7,8 +7,8 @@
     <LastTestInfo />
 
     <div class="gap flex-auto"></div>
-    <AppToolbar />
-    <LayoutToolbar />
+    <!--    <AppToolbar />
+        <LayoutToolbar />-->
     <WindowToolbar />
   </nav>
 </template>

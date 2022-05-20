@@ -131,6 +131,8 @@ const exec = (data: any) => {
     cachedExecData.value = data
   }
 
+  if (!data.scripts || data.scripts.length === 0) return
+
   caseCount.value++
   let msg = {}
   if (execType === 'ztf') {

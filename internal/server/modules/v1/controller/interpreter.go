@@ -2,7 +2,6 @@ package controller
 
 import (
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
@@ -41,10 +40,10 @@ func (c *InterpreterCtrl) GetLangInterpreter(ctx iris.Context) {
 }
 
 func (c *InterpreterCtrl) List(ctx iris.Context) {
-	if !commonUtils.IsWin() {
-		ctx.JSON(c.SuccessResp(nil))
-		return
-	}
+	//if !commonUtils.IsWin() {
+	//	ctx.JSON(c.SuccessResp(nil))
+	//	return
+	//}
 
 	data, err := c.InterpreterService.List()
 	if err != nil {
