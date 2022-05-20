@@ -1,8 +1,11 @@
 <template>
   <Panel :title="t('exec_log')" class="log-panel">
     <template #toolbar-buttons>
-      <Button class="rounded pure" :hint="t('collapse_all')" icon="subtract-square-multiple" iconSize="1.4em" />
-      <Button class="rounded pure" :hint="t('expand_up')" icon="chevron-up" iconSize="1.5em" @click="globalStore.commit('global/setLogPaneResized')" />
+      <Button class="rounded pure" :hint="t('collapse_all')"
+              :icon="logContentExpand ? 'subtract-square-multiple' : 'add-square-multiple'" iconSize="1.4em"
+              @click="globalStore.commit('global/setLogContentExpand')"/>
+      <Button class="rounded pure" :hint="t('expand_up')" icon="chevron-up" iconSize="1.5em"
+              @click="globalStore.commit('global/setLogPaneResized')" />
       <Button class="rounded pure" :hint="t('more_actions')" icon="more-vert" />
     </template>
 
@@ -19,9 +22,11 @@ import LogList from './LogList.vue';
 import {useI18n} from "vue-i18n";
 import { useStore } from 'vuex';
 import { StateType } from '@/store/global'
+import {computed} from "vue";
 const { t } = useI18n();
 
 const globalStore = useStore<{global: StateType}>()
+const logContentExpand = computed<boolean>(() => globalStore.state.global.logContentExpand);
 
 </script>
 

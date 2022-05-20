@@ -17,13 +17,13 @@
       <Button
         v-if="showOkBtn"
         @click="onOk"
-        class="btn-modal"
+        class="btn-modal btn state primary rounded"
         :label="okTitle == undefined ? t('confirm') : okTitle"
       />
       <Button
         v-if="showCancelBtn"
         @click="onCancel"
-        class="btn-modal"
+        class="btn-modal btn state rounded"
         :label="cancelTitle == undefined ? t('cancel') : cancelTitle"
       />
     </div>
@@ -136,7 +136,7 @@ defineExpose({
   margin: 0 2rem 1rem 0;
   min-width: 300px;
   justify-content: space-between;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 700;
 }
 
@@ -169,7 +169,6 @@ defineExpose({
   border: 0 solid #e2e8f0;
   margin-left: 10px;
   text-transform: none;
-  background-color: transparent;
   font-size: 100%;
   cursor: pointer;
   padding: 0.25rem 0.5rem;

@@ -14,8 +14,8 @@ export interface StateType {
   headFixed: boolean;
 
   logPaneOriginSize: number;
-  
   logPaneMaximized: boolean;
+  logContentExpand: boolean;
 }
 
 export interface ModuleType extends StoreModuleType<StateType> {
@@ -29,7 +29,8 @@ export interface ModuleType extends StoreModuleType<StateType> {
     setTopNavEnable: Mutation<StateType>;
     setHeadFixed: Mutation<StateType>;
     setLogPaneResized:Mutation<StateType>;
-    setLogPaneSize:Mutation<StateType>
+    setLogPaneSize:Mutation<StateType>;
+    setLogContentExpand:Mutation<StateType>;
   };
   actions: {
   };
@@ -40,7 +41,8 @@ const initState: StateType = {
   topNavEnable: settings.topNavEnable,
   headFixed: settings.headFixed,
   logPaneOriginSize: settings.logPaneSize,
-  logPaneMaximized: false
+  logPaneMaximized: false,
+  logContentExpand: false,
 };
 
 const StoreModel: ModuleType = {
@@ -86,6 +88,9 @@ const StoreModel: ModuleType = {
       
       state.logPaneOriginSize = payload;
       state.logPaneMaximized = false;
+    },
+    setLogContentExpand(state) {
+      state.logContentExpand = !state.logContentExpand;
     }
   },
   actions: {}

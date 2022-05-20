@@ -53,7 +53,7 @@ import {useI18n} from "vue-i18n";
 import {WsMsg} from "@/types/data";
 import {genExecInfo, genWorkspaceToScriptsMap} from "@/views/script/service";
 import {scroll} from "@/utils/dom";
-import {computed, onBeforeUnmount, onMounted, reactive, ref} from "vue";
+import {computed, onBeforeUnmount, onMounted, reactive, ref, watch} from "vue";
 import {useStore} from "vuex";
 import {WebSocketData} from "@/store/websoket";
 import {ExecStatus} from "@/store/exec";
@@ -65,7 +65,11 @@ import {WebSocket} from "@/services/websocket";
 import Icon from './Icon.vue';
 import {momentTime} from "@/utils/datetime";
 import {isInArray} from "@/utils/array";
+import {StateType as GlobalStateType} from "@/store/global";
 const { t } = useI18n();
+
+const globalStore = useStore<{global: GlobalStateType}>();
+const logContentExpand = computed<boolean>(() => globalStore.state.global.logContentExpand);
 
 const zentaoStore = useStore<{ Zentao: ZentaoData }>();
 const currSite = computed<any>(() => zentaoStore.state.Zentao.currSite);
@@ -90,6 +94,19 @@ const showDetail = (key) => {
   caseDetail.value[key] = !caseDetail.value[key]
 }
 
+const hideAllDetailOrNot = (val) => {
+  console.log('hideAllDetailOrNot')
+  Object.keys(caseDetail.value).forEach((key => {
+    caseDetail.value[key] = val;
+  }))
+  console.log(caseDetail.value)
+}
+
+watch(logContentExpand, () => {
+  console.log('watch logContentExpand', logContentExpand.value)
+  hideAllDetailOrNot(logContentExpand.value)
+}, {deep: true})
+
 const onWebsocketMsgEvent = (data: any) => {
   console.log('WebsocketMsgEvent in ExecLog', data.msg)
 
@@ -98,6 +115,11 @@ const onWebsocketMsgEvent = (data: any) => {
   if ('isRunning' in wsMsg) {
     console.log('change isRunning to ', item.isRunning)
     execStore.dispatch('Exec/setRunning', item.isRunning)
+  }
+
+  if (item.info?.status === 'start') {
+    const key = item.info.key + '-' + caseCount.value
+    caseDetail.value[key] = logContentExpand.value
   }
 
   item = genExecInfo(item, caseCount.value)
