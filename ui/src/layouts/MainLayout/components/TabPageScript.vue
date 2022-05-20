@@ -30,6 +30,7 @@ let scriptCode = ref('')
 let lang = ref('')
 const editorOptions = ref(MonacoOptions)
 
+const init = ref(false)
 watch(script, () => {
     console.log('watch script', script)
 
@@ -51,7 +52,7 @@ watch(script, () => {
         scriptCode.value = ''
         lang.value = ''
     }
-}, { deep: true })
+}, { deep: false })
 
 const editorChange = (newScriptCode) => {
     newScriptCode = newScriptCode.replace(/\n$/, '');

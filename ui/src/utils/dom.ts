@@ -52,7 +52,6 @@ export function resizeHeight(contentId: string, topId: string, splitterId: strin
     const bottom = document.getElementById(bottomId) as any;
 
     if (!splitter) {
-        console.log('splitter', splitter)
         return false
     }
 
