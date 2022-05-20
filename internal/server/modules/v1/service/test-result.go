@@ -117,10 +117,14 @@ func (s *TestResultService) Paginate(siteId, productId uint, req serverDomain.Re
 }
 
 func (s *TestResultService) GetLatest(siteId, productId uint) (summary serverDomain.TestReportSummary, err error) {
-	workspaces, _ := s.WorkspaceRepo.ListByProduct(siteId, productId)
+	workspaces, err := s.WorkspaceRepo.ListByProduct(siteId, productId)
+
+	if err != nil {
+		return
+	}
 
 	var fi fs.FileInfo
-	var ws model.Workspace
+	var ws *model.Workspace
 	for _, workspace := range workspaces {
 		reportFiles := analysisHelper.ListReportByModTime(workspace.Path + commConsts.LogDir)
 		if len(reportFiles) == 0 {
@@ -132,7 +136,12 @@ func (s *TestResultService) GetLatest(siteId, productId uint) (summary serverDom
 		}
 
 		fi = reportFiles[0]
-		ws = workspace
+		ws = &workspace
+	}
+
+	if fi == nil || ws == nil {
+		//		err = errors.New("not found")
+		return
 	}
 
 	summary = serverDomain.TestReportSummary{WorkspaceId: int(ws.ID)}
