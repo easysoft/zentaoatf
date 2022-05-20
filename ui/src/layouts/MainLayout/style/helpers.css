@@ -27,22 +27,24 @@
 .surface-heavy {background-color: var(--color-surface-heavy);}
 
 /* Backgrounds 背景色 */
-.primary {background-color: var(--color-primary); color: var(--color-back); border-color: var(--color-primary)}
-.green   {background-color: var(--color-green); color: var(--color-back); border-color: var(--color-green)}
-.red     {background-color: var(--color-red); color: var(--color-back); border-color: var(--color-red)}
-.yellow  {background-color: var(--color-yellow); color: var(--color-back); border-color: var(--color-yellow)}
-.blue    {background-color: var(--color-blue); color: var(--color-back); border-color: var(--color-blue)}
-.purple  {background-color: var(--color-purple); color: var(--color-back); border-color: var(--color-purple)}
-.gray    {background-color: var(--color-gray); color: var(--color-back); border-color: var(--color-gray)}
-.pure    {background-color: transparent; color: inherit; border-color: transparent}
+.primary   {background-color: var(--color-primary); color: var(--color-back); border-color: var(--color-primary)}
+.secondary {background-color: var(--color-secondary); color: var(--color-back); border-color: var(--color-secondary)}
+.green     {background-color: var(--color-green); color: var(--color-back); border-color: var(--color-green)}
+.red       {background-color: var(--color-red); color: var(--color-back); border-color: var(--color-red)}
+.yellow    {background-color: var(--color-yellow); color: var(--color-back); border-color: var(--color-yellow)}
+.blue      {background-color: var(--color-blue); color: var(--color-back); border-color: var(--color-blue)}
+.purple    {background-color: var(--color-purple); color: var(--color-back); border-color: var(--color-purple)}
+.gray      {background-color: var(--color-gray); color: var(--color-back); border-color: var(--color-gray)}
+.pure      {background-color: transparent; color: inherit; border-color: transparent}
 
 /* Backgrounds (light) 背景色（浅色） */
-.primary-pale {background-color: var(--color-primary-pale); color: var(--color-primary);}
-.red-pale     {background-color: var(--color-red-pale); color: var(--color-red);}
-.yellow-pale  {background-color: var(--color-yellow-pale); color: var(--color-yellow);}
-.blue-pale    {background-color: var(--color-blue-pale); color: var(--color-blue);}
-.purple-pale  {background-color: var(--color-purple-pale); color: var(--color-purple);}
-.gray-pale    {background-color: var(--color-gray-pale); color: var(--color-gray);}
+.primary-pale   {background-color: var(--color-primary-pale); color: var(--color-primary);}
+.secondary-pale {background-color: var(--color-secondary-pale); color: var(--color-secondary);}
+.red-pale       {background-color: var(--color-red-pale); color: var(--color-red);}
+.yellow-pale    {background-color: var(--color-yellow-pale); color: var(--color-yellow);}
+.blue-pale      {background-color: var(--color-blue-pale); color: var(--color-blue);}
+.purple-pale    {background-color: var(--color-purple-pale); color: var(--color-purple);}
+.gray-pale      {background-color: var(--color-gray-pale); color: var(--color-gray);}
 
 /* Lighten backgrounds 背景变浅 */
 .lighten-0  {background-color: var(--color-lighten-0);}
@@ -89,16 +91,17 @@
 .darken-19 {background-color: var(--color-darken-19);}
 
 /* Text colors 文本颜色 */
-.text-primary {color: var(--color-primary);}
-.text-red     {color: var(--color-red);}
-.text-green   {color: var(--color-green);}
-.text-yellow  {color: var(--color-yellow);}
-.text-blue    {color: var(--color-blue);}
-.text-purple  {color: var(--color-purple);}
-.text-gray    {color: var(--color-gray);}
-.text-light   {color: var(--color-darken-3);}
-.text-muted   {color: var(--color-darken-7);}
-.text-deep    {color: var(--color-darken-13);}
+.text-primary   {color: var(--color-primary);}
+.text-secondary {color: var(--color-secondary);}
+.text-red       {color: var(--color-red);}
+.text-green     {color: var(--color-green);}
+.text-yellow    {color: var(--color-yellow);}
+.text-blue      {color: var(--color-blue);}
+.text-purple    {color: var(--color-purple);}
+.text-gray      {color: var(--color-gray);}
+.text-light     {color: var(--color-darken-3);}
+.text-muted     {color: var(--color-darken-7);}
+.text-deep      {color: var(--color-darken-13);}
 
 /* Text sizes 文本大小 */
 .text-sm, .small, small {font-size: var(--text-size-sm);}
@@ -110,15 +113,16 @@
 .text-bold, .strong {font-weight: bold;}
 
 /* Border colors 边框颜色 */
-.border-primary {border-color: var(--color-primary);}
-.border-red     {border-color: var(--color-red);}
-.border-yellow  {border-color: var(--color-yellow);}
-.border-blue    {border-color: var(--color-blue);}
-.border-purple  {border-color: var(--color-purple);}
-.border-gray    {border-color: var(--color-gray);}
-.border-heavy   {border-color: var(--color-darken-10);}
-.border         {border-color: var(--color-darken-5);}
-.border-light   {border-color: var(--color-darken-3);}
+.border-primary   {border-color: var(--color-primary);}
+.border-secondary {border-color: var(--color-secondary);}
+.border-red       {border-color: var(--color-red);}
+.border-yellow    {border-color: var(--color-yellow);}
+.border-blue      {border-color: var(--color-blue);}
+.border-purple    {border-color: var(--color-purple);}
+.border-gray      {border-color: var(--color-gray);}
+.border-heavy     {border-color: var(--color-darken-10);}
+.border           {border-color: var(--color-darken-5);}
+.border-light     {border-color: var(--color-darken-3);}
 
 /* Divider 分割线 */
 .divider {border-bottom: 1px solid var(--color-darken-1)}
