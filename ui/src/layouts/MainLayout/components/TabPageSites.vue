@@ -11,6 +11,7 @@
         :messages="table.messages"
         @do-search="doSearch"
         @is-finished="table.isLoading = false"
+        :pageSize="3"
     ></Table>
 
   </div>
@@ -21,7 +22,6 @@ import {defineProps, reactive} from "vue";
 import {PageTab} from "@/store/tabs";
 import Table from "./Table.vue";
 import {useI18n} from "vue-i18n";
-
 const {t} = useI18n();
 
 const table = reactive({
@@ -52,16 +52,16 @@ const table = reactive({
   sortable: {
     order: "id",
     sort: "asc",
-  },
-});
+  } ,
+} as any);
 
 const doSearch = (offset, limit, order, sort) => {
+  console.log('===', limit)
+
   table.isLoading = true;
   setTimeout(() => {
     table.isReSearch = offset == undefined ? true : false;
-    if (offset >= 10 || limit >= 20) {
-      limit = 20;
-    }
+
     if (sort == "asc") {
       table.rows = sampleData1(offset, limit);
     } else {
@@ -70,16 +70,16 @@ const doSearch = (offset, limit, order, sort) => {
     table.totalRecordCount = 20;
     table.sortable.order = order;
     table.sortable.sort = sort;
-  }, 600);
+  }, 50);
 };
 
-doSearch(0, 10, 'id', 'asc');
+doSearch(0, 3, 'id', 'asc');
 
 // Fake Data for 'asc' sortable
 const sampleData1 = (offst, limit) => {
   offst = offst + 1;
-  let data = [];
-  for (let i = offst; i <= limit; i++) {
+  let data = [] as any[];
+  for (let i = offst; i < offst + limit; i++) {
     data.push({
       id: i,
       name: "TEST" + i,
@@ -90,8 +90,8 @@ const sampleData1 = (offst, limit) => {
 };
 // Fake Data for 'desc' sortable
 const sampleData2 = (offst, limit) => {
-  let data = [];
-  for (let i = limit; i > offst; i--) {
+  let data = [] as any[];
+  for (let i = limit; i > offst + limit; i--) {
     data.push({
       id: i,
       name: "TEST" + i,

@@ -1,8 +1,5 @@
 import { Mutation, Action } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
-import { ResponseData } from '@/utils/request';
-import {setCache} from "@/utils/localCache";
-import settings from '@/config/settings';
 import {WebSocket} from "@/services/websocket";
 
 export interface WebSocketData {
@@ -47,7 +44,7 @@ const StoreModel: ModuleType = {
     async connect({ commit }, room) {
       console.log("connect to websocket")
 
-      await WebSocket.init()
+      await WebSocket.init(false)
 
       const msg = {act: 'init'}
       WebSocket.sentMsg(room, JSON.stringify(msg))

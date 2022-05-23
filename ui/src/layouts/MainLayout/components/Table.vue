@@ -136,17 +136,17 @@
           </table>
         </div>
       </div>
+
+      <!-- pagination -->
       <div class="vtl-paging vtl-row" v-if="rows.length > 0">
         <template v-if="!setting.isHidePaging">
-          <div class="vtl-paging-info col-sm-12 col-md-4">
+          <div class="vtl-paging-info">
             <div role="status" aria-live="polite">
-              {{
-                stringFormat(messages.pagingInfo, setting.offset, setting.limit, total)
-              }}
+              {{ info.pagingInfo }}
             </div>
           </div>
-          <div class="vtl-paging-change-div col-sm-12 col-md-4">
-            <span class="vtl-paging-count-label">{{ messages.pageSizeChangeLabel }}</span>
+          <div class="vtl-paging-change-div">
+            <span class="vtl-paging-count-label">{{ info.pageSizeChangeLabel }}&nbsp;</span>
             <select class="vtl-paging-count-dropdown" v-model="setting.pageSize">
               <option
                 v-for="pageOption in pageOptions"
@@ -156,13 +156,16 @@
                 {{ pageOption.text }}
               </option>
             </select>
-            <span class="vtl-paging-page-label">{{ messages.gotoPageLabel }}</span>
+            &nbsp;&nbsp;&nbsp;
+
+            <span class="vtl-paging-page-label">{{ info.gotoPageLabel }}&nbsp;</span>
             <select class="vtl-paging-page-dropdown" v-model="setting.page">
               <option v-for="n in setting.maxPage" :key="n" :value="parseInt(n)">
                 {{ n }}
               </option>
             </select>
           </div>
+
           <div class="vtl-paging-pagination-div col-sm-12 col-md-4">
             <div class="dataTables_paginate">
               <ul class="vtl-paging-pagination-ul vtl-pagination">
@@ -260,6 +263,7 @@ import {
   nextTick,
   onMounted,
 } from "vue";
+import {useI18n} from "vue-i18n";
 
 interface pageOption {
   value: number;
@@ -367,7 +371,7 @@ export default defineComponent({
       type: Object,
       default: () => {
         return {
-          pagingInfo: "Showing {0}-{1} of {2}",
+          pagingInfo: 'page_info',
           pageSizeChangeLabel: "Row count:",
           gotoPageLabel: "Go to page:",
           noDataAvailable: "No data",
@@ -398,8 +402,8 @@ export default defineComponent({
           text: 10,
         },
         {
-          value: 25,
-          text: 25,
+          value: 20,
+          text: 20,
         },
         {
           value: 50,
@@ -409,6 +413,17 @@ export default defineComponent({
     },
   },
   setup(props, { emit, slots }) {
+    const {t} = useI18n();
+
+    const info = computed<any>(() => {
+      return {
+        pagingInfo: t('page_info', {offset: setting.offset, limit: setting.limit, total: props.total}),
+        pageSizeChangeLabel: t('page_count'),
+        gotoPageLabel: t('page_goto'),
+        noDataAvailable: t('page_no_data'),
+      }
+    })
+
     let localTable = ref<HTMLElement | null>(null);
 
     // 檢查下拉選單中是否包含預設一頁顯示筆數 (Validate dropdown's values have page-size value or not)
@@ -448,7 +463,7 @@ export default defineComponent({
       // 當前頁數 (current page number)
       page: props.page,
       // 每頁顯示筆數 (Display count per page)
-      pageSize: defaultPageSize.value,
+      pageSize: props.pageSize ? props.pageSize : defaultPageSize.value,
       // 最大頁數 (Maximum number of pages)
       maxPage: computed(() => {
         if (props.total <= 0) {
@@ -477,7 +492,7 @@ export default defineComponent({
           startPage = setting.maxPage - 4;
         }
         startPage = startPage <= 0 ? 1 : startPage;
-        let pages = [];
+        let pages = [] as number[];
         for (let i = startPage; i <= setting.maxPage; i++) {
           if (pages.length < 5) {
             pages.push(i);
@@ -521,7 +536,7 @@ export default defineComponent({
       });
 
       // return sorted and offset rows
-      let result = [];
+      let result = [] as any[];
       for (let index = setting.offset - 1; index < setting.limit; index++) {
         if (rows[index]) {
           result.push(rows[index]);
@@ -631,6 +646,8 @@ export default defineComponent({
       let limit = setting.pageSize;
       setting.order = order;
       setting.sort = sort;
+
+      console.log("do-search", offset, limit)
       emit("do-search", offset, limit, order, sort);
 
       // 清空畫面上選擇的資料 (Clear the selected data on the screen)
@@ -658,6 +675,8 @@ export default defineComponent({
       let limit = setting.pageSize;
       if (!props.isReSearch || page > 1 || page == prevPage) {
         // 非重新查詢發生的頁碼變動才執行呼叫查詢 (Call query will only be executed if the page number is changed without re-query)
+
+        console.log("do-search", offset, limit)
         emit("do-search", offset, limit, order, sort);
       }
     };
@@ -793,13 +812,14 @@ export default defineComponent({
         movePage,
         nextPage,
         stringFormat,
+        info,
       };
     }
   },
 });
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .vtl-checkbox-th {
   width: 1%;
 }
@@ -888,9 +908,8 @@ tr {
 
 .vtl-table thead th {
   vertical-align: bottom;
-  color: #fff;
-  background-color: #343a40;
-  border-color: #454d55;
+  background-color: var(--color-darken-1);
+  border-color: #dee2e6;
   border-bottom: 2px solid #dee2e6;
 }
 
@@ -939,6 +958,26 @@ tr {
   padding-left: 0;
   list-style: none;
   border-radius: 0.25rem;
+}
+
+.vtl-paging {
+  .vtl-paging-info {
+    width: 160px;
+    line-height: 38px;
+    .vtl-paging-page-dropdown {
+      width: 50px !important;
+    }
+  }
+  .vtl-paging-change-div {
+    width: 230px;
+    line-height: 38px;
+    .vtl-paging-page-dropdown {
+      width: 50px !important;
+    }
+  }
+  .vtl-paging-pagination-div {
+    flex: 1;
+  }
 }
 
 .page-item.disabled .page-link {
@@ -1003,11 +1042,6 @@ tr {
   }
   .vtl-table-responsive-sm > .table-bordered {
     border: 0;
-  }
-  .col-md-4 {
-    -ms-flex: 0 0 33.333333%;
-    flex: 0 0 33.333333%;
-    max-width: 33.333333%;
   }
 }
 </style>

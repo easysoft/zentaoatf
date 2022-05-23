@@ -216,6 +216,11 @@ export default {
     'no_interp_1': 'No windows system, ',
     'no_interp_2': 'please add interpreter executable file to PATH environment variable.',
 
+    'page_info': 'Show {offset}-{limit} Of {total}',
+    'page_count': 'Row Count',
+    'page_goto': 'Go to Page',
+    'page_no_data': 'No Data',
+
     'http_100': 'Server Not Available',
     'http_500': 'Internal Server Error',
     'biz_100': 'Common Error',

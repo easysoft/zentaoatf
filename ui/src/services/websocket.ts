@@ -16,10 +16,10 @@ export const WsDefaultNameSpace = 'default'
 export class WebSocket {
   static conn: NSConn
 
-  static async init(): Promise<any> {
+  static async init(reConn): Promise<any> {
     console.log(`init websocket`)
 
-    if (!WebSocket.conn) {
+    if (reConn || !WebSocket.conn) {
       try {
         const conn = await neffos.dial(getWebSocketApi(), {
           default: {
@@ -60,16 +60,21 @@ export class WebSocket {
   }
 
   static joinRoomAndSend(roomName: string, msg: string): void {
-    if (!WebSocket.conn) return
-
-    WebSocket.conn.joinRoom(roomName).then((room) => {
-      console.log(`success to join room "${roomName}"`)
+    if (WebSocket.conn && WebSocket.conn.room(roomName)) {
       WebSocket.conn.room(roomName).emit('OnChat', msg)
+      return
+    } else {
+      WebSocket.init(true).then(() => {
+        WebSocket.conn.joinRoom(roomName).then((room) => {
+          console.log(`success to join room "${roomName}"`)
+          WebSocket.conn.room(roomName).emit('OnChat', msg)
 
-    }).catch(err => {
-      console.log(`fail to join room ${roomName}`, err)
-      bus.emit(settings.eventWebSocketConnStatus, {msg: '{"conn": "fail"}'});
-    })
+        }).catch(err => {
+          console.log(`fail to join room ${roomName}`, err)
+          bus.emit(settings.eventWebSocketConnStatus, {msg: '{"conn": "fail"}'});
+        })
+      })
+    }
   }
 
   static sentMsg(roomName: string, msg: string): void {

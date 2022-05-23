@@ -18,8 +18,8 @@ func (c *BaseCtrl) SuccessResp(data interface{}) (ret domain.Response) {
 	return
 }
 
-func (c *BaseCtrl) ErrResp(err commConsts.ResponseCode, msg string) (ret domain.Response) {
-	ret = domain.Response{Code: err.Code, Msg: c.ErrMsg(err, msg)}
+func (c *BaseCtrl) ErrResp(respCode commConsts.ResponseCode, msg string) (ret domain.Response) {
+	ret = domain.Response{Code: respCode.Code, Msg: c.ErrMsg(respCode, msg)}
 
 	return
 }
