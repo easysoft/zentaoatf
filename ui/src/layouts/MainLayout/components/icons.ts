@@ -25,6 +25,10 @@ import checkbox_checked from '@iconify-icons/fluent/checkbox-checked-24-regular'
 import checkbox_unchecked from '@iconify-icons/fluent/checkbox-unchecked-24-regular';
 import chevron_down from '@iconify-icons/fluent/chevron-down-20-regular';
 import chevron_up from '@iconify-icons/fluent/chevron-up-20-regular';
+
+import arrow_up from '@iconify-icons/fluent/arrow-up-16-regular';
+import arrow_down from '@iconify-icons/fluent/arrow-down-16-regular';
+
 import chevron_left from '@iconify-icons/fluent/chevron-left-20-regular';
 import chevron_right from '@iconify-icons/fluent/chevron-right-20-regular';
 import add from '@iconify-icons/fluent/add-24-regular';
@@ -89,6 +93,8 @@ export const icons = {
     'zentao': zentao,
     'chevron-down': chevron_down,
     'chevron-up': chevron_up,
+    'arrow-up': arrow_up,
+    'arrow-down': arrow_down,
     'chevron-left': chevron_left,
     'chevron-right': chevron_right,
     'add': add,
