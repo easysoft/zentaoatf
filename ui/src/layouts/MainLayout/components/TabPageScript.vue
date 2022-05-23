@@ -8,7 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
+import notification from "@/utils/notification";
+import { defineProps, defineExpose } from "vue";
 import { PageTab } from "@/store/tabs";
 import { useStore } from "vuex";
 import { ScriptData } from "@/views/script/store";
@@ -25,10 +26,12 @@ const props = defineProps<{
 
 const scriptStore = useStore<{ Script: ScriptData }>();
 let script = computed<any>(() => scriptStore.state.Script.detail);
+const currWorkspace = computed<any>(() => scriptStore.state.Script.currWorkspace);
 let scriptCode = ref('')
 
 let lang = ref('')
 const editorOptions = ref(MonacoOptions)
+const editorRef = ref<InstanceType<typeof MonacoEditor>>()
 
 const init = ref(false)
 watch(script, () => {
@@ -67,6 +70,24 @@ const editorChange = (newScriptCode) => {
         data: props.tab.data
     });
 }
+
+const save = () => {
+    const code = editorRef.value._getValue()
+    scriptStore.dispatch('Script/updateCode',{
+        workspaceId: currWorkspace.value.id,
+        path: script.value.path, 
+        code: code
+    }).then(() => {    
+        console.info("success")
+        notification.success({
+          message: t('save_success'),
+        })
+      })
+}
+
+defineExpose({
+    save
+});
 </script>
 
 <style lang="less" scoped>
