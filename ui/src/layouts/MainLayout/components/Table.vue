@@ -3,14 +3,14 @@
     <div class="z-card-title" v-if="title">{{ title }}</div>
     <div class="z-card-body">
       <div class="z-row">
-        <div class="col-sm-12">
+        <div class="z-full">
           <div v-if="isLoading" class="z-loading-mask">
             <div class="z-loading-content">
               <span style="color: white">Loading...</span>
             </div>
           </div>
           <table
-              class="z-table z-table-hover z-table-bordered z-table-responsive z-table-responsive-sm"
+              class="z-table z-table-hover z-table-bordered z-table-responsive"
               ref="localTable">
             <thead class="z-thead">
             <tr class="z-thead-tr">
@@ -136,7 +136,7 @@
                       :key="pageOption.value">
                 {{ pageOption.text }}
               </option>
-            </select>
+            </select>&nbsp;
 
             <span class="z-paging-page-label">{{ info.gotoPageLabel }}&nbsp;</span>
             <select class="z-paging-page-dropdown" v-model="setting.page">
@@ -146,7 +146,7 @@
             </select>
           </div>
 
-          <div class="z-paging-pagination-div col-sm-12 col-md-4">
+          <div class="z-paging-pagination-div col-full col-md-4">
             <div class="dataTables_paginate">
               <ul class="z-paging-pagination-ul z-pagination">
                 <li class="z-paging-pagination-page-li z-paging-pagination-page-li-first page-item"
@@ -205,7 +205,7 @@
         </template>
       </div>
       <div class="z-row" v-else>
-        <div class="z-empty-msg col-sm-12 text-center">
+        <div class="z-empty-msg col-full z-center">
           {{ messages.noDataAvailable }}
         </div>
       </div>
@@ -780,10 +780,6 @@ export default defineComponent({
   width: 1%;
 }
 
-.z-both {
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAQAAADYWf5HAAAAkElEQVQoz7X QMQ5AQBCF4dWQSJxC5wwax1Cq1e7BAdxD5SL+Tq/QCM1oNiJidwox0355mXnG/DrEtIQ6azioNZQxI0ykPhTQIwhCR+BmBYtlK7kLJYwWCcJA9M4qdrZrd8pPjZWPtOqdRQy320YSV17OatFC4euts6z39GYMKRPCTKY9UnPQ6P+GtMRfGtPnBCiqhAeJPmkqAAAAAElFTkSuQmCC");
-}
-
 .z-sortable {
   cursor: pointer;
   background-position: right;
@@ -791,10 +787,12 @@ export default defineComponent({
   padding-right: 30px !important;
 }
 
+.z-both {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAQAAADYWf5HAAAAkElEQVQoz7X QMQ5AQBCF4dWQSJxC5wwax1Cq1e7BAdxD5SL+Tq/QCM1oNiJidwox0355mXnG/DrEtIQ6azioNZQxI0ykPhTQIwhCR+BmBYtlK7kLJYwWCcJA9M4qdrZrd8pPjZWPtOqdRQy320YSV17OatFC4euts6z39GYMKRPCTKY9UnPQ6P+GtMRfGtPnBCiqhAeJPmkqAAAAAElFTkSuQmCC");
+}
 .z-asc {
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAYAAAByUDbMAAAAZ0lEQVQ4y2NgGLKgquEuFxBPAGI2ahhWCsS/gDibUoO0gPgxEP8H4ttArEyuQYxAPBdqEAxPBImTY5gjEL9DM+wTENuQahAvEO9DMwiGdwAxOymGJQLxTyD+jgWDxCMZRsEoGAVoAADeemwtPcZI2wAAAABJRU5ErkJggg==) no-repeat right 5px;
 }
-
 .z-desc {
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAYAAAByUDbMAAAAZUlEQVQ4y2NgGAWjYBSggaqGu5FA/BOIv2PBIPFEUgxjB+IdQPwfC94HxLykus4GiD+hGfQOiB3J8SojEE9EM2wuSJzcsFMG4ttQgx4DsRalkZENxL+AuJQaMcsGxBOAmGvopk8AVz1sLZgg0bsAAAAASUVORK5CYII=) no-repeat right -2px;
 }
@@ -937,72 +935,44 @@ tr {
 
   .z-paging-pagination-div {
     flex: 1;
+
+    .page-link {
+      position: relative;
+      display: block;
+      padding: 0.5rem 0.75rem;
+      margin-left: -1px;
+      line-height: 1.25;
+      color: #007bff;
+      background-color: #fff;
+      border: 1px solid #dee2e6;
+    }
+    .page-item {
+      &.disabled .page-link {
+        color: #6c757d;
+        pointer-events: none;
+        cursor: auto;
+        background-color: #fff;
+        border-color: #dee2e6;
+      }
+      &:first-child .page-link {
+        margin-left: 0;
+        border-top-left-radius: 0.25rem;
+        border-bottom-left-radius: 0.25rem;
+      }
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
   }
 }
 
-.page-item.disabled .page-link {
-  color: #6c757d;
-  pointer-events: none;
-  cursor: auto;
-  background-color: #fff;
-  border-color: #dee2e6;
-}
-
-.page-item:first-child .page-link {
-  margin-left: 0;
-  border-top-left-radius: 0.25rem;
-  border-bottom-left-radius: 0.25rem;
-}
-
-.page-link {
-  position: relative;
-  display: block;
-  padding: 0.5rem 0.75rem;
-  margin-left: -1px;
-  line-height: 1.25;
-  color: #007bff;
-  background-color: #fff;
-  border: 1px solid #dee2e6;
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-*,
-::after,
-::before {
-  box-sizing: border-box;
-}
-
-.col-sm-12 {
-  -ms-flex: 0 0 100%;
-  flex: 0 0 100%;
-  max-width: 100%;
-}
-
-.text-center {
-  text-align: center;
-}
-
-@media (min-width: 576px) {
-  .z-table-responsive-sm {
-    display: block;
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .z-table-responsive-sm > .table-bordered {
-    border: 0;
-  }
-}
 </style>

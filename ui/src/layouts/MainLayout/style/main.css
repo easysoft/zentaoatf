@@ -42,11 +42,18 @@ button {
     width: 100%;
 }
 
+.z-center {
+    text-align: center;
+}
 .z-err {
     color: var(--color-err);
     opacity: 1;
 }
-
+.z-full {
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
 .z-bord{
     font-weight: bold;
 }
