@@ -291,6 +291,13 @@ interface column {
   field: string;
 }
 
+interface pageMessage {
+  pagingInfo: string
+  pageSizeChangeLabel:  string
+    gotoPageLabel:  string
+    noDataAvailable: string
+}
+
 export default defineComponent({
   name: "Table",
   emits: ["return-checked-rows", "do-search", "is-finished", "get-now-page", "row-clicked"],
@@ -369,7 +376,7 @@ export default defineComponent({
     // 顯示文字 (Display text)
     messages: {
       type: Object,
-      default: {} as any,
+      default: {} as pageMessage,
     },
     // 靜態模式 (Static mode(no refresh server data))
     isStaticMode: {
@@ -409,15 +416,15 @@ export default defineComponent({
     const {t} = useI18n();
 
     const info = computed<any>(() => {
-      console.log(props.messages)
-
-      if (props.messages?.pagingInfo) return props.messages
-
       return {
-        pagingInfo: t('page_info', {offset: setting.offset, limit: setting.limit, total: props.total}),
-        pageSizeChangeLabel: t('page_count'),
-        gotoPageLabel: t('page_goto'),
-        noDataAvailable: t('page_no_data'),
+        pagingInfo: props.messages?.pagingInfo ? props.messages?.pagingInfo :
+            t('page_info', {offset: setting.offset, limit: setting.limit, total: props.total}),
+        pageSizeChangeLabel:  props.messages?.pageSizeChangeLabel ? props.messages?.pageSizeChangeLabel :
+            t('page_count'),
+        gotoPageLabel:  props.messages?.gotoPageLabel ? props.messages?.gotoPageLabel :
+            t('page_goto'),
+        noDataAvailable:  props.messages?.noDataAvailable ? props.messages?.noDataAvailable :
+            t('page_no_data'),
       }
     })
 
