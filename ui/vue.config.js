@@ -43,6 +43,7 @@ module.exports = {
             // 'vue': 'Vue',
             // 'vue-router': 'VueRouter',
         },
+        devtool: 'source-map'
     },
 
     chainWebpack(config) {

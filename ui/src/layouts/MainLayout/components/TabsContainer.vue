@@ -17,7 +17,7 @@
 
     <template v-for="tab in tabsList" :key="tab.id">
       <KeepAlive>
-        <TabPage v-if="tab.id === activeID" class="flex-auto" :tab="tab"/>
+        <TabPage v-if="tab.id === activeID" class="flex-auto" :tab="tab" ref="tabsRef" />
       </KeepAlive>
     </template>
   </div>
@@ -59,6 +59,8 @@ const toolbarItemArr = [
   }
 ]
 const toolbarItems = ref([] as any[]);
+// const tabPageRef = ref<InstanceType<typeof TabPage> | null>(null)
+const tabsRef = ref<InstanceType<typeof TabPage>[] | null>(null)
 
 const tabsList = computed(() => {
   return store.getters['tabs/list'];
@@ -82,9 +84,17 @@ const testTabIDRef = ref(0);
 
 const onToolbarClick = (e) => {
   console.log('onToolbarClick', e.key, activeID.value)
-  if (e.key === 'run') {
-    bus.emit(settings.eventExec,
-        {execType: 'ztf', scripts: [{ path: activeID.value, workspaceId: currWorkspace.value.id }]});
+  switch (e.key) {
+    case 'run': {
+      bus.emit(settings.eventExec,
+         {execType: 'ztf', scripts: [{ path: activeID.value, workspaceId: currWorkspace.value.id }]});
+      break;
+    }
+    case 'save': {
+      if (tabsRef.value) {
+        tabsRef.value[0].save()
+      }
+    }
   }
 }
 
