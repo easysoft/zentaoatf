@@ -369,14 +369,7 @@ export default defineComponent({
     // 顯示文字 (Display text)
     messages: {
       type: Object,
-      default: () => {
-        return {
-          pagingInfo: 'page_info',
-          pageSizeChangeLabel: "Row count:",
-          gotoPageLabel: "Go to page:",
-          noDataAvailable: "No data",
-        };
-      },
+      default: {} as any,
     },
     // 靜態模式 (Static mode(no refresh server data))
     isStaticMode: {
@@ -416,6 +409,10 @@ export default defineComponent({
     const {t} = useI18n();
 
     const info = computed<any>(() => {
+      console.log(props.messages)
+
+      if (props.messages?.pagingInfo) return props.messages
+
       return {
         pagingInfo: t('page_info', {offset: setting.offset, limit: setting.limit, total: props.total}),
         pageSizeChangeLabel: t('page_count'),
