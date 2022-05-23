@@ -240,7 +240,7 @@ export default {
     'no_interp_1': '非Windows平台中，请参照',
     'no_interp_2': '将可执行文件加入PATH变量中，即可在任意目录中执行测试，不需要为各种语言设置运行环境。',
 
-    'page_info': '显示{offset}-{limit}条，共{total}条',
+    'page_info': '显示{offset}-{limit}条，共{total}条。',
     'page_count': '每页显示',
     'page_goto': '跳转到',
     'page_no_data': '数据为空',
