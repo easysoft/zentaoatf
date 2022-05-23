@@ -655,41 +655,39 @@ export default defineComponent({
     );
 
     /**
-     * 切換顯示筆數 (Switch display number)
+     * Switch display number
      */
     const changePageSize = () => {
       if (setting.page === 1) {
-        // 沒自動觸發 changePage()，所以手動觸發
         changePage(setting.page, setting.page);
       } else {
-        // 強制返回第一頁,並自動觸發 changePage()
         setting.page = 1;
         setting.isCheckAll = false;
       }
     };
-    // 監聽顯示筆數切換 (Monitor display number switch)
+    // Monitor display number switch
     watch(() => setting.pageSize, changePageSize);
 
     /**
-     * 上一頁 (Previous page)
+     * Previous page
      */
     const prevPage = () => {
       if (setting.page == 1) {
-        // 如果是第一頁，不予執行 (If it is the first page, it will not be executed)
+        // If it is the first page, it will not be executed
         return false;
       }
       setting.page--;
     };
 
     /**
-     * 移動至指定頁數 (Move to the specified number of pages)
+     * Move to the specified number of pages
      */
     const movePage = (page: number) => {
       setting.page = page;
     };
 
     /**
-     * 下一頁 (Next page)
+     * Next page
      */
     const nextPage = () => {
       if (setting.page >= setting.maxPage) {
@@ -699,7 +697,7 @@ export default defineComponent({
       setting.page++;
     };
 
-    // 監聽資料變更 (Monitoring data changes)
+    // Monitoring data changes
     watch(
         () => props.rows,
         () => {
@@ -732,7 +730,7 @@ export default defineComponent({
     };
 
     /**
-     * 組件掛載後事件 (Mounted Event)
+     * Mounted Event
      */
     onMounted(() => {
       nextTick(() => {
