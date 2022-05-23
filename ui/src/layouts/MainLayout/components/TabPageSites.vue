@@ -109,5 +109,7 @@ defineProps<{
 <style lang="less" scoped>
 .tab-page-sites {
   padding: 10px;
+  height: 100%;
+  overflow-y: auto;
 }
 </style>

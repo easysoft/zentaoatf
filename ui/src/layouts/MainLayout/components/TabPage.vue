@@ -45,3 +45,9 @@ defineExpose({
   save
 });
 </script>
+
+<style lang="less" scoped>
+.tab-page {
+  height: calc(100% - 30px);
+}
+</style>
