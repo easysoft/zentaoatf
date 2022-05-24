@@ -1,7 +1,7 @@
 <template>
   <div class="window-toolbar">
     <Toolbar>
-      <template v-if="true">
+      <template v-if="isElectron">
         <Button v-if="!fullScreenDef" @click="fullScreen" class="rounded pure" icon="fullscreen-on"
                 :hint="t('fullscreen')" />
         <Button v-if="fullScreenDef" @click="fullScreen" class="rounded pure" icon="fullscreen-off"
@@ -35,7 +35,6 @@ const {t} = useI18n();
 const router = useRouter();
 
 const isElectron = ref(getElectron())
-console.log(`isElectron ${isElectron.value}`)
 
 const fullScreenDef = ref(false)
 const fullScreen = (): void => {
