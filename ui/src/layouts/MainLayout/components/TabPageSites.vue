@@ -1,7 +1,7 @@
 <template>
   <div class="tab-page-sites">
     <div>{{ t('site_management') }}</div>
-    <br/>
+
     <Table
         :is-loading="table.isLoading"
         :columns="table.columns"
@@ -12,6 +12,7 @@
         @do-search="doSearch"
         @is-finished="table.isLoading = false"
         :pageSize="3"
+        :isHidePaging="false"
     ></Table>
 
   </div>

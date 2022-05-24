@@ -1,213 +1,210 @@
 <template>
-  <div class="z-card">
-    <div class="z-card-title" v-if="title">{{ title }}</div>
-    <div class="z-card-body">
-      <div class="z-row">
-        <div class="z-full">
-          <div v-if="isLoading" class="z-loading-mask">
-            <div class="z-loading-content">
-              <span style="color: white">Loading...</span>
-            </div>
+  <div class="z-table-main">
+    <div class="z-row">
+      <div class="z-full">
+        <div v-if="isLoading" class="z-loading-mask">
+          <div class="z-loading-content">
+            <span style="color: white">Loading...</span>
           </div>
-          <table
-              class="z-table z-table-hover z-table-bordered z-table-responsive"
-              ref="localTable">
-            <thead class="z-thead">
-            <tr class="z-thead-tr">
-              <th v-if="hasCheckbox" class="z-thead-th z-checkbox-th">
+        </div>
+        <table
+            class="z-table z-table-hover z-table-bordered z-table-responsive"
+            ref="localTable">
+          <thead class="z-thead">
+          <tr class="z-thead-tr">
+            <th v-if="hasCheckbox" class="z-thead-th z-checkbox-th">
+              <div>
+                <input
+                    type="checkbox"
+                    class="z-thead-checkbox"
+                    v-model="setting.isCheckAll"
+                />
+              </div>
+            </th>
+            <th v-for="(col, index) in columns"
+                class="z-thead-th"
+                :class="col.headerClasses"
+                :key="index"
+                :style="
+                  Object.assign(
+                    { width: col.width ? col.width : 'auto' },
+                    col.headerStyles
+                  )
+                ">
+              <div class="z-thead-column"
+                   :class="{
+                    'z-sortable': col.sortable,
+                    'z-both': col.sortable,
+                    'z-asc': setting.order === col.field && setting.sort === 'asc',
+                    'z-desc': setting.order === col.field && setting.sort === 'desc',
+                  }"
+                   @click="col.sortable ? doSort(col.field) : false">
+                {{ col.label }}
+              </div>
+            </th>
+          </tr>
+          </thead>
+          <tbody v-if="rows.length > 0" class="z-tbody">
+          <template v-if="isStaticMode">
+            <tr v-for="(row, i) in localRows"
+                :key="i"
+                class="z-tbody-tr"
+                :class="typeof rowClasses === 'function' ? rowClasses(row) : rowClasses"
+                @click="$emit('row-clicked', row)">
+              <td v-if="hasCheckbox" class="z-tbody-td">
                 <div>
-                  <input
-                      type="checkbox"
-                      class="z-thead-checkbox"
-                      v-model="setting.isCheckAll"
-                  />
+                  <input type="checkbox"
+                         class="z-tbody-checkbox"
+                         :ref="
+                        (el) => {
+                          rowCheckbox[i] = el;
+                        }
+                      "
+                         :value="row[setting.keyColumn]"
+                         @click="checked"/>
                 </div>
-              </th>
-              <th v-for="(col, index) in columns"
-                  class="z-thead-th"
-                  :class="col.headerClasses"
-                  :key="index"
-                  :style="
-                    Object.assign(
-                      { width: col.width ? col.width : 'auto' },
-                      col.headerStyles
-                    )
-                  ">
-                <div class="z-thead-column"
-                     :class="{
-                      'z-sortable': col.sortable,
-                      'z-both': col.sortable,
-                      'z-asc': setting.order === col.field && setting.sort === 'asc',
-                      'z-desc': setting.order === col.field && setting.sort === 'desc',
-                    }"
-                     @click="col.sortable ? doSort(col.field) : false">
-                  {{ col.label }}
-                </div>
-              </th>
+              </td>
+              <td v-for="(col, j) in columns"
+                  :key="j"
+                  class="z-tbody-td"
+                  :class="col.columnClasses"
+                  :style="col.columnStyles">
+                <div v-if="col.display" v-html="col.display(row)"></div>
+                <template v-else>
+                  <div v-if="setting.isSlotMode && slots[col.field]">
+                    <slot :name="col.field" :value="row"></slot>
+                  </div>
+                  <span v-else>{{ row[col.field] }}</span>
+                </template>
+              </td>
             </tr>
-            </thead>
-            <tbody v-if="rows.length > 0" class="z-tbody">
-            <template v-if="isStaticMode">
-              <tr v-for="(row, i) in localRows"
-                  :key="i"
-                  class="z-tbody-tr"
-                  :class="typeof rowClasses === 'function' ? rowClasses(row) : rowClasses"
-                  @click="$emit('row-clicked', row)">
-                <td v-if="hasCheckbox" class="z-tbody-td">
-                  <div>
-                    <input type="checkbox"
-                           class="z-tbody-checkbox"
-                           :ref="
-                          (el) => {
-                            rowCheckbox[i] = el;
-                          }
-                        "
-                           :value="row[setting.keyColumn]"
-                           @click="checked"/>
+          </template>
+          <template v-else>
+            <tr v-for="(row, i) in rows"
+                :key="i"
+                class="z-tbody-tr"
+                :class="typeof rowClasses === 'function' ? rowClasses(row) : rowClasses"
+                @click="$emit('row-clicked', row)">
+              <td v-if="hasCheckbox" class="z-tbody-td">
+                <div>
+                  <input type="checkbox"
+                         class="z-tbody-checkbox"
+                         :ref="
+                        (el) => {
+                          rowCheckbox[i] = el;
+                        }
+                      "
+                         :value="row[setting.keyColumn]"
+                         @click="checked"/>
+                </div>
+              </td>
+              <td v-for="(col, j) in columns"
+                  :key="j"
+                  class="z-tbody-td"
+                  :class="col.columnClasses"
+                  :style="col.columnStyles">
+                <div v-if="col.display" v-html="col.display(row)"></div>
+                <div v-else>
+                  <div v-if="setting.isSlotMode && slots[col.field]">
+                    <slot :name="col.field" :value="row"></slot>
                   </div>
-                </td>
-                <td v-for="(col, j) in columns"
-                    :key="j"
-                    class="z-tbody-td"
-                    :class="col.columnClasses"
-                    :style="col.columnStyles">
-                  <div v-if="col.display" v-html="col.display(row)"></div>
-                  <template v-else>
-                    <div v-if="setting.isSlotMode && slots[col.field]">
-                      <slot :name="col.field" :value="row"></slot>
-                    </div>
-                    <span v-else>{{ row[col.field] }}</span>
-                  </template>
-                </td>
-              </tr>
-            </template>
-            <template v-else>
-              <tr v-for="(row, i) in rows"
-                  :key="i"
-                  class="z-tbody-tr"
-                  :class="typeof rowClasses === 'function' ? rowClasses(row) : rowClasses"
-                  @click="$emit('row-clicked', row)">
-                <td v-if="hasCheckbox" class="z-tbody-td">
-                  <div>
-                    <input type="checkbox"
-                           class="z-tbody-checkbox"
-                           :ref="
-                          (el) => {
-                            rowCheckbox[i] = el;
-                          }
-                        "
-                           :value="row[setting.keyColumn]"
-                           @click="checked"/>
-                  </div>
-                </td>
-                <td v-for="(col, j) in columns"
-                    :key="j"
-                    class="z-tbody-td"
-                    :class="col.columnClasses"
-                    :style="col.columnStyles">
-                  <div v-if="col.display" v-html="col.display(row)"></div>
-                  <div v-else>
-                    <div v-if="setting.isSlotMode && slots[col.field]">
-                      <slot :name="col.field" :value="row"></slot>
-                    </div>
-                    <span v-else>{{ row[col.field] }}</span>
-                  </div>
-                </td>
-              </tr>
-            </template>
-            </tbody>
-          </table>
-        </div>
+                  <span v-else>{{ row[col.field] }}</span>
+                </div>
+              </td>
+            </tr>
+          </template>
+          </tbody>
+        </table>
       </div>
+    </div>
 
-      <!-- pagination -->
-      <div class="z-paging z-row" v-if="rows.length > 0">
-        <template v-if="!setting.isHidePaging">
-          <div class="z-paging-info">
-            <div role="status" aria-live="polite">
-              {{ info.pagingInfo }}
-            </div>
+    <!-- pagination -->
+    <div class="z-paging z-row" v-if="rows.length > 0 && !setting.isHidePaging">
+        <div class="z-paging-info">
+          <div role="status" aria-live="polite">
+            {{ info.pagingInfo }}
           </div>
-          <div class="z-paging-change-div">
-            <span class="z-paging-count-label">{{ info.pageSizeChangeLabel }}&nbsp;</span>
-            <select class="z-paging-count-dropdown" v-model="setting.pageSize">
-              <option v-for="pageOption in pageOptions"
-                      :value="pageOption.value"
-                      :key="pageOption.value">
-                {{ pageOption.text }}
-              </option>
-            </select>&nbsp;
-
-            <span class="z-paging-page-label">{{ info.gotoPageLabel }}&nbsp;</span>
-            <select class="z-paging-page-dropdown" v-model="setting.page">
-              <option v-for="n in setting.maxPage" :key="n" :value="parseInt(n)">
-                {{ n }}
-              </option>
-            </select>
-          </div>
-
-          <div class="z-paging-pagination-div col-full col-md-4">
-            <div class="dataTables_paginate">
-              <ul class="z-paging-pagination-ul z-pagination">
-                <li class="z-paging-pagination-page-li z-paging-pagination-page-li-first page-item"
-                    :class="{ disabled: setting.page <= 1 }">
-                  <a class="z-paging-pagination-page-link z-paging-pagination-page-link-first page-link"
-                     href="javascript:void(0)"
-                     aria-label="Previous"
-                     @click="setting.page = 1">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">First</span>
-                  </a>
-                </li>
-                <li class="z-paging-pagination-page-li z-paging-pagination-page-li-prev page-item"
-                    :class="{ disabled: setting.page <= 1 }">
-                  <a class="z-paging-pagination-page-link z-paging-pagination-page-link-prev page-link"
-                     href="javascript:void(0)"
-                     aria-label="Previous"
-                     @click="prevPage">
-                    <span aria-hidden="true">&lt;</span>
-                    <span class="sr-only">Prev</span>
-                  </a>
-                </li>
-                <li class="z-paging-pagination-page-li z-paging-pagination-page-li-number page-item"
-                    v-for="n in setting.paging"
-                    :key="n"
-                    :class="{ disabled: setting.page === n }">
-                  <a class="z-paging-pagination-page-link z-paging-pagination-page-link-number page-link"
-                     href="javascript:void(0)"
-                     @click="movePage(n)"
-                  >{{ n }}</a>
-                </li>
-                <li
-                    class="z-paging-pagination-page-li z-paging-pagination-page-li-next page-item"
-                    :class="{ disabled: setting.page >= setting.maxPage }">
-                  <a class="z-paging-pagination-page-link z-paging-pagination-page-link-next page-link"
-                     href="javascript:void(0)"
-                     aria-label="Next"
-                     @click="nextPage">
-                    <span aria-hidden="true">&gt;</span>
-                    <span class="sr-only">Next</span>
-                  </a>
-                </li>
-                <li class="z-paging-pagination-page-li z-paging-pagination-page-li-last page-item"
-                    :class="{ disabled: setting.page >= setting.maxPage }">
-                  <a class="z-paging-pagination-page-link z-paging-pagination-page-link-last page-link"
-                     href="javascript:void(0)"
-                     aria-label="Next"
-                     @click="setting.page = setting.maxPage">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Last</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </template>
-      </div>
-      <div class="z-row" v-else>
-        <div class="z-empty-msg col-full z-center">
-          {{ messages.noDataAvailable }}
         </div>
+
+        <div class="z-paging-change-div">
+          <span class="z-paging-count-label">{{ info.pageSizeChangeLabel }}&nbsp;</span>
+          <select class="z-paging-count-dropdown" v-model="setting.pageSize">
+            <option v-for="pageOption in pageOptions"
+                    :value="pageOption.value"
+                    :key="pageOption.value">
+              {{ pageOption.text }}
+            </option>
+          </select>&nbsp;
+
+          <span class="z-paging-page-label">{{ info.gotoPageLabel }}&nbsp;</span>
+          <select class="z-paging-page-dropdown" v-model="setting.page">
+            <option v-for="n in setting.maxPage" :key="n" :value="parseInt(n)">
+              {{ n }}
+            </option>
+          </select>
+        </div>
+
+        <div class="z-paging-pagination-div col-full col-md-4">
+          <div class="dataTables_paginate">
+            <ul class="z-paging-pagination-ul z-pagination">
+              <li class="z-paging-pagination-page-li z-paging-pagination-page-li-first page-item"
+                  :class="{ disabled: setting.page <= 1 }">
+                <a class="z-paging-pagination-page-link z-paging-pagination-page-link-first page-link"
+                   href="javascript:void(0)"
+                   aria-label="Previous"
+                   @click="setting.page = 1">
+                  <span aria-hidden="true">&laquo;</span>
+                  <span class="sr-only">First</span>
+                </a>
+              </li>
+              <li class="z-paging-pagination-page-li z-paging-pagination-page-li-prev page-item"
+                  :class="{ disabled: setting.page <= 1 }">
+                <a class="z-paging-pagination-page-link z-paging-pagination-page-link-prev page-link"
+                   href="javascript:void(0)"
+                   aria-label="Previous"
+                   @click="prevPage">
+                  <span aria-hidden="true">&lt;</span>
+                  <span class="sr-only">Prev</span>
+                </a>
+              </li>
+              <li class="z-paging-pagination-page-li z-paging-pagination-page-li-number page-item"
+                  v-for="n in setting.paging"
+                  :key="n"
+                  :class="{ disabled: setting.page === n }">
+                <a class="z-paging-pagination-page-link z-paging-pagination-page-link-number page-link"
+                   href="javascript:void(0)"
+                   @click="movePage(n)"
+                >{{ n }}</a>
+              </li>
+              <li
+                  class="z-paging-pagination-page-li z-paging-pagination-page-li-next page-item"
+                  :class="{ disabled: setting.page >= setting.maxPage }">
+                <a class="z-paging-pagination-page-link z-paging-pagination-page-link-next page-link"
+                   href="javascript:void(0)"
+                   aria-label="Next"
+                   @click="nextPage">
+                  <span aria-hidden="true">&gt;</span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </li>
+              <li class="z-paging-pagination-page-li z-paging-pagination-page-li-last page-item"
+                  :class="{ disabled: setting.page >= setting.maxPage }">
+                <a class="z-paging-pagination-page-link z-paging-pagination-page-link-last page-link"
+                   href="javascript:void(0)"
+                   aria-label="Next"
+                   @click="setting.page = setting.maxPage">
+                  <span aria-hidden="true">&raquo;</span>
+                  <span class="sr-only">Last</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </div>
+
+    <div class="z-row" v-else>
+      <div class="z-empty-msg col-full z-center">
+        {{ messages.noDataAvailable }}
       </div>
     </div>
   </div>
@@ -421,7 +418,7 @@ export default defineComponent({
       // current page number
       page: props.page,
       // Display count per page
-      pageSize: props.pageSize ? props.pageSize : defaultPageSize.value,
+      pageSize: !props.isHidePaging ? props.pageSize ? props.pageSize : defaultPageSize.value : 10000,
       // Maximum number of pages
       maxPage: computed(() => {
         if (props.total <= 0) {
@@ -774,6 +771,9 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
+.z-table-main {
+
+}
 .z-checkbox-th {
   width: 1%;
 }
@@ -815,18 +815,6 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.z-card {
-  position: relative;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  min-width: 0;
-  word-wrap: break-word;
-  background-color: #fff;
-  background-clip: border-box;
 }
 
 select {
