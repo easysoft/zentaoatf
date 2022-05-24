@@ -17,6 +17,7 @@ import fullscreen_on from '@iconify-icons/fluent/full-screen-maximize-24-regular
 import fullscreen_off from '@iconify-icons/fluent/full-screen-minimize-24-regular';
 import search from '@iconify-icons/fluent/search-24-regular';
 import settings from '@iconify-icons/fluent/settings-24-regular';
+import language from '@iconify-icons/fluent/local-language-24-regular'
 import more_vert from '@iconify-icons/fluent/more-vertical-24-regular';
 import more_horz from '@iconify-icons/fluent/more-horizontal-24-regular';
 import checkmark from '@iconify-icons/fluent/checkmark-24-regular';
@@ -129,6 +130,7 @@ export const icons = {
     'close': window_close,
 
     'circle': circle_20,
+    'local-language' : language,
 }
 
 Object.entries(icons).forEach(([name, icon]) => {
