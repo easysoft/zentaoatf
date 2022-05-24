@@ -94,6 +94,7 @@ const onToolbarClick = (e) => {
       if (tabsRef.value) {
         tabsRef.value[0].save()
       }
+      break;
     }
   }
 }

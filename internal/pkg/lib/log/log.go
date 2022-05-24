@@ -2,12 +2,15 @@ package logUtils
 
 import (
 	"fmt"
+	dateUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/date"
+	stringUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/string"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	"github.com/easysoft/zentaoatf/internal/pkg/consts"
@@ -15,19 +18,30 @@ import (
 )
 
 func GetLogDir(workspacePath string) string {
-	logDir := filepath.Join(workspacePath, commConsts.LogDirName)
+	logBase := filepath.Join(workspacePath, commConsts.LogDirName)
 
-	d, _ := ioutil.ReadDir(logDir)
+	days := geWeekDays()
+	files1, _ := ioutil.ReadDir(logBase)
+	for _, fi := range files1 {
+		name := fi.Name()
+		if fi.IsDir() && !stringUtils.FindInArr(name, days) {
+			os.RemoveAll(filepath.Join(logBase, name))
+		}
+	}
 
+	logDir := filepath.Join(logBase, dateUtils.DateStrShort(time.Now()))
+	if _, err := os.Stat(logDir); os.IsNotExist(err) {
+		os.MkdirAll(logDir, os.ModePerm)
+	}
+
+	files2, _ := ioutil.ReadDir(logDir)
 	regx := `^\d\d\d$`
-
 	numb := 0
-	for _, fi := range d {
+	for _, fi := range files2 {
 		if fi.IsDir() {
 			name := fi.Name()
-			pass, _ := regexp.MatchString(regx, name)
-
-			if pass { // 999
+			isLog, _ := regexp.MatchString(regx, name)
+			if isLog {
 				name = strings.TrimLeft(name, "0")
 				nm, _ := strconv.Atoi(name)
 
@@ -35,25 +49,6 @@ func GetLogDir(workspacePath string) string {
 					numb = nm
 				}
 			}
-		}
-	}
-
-	if numb > 9 {
-		numb = 0
-
-		tempDir := logDir[:len(logDir)-1] + "-bak" + string(os.PathSeparator) + logDir[len(logDir):]
-		childDir := logDir + "-bak" + string(os.PathSeparator) + logDir[len(logDir):]
-
-		if err := os.RemoveAll(childDir); err != nil {
-			panic(err)
-		}
-
-		if err := os.Rename(logDir, tempDir); err != nil {
-			panic(err)
-		}
-
-		if err := os.Rename(tempDir, childDir); err != nil {
-			panic(err)
 		}
 	}
 
@@ -65,6 +60,18 @@ func GetLogDir(workspacePath string) string {
 	}
 
 	return ret
+}
+
+func geWeekDays() (ret []string) {
+	for i := 0; i < 7; i++ {
+		today := time.Now()
+		newDay := today.AddDate(0, 0, i*-1)
+		newDayStr := dateUtils.DateStrShort(newDay)
+
+		ret = append(ret, newDayStr)
+	}
+
+	return
 }
 
 func getLogNumb(numb int) string {
