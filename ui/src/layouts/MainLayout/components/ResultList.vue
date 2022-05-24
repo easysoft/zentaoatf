@@ -1,7 +1,7 @@
 <template>
   <div class="result-list">
     <List compact divider>
-    <div v-for="item, index in models" :key="index" :class="'list-item-container ' + (item.checked==1?'checked':'')" @click="showDetail($event, index)" @mouseenter="changeControlIcon($event, index)" @mouseleave="changeControlIcon($event, index)">
+    <div v-for="item, index in models" :key="index" :class="'list-item-container ' + (item.checked==1?'checked':'')" @click="showDetail($event, item)" @mouseenter="changeControlIcon($event, index)" @mouseleave="changeControlIcon($event, index)">
         <ListItem
           icon="checkmark-circle"
           class="inline-left"
@@ -80,7 +80,12 @@ const refreshExec = (e, item) => {
 }
 
 const showDetail = (e, item) => {
-    console.log(item)
+    store.dispatch('tabs/open', {
+    id: item.no,
+    title: item.total > 1 ? item.workspaceName + '(' + item.total + ')' : item.testScriptName,
+    type: 'result',
+    data: {seq:item.seq, workspaceId: item.workspaceId}
+  });
     e.stopPropagation()
 }
 
