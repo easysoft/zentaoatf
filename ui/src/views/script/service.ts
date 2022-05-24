@@ -232,6 +232,7 @@ export function scriptTreeAddAttr(treeData) {
     }
     treeData = treeData.map((item, index) => {
         item.id = item.path;
+        item.checkable = item.workspaceType == 'ztf' ? true : false;
         if (item.isLeaf) {
             item.toolbarItems = [
                 { hint: 'create_file', icon: 'file-add', key: 'createFile'},

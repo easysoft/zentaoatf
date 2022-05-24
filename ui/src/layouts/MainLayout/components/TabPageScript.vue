@@ -25,18 +25,22 @@ const props = defineProps<{
 }>();
 
 const scriptStore = useStore<{ Script: ScriptData }>();
-let script = computed<any>(() => scriptStore.state.Script.detail);
+const script = computed<any>(() => scriptStore.state.Script.detail);
 const currWorkspace = computed<any>(() => scriptStore.state.Script.currWorkspace);
-let scriptCode = ref('')
+const scriptCode = ref('')
+const path = ref('')
 
-let lang = ref('')
+const lang = ref('')
 const editorOptions = ref(MonacoOptions)
 const editorRef = ref<InstanceType<typeof MonacoEditor>>()
 
 const init = ref(false)
 watch(script, () => {
+    if(path.value !== '' && path.value !== script.value.path){
+        return
+    }
     console.log('watch script', script)
-
+    path.value = path.value === '' ? script.value.path : path.value
     if (script.value) {
         if (script.value.code === ScriptFileNotExist) {
             scriptCode.value = ScriptFileNotExist

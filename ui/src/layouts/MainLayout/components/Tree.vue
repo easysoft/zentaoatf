@@ -136,7 +136,8 @@ function _convertNodeData(node: TreeNodeData, parent: TreeNodeData | undefined, 
         });
     }
 
-    if (props.checkable !== undefined) {
+    
+    if (props.checkable !== undefined && !props.checkable) {
         node.checkable = props.checkable;
     }
     return node;
