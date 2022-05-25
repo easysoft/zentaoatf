@@ -81,7 +81,7 @@ const refreshExec = (e, item) => {
 
 const showDetail = (e, item) => {
     store.dispatch('tabs/open', {
-    id: item.no,
+    id: 'result-' + item.no,
     title: item.total > 1 ? item.workspaceName + '(' + item.total + ')' : item.testScriptName,
     type: 'result',
     data: {seq:item.seq, workspaceId: item.workspaceId}
