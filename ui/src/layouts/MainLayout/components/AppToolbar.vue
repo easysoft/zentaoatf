@@ -18,7 +18,7 @@ let  language = locale.value
 const switchLanguage = () => {
   console.info("switchLanguage", getLocale(), language, defaultLang)
   language = (language === defaultLang ? 'en-US' : defaultLang)
-  setI18nLanguage(language);
+  setI18nLanguage(language, true); 
 }
 
 </script>
