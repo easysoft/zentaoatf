@@ -63,7 +63,7 @@ const store = useStore<{ Zentao: ZentaoData }>();
 
 const sites = computed<any[]>(() => store.state.Zentao.sites);
 const products = computed<any>(() => store.state.Zentao.products);
-console.log(1111,sites.value);
+
 const currSite = computed<any>(() => store.state.Zentao.currSite);
 const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
@@ -101,7 +101,11 @@ const showZentaoMsg = (payload): void => {
 const selectSite = (item): void => {
   console.log('selectSite', item.key)
   if(item.key == -1){
-      showCreateSiteModal.value = true;
+      store.dispatch('tabs/open', {
+        id: 'sites',
+        title: t('site_management'),
+        type: 'sites',
+    });
   }
   store.dispatch('Zentao/fetchSitesAndProduct', {currSiteId: item.key}).then((payload) => {
     showZentaoMsg(payload)
@@ -119,20 +123,6 @@ const replaceFields = {
   title: 'name',
 }
 
-const showCreateSiteModal = ref(false)
-const modalClose = () => {
-  showCreateSiteModal.value = false;
-}
-const formSite = ref(null)
-const createSite = (formData) => {
-    store.dispatch('Site/save', formData).then((response) => {
-        if (response) {
-            formSite.value.clearFormData()
-            notification.success({message: t('save_success')});
-            showCreateSiteModal.value = false;
-        }
-    })
-};
 </script>
 
 <style>

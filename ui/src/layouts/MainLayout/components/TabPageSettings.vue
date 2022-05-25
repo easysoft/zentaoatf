@@ -1,58 +1,44 @@
 <template>
   <div class="site-main space-top space-left space-right">
-      <div class="t-card-toolbar">
-        <div class="left">
-          {{ t("zentao_site") }}
-        </div>
-        <Button 
-        class="state primary"
-          size="sm"
-         @click="create()"
-         >
-          {{t('create_site')}}
-        </Button>
+    <div class="t-card-toolbar">
+      <div class="left">
+        {{ t("interpreter") }}
       </div>
+      <Button class="state primary" size="sm" @click="create()">
+        {{ t("create_interpreter") }}
+      </Button>
+    </div>
     <Table
-      :is-loading="false"
       :columns="columns"
-      :rows="models"
+      :rows="interpreters"
       :isHidePaging="true"
       :isSlotMode="true"
     >
-      <template #status="record">
-        {{ disableStatus(record.value.disabled) }}
+      <template #lang="record">
+        {{ languageMap[record.value.lang].name }}
       </template>
+
       <template #createdAt="record">
-        <span v-if="record.value.createdAt">{{
-          momentUtc(record.value.createdAt)
-        }}</span>
+        <span v-if="record.value.createdAt">{{ momentUtc(record.value.createdAt) }}</span>
       </template>
 
       <template #action="record">
-        <Button
-          class="tab-setting-btn"
-          v-if="record.value.url"
-          @click="() => edit(record.value.id)"
-          size="sm"
-          >{{ t("edit") }}</Button
-        >
-        <Button
-          class="tab-setting-btn"
-          v-if="record.value.url"
-          @click="() => remove(record)"
-          size="sm"
+        <Button @click="() => edit(record)" class="tab-setting-btn" size="sm">{{
+          t("edit")
+        }}</Button>
+        <Button @click="() => remove(record)" class="tab-setting-btn" size="sm"
           >{{ t("delete") }}
         </Button>
       </template>
     </Table>
 
     <FormSite
-      :show="showCreateSiteModal"
+      :show="showCreateInterpreterModal"
       :id="editId"
       @submit="createSite"
       @cancel="modalClose"
-      ref="formSite"
-     />
+      ref="formInterpreter"
+    />
   </div>
 </template>
 
@@ -68,26 +54,32 @@ import {
   ref,
   Ref,
   watch,
+  reactive,
 } from "vue";
 import { useStore } from "vuex";
 import { StateType } from "@/views/site/store";
 import { momentUtcDef } from "@/utils/datetime";
-import { PaginationConfig, QueryParams } from "@/types/data";
 import { ZentaoData } from "@/store/zentao";
-import { disableStatusDef } from "@/utils/decorator";
 import Table from "./Table.vue";
 import notification from "@/utils/notification";
 import Modal from "@/utils/modal";
 import Button from "./Button.vue";
 import FormSite from "./FormSite.vue";
-
-const { t, locale } = useI18n();
-const momentUtc = momentUtcDef;
-const disableStatus = disableStatusDef;
+import { getLangSettings } from "@/views/interpreter/service";
+import {
+  listInterpreter,
+  removeInterpreter,
+} from "@/views/interpreter/service";
 
 const props = defineProps<{
   tab: PageTab;
 }>();
+
+const { t, locale } = useI18n();
+const momentUtc = momentUtcDef;
+
+let interpreters = ref<any>([]);
+let interpreter = reactive<any>({});
 
 const editId = ref(0);
 
@@ -110,38 +102,28 @@ const setColumns = () => {
     {
       isKey: true,
       label: t("no"),
-      field: "index",
-      width: "8%",
+      field: "id",
+      width: "20%",
     },
     {
-      label: t("name"),
-      field: "name",
-      width: "15%",
+      label: t("lang"),
+      field: "lang",
+      width: "20%",
     },
     {
-      label: t("zentao_url"),
-      field: "url",
-      width: "15%",
-    },
-    {
-      label: t("username"),
-      field: "username",
-      width: "15%",
-    },
-    {
-      label: t("status"),
-      field: "status",
-      width: "15%",
+      label: t("interpreter_path"),
+      field: "path",
+      width: "20%",
     },
     {
       label: t("create_time"),
       field: "createdAt",
-      width: "15%",
+      width: "20%",
     },
     {
       label: t("opt"),
       field: "action",
-      width: "10%",
+      width: "20%",
     },
   ];
 };
@@ -149,49 +131,44 @@ setColumns();
 
 const zentaoStore = useStore<{ zentao: ZentaoData }>();
 const store = useStore<{ Site: StateType }>();
-const showCreateSiteModal = ref(false)
-const models = computed<any[]>(() => store.state.Site.queryResult.result);
+const showCreateInterpreterModal = ref(false);
 
-const queryParams = ref<QueryParams>({
-  keywords: "",
-  enabled: "1",
-  page: 1,
-  pageSize: 100,
-});
-
-const model = ref({} as any);
-
-const loading = ref<boolean>(true);
-const list = (page: number) => {
-  loading.value = true;
-  store.dispatch("Site/list", {
-    keywords: queryParams.value.keywords,
-    enabled: queryParams.value.enabled,
-    pageSize: queryParams.value.pageSize,
-    page: page,
-  });
-  loading.value = false;
+let languageMap = ref<any>({});
+const getInterpretersA = async () => {
+  const data = await getLangSettings();
+  languageMap.value = data.languageMap;
 };
-list(1);
+getInterpretersA();
 
 onMounted(() => {
   console.log("onMounted");
 });
 
+const list = () => {
+  listInterpreter().then((json) => {
+    console.log("---", json);
+
+    if (json.code === 0) {
+      interpreters.value = json.data;
+    }
+  });
+};
+list();
+
 const create = () => {
   console.log("create");
   editId.value = 0;
-  showCreateSiteModal.value = true;
+  showCreateInterpreterModal.value = true;
 };
 const edit = (id) => {
   console.log("edit", id);
   editId.value = id;
-  showCreateSiteModal.value = true;
+  showCreateInterpreterModal.value = true;
 };
 
 const remove = (item) => {
   Modal.confirm({
-    title: "",
+    label: "",
     content: t("confirm_delete", {
       name: item.value.name,
       typ: t("zentao_site"),
@@ -199,30 +176,25 @@ const remove = (item) => {
     okText: t("confirm"),
     cancelText: t("cancel"),
     onOk: async () => {
-      store.dispatch("Site/delete", item.value.id).then((success) => {
-        zentaoStore.dispatch("Zentao/fetchSitesAndProduct").then((success) => {
-          notification.success(t("delete_success"));
-          list(1);
-        });
-      });
+      await removeInterpreter(item.id);
+      list();
     },
   });
 };
 
 const modalClose = () => {
-  showCreateSiteModal.value = false;
-}
-const formSite = ref(null)
-const createSite = (formData) => {
-    store.dispatch('Site/save', formData).then((response) => {
-        if (response) {
-            formSite.value.clearFormData()
-            notification.success({message: t('save_success')});
-            showCreateSiteModal.value = false;
-        }
-    })
+  showCreateInterpreterModal.value = false;
 };
-
+const formInterpreter = ref(null);
+const createSite = (formData) => {
+  store.dispatch("Site/save", formData).then((response) => {
+    if (response) {
+      formInterpreter.value.clearFormData();
+      notification.success({ message: t("save_success") });
+      showCreateInterpreterModal.value = false;
+    }
+  });
+};
 </script>
 
 <style>
@@ -271,8 +243,8 @@ const createSite = (formData) => {
   color: #1890ff;
   border-style: hidden !important;
 }
-.t-card-toolbar{
-    display: flex;
-    justify-content: space-between;
+.t-card-toolbar {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

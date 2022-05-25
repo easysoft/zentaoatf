@@ -3,7 +3,7 @@
     :showModal="showModalRef"
     @onCancel="cancel"
     @onOk="submit"
-    :title="t('pls_name')"
+    :title="t('create')"
   >
     <Form labelCol="6" wrapperCol="16">
       <FormItem name="name" :label="t('name')" :info="validateInfos.name">

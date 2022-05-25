@@ -3,7 +3,7 @@
     :showModal="showModalRef"
     @onCancel="cancel"
     @onOk="submit"
-    :title="t('pls_name')"
+    :title="props.id > 0 ? t('edit_site') : t('create_site')"
   >
     <Form class="form-site" labelCol="6" wrapperCol="16">
       <FormItem name="name" :label="t('name')" :info="validateInfos.name">
