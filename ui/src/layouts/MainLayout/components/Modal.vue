@@ -52,12 +52,8 @@ import { $vfm } from "vue-final-modal";
 export interface ZModalProps {
   showModal?: boolean;
   title: string;
-  onCancel?: {
-    type: Function;
-  };
-  onOk?: {
-    type: Function;
-  };
+  onCancel?: Function;
+  onOk?: Function;
   okTitle?: string;
   cancelTitle?: string;
   content?: string;
@@ -92,7 +88,7 @@ const confirm = (params) => {
 const onCancel = () => {
   if (props.isConfirm) {
     $vfm.hide("ZModal");
-    if (props.onOk && typeof props.onOk === "function") {
+    if (props.onCancel && typeof props.onCancel === "function") {
       props.onCancel();
     }
   }

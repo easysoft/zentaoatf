@@ -35,6 +35,12 @@
       :replaceFields="replaceFields"
   />
 
+  <FormSite
+      :show="showCreateSiteModal"
+      @submit="createSite"
+      @cancel="modalClose"
+      ref="formSite"
+      />
 </template>
 
 <script setup lang="ts">
@@ -45,9 +51,10 @@ import {useI18n} from "vue-i18n";
 import {useRouter} from "vue-router";
 import {useStore} from "vuex";
 import {ZentaoData} from "@/store/zentao";
-import {computed, onMounted, watch} from "vue";
+import {computed, onMounted, watch, ref} from "vue";
 import {getInitStatus} from "@/utils/cache";
 import {notification} from "ant-design-vue";
+import FormSite from "./FormSite.vue";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -94,13 +101,7 @@ const showZentaoMsg = (payload): void => {
 const selectSite = (item): void => {
   console.log('selectSite', item.key)
   if(item.key == -1){
-      // create site
-    //   store.dispatch('tabs/open', {
-    //     id: 'createSite',
-    //     title: t('createSite'),
-    //     type: 'settings',
-    //     data: {action:'createSite'}
-    // });
+      showCreateSiteModal.value = true;
   }
   store.dispatch('Zentao/fetchSitesAndProduct', {currSiteId: item.key}).then((payload) => {
     showZentaoMsg(payload)
@@ -118,6 +119,20 @@ const replaceFields = {
   title: 'name',
 }
 
+const showCreateSiteModal = ref(false)
+const modalClose = () => {
+  showCreateSiteModal.value = false;
+}
+const formSite = ref(null)
+const createSite = (formData) => {
+    store.dispatch('Site/save', formData).then((response) => {
+        if (response) {
+            formSite.value.clearFormData()
+            notification.success({message: t('save_success')});
+            showCreateSiteModal.value = false;
+        }
+    })
+};
 </script>
 
 <style>

@@ -5,6 +5,9 @@ const toast = useToast()
 export default {
     success(options) {
         console.log(options)
+        if(typeof(options) === 'string') {
+            options = {message: options}
+        }
         toast.success(options.message, options);
     },
     error(options) {

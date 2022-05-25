@@ -24,7 +24,7 @@ export function useForm(modelRef, rulesRef) {
         if (pass && item.email) pass &&= checkEmail(key, item, model, errorMap)
         if (pass && item.regex) pass &&= checkRegex(key, item, model, errorMap)
 
-        success = pass
+        success &&= pass
       })
 
       validateInfos.value[key] = errorMap

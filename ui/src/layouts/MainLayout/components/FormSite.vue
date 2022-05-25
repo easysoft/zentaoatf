@@ -5,34 +5,26 @@
     @onOk="submit"
     :title="t('pls_name')"
   >
-    <Form labelCol="6" wrapperCol="16">
+    <Form class="form-site" labelCol="6" wrapperCol="16">
       <FormItem name="name" :label="t('name')" :info="validateInfos.name">
         <input v-model="modelRef.name" class="form-control" />
       </FormItem>
-      <FormItem name="path" :label="t('path')" :info="validateInfos.path">
-        <input v-model="modelRef.path" class="form-control" />
-      </FormItem>
-      <FormItem name="type" :label="t('type')" :info="validateInfos.type">
-        <select name="type" v-model="modelRef.type" class="form-control">
-          <option
-            v-for="item in testTypes"
-            :key="item.value"
-            :value="item.value"
-          >
-            {{ item.label }}
-          </option>
-        </select>
+      <FormItem name="url" :label="t('zentao_url')" :info="validateInfos.url">
+        <input v-model="modelRef.url" class="form-control" />
       </FormItem>
       <FormItem
-        name="lang"
-        :label="t('default_lang')"
-        :info="validateInfos.lang"
+        name="username"
+        :label="t('username')"
+        :info="validateInfos.username"
       >
-        <select name="type" v-model="modelRef.lang" class="form-control">
-          <option v-for="item in langs" :key="item.code" :value="item.code">
-            {{ item.name }}
-          </option>
-        </select>
+        <input v-model="modelRef.username" class="form-control" />
+      </FormItem>
+      <FormItem
+        name="password"
+        :label="t('password')"
+        :info="validateInfos.password"
+      >
+        <input v-model="modelRef.password" class="form-control" />
       </FormItem>
     </Form>
   </ZModal>
@@ -52,38 +44,56 @@ import {
   ref,
   defineProps,
   defineEmits,
+  watch,
 } from "vue";
 import { useForm } from "@/utils/form";
 import Form from "./Form.vue";
 import FormItem from "./FormItem.vue";
+import { StateType } from "@/views/site/store";
 
-export interface FormWorkspaceProps {
+export interface FormSiteProps {
   show?: boolean;
+  id?: number;
 }
 const { t } = useI18n();
-const props = withDefaults(defineProps<FormWorkspaceProps>(), {
+const props = withDefaults(defineProps<FormSiteProps>(), {
   show: false,
+  id: 0
 });
 
 const showModalRef = computed(() => {
   return props.show;
 });
-const testTypes = ref([...ztfTestTypesDef, ...unitTestTypesDef]);
-const zentaoStore = useStore<{ Zentao: ZentaoData }>();
-const langs = computed<any[]>(() => zentaoStore.state.Zentao.langs);
+const store = useStore<{ Site: StateType }>();
+const get = async (id: number): Promise<void> => {
+  await store.dispatch("Site/get", id);
+};
 
+watch(props, () => {
+        get(props.id);
+})
+get(props.id);
 const cancel = () => {
   emit("cancel", {});
 };
 
-const modelRef = ref({});
+const modelRef = computed(() => store.state.Site.detailResult);
 const rulesRef = ref({
   name: [{ required: true, msg: t("pls_name") }],
-  path: [{ required: true, msg: t("pls_workspace_path") }],
-  lang: [{ required: true, msg: t("select_ui_lang") }],
-  type: [{ required: true, msg: t("pls_workspace_type") }],
+  url: [
+    {
+      required: true,
+      msg: t("pls_zentao_url"),
+    },
+    {
+      regex:
+        /(http?|https):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/i,
+      msg: t("pls_zentao_url"),
+    },
+  ],
+  username: [{ required: true, msg: t("pls_username") }],
+  password: [{ required: true, msg: t("pls_password") }],
 });
-
 const { validate, reset, validateInfos } = useForm(modelRef, rulesRef);
 
 const emit = defineEmits<{
@@ -93,6 +103,7 @@ const emit = defineEmits<{
 
 const submit = () => {
   if (validate()) {
+    console.log("submit", validate());
     emit("submit", modelRef.value);
   }
 };
@@ -143,5 +154,8 @@ defineExpose({
   border-color: #80bdff;
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+}
+.form-site {
+  min-width: 500px;
 }
 </style>
