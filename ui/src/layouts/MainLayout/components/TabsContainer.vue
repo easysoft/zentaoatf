@@ -10,7 +10,7 @@
         @clickToolbar="onToolbarClick"
     />
 
-    <Button style="position: absolute; top: 50px; right: 0;" class="red" icon="add"
+    <Button style="position: absolute; top: 50px; right: 0;z-index:999;" class="red" icon="add"
             @click="_addTestTab">
       Add test tab
     </Button>
