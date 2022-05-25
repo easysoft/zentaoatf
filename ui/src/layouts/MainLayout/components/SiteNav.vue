@@ -17,7 +17,7 @@
 
   <DropdownMenu
       toggle="#siteMenuToggle"
-      :items="sites"
+      :items="[...sites, {checked: false,id: -1,name: t('create_site'),password: '',url: '',username: '', titleClass: 'top-line padding-top'}]"
       keyName="id"
       :checkedKey="currSite.id"
       @click="selectSite"
@@ -56,7 +56,7 @@ const store = useStore<{ Zentao: ZentaoData }>();
 
 const sites = computed<any[]>(() => store.state.Zentao.sites);
 const products = computed<any>(() => store.state.Zentao.products);
-
+console.log(1111,sites.value);
 const currSite = computed<any>(() => store.state.Zentao.currSite);
 const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
@@ -93,6 +93,15 @@ const showZentaoMsg = (payload): void => {
 
 const selectSite = (item): void => {
   console.log('selectSite', item.key)
+  if(item.key == -1){
+      // create site
+    //   store.dispatch('tabs/open', {
+    //     id: 'createSite',
+    //     title: t('createSite'),
+    //     type: 'settings',
+    //     data: {action:'createSite'}
+    // });
+  }
   store.dispatch('Zentao/fetchSitesAndProduct', {currSiteId: item.key}).then((payload) => {
     showZentaoMsg(payload)
   })
@@ -110,3 +119,7 @@ const replaceFields = {
 }
 
 </script>
+
+<style>
+.top-line {border-top: 1px dashed var(--color-green)}
+</style>

@@ -12,13 +12,22 @@ import Toolbar from './Toolbar.vue';
 import {setI18nLanguage} from "@/config/i18n";
 import { getLocale, defaultLang } from "@/utils/i18n";
 import {useI18n} from "vue-i18n";
+import {useStore} from "vuex";
+import {ZentaoData} from "@/store/zentao";
+
 const { t, locale } = useI18n();
+const store = useStore<{ Zentao: ZentaoData }>();
 
 let  language = locale.value
 const switchLanguage = () => {
-  console.info("switchLanguage", getLocale(), language, defaultLang)
-  language = (language === defaultLang ? 'en-US' : defaultLang)
-  setI18nLanguage(language);
+//   console.info("switchLanguage", getLocale(), language, defaultLang)
+//   language = (language === defaultLang ? 'en-US' : defaultLang)
+//   setI18nLanguage(language);
+    store.dispatch('tabs/open', {
+        id: 'settings',
+        title: t('settings'),
+        type: 'settings',
+    });
 }
 
 </script>
