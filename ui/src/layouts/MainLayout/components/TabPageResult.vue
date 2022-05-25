@@ -19,12 +19,6 @@
           type="button"
           class="space-left"
         />
-        <Button
-          type="button"
-          @click="() => back()"
-          :label="t('back')"
-          class="space-left"
-        />
       </div>
 
       <div class="main">
@@ -395,10 +389,6 @@ const submitBugForm = (formData) => {
 };
 const cancelBugForm = () => {
   setBugFormVisible(false);
-};
-
-const back = (): void => {
-  console.log(back);
 };
 
 onMounted(() => {
