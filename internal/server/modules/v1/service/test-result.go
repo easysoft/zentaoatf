@@ -2,8 +2,8 @@ package service
 
 import (
 	"fmt"
-	"io/fs"
 	"path/filepath"
+	"sort"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
@@ -13,7 +13,6 @@ import (
 	"github.com/easysoft/zentaoatf/internal/pkg/domain"
 	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 	"github.com/jinzhu/copier"
 )
@@ -38,24 +37,13 @@ func (s *TestResultService) Paginate(siteId, productId uint, req serverDomain.Re
 	pageSize := req.PageSize
 	jumpNo := pageNo * pageSize
 
-	count := 0
+	maxSize := (pageNo + 1) * pageSize
 	for _, workspace := range workspaces {
-		//if workspace.Type != commConsts.ZTF {
-		//	continue
-		//}
-
-		logDir := filepath.Join(workspace.Path, commConsts.LogDirName)
-		reportFiles := analysisHelper.ListReportByModTime(logDir)
-		for _, fi := range reportFiles {
-			if count < jumpNo || len(reports) >= pageSize {
-				count += 1
-				continue
-			}
-
-			seq := fi.Name()
+		reportSeqs := analysisHelper.ListReport2(workspace.Path, maxSize)
+		for _, seq := range reportSeqs {
 			summary := serverDomain.TestReportSummary{WorkspaceId: int(workspace.ID)}
 
-			report, err1 := analysisHelper.ReadReportByWorkspaceSeq2(workspace.Path, seq, false)
+			report, err1 := analysisHelper.ReadReportByWorkspaceSeq(workspace.Path, seq)
 			if err1 != nil { // ignore wrong json result
 				continue
 			}
@@ -71,94 +59,62 @@ func (s *TestResultService) Paginate(siteId, productId uint, req serverDomain.Re
 			}
 
 			reports = append(reports, summary)
-
-			count += 1
-		}
-
-		// if the num of current log report is not enough, list bak reports.
-		reportLen := len(reports)
-		jumpNo += reportLen
-
-		logBakDir := filepath.Join(workspace.Path, commConsts.LogBakDirName)
-		bakReportFiles := analysisHelper.ListReportByModTime(logBakDir)
-		for _, fi := range bakReportFiles {
-			if count < jumpNo || len(reports) >= pageSize {
-				count += 1
-				continue
-			}
-
-			seq := fi.Name()
-			summary := serverDomain.TestReportSummary{WorkspaceId: int(workspace.ID)}
-
-			report, err1 := analysisHelper.ReadReportByWorkspaceSeq2(workspace.Path, seq, true)
-			if err1 != nil { // ignore wrong json result
-				continue
-			}
-			copier.Copy(&summary, report)
-
-			summary.No = fmt.Sprintf("%d-%s", workspace.ID, seq)
-			summary.Seq = seq
-			summary.WorkspaceId = int(workspace.ID)
-			summary.WorkspaceName = workspace.Name
-
-			if report.Total == 1 {
-				_, summary.TestScriptName = filepath.Split(report.FuncResult[0].Path)
-			}
-
-			reports = append(reports, summary)
-
-			count += 1
 		}
 	}
 
-	data.Populate(reports, int64(count), req.Page, req.PageSize)
+	sort.Slice(reports, func(i, j int) bool {
+		return reports[i].StartTime > reports[j].StartTime
+	})
+
+	count := len(reports) - jumpNo
+	if count > pageSize {
+		count = pageSize
+	} else if count < 1 {
+		count = 0
+	}
+
+	data.Populate(reports[jumpNo:jumpNo+count], int64(count), req.Page, req.PageSize)
 
 	return
 }
 
 func (s *TestResultService) GetLatest(siteId, productId uint) (summary serverDomain.TestReportSummary, err error) {
 	workspaces, err := s.WorkspaceRepo.ListByProduct(siteId, productId)
-
 	if err != nil {
 		return
 	}
 
-	var fi fs.FileInfo
-	var ws *model.Workspace
+	summaries := make([]serverDomain.TestReportSummary, 0, len(workspaces))
 	for _, workspace := range workspaces {
-		reportFiles := analysisHelper.ListReportByModTime(workspace.Path + commConsts.LogDir)
-		if len(reportFiles) == 0 {
+		reportSeqs := analysisHelper.ListReport2(workspace.Path, 1)
+		if len(reportSeqs) == 0 {
 			continue
 		}
 
-		if fi != nil && fi.ModTime().Before(reportFiles[0].ModTime()) {
+		seq := reportSeqs[0]
+		report, err1 := analysisHelper.ReadReportByWorkspaceSeq(workspace.Path, seq)
+		if err1 != nil {
 			continue
 		}
 
-		fi = reportFiles[0]
-		ws = &workspace
+		s := serverDomain.TestReportSummary{WorkspaceId: int(workspace.ID)}
+		copier.Copy(&s, report)
+		s.No = fmt.Sprintf("%d-%s", workspace.ID, seq)
+
+		s.Seq = seq
+		s.WorkspaceId = int(workspace.ID)
+		s.WorkspaceName = workspace.Name
+		if report.Total == 1 {
+			_, s.TestScriptName = filepath.Split(report.FuncResult[0].Path)
+		}
+
+		summaries = append(summaries, s)
 	}
 
-	if fi == nil || ws == nil {
-		//		err = errors.New("not found")
-		return
-	}
+	sort.Slice(summaries, func(i, j int) bool { return summaries[i].StartTime > summaries[j].StartTime })
 
-	summary = serverDomain.TestReportSummary{WorkspaceId: int(ws.ID)}
-	seq := fi.Name()
-	report, err1 := analysisHelper.ReadReportByWorkspaceSeq(ws.Path, seq)
-	if err1 != nil { // ignore wrong json result
-		return
-	}
-
-	copier.Copy(&summary, report)
-	summary.No = fmt.Sprintf("%d-%s", ws.ID, seq)
-	summary.Seq = seq
-	summary.WorkspaceId = int(ws.ID)
-	summary.WorkspaceName = ws.Name
-
-	if report.Total == 1 {
-		_, summary.TestScriptName = filepath.Split(report.FuncResult[0].Path)
+	if len(summaries) > 0 {
+		summary = summaries[0]
 	}
 
 	return
