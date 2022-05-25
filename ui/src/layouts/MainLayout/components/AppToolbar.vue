@@ -20,6 +20,7 @@ const store = useStore<{ Zentao: ZentaoData }>();
 
 let  language = locale.value
 const switchLanguage = () => {
+<<<<<<< HEAD
 //   console.info("switchLanguage", getLocale(), language, defaultLang)
 //   language = (language === defaultLang ? 'en-US' : defaultLang)
 //   setI18nLanguage(language);
@@ -28,6 +29,11 @@ const switchLanguage = () => {
         title: t('settings'),
         type: 'settings',
     });
+=======
+  console.info("switchLanguage", getLocale(), language, defaultLang)
+  language = (language === defaultLang ? 'en-US' : defaultLang)
+  setI18nLanguage(language, true); 
+>>>>>>> d2fef79bec49f3055e18cc844f66d303785a70ab
 }
 
 </script>

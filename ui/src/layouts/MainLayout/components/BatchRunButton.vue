@@ -31,7 +31,8 @@
 import {computed, ref} from "vue";
 import Button from './Button.vue';
 import ButtonGroup from './ButtonGroup.vue';
-import DropdownMenu from './DropdownMenu.vue';import {useI18n} from "vue-i18n";
+import DropdownMenu from './DropdownMenu.vue';
+import {useI18n} from "vue-i18n";
 import {getExecBy} from "@/utils/cache";
 import bus from "@/utils/eventBus";
 import settings from "@/config/settings";
