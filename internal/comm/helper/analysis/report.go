@@ -2,10 +2,8 @@ package analysisHelper
 
 import (
 	"encoding/json"
-	"io/fs"
 	"io/ioutil"
 	"path/filepath"
-	"sort"
 	"strings"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
@@ -13,66 +11,61 @@ import (
 	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
 )
 
-func ListReport(workspaceLogPath string) (reportFiles []string) {
-	//dir := filepath.Join(workspacePath, commConsts.LogDirName)
+func ListReport(workspacePath string) (reportSeqs []string) {
+	return ListReport2(workspacePath, -1)
+}
 
-	files, _ := ioutil.ReadDir(workspaceLogPath)
-	for _, fi := range files {
-		if fi.IsDir() {
-			reportFiles = append(reportFiles, fi.Name())
+func ListReport2(workspacePath string, maxSize int) (reportSeqs []string) {
+	logRoot := filepath.Join(workspacePath, commConsts.LogDirName)
+
+	if maxSize <= 0 {
+		maxSize = int(^uint(0) >> 1)
+	}
+
+	var count int = 0
+	// read log dir
+	dailyFiles, _ := ioutil.ReadDir(logRoot)
+	for i := len(dailyFiles) - 1; i > -1; i-- {
+		daily := dailyFiles[i]
+
+		if daily.IsDir() {
+			// read daily log dir
+			files, _ := ioutil.ReadDir(filepath.Join(logRoot, daily.Name()))
+			for j := len(files) - 1; j > -1; j-- {
+				count++
+				if count > maxSize {
+					break
+				}
+
+				fi := files[j]
+				reportSeqs = append(reportSeqs, EncodeSeq(filepath.Join(daily.Name(), fi.Name())))
+			}
 		}
 	}
 
 	return
 }
 
-func ListReportByModTime(workspaceLogPath string) (reportFiles []fs.FileInfo) {
+func EncodeSeq(seq string) string {
+	return strings.ReplaceAll(seq, string(filepath.Separator), ":")
+}
 
-	files, _ := ioutil.ReadDir(workspaceLogPath)
-	reportFiles = make([]fs.FileInfo, 0, len(files))
-	for _, fi := range files {
-		if fi.IsDir() {
-			reportFiles = append(reportFiles, fi)
-		}
-	}
-
-	sort.Slice(reportFiles, func(i, j int) bool {
-		return reportFiles[i].ModTime().After(reportFiles[j].ModTime())
-	})
-
-	return
+func DecodeSeq(seq string) string {
+	return strings.ReplaceAll(seq, ":", string(filepath.Separator))
 }
 
 func ReadReportByWorkspaceSeq(workspacePath string, seq string) (report commDomain.ZtfReport, err error) {
-
-	report, err = ReadReportByWorkspaceSeq2(workspacePath, seq, false)
-	if err != nil {
-		report, err2 := ReadReportByWorkspaceSeq2(workspacePath, seq, true)
-
-		if err2 != nil {
-			return report, err
-		} else {
-			return report, nil
-		}
-	}
-
-	return
-}
-
-func ReadReportByWorkspaceSeq2(workspacePath string, seq string, isBak bool) (report commDomain.ZtfReport, err error) {
+	seq = DecodeSeq(seq)
 	pth := ""
 	if commConsts.ExecFrom == commConsts.FromCmd {
 		seqPath := seq
 		if !filepath.IsAbs(seqPath) {
 			seqPath = filepath.Join(workspacePath, seq)
 		}
+
 		pth = filepath.Join(seqPath, commConsts.ResultJson)
 	} else {
-		if isBak {
-			pth = filepath.Join(workspacePath, commConsts.LogBakDirName, seq, commConsts.ResultJson)
-		} else {
-			pth = filepath.Join(workspacePath, commConsts.LogDirName, seq, commConsts.ResultJson)
-		}
+		pth = filepath.Join(workspacePath, commConsts.LogDirName, seq, commConsts.ResultJson)
 	}
 
 	return ReadReportByPath(pth)
