@@ -9,15 +9,15 @@
 
     </template>
     <template #extra>
-      <a-button v-if="interpreters" @click="create()" type="primary">
+      <a-button v-if="!interpreters" @click="create()" type="primary">
         <template #icon><PlusCircleOutlined /></template>
         {{t('create_interpreter')}}
       </a-button>
     </template>
 
-    <div v-if="!interpreters" style="padding: 20px;">
+    <!-- <div v-if="!interpreters" style="padding: 20px;">
       {{t('no_interp_1')}}<a href="https://ztf.im/book/ztf/ztf-about-26.html" target="_blank">这里</a>{{t('no_interp_2')}}
-    </div>
+    </div> -->
 
     <a-table
         v-if="interpreters"
