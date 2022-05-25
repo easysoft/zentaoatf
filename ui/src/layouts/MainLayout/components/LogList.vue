@@ -124,6 +124,12 @@ const onWebsocketMsgEvent = (data: any) => {
 
   item = genExecInfo(item, caseCount.value)
   if (item.info && item.info.key && isInArray(item.info.status, ['pass', 'fail', 'skip'])) { // set case result
+    globalStore.dispatch('Result/list', {
+        keywords: '',
+        enabled: 1,
+        pageSize: 10,
+        page: 1
+        });
     caseResult.value[item.info.key] = item.info.status
   }
 

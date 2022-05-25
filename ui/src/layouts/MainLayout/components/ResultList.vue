@@ -7,7 +7,7 @@
           class="inline-left"
           iconClass="text-green"
           v-if="item.fail==0"
-          :title="item.total > 1 ? item.workspaceName + '(' + item.total + ')' : item.testScriptName"
+          :title="item.total != 1 ? item.workspaceName + '(' + item.total + ')' : item.testScriptName"
           trailingTextClass="muted small"
         >
         </ListItem>
@@ -16,7 +16,7 @@
           class="inline-left"
           iconClass="text-red"
           v-else
-          :title="item.total > 1 ? item.workspaceName + '(' + item.total + ')' : item.testScriptName"
+          :title="item.total != 1 ? item.workspaceName + '(' + item.total + ')' : item.testScriptName"
           trailingTextClass="muted small"
         />
         <span v-if="item.checked == 0 || item.checked == undefined">{{momentTime(item.startTime, 'hh:mm')}}</span>
@@ -42,7 +42,7 @@
 <script setup lang="ts">
 import List from './List.vue';
 import ListItem from './ListItem.vue';
-import {StateType} from "@/src/views/result/store";
+import {StateType} from "@/views/result/store";
 import {PaginationConfig, QueryParams} from "@/types/data";
 import Icon from './Icon.vue';
 import {useI18n} from "vue-i18n";
@@ -82,7 +82,7 @@ const refreshExec = (e, item) => {
 const showDetail = (e, item) => {
     store.dispatch('tabs/open', {
     id: 'result-' + item.no,
-    title: item.total > 1 ? item.workspaceName + '(' + item.total + ')' : item.testScriptName,
+    title: item.total != 1 ? item.workspaceName + '(' + item.total + ')' : item.testScriptName,
     type: 'result',
     data: {seq:item.seq, workspaceId: item.workspaceId}
   });

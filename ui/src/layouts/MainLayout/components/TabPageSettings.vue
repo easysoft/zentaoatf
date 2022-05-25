@@ -176,7 +176,7 @@ const remove = (item) => {
     okText: t("confirm"),
     cancelText: t("cancel"),
     onOk: async () => {
-      await removeInterpreter(item.id);
+      await removeInterpreter(item.value.id);
       list();
     },
   });
