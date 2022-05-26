@@ -8,8 +8,11 @@
           :label="t('re_exec_all')"
           type="button"
         />
-        <Button @click="exec('fail')" class="space-left state primary">{{
+        <Button v-if="reportRef.testType != 'unit'" @click="exec('fail')" class="space-left state primary">{{
           t("re_exec_failed")
+        }}</Button>
+        <Button v-else @click="exec('fail')" class="space-left state primary">{{
+          t("re_exec_unit")
         }}</Button>
 
         <Button
@@ -98,8 +101,8 @@
           }}</Col>
         </Row>
         <Row>
-          <Col :span="2"></Col>
-          <Col :span="22">
+          <Col :span="1"></Col>
+          <Col :span="23" v-if="reportRef.testType != 'unit'">
             <template v-for="cs in reportRef.funcResult" :key="cs.id">
               <div class="case-info">
                 <div class="info">
@@ -130,7 +133,6 @@
               </div>
 
               <Table
-                :is-loading="false"
                 :columns="columns"
                 :rows="cs.steps"
                 :isHidePaging="true"
@@ -175,6 +177,30 @@
               <br />
             </template>
           </Col>
+          <Col :span="23" v-else>
+              <Table
+                :columns="columns"
+                :rows="reportRef.unitResult"
+                :isHidePaging="true"
+                :isSlotMode="true"
+              >
+                <template #status="record">
+                  <span :class="'t-' + record.value.status">
+                    <span class="dot"><icon-svg type="dot" /></span>
+                    <span>{{ resultStatus(record.value.status) }}</span>
+                  </span>
+                </template>
+                <template #duration="record">
+                    {{ record.value.duration }}
+                </template>
+                <template #opt="record">
+                    <template v-if="record.value.failure">
+                    <span @click="showInfo(record.value)" class="t-link t-primary">{{t('view_error')}}</span>
+                </template>
+                </template>
+              </Table>
+              <br />
+          </Col>
         </Row>
       </div>
     </div>
@@ -182,7 +208,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, toRefs } from "vue";
+import { defineProps, toRefs, reactive } from "vue";
+import { PageTab } from "@/store/tabs";
 import { useI18n } from "vue-i18n";
 import { computed, defineComponent, onMounted, ref, Ref, watch } from "vue";
 import { useStore } from "vuex";
@@ -191,6 +218,8 @@ import Button from "./Button.vue";
 import Row from "./Row.vue";
 import Col from "./Col.vue";
 import Table from "./Table.vue";
+import Modal from "@/utils/modal"
+import {jsonStrDef} from "@/utils/dom";
 import {
   execByDef,
   resultStatusDef,
@@ -204,12 +233,12 @@ import notification from "@/utils/notification";
 
 import { submitResultToZentao } from "@/views/result/service";
 import { submitBugToZentao } from "@/services/bug";
-import { PageTab } from "@/store/tabs";
 import { ZentaoData } from "@/store/zentao";
 import { StateType } from "@/views/result/store";
 import IconSvg from "@/components/IconSvg/index";
 import bus from "@/utils/eventBus";
 import settings from "@/config/settings";
+import modal from "@/utils/modal";
 
 const { t, locale } = useI18n();
 
@@ -219,6 +248,7 @@ const report = computed<any>(() => store.state.Result.detailResult);
 const zentaoStore = useStore<{ Zentao: ZentaoData }>();
 const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
 
+const jsonStr = jsonStrDef
 const execBy = execByDef;
 const momentTime = momentUnixDef;
 const percent = percentDef;
@@ -243,8 +273,41 @@ watch(
   { deep: true }
 );
 
+const reportRef = ref({});
+
 const columns = ref([] as any[]);
 const setColumns = () => {
+  if(reportRef.value.testType === 'unit') {
+    columns.value = [
+      {
+        label: t('no'),
+        field: "id",
+        width: "3%",
+        isKey: true,
+      },
+      {
+        label: t('case'),
+        field: 'title',
+      },
+      {
+        label: t('suite'),
+        field: 'testSuite',
+      },
+      {
+        label: t('duration_sec'),
+        field: 'duration',
+      },
+      {
+        label: t('status'),
+        field: 'status',
+      },
+      {
+        label: t('opt'),
+        field: 'opt',
+      },
+    ];
+    return;
+  }
   columns.value = [
     {
       label: "ID",
@@ -260,12 +323,12 @@ const setColumns = () => {
     {
       label: t("status"),
       field: "status",
-      width: "10%",
+      width: "5%",
     },
     {
       label: t("checkpoint"),
       field: "checkpoint",
-      width: "10%",
+      width: "20%",
     },
   ];
 };
@@ -273,7 +336,6 @@ setColumns();
 
 const loading = ref<boolean>(true);
 
-const reportRef = ref({});
 watch(
   report,
   () => {
@@ -282,6 +344,7 @@ watch(
     }
     console.log("watch report", report.value);
     reportRef.value = report.value;
+    setColumns();
   },
   { deep: true }
 );
@@ -410,6 +473,15 @@ const cancelBugForm = () => {
   setBugFormVisible(false);
 };
 
+const showInfo = (item): void => {
+    Modal.confirm({
+        title: t("error_detail"),
+        showOkBtn: false,
+        content: jsonStr(item.failure),
+        cancelTitle: t("close"),
+    })
+}
+
 onMounted(() => {
   console.log("onMounted");
 });
@@ -470,5 +542,11 @@ const getCaseIdsInReport = (reportVal) => {
 .checkpoint-num {
   display: inline-block;
   width: 18px;
+}
+.tab-result-link {
+  border: none;
+  background: none;
+  color: #1890ff;
+  border-style: hidden !important;
 }
 </style>

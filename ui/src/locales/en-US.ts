@@ -105,6 +105,7 @@ export default {
     're_exec':  'Retest', 
     're_exec_all':  'Retest All Cases', 
     're_exec_failed':  'Retest Failed Cases', 
+    're_exec_unit':  'Retest Unit Test', 
     'test_env':  'Test Environment', 
     'test_type':  'Test Type', 
     'exec_type': 'Execution Type', 
