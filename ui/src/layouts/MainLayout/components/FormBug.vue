@@ -57,8 +57,6 @@
         <textarea v-model="modelRef.steps" rows="3" />
       </FormItem>
     </Form>
-
-    {{validateInfos}}
   </ZModal>
 </template>
 
