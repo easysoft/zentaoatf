@@ -302,7 +302,7 @@ const exec = (scope): void => {
   if (execBy === "case") {
     const caseMap = getCaseIdsInReport(report.value)
     const cases = ref(caseMap[scope])
-    console.log(cases)
+    console.log(cases.value)
   } else {
     console.log("suite");
   }
@@ -404,7 +404,15 @@ onMounted(() => {
 });
 
 const getCaseIdsInReport = (reportVal) => {
-  console.log(reportVal)
+  const allCases = [] as string[]
+  const failedCases = [] as string[]
+
+  reportVal.funcResult.forEach(cs => {
+    allCases.push(cs.path)
+    if (cs.status === 'fail') failedCases.push(cs.path)
+  })
+
+  return {all: allCases, fail: failedCases}
 }
 
 </script>
