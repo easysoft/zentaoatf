@@ -4,6 +4,11 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"os/exec"
+	"path/filepath"
+	"regexp"
+	"strings"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	langHelper "github.com/easysoft/zentaoatf/internal/comm/helper/lang"
 	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
@@ -11,10 +16,6 @@ import (
 	shellUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/shell"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
-	"os/exec"
-	"path/filepath"
-	"regexp"
-	"strings"
 )
 
 type InterpreterService struct {
@@ -96,6 +97,42 @@ func (s *InterpreterService) GetLangSettings() (mp map[string]interface{}, err e
 }
 
 func (s *InterpreterService) GetLangInterpreter(language string) (list []map[string]interface{}, err error) {
+	if commonUtils.IsWin() {
+		return s.GetLangInterpreterWin(language)
+	} else {
+		return s.GetLangInterpreterUnix(language)
+	}
+}
+
+func (s *InterpreterService) GetLangInterpreterUnix(language string) (list []map[string]interface{}, err error) {
+	langSettings := commConsts.LangMap[language]
+	whereCmd := strings.TrimSpace(langSettings["linuxWhereCmd"])
+	versionCmd := strings.TrimSpace(langSettings["versionCmd"])
+
+	output, err := shellUtils.ExeSysCmd(whereCmd)
+	if err != nil {
+		return
+	}
+	pathArr := strings.Split(output, "\n")
+
+	for _, path := range pathArr {
+		path = strings.TrimSpace(path)
+
+		versionInfo, err1 := shellUtils.ExeSysCmd(path + " " + versionCmd)
+		if err1 != nil {
+			continue
+		}
+
+		mp := map[string]interface{}{}
+		mp["path"] = path
+		mp["info"] = versionInfo
+		list = append(list, mp)
+	}
+
+	return
+}
+
+func (s *InterpreterService) GetLangInterpreterWin(language string) (list []map[string]interface{}, err error) {
 	langSettings := commConsts.LangMap[language]
 	whereCmd := strings.TrimSpace(langSettings["whereCmd"])
 	versionCmd := strings.TrimSpace(langSettings["versionCmd"])
