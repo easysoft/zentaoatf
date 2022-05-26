@@ -34,7 +34,6 @@
       @click="selectProduct"
       :replaceFields="replaceFields"
   />
-
 </template>
 
 <script setup lang="ts">

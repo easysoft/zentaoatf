@@ -130,7 +130,7 @@ defineExpose({
 }
 
 .modal-title {
-  margin: 0 2rem 1rem 0;
+  margin: 0 2rem 0 0;
   min-width: 300px;
   justify-content: space-between;
   font-size: 1.1rem;
@@ -154,7 +154,7 @@ defineExpose({
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-  padding: 1rem 0 0;
+  padding: 0 0 0;
 }
 
 .dark-mode div::v-deep .modal-content {

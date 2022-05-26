@@ -1,5 +1,5 @@
 <template>
-  <div class="site-main custom-space-top custom-space-left custom-space-right">
+  <div class="site-main space-top space-left space-right">
     <div class="t-card-toolbar">
       <div class="left">
         {{ t("interpreter") }}
@@ -32,14 +32,16 @@
       </template>
     </Table>
 
-    <FormInterpreter
+    <FormSite
       :show="showCreateInterpreterModal"
-      :info="editInfo"
-      @submit="createInterpreter"
+      :id="editId"
+      @submit="createSite"
       @cancel="modalClose"
       ref="formInterpreter"
     />
   </div>
+  <hr>
+  <LanguageSettings></LanguageSettings>
 </template>
 
 <script setup lang="ts">
@@ -47,8 +49,12 @@ import { defineProps } from "vue";
 import { PageTab } from "@/store/tabs";
 import { useI18n } from "vue-i18n";
 import {
+  computed,
+  ComputedRef,
+  defineComponent,
   onMounted,
   ref,
+  Ref,
   watch,
   reactive,
 } from "vue";
@@ -60,13 +66,13 @@ import Table from "./Table.vue";
 import notification from "@/utils/notification";
 import Modal from "@/utils/modal";
 import Button from "./Button.vue";
-import FormInterpreter from "./FormInterpreter.vue";
+import FormSite from "./FormSite.vue";
+import LanguageSettings from "./LanguageSettings.vue";
 import { getLangSettings } from "@/views/interpreter/service";
 import {
   listInterpreter,
   removeInterpreter,
 } from "@/views/interpreter/service";
-import {getLangInterpreter, saveInterpreter} from "@/views/interpreter/service";
 
 const props = defineProps<{
   tab: PageTab;
@@ -78,7 +84,7 @@ const momentUtc = momentUtcDef;
 let interpreters = ref<any>([]);
 let interpreter = reactive<any>({});
 
-const editInfo = ref(0);
+const editId = ref(0);
 
 onMounted(() => {
   console.log("onMounted");
@@ -126,6 +132,7 @@ const setColumns = () => {
 };
 setColumns();
 
+const zentaoStore = useStore<{ zentao: ZentaoData }>();
 const store = useStore<{ Site: StateType }>();
 const showCreateInterpreterModal = ref(false);
 
@@ -153,12 +160,12 @@ list();
 
 const create = () => {
   console.log("create");
-  editInfo.value = {};
+  editId.value = 0;
   showCreateInterpreterModal.value = true;
 };
-const edit = (item) => {
-  console.log("edit", item);
-  editInfo.value = item;
+const edit = (id) => {
+  console.log("edit", id);
+  editId.value = id;
   showCreateInterpreterModal.value = true;
 };
 
@@ -166,8 +173,8 @@ const remove = (item) => {
   Modal.confirm({
     title: "",
     content: t("confirm_delete", {
-      name: languageMap.value[item.value.lang].name,
-      typ: t("script_lang"),
+      name: item.value.name,
+      typ: t("zentao_site"),
     }),
     okText: t("confirm"),
     cancelText: t("cancel"),
@@ -182,15 +189,14 @@ const modalClose = () => {
   showCreateInterpreterModal.value = false;
 };
 const formInterpreter = ref(null);
-const createInterpreter = (formData) => {
-    saveInterpreter(formData).then((json) => {
-      if (json.code === 0) {
-        formInterpreter.value.clearFormData();
-        notification.success({ message: t("save_success") });
-        showCreateInterpreterModal.value = false;
-        list();
-      }
-  })
+const createSite = (formData) => {
+  store.dispatch("Site/save", formData).then((response) => {
+    if (response) {
+      formInterpreter.value.clearFormData();
+      notification.success({ message: t("save_success") });
+      showCreateInterpreterModal.value = false;
+    }
+  });
 };
 </script>
 
@@ -243,15 +249,5 @@ const createInterpreter = (formData) => {
 .t-card-toolbar {
   display: flex;
   justify-content: space-between;
-}
-
-.custom-space-left{
-    margin-left: 8px;
-}
-.custom-space-top{
-    margin-left: 8px;
-}
-.custom-space-right{
-    margin-left: 8px;
 }
 </style>
