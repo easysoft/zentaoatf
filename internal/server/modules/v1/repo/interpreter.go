@@ -3,6 +3,7 @@ package repo
 import (
 	"errors"
 	"fmt"
+
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/fatih/color"
@@ -21,6 +22,7 @@ func NewInterpreterRepo() *InterpreterRepo {
 func (r *InterpreterRepo) List() (pos []model.Interpreter, err error) {
 	db := r.DB.Model(&model.Interpreter{}).Where("NOT deleted")
 	err = db.Find(&pos).Error
+	fmt.Println(err)
 
 	return
 }

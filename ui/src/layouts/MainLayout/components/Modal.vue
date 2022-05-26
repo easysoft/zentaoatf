@@ -10,7 +10,7 @@
       title == undefined ? t("title") : title
     }}</span>
     <div class="modal-content">
-      {{ content }}
+        <span v-html="content"></span>
       <slot />
     </div>
     <div class="modal-action">
