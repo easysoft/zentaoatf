@@ -103,27 +103,27 @@ const setColumns = () => {
       isKey: true,
       label: t("no"),
       field: "id",
-      width: "20%",
+      width: "10%",
     },
     {
       label: t("lang"),
       field: "lang",
-      width: "20%",
+      width: "25%",
     },
     {
       label: t("interpreter_path"),
       field: "path",
-      width: "20%",
+      width: "30%",
     },
     {
       label: t("create_time"),
       field: "createdAt",
-      width: "20%",
+      width: "25%",
     },
     {
       label: t("opt"),
       field: "action",
-      width: "20%",
+      width: "25%",
     },
   ];
 };
@@ -168,7 +168,7 @@ const edit = (id) => {
 
 const remove = (item) => {
   Modal.confirm({
-    label: "",
+    title: "",
     content: t("confirm_delete", {
       name: item.value.name,
       typ: t("zentao_site"),
@@ -235,7 +235,7 @@ const createSite = (formData) => {
   background-color: #fff;
   border-color: #80bdff;
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+  box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 23%);
 }
 .tab-setting-btn {
   border: none;

@@ -11,7 +11,7 @@
         <Button v-if="reportRef.testType != 'unit'" @click="exec('fail')" class="space-left state primary">{{
           t("re_exec_failed")
         }}</Button>
-        <Button v-else @click="exec('fail')" class="space-left state primary">{{
+        <Button v-else @click="exec('')" class="space-left state primary">{{
           t("re_exec_unit")
         }}</Button>
 
