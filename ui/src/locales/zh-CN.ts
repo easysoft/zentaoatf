@@ -114,6 +114,7 @@ export default {
     're_exec':  '重新执行', 
     're_exec_all':  '重新执行所有用例', 
     're_exec_failed':  '重新执行失败用例', 
+    're_exec_unit':  '重新执行单元测试', 
     'test_env':  '测试环境', 
     'test_type':  '测试类型', 
     'exec_type': '执行类型', 
