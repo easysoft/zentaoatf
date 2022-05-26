@@ -101,9 +101,8 @@
             t("case_detail")
           }}</Col>
         </Row>
-        <Row>
-          <Col :width="'2'"></Col>
-          <Col :width="'98'" v-if="reportRef.testType != 'unit'">
+        <Row class="space-left">
+          <Col :width="'100'" v-if="reportRef.testType != 'unit'">
             <template v-for="cs in reportRef.funcResult" :key="cs.id">
               <div class="case-info">
                 <div class="info">
@@ -178,7 +177,7 @@
               <br />
             </template>
           </Col>
-          <Col :width="'98'" v-else>
+          <Col :width="'100'" v-else>
               <Table
                 :columns="columns"
                 :rows="reportRef.unitResult"

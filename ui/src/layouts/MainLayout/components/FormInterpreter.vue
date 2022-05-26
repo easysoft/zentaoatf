@@ -3,9 +3,46 @@
     :showModal="showModalRef"
     @onCancel="cancel"
     @onOk="submit"
-    :title="props.id > 0 ? t('edit_interpreter') : t('create_interpreter')"
+    :title="t('script_lang')"
   >
+
     <Form class="form-site" labelCol="6" wrapperCol="16">
+        <FormItem name="lang" :label="t('script_lang')" :info="validateInfos.lang">
+        <select name="type" v-model="modelRef.lang" class="form-control">
+          <option
+            v-for="item in languages"
+            :key="item.value"
+            :value="item.value"
+          >
+            {{ languageMap[item.value].name }}
+          </option>
+        </select>
+      </FormItem>
+<FormItem name="name" :label="t('interpreter_path')" :info="validateInfos.path">
+        <input v-model="modelRef.path" class="form-control" @change="selectFile" />
+      </FormItem>
+<FormItem v-if="!isElectron" name="name" :label="t('interpreter_path')" :info="validateInfos.path">
+        <input v-model="modelRef.path" class="form-control" @change="selectFile" />
+      </FormItem>
+
+      <a-input v-if="!isElectron" v-model:value="modelRef.path" spellcheck="false"
+               @blur="validate('path', { trigger: 'blur' }).catch(() => {})"/>
+    </a-form-item>
+
+    <a-form-item :wrapper-col="{ span: wrapperCol.span, offset: labelCol.span }">
+      <a-select v-if="interpreterInfos.length > 0" v-model:value="selectedInterpreter" @change="selectInterpreter">
+        <a-select-option value="">{{ t('find_to_select', {num: interpreterInfos.length})}}</a-select-option>
+        <a-select-option v-for="item in interpreterInfos" :key="item.path" :value="item.path">
+          {{ item.info }}
+        </a-select-option>
+      </a-select>
+    </a-form-item>
+
+    <a-form-item :wrapper-col="{ span: wrapperCol.span, offset: labelCol.span }"
+                 :class="{'t-dir-right': !isWin}" class="t-right">
+      <a-button type="primary" @click.prevent="save" class="t-btn-gap">{{ t('save') }}</a-button> &nbsp;
+      <a-button @click="reset" class="t-btn-gap">{{ t('reset') }}</a-button>
+    </a-form-item>
       <FormItem name="name" :label="t('name')" :info="validateInfos.name">
         <input v-model="modelRef.name" class="form-control" />
       </FormItem>
@@ -50,12 +87,23 @@ import { useForm } from "@/utils/form";
 import Form from "./Form.vue";
 import FormItem from "./FormItem.vue";
 import { StateType } from "@/views/site/store";
+import {getLangSettings} from "@/views/interpreter/service";
 
 export interface FormSiteProps {
   show?: boolean;
   id?: number;
 }
 const { t } = useI18n();
+
+const languages = ref<any>({})
+    const languageMap = ref<any>({})
+
+    const getInterpretersA = async () => {
+      const data = await getLangSettings()
+      languages.value = data.languages
+      languageMap.value = data.languageMap
+    }
+
 const props = withDefaults(defineProps<FormSiteProps>(), {
   show: false,
   id: 0
