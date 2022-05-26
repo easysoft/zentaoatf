@@ -273,6 +273,7 @@ const resultStatus = (code) => {
 const props = defineProps<{
   tab: PageTab;
 }>();
+
 const { tab } = toRefs(props);
 let { seq, workspaceId } = tab.value.data;
 
