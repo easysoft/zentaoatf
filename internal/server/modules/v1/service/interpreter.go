@@ -109,10 +109,7 @@ func (s *InterpreterService) GetLangInterpreterUnix(language string) (list []map
 	whereCmd := strings.TrimSpace(langSettings["linuxWhereCmd"])
 	versionCmd := strings.TrimSpace(langSettings["versionCmd"])
 
-	output, err := shellUtils.ExeSysCmd(whereCmd)
-	if err != nil {
-		return
-	}
+	output, _ := shellUtils.ExeSysCmd(whereCmd)
 	pathArr := strings.Split(output, "\n")
 
 	for _, path := range pathArr {
