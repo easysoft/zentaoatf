@@ -3,7 +3,6 @@
     <div>
       <div class="opt">
         <Button
-          v-if="reportRef.testType != 'unit'"
           @click="exec('all')"
           class="space-left state primary"
           :label="t('re_exec_all')"
@@ -12,7 +11,7 @@
         <Button v-if="reportRef.testType != 'unit'" @click="exec('fail')" class="space-left state primary">{{
           t("re_exec_failed")
         }}</Button>
-        <Button v-if="reportRef.testType == 'unit'" @click="exec('')" class="space-left state primary">{{
+        <Button v-else @click="exec('')" class="space-left state primary">{{
           t("re_exec_unit")
         }}</Button>
 
@@ -21,13 +20,12 @@
           @click="openResultForm()"
           :label="t('submit_result_to_zentao')"
           type="button"
-          class="space-left"
-        />
+          class="space-left" />
       </div>
 
       <div class="main">
         <div class="summary">
-          <Row >
+          <Row :gutter="10">
             <Col :span="2" class="t-bord t-label-right">{{
               t("test_env")
             }}</Col>
@@ -101,8 +99,9 @@
             t("case_detail")
           }}</Col>
         </Row>
-        <Row class="case-result-item">
-          <Col :width="'100'" v-if="reportRef.testType != 'unit'">
+        <Row>
+          <Col :span="1"></Col>
+          <Col :span="23" v-if="reportRef.testType != 'unit'">
             <template v-for="cs in reportRef.funcResult" :key="cs.id">
               <div class="case-info">
                 <div class="info">
@@ -177,7 +176,7 @@
               <br />
             </template>
           </Col>
-          <Col :width="'100'" v-else>
+          <Col :span="23" v-else>
               <Table
                 :columns="columns"
                 :rows="reportRef.unitResult"
@@ -204,6 +203,22 @@
         </Row>
       </div>
     </div>
+
+    <!-- use v-if, each time will call init func in popup page  -->
+    <FormResult
+        v-if="showSubmitResultModal"
+        :show="showSubmitResultModal"
+        :finish="closeResultForm"
+        :data="report"
+        ref="formSite"
+    />
+    <FormBug
+        v-if="showSubmitBugModal"
+        :show="showSubmitBugModal"
+        :finish="closeBugForm"
+        :data="bugFormData"
+        ref="formSite"
+    />
   </div>
 </template>
 
@@ -218,6 +233,8 @@ import Button from "./Button.vue";
 import Row from "./Row.vue";
 import Col from "./Col.vue";
 import Table from "./Table.vue";
+import FormResult from "./FormResult.vue";
+import FormBug from "./FormBug.vue";
 import Modal from "@/utils/modal"
 import {jsonStrDef} from "@/utils/dom";
 import {
@@ -229,16 +246,11 @@ import {
   actualDesc,
 } from "@/utils/testing";
 
-import notification from "@/utils/notification";
-
-import { submitResultToZentao } from "@/views/result/service";
-import { submitBugToZentao } from "@/services/bug";
 import { ZentaoData } from "@/store/zentao";
 import { StateType } from "@/views/result/store";
 import IconSvg from "@/components/IconSvg/index";
 import bus from "@/utils/eventBus";
 import settings from "@/config/settings";
-import modal from "@/utils/modal";
 
 const { t, locale } = useI18n();
 
@@ -360,9 +372,6 @@ const exec = (scope): void => {
   console.log('exec', report.value);
 
   const testType = report.value.testType;
-  const productId = report.value.productId;
-  const workspaceId = report.value.workspaceId;
-  const execById = report.value.execById;
 
   if (testType === "func") {
     const caseMap = getCaseIdsInReport(report.value)
@@ -383,94 +392,32 @@ const exec = (scope): void => {
 };
 
 // 提交结果
-const resultFormData = ref({});
-const resultFormVisible = ref<boolean>(false);
-const setResultFormVisible = (val: boolean) => {
-  resultFormVisible.value = val;
-};
+const showSubmitResultModal = ref(false)
 const openResultForm = () => {
   console.log("openResultForm");
-  resultFormData.value = report.value;
-  setResultFormVisible(true);
+  showSubmitResultModal.value = true
 };
-const submitResultForm = (formData) => {
-  console.log("submitResultForm", formData);
-
-  const data = Object.assign(
-    {
-      workspaceId: report.value.workspaceId,
-      seq: report.value.seq,
-    },
-    formData
-  );
-
-  data.taskId = parseInt(data.taskId);
-
-  submitResultToZentao(data).then((json) => {
-    console.log("json", json);
-    if (json.code === 0) {
-      notification.success({
-        message: t("submit_success"),
-      });
-      setResultFormVisible(false);
-    } else {
-      notification.error({
-        message: t("submit_failed"),
-        description: json.msg,
-      });
-    }
-  });
-};
-const cancelResultForm = () => {
-  setResultFormVisible(false);
+const closeResultForm = () => {
+  console.log("closeResultForm");
+  showSubmitResultModal.value = false
 };
 
 // 提交缺陷
-const bugFormData = ref({});
-const bugFormVisible = ref<boolean>(false);
-const setBugFormVisible = (val: boolean) => {
-  bugFormVisible.value = val;
-};
+const showSubmitBugModal = ref(false)
+const bugFormData = ref({})
 const openBugForm = (cs) => {
-  console.log("openBugForm", cs);
-  if (cs.product === 0) cs.product = "";
-  cs.workspaceId = report.value.workspaceId;
-  cs.seq = report.value.seq;
-  bugFormData.value = cs;
-  setBugFormVisible(true);
+  console.log("openBugForm");
+
+  if (cs.product === 0) cs.product = ''
+  cs.workspaceId = report.value.workspaceId
+  cs.seq = report.value.seq
+  bugFormData.value = cs
+
+  showSubmitBugModal.value = true
 };
-const submitBugForm = (formData) => {
-  console.log("submitBugForm", formData);
-
-  const data = Object.assign(
-    {
-      workspaceId: report.value.workspaceId,
-      seq: report.value.seq,
-    },
-    formData
-  );
-
-  data.module = parseInt(data.module);
-  data.severity = parseInt(data.severity);
-  data.pri = parseInt(data.pri);
-
-  submitBugToZentao(data).then((json) => {
-    console.log("json", json);
-    if (json.code === 0) {
-      notification.success({
-        message: t("submit_success"),
-      });
-      setBugFormVisible(false);
-    } else {
-      notification.error({
-        message: t("submit_failed"),
-        description: json.msg,
-      });
-    }
-  });
-};
-const cancelBugForm = () => {
-  setBugFormVisible(false);
+const closeBugForm = () => {
+  console.log("closeBugForm");
+  showSubmitBugModal.value = false
 };
 
 const showInfo = (item): void => {
@@ -504,7 +451,7 @@ const getCaseIdsInReport = (reportVal) => {
 
 <style lang="less" scoped>
 .main {
-  padding: 20px var(--space-base);
+  padding: 20px;
 }
 .dot {
   margin-right: 5px;
@@ -548,8 +495,5 @@ const getCaseIdsInReport = (reportVal) => {
   background: none;
   color: #1890ff;
   border-style: hidden !important;
-}
-.case-result-item{
-    padding-left: 15px;
 }
 </style>

@@ -34,13 +34,6 @@
       @click="selectProduct"
       :replaceFields="replaceFields"
   />
-
-  <FormSite
-      :show="showCreateSiteModal"
-      @submit="createSite"
-      @cancel="modalClose"
-      ref="formSite"
-      />
 </template>
 
 <script setup lang="ts">

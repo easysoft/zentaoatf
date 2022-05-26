@@ -17,7 +17,6 @@ export function useForm(modelRef, rulesRef) {
     ruleKeys.forEach((key, index) => {
       const errorMap = {}
       let pass = true
-      if (!errorMap[key]) errorMap[key] = []
 
       rules[key].forEach((item, index) => {
         if (item.required) pass &&= checkRequired(key, item, model, errorMap)
@@ -47,7 +46,10 @@ export function checkRequired(key, item, model, errMap) {
   let pass = true;
   if (item.required && !model[key]) pass = false
 
-  if (!pass) errMap[key].push(item.msg)
+  const type = 'required'
+  if (!errMap[type]) errMap[type] = []
+
+  if (!pass) errMap[type].push(item.msg)
   return pass;
 }
 
@@ -55,7 +57,10 @@ export function checkEmail(key, item, model, errMap) {
   const regx=/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
   const pass = regx.test(model[key]);
 
-  if (!pass) errMap[key].push(item.msg)
+  const type = 'email'
+  if (!errMap[type]) errMap[type] = []
+
+  if (!pass) errMap[type].push(item.msg)
   return pass;
 }
 
@@ -63,7 +68,10 @@ export function checkRegex(key, item, model, errMap) :any {
   const regx = new RegExp(item.regex);
   const pass = regx.test(model[key]);
 
-  if (!pass) errMap[key].push(item.msg)
+  const type = 'regex'
+  if (!errMap[type]) errMap[type] = []
+
+  if (!pass) errMap[type].push(item.msg)
   return pass;
 }
 
