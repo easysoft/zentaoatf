@@ -64,9 +64,9 @@ export interface ZModalProps {
   isConfirm?: boolean;
   showOkBtn?: boolean;
   showCancelBtn?: boolean;
-  styles?: object;
-  contentStyle?: object;
-  overlayStyle?: object;
+  styles?: object; // Style that will be applied to the modal container.
+  contentStyle?: object; // Style that will be applied to the modal content.
+  overlayStyle?: object; // Style that will be applied to the modal overlay.
 }
 const { t } = useI18n();
 const props = withDefaults(defineProps<ZModalProps>(), {
