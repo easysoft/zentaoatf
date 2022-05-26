@@ -43,13 +43,20 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 	}
 
 	report = commDomain.ZtfReport{
-		TestEnv:   commonUtils.GetOs(),
-		TestType:  commConsts.TestUnit,
-		TestTool:  req.TestTool,
-		BuildTool: req.BuildTool,
+		TestEnv:     commonUtils.GetOs(),
+		TestType:    commConsts.TestUnit,
+		TestTool:    req.TestTool,
+		BuildTool:   req.BuildTool,
+		TestCommand: req.Cmd,
+
 		StartTime: startTime,
 		EndTime:   endTime,
-		Pass:      0, Fail: 0, Total: 0}
+		Pass:      0, Fail: 0, Total: 0,
+
+		SubmitResult:  req.SubmitResult,
+		WorkspaceId:   req.WorkspaceId,
+		WorkspaceType: req.WorkspaceType,
+	}
 
 	failedCount := 0
 	failedCaseLines := make([]string, 0)

@@ -144,13 +144,17 @@ type ZentaoBug struct {
 }
 
 type ZtfReport struct {
-	TestEnv   commConsts.OsType    `json:"testEnv,omitempty"`
-	TestType  commConsts.TestType  `json:"testType"`
-	TestTool  commConsts.TestTool  `json:"testTool"`
-	BuildTool commConsts.BuildTool `json:"buildTool"`
+	TestEnv     commConsts.OsType    `json:"testEnv,omitempty"`
+	TestType    commConsts.TestType  `json:"testType"`
+	TestTool    commConsts.TestTool  `json:"testTool"`
+	BuildTool   commConsts.BuildTool `json:"buildTool"`
+	TestCommand string               `json:"testCommand"`
 
-	WorkspaceId int    `json:"workspaceId,omitempty"`
-	Seq         string `json:"seq,omitempty"`
+	WorkspaceId   int                 `json:"workspaceId,omitempty"`
+	WorkspaceType commConsts.TestTool `json:"workspaceType"`
+	WorkspacePath string              `json:"workspacePath"`
+	Seq           string              `json:"seq,omitempty"`
+	SubmitResult  bool                `json:"submitResult"`
 
 	ProductId int               `json:"productId,omitempty"`
 	TaskId    int               `json:"taskId,omitempty"`

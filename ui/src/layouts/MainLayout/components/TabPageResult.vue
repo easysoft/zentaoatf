@@ -296,19 +296,26 @@ get();
 const exec = (scope): void => {
   console.log('exec', report.value);
 
-  const execBy = report.value.execBy;
+  const testType = report.value.testType;
   const productId = report.value.productId;
   const workspaceId = report.value.workspaceId;
   const execById = report.value.execById;
 
-  if (execBy === "case") {
+  if (testType === "func") {
     const caseMap = getCaseIdsInReport(report.value)
     const cases = caseMap[scope]
-    console.log(cases)
-
     bus.emit(settings.eventExec, { execType: 'ztf', scripts: cases });
-  } else {
-    console.log("suite");
+
+  } else if (testType === "unit") {
+    const data = {
+      execType: 'unit',
+      cmd: report.value.testCommand,
+      id: report.value.workspaceId,
+      type: report.value.workspaceType,
+      submitResult: report.value.submitResult,
+    }
+    console.log(data)
+    bus.emit(settings.eventExec, data);
   }
 };
 
