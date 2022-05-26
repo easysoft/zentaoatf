@@ -27,7 +27,7 @@
 
       <div class="main">
         <div class="summary">
-          <Row :gutter="10">
+          <Row >
             <Col :span="2" class="t-bord t-label-right">{{
               t("test_env")
             }}</Col>
@@ -101,7 +101,7 @@
             t("case_detail")
           }}</Col>
         </Row>
-        <Row class="space-left">
+        <Row class="case-result-item">
           <Col :width="'100'" v-if="reportRef.testType != 'unit'">
             <template v-for="cs in reportRef.funcResult" :key="cs.id">
               <div class="case-info">
@@ -504,7 +504,7 @@ const getCaseIdsInReport = (reportVal) => {
 
 <style lang="less" scoped>
 .main {
-  padding: 20px;
+  padding: 20px var(--space-base);
 }
 .dot {
   margin-right: 5px;
@@ -548,5 +548,8 @@ const getCaseIdsInReport = (reportVal) => {
   background: none;
   color: #1890ff;
   border-style: hidden !important;
+}
+.case-result-item{
+    padding-left: 15px;
 }
 </style>

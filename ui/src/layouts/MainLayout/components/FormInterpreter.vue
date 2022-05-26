@@ -22,12 +22,19 @@
         <input v-model="modelRef.path" class="form-control" @change="selectFile" />
       </FormItem>
 <FormItem v-if="!isElectron" name="name" :label="t('interpreter_path')" :info="validateInfos.path">
-        <input v-model="modelRef.path" class="form-control" @change="selectFile" />
+        <input v-model="modelRef.path" class="form-control" />
       </FormItem>
-
-      <a-input v-if="!isElectron" v-model:value="modelRef.path" spellcheck="false"
-               @blur="validate('path', { trigger: 'blur' }).catch(() => {})"/>
-    </a-form-item>
+      <FormItem name="lang" v-if="interpreterInfos.length > 0" :label="t('script_lang')">
+        <select name="type" v-model="selectedInterpreter" @change="selectInterpreter" class="form-control">
+          <option
+            v-for="item in languages"
+            :key="item.value"
+            :value="item.value"
+          >
+            {{ languageMap[item.value].name }}
+          </option>
+        </select>
+      </FormItem>
 
     <a-form-item :wrapper-col="{ span: wrapperCol.span, offset: labelCol.span }">
       <a-select v-if="interpreterInfos.length > 0" v-model:value="selectedInterpreter" @change="selectInterpreter">
