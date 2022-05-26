@@ -4,6 +4,7 @@ import { $vfm } from "vue-final-modal";
 export default {
     confirm(options) {
         options.isConfirm = true;
+        options.clickToClose = false;
         $vfm.show({ component: 'ZModal', bind: options }) //options {title:'title'}
     },
 }

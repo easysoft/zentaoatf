@@ -7,7 +7,7 @@
   >
     <Form labelCol="6" wrapperCol="16">
       <FormItem name="name" :label="t('name')" :info="validateInfos.name">
-        <input v-model="modelRef.name" class="form-control" />
+        <input v-model="modelRef.name" class="z-form-control" />
       </FormItem>
     </Form>
   </ZModal>
@@ -74,45 +74,3 @@ defineExpose({
   clearFormData,
 });
 </script>
-
-<style lang="less" scoped>
-.workdir {
-  height: calc(100vh - 80px);
-}
-.form-control {
-  width: 100%;
-  color: #495057;
-  background-color: #fff;
-  border: 1px solid #ced4da;
-  border-radius: 0.25rem;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-.z-form-item-label {
-  font-weight: 400;
-  color: #212529;
-  text-align: left;
-  box-sizing: border-box;
-  display: inline-block;
-  position: relative;
-  width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
-  flex: 0 0 16.666667%;
-  max-width: 16.666667%;
-  padding-top: calc(0.375rem + 1px);
-  padding-bottom: calc(0.375rem + 1px);
-  margin-bottom: 0;
-  line-height: 1.5;
-}
-.z-form-item {
-  display: flex;
-  align-items: center;
-}
-.form-control:focus {
-  color: #495057;
-  background-color: #fff;
-  border-color: #80bdff;
-  outline: 0;
-  box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
-}
-</style>
