@@ -3,6 +3,7 @@
     <div>
       <div class="opt">
         <Button
+          v-if="reportRef.testType != 'unit'"
           @click="exec('all')"
           class="space-left state primary"
           :label="t('re_exec_all')"
@@ -11,7 +12,7 @@
         <Button v-if="reportRef.testType != 'unit'" @click="exec('fail')" class="space-left state primary">{{
           t("re_exec_failed")
         }}</Button>
-        <Button v-else @click="exec('')" class="space-left state primary">{{
+        <Button v-if="reportRef.testType == 'unit'" @click="exec('')" class="space-left state primary">{{
           t("re_exec_unit")
         }}</Button>
 
