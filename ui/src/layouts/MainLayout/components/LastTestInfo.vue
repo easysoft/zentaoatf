@@ -2,9 +2,9 @@
   <Button class="rounded border-light canvas gap-sm" :hint="t('view_test_result')" @click="showDetail(model)">
     <small class="text-muted">{{t('previous_result')}}</small>
     <small class="text-yellow" :key="model">{{model.duration}}s</small>
-    <Icon icon="close-circle" class="text-red space-left" />
+    <Icon icon="close-circle" class="text-red custom-space-left" />
     <small class="text-red">{{model.fail}}</small>
-    <Icon icon="checkmark-circle" class="text-green space-left" />
+    <Icon icon="checkmark-circle" class="text-green custom-space-left" />
     <small class="text-green">{{model.pass}}</small>
   </Button>
 </template>
@@ -35,4 +35,10 @@ onMounted(() => {
 })
 
 </script>
+
+<style>
+.custom-space-left{
+    margin-left: 8px;
+}
+</style>
 

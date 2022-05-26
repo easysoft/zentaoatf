@@ -1,5 +1,5 @@
 <template>
-  <div class="site-main space-top space-left space-right">
+  <div class="site-main custom-space-top custom-space-left custom-space-right">
       <div class="t-card-toolbar">
         <div class="left">
           {{ t("site_management") }}
@@ -273,5 +273,14 @@ const createSite = (formData) => {
 .t-card-toolbar{
     display: flex;
     justify-content: space-between;
+}
+.custom-space-left{
+    margin-left: 8px;
+}
+.custom-space-top{
+    margin-left: 8px;
+}
+.custom-space-right{
+    margin-left: 8px;
 }
 </style>

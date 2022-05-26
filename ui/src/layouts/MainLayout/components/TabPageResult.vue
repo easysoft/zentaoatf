@@ -5,14 +5,14 @@
         <Button
           v-if="reportRef.testType != 'unit'"
           @click="exec('all')"
-          class="space-left state primary"
+          class="custom-space-left state primary"
           :label="t('re_exec_all')"
           type="button"
         />
-        <Button v-if="reportRef.testType != 'unit'" @click="exec('fail')" class="space-left state primary">{{
+        <Button v-if="reportRef.testType != 'unit'" @click="exec('fail')" class="custom-space-left state primary">{{
           t("re_exec_failed")
         }}</Button>
-        <Button v-if="reportRef.testType == 'unit'" @click="exec('')" class="space-left state primary">{{
+        <Button v-if="reportRef.testType == 'unit'" @click="exec('')" class="custom-space-left state primary">{{
           t("re_exec_unit")
         }}</Button>
 
@@ -21,7 +21,7 @@
           @click="openResultForm()"
           :label="t('submit_result_to_zentao')"
           type="button"
-          class="space-left"
+          class="custom-space-left"
         />
       </div>
 
@@ -126,7 +126,7 @@
                   <Button
                     v-if="currProduct.id"
                     @click="openBugForm(cs)"
-                    class="space-left"
+                    class="custom-space-left"
                     :label="t('submit_bug_to_zentao')"
                   />
                 </div>
@@ -551,5 +551,8 @@ const getCaseIdsInReport = (reportVal) => {
 }
 .case-result-item{
     padding-left: 15px;
+}
+.custom-custom-space-left{
+    margin-left: 8px;
 }
 </style>
