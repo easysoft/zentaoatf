@@ -208,6 +208,8 @@ import { PageTab } from "@/store/tabs";
 import { ZentaoData } from "@/store/zentao";
 import { StateType } from "@/views/result/store";
 import IconSvg from "@/components/IconSvg/index";
+import bus from "@/utils/eventBus";
+import settings from "@/config/settings";
 
 const { t, locale } = useI18n();
 
@@ -301,8 +303,10 @@ const exec = (scope): void => {
 
   if (execBy === "case") {
     const caseMap = getCaseIdsInReport(report.value)
-    const cases = ref(caseMap[scope])
-    console.log(cases.value)
+    const cases = caseMap[scope]
+    console.log(cases)
+
+    bus.emit(settings.eventExec, { execType: 'ztf', scripts: cases });
   } else {
     console.log("suite");
   }
@@ -408,8 +412,9 @@ const getCaseIdsInReport = (reportVal) => {
   const failedCases = [] as string[]
 
   reportVal.funcResult.forEach(cs => {
-    allCases.push(cs.path)
-    if (cs.status === 'fail') failedCases.push(cs.path)
+    const item = {path: cs.path, workspaceId: reportVal.workspaceId}
+    allCases.push(item)
+    if (cs.status === 'fail') failedCases.push(item)
   })
 
   return {all: allCases, fail: failedCases}
