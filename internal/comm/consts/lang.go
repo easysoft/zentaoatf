@@ -96,7 +96,7 @@ var (
 			"interpreter":   "C:\\ActiveTcl\\bin\\tclsh.exe",
 			"whereCmd":      "where tclsh",
 			"linuxWhereCmd": "which -a tclsh",
-			"versionCmd":    "echo puts $tcl_version;exit 0",
+			"versionCmd":    "echo 'puts $tcl_version;exit 0'",
 		},
 	}
 
