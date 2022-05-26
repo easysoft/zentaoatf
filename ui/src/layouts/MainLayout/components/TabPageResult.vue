@@ -183,11 +183,9 @@
 
 <script setup lang="ts">
 import { defineProps, toRefs } from "vue";
-import { PageTab } from "@/store/tabs";
 import { useI18n } from "vue-i18n";
 import { computed, defineComponent, onMounted, ref, Ref, watch } from "vue";
 import { useStore } from "vuex";
-import { StateType } from "./store";
 import { momentUnixDef, percentDef } from "@/utils/datetime";
 import Button from "./Button.vue";
 import Row from "./Row.vue";
@@ -206,10 +204,16 @@ import notification from "@/utils/notification";
 
 import { submitResultToZentao } from "@/views/result/service";
 import { submitBugToZentao } from "@/services/bug";
+import { PageTab } from "@/store/tabs";
 import { ZentaoData } from "@/store/zentao";
+import { StateType } from "@/views/result/store";
 import IconSvg from "@/components/IconSvg/index";
 
 const { t, locale } = useI18n();
+
+const store = useStore<{ Result: StateType }>();
+const report = computed<any>(() => store.state.Result.detailResult);
+
 const zentaoStore = useStore<{ Zentao: ZentaoData }>();
 const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
 
@@ -265,8 +269,6 @@ const setColumns = () => {
 };
 setColumns();
 
-const store = useStore<{ Result: StateType }>();
-const report = computed<any>(() => store.state.Result.detailResult);
 const loading = ref<boolean>(true);
 
 const reportRef = ref({});
@@ -290,14 +292,20 @@ const get = async (): Promise<void> => {
 get();
 
 const exec = (scope): void => {
-  console.log(report);
+  console.log('exec', report.value);
 
-  const productId = report.value.productId;
   const execBy = report.value.execBy;
+  const productId = report.value.productId;
+  const workspaceId = report.value.workspaceId;
   const execById = report.value.execById;
 
-  if (execBy === "case") console.log("case");
-  else console.log("suite");
+  if (execBy === "case") {
+    const caseMap = getCaseIdsInReport(report.value)
+    const cases = ref(caseMap[scope])
+    console.log(cases)
+  } else {
+    console.log("suite");
+  }
 };
 
 // 提交结果
@@ -394,7 +402,14 @@ const cancelBugForm = () => {
 onMounted(() => {
   console.log("onMounted");
 });
+
+const getCaseIdsInReport = (reportVal) => {
+  console.log(reportVal)
+}
+
 </script>
+
+
 <style lang="less" scoped>
 .main {
   padding: 20px;
