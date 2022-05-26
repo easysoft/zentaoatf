@@ -2,7 +2,7 @@
   <Toolbar>
 <!--    <Button class="rounded pure" icon="search" :hint="t('search')" />-->
     <Button class="rounded pure" icon="local-language" :hint="t('ui_lang')" @click="switchLanguage" />
-    <Button class="rounded pure" icon="settings" :hint="t('settings')" @click="switchLanguage" />
+    <Button class="rounded pure" icon="settings" :hint="t('settings')" @click="openSettings" />
   </Toolbar>
 </template>
 
@@ -20,9 +20,12 @@ const store = useStore<{ Zentao: ZentaoData }>();
 
 let  language = locale.value
 const switchLanguage = () => {
-//   console.info("switchLanguage", getLocale(), language, defaultLang)
-//   language = (language === defaultLang ? 'en-US' : defaultLang)
-//   setI18nLanguage(language);
+  console.info("switchLanguage", getLocale(), language, defaultLang)
+  language = (language === defaultLang ? 'en-US' : defaultLang)
+  setI18nLanguage(language, true);
+}
+
+const openSettings = () => {
     store.dispatch('tabs/open', {
         id: 'settings',
         title: t('settings'),
@@ -31,6 +34,3 @@ const switchLanguage = () => {
 }
 
 </script>
-
-<style lang="less" scoped>
-</style>
