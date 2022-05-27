@@ -215,6 +215,7 @@ import IconSvg from "@/components/IconSvg/index";
 import bus from "@/utils/eventBus";
 import settings from "@/config/settings";
 
+
 const {t, locale} = useI18n();
 
 const store = useStore<{ Result: StateType }>();
@@ -390,6 +391,7 @@ const showInfo = (item): void => {
     showOkBtn: false,
     content: jsonStr(item.failure),
     cancelTitle: t("close"),
+    contentStyle: {width: '800px'}
   })
 }
 
@@ -467,5 +469,10 @@ const getCaseIdsInReport = (reportVal) => {
   background: none;
   color: #1890ff;
   border-style: hidden !important;
+}
+.opt{
+    display: flex;
+    padding-right: 20px;
+    flex-direction: row-reverse;
 }
 </style>

@@ -28,9 +28,7 @@ import FormItem from "./FormItem.vue";
 import {useForm} from "@/utils/form";
 import Tree from "./Tree.vue";
 import notification from "@/utils/notification";
-import {unitTestTypesDef, ZentaoCasePrefix, ztfTestTypesDef} from "@/utils/const";
-import {WorkspaceData} from "@/views/workspace/store";
-import {computed, defineExpose, onMounted, onUnmounted, ref, watch, getCurrentInstance} from "vue";
+import { computed, defineExpose, onMounted, onUnmounted, ref, watch } from "vue";
 
 import bus from "@/utils/eventBus";
 import {
@@ -38,26 +36,16 @@ import {
   getScriptDisplayBy,
   getScriptFilters,
   setExpandedKeys,
-  setScriptDisplayBy,
-  setScriptFilters
 } from "@/utils/cache";
 import {
-  genWorkspaceToScriptsMap,
   getCaseIdsFromReport,
-  getFileNodesUnderParent,
   getNodeMap,
-  getSyncFromInfoFromMenu,
   listFilterItems,
-  updateNameReq
 } from "@/views/script/service";
-import settings from "@/config/settings";
 import {useRouter} from "vue-router";
-import {DropEvent, TreeDragEvent} from "ant-design-vue/es/tree/Tree";
 import {isWindows} from "@/utils/comm";
-import {ExecStatus} from "@/store/exec";
 import debounce from "lodash.debounce";
 import throttle from "lodash.debounce";
-import {isInArray} from "@/utils/array";
 import Modal from "@/utils/modal"
 import FormNode from "./FormNode.vue";
 
@@ -72,12 +60,8 @@ const currWorkspace = computed<any>(() => scriptStore.state.Script.currWorkspace
 
 const isWin = isWindows()
 
-const testTypes = ref([...ztfTestTypesDef, ...unitTestTypesDef])
 zentaoStore.dispatch('Zentao/fetchLangs')
 const langs = computed<any[]>(() => zentaoStore.state.Zentao.langs);
-
-const fromTitle = ref('从禅道同步用例')
-const fromVisible = ref(false)
 
 const router = useRouter();
 let workspace = router.currentRoute.value.params.workspace as string
@@ -87,13 +71,7 @@ seq = seq === '-' ? '' : seq
 let scope = router.currentRoute.value.params.scope as string
 scope = scope === '-' ? '' : scope
 
-const execStore = useStore<{ Exec: ExecStatus }>();
-const isRunning = computed<any>(() => execStore.state.Exec.isRunning);
-
 const store = useStore<{ Script: ScriptData }>();
-const treeDataEmpty = computed<boolean>(() => !(treeData.value.length > 0 &&
-    treeData.value[0] && treeData.value[0].children))
-const workspaceStore = useStore<{ Workspace: WorkspaceData }>();
 const filerType = ref('')
 const filerValue = ref('')
 const showModal = ref(false)
@@ -183,12 +161,6 @@ const loadScripts = async () => {
   store.dispatch('Script/listScript', params)
 }
 
-// 异步加载
-const onLoadData = async (treeNode: any) => {
-  console.log('onLoadData')
-  await store.dispatch('Script/loadChildren', treeNode)
-}
-
 const onTreeDataChanged = async () => {
   getNodeMapCall()
 
@@ -238,19 +210,6 @@ const loadFilterItems = async () => {
     if (!found) filerValue.value = ''
   }
 }
-const selectFilerType = async (type) => {
-  console.log('selectFilerType', type)
-  await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, type, '')
-
-  await loadFilterItems()
-  await loadScripts()
-}
-const selectFilerValue = async (val) => {
-  console.log('selectFilerValue', val)
-  await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, filerType.value, val)
-
-  await loadScripts()
-}
 
 const initData = debounce(async () => {
   console.log('init')
@@ -281,10 +240,6 @@ const getOpenKeys = (treeNode: any, openAll: boolean) => { // expand top one lev
 const selectedKeys = ref<string[]>([])
 const checkedKeys = ref<string[]>([])
 
-const replaceFields = {
-  key: 'path',
-};
-
 let isExpand = ref(false);
 let showCheckbox = ref(false)
 let displayBy = ref('workspace')
@@ -293,58 +248,10 @@ let tree = ref(null)
 
 onMounted(() => {
   console.log('onMounted', tree)
-  document.addEventListener("click", clearMenu)
 })
 onUnmounted(() => {
-  document.removeEventListener("click", clearMenu)
+    console.log('onUnmounted', tree)
 })
-
-const execSelected = () => {
-  console.log('execSelected')
-
-  selectNothing()
-
-  const leafNodes = getCheckedFileNodes()
-  bus.emit(settings.eventExec, {execType: 'ztf', scripts: leafNodes});
-}
-const execStop = () => {
-  console.log('execStop')
-  const data = Object.assign({execType: 'stop'})
-  bus.emit(settings.eventExec, data);
-}
-
-const toExecUnit = () => {
-  console.log('toExecUnit')
-  selectNothing()
-}
-
-const checkoutCases = () => {
-  console.log('checkoutCases')
-  fromVisible.value = true
-}
-const onSave = async () => {
-  console.log('onSave')
-  fromVisible.value = false
-}
-const onCancel = async () => {
-  console.log('onCancel')
-  fromVisible.value = false
-}
-
-const checkinCases = () => {
-  console.log('checkinCases')
-
-  const fileNodes = getCheckedFileNodes()
-  const workspaceWithScripts = genWorkspaceToScriptsMap(fileNodes)
-
-  scriptStore.dispatch('Script/syncToZentao', workspaceWithScripts).then((resp => {
-    if (resp.code === 0) {
-      notification.success({message: t('sync_success')});
-    } else {
-      notification.error({message: t('sync_fail'), description: resp.data.msg});
-    }
-  }))
-}
 
 const selectNode = (activeNode) => {
   console.log('selectNode', activeNode.activeID)
@@ -373,46 +280,10 @@ const checkNode = (checkedKeys) => {
 //       {id: e.node.dataRef.workspaceId, type: e.node.dataRef.workspaceType})
 }
 
-const selectNothing = () => {
-  selectedKeys.value = []
-  scriptStore.dispatch('Script/getScript', null)
-}
 const checkNothing = () => {
   checkedKeys.value = []
 }
 
-const expandNode = (keys: string[], e: any) => {
-  console.log('expandNode')
-  setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
-}
-const expandAllOrNot = (e) => {
-  console.log('expandAllOrNot')
-  isExpand.value = !isExpand.value
-
-  expandedKeys.value = []
-  if (isExpand.value) getOpenKeys(treeData.value[0], true)
-  else getOpenKeys(treeData.value[0], false)
-
-  setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
-}
-
-const showCheckboxOrNot = (e) => {
-  console.log('showCheckboxOrNot')
-  showCheckbox.value = !showCheckbox.value
-}
-
-const onDisplayBy = () => {
-  console.log('onDisplayBy')
-  if (displayBy.value === 'workspace') displayBy.value = 'module'
-  else displayBy.value = 'workspace'
-
-  setScriptDisplayBy(displayBy.value, currSite.value.id, currProduct.value.id)
-
-  loadScripts()
-}
-
-// context menu
-let rightVisible = false
 let contextNode = ref({} as any)
 let menuStyle = ref({} as any)
 const editedData = ref<any>({})
@@ -425,51 +296,6 @@ const getNodeMapCall = throttle(async () => {
 
 let rightClickedNode = {} as any
 let createAct = ''
-
-const onRightClick = (e) => {
-  console.log('onRightClick', e.node.dataRef)
-  const {event, node} = e
-
-  rightClickedNode = node.dataRef
-
-  const y = event.currentTarget.getBoundingClientRect().top
-  const x = event.currentTarget.getBoundingClientRect().right
-
-  contextNode.value = {
-    pageX: x,
-    pageY: y,
-    path: rightClickedNode.path,
-    title: rightClickedNode.title,
-    type: rightClickedNode.type,
-    workspaceId: rightClickedNode.workspaceId,
-    // parentId: node.dataRef.parentId
-  }
-
-  menuStyle.value = {
-    position: 'fixed',
-    maxHeight: 40,
-    textAlign: 'center',
-    left: `${x + 10}px`,
-    top: `${y + 6}px`
-    // display: 'flex',
-    // flexDirection: 'row'
-  }
-}
-
-const updateName = (path) => {
-  const title = editedData.value[path]
-  console.log('updateName', path, title)
-  updateNameReq(path, title).then((json) => {
-    if (json.code === 0) {
-      treeDataMap[path].title = title
-      treeDataMap[path].isEdit = false
-    }
-  })
-}
-const cancelUpdate = (path) => {
-  console.log('cancelUpdate', path)
-  treeDataMap[path].isEdit = false
-}
 
 const formNode = ref(null)
 const createNode = (formData) => {
@@ -500,130 +326,6 @@ const createNode = (formData) => {
         }
     })
 }
-
-const menuClick = (act: string, node: any) => {
-  console.log('menuClick', act, node)
-  createAct = act
-  rightClickedNode = node
-
-  if (isInArray(act, ['add_brother_node', 'add_child_node', 'add_brother_dir', 'add_child_dir'])) {
-    nameFormVisible.value = true
-    return
-
-  } else if (act === 'rename') {
-    selectedKeys.value = [rightClickedNode.path]
-    selectNode(selectedKeys.value)
-    editedData.value[rightClickedNode.path] = treeDataMap[rightClickedNode.path].title
-    treeDataMap[rightClickedNode.path].isEdit = true
-    return
-
-  } else if (act === 'remove') {
-    console.log('remove ', rightClickedNode)
-    const typ = rightClickedNode.type === 'file' ? t('script') : t('dir')
-    Modal.confirm({
-      title: '删除项目',
-      content: t('confirm_delete', {
-        name: rightClickedNode.title,
-        typ: typ,
-      }),
-      okText: t('confirm'),
-      cancelText: t('cancel'),
-      onOk: async () => {
-        removeNode(rightClickedNode.path)
-      }
-    });
-    return
-
-  } else if (act === 'sync_from_zentao') {
-    const node = treeDataMap[rightClickedNode.path]
-    const data = getSyncFromInfoFromMenu(rightClickedNode.path, node)
-    data.workspaceId = treeDataMap[rightClickedNode.path].workspaceId
-
-    scriptStore.dispatch('Script/syncFromZentao', data).then((resp => {
-      if (resp.code === 0) {
-        notification.success({message: t('sync_success')});
-      } else {
-        notification.error({message: t('sync_fail'), description: resp.data.msg});
-      }
-    }))
-
-    return
-  } else if (act === 'sync_to_zentao') {
-    const node = treeDataMap[rightClickedNode.path]
-
-    const fileNodes = getFileNodesUnderParent(node)
-    const workspaceWithScripts = genWorkspaceToScriptsMap(fileNodes)
-
-    scriptStore.dispatch('Script/syncToZentao', workspaceWithScripts).then((resp => {
-      if (resp.code === 0) {
-        notification.success({message: t('sync_success')});
-      } else {
-        notification.error({message: t('sync_fail'), description: resp.data.msg});
-      }
-    }))
-
-    return
-  }
-
-  const arr = act.split('_')
-  addNode(arr[1], arr[2])
-
-  clearMenu()
-}
-
-const clearMenu = () => {
-  console.log('clearMenu')
-  contextNode.value = ref({})
-}
-const addNode = (mode, type) => {
-  console.log('addNode', rightClickedNode.path)
-  store.dispatch('Interface/createInterface',
-      {mode: mode, type: type, target: rightClickedNode.path, name: type === 'dir' ? '新目录' : '新接口'})
-      .then((newNode) => {
-        console.log('newNode', newNode)
-        selectedKeys.value = [newNode.id] // select new node
-        expandOneKey(treeDataMap, newNode.parentId, expandedKeys.value) // expend new node
-      })
-}
-const removeNode = (path) => {
-  store.dispatch('Script/deleteScript', path);
-}
-
-const onDragEnter = (info: TreeDragEvent) => {
-  console.log('onDragEnter', info);
-};
-
-const onDrop = (info: DropEvent) => {
-  console.log('onDrop', info);
-
-  const dragKey = info.dragNode.eventKey;
-  const dropKey = info.node.eventKey;
-  let dropPos = info.dropPosition > 1 ? 1 : info.dropPosition;
-  if (!treeDataMap[dropKey].isDir && dropPos === 0) dropPos = 1
-  console.log(dragKey, dropKey, dropPos);
-
-  store.dispatch('Script/moveScript', {dragKey: dragKey, dropKey: dropKey, dropPos: dropPos});
-}
-
-const getCheckedFileNodes = (): string[] => {
-  console.log('getCheckedFileNodes')
-
-  let arr = [] as string[]
-  checkedKeys.value.forEach(k => {
-    if (treeDataMap[k].type === 'file') {
-      arr.push(treeDataMap[k])
-    }
-  })
-  return arr
-}
-
-const noScript = (str) => {
-  if (str.indexOf(ZentaoCasePrefix) == 0) {
-    return true
-  }
-  return false
-}
-
 
 defineExpose({
   get isCheckable() {

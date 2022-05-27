@@ -36,7 +36,7 @@ const editorRef = ref<InstanceType<typeof MonacoEditor>>()
 
 const init = ref(false)
 watch(script, () => {
-    if(path.value !== '' && path.value !== script.value.path){
+    if(script.value == undefined || (path.value !== '' && path.value !== script.value.path)){
         return
     }
     console.log('watch script', script)
