@@ -9,12 +9,6 @@
         @close="_handleNavClose"
         @clickToolbar="onToolbarClick"
     />
-
-    <Button style="position: absolute; top: 50px; right: 0;z-index:999;" class="red" icon="add"
-            @click="_addTestTab">
-      Add test tab
-    </Button>
-
     <template v-for="tab in tabsList" :key="tab.id">
       <KeepAlive>
         <TabPage v-if="tab.id === activeID" class="flex-auto" :tab="tab" ref="tabsRef" />
@@ -107,17 +101,6 @@ function _handleNavClick(item) {
 function _handleNavClose(item) {
   console.log('_handleNavClose', item);
   store.dispatch('tabs/close', item);
-}
-
-function _addTestTab() {
-  testTabIDRef.value++;
-  store.dispatch('tabs/open', {
-    id: `testTab-${testTabIDRef.value}`,
-    title: `TestTab ${testTabIDRef.value}`,
-    changed: Math.random() > 0.5,
-    type: 'sites', // ['script', 'sites', 'settings', 'result', ''][Math.floor(Math.random() * 5)],
-    data: Math.random()
-  });
 }
 
 if (process.env?.NODE_ENV === 'development') {
