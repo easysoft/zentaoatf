@@ -40,6 +40,8 @@
       ref="formInterpreter"
     />
   </div>
+  <hr>
+  <LanguageSettings></LanguageSettings>
 </template>
 
 <script setup lang="ts">
@@ -65,6 +67,7 @@ import notification from "@/utils/notification";
 import Modal from "@/utils/modal";
 import Button from "./Button.vue";
 import FormSite from "./FormSite.vue";
+import LanguageSettings from "./LanguageSettings.vue";
 import { getLangSettings } from "@/views/interpreter/service";
 import {
   listInterpreter,

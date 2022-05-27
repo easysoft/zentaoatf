@@ -1,6 +1,10 @@
 <template>
   <vue-final-modal
     :name="'ZModal'"
+    :content-style="contentStyle"
+    :overlay-style="overlayStyle"
+    :styles="styles"
+    :click-to-close="false"
     v-model="showModalRef"
     classes="modal-container"
     content-class="modal-content"
@@ -60,6 +64,9 @@ export interface ZModalProps {
   isConfirm?: boolean;
   showOkBtn?: boolean;
   showCancelBtn?: boolean;
+  styles?: object; // Style that will be applied to the modal container.
+  contentStyle?: object; // Style that will be applied to the modal content.
+  overlayStyle?: object; // Style that will be applied to the modal overlay.
 }
 const { t } = useI18n();
 const props = withDefaults(defineProps<ZModalProps>(), {
@@ -72,10 +79,6 @@ const showModalRef = ref(props.showModal);
 watch(props, () => {
   showModalRef.value = props.showModal;
 });
-
-// const showModal = computed(() => {
-//     return props.showModal;
-//   });
 
 const emit = defineEmits<{
   (type: "onCancel", event: {}): void;
@@ -123,8 +126,6 @@ defineExpose({
   padding: 1rem;
   border-radius: 0.25rem;
   background: #fff;
-  /* min-width: 600px;
-  min-height: 200px; */
   justify-content: space-between;
 }
 

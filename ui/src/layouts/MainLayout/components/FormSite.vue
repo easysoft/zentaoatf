@@ -7,24 +7,24 @@
   >
     <Form class="form-site" labelCol="6" wrapperCol="16">
       <FormItem name="name" :label="t('name')" :info="validateInfos.name">
-        <input v-model="modelRef.name" class="form-control" />
+        <input v-model="modelRef.name" class="z-form-control" />
       </FormItem>
       <FormItem name="url" :label="t('zentao_url')" :info="validateInfos.url">
-        <input v-model="modelRef.url" class="form-control" />
+        <input v-model="modelRef.url" class="z-form-control" />
       </FormItem>
       <FormItem
         name="username"
         :label="t('username')"
         :info="validateInfos.username"
       >
-        <input v-model="modelRef.username" class="form-control" />
+        <input v-model="modelRef.username" class="z-form-control" />
       </FormItem>
       <FormItem
         name="password"
         :label="t('password')"
         :info="validateInfos.password"
       >
-        <input v-model="modelRef.password" class="form-control" />
+        <input v-model="modelRef.password" class="z-form-control" />
       </FormItem>
     </Form>
   </ZModal>
@@ -118,43 +118,6 @@ defineExpose({
 </script>
 
 <style lang="less" scoped>
-.workdir {
-  height: calc(100vh - 80px);
-}
-.form-control {
-  width: 100%;
-  color: #495057;
-  background-color: #fff;
-  border: 1px solid #ced4da;
-  border-radius: 0.25rem;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-.z-form-item-label {
-  font-weight: 400;
-  color: #212529;
-  text-align: left;
-  box-sizing: border-box;
-  display: inline-block;
-  position: relative;
-  width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
-  padding-top: calc(0.375rem + 1px);
-  padding-bottom: calc(0.375rem + 1px);
-  margin-bottom: 0;
-  line-height: 1.5;
-}
-.z-form-item {
-  display: flex;
-  align-items: center;
-}
-.form-control:focus {
-  color: #495057;
-  background-color: #fff;
-  border-color: #80bdff;
-  outline: 0;
-  box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
-}
 .form-site {
   min-width: 500px;
 }
