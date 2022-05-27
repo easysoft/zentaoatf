@@ -644,40 +644,4 @@ defineExpose({
 .workdir {
   height: calc(100vh - 80px);
 }
-.form-control{
-    width: 100%;
-    color: #495057;
-    background-color: #fff;
-    border: 1px solid #ced4da;
-    border-radius: .25rem;
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-}
-.z-form-item-label{
-    font-weight: 400;
-    color: #212529;
-    text-align: left;
-    box-sizing: border-box;
-    display: inline-block;
-    position: relative;
-    width: 100%;
-    padding-right: 15px;
-    padding-left: 15px;
-    flex: 0 0 16.666667%;
-    max-width: 16.666667%;
-    padding-top: calc(.375rem + 1px);
-    padding-bottom: calc(.375rem + 1px);
-    margin-bottom: 0;
-    line-height: 1.5;
-}
-.z-form-item{
-    display: flex;
-    align-items: center;
-}
-.form-control:focus {
-    color: #495057;
-    background-color: #fff;
-    border-color: #80bdff;
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
-}
 </style>

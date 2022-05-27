@@ -64,7 +64,7 @@ const errorMap = computed(() => {
   }
   .z-form-item-wrapper {
     .z-form-item-control {
-      height: 100%;
+    //   height: 100%;
       input, select {
         width: 90%;
         height: 28px;

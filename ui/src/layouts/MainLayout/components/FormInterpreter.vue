@@ -99,6 +99,14 @@ const props = withDefaults(defineProps<FormSiteProps>(), {
   info: {},
 });
 
+watch(props, () => {
+    if(!props.show){
+        setTimeout(() => {
+            validateInfos.value = {};
+        }, 200);
+    }
+})
+
 const showModalRef = computed(() => {
   return props.show;
 });
@@ -192,22 +200,3 @@ defineExpose({
   clearFormData,
 });
 </script>
-
-<style>
-/* .z-form-control:focus {
-  color: #495057;
-  background-color: #fff;
-  border-color: #80bdff;
-  outline: 0;
-  box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
-}
-.z-form-control {
-  width: 100%;
-  color: #495057;
-  background-color: #fff;
-  border: 1px solid #ced4da;
-  border-radius: 0.25rem;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-} */
-
-</style>

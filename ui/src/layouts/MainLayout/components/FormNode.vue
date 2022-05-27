@@ -16,10 +16,6 @@
 
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
-import { useStore } from "vuex";
-import { ZentaoData } from "@/store/zentao";
-import { ScriptData } from "@/views/script/store";
-import { unitTestTypesDef, ztfTestTypesDef } from "@/utils/const";
 import {
   computed,
   defineExpose,
@@ -28,6 +24,7 @@ import {
   ref,
   defineProps,
   defineEmits,
+  watch,
 } from "vue";
 import { useForm } from "@/utils/form";
 import Form from "./Form.vue";
@@ -40,6 +37,14 @@ const { t } = useI18n();
 const props = withDefaults(defineProps<FormWorkspaceProps>(), {
   show: false,
 });
+
+watch(props, () => {
+    if(!props.show){
+        setTimeout(() => {
+            validateInfos.value = {};
+        }, 200);
+    }
+})
 
 const showModalRef = computed(() => {
   return props.show;
