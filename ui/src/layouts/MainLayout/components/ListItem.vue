@@ -65,7 +65,6 @@
 import { defineProps, defineEmits, withDefaults, useAttrs } from 'vue';
 import Icon from './Icon.vue';
 import {useI18n} from "vue-i18n";
-const { t } = useI18n();
 
 export interface ListItemProps {
     disabled?: boolean,
@@ -93,6 +92,8 @@ export interface ListItemProps {
 }
 
 export type ListItemKey = string | number | symbol | null;
+
+const { t } = useI18n();
 
 const props = withDefaults(defineProps<ListItemProps>(), {checked: undefined});
 
