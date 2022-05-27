@@ -4,6 +4,7 @@
     @onCancel="cancel"
     @onOk="submit"
     :title="t('create_workspace')"
+    :contentStyle="{width: '500px'}"
   >
     <Form labelCol="6" wrapperCol="16">
       <FormItem name="name" :label="t('name')" :info="validateInfos.name">

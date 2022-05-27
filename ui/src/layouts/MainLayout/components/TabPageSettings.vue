@@ -32,10 +32,10 @@
       </template>
     </Table>
 
-    <FormSite
+    <FormInterpreter
       :show="showCreateInterpreterModal"
-      :id="editId"
-      @submit="createSite"
+      :info="editInfo"
+      @submit="createInterpreter"
       @cancel="modalClose"
       ref="formInterpreter"
     />
@@ -61,18 +61,18 @@ import {
 import { useStore } from "vuex";
 import { StateType } from "@/views/site/store";
 import { momentUtcDef } from "@/utils/datetime";
-import { ZentaoData } from "@/store/zentao";
 import Table from "./Table.vue";
 import notification from "@/utils/notification";
 import Modal from "@/utils/modal";
 import Button from "./Button.vue";
-import FormSite from "./FormSite.vue";
 import LanguageSettings from "./LanguageSettings.vue";
-import { getLangSettings } from "@/views/interpreter/service";
+import {getLangInterpreter, saveInterpreter} from "@/views/interpreter/service";
 import {
   listInterpreter,
   removeInterpreter,
 } from "@/views/interpreter/service";
+import FormInterpreter from "./FormInterpreter.vue";
+import { getLangSettings } from "@/views/interpreter/service";
 
 const props = defineProps<{
   tab: PageTab;
@@ -84,7 +84,7 @@ const momentUtc = momentUtcDef;
 let interpreters = ref<any>([]);
 let interpreter = reactive<any>({});
 
-const editId = ref(0);
+const editInfo = ref(0);
 
 onMounted(() => {
   console.log("onMounted");
@@ -132,7 +132,6 @@ const setColumns = () => {
 };
 setColumns();
 
-const zentaoStore = useStore<{ zentao: ZentaoData }>();
 const store = useStore<{ Site: StateType }>();
 const showCreateInterpreterModal = ref(false);
 
@@ -160,12 +159,12 @@ list();
 
 const create = () => {
   console.log("create");
-  editId.value = 0;
+  editInfo.value = {};
   showCreateInterpreterModal.value = true;
 };
-const edit = (id) => {
-  console.log("edit", id);
-  editId.value = id;
+const edit = (item) => {
+  console.log("edit", item.value.id);
+  editInfo.value = item;
   showCreateInterpreterModal.value = true;
 };
 
@@ -173,8 +172,8 @@ const remove = (item) => {
   Modal.confirm({
     title: "",
     content: t("confirm_delete", {
-      name: item.value.name,
-      typ: t("zentao_site"),
+      name: languageMap.value[item.value.lang].name,
+      typ: t("script_lang"),
     }),
     okText: t("confirm"),
     cancelText: t("cancel"),
@@ -189,65 +188,18 @@ const modalClose = () => {
   showCreateInterpreterModal.value = false;
 };
 const formInterpreter = ref(null);
-const createSite = (formData) => {
-  store.dispatch("Site/save", formData).then((response) => {
-    if (response) {
-      formInterpreter.value.clearFormData();
-      notification.success({ message: t("save_success") });
-      showCreateInterpreterModal.value = false;
-    }
-  });
+const createInterpreter = (formData) => {
+    saveInterpreter(formData).then((json) => {
+        if (json.code === 0) {
+        formInterpreter.value.clearFormData();
+        notification.success({ message: t("save_success") });
+        showCreateInterpreterModal.value = false;
+        list();
+        }
+  })
 };
 </script>
 
 <style>
-.site-search {
-  display: flex;
-  justify-content: flex-end;
-}
-.form-control {
-  width: 100%;
-  color: #495057;
-  background-color: #fff;
-  border: 1px solid #ced4da;
-  border-radius: 0.25rem;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-.z-form-item-label {
-  font-weight: 400;
-  color: #212529;
-  text-align: left;
-  box-sizing: border-box;
-  display: inline-block;
-  position: relative;
-  width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
-  padding-top: calc(0.375rem + 1px);
-  padding-bottom: calc(0.375rem + 1px);
-  margin-bottom: 0;
-  line-height: 1.5;
-}
-.z-form-item {
-  display: flex;
-  align-items: center;
-  word-break: keep-all;
-}
-.form-control:focus {
-  color: #495057;
-  background-color: #fff;
-  border-color: #80bdff;
-  outline: 0;
-  box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 23%);
-}
-.tab-setting-btn {
-  border: none;
-  background: none;
-  color: #1890ff;
-  border-style: hidden !important;
-}
-.t-card-toolbar {
-  display: flex;
-  justify-content: space-between;
-}
+
 </style>

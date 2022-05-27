@@ -4,6 +4,7 @@
     @onCancel="cancel"
     @onOk="submit"
     :title="t('create')"
+    :contentStyle="{width: '300px'}"
   >
     <Form labelCol="6" wrapperCol="16">
       <FormItem name="name" :label="t('name')" :info="validateInfos.name">

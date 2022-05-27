@@ -120,19 +120,12 @@ defineExpose({
 
 :deep(.modal-content) {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  margin: 0 1rem;
   padding: 1rem;
   border-radius: 0.25rem;
   background: #fff;
-  justify-content: space-between;
 }
 
 .modal-title {
-  margin: 0 2rem 0 0;
-  min-width: 300px;
-  justify-content: space-between;
   font-size: 1.1rem;
   font-weight: 700;
 }
@@ -141,8 +134,7 @@ defineExpose({
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  border: 0 solid #e2e8f0;
-  margin-left: 10px;
+  border-width: 0;
   background-color: transparent;
   font-size: 1rem;
   cursor: pointer;
@@ -152,24 +144,13 @@ defineExpose({
 .modal-action {
   display: flex;
   justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-  padding: 0 0 0;
-}
-
-.dark-mode div::v-deep .modal-content {
-  border-color: #2d3748;
-  background-color: #1a202c;
 }
 
 .btn-modal {
-  border: 0 solid #e2e8f0;
+  border-width: 0;
   margin-left: 10px;
-  text-transform: none;
-  font-size: 100%;
   cursor: pointer;
   padding: 0.25rem 0.5rem;
-  border-width: 1px;
   border-radius: 0.25rem;
 }
 </style>
