@@ -115,11 +115,15 @@ func (s *InterpreterService) GetLangInterpreterUnix(language string) (list []map
 	for _, path := range pathArr {
 		path = strings.TrimSpace(path)
 
+		if path == "" {
+			continue
+		}
+
 		var vcmd string
 		if language == "tcl" {
 			vcmd = versionCmd + " | " + path
 		} else {
-			vcmd = path + " " + versionCmd
+			vcmd = path + " " + versionCmd + " |& tee"
 		}
 
 		versionInfo, err1 := shellUtils.ExeSysCmd(vcmd)
