@@ -7,12 +7,18 @@ export function useForm(modelRef, rulesRef) {
   const initialModel = cloneDeep(unref(modelRef));
   const validateInfos = ref({})
 
+  const rules = unref(rulesRef)
+  const ruleKeys = unref(Object.keys(rules))
+  ruleKeys.forEach((key, index) => {
+    rules[key].forEach((item, index) => {
+      if (item.required) validateInfos.value[key] = {required: []}
+    })
+  })
+
   const validate = () => {
     let success = true
 
     const model = unref(modelRef)
-    const rules = unref(rulesRef)
-    const ruleKeys = unref(Object.keys(rules))
 
     ruleKeys.forEach((key, index) => {
       const errorMap = {}

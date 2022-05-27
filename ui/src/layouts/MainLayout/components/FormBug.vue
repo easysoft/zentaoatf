@@ -7,11 +7,11 @@
   >
     <Form labelCol="6" wrapperCol="16">
       <FormItem name="title" :label="t('title')" :info="validateInfos.title">
-        <input v-model="modelRef.title" class="form-control" />
+        <input v-model="modelRef.title" class="z-form-control" />
       </FormItem>
 
       <FormItem name="module" :label="t('module')">
-        <select name="module" v-model="modelRef.module" class="form-control">
+        <select name="module" v-model="modelRef.module" class="z-form-control">
           <option value=""></option>
           <option v-for="item in modules" :key="item.code" :value="item.code+''">
             {{ item.name }}
@@ -20,7 +20,7 @@
       </FormItem>
 
       <FormItem name="type" :label="t('category')">
-        <select name="type" v-model="modelRef.type" class="form-control">
+        <select name="type" v-model="modelRef.type" class="z-form-control">
           <option value=""></option>
           <option v-for="item in types" :key="item.code" :value="item.code+''">
             {{ item.name }}
@@ -29,7 +29,7 @@
       </FormItem>
 
       <FormItem name="openedBuild" :label="t('version')">
-        <select name="openedBuild" v-model="modelRef.openedBuild" class="form-control">
+        <select name="openedBuild" v-model="modelRef.openedBuild" class="z-form-control">
           <option value=""></option>
           <option v-for="item in builds" :key="item.code" :value="item.code+''">
             {{ item.name }}
@@ -38,7 +38,7 @@
       </FormItem>
 
       <FormItem name="severity" :label="t('severity')">
-        <select name="severity" v-model="modelRef.severity" class="form-control">
+        <select name="severity" v-model="modelRef.severity" class="z-form-control">
           <option v-for="item in severities" :key="item.code" :value="item.code+''">
             {{ item.name }}
           </option>
@@ -46,7 +46,7 @@
       </FormItem>
 
       <FormItem name="priority" :label="t('priority')">
-        <select name="priority" v-model="modelRef.pri" class="form-control">
+        <select name="priority" v-model="modelRef.pri" class="z-form-control">
           <option v-for="item in priorities" :key="item.code" :value="item.code+''">
             {{ item.name }}
           </option>

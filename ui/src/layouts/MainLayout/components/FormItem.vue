@@ -9,8 +9,8 @@
         <span v-if="errorMap.required" class="z-err tips">*</span>
       </div>
       <div class="z-form-item-error">
-        <template v-for="(val, key) in errorMap" :key="key">
-          <div v-for="(item, index) in val" :key="index" class="z-err">
+        <template v-for="(arr, key) in errorMap" :key="key">
+          <div v-for="(item, index) in arr" :key="index" class="z-err">
             {{item}}
           </div>
         </template>
@@ -45,7 +45,7 @@ let wrapperCol = parseInt(wrapperColStr)
 
 const size = ref(props.size)
 const errorMap = computed(() => {
-  return props.info ? props.info : [];
+  return props.info ? props.info : {};
 })
 
 </script>
