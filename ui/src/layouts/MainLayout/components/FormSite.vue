@@ -4,27 +4,28 @@
     @onCancel="cancel"
     @onOk="submit"
     :title="props.id > 0 ? t('edit_site') : t('create_site')"
+    :contentStyle="{width: '600px'}"
   >
-    <Form class="form-site" labelCol="6" wrapperCol="16">
+    <Form labelCol="6" wrapperCol="16">
       <FormItem name="name" :label="t('name')" :info="validateInfos.name">
-        <input v-model="modelRef.name" class="z-form-control" />
+        <input v-model="modelRef.name" />
       </FormItem>
       <FormItem name="url" :label="t('zentao_url')" :info="validateInfos.url">
-        <input v-model="modelRef.url" class="z-form-control" />
+        <input v-model="modelRef.url" />
       </FormItem>
       <FormItem
         name="username"
         :label="t('username')"
         :info="validateInfos.username"
       >
-        <input v-model="modelRef.username" class="z-form-control" />
+        <input v-model="modelRef.username" />
       </FormItem>
       <FormItem
         name="password"
         :label="t('password')"
         :info="validateInfos.password"
       >
-        <input v-model="modelRef.password" class="z-form-control" />
+        <input v-model="modelRef.password" />
       </FormItem>
     </Form>
   </ZModal>
@@ -116,9 +117,3 @@ defineExpose({
   clearFormData,
 });
 </script>
-
-<style lang="less" scoped>
-.form-site {
-  min-width: 500px;
-}
-</style>

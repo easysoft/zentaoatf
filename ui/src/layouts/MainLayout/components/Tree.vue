@@ -102,6 +102,7 @@ function _convertNodeData(node: TreeNodeData, parent: TreeNodeData | undefined, 
       ...node,
       level: parent ? ((parent.level ?? 0) + 1) : 0
     };
+    
     if (collapsedMap[node.id] !== undefined) {
         node.collapsed = collapsedMap[node.id];
     }
@@ -124,7 +125,11 @@ function _convertNodeData(node: TreeNodeData, parent: TreeNodeData | undefined, 
                 }
             }
         } else {
-            node.icon = props.leafIcon;
+            if(node.type == 'file'){
+                node.icon = props.leafIcon;
+            }else{
+                node.icon = props.nodeIcon;
+            }
         }
     }
 

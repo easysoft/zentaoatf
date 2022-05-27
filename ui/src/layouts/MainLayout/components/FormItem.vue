@@ -69,6 +69,12 @@ const errorMap = computed(() => {
         width: 90%;
         height: 28px;
         vertical-align: middle;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+      }
+      input:focus, select:focus{
+          border-color: #80bdff;
+          outline: 0;
       }
       input[type="checkbox"] {
         width: auto;

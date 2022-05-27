@@ -7,7 +7,7 @@
   >
     <Form labelCol="6" wrapperCol="16">
       <FormItem name="taskId" :label="t('task')">
-        <select name="taskId" v-model="modelRef.taskId" class="z-form-control">
+        <select name="taskId" v-model="modelRef.taskId">
           <option value="0"></option>
           <option v-for="item in tasks" :key="item.id" :value="item.id">
             {{ item.name }}

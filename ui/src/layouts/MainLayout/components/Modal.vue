@@ -120,12 +120,18 @@ defineExpose({
 
 :deep(.modal-content) {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 0 1rem;
   padding: 1rem;
   border-radius: 0.25rem;
   background: #fff;
+  justify-content: space-between;
 }
 
 .modal-title {
+  margin: 0 2rem 0 0;
+  justify-content: space-between;
   font-size: 1.1rem;
   font-weight: 700;
 }
@@ -144,6 +150,9 @@ defineExpose({
 .modal-action {
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 1rem 0 0;
 }
 
 .btn-modal {

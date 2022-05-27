@@ -4,7 +4,7 @@
     @onCancel="cancel"
     @onOk="submit"
     :title="info == undefined ? t('create_interpreter') : t('edit_interpreter')" 
-    :contentStyle="{width: '500px'}"
+    :contentStyle="{width: '600px'}"
   >
     <Form class="form-interpreter" labelCol="6" wrapperCol="16">
       <FormItem
@@ -16,7 +16,6 @@
           name="lang"
           v-model="modelRef.lang"
           @change="selectLang"
-          class="z-form-control"
         >
           <option v-for="item in languages" :key="item" :value="item">
             {{ languageMap[item].name }}
@@ -31,7 +30,6 @@
       >
         <input
           v-model="modelRef.path"
-          class="z-form-control"
           @change="selectFile"
         />
       </FormItem>
@@ -41,7 +39,7 @@
         :label="t('interpreter_path')"
         :info="validateInfos.path"
       >
-        <input v-model="modelRef.path" class="z-form-control" />
+        <input v-model="modelRef.path" />
       </FormItem>
       <FormItem
         name="lang"
@@ -52,7 +50,6 @@
           name="type"
           v-model="selectedInterpreter"
           @change="selectInterpreter"
-          class="z-form-control"
         >
           <option value="">
             {{ t("find_to_select", { num: interpreterInfos.length }) }}
@@ -195,3 +192,22 @@ defineExpose({
   clearFormData,
 });
 </script>
+
+<style>
+/* .z-form-control:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+}
+.z-form-control {
+  width: 100%;
+  color: #495057;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+} */
+
+</style>

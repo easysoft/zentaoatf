@@ -82,7 +82,6 @@ const { t, locale } = useI18n();
 const momentUtc = momentUtcDef;
 
 let interpreters = ref<any>([]);
-let interpreter = reactive<any>({});
 
 const editInfo = ref(0);
 
@@ -132,7 +131,6 @@ const setColumns = () => {
 };
 setColumns();
 
-const store = useStore<{ Site: StateType }>();
 const showCreateInterpreterModal = ref(false);
 
 let languageMap = ref<any>({});
@@ -158,23 +156,21 @@ const list = () => {
 list();
 
 const create = () => {
-  console.log("create");
   editInfo.value = {};
   showCreateInterpreterModal.value = true;
 };
 const edit = (item) => {
-  console.log("edit", item.value.id);
   editInfo.value = item;
   showCreateInterpreterModal.value = true;
 };
 
 const remove = (item) => {
   Modal.confirm({
-    title: "",
-    content: t("confirm_delete", {
+    title: t("confirm_delete", {
       name: languageMap.value[item.value.lang].name,
       typ: t("script_lang"),
     }),
+    content: '',
     okText: t("confirm"),
     cancelText: t("cancel"),
     onOk: async () => {
@@ -199,7 +195,3 @@ const createInterpreter = (formData) => {
   })
 };
 </script>
-
-<style>
-
-</style>
