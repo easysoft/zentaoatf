@@ -75,7 +75,7 @@ var (
 			"printGrammar":  "print(\"#\")",
 			"interpreter":   "C:\\Users\\admin\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe",
 			"whereCmd":      "where python",
-			"linuxWhereCmd": "which -a python python3",
+			"linuxWhereCmd": "which -a python python2 python3",
 			"versionCmd":    "--version",
 		},
 		"ruby": {
