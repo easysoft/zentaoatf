@@ -24,54 +24,54 @@
 
       <div class="main">
         <div class="summary">
-          <Row :gutter="10">
-            <Col :span="2" class="t-bord t-label-right">{{t("test_env")}}
+          <Row>
+            <Col :span="3" class="t-bord t-label-right">{{t("test_env")}}
             </Col>
-            <Col :span="6">{{ testEnv(reportRef.testEnv) }}</Col>
+            <Col :span="5">{{ testEnv(reportRef.testEnv) }}</Col>
 
-            <Col :span="2" class="t-bord t-label-right">{{t("start_time")}}
+            <Col :span="3" class="t-bord t-label-right">{{t("start_time")}}
             </Col>
-            <Col :span="6">{{ momentTime(reportRef.startTime) }}</Col>
+            <Col :span="5">{{ momentTime(reportRef.startTime) }}</Col>
 
-            <Col :span="2" class="t-bord t-label-right">{{t("case_num")}}
+            <Col :span="3" class="t-bord t-label-right">{{t("case_num")}}
             </Col>
-            <Col :span="6">{{ reportRef.total }}</Col>
+            <Col :span="5">{{ reportRef.total }}</Col>
           </Row>
           <Row>
-            <Col :span="2" class="t-bord t-label-right">{{t("test_type")}}
+            <Col :span="3" class="t-bord t-label-right">{{t("test_type")}}
             </Col>
-            <Col :span="6">{{ testType(reportRef.testType) }}</Col>
+            <Col :span="5">{{ testType(reportRef.testType) }}</Col>
 
-            <Col :span="2" class="t-bord t-label-right">{{t("end_time")}}
+            <Col :span="3" class="t-bord t-label-right">{{t("end_time")}}
             </Col>
-            <Col :span="6">{{ momentTime(reportRef.endTime) }}</Col>
+            <Col :span="5">{{ momentTime(reportRef.endTime) }}</Col>
 
-            <Col :span="2" class="t-bord t-label-right">{{ t("pass") }}</Col>
-            <Col :span="6" class="t-pass"
+            <Col :span="3" class="t-bord t-label-right">{{ t("pass") }}</Col>
+            <Col :span="5" class="t-pass"
             >{{ reportRef.pass }}（{{percent(reportRef.pass, reportRef.total)}}）
             </Col
             >
           </Row>
 
           <Row>
-            <Col :span="2" class="t-bord t-label-right">{{t("exec_type")}}
+            <Col :span="3" class="t-bord t-label-right">{{t("exec_type")}}
             </Col>
-            <Col :span="6">{{ execBy(reportRef) }}</Col>
+            <Col :span="5">{{ te(execBy(reportRef)) ? execBy(reportRef) : execBy(reportRef) }}</Col>
 
-            <Col :span="2" class="t-bord t-label-right">{{t("duration")}}
+            <Col :span="3" class="t-bord t-label-right">{{t("duration")}}
             </Col>
-            <Col :span="6">{{ reportRef.duration }}{{ t("sec") }}</Col>
+            <Col :span="5">{{ reportRef.duration }}{{ t("sec") }}</Col>
 
-            <Col :span="2" class="t-bord t-label-right">{{ t("fail") }}</Col>
-            <Col :span="6" class="t-fail">{{ reportRef.fail }}（{{percent(reportRef.fail, reportRef.total)}}）
+            <Col :span="3" class="t-bord t-label-right">{{ t("fail") }}</Col>
+            <Col :span="5" class="t-fail">{{ reportRef.fail }}（{{percent(reportRef.fail, reportRef.total)}}）
             </Col>
           </Row>
 
           <Row>
             <Col :span="16"></Col>
 
-            <Col :span="2" class="t-bord t-label-right">{{ t("ignore") }}</Col>
-            <Col :span="6" class="t-skip">{{ reportRef.skip }}（{{percent(reportRef.skip, reportRef.total)}}）
+            <Col :span="3" class="t-bord t-label-right">{{ t("ignore") }}</Col>
+            <Col :span="5" class="t-skip">{{ reportRef.skip }}（{{percent(reportRef.skip, reportRef.total)}}）
             </Col>
           </Row>
 
@@ -80,11 +80,10 @@
         </div>
 
         <Row>
-          <Col :span="2" class="t-bord t-label-right">{{t("case_detail") }}</Col>
+          <Col :span="3" class="t-bord t-label-right">{{t("case_detail") }}</Col>
         </Row>
-        <Row>
-          <Col :span="1"></Col>
-          <Col :span="23" v-if="reportRef.testType != 'unit'">
+        <Row class="case-result-item">
+          <Col :span="24" v-if="reportRef.testType != 'unit'">
             <template v-for="cs in reportRef.funcResult" :key="cs.id">
               <div class="case-info">
                 <div class="info">
@@ -147,7 +146,7 @@
               <br/>
             </template>
           </Col>
-          <Col :span="23" v-else>
+          <Col :span="24" v-else>
             <Table
                 :columns="columns"
                 :rows="reportRef.unitResult"
@@ -216,7 +215,7 @@ import bus from "@/utils/eventBus";
 import settings from "@/config/settings";
 
 
-const {t, locale} = useI18n();
+const {t, te, locale} = useI18n();
 
 const store = useStore<{ Result: StateType }>();
 const report = computed<any>(() => store.state.Result.detailResult);
@@ -259,27 +258,32 @@ const setColumns = () => {
       {
         label: t('no'),
         field: "id",
-        width: "3%",
+        width: "10%",
         isKey: true,
       },
       {
         label: t('case'),
+        width: "20%",
         field: 'title',
       },
       {
         label: t('suite'),
+        width: "40%",
         field: 'testSuite',
       },
       {
         label: t('duration_sec'),
+        width: "10%",
         field: 'duration',
       },
       {
         label: t('status'),
+        width: "10%",
         field: 'status',
       },
       {
         label: t('opt'),
+        width: "10%",
         field: 'opt',
       },
     ];
@@ -287,25 +291,25 @@ const setColumns = () => {
   }
   columns.value = [
     {
-      label: "ID",
+      label: t('no'),
+      width: "10%",
       field: "id",
-      width: "3%",
       isKey: true,
     },
     {
       label: t("step"),
       field: "name",
-      width: "10%",
+      width: "30%",
     },
     {
       label: t("status"),
       field: "status",
-      width: "5%",
+      width: "10%",
     },
     {
       label: t("checkpoint"),
       field: "checkpoint",
-      width: "20%",
+      width: "50%",
     },
   ];
 };
@@ -417,7 +421,7 @@ const getCaseIdsInReport = (reportVal) => {
 
 <style lang="less" scoped>
 .main {
-  padding: 20px;
+  padding: 20px var(--space-base);
 }
 
 .dot {
@@ -474,5 +478,8 @@ const getCaseIdsInReport = (reportVal) => {
     display: flex;
     padding-right: 20px;
     flex-direction: row-reverse;
+}
+.case-result-item{
+    padding-left: 1rem;
 }
 </style>

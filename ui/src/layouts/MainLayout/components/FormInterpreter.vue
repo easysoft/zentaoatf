@@ -59,7 +59,7 @@
             :key="item.path"
             :value="item.path"
           >
-            {{ item.info }}
+            {{ item.info.length > 50 ? item.info.substring(0,47) + '...' : item.info }}
           </option>
         </select>
       </FormItem>
@@ -154,10 +154,12 @@ watch(props, () => {
       lang: "",
       path: "",
     };
+    interpreterInfos.value = [];
   } else {
     modelRef.value.id = props.info.value.id;
     modelRef.value.path = props.info.value.path;
     modelRef.value.lang = props.info.value.lang;
+    interpreterInfos.value = [];
   }
 });
 

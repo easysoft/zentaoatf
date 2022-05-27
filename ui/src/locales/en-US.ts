@@ -172,6 +172,7 @@ export default {
     'by_module': 'By Module',
     'by_suite': 'By Suite',
     'by_task': 'By Task',
+    'by_case': 'By Case',
     'checkout_case': 'Checkout Cases',
     'checkin_case': 'Checkin Cases',
     'exec_selected': 'Exec Selected',
@@ -214,6 +215,7 @@ export default {
     'pls_input_lang': 'Please input language.',
     'pls_input_interpreter_path': 'Please input interpreter path.',
 
+    'find_to_select': 'Find {num} option to select',
     'no_interp_1': 'No windows system, ',
     'no_interp_2': 'please add interpreter executable file to PATH environment variable.',
 

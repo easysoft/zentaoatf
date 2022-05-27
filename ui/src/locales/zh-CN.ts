@@ -186,6 +186,7 @@ export default {
     'by_module': '按模块',
     'by_suite': '按套件',
     'by_task': '按任务',
+    'by_case': '按用例',
     'checkout_case': '导出禅道用例',
     'checkin_case': '更新禅道用例',
     'exec_all': '执行所有文件',

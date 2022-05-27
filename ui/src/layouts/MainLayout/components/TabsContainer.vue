@@ -66,7 +66,7 @@ const activeID = computed((): string => {
 
 watch(activeID, () => {
   console.log('watch activeID', activeID)
-  if (activeID.value.indexOf('workspace-') === 0 || activeID.value.indexOf('result-') === 0) {
+  if (activeID.value.indexOf('workspace-') === -1 && activeID.value.indexOf('result-') === -1) {
     toolbarItems.value = []
   } else {
     toolbarItems.value = toolbarItemArr
