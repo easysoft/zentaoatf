@@ -2,10 +2,9 @@
   <ButtonGroup class="space-left">
     <Button id="siteMenuToggle"
             :label="currSite.name"
-            icon="zentao"
+            :icon="currSite.username ? 'zentao' : 'hard-drive-filled'"
             class="rounded border lighten-16"
-            iconColor="var(--color-blue)"
-            iconClass="off-off"
+            :iconClass="currSite.username ? 'text-blue' : 'text-secondary'"
             suffix-icon="caret-down"/>
     <Button v-if="products.length > 0"
             id="productMenuToggle"
@@ -17,12 +16,15 @@
 
   <DropdownMenu
       toggle="#siteMenuToggle"
-      :items="[...sites, {checked: false,id: -1,name: t('create_site'),password: '',url: '',username: '', titleClass: 'top-line padding-top'}]"
+      class="padding-0-bottom"
+      :items="sites"
       keyName="id"
       :checkedKey="currSite.id"
       @click="selectSite"
       :replaceFields="replaceFields"
   >
+    <div class="divider space-sm-top"></div>
+    <ListItem class="darken-1" icon="globe" :title="t('site_management')" @click="openSiteManagementTab()" />
   </DropdownMenu>
 
   <DropdownMenu
@@ -40,6 +42,7 @@
 import Button from './Button.vue';
 import ButtonGroup from './ButtonGroup.vue';
 import DropdownMenu from './DropdownMenu.vue';
+import ListItem from './ListItem.vue';
 import {useI18n} from "vue-i18n";
 import {useRouter} from "vue-router";
 import {useStore} from "vuex";
@@ -50,13 +53,15 @@ import {notification} from "ant-design-vue";
 
 const { t } = useI18n();
 const router = useRouter();
-
 const store = useStore<{ Zentao: ZentaoData }>();
 
-const sites = computed<any[]>(() => store.state.Zentao.sites);
 const products = computed<any>(() => store.state.Zentao.products);
-
 const currSite = computed<any>(() => store.state.Zentao.currSite);
+const sites = computed<any[]>(() => store.state.Zentao.sites.map(site => ({
+    icon: site.username ? 'zentao' : 'hard-drive-filled',
+    iconClass: 'muted',
+    ...site
+})));
 const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
 store.dispatch('Zentao/fetchSitesAndProduct', {}).then((payload) => {
@@ -90,19 +95,23 @@ const showZentaoMsg = (payload): void => {
   }
 }
 
-const selectSite = (item): void => {
-  console.log('selectSite', item.key)
-  if(item.key == -1){
-      store.dispatch('tabs/open', {
+const openSiteManagementTab = (showCreateSiteModal?: boolean) => {
+    console.log('openSiteManagementTab');
+    store.dispatch('tabs/open', {
         id: 'sites',
         title: t('site_management'),
         type: 'sites',
+        data: {showCreateSiteModal}
     });
-  }
+};
+
+const selectSite = (item): void => {
+  console.log('selectSite', item.key)
   store.dispatch('Zentao/fetchSitesAndProduct', {currSiteId: item.key}).then((payload) => {
     showZentaoMsg(payload)
   })
 }
+
 const selectProduct = (item): void => {
   console.log('selectProduct', item.key)
   store.dispatch('Zentao/fetchSitesAndProduct', {currProductId: item.key}).then((payload) => {

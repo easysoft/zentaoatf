@@ -1,17 +1,17 @@
 <template>
   <div class="site-main space-top space-left space-right">
-      <div class="t-card-toolbar">
-        <div class="left">
-          {{ t("site_management") }}
-        </div>
-        <Button 
-        class="state primary"
-          size="sm"
-         @click="create()"
-         >
-          {{t('create_site')}}
-        </Button>
+    <div class="t-card-toolbar">
+      <div class="left">
+        {{ t("site_management") }}
       </div>
+      <Button
+      class="state primary"
+        size="sm"
+        @click="create()"
+        >
+        {{t('create_site')}}
+      </Button>
+    </div>
     <Table
       :columns="columns"
       :rows="models"
@@ -146,9 +146,11 @@ const setColumns = () => {
 };
 setColumns();
 
+console.log();
+
 const zentaoStore = useStore<{ zentao: ZentaoData }>();
 const store = useStore<{ Site: StateType }>();
-const showCreateSiteModal = ref(false)
+const showCreateSiteModal = ref(!!props.tab?.data?.showCreateSiteModal)
 const models = computed<any[]>(() => store.state.Site.queryResult.result);
 
 const queryParams = ref<QueryParams>({
