@@ -120,12 +120,12 @@ const setColumns = () => {
     {
       label: t("create_time"),
       field: "createdAt",
-      width: "25%",
+      width: "20%",
     },
     {
       label: t("opt"),
       field: "action",
-      width: "25%",
+      width: "30%",
     },
   ];
 };

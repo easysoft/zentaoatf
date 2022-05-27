@@ -56,7 +56,7 @@
           <Row>
             <Col :span="3" class="t-bord t-label-right">{{t("exec_type")}}
             </Col>
-            <Col :span="5">{{ te(execBy(reportRef)) ? execBy(reportRef) : execBy(reportRef) }}</Col>
+            <Col :span="5">{{ te(execBy(reportRef)) ? t(execBy(reportRef)) : execBy(reportRef) }}</Col>
 
             <Col :span="3" class="t-bord t-label-right">{{t("duration")}}
             </Col>
@@ -299,7 +299,7 @@ const setColumns = () => {
     {
       label: t("step"),
       field: "name",
-      width: "30%",
+      width: "20%",
     },
     {
       label: t("status"),

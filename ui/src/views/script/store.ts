@@ -62,7 +62,8 @@ const StoreModel: ModuleType = {
     },
     mutations: {
         setList(state, payload) {
-            state.list = payload;
+            console.log(1111,payload)
+            state.list = payload.length > 0 ? payload[0]['children'] : [];
             const treeDataMap = {};
             if(payload.length > 0) {
                 getNodeMap(payload[0], treeDataMap);
