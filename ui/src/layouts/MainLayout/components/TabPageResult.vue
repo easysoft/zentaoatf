@@ -104,6 +104,7 @@
               </div>
 
               <Table
+                  v-if="cs.steps.length"
                   :columns="columns"
                   :rows="cs.steps"
                   :isHidePaging="true"
@@ -148,6 +149,7 @@
           </Col>
           <Col :span="24" v-else>
             <Table
+                v-if="reportRef.unitResult.length"
                 :columns="columns"
                 :rows="reportRef.unitResult"
                 :isHidePaging="true"
