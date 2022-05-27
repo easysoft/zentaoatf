@@ -26,7 +26,6 @@ const colClass = computed(() => {
   const classes: string[] = [];
 
   const span = typeof(props.span) === "undefined" ? -1 : props.span
-
   if (span > 0) {
     classes.push(`z-col-${span}`);
   }
@@ -42,15 +41,14 @@ const colStyle = computed(() => {
   const style: Record<string, any> = {};
 
   const width = typeof(props.width) === "undefined" ? '' : (props.width.indexOf('px') > 0 ? props.width : props.width + '%')
-  const span = typeof(props.span) === "undefined" ? -1 : props.span
   const flex = typeof(props.flex) === "undefined" ? -1 : props.flex
-
+  const span = typeof(props.span) === "undefined" ? -1 : props.span
   if (width && width !== '') {
     style.width = width;
-  } else if (span === 0) {
-    style.display = 'none';
   } else if (flex > 0) {
     style.flex = flex;
+  } else if (span === 0) {
+    style.display = 'none';
   }
 
   if (gutter.value > 0) {

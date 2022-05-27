@@ -14,14 +14,14 @@ export interface RowProps {
 }
 
 const props = defineProps<RowProps>();
-const gutter = ref(props.gutter);
+const gutter = ref(props.gutter); // set margin-left and margin-right on child cols
 
 provide('gutter', gutter);
 
 const rowStyle = computed(() => {
   const style: Record<string, any> = {};
 
-  if (gutter.value > 0) {
+  if (gutter.value > 0) { // move whole row
     style.marginLeft = gutter.value / -2 + 'px';
     style.marginRight = gutter.value / -2 + 'px';
   }
