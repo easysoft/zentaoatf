@@ -12,7 +12,7 @@ import {useI18n} from "vue-i18n";
 import {useStore} from "vuex";
 import {ZentaoData} from "@/store/zentao";
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 const store = useStore<{ Zentao: ZentaoData }>();
 
 const openSettings = () => {
