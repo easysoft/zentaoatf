@@ -35,7 +35,6 @@ export interface FormItemProps {
 }
 
 const props = defineProps<FormItemProps>();
-console.log(props)
 
 let labelColStr = inject('labelCol') as string
 let wrapperColStr = inject('wrapperCol') as string
