@@ -30,6 +30,7 @@
   <DropdownMenu
       v-if="products.length > 0"
       toggle="#productMenuToggle"
+      class="scrollbar-y scrollbar-hover"
       :items="products"
       keyName="id"
       :checkedKey="currProduct.id"
