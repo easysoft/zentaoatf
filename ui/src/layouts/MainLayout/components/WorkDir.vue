@@ -1,31 +1,21 @@
 <template>
   <div class="workdir">
-    <Tree 
-      :data="treeData" 
-      :checkable="checkable" 
-      ref="treeRef" 
-      @active="selectNode" 
-      @check="checkNode" 
-      @clickToolbar="onToolbarClicked"
-    />
-    <FormNode
-      :show="showModal"
-      @submit="createNode"
-      @cancel="modalClose"
-      ref="formNode"
-     />
+    <Tree :data="treeData" :checkable="checkable" ref="treeRef" @active="selectNode" @check="checkNode"
+      @clickToolbar="onToolbarClicked" />
+    <FormNode :show="showModal" @submit="createNode" @cancel="modalClose" ref="formNode" />
   </div>
 </template>
 
 <script setup lang="ts">
-import {useI18n} from "vue-i18n";
-import {useStore} from "vuex";
-import {ZentaoData} from "@/store/zentao";
-import {ScriptData} from "@/views/script/store";
-import {expandOneKey, resizeWidth} from "@/utils/dom";
+import { useI18n } from "vue-i18n";
+import { useStore } from "vuex";
+import { ZentaoData } from "@/store/zentao";
+import { ScriptData } from "@/views/script/store";
+import { WorkspaceData } from "@/store/workspace";
+import { expandOneKey, resizeWidth } from "@/utils/dom";
 import Form from "./Form.vue";
 import FormItem from "./FormItem.vue";
-import {useForm} from "@/utils/form";
+import { useForm } from "@/utils/form";
 import Tree from "./Tree.vue";
 import notification from "@/utils/notification";
 import { computed, defineExpose, onMounted, onUnmounted, ref, watch } from "vue";
@@ -42,14 +32,14 @@ import {
   getNodeMap,
   listFilterItems,
 } from "@/views/script/service";
-import {useRouter} from "vue-router";
-import {isWindows} from "@/utils/comm";
+import { useRouter } from "vue-router";
+import { isWindows } from "@/utils/comm";
 import debounce from "lodash.debounce";
 import throttle from "lodash.debounce";
 import Modal from "@/utils/modal"
 import FormNode from "./FormNode.vue";
 
-const {t} = useI18n();
+const { t } = useI18n();
 
 const zentaoStore = useStore<{ Zentao: ZentaoData }>();
 const currSite = computed<any>(() => zentaoStore.state.Zentao.currSite);
@@ -58,6 +48,7 @@ const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
 const scriptStore = useStore<{ Script: ScriptData }>();
 const currWorkspace = computed<any>(() => scriptStore.state.Script.currWorkspace);
 
+const workspaceStore = useStore<{ Workspace: WorkspaceData }>();
 const isWin = isWindows()
 
 zentaoStore.dispatch('Zentao/fetchLangs')
@@ -88,13 +79,31 @@ onMounted(() => {
 const onToolbarClicked = (e) => {
   const node = e.node == undefined ? treeDataMap[''] : treeDataMap[e.node.id]
   scriptStore.dispatch('Script/changeWorkspace',
-      {id: node.workspaceId, type: node.workspaceType})
+    { id: node.workspaceId, type: node.workspaceType })
 
   currentNode.value = node;
   if (e.event.key == 'runTest') {
     runTest(currentNode);
   } else if (e.event.key == 'createFile' || e.event.key == 'createWorkspace') {
     showModal.value = true;
+  } else if (e.event.key === 'deleteWorkspace') {
+    Modal.confirm({
+      title: t('delete'),
+      content: t('confirm_to_delete_workspace', { p: node.title }),
+      showOkBtn: true
+    },
+      {
+        "onOk": () => {
+          workspaceStore.dispatch('Workspace/removeWorkspace', node.path)
+            .then((response) => {
+              if (response) {
+                notification.success({ message: t('delete_success') });
+                loadScripts()
+              }
+            })
+        }
+      }
+    )
   }
 }
 
@@ -144,12 +153,12 @@ selectCasesFromReport()
 watch(currProduct, () => {
   console.log('watch currProduct', currProduct.value.id)
   initData()
-}, {deep: true})
+}, { deep: true })
 
 watch(treeData, (currConfig) => {
   console.log('watch treeData', treeData.value)
   onTreeDataChanged()
-}, {deep: true})
+}, { deep: true })
 
 let filerItems = ref([] as any)
 
@@ -157,7 +166,7 @@ const loadScripts = async () => {
   console.log(`loadScripts should be executed only once`)
   console.log(`filerType: ${filerType.value}, filerValue: ${filerValue.value}`)
 
-  const params = {displayBy: displayBy.value, filerType: filerType.value, filerValue: filerValue.value} as any
+  const params = { displayBy: displayBy.value, filerType: filerType.value, filerValue: filerValue.value } as any
   store.dispatch('Script/listScript', params)
 }
 
@@ -250,7 +259,7 @@ onMounted(() => {
   console.log('onMounted', tree)
 })
 onUnmounted(() => {
-    console.log('onUnmounted', tree)
+  console.log('onUnmounted', tree)
 })
 
 const selectNode = (activeNode) => {
@@ -271,13 +280,13 @@ const selectNode = (activeNode) => {
   }
 
   scriptStore.dispatch('Script/changeWorkspace',
-      {id: node.workspaceId, type: node.workspaceType})
+    { id: node.workspaceId, type: node.workspaceType })
 }
 
 const checkNode = (checkedKeys) => {
   console.log('checkNode', checkedKeys.checked)
-//   scriptStore.dispatch('Script/changeWorkspace',
-//       {id: e.node.dataRef.workspaceId, type: e.node.dataRef.workspaceType})
+  //   scriptStore.dispatch('Script/changeWorkspace',
+  //       {id: e.node.dataRef.workspaceId, type: e.node.dataRef.workspaceType})
 }
 
 const checkNothing = () => {
@@ -299,32 +308,32 @@ let createAct = ''
 
 const formNode = ref(null)
 const createNode = (formData) => {
-    const mode = 'child';
-    let type = 'dir';
-    if (currentNode.value.isLeaf) {
-        type = 'node';
-    }
-    scriptStore.dispatch('Script/createScript', {
-        name: formData.name, mode: mode, type: type, target: currentNode.value.path,
-        workspaceId: currentNode.value.workspaceId, productId: currProduct.value.id,
-    }).then((result) => {
-        if (result) {
-            formNode.value.clearFormData()
-            showModal.value = false;
-            notification.success({message: t('create_success')});
-            nameFormVisible.value = false
+  const mode = 'child';
+  let type = 'dir';
+  if (currentNode.value.isLeaf) {
+    type = 'node';
+  }
+  scriptStore.dispatch('Script/createScript', {
+    name: formData.name, mode: mode, type: type, target: currentNode.value.path,
+    workspaceId: currentNode.value.workspaceId, productId: currProduct.value.id,
+  }).then((result) => {
+    if (result) {
+      formNode.value.clearFormData()
+      showModal.value = false;
+      notification.success({ message: t('create_success') });
+      nameFormVisible.value = false
 
-            if (mode == 'child') {
-                expandedKeys.value.push(rightClickedNode.path)
-            }
-            if (type === 'dir') {
-                expandedKeys.value.push(result)
-            }
-            setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
-        } else {
-            notification.error({message: t('create_fail')});
-        }
-    })
+      if (mode == 'child') {
+        expandedKeys.value.push(rightClickedNode.path)
+      }
+      if (type === 'dir') {
+        expandedKeys.value.push(result)
+      }
+      setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
+    } else {
+      notification.error({ message: t('create_fail') });
+    }
+  })
 }
 
 defineExpose({

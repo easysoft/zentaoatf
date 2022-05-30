@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"fmt"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
 	"github.com/easysoft/zentaoatf/internal/pkg/domain"
@@ -64,6 +65,17 @@ func (s *WorkspaceService) Update(workspace model.Workspace) (err error) {
 
 func (s *WorkspaceService) Delete(id uint) (err error) {
 	err = s.WorkspaceRepo.Delete(id)
+	if err != nil {
+		return
+	}
+
+	err = s.WorkspaceRepo.SetCurrWorkspace("")
+
+	return
+}
+
+func (s *WorkspaceService) DeleteByPath(path string, productId uint) (err error) {
+	err = s.WorkspaceRepo.DeleteByPath(path, productId)
 	if err != nil {
 		return
 	}
