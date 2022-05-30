@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, onBeforeUnmount, computed, CSSProperties, watch, ref, defineEmits, onMounted, defineExpose } from 'vue';
+import { defineProps, onBeforeUnmount, computed, CSSProperties, watch, shallowRef, defineEmits, onMounted, defineExpose, toRaw } from 'vue';
 import * as monaco from 'monaco-editor';
 import { useElementSize } from '@vueuse/core'
 
@@ -22,8 +22,8 @@ const emit = defineEmits([
     'change'
 ]);
 
-const elRef = ref<HTMLElement>();
-const editorRef = ref<monaco.editor.IStandaloneCodeEditor>();
+const elRef = shallowRef<HTMLElement>();
+const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor>();
 
 const style = computed(()=>{
     const {width, height} = props;
