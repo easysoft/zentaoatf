@@ -8,10 +8,10 @@
           </div>
         </div>
         <table
-            class="z-table z-table-hover z-table-bordered z-table-responsive"
+            class="z-table z-table-hover z-table-bordered"
             ref="localTable">
           <thead class="z-thead">
-          <tr class="z-thead-tr">
+            <tr class="z-thead-tr">
             <th v-if="hasCheckbox" class="z-thead-th z-checkbox-th">
               <div>
                 <input
@@ -45,7 +45,7 @@
           </tr>
           </thead>
           <tbody v-if="rows.length > 0" class="z-tbody">
-          <template v-if="isStaticMode">
+            <template v-if="isStaticMode">
             <tr v-for="(row, i) in localRows"
                 :key="i"
                 class="z-tbody-tr"
@@ -79,7 +79,7 @@
               </td>
             </tr>
           </template>
-          <template v-else>
+            <template v-else>
             <tr v-for="(row, i) in rows"
                 :key="i"
                 class="z-tbody-tr"
@@ -866,22 +866,13 @@ tr {
   vertical-align: top;
   border-top: 1px solid #dee2e6;
   vertical-align: middle;
+  position: sticky;
+  top: 0;
 }
 
 .z-table-hover tbody tr:hover {
   color: #212529;
   background-color: rgba(0, 0, 0, 0.075);
-}
-
-.z-table-responsive {
-  display: block;
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.z-table-responsive > .z-table-bordered {
-  border: 0;
 }
 
 .z-row {

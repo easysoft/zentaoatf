@@ -42,7 +42,7 @@ const colStyle = computed(() => {
 
   const width = typeof(props.width) === "undefined" ? '' : (props.width.indexOf('px') > 0 ? props.width : props.width + '%')
   const flex = typeof(props.flex) === "undefined" ? -1 : props.flex
-  const span = typeof(props.span) === "undefined" ? -1 : props.span
+  const span = typeof(props.span) === "undefined" ? -1 : props.span // 0 to hide
   if (width && width !== '') {
     style.width = width;
   } else if (flex > 0) {

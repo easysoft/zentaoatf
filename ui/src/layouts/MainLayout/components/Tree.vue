@@ -10,7 +10,8 @@
       @toggle="_handleToggle"
       @clickToolbar="emit('clickToolbar', $event)"
       @check="_handleCheck"
-    />
+    >
+    </TreeNode>
     <slot />
   </div>
 </template>

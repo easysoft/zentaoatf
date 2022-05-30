@@ -105,12 +105,12 @@ const setColumns = () => {
       isKey: true,
       label: t("no"),
       field: "id",
-      width: "10%",
+      width: "15%",
     },
     {
       label: t("lang"),
       field: "lang",
-      width: "25%",
+      width: "15%",
     },
     {
       label: t("interpreter_path"),
@@ -125,7 +125,7 @@ const setColumns = () => {
     {
       label: t("opt"),
       field: "action",
-      width: "30%",
+      width: "20%",
     },
   ];
 };
