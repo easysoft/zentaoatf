@@ -3,6 +3,7 @@ package repo
 import (
 	"errors"
 	"fmt"
+
 	"github.com/easysoft/zentaoatf/internal/pkg/domain"
 	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
@@ -107,6 +108,19 @@ func (r *WorkspaceRepo) Delete(id uint) (err error) {
 	err = r.DB.Where("id = ?", id).
 		Delete(&model.Workspace{}).
 		Error
+	if err != nil {
+		logUtils.Errorf(color.RedString("delete workspace failed, error: %s.", err.Error()))
+		return
+	}
+
+	return
+}
+
+func (r *WorkspaceRepo) DeleteByPath(path string, productId uint) (err error) {
+	err = r.DB.Where("path = ? AND product_id = ?", path, productId).
+		Delete(&model.Workspace{}).
+		Error
+
 	if err != nil {
 		logUtils.Errorf(color.RedString("delete workspace failed, error: %s.", err.Error()))
 		return

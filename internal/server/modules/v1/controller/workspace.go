@@ -111,6 +111,24 @@ func (c *WorkspaceCtrl) Delete(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(nil))
 }
 
+// delete by path
+func (c *WorkspaceCtrl) DeleteByPath(ctx iris.Context) {
+	path := ctx.URLParam("path")
+	currProductId, err := ctx.URLParamInt64("currProductId")
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, "currProductId"))
+		return
+	}
+
+	err = c.WorkspaceService.DeleteByPath(path, uint(currProductId))
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	ctx.JSON(c.SuccessResp(nil))
+}
+
 func (c *WorkspaceCtrl) ListByProduct(ctx iris.Context) {
 	currSiteId, _ := ctx.URLParamInt("currSiteId")
 	currProductId, _ := ctx.URLParamInt("currProductId")
