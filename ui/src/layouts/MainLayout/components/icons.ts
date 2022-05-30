@@ -63,6 +63,7 @@ import lock_closed from '@iconify-icons/fluent/lock-closed-20-regular';
 import lock_open from '@iconify-icons/fluent/lock-open-20-regular';
 import hard_drive from '@iconify-icons/fluent/hard-drive-20-regular';
 import hard_drive_filled from '@iconify-icons/fluent/hard-drive-20-filled';
+import delete_20 from '@iconify-icons/fluent/delete-20-regular';
 
 import circle_20 from '@iconify-icons/fluent/circle-20-filled';
 
@@ -135,6 +136,8 @@ export const icons = {
     'local-language' : language,
     'hard-drive' : hard_drive,
     'hard-drive-filled' : hard_drive_filled,
+
+    'delete_20' :delete_20,
 }
 
 Object.entries(icons).forEach(([name, icon]) => {

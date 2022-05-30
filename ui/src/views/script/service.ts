@@ -245,6 +245,10 @@ export function scriptTreeAddAttr(treeData) {
                 item.toolbarItems.push({hint: testToolMap[item.workspaceType], icon: 'play', hintI18n: 'test', key: 'runTest'})
             }
         }
+
+        if (item.type === "workspace") {
+            item.toolbarItems.push({hint:'delete', icon:'delete_20', key: 'deleteWorkspace'})
+        }
         if (item.children != undefined && item.children.length > 0) {
             item.children = scriptTreeAddAttr(item.children)
         }
