@@ -13,7 +13,7 @@ import { defineProps, defineExpose } from "vue";
 import { PageTab } from "@/store/tabs";
 import { useStore } from "vuex";
 import { ScriptData } from "@/views/script/store";
-import { computed, defineComponent, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { MonacoOptions, ScriptFileNotExist } from "@/utils/const";
 import { resizeHeight, resizeWidth } from "@/utils/dom";
 import { useI18n } from "vue-i18n";
@@ -76,12 +76,12 @@ const editorChange = (newScriptCode) => {
 }
 
 const save = () => {
-    const code = editorRef.value._getValue()
+    const code = editorRef.value?.getValue()
     scriptStore.dispatch('Script/updateCode',{
         workspaceId: currWorkspace.value.id,
-        path: script.value.path, 
+        path: script.value.path,
         code: code
-    }).then(() => {    
+    }).then(() => {
         console.info("success")
         notification.success({
           message: t('save_success'),

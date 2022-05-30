@@ -1,145 +1,120 @@
 <template>
-  <div class="monaco-editor-vue3" :style="style"></div>
+  <div class="monaco-editor-vue3" :style="style" ref="elRef"></div>
 </template>
 
-<script>
-import { defineComponent, computed, toRefs, defineExpose } from 'vue'
-import * as monaco from 'monaco-editor'
+<script setup lang="ts">
+import { defineProps, onBeforeUnmount, computed, CSSProperties, watch, ref, defineEmits, onMounted, defineExpose } from 'vue';
+import * as monaco from 'monaco-editor';
+import { useElementSize } from '@vueuse/core'
 
-export default defineComponent({
-  name: "MonacoEditor",
-  props: {
-    diffEditor: { type: Boolean, default: false },
+const props = defineProps({
     width: {type: [String, Number], default: '100%'},
     height: {type: [String, Number], default: '100%'},
-    original: String,
     value: String,
     language: {type: String, default: 'javascript'},
     theme: {type: String, default: 'vs'},
     options: {type: Object, default() {return {};}},
-  },
-  emits: [
+});
+
+const emit = defineEmits([
     'editorWillMount',
     'editorDidMount',
     'change'
-  ],
-  setup(props){
-    const { width, height } = toRefs(props)
-    const style = computed(()=>{
-      const fixedWidth = width.value.toString().includes('%') ? width.value : `${width.value}px`
-      const fixedHeight = height.value.toString().includes('%')? height.value : `${height.value}px`
-      return {
+]);
+
+const elRef = ref<HTMLElement>();
+const editorRef = ref<monaco.editor.IStandaloneCodeEditor>();
+
+const style = computed(()=>{
+    const {width, height} = props;
+    const fixedWidth = (typeof width === 'string' && width.includes('%')) ? width : `${width}px`
+    const fixedHeight = (typeof height === 'string' && height.includes('%')) ? height : `${height}px`
+    return {
         width: fixedWidth,
         height: fixedHeight,
-        'text-align': 'left'
-      }
-    })
+        textAlign: 'left'
+    } as CSSProperties;
+});
 
-    const getValue = () => {
-      return this._getValue()
+const {height: containerHeight} = useElementSize(elRef);
+
+watch(containerHeight, (newVal, oldValue) => {
+    console.log('containerHeight: ', newVal, oldValue, editorRef);
+    // if (editorRef.value) {
+    //    editorRef.value.layout();
+    // }
+});
+
+watch(() => props.options, () => {
+    if (editorRef.value) {
+        editorRef.value.updateOptions(props.options);
     }
-    // defineExpose({
-    //   getValue,
-    // })
+});
 
-    return {
-      style,
-      // getValue,
+watch(() => props.value, () => {
+    if (editorRef.value && props.value && editorRef.value.getValue() !== props.value) {
+        editorRef.value.setValue(props.value);
     }
-  },
-  mounted() {
-    this.initMonaco()
-  },
-  beforeUnmount() {
-    this.editor && this.editor.dispose();
-  },
-  methods: {
-    initMonaco(){
-      this.$emit('editorWillMount', this.monaco)
-      const { value, language, theme, options } = this;
-      Object.assign(options, {scrollbar: {
-          useShadows: false,
-          verticalScrollbarSize: 6,
-          horizontalScrollbarSize: 6
-        }})
+});
 
-      const opt = {
-        value: value,
-        language: language,
-        theme: theme,
-        ...options
-      }
-      if (language) opt.language = language
-
-      this.editor = monaco.editor[this.diffEditor ? 'createDiffEditor' : 'create'](this.$el, opt);
-      this.diffEditor && this._setModel(this.value, this.original);
-
-      // @event `change`
-      const editor = this._getEditor()
-      editor.onDidChangeModelContent(event => {
-        const value = editor.getValue()
-        if (this.value !== value) {
-          this.$emit('change', value, event)
+watch(() => props.language, () => {
+    if (editorRef.value) {
+        const model = editorRef.value.getModel();
+        if (model) {
+            monaco.editor.setModelLanguage(model, props.language);
         }
-      })
-
-      this.$emit('editorDidMount', this.editor)
-      setTimeout(() => {
-        editor.getAction('editor.action.formatDocument').run()
-      }, 100)
-    },
-    _setModel(value, original) {
-      const { language } = this;
-      const originalModel = monaco.editor.createModel(original, language);
-      const modifiedModel = monaco.editor.createModel(value, language);
-      this.editor.setModel({
-        original: originalModel,
-        modified: modifiedModel
-      });
-    },
-    _setValue(value) {
-      let editor = this._getEditor();
-      if(editor) return editor.setValue(value);
-    },
-    _getValue() {
-      let editor = this._getEditor();
-      if(!editor) return '';
-      return editor.getValue();
-    },
-    _getEditor() {
-      if(!this.editor) return null;
-      return this.diffEditor ? this.editor.modifiedEditor : this.editor;
-    },
-    _setOriginal(){
-      const { original } = this.editor.getModel()
-      original.setValue(this.original)
     }
-  },
-  watch: {
-    options: {
-      deep: true,
-      handler(options) {
-        this.editor.updateOptions(options);
-      }
-    },
-    value() {
-      this.value !== this._getValue() && this._setValue(this.value);
-    },
-    original() {
-      this._setOriginal()
-    },
-    language() {
-      if(!this.editor) return;
-      if(this.diffEditor){
-        const { original, modified } = this.editor.getModel();
-        monaco.editor.setModelLanguage(original, this.language);
-        monaco.editor.setModelLanguage(modified, this.language);
-      }else
-        monaco.editor.setModelLanguage(this.editor.getModel(), this.language);
-    },
-    theme() {
-      monaco.editor.setTheme(this.theme);
-    },
-  }
+});
+
+watch(() => props.theme, () => {
+    monaco.editor.setTheme(props.theme);
+});
+
+onMounted(() => {
+    const editorOptions = {
+        value: props.value,
+        theme: props.theme,
+        ...props.options,
+        scrollbar: {
+            useShadows: false,
+            verticalScrollbarSize: 6,
+            horizontalScrollbarSize: 6
+        },
+        language: props.language
+    };
+    emit('editorWillMount', editorOptions);
+
+    if (elRef.value) {
+        const editor = monaco.editor.create(elRef.value, editorOptions);
+        editorRef.value = editor;
+
+        editor.onDidChangeModelContent(event => {
+            const editorValue = editor.getValue()
+            if (props.value !== editorValue) {
+                emit('change', editorValue, event)
+            }
+        });
+
+        emit('editorDidMount', editor);
+        setTimeout(() => {
+            editor.getAction('editor.action.formatDocument').run();
+        }, 100);
+    }
+});
+
+onBeforeUnmount(() => {
+    if (editorRef.value) {
+       editorRef.value.dispose();
+    }
+});
+
+function getValue() {
+    if (editorRef.value) {
+        return editorRef.value.getValue();
+    }
+}
+
+defineExpose({
+    getValue
 });
 </script>
