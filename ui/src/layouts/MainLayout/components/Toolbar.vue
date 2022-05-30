@@ -14,9 +14,10 @@
 import { defineProps, withDefaults } from 'vue';
 import ButtonList, {ButtonListItemProps} from './ButtonList.vue';
 import {useI18n} from "vue-i18n";
-const { t } = useI18n();
 
 export type ToolbarItemProps = ButtonListItemProps;
+
+const { t } = useI18n();
 
 withDefaults(defineProps<{
     items?: ToolbarItemProps[] | Record<string, any>[],
