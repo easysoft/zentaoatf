@@ -44,7 +44,7 @@ const initState: WorkspaceData = {
 
 const StoreModel: ModuleType = {
     namespaced: true,
-    name: 'Workspace',
+    name: 'WorkspaceOld',
     state: {
         ...initState
     },

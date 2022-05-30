@@ -92,12 +92,12 @@ export default defineComponent({
     const zentaoStore = useStore<{ Zentao: ZentaoData }>();
     const langs = computed<any[]>(() => zentaoStore.state.Zentao.langs);
 
-    const store = useStore<{ Workspace: WorkspaceData }>();
-    const modelRef = computed(() => store.state.Workspace.detailResult);
+    const store = useStore<{ WorkspaceOld: WorkspaceData }>();
+    const modelRef = computed(() => store.state.WorkspaceOld.detailResult);
     const showCmd = computed(() => { return modelRef.value.type !== 'ztf' })
 
     const get = async (id: number): Promise<void> => {
-      await store.dispatch('Workspace/get', id);
+      await store.dispatch('WorkspaceOld/get', id);
       if (!modelRef.value.cmd) selectType()
     }
     const id = +router.currentRoute.value.params.id
@@ -146,7 +146,7 @@ export default defineComponent({
       validate()
         .then(() => {
           console.log(modelRef.value);
-          store.dispatch('Workspace/save', modelRef.value).then((success) => {
+          store.dispatch('WorkspaceOld/save', modelRef.value).then((success) => {
             if (success) {
               notification.success({message: t('save_success')});
               router.push(`/workspace/list`)

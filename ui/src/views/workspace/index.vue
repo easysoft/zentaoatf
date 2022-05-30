@@ -16,16 +16,6 @@
             :columns="columns"
             :data-source="models"
             :loading="loading"
-            :pagination="{
-                ...pagination,
-                onChange: (page) => {
-                    getList(page);
-                },
-                onShowSizeChange: (page, size) => {
-                    pagination.pageSize = size
-                    getList(page);
-                },
-            }"
         >
           <template #status="{ record }">
             {{ disableStatus(record.disabled) }}
@@ -116,7 +106,7 @@ export default defineComponent({
         dataIndex: 'index',
         width: 80,
         customRender: ({text, index}: { text: any; index: number }) =>
-            (pagination.value.page - 1) * pagination.value.pageSize + index + 1,
+            index + 1,
         },
         {
           title: t('name'),
@@ -148,22 +138,13 @@ export default defineComponent({
     const zentaoStore = useStore<{ Zentao: ZentaoData }>();
     const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
 
-    const store = useStore<{ Workspace: WorkspaceData }>();
-    const models = computed<any[]>(() => store.state.Workspace.queryResult.result);
-    const pagination = computed<PaginationConfig>(() => store.state.Workspace.queryResult.pagination);
-    const queryParams = ref<QueryParams>({
-      keywords: '', enabled: '1', page: pagination.value.page, pageSize: pagination.value.pageSize
-    });
+    const store = useStore<{ WorkspaceOld: WorkspaceData }>();
+    const models = computed<any[]>(() => store.state.WorkspaceOld.queryResult?.result);
 
     const loading = ref<boolean>(true);
     const getList = (page: number) => {
       loading.value = true;
-      store.dispatch('Workspace/query', {
-        keywords: queryParams.value.keywords,
-        enabled: queryParams.value.enabled,
-        pageSize: pagination.value.pageSize,
-        page: page
-      });
+      store.dispatch('WorkspaceOld/query', {});
       loading.value = false;
     }
     getList(1);
@@ -196,7 +177,7 @@ export default defineComponent({
       store.dispatch('Workspace/delete', model.value.id).then((success) => {
         if (success) {
           message.success(t('delete_success'));
-          getList(pagination.value.page)
+          getList(1)
 
           removeLoading.value = [];
           confirmVisible.value = false
@@ -209,8 +190,6 @@ export default defineComponent({
       isWin,
 
       statusArr,
-      queryParams,
-      pagination,
 
       currProduct,
       columns,
