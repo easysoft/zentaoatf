@@ -9,9 +9,9 @@
             type="button"
         />
         <Button v-if="reportRef.testType != 'unit'" @click="exec('fail')" class="space-left state primary">
-          {{t("re_exec_failed") }}
+          {{t('re_exec_failed') }}
         </Button>
-        <Button v-else @click="exec('')" class="space-left state primary">{{t("re_exec_unit") }}
+        <Button v-else @click="exec('')" class="space-left state primary">{{t('re_exec_unit') }}
         </Button>
 
         <Button
@@ -56,7 +56,7 @@
           <Row>
             <Col :span="3" class="t-bord t-label-right">{{t("exec_type")}}
             </Col>
-            <Col :span="5">{{ te(execBy(reportRef)) ? t(execBy(reportRef)) : execBy(reportRef) }}</Col>
+            <Col :span="5">{{ execBy(reportRef) && te(execBy(reportRef)) ? t(execBy(reportRef)) : execBy(reportRef) }}</Col>
 
             <Col :span="3" class="t-bord t-label-right">{{t("duration")}}
             </Col>
