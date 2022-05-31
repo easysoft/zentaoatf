@@ -120,6 +120,9 @@ defineExpose({
 
 <style lang="less">
 .monaco-editor {
-    padding: 10px 0;
+  padding: 10px 0;
+}
+.editor-panel {
+  height: 10%;
 }
 </style>
