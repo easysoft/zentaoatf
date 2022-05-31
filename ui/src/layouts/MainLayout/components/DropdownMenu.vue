@@ -184,6 +184,7 @@ const menuFinalStyle = computed(() => {
         style.top = Math.min(windowSize.height.value - menuBounding.height, style.top);
     }
     style.maxHeight = `${Math.round(windowSize.height.value - style.top - 10)}px`;
+    // if (style.maxHeight === '0px') style.maxHeight = 'auto'
     style.maxWidth = `${Math.round(windowSize.width.value - style.left - 10)}px`;
     style.left = `${Math.round(style.left)}px`;
     style.top = `${Math.round(style.top)}px`;

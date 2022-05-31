@@ -66,9 +66,9 @@ const StoreModel: ModuleType = {
       try {
         await deleteWorkspace(selectedWorkspacePath);
 
-        const response: ResponseData = await getWorkspace('');
-        const { data } = response;
-        commit('saveWorkspaces', data || {});
+//        const response: ResponseData = await getWorkspace('');
+//        const { data } = response;
+//        commit('saveWorkspaces', data || {});
 
         return true;
       } catch (error) {

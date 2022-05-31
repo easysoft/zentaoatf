@@ -261,4 +261,6 @@ export default {
     'biz_3000': '禅道请求错误',
     'biz_4000': '记录不存在',
     'biz_5000': '无效的请求',
+
+    'restore_panel_size': '还原面板尺寸',
 };

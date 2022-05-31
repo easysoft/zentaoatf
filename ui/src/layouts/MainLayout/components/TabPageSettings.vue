@@ -1,9 +1,7 @@
 <template>
   <div class="site-main space-top space-left space-right">
-    <LanguageSettings></LanguageSettings>
-    <p class="divider setting-space-top"></p>
     <div class="t-card-toolbar">
-      <div class="left title strong">
+      <div class="left">
         {{ t("interpreter") }}
       </div>
       <Button class="state primary" size="sm" @click="create()">
@@ -11,12 +9,10 @@
       </Button>
     </div>
     <Table
-      v-if="interpreters.length > 0"
       :columns="columns"
       :rows="interpreters"
       :isHidePaging="true"
       :isSlotMode="true"
-      :sortable="{}"
     >
       <template #lang="record">
         {{ languageMap[record.value.lang].name }}
@@ -35,9 +31,6 @@
         </Button>
       </template>
     </Table>
-    <p v-else class="empty-tip">
-    {{ t("empty_data") }}
-    </p>
 
     <FormInterpreter
       :show="showCreateInterpreterModal"
@@ -47,6 +40,9 @@
       ref="formInterpreter"
     />
   </div>
+  <hr>
+
+  <LanguageSettings></LanguageSettings>
 </template>
 
 <script setup lang="ts">
@@ -87,7 +83,6 @@ const { t, locale } = useI18n();
 const momentUtc = momentUtcDef;
 
 let interpreters = ref<any>([]);
-
 const editInfo = ref(0);
 
 onMounted(() => {
@@ -110,7 +105,7 @@ const setColumns = () => {
       isKey: true,
       label: t("no"),
       field: "id",
-      width: "60px",
+      width: "15%",
     },
     {
       label: t("lang"),
@@ -187,7 +182,7 @@ const remove = (item) => {
 const modalClose = () => {
   showCreateInterpreterModal.value = false;
 };
-const formInterpreter = ref({} as any);
+const formInterpreter = ref(null);
 const createInterpreter = (formData) => {
     saveInterpreter(formData).then((json) => {
         if (json.code === 0) {

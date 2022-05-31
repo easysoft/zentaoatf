@@ -79,7 +79,7 @@ export function percentDef(numb, total) {
 const osMap = {
     windows: 'Windows',
     linux: 'Linux',
-    mac: 'Mac',
+    mac: 'mac',
 }
 export function testEnvDef(code) {
     return osMap[code]
