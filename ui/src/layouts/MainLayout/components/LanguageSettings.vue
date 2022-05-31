@@ -6,7 +6,7 @@
       <Col width="60px" class="lang-label">
         {{ languageLabels[item] }}
       </Col>
-      <Col width="20px" class="lang-input">
+      <Col flex="1" class="lang-input">
         <input type="radio" :value="item" v-model="locale" @change="changeLang(item)"/>
       </Col>
     </Row>
