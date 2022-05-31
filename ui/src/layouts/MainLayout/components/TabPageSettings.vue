@@ -110,22 +110,21 @@ const setColumns = () => {
     {
       label: t("lang"),
       field: "lang",
-      width: "15%",
+      width: "60px",
     },
     {
       label: t("interpreter_path"),
       field: "path",
-      width: "30%",
     },
     {
       label: t("create_time"),
       field: "createdAt",
-      width: "20%",
+      width: "160px",
     },
     {
       label: t("opt"),
       field: "action",
-      width: "20%",
+      width: "160px",
     },
   ];
 };
@@ -195,3 +194,22 @@ const createInterpreter = (formData) => {
   })
 };
 </script>
+
+<style>
+.empty-tip {
+  text-align: center;
+  padding: 20px 0;
+}
+.site-main{
+    padding: 8px;
+    height: 100%;
+    overflow: auto;
+}
+.setting-space-top{
+    margin-top: 1rem;
+}
+.t-card-toolbar{
+    align-items: flex-end;
+    margin-bottom: 1rem;
+}
+</style>

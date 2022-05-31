@@ -127,6 +127,8 @@ defineExpose({
   border-radius: 0.25rem;
   background: #fff;
   justify-content: space-between;
+  max-height: 90%;
+  overflow: auto;
 }
 
 .modal-title {

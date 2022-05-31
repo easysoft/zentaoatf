@@ -40,6 +40,7 @@
 /* Backgrounds (light) 背景色（浅色） */
 .primary-pale   {background-color: var(--color-primary-pale); color: var(--color-primary);}
 .secondary-pale {background-color: var(--color-secondary-pale); color: var(--color-secondary);}
+.green-pale       {background-color: var(--color-green-pale); color: var(--color-green);}
 .red-pale       {background-color: var(--color-red-pale); color: var(--color-red);}
 .yellow-pale    {background-color: var(--color-yellow-pale); color: var(--color-yellow);}
 .blue-pale      {background-color: var(--color-blue-pale); color: var(--color-blue);}
@@ -273,6 +274,14 @@
 
 /* Relative position 相对定位 */
 .relative {position: relative;}
+
+/* Absolute positioning 绝对定位*/
+.absolute    {position: absolute;}
+.dock        {position: absolute; top: 0; left: 0; bottom: 0; right: 0}
+.dock-top    {position: absolute; top: 0; left: 0; right: 0}
+.dock-bottom {position: absolute; bottom: 0; left: 0; right: 0}
+.dock-left   {position: absolute; top: 0; left: 0; bottom: 0;}
+.dock-right  {position: absolute; top: 0; bottom: 0; right: 0}
 
 /* No overflow 禁止超出 */
 .no-overflow {overflow: hidden!important;}

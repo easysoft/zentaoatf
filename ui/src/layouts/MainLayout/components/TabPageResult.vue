@@ -1,5 +1,5 @@
 <template>
-  <div class="indexlayout-main-content space-top">
+  <div class="result-main space-top">
     <div>
       <div class="opt">
         <Button v-if="reportRef.testType != 'unit'"
@@ -79,7 +79,7 @@
           <div class="v-line v-line2"></div>
         </div>
 
-        <Row>
+        <Row class="case-result-title">
           <Col :span="3" class="t-bord t-label-right">{{t("case_detail") }}</Col>
         </Row>
         <Row class="case-result-item">
@@ -108,7 +108,9 @@
                   :columns="columns"
                   :rows="cs.steps"
                   :isHidePaging="true"
-                  :isSlotMode="true">
+                  :isSlotMode="true"
+                  :sortable="{}"
+                  >
                 <template #no="record">
                   {{ record.value.id }}
                 </template>
@@ -144,6 +146,9 @@
                   </div>
                 </template>
               </Table>
+              <p v-else class="empty-tip">
+                {{ t("empty_data") }}
+              </p>
               <br/>
             </template>
           </Col>
@@ -154,6 +159,7 @@
                 :rows="reportRef.unitResult"
                 :isHidePaging="true"
                 :isSlotMode="true"
+                :sortable="{}"
             >
               <template #status="record">
                   <span :class="'t-' + record.value.status">
@@ -170,6 +176,9 @@
                 </template>
               </template>
             </Table>
+            <p v-else class="empty-tip">
+                {{ t("empty_data") }}
+            </p>
             <br/>
           </Col>
         </Row>
@@ -260,32 +269,31 @@ const setColumns = () => {
       {
         label: t('no'),
         field: "id",
-        width: "10%",
+        width: "60px",
         isKey: true,
       },
       {
         label: t('case'),
-        width: "20%",
+        width: "60px",
         field: 'title',
       },
       {
         label: t('suite'),
-        width: "40%",
         field: 'testSuite',
       },
       {
         label: t('duration_sec'),
-        width: "10%",
+        width: "100px",
         field: 'duration',
       },
       {
         label: t('status'),
-        width: "10%",
+        width: "100px",
         field: 'status',
       },
       {
         label: t('opt'),
-        width: "10%",
+        width: "120px",
         field: 'opt',
       },
     ];
@@ -294,24 +302,22 @@ const setColumns = () => {
   columns.value = [
     {
       label: t('no'),
-      width: "10%",
+      width: "60px",
       field: "id",
       isKey: true,
     },
     {
       label: t("step"),
       field: "name",
-      width: "20%",
     },
     {
       label: t("status"),
       field: "status",
-      width: "10%",
+      width: "100px",
     },
     {
       label: t("checkpoint"),
       field: "checkpoint",
-      width: "50%",
     },
   ];
 };
@@ -422,6 +428,11 @@ const getCaseIdsInReport = (reportVal) => {
 
 
 <style lang="less" scoped>
+.result-main{
+    margin-top: 8px;
+    height: 100%;
+    overflow: auto;
+}
 .main {
   padding: 20px var(--space-base);
 }
@@ -437,9 +448,9 @@ const getCaseIdsInReport = (reportVal) => {
 
   .v-line {
     position: absolute;
-    top: 10px;
+    top: 0px;
     width: 1px;
-    height: 90px;
+    height: 80px;
     background: #e4e4e4;
   }
 
@@ -482,6 +493,13 @@ const getCaseIdsInReport = (reportVal) => {
     flex-direction: row-reverse;
 }
 .case-result-item{
+    margin-top: 1rem;
     padding-left: 1rem;
+}
+.result-space-top{
+    margin-top: 8px;
+}
+.case-result-title{
+    margin-top: 10px;
 }
 </style>
