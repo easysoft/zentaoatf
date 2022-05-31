@@ -58,6 +58,7 @@ export default {
     'zentao_url': '禅道地址',
     'username': '用户名',
     'password': '密码',
+    'empty_data': '暂无数据',
 
     'interpreter': '运行环境',
     'create_interpreter': '新建运行环境',

@@ -202,7 +202,7 @@ const showModal = ref(false)
 const modalClose = () => {
   showModal.value = false;
 }
-const formWorkspace = ref(null)
+const formWorkspace = ref({} as any)
 const createWorkSpace = (formData) => {
     store.dispatch('Workspace/save', formData).then((response) => {
         if (response) {

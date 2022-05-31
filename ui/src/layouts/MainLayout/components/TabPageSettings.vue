@@ -13,7 +13,6 @@
       :rows="interpreters"
       :isHidePaging="true"
       :isSlotMode="true"
-      @do-search="list"
     >
       <template #lang="record">
         {{ languageMap[record.value.lang].name }}
@@ -84,7 +83,7 @@ const momentUtc = momentUtcDef;
 
 let interpreters = ref<any>([]);
 
-const editInfo = ref({} as any);
+const editInfo = ref(0);
 
 onMounted(() => {
   console.log("onMounted");
@@ -112,7 +111,6 @@ const setColumns = () => {
       label: t("lang"),
       field: "lang",
       width: "15%",
-      sortable: true,
     },
     {
       label: t("interpreter_path"),
@@ -146,9 +144,10 @@ onMounted(() => {
   console.log("onMounted");
 });
 
-const list = (offset?, limit?, order?, sort?) => {
-  console.log("---", offset, limit, order, sort);
+const list = () => {
   listInterpreter().then((json) => {
+    console.log("---", json);
+
     if (json.code === 0) {
       interpreters.value = json.data;
     }
@@ -184,15 +183,15 @@ const remove = (item) => {
 const modalClose = () => {
   showCreateInterpreterModal.value = false;
 };
-const formInterpreter = ref({} as any);
+const formInterpreter = ref(null);
 const createInterpreter = (formData) => {
     saveInterpreter(formData).then((json) => {
         if (json.code === 0) {
-          formInterpreter.value.clearFormData();
-          notification.success({ message: t("save_success") });
-          showCreateInterpreterModal.value = false;
-          list();
+        formInterpreter.value.clearFormData();
+        notification.success({ message: t("save_success") });
+        showCreateInterpreterModal.value = false;
+        list();
         }
-    })
+  })
 };
 </script>
