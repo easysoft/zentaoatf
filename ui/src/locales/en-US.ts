@@ -152,6 +152,8 @@ export default {
 
     'expand_all': 'Expand',
     'collapse_all': 'Collapse',
+    'expand_up': 'Expand Up',
+    'more_actions': 'More Actions',
     'show_checkbox': 'Show Checkbox',
     'hide_checkbox': 'Hide Checkbox',
     'wrong_url': 'Please input right ZenTao URL.',
