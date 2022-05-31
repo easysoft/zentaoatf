@@ -5,6 +5,6 @@ export default {
     confirm(options, on?: { [key: string]: Function | Function[] } ) {
         options.isConfirm = true;
         options.clickToClose = false;
-        $vfm.show({ component: 'ZModal', bind: options, on: on}) //options {title:'title'}
+        $vfm.show({ component: 'ZModal', bind: options, on: on == undefined ? {} : on}) //options {title:'title'}
     },
 }

@@ -58,6 +58,7 @@ export default {
     'zentao_url': '禅道地址',
     'username': '用户名',
     'password': '密码',
+    'empty_data': '暂无数据',
 
     'interpreter': '运行环境',
     'create_interpreter': '新建运行环境',
@@ -159,6 +160,7 @@ export default {
     'create_success': '创建成功',
     'create_fail': '创建失败',
 
+    'skip': '跳过',
     'batch': '批量',
     'batch_select': '批量选择',
     'expand_all': '展开',

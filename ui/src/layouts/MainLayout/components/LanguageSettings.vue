@@ -1,16 +1,19 @@
 <template>
-  <div>{{ t("ui_lang") }}</div>
   <div>
-    <div  v-for="item in locales" :key="item" >
-      <input type="radio" :id="'ui-lang-setting-radio-' + item" :value="item" v-model="locale" @change="changeLang(item)" />
-      <label :for="'ui-lang-setting-radio-' + item" > {{languageLabels[item] }}</label>
-    </div>
+    <div class="title strong space-bottom">{{ t("ui_lang") }}</div>
+    <Form labelCol="16" wrapperCol="1" class="settting-form">
+        <FormItem name="taskId" v-for="item in locales" :key="item" :label="languageLabels[item]">
+            <input type="radio" class="language-input" :value="item" v-model="locale" @change="changeLang(item)" />
+        </FormItem>
+    </Form>
   </div>
 </template>
 
 <script setup lang="ts">
 import { setI18nLanguage } from "@/config/i18n";
 import { useI18n } from "vue-i18n";
+import Form from "./Form.vue";
+import FormItem from "./FormItem.vue";
 
 const { t, locale } = useI18n();
 
@@ -29,3 +32,12 @@ console.info(key)
   setI18nLanguage(key);
 };
 </script>
+
+<style>
+.language-input {
+  min-width: 60px;
+}
+.settting-form{
+    display: flex;
+}
+</style>

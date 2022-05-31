@@ -212,7 +212,7 @@ const remove = (item) => {
 const modalClose = () => {
   showCreateSiteModal.value = false;
 }
-const formSite = ref(null)
+const formSite = ref({} as any)
 const createSite = (formData) => {
     store.dispatch('Site/save', formData).then((response) => {
         if (response) {

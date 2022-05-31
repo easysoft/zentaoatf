@@ -39,10 +39,9 @@ const style = computed(()=>{
 const {height: containerHeight} = useElementSize(elRef);
 
 watch(containerHeight, (newVal, oldValue) => {
-    console.log('containerHeight: ', newVal, oldValue, editorRef);
-    // if (editorRef.value) {
-    //    editorRef.value.layout();
-    // }
+    if (editorRef.value) {
+       editorRef.value.layout();
+    }
 });
 
 watch(() => props.options, () => {
@@ -74,6 +73,7 @@ onMounted(() => {
     const editorOptions = {
         value: props.value,
         theme: props.theme,
+        automaticLayout: true,
         ...props.options,
         scrollbar: {
             useShadows: false,

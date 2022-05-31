@@ -308,7 +308,7 @@ const getNodeMapCall = throttle(async () => {
 let rightClickedNode = {} as any
 let createAct = ''
 
-const formNode = ref(null)
+const formNode = ref({} as any)
 const createNode = (formData) => {
   const mode = 'child';
   let type = 'dir';
