@@ -41,6 +41,7 @@
     />
   </div>
   <hr>
+
   <LanguageSettings></LanguageSettings>
 </template>
 

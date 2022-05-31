@@ -1,21 +1,25 @@
 <template>
-  <div>
+  <div class="lang-settings">
     <div class="title strong space-bottom">{{ t("ui_lang") }}</div>
-    <Form labelCol="16" wrapperCol="1" class="settting-form">
-        <FormItem name="taskId" v-for="item in locales" :key="item" :label="languageLabels[item]">
-            <input type="radio" class="language-input" :value="item" v-model="locale" @change="changeLang(item)" />
-        </FormItem>
-    </Form>
+
+    <Row v-for="(item,index) in locales" :key="index" class="setting-form">
+      <Col width="60px" class="lang-label">
+        {{ languageLabels[item] }}
+      </Col>
+      <Col width="20px" class="lang-input">
+        <input type="radio" :value="item" v-model="locale" @change="changeLang(item)"/>
+      </Col>
+    </Row>
   </div>
 </template>
 
 <script setup lang="ts">
-import { setI18nLanguage } from "@/config/i18n";
-import { useI18n } from "vue-i18n";
-import Form from "./Form.vue";
-import FormItem from "./FormItem.vue";
+import {setI18nLanguage} from "@/config/i18n";
+import {useI18n} from "vue-i18n";
+import Row from "@/layouts/MainLayout/components/Row.vue";
+import Col from "@/layouts/MainLayout/components/Col.vue";
 
-const { t, locale } = useI18n();
+const {t, locale} = useI18n();
 
 const locales: string[] = ["zh-CN", "en-US"];
 const languageLabels: { [key: string]: string } = {
@@ -28,16 +32,23 @@ const languageIcons: { [key: string]: string } = {
 };
 
 const changeLang = (key): void => {
-console.info(key)
+  console.info(key)
   setI18nLanguage(key);
 };
 </script>
 
-<style>
-.language-input {
-  min-width: 60px;
-}
-.settting-form{
-    display: flex;
+<style lang="less" scoped>
+.lang-settings {
+  padding: 6px;
+
+  .lang-label {
+    display: inline-block;
+    margin-right: 5px;
+    text-align: right;
+  }
+
+  .lang-input {
+    line-height: 24px;
+  }
 }
 </style>
