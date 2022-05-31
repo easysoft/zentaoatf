@@ -66,7 +66,7 @@ function _getItemIcon(item: TabNavItem) {
             return 'file-text';
         }
         if (item.type === 'result') {
-            return 'checkmark-circle';
+            return 'text-box-search';
         }
         if (item.type === 'settings') {
             return 'settings'
