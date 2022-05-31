@@ -82,7 +82,7 @@ func loadScriptNodesInDir(folder string, parent *serverDomain.TestAsset, level i
 
 	for _, grandson := range list {
 		name := grandson.Name()
-		if commonUtils.IgnoreFile(name) {
+		if commonUtils.IgnoreZtfFile(name) {
 			continue
 		}
 
@@ -135,7 +135,7 @@ func LoadScriptListInDir(path string, files *[]string, level int) error {
 
 	for _, fi := range dir {
 		name := fi.Name()
-		if commonUtils.IgnoreFile(name) {
+		if commonUtils.IgnoreZtfFile(name) {
 			continue
 		}
 
@@ -315,7 +315,7 @@ func GetAllScriptsInDir(path string, files *[]string) error {
 
 	for _, fi := range dir {
 		name := fi.Name()
-		if commonUtils.IgnoreFile(name) {
+		if commonUtils.IgnoreZtfFile(name) {
 			continue
 		}
 

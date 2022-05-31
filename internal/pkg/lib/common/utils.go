@@ -3,6 +3,7 @@ package commonUtils
 import (
 	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	stringUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/string"
 	"github.com/emirpasic/gods/maps"
 	"net"
 	"os"
@@ -117,12 +118,22 @@ func IsDisable(enable string) bool {
 	}
 }
 
-func IgnoreFile(path string) bool {
+func IgnoreZtfFile(path string) bool {
 	path = filepath.Base(path)
 
-	if strings.Index(path, ".") == 0 ||
-		path == "bin" || path == "release" || path == "logs" || path == "xdoc" ||
-		path == "log" || path == "log-bak" || path == "conf" {
+	arr := []string{"bin", "release", "logs", "xdoc",
+		"log", "log-bak", "conf"}
+	if strings.Index(path, ".") == 0 || stringUtils.FindInArr(path, arr) {
+		return true
+	} else {
+		return false
+	}
+}
+func IgnoreCodeFile(path string) bool {
+	path = filepath.Base(path)
+
+	arr := []string{"bin", "node_modules", ".git"}
+	if strings.Index(path, ".") == 0 || stringUtils.FindInArr(path, arr) {
 		return true
 	} else {
 		return false

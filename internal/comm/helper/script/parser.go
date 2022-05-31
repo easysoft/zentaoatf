@@ -1063,7 +1063,7 @@ func GetScriptByIdsInDir(dirPth string, idMap *map[int]string) error {
 
 	sep := consts.FilePthSep
 
-	if commonUtils.IgnoreFile(dirPth) {
+	if commonUtils.IgnoreZtfFile(dirPth) {
 		return nil
 	}
 

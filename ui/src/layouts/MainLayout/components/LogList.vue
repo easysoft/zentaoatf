@@ -159,7 +159,13 @@ const exec = (data: any) => {
     cachedExecData.value = data
   }
 
-  if (execType === 'ztf' && (!data.scripts || data.scripts.length === 0)) return
+  if (execType === 'ztf' && (!data.scripts || data.scripts.length === 0)) {
+    const msgCancel = {
+      msg: `<span class="z-border">`+t('case_num_empty')+`</span>`,
+      time: momentTime(new Date())}
+    wsMsg.out.push(msgCancel)
+    return
+  }
 
   caseCount.value++
   let msg = {}

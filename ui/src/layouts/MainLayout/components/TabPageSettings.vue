@@ -1,7 +1,7 @@
 <template>
   <div class="site-main space-top space-left space-right">
     <div class="t-card-toolbar">
-      <div class="left">
+      <div class="left strong">
         {{ t("interpreter") }}
       </div>
       <Button class="state primary" size="sm" @click="create()">

@@ -120,6 +120,7 @@ export default {
     'test_type':  '测试类型', 
     'exec_type': '执行类型', 
     'case_num':  '用例数',
+    'case_num_empty':  '请选择用例执行。',
 
     'enable': '启用',
     'disable':  '禁用',

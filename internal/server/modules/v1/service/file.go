@@ -77,7 +77,7 @@ func (s *FileService) GetAllChildren(childPath string, parent *serverDomain.Test
 
 	for _, grandson := range list {
 		name := grandson.Name()
-		if commonUtils.IgnoreFile(name) {
+		if commonUtils.IgnoreZtfFile(name) {
 			continue
 		}
 

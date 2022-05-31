@@ -72,7 +72,6 @@ function _handleDropDownMenuClick(event) {
       }
     })
 
-    if (arr.length === 0) return
     bus.emit(settings.eventExec, { execType: 'ztf', scripts: arr });
 
   } else if (execBy.value === 'opened') {
@@ -90,7 +89,6 @@ function _handleDropDownMenuClick(event) {
       }
     })
 
-    if (arr.length === 0) return
     bus.emit(settings.eventExec, { execType: 'ztf', scripts: arr });
   }
 

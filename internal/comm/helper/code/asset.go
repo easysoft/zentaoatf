@@ -52,7 +52,7 @@ func LoadCodeNodesInDir(dir string, workspaceId int, workspaceType commConsts.Te
 
 	for _, child := range list {
 		name := child.Name()
-		if commonUtils.IgnoreFile(name) {
+		if commonUtils.IgnoreCodeFile(name) {
 			continue
 		}
 

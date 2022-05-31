@@ -112,6 +112,7 @@ export default {
     'test_type':  'Test Type', 
     'exec_type': 'Execution Type', 
     'case_num':  'Case Number',
+    'case_num_empty':  'Please Select Cases to Run.',
 
     'enable': 'Enable',
     'disable':  'Disable',
