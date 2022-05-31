@@ -2,7 +2,7 @@
   <div class="lang-settings">
     <div class="title strong space-bottom">{{ t("ui_lang") }}</div>
 
-    <Row v-for="(item,index) in locales" :key="index" class="setting-form">
+    <Row v-for="(item,index) in locales" :key="index">
       <Col width="60px" class="lang-label">
         {{ languageLabels[item] }}
       </Col>
