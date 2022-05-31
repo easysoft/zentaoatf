@@ -123,7 +123,7 @@ func (s *InterpreterService) GetLangInterpreterUnix(language string) (list []map
 		if language == "tcl" {
 			vcmd = versionCmd + " | " + path
 		} else {
-			vcmd = path + " " + versionCmd + " |& tee"
+			vcmd = path + " " + versionCmd + " 2>&1"
 		}
 
 		versionInfo, err1 := shellUtils.ExeSysCmd(vcmd)
