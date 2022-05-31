@@ -65,14 +65,17 @@ const errorMap = computed(() => {
   .z-form-item-wrapper {
     .z-form-item-control {
     //   height: 100%;
-      input, select {
+      input, select, textarea {
         width: 90%;
         height: 28px;
         vertical-align: middle;
         border: 1px solid #ced4da;
         border-radius: 0.25rem;
       }
-      input:focus, select:focus{
+      textarea{
+        height: 100%;
+      }
+      input:focus, select:focus, textarea:focus{
           border-color: #80bdff;
           outline: 0;
       }

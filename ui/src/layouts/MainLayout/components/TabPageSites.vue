@@ -13,10 +13,12 @@
       </Button>
     </div>
     <Table
+      v-if="models.length > 0"
       :columns="columns"
       :rows="models"
       :isHidePaging="true"
       :isSlotMode="true"
+      :sortable="{}"
     >
       <template #status="record">
         {{ disableStatus(record.value.disabled) }}
@@ -44,6 +46,9 @@
         </Button>
       </template>
     </Table>
+    <p v-else class="empty-tip">
+    {{ t("empty_data") }}
+    </p>
 
     <FormSite
       :show="showCreateSiteModal"
@@ -110,37 +115,35 @@ const setColumns = () => {
       isKey: true,
       label: t("no"),
       field: "id",
-      width: "8%",
+       width: "60px",
     },
     {
       label: t("name"),
       field: "name",
-      width: "15%",
     },
     {
       label: t("zentao_url"),
       field: "url",
-      width: "15%",
     },
     {
       label: t("username"),
       field: "username",
-      width: "15%",
+      width: "80px",
     },
     {
       label: t("status"),
       field: "status",
-      width: "15%",
+       width: "100px",
     },
     {
       label: t("create_time"),
       field: "createdAt",
-      width: "15%",
+       width: "160px",
     },
     {
       label: t("opt"),
       field: "action",
-      width: "10%",
+       width: "120px",
     },
   ];
 };
