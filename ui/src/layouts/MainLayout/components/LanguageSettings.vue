@@ -2,13 +2,15 @@
   <div class="lang-settings">
     <div class="title strong space-bottom">{{ t("ui_lang") }}</div>
 
-    <Row v-for="(item,index) in locales" :key="index">
-      <Col width="60px" class="lang-label">
-        {{ languageLabels[item] }}
-      </Col>
-      <Col flex="1" class="lang-input">
-        <input type="radio" :value="item" v-model="locale" @change="changeLang(item)"/>
-      </Col>
+    <Row>
+      <template v-for="(item,index) in locales" :key="index">
+        <Col width="60px" class="lang-label">
+          {{ languageLabels[item] }}
+        </Col>
+        <Col width="30px" class="lang-input">
+          <input type="radio" :value="item" v-model="locale"  @change="changeLang(item)"/>
+        </Col>
+      </template>
     </Row>
   </div>
 </template>
