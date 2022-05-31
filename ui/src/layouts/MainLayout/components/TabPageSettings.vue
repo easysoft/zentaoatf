@@ -82,7 +82,6 @@ const { t, locale } = useI18n();
 const momentUtc = momentUtcDef;
 
 let interpreters = ref<any>([]);
-
 const editInfo = ref(0);
 
 onMounted(() => {
