@@ -81,6 +81,12 @@ const errorMap = computed(() => {
         height: 14px;
         margin-top: 6px;
       }
+      input[type="radio"] {
+          width: auto;
+        height: 14px;
+        margin-top: 6px;
+        cursor: pointer;
+      }
       label {
         display: inline-block;
         padding: 0 3px;

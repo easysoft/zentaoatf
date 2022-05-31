@@ -48,6 +48,7 @@ export default {
     'zentao_url': 'ZenTao URL',
     'username': 'User Name',
     'password': 'Password',
+    'empty_data': 'Empty Data',
 
     'interpreter': 'Interpreter',
     'create_interpreter': 'Create Interpreter',

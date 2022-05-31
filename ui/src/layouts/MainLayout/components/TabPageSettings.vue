@@ -1,7 +1,9 @@
 <template>
   <div class="site-main space-top space-left space-right">
+    <LanguageSettings></LanguageSettings>
+    <p class="divider setting-space-top"></p>
     <div class="t-card-toolbar">
-      <div class="left">
+      <div class="left title strong">
         {{ t("interpreter") }}
       </div>
       <Button class="state primary" size="sm" @click="create()">
@@ -9,10 +11,12 @@
       </Button>
     </div>
     <Table
+      v-if="interpreters.length > 0"
       :columns="columns"
       :rows="interpreters"
       :isHidePaging="true"
       :isSlotMode="true"
+      :sortable="{}"
     >
       <template #lang="record">
         {{ languageMap[record.value.lang].name }}
@@ -31,6 +35,9 @@
         </Button>
       </template>
     </Table>
+    <p v-else class="empty-tip">
+    {{ t("empty_data") }}
+    </p>
 
     <FormInterpreter
       :show="showCreateInterpreterModal"
@@ -40,8 +47,6 @@
       ref="formInterpreter"
     />
   </div>
-  <hr>
-  <LanguageSettings></LanguageSettings>
 </template>
 
 <script setup lang="ts">
@@ -105,7 +110,7 @@ const setColumns = () => {
       isKey: true,
       label: t("no"),
       field: "id",
-      width: "15%",
+      width: "60px",
     },
     {
       label: t("lang"),
@@ -183,7 +188,7 @@ const remove = (item) => {
 const modalClose = () => {
   showCreateInterpreterModal.value = false;
 };
-const formInterpreter = ref(null);
+const formInterpreter = ref({} as any);
 const createInterpreter = (formData) => {
     saveInterpreter(formData).then((json) => {
         if (json.code === 0) {
@@ -195,3 +200,20 @@ const createInterpreter = (formData) => {
   })
 };
 </script>
+
+<style>
+.empty-tip {
+  text-align: center;
+  padding: 20px 0;
+}
+.site-main{
+    padding: 8px;
+}
+.setting-space-top{
+    margin-top: 1rem;
+}
+.t-card-toolbar{
+    align-items: flex-end;
+    margin-bottom: 1rem;
+}
+</style>
