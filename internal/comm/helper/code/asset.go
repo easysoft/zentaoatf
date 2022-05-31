@@ -2,6 +2,9 @@ package codeHelper
 
 import (
 	"encoding/json"
+	"io/ioutil"
+	"path/filepath"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
 	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
@@ -9,8 +12,6 @@ import (
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/kataras/iris/v12"
-	"io/ioutil"
-	"path/filepath"
 )
 
 func LoadCodeTree(workspace model.Workspace) (asset serverDomain.TestAsset, err error) {
@@ -59,6 +60,7 @@ func LoadCodeNodesInDir(dir string, workspaceId int, workspaceType commConsts.Te
 		childPath := filepath.Join(dir, name)
 		if child.IsDir() { // 目录
 			dirNode := getDir(childPath, workspaceId, workspaceType)
+			dirNode.Children, _ = LoadCodeNodesInDir(dirNode.Path, workspaceId, workspaceType)
 			nodes = append(nodes, &dirNode)
 		} else {
 			fileNode := getFile(childPath, workspaceId, workspaceType)
