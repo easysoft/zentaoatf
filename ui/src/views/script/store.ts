@@ -88,7 +88,7 @@ const StoreModel: ModuleType = {
             const response: ResponseData = await list(playload);
             const data = response.data;
             data.id = data.path;
-            data.children = scriptTreeAddAttr(data.children);
+            data.children = scriptTreeAddAttr(data.children ? data.children : []);
             commit('setList', [data]);
 
             commit('setQueryParams', playload);

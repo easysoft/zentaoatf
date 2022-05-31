@@ -179,8 +179,9 @@ const onTreeDataChanged = async () => {
     if (cachedKeys) expandedKeys.value = cachedKeys
 
     if (!cachedKeys || cachedKeys.length === 0) {
-      getOpenKeys(treeData.value[0], false) // expend first level folder
-      await setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
+      // getOpenKeys方法修改成需要传现在的数据
+      // getOpenKeys(treeData.value[0], false) // expend first level folder
+      // await setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
     }
   })
 }
