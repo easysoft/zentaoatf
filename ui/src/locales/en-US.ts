@@ -237,4 +237,6 @@ export default {
     'biz_2000': 'Zentao Config Failed',
     'biz_4000': 'Record Not Found',
     'biz_5000': 'Not Available',
+
+    'restore_panel_size' : 'restore panel size',
 };
