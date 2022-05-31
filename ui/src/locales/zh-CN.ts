@@ -160,6 +160,7 @@ export default {
     'create_success': '创建成功',
     'create_fail': '创建失败',
 
+    'skip': '跳过',
     'batch': '批量',
     'batch_select': '批量选择',
     'expand_all': '展开',

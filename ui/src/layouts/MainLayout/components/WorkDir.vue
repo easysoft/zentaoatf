@@ -300,7 +300,9 @@ const nameFormVisible = ref(false)
 
 const treeDataMap = {}
 const getNodeMapCall = throttle(async () => {
-  getNodeMap(treeData.value[0], treeDataMap)
+  treeData.value.forEach(item => {
+    getNodeMap(item, treeDataMap)
+  })
 }, 300)
 
 let rightClickedNode = {} as any

@@ -16,7 +16,6 @@
 <script setup lang="ts">
 import {defineProps, computed, useSlots, defineEmits, useAttrs} from 'vue';
 import Icon from './Icon.vue';import {useI18n} from "vue-i18n";
-const { t } = useI18n();
 
 export interface ButtonProps {
     icon?: string,
@@ -34,6 +33,8 @@ export interface ButtonProps {
     disabled?: boolean,
     active?: boolean,
 }
+
+const { t } = useI18n();
 
 const props = defineProps<ButtonProps>();
 

@@ -15,12 +15,12 @@
 
 <script setup lang="ts">
 import {useI18n} from "vue-i18n";
-const { t,te } = useI18n();
-
 import {defineProps, computed, defineEmits} from 'vue';
 import Button, {ButtonProps} from './Button.vue';
 
 export type ButtonListItemProps = ButtonProps;
+
+const { t,te } = useI18n();
 
 const props = defineProps<{
     buttons?: ButtonProps[] | Record<string, any>[],
@@ -40,7 +40,7 @@ const buttonPropsList = computed(() => {
     }
     return props.buttons.map((x, i) => {
         let item: (ButtonProps | Record<string, any>) & {key: string | number | symbol};
-        
+
         if (props.replaceFields && Button.props) {
             item = Object.keys(Button.props).reduce((item, propName) => {
                 const replacePropName = props.replaceFields ? props.replaceFields[propName] : null;
@@ -63,7 +63,7 @@ const buttonPropsList = computed(() => {
         if(te(item.hint)){
             item.hint = t(item.hint)
         }
-        if(item.hintI18n!=undefined){
+        if(item.hintI18n !== undefined){
             item.hint += t(item.hintI18n)
         }
         return item;

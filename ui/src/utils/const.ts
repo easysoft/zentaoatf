@@ -46,7 +46,8 @@ export const MonacoOptions = {
     tabSize: 2,
     autoIndent: true,
     formatOnPaste: true,
-    formatOnType: true
+    formatOnType: true,
+    scrollBeyondLastLine: false
 }
 
 export const disableStatusMap = [
