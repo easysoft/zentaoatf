@@ -183,7 +183,10 @@ func (s *InterpreterService) GetLangInterpreterWin(language string) (list []map[
 		}
 
 		var out bytes.Buffer
+		var stderr bytes.Buffer
 		cmd.Stdout = &out
+		cmd.Stderr = &stderr
+
 		err = cmd.Run()
 		if err != nil {
 			err = nil
@@ -193,6 +196,11 @@ func (s *InterpreterService) GetLangInterpreterWin(language string) (list []map[
 		infoArr := s.GetNoEmptyLines(out.String(), "", true)
 		if len(infoArr) > 0 {
 			info = infoArr[0]
+		} else {
+			infoArr = s.GetNoEmptyLines(stderr.String(), "", true)
+			if len(infoArr) > 0 {
+				info = infoArr[0]
+			}
 		}
 
 		mp := map[string]interface{}{}
