@@ -4,9 +4,9 @@
       <Button class="rounded pure" :hint="t('collapse_all')"
               :icon="logContentExpand ? 'subtract-square-multiple' : 'add-square-multiple'" iconSize="1.4em"
               @click="globalStore.commit('global/setLogContentExpand')"/>
-      <Button class="rounded pure" :hint="t('expand_up')" icon="chevron-up" iconSize="1.5em"
+      <Button class="rounded pure" :hint="t('expand_up')" :icon="expandIcon" iconSize="1.5em"
               @click="globalStore.commit('global/setLogPaneResized')" />
-      <Button class="rounded pure" :hint="t('more_actions')" icon="more-vert" />
+		<Button class="rounded pure" :hint="t('more_actions')" icon="more-vert" />
     </template>
 
     <LogList />
@@ -27,6 +27,14 @@ const { t } = useI18n();
 
 const globalStore = useStore<{global: StateType}>()
 const logContentExpand = computed<boolean>(() => globalStore.state.global.logContentExpand);
+
+const expandIcon = computed<string>(() => {
+  if (globalStore.state.global.logPaneMaximized) {
+    return "chevron-down";
+  }
+
+  return "chevron-up";
+});
 
 </script>
 
