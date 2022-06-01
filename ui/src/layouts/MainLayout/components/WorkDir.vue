@@ -1,7 +1,15 @@
 <template>
   <div class="workdir">
-    <Tree :data="treeData" :checkable="checkable" ref="treeRef" @active="selectNode" @check="checkNode"
-      @clickToolbar="onToolbarClicked" />
+    <Tree 
+    :data="treeData" 
+    :checkable="checkable"
+    ref="treeRef" 
+    @active="selectNode" 
+    @check="checkNode"
+    @clickToolbar="onToolbarClicked" 
+    @collapse="expandNode" 
+    :defaultCollapsedMap="collapsedMap"
+    />
     <FormNode :show="showModal" @submit="createNode" @cancel="modalClose" ref="formNode" />
   </div>
 </template>
@@ -38,6 +46,7 @@ import debounce from "lodash.debounce";
 import throttle from "lodash.debounce";
 import Modal from "@/utils/modal"
 import FormNode from "./FormNode.vue";
+import { key } from "localforage";
 
 const { t } = useI18n();
 
@@ -64,6 +73,7 @@ const filerType = ref('')
 const filerValue = ref('')
 const showModal = ref(false)
 const currentNode = ref({} as any) // parent node for create node
+const collapsedMap = ref({} as any)
 
 onMounted(() => {
   console.log('onMounted')
@@ -74,7 +84,7 @@ onMounted(() => {
 })
 
 const onToolbarClicked = (e) => {
-  const node = e.node == undefined ? treeDataMap[''] : treeDataMap[e.node.id]
+  const node = e.node == undefined ? treeDataMap.value[''] : treeDataMap.value[e.node.id]
   store.dispatch('Script/changeWorkspace',
     { id: node.workspaceId, type: node.workspaceType })
 
@@ -244,6 +254,13 @@ const getOpenKeys = (treeNode: any, openAll: boolean) => { // expand top one lev
   console.log('keys', expandedKeys.value)
 }
 
+watch(expandedKeys, () => {
+    console.log('watch expandedKeys')
+    for (let treeDataKey in treeDataMap.value) {
+        collapsedMap.value[treeDataKey] = expandedKeys.value.indexOf(treeDataKey) !== -1 ? false : true
+    }
+}, { deep: true })
+
 const selectedKeys = ref<string[]>([])
 const checkedKeys = ref<string[]>([])
 
@@ -263,7 +280,7 @@ onUnmounted(() => {
 const selectNode = (activeNode) => {
   console.log('selectNode', activeNode.activeID)
 
-  const node = treeDataMap[activeNode.activeID]
+  const node = treeDataMap.value[activeNode.activeID]
   if (node.workspaceType !== 'ztf') checkNothing()
 
   store.dispatch('Script/getScript', node)
@@ -296,10 +313,10 @@ let menuStyle = ref({} as any)
 const editedData = ref<any>({})
 const nameFormVisible = ref(false)
 
-const treeDataMap = {}
+const treeDataMap = computed<any>(() => store.state.Script.treeDataMap);
 const getNodeMapCall = throttle(async () => {
   treeData.value.forEach(item => {
-    getNodeMap(item, treeDataMap)
+    getNodeMap(item, treeDataMap.value)
   })
 }, 300)
 
@@ -334,6 +351,22 @@ const createNode = (formData) => {
       notification.error({ message: t('create_fail') });
     }
   })
+}
+
+const expandNode = (expandedKeysMap) => {
+    console.log('expandNode', expandedKeysMap.collapsed)
+    for(var key in expandedKeysMap.collapsed){
+        if(expandedKeysMap.collapsed[key]){
+            expandedKeys.value.forEach((item, index) => {
+                if(item === key){
+                    expandedKeys.value.splice(index, 1)
+                }
+            })
+        }else{
+            expandedKeys.value.push(key)
+        }
+    }
+    setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
 }
 
 defineExpose({

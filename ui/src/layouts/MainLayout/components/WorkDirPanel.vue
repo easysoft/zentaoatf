@@ -33,6 +33,7 @@
         <DropdownMenu class="childMenu" toggle="#parentMenu"
                   :items="filerItems"
                   :checkedKey="filerValue"
+                  keyName="value"
                   @click="onFilterValueChanged"
                   :hideOnClickMenu="true"
                   :replace-fields="replaceFields"
@@ -95,7 +96,7 @@ const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
 let displayBy = ref('workspace')
 let isExpand = ref(false);
-const filerType = ref('suite')
+const filerType = ref('')
 const filerValue = ref('')
 
 const displayTypes = ref([
@@ -117,6 +118,8 @@ const initData = debounce(async () => {
   if (!currSite.value.id) return
 
   await loadDisplayBy()
+  await loadFilterItems()
+  await loadScripts()
 }, 50)
 
 const replaceFields = {
@@ -172,16 +175,16 @@ const onDisplayByChanged = (item) => {
   loadScripts()
 }
 
-const onFilterTypeChanged = (item) => {
-  console.log('onDisplayByFilterChanged')
+const onFilterTypeChanged = async (item) => {
+  console.log('onFilterTypeChanged')
   filerType.value = item.key
-
+  await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, filerType.value, filerValue.value)
   loadFilterItems();
 }
 
 const onFilterValueChanged = async (item) => {
-  console.log('onDisplayByFilterChanged')
-  filerValue.value = filerItems.value[item.key].value
+  console.log('onFilterValueChanged', displayBy.value, filerType.value, item.key)
+  filerValue.value = item.key
 
   await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, filerType.value, filerValue.value)
   await loadScripts()
