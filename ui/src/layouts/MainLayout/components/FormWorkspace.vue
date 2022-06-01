@@ -13,10 +13,8 @@
         
       <FormItem name="path" :label="t('path')" :info="validateInfos.path">
         <input v-if="isElectron" v-model="modelRef.path"
-            @change="selectDir" />
-            <template #enterButton>
-                <a-button>选择</a-button>
-            </template>
+             />
+        <Button @click="selectDir" class="state secondary select-dir-btn">选择</Button>
         <input v-if="!isElectron" v-model="modelRef.path" />
       </FormItem>
       <FormItem name="type" :label="t('type')" :info="validateInfos.type">
@@ -73,6 +71,7 @@ import Form from "./Form.vue";
 import FormItem from "./FormItem.vue";
 import {arrToMap} from "@/utils/array";
 import settings from "@/config/settings";
+import Button from "./Button.vue";
 
 export interface FormWorkspaceProps {
   show?: boolean;
@@ -168,3 +167,10 @@ defineExpose({
   clearFormData,
 });
 </script>
+
+<style>
+.select-dir-btn{
+    position: absolute;
+    right: 20px;
+}
+</style>
