@@ -10,14 +10,13 @@
       <FormItem name="name" :label="t('name')" :info="validateInfos.name">
         <input v-model="modelRef.name" />
       </FormItem>
-        
-      <FormItem name="path" :label="t('path')" :info="validateInfos.path">
-        <input v-if="isElectron" v-model="modelRef.path"
-            @change="selectDir" />
-            <template #enterButton>
-                <a-button>选择</a-button>
-            </template>
-        <input v-if="!isElectron" v-model="modelRef.path" />
+      <input v-if="isElectron" v-model="modelRef.path"
+        @change="selectDir" />
+          <!-- <template #enterButton>
+            <a-button>选择</a-button>
+          </template> -->
+      <FormItem v-if="!isElectron" name="path" :label="t('path')" :info="validateInfos.path">
+        <input v-model="modelRef.path" />
       </FormItem>
       <FormItem name="type" :label="t('type')" :info="validateInfos.type">
         <select name="type" @change="selectType" v-model="modelRef.type">
@@ -42,7 +41,7 @@
           </option>
         </select>
       </FormItem>
-      <FormItem v-if="showCmd" name="cmd" :label="t('name')" :info="validateInfos.cmd">
+      <FormItem v-if="showCmd" name="cmd" :label="t('cmd')" :info="validateInfos.cmd">
         <textarea v-model="modelRef.cmd" />
         <div class="t-tips" style="margin-top: 5px;">
           <div>{{ t('tips_test_cmd', {cmd: cmdSample}) }}</div>
@@ -72,7 +71,6 @@ import { useForm } from "@/utils/form";
 import Form from "./Form.vue";
 import FormItem from "./FormItem.vue";
 import {arrToMap} from "@/utils/array";
-import settings from "@/config/settings";
 
 export interface FormWorkspaceProps {
   show?: boolean;
@@ -85,7 +83,7 @@ const props = withDefaults(defineProps<FormWorkspaceProps>(), {
 watch(props, () => {
     if(!props.show){
         setTimeout(() => {
-            validateInfos.value = {type:'ztf'};
+            validateInfos.value = {};
         }, 200);
     }
 })
@@ -116,8 +114,9 @@ const cancel = () => {
 };
 
 const isElectron = ref(!!window.require)
-const showCmd = computed(() => { return modelRef.value.type !== 'ztf' })
-const modelRef = ref({type: 'ztf'});
+const modelRef = ref({} as any);
+
+const showCmd = computed(() => { return modelRef.value.type && modelRef.value.type !== 'ztf' })
 const rulesRef = ref({
   name: [{ required: true, msg: t("pls_name") }],
   path: [{ required: true, msg: t("pls_workspace_path") }],
@@ -147,18 +146,6 @@ const submit = () => {
     emit("submit", modelRef.value);
   }
 };
-
-const selectDir = () => {
-      console.log('selectDir')
-
-      const { ipcRenderer } = window.require('electron')
-      ipcRenderer.send(settings.electronMsg, 'selectDir')
-
-      ipcRenderer.on(settings.electronMsgReplay, (event, arg) => {
-        console.log(arg)
-        modelRef.value.path = arg
-      })
-    }
 
 const clearFormData = () => {
   modelRef.value = {};

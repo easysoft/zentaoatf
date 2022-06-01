@@ -97,7 +97,7 @@ const store = useStore<{ Script: ScriptData }>();
 
 let displayBy = ref('workspace')
 let isExpand = ref(false);
-const filerType = ref('')
+const filerType = ref('suite')
 const filerValue = ref('')
 
 const displayTypes = ref([
@@ -117,10 +117,8 @@ const loadDisplayBy = async () => {
 const initData = debounce(async () => {
   console.log('init')
   if (!currSite.value.id) return
-console.log('222init2222')
+
   await loadDisplayBy()
-  await loadFilterItems()
-  await loadScripts()
 }, 50)
 
 const replaceFields = {
@@ -176,15 +174,15 @@ const onDisplayByChanged = (item) => {
   loadScripts()
 }
 
-const onFilterTypeChanged = async (item) => {
-  console.log('onFilterTypeChanged')
+const onFilterTypeChanged = (item) => {
+  console.log('onDisplayByFilterChanged')
   filerType.value = item.key
-  await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, filerType.value, filerValue.value)
+
   loadFilterItems();
 }
 
 const onFilterValueChanged = async (item) => {
-  console.log('onFilterValueChanged', displayBy.value, filerType.value, filerItems.value[item.key].value)
+  console.log('onDisplayByFilterChanged')
   filerValue.value = filerItems.value[item.key].value
 
   await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, filerType.value, filerValue.value)
