@@ -29,4 +29,8 @@ const { t } = useI18n();
 #navbar {
   height: var(--navbar-height, 40px);
 }
+
+#navbar button {
+  -webkit-app-region: no-drag;
+}
 </style>
