@@ -18,8 +18,8 @@ export default defineComponent({
     setup() {
       const { t } = useI18n();
 
-      const websocketStore = useStore<{ WebSocket: WebSocketData }>();
-      websocketStore.dispatch('WebSocket/connect')
+      const store = useStore<{ WebSocket: WebSocketData }>();
+      store.dispatch('WebSocket/connect')
 
       onMounted(() => {
         console.log('onMounted')
@@ -35,7 +35,7 @@ export default defineComponent({
         const jsn = JSON.parse(data.msg) as WsMsg
 
         if (jsn.conn) { // update connection status
-          websocketStore.dispatch('WebSocket/changeStatus', jsn.conn)
+          store.dispatch('WebSocket/changeStatus', jsn.conn)
         }
       }
 

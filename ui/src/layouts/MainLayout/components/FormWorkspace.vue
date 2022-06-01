@@ -94,8 +94,8 @@ const showModalRef = computed(() => {
 });
 
 const testTypes = ref([...ztfTestTypesDef, ...unitTestTypesDef]);
-const zentaoStore = useStore<{ Zentao: ZentaoData }>();
-const langs = computed<any[]>(() => zentaoStore.state.Zentao.langs);
+const store = useStore<{ Zentao: ZentaoData }>();
+const langs = computed<any[]>(() => store.state.Zentao.langs);
 const cmdSample = ref('')
 const cmdMap = ref(arrToMap(testTypes.value))
 const selectType = () => {

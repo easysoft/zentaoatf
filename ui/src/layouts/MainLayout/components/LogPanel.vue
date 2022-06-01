@@ -28,9 +28,9 @@ import { StateType } from '@/store/global'
 import {computed} from 'vue';
 const { t } = useI18n();
 
-const globalStore = useStore<{global: StateType}>()
-const logContentExpand = computed<boolean>(() => globalStore.state.global.logContentExpand);
-const logPaneMaximized = computed<boolean>(() => globalStore.state.global.logPaneMaximized);
+const store = useStore<{global: StateType}>()
+const logContentExpand = computed<boolean>(() => store.state.global.logContentExpand);
+const logPaneMaximized = computed<boolean>(() => store.state.global.logPaneMaximized);
 
 </script>
 

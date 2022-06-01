@@ -201,8 +201,8 @@ import useTestReport from '../hooks/useTestReport';
 
 const {t, te, locale} = useI18n();
 
-const zentaoStore = useStore<{ Zentao: ZentaoData }>();
-const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
+const store = useStore<{ Zentao: ZentaoData }>();
+const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
 const jsonStr = jsonStrDef
 const execBy = execByDef;

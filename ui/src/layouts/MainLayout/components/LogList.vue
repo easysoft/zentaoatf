@@ -68,18 +68,13 @@ import {isInArray} from "@/utils/array";
 import {StateType as GlobalStateType} from "@/store/global";
 const { t } = useI18n();
 
-const globalStore = useStore<{global: GlobalStateType}>();
-const logContentExpand = computed<boolean>(() => globalStore.state.global.logContentExpand);
+const store = useStore<{global: GlobalStateType, Zentao: ZentaoData, WebSocket: WebSocketData, Exec: ExecStatus}>();
+const logContentExpand = computed<boolean>(() => store.state.global.logContentExpand);
 
-const zentaoStore = useStore<{ Zentao: ZentaoData }>();
-const currSite = computed<any>(() => zentaoStore.state.Zentao.currSite);
-const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
-
-const websocketStore = useStore<{ WebSocket: WebSocketData }>();
-const wsStatus = computed<any>(() => websocketStore.state.WebSocket.connStatus);
-
-const execStore = useStore<{ Exec: ExecStatus }>();
-const isRunning = computed<any>(() => execStore.state.Exec.isRunning);
+const currSite = computed<any>(() => store.state.Zentao.currSite);
+const currProduct = computed<any>(() => store.state.Zentao.currProduct);
+const wsStatus = computed<any>(() => store.state.WebSocket.connStatus);
+const isRunning = computed<any>(() => store.state.Exec.isRunning);
 
 const cachedExecData = ref({})
 const caseCount = ref(1)
@@ -114,7 +109,7 @@ const onWebsocketMsgEvent = (data: any) => {
 
   if ('isRunning' in wsMsg) {
     console.log('change isRunning to ', item.isRunning)
-    execStore.dispatch('Exec/setRunning', item.isRunning)
+    store.dispatch('Exec/setRunning', item.isRunning)
   }
 
   if (item.info?.status === 'start') {
@@ -124,7 +119,7 @@ const onWebsocketMsgEvent = (data: any) => {
 
   item = genExecInfo(item, caseCount.value)
   if (item.info && item.info.key && isInArray(item.info.status, ['pass', 'fail', 'skip'])) { // set case result
-    globalStore.dispatch('Result/list', {
+    store.dispatch('Result/list', {
         keywords: '',
         enabled: 1,
         pageSize: 10,

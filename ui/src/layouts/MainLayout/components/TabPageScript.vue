@@ -24,9 +24,9 @@ const props = defineProps<{
     tab: PageTab
 }>();
 
-const scriptStore = useStore<{ Script: ScriptData }>();
-const script = computed<any>(() => scriptStore.state.Script.detail);
-const currWorkspace = computed<any>(() => scriptStore.state.Script.currWorkspace);
+const store = useStore<{ Script: ScriptData }>();
+const script = computed<any>(() => store.state.Script.detail);
+const currWorkspace = computed<any>(() => store.state.Script.currWorkspace);
 const scriptCode = ref('')
 const path = ref('')
 
@@ -66,7 +66,7 @@ const editorChange = (newScriptCode) => {
     let oldScriptCode = scriptCode.value;
     oldScriptCode = oldScriptCode.replace(/\n$/, '');
     let changed = newScriptCode == oldScriptCode ? false : true;
-    scriptStore.dispatch('tabs/update', {
+  store.dispatch('tabs/update', {
         id: props.tab.id,
         title: props.tab.title,
         changed: changed,
@@ -77,7 +77,7 @@ const editorChange = (newScriptCode) => {
 
 const save = () => {
     const code = editorRef.value?.getValue()
-    scriptStore.dispatch('Script/updateCode',{
+  store.dispatch('Script/updateCode',{
         workspaceId: currWorkspace.value.id,
         path: script.value.path,
         code: code

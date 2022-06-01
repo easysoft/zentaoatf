@@ -31,10 +31,8 @@ import {ScriptData} from "@/views/script/store";
 
 const {t} = useI18n();
 
-const store = useStore<{ tabs: TabsData }>();
-
-const scriptStore = useStore<{ Script: ScriptData }>();
-const currWorkspace = computed<any>(() => scriptStore.state.Script.currWorkspace);
+const store = useStore<{ tabs: TabsData, Script: ScriptData }>();
+const currWorkspace = computed<any>(() => store.state.Script.currWorkspace);
 
 const items = computed<TabNavItem[]>(() => {
   return store.getters['tabs/list'];

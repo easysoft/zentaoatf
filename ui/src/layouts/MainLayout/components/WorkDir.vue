@@ -41,18 +41,16 @@ import FormNode from "./FormNode.vue";
 
 const { t } = useI18n();
 
-const zentaoStore = useStore<{ Zentao: ZentaoData }>();
-const currSite = computed<any>(() => zentaoStore.state.Zentao.currSite);
-const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
+const store = useStore<{ Zentao: ZentaoData, Script: ScriptData, Workspace: WorkspaceData }>();
+const currSite = computed<any>(() => store.state.Zentao.currSite);
+const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
-const scriptStore = useStore<{ Script: ScriptData }>();
-const currWorkspace = computed<any>(() => scriptStore.state.Script.currWorkspace);
+const currWorkspace = computed<any>(() => store.state.Script.currWorkspace);
 
-const workspaceStore = useStore<{ Workspace: WorkspaceData }>();
 const isWin = isWindows()
 
-zentaoStore.dispatch('Zentao/fetchLangs')
-const langs = computed<any[]>(() => zentaoStore.state.Zentao.langs);
+store.dispatch('Zentao/fetchLangs')
+const langs = computed<any[]>(() => store.state.Zentao.langs);
 
 const router = useRouter();
 let workspace = router.currentRoute.value.params.workspace as string
@@ -62,11 +60,10 @@ seq = seq === '-' ? '' : seq
 let scope = router.currentRoute.value.params.scope as string
 scope = scope === '-' ? '' : scope
 
-const store = useStore<{ Script: ScriptData }>();
 const filerType = ref('')
 const filerValue = ref('')
 const showModal = ref(false)
-const currentNode = ref({}) // parent node for create node
+const currentNode = ref({} as any) // parent node for create node
 
 onMounted(() => {
   console.log('onMounted')
@@ -78,7 +75,7 @@ onMounted(() => {
 
 const onToolbarClicked = (e) => {
   const node = e.node == undefined ? treeDataMap[''] : treeDataMap[e.node.id]
-  scriptStore.dispatch('Script/changeWorkspace',
+  store.dispatch('Script/changeWorkspace',
     { id: node.workspaceId, type: node.workspaceType })
 
   currentNode.value = node;
@@ -94,7 +91,7 @@ const onToolbarClicked = (e) => {
     },
       {
         "onOk": () => {
-          workspaceStore.dispatch('Workspace/removeWorkspace', node.path)
+          store.dispatch('Workspace/removeWorkspace', node.path)
             .then((response) => {
               if (response) {
                 notification.success({ message: t('delete_success') });
@@ -128,7 +125,7 @@ const modalClose = () => {
 
 const treeRef = ref<{ isAllCollapsed: () => boolean, toggleAllCollapsed: () => void }>();
 
-let treeData = computed<any>(() => scriptStore.state.Script.list);
+let treeData = computed<any>(() => store.state.Script.list);
 
 const checkable = ref(false);
 
@@ -269,7 +266,7 @@ const selectNode = (activeNode) => {
   const node = treeDataMap[activeNode.activeID]
   if (node.workspaceType !== 'ztf') checkNothing()
 
-  scriptStore.dispatch('Script/getScript', node)
+  store.dispatch('Script/getScript', node)
   if (node.type === 'file') {
     store.dispatch('tabs/open', {
       id: 'script-' + node.path,
@@ -280,7 +277,7 @@ const selectNode = (activeNode) => {
     });
   }
 
-  scriptStore.dispatch('Script/changeWorkspace',
+  store.dispatch('Script/changeWorkspace',
     { id: node.workspaceId, type: node.workspaceType })
 }
 
@@ -316,7 +313,7 @@ const createNode = (formData) => {
   if (currentNode.value.isLeaf) {
     type = 'node';
   }
-  scriptStore.dispatch('Script/createScript', {
+  store.dispatch('Script/createScript', {
     name: formData.name, mode: mode, type: type, target: currentNode.value.path,
     workspaceId: currentNode.value.workspaceId, productId: currProduct.value.id,
   }).then((result) => {

@@ -59,7 +59,6 @@ const momentTime = momentUnixDefFormat
 const store = useStore<{ Result: StateType }>();
 const models = computed<any[]>(() => store.state.Result.queryResult.result)
 
-console.log("test result list:",models)
 const pagination = computed<PaginationConfig>(() => store.state.Result.queryResult.pagination);
 const queryParams = ref<QueryParams>({
     keywords: '', enabled: '1', page: pagination.value.page, pageSize: pagination.value.pageSize

@@ -1,8 +1,8 @@
-import {onMounted, watch, shallowRef, ShallowRef} from 'vue';
+import {onMounted, watch, shallowRef} from 'vue';
 import {useStore} from 'vuex';
 import {StateType} from '@/views/result/store';
 
-export default function useTestReport(seq: string, workspaceId: number): ShallowRef {
+export default function useTestReport(seq: string, workspaceId: number): any {
     const store = useStore<{ Result: StateType }>();
     const reportRef = shallowRef();
 

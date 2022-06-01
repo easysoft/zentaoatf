@@ -42,15 +42,14 @@ import {TabsData} from "@/store/tabs";
 import {TabNavItem} from "@/layouts/MainLayout/components/TabsNav.vue";
 const { t } = useI18n();
 
-const store = useStore<{ tabs: TabsData }>();
+const store = useStore<{ tabs: TabsData, Script: ScriptData }>();
 const tabs = computed<TabNavItem[]>(() => {
   return store.getters['tabs/list'];
 });
 
-const scriptStore = useStore<{ Script: ScriptData }>();
-const currWorkspace = computed<any>(() => scriptStore.state.Script.currWorkspace);
-const treeDataMap = computed<any>(() => scriptStore.state.Script.treeDataMap);
-const selectedNodes = computed<any>(() => scriptStore.state.Script.checkedNodes);
+const currWorkspace = computed<any>(() => store.state.Script.currWorkspace);
+const treeDataMap = computed<any>(() => store.state.Script.treeDataMap);
+const selectedNodes = computed<any>(() => store.state.Script.checkedNodes);
 
 const execBy = ref('opened');
 (async function () {

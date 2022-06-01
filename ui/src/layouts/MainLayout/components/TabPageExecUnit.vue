@@ -48,11 +48,10 @@ const props = withDefaults(defineProps<{
   tab: PageTab
 }>(), {})
 
-const zentaoStore = useStore<{ Zentao: ZentaoData }>();
-const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
+const store = useStore<{ Zentao: ZentaoData, Script: ScriptData }>();
+const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
-const scriptStore = useStore<{ Script: ScriptData }>();
-const currWorkspace = computed<any>(() => scriptStore.state.Script.currWorkspace);
+const currWorkspace = computed<any>(() => store.state.Script.currWorkspace);
 
 const workspaceId = computed<any>(() => props.tab.data.workspaceId)
 const workspaceType = computed<any>(() => props.tab.data.workspaceType)
@@ -94,7 +93,7 @@ watch(currWorkspace, () => {
 }, {deep: true})
 
 if (workspaceId.value > 0 && workspaceId.value !== currWorkspace.value.id) {
-  scriptStore.dispatch('Script/changeWorkspace',
+  store.dispatch('Script/changeWorkspace',
       {id: workspaceId.value, type: workspaceType.value})
 }
 

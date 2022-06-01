@@ -89,11 +89,9 @@ import notification from "@/utils/notification";
 
 const { t } = useI18n();
 
-const zentaoStore = useStore<{ Zentao: ZentaoData }>();
-const currSite = computed<any>(() => zentaoStore.state.Zentao.currSite);
-const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
-
-const store = useStore<{ Script: ScriptData }>();
+const store = useStore<{ Zentao: ZentaoData, Script: ScriptData }>();
+const currSite = computed<any>(() => store.state.Zentao.currSite);
+const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
 let displayBy = ref('workspace')
 let isExpand = ref(false);
