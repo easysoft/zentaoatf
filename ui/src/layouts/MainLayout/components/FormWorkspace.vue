@@ -14,7 +14,7 @@
       <FormItem name="path" :label="t('path')" :info="validateInfos.path">
         <input v-if="isElectron" v-model="modelRef.path"
              />
-        <Button  v-if="isElectron" @click="selectDir" class="state secondary select-dir-btn">选择</Button>
+        <Button  v-if="isElectron" @click="selectDir" class="state secondary select-dir-btn">{{t('select')}}</Button>
         <input v-if="!isElectron" v-model="modelRef.path" />
       </FormItem>
       <FormItem name="type" :label="t('type')" :info="validateInfos.type">

@@ -30,8 +30,8 @@
       >
         <input
           v-model="modelRef.path"
-          @change="selectFile"
         />
+        <Button  v-if="isElectron" @click="selectFile" class="state secondary select-dir-btn">{{t('select')}}</Button>
       </FormItem>
       <FormItem
         v-if="!isElectron"
@@ -86,6 +86,8 @@ import { StateType } from "@/views/site/store";
 import { getLangSettings } from "@/views/interpreter/service";
 import { getLangInterpreter } from "@/views/interpreter/service";
 import { getElectron } from "@/utils/comm";
+import Button from "./Button.vue";
+import settings from "@/config/settings";
 
 export interface FormSiteProps {
   show?: boolean;
@@ -198,6 +200,17 @@ const clearFormData = () => {
   interpreterInfos.value = [];
 };
 
+const selectFile = () => {
+    console.log('selectFile')
+
+    const { ipcRenderer } = window.require('electron')
+    ipcRenderer.send(settings.electronMsg, 'selectFile')
+
+    ipcRenderer.on(settings.electronMsgReplay, (event, arg) => {
+    console.log(arg)
+    modelRef.value.path = arg
+    })
+}
 defineExpose({
   clearFormData,
 });
