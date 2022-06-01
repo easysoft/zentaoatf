@@ -14,7 +14,7 @@
       <FormItem name="path" :label="t('path')" :info="validateInfos.path">
         <input v-if="isElectron" v-model="modelRef.path"
              />
-        <Button @click="selectDir" class="state secondary select-dir-btn">选择</Button>
+        <Button  v-if="isElectron" @click="selectDir" class="state secondary select-dir-btn">选择</Button>
         <input v-if="!isElectron" v-model="modelRef.path" />
       </FormItem>
       <FormItem name="type" :label="t('type')" :info="validateInfos.type">
@@ -40,7 +40,7 @@
           </option>
         </select>
       </FormItem>
-      <FormItem v-if="showCmd" name="cmd" :label="t('name')" :info="validateInfos.cmd">
+      <FormItem v-if="showCmd" name="cmd" :label="t('cmd')" :info="validateInfos.cmd">
         <textarea v-model="modelRef.cmd" />
         <div class="t-tips" style="margin-top: 5px;">
           <div>{{ t('tips_test_cmd', {cmd: cmdSample}) }}</div>
@@ -84,7 +84,7 @@ const props = withDefaults(defineProps<FormWorkspaceProps>(), {
 watch(props, () => {
     if(!props.show){
         setTimeout(() => {
-            validateInfos.value = {type:'ztf'};
+            validateInfos.value = {};
         }, 200);
     }
 })
@@ -115,8 +115,9 @@ const cancel = () => {
 };
 
 const isElectron = ref(!!window.require)
-const showCmd = computed(() => { return modelRef.value.type !== 'ztf' })
-const modelRef = ref({type: 'ztf'});
+const modelRef = ref({} as any);
+
+const showCmd = computed(() => { return modelRef.value.type && modelRef.value.type !== 'ztf' })
 const rulesRef = ref({
   name: [{ required: true, msg: t("pls_name") }],
   path: [{ required: true, msg: t("pls_workspace_path") }],
@@ -147,21 +148,21 @@ const submit = () => {
   }
 };
 
-const selectDir = () => {
-      console.log('selectDir')
-
-      const { ipcRenderer } = window.require('electron')
-      ipcRenderer.send(settings.electronMsg, 'selectDir')
-
-      ipcRenderer.on(settings.electronMsgReplay, (event, arg) => {
-        console.log(arg)
-        modelRef.value.path = arg
-      })
-    }
-
 const clearFormData = () => {
   modelRef.value = {};
 };
+
+const selectDir = () => {
+    console.log('selectDir')
+
+    const { ipcRenderer } = window.require('electron')
+    ipcRenderer.send(settings.electronMsg, 'selectDir')
+
+    ipcRenderer.on(settings.electronMsgReplay, (event, arg) => {
+    console.log(arg)
+    modelRef.value.path = arg
+    })
+}
 
 defineExpose({
   clearFormData,

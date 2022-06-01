@@ -20,7 +20,7 @@ import Button, {ButtonProps} from './Button.vue';
 
 export type ButtonListItemProps = ButtonProps;
 
-const { t,te } = useI18n();
+const { t, te } = useI18n();
 
 const props = defineProps<{
     buttons?: ButtonProps[] | Record<string, any>[],

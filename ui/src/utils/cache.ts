@@ -80,6 +80,7 @@ export const getScriptFilters = async (displayBy, siteId, productId) => {
     const mp = cachedData[key]
     const by = mp.by ? mp.by : 'workspace'
     const val = mp[by]
+
     return {by: by, val: val}
 }
 export const setScriptFilters = async (displayBy, siteId, productId, by, val) => {

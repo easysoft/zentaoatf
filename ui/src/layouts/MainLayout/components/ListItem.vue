@@ -1,7 +1,7 @@
 <template>
   <div
     class="list-item"
-    :class="{disabled, divider, state: !disabled, compact, active, 'has-checkmark': checked !== undefined}"
+    :class="{disabled, divider, state: !disabled && !noState, compact, active, 'has-checkmark': checked !== undefined}"
     @click="_handleClick"
   >
     <slot name="leading" />
@@ -68,6 +68,7 @@ import {useI18n} from "vue-i18n";
 
 export interface ListItemProps {
     disabled?: boolean,
+    noState?: boolean,
     active?: boolean,
     checked?: boolean,
     divider?: boolean,

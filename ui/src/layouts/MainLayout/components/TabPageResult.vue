@@ -1,187 +1,161 @@
 <template>
-  <div class="result-main space-top">
-    <div>
-      <div class="opt">
-        <Button v-if="reportRef.testType != 'unit'"
-            @click="exec('all')"
-            class="space-left state primary"
-            :label="t('re_exec_all')"
-            type="button"
+  <div v-if="report" class="page-result dock scrollbar-y">
+    <header class="single row align-center padding">
+      <Icon v-if="isTestPassed" icon="checkmark-circle" class="text-green" size="1.8em" />
+      <Icon v-else icon="close-circle" class="text-red" size="2em" />
+      <strong class="space-left">{{ t('case_num_format', {count: report.total}) }}</strong>
+      <small class="rounded inline-block space-left" :class="isTestPassed ? 'green-pale padding-sm-h' : 'red-pale padding-sm-h'">{{t('pass')}} {{percent(report.pass, report.total)}}</small>
+      <div class="flex-auto row justify-end">
+        <Button
+          v-if="currProduct.id"
+          @click="openResultForm()"
+          :label="t('submit_result_to_zentao')"
+          class="space-left border blue-pale rounded"
         />
-        <Button v-if="reportRef.testType != 'unit'" @click="exec('fail')" class="space-left state primary">
+        <Button
+          v-if="report.testType != 'unit'"
+          class="space-left border primary-pale rounded"
+          icon="refresh"
+          :label="t('re_exec_all')"
+          @click="exec('all')"
+        />
+        <Button
+          v-if="report.testType != 'unit'"
+          class="space-left primary rounded"
+          icon="bug-arrow-counterclockwise"
+          @click="exec('fail')"
+        >
           {{t('re_exec_failed') }}
         </Button>
-        <Button v-else @click="exec('')" class="space-left state primary">{{t('re_exec_unit') }}
+        <Button v-else @click="exec('')" class="space-left primary rounded">
+          {{t('re_exec_unit') }}
         </Button>
-
-        <Button
-            v-if="currProduct.id"
-            @click="openResultForm()"
-            :label="t('submit_result_to_zentao')"
-            type="button"
-            class="space-left"/>
       </div>
-
-      <div class="main">
-        <div class="summary">
-          <Row>
-            <Col :span="3" class="t-bord t-label-right">{{t("test_env")}}
-            </Col>
-            <Col :span="5">{{ testEnv(reportRef.testEnv) }}</Col>
-
-            <Col :span="3" class="t-bord t-label-right">{{t("start_time")}}
-            </Col>
-            <Col :span="5">{{ momentTime(reportRef.startTime) }}</Col>
-
-            <Col :span="3" class="t-bord t-label-right">{{t("case_num")}}
-            </Col>
-            <Col :span="5">{{ reportRef.total }}</Col>
-          </Row>
-          <Row>
-            <Col :span="3" class="t-bord t-label-right">{{t("test_type")}}
-            </Col>
-            <Col :span="5">{{ testType(reportRef.testType) }}</Col>
-
-            <Col :span="3" class="t-bord t-label-right">{{t("end_time")}}
-            </Col>
-            <Col :span="5">{{ momentTime(reportRef.endTime) }}</Col>
-
-            <Col :span="3" class="t-bord t-label-right">{{ t("pass") }}</Col>
-            <Col :span="5" class="t-pass"
-            >{{ reportRef.pass }}（{{percent(reportRef.pass, reportRef.total)}}）
-            </Col
-            >
-          </Row>
-
-          <Row>
-            <Col :span="3" class="t-bord t-label-right">{{t("exec_type")}}
-            </Col>
-            <Col :span="5">{{ execBy(reportRef) && te(execBy(reportRef)) ? t(execBy(reportRef)) : execBy(reportRef) }}</Col>
-
-            <Col :span="3" class="t-bord t-label-right">{{t("duration")}}
-            </Col>
-            <Col :span="5">{{ reportRef.duration }}{{ t("sec") }}</Col>
-
-            <Col :span="3" class="t-bord t-label-right">{{ t("fail") }}</Col>
-            <Col :span="5" class="t-fail">{{ reportRef.fail }}（{{percent(reportRef.fail, reportRef.total)}}）
-            </Col>
-          </Row>
-
-          <Row>
-            <Col :span="16"></Col>
-
-            <Col :span="3" class="t-bord t-label-right">{{ t("ignore") }}</Col>
-            <Col :span="5" class="t-skip">{{ reportRef.skip }}（{{percent(reportRef.skip, reportRef.total)}}）
-            </Col>
-          </Row>
-
-          <div class="v-line v-line1"></div>
-          <div class="v-line v-line2"></div>
+    </header>
+    <div class="padding-lg darken-1 rounded-lg space-h">
+      <div class="row justify-center space-bottom result-summary">
+        <div v-if="report.pass"><i style="background: #16a34a;"></i> {{t("pass")}} {{report.pass}}<small class="muted">（{{percent(report.pass, report.total)}}）</small></div>
+        <div v-if="report.fail"><i style="background: #dc2626;"></i> {{t("fail")}} {{report.fail}}<small class="muted">（{{percent(report.fail, report.total)}}）</small></div>
+      <div v-if="report.skip"><i style="background: #94a3b8;"></i> {{t("skip")}} {{report.skip}}<small class="muted">（{{percent(report.skip, report.total)}}）</small></div>
+      </div>
+      <ProgressBar
+        v-if="report.total"
+        class="result-progress shadow space-xl-h"
+        :progress="[100 * report.pass / report.total, 100 * report.fail / report.total, 100 * report.skip / report.total]"
+        :height="20"
+        :radius="4"
+        :striped="true"
+        colors="#16a34a,#dc2626,#94a3b8"
+      />
+      <div class="result-infos space-xl-top row justify-between gap-lg">
+        <div class="row single gap-sm align-center">
+          <span class="muted">{{t("test_env")}}</span>
+          <span>{{testEnv(report.testEnv)}}</span>
         </div>
-
-        <Row class="case-result-title">
-          <Col :span="3" class="t-bord t-label-right">{{t("case_detail") }}</Col>
-        </Row>
-        <Row class="case-result-item">
-          <Col :span="24" v-if="reportRef.testType != 'unit'">
-            <template v-for="cs in reportRef.funcResult" :key="cs.id">
-              <div class="case-info">
-                <div class="info">
-                  <span>{{ cs.id }}. {{ cs.path }}</span> &nbsp;
-                  <span :class="'t-' + cs.status">
-                    <icon-svg type="pass" v-if="cs.status === 'pass'"></icon-svg>
-                    <icon-svg type="fail" v-if="cs.status === 'fail'"></icon-svg>
-                    <icon-svg type="skip" v-if="cs.status === 'skip'"></icon-svg>
-                  </span>
+        <div class="row single gap-sm align-center">
+          <span class="muted">{{t("test_type")}}</span>
+          <span>{{report.testType}}</span>
+        </div>
+        <div class="row single gap-sm align-center">
+          <span class="muted">{{t("exec_type")}}</span>
+          <span>{{execBy(report) && te(execBy(report)) ? t(execBy(report)) : execBy(report)}}</span>
+        </div>
+        <div class="row single gap-sm align-center">
+          <Icon icon="timer" class="muted" />
+          <span>{{t("duration")}}</span>
+          <strong>{{report.duration}}{{ t("sec") }}</strong>
+          <small class="muted">(<span :title="t('start_time')">{{ momentTime(report.startTime) }}</span> ~ <span :title="t('end_time')">{{ momentTime(report.endTime) }}</span>)</small>
+        </div>
+      </div>
+    </div>
+    <div class="result-cases space-top" v-if="report.unitResult?.length || report.funcResult?.length">
+      <div class="padding single row gap align-center">
+        <Icon icon="task-list-square" class="muted" />
+        <strong>{{t('case_list') }}</strong>
+      </div>
+      <div v-if="report.testType === 'unit'" class="unit-result-list divider">
+        <div v-for="result in report.unitResult" :key="`${result.testSuite}.${result.title}`" class="unit-result">
+          <ListItem @click="toggleItemCollapsed(result)" no-state class="divider-top">
+            <template #leading>
+              <Icon v-if="result.status === 'pass'" icon="checkmark-circle-filled" class="text-green" />
+              <Icon v-else-if="result.status === 'skip'" icon="subtract-circle-filled" class="muted" />
+              <Icon v-else icon="close-circle-filled" class="text-red" />
+            </template>
+            <div clas="unit-result-title">
+              <div>{{result.title}}</div>
+            </div>
+            <template #trailing>
+              <Button
+                v-if="result.status === 'fail' && currProduct.id"
+                icon="bug"
+                @click="showInfo(result)"
+                class="space-left rounded pure text-red"
+                :label="t('view_error')"
+              />
+            </template>
+          </ListItem>
+          <div class="unit-result-info row gap-xl padding-bottom small">
+            <div class="muted">{{t('suite')}}: <code>{{result.testSuite}}</code></div>
+            <div class="row single gap-sm align-center muted">
+              <Icon icon="timer" class="muted" />
+              <span>{{t("duration")}}</span>
+              <span>{{result.duration}}{{ t("sec") }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-else class="func-result-list divider">
+        <div v-for="result in report.funcResult" :key="result.path" class="func-result" :class="isCollapsed(result) ? 'collapsed' : 'expaned'">
+          <ListItem @click="toggleItemCollapsed(result)">
+            <template #leading>
+              <Icon v-if="result.status === 'pass'" icon="checkmark-circle-filled" class="text-green" />
+              <Icon v-else-if="result.status === 'skip'" icon="subtract-circle-filled" class="muted" />
+              <Icon v-else icon="close-circle-filled" class="text-red" />
+            </template>
+            <div clas="func-result-title"><code class="small">{{result.path}}</code></div>
+            <template #trailing>
+              <Button
+                v-if="result.status === 'fail' && currProduct.id"
+                icon="bug"
+                @click="openBugForm(result)"
+                class="space-left rounded pure text-blue"
+                :label="t('submit_bug_to_zentao')"
+              />
+              <Icon :icon="isCollapsed(result) ? 'chevron-right' : 'chevron-down'" class="rounded pure" />
+            </template>
+          </ListItem>
+          <template v-if="!isCollapsed(result)">
+            <div v-if="result.steps.length" class="result-step-list">
+              <div v-for="step in result.steps" :key="step.id" class="result-step-item padding">
+                <div class="row single align-center gap" :class="step.status === 'fail' ? 'red-pale' : 'green-pale'">
+                  <div class="padding-sm-h small" :class="step.status === 'fail' ? 'red' : 'green'">{{resultStatus(step.status)}}</div>
+                  <span>{{step.name}}</span>
                 </div>
-                <div class="buttons" v-if="cs.status === 'fail'">
-                  <Button
-                      v-if="currProduct.id"
-                      @click="openBugForm(cs)"
-                      class="space-left"
-                      :label="t('submit_bug_to_zentao')"/>
+                <div class="result-step-checkpoints">
+                  <div v-for="checkpoint in step.checkPoints" class="result-step-checkpoint padding-v row single gap-lg align-start" :key="checkpoint.numb">
+                    <div class="row single align-center gap flex-none">
+                      <Icon :icon="checkpoint.status === 'fail' ? 'close-circle' : 'checkmark-circle'" :class="checkpoint.status === 'fail' ? 'text-red' : 'text-green'" />
+                      <strong>{{t("checkpoint")}} {{checkpoint.numb}}</strong>
+                    </div>
+                    <div class="flex-1 small">
+                      <pre class="darken-1 space-0">
+                        <div class="text-gray darken-1 padding-h">{{t('expect')}}</div>
+                        <code class="padding-sm scrollbar-y">{{expectDesc(checkpoint.expect)}}&nbsp;</code>
+                      </pre>
+                    </div>
+                    <div class="flex-1 small">
+                      <pre class="darken-1 space-0" :class="checkpoint.status === 'fail' ? 'red-pale' : ''">
+                        <div class="text-gray darken-1 padding-h">{{t('actual')}}</div>
+                        <code class="padding-sm scrollbar-y">{{actualDesc(checkpoint.actual)}}&nbsp;</code>
+                      </pre>
+                    </div>
+                  </div>
                 </div>
               </div>
-
-              <Table
-                  v-if="cs.steps.length"
-                  :columns="columns"
-                  :rows="cs.steps"
-                  :isHidePaging="true"
-                  :isSlotMode="true"
-                  :sortable="{}"
-                  >
-                <template #no="record">
-                  {{ record.value.id }}
-                </template>
-
-                <template #name="record">
-                  {{ record.value.name }}
-                </template>
-
-                <template #status="record">
-                  <span :class="'t-' + record.value.status">
-                    <span class="dot"><icon-svg type="dot"/></span>
-                    <span>{{ resultStatus(record.value.status) }}</span>
-                  </span>
-                </template>
-
-                <template #checkpoint="record">
-                  <div
-                      v-for="checkPointItem in record.value.checkPoints"
-                      :key="checkPointItem.numb">
-                    <span class="checkpoint-num">
-                      {{ checkPointItem.numb }}.
-                    </span>
-                    <span :class="'t-' + checkPointItem.status">
-                      {{ resultStatus(checkPointItem.status) }}
-                    </span>
-                    &nbsp; (
-                    <span>{{ expectDesc(checkPointItem.expect) }}</span>
-                    /
-                    <span :class="'t-' + checkPointItem.status">
-                      {{ actualDesc(checkPointItem.actual) }}
-                    </span>
-                    )
-                  </div>
-                </template>
-              </Table>
-              <p v-else class="empty-tip">
-                {{ t("empty_data") }}
-              </p>
-              <br/>
-            </template>
-          </Col>
-          <Col :span="24" v-else>
-            <Table
-                v-if="reportRef.unitResult.length"
-                :columns="columns"
-                :rows="reportRef.unitResult"
-                :isHidePaging="true"
-                :isSlotMode="true"
-                :sortable="{}"
-            >
-              <template #status="record">
-                  <span :class="'t-' + record.value.status">
-                    <span class="dot"><icon-svg type="dot"/></span>
-                    <span>{{ resultStatus(record.value.status) }}</span>
-                  </span>
-              </template>
-              <template #duration="record">
-                {{ record.value.duration }}
-              </template>
-              <template #opt="record">
-                <template v-if="record.value.failure">
-                  <span @click="showInfo(record.value)" class="t-link t-primary">{{ t('view_error') }}</span>
-                </template>
-              </template>
-            </Table>
-            <p v-else class="empty-tip">
-                {{ t("empty_data") }}
-            </p>
-            <br/>
-          </Col>
-        </Row>
+            </div>
+            <div v-else class="padding center muted">{{t('empty_data')}}</div>
+          </template>
+        </div>
       </div>
     </div>
 
@@ -201,18 +175,17 @@
         ref="formSite"
     />
   </div>
+  <Loading class="dock" v-else />
 </template>
 
 <script setup lang="ts">
-import {computed, defineProps, onMounted, ref, toRefs, watch} from "vue";
+import {computed, defineProps, onMounted, reactive, ref, toRefs, watch} from "vue";
 import {PageTab} from "@/store/tabs";
 import {useI18n} from "vue-i18n";
 import {useStore} from "vuex";
 import {momentUnixDef, percentDef} from "@/utils/datetime";
 import Button from "./Button.vue";
-import Row from "./Row.vue";
-import Col from "./Col.vue";
-import Table from "./Table.vue";
+import Icon from "./Icon.vue";
 import FormResult from "./FormResult.vue";
 import FormBug from "./FormBug.vue";
 import Modal from "@/utils/modal"
@@ -220,16 +193,14 @@ import {jsonStrDef} from "@/utils/dom";
 import {actualDesc, execByDef, expectDesc, resultStatusDef, testEnvDef, testTypeDef,} from "@/utils/testing";
 
 import {ZentaoData} from "@/store/zentao";
-import {StateType} from "@/views/result/store";
-import IconSvg from "@/components/IconSvg/index";
 import bus from "@/utils/eventBus";
 import settings from "@/config/settings";
-
+import ProgressBar from './ProgressBar.vue';
+import Loading from './Loading.vue';
+import ListItem from './ListItem.vue';
+import useTestReport from '../hooks/useTestReport';
 
 const {t, te, locale} = useI18n();
-
-const store = useStore<{ Result: StateType }>();
-const report = computed<any>(() => store.state.Result.detailResult);
 
 const zentaoStore = useStore<{ Zentao: ZentaoData }>();
 const currProduct = computed<any>(() => zentaoStore.state.Zentao.currProduct);
@@ -251,106 +222,47 @@ const props = defineProps<{
 const {tab} = toRefs(props);
 let {seq, workspaceId} = tab.value.data;
 
-watch(
-    locale,
-    () => {
-      console.log("watch locale", locale);
-      setColumns();
-    },
-    {deep: true}
-);
+const report = useTestReport(seq as string, workspaceId as number);
 
-const reportRef = ref({});
+const isTestPassed = computed(() => {
+    const {value} = report;
+    return value && value.pass && value.total === value.pass;
+});
 
-const columns = ref([] as any[]);
-const setColumns = () => {
-  if (reportRef.value.testType === 'unit') {
-    columns.value = [
-      {
-        label: t('no'),
-        field: "id",
-        width: "60px",
-        isKey: true,
-      },
-      {
-        label: t('case'),
-        width: "60px",
-        field: 'title',
-      },
-      {
-        label: t('suite'),
-        field: 'testSuite',
-      },
-      {
-        label: t('duration_sec'),
-        width: "100px",
-        field: 'duration',
-      },
-      {
-        label: t('status'),
-        width: "100px",
-        field: 'status',
-      },
-      {
-        label: t('opt'),
-        width: "120px",
-        field: 'opt',
-      },
-    ];
-    return;
-  }
-  columns.value = [
-    {
-      label: t('no'),
-      width: "60px",
-      field: "id",
-      isKey: true,
-    },
-    {
-      label: t("step"),
-      field: "name",
-    },
-    {
-      label: t("status"),
-      field: "status",
-      width: "100px",
-    },
-    {
-      label: t("checkpoint"),
-      field: "checkpoint",
-    },
-  ];
-};
-setColumns();
+const collapsedMap = reactive({});
 
-const loading = ref<boolean>(true);
+function isCollapsed(item) {
+    if (report.value.testType === 'unit') {
+        return false;
+    } else {
+        const collapsed = collapsedMap[item.path];
+        if (typeof collapsed === 'boolean') {
+            return collapsed;
+        }
+        return item.status === 'pass';
+    }
+}
 
-watch(
-    report,
-    () => {
-      if (seq !== report.value.seq || workspaceId !== report.value.workspaceId) {
-        return;
-      }
-      console.log("watch report", report.value);
-      reportRef.value = report.value;
-      setColumns();
-    },
-    {deep: true}
-);
-
-const get = async (): Promise<void> => {
-  loading.value = true;
-  await store.dispatch("Result/get", {workspaceId: workspaceId, seq: seq});
-  loading.value = false;
-};
-get();
+function toggleItemCollapsed(item) {
+    collapsedMap[item.path] = !isCollapsed(item);
+}
 
 const exec = (scope): void => {
-  console.log('exec', report.value);
-
   const testType = report.value.testType;
-
   if (testType === "func") {
+    const getCaseIdsInReport = (reportVal) => {
+      const allCases: object[] = [];
+      const failedCases: object[] = [];
+
+      reportVal.funcResult.forEach(cs => {
+        const item = {path: cs.path, workspaceId: reportVal.workspaceId}
+        allCases.push(item)
+        if (cs.status === 'fail') failedCases.push(item)
+      })
+
+      return {all: allCases, fail: failedCases}
+    }
+
     const caseMap = getCaseIdsInReport(report.value)
     const cases = caseMap[scope]
     bus.emit(settings.eventExec, {execType: 'ztf', scripts: cases});
@@ -410,96 +322,68 @@ const showInfo = (item): void => {
 onMounted(() => {
   console.log("onMounted");
 });
-
-const getCaseIdsInReport = (reportVal) => {
-  const allCases = [] as string[]
-  const failedCases = [] as string[]
-
-  reportVal.funcResult.forEach(cs => {
-    const item = {path: cs.path, workspaceId: reportVal.workspaceId}
-    allCases.push(item)
-    if (cs.status === 'fail') failedCases.push(item)
-  })
-
-  return {all: allCases, fail: failedCases}
-}
-
 </script>
 
-
-<style lang="less" scoped>
-.result-main{
-    margin-top: 8px;
-    height: 100%;
-    overflow: auto;
+<style scoped>
+.result-progress {
+  border: 1px solid rgba(0,0,0,.5);
 }
-.main {
-  padding: 20px var(--space-base);
+.result-progress:deep(.progress-bar-percent) {
+  box-shadow: inset 0 0 1px 1px rgba(255,255,255,.7);
+  opacity: .9;
 }
-
-.dot {
-  margin-right: 5px;
-  font-size: 8px;
-  vertical-align: 2px;
+.result-progress:deep(.progress-bar-percent:hover) {
+  opacity: 1;
 }
-
-.summary {
-  position: relative;
-
-  .v-line {
-    position: absolute;
-    top: 0px;
-    width: 1px;
-    height: 80px;
-    background: #e4e4e4;
-  }
-
-  .v-line1 {
-    left: 30%;
-  }
-
-  .v-line2 {
-    left: 65%;
-  }
+.result-progress:deep(.progress-bar-percent + .progress-bar-percent) {
+  border-left: 1px solid rgba(0,0,0,.1);
 }
-
-.case-info {
-  display: flex;
-
-  .info {
-    flex: 1;
-  }
-
-  .buttons {
-    width: 200px;
-    text-align: right;
-  }
+.result-summary {
+  gap: 10px;
 }
-
-.checkpoint-num {
+.result-summary > div > i {
   display: inline-block;
-  width: 18px;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  margin-right: 4px;
 }
-
-.tab-result-link {
-  border: none;
-  background: none;
-  color: #1890ff;
-  border-style: hidden !important;
+.func-result {
+  border-top: 1px solid var(--color-darken-2);
 }
-.opt{
-    display: flex;
-    padding-right: 20px;
-    flex-direction: row-reverse;
+.func-result.expaned {
+  outline: 1px solid var(--color-darken-2);
+  outline-offset: -1px;
 }
-.case-result-item{
-    margin-top: 1rem;
-    padding-left: 1rem;
+.func-result.expaned:hover {
+  outline-color: var(--color-focus);
 }
-.result-space-top{
-    margin-top: 8px;
+.func-result.expaned :deep(.func-result-title) {
+  font-weight: bold;
 }
-.case-result-title{
-    margin-top: 10px;
+.func-result.expaned :deep(.list-item) {
+  background-color: var(--color-darken-1);
+}
+.unit-result :deep(.list-item),
+.func-result :deep(.list-item) {
+  min-height: 36px;
+}
+.result-step-checkpoint + .result-step-checkpoint {
+  border-top: 1px solid var(--color-darken-1);
+}
+.result-step-checkpoint pre {
+  white-space: normal;
+}
+.result-step-checkpoint pre > code {
+  white-space: pre-wrap;
+  display: block;
+  max-height: 120px;
+  overflow-y: auto;
+}
+.unit-result:hover {
+  background-color: var(--color-darken-1);
+}
+.unit-result-info {
+  padding-left: 30px;
 }
 </style>
