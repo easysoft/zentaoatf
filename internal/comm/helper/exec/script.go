@@ -2,6 +2,9 @@ package execHelper
 
 import (
 	"fmt"
+	"strings"
+	"time"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/comm/helper/websocket"
@@ -11,8 +14,6 @@ import (
 	stringUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/string"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
-	"strings"
-	"time"
 )
 
 func ExecScript(scriptFile, workspacePath string,
@@ -52,6 +53,7 @@ func ExecScript(scriptFile, workspacePath string,
 
 	entTime := time.Now()
 	secs := fmt.Sprintf("%.2f", float32(entTime.Sub(startTime)/time.Second))
+	report.WorkspacePath = workspacePath
 	CheckCaseResult(scriptFile, logs, report, scriptIdx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg)
 
 	endMsg := i118Utils.Sprintf("end_execution", scriptFile, dateUtils.DateTimeStr(entTime))

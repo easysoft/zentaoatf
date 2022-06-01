@@ -284,6 +284,9 @@
 .dock-left   {position: absolute; top: 0; left: 0; bottom: 0;}
 .dock-right  {position: absolute; top: 0; bottom: 0; right: 0}
 
+/* Sticky positioning 粘性定位*/
+.sticky      {position: sticky; top: 0; z-index: 1;}
+
 /* No overflow 禁止超出 */
 .no-overflow {overflow: hidden!important;}
 
