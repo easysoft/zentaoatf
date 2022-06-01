@@ -225,7 +225,7 @@ const report = useTestReport(seq as string, workspaceId as number);
 
 const isTestPassed = computed(() => {
     const {value} = report;
-    return value && value.pass && value.total === value.pass;
+    return value && !value.fail;
 });
 
 const collapsedMap = reactive({});
