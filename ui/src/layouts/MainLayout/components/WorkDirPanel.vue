@@ -210,6 +210,7 @@ const createWorkSpace = (formData) => {
             formWorkspace.value.clearFormData()
             notification.success({message: t('save_success')});
             showModal.value = false;
+            workDirRef.value.loadScripts()
         }
     })
 };

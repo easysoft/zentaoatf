@@ -215,6 +215,7 @@ export default {
     'pls_create_workspace': 'Please create workspace to continue.',
     'pls_product': 'Please select product.',
     'pls_lang': 'Please select language.',
+    'pls_script_lang': 'Please select script language.',
     'pls_title':  'Please input title.',
     'pls_name':  'Please input name.',
     'pls_select_case':  'Please select cases.',

@@ -72,6 +72,7 @@ scope = scope === '-' ? '' : scope
 const filerType = ref('')
 const filerValue = ref('')
 const showModal = ref(false)
+const toolbarAction = ref('')
 const currentNode = ref({} as any) // parent node for create node
 const collapsedMap = ref({} as any)
 
@@ -91,8 +92,9 @@ const onToolbarClicked = (e) => {
   currentNode.value = node;
   if (e.event.key == 'runTest') {
     runTest(currentNode);
-  } else if (e.event.key == 'createFile' || e.event.key == 'createWorkspace') {
+  } else if (e.event.key == 'createFile' || e.event.key == 'createWorkspace' || e.event.key == 'createDir') {
     showModal.value = true;
+    toolbarAction.value = e.event.key;
   } else if (e.event.key === 'deleteWorkspace') {
     Modal.confirm({
       title: t('delete'),
@@ -327,9 +329,7 @@ const formNode = ref({} as any)
 const createNode = (formData) => {
   const mode = 'child';
   let type = 'dir';
-  if (currentNode.value.isLeaf) {
-    type = 'node';
-  }
+  if(toolbarAction.value === 'createFile') type = 'node'
   store.dispatch('Script/createScript', {
     name: formData.name, mode: mode, type: type, target: currentNode.value.path,
     workspaceId: currentNode.value.workspaceId, productId: currProduct.value.id,
@@ -380,7 +380,8 @@ defineExpose({
     return treeRef.value?.toggleAllCollapsed();
   },
   toggleCheckable,
-  onToolbarClicked
+  onToolbarClicked,
+  loadScripts
 });
 </script>
 
