@@ -44,7 +44,6 @@
         :progress="[100 * report.pass / report.total, 100 * report.fail / report.total, 100 * report.skip / report.total]"
         :height="20"
         :radius="4"
-        :striped="true"
         colors="#16a34a,#dc2626,#94a3b8"
       />
       <div class="result-infos space-xl-top row justify-between gap-lg">
