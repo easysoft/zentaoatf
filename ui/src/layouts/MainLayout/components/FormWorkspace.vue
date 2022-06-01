@@ -41,7 +41,7 @@
           </option>
         </select>
       </FormItem>
-      <FormItem v-if="showCmd" name="cmd" :label="t('name')" :info="validateInfos.cmd">
+      <FormItem v-if="showCmd" name="cmd" :label="t('cmd')" :info="validateInfos.cmd">
         <textarea v-model="modelRef.cmd" />
         <div class="t-tips" style="margin-top: 5px;">
           <div>{{ t('tips_test_cmd', {cmd: cmdSample}) }}</div>
@@ -114,8 +114,9 @@ const cancel = () => {
 };
 
 const isElectron = ref(!!window.require)
-const showCmd = computed(() => { return modelRef.value.type !== 'ztf' })
-const modelRef = ref({});
+const modelRef = ref({} as any);
+
+const showCmd = computed(() => { return modelRef.value.type && modelRef.value.type !== 'ztf' })
 const rulesRef = ref({
   name: [{ required: true, msg: t("pls_name") }],
   path: [{ required: true, msg: t("pls_workspace_path") }],
