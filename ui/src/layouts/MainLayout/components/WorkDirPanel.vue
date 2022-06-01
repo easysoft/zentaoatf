@@ -33,6 +33,7 @@
         <DropdownMenu class="childMenu" toggle="#parentMenu"
                   :items="filerItems"
                   :checkedKey="filerValue"
+                  keyName="value"
                   @click="onFilterValueChanged"
                   :hideOnClickMenu="true"
                   :replace-fields="replaceFields"
@@ -184,8 +185,8 @@ const onFilterTypeChanged = async (item) => {
 }
 
 const onFilterValueChanged = async (item) => {
-  console.log('onFilterValueChanged', displayBy.value, filerType.value, filerItems.value[item.key].value)
-  filerValue.value = filerItems.value[item.key].value
+  console.log('onFilterValueChanged', displayBy.value, filerType.value, item.key)
+  filerValue.value = item.key
 
   await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, filerType.value, filerValue.value)
   await loadScripts()
