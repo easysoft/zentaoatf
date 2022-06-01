@@ -1,6 +1,6 @@
 <template>
   <div v-if="report" class="page-result dock scrollbar-y">
-    <header class="single row align-center padding">
+    <header class="single row align-center padding canvas sticky shadow-border-bottom">
       <Icon v-if="isTestPassed" icon="checkmark-circle" class="text-green" size="1.8em" />
       <Icon v-else icon="close-circle" class="text-red" size="2em" />
       <strong class="space-left">{{ t('case_num_format', {count: report.total}) }}</strong>
@@ -32,7 +32,7 @@
         </Button>
       </div>
     </header>
-    <div class="padding-lg darken-1 rounded-lg space-h">
+    <div class="padding-lg darken-1 divider">
       <div class="row justify-center space-bottom result-summary">
         <div v-if="report.pass"><i style="background: #16a34a;"></i> {{t("pass")}} {{report.pass}}<small class="muted">（{{percent(report.pass, report.total)}}）</small></div>
         <div v-if="report.fail"><i style="background: #dc2626;"></i> {{t("fail")}} {{report.fail}}<small class="muted">（{{percent(report.fail, report.total)}}）</small></div>
@@ -63,7 +63,7 @@
         <div class="row single gap-sm align-center">
           <Icon icon="timer" class="muted" />
           <span>{{t("duration")}}</span>
-          <strong>{{report.duration}}{{ t("sec") }}</strong>
+          <span>{{report.duration}}{{ t("sec") }}</span>
           <small class="muted">(<span :title="t('start_time')">{{ momentTime(report.startTime) }}</span> ~ <span :title="t('end_time')">{{ momentTime(report.endTime) }}</span>)</small>
         </div>
       </div>
@@ -112,7 +112,7 @@
               <Icon v-else-if="result.status === 'skip'" icon="subtract-circle-filled" class="muted" />
               <Icon v-else icon="close-circle-filled" class="text-red" />
             </template>
-            <div clas="func-result-title"><code class="small">{{result.path}}</code></div>
+            <div class="func-result-title"><code class="small">{{result.path}}</code></div>
             <template #trailing>
               <Button
                 v-if="result.status === 'fail' && currProduct.id"
@@ -125,7 +125,7 @@
             </template>
           </ListItem>
           <template v-if="!isCollapsed(result)">
-            <div v-if="result.steps.length" class="result-step-list">
+            <div v-if="result.steps.length" class="result-step-list padding-xl-left">
               <div v-for="step in result.steps" :key="step.id" class="result-step-item padding">
                 <div class="row single align-center gap" :class="step.status === 'fail' ? 'red-pale' : 'green-pale'">
                   <div class="padding-sm-h small" :class="step.status === 'fail' ? 'red' : 'green'">{{resultStatus(step.status)}}</div>
@@ -135,17 +135,17 @@
                   <div v-for="checkpoint in step.checkPoints" class="result-step-checkpoint padding-v row single gap-lg align-start" :key="checkpoint.numb">
                     <div class="row single align-center gap flex-none">
                       <Icon :icon="checkpoint.status === 'fail' ? 'close-circle' : 'checkmark-circle'" :class="checkpoint.status === 'fail' ? 'text-red' : 'text-green'" />
-                      <strong>{{t("checkpoint")}} {{checkpoint.numb}}</strong>
+                      <span>{{t("checkpoint")}} {{checkpoint.numb}}</span>
                     </div>
                     <div class="flex-1 small">
                       <pre class="darken-1 space-0">
-                        <div class="text-gray darken-1 padding-h">{{t('expect')}}</div>
+                        <div class="text-gray darken-1 padding-sm-h">{{t('expect')}}</div>
                         <code class="padding-sm scrollbar-y">{{expectDesc(checkpoint.expect)}}&nbsp;</code>
                       </pre>
                     </div>
                     <div class="flex-1 small">
                       <pre class="darken-1 space-0" :class="checkpoint.status === 'fail' ? 'red-pale' : ''">
-                        <div class="text-gray darken-1 padding-h">{{t('actual')}}</div>
+                        <div class="text-gray darken-1 padding-sm-h">{{t('actual')}}</div>
                         <code class="padding-sm scrollbar-y">{{actualDesc(checkpoint.actual)}}&nbsp;</code>
                       </pre>
                     </div>
@@ -239,7 +239,7 @@ function isCollapsed(item) {
         if (typeof collapsed === 'boolean') {
             return collapsed;
         }
-        return item.status === 'pass';
+        return item.status === 'pass' || item.status === 'skip';
     }
 }
 
@@ -352,7 +352,7 @@ onMounted(() => {
   border-top: 1px solid var(--color-darken-2);
 }
 .func-result.expaned {
-  outline: 1px solid var(--color-darken-2);
+  outline: 1px solid transparent;
   outline-offset: -1px;
 }
 .func-result.expaned:hover {
@@ -360,9 +360,6 @@ onMounted(() => {
 }
 .func-result.expaned :deep(.func-result-title) {
   font-weight: bold;
-}
-.func-result.expaned :deep(.list-item) {
-  background-color: var(--color-darken-1);
 }
 .unit-result :deep(.list-item),
 .func-result :deep(.list-item) {
@@ -377,7 +374,7 @@ onMounted(() => {
 .result-step-checkpoint pre > code {
   white-space: pre-wrap;
   display: block;
-  max-height: 120px;
+  max-height: 150px;
   overflow-y: auto;
 }
 .unit-result:hover {
