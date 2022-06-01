@@ -114,6 +114,7 @@
 .text-bold, .strong {font-weight: bold;}
 
 /* Border colors 边框颜色 */
+.border           {border: var(--color-darken-5) 1px solid;}
 .border-primary   {border-color: var(--color-primary);}
 .border-secondary {border-color: var(--color-secondary);}
 .border-red       {border-color: var(--color-red);}
@@ -122,7 +123,6 @@
 .border-purple    {border-color: var(--color-purple);}
 .border-gray      {border-color: var(--color-gray);}
 .border-heavy     {border-color: var(--color-darken-10);}
-.border           {border-color: var(--color-darken-5);}
 .border-light     {border-color: var(--color-darken-3);}
 
 /* Divider 分割线 */
@@ -169,7 +169,7 @@
 .space-lg-bottom {margin-bottom: var(--space-lg)!important;}
 .space-lg-h      {margin-left: var(--space-lg)!important; margin-right: var(--space-lg)!important;}
 .space-lg-v      {margin-top: var(--space-lg)!important; margin-bottom: var(--space-lg)!important;}
-.space-lg        {margin-bottom: var(--space-lg)!important;}
+.space-lg        {margin: var(--space-lg)!important;}
 
 /* Spaces (xl) 外边距（xl） */
 .space-xl-top   {margin-top: var(--space-xl)!important;}
@@ -255,6 +255,7 @@
 .single            {flex-wrap: nowrap;}
 .flex-none         {flex: none}
 .flex-auto         {flex: auto}
+.flex-1            {flex: 1}
 .justify-start     {justify-content: start;}
 .justify-end       {justify-content: end;}
 .justify-stretch   {justify-content: stretch;}
@@ -282,6 +283,9 @@
 .dock-bottom {position: absolute; bottom: 0; left: 0; right: 0}
 .dock-left   {position: absolute; top: 0; left: 0; bottom: 0;}
 .dock-right  {position: absolute; top: 0; bottom: 0; right: 0}
+
+/* Sticky positioning 粘性定位*/
+.sticky      {position: sticky; top: 0; z-index: 1;}
 
 /* No overflow 禁止超出 */
 .no-overflow {overflow: hidden!important;}

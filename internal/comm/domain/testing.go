@@ -3,9 +3,10 @@ package commDomain
 import (
 	"encoding/xml"
 	"fmt"
+	"time"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	"github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"time"
 )
 
 type ZtfRespTestCases struct {
@@ -182,10 +183,12 @@ type FuncResult struct {
 	WorkspaceId int    `json:"workspaceId"`
 	Seq         string `json:"seq"`
 
-	ProductId int                     `json:"productId"`
-	Path      string                  `json:"path"`
-	Status    commConsts.ResultStatus `json:"status"`
-	Title     string                  `json:"title"`
+	Key          string                  `json:"key"`
+	ProductId    int                     `json:"productId"`
+	Path         string                  `json:"path"`
+	RelativePath string                  `json:"relativePath"`
+	Status       commConsts.ResultStatus `json:"status"`
+	Title        string                  `json:"title"`
 
 	Steps []StepLog `json:"steps"`
 }

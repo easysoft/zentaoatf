@@ -9,6 +9,7 @@ import run_all from '@iconify-icons/codicon/run-all';
 import play from '@iconify-icons/codicon/play';
 import play_circle from '@iconify-icons/codicon/play-circle';
 import close_circle from '@iconify-icons/fluent/dismiss-circle-24-regular';
+import close_circle_filled from '@iconify-icons/fluent/dismiss-circle-24-filled';
 import window_maximize from '@iconify-icons/fluent/maximize-24-regular';
 import window_minimize from '@iconify-icons/fluent/minimize-24-regular';
 import window_restore from '@iconify-icons/fluent/panel-separate-window-20-regular';
@@ -22,6 +23,7 @@ import more_vert from '@iconify-icons/fluent/more-vertical-24-regular';
 import more_horz from '@iconify-icons/fluent/more-horizontal-24-regular';
 import checkmark from '@iconify-icons/fluent/checkmark-24-regular';
 import checkmark_circle from '@iconify-icons/fluent/checkmark-circle-24-regular';
+import checkmark_circle_filled from '@iconify-icons/fluent/checkmark-circle-24-filled';
 import checkbox_checked from '@iconify-icons/fluent/checkbox-checked-24-regular';
 import checkbox_unchecked from '@iconify-icons/fluent/checkbox-unchecked-24-regular';
 import chevron_down from '@iconify-icons/fluent/chevron-down-20-regular';
@@ -64,6 +66,14 @@ import lock_open from '@iconify-icons/fluent/lock-open-20-regular';
 import hard_drive from '@iconify-icons/fluent/hard-drive-20-regular';
 import hard_drive_filled from '@iconify-icons/fluent/hard-drive-20-filled';
 import delete_20 from '@iconify-icons/fluent/delete-20-regular';
+import bug_arrow_counterclockwise from '@iconify-icons/fluent/bug-arrow-counterclockwise-20-regular';
+import timer from '@iconify-icons/fluent/timer-24-regular';
+import task_list_square from '@iconify-icons/fluent/task-list-square-ltr-24-regular';
+import subtract_circle from '@iconify-icons/fluent/subtract-circle-24-regular';
+import subtract_circle_filled from '@iconify-icons/fluent/subtract-circle-24-filled';
+import bug from '@iconify-icons/fluent/bug-24-regular';
+import bug_filled from '@iconify-icons/fluent/bug-24-filled';
+
 
 import circle_20 from '@iconify-icons/fluent/circle-20-filled';
 
@@ -80,6 +90,7 @@ export const icons = {
     'play': play,
     'play-circle': play_circle,
     'close-circle': close_circle,
+    'close-circle-filled': close_circle_filled,
     'window-maximize': window_maximize,
     'window-minimize': window_minimize,
     'window-restore': window_restore,
@@ -91,6 +102,7 @@ export const icons = {
     'more-horz': more_horz,
     'more-vert': more_vert,
     'checkmark-circle': checkmark_circle,
+    'checkmark-circle-filled': checkmark_circle_filled,
     'checkmark': checkmark,
     'checkbox-checked': checkbox_checked,
     'checkbox-unchecked': checkbox_unchecked,
@@ -136,6 +148,13 @@ export const icons = {
     'local-language' : language,
     'hard-drive' : hard_drive,
     'hard-drive-filled' : hard_drive_filled,
+    'bug-arrow-counterclockwise': bug_arrow_counterclockwise,
+    timer,
+    'task-list-square': task_list_square,
+    'subtract-circle': subtract_circle,
+    'subtract-circle-filled': subtract_circle_filled,
+    'bug': bug,
+    'bug-filled': bug_filled,
 
     'delete_20' :delete_20,
 }

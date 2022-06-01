@@ -41,7 +41,7 @@ const props = withDefaults(defineProps<{
   barClass?: string | object | (string | object)[],
   barStyle?: object | string,
   background?: false | string,
-  radius?: string | number | boolean | (string | number | boolean)[],
+  radius: string | number | boolean | (string | number | boolean)[],
   colors?: string | boolean | string[],
   progress: string | number | (string | number)[],
   height: number,
@@ -54,6 +54,7 @@ const props = withDefaults(defineProps<{
   scaling?: string | number
 }>(), {
   height: 8,
+  radius: '50%',
   colors: true,
   striped: false,
   background: 'var(--color-primary-pale)',

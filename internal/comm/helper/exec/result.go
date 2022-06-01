@@ -2,21 +2,22 @@ package execHelper
 
 import (
 	"fmt"
+	"regexp"
+	"strconv"
+	"strings"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	"github.com/easysoft/zentaoatf/internal/comm/domain"
+	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
 	langHelper "github.com/easysoft/zentaoatf/internal/comm/helper/lang"
-	"github.com/easysoft/zentaoatf/internal/comm/helper/script"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/comm/helper/script"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/comm/helper/websocket"
-	"github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
+	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	stringUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/string"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/mattn/go-runewidth"
-	"regexp"
-	"strconv"
-	"strings"
 )
 
 func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfReport, scriptIdx int,
@@ -104,8 +105,9 @@ func ValidateCaseResult(scriptFile string, langType string,
 	}
 	report.Total = report.Total + 1
 
+	relativePath := strings.TrimLeft(scriptFile, report.WorkspacePath)
 	csResult := commDomain.FuncResult{Id: caseId, ProductId: productId, Title: title,
-		Path: scriptFile, Status: caseResult, Steps: stepLogs}
+		Key: key, Path: scriptFile, RelativePath: relativePath, Status: caseResult, Steps: stepLogs}
 	report.FuncResult = append(report.FuncResult, csResult)
 
 	width := strconv.Itoa(len(strconv.Itoa(total)))

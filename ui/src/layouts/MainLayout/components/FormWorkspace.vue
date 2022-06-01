@@ -10,13 +10,12 @@
       <FormItem name="name" :label="t('name')" :info="validateInfos.name">
         <input v-model="modelRef.name" />
       </FormItem>
-      <input v-if="isElectron" v-model="modelRef.path"
-        @change="selectDir" />
-          <!-- <template #enterButton>
-            <a-button>选择</a-button>
-          </template> -->
-      <FormItem v-if="!isElectron" name="path" :label="t('path')" :info="validateInfos.path">
-        <input v-model="modelRef.path" />
+        
+      <FormItem name="path" :label="t('path')" :info="validateInfos.path">
+        <input v-if="isElectron" v-model="modelRef.path"
+             />
+        <Button  v-if="isElectron" @click="selectDir" class="state secondary select-dir-btn">{{t('select')}}</Button>
+        <input v-if="!isElectron" v-model="modelRef.path" />
       </FormItem>
       <FormItem name="type" :label="t('type')" :info="validateInfos.type">
         <select name="type" @change="selectType" v-model="modelRef.type">
@@ -71,6 +70,8 @@ import { useForm } from "@/utils/form";
 import Form from "./Form.vue";
 import FormItem from "./FormItem.vue";
 import {arrToMap} from "@/utils/array";
+import settings from "@/config/settings";
+import Button from "./Button.vue";
 
 export interface FormWorkspaceProps {
   show?: boolean;
@@ -151,7 +152,26 @@ const clearFormData = () => {
   modelRef.value = {};
 };
 
+const selectDir = () => {
+    console.log('selectDir')
+
+    const { ipcRenderer } = window.require('electron')
+    ipcRenderer.send(settings.electronMsg, 'selectDir')
+
+    ipcRenderer.on(settings.electronMsgReplay, (event, arg) => {
+    console.log(arg)
+    modelRef.value.path = arg
+    })
+}
+
 defineExpose({
   clearFormData,
 });
 </script>
+
+<style>
+.select-dir-btn{
+    position: absolute;
+    right: 20px;
+}
+</style>
