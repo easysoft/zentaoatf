@@ -138,12 +138,16 @@
                       <strong>{{t("checkpoint")}} {{checkpoint.numb}}</strong>
                     </div>
                     <div class="flex-1 small">
-                      <div class="text-gray">{{t('expect')}}</div>
-                      <pre class="darken-1 space-0 padding-sm scrollbar-y"><code>{{expectDesc(checkpoint.expect)}}&nbsp;</code></pre>
+                      <pre class="darken-1 space-0">
+                        <div class="text-gray darken-1 padding-h">{{t('expect')}}</div>
+                        <code class="padding-sm scrollbar-y">{{expectDesc(checkpoint.expect)}}&nbsp;</code>
+                      </pre>
                     </div>
                     <div class="flex-1 small">
-                      <div class="text-gray">{{t('actual')}}</div>
-                      <pre class="darken-1 space-0 padding-sm scrollbar-y" :class="checkpoint.status === 'fail' ? 'red-pale' : ''"><code>{{actualDesc(checkpoint.actual)}}&nbsp;</code></pre>
+                      <pre class="darken-1 space-0" :class="checkpoint.status === 'fail' ? 'red-pale' : ''">
+                        <div class="text-gray darken-1 padding-h">{{t('actual')}}</div>
+                        <code class="padding-sm scrollbar-y">{{actualDesc(checkpoint.actual)}}&nbsp;</code>
+                      </pre>
                     </div>
                   </div>
                 </div>
@@ -367,8 +371,13 @@ onMounted(() => {
 .result-step-checkpoint + .result-step-checkpoint {
   border-top: 1px solid var(--color-darken-1);
 }
-.result-step-checkpoint > pre {
-  max-height: 100px;
+.result-step-checkpoint pre {
+  white-space: normal;
+}
+.result-step-checkpoint pre > code {
+  white-space: pre-wrap;
+  display: block;
+  max-height: 120px;
   overflow-y: auto;
 }
 .unit-result:hover {
