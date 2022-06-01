@@ -28,7 +28,7 @@ const PageTabComponent = {
 };
 
 const pageRef = ref<
-  InstanceType< typeof TabPageScript> | 
+  InstanceType< typeof TabPageScript> |
   InstanceType< typeof TabPageScript> | null
   >(null)
 const save = () => {
@@ -49,5 +49,6 @@ defineExpose({
 <style lang="less" scoped>
 .tab-page {
   height: calc(100% - 30px);
+  position: relative;
 }
 </style>
