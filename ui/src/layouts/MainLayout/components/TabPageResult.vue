@@ -68,7 +68,7 @@
         </div>
       </div>
     </div>
-    <div class="result-cases space-top" v-if="report.unitResult?.length || report.funcResult?.length">
+    <div class="result-cases" v-if="report.unitResult?.length || report.funcResult?.length">
       <div class="padding single row gap align-center">
         <Icon icon="task-list-square" class="muted" />
         <strong>{{t('case_list') }}</strong>
@@ -105,14 +105,14 @@
         </div>
       </div>
       <div v-else class="func-result-list divider">
-        <div v-for="result in report.funcResult" :key="result.path" class="func-result" :class="isCollapsed(result) ? 'collapsed' : 'expaned'">
+        <div v-for="result in report.funcResult" :key="result.path || result.key" class="func-result" :class="isCollapsed(result) ? 'collapsed' : 'expaned'">
           <ListItem @click="toggleItemCollapsed(result)">
             <template #leading>
               <Icon v-if="result.status === 'pass'" icon="checkmark-circle-filled" class="text-green" />
               <Icon v-else-if="result.status === 'skip'" icon="subtract-circle-filled" class="muted" />
               <Icon v-else icon="close-circle-filled" class="text-red" />
             </template>
-            <div class="func-result-title"><code class="small">{{result.path}}</code></div>
+            <div class="func-result-title"><code class="small">{{result.path || result.relativePath}}</code></div>
             <template #trailing>
               <Button
                 v-if="result.status === 'fail' && currProduct.id"
