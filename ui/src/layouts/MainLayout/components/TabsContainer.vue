@@ -66,7 +66,7 @@ const activeID = computed((): string => {
 
 watch(activeID, () => {
   console.log('watch activeID', activeID)
-  if (activeID.value.indexOf('workspace-') === -1 && activeID.value.indexOf('result-') === -1) {
+  if (activeID.value.indexOf('script-') === -1 && activeID.value.indexOf('result-') === -1) {
     toolbarItems.value = []
   } else {
     toolbarItems.value = toolbarItemArr
@@ -80,8 +80,12 @@ const onToolbarClick = (e) => {
   console.log('onToolbarClick', e.key, activeID.value)
   switch (e.key) {
     case 'run': {
+      let path = activeID.value
+      if (path.indexOf('script-') === 0) {
+        path = path.replace('script-', '')
+      }
       bus.emit(settings.eventExec,
-         {execType: 'ztf', scripts: [{ path: activeID.value, workspaceId: currWorkspace.value.id }]});
+         {execType: 'ztf', scripts: [{ path: path, workspaceId: currWorkspace.value.id }]});
       break;
     }
     case 'save': {

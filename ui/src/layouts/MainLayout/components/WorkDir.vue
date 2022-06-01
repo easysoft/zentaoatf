@@ -272,7 +272,7 @@ const selectNode = (activeNode) => {
   scriptStore.dispatch('Script/getScript', node)
   if (node.type === 'file') {
     store.dispatch('tabs/open', {
-      id: 'workspace-' + node.path,
+      id: 'script-' + node.path,
       title: node.title,
       changed: false,
       type: 'script',

@@ -155,6 +155,7 @@ function _handleClick(event) {
     if (props.toggleOnClick) {
         collapsedMap[node.id] = !(collapsedMap[node.id] === undefined ? node.collapsed : collapsedMap[node.id]);
     }
+
     emit('active', {activeID: node.id});
 }
 
