@@ -130,24 +130,22 @@
                   <div class="padding-sm-h small" :class="step.status === 'fail' ? 'red' : 'green'">{{resultStatus(step.status)}}</div>
                   <span>{{step.name}}</span>
                 </div>
-                <div class="result-step-checkpoints">
-                  <div v-for="checkpoint in step.checkPoints" class="result-step-checkpoint padding-v row single gap-lg align-start" :key="checkpoint.numb">
-                    <div class="row single align-center gap flex-none">
-                      <Icon :icon="checkpoint.status === 'fail' ? 'close-circle' : 'checkmark-circle'" :class="checkpoint.status === 'fail' ? 'text-red' : 'text-green'" />
-                      <span>{{t("checkpoint")}} {{checkpoint.numb}}</span>
+                <div class="result-step-checkpoints padding-sm-top">
+                  <div v-for="checkpoint in step.checkPoints" class="result-step-checkpoint padding-sm-v row single align-stretch" :key="checkpoint.numb">
+                    <div class="flex-none padding-lg-right">
+                      <div class="row single align-center gap ">
+                        <Icon :icon="checkpoint.status === 'fail' ? 'close-circle' : 'checkmark-circle'" :class="checkpoint.status === 'fail' ? 'text-red' : 'text-green'" />
+                        <span>{{t("checkpoint")}} {{checkpoint.numb}}</span>
+                      </div>
                     </div>
-                    <div class="flex-1 small">
-                      <pre class="darken-1 space-0">
-                        <div class="text-gray darken-1 padding-sm-h">{{t('expect')}}</div>
-                        <code class="padding-sm scrollbar-y">{{expectDesc(checkpoint.expect)}}&nbsp;</code>
-                      </pre>
-                    </div>
-                    <div class="flex-1 small">
-                      <pre class="darken-1 space-0" :class="checkpoint.status === 'fail' ? 'red-pale' : ''">
-                        <div class="text-gray darken-1 padding-sm-h">{{t('actual')}}</div>
-                        <code class="padding-sm scrollbar-y">{{actualDesc(checkpoint.actual)}}&nbsp;</code>
-                      </pre>
-                    </div>
+                    <pre class="flex-1 small darken-1 space-0">
+                      <div class="text-gray darken-1 padding-sm-h">{{t('expect')}}</div>
+                      <code class="padding-sm scrollbar-y">{{expectDesc(checkpoint.expect)}}&nbsp;</code>
+                    </pre>
+                    <pre class="flex-1 small darken-1 space-0 divider-left-dark" :class="checkpoint.status === 'fail' ? 'red-pale' : ''">
+                      <div class="text-gray darken-1 padding-sm-h">{{t('actual')}}</div>
+                      <code class="padding-sm scrollbar-y">{{actualDesc(checkpoint.actual)}}&nbsp;</code>
+                    </pre>
                   </div>
                 </div>
               </div>
@@ -362,9 +360,6 @@ onMounted(() => {
 .unit-result :deep(.list-item),
 .func-result :deep(.list-item) {
   min-height: 36px;
-}
-.result-step-checkpoint + .result-step-checkpoint {
-  border-top: 1px solid var(--color-darken-1);
 }
 .result-step-checkpoint pre {
   white-space: normal;

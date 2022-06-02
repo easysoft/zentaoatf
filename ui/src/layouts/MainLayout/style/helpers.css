@@ -113,6 +113,19 @@
 /* Text weights 文本字重 */
 .text-bold, .strong {font-weight: bold;}
 
+/* Divider 分割线 */
+.divider, .divider-bottom {border-bottom: 1px solid var(--color-darken-1)}
+.divider-top    {border-top: 1px solid var(--color-darken-1)}
+.divider-left   {border-left: 1px solid var(--color-darken-1)}
+.divider-right  {border-right: 1px solid var(--color-darken-1)}
+.divider-all    {border: 1px solid var(--color-darken-1)}
+
+.divider-bottom-dark {border-bottom: 1px solid var(--color-darken-2)}
+.divider-top-dark    {border-top: 1px solid var(--color-darken-2)}
+.divider-left-dark   {border-left: 1px solid var(--color-darken-2)}
+.divider-right-dark  {border-right: 1px solid var(--color-darken-2)}
+.divider-all-dark    {border: 1px solid var(--color-darken-2)}
+
 /* Border colors 边框颜色 */
 .border           {border: var(--color-darken-5) 1px solid;}
 .border-primary   {border-color: var(--color-primary);}
@@ -124,12 +137,6 @@
 .border-gray      {border-color: var(--color-gray);}
 .border-heavy     {border-color: var(--color-darken-10);}
 .border-light     {border-color: var(--color-darken-3);}
-
-/* Divider 分割线 */
-.divider, .divider-bottom {border-bottom: 1px solid var(--color-darken-1)}
-.divider-top    {border-top: 1px solid var(--color-darken-1)}
-.divider-left   {border-left: 1px solid var(--color-darken-1)}
-.divider-right  {border-right: 1px solid var(--color-darken-1)}
 
 /* Muted 弱化 */
 .muted-off {opacity: 1;}
