@@ -80,6 +80,11 @@ func (s *SiteService) Update(site model.Site) (err error) {
 }
 
 func (s *SiteService) Delete(id uint) error {
+	err := s.WorkspaceRepo.DeleteBySite(id)
+	if err != nil {
+		return err
+	}
+
 	return s.SiteRepo.Delete(id)
 }
 

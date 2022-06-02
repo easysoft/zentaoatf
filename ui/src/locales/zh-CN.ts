@@ -227,6 +227,7 @@ export default {
     'pls_create_workspace': '请点击右上角链接新建工作目录',
     'pls_product': '请选择产品',
     'pls_lang': '请选择语言',
+    'pls_script_lang': '请选择脚本语言',
     'pls_title':  '请输入标题',
     'pls_name':  '请输入名称',
     'pls_select_case':  '请选择需要执行的用例',

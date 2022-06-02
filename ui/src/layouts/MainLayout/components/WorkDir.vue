@@ -1,7 +1,16 @@
 <template>
   <div class="workdir">
-    <Tree :data="treeData" :checkable="checkable" ref="treeRef" @active="selectNode" @check="checkNode"
-      @clickToolbar="onToolbarClicked" />
+    <Tree 
+    :data="treeData" 
+    :checkable="checkable"
+    ref="treeRef" 
+    @active="selectNode" 
+    @check="checkNode"
+    @clickToolbar="onToolbarClicked" 
+    @collapse="expandNode" 
+    :defaultCollapsedMap="collapsedMap"
+    :defaultCollapsed="true"
+    />
     <FormNode :show="showModal" @submit="createNode" @cancel="modalClose" ref="formNode" />
   </div>
 </template>
@@ -38,6 +47,7 @@ import debounce from "lodash.debounce";
 import throttle from "lodash.debounce";
 import Modal from "@/utils/modal"
 import FormNode from "./FormNode.vue";
+import { key } from "localforage";
 
 const { t } = useI18n();
 
@@ -63,7 +73,9 @@ scope = scope === '-' ? '' : scope
 const filerType = ref('')
 const filerValue = ref('')
 const showModal = ref(false)
+const toolbarAction = ref('')
 const currentNode = ref({} as any) // parent node for create node
+const collapsedMap = ref({} as any)
 
 onMounted(() => {
   console.log('onMounted')
@@ -74,15 +86,16 @@ onMounted(() => {
 })
 
 const onToolbarClicked = (e) => {
-  const node = e.node == undefined ? treeDataMap[''] : treeDataMap[e.node.id]
+  const node = e.node == undefined ? treeDataMap.value[''] : treeDataMap.value[e.node.id]
   store.dispatch('Script/changeWorkspace',
     { id: node.workspaceId, type: node.workspaceType })
 
   currentNode.value = node;
   if (e.event.key == 'runTest') {
     runTest(currentNode);
-  } else if (e.event.key == 'createFile' || e.event.key == 'createWorkspace') {
+  } else if (e.event.key == 'createFile' || e.event.key == 'createWorkspace' || e.event.key == 'createDir') {
     showModal.value = true;
+    toolbarAction.value = e.event.key;
   } else if (e.event.key === 'deleteWorkspace') {
     Modal.confirm({
       title: t('delete'),
@@ -244,6 +257,13 @@ const getOpenKeys = (treeNode: any, openAll: boolean) => { // expand top one lev
   console.log('keys', expandedKeys.value)
 }
 
+watch(expandedKeys, () => {
+    console.log('watch expandedKeys')
+    for (let treeDataKey in treeDataMap.value) {
+        collapsedMap.value[treeDataKey] = expandedKeys.value.indexOf(treeDataKey) !== -1 ? false : true
+    }
+}, { deep: true })
+
 const selectedKeys = ref<string[]>([])
 const checkedKeys = ref<string[]>([])
 
@@ -263,7 +283,7 @@ onUnmounted(() => {
 const selectNode = (activeNode) => {
   console.log('selectNode', activeNode.activeID)
 
-  const node = treeDataMap[activeNode.activeID]
+  const node = treeDataMap.value[activeNode.activeID]
   if (node.workspaceType !== 'ztf') checkNothing()
 
   store.dispatch('Script/getScript', node)
@@ -283,6 +303,7 @@ const selectNode = (activeNode) => {
 
 const checkNode = (checkedKeys) => {
   console.log('checkNode', checkedKeys.checked)
+  store.dispatch('Script/setCheckedNodes', checkedKeys.checked)
   //   scriptStore.dispatch('Script/changeWorkspace',
   //       {id: e.node.dataRef.workspaceId, type: e.node.dataRef.workspaceType})
 }
@@ -296,10 +317,10 @@ let menuStyle = ref({} as any)
 const editedData = ref<any>({})
 const nameFormVisible = ref(false)
 
-const treeDataMap = {}
+const treeDataMap = computed<any>(() => store.state.Script.treeDataMap);
 const getNodeMapCall = throttle(async () => {
   treeData.value.forEach(item => {
-    getNodeMap(item, treeDataMap)
+    getNodeMap(item, treeDataMap.value)
   })
 }, 300)
 
@@ -310,9 +331,7 @@ const formNode = ref({} as any)
 const createNode = (formData) => {
   const mode = 'child';
   let type = 'dir';
-  if (currentNode.value.isLeaf) {
-    type = 'node';
-  }
+  if(toolbarAction.value === 'createFile') type = 'node'
   store.dispatch('Script/createScript', {
     name: formData.name, mode: mode, type: type, target: currentNode.value.path,
     workspaceId: currentNode.value.workspaceId, productId: currProduct.value.id,
@@ -336,6 +355,22 @@ const createNode = (formData) => {
   })
 }
 
+const expandNode = (expandedKeysMap) => {
+    console.log('expandNode', expandedKeysMap.collapsed)
+    for(var key in expandedKeysMap.collapsed){
+        if(expandedKeysMap.collapsed[key]){
+            expandedKeys.value.forEach((item, index) => {
+                if(item === key){
+                    expandedKeys.value.splice(index, 1)
+                }
+            })
+        }else{
+            expandedKeys.value.push(key)
+        }
+    }
+    setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
+}
+
 defineExpose({
   get isCheckable() {
     return checkable.value;
@@ -347,7 +382,8 @@ defineExpose({
     return treeRef.value?.toggleAllCollapsed();
   },
   toggleCheckable,
-  onToolbarClicked
+  onToolbarClicked,
+  loadScripts
 });
 </script>
 

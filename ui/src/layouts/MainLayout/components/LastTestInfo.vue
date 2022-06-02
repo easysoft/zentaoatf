@@ -27,7 +27,12 @@ const latest = () => {
 latest();
 
 const showDetail = (item) => {
-    console.log(item)
+    store.dispatch('tabs/open', {
+      id: 'result-' + item.no,
+      title: item.total != 1 ? item.workspaceName + '(' + item.total + ')' : item.testScriptName,
+      type: 'result',
+      data: {seq:item.seq, workspaceId: item.workspaceId}
+    });
 }
 
 onMounted(() => {

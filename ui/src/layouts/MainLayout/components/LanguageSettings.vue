@@ -41,8 +41,6 @@ const changeLang = (key): void => {
 
 <style lang="less" scoped>
 .lang-settings {
-  padding: 6px;
-
   .lang-label {
     display: inline-block;
     margin-right: 5px;

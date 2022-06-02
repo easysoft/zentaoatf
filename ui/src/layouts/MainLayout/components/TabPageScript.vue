@@ -48,7 +48,7 @@ watch(script, () => {
 
             return
         }
-
+        
         scriptCode.value = script.value.code ? script.value.code : t('empty')
         lang.value = script.value.lang
         setTimeout(() => {
@@ -59,14 +59,27 @@ watch(script, () => {
         scriptCode.value = ''
         lang.value = ''
     }
+    store.dispatch('tabs/update', {
+        id: props.tab.id,
+        title: props.tab.title,
+        changed: script.value.code != scriptCode.value,
+        type: 'script',
+        data: props.tab.data
+    });
 }, { deep: false })
 
+const isFirstLoad = ref(false) // update code from MonacoEditor when first load scriptCode from store.
+
 const editorChange = (newScriptCode) => {
+    if(!isFirstLoad.value){
+        scriptCode.value = newScriptCode
+        isFirstLoad.value = true
+    }
     newScriptCode = newScriptCode.replace(/\n$/, '');
     let oldScriptCode = scriptCode.value;
     oldScriptCode = oldScriptCode.replace(/\n$/, '');
-    let changed = newScriptCode == oldScriptCode ? false : true;
-  store.dispatch('tabs/update', {
+    let changed = newScriptCode === oldScriptCode ? false : true;
+    store.dispatch('tabs/update', {
         id: props.tab.id,
         title: props.tab.title,
         changed: changed,
@@ -76,13 +89,14 @@ const editorChange = (newScriptCode) => {
 }
 
 const save = () => {
-    const code = editorRef.value?.getValue()
+  const code = editorRef.value?.getValue()
   store.dispatch('Script/updateCode',{
         workspaceId: currWorkspace.value.id,
         path: script.value.path,
         code: code
     }).then(() => {
         console.info("success")
+        store.dispatch('Script/getScript', {type: 'file', ...script.value})
         notification.success({
           message: t('save_success'),
         })

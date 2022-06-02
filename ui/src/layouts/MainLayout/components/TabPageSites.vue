@@ -1,7 +1,7 @@
 <template>
   <div class="site-main space-top space-left space-right">
     <div class="t-card-toolbar">
-      <div class="left">
+      <div class="left strong">
         {{ t("site_management") }}
       </div>
       <Button
@@ -219,8 +219,16 @@ const createSite = (formData) => {
     store.dispatch('Site/save', formData).then((response) => {
         if (response) {
             formSite.value.clearFormData()
-            notification.success({message: t('save_success')});
             showCreateSiteModal.value = false;
+            store.dispatch('Zentao/fetchSitesAndProduct').then((success) => {
+              notification.success({message: t('save_success')});
+              store.dispatch("Site/list", {
+                keywords: queryParams.value.keywords,
+                enabled: queryParams.value.enabled,
+                pageSize: queryParams.value.pageSize,
+                page: 1,
+              });
+            })
         }
     })
 };

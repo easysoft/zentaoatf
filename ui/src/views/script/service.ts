@@ -235,11 +235,12 @@ export function scriptTreeAddAttr(treeData) {
         item.checkable = item.workspaceType == 'ztf' ? true : false;
         if (item.isLeaf) {
             item.toolbarItems = [
-                { hint: 'create_file', icon: 'file-add', key: 'createFile'},
+                // { hint: 'create_file', icon: 'file-add', key: 'createFile'},
             ];
         } else {
             item.toolbarItems = [
-                {hint: 'create_workspace', icon: 'folder-add', key: 'createFile'},
+                {hint: 'create_workspace', icon: 'folder-add', key: 'createDir'},
+                { hint: 'create_file', icon: 'file-add', key: 'createFile'},
             ];
             if(item.workspaceType != 'ztf'){
                 item.toolbarItems.push({hint: testToolMap[item.workspaceType], icon: 'play', hintI18n: 'test', key: 'runTest'})

@@ -104,9 +104,9 @@ const selectType = () => {
     if (modelRef.value.type !== 'ztf') {
         cmdSample.value = cmdMap.value[modelRef.value.type].cmd
         modelRef.value.cmd = cmdSample.value.split('product_id')[1].trim()
-        rulesRef.value.lang = [{ required: false, msg: t("select_ui_lang") }]
+        rulesRef.value.lang = [{ required: false, msg: t("pls_script_lang") }]
     }else{
-        rulesRef.value.lang = [{ required: true, msg: t("select_ui_lang") }]
+        rulesRef.value.lang = [{ required: true, msg: t("pls_script_lang") }]
     }
 }
 
@@ -121,7 +121,7 @@ const showCmd = computed(() => { return modelRef.value.type && modelRef.value.ty
 const rulesRef = ref({
   name: [{ required: true, msg: t("pls_name") }],
   path: [{ required: true, msg: t("pls_workspace_path") }],
-  lang: [{ required: true, msg: t("select_ui_lang") }],
+  lang: [{ required: true, msg: t("pls_script_lang") }],
   type: [{ required: true, msg: t("pls_workspace_type") }],
   cmd: [
         {
