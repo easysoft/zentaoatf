@@ -9,6 +9,7 @@
     @clickToolbar="onToolbarClicked" 
     @collapse="expandNode" 
     :defaultCollapsedMap="collapsedMap"
+    :defaultCollapsed="true"
     />
     <FormNode :show="showModal" @submit="createNode" @cancel="modalClose" ref="formNode" />
   </div>

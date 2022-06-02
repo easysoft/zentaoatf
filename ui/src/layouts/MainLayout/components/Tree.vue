@@ -35,6 +35,7 @@ export interface TreeProps {
     defaultActiveID?: string,
     defaultCheckedMap?: Record<string, boolean | 'indeterminate'>,
     toggleOnClick?: boolean,
+    defaultCollapsed?: boolean,
 }
 
 const props = withDefaults(defineProps<TreeProps>(), {
@@ -45,7 +46,8 @@ const props = withDefaults(defineProps<TreeProps>(), {
     nodeCollapsedIcon: 'folder-filled',
     leafIcon: 'file-text',
     inheritStyleFromParent: true,
-    checkable: undefined
+    checkable: undefined,
+    defaultCollapsed: false
 });
 
 const collapsedMap = reactive(props.defaultCollapsedMap ?? {});
@@ -106,6 +108,8 @@ function _convertNodeData(node: TreeNodeData, parent: TreeNodeData | undefined, 
     
     if (collapsedMap[node.id] !== undefined) {
         node.collapsed = collapsedMap[node.id];
+    }else{
+        node.collapsed = props.defaultCollapsed;
     }
     if (checkedMap[node.id] !== undefined) {
         node.checked = checkedMap[node.id];
