@@ -209,7 +209,15 @@ const createInterpreter = (formData) => {
     margin-top: 1rem;
 }
 .t-card-toolbar{
+    display: flex;
+    justify-content: space-between;
     align-items: flex-end;
     margin-bottom: 1rem;
+}
+.tab-setting-btn {
+  border: none;
+  background: none;
+  color: #1890ff;
+  border-style: hidden !important;
 }
 </style>
