@@ -2,7 +2,6 @@ package web
 
 import (
 	"fmt"
-	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	"github.com/easysoft/zentaoatf/internal/server/core/module"
 	"github.com/easysoft/zentaoatf/internal/server/middleware"
