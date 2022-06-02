@@ -45,10 +45,6 @@ func (webServer *WebServer) GetSources() []map[string]string {
 	routeLen := len(webServer.app.GetRoutes())
 	ch := make(chan map[string]string, routeLen)
 	for _, r := range webServer.app.GetRoutes() {
-		if strings.Index(r.Path, "test123") > -1 {
-			logUtils.Info("")
-		}
-
 		r := r
 		// 去除非接口路径
 		handerNames := context.HandlersNames(r.Handlers)
