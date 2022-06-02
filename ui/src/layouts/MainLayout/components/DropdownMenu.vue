@@ -1,7 +1,7 @@
 <template>
   <div
     class="dropdown-menu"
-    :class="menuClass ?? 'shadow-lg canvas rounded'"
+    :class="menuClass ?? 'layer rounded'"
     :style="menuFinalStyle"
     @click="_handleClickMenu"
     ref="menuRef"
