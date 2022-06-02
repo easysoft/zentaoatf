@@ -73,7 +73,7 @@ func (r *WorkspaceRepo) Get(id uint) (po model.Workspace, err error) {
 }
 
 func (r *WorkspaceRepo) Create(workspace model.Workspace) (id uint, err error) {
-	po, err := r.FindDuplicate(workspace.Name, workspace.Path, 0, workspace.ProductId)
+	po, err := r.FindDuplicate(workspace.Name, workspace.Path, 0, workspace.ProductId, workspace.SiteId)
 	if po.ID != 0 {
 		return 0, errors.New(fmt.Sprintf("工作目录%s（%s）已存在", workspace.Name, workspace.Path))
 	}
@@ -90,7 +90,7 @@ func (r *WorkspaceRepo) Create(workspace model.Workspace) (id uint, err error) {
 }
 
 func (r *WorkspaceRepo) Update(workspace model.Workspace) error {
-	po, err := r.FindDuplicate(workspace.Name, workspace.Path, workspace.ID, workspace.ProductId)
+	po, err := r.FindDuplicate(workspace.Name, workspace.Path, workspace.ID, workspace.ProductId, workspace.SiteId)
 	if po.ID != 0 {
 		return errors.New(fmt.Sprintf("工作目录%s(%s)已存在", workspace.Name, workspace.Path))
 	}
@@ -116,13 +116,23 @@ func (r *WorkspaceRepo) Delete(id uint) (err error) {
 	return
 }
 
+func (r *WorkspaceRepo) DeleteBySite(siteId uint) (err error) {
+	err = r.DB.Where("site_id = ?", siteId).Delete(&model.Workspace{}).Error
+
+	if err != nil {
+		logUtils.Errorf(color.RedString("by siteId, delete workspace failed, error: %s.", err.Error()))
+	}
+
+	return
+}
+
 func (r *WorkspaceRepo) DeleteByPath(path string, productId uint) (err error) {
 	err = r.DB.Where("path = ? AND product_id = ?", path, productId).
 		Delete(&model.Workspace{}).
 		Error
 
 	if err != nil {
-		logUtils.Errorf(color.RedString("delete workspace failed, error: %s.", err.Error()))
+		logUtils.Errorf(color.RedString("by path, delete workspace failed, error: %s.", err.Error()))
 		return
 	}
 
@@ -153,9 +163,10 @@ func (r *WorkspaceRepo) FindByPath(workspacePath string) (po model.Workspace, er
 	return
 }
 
-func (r *WorkspaceRepo) FindDuplicate(name, url string, id, productId uint) (po model.Workspace, err error) {
+func (r *WorkspaceRepo) FindDuplicate(name, url string, id, productId uint, siteId uint) (po model.Workspace, err error) {
 	db := r.DB.Model(&model.Workspace{}).
 		Where("NOT deleted").
+		Where("site_id = ?", siteId).
 		Where("product_id = ?", productId).
 		Where("name = ? OR path = ?", name, url)
 
