@@ -88,7 +88,7 @@ import {
 import FormWorkspace from "./FormWorkspace.vue";
 import notification from "@/utils/notification";
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const store = useStore<{ Zentao: ZentaoData, Script: ScriptData }>();
 const currSite = computed<any>(() => store.state.Zentao.currSite);
@@ -104,10 +104,32 @@ const displayTypes = ref([
   {key: 'module', title: t('by_module')},
 ])
 
+const setDisplayTypes = () => {
+  displayTypes.value = [
+    {key: 'workspace', title: t('by_workspace')},
+    {key: 'module', title: t('by_module')},
+  ]
+}
+
 const FilterTyles = ref([
   {key: 'suite', title: t('by_suite')},
   {key: 'task', title: t('by_task')},
 ])
+
+const setFilterTypes = () => {
+  FilterTyles.value = [
+    {key: 'suite', title: t('by_suite')},
+  {key: 'task', title: t('by_task')},
+  ]
+}
+watch(
+  locale,
+  () => {
+    setFilterTypes();
+    setDisplayTypes();
+  },
+  { deep: true }
+);
 
 const loadDisplayBy = async () => {
   displayBy.value = await getScriptDisplayBy(currSite.value.id, currProduct.value.id)

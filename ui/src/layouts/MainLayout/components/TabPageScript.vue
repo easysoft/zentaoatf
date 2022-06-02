@@ -28,7 +28,7 @@ const store = useStore<{ Script: ScriptData }>();
 const script = computed<any>(() => store.state.Script.detail);
 const currWorkspace = computed<any>(() => store.state.Script.currWorkspace);
 const scriptCode = ref('')
-const path = ref('')
+const currentScript = ref({} as any)
 
 const lang = ref('')
 const editorOptions = ref(MonacoOptions)
@@ -36,11 +36,11 @@ const editorRef = ref<InstanceType<typeof MonacoEditor>>()
 
 const init = ref(false)
 watch(script, () => {
-    if(script.value == undefined || (path.value !== '' && path.value !== script.value.path)){
+    if(script.value == undefined || (currentScript.value.path!==undefined && currentScript.value.path !== script.value.path)){
         return
     }
     console.log('watch script', script)
-    path.value = path.value === '' ? script.value.path : path.value
+    currentScript.value = script.value
     if (script.value) {
         if (script.value.code === ScriptFileNotExist) {
             scriptCode.value = ScriptFileNotExist
@@ -92,11 +92,11 @@ const save = () => {
   const code = editorRef.value?.getValue()
   store.dispatch('Script/updateCode',{
         workspaceId: currWorkspace.value.id,
-        path: script.value.path,
+        path: currentScript.value.path,
         code: code
     }).then(() => {
         console.info("success")
-        store.dispatch('Script/getScript', {type: 'file', ...script.value})
+        store.dispatch('Script/getScript', {type: 'file', ...currentScript.value})
         notification.success({
           message: t('save_success'),
         })
