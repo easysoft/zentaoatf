@@ -50,19 +50,21 @@ import {useRouter} from "vue-router";
 import {useStore} from "vuex";
 import {computed, onMounted, watch, ref} from "vue";
 import {momentUnixDefFormat} from "@/utils/datetime";
+import {ZentaoData} from "@/store/zentao";
 
 const { t } = useI18n();
 const router = useRouter();
 
 const momentTime = momentUnixDefFormat
 
-const store = useStore<{ Result: StateType }>();
+const store = useStore<{ Zentao: ZentaoData, Result: StateType }>();
 const models = computed<any[]>(() => store.state.Result.queryResult.result)
 
 const pagination = computed<PaginationConfig>(() => store.state.Result.queryResult.pagination);
 const queryParams = ref<QueryParams>({
     keywords: '', enabled: '1', page: pagination.value.page, pageSize: pagination.value.pageSize
 });
+const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
 const list = (page: number) => {
     store.dispatch('Result/list', {
@@ -72,6 +74,10 @@ const list = (page: number) => {
     page: page});
 }
 list(1);
+
+watch(currProduct, () => {
+  list(1);
+}, { deep: true })
 
 const refreshExec = (e, item) => {
     console.log(e, item)

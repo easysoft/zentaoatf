@@ -40,6 +40,10 @@ watch(script, () => {
         return
     }
     console.log('watch script', script)
+    if(!isFirstLoad.value){
+        scriptCode.value = String(editorRef.value?.getValue())
+        isFirstLoad.value = true
+    }
     currentScript.value = script.value
     if (script.value) {
         if (script.value.code === ScriptFileNotExist) {
@@ -71,10 +75,6 @@ watch(script, () => {
 const isFirstLoad = ref(false) // update code from MonacoEditor when first load scriptCode from store.
 
 const editorChange = (newScriptCode) => {
-    if(!isFirstLoad.value){
-        scriptCode.value = newScriptCode
-        isFirstLoad.value = true
-    }
     newScriptCode = newScriptCode.replace(/\n$/, '');
     let oldScriptCode = scriptCode.value;
     oldScriptCode = oldScriptCode.replace(/\n$/, '');
