@@ -9,6 +9,7 @@
       class="list-item-icon"
       v-if="icon"
       :icon="icon"
+      :size="iconSize"
       :class="iconClass"
       :color="iconColor"
       key="icon"
@@ -42,6 +43,7 @@
       :icon="trailingIcon"
       :class="trailingIconClass"
       :color="trailingIconColor"
+      :size="trailingIconSize"
       key="trailingIcon"
     />
     <Icon
@@ -131,9 +133,6 @@ function _handleClick(originalEvent) {
   gap: var(--space-sm);
 }
 .divider > .list-item + .list-item,
-.list-item.divider + .list-item {
-  border-top: 1px solid var(--color-darken-1)
-}
 .list-item-subtitle,
 .compact > .list-item .list-item-title,
 .list-item.compact .list-item-title {

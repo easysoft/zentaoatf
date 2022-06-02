@@ -205,11 +205,6 @@ const createInterpreter = (formData) => {
   text-align: center;
   padding: 20px 0;
 }
-.site-main{
-    padding: 8px;
-    height: 100%;
-    overflow: auto;
-}
 .setting-space-top{
     margin-top: 1rem;
 }

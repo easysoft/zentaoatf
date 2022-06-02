@@ -1,54 +1,60 @@
 <template>
-  <div class="site-main space-top space-left space-right">
-    <div class="t-card-toolbar">
-      <div class="left strong">
-        {{ t("site_management") }}
-      </div>
-      <Button
-      class="state primary"
-        size="sm"
-        @click="create()"
-        >
-        {{t('create_site')}}
-      </Button>
-    </div>
-    <Table
-      v-if="models.length > 0"
-      :columns="columns"
-      :rows="models"
-      :isHidePaging="true"
-      :isSlotMode="true"
-      :sortable="{}"
-    >
-      <template #status="record">
-        {{ disableStatus(record.value.disabled) }}
-      </template>
-      <template #createdAt="record">
-        <span v-if="record.value.createdAt">{{
-          momentUtc(record.value.createdAt)
-        }}</span>
-      </template>
-
-      <template #action="record">
-        <Button
-          class="tab-setting-btn"
-          v-if="record.value.url"
-          @click="() => edit(record.value.id)"
+  <div class="site-main">
+    <header class="single row align-center padding canvas sticky shadow-border-bottom">
+      <strong>{{t('site_num', {count: sites.length})}}</strong>
+      <div class="flex-auto row justify-end">
+         <Button
+          class="state primary rounded"
+          icon="add"
           size="sm"
-          >{{ t("edit") }}</Button
+          @click="create()"
         >
-        <Button
-          class="tab-setting-btn"
-          v-if="record.value.url"
-          @click="() => remove(record)"
-          size="sm"
-          >{{ t("delete") }}
+          {{t('create_site')}}
         </Button>
-      </template>
-    </Table>
-    <p v-else class="empty-tip">
-    {{ t("empty_data") }}
-    </p>
+      </div>
+    </header>
+
+    <List v-if="sites.length">
+      <ListItem
+        v-for="site in sites"
+        :key="site.id"
+        icon="zentao"
+        iconClass="text-blue"
+        iconSize="2em"
+        divider
+        no-state
+      >
+        <div class="row single align-center gap space-xs-v">
+          <span class="text-blue">{{site.name}}</span>
+          <div class="row single align-center gap-sm small muted"><Icon icon="link" size="1em" /> {{site.url}}</div>
+        </div>
+        <div class="row single align-center gap muted">
+          <div class="row single align-center gap-sm small">
+            <Icon icon="person" size="1em" /> {{site.username}}
+          </div>
+          <div class="row single align-center gap-sm small">
+            <Icon icon="clock" size="1em" /> {{t('create_time')}}：{{momentUtc(site.createdAt)}}
+          </div>
+        </div>
+        <template #trailing>
+          <Button
+            class="pure rounded text-primary"
+            icon="edit"
+            @click="() => edit(site.id)"
+          >
+            {{t('edit')}}
+          </Button>
+          <Button
+            class="pure rounded text-primary"
+            icon="delete"
+            @click="() => remove(site)"
+          >
+            {{t('delete')}}
+          </Button>
+        </template>
+      </ListItem>
+    </List>
+    <div v-else class="center padding-xl empty-tip">{{ t("empty_data") }}</div>
 
     <FormSite
       :show="showCreateSiteModal"
@@ -64,122 +70,32 @@
 import { defineProps } from "vue";
 import { PageTab } from "@/store/tabs";
 import { useI18n } from "vue-i18n";
-import {
-  computed,
-  ComputedRef,
-  defineComponent,
-  onMounted,
-  ref,
-  Ref,
-  watch,
-} from "vue";
+import { ref } from "vue";
 import { useStore } from "vuex";
 import { StateType } from "@/views/site/store";
 import { momentUtcDef } from "@/utils/datetime";
-import { PaginationConfig, QueryParams } from "@/types/data";
-import { ZentaoData } from "@/store/zentao";
 import { disableStatusDef } from "@/utils/decorator";
-import Table from "./Table.vue";
+import List from "./List.vue";
+import ListItem from "./ListItem.vue";
+import Icon from "./Icon.vue";
 import notification from "@/utils/notification";
 import Modal from "@/utils/modal";
 import Button from "./Button.vue";
 import FormSite from "./FormSite.vue";
+import useSites from '../hooks/useSites';
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 const momentUtc = momentUtcDef;
-const disableStatus = disableStatusDef;
 
 const props = defineProps<{
   tab: PageTab;
 }>();
 
 const editId = ref(0);
-
-onMounted(() => {
-  console.log("onMounted");
-});
-
-watch(
-  locale,
-  () => {
-    console.log("watch locale", locale);
-    setColumns();
-  },
-  { deep: true }
-);
-
-const columns = ref([] as any[]);
-const setColumns = () => {
-  columns.value = [
-    {
-      isKey: true,
-      label: t("no"),
-      field: "id",
-       width: "60px",
-    },
-    {
-      label: t("name"),
-      field: "name",
-    },
-    {
-      label: t("zentao_url"),
-      field: "url",
-    },
-    {
-      label: t("username"),
-      field: "username",
-      width: "80px",
-    },
-    {
-      label: t("status"),
-      field: "status",
-       width: "100px",
-    },
-    {
-      label: t("create_time"),
-      field: "createdAt",
-       width: "160px",
-    },
-    {
-      label: t("opt"),
-      field: "action",
-       width: "120px",
-    },
-  ];
-};
-setColumns();
-
-console.log();
-
 const store = useStore<{ Site: StateType }>();
-const showCreateSiteModal = ref(!!props.tab?.data?.showCreateSiteModal)
-const models = computed<any[]>(() => store.state.Site.queryResult.result);
+const showCreateSiteModal = ref(!!props.tab?.data?.showCreateSiteModal);
 
-const queryParams = ref<QueryParams>({
-  keywords: "",
-  enabled: "1",
-  page: 1,
-  pageSize: 100,
-});
-
-const model = ref({} as any);
-
-const loading = ref<boolean>(true);
-const list = (page: number) => {
-  loading.value = true;
-  store.dispatch("Site/list", {
-    keywords: queryParams.value.keywords,
-    enabled: queryParams.value.enabled,
-    pageSize: queryParams.value.pageSize,
-    page: page,
-  });
-  loading.value = false;
-};
-list(1);
-
-onMounted(() => {
-  console.log("onMounted");
-});
+const {fetchSites, sites} = useSites();
 
 const create = () => {
   console.log("create");
@@ -195,16 +111,16 @@ const edit = (id) => {
 const remove = (item) => {
   Modal.confirm({
     title: t("confirm_delete", {
-      name: item.value.name,
+      name: item.name,
       typ: t("zentao_site"),
     }),
     okText: t("confirm"),
     cancelText: t("cancel"),
     onOk: async () => {
-      store.dispatch("Site/delete", item.value.id).then((success) => {
+      store.dispatch("Site/delete", item.id).then((success) => {
         store.dispatch("Zentao/fetchSitesAndProduct").then((success) => {
           notification.success(t("delete_success"));
-          list(1);
+          fetchSites();
         });
       });
     },
@@ -216,34 +132,18 @@ const modalClose = () => {
 }
 const formSite = ref({} as any)
 const createSite = (formData) => {
-    store.dispatch('Site/save', formData).then((response) => {
-        if (response) {
-            formSite.value.clearFormData()
-            showCreateSiteModal.value = false;
-            store.dispatch('Zentao/fetchSitesAndProduct').then((success) => {
-              notification.success({message: t('save_success')});
-              store.dispatch("Site/list", {
-                keywords: queryParams.value.keywords,
-                enabled: queryParams.value.enabled,
-                pageSize: queryParams.value.pageSize,
-                page: 1,
-              });
-            })
-        }
-    })
+  store.dispatch('Site/save', formData).then((response) => {
+    if (response) {
+      formSite.value.clearFormData()
+      showCreateSiteModal.value = false;
+      store.dispatch('Zentao/fetchSitesAndProduct').then((success) => {
+        notification.success({message: t('save_success')});
+        fetchSites();
+      });
+    }
+  })
 };
-
 </script>
 
 <style>
-.tab-setting-btn {
-  border: none;
-  background: none;
-  color: #1890ff;
-  border-style: hidden !important;
-}
-.t-card-toolbar{
-    display: flex;
-    justify-content: space-between;
-}
 </style>

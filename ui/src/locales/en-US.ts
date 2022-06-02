@@ -37,7 +37,8 @@ export default {
     'only_failed':  'Only Failed',
 
     'zentao_site': 'Zentao Site',
-    'site_management': 'Site Management',
+    'site_management': 'Site management',
+    'site_num': '{count} sites',
     'create_site': 'Create Site',
     'edit_site': 'Edit Site',
     'zentao_config': 'Site Config',

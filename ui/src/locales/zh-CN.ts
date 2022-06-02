@@ -41,6 +41,7 @@ export default {
 
     'zentao_site': '禅道站点',
     'site_management': '站点管理',
+    'site_num': '{count} 个站点',
     'create_site': '新建站点',
     'edit_site': '编辑站点',
     'zentao_config': '站点配置',
