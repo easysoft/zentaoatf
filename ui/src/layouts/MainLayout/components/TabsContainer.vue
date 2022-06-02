@@ -63,14 +63,13 @@ const activeID = computed((): string => {
 });
 
 watch(activeID, () => {
-  console.log('watch activeID', activeID)
-  if (activeID.value.indexOf('script-') === -1 && activeID.value.indexOf('result-') === -1) {
-    toolbarItems.value = []
-  } else {
+  console.log('watch activeID', activeID.value)
+  if (activeID.value.indexOf('script-') > -1) {
     toolbarItems.value = toolbarItemArr
+  } else {
+    toolbarItems.value = []
   }
 }, {deep: true})
-
 
 const testTabIDRef = ref(0);
 

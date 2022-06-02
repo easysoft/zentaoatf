@@ -20,14 +20,14 @@
           @click="exec('all')"
         />
         <Button
-          v-if="report.testType != 'unit'"
+          v-if="report.testType != 'unit' && report.fail > 0"
           class="space-left primary rounded"
           icon="bug-arrow-counterclockwise"
           @click="exec('fail')"
         >
           {{t('re_exec_failed') }}
         </Button>
-        <Button v-else @click="exec('')" class="space-left primary rounded">
+        <Button v-if="report.testType === 'unit'" @click="exec('')" class="space-left primary rounded">
           {{t('re_exec_unit') }}
         </Button>
       </div>
@@ -249,19 +249,6 @@ function toggleItemCollapsed(item) {
 const exec = (scope): void => {
   const testType = report.value.testType;
   if (testType === "func") {
-    const getCaseIdsInReport = (reportVal) => {
-      const allCases: object[] = [];
-      const failedCases: object[] = [];
-
-      reportVal.funcResult.forEach(cs => {
-        const item = {path: cs.path, workspaceId: reportVal.workspaceId}
-        allCases.push(item)
-        if (cs.status === 'fail') failedCases.push(item)
-      })
-
-      return {all: allCases, fail: failedCases}
-    }
-
     const caseMap = getCaseIdsInReport(report.value)
     const cases = caseMap[scope]
     bus.emit(settings.eventExec, {execType: 'ztf', scripts: cases});
@@ -278,6 +265,18 @@ const exec = (scope): void => {
     bus.emit(settings.eventExec, data);
   }
 };
+const getCaseIdsInReport = (reportVal) => {
+  const allCases: object[] = [];
+  const failedCases: object[] = [];
+
+  reportVal.funcResult.forEach(cs => {
+    const item = {path: cs.path, workspaceId: reportVal.workspaceId}
+    allCases.push(item)
+    if (cs.status === 'fail') failedCases.push(item)
+  })
+
+  return {all: allCases, fail: failedCases}
+}
 
 // 提交结果
 const showSubmitResultModal = ref(false)
