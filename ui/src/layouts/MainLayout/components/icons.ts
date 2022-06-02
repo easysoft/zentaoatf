@@ -73,6 +73,15 @@ import subtract_circle from '@iconify-icons/fluent/subtract-circle-24-regular';
 import subtract_circle_filled from '@iconify-icons/fluent/subtract-circle-24-filled';
 import bug from '@iconify-icons/fluent/bug-24-regular';
 import bug_filled from '@iconify-icons/fluent/bug-24-filled';
+import person from '@iconify-icons/fluent/person-24-regular';
+import person_filled from '@iconify-icons/fluent/person-24-filled';
+import edit from '@iconify-icons/fluent/edit-24-regular';
+import edit_filled from '@iconify-icons/fluent/edit-24-filled';
+import deleteIcon from '@iconify-icons/fluent/delete-24-regular';
+import delete_filled from '@iconify-icons/fluent/delete-24-filled';
+import clock from '@iconify-icons/fluent/clock-24-regular';
+import clock_filled from '@iconify-icons/fluent/clock-24-filled';
+import link from '@iconify-icons/fluent/link-24-regular';
 
 
 import circle_20 from '@iconify-icons/fluent/circle-20-filled';
@@ -155,6 +164,15 @@ export const icons = {
     'subtract-circle-filled': subtract_circle_filled,
     'bug': bug,
     'bug-filled': bug_filled,
+    'person': person,
+    'person-filled': person_filled,
+    'edit': edit,
+    'edit-filled': edit_filled,
+    'delete': deleteIcon,
+    'delete-filled': delete_filled,
+    'clock': clock,
+    'clock-filled': clock_filled,
+    'link': link,
 
     'delete_20' :delete_20,
 }
