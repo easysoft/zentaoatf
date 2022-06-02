@@ -1,12 +1,11 @@
 <template>
-  <div class="log-list padding muted">
-
-    <div id="content" class="content">
+  <div class="log-list scrollbar-y">
+    <pre id="content" class="content">
       <template v-for="(item, index) in wsMsg.out" :key="index">
         {{ void (info = item.info) }}
         {{ void (csKey = info?.key) }}
 
-        <div class="item"
+        <code class="item small"
              :class="[
                  csKey && caseDetail[csKey] ? 'show-detail' : '',
 
@@ -14,12 +13,12 @@
                  info?.status === 'start' ? 'case-start' : '',
                  info?.status === 'start' ? 'result-'+caseResult[csKey] : '',
 
-                 info?.status === 'start-task' ? 'z-border' : ''
+                 info?.status === 'start-task' ? 'strong' : ''
              ]">
 
           <div class="group">
             <template v-if="info?.status === 'start'">
-              <span @click="showDetail(item.info?.key)" class="link">
+              <span @click="showDetail(item.info?.key)" class="link state center">
                 <Icon v-if="!caseDetail[csKey]" icon="chevron-right" />
                 <Icon v-if="caseDetail[csKey]" icon="chevron-down" />
               </span>
@@ -40,11 +39,10 @@
               [ {{ t(caseResult[csKey]) }} ]
             </span>
           </div>
-        </div>
+        </code>
 
       </template>
-    </div>
-
+    </pre>
   </div>
 </template>
 
@@ -156,7 +154,7 @@ const exec = (data: any) => {
 
   if (execType === 'ztf' && (!data.scripts || data.scripts.length === 0)) {
     const msgCancel = {
-      msg: `<span class="z-border">`+t('case_num_empty')+`</span>`,
+      msg: `<span class="strong">`+t('case_num_empty')+`</span>`,
       time: momentTime(new Date())}
     wsMsg.out.push(msgCancel)
     return
@@ -190,26 +188,17 @@ const logStatus = ref('')
 <style lang="less">
 .log-list {
   .result-pass {
-    color: #68BB8D
+    color: var(--color-green)
   }
 
   .result-fail {
-    color: #FC2C25
+    color: var(--color-red)
   }
-}
-</style>
 
-<style lang="less">
-.log-list {
-  height: 100%;
-  font-family: HelveticaNeue;
   .content {
-    height: 100%;
-    overflow-y: auto;
+    white-space: normal;
     .item {
       &.case-item {
-        &.case-start {
-        }
         &:not(.case-start) {
           display: none !important;
         }
@@ -217,17 +206,21 @@ const logStatus = ref('')
       &.show-detail:not(.case-start) {
         display: flex !important;
       }
+      &:hover {
+        background-color: var(--color-darken-1);
+      }
 
       .group {
         width: 16px;
         font-size: 13px;
         text-align: center;
         .link {
-          cursor: pointer;
+          position: relative;
+          top: 2px;
         }
       }
       .sign {
-        width: 30px;
+        width: 20px;
         font-size: 6px;
         text-align: center;
       }
