@@ -75,9 +75,7 @@ watch(script, () => {
 const isFirstLoad = ref(false) // update code from MonacoEditor when first load scriptCode from store.
 
 const editorChange = (newScriptCode) => {
-    newScriptCode = newScriptCode.replace(/\n$/, '');
     let oldScriptCode = scriptCode.value;
-    oldScriptCode = oldScriptCode.replace(/\n$/, '');
     let changed = newScriptCode === oldScriptCode ? false : true;
     store.dispatch('tabs/update', {
         id: props.tab.id,

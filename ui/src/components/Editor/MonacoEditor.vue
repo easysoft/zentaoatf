@@ -90,9 +90,10 @@ onMounted(() => {
 
         editor.onDidChangeModelContent(event => {
             const editorValue = editor.getValue()
-            if (props.value !== editorValue) {
-                emit('change', editorValue, event)
-            }
+            emit('change', editorValue, event);
+            // if (props.value !== editorValue) {
+            //     emit('change', editorValue, event)
+            // }
         });
 
         emit('editorDidMount', editor);
