@@ -303,6 +303,7 @@ const selectNode = (activeNode) => {
 
 const checkNode = (checkedKeys) => {
   console.log('checkNode', checkedKeys.checked)
+  store.dispatch('Script/setCheckedNodes', checkedKeys.checked)
   //   scriptStore.dispatch('Script/changeWorkspace',
   //       {id: e.node.dataRef.workspaceId, type: e.node.dataRef.workspaceType})
 }
