@@ -68,6 +68,7 @@ import hard_drive_filled from '@iconify-icons/fluent/hard-drive-20-filled';
 import bug_arrow_counterclockwise from '@iconify-icons/fluent/bug-arrow-counterclockwise-20-regular';
 import timer from '@iconify-icons/fluent/timer-24-regular';
 import task_list_square from '@iconify-icons/fluent/task-list-square-ltr-24-regular';
+import task_list_square_filled from '@iconify-icons/fluent/task-list-square-ltr-24-filled';
 import subtract_circle from '@iconify-icons/fluent/subtract-circle-24-regular';
 import subtract_circle_filled from '@iconify-icons/fluent/subtract-circle-24-filled';
 import bug from '@iconify-icons/fluent/bug-24-regular';
@@ -81,7 +82,14 @@ import delete_filled from '@iconify-icons/fluent/delete-24-filled';
 import clock from '@iconify-icons/fluent/clock-24-regular';
 import clock_filled from '@iconify-icons/fluent/clock-24-filled';
 import link from '@iconify-icons/fluent/link-24-regular';
-
+import clipboard_task from '@iconify-icons/fluent/clipboard-task-24-regular';
+import clipboard_task_filled from '@iconify-icons/fluent/clipboard-task-24-filled';
+import briefcase from '@iconify-icons/fluent/briefcase-24-regular';
+import briefcase_filled from '@iconify-icons/fluent/briefcase-24-filled';
+import folder_briefcase from '@iconify-icons/fluent/folder-briefcase-20-regular';
+import folder_briefcase_filled from '@iconify-icons/fluent/folder-briefcase-20-filled';
+import puzzle_piece from '@iconify-icons/fluent/puzzle-piece-24-regular';
+import puzzle_piece_filled from '@iconify-icons/fluent/puzzle-piece-24-filled';
 
 import circle_20 from '@iconify-icons/fluent/circle-20-filled';
 
@@ -159,6 +167,7 @@ export const icons = {
     'bug-arrow-counterclockwise': bug_arrow_counterclockwise,
     timer,
     'task-list-square': task_list_square,
+    'task-list-square-filled': task_list_square_filled,
     'subtract-circle': subtract_circle,
     'subtract-circle-filled': subtract_circle_filled,
     'bug': bug,
@@ -172,6 +181,14 @@ export const icons = {
     'clock': clock,
     'clock-filled': clock_filled,
     'link': link,
+    'clipboard-task': clipboard_task,
+    'clipboard-task-filled': clipboard_task_filled,
+    'briefcase': briefcase,
+    'briefcase-filled': briefcase_filled,
+    'folder-briefcase': folder_briefcase,
+    'folder-briefcase-filled': folder_briefcase_filled,
+    'puzzle-piece': puzzle_piece,
+    'puzzle-piece-filled': puzzle_piece_filled,
 }
 
 Object.entries(icons).forEach(([name, icon]) => {
