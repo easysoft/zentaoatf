@@ -360,7 +360,7 @@ onMounted(() => {
 }
 .unit-result :deep(.list-item),
 .func-result :deep(.list-item) {
-  min-height: 36px;
+  min-height: 28px;
 }
 .result-step-checkpoint pre {
   white-space: normal;
