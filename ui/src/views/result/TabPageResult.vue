@@ -196,7 +196,7 @@ import FormBug from "@/views/result/FormBug.vue";
 import ProgressBar from '@/components/ProgressBar.vue';
 import Loading from '@/components/Loading.vue';
 import ListItem from '@/components/ListItem.vue';
-import useTestReport from '@/layouts/MainLayout/hooks/useTestReport';
+import useTestReport from '@/hooks/use-test-report';
 
 const {t, te, locale} = useI18n();
 

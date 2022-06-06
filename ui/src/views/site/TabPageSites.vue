@@ -82,7 +82,7 @@ import notification from "@/utils/notification";
 import Modal from "@/utils/modal";
 import Button from "@/components/Button.vue";
 import FormSite from "@/views/site/FormSite.vue";
-import useSites from '@/layouts/MainLayout/hooks/useSites';
+import useSites from '@/hooks/use-sites';
 
 const { t } = useI18n();
 const momentUtc = momentUtcDef;
