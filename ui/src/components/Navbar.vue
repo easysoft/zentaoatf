@@ -7,8 +7,7 @@
     <LastTestInfo />
 
     <div class="gap flex-auto"></div>
-        <AppToolbar />
-    <!-- <LayoutToolbar />-->
+    <AppToolbar />
     <WindowToolbar />
   </nav>
 </template>
@@ -17,12 +16,9 @@
 import Logo from './Logo.vue';
 import WindowToolbar from './WindowToolbar.vue';
 import AppToolbar from './AppToolbar.vue';
-import LayoutToolbar from './LayoutToolbar.vue';
 import SiteNav from '@/views/site/SiteNav.vue';
 import BatchRunButton from '@/views/exec/BatchRunButton.vue';
 import LastTestInfo from '@/views/exec/LastTestInfo.vue';
-import {useI18n} from "vue-i18n";
-const { t } = useI18n();
 </script>
 
 <style>
