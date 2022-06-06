@@ -88,7 +88,7 @@ const onToolbarClick = (e) => {
     }
     case 'save': {
       if (tabsRef.value) {
-        bus.emit(settings.eventScriptSave)
+        bus.emit(settings.eventScriptSave, {path: activeID.value})
       }
       break;
     }

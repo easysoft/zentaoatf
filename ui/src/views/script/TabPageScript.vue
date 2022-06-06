@@ -88,8 +88,12 @@ const editorChange = (newScriptCode) => {
     });
 }
 
-const save = () => {
-  const code = editorRef.value?.getValue()
+const save = (item) => {
+console.log(item.path)
+if(item.path.indexOf(currentScript.value.path) == -1 ){
+    return;
+}
+const code = editorRef.value?.getValue()
   store.dispatch('Script/updateCode',{
         workspaceId: currWorkspace.value.id,
         path: currentScript.value.path,
