@@ -3,7 +3,7 @@
     <TreeNode
       v-for="data in dataList"
       :key="data.id"
-      class="tree-node-root"
+      root
       v-bind="_convertNodeData(data, undefined, 0)"
       :childrenConverter="_convertNodeData"
       @click="_handleClick"
@@ -105,7 +105,7 @@ function _convertNodeData(node: TreeNodeData, parent: TreeNodeData | undefined, 
       ...node,
       level: parent ? ((parent.level ?? 0) + 1) : 0
     };
-    
+
     if (collapsedMap[node.id] !== undefined) {
         node.collapsed = collapsedMap[node.id];
     }else{
@@ -146,7 +146,7 @@ function _convertNodeData(node: TreeNodeData, parent: TreeNodeData | undefined, 
         });
     }
 
-    
+
     if (props.checkable !== undefined && !props.checkable) {
         node.checkable = props.checkable;
     }
@@ -288,24 +288,5 @@ watch(checkedMap, () => {
 .tree :deep(.tree-node.has-children > .tree-node-item > .tree-node-icon) {
   color: var(--tree-toggle-icon-color);
   opacity: 1;
-}
-.tree-node-root > :deep(.tree-node-item > .tree-node-icon) {
-  position: relative;
-}
-.tree-node-root > :deep(.tree-node-item > .tree-node-title) {
-  font-weight: bold;
-}
-.tree-node-root > :deep(.tree-node-item > .tree-node-icon:before) {
-  content: ' ';
-  display: block;
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  left: 0;
-  bottom: 1px;
-  border: 1px solid var(--color-gray);
-  background: var(--color-gray);
-  box-shadow: inset var(--color-canvas) 0 0 0 1px, 0 0 0 1px var(--color-canvas);
 }
 </style>

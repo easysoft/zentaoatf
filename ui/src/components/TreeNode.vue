@@ -1,5 +1,5 @@
 <template>
-  <div class="tree-node" :class="{collapsed: isCollapsed, checked, selected, checkable, 'has-children': children, 'is-leaf': !children}" :data-id="id">
+  <div class="tree-node" :class="{collapsed: isCollapsed, checked, selected, checkable, 'has-children': children, 'is-leaf': !children, 'tree-node-root': root}" :data-id="id">
     <div
       class="tree-node-item"
       :style="`padding-left: ${indent * (level || 0)}px`"
@@ -64,6 +64,7 @@ export interface TreeNodeData {
     title: string,
     level?: number,
     indent?: number,
+    root: boolean,
     titleClass?: string,
     titleStyle?: string | object,
     collapsed?: boolean | ((item: TreeNodeData) => boolean),
@@ -172,5 +173,25 @@ function _handleMouseLeave() {
 }
 .tree-node.is-leaf > .tree-node-item > :first-child {
   margin-left: calc(2em - 2px);
+}
+
+.tree-node-root > .tree-node-item > .tree-node-icon {
+  position: relative;
+}
+.tree-node-root > .tree-node-item > .tree-node-title {
+  font-weight: bold;
+}
+.tree-node-root > .tree-node-item > .tree-node-icon:before {
+  content: ' ';
+  display: block;
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  left: 0;
+  bottom: 1px;
+  border: 1px solid var(--color-gray);
+  background: var(--color-gray);
+  box-shadow: inset var(--color-canvas) 0 0 0 1px, 0 0 0 1px var(--color-canvas);
 }
 </style>
