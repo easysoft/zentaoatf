@@ -10,23 +10,23 @@
       <FormItem name="name" :label="t('name')" :info="validateInfos.name">
         <input v-model="modelRef.name" />
       </FormItem>
-        
       <FormItem name="path" :label="t('path')" :info="validateInfos.path">
-        <input v-if="isElectron" v-model="modelRef.path"
-             />
-        <Button  v-if="isElectron" @click="selectDir" class="state secondary select-dir-btn">{{t('select')}}</Button>
+        <input v-if="isElectron" v-model="modelRef.path" />
+        <Button  v-if="isElectron" @click="selectDir" class="state secondary flex-none rounded">{{t('select')}}</Button>
         <input v-if="!isElectron" v-model="modelRef.path" />
       </FormItem>
       <FormItem name="type" :label="t('type')" :info="validateInfos.type">
-        <select name="type" @change="selectType" v-model="modelRef.type">
-          <option
-            v-for="item in testTypes"
-            :key="item.value"
-            :value="item.value"
-          >
-            {{ item.label }}
-          </option>
-        </select>
+        <div class="select">
+          <select name="type" @change="selectType" v-model="modelRef.type">
+            <option
+              v-for="item in testTypes"
+              :key="item.value"
+              :value="item.value"
+            >
+              {{ item.label }}
+            </option>
+          </select>
+        </div>
       </FormItem>
       <FormItem
         v-if="modelRef.type === 'ztf'"
@@ -34,17 +34,16 @@
         :label="t('default_lang')"
         :info="validateInfos.lang"
       >
-        <select name="type" v-model="modelRef.lang">
-          <option v-for="item in langs" :key="item.code" :value="item.code">
-            {{ item.name }}
-          </option>
-        </select>
-      </FormItem>
-      <FormItem v-if="showCmd" name="cmd" :label="t('cmd')" :info="validateInfos.cmd">
-        <textarea v-model="modelRef.cmd" />
-        <div class="t-tips" style="margin-top: 5px;">
-          <div>{{ t('tips_test_cmd', {cmd: cmdSample}) }}</div>
+        <div class="select">
+          <select name="type" v-model="modelRef.lang">
+            <option v-for="item in langs" :key="item.code" :value="item.code">
+              {{ item.name }}
+            </option>
+          </select>
         </div>
+      </FormItem>
+      <FormItem v-if="showCmd" name="cmd" :label="t('cmd')" :info="validateInfos.cmd" :helpText="t('tips_test_cmd', {cmd: cmdSample})">
+        <textarea v-model="modelRef.cmd" />
       </FormItem>
     </Form>
   </ZModal>
@@ -168,10 +167,3 @@ defineExpose({
   clearFormData,
 });
 </script>
-
-<style>
-.select-dir-btn{
-    position: absolute;
-    right: 20px;
-}
-</style>
