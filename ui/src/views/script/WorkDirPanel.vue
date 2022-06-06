@@ -3,7 +3,7 @@
     <template #header>
       <ButtonList :gap="2" class="workdir-panel-nav">
         <Button id="displayByMenuToggle"
-                :label="t('by_' + displayBy)"
+                :label="te('by_' + displayBy) ? t('by_' + displayBy) : t('by_workspace')"
                 labelClass="strong"
                 class="rounded pure padding-sm-h"
                 suffix-icon="caret-down"/>
@@ -15,7 +15,7 @@
         </DropdownMenu>
 
         <Button id="displayByFilter"
-                :label="t('by_' + filerType)"
+                :label="te('by_' + filerType) ? t('by_' + filerType) : t('by_workspace')"
                 labelClass="strong"
                 class="rounded pure padding-sm-h"
                 suffix-icon="caret-down"/>
@@ -85,7 +85,7 @@ import {
 import FormWorkspace from "@/views/workspace/FormWorkspace.vue";
 import notification from "@/utils/notification";
 
-const { t, locale } = useI18n();
+const { t, locale, te } = useI18n();
 
 const store = useStore<{ Zentao: ZentaoData, Script: ScriptData }>();
 const currSite = computed<any>(() => store.state.Zentao.currSite);
