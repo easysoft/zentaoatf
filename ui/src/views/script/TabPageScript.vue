@@ -42,10 +42,6 @@ watch(script, () => {
         return
     }
     console.log('watch script', script)
-    if(!isFirstLoad.value){
-        scriptCode.value = String(editorRef.value?.getValue())
-        isFirstLoad.value = true
-    }
     currentScript.value = script.value
     if (script.value) {
         if (script.value.code === ScriptFileNotExist) {
@@ -54,8 +50,9 @@ watch(script, () => {
 
             return
         }
-        
-        scriptCode.value = script.value.code ? script.value.code : t('empty')
+        if(scriptCode.value == ''){
+          scriptCode.value = script.value.code ? script.value.code : t('empty');
+		}
         lang.value = script.value.lang
         setTimeout(() => {
             resizeHeight('ztf-script-main', 'editor-panel', 'splitter-v', 'logs-panel',
@@ -74,10 +71,10 @@ watch(script, () => {
     });
 }, { deep: false })
 
-const isFirstLoad = ref(false) // update code from MonacoEditor when first load scriptCode from store.
 
 const editorChange = (newScriptCode) => {
-    let oldScriptCode = scriptCode.value;
+    let oldScriptCode = script.value.code;
+    scriptCode.value = newScriptCode;
     let changed = newScriptCode === oldScriptCode ? false : true;
     store.dispatch('tabs/update', {
         id: props.tab.id,
@@ -89,7 +86,6 @@ const editorChange = (newScriptCode) => {
 }
 
 const save = (item) => {
-console.log(item.path)
 if(item.path.indexOf(currentScript.value.path) == -1 ){
     return;
 }
