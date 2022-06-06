@@ -18,7 +18,7 @@ import {useI18n} from "vue-i18n";
 import {defineProps, computed, defineEmits} from 'vue';
 import Button, {ButtonProps} from './Button.vue';
 
-export type ButtonListItemProps = ButtonProps;
+export type ButtonListItemProps = {key: string} & ButtonProps;
 
 const { t, te } = useI18n();
 

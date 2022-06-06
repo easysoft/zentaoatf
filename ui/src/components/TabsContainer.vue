@@ -22,7 +22,6 @@ import {computed, onMounted, ref, watch} from 'vue';
 import {useStore} from 'vuex';
 import {PageTab, TabsData} from "@/store/tabs";
 import TabsNav, {TabNavItem} from './TabsNav.vue';
-import Button from './Button.vue';
 import TabPage from './TabPage.vue';
 import {useI18n} from "vue-i18n";
 import bus from "@/utils/eventBus";
