@@ -13,11 +13,13 @@ import { defineProps, defineExpose } from "vue";
 import { PageTab } from "@/store/tabs";
 import { useStore } from "vuex";
 import { ScriptData } from "@/views/script/store";
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, onMounted, onBeforeUnmount } from "vue";
 import { MonacoOptions, ScriptFileNotExist } from "@/utils/const";
 import { resizeHeight, resizeWidth } from "@/utils/dom";
 import { useI18n } from "vue-i18n";
 import MonacoEditor from "@/components/MonacoEditor.vue";
+import bus from "@/utils/eventBus";
+import settings from "@/config/settings";
 
 const { t } = useI18n();
 const props = defineProps<{
@@ -100,6 +102,15 @@ const save = () => {
         })
       })
 }
+
+onMounted(() => {
+  console.log('onMounted')
+  bus.on(settings.eventScriptSave, save);
+})
+onBeforeUnmount( () => {
+  console.log('onBeforeUnmount')
+  bus.off(settings.eventScriptSave, save);
+})
 
 defineExpose({
     save
