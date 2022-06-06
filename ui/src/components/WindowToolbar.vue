@@ -2,20 +2,20 @@
   <div class="window-toolbar">
     <Toolbar>
       <template v-if="isElectron">
-        <Button v-if="!fullScreenDef" @click="fullScreen" class="rounded pure" icon="fullscreen-on"
+        <Button v-if="!fullScreenDef" @click="fullScreen" class="rounded pure" icon="fullscreen-on" iconSize="1.5em"
                 :hint="t('fullscreen')" />
-        <Button v-if="fullScreenDef" @click="fullScreen" class="rounded pure" icon="fullscreen-off"
+        <Button v-if="fullScreenDef" @click="fullScreen" class="rounded pure" icon="fullscreen-off" iconSize="1.5em"
                 :hint="t('exit_fullscreen')" />
 
-        <Button @click="minimize" class="rounded pure" icon="window-minimize"
+        <Button @click="minimize" class="rounded pure" icon="window-minimize" iconSize="1.5em"
                 :hint="t('minimize')" />
 
-        <Button v-if="!maximizeDef" @click="maximize" class="rounded pure" icon="window-maximize"
+        <Button v-if="!maximizeDef" @click="maximize" class="rounded pure" icon="window-maximize" iconSize="1.5em"
                 :hint="t('maximize')" />
-        <Button v-if="maximizeDef" @click="maximize" class="rounded pure" icon="window-restore"
+        <Button v-if="maximizeDef" @click="maximize" class="rounded pure" icon="window-restore" iconSize="1.5em"
                 :hint="t('restore')" />
 
-        <Button @click="exit" class="rounded pure" icon="window-close"
+        <Button @click="exit" class="rounded pure" icon="window-close" iconSize="1.5em"
                 :hint="t('close')" />
       </template>
     </Toolbar>

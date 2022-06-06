@@ -1,7 +1,7 @@
 <template>
   <Toolbar>
-<!--    <Button class="rounded pure" icon="search" :hint="t('search')" />-->
-    <Button class="rounded pure" icon="settings" :hint="t('settings')" @click="openSettings" />
+<!--    <Button class="rounded pure" icon="search" iconSize="1.5em" :hint="t('search')" />-->
+    <Button class="rounded pure" icon="settings" iconSize="1.5em" :hint="t('settings')" @click="openSettings" />
   </Toolbar>
 </template>
 
