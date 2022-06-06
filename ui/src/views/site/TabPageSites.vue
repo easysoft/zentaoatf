@@ -1,9 +1,9 @@
 <template>
-  <div class="site-main">
+  <div class="dock scrollbar-y">
     <header class="single row align-center padding canvas sticky shadow-border-bottom">
       <strong>{{t('site_num', {count: sites.length})}}</strong>
       <div class="flex-auto row justify-end">
-         <Button
+        <Button
           class="state primary rounded"
           icon="add"
           size="sm"
@@ -25,7 +25,7 @@
         no-state
       >
         <div class="row single align-center gap space-xs-v">
-          <span class="text-blue">{{site.name}}</span>
+          <span class="text-primary">{{site.name}}</span>
           <div class="row single align-center gap-sm small muted"><Icon icon="link" size="1em" /> {{site.url}}</div>
         </div>
         <div class="row single align-center gap muted">

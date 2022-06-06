@@ -65,7 +65,6 @@ import lock_closed from '@iconify-icons/fluent/lock-closed-20-regular';
 import lock_open from '@iconify-icons/fluent/lock-open-20-regular';
 import hard_drive from '@iconify-icons/fluent/hard-drive-20-regular';
 import hard_drive_filled from '@iconify-icons/fluent/hard-drive-20-filled';
-import delete_20 from '@iconify-icons/fluent/delete-20-regular';
 import bug_arrow_counterclockwise from '@iconify-icons/fluent/bug-arrow-counterclockwise-20-regular';
 import timer from '@iconify-icons/fluent/timer-24-regular';
 import task_list_square from '@iconify-icons/fluent/task-list-square-ltr-24-regular';
@@ -173,8 +172,6 @@ export const icons = {
     'clock': clock,
     'clock-filled': clock_filled,
     'link': link,
-
-    'delete_20' :delete_20,
 }
 
 Object.entries(icons).forEach(([name, icon]) => {

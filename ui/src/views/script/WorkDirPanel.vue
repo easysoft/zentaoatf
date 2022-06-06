@@ -19,7 +19,7 @@
                 labelClass="strong"
                 class="rounded pure padding-sm-h"
                 suffix-icon="caret-down"/>
-    
+
     <div class="dropdownMenu-container">
 
         <DropdownMenu class="childMenu" toggle="#displayByFilter"

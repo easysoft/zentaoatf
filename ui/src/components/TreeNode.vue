@@ -49,6 +49,7 @@
 <script lang="ts">
 export default {
     name: 'TreeNode',
+    inheritAttrs: false
 }
 </script>
 
@@ -165,6 +166,9 @@ function _handleMouseLeave() {
 .tree-node-title {
   flex: auto;
   min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .tree-node.is-leaf > .tree-node-item > :first-child {
   margin-left: calc(2em - 2px);
