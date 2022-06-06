@@ -24,7 +24,13 @@
       :replaceFields="replaceFields"
   >
     <div class="divider space-sm-top"></div>
-    <ListItem class="darken-1" icon="globe" :title="t('site_management')" @click="openSiteManagementTab()" />
+    <ListItem
+      class="darken-1 padding-sm-right"
+      icon="globe"
+      :title="t('site_management')"
+      trailingIcon="chevron-right"
+      @click="openSiteManagementTab()"
+    />
   </DropdownMenu>
 
   <DropdownMenu
