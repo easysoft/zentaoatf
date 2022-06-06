@@ -146,5 +146,6 @@ function _handleClick(originalEvent) {
 }
 .list-item-content {
   flex: auto;
+  min-width: 0;
 }
 </style>
