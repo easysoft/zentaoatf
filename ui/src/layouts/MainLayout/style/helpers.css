@@ -115,6 +115,9 @@
 /* Text weights 文本字重 */
 .text-bold, .strong {font-weight: bold;}
 
+/* Text overflow */
+.text-ellipsis {text-overflow: ellipsis; white-space: nowrap; overflow: hidden;}
+
 /* Divider 分割线 */
 .divider, .divider-bottom {border-bottom: 1px solid var(--color-darken-1)}
 .divider-top    {border-top: 1px solid var(--color-darken-1)}
