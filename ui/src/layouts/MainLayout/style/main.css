@@ -3,15 +3,17 @@ body {
     color: var(--text-color, #222);
     font-size: var(--text-size, 13px);
     line-height: var(--line-height-base);
-}
-
-button {
-    cursor: pointer;
+    font-family: var(--font-family-sans-serif);
 }
 
 pre {
     white-space: pre-wrap;
     word-break: break-all;
+    font-family: var(--font-family-monospace);
+}
+
+code {
+    font-family: var(--font-family-monospace);
 }
 
 .splitpanes__splitter {
@@ -58,7 +60,4 @@ pre {
     -ms-flex: 0 0 100%;
     flex: 0 0 100%;
     max-width: 100%;
-}
-.z-bord{
-    font-weight: bold;
 }
