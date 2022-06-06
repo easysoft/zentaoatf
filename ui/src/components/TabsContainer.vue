@@ -88,7 +88,7 @@ const onToolbarClick = (e) => {
     }
     case 'save': {
       if (tabsRef.value) {
-        tabsRef.value[0].save()
+        tabsRef.value.save()
       }
       break;
     }

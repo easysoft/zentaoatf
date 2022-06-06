@@ -24,6 +24,7 @@ export interface PageTab {
      */
     title: string;
 
+    titleFunc: any;
     /**
      * Page icon
      * 页面图标

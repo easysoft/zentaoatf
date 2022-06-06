@@ -8,7 +8,7 @@
           @click.stop="emit('click', item)"
         >
           <Icon :icon="_getItemIcon(item)" />
-          <span class="tabs-nav-title" :title="item.title">{{item.title}}</span>
+          <span class="tabs-nav-title" :title="item.title">{{item.titleFunc ? item.titleFunc() : item.title}}</span>
           <Icon v-if="item.readonly" icon="lock-closed" class="muted" />
           <div class="tabs-nav-close state rounded">
             <Icon icon="close" @click.stop="emit('close', item)" />
@@ -32,13 +32,16 @@ import Toolbar, {ToolbarItemProps} from './Toolbar.vue';
 import {useI18n} from "vue-i18n";
 
 export interface TabNavItem {
-    id: string;
+  id: string;
     title: string;
+    titleFunc: TitleFunc;
     icon?: string;
     type?: 'script' | 'result' | 'settings' | 'sites';
     changed?: boolean;
     readonly?: boolean;
 }
+
+export interface TitleFunc {():string;}
 
 const { t } = useI18n();
 
@@ -49,6 +52,7 @@ const props = defineProps<{
     activeID?: string,
     toolbarItems?: ToolbarItemProps[],
 }>();
+
 
 const emit = defineEmits<{
     (type: 'click', event: TabNavItem) : void,

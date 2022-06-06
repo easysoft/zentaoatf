@@ -107,6 +107,7 @@ const openSiteManagementTab = (showCreateSiteModal?: boolean) => {
     store.dispatch('tabs/open', {
         id: 'sites',
         title: t('site_management'),
+        titleFunc: () => t('site_management'),
         type: 'sites',
         data: {showCreateSiteModal}
     });

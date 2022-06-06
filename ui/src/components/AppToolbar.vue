@@ -19,6 +19,7 @@ const openSettings = () => {
     store.dispatch('tabs/open', {
         id: 'settings',
         title: t('settings'),
+        titleFunc: ()=> { return t('settings')},
         type: 'settings',
     });
 }
