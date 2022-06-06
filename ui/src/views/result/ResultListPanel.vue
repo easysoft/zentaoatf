@@ -1,8 +1,5 @@
 <template>
   <Panel :title="t('test_result')">
-    <template #toolbar-buttons>
-      <Button class="rounded pure" :hint="t('more_actions')" icon="more-vert" />
-    </template>
     <ResultList />
   </Panel>
 </template>
