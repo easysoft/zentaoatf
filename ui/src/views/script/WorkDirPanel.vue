@@ -272,7 +272,6 @@ function _handleToggleAllBtnClick() {
     min-width: none !important;
 }
 .childMenu{
-    display: flex!important;;
     position: unset!important;
     min-width: 0!important;
 }
