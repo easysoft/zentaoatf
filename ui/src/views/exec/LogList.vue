@@ -1,5 +1,5 @@
 <template>
-  <div class="log-list scrollbar-y">
+  <div id="log-list" class="log-list scrollbar-y">
     <pre id="content" class="content">
       <template v-for="(item, index) in wsMsg.out" :key="index">
         {{ void (info = item.info) }}
@@ -127,7 +127,7 @@ const onWebsocketMsgEvent = (data: any) => {
   }
 
   wsMsg.out.push(item)
-  scroll('content')
+  scroll('log-list')
 }
 
 onMounted(() => {
@@ -187,6 +187,7 @@ const logStatus = ref('')
 
 <style lang="less">
 .log-list {
+  height: 100%;
   .result-pass {
     color: var(--color-green)
   }

@@ -17,7 +17,7 @@
       </template>
     </nav>
     <Toolbar
-      v-if="toolbarItems"
+      v-if="toolbarItems?.length"
       class="tabs-nav-toolbar"
       :buttons="toolbarItems"
       @click="emit('clickToolbar', $event)"
