@@ -3,6 +3,7 @@
     <router-view></router-view>
   </a-config-provider>
 </template>
+
 <script lang="ts">
 import {computed, defineComponent, onMounted} from "vue";
 import {antdMessages} from "@/config/i18n";

@@ -35,12 +35,12 @@ import './style/index.less';
 import 'splitpanes/dist/splitpanes.css'
 
 import { Splitpanes, Pane, PaneProps } from 'splitpanes';
-import Navbar from './components/Navbar.vue';
-import WorkDirPanel from './components/WorkDirPanel.vue';
-import LogPanel from './components/LogPanel.vue';
-import TabsContainer from './components/TabsContainer.vue';
-import ResultListPanel from './components/ResultListPanel.vue';
-import Websocket from './components/Websocket.vue';
+import Navbar from '@/components/Navbar.vue';
+import WorkDirPanel from '@/views/script/WorkDirPanel.vue';
+import LogPanel from '@/views/exec/LogPanel.vue';
+import TabsContainer from '@/components/TabsContainer.vue';
+import ResultListPanel from '@/views/result/ResultListPanel.vue';
+import Websocket from '@/components/Websocket.vue';
 import settings from "@/config/settings";
 import {onBeforeUnmount, onMounted, ref} from "vue";
 import bus from "@/utils/eventBus";
