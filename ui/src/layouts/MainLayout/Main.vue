@@ -4,23 +4,23 @@
     <Navbar class="flex-none" />
 
     <div id="mainContent" class="flex-auto">
-      <Splitpanes id="mainRow">
-        <Pane :size="20" id="leftPane">
+      <Splitpanes id="mainRow" ref="mainRow">
+        <Pane :size="20" id="leftPane" :min-size="minLeftPane" :max-size="50">
           <WorkDirPanel />
         </Pane>
 
         <Pane id="centerPane">
-          <Splitpanes id="centerColumn" horizontal v-on:resized="onSplitpanesResized($event)">
+          <Splitpanes id="centerColumn" ref="centerColumn" horizontal v-on:resized="onSplitpanesResized($event)">
             <Pane id="tabsPane" :size='globalStore.getters["global/editorPaneSize"]'>
               <TabsContainer class="height-full" />
             </Pane>
-            <Pane v-show="showLogPanel" :size='globalStore.getters["global/logPaneSize"]' id="bottomPane">
+            <Pane v-show="showLogPanel" :size='globalStore.getters["global/logPaneSize"]' id="bottomPane" :min-size="minBottomPane" :max-size="50">
               <LogPanel />
             </Pane>
           </Splitpanes>
         </Pane>
 
-        <Pane :size="20" id="rightPane">
+        <Pane :size="20" id="rightPane" :min-size="minRightPane" :max-size="80">
           <ResultListPanel />
         </Pane>
       </Splitpanes>
@@ -48,9 +48,14 @@ import {notification} from "ant-design-vue";
 import { useI18n } from "vue-i18n";
 import {StateType} from "@/store/global"
 import { useStore } from 'vuex';
+import { useHeightToPercent, useWidthToPercent } from '@/components/hooks/use-pixels-to-percent';
 
 const { t } = useI18n();
-const showLogPanel = ref(false)
+const showLogPanel = ref(false);
+const mainRow = ref();
+const centerColumn = ref();
+const [minLeftPane, minRightPane] = useWidthToPercent(mainRow, 220, 200);
+const [minBottomPane] = useHeightToPercent(centerColumn, 70);
 
 const globalStore = useStore<{global: StateType}>()
 
