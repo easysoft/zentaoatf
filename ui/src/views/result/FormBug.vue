@@ -8,7 +8,7 @@
   >
     <Form labelCol="6" wrapperCol="16">
       <FormItem name="title" :label="t('title')" :info="validateInfos.title">
-        <input v-model="modelRef.title" />
+        <input type="text" v-model="modelRef.title" />
       </FormItem>
 
       <FormItem name="module" :label="t('module')">

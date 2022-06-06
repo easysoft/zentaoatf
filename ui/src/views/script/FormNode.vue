@@ -8,7 +8,7 @@
   >
     <Form labelCol="6" wrapperCol="16">
       <FormItem name="name" :label="t('name')" :info="validateInfos.name">
-        <input v-model="modelRef.name" />
+        <input type="text" v-model="modelRef.name" />
       </FormItem>
     </Form>
   </ZModal>

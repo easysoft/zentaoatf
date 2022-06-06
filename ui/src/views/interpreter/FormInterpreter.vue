@@ -42,7 +42,7 @@
         :label="t('interpreter_path')"
         :info="validateInfos.path"
       >
-        <input v-model="modelRef.path" />
+        <input type="text" v-model="modelRef.path" />
       </FormItem>
       <FormItem
         labelWidth="100px"

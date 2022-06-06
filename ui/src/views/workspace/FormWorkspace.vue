@@ -8,12 +8,12 @@
   >
     <Form labelCol="6" wrapperCol="16">
       <FormItem name="name" :label="t('name')" :info="validateInfos.name">
-        <input v-model="modelRef.name" />
+        <input type="text" v-model="modelRef.name" />
       </FormItem>
       <FormItem name="path" :label="t('path')" :info="validateInfos.path">
-        <input v-if="isElectron" v-model="modelRef.path" />
+        <input type="text" v-if="isElectron" v-model="modelRef.path" />
         <Button  v-if="isElectron" @click="selectDir" class="state secondary flex-none rounded">{{t('select')}}</Button>
-        <input v-if="!isElectron" v-model="modelRef.path" />
+        <input type="text" v-if="!isElectron" v-model="modelRef.path" />
       </FormItem>
       <FormItem name="type" :label="t('type')" :info="validateInfos.type">
         <div class="select">

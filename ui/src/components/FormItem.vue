@@ -107,7 +107,6 @@ defineProps<FormItemProps>();
   display:         flex;
   flex-direction:  row;
   align-items:     center;
-  justify-content: end;
   padding-right:   var(--space-base);
   padding-top:     var(--space-sm);
   align-self:      start;
@@ -139,16 +138,15 @@ defineProps<FormItemProps>();
   position: relative;
   gap: var(--space-base);
 }
-.form-item-field:deep(input),
+.form-item-field:deep(input[type="text"]),
+.form-item-field:deep(input[type="number"]),
 .form-item-field:deep(select),
 .form-item-field:deep(.select),
 .form-item-field:deep(textarea)  {
   flex: auto;
 }
 .form-item-field-single {
-  flex:           auto;
-  text-align:     right;
-  justify-content: flex-end;
+  flex: auto;
 }
 .form-item-divider:after {
   content:    ' ';
@@ -199,7 +197,8 @@ defineProps<FormItemProps>();
   margin-top: var(--space-sm)
 }
 
-.form-item-field:deep(input),
+.form-item-field:deep(input[type="text"]),
+.form-item-field:deep(input[type="number"]),
 .form-item-field:deep(textarea),
 .form-item-field:deep(select) {
   display: block;

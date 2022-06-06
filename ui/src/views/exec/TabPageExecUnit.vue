@@ -2,7 +2,7 @@
   <div class="tab-page-exec-unit">
     <Form labelCol="6" wrapperCol="26">
       <FormItem labelWidth="100px" name="cmd" :label="t('test_cmd')" :info="validateInfos.cmd">
-        <input v-model="modelRef.cmd" @keydown="keydown"/>
+        <input type="text" v-model="modelRef.cmd" @keydown="keydown"/>
       </FormItem>
 
       <FormItem labelWidth="100px" v-if="currProduct.id" name="submitResult" :label="t('submit_result_to_zentao')">
@@ -10,10 +10,10 @@
       </FormItem>
 
       <FormItem labelWidth="100px">
-        <Button :disabled="isRunning === 'true' || !modelRef.cmd" @click="start" class="rounded">
+        <Button :disabled="isRunning === 'true' || !modelRef.cmd" @click="start" class="rounded primary">
           {{ t('exec') }}
         </Button>
-        <Button v-if="isRunning === 'true'" @click="stop" class="rounded pure">
+        <Button v-if="isRunning === 'true'" @click="stop" class="rounded pure primary">
           {{ t('stop') }}
         </Button>
       </FormItem>
