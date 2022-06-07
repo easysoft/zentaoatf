@@ -34,7 +34,7 @@
         <DropdownMenu class="childMenu" toggle="#parentMenu"
                   v-if="currSite.id != 1"
                   :items="filerItems"
-                  :checkedKey="filerValue ? filerValue : oldFilerValue"
+                  :checkedKey="filerType == oldFilerType ? oldFilerValue : ''"
                   keyName="value"
                   @click="onFilterValueChanged"
                   :hideOnClickMenu="true"
