@@ -62,7 +62,6 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		}
 
 		//filePath = "\"" + filePath + "\""
-
 		scriptInterpreter := configHelper.GetFieldVal(conf, stringUtils.UcFirst(lang))
 
 		if scriptInterpreter != "" {
