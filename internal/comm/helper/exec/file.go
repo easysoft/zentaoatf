@@ -126,7 +126,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		if line != "" {
 			if commConsts.ExecFrom != commConsts.FromCmd {
 				websocketHelper.SendOutputMsg(line, "", iris.Map{"key": key}, wsMsg)
-				logUtils.ExecConsole(1, line)
+				logUtils.ExecConsole(-1, line)
 			}
 
 			logUtils.ExecFile(line)
@@ -138,7 +138,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			break
 		}
 		if err2 != nil {
-			logUtils.ExecConsole(1, err2.Error())
+			logUtils.ExecConsole(color.FgRed, err2.Error())
 			logUtils.ExecFile(err2.Error())
 			break
 		}
