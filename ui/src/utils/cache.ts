@@ -67,7 +67,7 @@ export const setScriptDisplayBy = async (displayBy, siteId, productId) => {
 }
 
 // script filters
-export const getScriptFilters = async (displayBy, siteId, productId) => {
+export const getScriptFilters = async (displayBy, siteId, productId, byDefault = '') => {
     console.log('getScriptFilters')
 
     const cachedData = await getCache(settings.scriptFilters);
@@ -78,7 +78,7 @@ export const getScriptFilters = async (displayBy, siteId, productId) => {
     }
 
     const mp = cachedData[key]
-    const by = mp.by ? mp.by : 'workspace'
+    const by = byDefault ? byDefault : (mp.by ? mp.by : 'workspace')
     const val = mp[by]
 
     return {by: by, val: val}

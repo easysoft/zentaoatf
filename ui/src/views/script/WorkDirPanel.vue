@@ -34,7 +34,7 @@
         <DropdownMenu class="childMenu" toggle="#parentMenu"
                   v-if="currSite.id != 1"
                   :items="filerItems"
-                  :checkedKey="filerType == oldFilerType ? filerValue : ''"
+                  :checkedKey="filerValue ? filerValue : oldFilerValue"
                   keyName="value"
                   @click="onFilterValueChanged"
                   :hideOnClickMenu="true"
@@ -163,10 +163,12 @@ const replaceFields = {
 
 let filerItems = ref([] as any)
 // filters
-const loadFilterItems = async () => {
-    const data = await getScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id)
-    filerType.value = data.by
-    filerValue.value = data.val
+const loadFilterItems = async (useCache = true) => {
+    const data = await getScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, useCache ? '' : filerType.value)
+    if(useCache){
+      filerType.value = data.by
+      filerValue.value = data.val
+    }
 
     if (!currProduct.value.id && filerType.value !== 'workspace') {
       oldFilerType.value = filerType.value = 'workspace'
@@ -214,8 +216,9 @@ const onDisplayByChanged = (item) => {
 const onFilterTypeChanged = async (item) => {
   console.log('onFilterTypeChanged', filerType.value, oldFilerType.value, item.key)
   filerType.value = item.key
-  await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, filerType.value, filerValue.value)
-  loadFilterItems();
+  filerValue.value = '';
+  //await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, filerType.value, filerValue.value)
+  loadFilterItems(false);
 }
 
 const onFilterValueChanged = async (item) => {
