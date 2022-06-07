@@ -2,6 +2,7 @@ package execHelper
 
 import (
 	"bufio"
+	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
@@ -26,10 +27,10 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 
 	key := stringUtils.Md5(filePath)
 
+	lang := langHelper.GetLangByFile(filePath)
+
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
-		lang := langHelper.GetLangByFile(filePath)
-
 		scriptInterpreter := ""
 		if strings.ToLower(lang) != "bat" {
 			scriptInterpreter = configHelper.GetFieldVal(conf, stringUtils.UcFirst(lang))
@@ -61,8 +62,15 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			logUtils.ExecFilef(msg)
 		}
 
-		filePath = "\"" + filePath + "\""
-		cmd = exec.Command("/bin/bash", "-c", filePath)
+		//filePath = "\"" + filePath + "\""
+
+		scriptInterpreter := configHelper.GetFieldVal(conf, stringUtils.UcFirst(lang))
+
+		if scriptInterpreter != "" {
+			cmd = exec.Command(scriptInterpreter, filePath)
+		} else {
+			cmd = exec.Command("/bin/bash", "-c", filePath)
+		}
 	}
 
 	cmd.Dir = workspacePath
@@ -105,6 +113,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	isTerminal := false
 	reader1 := bufio.NewReader(stdout)
 	stdOutputArr := make([]string, 0)
+
 	for {
 		line, err2 := reader1.ReadString('\n')
 		if line != "" {
