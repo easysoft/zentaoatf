@@ -1,5 +1,5 @@
 <template>
-  <Button class="rounded border-light canvas gap-sm" :hint="t('view_test_result')" @click="showDetail(model)">
+  <Button v-if="model!=undefined" class="rounded border-light canvas gap-sm" :hint="t('view_test_result')" @click="showDetail(model)">
     <small class="text-muted">{{t('previous_result')}}</small>
     <small class="text-yellow" :key="model">{{model.duration}}s</small>
     <Icon icon="close-circle" class="text-red space-left" />
