@@ -15,7 +15,7 @@
         </DropdownMenu>
 
         <Button id="displayByFilter"
-                :label="filerValue && te('by_' + filerType) ? t('by_' + filerType) : t('by_workspace')"
+                :label="oldFilerValue && te('by_' + oldFilerType) ? t('by_' + oldFilerType) : t('by_workspace')"
                 labelClass="strong"
                 class="rounded pure padding-sm-h"
                 :suffix-icon="currSite.id == 1 ? '' : 'caret-down'"/>
@@ -26,7 +26,7 @@
                   v-if="currSite.id != 1"
                   id="parentMenu"
                   :items="FilterTyles"
-                  :checkedKey="filerType && filerValue ? filerType : ''"
+                  :checkedKey="filerType == oldFilerType && filerValue ? filerType : oldFilerType"
                   @click="onFilterTypeChanged"
                   :hideOnClickMenu="false"
                   >
@@ -34,7 +34,7 @@
         <DropdownMenu class="childMenu" toggle="#parentMenu"
                   v-if="currSite.id != 1"
                   :items="filerItems"
-                  :checkedKey="filerValue"
+                  :checkedKey="filerType == oldFilerType ? filerValue : ''"
                   keyName="value"
                   @click="onFilterValueChanged"
                   :hideOnClickMenu="true"
@@ -97,6 +97,8 @@ let displayBy = ref('workspace')
 let isExpand = ref(false);
 const filerType = ref('')
 const filerValue = ref('')
+const oldFilerType = ref('')
+const oldFilerValue = ref('')
 
 const displayTypes = ref([
   {key: 'workspace', title: t('by_workspace')},
@@ -167,8 +169,8 @@ const loadFilterItems = async () => {
     filerValue.value = data.val
 
     if (!currProduct.value.id && filerType.value !== 'workspace') {
-      filerType.value = 'workspace'
-      filerValue.value = ''
+      oldFilerType.value = filerType.value = 'workspace'
+      oldFilerValue.value = filerValue.value = ''
     }
 
     if (filerType.value) {
@@ -184,6 +186,11 @@ const loadFilterItems = async () => {
     }
 
     if (!found) filerValue.value = ''
+    }
+
+    if(oldFilerValue.value == ''){
+      oldFilerType.value = filerType.value;
+      oldFilerValue.value = filerValue.value;
     }
 }
 
@@ -205,16 +212,16 @@ const onDisplayByChanged = (item) => {
 }
 
 const onFilterTypeChanged = async (item) => {
-  console.log('onFilterTypeChanged')
+  console.log('onFilterTypeChanged', filerType.value, oldFilerType.value, item.key)
   filerType.value = item.key
   await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, filerType.value, filerValue.value)
   loadFilterItems();
 }
 
 const onFilterValueChanged = async (item) => {
-  console.log('onFilterValueChanged', displayBy.value, filerType.value, item.key)
-  filerValue.value = item.key
-
+  console.log('onFilterValueChanged')
+  oldFilerValue.value = filerValue.value = item.key
+  oldFilerType.value = filerType.value;
   await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, filerType.value, filerValue.value)
   await loadScripts()
 }
