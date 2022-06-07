@@ -67,6 +67,7 @@ const StoreModel: ModuleType = {
                 }
                 const data = response.data;
                 commit('setQueryResult', data);
+                commit('setLastResult', data.result[0]);
 
                 return true;
             } catch (error) {

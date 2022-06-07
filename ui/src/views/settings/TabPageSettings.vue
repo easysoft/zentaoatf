@@ -191,12 +191,12 @@ const formInterpreter = ref({} as any);
 const createInterpreter = (formData) => {
     saveInterpreter(formData).then((json) => {
         if (json.code === 0) {
-        formInterpreter.value.clearFormData();
-        notification.success({ message: t("save_success") });
-        showCreateInterpreterModal.value = false;
-        list();
+          formInterpreter.value.clearFormData();
+          notification.success({ message: t("save_success") });
+          showCreateInterpreterModal.value = false;
+          list();
         }
-  })
+  }, (json) => {console.log(json)})
 };
 </script>
 
