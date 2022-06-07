@@ -55,7 +55,7 @@ const StoreModel: ModuleType = {
             state.detailResult = payload;
         },
         setLastResult(state, payload) {
-            state.lastResult = payload;
+            state.lastResult = payload == undefined ? {} : payload;
         },
     },
     actions: {
