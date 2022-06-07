@@ -60,7 +60,6 @@ SKIP_SERVER=1 npm run start
 
 ```
 UI_SERVER_URL=http://localhost:8000 SKIP_SERVER=1 npm run start
-UI_SERVER_URL=http://localhost:8000/#/main SKIP_SERVER=1 npm run start
 ```
 
 ## 代码检查
