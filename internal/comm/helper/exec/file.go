@@ -2,6 +2,7 @@ package execHelper
 
 import (
 	"bufio"
+	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
@@ -65,6 +66,14 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		scriptInterpreter := configHelper.GetFieldVal(conf, stringUtils.UcFirst(lang))
 
 		if scriptInterpreter != "" {
+			msg := fmt.Sprintf("use interpreter %s", scriptInterpreter)
+
+			if commConsts.ExecFrom != commConsts.FromCmd {
+				//websocketHelper.SendOutputMsg(msg, "", iris.Map{"key": key}, wsMsg)
+				logUtils.ExecConsolef(-1, msg)
+			}
+			//logUtils.ExecFilef(msg)
+
 			cmd = exec.Command(scriptInterpreter, filePath)
 		} else {
 			cmd = exec.Command("/bin/bash", "-c", filePath)
