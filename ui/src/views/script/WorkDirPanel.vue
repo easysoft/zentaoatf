@@ -170,7 +170,7 @@ const loadFilterItems = async (useCache = true) => {
       filerValue.value = data.val
     }
 
-    if (!currProduct.value.id && filerType.value !== 'workspace') {
+    if (!currProduct.value.id && (filerType.value !== 'workspace' || oldFilerType.value != 'workspace')) {
       oldFilerType.value = filerType.value = 'workspace'
       oldFilerValue.value = filerValue.value = ''
     }
