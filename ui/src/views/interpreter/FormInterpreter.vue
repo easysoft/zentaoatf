@@ -3,11 +3,12 @@
     :showModal="showModalRef"
     @onCancel="cancel"
     @onOk="submit"
-    :title="info == undefined ? t('create_interpreter') : t('edit_interpreter')" 
-    :contentStyle="{width: '600px'}"
+    :title="info == undefined ? t('create_interpreter') : t('edit_interpreter')"
+    :contentStyle="{width: '500px'}"
   >
     <Form class="form-interpreter" labelCol="6" wrapperCol="16">
       <FormItem
+        labelWidth="100px"
         name="lang"
         :label="t('script_lang')"
         :info="validateInfos.lang"
@@ -23,6 +24,7 @@
         </select>
       </FormItem>
       <FormItem
+        labelWidth="100px"
         v-if="isElectron"
         name="path"
         :label="t('interpreter_path')"
@@ -34,14 +36,16 @@
         <Button  v-if="isElectron" @click="selectFile" class="state secondary select-dir-btn">{{t('select')}}</Button>
       </FormItem>
       <FormItem
+        labelWidth="100px"
         v-if="!isElectron"
         name="path"
         :label="t('interpreter_path')"
         :info="validateInfos.path"
       >
-        <input v-model="modelRef.path" />
+        <input type="text" v-model="modelRef.path" />
       </FormItem>
       <FormItem
+        labelWidth="100px"
         name="lang"
         v-if="interpreterInfos.length > 0"
         :label="t('script_lang')"

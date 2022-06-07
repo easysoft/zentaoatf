@@ -99,6 +99,7 @@
 
     /* Focus color 激活颜色 */
     --color-focus: var(--color-blue);
+    --color-focus-pale: var(--color-blue-pale);
 
     /* Text color 文字颜色 */
     --text-color: var(--color-fore);
@@ -161,6 +162,13 @@
     --pane-right-min-width: 200px;
     --pane-tabs-min-height: 200px;
     --pane-bottom-min-height: 200px;
+
+    /* Form controls 表单控件 */
+    --input-border-color: var(--color-darken-3);
+    --input-border-color-hover: var(--color-darken-4);
+    --input-height: 28px;
+    --input-back-color-disabled: var(--color-darken-2);
+    --input-border-radius: var(--border-radius);
 
     --color-err: #ff4d4f;
     --tree-toggle-icon-color: #e6b367;

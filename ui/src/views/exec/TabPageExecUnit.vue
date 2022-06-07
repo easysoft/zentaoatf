@@ -1,24 +1,24 @@
 <template>
   <div class="tab-page-exec-unit">
     <Form labelCol="6" wrapperCol="26">
-      <FormItem name="cmd" :label="t('test_cmd')" :info="validateInfos.cmd">
-        <input v-model="modelRef.cmd" @keydown="keydown"/>
+      <FormItem labelWidth="100px" name="cmd" :label="t('test_cmd')" :info="validateInfos.cmd">
+        <input type="text" v-model="modelRef.cmd" @keydown="keydown"/>
       </FormItem>
 
-      <FormItem v-if="currProduct.id" name="submitResult" :label="t('submit_result_to_zentao')">
+      <FormItem labelWidth="100px" v-if="currProduct.id" name="submitResult" :label="t('submit_result_to_zentao')">
         <input v-model="modelRef.submitResult" type="checkbox">
       </FormItem>
 
-      <FormItem>
-        <Button :disabled="isRunning === 'true' || !modelRef.cmd" @click="start" class="rounded">
+      <FormItem labelWidth="100px">
+        <Button :disabled="isRunning === 'true' || !modelRef.cmd" @click="start" class="rounded primary">
           {{ t('exec') }}
         </Button>
-        <Button v-if="isRunning === 'true'" @click="stop" class="rounded pure">
+        <Button v-if="isRunning === 'true'" @click="stop" class="rounded pure primary">
           {{ t('stop') }}
         </Button>
       </FormItem>
 
-      <FormItem>
+      <FormItem labelWidth="100px">
         <span class="t-tips">{{ t('cmd_nav') }}</span>
       </FormItem>
     </Form>

@@ -64,7 +64,7 @@ export interface TreeNodeData {
     title: string,
     level?: number,
     indent?: number,
-    root: boolean,
+    root?: boolean,
     titleClass?: string,
     titleStyle?: string | object,
     collapsed?: boolean | ((item: TreeNodeData) => boolean),

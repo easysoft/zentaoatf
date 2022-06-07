@@ -8,24 +8,24 @@
   >
     <Form labelCol="6" wrapperCol="16">
       <FormItem name="name" :label="t('name')" :info="validateInfos.name">
-        <input v-model="modelRef.name" />
+        <input type="text" v-model="modelRef.name" />
       </FormItem>
       <FormItem name="url" :label="t('zentao_url')" :info="validateInfos.url">
-        <input v-model="modelRef.url" />
+        <input type="text" v-model="modelRef.url" />
       </FormItem>
       <FormItem
         name="username"
         :label="t('username')"
         :info="validateInfos.username"
       >
-        <input v-model="modelRef.username" />
+        <input type="text" v-model="modelRef.username" />
       </FormItem>
       <FormItem
         name="password"
         :label="t('password')"
         :info="validateInfos.password"
       >
-        <input v-model="modelRef.password" />
+        <input type="text" v-model="modelRef.password" />
       </FormItem>
     </Form>
   </ZModal>

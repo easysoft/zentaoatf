@@ -4,16 +4,13 @@
       <Button class="rounded pure" :hint="t('collapse_all')"
               :icon="logContentExpand ? 'subtract-square-multiple' : 'add-square-multiple'" iconSize="1.4em"
               @click="store.commit('global/setLogContentExpand')"/>
-      <Button class="rounded pure" 
+      <Button class="rounded pure"
         :hint="logPaneMaximized ? t('restore_panel_size') : t('expand_up')"
         :icon="logPaneMaximized ? 'chevron-down' : 'chevron-up'"
         iconSize="1.5em"
         @click="store.commit('global/setLogPaneResized')" />
-		<Button class="rounded pure" :hint="t('more_actions')" icon="more-vert" />
     </template>
-
     <LogList />
-
   </Panel>
 </template>
 
