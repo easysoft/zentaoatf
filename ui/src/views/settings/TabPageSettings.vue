@@ -196,7 +196,7 @@ const createInterpreter = (formData) => {
           showCreateInterpreterModal.value = false;
           list();
         }
-  })
+  }, (json) => {console.log(json)})
 };
 </script>
 
