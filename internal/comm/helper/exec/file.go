@@ -2,7 +2,6 @@ package execHelper
 
 import (
 	"bufio"
-	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
