@@ -7,7 +7,6 @@ import (
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
 	"github.com/easysoft/zentaoatf/internal/pkg/domain"
-	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
 	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
@@ -93,6 +92,10 @@ func (s *WorkspaceService) UpdateAllConfig() {
 	workspaces, _ := s.WorkspaceRepo.ListWorkspace()
 
 	for _, item := range workspaces {
+		if item.Type != commConsts.ZTF {
+			continue
+		}
+
 		s.UpdateConfig(item, "interpreter")
 	}
 }
@@ -113,7 +116,7 @@ func (s *WorkspaceService) UpdateConfig(workspace model.Workspace, by string) (e
 		conf.Password = site.Password
 	}
 
-	if by == "all" || by == "interpreter" && commonUtils.IsWin() {
+	if by == "all" || by == "interpreter" {
 		conf.Javascript = mp["javascript"]
 		conf.Lua = mp["lua"]
 		conf.Perl = mp["perl"]
