@@ -6,9 +6,9 @@
                 :label="te('by_' + displayBy) ? t('by_' + displayBy) : t('by_workspace')"
                 labelClass="strong"
                 class="rounded pure padding-sm-h"
-                suffix-icon="caret-down"/>
+                :suffix-icon="currSite.id == 1 ? '' : 'caret-down'"/>
 
-        <DropdownMenu :items="displayTypes"
+        <DropdownMenu v-if="currSite.id != 1" :items="displayTypes"
                   :checkedKey="displayBy"
                   @click="onDisplayByChanged"
                   toggle="#displayByMenuToggle">
@@ -18,19 +18,21 @@
                 :label="te('by_' + filerType) ? t('by_' + filerType) : t('by_workspace')"
                 labelClass="strong"
                 class="rounded pure padding-sm-h"
-                suffix-icon="caret-down"/>
+                :suffix-icon="currSite.id == 1 ? '' : 'caret-down'"/>
 
     <div class="dropdownMenu-container">
 
         <DropdownMenu class="childMenu" toggle="#displayByFilter"
+                  v-if="currSite.id != 1"
                   id="parentMenu"
                   :items="FilterTyles"
-                  :checkedKey="filerType"
+                  :checkedKey="filerType && filerValue ? filerType : ''"
                   @click="onFilterTypeChanged"
                   :hideOnClickMenu="false"
                   >
         </DropdownMenu>
         <DropdownMenu class="childMenu" toggle="#parentMenu"
+                  v-if="currSite.id != 1"
                   :items="filerItems"
                   :checkedKey="filerValue"
                   keyName="value"
@@ -102,10 +104,14 @@ const displayTypes = ref([
 ])
 
 const setDisplayTypes = () => {
-  displayTypes.value = [
-    {key: 'workspace', title: t('by_workspace')},
-    {key: 'module', title: t('by_module')},
-  ]
+  if(currSite.value.id != 1){
+    displayTypes.value = [
+      {key: 'workspace', title: t('by_workspace')},
+      {key: 'module', title: t('by_module')},
+    ];
+  }else{
+    displayTypes.value = [];
+  }
 }
 
 const FilterTyles = ref([
@@ -114,10 +120,15 @@ const FilterTyles = ref([
 ])
 
 const setFilterTypes = () => {
-  FilterTyles.value = [
-    {key: 'suite', title: t('by_suite')},
-  {key: 'task', title: t('by_task')},
-  ]
+  if(currSite.value.id != 1){
+    FilterTyles.value = [
+      {key: 'workspace', title: t('by_workspace')},
+      {key: 'suite', title: t('by_suite')},
+      {key: 'task', title: t('by_task')},
+    ];
+  }else{
+    FilterTyles.value = [];
+  }
 }
 watch(
   locale,
@@ -135,7 +146,9 @@ const loadDisplayBy = async () => {
 const initData = debounce(async () => {
   console.log('init')
   if (!currSite.value.id) return
-
+  
+  setDisplayTypes();
+  setFilterTypes();
   await loadDisplayBy()
   await loadFilterItems()
   await loadScripts()
@@ -150,15 +163,12 @@ let filerItems = ref([] as any)
 // filters
 const loadFilterItems = async () => {
     const data = await getScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id)
-
-    if (!filerType.value) {
-        filerType.value = data.by
-    }
+    filerType.value = data.by
     filerValue.value = data.val
 
     if (!currProduct.value.id && filerType.value !== 'workspace') {
-    filerType.value = 'workspace'
-    filerValue.value = ''
+      filerType.value = 'workspace'
+      filerValue.value = ''
     }
 
     if (filerType.value) {
