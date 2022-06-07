@@ -44,7 +44,7 @@ import Websocket from '@/components/Websocket.vue';
 import settings from "@/config/settings";
 import {onBeforeUnmount, onMounted, ref} from "vue";
 import bus from "@/utils/eventBus";
-import {notification} from "ant-design-vue";
+import notification from "@/utils/notification";
 import { useI18n } from "vue-i18n";
 import {StateType} from "@/store/global"
 import { useStore } from 'vuex';

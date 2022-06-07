@@ -30,7 +30,7 @@
         :label="t('interpreter_path')"
         :info="validateInfos.path"
       >
-        <input
+        <input type="text"
           v-model="modelRef.path"
         />
         <Button  v-if="isElectron" @click="selectFile" class="state secondary select-dir-btn">{{t('select')}}</Button>
@@ -221,3 +221,8 @@ defineExpose({
   clearFormData,
 });
 </script>
+<style scoped>
+.select-dir-btn{
+  width: 60px;
+}
+</style>
