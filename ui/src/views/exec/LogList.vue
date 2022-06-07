@@ -199,6 +199,7 @@ const logStatus = ref('')
   .content {
     white-space: normal;
     .item {
+      line-height: 18px;
       &.case-item {
         &:not(.case-start) {
           display: none !important;
@@ -216,11 +217,13 @@ const logStatus = ref('')
         font-size: 13px;
         text-align: center;
         .link {
-          position: relative;
-          top: 2px;
+          //position: relative;
+          //top: 2px;
         }
       }
       .sign {
+        margin: auto;
+
         width: 20px;
         font-size: 6px;
         text-align: center;
