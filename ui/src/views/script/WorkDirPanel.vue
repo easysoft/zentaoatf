@@ -15,7 +15,7 @@
         </DropdownMenu>
 
         <Button id="displayByFilter"
-                :label="te('by_' + filerType) ? t('by_' + filerType) : t('by_workspace')"
+                :label="filerValue && te('by_' + filerType) ? t('by_' + filerType) : t('by_workspace')"
                 labelClass="strong"
                 class="rounded pure padding-sm-h"
                 :suffix-icon="currSite.id == 1 ? '' : 'caret-down'"/>
