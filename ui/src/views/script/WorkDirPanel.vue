@@ -179,7 +179,7 @@ const loadFilterItems = async (useCache = true) => {
     const result = await listFilterItems(filerType.value)
 
     if(filerType.value === 'workspace'){
-      result.data = result.data == undefined ?[{label: '全部', value: -1}] : [{label: '全部', value: -1}, ...result.data];
+      result.data = result.data == undefined ?[{label: t('all'), value: -1}] : [{label: t('all'), value: -1}, ...result.data];
     }
     filerItems.value = result.data
 
