@@ -3,7 +3,6 @@
  * @author LiQingSong
  */
 import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { notification } from "ant-design-vue";
 import settings from '@/config/settings';
 import { getCache, setCache } from '@/utils/localCache';
 import i18n from "@/config/i18n";

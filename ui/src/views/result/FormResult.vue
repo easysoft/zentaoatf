@@ -41,12 +41,12 @@ import Form from "@/components/Form.vue";
 import FormItem from "@/components/FormItem.vue";
 import {queryTask} from "@/services/zentao";
 import {submitResultToZentao} from "@/views/result/service";
-import {notification} from "ant-design-vue";
+import notification from "@/utils/notification";
 
 export interface FormWorkspaceProps {
   data?: any;
   show?: boolean;
-  finish?: Function;
+  finish: Function;
 }
 const { t } = useI18n();
 const props = withDefaults(defineProps<FormWorkspaceProps>(), {
@@ -61,7 +61,7 @@ const testTypes = ref([...ztfTestTypesDef, ...unitTestTypesDef]);
 const store = useStore<{ Zentao: ZentaoData }>();
 const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
-const modelRef = ref({taskId: 0});
+const modelRef = ref({taskId: 0} as any);
 const rulesRef = ref({});
 
 let tasks = ref([])
@@ -84,7 +84,7 @@ const submit = () => {
   const data = Object.assign({
     workspaceId: props.data.workspaceId,
     seq: props.data.seq,
-  }, modelRef.value)
+  }, modelRef.value) as any
   data.taskId = parseInt(data.taskId)
 
   console.log('data', data)
