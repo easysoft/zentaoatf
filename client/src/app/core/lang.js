@@ -10,6 +10,7 @@ const langHelper = new LangHelper();
 
 export const initLang = () => {
     let langName = app.getLocale()
+    logInfo(`langName=${langName}`)
 
     langName = langName.toLowerCase()
     if (langName.startsWith('zh-')) {
