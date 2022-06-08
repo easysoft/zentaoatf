@@ -56,7 +56,7 @@ import {useStore} from "vuex";
 import {ZentaoData} from "@/store/zentao";
 import {computed, onMounted, watch, ref} from "vue";
 import {getInitStatus} from "@/utils/cache";
-import {notification} from "ant-design-vue";
+import notification from "@/utils/notification";
 
 const { t } = useI18n();
 const router = useRouter();

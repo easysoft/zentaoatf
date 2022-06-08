@@ -88,13 +88,13 @@ import { useForm } from "@/utils/form";
 import Form from "@/components/Form.vue";
 import FormItem from "@/components/FormItem.vue";
 import {queryBugFields, queryTask} from "@/services/zentao";
-import {notification} from "ant-design-vue";
+import notification from "@/utils/notification";
 import {prepareBugData, submitBugToZentao} from "@/services/bug";
 
 export interface FormWorkspaceProps {
   data?: any;
   show?: boolean;
-  finish?: Function;
+  finish: Function;
 }
 const { t } = useI18n();
 const props = withDefaults(defineProps<FormWorkspaceProps>(), {
@@ -109,7 +109,7 @@ const testTypes = ref([...ztfTestTypesDef, ...unitTestTypesDef]);
 const store = useStore<{ Zentao: ZentaoData }>();
 const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
-const modelRef = ref({taskId: 0});
+const modelRef = ref({taskId: 0} as any);
 const rulesRef = reactive({
   title: [
     { required: true, msg: t('pls_title') },
@@ -153,7 +153,7 @@ const submit = () => {
   const data = Object.assign({
     workspaceId: props.data.workspaceId,
     seq: props.data.seq
-  }, modelRef.value)
+  }, modelRef.value) as any
   data.module = parseInt(data.module)
   data.severity = parseInt(data.severity)
   data.pri = parseInt(data.pri)
