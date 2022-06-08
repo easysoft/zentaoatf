@@ -177,6 +177,10 @@ const loadFilterItems = async (useCache = true) => {
 
     if (filerType.value) {
     const result = await listFilterItems(filerType.value)
+
+    if(filerType.value === 'workspace'){
+      result.data = result.data == undefined ?{label: '全部', value: -1} : [{label: '全部', value: -1}, ...result.data];
+    }
     filerItems.value = result.data
 
     let found = false
@@ -232,7 +236,7 @@ const onFilterValueChanged = async (item) => {
 const loadScripts = async () => {
   console.log(`filerType: ${filerType.value}, filerValue: ${filerValue.value}`)
 
-  const params = {displayBy: displayBy.value, filerType: filerType.value, filerValue: filerValue.value} as any
+  const params = {displayBy: displayBy.value, filerType: filerType.value, filerValue: filerValue.value == -1 ? 0 : filerValue.value} as any
   store.dispatch('Script/listScript', params)
 }
 
