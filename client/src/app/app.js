@@ -11,10 +11,7 @@ import {startZtfServer, killZtfServer} from "./core/ztf";
 
 export default class ZtfApp {
     constructor() {
-        initLang()
-
         app.name = Lang.string('app.title', Config.pkg.displayName);
-        logInfo(app.name);
 
         this._windows = new Map();
 
@@ -126,6 +123,7 @@ export default class ZtfApp {
      ready() {
         logInfo('>> ztf app ready.');
 
+        initLang()
         this.buildAppMenu();
         this.openOrCreateWindow()
         this.setAboutPanel();
