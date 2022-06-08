@@ -1,7 +1,7 @@
 import {app, BrowserWindow, ipcMain, Menu, shell, dialog} from 'electron';
 
 import {DEBUG, electronMsg, electronMsgReplay, minimumSizeHeight, minimumSizeWidth} from './utils/consts';
-import {IS_MAC_OSX} from './utils/env';
+import {IS_MAC_OSX, IS_LINUX} from './utils/env';
 import {logInfo, logErr} from './utils/log';
 import Config, {updateConfig} from './utils/config';
 import Lang, {initLang} from './core/lang';
