@@ -97,7 +97,7 @@ export default class ZtfApp {
         })
 
         // if (DEBUG) {
-            mainWin.webContents.openDevTools({mode: 'bottom'});
+        //     mainWin.webContents.openDevTools({mode: 'bottom'});
         // }
     };
 
