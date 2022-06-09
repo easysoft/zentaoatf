@@ -24,7 +24,7 @@ func SyncFromZentao(settings commDomain.SyncSettings, config commDomain.Workspac
 
 	byModule := settings.SaveByModule
 	independentFile := settings.IndependentFile
-	lang := "php" // settings.Lang
+	lang := settings.Lang
 
 	ok := langHelper.CheckSupportLanguages(lang)
 	if !ok {
