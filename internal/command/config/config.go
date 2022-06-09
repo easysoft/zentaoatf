@@ -26,11 +26,12 @@ func InitConfig() {
 
 	commConsts.WorkDir = fileUtils.GetWorkDir()
 	commConsts.ZtfDir, _ = fileUtils.GetZTFDir()
-	commConsts.ConfigPath = commConsts.WorkDir + commConsts.ConfigFile
 
-	if commConsts.Verbose {
-		fmt.Printf("\nlaunch %s%s in %s\n", "", commConsts.App, commConsts.WorkDir)
+	commConsts.ConfigPath = commConsts.WorkDir + commConsts.ConfigFile
+	if commConsts.IsRelease {
+		commConsts.ConfigPath = commConsts.ZtfDir + commConsts.ConfigFile
 	}
+
 	v := viper.New()
 	serverConfig.VIPER = v
 	serverConfig.VIPER.SetConfigType("yaml")
