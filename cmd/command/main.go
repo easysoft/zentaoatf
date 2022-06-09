@@ -80,6 +80,7 @@ func main() {
 	case "set", "-set":
 		flagSet.Parse(os.Args[2:])
 		if commConsts.Verbose {
+			fmt.Printf("\nIsRelease=%t\n", commConsts.IsRelease)
 			fmt.Printf("\nlaunch %s%s in %s\n", "", commConsts.App, commConsts.WorkDir)
 		}
 		action.Set()
