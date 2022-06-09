@@ -97,6 +97,7 @@ onBeforeUnmount( () => {
 #main {
   height: 100vh;
   width: 100vw;
+  min-width: 800px;
 
   #mainContent {
     height: calc(100% - 40px);
@@ -104,7 +105,7 @@ onBeforeUnmount( () => {
   }
 }
 #leftPane {
-  min-width: var(--pane-left-min-width, 200px);
+  min-width: var(--pane-left-min-width, 230px);
 }
 
 #centerPane {
