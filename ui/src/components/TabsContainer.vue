@@ -30,7 +30,9 @@ import {ScriptData} from "@/views/script/store";
 
 const {t} = useI18n();
 
-const store = useStore<{ tabs: TabsData, Script: ScriptData }>();
+import { StateType as GlobalData } from "@/store/global";
+const store = useStore<{ global: GlobalData, tabs: TabsData, Script: ScriptData }>();
+const global = computed<any>(() => store.state.global.tabIdToWorkspaceIdMap);
 const currWorkspace = computed<any>(() => store.state.Script.currWorkspace);
 
 const items = computed<TabNavItem[]>(() => {
@@ -76,14 +78,17 @@ const testTabIDRef = ref(0);
 
 const onToolbarClick = (e) => {
   console.log('onToolbarClick', e.key, activeID.value)
+
   switch (e.key) {
     case 'run': {
       let path = activeID.value
       if (path.indexOf('script-') === 0) {
         path = path.replace('script-', '')
       }
+
+      const workspaceId = global.value[activeID.value]
       bus.emit(settings.eventExec,
-         {execType: 'ztf', scripts: [{ path: path, workspaceId: currWorkspace.value.id }]});
+         {execType: 'ztf', scripts: [{ path: path, workspaceId: workspaceId }]});
       break;
     }
     case 'save': {

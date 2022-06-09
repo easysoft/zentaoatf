@@ -16,6 +16,8 @@ export interface StateType {
   logPaneOriginSize: number;
   logPaneMaximized: boolean;
   logContentExpand: boolean;
+
+  tabIdToWorkspaceIdMap: any;
 }
 
 export interface ModuleType extends StoreModuleType<StateType> {
@@ -31,6 +33,7 @@ export interface ModuleType extends StoreModuleType<StateType> {
     setLogPaneResized:Mutation<StateType>;
     setLogPaneSize:Mutation<StateType>;
     setLogContentExpand:Mutation<StateType>;
+    setTabIdToWorkspaceId:Mutation<StateType>;
   };
   actions: {
   };
@@ -43,6 +46,7 @@ const initState: StateType = {
   logPaneOriginSize: settings.logPaneSize,
   logPaneMaximized: false,
   logContentExpand: false,
+  tabIdToWorkspaceIdMap: {},
 };
 
 const StoreModel: ModuleType = {
@@ -91,6 +95,10 @@ const StoreModel: ModuleType = {
     },
     setLogContentExpand(state) {
       state.logContentExpand = !state.logContentExpand;
+    },
+
+    setTabIdToWorkspaceId(state, payload) {
+      state.tabIdToWorkspaceIdMap[payload.tabId] = payload.workspaceId;
     }
   },
   actions: {}

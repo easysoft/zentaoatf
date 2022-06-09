@@ -18,6 +18,7 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
+import { StateType as GlobalData } from "@/store/global";
 import { ZentaoData } from "@/store/zentao";
 import { ScriptData } from "@/views/script/store";
 import { WorkspaceData } from "@/store/workspace";
@@ -48,7 +49,8 @@ import { key } from "localforage";
 
 const { t } = useI18n();
 
-const store = useStore<{ Zentao: ZentaoData, Script: ScriptData, Workspace: WorkspaceData }>();
+const store = useStore<{ global: GlobalData, Zentao: ZentaoData, Script: ScriptData, Workspace: WorkspaceData }>();
+const global = computed<any>(() => store.state.global.tabIdToWorkspaceIdMap);
 const currSite = computed<any>(() => store.state.Zentao.currSite);
 const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
@@ -278,15 +280,18 @@ onUnmounted(() => {
 })
 
 const selectNode = (activeNode) => {
-  console.log('selectNode', activeNode.activeID)
+  console.log('selectNode', activeNode.activeID, global.value)
 
   const node = treeDataMap.value[activeNode.activeID]
   if (node.workspaceType !== 'ztf') checkNothing()
 
   store.dispatch('Script/getScript', node)
   if (node.type === 'file') {
+    const tabId = node.workspaceType === 'ztf' ? 'script-' + node.path : 'code-' + node.path
+    global.value[tabId] = node.workspaceId
+
     store.dispatch('tabs/open', {
-      id: node.workspaceType === 'ztf' ? 'script-' + node.path : 'code-' + node.path,
+      id: tabId,
       title: node.title,
       changed: false,
       type: 'script',

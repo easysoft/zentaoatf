@@ -1,17 +1,17 @@
 import moment, {utc} from "moment";
 
 export function momentUtcDef(tm) {
-    return moment.utc(tm).format("YYYY-MM-DD HH:mm:ss")
+    return moment.parseZone(tm).format("YYYY-MM-DD HH:mm:ss")
 }
 export function momentUnixDef(tm) {
-    return moment.unix(tm).format("YYYY-MM-DD HH:mm:ss")
+    return moment.parseZone(tm).format("YYYY-MM-DD HH:mm:ss")
 }
 export function momentTime(tm) {
-    return moment.unix(tm).format("HH:mm:ss")
+    return moment.parseZone(tm).format("HH:mm:ss")
 }
 
 export function momentUnixDefFormat(tm, format) {
-    return moment.unix(tm).format(format)
+    return moment.parseZone(tm).format(format)
 }
 
 export function percentDef(numb, total) {
