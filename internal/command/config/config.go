@@ -82,7 +82,7 @@ func InitScreenSize() {
 
 func PrintCurrConfig() {
 	logUtils.ExecConsole(color.FgCyan, "\n"+i118Utils.Sprintf("current_config"))
-	conf := configHelper.LoadByWorkspacePath(commConsts.WorkDir)
+	conf := configHelper.LoadByWorkspacePath(commConsts.ZtfDir)
 	val := reflect.ValueOf(conf)
 	typeOfS := val.Type()
 	for i := 0; i < reflect.ValueOf(conf).NumField(); i++ {
