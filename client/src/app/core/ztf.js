@@ -33,7 +33,7 @@ export async function startZtfServer() {
             logInfo(`>> starting ztf server with command ` +
                 `"${serverExePath} -p ${portServer} -uuid ${uuid}" in "${cwd}"...`);
 
-            const cmd = spawn(serverExePath, ['-p', portServer, '-uuid', uuid], {
+            const cmd = spawn('"'+serverExePath+'"', ['-p', portServer, '-uuid', uuid], {
                 cwd,
                 shell: true,
             });
@@ -122,14 +122,14 @@ export async function startZtfServer() {
 export function killZtfServer() {
     let cmd = ''
     if (!IS_WINDOWS_OS) {
-        logInfo(`>> no windows`);
+        logInfo(`>> not windows`);
 
         cmd = `ps -ef | grep ${uuid} | grep -v "grep" | awk '{print $2}' | xargs kill -9`
-        logInfo(`>> kill cmd: ${cmd}`);
+        logInfo(`>> exit cmd: ${cmd}`);
 
         const cp = require('child_process');
         cp.exec(cmd, function (error, stdout, stderr) {
-            logInfo(`>> kill result: stdout: ${stdout}; stderr: ${stderr}; error: ${error}`);
+            logInfo(`>> exit result: stdout: ${stdout}; stderr: ${stderr}; error: ${error}`);
         });
     } else {
         const cmd = 'WMIC path win32_process  where "Commandline like \'%%' + uuid + '%%\'" get Processid,Caption';
@@ -159,10 +159,10 @@ export function killZtfServer() {
 
         if (pid && pid > 0) {
             const killCmd = `taskkill /F /pid ${pid}`
-            logInfo(`>> taskkill cmd: exec ${killCmd}`)
+            logInfo(`>> exit cmd: exec ${killCmd}`)
 
             const out = execSync(`taskkill /F /pid ${pid}`, {windowsHide: true}).toString().trim()
-            logInfo(`>> taskkill result: ${out}`)
+            logInfo(`>> exit result: ${out}`)
         }
     }
 }

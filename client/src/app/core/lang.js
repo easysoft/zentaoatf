@@ -19,7 +19,6 @@ export const initLang = () => {
         langName = 'en';
     }
 
-    logInfo(`langName=${langName}`)
     loadLanguage(langName)
 };
 
