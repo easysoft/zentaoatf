@@ -157,7 +157,7 @@
     --splitter-hover-size: 6px;
 
     /* Panel settings 面板设置 */
-    --pane-left-min-width: 200px;
+    --pane-left-min-width: 230px;
     --pane-center-min-width: 100px;
     --pane-right-min-width: 200px;
     --pane-tabs-min-height: 200px;
