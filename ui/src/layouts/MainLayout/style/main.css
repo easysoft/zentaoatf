@@ -61,3 +61,26 @@ code {
     flex: 0 0 100%;
     max-width: 100%;
 }
+.toast-notification {
+    background: #fff!important;
+    min-width: 260px!important;
+}
+.toast-notification-container{
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 14px;
+}
+.toast-notification-success svg{
+    color: #52c41a!important;
+}
+.toast-notification-error svg{
+    color: #ff4d4f!important;
+}
+.toast-notification-info svg{
+    color: #1890ff!important;
+}
+.toast-notification-warning svg{
+    color: #faad14!important;
+}
+.toast-notification-close{
+    color: rgba(0, 0, 0, 0.67)!important;
+}
