@@ -140,6 +140,7 @@ defineProps<FormItemProps>();
 }
 .form-item-field:deep(input[type="text"]),
 .form-item-field:deep(input[type="number"]),
+.form-item-field:deep(input[type="password"]),
 .form-item-field:deep(select),
 .form-item-field:deep(.select),
 .form-item-field:deep(textarea)  {
@@ -199,6 +200,7 @@ defineProps<FormItemProps>();
 
 .form-item-field:deep(input[type="text"]),
 .form-item-field:deep(input[type="number"]),
+.form-item-field:deep(input[type="password"]),
 .form-item-field:deep(textarea),
 .form-item-field:deep(select) {
   display: block;

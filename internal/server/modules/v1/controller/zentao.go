@@ -45,8 +45,9 @@ func (c *ZentaoCtrl) GetProfile(ctx iris.Context) {
 func (c *ZentaoCtrl) ListSiteAndProduct(ctx iris.Context) {
 	currSiteId, _ := ctx.URLParamInt("currSiteId")
 	currProductId, _ := ctx.URLParamInt("currProductId")
+	lang := ctx.URLParam("lang")
 
-	sites, currSite, _ := c.SiteService.LoadSites(currSiteId)
+	sites, currSite, _ := c.SiteService.LoadSites(currSiteId, lang)
 	products, currProduct, err := zentaoHelper.LoadSiteProduct(currSite, currProductId)
 
 	for idx, _ := range sites {

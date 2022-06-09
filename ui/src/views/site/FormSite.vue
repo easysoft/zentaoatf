@@ -25,7 +25,7 @@
         :label="t('password')"
         :info="validateInfos.password"
       >
-        <input type="text" v-model="modelRef.password" />
+        <input type="password" v-model="modelRef.password" />
       </FormItem>
     </Form>
   </ZModal>

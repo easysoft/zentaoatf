@@ -8,6 +8,7 @@ import (
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
+	"strings"
 )
 
 type SiteService struct {
@@ -88,7 +89,7 @@ func (s *SiteService) Delete(id uint) error {
 	return s.SiteRepo.Delete(id)
 }
 
-func (s *SiteService) LoadSites(currSiteId int) (sites []serverDomain.ZentaoSite, currSite serverDomain.ZentaoSite, err error) {
+func (s *SiteService) LoadSites(currSiteId int, lang string) (sites []serverDomain.ZentaoSite, currSite serverDomain.ZentaoSite, err error) {
 	req := serverDomain.ReqPaginate{PaginateReq: domain.PaginateReq{Page: 1, PageSize: 10000}}
 	pageData, err := s.Paginate(req)
 	if err != nil {
@@ -97,7 +98,7 @@ func (s *SiteService) LoadSites(currSiteId int) (sites []serverDomain.ZentaoSite
 
 	pos := pageData.Result.([]*model.Site)
 	if len(pos) == 0 {
-		s.CreateEmptySite()
+		s.CreateEmptySite(lang)
 		pageData, err = s.Paginate(req)
 		pos = pageData.Result.([]*model.Site)
 	}
@@ -125,9 +126,14 @@ func (s *SiteService) LoadSites(currSiteId int) (sites []serverDomain.ZentaoSite
 	return
 }
 
-func (s *SiteService) CreateEmptySite() (err error) {
+func (s *SiteService) CreateEmptySite(lang string) (err error) {
+	name := "Local"
+	if strings.Index(strings.ToLower(lang), "zh") > -1 {
+		name = "本地"
+	}
+
 	po := model.Site{
-		Name: "无站点",
+		Name: name,
 		Url:  "",
 	}
 	_, err = s.SiteRepo.Create(&po)
