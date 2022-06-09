@@ -2,6 +2,7 @@ package serverConfig
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"net/url"
 	"os"
@@ -44,7 +45,9 @@ func InitLog() {
 
 // 执行日志，用于具体的测试执行
 func InitExecLog(workspacePath string) {
+	fmt.Printf("\nworkspacePath=%s\n", workspacePath)
 	commConsts.ExecLogDir = logUtils.GetLogDir(workspacePath)
+	fmt.Printf("\ncommConsts.ExecLogDir=%s\n", commConsts.ExecLogDir)
 	config := getLogConfig()
 	config.EncoderConfig.EncodeLevel = nil
 

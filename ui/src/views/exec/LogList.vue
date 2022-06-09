@@ -191,9 +191,11 @@ const logStatus = ref('')
   .result-pass {
     color: var(--color-green)
   }
-
   .result-fail {
     color: var(--color-red)
+  }
+  .result-skip {
+    color: var(--color-gray)
   }
 
   .content {

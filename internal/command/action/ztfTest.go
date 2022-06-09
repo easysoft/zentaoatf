@@ -15,7 +15,9 @@ func RunZTFTest(files []string, moduleIdStr, suiteIdStr, taskIdStr string) error
 	req := serverDomain.WsReq{
 		ScriptDirParamFromCmdLine: files[0],
 	}
-	testSet := serverDomain.TestSet{}
+	testSet := serverDomain.TestSet{
+		WorkspacePath: commConsts.ZtfDir,
+	}
 
 	if moduleIdStr != "" { // run with module id
 		testSet.ProductId = stringUtils.ParseInt(commConsts.ProductId)

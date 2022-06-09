@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"github.com/easysoft/zentaoatf/internal/comm/consts"
 	"github.com/easysoft/zentaoatf/internal/command/action"
 	commandConfig "github.com/easysoft/zentaoatf/internal/command/config"
@@ -77,6 +78,11 @@ func main() {
 
 	switch os.Args[1] {
 	case "set", "-set":
+		flagSet.Parse(os.Args[2:])
+		if commConsts.Verbose {
+			fmt.Printf("\nIsRelease=%t\n", commConsts.IsRelease)
+			fmt.Printf("\nlaunch %s%s in %s\n", "", commConsts.App, commConsts.WorkDir)
+		}
 		action.Set()
 
 	case "expect":

@@ -57,21 +57,11 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		msgFail += strings.Join(failedCaseLines, "\n")
 		msgFail += strings.Join(failedCaseLinesWithCheckpoint, "\n")
 
-		// move to case result
-		//if commConsts.ExecFrom != commConsts.FromCmd {
-		//	websocketHelper.SendExecMsg(msgFail, "", commConsts.Error, nil, wsMsg)
-		//}
-
 		logUtils.ExecConsolef(color.FgRed, msgFail)
 		logUtils.ExecFile(msgFail)
 	}
 
 	// 生成统计行
-	//secTag := ""
-	//if commConsts.Language == "en" && report.Duration > 1 {
-	//	secTag = "s"
-	//}
-
 	fmtStr := "%d(%.1f%%) %s"
 	passRate := 0
 	failRate := 0
@@ -89,13 +79,15 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	// 执行%d个用例，耗时%d秒%s。%s，%s，%s。
 	// Run %d script in %d sec, %s, %s, %s.
 	msgRun := dateUtils.DateTimeStr(time.Now()) + " " +
-		i118Utils.Sprintf("run_result",
-			report.Total, report.Duration, // secTag,
-			passStr, failStr, skipStr,
-		)
+		i118Utils.Sprintf("run_result", report.Total, report.Duration, passStr, failStr, skipStr)
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg(msgRun, "", commConsts.Run, nil, wsMsg)
+		msgRunColor := i118Utils.Sprintf("run_result", report.Total, report.Duration,
+			fmt.Sprintf(`<span class="result-pass">%s</span>`, passStr),
+			fmt.Sprintf(`<span class="result-fail">%s</span>`, failStr),
+			fmt.Sprintf(`<span class="result-skip">%s</span>`, skipStr),
+		)
+		websocketHelper.SendExecMsg(msgRunColor, "", commConsts.Run, nil, wsMsg)
 	}
 
 	logUtils.ExecConsole(color.FgCyan, msgRun)

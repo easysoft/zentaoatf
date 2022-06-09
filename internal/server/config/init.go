@@ -17,10 +17,6 @@ func Init() {
 	//commConsts.ZtfDir = fileUtils.GetExeDir(commConsts.WorkDir)
 	commConsts.WorkDir = GetServerWorDir()
 
-	//if !commConsts.IsRelease {
-	//	commConsts.Verbose = true
-	//}
-
 	if commConsts.Verbose {
 		fmt.Printf("\nlaunch %s%s in %s\n", "", commConsts.App, commConsts.WorkDir)
 	}

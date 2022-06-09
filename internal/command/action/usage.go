@@ -32,10 +32,10 @@ func PrintUsage() {
 	logUtils.Info("\n" + color.CyanString(i118Utils.Sprintf("example")))
 
 	sampleData, _ := resUtils.ReadRes(sampleFile)
-	sample := ""
+	sample := string(sampleData)
 	if !commonUtils.IsWin() {
 		regx, _ := regexp.Compile(`\\`)
-		sample = regx.ReplaceAllString(string(sampleData), "/")
+		sample = regx.ReplaceAllString(sample, "/")
 
 		regx, _ = regexp.Compile(commConsts.App + `.exe`)
 		sample = regx.ReplaceAllString(sample, commConsts.App)

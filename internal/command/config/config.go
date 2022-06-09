@@ -25,12 +25,13 @@ func InitConfig() {
 	commConsts.IsRelease = commonUtils.IsRelease()
 
 	commConsts.WorkDir = fileUtils.GetWorkDir()
-	commConsts.ZtfDir, _ = fileUtils.GetZTFDir()
-	commConsts.ConfigPath = commConsts.WorkDir + commConsts.ConfigFile
+	commConsts.ZtfDir = fileUtils.GetZTFDir()
 
-	if commConsts.Verbose {
-		fmt.Printf("\nlaunch %s%s in %s\n", "", commConsts.App, commConsts.WorkDir)
+	commConsts.ConfigPath = commConsts.WorkDir + commConsts.ConfigFile
+	if commConsts.IsRelease {
+		commConsts.ConfigPath = commConsts.ZtfDir + commConsts.ConfigFile
 	}
+
 	v := viper.New()
 	serverConfig.VIPER = v
 	serverConfig.VIPER.SetConfigType("yaml")
@@ -81,7 +82,7 @@ func InitScreenSize() {
 
 func PrintCurrConfig() {
 	logUtils.ExecConsole(color.FgCyan, "\n"+i118Utils.Sprintf("current_config"))
-	conf := configHelper.LoadByWorkspacePath(commConsts.WorkDir)
+	conf := configHelper.LoadByWorkspacePath(commConsts.ZtfDir)
 	val := reflect.ValueOf(conf)
 	typeOfS := val.Type()
 	for i := 0; i < reflect.ValueOf(conf).NumField(); i++ {

@@ -231,17 +231,13 @@ func GetWorkDir() string { // where we run file in
 	return dir
 }
 
-func GetZTFDir() (dir string, isDebug bool) { // where ztf command and config in
+func GetZTFDir() (dir string) { // where ztf exe file in
+	fmt.Printf("\nIsRelease = %t\n", commonUtils.IsRelease())
 	if commonUtils.IsRelease() { // release
-		p, _ := exec.LookPath(os.Args[0])
-		if strings.Index(p, string(os.PathSeparator)) > -1 {
-			dir = p[:strings.LastIndex(p, string(os.PathSeparator))]
-		}
-	} else { // debug
 		dir, _ = os.Executable()
-		isDebug = true
-
-		fmt.Printf("Debug: Launch %s in %s \n", os.Args[0], dir)
+		dir = filepath.Dir(dir)
+	} else { // debug
+		dir = GetWorkDir()
 	}
 
 	dir, _ = filepath.Abs(dir)

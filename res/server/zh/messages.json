@@ -216,7 +216,7 @@
     },
     {
       "id": "config_zentao_site",
-      "translation": "现在开始配置同禅道系统的同步参数？（y/n, 默认Yes）"
+      "translation": "现在开始配置禅道系统的同步参数？（y/n, 默认Yes）"
     },
     {
       "id": "enter_url",

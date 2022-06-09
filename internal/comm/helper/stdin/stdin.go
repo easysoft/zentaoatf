@@ -91,8 +91,8 @@ func GetInputForScriptInterpreter(defaultVal string, fmtStr string, params ...in
 	}
 }
 
-func InputForSet() {
-	conf := configHelper.ReadFromFile(commConsts.WorkDir)
+func InputForSet(dir string) {
+	conf := configHelper.ReadFromFile(dir)
 
 	var configSite bool
 
@@ -131,11 +131,11 @@ func InputForSet() {
 		var configInterpreter bool
 		stdinUtils.InputForBool(&configInterpreter, true, "config_script_interpreter")
 		if configInterpreter {
-			scripts := scriptHelper.LoadScriptByWorkspace(commConsts.WorkDir)
+			scripts := scriptHelper.LoadScriptByWorkspace(dir)
 			InputForScriptInterpreter(scripts, &conf, "set")
 		}
 	}
-	configHelper.SaveToFile(conf, commConsts.WorkDir)
+	configHelper.SaveToFile(conf, dir)
 }
 
 func getZenTaoBaseUrl(url string) string {
