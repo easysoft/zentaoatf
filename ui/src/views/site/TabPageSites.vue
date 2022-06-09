@@ -119,7 +119,7 @@ const remove = (item) => {
     onOk: async () => {
       store.dispatch("Site/delete", item.id).then((success) => {
         store.dispatch("Zentao/fetchSitesAndProduct").then((success) => {
-          notification.success(t("delete_success"));
+        //   notification.success(t("delete_success"));
           fetchSites();
         });
       });
@@ -137,7 +137,7 @@ const createSite = (formData) => {
       formSite.value.clearFormData()
       showCreateSiteModal.value = false;
       store.dispatch('Zentao/fetchSitesAndProduct').then((success) => {
-        notification.success({message: t('save_success')});
+        // notification.success({message: t('save_success')});
         fetchSites();
       });
     }

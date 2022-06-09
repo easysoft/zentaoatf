@@ -192,7 +192,7 @@ const createInterpreter = (formData) => {
     saveInterpreter(formData).then((json) => {
         if (json.code === 0) {
           formInterpreter.value.clearFormData();
-          notification.success({ message: t("save_success") });
+        //   notification.success({ message: t("save_success") });
           showCreateInterpreterModal.value = false;
           list();
         }

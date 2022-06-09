@@ -74,11 +74,11 @@ export const getScriptFilters = async (displayBy, siteId, productId, byDefault =
     const key = `${displayBy}-${siteId}-${productId}`
 
     if (!cachedData || !cachedData[key]) {
-        return {by: 'workspace', val: ''}
+        return {by: '', val: ''}
     }
 
     const mp = cachedData[key]
-    const by = byDefault ? byDefault : (mp.by ? mp.by : 'workspace')
+    const by = byDefault ? byDefault : (mp.by ? mp.by : '')
     const val = mp[by]
 
     return {by: by, val: val}

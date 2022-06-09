@@ -15,10 +15,11 @@
         </DropdownMenu>
 
         <Button id="displayByFilter"
-                :label="oldFilerValue && te('by_' + oldFilerType) ? t('by_' + oldFilerType) : t('by_workspace')"
+                 v-if="currSite.id != 1"
+                :label="oldFilerValue && te('by_' + oldFilerType) ? t('by_' + oldFilerType) : t('all')"
                 labelClass="strong"
                 class="rounded pure padding-sm-h"
-                :suffix-icon="currSite.id == 1 ? '' : 'caret-down'"/>
+                suffix-icon="caret-down"/>
 
     <div class="dropdownMenu-container">
 
@@ -28,11 +29,11 @@
                   :items="FilterTyles"
                   :checkedKey="filerType == oldFilerType && filerValue ? filerType : oldFilerType"
                   @click="onFilterTypeChanged"
-                  :hideOnClickMenu="false"
+                  :hideOnClickMenu="filerType == '' ? true : false"
                   >
         </DropdownMenu>
         <DropdownMenu class="childMenu" toggle="#parentMenu"
-                  v-if="currSite.id != 1"
+                  v-if="currSite.id != 1 && filerType != ''"
                   :items="filerItems"
                   :checkedKey="filerType == oldFilerType ? oldFilerValue : ''"
                   keyName="value"
@@ -124,6 +125,7 @@ const FilterTyles = ref([
 const setFilterTypes = () => {
   if(currSite.value.id != 1){
     FilterTyles.value = [
+      {key: '', title: t('all')},
       {key: 'workspace', title: t('by_workspace')},
       {key: 'suite', title: t('by_suite')},
       {key: 'task', title: t('by_task')},
@@ -166,12 +168,12 @@ let filerItems = ref([] as any)
 const loadFilterItems = async (useCache = true) => {
     const data = await getScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, useCache ? '' : filerType.value)
     if(useCache){
-      filerType.value = data.by
+      filerType.value = !data.val ? '' : data.by
       filerValue.value = data.val
     }
 
     if (!currProduct.value.id && (filerType.value !== 'workspace' || oldFilerType.value != 'workspace')) {
-      oldFilerType.value = filerType.value = 'workspace'
+      oldFilerType.value = filerType.value = ''
       oldFilerValue.value = filerValue.value = ''
     }
 
@@ -221,8 +223,15 @@ const onFilterTypeChanged = async (item) => {
   console.log('onFilterTypeChanged', filerType.value, oldFilerType.value, item.key)
   filerType.value = item.key
   filerValue.value = '';
-  //await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, filerType.value, filerValue.value)
-  loadFilterItems(false);
+  filerItems.value = [];
+  if(filerType.value == ''){
+    oldFilerType.value = '';
+	oldFilerValue.value = -1;
+    await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, filerType.value, filerValue.value)
+    await loadScripts()
+  }else{
+    loadFilterItems(false);
+  }
 }
 
 const onFilterValueChanged = async (item) => {
