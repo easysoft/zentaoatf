@@ -235,6 +235,7 @@ func GetZTFDir() (dir string) { // where ztf exe file in
 	fmt.Printf("\nIsRelease = %t\n", commonUtils.IsRelease())
 	if commonUtils.IsRelease() { // release
 		dir, _ = os.Executable()
+		dir = filepath.Dir(dir)
 	} else { // debug
 		dir = GetWorkDir()
 	}
