@@ -114,7 +114,7 @@ const cancel = () => {
 };
 
 const isElectron = ref(!!window.require)
-const modelRef = ref({} as any);
+const modelRef = ref({type: 'ztf'} as any);
 
 const showCmd = computed(() => { return modelRef.value.type && modelRef.value.type !== 'ztf' })
 const rulesRef = ref({
