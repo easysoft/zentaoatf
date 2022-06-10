@@ -3,12 +3,13 @@
     <template #header>
       <ButtonList :gap="2" class="workdir-panel-nav">
         <Button id="displayByMenuToggle"
+                v-if="currSite.id != 1"
                 :label="te('by_' + displayBy) ? t('by_' + displayBy) : t('by_workspace')"
                 labelClass="strong"
                 class="rounded pure padding-sm-h"
                 :suffix-icon="currSite.id == 1 ? '' : 'caret-down'"/>
 
-        <DropdownMenu v-if="currSite.id != 1" :items="displayTypes"
+        <DropdownMenu :items="displayTypes"
                   :checkedKey="displayBy"
                   @click="onDisplayByChanged"
                   toggle="#displayByMenuToggle">

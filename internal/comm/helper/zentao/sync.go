@@ -2,6 +2,8 @@ package zentaoHelper
 
 import (
 	"fmt"
+	"path/filepath"
+
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
 	langHelper "github.com/easysoft/zentaoatf/internal/comm/helper/lang"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/comm/helper/script"
@@ -9,7 +11,6 @@ import (
 	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	"github.com/fatih/color"
-	"path/filepath"
 )
 
 func SyncFromZentao(settings commDomain.SyncSettings, config commDomain.WorkspaceConf, workspacePath string) (
@@ -23,7 +24,7 @@ func SyncFromZentao(settings commDomain.SyncSettings, config commDomain.Workspac
 
 	byModule := settings.SaveByModule
 	independentFile := settings.IndependentFile
-	lang := "php" // settings.Lang
+	lang := settings.Lang
 
 	ok := langHelper.CheckSupportLanguages(lang)
 	if !ok {
@@ -53,7 +54,7 @@ func SyncFromZentao(settings commDomain.SyncSettings, config commDomain.Workspac
 	}
 	targetDir := fileUtils.AddFilePathSepIfNeeded(filepath.Join(workspacePath, fmt.Sprintf("product%d", productId)))
 
-	pths, err = scriptHelper.GenerateScripts(cases, lang, independentFile, byModule, targetDir)
+	pths, targetDir, err = scriptHelper.GenerateScripts(cases, lang, independentFile, byModule, targetDir)
 	if err == nil {
 		logUtils.Infof(i118Utils.Sprintf("success_to_generate", len(pths), targetDir))
 	} else {

@@ -2,6 +2,10 @@ package scriptHelper
 
 import (
 	"fmt"
+	"path/filepath"
+	"strconv"
+	"strings"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
 	"github.com/easysoft/zentaoatf/internal/pkg/consts"
@@ -9,13 +13,10 @@ import (
 	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
 	resUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/res"
 	stdinUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/stdin"
-	"path/filepath"
-	"strconv"
-	"strings"
 )
 
 func GenerateScripts(cases []commDomain.ZtfCase, langType string, independentFile bool,
-	byModule bool, targetDir string) (pths []string, err error) {
+	byModule bool, targetDir string) (pths []string, realPath string, err error) {
 	caseIds := make([]string, 0)
 
 	if commConsts.ExecFrom == commConsts.FromCmd { // from cmd
@@ -23,6 +24,7 @@ func GenerateScripts(cases []commDomain.ZtfCase, langType string, independentFil
 		stdinUtils.InputForBool(&byModule, byModule, "co_organize_by_module")
 	}
 	targetDir = fileUtils.AbsolutePath(targetDir)
+	realPath = targetDir
 
 	for _, cs := range cases {
 		pth, _ := GenerateScript(cs, langType, independentFile, &caseIds, targetDir, byModule)
