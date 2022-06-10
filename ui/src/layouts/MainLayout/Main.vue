@@ -109,7 +109,7 @@ onBeforeUnmount( () => {
 }
 
 #centerPane {
-  min-width: var(--pane-center-min-width, 100px);
+  min-width: 500px;
 
   #tabsPane {
     min-width: var(--pane-tabs-min-width, 100px);

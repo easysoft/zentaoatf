@@ -6,6 +6,7 @@ import (
 	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/comm/helper/script"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
 	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
 	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
@@ -120,11 +121,18 @@ func InputForSet(dir string) {
 
 	stdinUtils.InputForBool(&configSite, true, "config_zentao_site")
 	if configSite {
+	SetZentao:
+
 		conf.Url = stdinUtils.GetInput("((http|https)://.*)", conf.Url, "enter_url", conf.Url)
 		conf.Url = getZenTaoBaseUrl(conf.Url)
 
 		conf.Username = stdinUtils.GetInput("(.{2,})", conf.Username, "enter_account", conf.Username)
 		conf.Password = stdinUtils.GetInput("(.{2,})", conf.Password, "enter_password", conf.Password)
+
+		err := zentaoHelper.Login(conf)
+		if err != nil {
+			goto SetZentao
+		}
 	}
 
 	if commonUtils.IsWin() {

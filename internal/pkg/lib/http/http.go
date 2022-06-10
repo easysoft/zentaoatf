@@ -13,13 +13,17 @@ import (
 )
 
 func Get(url string) (ret []byte, err error) {
-	logUtils.Infof("===DEBUG===  request: %s", url)
+	if commConsts.Verbose {
+		logUtils.Infof("===DEBUG===  request: %s", url)
+	}
 
 	client := &http.Client{}
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		logUtils.Infof(color.RedString("get request failed, error: %s.", err.Error()))
+		if commConsts.Verbose {
+			logUtils.Infof(color.RedString("get request failed, error: %s.", err.Error()))
+		}
 		return
 	}
 
@@ -30,12 +34,16 @@ func Get(url string) (ret []byte, err error) {
 	resp, err := client.Do(req)
 	defer resp.Body.Close()
 	if err != nil {
-		logUtils.Infof(color.RedString("get request failed, error: %s.", err.Error()))
+		if commConsts.Verbose {
+			logUtils.Infof(color.RedString("get request failed, error: %s.", err.Error()))
+		}
 		return
 	}
 
 	if !IsSuccessCode(resp.StatusCode) {
-		logUtils.Infof(color.RedString("read response failed, StatusCode: %d.", resp.StatusCode))
+		if commConsts.Verbose {
+			logUtils.Infof(color.RedString("read response failed, StatusCode: %d.", resp.StatusCode))
+		}
 		err = errors.New(resp.Status)
 		return
 	}
@@ -46,7 +54,9 @@ func Get(url string) (ret []byte, err error) {
 	}
 
 	if err != nil {
-		logUtils.Infof(color.RedString("read response failed, error ", err.Error()))
+		if commConsts.Verbose {
+			logUtils.Infof(color.RedString("read response failed, error ", err.Error()))
+		}
 		return
 	}
 
@@ -75,7 +85,9 @@ func Put(url string, data interface{}) (ret []byte, err error) {
 }
 
 func PostOrPut(url string, method string, data interface{}) (ret []byte, err error) {
-	logUtils.Infof("===DEBUG===  request: %s", url)
+	if commConsts.Verbose {
+		logUtils.Infof("===DEBUG===  request: %s", url)
+	}
 
 	client := &http.Client{}
 
@@ -85,7 +97,9 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 	}
 
 	if err != nil {
-		logUtils.Infof(color.RedString("marshal request failed, error: %s.", err.Error()))
+		if commConsts.Verbose {
+			logUtils.Infof(color.RedString("marshal request failed, error: %s.", err.Error()))
+		}
 		return
 	}
 
@@ -93,7 +107,9 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 
 	req, err := http.NewRequest(method, url, strings.NewReader(dataStr))
 	if err != nil {
-		logUtils.Infof(color.RedString("post request failed, error: %s.", err.Error()))
+		if commConsts.Verbose {
+			logUtils.Infof(color.RedString("post request failed, error: %s.", err.Error()))
+		}
 		return
 	}
 
@@ -105,12 +121,16 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 
 	resp, err := client.Do(req)
 	if err != nil {
-		logUtils.Infof(color.RedString("post request failed, error: %s.", err.Error()))
+		if commConsts.Verbose {
+			logUtils.Infof(color.RedString("post request failed, error: %s.", err.Error()))
+		}
 		return
 	}
 
 	if !IsSuccessCode(resp.StatusCode) {
-		logUtils.Infof(color.RedString("post request return '%s'.", resp.Status))
+		if commConsts.Verbose {
+			logUtils.Infof(color.RedString("post request return '%s'.", resp.Status))
+		}
 		err = errors.New(resp.Status)
 		return
 	}
@@ -123,7 +143,9 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 	}
 
 	if err != nil {
-		logUtils.Infof(color.RedString("read response failed, error: %s.", err.Error()))
+		if commConsts.Verbose {
+			logUtils.Infof(color.RedString("read response failed, error: %s.", err.Error()))
+		}
 		return
 	}
 

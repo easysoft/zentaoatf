@@ -25,13 +25,14 @@ func LoadBySite(site model.Site) (config commDomain.WorkspaceConf) {
 	return config
 }
 
+func LoadByConfigPath(configPath string) (config commDomain.WorkspaceConf) {
+	ini.MapTo(&config, configPath)
+	config.Url = commonUtils.AddSlashForUrl(config.Url)
+	return config
+}
 func LoadByWorkspacePath(workspacePath string) (config commDomain.WorkspaceConf) {
 	pth := filepath.Join(workspacePath, commConsts.ConfigDir, commConsts.ConfigFile)
-	ini.MapTo(&config, pth)
-
-	config.Url = commonUtils.AddSlashForUrl(config.Url)
-
-	return config
+	return LoadByConfigPath(pth)
 }
 
 func UpdateSite(site model.Site, workspacePath string) (err error) {

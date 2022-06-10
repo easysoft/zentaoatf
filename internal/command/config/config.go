@@ -27,10 +27,13 @@ func InitConfig() {
 	commConsts.WorkDir = fileUtils.GetWorkDir()
 	commConsts.ZtfDir = fileUtils.GetZTFDir()
 
-	commConsts.ConfigPath = commConsts.WorkDir + commConsts.ConfigFile
+	commConsts.ConfigPath = filepath.Join(commConsts.WorkDir, commConsts.ConfigDir, commConsts.ConfigFile)
 	if commConsts.IsRelease {
-		commConsts.ConfigPath = commConsts.ZtfDir + commConsts.ConfigFile
+		commConsts.ConfigPath = filepath.Join(commConsts.ZtfDir, commConsts.ConfigDir, commConsts.ConfigFile)
 	}
+
+	config := configHelper.LoadByConfigPath(commConsts.ConfigPath)
+	commConsts.Language = config.Language
 
 	v := viper.New()
 	serverConfig.VIPER = v
