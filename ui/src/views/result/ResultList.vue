@@ -6,7 +6,7 @@
       class="result-list-item"
       :title="item.displayName"
       titleClass="text-ellipsis"
-      :trailingText="momentTime(item.startTime, 'hh:mm')"
+      :trailingText="momentUnixFormat(1654830469, 'hh:mm')"
       trailingTextClass="muted small"
       @click="showDetail(item)"
     >
@@ -34,7 +34,7 @@ import List from '@/components/List.vue';
 import ListItem from '@/components/ListItem.vue';
 import Icon from '@/components/Icon.vue';
 import {StateType} from "@/views/result/store";
-import {momentUnixDefFormat as momentTime} from "@/utils/datetime";
+import {momentUnixFormat} from "@/utils/datetime";
 import {ZentaoData} from "@/store/zentao";
 import Button from '@/components/Button.vue';
 import bus from "@/utils/eventBus";
