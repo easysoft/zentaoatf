@@ -5,7 +5,7 @@
       <Icon v-else icon="close-circle" class="text-red" size="2em" />
       <strong class="space-left">{{ t('case_num_format', {count: report.total}) }}</strong>
       <small class="rounded inline-block space-left" :class="isTestPassed ? 'green-pale padding-sm-h' : 'red-pale padding-sm-h'">{{t('pass')}} {{percent(report.pass, report.total)}}</small>
-      <div class="flex-auto row justify-end">
+      <div class="flex-auto row justify-end result-action">
         <Button
           v-if="currProduct.id"
           @click="openResultForm()"
@@ -63,7 +63,7 @@
           <Icon icon="timer" class="muted" />
           <span>{{t("duration")}}</span>
           <span>{{report.duration}}{{ t("sec") }}</span>
-          <small class="muted">(<span :title="t('start_time')">{{ momentTime(report.startTime) }}</span> ~ <span :title="t('end_time')">{{ momentTime(report.endTime) }}</span>)</small>
+          <small class="muted">(<span :title="t('start_time')">{{ momentTime(report.startTime, "YYYY-MM-DD HH:mm:ss") }}</span> ~ <span :title="t('end_time')">{{ momentTime(report.endTime, "YYYY-MM-DD HH:mm:ss") }}</span>)</small>
         </div>
       </div>
     </div>
@@ -180,7 +180,7 @@ import {computed, defineProps, onMounted, reactive, ref, toRefs, watch} from "vu
 import {PageTab} from "@/store/tabs";
 import {useI18n} from "vue-i18n";
 import {useStore} from "vuex";
-import {momentUnixDef, percentDef} from "@/utils/datetime";
+import {momentUnixFormat, percentDef} from "@/utils/datetime";
 import Modal from "@/utils/modal"
 import {jsonStrDef} from "@/utils/dom";
 import {actualDesc, execByDef, expectDesc, resultStatusDef, testEnvDef, testTypeDef,} from "@/utils/testing";
@@ -205,7 +205,7 @@ const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
 const jsonStr = jsonStrDef
 const execBy = execByDef;
-const momentTime = momentUnixDef;
+const momentTime = momentUnixFormat;
 const percent = percentDef;
 const testEnv = testEnvDef;
 const testType = testTypeDef;
@@ -376,5 +376,10 @@ onMounted(() => {
 }
 .unit-result-info {
   padding-left: 30px;
+}
+.result-action .btn[data-v-03c253ee] {
+  height: auto;
+  padding: 3px .7em;
+  min-height: calc(2em + 2px);
 }
 </style>
