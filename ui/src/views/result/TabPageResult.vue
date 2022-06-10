@@ -377,7 +377,7 @@ onMounted(() => {
 .unit-result-info {
   padding-left: 30px;
 }
-.result-action .btn[data-v-03c253ee] {
+.result-action .btn {
   height: auto;
   padding: 3px .7em;
   min-height: calc(2em + 2px);
