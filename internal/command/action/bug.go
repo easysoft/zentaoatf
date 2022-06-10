@@ -38,6 +38,7 @@ func CommitBug(files []string, productId int) {
 
 	report, err := analysisHelper.ReadReportByWorkspaceSeq(commConsts.WorkDir, resultDir)
 	if err != nil {
+		logUtils.ExecConsole(color.FgRed, i118Utils.Sprintf("read_report_fail", resultDir))
 		return
 	}
 

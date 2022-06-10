@@ -396,6 +396,10 @@
       "translation": "Report %s."
     },
     {
+      "id": "read_report_fail",
+      "translation": "Not find test report in path %s."
+    },
+    {
       "id": "no_interpreter_for_run",
       "translation": "No interpreter for %s, skip script %s s."
     },

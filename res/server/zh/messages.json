@@ -383,6 +383,10 @@
       "translation": "报告%s。"
     },
     {
+      "id": "read_report_fail",
+      "translation": "未找到测试报告在指定路径%s。"
+    },
+    {
       "id": "no_interpreter_for_run",
       "translation": "未配置%s语言的解释程序，跳过脚本%s。"
     },
