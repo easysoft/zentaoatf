@@ -6,7 +6,7 @@
       class="result-list-item"
       :title="item.displayName"
       titleClass="text-ellipsis"
-      :trailingText="momentUnixFormat(1654830469, 'hh:mm')"
+      :trailingText="momentUnixFormat(item.startTime, 'hh:mm')"
       trailingTextClass="muted small"
       @click="showDetail(item)"
     >
