@@ -127,7 +127,6 @@ func ListProduct(workspacePath string) (products []serverDomain.ZentaoProduct, e
 	config := configHelper.LoadByWorkspacePath(workspacePath)
 	return loadProduct(config)
 }
-
 func loadProduct(config commDomain.WorkspaceConf) (products []serverDomain.ZentaoProduct, err error) {
 	if config.Url == "" {
 		err = errors.New(i118Utils.Sprintf("pls_config_workspace"))
