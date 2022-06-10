@@ -10,6 +10,7 @@
       trailingTextClass="muted small"
       @click="showDetail(item)"
     >
+
       <template #leading>
         <Icon v-if="item.fail" icon="close-circle" class="flex-none text-red" />
         <Icon v-else icon="checkmark-circle" class="flex-none text-green" />
