@@ -37,6 +37,7 @@ export default {
     'step':  '步骤',
     'status':  '状态',
     'all':  '所有',
+    'none':  '无',
     'only_failed':  '仅失败用例',
 
     'zentao_site': '禅道站点',

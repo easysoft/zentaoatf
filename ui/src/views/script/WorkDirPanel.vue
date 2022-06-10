@@ -17,7 +17,7 @@
 
         <Button id="displayByFilter"
                  v-if="currSite.id != 1"
-                :label="oldFilerValue && te('by_' + oldFilerType) ? t('by_' + oldFilerType) : t('all')"
+                :label="oldFilerValue && te('by_' + oldFilerType) ? t('by_' + oldFilerType) : t('none')"
                 labelClass="strong"
                 class="rounded pure padding-sm-h"
                 suffix-icon="caret-down"/>
@@ -126,7 +126,7 @@ const FilterTyles = ref([
 const setFilterTypes = () => {
   if(currSite.value.id != 1){
     FilterTyles.value = [
-      {key: '', title: t('all')},
+      {key: '', title: t('none')},
       {key: 'workspace', title: t('by_workspace')},
       {key: 'suite', title: t('by_suite')},
       {key: 'task', title: t('by_task')},

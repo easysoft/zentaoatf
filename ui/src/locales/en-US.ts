@@ -33,6 +33,7 @@ export default {
     'priority':  'Priority',
     'step':  'Step',
     'status':  'Status',
+    'none':  'none',
     'all':  'All',
     'only_failed':  'Only Failed',
 
