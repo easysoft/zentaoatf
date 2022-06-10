@@ -111,6 +111,7 @@ func loadScriptNodesInDir(folder string, parent *serverDomain.TestAsset, level i
 	return
 }
 
+// for command only
 func LoadScriptListInDir(path string, files *[]string, level int) error {
 	regx := langHelper.GetSupportLanguageExtRegx()
 
@@ -193,20 +194,21 @@ func AddScript(moduleId, caseId int, pth string, caseNameInZentao, displayBy str
 	}
 
 	regx := langHelper.GetSupportLanguageExtRegx()
-	langPass, _ := regexp.MatchString("^*.\\."+regx+"$", pth)
+	langPass, _ := regexp.MatchString("^.*\\."+regx+"|exp$", pth)
 
 	if !langPass {
 		return
 	}
 
 	contentOk := CheckFileIsScript(pth)
-	if !contentOk {
+	if !contentOk && strings.Index(pth, ".exp") != len(pth)-4 {
 		return
 	}
 
 	parent.Children = append(parent.Children, childScript)
 	parent.ScriptCount += 1
 }
+
 func AddDir(pth string, moduleId int, moduleName string, parent *serverDomain.TestAsset) (dirNode *serverDomain.TestAsset) {
 	var nodeType commConsts.TreeNodeType
 

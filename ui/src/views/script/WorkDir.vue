@@ -287,7 +287,8 @@ const selectNode = (activeNode) => {
 
   store.dispatch('Script/getScript', node)
   if (node.type === 'file') {
-    const tabId = node.workspaceType === 'ztf' ? 'script-' + node.path : 'code-' + node.path
+    const tabId = node.workspaceType === 'ztf' && node.path.indexOf('.exp') !== node.path.length - 4
+        ? 'script-' + node.path : 'code-' + node.path
     global.value[tabId] = node.workspaceId
 
     store.dispatch('tabs/open', {
