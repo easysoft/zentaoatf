@@ -52,9 +52,13 @@ func (c *SiteCtrl) Create(ctx iris.Context) {
 	req := model.Site{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
+		return
 	}
 
-	id, err := c.SiteService.Create(req)
+	id, isDuplicate, err := c.SiteService.Create(req)
+	if isDuplicate {
+		ctx.JSON(c.ErrResp(commConsts.ErrRecordWithSameNameExist, ""))
+	}
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.ErrZentaoConfig, err.Error()))
 		return
@@ -69,7 +73,11 @@ func (c *SiteCtrl) Update(ctx iris.Context) {
 		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
 	}
 
-	err := c.SiteService.Update(req)
+	isDuplicate, err := c.SiteService.Update(req)
+	if isDuplicate {
+		ctx.JSON(c.ErrResp(commConsts.ErrRecordWithSameNameExist, ""))
+		return
+	}
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.ErrZentaoConfig, err.Error()))
 		return

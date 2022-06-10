@@ -255,6 +255,7 @@ export default {
     'biz_1000': 'Data Not Init',
     'biz_1100': 'Can not delete dir that is not empty.',
     'biz_2000': 'Zentao Config Failed',
+    'biz_3010': 'Record with same name already exist',
     'biz_4000': 'Record Not Found',
     'biz_5000': 'Not Available',
 

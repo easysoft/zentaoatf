@@ -41,7 +41,7 @@ func (s *SiteService) GetDomainObject(id uint) (site serverDomain.ZentaoSite, er
 	return
 }
 
-func (s *SiteService) Create(site model.Site) (id uint, err error) {
+func (s *SiteService) Create(site model.Site) (id uint, isDuplicate bool, err error) {
 	site.Url = fileUtils.AddUrlPathSepIfNeeded(site.Url)
 
 	config := configHelper.LoadBySite(site)
@@ -50,15 +50,12 @@ func (s *SiteService) Create(site model.Site) (id uint, err error) {
 		return
 	}
 
-	id, err = s.SiteRepo.Create(&site)
-	if err != nil {
-		return
-	}
+	id, isDuplicate, err = s.SiteRepo.Create(&site)
 
 	return
 }
 
-func (s *SiteService) Update(site model.Site) (err error) {
+func (s *SiteService) Update(site model.Site) (isDuplicate bool, err error) {
 	site.Url = fileUtils.AddUrlPathSepIfNeeded(site.Url)
 
 	config := configHelper.LoadBySite(site)
@@ -67,8 +64,8 @@ func (s *SiteService) Update(site model.Site) (err error) {
 		return
 	}
 
-	err = s.SiteRepo.Update(site)
-	if err != nil {
+	isDuplicate, err = s.SiteRepo.Update(site)
+	if isDuplicate || err != nil {
 		return
 	}
 
@@ -136,7 +133,7 @@ func (s *SiteService) CreateEmptySite(lang string) (err error) {
 		Name: name,
 		Url:  "",
 	}
-	_, err = s.SiteRepo.Create(&po)
+	_, _, err = s.SiteRepo.Create(&po)
 
 	return
 }

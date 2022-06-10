@@ -1,7 +1,6 @@
 package repo
 
 import (
-	"errors"
 	"fmt"
 	"github.com/easysoft/zentaoatf/internal/pkg/domain"
 	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
@@ -69,18 +68,19 @@ func (r *SiteRepo) Get(id uint) (po model.Site, err error) {
 	return
 }
 
-func (r *SiteRepo) Create(site *model.Site) (id uint, err error) {
+func (r *SiteRepo) Create(site *model.Site) (id uint, isDuplicate bool, err error) {
 	site.Url = httpUtils.AddSepIfNeeded(site.Url)
 
 	po, err := r.FindDuplicate(site.Name, site.Url, 0)
 	if po.ID != 0 {
-		return 0, errors.New(fmt.Sprintf("站点%s（%s）已存在", site.Name, site.Url))
+		isDuplicate = true
+		return
 	}
 
 	err = r.DB.Model(&model.Site{}).Create(site).Error
 	if err != nil {
 		logUtils.Errorf(color.RedString("create site failed, error: %s.", err.Error()))
-		return 0, err
+		return
 	}
 
 	id = site.ID
@@ -88,19 +88,20 @@ func (r *SiteRepo) Create(site *model.Site) (id uint, err error) {
 	return
 }
 
-func (r *SiteRepo) Update(site model.Site) error {
+func (r *SiteRepo) Update(site model.Site) (isDuplicate bool, err error) {
 	po, err := r.FindDuplicate(site.Name, site.Url, site.ID)
 	if po.ID != 0 {
-		return errors.New(fmt.Sprintf("站点%s(%s)已存在", site.Name, site.Url))
+		isDuplicate = true
+		return
 	}
 
 	err = r.DB.Model(&model.Site{}).Where("id = ?", site.ID).Updates(&site).Error
 	if err != nil {
 		logUtils.Errorf(color.RedString("update site failed, error: %s.", err.Error()))
-		return err
+		return
 	}
 
-	return nil
+	return
 }
 
 func (r *SiteRepo) Delete(id uint) (err error) {
@@ -117,7 +118,7 @@ func (r *SiteRepo) Delete(id uint) (err error) {
 func (r *SiteRepo) FindDuplicate(name, url string, id uint) (po model.Site, err error) {
 	db := r.DB.Model(&model.Site{}).
 		Where("NOT deleted").
-		Where("name = ? OR url = ?", name, url)
+		Where("name = ?", name)
 
 	if id != 0 {
 		db.Where("id != ?", id)

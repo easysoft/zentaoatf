@@ -115,8 +115,6 @@ const errorHandler = (resp: any) => {
     }
 
     const result ={httpCode: resp.status, resultCode: resp.data.code, resultMsg: resp.data.msg} as ResultErr
-    console.log(`===`, result)
-
     bus.emit(settings.eventNotify, result)
 
     return Promise.reject({})
