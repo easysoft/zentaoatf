@@ -4,14 +4,15 @@ export function momentUtcDef(tm) {
     return moment.parseZone(tm).format("YYYY-MM-DD HH:mm:ss")
 }
 export function momentUnixDef(tm) {
-    return moment.parseZone(tm).format("YYYY-MM-DD HH:mm:ss")
+    return moment.unix(tm).format("YYYY-MM-DD HH:mm:ss")
 }
 export function momentTime(tm) {
     return moment.parseZone(tm).format("HH:mm:ss")
 }
 
 export function momentUnixDefFormat(tm, format) {
-    return moment.parseZone(tm).format(format)
+    console.log(111, tm, format)
+    return moment.unix(tm).format(format)
 }
 
 export function percentDef(numb, total) {
