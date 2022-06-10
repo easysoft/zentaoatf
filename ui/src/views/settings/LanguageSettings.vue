@@ -20,6 +20,7 @@ import {setI18nLanguage} from "@/config/i18n";
 import {useI18n} from "vue-i18n";
 import Row from "@/components/Row.vue";
 import Col from "@/components/Col.vue";
+import {setLang} from "@/services/settings";
 
 const {t, locale} = useI18n();
 
@@ -36,6 +37,8 @@ const languageIcons: { [key: string]: string } = {
 const changeLang = (key): void => {
   console.info(key)
   setI18nLanguage(key);
+
+  setLang(key)
 };
 </script>
 
