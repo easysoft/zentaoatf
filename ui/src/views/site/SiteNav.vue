@@ -43,6 +43,12 @@
       @click="selectProduct"
       :replaceFields="replaceFields"
   />
+  <SitesModal 
+    :show="showSitesModal"
+    @cancel="sitesModalClose"
+    :showOkBtn="false"
+    :showCancelBtn="false"
+  />
 </template>
 
 <script setup lang="ts">
@@ -57,10 +63,12 @@ import {ZentaoData} from "@/store/zentao";
 import {computed, onMounted, watch, ref} from "vue";
 import {getInitStatus} from "@/utils/cache";
 import notification from "@/utils/notification";
+import SitesModal from "@/views/site/sitesModal.vue";
 
 const { t } = useI18n();
 const router = useRouter();
 const store = useStore<{ Zentao: ZentaoData }>();
+const showSitesModal = ref(false);
 
 const products = computed<any>(() => store.state.Zentao.products);
 const currSite = computed<any>(() => store.state.Zentao.currSite);
@@ -104,14 +112,8 @@ const showZentaoMsg = (payload): void => {
 }
 
 const openSiteManagementTab = (showCreateSiteModal?: boolean) => {
-    console.log('openSiteManagementTab');
-    store.dispatch('tabs/open', {
-        id: 'sites',
-        title: t('site_management'),
-        titleFunc: () => t('site_management'),
-        type: 'sites',
-        data: {showCreateSiteModal}
-    });
+    console.log('openSiteManagementModal');
+    showSitesModal.value = true;
 };
 
 const selectSite = (item): void => {
@@ -131,6 +133,10 @@ const selectProduct = (item): void => {
 const replaceFields = {
   key: 'id',
   title: 'name',
+}
+
+const sitesModalClose = () => {
+    showSitesModal.value = false;
 }
 
 </script>

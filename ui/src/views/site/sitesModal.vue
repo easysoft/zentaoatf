@@ -1,4 +1,11 @@
 <template>
+<ZModal
+    :showModal="props.show"
+    :title="t('site_management')"
+    :contentStyle="{width: '90vw', height: '90vh'}"
+    @onCancel="emit('cancel', {event: $event})"
+  >
+
   <div class="dock scrollbar-y">
     <header class="single row align-center padding canvas sticky shadow-border-bottom">
       <strong>{{t('site_num', {count: sites.length})}}</strong>
@@ -59,13 +66,14 @@
       ref="formSite"
      />
   </div>
+</ZModal>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
+import { defineProps, defineEmits } from "vue";
 import { PageTab } from "@/store/tabs";
 import { useI18n } from "vue-i18n";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { StateType } from "@/views/site/store";
 import { momentUtcDef } from "@/utils/datetime";
@@ -83,12 +91,16 @@ const { t } = useI18n();
 const momentUtc = momentUtcDef;
 
 const props = defineProps<{
-  tab: PageTab;
+  show: boolean;
+}>();
+
+const emit = defineEmits<{
+    (type: 'cancel', event: {event: any}) : void,
 }>();
 
 const editId = ref(0);
 const store = useStore<{ Site: StateType }>();
-const showCreateSiteModal = ref(!!props.tab?.data?.showCreateSiteModal);
+const showCreateSiteModal = ref(false);
 
 const {fetchSites, sites} = useSites();
 

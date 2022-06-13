@@ -3,6 +3,12 @@
 <!--    <Button class="rounded pure" icon="search" iconSize="1.5em" :hint="t('search')" />-->
     <Button class="rounded pure" icon="settings" iconSize="1.5em" :hint="t('settings')" @click="openSettings" />
   </Toolbar>
+  <SettingsModal 
+    :show="showSettingsModal"
+    @cancel="settingsModalClose"
+    :showOkBtn="false"
+    :showCancelBtn="false"
+  />
 </template>
 
 <script setup lang="ts">
@@ -11,17 +17,20 @@ import Toolbar from './Toolbar.vue';
 import {useI18n} from "vue-i18n";
 import {useStore} from "vuex";
 import {ZentaoData} from "@/store/zentao";
+import SettingsModal from '@/views/settings/SettingsModal.vue';
+import { ref } from "vue";
 
 const { t } = useI18n();
 const store = useStore<{ Zentao: ZentaoData }>();
 
+const showSettingsModal = ref(false);
+
 const openSettings = () => {
-    store.dispatch('tabs/open', {
-        id: 'settings',
-        title: t('settings'),
-        titleFunc: ()=> { return t('settings')},
-        type: 'settings',
-    });
+    showSettingsModal.value = true;
+}
+
+const settingsModalClose = () => {
+    showSettingsModal.value = false;
 }
 
 </script>

@@ -11,7 +11,7 @@
 
         <Pane id="centerPane">
           <Splitpanes id="centerColumn" ref="centerColumn" horizontal v-on:resized="onSplitpanesResized($event)">
-            <Pane id="tabsPane" :size='globalStore.getters["global/editorPaneSize"]'>
+            <Pane id="tabsPane" :size='showLogPanel ? globalStore.getters["global/editorPaneSize"] : "100%"'>
               <TabsContainer class="height-full" />
             </Pane>
             <Pane v-show="showLogPanel" :size='globalStore.getters["global/logPaneSize"]' id="bottomPane" :min-size="minBottomPane" :max-size="50">

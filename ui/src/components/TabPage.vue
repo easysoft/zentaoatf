@@ -9,8 +9,6 @@ import {defineProps, defineExpose, ref} from "vue";
 import {PageTab} from "@/store/tabs";
 import TabPageResult from '@/views/result/TabPageResult.vue';
 import TabPageScript from '@/views/script/TabPageScript.vue';
-import TabPageSettings from '@/views/settings/TabPageSettings.vue';
-import TabPageSites from '@/views/site/TabPageSites.vue';
 import TabPageExecUnit from '@/views/exec/TabPageExecUnit.vue';
 import TabPageUnknown from './TabPageUnknown.vue';
 import {useI18n} from "vue-i18n";
@@ -20,9 +18,7 @@ const {t} = useI18n();
 
 const PageTabComponent = {
   script: TabPageScript,
-  settings: TabPageSettings,
   result: TabPageResult,
-  sites: TabPageSites,
   execUnit: TabPageExecUnit,
   unknown: TabPageUnknown,
 };

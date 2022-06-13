@@ -1,4 +1,10 @@
 <template>
+<ZModal
+    :showModal="props.show"
+    :title="t('settings')"
+    :contentStyle="{width: '90vw', height: '90vh'}"
+    @onCancel="emit('cancel', {event: $event})"
+  >
   <div class="site-main space-top space-left space-right">
     <LanguageSettings></LanguageSettings>
     <p class="divider setting-space-top"></p>
@@ -47,10 +53,11 @@
       ref="formInterpreter"
     />
   </div>
+</ZModal>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
+import { defineProps, defineEmits } from "vue";
 import { PageTab } from "@/store/tabs";
 import { useI18n } from "vue-i18n";
 import {
@@ -80,7 +87,15 @@ import FormInterpreter from "@/views/interpreter/FormInterpreter.vue";
 import { getLangSettings } from "@/views/interpreter/service";
 
 const props = defineProps<{
-  tab: PageTab;
+  show: boolean;
+}>();
+
+const showModalRef = computed(() => {
+  return props.show;
+});
+
+const emit = defineEmits<{
+    (type: 'cancel', event: {event: any}) : void,
 }>();
 
 const { t, locale } = useI18n();

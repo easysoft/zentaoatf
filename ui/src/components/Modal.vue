@@ -1,6 +1,6 @@
 <template>
   <vue-final-modal
-    :name="'ZModal'"
+    :name="'ZModal'+props.title"
     :content-style="contentStyle"
     :overlay-style="overlayStyle"
     :styles="styles"
@@ -13,7 +13,7 @@
     <span class="modal-title">{{
       title == undefined ? t("title") : title
     }}</span>
-    <div class="modal-content">
+    <div class="modal-content-container">
         <span v-html="content"></span>
       <slot />
     </div>
@@ -90,7 +90,7 @@ const confirm = (params) => {
 };
 const onCancel = () => {
   if (props.isConfirm) {
-    $vfm.hide("ZModal");
+    $vfm.hide("ZModal" + props.title);
     if (props.onCancel && typeof props.onCancel === "function") {
       props.onCancel();
     }
@@ -99,7 +99,7 @@ const onCancel = () => {
 };
 const onOk = () => {
   if (props.isConfirm) {
-    $vfm.hide("ZModal");
+    $vfm.hide("ZModal" + props.title);
     if (props.onOk && typeof props.onOk === "function") {
       props.onOk();
     }
@@ -129,7 +129,12 @@ defineExpose({
   max-height: 90%;
   overflow: auto;
 }
-
+.modal-content-container{
+  position: relative;
+  padding: 1rem;
+  height: 100%;
+  overflow: auto;
+}
 .modal-title {
   margin: 0 2rem 0 0;
   justify-content: space-between;
