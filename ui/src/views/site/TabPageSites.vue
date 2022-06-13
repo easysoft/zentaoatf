@@ -27,13 +27,8 @@
         <div class="row single align-center gap space-xs-v">
           <span class="text-primary">{{site.name}}</span>
           <div class="row single align-center gap-sm small muted"><Icon icon="link" size="1em" /> {{site.url}}</div>
-        </div>
-        <div class="row single align-center gap muted">
-          <div class="row single align-center gap-sm small">
+          <div class="row single align-center gap muted">
             <Icon icon="person" size="1em" /> {{site.username}}
-          </div>
-          <div class="row single align-center gap-sm small">
-            <Icon icon="clock" size="1em" /> {{t('create_time')}}：{{momentUtc(site.createdAt)}}
           </div>
         </div>
         <template #trailing>

@@ -1,7 +1,7 @@
 <template>
   <ButtonGroup class="space-left">
     <Button id="siteMenuToggle"
-            :label="currSite.name"
+            :label="currSite.id == 1 ? t('local') : currSite.name"
             :icon="currSite.username ? 'zentao' : 'hard-drive-filled'"
             class="rounded border lighten-16"
             :iconClass="currSite.username ? 'text-blue' : 'text-secondary'"
@@ -67,7 +67,8 @@ const currSite = computed<any>(() => store.state.Zentao.currSite);
 const sites = computed<any[]>(() => store.state.Zentao.sites.map(site => ({
     icon: site.username ? 'zentao' : 'hard-drive-filled',
     iconClass: 'muted',
-    ...site
+    ...site,
+    name: site.id == 1 ? t('local') : site.name,
 })));
 const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 

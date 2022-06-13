@@ -4,7 +4,6 @@
     <SiteNav />
 
     <BatchRunButton />
-    <LastTestInfo />
 
     <div class="gap flex-auto"></div>
     <AppToolbar />
@@ -18,7 +17,6 @@ import WindowToolbar from './WindowToolbar.vue';
 import AppToolbar from './AppToolbar.vue';
 import SiteNav from '@/views/site/SiteNav.vue';
 import BatchRunButton from '@/views/exec/BatchRunButton.vue';
-import LastTestInfo from '@/views/exec/LastTestInfo.vue';
 </script>
 
 <style>
