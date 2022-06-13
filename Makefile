@@ -13,22 +13,14 @@ GO_VERSION=`go version`
 GIT_HASH=`git show -s --format=%H`
 BUILD_CMD=go build -ldflags "-X 'commConsts.appVersion=${VERSION}' -X 'commConsts.buildTime=${BUILD_TIME}' -X 'commConsts.goVersion=${GO_VERSION}' -X 'commConsts.gitHash=${GIT_HASH}'"
 
-default: gui_win64 gui_win32 gui_linux gui_mac command_win64 command_win32 command_linux command_mac
+default: win64 win32 linux mac
 
-win64: gui_win64 command_win64 copy_files_win64 create_shortcut_win64 zip_win64
-win32: gui_win32 command_win32 copy_files_win32 create_shortcut_win32 zip_win32
-linux: gui_linux command_linux copy_files_linux create_shortcut_linux zip_linux
-mac: gui_mac command_mac copy_files_mac zip_mac
+win64: prepare build_gui_win64 compile_command_win64 copy_files_win64 create_shortcut_win64 zip_win64
+win32: prepare build_gui_win32 compile_command_win32 copy_files_win32 create_shortcut_win32 zip_win32
+linux: prepare build_gui_linux compile_command_linux copy_files_linux create_shortcut_linux zip_linux
+mac: prepare build_gui_mac compile_command_mac copy_files_mac zip_mac
 
-command_win64: update_version prepare_res compile_command_win64
-command_win32: update_version prepare_res compile_command_win32
-command_linux: update_version prepare_res compile_command_linux
-command_mac:   update_version prepare_res compile_command_mac
-
-gui_win64: update_version prepare_res build_gui_win64
-gui_win32: update_version prepare_res build_gui_win32
-gui_linux: update_version prepare_res build_gui_linux
-gui_mac: update_version prepare_res build_gui_mac
+prepare: update_version prepare_res
 
 update_version: update_version_in_config gen_version_file
 
