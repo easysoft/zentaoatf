@@ -146,15 +146,15 @@ copy_files_mac:
 
 create_shortcut_win64:
 	@echo 'create shortcut win64'
-	cp xdoc/ztfgui.cmd "${CLIENT_OUT_DIR}win64"
+	cp xdoc/ztf-gui.cmd "${CLIENT_OUT_DIR}win64"
 
 create_shortcut_win32:
 	@echo 'create shortcut win32'
-	cp xdoc/ztfgui.cmd "${CLIENT_OUT_DIR}win32"
+	cp xdoc/ztf-gui.cmd "${CLIENT_OUT_DIR}win32"
 
 create_shortcut_linux:
 	@echo 'create shortcut linux'
-	cp xdoc/ztfgui.sh ${CLIENT_OUT_DIR}linux
+	cp xdoc/ztf-gui.sh ${CLIENT_OUT_DIR}linux
 
 zip_win64:
 	@echo 'start zip win64'
