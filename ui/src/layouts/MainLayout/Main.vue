@@ -88,12 +88,8 @@ onMounted(() => {
   bus.on(settings.eventNotify, notify);
 
   const resize_ob = new ResizeObserver((entries) => {
-    console.log(1, entries)
     const width = entries[0].contentRect.width
-    console.log(2, width)
-
     paneMinSize.value = (660 * 100) / width
-    console.log(3, paneMinSize.value)
   })
   resize_ob.observe(mainRow.value.container)
 })
