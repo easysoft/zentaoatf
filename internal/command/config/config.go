@@ -33,7 +33,9 @@ func InitConfig() {
 	}
 
 	config := configHelper.LoadByConfigPath(commConsts.ConfigPath)
-	commConsts.Language = config.Language
+	if config.Language != "" {
+		commConsts.Language = config.Language
+	}
 
 	v := viper.New()
 	serverConfig.VIPER = v
