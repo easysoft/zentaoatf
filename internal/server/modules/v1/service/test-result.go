@@ -43,7 +43,7 @@ func (s *TestResultService) Paginate(siteId, productId uint, req serverDomain.Re
 		for _, seq := range reportSeqs {
 			summary := serverDomain.TestReportSummary{WorkspaceId: int(workspace.ID)}
 
-			report, err1 := analysisHelper.ReadReportByWorkspaceSeq(workspace.Path, seq)
+			report, _, err1 := analysisHelper.ReadReportByWorkspaceSeq(workspace.Path, seq)
 			if err1 != nil { // ignore wrong json result
 				continue
 			}
@@ -92,7 +92,7 @@ func (s *TestResultService) GetLatest(siteId, productId uint) (summary serverDom
 		}
 
 		seq := reportSeqs[0]
-		report, err1 := analysisHelper.ReadReportByWorkspaceSeq(workspace.Path, seq)
+		report, _, err1 := analysisHelper.ReadReportByWorkspaceSeq(workspace.Path, seq)
 		if err1 != nil {
 			continue
 		}
@@ -122,7 +122,7 @@ func (s *TestResultService) GetLatest(siteId, productId uint) (summary serverDom
 
 func (s *TestResultService) Get(workspaceId int, seq string) (report commDomain.ZtfReport, err error) {
 	workspace, _ := s.WorkspaceRepo.Get(uint(workspaceId))
-	report, err = analysisHelper.ReadReportByWorkspaceSeq(workspace.Path, seq)
+	report, _, err = analysisHelper.ReadReportByWorkspaceSeq(workspace.Path, seq)
 	report.WorkspaceId = workspaceId
 	report.Seq = seq
 
@@ -144,7 +144,7 @@ func (s *TestResultService) Submit(result serverDomain.ZentaoResultSubmitReq, si
 
 	workspace, _ := s.WorkspaceRepo.Get(uint(result.WorkspaceId))
 
-	report, err := analysisHelper.ReadReportByWorkspaceSeq(workspace.Path, result.Seq)
+	report, _, err := analysisHelper.ReadReportByWorkspaceSeq(workspace.Path, result.Seq)
 	if err != nil {
 		return
 	}

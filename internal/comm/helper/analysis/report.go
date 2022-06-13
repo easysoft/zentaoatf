@@ -54,21 +54,22 @@ func DecodeSeq(seq string) string {
 	return strings.ReplaceAll(seq, ":", string(filepath.Separator))
 }
 
-func ReadReportByWorkspaceSeq(workspacePath string, seq string) (report commDomain.ZtfReport, err error) {
-	seq = DecodeSeq(seq)
-	pth := ""
+func ReadReportByWorkspaceSeq(workspacePath string, resultDir string) (report commDomain.ZtfReport, pth string, err error) {
 	if commConsts.ExecFrom == commConsts.FromCmd {
-		seqPath := seq
+		seqPath := resultDir
 		if !filepath.IsAbs(seqPath) {
-			seqPath = filepath.Join(workspacePath, seq)
+			seqPath = filepath.Join(workspacePath, resultDir)
 		}
 
 		pth = filepath.Join(seqPath, commConsts.ResultJson)
 	} else {
-		pth = filepath.Join(workspacePath, commConsts.LogDirName, seq, commConsts.ResultJson)
+		resultDir = DecodeSeq(resultDir)
+		pth = filepath.Join(workspacePath, commConsts.LogDirName, resultDir, commConsts.ResultJson)
 	}
 
-	return ReadReportByPath(pth)
+	report, err = ReadReportByPath(pth)
+
+	return
 }
 
 func ReadReportByPath(pth string) (report commDomain.ZtfReport, err error) {

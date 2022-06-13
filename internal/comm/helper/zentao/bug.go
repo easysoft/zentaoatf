@@ -50,7 +50,7 @@ func PrepareBug(workspacePath, seq string, caseIdStr string, productId int) (bug
 		return
 	}
 
-	report, err := analysisHelper.ReadReportByWorkspaceSeq(workspacePath, seq)
+	report, _, err := analysisHelper.ReadReportByWorkspaceSeq(workspacePath, seq)
 	if err != nil {
 		return
 	}
