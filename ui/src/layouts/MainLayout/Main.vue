@@ -9,7 +9,7 @@
           <WorkDirPanel />
         </Pane>
 
-        <Pane id="centerPane">
+        <Pane id="centerPane" :min-size="paneMinSize">
           <Splitpanes id="centerColumn" ref="centerColumn" horizontal v-on:resized="onSplitpanesResized($event)">
             <Pane id="tabsPane" :size='globalStore.getters["global/editorPaneSize"]'>
               <TabsContainer class="height-full" />
@@ -57,6 +57,8 @@ const centerColumn = ref();
 const [minLeftPane, minRightPane] = useWidthToPercent(mainRow, 220, 200);
 const [minBottomPane] = useHeightToPercent(centerColumn, 70);
 
+const paneMinSize = ref(0)
+
 const globalStore = useStore<{global: StateType}>()
 
 const onExecStartEvent = () => {
@@ -84,12 +86,21 @@ onMounted(() => {
   console.log('onMounted ztf')
   bus.on(settings.eventExec, onExecStartEvent)
   bus.on(settings.eventNotify, notify);
+
+  const resize_ob = new ResizeObserver((entries) => {
+    console.log(1, entries)
+    const width = entries[0].contentRect.width
+    console.log(2, width)
+
+    paneMinSize.value = (660 * 100) / width
+    console.log(3, paneMinSize.value)
+  })
+  resize_ob.observe(mainRow.value.container)
 })
 onBeforeUnmount( () => {
   bus.off(settings.eventExec, onExecStartEvent)
   bus.off(settings.eventNotify, notify);
 })
-
 
 </script>
 
@@ -97,7 +108,7 @@ onBeforeUnmount( () => {
 #main {
   height: 100vh;
   width: 100vw;
-  min-width: 800px;
+  min-width: 1100px;
 
   #mainContent {
     height: calc(100% - 40px);
