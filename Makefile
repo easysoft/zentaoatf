@@ -2,7 +2,8 @@ VERSION=3.0.0_beta1
 PROJECT=ztf
 QINIU_DIR=/Users/aaron/work/zentao/qiniu/
 QINIU_DIST_DIR=${QINIU_DIR}${PROJECT}/${VERSION}/
-MAIN_FILE=cmd/server/main.go
+SERVER_MAIN_FILE=cmd/server/main.go
+COMMAND_MAIN_FILE=cmd/command/main.go
 
 COMMAND_BIN_DIR=bin/
 CLIENT_BIN_DIR=client/bin/
@@ -13,22 +14,14 @@ GO_VERSION=`go version`
 GIT_HASH=`git show -s --format=%H`
 BUILD_CMD=go build -ldflags "-X 'commConsts.appVersion=${VERSION}' -X 'commConsts.buildTime=${BUILD_TIME}' -X 'commConsts.goVersion=${GO_VERSION}' -X 'commConsts.gitHash=${GIT_HASH}'"
 
-default: gui_win64 gui_win32 gui_linux gui_mac command_win64 command_win32 command_linux command_mac
+default: win64 win32 linux mac
 
-win64: gui_win64 command_win64 copy_files_win64 create_shortcut_win64 zip_win64
-win32: gui_win32 command_win32 copy_files_win32 create_shortcut_win32 zip_win32
-linux: gui_linux command_linux copy_files_linux create_shortcut_linux zip_linux
-mac: gui_mac command_mac copy_files_mac zip_mac
+win64: prepare build_gui_win64 compile_command_win64 copy_files_win64 create_shortcut_win64 zip_win64
+win32: prepare build_gui_win32 compile_command_win32 copy_files_win32 create_shortcut_win32 zip_win32
+linux: prepare build_gui_linux compile_command_linux copy_files_linux create_shortcut_linux zip_linux
+mac: prepare build_gui_mac compile_command_mac copy_files_mac zip_mac
 
-command_win64: update_version prepare_res compile_command_win64
-command_win32: update_version prepare_res compile_command_win32
-command_linux: update_version prepare_res compile_command_linux
-command_mac:   update_version prepare_res compile_command_mac
-
-gui_win64: update_version prepare_res build_gui_win64
-gui_win32: update_version prepare_res build_gui_win32
-gui_linux: update_version prepare_res build_gui_linux
-gui_mac: update_version prepare_res build_gui_mac
+prepare: update_version prepare_res
 
 update_version: update_version_in_config gen_version_file
 
@@ -55,7 +48,7 @@ compile_gui_win64:
 	@rm -rf ./${CLIENT_BIN_DIR}/*
 	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
 		${BUILD_CMD} -x -v -ldflags "-s -w" \
-		-o ${CLIENT_BIN_DIR}win32/${PROJECT}.exe ${MAIN_FILE}
+		-o ${CLIENT_BIN_DIR}win32/${PROJECT}.exe ${SERVER_MAIN_FILE}
 package_gui_win64_client:
 	@cd client && npm run package-win64 && cd ..
 	@rm -rf ${CLIENT_OUT_DIR}win64 && mkdir ${CLIENT_OUT_DIR}win64 && \
@@ -67,7 +60,7 @@ compile_gui_win32:
 	@rm -rf ./${CLIENT_BIN_DIR}/*
 	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
 		${BUILD_CMD} -x -v -ldflags "-s -w" \
-		-o ${CLIENT_BIN_DIR}win32/${PROJECT}.exe ${MAIN_FILE}
+		-o ${CLIENT_BIN_DIR}win32/${PROJECT}.exe ${SERVER_MAIN_FILE}
 package_gui_win32_client:
 	@cd client && npm run package-win32 && cd ..
 	@rm -rf ${CLIENT_OUT_DIR}win32 && mkdir ${CLIENT_OUT_DIR}win32 && \
@@ -79,7 +72,7 @@ compile_gui_linux:
 	@rm -rf ./${CLIENT_BIN_DIR}/*
 	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ \
 		${BUILD_CMD} \
-		-o ${CLIENT_BIN_DIR}linux/${PROJECT} ${MAIN_FILE}
+		-o ${CLIENT_BIN_DIR}linux/${PROJECT} ${SERVER_MAIN_FILE}
 package_gui_linux_client:
 	@cd client && npm run package-linux && cd ..
 	@rm -rf ${CLIENT_OUT_DIR}linux && mkdir ${CLIENT_OUT_DIR}linux && \
@@ -92,7 +85,7 @@ compile_gui_mac:
 	@echo
 	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 \
 		${BUILD_CMD} \
-		-o ${CLIENT_BIN_DIR}darwin/${PROJECT} ${MAIN_FILE}
+		-o ${CLIENT_BIN_DIR}darwin/${PROJECT} ${SERVER_MAIN_FILE}
 package_gui_mac_client:
 	@cd client && npm run package-mac && cd ..
 	@rm -rf ${CLIENT_OUT_DIR}darwin && mkdir ${CLIENT_OUT_DIR}darwin && \
@@ -103,26 +96,26 @@ compile_command_win64:
 	@echo 'start compile win64'
 	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
 		${BUILD_CMD} -x -v -ldflags "-s -w" \
-		-o ${COMMAND_BIN_DIR}win64/${PROJECT}.exe ${MAIN_FILE}
+		-o ${COMMAND_BIN_DIR}win64/${PROJECT}.exe ${COMMAND_MAIN_FILE}
 
 compile_command_win32:
 	@echo 'start compile win32'
 	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
 		${BUILD_CMD} -x -v -ldflags "-s -w" \
-		-o ${COMMAND_BIN_DIR}win32/${PROJECT}.exe ${MAIN_FILE}
+		-o ${COMMAND_BIN_DIR}win32/${PROJECT}.exe ${COMMAND_MAIN_FILE}
 
 compile_command_linux:
 	@echo 'start compile linux'
 	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ \
 		${BUILD_CMD} \
-		-o ${COMMAND_BIN_DIR}linux/${PROJECT} ${MAIN_FILE}
+		-o ${COMMAND_BIN_DIR}linux/${PROJECT} ${COMMAND_MAIN_FILE}
 
 compile_command_mac:
 	@echo 'start compile darwin'
 	@echo
 	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 \
 		${BUILD_CMD} \
-		-o ${COMMAND_BIN_DIR}darwin/${PROJECT} ${MAIN_FILE}
+		-o ${COMMAND_BIN_DIR}darwin/${PROJECT} ${COMMAND_MAIN_FILE}
 
 copy_files_win64:
 	@echo 'start copy files win64'

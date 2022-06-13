@@ -157,7 +157,7 @@ const submit = () => {
   data.module = parseInt(data.module)
   data.severity = parseInt(data.severity)
   data.pri = parseInt(data.pri)
-  if (data.openedBuild) data.openedBuild = [data.openedBuild]
+  if (!Array.isArray(data.openedBuild)) data.openedBuild = [data.openedBuild]
 
   submitBugToZentao(data).then((json) => {
     console.log('json', json)
