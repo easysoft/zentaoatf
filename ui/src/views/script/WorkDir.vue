@@ -1,4 +1,5 @@
 <template>
+  <div class="left-pannel-contain">
   <div class="workdir">
     <Tree 
     :data="treeData" 
@@ -12,8 +13,9 @@
     :defaultCollapsed="true"
     />
     <FormNode :show="showModal" @submit="createNode" @cancel="modalClose" ref="formNode" />
+  </div>
     <Button 
-      v-if="checkedKeys.length"
+      v-if="true || checkedKeys.length"
       class="rounded border primary-pale run-selected" icon="run-all" 
       :label="t('exec_selected')" 
       @click="execSelected"
@@ -434,16 +436,18 @@ defineExpose({
 </script>
 
 <style lang="less" scoped>
-.workdir {
-  height: calc(100vh - 80px);
-  position: relative;
-
+.left-pannel-contain{
+  text-align: center;
+  .workdir {
+    height: calc(100vh - 120px);
+    overflow: auto;
+    text-align: left;
+  }
   .run-selected{
     max-width: 100px;
     margin: auto;
-    position: fixed;
-    bottom: 100px;
-    left: 60px;
+    text-align: center;
+    margin-top: 10px;
   }
 }
 </style>
