@@ -12,6 +12,12 @@
     :defaultCollapsed="true"
     />
     <FormNode :show="showModal" @submit="createNode" @cancel="modalClose" ref="formNode" />
+    <Button 
+      v-if="checkedKeys.length"
+      class="rounded border primary-pale run-selected" icon="run-all" 
+      :label="t('exec_selected')" 
+      @click="execSelected"
+     />
   </div>
 </template>
 
@@ -26,6 +32,7 @@ import { resizeWidth } from "@/utils/dom";
 import Tree from "@/components/Tree.vue";
 import notification from "@/utils/notification";
 import { computed, defineExpose, onMounted, onUnmounted, ref, watch } from "vue";
+import Button from '@/components/Button.vue';
 
 import bus from "@/utils/eventBus";
 import {
@@ -76,6 +83,7 @@ const showModal = ref(false)
 const toolbarAction = ref('')
 const currentNode = ref({} as any) // parent node for create node
 const collapsedMap = ref({} as any)
+const checkedKeys = ref<string[]>([])
 
 onMounted(() => {
   console.log('onMounted')
@@ -281,9 +289,6 @@ watch(expandedKeys, () => {
     }
 }, { deep: true })
 
-const selectedKeys = ref<string[]>([])
-const checkedKeys = ref<string[]>([])
-
 let isExpand = ref(false);
 let showCheckbox = ref(false)
 let displayBy = ref('workspace')
@@ -322,9 +327,16 @@ const selectNode = (activeNode) => {
     { id: node.workspaceId, type: node.workspaceType })
 }
 
-const checkNode = (checkedKeys) => {
-  console.log('checkNode', checkedKeys.checked)
-  store.dispatch('Script/setCheckedNodes', checkedKeys.checked)
+const checkNode = (keys) => {
+  console.log('checkNode', keys.checked)
+  store.dispatch('Script/setCheckedNodes', keys.checked)
+  let checkedKeysTmp:string[] = [];
+  for(let key in keys.checked){
+    if(keys.checked[key] === true){
+        checkedKeysTmp.push(key)
+    }
+  }
+  checkedKeys.value = checkedKeysTmp;
   //   scriptStore.dispatch('Script/changeWorkspace',
   //       {id: e.node.dataRef.workspaceId, type: e.node.dataRef.workspaceType})
 }
@@ -332,6 +344,16 @@ const checkNode = (checkedKeys) => {
 const checkNothing = () => {
   checkedKeys.value = []
 }
+
+const execSelected = () => {
+    let arr = [] as string[]
+    checkedKeys.value.forEach(item => {
+      if (treeDataMap.value[item]?.type === 'file') {
+        arr.push(treeDataMap.value[item])
+      }
+    })
+    bus.emit(settings.eventExec, { execType: 'ztf', scripts: arr });
+} 
 
 let contextNode = ref({} as any)
 let menuStyle = ref({} as any)
@@ -378,7 +400,8 @@ const createNode = (formData) => {
 
 const expandNode = (expandedKeysMap) => {
     console.log('expandNode', expandedKeysMap.collapsed)
-    for(var key in expandedKeysMap.collapsed){
+    let expandedKeysTmp:string[] = [];
+    for(let key in expandedKeysMap.collapsed){
         if(expandedKeysMap.collapsed[key]){
             expandedKeys.value.forEach((item, index) => {
                 if(item === key){
@@ -386,9 +409,11 @@ const expandNode = (expandedKeysMap) => {
                 }
             })
         }else{
-            expandedKeys.value.push(key)
+            expandedKeysTmp.push(key)
         }
     }
+    expandedKeys.value = expandedKeysTmp;
+    console.log('expandkeys', expandedKeys.value)
     setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
 }
 
@@ -411,5 +436,13 @@ defineExpose({
 <style lang="less" scoped>
 .workdir {
   height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .run-selected{
+      max-width: 100px;
+      margin-left: calc((100% - 100px)/2);
+  }
 }
 </style>

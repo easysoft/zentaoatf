@@ -15,7 +15,6 @@
         :items="[
           {key: 'all', title: t('exec_all')},
           {key: 'previous', title: t('exec_previous')},
-          {key: 'selected', title: t('exec_selected')},
           {key: 'opened', title: t('exec_opened')}
         ]"
         :checkedKey="execBy"
