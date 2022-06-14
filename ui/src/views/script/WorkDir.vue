@@ -436,13 +436,14 @@ defineExpose({
 <style lang="less" scoped>
 .workdir {
   height: calc(100vh - 80px);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  position: relative;
 
   .run-selected{
-      max-width: 100px;
-      margin-left: calc((100% - 100px)/2);
+    max-width: 100px;
+    margin: auto;
+    position: fixed;
+    bottom: 100px;
+    left: 60px;
   }
 }
 </style>
