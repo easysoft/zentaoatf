@@ -46,6 +46,7 @@ import throttle from "lodash.debounce";
 import Modal from "@/utils/modal"
 import FormNode from "./FormNode.vue";
 import { key } from "localforage";
+import settings from "@/config/settings";
 
 const { t } = useI18n();
 
@@ -90,29 +91,46 @@ const onToolbarClicked = (e) => {
     { id: node.workspaceId, type: node.workspaceType })
 
   currentNode.value = node;
-  if (e.event.key == 'runTest') {
-    runTest(currentNode);
-  } else if (e.event.key == 'createFile' || e.event.key == 'createWorkspace' || e.event.key == 'createDir') {
-    showModal.value = true;
-    toolbarAction.value = e.event.key;
-  } else if (e.event.key === 'deleteWorkspace') {
-    Modal.confirm({
-      title: t('delete'),
-      content: t('confirm_to_delete_workspace', { p: node.title }),
-      showOkBtn: true
-    },
-      {
-        "onOk": () => {
-          store.dispatch('Workspace/removeWorkspace', node.path)
-            .then((response) => {
+  switch (e.event.key) {
+    case 'runTest':
+      runTest(currentNode);
+      break;
+    case 'createFile':
+    case 'createWorkspace':
+    case 'createDir':
+      showModal.value = true;
+      toolbarAction.value = e.event.key;
+      break;
+    case 'deleteWorkspace':
+      Modal.confirm({
+          title: t('delete'),
+          content: t('confirm_to_delete_workspace', { p: node.title }),
+          showOkBtn: true
+        },
+        {
+          "onOk": () => {
+            store.dispatch('Workspace/removeWorkspace', node.path)
+              .then((response) => {
               if (response) {
                 notification.success({ message: t('delete_success') });
                 loadScripts()
               }
             })
+          }
         }
-      }
-    )
+      );
+    break;
+    case 'runScript':
+      console.log('run script', currentNode.value);
+      bus.emit(settings.eventExec,
+        {execType: currentNode.value.workspaceType === 'ztf' ? 'ztf' : 'unit', scripts: currentNode.value.isLeaf ? [currentNode.value] : currentNode.value.children});
+      break;
+    case 'checkinCase':
+      console.log('checkin case', currentNode.value);
+      break;
+    case 'checkoutCase':
+      console.log('checkout case', currentNode.value);
+      break;
   }
 }
 
