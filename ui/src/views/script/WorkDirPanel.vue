@@ -15,41 +15,25 @@
                   toggle="#displayByMenuToggle">
         </DropdownMenu>
 
-        <Button id="displayByFilter"
-                 v-if="currSite.id != 1"
-                :label="oldFilerValue && te('by_' + oldFilerType) ? t('by_' + oldFilerType) : t('none')"
-                labelClass="strong"
-                class="rounded pure padding-sm-h"
-                suffix-icon="caret-down"/>
-
-    <div class="dropdownMenu-container">
-
-        <DropdownMenu class="childMenu" toggle="#displayByFilter"
-                  v-if="currSite.id != 1"
-                  id="parentMenu"
-                  :items="FilterTyles"
-                  :checkedKey="filerType == oldFilerType && filerValue ? filerType : oldFilerType"
-                  @click="onFilterTypeChanged"
-                  :hideOnClickMenu="filerType == '' ? true : false"
-                  >
-        </DropdownMenu>
-        <DropdownMenu class="childMenu" toggle="#parentMenu"
-                  v-if="currSite.id != 1 && filerType != ''"
-                  :items="filerItems"
-                  :checkedKey="filerType == oldFilerType ? oldFilerValue : ''"
-                  keyName="value"
-                  @click="onFilterValueChanged"
-                  :hideOnClickMenu="true"
-                  :replace-fields="replaceFields"
-                  triggerEvent="click"
-                  >
-        </DropdownMenu>
-
-    </div>
       </ButtonList>
     </template>
 
     <template #toolbar-buttons>
+      <FilterModal 
+        toggle="#filterBtn" 
+        :tabs="FilterTyles" 
+        @tabChanged="onFilterTypeChanged" 
+        :list="filerItems" 
+        :checkedTab="filerType"
+        :checkedKey="filerType == oldFilerType ? oldFilerValue : ''"
+        keyName="value"
+        @click="onFilterValueChanged"
+        :hideOnClickMenu="true"
+        :replace-fields="replaceFields"
+        triggerEvent="click">
+      </FilterModal>
+      
+      <Button id="filterBtn" v-show="currSite.id != 1 && filerType != ''" class="rounded pure" icon="filter" ref="filterBtnRef" @click="filterShow($event)" />
       <Button class="rounded pure" :hint="t('create_workspace')" @click="showModal=!showModal" icon="folder-add" />
       <Button class="rounded pure" :hint="t('batch_select')" icon="select-all-on" @click="_handleBatchSelectBtnClick" :active="workDirRef?.isCheckable" />
       <Button @click="_handleToggleAllBtnClick" class="rounded pure" :hint="workDirRef?.isAllCollapsed ? t('collapse') : t('expand_all')" :icon="workDirRef?.isAllCollapsed ? 'add-square-multiple' : 'subtract-square-multiple'" iconSize="1.4em" />
@@ -88,6 +72,7 @@ import {
 } from "@/views/script/service";
 import FormWorkspace from "@/views/workspace/FormWorkspace.vue";
 import notification from "@/utils/notification";
+import FilterModal from "./FilterModal.vue";
 
 const { t, locale, te } = useI18n();
 
@@ -126,7 +111,6 @@ const FilterTyles = ref([
 const setFilterTypes = () => {
   if(currSite.value.id != 1){
     FilterTyles.value = [
-      {key: '', title: t('none')},
       {key: 'workspace', title: t('by_workspace')},
       {key: 'suite', title: t('by_suite')},
       {key: 'task', title: t('by_task')},
@@ -235,8 +219,8 @@ const onFilterTypeChanged = async (item) => {
   }
 }
 
-const onFilterValueChanged = async (item) => {
-  console.log('onFilterValueChanged')
+const onFilterValueChanged = async (item, key) => {
+  console.log('onFilterValueChanged', item, key)
   oldFilerValue.value = filerValue.value = item.key
   oldFilerType.value = filerType.value;
   await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, filerType.value, filerValue.value)
@@ -280,6 +264,9 @@ function _handleToggleAllBtnClick() {
     }
 }
 
+const filterShow = (e) => {
+    console.log(1111)
+}
 </script>
 
 <style lang="less" >
@@ -294,6 +281,12 @@ function _handleToggleAllBtnClick() {
 
   .panel-body {
     height: calc(100% - 30px);
+  }
+
+  .filter-filter{
+    position: relative;
+    top: 0;
+    left: 0;
   }
 }
 .dropdownMenu-container {
