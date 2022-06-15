@@ -33,7 +33,7 @@ import { StateType as GlobalData } from "@/store/global";
 import { ZentaoData } from "@/store/zentao";
 import { ScriptData } from "@/views/script/store";
 import { WorkspaceData } from "@/store/workspace";
-import { resizeWidth } from "@/utils/dom";
+import {getContextMenuStyle, resizeWidth} from "@/utils/dom";
 import Tree from "@/components/Tree.vue";
 import notification from "@/utils/notification";
 import { computed, defineExpose, onMounted, onUnmounted, ref, watch } from "vue";
@@ -430,9 +430,6 @@ const onRightClick = (e) => {
   console.log('onRightClick', e)
   const {event, node} = e
 
-  const y = event.currentTarget.getBoundingClientRect().top
-  const x = event.currentTarget.getBoundingClientRect().right
-
   const contextNodeData = treeDataMap.value[node.id]
   contextNode.value = {
     id: contextNodeData.id,
@@ -443,15 +440,7 @@ const onRightClick = (e) => {
     workspaceType: contextNodeData.workspaceType,
   }
 
-  let top = y
-  if (y + 260 > document.body.clientHeight)
-    top = document.body.clientHeight - 260
-  menuStyle.value = {
-    zIndex: 9,
-    position: 'fixed',
-    left: `${x + 10}px`,
-    top: `${top}px`,
-  }
+  menuStyle.value = getContextMenuStyle(event.currentTarget.getBoundingClientRect().right, event.currentTarget.getBoundingClientRect().top, 260)
 
   rightVisible.value = true
 }
