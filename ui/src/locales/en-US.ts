@@ -83,8 +83,6 @@ export default {
     'edit_workspace': 'Edit WorkDir',
     'create_file': 'Create file',
     'del_file': 'Delete File',
-    'execCase': 'Execute By Case',
-    'execUnit': 'Execute UnitTest',
 
     'duration':  'Duration',
     'duration_sec':  'Duration(sec)',

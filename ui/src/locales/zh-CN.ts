@@ -91,8 +91,6 @@ export default {
     'edit_workspace': '编辑工作目录',
     'create_file': '新建脚本',
     'del_file': '删除脚本',
-    'execCase': '执行用例',
-    'execUnit': '执行单元测试',
 
     'duration':  '耗时',
     'duration_sec':  '耗时（秒）',
