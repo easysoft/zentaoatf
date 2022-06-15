@@ -33,7 +33,7 @@
         triggerEvent="click">
       </FilterModal>
       
-      <Button id="filterBtn" v-show="currSite.id != 1 && filerType != ''" class="rounded pure" icon="filter" ref="filterBtnRef" />
+      <Button id="filterBtn" :label="filerLabel" v-show="currSite.id != 1 && filerType != ''" class="rounded pure" icon="filter" ref="filterBtnRef" />
       <Button class="rounded pure" :hint="t('create_workspace')" @click="showModal=!showModal" icon="folder-add" />
       <Button class="rounded pure" :hint="t('batch_select')" icon="select-all-on" @click="_handleBatchSelectBtnClick" :active="workDirRef?.isCheckable" />
       <Button @click="_handleToggleAllBtnClick" class="rounded pure" :hint="workDirRef?.isAllCollapsed ? t('collapse') : t('expand_all')" :icon="workDirRef?.isAllCollapsed ? 'add-square-multiple' : 'subtract-square-multiple'" iconSize="1.4em" />
@@ -86,6 +86,7 @@ const filerType = ref('')
 const filerValue = ref('')
 const oldFilerType = ref('')
 const oldFilerValue = ref('')
+const filerLabel = ref('');
 
 const displayTypes = ref([
   {key: 'workspace', title: t('by_workspace')},
@@ -149,6 +150,17 @@ const replaceFields = {
     };
 
 let filerItems = ref([] as any)
+
+const getFilerValueLabel = () => {
+    let label = '';
+    filerItems.value !=undefined && filerItems.value.forEach(item => {
+        if(item.value == oldFilerValue.value){
+            label = item.label;
+        }
+    });
+    return label;
+}
+
 // filters
 const loadFilterItems = async (useCache = true) => {
     const data = await getScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, useCache ? '' : filerType.value)
@@ -184,6 +196,9 @@ const loadFilterItems = async (useCache = true) => {
     if(oldFilerValue.value == ''){
       oldFilerType.value = filerType.value;
       oldFilerValue.value = filerValue.value;
+    }
+    if(oldFilerType.value == filerType.value && te('by_' + oldFilerType.value)){
+        filerLabel.value = t('by_' + oldFilerType.value) + ':' + getFilerValueLabel();
     }
 }
 
@@ -223,6 +238,7 @@ const onFilterValueChanged = async (item, key) => {
   console.log('onFilterValueChanged', item, key)
   oldFilerValue.value = filerValue.value = item.key
   oldFilerType.value = filerType.value;
+  filerLabel.value = t('by_' + oldFilerType.value) + ':' + getFilerValueLabel();
   await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, filerType.value, filerValue.value)
   await loadScripts()
 }
