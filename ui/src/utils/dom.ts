@@ -129,21 +129,16 @@ export function jsonStrDef(obj) {
     return msg
 }
 
-export function hideMenu (newVal) {
-    const scriptMenu = document.getElementById('menu-script')
-    if (newVal.type === 'unit') addClass(scriptMenu, 't-hidden')
-    else removeClass(scriptMenu,'t-hidden')
-
-    const scriptSync = document.getElementById('menu-sync')
-    if (newVal.type === 'unit') addClass(scriptSync,'t-hidden')
-    else removeClass(scriptSync,'t-hidden')
-}
-
-export function expandOneKey(treeMap: any, key: string, expandedKeys: string[]) {
-    if (!expandedKeys.includes(key)) expandedKeys.push(key)
-
-    const parentId = treeMap[key].parentId
-    if (parentId) {
-        expandOneKey(treeMap, parentId, expandedKeys)
+export function getContextMenuStyle(x, y, height) {
+    let top = y
+    if (y + height > document.body.clientHeight)
+        top = document.body.clientHeight - height
+    const menuStyle = {
+        zIndex: 9,
+        position: 'fixed',
+        left: `${x + 10}px`,
+        top: `${top}px`,
     }
+
+    return menuStyle
 }

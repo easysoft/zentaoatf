@@ -214,8 +214,16 @@ export default {
     'test_type_other':  'Other Automated or Unit Test',
     'input_keyword_to_search': 'Input Keyword To Search',
     'tips_test_cmd': 'Please run "{cmd}" with command line.',
-    'pls_add_zentao_site': 'Please add zentao site.',
 
+    'sync-from-zentao': 'Sync From Zentao',
+    'sync-to-zentao': 'Sync To Zentao',
+    'copy': 'Copy',
+    'cut': 'Cut',
+    'paste': 'Paste',
+    'open-in-explore': 'Open In Explore',
+    'open-in-terminal': 'Open In Terminal',
+
+    'pls_add_zentao_site': 'Please add zentao site.',
     'pls_create_workspace': 'Please create workspace to continue.',
     'pls_product': 'Please select product.',
     'pls_lang': 'Please select language.',
@@ -233,7 +241,7 @@ export default {
     'pls_workspace_path':  'Please input workspace full path.',
     'pls_workspace_type':  'Please input workspace type.',
 
-    'pls_zentao_url': 'Please input ZenTao URL',
+    'pls_zentao_url': 'Please input right ZenTao URL',
     'pls_username': 'Please input user name.',
     'pls_password': 'Please input password.',
     'pls_input_lang': 'Please input language.',
