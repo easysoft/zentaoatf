@@ -28,6 +28,17 @@ type CreateScriptReq struct {
 	ProductId   int                       `json:"productId"`
 }
 
+type PasteScriptReq struct {
+	SrcKey          string                  `json:"srcKey"`
+	SrcType         commConsts.TreeNodeType `json:"srcType"`
+	SrcWorkspaceId  int                     `json:"srcWorkspaceId"`
+	DistKey         string                  `json:"distKey"`
+	DistType        commConsts.TreeNodeType `json:"distType"`
+	DistWorkspaceId int                     `json:"distWorkspaceId"`
+
+	Action string `json:"action"`
+}
+
 type MoveScriptReq struct {
 	DragKey      string             `json:"dragKey"`
 	DropKey      string             `json:"dropKey"`

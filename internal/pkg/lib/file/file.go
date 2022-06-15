@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
+	cp "github.com/otiai10/copy"
 	"io"
 	"io/ioutil"
 	"os"
@@ -144,29 +145,41 @@ func GetFilesFromParams(arguments []string) []string {
 	return ret
 }
 
-func CopyFile(src, dst string) (int64, error) {
+func CopyFile(src, dst string) (nBytes int64, err error) {
 	sourceFileStat, err := os.Stat(src)
 	if err != nil {
-		return 0, err
+		return
 	}
 
 	if !sourceFileStat.Mode().IsRegular() {
-		return 0, fmt.Errorf("%s is not a regular file", src)
+		err = fmt.Errorf("%s is not a regular file", src)
+		return
 	}
 
 	source, err := os.Open(src)
 	if err != nil {
-		return 0, err
+		return
 	}
 	defer source.Close()
 
 	destination, err := os.Create(dst)
 	if err != nil {
-		return 0, err
+		return
 	}
 	defer destination.Close()
-	nBytes, err := io.Copy(destination, source)
-	return nBytes, err
+	nBytes, err = io.Copy(destination, source)
+	return
+}
+
+func CopyDir(src, dest string) (err error) {
+	opt := cp.Options{
+		Skip: func(src string) (bool, error) {
+			return strings.HasSuffix(src, ".git"), nil
+		},
+	}
+	err = cp.Copy(src, dest, opt)
+
+	return
 }
 
 func GetFileName(pathOrUrl string) string {

@@ -17,8 +17,11 @@
       <div v-if="treeNode.type != 'workspace'" @click="menuClick('cut')" class="menu-item">
         <span>{{t('cut')}}</span>
       </div>
-      <div v-if="clipboard?.id && treeNode?.type != 'dir'" @click="menuClick('paste')" class="menu-item">
+      <div v-if="clipboardData?.id && (treeNode?.type == 'workspace' || treeNode?.type == 'dir')" @click="menuClick('paste')" class="menu-item">
         <span>{{t('paste')}}</span>
+      </div>
+      <div v-if="treeNode?.type != 'workspace'" @click="menuClick('delete')" class="menu-item">
+        <span>{{t('delete')}}</span>
       </div>
 
       <div @click="menuClick('open-in-explore')" class="menu-item">
@@ -46,7 +49,7 @@ export default defineComponent({
       type: Function as PropType<(menuKey: string, targetId: number) => void>,
       required: true
     },
-    clipboard: {
+    clipboardData: {
       type: Object,
       required: false
     },

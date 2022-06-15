@@ -226,6 +226,7 @@ export default {
     'switch_display_bottom_side': '切换显示底部边栏',
     'switch_display_right_side': '切换显示右侧边栏',
 
+    'node': '节点',
     'sync-from-zentao': '从禅道同步',
     'sync-to-zentao': '同步到禅道',
     'copy': '复制',

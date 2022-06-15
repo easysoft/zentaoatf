@@ -74,6 +74,14 @@ export async function updateNameReq(path: string, name: string): Promise<any> {
     });
 }
 
+export async function paste(data: any): Promise<any> {
+    return request({
+        url: `/${apiPath}/paste`,
+        method: 'PUT',
+        data
+    });
+}
+
 export async function move(data: any): Promise<any> {
     return request({
         url: `/${apiPath}/move`,

@@ -21,7 +21,7 @@
      />
 
     <div v-if="contextNode.id && rightVisible" :style="menuStyle">
-      <TreeContextMenu :treeNode="contextNode" :onMenuClick="menuClick"/>
+      <TreeContextMenu :treeNode="contextNode" :clipboardData="clipboardData" :onMenuClick="menuClick"/>
     </div>
   </div>
 </template>
@@ -50,7 +50,7 @@ import {
 import {
   getCaseIdsFromReport,
   getNodeMap,
-  listFilterItems,
+  listFilterItems, pasteNode,
 } from "@/views/script/service";
 import { useRouter } from "vue-router";
 import { isWindows } from "@/utils/comm";
@@ -421,11 +421,12 @@ const expandNode = (expandedKeysMap) => {
     setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
 }
 
-let menuStyle = ref({} as any)
-let contextNode = ref({} as any)
-let targetModelId = 0
+const menuStyle = ref({} as any)
+const contextNode = ref({} as any)
+const clipboardAction = ref('')
+const clipboardData = ref({} as any)
 
-let rightVisible = ref(false)
+const rightVisible = ref(false)
 const onRightClick = (e) => {
   console.log('onRightClick', e)
   const {event, node} = e
@@ -446,8 +447,43 @@ const onRightClick = (e) => {
 }
 
 const menuClick = (menuKey: string, targetId: number) => {
-  console.log('menuClick', menuKey, targetId)
-  targetModelId = targetId
+  console.log('menuClick', menuKey, treeDataMap.value[targetId])
+
+  const contextNodeData = treeDataMap.value[targetId]
+  if (menuKey === 'copy' || menuKey === 'cut') {
+    clipboardAction.value = menuKey
+    clipboardData.value = contextNodeData
+
+  } else if (menuKey === 'paste') {
+    console.log(clipboardData.value)
+    const data = {
+      srcKey: clipboardData.value.id,
+      srcType: clipboardData.value.type,
+      srcWorkspaceId: clipboardData.value.workspaceId,
+      distKey: contextNodeData.id,
+      distType: contextNodeData.type,
+      distWorkspaceId: contextNodeData.workspaceId,
+      action: clipboardAction.value,
+    }
+    store.dispatch('Script/pasteScript', data)
+
+  } else if (menuKey === 'delete') {
+    Modal.confirm({
+      title: t("confirm_delete", {
+        name: contextNodeData.title,
+        typ: t("node"),
+      }),
+      okText: t("confirm"),
+      cancelText: t("cancel"),
+      onOk: async () => {
+        store.dispatch('Script/deleteScript', contextNodeData.id)
+      },
+    });
+
+  } else {
+    clipboardAction.value = ''
+    clipboardData.value = {}
+  }
 
   clearMenu()
 }

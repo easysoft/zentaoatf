@@ -215,6 +215,7 @@ export default {
     'input_keyword_to_search': 'Input Keyword To Search',
     'tips_test_cmd': 'Please run "{cmd}" with command line.',
 
+    'node': 'Node',
     'sync-from-zentao': 'Sync From Zentao',
     'sync-to-zentao': 'Sync To Zentao',
     'copy': 'Copy',

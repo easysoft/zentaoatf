@@ -178,7 +178,7 @@ func (s *TestScriptService) UpdateName(script serverDomain.TestScript) (err erro
 }
 
 func (s *TestScriptService) Delete(pth string) (bizErr *domain.BizError) {
-	err := os.Remove(pth)
+	err := os.RemoveAll(pth)
 
 	_, ok := err.(*os.PathError)
 	if ok {
@@ -204,6 +204,26 @@ func (s *TestScriptService) Move(req serverDomain.MoveScriptReq) (err error) {
 
 	pth := filepath.Join(distDir, srcName)
 	err = os.Rename(src, pth)
+
+	return
+}
+
+func (s *TestScriptService) Paste(req serverDomain.PasteScriptReq) (err error) {
+	distPath := filepath.Join(req.DistKey, filepath.Base(req.SrcKey))
+
+	if distPath == req.SrcKey {
+		return
+	}
+
+	if req.Action == "copy" {
+		if req.SrcType == commConsts.File {
+			fileUtils.CopyFile(req.SrcKey, distPath)
+		} else {
+			fileUtils.CopyDir(req.SrcKey, distPath)
+		}
+	} else if req.Action == "cut" {
+		os.Rename(req.SrcKey, distPath)
+	}
 
 	return
 }
