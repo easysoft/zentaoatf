@@ -235,15 +235,10 @@ export function scriptTreeAddAttr(treeData) {
         item.checkable = item.workspaceType == 'ztf' ? true : false;
         if (item.isLeaf) {
             item.toolbarItems = [
-                {hint: 'execCase', icon: 'play', key: 'runScript'},
-                {hint: 'checkin_case', icon: 'arrow-up', key: 'checkinCase'},
-                {hint: 'checkout_case', icon: 'arrow-down', key: 'checkoutCase'},
+                
             ];
         } else {
             item.toolbarItems = [
-                {hint: item.checkable ? 'exec_all' : 'execUnit', icon: 'play', key: 'runScript'},
-                {hint: 'checkin_case', icon: 'arrow-up', key: 'checkinCase'},
-                {hint: 'checkout_case', icon: 'arrow-down', key: 'checkoutCase'},
                 {hint: 'create_workspace', icon: 'folder-add', key: 'createDir'},
                 { hint: 'create_file', icon: 'file-add', key: 'createFile'},
             ];

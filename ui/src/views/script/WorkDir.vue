@@ -1,19 +1,19 @@
 <template>
   <div class="left-pannel-contain">
-  <div class="workdir">
-    <Tree 
-    :data="treeData" 
-    :checkable="checkable"
-    ref="treeRef" 
-    @active="selectNode" 
-    @check="checkNode"
-    @clickToolbar="onToolbarClicked" 
-    @collapse="expandNode" 
-    :defaultCollapsedMap="collapsedMap"
-    :defaultCollapsed="true"
-    />
-    <FormNode :show="showModal" @submit="createNode" @cancel="modalClose" ref="formNode" />
-  </div>
+    <div class="workdir">
+      <Tree 
+        :data="treeData" 
+        :checkable="checkable"
+        ref="treeRef" 
+        @active="selectNode" 
+        @check="checkNode"
+        @clickToolbar="onToolbarClicked" 
+        @collapse="expandNode" 
+        :defaultCollapsedMap="collapsedMap"
+        :defaultCollapsed="true"
+      />
+      <FormNode :show="showModal" @submit="createNode" @cancel="modalClose" ref="formNode" />
+    </div>
     <Button 
       v-if="true || checkedKeys.length"
       class="rounded border primary-pale run-selected" icon="run-all" 
@@ -130,17 +130,6 @@ const onToolbarClicked = (e) => {
         }
       );
     break;
-    case 'runScript':
-      console.log('run script', currentNode.value);
-      bus.emit(settings.eventExec,
-        {execType: currentNode.value.workspaceType === 'ztf' ? 'ztf' : 'unit', scripts: currentNode.value.isLeaf ? [currentNode.value] : currentNode.value.children});
-      break;
-    case 'checkinCase':
-      console.log('checkin case', currentNode.value);
-      break;
-    case 'checkoutCase':
-      console.log('checkout case', currentNode.value);
-      break;
   }
 }
 
