@@ -1,23 +1,28 @@
 <template>
   <div class="workdir">
-    <Tree 
-    :data="treeData" 
+    <Tree
+    :data="treeData"
     :checkable="checkable"
-    ref="treeRef" 
-    @active="selectNode" 
+    ref="treeRef"
+    @active="selectNode"
+    @rightClick="onRightClick"
     @check="checkNode"
-    @clickToolbar="onToolbarClicked" 
-    @collapse="expandNode" 
+    @clickToolbar="onToolbarClicked"
+    @collapse="expandNode"
     :defaultCollapsedMap="collapsedMap"
     :defaultCollapsed="true"
     />
     <FormNode :show="showModal" @submit="createNode" @cancel="modalClose" ref="formNode" />
-    <Button 
+    <Button
       v-if="checkedKeys.length"
-      class="rounded border primary-pale run-selected" icon="run-all" 
-      :label="t('exec_selected')" 
+      class="rounded border primary-pale run-selected" icon="run-all"
+      :label="t('exec_selected')"
       @click="execSelected"
      />
+
+    <div v-if="contextNode.id && rightVisible" :style="menuStyle">
+      <TreeContextMenu :treeNode="contextNode" :onMenuClick="menuClick"/>
+    </div>
   </div>
 </template>
 
@@ -28,11 +33,12 @@ import { StateType as GlobalData } from "@/store/global";
 import { ZentaoData } from "@/store/zentao";
 import { ScriptData } from "@/views/script/store";
 import { WorkspaceData } from "@/store/workspace";
-import { resizeWidth } from "@/utils/dom";
+import {getContextMenuStyle, resizeWidth} from "@/utils/dom";
 import Tree from "@/components/Tree.vue";
 import notification from "@/utils/notification";
 import { computed, defineExpose, onMounted, onUnmounted, ref, watch } from "vue";
 import Button from '@/components/Button.vue';
+import TreeContextMenu from './TreeContextMenu.vue';
 
 import bus from "@/utils/eventBus";
 import {
@@ -353,10 +359,8 @@ const execSelected = () => {
       }
     })
     bus.emit(settings.eventExec, { execType: 'ztf', scripts: arr });
-} 
+}
 
-let contextNode = ref({} as any)
-let menuStyle = ref({} as any)
 const editedData = ref<any>({})
 const nameFormVisible = ref(false)
 
@@ -417,6 +421,41 @@ const expandNode = (expandedKeysMap) => {
     setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
 }
 
+let menuStyle = ref({} as any)
+let contextNode = ref({} as any)
+let targetModelId = 0
+
+let rightVisible = ref(false)
+const onRightClick = (e) => {
+  console.log('onRightClick', e)
+  const {event, node} = e
+
+  const contextNodeData = treeDataMap.value[node.id]
+  contextNode.value = {
+    id: contextNodeData.id,
+    title: contextNodeData.title,
+    type: contextNodeData.type,
+    isLeaf: contextNodeData.isLeaf,
+    workspaceId: contextNodeData.workspaceId,
+    workspaceType: contextNodeData.workspaceType,
+  }
+
+  menuStyle.value = getContextMenuStyle(event.currentTarget.getBoundingClientRect().right, event.currentTarget.getBoundingClientRect().top, 260)
+
+  rightVisible.value = true
+}
+
+const menuClick = (menuKey: string, targetId: number) => {
+  console.log('menuClick', menuKey, targetId)
+  targetModelId = targetId
+
+  clearMenu()
+}
+const clearMenu = () => {
+  console.log('clearMenu')
+  contextNode.value = ref(null)
+}
+
 defineExpose({
   get isCheckable() {
     return checkable.value;
@@ -431,6 +470,15 @@ defineExpose({
   onToolbarClicked,
   loadScripts
 });
+
+onMounted(() => {
+  console.log('onMounted')
+  document.addEventListener("click", clearMenu)
+})
+onUnmounted(() => {
+  document.removeEventListener("click", clearMenu)
+})
+
 </script>
 
 <style lang="less" scoped>

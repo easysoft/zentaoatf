@@ -2,10 +2,10 @@
   <div class="tree-context-menu">
     <div class="menu">
       <div @click="menuClick('sync-from-zentao')" class="menu-item">
-        <span>{{t('sync-from-zentao')}} {{ treeNode.type }} - {{ treeNode.workspaceType }}</span>
+        <span>{{t('sync-from-zentao')}}</span>
       </div>
       <div @click="menuClick('sync-to-zentao')" class="menu-item">
-        <span>{{t('sync-to-zentao')}} {{ treeNode.type }} - {{ treeNode.workspaceType }}</span>
+        <span>{{t('sync-to-zentao')}}</span>
       </div>
       <div @click="menuClick('exec')" class="menu-item">
         <span>{{t('exec')}}</span>
