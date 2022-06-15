@@ -2,7 +2,7 @@
   <div class="tree-context-menu">
     <div class="menu">
       <div @click="menuClick('sync-from-zentao')" class="menu-item">
-        <span>{{t('sync-from-zentao')}}</span>
+        <span>{{t('sync-from-zentao')}} - {{treeNode.type}}</span>
       </div>
       <div @click="menuClick('sync-to-zentao')" class="menu-item">
         <span>{{t('sync-to-zentao')}}</span>
@@ -11,13 +11,13 @@
         <span>{{t('exec')}}</span>
       </div>
 
-      <div @click="menuClick('copy')" class="menu-item">
+      <div v-if="treeNode.type != 'workspace'" @click="menuClick('copy')" class="menu-item">
         <span>{{t('copy')}}</span>
       </div>
-      <div @click="menuClick('cut')" class="menu-item">
+      <div v-if="treeNode.type != 'workspace'" @click="menuClick('cut')" class="menu-item">
         <span>{{t('cut')}}</span>
       </div>
-      <div @click="menuClick('paste')" class="menu-item">
+      <div v-if="clipboard?.id && treeNode?.type != 'dir'" @click="menuClick('paste')" class="menu-item">
         <span>{{t('paste')}}</span>
       </div>
 
@@ -45,7 +45,11 @@ export default defineComponent({
     onMenuClick: {
       type: Function as PropType<(menuKey: string, targetId: number) => void>,
       required: true
-    }
+    },
+    clipboard: {
+      type: Object,
+      required: false
+    },
   },
   components: {
   },
