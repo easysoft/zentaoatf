@@ -7,6 +7,7 @@
       v-bind="_convertNodeData(data, undefined, 0)"
       :childrenConverter="_convertNodeData"
       @click="_handleClick"
+      @rightClick="emit('rightClick', $event)"
       @toggle="_handleToggle"
       @clickToolbar="emit('clickToolbar', $event)"
       @check="_handleCheck"
@@ -86,6 +87,7 @@ const emit = defineEmits<{
     (type: 'collapse', event: {collapsed: Record<string, boolean>}) : void,
     (type: 'check', event: {checked: Record<string, boolean | 'indeterminate'>}) : void,
     (type: 'active', event: {activeID: string}) : void,
+    (type: 'rightClick', event: {node: TreeNodeData, parent?: TreeNodeData, event: any}) : void,
     (type: 'clickToolbar', event: {node: TreeNodeData, parent?: TreeNodeData, event: any}) : void,
 }>();
 

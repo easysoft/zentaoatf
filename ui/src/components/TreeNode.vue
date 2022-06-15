@@ -6,6 +6,7 @@
       @mouseenter="_handleMouseEnter"
       @mouseleave="_handleMouseLeave"
       @click.stop="emit('click', {node: props, event: $event})"
+      @contextmenu.prevent="emit('rightClick', {node: props, event: $event})"
     >
       <template v-if="children">
         <Button v-if="isCollapsed" size="sm" :icon="collapsedIcon" :class="collapsedIconClass" :style="collapsedIconStyle" class="tree-node-toggle" @click="emit('toggle', {node: props, event: $event})" />
@@ -19,10 +20,12 @@
         size="sm"
         @click="emit('check', {node: props, event: $event})"
       />
+
       <div class="tree-node-icon">
         <Icon v-if="icon" :icon="icon" :class="iconClass" :style="iconStyle" />
       </div>
       <div class="tree-node-title" :class="titleClass" :style="titleClass">{{title}}</div>
+
       <Toolbar
         v-if="toolbarItems && showToolbar"
         class="tree-node-toolbar"
@@ -37,6 +40,7 @@
         v-bind="childrenConverter ? childrenConverter(child, props, index) : child"
         :childrenConverter="childrenConverter"
         @click="emit('click', {parent: props, ...$event})"
+        @rightClick="emit('rightClick', {parent: props, ...$event})"
         @toggle="emit('toggle', {parent: props, ...$event})"
         @clickToolbar="emit('clickToolbar', {parent: props, ...$event})"
         @check="emit('check', {parent: props, ...$event})"
@@ -100,6 +104,7 @@ const showToolbar = ref(!props.toolbarShowOnHover);
 
 const emit = defineEmits<{
     (type: 'click', event: {node: TreeNodeData, parent?: TreeNodeData, event: any}) : void,
+    (type: 'rightClick', event: {node: TreeNodeData, parent?: TreeNodeData, event: any}) : void,
     (type: 'check', event: {node: TreeNodeData, parent?: TreeNodeData, event: any}) : void,
     (type: 'toggle', event: {node: TreeNodeData, parent?: TreeNodeData, event: any}) : void,
     (type: 'clickToolbar', event: {node: TreeNodeData, parent?: TreeNodeData, event: any}) : void,
@@ -118,6 +123,7 @@ function _handleMouseEnter() {
 function _handleMouseLeave() {
     showToolbar.value = false;
 }
+
 </script>
 
 <style scoped>

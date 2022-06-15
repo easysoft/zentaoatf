@@ -228,6 +228,14 @@ export default {
     'switch_display_bottom_side': '切换显示底部边栏',
     'switch_display_right_side': '切换显示右侧边栏',
 
+    'sync-from-zentao': '从禅道同步',
+    'sync-to-zentao': '同步到禅道',
+    'copy': '复制',
+    'cut': '剪切',
+    'paste': '粘贴',
+    'open-in-explore': '在资源管理器中显示',
+    'open-in-terminal': '从此位置打开命令行',
+
     'pls_add_zentao_site': '初次使用，请点击右上按钮新建禅道站点。',
     'pls_create_workspace': '请点击右上角链接新建工作目录',
     'pls_product': '请选择产品',
@@ -246,7 +254,7 @@ export default {
     'pls_workspace_path':  '请输入工作目录完整路径',
     'pls_workspace_type':  '请选择工作目录类型',
 
-    'pls_zentao_url': '请输入禅道地址',
+    'pls_zentao_url': '请输入正确的禅道地址',
     'pls_username': '请输入用户名',
     'pls_password': '请输入密码',
     'pls_input_lang': '请输入语言',

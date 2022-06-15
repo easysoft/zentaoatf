@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
 	"github.com/easysoft/zentaoatf/internal/pkg/domain"
@@ -8,6 +9,7 @@ import (
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
+	"regexp"
 	"strings"
 )
 
@@ -42,6 +44,12 @@ func (s *SiteService) GetDomainObject(id uint) (site serverDomain.ZentaoSite, er
 }
 
 func (s *SiteService) Create(site model.Site) (id uint, isDuplicate bool, err error) {
+	site.Url = fixSiteUlt(site.Url)
+	if site.Url == "" {
+		err = errors.New("url not right")
+		return
+	}
+
 	site.Url = fileUtils.AddUrlPathSepIfNeeded(site.Url)
 
 	config := configHelper.LoadBySite(site)
@@ -56,6 +64,12 @@ func (s *SiteService) Create(site model.Site) (id uint, isDuplicate bool, err er
 }
 
 func (s *SiteService) Update(site model.Site) (isDuplicate bool, err error) {
+	site.Url = fixSiteUlt(site.Url)
+	if site.Url == "" {
+		err = errors.New("url not right")
+		return
+	}
+
 	site.Url = fileUtils.AddUrlPathSepIfNeeded(site.Url)
 
 	config := configHelper.LoadBySite(site)
@@ -134,6 +148,25 @@ func (s *SiteService) CreateEmptySite(lang string) (err error) {
 		Url:  "",
 	}
 	_, _, err = s.SiteRepo.Create(&po)
+
+	return
+}
+
+func fixSiteUlt(url string) (ret string) {
+	regx := regexp.MustCompile(`(http|https):\/\/.+`)
+	result := regx.FindStringSubmatch(url)
+	if result == nil {
+		return
+	}
+
+	regx = regexp.MustCompile(`[^:\/]\/`)
+	result = regx.FindStringSubmatch(url)
+	if result == nil { // without /
+		ret = url
+	} else {
+		index := strings.LastIndex(url, "/")
+		ret = url[:index+1]
+	}
 
 	return
 }
