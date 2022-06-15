@@ -448,7 +448,15 @@ const onRightClick = (e) => {
 const menuClick = (menuKey: string, targetId: number) => {
   console.log('menuClick', menuKey, targetId)
   targetModelId = targetId
-
+  if(menuKey === 'exec'){
+    const node = treeDataMap.value[targetModelId]
+    if(node.workspaceType !== 'ztf'){
+        runTest(ref(node));
+    }else{
+        bus.emit(settings.eventExec,
+        {execType: node.workspaceType === 'ztf' ? 'ztf' : 'unit', scripts: node.type === 'file' ? [node] : node.children});
+    }
+  }
   clearMenu()
 }
 const clearMenu = () => {

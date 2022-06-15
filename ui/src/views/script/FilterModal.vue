@@ -256,7 +256,6 @@ onMounted(() => {
 const activeKey = computed(() => props.checkedTab);
 const tabRef = ref(null);
 const onTabClick = (event, tab, index) => {
-  activeKey.value = tab.key;
   emit("tabChanged", tab);
 };
 
@@ -281,8 +280,7 @@ onUnmounted(() => {
   z-index: 100;
   padding-top: var(--space-sm);
   padding-bottom: var(--space-sm);
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 2em;
 }
 .popper :deep(.list-item) {
   padding-left: var(--space-lg);
@@ -304,7 +302,7 @@ onUnmounted(() => {
     font-size: 14px;
     line-height: 40px;
     display: inline-block;
-    margin-right: 3em;
+    margin-right: 2em;
     cursor: pointer;
     border-bottom: 2px solid transparent;
     &.active {

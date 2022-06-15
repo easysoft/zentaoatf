@@ -33,7 +33,7 @@
         triggerEvent="click">
       </FilterModal>
       
-      <Button id="filterBtn" v-show="currSite.id != 1 && filerType != ''" class="rounded pure" icon="filter" ref="filterBtnRef" @click="filterShow($event)" />
+      <Button id="filterBtn" v-show="currSite.id != 1 && filerType != ''" class="rounded pure" icon="filter" ref="filterBtnRef" />
       <Button class="rounded pure" :hint="t('create_workspace')" @click="showModal=!showModal" icon="folder-add" />
       <Button class="rounded pure" :hint="t('batch_select')" icon="select-all-on" @click="_handleBatchSelectBtnClick" :active="workDirRef?.isCheckable" />
       <Button @click="_handleToggleAllBtnClick" class="rounded pure" :hint="workDirRef?.isAllCollapsed ? t('collapse') : t('expand_all')" :icon="workDirRef?.isAllCollapsed ? 'add-square-multiple' : 'subtract-square-multiple'" iconSize="1.4em" />
@@ -264,9 +264,6 @@ function _handleToggleAllBtnClick() {
     }
 }
 
-const filterShow = (e) => {
-    console.log(1111)
-}
 </script>
 
 <style lang="less" >
