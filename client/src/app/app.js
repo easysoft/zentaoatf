@@ -204,10 +204,12 @@ export default class ZtfApp {
             path = pth.resolve(path, '..')
         }
 
-        if (IS_MAC_OSX) {
-            cp.exec('open -a Terminal ' + path);
-        } else if (IS_WINDOWS_OS) {
+        if (IS_WINDOWS_OS) {
             cp.spawn('cmd', ['/C', 'start cmd.exe']);
+        } else if (IS_LINUX) {
+
+        } else if (IS_MAC_OSX) {
+            cp.exec('open -a Terminal ' + path);
         }
     }
 
