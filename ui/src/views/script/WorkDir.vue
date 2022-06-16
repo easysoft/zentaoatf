@@ -23,6 +23,13 @@
     <div v-if="contextNode.id && rightVisible" :style="menuStyle">
       <TreeContextMenu :treeNode="contextNode" :clipboardData="clipboardData" :onMenuClick="menuClick"/>
     </div>
+    <FormSyncFromZentao
+      :show="showSyncFromZentaoModal"
+      @submit="syncFromZentaoSubmit"
+      @cancel="showSyncFromZentaoModal = !showSyncFromZentaoModal"
+      :workspaceId="syncFromZentaoWorkspaceId"
+      ref="syncFromZentaoRef"
+    />
   </div>
 </template>
 
@@ -39,6 +46,7 @@ import notification from "@/utils/notification";
 import { computed, defineExpose, onMounted, onUnmounted, ref, watch } from "vue";
 import Button from '@/components/Button.vue';
 import TreeContextMenu from './TreeContextMenu.vue';
+import FormSyncFromZentao  from "./FormSyncFromZentao.vue";
 
 import bus from "@/utils/eventBus";
 import {
@@ -91,6 +99,7 @@ const currentNode = ref({} as any) // parent node for create node
 const collapsedMap = ref({} as any)
 const checkedKeys = ref<string[]>([])
 const showSyncFromZentaoModal = ref(false);
+const syncFromZentaoWorkspaceId = ref(0);
 
 onMounted(() => {
   console.log('onMounted')
@@ -449,13 +458,13 @@ const onRightClick = (e) => {
 }
 
 const menuClick = (menuKey: string, targetId: number) => {
-  console.log('menuClick', menuKey, targetId)
   const contextNodeData = treeDataMap.value[targetId]
+  console.log('menuClick', menuKey, targetId, contextNodeData)
 
   if(menuKey === 'exec'){
-    execScript(currentNode.value)
+    execScript(contextNodeData)
   }else if(menuKey == 'sync-from-zentao'){
-    syncFromZentaoSubmit(currentNode.value)
+    syncFromZentao(contextNodeData)
   } else if (menuKey === 'copy' || menuKey === 'cut') {
     clipboardAction.value = menuKey
     clipboardData.value = contextNodeData
@@ -503,6 +512,46 @@ const menuClick = (menuKey: string, targetId: number) => {
   }
 
   clearMenu()
+}
+const syncFromZentao = (node) => {
+    if(node.workspaceType == 'ztf'){
+      if(node.type == 'workspace'){
+        console.log('workspace show')
+        showSyncFromZentaoModal.value = true;
+        syncFromZentaoWorkspaceId.value = node.workspaceId;
+      }else if(node.type == 'dir'){
+        checkoutCases(node.workspaceId, node)
+      }else if(node.type == 'file'){
+        checkout(node.workspaceId, node.caseId)
+      }
+    }
+}
+const checkoutCases = (workspaceId, node) => {
+    if(node.children == undefined || node.children.length == 0){
+        return;
+    }
+    node.children.forEach(item => {
+        if(item.type == 'dir'){
+            checkoutCases(workspaceId, item)
+        }else if(item.type == 'file' && item.caseId){
+            checkout(workspaceId, item.caseId, false)
+        }
+    });
+}
+const checkout = (workspaceId, caseId, successNotice = true) => {
+    console.log('checkout', workspaceId, caseId)
+    const data = {caseId: caseId, workspaceId: workspaceId}
+    store.dispatch('Script/syncFromZentao', data).then((resp => {
+    if (resp.code === 0) {
+      successNotice && notification.success({
+        message: t('sync_success'),
+      });
+    } else {
+        notification.error({
+          message: resp.data.msg,
+        });
+    }
+    }))
 }
 const syncFromZentaoRef = ref({} as any)
 const syncFromZentaoSubmit = (model) => {
