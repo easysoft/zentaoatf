@@ -205,7 +205,7 @@ export default class ZtfApp {
         }
 
         if (IS_WINDOWS_OS) {
-            cp.spawn('cmd', ['/C', 'start cmd.exe']);
+            cp.exec('start cmd.exe /K cd /D ' + path);
         } else if (IS_LINUX) {
 
         } else if (IS_MAC_OSX) {
