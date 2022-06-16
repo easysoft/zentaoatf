@@ -207,7 +207,9 @@ export default class ZtfApp {
         if (IS_WINDOWS_OS) {
             cp.exec('start cmd.exe /K cd /D ' + path);
         } else if (IS_LINUX) {
-            cp.spawn ('/bin/bash', { cwd: path });
+            cp.spawn ('sh',
+                [
+                    '-c', 'ls'], { cwd: path });
         } else if (IS_MAC_OSX) {
             cp.exec('open -a Terminal ' + path);
         }
