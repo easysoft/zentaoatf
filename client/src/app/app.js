@@ -213,6 +213,7 @@ export default class ZtfApp {
             cp.exec('open -a Terminal ' + path);
         }
     }
+
     get windows() {
         return this._windows;
     }
