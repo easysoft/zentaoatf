@@ -24,10 +24,10 @@
         <span>{{t('delete')}}</span>
       </div>
 
-      <div @click="menuClick('open-in-explore')" class="menu-item">
+      <div v-if="isElectron" @click="menuClick('open-in-explore')" class="menu-item">
         <span>{{t('open-in-explore')}}</span>
       </div>
-      <div @click="menuClick('open-in-terminal')" class="menu-item">
+      <div v-if="isElectron" @click="menuClick('open-in-terminal')" class="menu-item">
         <span>{{t('open-in-terminal')}}</span>
       </div>
     </div>
@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, PropType, Ref} from "vue";
+import {defineComponent, PropType, ref, Ref} from "vue";
 import {useI18n} from "vue-i18n";
 
 export default defineComponent({
@@ -59,12 +59,15 @@ export default defineComponent({
   setup(props) {
     const { t } = useI18n();
 
+    const isElectron = ref(!!window.require)
+
     const menuClick = (menuKey) => {
       props.onMenuClick(menuKey, props.treeNode.id);
     };
 
     return {
       t,
+      isElectron,
       menuClick
     }
   }
