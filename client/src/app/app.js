@@ -197,7 +197,7 @@ export default class ZtfApp {
         shell.showItemInFolder(path);
     }
     openInTerminal(path) {
-        logInfo('openInExplore')
+        logInfo('openInTerminal')
 
         const stats = fs.statSync(path);
         if (stats.isFile()) {
@@ -207,9 +207,7 @@ export default class ZtfApp {
         if (IS_WINDOWS_OS) {
             cp.exec('start cmd.exe /K cd /D ' + path);
         } else if (IS_LINUX) {
-            cp.spawn ('sh',
-                [
-                    '-c', 'ls'], { cwd: path });
+            cp.spawn ('sh', [], { cwd: path, stdio: 'inherit' });
         } else if (IS_MAC_OSX) {
             cp.exec('open -a Terminal ' + path);
         }
