@@ -126,7 +126,7 @@ const StoreModel: ModuleType = {
             if (resp.code === 0) {
                 await dispatch('listScript', state.queryParams)
 
-                if (resp.code === 0 && resp.data.length === 1) {
+                if (resp.code === 0 && resp.data != null && resp.data.length === 1) {
                     const getResp = await get(resp.data[0], payload.workspaceId);
                     commit('setItem', getResp.data);
                 } else {
