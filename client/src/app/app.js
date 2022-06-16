@@ -1,13 +1,16 @@
-import {app, BrowserWindow, ipcMain, Menu, shell, dialog} from 'electron';
+import {app, BrowserWindow, ipcMain, Menu, shell, dialog, globalShortcut} from 'electron';
 
 import {DEBUG, electronMsg, electronMsgReplay, minimumSizeHeight, minimumSizeWidth} from './utils/consts';
-import {IS_MAC_OSX, IS_LINUX} from './utils/env';
+import {IS_MAC_OSX, IS_LINUX, IS_WINDOWS_OS} from './utils/env';
 import {logInfo, logErr} from './utils/log';
 import Config, {updateConfig} from './utils/config';
 import Lang, {initLang} from './core/lang';
 import {startUIService} from "./core/ui";
 import {startZtfServer, killZtfServer} from "./core/ztf";
-// import {main} from "@electron/remote";
+
+const cp = require('child_process');
+const fs = require('fs');
+const pth = require('path');
 
 export default class ZtfApp {
     constructor() {
@@ -93,6 +96,11 @@ export default class ZtfApp {
                     app.quit()
                     break;
                 default:
+                   logInfo('--', arg.action, arg.path)
+                    if (arg.action == 'openInExplore')
+                        this.openInExplore(arg.path)
+                   else if (arg.action == 'openInTerminal')
+                        this.openInTerminal(arg.path)
             }
         })
 
@@ -127,6 +135,12 @@ export default class ZtfApp {
         this.buildAppMenu();
         this.openOrCreateWindow()
         this.setAboutPanel();
+
+         globalShortcut.register('CommandOrControl+D', () => {
+             console.log('CommandOrControl+X is pressed')
+             const mainWin = this._windows.get('main');
+             mainWin.toggleDevTools()
+         })
     }
 
     quit() {
@@ -177,6 +191,24 @@ export default class ZtfApp {
         }).catch(err => {
             logErr(err)
         })
+    }
+
+    openInExplore(path) {
+        shell.showItemInFolder(path);
+    }
+    openInTerminal(path) {
+        logInfo('openInExplore')
+
+        const stats = fs.statSync(path);
+        if (stats.isFile()) {
+            path = pth.resolve(path, '..')
+        }
+
+        if (IS_MAC_OSX) {
+            cp.exec('open -a Terminal ' + path);
+        } else if (IS_WINDOWS_OS) {
+            cp.spawn('cmd', ['/C', 'start cmd.exe']);
+        }
     }
 
     get windows() {

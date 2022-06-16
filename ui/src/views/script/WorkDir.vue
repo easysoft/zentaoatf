@@ -483,6 +483,17 @@ const menuClick = (menuKey: string, targetId: number) => {
   } else {
     clipboardAction.value = ''
     clipboardData.value = {}
+
+    if (menuKey === 'open-in-explore') {
+      const { ipcRenderer } = window.require('electron')
+      ipcRenderer.send(settings.electronMsg, {action: 'openInExplore', path: contextNodeData.path})
+
+    } else if (menuKey === 'open-in-terminal') {
+      const { ipcRenderer } = window.require('electron')
+
+      ipcRenderer.send(settings.electronMsg, {action: 'openInTerminal', path: contextNodeData.path})
+
+    }
   }
 
   clearMenu()
