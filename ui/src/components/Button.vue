@@ -9,7 +9,7 @@
     <slot>
       <span class="btn-label" :class="labelClass" v-if="label">{{label}}</span>
     </slot>
-    <Icon v-if="suffixIcon" class="btn-suffix-icon" :class="suffixIconClass ?? (isOnlyIcon ? '' : 'muted')" :icon="suffixIcon" :color="suffixIconColor" :size="suffixIconSize" />
+    <Icon v-if="suffixIcon" class="btn-suffix-icon" :class="suffixIconClass ?? (isOnlyIcon ? '' : 'muted')" :icon="suffixIcon" :color="suffixIconColor" :size="suffixIconSize" @click.stop="_handleSuffixClick" />
   </button>
 </template>
 
@@ -42,7 +42,10 @@ const slots = useSlots();
 
 const isOnlyIcon = computed(() => (!props.label && !slots.default && props.icon && !props.suffixIcon));
 
-const emit = defineEmits<{(type: 'click', event: {originalEvent: Event, key: string | number | symbol | null}) : void}>();
+const emit = defineEmits<{
+    (type: 'click', event: {originalEvent: Event, key: string | number | symbol | null}) : void,
+    (type: 'suffixClick', event: {originalEvent: Event, key: string | number | symbol | null}) : void,
+    }>();
 const attrs = useAttrs();
 
 function _handleClick(originalEvent) {
@@ -52,6 +55,15 @@ function _handleClick(originalEvent) {
 
     const event = {originalEvent, key: attrs['data-key'] as (string | number | symbol | null)};
     emit('click', event);
+}
+
+function _handleSuffixClick(originalEvent) {
+    if (props.disabled) {
+        return;
+    }
+
+    const event = {originalEvent, key: attrs['data-key'] as (string | number | symbol | null)};
+    emit('suffixClick', event);
 }
 </script>
 

@@ -8,6 +8,8 @@ import cube from '@iconify-icons/fluent/cube-24-regular';
 import run_all from '@iconify-icons/codicon/run-all';
 import play from '@iconify-icons/codicon/play';
 import play_circle from '@iconify-icons/codicon/play-circle';
+import filter from '@iconify-icons/codicon/filter';
+import filter_filled from '@iconify-icons/codicon/filter-filled';
 import close_circle from '@iconify-icons/fluent/dismiss-circle-24-regular';
 import close_circle_filled from '@iconify-icons/fluent/dismiss-circle-24-filled';
 import window_maximize from '@iconify-icons/fluent/maximize-24-regular';
@@ -189,6 +191,8 @@ export const icons = {
     'folder-briefcase-filled': folder_briefcase_filled,
     'puzzle-piece': puzzle_piece,
     'puzzle-piece-filled': puzzle_piece_filled,
+    'filter': filter,
+    'filter-filled': filter_filled,
 }
 
 Object.entries(icons).forEach(([name, icon]) => {

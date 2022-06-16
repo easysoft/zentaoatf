@@ -90,6 +90,7 @@ const toolbarAction = ref('')
 const currentNode = ref({} as any) // parent node for create node
 const collapsedMap = ref({} as any)
 const checkedKeys = ref<string[]>([])
+const showSyncFromZentaoModal = ref(false);
 
 onMounted(() => {
   console.log('onMounted')
@@ -421,12 +422,13 @@ const expandNode = (expandedKeysMap) => {
     setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
 }
 
-const menuStyle = ref({} as any)
-const contextNode = ref({} as any)
+let menuStyle = ref({} as any)
+let contextNode = ref({} as any)
 const clipboardAction = ref('')
 const clipboardData = ref({} as any)
 
 const rightVisible = ref(false)
+
 const onRightClick = (e) => {
   console.log('onRightClick', e)
   const {event, node} = e
@@ -447,10 +449,15 @@ const onRightClick = (e) => {
 }
 
 const menuClick = (menuKey: string, targetId: number) => {
-  console.log('menuClick', menuKey, treeDataMap.value[targetId])
+  console.log('menuClick', menuKey, targetId)
+  targetModelId = targetId
+  currentNode.value = treeDataMap.value[targetModelId]
 
-  const contextNodeData = treeDataMap.value[targetId]
-  if (menuKey === 'copy' || menuKey === 'cut') {
+  if(menuKey === 'exec'){
+    execScript(currentNode.value)
+  }else if(menuKey == 'sync-from-zentao'){
+    syncFromZentao(currentNode.value)
+  } else if (menuKey === 'copy' || menuKey === 'cut') {
     clipboardAction.value = menuKey
     clipboardData.value = contextNodeData
 

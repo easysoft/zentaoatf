@@ -15,41 +15,33 @@
                   toggle="#displayByMenuToggle">
         </DropdownMenu>
 
-        <Button id="displayByFilter"
-                 v-if="currSite.id != 1"
-                :label="oldFilerValue && te('by_' + oldFilerType) ? t('by_' + oldFilerType) : t('none')"
-                labelClass="strong"
-                class="rounded pure padding-sm-h"
-                suffix-icon="caret-down"/>
-
-    <div class="dropdownMenu-container">
-
-        <DropdownMenu class="childMenu" toggle="#displayByFilter"
-                  v-if="currSite.id != 1"
-                  id="parentMenu"
-                  :items="FilterTyles"
-                  :checkedKey="filerType == oldFilerType && filerValue ? filerType : oldFilerType"
-                  @click="onFilterTypeChanged"
-                  :hideOnClickMenu="filerType == '' ? true : false"
-                  >
-        </DropdownMenu>
-        <DropdownMenu class="childMenu" toggle="#parentMenu"
-                  v-if="currSite.id != 1 && filerType != ''"
-                  :items="filerItems"
-                  :checkedKey="filerType == oldFilerType ? oldFilerValue : ''"
-                  keyName="value"
-                  @click="onFilterValueChanged"
-                  :hideOnClickMenu="true"
-                  :replace-fields="replaceFields"
-                  triggerEvent="click"
-                  >
-        </DropdownMenu>
-
-    </div>
       </ButtonList>
     </template>
 
     <template #toolbar-buttons>
+      <FilterModal 
+        toggle="#filterBtn" 
+        :tabs="FilterTyles" 
+        @tabChanged="onFilterTypeChanged" 
+        :list="filerItems" 
+        :checkedTab="filerType"
+        :checkedKey="filerType == oldFilerType ? oldFilerValue : ''"
+        keyName="value"
+        @click="onFilterValueChanged"
+        :hideOnClickMenu="true"
+        :replace-fields="replaceFields"
+        triggerEvent="click">
+      </FilterModal>
+      
+      <Button 
+      id="filterBtn" 
+      :label="filerLabel" 
+      v-show="currSite.id != 1" 
+      :class="filerLabel == '' ? 'rounded pure' : 'btn state rounded border primary-pale'" 
+      icon="filter" ref="filterBtnRef" 
+      :suffixIcon="filerLabel == '' ? '' : 'close'" 
+      @suffixClick="clearFiler"
+      />
       <Button class="rounded pure" :hint="t('create_workspace')" @click="showModal=!showModal" icon="folder-add" />
       <Button class="rounded pure" :hint="t('batch_select')" icon="select-all-on" @click="_handleBatchSelectBtnClick" :active="workDirRef?.isCheckable" />
       <Button @click="_handleToggleAllBtnClick" class="rounded pure" :hint="workDirRef?.isAllCollapsed ? t('collapse') : t('expand_all')" :icon="workDirRef?.isAllCollapsed ? 'add-square-multiple' : 'subtract-square-multiple'" iconSize="1.4em" />
@@ -88,6 +80,7 @@ import {
 } from "@/views/script/service";
 import FormWorkspace from "@/views/workspace/FormWorkspace.vue";
 import notification from "@/utils/notification";
+import FilterModal from "./FilterModal.vue";
 
 const { t, locale, te } = useI18n();
 
@@ -97,10 +90,11 @@ const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
 let displayBy = ref('workspace')
 let isExpand = ref(false);
-const filerType = ref('')
+const filerType = ref('workspace')
 const filerValue = ref('')
 const oldFilerType = ref('')
-const oldFilerValue = ref('')
+const oldFilerValue = ref('' as any)
+const filerLabel = ref('');
 
 const displayTypes = ref([
   {key: 'workspace', title: t('by_workspace')},
@@ -126,7 +120,6 @@ const FilterTyles = ref([
 const setFilterTypes = () => {
   if(currSite.value.id != 1){
     FilterTyles.value = [
-      {key: '', title: t('none')},
       {key: 'workspace', title: t('by_workspace')},
       {key: 'suite', title: t('by_suite')},
       {key: 'task', title: t('by_task')},
@@ -165,12 +158,24 @@ const replaceFields = {
     };
 
 let filerItems = ref([] as any)
+
+const getFilerValueLabel = () => {
+    let label = '';
+    filerItems.value !=undefined && filerItems.value.forEach(item => {
+        if(item.value == oldFilerValue.value){
+            label = item.label;
+        }
+    });
+    return label;
+}
+
 // filters
 const loadFilterItems = async (useCache = true) => {
     const data = await getScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, useCache ? '' : filerType.value)
     if(useCache){
-      filerType.value = !data.val ? '' : data.by
-      filerValue.value = data.val
+      oldFilerType.value = filerType.value = !data.val ? '' : data.by
+      if(filerType.value == '') filerType.value = 'workspace'
+      oldFilerValue.value = filerValue.value = data.val
     }
 
     if (!currProduct.value.id && (filerType.value !== 'workspace' || oldFilerType.value != 'workspace')) {
@@ -182,7 +187,7 @@ const loadFilterItems = async (useCache = true) => {
     const result = await listFilterItems(filerType.value)
 
     if(filerType.value === 'workspace'){
-      result.data = result.data == undefined ?[{label: t('all'), value: -1}] : [{label: t('all'), value: -1}, ...result.data];
+      result.data = result.data == undefined ?[] :  result.data;
     }
     filerItems.value = result.data
 
@@ -197,9 +202,8 @@ const loadFilterItems = async (useCache = true) => {
     if (!found) filerValue.value = ''
     }
 
-    if(oldFilerValue.value == ''){
-      oldFilerType.value = filerType.value;
-      oldFilerValue.value = filerValue.value;
+    if(oldFilerType.value == filerType.value && filerType.value != '' && te('by_' + oldFilerType.value)){
+        filerLabel.value = t('by_' + oldFilerType.value) + ':' + getFilerValueLabel();
     }
 }
 
@@ -227,7 +231,7 @@ const onFilterTypeChanged = async (item) => {
   filerItems.value = [];
   if(filerType.value == ''){
     oldFilerType.value = '';
-	oldFilerValue.value = -1;
+	oldFilerValue.value = '';
     await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, filerType.value, filerValue.value)
     await loadScripts()
   }else{
@@ -235,10 +239,11 @@ const onFilterTypeChanged = async (item) => {
   }
 }
 
-const onFilterValueChanged = async (item) => {
-  console.log('onFilterValueChanged')
+const onFilterValueChanged = async (item, key) => {
+  console.log('onFilterValueChanged', item, key)
   oldFilerValue.value = filerValue.value = item.key
   oldFilerType.value = filerType.value;
+  filerLabel.value = t('by_' + oldFilerType.value) + ':' + getFilerValueLabel();
   await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, filerType.value, filerValue.value)
   await loadScripts()
 }
@@ -246,7 +251,7 @@ const onFilterValueChanged = async (item) => {
 const loadScripts = async () => {
   console.log(`filerType: ${filerType.value}, filerValue: ${filerValue.value}`)
 
-  const params = {displayBy: displayBy.value, filerType: filerType.value, filerValue: filerValue.value == -1 ? 0 : filerValue.value} as any
+  const params = {displayBy: displayBy.value, filerType: filerType.value, filerValue: filerValue.value} as any
   store.dispatch('Script/listScript', params)
 }
 
@@ -267,6 +272,17 @@ const createWorkSpace = (formData) => {
         }
     })
 };
+
+const clearFiler = async () => {
+    console.log('clear filer');
+    filerType.value = '';
+    filerValue.value = '';
+    oldFilerType.value = '';
+	oldFilerValue.value = '';
+    filerLabel.value = '';
+    await setScriptFilters(displayBy.value, currSite.value.id, currProduct.value.id, filerType.value, filerValue.value)
+    await loadScripts()
+}
 
 function _handleBatchSelectBtnClick() {
     if (workDirRef.value) {
@@ -294,6 +310,12 @@ function _handleToggleAllBtnClick() {
 
   .panel-body {
     height: calc(100% - 30px);
+  }
+
+  .filter-filter{
+    position: relative;
+    top: 0;
+    left: 0;
   }
 }
 .dropdownMenu-container {
