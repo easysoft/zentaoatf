@@ -68,6 +68,7 @@ import Modal from "@/utils/modal"
 import FormNode from "./FormNode.vue";
 import { key } from "localforage";
 import settings from "@/config/settings";
+import {getFileNodesUnderParent, genWorkspaceToScriptsMap} from "@/views/script/service";
 
 const { t } = useI18n();
 
@@ -494,7 +495,8 @@ const menuClick = (menuKey: string, targetId: number) => {
         store.dispatch('Script/deleteScript', contextNodeData.id)
       },
     });
-
+  }else if(menuKey === 'sync-to-zentao'){
+    checkinCases(contextNodeData)
   } else {
     clipboardAction.value = ''
     clipboardData.value = {}
@@ -513,6 +515,20 @@ const menuClick = (menuKey: string, targetId: number) => {
 
   clearMenu()
 }
+const checkinCases = (node) => {
+  if(node.workspaceType == 'ztf'){
+    console.log('checkinCases')
+    const fileNodes = getFileNodesUnderParent(node)
+    const workspaceWithScripts = genWorkspaceToScriptsMap(fileNodes)
+    store.dispatch('Script/syncToZentao', workspaceWithScripts).then((resp => {
+    if (resp.code === 0) {
+        notification.success({message: t('sync_success')});
+    } else {
+        notification.error({message: t('sync_fail'), description: resp.data.msg});
+    }
+    }))
+  }
+}
 const syncFromZentao = (node) => {
     if(node.workspaceType == 'ztf'){
       if(node.type == 'workspace'){
@@ -523,6 +539,8 @@ const syncFromZentao = (node) => {
         checkoutCases(node.workspaceId, node)
       }else if(node.type == 'file'){
         checkout(node.workspaceId, node.caseId)
+      }else if(node.type == 'module'){
+        checkoutFromModule(node.workspaceId, node)
       }
     }
 }
@@ -537,6 +555,27 @@ const checkoutCases = (workspaceId, node) => {
             checkout(workspaceId, item.caseId, false)
         }
     });
+    notification.success({
+        message: t('sync_success'),
+      });
+}
+const checkoutFromModule = (workspaceId, node) => {
+    if(node.children == undefined || node.children.length == 0){
+        return;
+    }
+    console.log('checkout from module', workspaceId, node.children[0].moduleId)
+    const data = {moduleId: node.children[0].moduleId, workspaceId: workspaceId}
+    store.dispatch('Script/syncFromZentao', data).then((resp => {
+    if (resp.code === 0) {
+      notification.success({
+        message: t('sync_success'),
+      });
+    } else {
+        notification.error({
+          message: resp.data.msg,
+        });
+    }
+    }))
 }
 const checkout = (workspaceId, caseId, successNotice = true) => {
     console.log('checkout', workspaceId, caseId)
