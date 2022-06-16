@@ -207,12 +207,12 @@ export default class ZtfApp {
         if (IS_WINDOWS_OS) {
             cp.exec('start cmd.exe /K cd /D ' + path);
         } else if (IS_LINUX) {
+            // support other terminal types?
             cp.spawn ('gnome-terminal', [], { cwd: path });
         } else if (IS_MAC_OSX) {
             cp.exec('open -a Terminal ' + path);
         }
     }
-
     get windows() {
         return this._windows;
     }
