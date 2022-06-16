@@ -42,7 +42,6 @@ watch(script, () => {
         return
     }
     console.log('watch script', script)
-    currentScript.value = script.value
     if (script.value) {
         if (script.value.code === ScriptFileNotExist) {
             scriptCode.value = ScriptFileNotExist
@@ -50,7 +49,7 @@ watch(script, () => {
 
             return
         }
-        if(scriptCode.value == ''){
+        if(scriptCode.value == '' || currentScript.value.code == scriptCode.value){
           scriptCode.value = script.value.code ? script.value.code : t('empty');
 		}
         lang.value = script.value.lang
@@ -62,6 +61,7 @@ watch(script, () => {
         scriptCode.value = ''
         lang.value = ''
     }
+    currentScript.value = script.value
     store.dispatch('tabs/update', {
         id: props.tab.id,
         title: props.tab.title,

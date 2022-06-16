@@ -215,6 +215,7 @@ export default class ZtfApp {
     }
 
     get windows() {
+
         return this._windows;
     }
 
