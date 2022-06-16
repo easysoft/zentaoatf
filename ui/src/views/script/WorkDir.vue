@@ -50,7 +50,7 @@ import {
 import {
   getCaseIdsFromReport,
   getNodeMap,
-  listFilterItems, pasteNode,
+  listFilterItems,
 } from "@/views/script/service";
 import { useRouter } from "vue-router";
 import { isWindows } from "@/utils/comm";
@@ -450,13 +450,12 @@ const onRightClick = (e) => {
 
 const menuClick = (menuKey: string, targetId: number) => {
   console.log('menuClick', menuKey, targetId)
-  targetModelId = targetId
-  currentNode.value = treeDataMap.value[targetModelId]
+  const contextNodeData = treeDataMap.value[targetId]
 
   if(menuKey === 'exec'){
     execScript(currentNode.value)
   }else if(menuKey == 'sync-from-zentao'){
-    syncFromZentao(currentNode.value)
+    syncFromZentaoSubmit(currentNode.value)
   } else if (menuKey === 'copy' || menuKey === 'cut') {
     clipboardAction.value = menuKey
     clipboardData.value = contextNodeData
@@ -504,6 +503,30 @@ const menuClick = (menuKey: string, targetId: number) => {
   }
 
   clearMenu()
+}
+const syncFromZentaoRef = ref({} as any)
+const syncFromZentaoSubmit = (model) => {
+  store.dispatch("Script/syncFromZentao", model).then((resp) => {
+    if (resp.code === 0) {
+      notification.success({
+        message: t("sync_success"),
+      });
+      showSyncFromZentaoModal.value = false;
+      syncFromZentaoRef.value.clearFormData()
+    } else {
+      notification.error({
+        message: resp.data.msg,
+      });
+    }
+  });
+}
+const execScript = (node) => {
+  if(node.workspaceType !== 'ztf'){
+    runTest(ref(node));
+  }else{
+    bus.emit(settings.eventExec,
+        {execType: node.workspaceType === 'ztf' ? 'ztf' : 'unit', scripts: node.type === 'file' ? [node] : node.children});
+  }
 }
 const clearMenu = () => {
   console.log('clearMenu')
