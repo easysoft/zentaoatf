@@ -9,7 +9,6 @@ import (
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 	"github.com/easysoft/zentaoatf/pkg/domain"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
-	"regexp"
 	"strings"
 )
 
@@ -44,7 +43,7 @@ func (s *SiteService) GetDomainObject(id uint) (site serverDomain.ZentaoSite, er
 }
 
 func (s *SiteService) Create(site model.Site) (id uint, isDuplicate bool, err error) {
-	site.Url = fixSiteUlt(site.Url)
+	site.Url = zentaoHelper.FixSiteUlt(site.Url)
 	if site.Url == "" {
 		err = errors.New("url not right")
 		return
@@ -64,7 +63,7 @@ func (s *SiteService) Create(site model.Site) (id uint, isDuplicate bool, err er
 }
 
 func (s *SiteService) Update(site model.Site) (isDuplicate bool, err error) {
-	site.Url = fixSiteUlt(site.Url)
+	site.Url = zentaoHelper.FixSiteUlt(site.Url)
 	if site.Url == "" {
 		err = errors.New("url not right")
 		return
@@ -148,25 +147,6 @@ func (s *SiteService) CreateEmptySite(lang string) (err error) {
 		Url:  "",
 	}
 	_, _, err = s.SiteRepo.Create(&po)
-
-	return
-}
-
-func fixSiteUlt(url string) (ret string) {
-	regx := regexp.MustCompile(`(http|https):\/\/.+`)
-	result := regx.FindStringSubmatch(url)
-	if result == nil {
-		return
-	}
-
-	regx = regexp.MustCompile(`[^:\/]\/`)
-	result = regx.FindStringSubmatch(url)
-	if result == nil { // without /
-		ret = url
-	} else {
-		index := strings.LastIndex(url, "/")
-		ret = url[:index+1]
-	}
 
 	return
 }

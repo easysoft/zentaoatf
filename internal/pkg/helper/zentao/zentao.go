@@ -15,6 +15,8 @@ import (
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"path"
+	"regexp"
+	"strings"
 )
 
 func GetConfig(baseUrl string) (err error) {
@@ -328,6 +330,25 @@ func GenPlatItems(arr []interface{}) (ret []domain.NestedItem, err error) {
 
 		item := domain.NestedItem{Id: int(id64), Name: temp["name"].(string)}
 		ret = append(ret, item)
+	}
+
+	return
+}
+
+func FixSiteUlt(url string) (ret string) {
+	regx := regexp.MustCompile(`(http|https):\/\/.+`)
+	result := regx.FindStringSubmatch(url)
+	if result == nil {
+		return
+	}
+
+	regx = regexp.MustCompile(`[^:\/]\/`)
+	result = regx.FindStringSubmatch(url)
+	if result == nil { // without /
+		ret = url
+	} else {
+		index := strings.LastIndex(url, "/")
+		ret = url[:index+1]
 	}
 
 	return

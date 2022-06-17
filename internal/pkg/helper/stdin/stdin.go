@@ -8,6 +8,7 @@ import (
 	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stdinUtils "github.com/easysoft/zentaoatf/pkg/lib/stdin"
@@ -124,7 +125,8 @@ func InputForSet(dir string) {
 	SetZentao:
 
 		conf.Url = stdinUtils.GetInput("((http|https)://.*)", conf.Url, "enter_url", conf.Url)
-		conf.Url = getZenTaoBaseUrl(conf.Url)
+		conf.Url = zentaoHelper.FixSiteUlt(conf.Url)
+		conf.Url = fileUtils.AddUrlPathSepIfNeeded(conf.Url)
 
 		conf.Username = stdinUtils.GetInput("(.{2,})", conf.Username, "enter_account", conf.Username)
 		conf.Password = stdinUtils.GetInput("(.{2,})", conf.Password, "enter_password", conf.Password)
@@ -146,22 +148,22 @@ func InputForSet(dir string) {
 	configHelper.SaveToFile(conf, dir)
 }
 
-func getZenTaoBaseUrl(url string) string {
-	arr := strings.Split(url, "/")
-
-	base := url
-	last := arr[len(arr)-1]
-	if strings.Index(last, ".php") > -1 || strings.Index(last, ".html") > -1 ||
-		strings.Index(last, "user-login") > -1 || strings.Index(last, "?") == 0 {
-		base = base[:strings.LastIndex(base, "/")]
-	}
-
-	if strings.Index(base, "?") > -1 {
-		base = base[:strings.LastIndex(base, "?")]
-	}
-
-	return base
-}
+//func getZenTaoBaseUrl(url string) string {
+//	arr := strings.Split(url, "/")
+//
+//	base := url
+//	last := arr[len(arr)-1]
+//	if strings.Index(last, ".php") > -1 || strings.Index(last, ".html") > -1 ||
+//		strings.Index(last, "user-login") > -1 || strings.Index(last, "?") == 0 {
+//		base = base[:strings.LastIndex(base, "/")]
+//	}
+//
+//	if strings.Index(base, "?") > -1 {
+//		base = base[:strings.LastIndex(base, "?")]
+//	}
+//
+//	return base
+//}
 
 //func InputForRequest() {
 //	conf := configHelper.LoadByWorkspacePath(commConsts.WorkDir)
