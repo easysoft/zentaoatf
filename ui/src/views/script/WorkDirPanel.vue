@@ -272,8 +272,9 @@ const createWorkSpace = (formData) => {
     })
 };
 
-const clearFiler = async () => {
+const clearFiler = async (e) => {
     console.log('clear filer');
+    e.originalEvent.stopPropagation();
     filerType.value = '';
     filerValue.value = '';
     oldFilerType.value = '';

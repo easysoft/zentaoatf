@@ -9,7 +9,7 @@
     <slot>
       <span class="btn-label" :class="labelClass" v-if="label">{{label}}</span>
     </slot>
-    <Icon v-if="suffixIcon" class="btn-suffix-icon" :class="suffixIconClass ?? (isOnlyIcon ? '' : 'muted')" :icon="suffixIcon" :color="suffixIconColor" :size="suffixIconSize" @click.stop="_handleSuffixClick" />
+    <Icon v-if="suffixIcon" class="btn-suffix-icon" :class="suffixIconClass ?? (isOnlyIcon ? '' : 'muted')" :icon="suffixIcon" :color="suffixIconColor" :size="suffixIconSize" @click="_handleSuffixClick" />
   </button>
 </template>
 
