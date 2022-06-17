@@ -192,9 +192,10 @@ const StoreModel: ModuleType = {
             }
         },
 
-        async updateCode({ commit }, payload: any ) {
+        async updateCode({ commit, dispatch, state }, payload: any ) {
             try {
                 await updateCode(payload);
+                await dispatch('listScript', state.queryParams)
                 return true;
             } catch (error) {
                 return false;
