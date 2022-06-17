@@ -151,7 +151,7 @@ create_shortcut_linux:
 
 create_shortcut_mac:
 	@echo 'create shortcut mac'
-	cp xdoc/ztf-gui.sh ${CLIENT_OUT_DIR}darwin
+	echo 'open ./gui/ztf.app' ${CLIENT_OUT_DIR}darwin/ztf-gui.sh
 
 zip_win64:
 	@echo 'start zip win64'
