@@ -1,10 +1,10 @@
 <template>
   <div class="tree-context-menu">
     <div class="menu">
-      <div @click="menuClick('sync-from-zentao')" class="menu-item">
+      <div v-if="siteId != 1" @click="menuClick('sync-from-zentao')" class="menu-item">
         <span>{{t('sync-from-zentao')}}</span>
       </div>
-      <div @click="menuClick('sync-to-zentao')" class="menu-item">
+      <div v-if="siteId != 1" @click="menuClick('sync-to-zentao')" class="menu-item">
         <span>{{t('sync-to-zentao')}}</span>
       </div>
       <div @click="menuClick('exec')" class="menu-item">
@@ -53,6 +53,10 @@ export default defineComponent({
       type: Object,
       required: false
     },
+    siteId: {
+        type: Number,
+        required: true
+    }
   },
   components: {
   },
