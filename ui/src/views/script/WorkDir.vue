@@ -539,7 +539,7 @@ const syncFromZentao = (node) => {
       }else if(node.type == 'dir'){
         checkoutCases(node.workspaceId, node)
       }else if(node.type == 'file'){
-        checkout(node.workspaceId, node.caseId)
+        checkout(node.workspaceId, node.caseId, node.path)
       }else if(node.type == 'module'){
         checkoutFromModule(node.workspaceId, node)
       }
@@ -553,7 +553,7 @@ const checkoutCases = (workspaceId, node) => {
         if(item.type == 'dir'){
             checkoutCases(workspaceId, item)
         }else if(item.type == 'file' && item.caseId){
-            checkout(workspaceId, item.caseId, false)
+            checkout(workspaceId, item.caseId, item.path, false)
         }
     });
     notification.success({
@@ -578,9 +578,9 @@ const checkoutFromModule = (workspaceId, node) => {
     }
     }))
 }
-const checkout = (workspaceId, caseId, successNotice = true) => {
-    console.log('checkout', workspaceId, caseId)
-    const data = {caseId: caseId, workspaceId: workspaceId}
+const checkout = (workspaceId, caseId, path, successNotice = true) => {
+    console.log('checkout', workspaceId, caseId, path)
+    const data = {caseId: caseId, workspaceId: workspaceId, casePath: path}
     store.dispatch('Script/syncFromZentao', data).then((resp => {
     if (resp.code === 0) {
       successNotice && notification.success({
