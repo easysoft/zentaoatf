@@ -198,4 +198,3 @@ upload_to:
 	@find ${QINIU_DIR} -name ".DS_Store" -type f -delete
 	@qshell qupload2 --src-dir=${QINIU_DIR} --bucket=download --thread-count=10 --log-file=qshell.log \
 					 --skip-path-prefixes=zz,zd,zmanager,driver --rescan-local --overwrite --check-hash
-
