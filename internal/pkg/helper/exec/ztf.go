@@ -1,6 +1,10 @@
 package execHelper
 
 import (
+	"path"
+	"strconv"
+	"time"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	analysisHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
@@ -17,9 +21,6 @@ import (
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/mattn/go-runewidth"
-	"path"
-	"strconv"
-	"time"
 )
 
 func ExecCases(ch chan int, testSet serverDomain.TestSet, msg *websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
@@ -87,8 +88,10 @@ func RunZtf(ch chan int,
 	// run
 	ExeScripts(casesToRun, casesToIgnore, workspacePath, conf, &report, pathMaxWidth, numbMaxWidth, ch, wsMsg)
 
-	// gen report
-	GenZTFTestReport(report, pathMaxWidth, workspacePath, wsMsg)
+	if len(casesToRun) > 0 {
+		// gen report
+		GenZTFTestReport(report, pathMaxWidth, workspacePath, wsMsg)
+	}
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketHelper.SendExecMsg("", "false", commConsts.Run, nil, wsMsg)
