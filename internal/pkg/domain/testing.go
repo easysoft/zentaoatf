@@ -86,7 +86,7 @@ type ZtfCase struct {
 	Title string
 	Steps []ZtfStep `json:"steps"`
 
-	Path string `json:"path"` // used for update exist script
+	ScriptPath string `json:"scriptPath"` // used for update exist script
 }
 type ZtfCaseWrapper struct {
 	From string

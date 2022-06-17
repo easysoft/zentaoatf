@@ -26,12 +26,19 @@ func GenerateScripts(cases []commDomain.ZtfCase, langType string, independentFil
 	targetDir = fileUtils.AbsolutePath(targetDir)
 	realPath = targetDir
 
+	createNew := false
 	for _, cs := range cases {
 		pth, _ := GenerateScript(cs, langType, independentFile, &caseIds, targetDir, byModule)
 		pths = append(pths, pth)
+
+		if cs.ScriptPath == "" {
+			createNew = true
+		}
 	}
 
-	GenSuite(caseIds, targetDir)
+	if createNew {
+		GenSuite(caseIds, targetDir)
+	}
 
 	return
 }
@@ -48,13 +55,12 @@ func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool
 		targetDir = filepath.Join(targetDir, strconv.Itoa(moduleId))
 	}
 
-	fileUtils.MkDirIfNeeded(targetDir)
-
 	content := ""
 	isOldFormat := false
 
-	scriptPath = cs.Path
+	scriptPath = cs.ScriptPath
 	if scriptPath == "" {
+		fileUtils.MkDirIfNeeded(targetDir)
 		scriptPath = filepath.Join(targetDir, fmt.Sprintf("%d.%s", caseId, commConsts.LangMap[langType]["extName"]))
 	}
 
