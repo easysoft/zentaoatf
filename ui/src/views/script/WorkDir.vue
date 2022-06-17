@@ -1,20 +1,22 @@
 <template>
-  <div class="workdir">
-    <Tree
-    :data="treeData"
-    :checkable="checkable"
-    ref="treeRef"
-    @active="selectNode"
-    @rightClick="onRightClick"
-    @check="checkNode"
-    @clickToolbar="onToolbarClicked"
-    @collapse="expandNode"
-    :defaultCollapsedMap="collapsedMap"
-    :defaultCollapsed="true"
-    />
-    <FormNode :show="showModal" @submit="createNode" @cancel="modalClose" ref="formNode" />
+  <div class="left-pannel-contain">
+    <div :class="checkable && checkedKeys.length ? 'workdir-with-btn' : 'workdir'">
+      <Tree
+        :data="treeData"
+        :checkable="checkable"
+        ref="treeRef"
+        @active="selectNode"
+        @rightClick="onRightClick"
+        @check="checkNode"
+        @clickToolbar="onToolbarClicked"
+        @collapse="expandNode"
+        :defaultCollapsedMap="collapsedMap"
+        :defaultCollapsed="true"
+      />
+      <FormNode :show="showModal" @submit="createNode" @cancel="modalClose" ref="formNode" />
+    </div>
     <Button
-      v-if="checkedKeys.length"
+      v-if="checkable && checkedKeys.length"
       class="rounded border primary-pale run-selected" icon="run-all"
       :label="t('exec_selected')"
       @click="execSelected"
@@ -647,16 +649,23 @@ onUnmounted(() => {
 </script>
 
 <style lang="less" scoped>
+.left-pannel-contain{
+  text-align: center;
 .workdir {
-  height: calc(100vh - 80px);
-  position: relative;
-
-  .run-selected{
-    max-width: 100px;
-    margin: auto;
-    position: fixed;
-    bottom: 100px;
-    left: 60px;
-  }
+    height: calc(100vh - 80px);
+    overflow: auto;
+    text-align: left;
+}
+.workdir-with-btn {
+    height: calc(100vh - 120px);
+    overflow: auto;
+    text-align: left;
+}
+.run-selected{
+max-width: 100px;
+margin: auto;
+text-align: center;
+margin-top: 10px;
+}
 }
 </style>

@@ -3,7 +3,7 @@
     :showModal="showModalRef"
     @onCancel="cancel"
     @onOk="submit"
-    :title="t('create')"
+    :title="t('sync-from-zentao')"
     :contentStyle="{ width: '400px' }"
   >
     <Form labelCol="6" wrapperCol="16">
@@ -144,6 +144,7 @@ const suites = computed<any[]>(() => store.state.Zentao.suites);
 const tasks = computed<any[]>(() => store.state.Zentao.tasks);
 const fetchData = () => {
   store.dispatch("WorkspaceOld/list", currProduct.value.id);
+  if(currSite.value.id == undefined || currSite.value.id <= 1) return;
   store.dispatch("Zentao/fetchModules", {
     siteId: currSite.value.id,
     productId: currProduct.value.id,
