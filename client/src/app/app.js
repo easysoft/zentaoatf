@@ -137,7 +137,6 @@ export default class ZtfApp {
         this.setAboutPanel();
 
          globalShortcut.register('CommandOrControl+D', () => {
-             console.log('CommandOrControl+X is pressed')
              const mainWin = this._windows.get('main');
              mainWin.toggleDevTools()
          })
