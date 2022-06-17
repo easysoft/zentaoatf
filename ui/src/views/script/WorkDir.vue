@@ -23,7 +23,7 @@
      />
 
     <div v-if="contextNode.id && rightVisible" :style="menuStyle">
-      <TreeContextMenu :treeNode="contextNode" :clipboardData="clipboardData" :onMenuClick="menuClick"/>
+      <TreeContextMenu :treeNode="contextNode" :clipboardData="clipboardData" :onMenuClick="menuClick" :siteId="currSite.id"/>
     </div>
     <FormSyncFromZentao
       :show="showSyncFromZentaoModal"
@@ -534,7 +534,6 @@ const checkinCases = (node) => {
 const syncFromZentao = (node) => {
     if(node.workspaceType == 'ztf'){
       if(node.type == 'workspace'){
-        console.log('workspace show')
         showSyncFromZentaoModal.value = true;
         syncFromZentaoWorkspaceId.value = node.workspaceId;
       }else if(node.type == 'dir'){
