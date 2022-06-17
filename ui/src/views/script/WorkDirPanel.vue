@@ -32,7 +32,6 @@
         :replace-fields="replaceFields"
         triggerEvent="click">
       </FilterModal>
-      
       <Button 
       id="filterBtn" 
       :label="filerLabel" 

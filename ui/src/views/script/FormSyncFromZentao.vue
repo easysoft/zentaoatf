@@ -80,10 +80,12 @@ export interface FormWorkspaceProps {
 }
 const { t } = useI18n();
 const isWin = isWindows();
+const disabled = ref(false);
 const props = withDefaults(defineProps<FormWorkspaceProps>(), {
   show: false,
 });
 watch(props, () => {
+  if(!props.show) disabled.value = false;
   modelRef.value.workspaceId = props.workspaceId;
   selectWorkspace();
 });
@@ -119,6 +121,10 @@ const cancel = () => {
 };
 
 const submit = () => {
+  if(disabled.value) {
+    return;
+  }
+  disabled.value = true;
   console.log("syncFromZentaoSubmit", console.log(modelRef.value));
   if (validate()) {
     emit("submit", modelRef.value);
