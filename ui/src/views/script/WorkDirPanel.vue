@@ -34,6 +34,7 @@
       </FilterModal>
       <Button 
       id="filterBtn" 
+      class="filter-btn"
       :label="filerLabel" 
       v-show="currSite.id != 1" 
       :class="filerLabel == '' ? 'rounded pure' : 'btn state rounded border primary-pale'" 
@@ -330,5 +331,13 @@ function _handleToggleAllBtnClick() {
 .childMenu{
     position: unset!important;
     min-width: 0!important;
+}
+.filter-btn{
+    max-width: 10vw;
+    .btn-label{
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
 }
 </style>

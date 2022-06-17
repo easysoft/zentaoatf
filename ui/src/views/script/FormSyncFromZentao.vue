@@ -3,7 +3,7 @@
     :showModal="showModalRef"
     @onCancel="cancel"
     @onOk="submit"
-    :title="t('create')"
+    :title="t('sync-from-zentao')"
     :contentStyle="{ width: '400px' }"
   >
     <Form labelCol="6" wrapperCol="16">
