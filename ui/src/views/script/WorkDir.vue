@@ -325,6 +325,7 @@ const selectNode = (activeNode) => {
   console.log('selectNode', activeNode.activeID, global.value)
 
   const node = treeDataMap.value[activeNode.activeID]
+  console.log('node id', node.caseId)
   if (node.workspaceType !== 'ztf') checkNothing()
 
   store.dispatch('Script/getScript', node)

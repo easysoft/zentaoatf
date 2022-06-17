@@ -19,7 +19,6 @@ type IndexModule struct {
 	SiteModule   *index.SiteModule   `inject:""`
 
 	InterpreterModule *index.InterpreterModule `inject:""`
-	SyncModule        *index.SyncModule        `inject:""`
 	WorkspaceModule   *index.WorkspaceModule   `inject:""`
 
 	TestFilterModule *index.TestFilterModule `inject:""`
@@ -51,7 +50,6 @@ func (m *IndexModule) Party() module.WebModule {
 		m.ZentaoModule.Party(),
 		m.SiteModule.Party(),
 		m.InterpreterModule.Party(),
-		m.SyncModule.Party(),
 		m.WorkspaceModule.Party(),
 
 		m.TestFilterModule.Party(),

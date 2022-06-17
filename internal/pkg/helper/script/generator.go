@@ -52,7 +52,12 @@ func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool
 
 	content := ""
 	isOldFormat := false
-	scriptPath = filepath.Join(targetDir, fmt.Sprintf("%d.%s", caseId, commConsts.LangMap[langType]["extName"]))
+
+	scriptPath = cs.Path
+	if scriptPath == "" {
+		scriptPath = filepath.Join(targetDir, fmt.Sprintf("%d.%s", caseId, commConsts.LangMap[langType]["extName"]))
+	}
+
 	if fileUtils.FileExist(scriptPath) { // update title and steps
 		content = fileUtils.ReadFile(scriptPath)
 		isOldFormat = strings.Index(content, "[esac]") > -1

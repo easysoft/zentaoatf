@@ -21,6 +21,7 @@ func SyncFromZentao(settings commDomain.SyncSettings, config commDomain.Workspac
 	suiteId := settings.SuiteId
 	taskId := settings.TaskId
 	caseId := settings.CaseId
+	casePath := settings.CasePath
 
 	byModule := settings.SaveByModule
 	independentFile := settings.IndependentFile
@@ -34,6 +35,7 @@ func SyncFromZentao(settings commDomain.SyncSettings, config commDomain.Workspac
 	cases := make([]commDomain.ZtfCase, 0)
 	if caseId != 0 {
 		cs, err := GetTestCaseDetail(caseId, config)
+		cs.Path = casePath
 		if err == nil {
 			cases = append(cases, cs)
 		}
