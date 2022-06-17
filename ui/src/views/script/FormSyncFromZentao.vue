@@ -4,10 +4,10 @@
     @onCancel="cancel"
     @onOk="submit"
     :title="t('sync-from-zentao')"
-    :contentStyle="{ width: '400px' }"
+    :contentStyle="{ width: '600px' }"
   >
     <Form labelCol="6" wrapperCol="16">
-      <FormItem :label="t('module')">
+      <FormItem labelWidth="140px" :label="t('module')">
         <select v-model="modelRef.moduleId">
           <option key="" value="">&nbsp;</option>
           <option v-for="item in modules" :key="item.id" :value="item.id">
@@ -16,7 +16,7 @@
         </select>
       </FormItem>
 
-      <FormItem :label="t('suite')">
+      <FormItem labelWidth="140px" :label="t('suite')">
         <select v-model="modelRef.suiteId">
           <option key="" value="">&nbsp;</option>
           <option v-for="item in suites" :key="item.id" :value="item.id">
@@ -25,7 +25,7 @@
         </select>
       </FormItem>
 
-      <FormItem :label="t('task')">
+      <FormItem labelWidth="140px" :label="t('task')">
         <select v-model="modelRef.taskId">
           <option key="" value="">&nbsp;</option>
           <option v-for="item in tasks" :key="item.id" :value="item.id">
@@ -34,7 +34,7 @@
         </select>
       </FormItem>
 
-      <FormItem :label="t('lang')">
+      <FormItem labelWidth="140px" :label="t('lang')">
         <select v-model="modelRef.lang">
           <option v-for="item in langs" :key="item.code" :value="item.code">
             {{ item.name }}
@@ -42,11 +42,11 @@
         </select>
       </FormItem>
 
-      <FormItem :label="t('save_by_module')">
+      <FormItem labelWidth="140px" :label="t('save_by_module')">
         <Switch v-model="modelRef.saveByModule" />
       </FormItem>
 
-      <FormItem :label="t('independent_expect')">
+      <FormItem labelWidth="140px" :label="t('independent_expect')">
         <Switch v-model="modelRef.independentFile" />
       </FormItem>
     </Form>
