@@ -19,7 +19,7 @@ default: win64 win32 linux mac
 win64: prepare build_gui_win64 compile_command_win64 copy_files_win64 create_shortcut_win64 zip_win64
 win32: prepare build_gui_win32 compile_command_win32 copy_files_win32 create_shortcut_win32 zip_win32
 linux: prepare build_gui_linux compile_command_linux copy_files_linux create_shortcut_linux zip_linux
-mac: prepare build_gui_mac compile_command_mac copy_files_mac zip_mac
+mac: prepare build_gui_mac compile_command_mac copy_files_mac create_shortcut_mac zip_mac
 
 prepare: update_version prepare_res
 
@@ -148,6 +148,10 @@ create_shortcut_win32:
 create_shortcut_linux:
 	@echo 'create shortcut linux'
 	cp xdoc/ztf-gui.sh ${CLIENT_OUT_DIR}linux
+
+create_shortcut_mac:
+	@echo 'create shortcut mac'
+	cp xdoc/ztf-gui.sh ${CLIENT_OUT_DIR}darwin
 
 zip_win64:
 	@echo 'start zip win64'
