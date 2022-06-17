@@ -1,13 +1,13 @@
 package action
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	analysisHelper "github.com/easysoft/zentaoatf/internal/comm/helper/analysis"
-	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
-	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
-	stdinUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/stdin"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	analysisHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
+	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	stdinUtils "github.com/easysoft/zentaoatf/pkg/lib/stdin"
 	"path/filepath"
 	"strconv"
 )

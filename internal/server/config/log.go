@@ -3,14 +3,13 @@ package serverConfig
 import (
 	"errors"
 	"fmt"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"log"
 	"net/url"
 	"os"
 	"path/filepath"
-
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
-	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 
 	"github.com/snowlyg/helper/dir"
 	"go.uber.org/zap"

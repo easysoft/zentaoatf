@@ -1,7 +1,7 @@
 package controller
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"

@@ -1,6 +1,6 @@
 package model
 
-import commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+import commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 
 type Workspace struct {
 	BaseModel

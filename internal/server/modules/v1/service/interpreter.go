@@ -4,18 +4,18 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
 
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	langHelper "github.com/easysoft/zentaoatf/internal/comm/helper/lang"
-	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
-	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
-	shellUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/shell"
+	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
 )
 
 type InterpreterService struct {

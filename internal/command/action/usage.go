@@ -2,12 +2,12 @@ package action
 
 import (
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	"github.com/easysoft/zentaoatf/internal/pkg/consts"
-	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
-	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
-	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
-	resUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/res"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	"github.com/easysoft/zentaoatf/pkg/consts"
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	resUtils "github.com/easysoft/zentaoatf/pkg/lib/res"
 	"github.com/fatih/color"
 	"os"
 	"regexp"

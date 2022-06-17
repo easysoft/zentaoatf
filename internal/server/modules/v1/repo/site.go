@@ -2,13 +2,13 @@ package repo
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/internal/pkg/domain"
-	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
-	httpUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/http"
-	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	"github.com/easysoft/zentaoatf/internal/server/core/dao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+	"github.com/easysoft/zentaoatf/pkg/domain"
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/fatih/color"
 	"go.uber.org/zap"
 	"gorm.io/gorm"

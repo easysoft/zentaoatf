@@ -1,8 +1,8 @@
 package controller
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	"github.com/kataras/iris/v12"
 	"strings"
 )

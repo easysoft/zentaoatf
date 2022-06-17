@@ -2,13 +2,13 @@ package service
 
 import (
 	"errors"
-	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
-	"github.com/easysoft/zentaoatf/internal/pkg/domain"
-	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
+	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
+	"github.com/easysoft/zentaoatf/pkg/domain"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	"regexp"
 	"strings"
 )

@@ -3,10 +3,10 @@ package repo
 import (
 	"errors"
 	"fmt"
+	"github.com/easysoft/zentaoatf/pkg/domain"
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 
-	"github.com/easysoft/zentaoatf/internal/pkg/domain"
-	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
-	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	"github.com/easysoft/zentaoatf/internal/server/core/dao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"

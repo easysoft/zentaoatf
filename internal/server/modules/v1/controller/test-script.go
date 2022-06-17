@@ -2,11 +2,11 @@ package controller
 
 import (
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
-	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	scriptHelper "github.com/easysoft/zentaoatf/internal/comm/helper/script"
-	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
+	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"

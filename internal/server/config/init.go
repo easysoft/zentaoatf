@@ -3,10 +3,10 @@ package serverConfig
 import (
 	"bytes"
 	"fmt"
-	"github.com/easysoft/zentaoatf/internal/comm/consts"
-	"github.com/easysoft/zentaoatf/internal/pkg/lib/common"
-	"github.com/easysoft/zentaoatf/internal/pkg/lib/file"
-	"github.com/easysoft/zentaoatf/internal/pkg/lib/res"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	"github.com/easysoft/zentaoatf/pkg/lib/common"
+	"github.com/easysoft/zentaoatf/pkg/lib/file"
+	"github.com/easysoft/zentaoatf/pkg/lib/res"
 	"github.com/spf13/viper"
 	"path/filepath"
 )

@@ -2,11 +2,11 @@ package action
 
 import (
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
-	scriptHelper "github.com/easysoft/zentaoatf/internal/comm/helper/script"
-	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
-	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/mattn/go-runewidth"
 	"strconv"
 	"strings"

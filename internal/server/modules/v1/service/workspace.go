@@ -3,11 +3,11 @@ package service
 import (
 	"errors"
 	"fmt"
+	"github.com/easysoft/zentaoatf/pkg/domain"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	"github.com/easysoft/zentaoatf/internal/pkg/domain"
-	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"

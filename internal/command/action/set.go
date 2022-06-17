@@ -1,9 +1,9 @@
 package action
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	stdinHelper "github.com/easysoft/zentaoatf/internal/comm/helper/stdin"
 	commandConfig "github.com/easysoft/zentaoatf/internal/command/config"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	stdinHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/stdin"
 )
 
 func Set() {

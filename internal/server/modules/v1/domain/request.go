@@ -1,7 +1,7 @@
 package serverDomain
 
 import (
-	"github.com/easysoft/zentaoatf/internal/pkg/domain"
+	"github.com/easysoft/zentaoatf/pkg/domain"
 )
 
 type ReqPaginate struct {

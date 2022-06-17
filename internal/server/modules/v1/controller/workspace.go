@@ -1,11 +1,11 @@
 package controller
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	"github.com/easysoft/zentaoatf/internal/pkg/domain"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
+	"github.com/easysoft/zentaoatf/pkg/domain"
 	"github.com/kataras/iris/v12"
 )
 

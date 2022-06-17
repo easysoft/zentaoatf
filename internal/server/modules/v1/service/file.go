@@ -2,11 +2,11 @@ package service
 
 import (
 	"errors"
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
-	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
-	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/fatih/color"
 	"io/ioutil"
 	"mime/multipart"

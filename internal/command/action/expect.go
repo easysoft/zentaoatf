@@ -1,14 +1,14 @@
 package action
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	execHelper "github.com/easysoft/zentaoatf/internal/comm/helper/exec"
-	scriptHelper "github.com/easysoft/zentaoatf/internal/comm/helper/script"
-	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
-	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
-	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
+	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"path/filepath"
 )
 

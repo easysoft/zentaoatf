@@ -1,9 +1,9 @@
 package service
 
 import (
-	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
-	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
+	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 )
 

@@ -2,16 +2,16 @@ package service
 
 import (
 	"fmt"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	"github.com/easysoft/zentaoatf/pkg/domain"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	"path/filepath"
 	"sort"
 
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
-	analysisHelper "github.com/easysoft/zentaoatf/internal/comm/helper/analysis"
-	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
-	"github.com/easysoft/zentaoatf/internal/pkg/domain"
-	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
+	analysisHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
+	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 	"github.com/jinzhu/copier"

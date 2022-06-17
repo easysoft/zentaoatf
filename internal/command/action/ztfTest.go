@@ -1,13 +1,13 @@
 package action
 
 import (
-	"github.com/easysoft/zentaoatf/internal/comm/consts"
-	"github.com/easysoft/zentaoatf/internal/comm/helper/exec"
-	"github.com/easysoft/zentaoatf/internal/comm/helper/script"
-	"github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/easysoft/zentaoatf/internal/pkg/lib/file"
-	stringUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/string"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	"github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
+	"github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
+	"github.com/easysoft/zentaoatf/pkg/consts"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	"path"
 )
 

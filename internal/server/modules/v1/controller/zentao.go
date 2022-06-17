@@ -1,9 +1,9 @@
 package controller
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
