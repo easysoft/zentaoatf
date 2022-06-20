@@ -410,8 +410,6 @@ const createNode = (formData) => {
         expandedKeys.value.push(result)
       }
       setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
-    } else {
-      notification.error({ message: t('create_fail') });
     }
   })
 }

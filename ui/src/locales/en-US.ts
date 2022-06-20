@@ -270,6 +270,7 @@ export default {
     'biz_3010': 'Record with same name already exist',
     'biz_4000': 'Record Not Found',
     'biz_5000': 'Not Available',
+    'biz_6000': 'File or dir already Exist',
 
     'restore_panel_size' : 'restore panel size',
 };

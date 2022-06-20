@@ -81,12 +81,12 @@ func (c *TestScriptCtrl) Create(ctx iris.Context) {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 	}
 
-	pth, err := c.TestScriptService.CreateNode(req)
-
-	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+	pth, bizErr := c.TestScriptService.CreateNode(req)
+	if bizErr != nil {
+		ctx.JSON(c.BizErrResp(bizErr, ""))
 		return
 	}
+
 	ctx.JSON(c.SuccessResp(pth))
 }
 

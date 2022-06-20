@@ -127,7 +127,7 @@ func (s *TestScriptService) GetCaseIdsFromReport(workspaceId int, seq, scope str
 	return
 }
 
-func (s *TestScriptService) CreateNode(req serverDomain.CreateScriptReq) (pth string, err error) {
+func (s *TestScriptService) CreateNode(req serverDomain.CreateScriptReq) (pth string, err *domain.BizError) {
 	name := req.Name
 	extName := fileUtils.GetExtNameWithoutDot(name)
 	mode := req.Mode
@@ -148,6 +148,11 @@ func (s *TestScriptService) CreateNode(req serverDomain.CreateScriptReq) (pth st
 	}
 
 	pth = filepath.Join(dir, name)
+	if fileUtils.FileExist(pth) {
+		err = &domain.BizError{Code: commConsts.ErrFileOrDirExist.Code}
+		return
+	}
+
 	if typ == commConsts.CreateDir {
 		fileUtils.MkDirIfNeeded(pth)
 	} else {
@@ -156,7 +161,12 @@ func (s *TestScriptService) CreateNode(req serverDomain.CreateScriptReq) (pth st
 			return
 		}
 
-		lang := commConsts.ScriptExtToNameMap[fileUtils.GetExtNameWithoutDot(pth)]
+		lang := commConsts.ScriptExtToNameMap[extName]
+		if lang == "" {
+			fileUtils.WriteFile(pth, "")
+			return
+		}
+
 		scriptHelper.GenEmptyScript(name, lang, pth, productId)
 	}
 
