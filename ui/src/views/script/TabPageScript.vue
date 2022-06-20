@@ -20,13 +20,15 @@ import { useI18n } from "vue-i18n";
 import MonacoEditor from "@/components/MonacoEditor.vue";
 import bus from "@/utils/eventBus";
 import settings from "@/config/settings";
+import { StateType as GlobalData } from "@/store/global";
 
 const { t } = useI18n();
 const props = defineProps<{
     tab: PageTab
 }>();
 
-const store = useStore<{ Script: ScriptData }>();
+const store = useStore<{ Script: ScriptData, global: GlobalData }>();
+const global = computed<any>(() => store.state.global.tabIdToWorkspaceIdMap);
 const script = computed<any>(() => store.state.Script.detail);
 const currWorkspace = computed<any>(() => store.state.Script.currWorkspace);
 const scriptCode = ref('')
@@ -86,12 +88,14 @@ const editorChange = (newScriptCode) => {
 }
 
 const save = (item) => {
-if(item.path.indexOf(currentScript.value.path) == -1 ){
+  if(item.path.indexOf(currentScript.value.path) == -1 ){
     return;
-}
-const code = editorRef.value?.getValue()
+  }
+  const code = editorRef.value?.getValue()
+  const tabId = currentScript.value.workspaceType === 'ztf' && currentScript.value.path.indexOf('.exp') !== currentScript.value.path.length - 4
+        ? 'script-' + currentScript.value.path : 'code-' + currentScript.value.path
   store.dispatch('Script/updateCode',{
-        workspaceId: currWorkspace.value.id,
+        workspaceId: global.value[tabId],
         path: currentScript.value.path,
         code: code
     }).then(() => {
