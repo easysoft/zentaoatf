@@ -467,8 +467,6 @@ const menuClick = (menuKey: string, targetId: number) => {
 
   if(menuKey === 'exec'){
     execScript(contextNodeData)
-  }else if(menuKey == 'sync-from-zentao'){
-    syncFromZentao(contextNodeData)
   } else if (menuKey === 'copy' || menuKey === 'cut') {
     clipboardAction.value = menuKey
     clipboardData.value = contextNodeData
@@ -498,7 +496,9 @@ const menuClick = (menuKey: string, targetId: number) => {
         store.dispatch('Script/deleteScript', contextNodeData.id)
       },
     });
-  }else if(menuKey === 'sync-to-zentao'){
+  } else if(menuKey == 'sync-from-zentao'){
+    syncFromZentao(contextNodeData)
+  } else if(menuKey === 'sync-to-zentao'){
     checkinCases(contextNodeData)
   } else {
     clipboardAction.value = ''
@@ -525,7 +525,12 @@ const checkinCases = (node) => {
     const workspaceWithScripts = genWorkspaceToScriptsMap(fileNodes)
     store.dispatch('Script/syncToZentao', workspaceWithScripts).then((resp => {
     if (resp.code === 0) {
-        notification.success({message: t('sync_success')});
+        notification.success({message:
+              t('sync_success', {
+                success: resp.data.success,
+                ignore: resp.data.total - resp.data.success
+              }
+          )});
     } else {
         notification.error({message: t('sync_fail'), description: resp.data.msg});
     }

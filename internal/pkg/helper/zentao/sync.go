@@ -66,15 +66,17 @@ func SyncFromZentao(settings commDomain.SyncSettings, config commDomain.Workspac
 	return
 }
 
-func SyncToZentao(cases []string, config commDomain.WorkspaceConf) (err error) {
-	count := 0
+func SyncToZentao(cases []string, config commDomain.WorkspaceConf) (count int, err error) {
 	for _, cs := range cases {
 		pass, id, _, title := scriptHelper.GetCaseInfo(cs)
+		if !pass {
+			continue
+		}
 
-		if pass && id > 0 {
-			steps, _ := scriptHelper.GetStepAndExpectMap(cs)
-			CommitCase(id, title, steps, config)
+		steps, _ := scriptHelper.GetStepAndExpectMap(cs)
+		err = CommitCase(id, title, steps, config)
 
+		if err == nil {
 			count++
 		}
 	}

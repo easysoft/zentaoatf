@@ -29,6 +29,11 @@ func CommitCase(caseId int, title string,
 		return
 	}
 
+	_, err = GetCaseById(config.Url, caseId)
+	if err != nil {
+		return
+	}
+
 	uri := fmt.Sprintf("/testcases/%d", caseId)
 	url := GenApiUrl(uri, nil, config.Url)
 

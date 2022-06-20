@@ -698,14 +698,10 @@ func ScriptToExpectName(file string) string {
 //	return runName
 //}
 
-func GetCaseInfo(file string) (bool, int, int, string) {
-	var caseId int
-	var productId int
-	var title string
-
+func GetCaseInfo(file string) (pass bool, caseId, productId int, title string) {
 	content := fileUtils.ReadFile(file)
 	isOldFormat := strings.Index(content, "[esac]") > -1
-	pass := CheckFileContentIsScript(content)
+	pass = CheckFileContentIsScript(content)
 	if !pass {
 		return false, caseId, productId, title
 	}
@@ -745,7 +741,11 @@ func GetCaseInfo(file string) (bool, int, int, string) {
 		title = strings.TrimSpace(arr[1])
 	}
 
-	return pass, caseId, productId, title
+	if caseId <= 0 {
+		pass = false
+	}
+
+	return
 }
 
 //func ReadScriptCheckpoints(file string) ([]string, [][]string) {

@@ -246,18 +246,20 @@ func (c *TestScriptCtrl) SyncToZentao(ctx iris.Context) {
 	site, _ := c.SiteService.Get(uint(currSiteId))
 	config := configHelper.LoadBySite(site)
 
+	totalNum := 0
+	successNum := 0
 	for _, set := range sets {
-		//	workspaceId := set.WorkspaceId
-		//	workspace, _ := c.WorkspaceService.Get(uint(workspaceId))
+		totalNum += len(set.Cases)
 
-		err := zentaoHelper.SyncToZentao(set.Cases, config)
-		if err != nil {
-			ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
-			return
-		}
+		count, _ := zentaoHelper.SyncToZentao(set.Cases, config)
+
+		successNum += count
 	}
 
-	ctx.JSON(c.SuccessResp(nil))
+	ctx.JSON(c.SuccessResp(iris.Map{
+		"total":   totalNum,
+		"success": successNum,
+	}))
 }
 
 // Get 根据报告获取用例编号的列表
