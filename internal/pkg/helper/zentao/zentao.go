@@ -4,9 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"path"
+	"regexp"
+	"strings"
+
 	"github.com/bitly/go-simplejson"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/easysoft/zentaoatf/internal/pkg/domain"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
@@ -14,9 +18,6 @@ import (
 	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"path"
-	"regexp"
-	"strings"
 )
 
 func GetConfig(baseUrl string) (err error) {
@@ -119,6 +120,9 @@ func LoadSiteProduct(currSite serverDomain.ZentaoSite, currProductId int) (
 		}
 	}
 
+	if len(products) == 0 {
+		return
+	}
 	currProduct = products[currIndex]
 	//products[currIndex].Checked = true
 
