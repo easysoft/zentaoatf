@@ -93,7 +93,7 @@ const rulesRef = ref({
     },
     {
       regex:
-        /(http?|https):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/i,
+        /[-A-Za-z0-9+&@#/%?=~_|!:,.;]+\.[-A-Za-z0-9+&@#/%=~_|]/i,
       msg: t("pls_zentao_url"),
     },
   ],
