@@ -278,40 +278,28 @@ onUnmounted(() => {
   position: fixed;
   min-width: 100px;
   z-index: 100;
-  padding-top: var(--space-sm);
-  padding-bottom: var(--space-sm);
-  padding-left: 2em;
+  padding: 10px;
 }
-.popper :deep(.list-item) {
-  padding-left: var(--space-lg);
-  padding-right: var(--space-lg);
-}
-.popper :deep(.list-item.has-checkmark) {
-  padding-right: var(--space-sm);
-}
+
 .tab-group {
   .tab-header {
-    &:after {
-      content: "";
-      width: 100%;
-      border-bottom: 2px solid #ddd;
-    }
-  }
-  .tab-nav {
-    color: #5c5c5c;
-    font-size: 14px;
-    line-height: 40px;
-    display: inline-block;
-    margin-right: 2em;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    &.active {
-      color: #2f5cd5;
-      border-bottom-color: #2f5cd5;
+    display: flex;
+    padding-bottom: 10px;
+    .tab-nav {
+      flex: 1;
+      text-align: center;
+      color: #5c5c5c;
+      line-height: 40px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      &.active {
+        color: #2f5cd5;
+        border-bottom-color: #2f5cd5;
+      }
     }
   }
   .tab-panel {
-    padding: 0, 15px;
+    padding: 0 10px;
   }
 }
 </style>
