@@ -139,7 +139,13 @@ const modalClose = () => {
 }
 const formSite = ref({} as any)
 const createSite = (formData) => {
-  store.dispatch('Site/save', formData).then((response) => {
+  let formDataNew = {
+    ...formData,
+  };
+  if(formDataNew.url.indexOf("http") !== 0) {
+    formDataNew.url = "http://" + formDataNew.url;
+  }
+  store.dispatch('Site/save', formDataNew).then((response) => {
     if (response) {
       formSite.value.clearFormData()
       showCreateSiteModal.value = false;
