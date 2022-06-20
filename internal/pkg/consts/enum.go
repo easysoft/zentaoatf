@@ -32,8 +32,7 @@ var (
 	ErrRecordNotExist          = ResponseCode{4000, "Record Not Found"}
 	NotAvailable               = ResponseCode{5000, "Not Available"}
 
-	ErrFileOrDirExist   = ResponseCode{6000, "File or Dir Exist"}
-	ErrNotSupportedLang = ResponseCode{7000, "File or Dir Exist"}
+	ErrFileOrDirExist = ResponseCode{6000, "File or Dir Exist"}
 )
 
 type ResultStatus string
