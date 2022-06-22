@@ -69,6 +69,7 @@ func (r *SiteRepo) Get(id uint) (po model.Site, err error) {
 }
 
 func (r *SiteRepo) Create(site *model.Site) (id uint, isDuplicate bool, err error) {
+
 	site.Url = httpUtils.AddSepIfNeeded(site.Url)
 
 	po, err := r.FindDuplicate(site.Name, site.Url, 0)
