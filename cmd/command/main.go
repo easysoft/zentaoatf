@@ -67,6 +67,7 @@ func main() {
 	flagSet.StringVar(&keywords, "k", "", "")
 	flagSet.StringVar(&keywords, "keywords", "", "")
 
+	flagSet.BoolVar(&commConsts.AutoCommitBug, "c", false, "")
 	flagSet.BoolVar(&noNeedConfirm, "y", false, "")
 	flagSet.BoolVar(&commConsts.Verbose, "verbose", false, "")
 
@@ -113,7 +114,7 @@ func main() {
 	case "cb":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
-			action.CommitBug(files, stringUtils.ParseInt(productId))
+			action.CommitBug(files, stringUtils.ParseInt(productId), noNeedConfirm)
 		}
 
 	case "list", "ls", "-l":
@@ -161,6 +162,9 @@ func run(args []string) {
 		runUnitTest(args)
 	} else { // ztf test
 		runFuncTest(args)
+		if commConsts.AutoCommitBug && productId != "" {
+			action.CommitBug([]string{commConsts.ExecLogDir}, stringUtils.ParseInt(productId), true)
+		}
 	}
 }
 

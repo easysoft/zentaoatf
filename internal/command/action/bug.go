@@ -22,7 +22,7 @@ var (
 	bugFields commDomain.ZentaoBugFields
 )
 
-func CommitBug(files []string, productId int) {
+func CommitBug(files []string, productId int, noNeedConfirm bool) {
 	var resultDir string
 	if len(files) > 0 {
 		resultDir = files[0]
@@ -56,9 +56,18 @@ func CommitBug(files []string, productId int) {
 		return
 	}
 
+	if noNeedConfirm {
+		for _, caseId := range ids {
+			reportBug(resultDir, caseId, productId)
+		}
+
+		return
+	}
+
+	// wait to input
 	for {
 		logUtils.ExecConsole(color.FgCyan, "\n"+i118Utils.Sprintf("enter_case_id_for_report_bug"))
-		logUtils.ExecConsole(color.FgCyan, strings.Join(lines, "\n"))
+		logUtils.ExecConsole(-1, strings.Join(lines, "\n"))
 		var caseId string
 		fmt.Scanln(&caseId)
 		if caseId == "exit" {

@@ -9,12 +9,13 @@ var (
 	LanguageEn = "en"
 	Language   = LanguageZh
 
-	Verbose    = false
-	IsRelease  bool
-	ZtfDir     string
-	WorkDir    string
-	ExecLogDir string
-	LogDir     string
+	AutoCommitBug bool
+	Verbose       = false
+	IsRelease     bool
+	ZtfDir        string
+	WorkDir       string
+	ExecLogDir    string
+	LogDir        string
 
 	RequestType string
 	ExecFrom    ExecFromDef
