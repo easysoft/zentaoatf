@@ -2,7 +2,6 @@ package serverConfig
 
 import (
 	"errors"
-	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
@@ -44,9 +43,7 @@ func InitLog() {
 
 // 执行日志，用于具体的测试执行
 func InitExecLog(workspacePath string) {
-	fmt.Printf("\nworkspacePath=%s\n", workspacePath)
 	commConsts.ExecLogDir = logUtils.GetLogDir(workspacePath)
-	fmt.Printf("\ncommConsts.ExecLogDir=%s\n", commConsts.ExecLogDir)
 	config := getLogConfig()
 	config.EncoderConfig.EncodeLevel = nil
 
@@ -60,7 +57,6 @@ func InitExecLog(workspacePath string) {
 	config.OutputPaths = []string{logPath}
 	var err error
 	logUtils.LoggerExecFile, err = config.Build()
-	logUtils.ExecConsole(1, "init LoggerExecFile "+logPath)
 
 	if err != nil {
 		log.Println("init exec file logger fail " + err.Error())
