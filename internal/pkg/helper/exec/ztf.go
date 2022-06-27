@@ -108,7 +108,13 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 	startTime := now.Unix()
 	report.StartTime = startTime
 
-	msg := i118Utils.Sprintf("found_scripts", len(casesToRun), workspacePath)
+	workDir := commConsts.WorkDir
+	if commConsts.ExecFrom != commConsts.FromCmd {
+		workDir = workspacePath
+	}
+
+	msg := i118Utils.Sprintf("found_scripts", len(casesToRun), workDir)
+
 	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketHelper.SendExecMsg(msg, "", commConsts.Run, nil, wsMsg)
 	}
