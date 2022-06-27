@@ -73,6 +73,7 @@ import FormItem from "@/components/FormItem.vue";
 import notification from "@/utils/notification";
 import { useForm } from "@/utils/form";
 import Switch from "@/components/Switch.vue";
+import { ZentaoData } from "@/store/zentao";
 
 export interface FormWorkspaceProps {
   show?: boolean;
@@ -135,7 +136,7 @@ const clearFormData = () => {
   modelRef.value = {};
 };
 
-const store = useStore<{ Workspace: WorkspaceData }>();
+const store = useStore<{ Workspace: WorkspaceData, Zentao: ZentaoData }>();
 const currSite = computed<any>(() => store.state.Zentao.currSite);
 const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 const langs = computed<any[]>(() => store.state.Zentao.langs);

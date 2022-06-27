@@ -25,7 +25,7 @@
     <div v-if="contextNode.id && rightVisible" :style="menuStyle">
       <TreeContextMenu :treeNode="contextNode" :clipboardData="clipboardData" :onMenuClick="menuClick" :siteId="currSite.id"/>
     </div>
-    <FormSyncFromZentao
+    <FormSyncFromZentao v-if="showSyncFromZentaoModal"
       :show="showSyncFromZentaoModal"
       @submit="syncFromZentaoSubmit"
       @cancel="showSyncFromZentaoModal = !showSyncFromZentaoModal"
