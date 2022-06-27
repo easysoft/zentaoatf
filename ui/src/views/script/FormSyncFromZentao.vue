@@ -144,7 +144,6 @@ const modules = computed<any[]>(() => store.state.Zentao.modules);
 const suites = computed<any[]>(() => store.state.Zentao.suites);
 const tasks = computed<any[]>(() => store.state.Zentao.tasks);
 const fetchData = () => {
-  store.dispatch("WorkspaceOld/list", currProduct.value.id);
   if(currSite.value.id == undefined || currSite.value.id <= 1
       || currProduct.value.id == undefined || currProduct.value.id <= 0) return;
   store.dispatch("Zentao/fetchModules", {
