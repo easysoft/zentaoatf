@@ -73,6 +73,7 @@ import FormItem from "@/components/FormItem.vue";
 import notification from "@/utils/notification";
 import { useForm } from "@/utils/form";
 import Switch from "@/components/Switch.vue";
+import { ZentaoData } from "@/store/zentao";
 
 export interface FormWorkspaceProps {
   show?: boolean;
@@ -134,8 +135,7 @@ const submit = () => {
 const clearFormData = () => {
   modelRef.value = {};
 };
-
-const store = useStore<{ Workspace: WorkspaceData }>();
+const store = useStore<{ Workspace: WorkspaceData, Zentao: ZentaoData }>();
 const currSite = computed<any>(() => store.state.Zentao.currSite);
 const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 const langs = computed<any[]>(() => store.state.Zentao.langs);
@@ -143,10 +143,7 @@ const modules = computed<any[]>(() => store.state.Zentao.modules);
 const suites = computed<any[]>(() => store.state.Zentao.suites);
 const tasks = computed<any[]>(() => store.state.Zentao.tasks);
 const fetchData = () => {
-  store.dispatch("WorkspaceOld/list", currProduct.value.id);
-  if(currSite.value.id == undefined || currSite.value.id <= 1
-      || currProduct.value.id == undefined || currProduct.value.id <= 0) return;
-
+  if(currSite.value.id == undefined || currSite.value.id <= 1 || currProduct.value.id == undefined) return;
   store.dispatch("Zentao/fetchModules", {
     siteId: currSite.value.id,
     productId: currProduct.value.id,
