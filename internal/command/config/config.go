@@ -16,7 +16,6 @@ import (
 	resUtils "github.com/easysoft/zentaoatf/pkg/lib/res"
 	"github.com/fatih/color"
 	"github.com/spf13/viper"
-	"log"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -26,10 +25,7 @@ func InitConfig() {
 	commConsts.IsRelease = commonUtils.IsRelease()
 
 	commConsts.WorkDir = fileUtils.GetWorkDir()
-	log.Println("===" + commConsts.WorkDir)
 	commConsts.ZtfDir = fileUtils.GetZTFDir()
-	log.Println("===" + commConsts.ZtfDir)
-	log.Println(commonUtils.IsRelease())
 
 	commConsts.ConfigPath = filepath.Join(commConsts.WorkDir, commConsts.ConfigDir, commConsts.ConfigFile)
 	if commConsts.IsRelease {

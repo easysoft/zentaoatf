@@ -30,3 +30,4 @@ logs/
 #vim
 .vim/
 .*.swp
+/.scannerwork/
