@@ -31,3 +31,5 @@ logs/
 .vim/
 .*.swp
 /.scannerwork/
+/bin/
+/log/
