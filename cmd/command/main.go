@@ -67,7 +67,8 @@ func main() {
 	flagSet.StringVar(&keywords, "k", "", "")
 	flagSet.StringVar(&keywords, "keywords", "", "")
 
-	flagSet.BoolVar(&commConsts.AutoCommitBug, "c", false, "")
+	flagSet.BoolVar(&commConsts.AutoCommitResult, "cr", false, "")
+	flagSet.BoolVar(&commConsts.AutoCommitBug, "cb", false, "")
 	flagSet.BoolVar(&noNeedConfirm, "y", false, "")
 	flagSet.BoolVar(&commConsts.Verbose, "verbose", false, "")
 
@@ -162,6 +163,12 @@ func run(args []string) {
 		runUnitTest(args)
 	} else { // ztf test
 		runFuncTest(args)
+
+		if commConsts.AutoCommitResult && productId != "" {
+			action.CommitZTFTestResult([]string{commConsts.ExecLogDir},
+				stringUtils.ParseInt(productId), stringUtils.ParseInt(productId), true)
+		}
+
 		if commConsts.AutoCommitBug && productId != "" {
 			action.CommitBug([]string{commConsts.ExecLogDir}, stringUtils.ParseInt(productId), true)
 		}
