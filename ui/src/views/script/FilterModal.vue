@@ -222,6 +222,7 @@ const menuFinalStyle = computed(() => {
 
   style.maxHeight = `${Math.round(windowSize.height.value - style.top - 10)}px`;
   style.maxWidth = `${Math.round(windowSize.width.value - style.left - 10)}px`;
+  style.minWidth = '160px';
   style.left = `${Math.round(style.left)}px`;
   style.top = `${Math.round(style.top)}px`;
   style.overflow = "auto";
