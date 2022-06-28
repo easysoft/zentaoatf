@@ -99,7 +99,8 @@ func coloredStatus(status commConsts.ResultStatus) string {
 }
 
 func reportBug(resultDir string, caseId string, productId int) error {
-	config := configHelper.LoadByWorkspacePath(commConsts.WorkDir)
+	config := configHelper.LoadByWorkspacePath(commConsts.ZtfDir)
+
 	bugFields, _ = zentaoHelper.GetBugFiledOptions(config, bug.Product)
 
 	bug = zentaoHelper.PrepareBug(commConsts.WorkDir, resultDir, caseId, productId)

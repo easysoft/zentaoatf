@@ -27,7 +27,8 @@ func GenExpectFiles(files []string) error {
 		logUtils.Info("\n" + i118Utils.Sprintf("no_cases"))
 		return nil
 	}
-	conf := configHelper.LoadByWorkspacePath(commConsts.WorkDir)
+	conf := configHelper.LoadByWorkspacePath(commConsts.ZtfDir)
+
 	casesToRun, _ := execHelper.FilterCases(cases, conf)
 
 	dryRunScripts(casesToRun)
@@ -42,7 +43,8 @@ func dryRunScripts(casesToRun []string) {
 	}
 }
 func dryRunScript(file string) {
-	conf := configHelper.LoadByWorkspacePath(commConsts.WorkDir)
+	conf := configHelper.LoadByWorkspacePath(commConsts.ZtfDir)
+
 	out, _ := execHelper.RunFile(file, commConsts.WorkDir, conf, nil, nil)
 
 	expFile := filepath.Join(filepath.Dir(file), fileUtils.GetFileNameWithoutExt(file)+".exp")

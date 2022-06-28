@@ -10,7 +10,7 @@ import (
 func CommitCases(files []string) {
 	cases := scriptHelper.GetCaseByDirAndFile(files)
 
-	config := configHelper.LoadByWorkspacePath(commConsts.WorkDir)
+	config := configHelper.LoadByWorkspacePath(commConsts.ZtfDir)
 
 	zentaoHelper.SyncToZentao(cases, config)
 }

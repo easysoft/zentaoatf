@@ -26,7 +26,7 @@ func Checkout(productId, moduleId, suiteId, taskId string, independentFile bool,
 		Lang:            scriptLang,
 	}
 
-	config := configHelper.LoadByWorkspacePath(commConsts.WorkDir)
+	config := configHelper.LoadByWorkspacePath(commConsts.ZtfDir)
 
 	zentaoHelper.SyncFromZentao(settings, config, commConsts.WorkDir)
 }
