@@ -11,7 +11,7 @@ $>ztf.exe run product01 product01\all.cs             执行all.cs测试套件的
 $>ztf.exe run log\001\result.txt                     执行result.txt结果文件中的失败用例。
 $>ztf.exe run product01 -suite 1                     执行禅道系统中编号为1的套件，脚本在product01目录，缩写-s。
 $>ztf.exe run -task 1                                执行禅道系统中编号为1的任务，脚本在当期目录, 缩写-t。
-$>ztf.exe run demo\demo -p 1 -cr -cb                 执行目录demo下的脚本，完成后提交结果到禅道，并将失败结果提交成用例。
+$>ztf.exe run demo\demo -p 1 -cr -cb                 执行目录demo下的脚本，完成后提交结果到禅道，并将失败结果提交成缺陷。
                                                      cr提交结果，-cb提交缺陷，-p必填参数指定产品ID
 
 $>ztf.exe run demo\autoit                            执行ZTF自带AutoIT脚本。

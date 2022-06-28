@@ -38,7 +38,7 @@ func CommitBug(ztfBug commDomain.ZtfBug, config commDomain.WorkspaceConf) (err e
 		return
 	}
 
-	logUtils.Info(i118Utils.Sprintf("success_to_report_bug", ztfBug.Case))
+	logUtils.Info(color.GreenString(i118Utils.Sprintf("success_to_report_bug", ztfBug.Case)))
 
 	return
 }

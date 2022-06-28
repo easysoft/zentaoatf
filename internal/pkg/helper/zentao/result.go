@@ -31,8 +31,10 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId int, config com
 	url := GenApiUrl(uri, nil, config.Url)
 
 	jsn, _ := json.Marshal(report)
-	logUtils.Info(url)
-	logUtils.Info(string(jsn))
+	if commConsts.Verbose {
+		logUtils.Info(url)
+		logUtils.Info(string(jsn))
+	}
 
 	_, err = httpUtils.Post(url, report)
 	if err != nil {

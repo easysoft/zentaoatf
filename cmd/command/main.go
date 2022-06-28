@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"github.com/easysoft/zentaoatf/internal/command/action"
 	commandConfig "github.com/easysoft/zentaoatf/internal/command/config"
 	"github.com/easysoft/zentaoatf/internal/pkg/consts"
@@ -11,6 +10,7 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	"github.com/fatih/color"
+	"log"
 	"os"
 	"os/signal"
 	"strings"
@@ -82,8 +82,8 @@ func main() {
 	case "set", "-set":
 		flagSet.Parse(os.Args[2:])
 		if commConsts.Verbose {
-			fmt.Printf("\nIsRelease=%t\n", commConsts.IsRelease)
-			fmt.Printf("\nlaunch %s%s in %s\n", "", commConsts.App, commConsts.WorkDir)
+			log.Println("WorkDir=" + commConsts.WorkDir)
+			log.Println("ZtfDir=" + commConsts.ZtfDir)
 		}
 		action.Set()
 
