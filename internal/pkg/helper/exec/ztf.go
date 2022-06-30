@@ -113,9 +113,10 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 		workDir = workspacePath
 	}
 
-	msg := i118Utils.Sprintf("found_scripts", len(casesToRun), workDir)
+	msg := i118Utils.Sprintf("found_scripts", len(casesToRun), workDir, commConsts.ZtfDir)
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
+		msg = i118Utils.Sprintf("found_scripts_no_ztf_dir", len(casesToRun), workDir)
 		websocketHelper.SendExecMsg(msg, "", commConsts.Run, nil, wsMsg)
 	}
 	logUtils.ExecConsolef(color.FgCyan, msg)

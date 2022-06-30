@@ -356,7 +356,11 @@
     },
     {
       "id": "found_scripts",
-      "translation": "发现%d个用例在工作目录%s中。"
+      "translation": "发现%d个用例，工作目录为%s，ZTF目录为%s。"
+    },
+    {
+      "id": "found_scripts_no_ztf_dir",
+      "translation": "发现%d个用例，工作目录为%s。"
     },
     {
       "id": "ignore_scripts",
