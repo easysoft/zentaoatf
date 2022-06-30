@@ -230,6 +230,8 @@ func runUnitTest(args []string) {
 	} else if args[start] == commConsts.UnitTestToolRobot {
 		commConsts.UnitTestTool = commConsts.RobotFramework
 		commConsts.UnitBuildTool = commConsts.Maven
+	} else {
+		commConsts.UnitTestTool = commConsts.TestTool(args[start])
 	}
 
 	cmd := strings.Join(args[start:], " ")

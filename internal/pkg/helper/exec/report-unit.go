@@ -194,7 +194,7 @@ func RetrieveUnitResult(workspacePath string, startTime int64, testTool commCons
 		resultDir = "results"
 		zipDir = resultDir
 	} else {
-		resultDir = "results"
+		resultDir = ""
 		zipDir = resultDir
 	}
 
