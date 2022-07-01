@@ -33,13 +33,14 @@ const {t} = useI18n();
 import { StateType as GlobalData } from "@/store/global";
 const store = useStore<{ global: GlobalData, tabs: TabsData, Script: ScriptData }>();
 const global = computed<any>(() => store.state.global.tabIdToWorkspaceIdMap);
+const saveBtnAbled = computed<any>(() => store.state.Script.currentCodeChanged);
 const currWorkspace = computed<any>(() => store.state.Script.currWorkspace);
 
 const items = computed<TabNavItem[]>(() => {
   return store.getters['tabs/list'];
 });
 
-const toolbarItemArr = [
+let toolbarItemArr = [
   {
     key: 'run',
     hint: 'Run',
@@ -48,9 +49,10 @@ const toolbarItemArr = [
   {
     key: 'save',
     hint: 'Save',
-    icon: 'save'
+    icon: 'save',
+    disabled: !saveBtnAbled.value
   }
-]
+];
 const toolbarItems = ref([] as any[]);
 // const tabPageRef = ref<InstanceType<typeof TabPage> | null>(null)
 const tabsRef = ref<InstanceType<typeof TabPage>[] | null>(null)
@@ -65,6 +67,29 @@ const activeID = computed((): string => {
 
 watch(activeID, () => {
   console.log('watch activeID', activeID.value)
+  if (activeID.value.indexOf('script-') > -1) {
+    toolbarItems.value = toolbarItemArr
+  } else if (activeID.value.indexOf('code-') > -1) {
+    toolbarItems.value = [toolbarItemArr[1]]
+  } else {
+    toolbarItems.value = []
+  }
+}, {deep: true})
+
+watch(saveBtnAbled, () => {
+  toolbarItemArr = [
+    {
+    key: 'run',
+    hint: 'Run',
+    icon: 'play'
+    },
+    {
+    key: 'save',
+    hint: 'Save',
+    icon: 'save',
+    disabled: !saveBtnAbled.value
+    }
+  ];
   if (activeID.value.indexOf('script-') > -1) {
     toolbarItems.value = toolbarItemArr
   } else if (activeID.value.indexOf('code-') > -1) {
@@ -103,6 +128,7 @@ const onToolbarClick = (e) => {
 function _handleNavClick(item) {
   console.log('_handleNavClick', item);
   store.dispatch('tabs/open', item);
+  store.dispatch('Script/updateCurrentCodeChanged', item.changed)
 }
 
 function _handleNavClose(item) {
