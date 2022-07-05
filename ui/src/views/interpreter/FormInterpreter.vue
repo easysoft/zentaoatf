@@ -3,7 +3,7 @@
     :showModal="showModalRef"
     @onCancel="cancel"
     @onOk="submit"
-    :title="info == undefined ? t('create_interpreter') : t('edit_interpreter')"
+    :title="info.id == 0 ? t('create_interpreter') : t('edit_interpreter')"
     :contentStyle="{width: '500px'}"
   >
     <Form class="form-interpreter" labelCol="6" wrapperCol="16">
@@ -104,17 +104,15 @@ const isElectron = ref(getElectron());
 
 const props = withDefaults(defineProps<FormSiteProps>(), {
   show: false,
-  info: {},
+  info: ref({
+    id: 0,
+    lang: "",
+    path: "",
+  }),
 });
-
-watch(props, () => {
-    if(!props.show){
-        setTimeout(() => {
-            validateInfos.value = {};
-        }, 200);
-    }
-})
-
+const info = computed(() => {
+  return props.info.value == undefined ? {id: 0,lang: "",path: ""} : props.info.value;
+});
 const showModalRef = computed(() => {
   return props.show;
 });
@@ -154,31 +152,14 @@ const selectLang = async (item) => {
   console.log(interpreterInfos.value);
 };
 
-watch(props, () => {
-  console.log("watch formInterpreter", props);
-  if (props.info.value == undefined) {
-    modelRef.value = {
-      id: 0,
-      lang: "",
-      path: "",
-    };
-    interpreterInfos.value = [];
-  } else {
-    modelRef.value.id = props.info.value.id;
-    modelRef.value.path = props.info.value.path;
-    modelRef.value.lang = props.info.value.lang;
-    interpreterInfos.value = [];
-  }
-});
-
 const cancel = () => {
   emit("cancel", {});
 };
 
 const modelRef = ref<any>({
-  id: 0,
-  lang: "",
-  path: "",
+  id: info.value.id,
+  lang: info.value.lang,
+  path: info.value.path,
 });
 const rulesRef = ref({
   lang: [{ required: true, msg: t("pls_lang") }],

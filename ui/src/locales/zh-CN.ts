@@ -70,6 +70,20 @@ export default {
     'interpreter_path': '可执行文件路径',
     'script_lang': '脚本语言',
 
+    'remote_proxy': '远程代理管理',
+    'create_remote_proxy': '新建远程代理',
+    'edit_remote_proxy': '编辑远程代理',
+    'proxy_link': '远程代理地址',
+    'proxy_lang': '代理语言',
+    'pls_input_proxy_link': '请输入远程代理地址',
+
+    'remote_server': '服务器管理',
+    'create_remote_server': '新建服务器',
+    'edit_remote_server': '编辑服务器',
+    'server_link': '服务器地址',
+    'set_default': '设为默认',
+    'pls_input_server_link': '请输入服务器地址',
+
     'script': '脚本',
     'test_script': '测试脚本',
     'script.list': '脚本列表',

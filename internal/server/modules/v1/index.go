@@ -1,10 +1,11 @@
 package v1
 
 import (
+	"time"
+
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	"github.com/easysoft/zentaoatf/internal/server/core/module"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/index"
-	"time"
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/rate"
@@ -20,6 +21,8 @@ type IndexModule struct {
 
 	InterpreterModule *index.InterpreterModule `inject:""`
 	WorkspaceModule   *index.WorkspaceModule   `inject:""`
+	ProxyModule       *index.ProxyModule       `inject:""`
+	ServerModule      *index.ServerModule      `inject:""`
 
 	TestFilterModule *index.TestFilterModule `inject:""`
 	TestScriptModule *index.TestScriptModule `inject:""`
@@ -51,6 +54,8 @@ func (m *IndexModule) Party() module.WebModule {
 		m.SiteModule.Party(),
 		m.InterpreterModule.Party(),
 		m.WorkspaceModule.Party(),
+		m.ProxyModule.Party(),
+		m.ServerModule.Party(),
 
 		m.TestFilterModule.Party(),
 		m.TestScriptModule.Party(),

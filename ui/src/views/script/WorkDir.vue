@@ -84,7 +84,6 @@ const currWorkspace = computed<any>(() => store.state.Script.currWorkspace);
 const isWin = isWindows()
 
 store.dispatch('Zentao/fetchLangs')
-const langs = computed<any[]>(() => store.state.Zentao.langs);
 
 const router = useRouter();
 let workspace = router.currentRoute.value.params.workspace as string

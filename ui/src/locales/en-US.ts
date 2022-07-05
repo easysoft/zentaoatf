@@ -62,6 +62,20 @@ export default {
     'interpreter_path': 'Interpreter Path',
     'script_lang': 'Script Language',
 
+    'remote_proxy': 'Remote Proxy',
+    'create_remote_proxy': 'Create Remote Proxy',
+    'edit_remote_proxy': 'Edit Remote Proxy',
+    'proxy_link': 'Reomte Proxy Link',
+    'proxy_lang': 'Proxy Language',
+    'pls_input_proxy_link': 'Please Input Proxy Link',
+
+    'remote_server': 'Remote Server',
+    'create_remote_server': 'Create Remote Server',
+    'edit_remote_server': 'Edit Remote Server',
+    'server_link': 'Server Address',
+    'set_default': 'Set Default',
+    'pls_input_server_link': 'Please Input Server Address',
+
     'script': 'Script',
     'test_script': 'Test Script',
     'script.list': 'Script List',
