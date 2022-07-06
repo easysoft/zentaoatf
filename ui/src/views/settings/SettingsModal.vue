@@ -119,7 +119,7 @@
       </template>
 
       <template #action="record">
-        <Button @click="() => handleEditServer(record)" class="tab-setting-btn" size="sm">{{
+        <Button v-if="record.value.id" @click="() => handleEditServer(record)" class="tab-setting-btn" size="sm">{{
           t("edit")
         }}</Button>
         <Button v-if="record.value.id" @click="() => handleRemoveServer(record)" class="tab-setting-btn" size="sm"
@@ -177,6 +177,7 @@ import FormProxy from "@/views/proxy/FormProxy.vue";
 import FormServer from "@/views/server/FormServer.vue";
 import {setServerURL} from "@/utils/cache";
 import { StateType as GlobalData } from "@/store/global";
+import { ProxyData } from "@/store/proxy";
 
 const props = defineProps<{
   show: boolean;
@@ -190,7 +191,6 @@ const { t, locale } = useI18n();
 const momentUtc = momentUtcDef;
 
 const interpreters = ref<any>([]);
-const remoteProxies = ref<any>([]);
 const remoteServers = ref<any>([]);
 
 const editInfo = ref({});
@@ -201,7 +201,9 @@ onMounted(() => {
   console.log("onMounted");
 });
 
-const store = useStore<{ global: GlobalData }>();
+const store = useStore<{ global: GlobalData, proxy: ProxyData }>();
+store.dispatch("proxy/fetchProxies");
+const remoteProxies = computed<any[]>(() => store.state.proxy.proxies);
 const serverUrl = computed<any>(() => store.state.global.serverUrl);
 watch(serverUrl, () => {
   console.log('watch serverUrl', serverUrl.value)
@@ -260,6 +262,10 @@ const setColumns = () => {
     //   width: "60px",
     // },
     {
+      label: t("name"),
+      field: "name",
+    },
+    {
       label: t("proxy_link"),
       field: "path",
     },
@@ -280,6 +286,10 @@ const setColumns = () => {
       label: t("no"),
       field: "id",
       width: "60px",
+    },
+    {
+      label: t("name"),
+      field: "name",
     },
     {
       label: t("server_link"),
@@ -320,11 +330,6 @@ const list = () => {
 
     if (json.code === 0) {
       interpreters.value = json.data;
-    }
-  });
-  listProxy().then((json) => {
-    if (json.code === 0) {
-      remoteProxies.value = json.data;
     }
   });
   listServer().then((json) => {
@@ -399,6 +404,7 @@ const submitProxy = (formData) => {
           formProxy.value.clearFormData();
           showCreateProxyModal.value = false;
           list();
+          store.dispatch("proxy/fetchProxies");
         }
   }, (json) => {console.log(json)})
 };

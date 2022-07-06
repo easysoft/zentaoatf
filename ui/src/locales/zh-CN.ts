@@ -70,7 +70,7 @@ export default {
     'interpreter_path': '可执行文件路径',
     'script_lang': '脚本语言',
 
-    'remote_proxy': '远程代理管理',
+    'remote_proxy': '远程代理',
     'create_remote_proxy': '新建远程代理',
     'edit_remote_proxy': '编辑远程代理',
     'proxy_link': '远程代理地址',

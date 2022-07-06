@@ -45,6 +45,20 @@
       <FormItem v-if="showCmd" name="cmd" :label="t('cmd')" :info="validateInfos.cmd" :helpText="t('tips_test_cmd', {cmd: cmdSample})">
         <textarea v-model="modelRef.cmd" />
       </FormItem>
+      <FormItem
+        name="proxy"
+        :label="t('remote_proxy')"
+        :info="validateInfos.proxy"
+      >
+        <div class="select">
+          <select name="type" v-model="modelRef.proxy">
+            <option value="0">{{t('local')}}</option>
+            <option v-for="item in remoteProxies" :key="item.id" :value="item.id">
+              {{ item.path }}
+            </option>
+          </select>
+        </div>
+      </FormItem>
     </Form>
   </ZModal>
 </template>
@@ -53,6 +67,7 @@
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import { ZentaoData } from "@/store/zentao";
+import { ProxyData } from "@/store/proxy";
 
 import { unitTestTypesDef, ztfTestTypesDef } from "@/utils/const";
 import {
@@ -93,8 +108,10 @@ const showModalRef = computed(() => {
 });
 
 const testTypes = ref([...ztfTestTypesDef, ...unitTestTypesDef]);
-const store = useStore<{ Zentao: ZentaoData }>();
+const store = useStore<{ Zentao: ZentaoData, proxy: ProxyData }>();
+store.dispatch("proxy/fetchProxies");
 const langs = computed<any[]>(() => store.state.Zentao.langs);
+const remoteProxies = computed<any[]>(() => store.state.proxy.proxies);
 const cmdSample = ref('')
 const cmdMap = ref(arrToMap(testTypes.value))
 const selectType = () => {
@@ -114,7 +131,7 @@ const cancel = () => {
 };
 
 const isElectron = ref(!!window.require)
-const modelRef = ref({type: 'ztf'} as any);
+const modelRef = ref({type: 'ztf', proxy: 0} as any);
 
 const showCmd = computed(() => { return modelRef.value.type && modelRef.value.type !== 'ztf' })
 const rulesRef = ref({

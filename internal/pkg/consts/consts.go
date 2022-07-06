@@ -1,5 +1,7 @@
 package commConsts
 
+import "os"
+
 const (
 	App        = "ztf"
 	AppServer  = "server"
@@ -21,6 +23,7 @@ const (
 
 	PathInfo = "PATH_INFO"
 	Get      = "GET"
+	PthSep   = string(os.PathSeparator)
 )
 
 var (

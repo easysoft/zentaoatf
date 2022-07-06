@@ -4,7 +4,7 @@
     @onCancel="cancel"
     @onOk="submit"
     :title="info.id == 0 ? t('create_remote_proxy') : t('edit_remote_proxy')"
-    :contentStyle="{width: '500px'}"
+    :contentStyle="{ width: '500px' }"
   >
     <Form class="form-proxy" labelCol="6" wrapperCol="16">
       <!-- <FormItem 
@@ -40,6 +40,14 @@
           </select>
         </div>
       </FormItem> -->
+      <FormItem
+        name="name"
+        labelWidth="100px"
+        :label="t('name')"
+        :info="validateInfos.name"
+      >
+        <input type="text" v-model="modelRef.name" />
+      </FormItem>
       <FormItem
         labelWidth="100px"
         name="path"
@@ -85,12 +93,17 @@ const props = withDefaults(defineProps<FormSiteProps>(), {
   show: false,
   info: {
     id: 0,
-    type: 'ztf',
+    type: "ztf",
     lang: "",
     path: "",
+    name: "",
   },
 });
-const info = computed(() => props.info.value == undefined ? {id: 0,type: 'ztf',lang: "",path: ""} : props.info.value);
+const info = computed(() =>
+  props.info.value == undefined
+    ? { id: 0, type: "ztf", lang: "", path: "" }
+    : props.info.value
+);
 
 const showModalRef = computed(() => {
   return props.show;
@@ -100,7 +113,7 @@ const testTypes = ref([...ztfTestTypesDef, ...unitTestTypesDef]);
 const proxyInfos = ref([]);
 // const langs = computed<any[]>(() => store.state.Zentao.langs);
 
-const store = useStore<{ Site: StateType, Zentao: ZentaoData }>();
+const store = useStore<{ Site: StateType; Zentao: ZentaoData }>();
 
 const cancel = () => {
   emit("cancel", {});
@@ -110,10 +123,12 @@ const modelRef = ref<any>({
   id: info.value.id,
   type: info.value.type,
   lang: info.value.lang,
+  name: info.value.name,
   path: info.value.path,
 });
 const rulesRef = ref({
-//   lang: [{ required: true, msg: t("pls_lang") }],
+  name: [{ required: true, msg: t("pls_name") }],
+  //   lang: [{ required: true, msg: t("pls_lang") }],
   path: [{ required: true, msg: t("pls_input_proxy_link") }],
 });
 const { validate, reset, validateInfos } = useForm(modelRef, rulesRef);
@@ -134,6 +149,7 @@ const clearFormData = () => {
   console.log("clear");
   modelRef.value.path = "";
   modelRef.value.lang = "";
+  modelRef.value.name = "";
   proxyInfos.value = [];
 };
 
@@ -142,7 +158,7 @@ defineExpose({
 });
 </script>
 <style scoped>
-.select-dir-btn{
+.select-dir-btn {
   width: 60px;
 }
 </style>
