@@ -4,6 +4,7 @@ import { StateType } from '@/views/site/store';
 import {ZentaoData} from '@/store/zentao';
 import {PaginationConfig} from '@/types/data';
 import useCurrentProduct from './use-current-product';
+import { StateType as GlobalData } from "@/store/global";
 
 interface TestResultInfo {
     buildTool: string;
@@ -27,7 +28,7 @@ interface TestResultInfo {
 }
 
 export default function useResultList(): {results: ComputedRef<TestResultInfo[]>, fetchResults: () => void} {
-    const store = useStore<{ Zentao: ZentaoData, Result: StateType }>();
+    const store = useStore<{ Zentao: ZentaoData, Result: StateType, global: GlobalData }>();
     const results = computed<any[]>(() => store.state.Result.queryResult.result?.map((item) => ({...item, displayName: item.total != 1 ? item.workspaceName + '(' + item.total + ')' : item.testScriptName})));
     const currentProduct = useCurrentProduct();
 
@@ -46,6 +47,8 @@ export default function useResultList(): {results: ComputedRef<TestResultInfo[]>
     onMounted(fetchResults);
 
     watch(currentProduct, () => fetchResults());
+    const serverUrl = computed<any>(() => store.state.global.serverUrl);
+    watch(serverUrl, () => fetchResults())
 
     return {results, fetchResults};
 }

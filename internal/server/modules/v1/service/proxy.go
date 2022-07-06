@@ -1,8 +1,12 @@
 package service
 
 import (
+	"errors"
+
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 )
 
 type ProxyService struct {
@@ -18,18 +22,23 @@ func (s *ProxyService) List() (ret []model.Proxy, err error) {
 	return
 }
 
-func (s *ProxyService) Get(id uint) (site model.Proxy, err error) {
+func (s *ProxyService) Get(id uint) (proxy model.Proxy, err error) {
 	return s.ProxyRepo.Get(id)
 }
 
-func (s *ProxyService) Create(site model.Proxy) (id uint, err error) {
-	id, err = s.ProxyRepo.Create(site)
+func (s *ProxyService) Create(proxy model.Proxy) (id uint, err error) {
+	id, err = s.ProxyRepo.Create(proxy)
 	return
 }
 
-func (s *ProxyService) Update(site model.Proxy) (err error) {
-
-	err = s.ProxyRepo.Update(site)
+func (s *ProxyService) Update(proxy model.Proxy) (err error) {
+	proxy.Path = zentaoHelper.FixSiteUlt(proxy.Path)
+	if proxy.Path == "" {
+		err = errors.New("url not right")
+		return
+	}
+	proxy.Path = fileUtils.AddUrlPathSepIfNeeded(proxy.Path)
+	err = s.ProxyRepo.Update(proxy)
 	return
 }
 

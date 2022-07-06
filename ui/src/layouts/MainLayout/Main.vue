@@ -42,7 +42,7 @@ import TabsContainer from '@/components/TabsContainer.vue';
 import ResultListPanel from '@/views/result/ResultListPanel.vue';
 import Websocket from '@/components/Websocket.vue';
 import settings from "@/config/settings";
-import {onBeforeUnmount, onMounted, ref} from "vue";
+import {onBeforeUnmount, onMounted, ref, onBeforeMount} from "vue";
 import bus from "@/utils/eventBus";
 import notification from "@/utils/notification";
 import { useI18n } from "vue-i18n";
@@ -97,7 +97,9 @@ onBeforeUnmount( () => {
   bus.off(settings.eventExec, onExecStartEvent)
   bus.off(settings.eventNotify, notify);
 })
-
+onBeforeMount( async () => {
+  console.log('before mount')
+})
 </script>
 
 <style lang="less" scoped>

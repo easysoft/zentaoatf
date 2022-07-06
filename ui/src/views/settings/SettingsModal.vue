@@ -175,6 +175,8 @@ import FormInterpreter from "@/views/interpreter/FormInterpreter.vue";
 import { getLangSettings } from "@/views/interpreter/service";
 import FormProxy from "@/views/proxy/FormProxy.vue";
 import FormServer from "@/views/server/FormServer.vue";
+import {setServerURL} from "@/utils/cache";
+import { StateType as GlobalData } from "@/store/global";
 
 const props = defineProps<{
   show: boolean;
@@ -199,6 +201,12 @@ onMounted(() => {
   console.log("onMounted");
 });
 
+const store = useStore<{ global: GlobalData }>();
+const serverUrl = computed<any>(() => store.state.global.serverUrl);
+watch(serverUrl, () => {
+  console.log('watch serverUrl', serverUrl.value)
+  list()
+}, { deep: true })
 watch(
   locale,
   () => {
@@ -429,6 +437,11 @@ const handleSetDefault = (item) => {
     remoteServers.value.forEach(server => {
         if(server.id){
             server.default = item.value.id == server.id;
+            if(server.default){
+                setServerURL(server.path == t('local') ? 'local' : server.path);
+                store.commit('global/setServerUrl', server.path);
+                store.dispatch('Zentao/fetchSitesAndProduct', {})
+            }
             saveServer(server).then((json) => {
                 if (json.code === 0) {
                     list();
@@ -436,6 +449,11 @@ const handleSetDefault = (item) => {
             }, (json) => {console.log(json)})
         }
     });
+    if(!item.value.id){
+        setServerURL('local');
+        store.commit('global/setServerUrl', 'local');
+        store.dispatch('Zentao/fetchSitesAndProduct', {})
+    }
 };
 const submitServer = (formData) => {
     saveServer(formData).then((json) => {

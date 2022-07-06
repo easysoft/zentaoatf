@@ -76,7 +76,13 @@ request.interceptors.request.use(
         //     const workspacePath = await getCache(settings.currWorkspace);
         //     config.params = { ...config.params, [settings.currWorkspace]: workspacePath, lang: i18n.global.locale.value };
         // }
-
+        let serverURL = await getCache(settings.currServerURL);
+        if(!serverURL || serverURL == 'local' || config.url== undefined || config.url.indexOf('/servers') > -1) {
+            serverURL = process.env.VUE_APP_APIHOST;
+        }else{
+            serverURL = String(serverURL) + 'api/v1'
+        }
+        config.baseURL = serverURL;
         console.log('=== request ===', config.url, config)
         return config;
     },

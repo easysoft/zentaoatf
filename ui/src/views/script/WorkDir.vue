@@ -76,6 +76,7 @@ const { t } = useI18n();
 
 const store = useStore<{ global: GlobalData, Zentao: ZentaoData, Script: ScriptData, Workspace: WorkspaceData }>();
 const global = computed<any>(() => store.state.global.tabIdToWorkspaceIdMap);
+const serverUrl = computed<any>(() => store.state.global.serverUrl);
 const currSite = computed<any>(() => store.state.Zentao.currSite);
 const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
@@ -203,6 +204,10 @@ const selectCasesFromReport = async (): Promise<void> => {
 }
 selectCasesFromReport()
 
+watch(serverUrl, () => {
+  console.log('watch serverUrl', serverUrl.value)
+  initData()
+}, { deep: true })
 watch(currProduct, () => {
   console.log('watch currProduct', currProduct.value.id)
   initData()
