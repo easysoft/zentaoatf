@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"fmt"
 
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
@@ -29,6 +28,16 @@ func (s *ServerService) Get(id uint) (server model.Server, err error) {
 }
 
 func (s *ServerService) Create(server model.Server) (id uint, err error) {
+	server.Path = zentaoHelper.FixSiteUlt(server.Path)
+	if server.Path == "" {
+		err = errors.New("url not right")
+		return
+	}
+	server.Path = fileUtils.AddUrlPathSepIfNeeded(server.Path)
+	err = s.CheckServer(server.Path)
+	if err != nil {
+		return
+	}
 	id, err = s.ServerRepo.Create(server)
 	return
 }
@@ -53,7 +62,6 @@ func (s *ServerService) Delete(id uint) error {
 }
 
 func (s *ServerService) CheckServer(url string) (err error) {
-	fmt.Println(url + "api/v1/interpreters/getLangSettings")
-	_, err = httpUtils.Get(url + "api/v1/interpreters/getLangSettings")
+	_, err = httpUtils.Get(url + "api/v1/heartbeat")
 	return
 }

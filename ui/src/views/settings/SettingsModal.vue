@@ -125,7 +125,7 @@
         <Button v-if="record.value.id" @click="() => handleRemoveServer(record)" class="tab-setting-btn" size="sm"
           >{{ t("delete") }}
         </Button>
-        <Button v-if="!record.value.default" @click="() => handleSetDefault(record)" class="tab-setting-btn" size="sm"
+        <Button v-if="!record.value.is_default" @click="() => handleSetDefault(record)" class="tab-setting-btn" size="sm"
           >{{ t("set_default") }}
         </Button>
       </template>
@@ -336,11 +336,11 @@ const list = () => {
     if (json.code === 0) {
       let defaultServerId = 0;
       json.data.forEach(server => {
-        if(server.default) {
+        if(server.is_default) {
           defaultServerId = server.id;
         }
       });
-      json.data.splice(0, 0, {id: 0, path: t("local"), default: defaultServerId > 0 ? false : true});
+      json.data.splice(0, 0, {id: 0, path: t("local"), is_default: defaultServerId > 0 ? false : true});
       remoteServers.value = json.data;
     }
   });
@@ -442,8 +442,8 @@ const handleEditServer = (item) => {
 const handleSetDefault = (item) => {
     remoteServers.value.forEach(server => {
         if(server.id){
-            server.default = item.value.id == server.id;
-            if(server.default){
+            server.is_default = item.value.id == server.id;
+            if(server.is_default){
                 setServerURL(server.path == t('local') ? 'local' : server.path);
                 store.commit('global/setServerUrl', server.path);
                 store.dispatch('Zentao/fetchSitesAndProduct', {})

@@ -14,14 +14,14 @@ export const WsDefaultNameSpace = 'default'
 // export const WsDefaultRoom = 'default'
 
 export class WebSocket {
-  static conn: NSConn
+  static conns: Record<string, NSConn>
 
-  static async init(reConn): Promise<any> {
-    console.log(`init websocket`)
-
-    if (reConn || !WebSocket.conn) {
+  static async init(reConn, appApiHost): Promise<any> {
+    console.log(`init websocket`, WebSocket.conns)
+    if(WebSocket.conns == undefined) WebSocket.conns = {};
+    if (reConn || !WebSocket.conns[appApiHost]) {
       try {
-        const conn = await neffos.dial(getWebSocketApi(), {
+        const conn = await neffos.dial(getWebSocketApi(appApiHost), {
           default: {
             _OnNamespaceConnected: (nsConn, msg) => {
               if (nsConn.conn.wasReconnected()) {
@@ -29,7 +29,7 @@ export class WebSocket {
               }
 
               console.log('connected to namespace: ' + msg.Namespace)
-              WebSocket.conn = nsConn
+              WebSocket.conns[appApiHost] = nsConn
               bus.emit(settings.eventWebSocketConnStatus, {msg: '{"conn": "success"}'});
             },
 
@@ -59,15 +59,15 @@ export class WebSocket {
     return WebSocket
   }
 
-  static joinRoomAndSend(roomName: string, msg: string): void {
-    if (WebSocket.conn && WebSocket.conn.room(roomName)) {
-      WebSocket.conn.room(roomName).emit('OnChat', msg)
+  static joinRoomAndSend(roomName: string, msg: string, appApiHost:string): void {
+    if (WebSocket.conns[appApiHost] && WebSocket.conns[appApiHost].room(roomName)) {
+      WebSocket.conns[appApiHost].room(roomName).emit('OnChat', msg)
       return
     } else {
-      WebSocket.init(true).then(() => {
-        WebSocket.conn.joinRoom(roomName).then((room) => {
+      WebSocket.init(true, appApiHost).then(() => {
+        WebSocket.conns[appApiHost].joinRoom(roomName).then((room) => {
           console.log(`success to join room "${roomName}"`)
-          WebSocket.conn.room(roomName).emit('OnChat', msg)
+          WebSocket.conns[appApiHost].room(roomName).emit('OnChat', msg)
 
         }).catch(err => {
           console.log(`fail to join room ${roomName}`, err)
@@ -77,22 +77,24 @@ export class WebSocket {
     }
   }
 
-  static sentMsg(roomName: string, msg: string): void {
+  static sentMsg(roomName: string, msg: string, appApiHost: string): void {
     console.log(`send msg to room "${roomName}"`)
-    if (!WebSocket.conn) return
-
-    WebSocket.conn.leaveAll().then(() =>
-        this.joinRoomAndSend(roomName, msg)
-    )
+    if (WebSocket.conns[appApiHost]){
+        WebSocket.conns[appApiHost].leaveAll().then(() =>
+        this.joinRoomAndSend(roomName, msg, appApiHost)
+        )
+    }else{
+        this.joinRoomAndSend(roomName, msg, appApiHost)
+    }
   }
 }
 
-export function getWebSocketApi (): string {
+export function getWebSocketApi (appApiHost): string {
   const isProd = process.env.NODE_ENV === 'production'
   const loc = window.location
   console.log(`${isProd}, ${loc.toString()}`)
-
-  const apiHost = process.env.VUE_APP_APIHOST ? process.env.VUE_APP_APIHOST : ''
+console.log(11111111111, appApiHost, process.env.VUE_APP_APIHOST)
+  const apiHost = appApiHost ? appApiHost + process.env.VUE_APP_APISUFFIX : (process.env.VUE_APP_APIHOST ? process.env.VUE_APP_APIHOST : '')
   const url = apiHost.replace('http', 'ws') + '/ws'
   console.log(`websocket url = ${url}`)
 

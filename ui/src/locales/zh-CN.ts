@@ -77,6 +77,9 @@ export default {
     'proxy_lang': '代理语言',
     'pls_input_proxy_link': '请输入远程代理地址',
 
+    'git_auth_type': 'git 登录方式',
+    'rsa_path': '密钥路径',
+
     'remote_server': '服务器管理',
     'create_remote_server': '新建服务器',
     'edit_remote_server': '编辑服务器',
@@ -269,6 +272,7 @@ export default {
     'pls_workspace_type':  '请选择工作目录类型',
 
     'pls_zentao_url': '请输入正确的禅道地址',
+    'pls_rsa': '请输入密钥地址',
     'pls_username': '请输入用户名',
     'pls_password': '请输入密码',
     'pls_input_lang': '请输入语言',

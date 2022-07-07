@@ -5,6 +5,7 @@ import {WebSocket} from "@/services/websocket";
 export interface WebSocketData {
   connStatus: string
   room: string
+  appApiHost: string
 }
 
 export interface ModuleType extends StoreModuleType<WebSocketData> {
@@ -22,6 +23,7 @@ export interface ModuleType extends StoreModuleType<WebSocketData> {
 const initState: WebSocketData = {
   connStatus: '',
   room: 'room',
+  appApiHost: ''
 }
 
 const StoreModel: ModuleType = {
@@ -41,13 +43,13 @@ const StoreModel: ModuleType = {
     }
   },
   actions: {
-    async connect({ commit }, room) {
-      console.log("connect to websocket")
+    async connect({ commit }, {room, appApiHost}) {
+      console.log("connect to websocket", room)
 
-      await WebSocket.init(false)
+      await WebSocket.init(false, appApiHost)
 
       const msg = {act: 'init'}
-      WebSocket.sentMsg(room, JSON.stringify(msg))
+      WebSocket.sentMsg(room, JSON.stringify(msg), appApiHost)
 
       return true;
     },

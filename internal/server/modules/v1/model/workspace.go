@@ -12,6 +12,12 @@ type Workspace struct {
 	Lang string              `json:"lang"`
 	Cmd  string              `json:"cmd"`
 
+	AuthType string `json:"auth_type"`
+	RsaKey   string `json:"rsa_key"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	ProxyId  uint   `json:"proxy_id"`
+
 	SiteId    uint `json:"siteId"`
 	ProductId uint `json:"productId"`
 

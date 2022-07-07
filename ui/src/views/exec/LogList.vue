@@ -55,6 +55,8 @@ import {computed, onBeforeUnmount, onMounted, reactive, ref, watch} from "vue";
 import {useStore} from "vuex";
 import {WebSocketData} from "@/store/websoket";
 import {ExecStatus} from "@/store/exec";
+import {ProxyData} from "@/store/proxy";
+import {WorkspaceData} from "@/store/workspace";
 import bus from "@/utils/eventBus";
 import settings from "@/config/settings";
 import {ZentaoData} from "@/store/zentao";
@@ -64,15 +66,17 @@ import Icon from '@/components/Icon.vue';
 import {momentTime} from "@/utils/datetime";
 import {isInArray} from "@/utils/array";
 import {StateType as GlobalStateType} from "@/store/global";
+import { get as getWorkspace } from "@/views/workspace/service";
 const { t } = useI18n();
 
-const store = useStore<{global: GlobalStateType, Zentao: ZentaoData, WebSocket: WebSocketData, Exec: ExecStatus}>();
+const store = useStore<{global: GlobalStateType, Zentao: ZentaoData, WebSocket: WebSocketData, Exec: ExecStatus, proxy: ProxyData, workspace: WorkspaceData}>();
 const logContentExpand = computed<boolean>(() => store.state.global.logContentExpand);
 
 const currSite = computed<any>(() => store.state.Zentao.currSite);
 const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 const wsStatus = computed<any>(() => store.state.WebSocket.connStatus);
 const isRunning = computed<any>(() => store.state.Exec.isRunning);
+const proxyMap = computed<any>(() => store.state.proxy.proxyMap);
 
 const cachedExecData = ref({})
 const caseCount = ref(1)
@@ -141,7 +145,7 @@ onBeforeUnmount( () => {
   bus.off(settings.eventWebSocketMsg, onWebsocketMsgEvent);
 })
 
-const exec = (data: any) => {
+const exec = async (data: any) => {
   console.log('exec', data)
 
   let execType = data.execType
@@ -162,12 +166,19 @@ const exec = (data: any) => {
 
   caseCount.value++
   let msg = {}
+  let workspaceId = 0;
   if (execType === 'ztf') {
     const scripts = data.scripts
     const sets = genWorkspaceToScriptsMap(scripts)
+    if(!workspaceId){
+        if(scripts.length > 0){
+            workspaceId = scripts[0].workspaceId
+        }
+    }
     msg = {act: 'execCase', testSets: sets}
 
   } else if (execType === 'unit') {
+    if(!workspaceId) workspaceId = data.id;
     const set = {workspaceId: data.id, workspaceType: data.type, cmd: data.cmd, submitResult: data.submitResult}
 
     msg = {act: 'execUnit', testSets: [set]}
@@ -177,7 +188,8 @@ const exec = (data: any) => {
   }
 
   console.log('exec testing', msg)
-  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg))
+  const workspaceInfo = await getWorkspace(workspaceId)
+  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), proxyMap.value[workspaceInfo.data.proxy_id])
 }
 
 const logLevel = ref('result')

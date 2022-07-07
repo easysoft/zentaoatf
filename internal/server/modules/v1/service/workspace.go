@@ -3,11 +3,13 @@ package service
 import (
 	"errors"
 	"fmt"
+
 	"github.com/easysoft/zentaoatf/pkg/domain"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
+	gitHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/git"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
@@ -42,6 +44,11 @@ func (s *WorkspaceService) GetByPath(workspacePath string) (po model.Workspace, 
 func (s *WorkspaceService) Create(workspace model.Workspace) (id uint, err error) {
 	if !fileUtils.IsDir(workspace.Path) {
 		err = errors.New(fmt.Sprintf("目录%s不存在", workspace.Path))
+		return
+	}
+
+	err = gitHelper.CheckAuth(&gitHelper.Build{WorkDir: workspace.Path, Username: workspace.Username, Password: workspace.Password, RsaKey: workspace.RsaKey})
+	if err != nil {
 		return
 	}
 

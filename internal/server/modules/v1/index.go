@@ -23,6 +23,7 @@ type IndexModule struct {
 	WorkspaceModule   *index.WorkspaceModule   `inject:""`
 	ProxyModule       *index.ProxyModule       `inject:""`
 	ServerModule      *index.ServerModule      `inject:""`
+	HeartBeatModule   *index.HeartBeatModule   `inject:""`
 
 	TestFilterModule *index.TestFilterModule `inject:""`
 	TestScriptModule *index.TestScriptModule `inject:""`
@@ -56,6 +57,7 @@ func (m *IndexModule) Party() module.WebModule {
 		m.WorkspaceModule.Party(),
 		m.ProxyModule.Party(),
 		m.ServerModule.Party(),
+		m.HeartBeatModule.Party(),
 
 		m.TestFilterModule.Party(),
 		m.TestScriptModule.Party(),

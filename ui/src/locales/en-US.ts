@@ -69,6 +69,9 @@ export default {
     'proxy_lang': 'Proxy Language',
     'pls_input_proxy_link': 'Please Input Proxy Link',
 
+    'git_auth_type': 'Git Auth Type',
+    'rsa_path': 'Rsa Key Path',
+
     'remote_server': 'Remote Server',
     'create_remote_server': 'Create Remote Server',
     'edit_remote_server': 'Edit Remote Server',
@@ -258,6 +261,7 @@ export default {
     'pls_workspace_type':  'Please input workspace type.',
 
     'pls_zentao_url': 'Please input right ZenTao URL',
+    'pls_rsa': 'Please input right RSA key',
     'pls_username': 'Please input user name.',
     'pls_password': 'Please input password.',
     'pls_input_lang': 'Please input language.',

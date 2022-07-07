@@ -3,9 +3,9 @@ package model
 type Server struct {
 	BaseModel
 
-	Name    string `json:"name"`
-	Path    string `json:"path"`
-	Default bool   `json:"default"`
+	Name      string `json:"name"`
+	Path      string `json:"path"`
+	IsDefault bool   `json:"is_default"`
 }
 
 func (Server) TableName() string {

@@ -5,12 +5,14 @@ import { listProxy } from '@/views/proxy/service';
 
 export interface ProxyData {
   proxies: any[];
+  proxyMap: Record<number, string>;
 }
 
 export interface ModuleType extends StoreModuleType<ProxyData> {
   state: ProxyData;
   mutations: {
     saveProxies: Mutation<any>;
+    saveProxyMap: Mutation<any>;
   };
   actions: {
     fetchProxies: Action<ProxyData, ProxyData>;
@@ -19,6 +21,7 @@ export interface ModuleType extends StoreModuleType<ProxyData> {
 
 const initState: ProxyData = {
   proxies: [],
+  proxyMap: {},
 };
 
 const StoreModel: ModuleType = {
@@ -32,13 +35,22 @@ const StoreModel: ModuleType = {
       console.log('payload', payload);
       state.proxies = payload;
     },
+    saveProxyMap(state, payload) {
+        console.log('payload', payload);
+        const map = {};
+        payload.forEach(item => {
+            map[item.id] = item.path;
+        })
+        state.proxyMap = map;
+      },
   },
   actions: {
     async fetchProxies({ commit }, params) {
       try {
         const response: ResponseData = await listProxy(params);
         const { data } = response;
-        commit('saveProxies', data || 0);
+        commit('saveProxies', data);
+        commit('saveProxyMap', data);
 
         return true;
       } catch (error) {
