@@ -442,15 +442,16 @@ const handleEditServer = (item) => {
 const handleSetDefault = (item) => {
     remoteServers.value.forEach(server => {
         if(server.id){
-            server.is_default = item.value.id == server.id;
-            if(server.is_default){
-                setServerURL(server.path == t('local') ? 'local' : server.path);
-                store.commit('global/setServerUrl', server.path);
-                store.dispatch('Zentao/fetchSitesAndProduct', {})
-            }
-            saveServer(server).then((json) => {
+            let serverClone = JSON.parse(JSON.stringify(server));
+            serverClone.is_default = item.value.id == server.id;
+            saveServer(serverClone).then((json) => {
                 if (json.code === 0) {
-                    list();
+                    if(serverClone.is_default){
+                        setServerURL(server.path);
+                        store.commit('global/setServerUrl', server.path);
+                        store.dispatch('Zentao/fetchSitesAndProduct', {})
+                        list();
+                    }
                 }
             }, (json) => {console.log(json)})
         }

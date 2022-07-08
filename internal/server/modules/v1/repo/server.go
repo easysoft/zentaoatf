@@ -69,7 +69,7 @@ func (r *ServerRepo) Update(server model.Server) error {
 		return err
 	}
 	err = r.DB.Model(&model.Server{}).Where("id = ?", server.ID).
-		Updates(map[string]interface{}{"default": server.IsDefault}).Error
+		Updates(map[string]interface{}{"is_default": server.IsDefault}).Error
 	if err != nil {
 		logUtils.Errorf("update server failed, error: %s.", err.Error())
 		return err

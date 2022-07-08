@@ -14,6 +14,14 @@
         :defaultCollapsed="true"
       />
       <FormNode :show="showModal" @submit="createNode" @cancel="modalClose" ref="formNode" />
+      <FormWorkspace
+      v-if="showWorkspaceModal"
+      :show="showWorkspaceModal"
+      @submit="createWorkSpace"
+      @cancel="modalWorkspaceClose"
+      ref="formWorkspace"
+      :workspaceId="currentNode.workspaceId"
+     />
     </div>
     <Button
       v-if="checkable && checkedKeys.length"
@@ -71,6 +79,7 @@ import FormNode from "./FormNode.vue";
 import { key } from "localforage";
 import settings from "@/config/settings";
 import {getFileNodesUnderParent, genWorkspaceToScriptsMap} from "@/views/script/service";
+import FormWorkspace from "@/views/workspace/FormWorkspace.vue";
 
 const { t } = useI18n();
 
@@ -127,6 +136,10 @@ const onToolbarClicked = (e) => {
     case 'createDir':
       showModal.value = true;
       toolbarAction.value = e.event.key;
+      console.log(e.event.key)
+      break;
+    case 'editWorkspace':
+      showWorkspaceModal.value = true;
       break;
     case 'deleteWorkspace':
       Modal.confirm({
@@ -628,6 +641,21 @@ const execScript = (node) => {
 const clearMenu = () => {
   console.log('clearMenu')
   contextNode.value = ref(null)
+}
+
+const showWorkspaceModal = ref(false)
+const formWorkspace = ref({} as any)
+const createWorkSpace = (formData) => {
+    store.dispatch('Workspace/save', formData).then((response) => {
+        if (response) {
+            formWorkspace.value.clearFormData()
+            notification.success({message: t('save_success')});
+            showWorkspaceModal.value = false;
+        }
+    })
+};
+const modalWorkspaceClose = () => {
+  showWorkspaceModal.value = false;
 }
 
 defineExpose({

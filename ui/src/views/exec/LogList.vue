@@ -72,6 +72,7 @@ const { t } = useI18n();
 const store = useStore<{global: GlobalStateType, Zentao: ZentaoData, WebSocket: WebSocketData, Exec: ExecStatus, proxy: ProxyData, workspace: WorkspaceData}>();
 const logContentExpand = computed<boolean>(() => store.state.global.logContentExpand);
 
+store.dispatch("proxy/fetchProxies");
 const currSite = computed<any>(() => store.state.Zentao.currSite);
 const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 const wsStatus = computed<any>(() => store.state.WebSocket.connStatus);
@@ -188,8 +189,8 @@ const exec = async (data: any) => {
   }
 
   console.log('exec testing', msg)
-  const workspaceInfo = await getWorkspace(workspaceId)
-  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), proxyMap.value[workspaceInfo.data.proxy_id])
+  const workspaceInfo = workspaceId > 0 ? await getWorkspace(workspaceId) : {};
+  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), proxyMap.value[workspaceInfo?.data.proxy_id])
 }
 
 const logLevel = ref('result')

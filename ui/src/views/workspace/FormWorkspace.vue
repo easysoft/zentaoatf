@@ -3,7 +3,7 @@
     :showModal="showModalRef"
     @onCancel="cancel"
     @onOk="submit"
-    :title="t('create_workspace')"
+    :title="props.workspaceId ? t('edit_workspace') : t('create_workspace')"
     :contentStyle="{width: '600px'}"
   >
     <Form labelCol="6" wrapperCol="16">
@@ -53,7 +53,7 @@
         :info="validateInfos.proxy_id"
       >
         <div class="select">
-          <select name="type" @change="updateRules" v-model="modelRef.proxy_id">
+          <select name="type" v-model="modelRef.proxy_id">
             <option :value="0">{{t('local')}}</option>
             <option v-for="item in remoteProxies" :key="item.id" :value="item.id">
               {{ item.path }}
@@ -61,49 +61,6 @@
           </select>
         </div>
       </FormItem>
-      <div v-if="modelRef.proxy_id">
-        <FormItem
-        labelWidth="100px"
-        name="auth_type"
-        :label="t('git_auth_type')"
-        :info="validateInfos.auth_type"
-        >
-        <div class="select">
-            <select name="auth_type" @change="updateRules" v-model="modelRef.auth_type">
-            <option value="ssh">ssh</option>
-            <option value="password">password</option>
-            </select>
-        </div>
-        </FormItem>
-        <FormItem
-        labelWidth="100px"
-        v-if="modelRef.auth_type === 'password'"
-        name="username"
-        :label="t('username')"
-        :info="validateInfos.username"
-        >
-        <input type="text" v-model="modelRef.username" />
-        </FormItem>
-        <FormItem 
-          v-if="modelRef.auth_type === 'ssh'" 
-          labelWidth="100px" 
-          name="rsa_key" 
-          :label="t('rsa_path')" 
-          :info="validateInfos.rsa_key"
-          >
-          <input type="text" v-if="isElectron" v-model="modelRef.rsa_key" />
-          <Button  v-if="isElectron" @click="selectDir('rsa_key')" class="state secondary flex-none rounded">{{t('select')}}</Button>
-          <input type="text" v-if="!isElectron" v-model="modelRef.rsa_key" />
-        </FormItem>
-        <FormItem
-        labelWidth="100px"
-        name="password"
-        :label="t('password')"
-        :info="validateInfos.password"
-        >
-        <input type="password" v-model="modelRef.password" />
-        </FormItem>
-      </div>
     </Form>
   </ZModal>
 </template>
@@ -131,13 +88,16 @@ import FormItem from "@/components/FormItem.vue";
 import {arrToMap} from "@/utils/array";
 import settings from "@/config/settings";
 import Button from "@/components/Button.vue";
+import { get as getWorkspace } from "@/views/workspace/service";
 
 export interface FormWorkspaceProps {
   show?: boolean;
+  workspaceId?: number;
 }
 const { t } = useI18n();
 const props = withDefaults(defineProps<FormWorkspaceProps>(), {
   show: false,
+  workspaceId: 0,
 });
 
 watch(props, () => {
@@ -151,6 +111,27 @@ watch(props, () => {
 const showModalRef = computed(() => {
   return props.show;
 });
+
+const info = ref({} as any);
+const loadInfo = async () => {
+    if(props.workspaceId === undefined || !props.workspaceId) return;
+    await getWorkspace(props.workspaceId).then((json) => {
+    if (json.code === 0) {
+      info.value = json.data;
+      modelRef.value = {
+        id: info.value.id,
+        name: info.value.name,
+        path: info.value.path,
+        type: info.value.type,
+        lang: info.value.lang,
+        cmd: info.value.cmd,
+        proxy_id: info.value.proxy_id,
+      };
+    }
+  });
+}
+
+loadInfo();
 
 const testTypes = ref([...ztfTestTypesDef, ...unitTestTypesDef]);
 const store = useStore<{ Zentao: ZentaoData, proxy: ProxyData }>();
@@ -188,15 +169,6 @@ const rulesRef = ref({
   username: [],
   rsa_key: [],
 });
-
-const updateRules = () => {
-    if (modelRef.value.proxy_id && modelRef.value.auth_type === 'password') {
-        rulesRef.value.username = [{ required: true, msg: t("pls_username") }];
-        rulesRef.value.password = [{ required: true, msg: t("pls_password") }];
-    } else if(modelRef.value.proxy_id && modelRef.value.auth_type === 'ssh') {
-        rulesRef.value.rsa_key = [{ required: true, msg: t("pls_rsa") }]
-    }
-}
 
 const { validate, reset, validateInfos } = useForm(modelRef, rulesRef);
 
