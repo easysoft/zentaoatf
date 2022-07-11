@@ -34,9 +34,11 @@ func (s *ServerService) Create(server model.Server) (id uint, err error) {
 		return
 	}
 	server.Path = fileUtils.AddUrlPathSepIfNeeded(server.Path)
-	err = s.CheckServer(server.Path)
-	if err != nil {
-		return
+	if server.IsDefault {
+		err = s.CheckServer(server.Path)
+		if err != nil {
+			return
+		}
 	}
 	id, err = s.ServerRepo.Create(server)
 	return
@@ -49,9 +51,11 @@ func (s *ServerService) Update(server model.Server) (err error) {
 		return
 	}
 	server.Path = fileUtils.AddUrlPathSepIfNeeded(server.Path)
-	err = s.CheckServer(server.Path)
-	if err != nil {
-		return err
+	if server.IsDefault {
+		err = s.CheckServer(server.Path)
+		if err != nil {
+			return err
+		}
 	}
 	err = s.ServerRepo.Update(server)
 	return

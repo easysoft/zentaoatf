@@ -41,3 +41,11 @@ export async function remove(id: number): Promise<any> {
         method: 'delete',
     });
 }
+
+export async function uploadToProxy(params: any): Promise<any> {
+    return request({
+        url: `/${apiPath}/uploadToProxy`,
+        method: 'POST',
+        data: params,
+    });
+}

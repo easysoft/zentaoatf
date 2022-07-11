@@ -3,9 +3,17 @@ package service
 import (
 	"errors"
 	"fmt"
+	"mime/multipart"
+	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/easysoft/zentaoatf/pkg/domain"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	"github.com/fatih/color"
+	"github.com/kataras/iris/v12"
+	"github.com/snowlyg/helper/dir"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
@@ -18,6 +26,7 @@ type WorkspaceService struct {
 	WorkspaceRepo      *repo.WorkspaceRepo `inject:""`
 	SiteRepo           *repo.SiteRepo      `inject:""`
 	InterpreterService *InterpreterService `inject:""`
+	ProxyService       *ProxyService       `inject:""`
 }
 
 func NewWorkspaceService() *WorkspaceService {
@@ -130,5 +139,59 @@ func (s *WorkspaceService) UpdateConfig(workspace model.Workspace, by string) (e
 
 	configHelper.SaveToFile(conf, workspace.Path)
 
+	return
+}
+
+func (s *WorkspaceService) UploadScriptsToProxy(testSets []serverDomain.TestSet) (pathMap map[string]string, err error) {
+	pathMap = make(map[string]string)
+	unitResultPath := filepath.Join(commConsts.WorkDir, commConsts.ExecZip)
+	uploadDir := fileUtils.AddSepIfNeeded(filepath.Join(commConsts.WorkDir, commConsts.ExecZipPath))
+	realScriptDir := fileUtils.AddSepIfNeeded(filepath.Join(commConsts.WorkDir, commConsts.ExecProxyPath, commConsts.ExecZipPath))
+	os.RemoveAll(uploadDir)
+	os.Remove(unitResultPath)
+	var workspaceInfo model.Workspace
+	for _, testSet := range testSets {
+		po, _ := s.Get(uint(testSet.WorkspaceId))
+		if workspaceInfo.ID == 0 && po.ID > 0 {
+			workspaceInfo = po
+		}
+		for _, casePath := range testSet.Cases {
+			_, err = fileUtils.CopyFileAll(casePath, strings.Replace(casePath, po.Path, uploadDir, 1))
+			if err != nil {
+				return
+			}
+			pathMap[strings.Replace(casePath, po.Path, realScriptDir, 1)] = casePath
+		}
+	}
+	var uploadUrl = ""
+	if workspaceInfo.ProxyId > 0 {
+		proxyInfo, _ := s.ProxyService.Get(workspaceInfo.ProxyId)
+		if proxyInfo.Path != "" {
+			uploadUrl = proxyInfo.Path
+		}
+	}
+	if uploadUrl == "" {
+		return
+	}
+	fileUtils.ZipDir(unitResultPath, uploadDir)
+	fileUtils.Upload(uploadUrl+"api/v1/workspaces/uploadScripts", []string{unitResultPath}, nil)
+	return
+}
+
+func (s *WorkspaceService) UploadScripts(fh *multipart.FileHeader, ctx iris.Context) (err error) {
+	path := filepath.Join(commConsts.WorkDir, commConsts.ExecProxyPath)
+	err = dir.InsureDir(path)
+	if err != nil {
+		logUtils.Infof(color.RedString("file upload failed, error: %s.", err.Error()))
+		return
+	}
+	zipPath := filepath.Join(path, commConsts.ExecZip)
+	_, err = ctx.SaveFormFile(fh, zipPath)
+	if err != nil {
+		logUtils.Infof(color.RedString("file upload failed, error: %s.", err.Error()))
+		return
+	}
+
+	fileUtils.Unzip(zipPath, path)
 	return
 }

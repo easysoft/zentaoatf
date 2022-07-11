@@ -4,7 +4,7 @@
  */
 import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
 import settings from '@/config/settings';
-import { getCache, setCache } from '@/utils/localCache';
+import { getCache } from '@/utils/localCache';
 import i18n from "@/config/i18n";
 import {getCurrProductIdBySite, getCurrSiteId} from "@/utils/cache";
 import bus from "@/utils/eventBus";

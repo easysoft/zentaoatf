@@ -1,12 +1,14 @@
 package service
 
 import (
+	"errors"
 	"fmt"
+	"path/filepath"
+	"sort"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/easysoft/zentaoatf/pkg/domain"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
-	"path/filepath"
-	"sort"
 
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	analysisHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
@@ -14,12 +16,15 @@ import (
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/jinzhu/copier"
 )
 
 type TestResultService struct {
-	SiteRepo      *repo.SiteRepo      `inject:""`
-	WorkspaceRepo *repo.WorkspaceRepo `inject:""`
+	SiteRepo         *repo.SiteRepo      `inject:""`
+	WorkspaceRepo    *repo.WorkspaceRepo `inject:""`
+	ProxyService     *ProxyService       `inject:""`
+	WorkspaceService *WorkspaceService   `inject:""`
 }
 
 func NewTestResultService() *TestResultService {
@@ -152,5 +157,50 @@ func (s *TestResultService) Submit(result serverDomain.ZentaoResultSubmitReq, si
 	config := configHelper.LoadBySite(site)
 	err = zentaoHelper.CommitResult(report, result.ProductId, result.TaskId, config, nil)
 
+	return
+}
+
+func (s *TestResultService) ZipLog(fileName string) (zipPath string, err error) {
+	if fileName == "" {
+		err = errors.New("file path is empty")
+		return
+	}
+	zipPath = filepath.Join(commConsts.WorkDir, commConsts.DownloadServerPath, commConsts.ResultZip)
+	path, _ := filepath.Split(fileName)
+	fileUtils.ZipDir(zipPath, path)
+	return
+}
+
+func (s *TestResultService) DownloadFromProxy(fileName string, workspaceId int) (zipPath string, err error) {
+	if fileName == "" {
+		err = errors.New("file path is empty")
+		return
+	}
+	if workspaceId == 0 {
+		return
+	}
+	workspaceInfo, _ := s.WorkspaceService.Get(uint(workspaceId))
+	if workspaceInfo.ID == 0 {
+		err = errors.New("workspace not found")
+		return
+	}
+	fmt.Println(44444, workspaceInfo.ProxyId)
+	if workspaceInfo.ProxyId == 0 {
+		return
+	}
+	url := ""
+	proxyInfo, _ := s.ProxyService.Get(workspaceInfo.ProxyId)
+	if proxyInfo.Path != "" {
+		url = proxyInfo.Path
+	}
+	if url == "" {
+		err = errors.New("proxy path is empty")
+		return
+	}
+	zipPath = filepath.Join(commConsts.WorkDir, commConsts.DownloadPath, commConsts.ResultZip)
+	fileUtils.Download(url, zipPath)
+	execLogDir := logUtils.GetLogDir(workspaceInfo.Path)
+	fmt.Println(2222, execLogDir)
+	fileUtils.Unzip(zipPath, execLogDir)
 	return
 }

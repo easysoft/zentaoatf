@@ -449,6 +449,7 @@ const handleSetDefault = (item) => {
                     if(serverClone.is_default){
                         setServerURL(server.path);
                         store.commit('global/setServerUrl', server.path);
+                        store.dispatch('proxy/fetchProxies');
                         store.dispatch('Zentao/fetchSitesAndProduct', {})
                         list();
                     }
@@ -457,9 +458,12 @@ const handleSetDefault = (item) => {
         }
     });
     if(!item.value.id){
-        setServerURL('local');
-        store.commit('global/setServerUrl', 'local');
-        store.dispatch('Zentao/fetchSitesAndProduct', {})
+        setTimeout(() => {
+            setServerURL('local');
+            store.commit('global/setServerUrl', 'local');
+            store.dispatch('proxy/fetchProxies');
+            store.dispatch('Zentao/fetchSitesAndProduct', {})
+        }, 200);
     }
 };
 const submitServer = (formData) => {

@@ -3,6 +3,7 @@ import {NSConn} from "neffos.js";
 
 import bus from "@/utils/eventBus";
 import settings from "@/config/settings";
+import { getCache } from '@/utils/localCache';
 
 export type WsEvent = {
   room: string;
@@ -17,11 +18,11 @@ export class WebSocket {
   static conns: Record<string, NSConn>
 
   static async init(reConn, appApiHost): Promise<any> {
-    console.log(`init websocket`, WebSocket.conns)
+    console.log(`init websocket`, WebSocket.conns, appApiHost)
     if(WebSocket.conns == undefined) WebSocket.conns = {};
-    if (reConn || !WebSocket.conns[appApiHost]) {
+    if (reConn || WebSocket.conns[appApiHost] == undefined) {
       try {
-        const conn = await neffos.dial(getWebSocketApi(appApiHost), {
+        const conn = await neffos.dial(await getWebSocketApi(appApiHost), {
           default: {
             _OnNamespaceConnected: (nsConn, msg) => {
               if (nsConn.conn.wasReconnected()) {
@@ -89,14 +90,25 @@ export class WebSocket {
   }
 }
 
-export function getWebSocketApi (appApiHost): string {
+export async function getWebSocketApi (appApiHost): Promise<string> {
   const isProd = process.env.NODE_ENV === 'production'
   const loc = window.location
   console.log(`${isProd}, ${loc.toString()}`)
-console.log(11111111111, appApiHost, process.env.VUE_APP_APIHOST)
-  const apiHost = appApiHost ? appApiHost + process.env.VUE_APP_APISUFFIX : (process.env.VUE_APP_APIHOST ? process.env.VUE_APP_APIHOST : '')
+  const serverUrl = await getServerUrl();
+  const apiHost = appApiHost ? appApiHost + process.env.VUE_APP_APISUFFIX : String(serverUrl)
+
   const url = apiHost.replace('http', 'ws') + '/ws'
   console.log(`websocket url = ${url}`)
 
   return url
+}
+
+export async function getServerUrl(): Promise<string>{
+  let serverURL = await getCache(settings.currServerURL);
+  if (!serverURL || serverURL == 'local') {
+    serverURL = process.env.VUE_APP_APIHOST;
+  } else {
+    serverURL = String(serverURL) + 'api/v1';
+  }
+  return serverURL
 }

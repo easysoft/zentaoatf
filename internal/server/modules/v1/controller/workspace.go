@@ -11,6 +11,7 @@ import (
 
 type WorkspaceCtrl struct {
 	WorkspaceService *service.WorkspaceService `inject:""`
+	ProxyService     *service.ProxyService     `inject:""`
 	BaseCtrl
 }
 
@@ -144,4 +145,40 @@ func (c *WorkspaceCtrl) ListByProduct(ctx iris.Context) {
 	}
 
 	ctx.JSON(c.SuccessResp(data))
+}
+
+func (c *WorkspaceCtrl) UploadScriptsToProxy(ctx iris.Context) {
+	testSets := []serverDomain.TestSet{}
+	var err error
+	if err := ctx.ReadJSON(&testSets); err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+	pathMap, err := c.WorkspaceService.UploadScriptsToProxy(testSets)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+	ctx.JSON(c.SuccessResp(pathMap))
+}
+
+// UploadFile 上传文件
+func (c *WorkspaceCtrl) UploadScripts(ctx iris.Context) {
+	f, fh, err := ctx.FormFile("file")
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+	defer f.Close()
+
+	err = c.WorkspaceService.UploadScripts(fh, ctx)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+	ctx.StatusCode(200)
 }

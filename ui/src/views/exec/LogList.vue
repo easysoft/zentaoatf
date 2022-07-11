@@ -66,7 +66,8 @@ import Icon from '@/components/Icon.vue';
 import {momentTime} from "@/utils/datetime";
 import {isInArray} from "@/utils/array";
 import {StateType as GlobalStateType} from "@/store/global";
-import { get as getWorkspace } from "@/views/workspace/service";
+import { get as getWorkspace, uploadToProxy } from "@/views/workspace/service";
+import { key } from "localforage";
 const { t } = useI18n();
 
 const store = useStore<{global: GlobalStateType, Zentao: ZentaoData, WebSocket: WebSocketData, Exec: ExecStatus, proxy: ProxyData, workspace: WorkspaceData}>();
@@ -78,11 +79,13 @@ const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 const wsStatus = computed<any>(() => store.state.WebSocket.connStatus);
 const isRunning = computed<any>(() => store.state.Exec.isRunning);
 const proxyMap = computed<any>(() => store.state.proxy.proxyMap);
+const currentWorkspace = ref({} as any);
 
 const cachedExecData = ref({})
 const caseCount = ref(1)
 const caseResult = ref({})
 const caseDetail = ref({})
+const realPathMap = ref({})
 
 // websocket
 let wsMsg = reactive({in: '', out: [] as any[]});
@@ -131,8 +134,31 @@ const onWebsocketMsgEvent = (data: any) => {
     caseResult.value[item.info.key] = item.info.status
   }
 
+  Object.keys(realPathMap.value).forEach(key => {
+    item.msg = item.msg.replace(key, realPathMap.value[key])
+  })
+
+  downloadLog(item.msg);
   wsMsg.out.push(item)
   scroll('log-list')
+}
+
+const downloadLog = (msg) => {
+    console.log(111111, msg, currentWorkspace.value)
+  if(currentWorkspace.value.proxy_id == 0 || (msg.indexOf('Report') !== 0 && msg.indexOf('报告') !== 0)){
+    return;
+  }
+  let logPath = '';
+  if(msg.indexOf('Report') === 0){
+    logPath = msg.replace('Report', '')
+    logPath = logPath.replace('.', '')
+  }
+  if(msg.indexOf('报告') === 0){
+    logPath = msg.replace('报告', '')
+    logPath = logPath.replace('。', '')
+  }
+  
+  console.log(logPath)
 }
 
 onMounted(() => {
@@ -190,6 +216,23 @@ const exec = async (data: any) => {
 
   console.log('exec testing', msg)
   const workspaceInfo = workspaceId > 0 ? await getWorkspace(workspaceId) : {};
+  if (msg.testSets !== undefined && workspaceInfo?.data.proxy_id > 0) {
+    currentWorkspace.value = workspaceInfo.data;
+    const resp = await uploadToProxy(msg.testSets);
+    const testSetsMap = resp.data;
+    realPathMap.value = testSetsMap;
+    let casesMap = {};
+    var keys = Object.keys(testSetsMap);
+    keys.forEach((val) => {
+        casesMap[testSetsMap[val]] = val;
+    });
+    msg.testSets.forEach((set, setIndex) => {
+        set.cases.forEach((casePath, caseIndex) => {
+            msg.testSets[setIndex].cases[caseIndex] = casesMap[casePath];
+        }
+        );
+    })
+  }
   WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), proxyMap.value[workspaceInfo?.data.proxy_id])
 }
 
