@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"fmt"
-
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
@@ -121,15 +119,24 @@ func (c *TestResultCtrl) DownloadLog(ctx iris.Context) {
 	ctx.ServeFile(zipPath)
 }
 func (c *TestResultCtrl) MvLog(ctx iris.Context) {
-	fileName := ctx.URLParam("file")
-	workspaceId, _ := ctx.URLParamInt("workspaceId")
-	fmt.Println(11111, fileName, workspaceId)
-	zipPath, err := c.TestResultService.DownloadFromProxy(fileName, workspaceId)
+	type mvlog struct {
+		File        string `json:"file"`
+		WorkspaceId int    `json:"workspaceId"`
+	}
+	params := mvlog{}
+	err := ctx.ReadJSON(&params)
+	if err != nil {
+		c.ErrResp(commConsts.ParamErr, err.Error())
+		return
+	}
+	fileName := params.File
+	workspaceId := params.WorkspaceId
+	logPath, err := c.TestResultService.DownloadFromProxy(fileName, workspaceId)
 
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
-	ctx.ServeFile(zipPath)
+	ctx.JSON(c.SuccessResp(logPath))
 }

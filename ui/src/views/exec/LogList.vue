@@ -67,6 +67,7 @@ import {momentTime} from "@/utils/datetime";
 import {isInArray} from "@/utils/array";
 import {StateType as GlobalStateType} from "@/store/global";
 import { get as getWorkspace, uploadToProxy } from "@/views/workspace/service";
+import {mvLog} from "@/views/result/service";
 import { key } from "localforage";
 const { t } = useI18n();
 
@@ -138,13 +139,13 @@ const onWebsocketMsgEvent = (data: any) => {
     item.msg = item.msg.replace(key, realPathMap.value[key])
   })
 
-  downloadLog(item.msg);
+  downloadLog(item);
   wsMsg.out.push(item)
   scroll('log-list')
 }
 
-const downloadLog = (msg) => {
-    console.log(111111, msg, currentWorkspace.value)
+const downloadLog = (item) => {
+  const msg = item.msg;
   if(currentWorkspace.value.proxy_id == 0 || (msg.indexOf('Report') !== 0 && msg.indexOf('报告') !== 0)){
     return;
   }
@@ -152,12 +153,14 @@ const downloadLog = (msg) => {
   if(msg.indexOf('Report') === 0){
     logPath = msg.replace('Report', '')
     logPath = logPath.replace('.', '')
+    item.msg = "Report proxy address" + item.msg.substr(6)
   }
   if(msg.indexOf('报告') === 0){
     logPath = msg.replace('报告', '')
     logPath = logPath.replace('。', '')
+    item.msg = "报告代理地址" + item.msg.substr(2)
   }
-  
+  mvLog({file: logPath, workspaceId: currentWorkspace.value.id})
   console.log(logPath)
 }
 
@@ -192,7 +195,7 @@ const exec = async (data: any) => {
   }
 
   caseCount.value++
-  let msg = {}
+  let msg = {} as any
   let workspaceId = 0;
   if (execType === 'ztf') {
     const scripts = data.scripts

@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"path/filepath"
 	"sort"
 
@@ -167,6 +168,7 @@ func (s *TestResultService) ZipLog(fileName string) (zipPath string, err error) 
 	}
 	zipPath = filepath.Join(commConsts.WorkDir, commConsts.DownloadServerPath, commConsts.ResultZip)
 	path, _ := filepath.Split(fileName)
+	fmt.Println(zipPath, path)
 	fileUtils.ZipDir(zipPath, path)
 	return
 }
@@ -184,7 +186,6 @@ func (s *TestResultService) DownloadFromProxy(fileName string, workspaceId int) 
 		err = errors.New("workspace not found")
 		return
 	}
-	fmt.Println(44444, workspaceInfo.ProxyId)
 	if workspaceInfo.ProxyId == 0 {
 		return
 	}
@@ -198,9 +199,18 @@ func (s *TestResultService) DownloadFromProxy(fileName string, workspaceId int) 
 		return
 	}
 	zipPath = filepath.Join(commConsts.WorkDir, commConsts.DownloadPath, commConsts.ResultZip)
-	fileUtils.Download(url, zipPath)
+	fileUtils.Download(url+"api/v1/results/downloadLog?file="+fileName, zipPath)
 	execLogDir := logUtils.GetLogDir(workspaceInfo.Path)
-	fmt.Println(2222, execLogDir)
 	fileUtils.Unzip(zipPath, execLogDir)
-	return
+	paths, err := ioutil.ReadDir(execLogDir)
+	if len(paths) == 0 {
+		return
+	}
+	childrenDir := execLogDir + paths[0].Name()
+	paths, err = ioutil.ReadDir(childrenDir)
+	for _, path := range paths {
+		fileUtils.CopyFile(fileUtils.AddSepIfNeeded(childrenDir)+path.Name(), execLogDir+path.Name())
+	}
+	fileUtils.RmDir(childrenDir)
+	return execLogDir + commConsts.LogText, nil
 }
