@@ -175,7 +175,11 @@ func (s *WorkspaceService) UploadScriptsToProxy(testSets []serverDomain.TestSet)
 	}
 	fileUtils.ZipDir(unitResultPath, uploadDir)
 	resp := fileUtils.UploadWithResp(uploadUrl+"api/v1/workspaces/uploadScripts", []string{unitResultPath}, nil)
-	fmt.Println(1111, resp)
+	dataMap := resp["data"].(map[string]interface{})
+	proxyWorkDir := dataMap["workDir"]
+	proxySep := dataMap["sep"]
+
+	fmt.Println(1111, proxyWorkDir, proxySep)
 	return
 }
 

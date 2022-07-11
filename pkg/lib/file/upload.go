@@ -2,6 +2,7 @@ package fileUtils
 
 import (
 	"bytes"
+	"encoding/json"
 	"io"
 	"io/ioutil"
 	"mime/multipart"
@@ -45,7 +46,7 @@ func Upload(url string, files []string, extraParams map[string]string) {
 	logUtils.Info(i118Utils.Sprintf("upload_status", resp.Status, string(respBody)))
 }
 
-func UploadWithResp(url string, files []string, extraParams map[string]string) string {
+func UploadWithResp(url string, files []string, extraParams map[string]string) map[string]interface{} {
 	bodyBuffer := &bytes.Buffer{}
 	bodyWriter := multipart.NewWriter(bodyBuffer)
 
@@ -76,5 +77,7 @@ func UploadWithResp(url string, files []string, extraParams map[string]string) s
 	}
 
 	logUtils.Info(i118Utils.Sprintf("upload_status", resp.Status, string(respBody)))
-	return string(respBody)
+	respMap := make(map[string]interface{})
+	_ = json.Unmarshal(respBody, &respMap)
+	return respMap
 }

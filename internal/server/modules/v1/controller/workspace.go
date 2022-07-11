@@ -181,5 +181,5 @@ func (c *WorkspaceCtrl) UploadScripts(ctx iris.Context) {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
-	ctx.JSON(c.SuccessResp(iris.Map{"workPath": commConsts.WorkDir, "sep": ztfConsts.FilePthSep}))
+	ctx.JSON(c.SuccessResp(iris.Map{"WorkDir": commConsts.WorkDir, "sep": ztfConsts.FilePthSep}))
 }
