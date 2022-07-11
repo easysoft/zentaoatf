@@ -145,7 +145,7 @@ func (s *WorkspaceService) UpdateConfig(workspace model.Workspace, by string) (e
 func (s *WorkspaceService) UploadScriptsToProxy(testSets []serverDomain.TestSet) (pathMap map[string]string, err error) {
 	pathMap = make(map[string]string)
 	unitResultPath := filepath.Join(commConsts.WorkDir, commConsts.ExecZip)
-	uploadDir := filepath.Join(commConsts.WorkDir, commConsts.ExecZipPath)
+	uploadDir := fileUtils.AddSepIfNeeded(filepath.Join(commConsts.WorkDir, commConsts.ExecZipPath))
 	realScriptDir := fileUtils.AddSepIfNeeded(filepath.Join(commConsts.WorkDir, commConsts.ExecProxyPath, commConsts.ExecZipPath))
 	os.RemoveAll(uploadDir)
 	os.Remove(unitResultPath)
@@ -174,7 +174,8 @@ func (s *WorkspaceService) UploadScriptsToProxy(testSets []serverDomain.TestSet)
 		return
 	}
 	fileUtils.ZipDir(unitResultPath, uploadDir)
-	fileUtils.Upload(uploadUrl+"api/v1/workspaces/uploadScripts", []string{unitResultPath}, nil)
+	resp := fileUtils.UploadWithResp(uploadUrl+"api/v1/workspaces/uploadScripts", []string{unitResultPath}, nil)
+	fmt.Println(1111, resp)
 	return
 }
 

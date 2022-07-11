@@ -5,6 +5,7 @@ import (
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
+	ztfConsts "github.com/easysoft/zentaoatf/pkg/consts"
 	"github.com/easysoft/zentaoatf/pkg/domain"
 	"github.com/kataras/iris/v12"
 )
@@ -180,5 +181,5 @@ func (c *WorkspaceCtrl) UploadScripts(ctx iris.Context) {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
-	ctx.StatusCode(200)
+	ctx.JSON(c.SuccessResp(iris.Map{"workPath": commConsts.WorkDir, "sep": ztfConsts.FilePthSep}))
 }
