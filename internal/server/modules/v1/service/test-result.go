@@ -168,7 +168,7 @@ func (s *TestResultService) ZipLog(fileName string) (zipPath string, err error) 
 	}
 	zipPath = filepath.Join(commConsts.WorkDir, commConsts.DownloadServerPath, commConsts.ResultZip)
 	path, _ := filepath.Split(fileName)
-	fmt.Println(zipPath, path)
+	fileUtils.RmDir(zipPath)
 	fileUtils.ZipDir(zipPath, path)
 	return
 }
