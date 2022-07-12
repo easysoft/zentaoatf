@@ -235,6 +235,9 @@ export default {
     'open-in-explore': '在资源管理器中显示',
     'open-in-terminal': '从此位置打开命令行',
 
+    'pls_select_task': '请选择任务',
+    'or_input_task_name': '或输入新任务标题',
+
     'pls_select_workspace': '请选择导出到的工作目录。',
     'pls_add_zentao_site': '初次使用，请点击右上按钮新建禅道站点。',
     'pls_create_workspace': '请点击右上角链接新建工作目录',

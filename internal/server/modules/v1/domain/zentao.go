@@ -10,6 +10,7 @@ type ZentaoRespData struct {
 }
 
 type ZentaoResultSubmitReq struct {
+	Title       string `json:"title"`
 	Seq         string `json:"seq"`
 	WorkspaceId int    `json:"workspaceId"`
 	ProductId   int    `json:"productId"`
