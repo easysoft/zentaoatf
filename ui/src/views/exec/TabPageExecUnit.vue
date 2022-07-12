@@ -1,6 +1,6 @@
 <template>
   <div class="tab-page-exec-unit">
-    <Form labelCol="6" wrapperCol="26">
+    <Form>
       <FormItem labelWidth="100px" name="cmd" :label="t('test_cmd')" :info="validateInfos.cmd">
         <input type="text" v-model="modelRef.cmd" @keydown="keydown"/>
       </FormItem>
