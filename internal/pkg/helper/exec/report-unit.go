@@ -43,6 +43,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 	}
 
 	report = commDomain.ZtfReport{
+		Name:        req.Name,
 		TestEnv:     commonUtils.GetOs(),
 		TestType:    commConsts.TestUnit,
 		TestTool:    req.TestTool,

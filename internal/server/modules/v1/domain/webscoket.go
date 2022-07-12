@@ -26,6 +26,8 @@ type WsReq struct {
 }
 
 type TestSet struct {
+	Name string `json:"name"`
+
 	WorkspaceId   int                 `json:"workspaceId"`
 	WorkspaceType commConsts.TestTool `json:"workspaceType"`
 	WorkspacePath string              `json:"workspacePath"`

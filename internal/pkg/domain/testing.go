@@ -146,6 +146,8 @@ type ZentaoBug struct {
 }
 
 type ZtfReport struct {
+	Name string `json:"name"`
+
 	TestEnv     commConsts.OsType    `json:"testEnv,omitempty"`
 	TestType    commConsts.TestType  `json:"testType"`
 	TestTool    commConsts.TestTool  `json:"testTool"`

@@ -12,7 +12,7 @@ import (
 	"strconv"
 )
 
-func CommitZTFTestResult(files []string, productId, taskId int, noNeedConfirm bool) {
+func CommitZTFTestResult(files []string, productId int, taskIdOrName string, noNeedConfirm bool) {
 	var resultDir string
 	if len(files) > 0 {
 		resultDir = files[0]
@@ -26,6 +26,12 @@ func CommitZTFTestResult(files []string, productId, taskId int, noNeedConfirm bo
 		productId, _ = strconv.Atoi(productIdStr)
 	}
 
+	taskName := ""
+	taskId, err := strconv.Atoi(taskIdOrName)
+	if err != nil {
+		taskName = taskIdOrName
+	}
+
 	if taskId == 0 && !noNeedConfirm {
 		taskIdStr := stdinUtils.GetInput("\\d*", "",
 			i118Utils.Sprintf("pls_enter")+" "+i118Utils.Sprintf("task_id")+
@@ -36,6 +42,7 @@ func CommitZTFTestResult(files []string, productId, taskId int, noNeedConfirm bo
 	result := serverDomain.ZentaoResultSubmitReq{
 		ProductId: productId,
 		TaskId:    taskId,
+		Name:      taskName,
 		Seq:       resultDir,
 	}
 
