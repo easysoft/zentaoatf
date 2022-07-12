@@ -237,6 +237,7 @@ export default {
 
     'pls_select_task': '请选择任务',
     'or_input_task_name': '或输入新任务标题',
+    'task_name': '禅道任务标题',
 
     'pls_select_workspace': '请选择导出到的工作目录。',
     'pls_add_zentao_site': '初次使用，请点击右上按钮新建禅道站点。',

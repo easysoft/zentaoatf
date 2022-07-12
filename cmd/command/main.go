@@ -22,10 +22,11 @@ var (
 	independentFile bool
 	keywords        string
 
-	productId string
-	moduleId  string
-	taskId    string
-	suiteId   string
+	productId    string
+	moduleId     string
+	taskIdOrName string
+	suiteId      string
+	taskName     string
 
 	noNeedConfirm bool
 
@@ -52,8 +53,8 @@ func main() {
 	flagSet.StringVar(&suiteId, "s", "", "")
 	flagSet.StringVar(&suiteId, "suite", "", "")
 
-	flagSet.StringVar(&taskId, "t", "", "")
-	flagSet.StringVar(&taskId, "task", "", "")
+	flagSet.StringVar(&taskIdOrName, "t", "", "")
+	flagSet.StringVar(&taskIdOrName, "task", "", "")
 
 	flagSet.StringVar(&language, "l", "", "")
 	flagSet.StringVar(&language, "language", "", "")
@@ -96,7 +97,7 @@ func main() {
 
 	case "checkout", "co":
 		if err := flagSet.Parse(os.Args[2:]); err == nil {
-			action.Checkout(productId, moduleId, suiteId, taskId, independentFile, language)
+			action.Checkout(productId, moduleId, suiteId, taskIdOrName, independentFile, language)
 		}
 
 	case "ci":
@@ -108,8 +109,8 @@ func main() {
 	case "cr":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
 		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
-			action.CommitZTFTestResult(files, stringUtils.ParseInt(productId), stringUtils.ParseInt(taskId),
-				noNeedConfirm)
+			action.CommitZTFTestResult(files, stringUtils.ParseInt(productId),
+				taskIdOrName, noNeedConfirm)
 		}
 
 	case "cb":
@@ -166,7 +167,7 @@ func run(args []string) {
 
 		if commConsts.AutoCommitResult && productId != "" {
 			action.CommitZTFTestResult([]string{commConsts.ExecLogDir},
-				stringUtils.ParseInt(productId), stringUtils.ParseInt(productId), true)
+				stringUtils.ParseInt(productId), taskIdOrName, true)
 		}
 
 		if commConsts.AutoCommitBug && productId != "" {
@@ -198,7 +199,7 @@ func runFuncTest(args []string) {
 		msgStr := i118Utils.Sprintf("run_with_specific_interpreter", commConsts.Interpreter)
 		logUtils.ExecConsolef(color.FgCyan, msgStr)
 	}
-	action.RunZTFTest(files, moduleId, suiteId, taskId)
+	action.RunZTFTest(files, moduleId, suiteId, taskIdOrName)
 }
 
 func runUnitTest(args []string) {

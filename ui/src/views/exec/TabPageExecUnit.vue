@@ -9,6 +9,10 @@
         <input v-model="modelRef.submitResult" type="checkbox">
       </FormItem>
 
+      <FormItem labelWidth="100px" v-if="modelRef.submitResult" name="name" :label="t('task_name')">
+        <input v-model="modelRef.name">
+      </FormItem>
+
       <FormItem labelWidth="100px">
         <Button :disabled="isRunning === 'true' || !modelRef.cmd" @click="start" class="rounded primary">
           {{ t('exec') }}

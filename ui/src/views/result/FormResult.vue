@@ -18,8 +18,8 @@
         </div>
       </FormItem>
 
-      <FormItem v-if="!modelRef.taskId" name="title" :label="t('or_input_task_name')" labelWidth="120px">
-        <input type="text" v-model="modelRef.title" />
+      <FormItem v-if="!modelRef.taskId" name="name" :label="t('or_input_task_name')" labelWidth="120px">
+        <input type="text" v-model="modelRef.name" />
       </FormItem>
     </Form>
   </ZModal>
