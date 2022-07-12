@@ -82,6 +82,9 @@
         <Button @click="() => handleRemoveProxy(record)" class="tab-setting-btn" size="sm"
           >{{ t("delete") }}
         </Button>
+        <Button @click="() => handleInterpreterManger(record)" class="tab-setting-btn" size="sm"
+          >{{ t("interpreter") }}
+        </Button>
       </template>
     </Table>
     <p v-else class="empty-tip">
@@ -96,6 +99,14 @@
       @cancel="modalProxyClose"
       ref="formProxy"
     />
+
+    <InterpreterModal
+      v-if="showInterpreterModal"
+      :proxyInfo="currentProxy.value" 
+      @cancel="interpreterModalClose"
+      :showOkBtn="false"
+      :showCancelBtn="false"
+       />
 
     <p class="divider setting-space-top"></p>
     <div class="t-card-toolbar">
@@ -156,7 +167,6 @@ import {
   defineComponent,
   onMounted,
   ref,
-  Ref,
   watch,
   reactive,
 } from "vue";
@@ -172,6 +182,7 @@ import {listInterpreter, saveInterpreter, removeInterpreter} from "@/views/inter
 import {listProxy, saveProxy, removeProxy} from "@/views/proxy/service";
 import {listServer, saveServer, removeServer} from "@/views/server/service";
 import FormInterpreter from "@/views/interpreter/FormInterpreter.vue";
+import InterpreterModal from "@/views/interpreter/interpreterModal.vue";
 import { getLangSettings } from "@/views/interpreter/service";
 import FormProxy from "@/views/proxy/FormProxy.vue";
 import FormServer from "@/views/server/FormServer.vue";
@@ -312,6 +323,7 @@ setColumns();
 const showCreateInterpreterModal = ref(false);
 const showCreateProxyModal = ref(false);
 const showCreateServerModal = ref(false);
+const showInterpreterModal = ref(false);
 
 let languageMap = ref<any>({});
 const getInterpretersA = async () => {
@@ -496,6 +508,15 @@ const handleRemoveServer = (item) => {
 const modalServerClose = () => {
   showCreateServerModal.value = false;
 };
+
+const currentProxy = ref({} as any);
+const handleInterpreterManger = (proxy) => {
+    currentProxy.value = proxy;
+    showInterpreterModal.value = true;
+}
+const interpreterModalClose = () => {
+    showInterpreterModal.value = false;
+}
 </script>
 
 <style>

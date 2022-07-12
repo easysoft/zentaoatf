@@ -146,21 +146,21 @@ func (s *WorkspaceService) UploadScriptsToProxy(testSets []serverDomain.TestSet)
 	pathMap = make(map[string]string)
 	unitResultPath := filepath.Join(commConsts.WorkDir, commConsts.ExecZip)
 	uploadDir := fileUtils.AddSepIfNeeded(filepath.Join(commConsts.WorkDir, commConsts.ExecZipPath))
-	realScriptDir := fileUtils.AddSepIfNeeded(filepath.Join(commConsts.WorkDir, commConsts.ExecProxyPath, commConsts.ExecZipPath))
 	os.RemoveAll(uploadDir)
 	os.Remove(unitResultPath)
 	var workspaceInfo model.Workspace
+	var workspacePathArray = []string{}
 	for _, testSet := range testSets {
 		po, _ := s.Get(uint(testSet.WorkspaceId))
 		if workspaceInfo.ID == 0 && po.ID > 0 {
 			workspaceInfo = po
 		}
+		workspacePathArray = append(workspacePathArray, po.Path)
 		for _, casePath := range testSet.Cases {
 			_, err = fileUtils.CopyFileAll(casePath, strings.Replace(casePath, po.Path, uploadDir, 1))
 			if err != nil {
 				return
 			}
-			pathMap[strings.Replace(casePath, po.Path, realScriptDir, 1)] = casePath
 		}
 	}
 	var uploadUrl = ""
@@ -176,10 +176,22 @@ func (s *WorkspaceService) UploadScriptsToProxy(testSets []serverDomain.TestSet)
 	fileUtils.ZipDir(unitResultPath, uploadDir)
 	resp := fileUtils.UploadWithResp(uploadUrl+"api/v1/workspaces/uploadScripts", []string{unitResultPath}, nil)
 	dataMap := resp["data"].(map[string]interface{})
-	proxyWorkDir := dataMap["workDir"]
-	proxySep := dataMap["sep"]
+	proxyWorkDir := dataMap["workDir"].(string)
+	proxySep := dataMap["sep"].(string)
+	realScriptDir := proxyWorkDir + commConsts.ExecProxyPath + proxySep + commConsts.ExecZipPath
 
-	fmt.Println(1111, proxyWorkDir, proxySep)
+	for _, testSet := range testSets {
+		for _, casePath := range testSet.Cases {
+			for _, workspacePath := range workspacePathArray {
+				oldCasePath := casePath
+				if commConsts.PthSep != proxySep {
+					workspacePath = strings.Replace(workspacePath, commConsts.PthSep, proxySep, -1)
+					casePath = strings.Replace(casePath, commConsts.PthSep, proxySep, -1)
+				}
+				pathMap[strings.Replace(casePath, workspacePath, realScriptDir, 1)] = oldCasePath
+			}
+		}
+	}
 	return
 }
 

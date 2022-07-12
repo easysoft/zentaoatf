@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"path/filepath"
 	"sort"
+	"strings"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/easysoft/zentaoatf/pkg/domain"
@@ -61,7 +62,13 @@ func (s *TestResultService) Paginate(siteId, productId uint, req serverDomain.Re
 			summary.WorkspaceName = workspace.Name
 
 			if report.Total == 1 {
-				_, summary.TestScriptName = filepath.Split(report.FuncResult[0].Path)
+				scriptName := ""
+				if commConsts.PthSep == "\\" {
+					scriptName = strings.Replace(report.FuncResult[0].Path, "/", "\\", -1)
+				} else {
+					scriptName = strings.Replace(report.FuncResult[0].Path, "\\", "/", -1)
+				}
+				_, summary.TestScriptName = filepath.Split(scriptName)
 			}
 
 			reports = append(reports, summary)

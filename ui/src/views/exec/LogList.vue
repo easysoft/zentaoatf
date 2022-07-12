@@ -145,6 +145,7 @@ const onWebsocketMsgEvent = (data: any) => {
 }
 
 const downloadLog = (item) => {
+  let oldItem = {...item}
   const msg = item.msg;
   if(currentWorkspace.value.proxy_id == 0 || (msg.indexOf('Report') !== 0 && msg.indexOf('报告') !== 0)){
     return;
@@ -154,14 +155,17 @@ const downloadLog = (item) => {
     logPath = msg.replace('Report', '')
     logPath = logPath.replace('.', '')
     item.msg = "Report proxy address" + item.msg.substr(6)
-  }
-  if(msg.indexOf('报告') === 0){
+  }else if(msg.indexOf('报告') === 0){
     logPath = msg.replace('报告', '')
     logPath = logPath.replace('。', '')
     item.msg = "报告代理地址" + item.msg.substr(2)
   }
-  mvLog({file: logPath, workspaceId: currentWorkspace.value.id})
-  console.log(logPath)
+  mvLog({file: logPath, workspaceId: currentWorkspace.value.id}).then(resp => {
+    if(resp.code === 0){
+      oldItem.msg = oldItem.msg.replace(logPath, resp.data)
+      wsMsg.out.push(oldItem)
+    }
+  })
 }
 
 onMounted(() => {

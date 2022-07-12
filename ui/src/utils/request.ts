@@ -82,6 +82,9 @@ request.interceptors.request.use(
         }else{
             serverURL = String(serverURL) + 'api/v1'
         }
+        if(config.params.proxyPath != undefined && config.params.proxyPath != 'local') {
+            serverURL = String(config.params.proxyPath) + 'api/v1'
+        }
         config.baseURL = serverURL;
         console.log('=== request ===', config.url, config)
         return config;

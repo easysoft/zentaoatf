@@ -98,12 +98,14 @@ import Button from "@/components/Button.vue";
 export interface FormSiteProps {
   show?: boolean;
   info?: any;
+  proxyPath?: string;
 }
 const { t } = useI18n();
 const isElectron = ref(getElectron());
 
 const props = withDefaults(defineProps<FormSiteProps>(), {
   show: false,
+  proxyPath: 'local',
   info: ref({
     id: 0,
     lang: "",
@@ -122,7 +124,7 @@ const languageMap = ref<any>({})
 const interpreterInfos = ref([]);
 
 const getInterpretersA = async () => {
-    const data = await getLangSettings();
+    const data = await getLangSettings(props.proxyPath);
     languages.value = data.languages;
     languageMap.value = data.languageMap;
 };
@@ -147,7 +149,7 @@ const selectLang = async (item) => {
     return;
   }
 
-  interpreterInfos.value = await getLangInterpreter(modelRef.value.lang);
+  interpreterInfos.value = await getLangInterpreter(modelRef.value.lang, props.proxyPath);
   if (interpreterInfos.value == null) interpreterInfos.value = [];
   console.log(interpreterInfos.value);
 };
