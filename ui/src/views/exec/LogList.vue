@@ -49,7 +49,7 @@
 <script setup lang="ts">
 import {useI18n} from "vue-i18n";
 import {WsMsg} from "@/types/data";
-import {genExecInfo, genWorkspaceToScriptsMap} from "@/views/script/service";
+import {genExecInfo, genWorkspaceToScriptsMap, genModuleToScriptsMap} from "@/views/script/service";
 import {scroll} from "@/utils/dom";
 import {computed, onBeforeUnmount, onMounted, reactive, ref, watch} from "vue";
 import {useStore} from "vuex";
@@ -164,8 +164,8 @@ const exec = (data: any) => {
   let msg = {}
   if (execType === 'ztf') {
     const scripts = data.scripts
-    const sets = genWorkspaceToScriptsMap(scripts)
-    msg = {act: 'execCase', testSets: sets}
+    const sets = scripts[0].moduleId > 0 ? genModuleToScriptsMap(scripts): genWorkspaceToScriptsMap(scripts)
+    msg = {act: scripts[0].moduleId > 0 ? 'execModule' : 'execCase', testSets: sets}
 
   } else if (execType === 'unit') {
     const set = {workspaceId: data.id, workspaceType: data.type, cmd: data.cmd, submitResult: data.submitResult, name: data.name}

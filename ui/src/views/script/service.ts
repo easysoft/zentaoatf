@@ -185,6 +185,27 @@ export function genWorkspaceToScriptsMap(scripts: any[]): any[] {
     return sets
 }
 
+export function genModuleToScriptsMap(scripts: any[]): any[] {
+    const moduleIds = [] as number[]
+    const mp = {}
+    scripts.forEach((item) => {
+        if (!mp[item.moduleId]) {
+            mp[item.moduleId] = []
+            moduleIds.push(item.moduleId)
+        }
+
+        mp[item.moduleId].push(item.path)
+    })
+
+    const sets = [] as any[]
+    moduleIds.forEach((moduleId) => {
+        const set = {moduleId: moduleId, cases: mp[moduleId]}
+        sets.push(set)
+    })
+
+    return sets
+}
+
 export function getSyncFromInfoFromMenu(key: string, node: any): any {
     let moduleId = 0
     let caseId = 0
