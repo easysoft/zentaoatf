@@ -178,7 +178,7 @@ export function genWorkspaceToScriptsMap(scripts: any[]): any[] {
 
     const sets = [] as any[]
     workspaceIds.forEach((workspaceId) => {
-        const set = {workspaceId: workspaceId, moduleId: 100, cases: mp[workspaceId]}
+        const set = {workspaceId: workspaceId, cases: mp[workspaceId]}
         sets.push(set)
     })
 
