@@ -5,6 +5,7 @@ import (
 	"github.com/easysoft/zentaoatf/internal/command/action"
 	commandConfig "github.com/easysoft/zentaoatf/internal/command/config"
 	"github.com/easysoft/zentaoatf/internal/pkg/consts"
+	unitHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/unit"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
@@ -225,15 +226,7 @@ func runUnitTest(args []string) {
 		start = start + 1
 	}
 
-	if args[start] == commConsts.UnitTestToolMvn {
-		commConsts.UnitTestTool = commConsts.JUnit
-		commConsts.UnitBuildTool = commConsts.Maven
-	} else if args[start] == commConsts.UnitTestToolRobot {
-		commConsts.UnitTestTool = commConsts.RobotFramework
-		commConsts.UnitBuildTool = commConsts.Maven
-	} else {
-		commConsts.UnitTestTool = commConsts.TestTool(args[start])
-	}
+	unitHelper.GetUnitTools(args, start)
 
 	cmd := strings.Join(args[start:], " ")
 

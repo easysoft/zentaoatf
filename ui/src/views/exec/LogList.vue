@@ -165,6 +165,7 @@ const exec = (data: any) => {
   if (execType === 'ztf') {
     const scripts = data.scripts
     const sets = genWorkspaceToScriptsMap(scripts)
+    console.log('===', sets)
     msg = {act: 'execCase', testSets: sets}
 
   } else if (execType === 'unit') {

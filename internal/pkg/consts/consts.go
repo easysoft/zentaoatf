@@ -32,21 +32,25 @@ var (
 	AutoTestTypeAppium   = "appium"
 	AutoTestTypes        = []string{AutoTestTypeSelenium, AutoTestTypeAppium}
 
-	UnitTestTypeJunit   = "junit"
-	UnitTestTypeTestNG  = "testng"
-	UnitTestTypeRobot   = "robot"
-	UnitTestTypeCypress = "cypress"
-	UnitTestPhpUnit     = "phpunit"
-	UnitTestTypePyTest  = "pytest"
-	UnitTestTypeJest    = "jest"
-	UnitTestTypeCppUnit = "cppunit"
-	UnitTestTypeGTest   = "gtest"
-	UnitTestTypeQTest   = "qtest"
-	UnitTestTypes       = []string{
-		UnitTestTypeJunit, UnitTestTypeTestNG, UnitTestTypeRobot, UnitTestTypeCypress,
+	UnitTestTypeJunit      = "junit"
+	UnitTestTypeTestNG     = "testng"
+	UnitTestTypeRobot      = "robot"
+	UnitTestTypeCypress    = "cypress"
+	UnitTestTypePlaywright = "playwright"
+	UnitTestTypePuppeteer  = "puppeteer"
+	UnitTestPhpUnit        = "phpunit"
+	UnitTestTypePyTest     = "pytest"
+	UnitTestTypeJest       = "jest"
+	UnitTestTypeCppUnit    = "cppunit"
+	UnitTestTypeGTest      = "gtest"
+	UnitTestTypeQTest      = "qtest"
+	UnitTestTypes          = []string{
+		UnitTestTypeJunit, UnitTestTypeTestNG,
+		UnitTestTypeRobot, UnitTestTypeCypress, UnitTestTypePlaywright, UnitTestTypePuppeteer,
 		UnitTestPhpUnit, UnitTestTypePyTest, UnitTestTypeJest, UnitTestTypeCppUnit, UnitTestTypeGTest, UnitTestTypeQTest,
 	}
 
 	UnitTestToolMvn   = "mvn"
+	UnitTestToolMocha = "mocha"
 	UnitTestToolRobot = "robot"
 )

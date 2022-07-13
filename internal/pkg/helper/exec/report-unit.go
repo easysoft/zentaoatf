@@ -191,7 +191,8 @@ func RetrieveUnitResult(workspacePath string, startTime int64, testTool commCons
 	} else if testTool == commConsts.TestNG && buildTool == commConsts.Maven {
 		resultDir = filepath.Join("target", "surefire-reports", "junitreports")
 		zipDir = filepath.Dir(resultDir)
-	} else if testTool == commConsts.RobotFramework || testTool == commConsts.Cypress {
+	} else if testTool == commConsts.RobotFramework || testTool == commConsts.Cypress ||
+		testTool == commConsts.Playwright || testTool == commConsts.Puppeteer {
 		resultDir = "results"
 		zipDir = resultDir
 	} else {
@@ -293,6 +294,22 @@ func GetTestSuite(xmlFile string, testTool commConsts.TestTool) (
 		if err == nil {
 			testSuite = ConvertCyResult(cyResult)
 		}
+	} else if testTool == commConsts.Playwright {
+		cyResult := commDomain.CypressTestsuites{}
+		err = xml.Unmarshal([]byte(content), &cyResult)
+		if err == nil {
+			testSuite = ConvertCyResult(cyResult)
+		}
+	} else if testTool == commConsts.Puppeteer {
+		cyResult := commDomain.CypressTestsuites{}
+
+		cySuite := commDomain.CypressTestsuite{}
+		err = xml.Unmarshal([]byte(content), &cySuite)
+
+		cyResult.Testsuites = append(cyResult.Testsuites, cySuite)
+		if err == nil {
+			testSuite = ConvertCyResult(cyResult)
+		}
 	}
 
 	return
@@ -303,9 +320,9 @@ func ParserUnitTestResult(testSuites []commDomain.UnitTestSuite) (
 
 	idx := 1
 	for _, suite := range testSuites {
-		if suite.Time != 0 { // for junit, there is a time on suite level
-			dur += suite.Time
-		}
+		//if suite.Time != 0 && suite.Time  { // for junit, there is a time on suite level
+		//	dur += suite.Time
+		//}
 
 		for _, cs := range suite.Cases {
 			cs.Id = idx
@@ -579,8 +596,12 @@ func ConvertCyResult(result commDomain.CypressTestsuites) commDomain.UnitTestSui
 
 		templ := "20060102 15:04:05.000"
 		duration := suite.Time
-		startTime, _ := time.ParseInLocation(templ, suite.Timestamp, time.Local)
+		startTime, err := time.ParseInLocation(templ, suite.Timestamp, time.Local)
 		//endTime := time.Unix(startTime.Unix() + int64(duration), 0)
+
+		if err != nil {
+			startTime, err = time.ParseInLocation(time.RFC1123, suite.Timestamp, time.Local)
+		}
 
 		testSuite.Duration = int64(duration)
 		testSuite.Time = float32(startTime.Unix())

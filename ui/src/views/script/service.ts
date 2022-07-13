@@ -178,7 +178,7 @@ export function genWorkspaceToScriptsMap(scripts: any[]): any[] {
 
     const sets = [] as any[]
     workspaceIds.forEach((workspaceId) => {
-        const set = {workspaceId: workspaceId, cases: mp[workspaceId]}
+        const set = {workspaceId: workspaceId, cases: mp[workspaceId], moduleId: 100}
         sets.push(set)
     })
 
@@ -243,7 +243,7 @@ export function scriptTreeAddAttr(treeData) {
         item.checkable = item.workspaceType == 'ztf' ? true : false;
         if (item.isLeaf) {
             item.toolbarItems = [
-                
+
             ];
         } else {
             item.toolbarItems = [
