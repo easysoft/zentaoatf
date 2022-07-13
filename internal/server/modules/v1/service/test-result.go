@@ -163,6 +163,7 @@ func (s *TestResultService) Submit(result serverDomain.ZentaoResultSubmitReq, si
 	}
 
 	config := configHelper.LoadBySite(site)
+	report.Name = result.Name
 	err = zentaoHelper.CommitResult(report, result.ProductId, result.TaskId, config, nil)
 
 	return

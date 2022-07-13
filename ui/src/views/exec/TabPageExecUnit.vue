@@ -1,12 +1,16 @@
 <template>
   <div class="tab-page-exec-unit">
-    <Form labelCol="6" wrapperCol="26">
+    <Form>
       <FormItem labelWidth="100px" name="cmd" :label="t('test_cmd')" :info="validateInfos.cmd">
         <input type="text" v-model="modelRef.cmd" @keydown="keydown"/>
       </FormItem>
 
       <FormItem labelWidth="100px" v-if="currProduct.id" name="submitResult" :label="t('submit_result_to_zentao')">
         <input v-model="modelRef.submitResult" type="checkbox">
+      </FormItem>
+
+      <FormItem labelWidth="100px" v-if="modelRef.submitResult" name="name" :label="t('task_name')">
+        <input v-model="modelRef.name">
       </FormItem>
 
       <FormItem labelWidth="100px">

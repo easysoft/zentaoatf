@@ -6,7 +6,7 @@
     :title="info.id == 0 ? t('create_interpreter') : t('edit_interpreter')"
     :contentStyle="{width: '500px'}"
   >
-    <Form class="form-interpreter" labelCol="6" wrapperCol="16">
+    <Form class="form-interpreter">
       <FormItem
         labelWidth="100px"
         name="lang"

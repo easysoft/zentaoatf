@@ -241,6 +241,10 @@ export default {
     'open-in-explore': 'Open In Explore',
     'open-in-terminal': 'Open In Terminal',
 
+    'pls_select_task': 'Please select task',
+    'or_input_task_name': 'Or input new task name',
+    'task_name': 'Zentao Task Name',
+
     'pls_select_workspace': 'Please select workspace.',
     'pls_add_zentao_site': 'Please add zentao site.',
     'pls_create_workspace': 'Please create workspace to continue.',

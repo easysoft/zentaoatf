@@ -4,10 +4,10 @@
     @onCancel="close"
     @onOk="submit"
     :title="t('submit_result_to_zentao')"
-    :contentStyle="{width: '300px'}"
+    :contentStyle="{width: '500px'}"
   >
-    <Form labelCol="6" wrapperCol="16">
-      <FormItem name="taskId" :label="t('task')">
+    <Form>
+      <FormItem name="taskId" :label="t('pls_select_task')" labelWidth="120px">
         <div class="select">
           <select name="taskId" v-model="modelRef.taskId">
             <option value="0"></option>
@@ -16,6 +16,10 @@
             </option>
           </select>
         </div>
+      </FormItem>
+
+      <FormItem v-if="!modelRef.taskId" name="name" :label="t('or_input_task_name')" labelWidth="120px">
+        <input type="text" v-model="modelRef.name" />
       </FormItem>
     </Form>
   </ZModal>

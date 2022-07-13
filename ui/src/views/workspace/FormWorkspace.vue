@@ -6,7 +6,7 @@
     :title="props.workspaceId ? t('edit_workspace') : t('create_workspace')"
     :contentStyle="{width: '600px'}"
   >
-    <Form labelCol="6" wrapperCol="16">
+    <Form>
       <FormItem labelWidth="100px" name="name" :label="t('name')" :info="validateInfos.name">
         <input type="text" v-model="modelRef.name" />
       </FormItem>

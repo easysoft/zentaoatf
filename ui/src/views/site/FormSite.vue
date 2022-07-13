@@ -6,7 +6,7 @@
     :title="props.id > 0 ? t('edit_site') : t('create_site')"
     :contentStyle="{width: '600px'}"
   >
-    <Form labelCol="6" wrapperCol="16">
+    <Form>
       <FormItem name="name" :label="t('name')" :info="validateInfos.name">
         <input type="text" v-model="modelRef.name" />
       </FormItem>

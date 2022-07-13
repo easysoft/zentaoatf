@@ -8,6 +8,7 @@ import (
 	"github.com/easysoft/zentaoatf/pkg/consts"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	"html"
 	"io/ioutil"
 	"path"
 	"path/filepath"
@@ -615,6 +616,9 @@ func GetCaseContent(stepObj commDomain.ZtfStep, seq string, independentFile bool
 	}
 
 	expectContent = expectStr
+
+	stepContent = html.UnescapeString(stepContent)
+	expectContent = html.UnescapeString(expectContent)
 
 	return
 }

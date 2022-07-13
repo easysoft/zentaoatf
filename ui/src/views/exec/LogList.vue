@@ -225,8 +225,7 @@ const exec = async (data: any) => {
     msg = {act: 'execCase', testSets: sets}
 
   } else if (execType === 'unit') {
-    if(!workspaceId) workspaceId = data.id;
-    const set = {workspaceId: data.id, workspaceType: data.type, cmd: data.cmd, submitResult: data.submitResult}
+    const set = {workspaceId: data.id, workspaceType: data.type, cmd: data.cmd, submitResult: data.submitResult, name: data.name}
 
     msg = {act: 'execUnit', testSets: [set]}
 
