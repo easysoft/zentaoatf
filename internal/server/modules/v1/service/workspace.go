@@ -158,6 +158,8 @@ func (s *WorkspaceService) UploadScriptsToProxy(testSets []serverDomain.TestSet)
 			workspaceInfo = po
 		}
 		workspacePathArray = append(workspacePathArray, po.Path)
+		workspaceIsZtfMap[po.Path] = po.Type == "ztf"
+
 		if po.Type == "ztf" {
 			for _, casePath := range testSet.Cases {
 				_, err = fileUtils.CopyFileAll(casePath, strings.Replace(casePath, po.Path, uploadDir, 1))
@@ -167,7 +169,6 @@ func (s *WorkspaceService) UploadScriptsToProxy(testSets []serverDomain.TestSet)
 			}
 		} else {
 			err = fileUtils.CopyDir(po.Path, uploadDir)
-			workspaceIsZtfMap[po.Path] = po.Type == "ztf"
 			if err != nil {
 				return
 			}
@@ -192,15 +193,14 @@ func (s *WorkspaceService) UploadScriptsToProxy(testSets []serverDomain.TestSet)
 
 	for _, testSet := range testSets {
 		if workspaceIsZtfMap[testSet.WorkspacePath] {
+			workspacePath := testSet.WorkspacePath
 			for _, casePath := range testSet.Cases {
-				for _, workspacePath := range workspacePathArray {
-					oldCasePath := casePath
-					if commConsts.PthSep != proxySep {
-						workspacePath = strings.Replace(workspacePath, commConsts.PthSep, proxySep, -1)
-						casePath = strings.Replace(casePath, commConsts.PthSep, proxySep, -1)
-					}
-					pathMap[strings.Replace(casePath, workspacePath, realScriptDir, 1)] = oldCasePath
+				oldCasePath := casePath
+				if commConsts.PthSep != proxySep {
+					workspacePath = strings.Replace(workspacePath, commConsts.PthSep, proxySep, -1)
+					casePath = strings.Replace(casePath, commConsts.PthSep, proxySep, -1)
 				}
+				pathMap[strings.Replace(casePath, workspacePath, realScriptDir, 1)] = oldCasePath
 			}
 		} else {
 			if commConsts.PthSep != proxySep {

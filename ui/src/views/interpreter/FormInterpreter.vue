@@ -8,6 +8,24 @@
   >
     <Form class="form-interpreter">
       <FormItem
+        v-if="props.proxyId > 0"
+        labelWidth="100px"
+        name="proxy_id"
+        :label="t('copy_from')"
+        :info="validateInfos.proxy_id"
+      >
+        <select
+          name="proxy_id"
+          v-model="modelRef.proxy_id"
+          @change="selectProxy"
+        >
+          <option :value="-1">{{t('local')}}</option>
+          <option v-for="item in remoteProxies" :key="item.id" :value="item.id">
+            {{ item.name }}
+          </option>
+        </select>
+      </FormItem>
+      <FormItem
         labelWidth="100px"
         name="lang"
         :label="t('script_lang')"
@@ -90,6 +108,7 @@ import { getElectron } from "@/utils/comm";
 
 import { StateType } from "@/views/site/store";
 import { getLangSettings, getLangInterpreter } from "@/views/interpreter/service";
+import { ProxyData } from "@/store/proxy";
 
 import Form from "@/components/Form.vue";
 import FormItem from "@/components/FormItem.vue";
@@ -99,6 +118,7 @@ export interface FormSiteProps {
   show?: boolean;
   info?: any;
   proxyPath?: string;
+  proxyId?: number;
 }
 const { t } = useI18n();
 const isElectron = ref(getElectron());
@@ -130,8 +150,14 @@ const getInterpretersA = async () => {
 };
 getInterpretersA();
 
-const store = useStore<{ Site: StateType }>();
+const store = useStore<{ Site: StateType, proxy: ProxyData }>();
 
+const remoteProxies = computed<any[]>(() => store.state.proxy.proxies.filter(item => {
+    if(item.id != props.proxyId){
+        return true;
+    }
+    return false
+}));
 const selectedInterpreter = ref("");
 const selectInterpreter = async () => {
   console.log("selectInterpreter", selectedInterpreter.value);
@@ -199,6 +225,21 @@ const selectFile = () => {
     console.log(arg)
     modelRef.value.path = arg
     })
+}
+
+const selectProxy = () => {
+    if(modelRef.value.proxy_id == -1){
+        rulesRef.value.lang = [];
+        rulesRef.value.path = [];
+    }else{
+        rulesRef.value.lang = [{ required: true, msg: t("pls_lang") }];
+        rulesRef.value.path = [{ required: true, msg: t("pls_input_interpreter_path") }];
+        remoteProxies.value.forEach(item => {
+            if(item.id == modelRef.value.proxy_id){
+                modelRef.value.proxyPath = item.path;
+            }
+        })
+    }
 }
 defineExpose({
   clearFormData,

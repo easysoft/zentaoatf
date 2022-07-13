@@ -67,6 +67,7 @@ export default {
     'edit_remote_proxy': 'Edit Remote Proxy',
     'proxy_link': 'Reomte Proxy Link',
     'proxy_lang': 'Proxy Language',
+    'copy_from': 'Copy From',
     'pls_input_proxy_link': 'Please Input Proxy Link',
 
     'git_auth_type': 'Git Auth Type',

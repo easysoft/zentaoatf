@@ -69,12 +69,13 @@ export default {
     'edit_interpreter': '编辑运行环境',
     'interpreter_path': '可执行文件路径',
     'script_lang': '脚本语言',
-
+    
     'remote_proxy': '远程代理',
     'create_remote_proxy': '新建远程代理',
     'edit_remote_proxy': '编辑远程代理',
     'proxy_link': '远程代理地址',
     'proxy_lang': '代理语言',
+    'copy_from': '复制自',
     'pls_input_proxy_link': '请输入远程代理地址',
 
     'git_auth_type': 'git 登录方式',

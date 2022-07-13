@@ -50,6 +50,7 @@
       @cancel="modalClose"
       ref="formInterpreter"
       :proxyPath="props.proxyInfo.path"
+      :proxyId="props.proxyInfo.id"
     />
   </div>
 </ZModal>
@@ -206,13 +207,32 @@ const modalClose = () => {
 };
 const formInterpreter = ref({} as any);
 const createInterpreter = (formData) => {
-    saveInterpreter(formData, props.proxyInfo.path).then((json) => {
-        if (json.code === 0) {
-          formInterpreter.value.clearFormData();
-          showCreateInterpreterModal.value = false;
-          list();
-        }
-  }, (json) => {console.log(json)})
+    if (formData.path == '') {
+        listInterpreter(formData.proxyPath).then((json) => {
+            if (json.code === 0) {
+                if (json.data.length == 0) {
+                    return;
+                }
+                json.data.forEach(item => {
+                    saveInterpreter({ name: item.name, path: item.path, lang: item.lang }, props.proxyInfo.path).then((json) => {
+                        if (json.code === 0) {
+                            formInterpreter.value.clearFormData();
+                            showCreateInterpreterModal.value = false;
+                            list();
+                        }
+                    }, (json) => { console.log(json) })
+                });
+            }
+        });
+    } else {
+        saveInterpreter(formData, props.proxyInfo.path).then((json) => {
+            if (json.code === 0) {
+                formInterpreter.value.clearFormData();
+                showCreateInterpreterModal.value = false;
+                list();
+            }
+        }, (json) => { console.log(json) })
+    }
 };
 </script>
 
