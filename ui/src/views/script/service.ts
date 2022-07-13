@@ -155,10 +155,10 @@ export async function syncToZentao(sets: any[]): Promise<any> {
 
 export const getNodeMap = (node, mp): void => {
     if (!node) return
-
-    mp[node.path] = node
-    if (node.children) {
-        node.children.forEach(c => {
+    const newNode = {...node}
+    mp[newNode.path] = newNode
+    if (newNode.children) {
+        newNode.children.forEach(c => {
             getNodeMap(c, mp)
         })
     }
@@ -178,28 +178,7 @@ export function genWorkspaceToScriptsMap(scripts: any[]): any[] {
 
     const sets = [] as any[]
     workspaceIds.forEach((workspaceId) => {
-        const set = {workspaceId: workspaceId, cases: mp[workspaceId]}
-        sets.push(set)
-    })
-
-    return sets
-}
-
-export function genModuleToScriptsMap(scripts: any[]): any[] {
-    const moduleIds = [] as number[]
-    const mp = {}
-    scripts.forEach((item) => {
-        if (!mp[item.moduleId]) {
-            mp[item.moduleId] = []
-            moduleIds.push(item.moduleId)
-        }
-
-        mp[item.moduleId].push(item.path)
-    })
-
-    const sets = [] as any[]
-    moduleIds.forEach((moduleId) => {
-        const set = {moduleId: moduleId, cases: mp[moduleId]}
+        const set = {workspaceId: workspaceId, moduleId: 100, cases: mp[workspaceId]}
         sets.push(set)
     })
 
