@@ -6,7 +6,7 @@
       :title="t('submit_result_to_zentao')"
       :contentStyle="{width: '500px'}"
   >
-    <Form labelCol="6" wrapperCol="16">
+    <Form>
       <FormItem name="title" :label="t('title')" :info="validateInfos.title">
         <input type="text" v-model="modelRef.title" />
       </FormItem>

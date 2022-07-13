@@ -6,7 +6,7 @@
     :title="t('sync-from-zentao')"
     :contentStyle="{ width: '600px' }"
   >
-    <Form labelCol="6" wrapperCol="16">
+    <Form>
       <FormItem labelWidth="140px" :label="t('module')">
         <select v-model="modelRef.moduleId">
           <option key="" value="">&nbsp;</option>
