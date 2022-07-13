@@ -109,7 +109,7 @@ watch(logContentExpand, () => {
   hideAllDetailOrNot(logContentExpand.value)
 }, {deep: true})
 
-const onWebsocketMsgEvent = (data: any) => {
+const onWebsocketMsgEvent = async (data: any) => {
   console.log('WebsocketMsgEvent in ExecLog', data.msg)
 
   let item = JSON.parse(data.msg) as WsMsg
@@ -139,31 +139,44 @@ const onWebsocketMsgEvent = (data: any) => {
     item.msg = item.msg.replace(key, realPathMap.value[key])
   })
 
-  downloadLog(item);
+  if(currentWorkspace.value.proxy_id > 0){
+    await downloadLog(item);
+    if( item.msg == ""){
+      return;
+    }
+  }
   wsMsg.out.push(item)
   scroll('log-list')
 }
 
-const downloadLog = (item) => {
-  let oldItem = {...item}
+const downloadLog = async (item) => {
+    console.log(11111111, currentWorkspace.value)
   const msg = item.msg;
-  if(currentWorkspace.value.proxy_id == 0 || (msg.indexOf('Report') !== 0 && msg.indexOf('报告') !== 0)){
+  if(msg.indexOf('Report') !== 0 && msg.indexOf('报告') !== 0){
     return;
   }
   let logPath = '';
   if(msg.indexOf('Report') === 0){
     logPath = msg.replace('Report', '')
     logPath = logPath.replace('.', '')
-    item.msg = "Report proxy address" + item.msg.substr(6)
   }else if(msg.indexOf('报告') === 0){
     logPath = msg.replace('报告', '')
     logPath = logPath.replace('。', '')
-    item.msg = "报告代理地址" + item.msg.substr(2)
   }
   mvLog({file: logPath, workspaceId: currentWorkspace.value.id}).then(resp => {
     if(resp.code === 0){
-      oldItem.msg = oldItem.msg.replace(logPath, resp.data)
-      wsMsg.out.push(oldItem)
+      item.msg = item.msg.replace(logPath, resp.data)
+      let emptMsg = {...item}
+      emptMsg.msg = '';
+      emptMsg.isRunning = false;
+      emptMsg.time = '';
+      wsMsg.out.push(emptMsg)
+      store.dispatch('Result/list', {
+        keywords: '',
+        enabled: 1,
+        pageSize: 10,
+        page: 1
+        });
     }
   })
 }
@@ -222,8 +235,9 @@ const exec = async (data: any) => {
   }
 
   console.log('exec testing', msg)
+  currentWorkspace.value = {};
   const workspaceInfo = workspaceId > 0 ? await getWorkspace(workspaceId) : {};
-  if (msg.testSets !== undefined && workspaceInfo?.data.proxy_id > 0) {
+  if (msg.testSets !== undefined && workspaceInfo.data != undefined && workspaceInfo.data.proxy_id > 0) {
     currentWorkspace.value = workspaceInfo.data;
     const resp = await uploadToProxy(msg.testSets);
     const testSetsMap = resp.data;
@@ -240,7 +254,8 @@ const exec = async (data: any) => {
         );
     })
   }
-  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), proxyMap.value[workspaceInfo?.data.proxy_id])
+  console.log(2222, msg)
+  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), proxyMap.value[workspaceInfo?.data?.proxy_id])
 }
 
 const logLevel = ref('result')
