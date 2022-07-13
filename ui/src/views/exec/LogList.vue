@@ -150,7 +150,6 @@ const onWebsocketMsgEvent = async (data: any) => {
 }
 
 const downloadLog = async (item) => {
-    console.log(11111111, currentWorkspace.value)
   const msg = item.msg;
   if(msg.indexOf('Report') !== 0 && msg.indexOf('报告') !== 0){
     return;
@@ -226,6 +225,7 @@ const exec = async (data: any) => {
 
   } else if (execType === 'unit') {
     const set = {workspaceId: data.id, workspaceType: data.type, cmd: data.cmd, submitResult: data.submitResult, name: data.name}
+    workspaceId = workspaceId == 0 ? data.id : workspaceId;
 
     msg = {act: 'execUnit', testSets: [set]}
 
@@ -235,7 +235,10 @@ const exec = async (data: any) => {
 
   console.log('exec testing', msg)
   currentWorkspace.value = {};
-  const workspaceInfo = workspaceId > 0 ? await getWorkspace(workspaceId) : {};
+  let workspaceInfo = {};
+  if(workspaceId>0){
+    workspaceInfo = await getWorkspace(workspaceId)
+  }
   if (msg.testSets !== undefined && workspaceInfo.data != undefined && workspaceInfo.data.proxy_id > 0) {
     currentWorkspace.value = workspaceInfo.data;
     const resp = await uploadToProxy(msg.testSets);
@@ -247,13 +250,14 @@ const exec = async (data: any) => {
         casesMap[testSetsMap[val]] = val;
     });
     msg.testSets.forEach((set, setIndex) => {
-        set.cases.forEach((casePath, caseIndex) => {
-            msg.testSets[setIndex].cases[caseIndex] = casesMap[casePath];
-        }
+        if(set.cases != undefined){
+            set.cases.forEach((casePath, caseIndex) => {
+                msg.testSets[setIndex].cases[caseIndex] = casesMap[casePath];
+            }
         );
+        }
     })
   }
-  console.log(2222, msg)
   WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), proxyMap.value[workspaceInfo?.data?.proxy_id])
 }
 

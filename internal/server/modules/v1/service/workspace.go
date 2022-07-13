@@ -150,14 +150,24 @@ func (s *WorkspaceService) UploadScriptsToProxy(testSets []serverDomain.TestSet)
 	os.Remove(unitResultPath)
 	var workspaceInfo model.Workspace
 	var workspacePathArray = []string{}
-	for _, testSet := range testSets {
+	var workspaceIsZtfMap = make(map[string]bool)
+	for index, testSet := range testSets {
 		po, _ := s.Get(uint(testSet.WorkspaceId))
+		testSets[index].WorkspacePath = po.Path
 		if workspaceInfo.ID == 0 && po.ID > 0 {
 			workspaceInfo = po
 		}
 		workspacePathArray = append(workspacePathArray, po.Path)
-		for _, casePath := range testSet.Cases {
-			_, err = fileUtils.CopyFileAll(casePath, strings.Replace(casePath, po.Path, uploadDir, 1))
+		if po.Type == "ztf" {
+			for _, casePath := range testSet.Cases {
+				_, err = fileUtils.CopyFileAll(casePath, strings.Replace(casePath, po.Path, uploadDir, 1))
+				if err != nil {
+					return
+				}
+			}
+		} else {
+			err = fileUtils.CopyDir(po.Path, uploadDir)
+			workspaceIsZtfMap[po.Path] = po.Type == "ztf"
 			if err != nil {
 				return
 			}
@@ -181,14 +191,20 @@ func (s *WorkspaceService) UploadScriptsToProxy(testSets []serverDomain.TestSet)
 	realScriptDir := proxyWorkDir + commConsts.ExecProxyPath + proxySep + commConsts.ExecZipPath
 
 	for _, testSet := range testSets {
-		for _, casePath := range testSet.Cases {
-			for _, workspacePath := range workspacePathArray {
-				oldCasePath := casePath
-				if commConsts.PthSep != proxySep {
-					workspacePath = strings.Replace(workspacePath, commConsts.PthSep, proxySep, -1)
-					casePath = strings.Replace(casePath, commConsts.PthSep, proxySep, -1)
+		if workspaceIsZtfMap[testSet.WorkspacePath] {
+			for _, casePath := range testSet.Cases {
+				for _, workspacePath := range workspacePathArray {
+					oldCasePath := casePath
+					if commConsts.PthSep != proxySep {
+						workspacePath = strings.Replace(workspacePath, commConsts.PthSep, proxySep, -1)
+						casePath = strings.Replace(casePath, commConsts.PthSep, proxySep, -1)
+					}
+					pathMap[strings.Replace(casePath, workspacePath, realScriptDir, 1)] = oldCasePath
 				}
-				pathMap[strings.Replace(casePath, workspacePath, realScriptDir, 1)] = oldCasePath
+			}
+		} else {
+			if commConsts.PthSep != proxySep {
+				pathMap[realScriptDir] = testSet.WorkspacePath
 			}
 		}
 	}

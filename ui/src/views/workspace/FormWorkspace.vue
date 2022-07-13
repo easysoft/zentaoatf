@@ -127,6 +127,7 @@ const loadInfo = async () => {
         cmd: info.value.cmd,
         proxy_id: info.value.proxy_id,
       };
+    selectType()
     }
   });
 }
@@ -141,7 +142,7 @@ const remoteProxies = computed<any[]>(() => store.state.proxy.proxies);
 const cmdSample = ref('')
 const cmdMap = ref(arrToMap(testTypes.value))
 const selectType = () => {
-    console.log('selectType')
+    console.log('selectType', modelRef.value.type)
 
     if (modelRef.value.type !== 'ztf') {
         cmdSample.value = cmdMap.value[modelRef.value.type].cmd
