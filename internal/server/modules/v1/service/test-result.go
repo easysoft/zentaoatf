@@ -54,7 +54,7 @@ func (s *TestResultService) Paginate(siteId, productId uint, req serverDomain.Re
 			summary.WorkspaceId = int(workspace.ID)
 			summary.WorkspaceName = workspace.Name
 
-			if report.Total == 1 {
+			if report.Total == 1 && len(report.FuncResult) > 0 {
 				_, summary.TestScriptName = filepath.Split(report.FuncResult[0].Path)
 			}
 
