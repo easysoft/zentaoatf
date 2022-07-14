@@ -15,6 +15,7 @@
         <Button  v-if="isElectron" @click="selectDir" class="state secondary flex-none rounded">{{t('select')}}</Button>
         <input type="text" v-if="!isElectron" v-model="modelRef.path" />
       </FormItem>
+
       <FormItem name="type" :label="t('type')" :info="validateInfos.type">
         <div class="select">
           <select name="type" @change="selectType" v-model="modelRef.type">
@@ -28,6 +29,7 @@
           </select>
         </div>
       </FormItem>
+
       <FormItem
         v-if="modelRef.type === 'ztf'"
         name="lang"
@@ -98,7 +100,7 @@ const langs = computed<any[]>(() => store.state.Zentao.langs);
 const cmdSample = ref('')
 const cmdMap = ref(arrToMap(testTypes.value))
 const selectType = () => {
-    console.log('selectType')
+    console.log('selectType', modelRef.value.type, cmdMap.value)
 
     if (modelRef.value.type !== 'ztf') {
         cmdSample.value = cmdMap.value[modelRef.value.type].cmd
