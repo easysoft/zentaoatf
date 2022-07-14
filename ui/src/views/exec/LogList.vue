@@ -221,6 +221,7 @@ const exec = async (data: any) => {
             workspaceId = scripts[0].workspaceId
         }
     }
+    console.log('===', sets)
     msg = {act: 'execCase', testSets: sets}
 
   } else if (execType === 'unit') {

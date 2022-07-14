@@ -491,6 +491,8 @@ type CypressTestcase struct {
 	Time      float64          `xml:"time,attr"`
 	Classname string           `xml:"classname,attr"`
 	Failures  []CypressFailure `xml:"failure"`
+
+	OutPut string `xml:"system-out"`
 }
 
 type CypressFailure struct {

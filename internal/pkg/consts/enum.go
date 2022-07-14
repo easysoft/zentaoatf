@@ -154,6 +154,8 @@ const (
 	Appium         TestTool = "appium"
 	RobotFramework TestTool = "robotframework"
 	Cypress        TestTool = "cypress"
+	Playwright     TestTool = "playwright"
+	Puppeteer      TestTool = "puppeteer"
 )
 
 func (e TestTool) String() string {
@@ -167,6 +169,7 @@ type BuildTool string
 
 const (
 	Maven BuildTool = "maven"
+	Mocha BuildTool = "mocha"
 )
 
 func (e BuildTool) String() string {
