@@ -26,6 +26,8 @@ export const TestTools = [
 
     'RobotFramework',
     'Cypress',
+    'Playwright',
+    'Puppeteer',
 ]
 export const BuildTools = {
     junit: ['Maven'],
@@ -38,6 +40,8 @@ export const AutoTestTools = [
     'Appium',
     'RobotFramework',
     'Cypress',
+    'Playwright',
+    'Puppeteer',
 ]
 
 export const MonacoOptions = {
