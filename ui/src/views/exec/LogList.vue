@@ -165,13 +165,18 @@ const exec = (data: any) => {
   if (execType === 'ztf') {
     const scripts = data.scripts
     const sets = genWorkspaceToScriptsMap(scripts)
-    console.log('===', sets)
     msg = {act: 'execCase', testSets: sets}
 
   } else if (execType === 'unit') {
-    const set = {workspaceId: data.id, workspaceType: data.type, cmd: data.cmd, submitResult: data.submitResult, name: data.name}
+    const set = {
+      workspaceId: data.id,
+      workspaceType: data.type,
+      cmd: data.cmd,
+      submitResult: data.submitResult,
+      name: data.name,
+    }
 
-    msg = {act: 'execUnit', testSets: [set]}
+    msg = {act: 'execUnit', testSets: [set], productId: currProduct.value.id}
 
   } else if (execType === 'stop') {
     msg = {act: 'execStop'}
