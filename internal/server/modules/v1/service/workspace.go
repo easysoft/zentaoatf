@@ -162,6 +162,9 @@ func (s *WorkspaceService) UploadScriptsToProxy(testSets []serverDomain.TestSet)
 
 		if po.Type == "ztf" {
 			for _, casePath := range testSet.Cases {
+				if fileUtils.IsDir(casePath) {
+					continue
+				}
 				_, err = fileUtils.CopyFileAll(casePath, strings.Replace(casePath, po.Path, uploadDir, 1))
 				if err != nil {
 					return

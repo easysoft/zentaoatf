@@ -19,6 +19,7 @@
           v-model="modelRef.proxy_id"
           @change="selectProxy"
         >
+          <option :value="0"></option>
           <option :value="-1">{{t('local')}}</option>
           <option v-for="item in remoteProxies" :key="item.id" :value="item.id">
             {{ item.name }}
