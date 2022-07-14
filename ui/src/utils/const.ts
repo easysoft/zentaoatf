@@ -104,7 +104,7 @@ export const unitTestTypesDef = [
     {
         label: 'GTest',
         value: 'gtest',
-        cmd: 'ztf  gtest -p product_id ./build/bin/unit_tests --gtest_output=xml:testresults.xml',
+        cmd: 'ztf gtest -p product_id ./build/bin/unit_tests --gtest_output=xml:testresults.xml',
     },
     {
         label: 'QTest',
@@ -114,22 +114,22 @@ export const unitTestTypesDef = [
     {
         label: 'CppUnit',
         value: 'cppunit',
-        cmd: ' ztf cppunit -p product_id ./MathTest',
+        cmd: 'ztf cppunit -p product_id ./MathTest',
     },
     {
         label: 'Cypress',
         value: 'cypress',
-        cmd: ' ztf cypress -p product_id --verbose yarn cypress:run --spec "cypress/integration/test/baidu.spec.js" --reporter junit --reporter-options "mochaFile=results/test_output.xml,toConsole=true"',
+        cmd: 'ztf cypress -p product_id --verbose yarn cypress:run --spec "cypress/integration/test/baidu.spec.js" --reporter junit --reporter-options "mochaFile=results/test_output.xml,toConsole=true"',
     },
     {
         label: 'Playwright',
         value: 'playwright',
-        cmd: ' ztf playwright -p product_id PLAYWRIGHT_JUNIT_OUTPUT_NAME=testresults.xml npx playwright test  --project=chromium --headed --reporter=junit',
+        cmd: 'ztf playwright -p product_id PLAYWRIGHT_JUNIT_OUTPUT_NAME=results/testresults.xml npx playwright test  --project=chromium --headed --reporter=junit',
     },
     {
         label: 'Puppeteer',
         value: 'puppeteer',
-        cmd: ' ztf puppeteer -p product_id mocha tests/example.js --reporter xunit --reporter-options output=results/testresults.xml -t 30000',
+        cmd: 'ztf puppeteer -p product_id mocha tests/example.js --reporter xunit --reporter-options output=results/testresults.xml -t 30000',
     },
 ]
 
