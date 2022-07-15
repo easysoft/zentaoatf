@@ -7,7 +7,7 @@ import (
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 )
 
-func RunUnitTest(cmdStr string) {
+func RunUnitTest(cmdStr string, taskIdOrName string) {
 	testSet := serverDomain.TestSet{
 		ProductId:     stringUtils.ParseInt(commConsts.ProductId),
 		WorkspacePath: commConsts.WorkDir,
@@ -18,6 +18,10 @@ func RunUnitTest(cmdStr string) {
 	}
 	if testSet.ProductId != 0 {
 		testSet.SubmitResult = true
+	}
+
+	if taskIdOrName != "" {
+		testSet.Name = taskIdOrName
 	}
 
 	req := serverDomain.WsReq{

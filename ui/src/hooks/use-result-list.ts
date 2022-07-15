@@ -28,7 +28,14 @@ interface TestResultInfo {
 
 export default function useResultList(): {results: ComputedRef<TestResultInfo[]>, fetchResults: () => void} {
     const store = useStore<{ Zentao: ZentaoData, Result: StateType }>();
-    const results = computed<any[]>(() => store.state.Result.queryResult.result?.map((item) => ({...item, displayName: item.total != 1 ? item.workspaceName + '(' + item.total + ')' : item.testScriptName})));
+    const results = computed<any[]>(() =>
+        store.state.Result.queryResult.result?.map((item) => {
+            const displayName = item.testType === "unit" || item.total != 1 ? item.workspaceName + '(' + item.total + ')' : item.testScriptName
+                return {
+                    ...item,
+                    displayName: displayName
+                }
+            }));
     const currentProduct = useCurrentProduct();
 
     const pagination = computed<PaginationConfig>(() => store.state.Result.queryResult.pagination);
