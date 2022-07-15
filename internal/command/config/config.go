@@ -28,10 +28,10 @@ func InitConfig() {
 	commConsts.WorkDir = fileUtils.GetWorkDir()
 	commConsts.ZtfDir = fileUtils.GetZTFDir()
 
-	if commConsts.Verbose {
-		log.Println("WorkDir=" + commConsts.WorkDir)
-		log.Println("ZtfDir=" + commConsts.ZtfDir)
-	}
+	//if commConsts.Verbose {
+	log.Println("WorkDir=" + commConsts.WorkDir)
+	log.Println("ZtfDir=" + commConsts.ZtfDir)
+	//}
 
 	commConsts.ConfigPath = filepath.Join(commConsts.WorkDir, commConsts.ConfigDir, commConsts.ConfigFile)
 	if commConsts.IsRelease {
