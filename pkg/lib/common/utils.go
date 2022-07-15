@@ -93,7 +93,8 @@ func IsRelease() bool {
 	arg1 := strings.ToLower(os.Args[0])
 	name := filepath.Base(arg1)
 
-	ret := strings.Index(name, "___") != 0 && strings.Index(arg1, "go-build") < 0
+	ret := strings.Index(arg1, "go-build") < 0 &&
+		strings.Index(name, "___") != 0 && strings.Index(name, "go-build") != 0
 
 	return ret
 }
