@@ -119,22 +119,22 @@ compile_command_mac:
 
 copy_files_win64:
 	@echo 'start copy files win64'
-	cp -r {demo,runtime} "${CLIENT_OUT_DIR}win64"
+	cp -r demo "${CLIENT_OUT_DIR}win64"
 	cp ${COMMAND_BIN_DIR}win64/* "${CLIENT_OUT_DIR}win64"
 
 copy_files_win32:
 	@echo 'start copy files win32'
-	cp -r {demo,runtime} "${CLIENT_OUT_DIR}win32"
+	cp -r demo "${CLIENT_OUT_DIR}win32"
 	cp ${COMMAND_BIN_DIR}win32/* "${CLIENT_OUT_DIR}win32"
 
 copy_files_linux:
 	@echo 'start copy files linux'
-	cp -r {demo,runtime} "${CLIENT_OUT_DIR}linux"
+	cp -r demo "${CLIENT_OUT_DIR}linux"
 	cp ${COMMAND_BIN_DIR}linux/* "${CLIENT_OUT_DIR}linux"
 
 copy_files_mac:
 	@echo 'start copy files darwin'
-	cp -r {demo,runtime} "${CLIENT_OUT_DIR}darwin"
+	cp -r demo "${CLIENT_OUT_DIR}darwin"
 	cp ${COMMAND_BIN_DIR}darwin/* "${CLIENT_OUT_DIR}darwin"
 
 create_shortcut_win64:
