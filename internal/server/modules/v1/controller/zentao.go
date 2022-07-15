@@ -1,9 +1,9 @@
 package controller
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
@@ -45,9 +45,14 @@ func (c *ZentaoCtrl) GetProfile(ctx iris.Context) {
 func (c *ZentaoCtrl) ListSiteAndProduct(ctx iris.Context) {
 	currSiteId, _ := ctx.URLParamInt("currSiteId")
 	currProductId, _ := ctx.URLParamInt("currProductId")
+	lang := ctx.URLParam("lang")
 
-	sites, currSite, _ := c.SiteService.LoadSites(currSiteId)
+	sites, currSite, _ := c.SiteService.LoadSites(currSiteId, lang)
 	products, currProduct, err := zentaoHelper.LoadSiteProduct(currSite, currProductId)
+
+	for idx, _ := range sites {
+		sites[idx].Url = ""
+	}
 
 	zentaoErr := false
 	if err != nil {

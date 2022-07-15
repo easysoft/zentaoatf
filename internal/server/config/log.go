@@ -2,9 +2,9 @@ package serverConfig
 
 import (
 	"errors"
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
-	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"log"
 	"net/url"
 	"os"
@@ -57,7 +57,6 @@ func InitExecLog(workspacePath string) {
 	config.OutputPaths = []string{logPath}
 	var err error
 	logUtils.LoggerExecFile, err = config.Build()
-	logUtils.ExecConsole(1, "init LoggerExecFile "+logPath)
 
 	if err != nil {
 		log.Println("init exec file logger fail " + err.Error())
@@ -77,6 +76,20 @@ func InitExecLog(workspacePath string) {
 	logUtils.LoggerExecResult, err = config.Build()
 	if err != nil {
 		log.Println("init exec result logger fail " + err.Error())
+	}
+
+}
+
+// flush buffer and release the file.
+func SyncExecLog() {
+	if logUtils.LoggerExecFile != nil {
+		logUtils.LoggerExecFile.Sync()
+		logUtils.LoggerExecFile = nil
+	}
+
+	if logUtils.LoggerExecResult != nil {
+		logUtils.LoggerExecResult.Sync()
+		logUtils.LoggerExecResult = nil
 	}
 }
 
@@ -151,5 +164,5 @@ func newWinFileSink(u *url.URL) (zap.Sink, error) {
 	} else {
 		return nil, errors.New("path error")
 	}
-	return os.OpenFile(name, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+	return os.OpenFile(name, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
 }

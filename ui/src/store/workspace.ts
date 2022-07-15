@@ -1,9 +1,10 @@
 import { Mutation, Action } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
-import {queryWorkspace, deleteWorkspace} from "@/services/workspace";
+import {deleteWorkspace, getWorkspace} from "@/services/workspace";
 import {setCache} from "@/utils/localCache";
 import settings from '@/config/settings';
+import {save} from '@/views/workspace/service';
 
 export interface WorkspaceData {
   workspaces: any[]
@@ -20,6 +21,7 @@ export interface ModuleType extends StoreModuleType<WorkspaceData> {
   actions: {
     fetchWorkspace: Action<WorkspaceData, WorkspaceData>;
     removeWorkspace: Action<WorkspaceData, WorkspaceData>;
+    save: Action<WorkspaceData, WorkspaceData>;
   };
 }
 
@@ -32,7 +34,7 @@ const initState: WorkspaceData = {
 
 const StoreModel: ModuleType = {
   namespaced: true,
-  name: 'workspace',
+  name: 'Workspace',
   state: {
     ...initState
   },
@@ -51,7 +53,7 @@ const StoreModel: ModuleType = {
   actions: {
     async fetchWorkspace({ commit }, currWorkspacePath) {
       try {
-        const response: ResponseData = await queryWorkspace(currWorkspacePath);
+        const response: ResponseData = await getWorkspace(currWorkspacePath);
         const { data } = response;
         commit('saveWorkspaces', data || {});
 
@@ -64,14 +66,22 @@ const StoreModel: ModuleType = {
       try {
         await deleteWorkspace(selectedWorkspacePath);
 
-        const response: ResponseData = await queryWorkspace('');
-        const { data } = response;
-        commit('saveWorkspaces', data || {});
+//        const response: ResponseData = await getWorkspace('');
+//        const { data } = response;
+//        commit('saveWorkspaces', data || {});
 
         return true;
       } catch (error) {
         return false;
       }
+    },
+    async save({ commit }, payload) {
+        try {
+            await save(payload);
+            return true;
+        } catch (error) {
+            return false;
+        }
     },
   }
 }

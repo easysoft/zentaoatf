@@ -1,7 +1,7 @@
 package serverDomain
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/kataras/iris/v12"
 )
 

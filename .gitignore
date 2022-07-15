@@ -12,6 +12,7 @@
 # file
 latest_log
 rbac_model.conf
+cmd/server/server
 
 #dir
 tmp/
@@ -22,3 +23,14 @@ logs/
 /res/res.go
 /conf/
 /testng_*
+
+#IDE
+.vscode/
+
+#vim
+.vim/
+.*.swp
+/.scannerwork/
+/bin/
+/log/
+/product1/

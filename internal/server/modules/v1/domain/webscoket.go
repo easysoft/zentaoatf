@@ -1,6 +1,6 @@
 package serverDomain
 
-import commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+import commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 
 type WsReq struct {
 	Act commConsts.ExecCmd `json:"act"`
@@ -26,6 +26,8 @@ type WsReq struct {
 }
 
 type TestSet struct {
+	Name string `json:"name"`
+
 	WorkspaceId   int                 `json:"workspaceId"`
 	WorkspaceType commConsts.TestTool `json:"workspaceType"`
 	WorkspacePath string              `json:"workspacePath"`

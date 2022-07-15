@@ -46,6 +46,7 @@
     "express": "^4.17.3",
     "find-process": "^1.4.7",
     "kill-port-process": "^3.0.1",
+    "open-term": "^2.0.4",
     "ps-tree": "^1.2.0",
     "tree-kill": "^1.2.2"
   }

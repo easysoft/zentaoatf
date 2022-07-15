@@ -5,11 +5,11 @@ const { VUE_APP_PORT, NODE_ENV, VUE_APP_MOCK } = process.env;
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 
 module.exports = {
-    publicPath: '/',
+    publicPath: './',
     outputDir: 'dist',
     productionSourceMap: false,
     devServer: {
-        host: 'localhost',
+        host: '0.0.0.0',//set minpc accessible
         port: VUE_APP_PORT || 8000,
         disableHostCheck: true,
         // 配置反向代理
@@ -43,6 +43,7 @@ module.exports = {
             // 'vue': 'Vue',
             // 'vue-router': 'VueRouter',
         },
+        devtool: 'source-map'
     },
 
     chainWebpack(config) {

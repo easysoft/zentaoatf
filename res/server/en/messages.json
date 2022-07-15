@@ -368,7 +368,11 @@
     },
     {
       "id": "found_scripts",
-      "translation": "Found %d test cases in work dir %s."
+      "translation": "Found %d test cases, WorkDir %s，ZTFDir %s."
+    },
+    {
+      "id": "found_scripts_no_ztf_dir",
+      "translation": "Found %d test cases, WorkDir %s."
     },
     {
       "id": "ignore_scripts",
@@ -396,10 +400,18 @@
       "translation": "Report %s."
     },
     {
+      "id": "read_report_fail",
+      "translation": "Not find test report in path %s."
+    },
+    {
       "id": "no_interpreter_for_run",
       "translation": "No interpreter for %s, skip script %s s."
     },
 
+    {
+      "id": "steps_result_msg",
+      "translation": "Total %d steps, %d pass，%d failed."
+    },
     {
       "id": "no_checkpoints",
       "translation": "No checkpoints."

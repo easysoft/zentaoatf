@@ -1,13 +1,16 @@
-import {app, BrowserWindow, ipcMain, Menu, shell, dialog} from 'electron';
+import {app, BrowserWindow, ipcMain, Menu, shell, dialog, globalShortcut} from 'electron';
 
-import {DEBUG, electronMsg, electronMsgReplay} from './utils/consts';
-import {IS_MAC_OSX} from './utils/env';
+import {DEBUG, electronMsg, electronMsgReplay, minimumSizeHeight, minimumSizeWidth} from './utils/consts';
+import {IS_MAC_OSX, IS_LINUX, IS_WINDOWS_OS} from './utils/env';
 import {logInfo, logErr} from './utils/log';
 import Config, {updateConfig} from './utils/config';
 import Lang, {initLang} from './core/lang';
 import {startUIService} from "./core/ui";
 import {startZtfServer, killZtfServer} from "./core/ztf";
-// import {main} from "@electron/remote";
+
+const cp = require('child_process');
+const fs = require('fs');
+const pth = require('path');
 
 export default class ZtfApp {
     constructor() {
@@ -50,6 +53,8 @@ export default class ZtfApp {
             }
         })
 
+        mainWin.setSize(minimumSizeWidth, minimumSizeHeight)
+        mainWin.setMovable(true)
         mainWin.maximize()
         mainWin.show()
 
@@ -61,6 +66,8 @@ export default class ZtfApp {
         const { ipcMain } = require('electron')
         ipcMain.on(electronMsg, (event, arg) => {
             logInfo('msg from renderer: ' + arg)
+            const mainWin = this._windows.get('main');
+
             switch (arg) {
                 case 'selectDir':
                     this.showFolderSelection(event)
@@ -68,10 +75,20 @@ export default class ZtfApp {
                 case 'selectFile':
                     this.showFileSelection(event)
                     break;
+
                 case 'fullScreen':
-                    const mainWin = this._windows.get('main');
                     mainWin.setFullScreen(!mainWin.isFullScreen());
                     break;
+                case 'minimize':
+                    mainWin.minimize();
+                    break;
+                case 'maximize':
+                    mainWin.maximize();
+                    break;
+                case 'unmaximize':
+                    mainWin.unmaximize();
+                    break;
+
                 case 'help':
                     shell.openExternal('https://ztf.im');
                     break;
@@ -79,11 +96,16 @@ export default class ZtfApp {
                     app.quit()
                     break;
                 default:
+                   logInfo('--', arg.action, arg.path)
+                    if (arg.action == 'openInExplore')
+                        this.openInExplore(arg.path)
+                   else if (arg.action == 'openInTerminal')
+                        this.openInTerminal(arg.path)
             }
         })
 
         // if (DEBUG) {
-            mainWin.webContents.openDevTools({mode: 'bottom'});
+        //     mainWin.webContents.openDevTools({mode: 'bottom'});
         // }
     };
 
@@ -113,6 +135,11 @@ export default class ZtfApp {
         this.buildAppMenu();
         this.openOrCreateWindow()
         this.setAboutPanel();
+
+         globalShortcut.register('CommandOrControl+D', () => {
+             const mainWin = this._windows.get('main');
+             mainWin.toggleDevTools()
+         })
     }
 
     quit() {
@@ -165,7 +192,29 @@ export default class ZtfApp {
         })
     }
 
+    openInExplore(path) {
+        shell.showItemInFolder(path);
+    }
+    openInTerminal(path) {
+        logInfo('openInTerminal')
+
+        const stats = fs.statSync(path);
+        if (stats.isFile()) {
+            path = pth.resolve(path, '..')
+        }
+
+        if (IS_WINDOWS_OS) {
+            cp.exec('start cmd.exe /K cd /D ' + path);
+        } else if (IS_LINUX) {
+            // TODO: support other terminal types
+            cp.spawn ('gnome-terminal', [], { cwd: path });
+        } else if (IS_MAC_OSX) {
+            cp.exec('open -a Terminal ' + path);
+        }
+    }
+
     get windows() {
+
         return this._windows;
     }
 
@@ -186,104 +235,109 @@ export default class ZtfApp {
         logInfo('>> ztf app: build application menu.');
 
         if (IS_MAC_OSX) {
-            Menu.setApplicationMenu(Menu.buildFromTemplate([]));
+            const template = [
+                {
+                    label: Lang.string('app.title', Config.pkg.displayName),
+                    submenu: [
+                        {
+                            label: Lang.string('app.about'),
+                            selector: 'orderFrontStandardAboutPanel:'
+                        }, {
+                            label: Lang.string('app.exit'),
+                            accelerator: 'Command+Q',
+                            click: () => {
+                                app.quit();
+                            }
+                        }
+                    ]
+                },
+                {
+                    label: Lang.string('app.edit'),
+                    submenu: [{
+                        label: Lang.string('app.undo'),
+                        accelerator: 'Command+Z',
+                        selector: 'undo:'
+                    }, {
+                        label: Lang.string('app.redo'),
+                        accelerator: 'Shift+Command+Z',
+                        selector: 'redo:'
+                    }, {
+                        type: 'separator'
+                    }, {
+                        label: Lang.string('app.cut'),
+                        accelerator: 'Command+X',
+                        selector: 'cut:'
+                    }, {
+                        label: Lang.string('app.copy'),
+                        accelerator: 'Command+C',
+                        selector: 'copy:'
+                    }, {
+                        label: Lang.string('app.paste'),
+                        accelerator: 'Command+V',
+                        selector: 'paste:'
+                    }, {
+                        label: Lang.string('app.select_all'),
+                        accelerator: 'Command+A',
+                        selector: 'selectAll:'
+                    }]
+                },
+                {
+                    label: Lang.string('app.view'),
+                    submenu:  [
+                        {
+                            label: Lang.string('app.switch_to_full_screen'),
+                            accelerator: 'Ctrl+Command+F',
+                            click: () => {
+                                const mainWin = this._windows.get('main');
+                                mainWin.setFullScreen(!mainWin.isFullScreen());
+                            }
+                        }
+                    ]
+                },
+                {
+                    label: Lang.string('app.window'),
+                    submenu: [
+                        {
+                            label: Lang.string('app.minimize'),
+                            accelerator: 'Command+M',
+                            selector: 'performMiniaturize:'
+                        },
+                        {
+                            label: Lang.string('app.close'),
+                            accelerator: 'Command+W',
+                            selector: 'performClose:'
+                        },
+                        {
+                            label: 'Reload',
+                            accelerator: 'Command+R',
+                            click: () => {
+                                this._windows.get('main').webContents.reload();
+                            }
+                        },
+                        {
+                            type: 'separator'
+                        },
+                        {
+                            label: Lang.string('app.bring_all_to_front'),
+                            selector: 'arrangeInFront:'
+                        }
+                    ]
+                },
+                {
+                    label: Lang.string('app.help'),
+                    submenu: [{
+                        label: Lang.string('app.website'),
+                        click: () => {
+                            shell.openExternal('https://ztf.im');
+                        }
+                    }]
+                }
+            ];
+
+            const menu = Menu.buildFromTemplate(template);
+            Menu.setApplicationMenu(menu);
         } else {
             Menu.setApplicationMenu(null);
         }
-
-        // const template = [
-        //     {
-        //         label: Lang.string('app.title', Config.pkg.displayName),
-        //         submenu: [
-        //             {
-        //                 label: Lang.string('app.about'),
-        //                 selector: 'orderFrontStandardAboutPanel:'
-        //             }, {
-        //                 label: Lang.string('app.exit'),
-        //                 accelerator: 'Command+Q',
-        //                 click: () => {
-        //                     app.quit();
-        //                 }
-        //             }
-        //         ]
-        //     },
-        //     {
-        //         label: Lang.string('app.edit'),
-        //         submenu: [{
-        //             label: Lang.string('app.undo'),
-        //             accelerator: 'Command+Z',
-        //             selector: 'undo:'
-        //         }, {
-        //             label: Lang.string('app.redo'),
-        //             accelerator: 'Shift+Command+Z',
-        //             selector: 'redo:'
-        //         }, {
-        //             type: 'separator'
-        //         }, {
-        //             label: Lang.string('app.cut'),
-        //             accelerator: 'Command+X',
-        //             selector: 'cut:'
-        //         }, {
-        //             label: Lang.string('app.copy'),
-        //             accelerator: 'Command+C',
-        //             selector: 'copy:'
-        //         }, {
-        //             label: Lang.string('app.paste'),
-        //             accelerator: 'Command+V',
-        //             selector: 'paste:'
-        //         }, {
-        //             label: Lang.string('app.select_all'),
-        //             accelerator: 'Command+A',
-        //             selector: 'selectAll:'
-        //         }]
-        //     },
-        //     {
-        //         label: Lang.string('app.view'),
-        //         submenu:  [
-        //             {
-        //                 label: Lang.string('app.switch_to_full_screen'),
-        //                 accelerator: 'Ctrl+Command+F',
-        //                 click: () => {
-        //                     const mainWin = this._windows.get('main');
-        //                     mainWin.setFullScreen(!mainWin.isFullScreen());
-        //                 }
-        //             }
-        //         ]
-        //     },
-        //     {
-        //         label: Lang.string('app.window'),
-        //         submenu: [
-        //             {
-        //                 label: Lang.string('app.minimize'),
-        //                 accelerator: 'Command+M',
-        //                 selector: 'performMiniaturize:'
-        //             },
-        //             {
-        //                 label: Lang.string('app.close'),
-        //                 accelerator: 'Command+W',
-        //                 selector: 'performClose:'
-        //             },
-        //             {
-        //                 type: 'separator'
-        //             },
-        //             {
-        //                 label: Lang.string('app.bring_all_to_front'),
-        //                 selector: 'arrangeInFront:'
-        //             }
-        //         ]
-        //     },
-        //     {
-        //         label: Lang.string('app.help'),
-        //         submenu: [{
-        //             label: Lang.string('app.website'),
-        //             click: () => {
-        //                 shell.openExternal('https://ztf.im');
-        //             }
-        //         }]
-        //     }
-        // ];
-        //
-        // const menu = Menu.buildFromTemplate(template);
-        // Menu.setApplicationMenu(menu);
     }
 }

@@ -2,11 +2,11 @@ package controller
 
 import (
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
-	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	scriptHelper "github.com/easysoft/zentaoatf/internal/comm/helper/script"
-	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
+	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
@@ -81,12 +81,12 @@ func (c *TestScriptCtrl) Create(ctx iris.Context) {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 	}
 
-	pth, err := c.TestScriptService.CreateNode(req)
-
-	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+	pth, bizErr := c.TestScriptService.CreateNode(req)
+	if bizErr != nil {
+		ctx.JSON(c.BizErrResp(bizErr, ""))
 		return
 	}
+
 	ctx.JSON(c.SuccessResp(pth))
 }
 
@@ -124,6 +124,23 @@ func (c *TestScriptCtrl) UpdateName(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(nil))
 }
 
+func (c *TestScriptCtrl) Paste(ctx iris.Context) {
+	req := serverDomain.PasteScriptReq{}
+
+	err := ctx.ReadJSON(&req)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+	}
+
+	err = c.TestScriptService.Paste(req)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	ctx.JSON(c.SuccessResp(nil))
+}
+
 func (c *TestScriptCtrl) Move(ctx iris.Context) {
 	req := serverDomain.MoveScriptReq{}
 
@@ -147,6 +164,7 @@ func (c *TestScriptCtrl) Delete(ctx iris.Context) {
 	err := ctx.ReadJSON(&req)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
 	}
 
 	bizErr := c.TestScriptService.Delete(req.Path)
@@ -228,18 +246,20 @@ func (c *TestScriptCtrl) SyncToZentao(ctx iris.Context) {
 	site, _ := c.SiteService.Get(uint(currSiteId))
 	config := configHelper.LoadBySite(site)
 
+	totalNum := 0
+	successNum := 0
 	for _, set := range sets {
-		//	workspaceId := set.WorkspaceId
-		//	workspace, _ := c.WorkspaceService.Get(uint(workspaceId))
+		totalNum += len(set.Cases)
 
-		err := zentaoHelper.SyncToZentao(set.Cases, config)
-		if err != nil {
-			ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
-			return
-		}
+		count, _ := zentaoHelper.SyncToZentao(set.Cases, config)
+
+		successNum += count
 	}
 
-	ctx.JSON(c.SuccessResp(nil))
+	ctx.JSON(c.SuccessResp(iris.Map{
+		"total":   totalNum,
+		"success": successNum,
+	}))
 }
 
 // Get 根据报告获取用例编号的列表

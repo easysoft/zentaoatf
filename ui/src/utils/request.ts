@@ -3,7 +3,6 @@
  * @author LiQingSong
  */
 import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { notification } from "ant-design-vue";
 import settings from '@/config/settings';
 import { getCache, setCache } from '@/utils/localCache';
 import i18n from "@/config/i18n";
@@ -88,20 +87,19 @@ request.interceptors.request.use(
  * 响应拦截器
  */
 request.interceptors.response.use(
-    async (response: AxiosResponse) => {
-        console.log('=== response ===', response.config.url, response)
+    async (axiosResponse: AxiosResponse) => {
+        console.log('=== response ===', axiosResponse.config.url, axiosResponse)
 
-        const data: ResponseData = response.data;
+        const data: ResponseData = axiosResponse.data;
         const { code, msg } = data;
 
         // 自定义状态码验证
         if (code !== 0) {
-            return Promise.reject(response);
+            return Promise.reject(axiosResponse);
         }
 
-        return response;
-    },
-    /* error => {} */ // 已在 export default catch
+        return axiosResponse;
+    }
 );
 
 /**
@@ -117,32 +115,11 @@ const errorHandler = (resp: any) => {
     }
 
     const result ={httpCode: resp.status, resultCode: resp.data.code, resultMsg: resp.data.msg} as ResultErr
-    console.log(`===`, result)
-
     bus.emit(settings.eventNotify, result)
 
     return Promise.reject({})
 }
 
-/** 
- * ajax 导出
- * 
- * Method: get
- *     Request Headers
- *         无 - Content-Type
- *     Query String Parameters
- *         name: name
- *         age: age
- * 
- * Method: post
- *     Request Headers
- *         Content-Type:application/json;charset=UTF-8
- *     Request Payload
- *         { name: name, age: age }
- *         Custom config parameters
- *             { cType: true }  Mandatory Settings Content-Type:application/json;charset=UTF-8
- * ......
- */
 export default function(config: AxiosRequestConfig): AxiosPromise<any> {
     return request(config).then((response: AxiosResponse) => response.data).catch(error => errorHandler(error));
 }

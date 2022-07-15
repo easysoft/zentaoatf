@@ -1,6 +1,8 @@
 import request from '@/utils/request';
 import {WsMsg} from "@/types/data";
 import {removeEmptyField} from "@/utils/object";
+import {momentTime} from "@/utils/datetime";
+import {testToolMap} from "@/utils/testing";
 
 const apiPath = 'scripts';
 const apiPathFilters = 'filters';
@@ -72,10 +74,18 @@ export async function updateNameReq(path: string, name: string): Promise<any> {
     });
 }
 
+export async function paste(data: any): Promise<any> {
+    return request({
+        url: `/${apiPath}/paste`,
+        method: 'PUT',
+        data
+    });
+}
+
 export async function move(data: any): Promise<any> {
     return request({
-        url: `/${apiPath}/moveScript`,
-        method: 'post',
+        url: `/${apiPath}/move`,
+        method: 'put',
         data,
     });
 }
@@ -98,9 +108,24 @@ export async function updateCode(data: any): Promise<any> {
     });
 }
 
-export function genExecInfo(jsn: WsMsg) : WsMsg {
-    jsn.msg = jsn.msg.replace(/^"+/,'').replace(/"+$/,'')
-    return jsn
+export function genExecInfo(item: WsMsg, count: number) : WsMsg {
+    if (item.info) item.info.key = item.info.key ? item.info.key + '-' + count : undefined
+
+    if (item.info && item.info.status)  {
+        item.msg = setFirstLineColor(item.msg, item.info.status)
+    }
+
+    item.msg = item.msg.replace(/^"+/,'').replace(/"+$/,'')
+        .replaceAll('\n','<br />')
+        .replaceAll('[','&nbsp;&nbsp;&nbsp;[')
+    if (item.msg) item.time = momentTime(new Date());
+    return item
+}
+
+function setFirstLineColor(msg, status) {
+    const arr = msg.split('<br/>')
+    arr[0] = `<span class="result-${status}">${arr[0]}</span>`
+    return arr.join('<br/>')
 }
 
 export function getCaseIdsFromReport(workspace, seq, scope) {
@@ -130,10 +155,10 @@ export async function syncToZentao(sets: any[]): Promise<any> {
 
 export const getNodeMap = (node, mp): void => {
     if (!node) return
-
-    mp[node.path] = node
-    if (node.children) {
-        node.children.forEach(c => {
+    const newNode = {...node}
+    mp[newNode.path] = newNode
+    if (newNode.children) {
+        newNode.children.forEach(c => {
             getNodeMap(c, mp)
         })
     }
@@ -207,4 +232,37 @@ export const getFileNodesUnderParent = (node): string[] => {
 export function getSyncToInfoFromMenu(key: string, node: any): any {
 
     return
+}
+
+export function scriptTreeAddAttr(treeData) {
+    if(treeData == undefined){
+        return treeData;
+    }
+    treeData = treeData.map((item, index) => {
+        item.id = item.path;
+        item.checkable = item.workspaceType == 'ztf' ? true : false;
+        if (item.isLeaf) {
+            item.toolbarItems = [
+
+            ];
+        } else {
+            item.toolbarItems = [
+                {hint: 'create_workspace', icon: 'folder-add', key: 'createDir'},
+                { hint: 'create_file', icon: 'file-add', key: 'createFile'},
+            ];
+            if(item.workspaceType != 'ztf'){
+                item.toolbarItems.push({hint: testToolMap[item.workspaceType], icon: 'play', hintI18n: 'test', key: 'runTest'})
+            }
+        }
+
+        if (item.type === "workspace") {
+            item.toolbarItems.push({hint:'delete', icon:'delete', key: 'deleteWorkspace'})
+        }
+        if (item.children != undefined && item.children.length > 0) {
+            item.children = scriptTreeAddAttr(item.children)
+        }
+        return item;
+    })
+
+    return treeData
 }

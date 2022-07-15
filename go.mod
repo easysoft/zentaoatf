@@ -1,4 +1,4 @@
-module  github.com/easysoft/zentaoatf
+module github.com/easysoft/zentaoatf
 
 go 1.16
 
@@ -33,6 +33,7 @@ require (
 	github.com/mholt/archiver/v3 v3.5.0
 	github.com/mitchellh/mapstructure v1.4.2 // indirect
 	github.com/nats-io/nats-server/v2 v2.7.2 // indirect
+	github.com/otiai10/copy v1.7.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/satori/go.uuid v1.2.0

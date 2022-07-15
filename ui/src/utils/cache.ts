@@ -2,6 +2,15 @@ import {getCache, setCache} from './localCache';
 import settings from '@/config/settings';
 import {proxyArrToVal} from "@/utils/comm";
 
+export const getExecBy = async () => {
+    let execBy = await getCache(settings.execBy);
+    if (!execBy) execBy = 'opened'
+    return execBy
+}
+export const setExecBy = async (execBy) => {
+    await setCache(settings.execBy, execBy);
+}
+
 export const getInitStatus = async () => {
     const initStatus = await getCache(settings.initStatus);
     return initStatus
@@ -58,18 +67,18 @@ export const setScriptDisplayBy = async (displayBy, siteId, productId) => {
 }
 
 // script filters
-export const getScriptFilters = async (displayBy, siteId, productId) => {
+export const getScriptFilters = async (displayBy, siteId, productId, byDefault = '') => {
     console.log('getScriptFilters')
 
     const cachedData = await getCache(settings.scriptFilters);
     const key = `${displayBy}-${siteId}-${productId}`
 
     if (!cachedData || !cachedData[key]) {
-        return {by: 'workspace', val: ''}
+        return {by: '', val: ''}
     }
 
     const mp = cachedData[key]
-    const by = mp.by ? mp.by : 'workspace'
+    const by = byDefault ? byDefault : (mp.by ? mp.by : '')
     const val = mp[by]
 
     return {by: by, val: val}

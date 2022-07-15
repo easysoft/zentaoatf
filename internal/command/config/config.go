@@ -3,19 +3,20 @@ package commandConfig
 import (
 	"bytes"
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	langHelper "github.com/easysoft/zentaoatf/internal/comm/helper/lang"
-	"github.com/easysoft/zentaoatf/internal/pkg/consts"
-	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
-	"github.com/easysoft/zentaoatf/internal/pkg/lib/display"
-	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
-	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
-	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
-	resUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/res"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
+	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
+	"github.com/easysoft/zentaoatf/pkg/consts"
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	"github.com/easysoft/zentaoatf/pkg/lib/display"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	resUtils "github.com/easysoft/zentaoatf/pkg/lib/res"
 	"github.com/fatih/color"
 	"github.com/spf13/viper"
+	"log"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -25,12 +26,23 @@ func InitConfig() {
 	commConsts.IsRelease = commonUtils.IsRelease()
 
 	commConsts.WorkDir = fileUtils.GetWorkDir()
-	commConsts.ZtfDir, _ = fileUtils.GetZTFDir()
-	commConsts.ConfigPath = commConsts.WorkDir + commConsts.ConfigFile
+	commConsts.ZtfDir = fileUtils.GetZTFDir()
 
-	if commConsts.Verbose {
-		fmt.Printf("\nlaunch %s%s in %s\n", "", commConsts.App, commConsts.WorkDir)
+	if !commConsts.IsRelease {
+		log.Println("WorkDir=" + commConsts.WorkDir)
+		log.Println("ZtfDir=" + commConsts.ZtfDir)
 	}
+
+	commConsts.ConfigPath = filepath.Join(commConsts.WorkDir, commConsts.ConfigDir, commConsts.ConfigFile)
+	if commConsts.IsRelease {
+		commConsts.ConfigPath = filepath.Join(commConsts.ZtfDir, commConsts.ConfigDir, commConsts.ConfigFile)
+	}
+
+	config := configHelper.LoadByConfigPath(commConsts.ConfigPath)
+	if config.Language != "" {
+		commConsts.Language = config.Language
+	}
+
 	v := viper.New()
 	serverConfig.VIPER = v
 	serverConfig.VIPER.SetConfigType("yaml")
@@ -81,7 +93,7 @@ func InitScreenSize() {
 
 func PrintCurrConfig() {
 	logUtils.ExecConsole(color.FgCyan, "\n"+i118Utils.Sprintf("current_config"))
-	conf := configHelper.LoadByWorkspacePath(commConsts.WorkDir)
+	conf := configHelper.LoadByWorkspacePath(commConsts.ZtfDir)
 	val := reflect.ValueOf(conf)
 	typeOfS := val.Type()
 	for i := 0; i < reflect.ValueOf(conf).NumField(); i++ {

@@ -1,5 +1,5 @@
 
-import { Mutation/* , Action */ } from 'vuex';
+import { Mutation/* , Action */ , Getter} from 'vuex';
 import { StoreModuleType } from "@/utils/store";
 import { TabNavItem } from '@/utils/routes';
 import settings from '@/config/settings';
@@ -12,14 +12,28 @@ export interface StateType {
   topNavEnable: boolean;
   // 头部固定开启
   headFixed: boolean;
+
+  logPaneOriginSize: number;
+  logPaneMaximized: boolean;
+  logContentExpand: boolean;
+
+  tabIdToWorkspaceIdMap: any;
 }
 
 export interface ModuleType extends StoreModuleType<StateType> {
   state: StateType;
+  getters: {
+    logPaneSize: Getter<StateType, StateType>;
+    editorPaneSize: Getter<StateType, StateType>;
+  };
   mutations: {
     changeLayoutCollapsed: Mutation<StateType>;
     setTopNavEnable: Mutation<StateType>;
     setHeadFixed: Mutation<StateType>;
+    setLogPaneResized:Mutation<StateType>;
+    setLogPaneSize:Mutation<StateType>;
+    setLogContentExpand:Mutation<StateType>;
+    setTabIdToWorkspaceId:Mutation<StateType>;
   };
   actions: {
   };
@@ -29,6 +43,10 @@ const initState: StateType = {
   collapsed: false,
   topNavEnable: settings.topNavEnable,
   headFixed: settings.headFixed,
+  logPaneOriginSize: settings.logPaneSize,
+  logPaneMaximized: false,
+  logContentExpand: false,
+  tabIdToWorkspaceIdMap: {},
 };
 
 const StoreModel: ModuleType = {
@@ -36,6 +54,22 @@ const StoreModel: ModuleType = {
   name: 'global',
   state: {
     ...initState
+  },
+  getters: {
+    logPaneSize(state) {
+      if (state.logPaneMaximized) {
+        return 100;
+      }
+
+      return state.logPaneOriginSize;
+    },
+    editorPaneSize(state) {
+      if (state.logPaneMaximized) {
+        return 0;
+      }
+
+      return 100 - state.logPaneOriginSize;
+    }
   },
   mutations: {
     changeLayoutCollapsed(state, payload) {
@@ -46,6 +80,25 @@ const StoreModel: ModuleType = {
     },
     setHeadFixed(state, payload) {
       state.headFixed = payload;
+    },
+    setLogPaneResized(state) {
+      state.logPaneMaximized = !state.logPaneMaximized
+    },
+    setLogPaneSize(state, payload) {
+      if (100 == payload) {
+        state.logPaneMaximized = true;
+        return; 
+      }
+      
+      state.logPaneOriginSize = payload;
+      state.logPaneMaximized = false;
+    },
+    setLogContentExpand(state) {
+      state.logContentExpand = !state.logContentExpand;
+    },
+
+    setTabIdToWorkspaceId(state, payload) {
+      state.tabIdToWorkspaceIdMap[payload.tabId] = payload.workspaceId;
     }
   },
   actions: {}

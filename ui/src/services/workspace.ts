@@ -2,7 +2,7 @@ import request from '@/utils/request';
 
 const apiPath = 'workspaces';
 
-export async function queryWorkspace(currWorkspacePath: string): Promise<any> {
+export async function getWorkspace(currWorkspacePath: string): Promise<any> {
     const params = {currWorkspace: currWorkspacePath}
 
     return request({

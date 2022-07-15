@@ -1,21 +1,23 @@
 package action
 
 import (
-	"github.com/easysoft/zentaoatf/internal/comm/consts"
-	"github.com/easysoft/zentaoatf/internal/comm/helper/exec"
-	"github.com/easysoft/zentaoatf/internal/comm/helper/script"
-	"github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/easysoft/zentaoatf/internal/pkg/lib/file"
-	stringUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/string"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	"github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
+	"github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
+	"github.com/easysoft/zentaoatf/pkg/consts"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	"path"
 )
 
-func RunZTFTest(files []string, moduleIdStr, suiteIdStr, taskIdStr string) error {
+func RunZTFTest(files []string, moduleIdStr, suiteIdStr, taskIdOrName string) error {
 	req := serverDomain.WsReq{
 		ScriptDirParamFromCmdLine: files[0],
 	}
-	testSet := serverDomain.TestSet{}
+	testSet := serverDomain.TestSet{
+		WorkspacePath: commConsts.ZtfDir,
+	}
 
 	if moduleIdStr != "" { // run with module id
 		testSet.ProductId = stringUtils.ParseInt(commConsts.ProductId)
@@ -26,8 +28,8 @@ func RunZTFTest(files []string, moduleIdStr, suiteIdStr, taskIdStr string) error
 		testSet.SuiteId = stringUtils.ParseInt(suiteIdStr)
 		req.Act = commConsts.ExecSuite
 
-	} else if taskIdStr != "" { // run with task id,
-		testSet.TaskId = stringUtils.ParseInt(taskIdStr)
+	} else if taskIdOrName != "" && stringUtils.ParseInt(taskIdOrName) > 0 { // run with task id,
+		testSet.TaskId = stringUtils.ParseInt(taskIdOrName)
 		req.Act = commConsts.ExecTask
 
 	} else {

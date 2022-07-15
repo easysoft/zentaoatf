@@ -2,12 +2,12 @@ package action
 
 import (
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	"github.com/easysoft/zentaoatf/internal/pkg/consts"
-	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
-	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
-	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
-	resUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/res"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	"github.com/easysoft/zentaoatf/pkg/consts"
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	resUtils "github.com/easysoft/zentaoatf/pkg/lib/res"
 	"github.com/fatih/color"
 	"os"
 	"regexp"
@@ -32,10 +32,10 @@ func PrintUsage() {
 	logUtils.Info("\n" + color.CyanString(i118Utils.Sprintf("example")))
 
 	sampleData, _ := resUtils.ReadRes(sampleFile)
-	sample := ""
+	sample := string(sampleData)
 	if !commonUtils.IsWin() {
 		regx, _ := regexp.Compile(`\\`)
-		sample = regx.ReplaceAllString(string(sampleData), "/")
+		sample = regx.ReplaceAllString(sample, "/")
 
 		regx, _ = regexp.Compile(commConsts.App + `.exe`)
 		sample = regx.ReplaceAllString(sample, commConsts.App)

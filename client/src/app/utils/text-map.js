@@ -53,6 +53,6 @@ export default class TextMap {
      */
     string(name, defaultValue= '') {
         const value = this._data[name];
-        return value === undefined ? defaultValue : value;
+        return !value ? defaultValue : value;
     }
 }

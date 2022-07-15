@@ -3,6 +3,9 @@ export interface WsMsg {
   isRunning: string
   category:  string
   conn: string
+
+  time: string
+  info: any
 }
 
 export interface QueryParams {

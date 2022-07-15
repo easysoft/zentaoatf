@@ -1,10 +1,10 @@
 package middleware
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	"github.com/easysoft/zentaoatf/internal/pkg/domain"
-	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/easysoft/zentaoatf/internal/server/core/dao"
+	"github.com/easysoft/zentaoatf/pkg/domain"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	"net/http"
 
 	"github.com/kataras/iris/v12"

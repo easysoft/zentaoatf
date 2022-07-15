@@ -26,6 +26,7 @@ func (m *WorkspaceModule) Party() module.WebModule {
 		index.Post("/", m.WorkspaceCtrl.Create).Name = "新建"
 		index.Put("/{id:int}", m.WorkspaceCtrl.Update).Name = "更新"
 		index.Delete("/{id:int}", m.WorkspaceCtrl.Delete).Name = "删除"
+		index.Delete("/", m.WorkspaceCtrl.DeleteByPath).Name = "删除工作目录"
 	}
 	return module.NewModule("/workspaces", handler)
 }

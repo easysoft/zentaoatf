@@ -1,13 +1,15 @@
 package service
 
 import (
-	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
-	"github.com/easysoft/zentaoatf/internal/pkg/domain"
-	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
+	"errors"
+	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
+	"github.com/easysoft/zentaoatf/pkg/domain"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	"strings"
 )
 
 type SiteService struct {
@@ -40,7 +42,13 @@ func (s *SiteService) GetDomainObject(id uint) (site serverDomain.ZentaoSite, er
 	return
 }
 
-func (s *SiteService) Create(site model.Site) (id uint, err error) {
+func (s *SiteService) Create(site model.Site) (id uint, isDuplicate bool, err error) {
+	site.Url = zentaoHelper.FixSiteUlt(site.Url)
+	if site.Url == "" {
+		err = errors.New("url not right")
+		return
+	}
+
 	site.Url = fileUtils.AddUrlPathSepIfNeeded(site.Url)
 
 	config := configHelper.LoadBySite(site)
@@ -49,15 +57,18 @@ func (s *SiteService) Create(site model.Site) (id uint, err error) {
 		return
 	}
 
-	id, err = s.SiteRepo.Create(&site)
-	if err != nil {
-		return
-	}
+	id, isDuplicate, err = s.SiteRepo.Create(&site)
 
 	return
 }
 
-func (s *SiteService) Update(site model.Site) (err error) {
+func (s *SiteService) Update(site model.Site) (isDuplicate bool, err error) {
+	site.Url = zentaoHelper.FixSiteUlt(site.Url)
+	if site.Url == "" {
+		err = errors.New("url not right")
+		return
+	}
+
 	site.Url = fileUtils.AddUrlPathSepIfNeeded(site.Url)
 
 	config := configHelper.LoadBySite(site)
@@ -66,8 +77,8 @@ func (s *SiteService) Update(site model.Site) (err error) {
 		return
 	}
 
-	err = s.SiteRepo.Update(site)
-	if err != nil {
+	isDuplicate, err = s.SiteRepo.Update(site)
+	if isDuplicate || err != nil {
 		return
 	}
 
@@ -80,10 +91,15 @@ func (s *SiteService) Update(site model.Site) (err error) {
 }
 
 func (s *SiteService) Delete(id uint) error {
+	err := s.WorkspaceRepo.DeleteBySite(id)
+	if err != nil {
+		return err
+	}
+
 	return s.SiteRepo.Delete(id)
 }
 
-func (s *SiteService) LoadSites(currSiteId int) (sites []serverDomain.ZentaoSite, currSite serverDomain.ZentaoSite, err error) {
+func (s *SiteService) LoadSites(currSiteId int, lang string) (sites []serverDomain.ZentaoSite, currSite serverDomain.ZentaoSite, err error) {
 	req := serverDomain.ReqPaginate{PaginateReq: domain.PaginateReq{Page: 1, PageSize: 10000}}
 	pageData, err := s.Paginate(req)
 	if err != nil {
@@ -92,13 +108,13 @@ func (s *SiteService) LoadSites(currSiteId int) (sites []serverDomain.ZentaoSite
 
 	pos := pageData.Result.([]*model.Site)
 	if len(pos) == 0 {
-		s.CreateEmptySite()
+		s.CreateEmptySite(lang)
 		pageData, err = s.Paginate(req)
 		pos = pageData.Result.([]*model.Site)
 	}
 
 	sites = []serverDomain.ZentaoSite{}
-	var first serverDomain.ZentaoSite
+	currIndex := 0
 	for idx, item := range pos {
 		site := serverDomain.ZentaoSite{
 			Id:       int(item.ID),
@@ -109,29 +125,28 @@ func (s *SiteService) LoadSites(currSiteId int) (sites []serverDomain.ZentaoSite
 		}
 
 		if uint(currSiteId) == item.ID {
-			currSite = site
-		}
-
-		if idx == 0 {
-			first = site
+			currIndex = idx
 		}
 
 		sites = append(sites, site)
 	}
 
-	if currSite.Id == 0 { // not found, use the first one
-		currSite = first
-	}
+	currSite = sites[currIndex] // default is first one
 
 	return
 }
 
-func (s *SiteService) CreateEmptySite() (err error) {
+func (s *SiteService) CreateEmptySite(lang string) (err error) {
+	name := "Local"
+	if strings.Index(strings.ToLower(lang), "zh") > -1 {
+		name = "本地"
+	}
+
 	po := model.Site{
-		Name: "无站点",
+		Name: name,
 		Url:  "",
 	}
-	_, err = s.SiteRepo.Create(&po)
+	_, _, err = s.SiteRepo.Create(&po)
 
 	return
 }

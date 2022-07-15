@@ -3,16 +3,17 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
-	execHelper "github.com/easysoft/zentaoatf/internal/comm/helper/exec"
-	websocketHelper "github.com/easysoft/zentaoatf/internal/comm/helper/websocket"
-	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
-	"github.com/easysoft/zentaoatf/internal/pkg/lib/log"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
+	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
+	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	"github.com/easysoft/zentaoatf/internal/server/config"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/fatih/color"
+	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
 )
 
@@ -66,7 +67,7 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 	err = json.Unmarshal(wsMsg.Body, &req)
 	if err != nil {
 		msg := i118Utils.Sprintf("wrong_req_params", err.Error())
-		websocketHelper.SendExecMsg(msg, "", commConsts.Error, &wsMsg)
+		websocketHelper.SendExecMsg(msg, "", commConsts.Error, nil, &wsMsg)
 		logUtils.ExecConsole(color.FgRed, msg)
 		return
 	}
@@ -93,7 +94,7 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 		execHelper.SetRunning(false)
 
 		msg := i118Utils.Sprintf("end_task")
-		websocketHelper.SendExecMsg(msg, "false", commConsts.Run, &wsMsg)
+		websocketHelper.SendExecMsg(msg, "false", commConsts.Run, nil, &wsMsg)
 		logUtils.ExecConsole(color.FgCyan, msg)
 		return
 	}
@@ -101,7 +102,7 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 	if execHelper.GetRunning() && (act == commConsts.ExecCase || act == commConsts.ExecModule ||
 		act == commConsts.ExecSuite || act == commConsts.ExecTask || act == commConsts.ExecUnit) {
 		msg := i118Utils.Sprintf("pls_stop_previous")
-		websocketHelper.SendExecMsg(msg, "true", commConsts.Run, &wsMsg)
+		websocketHelper.SendExecMsg(msg, "true", commConsts.Run, nil, &wsMsg)
 		logUtils.ExecConsole(color.FgRed, msg)
 
 		return
@@ -115,6 +116,7 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 		if testSet.WorkspaceId != 0 {
 			po, _ := c.WorkspaceService.Get(uint(testSet.WorkspaceId))
 			testSet.WorkspacePath = po.Path
+			testSet.WorkspaceType = po.Type
 		}
 	}
 
@@ -127,7 +129,8 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 	execHelper.SetRunning(true)
 
 	msg := i118Utils.Sprintf("start_task")
-	websocketHelper.SendExecMsg(msg, "true", commConsts.Run, &wsMsg)
+	websocketHelper.SendExecMsg(msg, "true", commConsts.Run,
+		iris.Map{"status": "start-task"}, &wsMsg)
 	logUtils.ExecConsole(color.FgCyan, msg)
 
 	return

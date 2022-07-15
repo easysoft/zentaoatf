@@ -3,11 +3,11 @@ package service
 import (
 	"errors"
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	"github.com/easysoft/zentaoatf/internal/pkg/domain"
-	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
-	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
+	"github.com/easysoft/zentaoatf/pkg/domain"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
@@ -73,6 +73,17 @@ func (s *WorkspaceService) Delete(id uint) (err error) {
 	return
 }
 
+func (s *WorkspaceService) DeleteByPath(path string, productId uint) (err error) {
+	err = s.WorkspaceRepo.DeleteByPath(path, productId)
+	if err != nil {
+		return
+	}
+
+	err = s.WorkspaceRepo.SetCurrWorkspace("")
+
+	return
+}
+
 func (s *WorkspaceService) ListByProduct(siteId, productId uint) (pos []model.Workspace, err error) {
 	return s.WorkspaceRepo.ListByProduct(siteId, productId)
 }
@@ -81,6 +92,10 @@ func (s *WorkspaceService) UpdateAllConfig() {
 	workspaces, _ := s.WorkspaceRepo.ListWorkspace()
 
 	for _, item := range workspaces {
+		if item.Type != commConsts.ZTF {
+			continue
+		}
+
 		s.UpdateConfig(item, "interpreter")
 	}
 }
@@ -101,7 +116,7 @@ func (s *WorkspaceService) UpdateConfig(workspace model.Workspace, by string) (e
 		conf.Password = site.Password
 	}
 
-	if by == "all" || by == "interpreter" && commonUtils.IsWin() {
+	if by == "all" || by == "interpreter" {
 		conf.Javascript = mp["javascript"]
 		conf.Lua = mp["lua"]
 		conf.Perl = mp["perl"]

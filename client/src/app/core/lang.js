@@ -13,7 +13,7 @@ export const initLang = () => {
     logInfo(`langName=${langName}`)
 
     langName = langName.toLowerCase()
-    if (langName !== 'zh-cn' && langName.startsWith('zh-')) {
+    if (langName.startsWith('zh-')) {
         langName = 'zh-cn';
     } else {
         langName = 'en';

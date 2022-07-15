@@ -1,6 +1,6 @@
 package serverDomain
 
-import commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+import commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 
 type TestScript struct {
 	Id      int    `json:"id"`
@@ -26,6 +26,17 @@ type CreateScriptReq struct {
 	Name        string                    `json:"name"`
 	WorkspaceId int                       `json:"workspaceId"`
 	ProductId   int                       `json:"productId"`
+}
+
+type PasteScriptReq struct {
+	SrcKey          string                  `json:"srcKey"`
+	SrcType         commConsts.TreeNodeType `json:"srcType"`
+	SrcWorkspaceId  int                     `json:"srcWorkspaceId"`
+	DistKey         string                  `json:"distKey"`
+	DistType        commConsts.TreeNodeType `json:"distType"`
+	DistWorkspaceId int                     `json:"distWorkspaceId"`
+
+	Action string `json:"action"`
 }
 
 type MoveScriptReq struct {

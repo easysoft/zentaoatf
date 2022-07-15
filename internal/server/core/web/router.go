@@ -2,7 +2,6 @@ package web
 
 import (
 	"fmt"
-	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	"github.com/easysoft/zentaoatf/internal/server/core/module"
 	"github.com/easysoft/zentaoatf/internal/server/middleware"
@@ -45,10 +44,6 @@ func (webServer *WebServer) GetSources() []map[string]string {
 	routeLen := len(webServer.app.GetRoutes())
 	ch := make(chan map[string]string, routeLen)
 	for _, r := range webServer.app.GetRoutes() {
-		if strings.Index(r.Path, "test123") > -1 {
-			logUtils.Info("")
-		}
-
 		r := r
 		// 去除非接口路径
 		handerNames := context.HandlersNames(r.Handlers)

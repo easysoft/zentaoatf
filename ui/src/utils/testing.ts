@@ -43,10 +43,10 @@ export function getAutoTestTools(): any {
 }
 
 const execByMap = {
-    case: '按用例',
-    module: '按模块',
-    suite: '按套件',
-    task: '按任务',
+    case: 'by_case',
+    module: 'by_module',
+    suite: 'by_suite',
+    task: 'by_task',
 }
 export const testToolMap = {
     junit: 'JUnit',
@@ -60,13 +60,17 @@ export const testToolMap = {
 
     robotframework: 'RobotFramework',
     cypress: 'Cypress',
+
+    playwright: 'Playwright',
+    puppeteer: 'Puppeteer',
+
     autoit: 'AutoIt',
     selenium: 'Selenium',
     appium: 'Appium',
 }
 export function execByDef(record) {
-    if (record.execBy) return execByMap[record.execBy]
-    else return testToolMap[record.testTool]
+    if (record.execBy) return execByMap[record.execBy] ? execByMap[record.execBy]: '';
+    else return testToolMap[record.testTool] ? testToolMap[record.testTool]: '';
 }
 export function momentTimeDef(tm) {
     return moment.unix(tm).format("YYYY-MM-DD HH:mm:ss")
@@ -79,7 +83,7 @@ export function percentDef(numb, total) {
 const osMap = {
     windows: 'Windows',
     linux: 'Linux',
-    mac: 'Mac',
+    mac: 'mac',
 }
 export function testEnvDef(code) {
     return osMap[code]

@@ -1,34 +1,56 @@
-package consts
-
-import (
-	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	"os"
-)
+package commConsts
 
 const (
-	FilePthSep = string(os.PathSeparator)
+	App        = "ztf"
+	AppServer  = "server"
+	AppAgent   = "agent"
+	AppCommand = "cmd"
+
+	ConfigVersion = "3.0"
+	ConfigDir     = "conf"
+	ConfigFile    = "ztf.conf"
+	LogDirName    = "log"
+	LogBakDirName = "log-bak"
+	ExtNameSuite  = "cs"
+	LogText       = "log.txt"
+	ResultText    = "result.txt"
+	ResultJson    = "result.json"
+	ResultZip     = "result.zip"
+
+	ExpectResultPass = "pass"
+
+	PathInfo = "PATH_INFO"
+	Get      = "GET"
 )
 
 var (
-	ConfigFile = fmt.Sprintf("conf%s%s.conf", FilePthSep, commConsts.App)
+	UnitBuildToolMap = map[string]BuildTool{
+		"mvn": Maven,
+	}
 
-	ExtNameSuite  = "cs"
-	ExtNameJson   = "json"
-	ExtNameResult = "txt"
+	AutoTestTypeSelenium = "selenium"
+	AutoTestTypeAppium   = "appium"
+	AutoTestTypes        = []string{AutoTestTypeSelenium, AutoTestTypeAppium}
 
-	LogDir = fmt.Sprintf("log%s", FilePthSep)
+	UnitTestTypeJunit      = "junit"
+	UnitTestTypeTestNG     = "testng"
+	UnitTestTypeRobot      = "robot"
+	UnitTestTypeCypress    = "cypress"
+	UnitTestTypePlaywright = "playwright"
+	UnitTestTypePuppeteer  = "puppeteer"
+	UnitTestPhpUnit        = "phpunit"
+	UnitTestTypePyTest     = "pytest"
+	UnitTestTypeJest       = "jest"
+	UnitTestTypeCppUnit    = "cppunit"
+	UnitTestTypeGTest      = "gtest"
+	UnitTestTypeQTest      = "qtest"
+	UnitTestTypes          = []string{
+		UnitTestTypeJunit, UnitTestTypeTestNG,
+		UnitTestTypeRobot, UnitTestTypeCypress, UnitTestTypePlaywright, UnitTestTypePuppeteer,
+		UnitTestPhpUnit, UnitTestTypePyTest, UnitTestTypeJest, UnitTestTypeCppUnit, UnitTestTypeGTest, UnitTestTypeQTest,
+	}
 
-	LeftWidth = 36
-	MinWidth  = 130
-	MinHeight = 36
-
-	CmdViewHeight    = 10
-	ExpectResultPass = "pass"
-
-	RequestTypePathInfo = "PATH_INFO"
-
-	RunModeCommon  = "common"
-	RunModeServer  = "server"
-	RunModeRequest = "request"
+	UnitTestToolMvn   = "mvn"
+	UnitTestToolMocha = "mocha"
+	UnitTestToolRobot = "robot"
 )

@@ -1,16 +1,16 @@
 package service
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
-	codeHelper "github.com/easysoft/zentaoatf/internal/comm/helper/code"
-	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	scriptHelper "github.com/easysoft/zentaoatf/internal/comm/helper/script"
-	zentaoHelper "github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
-	"github.com/easysoft/zentaoatf/internal/pkg/domain"
-	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
+	codeHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/code"
+	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
+	"github.com/easysoft/zentaoatf/pkg/domain"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	"github.com/kataras/iris/v12"
 	"os"
 	"path/filepath"
@@ -127,7 +127,7 @@ func (s *TestScriptService) GetCaseIdsFromReport(workspaceId int, seq, scope str
 	return
 }
 
-func (s *TestScriptService) CreateNode(req serverDomain.CreateScriptReq) (pth string, err error) {
+func (s *TestScriptService) CreateNode(req serverDomain.CreateScriptReq) (pth string, err *domain.BizError) {
 	name := req.Name
 	extName := fileUtils.GetExtNameWithoutDot(name)
 	mode := req.Mode
@@ -148,6 +148,11 @@ func (s *TestScriptService) CreateNode(req serverDomain.CreateScriptReq) (pth st
 	}
 
 	pth = filepath.Join(dir, name)
+	if fileUtils.FileExist(pth) {
+		err = &domain.BizError{Code: commConsts.ErrFileOrDirExist.Code}
+		return
+	}
+
 	if typ == commConsts.CreateDir {
 		fileUtils.MkDirIfNeeded(pth)
 	} else {
@@ -156,7 +161,12 @@ func (s *TestScriptService) CreateNode(req serverDomain.CreateScriptReq) (pth st
 			return
 		}
 
-		lang := commConsts.ScriptExtToNameMap[fileUtils.GetExtNameWithoutDot(pth)]
+		lang := commConsts.ScriptExtToNameMap[extName]
+		if lang == "" {
+			fileUtils.WriteFile(pth, "")
+			return
+		}
+
 		scriptHelper.GenEmptyScript(name, lang, pth, productId)
 	}
 
@@ -178,7 +188,7 @@ func (s *TestScriptService) UpdateName(script serverDomain.TestScript) (err erro
 }
 
 func (s *TestScriptService) Delete(pth string) (bizErr *domain.BizError) {
-	err := os.Remove(pth)
+	err := os.RemoveAll(pth)
 
 	_, ok := err.(*os.PathError)
 	if ok {
@@ -204,6 +214,26 @@ func (s *TestScriptService) Move(req serverDomain.MoveScriptReq) (err error) {
 
 	pth := filepath.Join(distDir, srcName)
 	err = os.Rename(src, pth)
+
+	return
+}
+
+func (s *TestScriptService) Paste(req serverDomain.PasteScriptReq) (err error) {
+	distPath := filepath.Join(req.DistKey, filepath.Base(req.SrcKey))
+
+	if distPath == req.SrcKey {
+		return
+	}
+
+	if req.Action == "copy" {
+		if req.SrcType == commConsts.File {
+			fileUtils.CopyFile(req.SrcKey, distPath)
+		} else {
+			fileUtils.CopyDir(req.SrcKey, distPath)
+		}
+	} else if req.Action == "cut" {
+		os.Rename(req.SrcKey, distPath)
+	}
 
 	return
 }

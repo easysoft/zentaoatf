@@ -1,7 +1,7 @@
 package serverDomain
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 )
 
 type TestExecReq struct {
@@ -10,6 +10,7 @@ type TestExecReq struct {
 }
 
 type TestReportSummary struct {
+	Name      string               `json:"name"`
 	No        string               `json:"no"`
 	Seq       string               `json:"seq"`
 	TestEnv   commConsts.OsType    `json:"testEnv,omitempty"`
@@ -22,6 +23,8 @@ type TestReportSummary struct {
 	WorkspaceName string            `json:"workspaceName,omitempty"`
 	ExecBy        commConsts.ExecBy `json:"execBy,omitempty"`
 	ExecById      int               `json:"execById,omitempty"`
+
+	TestScriptName string `json:"testScriptName,omitempty"`
 
 	Pass      int   `json:"pass"`
 	Fail      int   `json:"fail"`

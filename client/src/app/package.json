@@ -1,6 +1,6 @@
 {
     "name": "ztf",
-    "displayName": "ZTF自动化测试框架",
+    "displayName": "ZTF",
     "version": "3.0.0",
     "main": "./main.js",
     "author": {

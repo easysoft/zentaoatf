@@ -216,7 +216,7 @@
     },
     {
       "id": "config_zentao_site",
-      "translation": "现在开始配置同禅道系统的同步参数？（y/n, 默认Yes）"
+      "translation": "现在开始配置禅道系统的同步参数？（y/n, 默认Yes）"
     },
     {
       "id": "enter_url",
@@ -356,7 +356,11 @@
     },
     {
       "id": "found_scripts",
-      "translation": "发现%d个用例在工作目录%s中。"
+      "translation": "发现%d个用例，工作目录为%s，ZTF目录为%s。"
+    },
+    {
+      "id": "found_scripts_no_ztf_dir",
+      "translation": "发现%d个用例，工作目录为%s。"
     },
     {
       "id": "ignore_scripts",
@@ -383,12 +387,20 @@
       "translation": "报告%s。"
     },
     {
+      "id": "read_report_fail",
+      "translation": "未找到测试报告在指定路径%s。"
+    },
+    {
       "id": "no_interpreter_for_run",
       "translation": "未配置%s语言的解释程序，跳过脚本%s。"
     },
     {
       "id": "time_from_to",
       "translation": "从%s到%s, 耗时%d秒。"
+    },
+    {
+      "id": "steps_result_msg",
+      "translation": "共有%d个步骤，%d个通过，%d个失败。"
     },
     {
       "id": "no_checkpoints",

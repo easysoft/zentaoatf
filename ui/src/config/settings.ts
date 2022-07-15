@@ -13,11 +13,15 @@ export interface SettingsType {
      * 顶部菜单开启
      */
     topNavEnable: boolean;
-
     /**
      * 头部固定开启
      */
     headFixed: boolean;
+
+    /*
+     * 日志面板大小 （目前就是高度）
+     */
+    logPaneSize: number;
 
     /**
      * 站点本地存储Token的Key值
@@ -25,6 +29,7 @@ export interface SettingsType {
     siteTokenKey: string;
 
     eventExec: string;
+    eventScriptSave: string;
     eventNotify: string;
     eventWebSocketConnStatus: string,
     eventWebSocketMsg: string,
@@ -33,6 +38,7 @@ export interface SettingsType {
     electronMsgReplay: string,
 
     initStatus: string;
+    execBy: string;
     currSiteId: string;
     currProductId: string;
     currProductIdBySite: string;
@@ -63,9 +69,11 @@ const settings: SettingsType = {
     siteTitle: 'ZTF',
     topNavEnable: true,
     headFixed: true,
+    logPaneSize: 30,
     siteTokenKey: 'admin_antd_vue_token',
 
     eventExec: 'eventExec',
+    eventScriptSave: 'eventScriptSave',
     eventNotify: 'eventNotify',
     eventWebSocketConnStatus: 'eventWebSocketStatus',
     eventWebSocketMsg: 'eventWebSocketMsg',
@@ -74,6 +82,7 @@ const settings: SettingsType = {
     electronMsgReplay: 'electronMsgReplay',
 
     initStatus: 'initStatus',
+    execBy: 'execBy',
     currSiteId: 'currSiteId',
     currProductId: 'currProductId',
     currProductIdBySite: 'currProductIdBySite',

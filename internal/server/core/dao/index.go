@@ -1,9 +1,9 @@
 package dao
 
 import (
-	"github.com/easysoft/zentaoatf/internal/comm/consts"
-	"github.com/easysoft/zentaoatf/internal/pkg/lib/log"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/fatih/color"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm/schema"

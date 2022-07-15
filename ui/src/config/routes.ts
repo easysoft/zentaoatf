@@ -9,8 +9,7 @@ NProgress.configure({ showSpinner: false, easing: 'ease', speed: 1000 }); // NPr
 import { createRouter, createWebHashHistory } from 'vue-router';
 import { RoutesDataItem } from "@/utils/routes";
 
-import IndexLayoutRoutes from '@/layouts/IndexLayout/routes';
-import IndexLayout from '@/layouts/IndexLayout/index.vue';
+import MainLayout from '@/layouts/MainLayout/Main.vue';
 import BlankLayout from "@/layouts/BlankLayout.vue";
 
 const routes: RoutesDataItem[] = [
@@ -20,11 +19,9 @@ const routes: RoutesDataItem[] = [
     component: BlankLayout,
     children: [
       {
-        title: 'empty',
+        title: 'main',
         path: '/',
-        redirect: '/script/index',
-        component: IndexLayout,
-        children: IndexLayoutRoutes
+        component: MainLayout
       },
       {
         title: 'empty',

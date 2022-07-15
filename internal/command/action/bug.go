@@ -2,15 +2,15 @@ package action
 
 import (
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	commDomain "github.com/easysoft/zentaoatf/internal/comm/domain"
-	analysisHelper "github.com/easysoft/zentaoatf/internal/comm/helper/analysis"
-	configHelper "github.com/easysoft/zentaoatf/internal/comm/helper/config"
-	"github.com/easysoft/zentaoatf/internal/comm/helper/zentao"
-	i118Utils "github.com/easysoft/zentaoatf/internal/pkg/lib/i118"
-	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
-	stdinUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/stdin"
-	stringUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/string"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
+	analysisHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
+	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
+	"github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	stdinUtils "github.com/easysoft/zentaoatf/pkg/lib/stdin"
+	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	"github.com/fatih/color"
 	"os"
 	"strconv"
@@ -22,7 +22,7 @@ var (
 	bugFields commDomain.ZentaoBugFields
 )
 
-func CommitBug(files []string, productId int) {
+func CommitBug(files []string, productId int, noNeedConfirm bool) {
 	var resultDir string
 	if len(files) > 0 {
 		resultDir = files[0]
@@ -36,8 +36,9 @@ func CommitBug(files []string, productId int) {
 		productId, _ = strconv.Atoi(productIdStr)
 	}
 
-	report, err := analysisHelper.ReadReportByWorkspaceSeq(commConsts.WorkDir, resultDir)
+	report, pth, err := analysisHelper.ReadReportByWorkspaceSeq(commConsts.WorkDir, resultDir)
 	if err != nil {
+		logUtils.ExecConsole(color.FgRed, i118Utils.Sprintf("read_report_fail", pth))
 		return
 	}
 
@@ -55,9 +56,18 @@ func CommitBug(files []string, productId int) {
 		return
 	}
 
+	if noNeedConfirm {
+		for _, caseId := range ids {
+			reportBug(resultDir, caseId, productId)
+		}
+
+		return
+	}
+
+	// wait to input
 	for {
 		logUtils.ExecConsole(color.FgCyan, "\n"+i118Utils.Sprintf("enter_case_id_for_report_bug"))
-		logUtils.ExecConsole(color.FgCyan, strings.Join(lines, "\n"))
+		logUtils.ExecConsole(-1, strings.Join(lines, "\n"))
 		var caseId string
 		fmt.Scanln(&caseId)
 		if caseId == "exit" {
@@ -89,7 +99,8 @@ func coloredStatus(status commConsts.ResultStatus) string {
 }
 
 func reportBug(resultDir string, caseId string, productId int) error {
-	config := configHelper.LoadByWorkspacePath(commConsts.WorkDir)
+	config := configHelper.LoadByWorkspacePath(commConsts.ZtfDir)
+
 	bugFields, _ = zentaoHelper.GetBugFiledOptions(config, bug.Product)
 
 	bug = zentaoHelper.PrepareBug(commConsts.WorkDir, resultDir, caseId, productId)

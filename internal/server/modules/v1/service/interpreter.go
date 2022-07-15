@@ -4,17 +4,18 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	langHelper "github.com/easysoft/zentaoatf/internal/comm/helper/lang"
-	commonUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/common"
-	fileUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/file"
-	shellUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/shell"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
 )
 
 type InterpreterService struct {
@@ -96,6 +97,50 @@ func (s *InterpreterService) GetLangSettings() (mp map[string]interface{}, err e
 }
 
 func (s *InterpreterService) GetLangInterpreter(language string) (list []map[string]interface{}, err error) {
+	if commonUtils.IsWin() {
+		return s.GetLangInterpreterWin(language)
+	} else {
+		return s.GetLangInterpreterUnix(language)
+	}
+}
+
+func (s *InterpreterService) GetLangInterpreterUnix(language string) (list []map[string]interface{}, err error) {
+	langSettings := commConsts.LangMap[language]
+	whereCmd := strings.TrimSpace(langSettings["linuxWhereCmd"])
+	versionCmd := strings.TrimSpace(langSettings["versionCmd"])
+
+	output, _ := shellUtils.ExeSysCmd(whereCmd)
+	pathArr := strings.Split(output, "\n")
+
+	for _, path := range pathArr {
+		path = strings.TrimSpace(path)
+
+		if path == "" {
+			continue
+		}
+
+		var vcmd string
+		if language == "tcl" {
+			vcmd = versionCmd + " | " + path
+		} else {
+			vcmd = path + " " + versionCmd + " 2>&1"
+		}
+
+		versionInfo, err1 := shellUtils.ExeSysCmd(vcmd)
+		if err1 != nil {
+			continue
+		}
+
+		mp := map[string]interface{}{}
+		mp["path"] = path
+		mp["info"] = versionInfo
+		list = append(list, mp)
+	}
+
+	return
+}
+
+func (s *InterpreterService) GetLangInterpreterWin(language string) (list []map[string]interface{}, err error) {
 	langSettings := commConsts.LangMap[language]
 	whereCmd := strings.TrimSpace(langSettings["whereCmd"])
 	versionCmd := strings.TrimSpace(langSettings["versionCmd"])
@@ -138,7 +183,10 @@ func (s *InterpreterService) GetLangInterpreter(language string) (list []map[str
 		}
 
 		var out bytes.Buffer
+		var stderr bytes.Buffer
 		cmd.Stdout = &out
+		cmd.Stderr = &stderr
+
 		err = cmd.Run()
 		if err != nil {
 			err = nil
@@ -148,6 +196,11 @@ func (s *InterpreterService) GetLangInterpreter(language string) (list []map[str
 		infoArr := s.GetNoEmptyLines(out.String(), "", true)
 		if len(infoArr) > 0 {
 			info = infoArr[0]
+		} else {
+			infoArr = s.GetNoEmptyLines(stderr.String(), "", true)
+			if len(infoArr) > 0 {
+				info = infoArr[0]
+			}
 		}
 
 		mp := map[string]interface{}{}

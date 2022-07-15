@@ -3,7 +3,7 @@ import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 import { QueryParams, QueryResult } from '@/types/data.d';
 import {
-    list, get, remove,
+    list, get, remove,getLastest,
 } from './service';
 
 export interface StateType {

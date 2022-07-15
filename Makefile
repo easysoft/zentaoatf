@@ -1,11 +1,13 @@
-VERSION=3.0.0_beta1
+VERSION=3.0.0
 PROJECT=ztf
 QINIU_DIR=/Users/aaron/work/zentao/qiniu/
 QINIU_DIST_DIR=${QINIU_DIR}${PROJECT}/${VERSION}/
-MAIN_FILE=cmd/server/main.go
+SERVER_MAIN_FILE=cmd/server/main.go
+COMMAND_MAIN_FILE=cmd/command/main.go
 
-BIN_DIR=client/bin/
-OUT_DIR=client/out/
+COMMAND_BIN_DIR=bin/
+CLIENT_BIN_DIR=client/bin/
+CLIENT_OUT_DIR=client/out/
 
 BUILD_TIME=`git show -s --format=%cd`
 GO_VERSION=`go version`
@@ -14,10 +16,12 @@ BUILD_CMD=go build -ldflags "-X 'commConsts.appVersion=${VERSION}' -X 'commConst
 
 default: win64 win32 linux mac
 
-win64: update_version prepare_res build_win64 copy_files_win64 zip_win64
-win32: update_version prepare_res build_win32 copy_files_win32 zip_win32
-linux: update_version prepare_res build_linux copy_files_linux zip_linux
-mac: update_version prepare_res build_mac copy_files_darwin zip_darwin
+win64: prepare build_gui_win64 compile_command_win64 copy_files_win64 create_shortcut_win64 zip_win64
+win32: prepare build_gui_win32 compile_command_win32 copy_files_win32 create_shortcut_win32 zip_win32
+linux: prepare build_gui_linux compile_command_linux copy_files_linux create_shortcut_linux zip_linux
+mac: prepare build_gui_mac compile_command_mac copy_files_mac create_shortcut_mac zip_mac
+
+prepare: update_version prepare_res
 
 update_version: update_version_in_config gen_version_file
 
@@ -37,81 +41,123 @@ prepare_res:
 	@rm -rf res/res.go
 	@go-bindata -o=res/res.go -pkg=res res/...
 
-build_win64: compile_win64 package_win64_client
-compile_win64:
+# gui
+build_gui_win64: compile_gui_win64 package_gui_win64_client
+compile_gui_win64:
 	@echo 'start compile win64'
-	@rm -rf ./${BIN_DIR}/*
+	@rm -rf ./${CLIENT_BIN_DIR}/*
 	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
 		${BUILD_CMD} -x -v -ldflags "-s -w" \
-		-o ${BIN_DIR}win32/${PROJECT}.exe ${MAIN_FILE}
-package_win64_client:
+		-o ${CLIENT_BIN_DIR}win32/${PROJECT}.exe ${SERVER_MAIN_FILE}
+package_gui_win64_client:
 	@cd client && npm run package-win64 && cd ..
-	@rm -rf ${OUT_DIR}win64 && mkdir ${OUT_DIR}win64 && \
-		mv ${OUT_DIR}${PROJECT}-win32-x64 ${OUT_DIR}win64/${PROJECT}
+	@rm -rf ${CLIENT_OUT_DIR}win64 && mkdir ${CLIENT_OUT_DIR}win64 && \
+		mv ${CLIENT_OUT_DIR}${PROJECT}-win32-x64 ${CLIENT_OUT_DIR}win64/gui
 
-build_win32: compile_win32 package_win32_client
-compile_win32:
+build_gui_win32: compile_gui_win32 package_gui_win32_client
+compile_gui_win32:
 	@echo 'start compile win32'
-	@rm -rf ./${BIN_DIR}/*
+	@rm -rf ./${CLIENT_BIN_DIR}/*
 	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
 		${BUILD_CMD} -x -v -ldflags "-s -w" \
-		-o ${BIN_DIR}win32/${PROJECT}.exe ${MAIN_FILE}
-package_win32_client:
+		-o ${CLIENT_BIN_DIR}win32/${PROJECT}.exe ${SERVER_MAIN_FILE}
+package_gui_win32_client:
 	@cd client && npm run package-win32 && cd ..
-	@rm -rf ${OUT_DIR}win32 && mkdir ${OUT_DIR}win32 && \
-		mv ${OUT_DIR}${PROJECT}-win32-ia32 ${OUT_DIR}win32/${PROJECT}
+	@rm -rf ${CLIENT_OUT_DIR}win32 && mkdir ${CLIENT_OUT_DIR}win32 && \
+		mv ${CLIENT_OUT_DIR}${PROJECT}-win32-ia32 ${CLIENT_OUT_DIR}win32/gui
 
-build_linux: compile_linux package_linux_client
-compile_linux:
+build_gui_linux: compile_gui_linux package_gui_linux_client
+compile_gui_linux:
 	@echo 'start compile linux'
-	@rm -rf ./${BIN_DIR}/*
+	@rm -rf ./${CLIENT_BIN_DIR}/*
 	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ \
 		${BUILD_CMD} \
-		-o ${BIN_DIR}linux/${PROJECT} ${MAIN_FILE}
-package_linux_client:
+		-o ${CLIENT_BIN_DIR}linux/${PROJECT} ${SERVER_MAIN_FILE}
+package_gui_linux_client:
 	@cd client && npm run package-linux && cd ..
-	@rm -rf ${OUT_DIR}linux && mkdir ${OUT_DIR}linux && \
-		mv ${OUT_DIR}${PROJECT}-linux-x64 ${OUT_DIR}linux/${PROJECT}
+	@rm -rf ${CLIENT_OUT_DIR}linux && mkdir ${CLIENT_OUT_DIR}linux && \
+		mv ${CLIENT_OUT_DIR}${PROJECT}-linux-x64 ${CLIENT_OUT_DIR}linux/gui
 
-build_mac: compile_mac package_mac_client
-compile_mac:
+build_gui_mac: compile_gui_mac package_gui_mac_client
+compile_gui_mac:
 	@echo 'start compile mac'
-	@rm -rf ./${BIN_DIR}/*
+	@rm -rf ./${CLIENT_BIN_DIR}/*
 	@echo
 	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 \
 		${BUILD_CMD} \
-		-o ${BIN_DIR}darwin/${PROJECT} ${MAIN_FILE}
-package_mac_client:
+		-o ${CLIENT_BIN_DIR}darwin/${PROJECT} ${SERVER_MAIN_FILE}
+package_gui_mac_client:
 	@cd client && npm run package-mac && cd ..
-	@rm -rf ${OUT_DIR}darwin && mkdir ${OUT_DIR}darwin && \
-		mv ${OUT_DIR}${PROJECT}-darwin-x64 ${OUT_DIR}darwin/${PROJECT}
+	@rm -rf ${CLIENT_OUT_DIR}darwin && mkdir ${CLIENT_OUT_DIR}darwin && \
+		mv ${CLIENT_OUT_DIR}${PROJECT}-darwin-x64 ${CLIENT_OUT_DIR}darwin/gui
+
+# command line
+compile_command_win64:
+	@echo 'start compile win64'
+	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
+		${BUILD_CMD} -x -v -ldflags "-s -w" \
+		-o ${COMMAND_BIN_DIR}win64/${PROJECT}.exe ${COMMAND_MAIN_FILE}
+
+compile_command_win32:
+	@echo 'start compile win32'
+	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
+		${BUILD_CMD} -x -v -ldflags "-s -w" \
+		-o ${COMMAND_BIN_DIR}win32/${PROJECT}.exe ${COMMAND_MAIN_FILE}
+
+compile_command_linux:
+	@echo 'start compile linux'
+	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ \
+		${BUILD_CMD} \
+		-o ${COMMAND_BIN_DIR}linux/${PROJECT} ${COMMAND_MAIN_FILE}
+
+compile_command_mac:
+	@echo 'start compile darwin'
+	@echo
+	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 \
+		${BUILD_CMD} \
+		-o ${COMMAND_BIN_DIR}darwin/${PROJECT} ${COMMAND_MAIN_FILE}
 
 copy_files_win64:
 	@echo 'start copy files win64'
-	cp -r demo "${OUT_DIR}win64"
+	cp -r {demo,runtime} "${CLIENT_OUT_DIR}win64"
+	cp ${COMMAND_BIN_DIR}win64/* "${CLIENT_OUT_DIR}win64"
 
 copy_files_win32:
 	@echo 'start copy files win32'
-	cp -r demo "${OUT_DIR}win32"
+	cp -r {demo,runtime} "${CLIENT_OUT_DIR}win32"
+	cp ${COMMAND_BIN_DIR}win32/* "${CLIENT_OUT_DIR}win32"
 
 copy_files_linux:
 	@echo 'start copy files linux'
-	cp -r demo "${OUT_DIR}linux"
+	cp -r {demo,runtime} "${CLIENT_OUT_DIR}linux"
+	cp ${COMMAND_BIN_DIR}linux/* "${CLIENT_OUT_DIR}linux"
 
-copy_files_darwin:
-	@echo 'start copy files mac'
-	cp -r demo "${OUT_DIR}darwin"
+copy_files_mac:
+	@echo 'start copy files darwin'
+	cp -r {demo,runtime} "${CLIENT_OUT_DIR}darwin"
+	cp ${COMMAND_BIN_DIR}darwin/* "${CLIENT_OUT_DIR}darwin"
 
-#copy_files:
-#	@echo 'start copy files'
-#	@for platform in `ls ${OUT_DIR}`; \
-#		do cp -r demo "${OUT_DIR}$${platform}"; done
+create_shortcut_win64:
+	@echo 'create shortcut win64'
+	cp xdoc/ztf-gui.cmd "${CLIENT_OUT_DIR}win64"
+
+create_shortcut_win32:
+	@echo 'create shortcut win32'
+	cp xdoc/ztf-gui.cmd "${CLIENT_OUT_DIR}win32"
+
+create_shortcut_linux:
+	@echo 'create shortcut linux'
+	cp xdoc/ztf-gui-linux.sh ${CLIENT_OUT_DIR}linux/ztf-gui.sh
+
+create_shortcut_mac:
+	@echo 'create shortcut mac'
+	cp xdoc/ztf-gui-mac.sh ${CLIENT_OUT_DIR}darwin/ztf-gui.sh
 
 zip_win64:
 	@echo 'start zip win64'
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
 	@mkdir -p ${QINIU_DIST_DIR}win64 && rm -rf ${QINIU_DIST_DIR}win64/${PROJECT}.zip
-	@cd ${OUT_DIR}win64 && \
+	@cd ${CLIENT_OUT_DIR}win64 && \
 		zip -ry ${QINIU_DIST_DIR}win64/${PROJECT}.zip ./* && \
 		md5sum ${QINIU_DIST_DIR}win64/${PROJECT}.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}win64/${PROJECT}.zip.md5 && \
@@ -121,7 +167,7 @@ zip_win32:
 	@echo 'start zip win32'
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
 	@mkdir -p ${QINIU_DIST_DIR}win32 && rm -rf ${QINIU_DIST_DIR}win32/${PROJECT}.zip
-	@cd ${OUT_DIR}win32 && \
+	@cd ${CLIENT_OUT_DIR}win32 && \
 		zip -ry ${QINIU_DIST_DIR}win32/${PROJECT}.zip ./* && \
 		md5sum ${QINIU_DIST_DIR}win32/${PROJECT}.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}win32/${PROJECT}.zip.md5 && \
@@ -131,35 +177,21 @@ zip_linux:
 	@echo 'start zip linux'
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
 	@mkdir -p ${QINIU_DIST_DIR}linux && rm -rf ${QINIU_DIST_DIR}linux/${PROJECT}.zip
-	@cd ${OUT_DIR}linux && \
+	@cd ${CLIENT_OUT_DIR}linux && \
 		zip -ry ${QINIU_DIST_DIR}linux/${PROJECT}.zip ./* && \
 		md5sum ${QINIU_DIST_DIR}linux/${PROJECT}.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}linux/${PROJECT}.zip.md5 && \
         cd ../..; \
 
-zip_darwin:
+zip_mac:
 	@echo 'start zip darwin'
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
 	@mkdir -p ${QINIU_DIST_DIR}darwin && rm -rf ${QINIU_DIST_DIR}darwin/${PROJECT}.zip
-	@cd ${OUT_DIR}darwin && \
+	@cd ${CLIENT_OUT_DIR}darwin && \
 		zip -ry ${QINIU_DIST_DIR}darwin/${PROJECT}.zip ./* && \
 		md5sum ${QINIU_DIST_DIR}darwin/${PROJECT}.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}darwin/${PROJECT}.zip.md5 && \
         cd ../..; \
-
-#zip:
-#	@echo 'start zip'
-#	@find . -name .DS_Store -print0 | xargs -0 rm -f
-#	@for platform in `ls ${OUT_DIR}`; do mkdir -p ${QINIU_DIST_DIR}$${platform}; done
-#
-#	@cd ${OUT_DIR} && \
-#		for platform in `ls ./`; \
-#		   do cd $${platform} && \
-#		   zip -ry ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip ./* && \
-#		   md5sum ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip | awk '{print $$1}' | \
-#		          xargs echo > ${QINIU_DIST_DIR}$${platform}/${PROJECT}.zip.md5 && \
-#           cd ..; \
-#		done
 
 upload_to:
 	@echo 'upload...'

@@ -1,13 +1,13 @@
 package action
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	"github.com/easysoft/zentaoatf/internal/comm/helper/exec"
-	stringUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/string"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	"github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
+	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 )
 
-func RunUnitTest(cmdStr string) {
+func RunUnitTest(cmdStr string, taskIdOrName string) {
 	testSet := serverDomain.TestSet{
 		ProductId:     stringUtils.ParseInt(commConsts.ProductId),
 		WorkspacePath: commConsts.WorkDir,
@@ -18,6 +18,10 @@ func RunUnitTest(cmdStr string) {
 	}
 	if testSet.ProductId != 0 {
 		testSet.SubmitResult = true
+	}
+
+	if taskIdOrName != "" {
+		testSet.Name = taskIdOrName
 	}
 
 	req := serverDomain.WsReq{

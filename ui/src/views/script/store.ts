@@ -3,13 +3,27 @@ import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 
 import {
-    list, get, extract, create, update, remove, loadChildren, updateCode, syncFromZentao, syncToZentao, move
+    list,
+    get,
+    extract,
+    create,
+    update,
+    remove,
+    loadChildren,
+    updateCode,
+    syncFromZentao,
+    syncToZentao,
+    paste, move,
+    scriptTreeAddAttr,
+    getNodeMap,
 } from './service';
 import {ScriptFileNotExist} from "@/utils/const";
 
 export interface ScriptData {
     list: [];
     detail: any;
+    treeDataMap: any;
+    checkedNodes: [];
 
     currWorkspace: any
     queryParams: any;
@@ -22,6 +36,7 @@ export interface ModuleType extends StoreModuleType<ScriptData> {
         setItem: Mutation<ScriptData>;
         setWorkspace: Mutation<ScriptData>;
         setQueryParams: Mutation<ScriptData>;
+        setCheckedNodes: Mutation<ScriptData>;
     };
     actions: {
         listScript: Action<ScriptData, ScriptData>;
@@ -31,20 +46,25 @@ export interface ModuleType extends StoreModuleType<ScriptData> {
         syncToZentao: Action<ScriptData, ScriptData>;
         extractScript: Action<ScriptData, ScriptData>;
         changeWorkspace: Action<ScriptData, ScriptData>;
+        setCheckedNodes: Action<ScriptData, ScriptData>;
 
         createScript: Action<ScriptData, ScriptData>;
         updateScript: Action<ScriptData, ScriptData>;
-        updateCode: Action<ScriptData, ScriptData>;
-        moveScript: Action<ScriptData, ScriptData>;
         deleteScript: Action<ScriptData, ScriptData>;
+        pasteScript: Action<ScriptData, ScriptData>;
+        moveScript: Action<ScriptData, ScriptData>;
+        updateCode: Action<ScriptData, ScriptData>;
     };
 }
 const initState: ScriptData = {
     list: [],
     detail: null,
+    treeDataMap: {},
 
     currWorkspace: {id: 0, type: 'ztf'},
     queryParams: {},
+
+    checkedNodes: [],
 };
 
 const StoreModel: ModuleType = {
@@ -55,7 +75,12 @@ const StoreModel: ModuleType = {
     },
     mutations: {
         setList(state, payload) {
-            state.list = payload;
+            state.list = payload.length > 0 ? payload[0]['children'] : [];
+            const treeDataMap = {};
+            if(payload.length > 0) {
+                getNodeMap(payload[0], treeDataMap);
+            }
+            state.treeDataMap = treeDataMap;
         },
         setItem(state, payload) {
             state.detail = payload;
@@ -66,11 +91,17 @@ const StoreModel: ModuleType = {
         setQueryParams(state, payload) {
             state.queryParams = payload;
         },
+
+        setCheckedNodes(state, payload) {
+            state.checkedNodes = payload;
+        },
     },
     actions: {
         async listScript({ commit }, playload: any ) {
             const response: ResponseData = await list(playload);
-            const { data } = response;
+            const data = response.data;
+            data.id = data.path;
+            data.children = scriptTreeAddAttr(data.children ? data.children : []);
             commit('setList', [data]);
 
             commit('setQueryParams', playload);
@@ -87,7 +118,7 @@ const StoreModel: ModuleType = {
             })
         },
 
-        async getScript({ commit }, script: any ) {
+        async getScript({ commit, dispatch }, script: any ) {
             if (!script || script.type !== 'file') {
                 commit('setItem', null);
                 return true;
@@ -108,7 +139,7 @@ const StoreModel: ModuleType = {
             if (resp.code === 0) {
                 await dispatch('listScript', state.queryParams)
 
-                if (resp.code === 0 && resp.data.length === 1) {
+                if (resp.code === 0 && resp.data != null && resp.data.length === 1) {
                     const getResp = await get(resp.data[0], payload.workspaceId);
                     commit('setItem', getResp.data);
                 } else {
@@ -161,9 +192,21 @@ const StoreModel: ModuleType = {
             }
         },
 
-        async updateCode({ commit }, payload: any ) {
+        async updateCode({ commit, dispatch, state }, payload: any ) {
             try {
                 await updateCode(payload);
+                await dispatch('listScript', state.queryParams)
+                return true;
+            } catch (error) {
+                return false;
+            }
+        },
+
+        async pasteScript({ commit , dispatch, state}, data: any ) {
+            try {
+                await paste(data);
+                await dispatch('listScript', state.queryParams)
+
                 return true;
             } catch (error) {
                 return false;
@@ -194,6 +237,11 @@ const StoreModel: ModuleType = {
 
         async changeWorkspace({ commit }, payload: any ) {
             commit('setWorkspace', payload);
+            return true;
+        },
+
+        async setCheckedNodes({ commit }, payload: any ) {
+            commit('setCheckedNodes', payload);
             return true;
         },
     }

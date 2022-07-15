@@ -2,11 +2,11 @@ package main
 
 import (
 	"flag"
-	commConsts "github.com/easysoft/zentaoatf/internal/comm/consts"
-	websocketHelper "github.com/easysoft/zentaoatf/internal/comm/helper/websocket"
-	logUtils "github.com/easysoft/zentaoatf/internal/pkg/lib/log"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	"github.com/easysoft/zentaoatf/internal/server/core/cron"
 	"github.com/easysoft/zentaoatf/internal/server/core/web"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"os"
 )
 
