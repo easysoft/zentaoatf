@@ -32,7 +32,7 @@ func CommitZTFTestResult(files []string, productId int, taskIdOrName string, noN
 		taskName = taskIdOrName
 	}
 
-	if taskId == 0 && !noNeedConfirm {
+	if taskId == 0 && taskName == "" && !noNeedConfirm {
 		taskIdStr := stdinUtils.GetInput("\\d*", "",
 			i118Utils.Sprintf("pls_enter")+" "+i118Utils.Sprintf("task_id")+
 				i118Utils.Sprintf("task_id_empty_to_create"))
@@ -49,6 +49,10 @@ func CommitZTFTestResult(files []string, productId int, taskIdOrName string, noN
 	report, err := analysisHelper.ReadReportByPath(filepath.Join(result.Seq, commConsts.ResultJson))
 	if err != nil {
 		return
+	}
+
+	if taskName != "" {
+		report.Name = taskName
 	}
 
 	config := configHelper.LoadByWorkspacePath(commConsts.ZtfDir)
