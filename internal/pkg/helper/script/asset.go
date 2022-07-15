@@ -3,6 +3,12 @@ package scriptHelper
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"path"
+	"regexp"
+	"strconv"
+	"strings"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
@@ -15,11 +21,6 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	"github.com/kataras/iris/v12"
-	"io/ioutil"
-	"path"
-	"regexp"
-	"strconv"
-	"strings"
 )
 
 func LoadScriptTreeByDir(workspace model.Workspace, scriptIdsFromZentao map[int]string) (asset serverDomain.TestAsset, err error) {
@@ -36,7 +37,7 @@ func LoadScriptTreeByDir(workspace model.Workspace, scriptIdsFromZentao map[int]
 		WorkspaceId:   workspaceId,
 		WorkspaceType: workspace.Type,
 		Path:          workspaceDir,
-		Title:         fileUtils.GetDirName(workspaceDir),
+		Title:         workspace.Name,
 		Slots:         iris.Map{"icon": "icon"},
 
 		Checkable: true,

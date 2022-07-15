@@ -352,7 +352,11 @@ func FixSiteUlt(url string) (ret string) {
 		ret = url
 	} else {
 		index := strings.LastIndex(url, "/")
-		ret = url[:index+1]
+		if url[index+1:] != "zentao" {
+			ret = url[:index+1]
+		} else {
+			ret = url
+		}
 	}
 
 	return
