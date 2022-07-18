@@ -61,7 +61,7 @@ func (r *ServerRepo) Create(server model.Server) (id uint, err error) {
 func (r *ServerRepo) Update(server model.Server) error {
 	po, err := r.FindDuplicate(server.Path, server.ID)
 	if po.ID != 0 {
-		return errors.New(fmt.Sprintf("%s远程代理已存在", server.Path))
+		return errors.New(fmt.Sprintf("%s远程服务器已存在", server.Path))
 	}
 	err = r.DB.Model(&model.Server{}).Where("id = ?", server.ID).Updates(&server).Error
 	if err != nil {

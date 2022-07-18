@@ -87,6 +87,7 @@ const caseCount = ref(1)
 const caseResult = ref({})
 const caseDetail = ref({})
 const realPathMap = ref({})
+const lastWsMsg = ref({})
 
 // websocket
 let wsMsg = reactive({in: '', out: [] as any[]});
@@ -145,6 +146,10 @@ const onWebsocketMsgEvent = async (data: any) => {
       return;
     }
   }
+  if(JSON.stringify(lastWsMsg.value) === JSON.stringify(item)){
+    return;
+  }
+  lastWsMsg.value = item;
   wsMsg.out.push(item)
   scroll('log-list')
 }

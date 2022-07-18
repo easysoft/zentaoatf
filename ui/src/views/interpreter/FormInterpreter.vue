@@ -189,6 +189,7 @@ const modelRef = ref<any>({
   id: info.value.id,
   lang: info.value.lang,
   path: info.value.path,
+  proxyPath: '',
 });
 const rulesRef = ref({
   lang: [{ required: true, msg: t("pls_lang") }],
@@ -212,6 +213,7 @@ const clearFormData = () => {
   console.log("clear");
   modelRef.value.path = "";
   modelRef.value.lang = "";
+  modelRef.value.proxyPath = "";
   selectedInterpreter.value = "";
   interpreterInfos.value = [];
 };
@@ -229,17 +231,17 @@ const selectFile = () => {
 }
 
 const selectProxy = () => {
-    if(modelRef.value.proxy_id == -1){
+    if(modelRef.value.proxy_id != 0){
         rulesRef.value.lang = [];
         rulesRef.value.path = [];
-    }else{
-        rulesRef.value.lang = [{ required: true, msg: t("pls_lang") }];
-        rulesRef.value.path = [{ required: true, msg: t("pls_input_interpreter_path") }];
         remoteProxies.value.forEach(item => {
             if(item.id == modelRef.value.proxy_id){
                 modelRef.value.proxyPath = item.path;
             }
         })
+    }else{
+        rulesRef.value.lang = [{ required: true, msg: t("pls_lang") }];
+        rulesRef.value.path = [{ required: true, msg: t("pls_input_interpreter_path") }];
     }
 }
 defineExpose({
