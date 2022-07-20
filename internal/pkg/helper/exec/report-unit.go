@@ -33,8 +33,8 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 	key := stringUtils.Md5(req.WorkspacePath)
 
 	testSuites, zipDir := RetrieveUnitResult(req.WorkspacePath, startTime, req.TestTool, req.BuildTool)
-	unitResultPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultZip)
-	fileUtils.ZipDir(unitResultPath, zipDir)
+	zipFile := filepath.Join(commConsts.ExecLogDir, commConsts.ResultZip)
+	fileUtils.ZipDir(zipFile, zipDir)
 
 	cases, classNameMaxWidth, duration := ParserUnitTestResult(testSuites)
 
@@ -196,7 +196,7 @@ func RetrieveUnitResult(workspacePath string, startTime int64, testTool commCons
 		resultDir = "results"
 		zipDir = resultDir
 	} else {
-		resultDir = ""
+		resultDir = "testresult.xml"
 		zipDir = resultDir
 	}
 
