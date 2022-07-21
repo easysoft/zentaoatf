@@ -60,6 +60,8 @@ func ExecUnit(ch chan int,
 			configDir = commConsts.ZtfDir
 		}
 
+		//logUtils.Info("configDir=" + configDir)
+
 		config := configHelper.LoadByWorkspacePath(configDir)
 		err = zentaoHelper.CommitResult(report, req.ProductId, 0, config, wsMsg)
 	}
