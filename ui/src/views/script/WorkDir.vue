@@ -561,7 +561,9 @@ const checkoutCases = (workspaceId, node) => {
         }
     });
     notification.success({
-        message: t('sync_success'),
+        message: t('sync_from_zentao_success', {
+                success: node.children.length,
+              }),
       });
 }
 const checkoutFromModule = (workspaceId, node) => {
@@ -573,7 +575,9 @@ const checkoutFromModule = (workspaceId, node) => {
     store.dispatch('Script/syncFromZentao', data).then((resp => {
     if (resp.code === 0) {
       notification.success({
-        message: t('sync_success'),
+        message: t('sync_from_zentao_success', {
+            success: resp.data.length,
+        }),
       });
     } else {
         notification.error({
@@ -588,7 +592,9 @@ const checkout = (workspaceId, caseId, path, successNotice = true) => {
     store.dispatch('Script/syncFromZentao', data).then((resp => {
     if (resp.code === 0) {
       successNotice && notification.success({
-        message: t('sync_success'),
+        message: t('sync_from_zentao_success', {
+          success: 1,
+        }),
       });
     } else {
         notification.error({
@@ -602,7 +608,7 @@ const syncFromZentaoSubmit = (model) => {
   store.dispatch("Script/syncFromZentao", model).then((resp) => {
     if (resp.code === 0) {
       notification.success({
-        message: t("sync_success", {success: resp.data == undefined? 0 : resp.data.length, ignore:0}),
+        message: t("sync_from_zentao_success", {success: resp.data == undefined? 0 : resp.data.length, ignore:0}),
       });
       showSyncFromZentaoModal.value = false;
       syncFromZentaoRef.value.clearFormData()
