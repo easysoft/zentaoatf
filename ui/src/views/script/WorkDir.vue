@@ -602,7 +602,7 @@ const syncFromZentaoSubmit = (model) => {
   store.dispatch("Script/syncFromZentao", model).then((resp) => {
     if (resp.code === 0) {
       notification.success({
-        message: t("sync_success", {success: resp.data.length, ignore:0}),
+        message: t("sync_success", {success: resp.data == undefined? 0 : resp.data.length, ignore:0}),
       });
       showSyncFromZentaoModal.value = false;
       syncFromZentaoRef.value.clearFormData()
