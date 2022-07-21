@@ -3,17 +3,18 @@ package zentaoHelper
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
+	"strings"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/easysoft/zentaoatf/internal/pkg/domain"
-	"github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
+	analysisHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
 	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
-	"github.com/easysoft/zentaoatf/pkg/lib/i118"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/fatih/color"
 	"github.com/jinzhu/copier"
 	uuid "github.com/satori/go.uuid"
-	"strconv"
-	"strings"
 )
 
 func CommitBug(ztfBug commDomain.ZtfBug, config commDomain.WorkspaceConf) (err error) {
@@ -90,16 +91,15 @@ func PrepareBug(workspacePath, seq string, caseIdStr string, productId int) (bug
 func GenBugStepText(step commDomain.StepLog) string {
 	stepResults := make([]string, 0)
 
-	stepTxt := fmt.Sprintf("步骤%s： %s %s\n", step.Id, step.Name, step.Status)
-
+	stepTxt := fmt.Sprintf("%s%s： %s %s\n", i118Utils.Sprintf("step"), step.Id, step.Name, step.Status)
 	for _, checkpoint := range step.CheckPoints {
 		text := fmt.Sprintf(
-			"  检查点：%s\n"+
-				"    期待结果：\n"+
+			"  %s：%s\n"+
+				"    %s：\n"+
 				"      %s\n"+
-				"    实际结果：\n"+
+				"    %s：\n"+
 				"      %s",
-			checkpoint.Status, checkpoint.Expect, checkpoint.Actual)
+			i118Utils.Sprintf("checkpoint"), checkpoint.Status, i118Utils.Sprintf("expect_result"), checkpoint.Expect, i118Utils.I118Prt.Sprintf("actual_result"), checkpoint.Actual)
 
 		stepResults = append(stepResults, text)
 	}
