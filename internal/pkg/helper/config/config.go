@@ -77,13 +77,17 @@ func SaveToFile(config commDomain.WorkspaceConf, workspacePath string) (err erro
 	return nil
 }
 
-func GetFieldVal(config commDomain.WorkspaceConf, key string) string {
+func GetFieldVal(config commDomain.WorkspaceConf, key string) (val string) {
 	key = stringUtils.UcFirst(key)
 
 	immutable := reflect.ValueOf(config)
-	val := immutable.FieldByName(key).String()
+	value := immutable.FieldByName(key)
 
-	return val
+	if value.IsValid() {
+		val = value.String()
+	}
+
+	return
 }
 
 func SetFieldVal(config *commDomain.WorkspaceConf, key string, val string) string {
