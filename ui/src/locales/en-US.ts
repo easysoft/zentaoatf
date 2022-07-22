@@ -31,6 +31,7 @@ export default {
     'version':  'Version',
     'severity':  'Severity',
     'priority':  'Priority',
+    'priority_desc':  'The lower the number, the higher the priority',
     'step':  'Step',
     'status':  'Status',
     'none':  'None',

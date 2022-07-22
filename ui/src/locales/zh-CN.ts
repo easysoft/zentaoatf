@@ -34,6 +34,7 @@ export default {
     'version':  '版本',
     'severity':  '严重程度',
     'priority':  '优先级',
+    'priority_desc':  '数字越小，优先级越高',
     'step':  '步骤',
     'status':  '状态',
     'all':  '所有',

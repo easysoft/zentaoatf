@@ -63,6 +63,7 @@ func (c *WorkspaceCtrl) Create(ctx iris.Context) {
 	req := model.Workspace{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
 	}
 
 	req.SiteId = uint(currSiteId)

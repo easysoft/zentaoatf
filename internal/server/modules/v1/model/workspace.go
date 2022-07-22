@@ -12,9 +12,10 @@ type Workspace struct {
 	Lang string              `json:"lang"`
 	Cmd  string              `json:"cmd"`
 
-	ProxyId   uint `json:"proxy_id"`
-	SiteId    uint `json:"siteId"`
-	ProductId uint `json:"productId"`
+	ProxyId   uint   `json:"proxy_id"`
+	Proxies   string `json:"proxies"`
+	SiteId    uint   `json:"siteId"`
+	ProductId uint   `json:"productId"`
 
 	IsDefault bool `json:"isDefault"`
 }

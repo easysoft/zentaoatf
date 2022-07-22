@@ -47,18 +47,43 @@
         <textarea v-model="modelRef.cmd" />
       </FormItem>
       <FormItem
+        v-for="(proxy, index) in proxyList"
+        :key="index"
         labelWidth="100px"
-        name="proxy_id"
-        :label="t('remote_proxy')"
-        :info="validateInfos.proxy_id"
+        name="proxy_id[]"
+        :label="index == 0 ? t('remote_proxy') : ''"
+        :helpText="index == proxyList.length-1 ? t('priority_desc') : ''"
       >
-        <div class="select">
-          <select name="type" v-model="modelRef.proxy_id">
+        <div class="form-select">
+          <select name="type" v-model="proxyList[index]">
             <option :value="0">{{t('local')}}</option>
             <option v-for="item in remoteProxies" :key="item.id" :value="item.id">
               {{ item.path }}
             </option>
           </select>
+          <Button
+          :disabled="index == 0"
+          class="state only-icon"
+          icon="arrow-up"
+          size="sm"
+          @click="changeSort(index, 'up')"
+          >
+          </Button>
+          <Button
+          :disabled="index == proxyList.length-1"
+          class="state only-icon"
+          icon="arrow-down"
+          size="sm"
+          @click="changeSort(index, 'down')"
+          >
+          </Button>
+          <Button
+          class="state only-icon"
+          :icon="index ==0 ? 'add' : 'delete'"
+          size="sm"
+          @click="addProxySelect(index)"
+          >
+          </Button>
         </div>
       </FormItem>
     </Form>
@@ -89,6 +114,7 @@ import {arrToMap} from "@/utils/array";
 import settings from "@/config/settings";
 import Button from "@/components/Button.vue";
 import { get as getWorkspace } from "@/views/workspace/service";
+import Icon from '@/components/Icon.vue';
 
 export interface FormWorkspaceProps {
   show?: boolean;
@@ -113,6 +139,7 @@ const showModalRef = computed(() => {
 });
 
 const info = ref({} as any);
+const proxyList = ref([0] as any[]);
 const loadInfo = async () => {
     if(props.workspaceId === undefined || !props.workspaceId) return;
     await getWorkspace(props.workspaceId).then((json) => {
@@ -127,7 +154,8 @@ const loadInfo = async () => {
         cmd: info.value.cmd,
         proxy_id: info.value.proxy_id,
       };
-    selectType()
+      proxyList.value = info.value.proxies.split(',');
+      selectType()
     }
   });
 }
@@ -158,7 +186,7 @@ const cancel = () => {
 };
 
 const isElectron = ref(!!window.require)
-const modelRef = ref({type: 'ztf', proxy_id: 0, auth_type: 'ssh'} as any);
+const modelRef = ref({type: 'ztf', proxy_id: 0} as any);
 
 const showCmd = computed(() => { return modelRef.value.type && modelRef.value.type !== 'ztf' })
 const rulesRef = ref({
@@ -166,9 +194,6 @@ const rulesRef = ref({
   path: [{ required: true, msg: t("pls_workspace_path") }],
   lang: [{ required: true, msg: t("pls_script_lang") }],
   type: [{ required: true, msg: t("pls_workspace_type") }],
-  password: [],
-  username: [],
-  rsa_key: [],
 });
 
 const { validate, reset, validateInfos } = useForm(modelRef, rulesRef);
@@ -179,6 +204,7 @@ const emit = defineEmits<{
 }>();
 
 const submit = () => {
+  modelRef.value.proxies = proxyList.value.join(',');
   if (validate()) {
     emit("submit", modelRef.value);
   }
@@ -200,7 +226,47 @@ const selectDir = (key) => {
     })
 }
 
+const addProxySelect = (index) => {
+    if(index == 0){
+        proxyList.value.push(0)
+    }else{
+        proxyList.value.splice(index, 1)
+    }
+}
+
+const changeSort = (index, action) => {
+    if(action == 'up'){
+        if(index == 0){
+            return;
+        }
+        [proxyList.value[index], proxyList.value[index-1]] = [proxyList.value[index-1], proxyList.value[index]]
+    }else{
+        if(index == proxyList.value.length-1){
+            return;
+        }
+        [proxyList.value[index], proxyList.value[index+1]] = [proxyList.value[index+1], proxyList.value[index]]
+    }
+}
+
 defineExpose({
   clearFormData,
 });
 </script>
+<style  lang="less" scoped>
+.form-select{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex: 1;
+    .inner-label{
+        word-break: keep-all;
+        margin: 0 10px;
+    }
+    .only-icon{
+        outline:none;
+        background-color: transparent;
+        border: none;
+        margin-left: 10px;
+    }
+}
+</style>
