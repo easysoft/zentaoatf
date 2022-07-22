@@ -618,7 +618,7 @@ const execScript = (node) => {
     runTest(ref(node));
   }else{
     bus.emit(settings.eventExec,
-        {execType: node.workspaceType === 'ztf' ? 'ztf' : 'unit', scripts: node.type === 'file' ? [node] : node.children});
+        {execType: 'ztf', scripts: node.type === 'file' ? [node] : node.children});
   }
 }
 const clearMenu = () => {
