@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/Joker/hpp v1.0.0 // indirect
 	github.com/ajg/form v1.5.1
+	github.com/akavel/rsrc v0.10.2 // indirect
 	github.com/awesome-gocui/gocui v0.6.0
 	github.com/bitly/go-simplejson v0.5.0
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
