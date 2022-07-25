@@ -92,7 +92,7 @@ watch(props, () => {
 });
 const modelRef = ref({
   workspaceId: props.workspaceId,
-  lang: "python",
+  lang: 'php',
   independentFile: false,
 } as any);
 const rulesRef = ref({
@@ -188,6 +188,7 @@ const selectWorkspace = () => {
     }
   });
 };
+selectWorkspace();
 
 defineExpose({
   clearFormData,

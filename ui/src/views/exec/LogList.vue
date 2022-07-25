@@ -78,6 +78,7 @@ const cachedExecData = ref({})
 const caseCount = ref(1)
 const caseResult = ref({})
 const caseDetail = ref({})
+const lastWsMsg = ref({})
 
 // websocket
 let wsMsg = reactive({in: '', out: [] as any[]});
@@ -126,6 +127,10 @@ const onWebsocketMsgEvent = (data: any) => {
     caseResult.value[item.info.key] = item.info.status
   }
 
+  if(JSON.stringify(lastWsMsg.value) === JSON.stringify(item)){
+    return;
+  }
+  lastWsMsg.value = item;
   wsMsg.out.push(item)
   scroll('log-list')
 }
