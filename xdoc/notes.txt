@@ -52,7 +52,7 @@ sonar-scanner \
   -Dsonar.host.url=http://10.8.1.10:59000  \
   -Dsonar.login=412093d8c90b99378b48139915fbf275509092ad
 
-scp ~/work/zentao/qiniu/ztf/3.0.0/win64/ztf.zip aaron@110.42.146.127:~/work/webroot/
+scp ~/work/zentao/qiniu/ztf/3.0.0/linux/ztf.zip aaron@192.168.0.112:~
 
 rsrc -arch amd64 -manifest main.manifest -ico main.ico -o main.syso
 rsrc -arch amd64 -ico main.ico -o main.syso

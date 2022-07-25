@@ -33,10 +33,10 @@ BUILD_CMD=go build -ldflags "-X 'commConsts.appVersion=${VERSION}' -X 'commConst
 
 default: win64 win32 linux mac
 
-win64: prepare build_gui_win64 compile_command_win64 copy_files_win64 create_shortcut_win64 zip_win64
-win32: prepare build_gui_win32 compile_command_win32 copy_files_win32 create_shortcut_win32 zip_win32
-linux: prepare build_gui_linux compile_command_linux copy_files_linux create_shortcut_linux zip_linux
-mac: prepare build_gui_mac compile_command_mac copy_files_mac create_shortcut_mac zip_mac
+win64: prepare build_gui_win64 compile_launcher_win64 compile_command_win64 copy_files_win64 zip_win64
+win32: prepare build_gui_win32 compile_launcher_win32 compile_command_win32 copy_files_win32 zip_win32
+linux: prepare build_gui_linux                        compile_command_linux copy_files_linux zip_linux
+mac:   prepare build_gui_mac                          compile_command_mac   copy_files_mac   zip_mac
 
 prepare: update_version prepare_res
 
@@ -61,6 +61,23 @@ prepare_res:
 	@echo 'start prepare res'
 	@rm -rf res/res.go
 	@go-bindata -o=res/res.go -pkg=res res/...
+
+# launcher
+compile_launcher_win64:
+	@echo 'start compile win64 launcher'
+	@cd cmd/launcher && \
+        CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
+		${BUILD_CMD} -x -v -ldflags "-s -w" \
+		-o ../../${COMMAND_BIN_DIR}win64/${PROJECT}-gui.exe && \
+		cd ..
+
+compile_launcher_win32:
+	@echo 'start compile win32 launcher'
+	@cd cmd/launcher && \
+        CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
+		${BUILD_CMD} -x -v -ldflags "-s -w" \
+		-o ../../${COMMAND_BIN_DIR}win32/${PROJECT}-gui.exe && \
+        cd ..
 
 # gui
 build_gui_win64: compile_gui_win64 package_gui_win64_client
@@ -116,7 +133,8 @@ compile_gui_mac:
 package_gui_mac_client:
 	@cd client && npm run package-mac && cd ..
 	@rm -rf ${CLIENT_OUT_DIR}darwin && mkdir ${CLIENT_OUT_DIR}darwin && \
-		mv ${CLIENT_OUT_DIR}${PROJECT}-darwin-x64 ${CLIENT_OUT_DIR}darwin/gui
+		mv ${CLIENT_OUT_DIR}${PROJECT}-darwin-x64 ${CLIENT_OUT_DIR}darwin/gui && \
+		mv ${CLIENT_OUT_DIR}darwin/gui/ztf.app ${CLIENT_OUT_DIR}darwin/ztf.app && rm -rf ${CLIENT_OUT_DIR}darwin/gui
 
 # command line
 compile_command_win64:
@@ -139,7 +157,7 @@ compile_command_win32:
 compile_command_linux:
 	@echo 'start compile linux'
 ifeq ($(PLATFORM),"Mac")
-	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ \
+	@CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ \
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}linux/${PROJECT} ${COMMAND_MAIN_FILE}
 else
@@ -175,21 +193,21 @@ copy_files_mac:
 	cp -r demo "${CLIENT_OUT_DIR}darwin"
 	cp ${COMMAND_BIN_DIR}darwin/* "${CLIENT_OUT_DIR}darwin"
 
-create_shortcut_win64:
-	@echo 'create shortcut win64'
-	cp xdoc/ztf-gui.cmd "${CLIENT_OUT_DIR}win64"
-
-create_shortcut_win32:
-	@echo 'create shortcut win32'
-	cp xdoc/ztf-gui.cmd "${CLIENT_OUT_DIR}win32"
-
-create_shortcut_linux:
-	@echo 'create shortcut linux'
-	cp xdoc/ztf-gui-linux.sh ${CLIENT_OUT_DIR}linux/ztf-gui.sh
-
-create_shortcut_mac:
-	@echo 'create shortcut mac'
-	cp xdoc/ztf-gui-mac.sh ${CLIENT_OUT_DIR}darwin/ztf-gui.sh
+#create_shortcut_win64:
+#	@echo 'create shortcut win64'
+#	cp xdoc/ztf-gui.cmd "${CLIENT_OUT_DIR}win64"
+#
+#create_shortcut_win32:
+#	@echo 'create shortcut win32'
+#	cp xdoc/ztf-gui.cmd "${CLIENT_OUT_DIR}win32"
+#
+#create_shortcut_linux:
+#	@echo 'create shortcut linux'
+#	cp xdoc/ztf-gui-linux.sh ${CLIENT_OUT_DIR}linux/ztf-gui.sh
+#
+#create_shortcut_mac:
+#	@echo 'create shortcut mac'
+#	cp xdoc/ztf-gui-mac.sh ${CLIENT_OUT_DIR}darwin/ztf-gui.sh
 
 zip_win64:
 	@echo 'start zip win64'
