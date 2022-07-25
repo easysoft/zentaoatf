@@ -23,7 +23,7 @@ func main() {
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
 		pth = "gui\\ztf.exe"
-		cmd = exec.Command("start", pth)
+		cmd = exec.Command("cmd", "/C", pth)
 	}
 
 	err := cmd.Run()
