@@ -28,7 +28,7 @@ func (s *ProxyService) Get(id uint) (proxy model.Proxy, err error) {
 }
 
 func (s *ProxyService) Create(proxy model.Proxy) (id uint, err error) {
-	proxy.Path = zentaoHelper.FixSiteUlt(proxy.Path)
+	proxy.Path = zentaoHelper.FixSiteUrl(proxy.Path)
 	if proxy.Path == "" {
 		err = errors.New("url not right")
 		return
@@ -43,7 +43,7 @@ func (s *ProxyService) Create(proxy model.Proxy) (id uint, err error) {
 }
 
 func (s *ProxyService) Update(proxy model.Proxy) (err error) {
-	proxy.Path = zentaoHelper.FixSiteUlt(proxy.Path)
+	proxy.Path = zentaoHelper.FixSiteUrl(proxy.Path)
 	if proxy.Path == "" {
 		err = errors.New("url not right")
 		return
