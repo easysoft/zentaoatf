@@ -2,20 +2,21 @@ VERSION=3.0.0
 PROJECT=ztf
 
 ifeq ($(OS),Windows_NT)
- PLATFORM="Windows"
+    PLATFORM="Windows"
 else
- ifeq ($(shell uname),Darwin)
-  PLATFORM="Mac"
- else
-  PLATFORM="Unix"
- endif
+    ifeq ($(shell uname),Darwin)
+        PLATFORM="Mac"
+    else
+        PLATFORM="Unix"
+    endif
 endif
 
 ifeq ($(PLATFORM),"Mac")
-  QINIU_DIR=/Users/aaron/work/zentao/qiniu/
+    QINIU_DIR=/Users/aaron/work/zentao/qiniu/
 else
-  QINIU_DIR=~/ztfZip
+    QINIU_DIR=~/ztfZip
 endif
+
 QINIU_DIST_DIR=${QINIU_DIR}${PROJECT}/${VERSION}/
 SERVER_MAIN_FILE=cmd/server/main.go
 
