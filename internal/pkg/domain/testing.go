@@ -236,6 +236,17 @@ type UnitResult struct {
 	Id     int    `json:"id"`
 	Status string `json:"status"`
 }
+type CaseSlice []UnitResult
+
+func (a CaseSlice) Len() int {
+	return len(a)
+}
+func (a CaseSlice) Swap(i, j int) {
+	a[i], a[j] = a[j], a[i]
+}
+func (a CaseSlice) Less(i, j int) bool {
+	return a[j].Id > a[i].Id
+}
 
 type Failure struct {
 	Type string `json:"type" xml:"type,attr"`

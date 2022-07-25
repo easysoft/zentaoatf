@@ -21,6 +21,7 @@ import (
 	"io/ioutil"
 	"path"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -380,7 +381,9 @@ func ParserUnitTestResult(testSuites []commDomain.UnitTestSuite) (
 		//}
 
 		for _, cs := range suite.Cases {
-			cs.Id = idx
+			if cs.Id <= 0 {
+				cs.Id = idx
+			}
 
 			if cs.Failure != nil {
 				cs.Status = "fail"
@@ -435,6 +438,7 @@ func ConvertAllureResult(cases []commDomain.AllureCase) (testSuites []commDomain
 
 		// passed, failed
 		caseResult := commDomain.UnitResult{
+			Id:        stringUtils.ParseInt(cs.TestCaseId),
 			Title:     cs.Name,
 			TestSuite: suiteName,
 			Duration:  float32(cs.Stop-cs.Start) / 1000,
@@ -451,6 +455,8 @@ func ConvertAllureResult(cases []commDomain.AllureCase) (testSuites []commDomain
 	}
 
 	for _, suite := range suites {
+		sort.Sort(commDomain.CaseSlice(suite.Cases))
+
 		dur := int64(0)
 		for _, cs := range suite.Cases {
 			dur += cs.EndTime - cs.StartTime
@@ -462,6 +468,7 @@ func ConvertAllureResult(cases []commDomain.AllureCase) (testSuites []commDomain
 
 	return
 }
+
 func GetAllureCaseSuiteName(cs commDomain.AllureCase) (name string) {
 	suiteArr := make([]string, 0)
 
