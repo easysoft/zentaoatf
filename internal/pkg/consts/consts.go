@@ -40,6 +40,7 @@ var (
 	AutoTestTypeAppium   = "appium"
 	AutoTestTypes        = []string{AutoTestTypeSelenium, AutoTestTypeAppium}
 
+	UnitTestTypeAllure     = "allure"
 	UnitTestTypeJunit      = "junit"
 	UnitTestTypeTestNG     = "testng"
 	UnitTestTypeRobot      = "robot"
@@ -53,7 +54,7 @@ var (
 	UnitTestTypeGTest      = "gtest"
 	UnitTestTypeQTest      = "qtest"
 	UnitTestTypes          = []string{
-		UnitTestTypeJunit, UnitTestTypeTestNG,
+		UnitTestTypeAllure, UnitTestTypeJunit, UnitTestTypeTestNG,
 		UnitTestTypeRobot, UnitTestTypeCypress, UnitTestTypePlaywright, UnitTestTypePuppeteer,
 		UnitTestPhpUnit, UnitTestTypePyTest, UnitTestTypeJest, UnitTestTypeCppUnit, UnitTestTypeGTest, UnitTestTypeQTest,
 	}

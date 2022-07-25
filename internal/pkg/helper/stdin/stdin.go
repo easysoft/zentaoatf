@@ -125,7 +125,7 @@ func InputForSet(dir string) {
 	SetZentao:
 
 		conf.Url = stdinUtils.GetInput("((http|https)://.*)", conf.Url, "enter_url", conf.Url)
-		conf.Url = zentaoHelper.FixSiteUlt(conf.Url)
+		conf.Url = zentaoHelper.FixSiteUrl(conf.Url)
 		conf.Url = fileUtils.AddUrlPathSepIfNeeded(conf.Url)
 
 		conf.Username = stdinUtils.GetInput("(.{2,})", conf.Username, "enter_account", conf.Username)

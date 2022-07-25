@@ -250,6 +250,33 @@ type Property struct {
 	Value string `json:"value" xml:"value,attr"`
 }
 
+// allure json
+type AllureCase struct {
+	Name        string        `json:"name"`
+	Status      string        `json:"status"`
+	Stage       string        `json:"stage"`
+	Description string        `json:"description"`
+	Steps       []interface{} `json:"steps"`
+	Attachments []interface{} `json:"attachments"`
+	Parameters  []struct {
+		Name  string `json:"name"`
+		Value string `json:"value"`
+	} `json:"parameters"`
+	Start      int64  `json:"start"`
+	Stop       int64  `json:"stop"`
+	Uuid       string `json:"uuid"`
+	HistoryId  string `json:"historyId"`
+	TestCaseId string `json:"testCaseId"`
+	FullName   string `json:"fullName"`
+	Labels     []struct {
+		Name  string `json:"name"`
+		Value string `json:"value"`
+	} `json:"labels"`
+	Links []interface{} `json:"links"`
+
+	Duration int
+}
+
 // phpunit xml
 type PhpUnitSuites struct {
 	XMLName xml.Name `xml:"tests"`

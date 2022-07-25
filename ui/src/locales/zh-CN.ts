@@ -210,6 +210,7 @@ export default {
     'extract_success': '提取注释为测试步骤和验证点成功。',
     'extract_none': '脚本中未发现测试步骤。',
     'extract_fail': '提取注释为测试步骤和验证点失败。',
+    'sync_from_zentao_success': '成功从禅道同步{success}个用例。',
     'sync_success': '成功同步{success}个用例到禅道，忽略{ignore}个。',
     'sync_fail': '同步失败',
     'by_workspace': '按目录',

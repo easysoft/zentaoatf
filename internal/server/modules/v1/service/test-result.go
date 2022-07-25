@@ -48,7 +48,9 @@ func (s *TestResultService) Paginate(siteId, productId uint, req serverDomain.Re
 	for _, workspace := range workspaces {
 		reportSeqs := analysisHelper.ListReport2(workspace.Path, maxSize)
 		for _, seq := range reportSeqs {
-			summary := serverDomain.TestReportSummary{WorkspaceId: int(workspace.ID)}
+			summary := serverDomain.TestReportSummary{
+				WorkspaceId: int(workspace.ID),
+			}
 
 			report, _, err1 := analysisHelper.ReadReportByWorkspaceSeq(workspace.Path, seq)
 			if err1 != nil { // ignore wrong json result
@@ -61,7 +63,7 @@ func (s *TestResultService) Paginate(siteId, productId uint, req serverDomain.Re
 			summary.WorkspaceId = int(workspace.ID)
 			summary.WorkspaceName = workspace.Name
 
-			if report.Total == 1 {
+			if report.Total == 1 && len(report.FuncResult) > 0 {
 				scriptName := ""
 				if commConsts.PthSep == "\\" {
 					scriptName = strings.Replace(report.FuncResult[0].Path, "/", "\\", -1)

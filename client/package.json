@@ -7,7 +7,7 @@
   "scripts": {
     "start": "NODE_ENV=development electron-forge start",
     "package": "electron-forge package",
-    "package-mac": "npm run package",
+    "package-mac": "npm run package -- --platform=darwin",
     "package-linux": "npm run package -- --platform=linux",
     "package-win64": "npm run package -- --platform=win32 --arch=x64",
     "package-win32": "npm run package -- --platform=win32 --arch=ia32",

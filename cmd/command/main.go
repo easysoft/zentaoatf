@@ -222,6 +222,9 @@ func runUnitTest(args []string) {
 		start = start + 2
 		commConsts.ProductId = productId
 	}
+	if taskIdOrName != "" {
+		start = start + 2
+	}
 	if commConsts.Verbose {
 		start = start + 1
 	}
@@ -230,7 +233,7 @@ func runUnitTest(args []string) {
 
 	cmd := strings.Join(args[start:], " ")
 
-	action.RunUnitTest(cmd)
+	action.RunUnitTest(cmd, taskIdOrName)
 }
 
 func init() {

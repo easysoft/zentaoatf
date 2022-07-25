@@ -53,3 +53,9 @@ sonar-scanner \
   -Dsonar.login=412093d8c90b99378b48139915fbf275509092ad
 
 scp ~/work/zentao/qiniu/ztf/3.0.0/win64/ztf.zip aaron@110.42.146.127:~/work/webroot/
+
+rsrc -arch amd64 -manifest main.manifest -ico main.ico -o main.syso
+
+rsrc -arch amd64 -ico main.ico -o main.syso
+rsrc -arch 386 -ico main.ico -o main.syso
+sips -z 32 32 ztf.png --out tmp.iconset/icon_32x32.png

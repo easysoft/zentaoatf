@@ -226,14 +226,25 @@ const exec = async (data: any) => {
             workspaceId = scripts[0].workspaceId
         }
     }
+    if(!workspaceId){
+        if(scripts.length > 0){
+            workspaceId = scripts[0].workspaceId
+        }
+    }
     console.log('===', sets)
     msg = {act: 'execCase', testSets: sets}
 
   } else if (execType === 'unit') {
-    const set = {workspaceId: data.id, workspaceType: data.type, cmd: data.cmd, submitResult: data.submitResult, name: data.name}
+    const set = {
+      workspaceId: data.id,
+      workspaceType: data.type,
+      cmd: data.cmd,
+      submitResult: data.submitResult,
+      name: data.name,
+    }
     workspaceId = workspaceId == 0 ? data.id : workspaceId;
 
-    msg = {act: 'execUnit', testSets: [set]}
+    msg = {act: 'execUnit', testSets: [set], productId: currProduct.value.id}
 
   } else if (execType === 'stop') {
     msg = {act: 'execStop'}

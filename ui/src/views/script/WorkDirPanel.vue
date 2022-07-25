@@ -19,11 +19,11 @@
     </template>
 
     <template #toolbar-buttons>
-      <FilterModal 
-        toggle="#filterBtn" 
-        :tabs="FilterTyles" 
-        @tabChanged="onFilterTypeChanged" 
-        :list="filerItems" 
+      <FilterModal
+        toggle="#filterBtn"
+        :tabs="FilterTyles"
+        @tabChanged="onFilterTypeChanged"
+        :list="filerItems"
         :checkedTab="filerType"
         :checkedKey="filerType == oldFilerType ? oldFilerValue : ''"
         keyName="value"
@@ -32,14 +32,14 @@
         :replace-fields="replaceFields"
         triggerEvent="click">
       </FilterModal>
-      <Button 
-      id="filterBtn" 
+      <Button
+      id="filterBtn"
       class="filter-btn"
-      :label="filerLabel" 
-      v-show="currSite.id != 1" 
-      :class="filerLabel == '' ? 'rounded pure' : 'btn state rounded border primary-pale'" 
-      icon="filter" ref="filterBtnRef" 
-      :suffixIcon="filerLabel == '' ? '' : 'close'" 
+      :label="filerLabel"
+      v-show="currSite.id != 1"
+      :class="filerLabel == '' ? 'rounded pure' : 'btn state rounded border primary-pale'"
+      icon="filter" ref="filterBtnRef"
+      :suffixIcon="filerLabel == '' ? '' : 'close'"
       @suffixClick="clearFiler"
       />
       <Button class="rounded pure" :hint="t('create_workspace')" @click="showModal=!showModal" icon="folder-add" />
@@ -49,6 +49,7 @@
     </template>
 
     <WorkDir ref="workDirRef" />
+
     <FormWorkspace
       v-if="showModal"
       :show="showModal"
@@ -143,7 +144,7 @@ const loadDisplayBy = async () => {
 const initData = debounce(async () => {
   console.log('init')
   if (!currSite.value.id) return
-  
+
   setDisplayTypes();
   setFilterTypes();
   await loadDisplayBy()

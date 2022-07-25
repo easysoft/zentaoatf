@@ -28,7 +28,7 @@ func InitConfig() {
 	commConsts.WorkDir = fileUtils.GetWorkDir()
 	commConsts.ZtfDir = fileUtils.GetZTFDir()
 
-	if commConsts.Verbose {
+	if !commConsts.IsRelease {
 		log.Println("WorkDir=" + commConsts.WorkDir)
 		log.Println("ZtfDir=" + commConsts.ZtfDir)
 	}

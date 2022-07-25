@@ -11,7 +11,7 @@ import (
 	"path"
 )
 
-func RunZTFTest(files []string, moduleIdStr, suiteIdStr, taskIdStr string) error {
+func RunZTFTest(files []string, moduleIdStr, suiteIdStr, taskIdOrName string) error {
 	req := serverDomain.WsReq{
 		ScriptDirParamFromCmdLine: files[0],
 	}
@@ -28,8 +28,8 @@ func RunZTFTest(files []string, moduleIdStr, suiteIdStr, taskIdStr string) error
 		testSet.SuiteId = stringUtils.ParseInt(suiteIdStr)
 		req.Act = commConsts.ExecSuite
 
-	} else if taskIdStr != "" { // run with task id,
-		testSet.TaskId = stringUtils.ParseInt(taskIdStr)
+	} else if taskIdOrName != "" && stringUtils.ParseInt(taskIdOrName) > 0 { // run with task id,
+		testSet.TaskId = stringUtils.ParseInt(taskIdOrName)
 		req.Act = commConsts.ExecTask
 
 	} else {

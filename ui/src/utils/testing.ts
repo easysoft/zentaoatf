@@ -60,6 +60,10 @@ export const testToolMap = {
 
     robotframework: 'RobotFramework',
     cypress: 'Cypress',
+
+    playwright: 'Playwright',
+    puppeteer: 'Puppeteer',
+
     autoit: 'AutoIt',
     selenium: 'Selenium',
     appium: 'Appium',
