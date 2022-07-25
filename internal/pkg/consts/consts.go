@@ -1,26 +1,34 @@
 package commConsts
 
+import "os"
+
 const (
 	App        = "ztf"
 	AppServer  = "server"
 	AppAgent   = "agent"
 	AppCommand = "cmd"
 
-	ConfigVersion = "3.0"
-	ConfigDir     = "conf"
-	ConfigFile    = "ztf.conf"
-	LogDirName    = "log"
-	LogBakDirName = "log-bak"
-	ExtNameSuite  = "cs"
-	LogText       = "log.txt"
-	ResultText    = "result.txt"
-	ResultJson    = "result.json"
-	ResultZip     = "result.zip"
+	ConfigVersion      = "3.0"
+	ConfigDir          = "conf"
+	ConfigFile         = "ztf.conf"
+	LogDirName         = "log"
+	LogBakDirName      = "log-bak"
+	ExtNameSuite       = "cs"
+	LogText            = "log.txt"
+	ResultText         = "result.txt"
+	ResultJson         = "result.json"
+	ResultZip          = "result.zip"
+	ExecZip            = "exec.zip"
+	ExecZipPath        = "uploadTmp"
+	DownloadServerPath = "serverTmp"
+	DownloadPath       = "downloadTmp"
+	ExecProxyPath      = "execTmp"
 
 	ExpectResultPass = "pass"
 
 	PathInfo = "PATH_INFO"
 	Get      = "GET"
+	PthSep   = string(os.PathSeparator)
 )
 
 var (
@@ -32,6 +40,7 @@ var (
 	AutoTestTypeAppium   = "appium"
 	AutoTestTypes        = []string{AutoTestTypeSelenium, AutoTestTypeAppium}
 
+	UnitTestTypeAllure     = "allure"
 	UnitTestTypeJunit      = "junit"
 	UnitTestTypeTestNG     = "testng"
 	UnitTestTypeRobot      = "robot"
@@ -45,7 +54,7 @@ var (
 	UnitTestTypeGTest      = "gtest"
 	UnitTestTypeQTest      = "qtest"
 	UnitTestTypes          = []string{
-		UnitTestTypeJunit, UnitTestTypeTestNG,
+		UnitTestTypeAllure, UnitTestTypeJunit, UnitTestTypeTestNG,
 		UnitTestTypeRobot, UnitTestTypeCypress, UnitTestTypePlaywright, UnitTestTypePuppeteer,
 		UnitTestPhpUnit, UnitTestTypePyTest, UnitTestTypeJest, UnitTestTypeCppUnit, UnitTestTypeGTest, UnitTestTypeQTest,
 	}

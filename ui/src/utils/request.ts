@@ -4,7 +4,7 @@
  */
 import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
 import settings from '@/config/settings';
-import { getCache, setCache } from '@/utils/localCache';
+import { getCache } from '@/utils/localCache';
 import i18n from "@/config/i18n";
 import {getCurrProductIdBySite, getCurrSiteId} from "@/utils/cache";
 import bus from "@/utils/eventBus";
@@ -76,7 +76,16 @@ request.interceptors.request.use(
         //     const workspacePath = await getCache(settings.currWorkspace);
         //     config.params = { ...config.params, [settings.currWorkspace]: workspacePath, lang: i18n.global.locale.value };
         // }
-
+        let serverURL = await getCache(settings.currServerURL);
+        if(!serverURL || serverURL == 'local' || config.url== undefined || config.url.indexOf('/servers') > -1) {
+            serverURL = process.env.VUE_APP_APIHOST;
+        }else{
+            serverURL = String(serverURL) + 'api/v1'
+        }
+        if(config.params.proxyPath != undefined && config.params.proxyPath != 'local') {
+            serverURL = String(config.params.proxyPath) + 'api/v1'
+        }
+        config.baseURL = serverURL;
         console.log('=== request ===', config.url, config)
         return config;
     },

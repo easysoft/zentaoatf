@@ -31,6 +31,7 @@ export default {
     'version':  'Version',
     'severity':  'Severity',
     'priority':  'Priority',
+    'priority_desc':  'The lower the number, the higher the priority',
     'step':  'Step',
     'status':  'Status',
     'none':  'None',
@@ -61,6 +62,24 @@ export default {
     'edit_interpreter': 'Edit Interpreter',
     'interpreter_path': 'Interpreter Path',
     'script_lang': 'Script Language',
+
+    'remote_proxy': 'Remote Proxy',
+    'create_remote_proxy': 'Create Remote Proxy',
+    'edit_remote_proxy': 'Edit Remote Proxy',
+    'proxy_link': 'Reomte Proxy Link',
+    'proxy_lang': 'Proxy Language',
+    'copy_from': 'Copy From',
+    'pls_input_proxy_link': 'Please Input Proxy Link',
+
+    'git_auth_type': 'Git Auth Type',
+    'rsa_path': 'Rsa Key Path',
+
+    'remote_server': 'Remote Server',
+    'create_remote_server': 'Create Remote Server',
+    'edit_remote_server': 'Edit Remote Server',
+    'server_link': 'Server Address',
+    'set_default': 'Set Default',
+    'pls_input_server_link': 'Please Input Server Address',
 
     'script': 'Script',
     'test_script': 'Test Script',
@@ -184,6 +203,7 @@ export default {
     'extract_success': 'Extract comments to test steps and checkpoints successfully.',
     'extract_none': 'Not found any test steps in script comments.',
     'extract_fail': 'Extract comments to test steps and checkpoints failed.',
+    'sync_from_zentao_success': 'Success to sync {success} cases from Zentao',
     'sync_success': 'Success to sync {success} cases to Zentao, ignore {ignore} cases.',
     'sync_fail': 'Sync failed.',
     'by_workspace': 'By WorkDir',
@@ -248,6 +268,7 @@ export default {
     'pls_workspace_type':  'Please input workspace type.',
 
     'pls_zentao_url': 'Please input right ZenTao URL',
+    'pls_rsa': 'Please input right RSA key',
     'pls_username': 'Please input user name.',
     'pls_password': 'Please input password.',
     'pls_input_lang': 'Please input language.',

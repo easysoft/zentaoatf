@@ -55,7 +55,14 @@ func ExecUnit(ch chan int,
 
 	// submit result
 	if req.SubmitResult {
-		config := configHelper.LoadByWorkspacePath(req.WorkspacePath)
+		configDir := req.WorkspacePath
+		if commConsts.ExecFrom == commConsts.FromCmd {
+			configDir = commConsts.ZtfDir
+		}
+
+		//logUtils.Info("configDir=" + configDir)
+
+		config := configHelper.LoadByWorkspacePath(configDir)
 		err = zentaoHelper.CommitResult(report, req.ProductId, 0, config, wsMsg)
 	}
 

@@ -1,14 +1,15 @@
 package langHelper
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
-	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"github.com/easysoft/zentaoatf/pkg/lib/string"
 	"path"
 	"sort"
 	"strconv"
 	"strings"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 )
 
 func GetSupportLanguageOptions(scriptExtsInDir []string) ([]string, []string, []string) {
@@ -121,6 +122,9 @@ func GetEditorExtToLangMap() {
 
 func GetLangByFile(filePath string) string {
 	ext := path.Ext(filePath)
+	if len(ext) < 1 {
+		return ""
+	}
 	ext = ext[1:]
 
 	lang, _ := commConsts.ScriptExtToNameMap[ext]

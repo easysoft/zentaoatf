@@ -43,7 +43,7 @@ func (s *SiteService) GetDomainObject(id uint) (site serverDomain.ZentaoSite, er
 }
 
 func (s *SiteService) Create(site model.Site) (id uint, isDuplicate bool, err error) {
-	site.Url = zentaoHelper.FixSiteUlt(site.Url)
+	site.Url = zentaoHelper.FixSiteUrl(site.Url)
 	if site.Url == "" {
 		err = errors.New("url not right")
 		return
@@ -63,7 +63,7 @@ func (s *SiteService) Create(site model.Site) (id uint, isDuplicate bool, err er
 }
 
 func (s *SiteService) Update(site model.Site) (isDuplicate bool, err error) {
-	site.Url = zentaoHelper.FixSiteUlt(site.Url)
+	site.Url = zentaoHelper.FixSiteUrl(site.Url)
 	if site.Url == "" {
 		err = errors.New("url not right")
 		return

@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/Joker/hpp v1.0.0 // indirect
 	github.com/ajg/form v1.5.1
+	github.com/akavel/rsrc v0.10.2 // indirect
 	github.com/awesome-gocui/gocui v0.6.0
 	github.com/bitly/go-simplejson v0.5.0
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
@@ -17,6 +18,7 @@ require (
 	github.com/facebookgo/structtag v0.0.0-20150214074306-217e25fb9691 // indirect
 	github.com/facebookgo/subset v0.0.0-20200203212716-c811ad88dec4 // indirect
 	github.com/fatih/color v1.13.0
+	github.com/go-git/go-git/v5 v5.4.2
 	github.com/go-playground/validator/v10 v10.9.0
 	github.com/go-redis/redis/v8 v8.11.3
 	github.com/gorilla/websocket v1.4.2

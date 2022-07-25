@@ -107,3 +107,36 @@ func (c *TestResultCtrl) Submit(ctx iris.Context) {
 
 	ctx.JSON(c.SuccessResp(nil))
 }
+
+func (c *TestResultCtrl) DownloadLog(ctx iris.Context) {
+	fileName := ctx.URLParamDefault("file", "")
+	zipPath, err := c.TestResultService.ZipLog(fileName)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	ctx.ServeFile(zipPath)
+}
+func (c *TestResultCtrl) MvLog(ctx iris.Context) {
+	type mvlog struct {
+		File        string `json:"file"`
+		WorkspaceId int    `json:"workspaceId"`
+	}
+	params := mvlog{}
+	err := ctx.ReadJSON(&params)
+	if err != nil {
+		c.ErrResp(commConsts.ParamErr, err.Error())
+		return
+	}
+	fileName := params.File
+	workspaceId := params.WorkspaceId
+	logPath, err := c.TestResultService.DownloadFromProxy(fileName, workspaceId)
+
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	ctx.JSON(c.SuccessResp(logPath))
+}

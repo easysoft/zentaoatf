@@ -14,6 +14,14 @@
         :defaultCollapsed="true"
       />
       <FormNode :show="showModal" @submit="createNode" @cancel="modalClose" ref="formNode" />
+      <FormWorkspace
+      v-if="showWorkspaceModal"
+      :show="showWorkspaceModal"
+      @submit="createWorkSpace"
+      @cancel="modalWorkspaceClose"
+      ref="formWorkspace"
+      :workspaceId="currentNode.workspaceId"
+     />
     </div>
     <Button
       v-if="checkable && checkedKeys.length"
@@ -71,11 +79,13 @@ import FormNode from "./FormNode.vue";
 import { key } from "localforage";
 import settings from "@/config/settings";
 import {getFileNodesUnderParent, genWorkspaceToScriptsMap} from "@/views/script/service";
+import FormWorkspace from "@/views/workspace/FormWorkspace.vue";
 
 const { t } = useI18n();
 
 const store = useStore<{ global: GlobalData, Zentao: ZentaoData, Script: ScriptData, Workspace: WorkspaceData }>();
 const global = computed<any>(() => store.state.global.tabIdToWorkspaceIdMap);
+const serverUrl = computed<any>(() => store.state.global.serverUrl);
 const currSite = computed<any>(() => store.state.Zentao.currSite);
 const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
@@ -84,7 +94,6 @@ const currWorkspace = computed<any>(() => store.state.Script.currWorkspace);
 const isWin = isWindows()
 
 store.dispatch('Zentao/fetchLangs')
-const langs = computed<any[]>(() => store.state.Zentao.langs);
 
 const router = useRouter();
 let workspace = router.currentRoute.value.params.workspace as string
@@ -127,6 +136,10 @@ const onToolbarClicked = (e) => {
     case 'createDir':
       showModal.value = true;
       toolbarAction.value = e.event.key;
+      console.log(e.event.key)
+      break;
+    case 'editWorkspace':
+      showWorkspaceModal.value = true;
       break;
     case 'deleteWorkspace':
       Modal.confirm({
@@ -204,6 +217,10 @@ const selectCasesFromReport = async (): Promise<void> => {
 }
 selectCasesFromReport()
 
+watch(serverUrl, () => {
+  console.log('watch serverUrl', serverUrl.value)
+  initData()
+}, { deep: true })
 watch(currProduct, () => {
   console.log('watch currProduct', currProduct.value.id)
   initData()
@@ -561,7 +578,9 @@ const checkoutCases = (workspaceId, node) => {
         }
     });
     notification.success({
-        message: t('sync_success'),
+        message: t('sync_from_zentao_success', {
+                success: node.children.length,
+              }),
       });
 }
 const checkoutFromModule = (workspaceId, node) => {
@@ -573,7 +592,9 @@ const checkoutFromModule = (workspaceId, node) => {
     store.dispatch('Script/syncFromZentao', data).then((resp => {
     if (resp.code === 0) {
       notification.success({
-        message: t('sync_success'),
+        message: t('sync_from_zentao_success', {
+            success: resp.data.length,
+        }),
       });
     } else {
         notification.error({
@@ -588,7 +609,9 @@ const checkout = (workspaceId, caseId, path, successNotice = true) => {
     store.dispatch('Script/syncFromZentao', data).then((resp => {
     if (resp.code === 0) {
       successNotice && notification.success({
-        message: t('sync_success'),
+        message: t('sync_from_zentao_success', {
+          success: 1,
+        }),
       });
     } else {
         notification.error({
@@ -602,7 +625,7 @@ const syncFromZentaoSubmit = (model) => {
   store.dispatch("Script/syncFromZentao", model).then((resp) => {
     if (resp.code === 0) {
       notification.success({
-        message: t("sync_success", {success: resp.data == undefined? 0 : resp.data.length, ignore:0}),
+        message: t("sync_from_zentao_success", {success: resp.data == undefined? 0 : resp.data.length, ignore:0}),
       });
       showSyncFromZentaoModal.value = false;
       syncFromZentaoRef.value.clearFormData()
@@ -618,12 +641,27 @@ const execScript = (node) => {
     runTest(ref(node));
   }else{
     bus.emit(settings.eventExec,
-        {execType: node.workspaceType === 'ztf' ? 'ztf' : 'unit', scripts: node.type === 'file' ? [node] : node.children});
+        {execType: 'ztf', scripts: node.type === 'file' ? [node] : node.children});
   }
 }
 const clearMenu = () => {
   console.log('clearMenu')
   contextNode.value = ref(null)
+}
+
+const showWorkspaceModal = ref(false)
+const formWorkspace = ref({} as any)
+const createWorkSpace = (formData) => {
+    store.dispatch('Workspace/save', formData).then((response) => {
+        if (response) {
+            formWorkspace.value.clearFormData()
+            notification.success({message: t('save_success')});
+            showWorkspaceModal.value = false;
+        }
+    })
+};
+const modalWorkspaceClose = () => {
+  showWorkspaceModal.value = false;
 }
 
 defineExpose({

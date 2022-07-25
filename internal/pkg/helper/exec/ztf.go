@@ -162,16 +162,20 @@ ExitAllCase:
 
 func FilterCases(cases []string, conf commDomain.WorkspaceConf) (casesToRun, casesToIgnore []string) {
 	for _, cs := range cases {
+		ext := path.Ext(cs)
+		if ext != "" {
+			ext = ext[1:]
+		}
+		lang := commConsts.ScriptExtToNameMap[ext]
+		if lang == "" {
+			continue
+		}
+
 		if commonUtils.IsWin() {
 			if path.Ext(cs) == ".sh" { // filter by os
 				continue
 			}
 
-			ext := path.Ext(cs)
-			if ext != "" {
-				ext = ext[1:]
-			}
-			lang := commConsts.ScriptExtToNameMap[ext]
 			interpreter := configHelper.GetFieldVal(conf, stringUtils.UcFirst(lang))
 			if interpreter == "-" || interpreter == "" {
 				interpreter = ""
@@ -181,13 +185,16 @@ func FilterCases(cases []string, conf commDomain.WorkspaceConf) (casesToRun, cas
 				continue
 			}
 
-		} else if !commonUtils.IsWin() { // filter by os
+		} else { // filter by os
 			if path.Ext(cs) == ".bat" {
 				continue
 			}
 		}
 
+		//pass := scriptHelper.CheckFileIsScript(cs)
+		//if pass {
 		casesToRun = append(casesToRun, cs)
+		//}
 	}
 
 	return

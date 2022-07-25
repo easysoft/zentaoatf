@@ -5,12 +5,14 @@ import (
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
+	ztfConsts "github.com/easysoft/zentaoatf/pkg/consts"
 	"github.com/easysoft/zentaoatf/pkg/domain"
 	"github.com/kataras/iris/v12"
 )
 
 type WorkspaceCtrl struct {
 	WorkspaceService *service.WorkspaceService `inject:""`
+	ProxyService     *service.ProxyService     `inject:""`
 	BaseCtrl
 }
 
@@ -61,6 +63,7 @@ func (c *WorkspaceCtrl) Create(ctx iris.Context) {
 	req := model.Workspace{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
 	}
 
 	req.SiteId = uint(currSiteId)
@@ -144,4 +147,40 @@ func (c *WorkspaceCtrl) ListByProduct(ctx iris.Context) {
 	}
 
 	ctx.JSON(c.SuccessResp(data))
+}
+
+func (c *WorkspaceCtrl) UploadScriptsToProxy(ctx iris.Context) {
+	testSets := []serverDomain.TestSet{}
+	var err error
+	if err := ctx.ReadJSON(&testSets); err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+	pathMap, err := c.WorkspaceService.UploadScriptsToProxy(testSets)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+	ctx.JSON(c.SuccessResp(pathMap))
+}
+
+// UploadFile 上传文件
+func (c *WorkspaceCtrl) UploadScripts(ctx iris.Context) {
+	f, fh, err := ctx.FormFile("file")
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+	defer f.Close()
+
+	err = c.WorkspaceService.UploadScripts(fh, ctx)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+	ctx.JSON(c.SuccessResp(iris.Map{"workDir": commConsts.WorkDir, "sep": ztfConsts.FilePthSep}))
 }

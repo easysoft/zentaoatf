@@ -139,6 +139,7 @@ func (TestType) Get(str string) TestType {
 type TestTool string
 
 const (
+	Allure  TestTool = "allure"
 	ZTF     TestTool = "ztf"
 	JUnit   TestTool = "junit"
 	TestNG  TestTool = "testng"

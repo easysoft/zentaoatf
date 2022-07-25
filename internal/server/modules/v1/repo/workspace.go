@@ -3,6 +3,7 @@ package repo
 import (
 	"errors"
 	"fmt"
+
 	"github.com/easysoft/zentaoatf/pkg/domain"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
@@ -100,7 +101,14 @@ func (r *WorkspaceRepo) Update(workspace model.Workspace) error {
 		logUtils.Errorf(color.RedString("update workspace failed, error: %s.", err.Error()))
 		return err
 	}
-
+	if workspace.ProxyId == 0 {
+		err = r.DB.Model(&model.Workspace{}).Where("id = ?", workspace.ID).
+			Update("proxy_id", 0).Error
+		if err != nil {
+			logUtils.Errorf(color.RedString("update workspace failed, error: %s.", err.Error()))
+			return err
+		}
+	}
 	return nil
 }
 

@@ -8,8 +8,12 @@ import (
 func GetUnitTools(args []string, startIndex int) {
 	str := args[startIndex]
 
-	if str == commConsts.UnitTestToolMvn {
-		commConsts.UnitTestTool = commConsts.JUnit
+	if commConsts.UnitTestType == commConsts.UnitTestTypeAllure {
+		commConsts.UnitTestTool = commConsts.Allure
+		if str == commConsts.UnitTestToolMvn {
+			commConsts.UnitBuildTool = commConsts.Maven
+		}
+	} else if str == commConsts.UnitTestToolMvn {
 		commConsts.UnitBuildTool = commConsts.Maven
 	} else if str == commConsts.UnitTestToolMocha {
 		commConsts.UnitTestTool = commConsts.Puppeteer

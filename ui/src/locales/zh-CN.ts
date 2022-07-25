@@ -34,6 +34,7 @@ export default {
     'version':  '版本',
     'severity':  '严重程度',
     'priority':  '优先级',
+    'priority_desc':  '数字越小，优先级越高',
     'step':  '步骤',
     'status':  '状态',
     'all':  '所有',
@@ -69,6 +70,24 @@ export default {
     'edit_interpreter': '编辑运行环境',
     'interpreter_path': '可执行文件路径',
     'script_lang': '脚本语言',
+    
+    'remote_proxy': '远程代理',
+    'create_remote_proxy': '新建远程代理',
+    'edit_remote_proxy': '编辑远程代理',
+    'proxy_link': '远程代理地址',
+    'proxy_lang': '代理语言',
+    'copy_from': '复制自',
+    'pls_input_proxy_link': '请输入远程代理地址',
+
+    'git_auth_type': 'git 登录方式',
+    'rsa_path': '密钥路径',
+
+    'remote_server': '服务器管理',
+    'create_remote_server': '新建服务器',
+    'edit_remote_server': '编辑服务器',
+    'server_link': '服务器地址',
+    'set_default': '设为默认',
+    'pls_input_server_link': '请输入服务器地址',
 
     'script': '脚本',
     'test_script': '测试脚本',
@@ -191,6 +210,7 @@ export default {
     'extract_success': '提取注释为测试步骤和验证点成功。',
     'extract_none': '脚本中未发现测试步骤。',
     'extract_fail': '提取注释为测试步骤和验证点失败。',
+    'sync_from_zentao_success': '成功从禅道同步{success}个用例。',
     'sync_success': '成功同步{success}个用例到禅道，忽略{ignore}个。',
     'sync_fail': '同步失败',
     'by_workspace': '按目录',
@@ -259,6 +279,7 @@ export default {
     'pls_workspace_type':  '请选择工作目录类型',
 
     'pls_zentao_url': '请输入正确的禅道地址',
+    'pls_rsa': '请输入密钥地址',
     'pls_username': '请输入用户名',
     'pls_password': '请输入密码',
     'pls_input_lang': '请输入语言',

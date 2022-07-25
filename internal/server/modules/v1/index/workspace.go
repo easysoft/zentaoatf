@@ -24,6 +24,8 @@ func (m *WorkspaceModule) Party() module.WebModule {
 		index.Get("/listByProduct", m.WorkspaceCtrl.ListByProduct).Name = "列表"
 		index.Get("/{id:int}", m.WorkspaceCtrl.Get).Name = "详情"
 		index.Post("/", m.WorkspaceCtrl.Create).Name = "新建"
+		index.Post("/uploadToProxy", m.WorkspaceCtrl.UploadScriptsToProxy).Name = "上传脚本到代理服务器"
+		index.Post("/uploadScripts", m.WorkspaceCtrl.UploadScripts).Name = "上传脚本"
 		index.Put("/{id:int}", m.WorkspaceCtrl.Update).Name = "更新"
 		index.Delete("/{id:int}", m.WorkspaceCtrl.Delete).Name = "删除"
 		index.Delete("/", m.WorkspaceCtrl.DeleteByPath).Name = "删除工作目录"

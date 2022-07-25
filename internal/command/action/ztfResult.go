@@ -56,6 +56,5 @@ func CommitZTFTestResult(files []string, productId int, taskIdOrName string, noN
 	}
 
 	config := configHelper.LoadByWorkspacePath(commConsts.ZtfDir)
-
 	err = zentaoHelper.CommitResult(report, result.ProductId, result.TaskId, config, nil)
 }

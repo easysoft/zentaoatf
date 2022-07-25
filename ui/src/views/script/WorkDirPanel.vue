@@ -51,6 +51,7 @@
     <WorkDir ref="workDirRef" />
 
     <FormWorkspace
+      v-if="showModal"
       :show="showModal"
       @submit="createWorkSpace"
       @cancel="modalClose"

@@ -23,3 +23,12 @@ export const removeCache = async (key: string): Promise<boolean> => {
     return false;
   }
 };
+
+export const clear = async (): Promise<boolean> => {
+    try {
+      await localforage.clear();
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };

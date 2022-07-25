@@ -33,8 +33,10 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 	key := stringUtils.Md5(req.WorkspacePath)
 
 	testSuites, zipDir := RetrieveUnitResult(req.WorkspacePath, startTime, req.TestTool, req.BuildTool)
-	unitResultPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultZip)
-	fileUtils.ZipDir(unitResultPath, zipDir)
+	zipFile := filepath.Join(commConsts.ExecLogDir, commConsts.ResultZip)
+	if zipDir != "" {
+		fileUtils.ZipDir(zipFile, zipDir)
+	}
 
 	cases, classNameMaxWidth, duration := ParserUnitTestResult(testSuites)
 
@@ -195,37 +197,85 @@ func RetrieveUnitResult(workspacePath string, startTime int64, testTool commCons
 		testTool == commConsts.Playwright || testTool == commConsts.Puppeteer {
 		resultDir = "results"
 		zipDir = resultDir
+	} else if testTool == commConsts.Allure {
+		if buildTool == commConsts.Maven {
+			resultDir = filepath.Join("target", "allure-results")
+			zipDir = resultDir
+		}
 	} else {
-		resultDir = ""
+		resultDir = "testresult.xml"
 		zipDir = resultDir
 	}
 
 	zipDir = filepath.Join(workspacePath, zipDir)
 	resultDir = filepath.Join(workspacePath, resultDir)
-	resultFiles, _ = GetSuiteFiles(resultDir, startTime)
+	resultFiles, _ = GetSuiteFiles(resultDir, startTime, testTool)
 
-	for _, file := range resultFiles {
-		testSuite, err := GetTestSuite(file, testTool)
+	if testTool == commConsts.Allure {
+		suites = GetAllureSuites(resultDir, startTime)
 
-		if err == nil {
-			suites = append(suites, testSuite)
+	} else {
+		for _, file := range resultFiles {
+			testSuite, err := GetTestSuite(file, testTool)
+
+			if err == nil {
+				suites = append(suites, testSuite)
+			}
 		}
 	}
 
 	return
 }
 
-func GetSuiteFiles(resultDir string, startTime int64) (resultFiles []string, err error) {
+func GetAllureSuites(resultDir string, startTime int64) (suites []commDomain.UnitTestSuite) {
+	files, err := ioutil.ReadDir(resultDir)
+	if err != nil {
+		return
+	}
+
+	cases := make([]commDomain.AllureCase, 0)
+	for _, fi := range files {
+		name := fi.Name()
+
+		if strings.Index(name, "-result.json") < 0 || fi.ModTime().Unix() < startTime {
+			continue
+		}
+
+		pth := filepath.Join(resultDir, name)
+		content := fileUtils.ReadFileBuf(pth)
+
+		cs := commDomain.AllureCase{}
+		err = json.Unmarshal(content, &cs)
+		if err == nil {
+			cases = append(cases, cs)
+		}
+	}
+
+	suites = ConvertAllureResult(cases)
+
+	return
+}
+
+func GetSuiteFiles(resultDir string, startTime int64, testTool commConsts.TestTool) (resultFiles []string, err error) {
 	if fileUtils.IsDir(resultDir) {
 		dir, err := ioutil.ReadDir(resultDir)
 		if err == nil {
 			for _, fi := range dir {
 				name := fi.Name()
 				ext := path.Ext(name)
-				if ext == ".xml" && fi.ModTime().Unix() >= startTime {
+
+				if fi.ModTime().Unix() < startTime {
+					continue
+				}
+
+				if testTool == commConsts.Allure && ext == ".json" {
+					pth := filepath.Join(resultDir, name)
+					resultFiles = append(resultFiles, pth)
+				} else if ext == ".xml" {
 					pth := filepath.Join(resultDir, name)
 					resultFiles = append(resultFiles, pth)
 				}
+
 			}
 		}
 	} else {
@@ -354,6 +404,28 @@ func ParserUnitTestResult(testSuites []commDomain.UnitTestSuite) (
 			idx++
 		}
 	}
+
+	return
+}
+
+func ConvertAllureResult(cases []commDomain.AllureCase) (testSuite []commDomain.UnitTestSuite) {
+	//testSuite.Time = 0
+	//
+	//for _, cs := range testSuite.Cases {
+	//	caseResult := commDomain.UnitResult{}
+	//	caseResult.Title = cs.Title
+	//	caseResult.Duration = cs.Duration
+	//
+	//	if suite.Title != "" && suite.Title != "undefined" {
+	//		caseResult.TestSuite = suite.Title
+	//	} else {
+	//		caseResult.TestSuite = jestSuite.Title
+	//	}
+	//
+	//	caseResult.Failure = cs.Failure
+	//
+	//	testSuite.Cases = append(testSuite.Cases, caseResult)
+	//}
 
 	return
 }
