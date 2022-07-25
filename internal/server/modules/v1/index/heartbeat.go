@@ -19,7 +19,7 @@ func (m *HeartBeatModule) Party() module.WebModule {
 		index.Use(middleware.InitCheck())
 
 		index.Get("/", func(ctx iris.Context) {
-			ctx.StatusCode(200)
+			ctx.JSON(iris.Map{"code": 0, "msg": "ok"})
 		})
 	}
 	return module.NewModule("/heartbeat", handler)
