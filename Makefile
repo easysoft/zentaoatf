@@ -1,6 +1,21 @@
 VERSION=3.0.0
 PROJECT=ztf
-QINIU_DIR=/Users/aaron/work/zentao/qiniu/
+
+ifeq ($(OS),Windows_NT)
+ PLATFORM="Windows"
+else
+ ifeq ($(shell uname),Darwin)
+  PLATFORM="Mac"
+ else
+  PLATFORM="Unix"
+ endif
+endif
+
+ifeq ($(PLATFORM),"Mac")
+  QINIU_DIR=/Users/aaron/work/zentao/qiniu/
+else
+  QINIU_DIR=~/ztfZip
+endif
 QINIU_DIST_DIR=${QINIU_DIR}${PROJECT}/${VERSION}/
 SERVER_MAIN_FILE=cmd/server/main.go
 
@@ -28,7 +43,11 @@ prepare: update_version prepare_res
 update_version: update_version_in_config gen_version_file
 
 update_version_in_config:
-	@gsed -i "s/Version.*/Version = ${VERSION}/" conf/ztf.conf
+ifeq ($(PLATFORM),"Mac")
+    @gsed -i "s/Version.*/Version = ${VERSION}/" conf/ztf.conf
+else
+	@sed -i "s/Version.*/Version = ${VERSION}/" conf/ztf.conf
+endif
 
 gen_version_file:
 	@echo 'gen version'
@@ -72,9 +91,15 @@ build_gui_linux: compile_gui_linux package_gui_linux_client
 compile_gui_linux:
 	@echo 'start compile linux'
 	@rm -rf ./${CLIENT_BIN_DIR}/*
+ifeq ($(PLATFORM),"Mac")
 	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ \
 		${BUILD_CMD} \
 		-o ${CLIENT_BIN_DIR}linux/${PROJECT} ${SERVER_MAIN_FILE}
+else
+	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=gcc CXX=g++ \
+		${BUILD_CMD} \
+		-o ${CLIENT_BIN_DIR}linux/${PROJECT} ${SERVER_MAIN_FILE}
+endif
 package_gui_linux_client:
 	@cd client && npm run package-linux && cd ..
 	@rm -rf ${CLIENT_OUT_DIR}linux && mkdir ${CLIENT_OUT_DIR}linux && \
@@ -95,6 +120,7 @@ package_gui_mac_client:
 
 # command line
 compile_command_win64:
+	@echo ${QINIU_DIR}
 	@echo 'start compile win64'
 	@cd ${COMMAND_MAIN_DIR} && \
         CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
@@ -112,9 +138,15 @@ compile_command_win32:
 
 compile_command_linux:
 	@echo 'start compile linux'
+ifeq ($(PLATFORM),"Mac")
 	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ \
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}linux/${PROJECT} ${COMMAND_MAIN_FILE}
+else
+	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=gcc CXX=g++ \
+		${BUILD_CMD} \
+		-o ${COMMAND_BIN_DIR}linux/${PROJECT} ${COMMAND_MAIN_FILE}
+endif
 
 compile_command_mac:
 	@echo 'start compile darwin'
