@@ -93,3 +93,18 @@ func (c *ProxyCtrl) Delete(ctx iris.Context) {
 
 	ctx.JSON(c.SuccessResp(nil))
 }
+
+func (c *ProxyCtrl) CheckConnect(ctx iris.Context) {
+	id, err := ctx.Params().GetInt("id")
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	path, err := c.ProxyService.CheckConnect(uint(id))
+	if err != nil {
+		ctx.JSON(c.SuccessResp(iris.Map{"status": "fail", "path": path}))
+		return
+	}
+	ctx.JSON(c.SuccessResp(iris.Map{"status": "ok", "path": path}))
+}

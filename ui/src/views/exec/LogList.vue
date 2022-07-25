@@ -66,20 +66,18 @@ import Icon from '@/components/Icon.vue';
 import {momentTime} from "@/utils/datetime";
 import {isInArray} from "@/utils/array";
 import {StateType as GlobalStateType} from "@/store/global";
-import { get as getWorkspace, uploadToProxy } from "@/views/workspace/service";
+import { get as getWorkspace, uploadToProxy, autoSelectProxy } from "@/views/workspace/service";
 import {mvLog} from "@/views/result/service";
 import { key } from "localforage";
 const { t } = useI18n();
 
-const store = useStore<{global: GlobalStateType, Zentao: ZentaoData, WebSocket: WebSocketData, Exec: ExecStatus, proxy: ProxyData, workspace: WorkspaceData}>();
+const store = useStore<{global: GlobalStateType, Zentao: ZentaoData, WebSocket: WebSocketData, Exec: ExecStatus, workspace: WorkspaceData}>();
 const logContentExpand = computed<boolean>(() => store.state.global.logContentExpand);
 
-store.dispatch("proxy/fetchProxies");
 const currSite = computed<any>(() => store.state.Zentao.currSite);
 const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 const wsStatus = computed<any>(() => store.state.WebSocket.connStatus);
 const isRunning = computed<any>(() => store.state.Exec.isRunning);
-const proxyMap = computed<any>(() => store.state.proxy.proxyMap);
 const currentWorkspace = ref({} as any);
 
 const cachedExecData = ref({})
@@ -252,7 +250,7 @@ const exec = async (data: any) => {
 
   console.log('exec testing', msg)
   currentWorkspace.value = {};
-  let workspaceInfo = {};
+  let workspaceInfo = {} as any;
   if(workspaceId>0){
     workspaceInfo = await getWorkspace(workspaceId)
   }
@@ -275,7 +273,8 @@ const exec = async (data: any) => {
         }
     })
   }
-  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), proxyMap.value[workspaceInfo?.data?.proxy_id])
+  const proxyPath = await autoSelectProxy(workspaceInfo.data);
+  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), proxyPath)
 }
 
 const logLevel = ref('result')

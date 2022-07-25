@@ -22,6 +22,7 @@ func (m *ProxyModule) Party() module.WebModule {
 
 		index.Get("/", m.ProxyCtrl.List).Name = "列表"
 		index.Get("/{id:int}", m.ProxyCtrl.Get).Name = "详情"
+		index.Get("/{id:int}/check", m.ProxyCtrl.CheckConnect).Name = "测试连接可用"
 		index.Post("/", m.ProxyCtrl.Create).Name = "新建"
 		index.Put("/{id:int}", m.ProxyCtrl.Update).Name = "更新"
 		index.Delete("/{id:int}", m.ProxyCtrl.Delete).Name = "删除"

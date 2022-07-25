@@ -64,3 +64,12 @@ func (s *ProxyService) CheckServer(url string) (err error) {
 	_, err = httpUtils.Get(url + "api/v1/heartbeat")
 	return
 }
+
+func (s *ProxyService) CheckConnect(id uint) (path string, err error) {
+	proxy, err := s.Get(id)
+	if err != nil {
+		return path, errors.New("proxy not found")
+	}
+	_, err = httpUtils.Get(proxy.Path + "api/v1/heartbeat")
+	return proxy.Path, err
+}

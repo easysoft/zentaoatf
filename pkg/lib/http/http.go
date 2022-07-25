@@ -3,13 +3,14 @@ package httpUtils
 import (
 	"encoding/json"
 	"errors"
+	"io/ioutil"
+	"net/http"
+	"strings"
+
 	"github.com/bitly/go-simplejson"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/fatih/color"
-	"io/ioutil"
-	"net/http"
-	"strings"
 )
 
 func Get(url string) (ret []byte, err error) {
@@ -32,13 +33,13 @@ func Get(url string) (ret []byte, err error) {
 	}
 
 	resp, err := client.Do(req)
-	defer resp.Body.Close()
 	if err != nil {
 		if commConsts.Verbose {
 			logUtils.Infof(color.RedString("get request failed, error: %s.", err.Error()))
 		}
 		return
 	}
+	defer resp.Body.Close()
 
 	if !IsSuccessCode(resp.StatusCode) {
 		if commConsts.Verbose {
