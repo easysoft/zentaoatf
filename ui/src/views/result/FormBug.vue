@@ -3,7 +3,7 @@
       :showModal="showModalRef"
       @onCancel="close"
       @onOk="submit"
-      :title="t('submit_result_to_zentao')"
+      :title="t('submit_bug_to_zentao')"
       :contentStyle="{width: '500px'}"
   >
     <Form>

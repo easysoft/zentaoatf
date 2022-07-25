@@ -184,6 +184,7 @@ export default {
     'extract_success': 'Extract comments to test steps and checkpoints successfully.',
     'extract_none': 'Not found any test steps in script comments.',
     'extract_fail': 'Extract comments to test steps and checkpoints failed.',
+    'sync_from_zentao_success': 'Success to sync {success} cases from Zentao',
     'sync_success': 'Success to sync {success} cases to Zentao, ignore {ignore} cases.',
     'sync_fail': 'Sync failed.',
     'by_workspace': 'By WorkDir',
