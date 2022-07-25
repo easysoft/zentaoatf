@@ -20,7 +20,7 @@ default: win64 win32 linux mac
 
 win64: prepare build_gui_win64 compile_launcher_win64 compile_command_win64 copy_files_win64 zip_win64
 win32: prepare build_gui_win32 compile_launcher_win32 compile_command_win32 copy_files_win32 zip_win32
-linux: prepare build_gui_linux compile_launcher_linux compile_command_linux copy_files_linux zip_linux
+linux: prepare build_gui_linux                        compile_command_linux copy_files_linux zip_linux
 mac:   prepare build_gui_mac                          compile_command_mac   copy_files_mac   zip_mac
 
 prepare: update_version prepare_res
