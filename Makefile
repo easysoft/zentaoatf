@@ -3,7 +3,9 @@ PROJECT=ztf
 QINIU_DIR=/Users/aaron/work/zentao/qiniu/
 QINIU_DIST_DIR=${QINIU_DIR}${PROJECT}/${VERSION}/
 SERVER_MAIN_FILE=cmd/server/main.go
-COMMAND_MAIN_FILE=cmd/command/main.go
+
+COMMAND_MAIN_DIR=cmd/command/
+COMMAND_MAIN_FILE=${COMMAND_MAIN_DIR}main.go
 
 COMMAND_BIN_DIR=bin/
 CLIENT_BIN_DIR=client/bin/
@@ -94,15 +96,19 @@ package_gui_mac_client:
 # command line
 compile_command_win64:
 	@echo 'start compile win64'
-	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
+	@cd ${COMMAND_MAIN_DIR} && \
+        CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
 		${BUILD_CMD} -x -v -ldflags "-s -w" \
-		-o ${COMMAND_BIN_DIR}win64/${PROJECT}.exe ${COMMAND_MAIN_FILE}
+		-o ../../${COMMAND_BIN_DIR}win64/${PROJECT}.exe && \
+		cd ..
 
 compile_command_win32:
 	@echo 'start compile win32'
-	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
+	@cd ${COMMAND_MAIN_DIR} && \
+        CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
 		${BUILD_CMD} -x -v -ldflags "-s -w" \
-		-o ${COMMAND_BIN_DIR}win32/${PROJECT}.exe ${COMMAND_MAIN_FILE}
+		-o ../../${COMMAND_BIN_DIR}win32/${PROJECT}.exe && \
+        cd ..
 
 compile_command_linux:
 	@echo 'start compile linux'
