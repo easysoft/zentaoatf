@@ -33,8 +33,8 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 	key := stringUtils.Md5(req.WorkspacePath)
 
 	testSuites, zipDir := RetrieveUnitResult(req.WorkspacePath, startTime, req.TestTool, req.BuildTool)
-	zipFile := filepath.Join(commConsts.ExecLogDir, commConsts.ResultZip)
 	if zipDir != "" {
+		zipFile := filepath.Join(commConsts.ExecLogDir, commConsts.ResultZip)
 		fileUtils.ZipDir(zipFile, zipDir)
 	}
 
@@ -108,7 +108,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 		msg += strings.Join(failedCaseLines, "\n")
 		msg += strings.Join(failedCaseLinesDesc, "\n")
 
-		logUtils.ExecConsolef(color.FgCyan, msg)
+		logUtils.ExecConsolef(color.FgRed, msg)
 		logUtils.ExecResult(msg)
 	}
 
@@ -198,21 +198,26 @@ func RetrieveUnitResult(workspacePath string, startTime int64, testTool commCons
 		resultDir = "results"
 		zipDir = resultDir
 	} else if testTool == commConsts.Allure {
-		if buildTool == commConsts.Maven {
-			resultDir = filepath.Join("target", "allure-results")
-			zipDir = resultDir
-		}
+		resultDir = commConsts.AllureReportDir
+		zipDir = resultDir
 	} else {
 		resultDir = "testresult.xml"
 		zipDir = resultDir
 	}
 
-	zipDir = filepath.Join(workspacePath, zipDir)
-	resultDir = filepath.Join(workspacePath, resultDir)
-	resultFiles, _ = GetSuiteFiles(resultDir, startTime, testTool)
+	if resultDir != "" {
+		zipDir = filepath.Join(workspacePath, zipDir)
+		resultDir = filepath.Join(workspacePath, resultDir)
+		resultFiles, _ = GetSuiteFiles(resultDir, startTime, testTool)
+	}
 
 	if testTool == commConsts.Allure {
-		suites = GetAllureSuites(resultDir, startTime)
+		if resultDir != "" {
+			suites = GetAllureSuites(resultDir, startTime)
+		} else {
+			logUtils.Info(color.RedString(
+				i118Utils.Sprintf("must_provide_allure_report_dir")))
+		}
 
 	} else {
 		for _, file := range resultFiles {
@@ -408,24 +413,75 @@ func ParserUnitTestResult(testSuites []commDomain.UnitTestSuite) (
 	return
 }
 
-func ConvertAllureResult(cases []commDomain.AllureCase) (testSuite []commDomain.UnitTestSuite) {
-	//testSuite.Time = 0
-	//
-	//for _, cs := range testSuite.Cases {
-	//	caseResult := commDomain.UnitResult{}
-	//	caseResult.Title = cs.Title
-	//	caseResult.Duration = cs.Duration
-	//
-	//	if suite.Title != "" && suite.Title != "undefined" {
-	//		caseResult.TestSuite = suite.Title
-	//	} else {
-	//		caseResult.TestSuite = jestSuite.Title
-	//	}
-	//
-	//	caseResult.Failure = cs.Failure
-	//
-	//	testSuite.Cases = append(testSuite.Cases, caseResult)
-	//}
+func ConvertAllureResult(cases []commDomain.AllureCase) (testSuites []commDomain.UnitTestSuite) {
+	suites := make([]*commDomain.UnitTestSuite, 0)
+	suiteMap := map[string]*commDomain.UnitTestSuite{}
+
+	for _, cs := range cases {
+		suiteName := GetAllureCaseSuiteName(cs)
+		logUtils.Info(suiteName)
+
+		_, ok := suiteMap[suiteName]
+		if !ok {
+			suite := commDomain.UnitTestSuite{
+				Name: suiteName,
+				Time: 0,
+			}
+			suites = append(suites, &suite)
+			suiteMap[suiteName] = &suite
+		}
+
+		suiteMap[suiteName].Name = "111"
+
+		// passed, failed
+		caseResult := commDomain.UnitResult{
+			Title:     cs.Name,
+			TestSuite: suiteName,
+			Duration:  float32(cs.Stop-cs.Start) / 1000,
+		}
+
+		if cs.Status == "failed" {
+			caseResult.Failure = &commDomain.Failure{
+				Type: "AssertionError",
+				Desc: cs.StatusDetails.Message + ": " + cs.StatusDetails.Trace,
+			}
+		}
+
+		suiteMap[suiteName].Cases = append(suiteMap[suiteName].Cases, caseResult)
+	}
+
+	for _, suite := range suites {
+		dur := int64(0)
+		for _, cs := range suite.Cases {
+			dur += cs.EndTime - cs.StartTime
+		}
+		suite.Time = float32(dur)
+
+		testSuites = append(testSuites, *suite)
+	}
+
+	return
+}
+func GetAllureCaseSuiteName(cs commDomain.AllureCase) (name string) {
+	suiteArr := make([]string, 0)
+
+	for _, label := range cs.Labels {
+		if label.Name == "parentSuite" {
+			if label.Value != "" {
+				suiteArr = append(suiteArr, label.Value)
+			}
+		} else if label.Name == "suite" {
+			if label.Value != "" && (len(suiteArr) == 0 || label.Value != suiteArr[len(suiteArr)-1]) {
+				suiteArr = append(suiteArr, label.Value)
+			}
+		} else if label.Name == "subSuite" {
+			if label.Value != "" && (len(suiteArr) == 0 || label.Value != suiteArr[len(suiteArr)-1]) {
+				suiteArr = append(suiteArr, label.Value)
+			}
+		}
+	}
+
+	name = strings.Join(suiteArr, "-")
 
 	return
 }

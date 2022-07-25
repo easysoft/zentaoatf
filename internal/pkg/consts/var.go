@@ -37,8 +37,7 @@ var (
 	UnitTestType    string
 	UnitBuildTool   BuildTool
 	UnitTestTool    TestTool
-	UnitTestResult  string
-	UnitTestResults = "results"
+	AllureReportDir string
 	ProductId       string
 
 	ZenTaoVersion string

@@ -252,8 +252,15 @@ type Property struct {
 
 // allure json
 type AllureCase struct {
-	Name        string        `json:"name"`
-	Status      string        `json:"status"`
+	Name          string `json:"name"`
+	Status        string `json:"status"`
+	StatusDetails struct {
+		Known   bool   `json:"known"`
+		Muted   bool   `json:"muted"`
+		Flaky   bool   `json:"flaky"`
+		Message string `json:"message"`
+		Trace   string `json:"trace"`
+	} `json:"statusDetails"`
 	Stage       string        `json:"stage"`
 	Description string        `json:"description"`
 	Steps       []interface{} `json:"steps"`

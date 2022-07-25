@@ -54,7 +54,7 @@ func ExecUnit(ch chan int,
 	report := GenUnitTestReport(req, startTime.Unix(), entTime.Unix(), ch, wsMsg)
 
 	// submit result
-	if req.SubmitResult {
+	if req.SubmitResult && (report.FuncResult != nil || report.UnitResult != nil) {
 		configDir := req.WorkspacePath
 		if commConsts.ExecFrom == commConsts.FromCmd {
 			configDir = commConsts.ZtfDir

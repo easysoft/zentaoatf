@@ -74,7 +74,7 @@ func main() {
 	flagSet.BoolVar(&noNeedConfirm, "y", false, "")
 	flagSet.BoolVar(&commConsts.Verbose, "verbose", false, "")
 
-	flagSet.StringVar(&commConsts.UnitTestResult, "result", "", "")
+	flagSet.StringVar(&commConsts.AllureReportDir, "allureReportDir", "", "")
 
 	if len(os.Args) == 1 {
 		os.Args = append(os.Args, "run", ".")
@@ -213,16 +213,14 @@ func runUnitTest(args []string) {
 	flagSet.Parse(args[3:])
 
 	start := 3
-	if commConsts.UnitTestResult != "" {
-		start = start + 2
-	} else {
-		commConsts.UnitTestResult = "./"
-	}
 	if productId != "" {
 		start = start + 2
 		commConsts.ProductId = productId
 	}
 	if taskIdOrName != "" {
+		start = start + 2
+	}
+	if commConsts.AllureReportDir != "" {
 		start = start + 2
 	}
 	if commConsts.Verbose {

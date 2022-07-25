@@ -662,6 +662,10 @@
     {
       "id": "upload_file_result",
       "translation": "Upload file result: %s，%s."
+    },
+    {
+      "id": "must_provide_allure_report_dir",
+      "translation": "Please provide report dir if using Allure Report Framework."
     }
   ]
 }
