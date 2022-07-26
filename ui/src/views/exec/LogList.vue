@@ -257,26 +257,26 @@ const exec = async (data: any) => {
   let selectedProxy = {data:{path:''}} as any;
   if (msg.testSets !== undefined && workspaceInfo.data != undefined && workspaceInfo.data.proxies != '' && workspaceInfo.data.proxies != '0') {
     currentWorkspace.value = workspaceInfo.data;
-     selectedProxy = await autoSelectProxy(workspaceInfo.data);
-    if(selectedProxy.data.proxy_id > 0){
-        currentWorkspace.value.proxy_id = selectedProxy.data.proxy_id;
-    }
-    const resp = await uploadToProxy(msg.testSets);
-    const testSetsMap = resp.data;
-    realPathMap.value = testSetsMap;
-    let casesMap = {};
-    var keys = Object.keys(testSetsMap);
-    keys.forEach((val) => {
+    currentWorkspace.value.proxy_id = 0;
+    selectedProxy = await autoSelectProxy(workspaceInfo.data);
+    if (selectedProxy.data.id > 0) {
+      currentWorkspace.value.proxy_id = selectedProxy.data.id;
+      const resp = await uploadToProxy(msg.testSets);
+      const testSetsMap = resp.data;
+      realPathMap.value = testSetsMap;
+      let casesMap = {};
+      var keys = Object.keys(testSetsMap);
+      keys.forEach((val) => {
         casesMap[testSetsMap[val]] = val;
-    });
-    msg.testSets.forEach((set, setIndex) => {
-        if(set.cases != undefined){
-            set.cases.forEach((casePath, caseIndex) => {
-                msg.testSets[setIndex].cases[caseIndex] = casesMap[casePath];
-            }
-        );
+      });
+      msg.testSets.forEach((set, setIndex) => {
+        if (set.cases != undefined) {
+          set.cases.forEach((casePath, caseIndex) => {
+            msg.testSets[setIndex].cases[caseIndex] = casesMap[casePath];
+          });
         }
-    })
+      });
+    }
   }
 
   WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), selectedProxy.data.path)
