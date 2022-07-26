@@ -62,6 +62,6 @@ export async function removeInterpreter(id: number, proxyPath = 'local'): Promis
     return request({
         url: `/${apiPath}/${id}`,
         method: 'delete',
-        data:{proxyPath}
+        params:{proxyPath}
     });
 }

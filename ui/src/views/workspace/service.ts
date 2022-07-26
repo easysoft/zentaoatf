@@ -52,24 +52,11 @@ export async function uploadToProxy(params: any): Promise<any> {
 }
 
 export async function autoSelectProxy(workspace) {
-  const proxies = workspace.proxies.split(',');
-  const handleList = [] as any;
-  let localIndex = proxies.length;
-  proxies.forEach((proxy, index) => {
-    if (proxy > 0) {
-      handleList.push(
-        checkProxy(proxy)
-      );
-    }else{
-        localIndex = index;
+    if(workspace == undefined || workspace.id == undefined) {
+        return 'local';
     }
-  })
-  const resp = await Promise.all(handleList);
-  let proxyPath = '';
-  resp.forEach((item:any, index) => {
-    if(proxyPath == '' && item.data.status == 'ok' && index < localIndex){
-        proxyPath = item.data.path;
-    }
-  })
-  return proxyPath ? proxyPath : 'local';
+    return request({
+        url: `/${apiPath}/${workspace.id}/proxy`,
+        method: 'get',
+    });
 }

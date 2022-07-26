@@ -95,7 +95,7 @@ export async function getWebSocketApi (appApiHost): Promise<string> {
   const loc = window.location
   console.log(`${isProd}, ${loc.toString()}`)
   const serverUrl = await getServerUrl();
-  const apiHost = appApiHost ? appApiHost + process.env.VUE_APP_APISUFFIX : serverUrl
+  const apiHost = appApiHost && appApiHost != 'local' ? appApiHost + process.env.VUE_APP_APISUFFIX : serverUrl
 
   const url = apiHost.replace('http', 'ws') + '/ws'
   console.log(`websocket url = ${url}`, appApiHost)

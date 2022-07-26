@@ -184,3 +184,19 @@ func (c *WorkspaceCtrl) UploadScripts(ctx iris.Context) {
 	}
 	ctx.JSON(c.SuccessResp(iris.Map{"workDir": commConsts.WorkDir, "sep": ztfConsts.FilePthSep}))
 }
+
+func (c *WorkspaceCtrl) GetValidProxy(ctx iris.Context) {
+	id, err := ctx.Params().GetInt("id")
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	proxy, err := c.WorkspaceService.GetValidProxy(uint(id))
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	ctx.JSON(c.SuccessResp(proxy))
+}

@@ -254,8 +254,13 @@ const exec = async (data: any) => {
   if(workspaceId>0){
     workspaceInfo = await getWorkspace(workspaceId)
   }
-  if (msg.testSets !== undefined && workspaceInfo.data != undefined && workspaceInfo.data.proxy_id > 0) {
+  let selectedProxy = {data:{path:''}} as any;
+  if (msg.testSets !== undefined && workspaceInfo.data != undefined && workspaceInfo.data.proxies != '' && workspaceInfo.data.proxies != '0') {
     currentWorkspace.value = workspaceInfo.data;
+     selectedProxy = await autoSelectProxy(workspaceInfo.data);
+    if(selectedProxy.data.proxy_id > 0){
+        currentWorkspace.value.proxy_id = selectedProxy.data.proxy_id;
+    }
     const resp = await uploadToProxy(msg.testSets);
     const testSetsMap = resp.data;
     realPathMap.value = testSetsMap;
@@ -273,8 +278,8 @@ const exec = async (data: any) => {
         }
     })
   }
-  const proxyPath = await autoSelectProxy(workspaceInfo.data);
-  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), proxyPath)
+
+  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), selectedProxy.data.path)
 }
 
 const logLevel = ref('result')
