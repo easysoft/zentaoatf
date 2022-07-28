@@ -3,17 +3,19 @@ package zentaoHelper
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
+	"strings"
+
+	"github.com/bitly/go-simplejson"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/easysoft/zentaoatf/internal/pkg/domain"
-	"github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
+	analysisHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
 	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
-	"github.com/easysoft/zentaoatf/pkg/lib/i118"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/fatih/color"
 	"github.com/jinzhu/copier"
 	uuid "github.com/satori/go.uuid"
-	"strconv"
-	"strings"
 )
 
 func CommitBug(ztfBug commDomain.ZtfBug, config commDomain.WorkspaceConf) (err error) {
@@ -137,5 +139,51 @@ func GetBugFiledOptions(config commDomain.WorkspaceConf, productId int) (
 	bugFields.Modules = fieldMapToListOrderByInt(bugOptionsWrapper.Options.Modules)
 	bugFields.Build = fieldMapToListOrderByStr(bugOptionsWrapper.Options.Build, true)
 
+	return
+}
+
+func LoadBugs(Product int, config commDomain.WorkspaceConf) (bugs []commDomain.ZentaoBug, err error) {
+
+	Login(config)
+
+	uri := fmt.Sprintf("/products/%d/bugs", Product)
+	params := map[string]interface{}{
+		"limit": 10000,
+	}
+	url := GenApiUrl(uri, params, config.Url)
+
+	bytes, err := httpUtils.Get(url)
+	if err != nil {
+		err = ZentaoRequestErr(url, err.Error())
+		return
+	}
+	jsn, err := simplejson.NewJson(bytes)
+	if err != nil {
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
+		return
+	}
+	items, err := jsn.Get("bugs").Array()
+
+	for _, item := range items {
+		bug, _ := item.(map[string]interface{})
+		id, _ := bug["id"].(json.Number).Int64()
+		caseId, _ := bug["case"].(json.Number).Int64()
+		severity, _ := bug["severity"].(json.Number).Int64()
+		pri, _ := bug["pri"].(json.Number).Int64()
+		title, _ := bug["title"].(string)
+		openedBy, _ := bug["openedBy"].(map[string]interface{})
+		bugs = append(bugs, commDomain.ZentaoBug{
+			Id:         int(id),
+			Title:      title,
+			Case:       int(caseId),
+			Steps:      bug["steps"].(string),
+			Type:       bug["type"].(string),
+			Severity:   int(severity),
+			Pri:        int(pri),
+			StatusName: bug["statusName"].(string),
+			OpenedDate: bug["openedDate"].(string),
+			OpenedBy:   openedBy["realname"].(string),
+		})
+	}
 	return
 }

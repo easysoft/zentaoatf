@@ -14,6 +14,11 @@
         <TabPage v-if="tab.id === activeID" class="flex-auto" :tab="tab" ref="tabsRef" />
       </KeepAlive>
     </template>
+    <BugsModal
+      v-if="showBugsModal"
+      @cancel="showBugsModal=!showBugsModal"
+      :caseIds="caseIds"
+    />
   </div>
 </template>
 
@@ -27,13 +32,20 @@ import {useI18n} from "vue-i18n";
 import bus from "@/utils/eventBus";
 import settings from "@/config/settings";
 import {ScriptData} from "@/views/script/store";
+import {loadBugs} from "@/services/bug";
+import { ZentaoData } from "@/store/zentao";
+import { StateType as GlobalData } from "@/store/global";
+
+import BugsModal from '@/views/result/BugsModal.vue';
 
 const {t} = useI18n();
 
-import { StateType as GlobalData } from "@/store/global";
-const store = useStore<{ global: GlobalData, tabs: TabsData, Script: ScriptData }>();
+const store = useStore<{ global: GlobalData, tabs: TabsData, Script: ScriptData, Zentao: ZentaoData }>();
 const global = computed<any>(() => store.state.global.tabIdToWorkspaceIdMap);
 const currWorkspace = computed<any>(() => store.state.Script.currWorkspace);
+const bugMap = computed<any>(() => store.state.Zentao.bugMap);
+const showBugsModal = ref(false)
+const caseIds = ref([] as number[])
 
 const items = computed<TabNavItem[]>(() => {
   return store.getters['tabs/list'];
@@ -63,6 +75,8 @@ const activeID = computed((): string => {
   return store.state.tabs.activeID;
 });
 
+const treeDataMap = computed<any>(() => store.state.Script.treeDataMap);
+
 watch(activeID, () => {
   console.log('watch activeID', activeID.value)
   if (activeID.value.indexOf('script-') > -1) {
@@ -72,7 +86,32 @@ watch(activeID, () => {
   } else {
     toolbarItems.value = []
   }
+  store.dispatch("Zentao/fetchBugs", {});
+  showBugBtn()
 }, {deep: true})
+
+watch(bugMap, () => {
+  console.log('watch bugMap', bugMap.value)
+  showBugBtn()
+}, {deep: true})
+
+const showBugBtn = () => {
+  if (activeID.value.indexOf('script-') === 0) {
+    const path = activeID.value.replace('script-', '')
+    const relateBugs = bugMap.value[treeDataMap.value[path].caseId] || []
+    const hasBugBtn = toolbarItems.value.filter(item => item.key === 'bugs').length > 0;
+    if(relateBugs.length > 0 && !hasBugBtn) {
+        toolbarItems.value.push({
+            key: 'bugs',
+            hint: 'Bugs',
+            icon: 'bug'
+        })
+    }else if(relateBugs.length === 0 && hasBugBtn) {
+        toolbarItems.value = toolbarItems.value.filter(item => item.key !== 'bugs')
+    }
+    caseIds.value = [treeDataMap.value[path].caseId]
+  }
+}
 
 const testTabIDRef = ref(0);
 
@@ -95,6 +134,10 @@ const onToolbarClick = (e) => {
       if (tabsRef.value) {
         bus.emit(settings.eventScriptSave, {path: activeID.value})
       }
+      break;
+    }
+    case 'bugs': {
+      showBugsModal.value = true;
       break;
     }
   }

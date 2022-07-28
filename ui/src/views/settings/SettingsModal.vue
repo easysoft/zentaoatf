@@ -58,27 +58,20 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits } from "vue";
-import { PageTab } from "@/store/tabs";
 import { useI18n } from "vue-i18n";
 import {
   computed,
-  ComputedRef,
-  defineComponent,
   onMounted,
   ref,
-  Ref,
   watch,
-  reactive,
 } from "vue";
-import { useStore } from "vuex";
-import { StateType } from "@/views/site/store";
 import { momentUtcDef } from "@/utils/datetime";
 import Table from "@/components/Table.vue";
 import notification from "@/utils/notification";
 import Modal from "@/utils/modal";
 import Button from "@/components/Button.vue";
 import LanguageSettings from "./LanguageSettings.vue";
-import {getLangInterpreter, saveInterpreter} from "@/views/interpreter/service";
+import {saveInterpreter} from "@/views/interpreter/service";
 import {
   listInterpreter,
   removeInterpreter,
@@ -89,10 +82,6 @@ import { getLangSettings } from "@/views/interpreter/service";
 const props = defineProps<{
   show: boolean;
 }>();
-
-const showModalRef = computed(() => {
-  return props.show;
-});
 
 const emit = defineEmits<{
     (type: 'cancel', event: {event: any}) : void,

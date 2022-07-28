@@ -18,6 +18,7 @@ export default {
     'path': 'Path',
     'type': 'Type',
     'create_time': 'Create Time',
+    'created_by': 'Created By',
     'start_time': 'Start Time',
     'end_time': 'End Time',
     'test': '测试',
@@ -102,6 +103,7 @@ export default {
     'default_lang': 'Default Language',
     'save_by_module': 'Save Script By Module',
     'independent_expect': 'Save Expect Result in Independent File.',
+    'zentao_bug': 'Zentao Bug',
 
     'unit_test':  'Unit Test',
     'framework_tool':  'Framework/Tool',

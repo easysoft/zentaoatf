@@ -3,9 +3,10 @@ package commDomain
 import (
 	"encoding/xml"
 	"fmt"
+	"time"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/easysoft/zentaoatf/pkg/consts"
-	"time"
 )
 
 type ZtfRespTestCases struct {
@@ -128,6 +129,7 @@ type ZtfBug struct {
 }
 
 type ZentaoBug struct {
+	Id    int    `json:"id"`
 	Title string `json:"title"`
 	Type  string `json:"type"`
 
@@ -143,6 +145,9 @@ type ZentaoBug struct {
 	OpenedBuild []string `json:"openedBuild"`
 	CaseVersion string   `json:"caseVersion"`
 	OldTaskID   string   `json:"oldTaskID"`
+	OpenedDate  string   `json:"openedDate"`
+	OpenedBy    string   `json:"openedBy"`
+	StatusName  string   `json:"statusName"`
 }
 
 type ZtfReport struct {

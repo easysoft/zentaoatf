@@ -19,6 +19,7 @@ export default {
     'path': '路径',
     'type': '类型',
     'create_time': '创建时间',
+    'created_by': '创建者',
     'start_time': '开始时间',
     'end_time': '结束时间',
     'test': '测试',
@@ -109,6 +110,7 @@ export default {
     'default_lang': '默认语言',
     'save_by_module': '按模块组织用例',
     'independent_expect': '期待结果为独立文件',
+    'zentao_bug': '禅道BUG',
 
     'unit_test':  '单元测试',
     'framework_tool':  '框架/工具',

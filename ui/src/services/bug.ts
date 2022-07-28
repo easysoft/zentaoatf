@@ -17,3 +17,10 @@ export function prepareBugData(data: any): Promise<any> {
         data: data,
     });
 }
+
+export function loadBugs(): Promise<any> {
+    return request({
+        url: `${apiPath}`,
+        method: 'get',
+    });
+}
