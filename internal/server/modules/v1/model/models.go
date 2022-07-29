@@ -5,5 +5,6 @@ var (
 		&Interpreter{},
 		&Site{},
 		&Workspace{},
+		&Statistic{},
 	}
 )

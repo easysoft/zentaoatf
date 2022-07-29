@@ -31,6 +31,15 @@ export async function get(path: string, workspaceId: number): Promise<any> {
     });
 }
 
+export async function getStatistic(path: string, workspaceId: number): Promise<any> {
+    const params = {path: path, workspaceId: workspaceId}
+
+    return request({
+        url: `/${apiPath}/statistics`,
+        params
+    });
+}
+
 export async function loadChildren(dir: string, workspaceId: number): Promise<any> {
     const params = {dir: dir, workspaceId: workspaceId}
 

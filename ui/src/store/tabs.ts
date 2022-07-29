@@ -146,6 +146,7 @@ const TabsModel: TabsModuleType = {
         },
         activateLast(state, payload: {exceptID?: string}) {
             if (!state.idList.length) {
+                state.activeID = '';
                 return;
             }
 

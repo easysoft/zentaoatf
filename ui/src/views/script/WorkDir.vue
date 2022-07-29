@@ -329,6 +329,7 @@ const selectNode = (activeNode) => {
   if (node.workspaceType !== 'ztf') checkNothing()
 
   store.dispatch('Script/getScript', node)
+  store.dispatch('Script/getStatistic', node)
   if (node.type === 'file') {
     const tabId = node.workspaceType === 'ztf' && node.path.indexOf('.exp') !== node.path.length - 4
         ? 'script-' + node.path : 'code-' + node.path
@@ -375,7 +376,6 @@ const execSelected = () => {
     bus.emit(settings.eventExec, { execType: 'ztf', scripts: arr });
 }
 
-const editedData = ref<any>({})
 const nameFormVisible = ref(false)
 
 const treeDataMap = computed<any>(() => store.state.Script.treeDataMap);
@@ -386,7 +386,6 @@ const getNodeMapCall = throttle(async () => {
 }, 300)
 
 let rightClickedNode = {} as any
-let createAct = ''
 
 const formNode = ref({} as any)
 const createNode = (formData) => {

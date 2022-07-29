@@ -23,6 +23,7 @@ func (m *TestScriptModule) Party() module.WebModule {
 		index.Get("/list", m.TestScriptCtrl.List).Name = "脚本列表"
 		index.Get("/loadChildren", m.TestScriptCtrl.LoadCodeChildren).Name = "加载子项"
 		index.Get("/get", m.TestScriptCtrl.Get).Name = "脚本详情"
+		index.Get("/statistics", m.TestScriptCtrl.GetStatistic).Name = "脚本详情"
 		index.Post("/", m.TestScriptCtrl.Create).Name = "创建脚本"
 		index.Delete("/", m.TestScriptCtrl.Delete).Name = "删除脚本"
 

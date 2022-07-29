@@ -24,6 +24,7 @@ export default {
     'test': '测试',
     'result': 'Result',
     'test_result': 'Test Result',
+    'exec_statistics': 'Exec Statistic',
     'test_result_detail':  'Result Detail',
     'view_test_result': 'View Test Result',
     'opt':  'opt',

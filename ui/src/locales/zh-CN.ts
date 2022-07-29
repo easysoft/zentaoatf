@@ -25,6 +25,7 @@ export default {
     'test': '测试',
     'result': '结果',
     'test_result': '测试结果',
+    'exec_statistics': '执行统计',
     'test_result_detail':  '结果详情',
     'view_test_result': '查看测试结果',
     'opt':  '操作',

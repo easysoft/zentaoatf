@@ -81,6 +81,8 @@ watch(activeID, () => {
   console.log('watch activeID', activeID.value)
   if (activeID.value.indexOf('script-') > -1) {
     toolbarItems.value = toolbarItemArr
+    const path = activeID.value.replace('script-', '');
+    store.dispatch('Script/getStatistic', treeDataMap.value[path])
   } else if (activeID.value.indexOf('code-') > -1) {
     toolbarItems.value = [toolbarItemArr[1]]
   } else {
