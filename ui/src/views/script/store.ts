@@ -16,14 +16,12 @@ import {
     paste, move,
     scriptTreeAddAttr,
     getNodeMap,
-    getStatistic,
 } from './service';
 import {ScriptFileNotExist} from "@/utils/const";
 
 export interface ScriptData {
     list: [];
     detail: any;
-    statistic: any;
     treeDataMap: any;
     checkedNodes: [];
 
@@ -36,7 +34,6 @@ export interface ModuleType extends StoreModuleType<ScriptData> {
     mutations: {
         setList: Mutation<ScriptData>;
         setItem: Mutation<ScriptData>;
-        setStatistic: Mutation<ScriptData>;
         setWorkspace: Mutation<ScriptData>;
         setQueryParams: Mutation<ScriptData>;
         setCheckedNodes: Mutation<ScriptData>;
@@ -44,7 +41,6 @@ export interface ModuleType extends StoreModuleType<ScriptData> {
     actions: {
         listScript: Action<ScriptData, ScriptData>;
         getScript: Action<ScriptData, ScriptData>;
-        getStatistic: Action<ScriptData, ScriptData>;
         loadChildren: Action<ScriptData, ScriptData>;
         syncFromZentao: Action<ScriptData, ScriptData>;
         syncToZentao: Action<ScriptData, ScriptData>;
@@ -63,7 +59,6 @@ export interface ModuleType extends StoreModuleType<ScriptData> {
 const initState: ScriptData = {
     list: [],
     detail: null,
-    statistic: null,
     treeDataMap: {},
 
     currWorkspace: {id: 0, type: 'ztf'},
@@ -89,9 +84,6 @@ const StoreModel: ModuleType = {
         },
         setItem(state, payload) {
             state.detail = payload;
-        },
-        setStatistic(state, payload) {
-            state.statistic = payload;
         },
         setWorkspace(state, payload) {
             state.currWorkspace = payload;
@@ -139,21 +131,6 @@ const StoreModel: ModuleType = {
 
             const response: ResponseData = await get(script.path, script.workspaceId);
             commit('setItem', response.data);
-            return true;
-        },
-
-        async getStatistic({ commit, dispatch }, script: any ) {
-            // if (!script || script.type !== 'file') {
-            //     commit('setStatistic', null);
-            //     return true;
-            // }
-            // if (script.path.indexOf('zentao-') === 0) {
-            //     commit('setStatistic', null);
-            //     return true;
-            // }
-
-            const response: ResponseData = await getStatistic(script.path, script.workspaceId);
-            commit('setStatistic', response.data);
             return true;
         },
 

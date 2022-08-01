@@ -3,6 +3,10 @@ package execHelper
 import (
 	"encoding/json"
 	"fmt"
+	"path/filepath"
+	"strings"
+	"time"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
@@ -13,9 +17,6 @@ import (
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/mattn/go-runewidth"
-	"path/filepath"
-	"strings"
-	"time"
 )
 
 func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
@@ -99,7 +100,9 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	logUtils.ExecConsole(color.FgCyan, msgReport)
 	logUtils.ExecResult(msgReport)
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg(msgReport, "", commConsts.Run, nil, wsMsg)
+		websocketHelper.SendExecMsg(msgReport, "", commConsts.Run, map[string]interface{}{
+			"logDir": commConsts.ExecLogDir,
+		}, wsMsg)
 	}
 
 	//report.ProductId, _ = strconv.Atoi(vari.ProductId)

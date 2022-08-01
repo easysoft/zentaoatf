@@ -7,10 +7,9 @@ type Statistic struct {
 	Total    int    `json:"total"`
 	Succ     int    `json:"succ"`
 	Fail     int    `json:"fail"`
-	SuccLogs string `json:"succ_logs"`
 	FailLogs string `json:"fail_logs"`
 }
 
 func (Statistic) TableName() string {
-	return "biz_statistics"
+	return "biz_statistic"
 }

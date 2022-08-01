@@ -62,3 +62,28 @@ export function SetWidth(content: string, width: number): string{
     return `<span style="display: inline-block; width: ${width}px; text-align: right; padding-right: 6px;">${content}</span>`;
 }
 
+export async function getStatistic(path: string): Promise<any> {
+    const params = {path: path}
+
+    return request({
+        url: `/${apiPath}/statistic`,
+        params
+    });
+}
+
+export async function updateStatistic(params: any): Promise<any> {
+    return request({
+        url: `/${apiPath}/statistic`,
+        method: 'put',
+        params,
+    });
+}
+
+export async function getFailure(path: string): Promise<any> {
+    const params = {path: path}
+
+    return request({
+        url: `/${apiPath}/failure`,
+        params
+    });
+}

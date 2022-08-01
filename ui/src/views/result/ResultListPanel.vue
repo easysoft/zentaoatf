@@ -1,7 +1,7 @@
 <template>
 <div>
   <Panel v-show="showStatistices" :title="t('exec_statistics')">
-    <ResultStatistic />
+    <ResultStatistic :path="scriptPath" />
   </Panel>
   <Panel :title="t('test_result')">
     <ResultList />
@@ -24,6 +24,12 @@ const { t } = useI18n();
 const store = useStore<{ tabs: TabsData }>();
 const showStatistices = computed((): boolean => {
   return store.state.tabs.activeID.indexOf('script-') > -1
+});
+const scriptPath = computed((): string => {
+  if(store.state.tabs.activeID.indexOf('script-') > -1){
+    return store.state.tabs.activeID.replace('script-', '');
+  }
+  return ""
 });
 
 </script>

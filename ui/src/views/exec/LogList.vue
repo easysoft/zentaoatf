@@ -50,6 +50,7 @@
 import {useI18n} from "vue-i18n";
 import {WsMsg} from "@/types/data";
 import {genExecInfo, genWorkspaceToScriptsMap} from "@/views/script/service";
+import {updateStatistic} from "@/views/result/service";
 import {scroll} from "@/utils/dom";
 import {computed, onBeforeUnmount, onMounted, reactive, ref, watch} from "vue";
 import {useStore} from "vuex";
@@ -130,9 +131,24 @@ const onWebsocketMsgEvent = (data: any) => {
   if(JSON.stringify(lastWsMsg.value) === JSON.stringify(item)){
     return;
   }
+  
+  if(item.info?.logDir != undefined){
+    updateStatisticInfo(item.info.logDir)
+  }
   lastWsMsg.value = item;
   wsMsg.out.push(item)
   scroll('log-list')
+}
+
+const updateStatisticInfo = (logDir) => {
+  console.log('updateStatisticInfo')
+  updateStatistic({path: logDir}).then((res) => {
+    if(res.code == 0){
+        res.data.forEach((item) => {
+            store.dispatch('Result/getStatistic', {path: item})
+        })
+    }
+  })
 }
 
 onMounted(() => {

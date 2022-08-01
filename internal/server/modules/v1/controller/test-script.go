@@ -19,7 +19,6 @@ type TestScriptCtrl struct {
 	SyncService       *service.SyncService       `inject:""`
 	WorkspaceService  *service.WorkspaceService  `inject:""`
 	SiteService       *service.SiteService       `inject:""`
-	StatisticService  *service.StatisticService  `inject:""`
 	BaseCtrl
 }
 
@@ -74,28 +73,6 @@ func (c *TestScriptCtrl) Get(ctx iris.Context) {
 		return
 	}
 	ctx.JSON(c.SuccessResp(script))
-}
-
-// Get 统计信息
-func (c *TestScriptCtrl) GetStatistic(ctx iris.Context) {
-	scriptPath := ctx.URLParam("path")
-
-	if scriptPath == "" {
-		ctx.JSON(c.ErrResp(commConsts.ParamErr, fmt.Sprintf("参数%s不合法", "path")))
-		return
-	}
-
-	if strings.Index(scriptPath, "zentao") == 0 {
-		ctx.JSON(c.SuccessResp(""))
-		return
-	}
-
-	statistics, err := c.StatisticService.GetByPath(scriptPath)
-	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
-		return
-	}
-	ctx.JSON(c.SuccessResp(statistics))
 }
 
 func (c *TestScriptCtrl) Create(ctx iris.Context) {

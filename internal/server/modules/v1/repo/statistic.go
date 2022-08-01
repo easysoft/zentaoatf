@@ -1,9 +1,12 @@
 package repo
 
 import (
+	"github.com/easysoft/zentaoatf/internal/server/core/dao"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	"github.com/facebookgo/inject"
 	"github.com/fatih/color"
+	"github.com/sirupsen/logrus"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -13,7 +16,28 @@ type StatisticRepo struct {
 }
 
 func NewStatisticRepo() *StatisticRepo {
-	return &StatisticRepo{}
+	instance := &StatisticRepo{}
+	if instance.DB == nil {
+		instance.injectModule(instance)
+	}
+	return instance
+}
+
+func (r *StatisticRepo) injectModule(instance *StatisticRepo) {
+	var g inject.Graph
+	g.Logger = logrus.StandardLogger()
+
+	// inject objects
+	if err := g.Provide(
+		&inject.Object{Value: dao.GetDB()},
+		&inject.Object{Value: instance},
+	); err != nil {
+		logrus.Fatalf("provide usecase objects to the Graph: %v", err)
+	}
+	err := g.Populate()
+	if err != nil {
+		logrus.Fatalf("populate the incomplete Objects: %v", err)
+	}
 }
 
 func (r *StatisticRepo) Get(id uint) (po model.Statistic, err error) {
@@ -104,13 +128,14 @@ func (r *StatisticRepo) FindDuplicate(path string, id uint) (po model.Statistic,
 	return
 }
 
-func (r *StatisticRepo) UpdateStatistic(id uint, total, success, fail int) (err error) {
+func (r *StatisticRepo) UpdateStatistic(path string, total, success, fail int, logPath string) (err error) {
 	err = r.DB.Model(&model.Statistic{}).
-		Where("id = ?", id).
-		Updates(map[string]int{
-			"exec_total": total,
-			"exec_succ":  success,
-			"exec_fail":  fail,
+		Where("path = ?", path).
+		Updates(map[string]interface{}{
+			"total":    total,
+			"succ":     success,
+			"fail":     fail,
+			"FailLogs": logPath,
 		}).Error
 
 	return err

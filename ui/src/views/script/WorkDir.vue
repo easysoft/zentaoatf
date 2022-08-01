@@ -329,7 +329,7 @@ const selectNode = (activeNode) => {
   if (node.workspaceType !== 'ztf') checkNothing()
 
   store.dispatch('Script/getScript', node)
-  store.dispatch('Script/getStatistic', node)
+  store.dispatch('Result/getStatistic', node)
   if (node.type === 'file') {
     const tabId = node.workspaceType === 'ztf' && node.path.indexOf('.exp') !== node.path.length - 4
         ? 'script-' + node.path : 'code-' + node.path
