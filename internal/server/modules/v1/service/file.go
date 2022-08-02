@@ -18,6 +18,10 @@ import (
 	"github.com/snowlyg/helper/str"
 )
 
+const (
+	UploadFail = "file upload failed, %s."
+)
+
 var (
 	ErrEmpty = errors.New("请上传正确的文件")
 )
@@ -39,12 +43,12 @@ func (s *FileService) UploadFile(ctx iris.Context, fh *multipart.FileHeader) (ir
 	path := filepath.Join(dir.GetCurrentAbPath(), "static", "upload", "images")
 	err = dir.InsureDir(path)
 	if err != nil {
-		logUtils.Infof(color.RedString("file upload failed, error: %s.", err.Error()))
+		logUtils.Infof(color.RedString(UploadFail, err.Error()))
 		return nil, err
 	}
 	_, err = ctx.SaveFormFile(fh, filepath.Join(path, filename))
 	if err != nil {
-		logUtils.Infof(color.RedString("file upload failed, error: %s.", err.Error()))
+		logUtils.Infof(color.RedString(UploadFail, err.Error()))
 		return nil, err
 	}
 
@@ -104,13 +108,13 @@ func (s *FileService) addDir(pth string, parent *serverDomain.TestAsset) (dirNod
 func GetFileName(name string) (string, error) {
 	fns := strings.Split(strings.TrimLeft(name, "./"), ".")
 	if len(fns) != 2 {
-		logUtils.Infof(color.RedString("file upload failed, error: wrong file name %s.", name))
+		logUtils.Infof(color.RedString(UploadFail, "wrong file name "+name))
 		return "", ErrEmpty
 	}
 	ext := fns[1]
 	md5, err := dir.MD5(name)
 	if err != nil {
-		logUtils.Errorf(color.RedString("file upload failed, error: %s.", name))
+		logUtils.Errorf(color.RedString(UploadFail, name))
 		return "", err
 	}
 	return str.Join(md5, ".", ext), nil
