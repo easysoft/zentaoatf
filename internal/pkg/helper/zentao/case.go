@@ -21,8 +21,8 @@ import (
 	"strings"
 )
 
-func CommitCase(caseId int, title string,
-	steps []commDomain.ZentaoCaseStep, config commDomain.WorkspaceConf) (err error) {
+func CommitCase(caseId int, title string, steps []commDomain.ZentaoCaseStep, script serverDomain.TestScript,
+	config commDomain.WorkspaceConf) (err error) {
 
 	err = Login(config)
 	if err != nil {
@@ -38,9 +38,11 @@ func CommitCase(caseId int, title string,
 	url := GenApiUrl(uri, nil, config.Url)
 
 	requestObj := map[string]interface{}{
-		"type":  "feature",
-		"title": title,
-		"steps": steps,
+		"type":   "feature",
+		"title":  title,
+		"steps":  steps,
+		"script": script.Code,
+		"lang":   script.Lang,
 	}
 
 	json, err := json.Marshal(requestObj)

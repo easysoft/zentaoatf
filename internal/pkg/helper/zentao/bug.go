@@ -56,7 +56,7 @@ func PrepareBug(workspacePath, seq string, caseIdStr string, productId int) (bug
 	}
 
 	for _, cs := range report.FuncResult {
-		if cs.Id != caseId {
+		if cs.Id != caseId || cs.Status != commConsts.FAIL {
 			continue
 		}
 

@@ -24,24 +24,16 @@ func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfRepor
 	total int, secs string, pathMaxWidth int, numbMaxWidth int,
 	wsMsg *websocket.Message) {
 
-	steps, isOldFormat := scriptHelper.GetStepAndExpectMap(scriptFile)
+	steps := scriptHelper.GetStepAndExpectMap(scriptFile)
 
 	isIndependent, expectIndependentContent := scriptHelper.GetDependentExpect(scriptFile)
 	if isIndependent {
-		if isOldFormat {
-			scriptHelper.GetExpectMapFromIndependentFileObsolete(&steps, expectIndependentContent, false)
-		} else {
-			scriptHelper.GetExpectMapFromIndependentFile(&steps, expectIndependentContent, false)
-		}
+		scriptHelper.GetExpectMapFromIndependentFile(&steps, expectIndependentContent, false)
 	}
 
 	skip := false
 	actualArr := make([][]string, 0)
-	if isOldFormat {
-		skip, actualArr = scriptHelper.ReadLogArrObsolete(logs)
-	} else {
-		skip, actualArr = scriptHelper.ReadLogArr(logs)
-	}
+	skip, actualArr = scriptHelper.ReadLogArr(logs)
 
 	language := langHelper.GetLangByFile(scriptFile)
 	ValidateCaseResult(scriptFile, language, steps, skip, actualArr, report,
