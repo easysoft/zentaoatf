@@ -84,7 +84,7 @@ const StoreModel: ModuleType = {
                 return false;
             }
         },
-        async delete({ dispatch, state}, id: number ) {
+        async delete({ dispatch}, id: number ) {
             try {
                 await remove(id);
                 dispatch('list', {})

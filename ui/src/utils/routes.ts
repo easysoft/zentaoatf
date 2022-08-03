@@ -205,7 +205,7 @@ export const vueRoutes = (routesData: RoutesDataItem[], parentPath = '/', headSt
   return routesData.map(item => {
     const { children, ...other } = item;
     const itemChildren = children || [];
-    const newItem: RoutesDataItem = { ...other };
+    const newItem: RoutesDataItem = {children: [], ...other };
     newItem.path = setRoutePathForParent(newItem.path, parentPath, headStart);
 
     if (item.children) {
@@ -233,6 +233,7 @@ export const vueRoutes = (routesData: RoutesDataItem[], parentPath = '/', headSt
         tabNavType: tabNavType || 'path',
         // 自定义设置的 meta 值 E
       },
+      children: [],
       ...other
      };
 
