@@ -41,6 +41,15 @@ export default {
     'all':  '所有',
     'none':  '无',
     'only_failed':  '仅失败用例',
+    'case_type_config':  '配置相关',
+    'case_type_feature':  '功能测试',
+    'case_type_install':  '安装部署',
+    'case_type_security':  '安全相关',
+    'case_type_performance':  '性能测试',
+    'case_type_standard':  '标准规范',
+    'case_type_automation':  '测试脚本',
+    'case_type_designdefect':  '设计缺陷',
+    'case_type_others':  '其他',
 
     'zentao_site': '禅道站点',
     'local': '本地',
@@ -240,6 +249,7 @@ export default {
     'open-in-terminal': '从此位置打开命令行',
 
     'pls_select_task': '请选择任务',
+    'pls_select_step': '请选择步骤',
     'or_input_task_name': '或输入新任务标题',
     'task_name': '禅道任务标题',
 
@@ -252,6 +262,7 @@ export default {
     'pls_title':  '请输入标题',
     'pls_name':  '请输入名称',
     'pls_select_case':  '请选择需要执行的用例',
+    'pls_select_co_case':  '请选择用例',
     'pls_module':  '请选择模块',
     'pls_suite':  '请选择套件',
     'pls_task':  '请选择任务',

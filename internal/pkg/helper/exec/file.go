@@ -3,6 +3,11 @@ package execHelper
 import (
 	"bufio"
 	"fmt"
+	"io"
+	"os"
+	"os/exec"
+	"strings"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
@@ -15,10 +20,6 @@ import (
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
-	"io"
-	"os"
-	"os/exec"
-	"strings"
 )
 
 func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
@@ -162,8 +163,6 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		}
 	}
 
-	cmd.Wait()
-
 ExitCurrCase:
 	errOutputArr := make([]string, 0)
 	if !isTerminal {
@@ -180,5 +179,7 @@ ExitCurrCase:
 
 	stdOutput = strings.Join(stdOutputArr, "")
 	errOutput = strings.Join(errOutputArr, "")
+
+	cmd.Wait()
 	return
 }

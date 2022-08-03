@@ -8,6 +8,7 @@ type SyncSettings struct {
 	SuiteId   int    `json:"suiteId"`
 	TaskId    int    `json:"taskId"`
 	CaseId    int    `json:"caseId"`
+	CaseIds   []int  `json:"caseIds"`
 	CasePath  string `json:"casePath"`
 	Lang      string `json:"lang"`
 

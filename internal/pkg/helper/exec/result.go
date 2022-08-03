@@ -2,12 +2,13 @@ package execHelper
 
 import (
 	"fmt"
-	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
-	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	"regexp"
 	"strconv"
 	"strings"
+
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
@@ -22,7 +23,7 @@ import (
 
 func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfReport, scriptIdx int,
 	total int, secs string, pathMaxWidth int, numbMaxWidth int,
-	wsMsg *websocket.Message) {
+	wsMsg *websocket.Message, errOutput string) {
 
 	steps, isOldFormat := scriptHelper.GetStepAndExpectMap(scriptFile)
 
@@ -45,13 +46,13 @@ func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfRepor
 
 	language := langHelper.GetLangByFile(scriptFile)
 	ValidateCaseResult(scriptFile, language, steps, skip, actualArr, report,
-		scriptIdx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg)
+		scriptIdx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg, errOutput)
 }
 
 func ValidateCaseResult(scriptFile string, langType string,
 	steps []commDomain.ZentaoCaseStep, skip bool, actualArr [][]string, report *commDomain.ZtfReport,
 	scriptIdx int, total int, secs string, pathMaxWidth int, numbMaxWidth int,
-	wsMsg *websocket.Message) {
+	wsMsg *websocket.Message, errOutput string) {
 
 	key := stringUtils.Md5(scriptFile)
 
@@ -65,7 +66,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 		caseResult = commConsts.SKIP
 	} else {
 		stepIdxToCheck := 0
-		for _, step := range steps { // iterate by checkpoints
+		for index, step := range steps { // iterate by checkpoints
 			stepName := strings.TrimSpace(step.Desc)
 			expect := strings.TrimSpace(step.Expect)
 
@@ -82,6 +83,9 @@ func ValidateCaseResult(scriptFile string, langType string,
 			}
 
 			stepResult, checkpointLogs := ValidateStepResult(langType, expectLines, actualLines)
+			if errOutput != "" && index == 0 && len(checkpointLogs) > 0 {
+				checkpointLogs[0].Actual = errOutput
+			}
 			stepLog := commDomain.StepLog{Id: strconv.Itoa(stepIdxToCheck), Name: stepName, Status: stepResult, CheckPoints: checkpointLogs}
 			stepLogs = append(stepLogs, stepLog)
 			if stepResult == commConsts.FAIL {

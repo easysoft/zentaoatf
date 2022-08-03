@@ -29,11 +29,14 @@ type ZtfModule struct {
 	Cases map[int]ZtfCaseInModule
 }
 type ZtfCaseInModule struct {
-	Id      int
-	Title   string
-	Product int
-	Module  int
-	Case    int // case id in task
+	Id            int
+	Title         string
+	Product       int
+	Module        int
+	Case          int // case id in task
+	Type          string
+	StatusName    string
+	LastRunResult string
 }
 
 type ZtfSuite struct {

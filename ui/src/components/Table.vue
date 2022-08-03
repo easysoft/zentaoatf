@@ -18,6 +18,7 @@
                     type="checkbox"
                     class="z-thead-checkbox"
                     v-model="setting.isCheckAll"
+                    @click="checkAll"
                 />
               </div>
             </th>
@@ -61,6 +62,7 @@
                         }
                       "
                          :value="row[setting.keyColumn]"
+                         :checked="row.checked"
                          @click="checked"/>
                 </div>
               </td>
@@ -95,6 +97,7 @@
                         }
                       "
                          :value="row[setting.keyColumn]"
+                         :checked="row.checked"
                          @click="checked"/>
                 </div>
               </td>
@@ -268,6 +271,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    isCheckAll: {
+      type: Boolean,
+      default: false,
+    },
     //Returns data type for checked of Checkbox
     checkedReturnType: {
       type: String,
@@ -402,7 +409,7 @@ export default defineComponent({
       // Enable slot mode
       isSlotMode: props.isSlotMode,
       // Whether to select all
-      isCheckAll: false,
+      isCheckAll: props.isCheckAll,
       // Hide paging
       isHidePaging: props.isHidePaging,
       // KEY field name
@@ -525,26 +532,44 @@ export default defineComponent({
       /**
        * Check all checkboxes for monitoring
        */
-      watch(
-          () => setting.isCheckAll,
-          (state: boolean) => {
-            let isChecked: Array<string | unknown> = [];
-            rowCheckbox.value.forEach((val: HTMLInputElement, i: number) => {
-              if (val) {
-                val.checked = state;
-                if (val.checked) {
-                  if (props.checkedReturnType == "row") {
-                    isChecked.push(localRows.value[i]);
-                  } else {
-                    isChecked.push(val.value);
-                  }
+    //   watch(
+    //       () => setting.isCheckAll,
+    //       (state: boolean) => {
+    //         let isChecked: Array<string | unknown> = [];
+    //         rowCheckbox.value.forEach((val: HTMLInputElement, i: number) => {
+    //           if (val) {
+    //             val.checked = state;
+    //             if (val.checked) {
+    //               if (props.checkedReturnType == "row") {
+    //                 isChecked.push(localRows.value[i]);
+    //               } else {
+    //                 isChecked.push(val.value);
+    //               }
+    //             }
+    //           }
+    //         });
+    //         // 回傳畫面上選上的資料 (Return the selected data on the screen)
+    //         emit("return-checked-rows", isChecked);
+    //       }
+    //   );
+    }
+
+    const checkAll = (event: Event) => {
+        event.stopPropagation();
+        setting.isCheckAll = !setting.isCheckAll;
+        let isChecked: Array<string | unknown> = [];
+        rowCheckbox.value.forEach((val: HTMLInputElement, i: number) => {
+            val.checked = setting.isCheckAll;
+            if (val.checked) {
+                if (props.checkedReturnType == "row") {
+                isChecked.push(localRows.value[i]);
+                } else {
+                isChecked.push(val.value);
                 }
-              }
-            });
-            // 回傳畫面上選上的資料 (Return the selected data on the screen)
-            emit("return-checked-rows", isChecked);
-          }
-      );
+            }
+        });
+        // 回傳畫面上選上的資料 (Return the selected data on the screen)
+        emit("return-checked-rows", isChecked);
     }
 
     /**
@@ -554,7 +579,7 @@ export default defineComponent({
       event.stopPropagation();
       let isChecked: Array<string | unknown> = [];
       rowCheckbox.value.forEach((val: HTMLInputElement, i: number) => {
-        if (val && val.checked) {
+        if (val.checked) {
           if (props.checkedReturnType == "row") {
             isChecked.push(localRows.value[i]);
           } else {
@@ -562,6 +587,7 @@ export default defineComponent({
           }
         }
       });
+      setting.isCheckAll = isChecked.length >= localRows.value.length;
       // 回傳畫面上選上的資料 (Return the selected data on the screen)
       emit("return-checked-rows", isChecked);
     };
@@ -745,6 +771,7 @@ export default defineComponent({
         setting,
         rowCheckbox,
         checked,
+        checkAll,
         doSort,
         prevPage,
         movePage,

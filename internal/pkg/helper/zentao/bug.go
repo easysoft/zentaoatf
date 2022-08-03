@@ -63,25 +63,35 @@ func PrepareBug(workspacePath, seq string, caseIdStr string, productId int) (bug
 		}
 
 		steps := make([]string, 0)
+		stepsArray := make([]map[string]interface{}, 0)
 		stepIds := ""
 		for _, step := range cs.Steps {
 			if step.Status == commConsts.FAIL {
 				stepIds += step.Id + "_"
 			}
-
 			stepsContent := GenBugStepText(step)
 			steps = append(steps, stepsContent)
+			stepsArray = append(stepsArray, map[string]interface{}{
+				"name":   step.Name,
+				"status": step.Status,
+				"steps":  stepsContent,
+			})
 		}
 
 		bug = commDomain.ZtfBug{
 			Title:   cs.Title,
 			Case:    cs.Id,
 			Product: productId,
-			Steps:   strings.Join(steps, "\n"), StepIds: stepIds,
+			Steps:   strings.Join(steps, "\n"),
+			StepIds: stepIds,
 
 			Uid:  uuid.NewV4().String(),
 			Type: "codeerror", Severity: 3, Pri: 3, OpenedBuild: []string{"trunk"},
 			CaseVersion: "0", OldTaskID: "0",
+		}
+		if commConsts.ExecFrom != commConsts.FromCmd {
+			jsonSteps, _ := json.Marshal(stepsArray)
+			bug.Steps = string(jsonSteps)
 		}
 		return
 	}

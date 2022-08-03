@@ -143,6 +143,28 @@ func (c *ZentaoCtrl) ListTask(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(data))
 }
 
+func (c *ZentaoCtrl) ListCase(ctx iris.Context) {
+	siteId, err := ctx.URLParamInt("currSiteId")
+	productId, err := ctx.URLParamInt("currProductId")
+	moduleId := ctx.URLParamIntDefault("moduleId", 0)
+	suiteId := ctx.URLParamIntDefault("suiteId", 0)
+	taskId := ctx.URLParamIntDefault("taskId", 0)
+	if siteId == 0 || productId == 0 {
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
+		return
+	}
+
+	site, _ := c.SiteService.Get(uint(siteId))
+	config := configHelper.LoadBySite(site)
+	casesResp, err := zentaoHelper.LoadTestCaseSimple(productId, moduleId, suiteId, taskId, config)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.ErrZentaoRequest, err.Error()))
+		return
+	}
+
+	ctx.JSON(c.SuccessResp(casesResp.Cases))
+}
+
 func (c *ZentaoCtrl) ListBugFields(ctx iris.Context) {
 	siteId, _ := ctx.URLParamInt("currSiteId")
 	productId, _ := ctx.URLParamInt("currProductId")

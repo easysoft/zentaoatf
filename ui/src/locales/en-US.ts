@@ -38,6 +38,15 @@ export default {
     'none':  'None',
     'all':  'All',
     'only_failed':  'Only Failed',
+    'case_type_config':  'Configuration',
+    'case_type_feature':  'Feature',
+    'case_type_install':  'Installation',
+    'case_type_security':  'Security',
+    'case_type_performance':  'Performance',
+    'case_type_standard':  'Standard Specification',
+    'case_type_automation':  'TestScript',
+    'case_type_designdefect':  'DesignDefect',
+    'case_type_others':  'Others',
 
     'zentao_site': 'Zentao Site',
     'local': 'Local',
@@ -229,6 +238,7 @@ export default {
     'open-in-terminal': 'Open In Terminal',
 
     'pls_select_task': 'Please select task',
+    'pls_select_step': 'Please select step',
     'or_input_task_name': 'Or input new task name',
     'task_name': 'Zentao Task Name',
 
@@ -241,6 +251,7 @@ export default {
     'pls_title':  'Please input title.',
     'pls_name':  'Please input name.',
     'pls_select_case':  'Please select cases.',
+    'pls_select_co_case':  'Please select cases.',
     'pls_module':  'Please select module.',
     'pls_suite':  'Please select suite.',
     'pls_task':  'Please select task.',

@@ -3,9 +3,13 @@ package zentaoHelper
 import (
 	"encoding/json"
 	"fmt"
+	"sort"
+	"strconv"
+	"strings"
+
 	"github.com/bitly/go-simplejson"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/easysoft/zentaoatf/internal/pkg/domain"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
@@ -16,9 +20,6 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stdinUtils "github.com/easysoft/zentaoatf/pkg/lib/stdin"
 	"github.com/kataras/iris/v12"
-	"sort"
-	"strconv"
-	"strings"
 )
 
 func CommitCase(caseId int, title string,
@@ -212,6 +213,21 @@ func LoadTestCasesDetail(productId, moduleId, suiteId, taskId int,
 	for _, cs := range casesResp.Cases {
 		caseId := cs.Id
 
+		cs, err := GetTestCaseDetail(caseId, config)
+		if err != nil {
+			continue
+		}
+
+		cases = append(cases, cs)
+	}
+
+	return
+}
+
+func LoadTestCasesDetailByCaseIds(caseIds []int,
+	config commDomain.WorkspaceConf) (cases []commDomain.ZtfCase, err error) {
+
+	for _, caseId := range caseIds {
 		cs, err := GetTestCaseDetail(caseId, config)
 		if err != nil {
 			continue

@@ -3,6 +3,11 @@ package execHelper
 import (
 	"bufio"
 	"errors"
+	"io"
+	"os/exec"
+	"strings"
+	"time"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
@@ -16,10 +21,6 @@ import (
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
-	"io"
-	"os/exec"
-	"strings"
-	"time"
 )
 
 func ExecUnit(ch chan int,
@@ -155,8 +156,6 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg *websocket.Mes
 		}
 	}
 
-	cmd.Wait()
-
 ExitUnitTest:
 	errOutputArr := make([]string, 0)
 	if !isTerminal {
@@ -180,6 +179,8 @@ ExitUnitTest:
 		logUtils.ExecConsolef(-1, errOutput)
 		logUtils.ExecFilef(errOutput)
 	}
+
+	cmd.Wait()
 
 	return
 }

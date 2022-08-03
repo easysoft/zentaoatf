@@ -29,6 +29,7 @@ func (m *ZentaoModule) Party() module.WebModule {
 		index.Get("/listModule", m.ZentaoCtrl.ListModule).Name = "模块列表"
 		index.Get("/listSuite", m.ZentaoCtrl.ListSuite).Name = "套件列表"
 		index.Get("/listTask", m.ZentaoCtrl.ListTask).Name = "任务列表"
+		index.Get("/listCase", m.ZentaoCtrl.ListCase).Name = "用例列表"
 
 		index.Get("/listBugFields", m.ZentaoCtrl.ListBugFields).Name = "获取缺陷属性数据"
 	}
