@@ -12,14 +12,14 @@ export const setExecBy = async (execBy) => {
 }
 
 export const getInitStatus = async () => {
-    return await getCache(settings.initStatus);
+    return getCache(settings.initStatus);
 }
 export const setInitStatus = async () => {
     await setCache(settings.initStatus, true);
 }
 
 export const getCurrSiteId = async () => {
-    return await getCache(settings.currSiteId);
+    return getCache(settings.currSiteId);
 }
 export const setCurrSiteId = async (val) => {
     await setCache(settings.currSiteId, val);

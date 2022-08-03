@@ -20,15 +20,13 @@ import {
   computed,
   defineComponent,
   onMounted,
-  ref,
-  watch
 } from "vue";
 import {useStore} from "vuex";
 import {useI18n} from "vue-i18n";
 
 import {ScriptData} from "./store";
-import {resizeWidth, resizeHeight} from "@/utils/dom";
-import {Empty, notification} from "ant-design-vue";
+import {resizeWidth} from "@/utils/dom";
+import {Empty} from "ant-design-vue";
 
 import {ZentaoData} from "@/store/zentao";
 

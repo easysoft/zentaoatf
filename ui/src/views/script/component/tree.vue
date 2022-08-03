@@ -161,7 +161,6 @@
 <script setup lang="ts">
 import {
   computed,
-  defineComponent,
   onMounted, onUnmounted,
   ref,
   watch
@@ -170,7 +169,7 @@ import {useStore} from "vuex";
 import {useI18n} from "vue-i18n";
 
 import {ScriptData} from "../store";
-import {Empty, Modal, notification} from "ant-design-vue";
+import {Modal, notification} from "ant-design-vue";
 
 import bus from "@/utils/eventBus";
 import {ZentaoData} from "@/store/zentao";
@@ -198,7 +197,6 @@ import {isWindows} from "@/utils/comm";
 import {testToolMap} from "@/utils/testing";
 import {ExecStatus} from "@/store/exec";
 import debounce from "lodash.debounce";
-import throttle from "lodash.debounce";
 import TreeContextMenu from "./treeContextMenu.vue"
 import {ZentaoCasePrefix} from "@/utils/const";
 
@@ -495,7 +493,7 @@ import {isInArray} from "@/utils/array";
     const nameFormVisible = ref(false)
 
     const treeDataMap = {}
-    const getNodeMapCall = throttle(async () => {
+    const getNodeMapCall = debounce(async () => {
       getNodeMap(treeData.value[0], treeDataMap)
     }, 300)
 

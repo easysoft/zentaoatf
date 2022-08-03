@@ -18,7 +18,6 @@ import { RouteRecordRaw,  RouteLocationNormalizedLoaded } from 'vue-router';
  */
 export type TabNavType = 'path' | 'querypath';
 
-import 'vue-router'
 declare module 'vue-router' {
   /**
    * 自定义补充扩展 - 路由 - 类型字段

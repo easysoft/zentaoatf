@@ -218,27 +218,22 @@ export const getFileNodesUnderParent = (node): string[] => {
     getNodeMap(node, nodeMap)
 
     const arr = [] as string[]
-    Object.keys(nodeMap).forEach((k, v) => {
-        const node = nodeMap[k]
-        if (node.type === 'file') {
-            node.childrem = null
-            arr.push(node)
+    Object.keys(nodeMap).forEach((k, _v) => {
+        const item = nodeMap[k]
+        if (item.type === 'file') {
+            item.childrem = null
+            arr.push(item)
         }
     })
 
     return arr
 }
 
-export function getSyncToInfoFromMenu(key: string, node: any): any {
-
-    return
-}
-
 export function scriptTreeAddAttr(treeData) {
     if(treeData == undefined){
         return treeData;
     }
-    treeData = treeData.map((item, index) => {
+    treeData = treeData.map((item) => {
         item.id = item.path;
         item.checkable = item.workspaceType == 'ztf' ? true : false;
         if (item.isLeaf) {
