@@ -158,7 +158,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import {
   computed,
   defineComponent,
@@ -199,23 +199,12 @@ import {testToolMap} from "@/utils/testing";
 import {ExecStatus} from "@/store/exec";
 import debounce from "lodash.debounce";
 import throttle from "lodash.debounce";
-import {expandOneKey} from "@/utils/dom";
 import TreeContextMenu from "./treeContextMenu.vue"
 import {ZentaoCasePrefix} from "@/utils/const";
 
 import NameForm from "./nodeName.vue";
 import {isInArray} from "@/utils/array";
 
-export default defineComponent({
-  name: 'ScriptTreePage',
-  components: {
-    CloseOutlined, CheckOutlined,
-    TreeContextMenu, NameForm, SyncFromZentao,
-  },
-  props: {
-  },
-
-  setup(props) {
     const { t } = useI18n();
     const isWin = isWindows()
 
@@ -718,72 +707,14 @@ export default defineComponent({
       return false
     }
 
-    return {
-      t,
-      isWin,
+    const expandOneKey = (treeMap: any, key: string, expandedKeys: string[]) => {
+      if (!expandedKeys.includes(key)) expandedKeys.push(key)
 
-      currSite,
-      currProduct,
-      treeData,
-      currWorkspace,
-      testToolMap,
-      nameFormVisible,
-      treeDataEmpty,
-      filerItems,
-
-      filerType,
-      filerValue,
-      selectFilerType,
-      selectFilerValue,
-
-      replaceFields,
-      onLoadData,
-      expandNode,
-      selectNode,
-      checkNode,
-      isRunning,
-      execSelected,
-      execStop,
-      toExecUnit,
-      checkoutCases,
-      checkinCases,
-      isExpand,
-      showCheckbox,
-      displayBy,
-      expandAllOrNot,
-      showCheckboxOrNot,
-      onDisplayBy,
-      tree,
-      expandedKeys,
-      selectedKeys,
-      checkedKeys,
-      simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
-
-      fromTitle,
-      fromVisible,
-      onSave,
-      onCancel,
-      noScript,
-
-      rightVisible,
-      contextNode,
-      menuStyle,
-      treeDataMap,
-      editedData,
-      rightClickedNode,
-      updateName,
-      cancelUpdate,
-      onRightClick,
-      menuClick,
-      clearMenu,
-      createNode,
-      removeNode,
-      onDragEnter,
-      onDrop,
+      const parentId = treeMap[key].parentId
+      if (parentId) {
+        expandOneKey(treeMap, parentId, expandedKeys)
+      }
     }
-  }
-
-})
 </script>
 
 <style lang="less">

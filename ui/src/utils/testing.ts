@@ -1,14 +1,17 @@
 import moment from "moment";
-import {AutoTestTools, ScriptLanguages, TestTools, BuildTools} from "@/utils/const";
-import request from "@/utils/request";
+import {AutoTestTools, TestTools, BuildTools} from "@/utils/const";
+
+function addItems(item, list, map) {
+    const lowerCase = item.toLowerCase()
+    list.push(lowerCase)
+    map[lowerCase] = item
+}
 
 export function getUnitTestFrameworks(): any {
     const list = new Array<string>()
     const map = {}
     TestTools.forEach((item) => {
-        const lowerCase = item.toLowerCase()
-        list.push(lowerCase)
-        map[lowerCase] = item
+        addItems(item, list, map)
     })
 
     return {list: list, map: map}
@@ -34,9 +37,7 @@ export function getAutoTestTools(): any {
     const list = new Array<string>()
     const map = {}
     AutoTestTools.forEach((item) => {
-        const lowerCase = item.toLowerCase()
-        list.push(lowerCase)
-        map[lowerCase] = item
+        addItems(item, list, map)
     })
 
     return {list: list, map: map}

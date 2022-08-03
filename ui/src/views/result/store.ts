@@ -3,7 +3,7 @@ import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 import { QueryParams, QueryResult } from '@/types/data.d';
 import {
-    list, get, remove,getLastest,
+    list, get, remove,
 } from './service';
 
 export interface StateType {
@@ -74,7 +74,7 @@ const StoreModel: ModuleType = {
 
             return true;
         },
-        async delete({ commit , dispatch, state}, data: any ) {
+        async delete({ dispatch}, data: any ) {
             try {
                 await remove(data);
                 dispatch('list', {})

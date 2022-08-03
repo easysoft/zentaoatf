@@ -10,8 +10,7 @@ export async function getLangSettings() {
     })
 
     if (json.code === 0) {
-        const data = json.data
-        return data
+        return json.data
     }
 
     return {languages: [], languageMap: {}}
@@ -26,8 +25,7 @@ export async function getLangInterpreter(lang) {
     })
 
     if (json.code === 0) {
-        const data = json.data
-        return data
+        return json.data
     }
 
     return {path: '', info: ''}

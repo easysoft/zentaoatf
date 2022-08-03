@@ -1,6 +1,7 @@
+import { RouteRecordRaw,  RouteLocationNormalizedLoaded } from 'vue-router';
+
 /**
  * Route utils
- * @author LiQingSong
  */
 /**
  * 面包屑类型
@@ -32,13 +33,6 @@ declare module 'vue-router' {
       // 标题，路由在菜单、浏览器title 或 面包屑中展示的文字，目前可以使用locales
       title: string;
       /**
-       * 面包屑自定义内容：
-       *     1、默认不配置按照路由自动读取；
-       *     2、设置为 false , 按照路由自动读取并不读当前自己；
-       *     3、配置对应的面包屑格式如下：
-       */
-      breadcrumb?: BreadcrumbType[] | false;
-      /**
        * 设置tab导航存储规则类型
        *    1、默认不配置按照path(route.path)规则
        *    2、querypath：path + query (route.path+route.query) 规则
@@ -64,21 +58,11 @@ declare module 'vue-router' {
       belongTopMenu?: string;
   }
 }
-import { RouteRecordRaw,  RouteLocationNormalizedLoaded } from 'vue-router';
-
 
 /**
  * 自定义重命名 - 路由类型
  */
 export type RoutesDataItem = RouteRecordRaw;
-
-/**
- * 头部tab导航类型
- */
-export interface TabNavItem {
-  route: RouteLocationNormalizedLoaded,
-  menu: RoutesDataItem
-}
 
 import { isExternal } from './validate';
 import { equalObject } from "./object";
@@ -99,7 +83,7 @@ export const getRouteItem = (pathname: string, routesData: RoutesDataItem[]): Ro
       item = element;
       break;
     } else if (element.path.indexOf(':') > 0)  {
-      const reg = new RegExp("(:[^/]+)","gmi");
+      const reg = /(:[^/]+)/gmi
       const path = element.path.replaceAll(reg,".+")
       const pass = new RegExp(path).test(pathname)
 
@@ -168,7 +152,7 @@ export const setRoutePathForParent = (pathname: string, parentPath = '/', headSt
     return pathname;
   }
 
-  return pathname.substr(0, headStart.length) === headStart
+  return pathname.substring(0, headStart.length) === headStart
     ? pathname
     : `${parentPath}/${pathname}`;
 };
@@ -191,26 +175,6 @@ export const getPathsTheRoutes = ( pathname: string[], routesData: RoutesDataIte
 
   return routeItem;
 };
-
-
-/**
- * 获取面包屑对应的 route 数组
- * @param route route 当前routeItem
- * @param pathname path[]
- * @param routesData routes
- */
-export const getBreadcrumbRoutes = (route: RoutesDataItem, pathname: string[], routesData: RoutesDataItem[]): BreadcrumbType[] => {
-  if (!route.breadcrumb) {
-
-    const routePaths = getPathsTheRoutes(pathname, routesData);
-
-    const ret = route.breadcrumb === false ? routePaths : [...routePaths, route]
-    return ret;
-  }
-
-  return route.breadcrumb;
-};
-
 
 /**
  * 获取当前路由选中的侧边栏菜单path
@@ -244,7 +208,7 @@ export const vueRoutes = (routesData: RoutesDataItem[], parentPath = '/', headSt
     const itemChildren = children || [];
     const newItem: RoutesDataItem = { ...other };
     newItem.path = setRoutePathForParent(newItem.path, parentPath, headStart);
-    
+
     if (item.children) {
       newItem.children = [
         ...vueRoutes(itemChildren, newItem.path, headStart),
@@ -261,20 +225,18 @@ export const vueRoutes = (routesData: RoutesDataItem[], parentPath = '/', headSt
  */
  export const routesSetMeta = (routesData: RoutesDataItem[]): RoutesDataItem[] => {
   return routesData.map(item => {
-    const { children, tabNavType, meta, ...other } = item;    
+    const { children, tabNavType, meta, ...other } = item;
     const newItem: RoutesDataItem = {
       meta: {
         ...meta,
 
         // 自定义设置的 meta 值 S
-
-        tabNavType: tabNavType || 'path',  
-
+        tabNavType: tabNavType || 'path',
         // 自定义设置的 meta 值 E
       },
       ...other
      };
-    
+
     if (item.children) {
       const itemChildren = children || [];
       newItem.children = [
@@ -304,7 +266,7 @@ export const hasPermissionRouteRoles = (userRoles: string[], roles?: string | st
 
   if (typeof roles === 'string') {
     return userRoles.includes(roles);
-  } 
+  }
 
   if(roles instanceof Array && roles.length > 0) {
     return roles.some(role => userRoles.includes(role));
@@ -325,7 +287,6 @@ export const hasPermission = (roles: string[], route: RoutesDataItem): boolean =
 
   if (route.roles) {
     return route.roles.some(role => roles.includes(role));
-    //return roles.some(role => route.roles?.includes(role));
   }
 
   return true;
@@ -357,28 +318,24 @@ export const getPermissionMenuData = ( roles: string[], routes: RoutesDataItem[]
  * @param route1 vue-route
  * @param route2 vue-route
  * @param type 判断规则
- * @returns 
+ * @returns
  */
  export const equalTabNavRoute = (route1: RouteLocationNormalizedLoaded,
                                   route2: RouteLocationNormalizedLoaded,
                                   type: TabNavType = 'path'): boolean=> {
 
   let is = false;
-  switch (type) {
-    case 'querypath': // path + query
-      is = equalObject(route1.query,route2.query) && route1.path === route2.path
-      break;
-    default: // path
-      is = route1.path === route2.path
+  if (type === 'querypath') { // path + query
+    is = equalObject(route1.query, route2.query) && route1.path === route2.path
+  } else { // path
+    is = route1.path === route2.path
 
-      if (!is) {
-        const arr1 = route1.path.split('/')
-        const arr2 = route2.path.split('/')
+    if (!is) {
+      const arr1 = route1.path.split('/')
+      const arr2 = route2.path.split('/')
 
-        is = arr1[1] == '~' && arr2[1] == '~' && arr1[2] == arr2[2] // 同源高亮
-      }
-
-      break;
+      is = arr1[1] == '~' && arr2[1] == '~' && arr1[2] == arr2[2] // 同源高亮
+    }
   }
 
   return is;
