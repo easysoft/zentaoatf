@@ -216,12 +216,12 @@
 import {computed, defineComponent, nextTick, onBeforeUpdate, onMounted, reactive, ref, watch,} from "vue";
 import {useI18n} from "vue-i18n";
 
-interface pageOption {
+interface PageOption {
   value: number;
   text: number | string;
 }
 
-interface tableSetting {
+interface TableSetting {
   isSlotMode: boolean;
   isCheckAll: boolean;
   isHidePaging: boolean;
@@ -234,15 +234,15 @@ interface tableSetting {
   paging: Array<number>;
   order: string;
   sort: string;
-  pageOptions: Array<pageOption>;
+  pageOptions: Array<PageOption>;
 }
 
-interface column {
+interface Column {
   isKey: string;
   field: string;
 }
 
-interface pageMessage {
+interface PageMessage {
   pagingInfo: string
   pageSizeChangeLabel: string
   gotoPageLabel: string
@@ -327,7 +327,7 @@ export default defineComponent({
     // Display text
     messages: {
       type: Object,
-      default: {} as pageMessage,
+      default: {} as PageMessage,
     },
     // Static mode(no refresh server data)
     isStaticMode: {
@@ -382,11 +382,11 @@ export default defineComponent({
     let localTable = ref<HTMLElement | null>(null);
 
     // Validate dropdown values have page-size value or not
-    let tmpPageOptions = props.pageOptions as Array<pageOption>;
+    let tmpPageOptions = props.pageOptions as Array<PageOption>;
     let defaultPageSize =
         props.pageOptions.length > 0 ? ref(tmpPageOptions[0].value) : ref(props.pageSize);
     if (tmpPageOptions.length > 0) {
-      tmpPageOptions.forEach((v: pageOption) => {
+      tmpPageOptions.forEach((v: PageOption) => {
         if (
             Object.prototype.hasOwnProperty.call(v, "value") &&
             Object.prototype.hasOwnProperty.call(v, "text") &&
@@ -398,7 +398,7 @@ export default defineComponent({
     }
 
     // Internal set value for components
-    const setting: tableSetting = reactive({
+    const setting: TableSetting = reactive({
       // Enable slot mode
       isSlotMode: props.isSlotMode,
       // Whether to select all
@@ -408,7 +408,7 @@ export default defineComponent({
       // KEY field name
       keyColumn: computed(() => {
         let key = "";
-        Object.assign(props.columns).forEach((col: column) => {
+        Object.assign(props.columns).forEach((col: Column) => {
           if (col.isKey) {
             key = col.field;
           }
@@ -459,11 +459,11 @@ export default defineComponent({
       order: props.sortable.order,
       sort: props.sortable.sort,
       pageOptions: computed(() => {
-        const ops: pageOption[] = [];
+        const ops: PageOption[] = [];
         props.pageOptions?.forEach((o) => {
           ops.push({
-            value: (o as pageOption).value,
-            text: (o as pageOption).text,
+            value: (o as PageOption).value,
+            text: (o as PageOption).text,
           });
         });
         return ops;
@@ -478,7 +478,7 @@ export default defineComponent({
       if (setting.sort === "desc") {
         sort_order = -1;
       }
-      let rows = props.rows as Array<unknown>;
+      let rows = props.rows
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       rows.sort((a: any, b: any): number => {
         if (a[property] < b[property]) {
@@ -616,16 +616,16 @@ export default defineComponent({
     /**
      * Switch page number
      *
-     * @param page      number  New page number
-     * @param prevPage  number  Current page number
+     * @param pageNum      number  New page number
+     * @param prevPageNum  number  Current page number
      */
-    const changePage = (page: number, prevPage: number) => {
+    const changePage = (pageNum: number, prevPageNum: number) => {
       setting.isCheckAll = false;
       let order = setting.order;
       let sort = setting.sort;
-      let offset = (page - 1) * setting.pageSize;
+      let offset = (pageNum - 1) * setting.pageSize;
       let limit = setting.pageSize;
-      if (!props.isReSearch || page > 1 || page == prevPage) {
+      if (!props.isReSearch || pageNum > 1 || pageNum == prevPageNum) {
         // Call query will only be executed if the page number is changed without re-query
 
         console.log("do-search", offset, limit)

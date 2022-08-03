@@ -22,10 +22,10 @@ const i18n = createI18n({
  * @param locale
  */
 export function setI18nLanguage(locale: string, realReload = false): void {
-    setLocale(locale,realReload, function() {
+    setLocale(locale, function() {
         // i18n.global.locale = locale // legacy: true
         i18n.global.locale.value = locale;
-    })
+    }, realReload)
 }
 
 export default i18n;

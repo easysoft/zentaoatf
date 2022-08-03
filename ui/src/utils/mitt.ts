@@ -86,7 +86,7 @@ export default function mitt(all?: EventHandlerMap): Emitter {
       ((all?.get(type) || []) as EventHandlerList).slice().forEach((handler) => {
         handler(evt);
       });
-      ((all?.get('*') || []) as WildCardEventHandlerList).slice().forEach((handler) => {
+      (all?.get('*') || []).slice().forEach((handler) => {
         handler(type, evt);
       });
     },

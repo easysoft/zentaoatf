@@ -62,20 +62,16 @@ const StoreModel: ModuleType = {
         return false;
       }
     },
-    async removeWorkspace({ commit }, selectedWorkspacePath) {
+    async removeWorkspace(_ctx, selectedWorkspacePath) {
       try {
         await deleteWorkspace(selectedWorkspacePath);
-
-//        const response: ResponseData = await getWorkspace('');
-//        const { data } = response;
-//        commit('saveWorkspaces', data || {});
 
         return true;
       } catch (error) {
         return false;
       }
     },
-    async save({ commit }, payload) {
+    async save(_ctx, payload) {
         try {
             await save(payload);
             return true;
@@ -87,4 +83,4 @@ const StoreModel: ModuleType = {
 }
 
 export default StoreModel;
-  
+
