@@ -71,9 +71,7 @@
     "typescript": "~4.1.6",
     "vue-jest": "^5.0.0-alpha.10"
   },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
+
   "keywords": [
     "ztf"
   ],
