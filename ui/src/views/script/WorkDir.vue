@@ -218,11 +218,6 @@ const onTreeDataChanged = async () => {
     console.log('cachedKeys', currSite.value.id, currProduct.value.id)
 
     if (cachedKeys) expandedKeys.value = cachedKeys
-
-    // if (!cachedKeys || cachedKeys.length === 0) {
-      // getOpenKeys(treeData.value[0], false) // expend first level folder
-      // await setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
-    // }
   })
 }
 
@@ -644,21 +639,21 @@ onUnmounted(() => {
 <style lang="less" scoped>
 .left-pannel-contain{
   text-align: center;
-.workdir {
-    height: calc(100vh - 80px);
-    overflow: auto;
-    text-align: left;
-}
-.workdir-with-btn {
-    height: calc(100vh - 120px);
-    overflow: auto;
-    text-align: left;
-}
-.run-selected{
-max-width: 100px;
-margin: auto;
-text-align: center;
-margin-top: 10px;
-}
+  .workdir {
+      height: calc(100vh - 80px);
+      overflow: auto;
+      text-align: left;
+  }
+  .workdir-with-btn {
+      height: calc(100vh - 120px);
+      overflow: auto;
+      text-align: left;
+  }
+  .run-selected{
+    max-width: 100px;
+    margin: auto;
+    text-align: center;
+    margin-top: 10px;
+  }
 }
 </style>

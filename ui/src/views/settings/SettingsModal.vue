@@ -64,8 +64,7 @@ import Table from "@/components/Table.vue";
 import Modal from "@/utils/modal";
 import Button from "@/components/Button.vue";
 import LanguageSettings from "./LanguageSettings.vue";
-import {saveInterpreter} from "@/views/interpreter/service";
-import {listInterpreter, removeInterpreter, getLangSettings} from "@/views/interpreter/service";
+import {saveInterpreter,listInterpreter, removeInterpreter, getLangSettings} from "@/views/interpreter/service";
 import FormInterpreter from "@/views/interpreter/FormInterpreter.vue";
 
 const props = defineProps<{

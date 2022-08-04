@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, defineComponent, onMounted, onUnmounted, ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 
 import Panel from '@/components/Panel.vue';
 import Button from '@/components/Button.vue';
