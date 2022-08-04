@@ -7,7 +7,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint",
+    "lint": "vue-cli-service lint --format json > report.json",
     "svgo": "svgo -f src/assets/iconsvg --config=src/assets/iconsvg/svgo.yml"
   },
   "dependencies": {
@@ -29,6 +29,7 @@
     "nprogress": "^0.2.0",
     "sass-loader": "^12.6.0",
     "splitpanes": "^3.1.1",
+    "typescript-eslint": "^0.0.1-alpha.0",
     "vue": "^3.2.18",
     "vue-final-modal": "^3.4.3",
     "vue-i18n": "^9.1.7",
