@@ -81,7 +81,7 @@ export const setLocale = (lang: string, callback: () => void, realReload = true)
  * @author LiQingSong
  */
 export function importAllLocales(): LocaleMessages<VueMessageType> {
-    const modules: LocaleMessages<VueMessageType> = {};
+    const modules: any = {};
     try {
         // 导入 @/views 下文件，包含子目录，文件名为：[/\\]locales[/\\]([a-z]{2})-?([A-Z]{2})?\.ts
         const viewsRequireContext: __WebpackModuleApi.RequireContext = require.context('../views', true, /[/\\]locales[/\\]([a-z]{2})-?([A-Z]{2})?\.ts$/);
