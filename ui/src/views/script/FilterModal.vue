@@ -45,7 +45,7 @@ import {
   defineEmits,
 } from "vue";
 import { useWindowSize, onClickOutside } from "@vueuse/core";
-import { ListItemKey, ListItemProps } from "./ListItem.vue";
+import { ListItemKey, ListItemProps } from "@/components/ListItem.vue";
 import List from "@/components/List.vue";
 
 export type PopperPosition =
