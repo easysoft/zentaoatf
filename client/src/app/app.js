@@ -217,8 +217,8 @@ export class ZtfApp {
             return;
         }
 
-        const version = Config.pkg.buildTime ? 'build at ' + new Date(Config.pkg.buildTime).toLocaleString() : '' +
-            DEBUG ? '[debug]' : ''
+        let version = Config.pkg.buildTime ? 'build at ' + new Date(Config.pkg.buildTime).toLocaleString() : ''
+        version +=  DEBUG ? '[debug]' : ''
         app.setAboutPanelOptions({
             applicationName: Lang.string(Config.pkg.name) || Config.pkg.displayName,
             applicationVersion: Config.pkg.version,
