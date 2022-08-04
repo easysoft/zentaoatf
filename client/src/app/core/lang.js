@@ -4,7 +4,7 @@ const fs = require('fs');
 
 import {DEBUG} from '../utils/consts';
 import {logInfo} from "../utils/log";
-import LangHelper from '../utils/lang';
+import {LangHelper} from '../utils/lang';
 
 const langHelper = new LangHelper();
 
@@ -42,8 +42,7 @@ const loadLangData = (langName) => {
     logInfo(`load language res from ${pth}`)
 
     const buf = fs.readFileSync(pth)
-    const data = JSON.parse(buf.toString())
-    return data
+    return JSON.parse(buf.toString())
 }
 
 if (DEBUG) {

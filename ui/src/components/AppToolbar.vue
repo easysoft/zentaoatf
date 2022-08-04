@@ -1,9 +1,8 @@
 <template>
   <Toolbar>
-<!--    <Button class="rounded pure" icon="search" iconSize="1.5em" :hint="t('search')" />-->
     <Button class="rounded pure" icon="settings" iconSize="1.5em" :hint="t('settings')" @click="openSettings" />
   </Toolbar>
-  <SettingsModal 
+  <SettingsModal
     :show="showSettingsModal"
     @cancel="settingsModalClose"
     :showOkBtn="false"
