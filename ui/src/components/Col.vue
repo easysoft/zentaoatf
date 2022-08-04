@@ -9,7 +9,6 @@ import {useI18n} from "vue-i18n";
 const { t } = useI18n();
 
 import {computed, defineProps, inject} from "vue";
-import {ButtonProps} from "@/components/Button.vue";
 
 export interface ColumnProps {
   width?: string,
@@ -20,7 +19,7 @@ export interface ColumnProps {
 
 const props = defineProps<ColumnProps>();
 
-let gutter = inject('gutter');
+let gutter = inject('gutter') as any;
 
 const colClass = computed(() => {
   const classes: string[] = [];
@@ -30,7 +29,7 @@ const colClass = computed(() => {
     classes.push(`z-col-${span}`);
   }
 
-  if (props.offset > 0) {
+  if (props.offset && props.offset > 0) {
     classes.push(`z-col-offset-${props.offset}`);
   }
 

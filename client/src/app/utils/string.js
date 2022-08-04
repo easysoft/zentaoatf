@@ -108,7 +108,7 @@ export const ifEmptyStringThen = (str, thenStr) => (isEmptyString(str) ? thenStr
  */
 export const limitStringLength = (str, length, suffix) => {
     if (str.length > length) {
-        str = str.substr(0, length);
+        str = str.substring(0, length);
         if (suffix) {
             str = `${str}${suffix}`;
         }

@@ -1,6 +1,6 @@
 import {app} from 'electron';
 import {DEBUG} from './app/utils/consts';
-import ZtfApp from "./app/app";
+import {ZtfApp} from "./app/app";
 import {logInfo} from "./app/utils/log";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.

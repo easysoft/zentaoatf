@@ -49,8 +49,7 @@ export async function startZtfServer() {
             cmd.stdout.on('data', data => {
                 const dataString = String(data);
                 const lines = dataString.split('\n');
-                for (let i = 0; i < lines.length; i++) {
-                    const line = lines[i];
+                for (let line of lines) {
                     if (DEBUG) {
                         logInfo('\t' + line);
                     }
@@ -93,8 +92,7 @@ export async function startZtfServer() {
         cmd.stdout.on('data', data => {
             const dataString = String(data);
             const lines = dataString.split('\n');
-            for (let i = 0; i < lines.length; i++) {
-                const line = lines[i];
+            for (let line of lines) {
                 if (DEBUG) {
                     logInfo('\t' + line);
                 }
@@ -120,11 +118,10 @@ export async function startZtfServer() {
 }
 
 export function killZtfServer() {
-    let cmd = ''
     if (!IS_WINDOWS_OS) {
         logInfo(`>> not windows`);
 
-        cmd = `ps -ef | grep ${uuid} | grep -v "grep" | awk '{print $2}' | xargs kill -9`
+        const cmd = `ps -ef | grep ${uuid} | grep -v "grep" | awk '{print $2}' | xargs kill -9`
         logInfo(`>> exit cmd: ${cmd}`);
 
         const cp = require('child_process');
