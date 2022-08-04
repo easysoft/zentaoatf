@@ -9,10 +9,10 @@ export function resizeWidth(mainId: string, leftId: string, resizeId: string, co
     if (!resize) return false
 
     // 鼠标按下事件
-    resize.onmousedown = function (e) {
+    resize.onmousedown = function (event) {
         //色彩高亮
         resize.classList.add('active');
-        const startX = e.clientX;
+        const startX = event.clientX;
 
         // 鼠标拖动事件
         document.onmousemove = function (e) {
@@ -29,7 +29,7 @@ export function resizeWidth(mainId: string, leftId: string, resizeId: string, co
         };
 
         // 鼠标松开事件
-        document.onmouseup = function (evt) {
+        document.onmouseup = function (_e) {
             resize.classList.remove('active'); //色彩复原
 
             document.onmousemove = null;
@@ -56,10 +56,10 @@ export function resizeHeight(contentId: string, topId: string, splitterId: strin
     }
 
     // 鼠标按下事件
-    splitter.onmousedown = function (e) {
+    splitter.onmousedown = function (event) {
         //色彩高亮
         splitter.classList.add('active');
-        const startY = e.clientY - gap;
+        const startY = event.clientY - gap;
 
         // 鼠标拖动事件
         document.onmousemove = function (e) {
@@ -76,7 +76,7 @@ export function resizeHeight(contentId: string, topId: string, splitterId: strin
         };
 
         // 鼠标松开事件
-        document.onmouseup = function (evt) {
+        document.onmouseup = function (_e) {
             splitter.classList.remove('active'); //色彩复原
 
             document.onmousemove = null;
@@ -125,20 +125,19 @@ export function removeClass( elements, cName ){
 }
 
 export function jsonStrDef(obj) {
-    const msg = JSON.stringify(obj)
-    return msg
+    return JSON.stringify(obj)
 }
 
 export function getContextMenuStyle(x, y, height) {
     let top = y
     if (y + height > document.body.clientHeight)
         top = document.body.clientHeight - height
-    const menuStyle = {
+
+    return {
         zIndex: 9,
         position: 'fixed',
         left: `${x + 10}px`,
         top: `${top}px`,
     }
-
-    return menuStyle
 }
+

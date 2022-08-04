@@ -11,7 +11,6 @@ export type WsEvent = {
 };
 
 export const WsDefaultNameSpace = 'default'
-// export const WsDefaultRoom = 'default'
 
 export class WebSocket {
   static conn: NSConn
@@ -62,10 +61,10 @@ export class WebSocket {
   static joinRoomAndSend(roomName: string, msg: string): void {
     if (WebSocket.conn && WebSocket.conn.room(roomName)) {
       WebSocket.conn.room(roomName).emit('OnChat', msg)
-      return
+
     } else {
       WebSocket.init(true).then(() => {
-        WebSocket.conn.joinRoom(roomName).then((room) => {
+        WebSocket.conn.joinRoom(roomName).then((_room) => {
           console.log(`success to join room "${roomName}"`)
           WebSocket.conn.room(roomName).emit('OnChat', msg)
 

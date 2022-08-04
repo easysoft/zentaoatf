@@ -107,7 +107,7 @@ const StoreModel: ModuleType = {
             commit('setQueryParams', playload);
             return true;
         },
-        async loadChildren({ commit }, treeNode: any ) {
+        async loadChildren(_ctx, treeNode: any ) {
             console.log('load node children', treeNode.dataRef.workspaceType)
             if (treeNode.dataRef.workspaceType === 'ztf')
                 return true
@@ -118,19 +118,16 @@ const StoreModel: ModuleType = {
             })
         },
 
-        async getScript({ commit, dispatch }, script: any ) {
+        async getScript({ commit}, script: any ) {
             if (!script || script.type !== 'file') {
                 commit('setItem', null);
-                return true;
-            }
-
-            if (script.path.indexOf('zentao-') === 0) {
+            } else if (script.path.indexOf('zentao-') === 0) {
                 commit('setItem', {id: script.caseId, workspaceId: script.workspaceId, code: ScriptFileNotExist});
-                return true;
+            } else {
+                const response: ResponseData = await get(script.path, script.workspaceId);
+                commit('setItem', response.data);
             }
 
-            const response: ResponseData = await get(script.path, script.workspaceId);
-            commit('setItem', response.data);
             return true;
         },
 
@@ -150,7 +147,7 @@ const StoreModel: ModuleType = {
             return resp
         },
 
-        async syncToZentao({ commit, dispatch, state }, payload: any ) {
+        async syncToZentao({ dispatch, state }, payload: any ) {
             const resp = await syncToZentao(payload)
 
             if (resp.code === 0) {
@@ -170,7 +167,7 @@ const StoreModel: ModuleType = {
             return data.done
         },
 
-        async createScript({ commit , dispatch, state}, payload: any) {
+        async createScript({ dispatch, state}, payload: any) {
             try {
                 const jsn = await create(payload);
                 const path = jsn.data
@@ -182,7 +179,7 @@ const StoreModel: ModuleType = {
                 return ''
             }
         },
-        async updateScript({ commit }, payload: any ) {
+        async updateScript(_ctx, payload: any ) {
             try {
                 const { id, ...params } = payload;
                 await update(id, { ...params });
@@ -192,7 +189,7 @@ const StoreModel: ModuleType = {
             }
         },
 
-        async updateCode({ commit, dispatch, state }, payload: any ) {
+        async updateCode({ dispatch, state }, payload: any ) {
             try {
                 await updateCode(payload);
                 await dispatch('listScript', state.queryParams)
@@ -202,7 +199,7 @@ const StoreModel: ModuleType = {
             }
         },
 
-        async pasteScript({ commit , dispatch, state}, data: any ) {
+        async pasteScript({ dispatch, state}, data: any ) {
             try {
                 await paste(data);
                 await dispatch('listScript', state.queryParams)
@@ -213,7 +210,7 @@ const StoreModel: ModuleType = {
             }
         },
 
-        async moveScript({ commit , dispatch, state}, data: any ) {
+        async moveScript({ dispatch, state}, data: any ) {
             try {
                 await move(data);
                 await dispatch('listScript', state.queryParams)
@@ -224,7 +221,7 @@ const StoreModel: ModuleType = {
             }
         },
 
-        async deleteScript({ commit , dispatch, state}, path: string ) {
+        async deleteScript({ dispatch, state}, path: string ) {
             try {
                 await remove(path);
                 await dispatch('listScript', state.queryParams)

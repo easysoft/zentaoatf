@@ -50,13 +50,6 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-    name: 'TreeNode',
-    inheritAttrs: false
-}
-</script>
-
 <script setup lang="ts">
 import { defineProps, defineEmits, withDefaults, computed, ref } from 'vue';
 import Toolbar, { ToolbarItemProps } from './Toolbar.vue';
@@ -65,6 +58,7 @@ import Button from './Button.vue';
 
 export interface TreeNodeData {
     id: string,
+    type: string,
     title: string,
     level?: number,
     indent?: number,

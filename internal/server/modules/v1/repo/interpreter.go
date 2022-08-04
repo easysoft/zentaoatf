@@ -7,7 +7,6 @@ import (
 
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/fatih/color"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -33,7 +32,7 @@ func (r *InterpreterRepo) Get(id uint) (po model.Interpreter, err error) {
 		Where("NOT deleted").
 		First(&po).Error
 	if err != nil {
-		logUtils.Errorf(color.RedString("find interpreter by id failed, error: %s.", err.Error()))
+		logUtils.Info(color.RedString("find interpreter by id failed, %s.", err.Error()))
 		return
 	}
 
@@ -48,7 +47,7 @@ func (r *InterpreterRepo) Create(interpreter model.Interpreter) (id uint, err er
 
 	err = r.DB.Model(&model.Interpreter{}).Create(&interpreter).Error
 	if err != nil {
-		logUtils.Errorf(color.RedString("create interpreter failed, error: %s.", err.Error()))
+		logUtils.Info(color.RedString("create interpreter failed, %s.", err.Error()))
 		return 0, err
 	}
 
@@ -65,7 +64,7 @@ func (r *InterpreterRepo) Update(interpreter model.Interpreter) error {
 
 	err = r.DB.Model(&model.Interpreter{}).Where("id = ?", interpreter.ID).Updates(&interpreter).Error
 	if err != nil {
-		logUtils.Errorf(color.RedString("update interpreter failed, error: %s.", err.Error()))
+		logUtils.Info(color.RedString("update interpreter failed, %s.", err.Error()))
 		return err
 	}
 
@@ -76,7 +75,7 @@ func (r *InterpreterRepo) Delete(id uint) (err error) {
 	err = r.DB.Model(&model.Interpreter{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"deleted": true}).Error
 	if err != nil {
-		logUtils.Errorf("delete interpreter by id error", zap.String("error:", err.Error()))
+		logUtils.Info(color.RedString("delete interpreter by id error, %s.", err.Error()))
 		return
 	}
 

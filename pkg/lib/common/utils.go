@@ -52,14 +52,6 @@ func IsMac() bool {
 	return GetOs() == "mac"
 }
 
-func UpdateUrl(url string) string {
-	if strings.LastIndex(url, "/") < len(url)-1 {
-		url += "/"
-	}
-
-	return url
-}
-
 func IntToStrArr(intArr []int) (strArr []string) {
 	for _, i := range intArr {
 		strArr = append(strArr, strconv.Itoa(i))

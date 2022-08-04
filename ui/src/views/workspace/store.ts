@@ -97,7 +97,7 @@ const StoreModel: ModuleType = {
             commit('setDetailResult',data);
             return true;
         },
-        async save({ commit }, payload) {
+        async save(_ctx, payload) {
             try {
                 await save(payload);
                 return true;
@@ -105,7 +105,7 @@ const StoreModel: ModuleType = {
                 return false;
             }
         },
-        async delete({ commit , dispatch, state}, id: number ) {
+        async delete({ dispatch}, id: number ) {
             try {
                 await remove(id);
                 dispatch('list', {})

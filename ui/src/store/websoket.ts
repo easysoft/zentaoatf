@@ -1,4 +1,4 @@
-import { Mutation, Action } from 'vuex';
+import {Mutation, Action} from 'vuex';
 import { StoreModuleType } from "@/utils/store";
 import {WebSocket} from "@/services/websocket";
 
@@ -41,9 +41,8 @@ const StoreModel: ModuleType = {
     }
   },
   actions: {
-    async connect({ commit }, room) {
+    async connect(_ctx, room) {
       console.log("connect to websocket")
-
       await WebSocket.init(false)
 
       const msg = {act: 'init'}
@@ -53,7 +52,6 @@ const StoreModel: ModuleType = {
     },
     async changeStatus({ commit }, status) {
       console.log("changeStatus")
-
       commit('saveConnStatus', status)
 
       return true;
@@ -62,4 +60,3 @@ const StoreModel: ModuleType = {
 }
 
 export default StoreModel;
-  

@@ -61,3 +61,9 @@ sips -z 32 32 ztf.png --out tmp.iconset/icon_32x32.png
 
 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 go build -ldflags "-X 'commConsts.appVersion=3.0.0' -X 'commConsts.buildTime=Mon Jul 25 09:31:39 2022 +0800' -X 'commConsts.goVersion=go version go1.17.1 darwin/amd64
 ' -X 'commConsts.gitHash=d118c05ae38d76231abfb6430e52ec517e080f50'" -x -v -ldflags "-s -w" -o client/bin/win32/ztf.exe cmd/command/main.go cmd/command/main.syso
+
+sonar-scanner \
+  -Dsonar.projectKey=ztf \
+  -Dsonar.sources=. \
+  -Dsonar.host.url=http://localhost:59001 \
+  -Dsonar.login=sqp_94f2484e50b1cfea719eb791f4e5d544be887f87

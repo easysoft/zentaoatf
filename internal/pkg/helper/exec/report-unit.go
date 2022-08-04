@@ -274,14 +274,10 @@ func GetSuiteFiles(resultDir string, startTime int64, testTool commConsts.TestTo
 					continue
 				}
 
-				if testTool == commConsts.Allure && ext == ".json" {
-					pth := filepath.Join(resultDir, name)
-					resultFiles = append(resultFiles, pth)
-				} else if ext == ".xml" {
+				if (testTool == commConsts.Allure && ext == ".json") || ext == ".xml" {
 					pth := filepath.Join(resultDir, name)
 					resultFiles = append(resultFiles, pth)
 				}
-
 			}
 		}
 	} else {
@@ -344,17 +340,11 @@ func GetTestSuite(xmlFile string, testTool commConsts.TestTool) (
 		if err == nil {
 			testSuite = ConvertRobotResult(robotResult)
 		}
-	} else if testTool == commConsts.Cypress {
-		cyResult := commDomain.CypressTestsuites{}
-		err = xml.Unmarshal([]byte(content), &cyResult)
+	} else if testTool == commConsts.Cypress || testTool == commConsts.Playwright {
+		result := commDomain.CypressTestsuites{}
+		err = xml.Unmarshal([]byte(content), &result)
 		if err == nil {
-			testSuite = ConvertCyResult(cyResult)
-		}
-	} else if testTool == commConsts.Playwright {
-		cyResult := commDomain.CypressTestsuites{}
-		err = xml.Unmarshal([]byte(content), &cyResult)
-		if err == nil {
-			testSuite = ConvertCyResult(cyResult)
+			testSuite = ConvertCyResult(result)
 		}
 	} else if testTool == commConsts.Puppeteer {
 		cyResult := commDomain.CypressTestsuites{}
@@ -477,11 +467,7 @@ func GetAllureCaseSuiteName(cs commDomain.AllureCase) (name string) {
 			if label.Value != "" {
 				suiteArr = append(suiteArr, label.Value)
 			}
-		} else if label.Name == "suite" {
-			if label.Value != "" && (len(suiteArr) == 0 || label.Value != suiteArr[len(suiteArr)-1]) {
-				suiteArr = append(suiteArr, label.Value)
-			}
-		} else if label.Name == "subSuite" {
+		} else if label.Name == "suite" || label.Name == "subSuite" {
 			if label.Value != "" && (len(suiteArr) == 0 || label.Value != suiteArr[len(suiteArr)-1]) {
 				suiteArr = append(suiteArr, label.Value)
 			}

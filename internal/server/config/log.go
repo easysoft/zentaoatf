@@ -15,6 +15,10 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+const (
+	WinFileSchema = "winfile:///"
+)
+
 func InitLog() {
 	CONFIG.Zap.Director = filepath.Join(commConsts.WorkDir, CONFIG.Zap.Director)
 	if !dir.IsExist(CONFIG.Zap.Director) { // 判断是否有Director文件夹
@@ -50,7 +54,7 @@ func InitExecLog(workspacePath string) {
 	// print to test log file
 	logPath := filepath.Join(commConsts.ExecLogDir, commConsts.LogText)
 	if commonUtils.IsWin() {
-		logPath = filepath.Join("winfile:///", logPath)
+		logPath = filepath.Join(WinFileSchema, logPath)
 		zap.RegisterSink("winfile", newWinFileSink)
 	}
 
@@ -69,7 +73,7 @@ func InitExecLog(workspacePath string) {
 	// print to test result file
 	logPathResult := filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)
 	if commonUtils.IsWin() {
-		logPathResult = filepath.Join("winfile:///", logPathResult)
+		logPathResult = filepath.Join(WinFileSchema, logPathResult)
 		zap.RegisterSink("winfile", newWinFileSink)
 	}
 	config.OutputPaths = []string{logPathResult}
@@ -133,8 +137,8 @@ func getLogConfig() (config zap.Config) {
 	logPathInfo := filepath.Join(CONFIG.Zap.Director, "info.log")
 	logPathErr := filepath.Join(CONFIG.Zap.Director, "err.log")
 	if commonUtils.IsWin() {
-		logPathInfo = filepath.Join("winfile:///", logPathInfo)
-		logPathErr = filepath.Join("winfile:///", logPathErr)
+		logPathInfo = filepath.Join(WinFileSchema, logPathInfo)
+		logPathErr = filepath.Join(WinFileSchema, logPathErr)
 	}
 
 	config = zap.Config{

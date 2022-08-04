@@ -1,10 +1,5 @@
-/**
- * 自定义 request 网络请求工具,基于axios
- * @author LiQingSong
- */
 import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
 import settings from '@/config/settings';
-import { getCache, setCache } from '@/utils/localCache';
 import i18n from "@/config/i18n";
 import {getCurrProductIdBySite, getCurrSiteId} from "@/utils/cache";
 import bus from "@/utils/eventBus";
@@ -46,9 +41,6 @@ const request = axios.create({
     timeout: 0 // 请求超时时间,5000(单位毫秒) / 0 不做限制
 });
 
-// 全局设置 - post请求头
-// request.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
-
 /**
  * 请求拦截器
  */
@@ -72,11 +64,6 @@ request.interceptors.request.use(
 
         console.log(`currSiteId=${config.params[settings.currSiteId]}, currProductId=${config.params[settings.currProductId]}`)
 
-        // if (!config.params[settings.currWorkspace]) {
-        //     const workspacePath = await getCache(settings.currWorkspace);
-        //     config.params = { ...config.params, [settings.currWorkspace]: workspacePath, lang: i18n.global.locale.value };
-        // }
-
         console.log('=== request ===', config.url, config)
         return config;
     },
@@ -91,7 +78,7 @@ request.interceptors.response.use(
         console.log('=== response ===', axiosResponse.config.url, axiosResponse)
 
         const data: ResponseData = axiosResponse.data;
-        const { code, msg } = data;
+        const { code } = data;
 
         // 自定义状态码验证
         if (code !== 0) {

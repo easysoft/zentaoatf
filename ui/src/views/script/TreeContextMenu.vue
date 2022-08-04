@@ -35,13 +35,10 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, PropType, ref, Ref} from "vue";
+import {computed, defineComponent, PropType, ref} from "vue";
 import {useI18n} from "vue-i18n";
 import {useStore} from "vuex";
-import {StateType as GlobalData} from "@/store/global";
-import {ZentaoData} from "@/store/zentao";
 import {ScriptData} from "@/views/script/store";
-import {WorkspaceData} from "@/store/workspace";
 
 export default defineComponent({
   name: 'TreeContextMenu',

@@ -76,8 +76,9 @@ func SyncToZentao(cases []string, config commDomain.WorkspaceConf) (count int, e
 			continue
 		}
 
-		steps, _ := scriptHelper.GetStepAndExpectMap(cs)
-		err = CommitCase(id, title, steps, config)
+		steps := scriptHelper.GetStepAndExpectMap(cs)
+		script, _ := scriptHelper.GetScriptContent(cs, -1)
+		err = CommitCase(id, title, steps, script, config)
 
 		if err == nil {
 			count++
