@@ -43,7 +43,7 @@
       @click="selectProduct"
       :replaceFields="replaceFields"
   />
-  <SitesModal 
+  <SitesModal
     :show="showSitesModal"
     @cancel="sitesModalClose"
     :showOkBtn="false"
@@ -111,7 +111,7 @@ const showZentaoMsg = (payload): void => {
   }
 }
 
-const openSiteManagementTab = (showCreateSiteModal?: boolean) => {
+const openSiteManagementTab = () => {
     console.log('openSiteManagementModal');
     showSitesModal.value = true;
 };

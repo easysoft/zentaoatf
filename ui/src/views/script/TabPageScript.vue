@@ -9,13 +9,12 @@
 
 <script setup lang="ts">
 import notification from "@/utils/notification";
-import { defineProps, defineExpose } from "vue";
+import { defineProps, defineExpose, computed, ref, watch, onMounted, onBeforeUnmount } from "vue";
 import { PageTab } from "@/store/tabs";
 import { useStore } from "vuex";
 import { ScriptData } from "@/views/script/store";
-import { computed, ref, watch, onMounted, onBeforeUnmount } from "vue";
 import { MonacoOptions, ScriptFileNotExist } from "@/utils/const";
-import { resizeHeight, resizeWidth } from "@/utils/dom";
+import { resizeHeight } from "@/utils/dom";
 import { useI18n } from "vue-i18n";
 import MonacoEditor from "@/components/MonacoEditor.vue";
 import bus from "@/utils/eventBus";

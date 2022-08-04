@@ -34,16 +34,7 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
-import {
-  computed,
-  defineExpose,
-  onMounted,
-  withDefaults,
-  ref,
-  defineProps,
-  defineEmits,
-  watch,
-} from "vue";
+import {computed, defineExpose, withDefaults, ref, defineProps, defineEmits, watch} from "vue";
 import { useForm } from "@/utils/form";
 import Form from "@/components/Form.vue";
 import FormItem from "@/components/FormItem.vue";

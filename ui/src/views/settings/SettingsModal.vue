@@ -57,34 +57,16 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
-import { PageTab } from "@/store/tabs";
+import { defineProps, defineEmits, computed, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import {
-  computed,
-  ComputedRef,
-  defineComponent,
-  onMounted,
-  ref,
-  Ref,
-  watch,
-  reactive,
-} from "vue";
-import { useStore } from "vuex";
-import { StateType } from "@/views/site/store";
 import { momentUtcDef } from "@/utils/datetime";
 import Table from "@/components/Table.vue";
-import notification from "@/utils/notification";
 import Modal from "@/utils/modal";
 import Button from "@/components/Button.vue";
 import LanguageSettings from "./LanguageSettings.vue";
-import {getLangInterpreter, saveInterpreter} from "@/views/interpreter/service";
-import {
-  listInterpreter,
-  removeInterpreter,
-} from "@/views/interpreter/service";
+import {saveInterpreter} from "@/views/interpreter/service";
+import {listInterpreter, removeInterpreter, getLangSettings} from "@/views/interpreter/service";
 import FormInterpreter from "@/views/interpreter/FormInterpreter.vue";
-import { getLangSettings } from "@/views/interpreter/service";
 
 const props = defineProps<{
   show: boolean;
@@ -207,7 +189,6 @@ const createInterpreter = (formData) => {
     saveInterpreter(formData).then((json) => {
         if (json.code === 0) {
           formInterpreter.value.clearFormData();
-        //   notification.success({ message: t("save_success") });
           showCreateInterpreterModal.value = false;
           list();
         }

@@ -72,12 +72,7 @@ import {ZentaoData} from "@/store/zentao";
 import debounce from "lodash.debounce";
 import {useI18n} from "vue-i18n";
 import {ScriptData} from "@/views/script/store";
-import {
-  genWorkspaceToScriptsMap,
-  listFilterItems,
-  getCaseIdsFromReport,
-  getSyncFromInfoFromMenu, getNodeMap, getFileNodesUnderParent, updateNameReq
-} from "@/views/script/service";
+import { listFilterItems } from "@/views/script/service";
 import FormWorkspace from "@/views/workspace/FormWorkspace.vue";
 import notification from "@/utils/notification";
 import FilterModal from "./FilterModal.vue";

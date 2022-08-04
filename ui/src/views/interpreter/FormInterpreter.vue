@@ -138,7 +138,7 @@ const selectInterpreter = async () => {
   modelRef.value.path = selectedInterpreter.value;
 };
 
-const selectLang = async (item) => {
+const selectLang = async () => {
   console.log("selectLang", modelRef.value.lang);
 
   modelRef.value.path = "";
@@ -212,9 +212,8 @@ const selectFile = () => {
     const { ipcRenderer } = window.require('electron')
     ipcRenderer.send(settings.electronMsg, 'selectFile')
 
-    ipcRenderer.on(settings.electronMsgReplay, (event, arg) => {
-    console.log(arg)
-    modelRef.value.path = arg
+    ipcRenderer.on(settings.electronMsgReplay, (_event, arg) => {
+      modelRef.value.path = arg
     })
 }
 defineExpose({

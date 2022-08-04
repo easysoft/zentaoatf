@@ -27,7 +27,7 @@ const props = defineProps<{
     keyName?: string,
     checkedKey?: ListItemKey,
     activeKey?: ListItemKey,
-    replaceFields?: Record<string, string>, // {title: 'name'}
+    replaceFields?: Record<string, string>,
 }>();
 
 const keyItemMap = ref<Record<NonNullable<ListItemKey>, ListItemProps | Record<string, any>>>({});
@@ -39,10 +39,10 @@ const itemList = computed(() => {
     return props.items.map((x, i) => {
         let item: (ListItemProps | Record<string, any>) & {key: NonNullable<ListItemKey>};
         if (props.replaceFields && ListItem.props) {
-            item = Object.keys(ListItem.props).reduce((item, propName) => {
+            item = Object.keys(ListItem.props).reduce((item2, propName) => {
                 const replacePropName = props.replaceFields ? props.replaceFields[propName] : null;
-                item[propName] = x[typeof replacePropName === 'string' ? replacePropName : propName];
-                return item;
+                item2[propName] = x[typeof replacePropName === 'string' ? replacePropName : propName];
+                return item2;
             }, {key: x.key !== undefined ? x.key : i});
         } else {
             item = {

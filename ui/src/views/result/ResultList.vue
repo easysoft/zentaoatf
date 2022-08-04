@@ -57,9 +57,9 @@ const refreshExec = async (item): Promise<void> => {
       const failedCases: object[] = [];
 
       reportVal.funcResult.forEach(cs => {
-        const item = {path: cs.path, workspaceId: reportVal.workspaceId}
-        allCases.push(item)
-        if (cs.status === 'fail') failedCases.push(item)
+        const item2 = {path: cs.path, workspaceId: reportVal.workspaceId}
+        allCases.push(item2)
+        if (cs.status === 'fail') failedCases.push(item2)
       })
 
       return {all: allCases, fail: failedCases}

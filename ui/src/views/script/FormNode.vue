@@ -19,7 +19,6 @@ import { useI18n } from "vue-i18n";
 import {
   computed,
   defineExpose,
-  onMounted,
   withDefaults,
   ref,
   defineProps,

@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import {defineProps, computed, ref} from "vue";
+import {defineProps} from "vue";
 import Icon from '@/components/Icon.vue';
 
 export interface FormItemProps {

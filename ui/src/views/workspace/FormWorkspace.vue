@@ -57,16 +57,7 @@ import { useStore } from "vuex";
 import { ZentaoData } from "@/store/zentao";
 
 import { unitTestTypesDef, ztfTestTypesDef } from "@/utils/const";
-import {
-  computed,
-  defineExpose,
-  onMounted,
-  withDefaults,
-  ref,
-  defineProps,
-  defineEmits,
-  watch,
-} from "vue";
+import {computed, defineExpose, withDefaults, ref, defineProps, defineEmits, watch,} from "vue";
 import { useForm } from "@/utils/form";
 import Form from "@/components/Form.vue";
 import FormItem from "@/components/FormItem.vue";
@@ -127,7 +118,7 @@ const rulesRef = ref({
   cmd: [
         {
           trigger: 'blur',
-          validator: async (rule: any, value: string) => {
+          validator: async (_rule: any, value: string) => {
             if (modelRef.value.type !== 'ztf' && (value === '' || !value)) {
               throw new Error(t('pls_cmd'));
             }
@@ -159,9 +150,8 @@ const selectDir = () => {
     const { ipcRenderer } = window.require('electron')
     ipcRenderer.send(settings.electronMsg, 'selectDir')
 
-    ipcRenderer.on(settings.electronMsgReplay, (event, arg) => {
-    console.log(arg)
-    modelRef.value.path = arg
+    ipcRenderer.on(settings.electronMsgReplay, (_event, arg) => {
+      modelRef.value.path = arg
     })
 }
 

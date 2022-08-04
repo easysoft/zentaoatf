@@ -76,18 +76,11 @@ import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import { ZentaoData } from "@/store/zentao";
 import { unitTestTypesDef, ztfTestTypesDef } from "@/utils/const";
-import {
-  computed,
-  defineExpose,
-  onMounted,
-  withDefaults,
-  ref,
-  defineProps, reactive,
-} from "vue";
+import { computed, defineExpose, withDefaults, ref, defineProps, reactive } from "vue";
 import { useForm } from "@/utils/form";
 import Form from "@/components/Form.vue";
 import FormItem from "@/components/FormItem.vue";
-import {queryBugFields, queryTask} from "@/services/zentao";
+import {queryBugFields} from "@/services/zentao";
 import notification from "@/utils/notification";
 import {prepareBugData, submitBugToZentao} from "@/services/bug";
 

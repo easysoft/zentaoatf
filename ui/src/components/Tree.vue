@@ -102,7 +102,7 @@ function getNodeCheckState(id: string): boolean | 'indeterminate' {
     return checked;
 }
 
-function _convertNodeData(node: TreeNodeData, parent: TreeNodeData | undefined, index: number) {
+function _convertNodeData(node: TreeNodeData, parent: TreeNodeData | undefined, _index: number) {
     node = {
       ...node,
       level: parent ? ((parent.level ?? 0) + 1) : 0
