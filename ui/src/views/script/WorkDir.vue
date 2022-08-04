@@ -199,7 +199,6 @@ const selectCasesFromReport = async (): Promise<void> => {
 
   getCaseIdsFromReport(workspace, seq, scope).then((json) => {
     checkedKeys.value = json.data
-    router.push(`/script/index`) // remove the params of re-test
   })
 }
 selectCasesFromReport()
