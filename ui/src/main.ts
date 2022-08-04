@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 
 import App from '@/App.vue';
-import router from '@/config/routes';
+import router from '@/config/router';
 import store from '@/config/store';
 import i18n from '@/config/i18n';
 
