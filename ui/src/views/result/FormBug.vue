@@ -68,7 +68,7 @@
       <div class="steps-contain">
           <div class="steps-select" v-for="(item,index) in steps" :key="index">
             <input type="checkbox" :id="'cbox'+index" :value="index" :checked="item.checked" @click="stepSelect" />
-            <label :for="'cbox'+index" :class="'steps-label step-' + item.status">{{item.name}}</label>
+            <label :for="'cbox'+index" :class="'steps-label step-' + item.status">{{item.title}}</label>
           </div>
           <textarea v-model="modelRef.steps" rows="6" />
       </div>

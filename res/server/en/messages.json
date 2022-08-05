@@ -666,6 +666,10 @@
     {
       "id": "must_provide_allure_report_dir",
       "translation": "Please provide report dir if using Allure Report Framework."
+    },
+    {
+        "id": "bug_title",
+        "translation": "BUG Title"
     }
   ]
 }

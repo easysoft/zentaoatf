@@ -11,6 +11,7 @@ export default {
     'fullScreen': '切换全屏',
     'help': '帮助',
     'loading': '正在加载……',
+    'syncing': '同步中…',
 
     'index': '索引',
     'no': '编号',

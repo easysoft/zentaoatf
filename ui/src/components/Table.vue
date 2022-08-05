@@ -587,7 +587,7 @@ export default defineComponent({
           }
         }
       });
-      setting.isCheckAll = isChecked.length >= localRows.value.length;
+      setting.isCheckAll = isChecked.length >= rowCheckbox.value.length;
       // 回傳畫面上選上的資料 (Return the selected data on the screen)
       emit("return-checked-rows", isChecked);
     };

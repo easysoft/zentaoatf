@@ -112,8 +112,9 @@ type ZtfStep struct {
 }
 
 type ZtfBug struct {
-	Title string `json:"title"`
-	Type  string `json:"type"`
+	Title    string              `json:"title"`
+	Type     string              `json:"type"`
+	TestType commConsts.TestType `json:"testType"`
 
 	StepIds string `json:"ids"` // for to
 

@@ -3,8 +3,9 @@
     :showModal="showModalRef"
     @onCancel="cancel"
     @onOk="submit"
+    :okTitle="okTitle"
     :title="t('sync-from-zentao')"
-    :contentStyle="{ width: '600px' }"
+    :contentStyle="{ width: '600px', overflow: 'hidden' }"
   >
     <Form>
       <FormItem labelWidth="140px" :label="t('module')">
@@ -58,8 +59,8 @@
       :sortable="{}"
       :hasCheckbox="true"
       :isCheckAll="true"
-      ref="tableRef"
       @return-checked-rows="onCheckedRows"
+      class="table-sync-from-zentao"
     >
       <template #Type="record">
         {{ t('case_type_' + record.value.Type) }}
@@ -69,7 +70,7 @@
       </template>
     </Table>
     <p v-else class="empty-tip">
-    {{ t("empty_data") }}
+    {{ tableNotice }}
     </p>
     </Form>
   </ZModal>
@@ -110,6 +111,9 @@ const disabled = ref(false);
 const props = withDefaults(defineProps<FormWorkspaceProps>(), {
   show: false,
 });
+const okTitle = ref(t('confirm'))
+const tableNotice = ref(t('loading'))
+
 watch(props, () => {
   if(!props.show) disabled.value = false;
   modelRef.value.workspaceId = props.workspaceId;
@@ -156,6 +160,7 @@ const submit = () => {
   if(disabled.value) {
     return;
   }
+  okTitle.value = t('syncing');
   disabled.value = true;
   console.log("syncFromZentaoSubmit", console.log(selectedCases.value));
   if (validate()) {
@@ -164,6 +169,7 @@ const submit = () => {
 };
 
 const clearFormData = () => {
+  okTitle.value = t('confirm');
   modelRef.value = {};
 };
 
@@ -178,14 +184,18 @@ const selectedCases = ref([] as number[]);
 const cases = ref([]);
 
 const fetchCases = () => {
+    tableNotice.value = t('loading');
     queryCase({
     siteId: currSite.value.id,
     productId: currProduct.value.id,
     ...modelRef.value,
   }).then((res) => {
+    tableNotice.value = t('empty_data');
     res.data.forEach((item, index) => {
       res.data[index].checked = true;
       selectedCases.value.push(item.Id);
+    }, (err) => {
+        tableNotice.value = t('empty_data');
     });
     cases.value = res.data;
   });
@@ -271,8 +281,6 @@ const setColumns = () => {
 };
 setColumns();
 
-const tableRef = ref({} as any);
-
 const onCheckedRows = (rows: any[]) => {
     selectedCases.value = rows.map((item) => {
       return parseInt(item);
@@ -283,3 +291,10 @@ defineExpose({
   clearFormData,
 });
 </script>
+
+<style>
+.table-sync-from-zentao{
+    overflow: auto;
+    max-height: 50vh;
+}
+</style>

@@ -75,6 +75,54 @@ func CommitCase(caseId int, title string, steps []commDomain.ZentaoCaseStep, scr
 	return
 }
 
+func CreateCase(productId int, title string, steps []commDomain.ZentaoCaseStep, script serverDomain.TestScript,
+	config commDomain.WorkspaceConf) (cs commDomain.ZtfCase, err error) {
+
+	err = Login(config)
+	if err != nil {
+		return
+	}
+
+	uri := fmt.Sprintf("/products/%d/testcases", productId)
+	url := GenApiUrl(uri, nil, config.Url)
+
+	requestObj := map[string]interface{}{
+		"type":   "feature",
+		"title":  title,
+		"steps":  steps,
+		"script": script.Code,
+		"lang":   script.Lang,
+		"pri":    3,
+	}
+	if steps == nil {
+		requestObj["steps"] = []commDomain.ZentaoCaseStep{}
+	}
+
+	jsonData, err := json.Marshal(requestObj)
+	if err != nil {
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
+		return
+	}
+
+	if commConsts.Verbose {
+		logUtils.Infof(string(jsonData))
+	}
+
+	bytes, err := httpUtils.Post(url, requestObj)
+	if err != nil {
+		err = ZentaoRequestErr(url, err.Error())
+		return
+	}
+	err = json.Unmarshal(bytes, &cs)
+	if err != nil {
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
+		return
+	}
+	logUtils.Infof(i118Utils.Sprintf("success_to_create_case", title) + "\n")
+
+	return
+}
+
 func GetCaseById(baseUrl string, caseId int) (cs commDomain.ZtfCase, err error) {
 	uri := fmt.Sprintf("/testcases/%d", caseId)
 	url := GenApiUrl(uri, nil, baseUrl)
@@ -450,7 +498,9 @@ func GetCasesByTaskInDir(productId int, taskId int, workspacePath, scriptDir str
 
 func ListCaseByProduct(baseUrl string, productId int) (casesResp commDomain.ZtfRespTestCases, err error) {
 	uri := fmt.Sprintf("/products/%d/testcases", productId)
-	url := GenApiUrl(uri, nil, baseUrl)
+	url := GenApiUrl(uri, map[string]interface{}{
+		"limit": 10000,
+	}, baseUrl)
 
 	dataStr, err := httpUtils.Get(url)
 	if err != nil {

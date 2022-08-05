@@ -10,6 +10,7 @@ export default {
     'fullScreen': 'Toggle Fullscreen',
     'help': 'Help',
     'loading': 'Loading...',
+    'syncing': 'Syncing...',
 
     'index': 'Index',
     'no': 'NO.',

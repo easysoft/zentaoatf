@@ -91,6 +91,13 @@
                 class="space-left rounded pure text-red"
                 :label="t('view_error')"
               />
+              <Button
+                v-if="result.status === 'fail' && currProduct.id"
+                icon="bug"
+                @click="openBugForm(result)"
+                class="space-left rounded pure text-blue"
+                :label="t('submit_bug_to_zentao')"
+              />
             </template>
           </ListItem>
           <div class="unit-result-info row gap-xl padding-bottom small">

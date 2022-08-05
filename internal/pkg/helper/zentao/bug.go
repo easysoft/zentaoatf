@@ -10,9 +10,11 @@ import (
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	analysisHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
+	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	stdinUtils "github.com/easysoft/zentaoatf/pkg/lib/stdin"
 	"github.com/fatih/color"
 	"github.com/jinzhu/copier"
 	uuid "github.com/satori/go.uuid"
@@ -26,6 +28,9 @@ func CommitBug(ztfBug commDomain.ZtfBug, config commDomain.WorkspaceConf) (err e
 
 	Login(config)
 
+	if ztfBug.TestType == commConsts.TestUnit {
+		return CommitUnitBug(&ztfBug, config)
+	}
 	ztfBug.Steps = strings.Replace(ztfBug.Steps, " ", "&nbsp;", -1)
 	ztfBug.Steps = strings.Replace(ztfBug.Steps, "\n", "<br />", -1)
 
@@ -41,6 +46,44 @@ func CommitBug(ztfBug commDomain.ZtfBug, config commDomain.WorkspaceConf) (err e
 	}
 
 	logUtils.Info(color.GreenString(i118Utils.Sprintf("success_to_report_bug", ztfBug.Case)))
+
+	return
+}
+
+func CommitUnitBug(ztfBug *commDomain.ZtfBug, config commDomain.WorkspaceConf) (err error) {
+	if ztfBug.Product == 0 {
+		logUtils.Info(color.RedString(i118Utils.Sprintf("ignore_bug_without_product")))
+		return
+	}
+
+	if ztfBug.Title == "" {
+		ztfBug.Title = stdinUtils.GetInput("\\w+", "",
+			i118Utils.Sprintf("pls_enter")+" "+i118Utils.Sprintf("bug_title"))
+	}
+
+	Login(config)
+
+	submitBugs := make([]*commDomain.ZentaoBug, 0)
+	ztfBug.Steps = strings.Replace(ztfBug.Steps, " ", "&nbsp;", -1)
+	ztfBug.Steps = strings.Replace(ztfBug.Steps, "\n", "<br />", -1)
+	ztfBug.Title = strings.Trim(ztfBug.Title, "-")
+
+	bug := commDomain.ZentaoBug{}
+	copier.Copy(&bug, ztfBug)
+	submitBugs = append(submitBugs, &bug)
+	generateCaseId(submitBugs, config)
+	for _, bug := range submitBugs {
+		uri := fmt.Sprintf("/products/%d/bugs", bug.Product)
+		url := GenApiUrl(uri, nil, config.Url)
+
+		_, err = httpUtils.Post(url, bug)
+		if err != nil {
+			err = ZentaoRequestErr(url, i118Utils.Sprintf("fail_to_report_bug", err.Error()))
+			return
+		}
+
+		logUtils.Info(color.GreenString(i118Utils.Sprintf("success_to_report_bug", bug.Case)))
+	}
 
 	return
 }
@@ -69,21 +112,23 @@ func PrepareBug(workspacePath, seq string, caseIdStr string, productId int) (bug
 			if step.Status == commConsts.FAIL {
 				stepIds += step.Id + "_"
 			}
+			stepIds = strings.Trim(stepIds, "_")
 			stepsContent := GenBugStepText(step)
 			steps = append(steps, stepsContent)
 			stepsArray = append(stepsArray, map[string]interface{}{
-				"name":   step.Name,
+				"title":  step.Name,
 				"status": step.Status,
 				"steps":  stepsContent,
 			})
 		}
 
 		bug = commDomain.ZtfBug{
-			Title:   cs.Title,
-			Case:    cs.Id,
-			Product: productId,
-			Steps:   strings.Join(steps, "\n"),
-			StepIds: stepIds,
+			Title:    cs.Title,
+			TestType: "func",
+			Case:     cs.Id,
+			Product:  productId,
+			Steps:    strings.Join(steps, "\n"),
+			StepIds:  stepIds,
 
 			Uid:  uuid.NewV4().String(),
 			Type: "codeerror", Severity: 3, Pri: 3, OpenedBuild: []string{"trunk"},
@@ -96,6 +141,54 @@ func PrepareBug(workspacePath, seq string, caseIdStr string, productId int) (bug
 		return
 	}
 
+	if report.TestType == commConsts.TestFunc {
+		return
+	}
+	bugs := make([]map[string]interface{}, 0)
+	stepIds := ""
+	hasCaseId := true
+	if len(report.UnitResult) == report.UnitResult[len(report.UnitResult)-1].Id {
+		hasCaseId = false
+	}
+
+	for _, cs := range report.UnitResult {
+		if (caseId > 0 && cs.Id != caseId) || cs.Status == "pass" {
+			continue
+		}
+		stepIds += strconv.Itoa(cs.Id) + "_"
+		steps := ""
+		if cs.Failure != nil {
+			steps = cs.Failure.Desc
+		}
+		caseId = cs.Id
+		if !hasCaseId {
+			caseId = 0
+		}
+		bugMap := map[string]interface{}{
+			"title":  cs.Title,
+			"status": cs.Status,
+			"steps":  steps,
+			"caseId": caseId,
+			"id":     cs.Id,
+		}
+		bugs = append(bugs, bugMap)
+		break
+	}
+
+	bugsJSon, _ := json.Marshal(bugs)
+
+	bug = commDomain.ZtfBug{
+		Title:    report.Name,
+		TestType: "unit",
+		Case:     caseId,
+		Product:  productId,
+		Steps:    string(bugsJSon),
+		StepIds:  stepIds,
+
+		Uid:  uuid.NewV4().String(),
+		Type: "codeerror", Severity: 3, Pri: 3, OpenedBuild: []string{"trunk"},
+		CaseVersion: "0", OldTaskID: "0",
+	}
 	return
 }
 
@@ -195,5 +288,27 @@ func LoadBugs(Product int, config commDomain.WorkspaceConf) (bugs []commDomain.Z
 			OpenedBy:   openedBy["realname"].(string),
 		})
 	}
+	return
+}
+
+func generateCaseId(bugs []*commDomain.ZentaoBug, config commDomain.WorkspaceConf) (caseId int) {
+	if len(bugs) == 0 {
+		return
+	}
+	//查询所有case，标题相同则返回
+	casesResp, _ := ListCaseByProduct(config.Url, bugs[0].Product)
+	for _, bug := range bugs {
+		for _, cs := range casesResp.Cases {
+			if cs.Title == bug.Title {
+				bug.Case = cs.Id
+				break
+			}
+		}
+		if bug.Case == 0 {
+			caseInfo, _ := CreateCase(bug.Product, bug.Title, nil, serverDomain.TestScript{}, config)
+			bug.Case = caseInfo.Id
+		}
+	}
+
 	return
 }

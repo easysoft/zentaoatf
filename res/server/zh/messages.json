@@ -653,6 +653,10 @@
     {
       "id": "must_provide_allure_report_dir",
       "translation": "使用Allure报表框架时，需要指定报告所在的目录。"
+    },
+    {
+        "id": "bug_title",
+        "translation": "缺陷标题"
     }
   ]
 }
