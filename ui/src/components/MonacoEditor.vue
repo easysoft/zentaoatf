@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, onBeforeUnmount, computed, CSSProperties, watch, shallowRef, defineEmits, onMounted, defineExpose, toRaw } from 'vue';
+import { defineProps, onBeforeUnmount, computed, CSSProperties, watch, shallowRef, defineEmits, onMounted, defineExpose } from 'vue';
 import * as monaco from 'monaco-editor';
 import { useElementSize } from '@vueuse/core'
 
@@ -38,7 +38,7 @@ const style = computed(()=>{
 
 const {height: containerHeight} = useElementSize(elRef);
 
-watch(containerHeight, (newVal, oldValue) => {
+watch(containerHeight, (_newVal, _oldValue) => {
     if (editorRef.value) {
        editorRef.value.layout();
     }
@@ -91,9 +91,6 @@ onMounted(() => {
         editor.onDidChangeModelContent(event => {
             const editorValue = editor.getValue()
             emit('change', editorValue, event);
-            // if (props.value !== editorValue) {
-            //     emit('change', editorValue, event)
-            // }
         });
 
         emit('editorDidMount', editor);

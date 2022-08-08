@@ -40,7 +40,7 @@ defineProps<{
     keyName?: string,
     checkedKey?: ListItemKey,
     activeKey?: ListItemKey,
-    replaceFields?: Record<string, string>, // {title: 'name'}
+    replaceFields?: Record<string, string>,
     listClass?: string,
     listCompact?: boolean,
     listDivider?: boolean,

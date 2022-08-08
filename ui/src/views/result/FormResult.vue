@@ -29,17 +29,8 @@
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import { ZentaoData } from "@/store/zentao";
-import { ScriptData } from "@/views/script/store";
 import { unitTestTypesDef, ztfTestTypesDef } from "@/utils/const";
-import {
-  computed,
-  defineExpose,
-  onMounted,
-  withDefaults,
-  ref,
-  defineProps,
-  defineEmits, reactive, PropType,
-} from "vue";
+import {computed, defineExpose, withDefaults, ref, defineProps } from "vue";
 import { useForm } from "@/utils/form";
 import Form from "@/components/Form.vue";
 import FormItem from "@/components/FormItem.vue";

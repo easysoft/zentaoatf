@@ -9,7 +9,7 @@ import { getLocale, setLocale, importAllLocales, defaultLang } from "@/utils/i18
 /**
  * 框架 多语言 配置
  */
-export const messages = importAllLocales();
+export const messages = importAllLocales() as any;
 const sysLocale = getLocale();
 const i18n = createI18n({
     legacy: false,

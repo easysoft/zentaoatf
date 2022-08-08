@@ -3,7 +3,7 @@ import {app, BrowserWindow, ipcMain, Menu, shell, dialog, globalShortcut} from '
 import {DEBUG, electronMsg, electronMsgReplay, minimumSizeHeight, minimumSizeWidth} from './utils/consts';
 import {IS_MAC_OSX, IS_LINUX, IS_WINDOWS_OS} from './utils/env';
 import {logInfo, logErr} from './utils/log';
-import Config, {updateConfig} from './utils/config';
+import Config from './utils/config';
 import Lang, {initLang} from './core/lang';
 import {startUIService} from "./core/ui";
 import {startZtfServer, killZtfServer} from "./core/ztf";
@@ -12,7 +12,7 @@ const cp = require('child_process');
 const fs = require('fs');
 const pth = require('path');
 
-export default class ZtfApp {
+export class ZtfApp {
     constructor() {
         app.name = Lang.string('app.title', Config.pkg.displayName);
 
@@ -24,7 +24,6 @@ export default class ZtfApp {
         }).catch((err) => {
             logErr('>> ztf server started failed, err: ' + err);
             process.exit(1);
-            return;
         })
     }
 
@@ -63,10 +62,8 @@ export default class ZtfApp {
         const url = await startUIService()
         await mainWin.loadURL(url);
 
-        const { ipcMain } = require('electron')
         ipcMain.on(electronMsg, (event, arg) => {
             logInfo('msg from renderer: ' + arg)
-            const mainWin = this._windows.get('main');
 
             switch (arg) {
                 case 'selectDir':
@@ -103,11 +100,7 @@ export default class ZtfApp {
                         this.openInTerminal(arg.path)
             }
         })
-
-        // if (DEBUG) {
-        //     mainWin.webContents.openDevTools({mode: 'bottom'});
-        // }
-    };
+    }
 
     async openOrCreateWindow() {
         const mainWin = this._windows.get('main');
@@ -163,8 +156,7 @@ export default class ZtfApp {
             this.buildAppMenu();
 
             // 在 OS X 系统上，可能存在所有应用窗口关闭了，但是程序还没关闭，此时如果收到激活应用请求，需要重新打开应用窗口并创建应用菜单。
-            this.openOrCreateWindow().then(() => {
-            })
+            this.openOrCreateWindow()
         });
     }
 
@@ -172,9 +164,7 @@ export default class ZtfApp {
         dialog.showOpenDialog({
             properties: ['openFile']
         }).then(result => {
-            if (result.filePaths && result.filePaths.length > 0) {
-                event.reply(electronMsgReplay, result.filePaths[0]);
-            }
+            this.reply(event, result)
         }).catch(err => {
             logErr(err)
         })
@@ -184,12 +174,16 @@ export default class ZtfApp {
         dialog.showOpenDialog({
             properties: ['openDirectory']
         }).then(result => {
-            if (result.filePaths && result.filePaths.length > 0) {
-                event.reply(electronMsgReplay, result.filePaths[0]);
-            }
+            this.reply(event, result)
         }).catch(err => {
             logErr(err)
         })
+    }
+
+    reply(event, result)  {
+        if (result.filePaths && result.filePaths.length > 0) {
+            event.reply(electronMsgReplay, result.filePaths[0]);
+        }
     }
 
     openInExplore(path) {
@@ -206,7 +200,7 @@ export default class ZtfApp {
         if (IS_WINDOWS_OS) {
             cp.exec('start cmd.exe /K cd /D ' + path);
         } else if (IS_LINUX) {
-            // TODO: support other terminal types
+            // support other terminal types
             cp.spawn ('gnome-terminal', [], { cwd: path });
         } else if (IS_MAC_OSX) {
             cp.exec('open -a Terminal ' + path);
@@ -222,12 +216,15 @@ export default class ZtfApp {
         if (!app.setAboutPanelOptions) {
             return;
         }
+
+        let version = Config.pkg.buildTime ? 'build at ' + new Date(Config.pkg.buildTime).toLocaleString() : ''
+        version +=  DEBUG ? '[debug]' : ''
         app.setAboutPanelOptions({
             applicationName: Lang.string(Config.pkg.name) || Config.pkg.displayName,
             applicationVersion: Config.pkg.version,
             copyright: `${Config.pkg.copyright} ${Config.pkg.company}`,
             credits: `Licence: ${Config.pkg.license}`,
-            version: `${Config.pkg.buildTime ? `build at ${new Date(Config.pkg.buildTime).toLocaleString()}` : ''}${DEBUG ? '[debug]' : ''}`
+            version: version
         });
     }
 

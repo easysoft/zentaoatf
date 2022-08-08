@@ -88,17 +88,16 @@ import {
 } from "vue";
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
-import { WorkspaceData } from "../../workspace/store";
+import { WorkspaceData } from "../workspace/store";
 import { isWindows } from "@/utils/comm";
 import { get as getWorkspace } from "@/views/workspace/service";
 import Form from "@/components/Form.vue";
 import FormItem from "@/components/FormItem.vue";
-import notification from "@/utils/notification";
 import { useForm } from "@/utils/form";
 import Switch from "@/components/Switch.vue";
 import { ZentaoData } from "@/store/zentao";
 import {queryCase} from "@/services/zentao";
-
+import notification from "@/utils/notification";
 import Table from "@/components/Table.vue";
 
 export interface FormWorkspaceProps {
