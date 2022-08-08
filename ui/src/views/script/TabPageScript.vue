@@ -99,11 +99,10 @@ const save = (item) => {
         path: currentScript.value.path,
         code: code
     }).then(() => {
-        console.info("success")
-        store.dispatch('Script/getScript', {type: 'file', ...currentScript.value})
         notification.success({
           message: t('save_success'),
         })
+        store.dispatch('Script/getScript', {type: 'file', ...currentScript.value})
       })
 }
 
