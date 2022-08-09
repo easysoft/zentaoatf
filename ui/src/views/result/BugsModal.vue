@@ -1,9 +1,10 @@
 <template>
 <ZModal
     :showModal="props.show"
-    title="BUG"
+    :title="t('zentao_bug')"
     :contentStyle="{width: '90vw', height: '90vh'}"
     @onCancel="emit('cancel', {event: $event})"
+    :cancelTitle="t('close')"
     :showOkBtn="false"
   >
   <div class="site-main space-top space-left space-right">
