@@ -79,14 +79,10 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			} else {
 				cmd = exec.Command(scriptInterpreter, filePath)
 			}
-		} else if lang == "go" {
-			msg := i118Utils.I118Prt.Sprintf("no_interpreter_for_run", lang, filePath)
-			if commConsts.ExecFrom != commConsts.FromCmd {
-				websocketHelper.SendOutputMsg(msg, "", iris.Map{"key": key}, wsMsg)
-			}
-			logUtils.ExecConsolef(-1, msg)
-			logUtils.ExecFilef(msg)
 		} else {
+			if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
+				filePath = fmt.Sprintf("go %s %s", commConsts.LangMap[lang]["CompiledCommand"], filePath)
+			}
 			cmd = exec.Command("/bin/bash", "-c", filePath)
 		}
 	}
