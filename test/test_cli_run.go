@@ -78,7 +78,7 @@ func cloneGit(gitUrl string, name string) error {
 	return err
 }
 
-func testRunUnitTest(cmdStr, workspacePath string, successRE *regexp.Regexp) (err error) {
+func testRunUnitTest(cmdStr, workspacePath string, successRe *regexp.Regexp) (err error) {
 
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
@@ -111,7 +111,7 @@ func testRunUnitTest(cmdStr, workspacePath string, successRE *regexp.Regexp) (er
 		line, err3 := reader1.ReadString('\n')
 		if line != "" {
 			isTerminal = true
-			if successRE.MatchString(line) {
+			if successRe.MatchString(line) {
 				fmt.Println("Success")
 				break
 			}

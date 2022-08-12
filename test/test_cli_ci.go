@@ -18,8 +18,8 @@ import (
 )
 
 var (
-	continueRE = regexp.MustCompile("Will commit cases below to Zentao|以下用例信息将被更新到禅道")
-	successRE  = regexp.MustCompile("Totally commit 1 cases to Zentao|合计更新1个用例到禅道")
+	continueRe = regexp.MustCompile("Will commit cases below to Zentao|以下用例信息将被更新到禅道")
+	successRe  = regexp.MustCompile("Totally commit 1 cases to Zentao|合计更新1个用例到禅道")
 	newline    = "\n"
 )
 
@@ -33,8 +33,8 @@ func testCi() {
 		fmt.Println(err)
 	}
 	defer child.Close()
-	if _, _, err = child.Expect(continueRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", continueRE, err, newline)
+	if _, _, err = child.Expect(continueRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", continueRe, err, newline)
 		return
 	}
 
@@ -43,8 +43,8 @@ func testCi() {
 		return
 	}
 
-	if _, _, err = child.Expect(successRE, 10*time.Second); err != nil {
-		fmt.Printf("%s: %s%s", successRE, err, newline)
+	if _, _, err = child.Expect(successRe, 10*time.Second); err != nil {
+		fmt.Printf("%s: %s%s", successRe, err, newline)
 		return
 	}
 

@@ -18,8 +18,8 @@ import (
 )
 
 var (
-	continueRE = regexp.MustCompile("Which case do you want to report bug for|请输入您想提交缺陷的用例ID")
-	successRE  = regexp.MustCompile("Success to report bug for case \\d+|成功为用例\\d+提交缺陷")
+	continueRe = regexp.MustCompile("Which case do you want to report bug for|请输入您想提交缺陷的用例ID")
+	successRe  = regexp.MustCompile("Success to report bug for case \\d+|成功为用例\\d+提交缺陷")
 	newline    = "\n"
 )
 
@@ -33,8 +33,8 @@ func testCi() {
 		fmt.Println(err)
 	}
 	defer child.Close()
-	if _, _, err := child.Expect(continueRE, 2*time.Second); err != nil {
-		fmt.Printf("%s: %s%s", continueRE, err, newline)
+	if _, _, err := child.Expect(continueRe, 2*time.Second); err != nil {
+		fmt.Printf("%s: %s%s", continueRe, err, newline)
 		return
 	}
 
@@ -43,8 +43,8 @@ func testCi() {
 		return
 	}
 
-	if _, _, err = child.Expect(successRE, 10*time.Second); err != nil {
-		fmt.Printf("%s: %s%s", successRE, err, newline)
+	if _, _, err = child.Expect(successRe, 10*time.Second); err != nil {
+		fmt.Printf("%s: %s%s", successRe, err, newline)
 		return
 	}
 

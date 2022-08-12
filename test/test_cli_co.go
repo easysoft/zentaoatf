@@ -32,16 +32,16 @@ import (
 )
 
 var (
-	typeRE     = regexp.MustCompile("Import test cases from|请选择用例来源")
-	productRE  = regexp.MustCompile("Please enter Product Id|请输入 产品Id")
-	moduleRE   = regexp.MustCompile("Please enter Module Id|请输入 模块Id")
-	suiteRE    = regexp.MustCompile("Please enter Suite Id|请输入 套件Id")
-	taskRE     = regexp.MustCompile("Please enter Test Request Id|请输入 测试任务Id")
-	separateRE = regexp.MustCompile("Save expected results in a separate file|是否将用例期待结果保存在独立的文件中")
-	languageRE = regexp.MustCompile("Select script language|请选择脚本语言")
-	storeRE    = regexp.MustCompile("Where to store scripts|请输入脚本保存目录")
-	organizeRE = regexp.MustCompile("Organize test scripts by module|是否希望按模块ID组织脚本目录结构")
-	successRE  = regexp.MustCompile("Successfully generated \\d+ test scripts|成功创建\\d+个测试脚本")
+	typeRe     = regexp.MustCompile("Import test cases from|请选择用例来源")
+	productRe  = regexp.MustCompile("Please enter Product Id|请输入 产品Id")
+	moduleRe   = regexp.MustCompile("Please enter Module Id|请输入 模块Id")
+	suiteRe    = regexp.MustCompile("Please enter Suite Id|请输入 套件Id")
+	taskRe     = regexp.MustCompile("Please enter Test Request Id|请输入 测试任务Id")
+	separateRe = regexp.MustCompile("Save expected results in a separate file|是否将用例期待结果保存在独立的文件中")
+	languageRe = regexp.MustCompile("Select script language|请选择脚本语言")
+	storeRe    = regexp.MustCompile("Where to store scripts|请输入脚本保存目录")
+	organizeRe = regexp.MustCompile("Organize test scripts by module|是否希望按模块ID组织脚本目录结构")
+	successRe  = regexp.MustCompile("Successfully generated \\d+ test scripts|成功创建\\d+个测试脚本")
 	productId  = 1
 	moduleId   = 0
 	taskId     = 1
@@ -56,8 +56,8 @@ func testCoProduct() {
 		fmt.Println(err)
 	}
 	defer child.Close()
-	if _, _, err = child.Expect(typeRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", typeRE, err, newline)
+	if _, _, err = child.Expect(typeRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", typeRe, err, newline)
 		return
 	}
 
@@ -65,8 +65,8 @@ func testCoProduct() {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(productRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", productRE, err, newline)
+	if _, _, err = child.Expect(productRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", productRe, err, newline)
 		return
 	}
 
@@ -74,8 +74,8 @@ func testCoProduct() {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(moduleRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", moduleRE, err, newline)
+	if _, _, err = child.Expect(moduleRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", moduleRe, err, newline)
 		return
 	}
 
@@ -83,8 +83,8 @@ func testCoProduct() {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(separateRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", separateRE, err, newline)
+	if _, _, err = child.Expect(separateRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", separateRe, err, newline)
 		return
 	}
 
@@ -92,8 +92,8 @@ func testCoProduct() {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(languageRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", languageRE, err, newline)
+	if _, _, err = child.Expect(languageRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", languageRe, err, newline)
 		return
 	}
 
@@ -101,16 +101,16 @@ func testCoProduct() {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(storeRE, 10*time.Second); err != nil {
-		fmt.Printf("%s: %s%s", storeRE, err, newline)
+	if _, _, err = child.Expect(storeRe, 10*time.Second); err != nil {
+		fmt.Printf("%s: %s%s", storeRe, err, newline)
 		return
 	}
 	if err = child.Send(newline); err != nil {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(organizeRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", organizeRE, err, newline)
+	if _, _, err = child.Expect(organizeRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", organizeRe, err, newline)
 		return
 	}
 
@@ -118,8 +118,8 @@ func testCoProduct() {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(successRE, 10*time.Second); err != nil {
-		fmt.Printf("%s: %s%s", successRE, err, newline)
+	if _, _, err = child.Expect(successRe, 10*time.Second); err != nil {
+		fmt.Printf("%s: %s%s", successRe, err, newline)
 		return
 	}
 
@@ -133,8 +133,8 @@ func testCoSuite() {
 		fmt.Println(err)
 	}
 	defer child.Close()
-	if _, _, err = child.Expect(typeRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", typeRE, err, newline)
+	if _, _, err = child.Expect(typeRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", typeRe, err, newline)
 		return
 	}
 
@@ -142,8 +142,8 @@ func testCoSuite() {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(suiteRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", suiteRE, err, newline)
+	if _, _, err = child.Expect(suiteRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", suiteRe, err, newline)
 		return
 	}
 
@@ -151,8 +151,8 @@ func testCoSuite() {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(separateRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", separateRE, err, newline)
+	if _, _, err = child.Expect(separateRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", separateRe, err, newline)
 		return
 	}
 
@@ -160,8 +160,8 @@ func testCoSuite() {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(languageRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", languageRE, err, newline)
+	if _, _, err = child.Expect(languageRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", languageRe, err, newline)
 		return
 	}
 
@@ -169,16 +169,16 @@ func testCoSuite() {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(storeRE, 10*time.Second); err != nil {
-		fmt.Printf("%s: %s%s", storeRE, err, newline)
+	if _, _, err = child.Expect(storeRe, 10*time.Second); err != nil {
+		fmt.Printf("%s: %s%s", storeRe, err, newline)
 		return
 	}
 	if err = child.Send(newline); err != nil {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(organizeRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", organizeRE, err, newline)
+	if _, _, err = child.Expect(organizeRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", organizeRe, err, newline)
 		return
 	}
 
@@ -186,8 +186,8 @@ func testCoSuite() {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(successRE, 10*time.Second); err != nil {
-		fmt.Printf("%s: %s%s", successRE, err, newline)
+	if _, _, err = child.Expect(successRe, 10*time.Second); err != nil {
+		fmt.Printf("%s: %s%s", successRe, err, newline)
 		return
 	}
 
@@ -201,8 +201,8 @@ func testCoTask() {
 		fmt.Println(err)
 	}
 	defer child.Close()
-	if _, _, err = child.Expect(typeRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", typeRE, err, newline)
+	if _, _, err = child.Expect(typeRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", typeRe, err, newline)
 		return
 	}
 
@@ -210,8 +210,8 @@ func testCoTask() {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(taskRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", taskRE, err, newline)
+	if _, _, err = child.Expect(taskRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", taskRe, err, newline)
 		return
 	}
 
@@ -219,8 +219,8 @@ func testCoTask() {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(separateRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", separateRE, err, newline)
+	if _, _, err = child.Expect(separateRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", separateRe, err, newline)
 		return
 	}
 
@@ -228,8 +228,8 @@ func testCoTask() {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(languageRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", languageRE, err, newline)
+	if _, _, err = child.Expect(languageRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", languageRe, err, newline)
 		return
 	}
 
@@ -237,16 +237,16 @@ func testCoTask() {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(storeRE, 10*time.Second); err != nil {
-		fmt.Printf("%s: %s%s", storeRE, err, newline)
+	if _, _, err = child.Expect(storeRe, 10*time.Second); err != nil {
+		fmt.Printf("%s: %s%s", storeRe, err, newline)
 		return
 	}
 	if err = child.Send(newline); err != nil {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(organizeRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", organizeRE, err, newline)
+	if _, _, err = child.Expect(organizeRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", organizeRe, err, newline)
 		return
 	}
 
@@ -254,8 +254,8 @@ func testCoTask() {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(successRE, 10*time.Second); err != nil {
-		fmt.Printf("%s: %s%s", successRE, err, newline)
+	if _, _, err = child.Expect(successRe, 10*time.Second); err != nil {
+		fmt.Printf("%s: %s%s", successRe, err, newline)
 		return
 	}
 
@@ -269,16 +269,16 @@ func testCo(cmd string) {
 	}
 	defer child.Close()
 
-	if _, _, err = child.Expect(storeRE, 10*time.Second); err != nil {
-		fmt.Printf("%s: %s%s", storeRE, err, newline)
+	if _, _, err = child.Expect(storeRe, 10*time.Second); err != nil {
+		fmt.Printf("%s: %s%s", storeRe, err, newline)
 		return
 	}
 	if err = child.Send(newline); err != nil {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(organizeRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", organizeRE, err, newline)
+	if _, _, err = child.Expect(organizeRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", organizeRe, err, newline)
 		return
 	}
 
@@ -286,8 +286,8 @@ func testCo(cmd string) {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(successRE, 10*time.Second); err != nil {
-		fmt.Printf("%s: %s%s", successRE, err, newline)
+	if _, _, err = child.Expect(successRe, 10*time.Second); err != nil {
+		fmt.Printf("%s: %s%s", successRe, err, newline)
 		return
 	}
 

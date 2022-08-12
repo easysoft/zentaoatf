@@ -21,13 +21,13 @@ import (
 )
 
 var (
-	languageRE    = regexp.MustCompile("Enter the language you want to use|请输入你期望使用的语言")
-	configRE      = regexp.MustCompile("Do you want to config Zentao site|现在开始配置禅道系统的同步参数")
-	urlRE         = regexp.MustCompile("Zentao site url|请输入禅道站点网址")
-	accountRE     = regexp.MustCompile("Zentao account|请输入登录账号")
-	passwordRE    = regexp.MustCompile("Zentao password|请输入账号密码")
-	interpreterRE = regexp.MustCompile("Do you want to config script interpreter|现在配置脚本的解释程序")
-	successRE     = regexp.MustCompile("Success")
+	languageRe    = regexp.MustCompile("Enter the language you want to use|请输入你期望使用的语言")
+	configRe      = regexp.MustCompile("Do you want to config Zentao site|现在开始配置禅道系统的同步参数")
+	urlRe         = regexp.MustCompile("Zentao site url|请输入禅道站点网址")
+	accountRe     = regexp.MustCompile("Zentao account|请输入登录账号")
+	passwordRe    = regexp.MustCompile("Zentao password|请输入账号密码")
+	interpreterRe = regexp.MustCompile("Do you want to config script interpreter|现在配置脚本的解释程序")
+	successRe     = regexp.MustCompile("Success")
 	langs         = map[string]string{
 		"php":        "D:\\Program Files\\phpstudy_pro\\Extensions\\php\\php7.4.3nts\\php.exe",
 		"javascript": "",
@@ -48,8 +48,8 @@ func testSet(language string) {
 		fmt.Println(err)
 	}
 	defer child.Close()
-	if _, _, err = child.Expect(languageRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", languageRE, err, newline)
+	if _, _, err = child.Expect(languageRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", languageRe, err, newline)
 		return
 	}
 
@@ -57,24 +57,24 @@ func testSet(language string) {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err := child.Expect(configRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", configRE, err, newline)
+	if _, _, err := child.Expect(configRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", configRe, err, newline)
 		return
 	}
 	if err = child.Send("y" + newline); err != nil {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(urlRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", urlRE, err, newline)
+	if _, _, err = child.Expect(urlRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", urlRe, err, newline)
 		return
 	}
 	if err = child.Send("http://pms.test/" + newline); err != nil {
 		fmt.Println(err)
 		return
 	}
-	if _, _, err = child.Expect(accountRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", accountRE, err, newline)
+	if _, _, err = child.Expect(accountRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", accountRe, err, newline)
 		return
 	}
 	if err = child.Send("admin" + newline); err != nil {
@@ -82,8 +82,8 @@ func testSet(language string) {
 		return
 	}
 
-	if _, _, err = child.Expect(passwordRE, time.Second); err != nil {
-		fmt.Printf("%s: %s%s", passwordRE, err, newline)
+	if _, _, err = child.Expect(passwordRe, time.Second); err != nil {
+		fmt.Printf("%s: %s%s", passwordRe, err, newline)
 		return
 	}
 	if err = child.Send("123456." + newline); err != nil {
@@ -91,8 +91,8 @@ func testSet(language string) {
 		return
 	}
 	if runtime.GOOS == "windows" {
-		if _, _, err = child.Expect(interpreterRE, time.Second); err != nil {
-			fmt.Printf("%s: %s%s", interpreterRE, err, newline)
+		if _, _, err = child.Expect(interpreterRe, time.Second); err != nil {
+			fmt.Printf("%s: %s%s", interpreterRe, err, newline)
 			return
 		}
 		if err = child.Send("y" + newline); err != nil {
@@ -110,8 +110,8 @@ func testSet(language string) {
 			}
 		}
 	}
-	if _, _, err = child.Expect(successRE, 5*time.Second); err != nil {
-		fmt.Printf("%s: %s%s", successRE, err, newline)
+	if _, _, err = child.Expect(successRe, 5*time.Second); err != nil {
+		fmt.Printf("%s: %s%s", successRe, err, newline)
 		return
 	}
 

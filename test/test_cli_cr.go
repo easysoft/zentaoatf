@@ -18,7 +18,7 @@ import (
 )
 
 var (
-	successRE = regexp.MustCompile("Submitted test results to ZenTao|提交测试结果到禅道成功")
+	successRe = regexp.MustCompile("Submitted test results to ZenTao|提交测试结果到禅道成功")
 	newline   = "\n"
 )
 
@@ -33,8 +33,8 @@ func testCi() {
 	}
 	defer child.Close()
 
-	if _, _, err = child.Expect(successRE, 10*time.Second); err != nil {
-		fmt.Printf("%s: %s%s", successRE, err, newline)
+	if _, _, err = child.Expect(successRe, 10*time.Second); err != nil {
+		fmt.Printf("%s: %s%s", successRe, err, newline)
 		return
 	}
 
