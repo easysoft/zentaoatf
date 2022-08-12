@@ -74,14 +74,22 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 				logUtils.ExecConsolef(-1, msg)
 			}
 			//logUtils.ExecFilef(msg)
-
-			cmd = exec.Command(scriptInterpreter, filePath)
+			if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
+				cmd = exec.Command(scriptInterpreter, commConsts.LangMap[lang]["CompiledCommand"], filePath)
+			} else {
+				cmd = exec.Command(scriptInterpreter, filePath)
+			}
+		} else if lang == "go" {
+			msg := i118Utils.I118Prt.Sprintf("no_interpreter_for_run", lang, filePath)
+			if commConsts.ExecFrom != commConsts.FromCmd {
+				websocketHelper.SendOutputMsg(msg, "", iris.Map{"key": key}, wsMsg)
+			}
+			logUtils.ExecConsolef(-1, msg)
+			logUtils.ExecFilef(msg)
 		} else {
 			cmd = exec.Command("/bin/bash", "-c", filePath)
 		}
 	}
-
-	cmd.Dir = workspacePath
 
 	if cmd == nil {
 		msgStr := i118Utils.Sprintf("cmd_empty")
@@ -93,6 +101,8 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		logUtils.ExecFilef(msgStr)
 
 		return "", msgStr
+	} else {
+		cmd.Dir = workspacePath
 	}
 
 	stdout, err1 := cmd.StdoutPipe()

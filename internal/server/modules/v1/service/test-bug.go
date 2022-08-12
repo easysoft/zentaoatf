@@ -34,6 +34,9 @@ func (s *TestBugService) GetBugFields(siteId, productId int) (bugFields commDoma
 }
 
 func (s *TestBugService) LoadBugs(siteId, productId int) (bugs []commDomain.ZentaoBug, err error) {
+	if siteId == 1 {
+		return
+	}
 	site, _ := s.SiteRepo.Get(uint(siteId))
 	config := configHelper.LoadBySite(site)
 
