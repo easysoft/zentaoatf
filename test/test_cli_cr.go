@@ -14,7 +14,7 @@ import (
 	"runtime"
 	"time"
 
-	expect "github.com/google/goexpect"
+	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 )
 
 var (
@@ -27,7 +27,7 @@ func testCi() {
 	if runtime.GOOS == "windows" {
 		cmd = "ztf cr demo\\001 -p 1 -y -t testcr"
 	}
-	child, _, err := expect.Spawn(cmd, -1)
+	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		fmt.Println(err)
 	}

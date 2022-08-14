@@ -28,7 +28,7 @@ import (
 	"strconv"
 	"time"
 
-	expect "github.com/google/goexpect"
+	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 )
 
 var (
@@ -51,7 +51,7 @@ var (
 
 func testCoProduct() {
 	cmd := "ztf co"
-	child, _, err := expect.Spawn(cmd, -1)
+	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -128,7 +128,7 @@ func testCoProduct() {
 
 func testCoSuite() {
 	cmd := "ztf co"
-	child, _, err := expect.Spawn(cmd, -1)
+	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -196,7 +196,7 @@ func testCoSuite() {
 
 func testCoTask() {
 	cmd := "ztf co"
-	child, _, err := expect.Spawn(cmd, -1)
+	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -263,7 +263,7 @@ func testCoTask() {
 }
 
 func testCo(cmd string) {
-	child, _, err := expect.Spawn(cmd, -1)
+	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		fmt.Println(err)
 	}

@@ -35,9 +35,9 @@ import (
 	"strings"
 	"time"
 
+	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	"github.com/go-git/go-git/v5"
-	expect "github.com/google/goexpect"
 )
 
 var (
@@ -52,7 +52,7 @@ var (
 )
 
 func testRun(cmd string, expectReg *regexp.Regexp) {
-	child, _, err := expect.Spawn(cmd, -1)
+	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		fmt.Println(err)
 	}

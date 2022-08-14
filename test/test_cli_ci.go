@@ -14,7 +14,7 @@ import (
 	"runtime"
 	"time"
 
-	expect "github.com/google/goexpect"
+	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 )
 
 var (
@@ -28,7 +28,7 @@ func testCi() {
 	if runtime.GOOS == "windows" {
 		cmd = "ztf ci .\\demo\\1_string_match_pass.php"
 	}
-	child, _, err := expect.Spawn(cmd, -1)
+	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		fmt.Println(err)
 	}

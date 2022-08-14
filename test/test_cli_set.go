@@ -17,7 +17,7 @@ import (
 	"runtime"
 	"time"
 
-	expect "github.com/google/goexpect"
+	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 )
 
 var (
@@ -43,7 +43,7 @@ var (
 
 func testSet(language string) {
 	cmd := "ztf set"
-	child, _, err := expect.Spawn(cmd, -1)
+	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -114,7 +114,7 @@ func testSet(language string) {
 		fmt.Printf("%s: %s%s", successRe, err, newline)
 		return
 	}
-
+	child.Close()
 	fmt.Println("Success")
 }
 

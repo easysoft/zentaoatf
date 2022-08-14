@@ -17,7 +17,7 @@ import (
 	"strings"
 	"time"
 
-	expect "github.com/google/goexpect"
+	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 )
 
 var (
@@ -28,7 +28,7 @@ func testLs(cmd string, successRe *regexp.Regexp) {
 	if runtime.GOOS == "windows" {
 		cmd = strings.ReplaceAll(cmd, "/", "\\")
 	}
-	child, _, err := expect.Spawn(cmd, -1)
+	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		fmt.Println(err)
 	}
