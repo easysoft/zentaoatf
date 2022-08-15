@@ -40,7 +40,11 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			if strings.Index(strings.ToLower(scriptInterpreter), "autoit") > -1 {
 				cmd = exec.Command("cmd", "/C", scriptInterpreter, filePath, "|", "more")
 			} else {
-				cmd = exec.Command("cmd", "/C", scriptInterpreter, filePath)
+				if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
+					cmd = exec.Command("cmd", "/C", scriptInterpreter, command, filePath)
+				} else {
+					cmd = exec.Command("cmd", "/C", scriptInterpreter, filePath)
+				}
 			}
 		} else if strings.ToLower(lang) == "bat" {
 			cmd = exec.Command("cmd", "/C", filePath)
@@ -75,13 +79,13 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			}
 			//logUtils.ExecFilef(msg)
 			if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
-				cmd = exec.Command(scriptInterpreter, commConsts.LangMap[lang]["CompiledCommand"], filePath)
+				cmd = exec.Command(scriptInterpreter, command, filePath)
 			} else {
 				cmd = exec.Command(scriptInterpreter, filePath)
 			}
 		} else {
 			if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
-				filePath = fmt.Sprintf("go %s %s", commConsts.LangMap[lang]["CompiledCommand"], filePath)
+				filePath = fmt.Sprintf("%s %s", command, filePath)
 			}
 			cmd = exec.Command("/bin/bash", "-c", filePath)
 		}
