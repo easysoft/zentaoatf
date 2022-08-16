@@ -2,21 +2,22 @@ package scriptHelper
 
 import (
 	"fmt"
+	"regexp"
+	"strings"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"regexp"
-	"strings"
 )
 
 const (
 	groupTag = "group:"
 	stepTag  = "step:"
 
-	funcRegex               = `(?U)e\(['"](.+)['"]\)`
+	funcRegex               = `(?U)\We\(['"](.+)['"]\)`
 	singleLineCommentsRegex = `.*(?://|#)(.+)$`
 	multiLineCommentsRegex  = `/\*+(.+)\*+/`
 )
