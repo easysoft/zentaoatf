@@ -52,7 +52,7 @@ func Spawn(cmdStr string, timeout time.Duration) (expect *GExpect, err error) {
 
 	err = cmd.Start()
 	if err != nil {
-		fmt.Println(00, err)
+		return
 	}
 
 	expect = &GExpect{
@@ -61,26 +61,42 @@ func Spawn(cmdStr string, timeout time.Duration) (expect *GExpect, err error) {
 		in:  stdin,
 		err: stderr,
 	}
-
-	// err = cmd.Wait()
-	// if err != nil {
-	// 	fmt.Println(01, err)
-	// }
 	return
 }
-func (e *GExpect) Expect(expect *regexp.Regexp, timeout time.Duration) (out string, match string, err error) {
-	reader1 := bufio.NewReader(e.out)
-	for true {
-		line, err := reader1.ReadString('\n')
-		out = fmt.Sprintf("%s%s", out, line)
-		if expect.MatchString(out) {
-			return out, match, err
+func (e *GExpect) Expect(expect *regexp.Regexp, timeout time.Duration) (out string, err error) {
+	timer := time.NewTimer(timeout)
+	defer timer.Stop()
+	c := make(chan int, 1)
+	go e.expectActual(c, expect, &out, &err)
+	for {
+		select {
+		case <-c:
+			return out, err
+		case <-timer.C:
+			err = errors.New(out)
+			return
 		}
-		if err != nil || io.EOF == err {
+	}
+
+	return
+}
+func (e *GExpect) expectActual(c chan int, expect *regexp.Regexp, out *string, err *error) {
+	reader1 := bufio.NewReader(e.out)
+	for {
+		line, err2 := reader1.ReadString('\n')
+		if err2 != nil {
+			err = &err2
+			return
+		}
+		*out = fmt.Sprintf("%s%s", *out, line)
+		if expect.MatchString(*out) {
+			c <- 1
+			return
+		}
+		if *err != nil || io.EOF == *err {
 			break
 		}
 	}
-	return
 }
 func (e *GExpect) Send(msg string) (err error) {
 	e.in.Write([]byte(msg))

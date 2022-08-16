@@ -107,7 +107,7 @@ var (
 			"whereCmd":        "where go",
 			"linuxWhereCmd":   "which -a go",
 			"versionCmd":      "version",
-			"CompiledCommand": " go run",
+			"CompiledCommand": "run",
 		},
 	}
 

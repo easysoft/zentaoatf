@@ -85,7 +85,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			}
 		} else {
 			if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
-				filePath = fmt.Sprintf("%s %s", command, filePath)
+				filePath = fmt.Sprintf("%s %s %s", lang, command, filePath)
 			}
 			cmd = exec.Command("/bin/bash", "-c", filePath)
 		}

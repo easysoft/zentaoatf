@@ -33,37 +33,69 @@ import (
 	"regexp"
 	"runtime"
 	"strings"
+	"testing"
 	"time"
 
+	"github.com/bmizerany/assert"
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	"github.com/go-git/go-git/v5"
+	"github.com/stretchr/testify/suite"
 )
 
 var (
 	scriptResMap = map[string]*regexp.Regexp{
-		"ztf run demo/1_string_match_pass.php": regexp.MustCompile("Run 1 scripts in \\d+ sec, 1\\(100\\.0%\\) Pass, 0\\(0\\.0%\\) Fail, 0\\(0\\.0%\\) Skip"),
-		"ztf run demo demo/all.cs":             regexp.MustCompile("Run 2 scripts in \\d+ sec, 1\\(50\\.0%\\) Pass, 1\\(50\\.0%\\) Fail, 0\\(0\\.0%\\) Skip"),
-		"ztf run demo/001/result.txt":          regexp.MustCompile("Run 1 scripts in \\d+ sec, 0\\(0\\.0%\\) Pass, 1\\(100\\.0%\\) Fail, 0\\(0\\.0%\\) Skip"),
-		"ztf run demo -suite 1":                regexp.MustCompile("Run 2 scripts in \\d+ sec, 1\\(50\\.0%\\) Pass, 1\\(50\\.0%\\) Fail, 0\\(0\\.0%\\) Skip"),
-		"ztf run demo -task 1":                 regexp.MustCompile("Run 2 scripts in \\d+ sec, 1\\(50\\.0%\\) Pass, 1\\(50\\.0%\\) Fail, 0\\(0\\.0%\\) Skip"),
-		"ztf run demo -p 1 -t task1 -cr -cb":   regexp.MustCompile("Submitted test results to ZenTao\\.[\\s\\S]+Success to report bug for case 6"),
+		"ztf run demo/1_string_match_pass.php": regexp.MustCompile(`Run 1 scripts in \d+ sec, 1\(100\.0%\) Pass, 0\(0\.0%\) Fail, 0\(0\.0%\) Skip`),
+		"ztf run demo demo/all.cs":             regexp.MustCompile(`Run 2 scripts in \d+ sec, 1\(50\.0%\) Pass, 1\(50\.0%\) Fail, 0\(0\.0%\) Skip`),
+		"ztf run demo/001/result.txt":          regexp.MustCompile(`Run 1 scripts in \d+ sec, 0\(0\.0%\) Pass, 1\(100\.0%\) Fail, 0\(0\.0%\) Skip`),
+		"ztf run demo -suite 1":                regexp.MustCompile(`Run 2 scripts in \d+ sec, 1\(50\.0%\) Pass, 1\(50\.0%\) Fail, 0\(0\.0%\) Skip`),
+		"ztf run demo -task 1":                 regexp.MustCompile(`Run 2 scripts in \d+ sec, 1\(50\.0%\) Pass, 1\(50\.0%\) Fail, 0\(0\.0%\) Skip`),
+		"ztf run demo -p 1 -t task1 -cr -cb":   regexp.MustCompile(`Submitted test results to ZenTao\.[\s\S]+Success to report bug for case 6`),
 	}
 )
 
-func testRun(cmd string, expectReg *regexp.Regexp) {
+type RunSuit struct {
+	suite.Suite
+	testCount uint32
+}
+
+func (s *RunSuit) TestRunSuite() {
+	for cmd, expectReg := range scriptResMap {
+		if runtime.GOOS == "windows" {
+			cmd = strings.ReplaceAll(cmd, "/", "\\")
+		}
+		assert.Equal(s.Suite.T(), "Success", testRun(cmd, expectReg))
+	}
+
+}
+func (s *RunSuit) TestRunUnitTest() {
+	testngDir := "./demo/ci_test_testng"
+	pytestDir := "./demo/ci_test_pytest"
+	if runtime.GOOS == "windows" {
+		testngDir = ".\\demo\\ci_test_testng"
+		pytestDir = ".\\demo\\ci_test_pytest"
+	}
+	cloneGit("https://gitee.com/ngtesting/ci_test_testng.git", testngDir)
+	assert.Equal(s.Suite.T(), "Success", testRunUnitTest("mvn clean package test", testngDir, regexp.MustCompile(`Tests run\: 3, Failures\: 0, Errors\: 0, Skipped\: 0`)))
+
+	cloneGit("https://gitee.com/ngtesting/ci_test_pytest.git", pytestDir)
+
+	assert.Equal(s.Suite.T(), "Success", testRunUnitTest("pytest --junitxml=testresult.xml", pytestDir, regexp.MustCompile("1 failed, 1 passed")))
+
+}
+
+func testRun(cmd string, expectReg *regexp.Regexp) string {
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
-		fmt.Println(err)
+		return err.Error()
 	}
 	defer child.Close()
 
-	if out, _, err := child.Expect(expectReg, 10*time.Second); err != nil {
-		fmt.Printf("cmd: %s, %s: %s, output: %s\n", cmd, expectReg, "not found", out)
-		return
+	if _, err := child.Expect(expectReg, 10*time.Second); err != nil {
+		return fmt.Sprintf("expect %s, actual %s", expectReg, err.Error())
 	}
 
-	fmt.Println("Success")
+	return "Success"
 }
 
 func cloneGit(gitUrl string, name string) error {
@@ -78,7 +110,7 @@ func cloneGit(gitUrl string, name string) error {
 	return err
 }
 
-func testRunUnitTest(cmdStr, workspacePath string, successRe *regexp.Regexp) (err error) {
+func testRunUnitTest(cmdStr, workspacePath string, successRe *regexp.Regexp) string {
 
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
@@ -90,18 +122,15 @@ func testRunUnitTest(cmdStr, workspacePath string, successRe *regexp.Regexp) (er
 	cmd.Dir = workspacePath
 
 	if cmd == nil {
-		fmt.Println("cmd is nil")
-		return
+		return "cmd is nil"
 	}
 	stdout, err1 := cmd.StdoutPipe()
 	stderr, err2 := cmd.StderrPipe()
 
 	if err1 != nil {
-		fmt.Println(err1)
-		return
+		return err1.Error()
 	} else if err2 != nil {
-		fmt.Println(err2)
-		return
+		return err2.Error()
 	}
 	cmd.Start()
 
@@ -112,7 +141,7 @@ func testRunUnitTest(cmdStr, workspacePath string, successRe *regexp.Regexp) (er
 		if line != "" {
 			isTerminal = true
 			if successRe.MatchString(line) {
-				fmt.Println("Success")
+				return "Success"
 				break
 			}
 		}
@@ -139,28 +168,17 @@ func testRunUnitTest(cmdStr, workspacePath string, successRe *regexp.Regexp) (er
 	errOutput := strings.Join(errOutputArr, "")
 
 	if errOutput != "" {
-		fmt.Println(errOutput)
+		return errOutput
 	}
 
 	cmd.Wait()
 
-	return
+	return "Success"
 }
-func main() {
-	for cmd, expectReg := range scriptResMap {
-		if runtime.GOOS == "windows" {
-			cmd = strings.ReplaceAll(cmd, "/", "\\")
-		}
-		testRun(cmd, expectReg)
-	}
-	testngDir := "./demo/ci_test_testng"
-	pytestDir := "./demo/ci_test_pytest"
+
+func TestRun(t *testing.T) {
 	if runtime.GOOS == "windows" {
-		testngDir = ".\\demo\\ci_test_testng"
-		pytestDir = ".\\demo\\ci_test_pytest"
+		newline = "\r\n"
 	}
-	cloneGit("https://gitee.com/ngtesting/ci_test_testng.git", testngDir)
-	testRunUnitTest("mvn clean package test", testngDir, regexp.MustCompile("Tests run\\: 3, Failures\\: 0, Errors\\: 0, Skipped\\: 0"))
-	cloneGit("https://gitee.com/ngtesting/ci_test_pytest.git", pytestDir)
-	testRunUnitTest("pytest --junitxml=testresult.xml", pytestDir, regexp.MustCompile("1 failed, 1 passed"))
+	suite.Run(t, new(RunSuit))
 }
