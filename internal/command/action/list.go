@@ -2,15 +2,16 @@ package action
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
+	"time"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/mattn/go-runewidth"
-	"strconv"
-	"strings"
-	"time"
 )
 
 func List(files []string, keywords string) {
@@ -63,7 +64,7 @@ func List(files []string, keywords string) {
 }
 
 func SummaryObj(file string, keywords string) (bool, commDomain.FuncResult) {
-	pass, caseId, _, title := scriptHelper.GetCaseInfo(file)
+	pass, caseId, _, title, _ := scriptHelper.GetCaseInfo(file)
 
 	if pass {
 		_, err := strconv.Atoi(keywords)

@@ -167,7 +167,7 @@ func extractFromComments(file string) (stepObjs []*commDomain.ZtfStep) {
 }
 
 func prepareDesc(steps []string, file string) (desc string) {
-	pass, caseId, productId, title := GetCaseInfo(file)
+	pass, caseId, productId, title, _ := GetCaseInfo(file)
 	if !pass {
 		return
 	}

@@ -2,16 +2,19 @@ package execHelper
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"io"
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
@@ -31,6 +34,13 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	lang := langHelper.GetLangByFile(filePath)
 
 	var cmd *exec.Cmd
+	_, _, _, _, timeout := scriptHelper.GetCaseInfo(filePath)
+	if timeout == 0 {
+		timeout = 86400 * 7
+	}
+	ctxt, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(timeout))
+	defer cancel()
+
 	if commonUtils.IsWin() {
 		scriptInterpreter := ""
 		if strings.ToLower(lang) != "bat" {
@@ -75,13 +85,11 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			}
 			//logUtils.ExecFilef(msg)
 
-			cmd = exec.Command(scriptInterpreter, filePath)
+			cmd = exec.CommandContext(ctxt, scriptInterpreter, filePath)
 		} else {
-			cmd = exec.Command("/bin/bash", "-c", filePath)
+			cmd = exec.CommandContext(ctxt, "/bin/bash", "-c", filePath)
 		}
 	}
-
-	cmd.Dir = workspacePath
 
 	if cmd == nil {
 		msgStr := i118Utils.Sprintf("cmd_empty")
@@ -94,6 +102,8 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 
 		return "", msgStr
 	}
+
+	cmd.Dir = workspacePath
 
 	stdout, err1 := cmd.StdoutPipe()
 	stderr, err2 := cmd.StderrPipe()
@@ -176,10 +186,12 @@ ExitCurrCase:
 			errOutputArr = append(errOutputArr, line)
 		}
 	}
+	if ctxt.Err() != nil {
+		errOutputArr = append(errOutputArr, i118Utils.Sprintf("exec_cmd_timeout"))
 
+	}
 	stdOutput = strings.Join(stdOutputArr, "")
 	errOutput = strings.Join(errOutputArr, "")
-
 	cmd.Wait()
 	return
 }

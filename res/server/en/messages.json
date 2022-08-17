@@ -329,7 +329,10 @@
       "id": "exec_cmd_fail",
       "translation": "Fail to exec cmd %s, error is %s."
     },
-
+    {
+        "id": "exec_cmd_timeout",
+        "translation": "Exec cmd timeout."
+    },
     {
       "id": "success_to_conn",
       "translation": "Success to connect."
