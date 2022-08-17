@@ -18,6 +18,7 @@ require (
 	github.com/facebookgo/structtag v0.0.0-20150214074306-217e25fb9691 // indirect
 	github.com/facebookgo/subset v0.0.0-20200203212716-c811ad88dec4 // indirect
 	github.com/fatih/color v1.13.0
+	github.com/go-git/go-git/v5 v5.4.2 // indirect
 	github.com/go-playground/validator/v10 v10.9.0
 	github.com/go-redis/redis/v8 v8.11.3
 	github.com/gorilla/websocket v1.4.2
@@ -41,6 +42,7 @@ require (
 	github.com/sirupsen/logrus v1.4.2
 	github.com/snowlyg/helper v0.0.0-20210919081922-08e1fd247338
 	github.com/spf13/viper v1.8.1
+	github.com/stretchr/testify v1.8.0 // indirect
 	github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect

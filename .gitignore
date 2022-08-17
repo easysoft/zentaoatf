@@ -37,3 +37,9 @@ logs/
 
 /gui/
 /ui/report.json
+
+#test
+/test/conf
+/test/log
+/test/product1
+/test/demo/ci_test*

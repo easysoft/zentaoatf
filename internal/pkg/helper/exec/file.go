@@ -50,7 +50,11 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			if strings.Index(strings.ToLower(scriptInterpreter), "autoit") > -1 {
 				cmd = exec.Command("cmd", "/C", scriptInterpreter, filePath, "|", "more")
 			} else {
-				cmd = exec.Command("cmd", "/C", scriptInterpreter, filePath)
+				if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
+					cmd = exec.Command("cmd", "/C", scriptInterpreter, command, filePath)
+				} else {
+					cmd = exec.Command("cmd", "/C", scriptInterpreter, filePath)
+				}
 			}
 		} else if strings.ToLower(lang) == "bat" {
 			cmd = exec.Command("cmd", "/C", filePath)
@@ -85,8 +89,15 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			}
 			//logUtils.ExecFilef(msg)
 
-			cmd = exec.CommandContext(ctxt, scriptInterpreter, filePath)
+			if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
+				cmd = exec.CommandContext(ctxt, scriptInterpreter, command, filePath)
+			} else {
+				cmd = exec.CommandContext(ctxt, scriptInterpreter, filePath)
+			}
 		} else {
+			if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
+				filePath = fmt.Sprintf("%s %s %s", lang, command, filePath)
+			}
 			cmd = exec.CommandContext(ctxt, "/bin/bash", "-c", filePath)
 		}
 	}
@@ -101,6 +112,8 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		logUtils.ExecFilef(msgStr)
 
 		return "", msgStr
+	} else {
+		cmd.Dir = workspacePath
 	}
 
 	cmd.Dir = workspacePath
