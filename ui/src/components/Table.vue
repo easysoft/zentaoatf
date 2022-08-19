@@ -898,6 +898,10 @@ tr {
   top: 0;
 }
 
+.z-table td{
+    position: inherit;
+}
+
 .z-table-hover tbody tr:hover {
   color: #212529;
   background-color: rgba(0, 0, 0, 0.075);

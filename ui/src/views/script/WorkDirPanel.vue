@@ -153,6 +153,9 @@ watch(bugMap, () => {
   genCheckedCaseIds()
 }, { deep: true });
 
+watch(treeDataMap, () => {
+  loadFilterItems()
+}, { deep: true });
 const genCheckedCaseIds = () => {
   checkedCaseIds.value = [];
   for(let key in selectedNodes.value){
