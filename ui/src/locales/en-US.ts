@@ -90,6 +90,7 @@ export default {
     'execution.execTask': 'Execute By Task',
     'execution.execUnit': 'Execute UnitTest',
     'workspace': 'Work Dir',
+    'filter': 'Filter',
     'dir': 'Dir',
     'create_workspace': 'Create WorkDir',
     'edit_workspace': 'Edit WorkDir',

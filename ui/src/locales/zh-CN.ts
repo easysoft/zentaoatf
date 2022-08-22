@@ -98,6 +98,7 @@ export default {
     'execution.execTask': '执行任务',
     'execution.execUnit': '执行单元测试',
     'workspace': '工作目录',
+    'filter': '筛选',
     'dir': '目录',
     'create_workspace': '新建工作目录',
     'edit_workspace': '编辑工作目录',

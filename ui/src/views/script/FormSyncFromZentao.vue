@@ -1,5 +1,6 @@
 <template>
   <ZModal
+    id="syncFromZentaoFormModal"
     :showModal="showModalRef"
     @onCancel="cancel"
     @onOk="submit"

@@ -1,5 +1,5 @@
 <template>
-  <div class="popper layer rounded" :style="menuFinalStyle" ref="menuRef">
+  <div class="popper layer rounded" :style="menuFinalStyle" ref="menuRef" id="filterModal">
     <template v-if="state.show">
       <div class="tab-group">
         <div

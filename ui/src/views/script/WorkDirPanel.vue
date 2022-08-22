@@ -34,6 +34,7 @@
       </FilterModal>
       <Button
       id="filterBtn"
+      :hint="t('filter')"
       class="filter-btn"
       :label="filerLabel"
       v-show="currSite.id != 1"
