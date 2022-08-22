@@ -34,6 +34,7 @@
       </FilterModal>
       <Button
       id="filterBtn"
+      :hint="t('filter')"
       class="filter-btn"
       :label="filerLabel"
       v-show="currSite.id != 1"
@@ -153,6 +154,9 @@ watch(bugMap, () => {
   genCheckedCaseIds()
 }, { deep: true });
 
+watch(treeDataMap, () => {
+  loadFilterItems()
+}, { deep: true });
 const genCheckedCaseIds = () => {
   checkedCaseIds.value = [];
   for(let key in selectedNodes.value){

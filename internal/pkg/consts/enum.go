@@ -29,6 +29,7 @@ var (
 	ErrZentaoConfig            = ResponseCode{2000, "Zentao Config Error"}
 	ErrZentaoRequest           = ResponseCode{3000, "zentao request Error"}
 	ErrRecordWithSameNameExist = ResponseCode{3010, "Record Exist"}
+	ErrRecordWithSamePathExist = ResponseCode{3011, "Record Exist"}
 	ErrRecordNotExist          = ResponseCode{4000, "Record Not Found"}
 	NotAvailable               = ResponseCode{5000, "Not Available"}
 

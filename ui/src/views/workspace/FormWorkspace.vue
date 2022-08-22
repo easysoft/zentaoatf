@@ -1,5 +1,6 @@
 <template>
   <ZModal
+     id="workspaceFormModal"
     :showModal="showModalRef"
     @onCancel="cancel"
     @onOk="submit"

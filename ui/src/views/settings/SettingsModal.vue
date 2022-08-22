@@ -25,7 +25,7 @@
       :sortable="{}"
     >
       <template #lang="record">
-        {{ languageMap[record.value.lang].name }}
+        {{ languageMap[record.value.lang]?.name }}
       </template>
 
       <template #createdAt="record">

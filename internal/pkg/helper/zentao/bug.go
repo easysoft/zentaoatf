@@ -195,7 +195,9 @@ func PrepareBug(workspacePath, seq string, caseIdStr string, productId int) (bug
 func GenBugStepText(step commDomain.StepLog) string {
 	stepResults := make([]string, 0)
 
-	stepTxt := fmt.Sprintf("步骤%s： %s %s\n", step.Id, step.Name, step.Status)
+	stepId, _ := strconv.Atoi(step.Id)
+	stepId += 1
+	stepTxt := fmt.Sprintf("步骤%d： %s %s\n", stepId, step.Name, step.Status)
 
 	for _, checkpoint := range step.CheckPoints {
 		text := fmt.Sprintf(
