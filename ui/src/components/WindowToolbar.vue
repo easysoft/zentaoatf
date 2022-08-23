@@ -71,4 +71,8 @@ const exit = (): void => {
   button {
     -webkit-app-region: no-drag;
   }
+  .window-toolbar{
+    position: fixed;
+    right: 0;
+  }
 </style>
