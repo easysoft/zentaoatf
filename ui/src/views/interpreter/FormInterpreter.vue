@@ -1,9 +1,10 @@
 <template>
   <ZModal
+    id="interpreterFormModal"
     :showModal="showModalRef"
     @onCancel="cancel"
     @onOk="submit"
-    :title="info == undefined ? t('create_interpreter') : t('edit_interpreter')"
+    :title="info.value == undefined ? t('create_interpreter') : t('edit_interpreter')"
     :contentStyle="{width: '500px'}"
   >
     <Form class="form-interpreter">

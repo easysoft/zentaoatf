@@ -1,5 +1,6 @@
 <template>
 <ZModal
+    id="settingModal"
     :showModal="props.show"
     :title="t('settings')"
     :contentStyle="{width: '90vw', height: '90vh'}"
