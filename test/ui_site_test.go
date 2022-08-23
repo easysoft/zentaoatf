@@ -181,7 +181,6 @@ func EditSite(t *testing.T) {
 		t.FailNow()
 
 	}
-	// page.WaitForSelector(".tree")
 	Locator, err := page.Locator("#siteMenuToggle")
 	if err != nil {
 		t.Errorf("The siteMenuToggle is missing: %v", err)
@@ -204,7 +203,6 @@ func EditSite(t *testing.T) {
 	if err != nil {
 		t.Errorf("The Click site nav fail: %v", err)
 		t.FailNow()
-
 	}
 	// page.WaitForSelector(".modal-title")
 	Locator, err = page.Locator(".list-item", playwright.PageLocatorOptions{HasText: "单元测试站点"})
