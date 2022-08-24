@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import notification from "@/utils/notification";
 import { defineProps, defineExpose, computed, ref, watch, onMounted, onBeforeUnmount } from "vue";
-import { PageTab } from "@/store/tabs";
+import { PageTab, TabsData } from "@/store/tabs";
 import { useStore } from "vuex";
 import { ScriptData } from "@/views/script/store";
 import { MonacoOptions, ScriptFileNotExist } from "@/utils/const";
@@ -26,18 +26,19 @@ const props = defineProps<{
     tab: PageTab
 }>();
 
-const store = useStore<{ Script: ScriptData, global: GlobalData }>();
+const store = useStore<{ Script: ScriptData, global: GlobalData,tabs: TabsData }>();
 const global = computed<any>(() => store.state.global.tabIdToWorkspaceIdMap);
 const script = computed<any>(() => store.state.Script.detail);
-const currWorkspace = computed<any>(() => store.state.Script.currWorkspace);
 const scriptCode = ref('')
 const currentScript = ref({} as any)
 
 const lang = ref('')
 const editorOptions = ref(MonacoOptions)
 const editorRef = ref<InstanceType<typeof MonacoEditor>>()
+const activeID = computed((): string => {
+  return store.state.tabs.activeID;
+});
 
-const init = ref(false)
 watch(script, () => {
     if(script.value == undefined || (currentScript.value.path!==undefined && currentScript.value.path !== script.value.path)){
         return
@@ -108,10 +109,29 @@ const save = (item) => {
 onMounted(() => {
   console.log('onMounted')
   bus.on(settings.eventScriptSave, save);
+  document.addEventListener('keydown', function(e){
+    const ele = document.getElementsByClassName('vfm--fixed')
+    const isFocus = Array.prototype.findIndex.call(ele, function(vftEle){
+      return vftEle.style.display != 'none';
+    });
+    if(isFocus > -1){
+        return 
+    }
+    if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)){
+        e.preventDefault();
+        save({path: activeID.value})
+     }
+});
 })
 onBeforeUnmount( () => {
   console.log('onBeforeUnmount')
   bus.off(settings.eventScriptSave, save);
+  document.removeEventListener('keydown', function(e){
+    if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)){
+        e.preventDefault();
+        save(currentScript.value)
+     }
+});
 })
 
 defineExpose({
