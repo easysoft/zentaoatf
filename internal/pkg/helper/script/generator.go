@@ -2,10 +2,11 @@ package scriptHelper
 
 import (
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	"github.com/easysoft/zentaoatf/pkg/consts"
@@ -70,6 +71,7 @@ func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool
 		i118Utils.Sprintf("find_example", consts.FilePthSep, langType))
 
 	info = append(info, fmt.Sprintf("title=%s", caseTitle))
+	info = append(info, fmt.Sprintf("timeout=%d", 0))
 	info = append(info, fmt.Sprintf("cid=%d", caseId))
 	info = append(info, fmt.Sprintf("pid=%d", productId))
 

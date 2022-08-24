@@ -2,7 +2,7 @@
 <?php
 /**
 
-title=extract content from webpage12ac
+title=extract content from webpage
 cid=2
 pid=1
 
