@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
-	"github.com/fatih/color"
 	"os"
 	"os/exec"
 	"os/signal"
 	"syscall"
+
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	"github.com/fatih/color"
 )
 
 func main() {
@@ -23,7 +24,7 @@ func main() {
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
 		pth = "gui\\ztf.exe"
-		cmd = exec.Command("cmd", "/C", pth)
+		cmd = exec.Command("cmd", "/C", "start", pth)
 	}
 
 	err := cmd.Run()
