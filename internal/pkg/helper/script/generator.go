@@ -108,6 +108,7 @@ func GenEmptyScript(name, lang, pth string, productId int) {
 
 	info := make([]string, 0)
 	info = append(info, fmt.Sprintf("title=%s", name))
+	info = append(info, fmt.Sprintf("timeout=%d", 0))
 	info = append(info, fmt.Sprintf("cid=%d", 0))
 	info = append(info, fmt.Sprintf("pid=%d", productId))
 
