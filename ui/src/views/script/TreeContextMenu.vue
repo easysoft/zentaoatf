@@ -1,10 +1,10 @@
 <template>
   <div class="tree-context-menu">
     <div class="menu">
-      <div v-if="siteId != 1 && (treeNode.type !== 'file' || treeDataMap[treeNode.id]?.caseId > 0)" @click="menuClick('sync-from-zentao')" class="menu-item">
+      <div v-if="siteId != 1 && (treeNode.workspaceType == 'ztf' && (treeNode.type !== 'file' || treeDataMap[treeNode.id]?.caseId > 0))" @click="menuClick('sync-from-zentao')" class="menu-item">
         <span>{{t('sync-from-zentao')}}</span>
       </div>
-      <div v-if="siteId != 1 && (treeNode.type !== 'file' || treeDataMap[treeNode.id]?.caseId > 0)" @click="menuClick('sync-to-zentao')" class="menu-item">
+      <div v-if="siteId != 1 && (treeNode.workspaceType == 'ztf' && (treeNode.type !== 'file' || treeDataMap[treeNode.id]?.caseId > 0))" @click="menuClick('sync-to-zentao')" class="menu-item">
         <span>{{t('sync-to-zentao')}}</span>
       </div>
       <div @click="menuClick('exec')" class="menu-item">
