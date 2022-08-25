@@ -31,8 +31,7 @@ func CreateWorkspace(t *testing.T) {
 		t.FailNow()
 	}
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
-		WaitUntil: playwright.WaitUntilStateDomcontentloaded,
-	}); err != nil {
+		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
 	}
@@ -161,8 +160,7 @@ func SyncFromZentao(t *testing.T) {
 		t.FailNow()
 	}
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
-		WaitUntil: playwright.WaitUntilStateDomcontentloaded,
-	}); err != nil {
+		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
 	}
@@ -239,8 +237,7 @@ func SyncToZentao(t *testing.T) {
 		t.FailNow()
 	}
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
-		WaitUntil: playwright.WaitUntilStateDomcontentloaded,
-	}); err != nil {
+		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
 	}
@@ -305,8 +302,7 @@ func Copy(t *testing.T) {
 		t.FailNow()
 	}
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
-		WaitUntil: playwright.WaitUntilStateDomcontentloaded,
-	}); err != nil {
+		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
 	}
@@ -402,8 +398,7 @@ func DeleteScript(t *testing.T) {
 		t.FailNow()
 	}
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
-		WaitUntil: playwright.WaitUntilStateDomcontentloaded,
-	}); err != nil {
+		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
 	}
@@ -479,8 +474,7 @@ func DeleteDir(t *testing.T) {
 		t.FailNow()
 	}
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
-		WaitUntil: playwright.WaitUntilStateDomcontentloaded,
-	}); err != nil {
+		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
 	}
@@ -557,8 +551,7 @@ func DeleteWorkspace(t *testing.T) {
 		t.FailNow()
 	}
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
-		WaitUntil: playwright.WaitUntilStateDomcontentloaded,
-	}); err != nil {
+		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
 	}
@@ -624,8 +617,7 @@ func Clip(t *testing.T) {
 		t.FailNow()
 	}
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
-		WaitUntil: playwright.WaitUntilStateDomcontentloaded,
-	}); err != nil {
+		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
 	}
@@ -722,8 +714,7 @@ func FilterDir(t *testing.T) {
 		t.FailNow()
 	}
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
-		WaitUntil: playwright.WaitUntilStateDomcontentloaded,
-	}); err != nil {
+		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
 	}
@@ -797,8 +788,7 @@ func FilterSuite(t *testing.T) {
 		t.FailNow()
 	}
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
-		WaitUntil: playwright.WaitUntilStateDomcontentloaded,
-	}); err != nil {
+		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
 	}
@@ -883,8 +873,7 @@ func FilterTask(t *testing.T) {
 		t.FailNow()
 	}
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
-		WaitUntil: playwright.WaitUntilStateDomcontentloaded,
-	}); err != nil {
+		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
 	}
