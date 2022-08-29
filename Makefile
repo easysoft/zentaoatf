@@ -1,4 +1,4 @@
-VERSION=3.0.0
+VERSION=3.1.0
 PROJECT=ztf
 
 ifeq ($(OS),Windows_NT)
@@ -30,7 +30,7 @@ CLIENT_OUT_DIR=client/out/
 BUILD_TIME=`git show -s --format=%cd`
 GO_VERSION=`go version`
 GIT_HASH=`git show -s --format=%H`
-BUILD_CMD=go build -ldflags "-X 'commConsts.appVersion=${VERSION}' -X 'commConsts.buildTime=${BUILD_TIME}' -X 'commConsts.goVersion=${GO_VERSION}' -X 'commConsts.gitHash=${GIT_HASH}'"
+BUILD_CMD=go build -ldflags "-X 'main.AppVersion=${VERSION}' -X 'main.BuildTime=${BUILD_TIME}' -X 'main.GoVersion=${GO_VERSION}' -X 'main.GitHash=${GIT_HASH}'"
 
 default: win64 win32 linux mac
 
@@ -143,7 +143,7 @@ compile_command_win64:
 	@echo 'start compile win64'
 	@cd ${COMMAND_MAIN_DIR} && \
         CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
-		${BUILD_CMD} -x -v -ldflags "-s -w" \
+		${BUILD_CMD} -x -v \
 		-o ../../${COMMAND_BIN_DIR}win64/${PROJECT}.exe && \
 		cd ..
 
@@ -151,7 +151,7 @@ compile_command_win32:
 	@echo 'start compile win32'
 	@cd ${COMMAND_MAIN_DIR} && \
         CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
-		${BUILD_CMD} -x -v -ldflags "-s -w" \
+		${BUILD_CMD} -x -v \
 		-o ../../${COMMAND_BIN_DIR}win32/${PROJECT}.exe && \
         cd ..
 

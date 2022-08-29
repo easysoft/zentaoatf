@@ -20,11 +20,6 @@ var (
 
 	RequestType string
 	ExecFrom    ExecFromDef
-
-	AppVersion string
-	BuildTime  string
-	GoVersion  string
-	GitHash    string
 )
 
 var (
