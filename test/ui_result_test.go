@@ -312,6 +312,6 @@ func SubmitBug(t *testing.T) {
 
 func TestUiResult(t *testing.T) {
 	t.Run("Detail", Detail)
-	// t.Run("SubmitResult", SubmitResult)
-	// t.Run("SubmitBug", SubmitBug)
+	t.Run("SubmitResult", SubmitResult)
+	t.Run("SubmitBug", SubmitBug)
 }
