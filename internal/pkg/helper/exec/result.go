@@ -243,6 +243,21 @@ func MatchScene(expect, actual, langType string) (pass bool) {
 				case "!=":
 					return actualFloot != expectFloot
 				}
+			} else if strings.Contains(expect, "-") && strings.Count(expect, "-") == 1 {
+				rangeArr := strings.Split(expect, "-")
+				rangeFrom, err := strconv.ParseFloat(strings.TrimSpace(rangeArr[0]), 64)
+				if err != nil {
+					return false
+				}
+				rangeTo, err := strconv.ParseFloat(strings.TrimSpace(rangeArr[1]), 64)
+				if err != nil {
+					return false
+				}
+				actualFloot, err := strconv.ParseFloat(strings.TrimSpace(actual), 64)
+				if err != nil {
+					return false
+				}
+				return actualFloot >= rangeFrom && actualFloot <= rangeTo
 			} else {
 				character := expect[:1]
 				expectFloot, err := strconv.ParseFloat(strings.TrimSpace(expect[1:]), 64)

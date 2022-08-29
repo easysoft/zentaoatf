@@ -45,11 +45,11 @@ import (
 
 var (
 	scriptResMap = map[string]*regexp.Regexp{
-		"ztf run demo/1_string_match_pass.php": regexp.MustCompile(`Run 1 scripts in \d+ sec, 1\(100\.0%\) Pass, 0\(0\.0%\) Fail, 0\(0\.0%\) Skip`),
-		"ztf run demo demo/all.cs":             regexp.MustCompile(`Run 2 scripts in \d+ sec, 1\(50\.0%\) Pass, 1\(50\.0%\) Fail, 0\(0\.0%\) Skip`),
+		"ztf run demo/1_string_match_pass.php": regexp.MustCompile(`Run 1 scripts in \d+ sec, 1\(100\.0%\) Pass, 0\(0\.0%\) Fail, 0\(0\.0%\) Skip|执行1个用例，耗时\d+秒。1\(100\.0%\) 通过，0\(0\.0%\) 失败，0\(0\.0%\) 忽略`),
+		"ztf run demo demo/all.cs":             regexp.MustCompile(`Run 2 scripts in \d+ sec, 1\(50\.0%\) Pass, 1\(50\.0%\) Fail, 0\(0\.0%\) Skip|执行2个用例，耗时\d+秒。1\(50\.0%\) 通过，1\(50\.0%\) 失败，0\(0\.0%\) 忽略`),
 		// "ztf run demo/001/result.txt":          regexp.MustCompile(`Run 1 scripts in \d+ sec, 0\(0\.0%\) Pass, 1\(100\.0%\) Fail, 0\(0\.0%\) Skip`),
-		"ztf run demo -suite 1": regexp.MustCompile(`Run 2 scripts in \d+ sec, 1\(50\.0%\) Pass, 1\(50\.0%\) Fail, 0\(0\.0%\) Skip`),
-		"ztf run demo -task 1":  regexp.MustCompile(`Run 2 scripts in \d+ sec, 1\(50\.0%\) Pass, 1\(50\.0%\) Fail, 0\(0\.0%\) Skip`),
+		"ztf run demo -suite 1": regexp.MustCompile(`Run 2 scripts in \d+ sec, 1\(50\.0%\) Pass, 1\(50\.0%\) Fail, 0\(0\.0%\) Skip|执行2个用例，耗时\d+秒。1\(50\.0%\) 通过，1\(50\.0%\) 失败，0\(0\.0%\) 忽略`),
+		"ztf run demo -task 1":  regexp.MustCompile(`Run 2 scripts in \d+ sec, 1\(50\.0%\) Pass, 1\(50\.0%\) Fail, 0\(0\.0%\) Skip|执行2个用例，耗时\d+秒。1\(50\.0%\) 通过，1\(50\.0%\) 失败，0\(0\.0%\) 忽略`),
 		// "ztf run demo -p 1 -t task1 -cr -cb": regexp.MustCompile(`Submitted test results to ZenTao\.[\s\S]+Success to report bug for case 6`),
 	}
 )
@@ -59,14 +59,13 @@ type RunSuit struct {
 	testCount uint32
 }
 
-func (s *RunSuit) TestRunSuite() {
+func (s *RunSuit) TestRunZtf() {
 	for cmd, expectReg := range scriptResMap {
 		if runtime.GOOS == "windows" {
 			cmd = strings.ReplaceAll(cmd, "/", "\\")
 		}
 		assert.Equal(s.Suite.T(), "Success", testRun(cmd, expectReg))
 	}
-
 }
 func (s *RunSuit) TestRunUnitTest() {
 	testngDir := "./demo/ci_test_testng"
@@ -92,7 +91,7 @@ func testRun(cmd string, expectReg *regexp.Regexp) string {
 	defer child.Close()
 
 	if _, err := child.Expect(expectReg, 10*time.Second); err != nil {
-		return fmt.Sprintf("expect %s, actual %s", expectReg, err.Error())
+		return fmt.Sprintf("cmd:%s, expect %s, actual %s", cmd, expectReg, err.Error())
 	}
 
 	return "Success"
@@ -173,6 +172,57 @@ func testRunUnitTest(cmdStr, workspacePath string, successRe *regexp.Regexp) str
 	cmd.Wait()
 
 	return "Success"
+}
+
+func (s *RunSuit) TestRunScenes() {
+	sceneMap := map[string]string{
+		"exactly empty >> ~~":                            "",
+		"exactly start with abc >> ~f:^abc~":             "abcdvd",
+		"exactly end with abc >> ~f:abc$~":               "dcdabc",
+		"exactly contain abc >> ~f:abc~":                 "dvabcd",
+		"exactly containX abc*3 >> ~f:abc*3~":            "dvabcdabcabcdds",
+		"exactly 2 in (1,2,3) >> ~f:(1,2,3)~":            "2",
+		"exactly match %sabc%d >> ~m:%sabc%d~":           "dabc1dad",
+		"exactly match .*cid=.* >> ~m:.*cid=.*~":         "sdfascid=ljlkjl",
+		"exactly equal 123 >> ~c:=123~":                  "123",
+		"exactly less than 123 >> ~c:<123~":              "1",
+		"exactly less than or equal 123 >> ~c:<=123~":    "123",
+		"exactly greater than 123 >> ~c:>123~":           "124",
+		"exactly greater than or equal 123 >> ~c:>=123~": "123",
+		"exactly not equal 123 >> ~c:<>123~":             "120",
+		"exactly between 12-19 >> ~c:12-19~":             "15",
+	}
+	template := `#!/usr/bin/env php
+	<?php
+	/**
+	
+	title=check string matches pattern
+	cid=1
+	pid=1
+	
+	%s
+	
+	*/
+	
+	print("%s\n");`
+
+	path := "./demo/test"
+	if runtime.GOOS == "windows" {
+		path = `.\demo\test_scene.php`
+	}
+	cmd := `ztf run ` + path
+	for expectVal, actualVal := range sceneMap {
+		file, err := os.OpenFile(path, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0666)
+		defer file.Close()
+		if err != nil {
+			s.Suite.T().Errorf("open file fail, err:%s", err)
+			return
+		}
+		write := bufio.NewWriter(file)
+		write.WriteString(fmt.Sprintf(template, expectVal, actualVal))
+		write.Flush()
+		assert.Equal(s.Suite.T(), "Success", testRun(cmd, regexp.MustCompile(`Run 1 scripts in \d+ sec, 1\(100\.0%\) Pass, 0\(0\.0%\) Fail, 0\(0\.0%\) Skip|执行1个用例，耗时\d+秒。1\(100\.0%\) 通过，0\(0\.0%\) 失败，0\(0\.0%\) 忽略`)))
+	}
 }
 
 func TestRun(t *testing.T) {
