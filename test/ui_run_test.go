@@ -37,18 +37,18 @@ func RunScript(t *testing.T) {
 		t.Errorf("Wait tree-node fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	c, err := Locator.Count()
+	locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find workspace fail: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click()
+	err = locator.Click()
 	if err != nil {
 		t.Errorf("Click node fail: %v", err)
 		t.FailNow()
 	}
-	scriptLocator, err := Locator.Locator("text=1_string_match.php")
+	scriptLocator, err := locator.Locator("text=1_string_match.php")
 	if err != nil {
 		t.Errorf("Find 1_string_match.php fail: %v", err)
 		t.FailNow()
@@ -147,13 +147,13 @@ func RunSelectedScripts(t *testing.T) {
 		t.Errorf("Wait tree-node fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	c, err := Locator.Count()
+	locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find workspace fail: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click()
+	err = locator.Click()
 	if err != nil {
 		t.Errorf("Click node fail: %v", err)
 		t.FailNow()
@@ -163,7 +163,7 @@ func RunSelectedScripts(t *testing.T) {
 		t.Errorf("The Click select btn fail: %v", err)
 		t.FailNow()
 	}
-	scriptLocator, err := Locator.Locator(".tree-node-item:has-text('1_string_match.php')")
+	scriptLocator, err := locator.Locator(".tree-node-item:has-text('1_string_match.php')")
 	if err != nil {
 		t.Errorf("Find 1_string_match.php fail: %v", err)
 		t.FailNow()
@@ -178,7 +178,7 @@ func RunSelectedScripts(t *testing.T) {
 		t.Errorf("Click 1_string_match.php checkbox fail: %v", err)
 		t.FailNow()
 	}
-	scriptLocator, err = Locator.Locator(".tree-node-item:has-text('2_webpage_extract.php')")
+	scriptLocator, err = locator.Locator(".tree-node-item:has-text('2_webpage_extract.php')")
 	if err != nil {
 		t.Errorf("Find 2_webpage_extract.php fail: %v", err)
 		t.FailNow()
@@ -281,12 +281,12 @@ func RunOpenedAndLast(t *testing.T) {
 		t.Errorf("Wait tree-node fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err := page.Locator("#siteMenuToggle")
+	locator, err := page.Locator("#siteMenuToggle")
 	if err != nil {
 		t.Errorf("The siteMenuToggle is missing: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click()
+	err = locator.Click()
 	if err != nil {
 		t.Errorf("The Click is fail: %v", err)
 		t.FailNow()
@@ -306,13 +306,13 @@ func RunOpenedAndLast(t *testing.T) {
 		t.Errorf("Wait tree-node fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err = page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	c, err := Locator.Count()
+	locator, err = page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find workspace fail: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click()
+	err = locator.Click()
 	if err != nil || c == 0 {
 		t.Errorf("Click workspace fail: %v", err)
 		t.FailNow()
@@ -342,12 +342,12 @@ func RunOpenedAndLast(t *testing.T) {
 		t.Errorf("Wait exec opened scripts result fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err = page.Locator("#log-list>>code:has-text('执行2个用例，耗时')")
+	locator, err = page.Locator("#log-list>>code:has-text('执行2个用例，耗时')")
 	if err != nil {
 		t.Errorf("Find exec opened scripts result fail: %v", err)
 		t.FailNow()
 	}
-	innerText, err := Locator.InnerText()
+	innerText, err := locator.InnerText()
 	if err != nil {
 		t.Errorf("Find exec opened scripts result fail: %v", err)
 		t.FailNow()
@@ -365,7 +365,7 @@ func RunOpenedAndLast(t *testing.T) {
 	if err != nil || resultTitle != "单元测试工作目录(2)" {
 		t.Errorf("Find result in rightPane fail: %v", err)
 	}
-	timeElement, err := Locator.Locator(".time>>span")
+	timeElement, err := locator.Locator(".time>>span")
 	if err != nil {
 		t.Errorf("Find log time element in logPane fail: %v", err)
 		t.FailNow()
@@ -398,8 +398,8 @@ func RunOpenedAndLast(t *testing.T) {
 		t.Errorf("Wait exec last time result fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err = page.Locator("#log-list>>code:has-text('执行2个用例，耗时')")
-	innerText, err = Locator.InnerText()
+	locator, err = page.Locator("#log-list>>code:has-text('执行2个用例，耗时')")
+	innerText, err = locator.InnerText()
 	if err != nil {
 		t.Errorf("Find exec last time result fail: %v", err)
 		t.FailNow()
@@ -418,7 +418,7 @@ func RunOpenedAndLast(t *testing.T) {
 		t.Errorf("Find result in rightPane fail: %v", err)
 		t.FailNow()
 	}
-	timeElement, err = Locator.Locator(".time>>span")
+	timeElement, err = locator.Locator(".time>>span")
 	if err != nil {
 		t.Errorf("Find log time element in logPane fail: %v", err)
 		t.FailNow()
@@ -476,12 +476,12 @@ func RunAll(t *testing.T) {
 		t.Errorf("Wait tree-node fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err := page.Locator("#siteMenuToggle")
+	locator, err := page.Locator("#siteMenuToggle")
 	if err != nil {
 		t.Errorf("The siteMenuToggle is missing: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click()
+	err = locator.Click()
 	if err != nil {
 		t.Errorf("The Click is fail: %v", err)
 		t.FailNow()
@@ -501,8 +501,8 @@ func RunAll(t *testing.T) {
 		t.Errorf("Wait tree-node fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err = page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	c, err := Locator.Count()
+	locator, err = page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find workspace fail: %v", err)
 		t.FailNow()
@@ -523,12 +523,12 @@ func RunAll(t *testing.T) {
 		t.Errorf("Wait exec all scripts result fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err = page.Locator("#log-list>>code:has-text('执行3个用例，耗时')")
+	locator, err = page.Locator("#log-list>>code:has-text('执行3个用例，耗时')")
 	if err != nil {
 		t.Errorf("Find exec all scripts result fail: %v", err)
 		t.FailNow()
 	}
-	innerText, err := Locator.InnerText()
+	innerText, err := locator.InnerText()
 	if err != nil {
 		t.Errorf("Find exec all scripts result fail: %v", err)
 		t.FailNow()
@@ -547,7 +547,7 @@ func RunAll(t *testing.T) {
 		t.Errorf("Find result in rightPane fail: %v", err)
 		t.FailNow()
 	}
-	timeElement, err := Locator.Locator(".time>>span")
+	timeElement, err := locator.Locator(".time>>span")
 	if err != nil {
 		t.Errorf("Find log time element in logPane fail: %v", err)
 		t.FailNow()
@@ -605,12 +605,12 @@ func RunReExecFailCase(t *testing.T) {
 		t.FailNow()
 	}
 
-	Locator, err := page.Locator("#siteMenuToggle")
+	locator, err := page.Locator("#siteMenuToggle")
 	if err != nil {
 		t.Errorf("The siteMenuToggle is missing: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click()
+	err = locator.Click()
 	if err != nil {
 		t.Errorf("The Click is fail: %v", err)
 		t.FailNow()
@@ -643,12 +643,12 @@ func RunReExecFailCase(t *testing.T) {
 		t.Errorf("Wait exec script result fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err = page.Locator("#log-list>>code:has-text('执行1个用例，耗时')")
+	locator, err = page.Locator("#log-list>>code:has-text('执行1个用例，耗时')")
 	if err != nil {
 		t.Errorf("Find exec script log fail: %v", err)
 		t.FailNow()
 	}
-	innerText, err := Locator.InnerText()
+	innerText, err := locator.InnerText()
 	if err != nil {
 		t.Errorf("Find exec script result fail: %v", err)
 		t.FailNow()
@@ -667,7 +667,7 @@ func RunReExecFailCase(t *testing.T) {
 		t.Errorf("Find result in rightPane fail: %v", err)
 		t.FailNow()
 	}
-	timeElement, err := Locator.Locator(".time>>span")
+	timeElement, err := locator.Locator(".time>>span")
 	if err != nil || resultTitle != "1_string_match.php" {
 		t.Errorf("Find log time element in logPane fail: %v", err)
 		t.FailNow()
@@ -726,12 +726,12 @@ func RunReExecAllCase(t *testing.T) {
 		t.FailNow()
 	}
 
-	Locator, err := page.Locator("#siteMenuToggle")
+	locator, err := page.Locator("#siteMenuToggle")
 	if err != nil {
 		t.Errorf("The siteMenuToggle is missing: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click()
+	err = locator.Click()
 	if err != nil {
 		t.Errorf("The Click is fail: %v", err)
 		t.FailNow()
@@ -764,12 +764,12 @@ func RunReExecAllCase(t *testing.T) {
 		t.Errorf("Wait exec script result fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err = page.Locator("#log-list>>code:has-text('执行3个用例，耗时')")
+	locator, err = page.Locator("#log-list>>code:has-text('执行3个用例，耗时')")
 	if err != nil {
 		t.Errorf("Find exec script log fail: %v", err)
 		t.FailNow()
 	}
-	innerText, err := Locator.InnerText()
+	innerText, err := locator.InnerText()
 	if err != nil {
 		t.Errorf("Find exec script result fail: %v", err)
 		t.FailNow()
@@ -788,7 +788,7 @@ func RunReExecAllCase(t *testing.T) {
 		t.Errorf("Find result in rightPane fail: %v", err)
 		t.FailNow()
 	}
-	timeElement, err := Locator.Locator(".time>>span")
+	timeElement, err := locator.Locator(".time>>span")
 	if err != nil {
 		t.Errorf("Find log time element in logPane fail: %v", err)
 		t.FailNow()

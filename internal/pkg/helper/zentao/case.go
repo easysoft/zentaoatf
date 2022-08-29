@@ -570,6 +570,9 @@ func ListCaseByTask(baseUrl string, taskId int) (casesResp commDomain.ZtfRespTes
 		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
+	for index, caseInfo := range casesResp.Cases {
+		casesResp.Cases[index].Id = caseInfo.Case
+	}
 
 	return
 }

@@ -14,7 +14,7 @@ func CreateSite(t *testing.T) {
 		t.Error(err)
 		t.FailNow()
 	}
-	headless := false
+	headless := true
 	var slowMo float64 = 100
 	if siteBrowser == nil || !siteBrowser.IsConnected() {
 		siteBrowser, err = pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
@@ -34,12 +34,12 @@ func CreateSite(t *testing.T) {
 		t.FailNow()
 	}
 	// page.WaitForSelector(".tree")
-	Locator, err := page.Locator("#siteMenuToggle")
+	locator, err := page.Locator("#siteMenuToggle")
 	if err != nil {
 		t.Errorf("The siteMenuToggle is missing: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click()
+	err = locator.Click()
 	if err != nil {
 		t.Errorf("The Click is fail: %v", err)
 		t.FailNow()
@@ -60,12 +60,12 @@ func CreateSite(t *testing.T) {
 		t.Errorf("The Click create site fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err = page.Locator("#siteFormModal input")
+	locator, err = page.Locator("#siteFormModal input")
 	if err != nil {
 		t.Errorf("Find create site input fail: %v", err)
 		t.FailNow()
 	}
-	titleInput, err := Locator.Nth(0)
+	titleInput, err := locator.Nth(0)
 	if err != nil {
 		t.Errorf("Find title input fail: %v", err)
 		t.FailNow()
@@ -75,7 +75,7 @@ func CreateSite(t *testing.T) {
 		t.Errorf("Fil title input fail: %v", err)
 		t.FailNow()
 	}
-	addressInput, err := Locator.Nth(1)
+	addressInput, err := locator.Nth(1)
 	if err != nil {
 		t.Errorf("Find address input fail: %v", err)
 		t.FailNow()
@@ -85,7 +85,7 @@ func CreateSite(t *testing.T) {
 		t.Errorf("Fil address input fail: %v", err)
 		t.FailNow()
 	}
-	nameInput, err := Locator.Nth(2)
+	nameInput, err := locator.Nth(2)
 	if err != nil {
 		t.Errorf("Find name input fail: %v", err)
 		t.FailNow()
@@ -95,7 +95,7 @@ func CreateSite(t *testing.T) {
 		t.Errorf("Fil name input fail: %v", err)
 		t.FailNow()
 	}
-	pwdInput, err := Locator.Nth(3)
+	pwdInput, err := locator.Nth(3)
 	if err != nil {
 		t.Errorf("Find passwd input fail: %v", err)
 		t.FailNow()
@@ -111,8 +111,8 @@ func CreateSite(t *testing.T) {
 		t.FailNow()
 	}
 	page.WaitForTimeout(1000)
-	Locator, err = page.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: "单元测试站点"})
-	c, err := Locator.Count()
+	locator, err = page.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: "单元测试站点"})
+	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find created site fail: %v", err)
 		t.FailNow()
@@ -134,7 +134,7 @@ func EditSite(t *testing.T) {
 		t.Error(err)
 		t.FailNow()
 	}
-	headless := false
+	headless := true
 	var slowMo float64 = 100
 	if siteBrowser == nil || !siteBrowser.IsConnected() {
 		siteBrowser, err = pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
@@ -153,12 +153,12 @@ func EditSite(t *testing.T) {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
 	}
-	Locator, err := page.Locator("#siteMenuToggle")
+	locator, err := page.Locator("#siteMenuToggle")
 	if err != nil {
 		t.Errorf("The siteMenuToggle is missing: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click()
+	err = locator.Click()
 	if err != nil {
 		t.Errorf("The Click is fail: %v", err)
 		t.FailNow()
@@ -174,15 +174,15 @@ func EditSite(t *testing.T) {
 		t.FailNow()
 	}
 	// page.WaitForSelector(".modal-title")
-	Locator, err = page.Locator(".list-item", playwright.PageLocatorOptions{HasText: "单元测试站点"})
-	c, err := Locator.Count()
+	locator, err = page.Locator(".list-item", playwright.PageLocatorOptions{HasText: "单元测试站点"})
+	c, err := locator.Count()
 	if err != nil || c == 0 {
 		siteBrowser.Close()
 		CreateSite(t)
 		EditSite(t)
 		return
 	}
-	Locator, err = page.Locator(".list-item", playwright.PageLocatorOptions{HasText: "单元测试站点"})
+	locator, err = page.Locator(".list-item", playwright.PageLocatorOptions{HasText: "单元测试站点"})
 	if err != nil {
 		t.Errorf("Find test site fail: %v", err)
 		t.FailNow()
@@ -192,12 +192,12 @@ func EditSite(t *testing.T) {
 		t.Errorf("The Click update site fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err = page.Locator("#siteFormModal input")
+	locator, err = page.Locator("#siteFormModal input")
 	if err != nil {
 		t.Errorf("Find update site input fail: %v", err)
 		t.FailNow()
 	}
-	titleInput, err := Locator.Nth(0)
+	titleInput, err := locator.Nth(0)
 	if err != nil {
 		t.Errorf("Find title input fail: %v", err)
 		t.FailNow()
@@ -207,7 +207,7 @@ func EditSite(t *testing.T) {
 		t.Errorf("Fil title input fail: %v", err)
 		t.FailNow()
 	}
-	addressInput, err := Locator.Nth(1)
+	addressInput, err := locator.Nth(1)
 	if err != nil {
 		t.Errorf("Find address input fail: %v", err)
 		t.FailNow()
@@ -217,7 +217,7 @@ func EditSite(t *testing.T) {
 		t.Errorf("Fil address input fail: %v", err)
 		t.FailNow()
 	}
-	nameInput, err := Locator.Nth(2)
+	nameInput, err := locator.Nth(2)
 	if err != nil {
 		t.Errorf("Find name input fail: %v", err)
 		t.FailNow()
@@ -227,7 +227,7 @@ func EditSite(t *testing.T) {
 		t.Errorf("Fil name input fail: %v", err)
 		t.FailNow()
 	}
-	pwdInput, err := Locator.Nth(3)
+	pwdInput, err := locator.Nth(3)
 	if err != nil {
 		t.Errorf("Find passwd input fail: %v", err)
 		t.FailNow()
@@ -243,8 +243,8 @@ func EditSite(t *testing.T) {
 		t.FailNow()
 	}
 	page.WaitForTimeout(1000)
-	Locator, err = page.Locator(".list-item-content", playwright.PageLocatorOptions{HasText: "单元测试站点-update"})
-	c, err = Locator.Count()
+	locator, err = page.Locator(".list-item-content", playwright.PageLocatorOptions{HasText: "单元测试站点-update"})
+	c, err = locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find update site fail: %v", err)
 		t.FailNow()
@@ -265,7 +265,7 @@ func DeleteSite(t *testing.T) {
 		t.Error(err)
 		t.FailNow()
 	}
-	headless := false
+	headless := true
 	var slowMo float64 = 100
 	if siteBrowser == nil || !siteBrowser.IsConnected() {
 		siteBrowser, err = pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
@@ -285,12 +285,12 @@ func DeleteSite(t *testing.T) {
 		t.FailNow()
 	}
 	// page.WaitForSelector(".tree")
-	Locator, err := page.Locator("#siteMenuToggle")
+	locator, err := page.Locator("#siteMenuToggle")
 	if err != nil {
 		t.Errorf("The siteMenuToggle is missing: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click()
+	err = locator.Click()
 	if err != nil {
 		t.Errorf("The Click is fail: %v", err)
 		t.FailNow()
@@ -306,7 +306,7 @@ func DeleteSite(t *testing.T) {
 		t.FailNow()
 	}
 	// page.WaitForSelector(".modal-title")
-	Locator, err = page.Locator(".list-item", playwright.PageLocatorOptions{HasText: "单元测试站点"})
+	locator, err = page.Locator(".list-item", playwright.PageLocatorOptions{HasText: "单元测试站点"})
 	if err != nil {
 		t.Errorf("Find test site fail: %v", err)
 		t.FailNow()
@@ -323,8 +323,8 @@ func DeleteSite(t *testing.T) {
 		t.FailNow()
 	}
 	page.WaitForTimeout(1000)
-	Locator, err = page.Locator(".list-item-content", playwright.PageLocatorOptions{HasText: "单元测试站点"})
-	c, err := Locator.Count()
+	locator, err = page.Locator(".list-item-content", playwright.PageLocatorOptions{HasText: "单元测试站点"})
+	c, err := locator.Count()
 	if err != nil || c > 0 {
 		t.Errorf("Delete site fail: %v", err)
 		t.FailNow()

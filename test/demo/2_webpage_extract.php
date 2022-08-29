@@ -3,7 +3,7 @@
 /**
 
 title=extract content from webpage
-cid=5
+cid=2
 pid=1
 
 1. Load web page from url http://xxx

@@ -14,7 +14,7 @@ func CreateInterpreter(t *testing.T) {
 		t.Error(err)
 		t.FailNow()
 	}
-	headless := false
+	headless := true
 	var slowMo float64 = 100
 	if interpreterBrowser == nil || !interpreterBrowser.IsConnected() {
 		interpreterBrowser, err = pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
@@ -44,12 +44,12 @@ func CreateInterpreter(t *testing.T) {
 		t.Errorf("The Click create interpreter fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err := page.Locator("#interpreterFormModal select")
+	locator, err := page.Locator("#interpreterFormModal select")
 	if err != nil {
 		t.Errorf("Find create interpreter input fail: %v", err)
 		t.FailNow()
 	}
-	langSelect, err := Locator.Nth(0)
+	langSelect, err := locator.Nth(0)
 	if err != nil {
 		t.Errorf("Find lang select fail: %v", err)
 		t.FailNow()
@@ -60,7 +60,7 @@ func CreateInterpreter(t *testing.T) {
 		t.FailNow()
 	}
 	page.WaitForTimeout(200)
-	pathSelect, err := Locator.Nth(1)
+	pathSelect, err := locator.Nth(1)
 	if err != nil {
 		t.Errorf("Find address input fail: %v", err)
 		t.FailNow()
@@ -76,10 +76,19 @@ func CreateInterpreter(t *testing.T) {
 		t.Errorf("The Click submit form fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err = page.Locator("#settingModal .z-tbody-td", playwright.PageLocatorOptions{HasText: "Python"})
-	c, err := Locator.Count()
+	locator, err = page.Locator("#settingModal .z-tbody-td", playwright.PageLocatorOptions{HasText: "Python"})
+	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find created interpreter fail: %v", err)
+		t.FailNow()
+	}
+
+	if err = interpreterBrowser.Close(); err != nil {
+		t.Errorf("The interpreterBrowser cannot be closed: %v", err)
+		t.FailNow()
+	}
+	if err = pw.Stop(); err != nil {
+		t.Errorf("The playwright cannot be stopped: %v", err)
 		t.FailNow()
 	}
 }
@@ -89,7 +98,7 @@ func EditInterpreter(t *testing.T) {
 		t.Error(err)
 		t.FailNow()
 	}
-	headless := false
+	headless := true
 	var slowMo float64 = 100
 	if interpreterBrowser == nil || !interpreterBrowser.IsConnected() {
 		interpreterBrowser, err = pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
@@ -116,27 +125,27 @@ func EditInterpreter(t *testing.T) {
 		t.Errorf("The Click interpreter nav fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err := page.Locator("#settingModal .z-tbody-tr", playwright.PageLocatorOptions{HasText: "Python"})
+	locator, err := page.Locator("#settingModal .z-tbody-tr", playwright.PageLocatorOptions{HasText: "Python"})
 	if err != nil {
 		t.Errorf("Find python tr fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err = Locator.Locator("text=编辑")
+	locator, err = locator.Locator("text=编辑")
 	if err != nil {
 		t.Errorf("Find python edit btn fail: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click()
+	err = locator.Click()
 	if err != nil {
 		t.Errorf("The Click update site fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err = page.Locator("#interpreterFormModal select")
+	locator, err = page.Locator("#interpreterFormModal select")
 	if err != nil {
 		t.Errorf("Find create interpreter input fail: %v", err)
 		t.FailNow()
 	}
-	langSelect, err := Locator.Nth(0)
+	langSelect, err := locator.Nth(0)
 	if err != nil {
 		t.Errorf("Find lang select fail: %v", err)
 		t.FailNow()
@@ -147,7 +156,7 @@ func EditInterpreter(t *testing.T) {
 		t.FailNow()
 	}
 	page.WaitForTimeout(200)
-	pathSelect, err := Locator.Nth(1)
+	pathSelect, err := locator.Nth(1)
 	if err != nil {
 		t.Errorf("Find address input fail: %v", err)
 		t.FailNow()
@@ -163,10 +172,19 @@ func EditInterpreter(t *testing.T) {
 		t.Errorf("The Click submit form fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err = page.Locator("#settingModal .z-tbody-td", playwright.PageLocatorOptions{HasText: "Python"})
-	c, err := Locator.Count()
+	locator, err = page.Locator("#settingModal .z-tbody-td", playwright.PageLocatorOptions{HasText: "Python"})
+	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find created interpreter fail: %v", err)
+		t.FailNow()
+	}
+
+	if err = interpreterBrowser.Close(); err != nil {
+		t.Errorf("The interpreterBrowser cannot be closed: %v", err)
+		t.FailNow()
+	}
+	if err = pw.Stop(); err != nil {
+		t.Errorf("The playwright cannot be stopped: %v", err)
 		t.FailNow()
 	}
 }
@@ -176,7 +194,7 @@ func DeleteInterpreter(t *testing.T) {
 		t.Error(err)
 		t.FailNow()
 	}
-	headless := false
+	headless := true
 	var slowMo float64 = 100
 	if interpreterBrowser == nil || !interpreterBrowser.IsConnected() {
 		interpreterBrowser, err = pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
@@ -203,17 +221,17 @@ func DeleteInterpreter(t *testing.T) {
 		t.Errorf("The Click interpreter nav fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err := page.Locator("#settingModal .z-tbody-tr", playwright.PageLocatorOptions{HasText: "Python"})
+	locator, err := page.Locator("#settingModal .z-tbody-tr", playwright.PageLocatorOptions{HasText: "Python"})
 	if err != nil {
 		t.Errorf("Find python tr fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err = Locator.Locator("text=删除")
+	locator, err = locator.Locator("text=删除")
 	if err != nil {
 		t.Errorf("Find python edit btn fail: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click()
+	err = locator.Click()
 	if err != nil {
 		t.Errorf("The Click update site fail: %v", err)
 		t.FailNow()
@@ -225,8 +243,8 @@ func DeleteInterpreter(t *testing.T) {
 		t.FailNow()
 	}
 	page.WaitForTimeout(1000)
-	Locator, err = page.Locator("#settingModal .z-tbody-tr", playwright.PageLocatorOptions{HasText: "Python"})
-	c, err := Locator.Count()
+	locator, err = page.Locator("#settingModal .z-tbody-tr", playwright.PageLocatorOptions{HasText: "Python"})
+	c, err := locator.Count()
 	if err != nil || c > 0 {
 		t.Errorf("Delete interpreter fail: %v", err)
 		t.FailNow()

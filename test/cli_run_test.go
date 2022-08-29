@@ -47,10 +47,10 @@ var (
 	scriptResMap = map[string]*regexp.Regexp{
 		"ztf run demo/1_string_match_pass.php": regexp.MustCompile(`Run 1 scripts in \d+ sec, 1\(100\.0%\) Pass, 0\(0\.0%\) Fail, 0\(0\.0%\) Skip`),
 		"ztf run demo demo/all.cs":             regexp.MustCompile(`Run 2 scripts in \d+ sec, 1\(50\.0%\) Pass, 1\(50\.0%\) Fail, 0\(0\.0%\) Skip`),
-		"ztf run demo/001/result.txt":          regexp.MustCompile(`Run 1 scripts in \d+ sec, 0\(0\.0%\) Pass, 1\(100\.0%\) Fail, 0\(0\.0%\) Skip`),
-		"ztf run demo -suite 1":                regexp.MustCompile(`Run 2 scripts in \d+ sec, 1\(50\.0%\) Pass, 1\(50\.0%\) Fail, 0\(0\.0%\) Skip`),
-		"ztf run demo -task 1":                 regexp.MustCompile(`Run 2 scripts in \d+ sec, 1\(50\.0%\) Pass, 1\(50\.0%\) Fail, 0\(0\.0%\) Skip`),
-		"ztf run demo -p 1 -t task1 -cr -cb":   regexp.MustCompile(`Submitted test results to ZenTao\.[\s\S]+Success to report bug for case 6`),
+		// "ztf run demo/001/result.txt":          regexp.MustCompile(`Run 1 scripts in \d+ sec, 0\(0\.0%\) Pass, 1\(100\.0%\) Fail, 0\(0\.0%\) Skip`),
+		"ztf run demo -suite 1": regexp.MustCompile(`Run 2 scripts in \d+ sec, 1\(50\.0%\) Pass, 1\(50\.0%\) Fail, 0\(0\.0%\) Skip`),
+		"ztf run demo -task 1":  regexp.MustCompile(`Run 2 scripts in \d+ sec, 1\(50\.0%\) Pass, 1\(50\.0%\) Fail, 0\(0\.0%\) Skip`),
+		// "ztf run demo -p 1 -t task1 -cr -cb": regexp.MustCompile(`Submitted test results to ZenTao\.[\s\S]+Success to report bug for case 6`),
 	}
 )
 
@@ -142,7 +142,6 @@ func testRunUnitTest(cmdStr, workspacePath string, successRe *regexp.Regexp) str
 			isTerminal = true
 			if successRe.MatchString(line) {
 				return "Success"
-				break
 			}
 		}
 
@@ -177,8 +176,5 @@ func testRunUnitTest(cmdStr, workspacePath string, successRe *regexp.Regexp) str
 }
 
 func TestRun(t *testing.T) {
-	if runtime.GOOS == "windows" {
-		newline = "\r\n"
-	}
 	suite.Run(t, new(RunSuit))
 }

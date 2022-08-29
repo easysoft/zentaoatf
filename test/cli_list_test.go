@@ -29,9 +29,9 @@ type ListSuit struct {
 }
 
 func (s *ListSuit) TestListSuite() {
-	assert.Equal(s.Suite.T(), "Success", testLs("ztf list ./demo", regexp.MustCompile("Found 3 test cases|发现3个用例")))
-	assert.Equal(s.Suite.T(), "Success", testLs("ztf ls ./demo -k 1", regexp.MustCompile("Found 1 test cases|发现1个用例")))
-	assert.Equal(s.Suite.T(), "Success", testLs("ztf ls demo -k match", regexp.MustCompile("Found 2 test cases|发现2个用例")))
+	assert.Equal(s.Suite.T(), "Success", testLs("ztf list ./demo", regexp.MustCompile("Found 5 test cases|发现5个用例")))
+	assert.Equal(s.Suite.T(), "Success", testLs("ztf ls ./demo -k 1", regexp.MustCompile("Found 2 test cases|发现2个用例")))
+	assert.Equal(s.Suite.T(), "Success", testLs("ztf ls demo -k match", regexp.MustCompile("Found 3 test cases|发现3个用例")))
 }
 
 func testLs(cmd string, successRe *regexp.Regexp) string {
@@ -52,8 +52,5 @@ func testLs(cmd string, successRe *regexp.Regexp) string {
 }
 
 func TestList(t *testing.T) {
-	if runtime.GOOS == "windows" {
-		newline = "\r\n"
-	}
 	suite.Run(t, new(ListSuit))
 }

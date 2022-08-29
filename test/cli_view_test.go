@@ -30,8 +30,8 @@ type ViewSuit struct {
 
 func (s *ViewSuit) TestViewSuite() {
 	assert.Equal(s.Suite.T(), "Success", testView("ztf view ./demo/1_string_match_fail.php", regexp.MustCompile("check string matches pattern")))
-	assert.Equal(s.Suite.T(), "Success", testView("ztf -v ./demo -k 5", regexp.MustCompile("extract content from webpage")))
-	assert.Equal(s.Suite.T(), "Success", testView("ztf view demo -k match", regexp.MustCompile("Found 2 test cases|发现2个用例")))
+	assert.Equal(s.Suite.T(), "Success", testView("ztf -v ./demo -k 1", regexp.MustCompile("check string matches pattern")))
+	assert.Equal(s.Suite.T(), "Success", testView("ztf view demo -k match", regexp.MustCompile("Found 3 test cases|发现3个用例")))
 }
 
 func testView(cmd string, successRe *regexp.Regexp) string {

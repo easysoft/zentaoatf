@@ -31,7 +31,7 @@ var (
 	passwordRe    = regexp.MustCompile("Zentao password|请输入账号密码")
 	interpreterRe = regexp.MustCompile("Do you want to config script interpreter|现在配置脚本的解释程序")
 	successRe     = regexp.MustCompile("Success")
-	langs         = map[string]string{
+	langMap       = map[string]string{
 		"php":        "D:\\Program Files\\phpstudy_pro\\Extensions\\php\\php7.4.3nts\\php.exe",
 		"javascript": "",
 		"lua":        "",
@@ -39,9 +39,10 @@ var (
 		"python":     "",
 		"ruby":       "",
 		"tcl":        "",
-		"go":         "",
+		// "go":         "",
 	}
-	newline = "\n"
+	langArray = []string{"php", "javascript", "lua", "perl", "python", "ruby", "tcl"}
+	newline   = "\n"
 )
 
 type SetSuit struct {
@@ -80,7 +81,7 @@ func testSet(language string) (ret string) {
 	if _, err = child.Expect(urlRe, time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", urlRe, err.Error())
 	}
-	if err = child.Send("http://pms.test/" + newline); err != nil {
+	if err = child.Send("http://127.0.0.1/zentao/" + newline); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(accountRe, time.Second); err != nil {
@@ -103,11 +104,11 @@ func testSet(language string) (ret string) {
 		if err = child.Send("y" + newline); err != nil {
 			return err.Error()
 		}
-		for lang, interpreter := range langs {
+		for _, lang := range langArray {
 			if _, err = child.Expect(regexp.MustCompile(lang), time.Second); err != nil {
 				return fmt.Sprintf("expect %s, actual %s", lang, err.Error())
 			}
-			if err = child.Send(interpreter + newline); err != nil {
+			if err = child.Send(langMap[lang] + newline); err != nil {
 				return err.Error()
 			}
 		}

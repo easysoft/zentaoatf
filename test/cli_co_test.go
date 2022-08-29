@@ -35,6 +35,7 @@ import (
 )
 
 var (
+	coSuccessRe  = regexp.MustCompile("Success")
 	typeRe       = regexp.MustCompile("Import test cases from|请选择用例来源")
 	productRe    = regexp.MustCompile("Please enter Product Id|请输入 产品Id")
 	moduleRe     = regexp.MustCompile("Please enter Module Id|请输入 模块Id")
@@ -49,6 +50,7 @@ var (
 	moduleId     = 0
 	taskId       = 1
 	suiteId      = 1
+	coNewline    = "/"
 )
 
 type CoSuit struct {
@@ -83,52 +85,52 @@ func testCoProduct() string {
 		return fmt.Sprintf("expect %s, actual %s", typeRe, err.Error())
 	}
 
-	if err = child.Send("1" + newline); err != nil {
+	if err = child.Send("1" + coNewline); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(productRe, time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", productRe, err.Error())
 	}
 
-	if err = child.Send(strconv.Itoa(productId) + newline); err != nil {
+	if err = child.Send(strconv.Itoa(productId) + coNewline); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(moduleRe, time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", moduleRe, err.Error())
 	}
 
-	if err = child.Send(strconv.Itoa(moduleId) + newline); err != nil {
+	if err = child.Send(strconv.Itoa(moduleId) + coNewline); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(separateRe, time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", separateRe, err.Error())
 	}
 
-	if err = child.Send("n" + newline); err != nil {
+	if err = child.Send("n" + coNewline); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(languageCoRe, time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", languageCoRe, err.Error())
 	}
 
-	if err = child.Send("5" + newline); err != nil {
+	if err = child.Send("5" + coNewline); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(storeRe, 10*time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", storeRe, err.Error())
 	}
-	if err = child.Send(newline); err != nil {
+	if err = child.Send(coNewline); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(organizeRe, time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", organizeRe, err.Error())
 	}
 
-	if err = child.Send(newline); err != nil {
+	if err = child.Send(coNewline); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(successRe, 10*time.Second); err != nil {
-		return fmt.Sprintf("expect %s, actual %s", successRe, err.Error())
+	if _, err = child.Expect(coSuccessRe, 10*time.Second); err != nil {
+		return fmt.Sprintf("expect %s, actual %s", coSuccessRe, err.Error())
 	}
 
 	return "Success"
@@ -145,45 +147,45 @@ func testCoSuite() string {
 		return fmt.Sprintf("expect %s, actual %s", typeRe, err.Error())
 	}
 
-	if err = child.Send("2" + newline); err != nil {
+	if err = child.Send("2" + coNewline); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(suiteRe, time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", suiteRe, err.Error())
 	}
 
-	if err = child.Send(strconv.Itoa(suiteId) + newline); err != nil {
+	if err = child.Send(strconv.Itoa(suiteId) + coNewline); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(separateRe, time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", separateRe, err.Error())
 	}
 
-	if err = child.Send("n" + newline); err != nil {
+	if err = child.Send("n" + coNewline); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(languageCoRe, time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", languageCoRe, err.Error())
 	}
 
-	if err = child.Send("5" + newline); err != nil {
+	if err = child.Send("5" + coNewline); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(storeRe, 10*time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", storeRe, err.Error())
 	}
-	if err = child.Send(newline); err != nil {
+	if err = child.Send(coNewline); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(organizeRe, time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", organizeRe, err.Error())
 	}
 
-	if err = child.Send(newline); err != nil {
+	if err = child.Send(coNewline); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(successRe, 10*time.Second); err != nil {
-		return fmt.Sprintf("expect %s, actual %s", successRe, err.Error())
+	if _, err = child.Expect(coSuccessRe, 10*time.Second); err != nil {
+		return fmt.Sprintf("expect %s, actual %s", coSuccessRe, err.Error())
 	}
 
 	return "Success"
@@ -200,45 +202,45 @@ func testCoTask() string {
 		return fmt.Sprintf("expect %s, actual %s", typeRe, err.Error())
 	}
 
-	if err = child.Send("3" + newline); err != nil {
+	if err = child.Send("3" + coNewline); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(taskRe, time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", taskRe, err.Error())
 	}
 
-	if err = child.Send(strconv.Itoa(taskId) + newline); err != nil {
+	if err = child.Send(strconv.Itoa(taskId) + coNewline); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(separateRe, time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", separateRe, err.Error())
 	}
 
-	if err = child.Send("n" + newline); err != nil {
+	if err = child.Send("n" + coNewline); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(languageCoRe, time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", languageCoRe, err.Error())
 	}
 
-	if err = child.Send("5" + newline); err != nil {
+	if err = child.Send("5" + coNewline); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(storeRe, 10*time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", storeRe, err.Error())
 	}
-	if err = child.Send(newline); err != nil {
+	if err = child.Send(coNewline); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(organizeRe, time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", organizeRe, err.Error())
 	}
 
-	if err = child.Send(newline); err != nil {
+	if err = child.Send(coNewline); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(successRe, 10*time.Second); err != nil {
-		return fmt.Sprintf("expect %s, actual %s", successRe, err.Error())
+	if _, err = child.Expect(coSuccessRe, 10*time.Second); err != nil {
+		return fmt.Sprintf("expect %s, actual %s", coSuccessRe, err.Error())
 	}
 
 	return "Success"
@@ -254,18 +256,18 @@ func testCo(cmd string) string {
 	if _, err = child.Expect(storeRe, 10*time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", storeRe, err.Error())
 	}
-	if err = child.Send(newline); err != nil {
+	if err = child.Send(coNewline); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(organizeRe, time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", organizeRe, err.Error())
 	}
 
-	if err = child.Send(newline); err != nil {
+	if err = child.Send(coNewline); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(successRe, 10*time.Second); err != nil {
-		return fmt.Sprintf("expect %s, actual %s", successRe, err.Error())
+	if _, err = child.Expect(coSuccessRe, 10*time.Second); err != nil {
+		return fmt.Sprintf("expect %s, actual %s", coSuccessRe, err.Error())
 	}
 
 	return "Success"
@@ -273,7 +275,7 @@ func testCo(cmd string) string {
 
 func TestCo(t *testing.T) {
 	if runtime.GOOS == "windows" {
-		newline = "\r\n"
+		coNewline = "\r\n"
 	}
 	suite.Run(t, new(CoSuit))
 }

@@ -3,7 +3,7 @@
 /**
 
 title=check string matches pattern
-cid=6
+cid=3
 pid=1
 
 1. exactly match >> hello1

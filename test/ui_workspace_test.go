@@ -36,12 +36,12 @@ func CreateWorkspace(t *testing.T) {
 		t.FailNow()
 	}
 
-	Locator, err := page.Locator("#siteMenuToggle")
+	locator, err := page.Locator("#siteMenuToggle")
 	if err != nil {
 		t.Errorf("The siteMenuToggle is missing: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click()
+	err = locator.Click()
 	if err != nil {
 		t.Errorf("The Click is fail: %v", err)
 		t.FailNow()
@@ -63,12 +63,12 @@ func CreateWorkspace(t *testing.T) {
 		t.FailNow()
 	}
 	_, err = page.WaitForSelector("#workspaceFormModal")
-	Locator, err = page.Locator("#workspaceFormModal input")
+	locator, err = page.Locator("#workspaceFormModal input")
 	if err != nil {
 		t.Errorf("Find create workspace input fail: %v", err)
 		t.FailNow()
 	}
-	titleInput, err := Locator.Nth(0)
+	titleInput, err := locator.Nth(0)
 	if err != nil {
 		t.Errorf("Find title input fail: %v", err)
 		t.FailNow()
@@ -78,7 +78,7 @@ func CreateWorkspace(t *testing.T) {
 		t.Errorf("Fil title input fail: %v", err)
 		t.FailNow()
 	}
-	pathInput, err := Locator.Nth(1)
+	pathInput, err := locator.Nth(1)
 	if err != nil {
 		t.Errorf("Find address input fail: %v", err)
 		t.FailNow()
@@ -88,12 +88,12 @@ func CreateWorkspace(t *testing.T) {
 		t.Errorf("Fil address input fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err = page.Locator("#workspaceFormModal select")
+	locator, err = page.Locator("#workspaceFormModal select")
 	if err != nil {
 		t.Errorf("Find create workspace select fail: %v", err)
 		t.FailNow()
 	}
-	typeInput, err := Locator.Nth(0)
+	typeInput, err := locator.Nth(0)
 	if err != nil {
 		t.Errorf("Find name input fail: %v", err)
 		t.FailNow()
@@ -103,7 +103,7 @@ func CreateWorkspace(t *testing.T) {
 		t.Errorf("Fil name input fail: %v", err)
 		t.FailNow()
 	}
-	langInput, err := Locator.Nth(1)
+	langInput, err := locator.Nth(1)
 	if err != nil {
 		t.Errorf("Find lang input fail: %v", err)
 		t.FailNow()
@@ -124,8 +124,8 @@ func CreateWorkspace(t *testing.T) {
 		t.Errorf("Wait created workspace result fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err = page.Locator(".tree-node-title", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	c, err := Locator.Count()
+	locator, err = page.Locator(".tree-node-title", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find created workspace fail: %v", err)
 		t.FailNow()
@@ -171,13 +171,13 @@ func SyncFromZentao(t *testing.T) {
 		SyncFromZentao(t)
 		return
 	}
-	Locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	c, err := Locator.Count()
+	locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find workspace fail: %v", err)
 		t.FailNow()
 	}
-	Locator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
+	locator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
 	if err != nil {
 		t.Errorf("Right click node fail: %v", err)
 		t.FailNow()
@@ -202,8 +202,8 @@ func SyncFromZentao(t *testing.T) {
 		t.Errorf("Wait syncFromZentaoFormModal hide fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err = page.Locator(".toast-notification-container", playwright.PageLocatorOptions{HasText: "成功从禅道同步"})
-	c, err = Locator.Count()
+	locator, err = page.Locator(".toast-notification-container", playwright.PageLocatorOptions{HasText: "成功从禅道同步"})
+	c, err = locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Sync from zentao fail: %v", err)
 		t.FailNow()
@@ -246,13 +246,13 @@ func SyncToZentao(t *testing.T) {
 		t.Errorf("Wait tree-node fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	c, err := Locator.Count()
+	locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find workspace fail: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
+	err = locator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
 	if err != nil {
 		t.Errorf("Right click node fail: %v", err)
 		t.FailNow()
@@ -267,8 +267,8 @@ func SyncToZentao(t *testing.T) {
 		t.Errorf("Wait toast-notification-close fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err = page.Locator(".toast-notification-container", playwright.PageLocatorOptions{HasText: "成功同步"})
-	c, err = Locator.Count()
+	locator, err = page.Locator(".toast-notification-container", playwright.PageLocatorOptions{HasText: "成功同步"})
+	c, err = locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Sync to zentao fail: %v", err)
 		t.FailNow()
@@ -311,18 +311,18 @@ func Copy(t *testing.T) {
 		t.Errorf("Wait tree-node fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	c, err := Locator.Count()
+	locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find workspace fail: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click()
+	err = locator.Click()
 	if err != nil {
 		t.Errorf("Click node fail: %v", err)
 		t.FailNow()
 	}
-	productLocator, err := Locator.Locator(".tree-node-item:has-text('product1')")
+	productLocator, err := locator.Locator(".tree-node-item:has-text('product1')")
 	if err != nil {
 		t.Errorf("Find product1 fail: %v", err)
 		t.FailNow()
@@ -332,7 +332,7 @@ func Copy(t *testing.T) {
 		t.Errorf("Click product1 fail: %v", err)
 		t.FailNow()
 	}
-	scriptLocator, err := Locator.Locator("text=1_string_match.php")
+	scriptLocator, err := locator.Locator("text=1_string_match.php")
 	if err != nil {
 		t.Errorf("Find 1_string_match.php fail: %v", err)
 		t.FailNow()
@@ -347,11 +347,6 @@ func Copy(t *testing.T) {
 		t.Errorf("Click copy fail: %v", err)
 		t.FailNow()
 	}
-	// workspaceLocator, err := page.Locator(".tree-node-title", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	// if err != nil {
-	// 	t.Errorf("Find workspace fail: %v", err)
-	// 	t.FailNow()
-	// }
 	err = productLocator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
 	if err != nil {
 		t.Errorf("Right click workspace fail: %v", err)
@@ -363,7 +358,7 @@ func Copy(t *testing.T) {
 		t.FailNow()
 	}
 	page.WaitForTimeout(1000)
-	scriptLocator, err = Locator.Locator(".tree-node-item>>div:has-text('1_string_match.php')")
+	scriptLocator, err = locator.Locator(".tree-node-item>>div:has-text('1_string_match.php')")
 	c, err = scriptLocator.Count()
 	if err != nil || c < 2 {
 		t.Errorf("Find workspace fail: %v", err)
@@ -407,18 +402,18 @@ func DeleteScript(t *testing.T) {
 		t.Errorf("Wait tree-node fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	c, err := Locator.Count()
+	locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find workspace fail: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click()
+	err = locator.Click()
 	if err != nil {
 		t.Errorf("Click node fail: %v", err)
 		t.FailNow()
 	}
-	scriptLocator, err := Locator.Locator("text=1.php")
+	scriptLocator, err := locator.Locator("text=1.php")
 	if err != nil {
 		t.Errorf("Find 1.php fail: %v", err)
 		t.FailNow()
@@ -439,7 +434,7 @@ func DeleteScript(t *testing.T) {
 		t.FailNow()
 	}
 	page.WaitForTimeout(1000)
-	scriptLocator, err = Locator.Locator(".tree-node-item>>div:has-text('1.php')")
+	scriptLocator, err = locator.Locator(".tree-node-item>>div:has-text('1.php')")
 	c, err = scriptLocator.Count()
 	if err != nil || c > 0 {
 		t.Errorf("Delete workspace fail: %v", err)
@@ -483,18 +478,18 @@ func DeleteDir(t *testing.T) {
 		t.Errorf("Wait tree-node fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	c, err := Locator.Count()
+	locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find workspace fail: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click()
+	err = locator.Click()
 	if err != nil {
 		t.Errorf("Click node fail: %v", err)
 		t.FailNow()
 	}
-	productLocator, err := Locator.Locator(".tree-node-item:has-text('product1')")
+	productLocator, err := locator.Locator(".tree-node-item:has-text('product1')")
 	if err != nil {
 		t.Errorf("Find product1 fail: %v", err)
 		t.FailNow()
@@ -515,7 +510,7 @@ func DeleteDir(t *testing.T) {
 		t.FailNow()
 	}
 	page.WaitForTimeout(1000)
-	scriptLocator, err := Locator.Locator(".tree-node-item>>div:has-text('product1')")
+	scriptLocator, err := locator.Locator(".tree-node-item>>div:has-text('product1')")
 	c, err = scriptLocator.Count()
 	if err != nil || c > 0 {
 		t.Errorf("Delete workspace fail: %v", err)
@@ -560,13 +555,13 @@ func DeleteWorkspace(t *testing.T) {
 		t.Errorf("Wait tree-node fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err := page.Locator(".tree-node-item", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	c, err := Locator.Count()
+	locator, err := page.Locator(".tree-node-item", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find workspace fail: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Hover()
+	err = locator.Hover()
 	if err != nil {
 		t.Errorf("The hover workspace fail: %v", err)
 		t.FailNow()
@@ -626,18 +621,18 @@ func Clip(t *testing.T) {
 		t.Errorf("Wait tree-node fail: %v", err)
 		t.FailNow()
 	}
-	Locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	c, err := Locator.Count()
+	locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find workspace fail: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click()
+	err = locator.Click()
 	if err != nil {
 		t.Errorf("Click node fail: %v", err)
 		t.FailNow()
 	}
-	productLocator, err := Locator.Locator(".tree-node-item:has-text('product1')")
+	productLocator, err := locator.Locator(".tree-node-item:has-text('product1')")
 	if err != nil {
 		t.Errorf("Find product1 fail: %v", err)
 		t.FailNow()
@@ -647,7 +642,7 @@ func Clip(t *testing.T) {
 		t.Errorf("Click product1 fail: %v", err)
 		t.FailNow()
 	}
-	scriptLocator, err := Locator.Locator("text=1.php")
+	scriptLocator, err := locator.Locator("text=1.php")
 	if err != nil {
 		t.Errorf("Find 1.php fail: %v", err)
 		t.FailNow()
@@ -678,7 +673,7 @@ func Clip(t *testing.T) {
 		t.FailNow()
 	}
 	page.WaitForTimeout(1000)
-	scriptLocator, err = Locator.Locator(".tree-node-item>>div:has-text('1.php')")
+	scriptLocator, err = locator.Locator(".tree-node-item>>div:has-text('1.php')")
 	c, err = scriptLocator.Count()
 	if err != nil || c < 1 {
 		t.Errorf("Find workspace fail: %v", err)
@@ -719,12 +714,12 @@ func FilterDir(t *testing.T) {
 		t.FailNow()
 	}
 
-	Locator, err := page.Locator("#siteMenuToggle")
+	locator, err := page.Locator("#siteMenuToggle")
 	if err != nil {
 		t.Errorf("The siteMenuToggle is missing: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click()
+	err = locator.Click()
 	if err != nil {
 		t.Errorf("The Click is fail: %v", err)
 		t.FailNow()
@@ -793,12 +788,12 @@ func FilterSuite(t *testing.T) {
 		t.FailNow()
 	}
 
-	Locator, err := page.Locator("#siteMenuToggle")
+	locator, err := page.Locator("#siteMenuToggle")
 	if err != nil {
 		t.Errorf("The siteMenuToggle is missing: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click()
+	err = locator.Click()
 	if err != nil {
 		t.Errorf("The Click is fail: %v", err)
 		t.FailNow()
@@ -835,8 +830,10 @@ func FilterSuite(t *testing.T) {
 		t.Errorf("The Click test_suite filter fail: %v", err)
 		t.FailNow()
 	}
+	page.WaitForTimeout(200)
 	page.WaitForSelector(".toolbar:has-text(\"按套件\")")
 	err = page.Click(".tree-node-title:has-text(\"单元测试工作目录\")")
+	page.WaitForSelector(".tree")
 	page.WaitForTimeout(200)
 	scriptLocator, err := page.Locator(".tree>>text=1_string_match.php")
 	c, err := scriptLocator.Count()
@@ -878,12 +875,12 @@ func FilterTask(t *testing.T) {
 		t.FailNow()
 	}
 
-	Locator, err := page.Locator("#siteMenuToggle")
+	locator, err := page.Locator("#siteMenuToggle")
 	if err != nil {
 		t.Errorf("The siteMenuToggle is missing: %v", err)
 		t.FailNow()
 	}
-	err = Locator.Click()
+	err = locator.Click()
 	if err != nil {
 		t.Errorf("The Click is fail: %v", err)
 		t.FailNow()
@@ -916,8 +913,9 @@ func FilterTask(t *testing.T) {
 	}
 	page.WaitForSelector("#filterModal>>.list-item-title:has-text(\"test_task\")")
 	err = page.Click("#filterModal>>.list-item-title:has-text(\"test_task\")")
+	page.WaitForTimeout(200)
 	if err != nil {
-		t.Errorf("The Click test_suite filter fail: %v", err)
+		t.Errorf("The Click test_task filter fail: %v", err)
 		t.FailNow()
 	}
 	page.WaitForSelector(".toolbar:has-text(\"按任务\")")
