@@ -46,7 +46,7 @@ func List(files []string, keywords string) {
 	width := strconv.Itoa(len(strconv.Itoa(total)))
 
 	logUtils.Info("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
-		i118Utils.Sprintf("found_scripts", total, commConsts.WorkDir))
+		i118Utils.Sprintf("found_scripts_no_ztf_dir", total, commConsts.WorkDir))
 
 	for idx, cs := range scriptArr {
 		path := cs.Path
