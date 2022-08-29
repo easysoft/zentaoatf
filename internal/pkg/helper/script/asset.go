@@ -201,10 +201,10 @@ func AddScript(moduleId, caseId int, pth string, caseNameInZentao, displayBy str
 		return
 	}
 
-	contentOk := CheckFileIsScript(pth)
-	if !contentOk && strings.Index(pth, ".exp") != len(pth)-4 {
-		return
-	}
+	// contentOk := CheckFileIsScript(pth)
+	// if !contentOk && strings.Index(pth, ".exp") != len(pth)-4 {
+	// 	return
+	// }
 
 	parent.Children = append(parent.Children, childScript)
 	parent.ScriptCount += 1
