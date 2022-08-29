@@ -412,7 +412,7 @@ func ConvertAllureResult(cases []commDomain.AllureCase) (testSuites []commDomain
 
 	for _, cs := range cases {
 		suiteName := GetAllureCaseSuiteName(cs)
-		logUtils.Info(suiteName)
+		//logUtils.Info(suiteName)
 
 		_, ok := suiteMap[suiteName]
 		if !ok {
@@ -426,9 +426,11 @@ func ConvertAllureResult(cases []commDomain.AllureCase) (testSuites []commDomain
 
 		suiteMap[suiteName].Name = "111"
 
+		caseId := GetAllureCaseId(cs.TestCaseId, cs)
+
 		// passed, failed
 		caseResult := commDomain.UnitResult{
-			Id:        stringUtils.ParseInt(cs.TestCaseId),
+			Id:        caseId,
 			Title:     cs.Name,
 			TestSuite: suiteName,
 			Duration:  float32(cs.Stop-cs.Start) / 1000,
@@ -475,6 +477,27 @@ func GetAllureCaseSuiteName(cs commDomain.AllureCase) (name string) {
 	}
 
 	name = strings.Join(suiteArr, "-")
+
+	return
+}
+
+func GetAllureCaseId(testCaseIdStr string, cs commDomain.AllureCase) (id int) {
+	id, err := strconv.Atoi(testCaseIdStr)
+	if err == nil && id > 0 {
+		return
+	}
+
+	for _, label := range cs.Labels {
+		if label.Name == "as_id" {
+			if label.Value != "" {
+				testCaseIdStr = label.Value
+			}
+
+			break
+		}
+	}
+
+	id = stringUtils.ParseInt(testCaseIdStr)
 
 	return
 }
