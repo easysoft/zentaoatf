@@ -319,6 +319,10 @@
       "translation": "执行命令%s失败，错误%s。"
     },
     {
+        "id": "exec_cmd_timeout",
+        "translation": "执行命令超时。"
+    },
+    {
       "id": "cmd_empty",
       "translation": "命令为空。"
     },

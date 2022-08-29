@@ -71,7 +71,7 @@ func SyncFromZentao(settings commDomain.SyncSettings, config commDomain.Workspac
 
 func SyncToZentao(cases []string, config commDomain.WorkspaceConf) (count int, err error) {
 	for _, cs := range cases {
-		pass, id, _, title := scriptHelper.GetCaseInfo(cs)
+		pass, id, _, title, _ := scriptHelper.GetCaseInfo(cs)
 		if !pass {
 			continue
 		}

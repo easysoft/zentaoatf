@@ -71,6 +71,8 @@ export class WebSocket {
         }).catch(err => {
           console.log(`fail to join room ${roomName}`, err)
           bus.emit(settings.eventWebSocketConnStatus, {msg: '{"conn": "fail"}'});
+          WebSocket.conn.disconnect()
+          this.joinRoomAndSend(roomName, msg)
         })
       })
     }

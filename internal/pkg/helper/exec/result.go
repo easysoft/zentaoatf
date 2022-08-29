@@ -48,7 +48,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 
 	key := stringUtils.Md5(scriptFile)
 
-	_, caseId, productId, title := scriptHelper.GetCaseInfo(scriptFile)
+	_, caseId, productId, title, _ := scriptHelper.GetCaseInfo(scriptFile)
 
 	stepLogs := make([]commDomain.StepLog, 0)
 	caseResult := commConsts.PASS

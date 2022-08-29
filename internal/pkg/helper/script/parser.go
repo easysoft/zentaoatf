@@ -2,12 +2,6 @@ package scriptHelper
 
 import (
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
-	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
-	"github.com/easysoft/zentaoatf/pkg/consts"
-	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
-	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	"html"
 	"io/ioutil"
 	"path"
@@ -15,6 +9,13 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
+	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
+	"github.com/easysoft/zentaoatf/pkg/consts"
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 )
 
 func ReplaceCaseDesc(desc, file string) {
@@ -504,12 +505,12 @@ func ScriptToExpectName(file string) string {
 //	return runName
 //}
 
-func GetCaseInfo(file string) (pass bool, caseId, productId int, title string) {
+func GetCaseInfo(file string) (pass bool, caseId, productId int, title string, timeout int64) {
 	content := fileUtils.ReadFile(file)
 	isOldFormat := strings.Index(content, "[esac]") > -1
 	pass = CheckFileContentIsScript(content)
 	if !pass {
-		return false, caseId, productId, title
+		return false, caseId, productId, title, timeout
 	}
 
 	caseInfo := ""
@@ -533,6 +534,12 @@ func GetCaseInfo(file string) (pass bool, caseId, productId int, title string) {
 	arr = myExp.FindStringSubmatch(caseInfo)
 	if len(arr) > 1 {
 		caseId, _ = strconv.Atoi(arr[1])
+	}
+
+	myExp = regexp.MustCompile(`[\S\s]*timeout=\s*([^\n]*?)\s*\n`)
+	arr = myExp.FindStringSubmatch(caseInfo)
+	if len(arr) > 1 {
+		timeout, _ = strconv.ParseInt(arr[1], 10, 64)
 	}
 
 	myExp = regexp.MustCompile(`[\S\s]*pid=\s*([^\n]*?)\s*\n`)
@@ -739,7 +746,7 @@ func GetScriptByIdsInDir(dirPth string, idMap *map[int]string) error {
 			}
 
 			path := dirPth + name
-			pass, id, _, _ := GetCaseInfo(path)
+			pass, id, _, _, _ := GetCaseInfo(path)
 			if pass {
 				(*idMap)[id] = path
 			}

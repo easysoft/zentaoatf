@@ -98,13 +98,13 @@ func loadScriptNodesInDir(folder string, parent *serverDomain.TestAsset, level i
 			caseId, _ := strconv.Atoi(caseIdStr)
 
 			if scriptIdsFromZentao == nil || caseId < 1 { // not to filter
-				AddScript(0, caseId, childPath, "", "workspace", true, parent)
+				AddScript(0, caseId, childPath, "", "workspace", false, parent)
 				continue
 			}
 
 			_, ok := scriptIdsFromZentao[caseId]
 			if ok {
-				AddScript(0, caseId, childPath, "", "workspace", true, parent)
+				AddScript(0, caseId, childPath, "", "workspace", false, parent)
 			}
 		}
 	}
@@ -201,10 +201,10 @@ func AddScript(moduleId, caseId int, pth string, caseNameInZentao, displayBy str
 		return
 	}
 
-	contentOk := CheckFileIsScript(pth)
-	if !contentOk && strings.Index(pth, ".exp") != len(pth)-4 {
-		return
-	}
+	// contentOk := CheckFileIsScript(pth)
+	// if !contentOk && strings.Index(pth, ".exp") != len(pth)-4 {
+	// 	return
+	// }
 
 	parent.Children = append(parent.Children, childScript)
 	parent.ScriptCount += 1

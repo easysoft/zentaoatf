@@ -1,5 +1,6 @@
 <template>
   <ZModal
+      id="submitBugModal"
       :showModal="showModalRef"
       @onCancel="close"
       @onOk="submit"
