@@ -31,6 +31,7 @@ BUILD_TIME=`git show -s --format=%cd`
 GO_VERSION=`go version`
 GIT_HASH=`git show -s --format=%H`
 BUILD_CMD=go build -ldflags "-X 'main.AppVersion=${VERSION}' -X 'main.BuildTime=${BUILD_TIME}' -X 'main.GoVersion=${GO_VERSION}' -X 'main.GitHash=${GIT_HASH}'"
+BUILD_CMD_WIN=go build -ldflags "-s -w -X 'main.AppVersion=${VERSION}' -X 'main.BuildTime=${BUILD_TIME}' -X 'main.GoVersion=${GO_VERSION}' -X 'main.GitHash=${GIT_HASH}'"
 
 default: win64 win32 linux mac
 
@@ -68,7 +69,7 @@ compile_launcher_win64:
 	@echo 'start compile win64 launcher'
 	@cd cmd/launcher && \
         CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
-		${BUILD_CMD} -x -v -ldflags \
+		${BUILD_CMD} -x -v \
 		-o ../../${COMMAND_BIN_DIR}win64/${PROJECT}-gui.exe && \
 		cd ..
 
@@ -76,7 +77,7 @@ compile_launcher_win32:
 	@echo 'start compile win32 launcher'
 	@cd cmd/launcher && \
         CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
-		${BUILD_CMD} -x -v -ldflags \
+		${BUILD_CMD} -x -v \
 		-o ../../${COMMAND_BIN_DIR}win32/${PROJECT}-gui.exe && \
         cd ..
 
@@ -86,7 +87,7 @@ compile_gui_win64:
 	@echo 'start compile win64'
 	@rm -rf ./${CLIENT_BIN_DIR}/*
 	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
-		${BUILD_CMD} -x -v \
+		${BUILD_CMD_WIN} -x -v \
 		-o ${CLIENT_BIN_DIR}win32/${PROJECT}.exe ${SERVER_MAIN_FILE}
 package_gui_win64_client:
 	@cd client && npm run package-win64 && cd ..
@@ -98,7 +99,7 @@ compile_gui_win32:
 	@echo 'start compile win32'
 	@rm -rf ./${CLIENT_BIN_DIR}/*
 	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
-		${BUILD_CMD} -x -v \
+		${BUILD_CMD_WIN} -x -v \
 		-o ${CLIENT_BIN_DIR}win32/${PROJECT}.exe ${SERVER_MAIN_FILE}
 package_gui_win32_client:
 	@cd client && npm run package-win32 && cd ..
