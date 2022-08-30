@@ -32,6 +32,14 @@
       :workspaceId="syncFromZentaoWorkspaceId"
       ref="syncFromZentaoRef"
     />
+    <FormWorkspace
+      v-if="showWorkspaceModal"
+      :show="showWorkspaceModal"
+      @submit="createWorkSpace"
+      @cancel="modalWorkspaceClose"
+      ref="formWorkspace"
+      :workspaceId="currentNode.workspaceId"
+     />
   </div>
 </template>
 
@@ -49,6 +57,7 @@ import { computed, defineExpose, onMounted, onUnmounted, ref, watch } from "vue"
 import Button from '@/components/Button.vue';
 import TreeContextMenu from './TreeContextMenu.vue';
 import FormSyncFromZentao  from "./FormSyncFromZentao.vue";
+import FormWorkspace from "@/views/workspace/FormWorkspace.vue";
 
 import bus from "@/utils/eventBus";
 import {getExpandedKeys, getScriptDisplayBy, getScriptFilters, setExpandedKeys } from "@/utils/cache";
@@ -115,6 +124,9 @@ const onToolbarClicked = (e) => {
     case 'createDir':
       showModal.value = true;
       toolbarAction.value = e.event.key;
+      break;
+    case 'editWorkspace':
+      showWorkspaceModal.value = true;
       break;
     case 'deleteWorkspace':
       Modal.confirm({
@@ -608,6 +620,22 @@ const execScript = (node) => {
 const clearMenu = () => {
   console.log('clearMenu')
   contextNode.value = ref(null)
+}
+
+const showWorkspaceModal = ref(false)
+const formWorkspace = ref({} as any)
+const createWorkSpace = (formData) => {
+    store.dispatch('Workspace/save', formData).then((response) => {
+        if (response) {
+            formWorkspace.value.clearFormData()
+            notification.success({message: t('save_success')});
+            showWorkspaceModal.value = false;
+            loadScripts()
+        }
+    })
+};
+const modalWorkspaceClose = () => {
+  showWorkspaceModal.value = false;
 }
 
 defineExpose({

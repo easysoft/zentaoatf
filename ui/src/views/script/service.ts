@@ -251,6 +251,7 @@ export function scriptTreeAddAttr(treeData) {
         }
 
         if (item.type === "workspace") {
+            item.toolbarItems.push({hint:'edit', icon:'edit', key: 'editWorkspace'})
             item.toolbarItems.push({hint:'delete', icon:'delete', key: 'deleteWorkspace'})
         }
         if (item.children != undefined && item.children.length > 0) {

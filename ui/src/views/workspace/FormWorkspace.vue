@@ -1,13 +1,13 @@
 <template>
-  <ZModal
-     id="workspaceFormModal"
-    :showModal="showModalRef"
-    @onCancel="cancel"
-    @onOk="submit"
-    :title="t('create_workspace')"
-    :contentStyle="{width: '600px'}"
-  >
-    <Form>
+    <ZModal
+       id="workspaceFormModal"
+      :showModal="showModalRef"
+      @onCancel="cancel"
+      @onOk="submit"
+      :title="props.workspaceId ? t('edit_workspace') : t('create_workspace')"
+      :contentStyle="{width: '600px'}"
+    >
+      <Form>
       <FormItem name="name" :label="t('name')" :info="validateInfos.name">
         <input type="text" v-model="modelRef.name" />
       </FormItem>
@@ -65,27 +65,52 @@ import FormItem from "@/components/FormItem.vue";
 import {arrToMap} from "@/utils/array";
 import settings from "@/config/settings";
 import Button from "@/components/Button.vue";
-
-export interface FormWorkspaceProps {
-  show?: boolean;
-}
-const { t } = useI18n();
-const props = withDefaults(defineProps<FormWorkspaceProps>(), {
-  show: false,
-});
-
-watch(props, () => {
-    if(!props.show){
-        setTimeout(() => {
-            validateInfos.value = {};
-        }, 200);
-    }
-})
-
-const showModalRef = computed(() => {
-  return props.show;
-});
-
+  import { get as getWorkspace } from "@/views/workspace/service";
+  import Icon from '@/components/Icon.vue';
+  
+  export interface FormWorkspaceProps {
+    show?: boolean;
+    workspaceId?: number;
+  }
+  const { t } = useI18n();
+  const props = withDefaults(defineProps<FormWorkspaceProps>(), {
+    show: false,
+    workspaceId: 0,
+  });
+  
+  watch(props, () => {
+      if(!props.show){
+          setTimeout(() => {
+              validateInfos.value = {};
+          }, 200);
+      }
+  })
+  
+  const showModalRef = computed(() => {
+    return props.show;
+  });
+  
+  const info = ref({} as any);
+  const loadInfo = async () => {
+      if(props.workspaceId === undefined || !props.workspaceId) return;
+      await getWorkspace(props.workspaceId).then((json) => {
+      if (json.code === 0) {
+        info.value = json.data;
+        modelRef.value = {
+          id: info.value.id,
+          name: info.value.name,
+          path: info.value.path,
+          type: info.value.type,
+          lang: info.value.lang,
+          cmd: info.value.cmd,
+        };
+        selectType()
+      }
+    });
+  }
+  
+  loadInfo();
+  
 const testTypes = ref([...ztfTestTypesDef, ...unitTestTypesDef]);
 const store = useStore<{ Zentao: ZentaoData }>();
 const langs = computed<any[]>(() => store.state.Zentao.langs);
