@@ -51,9 +51,9 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 				cmd = exec.CommandContext(ctxt, "cmd", "/C", scriptInterpreter, filePath, "|", "more")
 			} else {
 				if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
-					exec.CommandContext(ctxt, "cmd", "/C", scriptInterpreter, command, filePath)
+					cmd = exec.CommandContext(ctxt, "cmd", "/C", scriptInterpreter, command, filePath)
 				} else {
-					exec.CommandContext(ctxt, "cmd", "/C", scriptInterpreter, filePath)
+					cmd = exec.CommandContext(ctxt, "cmd", "/C", scriptInterpreter, filePath)
 				}
 			}
 		} else if strings.ToLower(lang) == "bat" {
