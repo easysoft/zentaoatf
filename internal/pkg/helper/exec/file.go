@@ -48,16 +48,16 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		}
 		if scriptInterpreter != "" {
 			if strings.Index(strings.ToLower(scriptInterpreter), "autoit") > -1 {
-				cmd = exec.Command("cmd", "/C", scriptInterpreter, filePath, "|", "more")
+				cmd = exec.CommandContext(ctxt, "cmd", "/C", scriptInterpreter, filePath, "|", "more")
 			} else {
 				if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
-					cmd = exec.Command("cmd", "/C", scriptInterpreter, command, filePath)
+					exec.CommandContext(ctxt, "cmd", "/C", scriptInterpreter, command, filePath)
 				} else {
-					cmd = exec.Command("cmd", "/C", scriptInterpreter, filePath)
+					exec.CommandContext(ctxt, "cmd", "/C", scriptInterpreter, filePath)
 				}
 			}
 		} else if strings.ToLower(lang) == "bat" {
-			cmd = exec.Command("cmd", "/C", filePath)
+			cmd = exec.CommandContext(ctxt, "cmd", "/C", filePath)
 		} else {
 			msg := i118Utils.I118Prt.Sprintf("no_interpreter_for_run", lang, filePath)
 			if commConsts.ExecFrom != commConsts.FromCmd {
