@@ -2,10 +2,11 @@ package zentaoHelper
 
 import (
 	"fmt"
+	"path/filepath"
+
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"path/filepath"
 
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
@@ -39,6 +40,8 @@ func SyncFromZentao(settings commDomain.SyncSettings, config commDomain.Workspac
 		if err == nil {
 			cases = append(cases, cs)
 		}
+	} else if len(settings.CaseIds) > 0 {
+		cases, err = LoadTestCasesDetailByCaseIds(settings.CaseIds, config)
 	} else {
 		cases, err = LoadTestCasesDetail(productId, moduleId, suiteId, taskId, config)
 	}
@@ -68,13 +71,14 @@ func SyncFromZentao(settings commDomain.SyncSettings, config commDomain.Workspac
 
 func SyncToZentao(cases []string, config commDomain.WorkspaceConf) (count int, err error) {
 	for _, cs := range cases {
-		pass, id, _, title := scriptHelper.GetCaseInfo(cs)
+		pass, id, _, title, _ := scriptHelper.GetCaseInfo(cs)
 		if !pass {
 			continue
 		}
 
-		steps, _ := scriptHelper.GetStepAndExpectMap(cs)
-		err = CommitCase(id, title, steps, config)
+		steps := scriptHelper.GetStepAndExpectMap(cs)
+		script, _ := scriptHelper.GetScriptContent(cs, -1)
+		err = CommitCase(id, title, steps, script, config)
 
 		if err == nil {
 			count++

@@ -28,7 +28,7 @@ func (s *ServerService) Get(id uint) (server model.Server, err error) {
 }
 
 func (s *ServerService) Create(server model.Server) (id uint, err error) {
-	server.Path = zentaoHelper.FixSiteUlt(server.Path)
+	server.Path = zentaoHelper.FixSiteUrl(server.Path)
 	if server.Path == "" {
 		err = errors.New("url not right")
 		return
@@ -43,7 +43,7 @@ func (s *ServerService) Create(server model.Server) (id uint, err error) {
 }
 
 func (s *ServerService) Update(server model.Server) (err error) {
-	server.Path = zentaoHelper.FixSiteUlt(server.Path)
+	server.Path = zentaoHelper.FixSiteUrl(server.Path)
 	if server.Path == "" {
 		err = errors.New("url not right")
 		return

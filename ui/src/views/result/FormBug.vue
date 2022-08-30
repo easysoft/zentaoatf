@@ -1,5 +1,6 @@
 <template>
   <ZModal
+      id="submitBugModal"
       :showModal="showModalRef"
       @onCancel="close"
       @onOk="submit"
@@ -65,7 +66,13 @@
       </FormItem>
 
       <FormItem name="type" :label="t('step')">
-        <textarea v-model="modelRef.steps" rows="6" />
+      <div class="steps-contain">
+          <div class="steps-select" v-for="(item,index) in steps" :key="index">
+            <input type="checkbox" :id="'cbox'+index" :value="index" :checked="item.checked" @click="stepSelect" />
+            <label :for="'cbox'+index" :class="'steps-label step-' + item.status">{{item.title}}</label>
+          </div>
+          <textarea v-model="modelRef.steps" rows="6" />
+      </div>
       </FormItem>
     </Form>
   </ZModal>
@@ -76,18 +83,11 @@ import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import { ZentaoData } from "@/store/zentao";
 import { unitTestTypesDef, ztfTestTypesDef } from "@/utils/const";
-import {
-  computed,
-  defineExpose,
-  onMounted,
-  withDefaults,
-  ref,
-  defineProps, reactive,
-} from "vue";
+import { computed, defineExpose, withDefaults, ref, defineProps, reactive } from "vue";
 import { useForm } from "@/utils/form";
 import Form from "@/components/Form.vue";
 import FormItem from "@/components/FormItem.vue";
-import {queryBugFields, queryTask} from "@/services/zentao";
+import {queryBugFields} from "@/services/zentao";
 import notification from "@/utils/notification";
 import {prepareBugData, submitBugToZentao} from "@/services/bug";
 
@@ -121,13 +121,19 @@ let types = ref([])
 let builds = ref([])
 let severities = ref([])
 let priorities = ref([])
+const steps = ref([] as any)
 const getBugData = () => {
   prepareBugData(props.data).then((jsn) => {
+    steps.value = JSON.parse(jsn.data.steps);
+    steps.value.map((item, index) => {
+      item.checked = true;
+    });
     modelRef.value = jsn.data
     modelRef.value.module = ''
     modelRef.value.severity = ''+modelRef.value.severity
     modelRef.value.pri = ''+modelRef.value.pri
 
+    genSteps();
     getBugFields()
   })
 }
@@ -158,6 +164,10 @@ const submit = () => {
   data.severity = parseInt(data.severity)
   data.pri = parseInt(data.pri)
   if (!Array.isArray(data.openedBuild)) data.openedBuild = [data.openedBuild]
+  if (data.steps == '') {
+    notification.error({message: t('pls_select_step')})
+    return
+  }
 
   submitBugToZentao(data).then((json) => {
     console.log('json', json)
@@ -182,11 +192,44 @@ const clearFormData = () => {
   modelRef.value = {};
 };
 
+const stepSelect = (val) => {
+  const index = val.target.value;
+  steps.value[index].checked = val.target.checked;
+  genSteps();
+}
+
+const genSteps = () => {
+  let newSteps = [] as any;
+  steps.value.forEach((item) => {
+    if (item.checked) {
+      newSteps.push(item.steps);
+    }
+  });
+  modelRef.value.steps = newSteps.join('\n');
+}
+
 defineExpose({
   clearFormData,
 });
 </script>
 
 <style lang="less" scoped>
+.steps-contain{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
 
+    .steps-select{
+        display: flex;
+        .steps-label{
+            margin-left: 10px;
+        }
+        .step-fail{
+            color: var(--color-red);
+        }
+        .step-pass{
+            color: var(--color-green);
+        }
+    }
+}
 </style>

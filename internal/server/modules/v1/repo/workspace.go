@@ -12,7 +12,6 @@ import (
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/fatih/color"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -41,7 +40,6 @@ func (r *WorkspaceRepo) Paginate(req serverDomain.WorkspaceReqPaginate) (data do
 
 	err = db.Count(&count).Error
 	if err != nil {
-		logUtils.Errorf("count site error", zap.String("error:", err.Error()))
 		return
 	}
 
@@ -51,7 +49,7 @@ func (r *WorkspaceRepo) Paginate(req serverDomain.WorkspaceReqPaginate) (data do
 		Scopes(dao.PaginateScope(req.Page, req.PageSize, req.Order, req.Field)).
 		Find(&pos).Error
 	if err != nil {
-		logUtils.Errorf("query site error", zap.String("error:", err.Error()))
+		logUtils.Info(color.RedString("query site error, %s.", err.Error()))
 		return
 	}
 
@@ -66,7 +64,7 @@ func (r *WorkspaceRepo) Get(id uint) (po model.Workspace, err error) {
 		Where("NOT deleted").
 		First(&po).Error
 	if err != nil {
-		logUtils.Errorf(color.RedString("find workspace by id failed, error: %s.", err.Error()))
+		logUtils.Info(color.RedString("find workspace by id failed, %s.", err.Error()))
 		return
 	}
 
@@ -81,7 +79,7 @@ func (r *WorkspaceRepo) Create(workspace model.Workspace) (id uint, err error) {
 
 	err = r.DB.Model(&model.Workspace{}).Create(&workspace).Error
 	if err != nil {
-		logUtils.Errorf(color.RedString("create site failed, error: %s.", err.Error()))
+		logUtils.Info(color.RedString("create site failed, %s.", err.Error()))
 		return 0, err
 	}
 
@@ -140,7 +138,7 @@ func (r *WorkspaceRepo) DeleteByPath(path string, productId uint) (err error) {
 		Error
 
 	if err != nil {
-		logUtils.Errorf(color.RedString("by path, delete workspace failed, error: %s.", err.Error()))
+		logUtils.Info(color.RedString("by path, delete workspace failed, %s.", err.Error()))
 		return
 	}
 
@@ -164,7 +162,7 @@ func (r *WorkspaceRepo) FindByPath(workspacePath string) (po model.Workspace, er
 
 	err = db.First(&po).Error
 	if err != nil {
-		logUtils.Errorf("find workspace by path error", err.Error())
+		logUtils.Info(color.RedString("find workspace by path error, %s.", err.Error()))
 		return
 	}
 

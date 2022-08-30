@@ -11,7 +11,6 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	"github.com/fatih/color"
-	"log"
 	"os"
 	"os/signal"
 	"strings"
@@ -19,6 +18,11 @@ import (
 )
 
 var (
+	AppVersion string
+	BuildTime  string
+	GoVersion  string
+	GitHash    string
+
 	language        string
 	independentFile bool
 	keywords        string
@@ -74,7 +78,7 @@ func main() {
 	flagSet.BoolVar(&noNeedConfirm, "y", false, "")
 	flagSet.BoolVar(&commConsts.Verbose, "verbose", false, "")
 
-	flagSet.StringVar(&commConsts.UnitTestResult, "result", "", "")
+	flagSet.StringVar(&commConsts.AllureReportDir, "allureReportDir", "", "")
 
 	if len(os.Args) == 1 {
 		os.Args = append(os.Args, "run", ".")
@@ -83,64 +87,39 @@ func main() {
 	switch os.Args[1] {
 	case "set", "-set":
 		flagSet.Parse(os.Args[2:])
-		if commConsts.Verbose {
-			log.Println("WorkDir=" + commConsts.WorkDir)
-			log.Println("ZtfDir=" + commConsts.ZtfDir)
-		}
 		action.Set()
 
 	case "expect":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
 		action.GenExpectFiles(files)
+
 	case "extract":
 		files := fileUtils.GetFilesFromParams(os.Args[2:])
 		action.Extract(files)
 
 	case "checkout", "co":
-		if err := flagSet.Parse(os.Args[2:]); err == nil {
-			action.Checkout(productId, moduleId, suiteId, taskIdOrName, independentFile, language)
-		}
+		checkout()
 
 	case "ci":
-		files := fileUtils.GetFilesFromParams(os.Args[2:])
-		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
-			action.CheckIn(files)
-		}
+		ci()
 
 	case "cr":
-		files := fileUtils.GetFilesFromParams(os.Args[2:])
-		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
-			action.CommitZTFTestResult(files, stringUtils.ParseInt(productId),
-				taskIdOrName, noNeedConfirm)
-		}
+		cr()
 
 	case "cb":
-		files := fileUtils.GetFilesFromParams(os.Args[2:])
-		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
-			action.CommitBug(files, stringUtils.ParseInt(productId), noNeedConfirm)
-		}
+		cb()
 
 	case "list", "ls", "-l":
-		files := fileUtils.GetFilesFromParams(os.Args[2:])
-		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
-			if len(files) == 0 {
-				files = append(files, ".")
-			}
-
-			action.List(files, keywords)
-		}
+		list()
 
 	case "view", "-v":
-		files := fileUtils.GetFilesFromParams(os.Args[2:])
-		if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
-			action.View(files, keywords)
-		}
+		view()
 
 	case "clean", "-clean", "-c":
 		action.Clean()
 
 	case "version", "--version":
-		logUtils.PrintVersion(commConsts.AppVersion, commConsts.BuildTime, commConsts.GoVersion, commConsts.GitHash)
+		logUtils.PrintVersion(AppVersion, BuildTime, GoVersion, GitHash)
 
 	case "help", "-h", "-help", "--help":
 		action.PrintUsage()
@@ -157,6 +136,52 @@ func main() {
 		} else {
 			action.PrintUsage()
 		}
+	}
+}
+
+func checkout() {
+	if err := flagSet.Parse(os.Args[2:]); err == nil {
+		action.Checkout(productId, moduleId, suiteId, taskIdOrName, independentFile, language)
+	}
+}
+
+func ci() {
+	files := fileUtils.GetFilesFromParams(os.Args[2:])
+	if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
+		action.CheckIn(files)
+	}
+}
+
+func cr() {
+	files := fileUtils.GetFilesFromParams(os.Args[2:])
+	if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
+		action.CommitZTFTestResult(files, stringUtils.ParseInt(productId),
+			taskIdOrName, noNeedConfirm)
+	}
+}
+
+func cb() {
+	files := fileUtils.GetFilesFromParams(os.Args[2:])
+	if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
+		action.CommitBug(files, stringUtils.ParseInt(productId), noNeedConfirm)
+	}
+}
+
+func list() {
+	files := fileUtils.GetFilesFromParams(os.Args[2:])
+	if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
+		if len(files) == 0 {
+			files = append(files, ".")
+		}
+
+		action.List(files, keywords)
+	}
+}
+
+func view() {
+	files := fileUtils.GetFilesFromParams(os.Args[2:])
+	if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
+		action.View(files, keywords)
 	}
 }
 
@@ -213,16 +238,14 @@ func runUnitTest(args []string) {
 	flagSet.Parse(args[3:])
 
 	start := 3
-	if commConsts.UnitTestResult != "" {
-		start = start + 2
-	} else {
-		commConsts.UnitTestResult = "./"
-	}
 	if productId != "" {
 		start = start + 2
 		commConsts.ProductId = productId
 	}
 	if taskIdOrName != "" {
+		start = start + 2
+	}
+	if commConsts.AllureReportDir != "" {
 		start = start + 2
 	}
 	if commConsts.Verbose {

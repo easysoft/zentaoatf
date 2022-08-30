@@ -179,7 +179,9 @@ func FilterCases(cases []string, conf commDomain.WorkspaceConf) (casesToRun, cas
 			interpreter := configHelper.GetFieldVal(conf, stringUtils.UcFirst(lang))
 			if interpreter == "-" || interpreter == "" {
 				interpreter = ""
-				casesToIgnore = append(casesToIgnore, cs)
+				if lang != "bat" {
+					casesToIgnore = append(casesToIgnore, cs)
+				}
 			}
 			if lang != "bat" && interpreter == "" { // ignore the ones with no interpreter set
 				continue

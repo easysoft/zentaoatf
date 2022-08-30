@@ -16,10 +16,8 @@ interface SiteInfo {
 
 export default function useCurrentSite(): ComputedRef<SiteInfo> {
     const store = useStore<{ Zentao: ZentaoData }>();
-    const currSite = computed<any>(() => {
+    return computed<any>(() => {
         const site = store.state.Zentao.currSite;
         return site.username ? site : null;
     });
-
-    return currSite;
 }

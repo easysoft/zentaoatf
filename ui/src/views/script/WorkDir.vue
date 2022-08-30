@@ -59,26 +59,14 @@ import TreeContextMenu from './TreeContextMenu.vue';
 import FormSyncFromZentao  from "./FormSyncFromZentao.vue";
 
 import bus from "@/utils/eventBus";
-import {
-  getExpandedKeys,
-  getScriptDisplayBy,
-  getScriptFilters,
-  setExpandedKeys,
-} from "@/utils/cache";
-import {
-  getCaseIdsFromReport,
-  getNodeMap,
-  listFilterItems,
-} from "@/views/script/service";
+import {getExpandedKeys, getScriptDisplayBy, getScriptFilters, setExpandedKeys } from "@/utils/cache";
+import {getCaseIdsFromReport, getNodeMap, listFilterItems, getFileNodesUnderParent, genWorkspaceToScriptsMap } from "@/views/script/service";
 import { useRouter } from "vue-router";
 import { isWindows } from "@/utils/comm";
 import debounce from "lodash.debounce";
-import throttle from "lodash.debounce";
 import Modal from "@/utils/modal"
 import FormNode from "./FormNode.vue";
-import { key } from "localforage";
 import settings from "@/config/settings";
-import {getFileNodesUnderParent, genWorkspaceToScriptsMap} from "@/views/script/service";
 import FormWorkspace from "@/views/workspace/FormWorkspace.vue";
 
 const { t } = useI18n();
@@ -212,7 +200,6 @@ const selectCasesFromReport = async (): Promise<void> => {
 
   getCaseIdsFromReport(workspace, seq, scope).then((json) => {
     checkedKeys.value = json.data
-    router.push(`/script/index`) // remove the params of re-test
   })
 }
 selectCasesFromReport()
@@ -226,7 +213,7 @@ watch(currProduct, () => {
   initData()
 }, { deep: true })
 
-watch(treeData, (currConfig) => {
+watch(treeData, () => {
   console.log('watch treeData', treeData.value)
   onTreeDataChanged()
 }, { deep: true })
@@ -248,12 +235,6 @@ const onTreeDataChanged = async () => {
     console.log('cachedKeys', currSite.value.id, currProduct.value.id)
 
     if (cachedKeys) expandedKeys.value = cachedKeys
-
-    if (!cachedKeys || cachedKeys.length === 0) {
-      // 修改
-      // getOpenKeys(treeData.value[0], false) // expend first level folder
-      // await setExpandedKeys(currSite.value.id, currProduct.value.id, expandedKeys.value)
-    }
   })
 }
 
@@ -310,7 +291,7 @@ const getOpenKeys = (treeNode: any, openAll: boolean) => { // expand top one lev
   expandedKeys.value.push(treeNode.path)
 
   if (treeNode.children && openAll) {
-    treeNode.children.forEach((item, index) => {
+    treeNode.children.forEach((item) => {
       getOpenKeys(item, openAll)
     })
   }
@@ -346,6 +327,7 @@ const selectNode = (activeNode) => {
   if (node.workspaceType !== 'ztf') checkNothing()
 
   store.dispatch('Script/getScript', node)
+  store.dispatch('Result/getStatistic', node)
   if (node.type === 'file') {
     const tabId = node.workspaceType === 'ztf' && node.path.indexOf('.exp') !== node.path.length - 4
         ? 'script-' + node.path : 'code-' + node.path
@@ -368,14 +350,12 @@ const checkNode = (keys) => {
   console.log('checkNode', keys.checked)
   store.dispatch('Script/setCheckedNodes', keys.checked)
   let checkedKeysTmp:string[] = [];
-  for(let key in keys.checked){
-    if(keys.checked[key] === true){
-        checkedKeysTmp.push(key)
+  for(let checkedKey in keys.checked){
+    if(keys.checked[checkedKey] === true){
+        checkedKeysTmp.push(checkedKey)
     }
   }
   checkedKeys.value = checkedKeysTmp;
-  //   scriptStore.dispatch('Script/changeWorkspace',
-  //       {id: e.node.dataRef.workspaceId, type: e.node.dataRef.workspaceType})
 }
 
 const checkNothing = () => {
@@ -384,26 +364,24 @@ const checkNothing = () => {
 
 const execSelected = () => {
     let arr = [] as string[]
-    checkedKeys.value.forEach(item => {
-      if (treeDataMap.value[item]?.type === 'file') {
-        arr.push(treeDataMap.value[item])
+    checkedKeys.value.forEach(checkedKey => {
+      if (treeDataMap.value[checkedKey]?.type === 'file') {
+        arr.push(treeDataMap.value[checkedKey])
       }
     })
     bus.emit(settings.eventExec, { execType: 'ztf', scripts: arr });
 }
 
-const editedData = ref<any>({})
 const nameFormVisible = ref(false)
 
 const treeDataMap = computed<any>(() => store.state.Script.treeDataMap);
-const getNodeMapCall = throttle(async () => {
+const getNodeMapCall = debounce(async () => {
   treeData.value.forEach(item => {
     getNodeMap(item, treeDataMap.value)
   })
 }, 300)
 
 let rightClickedNode = {} as any
-let createAct = ''
 
 const formNode = ref({} as any)
 const createNode = (formData) => {
@@ -692,21 +670,21 @@ onUnmounted(() => {
 <style lang="less" scoped>
 .left-pannel-contain{
   text-align: center;
-.workdir {
-    height: calc(100vh - 80px);
-    overflow: auto;
-    text-align: left;
-}
-.workdir-with-btn {
-    height: calc(100vh - 120px);
-    overflow: auto;
-    text-align: left;
-}
-.run-selected{
-max-width: 100px;
-margin: auto;
-text-align: center;
-margin-top: 10px;
-}
+  .workdir {
+      height: calc(100vh - 80px);
+      overflow: auto;
+      text-align: left;
+  }
+  .workdir-with-btn {
+      height: calc(100vh - 120px);
+      overflow: auto;
+      text-align: left;
+  }
+  .run-selected{
+    max-width: 100px;
+    margin: auto;
+    text-align: center;
+    margin-top: 10px;
+  }
 }
 </style>

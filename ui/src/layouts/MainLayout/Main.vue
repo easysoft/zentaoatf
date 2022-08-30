@@ -68,7 +68,10 @@ const onExecStartEvent = () => {
 
 const notify = (result: any) => {
   if (!result.httpCode) result.httpCode = 100
-  const msg = result.httpCode === 200 ? t('biz_'+result.resultCode) : t('http_'+result.httpCode)
+  let msg = result.httpCode === 200 ? t('biz_'+result.resultCode) : t('http_'+result.httpCode)
+  if(result.resultCode === 2000) {
+    msg = result.resultMsg
+  }
   const desc = result.resultMsg ? result.resultMsg : ''
 
   notification.error({

@@ -2,11 +2,19 @@ package execHelper
 
 import (
 	"bufio"
+	"context"
 	"fmt"
+	"io"
+	"os"
+	"os/exec"
+	"strings"
+	"time"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
@@ -15,10 +23,6 @@ import (
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
-	"io"
-	"os"
-	"os/exec"
-	"strings"
 )
 
 func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
@@ -30,6 +34,13 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	lang := langHelper.GetLangByFile(filePath)
 
 	var cmd *exec.Cmd
+	_, _, _, _, timeout := scriptHelper.GetCaseInfo(filePath)
+	if timeout == 0 {
+		timeout = 86400 * 7
+	}
+	ctxt, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(timeout))
+	defer cancel()
+
 	if commonUtils.IsWin() {
 		scriptInterpreter := ""
 		if strings.ToLower(lang) != "bat" {
@@ -39,7 +50,11 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			if strings.Index(strings.ToLower(scriptInterpreter), "autoit") > -1 {
 				cmd = exec.Command("cmd", "/C", scriptInterpreter, filePath, "|", "more")
 			} else {
-				cmd = exec.Command("cmd", "/C", scriptInterpreter, filePath)
+				if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
+					cmd = exec.Command("cmd", "/C", scriptInterpreter, command, filePath)
+				} else {
+					cmd = exec.Command("cmd", "/C", scriptInterpreter, filePath)
+				}
 			}
 		} else if strings.ToLower(lang) == "bat" {
 			cmd = exec.Command("cmd", "/C", filePath)
@@ -74,13 +89,18 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			}
 			//logUtils.ExecFilef(msg)
 
-			cmd = exec.Command(scriptInterpreter, filePath)
+			if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
+				cmd = exec.CommandContext(ctxt, scriptInterpreter, command, filePath)
+			} else {
+				cmd = exec.CommandContext(ctxt, scriptInterpreter, filePath)
+			}
 		} else {
-			cmd = exec.Command("/bin/bash", "-c", filePath)
+			if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
+				filePath = fmt.Sprintf("%s %s %s", lang, command, filePath)
+			}
+			cmd = exec.CommandContext(ctxt, "/bin/bash", "-c", filePath)
 		}
 	}
-
-	cmd.Dir = workspacePath
 
 	if cmd == nil {
 		msgStr := i118Utils.Sprintf("cmd_empty")
@@ -92,7 +112,11 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		logUtils.ExecFilef(msgStr)
 
 		return "", msgStr
+	} else {
+		cmd.Dir = workspacePath
 	}
+
+	cmd.Dir = workspacePath
 
 	stdout, err1 := cmd.StdoutPipe()
 	stderr, err2 := cmd.StderrPipe()
@@ -162,8 +186,6 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		}
 	}
 
-	cmd.Wait()
-
 ExitCurrCase:
 	errOutputArr := make([]string, 0)
 	if !isTerminal {
@@ -177,8 +199,12 @@ ExitCurrCase:
 			errOutputArr = append(errOutputArr, line)
 		}
 	}
+	if ctxt.Err() != nil {
+		errOutputArr = append(errOutputArr, i118Utils.Sprintf("exec_cmd_timeout"))
 
+	}
 	stdOutput = strings.Join(stdOutputArr, "")
 	errOutput = strings.Join(errOutputArr, "")
+	cmd.Wait()
 	return
 }

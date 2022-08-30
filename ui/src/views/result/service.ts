@@ -69,3 +69,28 @@ export function mvLog(data: any): Promise<any> {
         data: data,
     });
 }
+export async function getStatistic(path: string): Promise<any> {
+    const params = {path: path}
+
+    return request({
+        url: `/${apiPath}/statistic`,
+        params
+    });
+}
+
+export async function updateStatistic(params: any): Promise<any> {
+    return request({
+        url: `/${apiPath}/statistic`,
+        method: 'put',
+        params,
+    });
+}
+
+export async function getFailure(path: string): Promise<any> {
+    const params = {path: path}
+
+    return request({
+        url: `/${apiPath}/failure`,
+        params
+    });
+}

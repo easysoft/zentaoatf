@@ -32,3 +32,19 @@ func (s *TestBugService) GetBugFields(siteId, productId int) (bugFields commDoma
 	bugFields, err = zentaoHelper.GetBugFiledOptions(config, productId)
 	return
 }
+
+func (s *TestBugService) LoadBugs(siteId, productId int) (bugs []commDomain.ZentaoBug, err error) {
+	if siteId == 1 {
+		return
+	}
+	site, _ := s.SiteRepo.Get(uint(siteId))
+	config := configHelper.LoadBySite(site)
+
+	allBugs, err := zentaoHelper.LoadBugs(productId, config)
+	for _, bug := range allBugs {
+		if bug.Case > 0 {
+			bugs = append(bugs, bug)
+		}
+	}
+	return
+}

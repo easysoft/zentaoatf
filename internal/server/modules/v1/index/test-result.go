@@ -24,6 +24,9 @@ func (m *TestResultModule) Party() module.WebModule {
 		index.Get("/latest", m.TestResultCtrl.GetLatest).Name = "获取最新一次执行详情"
 		index.Get("/{workspaceId:int}/{seq:string}", m.TestResultCtrl.Get).Name = "执行详情"
 		index.Get("/downloadLog", m.TestResultCtrl.DownloadLog).Name = "获取对应目录下的log zip"
+		index.Get("/statistic", m.TestResultCtrl.GetStatistic).Name = "脚本运行统计信息"
+		index.Get("/failure", m.TestResultCtrl.GetFailure).Name = "脚本运行失败列表"
+		index.Put("/statistic", m.TestResultCtrl.UpdateStatistic).Name = "更新执行信息"
 		index.Delete("/", m.TestResultCtrl.Delete).Name = "删除执行"
 
 		index.Post("/", m.TestResultCtrl.Submit).Name = "提交测试结果"

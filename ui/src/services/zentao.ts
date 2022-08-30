@@ -62,6 +62,15 @@ export async function queryTask(productId: string): Promise<any> {
     });
 }
 
+export async function queryCase(params): Promise<any> {
+
+    return request({
+        url: `/${apiPath}/listCase`,
+        method: 'GET',
+        params,
+    });
+}
+
 export async function queryBugFields(): Promise<any> {
     return request({
         url: `/${apiPath}/listBugFields`,

@@ -98,6 +98,17 @@ var (
 			"linuxWhereCmd": "which -a tclsh",
 			"versionCmd":    "echo 'puts $tcl_version;exit 0'",
 		},
+		"go": {
+			"name":            "Go",
+			"extName":         "go",
+			"commentsTag":     "//",
+			"printGrammar":    "print(\"#\")",
+			"interpreter":     "C:\\Program Files\\go\\bin\\go.exe",
+			"whereCmd":        "where go",
+			"linuxWhereCmd":   "which -a go",
+			"versionCmd":      "version",
+			"CompiledCommand": "run",
+		},
 	}
 
 	LangCommentsTagMap = map[string][]string{
@@ -110,6 +121,7 @@ var (
 		"ruby":       {`=begin`, `=end`},
 		"shell":      {`:<<!`, `!`},
 		"tcl":        {`set case {`, `}`},
+		"go":         {`/**`, `*/`},
 	}
 
 	LangCommentsRegxMap = map[string][]string{
@@ -122,6 +134,7 @@ var (
 		"ruby":       {"^\\s*=begin\\s*$", "^\\s*=end\\s*$"},
 		"shell":      {"^\\s*:<<!\\s*$", "^\\s*!\\s*$"},
 		"tcl":        {"^\\s*set case {", "^\\s*}"},
+		"go":         {"^\\s*/\\*{1,}\\s*$", "^\\s*\\*{1,}/\\s*$"},
 	}
 
 	EditorLangMap = map[string]map[string]string{

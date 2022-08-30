@@ -1,6 +1,9 @@
 package controller
 
 import (
+	"fmt"
+	"strings"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
@@ -9,6 +12,7 @@ import (
 
 type TestResultCtrl struct {
 	TestResultService *service.TestResultService `inject:""`
+	StatisticService  *service.StatisticService  `inject:""`
 	BaseCtrl
 }
 
@@ -118,6 +122,7 @@ func (c *TestResultCtrl) DownloadLog(ctx iris.Context) {
 
 	ctx.ServeFile(zipPath)
 }
+
 func (c *TestResultCtrl) MvLog(ctx iris.Context) {
 	type mvlog struct {
 		File        string `json:"file"`
@@ -139,4 +144,71 @@ func (c *TestResultCtrl) MvLog(ctx iris.Context) {
 	}
 
 	ctx.JSON(c.SuccessResp(logPath))
+}
+
+// Get 统计信息
+func (c *TestResultCtrl) GetStatistic(ctx iris.Context) {
+	scriptPath := ctx.URLParam("path")
+
+	if scriptPath == "" {
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, fmt.Sprintf("参数%s不合法", "path")))
+		return
+	}
+
+	if strings.Index(scriptPath, "zentao") == 0 {
+		ctx.JSON(c.SuccessResp(""))
+		return
+	}
+
+	statistic, err := c.StatisticService.GetByPath(scriptPath)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+	ctx.JSON(c.SuccessResp(statistic))
+}
+
+// Put 统计信息
+func (c *TestResultCtrl) UpdateStatistic(ctx iris.Context) {
+	resultPath := ctx.URLParam("path")
+
+	if resultPath == "" {
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, fmt.Sprintf("参数%s不合法", "path")))
+		return
+	}
+
+	if strings.Index(resultPath, "zentao") == 0 {
+		ctx.JSON(c.SuccessResp(""))
+		return
+	}
+
+	scriptPaths, err := c.StatisticService.UpdateStatistic(resultPath)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+	ctx.JSON(c.SuccessResp(scriptPaths))
+}
+
+// Get 失败用例信息
+func (c *TestResultCtrl) GetFailure(ctx iris.Context) {
+	scriptPath := ctx.URLParam("path")
+
+	if scriptPath == "" {
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, fmt.Sprintf("参数%s不合法", "path")))
+		return
+	}
+
+	if strings.Index(scriptPath, "zentao") == 0 {
+		ctx.JSON(c.SuccessResp(""))
+		return
+	}
+
+	logs, err := c.StatisticService.GetFailureLogs(scriptPath)
+
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+	ctx.JSON(c.SuccessResp(logs))
 }

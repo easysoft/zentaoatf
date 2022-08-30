@@ -9,7 +9,7 @@ import settings from '@/config/settings';
  * 获取本地Token
  */
 export const getToken = async (): Promise<string | null> => {
-  return await localforage.getItem(settings.siteTokenKey);
+  return localforage.getItem(settings.siteTokenKey);
 };
 
 /**

@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+const (
+	BrokerClosed = "broker closed"
+)
+
 type Broker interface {
 	publish(topic string, msg interface{}) error
 	subscribe(topic string) (<-chan interface{}, error)
@@ -50,7 +54,7 @@ func (b *BrokerImpl) close() {
 func (b *BrokerImpl) publish(topic string, pub interface{}) error {
 	select {
 	case <-b.exit:
-		return errors.New("broker closed")
+		return errors.New(BrokerClosed)
 	default:
 	}
 
@@ -107,7 +111,7 @@ func (b *BrokerImpl) broadcast(msg interface{}, subscribers []chan interface{}) 
 func (b *BrokerImpl) subscribe(topic string) (<-chan interface{}, error) {
 	select {
 	case <-b.exit:
-		return nil, errors.New("broker closed")
+		return nil, errors.New(BrokerClosed)
 	default:
 	}
 
@@ -121,7 +125,7 @@ func (b *BrokerImpl) subscribe(topic string) (<-chan interface{}, error) {
 func (b *BrokerImpl) unsubscribe(topic string, sub <-chan interface{}) error {
 	select {
 	case <-b.exit:
-		return errors.New("broker closed")
+		return errors.New(BrokerClosed)
 	default:
 	}
 

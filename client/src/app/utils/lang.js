@@ -1,7 +1,7 @@
 import TextMap from './text-map';
 import {formatString} from './string';
 
-export default class LangHelper extends TextMap {
+export class LangHelper extends TextMap {
     constructor(name, langData) {
         super(langData);
         this._name = name;

@@ -329,7 +329,10 @@
       "id": "exec_cmd_fail",
       "translation": "Fail to exec cmd %s, error is %s."
     },
-
+    {
+        "id": "exec_cmd_timeout",
+        "translation": "Exec cmd timeout."
+    },
     {
       "id": "success_to_conn",
       "translation": "Success to connect."
@@ -662,6 +665,14 @@
     {
       "id": "upload_file_result",
       "translation": "Upload file result: %s，%s."
+    },
+    {
+      "id": "must_provide_allure_report_dir",
+      "translation": "Please provide report dir if using Allure Report Framework."
+    },
+    {
+        "id": "bug_title",
+        "translation": "BUG Title"
     }
   ]
 }

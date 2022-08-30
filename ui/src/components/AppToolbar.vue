@@ -1,9 +1,8 @@
 <template>
-  <Toolbar>
-<!--    <Button class="rounded pure" icon="search" iconSize="1.5em" :hint="t('search')" />-->
+  <Toolbar :id="isElectron ? 'setting-btn':''">
     <Button class="rounded pure" icon="settings" iconSize="1.5em" :hint="t('settings')" @click="openSettings" />
   </Toolbar>
-  <SettingsModal 
+  <SettingsModal
     v-if="showSettingsModal"
     :show="showSettingsModal"
     @cancel="settingsModalClose"
@@ -20,9 +19,11 @@ import {useStore} from "vuex";
 import {ZentaoData} from "@/store/zentao";
 import SettingsModal from '@/views/settings/SettingsModal.vue';
 import { ref } from "vue";
+import { getElectron } from "@/utils/comm";
 
 const { t } = useI18n();
 const store = useStore<{ Zentao: ZentaoData }>();
+const isElectron = ref(getElectron());
 
 const showSettingsModal = ref(false);
 
@@ -35,3 +36,9 @@ const settingsModalClose = () => {
 }
 
 </script>
+<style>
+#setting-btn{
+    position: fixed;
+    right: 100px;
+}
+</style>

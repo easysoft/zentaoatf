@@ -2,9 +2,6 @@ package commonUtils
 
 import (
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
-	"github.com/emirpasic/gods/maps"
 	"net"
 	"os"
 	"os/user"
@@ -15,6 +12,10 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
+	"github.com/emirpasic/gods/maps"
 )
 
 func Base(pathStr string) string {
@@ -49,14 +50,6 @@ func IsLinux() bool {
 }
 func IsMac() bool {
 	return GetOs() == "mac"
-}
-
-func UpdateUrl(url string) string {
-	if strings.LastIndex(url, "/") < len(url)-1 {
-		url += "/"
-	}
-
-	return url
 }
 
 func IntToStrArr(intArr []int) (strArr []string) {
@@ -126,7 +119,9 @@ func IgnoreZtfFile(path string) bool {
 
 	arr := []string{"bin", "release", "logs", "xdoc",
 		"log", "log-bak", "conf"}
-	if strings.Index(path, ".") == 0 || stringUtils.FindInArr(path, arr) {
+	if strings.Index(path, ".") == 0 ||
+		stringUtils.FindInArr(path, arr) ||
+		(len(path) >= 4 && path[len(path)-4:] == ".exp") {
 		return true
 	} else {
 		return false

@@ -18,6 +18,7 @@
                     type="checkbox"
                     class="z-thead-checkbox"
                     v-model="setting.isCheckAll"
+                    @click="checkAll"
                 />
               </div>
             </th>
@@ -61,6 +62,7 @@
                         }
                       "
                          :value="row[setting.keyColumn]"
+                         :checked="row.checked"
                          @click="checked"/>
                 </div>
               </td>
@@ -95,6 +97,7 @@
                         }
                       "
                          :value="row[setting.keyColumn]"
+                         :checked="row.checked"
                          @click="checked"/>
                 </div>
               </td>
@@ -216,12 +219,12 @@
 import {computed, defineComponent, nextTick, onBeforeUpdate, onMounted, reactive, ref, watch,} from "vue";
 import {useI18n} from "vue-i18n";
 
-interface pageOption {
+interface PageOption {
   value: number;
   text: number | string;
 }
 
-interface tableSetting {
+interface TableSetting {
   isSlotMode: boolean;
   isCheckAll: boolean;
   isHidePaging: boolean;
@@ -234,15 +237,15 @@ interface tableSetting {
   paging: Array<number>;
   order: string;
   sort: string;
-  pageOptions: Array<pageOption>;
+  pageOptions: Array<PageOption>;
 }
 
-interface column {
+interface Column {
   isKey: string;
   field: string;
 }
 
-interface pageMessage {
+interface PageMessage {
   pagingInfo: string
   pageSizeChangeLabel: string
   gotoPageLabel: string
@@ -265,6 +268,10 @@ export default defineComponent({
     },
     // Presence of Checkbox
     hasCheckbox: {
+      type: Boolean,
+      default: false,
+    },
+    isCheckAll: {
       type: Boolean,
       default: false,
     },
@@ -327,7 +334,7 @@ export default defineComponent({
     // Display text
     messages: {
       type: Object,
-      default: {} as pageMessage,
+      default: {} as PageMessage,
     },
     // Static mode(no refresh server data)
     isStaticMode: {
@@ -382,11 +389,11 @@ export default defineComponent({
     let localTable = ref<HTMLElement | null>(null);
 
     // Validate dropdown values have page-size value or not
-    let tmpPageOptions = props.pageOptions as Array<pageOption>;
+    let tmpPageOptions = props.pageOptions as Array<PageOption>;
     let defaultPageSize =
         props.pageOptions.length > 0 ? ref(tmpPageOptions[0].value) : ref(props.pageSize);
     if (tmpPageOptions.length > 0) {
-      tmpPageOptions.forEach((v: pageOption) => {
+      tmpPageOptions.forEach((v: PageOption) => {
         if (
             Object.prototype.hasOwnProperty.call(v, "value") &&
             Object.prototype.hasOwnProperty.call(v, "text") &&
@@ -398,17 +405,17 @@ export default defineComponent({
     }
 
     // Internal set value for components
-    const setting: tableSetting = reactive({
+    const setting: TableSetting = reactive({
       // Enable slot mode
       isSlotMode: props.isSlotMode,
       // Whether to select all
-      isCheckAll: false,
+      isCheckAll: props.isCheckAll,
       // Hide paging
       isHidePaging: props.isHidePaging,
       // KEY field name
       keyColumn: computed(() => {
         let key = "";
-        Object.assign(props.columns).forEach((col: column) => {
+        Object.assign(props.columns).forEach((col: Column) => {
           if (col.isKey) {
             key = col.field;
           }
@@ -459,11 +466,11 @@ export default defineComponent({
       order: props.sortable.order,
       sort: props.sortable.sort,
       pageOptions: computed(() => {
-        const ops: pageOption[] = [];
+        const ops: PageOption[] = [];
         props.pageOptions?.forEach((o) => {
           ops.push({
-            value: (o as pageOption).value,
-            text: (o as pageOption).text,
+            value: (o as PageOption).value,
+            text: (o as PageOption).text,
           });
         });
         return ops;
@@ -478,7 +485,7 @@ export default defineComponent({
       if (setting.sort === "desc") {
         sort_order = -1;
       }
-      let rows = props.rows as Array<unknown>;
+      let rows = props.rows
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       rows.sort((a: any, b: any): number => {
         if (a[property] < b[property]) {
@@ -525,26 +532,44 @@ export default defineComponent({
       /**
        * Check all checkboxes for monitoring
        */
-      watch(
-          () => setting.isCheckAll,
-          (state: boolean) => {
-            let isChecked: Array<string | unknown> = [];
-            rowCheckbox.value.forEach((val: HTMLInputElement, i: number) => {
-              if (val) {
-                val.checked = state;
-                if (val.checked) {
-                  if (props.checkedReturnType == "row") {
-                    isChecked.push(localRows.value[i]);
-                  } else {
-                    isChecked.push(val.value);
-                  }
+    //   watch(
+    //       () => setting.isCheckAll,
+    //       (state: boolean) => {
+    //         let isChecked: Array<string | unknown> = [];
+    //         rowCheckbox.value.forEach((val: HTMLInputElement, i: number) => {
+    //           if (val) {
+    //             val.checked = state;
+    //             if (val.checked) {
+    //               if (props.checkedReturnType == "row") {
+    //                 isChecked.push(localRows.value[i]);
+    //               } else {
+    //                 isChecked.push(val.value);
+    //               }
+    //             }
+    //           }
+    //         });
+    //         // 回傳畫面上選上的資料 (Return the selected data on the screen)
+    //         emit("return-checked-rows", isChecked);
+    //       }
+    //   );
+    }
+
+    const checkAll = (event: Event) => {
+        event.stopPropagation();
+        setting.isCheckAll = !setting.isCheckAll;
+        let isChecked: Array<string | unknown> = [];
+        rowCheckbox.value.forEach((val: HTMLInputElement, i: number) => {
+            val.checked = setting.isCheckAll;
+            if (val.checked) {
+                if (props.checkedReturnType == "row") {
+                isChecked.push(localRows.value[i]);
+                } else {
+                isChecked.push(val.value);
                 }
-              }
-            });
-            // 回傳畫面上選上的資料 (Return the selected data on the screen)
-            emit("return-checked-rows", isChecked);
-          }
-      );
+            }
+        });
+        // 回傳畫面上選上的資料 (Return the selected data on the screen)
+        emit("return-checked-rows", isChecked);
     }
 
     /**
@@ -554,7 +579,7 @@ export default defineComponent({
       event.stopPropagation();
       let isChecked: Array<string | unknown> = [];
       rowCheckbox.value.forEach((val: HTMLInputElement, i: number) => {
-        if (val && val.checked) {
+        if (val.checked) {
           if (props.checkedReturnType == "row") {
             isChecked.push(localRows.value[i]);
           } else {
@@ -562,6 +587,7 @@ export default defineComponent({
           }
         }
       });
+      setting.isCheckAll = isChecked.length >= rowCheckbox.value.length;
       // 回傳畫面上選上的資料 (Return the selected data on the screen)
       emit("return-checked-rows", isChecked);
     };
@@ -616,16 +642,16 @@ export default defineComponent({
     /**
      * Switch page number
      *
-     * @param page      number  New page number
-     * @param prevPage  number  Current page number
+     * @param pageNum      number  New page number
+     * @param prevPageNum  number  Current page number
      */
-    const changePage = (page: number, prevPage: number) => {
+    const changePage = (pageNum: number, prevPageNum: number) => {
       setting.isCheckAll = false;
       let order = setting.order;
       let sort = setting.sort;
-      let offset = (page - 1) * setting.pageSize;
+      let offset = (pageNum - 1) * setting.pageSize;
       let limit = setting.pageSize;
-      if (!props.isReSearch || page > 1 || page == prevPage) {
+      if (!props.isReSearch || pageNum > 1 || pageNum == prevPageNum) {
         // Call query will only be executed if the page number is changed without re-query
 
         console.log("do-search", offset, limit)
@@ -745,6 +771,7 @@ export default defineComponent({
         setting,
         rowCheckbox,
         checked,
+        checkAll,
         doSort,
         prevPage,
         movePage,
@@ -869,6 +896,10 @@ tr {
   vertical-align: middle;
   position: sticky;
   top: 0;
+}
+
+.z-table td{
+    position: inherit;
 }
 
 .z-table-hover tbody tr:hover {

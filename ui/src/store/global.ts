@@ -1,9 +1,7 @@
 
 import { Mutation/* , Action */ , Getter} from 'vuex';
 import { StoreModuleType } from "@/utils/store";
-import { TabNavItem } from '@/utils/routes';
 import settings from '@/config/settings';
-import router from '@/config/routes';
 
 export interface StateType {
   // 左侧展开收起
@@ -90,9 +88,9 @@ const StoreModel: ModuleType = {
     setLogPaneSize(state, payload) {
       if (100 == payload) {
         state.logPaneMaximized = true;
-        return; 
+        return;
       }
-      
+
       state.logPaneOriginSize = payload;
       state.logPaneMaximized = false;
     },

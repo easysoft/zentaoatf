@@ -39,7 +39,7 @@ const props = withDefaults(defineProps<{
     keyName?: string,
     checkedKey?: ListItemKey,
     activeKey?: ListItemKey,
-    replaceFields?: Record<string, string>, // {title: 'name'}
+    replaceFields?: Record<string, string>,
     listClass?: string,
     listCompact?: boolean,
     listDivider?: boolean,
@@ -89,7 +89,7 @@ function _handleClickMenu(event: MouseEvent) {
 
 const emit = defineEmits<{(type: 'click', event: {originalEvent: Event, key: ListItemKey, item: ListItemProps | Record<string, any>}) : void}>();
 
-onClickOutside(menuRef, event => {
+onClickOutside(menuRef, _event => {
     if (props.hideOnClickAway && state.showed) {
         _toggle(false);
     }
@@ -200,7 +200,7 @@ onMounted(() => {
     }
 
     const triggerEvent = props.triggerEvent ?? 'click';
-    const handler = (event: Event) => {
+    const handler = (_event) => {
         if (state.showed) {
             _toggle(false);
         } else if (!state.show) {

@@ -3,9 +3,13 @@ package zentaoHelper
 import (
 	"encoding/json"
 	"fmt"
+	"sort"
+	"strconv"
+	"strings"
+
 	"github.com/bitly/go-simplejson"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/easysoft/zentaoatf/internal/pkg/domain"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
@@ -16,13 +20,10 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stdinUtils "github.com/easysoft/zentaoatf/pkg/lib/stdin"
 	"github.com/kataras/iris/v12"
-	"sort"
-	"strconv"
-	"strings"
 )
 
-func CommitCase(caseId int, title string,
-	steps []commDomain.ZentaoCaseStep, config commDomain.WorkspaceConf) (err error) {
+func CommitCase(caseId int, title string, steps []commDomain.ZentaoCaseStep, script serverDomain.TestScript,
+	config commDomain.WorkspaceConf) (err error) {
 
 	err = Login(config)
 	if err != nil {
@@ -38,9 +39,11 @@ func CommitCase(caseId int, title string,
 	url := GenApiUrl(uri, nil, config.Url)
 
 	requestObj := map[string]interface{}{
-		"type":  "feature",
-		"title": title,
-		"steps": steps,
+		"type":   "feature",
+		"title":  title,
+		"steps":  steps,
+		"script": script.Code,
+		"lang":   script.Lang,
 	}
 
 	json, err := json.Marshal(requestObj)
@@ -68,6 +71,54 @@ func CommitCase(caseId int, title string,
 
 		logUtils.Infof(i118Utils.Sprintf("success_to_commit_case", caseId) + "\n")
 	}
+
+	return
+}
+
+func CreateCase(productId int, title string, steps []commDomain.ZentaoCaseStep, script serverDomain.TestScript,
+	config commDomain.WorkspaceConf) (cs commDomain.ZtfCase, err error) {
+
+	err = Login(config)
+	if err != nil {
+		return
+	}
+
+	uri := fmt.Sprintf("/products/%d/testcases", productId)
+	url := GenApiUrl(uri, nil, config.Url)
+
+	requestObj := map[string]interface{}{
+		"type":   "feature",
+		"title":  title,
+		"steps":  steps,
+		"script": script.Code,
+		"lang":   script.Lang,
+		"pri":    3,
+	}
+	if steps == nil {
+		requestObj["steps"] = []commDomain.ZentaoCaseStep{}
+	}
+
+	jsonData, err := json.Marshal(requestObj)
+	if err != nil {
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
+		return
+	}
+
+	if commConsts.Verbose {
+		logUtils.Infof(string(jsonData))
+	}
+
+	bytes, err := httpUtils.Post(url, requestObj)
+	if err != nil {
+		err = ZentaoRequestErr(url, err.Error())
+		return
+	}
+	err = json.Unmarshal(bytes, &cs)
+	if err != nil {
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
+		return
+	}
+	logUtils.Infof(i118Utils.Sprintf("success_to_create_case", title) + "\n")
 
 	return
 }
@@ -212,6 +263,21 @@ func LoadTestCasesDetail(productId, moduleId, suiteId, taskId int,
 	for _, cs := range casesResp.Cases {
 		caseId := cs.Id
 
+		cs, err := GetTestCaseDetail(caseId, config)
+		if err != nil {
+			continue
+		}
+
+		cases = append(cases, cs)
+	}
+
+	return
+}
+
+func LoadTestCasesDetailByCaseIds(caseIds []int,
+	config commDomain.WorkspaceConf) (cases []commDomain.ZtfCase, err error) {
+
+	for _, caseId := range caseIds {
 		cs, err := GetTestCaseDetail(caseId, config)
 		if err != nil {
 			continue
@@ -432,7 +498,9 @@ func GetCasesByTaskInDir(productId int, taskId int, workspacePath, scriptDir str
 
 func ListCaseByProduct(baseUrl string, productId int) (casesResp commDomain.ZtfRespTestCases, err error) {
 	uri := fmt.Sprintf("/products/%d/testcases", productId)
-	url := GenApiUrl(uri, nil, baseUrl)
+	url := GenApiUrl(uri, map[string]interface{}{
+		"limit": 10000,
+	}, baseUrl)
 
 	dataStr, err := httpUtils.Get(url)
 	if err != nil {
@@ -501,6 +569,9 @@ func ListCaseByTask(baseUrl string, taskId int) (casesResp commDomain.ZtfRespTes
 	if err != nil {
 		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
+	}
+	for index, caseInfo := range casesResp.Cases {
+		casesResp.Cases[index].Id = caseInfo.Case
 	}
 
 	return

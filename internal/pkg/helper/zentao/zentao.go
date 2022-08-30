@@ -2,6 +2,9 @@ package zentaoHelper
 
 import (
 	"fmt"
+	"regexp"
+	"strings"
+
 	"github.com/bitly/go-simplejson"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
@@ -9,8 +12,6 @@ import (
 	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"regexp"
-	"strings"
 )
 
 func GetConfig(baseUrl string) (err error) {
@@ -69,7 +70,7 @@ func Login(config commDomain.WorkspaceConf) (err error) {
 		}
 
 	} else {
-		err = ZentaoLoginErr(fmt.Sprintf("err response: %#v", string(bodyBytes)))
+		err = ZentaoLoginErr(fmt.Sprintf("%#v", mp["error"]))
 
 		return
 	}

@@ -146,6 +146,7 @@ const TabsModel: TabsModuleType = {
         },
         activateLast(state, payload: {exceptID?: string}) {
             if (!state.idList.length) {
+                state.activeID = '';
                 return;
             }
 
@@ -205,7 +206,6 @@ const TabsModel: TabsModuleType = {
             }
         },
         close(context, payload: {id: string}) {
-            const {id} = payload;
             context.commit('removeTab', payload);
             context.commit('activateLast');
         },
@@ -213,10 +213,8 @@ const TabsModel: TabsModuleType = {
             context.commit('activateLast', {exceptID: payload.id});
         },
         update(context, payload: PageTab) {
-            const {state} = context;
-            const {id} = payload;
             context.commit('updateTab', payload);
-            }
+        }
     }
 };
 

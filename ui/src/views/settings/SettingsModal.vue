@@ -1,5 +1,6 @@
 <template>
 <ZModal
+    id="settingModal"
     :showModal="props.show"
     :title="t('settings')"
     :contentStyle="{width: '90vw', height: '90vh'}"
@@ -158,37 +159,26 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
-import { PageTab } from "@/store/tabs";
+
+import { defineProps, defineEmits, computed, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import {
-  computed,
-  ComputedRef,
-  defineComponent,
-  onMounted,
-  ref,
-  watch,
-  reactive,
-} from "vue";
 import { useStore } from "vuex";
 import { StateType } from "@/views/site/store";
 import { momentUtcDef } from "@/utils/datetime";
 import Table from "@/components/Table.vue";
-import notification from "@/utils/notification";
 import Modal from "@/utils/modal";
 import Button from "@/components/Button.vue";
 import LanguageSettings from "./LanguageSettings.vue";
-import {listInterpreter, saveInterpreter, removeInterpreter} from "@/views/interpreter/service";
 import {listProxy, saveProxy, removeProxy} from "@/views/proxy/service";
 import {listServer, saveServer, removeServer} from "@/views/server/service";
 import FormInterpreter from "@/views/interpreter/FormInterpreter.vue";
 import InterpreterModal from "@/views/interpreter/interpreterModal.vue";
-import { getLangSettings } from "@/views/interpreter/service";
 import FormProxy from "@/views/proxy/FormProxy.vue";
 import FormServer from "@/views/server/FormServer.vue";
 import {setServerURL} from "@/utils/cache";
 import { StateType as GlobalData } from "@/store/global";
 import { ProxyData } from "@/store/proxy";
+import {saveInterpreter,listInterpreter, removeInterpreter, getLangSettings} from "@/views/interpreter/service";
 
 const props = defineProps<{
   show: boolean;

@@ -12,16 +12,14 @@ export const setExecBy = async (execBy) => {
 }
 
 export const getInitStatus = async () => {
-    const initStatus = await getCache(settings.initStatus);
-    return initStatus
+    return getCache(settings.initStatus);
 }
 export const setInitStatus = async () => {
     await setCache(settings.initStatus, true);
 }
 
 export const getCurrSiteId = async () => {
-    const currSiteId = await getCache(settings.currSiteId);
-    return currSiteId
+    return getCache(settings.currSiteId);
 }
 export const setCurrSiteId = async (val) => {
     await setCache(settings.currSiteId, val);
@@ -29,8 +27,7 @@ export const setCurrSiteId = async (val) => {
 
 export const getCurrProductIdBySite = async (currSiteId) => {
     const mp = await getCache(settings.currProductIdBySite);
-    const currProductId = mp ? mp[currSiteId] : 0
-    return currProductId
+    return mp ? mp[currSiteId] : 0
 }
 export const setCurrProductIdBySite = async (currSiteId, currProductId) => {
     if (!currSiteId) return
@@ -129,8 +126,7 @@ export const setExpandedKeys = async (siteId, productId, keys) => {
 
 export const getCmdHistories = async (workspaceId) => {
     const mp = await getCache(settings.cmdHistories);
-    const items = mp && mp[workspaceId] ? mp[workspaceId] : []
-    return items
+    return mp && mp[workspaceId] ? mp[workspaceId] : []
 }
 export const setCmdHistories = async (workspaceId, items) => {
     console.log('setCmdHistories', workspaceId)

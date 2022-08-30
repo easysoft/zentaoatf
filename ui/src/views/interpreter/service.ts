@@ -11,8 +11,7 @@ export async function getLangSettings(proxyPath = 'local') {
     })
 
     if (json.code === 0) {
-        const data = json.data
-        return data
+        return json.data
     }
 
     return {languages: [], languageMap: {}}
@@ -27,8 +26,7 @@ export async function getLangInterpreter(lang, proxyPath = 'local') {
     })
 
     if (json.code === 0) {
-        const data = json.data
-        return data
+        return json.data
     }
 
     return {path: '', info: ''}

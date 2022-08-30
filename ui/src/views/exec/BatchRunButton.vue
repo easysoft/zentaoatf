@@ -89,18 +89,14 @@ function _handleDropDownMenuClick(event) {
 
     bus.emit(settings.eventExec, { execType: 'ztf', scripts: arr });
   }
-
-  return
 }
 
 const getOpenedScripts = () => {
-  const openedScripts = tabs.value.filter((item, index) => {
+  return tabs.value.filter((item) => {
     return item.type === 'script'
   }).map((script: any) => {
     return { path: script.data, workspaceId: currWorkspace.value.id }
   });
-
-  return openedScripts
 }
 
 </script>

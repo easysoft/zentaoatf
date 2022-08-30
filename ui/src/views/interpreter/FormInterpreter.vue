@@ -1,9 +1,10 @@
 <template>
   <ZModal
+    id="interpreterFormModal"
     :showModal="showModalRef"
     @onCancel="cancel"
     @onOk="submit"
-    :title="info.id == 0 ? t('create_interpreter') : t('edit_interpreter')"
+    :title="info.value == undefined ? t('create_interpreter') : t('edit_interpreter')"
     :contentStyle="{width: '500px'}"
   >
     <Form class="form-interpreter">
@@ -165,7 +166,7 @@ const selectInterpreter = async () => {
   modelRef.value.path = selectedInterpreter.value;
 };
 
-const selectLang = async (item) => {
+const selectLang = async () => {
   console.log("selectLang", modelRef.value.lang);
 
   modelRef.value.path = "";
@@ -224,9 +225,8 @@ const selectFile = () => {
     const { ipcRenderer } = window.require('electron')
     ipcRenderer.send(settings.electronMsg, 'selectFile')
 
-    ipcRenderer.on(settings.electronMsgReplay, (event, arg) => {
-    console.log(arg)
-    modelRef.value.path = arg
+    ipcRenderer.on(settings.electronMsgReplay, (_event, arg) => {
+      modelRef.value.path = arg
     })
 }
 

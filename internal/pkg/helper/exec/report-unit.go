@@ -21,6 +21,7 @@ import (
 	"io/ioutil"
 	"path"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -33,8 +34,8 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 	key := stringUtils.Md5(req.WorkspacePath)
 
 	testSuites, zipDir := RetrieveUnitResult(req.WorkspacePath, startTime, req.TestTool, req.BuildTool)
-	zipFile := filepath.Join(commConsts.ExecLogDir, commConsts.ResultZip)
 	if zipDir != "" {
+		zipFile := filepath.Join(commConsts.ExecLogDir, commConsts.ResultZip)
 		fileUtils.ZipDir(zipFile, zipDir)
 	}
 
@@ -108,7 +109,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 		msg += strings.Join(failedCaseLines, "\n")
 		msg += strings.Join(failedCaseLinesDesc, "\n")
 
-		logUtils.ExecConsolef(color.FgCyan, msg)
+		logUtils.ExecConsolef(color.FgRed, msg)
 		logUtils.ExecResult(msg)
 	}
 
@@ -198,21 +199,26 @@ func RetrieveUnitResult(workspacePath string, startTime int64, testTool commCons
 		resultDir = "results"
 		zipDir = resultDir
 	} else if testTool == commConsts.Allure {
-		if buildTool == commConsts.Maven {
-			resultDir = filepath.Join("target", "allure-results")
-			zipDir = resultDir
-		}
+		resultDir = commConsts.AllureReportDir
+		zipDir = resultDir
 	} else {
 		resultDir = "testresult.xml"
 		zipDir = resultDir
 	}
 
-	zipDir = filepath.Join(workspacePath, zipDir)
-	resultDir = filepath.Join(workspacePath, resultDir)
-	resultFiles, _ = GetSuiteFiles(resultDir, startTime, testTool)
+	if resultDir != "" {
+		zipDir = filepath.Join(workspacePath, zipDir)
+		resultDir = filepath.Join(workspacePath, resultDir)
+		resultFiles, _ = GetSuiteFiles(resultDir, startTime, testTool)
+	}
 
 	if testTool == commConsts.Allure {
-		suites = GetAllureSuites(resultDir, startTime)
+		if resultDir != "" {
+			suites = GetAllureSuites(resultDir, startTime)
+		} else {
+			logUtils.Info(color.RedString(
+				i118Utils.Sprintf("must_provide_allure_report_dir")))
+		}
 
 	} else {
 		for _, file := range resultFiles {
@@ -268,14 +274,10 @@ func GetSuiteFiles(resultDir string, startTime int64, testTool commConsts.TestTo
 					continue
 				}
 
-				if testTool == commConsts.Allure && ext == ".json" {
-					pth := filepath.Join(resultDir, name)
-					resultFiles = append(resultFiles, pth)
-				} else if ext == ".xml" {
+				if (testTool == commConsts.Allure && ext == ".json") || ext == ".xml" {
 					pth := filepath.Join(resultDir, name)
 					resultFiles = append(resultFiles, pth)
 				}
-
 			}
 		}
 	} else {
@@ -338,17 +340,11 @@ func GetTestSuite(xmlFile string, testTool commConsts.TestTool) (
 		if err == nil {
 			testSuite = ConvertRobotResult(robotResult)
 		}
-	} else if testTool == commConsts.Cypress {
-		cyResult := commDomain.CypressTestsuites{}
-		err = xml.Unmarshal([]byte(content), &cyResult)
+	} else if testTool == commConsts.Cypress || testTool == commConsts.Playwright {
+		result := commDomain.CypressTestsuites{}
+		err = xml.Unmarshal([]byte(content), &result)
 		if err == nil {
-			testSuite = ConvertCyResult(cyResult)
-		}
-	} else if testTool == commConsts.Playwright {
-		cyResult := commDomain.CypressTestsuites{}
-		err = xml.Unmarshal([]byte(content), &cyResult)
-		if err == nil {
-			testSuite = ConvertCyResult(cyResult)
+			testSuite = ConvertCyResult(result)
 		}
 	} else if testTool == commConsts.Puppeteer {
 		cyResult := commDomain.CypressTestsuites{}
@@ -375,7 +371,9 @@ func ParserUnitTestResult(testSuites []commDomain.UnitTestSuite) (
 		//}
 
 		for _, cs := range suite.Cases {
-			cs.Id = idx
+			if cs.Id <= 0 {
+				cs.Id = idx
+			}
 
 			if cs.Failure != nil {
 				cs.Status = "fail"
@@ -408,24 +406,105 @@ func ParserUnitTestResult(testSuites []commDomain.UnitTestSuite) (
 	return
 }
 
-func ConvertAllureResult(cases []commDomain.AllureCase) (testSuite []commDomain.UnitTestSuite) {
-	//testSuite.Time = 0
-	//
-	//for _, cs := range testSuite.Cases {
-	//	caseResult := commDomain.UnitResult{}
-	//	caseResult.Title = cs.Title
-	//	caseResult.Duration = cs.Duration
-	//
-	//	if suite.Title != "" && suite.Title != "undefined" {
-	//		caseResult.TestSuite = suite.Title
-	//	} else {
-	//		caseResult.TestSuite = jestSuite.Title
-	//	}
-	//
-	//	caseResult.Failure = cs.Failure
-	//
-	//	testSuite.Cases = append(testSuite.Cases, caseResult)
-	//}
+func ConvertAllureResult(cases []commDomain.AllureCase) (testSuites []commDomain.UnitTestSuite) {
+	suites := make([]*commDomain.UnitTestSuite, 0)
+	suiteMap := map[string]*commDomain.UnitTestSuite{}
+
+	for _, cs := range cases {
+		suiteName := GetAllureCaseSuiteName(cs)
+		//logUtils.Info(suiteName)
+
+		_, ok := suiteMap[suiteName]
+		if !ok {
+			suite := commDomain.UnitTestSuite{
+				Name: suiteName,
+				Time: 0,
+			}
+			suites = append(suites, &suite)
+			suiteMap[suiteName] = &suite
+		}
+
+		suiteMap[suiteName].Name = "111"
+
+		caseId := GetAllureCaseId(cs.TestCaseId, cs)
+
+		// passed, failed
+		var status commConsts.ResultStatus
+		if cs.Status == "passed" {
+			status = commConsts.PASS
+		} else if cs.Status == "passed" {
+			status = commConsts.FAIL
+		}
+		caseResult := commDomain.UnitResult{
+			Id:        caseId,
+			Title:     cs.Name,
+			TestSuite: suiteName,
+			Duration:  float32(cs.Stop-cs.Start) / 1000,
+			Status:    status,
+		}
+
+		if cs.Status == "failed" {
+			caseResult.Failure = &commDomain.Failure{
+				Type: "AssertionError",
+				Desc: cs.StatusDetails.Message + ": " + cs.StatusDetails.Trace,
+			}
+		}
+
+		suiteMap[suiteName].Cases = append(suiteMap[suiteName].Cases, caseResult)
+	}
+
+	for _, suite := range suites {
+		sort.Sort(commDomain.CaseSlice(suite.Cases))
+
+		dur := int64(0)
+		for _, cs := range suite.Cases {
+			dur += cs.EndTime - cs.StartTime
+		}
+		suite.Time = float32(dur)
+
+		testSuites = append(testSuites, *suite)
+	}
+
+	return
+}
+
+func GetAllureCaseSuiteName(cs commDomain.AllureCase) (name string) {
+	suiteArr := make([]string, 0)
+
+	for _, label := range cs.Labels {
+		if label.Name == "parentSuite" {
+			if label.Value != "" {
+				suiteArr = append(suiteArr, label.Value)
+			}
+		} else if label.Name == "suite" || label.Name == "subSuite" {
+			if label.Value != "" && (len(suiteArr) == 0 || label.Value != suiteArr[len(suiteArr)-1]) {
+				suiteArr = append(suiteArr, label.Value)
+			}
+		}
+	}
+
+	name = strings.Join(suiteArr, "-")
+
+	return
+}
+
+func GetAllureCaseId(testCaseIdStr string, cs commDomain.AllureCase) (id int) {
+	id, err := strconv.Atoi(testCaseIdStr)
+	if err == nil && id > 0 {
+		return
+	}
+
+	for _, label := range cs.Labels {
+		if label.Name == "as_id" {
+			if label.Value != "" {
+				testCaseIdStr = label.Value
+			}
+
+			break
+		}
+	}
+
+	id = stringUtils.ParseInt(testCaseIdStr)
 
 	return
 }
@@ -536,7 +615,7 @@ func ConvertGTestResult(gTestSuite commDomain.GTestSuites) commDomain.UnitTestSu
 			caseResult := commDomain.UnitResult{}
 			caseResult.Title = cs.Title
 			caseResult.Duration = cs.Duration
-			caseResult.Status = cs.Status
+			caseResult.Status = commConsts.ResultStatus(cs.Status)
 
 			if suite.Title != "" && suite.Title != "pytest" {
 				caseResult.TestSuite = suite.Title
@@ -591,7 +670,7 @@ func ConvertQTestResult(qTestSuite commDomain.QTestSuites) commDomain.UnitTestSu
 		caseResult := commDomain.UnitResult{}
 		caseResult.TestSuite = qTestSuite.Name
 		caseResult.Title = cs.Title
-		caseResult.Status = cs.Result
+		caseResult.Status = commConsts.ResultStatus(cs.Result)
 
 		if cs.Failure != nil {
 			fail := commDomain.Failure{}
@@ -622,7 +701,7 @@ func ConvertRobotResult(result commDomain.RobotResult) commDomain.UnitTestSuite 
 	for _, cs := range tests {
 		caseResult := commDomain.UnitResult{}
 		caseResult.Title = cs.Name
-		caseResult.Status = strings.ToLower(cs.Status.Status)
+		caseResult.Status = commConsts.ResultStatus(strings.ToLower(cs.Status.Status))
 
 		suiteId := cs.ID[0:strings.LastIndex(cs.ID, "-")]
 		caseResult.TestSuite = suiteMap[suiteId]

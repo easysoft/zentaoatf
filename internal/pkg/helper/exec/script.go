@@ -2,12 +2,13 @@ package execHelper
 
 import (
 	"fmt"
+	"strings"
+	"time"
+
 	dateUtils "github.com/easysoft/zentaoatf/pkg/lib/date"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
-	"strings"
-	"time"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
@@ -54,7 +55,8 @@ func ExecScript(scriptFile, workspacePath string,
 	entTime := time.Now()
 	secs := fmt.Sprintf("%.2f", float32(entTime.Sub(startTime)/time.Second))
 	report.WorkspacePath = workspacePath
-	CheckCaseResult(scriptFile, logs, report, scriptIdx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg)
+
+	CheckCaseResult(scriptFile, logs, report, scriptIdx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg, errOutput)
 
 	endMsg := i118Utils.Sprintf("end_execution", scriptFile, dateUtils.DateTimeStr(entTime))
 	if commConsts.ExecFrom != commConsts.FromCmd {

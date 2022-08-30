@@ -13,6 +13,7 @@ type WorkspaceConf struct {
 	Python     string `ini:",omitempty" json:"python"`
 	Ruby       string `ini:",omitempty" json:"ruby"`
 	Tcl        string `ini:",omitempty" json:"tcl"`
+	Go         string `ini:",omitempty" json:"go"`
 	Autoit     string `ini:",omitempty" json:"autoit"`
 
 	Version string `json:"version"`

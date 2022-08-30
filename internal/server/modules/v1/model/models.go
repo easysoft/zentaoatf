@@ -7,5 +7,6 @@ var (
 		&Workspace{},
 		&Proxy{},
 		&Server{},
+		&Statistic{},
 	}
 )

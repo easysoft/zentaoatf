@@ -72,6 +72,7 @@ func Init() {
 	i118Utils.Init(commConsts.Language, commConsts.AppServer)
 
 	langHelper.GetExtToNameMap()
+	langHelper.GetEditorExtToLangMap()
 
 	commConsts.ExecFrom = commConsts.FromCmd
 	return

@@ -108,7 +108,7 @@
     },
     {
       "id": "task_id",
-      "translation": "测试任务Id"
+      "translation": "测试单Id"
     },
     {
       "id": "test_case",
@@ -317,6 +317,10 @@
     {
       "id": "exec_cmd_fail",
       "translation": "执行命令%s失败，错误%s。"
+    },
+    {
+        "id": "exec_cmd_timeout",
+        "translation": "执行命令超时。"
     },
     {
       "id": "cmd_empty",
@@ -649,6 +653,14 @@
     {
       "id": "upload_file_result",
       "translation": "上传文件响应结果：%s，%s。"
+    },
+    {
+      "id": "must_provide_allure_report_dir",
+      "translation": "使用Allure报表框架时，需要指定报告所在的目录。"
+    },
+    {
+        "id": "bug_title",
+        "translation": "缺陷标题"
     }
   ]
 }

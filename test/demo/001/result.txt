@@ -1,0 +1,5 @@
+Found 1 test cases, WorkDir /root/app/zentaoatf/test/，ZTFDir /usr/bin/.
+(1/1) Fail [/root/app/zentaoatf/test/demo/1_string_match_fail.php] [1. check string matches pattern] (0.00s)
+2022-08-10 16:41:28 Run 1 scripts in 0 sec, 0(0.0%) Pass, 1(100.0%) Fail, 0(0.0%) Skip.
+                    Report /usr/bin/log/22-08-10/047/result.txt.
+

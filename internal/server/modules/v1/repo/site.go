@@ -36,7 +36,7 @@ func (r *SiteRepo) Paginate(req serverDomain.ReqPaginate) (data domain.PageData,
 
 	err = db.Count(&count).Error
 	if err != nil {
-		logUtils.Errorf("count site error", zap.String("error:", err.Error()))
+		logUtils.Info(color.RedString("count site error %s.", err.Error()))
 		return
 	}
 

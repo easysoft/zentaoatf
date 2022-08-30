@@ -9,7 +9,7 @@ import { getLocale, setLocale, importAllLocales, defaultLang } from "@/utils/i18
 /**
  * 框架 多语言 配置
  */
-export const messages = importAllLocales();
+export const messages = importAllLocales() as any;
 const sysLocale = getLocale();
 const i18n = createI18n({
     legacy: false,
@@ -22,10 +22,10 @@ const i18n = createI18n({
  * @param locale
  */
 export function setI18nLanguage(locale: string, realReload = false): void {
-    setLocale(locale,realReload, function() {
+    setLocale(locale, function() {
         // i18n.global.locale = locale // legacy: true
         i18n.global.locale.value = locale;
-    })
+    }, realReload)
 }
 
 export default i18n;

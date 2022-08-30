@@ -2,12 +2,13 @@ package execHelper
 
 import (
 	"fmt"
-	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
-	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	"regexp"
 	"strconv"
 	"strings"
+
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
@@ -22,40 +23,32 @@ import (
 
 func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfReport, scriptIdx int,
 	total int, secs string, pathMaxWidth int, numbMaxWidth int,
-	wsMsg *websocket.Message) {
+	wsMsg *websocket.Message, errOutput string) {
 
-	steps, isOldFormat := scriptHelper.GetStepAndExpectMap(scriptFile)
+	steps := scriptHelper.GetStepAndExpectMap(scriptFile)
 
 	isIndependent, expectIndependentContent := scriptHelper.GetDependentExpect(scriptFile)
 	if isIndependent {
-		if isOldFormat {
-			scriptHelper.GetExpectMapFromIndependentFileObsolete(&steps, expectIndependentContent, false)
-		} else {
-			scriptHelper.GetExpectMapFromIndependentFile(&steps, expectIndependentContent, false)
-		}
+		scriptHelper.GetExpectMapFromIndependentFile(&steps, expectIndependentContent, false)
 	}
 
 	skip := false
 	actualArr := make([][]string, 0)
-	if isOldFormat {
-		skip, actualArr = scriptHelper.ReadLogArrObsolete(logs)
-	} else {
-		skip, actualArr = scriptHelper.ReadLogArr(logs)
-	}
+	skip, actualArr = scriptHelper.ReadLogArr(logs)
 
 	language := langHelper.GetLangByFile(scriptFile)
 	ValidateCaseResult(scriptFile, language, steps, skip, actualArr, report,
-		scriptIdx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg)
+		scriptIdx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg, errOutput)
 }
 
 func ValidateCaseResult(scriptFile string, langType string,
 	steps []commDomain.ZentaoCaseStep, skip bool, actualArr [][]string, report *commDomain.ZtfReport,
 	scriptIdx int, total int, secs string, pathMaxWidth int, numbMaxWidth int,
-	wsMsg *websocket.Message) {
+	wsMsg *websocket.Message, errOutput string) {
 
 	key := stringUtils.Md5(scriptFile)
 
-	_, caseId, productId, title := scriptHelper.GetCaseInfo(scriptFile)
+	_, caseId, productId, title, _ := scriptHelper.GetCaseInfo(scriptFile)
 
 	stepLogs := make([]commDomain.StepLog, 0)
 	caseResult := commConsts.PASS
@@ -65,7 +58,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 		caseResult = commConsts.SKIP
 	} else {
 		stepIdxToCheck := 0
-		for _, step := range steps { // iterate by checkpoints
+		for index, step := range steps { // iterate by checkpoints
 			stepName := strings.TrimSpace(step.Desc)
 			expect := strings.TrimSpace(step.Expect)
 
@@ -82,6 +75,9 @@ func ValidateCaseResult(scriptFile string, langType string,
 			}
 
 			stepResult, checkpointLogs := ValidateStepResult(langType, expectLines, actualLines)
+			if errOutput != "" && index == 0 && len(checkpointLogs) > 0 {
+				checkpointLogs[0].Actual = errOutput
+			}
 			stepLog := commDomain.StepLog{Id: strconv.Itoa(stepIdxToCheck), Name: stepName, Status: stepResult, CheckPoints: checkpointLogs}
 			stepLogs = append(stepLogs, stepLog)
 			if stepResult == commConsts.FAIL {
@@ -165,7 +161,9 @@ func ValidateStepResult(langType string, expectLines []string, actualLines []str
 		expect = strings.TrimSpace(expect)
 
 		var pass bool
-		if len(expect) >= 2 && expect[:1] == "`" && expect[len(expect)-1:] == "`" {
+		if len(expect) > 1 && expect[0:1] == "~" && expect[len(expect)-1:] == "~" {
+			pass = MatchScene(expect[1:len(expect)-1], log, langType)
+		} else if len(expect) >= 2 && expect[:1] == "`" && expect[len(expect)-1:] == "`" {
 			expect = expect[1 : len(expect)-1]
 			pass = MatchString(expect, log, langType)
 		} else {
@@ -198,5 +196,127 @@ func MatchString(expect string, actual string, langType string) bool {
 	expect = strings.Replace(expect, "%c", ".", -1)                                    // 单个字符
 
 	pass, _ := regexp.MatchString(expect, actual)
+	return pass
+}
+
+func MatchScene(expect, actual, langType string) (pass bool) {
+	expect = strings.TrimSpace(expect)
+	actual = strings.TrimSpace(actual)
+	if len(expect) == 0 {
+		return actual == ""
+	}
+
+	if len(expect) > 2 {
+		scene := expect[:2]
+		expect = strings.TrimSpace(expect[2:])
+		switch scene {
+		case "f:":
+			if strings.Contains(expect, "*") {
+				expectArr := strings.Split(expect, "*")
+				repeatCount, _ := strconv.Atoi(string(expectArr[1]))
+				return strings.Count(actual, expectArr[0]) >= repeatCount
+			}
+			if expect[0:1] == "(" && expect[len(expect)-1:] == ")" && strings.Contains(expect, ",") {
+				expect = fmt.Sprintf("^%s{1}$", strings.ReplaceAll(expect, ",", "|"))
+			}
+			return MatchString(expect, actual, langType)
+		case "m:":
+			return MatchString(expect, actual, langType)
+		case "c:":
+			if len(expect) > 2 && (expect[:2] == ">=" || expect[:2] == "<=" || expect[:2] == "<>" || expect[:2] == "!=") {
+				character := expect[:2]
+				expectFloot, err := strconv.ParseFloat(strings.TrimSpace(expect[2:]), 64)
+				if err != nil {
+					return false
+				}
+				actualFloot, err := strconv.ParseFloat(strings.TrimSpace(actual), 64)
+				if err != nil {
+					return false
+				}
+				switch character {
+				case ">=":
+					return actualFloot >= expectFloot
+				case "<=":
+					return actualFloot <= expectFloot
+				case "<>":
+					return actualFloot != expectFloot
+				case "!=":
+					return actualFloot != expectFloot
+				}
+			} else if strings.Contains(expect, "-") && strings.Count(expect, "-") == 1 {
+				rangeArr := strings.Split(expect, "-")
+				rangeFrom, err := strconv.ParseFloat(strings.TrimSpace(rangeArr[0]), 64)
+				if err != nil {
+					return false
+				}
+				rangeTo, err := strconv.ParseFloat(strings.TrimSpace(rangeArr[1]), 64)
+				if err != nil {
+					return false
+				}
+				actualFloot, err := strconv.ParseFloat(strings.TrimSpace(actual), 64)
+				if err != nil {
+					return false
+				}
+				return actualFloot >= rangeFrom && actualFloot <= rangeTo
+			} else {
+				character := expect[:1]
+				expectFloot, err := strconv.ParseFloat(strings.TrimSpace(expect[1:]), 64)
+				if err != nil {
+					return false
+				}
+				actualFloot, err := strconv.ParseFloat(strings.TrimSpace(actual), 64)
+				if err != nil {
+					return false
+				}
+				switch character {
+				case ">":
+					return actualFloot > expectFloot
+				case "<":
+					return actualFloot < expectFloot
+				case "=":
+					return actualFloot == expectFloot
+				}
+				if strings.Contains(expect, "-") {
+					expectArr := strings.Split(expect, "-")
+					expectMin, _ := strconv.ParseFloat(strings.TrimSpace(expectArr[0]), 64)
+					expectMax, _ := strconv.ParseFloat(strings.TrimSpace(expectArr[1]), 64)
+					return actualFloot >= expectMin && actualFloot <= expectMax
+				}
+			}
+		case "l:":
+			openParenthesisCount, closeParenthesisCount := 0, 0
+			hasLogicCharacter := false
+			for index, v := range expect {
+				if v == '(' {
+					openParenthesisCount++
+				} else if v == ')' {
+					closeParenthesisCount++
+				}
+				if v == '&' || v == '|' {
+					hasLogicCharacter = true
+				}
+				if v == '|' && index > 0 && expect[index-1] != '\\' && (openParenthesisCount == closeParenthesisCount) {
+					return MatchScene("l:"+expect[:index], actual, langType) || MatchScene("l:"+expect[index+1:], actual, langType)
+				} else if v == '&' && index > 0 && string(expect[index-1]) != "\\" && (openParenthesisCount == closeParenthesisCount) {
+					return MatchScene("l:"+expect[:index], actual, langType) && MatchScene("l:"+expect[index+1:], actual, langType)
+				}
+			}
+			if expect[:1] == "(" {
+				expect = expect[1:]
+			}
+			if expect[len(expect)-1:] == ")" {
+				expect = expect[:len(expect)-1]
+			}
+			if !hasLogicCharacter {
+				if expect[:1] == "!" {
+					return !MatchScene(expect[1:], actual, langType)
+				}
+				return MatchScene(expect, actual, langType)
+			} else {
+				return MatchScene("l:"+expect, actual, langType)
+			}
+		}
+	}
+
 	return pass
 }

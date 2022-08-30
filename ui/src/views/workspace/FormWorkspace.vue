@@ -1,5 +1,6 @@
 <template>
   <ZModal
+     id="workspaceFormModal"
     :showModal="showModalRef"
     @onCancel="cancel"
     @onOk="submit"
@@ -97,16 +98,7 @@ import { ZentaoData } from "@/store/zentao";
 import { ProxyData } from "@/store/proxy";
 
 import { unitTestTypesDef, ztfTestTypesDef } from "@/utils/const";
-import {
-  computed,
-  defineExpose,
-  onMounted,
-  withDefaults,
-  ref,
-  defineProps,
-  defineEmits,
-  watch,
-} from "vue";
+import {computed, defineExpose, withDefaults, ref, defineProps, defineEmits, watch,} from "vue";
 import { useForm } from "@/utils/form";
 import Form from "@/components/Form.vue";
 import FormItem from "@/components/FormItem.vue";
@@ -194,6 +186,16 @@ const rulesRef = ref({
   path: [{ required: true, msg: t("pls_workspace_path") }],
   lang: [{ required: true, msg: t("pls_script_lang") }],
   type: [{ required: true, msg: t("pls_workspace_type") }],
+  cmd: [
+        {
+          trigger: 'blur',
+          validator: async (rule: any, value: string) => {
+            if (modelRef.value.type !== 'ztf' && (value === '' || !value)) {
+              throw new Error(t('pls_cmd'));
+            }
+          }
+        },
+      ],
 });
 
 const { validate, reset, validateInfos } = useForm(modelRef, rulesRef);
@@ -222,7 +224,7 @@ const selectDir = (key) => {
 
     ipcRenderer.on(settings.electronMsgReplay, (event, arg) => {
     console.log(arg)
-    modelRef.value[key] = arg
+    modelRef.value.path = arg
     })
 }
 

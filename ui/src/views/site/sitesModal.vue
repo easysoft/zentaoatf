@@ -70,10 +70,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, watch } from "vue";
 import { PageTab } from "@/store/tabs";
+import { defineProps, defineEmits, ref, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { StateType } from "@/views/site/store";
 import { momentUtcDef } from "@/utils/datetime";
@@ -82,7 +81,6 @@ import { StateType as GlobalData } from "@/store/global";
 import List from "@/components/List.vue";
 import ListItem from "@/components/ListItem.vue";
 import Icon from "@/components/Icon.vue";
-import notification from "@/utils/notification";
 import Modal from "@/utils/modal";
 import Button from "@/components/Button.vue";
 import FormSite from "@/views/site/FormSite.vue";
@@ -131,9 +129,8 @@ const remove = (item) => {
     okText: t("confirm"),
     cancelText: t("cancel"),
     onOk: async () => {
-      store.dispatch("Site/delete", item.id).then((success) => {
-        store.dispatch("Zentao/fetchSitesAndProduct").then((success) => {
-        //   notification.success(t("delete_success"));
+      store.dispatch("Site/delete", item.id).then((_success) => {
+        store.dispatch("Zentao/fetchSitesAndProduct").then((_success2) => {
           fetchSites();
         });
       });
@@ -152,12 +149,11 @@ const createSite = (formData) => {
   if(formDataNew.url.indexOf("http") !== 0) {
     formDataNew.url = "http://" + formDataNew.url;
   }
-  store.dispatch('Site/save', formDataNew).then((response) => {
-    if (response) {
+  store.dispatch('Site/save', formDataNew).then((success) => {
+    if (success) {
       formSite.value.clearFormData()
       showCreateSiteModal.value = false;
-      store.dispatch('Zentao/fetchSitesAndProduct').then((success) => {
-        // notification.success({message: t('save_success')});
+      store.dispatch('Zentao/fetchSitesAndProduct').then((_success2) => {
         fetchSites();
       });
     }

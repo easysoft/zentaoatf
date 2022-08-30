@@ -91,6 +91,13 @@
                 class="space-left rounded pure text-red"
                 :label="t('view_error')"
               />
+              <Button
+                v-if="result.status === 'fail' && currProduct.id"
+                icon="bug"
+                @click="openBugForm(result)"
+                class="space-left rounded pure text-blue"
+                :label="t('submit_bug_to_zentao')"
+              />
             </template>
           </ListItem>
           <div class="unit-result-info row gap-xl padding-bottom small">
@@ -176,7 +183,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, defineProps, onMounted, reactive, ref, toRefs, watch} from "vue";
+import {computed, defineProps, onMounted, reactive, ref, toRefs} from "vue";
 import {PageTab} from "@/store/tabs";
 import {useI18n} from "vue-i18n";
 import {useStore} from "vuex";
@@ -246,13 +253,13 @@ function toggleItemCollapsed(item) {
 }
 
 const exec = (scope): void => {
-  const testType = report.value.testType;
-  if (testType === "func") {
+  const testType2 = report.value.testType;
+  if (testType2 === "func") {
     const caseMap = getCaseIdsInReport(report.value)
     const cases = caseMap[scope]
     bus.emit(settings.eventExec, {execType: 'ztf', scripts: cases});
 
-  } else if (testType === "unit") {
+  } else if (testType2 === "unit") {
     const data = {
       execType: 'unit',
       cmd: report.value.testCommand,

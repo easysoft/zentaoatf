@@ -81,7 +81,6 @@ func Init(port int) *WebServer {
 		close(idleConnClosed)
 	})
 
-	// init grpc
 	mvc.New(app)
 
 	// init websocket

@@ -20,11 +20,6 @@ var (
 
 	RequestType string
 	ExecFrom    ExecFromDef
-
-	AppVersion string
-	BuildTime  string
-	GoVersion  string
-	GitHash    string
 )
 
 var (
@@ -37,8 +32,7 @@ var (
 	UnitTestType    string
 	UnitBuildTool   BuildTool
 	UnitTestTool    TestTool
-	UnitTestResult  string
-	UnitTestResults = "results"
+	AllureReportDir string
 	ProductId       string
 
 	ZenTaoVersion string

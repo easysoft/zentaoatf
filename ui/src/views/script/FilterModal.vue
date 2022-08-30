@@ -1,5 +1,5 @@
 <template>
-  <div class="popper layer rounded" :style="menuFinalStyle" ref="menuRef">
+  <div class="popper layer rounded" :style="menuFinalStyle" ref="menuRef" id="filterModal">
     <template v-if="state.show">
       <div class="tab-group">
         <div
@@ -45,7 +45,7 @@ import {
   defineEmits,
 } from "vue";
 import { useWindowSize, onClickOutside } from "@vueuse/core";
-import { ListItemKey, ListItemProps } from "./ListItem.vue";
+import { ListItemKey, ListItemProps } from "@/components/ListItem.vue";
 import List from "@/components/List.vue";
 
 export type PopperPosition =
@@ -74,7 +74,7 @@ const props = withDefaults(
     keyName?: string;
     checkedKey?: ListItemKey;
     checkedTab?: ListItemKey;
-    replaceFields?: Record<string, string>; // {title: 'name'}
+    replaceFields?: Record<string, string>;
     defaultShow?: boolean;
   }>(),
   {}
@@ -127,7 +127,7 @@ const emit = defineEmits<{
   ): void;
 }>();
 
-onClickOutside(menuRef, (event) => {
+onClickOutside(menuRef, (_event) => {
   if (state.showed) {
     _toggle(false);
   }
@@ -237,7 +237,7 @@ onMounted(() => {
   }
 
   const triggerEvent = props.triggerEvent ?? "click";
-  const handler = (event: Event) => {
+  const handler = (_event) => {
     if (state.showed) {
       _toggle(false);
     } else if (!state.show) {
@@ -256,7 +256,7 @@ onMounted(() => {
 
 const activeKey = computed(() => props.checkedTab);
 const tabRef = ref(null);
-const onTabClick = (event, tab, index) => {
+const onTabClick = (_event, tab) => {
   emit("tabChanged", tab);
 };
 

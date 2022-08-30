@@ -3,6 +3,11 @@ package execHelper
 import (
 	"bufio"
 	"errors"
+	"io"
+	"os/exec"
+	"strings"
+	"time"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
@@ -16,10 +21,6 @@ import (
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
-	"io"
-	"os/exec"
-	"strings"
-	"time"
 )
 
 func ExecUnit(ch chan int,
@@ -54,7 +55,7 @@ func ExecUnit(ch chan int,
 	report := GenUnitTestReport(req, startTime.Unix(), entTime.Unix(), ch, wsMsg)
 
 	// submit result
-	if req.SubmitResult {
+	if req.SubmitResult && (report.FuncResult != nil || report.UnitResult != nil) {
 		configDir := req.WorkspacePath
 		if commConsts.ExecFrom == commConsts.FromCmd {
 			configDir = commConsts.ZtfDir
@@ -155,8 +156,6 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg *websocket.Mes
 		}
 	}
 
-	cmd.Wait()
-
 ExitUnitTest:
 	errOutputArr := make([]string, 0)
 	if !isTerminal {
@@ -180,6 +179,8 @@ ExitUnitTest:
 		logUtils.ExecConsolef(-1, errOutput)
 		logUtils.ExecFilef(errOutput)
 	}
+
+	cmd.Wait()
 
 	return
 }

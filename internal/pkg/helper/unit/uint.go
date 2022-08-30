@@ -10,9 +10,6 @@ func GetUnitTools(args []string, startIndex int) {
 
 	if commConsts.UnitTestType == commConsts.UnitTestTypeAllure {
 		commConsts.UnitTestTool = commConsts.Allure
-		if str == commConsts.UnitTestToolMvn {
-			commConsts.UnitBuildTool = commConsts.Maven
-		}
 	} else if str == commConsts.UnitTestToolMvn {
 		commConsts.UnitBuildTool = commConsts.Maven
 	} else if str == commConsts.UnitTestToolMocha {

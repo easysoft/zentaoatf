@@ -2,10 +2,11 @@ package scriptHelper
 
 import (
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	"github.com/easysoft/zentaoatf/pkg/consts"
@@ -55,18 +56,10 @@ func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool
 		targetDir = filepath.Join(targetDir, strconv.Itoa(moduleId))
 	}
 
-	content := ""
-	isOldFormat := false
-
 	scriptPath = cs.ScriptPath
 	if scriptPath == "" {
 		fileUtils.MkDirIfNeeded(targetDir)
 		scriptPath = filepath.Join(targetDir, fmt.Sprintf("%d.%s", caseId, commConsts.LangMap[langType]["extName"]))
-	}
-
-	if fileUtils.FileExist(scriptPath) { // update title and steps
-		content = fileUtils.ReadFile(scriptPath)
-		isOldFormat = strings.Index(content, "[esac]") > -1
 	}
 
 	*caseIds = append(*caseIds, strconv.Itoa(caseId))
@@ -78,18 +71,15 @@ func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool
 		i118Utils.Sprintf("find_example", consts.FilePthSep, langType))
 
 	info = append(info, fmt.Sprintf("title=%s", caseTitle))
+	info = append(info, fmt.Sprintf("timeout=%d", 0))
 	info = append(info, fmt.Sprintf("cid=%d", caseId))
 	info = append(info, fmt.Sprintf("pid=%d", productId))
 
 	StepWidth := 20
 	stepDisplayMaxWidth := 0
 	computerTestStepWidth(cs.Steps, &stepDisplayMaxWidth, StepWidth)
+	generateTestStepAndScript(cs.Steps, &steps, &independentExpects, independentFile)
 
-	if isOldFormat {
-		generateTestStepAndScriptObsolete(cs.Steps, &steps, &independentExpects, independentFile)
-	} else {
-		generateTestStepAndScript(cs.Steps, &steps, &independentExpects, independentFile)
-	}
 	info = append(info, strings.Join(steps, "\n"))
 
 	if independentFile {
@@ -118,6 +108,7 @@ func GenEmptyScript(name, lang, pth string, productId int) {
 
 	info := make([]string, 0)
 	info = append(info, fmt.Sprintf("title=%s", name))
+	info = append(info, fmt.Sprintf("timeout=%d", 0))
 	info = append(info, fmt.Sprintf("cid=%d", 0))
 	info = append(info, fmt.Sprintf("pid=%d", productId))
 
@@ -126,108 +117,6 @@ func GenEmptyScript(name, lang, pth string, productId int) {
 
 	out := fmt.Sprintf(string(template), strings.Join(info, "\n"), srcCode)
 	fileUtils.WriteFile(pth, out)
-}
-
-func generateTestStepAndScriptObsolete(testSteps []commDomain.ZtfStep, steps *[]string, independentExpects *[]string, independentFile bool) {
-	nestedSteps := make([]commDomain.ZtfStep, 0)
-	currGroup := commDomain.ZtfStep{}
-	idx := 0
-
-	// convert steps to nested
-	for true {
-		if idx >= len(testSteps) {
-			break
-		}
-
-		ts := testSteps[idx]
-		if ts.Parent == 0 && ts.Type != "group" { // flat step
-			currGroup = commDomain.ZtfStep{Id: -1, Desc: "group", Children: make([]commDomain.ZtfStep, 0)}
-			currGroup.Children = append(currGroup.Children, ts)
-			idx++
-
-			mutiLine := false
-			for true {
-				if idx >= len(testSteps) {
-					currGroup.MultiLine = mutiLine
-					nestedSteps = append(nestedSteps, currGroup)
-					break
-				}
-
-				child := testSteps[idx]
-				if child.Type != "group" { // flat step
-					if !mutiLine {
-						mutiLine = IsMultiLine(child)
-					}
-
-					currGroup.Children = append(currGroup.Children, child)
-				} else { // found a group step
-					currGroup.MultiLine = mutiLine
-					nestedSteps = append(nestedSteps, currGroup)
-					break
-				}
-				idx++
-			}
-		} else if ts.Type == "group" {
-			currGroup = commDomain.ZtfStep{Desc: ts.Desc, Children: make([]commDomain.ZtfStep, 0)}
-			idx++
-
-			mutiLine := false
-			for true {
-				if idx >= len(testSteps) {
-					nestedSteps = append(nestedSteps, currGroup)
-					break
-				}
-
-				child := testSteps[idx]
-				if child.Type != "group" && child.Parent == ts.Id { // child step
-					if !mutiLine {
-						mutiLine = IsMultiLine(child)
-					}
-
-					currGroup.Children = append(currGroup.Children, child)
-				} else { // found a group step
-					currGroup.MultiLine = mutiLine
-					nestedSteps = append(nestedSteps, currGroup)
-					break
-				}
-				idx++
-			}
-		}
-	}
-
-	stepNumb := 1
-	// print nested steps, only one level
-	for _, group := range nestedSteps {
-		if group.Id == -1 { // [group]
-			*steps = append(*steps, fmt.Sprintf("\n[group]"))
-
-			for _, child := range group.Children {
-				stepContent, expectContent := GetCaseContent(child, strconv.Itoa(stepNumb), independentFile, group.MultiLine)
-				*steps = append(*steps, stepContent)
-
-				if independentFile && strings.TrimSpace(child.Expect) != "" {
-					*independentExpects = append(*independentExpects, expectContent)
-				}
-
-				stepNumb++
-			}
-		} else { // [1. title]
-			*steps = append(*steps, "\n"+fmt.Sprintf("[%d. %s]", stepNumb, group.Desc))
-
-			for childNo, child := range group.Children {
-				numbStr := fmt.Sprintf("%d.%d", stepNumb, childNo+1)
-
-				stepContent, expectContent := GetCaseContent(child, numbStr, independentFile, group.MultiLine)
-				*steps = append(*steps, stepContent)
-
-				if independentFile && strings.TrimSpace(child.Expect) != "" {
-					*independentExpects = append(*independentExpects, expectContent)
-				}
-			}
-
-			stepNumb++
-		}
-	}
 }
 
 func generateTestStepAndScript(testSteps []commDomain.ZtfStep, steps *[]string, independentExpects *[]string, independentFile bool) {

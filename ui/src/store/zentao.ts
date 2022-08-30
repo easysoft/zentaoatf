@@ -2,6 +2,7 @@ import { Mutation, Action } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 import {queryLang, querySiteAndProduct, getProfile, queryProduct, queryModule, querySuite, queryTask} from "../services/zentao";
+import {loadBugs} from "../services/bug";
 
 import {setCurrProductIdBySite, setCurrSiteId} from "@/utils/cache";
 
@@ -18,6 +19,7 @@ export interface ZentaoData {
     modules: any[]
     suites: any[]
     tasks: any[]
+    bugMap: {}
 }
 
 export interface ModuleType extends StoreModuleType<ZentaoData> {
@@ -32,6 +34,7 @@ export interface ModuleType extends StoreModuleType<ZentaoData> {
         saveModules: Mutation<any>;
         saveSuites: Mutation<any>;
         saveTasks: Mutation<any>;
+        saveBugs: Mutation<any>;
     };
     actions: {
         fetchLangs: Action<ZentaoData, ZentaoData>;
@@ -42,6 +45,7 @@ export interface ModuleType extends StoreModuleType<ZentaoData> {
         fetchModules: Action<ZentaoData, ZentaoData>;
         fetchSuites: Action<ZentaoData, ZentaoData>;
         fetchTasks: Action<ZentaoData, ZentaoData>;
+        fetchBugs: Action<ZentaoData, ZentaoData>;
     };
 }
 
@@ -58,6 +62,7 @@ const initState: ZentaoData = {
     modules: [],
     suites: [],
     tasks: [],
+    bugMap: [],
 }
 
 const StoreModel: ModuleType = {
@@ -108,6 +113,14 @@ const StoreModel: ModuleType = {
         saveTasks(state, payload) {
             console.log('payload', payload)
             state.tasks = payload
+        },
+        saveBugs(state, payload) {
+            console.log('payload', payload)
+            const bugMap = payload.reduce((bugMap, bug) => {
+                bugMap[bug.case] = bugMap[bug.case] == undefined ? [bug] : bugMap[bug.case].concat(bug)
+                return bugMap
+              }, {})
+            state.bugMap = bugMap
         },
     },
     actions: {
@@ -175,6 +188,17 @@ const StoreModel: ModuleType = {
                 const response: ResponseData = await queryTask(params);
                 const { data } = response;
                 commit('saveTasks', data || 0);
+
+                return true;
+            } catch (error) {
+                return false;
+            }
+        },
+        async fetchBugs({ commit }, params) {
+            try {
+                const response: ResponseData = await loadBugs();
+                const { data } = response;
+                commit('saveBugs', data || 0);
 
                 return true;
             } catch (error) {

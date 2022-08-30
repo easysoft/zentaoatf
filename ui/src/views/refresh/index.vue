@@ -2,7 +2,7 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-    beforeRouteEnter(to, from, next) {
+    beforeRouteEnter(_to, from, next) {
         // 在渲染该组件的对应路由被验证前调用
         // 不能获取组件实例 `this` ！
         // 因为当守卫执行时，组件实例还没被创建！

@@ -2,21 +2,22 @@ package scriptHelper
 
 import (
 	"fmt"
+	"regexp"
+	"strings"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"regexp"
-	"strings"
 )
 
 const (
 	groupTag = "group:"
 	stepTag  = "step:"
 
-	funcRegex               = `(?U)e\(['"](.+)['"]\)`
+	funcRegex               = `(?U)\We\(['"](.+)['"]\)`
 	singleLineCommentsRegex = `.*(?://|#)(.+)$`
 	multiLineCommentsRegex  = `/\*+(.+)\*+/`
 )
@@ -166,13 +167,14 @@ func extractFromComments(file string) (stepObjs []*commDomain.ZtfStep) {
 }
 
 func prepareDesc(steps []string, file string) (desc string) {
-	pass, caseId, productId, title := GetCaseInfo(file)
-	if !pass {
-		return
-	}
+	_, caseId, productId, title, timeout := GetCaseInfo(file)
+	// if !pass {
+	// 	return
+	// }
 
 	info := make([]string, 0)
 	info = append(info, fmt.Sprintf("title=%s", title))
+	info = append(info, fmt.Sprintf("timeout=%d", timeout))
 	info = append(info, fmt.Sprintf("cid=%d", caseId))
 	info = append(info, fmt.Sprintf("pid=%d", productId))
 	info = append(info, "\n"+strings.Join(steps, "\n"))

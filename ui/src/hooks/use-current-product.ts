@@ -16,9 +16,7 @@ interface ProductInfo {
 
 export default function useCurrentProduct(): ComputedRef<ProductInfo> {
     const store = useStore<{ Zentao: ZentaoData }>();
-    const curr = computed<any>(() => {
+    return computed<any>(() => {
         return store.state.Zentao.currProduct;
     });
-
-    return curr;
 }

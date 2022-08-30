@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	"github.com/easysoft/zentaoatf/internal/server/core/cron"
 	"github.com/easysoft/zentaoatf/internal/server/core/web"
@@ -11,6 +10,11 @@ import (
 )
 
 var (
+	AppVersion string
+	BuildTime  string
+	GoVersion  string
+	GitHash    string
+
 	port = 0
 	uuid = ""
 )
@@ -31,7 +35,7 @@ func main() {
 
 	switch os.Args[1] {
 	case "version", "--version":
-		logUtils.PrintVersion(commConsts.AppVersion, commConsts.BuildTime, commConsts.GoVersion, commConsts.GitHash)
+		logUtils.PrintVersion(AppVersion, BuildTime, GoVersion, GitHash)
 		return
 	default:
 		webServer := web.Init(port)

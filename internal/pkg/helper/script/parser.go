@@ -2,12 +2,6 @@ package scriptHelper
 
 import (
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
-	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
-	"github.com/easysoft/zentaoatf/pkg/consts"
-	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
-	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	"html"
 	"io/ioutil"
 	"path"
@@ -15,6 +9,13 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
+	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
+	"github.com/easysoft/zentaoatf/pkg/consts"
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 )
 
 func ReplaceCaseDesc(desc, file string) {
@@ -34,7 +35,7 @@ func ReplaceCaseDesc(desc, file string) {
 	fileUtils.WriteFile(file, out)
 }
 
-func GetStepAndExpectMap(file string) (steps []commDomain.ZentaoCaseStep, isOldFormat bool) {
+func GetStepAndExpectMap(file string) (steps []commDomain.ZentaoCaseStep) {
 	if !fileUtils.FileExist(file) {
 		return
 	}
@@ -42,62 +43,19 @@ func GetStepAndExpectMap(file string) (steps []commDomain.ZentaoCaseStep, isOldF
 	lang := langHelper.GetLangByFile(file)
 	txt := fileUtils.ReadFile(file)
 
-	isOldFormat = strings.Index(txt, "[esac]") > -1
-	_, checkpoints := ReadCaseInfo(txt, lang, isOldFormat)
+	_, checkpoints := ReadCaseInfo(txt, lang)
 	lines := strings.Split(checkpoints, "\n")
 
-	if isOldFormat {
-		groupBlockArr := getGroupBlockArr(lines)
-		groupArr := getStepNestedArrObsolete(groupBlockArr)
-		_, steps = getSortedTextFromNestedStepsObsolete(groupArr)
-	} else {
-		groupArr := getStepNestedArr(lines)
-		_, steps = getSortedTextFromNestedSteps(groupArr)
-	}
+	groupArr := getStepNestedArr(lines)
+	_, steps = getSortedTextFromNestedSteps(groupArr)
 
 	isIndependent, expectIndependentContent := GetDependentExpect(file)
 	if isIndependent {
-		if isOldFormat {
-			GetExpectMapFromIndependentFileObsolete(&steps, expectIndependentContent, false)
-		} else {
-			GetExpectMapFromIndependentFile(&steps, expectIndependentContent, false)
-		}
+		GetExpectMapFromIndependentFile(&steps, expectIndependentContent, false)
 	}
 
 	return
 }
-
-//func SortFile(file string) {
-//	stepsTxt := ""
-//
-//	if fileUtils.FileExist(file) {
-//		txt := fileUtils.ReadFile(file)
-//		lang := langUtils.GetLangByFile(file)
-//		isOldFormat := strings.Index(txt, "[esac]") > -1
-//		info, content := ReadCaseInfo(txt, lang, isOldFormat)
-//		lines := strings.Split(content, "\n")
-//
-//		groupBlockArr := getGroupBlockArr(lines)
-//		groupArr := getStepNestedArrObsolete(groupBlockArr)
-//		stepsTxt, _, _, _ = getSortedTextFromNestedStepsObsolete(groupArr)
-//
-//		// replace info
-//		from := ""
-//		to := ""
-//		if isOldFormat {
-//			from = `(?s)\[case\].*\[esac\]`
-//			to = "[case]\n" + info + "\n" + stepsTxt + "\n\n[esac]"
-//		} else {
-//			from = fmt.Sprintf(`(?s)%s.*%s`, langUtils.LangCommentsRegxMap[lang][0], langUtils.LangCommentsRegxMap[lang][1])
-//			to = fmt.Sprintf("%s\n"+info+"\n"+stepsTxt+"\n\n%s",
-//				langUtils.LangCommentsRegxMap[lang][0], langUtils.LangCommentsRegxMap[lang][1])
-//		}
-//		re, _ := regexp.Compile(from)
-//		script := re.ReplaceAllString(txt, to)
-//
-//		fileUtils.WriteFile(file, script)
-//	}
-//}
 
 func getGroupBlockArr(lines []string) [][]string {
 	groupBlockArr := make([][]string, 0)
@@ -139,28 +97,6 @@ func getGroupBlockArr(lines []string) [][]string {
 	}
 
 	return groupBlockArr
-}
-
-func getStepNestedArrObsolete(blocks [][]string) (ret []commDomain.ZtfStep) {
-	for _, block := range blocks {
-		name := block[0]
-		group := commDomain.ZtfStep{Desc: name}
-
-		if isStepsIdent(block[1]) { // muti line
-			group.MultiLine = true
-			childs := loadMultiLineSteps(block[1:])
-
-			group.Children = append(group.Children, childs...)
-		} else {
-			childs := loadSingleLineSteps(block[1:])
-
-			group.Children = append(group.Children, childs...)
-		}
-
-		ret = append(ret, group)
-	}
-
-	return ret
 }
 
 func getStepNestedArr(lines []string) (ret []commDomain.ZtfStep) {
@@ -346,125 +282,6 @@ func isGroup(str string) bool {
 	return ret
 }
 
-func getSortedTextFromNestedStepsObsolete(groups []commDomain.ZtfStep) (stepsText string, steps []commDomain.ZentaoCaseStep) {
-	ret := make([]string, 0)
-
-	groupNumb := 1
-	for _, group := range groups {
-		desc := group.Desc
-
-		if desc == "[group]" {
-			ret = append(ret, "\n"+desc)
-
-			for idx, child := range group.Children { // level 1 item
-				step := commDomain.ZentaoCaseStep{}
-
-				if group.MultiLine {
-					// steps
-					tag := replaceNumb("[steps]", groupNumb, -1, true)
-					ret = append(ret, "  "+tag)
-
-					stepTxt := printMutiStepOrExpect(child.Desc)
-					ret = append(ret, stepTxt)
-
-					step.Desc = stepTxt
-
-					// expects
-					tag = replaceNumb("[expects]", groupNumb, -1, true)
-					ret = append(ret, "  "+tag)
-
-					expectTxt := printMutiStepOrExpect(child.Expect)
-					ret = append(ret, expectTxt)
-					if idx < len(group.Children)-1 {
-						ret = append(ret, "")
-					}
-
-					step.Expect = expectTxt
-				} else {
-					stepTxt := strings.TrimSpace(child.Desc)
-					stepTxtWithNumb := replaceNumb(stepTxt, groupNumb, -1, false)
-
-					step.Desc = stepTxt
-
-					expectTxt := child.Expect
-					expectTxt = strings.TrimSpace(expectTxt)
-
-					step.Expect = expectTxt
-
-					if expectTxt != "" {
-						expectTxt = ">> " + expectTxt
-					}
-
-					ret = append(ret, fmt.Sprintf("  %s %s", stepTxtWithNumb, expectTxt))
-				}
-
-				steps = append(steps, step)
-
-				groupNumb++
-			}
-		} else {
-			groupStep := commDomain.ZentaoCaseStep{}
-
-			desc = replaceNumb(group.Desc, groupNumb, -1, true)
-			ret = append(ret, "\n"+desc)
-
-			groupStep.Type = commConsts.Group
-			groupStep.Desc = getGroupName(group.Desc)
-			groupStep.Expect = ""
-
-			steps = append(steps, groupStep)
-
-			childNumb := 1
-			for _, child := range group.Children {
-				itemStep := commDomain.ZentaoCaseStep{}
-
-				itemStep.Type = commConsts.Item
-
-				if group.MultiLine {
-					// steps
-					tag := replaceNumb("[steps]", groupNumb, childNumb, true)
-					ret = append(ret, "  "+tag)
-
-					stepTxt := printMutiStepOrExpect(child.Desc)
-					ret = append(ret, stepTxt)
-
-					itemStep.Desc = stepTxt
-
-					// expects
-					tag = replaceNumb("[expects]", groupNumb, childNumb, true)
-					ret = append(ret, "  "+tag)
-
-					expectTxt := printMutiStepOrExpect(child.Expect)
-					ret = append(ret, expectTxt)
-
-					itemStep.Expect = expectTxt
-				} else {
-					stepTxt := strings.TrimSpace(child.Desc)
-					itemStep.Desc = stepTxt
-
-					expectTxt := child.Expect
-					expectTxt = strings.TrimSpace(expectTxt)
-					itemStep.Expect = expectTxt
-
-					if expectTxt != "" {
-						expectTxt = ">> " + expectTxt
-					}
-
-					ret = append(ret, fmt.Sprintf("  %s %s", stepTxt, expectTxt))
-				}
-
-				childNumb++
-			}
-
-			groupNumb++
-		}
-	}
-
-	stepsText = strings.Join(ret, "\n")
-
-	return
-}
-
 func getSortedTextFromNestedSteps(groups []commDomain.ZtfStep) (ret string, steps []commDomain.ZentaoCaseStep) {
 	arr := make([]string, 0)
 
@@ -563,20 +380,6 @@ func printMutiStepOrExpect(str string) string {
 	}
 
 	return strings.Join(ret, "\r\n")
-}
-
-func GetExpectMapFromIndependentFileObsolete(steps *[]commDomain.ZentaoCaseStep, content string, withEmptyExpect bool) {
-	expectArr := ReadExpectIndependentArrObsolete(content)
-
-	for idx, step := range *steps {
-		if len(expectArr) > idx {
-			step.Expect = strings.Join(expectArr[idx], "\r\n")
-		} else {
-			if withEmptyExpect {
-				step.Expect = ""
-			}
-		}
-	}
 }
 
 func GetExpectMapFromIndependentFile(steps *[]commDomain.ZentaoCaseStep, content string, withEmptyExpect bool) {
@@ -702,12 +505,12 @@ func ScriptToExpectName(file string) string {
 //	return runName
 //}
 
-func GetCaseInfo(file string) (pass bool, caseId, productId int, title string) {
+func GetCaseInfo(file string) (pass bool, caseId, productId int, title string, timeout int64) {
 	content := fileUtils.ReadFile(file)
 	isOldFormat := strings.Index(content, "[esac]") > -1
 	pass = CheckFileContentIsScript(content)
 	if !pass {
-		return false, caseId, productId, title
+		return false, caseId, productId, title, timeout
 	}
 
 	caseInfo := ""
@@ -733,6 +536,12 @@ func GetCaseInfo(file string) (pass bool, caseId, productId int, title string) {
 		caseId, _ = strconv.Atoi(arr[1])
 	}
 
+	myExp = regexp.MustCompile(`[\S\s]*timeout=\s*([^\n]*?)\s*\n`)
+	arr = myExp.FindStringSubmatch(caseInfo)
+	if len(arr) > 1 {
+		timeout, _ = strconv.ParseInt(arr[1], 10, 64)
+	}
+
 	myExp = regexp.MustCompile(`[\S\s]*pid=\s*([^\n]*?)\s*\n`)
 	arr = myExp.FindStringSubmatch(caseInfo)
 	if len(arr) > 1 {
@@ -750,105 +559,6 @@ func GetCaseInfo(file string) (pass bool, caseId, productId int, title string) {
 	}
 
 	return
-}
-
-//func ReadScriptCheckpoints(file string) ([]string, [][]string) {
-//	_, expectIndependentContent := GetDependentExpect(file)
-//
-//	content := fileUtils.ReadFile(file)
-//	_, checkpoints := ReadCaseInfo(content)
-//
-//	cpStepArr, expectArr := getCheckpointStepArr(checkpoints, expectIndependentContent)
-//
-//	return cpStepArr, expectArr
-//}
-//func getCheckpointStepArr(content string, expectIndependentContent string) ([]string, [][]string) {
-//	cpStepArr := make([]string, 0)
-//	expectArr := make([][]string, 0)
-//
-//	independentExpect := expectIndependentContent != ""
-//
-//	lines := strings.Split(content, "\n")
-//	i := 0
-//	for i < len(lines) {
-//		step := ""
-//		expects := make([]string, 0)
-//
-//		line := strings.TrimSpace(lines[i])
-//
-//		regx := regexp.MustCompile(`(?U:[\d\.]*)(.+)>>(.*)`)
-//		arr := regx.FindStringSubmatch(line)
-//		if len(arr) > 2 {
-//			step = arr[1]
-//			if !independentExpect {
-//				expects = append(expects, strings.TrimSpace(arr[2]))
-//			}
-//		} else {
-//			regx = regexp.MustCompile(`\[([\d\.]*).*expects\]`)
-//			arr = regx.FindStringSubmatch(line)
-//			if len(arr) > 1 {
-//				step = arr[1]
-//
-//				if !independentExpect {
-//					for i+1 < len(lines) {
-//						ln := strings.TrimSpace(lines[i+1])
-//
-//						if strings.Index(ln, "[") == 0 || strings.Index(ln, ">>") > 0 || ln == "" {
-//							break
-//						} else {
-//							expects = append(expects, ln)
-//							i++
-//						}
-//					}
-//				}
-//			}
-//		}
-//
-//		if step != "" && len(expects) > 0 {
-//			cpStepArr = append(cpStepArr, step)
-//			if !independentExpect {
-//				expectArr = append(expectArr, expects)
-//			}
-//		}
-//		i++
-//	}
-//
-//	if independentExpect {
-//		expectArr = ReadExpectIndependentArrObsolete(expectIndependentContent)
-//	}
-//
-//	return cpStepArr, expectArr
-//}
-
-func ReadExpectIndependentArrObsolete(content string) [][]string {
-	lines := strings.Split(content, "\n")
-
-	ret := make([][]string, 0)
-	var cpArr []string
-
-	for idx, line := range lines {
-		line = strings.TrimSpace(line)
-
-		if line == ">>" { // more than one line
-			cpArr = make([]string, 0)
-		} else if strings.Index(line, ">>") == 0 { // single line
-			line = strings.Replace(line, ">>", "", -1)
-			line = strings.TrimSpace(line)
-
-			cpArr = append(cpArr, line)
-			ret = append(ret, cpArr)
-			cpArr = make([]string, 0)
-		} else { // under >>
-			cpArr = append(cpArr, line)
-
-			if idx == len(lines)-1 || strings.Index(lines[idx+1], ">>") > -1 {
-				ret = append(ret, cpArr)
-				cpArr = make([]string, 0)
-			}
-		}
-	}
-
-	return ret
 }
 
 func ReadExpectIndependentArr(content string) [][]string {
@@ -889,8 +599,6 @@ func ReadExpectIndependentArr(content string) [][]string {
 
 				idx += 1
 			}
-		} else if line == ">>" {
-			continue
 		} else {
 			currModel = "single"
 
@@ -905,51 +613,6 @@ func ReadExpectIndependentArr(content string) [][]string {
 	}
 
 	return ret
-}
-
-func ReadLogArrObsolete(content string) (isSkip bool, ret [][]string) {
-	lines := strings.Split(content, "\n")
-
-	ret = make([][]string, 0)
-	var cpArr []string
-
-	model := ""
-	for idx, line := range lines {
-		line = strings.TrimSpace(line)
-
-		if line == "skip" {
-			isSkip = true
-			return
-		}
-
-		if line == ">>" { // more than one line
-			model = "multi"
-			cpArr = make([]string, 0)
-		} else if strings.Index(line, ">>") == 0 { // single line
-			model = "single"
-
-			line = strings.Replace(line, ">>", "", -1)
-			line = strings.TrimSpace(line)
-
-			cpArr = append(cpArr, line)
-			ret = append(ret, cpArr)
-			cpArr = make([]string, 0)
-		} else {
-			if model == "" || model == "single" {
-				continue
-			}
-
-			// under >>
-			cpArr = append(cpArr, line)
-
-			if idx == len(lines)-1 || strings.Index(lines[idx+1], ">>") > -1 {
-				ret = append(ret, cpArr)
-				cpArr = make([]string, 0)
-			}
-		}
-	}
-
-	return
 }
 
 func ReadLogArr(content string) (isSkip bool, ret [][]string) {
@@ -983,8 +646,6 @@ func ReadLogArr(content string) (isSkip bool, ret [][]string) {
 				idx = idx + 1
 				model = ""
 			}
-		} else if line == ">>" {
-			continue
 		} else {
 			model = "single"
 
@@ -1013,14 +674,10 @@ func CheckFileContentIsScript(content string) bool {
 	return pass
 }
 
-func ReadCaseInfo(content, lang string, isOldFormat bool) (info, checkpoints string) {
-	regStr := ""
-	if isOldFormat {
-		regStr = `(?s)\[case\]((?U:.*pid.*))\n(.*)\[esac\]`
-	} else {
-		regStr = fmt.Sprintf(`(?smU)%s((?U:.*pid.*))\n(.*)%s`,
-			commConsts.LangCommentsRegxMap[lang][0], commConsts.LangCommentsRegxMap[lang][1])
-	}
+func ReadCaseInfo(content, lang string) (info, checkpoints string) {
+	regStr := fmt.Sprintf(`(?smU)%s((?U:.*pid.*))\n(.*)%s`,
+		commConsts.LangCommentsRegxMap[lang][0], commConsts.LangCommentsRegxMap[lang][1])
+
 	myExp := regexp.MustCompile(regStr)
 	arr := myExp.FindStringSubmatch(content)
 
@@ -1089,7 +746,7 @@ func GetScriptByIdsInDir(dirPth string, idMap *map[int]string) error {
 			}
 
 			path := dirPth + name
-			pass, id, _, _ := GetCaseInfo(path)
+			pass, id, _, _, _ := GetCaseInfo(path)
 			if pass {
 				(*idMap)[id] = path
 			}

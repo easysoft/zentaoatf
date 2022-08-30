@@ -3,23 +3,26 @@ import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
 import { QueryParams, QueryResult } from '@/types/data.d';
 import {
-    list, get, remove,getLastest,
+    list, get, remove,getStatistic,
 } from './service';
 
 export interface StateType {
     queryResult: QueryResult;
     detailResult: any;
+    statistic: any;
 }
 
 export interface ModuleType extends StoreModuleType<StateType> {
     state: StateType;
     mutations: {
         setQueryResult: Mutation<StateType>;
+        setStatistic: Mutation<StateType>;
         setDetailResult: Mutation<StateType>;
     };
     actions: {
         list: Action<StateType, StateType>;
         get: Action<StateType, StateType>;
+        getStatistic: Action<StateType, StateType>;
         delete: Action<StateType, StateType>;
     };
 }
@@ -35,6 +38,8 @@ const initState: StateType = {
         },
     },
     detailResult: {},
+    statistic: {},
+
 };
 
 const StoreModel: ModuleType = {
@@ -49,6 +54,9 @@ const StoreModel: ModuleType = {
         },
         setDetailResult(state, payload) {
             state.detailResult = payload;
+        },
+        setStatistic(state, payload) {
+            state.statistic = payload;
         },
     },
     actions: {
@@ -74,7 +82,7 @@ const StoreModel: ModuleType = {
 
             return true;
         },
-        async delete({ commit , dispatch, state}, data: any ) {
+        async delete({ dispatch}, data: any ) {
             try {
                 await remove(data);
                 dispatch('list', {})
@@ -83,6 +91,11 @@ const StoreModel: ModuleType = {
             } catch (error) {
                 return false;
             }
+        },
+        async getStatistic({ commit, dispatch }, script: any ) {
+            const response: ResponseData = await getStatistic(script.path);
+            commit('setStatistic', response.data);
+            return true;
         },
     }
 };

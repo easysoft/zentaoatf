@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import Button from './Button.vue';
 import Toolbar from './Toolbar.vue';
-import {defineComponent, ref} from "vue";
+import {ref} from "vue";
 import {useI18n} from "vue-i18n";
 import {useRouter} from "vue-router";
 import {getElectron} from "@/utils/comm";
@@ -70,5 +70,9 @@ const exit = (): void => {
 <style lang="less" scoped>
   button {
     -webkit-app-region: no-drag;
+  }
+  .window-toolbar{
+    position: fixed;
+    right: 0;
   }
 </style>

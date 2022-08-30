@@ -1,7 +1,3 @@
-/**
- * 自定义 request 网络请求工具,基于axios
- * @author LiQingSong
- */
 import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
 import settings from '@/config/settings';
 import { getCache } from '@/utils/localCache';
@@ -45,9 +41,6 @@ const request = axios.create({
     withCredentials: true, // 当跨域请求时发送cookie
     timeout: 0 // 请求超时时间,5000(单位毫秒) / 0 不做限制
 });
-
-// 全局设置 - post请求头
-// request.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 
 /**
  * 请求拦截器
@@ -100,7 +93,7 @@ request.interceptors.response.use(
         console.log('=== response ===', axiosResponse.config.url, axiosResponse)
 
         const data: ResponseData = axiosResponse.data;
-        const { code, msg } = data;
+        const { code } = data;
 
         // 自定义状态码验证
         if (code !== 0) {

@@ -3,9 +3,10 @@ package commDomain
 import (
 	"encoding/xml"
 	"fmt"
+	"time"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/easysoft/zentaoatf/pkg/consts"
-	"time"
 )
 
 type ZtfRespTestCases struct {
@@ -28,11 +29,14 @@ type ZtfModule struct {
 	Cases map[int]ZtfCaseInModule
 }
 type ZtfCaseInModule struct {
-	Id      int
-	Title   string
-	Product int
-	Module  int
-	Case    int // case id in task
+	Id            int
+	Title         string
+	Product       int
+	Module        int
+	Case          int // case id in task
+	Type          string
+	StatusName    string
+	LastRunResult string
 }
 
 type ZtfSuite struct {
@@ -108,8 +112,9 @@ type ZtfStep struct {
 }
 
 type ZtfBug struct {
-	Title string `json:"title"`
-	Type  string `json:"type"`
+	Title    string              `json:"title"`
+	Type     string              `json:"type"`
+	TestType commConsts.TestType `json:"testType"`
 
 	StepIds string `json:"ids"` // for to
 
@@ -128,6 +133,7 @@ type ZtfBug struct {
 }
 
 type ZentaoBug struct {
+	Id    int    `json:"id"`
 	Title string `json:"title"`
 	Type  string `json:"type"`
 
@@ -143,6 +149,9 @@ type ZentaoBug struct {
 	OpenedBuild []string `json:"openedBuild"`
 	CaseVersion string   `json:"caseVersion"`
 	OldTaskID   string   `json:"oldTaskID"`
+	OpenedDate  string   `json:"openedDate"`
+	OpenedBy    string   `json:"openedBy"`
+	StatusName  string   `json:"statusName"`
 }
 
 type ZtfReport struct {
@@ -233,8 +242,19 @@ type UnitResult struct {
 	ErrorType    string `json:"errorType" xml:"type,attr,omitempty"`
 	ErrorContent string `json:"errorContent" xml:"error,omitempty"`
 
-	Id     int    `json:"id"`
-	Status string `json:"status"`
+	Id     int                     `json:"id"`
+	Status commConsts.ResultStatus `json:"status"`
+}
+type CaseSlice []UnitResult
+
+func (a CaseSlice) Len() int {
+	return len(a)
+}
+func (a CaseSlice) Swap(i, j int) {
+	a[i], a[j] = a[j], a[i]
+}
+func (a CaseSlice) Less(i, j int) bool {
+	return a[j].Id > a[i].Id
 }
 
 type Failure struct {
@@ -252,8 +272,15 @@ type Property struct {
 
 // allure json
 type AllureCase struct {
-	Name        string        `json:"name"`
-	Status      string        `json:"status"`
+	Name          string `json:"name"`
+	Status        string `json:"status"`
+	StatusDetails struct {
+		Known   bool   `json:"known"`
+		Muted   bool   `json:"muted"`
+		Flaky   bool   `json:"flaky"`
+		Message string `json:"message"`
+		Trace   string `json:"trace"`
+	} `json:"statusDetails"`
 	Stage       string        `json:"stage"`
 	Description string        `json:"description"`
 	Steps       []interface{} `json:"steps"`

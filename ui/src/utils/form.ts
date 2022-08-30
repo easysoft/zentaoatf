@@ -9,8 +9,8 @@ export function useForm(modelRef, rulesRef) {
 
   const rules = unref(rulesRef)
   const ruleKeys = unref(Object.keys(rules))
-  ruleKeys.forEach((key, index) => {
-    rules[key].forEach((item, index) => {
+  ruleKeys.forEach((key) => {
+    rules[key].forEach((item) => {
       if (item.required) validateInfos.value[key] = {required: []}
     })
   })
@@ -20,11 +20,11 @@ export function useForm(modelRef, rulesRef) {
 
     const model = unref(modelRef)
 
-    ruleKeys.forEach((key, index) => {
+    ruleKeys.forEach((key) => {
       const errorMap = {}
       let pass = true
 
-      rules[key].forEach((item, index) => {
+      rules[key].forEach((item) => {
         if (item.required) pass &&= checkRequired(key, item, model, errorMap)
         if (pass && item.email) pass &&= checkEmail(key, item, model, errorMap)
         if (pass && item.regex) pass &&= checkRegex(key, item, model, errorMap)

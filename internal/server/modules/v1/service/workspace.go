@@ -132,6 +132,7 @@ func (s *WorkspaceService) UpdateConfig(workspace model.Workspace, by string) (e
 		conf.Perl = mp["perl"]
 		conf.Php = mp["php"]
 		conf.Python = mp["python"]
+		conf.Go = mp["go"]
 		conf.Ruby = mp["ruby"]
 		conf.Tcl = mp["tcl"]
 		conf.Autoit = mp["autoit"]

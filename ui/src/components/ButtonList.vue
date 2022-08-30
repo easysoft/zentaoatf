@@ -42,10 +42,10 @@ const buttonPropsList = computed(() => {
         let item: (ButtonProps | Record<string, any>) & {key: string | number | symbol};
 
         if (props.replaceFields && Button.props) {
-            item = Object.keys(Button.props).reduce((item, propName) => {
+            item = Object.keys(Button.props).reduce((item2, propName) => {
                 const replacePropName = props.replaceFields ? props.replaceFields[propName] : null;
-                item[propName] = x[typeof replacePropName === 'string' ? replacePropName : propName];
-                return item;
+              item2[propName] = x[typeof replacePropName === 'string' ? replacePropName : propName];
+                return item2;
             }, {key: x.key !== undefined ? x.key : i});
         } else {
             item = {

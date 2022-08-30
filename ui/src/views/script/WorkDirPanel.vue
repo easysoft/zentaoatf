@@ -34,6 +34,7 @@
       </FilterModal>
       <Button
       id="filterBtn"
+      :hint="t('filter')"
       class="filter-btn"
       :label="filerLabel"
       v-show="currSite.id != 1"
@@ -45,6 +46,7 @@
       <Button class="rounded pure" :hint="t('create_workspace')" @click="showModal=!showModal" icon="folder-add" />
       <Button class="rounded pure" :hint="t('batch_select')" icon="select-all-on" @click="_handleBatchSelectBtnClick" :active="workDirRef?.isCheckable" />
       <Button @click="_handleToggleAllBtnClick" class="rounded pure" :hint="workDirRef?.isAllCollapsed ? t('collapse') : t('expand_all')" :icon="workDirRef?.isAllCollapsed ? 'add-square-multiple' : 'subtract-square-multiple'" iconSize="1.4em" />
+      <Button v-if="checkedCaseIds.length > 0" @click="showBugsModal = !showBugsModal" class="rounded pure" :hint="t('zentao_bug')" icon="bug" iconSize="1.4em" />
 <!--      <Button class="rounded pure" :hint="t('more_actions')" icon="more-vert" />-->
     </template>
 
@@ -57,11 +59,17 @@
       @cancel="modalClose"
       ref="formWorkspace"
      />
+
+     <BugsModal
+      v-if="showBugsModal"
+      @cancel="showBugsModal=!showBugsModal"
+      :caseIds="checkedCaseIds"
+    />
   </Panel>
 </template>
 
 <script setup lang="ts">
-import {computed, defineComponent, onMounted, onUnmounted, ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 
 import Panel from '@/components/Panel.vue';
 import Button from '@/components/Button.vue';
@@ -74,15 +82,11 @@ import {ZentaoData} from "@/store/zentao";
 import debounce from "lodash.debounce";
 import {useI18n} from "vue-i18n";
 import {ScriptData} from "@/views/script/store";
-import {
-  genWorkspaceToScriptsMap,
-  listFilterItems,
-  getCaseIdsFromReport,
-  getSyncFromInfoFromMenu, getNodeMap, getFileNodesUnderParent, updateNameReq
-} from "@/views/script/service";
+import { listFilterItems } from "@/views/script/service";
 import FormWorkspace from "@/views/workspace/FormWorkspace.vue";
 import notification from "@/utils/notification";
 import FilterModal from "./FilterModal.vue";
+import BugsModal from '@/views/result/BugsModal.vue';
 
 const { t, locale, te } = useI18n();
 
@@ -97,6 +101,11 @@ const filerValue = ref('')
 const oldFilerType = ref('')
 const oldFilerValue = ref('' as any)
 const filerLabel = ref('');
+const showBugsModal = ref(false);
+const checkedCaseIds = ref([] as number[]);
+const selectedNodes = computed<any>(() => store.state.Script.checkedNodes);
+const treeDataMap = computed<any>(() => store.state.Script.treeDataMap);
+const bugMap = computed<any>(() => store.state.Zentao.bugMap);
 
 const displayTypes = ref([
   {key: 'workspace', title: t('by_workspace')},
@@ -136,6 +145,35 @@ watch(
   },
   { deep: true }
 );
+
+watch(selectedNodes, () => {
+  store.dispatch("Zentao/fetchBugs", {});
+  genCheckedCaseIds()
+}, { deep: true });
+
+watch(bugMap, () => {
+  genCheckedCaseIds()
+}, { deep: true });
+
+watch(treeDataMap, () => {
+  loadFilterItems()
+}, { deep: true });
+const genCheckedCaseIds = () => {
+  checkedCaseIds.value = [];
+  for(let key in selectedNodes.value){
+    if(selectedNodes.value[key] === true){
+        const caseId = treeDataMap.value[key].caseId;
+        if(
+            caseId > 0 && 
+            bugMap.value[caseId] != undefined && 
+            bugMap.value[caseId].length > 0 && 
+            checkedCaseIds.value.indexOf(caseId) === -1
+        ){
+            checkedCaseIds.value.push(caseId)
+        }
+    }
+  }
+}
 
 const loadDisplayBy = async () => {
   displayBy.value = await getScriptDisplayBy(currSite.value.id, currProduct.value.id)

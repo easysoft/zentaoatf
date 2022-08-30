@@ -2,19 +2,20 @@ package action
 
 import (
 	"fmt"
+	"os"
+	"strconv"
+	"strings"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	analysisHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
-	"github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stdinUtils "github.com/easysoft/zentaoatf/pkg/lib/stdin"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	"github.com/fatih/color"
-	"os"
-	"strconv"
-	"strings"
 )
 
 var (
@@ -46,7 +47,14 @@ func CommitBug(files []string, productId int, noNeedConfirm bool) {
 	lines := make([]string, 0)
 	for _, cs := range report.FuncResult {
 		if cs.Status != commConsts.PASS {
-			lines = append(lines, fmt.Sprintf("%d. %s %s", cs.Id, cs.Title, coloredStatus(cs.Status)))
+			lines = append(lines, fmt.Sprintf("%d. %s %s", cs.Id, cs.Title, coloredStatus(cs.Status.String())))
+			ids = append(ids, strconv.Itoa(cs.Id))
+		}
+	}
+
+	for _, cs := range report.UnitResult {
+		if cs.Status != "pass" {
+			lines = append(lines, fmt.Sprintf("%d. %s %s", cs.Id, cs.Title, coloredStatus(cs.Status.String())))
 			ids = append(ids, strconv.Itoa(cs.Id))
 		}
 	}
@@ -83,8 +91,8 @@ func CommitBug(files []string, productId int, noNeedConfirm bool) {
 	}
 }
 
-func coloredStatus(status commConsts.ResultStatus) string {
-	temp := strings.ToLower(status.String())
+func coloredStatus(status string) string {
+	temp := strings.ToLower(status)
 
 	switch temp {
 	case "pass":
@@ -95,7 +103,7 @@ func coloredStatus(status commConsts.ResultStatus) string {
 		return color.YellowString(i118Utils.Sprintf(temp))
 	}
 
-	return status.String()
+	return status
 }
 
 func reportBug(resultDir string, caseId string, productId int) error {

@@ -12,20 +12,7 @@ module.exports = {
         host: '0.0.0.0',//set minpc accessible
         port: VUE_APP_PORT || 8000,
         disableHostCheck: true,
-        // 配置反向代理
-        /*
-        proxy: {
-            '/api': {
-              target: '<url>',
-              ws: true,
-              changeOrigin: true
-            },
-            '/foo': {
-              target: '<other_url>'
-            }
-        },
-        */
-        before: function(app, server) {
+        before: function(_app, _server) {
         }
     },
     css: {

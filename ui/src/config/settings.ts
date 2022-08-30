@@ -1,5 +1,3 @@
-import {getCmdHistories, getInitStatus, getOpenedScripts} from "@/utils/cache";
-
 /**
  * 站点配置
  */
@@ -104,4 +102,4 @@ const settings: SettingsType = {
 };
 
 export default settings;
-  
+
