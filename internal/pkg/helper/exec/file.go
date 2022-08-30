@@ -140,7 +140,12 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	}
 
 	cmd.Start()
-
+	go func() {
+		time.AfterFunc(time.Second*time.Duration(timeout), func() {
+			stdout.Close()
+			stderr.Close()
+		})
+	}()
 	isTerminal := false
 	reader1 := bufio.NewReader(stdout)
 	stdOutputArr := make([]string, 0)
