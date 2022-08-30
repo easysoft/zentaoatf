@@ -68,7 +68,7 @@ compile_launcher_win64:
 	@echo 'start compile win64 launcher'
 	@cd cmd/launcher && \
         CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
-		${BUILD_CMD} -x -v -ldflags "-s -w" \
+		${BUILD_CMD} -x -v -ldflags \
 		-o ../../${COMMAND_BIN_DIR}win64/${PROJECT}-gui.exe && \
 		cd ..
 
@@ -76,7 +76,7 @@ compile_launcher_win32:
 	@echo 'start compile win32 launcher'
 	@cd cmd/launcher && \
         CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
-		${BUILD_CMD} -x -v -ldflags "-s -w" \
+		${BUILD_CMD} -x -v -ldflags \
 		-o ../../${COMMAND_BIN_DIR}win32/${PROJECT}-gui.exe && \
         cd ..
 
@@ -86,7 +86,7 @@ compile_gui_win64:
 	@echo 'start compile win64'
 	@rm -rf ./${CLIENT_BIN_DIR}/*
 	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
-		${BUILD_CMD} -x -v -ldflags "-s -w" \
+		${BUILD_CMD} -x -v \
 		-o ${CLIENT_BIN_DIR}win32/${PROJECT}.exe ${SERVER_MAIN_FILE}
 package_gui_win64_client:
 	@cd client && npm run package-win64 && cd ..
@@ -98,7 +98,7 @@ compile_gui_win32:
 	@echo 'start compile win32'
 	@rm -rf ./${CLIENT_BIN_DIR}/*
 	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
-		${BUILD_CMD} -x -v -ldflags "-s -w" \
+		${BUILD_CMD} -x -v \
 		-o ${CLIENT_BIN_DIR}win32/${PROJECT}.exe ${SERVER_MAIN_FILE}
 package_gui_win32_client:
 	@cd client && npm run package-win32 && cd ..
@@ -193,22 +193,6 @@ copy_files_mac:
 	@echo 'start copy files darwin'
 	cp -r demo "${CLIENT_OUT_DIR}darwin"
 	cp ${COMMAND_BIN_DIR}darwin/* "${CLIENT_OUT_DIR}darwin"
-
-#create_shortcut_win64:
-#	@echo 'create shortcut win64'
-#	cp xdoc/ztf-gui.cmd "${CLIENT_OUT_DIR}win64"
-#
-#create_shortcut_win32:
-#	@echo 'create shortcut win32'
-#	cp xdoc/ztf-gui.cmd "${CLIENT_OUT_DIR}win32"
-#
-#create_shortcut_linux:
-#	@echo 'create shortcut linux'
-#	cp xdoc/ztf-gui-linux.sh ${CLIENT_OUT_DIR}linux/ztf-gui.sh
-#
-#create_shortcut_mac:
-#	@echo 'create shortcut mac'
-#	cp xdoc/ztf-gui-mac.sh ${CLIENT_OUT_DIR}darwin/ztf-gui.sh
 
 zip_win64:
 	@echo 'start zip win64'
