@@ -429,11 +429,18 @@ func ConvertAllureResult(cases []commDomain.AllureCase) (testSuites []commDomain
 		caseId := GetAllureCaseId(cs.TestCaseId, cs)
 
 		// passed, failed
+		var status commConsts.ResultStatus
+		if cs.Status == "passed" {
+			status = commConsts.PASS
+		} else if cs.Status == "passed" {
+			status = commConsts.FAIL
+		}
 		caseResult := commDomain.UnitResult{
 			Id:        caseId,
 			Title:     cs.Name,
 			TestSuite: suiteName,
 			Duration:  float32(cs.Stop-cs.Start) / 1000,
+			Status:    status,
 		}
 
 		if cs.Status == "failed" {
@@ -608,7 +615,7 @@ func ConvertGTestResult(gTestSuite commDomain.GTestSuites) commDomain.UnitTestSu
 			caseResult := commDomain.UnitResult{}
 			caseResult.Title = cs.Title
 			caseResult.Duration = cs.Duration
-			caseResult.Status = cs.Status
+			caseResult.Status = commConsts.ResultStatus(cs.Status)
 
 			if suite.Title != "" && suite.Title != "pytest" {
 				caseResult.TestSuite = suite.Title
@@ -663,7 +670,7 @@ func ConvertQTestResult(qTestSuite commDomain.QTestSuites) commDomain.UnitTestSu
 		caseResult := commDomain.UnitResult{}
 		caseResult.TestSuite = qTestSuite.Name
 		caseResult.Title = cs.Title
-		caseResult.Status = cs.Result
+		caseResult.Status = commConsts.ResultStatus(cs.Result)
 
 		if cs.Failure != nil {
 			fail := commDomain.Failure{}
@@ -694,7 +701,7 @@ func ConvertRobotResult(result commDomain.RobotResult) commDomain.UnitTestSuite 
 	for _, cs := range tests {
 		caseResult := commDomain.UnitResult{}
 		caseResult.Title = cs.Name
-		caseResult.Status = strings.ToLower(cs.Status.Status)
+		caseResult.Status = commConsts.ResultStatus(strings.ToLower(cs.Status.Status))
 
 		suiteId := cs.ID[0:strings.LastIndex(cs.ID, "-")]
 		caseResult.TestSuite = suiteMap[suiteId]

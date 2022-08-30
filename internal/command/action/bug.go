@@ -54,7 +54,7 @@ func CommitBug(files []string, productId int, noNeedConfirm bool) {
 
 	for _, cs := range report.UnitResult {
 		if cs.Status != "pass" {
-			lines = append(lines, fmt.Sprintf("%d. %s %s", cs.Id, cs.Title, coloredStatus(cs.Status)))
+			lines = append(lines, fmt.Sprintf("%d. %s %s", cs.Id, cs.Title, coloredStatus(cs.Status.String())))
 			ids = append(ids, strconv.Itoa(cs.Id))
 		}
 	}

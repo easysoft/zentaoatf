@@ -242,8 +242,8 @@ type UnitResult struct {
 	ErrorType    string `json:"errorType" xml:"type,attr,omitempty"`
 	ErrorContent string `json:"errorContent" xml:"error,omitempty"`
 
-	Id     int    `json:"id"`
-	Status string `json:"status"`
+	Id     int                     `json:"id"`
+	Status commConsts.ResultStatus `json:"status"`
 }
 type CaseSlice []UnitResult
 
