@@ -67,6 +67,7 @@ export default {
     'minimize': '最小化',
     'restore': '还原',
     'close': '关闭',
+    'clear': '清空',
     'sync': '同步',
     'download': '下载',
     'src': '源码',

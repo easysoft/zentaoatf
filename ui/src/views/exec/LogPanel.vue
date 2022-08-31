@@ -1,6 +1,9 @@
 <template>
   <Panel :title="t('exec_log')" class="log-panel">
     <template #toolbar-buttons>
+      <Button class="rounded pure" :hint="t('clear')"
+              icon="clear" iconSize="1.4em"
+              @click="bus.emit(settings.eventClearWebSocketMsg);"/>
       <Button class="rounded pure" :hint="t('collapse_all')"
               :icon="logContentExpand ? 'subtract-square-multiple' : 'add-square-multiple'" iconSize="1.4em"
               @click="store.commit('global/setLogContentExpand')"/>
@@ -22,6 +25,8 @@ import {useI18n} from "vue-i18n";
 import { useStore} from 'vuex';
 import { StateType } from '@/store/global'
 import {computed} from 'vue';
+import bus from "@/utils/eventBus";
+import settings from "@/config/settings";
 const { t } = useI18n();
 
 const store = useStore<{global: StateType}>()

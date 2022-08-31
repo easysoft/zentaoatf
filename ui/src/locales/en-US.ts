@@ -61,6 +61,7 @@ export default {
     'select_ui_lang': 'Please select Language',
     'sync': 'Synchronization',
     'close': 'Close',
+    'clear': 'Clear',
     'download': 'Download',
     'src': 'Source Code',
     'zentao_url': 'ZenTao URL',

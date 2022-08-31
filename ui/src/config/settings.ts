@@ -31,6 +31,7 @@ export interface SettingsType {
     eventNotify: string;
     eventWebSocketConnStatus: string,
     eventWebSocketMsg: string,
+    eventClearWebSocketMsg: string,
     webSocketRoom: string,
     electronMsg: string,
     electronMsgReplay: string,
@@ -75,6 +76,7 @@ const settings: SettingsType = {
     eventNotify: 'eventNotify',
     eventWebSocketConnStatus: 'eventWebSocketStatus',
     eventWebSocketMsg: 'eventWebSocketMsg',
+    eventClearWebSocketMsg: 'eventClearWebSocketMsg',
     webSocketRoom: 'webSocketRoom',
     electronMsg: 'electronMsg',
     electronMsgReplay: 'electronMsgReplay',
