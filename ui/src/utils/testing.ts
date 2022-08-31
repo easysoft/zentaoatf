@@ -58,7 +58,7 @@ export const testToolMap = {
     cppunit: 'CppUnit',
     gtest: 'GTest',
     qtest: 'QTest',
-    goTest: 'GoTest',
+    gotest: 'GoTest',
     allure: 'Allure',
 
     robotframework: 'RobotFramework',

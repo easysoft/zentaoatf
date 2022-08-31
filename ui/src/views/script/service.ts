@@ -246,7 +246,7 @@ export function scriptTreeAddAttr(treeData) {
                 { hint: 'create_file', icon: 'file-add', key: 'createFile'},
             ];
             if(item.workspaceType != 'ztf'){
-                item.toolbarItems.push({hint: testToolMap[item.workspaceType], icon: 'play', hintI18n: 'test', key: 'runTest'})
+                item.toolbarItems.push({hint: testToolMap[item.workspaceType] == undefined ? "" : testToolMap[item.workspaceType], icon: 'play', hintI18n: 'test', key: 'runTest'})
             }
         }
 
