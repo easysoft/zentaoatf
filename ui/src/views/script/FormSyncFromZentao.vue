@@ -6,7 +6,7 @@
     @onOk="submit"
     :okTitle="okTitle"
     :title="t('sync-from-zentao')"
-    :contentStyle="{ width: '600px', overflow: 'hidden' }"
+    :contentStyle="{ width: '50vw', overflow: 'hidden' }"
   >
     <Form>
       <FormItem labelWidth="140px" :label="t('module')">
@@ -260,7 +260,7 @@ const setColumns = () => {
     {
       label: t("title"),
       field: "Title",
-      width: "60px",
+      width: "400px",
     },
     {
       label: t("type"),
