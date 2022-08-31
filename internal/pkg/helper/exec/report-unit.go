@@ -198,7 +198,7 @@ func RetrieveUnitResult(workspacePath string, startTime int64, testTool commCons
 		testTool == commConsts.Playwright || testTool == commConsts.Puppeteer {
 		resultDir = "results"
 		zipDir = resultDir
-	} else if testTool == commConsts.Allure {
+	} else if testTool == commConsts.Allure || testTool == commConsts.GoTest {
 		resultDir = commConsts.AllureReportDir
 		zipDir = resultDir
 	} else {

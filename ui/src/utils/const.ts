@@ -23,6 +23,8 @@ export const TestTools = [
     'CppUnit',
     'GTest',
     'QTest',
+    'GoTest',
+    'Allure',
 
     'RobotFramework',
     'Cypress',
@@ -130,6 +132,16 @@ export const unitTestTypesDef = [
         label: 'Puppeteer',
         value: 'puppeteer',
         cmd: 'ztf puppeteer -p product_id mocha tests/example.js --reporter xunit --reporter-options output=results/testresults.xml -t 30000',
+    },
+    {
+        label: 'GoTest',
+        value: 'gotest',
+        cmd: 'ztf allure -p product_id -allureReportDir test/allure-results go test ./test',
+    },
+    {
+        label: 'Allure',
+        value: 'allure',
+        cmd: 'ztf allure -p product_id -allureReportDir target/allure-results mvn clean package test -Dtestng.suite=target/classes/testng.xml',
     },
 ]
 

@@ -3,6 +3,7 @@ package execHelper
 import (
 	"bufio"
 	"errors"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	"io"
 	"os/exec"
 	"strings"
@@ -36,6 +37,14 @@ func ExecUnit(ch chan int,
 	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketHelper.SendExecMsg(startMsg, "", commConsts.Run,
 			iris.Map{"key": key, "status": "start"}, wsMsg)
+	}
+
+	//deal with  -allureReportDir param
+	arr := strings.Split(req.Cmd, " ")
+	if len(arr) > 1 && strings.TrimSpace(arr[0]) == "-allureReportDir" {
+		commConsts.AllureReportDir = arr[1]
+		fileUtils.RmDir(commConsts.AllureReportDir)
+		req.Cmd = strings.Join(arr[2:], " ")
 	}
 
 	// run

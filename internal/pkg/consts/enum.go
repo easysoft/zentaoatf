@@ -150,6 +150,7 @@ const (
 	CppUnit TestTool = "cppunit"
 	GTest   TestTool = "gtest"
 	QTest   TestTool = "qtest"
+	GoTest  TestTool = "gotest"
 
 	AutoIt         TestTool = "autoit"
 	Selenium       TestTool = "selenium"

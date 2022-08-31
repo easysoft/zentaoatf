@@ -58,6 +58,8 @@ export const testToolMap = {
     cppunit: 'CppUnit',
     gtest: 'GTest',
     qtest: 'QTest',
+    goTest: 'GoTest',
+    allure: 'Allure',
 
     robotframework: 'RobotFramework',
     cypress: 'Cypress',
