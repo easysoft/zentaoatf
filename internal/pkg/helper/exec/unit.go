@@ -75,6 +75,8 @@ func ExecUnit(ch chan int,
 		//logUtils.Info("configDir=" + configDir)
 
 		config := configHelper.LoadByWorkspacePath(configDir)
+		//text, _ := json.Marshal(report)
+		//logUtils.Info(string(text))
 		err = zentaoHelper.CommitResult(report, req.ProductId, 0, config, wsMsg)
 	}
 
