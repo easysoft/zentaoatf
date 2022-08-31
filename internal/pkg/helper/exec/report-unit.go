@@ -198,7 +198,7 @@ func RetrieveUnitResult(workspacePath string, startTime int64, testTool commCons
 		testTool == commConsts.Playwright || testTool == commConsts.Puppeteer {
 		resultDir = "results"
 		zipDir = resultDir
-	} else if testTool == commConsts.Allure || testTool == commConsts.GoTest {
+	} else if isAllureReport(testTool) {
 		resultDir = commConsts.AllureReportDir
 		zipDir = resultDir
 	} else {
@@ -212,7 +212,7 @@ func RetrieveUnitResult(workspacePath string, startTime int64, testTool commCons
 		resultFiles, _ = GetSuiteFiles(resultDir, startTime, testTool)
 	}
 
-	if testTool == commConsts.Allure {
+	if isAllureReport(testTool) {
 		if resultDir != "" {
 			suites = GetAllureSuites(resultDir, startTime)
 		} else {
@@ -274,7 +274,7 @@ func GetSuiteFiles(resultDir string, startTime int64, testTool commConsts.TestTo
 					continue
 				}
 
-				if (testTool == commConsts.Allure && ext == ".json") || ext == ".xml" {
+				if (isAllureReport(testTool) && ext == ".json") || ext == ".xml" {
 					pth := filepath.Join(resultDir, name)
 					resultFiles = append(resultFiles, pth)
 				}
@@ -779,4 +779,8 @@ func ConvertCyResult(result commDomain.CypressTestsuites) commDomain.UnitTestSui
 	}
 
 	return testSuite
+}
+
+func isAllureReport(testTool commConsts.TestTool) (ret bool) {
+	return testTool == commConsts.Allure || testTool == commConsts.GoTest
 }

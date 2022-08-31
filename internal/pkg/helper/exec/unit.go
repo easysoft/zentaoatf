@@ -6,6 +6,7 @@ import (
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	"io"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -43,7 +44,8 @@ func ExecUnit(ch chan int,
 	arr := strings.Split(req.Cmd, " ")
 	if len(arr) > 1 && strings.TrimSpace(arr[0]) == "-allureReportDir" {
 		commConsts.AllureReportDir = arr[1]
-		fileUtils.RmDir(commConsts.AllureReportDir)
+		pth := filepath.Join(req.WorkspacePath, commConsts.AllureReportDir)
+		fileUtils.RmDir(pth)
 		req.Cmd = strings.Join(arr[2:], " ")
 	}
 
