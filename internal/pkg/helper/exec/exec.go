@@ -8,7 +8,6 @@ import (
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
-	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	"github.com/kataras/iris/v12/websocket"
 )
 
@@ -100,12 +99,4 @@ func KillLinuxProcessByUUID(uuid string) {
 	cmd := exec.Command(command)
 	cmd.Start()
 
-}
-
-func KillProcessByUUID(uuid string) {
-	if commonUtils.IsWin() {
-		KillWinProcessByUUID(uuid)
-	} else {
-		KillLinuxProcessByUUID(uuid)
-	}
 }

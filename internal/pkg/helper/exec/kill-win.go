@@ -10,7 +10,7 @@ import (
 	"syscall"
 )
 
-func KillWinProcessByUUID(uuid string) {
+func KillProcessByUUID(uuid string) {
 	cmd1 := exec.Command("cmd")
 	cmd1.SysProcAttr = &syscall.SysProcAttr{CmdLine: fmt.Sprintf(`/c WMIC path win32_process where "CommandLine like '%%%s%%'" get Processid,Caption`, uuid), HideWindow: true}
 
