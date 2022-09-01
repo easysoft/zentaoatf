@@ -1,6 +1,9 @@
 package service
 
 import (
+	"os"
+	"path/filepath"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	codeHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/code"
@@ -12,8 +15,6 @@ import (
 	"github.com/easysoft/zentaoatf/pkg/domain"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	"github.com/kataras/iris/v12"
-	"os"
-	"path/filepath"
 )
 
 type TestScriptService struct {
@@ -189,6 +190,20 @@ func (s *TestScriptService) UpdateName(script serverDomain.TestScript) (err erro
 
 func (s *TestScriptService) Delete(pth string) (bizErr *domain.BizError) {
 	err := os.RemoveAll(pth)
+
+	_, ok := err.(*os.PathError)
+	if ok {
+		bizErr = &domain.BizError{Code: commConsts.ErrDirNotEmpty.Code}
+	} else {
+		bizErr = nil
+	}
+
+	return
+}
+
+func (s *TestScriptService) Rename(pth string, name string) (bizErr *domain.BizError) {
+	dir, _ := filepath.Split(pth)
+	err := os.Rename(pth, dir+name)
 
 	_, ok := err.(*os.PathError)
 	if ok {

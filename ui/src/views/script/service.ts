@@ -100,6 +100,14 @@ export async function remove(path: string): Promise<any> {
     });
 }
 
+export async function rename(data: any): Promise<any> {
+    return request({
+        url: `/${apiPath}/rename`,
+        method: 'put',
+        data,
+    });
+}
+
 export async function updateCode(data: any): Promise<any> {
     return request({
         url: `/${apiPath}/updateCode`,

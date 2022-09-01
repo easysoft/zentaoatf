@@ -236,6 +236,7 @@ export default {
     'copy': 'Copy',
     'cut': 'Cut',
     'paste': 'Paste',
+    'rename': 'Rename',
     'open-in-explore': 'Open In Explore',
     'open-in-terminal': 'Open In Terminal',
 

@@ -3,7 +3,7 @@
     :showModal="showModalRef"
     @onCancel="cancel"
     @onOk="submit"
-    :title="t('create')"
+    :title="props.path == '' ? t('create') : t('rename')"
     :contentStyle="{width: '400px'}"
   >
     <Form>
@@ -31,17 +31,25 @@ import FormItem from "@/components/FormItem.vue";
 
 export interface FormWorkspaceProps {
   show?: boolean;
+  path?: string;
+  name?: string;
 }
 const { t } = useI18n();
 const props = withDefaults(defineProps<FormWorkspaceProps>(), {
   show: false,
+  path:"",
+  name:"",
 });
 
 watch(props, () => {
     if(!props.show){
         setTimeout(() => {
             validateInfos.value = {};
+            modelRef.value = {name:'', path:''}
         }, 200);
+    }else{
+        modelRef.value.name = props.name
+        modelRef.value.path = props.path
     }
 })
 
@@ -53,7 +61,7 @@ const cancel = () => {
   emit("cancel", {});
 };
 
-const modelRef = ref({});
+const modelRef = ref({name:'', path:''});
 const rulesRef = ref({
   name: [{ required: true, msg: t("pls_name") }],
 });

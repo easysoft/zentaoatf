@@ -247,6 +247,7 @@ export default {
     'copy': '复制',
     'cut': '剪切',
     'paste': '粘贴',
+    'rename': '重命名',
     'open-in-explore': '在资源管理器中显示',
     'open-in-terminal': '从此位置打开命令行',
 

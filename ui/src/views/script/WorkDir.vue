@@ -13,7 +13,7 @@
         :defaultCollapsedMap="collapsedMap"
         :defaultCollapsed="true"
       />
-      <FormNode :show="showModal" @submit="createNode" @cancel="modalClose" ref="formNode" />
+      <FormNode :show="showModal" @submit="createNode" @cancel="modalClose" :path="currentNode.path" :name="currentNode.title" ref="formNode" />
     </div>
     <Button
       v-if="checkable && checkedKeys.length"
@@ -122,6 +122,7 @@ const onToolbarClicked = (e) => {
     case 'createFile':
     case 'createWorkspace':
     case 'createDir':
+        currentNode.value = {}
       showModal.value = true;
       toolbarAction.value = e.event.key;
       break;
@@ -380,6 +381,12 @@ let rightClickedNode = {} as any
 
 const formNode = ref({} as any)
 const createNode = (formData) => {
+  if(formData.path != ""){
+    store.dispatch('Script/renameScript', formData)
+    formNode.value.clearFormData()
+    showModal.value = false;
+    return;
+  }
   const mode = 'child';
   let type = 'dir';
   if(toolbarAction.value === 'createFile') type = 'node'
@@ -484,6 +491,9 @@ const menuClick = (menuKey: string, targetId: number) => {
         store.dispatch('Script/deleteScript', contextNodeData.id)
       },
     });
+} else if (menuKey === 'rename') {
+    showModal.value = true;
+    currentNode.value = contextNodeData;
   } else if(menuKey == 'sync-from-zentao'){
     syncFromZentao(contextNodeData)
   } else if(menuKey === 'sync-to-zentao'){

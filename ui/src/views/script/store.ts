@@ -14,6 +14,7 @@ import {
     syncFromZentao,
     syncToZentao,
     paste, move,
+    rename,
     scriptTreeAddAttr,
     getNodeMap,
 } from './service';
@@ -51,6 +52,7 @@ export interface ModuleType extends StoreModuleType<ScriptData> {
         createScript: Action<ScriptData, ScriptData>;
         updateScript: Action<ScriptData, ScriptData>;
         deleteScript: Action<ScriptData, ScriptData>;
+        renameScript: Action<ScriptData, ScriptData>;
         pasteScript: Action<ScriptData, ScriptData>;
         moveScript: Action<ScriptData, ScriptData>;
         updateCode: Action<ScriptData, ScriptData>;
@@ -224,6 +226,17 @@ const StoreModel: ModuleType = {
         async deleteScript({ dispatch, state}, path: string ) {
             try {
                 await remove(path);
+                await dispatch('listScript', state.queryParams)
+
+                return true;
+            } catch (error) {
+                return false;
+            }
+        },
+
+        async renameScript({ dispatch, state}, data: any ) {
+            try {
+                await rename(data);
                 await dispatch('listScript', state.queryParams)
 
                 return true;

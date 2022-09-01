@@ -177,6 +177,24 @@ func (c *TestScriptCtrl) Delete(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(nil))
 }
 
+func (c *TestScriptCtrl) Rename(ctx iris.Context) {
+	req := serverDomain.TestScript{}
+
+	err := ctx.ReadJSON(&req)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	bizErr := c.TestScriptService.Rename(req.Path, req.Name)
+	if bizErr != nil {
+		ctx.JSON(c.BizErrResp(bizErr, ""))
+		return
+	}
+
+	ctx.JSON(c.SuccessResp(nil))
+}
+
 // Extract 详情
 func (c *TestScriptCtrl) Extract(ctx iris.Context) {
 	scriptPath := ctx.URLParam("path")

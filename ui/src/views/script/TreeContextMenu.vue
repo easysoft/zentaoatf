@@ -23,6 +23,9 @@
       <div v-if="treeNode?.type != 'workspace'" @click="menuClick('delete')" class="menu-item">
         <span>{{t('delete')}}</span>
       </div>
+      <div v-if="treeNode?.type != 'workspace'" @click="menuClick('rename')" class="menu-item">
+        <span>{{t('rename')}}</span>
+      </div>
 
       <div v-if="isElectron" @click="menuClick('open-in-explore')" class="menu-item">
         <span>{{t('open-in-explore')}}</span>
