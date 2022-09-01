@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os/exec"
 	"strings"
-	"syscall"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
@@ -96,39 +95,17 @@ func setBuildTool(testSet *serverDomain.TestSet, req serverDomain.WsReq) {
 	}
 }
 
-func killWinProcessByUUID(uuid string) {
-	cmd1 := exec.Command("cmd")
-	cmd1.SysProcAttr = &syscall.SysProcAttr{CmdLine: fmt.Sprintf(`/c WMIC path win32_process where "CommandLine like '%%%s%%'" get Processid,Caption`, uuid), HideWindow: true}
-
-	out, _ := cmd1.Output()
-	lines := strings.Split(string(out), "\n")
-	for index, line := range lines {
-		if index == 0 {
-			continue
-		}
-		line = strings.TrimSpace(line)
-		cols := strings.Split(line, " ")
-		if len(cols) > 3 {
-			fmt.Println(fmt.Sprintf(`taskkill /F /pid %s`, cols[3]))
-			cmd2 := exec.Command("cmd")
-			cmd2.SysProcAttr = &syscall.SysProcAttr{CmdLine: fmt.Sprintf(`/c taskkill /F /pid %s`, cols[3]), HideWindow: true}
-			cmd2.Start()
-		}
-	}
-}
-
-func killLinuxProcessByUUID(uuid string) {
-	command := fmt.Sprintf(`-c ps -ef | grep %s | grep -v "grep" | awk '{print $2}' | xargs kill -9`, uuid)
-	cmd := exec.Command("/bin/bash")
-	cmd.SysProcAttr = &syscall.SysProcAttr{CmdLine: command, HideWindow: true}
+func KillLinuxProcessByUUID(uuid string) {
+	command := fmt.Sprintf(`ps -ef | grep %s | grep -v "grep" | awk '{print $2}' | xargs kill -9`, uuid)
+	cmd := exec.Command(command)
 	cmd.Start()
 
 }
 
 func KillProcessByUUID(uuid string) {
 	if commonUtils.IsWin() {
-		killWinProcessByUUID(uuid)
+		KillWinProcessByUUID(uuid)
 	} else {
-		killLinuxProcessByUUID(uuid)
+		KillLinuxProcessByUUID(uuid)
 	}
 }
