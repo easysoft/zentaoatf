@@ -218,6 +218,89 @@ func SyncFromZentao(t *testing.T) {
 		t.FailNow()
 	}
 }
+
+func SyncTwoCaseFromZentao(t *testing.T) {
+	pw, err := playwright.Run()
+	if err != nil {
+		t.Error(err)
+		t.FailNow()
+	}
+	headless := true
+	var slowMo float64 = 100
+	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	if err != nil {
+		t.Errorf("Fail to launch the web workspaceBrowser: %v", err)
+		t.FailNow()
+	}
+	page, err := workspaceBrowser.NewPage()
+	if err != nil {
+		t.Errorf("Create the new page fail: %v", err)
+		t.FailNow()
+	}
+	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
+		t.Errorf("The specific URL is missing: %v", err)
+		t.FailNow()
+	}
+	var waitTimeOut float64 = 5000
+	_, err = page.WaitForSelector(".tree-node", playwright.PageWaitForSelectorOptions{Timeout: &waitTimeOut})
+	if err != nil {
+		CreateWorkspace(t)
+		SyncFromZentao(t)
+		return
+	}
+	locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	c, err := locator.Count()
+	if err != nil || c == 0 {
+		t.Errorf("Find workspace fail: %v", err)
+		t.FailNow()
+	}
+	locator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
+	if err != nil {
+		t.Errorf("Right click node fail: %v", err)
+		t.FailNow()
+	}
+	page.Click(".tree-context-menu>>text=从禅道同步")
+	if err != nil {
+		t.Errorf("Click sync from zentao fail: %v", err)
+		t.FailNow()
+	}
+	_, err = page.WaitForSelector("#syncFromZentaoFormModal .z-tbody-checkbox")
+	if err != nil {
+		t.Errorf("Wait syncFromZentaoFormModal fail: %v", err)
+		t.FailNow()
+	}
+	err = page.Click("text=编号标题类型状态结果 >> input[type=\"checkbox\"]")
+	page.Click("text=1check string matches pattern功能测试正常通过 >> input[type=\"checkbox\"]")
+	page.Click("text=2extract content from webpage功能测试正常 >> input[type=\"checkbox\"]")
+	err = page.Click("#syncFromZentaoFormModal>>.modal-action>>span:has-text(\"确定\")")
+	if err != nil {
+		t.Errorf("The Click submit form fail: %v", err)
+		t.FailNow()
+	}
+	_, err = page.WaitForSelector("#syncFromZentaoFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateHidden})
+	if err != nil {
+		t.Errorf("Wait syncFromZentaoFormModal hide fail: %v", err)
+		t.FailNow()
+	}
+	locator, err = page.Locator(".toast-notification-container", playwright.PageLocatorOptions{HasText: "成功从禅道同步2个用例"})
+
+	c, err = locator.Count()
+	if err != nil || c == 0 {
+		t.Errorf("Sync from zentao fail: %v", err)
+		t.FailNow()
+	}
+
+	if err = workspaceBrowser.Close(); err != nil {
+		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+		t.FailNow()
+	}
+	if err = pw.Stop(); err != nil {
+		t.Errorf("The playwright cannot be stopped: %v", err)
+		t.FailNow()
+	}
+}
+
 func SyncToZentao(t *testing.T) {
 	pw, err := playwright.Run()
 	if err != nil {
@@ -937,6 +1020,7 @@ func FilterTask(t *testing.T) {
 	}
 }
 func TestWorkspace(t *testing.T) {
+	t.Run("SyncTwoCaseFromZentao", SyncTwoCaseFromZentao)
 	t.Run("SyncFromZentao", SyncFromZentao)
 	t.Run("SyncToZentao", SyncToZentao)
 	t.Run("Copy", Copy)
