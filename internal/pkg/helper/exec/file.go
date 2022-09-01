@@ -21,6 +21,7 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	"github.com/fatih/color"
+	"github.com/gofrs/uuid"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
 )
@@ -40,8 +41,9 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	}
 	ctxt, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(timeout))
 	defer cancel()
-
+	uuidString := ""
 	if commonUtils.IsWin() {
+		uuidString = uuid.Must(uuid.NewV4()).String()
 		scriptInterpreter := ""
 		if strings.ToLower(lang) != "bat" {
 			scriptInterpreter = configHelper.GetFieldVal(conf, stringUtils.UcFirst(lang))
@@ -51,13 +53,13 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 				cmd = exec.CommandContext(ctxt, "cmd", "/C", scriptInterpreter, filePath, "|", "more")
 			} else {
 				if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
-					cmd = exec.CommandContext(ctxt, "cmd", "/C", scriptInterpreter, command, filePath)
+					cmd = exec.CommandContext(ctxt, "cmd", "/C", scriptInterpreter, command, filePath, "-uuid", uuidString)
 				} else {
-					cmd = exec.CommandContext(ctxt, "cmd", "/C", scriptInterpreter, filePath)
+					cmd = exec.CommandContext(ctxt, "cmd", "/C", scriptInterpreter, filePath, "-uuid", uuidString)
 				}
 			}
 		} else if strings.ToLower(lang) == "bat" {
-			cmd = exec.CommandContext(ctxt, "cmd", "/C", filePath)
+			cmd = exec.CommandContext(ctxt, "cmd", "/C", filePath, "-uuid", uuidString)
 		} else {
 			msg := i118Utils.I118Prt.Sprintf("no_interpreter_for_run", lang, filePath)
 			if commConsts.ExecFrom != commConsts.FromCmd {
@@ -140,12 +142,15 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	}
 
 	cmd.Start()
-	go func() {
-		time.AfterFunc(time.Second*time.Duration(timeout), func() {
-			stdout.Close()
-			stderr.Close()
-		})
-	}()
+	if commonUtils.IsWin() {
+		go func() {
+			time.AfterFunc(time.Second*time.Duration(timeout), func() {
+				KillProcessByUUID(uuidString)
+				stdout.Close()
+				stderr.Close()
+			})
+		}()
+	}
 	isTerminal := false
 	reader1 := bufio.NewReader(stdout)
 	stdOutputArr := make([]string, 0)
