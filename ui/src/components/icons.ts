@@ -79,6 +79,7 @@ import person from '@iconify-icons/fluent/person-24-regular';
 import person_filled from '@iconify-icons/fluent/person-24-filled';
 import edit from '@iconify-icons/fluent/edit-24-regular';
 import edit_filled from '@iconify-icons/fluent/edit-24-filled';
+import clear from '@iconify-icons/fluent/paint-brush-arrow-down-20-regular';
 import deleteIcon from '@iconify-icons/fluent/delete-24-regular';
 import delete_filled from '@iconify-icons/fluent/delete-24-filled';
 import clock from '@iconify-icons/fluent/clock-24-regular';
@@ -178,6 +179,7 @@ export const icons = {
     'person-filled': person_filled,
     'edit': edit,
     'edit-filled': edit_filled,
+    'clear': clear,
     'delete': deleteIcon,
     'delete-filled': delete_filled,
     'clock': clock,

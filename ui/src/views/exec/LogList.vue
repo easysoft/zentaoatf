@@ -151,15 +151,21 @@ const updateStatisticInfo = (logDir) => {
   })
 }
 
+const clearWebsocketMsgEvent = () => {
+  wsMsg.out = [];
+}
+
 onMounted(() => {
   console.log('onMounted')
   bus.on(settings.eventExec, exec);
   bus.on(settings.eventWebSocketMsg, onWebsocketMsgEvent);
+  bus.on(settings.eventClearWebSocketMsg, clearWebsocketMsgEvent);
 })
 onBeforeUnmount( () => {
   console.log('onBeforeUnmount')
   bus.off(settings.eventExec, exec);
   bus.off(settings.eventWebSocketMsg, onWebsocketMsgEvent);
+  bus.off(settings.eventClearWebSocketMsg, clearWebsocketMsgEvent);
 })
 
 const exec = (data: any) => {

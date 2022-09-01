@@ -1,5 +1,6 @@
 <template>
 <ZModal
+    id="bugsModal"
     :showModal="props.show"
     :title="t('zentao_bug')"
     :contentStyle="{width: '90vw', height: '90vh'}"
