@@ -1,8 +1,6 @@
 package execHelper
 
 import (
-	"fmt"
-	"os/exec"
 	"strings"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
@@ -92,11 +90,4 @@ func setBuildTool(testSet *serverDomain.TestSet, req serverDomain.WsReq) {
 		arr := strings.Split(testSet.Cmd, " ")
 		testSet.BuildTool = commConsts.UnitBuildToolMap[strings.TrimSpace(arr[0])]
 	}
-}
-
-func KillLinuxProcessByUUID(uuid string) {
-	command := fmt.Sprintf(`ps -ef | grep %s | grep -v "grep" | awk '{print $2}' | xargs kill -9`, uuid)
-	cmd := exec.Command(command)
-	cmd.Start()
-
 }

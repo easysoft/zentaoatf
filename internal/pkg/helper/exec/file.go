@@ -41,9 +41,8 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	}
 	ctxt, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(timeout))
 	defer cancel()
-	uuidString := ""
+	uuidString := uuid.Must(uuid.NewV4()).String()
 	if commonUtils.IsWin() {
-		uuidString = uuid.Must(uuid.NewV4()).String()
 		scriptInterpreter := ""
 		if strings.ToLower(lang) != "bat" {
 			scriptInterpreter = configHelper.GetFieldVal(conf, stringUtils.UcFirst(lang))
@@ -100,7 +99,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
 				filePath = fmt.Sprintf("%s %s %s", lang, command, filePath)
 			}
-			cmd = exec.CommandContext(ctxt, "/bin/bash", "-c", filePath)
+			cmd = exec.CommandContext(ctxt, "/bin/bash", "-c", fmt.Sprintf("%s -uuid %s", filePath, uuidString))
 		}
 	}
 
@@ -142,15 +141,13 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	}
 
 	cmd.Start()
-	if commonUtils.IsWin() {
-		go func() {
-			time.AfterFunc(time.Second*time.Duration(timeout), func() {
-				KillProcessByUUID(uuidString)
-				stdout.Close()
-				stderr.Close()
-			})
-		}()
-	}
+	go func() {
+		time.AfterFunc(time.Second*time.Duration(timeout), func() {
+			KillProcessByUUID(uuidString)
+			stdout.Close()
+			stderr.Close()
+		})
+	}()
 	isTerminal := false
 	reader1 := bufio.NewReader(stdout)
 	stdOutputArr := make([]string, 0)

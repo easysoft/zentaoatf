@@ -10,6 +10,6 @@ import (
 
 func KillProcessByUUID(uuid string) {
 	command := fmt.Sprintf(`ps -ef | grep %s | grep -v "grep" | awk '{print $2}' | xargs kill -9`, uuid)
-	cmd := exec.Command(command)
+	cmd := exec.Command("/bin/bash", "-c", command)
 	cmd.Start()
 }
