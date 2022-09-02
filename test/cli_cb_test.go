@@ -21,6 +21,7 @@ import (
 )
 
 var (
+	cbNewline   = "/"
 	continueRe  = regexp.MustCompile("Which case do you want to report bug for|请输入您想提交缺陷的用例ID")
 	successCbRe = regexp.MustCompile("Success to report bug for case \\d+|成功为用例\\d+提交缺陷")
 )
@@ -48,7 +49,7 @@ func testCb() string {
 		return fmt.Sprintf("expect %s, actual %s", continueRe, err.Error())
 	}
 
-	if err = child.Send("1" + newline); err != nil {
+	if err = child.Send("1" + cbNewline); err != nil {
 		return err.Error()
 	}
 
@@ -61,7 +62,7 @@ func testCb() string {
 
 func TestCb(t *testing.T) {
 	if runtime.GOOS == "windows" {
-		newline = "\r\n"
+		cbNewline = "\r\n"
 	}
 	suite.Run(t, new(CbSuit))
 }

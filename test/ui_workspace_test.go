@@ -174,8 +174,9 @@ func SyncFromZentao(t *testing.T) {
 	locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
 	c, err := locator.Count()
 	if err != nil || c == 0 {
-		t.Errorf("Find workspace fail: %v", err)
-		t.FailNow()
+		CreateWorkspace(t)
+		SyncFromZentao(t)
+		return
 	}
 	locator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
 	if err != nil {
