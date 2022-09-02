@@ -117,7 +117,7 @@ func IsDisable(enable string) bool {
 func IgnoreZtfFile(path string) bool {
 	path = filepath.Base(path)
 
-	arr := []string{"bin", "release", "logs", "xdoc",
+	arr := []string{"bin", "logs", "xdoc",
 		"log", "log-bak", "conf"}
 	if strings.Index(path, ".") == 0 ||
 		stringUtils.FindInArr(path, arr) ||
