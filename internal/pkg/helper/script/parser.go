@@ -664,12 +664,11 @@ func CheckFileIsScript(path string) bool {
 	content := fileUtils.ReadFile(path)
 
 	pass := CheckFileContentIsScript(content)
-
 	return pass
 }
 
 func CheckFileContentIsScript(content string) bool {
-	pass, _ := regexp.MatchString(`cid\b*=`, content)
+	pass, _ := regexp.MatchString(`cid\b\s*=`, content)
 
 	return pass
 }
