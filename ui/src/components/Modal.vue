@@ -131,7 +131,7 @@ defineExpose({
 }
 .modal-content-container{
   position: relative;
-  padding: 1rem;
+  margin: 1rem;
   height: 100%;
   overflow: auto;
 }
