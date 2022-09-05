@@ -4,6 +4,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"
 )
 
@@ -12,7 +14,7 @@ var (
 	workspacePath = pw + "\\demo\\php"
 )
 
-func CreateWorkspace(t *testing.T) {
+func CreateWorkspace(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -141,7 +143,7 @@ func CreateWorkspace(t *testing.T) {
 	}
 }
 
-func SyncFromZentao(t *testing.T) {
+func SyncFromZentao(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -220,7 +222,7 @@ func SyncFromZentao(t *testing.T) {
 	}
 }
 
-func SyncTwoCaseFromZentao(t *testing.T) {
+func SyncTwoCaseFromZentao(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -302,7 +304,7 @@ func SyncTwoCaseFromZentao(t *testing.T) {
 	}
 }
 
-func SyncToZentao(t *testing.T) {
+func SyncToZentao(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -367,7 +369,7 @@ func SyncToZentao(t *testing.T) {
 		t.FailNow()
 	}
 }
-func Copy(t *testing.T) {
+func Copy(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -458,7 +460,7 @@ func Copy(t *testing.T) {
 		t.FailNow()
 	}
 }
-func DeleteScript(t *testing.T) {
+func DeleteScript(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -534,7 +536,7 @@ func DeleteScript(t *testing.T) {
 		t.FailNow()
 	}
 }
-func DeleteDir(t *testing.T) {
+func DeleteDir(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -611,7 +613,7 @@ func DeleteDir(t *testing.T) {
 	}
 }
 
-func DeleteWorkspace(t *testing.T) {
+func DeleteWorkspace(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -677,7 +679,7 @@ func DeleteWorkspace(t *testing.T) {
 		t.FailNow()
 	}
 }
-func Clip(t *testing.T) {
+func Clip(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -774,7 +776,7 @@ func Clip(t *testing.T) {
 	}
 }
 
-func FilterDir(t *testing.T) {
+func FilterDir(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -848,7 +850,7 @@ func FilterDir(t *testing.T) {
 		t.FailNow()
 	}
 }
-func FilterSuite(t *testing.T) {
+func FilterSuite(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -935,7 +937,7 @@ func FilterSuite(t *testing.T) {
 		t.FailNow()
 	}
 }
-func FilterTask(t *testing.T) {
+func FilterTask(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -990,7 +992,7 @@ func FilterTask(t *testing.T) {
 		t.FailNow()
 	}
 	page.WaitForTimeout(600)
-	err = page.Click("#filterModal>>.tab-nav:has-text(\"按任务\")")
+	err = page.Click("#filterModal>>.tab-nav:has-text(\"按测试单\")")
 	if err != nil {
 		t.Errorf("The Click by suite fail: %v", err)
 		t.FailNow()
@@ -1002,7 +1004,7 @@ func FilterTask(t *testing.T) {
 		t.Errorf("The Click test_task filter fail: %v", err)
 		t.FailNow()
 	}
-	page.WaitForSelector(".toolbar:has-text(\"按任务\")")
+	page.WaitForSelector(".toolbar:has-text(\"按测试单\")")
 	err = page.Click(".tree-node-title:has-text(\"单元测试工作目录\")")
 	scriptLocator, err := page.Locator(".tree>>text=1_string_match.php")
 	c, err := scriptLocator.Count()
@@ -1021,16 +1023,16 @@ func FilterTask(t *testing.T) {
 	}
 }
 func TestWorkspace(t *testing.T) {
-	t.Run("SyncTwoCaseFromZentao", SyncTwoCaseFromZentao)
-	t.Run("SyncFromZentao", SyncFromZentao)
-	t.Run("SyncToZentao", SyncToZentao)
-	t.Run("Copy", Copy)
-	t.Run("Clip", Clip)
-	t.Run("DeleteScript", DeleteScript)
-	t.Run("DeleteDir", DeleteDir)
-	t.Run("FilterDir", FilterDir)
-	t.Run("FilterSuite", FilterSuite)
-	t.Run("FilterTask", FilterTask)
-	t.Run("DeleteWorkspace", DeleteWorkspace)
-	t.Run("CreateWorkspace", CreateWorkspace)
+	runner.Run(t, "SyncTwoCaseFromZentao", SyncTwoCaseFromZentao)
+	runner.Run(t, "SyncFromZentao", SyncFromZentao)
+	runner.Run(t, "SyncToZentao", SyncToZentao)
+	runner.Run(t, "Copy", Copy)
+	runner.Run(t, "Clip", Clip)
+	runner.Run(t, "DeleteScript", DeleteScript)
+	runner.Run(t, "DeleteDir", DeleteDir)
+	runner.Run(t, "FilterDir", FilterDir)
+	runner.Run(t, "FilterSuite", FilterSuite)
+	runner.Run(t, "FilterTask", FilterTask)
+	runner.Run(t, "DeleteWorkspace", DeleteWorkspace)
+	runner.Run(t, "CreateWorkspace", CreateWorkspace)
 }

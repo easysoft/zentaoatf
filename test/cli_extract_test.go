@@ -18,22 +18,25 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bmizerany/assert"
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
-	"github.com/stretchr/testify/suite"
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
 
 var (
 	successExtractRe = regexp.MustCompile("Success to extract test steps and results|成功从注释提取步骤和期待结果")
 )
 
-type ExtractSuit struct {
+type ExtractSuite struct {
 	suite.Suite
-	testCount uint32
 }
 
-func (s *ExtractSuit) TestExtractSuite() {
-	assert.Equal(s.Suite.T(), "Success", testExtract())
+func (s *ExtractSuite) BeforeEach(t provider.T) {
+	t.ID("1579")
+	t.AddSubSuite("命令行-extract")
+}
+func (s *ExtractSuite) TestExtractSuitee(t provider.T) {
+	t.Require().Equal("Success", testExtract())
 }
 
 func testExtract() string {
@@ -94,5 +97,5 @@ step 10 >> expect 10
 }
 
 func TestExtract(t *testing.T) {
-	suite.Run(t, new(ExtractSuit))
+	suite.RunSuite(t, new(ExtractSuite))
 }

@@ -16,22 +16,25 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bmizerany/assert"
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
-	"github.com/stretchr/testify/suite"
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
 
 var (
 	successCrRe = regexp.MustCompile("Submitted test results to ZenTao|提交测试结果到禅道成功")
 )
 
-type CrSuit struct {
+type CrSuite struct {
 	suite.Suite
-	testCount uint32
 }
 
-func (s *CrSuit) TestCrSuite() {
-	assert.Equal(s.Suite.T(), "Success", testCr())
+func (s *CrSuite) BeforeEach(t provider.T) {
+	t.ID("1579")
+	t.AddSubSuite("命令行-cr")
+}
+func (s *CrSuite) TestCrSuitee(t provider.T) {
+	t.Require().Equal("Success", testCr())
 }
 
 func testCr() string {
@@ -52,8 +55,5 @@ func testCr() string {
 }
 
 func TestCr(t *testing.T) {
-	if runtime.GOOS == "windows" {
-		newline = "\r\n"
-	}
-	suite.Run(t, new(CrSuit))
+	suite.RunSuite(t, new(CrSuite))
 }

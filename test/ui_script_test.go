@@ -3,12 +3,14 @@ package main
 import (
 	"testing"
 
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"
 )
 
 var scriptBrowser playwright.Browser
 
-func SaveScript(t *testing.T) {
+func SaveScript(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -115,5 +117,5 @@ func SaveScript(t *testing.T) {
 }
 
 func TestUiScript(t *testing.T) {
-	t.Run("SaveScript", SaveScript)
+	runner.Run(t, "SaveScript", SaveScript)
 }

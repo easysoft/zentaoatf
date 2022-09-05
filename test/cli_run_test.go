@@ -36,11 +36,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bmizerany/assert"
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	"github.com/go-git/go-git/v5"
-	"github.com/stretchr/testify/suite"
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
 
 var (
@@ -59,15 +59,19 @@ type RunSuit struct {
 	testCount uint32
 }
 
-func (s *RunSuit) TestRunZtf() {
+func (s *RunSuit) BeforeEach(t provider.T) {
+	t.ID("1579")
+	t.AddSubSuite("命令行-run")
+}
+func (s *RunSuit) TestRunZtf(t provider.T) {
 	for cmd, expectReg := range scriptResMap {
 		if runtime.GOOS == "windows" {
 			cmd = strings.ReplaceAll(cmd, "/", "\\")
 		}
-		assert.Equal(s.Suite.T(), "Success", testRun(cmd, expectReg))
+		t.Require().Equal("Success", testRun(cmd, expectReg))
 	}
 }
-func (s *RunSuit) TestRunUnitTest() {
+func (s *RunSuit) TestRunUnitTest(t provider.T) {
 	testngDir := "./demo/ci_test_testng"
 	pytestDir := "./demo/ci_test_pytest"
 	if runtime.GOOS == "windows" {
@@ -75,11 +79,11 @@ func (s *RunSuit) TestRunUnitTest() {
 		pytestDir = ".\\demo\\ci_test_pytest"
 	}
 	cloneGit("https://gitee.com/ngtesting/ci_test_testng.git", testngDir)
-	assert.Equal(s.Suite.T(), "Success", testRunUnitTest("mvn clean package test", testngDir, regexp.MustCompile(`Tests run\: 3, Failures\: 0, Errors\: 0, Skipped\: 0`)))
+	t.Require().Equal("Success", testRunUnitTest("mvn clean package test", testngDir, regexp.MustCompile(`Tests run\: 3, Failures\: 0, Errors\: 0, Skipped\: 0`)))
 
 	cloneGit("https://gitee.com/ngtesting/ci_test_pytest.git", pytestDir)
 
-	assert.Equal(s.Suite.T(), "Success", testRunUnitTest("pytest --junitxml=testresult.xml", pytestDir, regexp.MustCompile("1 failed, 1 passed")))
+	t.Require().Equal("Success", testRunUnitTest("pytest --junitxml=testresult.xml", pytestDir, regexp.MustCompile("1 failed, 1 passed")))
 
 }
 
@@ -174,7 +178,7 @@ func testRunUnitTest(cmdStr, workspacePath string, successRe *regexp.Regexp) str
 	return "Success"
 }
 
-func (s *RunSuit) TestRunScenes() {
+func (s *RunSuit) TestRunScenes(t provider.T) {
 	sceneMap := map[string]string{
 		"exactly empty >> ~~":                            "",
 		"exactly start with abc >> ~f:^abc~":             "abcdvd",
@@ -214,18 +218,18 @@ func (s *RunSuit) TestRunScenes() {
 	for expectVal, actualVal := range sceneMap {
 		file, err := os.OpenFile(path, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0666)
 		if err != nil {
-			s.Suite.T().Errorf("open file fail, err:%s", err)
+			t.Errorf("open file fail, err:%s", err)
 			return
 		}
 		write := bufio.NewWriter(file)
 		write.WriteString(fmt.Sprintf(template, expectVal, actualVal))
 		write.Flush()
-		assert.Equal(s.Suite.T(), "Success", testRun(cmd, regexp.MustCompile(`Run 1 scripts in \d+ sec, 1\(100\.0%\) Pass, 0\(0\.0%\) Fail, 0\(0\.0%\) Skip|执行1个用例，耗时\d+秒。1\(100\.0%\) 通过，0\(0\.0%\) 失败，0\(0\.0%\) 忽略`)))
+		t.Require().Equal("Success", testRun(cmd, regexp.MustCompile(`Run 1 scripts in \d+ sec, 1\(100\.0%\) Pass, 0\(0\.0%\) Fail, 0\(0\.0%\) Skip|执行1个用例，耗时\d+秒。1\(100\.0%\) 通过，0\(0\.0%\) 失败，0\(0\.0%\) 忽略`)))
 		file.Close()
 	}
 	os.Remove(path)
 }
 
 func TestRun(t *testing.T) {
-	suite.Run(t, new(RunSuit))
+	suite.RunSuite(t, new(RunSuit))
 }

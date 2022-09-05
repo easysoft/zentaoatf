@@ -5,12 +5,14 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"
 )
 
 var runBrowser playwright.Browser
 
-func RunScript(t *testing.T) {
+func RunScript(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -120,7 +122,7 @@ func RunScript(t *testing.T) {
 	}
 }
 
-func RunSelectedScripts(t *testing.T) {
+func RunSelectedScripts(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -254,7 +256,7 @@ func RunSelectedScripts(t *testing.T) {
 	}
 }
 
-func RunOpenedAndLast(t *testing.T) {
+func RunOpenedAndLast(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -449,7 +451,7 @@ func RunOpenedAndLast(t *testing.T) {
 	}
 }
 
-func RunAll(t *testing.T) {
+func RunAll(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -577,7 +579,7 @@ func RunAll(t *testing.T) {
 	}
 }
 
-func RunReExecFailCase(t *testing.T) {
+func RunReExecFailCase(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -698,7 +700,7 @@ func RunReExecFailCase(t *testing.T) {
 	}
 }
 
-func RunReExecAllCase(t *testing.T) {
+func RunReExecAllCase(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -819,7 +821,7 @@ func RunReExecAllCase(t *testing.T) {
 	}
 }
 
-func RunFailStatistic(t *testing.T) {
+func RunFailStatistic(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -903,7 +905,7 @@ func RunFailStatistic(t *testing.T) {
 	}
 }
 
-func RunSuccessStatistic(t *testing.T) {
+func RunSuccessStatistic(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -987,7 +989,7 @@ func RunSuccessStatistic(t *testing.T) {
 	}
 }
 
-func RunBugStatistic(t *testing.T) {
+func RunBugStatistic(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -1063,13 +1065,13 @@ func RunBugStatistic(t *testing.T) {
 }
 
 func TestUiRun(t *testing.T) {
-	t.Run("RunScript", RunScript)
-	t.Run("RunSelectedScripts", RunSelectedScripts)
-	t.Run("RunOpenedAndLast", RunOpenedAndLast)
-	t.Run("RunAll", RunAll)
-	t.Run("RunReExecAllCase", RunReExecAllCase)
-	t.Run("RunReExecFailCase", RunReExecFailCase)
-	t.Run("RunSuccessStatistic", RunSuccessStatistic)
-	t.Run("RunFailStatistic", RunFailStatistic)
-	t.Run("RunBugStatistic", RunBugStatistic)
+	runner.Run(t, "UiRunScript", RunScript)
+	runner.Run(t, "UiRunSelectedScripts", RunSelectedScripts)
+	runner.Run(t, "UiRunOpenedAndLast", RunOpenedAndLast)
+	runner.Run(t, "UiRunAll", RunAll)
+	runner.Run(t, "UiRunReExecAllCase", RunReExecAllCase)
+	runner.Run(t, "UiRunReExecFailCase", RunReExecFailCase)
+	runner.Run(t, "UiRunSuccessStatistic", RunSuccessStatistic)
+	runner.Run(t, "UiRunFailStatistic", RunFailStatistic)
+	runner.Run(t, "UiRunBugStatistic", RunBugStatistic)
 }

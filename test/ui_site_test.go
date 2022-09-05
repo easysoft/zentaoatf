@@ -3,12 +3,14 @@ package main
 import (
 	"testing"
 
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"
 )
 
 var siteBrowser playwright.Browser
 
-func CreateSite(t *testing.T) {
+func CreateSite(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -127,7 +129,7 @@ func CreateSite(t *testing.T) {
 		t.FailNow()
 	}
 }
-func EditSite(t *testing.T) {
+func EditSite(t provider.T) {
 	// var timeout float64 = 5000
 	pw, err := playwright.Run()
 	if err != nil {
@@ -259,7 +261,7 @@ func EditSite(t *testing.T) {
 		t.FailNow()
 	}
 }
-func DeleteSite(t *testing.T) {
+func DeleteSite(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -341,7 +343,7 @@ func DeleteSite(t *testing.T) {
 }
 
 func TestUiSite(t *testing.T) {
-	t.Run("EditSite", EditSite)
-	t.Run("DeleteSite", DeleteSite)
-	t.Run("CreateSite", CreateSite)
+	runner.Run(t, "EditSite", EditSite)
+	runner.Run(t, "DeleteSite", DeleteSite)
+	runner.Run(t, "CreateSite", CreateSite)
 }

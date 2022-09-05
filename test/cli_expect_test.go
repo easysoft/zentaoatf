@@ -18,22 +18,25 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bmizerany/assert"
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
-	"github.com/stretchr/testify/suite"
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
 
 var (
 	successExpectRe = regexp.MustCompile("Success to create independent expect results file|成功创建独立的期待结果文件")
 )
 
-type ExpectSuit struct {
+type ExpectSuite struct {
 	suite.Suite
-	testCount uint32
 }
 
-func (s *ExpectSuit) TestExpectSuite() {
-	assert.Equal(s.Suite.T(), "Success", testExpect())
+func (s *ExpectSuite) BeforeEach(t provider.T) {
+	t.ID("1579")
+	t.AddSubSuite("命令行-expect")
+}
+func (s *ExpectSuite) TestExpectSuitee(t provider.T) {
+	t.Require().Equal("Success", testExpect())
 }
 
 func testExpect() string {
@@ -73,5 +76,5 @@ expect 3`)
 }
 
 func TestExpect(t *testing.T) {
-	suite.Run(t, new(ExpectSuit))
+	suite.RunSuite(t, new(ExpectSuite))
 }

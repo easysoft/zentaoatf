@@ -16,22 +16,25 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bmizerany/assert"
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
-	"github.com/stretchr/testify/suite"
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
 
 var (
 	successCleanRe = regexp.MustCompile("Successfully cleaned all logs|成功删除所有日志")
 )
 
-type CleanSuit struct {
+type CleanSuite struct {
 	suite.Suite
-	testCount uint32
 }
 
-func (s *CleanSuit) TestCleanSuite() {
-	assert.Equal(s.Suite.T(), "Success", testClean())
+func (s *CleanSuite) BeforeEach(t provider.T) {
+	t.ID("1579")
+	t.AddSubSuite("命令行-clean")
+}
+func (s *CleanSuite) TestCleanSuitee(t provider.T) {
+	t.Require().Equal("Success", testClean())
 }
 
 func testClean() string {
@@ -68,5 +71,5 @@ func testClean() string {
 }
 
 func TestClean(t *testing.T) {
-	suite.Run(t, new(CleanSuit))
+	suite.RunSuite(t, new(CleanSuite))
 }

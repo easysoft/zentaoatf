@@ -15,23 +15,27 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bmizerany/assert"
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
-	"github.com/stretchr/testify/suite"
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
 
 var (
+	ciNewline    = "/"
 	continueCiRe = regexp.MustCompile("Will commit cases below to Zentao|以下用例信息将被更新到禅道")
 	successCiRe  = regexp.MustCompile("Totally commit 1 cases to Zentao|合计更新1个用例到禅道")
 )
 
-type CiSuit struct {
+type CiSuite struct {
 	suite.Suite
-	testCount uint32
 }
 
-func (s *CiSuit) TestCiSuite() {
-	assert.Equal(s.Suite.T(), "Success", testCi())
+func (s *CiSuite) BeforeEach(t provider.T) {
+	t.ID("1579")
+	t.AddSubSuite("命令行-ci")
+}
+func (s *CiSuite) TestCiSuitee(t provider.T) {
+	t.Require().Equal("Success", testCi())
 }
 
 func testCi() string {
@@ -48,7 +52,7 @@ func testCi() string {
 		return fmt.Sprintf("expect %s, actual %s", continueCiRe, err.Error())
 	}
 
-	if err = child.Send("y" + newline); err != nil {
+	if err = child.Send("y" + ciNewline); err != nil {
 		return err.Error()
 	}
 
@@ -61,7 +65,7 @@ func testCi() string {
 
 func TestCi(t *testing.T) {
 	if runtime.GOOS == "windows" {
-		newline = "\r\n"
+		ciNewline = "\r\n"
 	}
-	suite.Run(t, new(CiSuit))
+	suite.RunSuite(t, new(CiSuite))
 }

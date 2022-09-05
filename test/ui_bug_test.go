@@ -3,12 +3,22 @@ package main
 import (
 	"testing"
 
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/suite"
 	playwright "github.com/playwright-community/playwright-go"
 )
 
 var bugBrowser playwright.Browser
 
-func ScriptBug(t *testing.T) {
+type UiBugSuite struct {
+	suite.Suite
+}
+
+func (s *UiBugSuite) BeforeEach(t provider.T) {
+	t.ID("1579")
+	t.AddSubSuite("客户端-bug")
+}
+func (s *UiBugSuite) TestScriptBug(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -80,7 +90,7 @@ func ScriptBug(t *testing.T) {
 	}
 }
 
-func ScriptsBug(t *testing.T) {
+func (s *UiBugSuite) TestScriptsBug(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -175,8 +185,6 @@ func ScriptsBug(t *testing.T) {
 		t.FailNow()
 	}
 }
-
 func TestUiBug(t *testing.T) {
-	t.Run("ScriptsBug", ScriptBug)
-	t.Run("ScriptsBug", ScriptsBug)
+	suite.RunSuite(t, new(UiBugSuite))
 }

@@ -608,8 +608,12 @@ github.com/ozontech/allure-go v0.6.17 h1:PO+bNrp3USw5RG36QwsxNvUYbd8IaKKs14YR1fc
 github.com/ozontech/allure-go v0.6.17/go.mod h1:p+WTLaHRdFDcGwJPeQTbJ2DDjMuAMJ2TH6TXhoBohnk=
 github.com/ozontech/allure-go/pkg/allure v0.6.3 h1:+nGs+2Kq+XprmONt4xww+MEDjnShkLK6kPtfOknernY=
 github.com/ozontech/allure-go/pkg/allure v0.6.3/go.mod h1:xyVZ+6tLDzQ4pr19eqLR0EckaI51kYUC1A5ihsDTygo=
+github.com/ozontech/allure-go/pkg/allure v0.6.4 h1:lQ2NJSgl3sj/0oi4HTG+8EXkV1A+wWN7WIfDkOaBtmY=
+github.com/ozontech/allure-go/pkg/allure v0.6.4/go.mod h1:xyVZ+6tLDzQ4pr19eqLR0EckaI51kYUC1A5ihsDTygo=
 github.com/ozontech/allure-go/pkg/framework v0.6.17 h1:XCnysk4udjqR4EzJzYFRvmTtwNDkyiLYBo4mnYi80C8=
 github.com/ozontech/allure-go/pkg/framework v0.6.17/go.mod h1:RxbhHdppAf70AST+S0G3iMDxkHcNb11ygMaXISF3m1A=
+github.com/ozontech/allure-go/pkg/framework v0.6.18 h1:QoYFww5gMu3qPaoVDVetBa17ahKTHNYEhbyUIP+qYn8=
+github.com/ozontech/allure-go/pkg/framework v0.6.18/go.mod h1:QNKRZHCSCxJHSBuJssp00Fc7EL5XvVX/IEJNSgxBN18=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c h1:Lgl0gzECD8GnQ5QCWA8o6BtfL6mDH5rQgM4/fX3avOs=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pelletier/go-toml v1.2.0/go.mod h1:5z9KED0ma1S8pY6P1sdut58dfprrGBbd/94hg7ilaic=

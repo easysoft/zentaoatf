@@ -29,9 +29,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bmizerany/assert"
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
-	"github.com/stretchr/testify/suite"
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
 
 var (
@@ -53,25 +53,28 @@ var (
 	coNewline    = "/"
 )
 
-type CoSuit struct {
+type CoSuite struct {
 	suite.Suite
-	testCount uint32
 }
 
-func (s *CoSuit) TestCoProduct() {
-	assert.Equal(s.Suite.T(), "Success", testCoProduct())
+func (s *CoSuite) BeforeEach(t provider.T) {
+	t.ID("1579")
+	t.AddSubSuite("命令行-co")
 }
-func (s *CoSuit) TestCoSuite() {
-	assert.Equal(s.Suite.T(), "Success", testCoSuite())
+func (s *CoSuite) TestCoProduct(t provider.T) {
+	t.Require().Equal("Success", testCoProduct())
 }
-func (s *CoSuit) TestCoTask() {
-	assert.Equal(s.Suite.T(), "Success", testCoTask())
+func (s *CoSuite) TestCoSuitee(t provider.T) {
+	t.Require().Equal("Success", testCoSuitee())
 }
-func (s *CoSuit) TestCo() {
-	assert.Equal(s.Suite.T(), "Success", testCo(fmt.Sprintf("ztf co -product %d -language php", productId)))
-	assert.Equal(s.Suite.T(), "Success", testCo(fmt.Sprintf("ztf co -p %d -m %d -l php", productId, moduleId)))
-	assert.Equal(s.Suite.T(), "Success", testCo(fmt.Sprintf("ztf co -s %d -l php -i true", suiteId)))
-	assert.Equal(s.Suite.T(), "Success", testCo(fmt.Sprintf("ztf co -t %d -l php", taskId)))
+func (s *CoSuite) TestCoTask(t provider.T) {
+	t.Require().Equal("Success", testCoTask())
+}
+func (s *CoSuite) TestCo(t provider.T) {
+	t.Require().Equal("Success", testCo(fmt.Sprintf("ztf co -product %d -language php", productId)))
+	t.Require().Equal("Success", testCo(fmt.Sprintf("ztf co -p %d -m %d -l php", productId, moduleId)))
+	t.Require().Equal("Success", testCo(fmt.Sprintf("ztf co -s %d -l php -i true", suiteId)))
+	t.Require().Equal("Success", testCo(fmt.Sprintf("ztf co -t %d -l php", taskId)))
 }
 
 func testCoProduct() string {
@@ -136,7 +139,7 @@ func testCoProduct() string {
 	return "Success"
 }
 
-func testCoSuite() string {
+func testCoSuitee() string {
 	cmd := "ztf co"
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
@@ -277,5 +280,5 @@ func TestCo(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		coNewline = "\r\n"
 	}
-	suite.Run(t, new(CoSuit))
+	suite.RunSuite(t, new(CoSuite))
 }

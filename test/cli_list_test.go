@@ -18,20 +18,23 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bmizerany/assert"
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
-	"github.com/stretchr/testify/suite"
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
 
-type ListSuit struct {
+type ListSuite struct {
 	suite.Suite
-	testCount uint32
 }
 
-func (s *ListSuit) TestListSuite() {
-	assert.Equal(s.Suite.T(), "Success", testLs("ztf list ./demo", regexp.MustCompile("Found 5 test cases|发现5个用例")))
-	assert.Equal(s.Suite.T(), "Success", testLs("ztf ls ./demo -k 1", regexp.MustCompile("Found 2 test cases|发现2个用例")))
-	assert.Equal(s.Suite.T(), "Success", testLs("ztf ls demo -k match", regexp.MustCompile("Found 3 test cases|发现3个用例")))
+func (s *ListSuite) BeforeEach(t provider.T) {
+	t.ID("1579")
+	t.AddSubSuite("命令行-list")
+}
+func (s *ListSuite) TestListSuitee(t provider.T) {
+	t.Require().Equal("Success", testLs("ztf list ./demo", regexp.MustCompile("Found 5 test cases|发现5个用例")))
+	t.Require().Equal("Success", testLs("ztf ls ./demo -k 1", regexp.MustCompile("Found 2 test cases|发现2个用例")))
+	t.Require().Equal("Success", testLs("ztf ls demo -k match", regexp.MustCompile("Found 3 test cases|发现3个用例")))
 }
 
 func testLs(cmd string, successRe *regexp.Regexp) string {
@@ -52,5 +55,5 @@ func testLs(cmd string, successRe *regexp.Regexp) string {
 }
 
 func TestList(t *testing.T) {
-	suite.Run(t, new(ListSuit))
+	suite.RunSuite(t, new(ListSuite))
 }
