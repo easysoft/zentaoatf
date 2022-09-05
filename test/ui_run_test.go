@@ -18,12 +18,12 @@ func RunScript(t *testing.T) {
 	}
 	headless := true
 	var slowMo float64 = 100
-	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
-		t.Errorf("Fail to launch the web workspaceBrowser: %v", err)
+		t.Errorf("Fail to launch the web runBrowser: %v", err)
 		t.FailNow()
 	}
-	page, err := workspaceBrowser.NewPage()
+	page, err := runBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
@@ -110,8 +110,8 @@ func RunScript(t *testing.T) {
 		t.FailNow()
 	}
 
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+	if err = runBrowser.Close(); err != nil {
+		t.Errorf("The runBrowser cannot be closed: %v", err)
 		t.FailNow()
 	}
 	if err = pw.Stop(); err != nil {
@@ -128,12 +128,12 @@ func RunSelectedScripts(t *testing.T) {
 	}
 	headless := true
 	var slowMo float64 = 100
-	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
-		t.Errorf("Fail to launch the web workspaceBrowser: %v", err)
+		t.Errorf("Fail to launch the web runBrowser: %v", err)
 		t.FailNow()
 	}
-	page, err := workspaceBrowser.NewPage()
+	page, err := runBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
@@ -244,8 +244,8 @@ func RunSelectedScripts(t *testing.T) {
 		t.Errorf("Find result in rightPane fail: %v", err)
 		t.FailNow()
 	}
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+	if err = runBrowser.Close(); err != nil {
+		t.Errorf("The runBrowser cannot be closed: %v", err)
 		t.FailNow()
 	}
 	if err = pw.Stop(); err != nil {
@@ -262,12 +262,12 @@ func RunOpenedAndLast(t *testing.T) {
 	}
 	headless := true
 	var slowMo float64 = 100
-	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
-		t.Errorf("Fail to launch the web workspaceBrowser: %v", err)
+		t.Errorf("Fail to launch the web runBrowser: %v", err)
 		t.FailNow()
 	}
-	page, err := workspaceBrowser.NewPage()
+	page, err := runBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
@@ -439,8 +439,8 @@ func RunOpenedAndLast(t *testing.T) {
 		t.Errorf("Find result in rightPane fail: %v", err)
 		t.FailNow()
 	}
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+	if err = runBrowser.Close(); err != nil {
+		t.Errorf("The runBrowser cannot be closed: %v", err)
 		t.FailNow()
 	}
 	if err = pw.Stop(); err != nil {
@@ -457,12 +457,12 @@ func RunAll(t *testing.T) {
 	}
 	headless := true
 	var slowMo float64 = 100
-	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
-		t.Errorf("Fail to launch the web workspaceBrowser: %v", err)
+		t.Errorf("Fail to launch the web runBrowser: %v", err)
 		t.FailNow()
 	}
-	page, err := workspaceBrowser.NewPage()
+	page, err := runBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
@@ -567,8 +567,8 @@ func RunAll(t *testing.T) {
 	if err != nil || logTime[:5] != resultTime {
 		t.Errorf("Find result in rightPane fail: %v", err)
 	}
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+	if err = runBrowser.Close(); err != nil {
+		t.Errorf("The runBrowser cannot be closed: %v", err)
 		t.FailNow()
 	}
 	if err = pw.Stop(); err != nil {
@@ -585,12 +585,12 @@ func RunReExecFailCase(t *testing.T) {
 	}
 	headless := true
 	var slowMo float64 = 100
-	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
-		t.Errorf("Fail to launch the web workspaceBrowser: %v", err)
+		t.Errorf("Fail to launch the web runBrowser: %v", err)
 		t.FailNow()
 	}
-	page, err := workspaceBrowser.NewPage()
+	page, err := runBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
@@ -688,8 +688,8 @@ func RunReExecFailCase(t *testing.T) {
 		t.Errorf("Find result in rightPane fail: %v", err)
 		t.FailNow()
 	}
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+	if err = runBrowser.Close(); err != nil {
+		t.Errorf("The runBrowser cannot be closed: %v", err)
 		t.FailNow()
 	}
 	if err = pw.Stop(); err != nil {
@@ -706,12 +706,12 @@ func RunReExecAllCase(t *testing.T) {
 	}
 	headless := true
 	var slowMo float64 = 100
-	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
-		t.Errorf("Fail to launch the web workspaceBrowser: %v", err)
+		t.Errorf("Fail to launch the web runBrowser: %v", err)
 		t.FailNow()
 	}
-	page, err := workspaceBrowser.NewPage()
+	page, err := runBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
@@ -809,8 +809,8 @@ func RunReExecAllCase(t *testing.T) {
 		t.Errorf("Find result in rightPane fail: %v", err)
 		t.FailNow()
 	}
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+	if err = runBrowser.Close(); err != nil {
+		t.Errorf("The runBrowser cannot be closed: %v", err)
 		t.FailNow()
 	}
 	if err = pw.Stop(); err != nil {
@@ -827,12 +827,12 @@ func RunFailStatistic(t *testing.T) {
 	}
 	headless := true
 	var slowMo float64 = 100
-	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
-		t.Errorf("Fail to launch the web workspaceBrowser: %v", err)
+		t.Errorf("Fail to launch the web runBrowser: %v", err)
 		t.FailNow()
 	}
-	page, err := workspaceBrowser.NewPage()
+	page, err := runBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
@@ -893,8 +893,8 @@ func RunFailStatistic(t *testing.T) {
 		t.Error("statistic error")
 		t.FailNow()
 	}
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+	if err = runBrowser.Close(); err != nil {
+		t.Errorf("The runBrowser cannot be closed: %v", err)
 		t.FailNow()
 	}
 	if err = pw.Stop(); err != nil {
@@ -911,12 +911,12 @@ func RunSuccessStatistic(t *testing.T) {
 	}
 	headless := true
 	var slowMo float64 = 100
-	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
-		t.Errorf("Fail to launch the web workspaceBrowser: %v", err)
+		t.Errorf("Fail to launch the web runBrowser: %v", err)
 		t.FailNow()
 	}
-	page, err := workspaceBrowser.NewPage()
+	page, err := runBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
@@ -977,8 +977,8 @@ func RunSuccessStatistic(t *testing.T) {
 		t.Error("statistic error")
 		t.FailNow()
 	}
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+	if err = runBrowser.Close(); err != nil {
+		t.Errorf("The runBrowser cannot be closed: %v", err)
 		t.FailNow()
 	}
 	if err = pw.Stop(); err != nil {
@@ -995,12 +995,12 @@ func RunBugStatistic(t *testing.T) {
 	}
 	headless := true
 	var slowMo float64 = 100
-	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
-		t.Errorf("Fail to launch the web workspaceBrowser: %v", err)
+		t.Errorf("Fail to launch the web runBrowser: %v", err)
 		t.FailNow()
 	}
-	page, err := workspaceBrowser.NewPage()
+	page, err := runBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
@@ -1052,8 +1052,8 @@ func RunBugStatistic(t *testing.T) {
 		t.Error("statistic error")
 		t.FailNow()
 	}
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+	if err = runBrowser.Close(); err != nil {
+		t.Errorf("The runBrowser cannot be closed: %v", err)
 		t.FailNow()
 	}
 	if err = pw.Stop(); err != nil {

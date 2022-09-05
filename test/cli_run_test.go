@@ -206,14 +206,13 @@ func (s *RunSuit) TestRunScenes() {
 	
 	print("%s\n");`
 
-	path := "./demo/test"
+	path := "./demo/test_scene.php"
 	if runtime.GOOS == "windows" {
 		path = `.\demo\test_scene.php`
 	}
 	cmd := `ztf run ` + path
 	for expectVal, actualVal := range sceneMap {
 		file, err := os.OpenFile(path, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0666)
-		defer file.Close()
 		if err != nil {
 			s.Suite.T().Errorf("open file fail, err:%s", err)
 			return
@@ -222,7 +221,9 @@ func (s *RunSuit) TestRunScenes() {
 		write.WriteString(fmt.Sprintf(template, expectVal, actualVal))
 		write.Flush()
 		assert.Equal(s.Suite.T(), "Success", testRun(cmd, regexp.MustCompile(`Run 1 scripts in \d+ sec, 1\(100\.0%\) Pass, 0\(0\.0%\) Fail, 0\(0\.0%\) Skip|执行1个用例，耗时\d+秒。1\(100\.0%\) 通过，0\(0\.0%\) 失败，0\(0\.0%\) 忽略`)))
+		file.Close()
 	}
+	os.Remove(path)
 }
 
 func TestRun(t *testing.T) {

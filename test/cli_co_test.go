@@ -129,8 +129,8 @@ func testCoProduct() string {
 	if err = child.Send(coNewline); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(coSuccessRe, 10*time.Second); err != nil {
-		return fmt.Sprintf("expect %s, actual %s", coSuccessRe, err.Error())
+	if _, err = child.Expect(successCoRe, 10*time.Second); err != nil {
+		return fmt.Sprintf("expect %s, actual %s", successCoRe, err.Error())
 	}
 
 	return "Success"
@@ -184,8 +184,8 @@ func testCoSuite() string {
 	if err = child.Send(coNewline); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(coSuccessRe, 10*time.Second); err != nil {
-		return fmt.Sprintf("expect %s, actual %s", coSuccessRe, err.Error())
+	if _, err = child.Expect(successCoRe, 10*time.Second); err != nil {
+		return fmt.Sprintf("expect %s, actual %s", successCoRe, err.Error())
 	}
 
 	return "Success"
@@ -239,8 +239,8 @@ func testCoTask() string {
 	if err = child.Send(coNewline); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(coSuccessRe, 10*time.Second); err != nil {
-		return fmt.Sprintf("expect %s, actual %s", coSuccessRe, err.Error())
+	if _, err = child.Expect(successCoRe, 10*time.Second); err != nil {
+		return fmt.Sprintf("expect %s, actual %s", successCoRe, err.Error())
 	}
 
 	return "Success"
@@ -266,8 +266,8 @@ func testCo(cmd string) string {
 	if err = child.Send(coNewline); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(coSuccessRe, 10*time.Second); err != nil {
-		return fmt.Sprintf("expect %s, actual %s", coSuccessRe, err.Error())
+	if _, err = child.Expect(successCoRe, 10*time.Second); err != nil {
+		return fmt.Sprintf("expect %s, actual %s", successCoRe, err.Error())
 	}
 
 	return "Success"
