@@ -3,6 +3,8 @@ package zentaoHelper
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
@@ -11,7 +13,6 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12/websocket"
-	"os"
 )
 
 func CommitResult(report commDomain.ZtfReport, productId, taskId int, config commDomain.WorkspaceConf,
@@ -19,6 +20,7 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId int, config com
 	if productId != 0 {
 		report.ProductId = productId
 	}
+	report = RemoveAutoCreateId(&report)
 	report.TaskId = taskId
 
 	// for ci tool debug
@@ -50,5 +52,23 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId int, config com
 		websocketHelper.SendExecMsg(msg, "", commConsts.Result, nil, wsMsg)
 	}
 
+	return
+}
+
+func RemoveAutoCreateId(report *commDomain.ZtfReport) {
+	if report.TestType == commConsts.TestFunc {
+		return
+	}
+	isAuto := true
+	for idx, cs := range report.UnitResult {
+		if cs.Id != idx+1 {
+			isAuto = false
+		}
+	}
+	if isAuto {
+		for idx, _ := range report.UnitResult {
+			report.UnitResult[idx].Id = 0
+		}
+	}
 	return
 }
