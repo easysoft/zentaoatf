@@ -11,6 +11,7 @@ import Toast, { PluginOptions } from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import vfmPlugin from "vue-final-modal";
 import ZModal from "@/components/Modal.vue";
+import {setLang} from "@/services/settings";
 
 const app = createApp(App)
 app.use(store);
@@ -43,3 +44,6 @@ app.config.globalProperties.$unsub = function (_event, _callback) {
     // eslint-disable-next-line prefer-rest-params
     Reflect.apply(_emitter.off, _emitter, _.toArray(arguments));
 };
+
+//更新服务端语言
+setLang(i18n.global.locale.value)
