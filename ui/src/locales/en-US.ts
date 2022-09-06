@@ -292,6 +292,7 @@ export default {
     'biz_2000': 'Zentao Config Failed',
     'biz_3010': 'Record with same name already exist',
     'biz_3011': 'Record with same path already exist',
+    'biz_3012': 'Record with same interpreter already exist',
     'biz_4000': 'Record Not Found',
     'biz_5000': 'Not Available',
     'biz_6000': 'File or dir already Exist',

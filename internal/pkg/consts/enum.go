@@ -25,13 +25,14 @@ var (
 	ResponseParseErr = ResponseCode{6000, "Json Parse Error"}
 	NeedInitErr      = ResponseCode{1000, "Data Not Init"}
 
-	ErrDirNotEmpty             = ResponseCode{1100, "Dir Not Empty Error"}
-	ErrZentaoConfig            = ResponseCode{2000, "Zentao Config Error"}
-	ErrZentaoRequest           = ResponseCode{3000, "zentao request Error"}
-	ErrRecordWithSameNameExist = ResponseCode{3010, "Record Exist"}
-	ErrRecordWithSamePathExist = ResponseCode{3011, "Record Exist"}
-	ErrRecordNotExist          = ResponseCode{4000, "Record Not Found"}
-	NotAvailable               = ResponseCode{5000, "Not Available"}
+	ErrDirNotEmpty                    = ResponseCode{1100, "Dir Not Empty Error"}
+	ErrZentaoConfig                   = ResponseCode{2000, "Zentao Config Error"}
+	ErrZentaoRequest                  = ResponseCode{3000, "zentao request Error"}
+	ErrRecordWithSameNameExist        = ResponseCode{3010, "Record Exist"}
+	ErrRecordWithSamePathExist        = ResponseCode{3011, "Record Exist"}
+	ErrRecordWithSameInterpreterExist = ResponseCode{3012, "Record Exist"}
+	ErrRecordNotExist                 = ResponseCode{4000, "Record Not Found"}
+	NotAvailable                      = ResponseCode{5000, "Not Available"}
 
 	ErrFileOrDirExist = ResponseCode{6000, "File or Dir Exist"}
 )

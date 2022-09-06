@@ -77,7 +77,7 @@ func (c *InterpreterCtrl) Create(ctx iris.Context) {
 
 	id, err := c.InterpreterService.Create(req)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.ErrRecordWithSameInterpreterExist, err.Error()))
 		return
 	}
 
@@ -94,7 +94,7 @@ func (c *InterpreterCtrl) Update(ctx iris.Context) {
 
 	err := c.InterpreterService.Update(req)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.ErrRecordWithSameInterpreterExist, err.Error()))
 		return
 	}
 
