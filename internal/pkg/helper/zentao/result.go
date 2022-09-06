@@ -20,7 +20,7 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId int, config com
 	if productId != 0 {
 		report.ProductId = productId
 	}
-	report = RemoveAutoCreateId(&report)
+	RemoveAutoCreateId(&report)
 	report.TaskId = taskId
 
 	// for ci tool debug

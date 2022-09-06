@@ -13,7 +13,7 @@
         :defaultCollapsedMap="collapsedMap"
         :defaultCollapsed="true"
       />
-      <FormNode :show="showModal" @submit="createNode" @cancel="modalClose" :path="currentNode.path" :name="currentNode.title" ref="formNode" />
+      <FormNode :show="showModal" @submit="createNode" @cancel="modalClose" :path="currentRnNode.path" :name="currentRnNode.title" ref="formNode" />
     </div>
     <Button
       v-if="checkable && checkedKeys.length"
@@ -96,6 +96,7 @@ const filerValue = ref('')
 const showModal = ref(false)
 const toolbarAction = ref('')
 const currentNode = ref({} as any) // parent node for create node
+const currentRnNode = ref({} as any)
 const collapsedMap = ref({} as any)
 const checkedKeys = ref<string[]>([])
 const showSyncFromZentaoModal = ref(false);
@@ -122,7 +123,7 @@ const onToolbarClicked = (e) => {
     case 'createFile':
     case 'createWorkspace':
     case 'createDir':
-        currentNode.value = {}
+    currentRnNode.value = {};
       showModal.value = true;
       toolbarAction.value = e.event.key;
       break;
@@ -493,7 +494,7 @@ const menuClick = (menuKey: string, targetId: number) => {
     });
 } else if (menuKey === 'rename') {
     showModal.value = true;
-    currentNode.value = contextNodeData;
+    currentRnNode.value = contextNodeData;
   } else if(menuKey == 'sync-from-zentao'){
     syncFromZentao(contextNodeData)
   } else if(menuKey === 'sync-to-zentao'){
