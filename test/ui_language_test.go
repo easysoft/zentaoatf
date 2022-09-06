@@ -11,6 +11,8 @@ import (
 var languageBrowser playwright.Browser
 
 func SwitchLanguage(t provider.T) {
+	t.ID("5464")
+	t.AddParentSuite("设置界面语言")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -72,5 +74,5 @@ func SwitchLanguage(t provider.T) {
 }
 
 func TestUiLanguage(t *testing.T) {
-	runner.Run(t, "UiSwitchLanguage", SwitchLanguage)
+	runner.Run(t, "设置界面语言", SwitchLanguage)
 }

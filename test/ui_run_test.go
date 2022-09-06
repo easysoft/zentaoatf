@@ -13,6 +13,8 @@ import (
 var runBrowser playwright.Browser
 
 func RunScript(t provider.T) {
+	t.ID("5479")
+	t.AddParentSuite("执行脚本")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -123,6 +125,8 @@ func RunScript(t provider.T) {
 }
 
 func RunSelectedScripts(t provider.T) {
+	t.ID("5481")
+	t.AddParentSuite("执行脚本")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -257,6 +261,8 @@ func RunSelectedScripts(t provider.T) {
 }
 
 func RunOpenedAndLast(t provider.T) {
+	t.ID("5484")
+	t.AddParentSuite("执行脚本")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -452,6 +458,8 @@ func RunOpenedAndLast(t provider.T) {
 }
 
 func RunAll(t provider.T) {
+	t.ID("5485")
+	t.AddParentSuite("执行脚本")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -580,6 +588,8 @@ func RunAll(t provider.T) {
 }
 
 func RunReExecFailCase(t provider.T) {
+	t.ID("5491")
+	t.AddParentSuite("执行脚本")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -701,6 +711,8 @@ func RunReExecFailCase(t provider.T) {
 }
 
 func RunReExecAllCase(t provider.T) {
+	t.ID("5491")
+	t.AddParentSuite("执行脚本")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -822,6 +834,8 @@ func RunReExecAllCase(t provider.T) {
 }
 
 func RunFailStatistic(t provider.T) {
+	t.ID("5487")
+	t.AddParentSuite("执行脚本")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -906,6 +920,8 @@ func RunFailStatistic(t provider.T) {
 }
 
 func RunSuccessStatistic(t provider.T) {
+	t.ID("5487")
+	t.AddParentSuite("执行脚本")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -990,6 +1006,8 @@ func RunSuccessStatistic(t provider.T) {
 }
 
 func RunBugStatistic(t provider.T) {
+	t.ID("5487")
+	t.AddParentSuite("执行脚本")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -1065,13 +1083,13 @@ func RunBugStatistic(t provider.T) {
 }
 
 func TestUiRun(t *testing.T) {
-	runner.Run(t, "UiRunScript", RunScript)
-	runner.Run(t, "UiRunSelectedScripts", RunSelectedScripts)
-	runner.Run(t, "UiRunOpenedAndLast", RunOpenedAndLast)
-	runner.Run(t, "UiRunAll", RunAll)
-	runner.Run(t, "UiRunReExecAllCase", RunReExecAllCase)
-	runner.Run(t, "UiRunReExecFailCase", RunReExecFailCase)
-	runner.Run(t, "UiRunSuccessStatistic", RunSuccessStatistic)
-	runner.Run(t, "UiRunFailStatistic", RunFailStatistic)
-	runner.Run(t, "UiRunBugStatistic", RunBugStatistic)
+	runner.Run(t, "客户端-执行单个脚本", RunScript)
+	runner.Run(t, "客户端-执行选中的脚本文件和文件夹", RunSelectedScripts)
+	runner.Run(t, "客户端-执行打开的脚本文件", RunOpenedAndLast)
+	runner.Run(t, "客户端-执行所有的脚本文件", RunAll)
+	runner.Run(t, "客户端-结果中重新执行所有脚本", RunReExecAllCase)
+	runner.Run(t, "客户端-结果中重新执行失败脚本", RunReExecFailCase)
+	runner.Run(t, "客户端-确认执行统计成功数据", RunSuccessStatistic)
+	runner.Run(t, "客户端-确认执行统计失败数据", RunFailStatistic)
+	runner.Run(t, "客户端-确认执行统计bug数据", RunBugStatistic)
 }

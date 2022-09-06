@@ -11,6 +11,8 @@ import (
 var scriptBrowser playwright.Browser
 
 func SaveScript(t provider.T) {
+	t.ID("5470")
+	t.AddParentSuite("保存脚本")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -117,5 +119,5 @@ func SaveScript(t provider.T) {
 }
 
 func TestUiScript(t *testing.T) {
-	runner.Run(t, "SaveScript", SaveScript)
+	runner.Run(t, "客户端-编辑保存禅道站点脚本", SaveScript)
 }

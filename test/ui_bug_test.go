@@ -4,21 +4,13 @@ import (
 	"testing"
 
 	"github.com/ozontech/allure-go/pkg/framework/provider"
-	"github.com/ozontech/allure-go/pkg/framework/suite"
+	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"
 )
 
 var bugBrowser playwright.Browser
 
-type UiBugSuite struct {
-	suite.Suite
-}
-
-func (s *UiBugSuite) BeforeEach(t provider.T) {
-	t.ID("1579")
-	t.AddSubSuite("客户端-bug")
-}
-func (s *UiBugSuite) TestScriptBug(t provider.T) {
+func ScriptBug(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -90,7 +82,7 @@ func (s *UiBugSuite) TestScriptBug(t provider.T) {
 	}
 }
 
-func (s *UiBugSuite) TestScriptsBug(t provider.T) {
+func ScriptsBug(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -186,5 +178,6 @@ func (s *UiBugSuite) TestScriptsBug(t provider.T) {
 	}
 }
 func TestUiBug(t *testing.T) {
-	suite.RunSuite(t, new(UiBugSuite))
+	runner.Run(t, "客户端-查看单个脚本bug列表", ScriptBug)
+	runner.Run(t, "客户端-查看选中脚本bug列表", ScriptsBug)
 }

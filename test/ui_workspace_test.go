@@ -15,6 +15,8 @@ var (
 )
 
 func CreateWorkspace(t provider.T) {
+	t.ID("5468")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -144,6 +146,8 @@ func CreateWorkspace(t provider.T) {
 }
 
 func SyncFromZentao(t provider.T) {
+	t.ID("5468")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -223,6 +227,8 @@ func SyncFromZentao(t provider.T) {
 }
 
 func SyncTwoCaseFromZentao(t provider.T) {
+	t.ID("5468")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -305,6 +311,8 @@ func SyncTwoCaseFromZentao(t provider.T) {
 }
 
 func SyncToZentao(t provider.T) {
+	t.ID("5468")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -370,6 +378,8 @@ func SyncToZentao(t provider.T) {
 	}
 }
 func Copy(t provider.T) {
+	t.ID("5474")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -461,6 +471,8 @@ func Copy(t provider.T) {
 	}
 }
 func DeleteScript(t provider.T) {
+	t.ID("5478")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -537,6 +549,8 @@ func DeleteScript(t provider.T) {
 	}
 }
 func DeleteDir(t provider.T) {
+	t.ID("5477")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -614,6 +628,8 @@ func DeleteDir(t provider.T) {
 }
 
 func DeleteWorkspace(t provider.T) {
+	t.ID("5468")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -680,6 +696,8 @@ func DeleteWorkspace(t provider.T) {
 	}
 }
 func Clip(t provider.T) {
+	t.ID("5476")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -777,6 +795,8 @@ func Clip(t provider.T) {
 }
 
 func FilterDir(t provider.T) {
+	t.ID("5494")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -851,6 +871,8 @@ func FilterDir(t provider.T) {
 	}
 }
 func FilterSuite(t provider.T) {
+	t.ID("5495")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -938,6 +960,8 @@ func FilterSuite(t provider.T) {
 	}
 }
 func FilterTask(t provider.T) {
+	t.ID("5496")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -1023,16 +1047,16 @@ func FilterTask(t provider.T) {
 	}
 }
 func TestWorkspace(t *testing.T) {
-	runner.Run(t, "SyncTwoCaseFromZentao", SyncTwoCaseFromZentao)
-	runner.Run(t, "SyncFromZentao", SyncFromZentao)
-	runner.Run(t, "SyncToZentao", SyncToZentao)
-	runner.Run(t, "Copy", Copy)
-	runner.Run(t, "Clip", Clip)
-	runner.Run(t, "DeleteScript", DeleteScript)
-	runner.Run(t, "DeleteDir", DeleteDir)
-	runner.Run(t, "FilterDir", FilterDir)
-	runner.Run(t, "FilterSuite", FilterSuite)
-	runner.Run(t, "FilterTask", FilterTask)
-	runner.Run(t, "DeleteWorkspace", DeleteWorkspace)
-	runner.Run(t, "CreateWorkspace", CreateWorkspace)
+	runner.Run(t, "客户端-从禅道同步部分用例", SyncTwoCaseFromZentao)
+	runner.Run(t, "客户端-从禅道同步", SyncFromZentao)
+	runner.Run(t, "客户端-同步到禅道", SyncToZentao)
+	runner.Run(t, "客户端-复制粘贴树状脚本文件", Copy)
+	runner.Run(t, "客户端-剪切粘贴树状脚本文件", Clip)
+	runner.Run(t, "客户端-删除树状脚本文件", DeleteScript)
+	runner.Run(t, "客户端-删除树状脚本文件夹", DeleteDir)
+	runner.Run(t, "客户端-按目录过滤禅道用例脚本", FilterDir)
+	runner.Run(t, "客户端-按套件过滤禅道用例脚本", FilterSuite)
+	runner.Run(t, "客户端-按测试单过滤禅道用例脚本", FilterTask)
+	runner.Run(t, "客户端-删除禅道工作目录", DeleteWorkspace)
+	runner.Run(t, "客户端-创建禅道工作目录", CreateWorkspace)
 }

@@ -12,6 +12,8 @@ import (
 var resultBrowser playwright.Browser
 
 func Detail(t provider.T) {
+	t.ID("5489")
+	t.AddParentSuite("测试结果")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -128,6 +130,8 @@ func Detail(t provider.T) {
 }
 
 func SubmitResult(t provider.T) {
+	t.ID("5499")
+	t.AddParentSuite("测试结果")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -231,6 +235,8 @@ func SubmitResult(t provider.T) {
 }
 
 func SubmitBug(t provider.T) {
+	t.ID("5500")
+	t.AddParentSuite("测试结果")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -324,6 +330,8 @@ func SubmitBug(t provider.T) {
 }
 
 func SubmitBugTwoStep(t provider.T) {
+	t.ID("5500")
+	t.AddParentSuite("测试结果")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -418,8 +426,8 @@ func SubmitBugTwoStep(t provider.T) {
 }
 
 func TestUiResult(t *testing.T) {
-	runner.Run(t, "UiDetail", Detail)
-	runner.Run(t, "UiSubmitResult", SubmitResult)
-	runner.Run(t, "UiSubmitBug", SubmitBug)
-	runner.Run(t, "UiSubmitBugTwoStep", SubmitBugTwoStep)
+	runner.Run(t, "客户端-查看测试结果详情", Detail)
+	runner.Run(t, "客户端-提交禅道用例脚本测试结果", SubmitResult)
+	runner.Run(t, "客户端-提交禅道失败用例为缺陷", SubmitBug)
+	runner.Run(t, "客户端-提交禅道部分失败用例为缺陷", SubmitBugTwoStep)
 }

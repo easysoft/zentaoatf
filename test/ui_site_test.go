@@ -11,6 +11,8 @@ import (
 var siteBrowser playwright.Browser
 
 func CreateSite(t provider.T) {
+	t.ID("5466")
+	t.AddParentSuite("配置禅道站点")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -130,7 +132,8 @@ func CreateSite(t provider.T) {
 	}
 }
 func EditSite(t provider.T) {
-	// var timeout float64 = 5000
+	t.ID("5466")
+	t.AddParentSuite("配置禅道站点")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -262,6 +265,8 @@ func EditSite(t provider.T) {
 	}
 }
 func DeleteSite(t provider.T) {
+	t.ID("5466")
+	t.AddParentSuite("配置禅道站点")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -343,7 +348,7 @@ func DeleteSite(t provider.T) {
 }
 
 func TestUiSite(t *testing.T) {
-	runner.Run(t, "EditSite", EditSite)
-	runner.Run(t, "DeleteSite", DeleteSite)
-	runner.Run(t, "CreateSite", CreateSite)
+	runner.Run(t, "客户端-编辑禅道站点", EditSite)
+	runner.Run(t, "客户端-删除禅道站点", DeleteSite)
+	runner.Run(t, "客户端-创建禅道站点", CreateSite)
 }
