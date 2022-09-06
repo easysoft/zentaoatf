@@ -30,10 +30,10 @@ type CleanSuite struct {
 }
 
 func (s *CleanSuite) BeforeEach(t provider.T) {
-	t.ID("1579")
-	t.AddSubSuite("命令行-clean")
+	t.ID("1595")
+	t.AddSubSuite("命令行-清除测试日志")
 }
-func (s *CleanSuite) TestCleanSuitee(t provider.T) {
+func (s *CleanSuite) TestCleanSuite(t provider.T) {
 	t.Require().Equal("Success", testClean())
 }
 

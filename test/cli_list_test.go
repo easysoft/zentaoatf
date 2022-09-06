@@ -28,10 +28,10 @@ type ListSuite struct {
 }
 
 func (s *ListSuite) BeforeEach(t provider.T) {
-	t.ID("1579")
-	t.AddSubSuite("命令行-list")
+	t.ID("1592")
+	t.AddSubSuite("命令行-查看脚本列表")
 }
-func (s *ListSuite) TestListSuitee(t provider.T) {
+func (s *ListSuite) TestListSuite(t provider.T) {
 	t.Require().Equal("Success", testLs("ztf list ./demo", regexp.MustCompile("Found 5 test cases|发现5个用例")))
 	t.Require().Equal("Success", testLs("ztf ls ./demo -k 1", regexp.MustCompile("Found 2 test cases|发现2个用例")))
 	t.Require().Equal("Success", testLs("ztf ls demo -k match", regexp.MustCompile("Found 3 test cases|发现3个用例")))

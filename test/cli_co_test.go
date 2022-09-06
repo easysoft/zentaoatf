@@ -58,14 +58,15 @@ type CoSuite struct {
 }
 
 func (s *CoSuite) BeforeEach(t provider.T) {
-	t.ID("1579")
+	t.ID("1580")
 	t.AddSubSuite("命令行-co")
 }
 func (s *CoSuite) TestCoProduct(t provider.T) {
+	t.Title("导出用例，不提供参数")
 	t.Require().Equal("Success", testCoProduct())
 }
-func (s *CoSuite) TestCoSuitee(t provider.T) {
-	t.Require().Equal("Success", testCoSuitee())
+func (s *CoSuite) TestCoSuite(t provider.T) {
+	t.Require().Equal("Success", testCoSuite())
 }
 func (s *CoSuite) TestCoTask(t provider.T) {
 	t.Require().Equal("Success", testCoTask())
@@ -139,7 +140,7 @@ func testCoProduct() string {
 	return "Success"
 }
 
-func testCoSuitee() string {
+func testCoSuite() string {
 	cmd := "ztf co"
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {

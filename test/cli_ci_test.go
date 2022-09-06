@@ -31,10 +31,10 @@ type CiSuite struct {
 }
 
 func (s *CiSuite) BeforeEach(t provider.T) {
-	t.ID("1579")
-	t.AddSubSuite("命令行-ci")
+	t.ID("5431")
+	t.AddSubSuite("命令行-同步用例信息到禅道")
 }
-func (s *CiSuite) TestCiSuitee(t provider.T) {
+func (s *CiSuite) TestCiSuite(t provider.T) {
 	t.Require().Equal("Success", testCi())
 }
 

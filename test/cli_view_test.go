@@ -28,10 +28,10 @@ type ViewSuite struct {
 }
 
 func (s *ViewSuite) BeforeEach(t provider.T) {
-	t.ID("1579")
-	t.AddSubSuite("命令行-view")
+	t.ID("1593")
+	t.AddSubSuite("命令行-查看脚本详情")
 }
-func (s *ViewSuite) TestViewSuitee(t provider.T) {
+func (s *ViewSuite) TestViewSuite(t provider.T) {
 	t.Require().Equal("Success", testView("ztf view ./demo/1_string_match_fail.php", regexp.MustCompile("check string matches pattern")))
 	t.Require().Equal("Success", testView("ztf -v ./demo -k 1", regexp.MustCompile("check string matches pattern")))
 	t.Require().Equal("Success", testView("ztf view demo -k match", regexp.MustCompile("Found 3 test cases|发现3个用例")))

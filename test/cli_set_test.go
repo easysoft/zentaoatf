@@ -54,11 +54,11 @@ func (s *SetSuite) BeforeEach(t provider.T) {
 	t.AddSubSuite("命令行-set")
 }
 
-func (s *SetSuite) TestChSetSuitee(t provider.T) {
+func (s *SetSuite) TestChSetSuite(t provider.T) {
 	t.Require().Equal("Success", testSet("2"))
 }
 
-func (s *SetSuite) TestEnSetSuitee(t provider.T) {
+func (s *SetSuite) TestEnSetSuite(t provider.T) {
 	t.Require().Equal("Success", testSet("1"))
 }
 

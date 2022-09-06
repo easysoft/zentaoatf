@@ -32,10 +32,10 @@ type ExpectSuite struct {
 }
 
 func (s *ExpectSuite) BeforeEach(t provider.T) {
-	t.ID("1579")
-	t.AddSubSuite("命令行-expect")
+	t.ID("5429")
+	t.AddSubSuite("命令行-生成独立的期待结果文件")
 }
-func (s *ExpectSuite) TestExpectSuitee(t provider.T) {
+func (s *ExpectSuite) TestExpectSuite(t provider.T) {
 	t.Require().Equal("Success", testExpect())
 }
 

@@ -30,10 +30,10 @@ type CrSuite struct {
 }
 
 func (s *CrSuite) BeforeEach(t provider.T) {
-	t.ID("1579")
-	t.AddSubSuite("命令行-cr")
+	t.ID("1590")
+	t.AddSubSuite("命令行-提交测试结果到禅道")
 }
-func (s *CrSuite) TestCrSuitee(t provider.T) {
+func (s *CrSuite) TestCrSuite(t provider.T) {
 	t.Require().Equal("Success", testCr())
 }
 
