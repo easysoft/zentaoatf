@@ -21,6 +21,9 @@ func InitCheck() iris.Handler {
 		}
 
 		lang := ctx.URLParam("lang")
+		if lang == "" {
+			lang = commConsts.Language
+		}
 		if lang != commConsts.Language {
 			commConsts.Language = lang
 			i118Utils.Init(commConsts.Language, commConsts.AppServer)
