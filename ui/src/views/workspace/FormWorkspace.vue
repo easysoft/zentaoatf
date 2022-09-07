@@ -147,6 +147,9 @@ const loadInfo = async () => {
         proxy_id: info.value.proxy_id,
       };
       proxyList.value = info.value.proxies.split(',');
+      proxyList.value.forEach((item, index) => {
+        proxyList.value[index] = parseInt(item);
+      });
       selectType()
     }
   });
@@ -206,6 +209,7 @@ const emit = defineEmits<{
 }>();
 
 const submit = () => {
+  proxyList.value = [...new Set(proxyList.value)]
   modelRef.value.proxies = proxyList.value.join(',');
   if (validate()) {
     emit("submit", modelRef.value);

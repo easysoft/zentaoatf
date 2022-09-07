@@ -60,6 +60,7 @@ func (s *ProxyService) Update(proxy model.Proxy) (err error) {
 func (s *ProxyService) Delete(id uint) error {
 	return s.ProxyRepo.Delete(id)
 }
+
 func (s *ProxyService) CheckServer(url string) (err error) {
 	_, err = httpUtils.Get(url + "api/v1/heartbeat")
 	return

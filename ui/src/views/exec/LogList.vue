@@ -67,20 +67,18 @@ import Icon from '@/components/Icon.vue';
 import {momentTime} from "@/utils/datetime";
 import {isInArray} from "@/utils/array";
 import {StateType as GlobalStateType} from "@/store/global";
-import { get as getWorkspace, uploadToProxy } from "@/views/workspace/service";
+import { get as getWorkspace, uploadToProxy, autoSelectProxy } from "@/views/workspace/service";
 import {mvLog} from "@/views/result/service";
 import { key } from "localforage";
 const { t } = useI18n();
 
-const store = useStore<{global: GlobalStateType, Zentao: ZentaoData, WebSocket: WebSocketData, Exec: ExecStatus, proxy: ProxyData, workspace: WorkspaceData}>();
+const store = useStore<{global: GlobalStateType, Zentao: ZentaoData, WebSocket: WebSocketData, Exec: ExecStatus, workspace: WorkspaceData}>();
 const logContentExpand = computed<boolean>(() => store.state.global.logContentExpand);
 
-store.dispatch("proxy/fetchProxies");
 const currSite = computed<any>(() => store.state.Zentao.currSite);
 const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 const wsStatus = computed<any>(() => store.state.WebSocket.connStatus);
 const isRunning = computed<any>(() => store.state.Exec.isRunning);
-const proxyMap = computed<any>(() => store.state.proxy.proxyMap);
 const currentWorkspace = ref({} as any);
 
 const cachedExecData = ref({})
@@ -267,30 +265,36 @@ const exec = async (data: any) => {
 
   console.log('exec testing', msg)
   currentWorkspace.value = {};
-  let workspaceInfo = {};
+  let workspaceInfo = {} as any;
   if(workspaceId>0){
     workspaceInfo = await getWorkspace(workspaceId)
   }
-  if (msg.testSets !== undefined && workspaceInfo.data != undefined && workspaceInfo.data.proxy_id > 0) {
+  let selectedProxy = {data:{path:''}} as any;
+  if (msg.testSets !== undefined && workspaceInfo.data != undefined && workspaceInfo.data.proxies != '' && workspaceInfo.data.proxies != '0') {
     currentWorkspace.value = workspaceInfo.data;
-    const resp = await uploadToProxy(msg.testSets);
-    const testSetsMap = resp.data;
-    realPathMap.value = testSetsMap;
-    let casesMap = {};
-    var keys = Object.keys(testSetsMap);
-    keys.forEach((val) => {
+    currentWorkspace.value.proxy_id = 0;
+    selectedProxy = await autoSelectProxy(workspaceInfo.data);
+    if (selectedProxy.data.id > 0) {
+      currentWorkspace.value.proxy_id = selectedProxy.data.id;
+      const resp = await uploadToProxy(msg.testSets);
+      const testSetsMap = resp.data;
+      realPathMap.value = testSetsMap;
+      let casesMap = {};
+      var keys = Object.keys(testSetsMap);
+      keys.forEach((val) => {
         casesMap[testSetsMap[val]] = val;
-    });
-    msg.testSets.forEach((set, setIndex) => {
-        if(set.cases != undefined){
-            set.cases.forEach((casePath, caseIndex) => {
-                msg.testSets[setIndex].cases[caseIndex] = casesMap[casePath];
-            }
-        );
+      });
+      msg.testSets.forEach((set, setIndex) => {
+        if (set.cases != undefined) {
+          set.cases.forEach((casePath, caseIndex) => {
+            msg.testSets[setIndex].cases[caseIndex] = casesMap[casePath];
+          });
         }
-    })
+      });
+    }
   }
-  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), proxyMap.value[workspaceInfo?.data?.proxy_id])
+
+  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), selectedProxy.data.path)
 }
 
 const logLevel = ref('result')

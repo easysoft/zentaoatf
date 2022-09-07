@@ -31,3 +31,9 @@ export async function removeProxy(id: number): Promise<any> {
         method: 'delete',
     });
 }
+
+export async function checkProxy(seq: number): Promise<any> {
+    return request({
+        url: `/${apiPath}/${seq}/check`
+    });
+}

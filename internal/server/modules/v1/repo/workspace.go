@@ -247,3 +247,14 @@ func (r *WorkspaceRepo) ListBySite(siteId uint) (pos []model.Workspace, err erro
 
 	return
 }
+
+func (r *WorkspaceRepo) SetProxyId(id, proxyId uint) (err error) {
+	err = r.DB.Model(&model.Workspace{}).Where("id = ?", id).
+		Updates(map[string]interface{}{"proxy_id": proxyId}).Error
+	if err != nil {
+		logUtils.Errorf(color.RedString("set workspace proxy id failed, error: %s.", err.Error()))
+		return
+	}
+
+	return
+}

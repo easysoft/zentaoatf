@@ -1,5 +1,6 @@
 import request from '@/utils/request';
 import { QueryParams } from '@/types/data.d';
+import { checkProxy } from "@/views/proxy/service";
 
 const apiPath = 'workspaces';
 
@@ -47,5 +48,15 @@ export async function uploadToProxy(params: any): Promise<any> {
         url: `/${apiPath}/uploadToProxy`,
         method: 'POST',
         data: params,
+    });
+}
+
+export async function autoSelectProxy(workspace) {
+    if(workspace == undefined || workspace.id == undefined) {
+        return 'local';
+    }
+    return request({
+        url: `/${apiPath}/${workspace.id}/proxy`,
+        method: 'get',
     });
 }

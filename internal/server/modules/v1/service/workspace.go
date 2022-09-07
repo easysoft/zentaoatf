@@ -6,9 +6,12 @@ import (
 	"mime/multipart"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/easysoft/zentaoatf/pkg/domain"
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/fatih/color"
@@ -231,4 +234,55 @@ func (s *WorkspaceService) UploadScripts(fh *multipart.FileHeader, ctx iris.Cont
 
 	fileUtils.Unzip(zipPath, path)
 	return
+}
+
+func (s *WorkspaceService) GetValidProxy(id uint) (proxyInfo model.Proxy, err error) {
+	workspaceInfo, err := s.WorkspaceRepo.Get(id)
+	if err != nil {
+		return proxyInfo, err
+	}
+	proxies := strings.Split(workspaceInfo.Proxies, ",")
+	rwMap := commonUtils.NewRWMap(len(proxies))
+	rwMap.Set(0, 1)
+	wg := &sync.WaitGroup{}
+	proxyIds := []int{}
+	proxyMap := make(map[int]model.Proxy)
+	proxyMap[0] = model.Proxy{
+		Path: "local",
+	}
+	for _, proxy := range proxies {
+		proxyId, err := strconv.Atoi(proxy)
+		if err != nil {
+			continue
+		}
+		proxyIds = append(proxyIds, proxyId)
+		if proxyId == 0 {
+			continue
+		}
+		proxyInfo, err = s.ProxyService.Get(uint(proxyId))
+		if err != nil {
+			continue
+		}
+		proxyMap[proxyId] = proxyInfo
+		wg.Add(1)
+		go func(group *sync.WaitGroup, proxyInfo model.Proxy) {
+			err := s.ProxyService.CheckServer(proxyInfo.Path)
+			if err != nil {
+				rwMap.Set(int(proxyInfo.ID), 0)
+			} else {
+				rwMap.Set(int(proxyInfo.ID), 1)
+			}
+			group.Done()
+		}(wg, proxyInfo)
+	}
+	wg.Wait()
+	for _, proxyId := range proxyIds {
+		if status, ok := rwMap.Get(proxyId); ok && status == 1 {
+			if proxyId > 0 {
+				_ = s.WorkspaceRepo.SetProxyId(id, uint(proxyId))
+			}
+			return proxyMap[proxyId], nil
+		}
+	}
+	return proxyMap[0], err
 }

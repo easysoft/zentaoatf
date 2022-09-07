@@ -1,16 +1,18 @@
 package configHelper
 
 import (
+	"path/filepath"
+	"reflect"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
+	"github.com/easysoft/zentaoatf/internal/server/core/dao"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	"gopkg.in/ini.v1"
-	"path/filepath"
-	"reflect"
 )
 
 func LoadBySite(site model.Site) (config commDomain.WorkspaceConf) {
@@ -31,6 +33,11 @@ func LoadByConfigPath(configPath string) (config commDomain.WorkspaceConf) {
 	return config
 }
 func LoadByWorkspacePath(workspacePath string) (config commDomain.WorkspaceConf) {
+	if workspacePath == "" {
+		//从db获取interpreter的路径
+		GetInterpreterConfig(&config)
+		return
+	}
 	pth := filepath.Join(workspacePath, commConsts.ConfigDir, commConsts.ConfigFile)
 	return LoadByConfigPath(pth)
 }
@@ -97,4 +104,28 @@ func SetFieldVal(config *commDomain.WorkspaceConf, key string, val string) strin
 	mutable.FieldByName(key).SetString(val)
 
 	return val
+}
+
+func GetInterpreterConfig(config *commDomain.WorkspaceConf) (err error) {
+	interps := []model.Interpreter{}
+	dao.GetDB().Model(&model.Interpreter{}).Where("NOT deleted")
+	err = dao.GetDB().Find(&interps).Error
+	mp := map[string]string{}
+
+	for _, item := range interps {
+		mp[item.Lang] = item.Path
+	}
+
+	if config.Language == "" {
+		config.Language = commConsts.LanguageZh
+	}
+	config.Javascript = mp["javascript"]
+	config.Lua = mp["lua"]
+	config.Perl = mp["perl"]
+	config.Php = mp["php"]
+	config.Python = mp["python"]
+	config.Ruby = mp["ruby"]
+	config.Tcl = mp["tcl"]
+	config.Autoit = mp["autoit"]
+	return
 }
