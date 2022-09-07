@@ -80,7 +80,10 @@ export class WebSocket {
 
   static sentMsg(roomName: string, msg: string): void {
     console.log(`send msg to room "${roomName}"`)
-    if (!WebSocket.conn) return
+    if (!WebSocket.conn) {
+        console.error("websocket conn miss")
+        return
+    }
 
     WebSocket.conn.leaveAll().then(() =>
         this.joinRoomAndSend(roomName, msg)
