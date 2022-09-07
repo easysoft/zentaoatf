@@ -106,7 +106,9 @@ const onWebsocketMsgEvent = (data: any) => {
   console.log('WebsocketMsgEvent in ExecLog', data.msg)
 
   let item = JSON.parse(data.msg) as WsMsg
-
+  if(item.category == 'watch'){
+    return;
+  }
   if ('isRunning' in wsMsg) {
     console.log('change isRunning to ', item.isRunning)
     store.dispatch('Exec/setRunning', item.isRunning)

@@ -3,12 +3,14 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
+	watchHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/watch"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
-	"github.com/easysoft/zentaoatf/internal/server/config"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
+	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
+	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
@@ -78,6 +80,11 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 		msg := i118Utils.Sprintf("success_to_conn")
 		//websocketHelper.SendExecMsg(msg, strconv.FormatBool(execHelper.GetRunning()), wsMsg)
 		logUtils.ExecConsole(color.FgCyan, msg)
+		return
+	}
+
+	if act == commConsts.Watch {
+		watchHelper.WatchFromReq(req.TestSets, &wsMsg)
 		return
 	}
 

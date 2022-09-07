@@ -1,6 +1,8 @@
 import { Mutation, Action } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
 import { ResponseData } from '@/utils/request';
+import {WebSocket} from "@/services/websocket";
+import settings from "@/config/settings";
 
 import {
     list,
@@ -105,7 +107,13 @@ const StoreModel: ModuleType = {
             data.id = data.path;
             data.children = scriptTreeAddAttr(data.children ? data.children : []);
             commit('setList', [data]);
-
+            if(data.children != undefined){
+                const watchPaths = [] as any;
+                data.children.forEach(element => {
+                    watchPaths.push({WorkspacePath: element.path})
+                });
+                WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify({act: 'watch',testSets:watchPaths}))
+            }
             commit('setQueryParams', playload);
             return true;
         },

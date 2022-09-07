@@ -53,7 +53,7 @@ import { WorkspaceData } from "@/store/workspace";
 import {getContextMenuStyle, resizeWidth} from "@/utils/dom";
 import Tree from "@/components/Tree.vue";
 import notification from "@/utils/notification";
-import { computed, defineExpose, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, defineExpose, onMounted, onUnmounted, ref, watch, onBeforeUnmount } from "vue";
 import Button from '@/components/Button.vue';
 import TreeContextMenu from './TreeContextMenu.vue';
 import FormSyncFromZentao  from "./FormSyncFromZentao.vue";
@@ -107,7 +107,22 @@ onMounted(() => {
   setTimeout(() => {
     resizeWidth('main', 'left', 'splitter-h', 'right', 380, 800)
   }, 600)
+  bus.on(settings.eventWebSocketMsg, onWebsocketMsgEvent);
 })
+
+onBeforeUnmount( () => {
+  console.log('onBeforeUnmount')
+  bus.off(settings.eventWebSocketMsg, onWebsocketMsgEvent);
+})
+
+const onWebsocketMsgEvent = (data: any) => {
+  console.log('WebsocketMsgEvent in WatchFile', data.msg)
+
+  let item = JSON.parse(data.msg)
+  if(item.category == 'watch'){
+    loadScripts()
+  }
+}
 
 const onToolbarClicked = (e) => {
   const node = e.node == undefined ? treeDataMap.value[''] : treeDataMap.value[e.node.id]
