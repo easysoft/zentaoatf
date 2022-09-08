@@ -119,7 +119,7 @@ const StoreModel: ModuleType = {
                 data.children.forEach(element => {
                     watchPaths.push({WorkspacePath: element.path})
                 });
-                WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify({act: 'watch',testSets:watchPaths}))
+                WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify({act: 'watch',testSets:watchPaths}), "local")
             }
             commit('setQueryParams', playload);
             return true;
