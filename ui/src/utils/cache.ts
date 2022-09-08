@@ -170,3 +170,10 @@ export const setServerURL = async (url : string) => {
     await clear()
     await setCache(settings.currServerURL, url);
 }
+
+export const getCurrProxyId = async () => {
+    return getCache(settings.currProxyId);
+}
+export const setCurrProxyId = async (val) => {
+    await setCache(settings.currProxyId, val);
+}

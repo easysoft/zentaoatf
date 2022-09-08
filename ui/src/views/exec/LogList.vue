@@ -69,7 +69,7 @@ import {isInArray} from "@/utils/array";
 import {StateType as GlobalStateType} from "@/store/global";
 import { get as getWorkspace, uploadToProxy, autoSelectProxy } from "@/views/workspace/service";
 import {mvLog} from "@/views/result/service";
-import { key } from "localforage";
+
 const { t } = useI18n();
 
 const store = useStore<{global: GlobalStateType, Zentao: ZentaoData, WebSocket: WebSocketData, Exec: ExecStatus, workspace: WorkspaceData}>();
@@ -141,7 +141,7 @@ const onWebsocketMsgEvent = async (data: any) => {
     item.msg = item.msg.replace(key, realPathMap.value[key])
   })
 
-  if(currentWorkspace.value.proxy_id > 0){
+  if(currentWorkspace.value.proxy_id > 0 && item.info != undefined){
     item.info.logDir = await downloadLog(item);
     if( item.msg == ""){
       return;
@@ -161,7 +161,7 @@ const onWebsocketMsgEvent = async (data: any) => {
 
 const downloadLog = async (item) => {
   const msg = item.msg;
-  let pth = item.logDir
+  let pth = item?.logDir
   if(msg.indexOf('Report') !== 0 && msg.indexOf('报告') !== 0){
     return;
   }
@@ -275,19 +275,25 @@ const exec = async (data: any) => {
   }
 
   console.log('exec testing', msg)
-  currentWorkspace.value = {};
+
+  const proxyPath = await selectProxy(workspaceId, msg)
+  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), proxyPath)
+}
+
+const selectProxy = async (workspaceId, msg) => {
+    currentWorkspace.value = {};
   let workspaceInfo = {} as any;
   if(workspaceId>0){
     workspaceInfo = await getWorkspace(workspaceId)
   }
   let selectedProxy = {data:{path:''}} as any;
-  if (msg.testSets !== undefined && workspaceInfo.data != undefined && workspaceInfo.data.proxies != '' && workspaceInfo.data.proxies != '0') {
+  if (msg.testSets !== undefined && workspaceInfo.data != undefined && workspaceInfo.data.proxies != '' && workspaceInfo.data.proxies[0] != '0') {
     currentWorkspace.value = workspaceInfo.data;
     currentWorkspace.value.proxy_id = 0;
     const msgSelectProxy = {
       msg: `<span class="strong">`+t('case_select_proxy')+`</span>`,
       time: momentTime(new Date())}
-      wsMsg.out.push(msgSelectProxy)
+    wsMsg.out.push(msgSelectProxy)
     selectedProxy = await autoSelectProxy(workspaceInfo.data);
     if (selectedProxy.data.id > 0) {
       currentWorkspace.value.proxy_id = selectedProxy.data.id;
@@ -312,8 +318,7 @@ const exec = async (data: any) => {
       });
     }
   }
-
-  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), selectedProxy.data.path)
+  return selectedProxy.data.path;
 }
 
 const logLevel = ref('result')

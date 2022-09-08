@@ -48,6 +48,7 @@ export interface SettingsType {
     cmdHistories: string;
     openedScripts: string;
     currServerURL: string;
+    currProxyId: string;
 
     /**
      * Ajax请求头发送Token 的 Key值
@@ -94,6 +95,7 @@ const settings: SettingsType = {
     cmdHistories: 'cmdHistories',
     openedScripts: 'openedScripts',
     currServerURL: 'currServerURL',
+    currProxyId: 'currProxyId',
 
     ajaxHeadersTokenKey: 'Authorization',
     ajaxResponseNoVerifyUrl: [
