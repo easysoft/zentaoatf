@@ -30,6 +30,7 @@ export interface ScriptData {
 
     currWorkspace: any
     queryParams: any;
+    currentCodeChanged: boolean;
 }
 
 export interface ModuleType extends StoreModuleType<ScriptData> {
@@ -40,6 +41,7 @@ export interface ModuleType extends StoreModuleType<ScriptData> {
         setWorkspace: Mutation<ScriptData>;
         setQueryParams: Mutation<ScriptData>;
         setCheckedNodes: Mutation<ScriptData>;
+        setCurrentCodeChanged: Mutation<ScriptData>;
     };
     actions: {
         listScript: Action<ScriptData, ScriptData>;
@@ -58,6 +60,7 @@ export interface ModuleType extends StoreModuleType<ScriptData> {
         pasteScript: Action<ScriptData, ScriptData>;
         moveScript: Action<ScriptData, ScriptData>;
         updateCode: Action<ScriptData, ScriptData>;
+        updateCurrentCodeChanged: Action<ScriptData, ScriptData>;
     };
 }
 const initState: ScriptData = {
@@ -69,6 +72,7 @@ const initState: ScriptData = {
     queryParams: {},
 
     checkedNodes: [],
+    currentCodeChanged: false,
 };
 
 const StoreModel: ModuleType = {
@@ -98,6 +102,9 @@ const StoreModel: ModuleType = {
 
         setCheckedNodes(state, payload) {
             state.checkedNodes = payload;
+        },
+        setCurrentCodeChanged(state, payload) {
+            state.currentCodeChanged = payload;
         },
     },
     actions: {
@@ -260,6 +267,11 @@ const StoreModel: ModuleType = {
 
         async setCheckedNodes({ commit }, payload: any ) {
             commit('setCheckedNodes', payload);
+            return true;
+        },
+
+        async updateCurrentCodeChanged({ commit }, payload: any ) {
+            commit('setCurrentCodeChanged', payload);
             return true;
         },
     }

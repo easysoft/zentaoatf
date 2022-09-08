@@ -19,7 +19,7 @@ export default defineComponent({
       const { t } = useI18n();
 
       const store = useStore<{ WebSocket: WebSocketData }>();
-      store.dispatch('WebSocket/connect')
+      store.dispatch('WebSocket/connect', {room: 'default', appApiHost: ''})
 
       onMounted(() => {
         console.log('onMounted')

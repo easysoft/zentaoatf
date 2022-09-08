@@ -3,6 +3,7 @@
     <Button class="rounded pure" icon="settings" iconSize="1.5em" :hint="t('settings')" @click="openSettings" />
   </Toolbar>
   <SettingsModal
+    v-if="showSettingsModal"
     :show="showSettingsModal"
     @cancel="settingsModalClose"
     :showOkBtn="false"

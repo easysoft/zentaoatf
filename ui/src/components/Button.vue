@@ -99,4 +99,8 @@ function _handleSuffixClick(originalEvent) {
 .btn-size-sm.btn-only-icon {
   width: calc(2em - 2px);
 }
+.disabled{
+    cursor: not-allowed;
+    opacity: 0.6;
+}
 </style>

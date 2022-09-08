@@ -3,6 +3,7 @@ import {NSConn} from "neffos.js";
 
 import bus from "@/utils/eventBus";
 import settings from "@/config/settings";
+import { getCache } from '@/utils/localCache';
 
 export type WsEvent = {
   room: string;
@@ -13,14 +14,14 @@ export type WsEvent = {
 export const WsDefaultNameSpace = 'default'
 
 export class WebSocket {
-  static conn: NSConn
+  static conns: Record<string, NSConn>
 
-  static async init(reConn): Promise<any> {
-    console.log(`init websocket`)
-
-    if (reConn || !WebSocket.conn) {
+  static async init(reConn, appApiHost): Promise<any> {
+    console.log(`init websocket`, WebSocket.conns, appApiHost)
+    if(WebSocket.conns == undefined) WebSocket.conns = {};
+    if (reConn || WebSocket.conns[appApiHost] == undefined) {
       try {
-        const conn = await neffos.dial(getWebSocketApi(), {
+        const conn = await neffos.dial(await getWebSocketApi(appApiHost), {
           default: {
             _OnNamespaceConnected: (nsConn, msg) => {
               if (nsConn.conn.wasReconnected()) {
@@ -28,7 +29,7 @@ export class WebSocket {
               }
 
               console.log('connected to namespace: ' + msg.Namespace)
-              WebSocket.conn = nsConn
+              WebSocket.conns[appApiHost] = nsConn
               bus.emit(settings.eventWebSocketConnStatus, {msg: '{"conn": "success"}'});
             },
 
@@ -58,44 +59,56 @@ export class WebSocket {
     return WebSocket
   }
 
-  static joinRoomAndSend(roomName: string, msg: string): void {
-    if (WebSocket.conn && WebSocket.conn.room(roomName)) {
-      WebSocket.conn.room(roomName).emit('OnChat', msg)
-
+  static joinRoomAndSend(roomName: string, msg: string, appApiHost:string): void {
+    if (WebSocket.conns[appApiHost] && WebSocket.conns[appApiHost].room(roomName)) {
+      WebSocket.conns[appApiHost].room(roomName).emit('OnChat', msg)
+      return
     } else {
-      WebSocket.init(true).then(() => {
-        WebSocket.conn.joinRoom(roomName).then((_room) => {
+      WebSocket.init(true, appApiHost).then(() => {
+        WebSocket.conns[appApiHost].joinRoom(roomName).then((_room) => {
           console.log(`success to join room "${roomName}"`)
-          WebSocket.conn.room(roomName).emit('OnChat', msg)
-
+          WebSocket.conns[appApiHost].room(roomName).emit('OnChat', msg)
         }).catch(err => {
           console.log(`fail to join room ${roomName}`, err)
           bus.emit(settings.eventWebSocketConnStatus, {msg: '{"conn": "fail"}'});
-          WebSocket.conn.disconnect()
-          this.joinRoomAndSend(roomName, msg)
+          WebSocket.conns[appApiHost].disconnect()
+          this.joinRoomAndSend(roomName, msg, appApiHost)
         })
       })
     }
   }
 
-  static sentMsg(roomName: string, msg: string): void {
+  static sentMsg(roomName: string, msg: string, appApiHost: string): void {
     console.log(`send msg to room "${roomName}"`)
-    if (!WebSocket.conn) return
-
-    WebSocket.conn.leaveAll().then(() =>
-        this.joinRoomAndSend(roomName, msg)
-    )
+    if (WebSocket.conns[appApiHost]){
+        WebSocket.conns[appApiHost].leaveAll().then(() =>
+        this.joinRoomAndSend(roomName, msg, appApiHost)
+        )
+    }else{
+        this.joinRoomAndSend(roomName, msg, appApiHost)
+    }
   }
 }
 
-export function getWebSocketApi (): string {
+export async function getWebSocketApi (appApiHost): Promise<string> {
   const isProd = process.env.NODE_ENV === 'production'
   const loc = window.location
   console.log(`${isProd}, ${loc.toString()}`)
+  const serverUrl = await getServerUrl();
+  const apiHost = appApiHost && appApiHost != 'local' ? appApiHost + process.env.VUE_APP_APISUFFIX : serverUrl
 
-  const apiHost = process.env.VUE_APP_APIHOST ? process.env.VUE_APP_APIHOST : ''
   const url = apiHost.replace('http', 'ws') + '/ws'
-  console.log(`websocket url = ${url}`)
+  console.log(`websocket url = ${url}`, appApiHost)
 
   return url
+}
+
+export async function getServerUrl(): Promise<string>{
+  let serverURL = await getCache(settings.currServerURL);
+  if (!serverURL || serverURL == 'local') {
+    serverURL = process.env.VUE_APP_APIHOST;
+  } else {
+    serverURL = String(serverURL) + 'api/v1';
+  }
+  return serverURL
 }

@@ -13,7 +13,15 @@
         :defaultCollapsedMap="collapsedMap"
         :defaultCollapsed="true"
       />
-      <FormNode :show="showModal" @submit="createNode" @cancel="modalClose" :path="currentNode.path" :name="currentNode.title" ref="formNode" />
+    <FormNode :show="showModal" @submit="createNode" @cancel="modalClose" :path="currentNode.path" :name="currentNode.title" ref="formNode" />
+    <FormWorkspace
+    v-if="showWorkspaceModal"
+    :show="showWorkspaceModal"
+    @submit="createWorkSpace"
+    @cancel="modalWorkspaceClose"
+    ref="formWorkspace"
+    :workspaceId="currentNode.workspaceId"
+    />
     </div>
     <Button
       v-if="checkable && checkedKeys.length"
@@ -32,14 +40,6 @@
       :workspaceId="syncFromZentaoWorkspaceId"
       ref="syncFromZentaoRef"
     />
-    <FormWorkspace
-      v-if="showWorkspaceModal"
-      :show="showWorkspaceModal"
-      @submit="createWorkSpace"
-      @cancel="modalWorkspaceClose"
-      ref="formWorkspace"
-      :workspaceId="currentNode.workspaceId"
-     />
   </div>
 </template>
 
@@ -73,6 +73,7 @@ const { t } = useI18n();
 
 const store = useStore<{ global: GlobalData, Zentao: ZentaoData, Script: ScriptData, Workspace: WorkspaceData }>();
 const global = computed<any>(() => store.state.global.tabIdToWorkspaceIdMap);
+const serverUrl = computed<any>(() => store.state.global.serverUrl);
 const currSite = computed<any>(() => store.state.Zentao.currSite);
 const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
@@ -81,7 +82,6 @@ const currWorkspace = computed<any>(() => store.state.Script.currWorkspace);
 const isWin = isWindows()
 
 store.dispatch('Zentao/fetchLangs')
-const langs = computed<any[]>(() => store.state.Zentao.langs);
 
 const router = useRouter();
 let workspace = router.currentRoute.value.params.workspace as string
@@ -96,6 +96,7 @@ const filerValue = ref('')
 const showModal = ref(false)
 const toolbarAction = ref('')
 const currentNode = ref({} as any) // parent node for create node
+const currentRnNode = ref({} as any)
 const collapsedMap = ref({} as any)
 const checkedKeys = ref<string[]>([])
 const showSyncFromZentaoModal = ref(false);
@@ -137,7 +138,7 @@ const onToolbarClicked = (e) => {
     case 'createFile':
     case 'createWorkspace':
     case 'createDir':
-        currentNode.value = {}
+    currentRnNode.value = {};
       showModal.value = true;
       toolbarAction.value = e.event.key;
       break;
@@ -219,6 +220,10 @@ const selectCasesFromReport = async (): Promise<void> => {
 }
 selectCasesFromReport()
 
+watch(serverUrl, () => {
+  console.log('watch serverUrl', serverUrl.value)
+  initData()
+}, { deep: true })
 watch(currProduct, () => {
   console.log('watch currProduct', currProduct.value.id)
   initData()
@@ -508,7 +513,7 @@ const menuClick = (menuKey: string, targetId: number) => {
     });
 } else if (menuKey === 'rename') {
     showModal.value = true;
-    currentNode.value = contextNodeData;
+    currentRnNode.value = contextNodeData;
   } else if(menuKey == 'sync-from-zentao'){
     syncFromZentao(contextNodeData)
   } else if(menuKey === 'sync-to-zentao'){
