@@ -162,6 +162,8 @@ export default {
     'case_num':  '用例数',
     'case_num_empty':  '请选择用例执行。',
     'case_num_format': '{count} 个用例',
+    'case_upload_to_proxy': '正在上传脚本到代理服务器...',
+    'case_select_proxy': '正在测试代理服务器状态...',
 
     'enable': '启用',
     'disable':  '禁用',

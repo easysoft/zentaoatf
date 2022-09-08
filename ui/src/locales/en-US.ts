@@ -155,6 +155,8 @@ export default {
     'case_num':  'Case Number',
     'case_num_empty':  'Please Select Cases to Run.',
     'case_num_format': '{count} cases',
+    'case_upload_to_proxy':  'Uploading Script to the proxy server...',
+    'case_select_proxy': 'Testing proxy server status...',
 
     'enable': 'Enable',
     'disable':  'Disable',

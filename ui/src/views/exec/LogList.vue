@@ -140,7 +140,7 @@ const onWebsocketMsgEvent = async (data: any) => {
   })
 
   if(currentWorkspace.value.proxy_id > 0){
-    await downloadLog(item);
+    item.info.logDir = await downloadLog(item);
     if( item.msg == ""){
       return;
     }
@@ -159,6 +159,7 @@ const onWebsocketMsgEvent = async (data: any) => {
 
 const downloadLog = async (item) => {
   const msg = item.msg;
+  let pth = item.logDir
   if(msg.indexOf('Report') !== 0 && msg.indexOf('报告') !== 0){
     return;
   }
@@ -170,8 +171,9 @@ const downloadLog = async (item) => {
     logPath = msg.replace('报告', '')
     logPath = logPath.replace('。', '')
   }
-  mvLog({file: logPath, workspaceId: currentWorkspace.value.id}).then(resp => {
+  await mvLog({file: logPath, workspaceId: currentWorkspace.value.id}).then(resp => {
     if(resp.code === 0){
+      pth = resp.data.replace('log.txt', '');
       item.msg = item.msg.replace(logPath, resp.data)
       let emptMsg = {...item}
       emptMsg.msg = '';
@@ -186,6 +188,7 @@ const downloadLog = async (item) => {
         });
          }
   })
+  return pth
 }
 const updateStatisticInfo = (logDir) => {
   console.log('updateStatisticInfo')
@@ -273,9 +276,17 @@ const exec = async (data: any) => {
   if (msg.testSets !== undefined && workspaceInfo.data != undefined && workspaceInfo.data.proxies != '' && workspaceInfo.data.proxies != '0') {
     currentWorkspace.value = workspaceInfo.data;
     currentWorkspace.value.proxy_id = 0;
+    const msgSelectProxy = {
+      msg: `<span class="strong">`+t('case_select_proxy')+`</span>`,
+      time: momentTime(new Date())}
+      wsMsg.out.push(msgSelectProxy)
     selectedProxy = await autoSelectProxy(workspaceInfo.data);
     if (selectedProxy.data.id > 0) {
       currentWorkspace.value.proxy_id = selectedProxy.data.id;
+      const msgUpload = {
+      msg: `<span class="strong">`+t('case_upload_to_proxy')+`</span>`,
+      time: momentTime(new Date())}
+      wsMsg.out.push(msgUpload)
       const resp = await uploadToProxy(msg.testSets);
       const testSetsMap = resp.data;
       realPathMap.value = testSetsMap;
