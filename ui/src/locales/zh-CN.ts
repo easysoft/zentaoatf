@@ -44,6 +44,7 @@ export default {
     'none':  '无',
     'only_failed':  '仅失败用例',
     'case_type_config':  '配置相关',
+    'case_type_unit':  '单元测试',
     'case_type_feature':  '功能测试',
     'case_type_install':  '安装部署',
     'case_type_security':  '安全相关',

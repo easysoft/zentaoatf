@@ -40,6 +40,7 @@ export default {
     'none':  'None',
     'all':  'All',
     'only_failed':  'Only Failed',
+    'case_type_unit':  'Unit Test',
     'case_type_config':  'Configuration',
     'case_type_feature':  'Feature',
     'case_type_install':  'Installation',
