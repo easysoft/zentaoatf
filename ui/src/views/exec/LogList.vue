@@ -308,6 +308,7 @@ const selectProxy = async (workspaceId, msg) => {
     msg: `<span class="strong">`+t('case_upload_to_proxy')+`</span>`,
     time: momentTime(new Date())}
     wsMsg.out.push(msgUpload)
+    msg.testSets[0].proxyId = selectedProxy.data.id;
     const resp = await uploadToProxy(msg.testSets);
     const testSetsMap = resp.data;
     realPathMap.value = testSetsMap;

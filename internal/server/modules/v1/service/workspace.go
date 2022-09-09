@@ -155,8 +155,16 @@ func (s *WorkspaceService) UploadScriptsToProxy(testSets []serverDomain.TestSet)
 	var workspaceInfo model.Workspace
 	var workspacePathArray = []string{}
 	var workspaceIsZtfMap = make(map[string]bool)
+	var uploadUrl = ""
+
 	for index, testSet := range testSets {
 		po, _ := s.Get(uint(testSet.WorkspaceId))
+		if uploadUrl == "" && testSet.ProxyId > 0 {
+			proxyInfo, _ := s.ProxyService.Get(uint(testSet.ProxyId))
+			if proxyInfo.Path != "" {
+				uploadUrl = proxyInfo.Path
+			}
+		}
 		testSets[index].WorkspacePath = po.Path
 		if workspaceInfo.ID == 0 && po.ID > 0 {
 			workspaceInfo = po
@@ -181,13 +189,7 @@ func (s *WorkspaceService) UploadScriptsToProxy(testSets []serverDomain.TestSet)
 			}
 		}
 	}
-	var uploadUrl = ""
-	if workspaceInfo.ProxyId > 0 {
-		proxyInfo, _ := s.ProxyService.Get(workspaceInfo.ProxyId)
-		if proxyInfo.Path != "" {
-			uploadUrl = proxyInfo.Path
-		}
-	}
+
 	if uploadUrl == "" {
 		return
 	}

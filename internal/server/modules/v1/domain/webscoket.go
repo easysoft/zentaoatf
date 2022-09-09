@@ -40,6 +40,7 @@ type TestSet struct {
 	SuiteId                   int                     `json:"suiteId"`
 	TaskId                    int                     `json:"taskId"`
 	ScriptDirParamFromCmdLine string                  `json:"-"`
+	ProxyId                   int                     `json:"proxyId"`
 
 	// for unit, automation testing
 	TestTool  commConsts.TestTool  `json:"testTool"`
