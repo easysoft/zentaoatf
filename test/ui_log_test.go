@@ -8,11 +8,11 @@ import (
 	playwright "github.com/playwright-community/playwright-go"
 )
 
-var scriptBrowser playwright.Browser
+var logBrowser playwright.Browser
 
-func SaveScript(t provider.T) {
-	t.ID("5470")
-	t.AddParentSuite("禅道站点脚本")
+func CollapseLog(t provider.T) {
+	t.ID("5502")
+	t.AddParentSuite("脚本执行日志")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -20,12 +20,12 @@ func SaveScript(t provider.T) {
 	}
 	headless := true
 	var slowMo float64 = 100
-	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	logBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
-		t.Errorf("Fail to launch the web workspaceBrowser: %v", err)
+		t.Errorf("Fail to launch the web logBrowser: %v", err)
 		t.FailNow()
 	}
-	page, err := workspaceBrowser.NewPage()
+	page, err := logBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
@@ -61,55 +61,41 @@ func SaveScript(t provider.T) {
 		t.Errorf("Click script fail: %v", err)
 		t.FailNow()
 	}
-	locator, err = page.Locator(".view-line>>text=title=check string matches pattern")
+	err = page.Click(".tabs-nav-toolbar>>[title=\"Run\"]")
 	if err != nil {
-		t.Errorf("Find title fail: %v", err)
+		t.Errorf("Click run fail: %v", err)
 		t.FailNow()
 	}
-	var positionX, positionY float64 = 400, 0
-	force := true
-	err = locator.Click(playwright.PageClickOptions{Force: &force, Position: &playwright.PageClickOptionsPosition{X: &positionX, Y: &positionY}})
+	_, err = page.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	if err != nil {
-		t.Errorf("Click title fail: %v", err)
+		t.Errorf("Wait exec result fail: %v", err)
 		t.FailNow()
 	}
-	err = locator.Type("-test")
+	err = page.Click(".btn[title=\"展开所有\"]")
 	if err != nil {
-		t.Errorf("Type code fail: %v", err)
+		t.Errorf("Click expand btn fail: %v", err)
 		t.FailNow()
 	}
-	err = page.Click(".tabs-nav-toolbar>>[title=\"Save\"]")
+	locator, _ = page.Locator("#log-list>>.show-detail>>:has-text('[Expect]')")
+	count, _ := locator.Count()
+	if count == 0 {
+		t.Error("Find expanded log fail")
+		t.FailNow()
+	}
+	page.WaitForTimeout(100)
+	err = page.Click(".btn[title=\"折叠所有\"]")
 	if err != nil {
-		t.Errorf("Click script fail: %v", err)
+		t.Errorf("Click Collapse btn fail: %v", err)
 		t.FailNow()
 	}
-	_, err = page.WaitForSelector(".toast-notification-close")
-	if err != nil {
-		t.Errorf("Wait toast-notification-close fail: %v", err)
+	locator, _ = page.Locator("#log-list>>.show-detail>>:has-text('[Expect]')")
+	count, _ = locator.Count()
+	if count > 0 {
+		t.Error("Find Collapsed log fail")
 		t.FailNow()
 	}
-	locator, err = page.Locator(".toast-notification-container", playwright.PageLocatorOptions{HasText: "保存成功"})
-	c, err = locator.Count()
-	if err != nil || c == 0 {
-		t.Errorf("Save fail: %v", err)
-		t.FailNow()
-	}
-	err = scriptLocator.Click()
-	if err != nil {
-		t.Errorf("Click script fail: %v", err)
-		t.FailNow()
-	}
-
-	locator, err = page.Locator(".view-line>>:has-text('title=check string matches pattern')")
-	locator.Click(playwright.PageClickOptions{Force: &force, Position: &playwright.PageClickOptionsPosition{X: &positionX, Y: &positionY}})
-	locator.Press("Backspace")
-	locator.Press("Backspace")
-	locator.Press("Backspace")
-	locator.Press("Backspace")
-	locator.Press("Backspace")
-	page.Click(".tabs-nav-toolbar>>[title=\"Save\"]")
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+	if err = logBrowser.Close(); err != nil {
+		t.Errorf("The logBrowser cannot be closed: %v", err)
 		t.FailNow()
 	}
 	if err = pw.Stop(); err != nil {
@@ -118,9 +104,9 @@ func SaveScript(t provider.T) {
 	}
 }
 
-func ViewScript(t provider.T) {
-	t.ID("5469")
-	t.AddParentSuite("禅道站点脚本")
+func FullScreenLog(t provider.T) {
+	t.ID("5502")
+	t.AddParentSuite("脚本执行日志")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -128,12 +114,12 @@ func ViewScript(t provider.T) {
 	}
 	headless := true
 	var slowMo float64 = 100
-	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	logBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
-		t.Errorf("Fail to launch the web workspaceBrowser: %v", err)
+		t.Errorf("Fail to launch the web logBrowser: %v", err)
 		t.FailNow()
 	}
-	page, err := workspaceBrowser.NewPage()
+	page, err := logBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
@@ -169,14 +155,29 @@ func ViewScript(t provider.T) {
 		t.Errorf("Click script fail: %v", err)
 		t.FailNow()
 	}
-	locator, err = page.Locator(".view-line>>text=title=check string matches pattern")
+	err = page.Click(".tabs-nav-toolbar>>[title=\"Run\"]")
 	if err != nil {
-		t.Errorf("Find title fail: %v", err)
+		t.Errorf("Click run fail: %v", err)
 		t.FailNow()
 	}
-
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+	_, err = page.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
+	if err != nil {
+		t.Errorf("Wait exec result fail: %v", err)
+		t.FailNow()
+	}
+	err = page.Click(".btn[title=\"向上展开\"]")
+	if err != nil {
+		t.Errorf("Click Collapse btn fail: %v", err)
+		t.FailNow()
+	}
+	page.WaitForTimeout(100)
+	isHidden, err := page.IsHidden("#tabsPane")
+	if !isHidden {
+		t.Errorf("Full Screen fail: %v", err)
+		t.FailNow()
+	}
+	if err = logBrowser.Close(); err != nil {
+		t.Errorf("The logBrowser cannot be closed: %v", err)
 		t.FailNow()
 	}
 	if err = pw.Stop(); err != nil {
@@ -185,7 +186,7 @@ func ViewScript(t provider.T) {
 	}
 }
 
-func TestUiScript(t *testing.T) {
-	// runner.Run(t, "客户端-编辑保存禅道站点脚本", SaveScript)
-	runner.Run(t, "客户端-显示禅道站点脚本", ViewScript)
+func TestUiLog(t *testing.T) {
+	runner.Run(t, "客户端-展开折叠执行日志", CollapseLog)
+	runner.Run(t, "客户端-最大化脚本执行日志", FullScreenLog)
 }
