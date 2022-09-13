@@ -1,4 +1,4 @@
-import {getCache, setCache} from './localCache';
+import {getCache, setCache, clear} from './localCache';
 import settings from '@/config/settings';
 import {proxyArrToVal} from "@/utils/comm";
 
@@ -165,4 +165,15 @@ export const closeScript = async (script : string) => {
     }
 
     await setCache(settings.openedScripts, newValue);
+}
+export const setServerURL = async (url : string) => {
+    await clear()
+    await setCache(settings.currServerURL, url);
+}
+
+export const getCurrProxyId = async () => {
+    return getCache(settings.currProxyId);
+}
+export const setCurrProxyId = async (val) => {
+    await setCache(settings.currProxyId, val);
 }

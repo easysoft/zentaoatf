@@ -3,6 +3,7 @@ package repo
 import (
 	"errors"
 	"fmt"
+
 	"github.com/easysoft/zentaoatf/pkg/domain"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
@@ -98,7 +99,14 @@ func (r *WorkspaceRepo) Update(workspace model.Workspace) error {
 		logUtils.Errorf(color.RedString("update workspace failed, error: %s.", err.Error()))
 		return err
 	}
-
+	if workspace.ProxyId == 0 {
+		err = r.DB.Model(&model.Workspace{}).Where("id = ?", workspace.ID).
+			Update("proxy_id", 0).Error
+		if err != nil {
+			logUtils.Errorf(color.RedString("update workspace failed, error: %s.", err.Error()))
+			return err
+		}
+	}
 	return nil
 }
 
@@ -236,6 +244,17 @@ func (r *WorkspaceRepo) ListBySite(siteId uint) (pos []model.Workspace, err erro
 		Where("site_id = ?", siteId).
 		Where("NOT deleted AND NOT disabled").
 		Find(&pos).Error
+
+	return
+}
+
+func (r *WorkspaceRepo) SetProxyId(id, proxyId uint) (err error) {
+	err = r.DB.Model(&model.Workspace{}).Where("id = ?", id).
+		Updates(map[string]interface{}{"proxy_id": proxyId}).Error
+	if err != nil {
+		logUtils.Errorf(color.RedString("set workspace proxy id failed, error: %s.", err.Error()))
+		return
+	}
 
 	return
 }

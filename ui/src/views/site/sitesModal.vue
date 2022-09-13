@@ -70,11 +70,13 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, ref } from "vue";
+import { PageTab } from "@/store/tabs";
+import { defineProps, defineEmits, ref, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import { StateType } from "@/views/site/store";
 import { momentUtcDef } from "@/utils/datetime";
+import { StateType as GlobalData } from "@/store/global";
 
 import List from "@/components/List.vue";
 import ListItem from "@/components/ListItem.vue";
@@ -96,10 +98,16 @@ const emit = defineEmits<{
 }>();
 
 const editId = ref(0);
-const store = useStore<{ Site: StateType }>();
+const store = useStore<{ Site: StateType, global: GlobalData }>();
 const showCreateSiteModal = ref(false);
 
 const {fetchSites, sites} = useSites();
+
+const serverUrl = computed<any>(() => store.state.global.serverUrl);
+watch(serverUrl, () => {
+  console.log('watch serverUrl', serverUrl.value)
+  fetchSites()
+}, { deep: true })
 
 const create = () => {
   console.log("create");

@@ -56,6 +56,8 @@ import {computed, onBeforeUnmount, onMounted, reactive, ref, watch} from "vue";
 import {useStore} from "vuex";
 import {WebSocketData} from "@/store/websoket";
 import {ExecStatus} from "@/store/exec";
+import {ProxyData} from "@/store/proxy";
+import {WorkspaceData} from "@/store/workspace";
 import bus from "@/utils/eventBus";
 import settings from "@/config/settings";
 import {ZentaoData} from "@/store/zentao";
@@ -65,20 +67,26 @@ import Icon from '@/components/Icon.vue';
 import {momentTime} from "@/utils/datetime";
 import {isInArray} from "@/utils/array";
 import {StateType as GlobalStateType} from "@/store/global";
+import { get as getWorkspace, uploadToProxy, autoSelectProxy } from "@/views/workspace/service";
+import {mvLog} from "@/views/result/service";
+
 const { t } = useI18n();
 
-const store = useStore<{global: GlobalStateType, Zentao: ZentaoData, WebSocket: WebSocketData, Exec: ExecStatus}>();
+const store = useStore<{global: GlobalStateType, Zentao: ZentaoData, WebSocket: WebSocketData, Exec: ExecStatus, workspace: WorkspaceData, proxy: ProxyData}>();
 const logContentExpand = computed<boolean>(() => store.state.global.logContentExpand);
 
 const currSite = computed<any>(() => store.state.Zentao.currSite);
 const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 const wsStatus = computed<any>(() => store.state.WebSocket.connStatus);
 const isRunning = computed<any>(() => store.state.Exec.isRunning);
+const currentWorkspace = ref({} as any);
+const currProxy = computed<any>(() => store.state.proxy.currProxy);
 
 const cachedExecData = ref({})
 const caseCount = ref(1)
 const caseResult = ref({})
 const caseDetail = ref({})
+const realPathMap = ref({})
 const lastWsMsg = ref({})
 
 // websocket
@@ -102,11 +110,13 @@ watch(logContentExpand, () => {
   hideAllDetailOrNot(logContentExpand.value)
 }, {deep: true})
 
-const onWebsocketMsgEvent = (data: any) => {
+const onWebsocketMsgEvent = async (data: any) => {
   console.log('WebsocketMsgEvent in ExecLog', data.msg)
 
   let item = JSON.parse(data.msg) as WsMsg
-
+  if(item.category == 'watch'){
+    return;
+  }
   if ('isRunning' in wsMsg) {
     console.log('change isRunning to ', item.isRunning)
     store.dispatch('Exec/setRunning', item.isRunning)
@@ -128,6 +138,16 @@ const onWebsocketMsgEvent = (data: any) => {
     caseResult.value[item.info.key] = item.info.status
   }
 
+  Object.keys(realPathMap.value).forEach(key => {
+    item.msg = item.msg.replace(key, realPathMap.value[key])
+  })
+
+  if(currentWorkspace.value.proxy_id > 0 && item.info != undefined){
+    item.info.logDir = await downloadLog(item);
+    if( item.msg == ""){
+      return;
+    }
+  }
   if(JSON.stringify(lastWsMsg.value) === JSON.stringify(item)){
     return;
   }
@@ -140,6 +160,39 @@ const onWebsocketMsgEvent = (data: any) => {
   scroll('log-list')
 }
 
+const downloadLog = async (item) => {
+  const msg = item.msg;
+  let pth = item?.logDir
+  if(msg.indexOf('Report') !== 0 && msg.indexOf('报告') !== 0){
+    return;
+  }
+  let logPath = '';
+  if(msg.indexOf('Report') === 0){
+    logPath = msg.replace('Report', '')
+    logPath = logPath.replace('.', '')
+  }else if(msg.indexOf('报告') === 0){
+    logPath = msg.replace('报告', '')
+    logPath = logPath.replace('。', '')
+  }
+  await mvLog({file: logPath, workspaceId: currentWorkspace.value.id}).then(resp => {
+    if(resp.code === 0){
+      pth = resp.data.replace('log.txt', '');
+      item.msg = item.msg.replace(logPath, resp.data)
+      let emptMsg = {...item}
+      emptMsg.msg = '';
+      emptMsg.isRunning = false;
+      emptMsg.time = '';
+      wsMsg.out.push(emptMsg)
+      store.dispatch('Result/list', {
+        keywords: '',
+        enabled: 1,
+        pageSize: 10,
+        page: 1
+        });
+         }
+  })
+  return pth
+}
 const updateStatisticInfo = (logDir) => {
   console.log('updateStatisticInfo')
   updateStatistic({path: logDir}).then((res) => {
@@ -168,7 +221,7 @@ onBeforeUnmount( () => {
   bus.off(settings.eventClearWebSocketMsg, clearWebsocketMsgEvent);
 })
 
-const exec = (data: any) => {
+const exec = async (data: any) => {
   console.log('exec', data)
 
   let execType = data.execType
@@ -188,10 +241,22 @@ const exec = (data: any) => {
   }
 
   caseCount.value++
-  let msg = {}
+  let msg = {} as any
+  let workspaceId = 0;
   if (execType === 'ztf') {
     const scripts = data.scripts
     const sets = genWorkspaceToScriptsMap(scripts)
+    if(!workspaceId){
+        if(scripts.length > 0){
+            workspaceId = scripts[0].workspaceId
+        }
+    }
+    if(!workspaceId){
+        if(scripts.length > 0){
+            workspaceId = scripts[0].workspaceId
+        }
+    }
+    console.log('===', sets)
     msg = {act: 'execCase', testSets: sets}
 
   } else if (execType === 'unit') {
@@ -202,6 +267,7 @@ const exec = (data: any) => {
       submitResult: data.submitResult,
       name: data.name,
     }
+    workspaceId = workspaceId == 0 ? data.id : workspaceId;
 
     msg = {act: 'execUnit', testSets: [set], productId: currProduct.value.id}
 
@@ -210,8 +276,57 @@ const exec = (data: any) => {
   }
 
   console.log('exec testing', msg)
-  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg))
+
+  const proxyPath = await selectProxy(workspaceId, msg)
+  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), proxyPath)
 }
+
+const selectProxy = async (workspaceId, msg) => {
+  if(msg.testSets == undefined){
+    return '';
+  }
+  currentWorkspace.value = {};
+  let workspaceInfo = {} as any;
+  if(workspaceId>0){
+    workspaceInfo = await getWorkspace(workspaceId)
+  }
+  let selectedProxy = {data:{path:''}} as any;
+  if(workspaceInfo.data == undefined || workspaceInfo.data.proxies == '' || workspaceInfo.data.proxies == '0'){
+    selectedProxy = {data:currProxy.value}
+  }else{
+    const msgSelectProxy = {
+      msg: `<span class="strong">`+t('case_select_proxy')+`</span>`,
+      time: momentTime(new Date())}
+    wsMsg.out.push(msgSelectProxy)
+    selectedProxy = await autoSelectProxy(workspaceInfo.data);
+  }
+  currentWorkspace.value = workspaceInfo.data;
+  currentWorkspace.value.proxy_id = 0;
+  if (selectedProxy.data.id > 0) {
+    currentWorkspace.value.proxy_id = selectedProxy.data.id;
+    const msgUpload = {
+    msg: `<span class="strong">`+t('case_upload_to_proxy')+`</span>`,
+    time: momentTime(new Date())}
+    wsMsg.out.push(msgUpload)
+    msg.testSets[0].proxyId = selectedProxy.data.id;
+    const resp = await uploadToProxy(msg.testSets);
+    const testSetsMap = resp.data;
+    realPathMap.value = testSetsMap;
+    let casesMap = {};
+    var keys = Object.keys(testSetsMap);
+    keys.forEach((val) => {
+    casesMap[testSetsMap[val]] = val;
+    });
+    msg.testSets.forEach((set, setIndex) => {
+      if (set.cases != undefined) {
+          set.cases.forEach((casePath, caseIndex) => {
+          msg.testSets[setIndex].cases[caseIndex] = casesMap[casePath];
+        });
+      }
+    });
+  }
+  return selectedProxy.data.path;
+  }
 
 const logLevel = ref('result')
 const logStatus = ref('')

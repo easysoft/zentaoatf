@@ -85,6 +85,7 @@ const editorChange = (newScriptCode) => {
         type: 'script',
         data: props.tab.data
     });
+    store.dispatch('Script/updateCurrentCodeChanged', changed)
 }
 
 const save = (item) => {

@@ -1,11 +1,12 @@
 package middleware
 
 import (
+	"net/http"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/easysoft/zentaoatf/internal/server/core/dao"
 	"github.com/easysoft/zentaoatf/pkg/domain"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
-	"net/http"
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/context"
@@ -19,11 +20,14 @@ func InitCheck() iris.Handler {
 			return
 		}
 
-		//lang := ctx.URLParam("lang")
-		//if lang != commConsts.Language {
-		//	commConsts.Language = lang
-		//	i118Utils.Init(commConsts.Language, commConsts.AppServer)
-		//}
+		lang := ctx.URLParam("lang")
+		if lang == "" {
+			lang = commConsts.Language
+		}
+		if lang != commConsts.Language {
+			commConsts.Language = lang
+			i118Utils.Init(commConsts.Language, commConsts.AppServer)
+		}
 
 		ctx.Next()
 	}

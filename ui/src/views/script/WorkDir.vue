@@ -14,6 +14,14 @@
         :defaultCollapsed="true"
       />
       <FormNode :show="showModal" @submit="createNode" @cancel="modalClose" :path="currentRnNode.path" :name="currentRnNode.title" ref="formNode" />
+      <FormWorkspace
+        v-if="showWorkspaceModal"
+        :show="showWorkspaceModal"
+        @submit="createWorkSpace"
+        @cancel="modalWorkspaceClose"
+        ref="formWorkspace"
+        :workspaceId="currentNode.workspaceId"
+      />
     </div>
     <Button
       v-if="checkable && checkedKeys.length"
@@ -32,14 +40,6 @@
       :workspaceId="syncFromZentaoWorkspaceId"
       ref="syncFromZentaoRef"
     />
-    <FormWorkspace
-      v-if="showWorkspaceModal"
-      :show="showWorkspaceModal"
-      @submit="createWorkSpace"
-      @cancel="modalWorkspaceClose"
-      ref="formWorkspace"
-      :workspaceId="currentNode.workspaceId"
-     />
   </div>
 </template>
 
@@ -53,7 +53,7 @@ import { WorkspaceData } from "@/store/workspace";
 import {getContextMenuStyle, resizeWidth} from "@/utils/dom";
 import Tree from "@/components/Tree.vue";
 import notification from "@/utils/notification";
-import { computed, defineExpose, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, defineExpose, onMounted, onUnmounted, ref, watch, onBeforeUnmount } from "vue";
 import Button from '@/components/Button.vue';
 import TreeContextMenu from './TreeContextMenu.vue';
 import FormSyncFromZentao  from "./FormSyncFromZentao.vue";
@@ -73,6 +73,7 @@ const { t } = useI18n();
 
 const store = useStore<{ global: GlobalData, Zentao: ZentaoData, Script: ScriptData, Workspace: WorkspaceData }>();
 const global = computed<any>(() => store.state.global.tabIdToWorkspaceIdMap);
+const serverUrl = computed<any>(() => store.state.global.serverUrl);
 const currSite = computed<any>(() => store.state.Zentao.currSite);
 const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
@@ -81,7 +82,6 @@ const currWorkspace = computed<any>(() => store.state.Script.currWorkspace);
 const isWin = isWindows()
 
 store.dispatch('Zentao/fetchLangs')
-const langs = computed<any[]>(() => store.state.Zentao.langs);
 
 const router = useRouter();
 let workspace = router.currentRoute.value.params.workspace as string
@@ -108,7 +108,22 @@ onMounted(() => {
   setTimeout(() => {
     resizeWidth('main', 'left', 'splitter-h', 'right', 380, 800)
   }, 600)
+  bus.on(settings.eventWebSocketMsg, onWebsocketMsgEvent);
 })
+
+onBeforeUnmount( () => {
+  console.log('onBeforeUnmount')
+  bus.off(settings.eventWebSocketMsg, onWebsocketMsgEvent);
+})
+
+const onWebsocketMsgEvent = (data: any) => {
+  console.log('WebsocketMsgEvent in WatchFile', data.msg)
+
+  let item = JSON.parse(data.msg)
+  if(item.category == 'watch'){
+    loadScripts()
+  }
+}
 
 const onToolbarClicked = (e) => {
   const node = e.node == undefined ? treeDataMap.value[''] : treeDataMap.value[e.node.id]
@@ -205,6 +220,10 @@ const selectCasesFromReport = async (): Promise<void> => {
 }
 selectCasesFromReport()
 
+watch(serverUrl, () => {
+  console.log('watch serverUrl', serverUrl.value)
+  initData()
+}, { deep: true })
 watch(currProduct, () => {
   console.log('watch currProduct', currProduct.value.id)
   initData()

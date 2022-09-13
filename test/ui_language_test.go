@@ -3,12 +3,16 @@ package main
 import (
 	"testing"
 
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"
 )
 
 var languageBrowser playwright.Browser
 
-func SwitchLanguage(t *testing.T) {
+func SwitchLanguage(t provider.T) {
+	t.ID("5464")
+	t.AddParentSuite("设置界面语言")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -70,5 +74,5 @@ func SwitchLanguage(t *testing.T) {
 }
 
 func TestUiLanguage(t *testing.T) {
-	t.Run("SwitchLanguage", SwitchLanguage)
+	runner.Run(t, "设置界面语言", SwitchLanguage)
 }

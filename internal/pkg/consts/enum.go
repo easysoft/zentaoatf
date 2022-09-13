@@ -63,6 +63,8 @@ const (
 	ExecTask   ExecCmd = "execTask"
 
 	ExecUnit ExecCmd = "execUnit"
+
+	Watch ExecCmd = "watch"
 )
 
 func (e ExecCmd) String() string {

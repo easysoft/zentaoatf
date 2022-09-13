@@ -18,6 +18,7 @@ require (
 	github.com/facebookgo/structtag v0.0.0-20150214074306-217e25fb9691 // indirect
 	github.com/facebookgo/subset v0.0.0-20200203212716-c811ad88dec4 // indirect
 	github.com/fatih/color v1.13.0
+	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/go-git/go-git/v5 v5.4.2 // indirect
 	github.com/go-playground/validator/v10 v10.9.0
 	github.com/go-redis/redis/v8 v8.11.3
@@ -37,6 +38,7 @@ require (
 	github.com/mitchellh/mapstructure v1.4.2 // indirect
 	github.com/nats-io/nats-server/v2 v2.7.2 // indirect
 	github.com/otiai10/copy v1.7.0 // indirect
+	github.com/ozontech/allure-go/pkg/framework v0.6.18
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/playwright-community/playwright-go v0.2000.1
 	github.com/robfig/cron/v3 v3.0.1

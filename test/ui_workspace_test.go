@@ -4,6 +4,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"
 )
 
@@ -12,7 +14,9 @@ var (
 	workspacePath = pw + "\\demo\\php"
 )
 
-func CreateWorkspace(t *testing.T) {
+func CreateWorkspace(t provider.T) {
+	t.ID("5468")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -141,7 +145,9 @@ func CreateWorkspace(t *testing.T) {
 	}
 }
 
-func SyncFromZentao(t *testing.T) {
+func SyncFromZentao(t provider.T) {
+	t.ID("5468")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -220,7 +226,9 @@ func SyncFromZentao(t *testing.T) {
 	}
 }
 
-func SyncTwoCaseFromZentao(t *testing.T) {
+func SyncTwoCaseFromZentao(t provider.T) {
+	t.ID("5468")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -302,7 +310,9 @@ func SyncTwoCaseFromZentao(t *testing.T) {
 	}
 }
 
-func SyncToZentao(t *testing.T) {
+func SyncToZentao(t provider.T) {
+	t.ID("5468")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -367,7 +377,9 @@ func SyncToZentao(t *testing.T) {
 		t.FailNow()
 	}
 }
-func Copy(t *testing.T) {
+func Copy(t provider.T) {
+	t.ID("5474")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -458,7 +470,9 @@ func Copy(t *testing.T) {
 		t.FailNow()
 	}
 }
-func DeleteScript(t *testing.T) {
+func DeleteScript(t provider.T) {
+	t.ID("5478")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -534,7 +548,9 @@ func DeleteScript(t *testing.T) {
 		t.FailNow()
 	}
 }
-func DeleteDir(t *testing.T) {
+func DeleteDir(t provider.T) {
+	t.ID("5477")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -611,7 +627,9 @@ func DeleteDir(t *testing.T) {
 	}
 }
 
-func DeleteWorkspace(t *testing.T) {
+func DeleteWorkspace(t provider.T) {
+	t.ID("5468")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -677,7 +695,9 @@ func DeleteWorkspace(t *testing.T) {
 		t.FailNow()
 	}
 }
-func Clip(t *testing.T) {
+func Clip(t provider.T) {
+	t.ID("5476")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -774,7 +794,9 @@ func Clip(t *testing.T) {
 	}
 }
 
-func FilterDir(t *testing.T) {
+func FilterDir(t provider.T) {
+	t.ID("5494")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -848,7 +870,9 @@ func FilterDir(t *testing.T) {
 		t.FailNow()
 	}
 }
-func FilterSuite(t *testing.T) {
+func FilterSuite(t provider.T) {
+	t.ID("5495")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -935,7 +959,9 @@ func FilterSuite(t *testing.T) {
 		t.FailNow()
 	}
 }
-func FilterTask(t *testing.T) {
+func FilterTask(t provider.T) {
+	t.ID("5496")
+	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -990,7 +1016,7 @@ func FilterTask(t *testing.T) {
 		t.FailNow()
 	}
 	page.WaitForTimeout(600)
-	err = page.Click("#filterModal>>.tab-nav:has-text(\"按任务\")")
+	err = page.Click("#filterModal>>.tab-nav:has-text(\"按测试单\")")
 	if err != nil {
 		t.Errorf("The Click by suite fail: %v", err)
 		t.FailNow()
@@ -1002,7 +1028,7 @@ func FilterTask(t *testing.T) {
 		t.Errorf("The Click test_task filter fail: %v", err)
 		t.FailNow()
 	}
-	page.WaitForSelector(".toolbar:has-text(\"按任务\")")
+	page.WaitForSelector(".toolbar:has-text(\"按测试单\")")
 	err = page.Click(".tree-node-title:has-text(\"单元测试工作目录\")")
 	scriptLocator, err := page.Locator(".tree>>text=1_string_match.php")
 	c, err := scriptLocator.Count()
@@ -1020,17 +1046,97 @@ func FilterTask(t *testing.T) {
 		t.FailNow()
 	}
 }
+func Collapse(t provider.T) {
+	t.ID("5472")
+	t.AddParentSuite("管理禅道站点下工作目录")
+	pw, err := playwright.Run()
+	if err != nil {
+		t.Error(err)
+		t.FailNow()
+	}
+	headless := true
+	var slowMo float64 = 100
+	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	if err != nil {
+		t.Errorf("Fail to launch the web workspaceBrowser: %v", err)
+		t.FailNow()
+	}
+	page, err := workspaceBrowser.NewPage()
+	if err != nil {
+		t.Errorf("Create the new page fail: %v", err)
+		t.FailNow()
+	}
+	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
+		t.Errorf("The specific URL is missing: %v", err)
+		t.FailNow()
+	}
+
+	locator, err := page.Locator("#siteMenuToggle")
+	if err != nil {
+		t.Errorf("The siteMenuToggle is missing: %v", err)
+		t.FailNow()
+	}
+	err = locator.Click()
+	if err != nil {
+		t.Errorf("The Click is fail: %v", err)
+		t.FailNow()
+	}
+	_, err = page.WaitForSelector("#navbar .list-item")
+	if err != nil {
+		t.Errorf("Wait for workspace list nav fail: %v", err)
+		t.FailNow()
+	}
+	err = page.Click(".list-item-title>>text=单元测试站点")
+	if err != nil {
+		t.Errorf("The Click workspace nav fail: %v", err)
+		t.FailNow()
+	}
+	err = page.Click(`#leftPane>>.toolbar>>[title="展开"]`)
+	if err != nil {
+		t.Errorf("Click expand workspace btn fail: %v", err)
+		t.FailNow()
+	}
+	page.WaitForTimeout(100)
+	locator, _ = page.Locator("#leftPane>>.tree-node-item>>text=1_string_match.php")
+	count, _ := locator.Count()
+	if count == 0 {
+		t.Error("Expand workspace fail")
+		t.FailNow()
+	}
+	err = page.Click(`#leftPane>>.toolbar>>[title="折叠"]`)
+	if err != nil {
+		t.Errorf("Click Collapse workspace btn fail: %v", err)
+		t.FailNow()
+	}
+	page.WaitForTimeout(100)
+	locator, _ = page.Locator("#leftPane>>.tree-node-item>>text=1_string_match.php")
+	count, _ = locator.Count()
+	if count > 0 {
+		t.Error("Collapse workspace fail")
+		t.FailNow()
+	}
+	if err = workspaceBrowser.Close(); err != nil {
+		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+		t.FailNow()
+	}
+	if err = pw.Stop(); err != nil {
+		t.Errorf("The playwright cannot be stopped: %v", err)
+		t.FailNow()
+	}
+}
 func TestWorkspace(t *testing.T) {
-	t.Run("SyncTwoCaseFromZentao", SyncTwoCaseFromZentao)
-	t.Run("SyncFromZentao", SyncFromZentao)
-	t.Run("SyncToZentao", SyncToZentao)
-	t.Run("Copy", Copy)
-	t.Run("Clip", Clip)
-	t.Run("DeleteScript", DeleteScript)
-	t.Run("DeleteDir", DeleteDir)
-	t.Run("FilterDir", FilterDir)
-	t.Run("FilterSuite", FilterSuite)
-	t.Run("FilterTask", FilterTask)
-	t.Run("DeleteWorkspace", DeleteWorkspace)
-	t.Run("CreateWorkspace", CreateWorkspace)
+	runner.Run(t, "客户端-从禅道同步部分用例", SyncTwoCaseFromZentao)
+	runner.Run(t, "客户端-从禅道同步", SyncFromZentao)
+	runner.Run(t, "客户端-同步到禅道", SyncToZentao)
+	runner.Run(t, "客户端-复制粘贴树状脚本文件", Copy)
+	runner.Run(t, "客户端-剪切粘贴树状脚本文件", Clip)
+	runner.Run(t, "客户端-删除树状脚本文件", DeleteScript)
+	runner.Run(t, "客户端-删除树状脚本文件夹", DeleteDir)
+	runner.Run(t, "客户端-按目录过滤禅道用例脚本", FilterDir)
+	runner.Run(t, "客户端-按套件过滤禅道用例脚本", FilterSuite)
+	runner.Run(t, "客户端-按测试单过滤禅道用例脚本", FilterTask)
+	runner.Run(t, "客户端-显示展开折叠脚本树状结构", Collapse)
+	runner.Run(t, "客户端-删除禅道工作目录", DeleteWorkspace)
+	runner.Run(t, "客户端-创建禅道工作目录", CreateWorkspace)
 }

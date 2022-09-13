@@ -16,8 +16,8 @@ import (
 	"time"
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/suite"
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
 
 var (
@@ -26,13 +26,16 @@ var (
 	successCbRe = regexp.MustCompile("Success to report bug for case \\d+|成功为用例\\d+提交缺陷")
 )
 
-type CbSuit struct {
+type CbSuite struct {
 	suite.Suite
-	testCount uint32
 }
 
-func (s *CbSuit) TestCbSuite() {
-	assert.Equal(s.Suite.T(), "Success", testCb())
+func (s *CbSuite) BeforeEach(t provider.T) {
+	t.ID("1591")
+	t.AddSubSuite("命令行-提交失败结果为禅道中缺陷")
+}
+func (s *CbSuite) TestCbSuite(t provider.T) {
+	t.Require().Equal("Success", testCb())
 }
 
 func testCb() string {
@@ -64,5 +67,5 @@ func TestCb(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		cbNewline = "\r\n"
 	}
-	suite.Run(t, new(CbSuit))
+	suite.RunSuite(t, new(CbSuite))
 }

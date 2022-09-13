@@ -3,12 +3,16 @@ package main
 import (
 	"testing"
 
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"
 )
 
 var siteBrowser playwright.Browser
 
-func CreateSite(t *testing.T) {
+func CreateSite(t provider.T) {
+	t.ID("5466")
+	t.AddParentSuite("配置禅道站点")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -127,8 +131,9 @@ func CreateSite(t *testing.T) {
 		t.FailNow()
 	}
 }
-func EditSite(t *testing.T) {
-	// var timeout float64 = 5000
+func EditSite(t provider.T) {
+	t.ID("5466")
+	t.AddParentSuite("配置禅道站点")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -259,7 +264,9 @@ func EditSite(t *testing.T) {
 		t.FailNow()
 	}
 }
-func DeleteSite(t *testing.T) {
+func DeleteSite(t provider.T) {
+	t.ID("5466")
+	t.AddParentSuite("配置禅道站点")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -341,7 +348,7 @@ func DeleteSite(t *testing.T) {
 }
 
 func TestUiSite(t *testing.T) {
-	t.Run("EditSite", EditSite)
-	t.Run("DeleteSite", DeleteSite)
-	t.Run("CreateSite", CreateSite)
+	runner.Run(t, "客户端-编辑禅道站点", EditSite)
+	runner.Run(t, "客户端-删除禅道站点", DeleteSite)
+	runner.Run(t, "客户端-创建禅道站点", CreateSite)
 }

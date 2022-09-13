@@ -6,7 +6,7 @@
     @onOk="submit"
     :okTitle="okTitle"
     :title="t('sync-from-zentao')"
-    :contentStyle="{ width: '50vw', overflow: 'hidden' }"
+    :contentStyle="{ width: '50vw', overflow: 'hidden', minWidth: '800px' }"
   >
     <Form>
       <FormItem labelWidth="140px" :label="t('module')">

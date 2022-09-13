@@ -62,6 +62,13 @@ export function SetWidth(content: string, width: number): string{
     return `<span style="display: inline-block; width: ${width}px; text-align: right; padding-right: 6px;">${content}</span>`;
 }
 
+export function mvLog(data: any): Promise<any> {
+    return request({
+        url: `${apiPath}/mvLog`,
+        method: 'post',
+        data: data,
+    });
+}
 export async function getStatistic(path: string): Promise<any> {
     const params = {path: path}
 

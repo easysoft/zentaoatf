@@ -7,6 +7,8 @@ cid=1
 pid=1
 
 1. exactly match >> ~c:!=2~
+2. exactly match >> ~c:!=2~
+3. exactly match >> ~c:!=2~
 
 */
 

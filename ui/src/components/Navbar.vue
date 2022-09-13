@@ -5,6 +5,7 @@
 
     <BatchRunButton />
 
+    <ProxyNav />
     <div class="gap flex-auto"></div>
     <AppToolbar />
     <WindowToolbar />
@@ -16,6 +17,7 @@ import Logo from './Logo.vue';
 import WindowToolbar from './WindowToolbar.vue';
 import AppToolbar from './AppToolbar.vue';
 import SiteNav from '@/views/site/SiteNav.vue';
+import ProxyNav from '@/views/proxy/ProxyNav.vue';
 import BatchRunButton from '@/views/exec/BatchRunButton.vue';
 </script>
 

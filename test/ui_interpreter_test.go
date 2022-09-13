@@ -3,12 +3,16 @@ package main
 import (
 	"testing"
 
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"
 )
 
 var interpreterBrowser playwright.Browser
 
-func CreateInterpreter(t *testing.T) {
+func CreateInterpreter(t provider.T) {
+	t.ID("5465")
+	t.AddParentSuite("设置界面语言")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -92,7 +96,9 @@ func CreateInterpreter(t *testing.T) {
 		t.FailNow()
 	}
 }
-func EditInterpreter(t *testing.T) {
+func EditInterpreter(t provider.T) {
+	t.ID("5465")
+	t.AddParentSuite("设置界面语言")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -188,7 +194,9 @@ func EditInterpreter(t *testing.T) {
 		t.FailNow()
 	}
 }
-func DeleteInterpreter(t *testing.T) {
+func DeleteInterpreter(t provider.T) {
+	t.ID("5465")
+	t.AddParentSuite("设置界面语言")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -261,7 +269,7 @@ func DeleteInterpreter(t *testing.T) {
 }
 
 func TestUiInterpreter(t *testing.T) {
-	t.Run("CreateInterpreter", CreateInterpreter)
-	t.Run("EditInterpreter", EditInterpreter)
-	t.Run("DeleteInterpreter", DeleteInterpreter)
+	runner.Run(t, "客户端-创建解析器", CreateInterpreter)
+	runner.Run(t, "客户端-编辑解析器", EditInterpreter)
+	runner.Run(t, "客户端-删除解析器", DeleteInterpreter)
 }

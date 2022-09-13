@@ -4,12 +4,16 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"
 )
 
 var resultBrowser playwright.Browser
 
-func Detail(t *testing.T) {
+func Detail(t provider.T) {
+	t.ID("5489")
+	t.AddParentSuite("测试结果")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -66,43 +70,54 @@ func Detail(t *testing.T) {
 	err = page.Click("#rightPane .result-list-item .list-item-title>>nth=0")
 	if err != nil {
 		t.Errorf("Click first result fail: %v", err)
+		t.FailNow()
 	}
 	_, err = page.WaitForSelector(".result-action .btn:has-text('提交结果到禅道')")
 	if err != nil {
 		t.Errorf("Wait result tabpage fail: %v", err)
+		t.FailNow()
 	}
 	locator, err = page.Locator(".page-result .single small")
 	if err != nil {
 		t.Errorf("Find result percent locator fail: %v", err)
+		t.FailNow()
 	}
 	result, err := locator.InnerText()
 	if err != nil {
 		t.Errorf("Find result percent fail: %v", err)
+		t.FailNow()
 	}
 	if result != "通过 0.00%" {
 		t.Error("Detail result error")
+		t.FailNow()
 	}
 	locator, err = page.Locator(".result-step-checkpoint code")
 	if err != nil {
 		t.Errorf("Find result expect locator fail: %v", err)
+		t.FailNow()
 	}
 	expectVal, err := locator.InnerText()
 	if err != nil {
 		t.Errorf("Find result expect fail: %v", err)
+		t.FailNow()
 	}
 	if strings.TrimSpace(expectVal) != "~c:!=2~" {
 		t.Error("Detail expect error")
+		t.FailNow()
 	}
 	locator, err = page.Locator(".result-step-checkpoint code>>nth=1")
 	if err != nil {
 		t.Errorf("Find result actual locator fail: %v", err)
+		t.FailNow()
 	}
 	actualVal, err := locator.InnerText()
 	if err != nil {
 		t.Errorf("Find result actual fail: %v", err)
+		t.FailNow()
 	}
 	if strings.TrimSpace(actualVal) != "2" {
 		t.Error("Detail actual error")
+		t.FailNow()
 	}
 	if err = workspaceBrowser.Close(); err != nil {
 		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
@@ -114,7 +129,9 @@ func Detail(t *testing.T) {
 	}
 }
 
-func SubmitResult(t *testing.T) {
+func SubmitResult(t provider.T) {
+	t.ID("5499")
+	t.AddParentSuite("测试结果")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -181,12 +198,12 @@ func SubmitResult(t *testing.T) {
 		t.Errorf("Wait syncToZentaoModal fail: %v", err)
 		t.FailNow()
 	}
-	titleInput, err := page.Locator("#syncToZentaoModal>>.form-item:has-text('或输入新任务标题')>>input")
+	titleInput, err := page.Locator("#syncToZentaoModal>>.form-item:has-text('或输入新测试单标题')>>input")
 	if err != nil {
 		t.Errorf("Find title input fail: %v", err)
 		t.FailNow()
 	}
-	err = titleInput.Fill("单元测试任务")
+	err = titleInput.Fill("单元测试测试单")
 	if err != nil {
 		t.Errorf("Fil title input fail: %v", err)
 		t.FailNow()
@@ -217,7 +234,9 @@ func SubmitResult(t *testing.T) {
 	}
 }
 
-func SubmitBug(t *testing.T) {
+func SubmitBug(t provider.T) {
+	t.ID("5500")
+	t.AddParentSuite("测试结果")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -310,7 +329,9 @@ func SubmitBug(t *testing.T) {
 	}
 }
 
-func SubmitBugTwoStep(t *testing.T) {
+func SubmitBugTwoStep(t provider.T) {
+	t.ID("5500")
+	t.AddParentSuite("测试结果")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -405,8 +426,8 @@ func SubmitBugTwoStep(t *testing.T) {
 }
 
 func TestUiResult(t *testing.T) {
-	t.Run("Detail", Detail)
-	t.Run("SubmitResult", SubmitResult)
-	t.Run("SubmitBug", SubmitBug)
-	t.Run("SubmitBugTwoStep", SubmitBugTwoStep)
+	runner.Run(t, "客户端-查看测试结果详情", Detail)
+	runner.Run(t, "客户端-提交禅道用例脚本测试结果", SubmitResult)
+	runner.Run(t, "客户端-提交禅道失败用例为缺陷", SubmitBug)
+	runner.Run(t, "客户端-提交禅道部分失败用例为缺陷", SubmitBugTwoStep)
 }

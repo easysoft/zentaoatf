@@ -3,18 +3,23 @@ package i118Utils
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/easysoft/zentaoatf/pkg/lib/res"
-	"golang.org/x/text/language"
-	"golang.org/x/text/message"
 	"io/ioutil"
 	"path/filepath"
+
+	resUtils "github.com/easysoft/zentaoatf/pkg/lib/res"
+	"golang.org/x/text/language"
+	"golang.org/x/text/message"
 )
 
 var I118Prt *message.Printer
 
 func Init(lang string, app string) {
+	if lang == "en-US" {
+		lang = "en"
+	} else if lang == "zh-CN" {
+		lang = "zh"
+	}
 	langRes := filepath.Join("res", app, lang, "messages.json")
-
 	bytes, _ := resUtils.ReadRes(langRes)
 	InitResFromAsset(bytes)
 

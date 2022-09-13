@@ -19,8 +19,8 @@ import (
 	"time"
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/suite"
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
 
 var (
@@ -45,17 +45,21 @@ var (
 	newline   = "\n"
 )
 
-type SetSuit struct {
+type SetSuite struct {
 	suite.Suite
-	testCount uint32
 }
 
-func (s *SetSuit) TestChSetSuite() {
-	assert.Equal(s.Suite.T(), "Success", testSet("2"))
+func (s *SetSuite) BeforeEach(t provider.T) {
+	t.ID("1579")
+	t.AddSubSuite("命令行-set")
 }
 
-func (s *SetSuit) TestEnSetSuite() {
-	assert.Equal(s.Suite.T(), "Success", testSet("1"))
+func (s *SetSuite) TestChSetSuite(t provider.T) {
+	t.Require().Equal("Success", testSet("2"))
+}
+
+func (s *SetSuite) TestEnSetSuite(t provider.T) {
+	t.Require().Equal("Success", testSet("1"))
 }
 
 func testSet(language string) (ret string) {
@@ -124,5 +128,5 @@ func TestSet(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		newline = "\r\n"
 	}
-	suite.Run(t, new(SetSuit))
+	suite.RunSuite(t, new(SetSuite))
 }

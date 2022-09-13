@@ -197,16 +197,15 @@ func GenBugStepText(step commDomain.StepLog) string {
 
 	stepId, _ := strconv.Atoi(step.Id)
 	stepId += 1
-	stepTxt := fmt.Sprintf("步骤%d： %s %s\n", stepId, step.Name, step.Status)
-
+	stepTxt := fmt.Sprintf("%s%d： %s %s\n", i118Utils.Sprintf("step"), stepId, step.Name, step.Status)
 	for _, checkpoint := range step.CheckPoints {
 		text := fmt.Sprintf(
-			"  检查点：%s\n"+
-				"    期待结果：\n"+
+			"  %s：%s\n"+
+				"    %s：\n"+
 				"      %s\n"+
-				"    实际结果：\n"+
+				"    %s：\n"+
 				"      %s",
-			checkpoint.Status, checkpoint.Expect, checkpoint.Actual)
+			i118Utils.Sprintf("checkpoint"), checkpoint.Status, i118Utils.Sprintf("expect_result"), checkpoint.Expect, i118Utils.I118Prt.Sprintf("actual_result"), checkpoint.Actual)
 
 		stepResults = append(stepResults, text)
 	}

@@ -215,6 +215,8 @@ github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMo
 github.com/fsnotify/fsnotify v1.4.9/go.mod h1:znqG4EE+3YCdAaPaxE2ZRY/06pZUdp0tY4IgpuI1SZQ=
 github.com/fsnotify/fsnotify v1.5.1 h1:mZcQUHVQUQWoPXXtuf9yuEXKudkV2sx1E06UadKWpgI=
 github.com/fsnotify/fsnotify v1.5.1/go.mod h1:T3375wBYaZdLLcVNkcVbzGHY7f1l/uK5T5Ai1i3InKU=
+github.com/fsnotify/fsnotify v1.5.4 h1:jRbGcIw6P2Meqdwuo0H1p6JVLbL5DHKAKlYndzMwVZI=
+github.com/fsnotify/fsnotify v1.5.4/go.mod h1:OVB6XrOHzAwXMpEM7uPOzcehqUV2UqJxmVXmkdnm1bU=
 github.com/gavv/httpexpect/v2 v2.3.1 h1:sGLlKMn8AuHS9ztK9Sb7AJ7OxIL8v2PcLdyxfKt1Fo4=
 github.com/gavv/httpexpect/v2 v2.3.1/go.mod h1:yOE8m/aqFYQDNrgprMeXgq4YynfN9h1NgcE1+1suV64=
 github.com/ghodss/yaml v1.0.0 h1:wQHKEahhL6wmXdzwWG11gIVCkOv05bNOh+Rxn0yngAk=
@@ -608,8 +610,12 @@ github.com/ozontech/allure-go v0.6.17 h1:PO+bNrp3USw5RG36QwsxNvUYbd8IaKKs14YR1fc
 github.com/ozontech/allure-go v0.6.17/go.mod h1:p+WTLaHRdFDcGwJPeQTbJ2DDjMuAMJ2TH6TXhoBohnk=
 github.com/ozontech/allure-go/pkg/allure v0.6.3 h1:+nGs+2Kq+XprmONt4xww+MEDjnShkLK6kPtfOknernY=
 github.com/ozontech/allure-go/pkg/allure v0.6.3/go.mod h1:xyVZ+6tLDzQ4pr19eqLR0EckaI51kYUC1A5ihsDTygo=
+github.com/ozontech/allure-go/pkg/allure v0.6.4 h1:lQ2NJSgl3sj/0oi4HTG+8EXkV1A+wWN7WIfDkOaBtmY=
+github.com/ozontech/allure-go/pkg/allure v0.6.4/go.mod h1:xyVZ+6tLDzQ4pr19eqLR0EckaI51kYUC1A5ihsDTygo=
 github.com/ozontech/allure-go/pkg/framework v0.6.17 h1:XCnysk4udjqR4EzJzYFRvmTtwNDkyiLYBo4mnYi80C8=
 github.com/ozontech/allure-go/pkg/framework v0.6.17/go.mod h1:RxbhHdppAf70AST+S0G3iMDxkHcNb11ygMaXISF3m1A=
+github.com/ozontech/allure-go/pkg/framework v0.6.18 h1:QoYFww5gMu3qPaoVDVetBa17ahKTHNYEhbyUIP+qYn8=
+github.com/ozontech/allure-go/pkg/framework v0.6.18/go.mod h1:QNKRZHCSCxJHSBuJssp00Fc7EL5XvVX/IEJNSgxBN18=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c h1:Lgl0gzECD8GnQ5QCWA8o6BtfL6mDH5rQgM4/fX3avOs=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pelletier/go-toml v1.2.0/go.mod h1:5z9KED0ma1S8pY6P1sdut58dfprrGBbd/94hg7ilaic=
@@ -1008,6 +1014,8 @@ golang.org/x/sys v0.0.0-20210806184541-e5e7981a1069/go.mod h1:oPkhp1MJrh7nUepCBc
 golang.org/x/sys v0.0.0-20210910150752-751e447fb3d0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220111092808-5a964db01320 h1:0jf+tOCoZ3LyutmCOWpVni1chK4VfFLhRsDK7MhqGRY=
 golang.org/x/sys v0.0.0-20220111092808-5a964db01320/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/sys v0.0.0-20220412211240-33da011f77ad h1:ntjMns5wyP/fN65tdBD4g8J5w8n015+iIIs9rtjXkY0=
+golang.org/x/sys v0.0.0-20220412211240-33da011f77ad/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/term v0.0.0-20201117132131-f5c789dd3221/go.mod h1:Nr5EML6q2oocZ2LXRh80K7BxOlk5/8JxuGnuhpl+muw=
 golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1 h1:v+OssWQX+hTHEmOBgwxdZxK4zHq3yOs8F9J7mk0PY8E=
 golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1/go.mod h1:bj7SfCRtBDWHUb9snDiAeCFNEtKQo2Wmx5Cou7ajbmo=

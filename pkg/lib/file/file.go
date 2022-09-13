@@ -4,9 +4,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/easysoft/zentaoatf/pkg/consts"
-	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
-	cp "github.com/otiai10/copy"
 	"io"
 	"io/ioutil"
 	"os"
@@ -16,6 +13,11 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	"github.com/easysoft/zentaoatf/pkg/consts"
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	cp "github.com/otiai10/copy"
+	"github.com/snowlyg/helper/dir"
 )
 
 func ReadFile(filePath string) string {
@@ -171,6 +173,37 @@ func CopyFile(src, dst string) (nBytes int64, err error) {
 	return
 }
 
+func CopyFileAll(src, dst string) (nBytes int64, err error) {
+	sourceFileStat, err := os.Stat(src)
+	if err != nil {
+		return
+	}
+
+	if !sourceFileStat.Mode().IsRegular() {
+		err = fmt.Errorf("%s is not a regular file", src)
+		return
+	}
+
+	source, err := os.Open(src)
+	if err != nil {
+		return
+	}
+	defer source.Close()
+
+	path, _ := filepath.Split(dst)
+	err = dir.InsureDir(path)
+	if err != nil {
+		return
+	}
+	destination, err := os.Create(dst)
+	if err != nil {
+		return
+	}
+	defer destination.Close()
+	nBytes, err = io.Copy(destination, source)
+	return
+}
+
 func CopyDir(src, dest string) (err error) {
 	opt := cp.Options{
 		Skip: func(src string) (bool, error) {
@@ -212,7 +245,9 @@ func GetExtNameWithoutDot(pathOrUrl string) string {
 func GetDirName(pth string) (name string) {
 	pth = strings.Trim(pth, consts.FilePthSep)
 	index := strings.LastIndex(pth, consts.FilePthSep)
-	name = pth[index:]
+	if index != -1 {
+		name = pth[index:]
+	}
 	name = strings.Trim(name, consts.FilePthSep)
 
 	return name

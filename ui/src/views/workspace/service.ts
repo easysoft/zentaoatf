@@ -1,5 +1,6 @@
 import request from '@/utils/request';
 import { QueryParams } from '@/types/data.d';
+import { checkProxy } from "@/views/proxy/service";
 
 const apiPath = 'workspaces';
 
@@ -39,5 +40,23 @@ export async function remove(id: number): Promise<any> {
     return request({
         url: `/${apiPath}/${id}`,
         method: 'delete',
+    });
+}
+
+export async function uploadToProxy(params: any): Promise<any> {
+    return request({
+        url: `/${apiPath}/uploadToProxy`,
+        method: 'POST',
+        data: params,
+    });
+}
+
+export async function autoSelectProxy(workspace) {
+    if(workspace == undefined || workspace.id == undefined) {
+        return 'local';
+    }
+    return request({
+        url: `/${apiPath}/${workspace.id}/proxy`,
+        method: 'get',
     });
 }

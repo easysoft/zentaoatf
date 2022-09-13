@@ -5,6 +5,8 @@ var (
 		&Interpreter{},
 		&Site{},
 		&Workspace{},
+		&Proxy{},
+		&Server{},
 		&Statistic{},
 	}
 )
