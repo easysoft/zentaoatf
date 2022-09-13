@@ -53,6 +53,7 @@
         name="path"
         :label="t('proxy_link')"
         :info="validateInfos.path"
+        :helpText="t('proxy_desc')"
       >
         <input type="text" v-model="modelRef.path" />
       </FormItem>

@@ -33,6 +33,7 @@ var (
 	ErrRecordWithSameInterpreterExist = ResponseCode{3012, "Record Exist"}
 	ErrRecordNotExist                 = ResponseCode{4000, "Record Not Found"}
 	NotAvailable                      = ResponseCode{5000, "Not Available"}
+	ServerNotAvailable                = ResponseCode{5001, "Server Not Available"}
 
 	ErrFileOrDirExist = ResponseCode{6000, "File or Dir Exist"}
 )

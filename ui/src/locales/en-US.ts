@@ -79,6 +79,7 @@ export default {
     'script_lang': 'Script Language',
 
     'remote_proxy': 'Remote Proxy',
+    'proxy_desc':  'The execution script will be uploaded to the proxy server(user directory/ztf/proxyExecDir), please deploy the script dependencies to the proxy server in advance',
     'create_remote_proxy': 'Create Remote Proxy',
     'edit_remote_proxy': 'Edit Remote Proxy',
     'proxy_link': 'Reomte Proxy Link',
@@ -320,6 +321,7 @@ export default {
     'biz_3012': 'Record with same interpreter already exist',
     'biz_4000': 'Record Not Found',
     'biz_5000': 'Not Available',
+    'biz_5001': 'Server Not Available',
     'biz_6000': 'File or dir already Exist',
 
     'restore_panel_size' : 'restore panel size',

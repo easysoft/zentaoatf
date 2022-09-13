@@ -53,7 +53,6 @@
         labelWidth="100px"
         name="proxy_id[]"
         :label="index == 0 ? t('remote_proxy') : ''"
-        :helpText="index == proxyList.length-1 ? t('priority_desc') : ''"
       >
         <div class="form-select">
           <select name="type" v-model="proxyList[index]">

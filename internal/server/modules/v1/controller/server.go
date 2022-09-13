@@ -67,7 +67,7 @@ func (c *ServerCtrl) Update(ctx iris.Context) {
 
 	err := c.ServerService.Update(req)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.ServerNotAvailable, err.Error()))
 		return
 	}
 

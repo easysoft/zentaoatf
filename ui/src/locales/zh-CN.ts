@@ -87,6 +87,7 @@ export default {
     'script_lang': '脚本语言',
     
     'remote_proxy': '远程代理',
+    'proxy_desc':  '执行脚本会上传到代理服务器(用户根目录/ztf/proxyExecDir)，请提前将脚本依赖部署于代理服务器',
     'create_remote_proxy': '新建远程代理',
     'edit_remote_proxy': '编辑远程代理',
     'proxy_link': '远程代理地址',
@@ -332,6 +333,7 @@ export default {
     'biz_3012': '已存在相同解析器的记录',
     'biz_4000': '记录不存在',
     'biz_5000': '无效的请求',
+    'biz_5001': '服务器不可用',
     'biz_6000': '文件或目录已存在',
 
     'restore_panel_size': '还原面板尺寸',

@@ -22,7 +22,7 @@ const (
 	ExecZipPath        = "uploadTmp"
 	DownloadServerPath = "serverTmp"
 	DownloadPath       = "downloadTmp"
-	ExecProxyPath      = "execTmp"
+	ExecProxyPath      = "proxyExecDir"
 
 	ExpectResultPass = "pass"
 
