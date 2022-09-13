@@ -186,6 +186,6 @@ func ViewScript(t provider.T) {
 }
 
 func TestUiScript(t *testing.T) {
-	// runner.Run(t, "客户端-编辑保存禅道站点脚本", SaveScript)
+	runner.Run(t, "客户端-编辑保存禅道站点脚本", SaveScript)
 	runner.Run(t, "客户端-显示禅道站点脚本", ViewScript)
 }
