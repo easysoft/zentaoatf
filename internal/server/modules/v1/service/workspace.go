@@ -198,7 +198,7 @@ func (s *WorkspaceService) UploadScriptsToProxy(testSets []serverDomain.TestSet)
 	dataMap := resp["data"].(map[string]interface{})
 	proxyWorkDir := dataMap["workDir"].(string)
 	proxySep := dataMap["sep"].(string)
-	realScriptDir := proxyWorkDir + commConsts.ExecProxyPath + proxySep + commConsts.ExecZipPath
+	realScriptDir := proxyWorkDir + commConsts.ExecProxyPath
 
 	for _, testSet := range testSets {
 		if workspaceIsZtfMap[testSet.WorkspacePath] {
@@ -212,9 +212,7 @@ func (s *WorkspaceService) UploadScriptsToProxy(testSets []serverDomain.TestSet)
 				pathMap[strings.Replace(casePath, workspacePath, realScriptDir, 1)] = oldCasePath
 			}
 		} else {
-			if commConsts.PthSep != proxySep {
-				pathMap[realScriptDir] = testSet.WorkspacePath
-			}
+			pathMap[realScriptDir] = testSet.WorkspacePath
 		}
 	}
 	return
@@ -233,8 +231,8 @@ func (s *WorkspaceService) UploadScripts(fh *multipart.FileHeader, ctx iris.Cont
 		logUtils.Infof(color.RedString("file upload failed, error: %s.", err.Error()))
 		return
 	}
-
 	fileUtils.Unzip(zipPath, path)
+	fileUtils.CopyDir(filepath.Join(path, commConsts.ExecZipPath), path)
 	return
 }
 

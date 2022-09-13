@@ -4,6 +4,14 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"io/ioutil"
+	"path"
+	"path/filepath"
+	"sort"
+	"strconv"
+	"strings"
+	"time"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
@@ -18,13 +26,6 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/mattn/go-runewidth"
-	"io/ioutil"
-	"path"
-	"path/filepath"
-	"sort"
-	"strconv"
-	"strings"
-	"time"
 )
 
 func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
@@ -168,7 +169,9 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 	msgReport := "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
 
 	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg(msgReport, "false", commConsts.Result, nil, wsMsg)
+		websocketHelper.SendExecMsg(msgReport, "false", commConsts.Result, map[string]interface{}{
+			"logDir": commConsts.ExecLogDir,
+		}, wsMsg)
 	}
 
 	logUtils.ExecConsole(color.FgCyan, msgReport)

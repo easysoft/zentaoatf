@@ -1,9 +1,12 @@
 package service
 
 import (
+	"bufio"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -183,7 +186,7 @@ func (s *TestResultService) ZipLog(fileName string) (zipPath string, err error) 
 	return
 }
 
-func (s *TestResultService) DownloadFromProxy(fileName string, workspaceId int) (zipPath string, err error) {
+func (s *TestResultService) DownloadFromProxy(fileName string, workspaceId int, proxyPath string, pathMap map[string]string) (zipPath string, err error) {
 	if fileName == "" {
 		err = errors.New("file path is empty")
 		return
@@ -200,15 +203,15 @@ func (s *TestResultService) DownloadFromProxy(fileName string, workspaceId int) 
 		return
 	}
 	url := ""
-	proxyInfo, _ := s.ProxyService.Get(workspaceInfo.ProxyId)
-	if proxyInfo.Path != "" {
-		url = proxyInfo.Path
+	if proxyPath != "" {
+		url = proxyPath
 	}
 	if url == "" {
 		err = errors.New("proxy path is empty")
 		return
 	}
 	zipPath = filepath.Join(commConsts.WorkDir, commConsts.DownloadPath, commConsts.ResultZip)
+	os.Remove(zipPath)
 	fileUtils.Download(url+"api/v1/results/downloadLog?file="+fileName, zipPath)
 	execLogDir := logUtils.GetLogDir(workspaceInfo.Path)
 	fileUtils.Unzip(zipPath, execLogDir)
@@ -220,7 +223,47 @@ func (s *TestResultService) DownloadFromProxy(fileName string, workspaceId int) 
 	paths, err = ioutil.ReadDir(childrenDir)
 	for _, path := range paths {
 		fileUtils.CopyFile(fileUtils.AddSepIfNeeded(childrenDir)+path.Name(), execLogDir+path.Name())
+		replaceProxyPath(execLogDir+path.Name(), fileName, execLogDir, pathMap)
 	}
 	fileUtils.RmDir(childrenDir)
 	return execLogDir + commConsts.LogText, nil
+}
+
+func replaceProxyPath(fullPath, fileName, execLogDir string, pathMap map[string]string) (err error) {
+	newContent := ""
+	if fullPath[len(fullPath)-5:] == ".json" {
+		report, err := analysisHelper.ReadReportByPath(fullPath)
+		if err != nil {
+			return err
+		}
+		for k, res := range report.FuncResult {
+			for proxyFilePath, localFilePath := range pathMap {
+				report.FuncResult[k].Path = strings.ReplaceAll(res.Path, proxyFilePath, localFilePath)
+				report.FuncResult[k].RelativePath = strings.ReplaceAll(res.RelativePath, proxyFilePath, localFilePath)
+			}
+		}
+		newContentByte, err := json.Marshal(report)
+		if err != nil {
+			return err
+		}
+		newContent = string(newContentByte)
+	} else {
+		bytes, _ := ioutil.ReadFile(fullPath)
+		newContent = strings.ReplaceAll(string(bytes), fileName[0:len(fileName)-10], execLogDir)
+		for proxyFilePath, localFilePath := range pathMap {
+			newContent = strings.ReplaceAll(newContent, proxyFilePath, localFilePath)
+		}
+	}
+	f, err := os.OpenFile(fullPath, os.O_WRONLY|os.O_TRUNC, 0600)
+	defer f.Close()
+	if err != nil {
+		return err
+	}
+	writer := bufio.NewWriter(f)
+	_, err = writer.Write([]byte(newContent))
+	if err != nil {
+		return err
+	}
+	writer.Flush()
+	return nil
 }

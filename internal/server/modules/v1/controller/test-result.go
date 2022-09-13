@@ -125,8 +125,10 @@ func (c *TestResultCtrl) DownloadLog(ctx iris.Context) {
 
 func (c *TestResultCtrl) MvLog(ctx iris.Context) {
 	type mvlog struct {
-		File        string `json:"file"`
-		WorkspaceId int    `json:"workspaceId"`
+		File        string            `json:"file"`
+		ProxyPath   string            `json:"proxyPath"`
+		WorkspaceId int               `json:"workspaceId"`
+		PathMap     map[string]string `json:"pathMap"`
 	}
 	params := mvlog{}
 	err := ctx.ReadJSON(&params)
@@ -134,9 +136,7 @@ func (c *TestResultCtrl) MvLog(ctx iris.Context) {
 		c.ErrResp(commConsts.ParamErr, err.Error())
 		return
 	}
-	fileName := params.File
-	workspaceId := params.WorkspaceId
-	logPath, err := c.TestResultService.DownloadFromProxy(fileName, workspaceId)
+	logPath, err := c.TestResultService.DownloadFromProxy(params.File, params.WorkspaceId, params.ProxyPath, params.PathMap)
 
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))

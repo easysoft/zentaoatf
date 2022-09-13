@@ -53,6 +53,7 @@ export default {
 
     'zentao_site': 'Zentao Site',
     'local': 'Local',
+    'local_proxy': 'Local Proxy',
     'site_management': 'Zentao Site Management',
     'site_num': '{count} sites',
     'create_site': 'Create Site',

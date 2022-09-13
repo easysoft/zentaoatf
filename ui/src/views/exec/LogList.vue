@@ -69,18 +69,18 @@ import {isInArray} from "@/utils/array";
 import {StateType as GlobalStateType} from "@/store/global";
 import { get as getWorkspace, uploadToProxy, autoSelectProxy } from "@/views/workspace/service";
 import {mvLog} from "@/views/result/service";
+import useCurrentProduct from "@/hooks/use-current-product";
 
 const { t } = useI18n();
 
 const store = useStore<{global: GlobalStateType, Zentao: ZentaoData, WebSocket: WebSocketData, Exec: ExecStatus, workspace: WorkspaceData, proxy: ProxyData}>();
 const logContentExpand = computed<boolean>(() => store.state.global.logContentExpand);
 
-const currSite = computed<any>(() => store.state.Zentao.currSite);
 const currProduct = computed<any>(() => store.state.Zentao.currProduct);
-const wsStatus = computed<any>(() => store.state.WebSocket.connStatus);
 const isRunning = computed<any>(() => store.state.Exec.isRunning);
 const currentWorkspace = ref({} as any);
-const currProxy = computed<any>(() => store.state.proxy.currProxy);
+const defaultProxy = computed<any>(() => store.state.proxy.currProxy);
+const currProxy = ref('');
 
 const cachedExecData = ref({})
 const caseCount = ref(1)
@@ -138,16 +138,17 @@ const onWebsocketMsgEvent = async (data: any) => {
     caseResult.value[item.info.key] = item.info.status
   }
 
-  Object.keys(realPathMap.value).forEach(key => {
-    item.msg = item.msg.replace(key, realPathMap.value[key])
-  })
-
-  if(currentWorkspace.value.proxy_id > 0 && item.info != undefined){
+  if(currProxy.value != '' && item.info != undefined){
     item.info.logDir = await downloadLog(item);
     if( item.msg == ""){
       return;
     }
   }
+
+  Object.keys(realPathMap.value).forEach(key => {
+    item.msg = item.msg.replace(key, realPathMap.value[key])
+  })
+
   if(JSON.stringify(lastWsMsg.value) === JSON.stringify(item)){
     return;
   }
@@ -161,8 +162,9 @@ const onWebsocketMsgEvent = async (data: any) => {
 }
 
 const downloadLog = async (item) => {
-  const msg = item.msg;
-  let pth = item?.logDir
+  const nItem = {...item}
+  const msg = nItem.msg;
+  let pth = nItem?.logDir
   if(msg.indexOf('Report') !== 0 && msg.indexOf('报告') !== 0){
     return;
   }
@@ -174,11 +176,12 @@ const downloadLog = async (item) => {
     logPath = msg.replace('报告', '')
     logPath = logPath.replace('。', '')
   }
-  await mvLog({file: logPath, workspaceId: currentWorkspace.value.id}).then(resp => {
+
+  await mvLog({file: logPath, workspaceId: currentWorkspace.value.id, proxyPath: currProxy.value, pathMap: realPathMap.value}).then(resp => {
     if(resp.code === 0){
       pth = resp.data.replace('log.txt', '');
-      item.msg = item.msg.replace(logPath, resp.data)
-      let emptMsg = {...item}
+      item.msg = nItem.msg.replace(logPath, resp.data)
+      let emptMsg = {...nItem}
       emptMsg.msg = '';
       emptMsg.isRunning = false;
       emptMsg.time = '';
@@ -277,8 +280,8 @@ const exec = async (data: any) => {
 
   console.log('exec testing', msg)
 
-  const proxyPath = await selectProxy(workspaceId, msg)
-  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), proxyPath)
+  currProxy.value = await selectProxy(workspaceId, msg)
+  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), currProxy.value)
 }
 
 const selectProxy = async (workspaceId, msg) => {
@@ -292,7 +295,7 @@ const selectProxy = async (workspaceId, msg) => {
   }
   let selectedProxy = {data:{path:''}} as any;
   if(workspaceInfo.data == undefined || workspaceInfo.data.proxies == '' || workspaceInfo.data.proxies == '0'){
-    selectedProxy = {data:currProxy.value}
+    selectedProxy = {data:defaultProxy.value}
   }else{
     const msgSelectProxy = {
       msg: `<span class="strong">`+t('case_select_proxy')+`</span>`,
@@ -322,6 +325,9 @@ const selectProxy = async (workspaceId, msg) => {
           set.cases.forEach((casePath, caseIndex) => {
           msg.testSets[setIndex].cases[caseIndex] = casesMap[casePath];
         });
+      }else{
+        msg.testSets[setIndex].workspacePath = keys[0]
+        msg.testSets[setIndex].workspaceType = currentWorkspace.value.type
       }
     });
   }

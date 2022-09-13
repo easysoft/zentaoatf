@@ -122,8 +122,10 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 
 		if testSet.WorkspaceId != 0 {
 			po, _ := c.WorkspaceService.Get(uint(testSet.WorkspaceId))
-			testSet.WorkspacePath = po.Path
-			testSet.WorkspaceType = po.Type
+			if testSet.WorkspacePath == "" {
+				testSet.WorkspacePath = po.Path
+				testSet.WorkspaceType = po.Type
+			}
 		}
 	}
 
