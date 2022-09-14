@@ -56,7 +56,7 @@ const StoreModel: ModuleType = {
         getCurrProxyId().then((currProxyId) => {
             let currProxy = {};
             if(currProxyId == undefined || currProxyId == 0){
-                currProxy = {id:0, name: '', path: ''};
+                currProxy = {id:0, name: '', path: 'local'};
             }else{
                 payload.forEach(proxy => {
                     if(proxy.id == currProxyId){

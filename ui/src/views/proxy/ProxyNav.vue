@@ -29,9 +29,9 @@ const store = useStore<{ proxy: ProxyData }>();
 
 store.dispatch("proxy/fetchProxies");
 const proxies = computed<any[]>(() => {
-    const proxies = store.state.proxy.proxies
-    proxies.push({id:0, name: t('local'), path: ''})
-    return proxies
+    const proxiesList = [...store.state.proxy.proxies]
+    proxiesList.push({id:0, name: t('local'), path: 'local'})
+    return proxiesList
 });
 const currProxy = computed<any>(() => store.state.proxy.currProxy);
 

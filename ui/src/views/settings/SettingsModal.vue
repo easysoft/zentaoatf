@@ -204,7 +204,11 @@ onMounted(() => {
 
 const store = useStore<{ global: GlobalData, proxy: ProxyData }>();
 store.dispatch("proxy/fetchProxies");
-const remoteProxies = computed<any[]>(() => store.state.proxy.proxies);
+const remoteProxies = computed<any[]>(() => {
+  const proxiesList = [...store.state.proxy.proxies]
+  proxiesList.push({id:0, name: t('local'), path: 'local'})
+  return proxiesList
+});
 const serverUrl = computed<any>(() => store.state.global.serverUrl);
 watch(serverUrl, () => {
   console.log('watch serverUrl', serverUrl.value)
@@ -327,7 +331,7 @@ onMounted(() => {
 });
 
 const list = () => {
-  listInterpreter().then((json) => {
+  listInterpreter('local').then((json) => {
     console.log("---", json);
 
     if (json.code === 0) {
@@ -342,7 +346,7 @@ const list = () => {
           defaultServerId = server.id;
         }
       });
-      json.data.splice(0, 0, {id: 0, path: t("local"), is_default: defaultServerId > 0 ? false : true});
+      json.data.splice(0, 0, {id: 0, path: 'local', name: t('local'), is_default: defaultServerId > 0 ? false : true});
       remoteServers.value = json.data;
     }
   });
