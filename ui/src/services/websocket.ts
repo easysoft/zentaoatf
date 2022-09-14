@@ -60,10 +60,10 @@ export class WebSocket {
   }
 
   static joinRoomAndSend(roomName: string, msg: string, appApiHost:string): void {
-    if (WebSocket.conns[appApiHost] && WebSocket.conns[appApiHost].room(roomName)) {
-      WebSocket.conns[appApiHost].room(roomName).emit('OnChat', msg)
-      return
-    } else {
+    // if (WebSocket.conns[appApiHost] && WebSocket.conns[appApiHost].room(roomName)) {
+    //   WebSocket.conns[appApiHost].room(roomName).emit('OnChat', msg)
+    //   return
+    // } else {
       WebSocket.init(true, appApiHost).then(() => {
         WebSocket.conns[appApiHost].joinRoom(roomName).then((_room) => {
           console.log(`success to join room "${roomName}"`)
@@ -75,7 +75,7 @@ export class WebSocket {
           this.joinRoomAndSend(roomName, msg, appApiHost)
         })
       })
-    }
+    // }
   }
 
   static sentMsg(roomName: string, msg: string, appApiHost: string): void {

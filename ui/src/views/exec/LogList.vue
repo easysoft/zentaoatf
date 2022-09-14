@@ -138,7 +138,7 @@ const onWebsocketMsgEvent = async (data: any) => {
     caseResult.value[item.info.key] = item.info.status
   }
 
-  if(currProxy.value != '' && item.info != undefined){
+  if(currProxy.value != '' && currProxy.value != 'local' && item.info != undefined){
     item.info.logDir = await downloadLog(item);
     if( item.msg == ""){
       return;

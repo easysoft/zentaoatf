@@ -23,7 +23,7 @@ export interface ModuleType extends StoreModuleType<WebSocketData> {
 const initState: WebSocketData = {
   connStatus: '',
   room: 'room',
-  appApiHost: ''
+  appApiHost: 'local'
 }
 
 const StoreModel: ModuleType = {
@@ -44,7 +44,10 @@ const StoreModel: ModuleType = {
   },
   actions: {
     async connect(_ctx, {room, appApiHost}) {
-      console.log("connect to websocket")
+      if(appApiHost == ''){
+        appApiHost = 'local'
+      }
+      console.log("connect to websocket", appApiHost)
       await WebSocket.init(false, appApiHost)
       
       const msg = {act: 'init'}
