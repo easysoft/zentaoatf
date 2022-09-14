@@ -294,7 +294,7 @@ const selectProxy = async (workspaceId, msg) => {
     workspaceInfo = await getWorkspace(workspaceId)
   }
   let selectedProxy = {data:{path:''}} as any;
-  if(workspaceInfo.data == undefined || workspaceInfo.data.proxies == ''){
+  if(workspaceInfo.data == undefined || workspaceInfo.data.proxies == '' || workspaceInfo.data.proxies == '0'){
     selectedProxy = {data:defaultProxy.value}
   }else{
     const msgSelectProxy = {
