@@ -354,6 +354,10 @@
       "translation": "Exit current case."
     },
     {
+        "id": "no_delete_default_server",
+        "translation": "Can not delete default server."
+    },
+    {
       "id": "exit_exec_all",
       "translation": "Exit follow-up case."
     },

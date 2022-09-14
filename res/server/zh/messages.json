@@ -347,6 +347,10 @@
       "translation": "退出当前用例。"
     },
     {
+        "id": "no_delete_default_server",
+        "translation": "请勿删除默认服务器"
+    },
+    {
       "id": "exit_exec_all",
       "translation": "放弃后续用例。"
     },

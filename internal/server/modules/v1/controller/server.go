@@ -85,7 +85,7 @@ func (c *ServerCtrl) Delete(ctx iris.Context) {
 
 	err = c.ServerService.Delete(uint(id))
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.ErrRecordNotAllowDelete, err.Error()))
 		return
 	}
 

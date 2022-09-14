@@ -8,6 +8,7 @@ import (
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 )
 
 type ServerService struct {
@@ -60,6 +61,10 @@ func (s *ServerService) Update(server model.Server) (err error) {
 }
 
 func (s *ServerService) Delete(id uint) error {
+	info, _ := s.Get(id)
+	if info.IsDefault {
+		return errors.New(i118Utils.Sprintf("no_delete_default_server"))
+	}
 	return s.ServerRepo.Delete(id)
 }
 
