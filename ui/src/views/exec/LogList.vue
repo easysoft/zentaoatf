@@ -117,7 +117,7 @@ const onWebsocketMsgEvent = async (data: any) => {
   if(item.category == 'watch'){
     return;
   }
-  if ('isRunning' in wsMsg) {
+  if (item.isRunning != undefined) {
     console.log('change isRunning to ', item.isRunning)
     store.dispatch('Exec/setRunning', item.isRunning)
   }
@@ -138,7 +138,7 @@ const onWebsocketMsgEvent = async (data: any) => {
     caseResult.value[item.info.key] = item.info.status
   }
 
-  if(currProxy.value != '' && item.info != undefined){
+  if(currProxy.value != '' && currProxy.value != 'local' && item.info != undefined){
     item.info.logDir = await downloadLog(item);
     if( item.msg == ""){
       return;
@@ -294,13 +294,15 @@ const selectProxy = async (workspaceId, msg) => {
     workspaceInfo = await getWorkspace(workspaceId)
   }
   let selectedProxy = {data:{path:''}} as any;
-  if(workspaceInfo.data == undefined || workspaceInfo.data.proxies == ''){
+  if(workspaceInfo.data == undefined || workspaceInfo.data.proxies == '' || workspaceInfo.data.proxies == '0'){
     selectedProxy = {data:defaultProxy.value}
   }else{
-    const msgSelectProxy = {
-      msg: `<span class="strong">`+t('case_select_proxy')+`</span>`,
-      time: momentTime(new Date())}
-    wsMsg.out.push(msgSelectProxy)
+    if(workspaceInfo.data.proxies != '0'){
+        const msgSelectProxy = {
+          msg: `<span class="strong">`+t('case_select_proxy')+`</span>`,
+          time: momentTime(new Date())}
+        wsMsg.out.push(msgSelectProxy)
+    }
     selectedProxy = await autoSelectProxy(workspaceInfo.data);
   }
   currentWorkspace.value = workspaceInfo.data;

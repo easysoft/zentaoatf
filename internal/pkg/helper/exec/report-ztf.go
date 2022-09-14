@@ -20,8 +20,15 @@ import (
 )
 
 func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
-	workspacePath string, wsMsg *websocket.Message) {
-
+	workspacePath string, ch chan int, wsMsg *websocket.Message) {
+	select {
+	case _, ok := <-ch:
+		if !ok {
+			SetRunning(false)
+			return
+		}
+	default:
+	}
 	// print failed case
 	failedCount := 0
 	failedCaseLines := make([]string, 0)
