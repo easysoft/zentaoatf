@@ -81,7 +81,7 @@ export class WebSocket {
   static sentMsg(roomName: string, msg: string, appApiHost: string): void {
     console.log(`send msg to room "${roomName}"`)
     if (WebSocket.conns[appApiHost]){
-        WebSocket.conns[appApiHost].leaveAll().then(() =>
+        WebSocket.conns[appApiHost].disconnect().then(() =>
         this.joinRoomAndSend(roomName, msg, appApiHost)
         )
     }else{
