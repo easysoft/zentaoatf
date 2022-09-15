@@ -21,6 +21,7 @@ import {
     getNodeMap,
 } from './service';
 import {ScriptFileNotExist} from "@/utils/const";
+import { jsonStrDef } from '@/utils/dom';
 
 export interface ScriptData {
     list: [];
@@ -31,6 +32,7 @@ export interface ScriptData {
     currWorkspace: any
     queryParams: any;
     currentCodeChanged: boolean;
+    watchPaths: string;
 }
 
 export interface ModuleType extends StoreModuleType<ScriptData> {
@@ -42,6 +44,7 @@ export interface ModuleType extends StoreModuleType<ScriptData> {
         setQueryParams: Mutation<ScriptData>;
         setCheckedNodes: Mutation<ScriptData>;
         setCurrentCodeChanged: Mutation<ScriptData>;
+        setWatchPath: Mutation<ScriptData>;
     };
     actions: {
         listScript: Action<ScriptData, ScriptData>;
@@ -73,6 +76,7 @@ const initState: ScriptData = {
 
     checkedNodes: [],
     currentCodeChanged: false,
+    watchPaths: '',
 };
 
 const StoreModel: ModuleType = {
@@ -106,9 +110,12 @@ const StoreModel: ModuleType = {
         setCurrentCodeChanged(state, payload) {
             state.currentCodeChanged = payload;
         },
+        setWatchPath(state, payload) {
+            state.watchPaths = payload;
+        },
     },
     actions: {
-        async listScript({ commit }, playload: any ) {
+        async listScript({ commit, state }, playload: any ) {
             const response: ResponseData = await list(playload);
             const data = response.data;
             data.id = data.path;
@@ -119,7 +126,11 @@ const StoreModel: ModuleType = {
                 data.children.forEach(element => {
                     watchPaths.push({WorkspacePath: element.path})
                 });
-                WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify({act: 'watch',testSets:watchPaths}), "local")
+                if(state.watchPaths != JSON.stringify(watchPaths)){
+                    console.log("watchPaths", state.watchPaths, JSON.stringify(watchPaths))
+                    WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify({act: 'watch',testSets:watchPaths}), "local")
+                    commit('setWatchPath', JSON.stringify(watchPaths));
+                }
             }
             commit('setQueryParams', playload);
             return true;
