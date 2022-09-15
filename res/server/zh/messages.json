@@ -547,6 +547,10 @@
       "translation": "错误的请求参数：%s。\n"
     },
     {
+      "id": "wrong_url_format",
+      "translation": "链接格式错误"
+    },
+    {
       "id": "server_address",
       "translation": "\n请求地址：\n"
     },

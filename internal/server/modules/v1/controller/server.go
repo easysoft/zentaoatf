@@ -50,7 +50,7 @@ func (c *ServerCtrl) Create(ctx iris.Context) {
 
 	id, err := c.ServerService.Create(req)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.ErrPostParam, err.Error()))
 		return
 	}
 

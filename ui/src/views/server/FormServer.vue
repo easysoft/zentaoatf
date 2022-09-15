@@ -21,7 +21,7 @@
         :label="t('server_link')"
         :info="validateInfos.path"
       >
-        <input type="text" v-model="modelRef.path" />
+        <input type="text" placeholder="http://127.0.0.1:8085" v-model="modelRef.path" />
       </FormItem>
     </Form>
   </ZModal>

@@ -33,6 +33,7 @@ var (
 	ErrRecordWithSameInterpreterExist = ResponseCode{3012, "Record Exist"}
 	ErrRecordNotExist                 = ResponseCode{4000, "Record Not Found"}
 	ErrRecordNotAllowDelete           = ResponseCode{2000, "Record Can Not Delete"}
+	ErrPostParam                      = ResponseCode{2000, "Parameter Error"}
 	NotAvailable                      = ResponseCode{5000, "Not Available"}
 	ServerNotAvailable                = ResponseCode{5001, "Server Not Available"}
 

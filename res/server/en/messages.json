@@ -554,6 +554,10 @@
       "translation": "Wrong request params: %s。\n"
     },
     {
+      "id": "wrong_url_format",
+      "translation": "Wrong format url"
+    },
+    {
       "id": "server_address",
       "translation": "\nRequest Address:\n"
     },

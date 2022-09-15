@@ -8,6 +8,7 @@ import (
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 )
 
 type ProxyService struct {
@@ -30,7 +31,7 @@ func (s *ProxyService) Get(id uint) (proxy model.Proxy, err error) {
 func (s *ProxyService) Create(proxy model.Proxy) (id uint, err error) {
 	proxy.Path = zentaoHelper.FixSiteUrl(proxy.Path)
 	if proxy.Path == "" {
-		err = errors.New("url not right")
+		err = errors.New(i118Utils.Sprintf("wrong_url_format"))
 		return
 	}
 	proxy.Path = fileUtils.AddUrlPathSepIfNeeded(proxy.Path)
@@ -45,7 +46,7 @@ func (s *ProxyService) Create(proxy model.Proxy) (id uint, err error) {
 func (s *ProxyService) Update(proxy model.Proxy) (err error) {
 	proxy.Path = zentaoHelper.FixSiteUrl(proxy.Path)
 	if proxy.Path == "" {
-		err = errors.New("url not right")
+		err = errors.New(i118Utils.Sprintf("wrong_url_format"))
 		return
 	}
 	proxy.Path = fileUtils.AddUrlPathSepIfNeeded(proxy.Path)

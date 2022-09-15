@@ -50,7 +50,7 @@ func (c *ProxyCtrl) Create(ctx iris.Context) {
 
 	id, err := c.ProxyService.Create(req)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.ErrPostParam, err.Error()))
 		return
 	}
 
@@ -67,7 +67,7 @@ func (c *ProxyCtrl) Update(ctx iris.Context) {
 
 	err := c.ProxyService.Update(req)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.ErrPostParam, err.Error()))
 		return
 	}
 
