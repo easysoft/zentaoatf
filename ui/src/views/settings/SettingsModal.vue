@@ -77,10 +77,10 @@
       </template>
 
       <template #action="record">
-        <Button @click="() => handleEditProxy(record)" class="tab-setting-btn" size="sm">{{
+        <Button v-if="record.value.id!=0" @click="() => handleEditProxy(record)" class="tab-setting-btn" size="sm">{{
           t("edit")
         }}</Button>
-        <Button @click="() => handleRemoveProxy(record)" class="tab-setting-btn" size="sm"
+        <Button v-if="record.value.id!=0" @click="() => handleRemoveProxy(record)" class="tab-setting-btn" size="sm"
           >{{ t("delete") }}
         </Button>
         <Button @click="() => handleInterpreterManger(record)" class="tab-setting-btn" size="sm"
