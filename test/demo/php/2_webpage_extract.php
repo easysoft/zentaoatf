@@ -1,11 +1,19 @@
 #!/usr/bin/env php
 <?php
+
 /**
 
 title=extract content from webpage
+timeout=0
 cid=2
 pid=1
 
+1. Load web page from url http://xxx
+2. Retrieve img element zt-logo.png in html
+3. Check img exist >> `.*zt-logo.png`
+1. Load web page from url http://xxx
+2. Retrieve img element zt-logo.png in html
+3. Check img exist >> `.*zt-logo.png`
 1. Load web page from url http://xxx
 2. Retrieve img element zt-logo.png in html
 3. Check img exist >> `.*zt-logo.png`
