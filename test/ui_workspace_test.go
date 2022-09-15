@@ -959,6 +959,88 @@ func FilterSuite(t provider.T) {
 		t.FailNow()
 	}
 }
+func ByModule(t provider.T) {
+	t.ID("5493")
+	t.AddParentSuite("管理禅道站点下工作目录")
+	pw, err := playwright.Run()
+	if err != nil {
+		t.Error(err)
+		t.FailNow()
+	}
+	headless := true
+	var slowMo float64 = 100
+	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	if err != nil {
+		t.Errorf("Fail to launch the web workspaceBrowser: %v", err)
+		t.FailNow()
+	}
+	page, err := workspaceBrowser.NewPage()
+	if err != nil {
+		t.Errorf("Create the new page fail: %v", err)
+		t.FailNow()
+	}
+	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
+		t.Errorf("The specific URL is missing: %v", err)
+		t.FailNow()
+	}
+
+	locator, err := page.Locator("#siteMenuToggle")
+	if err != nil {
+		t.Errorf("The siteMenuToggle is missing: %v", err)
+		t.FailNow()
+	}
+	err = locator.Click()
+	if err != nil {
+		t.Errorf("The Click is fail: %v", err)
+		t.FailNow()
+	}
+	_, err = page.WaitForSelector("#navbar .list-item")
+	if err != nil {
+		t.Errorf("Wait for workspace list nav fail: %v", err)
+		t.FailNow()
+	}
+	err = page.Click(".list-item-title>>text=单元测试站点")
+	if err != nil {
+		t.Errorf("The Click workspace nav fail: %v", err)
+		t.FailNow()
+	}
+	err = page.Click(".tree-node-title:has-text(\"单元测试工作目录\")")
+	if err != nil {
+		t.Errorf("The Click 单元测试工作目录 workspace fail: %v", err)
+		t.FailNow()
+	}
+	err = page.Click("#displayByMenuToggle")
+	if err != nil {
+		t.Errorf("The Click byModule btn fail: %v", err)
+		t.FailNow()
+	}
+	page.WaitForTimeout(100)
+	err = page.Click(".dropdown-menu>>.list-item-content:has-text(\"按模块\")")
+	if err != nil {
+		t.Errorf("The Click by module fail: %v", err)
+		t.FailNow()
+	}
+	err = page.Click(".tree-node-title:has-text(\"module1\")")
+	if err != nil {
+		t.Errorf("The Click module1 dir fail: %v", err)
+		t.FailNow()
+	}
+	scriptLocator, err := page.Locator(".tree-node>>:has-text(\"check string matches pattern\")")
+	c, err := scriptLocator.Count()
+	if err != nil || c == 0 {
+		t.Errorf("Filter suite fail: %v", err)
+		t.FailNow()
+	}
+	if err = workspaceBrowser.Close(); err != nil {
+		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+		t.FailNow()
+	}
+	if err = pw.Stop(); err != nil {
+		t.Errorf("The playwright cannot be stopped: %v", err)
+		t.FailNow()
+	}
+}
 func FilterTask(t provider.T) {
 	t.ID("5496")
 	t.AddParentSuite("管理禅道站点下工作目录")
@@ -1137,6 +1219,7 @@ func TestWorkspace(t *testing.T) {
 	runner.Run(t, "客户端-按套件过滤禅道用例脚本", FilterSuite)
 	runner.Run(t, "客户端-按测试单过滤禅道用例脚本", FilterTask)
 	runner.Run(t, "客户端-显示展开折叠脚本树状结构", Collapse)
+	runner.Run(t, "客户端-按模块展示禅道用例脚本", ByModule)
 	runner.Run(t, "客户端-删除禅道工作目录", DeleteWorkspace)
 	runner.Run(t, "客户端-创建禅道工作目录", CreateWorkspace)
 }
