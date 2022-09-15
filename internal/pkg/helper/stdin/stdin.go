@@ -2,6 +2,10 @@ package stdinHelper
 
 import (
 	"fmt"
+	"os"
+	"regexp"
+	"strings"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
@@ -13,9 +17,6 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stdinUtils "github.com/easysoft/zentaoatf/pkg/lib/stdin"
 	"github.com/fatih/color"
-	"os"
-	"regexp"
-	"strings"
 )
 
 func InputForScriptInterpreter(scripts []string, config *commDomain.WorkspaceConf, from string) bool {
@@ -119,6 +120,7 @@ func InputForSet(dir string) {
 	} else {
 		conf.Language = commConsts.LanguageZh
 	}
+	i118Utils.Init(conf.Language, commConsts.AppServer)
 
 	stdinUtils.InputForBool(&configSite, true, "config_zentao_site")
 	if configSite {
