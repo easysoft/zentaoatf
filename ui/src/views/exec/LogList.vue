@@ -153,7 +153,7 @@ const onWebsocketMsgEvent = async (data: any) => {
     return;
   }
   
-  if(item.info?.logDir != undefined){
+  if(item.info?.logDir != undefined && currentWorkspace.value.type == 'ztf'){
     updateStatisticInfo(item.info.logDir)
   }
   lastWsMsg.value = item;
