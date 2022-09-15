@@ -474,9 +474,9 @@ const handleSetDefault = (item) => {
 };
 const submitServer = (formData) => {
     let serverClone = JSON.parse(JSON.stringify(editServerInfo.value));
-    serverClone.value.name = formData.name;
-    serverClone.value.path = formData.path;
-    saveServer(serverClone.value).then((json) => {
+    serverClone.name = formData.name;
+    serverClone.path = formData.path;
+    saveServer(serverClone).then((json) => {
         if (json.code === 0) {
           formServer.value.clearFormData();
           showCreateServerModal.value = false;
