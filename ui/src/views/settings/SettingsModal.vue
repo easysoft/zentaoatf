@@ -419,7 +419,7 @@ const submitProxy = (formData) => {
 const handleRemoveProxy = (item) => {
   Modal.confirm({
     title: t("confirm_delete", {
-      name: item.value.path,
+      name: item.value.name,
       typ: t("proxy_link"),
     }),
     content: '',
@@ -486,7 +486,7 @@ const submitServer = (formData) => {
 const handleRemoveServer = (item) => {
   Modal.confirm({
     title: t("confirm_delete", {
-      name: item.value.path,
+      name: item.value.name,
       typ: t("server_link"),
     }),
     content: '',
