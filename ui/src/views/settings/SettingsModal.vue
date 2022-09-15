@@ -473,7 +473,10 @@ const handleSetDefault = (item) => {
     }
 };
 const submitServer = (formData) => {
-    let serverClone = JSON.parse(JSON.stringify(editServerInfo.value));
+    let serverClone = {} as any
+    if(editServerInfo.value.value != undefined){
+        serverClone = JSON.parse(JSON.stringify(editServerInfo.value.value));
+    }
     serverClone.name = formData.name;
     serverClone.path = formData.path;
     saveServer(serverClone).then((json) => {
