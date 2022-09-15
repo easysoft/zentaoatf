@@ -34,6 +34,7 @@ export class WebSocket {
             },
 
             _OnNamespaceDisconnect: (_nsConn, msg) => {
+              delete WebSocket.conns[appApiHost]
               console.log('disconnected from namespace: ' + msg.Namespace)
             },
 
@@ -62,12 +63,11 @@ export class WebSocket {
   static joinRoomAndSend(roomName: string, msg: string, appApiHost:string): void {
     // if (WebSocket.conns[appApiHost] && WebSocket.conns[appApiHost].room(roomName)) {
     //   WebSocket.conns[appApiHost].room(roomName).emit('OnChat', msg)
-    //   return
     // } else {
       WebSocket.init(true, appApiHost).then(() => {
         WebSocket.conns[appApiHost].joinRoom(roomName).then((_room) => {
           console.log(`success to join room "${roomName}"`)
-          WebSocket.conns[appApiHost].room(roomName).emit('OnChat', msg)
+          _room.emit('OnChat', msg)
         }).catch(err => {
           console.log(`fail to join room ${roomName}`, err)
           bus.emit(settings.eventWebSocketConnStatus, {msg: '{"conn": "fail"}'});
