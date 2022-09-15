@@ -236,10 +236,10 @@ func replaceProxyPath(fullPath, fileName, execLogDir string, pathMap map[string]
 		if err != nil {
 			return err
 		}
-		for k, res := range report.FuncResult {
+		for k, _ := range report.FuncResult {
 			for proxyFilePath, localFilePath := range pathMap {
-				report.FuncResult[k].Path = strings.ReplaceAll(res.Path, proxyFilePath, localFilePath)
-				report.FuncResult[k].RelativePath = strings.ReplaceAll(res.RelativePath, proxyFilePath, localFilePath)
+				report.FuncResult[k].Path = strings.ReplaceAll(report.FuncResult[k].Path, proxyFilePath, localFilePath)
+				report.FuncResult[k].RelativePath = strings.ReplaceAll(report.FuncResult[k].RelativePath, proxyFilePath, localFilePath)
 			}
 		}
 		newContentByte, err := json.Marshal(report)
