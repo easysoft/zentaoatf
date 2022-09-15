@@ -87,7 +87,7 @@ const caseCount = ref(1)
 const caseResult = ref({})
 const caseDetail = ref({})
 const realPathMap = ref({})
-const lastWsMsg = ref({})
+const lastWsMsg = ref('')
 
 // websocket
 let wsMsg = reactive({in: '', out: [] as any[]});
@@ -128,6 +128,12 @@ const onWebsocketMsgEvent = async (data: any) => {
   }
 
   item = genExecInfo(item, caseCount.value)
+
+  if(lastWsMsg.value === JSON.stringify(item)){
+    return;
+  }
+  lastWsMsg.value = JSON.stringify(item);
+
   if (item.info && item.info.key && isInArray(item.info.status, ['pass', 'fail', 'skip'])) { // set case result
     store.dispatch('Result/list', {
         keywords: '',
@@ -138,8 +144,10 @@ const onWebsocketMsgEvent = async (data: any) => {
     caseResult.value[item.info.key] = item.info.status
   }
 
-  if(currProxy.value != '' && currProxy.value != 'local' && item.info != undefined){
-    item.info.logDir = await downloadLog(item);
+  if(currProxy.value != '' && currProxy.value != 'local'){
+    if(item.info != undefined){
+        item.info.logDir = await downloadLog(item);
+    }
     if( item.msg == ""){
       return;
     }
@@ -148,15 +156,10 @@ const onWebsocketMsgEvent = async (data: any) => {
   Object.keys(realPathMap.value).forEach(key => {
     item.msg = item.msg.replace(key, realPathMap.value[key])
   })
-
-  if(JSON.stringify(lastWsMsg.value) === JSON.stringify(item)){
-    return;
-  }
   
   if(item.info?.logDir != undefined && currentWorkspace.value.type == 'ztf'){
     updateStatisticInfo(item.info.logDir)
   }
-  lastWsMsg.value = item;
   wsMsg.out.push(item)
   scroll('log-list')
 }
@@ -185,14 +188,16 @@ const downloadLog = async (item) => {
       emptMsg.msg = '';
       emptMsg.isRunning = false;
       emptMsg.time = '';
-      wsMsg.out.push(emptMsg)
+      setTimeout(() => {
+        wsMsg.out.push(emptMsg)
+      }, 100);
       store.dispatch('Result/list', {
         keywords: '',
         enabled: 1,
         pageSize: 10,
         page: 1
         });
-         }
+    }
   })
   return pth
 }
