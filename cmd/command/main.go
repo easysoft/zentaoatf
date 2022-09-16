@@ -285,6 +285,7 @@ func server(args []string) {
 	if port == 0 {
 		port = 8085
 	}
+	commConsts.ExecFrom = commConsts.FromClient
 	webServer := web.Init(port)
 	if webServer == nil {
 		return
