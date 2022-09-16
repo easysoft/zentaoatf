@@ -206,7 +206,7 @@ const store = useStore<{ global: GlobalData, proxy: ProxyData }>();
 store.dispatch("proxy/fetchProxies");
 const remoteProxies = computed<any[]>(() => {
   const proxiesList = [...store.state.proxy.proxies]
-  proxiesList.push({id:0, name: t('local'), path: 'local'})
+  proxiesList.push({id:0, name: t('local_proxy'), path: 'local'})
   return proxiesList
 });
 const serverUrl = computed<any>(() => store.state.global.serverUrl);
@@ -427,6 +427,7 @@ const handleRemoveProxy = (item) => {
     cancelText: t("cancel"),
     onOk: async () => {
       await removeProxy(item.value.id);
+      store.dispatch("proxy/fetchProxies");
       list();
     },
   });

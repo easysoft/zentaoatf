@@ -5,6 +5,7 @@
             suffix-icon="caret-down"/>
 
   <DropdownMenu
+      v-if="proxies.length>0"
       toggle="#proxyMenuToggle"
       class="padding-0-bottom"
       :items="proxies"
@@ -30,7 +31,9 @@ const store = useStore<{ proxy: ProxyData }>();
 store.dispatch("proxy/fetchProxies");
 const proxies = computed<any[]>(() => {
     const proxiesList = [...store.state.proxy.proxies]
-    proxiesList.push({id:0, name: t('local'), path: 'local'})
+    if(proxiesList.length > 0){
+        proxiesList.push({id:0, name: t('local_proxy'), path: 'local'})
+    }
     return proxiesList
 });
 const currProxy = computed<any>(() => store.state.proxy.currProxy);

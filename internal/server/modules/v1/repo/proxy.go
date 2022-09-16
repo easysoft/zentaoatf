@@ -61,7 +61,7 @@ func (r *ProxyRepo) Create(proxy model.Proxy) (id uint, err error) {
 func (r *ProxyRepo) Update(proxy model.Proxy) error {
 	po, err := r.FindDuplicate(proxy.Path, proxy.ID)
 	if po.ID != 0 {
-		return errors.New(fmt.Sprintf("%s远程代理已存在", proxy.Path))
+		return errors.New(fmt.Sprintf("%s执行节点已存在", proxy.Path))
 	}
 
 	err = r.DB.Model(&model.Proxy{}).Where("id = ?", proxy.ID).Updates(&proxy).Error
