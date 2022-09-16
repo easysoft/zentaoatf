@@ -21,6 +21,7 @@ func (m *ProxyModule) Party() module.WebModule {
 		index.Use(middleware.InitCheck())
 
 		index.Get("/", m.ProxyCtrl.List).Name = "列表"
+		index.Get("/{id:int}/check", m.ProxyCtrl.Check).Name = "测试节点状态"
 		index.Get("/{id:int}", m.ProxyCtrl.Get).Name = "详情"
 		index.Post("/", m.ProxyCtrl.Create).Name = "新建"
 		index.Put("/{id:int}", m.ProxyCtrl.Update).Name = "更新"

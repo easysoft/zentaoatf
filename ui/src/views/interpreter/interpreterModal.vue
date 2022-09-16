@@ -127,7 +127,7 @@ const setColumns = () => {
     {
       isKey: true,
       label: t("no"),
-      field: "id",
+      field: "tableIndex",
       width: "60px",
     },
     {

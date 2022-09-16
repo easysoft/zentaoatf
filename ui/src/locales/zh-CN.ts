@@ -81,6 +81,7 @@ export default {
     'empty_data': '暂无数据',
 
     'interpreter': '运行环境',
+    'curr_proxy_interpreter': '当前节点运行环境',
     'create_interpreter': '新建运行环境',
     'edit_interpreter': '编辑运行环境',
     'interpreter_path': '可执行文件路径',
@@ -167,7 +168,7 @@ export default {
     'case_num_empty':  '请选择用例执行。',
     'case_num_format': '{count} 个用例',
     'case_upload_to_proxy': '正在上传脚本到代理服务器...',
-    'case_select_proxy': '正在测试代理服务器状态...',
+    'case_test_proxy': '正在测试代理服务器状态...',
 
     'enable': '启用',
     'disable':  '禁用',
@@ -334,6 +335,7 @@ export default {
     'biz_4000': '记录不存在',
     'biz_5000': '无效的请求',
     'biz_5001': '服务器不可用',
+    'biz_5002': '执行节点不可用',
     'biz_6000': '文件或目录已存在',
 
     'restore_panel_size': '还原面板尺寸',

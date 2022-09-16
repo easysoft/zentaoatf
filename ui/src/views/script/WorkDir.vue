@@ -356,6 +356,7 @@ const selectNode = (activeNode) => {
       type: 'script',
       data: node.path
     });
+    store.dispatch('proxy/fetchProxyByWorkspace', node.workspaceId);
   }
 
   store.dispatch('Script/changeWorkspace',

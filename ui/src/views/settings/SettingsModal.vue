@@ -8,14 +8,12 @@
   >
   <div class="site-main space-top space-left space-right">
     <LanguageSettings></LanguageSettings>
+
     <p class="divider setting-space-top"></p>
     <div class="t-card-toolbar">
       <div class="left strong">
-        {{ t("interpreter") }}
+        {{ t("curr_proxy_interpreter") }}
       </div>
-      <Button class="state primary" size="sm" @click="create()">
-        {{ t("create_interpreter") }}
-      </Button>
     </div>
     <Table
       v-if="interpreters.length > 0"
@@ -25,89 +23,17 @@
       :isSlotMode="true"
       :sortable="{}"
     >
-      <template #lang="record">
+     <template #lang="record">
         {{ languageMap[record.value.lang]?.name }}
       </template>
 
       <template #createdAt="record">
         <span v-if="record.value.createdAt">{{ momentUtc(record.value.createdAt) }}</span>
       </template>
-
-      <template #action="record">
-        <Button @click="() => edit(record)" class="tab-setting-btn" size="sm">{{
-          t("edit")
-        }}</Button>
-        <Button @click="() => remove(record)" class="tab-setting-btn" size="sm"
-          >{{ t("delete") }}
-        </Button>
-      </template>
     </Table>
     <p v-else class="empty-tip">
     {{ t("empty_data") }}
     </p>
-
-    <FormInterpreter
-      v-if="showCreateInterpreterModal"
-      :show="showCreateInterpreterModal"
-      :info="editInfo"
-      @submit="createInterpreter"
-      @cancel="modalClose"
-      ref="formInterpreter"
-    />
-
-    <p class="divider setting-space-top"></p>
-    <div class="t-card-toolbar">
-      <div class="left strong">
-        {{ t("remote_proxy") }}
-      </div>
-      <Button class="state primary" size="sm" @click="createProxy()">
-        {{ t("create_remote_proxy") }}
-      </Button>
-    </div>
-    <Table
-      v-if="remoteProxies.length > 0"
-      :columns="remoteProxyColumns"
-      :rows="remoteProxies"
-      :isHidePaging="true"
-      :isSlotMode="true"
-      :sortable="{}"
-    >
-      <template #createdAt="record">
-        <span v-if="record.value.createdAt">{{ momentUtc(record.value.createdAt) }}</span>
-      </template>
-
-      <template #action="record">
-        <Button v-if="record.value.id!=0" @click="() => handleEditProxy(record)" class="tab-setting-btn" size="sm">{{
-          t("edit")
-        }}</Button>
-        <Button v-if="record.value.id!=0" @click="() => handleRemoveProxy(record)" class="tab-setting-btn" size="sm"
-          >{{ t("delete") }}
-        </Button>
-        <Button @click="() => handleInterpreterManger(record)" class="tab-setting-btn" size="sm"
-          >{{ t("interpreter") }}
-        </Button>
-      </template>
-    </Table>
-    <p v-else class="empty-tip">
-    {{ t("empty_data") }}
-    </p>
-
-    <FormProxy
-      v-if="showCreateProxyModal"
-      :show="showCreateProxyModal"
-      :info="editProxyInfo"
-      @submit="submitProxy"
-      @cancel="modalProxyClose"
-      ref="formProxy"
-    />
-
-    <InterpreterModal
-      v-if="showInterpreterModal"
-      :proxyInfo="currentProxy.value" 
-      @cancel="interpreterModalClose"
-      :showOkBtn="false"
-      :showCancelBtn="false"
-       />
 
     <p class="divider setting-space-top"></p>
     <div class="t-card-toolbar">
@@ -126,8 +52,32 @@
       :isSlotMode="true"
       :sortable="{}"
     >
-      <template #createdAt="record">
-        <span v-if="record.value.createdAt">{{ momentUtc(record.value.createdAt) }}</span>
+      <template #remote_proxy="record">
+        <Table
+      v-if="record && remoteProxies.length > 0"
+      :columns="remoteProxyColumns"
+      :rows="remoteProxies"
+      :isHideHeader="true"
+      :isHideLine="true"
+      :isHidePaging="true"
+      :isSlotMode="true"
+      :sortable="{}"
+    >
+      <template #name="record">
+        <span :title="record.value.path">{{ record.value.name }}</span>
+      </template>
+      <template #action="record">
+        <Button v-if="record.value.id!=0" @click="() => handleEditProxy(record)" class="tab-setting-btn" size="sm">{{
+          t("edit")
+        }}</Button>
+        <Button v-if="record.value.id!=0" @click="() => handleRemoveProxy(record)" class="tab-setting-btn" size="sm"
+          >{{ t("delete") }}
+        </Button>
+        <Button @click="() => handleInterpreterManger(record)" class="tab-setting-btn" size="sm"
+          >{{ t("interpreter") }}
+        </Button>
+      </template>
+    </Table>
       </template>
 
       <template #action="record">
@@ -145,6 +95,32 @@
     <p v-else class="empty-tip">
     {{ t("empty_data") }}
     </p>
+
+    <FormInterpreter
+      v-if="showCreateInterpreterModal"
+      :show="showCreateInterpreterModal"
+      :info="editInfo"
+      @submit="createInterpreter"
+      @cancel="modalClose"
+      ref="formInterpreter"
+    />
+
+    <FormProxy
+      v-if="showCreateProxyModal"
+      :show="showCreateProxyModal"
+      :info="editProxyInfo"
+      @submit="submitProxy"
+      @cancel="modalProxyClose"
+      ref="formProxy"
+    />
+
+    <InterpreterModal
+      v-if="showInterpreterModal"
+      :proxyInfo="currentProxy.value" 
+      @cancel="interpreterModalClose"
+      :showOkBtn="false"
+      :showCancelBtn="false"
+       />
 
     <FormServer
       v-if="showCreateServerModal"
@@ -231,7 +207,7 @@ const setColumns = () => {
     {
       isKey: true,
       label: t("no"),
-      field: "id",
+      field: "tableIndex",
       width: "60px",
     },
     {
@@ -248,48 +224,24 @@ const setColumns = () => {
       field: "createdAt",
       width: "160px",
     },
-    {
-      label: t("opt"),
-      field: "action",
-      width: "160px",
-    },
   ];
   remoteProxyColumns.value = [
     {
-      isKey: true,
-      label: t("no"),
-      field: "id",
-      width: "60px",
-    },
-    // {
-    //   label: t("lang"),
-    //   field: "lang",
-    //   width: "60px",
-    // },
-    {
       label: t("name"),
       field: "name",
-    },
-    {
-      label: t("proxy_link"),
-      field: "path",
-    },
-    {
-      label: t("create_time"),
-      field: "createdAt",
-      width: "160px",
+      width: "400px",
     },
     {
       label: t("opt"),
       field: "action",
-      width: "160px",
+      width: "250px",
     },
   ];
   remoteServerColumns.value = [
     {
       isKey: true,
       label: t("no"),
-      field: "id",
+      field: "tableIndex",
       width: "60px",
     },
     {
@@ -301,9 +253,9 @@ const setColumns = () => {
       field: "path",
     },
     {
-      label: t("create_time"),
-      field: "createdAt",
-      width: "160px",
+      label: t("remote_proxy"),
+      field: "remote_proxy",
+      width: "700px",
     },
     {
       label: t("opt"),
@@ -331,7 +283,8 @@ onMounted(() => {
 });
 
 const list = () => {
-  listInterpreter('local').then((json) => {
+  const defaultProxy = computed<any>(() => store.state.proxy.currProxy);
+  listInterpreter(defaultProxy.value.path).then((json) => {
     console.log("---", json);
 
     if (json.code === 0) {

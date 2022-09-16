@@ -67,8 +67,9 @@ import Icon from '@/components/Icon.vue';
 import {momentTime} from "@/utils/datetime";
 import {isInArray} from "@/utils/array";
 import {StateType as GlobalStateType} from "@/store/global";
-import { get as getWorkspace, uploadToProxy, autoSelectProxy } from "@/views/workspace/service";
+import { get as getWorkspace, uploadToProxy } from "@/views/workspace/service";
 import {mvLog} from "@/views/result/service";
+import {checkProxy} from "@/views/proxy/service";
 import useCurrentProduct from "@/hooks/use-current-product";
 
 const { t } = useI18n();
@@ -80,7 +81,7 @@ const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 const isRunning = computed<any>(() => store.state.Exec.isRunning);
 const currentWorkspace = ref({} as any);
 const defaultProxy = computed<any>(() => store.state.proxy.currProxy);
-const currProxy = ref('');
+const currProxy = ref({} as any);
 
 const cachedExecData = ref({})
 const caseCount = ref(1)
@@ -144,7 +145,7 @@ const onWebsocketMsgEvent = async (data: any) => {
     caseResult.value[item.info.key] = item.info.status
   }
 
-  if(currProxy.value != '' && currProxy.value != 'local'){
+  if(currProxy.value.path != '' && currProxy.value.path != 'local'){
     if(item.info != undefined){
         item.info.logDir = await downloadLog(item);
     }
@@ -180,7 +181,7 @@ const downloadLog = async (item) => {
     logPath = logPath.replace('。', '')
   }
 
-  await mvLog({file: logPath, workspaceId: currentWorkspace.value.id, proxyPath: currProxy.value, pathMap: realPathMap.value}).then(resp => {
+  await mvLog({file: logPath, workspaceId: currentWorkspace.value.id, proxyPath: currProxy.value.path, pathMap: realPathMap.value}).then(resp => {
     if(resp.code === 0){
       pth = resp.data.replace('log.txt', '');
       item.msg = nItem.msg.replace(logPath, resp.data)
@@ -285,62 +286,76 @@ const exec = async (data: any) => {
 
   console.log('exec testing', msg)
 
-  currProxy.value = await selectProxy(workspaceId, msg)
-  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), currProxy.value)
+  currProxy.value = await checkProxyStatus(workspaceId, msg)
+  if(currProxy.value.path == ''){
+      return;
+  }
+  await uploadScript(workspaceId, msg)
+  WebSocket.sentMsg(settings.webSocketRoom, JSON.stringify(msg), currProxy.value.path)
 }
 
-const selectProxy = async (workspaceId, msg) => {
+const checkProxyStatus = async (workspaceId, msg) => {
   if(msg.testSets == undefined){
-    return '';
+    return {path: ''};
   }
   currentWorkspace.value = {};
   let workspaceInfo = {} as any;
-  if(workspaceId>0){
+  if(workspaceId > 0){
     workspaceInfo = await getWorkspace(workspaceId)
   }
-  let selectedProxy = {data:{path:''}} as any;
-  if(workspaceInfo.data == undefined || workspaceInfo.data.proxies == '' || workspaceInfo.data.proxies == '0'){
-    selectedProxy = {data:defaultProxy.value}
-  }else{
+  const selectedProxy = defaultProxy.value
+  if(selectedProxy.id > 0){
     const msgSelectProxy = {
-      msg: `<span class="strong">`+t('case_select_proxy')+`</span>`,
-      time: momentTime(new Date())}
+        msg: `<span class="strong">`+t('case_test_proxy')+`</span>`,
+        time: momentTime(new Date())}
     wsMsg.out.push(msgSelectProxy)
-    selectedProxy = await autoSelectProxy(workspaceInfo.data);
+    const resp = await checkProxy(selectedProxy.id)
+    if(resp.data.status != 'ok'){
+      const msgSelectProxy = {
+        msg: `<span class="strong result-fail">`+t('biz_5002')+`</span>`,
+        time: momentTime(new Date())
+      }
+      wsMsg.out.push(msgSelectProxy)
+      return {path: ''};
+    }
+  }
+  if(workspaceInfo.data.proxy_id != selectedProxy.id){
+    workspaceInfo.data.proxy_id = selectedProxy.id
+    console.log("change workspace proxyid")
+    store.dispatch('Workspace/save', workspaceInfo.data)
   }
   currentWorkspace.value = workspaceInfo.data;
-  currentWorkspace.value.proxy_id = 0;
-  if (selectedProxy.data.id > 0) {
-    currentWorkspace.value.proxy_id = selectedProxy.data.id;
-    const msgUpload = {
-    msg: `<span class="strong">`+t('case_upload_to_proxy')+`</span>`,
-    time: momentTime(new Date())}
-    wsMsg.out.push(msgUpload)
-    msg.testSets[0].proxyId = selectedProxy.data.id;
-    const resp = await uploadToProxy(msg.testSets);
-    const testSetsMap = resp.data;
-    realPathMap.value = testSetsMap;
-    let casesMap = {};
-    var keys = Object.keys(testSetsMap);
-    keys.forEach((val) => {
-    casesMap[testSetsMap[val]] = val;
-    });
-    msg.testSets.forEach((set, setIndex) => {
-      if (set.cases != undefined) {
-          set.cases.forEach((casePath, caseIndex) => {
-          msg.testSets[setIndex].cases[caseIndex] = casesMap[casePath];
-        });
-      }else{
-        msg.testSets[setIndex].workspacePath = keys[0]
-        msg.testSets[setIndex].workspaceType = currentWorkspace.value.type
-      }
-    });
-  }
-  return selectedProxy.data.path;
-  }
+  return selectedProxy;
+}
 
-const logLevel = ref('result')
-const logStatus = ref('')
+const uploadScript = async (workspaceId, msg) => {
+  if(msg.testSets == undefined || currProxy.value.id == 0){
+    return '';
+  }
+  const msgUpload = {
+  msg: `<span class="strong">`+t('case_upload_to_proxy')+`</span>`,
+  time: momentTime(new Date())}
+  wsMsg.out.push(msgUpload)
+  msg.testSets[0].proxyId = currProxy.value.id;
+  const resp = await uploadToProxy(msg.testSets);
+  const testSetsMap = resp.data;
+  realPathMap.value = testSetsMap;
+  let casesMap = {};
+  var keys = Object.keys(testSetsMap);
+  keys.forEach((val) => {
+    casesMap[testSetsMap[val]] = val;
+  });
+  msg.testSets.forEach((set, setIndex) => {
+    if (set.cases != undefined) {
+      set.cases.forEach((casePath, caseIndex) => {
+      msg.testSets[setIndex].cases[caseIndex] = casesMap[casePath];
+      });
+    }else{
+      msg.testSets[setIndex].workspacePath = keys[0]
+      msg.testSets[setIndex].workspaceType = currentWorkspace.value.type
+    }
+  });
+}
 
 </script>
 

@@ -50,13 +50,3 @@ export async function uploadToProxy(params: any): Promise<any> {
         data: params,
     });
 }
-
-export async function autoSelectProxy(workspace) {
-    if(workspace == undefined || workspace.id == undefined) {
-        return 'local';
-    }
-    return request({
-        url: `/${apiPath}/${workspace.id}/proxy`,
-        method: 'get',
-    });
-}

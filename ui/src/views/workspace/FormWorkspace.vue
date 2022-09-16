@@ -47,45 +47,6 @@
       <FormItem labelWidth="100px" v-if="showCmd" name="cmd" :label="t('cmd')" :info="validateInfos.cmd" :helpText="t('tips_test_cmd', {cmd: cmdSample})">
         <textarea v-model="modelRef.cmd" />
       </FormItem>
-      <FormItem
-        v-for="(proxy, index) in proxyList"
-        :key="index"
-        labelWidth="100px"
-        name="proxy_id[]"
-        :label="index == 0 ? t('remote_proxy') : ''"
-      >
-        <div class="form-select">
-          <select name="type" v-model="proxyList[index]">
-            <option :value="0">{{t('local')}}</option>
-            <option v-for="item in remoteProxies" :key="item.id" :value="item.id">
-              {{ item.path }}
-            </option>
-          </select>
-          <Button
-          :disabled="index == 0"
-          class="state only-icon"
-          icon="arrow-up"
-          size="sm"
-          @click="changeSort(index, 'up')"
-          >
-          </Button>
-          <Button
-          :disabled="index == proxyList.length-1"
-          class="state only-icon"
-          icon="arrow-down"
-          size="sm"
-          @click="changeSort(index, 'down')"
-          >
-          </Button>
-          <Button
-          class="state only-icon"
-          :icon="index ==0 ? 'add' : 'delete'"
-          size="sm"
-          @click="addProxySelect(index)"
-          >
-          </Button>
-        </div>
-      </FormItem>
     </Form>
   </ZModal>
 </template>
@@ -131,7 +92,6 @@ const showModalRef = computed(() => {
 });
   
 const info = ref({} as any);
-const proxyList = ref([0] as any[]);
 const loadInfo = async () => {
     if(props.workspaceId === undefined || !props.workspaceId) return;
     await getWorkspace(props.workspaceId).then((json) => {
@@ -146,10 +106,6 @@ const loadInfo = async () => {
         cmd: info.value.cmd,
         proxy_id: info.value.proxy_id,
       };
-      proxyList.value = info.value.proxies.split(',');
-      proxyList.value.forEach((item, index) => {
-        proxyList.value[index] = parseInt(item);
-      });
       selectType()
     }
   });
@@ -159,9 +115,7 @@ loadInfo();
 
 const testTypes = ref([...ztfTestTypesDef, ...unitTestTypesDef]);
 const store = useStore<{ Zentao: ZentaoData, proxy: ProxyData }>();
-store.dispatch("proxy/fetchProxies");
 const langs = computed<any[]>(() => store.state.Zentao.langs);
-const remoteProxies = computed<any[]>(() => store.state.proxy.proxies);
 const cmdSample = ref('')
 const cmdMap = ref(arrToMap(testTypes.value))
 const selectType = () => {
@@ -209,8 +163,6 @@ const emit = defineEmits<{
 }>();
 
 const submit = () => {
-  proxyList.value = [...new Set(proxyList.value)]
-  modelRef.value.proxies = proxyList.value.join(',');
   if (validate()) {
     emit("submit", modelRef.value);
   }
@@ -230,28 +182,6 @@ const selectDir = (key) => {
     console.log(arg)
     modelRef.value.path = arg
     })
-}
-
-const addProxySelect = (index) => {
-    if(index == 0){
-        proxyList.value.push(0)
-    }else{
-        proxyList.value.splice(index, 1)
-    }
-}
-
-const changeSort = (index, action) => {
-    if(action == 'up'){
-        if(index == 0){
-            return;
-        }
-        [proxyList.value[index], proxyList.value[index-1]] = [proxyList.value[index-1], proxyList.value[index]]
-    }else{
-        if(index == proxyList.value.length-1){
-            return;
-        }
-        [proxyList.value[index], proxyList.value[index+1]] = [proxyList.value[index+1], proxyList.value[index]]
-    }
 }
 
 defineExpose({

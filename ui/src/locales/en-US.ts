@@ -73,6 +73,7 @@ export default {
     'empty_data': 'Empty Data',
 
     'interpreter': 'Interpreter',
+    'curr_proxy_interpreter': 'Interpreter Of Current Proxy',
     'create_interpreter': 'Create Interpreter',
     'edit_interpreter': 'Edit Interpreter',
     'interpreter_path': 'Interpreter Path',
@@ -160,7 +161,7 @@ export default {
     'case_num_empty':  'Please Select Cases to Run.',
     'case_num_format': '{count} cases',
     'case_upload_to_proxy':  'Uploading Script to the proxy server...',
-    'case_select_proxy': 'Testing proxy server status...',
+    'case_test_proxy': 'Testing proxy server status...',
 
     'enable': 'Enable',
     'disable':  'Disable',
@@ -322,6 +323,7 @@ export default {
     'biz_4000': 'Record Not Found',
     'biz_5000': 'Not Available',
     'biz_5001': 'Server Not Available',
+    'biz_5002': 'Proxy Not Available',
     'biz_6000': 'File or dir already Exist',
 
     'restore_panel_size' : 'restore panel size',

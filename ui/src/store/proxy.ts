@@ -3,6 +3,7 @@ import { StoreModuleType } from '@/utils/store';
 import { ResponseData } from '@/utils/request';
 import { listProxy } from '@/views/proxy/service';
 import {getCurrProxyId, setCurrProxyId} from "@/utils/cache";
+import { get as getWorkspace } from "@/views/workspace/service";
 
 export interface ProxyData {
   proxies: any[];
@@ -20,6 +21,7 @@ export interface ModuleType extends StoreModuleType<ProxyData> {
   actions: {
     fetchProxies: Action<ProxyData, ProxyData>;
     selectProxy: Action<ProxyData, ProxyData>;
+    fetchProxyByWorkspace: Action<ProxyData, ProxyData>;
   };
 }
 
@@ -84,6 +86,13 @@ const StoreModel: ModuleType = {
     },
     async selectProxy({ commit }, payload) {
         await setCurrProxyId(payload.currProxyId);
+        commit('saveCurrProxy', []);
+      },
+    async fetchProxyByWorkspace({ commit }, payload) {
+        const workspaceInfo = await getWorkspace(payload)
+        if(workspaceInfo.data.proxy_id > 0){
+            await setCurrProxyId(workspaceInfo.data.proxy_id);
+        }
         commit('saveCurrProxy', []);
       },
   },

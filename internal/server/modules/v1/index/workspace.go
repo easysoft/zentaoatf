@@ -23,7 +23,6 @@ func (m *WorkspaceModule) Party() module.WebModule {
 		index.Get("/", m.WorkspaceCtrl.List).Name = "列表"
 		index.Get("/listByProduct", m.WorkspaceCtrl.ListByProduct).Name = "列表"
 		index.Get("/{id:int}", m.WorkspaceCtrl.Get).Name = "详情"
-		index.Get("/{id:int}/proxy", m.WorkspaceCtrl.GetValidProxy).Name = "获取优先级最高的可用代理"
 		index.Post("/", m.WorkspaceCtrl.Create).Name = "新建"
 		index.Post("/uploadToProxy", m.WorkspaceCtrl.UploadScriptsToProxy).Name = "上传脚本到代理服务器"
 		index.Post("/uploadScripts", m.WorkspaceCtrl.UploadScripts).Name = "上传脚本"

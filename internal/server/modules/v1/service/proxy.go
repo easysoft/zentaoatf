@@ -58,6 +58,15 @@ func (s *ProxyService) Update(proxy model.Proxy) (err error) {
 	return
 }
 
+func (s *ProxyService) Check(proxyId uint) (err error) {
+	proxy, err := s.Get(proxyId)
+	if err != nil {
+		return
+	}
+	err = s.CheckServer(proxy.Path)
+	return
+}
+
 func (s *ProxyService) Delete(id uint) error {
 	return s.ProxyRepo.Delete(id)
 }

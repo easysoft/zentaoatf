@@ -36,6 +36,7 @@ var (
 	ErrPostParam                      = ResponseCode{2000, "Parameter Error"}
 	NotAvailable                      = ResponseCode{5000, "Not Available"}
 	ServerNotAvailable                = ResponseCode{5001, "Server Not Available"}
+	ProxyNotAvailable                 = ResponseCode{5002, "Proxy Not Available"}
 
 	ErrFileOrDirExist = ResponseCode{6000, "File or Dir Exist"}
 )

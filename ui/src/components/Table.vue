@@ -10,7 +10,7 @@
         <table
             class="z-table z-table-hover z-table-bordered"
             ref="localTable">
-          <thead class="z-thead">
+          <thead class="z-thead" v-if="!isHideHeader">
             <tr class="z-thead-tr">
             <th v-if="hasCheckbox" class="z-thead-th z-checkbox-th">
               <div>
@@ -70,13 +70,13 @@
                   :key="j"
                   class="z-tbody-td"
                   :class="col.columnClasses"
-                  :style="col.columnStyles">
+                  :style="isHideLine ? {border: 'none', width: col.width ? col.width : 'auto',...col.columnStyles} : {width: col.width ? col.width : 'auto', ...col.columnStyles}">
                 <div v-if="col.display" v-html="col.display(row)"></div>
                 <template v-else>
                   <div v-if="setting.isSlotMode && slots[col.field]">
                     <slot :name="col.field" :value="row"></slot>
                   </div>
-                  <span v-else>{{ row[col.field] }}</span>
+                  <span v-else>{{ col.field == 'tableIndex' && row[col.field] == undefined ? i+1 :row[col.field] }}</span>
                 </template>
               </td>
             </tr>
@@ -105,13 +105,13 @@
                   :key="j"
                   class="z-tbody-td"
                   :class="col.columnClasses"
-                  :style="col.columnStyles">
+                  :style="isHideLine ? {border: 'none', width: col.width ? col.width : 'auto',...col.columnStyles} : {width: col.width ? col.width : 'auto', ...col.columnStyles}">
                 <div v-if="col.display" v-html="col.display(row)"></div>
                 <div v-else>
                   <div v-if="setting.isSlotMode && slots[col.field]">
                     <slot :name="col.field" :value="row"></slot>
                   </div>
-                  <span v-else>{{ row[col.field] }}</span>
+                  <span v-else>{{ col.field == 'tableIndex' && row[col.field] == undefined ? i+1 :row[col.field] }}</span>
                 </div>
               </td>
             </tr>
@@ -348,6 +348,16 @@ export default defineComponent({
     },
     // Hide paging
     isHidePaging: {
+      type: Boolean,
+      default: false,
+    },
+    // Hide header
+    isHideHeader: {
+      type: Boolean,
+      default: false,
+    },
+    // Hide Line
+    isHideLine: {
       type: Boolean,
       default: false,
     },

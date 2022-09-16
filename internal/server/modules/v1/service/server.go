@@ -50,11 +50,9 @@ func (s *ServerService) Update(server model.Server) (err error) {
 		return
 	}
 	server.Path = fileUtils.AddUrlPathSepIfNeeded(server.Path)
-	if server.IsDefault {
-		err = s.CheckServer(server.Path)
-		if err != nil {
-			return err
-		}
+	err = s.CheckServer(server.Path)
+	if err != nil {
+		return err
 	}
 	err = s.ServerRepo.Update(server)
 	return
