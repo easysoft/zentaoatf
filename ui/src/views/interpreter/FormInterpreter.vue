@@ -190,7 +190,7 @@ const modelRef = ref<any>({
   id: info.value.id,
   lang: info.value.lang,
   path: info.value.path,
-  proxyPath: '',
+  proxyPath: 'local',
 });
 const rulesRef = ref({
   lang: [{ required: true, msg: t("pls_lang") }],
@@ -214,7 +214,7 @@ const clearFormData = () => {
   console.log("clear");
   modelRef.value.path = "";
   modelRef.value.lang = "";
-  modelRef.value.proxyPath = "";
+  modelRef.value.proxyPath = "local";
   selectedInterpreter.value = "";
   interpreterInfos.value = [];
 };

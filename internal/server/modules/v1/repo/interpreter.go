@@ -3,6 +3,8 @@ package repo
 import (
 	"errors"
 	"fmt"
+
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
@@ -42,7 +44,7 @@ func (r *InterpreterRepo) Get(id uint) (po model.Interpreter, err error) {
 func (r *InterpreterRepo) Create(interpreter model.Interpreter) (id uint, err error) {
 	po, err := r.FindDuplicate(interpreter.Lang, 0)
 	if po.ID != 0 {
-		return 0, errors.New(fmt.Sprintf("%s interpreter already exist.", interpreter.Lang))
+		return 0, errors.New(i118Utils.Sprintf("wrong_record_exist", interpreter.Lang))
 	}
 
 	err = r.DB.Model(&model.Interpreter{}).Create(&interpreter).Error

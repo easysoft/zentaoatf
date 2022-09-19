@@ -558,6 +558,14 @@
       "translation": "Wrong format url"
     },
     {
+        "id": "wrong_record_exist",
+        "translation": "%s Record Exist"
+    },
+    {
+      "id": "wrong_interpreter_format",
+      "translation": "Interpreter not found with name %s"
+    },
+    {
       "id": "server_address",
       "translation": "\nRequest Address:\n"
     },

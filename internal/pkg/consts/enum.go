@@ -30,7 +30,7 @@ var (
 	ErrZentaoRequest                  = ResponseCode{3000, "zentao request Error"}
 	ErrRecordWithSameNameExist        = ResponseCode{3010, "Record Exist"}
 	ErrRecordWithSamePathExist        = ResponseCode{3011, "Record Exist"}
-	ErrRecordWithSameInterpreterExist = ResponseCode{3012, "Record Exist"}
+	ErrRecordWithSameInterpreterExist = ResponseCode{2000, "Record Exist"}
 	ErrRecordNotExist                 = ResponseCode{4000, "Record Not Found"}
 	ErrRecordNotAllowDelete           = ResponseCode{2000, "Record Can Not Delete"}
 	ErrPostParam                      = ResponseCode{2000, "Parameter Error"}

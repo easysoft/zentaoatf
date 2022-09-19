@@ -551,6 +551,14 @@
       "translation": "链接格式错误"
     },
     {
+        "id": "wrong_record_exist",
+        "translation": "%s 记录已存在"
+    },
+    {
+      "id": "wrong_interpreter_format",
+      "translation": "可执行文件%s不存在"
+    },
+    {
       "id": "server_address",
       "translation": "\n请求地址：\n"
     },

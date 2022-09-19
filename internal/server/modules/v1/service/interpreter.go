@@ -4,17 +4,19 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
 )
 
@@ -31,27 +33,27 @@ func (s *InterpreterService) List() (ret []model.Interpreter, err error) {
 	return
 }
 
-func (s *InterpreterService) Get(id uint) (site model.Interpreter, err error) {
+func (s *InterpreterService) Get(id uint) (interpreter model.Interpreter, err error) {
 	return s.InterpreterRepo.Get(id)
 }
 
-func (s *InterpreterService) Create(site model.Interpreter) (id uint, err error) {
-	if !fileUtils.FileExist(site.Path) {
-		err = errors.New(fmt.Sprintf("可执行文件%s不存在", site.Path))
+func (s *InterpreterService) Create(interpreter model.Interpreter) (id uint, err error) {
+	if !fileUtils.FileExist(interpreter.Path) {
+		err = errors.New(i118Utils.Sprintf("wrong_interpreter_format", interpreter.Path))
 		return
 	}
 
-	id, err = s.InterpreterRepo.Create(site)
+	id, err = s.InterpreterRepo.Create(interpreter)
 	return
 }
 
-func (s *InterpreterService) Update(site model.Interpreter) (err error) {
-	if !fileUtils.FileExist(site.Path) {
-		err = errors.New(fmt.Sprintf("可执行文件%s不存在", site.Path))
+func (s *InterpreterService) Update(interpreter model.Interpreter) (err error) {
+	if !fileUtils.FileExist(interpreter.Path) {
+		err = errors.New(fmt.Sprintf("可执行文件%s不存在", interpreter.Path))
 		return
 	}
 
-	err = s.InterpreterRepo.Update(site)
+	err = s.InterpreterRepo.Update(interpreter)
 	return
 }
 
