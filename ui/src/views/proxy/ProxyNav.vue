@@ -10,7 +10,7 @@
       class="padding-0-bottom"
       :items="proxies"
       keyName="id"
-      :checkedKey="currProxy.id"
+      :checkedKey="currProxy.id == undefined ? 0 : currProxy.id"
       @click="selectProxy"
       :replaceFields="replaceFields"
   >

@@ -68,13 +68,10 @@ import {
   withDefaults,
 } from "vue";
 import { useStore } from "vuex";
-import { StateType } from "@/views/site/store";
 import { momentUtcDef } from "@/utils/datetime";
 import Table from "@/components/Table.vue";
-import notification from "@/utils/notification";
 import Modal from "@/utils/modal";
 import Button from "@/components/Button.vue";
-import LanguageSettings from "./LanguageSettings.vue";
 import {listInterpreter, saveInterpreter, removeInterpreter} from "@/views/interpreter/service";
 import FormInterpreter from "@/views/interpreter/FormInterpreter.vue";
 import { getLangSettings } from "@/views/interpreter/service";
@@ -108,6 +105,7 @@ onMounted(() => {
 
 const store = useStore<{ global: GlobalData }>();
 const serverUrl = computed<any>(() => store.state.global.serverUrl);
+
 watch(serverUrl, () => {
   console.log('watch serverUrl', serverUrl.value)
   list()
@@ -154,7 +152,7 @@ const setColumns = () => {
 setColumns();
 
 const showCreateInterpreterModal = ref(false);
-
+    
 let languageMap = ref<any>({});
 const getInterpretersA = async () => {
   const data = await getLangSettings(props.proxyInfo.path);
@@ -219,6 +217,7 @@ const createInterpreter = (formData) => {
                             formInterpreter.value.clearFormData();
                             showCreateInterpreterModal.value = false;
                             list();
+                            store.dispatch('proxy/fetchInterpreters', {})
                         }
                     }, (json) => { console.log(json) })
                 });
@@ -230,6 +229,7 @@ const createInterpreter = (formData) => {
                 formInterpreter.value.clearFormData();
                 showCreateInterpreterModal.value = false;
                 list();
+                store.dispatch('proxy/fetchInterpreters', {})
             }
         }, (json) => { console.log(json) })
     }

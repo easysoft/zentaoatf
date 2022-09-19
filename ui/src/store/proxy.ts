@@ -4,9 +4,11 @@ import { ResponseData } from '@/utils/request';
 import { listProxy } from '@/views/proxy/service';
 import {getCurrProxyId, setCurrProxyId} from "@/utils/cache";
 import { get as getWorkspace } from "@/views/workspace/service";
+import {listInterpreter} from "@/views/interpreter/service";
 
 export interface ProxyData {
   proxies: any[];
+  interpreters: any[];
   proxyMap: Record<number, string>;
   currProxy: any;
 }
@@ -15,11 +17,13 @@ export interface ModuleType extends StoreModuleType<ProxyData> {
   state: ProxyData;
   mutations: {
     saveProxies: Mutation<any>;
+    saveInterpreters: Mutation<any>;
     saveProxyMap: Mutation<any>;
     saveCurrProxy: Mutation<any>;
   };
   actions: {
     fetchProxies: Action<ProxyData, ProxyData>;
+    fetchInterpreters: Action<ProxyData, ProxyData>;
     selectProxy: Action<ProxyData, ProxyData>;
     fetchProxyByWorkspace: Action<ProxyData, ProxyData>;
   };
@@ -27,6 +31,7 @@ export interface ModuleType extends StoreModuleType<ProxyData> {
 
 const initState: ProxyData = {
   proxies: [],
+  interpreters: [],
   proxyMap: {},
   currProxy:{},
 };
@@ -41,6 +46,10 @@ const StoreModel: ModuleType = {
     saveProxies(state, payload) {
       console.log('payload', payload);
       state.proxies = payload;
+    },
+    saveInterpreters(state, payload) {
+        console.log('payload', payload);
+        state.interpreters = payload;
     },
     saveProxyMap(state, payload) {
         console.log('payload', payload);
@@ -83,6 +92,16 @@ const StoreModel: ModuleType = {
       } catch (error) {
         return false;
       }
+    },
+    async fetchInterpreters({ commit, state }, params) {
+        try {
+          const response: ResponseData = await listInterpreter(state.currProxy.path);
+          const { data } = response;
+          commit('saveInterpreters', data);
+          return true;
+        } catch (error) {
+          return false;
+        }
     },
     async selectProxy({ commit }, payload) {
         await setCurrProxyId(payload.currProxyId);

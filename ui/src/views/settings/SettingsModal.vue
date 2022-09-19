@@ -90,7 +90,7 @@
         <Button v-if="!record.value.is_default" @click="() => handleSetDefault(record)" class="tab-setting-btn" size="sm"
           >{{ t("set_default") }}</Button>
         <Button @click="() => createProxy(record)" class="tab-setting-btn" size="sm">{{
-          t("create_interpreter")
+          t("create_remote_proxy")
         }}
         </Button>
       </template>
@@ -170,7 +170,6 @@ const emit = defineEmits<{
 const { t, locale } = useI18n();
 const momentUtc = momentUtcDef;
 
-const interpreters = ref<any>([]);
 const remoteServers = ref<any>([]);
 
 const editInfo = ref({});
@@ -183,7 +182,9 @@ onMounted(() => {
 
 const store = useStore<{ global: GlobalData, proxy: ProxyData }>();
 store.dispatch("proxy/fetchProxies");
+store.dispatch('proxy/fetchInterpreters')
 
+const interpreters = computed<any>(() => store.state.proxy.interpreters);
 const serverUrl = computed<any>(() => store.state.global.serverUrl);
 watch(serverUrl, () => {
   console.log('watch serverUrl', serverUrl.value)
@@ -272,6 +273,7 @@ const showCreateInterpreterModal = ref(false);
 const showCreateProxyModal = ref(false);
 const showCreateServerModal = ref(false);
 const showInterpreterModal = ref(false);
+const defaultProxy = computed<any>(() => store.state.proxy.currProxy);
 
 let languageMap = ref<any>({});
 const getInterpretersA = async () => {
@@ -282,17 +284,15 @@ getInterpretersA();
 
 onMounted(() => {
   console.log("onMounted");
+  list();
 });
 
-const list = () => {
-  const defaultProxy = computed<any>(() => store.state.proxy.currProxy);
-  listInterpreter(defaultProxy.value.path).then((json) => {
-    console.log("---", json);
+watch(defaultProxy, () => {
+    console.log("watch default proxy")
+    list()
+})
 
-    if (json.code === 0) {
-      interpreters.value = json.data;
-    }
-  });
+const list = () => {
   listServer().then((json) => {
     if (json.code === 0) {
       let defaultServerId = 0;
@@ -312,7 +312,7 @@ const list = () => {
     }
   });
 };
-list();
+
 
 const create = () => {
   editInfo.value = {};
