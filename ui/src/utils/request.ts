@@ -77,6 +77,8 @@ request.interceptors.request.use(
         }
         if(config.params.proxyPath != undefined && config.params.proxyPath != 'local') {
             serverURL = String(config.params.proxyPath) + 'api/v1'
+        }else if(config.params.proxyPath == 'local'){
+            serverURL = process.env.VUE_APP_APIHOST;
         }
         config.baseURL = serverURL;
         console.log('=== request ===', config.url, config)
