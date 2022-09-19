@@ -84,7 +84,7 @@
       </template>
 
       <template #action="record">
-        <Button @click="() => createProxy(record)" class="tab-setting-btn" size="sm">{{t("create_remote_proxy")}}</Button>
+        <Button @click="() => createProxy(record)" class="tab-setting-btn text-align-left" size="sm">{{t("create_remote_proxy")}}</Button>
         <Button v-if="record.value.id" @click="() => handleEditServer(record)" class="tab-setting-btn" size="sm">{{t("edit")}}</Button>
         <Button v-if="record.value.id" @click="() => handleRemoveServer(record)" class="tab-setting-btn" size="sm">{{ t("delete") }}</Button>
         <Button v-if="!record.value.is_default" @click="() => handleSetDefault(record)" class="tab-setting-btn" size="sm">{{ t("set_default") }}</Button>
@@ -500,5 +500,10 @@ const interpreterModalClose = () => {
 .flex-end{
   display: flex;
   justify-content: flex-end;
+  flex-wrap: wrap;
+}
+.text-align-left{
+    text-align: left;
+    margin-bottom: 1rem;
 }
 </style>
