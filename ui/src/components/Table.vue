@@ -70,7 +70,7 @@
                   :key="j"
                   class="z-tbody-td"
                   :class="col.columnClasses"
-                  :style="isHideLine ? {border: 'none', width: col.width ? col.width : 'auto',...col.columnStyles} : {width: col.width ? col.width : 'auto', ...col.columnStyles}">
+                  :style="isHideBorder ? {border: 'none', width: col.width ? col.width : 'auto',...col.columnStyles} : {width: col.width ? col.width : 'auto', ...col.columnStyles}">
                 <div v-if="col.display" v-html="col.display(row)"></div>
                 <template v-else>
                   <div v-if="setting.isSlotMode && slots[col.field]">
@@ -105,7 +105,7 @@
                   :key="j"
                   class="z-tbody-td"
                   :class="col.columnClasses"
-                  :style="isHideLine ? {border: 'none', width: col.width ? col.width : 'auto',...col.columnStyles} : {width: col.width ? col.width : 'auto', ...col.columnStyles}">
+                  :style="isHideBorder ? {border: 'none', width: col.width ? col.width : 'auto',...col.columnStyles} : {width: col.width ? col.width : 'auto', ...col.columnStyles}">
                 <div v-if="col.display" v-html="col.display(row)"></div>
                 <div v-else>
                   <div v-if="setting.isSlotMode && slots[col.field]">
@@ -357,7 +357,7 @@ export default defineComponent({
       default: false,
     },
     // Hide Line
-    isHideLine: {
+    isHideBorder: {
       type: Boolean,
       default: false,
     },

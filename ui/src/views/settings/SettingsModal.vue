@@ -58,7 +58,7 @@
         :columns="remoteProxyColumns"
         :rows="record.value.proxies"
         :isHideHeader="true"
-        :isHideLine="true"
+        :isHideBorder="true"
         :isHidePaging="true"
         :isSlotMode="true"
         :sortable="{}"
@@ -214,6 +214,7 @@ const setColumns = () => {
     {
       label: t("interpreter_path"),
       field: "path",
+      width: "500px",
     },
     {
       label: t("create_time"),
@@ -243,10 +244,12 @@ const setColumns = () => {
     {
       label: t("name"),
       field: "name",
+      width: "160px",
     },
     {
       label: t("server_link"),
       field: "path",
+      width: "260px",
     },
     {
       label: t("remote_proxy"),
