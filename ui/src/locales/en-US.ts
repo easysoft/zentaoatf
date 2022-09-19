@@ -74,12 +74,14 @@ export default {
 
     'interpreter': 'Interpreter',
     'curr_proxy_interpreter': 'Interpreter Of Current Proxy',
+    'curr_proxy': 'Current Proxy',
     'create_interpreter': 'Create Interpreter',
     'edit_interpreter': 'Edit Interpreter',
     'interpreter_path': 'Interpreter Path',
     'script_lang': 'Script Language',
 
     'remote_proxy': 'Remote Proxy',
+    'curr_server': 'Current Server',
     'proxy_desc':  'The execution script will be uploaded to the proxy server(user directory/ztf/proxyExecDir), please deploy the script dependencies to the proxy server in advance',
     'create_remote_proxy': 'Create Remote Proxy',
     'edit_remote_proxy': 'Edit Remote Proxy',

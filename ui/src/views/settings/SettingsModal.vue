@@ -12,6 +12,13 @@
     <p class="divider setting-space-top"></p>
     <div class="t-card-toolbar">
       <div class="left strong">
+        <span class="space-right">{{ t("curr_server") }} : {{defaultServerName}}</span>
+        <span class="space">{{ t("curr_proxy") }} : {{defaultProxy.name == '' ? t('local_proxy') : defaultProxy.name}}</span>
+      </div>
+    </div>
+    <p class="divider setting-space-top"></p>
+    <div class="t-card-toolbar">
+      <div class="left strong">
         {{ t("curr_proxy_interpreter") }}
       </div>
     </div>
@@ -67,32 +74,20 @@
         <span :title="proxyRecord.value.path">{{ proxyRecord.value.name }}</span>
       </template>
       <template #action="proxyRecord">
-        <Button v-if="proxyRecord.value.id!=0" @click="() => handleEditProxy(proxyRecord, record)" class="tab-setting-btn" size="sm">{{
-          t("edit")
-        }}</Button>
-        <Button v-if="proxyRecord.value.id!=0" @click="() => handleRemoveProxy(proxyRecord, record)" class="tab-setting-btn" size="sm"
-          >{{ t("delete") }}
-        </Button>
-        <Button @click="() => handleInterpreterManger(proxyRecord)" class="tab-setting-btn" size="sm"
-          >{{ t("interpreter") }}
-        </Button>
+        <div class="flex-end">
+          <Button v-if="proxyRecord.value.id!=0" @click="() => handleEditProxy(proxyRecord, record)" class="tab-setting-btn" size="sm">{{t("edit")}}</Button>
+          <Button v-if="proxyRecord.value.id!=0" @click="() => handleRemoveProxy(proxyRecord, record)" class="tab-setting-btn" size="sm">{{ t("delete") }}</Button>
+          <Button @click="() => handleInterpreterManger(proxyRecord)" class="tab-setting-btn" size="sm">{{ t("interpreter") }}</Button>
+        </div>
       </template>
     </Table>
       </template>
 
       <template #action="record">
-        <Button v-if="record.value.id" @click="() => handleEditServer(record)" class="tab-setting-btn" size="sm">{{
-          t("edit")
-        }}</Button>
-        <Button v-if="record.value.id" @click="() => handleRemoveServer(record)" class="tab-setting-btn" size="sm"
-          >{{ t("delete") }}
-        </Button>
-        <Button v-if="!record.value.is_default" @click="() => handleSetDefault(record)" class="tab-setting-btn" size="sm"
-          >{{ t("set_default") }}</Button>
-        <Button @click="() => createProxy(record)" class="tab-setting-btn" size="sm">{{
-          t("create_remote_proxy")
-        }}
-        </Button>
+        <Button @click="() => createProxy(record)" class="tab-setting-btn" size="sm">{{t("create_remote_proxy")}}</Button>
+        <Button v-if="record.value.id" @click="() => handleEditServer(record)" class="tab-setting-btn" size="sm">{{t("edit")}}</Button>
+        <Button v-if="record.value.id" @click="() => handleRemoveServer(record)" class="tab-setting-btn" size="sm">{{ t("delete") }}</Button>
+        <Button v-if="!record.value.is_default" @click="() => handleSetDefault(record)" class="tab-setting-btn" size="sm">{{ t("set_default") }}</Button>
       </template>
     </Table>
     <p v-else class="empty-tip">
@@ -274,6 +269,7 @@ const showCreateProxyModal = ref(false);
 const showCreateServerModal = ref(false);
 const showInterpreterModal = ref(false);
 const defaultProxy = computed<any>(() => store.state.proxy.currProxy);
+const defaultServerName = ref('')
 
 let languageMap = ref<any>({});
 const getInterpretersA = async () => {
@@ -298,10 +294,12 @@ const list = () => {
       let defaultServerId = 0;
       json.data.forEach(server => {
         if(server.is_default) {
+          defaultServerName.value = server.name
           defaultServerId = server.id;
         }
       });
       json.data.splice(0, 0, {id: 0, path: 'local', name: t('local'), is_default: defaultServerId > 0 ? false : true});
+      defaultServerName.value = defaultServerId > 0 ? defaultServerName.value : t('local');
       remoteServers.value = json.data;
       json.data.forEach((server, index) => {
         listProxy({proxyPath: server.path}).then((proxies) => {
@@ -498,5 +496,9 @@ const interpreterModalClose = () => {
   background: none;
   color: #1890ff;
   border-style: hidden !important;
+}
+.flex-end{
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
