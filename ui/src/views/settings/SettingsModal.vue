@@ -88,7 +88,10 @@
           >{{ t("delete") }}
         </Button>
         <Button v-if="!record.value.is_default" @click="() => handleSetDefault(record)" class="tab-setting-btn" size="sm"
-          >{{ t("set_default") }}
+          >{{ t("set_default") }}</Button>
+        <Button @click="() => createProxy(record)" class="tab-setting-btn" size="sm">{{
+          t("create_interpreter")
+        }}
         </Button>
       </template>
     </Table>
@@ -302,6 +305,7 @@ const list = () => {
       remoteServers.value = json.data;
       json.data.forEach((server, index) => {
         listProxy({proxyPath: server.path}).then((proxies) => {
+            proxies.data.push({id:0, name: t('local_proxy'), path: 'local'})
             remoteServers.value[index].proxies = proxies.data;
         });
       });
@@ -350,8 +354,8 @@ const createInterpreter = (formData) => {
 };
 
 const formProxy = ref({} as any);
-const createProxy = () => {
-  editProxyInfo.value = {};
+const createProxy = (server) => {
+  editProxyInfo.value = {proxyPath: server.value.path};
   showCreateProxyModal.value = true;
 };
 const handleEditProxy = (item, server) => {
