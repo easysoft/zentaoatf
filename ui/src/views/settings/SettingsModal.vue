@@ -54,26 +54,26 @@
     >
       <template #remote_proxy="record">
         <Table
-      v-if="record && remoteProxies.length > 0"
-      :columns="remoteProxyColumns"
-      :rows="remoteProxies"
-      :isHideHeader="true"
-      :isHideLine="true"
-      :isHidePaging="true"
-      :isSlotMode="true"
-      :sortable="{}"
-    >
-      <template #name="record">
-        <span :title="record.value.path">{{ record.value.name }}</span>
+        v-if="record.value.proxies!= undefined && record.value.proxies.length > 0"
+        :columns="remoteProxyColumns"
+        :rows="record.value.proxies"
+        :isHideHeader="true"
+        :isHideLine="true"
+        :isHidePaging="true"
+        :isSlotMode="true"
+        :sortable="{}"
+        >
+      <template #name="proxyRecord">
+        <span :title="proxyRecord.value.path">{{ proxyRecord.value.name }}</span>
       </template>
-      <template #action="record">
-        <Button v-if="record.value.id!=0" @click="() => handleEditProxy(record)" class="tab-setting-btn" size="sm">{{
+      <template #action="proxyRecord">
+        <Button v-if="proxyRecord.value.id!=0" @click="() => handleEditProxy(proxyRecord, record)" class="tab-setting-btn" size="sm">{{
           t("edit")
         }}</Button>
-        <Button v-if="record.value.id!=0" @click="() => handleRemoveProxy(record)" class="tab-setting-btn" size="sm"
+        <Button v-if="proxyRecord.value.id!=0" @click="() => handleRemoveProxy(proxyRecord, record)" class="tab-setting-btn" size="sm"
           >{{ t("delete") }}
         </Button>
-        <Button @click="() => handleInterpreterManger(record)" class="tab-setting-btn" size="sm"
+        <Button @click="() => handleInterpreterManger(proxyRecord)" class="tab-setting-btn" size="sm"
           >{{ t("interpreter") }}
         </Button>
       </template>
@@ -180,11 +180,7 @@ onMounted(() => {
 
 const store = useStore<{ global: GlobalData, proxy: ProxyData }>();
 store.dispatch("proxy/fetchProxies");
-const remoteProxies = computed<any[]>(() => {
-  const proxiesList = [...store.state.proxy.proxies]
-  proxiesList.push({id:0, name: t('local_proxy'), path: 'local'})
-  return proxiesList
-});
+
 const serverUrl = computed<any>(() => store.state.global.serverUrl);
 watch(serverUrl, () => {
   console.log('watch serverUrl', serverUrl.value)
@@ -301,6 +297,11 @@ const list = () => {
       });
       json.data.splice(0, 0, {id: 0, path: 'local', name: t('local'), is_default: defaultServerId > 0 ? false : true});
       remoteServers.value = json.data;
+      json.data.forEach((server, index) => {
+        listProxy({proxyPath: server.path}).then((proxies) => {
+            remoteServers.value[index].proxies = proxies.data;
+        });
+      });
     }
   });
 };
@@ -350,14 +351,12 @@ const createProxy = () => {
   editProxyInfo.value = {};
   showCreateProxyModal.value = true;
 };
-const handleEditProxy = (item) => {
+const handleEditProxy = (item, server) => {
   editProxyInfo.value = item;
+  editProxyInfo.value.proxyPath = server.value.path
   showCreateProxyModal.value = true;
 };
 const submitProxy = (formData) => {
-    // if(formData.type !== 'ztf'){
-    //   formData.lang = '';
-    // }
     saveProxy(formData).then((json) => {
         if (json.code === 0) {
           formProxy.value.clearFormData();
@@ -369,7 +368,7 @@ const submitProxy = (formData) => {
 };
 
 
-const handleRemoveProxy = (item) => {
+const handleRemoveProxy = (item, server) => {
   Modal.confirm({
     title: t("confirm_delete", {
       name: item.value.name,
@@ -379,7 +378,7 @@ const handleRemoveProxy = (item) => {
     okText: t("confirm"),
     cancelText: t("cancel"),
     onOk: async () => {
-      await removeProxy(item.value.id);
+      await removeProxy(item.value.id, server.value.path);
       store.dispatch("proxy/fetchProxies");
       list();
     },

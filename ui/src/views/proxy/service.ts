@@ -1,9 +1,8 @@
-import {QueryParams} from "@/types/data";
 import request from "@/utils/request";
 
 const apiPath = 'proxies';
 
-export async function listProxy(params?: QueryParams): Promise<any> {
+export async function listProxy(params?: any): Promise<any> {
     return request({
         url: `/${apiPath}`,
         method: 'get',
@@ -22,13 +21,15 @@ export async function saveProxy(params: any): Promise<any> {
         url: `/${apiPath}` + (params.id ? `/${params.id}` : ''),
         method: params.id? 'PUT': 'POST',
         data: params,
+        params:{proxyPath: params.proxyPath}
     });
 }
 
-export async function removeProxy(id: number): Promise<any> {
+export async function removeProxy(id: number, proxyPath: string): Promise<any> {
     return request({
         url: `/${apiPath}/${id}`,
         method: 'delete',
+        params: {proxyPath: proxyPath}
     });
 }
 
