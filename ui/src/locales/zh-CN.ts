@@ -56,7 +56,7 @@ export default {
 
     'zentao_site': '禅道站点',
     'local': '本地',
-    'local_proxy': '本地代理',
+    'local_proxy': '本地节点',
     'site_management': '禅道站点管理',
     'site_num': '{count} 个站点',
     'create_site': '新建站点',
@@ -82,6 +82,7 @@ export default {
 
     'interpreter': '运行环境',
     'curr_proxy_interpreter': '当前节点运行环境',
+    'curr_proxy': '当前执行节点',
     'create_interpreter': '新建运行环境',
     'edit_interpreter': '编辑运行环境',
     'interpreter_path': '可执行文件路径',
@@ -100,6 +101,7 @@ export default {
     'rsa_path': '密钥路径',
 
     'remote_server': '服务器管理',
+    'curr_server': '当前服务器',
     'create_remote_server': '新建服务器',
     'edit_remote_server': '编辑服务器',
     'server_link': '服务器地址',
