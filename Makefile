@@ -150,11 +150,9 @@ compile_command_win64:
 
 compile_command_win32:
 	@echo 'start compile win32'
-	@cd ${COMMAND_MAIN_DIR} && \
-        CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
+	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
 		${BUILD_CMD} -x -v \
-		-o ../../${COMMAND_BIN_DIR}win32/${PROJECT}.exe && \
-        cd ..
+		-o ${COMMAND_BIN_DIR}win32/${PROJECT}.exe ${COMMAND_MAIN_FILE}
 
 compile_command_linux:
 	@echo 'start compile linux'
