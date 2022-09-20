@@ -140,13 +140,10 @@ package_gui_mac_client:
 
 # command line
 compile_command_win64:
-	@echo ${QINIU_DIR}
 	@echo 'start compile win64'
-	@cd ${COMMAND_MAIN_DIR} && \
-        CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
+	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
 		${BUILD_CMD} -x -v \
-		-o ../../${COMMAND_BIN_DIR}win64/${PROJECT}.exe && \
-		cd ..
+		-o ${COMMAND_BIN_DIR}win64/${PROJECT}.exe ${COMMAND_MAIN_FILE}
 
 compile_command_win32:
 	@echo 'start compile win32'
