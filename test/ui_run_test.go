@@ -1198,7 +1198,6 @@ func RunUnit(t provider.T) {
 	commonTestHelper.CloneGit("https://gitee.com/ngtesting/ci_test_testng.git", testngDir)
 	t.ID("5432")
 	t.Title("执行TestNG单元测试")
-	t.ID("5482")
 	t.AddParentSuite("右键执行脚本")
 	pw, err := playwright.Run()
 	if err != nil {
@@ -1395,6 +1394,7 @@ func createWorkspace(t provider.T, workspacePath string, page playwright.Page) {
 
 func TestUiRun(t *testing.T) {
 	//start docker
+	commonTestHelper.InitZentao()
 	// commonTestHelper.Run("12.3.3")
 	// runner.Run(t, "客户端-执行单个脚本", RunScript)
 	// runner.Run(t, "客户端-执行选中的脚本文件和文件夹", RunSelectedScripts)

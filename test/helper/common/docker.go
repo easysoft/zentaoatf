@@ -1,12 +1,19 @@
 package commonTest
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"os/exec"
 	"runtime"
 	"strings"
+	"time"
+
+	uiTest "github.com/easysoft/zentaoatf/test/helper/zentao/ui"
 )
+
+var version = flag.String("version", "", "")
+var isRuning = false
 
 func Run(version string) (err error) {
 	versionNumber := strings.ReplaceAll(version, ".", "")
@@ -34,4 +41,16 @@ func Run(version string) (err error) {
 	}
 	fmt.Println(string(output))
 	return err
+}
+
+func InitZentao() {
+	if isRuning {
+		return
+	}
+	flag.Parse()
+	isRuning = true
+	fmt.Println(*version)
+	Run(*version)
+	time.Sleep(time.Minute)
+	uiTest.InitZentaoData()
 }
