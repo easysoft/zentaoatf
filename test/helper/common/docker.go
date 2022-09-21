@@ -3,6 +3,7 @@ package commonTest
 import (
 	"errors"
 	"flag"
+	"fmt"
 	"os"
 	"os/exec"
 	"runtime"
@@ -17,9 +18,9 @@ var version = flag.String("version", "", "")
 func Run(version string) (err error) {
 	versionNumber := strings.ReplaceAll(version, ".", "")
 	apath, _ := os.Getwd()
-	codeDir := apath + "/docker/www"
+	codeDir := apath + "/docker/www/zentao" + versionNumber
 	if runtime.GOOS == "windows" {
-		codeDir = apath + `\docker\www`
+		codeDir = apath + `\docker\www\zentao` + versionNumber
 	}
 
 	_, err = os.Stat(codeDir)
@@ -30,6 +31,7 @@ func Run(version string) (err error) {
 	//docker run --name zentao -p 8081:80 --network=zentaonet -v D:\docker\www\zentaopms:/www/zentaopms -v D:\docker\mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -d easysoft/zentao:12.3.3
 	cmd := exec.Command("docker", "run", "--name", "zentao"+versionNumber, "-p", "8081:80", "-v", codeDir+":/www/zentaopms", "-e", "MYSQL_ROOT_PASSWORD=123456", "-d", "easysoft/zentao:"+version)
 	output, err := cmd.CombinedOutput()
+	fmt.Println(cmd.String())
 	if err != nil {
 		return
 	}
@@ -76,8 +78,10 @@ func InitZentao() {
 			time.Sleep(time.Second * 30)
 		}
 	} else {
+		fmt.Println(11111111111)
 		Run(*version)
 		time.Sleep(time.Second * 120)
 	}
+	fmt.Println(222222222222)
 	uiTest.InitZentaoData()
 }

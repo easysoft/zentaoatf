@@ -33,7 +33,7 @@ func Login() (err error) {
 	if err != nil {
 		return
 	}
-	if title == "流程 - 禅道" {
+	if title == "流程 - 禅道" || title == "地盘-个性化设置 - 禅道" {
 		err = page.Click(`button:has-text("保存")`)
 		if err != nil {
 			return

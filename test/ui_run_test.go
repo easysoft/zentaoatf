@@ -1197,7 +1197,6 @@ func RunUnit(t provider.T) {
 	}
 	commonTestHelper.CloneGit("https://gitee.com/ngtesting/ci_test_testng.git", testngDir)
 	t.ID("5432")
-	t.Title("执行TestNG单元测试")
 	t.AddParentSuite("右键执行脚本")
 	pw, err := playwright.Run()
 	if err != nil {
@@ -1406,5 +1405,5 @@ func TestUiRun(t *testing.T) {
 	// runner.Run(t, "客户端-确认执行统计失败数据", RunFailStatistic)
 	// runner.Run(t, "客户端-确认执行统计bug数据", RunBugStatistic)
 	// runner.Run(t, "客户端-右键执行工作目录", RunWorkspace)
-	runner.Run(t, "客户端-右键执行工作目录", RunUnit)
+	runner.Run(t, "客户端-执行TestNG单元测试", RunUnit)
 }
