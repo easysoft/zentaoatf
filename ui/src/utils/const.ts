@@ -119,9 +119,14 @@ export const unitTestTypesDef = [
         cmd: 'ztf cppunit -p product_id ./MathTest',
     },
     {
+        label: 'RobotFramework',
+        value: 'robotframework',
+        cmd: 'ztf robot -p product_id robot -d results src/testcase',
+    },
+    {
         label: 'Cypress',
         value: 'cypress',
-        cmd: 'ztf cypress -p product_id --verbose yarn cypress:run --spec "cypress/integration/test/baidu.spec.js" --reporter junit --reporter-options "mochaFile=results/test_output.xml,toConsole=true"',
+        cmd: 'ztf cypress -p product_id yarn cypress:run --spec "cypress/integration/test/baidu.spec.js" --reporter junit --reporter-options "mochaFile=results/test_output.xml,toConsole=true"',
     },
     {
         label: 'Playwright',
