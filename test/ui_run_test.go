@@ -9,7 +9,6 @@ import (
 
 	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
-	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"
 )
 
@@ -33,7 +32,7 @@ func RunScript(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -145,7 +144,7 @@ func RunSelectedScripts(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -281,7 +280,7 @@ func RunOpenedAndLast(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -478,7 +477,7 @@ func RunAll(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -608,7 +607,7 @@ func RunReExecFailCase(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -731,7 +730,7 @@ func RunReExecAllCase(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -854,7 +853,7 @@ func RunFailStatistic(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -940,7 +939,7 @@ func RunSuccessStatistic(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -1026,7 +1025,7 @@ func RunBugStatistic(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -1103,7 +1102,7 @@ func RunWorkspace(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -1215,7 +1214,7 @@ func RunUnit(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -1405,5 +1404,5 @@ func TestUiRun(t *testing.T) {
 	// runner.Run(t, "客户端-确认执行统计失败数据", RunFailStatistic)
 	// runner.Run(t, "客户端-确认执行统计bug数据", RunBugStatistic)
 	// runner.Run(t, "客户端-右键执行工作目录", RunWorkspace)
-	runner.Run(t, "客户端-执行TestNG单元测试", RunUnit)
+	// runner.Run(t, "客户端-执行TestNG单元测试", RunUnit)
 }

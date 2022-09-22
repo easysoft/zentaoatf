@@ -34,7 +34,7 @@ func CreateWorkspace(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -165,7 +165,7 @@ func SyncFromZentao(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -246,7 +246,7 @@ func SyncTwoCaseFromZentao(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -330,7 +330,7 @@ func SyncToZentao(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -397,7 +397,7 @@ func Copy(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -490,7 +490,7 @@ func DeleteScript(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -568,7 +568,7 @@ func DeleteDir(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -647,7 +647,7 @@ func DeleteWorkspace(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -715,7 +715,7 @@ func Clip(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -814,7 +814,7 @@ func FilterDir(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -890,7 +890,7 @@ func FilterSuite(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -979,7 +979,7 @@ func FilterTask(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -1066,7 +1066,7 @@ func Collapse(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()

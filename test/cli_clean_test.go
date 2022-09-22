@@ -70,6 +70,6 @@ func testClean() string {
 	return "Success"
 }
 
-func TestClean(t *testing.T) {
+func TestCliClean(t *testing.T) {
 	suite.RunSuite(t, new(CleanSuite))
 }

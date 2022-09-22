@@ -63,7 +63,7 @@ func testCi() string {
 	return "Success"
 }
 
-func TestCi(t *testing.T) {
+func TestCliCi(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		ciNewline = "\r\n"
 	}

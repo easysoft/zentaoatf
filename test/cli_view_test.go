@@ -54,6 +54,6 @@ func testView(cmd string, successRe *regexp.Regexp) string {
 	return "Success"
 }
 
-func TestView(t *testing.T) {
+func TestCliView(t *testing.T) {
 	suite.RunSuite(t, new(ViewSuite))
 }

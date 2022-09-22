@@ -30,7 +30,7 @@ func CollapseLog(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
@@ -124,7 +124,7 @@ func FullScreenLog(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()

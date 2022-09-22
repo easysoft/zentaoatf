@@ -51,6 +51,6 @@ func testVersion() string {
 	return "Success"
 }
 
-func TestVersion(t *testing.T) {
+func TestCliVersion(t *testing.T) {
 	suite.RunSuite(t, new(VersionSuite))
 }

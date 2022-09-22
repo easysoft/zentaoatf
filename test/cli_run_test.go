@@ -287,6 +287,6 @@ func testRunUnitTest(cmdStr, workspacePath string, successRe *regexp.Regexp) str
 // 	os.Remove(path)
 // }
 
-func TestRun(t *testing.T) {
+func TestCliRun(t *testing.T) {
 	suite.RunSuite(t, new(RunSuit))
 }

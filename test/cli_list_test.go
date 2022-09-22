@@ -54,6 +54,6 @@ func testLs(cmd string, successRe *regexp.Regexp) string {
 	return "Success"
 }
 
-func TestList(t *testing.T) {
+func TestCliList(t *testing.T) {
 	suite.RunSuite(t, new(ListSuite))
 }

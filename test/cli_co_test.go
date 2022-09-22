@@ -277,7 +277,7 @@ func testCo(cmd string) string {
 	return "Success"
 }
 
-func TestCo(t *testing.T) {
+func TestCliCo(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		coNewline = "\r\n"
 	}

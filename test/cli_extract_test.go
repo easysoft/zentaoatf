@@ -96,6 +96,6 @@ step 10 >> expect 10
 	return "Success"
 }
 
-func TestExtract(t *testing.T) {
+func TestCliExtract(t *testing.T) {
 	suite.RunSuite(t, new(ExtractSuite))
 }

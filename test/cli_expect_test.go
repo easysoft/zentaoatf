@@ -75,6 +75,6 @@ expect 3`)
 	return "Success"
 }
 
-func TestExpect(t *testing.T) {
+func TestCliExpect(t *testing.T) {
 	suite.RunSuite(t, new(ExpectSuite))
 }

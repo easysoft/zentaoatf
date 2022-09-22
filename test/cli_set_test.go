@@ -69,47 +69,47 @@ func testSet(language string) (ret string) {
 		return err.Error()
 	}
 	defer child.Close()
-	if _, err = child.Expect(languageRe, 3*time.Second); err != nil {
+	if _, err = child.Expect(languageRe, 3*time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", languageRe, err.Error())
 	}
 
 	if err = child.Send(language + newline); err != nil {
 		return err.Error()
 	}
-	if _, err := child.Expect(configRe, time.Second); err != nil {
+	if _, err := child.Expect(configRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", configRe, err.Error())
 	}
 	if err = child.Send("y" + newline); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(urlRe, time.Second); err != nil {
+	if _, err = child.Expect(urlRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", urlRe, err.Error())
 	}
-	if err = child.Send("http://127.0.0.1/zentao/" + newline); err != nil {
+	if err = child.Send("http://127.0.0.1:8081/" + newline); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(accountRe, time.Second); err != nil {
+	if _, err = child.Expect(accountRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", accountRe, err.Error())
 	}
 	if err = child.Send("admin" + newline); err != nil {
 		return err.Error()
 	}
 
-	if _, err = child.Expect(passwordRe, time.Second); err != nil {
+	if _, err = child.Expect(passwordRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", passwordRe, err.Error())
 	}
-	if err = child.Send("123456." + newline); err != nil {
+	if err = child.Send("Test123456." + newline); err != nil {
 		return err.Error()
 	}
 	if runtime.GOOS == "windows" {
-		if _, err = child.Expect(interpreterRe, time.Second); err != nil {
-			return fmt.Sprintf("expect %s, actual %s", interpreterRe, err.Error())
+		if _, err = child.Expect(interpreterRe, time.Second*5); err != nil {
+			return fmt.Sprintf("expect %s, actual %s", interpreterRe, err)
 		}
 		if err = child.Send("y" + newline); err != nil {
 			return err.Error()
 		}
 		for _, lang := range langArray {
-			if _, err = child.Expect(regexp.MustCompile(lang), time.Second); err != nil {
+			if _, err = child.Expect(regexp.MustCompile(lang), time.Second*5); err != nil {
 				return fmt.Sprintf("expect %s, actual %s", lang, err.Error())
 			}
 			if err = child.Send(langMap[lang] + newline); err != nil {
@@ -124,7 +124,7 @@ func testSet(language string) (ret string) {
 	return "Success"
 }
 
-func TestSet(t *testing.T) {
+func TestCliSet(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		newline = "\r\n"
 	}

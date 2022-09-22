@@ -73,12 +73,10 @@ func (e *GExpect) Expect(expect *regexp.Regexp, timeout time.Duration) (out stri
 		case <-c:
 			return out, err
 		case <-timer.C:
-			err = errors.New(out)
+			err = errors.New("Time out")
 			return
 		}
 	}
-
-	return
 }
 func (e *GExpect) expectActual(c chan int, expect *regexp.Regexp, out *string, err *error) {
 	reader1 := bufio.NewReader(e.out)

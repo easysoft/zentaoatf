@@ -56,14 +56,14 @@ func testCb() string {
 		return err.Error()
 	}
 
-	if _, err = child.Expect(successCbRe, 10*time.Second); err != nil {
+	if _, err = child.Expect(successCbRe, 20*time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", successCbRe, err.Error())
 	}
 	child.Close()
 	return "Success"
 }
 
-func TestCb(t *testing.T) {
+func TestCliCb(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		cbNewline = "\r\n"
 	}

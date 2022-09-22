@@ -54,6 +54,6 @@ func testCr() string {
 	return "Success"
 }
 
-func TestCr(t *testing.T) {
+func TestCliCr(t *testing.T) {
 	suite.RunSuite(t, new(CrSuite))
 }

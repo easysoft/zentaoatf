@@ -51,6 +51,6 @@ func testHelp() string {
 	return "Success"
 }
 
-func TestHelp(t *testing.T) {
+func TestCliHelp(t *testing.T) {
 	suite.RunSuite(t, new(HelpSuite))
 }
