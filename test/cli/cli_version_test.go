@@ -28,7 +28,7 @@ type VersionSuite struct {
 }
 
 func (s *VersionSuite) BeforeEach(t provider.T) {
-	t.ID("5428")
+	t.ID("2")
 	t.AddSubSuite("命令行-查看ZTF版本")
 }
 func (s *VersionSuite) TestVersionSuite(t provider.T) {

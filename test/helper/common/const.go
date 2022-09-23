@@ -19,6 +19,11 @@ func init() {
 	if runtime.GOOS == "windows" {
 		NewLine = "\r\n"
 	}
-	apath, _ := os.Getwd()
-	RootPath = apath[:strings.Index(apath, "test")]
+	RootPath, _ = os.Getwd()
+	if strings.Index(RootPath, "test") != -1 {
+		RootPath = RootPath[:strings.Index(RootPath, "test")]
+	}
+	if RootPath[len(RootPath)-1:] != FilePthSep {
+		RootPath += FilePthSep
+	}
 }

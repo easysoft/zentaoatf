@@ -25,22 +25,19 @@ type GExpect struct {
 }
 
 func Spawn(cmdStr string, timeout time.Duration) (expect *GExpect, err error) {
-	if runtime.GOOS == "windows" {
-		cmdStr = strings.ReplaceAll(cmdStr, "/", "\\")
-	}
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
+		cmdStr = strings.ReplaceAll(cmdStr, "/", "\\")
 		cmd = exec.Command("cmd", "/C", cmdStr)
 	} else {
 		cmd = exec.Command("/bin/bash", "-c", cmdStr)
 	}
-	fmt.Println(cmd.String())
+	// fmt.Println(cmd.String())
 
 	if cmd == nil {
 		err = errors.New("cmd is nil")
 		return
 	}
-	// cmd.Stdin, cmd.Stdout, cmd.Stderr = &stdout, &stdin, &stderr
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		return

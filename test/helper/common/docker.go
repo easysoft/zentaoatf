@@ -21,9 +21,8 @@ func Run(version string, codeDir string) (err error) {
 		os.RemoveAll(codeDir)
 	}
 
-	//docker run --name zentao -p 8081:80 --network=zentaonet -v D:\docker\www\zentaopms:/www/zentaopms -v D:\docker\mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -d easysoft/zentao:12.3.3
-	// cmd := exec.Command("docker", "run", "--name", "zentao"+versionNumber, "-p", "8081:80", "-v", codeDir+":/www/zentaopms", "-e", "-d", "easysoft/zentao:"+version)
-	cmd := exec.Command("docker", "run", "--name", "zentao"+versionNumber, "-p", "8081:80", "-v", codeDir+":/www/zentaopms", "-d", "easysoft/zentao:"+version)
+	// cmd := exec.Command("docker", "run", "--name", "zentao"+versionNumber, "-p", "8081:80", "-v", codeDir+":/www/zentaopms", "-d", "easysoft/zentao:"+version)
+	cmd := exec.Command("docker", "run", "--name", "zentao"+versionNumber, "-p", "8081:80", "-d", "easysoft/zentao:"+version)
 	fmt.Println(cmd.String())
 	output, err := cmd.CombinedOutput()
 	if err != nil {

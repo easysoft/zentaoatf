@@ -148,7 +148,7 @@ func createSuite() (err error) {
 			return
 		}
 		iframe.Click("#mainContent>>a[title=\"关联用例\"]")
-		iframe.Click("#cases1")
+		iframe.Click(`input[name="cases\[\]"]>>nth=-1`)
 		iframe.Click("#submit")
 	} else {
 		page.Click(".nav>>li>>text=套件")
@@ -166,7 +166,7 @@ func createSuite() (err error) {
 			return
 		}
 		page.Click("#mainContent>>a[title=\"关联用例\"]")
-		page.Click("#cases1")
+		page.Click(`input[name="cases\[\]"]>>nth=-1`)
 		page.Click("#submit")
 	}
 	return
