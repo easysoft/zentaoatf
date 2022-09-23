@@ -52,8 +52,6 @@ require (
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.21.0 // indirect
 	golang.org/x/text v0.3.7
-	google.golang.org/grpc v1.41.0
-	google.golang.org/protobuf v1.27.1
 	gopkg.in/ini.v1 v1.63.0
 	gorm.io/driver/sqlite v1.2.6
 	gorm.io/gorm v1.22.3

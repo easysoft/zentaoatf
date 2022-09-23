@@ -14,19 +14,6 @@ import (
 	"strings"
 )
 
-func ExecWinCmd(cmdStr string) (string, error) {
-	cmd := exec.Command("cmd", "/C", cmdStr)
-
-	var out bytes.Buffer
-	cmd.Stdout = &out
-
-	err := cmd.Run()
-
-	output := out.String()
-
-	return output, err
-}
-
 func ExeSysCmd(cmdStr string) (string, error) {
 	cmd := getCmd(cmdStr)
 

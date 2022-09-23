@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/internal/pkg/mq"
+	"github.com/easysoft/zentaoatf/pkg/core/mq"
 	"time"
 )
 
