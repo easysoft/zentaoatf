@@ -102,6 +102,9 @@ func createModule() (err error) {
 		}
 	} else {
 		page.Click(".nav>>li>>text=用例")
+		page.Click("#currentItem")
+		page.WaitForSelector("#dropMenu>>.list-group", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateVisible})
+		page.Click("#dropMenu>>a:has-text('企业网站建设')")
 		page.Click("#mainContent>>a>>text=维护模块")
 		err = page.Fill(`input[name="modules\[\]"]>>nth=0`, "module1")
 		if err != nil {
@@ -144,6 +147,9 @@ func createSuite() (err error) {
 		if err != nil {
 			return
 		}
+		iframe.Click("#mainContent>>a[title=\"关联用例\"]")
+		iframe.Click("#cases1")
+		iframe.Click("#submit")
 	} else {
 		page.Click(".nav>>li>>text=套件")
 		page.Click("#mainMenu>>text=建套件")
@@ -159,6 +165,9 @@ func createSuite() (err error) {
 		if err != nil {
 			return
 		}
+		page.Click("#mainContent>>a[title=\"关联用例\"]")
+		page.Click("#cases1")
+		page.Click("#submit")
 	}
 	return
 }
@@ -235,6 +244,20 @@ func downloadExt(codeDir string) (err error) {
 }
 
 func InitZentaoData(version string, codeDir string) (err error) {
+	pw, err := playwright.Run()
+	if err != nil {
+		return
+	}
+	headless := true
+	var slowMo float64 = 100
+	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	if err != nil {
+		return
+	}
+	page, err = runBrowser.NewPage()
+	if err != nil {
+		return
+	}
 	zentaoVersion = version
 	if _, err = page.Goto("http://127.0.0.1:8081", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
@@ -328,22 +351,7 @@ func InitZentaoData(version string, codeDir string) (err error) {
 			return
 		}
 	}
+	page.Close()
+	pw.Stop()
 	return
-}
-
-func init() {
-	pw, err := playwright.Run()
-	if err != nil {
-		return
-	}
-	headless := false
-	var slowMo float64 = 100
-	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
-	if err != nil {
-		return
-	}
-	page, err = runBrowser.NewPage()
-	if err != nil {
-		return
-	}
 }

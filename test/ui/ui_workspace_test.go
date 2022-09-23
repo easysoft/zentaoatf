@@ -4,6 +4,7 @@ import (
 	"os"
 	"testing"
 
+	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"
@@ -102,7 +103,7 @@ func CreateWorkspace(t provider.T) {
 		t.Errorf("Find name input fail: %v", err)
 		t.FailNow()
 	}
-	_, err = typeInput.SelectOption(playwright.SelectOptionValues{Values: &[]string{"ztf"}})
+	_, err = typeInput.SelectOption(playwright.SelectOptionValues{Values: &[]string{commonTestHelper.GetZtfPath() + ""}})
 	if err != nil {
 		t.Errorf("Fil name input fail: %v", err)
 		t.FailNow()
@@ -1125,7 +1126,7 @@ func Collapse(t provider.T) {
 		t.FailNow()
 	}
 }
-func TestWorkspace(t *testing.T) {
+func TestUiWorkspace(t *testing.T) {
 	runner.Run(t, "客户端-从禅道同步部分用例", SyncTwoCaseFromZentao)
 	runner.Run(t, "客户端-从禅道同步", SyncFromZentao)
 	runner.Run(t, "客户端-同步到禅道", SyncToZentao)

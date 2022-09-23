@@ -43,8 +43,10 @@ logs/
 /test/docker
 /test/log
 /test/product1
+/test/cli/product1
 /test/demo/ci_test*
 test/demo/php/conf
 test/demo/php/log
 test/demo/php/product1
+/test/cli/allure-results/
 /test/allure-results/

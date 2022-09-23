@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"regexp"
 	"runtime"
+	"strings"
 	"time"
 )
 
@@ -24,13 +25,16 @@ type GExpect struct {
 }
 
 func Spawn(cmdStr string, timeout time.Duration) (expect *GExpect, err error) {
-	// var stdout, stdin, stderr bytes.Buffer
+	if runtime.GOOS == "windows" {
+		cmdStr = strings.ReplaceAll(cmdStr, "/", "\\")
+	}
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
 		cmd = exec.Command("cmd", "/C", cmdStr)
 	} else {
 		cmd = exec.Command("/bin/bash", "-c", cmdStr)
 	}
+	fmt.Println(cmd.String())
 
 	if cmd == nil {
 		err = errors.New("cmd is nil")
@@ -73,7 +77,11 @@ func (e *GExpect) Expect(expect *regexp.Regexp, timeout time.Duration) (out stri
 		case <-c:
 			return out, err
 		case <-timer.C:
-			err = errors.New("Time out")
+			if out != "" {
+				err = errors.New(out)
+			} else {
+				err = errors.New("Time out")
+			}
 			return
 		}
 	}

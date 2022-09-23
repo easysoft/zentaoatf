@@ -11,17 +11,16 @@ pid=0
 import (
 	"fmt"
 	"regexp"
-	"runtime"
 	"testing"
 	"time"
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
+	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
 
 var (
-	cbNewline   = "/"
 	continueRe  = regexp.MustCompile("Which case do you want to report bug for|请输入您想提交缺陷的用例ID")
 	successCbRe = regexp.MustCompile("Success to report bug for case \\d+|成功为用例\\d+提交缺陷")
 )
@@ -39,24 +38,21 @@ func (s *CbSuite) TestCbSuite(t provider.T) {
 }
 
 func testCb() string {
-	cmd := "ztf cb demo/001 -p 1"
-	if runtime.GOOS == "windows" {
-		cmd = "ztf cb demo\\001 -p 1"
-	}
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" cb %stest/demo/001 -p 1", commonTestHelper.RootPath)
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		return err.Error()
 	}
 	defer child.Close()
-	if _, err := child.Expect(continueRe, 2*time.Second); err != nil {
+	if _, err := child.Expect(continueRe, 5*time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", continueRe, err.Error())
 	}
 
-	if err = child.Send("1" + cbNewline); err != nil {
+	if err = child.Send("1" + commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 
-	if _, err = child.Expect(successCbRe, 20*time.Second); err != nil {
+	if _, err = child.Expect(successCbRe, 30*time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", successCbRe, err.Error())
 	}
 	child.Close()
@@ -64,8 +60,5 @@ func testCb() string {
 }
 
 func TestCliCb(t *testing.T) {
-	if runtime.GOOS == "windows" {
-		cbNewline = "\r\n"
-	}
 	suite.RunSuite(t, new(CbSuite))
 }

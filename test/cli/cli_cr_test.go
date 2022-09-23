@@ -12,11 +12,11 @@ timeout=10
 import (
 	"fmt"
 	"regexp"
-	"runtime"
 	"testing"
 	"time"
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
+	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
@@ -38,10 +38,7 @@ func (s *CrSuite) TestCrSuite(t provider.T) {
 }
 
 func testCr() string {
-	cmd := "ztf cr demo/001 -p 1 -y -t testcr"
-	if runtime.GOOS == "windows" {
-		cmd = "ztf cr demo\\001 -p 1 -y -t testcr"
-	}
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" cr %stest/demo/001 -p 1 -y -t testcr", commonTestHelper.RootPath)
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		return err.Error()

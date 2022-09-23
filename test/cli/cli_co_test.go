@@ -24,12 +24,12 @@ pid=0
 import (
 	"fmt"
 	"regexp"
-	"runtime"
 	"strconv"
 	"testing"
 	"time"
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
+	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
@@ -50,7 +50,6 @@ var (
 	moduleId     = 0
 	taskId       = 1
 	suiteId      = 1
-	coNewline    = "/"
 )
 
 type CoSuite struct {
@@ -72,65 +71,65 @@ func (s *CoSuite) TestCoTask(t provider.T) {
 	t.Require().Equal("Success", testCoTask())
 }
 func (s *CoSuite) TestCo(t provider.T) {
-	t.Require().Equal("Success", testCo(fmt.Sprintf("ztf co -product %d -language php", productId)))
-	t.Require().Equal("Success", testCo(fmt.Sprintf("ztf co -p %d -m %d -l php", productId, moduleId)))
-	t.Require().Equal("Success", testCo(fmt.Sprintf("ztf co -s %d -l php -i true", suiteId)))
-	t.Require().Equal("Success", testCo(fmt.Sprintf("ztf co -t %d -l php", taskId)))
+	t.Require().Equal("Success", testCo(fmt.Sprintf(commonTestHelper.GetZtfPath()+" co -product %d -language php", productId)))
+	t.Require().Equal("Success", testCo(fmt.Sprintf(commonTestHelper.GetZtfPath()+" co -p %d -m %d -l php", productId, moduleId)))
+	t.Require().Equal("Success", testCo(fmt.Sprintf(commonTestHelper.GetZtfPath()+" co -s %d -l php -i true", suiteId)))
+	t.Require().Equal("Success", testCo(fmt.Sprintf(commonTestHelper.GetZtfPath()+" co -t %d -l php", taskId)))
 }
 
 func testCoProduct() string {
-	cmd := "ztf co"
+	cmd := commonTestHelper.GetZtfPath() + " co"
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		return err.Error()
 	}
 	defer child.Close()
-	if _, err = child.Expect(typeRe, time.Second); err != nil {
+	if _, err = child.Expect(typeRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", typeRe, err.Error())
 	}
 
-	if err = child.Send("1" + coNewline); err != nil {
+	if err = child.Send("1" + commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(productRe, time.Second); err != nil {
+	if _, err = child.Expect(productRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", productRe, err.Error())
 	}
 
-	if err = child.Send(strconv.Itoa(productId) + coNewline); err != nil {
+	if err = child.Send(strconv.Itoa(productId) + commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(moduleRe, time.Second); err != nil {
+	if _, err = child.Expect(moduleRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", moduleRe, err.Error())
 	}
 
-	if err = child.Send(strconv.Itoa(moduleId) + coNewline); err != nil {
+	if err = child.Send(strconv.Itoa(moduleId) + commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(separateRe, time.Second); err != nil {
+	if _, err = child.Expect(separateRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", separateRe, err.Error())
 	}
 
-	if err = child.Send("n" + coNewline); err != nil {
+	if err = child.Send("n" + commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(languageCoRe, time.Second); err != nil {
+	if _, err = child.Expect(languageCoRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", languageCoRe, err.Error())
 	}
 
-	if err = child.Send("5" + coNewline); err != nil {
+	if err = child.Send("5" + commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(storeRe, 10*time.Second); err != nil {
+	if _, err = child.Expect(storeRe, time.Second*60); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", storeRe, err.Error())
 	}
-	if err = child.Send(coNewline); err != nil {
+	if err = child.Send(commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(organizeRe, time.Second); err != nil {
+	if _, err = child.Expect(organizeRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", organizeRe, err.Error())
 	}
 
-	if err = child.Send(coNewline); err != nil {
+	if err = child.Send(commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(successCoRe, 10*time.Second); err != nil {
@@ -141,51 +140,51 @@ func testCoProduct() string {
 }
 
 func testCoSuite() string {
-	cmd := "ztf co"
+	cmd := commonTestHelper.GetZtfPath() + " co"
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		return err.Error()
 	}
 	defer child.Close()
-	if _, err = child.Expect(typeRe, time.Second); err != nil {
+	if _, err = child.Expect(typeRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", typeRe, err.Error())
 	}
 
-	if err = child.Send("2" + coNewline); err != nil {
+	if err = child.Send("2" + commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(suiteRe, time.Second); err != nil {
+	if _, err = child.Expect(suiteRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", suiteRe, err.Error())
 	}
 
-	if err = child.Send(strconv.Itoa(suiteId) + coNewline); err != nil {
+	if err = child.Send(strconv.Itoa(suiteId) + commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(separateRe, time.Second); err != nil {
+	if _, err = child.Expect(separateRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", separateRe, err.Error())
 	}
 
-	if err = child.Send("n" + coNewline); err != nil {
+	if err = child.Send("n" + commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(languageCoRe, time.Second); err != nil {
+	if _, err = child.Expect(languageCoRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", languageCoRe, err.Error())
 	}
 
-	if err = child.Send("5" + coNewline); err != nil {
+	if err = child.Send("5" + commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(storeRe, 10*time.Second); err != nil {
+	if _, err = child.Expect(storeRe, time.Second*60); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", storeRe, err.Error())
 	}
-	if err = child.Send(coNewline); err != nil {
+	if err = child.Send(commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(organizeRe, time.Second); err != nil {
+	if _, err = child.Expect(organizeRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", organizeRe, err.Error())
 	}
 
-	if err = child.Send(coNewline); err != nil {
+	if err = child.Send(commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(successCoRe, 10*time.Second); err != nil {
@@ -196,51 +195,51 @@ func testCoSuite() string {
 }
 
 func testCoTask() string {
-	cmd := "ztf co"
+	cmd := commonTestHelper.GetZtfPath() + " co"
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		return err.Error()
 	}
 	defer child.Close()
-	if _, err = child.Expect(typeRe, time.Second); err != nil {
+	if _, err = child.Expect(typeRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", typeRe, err.Error())
 	}
 
-	if err = child.Send("3" + coNewline); err != nil {
+	if err = child.Send("3" + commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(taskRe, time.Second); err != nil {
+	if _, err = child.Expect(taskRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", taskRe, err.Error())
 	}
 
-	if err = child.Send(strconv.Itoa(taskId) + coNewline); err != nil {
+	if err = child.Send(strconv.Itoa(taskId) + commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(separateRe, time.Second); err != nil {
+	if _, err = child.Expect(separateRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", separateRe, err.Error())
 	}
 
-	if err = child.Send("n" + coNewline); err != nil {
+	if err = child.Send("n" + commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(languageCoRe, time.Second); err != nil {
+	if _, err = child.Expect(languageCoRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", languageCoRe, err.Error())
 	}
 
-	if err = child.Send("5" + coNewline); err != nil {
+	if err = child.Send("5" + commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(storeRe, 10*time.Second); err != nil {
+	if _, err = child.Expect(storeRe, time.Second*60*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", storeRe, err.Error())
 	}
-	if err = child.Send(coNewline); err != nil {
+	if err = child.Send(commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(organizeRe, time.Second); err != nil {
+	if _, err = child.Expect(organizeRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", organizeRe, err.Error())
 	}
 
-	if err = child.Send(coNewline); err != nil {
+	if err = child.Send(commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(successCoRe, 10*time.Second); err != nil {
@@ -251,23 +250,24 @@ func testCoTask() string {
 }
 
 func testCo(cmd string) string {
+	fmt.Println(cmd)
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		return err.Error()
 	}
 	defer child.Close()
 
-	if _, err = child.Expect(storeRe, 10*time.Second); err != nil {
+	if _, err = child.Expect(storeRe, time.Second*60); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", storeRe, err.Error())
 	}
-	if err = child.Send(coNewline); err != nil {
+	if err = child.Send(commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(organizeRe, time.Second); err != nil {
+	if _, err = child.Expect(organizeRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", organizeRe, err.Error())
 	}
 
-	if err = child.Send(coNewline); err != nil {
+	if err = child.Send(commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(successCoRe, 10*time.Second); err != nil {
@@ -278,8 +278,5 @@ func testCo(cmd string) string {
 }
 
 func TestCliCo(t *testing.T) {
-	if runtime.GOOS == "windows" {
-		coNewline = "\r\n"
-	}
 	suite.RunSuite(t, new(CoSuite))
 }
