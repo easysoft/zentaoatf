@@ -20,7 +20,7 @@ example/tmp/
 example/www
 logs/
 .idea/
-/res/res.go
+# /res/res.go
 /conf/
 /testng_*
 
