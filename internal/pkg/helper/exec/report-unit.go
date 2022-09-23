@@ -205,7 +205,7 @@ func RetrieveUnitResult(workspacePath string, startTime int64, testTool commCons
 		resultDir = commConsts.AllureReportDir
 		zipDir = resultDir
 	} else {
-		resultDir = "testresult.xml"
+		resultDir = "testresults.xml"
 		zipDir = resultDir
 	}
 
