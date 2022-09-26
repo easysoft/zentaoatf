@@ -20,9 +20,9 @@ func TestCli() (err error) {
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
 		cmdStr = fmt.Sprintf(`%sztf.exe allure -allureReportDir .\test\cli\allure-results go test %stest\cli -v`, RootPath, RootPath)
-		cmd = exec.Command("cmd", "/C", cmdStr, "-uuid", "cli_auto_test")
+		cmd = exec.Command("cmd", "/C", cmdStr)
 	} else {
-		cmd = exec.Command("/bin/bash", "-c", cmdStr, "-uuid", "cli_auto_test")
+		cmd = exec.Command("/bin/bash", "-c", cmdStr)
 	}
 	cmd.Dir = RootPath
 	fmt.Println(cmd.String())
