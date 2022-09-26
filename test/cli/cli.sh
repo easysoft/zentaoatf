@@ -6,6 +6,8 @@ if [ ! -d "zentaoatf" ];then
     go mod tidy || true
     go run github.com/playwright-community/playwright-go/cmd/playwright install --with-deps
     cd ui
+    npm config set registry https://registry.npm.taobao.org  
+	npm config set disturl https://npm.taobao.org/dist  
     npm install
     cd ../
 else
