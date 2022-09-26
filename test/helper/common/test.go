@@ -19,11 +19,10 @@ func TestCli() (err error) {
 	cmdStr := fmt.Sprintf(`%sztf allure -allureReportDir ./test/cli/allure-results go test %stest/cli -v`, RootPath, RootPath)
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
-		cmdStr = fmt.Sprintf(`%sztf.exe allure -allureReportDir .\test\cli\allure-results go test %stest\cli -v -run=CliVersion`, RootPath, RootPath)
-		fmt.Println(RootPath, cmdStr)
-		cmd = exec.Command("cmd", "/C", cmdStr)
+		cmdStr = fmt.Sprintf(`%sztf.exe allure -allureReportDir .\test\cli\allure-results go test %stest\cli -v`, RootPath, RootPath)
+		cmd = exec.Command("cmd", "/C", cmdStr, "-uuid", "cli_auto_test")
 	} else {
-		cmd = exec.Command("/bin/bash", "-c", cmdStr, "-uuid", "uuuuuuuuuuu")
+		cmd = exec.Command("/bin/bash", "-c", cmdStr, "-uuid", "cli_auto_test")
 	}
 	cmd.Dir = RootPath
 	fmt.Println(cmd.String())
@@ -67,16 +66,14 @@ func TestCli() (err error) {
 		return
 	}
 	cmd.Process.Kill()
-	execHelper.KillProcessByUUID("uuuuuuuuuuu")
+	execHelper.KillProcessByUUID("cli_auto_test")
 	report, err := analysisHelper.ReadReportByPath(strings.Replace(reportDir, "result.txt", "result.json", 1))
 	if err != nil {
 		return
 	}
 	config := commDomain.WorkspaceConf{Url: "http://127.0.0.1:8081/", Password: "Test123456.", Username: "admin"}
 
-	fmt.Println(report, config)
 	err = zentaoHelper.CommitResult(report, 1, 0, config, nil)
-	fmt.Println(err)
 	return
 }
 
@@ -84,11 +81,10 @@ func TestUi() (err error) {
 	cmdStr := fmt.Sprintf(`%sztf allure -allureReportDir ./test/cli/allure-results go test %stest/ui -v`, RootPath, RootPath)
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
-		cmdStr = fmt.Sprintf(`%sztf.exe allure -allureReportDir .\test\cli\allure-results go test %stest\ui -v -run=CliVersion`, RootPath, RootPath)
-		fmt.Println(RootPath, cmdStr)
+		cmdStr = fmt.Sprintf(`%sztf.exe allure -allureReportDir .\test\cli\allure-results go test %stest\ui -v`, RootPath, RootPath)
 		cmd = exec.Command("cmd", "/C", cmdStr)
 	} else {
-		cmd = exec.Command("/bin/bash", "-c", cmdStr, "-uuid", "uuuuuuuuuuu")
+		cmd = exec.Command("/bin/bash", "-c", cmdStr)
 	}
 	cmd.Dir = RootPath
 	fmt.Println(cmd.String())
@@ -132,15 +128,13 @@ func TestUi() (err error) {
 		return
 	}
 	cmd.Process.Kill()
-	execHelper.KillProcessByUUID("uuuuuuuuuuu")
+	execHelper.KillProcessByUUID("ui_auto_test")
 	report, err := analysisHelper.ReadReportByPath(strings.Replace(reportDir, "result.txt", "result.json", 1))
 	if err != nil {
 		return
 	}
 	config := commDomain.WorkspaceConf{Url: "http://127.0.0.1:8081/", Password: "Test123456.", Username: "admin"}
 
-	fmt.Println(report, config)
 	err = zentaoHelper.CommitResult(report, 1, 0, config, nil)
-	fmt.Println(err)
 	return
 }

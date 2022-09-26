@@ -29,9 +29,5 @@ func main() {
 	if err != nil {
 		fmt.Println("Build cli fail ", err)
 	}
-	// err = commonTestHelper.BuildServer()
-	// if err != nil {
-	// 	fmt.Println("Build server fail ")
-	// }
 	commonTestHelper.TestCli()
 }

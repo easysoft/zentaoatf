@@ -33,5 +33,9 @@ func main() {
 	if err != nil {
 		fmt.Println("Build server fail ")
 	}
-	commonTestHelper.TestCli()
+	err = commonTestHelper.RunUi()
+	if err != nil {
+		fmt.Println("Build server fail ")
+	}
+	commonTestHelper.TestUi()
 }

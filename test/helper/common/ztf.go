@@ -32,10 +32,22 @@ func BuildCli() (err error) {
 func RunServer() (err error) {
 	ztfPath := GetZtfPath()
 	var cmd *exec.Cmd
-	cmd = exec.Command(ztfPath, "-P", "8085")
+	cmd = exec.Command(ztfPath, "-P", "8085", "-uuid=ui_auto_test")
 	cmd.Dir = RootPath
 	fmt.Println(cmd.String())
-	_, err = cmd.CombinedOutput()
+	err = cmd.Start()
+	if err != nil {
+		return
+	}
+	return
+}
+
+func RunUi() (err error) {
+	var cmd *exec.Cmd
+	cmd = exec.Command("npm", "run", "serve", "-uuid=ui_auto_test")
+	cmd.Dir = RootPath + FilePthSep + "ui"
+	fmt.Println(cmd.String())
+	err = cmd.Start()
 	if err != nil {
 		return
 	}
