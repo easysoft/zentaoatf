@@ -244,7 +244,7 @@ func testRunUnitTest(cmdStr, workspacePath string, successRe *regexp.Regexp) str
 // 	if runtime.GOOS == "windows" {
 // 		path = `..\..\demo\test_scene.php`
 // 	}
-// 	cmd := `ztf run ` + path
+// 	cmd := commonTestHelper.GetZtfPath()+` run ` + path
 // 	for expectVal, actualVal := range sceneMap {
 // 		file, err := os.OpenFile(path, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0666)
 // 		if err != nil {

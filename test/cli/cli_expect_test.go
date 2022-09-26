@@ -41,7 +41,7 @@ func (s *ExpectSuite) TestExpectSuite(t provider.T) {
 
 func testExpect() string {
 	path := fmt.Sprintf(`%sdemo/sample/1_simple.php`, commonTestHelper.RootPath)
-	cmd := `ztf expect ` + path
+	cmd := commonTestHelper.GetZtfPath() + ` expect ` + path
 
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {

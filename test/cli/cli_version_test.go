@@ -15,6 +15,7 @@ import (
 	"time"
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
+	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
@@ -36,7 +37,7 @@ func (s *VersionSuite) TestVersionSuite(t provider.T) {
 }
 
 func testVersion() string {
-	cmd := `ztf version`
+	cmd := commonTestHelper.GetZtfPath() + ` version`
 
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {

@@ -29,19 +29,10 @@ func BuildCli() (err error) {
 	return
 }
 
-func BuildServer() (err error) {
-	outPath := fmt.Sprintf("%s%s", RootPath, "server")
-	cliPath := `./cmd/server/main.go`
-	if runtime.GOOS == "windows" {
-		cliPath = `.\cmd\server\main.go`
-		outPath += ".exe"
-	}
-	_, err = os.Stat(outPath)
-	if err != nil && os.IsExist(err) {
-		os.Remove(outPath)
-	}
+func RunServer() (err error) {
+	ztfPath := GetZtfPath()
 	var cmd *exec.Cmd
-	cmd = exec.Command("go", "build", "-o", outPath, cliPath)
+	cmd = exec.Command(ztfPath, "-P", "8085")
 	cmd.Dir = RootPath
 	fmt.Println(cmd.String())
 	_, err = cmd.CombinedOutput()

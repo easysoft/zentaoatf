@@ -41,7 +41,7 @@ func (s *ExtractSuite) TestExtractSuite(t provider.T) {
 
 func testExtract() string {
 	path := fmt.Sprintf(`%sdemo/sample/8_extract_desc.php`, commonTestHelper.RootPath)
-	cmd := `ztf extract ` + path
+	cmd := commonTestHelper.GetZtfPath() + ` extract ` + path
 
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
