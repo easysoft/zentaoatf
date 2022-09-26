@@ -13,12 +13,12 @@ import (
 	"io/ioutil"
 	"os"
 	"regexp"
-	"runtime"
 	"strings"
 	"testing"
 	"time"
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
+	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
@@ -40,11 +40,8 @@ func (s *ExtractSuite) TestExtractSuite(t provider.T) {
 }
 
 func testExtract() string {
-	path := `../demo/sample/8_extract_desc.php`
-	if runtime.GOOS == "windows" {
-		path = `..\demo\sample\8_extract_desc.php`
-	}
-	cmd := `ztf extract ` + path
+	path := fmt.Sprintf(`%sdemo/sample/8_extract_desc.php`, commonTestHelper.RootPath)
+	cmd := commonTestHelper.GetZtfPath() + ` extract ` + path
 
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
@@ -96,6 +93,6 @@ step 10 >> expect 10
 	return "Success"
 }
 
-func TestExtract(t *testing.T) {
+func TestCliExtract(t *testing.T) {
 	suite.RunSuite(t, new(ExtractSuite))
 }

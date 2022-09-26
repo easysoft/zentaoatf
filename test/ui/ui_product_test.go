@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/ozontech/allure-go/pkg/framework/provider"
@@ -75,7 +74,6 @@ func SwitchProduct(t provider.T) {
 	err = page.Click("#navbar .list-item>>text=test")
 	page.WaitForTimeout(100)
 	productName, err := page.InnerText("#productMenuToggle>>span")
-	fmt.Println(productName)
 	if productName != "test" {
 		t.Error("Switch product fail")
 		t.FailNow()

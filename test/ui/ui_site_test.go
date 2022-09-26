@@ -84,7 +84,7 @@ func CreateSite(t provider.T) {
 		t.Errorf("Find address input fail: %v", err)
 		t.FailNow()
 	}
-	err = addressInput.Fill("http://127.0.0.1/zentao/")
+	err = addressInput.Fill("http://127.0.0.1:8081/")
 	if err != nil {
 		t.Errorf("Fil address input fail: %v", err)
 		t.FailNow()
@@ -104,7 +104,7 @@ func CreateSite(t provider.T) {
 		t.Errorf("Find passwd input fail: %v", err)
 		t.FailNow()
 	}
-	err = pwdInput.Fill("123456.")
+	err = pwdInput.Fill("Test123456.")
 	if err != nil {
 		t.Errorf("Fil passwd input fail: %v", err)
 		t.FailNow()
@@ -217,7 +217,7 @@ func EditSite(t provider.T) {
 		t.Errorf("Find address input fail: %v", err)
 		t.FailNow()
 	}
-	err = addressInput.Fill("http://127.0.0.1/zentao/")
+	err = addressInput.Fill("http://127.0.0.1:8081/")
 	if err != nil {
 		t.Errorf("Fil address input fail: %v", err)
 		t.FailNow()
@@ -237,7 +237,7 @@ func EditSite(t provider.T) {
 		t.Errorf("Find passwd input fail: %v", err)
 		t.FailNow()
 	}
-	err = pwdInput.Fill("123456.")
+	err = pwdInput.Fill("Test123456.")
 	if err != nil {
 		t.Errorf("Fil passwd input fail: %v", err)
 		t.FailNow()

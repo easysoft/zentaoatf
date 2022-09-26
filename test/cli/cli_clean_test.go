@@ -17,6 +17,7 @@ import (
 	"time"
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
+	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
@@ -38,7 +39,7 @@ func (s *CleanSuite) TestCleanSuite(t provider.T) {
 }
 
 func testClean() string {
-	cmd := `ztf clean`
+	cmd := commonTestHelper.GetZtfPath() + ` clean`
 	path := "./log/test"
 	if runtime.GOOS == "windows" {
 		path = `.\log\test`
@@ -70,6 +71,6 @@ func testClean() string {
 	return "Success"
 }
 
-func TestClean(t *testing.T) {
+func TestCliClean(t *testing.T) {
 	suite.RunSuite(t, new(CleanSuite))
 }

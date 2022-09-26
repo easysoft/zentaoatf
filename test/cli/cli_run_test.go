@@ -38,16 +38,10 @@ import (
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
 	"github.com/go-git/go-git/v5"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
-)
-
-var (
-	scriptResMap = map[string]*regexp.Regexp{
-		// "ztf run demo/001/result.txt":          regexp.MustCompile(`Run 1 scripts in \d+ sec, 0\(0\.0%\) Pass, 1\(100\.0%\) Fail, 0\(0\.0%\) Skip`),
-		// "ztf run demo -p 1 -t task1 -cr -cb": regexp.MustCompile(`Submitted test results to ZenTao\.[\s\S]+Success to report bug for case 6`),
-	}
 )
 
 type RunSuit struct {
@@ -57,30 +51,24 @@ type RunSuit struct {
 
 func (s *RunSuit) BeforeEach(t provider.T) {
 	if runtime.GOOS == "windows" {
-		os.RemoveAll("demo\\php\\product1")
+		os.RemoveAll(fmt.Sprintf("%s\\test\\demo\\php\\product1", commonTestHelper.RootPath))
 	} else {
-		os.RemoveAll("demo/php/product1")
+		os.RemoveAll(fmt.Sprintf("%s/test/demo/php/product1", commonTestHelper.RootPath))
 	}
 	t.AddSubSuite("命令行-run")
 }
 func (s *RunSuit) TestRunZtfFile(t provider.T) {
 	t.ID("1584")
 	t.Title("执行多个文件和目录中的脚本")
-	cmd := "ztf run demo/1_string_match_pass.php"
-	if runtime.GOOS == "windows" {
-		cmd = strings.ReplaceAll(cmd, "/", "\\")
-	}
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %s/test/demo/1_string_match_pass.php", commonTestHelper.RootPath)
 	expectReg := regexp.MustCompile(`Run 1 scripts in \d+ sec, 1\(100\.0%\) Pass, 0\(0\.0%\) Fail, 0\(0\.0%\) Skip|执行1个用例，耗时\d+秒。1\(100\.0%\) 通过，0\(0\.0%\) 失败，0\(0\.0%\) 忽略`)
 	t.Require().Equal("Success", testRun(cmd, expectReg))
 
-	cmd = "ztf run demo/1_string_match_pass.php demo/2_webpage_extract.php"
-	if runtime.GOOS == "windows" {
-		cmd = strings.ReplaceAll(cmd, "/", "\\")
-	}
+	cmd = commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %stest/demo/1_string_match_pass.php %stest/demo/2_webpage_extract.php", commonTestHelper.RootPath, commonTestHelper.RootPath)
 	expectReg = regexp.MustCompile(`Run 2 scripts in \d+ sec, 2\(100\.0%\) Pass, 0\(0\.0%\) Fail, 0\(0\.0%\) Skip|执行2个用例，耗时\d+秒。2\(100\.0%\) 通过，0\(0\.0%\) 失败，0\(0\.0%\) 忽略`)
 	t.Require().Equal("Success", testRun(cmd, expectReg))
 
-	cmd = "ztf run demo"
+	cmd = commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %stest/demo", commonTestHelper.RootPath)
 	if runtime.GOOS == "windows" {
 		cmd = strings.ReplaceAll(cmd, "/", "\\")
 	}
@@ -91,41 +79,29 @@ func (s *RunSuit) TestRunZtfFile(t provider.T) {
 func (s *RunSuit) TestRunZtfTask(t provider.T) {
 	t.ID("1589")
 	t.Title("执行禅道测试任务")
-	cmd := "ztf run demo -task 1"
-	if runtime.GOOS == "windows" {
-		cmd = strings.ReplaceAll(cmd, "/", "\\")
-	}
-	expectReg := regexp.MustCompile(`Run 2 scripts in \d+ sec, 1\(50\.0%\) Pass, 1\(50\.0%\) Fail, 0\(0\.0%\) Skip|执行2个用例，耗时\d+秒。1\(50\.0%\) 通过，1\(50\.0%\) 失败，0\(0\.0%\) 忽略`)
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %stest/demo -task 1", commonTestHelper.RootPath)
+	expectReg := regexp.MustCompile(`Run 3 scripts in \d+ sec, 1\(33\.0%\) Pass, 2\(66\.0%\) Fail, 0\(0\.0%\) Skip|执行3个用例，耗时\d+秒。1\(33\.0%\) 通过，2\(66\.0%\) 失败，0\(0\.0%\) 忽略`)
 	t.Require().Equal("Success", testRun(cmd, expectReg))
 }
 
 func (s *RunSuit) TestRunZtfSuite(t provider.T) {
 	t.ID("1588")
 	t.Title("执行禅道测试套件")
-	cmd := "ztf run demo -suite 1"
-	if runtime.GOOS == "windows" {
-		cmd = strings.ReplaceAll(cmd, "/", "\\")
-	}
-	expectReg := regexp.MustCompile(`Run 2 scripts in \d+ sec, 1\(50\.0%\) Pass, 1\(50\.0%\) Fail, 0\(0\.0%\) Skip|执行2个用例，耗时\d+秒。1\(50\.0%\) 通过，1\(50\.0%\) 失败，0\(0\.0%\) 忽略`)
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %stest/demo -suite 1", commonTestHelper.RootPath)
+	expectReg := regexp.MustCompile(`Run 1 scripts in \d+ sec, 0\(0\.0%\) Pass, 1\(100\.0%\) Fail, 0\(0\.0%\) Skip|执行1个用例，耗时\d+秒。0\(0\.0%\) 通过，1\(100\.0%\) 失败，0\(0\.0%\) 忽略`)
 	t.Require().Equal("Success", testRun(cmd, expectReg))
 }
 
 func (s *RunSuit) TestRunZtfCsFile(t provider.T) {
 	t.ID("1586")
 	t.Title("执行本地套件文件中指定编号的脚本")
-	cmd := "ztf run demo demo/all.cs"
-	if runtime.GOOS == "windows" {
-		cmd = strings.ReplaceAll(cmd, "/", "\\")
-	}
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %stest/demo %stest/demo/all.cs", commonTestHelper.RootPath, commonTestHelper.RootPath)
 	expectReg := regexp.MustCompile(`Run 2 scripts in \d+ sec, 1\(50\.0%\) Pass, 1\(50\.0%\) Fail, 0\(0\.0%\) Skip|执行2个用例，耗时\d+秒。1\(50\.0%\) 通过，1\(50\.0%\) 失败，0\(0\.0%\) 忽略`)
 	t.Require().Equal("Success", testRun(cmd, expectReg))
 }
 
 func (s *RunSuit) TestRunTestng(t provider.T) {
-	testngDir := "./demo/ci_test_testng"
-	if runtime.GOOS == "windows" {
-		testngDir = ".\\demo\\ci_test_testng"
-	}
+	testngDir := fmt.Sprintf("%stest/demo/ci_test_testng", commonTestHelper.RootPath)
 	t.ID("5432")
 	t.Title("执行TestNG单元测试")
 	cloneGit("https://gitee.com/ngtesting/ci_test_testng.git", testngDir)
@@ -133,10 +109,7 @@ func (s *RunSuit) TestRunTestng(t provider.T) {
 }
 
 func (s *RunSuit) TestRunPytest(t provider.T) {
-	pytestDir := "./demo/ci_test_pytest"
-	if runtime.GOOS == "windows" {
-		pytestDir = ".\\demo\\ci_test_pytest"
-	}
+	pytestDir := fmt.Sprintf(".%stest/demo/ci_test_pytest", commonTestHelper.RootPath)
 	t.ID("5435")
 	t.Title("执行PyTest单元测试")
 	cloneGit("https://gitee.com/ngtesting/ci_test_pytest.git", pytestDir)
@@ -267,11 +240,11 @@ func testRunUnitTest(cmdStr, workspacePath string, successRe *regexp.Regexp) str
 
 // 	print("%s\n");`
 
-// 	path := "./demo/test_scene.php"
+// 	path := "../../demoo/test_scene.php"
 // 	if runtime.GOOS == "windows" {
-// 		path = `.\demo\test_scene.php`
+// 		path = `..\..\demo\test_scene.php`
 // 	}
-// 	cmd := `ztf run ` + path
+// 	cmd := commonTestHelper.GetZtfPath()+` run ` + path
 // 	for expectVal, actualVal := range sceneMap {
 // 		file, err := os.OpenFile(path, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0666)
 // 		if err != nil {
@@ -287,6 +260,6 @@ func testRunUnitTest(cmdStr, workspacePath string, successRe *regexp.Regexp) str
 // 	os.Remove(path)
 // }
 
-func TestRun(t *testing.T) {
+func TestCliRun(t *testing.T) {
 	suite.RunSuite(t, new(RunSuit))
 }
