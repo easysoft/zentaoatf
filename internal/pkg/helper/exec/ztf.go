@@ -90,7 +90,7 @@ func RunZtf(ch chan int,
 
 	if len(casesToRun) > 0 {
 		// gen report
-		GenZTFTestReport(report, pathMaxWidth, workspacePath, wsMsg)
+		GenZTFTestReport(report, pathMaxWidth, workspacePath, ch, wsMsg)
 	}
 
 	if commConsts.ExecFrom != commConsts.FromCmd {

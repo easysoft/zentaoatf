@@ -1,6 +1,10 @@
 <template>
   <Panel :title="t('exec_log')" class="log-panel">
     <template #toolbar-buttons>
+      <Button class="rounded pure" :hint="t('stop')"
+              icon="stop" iconSize="1.4em"
+              :disabled="isRunning == 'false'"
+              @click="stopExec"/>
       <Button class="rounded pure" :hint="t('clear')"
               icon="clear" iconSize="1.4em"
               @click="bus.emit(settings.eventClearWebSocketMsg);"/>
@@ -27,12 +31,17 @@ import { StateType } from '@/store/global'
 import {computed} from 'vue';
 import bus from "@/utils/eventBus";
 import settings from "@/config/settings";
+import {ExecStatus} from "@/store/exec";
 const { t } = useI18n();
 
-const store = useStore<{global: StateType}>()
+const store = useStore<{global: StateType, Exec: ExecStatus}>()
 const logContentExpand = computed<boolean>(() => store.state.global.logContentExpand);
 const logPaneMaximized = computed<boolean>(() => store.state.global.logPaneMaximized);
+const isRunning = computed<any>(() => store.state.Exec.isRunning);
 
+const stopExec = () => {
+    bus.emit(settings.eventExec, { execType: 'stop' });
+}
 </script>
 
 <style lang="less">

@@ -98,6 +98,9 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 			}
 		}
 
+		if !execHelper.GetRunning() {
+			return
+		}
 		execHelper.SetRunning(false)
 
 		msg := i118Utils.Sprintf("end_task")

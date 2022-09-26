@@ -118,7 +118,7 @@ const onWebsocketMsgEvent = async (data: any) => {
   if(item.category == 'watch'){
     return;
   }
-  if ('isRunning' in wsMsg) {
+  if (item.isRunning != undefined) {
     console.log('change isRunning to ', item.isRunning)
     store.dispatch('Exec/setRunning', item.isRunning)
   }
