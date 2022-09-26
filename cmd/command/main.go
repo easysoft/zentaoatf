@@ -136,7 +136,9 @@ func main() {
 	case "-P":
 		server(os.Args)
 	case "clone":
-		Clone(os.Args)
+		clone(os.Args)
+	case "pull":
+		pull(os.Args)
 
 	default: // run
 		if len(os.Args) > 1 {
@@ -301,7 +303,7 @@ func server(args []string) {
 	webServer.Run()
 }
 
-func Clone(args []string) {
+func clone(args []string) {
 	url := ""
 	if len(args) >= 3 {
 		url = args[2]
@@ -310,8 +312,25 @@ func Clone(args []string) {
 		ScmAddress: url,
 		Username:   "yuaiwuhen@hotmail.com",
 		Password:   "zhaoke5272",
-		RsaKey:     `C:\Users\yuaiw\.ssh\id_rsa.pub`,
+		RsaKey:     `/root/.ssh/id_rsa`,
+		WorkDir:    "/root/",
 	}
 	err := gitHelper.CheckoutCodes(&build)
 	fmt.Println(err)
+}
+
+func pull(args []string) {
+	url := ""
+	if len(args) >= 3 {
+		url = args[2]
+	}
+	build := gitHelper.Build{
+		ScmAddress: url,
+		Username:   "yuaiwuhen@hotmail.com",
+		Password:   "zhaoke5272",
+		RsaKey:     `/root/.ssh/id_rsa`,
+		WorkDir:    "/root/",
+	}
+	err := gitHelper.ForcePull(&build, true)
+	fmt.Println(111111111111111, err)
 }

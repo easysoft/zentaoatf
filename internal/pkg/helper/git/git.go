@@ -70,7 +70,104 @@ func GetGitProjectName(gitUrl string) string {
 	return name
 }
 
-func Pull(build *Build, force bool) (err error) {
+func Pull(build *Build) (err error) {
+	userName := build.Username
+	password := build.Password
+	RsaKey := build.RsaKey
+	if build.ProjectDir == "" {
+		url := build.ScmAddress
+		projectDir := build.WorkDir + GetGitProjectName(url) + commConsts.PthSep
+		build.ProjectDir = projectDir
+	}
+	fmt.Println(build.ProjectDir)
+	options := git.PullOptions{
+		Progress: os.Stdout,
+	}
+	if userName != "" {
+		options.Auth = &http.BasicAuth{
+			Username: userName,
+			Password: password,
+		}
+	}
+	if RsaKey != "" {
+		_, err = os.Stat(RsaKey)
+		if err != nil {
+			return
+		}
+		options.Auth, err = ssh.NewPublicKeysFromFile("git", RsaKey, password)
+		if err != nil {
+			return
+		}
+	}
+	r, err := git.PlainOpen(build.ProjectDir)
+	if err != nil {
+		return
+	}
+	w, err := r.Worktree()
+	if err != nil {
+		return
+	}
+	err = w.Pull(&options)
+	if err != nil && !errors.Is(err, git.NoErrAlreadyUpToDate) {
+		return
+	}
+	return nil
+}
+
+func ForcePull(build *Build, force bool) (err error) {
+	userName := build.Username
+	password := build.Password
+	RsaKey := build.RsaKey
+	if build.ProjectDir == "" {
+		url := build.ScmAddress
+		projectDir := build.WorkDir + GetGitProjectName(url) + commConsts.PthSep
+		build.ProjectDir = projectDir
+	}
+	fmt.Println(build.ProjectDir)
+	options := git.PullOptions{
+		Progress: os.Stdout,
+		Force:    force,
+	}
+	if userName != "" {
+		options.Auth = &http.BasicAuth{
+			Username: userName,
+			Password: password,
+		}
+	}
+	if RsaKey != "" {
+		_, err = os.Stat(RsaKey)
+		if err != nil {
+			return
+		}
+		options.Auth, err = ssh.NewPublicKeysFromFile("git", RsaKey, password)
+		if err != nil {
+			return
+		}
+	}
+	r, err := git.PlainOpen(build.ProjectDir)
+	if err != nil {
+		return
+	}
+	w, err := r.Worktree()
+	if err != nil {
+		return
+	}
+	ref, err := r.Head()
+	if err != nil {
+		return
+	}
+	err = w.Reset(&git.ResetOptions{Commit: ref.Hash(), Mode: git.HardReset})
+	if err != nil {
+		return
+	}
+	err = w.Pull(&options)
+	if err != nil && !errors.Is(err, git.NoErrAlreadyUpToDate) {
+		return
+	}
+	return nil
+}
+
+func Fetch(build *Build) (err error) {
 	userName := build.Username
 	password := build.Password
 	RsaKey := build.RsaKey
@@ -79,7 +176,7 @@ func Pull(build *Build, force bool) (err error) {
 	fileUtils.MkDirIfNeeded(projectDir)
 	options := git.FetchOptions{
 		Progress: os.Stdout,
-		Force:    force,
+		Force:    true,
 	}
 	if userName != "" {
 		options.Auth = &http.BasicAuth{
