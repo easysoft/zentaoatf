@@ -1115,14 +1115,16 @@ func RunUnit(t provider.T) {
 		t.Errorf("Find result in rightPane fail: %v", err)
 		t.FailNow()
 
-	if err = runBrowser.Close(); err != nil {
-		t.Errorf("The runBrowser cannot be closed: %v", err)
-		t.FailNow()
+		if err = runBrowser.Close(); err != nil {
+			t.Errorf("The runBrowser cannot be closed: %v", err)
+			t.FailNow()
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+		}
 	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-	}
+
 }
 
 func createWorkspace(t provider.T, workspacePath string, page playwright.Page) {
