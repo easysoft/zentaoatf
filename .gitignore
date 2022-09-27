@@ -45,4 +45,5 @@ logs/
 test/demo/php/conf
 test/demo/php/log
 test/demo/php/product1
-/test/allure-results/
+/test/ui/allure-results
+/test/cli/allure-results

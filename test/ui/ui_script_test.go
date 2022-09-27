@@ -20,16 +20,28 @@ func SaveScript(t provider.T) {
 	}
 	headless := true
 	var slowMo float64 = 100
-	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	scriptBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
-		t.Errorf("Fail to launch the web workspaceBrowser: %v", err)
+		t.Errorf("Fail to launch the web scriptBrowser: %v", err)
 		t.FailNow()
 	}
-	page, err := workspaceBrowser.NewPage()
+	page, err := scriptBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
+	defer func() {
+		if err = scriptBrowser.Close(); err != nil {
+			t.Errorf("The scriptBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -108,14 +120,6 @@ func SaveScript(t provider.T) {
 	locator.Press("Backspace")
 	locator.Press("Backspace")
 	page.Click(".tabs-nav-toolbar>>[title=\"Save\"]")
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-		t.FailNow()
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-	}
 }
 
 func ViewScript(t provider.T) {
@@ -128,16 +132,28 @@ func ViewScript(t provider.T) {
 	}
 	headless := true
 	var slowMo float64 = 100
-	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	scriptBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
-		t.Errorf("Fail to launch the web workspaceBrowser: %v", err)
+		t.Errorf("Fail to launch the web scriptBrowser: %v", err)
 		t.FailNow()
 	}
-	page, err := workspaceBrowser.NewPage()
+	page, err := scriptBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
+	defer func() {
+		if err = scriptBrowser.Close(); err != nil {
+			t.Errorf("The scriptBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -172,15 +188,6 @@ func ViewScript(t provider.T) {
 	locator, err = page.Locator(".view-line>>text=title=check string matches pattern")
 	if err != nil {
 		t.Errorf("Find title fail: %v", err)
-		t.FailNow()
-	}
-
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-		t.FailNow()
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
 		t.FailNow()
 	}
 }

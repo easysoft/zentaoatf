@@ -32,6 +32,18 @@ func CreateInterpreter(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
+	defer func() {
+		if err = interpreterBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -86,15 +98,6 @@ func CreateInterpreter(t provider.T) {
 		t.Errorf("Find created interpreter fail: %v", err)
 		t.FailNow()
 	}
-
-	if err = interpreterBrowser.Close(); err != nil {
-		t.Errorf("The interpreterBrowser cannot be closed: %v", err)
-		t.FailNow()
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-	}
 }
 func EditInterpreter(t provider.T) {
 	t.ID("5465")
@@ -120,6 +123,18 @@ func EditInterpreter(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
+	defer func() {
+		if err = interpreterBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -184,15 +199,6 @@ func EditInterpreter(t provider.T) {
 		t.Errorf("Find created interpreter fail: %v", err)
 		t.FailNow()
 	}
-
-	if err = interpreterBrowser.Close(); err != nil {
-		t.Errorf("The interpreterBrowser cannot be closed: %v", err)
-		t.FailNow()
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-	}
 }
 func DeleteInterpreter(t provider.T) {
 	t.ID("5465")
@@ -206,18 +212,28 @@ func DeleteInterpreter(t provider.T) {
 	var slowMo float64 = 100
 	if interpreterBrowser == nil || !interpreterBrowser.IsConnected() {
 		interpreterBrowser, err = pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
-	}
-	defer interpreterBrowser.Close()
-	defer pw.Stop()
-	if err != nil {
-		t.Errorf("Fail to launch the web interpreterBrowser: %v", err)
-		t.FailNow()
+		if err != nil {
+			t.Errorf("Fail to launch the web interpreterBrowser: %v", err)
+			t.FailNow()
+		}
 	}
 	page, err := interpreterBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
+	defer func() {
+		if err = interpreterBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -255,15 +271,6 @@ func DeleteInterpreter(t provider.T) {
 	c, err := locator.Count()
 	if err != nil || c > 0 {
 		t.Errorf("Delete interpreter fail: %v", err)
-		t.FailNow()
-	}
-
-	if err = interpreterBrowser.Close(); err != nil {
-		t.Errorf("The interpreterBrowser cannot be closed: %v", err)
-		t.FailNow()
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
 		t.FailNow()
 	}
 }
