@@ -2,7 +2,6 @@ package gitHelper
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"strings"
 
@@ -29,7 +28,6 @@ func CheckoutCodes(build *Build) (err error) {
 
 	projectDir := build.WorkDir + GetGitProjectName(url) + commConsts.PthSep
 	build.ProjectDir = projectDir
-	fmt.Println(projectDir, url)
 	fileUtils.MkDirIfNeeded(projectDir)
 
 	options := git.CloneOptions{
@@ -44,12 +42,10 @@ func CheckoutCodes(build *Build) (err error) {
 	}
 	if build.RsaKey != "" {
 		_, err = os.Stat(build.RsaKey)
-		fmt.Println(err, build.RsaKey)
 		if err != nil {
 			return
 		}
 		options.Auth, err = ssh.NewPublicKeysFromFile("git", build.RsaKey, password)
-		fmt.Println(1111, options.Auth, err)
 		if err != nil {
 			return
 		}
@@ -79,7 +75,6 @@ func Pull(build *Build) (err error) {
 		projectDir := build.WorkDir + GetGitProjectName(url) + commConsts.PthSep
 		build.ProjectDir = projectDir
 	}
-	fmt.Println(build.ProjectDir)
 	options := git.PullOptions{
 		Progress: os.Stdout,
 	}
@@ -123,7 +118,6 @@ func ForcePull(build *Build, force bool) (err error) {
 		projectDir := build.WorkDir + GetGitProjectName(url) + commConsts.PthSep
 		build.ProjectDir = projectDir
 	}
-	fmt.Println(build.ProjectDir)
 	options := git.PullOptions{
 		Progress: os.Stdout,
 		Force:    force,

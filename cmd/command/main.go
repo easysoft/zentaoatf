@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"os"
 	"os/signal"
 	"strconv"
@@ -12,7 +11,6 @@ import (
 	"github.com/easysoft/zentaoatf/internal/command/action"
 	commandConfig "github.com/easysoft/zentaoatf/internal/command/config"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	gitHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/git"
 	unitHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/unit"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	"github.com/easysoft/zentaoatf/internal/server/core/cron"
@@ -135,10 +133,6 @@ func main() {
 		run(os.Args)
 	case "-P":
 		server(os.Args)
-	case "clone":
-		clone(os.Args)
-	case "pull":
-		pull(os.Args)
 
 	default: // run
 		if len(os.Args) > 1 {
@@ -301,36 +295,4 @@ func server(args []string) {
 	websocketHelper.InitMq()
 
 	webServer.Run()
-}
-
-func clone(args []string) {
-	url := ""
-	if len(args) >= 3 {
-		url = args[2]
-	}
-	build := gitHelper.Build{
-		ScmAddress: url,
-		Username:   "yuaiwuhen@hotmail.com",
-		Password:   "zhaoke5272",
-		RsaKey:     `/root/.ssh/id_rsa`,
-		WorkDir:    "/root/",
-	}
-	err := gitHelper.CheckoutCodes(&build)
-	fmt.Println(err)
-}
-
-func pull(args []string) {
-	url := ""
-	if len(args) >= 3 {
-		url = args[2]
-	}
-	build := gitHelper.Build{
-		ScmAddress: url,
-		Username:   "yuaiwuhen@hotmail.com",
-		Password:   "zhaoke5272",
-		RsaKey:     `/root/.ssh/id_rsa`,
-		WorkDir:    "/root/",
-	}
-	err := gitHelper.ForcePull(&build, true)
-	fmt.Println(111111111111111, err)
 }
