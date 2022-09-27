@@ -24,7 +24,7 @@ func RunUnitTest(cmdStr string, taskIdOrName string) {
 		testSet.Name = taskIdOrName
 	}
 
-	req := serverDomain.WsReq{
+	req := serverDomain.ExecReq{
 		Act:      commConsts.ExecUnit,
 		TestSets: []serverDomain.TestSet{testSet},
 	}

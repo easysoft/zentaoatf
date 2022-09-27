@@ -6,7 +6,6 @@ import (
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
-	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
 	watchHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/watch"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
@@ -15,18 +14,15 @@ import (
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/fatih/color"
-	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
-)
-
-var (
-	ch chan int
 )
 
 type WebSocketCtrl struct {
 	Namespace         string
-	WorkspaceService  *service.WorkspaceService `inject:""`
 	*websocket.NSConn `stateless:"true"`
+
+	WorkspaceService *service.WorkspaceService `inject:""`
+	TestExecService  *service.TestExecService  `inject:""`
 }
 
 func NewWebSocketCtrl() *WebSocketCtrl {
@@ -65,7 +61,7 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 	ctx := websocket.GetContext(c.Conn)
 	logUtils.Infof(i118Utils.Sprintf("ws_onchat", ctx.RemoteAddr(), wsMsg.Room, string(wsMsg.Body)))
 
-	req := serverDomain.WsReq{}
+	req := serverDomain.ExecReq{}
 	err = json.Unmarshal(wsMsg.Body, &req)
 	if err != nil {
 		msg := i118Utils.Sprintf("wrong_req_params", err.Error())
@@ -74,73 +70,21 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 		return
 	}
 
-	act := req.Act
-
-	if act == commConsts.ExecInit {
+	if req.Act == commConsts.ExecInit {
 		msg := i118Utils.Sprintf("success_to_conn")
 		//websocketHelper.SendExecMsg(msg, strconv.FormatBool(execHelper.GetRunning()), wsMsg)
 		logUtils.ExecConsole(color.FgCyan, msg)
-		return
-	}
 
-	if act == commConsts.Watch {
+	} else if req.Act == commConsts.Watch {
 		watchHelper.WatchFromReq(req.TestSets, &wsMsg)
-		return
+
+	} else if req.Act == commConsts.ExecStop {
+		c.TestExecService.Stop(req, &wsMsg)
+
+	} else {
+		c.TestExecService.Start(req, &wsMsg)
+
 	}
-
-	if act == commConsts.ExecStop {
-		if ch != nil {
-			if !execHelper.GetRunning() {
-				ch = nil
-			} else {
-				ch <- 1
-				ch = nil
-			}
-		}
-
-		execHelper.SetRunning(false)
-
-		msg := i118Utils.Sprintf("end_task")
-		websocketHelper.SendExecMsg(msg, "false", commConsts.Run, nil, &wsMsg)
-		logUtils.ExecConsole(color.FgCyan, msg)
-		return
-	}
-
-	if execHelper.GetRunning() && (act == commConsts.ExecCase || act == commConsts.ExecModule ||
-		act == commConsts.ExecSuite || act == commConsts.ExecTask || act == commConsts.ExecUnit) {
-		msg := i118Utils.Sprintf("pls_stop_previous")
-		websocketHelper.SendExecMsg(msg, "true", commConsts.Run, nil, &wsMsg)
-		logUtils.ExecConsole(color.FgRed, msg)
-
-		return
-	}
-
-	// populate test set's props with parent
-	execHelper.PopulateTestSetProps(&req)
-	for idx, _ := range req.TestSets {
-		testSet := &req.TestSets[idx]
-
-		if testSet.WorkspaceId != 0 {
-			po, _ := c.WorkspaceService.Get(uint(testSet.WorkspaceId))
-			if testSet.WorkspacePath == "" {
-				testSet.WorkspacePath = po.Path
-				testSet.WorkspaceType = po.Type
-			}
-		}
-	}
-
-	ch = make(chan int, 1)
-	go func() {
-		execHelper.Exec(ch, req, &wsMsg)
-		execHelper.SetRunning(false)
-	}()
-
-	execHelper.SetRunning(true)
-
-	msg := i118Utils.Sprintf("start_task")
-	websocketHelper.SendExecMsg(msg, "true", commConsts.Run,
-		iris.Map{"status": "start-task"}, &wsMsg)
-	logUtils.ExecConsole(color.FgCyan, msg)
 
 	return
 }

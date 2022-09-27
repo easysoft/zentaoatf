@@ -9,7 +9,7 @@ import (
 	"github.com/kataras/iris/v12/websocket"
 )
 
-func Exec(ch chan int, req serverDomain.WsReq, msg *websocket.Message) (
+func Exec(ch chan int, req serverDomain.ExecReq, msg *websocket.Message) (
 	err error) {
 
 	testSets := req.TestSets
@@ -40,7 +40,7 @@ func Exec(ch chan int, req serverDomain.WsReq, msg *websocket.Message) (
 	return
 }
 
-func PopulateTestSetProps(req *serverDomain.WsReq) {
+func PopulateTestSetPropsWithParentRequest(req *serverDomain.ExecReq) {
 	for idx, _ := range req.TestSets {
 		testSet := &req.TestSets[idx]
 
@@ -71,7 +71,7 @@ func PopulateTestSetProps(req *serverDomain.WsReq) {
 	}
 }
 
-func setTestTool(testSet *serverDomain.TestSet, req serverDomain.WsReq) {
+func setTestTool(testSet *serverDomain.TestSet, req serverDomain.ExecReq) {
 	if testSet.TestTool == "" && req.TestTool != "" {
 		testSet.TestTool = req.TestTool
 	}
@@ -81,7 +81,7 @@ func setTestTool(testSet *serverDomain.TestSet, req serverDomain.WsReq) {
 	}
 }
 
-func setBuildTool(testSet *serverDomain.TestSet, req serverDomain.WsReq) {
+func setBuildTool(testSet *serverDomain.TestSet, req serverDomain.ExecReq) {
 	if testSet.BuildTool == "" && req.BuildTool != "" {
 		testSet.BuildTool = req.BuildTool
 	}
