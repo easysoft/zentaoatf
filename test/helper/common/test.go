@@ -78,7 +78,7 @@ func TestCli() (err error) {
 }
 
 func TestUi() (err error) {
-	cmdStr := fmt.Sprintf(`%sztf allure -allureReportDir ./test/cli/allure-results go test %stest/ui -v`, RootPath, RootPath)
+	cmdStr := fmt.Sprintf(`%sztf allure -allureReportDir ./test/ui/allure-results go test %stest/ui -v`, RootPath, RootPath)
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
 		cmdStr = fmt.Sprintf(`%sztf.exe allure -allureReportDir .\test\cli\allure-results go test %stest\ui -v`, RootPath, RootPath)

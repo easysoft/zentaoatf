@@ -30,6 +30,18 @@ func SwitchProduct(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
+	defer func() {
+		if err = productBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -76,15 +88,6 @@ func SwitchProduct(t provider.T) {
 	productName, err := page.InnerText("#productMenuToggle>>span")
 	if productName != "test" {
 		t.Error("Switch product fail")
-		t.FailNow()
-	}
-
-	if err = productBrowser.Close(); err != nil {
-		t.Errorf("The productBrowser cannot be closed: %v", err)
-		t.FailNow()
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
 		t.FailNow()
 	}
 }

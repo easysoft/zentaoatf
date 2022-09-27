@@ -32,6 +32,18 @@ func SwitchLanguage(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
+	defer func() {
+		if err = languageBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -65,10 +77,6 @@ func SwitchLanguage(t provider.T) {
 	err = page.Click(`input[type="radio"]>>nth=0`)
 	if err = languageBrowser.Close(); err != nil {
 		t.Errorf("The languageBrowser cannot be closed: %v", err)
-		t.FailNow()
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
 		t.FailNow()
 	}
 }

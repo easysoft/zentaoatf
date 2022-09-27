@@ -32,6 +32,18 @@ func CreateSite(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
+	defer func() {
+		if err = siteBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -121,15 +133,6 @@ func CreateSite(t provider.T) {
 		t.Errorf("Find created site fail: %v", err)
 		t.FailNow()
 	}
-
-	if err = siteBrowser.Close(); err != nil {
-		t.Errorf("The siteBrowser cannot be closed: %v", err)
-		t.FailNow()
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-	}
 }
 func EditSite(t provider.T) {
 	t.ID("5466")
@@ -153,6 +156,18 @@ func EditSite(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
+	defer func() {
+		if err = siteBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -254,15 +269,6 @@ func EditSite(t provider.T) {
 		t.Errorf("Find update site fail: %v", err)
 		t.FailNow()
 	}
-
-	if err = siteBrowser.Close(); err != nil {
-		t.Errorf("The siteBrowser cannot be closed: %v", err)
-		t.FailNow()
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-	}
 }
 func DeleteSite(t provider.T) {
 	t.ID("5466")
@@ -286,6 +292,18 @@ func DeleteSite(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
+	defer func() {
+		if err = siteBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -334,15 +352,6 @@ func DeleteSite(t provider.T) {
 	c, err := locator.Count()
 	if err != nil || c > 0 {
 		t.Errorf("Delete site fail: %v", err)
-		t.FailNow()
-	}
-
-	if err = siteBrowser.Close(); err != nil {
-		t.Errorf("The siteBrowser cannot be closed: %v", err)
-		t.FailNow()
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
 		t.FailNow()
 	}
 }
