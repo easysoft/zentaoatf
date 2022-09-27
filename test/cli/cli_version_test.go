@@ -15,6 +15,7 @@ import (
 	"time"
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
+	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
@@ -28,7 +29,7 @@ type VersionSuite struct {
 }
 
 func (s *VersionSuite) BeforeEach(t provider.T) {
-	t.ID("5428")
+	t.ID("2")
 	t.AddSubSuite("命令行-查看ZTF版本")
 }
 func (s *VersionSuite) TestVersionSuite(t provider.T) {
@@ -36,7 +37,7 @@ func (s *VersionSuite) TestVersionSuite(t provider.T) {
 }
 
 func testVersion() string {
-	cmd := `ztf version`
+	cmd := commonTestHelper.GetZtfPath() + ` version`
 
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
@@ -51,6 +52,6 @@ func testVersion() string {
 	return "Success"
 }
 
-func TestVersion(t *testing.T) {
+func TestCliVersion(t *testing.T) {
 	suite.RunSuite(t, new(VersionSuite))
 }

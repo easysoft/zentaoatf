@@ -19,6 +19,7 @@ import (
 	"time"
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
+	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
@@ -39,10 +40,9 @@ var (
 		"python":     "",
 		"ruby":       "",
 		"tcl":        "",
-		// "go":         "",
+		"go":         "",
 	}
-	langArray = []string{"php", "javascript", "lua", "perl", "python", "ruby", "tcl"}
-	newline   = "\n"
+	langArray = []string{"php", "javascript", "lua", "perl", "python", "ruby", "tcl", "go"}
 )
 
 type SetSuite struct {
@@ -63,56 +63,56 @@ func (s *SetSuite) TestEnSetSuite(t provider.T) {
 }
 
 func testSet(language string) (ret string) {
-	cmd := "ztf set"
+	cmd := commonTestHelper.GetZtfPath() + " set"
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		return err.Error()
 	}
 	defer child.Close()
-	if _, err = child.Expect(languageRe, 3*time.Second); err != nil {
+	if _, err = child.Expect(languageRe, 3*time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", languageRe, err.Error())
 	}
 
-	if err = child.Send(language + newline); err != nil {
+	if err = child.Send(language + commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
-	if _, err := child.Expect(configRe, time.Second); err != nil {
+	if _, err := child.Expect(configRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", configRe, err.Error())
 	}
-	if err = child.Send("y" + newline); err != nil {
+	if err = child.Send("y" + commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(urlRe, time.Second); err != nil {
+	if _, err = child.Expect(urlRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", urlRe, err.Error())
 	}
-	if err = child.Send("http://127.0.0.1/zentao/" + newline); err != nil {
+	if err = child.Send("http://127.0.0.1:8081/" + commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
-	if _, err = child.Expect(accountRe, time.Second); err != nil {
+	if _, err = child.Expect(accountRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", accountRe, err.Error())
 	}
-	if err = child.Send("admin" + newline); err != nil {
+	if err = child.Send("admin" + commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 
-	if _, err = child.Expect(passwordRe, time.Second); err != nil {
+	if _, err = child.Expect(passwordRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", passwordRe, err.Error())
 	}
-	if err = child.Send("123456." + newline); err != nil {
+	if err = child.Send("Test123456." + commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if runtime.GOOS == "windows" {
-		if _, err = child.Expect(interpreterRe, time.Second); err != nil {
-			return fmt.Sprintf("expect %s, actual %s", interpreterRe, err.Error())
+		if _, err = child.Expect(interpreterRe, time.Second*5); err != nil {
+			return fmt.Sprintf("expect %s, actual %s", interpreterRe, err)
 		}
-		if err = child.Send("y" + newline); err != nil {
+		if err = child.Send("y" + commonTestHelper.NewLine); err != nil {
 			return err.Error()
 		}
 		for _, lang := range langArray {
-			if _, err = child.Expect(regexp.MustCompile(lang), time.Second); err != nil {
+			if _, err = child.Expect(regexp.MustCompile(lang), time.Second*5); err != nil {
 				return fmt.Sprintf("expect %s, actual %s", lang, err.Error())
 			}
-			if err = child.Send(langMap[lang] + newline); err != nil {
+			if err = child.Send(langMap[lang] + commonTestHelper.NewLine); err != nil {
 				return err.Error()
 			}
 		}
@@ -124,9 +124,6 @@ func testSet(language string) (ret string) {
 	return "Success"
 }
 
-func TestSet(t *testing.T) {
-	if runtime.GOOS == "windows" {
-		newline = "\r\n"
-	}
+func TestCliSet(t *testing.T) {
 	suite.RunSuite(t, new(SetSuite))
 }

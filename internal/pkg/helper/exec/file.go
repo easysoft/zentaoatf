@@ -147,6 +147,20 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			stdout.Close()
 			stderr.Close()
 		})
+		for {
+			select {
+			case _, ok := <-ch:
+				KillProcessByUUID(uuidString)
+				stdout.Close()
+				stderr.Close()
+				SetRunning(false)
+				if ok {
+					close(ch)
+				}
+				return
+			default:
+			}
+		}
 	}()
 	isTerminal := false
 	reader1 := bufio.NewReader(stdout)

@@ -3,12 +3,15 @@ package execHelper
 import (
 	"bufio"
 	"errors"
-	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	"fmt"
 	"io"
 	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
+
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	"github.com/gofrs/uuid"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
@@ -90,11 +93,12 @@ func ExecUnit(ch chan int,
 func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg *websocket.Message) (err error) {
 	key := stringUtils.Md5(workspacePath)
 
+	uuidString := uuid.Must(uuid.NewV4()).String()
 	var cmd *exec.Cmd
 	if commonUtils.IsWin() {
-		cmd = exec.Command("cmd", "/C", cmdStr)
+		cmd = exec.Command("cmd", "/C", cmdStr, "-uuid", uuidString)
 	} else {
-		cmd = exec.Command("/bin/bash", "-c", cmdStr)
+		cmd = exec.Command("/bin/bash", "-c", fmt.Sprintf("%s -uuid %s", cmdStr, uuidString))
 	}
 
 	cmd.Dir = workspacePath
@@ -134,6 +138,22 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg *websocket.Mes
 	}
 
 	cmd.Start()
+	go func() {
+		for {
+			select {
+			case _, ok := <-ch:
+				KillProcessByUUID(uuidString)
+				stdout.Close()
+				stderr.Close()
+				SetRunning(false)
+				if ok {
+					close(ch)
+				}
+				return
+			default:
+			}
+		}
+	}()
 
 	isTerminal := false
 	reader1 := bufio.NewReader(stdout)

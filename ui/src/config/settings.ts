@@ -27,6 +27,7 @@ export interface SettingsType {
     siteTokenKey: string;
 
     eventExec: string;
+    eventStopExec: string;
     eventScriptSave: string;
     eventNotify: string;
     eventWebSocketConnStatus: string,
@@ -74,6 +75,7 @@ const settings: SettingsType = {
     siteTokenKey: 'admin_antd_vue_token',
 
     eventExec: 'eventExec',
+    eventStopExec: 'eventStopExec',
     eventScriptSave: 'eventScriptSave',
     eventNotify: 'eventNotify',
     eventWebSocketConnStatus: 'eventWebSocketStatus',

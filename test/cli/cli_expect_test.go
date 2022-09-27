@@ -13,12 +13,12 @@ import (
 	"io/ioutil"
 	"os"
 	"regexp"
-	"runtime"
 	"strings"
 	"testing"
 	"time"
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
+	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
@@ -40,11 +40,8 @@ func (s *ExpectSuite) TestExpectSuite(t provider.T) {
 }
 
 func testExpect() string {
-	path := `../demo/sample/1_simple.php`
-	if runtime.GOOS == "windows" {
-		path = `..\demo\sample\1_simple.php`
-	}
-	cmd := `ztf expect ` + path
+	path := fmt.Sprintf(`%sdemo/sample/1_simple.php`, commonTestHelper.RootPath)
+	cmd := commonTestHelper.GetZtfPath() + ` expect ` + path
 
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
@@ -75,6 +72,6 @@ expect 3`)
 	return "Success"
 }
 
-func TestExpect(t *testing.T) {
+func TestCliExpect(t *testing.T) {
 	suite.RunSuite(t, new(ExpectSuite))
 }

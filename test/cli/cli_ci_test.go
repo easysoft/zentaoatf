@@ -11,17 +11,16 @@ pid=0
 import (
 	"fmt"
 	"regexp"
-	"runtime"
 	"testing"
 	"time"
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
+	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
 
 var (
-	ciNewline    = "/"
 	continueCiRe = regexp.MustCompile("Will commit cases below to Zentao|以下用例信息将被更新到禅道")
 	successCiRe  = regexp.MustCompile("Totally commit 1 cases to Zentao|合计更新1个用例到禅道")
 )
@@ -39,20 +38,17 @@ func (s *CiSuite) TestCiSuite(t provider.T) {
 }
 
 func testCi() string {
-	cmd := "ztf ci ./demo/1_string_match_pass.php"
-	if runtime.GOOS == "windows" {
-		cmd = "ztf ci .\\demo\\1_string_match_pass.php"
-	}
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" ci %stest/demo/1_string_match_pass.php", commonTestHelper.RootPath)
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		return err.Error()
 	}
 	defer child.Close()
-	if _, err = child.Expect(continueCiRe, time.Second); err != nil {
+	if _, err = child.Expect(continueCiRe, time.Second*10); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", continueCiRe, err.Error())
 	}
 
-	if err = child.Send("y" + ciNewline); err != nil {
+	if err = child.Send("y" + commonTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 
@@ -63,9 +59,6 @@ func testCi() string {
 	return "Success"
 }
 
-func TestCi(t *testing.T) {
-	if runtime.GOOS == "windows" {
-		ciNewline = "\r\n"
-	}
+func TestCliCi(t *testing.T) {
 	suite.RunSuite(t, new(CiSuite))
 }

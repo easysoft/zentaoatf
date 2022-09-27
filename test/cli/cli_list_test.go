@@ -13,12 +13,11 @@ pid=0
 import (
 	"fmt"
 	"regexp"
-	"runtime"
-	"strings"
 	"testing"
 	"time"
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
+	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
@@ -32,15 +31,12 @@ func (s *ListSuite) BeforeEach(t provider.T) {
 	t.AddSubSuite("命令行-查看脚本列表")
 }
 func (s *ListSuite) TestListSuite(t provider.T) {
-	t.Require().Equal("Success", testLs("ztf list ./demo", regexp.MustCompile("Found 5 test cases|发现5个用例")))
-	t.Require().Equal("Success", testLs("ztf ls ./demo -k 1", regexp.MustCompile("Found 2 test cases|发现2个用例")))
-	t.Require().Equal("Success", testLs("ztf ls demo -k match", regexp.MustCompile("Found 3 test cases|发现3个用例")))
+	t.Require().Equal("Success", testLs(commonTestHelper.GetZtfPath()+fmt.Sprintf(" list %stest/demo", commonTestHelper.RootPath), regexp.MustCompile("Found 5 test cases|发现5个用例")))
+	t.Require().Equal("Success", testLs(commonTestHelper.GetZtfPath()+fmt.Sprintf(" ls %stest/demo -k 1", commonTestHelper.RootPath), regexp.MustCompile("Found 2 test cases|发现2个用例")))
+	t.Require().Equal("Success", testLs(commonTestHelper.GetZtfPath()+fmt.Sprintf(" ls %stest/demo -k match", commonTestHelper.RootPath), regexp.MustCompile("Found 3 test cases|发现3个用例")))
 }
 
 func testLs(cmd string, successRe *regexp.Regexp) string {
-	if runtime.GOOS == "windows" {
-		cmd = strings.ReplaceAll(cmd, "/", "\\")
-	}
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		return err.Error()
@@ -54,6 +50,6 @@ func testLs(cmd string, successRe *regexp.Regexp) string {
 	return "Success"
 }
 
-func TestList(t *testing.T) {
+func TestCliList(t *testing.T) {
 	suite.RunSuite(t, new(ListSuite))
 }
