@@ -41,7 +41,6 @@ func (c *ExecCtrl) Stop(ctx iris.Context) {
 	}
 
 	err := c.TestExecService.Stop(req, nil)
-
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
