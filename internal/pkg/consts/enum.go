@@ -251,3 +251,20 @@ const (
 func (e DropPos) Int() int {
 	return int(e)
 }
+
+type ProgressStatus string
+
+const (
+	ProgressCreated    ProgressStatus = "created"
+	ProgressInProgress ProgressStatus = "in_progress"
+	ProgressTimeout    ProgressStatus = "timeout"
+	ProgressCompleted  ProgressStatus = "completed"
+)
+
+type BuildStatus string
+
+const (
+	StatusCreated BuildStatus = "created"
+	StatusPass    BuildStatus = "pass"
+	StatusFail    BuildStatus = "fail"
+)

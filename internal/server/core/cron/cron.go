@@ -3,16 +3,18 @@ package cron
 import (
 	"fmt"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
+	"github.com/easysoft/zentaoatf/internal/server/core/cache"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
 	"github.com/easysoft/zentaoatf/pkg/lib/cron"
 	"github.com/easysoft/zentaoatf/pkg/lib/date"
 	"github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/kataras/iris/v12"
-	"sync"
 	"time"
 )
 
 type ServerCron struct {
-	syncMap sync.Map
+	ExecService *service.ExecService `inject:""`
+	JobService  *service.JobService  `inject:""`
 }
 
 func NewServerCron() *ServerCron {
@@ -21,27 +23,29 @@ func NewServerCron() *ServerCron {
 }
 
 func (s *ServerCron) Init() {
-	s.syncMap.Store("isRunning", false)
-	s.syncMap.Store("lastCompletedTime", int64(0))
+	cache.SyncMap.Store(cache.IsRunning, false)
+	cache.SyncMap.Store(cache.LastLoopEndTime, int64(0))
 
 	cronUtils.AddTask(
-		"check",
-		fmt.Sprintf("@every %ds", serverConfig.WebCheckInterval),
+		"checkJob", fmt.Sprintf("@every %ds", serverConfig.JobCheckInterval),
 		func() {
-			isRunning, _ := s.syncMap.Load("isRunning")
-			lastCompletedTime, _ := s.syncMap.Load("lastCompletedTime")
+			isRunning, _ := cache.SyncMap.Load(cache.IsRunning)
+			lastCompletedTime, _ := cache.SyncMap.Load(cache.LastLoopEndTime)
 
-			if isRunning.(bool) || time.Now().Unix()-lastCompletedTime.(int64) < serverConfig.WebCheckInterval {
-				logUtils.Infof("skip this iteration " + dateUtils.DateTimeStr(time.Now()))
+			if isRunning.(bool) || time.Now().Unix()-lastCompletedTime.(int64) < serverConfig.JobCheckInterval {
+				logUtils.Infof("skip iteration" + dateUtils.DateTimeStr(time.Now()))
 				return
 			}
 
-			s.syncMap.Store("isRunning", true)
+			cache.SyncMap.Store(isRunning, true)
 
-			// do somethings
+			// start
+			currJob := cache.GetCurrJob()
+			s.JobService.Check(currJob)
+			// end
 
-			s.syncMap.Store("isRunning", false)
-			s.syncMap.Store("lastCompletedTime", time.Now().Unix())
+			cache.SyncMap.Store(isRunning, false)
+			cache.SyncMap.Store(lastCompletedTime, time.Now().Unix())
 		},
 	)
 

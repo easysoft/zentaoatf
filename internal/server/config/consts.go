@@ -1,7 +1,7 @@
 package serverConfig
 
 const (
-	WebCheckInterval = 60 * 60
+	JobCheckInterval = 15
 
 	WsDefaultNameSpace = "default"
 	WsDefaultRoom      = "default"

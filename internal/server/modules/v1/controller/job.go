@@ -7,23 +7,24 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
-type ExecCtrl struct {
+type JobCtrl struct {
 	BaseCtrl
-	TestExecService *service.TestExecService `inject:""`
+	JobService  *service.JobService  `inject:""`
+	ExecService *service.ExecService `inject:""`
 }
 
-func NewExecCtrl() *ExecCtrl {
-	return &ExecCtrl{}
+func NewJobCtrl() *JobCtrl {
+	return &JobCtrl{}
 }
 
-func (c *ExecCtrl) Start(ctx iris.Context) {
-	req := serverDomain.ExecReq{}
+func (c *JobCtrl) Add(ctx iris.Context) {
+	req := serverDomain.JobReq{}
 	if err := ctx.ReadQuery(&req); err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
-	err := c.TestExecService.Start(req, nil)
+	err := c.JobService.Add(req)
 
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
@@ -33,14 +34,30 @@ func (c *ExecCtrl) Start(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(nil))
 }
 
-func (c *ExecCtrl) Stop(ctx iris.Context) {
-	req := serverDomain.ExecReq{}
+func (c *JobCtrl) Remove(ctx iris.Context) {
+	req := serverDomain.JobReq{}
 	if err := ctx.ReadQuery(&req); err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
 	}
 
-	err := c.TestExecService.Stop(req, nil)
+	err := c.JobService.Remove(req)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	ctx.JSON(c.SuccessResp(nil))
+}
+
+func (c *JobCtrl) Stop(ctx iris.Context) {
+	req := serverDomain.JobReq{}
+	if err := ctx.ReadQuery(&req); err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	err := c.JobService.Stop()
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return

@@ -8,5 +8,6 @@ var (
 		&Proxy{},
 		&Server{},
 		&Statistic{},
+		&Job{},
 	}
 )

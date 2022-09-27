@@ -8,6 +8,8 @@ const (
 	AppAgent   = "agent"
 	AppCommand = "cmd"
 
+	JobTimeout = 60 * 3
+
 	ConfigVersion      = "3.0"
 	ConfigDir          = "conf"
 	ConfigFile         = "ztf.conf"
