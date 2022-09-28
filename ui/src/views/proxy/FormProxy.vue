@@ -1,5 +1,6 @@
 <template>
   <ZModal
+    id="proxyFormModal"
     :showModal="showModalRef"
     @onCancel="cancel"
     @onOk="submit"

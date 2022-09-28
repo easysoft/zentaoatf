@@ -23,6 +23,7 @@
       </div>
     </div>
     <Table
+      id="interpreterTable"
       v-if="interpreters.length > 0"
       :columns="columns"
       :rows="interpreters"
@@ -52,6 +53,7 @@
       </Button>
     </div>
     <Table
+      id="serverTable"
       v-if="remoteServers.length > 0"
       :columns="remoteServerColumns"
       :rows="remoteServers"
@@ -61,6 +63,7 @@
     >
       <template #remote_proxy="record">
         <Table
+        id="proxyTable"
         v-if="record.value.proxies!= undefined && record.value.proxies.length > 0"
         :columns="remoteProxyColumns"
         :rows="record.value.proxies"

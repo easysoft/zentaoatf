@@ -1,5 +1,6 @@
 <template>
   <ZModal
+    id="serverFormModal"
     :showModal="showModalRef"
     @onCancel="cancel"
     @onOk="submit"

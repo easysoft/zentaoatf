@@ -8,9 +8,9 @@ import (
 	playwright "github.com/playwright-community/playwright-go"
 )
 
-var interpreterBrowser playwright.Browser
+var proxyBrowser playwright.Browser
 
-func CreateInterpreter(t provider.T) {
+func CreateProxy(t provider.T) {
 	t.ID("5465")
 	t.AddParentSuite("设置界面语言")
 	pw, err := playwright.Run()
@@ -20,20 +20,20 @@ func CreateInterpreter(t provider.T) {
 	}
 	headless := true
 	var slowMo float64 = 100
-	if interpreterBrowser == nil || !interpreterBrowser.IsConnected() {
-		interpreterBrowser, err = pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	if proxyBrowser == nil || !proxyBrowser.IsConnected() {
+		proxyBrowser, err = pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	}
 	if err != nil {
-		t.Errorf("Fail to launch the web interpreterBrowser: %v", err)
+		t.Errorf("Fail to launch the web proxyBrowser: %v", err)
 		t.FailNow()
 	}
-	page, err := interpreterBrowser.NewPage()
+	page, err := proxyBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
 	defer func() {
-		if err = interpreterBrowser.Close(); err != nil {
+		if err = proxyBrowser.Close(); err != nil {
 			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
 			t.FailNow()
 			return
@@ -52,59 +52,56 @@ func CreateInterpreter(t provider.T) {
 
 	err = page.Click("#navbar>>[title=\"设置\"]")
 	if err != nil {
-		t.Errorf("The Click interpreter nav fail: %v", err)
+		t.Errorf("The Click proxy nav fail: %v", err)
 		t.FailNow()
 	}
-	err = page.Click("#proxyTable>>button:has-text('运行环境')")
+	err = page.Click("#serverTable>>button:has-text('新建执行节点')")
 	if err != nil {
 		t.Errorf("Click open interpreter modal fail: %v", err)
 		t.FailNow()
 	}
-	err = page.Click("text=新建运行环境")
+	locator, err := page.Locator("#proxyFormModal input")
 	if err != nil {
-		t.Errorf("The Click create interpreter fail: %v", err)
+		t.Errorf("Find create proxy input fail: %v", err)
 		t.FailNow()
 	}
-	locator, err := page.Locator("#interpreterFormModal select")
-	if err != nil {
-		t.Errorf("Find create interpreter input fail: %v", err)
-		t.FailNow()
-	}
-	langSelect, err := locator.Nth(0)
+	nameInput, err := locator.Nth(0)
 	if err != nil {
 		t.Errorf("Find lang select fail: %v", err)
 		t.FailNow()
 	}
-	_, err = langSelect.SelectOption(playwright.SelectOptionValues{Values: &[]string{"python"}})
+	err = nameInput.Fill("测试执行节点")
 	if err != nil {
-		t.Errorf("Select lang select fail: %v", err)
+		t.Errorf("Fill name fail: %v", err)
 		t.FailNow()
 	}
 	page.WaitForTimeout(200)
 	pathSelect, err := locator.Nth(1)
 	if err != nil {
-		t.Errorf("Find address input fail: %v", err)
+		t.Errorf("Find path input fail: %v", err)
 		t.FailNow()
 	}
-	_, err = pathSelect.SelectOption(playwright.SelectOptionValues{Indexes: &[]int{1}})
+	err = pathSelect.Fill("http://127.0.0.1:8085")
 	if err != nil {
-		t.Errorf("Fil address input fail: %v", err)
+		t.Errorf("Fil path input fail: %v", err)
 		t.FailNow()
 	}
 
-	err = page.Click("#interpreterFormModal>>text=确定")
+	err = page.Click("#proxyFormModal>>text=确定")
 	if err != nil {
 		t.Errorf("The Click submit form fail: %v", err)
 		t.FailNow()
 	}
-	locator, err = page.Locator("#settingModal .z-tbody-td", playwright.PageLocatorOptions{HasText: "Python"})
+	page.WaitForSelector("#proxyFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+	page.WaitForTimeout(1000)
+	locator, err = page.Locator("#proxyTable .z-tbody-td >> :scope:has-text('测试执行节点')")
 	c, err := locator.Count()
 	if err != nil || c == 0 {
-		t.Errorf("Find created interpreter fail: %v", err)
+		t.Errorf("Find created proxy fail: %v", err)
 		t.FailNow()
 	}
 }
-func EditInterpreter(t provider.T) {
+func EditProxy(t provider.T) {
 	t.ID("5465")
 	t.AddParentSuite("设置界面语言")
 	pw, err := playwright.Run()
@@ -114,22 +111,22 @@ func EditInterpreter(t provider.T) {
 	}
 	headless := true
 	var slowMo float64 = 100
-	if interpreterBrowser == nil || !interpreterBrowser.IsConnected() {
-		interpreterBrowser, err = pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	if proxyBrowser == nil || !proxyBrowser.IsConnected() {
+		proxyBrowser, err = pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	}
-	defer interpreterBrowser.Close()
+	defer proxyBrowser.Close()
 	defer pw.Stop()
 	if err != nil {
-		t.Errorf("Fail to launch the web interpreterBrowser: %v", err)
+		t.Errorf("Fail to launch the web proxyBrowser: %v", err)
 		t.FailNow()
 	}
-	page, err := interpreterBrowser.NewPage()
+	page, err := proxyBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
 	defer func() {
-		if err = interpreterBrowser.Close(); err != nil {
+		if err = proxyBrowser.Close(); err != nil {
 			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
 			t.FailNow()
 			return
@@ -148,22 +145,17 @@ func EditInterpreter(t provider.T) {
 
 	err = page.Click("#navbar>>[title=\"设置\"]")
 	if err != nil {
-		t.Errorf("The Click interpreter nav fail: %v", err)
+		t.Errorf("The Click proxy nav fail: %v", err)
 		t.FailNow()
 	}
-	err = page.Click("#proxyTable>>button:has-text('运行环境')")
+	locator, err := page.Locator("#proxyTable", playwright.PageLocatorOptions{HasText: "测试执行节点"})
 	if err != nil {
-		t.Errorf("Click open interpreter modal fail: %v", err)
-		t.FailNow()
-	}
-	locator, err := page.Locator("#settingModal .z-tbody-tr", playwright.PageLocatorOptions{HasText: "Python"})
-	if err != nil {
-		t.Errorf("Find python tr fail: %v", err)
+		t.Errorf("Find 测试执行节点 tr fail: %v", err)
 		t.FailNow()
 	}
 	locator, err = locator.Locator("text=编辑")
 	if err != nil {
-		t.Errorf("Find python edit btn fail: %v", err)
+		t.Errorf("Find 测试执行节点 edit btn fail: %v", err)
 		t.FailNow()
 	}
 	err = locator.Click()
@@ -171,46 +163,36 @@ func EditInterpreter(t provider.T) {
 		t.Errorf("The Click update site fail: %v", err)
 		t.FailNow()
 	}
-	locator, err = page.Locator("#interpreterFormModal select")
+	locator, err = page.Locator("#proxyFormModal input")
 	if err != nil {
-		t.Errorf("Find create interpreter input fail: %v", err)
+		t.Errorf("Find create proxy input fail: %v", err)
 		t.FailNow()
 	}
-	langSelect, err := locator.Nth(0)
+	nameInput, err := locator.Nth(0)
 	if err != nil {
-		t.Errorf("Find lang select fail: %v", err)
+		t.Errorf("Find name select fail: %v", err)
 		t.FailNow()
 	}
-	_, err = langSelect.SelectOption(playwright.SelectOptionValues{Values: &[]string{"python"}})
+	err = nameInput.Fill("测试执行节点-update")
 	if err != nil {
-		t.Errorf("Select lang select fail: %v", err)
+		t.Errorf("Fill name input fail: %v", err)
 		t.FailNow()
 	}
-	page.WaitForTimeout(200)
-	pathSelect, err := locator.Nth(1)
-	if err != nil {
-		t.Errorf("Find address input fail: %v", err)
-		t.FailNow()
-	}
-	_, err = pathSelect.SelectOption(playwright.SelectOptionValues{Indexes: &[]int{1}})
-	if err != nil {
-		t.Errorf("Fil address input fail: %v", err)
-		t.FailNow()
-	}
-
-	err = page.Click("#interpreterFormModal>>text=确定")
+	err = page.Click("#proxyFormModal>>text=确定")
 	if err != nil {
 		t.Errorf("The Click submit form fail: %v", err)
 		t.FailNow()
 	}
-	locator, err = page.Locator("#settingModal .z-tbody-td", playwright.PageLocatorOptions{HasText: "Python"})
+	page.WaitForSelector("#proxyFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+	page.WaitForTimeout(1000)
+	locator, err = page.Locator("#proxyTable .z-tbody-td >> :scope:has-text('测试执行节点')")
 	c, err := locator.Count()
 	if err != nil || c == 0 {
-		t.Errorf("Find created interpreter fail: %v", err)
+		t.Errorf("Find updated proxy fail: %v", err)
 		t.FailNow()
 	}
 }
-func DeleteInterpreter(t provider.T) {
+func DeleteProxy(t provider.T) {
 	t.ID("5465")
 	t.AddParentSuite("设置界面语言")
 	pw, err := playwright.Run()
@@ -220,20 +202,20 @@ func DeleteInterpreter(t provider.T) {
 	}
 	headless := true
 	var slowMo float64 = 100
-	if interpreterBrowser == nil || !interpreterBrowser.IsConnected() {
-		interpreterBrowser, err = pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	if proxyBrowser == nil || !proxyBrowser.IsConnected() {
+		proxyBrowser, err = pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 		if err != nil {
-			t.Errorf("Fail to launch the web interpreterBrowser: %v", err)
+			t.Errorf("Fail to launch the web proxyBrowser: %v", err)
 			t.FailNow()
 		}
 	}
-	page, err := interpreterBrowser.NewPage()
+	page, err := proxyBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
 	defer func() {
-		if err = interpreterBrowser.Close(); err != nil {
+		if err = proxyBrowser.Close(); err != nil {
 			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
 			t.FailNow()
 			return
@@ -252,22 +234,17 @@ func DeleteInterpreter(t provider.T) {
 
 	err = page.Click("#navbar>>[title=\"设置\"]")
 	if err != nil {
-		t.Errorf("The Click interpreter nav fail: %v", err)
+		t.Errorf("The Click proxy nav fail: %v", err)
 		t.FailNow()
 	}
-	err = page.Click("#proxyTable>>button:has-text('运行环境')")
-	if err != nil {
-		t.Errorf("Click open interpreter modal fail: %v", err)
-		t.FailNow()
-	}
-	locator, err := page.Locator("#settingModal .z-tbody-tr", playwright.PageLocatorOptions{HasText: "Python"})
+	locator, err := page.Locator("#proxyTable", playwright.PageLocatorOptions{HasText: "测试执行节点-update"})
 	if err != nil {
 		t.Errorf("Find python tr fail: %v", err)
 		t.FailNow()
 	}
 	locator, err = locator.Locator("text=删除")
 	if err != nil {
-		t.Errorf("Find python edit btn fail: %v", err)
+		t.Errorf("Find 测试执行节点 del btn fail: %v", err)
 		t.FailNow()
 	}
 	err = locator.Click()
@@ -282,16 +259,16 @@ func DeleteInterpreter(t provider.T) {
 		t.FailNow()
 	}
 	page.WaitForTimeout(1000)
-	locator, err = page.Locator("#settingModal .z-tbody-tr", playwright.PageLocatorOptions{HasText: "Python"})
+	locator, err = page.Locator("#settingModal .z-tbody-tr", playwright.PageLocatorOptions{HasText: "测试执行节点-update"})
 	c, err := locator.Count()
 	if err != nil || c > 0 {
-		t.Errorf("Delete interpreter fail: %v", err)
+		t.Errorf("Delete proxy fail: %v", err)
 		t.FailNow()
 	}
 }
 
-func TestUiInterpreter(t *testing.T) {
-	runner.Run(t, "客户端-创建解析器", CreateInterpreter)
-	runner.Run(t, "客户端-编辑解析器", EditInterpreter)
-	runner.Run(t, "客户端-删除解析器", DeleteInterpreter)
+func TestUiProxy(t *testing.T) {
+	runner.Run(t, "客户端-创建解析器", CreateProxy)
+	runner.Run(t, "客户端-编辑解析器", EditProxy)
+	runner.Run(t, "客户端-删除解析器", DeleteProxy)
 }

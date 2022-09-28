@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
+	zentaoTestHelper "github.com/easysoft/zentaoatf/test/helper/zentao/ui"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"
@@ -1163,7 +1164,11 @@ func RunUnit(t provider.T) {
 			t.FailNow()
 		}
 	}
-
+	isSuccess := zentaoTestHelper.CheckUnitTestResult()
+	if !isSuccess {
+		t.Errorf("Exec testng unit fail")
+		t.FailNow()
+	}
 }
 
 func createWorkspace(t provider.T, workspacePath string, page playwright.Page) {
@@ -1218,7 +1223,9 @@ func createWorkspace(t provider.T, workspacePath string, page playwright.Page) {
 		t.Errorf("The Click submit form fail: %v", err)
 		t.FailNow()
 	}
-	locator, err = page.Locator(".tree-node-title", playwright.PageLocatorOptions{HasText: "testng工作目录"})
+	page.WaitForSelector("#workspaceFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+	page.WaitForTimeout(1000)
+	locator, err = page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "testng工作目录"})
 	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find created workspace fail: %v", err)
@@ -1235,4 +1242,5 @@ func TestUiRun(t *testing.T) {
 	runner.Run(t, "客户端-执行所有的脚本文件", RunAll)
 	runner.Run(t, "客户端-右键执行工作目录", RunWorkspace)
 	runner.Run(t, "客户端-右键执行文件夹", RunDir)
+	runner.Run(t, "客户端-执行TestNG单元测试", RunUnit)
 }

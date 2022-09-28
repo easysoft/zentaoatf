@@ -196,6 +196,7 @@ const remove = (item) => {
     onOk: async () => {
       await removeInterpreter(item.value.id, props.proxyInfo.path);
       list();
+      store.dispatch('proxy/fetchInterpreters', {})
     },
   });
 };
