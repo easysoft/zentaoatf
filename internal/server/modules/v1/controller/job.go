@@ -17,6 +17,17 @@ func NewJobCtrl() *JobCtrl {
 	return &JobCtrl{}
 }
 
+func (c *JobCtrl) List(ctx iris.Context) {
+	list, err := c.JobService.List()
+
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	ctx.JSON(c.SuccessResp(list))
+}
+
 func (c *JobCtrl) Add(ctx iris.Context) {
 	req := serverDomain.JobReq{}
 	if err := ctx.ReadQuery(&req); err != nil {

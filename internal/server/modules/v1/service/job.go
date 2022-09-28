@@ -20,6 +20,12 @@ func NewJobService() *JobService {
 	return &JobService{}
 }
 
+func (s *JobService) List() (pos []model.Job, err error) {
+	pos, err = s.JobRepo.Query()
+
+	return
+}
+
 func (s *JobService) Add(req serverDomain.JobReq) (err error) {
 	job := model.Job{}
 	copier.CopyWithOption(&job, req, copier.Option{

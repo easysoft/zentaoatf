@@ -17,6 +17,21 @@ func NewJobRepo() *JobRepo {
 	return &JobRepo{}
 }
 
+func (r *JobRepo) Query() (pos []model.Job, err error) {
+	err = r.DB.
+		Where("progress_status != ? && progress_status != ?",
+			commConsts.ProgressCompleted, commConsts.ProgressTimeout).
+		Where("NOT deleted").
+		Find(&pos).Error
+
+	if err != nil {
+		logUtils.Errorf(color.RedString("list job failed: %s.", err.Error()))
+		return
+	}
+
+	return
+}
+
 func (r *JobRepo) ListByProgressStatus(progress commConsts.ProgressStatus) (pos []model.Job, err error) {
 	err = r.DB.
 		Where("progress_status = ?", progress).
