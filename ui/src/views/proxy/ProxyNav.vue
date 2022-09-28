@@ -1,11 +1,11 @@
 <template>
-    <View class="space-left">
-    <View class="title space">{{t('remote_proxy')}}：</View>
+    <div class="space-left">
+    <div class="title space">{{t('remote_proxy')}}：</div>
     <Button id="proxyMenuToggle"
         :label="currProxy.id == 0 || currProxy.id == undefined ? t('local_proxy') : currProxy.name"
         class="rounded border lighten-16"
         suffix-icon="caret-down"/>
-    </View>
+    </div>
   <DropdownMenu
       v-if="proxies.length>0"
       toggle="#proxyMenuToggle"

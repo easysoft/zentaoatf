@@ -296,7 +296,7 @@ const exec = async (data: any) => {
 
 const checkProxyStatus = async (workspaceId, msg) => {
   if(msg.testSets == undefined){
-    return {path: ''};
+    return {path: 'local'};
   }
   currentWorkspace.value = {};
   let workspaceInfo = {} as any;
