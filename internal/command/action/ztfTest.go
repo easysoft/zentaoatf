@@ -12,7 +12,7 @@ import (
 )
 
 func RunZTFTest(files []string, moduleIdStr, suiteIdStr, taskIdOrName string) error {
-	req := serverDomain.WsReq{
+	req := serverDomain.ExecReq{
 		ScriptDirParamFromCmdLine: files[0],
 	}
 	testSet := serverDomain.TestSet{

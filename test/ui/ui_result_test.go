@@ -21,16 +21,28 @@ func Detail(t provider.T) {
 	}
 	headless := true
 	var slowMo float64 = 100
-	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	resultBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
-		t.Errorf("Fail to launch the web workspaceBrowser: %v", err)
+		t.Errorf("Fail to launch the web resultBrowser: %v", err)
 		t.FailNow()
 	}
-	page, err := workspaceBrowser.NewPage()
+	page, err := resultBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
+	defer func() {
+		if err = resultBrowser.Close(); err != nil {
+			t.Errorf("The resultBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -119,14 +131,6 @@ func Detail(t provider.T) {
 		t.Error("Detail actual error")
 		t.FailNow()
 	}
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-		t.FailNow()
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-	}
 }
 
 func SubmitResult(t provider.T) {
@@ -139,16 +143,28 @@ func SubmitResult(t provider.T) {
 	}
 	headless := true
 	var slowMo float64 = 100
-	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	resultBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
-		t.Errorf("Fail to launch the web workspaceBrowser: %v", err)
+		t.Errorf("Fail to launch the web resultBrowser: %v", err)
 		t.FailNow()
 	}
-	page, err := workspaceBrowser.NewPage()
+	page, err := resultBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
+	defer func() {
+		if err = resultBrowser.Close(); err != nil {
+			t.Errorf("The resultBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -224,14 +240,6 @@ func SubmitResult(t provider.T) {
 		t.Errorf("Submit result to zentao fail: %v", err)
 		t.FailNow()
 	}
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-		t.FailNow()
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-	}
 }
 
 func SubmitBug(t provider.T) {
@@ -244,16 +252,28 @@ func SubmitBug(t provider.T) {
 	}
 	headless := true
 	var slowMo float64 = 100
-	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	resultBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
-		t.Errorf("Fail to launch the web workspaceBrowser: %v", err)
+		t.Errorf("Fail to launch the web resultBrowser: %v", err)
 		t.FailNow()
 	}
-	page, err := workspaceBrowser.NewPage()
+	page, err := resultBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
+	defer func() {
+		if err = resultBrowser.Close(); err != nil {
+			t.Errorf("The resultBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -319,14 +339,6 @@ func SubmitBug(t provider.T) {
 		t.Errorf("Submit bug to zentao fail: %v", err)
 		t.FailNow()
 	}
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-		t.FailNow()
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-	}
 }
 
 func SubmitBugTwoStep(t provider.T) {
@@ -339,16 +351,28 @@ func SubmitBugTwoStep(t provider.T) {
 	}
 	headless := true
 	var slowMo float64 = 100
-	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	resultBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
-		t.Errorf("Fail to launch the web workspaceBrowser: %v", err)
+		t.Errorf("Fail to launch the web resultBrowser: %v", err)
 		t.FailNow()
 	}
-	page, err := workspaceBrowser.NewPage()
+	page, err := resultBrowser.NewPage()
 	if err != nil {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
+	defer func() {
+		if err = resultBrowser.Close(); err != nil {
+			t.Errorf("The resultBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -413,14 +437,6 @@ func SubmitBugTwoStep(t provider.T) {
 	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Submit bug to zentao fail: %v", err)
-		t.FailNow()
-	}
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-		t.FailNow()
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
 		t.FailNow()
 	}
 }

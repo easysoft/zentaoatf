@@ -25,7 +25,7 @@ func CreateWorkspace(t provider.T) {
 		t.FailNow()
 		return
 	}
-	headless := false
+	headless := true
 	var slowMo float64 = 100
 	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
@@ -39,6 +39,18 @@ func CreateWorkspace(t provider.T) {
 		t.FailNow()
 		return
 	}
+	defer func() {
+		if err = workspaceBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -158,17 +170,6 @@ func CreateWorkspace(t provider.T) {
 		t.FailNow()
 		return
 	}
-
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-		t.FailNow()
-		return
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-		return
-	}
 }
 
 func SyncFromZentao(t provider.T) {
@@ -180,7 +181,7 @@ func SyncFromZentao(t provider.T) {
 		t.FailNow()
 		return
 	}
-	headless := false
+	headless := true
 	var slowMo float64 = 100
 	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
@@ -194,6 +195,18 @@ func SyncFromZentao(t provider.T) {
 		t.FailNow()
 		return
 	}
+	defer func() {
+		if err = workspaceBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -251,17 +264,6 @@ func SyncFromZentao(t provider.T) {
 		t.FailNow()
 		return
 	}
-
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-		t.FailNow()
-		return
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-		return
-	}
 }
 
 func SyncTwoCaseFromZentao(t provider.T) {
@@ -273,7 +275,7 @@ func SyncTwoCaseFromZentao(t provider.T) {
 		t.FailNow()
 		return
 	}
-	headless := false
+	headless := true
 	var slowMo float64 = 100
 	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
@@ -287,6 +289,18 @@ func SyncTwoCaseFromZentao(t provider.T) {
 		t.FailNow()
 		return
 	}
+	defer func() {
+		if err = workspaceBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -348,17 +362,6 @@ func SyncTwoCaseFromZentao(t provider.T) {
 		t.FailNow()
 		return
 	}
-
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-		t.FailNow()
-		return
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-		return
-	}
 }
 
 func SyncToZentao(t provider.T) {
@@ -370,7 +373,7 @@ func SyncToZentao(t provider.T) {
 		t.FailNow()
 		return
 	}
-	headless := false
+	headless := true
 	var slowMo float64 = 100
 	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
@@ -384,6 +387,18 @@ func SyncToZentao(t provider.T) {
 		t.FailNow()
 		return
 	}
+	defer func() {
+		if err = workspaceBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -429,17 +444,6 @@ func SyncToZentao(t provider.T) {
 		t.FailNow()
 		return
 	}
-
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-		t.FailNow()
-		return
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-		return
-	}
 }
 func Copy(t provider.T) {
 	t.ID("5474")
@@ -450,7 +454,7 @@ func Copy(t provider.T) {
 		t.FailNow()
 		return
 	}
-	headless := false
+	headless := true
 	var slowMo float64 = 100
 	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
@@ -464,6 +468,18 @@ func Copy(t provider.T) {
 		t.FailNow()
 		return
 	}
+	defer func() {
+		if err = workspaceBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -539,17 +555,6 @@ func Copy(t provider.T) {
 		t.FailNow()
 		return
 	}
-
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-		t.FailNow()
-		return
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-		return
-	}
 }
 func DeleteScript(t provider.T) {
 	t.ID("5478")
@@ -560,7 +565,7 @@ func DeleteScript(t provider.T) {
 		t.FailNow()
 		return
 	}
-	headless := false
+	headless := true
 	var slowMo float64 = 100
 	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
@@ -574,6 +579,18 @@ func DeleteScript(t provider.T) {
 		t.FailNow()
 		return
 	}
+	defer func() {
+		if err = workspaceBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -631,17 +648,6 @@ func DeleteScript(t provider.T) {
 		t.FailNow()
 		return
 	}
-
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-		t.FailNow()
-		return
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-		return
-	}
 }
 func DeleteDir(t provider.T) {
 	t.ID("5477")
@@ -652,7 +658,7 @@ func DeleteDir(t provider.T) {
 		t.FailNow()
 		return
 	}
-	headless := false
+	headless := true
 	var slowMo float64 = 100
 	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
@@ -666,6 +672,18 @@ func DeleteDir(t provider.T) {
 		t.FailNow()
 		return
 	}
+	defer func() {
+		if err = workspaceBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -723,17 +741,6 @@ func DeleteDir(t provider.T) {
 		t.FailNow()
 		return
 	}
-
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-		t.FailNow()
-		return
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-		return
-	}
 }
 
 func DeleteWorkspace(t provider.T) {
@@ -745,7 +752,7 @@ func DeleteWorkspace(t provider.T) {
 		t.FailNow()
 		return
 	}
-	headless := false
+	headless := true
 	var slowMo float64 = 100
 	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
@@ -759,6 +766,18 @@ func DeleteWorkspace(t provider.T) {
 		t.FailNow()
 		return
 	}
+	defer func() {
+		if err = workspaceBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -804,17 +823,6 @@ func DeleteWorkspace(t provider.T) {
 		t.FailNow()
 		return
 	}
-
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-		t.FailNow()
-		return
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-		return
-	}
 }
 func Clip(t provider.T) {
 	t.ID("5476")
@@ -825,7 +833,7 @@ func Clip(t provider.T) {
 		t.FailNow()
 		return
 	}
-	headless := false
+	headless := true
 	var slowMo float64 = 100
 	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
@@ -839,6 +847,18 @@ func Clip(t provider.T) {
 		t.FailNow()
 		return
 	}
+	defer func() {
+		if err = workspaceBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -920,17 +940,6 @@ func Clip(t provider.T) {
 		t.FailNow()
 		return
 	}
-
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-		t.FailNow()
-		return
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-		return
-	}
 }
 
 func FilterDir(t provider.T) {
@@ -942,7 +951,7 @@ func FilterDir(t provider.T) {
 		t.FailNow()
 		return
 	}
-	headless := false
+	headless := true
 	var slowMo float64 = 100
 	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
@@ -956,6 +965,18 @@ func FilterDir(t provider.T) {
 		t.FailNow()
 		return
 	}
+	defer func() {
+		if err = workspaceBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -1012,16 +1033,6 @@ func FilterDir(t provider.T) {
 		t.FailNow()
 		return
 	}
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-		t.FailNow()
-		return
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-		return
-	}
 }
 func FilterSuite(t provider.T) {
 	t.ID("5495")
@@ -1032,7 +1043,7 @@ func FilterSuite(t provider.T) {
 		t.FailNow()
 		return
 	}
-	headless := false
+	headless := true
 	var slowMo float64 = 100
 	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
@@ -1046,6 +1057,18 @@ func FilterSuite(t provider.T) {
 		t.FailNow()
 		return
 	}
+	defer func() {
+		if err = workspaceBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -1115,17 +1138,6 @@ func FilterSuite(t provider.T) {
 		t.FailNow()
 		return
 	}
-
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-		t.FailNow()
-		return
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-		return
-	}
 }
 func ByModule(t provider.T) {
 	t.ID("5493")
@@ -1147,6 +1159,18 @@ func ByModule(t provider.T) {
 		t.Errorf("Create the new page fail: %v", err)
 		t.FailNow()
 	}
+	defer func() {
+		if err = workspaceBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -1200,14 +1224,6 @@ func ByModule(t provider.T) {
 		t.Errorf("Filter suite fail: %v", err)
 		t.FailNow()
 	}
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-		t.FailNow()
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-	}
 }
 func FilterTask(t provider.T) {
 	t.ID("5496")
@@ -1218,7 +1234,7 @@ func FilterTask(t provider.T) {
 		t.FailNow()
 		return
 	}
-	headless := false
+	headless := true
 	var slowMo float64 = 100
 	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
@@ -1232,6 +1248,18 @@ func FilterTask(t provider.T) {
 		t.FailNow()
 		return
 	}
+	defer func() {
+		if err = workspaceBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -1299,17 +1327,6 @@ func FilterTask(t provider.T) {
 		t.FailNow()
 		return
 	}
-
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-		t.FailNow()
-		return
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
-		t.FailNow()
-		return
-	}
 }
 func Collapse(t provider.T) {
 	t.ID("5472")
@@ -1320,7 +1337,7 @@ func Collapse(t provider.T) {
 		t.FailNow()
 		return
 	}
-	headless := false
+	headless := true
 	var slowMo float64 = 100
 	workspaceBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
@@ -1334,6 +1351,18 @@ func Collapse(t provider.T) {
 		t.FailNow()
 		return
 	}
+	defer func() {
+		if err = workspaceBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
 	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
@@ -1390,16 +1419,6 @@ func Collapse(t provider.T) {
 	count, _ = locator.Count()
 	if count > 0 {
 		t.Error("Collapse workspace fail")
-		t.FailNow()
-		return
-	}
-	if err = workspaceBrowser.Close(); err != nil {
-		t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-		t.FailNow()
-		return
-	}
-	if err = pw.Stop(); err != nil {
-		t.Errorf("The playwright cannot be stopped: %v", err)
 		t.FailNow()
 		return
 	}
