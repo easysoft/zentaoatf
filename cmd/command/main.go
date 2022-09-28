@@ -37,6 +37,7 @@ var (
 	taskIdOrName string
 	suiteId      string
 	taskName     string
+	submitCode   string
 
 	noNeedConfirm bool
 
@@ -83,6 +84,7 @@ func main() {
 	flagSet.BoolVar(&noNeedConfirm, "y", false, "")
 	flagSet.BoolVar(&commConsts.Verbose, "verbose", false, "")
 
+	flagSet.StringVar(&submitCode, "submitCode", "", "")
 	flagSet.StringVar(&commConsts.AllureReportDir, "allureReportDir", "", "")
 
 	if len(os.Args) == 1 {
@@ -155,7 +157,7 @@ func checkout() {
 func ci() {
 	files := fileUtils.GetFilesFromParams(os.Args[2:])
 	if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
-		action.CheckIn(files)
+		action.CheckIn(files, noNeedConfirm, submitCode)
 	}
 }
 

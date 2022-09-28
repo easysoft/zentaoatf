@@ -111,6 +111,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 			"logDir": commConsts.ExecLogDir,
 		}, wsMsg)
 	}
+	report.Log = fileUtils.ReadFile(filepath.Join(commConsts.ExecLogDir, commConsts.LogText))
 
 	//report.ProductId, _ = strconv.Atoi(vari.ProductId)
 	json, _ := json.MarshalIndent(report, "", "\t")

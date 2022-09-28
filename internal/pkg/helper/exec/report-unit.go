@@ -176,6 +176,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 
 	logUtils.ExecConsole(color.FgCyan, msgReport)
 	logUtils.ExecResult(msgReport)
+	report.Log = fileUtils.ReadFile(filepath.Join(commConsts.ExecLogDir, commConsts.LogText))
 
 	//report.ProductId, _ = strconv.Atoi(vari.ProductId)
 	json, _ := json.MarshalIndent(report, "", "\t")
