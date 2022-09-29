@@ -11,6 +11,8 @@ import (
 var bugBrowser playwright.Browser
 
 func ScriptBug(t provider.T) {
+	t.ID("5747")
+	t.AddParentSuite("查看bug列表")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -87,6 +89,8 @@ func ScriptBug(t provider.T) {
 }
 
 func ScriptsBug(t provider.T) {
+	t.ID("5748")
+	t.AddParentSuite("查看bug列表")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)

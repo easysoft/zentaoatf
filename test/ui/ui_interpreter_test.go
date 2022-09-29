@@ -11,8 +11,8 @@ import (
 var interpreterBrowser playwright.Browser
 
 func CreateInterpreter(t provider.T) {
-	t.ID("5465")
-	t.AddParentSuite("设置界面语言")
+	t.ID("5744")
+	t.AddParentSuite("管理解析器")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -105,8 +105,8 @@ func CreateInterpreter(t provider.T) {
 	}
 }
 func EditInterpreter(t provider.T) {
-	t.ID("5465")
-	t.AddParentSuite("设置界面语言")
+	t.ID("5745")
+	t.AddParentSuite("管理解析器")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -212,7 +212,7 @@ func EditInterpreter(t provider.T) {
 }
 func DeleteInterpreter(t provider.T) {
 	t.ID("5465")
-	t.AddParentSuite("设置界面语言")
+	t.AddParentSuite("管理解析器")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -291,7 +291,7 @@ func DeleteInterpreter(t provider.T) {
 }
 
 func TestUiInterpreter(t *testing.T) {
-	runner.Run(t, "客户端-创建解析器", CreateInterpreter)
-	runner.Run(t, "客户端-编辑解析器", EditInterpreter)
-	runner.Run(t, "客户端-删除解析器", DeleteInterpreter)
+	runner.Run(t, "客户端-创建语言解析器", CreateInterpreter)
+	runner.Run(t, "客户端-编辑语言解析器", EditInterpreter)
+	runner.Run(t, "客户端-删除语言解析器", DeleteInterpreter)
 }

@@ -109,7 +109,7 @@ func CollapseLog(t provider.T) {
 }
 
 func FullScreenLog(t provider.T) {
-	t.ID("5502")
+	t.ID("5749")
 	t.AddParentSuite("脚本执行日志")
 	pw, err := playwright.Run()
 	if err != nil {

@@ -173,7 +173,7 @@ func CreateWorkspace(t provider.T) {
 }
 
 func SyncFromZentao(t provider.T) {
-	t.ID("5468")
+	t.ID("5751")
 	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
@@ -267,7 +267,7 @@ func SyncFromZentao(t provider.T) {
 }
 
 func SyncTwoCaseFromZentao(t provider.T) {
-	t.ID("5468")
+	t.ID("5752")
 	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
@@ -365,7 +365,7 @@ func SyncTwoCaseFromZentao(t provider.T) {
 }
 
 func SyncToZentao(t provider.T) {
-	t.ID("5468")
+	t.ID("5431")
 	t.AddParentSuite("管理禅道站点下工作目录")
 	pw, err := playwright.Run()
 	if err != nil {
@@ -1425,7 +1425,7 @@ func Collapse(t provider.T) {
 }
 func TestUiWorkspace(t *testing.T) {
 	runner.Run(t, "客户端-同步到禅道", SyncToZentao)
-	runner.Run(t, "客户端-从禅道同步部分用例", SyncTwoCaseFromZentao)
+	runner.Run(t, "客户端-从禅道同步选中用例", SyncTwoCaseFromZentao)
 	runner.Run(t, "客户端-从禅道同步", SyncFromZentao)
 	runner.Run(t, "客户端-复制粘贴树状脚本文件", Copy)
 	runner.Run(t, "客户端-剪切粘贴树状脚本文件", Clip)

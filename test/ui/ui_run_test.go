@@ -14,7 +14,7 @@ import (
 )
 
 func RunScript(t provider.T) {
-	t.ID("5479")
+	t.ID("5743")
 	t.AddParentSuite("执行脚本")
 	pw, err := playwright.Run()
 	if err != nil {
@@ -1233,6 +1233,154 @@ func createWorkspace(t provider.T, workspacePath string, page playwright.Page) {
 	}
 }
 
+func RunUseProxy(t provider.T) {
+	t.ID("5746")
+	t.AddParentSuite("执行脚本")
+	pw, err := playwright.Run()
+	if err != nil {
+		t.Error(err)
+		t.FailNow()
+	}
+	headless := true
+	var slowMo float64 = 100
+	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	if err != nil {
+		t.Errorf("Fail to launch the web runBrowser: %v", err)
+		t.FailNow()
+	}
+	page, err := runBrowser.NewPage()
+	if err != nil {
+		t.Errorf("Create the new page fail: %v", err)
+		t.FailNow()
+	}
+	defer func() {
+		if err = runBrowser.Close(); err != nil {
+			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
+			t.FailNow()
+			return
+		}
+		if err = pw.Stop(); err != nil {
+			t.Errorf("The playwright cannot be stopped: %v", err)
+			t.FailNow()
+			return
+		}
+	}()
+	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
+		t.Errorf("The specific URL is missing: %v", err)
+		t.FailNow()
+	}
+	CreateProxyAndInterpreter(page, t)
+	_, err = page.WaitForSelector(".tree-node")
+	if err != nil {
+		t.Errorf("Wait tree-node fail: %v", err)
+		t.FailNow()
+	}
+	locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	c, err := locator.Count()
+	if err != nil || c == 0 {
+		t.Errorf("Find workspace fail: %v", err)
+		t.FailNow()
+	}
+	err = locator.Click()
+	if err != nil {
+		t.Errorf("Click node fail: %v", err)
+		t.FailNow()
+	}
+	scriptLocator, err := locator.Locator("text=1_string_match.php")
+	if err != nil {
+		t.Errorf("Find 1_string_match.php fail: %v", err)
+		t.FailNow()
+	}
+	err = scriptLocator.Click()
+	if err != nil {
+		t.Errorf("Click script fail: %v", err)
+		t.FailNow()
+	}
+	err = page.Click("#proxyMenuToggle")
+	if err != nil {
+		t.Errorf("Click proxy nav fail: %v", err)
+		t.FailNow()
+	}
+	err = page.Click(".list-item-title:has-text('测试执行节点')")
+	if err != nil {
+		t.Errorf("Select proxy fail: %v", err)
+		t.FailNow()
+	}
+	err = page.Click(".tabs-nav-toolbar>>[title=\"Run\"]")
+	if err != nil {
+		t.Errorf("Click run fail: %v", err)
+		t.FailNow()
+	}
+	_, err = page.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
+	if err != nil {
+		t.Errorf("Wait exec result fail: %v", err)
+		t.FailNow()
+	}
+	element, err := page.QuerySelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
+	innerText, err := element.InnerText()
+	if err != nil {
+		t.Errorf("Find result fail: %v", err)
+		t.FailNow()
+	}
+	if !strings.Contains(innerText, "1(100.0%) 失败") {
+		t.Errorf("Exec 1_string_match.php fail: %v", err)
+		t.FailNow()
+	}
+	resultTitleElement, err := page.QuerySelector("#rightPane .result-list-item .list-item-title")
+	if err != nil {
+		t.Errorf("Find log title in logPane fail: %v", err)
+		t.FailNow()
+	}
+	resultTitle, err := resultTitleElement.InnerText()
+	if err != nil || resultTitle != "1_string_match.php" {
+		t.Errorf("Find result in rightPane fail: %v", err)
+		t.FailNow()
+	}
+	timeElement, err := page.QuerySelector("#log-list .item .time")
+	if err != nil {
+		t.Errorf("Find log time in logPane fail: %v", err)
+		t.FailNow()
+	}
+	logTime, err := timeElement.InnerText()
+	if err != nil {
+		t.Errorf("Find log time in logPane fail: %v", err)
+		t.FailNow()
+	}
+	resultTimeElement, err := page.QuerySelector("#rightPane .result-list-item .list-item-trailing-text")
+	if err != nil {
+		t.Errorf("Find log time in logPane fail: %v", err)
+		t.FailNow()
+	}
+	resultTime, err := resultTimeElement.InnerText()
+	if err != nil || logTime[:5] != resultTime {
+		t.Errorf("Find result in rightPane fail: %v", err)
+		t.FailNow()
+	}
+}
+
+func CreateProxyAndInterpreter(page playwright.Page, t provider.T) {
+	page.Click("#navbar>>[title=\"设置\"]")
+	page.WaitForSelector("#proxyTable", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateAttached})
+	locator, _ := page.Locator("#proxyTable>>.z-tbody-td>>:scope:has-text('测试执行节点')")
+	c, _ := locator.Count()
+	if c > 0 {
+		page.Click("#settingModal>>.modal-close")
+		return
+	}
+	page.Click("#serverTable>>button:has-text('新建执行节点')")
+	locator, _ = page.Locator("#proxyFormModal input")
+	nameInput, _ := locator.Nth(0)
+	nameInput.Fill("测试执行节点")
+	page.WaitForTimeout(200)
+	pathSelect, _ := locator.Nth(1)
+	pathSelect.Fill("http://127.0.0.1:8085")
+	page.Click("#proxyFormModal>>text=确定")
+	page.WaitForSelector("#proxyFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+	page.WaitForTimeout(1000)
+	page.Click("#settingModal>>.modal-close")
+}
+
 func TestUiRun(t *testing.T) {
 	runner.Run(t, "客户端-执行单个脚本", RunScript)
 	runner.Run(t, "客户端-右键执行单个脚本", RunScriptByRightClick)
@@ -1243,4 +1391,5 @@ func TestUiRun(t *testing.T) {
 	runner.Run(t, "客户端-右键执行工作目录", RunWorkspace)
 	runner.Run(t, "客户端-右键执行文件夹", RunDir)
 	runner.Run(t, "客户端-执行TestNG单元测试", RunUnit)
+	runner.Run(t, "客户端-使用代理执行单个脚本", RunUseProxy)
 }

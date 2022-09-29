@@ -11,8 +11,8 @@ import (
 var serverBrowser playwright.Browser
 
 func CreateServer(t provider.T) {
-	t.ID("5465")
-	t.AddParentSuite("设置界面语言")
+	t.ID("5737")
+	t.AddParentSuite("管理服务器")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -100,8 +100,8 @@ func CreateServer(t provider.T) {
 	}
 }
 func EditServer(t provider.T) {
-	t.ID("5465")
-	t.AddParentSuite("设置界面语言")
+	t.ID("5738")
+	t.AddParentSuite("管理服务器")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -190,8 +190,8 @@ func EditServer(t provider.T) {
 	}
 }
 func DeleteServer(t provider.T) {
-	t.ID("5465")
-	t.AddParentSuite("设置界面语言")
+	t.ID("5739")
+	t.AddParentSuite("管理服务器")
 	pw, err := playwright.Run()
 	if err != nil {
 		t.Error(err)
@@ -265,7 +265,7 @@ func DeleteServer(t provider.T) {
 }
 
 func TestUiServer(t *testing.T) {
-	runner.Run(t, "客户端-创建解析器", CreateServer)
-	runner.Run(t, "客户端-编辑解析器", EditServer)
-	runner.Run(t, "客户端-删除解析器", DeleteServer)
+	runner.Run(t, "客户端-创建服务器", CreateServer)
+	runner.Run(t, "客户端-编辑服务器", EditServer)
+	runner.Run(t, "客户端-删除服务器", DeleteServer)
 }

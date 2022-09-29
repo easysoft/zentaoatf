@@ -11,7 +11,7 @@ import (
 var proxyBrowser playwright.Browser
 
 func CreateProxy(t provider.T) {
-	t.ID("5465")
+	t.ID("5740")
 	t.AddParentSuite("设置界面语言")
 	pw, err := playwright.Run()
 	if err != nil {
@@ -102,7 +102,7 @@ func CreateProxy(t provider.T) {
 	}
 }
 func EditProxy(t provider.T) {
-	t.ID("5465")
+	t.ID("5741")
 	t.AddParentSuite("设置界面语言")
 	pw, err := playwright.Run()
 	if err != nil {
@@ -193,7 +193,7 @@ func EditProxy(t provider.T) {
 	}
 }
 func DeleteProxy(t provider.T) {
-	t.ID("5465")
+	t.ID("5742")
 	t.AddParentSuite("设置界面语言")
 	pw, err := playwright.Run()
 	if err != nil {
@@ -268,7 +268,7 @@ func DeleteProxy(t provider.T) {
 }
 
 func TestUiProxy(t *testing.T) {
-	runner.Run(t, "客户端-创建解析器", CreateProxy)
-	runner.Run(t, "客户端-编辑解析器", EditProxy)
-	runner.Run(t, "客户端-删除解析器", DeleteProxy)
+	runner.Run(t, "客户端-创建执行节点", CreateProxy)
+	runner.Run(t, "客户端-编辑执行节点", EditProxy)
+	runner.Run(t, "客户端-删除执行节点", DeleteProxy)
 }

@@ -139,7 +139,7 @@ func RunReExecFailCase(t provider.T) {
 }
 
 func RunReExecAllCase(t provider.T) {
-	t.ID("5491")
+	t.ID("5750")
 	t.AddParentSuite("测试结果页面执行脚本")
 	pw, err := playwright.Run()
 	if err != nil {
