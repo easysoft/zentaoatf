@@ -1,9 +1,9 @@
 package conf
 
 func SetExitOnError(val bool) {
-	ExitOnError = val
+	ExitAllOnError = val
 }
 
 func GetExitOnError() bool {
-	return ExitOnError
+	return ExitAllOnError
 }

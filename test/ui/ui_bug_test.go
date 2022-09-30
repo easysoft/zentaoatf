@@ -8,8 +8,6 @@ import (
 	playwright "github.com/playwright-community/playwright-go"
 )
 
-var bugBrowser playwright.Browser
-
 func ScriptBug(t provider.T) {
 	pw, err := playwright.Run()
 	if err != nil {

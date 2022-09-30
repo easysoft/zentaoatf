@@ -1,5 +1,5 @@
 package conf
 
 var (
-	ExitOnError = false
+	ExitAllOnError = false
 )
