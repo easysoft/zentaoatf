@@ -9,49 +9,23 @@ import (
 	playwright "github.com/playwright-community/playwright-go"
 )
 
+var runStatisticPage playwright.Page
+
 func RunFailStatistic(t provider.T) {
 	t.ID("5487")
 	t.AddParentSuite("执行脚本")
-	pw, err := playwright.Run()
-	if err != nil {
-		t.Error(err)
-		t.FailNow()
-	}
-	headless := true
-	var slowMo float64 = 100
-	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
-	if err != nil {
-		t.Errorf("Fail to launch the web runBrowser: %v", err)
-		t.FailNow()
-	}
-	page, err := runBrowser.NewPage()
-	if err != nil {
-		t.Errorf("Create the new page fail: %v", err)
-		t.FailNow()
-	}
-	defer func() {
-		if err = runBrowser.Close(); err != nil {
-			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-			t.FailNow()
-			return
-		}
-		if err = pw.Stop(); err != nil {
-			t.Errorf("The playwright cannot be stopped: %v", err)
-			t.FailNow()
-			return
-		}
-	}()
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+
+	if _, err := runStatisticPage.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
 	}
-	_, err = page.WaitForSelector(".tree-node")
+	_, err := runStatisticPage.WaitForSelector(".tree-node")
 	if err != nil {
 		t.Errorf("Wait tree-node fail: %v", err)
 		t.FailNow()
 	}
-	locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	locator, err := runStatisticPage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
 	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find workspace fail: %v", err)
@@ -72,23 +46,23 @@ func RunFailStatistic(t provider.T) {
 		t.Errorf("Click script fail: %v", err)
 		t.FailNow()
 	}
-	elements, _ := page.QuerySelectorAll(".statistic>>span")
+	elements, _ := runStatisticPage.QuerySelectorAll(".statistic>>span")
 	runTimes, _ := elements[0].InnerText()
 	failTimes, _ := elements[2].InnerText()
 	runTimesInt, _ := strconv.Atoi(runTimes)
 	failTimesInt, _ := strconv.Atoi(failTimes)
-	err = page.Click(".tabs-nav-toolbar>>[title=\"Run\"]")
+	err = runStatisticPage.Click(".tabs-nav-toolbar>>[title=\"Run\"]")
 	if err != nil {
 		t.Errorf("Click run fail: %v", err)
 		t.FailNow()
 	}
-	_, err = page.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
+	_, err = runStatisticPage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	if err != nil {
 		t.Errorf("Wait exec result fail: %v", err)
 		t.FailNow()
 	}
-	page.WaitForTimeout(200)
-	elements, _ = page.QuerySelectorAll(".statistic>>span")
+	runStatisticPage.WaitForTimeout(200)
+	elements, _ = runStatisticPage.QuerySelectorAll(".statistic>>span")
 	runTimes2, _ := elements[0].InnerText()
 	failTimes2, _ := elements[2].InnerText()
 	runTimes2Int, _ := strconv.Atoi(runTimes2)
@@ -102,46 +76,18 @@ func RunFailStatistic(t provider.T) {
 func RunSuccessStatistic(t provider.T) {
 	t.ID("5487")
 	t.AddParentSuite("执行脚本")
-	pw, err := playwright.Run()
-	if err != nil {
-		t.Error(err)
-		t.FailNow()
-	}
-	headless := true
-	var slowMo float64 = 100
-	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
-	if err != nil {
-		t.Errorf("Fail to launch the web runBrowser: %v", err)
-		t.FailNow()
-	}
-	page, err := runBrowser.NewPage()
-	if err != nil {
-		t.Errorf("Create the new page fail: %v", err)
-		t.FailNow()
-	}
-	defer func() {
-		if err = runBrowser.Close(); err != nil {
-			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-			t.FailNow()
-			return
-		}
-		if err = pw.Stop(); err != nil {
-			t.Errorf("The playwright cannot be stopped: %v", err)
-			t.FailNow()
-			return
-		}
-	}()
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+
+	if _, err := runStatisticPage.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
 	}
-	_, err = page.WaitForSelector(".tree-node")
+	_, err := runStatisticPage.WaitForSelector(".tree-node")
 	if err != nil {
 		t.Errorf("Wait tree-node fail: %v", err)
 		t.FailNow()
 	}
-	locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	locator, err := runStatisticPage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
 	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find workspace fail: %v", err)
@@ -152,9 +98,9 @@ func RunSuccessStatistic(t provider.T) {
 		t.Errorf("Click node fail: %v", err)
 		t.FailNow()
 	}
-	scriptLocator, err := locator.Locator("text=2_webpage_extract.php")
+	scriptLocator, err := locator.Locator("text=3_http_interface_call.php")
 	if err != nil {
-		t.Errorf("Find 2_webpage_extract.php fail: %v", err)
+		t.Errorf("Find 3_http_interface_call.php fail: %v", err)
 		t.FailNow()
 	}
 	err = scriptLocator.Click()
@@ -162,23 +108,23 @@ func RunSuccessStatistic(t provider.T) {
 		t.Errorf("Click script fail: %v", err)
 		t.FailNow()
 	}
-	elements, _ := page.QuerySelectorAll(".statistic>>span")
+	elements, _ := runStatisticPage.QuerySelectorAll(".statistic>>span")
 	runTimes, _ := elements[0].InnerText()
 	succTimes, _ := elements[1].InnerText()
 	runTimesInt, _ := strconv.Atoi(runTimes)
 	succTimesInt, _ := strconv.Atoi(succTimes)
-	err = page.Click(".tabs-nav-toolbar>>[title=\"Run\"]")
+	err = runStatisticPage.Click(".tabs-nav-toolbar>>[title=\"Run\"]")
 	if err != nil {
 		t.Errorf("Click run fail: %v", err)
 		t.FailNow()
 	}
-	_, err = page.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
+	_, err = runStatisticPage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	if err != nil {
 		t.Errorf("Wait exec result fail: %v", err)
 		t.FailNow()
 	}
-	page.WaitForTimeout(200)
-	elements, _ = page.QuerySelectorAll(".statistic>>span")
+	runStatisticPage.WaitForTimeout(200)
+	elements, _ = runStatisticPage.QuerySelectorAll(".statistic>>span")
 	runTimes2, _ := elements[0].InnerText()
 	succTimes2, _ := elements[1].InnerText()
 	runTimes2Int, _ := strconv.Atoi(runTimes2)
@@ -192,46 +138,18 @@ func RunSuccessStatistic(t provider.T) {
 func RunBugStatistic(t provider.T) {
 	t.ID("5487")
 	t.AddParentSuite("执行脚本")
-	pw, err := playwright.Run()
-	if err != nil {
-		t.Error(err)
-		t.FailNow()
-	}
-	headless := true
-	var slowMo float64 = 100
-	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
-	if err != nil {
-		t.Errorf("Fail to launch the web runBrowser: %v", err)
-		t.FailNow()
-	}
-	page, err := runBrowser.NewPage()
-	if err != nil {
-		t.Errorf("Create the new page fail: %v", err)
-		t.FailNow()
-	}
-	defer func() {
-		if err = runBrowser.Close(); err != nil {
-			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-			t.FailNow()
-			return
-		}
-		if err = pw.Stop(); err != nil {
-			t.Errorf("The playwright cannot be stopped: %v", err)
-			t.FailNow()
-			return
-		}
-	}()
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+
+	if _, err := runStatisticPage.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
 	}
-	_, err = page.WaitForSelector(".tree-node")
+	_, err := runStatisticPage.WaitForSelector(".tree-node")
 	if err != nil {
 		t.Errorf("Wait tree-node fail: %v", err)
 		t.FailNow()
 	}
-	locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	locator, err := runStatisticPage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
 	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find workspace fail: %v", err)
@@ -252,16 +170,16 @@ func RunBugStatistic(t provider.T) {
 		t.Errorf("Click script fail: %v", err)
 		t.FailNow()
 	}
-	page.WaitForTimeout(200)
-	elements, _ := page.QuerySelectorAll(".statistic>>span")
+	runStatisticPage.WaitForTimeout(200)
+	elements, _ := runStatisticPage.QuerySelectorAll(".statistic>>span")
 	bugTimes, _ := elements[3].InnerText()
 	bugTimesInt, _ := strconv.Atoi(bugTimes)
-	err = page.Click(".statistic>>span>>nth=3")
+	err = runStatisticPage.Click(".statistic>>span>>nth=3")
 	if err != nil {
 		t.Errorf("Click bug btn fail: %v", err)
 		t.FailNow()
 	}
-	elements, _ = page.QuerySelectorAll("#bugsModal>>tr")
+	elements, _ = runStatisticPage.QuerySelectorAll("#bugsModal>>tr")
 
 	bugTimes2Int := len(elements)
 	if bugTimes2Int-1 != bugTimesInt {
@@ -270,8 +188,44 @@ func RunBugStatistic(t provider.T) {
 	}
 }
 
-func TestUiRunToolbar(t *testing.T) {
+func TestUiRunStatistic(t *testing.T) {
+	pw, err := playwright.Run()
+	if err != nil {
+		t.Error(err)
+		t.FailNow()
+		return
+	}
+	headless := true
+	var slowMo float64 = 100
+	browser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	if err != nil {
+		t.Errorf("Fail to launch the web browser: %v", err)
+		t.FailNow()
+		return
+	}
+	runStatisticPage, err = browser.NewPage()
+	if err != nil {
+		t.Errorf("Create the new page fail: %v", err)
+		t.FailNow()
+		return
+	}
+	if _, err = runStatisticPage.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
+		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
+		t.Errorf("The specific URL is missing: %v", err)
+		t.FailNow()
+		return
+	}
 	runner.Run(t, "客户端-确认执行统计成功数据", RunSuccessStatistic)
 	runner.Run(t, "客户端-确认执行统计失败数据", RunFailStatistic)
 	runner.Run(t, "客户端-确认执行统计bug数据", RunBugStatistic)
+	if err = browser.Close(); err != nil {
+		t.Errorf("The browser cannot be closed: %v", err)
+		t.FailNow()
+		return
+	}
+	if err = pw.Stop(); err != nil {
+		t.Errorf("The playwright cannot be stopped: %v", err)
+		t.FailNow()
+		return
+	}
 }

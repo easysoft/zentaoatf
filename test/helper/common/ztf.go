@@ -61,3 +61,11 @@ func GetZtfPath() string {
 	}
 	return ztfPath
 }
+
+func GetZtfProductPath() string {
+	return fmt.Sprintf("%s%s%s%s%s%s%s%s", RootPath, "test", FilePthSep, "demo", FilePthSep, "php", FilePthSep, "product1")
+}
+
+func GetPhpWorkspacePath() string {
+	return fmt.Sprintf("%s%s%s%s%s%s%s", RootPath, "test", FilePthSep, "demo", FilePthSep, "php", FilePthSep)
+}

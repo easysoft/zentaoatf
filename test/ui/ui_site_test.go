@@ -126,7 +126,11 @@ func CreateSite(t provider.T) {
 		t.Errorf("The Click submit form fail: %v", err)
 		t.FailNow()
 	}
-	page.WaitForTimeout(1000)
+	_, err = page.WaitForSelector(".list-item-content span:has-text('单元测试站点')")
+	if err != nil {
+		t.Errorf("Wait created site fail: %v", err)
+		t.FailNow()
+	}
 	locator, err = page.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: "单元测试站点"})
 	c, err := locator.Count()
 	if err != nil || c == 0 {
@@ -262,8 +266,12 @@ func EditSite(t provider.T) {
 		t.Errorf("The Click submit form fail: %v", err)
 		t.FailNow()
 	}
-	page.WaitForTimeout(1000)
-	locator, err = page.Locator(".list-item-content", playwright.PageLocatorOptions{HasText: "单元测试站点-update"})
+	_, err = page.WaitForSelector(".list-item-content span:has-text('单元测试站点-update')")
+	if err != nil {
+		t.Errorf("Wait updated site fail: %v", err)
+		t.FailNow()
+	}
+	locator, err = page.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: "单元测试站点-update"})
 	c, err = locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find update site fail: %v", err)
@@ -347,7 +355,11 @@ func DeleteSite(t provider.T) {
 		t.Errorf("The Click submit form fail: %v", err)
 		t.FailNow()
 	}
-	page.WaitForTimeout(1000)
+	_, err = page.WaitForSelector(".list-item-content span:has-text('单元测试站点')", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+	if err != nil {
+		t.Errorf("Wait updated site fail: %v", err)
+		t.FailNow()
+	}
 	locator, err = page.Locator(".list-item-content", playwright.PageLocatorOptions{HasText: "单元测试站点"})
 	c, err := locator.Count()
 	if err != nil || c > 0 {

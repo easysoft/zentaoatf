@@ -47,12 +47,38 @@ func ScriptBug(t provider.T) {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
 	}
-	_, err = page.WaitForSelector(".tree-node")
+	locator, err := page.Locator("#siteMenuToggle")
 	if err != nil {
-		t.Errorf("Wait tree-node fail: %v", err)
+		t.Errorf("The siteMenuToggle is missing: %v", err)
 		t.FailNow()
+		return
 	}
-	locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	err = locator.Click()
+	if err != nil {
+		t.Errorf("The Click is fail: %v", err)
+		t.FailNow()
+		return
+	}
+	_, err = page.WaitForSelector("#mainContent .tree")
+	if err != nil {
+		t.Errorf("Wait for workspace list nav fail: %v", err)
+		t.FailNow()
+		return
+	}
+	err = page.Click(".list-item-title>>text=单元测试站点")
+	if err != nil {
+		t.Errorf("The Click workspace nav fail: %v", err)
+		t.FailNow()
+		return
+	}
+	_, err = page.WaitForSelector("#mainContent .tree:has-text('单元测试工作目录')")
+	if err != nil {
+		t.Errorf("Wait for workspace list fail: %v", err)
+		t.FailNow()
+		return
+	}
+	page.WaitForTimeout(100)
+	locator, err = page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
 	c, err := locator.Count()
 	if err != nil || c == 0 {
 		t.Errorf("Find workspace fail: %v", err)
@@ -63,7 +89,7 @@ func ScriptBug(t provider.T) {
 		t.Errorf("Click node fail: %v", err)
 		t.FailNow()
 	}
-	scriptLocator, err := locator.Locator("text=1_string_match.php")
+	scriptLocator, err := page.Locator(".tree-node-title:has-text('1_string_match.php')")
 	if err != nil {
 		t.Errorf("Find 1_string_match.php fail: %v", err)
 		t.FailNow()
@@ -125,10 +151,11 @@ func ScriptsBug(t provider.T) {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
 	}
-	_, err = page.WaitForSelector(".tree-node")
+	_, err = page.WaitForSelector("#mainContent .tree")
 	if err != nil {
-		t.Errorf("Wait tree-node fail: %v", err)
+		t.Errorf("Wait for workspace list nav fail: %v", err)
 		t.FailNow()
+		return
 	}
 	locator, err := page.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
 	c, err := locator.Count()

@@ -4,6 +4,7 @@ import (
 	"strings"
 	"testing"
 
+	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"
@@ -48,11 +49,6 @@ func RunReExecFailCase(t provider.T) {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
 	}
-	_, err = page.WaitForSelector(".tree-node")
-	if err != nil {
-		t.Errorf("Wait tree-node fail: %v", err)
-		t.FailNow()
-	}
 
 	locator, err := page.Locator("#siteMenuToggle")
 	if err != nil {
@@ -72,11 +68,6 @@ func RunReExecFailCase(t provider.T) {
 	err = page.Click(".list-item-title>>text=单元测试站点")
 	if err != nil {
 		t.Errorf("The Click site nav fail: %v", err)
-		t.FailNow()
-	}
-	_, err = page.WaitForSelector(".tree-node")
-	if err != nil {
-		t.Errorf("Wait tree-node fail: %v", err)
 		t.FailNow()
 	}
 	err = page.Click("#rightPane .result-list-item .list-item-title>>nth=0")
@@ -175,12 +166,6 @@ func RunReExecAllCase(t provider.T) {
 		t.Errorf("The specific URL is missing: %v", err)
 		t.FailNow()
 	}
-	_, err = page.WaitForSelector(".tree-node")
-	if err != nil {
-		t.Errorf("Wait tree-node fail: %v", err)
-		t.FailNow()
-	}
-
 	locator, err := page.Locator("#siteMenuToggle")
 	if err != nil {
 		t.Errorf("The siteMenuToggle is missing: %v", err)
@@ -201,11 +186,7 @@ func RunReExecAllCase(t provider.T) {
 		t.Errorf("The Click site nav fail: %v", err)
 		t.FailNow()
 	}
-	_, err = page.WaitForSelector(".tree-node")
-	if err != nil {
-		t.Errorf("Wait tree-node fail: %v", err)
-		t.FailNow()
-	}
+	ztfTestHelper.RunScript(page, "1_string_match.php")
 	err = page.Click("#rightPane .result-list-item .list-item-title>>nth=0")
 	if err != nil {
 		t.Errorf("Click first result fail: %v", err)
@@ -214,12 +195,12 @@ func RunReExecAllCase(t provider.T) {
 	if err != nil {
 		t.Errorf("Click re-exec failed case btn fail: %v", err)
 	}
-	_, err = page.WaitForSelector("#log-list>>.msg-span>>:has-text('执行3个用例，耗时')")
+	_, err = page.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	if err != nil {
 		t.Errorf("Wait exec script result fail: %v", err)
 		t.FailNow()
 	}
-	locator, err = page.Locator("#log-list>>code:has-text('执行3个用例，耗时')")
+	locator, err = page.Locator("#log-list>>code:has-text('执行1个用例，耗时')")
 	if err != nil {
 		t.Errorf("Find exec script log fail: %v", err)
 		t.FailNow()
@@ -229,7 +210,7 @@ func RunReExecAllCase(t provider.T) {
 		t.Errorf("Find exec script result fail: %v", err)
 		t.FailNow()
 	}
-	if !strings.Contains(innerText, "2(66.0%) 通过，1(33.0%) 失败") {
+	if !strings.Contains(innerText, "0(0.0%) 通过，1(100.0%) 失败") {
 		t.Errorf("Exec failed case fail: %v", err)
 		t.FailNow()
 	}
@@ -239,7 +220,7 @@ func RunReExecAllCase(t provider.T) {
 		t.FailNow()
 	}
 	resultTitle, err := resultTitleElement.InnerText()
-	if err != nil || resultTitle != "单元测试工作目录(3)" {
+	if err != nil || resultTitle != "1_string_match.php" {
 		t.Errorf("Find result in rightPane fail: %v", err)
 		t.FailNow()
 	}

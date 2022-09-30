@@ -83,10 +83,10 @@ func SwitchProduct(t provider.T) {
 		t.Errorf("Wait for product list nav fail: %v", err)
 		t.FailNow()
 	}
-	err = page.Click("#navbar .list-item>>text=test")
+	err = page.Click("#navbar .list-item>>text=企业内部工时管理系统")
 	page.WaitForTimeout(100)
 	productName, err := page.InnerText("#productMenuToggle>>span")
-	if productName != "test" {
+	if productName != "企业内部工时管理系统" {
 		t.Error("Switch product fail")
 		t.FailNow()
 	}

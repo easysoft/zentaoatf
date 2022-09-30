@@ -55,7 +55,7 @@ func CreateInterpreter(t provider.T) {
 		t.Errorf("The Click interpreter nav fail: %v", err)
 		t.FailNow()
 	}
-	err = page.Click("#proxyTable>>button:has-text('运行环境')")
+	err = page.Click("#proxyTable>>tr:has-text('本地节点')>>button:has-text('运行环境')")
 	if err != nil {
 		t.Errorf("Click open interpreter modal fail: %v", err)
 		t.FailNow()
@@ -151,7 +151,7 @@ func EditInterpreter(t provider.T) {
 		t.Errorf("The Click interpreter nav fail: %v", err)
 		t.FailNow()
 	}
-	err = page.Click("#proxyTable>>button:has-text('运行环境')")
+	err = page.Click("#proxyTable>>tr:has-text('本地节点')>>button:has-text('运行环境')")
 	if err != nil {
 		t.Errorf("Click open interpreter modal fail: %v", err)
 		t.FailNow()
@@ -255,7 +255,7 @@ func DeleteInterpreter(t provider.T) {
 		t.Errorf("The Click interpreter nav fail: %v", err)
 		t.FailNow()
 	}
-	err = page.Click("#proxyTable>>button:has-text('运行环境')")
+	err = page.Click("#proxyTable>>tr:has-text('本地节点')>>button:has-text('运行环境')")
 	if err != nil {
 		t.Errorf("Click open interpreter modal fail: %v", err)
 		t.FailNow()

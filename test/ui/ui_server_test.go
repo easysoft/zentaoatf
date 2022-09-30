@@ -92,6 +92,11 @@ func CreateServer(t provider.T) {
 		t.Errorf("The Click submit form fail: %v", err)
 		t.FailNow()
 	}
+	_, err = page.WaitForSelector("#settingModal .z-tbody-td:has-text('测试服务器')")
+	if err != nil {
+		t.Errorf("Wait created server fail: %v", err)
+		t.FailNow()
+	}
 	locator, err = page.Locator("#settingModal .z-tbody-td", playwright.PageLocatorOptions{HasText: "测试服务器"})
 	c, err := locator.Count()
 	if err != nil || c == 0 {
@@ -146,12 +151,7 @@ func EditServer(t provider.T) {
 		t.Errorf("The Click server nav fail: %v", err)
 		t.FailNow()
 	}
-	locator, err := page.Locator("#settingModal .z-tbody-tr", playwright.PageLocatorOptions{HasText: "测试服务器"})
-	if err != nil {
-		t.Errorf("Find 测试服务器 tr fail: %v", err)
-		t.FailNow()
-	}
-	locator, err = locator.Locator("text=编辑")
+	locator, err := page.Locator("#settingModal .z-tbody-tr:has-text('测试服务器')>>td>>nth=-1>>text=编辑")
 	if err != nil {
 		t.Errorf("Find 测试服务器 edit btn fail: %v", err)
 		t.FailNow()
@@ -182,6 +182,11 @@ func EditServer(t provider.T) {
 		t.FailNow()
 	}
 	page.WaitForSelector("#serverFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+	_, err = page.WaitForSelector("#settingModal .z-tbody-td:has-text('测试服务器-update')")
+	if err != nil {
+		t.Errorf("Wait updated server fail: %v", err)
+		t.FailNow()
+	}
 	locator, err = page.Locator("#settingModal .z-tbody-td", playwright.PageLocatorOptions{HasText: "测试服务器-update"})
 	c, err := locator.Count()
 	if err != nil || c == 0 {
@@ -255,7 +260,11 @@ func DeleteServer(t provider.T) {
 		t.Errorf("The Click submit form fail: %v", err)
 		t.FailNow()
 	}
-	page.WaitForTimeout(1000)
+	_, err = page.WaitForSelector("#settingModal .z-tbody-td:has-text('测试服务器-update')", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+	if err != nil {
+		t.Errorf("Wait updated server fail: %v", err)
+		t.FailNow()
+	}
 	locator, err = page.Locator("#settingModal .z-tbody-tr", playwright.PageLocatorOptions{HasText: "测试服务器-update"})
 	c, err := locator.Count()
 	if err != nil || c > 0 {

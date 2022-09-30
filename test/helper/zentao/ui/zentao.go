@@ -347,7 +347,7 @@ func InitZentaoData(version string, codeDir string) (err error) {
 	if err != nil {
 		return
 	}
-	headless := true
+	headless := false
 	var slowMo float64 = 100
 	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {

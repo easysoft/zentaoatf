@@ -4,6 +4,7 @@ import (
 	"strings"
 	"testing"
 
+	ztfTest "github.com/easysoft/zentaoatf/test/helper/ztf"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"
@@ -54,31 +55,9 @@ func Detail(t provider.T) {
 		t.FailNow()
 	}
 
-	locator, err := page.Locator("#siteMenuToggle")
-	if err != nil {
-		t.Errorf("The siteMenuToggle is missing: %v", err)
-		t.FailNow()
-	}
-	err = locator.Click()
-	if err != nil {
-		t.Errorf("The Click is fail: %v", err)
-		t.FailNow()
-	}
-	_, err = page.WaitForSelector("#navbar .list-item")
-	if err != nil {
-		t.Errorf("Wait for site list nav fail: %v", err)
-		t.FailNow()
-	}
-	err = page.Click(".list-item-title>>text=单元测试站点")
-	if err != nil {
-		t.Errorf("The Click site nav fail: %v", err)
-		t.FailNow()
-	}
-	_, err = page.WaitForSelector(".tree-node")
-	if err != nil {
-		t.Errorf("Wait tree-node fail: %v", err)
-		t.FailNow()
-	}
+	ztfTest.SelectSite(page)
+	ztfTest.ExpandProduct(page)
+	ztfTest.RunScript(page, "1_string_match.php")
 	err = page.Click("#rightPane .result-list-item .list-item-title>>nth=0")
 	if err != nil {
 		t.Errorf("Click first result fail: %v", err)
@@ -89,7 +68,7 @@ func Detail(t provider.T) {
 		t.Errorf("Wait result tabpage fail: %v", err)
 		t.FailNow()
 	}
-	locator, err = page.Locator(".page-result .single small")
+	locator, err := page.Locator(".page-result .single small")
 	if err != nil {
 		t.Errorf("Find result percent locator fail: %v", err)
 		t.FailNow()
@@ -409,6 +388,7 @@ func SubmitBugTwoStep(t provider.T) {
 		t.Errorf("Wait tree-node fail: %v", err)
 		t.FailNow()
 	}
+	ztfTest.RunScript(page, "1_string_match.php")
 	err = page.Click("#rightPane .result-list-item .list-item-title>>nth=0")
 	if err != nil {
 		t.Errorf("Click first result fail: %v", err)
