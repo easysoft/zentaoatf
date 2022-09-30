@@ -239,9 +239,9 @@ func DeleteServer(t provider.T) {
 		t.Errorf("The Click server nav fail: %v", err)
 		t.FailNow()
 	}
-	locator, err := page.Locator("#settingModal .z-tbody-tr", playwright.PageLocatorOptions{HasText: "测试服务器-update"})
+	locator, err := page.Locator("#settingModal .z-tbody-tr:has-text('测试服务器-update')>>td>>nth=-1")
 	if err != nil {
-		t.Errorf("Find python tr fail: %v", err)
+		t.Errorf("Find 测试服务器-update tr fail: %v", err)
 		t.FailNow()
 	}
 	locator, err = locator.Locator("text=删除")

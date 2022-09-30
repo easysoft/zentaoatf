@@ -164,7 +164,7 @@ func ExpandWorspace(page playwright.Page) (err error) {
 	if err != nil {
 		createTestWorkspace(page)
 	}
-	selector, _ := page.QuerySelector(".tree-node:has-text('单元测试工作目录')")
+	selector, _ := page.QuerySelector(".tree-node-root:has-text('单元测试工作目录')")
 	className, _ := selector.GetAttribute("class")
 	if !strings.Contains(className, "collapsed") {
 		return
