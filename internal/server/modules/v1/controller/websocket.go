@@ -22,7 +22,7 @@ type WebSocketCtrl struct {
 	*websocket.NSConn `stateless:"true"`
 
 	WorkspaceService *service.WorkspaceService `inject:""`
-	TestExecService  *service.TestExecService  `inject:""`
+	TestExecService  *service.ExecService      `inject:""`
 }
 
 func NewWebSocketCtrl() *WebSocketCtrl {
@@ -79,7 +79,7 @@ func (c *WebSocketCtrl) OnChat(wsMsg websocket.Message) (err error) {
 		watchHelper.WatchFromReq(req.TestSets, &wsMsg)
 
 	} else if req.Act == commConsts.ExecStop {
-		c.TestExecService.Stop(req, &wsMsg)
+		c.TestExecService.Stop(&wsMsg)
 
 	} else {
 		c.TestExecService.Start(req, &wsMsg)

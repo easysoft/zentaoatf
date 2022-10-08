@@ -8,8 +8,6 @@ import (
 	playwright "github.com/playwright-community/playwright-go"
 )
 
-var bugBrowser playwright.Browser
-
 func ScriptBug(t provider.T) {
 	t.ID("5747")
 	t.AddParentSuite("查看bug列表")

@@ -7,6 +7,7 @@ import (
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	"github.com/easysoft/zentaoatf/internal/server/config"
+	"github.com/easysoft/zentaoatf/internal/server/core/cron"
 	"github.com/easysoft/zentaoatf/internal/server/core/dao"
 	"github.com/easysoft/zentaoatf/internal/server/core/module"
 	v1 "github.com/easysoft/zentaoatf/internal/server/modules/v1"
@@ -120,11 +121,14 @@ func injectModule(ws *WebServer) {
 	var g inject.Graph
 	g.Logger = logrus.StandardLogger()
 
+	cron := cron.NewServerCron()
+	cron.Init()
 	indexModule := v1.NewIndexModule()
 
 	// inject objects
 	if err := g.Provide(
 		&inject.Object{Value: dao.GetDB()},
+		&inject.Object{Value: cron},
 		&inject.Object{Value: indexModule},
 	); err != nil {
 		logrus.Fatalf("provide usecase objects to the Graph: %v", err)

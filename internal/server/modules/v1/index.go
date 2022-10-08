@@ -18,7 +18,7 @@ type IndexModule struct {
 
 	ZentaoModule *index.ZentaoModule `inject:""`
 	SiteModule   *index.SiteModule   `inject:""`
-	ExecModule   *index.ExecModule   `inject:""`
+	JobModule    *index.JobModule    `inject:""`
 
 	InterpreterModule *index.InterpreterModule `inject:""`
 	WorkspaceModule   *index.WorkspaceModule   `inject:""`
@@ -54,7 +54,8 @@ func (m *IndexModule) Party() module.WebModule {
 
 		m.ZentaoModule.Party(),
 		m.SiteModule.Party(),
-		m.ExecModule.Party(),
+		m.JobModule.Party(),
+
 		m.InterpreterModule.Party(),
 		m.WorkspaceModule.Party(),
 		m.ProxyModule.Party(),

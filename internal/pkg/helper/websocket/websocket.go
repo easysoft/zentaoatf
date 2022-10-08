@@ -21,6 +21,10 @@ func SendOutputMsg(msg, isRunning string, info iris.Map, wsMsg *websocket.Messag
 	logUtils.Infof(i118Utils.Sprintf("ws_send_exec_msg", wsMsg.Room,
 		strings.ReplaceAll(strings.TrimSpace(msg), `%`, `%%`)))
 
+	if wsMsg == nil {
+		return
+	}
+
 	msg = strings.Trim(msg, "\n")
 	resp := commDomain.WsResp{Msg: msg, Category: commConsts.Output, Info: info}
 
@@ -32,6 +36,10 @@ func SendOutputMsg(msg, isRunning string, info iris.Map, wsMsg *websocket.Messag
 func SendExecMsg(msg, isRunning string, category commConsts.WsMsgCategory, info iris.Map, wsMsg *websocket.Message) {
 	logUtils.Infof(i118Utils.Sprintf("ws_send_exec_msg", wsMsg.Room,
 		strings.ReplaceAll(strings.TrimSpace(msg), `%`, `%%`)))
+
+	if wsMsg == nil {
+		return
+	}
 
 	msg = strings.TrimSpace(msg)
 	resp := commDomain.WsResp{Msg: msg, IsRunning: isRunning, Category: category, Info: info}
