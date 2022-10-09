@@ -1,4 +1,4 @@
-package main
+package script
 
 import (
 	"github.com/easysoft/zentaoatf/test/ui/conf"
