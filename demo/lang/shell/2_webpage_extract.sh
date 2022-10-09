@@ -12,7 +12,7 @@ pid=0
 
 !
 
-resp=$(curl -s http://pms.deeptest.loc)   # apt-get install curl if needed
+resp=$(curl -s http://pms.deeptest.loc/user-login-Lw==.html)   # apt-get install curl if needed
 elem=`echo $resp | grep -o '<img[^>]*src="[^"]*"'`
 
 echo "$elem"
