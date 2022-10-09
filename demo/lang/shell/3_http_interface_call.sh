@@ -12,7 +12,7 @@ pid=0
 
 !
 
-resp=$(curl -s 'http://max.demo.zentao.net/pms/?mode=getconfig')  # apt-get install curl if needed
+resp=$(curl -s 'http://pms.deeptest.loc/pms/?mode=getconfig')  # apt-get install curl if needed
 elem=`echo $resp | grep -o '"sessionID":"[^"]*"' | sed 's/^.*:"//g' | sed 's/"//g'`
 
 echo "$elem"
