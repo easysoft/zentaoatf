@@ -25,3 +25,7 @@ puts "$html"
 
 regexp -- {<title>(.*?)>} $html match elem
 puts "$elem"
+
+set a abc
+set b 测试
+puts "$a $b"
