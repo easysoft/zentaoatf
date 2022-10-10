@@ -21,7 +21,5 @@ set url https://www.apple.com
 set http [::http::geturl $url]
 set html [::http::data $http]
 
-puts "$html"
-
 regexp -- {<title>(.*?)</title>} $html match title
 puts "$title"
