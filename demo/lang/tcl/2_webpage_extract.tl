@@ -16,10 +16,12 @@ package require tls
 
 http::register https 443 tls::socket
 
-set url https://cn.bing.com
+set url https://us.bing.com
 
 set http [::http::geturl $url]
 set html [::http::data $http]
+
+puts "$html"
 
 regexp -- {<title>(.*?)<} $html match elem
 puts "$elem"
