@@ -8,13 +8,13 @@ pid=0
 
 1. Send a request to interface http://xxx
 2. Retrieve sessionID field from response json
-3. Check its format >> `^[a-z0-9]{26}`
+3. Check its format >> `^[a-z0-9]{8}`
 
 '''
 
 import requests
 import json
 
-jsonStr = requests.get('http://max.demo.zentao.net/pms/?mode=getconfig').content #need requests library (pip/pip3 install requests)
+jsonStr = requests.get('https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1').content
 jsonObj = json.loads(jsonStr)
-print(jsonObj['sessionID'])
+print(jsonObj['images'][0]['startdate'])

@@ -6,23 +6,22 @@ pid=0
 
 1. Load web page from url http://xxx
 2. Retrieve img element zt-logo.png in html
-3. Check img exist >> `.*.png`
+3. Check img exist >> `必应`
 
 */
 
-var http = require('http');
+const https = require('https');
 
-http.get('http://max.demo.zentao.net/user-login-Lw==.html', function(req) {
-    let html = '', image = '';
+https.get('https://cn.bing.com', function(req) {
+    let html = ''
 
     req.on('data', function(data) {
         html += data;
     });
     req.on('end', () => {
-        var res = html.match(/<img\ssrc="(.*?)"/);
+        const res = html.match(/<title>(.*?)</);
         if (res.length > 1) {
-            image = res[1]
-            console.log(image)
+            console.log(res[1])
         }
     });
 });

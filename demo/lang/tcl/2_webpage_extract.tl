@@ -7,16 +7,19 @@ pid=0
 
 1. Load web page from url http://xxx
 2. Retrieve img element zt-logo.png in html
-3. Check img exist >> `.*zt-logo.png`
+3. Check img exist >> `必应`
 
 }
 
 package require http
+package require tls
 
-set url http://max.demo.zentao.net/user-login-Lw==.html
+http::register https 443 tls::socket
+
+set url https://cn.bing.com
 
 set http [::http::geturl $url]
 set html [::http::data $http]
 
-regexp -- {<img src="(.*?)" .*>} $html match elem
+regexp -- {<title>(.*?)<} $html match elem
 puts "$elem"

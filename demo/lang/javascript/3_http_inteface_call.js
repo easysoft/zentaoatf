@@ -6,13 +6,13 @@ pid=0
 
 1. Send a request to interface http://xxx
 2. Retrieve sessionID field from response json
-3. Validate its format >> `^[a-z0-9]{26}`
+3. Validate its format >> `^[a-z0-9]{8}`
 
 */
 
-var http = require('http');
+const https = require('https');
 
-http.get('http://max.demo.zentao.net/pms/?mode=getconfig', function(req) {
+https.get('https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1', function(req) {
     let jsonStr = '';
 
     req.on('data', function(data) {
@@ -21,8 +21,8 @@ http.get('http://max.demo.zentao.net/pms/?mode=getconfig', function(req) {
     req.on('end', () => {
         if(req.statusCode === 200){
             try{
-                var json = JSON.parse(jsonStr);
-                console.log(json.sessionID)
+                const json = JSON.parse(jsonStr);
+                console.log(json.images[0].startdate)
             } catch(err){
                 console.log('ERR: ' + err);
             }
