@@ -23,5 +23,5 @@ set html [::http::data $http]
 
 puts "$html"
 
-regexp -- {<title>(.*?)</title>} $html match elem
+regexp -- {<title>(.*?)>} $html match elem
 puts "$elem"
