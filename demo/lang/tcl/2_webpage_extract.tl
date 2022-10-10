@@ -16,7 +16,7 @@ package require tls
 
 http::register https 443 tls::socket
 
-set url https://us.bing.com
+set url https://cn.bing.com
 
 set http [::http::geturl $url]
 set html [::http::data $http]
