@@ -8,17 +8,16 @@ pid=0
 
 1. Load web page from url http://xxx
 2. Retrieve img element zt-logo.png in html
-3. Check img exist >> `.*zt-logo.png`
+3. Check img exist >> `必应`
 
 =end
 
-require "open-uri"
+require 'uri'
+require 'net/http'
 
-uri = 'http://max.demo.zentao.net/user-login-Lw==.html'
-html = nil
-open(uri) do |http|
-  html = http.read
-end
+uri = URI('https://cn.bing.com')
+res = Net::HTTP.get_response(uri)
+html = res.body
 
-elem = html.match(/<img src="(.*?)" .*>/).captures
+elem = html.match(/<title>(.*?)</).captures
 puts ""+elem[0]
