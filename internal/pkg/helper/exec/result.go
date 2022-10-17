@@ -167,7 +167,7 @@ func ValidateStepResult(langType string, expectLines []string, actualLines []str
 			expect = expect[1 : len(expect)-1]
 			pass = MatchString(expect, log, langType)
 		} else {
-			pass = strings.Contains(log, expect)
+			pass = strings.TrimSpace(log) == strings.TrimSpace(expect)
 		}
 
 		if !pass {
