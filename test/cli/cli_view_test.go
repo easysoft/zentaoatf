@@ -33,7 +33,7 @@ func (s *ViewSuite) BeforeEach(t provider.T) {
 func (s *ViewSuite) TestViewSuite(t provider.T) {
 	t.Require().Equal("Success", testView(commonTestHelper.GetZtfPath()+fmt.Sprintf(" view %stest/demo/1_string_match_fail.php", commonTestHelper.RootPath), regexp.MustCompile("check string matches pattern")))
 	t.Require().Equal("Success", testView(commonTestHelper.GetZtfPath()+fmt.Sprintf(" -v %stest/demo -k 1", commonTestHelper.RootPath), regexp.MustCompile("check string matches pattern")))
-	t.Require().Equal("Success", testView(commonTestHelper.GetZtfPath()+fmt.Sprintf(" view %stest/demo -k match", commonTestHelper.RootPath), regexp.MustCompile("Found 3 test cases|发现3个用例")))
+	t.Require().Equal("Success", testView(commonTestHelper.GetZtfPath()+fmt.Sprintf(" view %stest/demo -k match", commonTestHelper.RootPath), regexp.MustCompile("Found 5 test cases|发现5个用例")))
 }
 
 func testView(cmd string, successRe *regexp.Regexp) string {

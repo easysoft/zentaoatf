@@ -31,9 +31,9 @@ func (s *ListSuite) BeforeEach(t provider.T) {
 	t.AddSubSuite("命令行-查看脚本列表")
 }
 func (s *ListSuite) TestListSuite(t provider.T) {
-	t.Require().Equal("Success", testLs(commonTestHelper.GetZtfPath()+fmt.Sprintf(" list %stest/demo", commonTestHelper.RootPath), regexp.MustCompile("Found 5 test cases|发现5个用例")))
-	t.Require().Equal("Success", testLs(commonTestHelper.GetZtfPath()+fmt.Sprintf(" ls %stest/demo -k 1", commonTestHelper.RootPath), regexp.MustCompile("Found 2 test cases|发现2个用例")))
-	t.Require().Equal("Success", testLs(commonTestHelper.GetZtfPath()+fmt.Sprintf(" ls %stest/demo -k match", commonTestHelper.RootPath), regexp.MustCompile("Found 3 test cases|发现3个用例")))
+	t.Require().Equal("Success", testLs(commonTestHelper.GetZtfPath()+fmt.Sprintf(" list %stest/demo", commonTestHelper.RootPath), regexp.MustCompile("Found 6 test cases|发现6个用例")))
+	t.Require().Equal("Success", testLs(commonTestHelper.GetZtfPath()+fmt.Sprintf(" ls %stest/demo -k 1", commonTestHelper.RootPath), regexp.MustCompile("Found 3 test cases|发现3个用例")))
+	t.Require().Equal("Success", testLs(commonTestHelper.GetZtfPath()+fmt.Sprintf(" ls %stest/demo -k match", commonTestHelper.RootPath), regexp.MustCompile("Found 4 test cases|发现4个用例")))
 }
 
 func testLs(cmd string, successRe *regexp.Regexp) string {
