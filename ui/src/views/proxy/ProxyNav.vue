@@ -1,5 +1,5 @@
 <template>
-    <div class="space-left">
+    <div class="space-left flex-align-center">
     <div class="title space">{{t('remote_proxy')}}：</div>
     <Button id="proxyMenuToggle"
         :label="currProxy.id == 0 || currProxy.id == undefined ? t('local_proxy') : currProxy.name"
@@ -59,4 +59,8 @@ const replaceFields = {
 
 <style>
 .top-line {border-top: 1px dashed var(--color-green)}
+.flex-align-center{
+  display: flex;
+  align-items: center;
+}
 </style>

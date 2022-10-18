@@ -177,6 +177,7 @@ type ZtfReport struct {
 	// run with ci tool
 	ZentaoData string `json:"zentaoData"`
 	BuildUrl   string `json:"buildUrl"`
+	Log        string `json:"log"`
 
 	Pass      int   `json:"pass"`
 	Fail      int   `json:"fail"`

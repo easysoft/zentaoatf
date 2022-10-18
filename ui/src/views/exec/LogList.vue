@@ -145,7 +145,7 @@ const onWebsocketMsgEvent = async (data: any) => {
     caseResult.value[item.info.key] = item.info.status
   }
 
-  if(currProxy.value.path != '' && currProxy.value.path != 'local'){
+  if(currProxy.value.path != undefined && currProxy.value.path != '' && currProxy.value.path != 'local'){
     if(item.info != undefined){
         item.info.logDir = await downloadLog(item);
     }
@@ -329,7 +329,7 @@ const checkProxyStatus = async (workspaceId, msg) => {
 }
 
 const uploadScript = async (workspaceId, msg) => {
-  if(msg.testSets == undefined || currProxy.value.id == 0){
+  if(msg.testSets == undefined || currProxy.value.id == 0 || currProxy.value.id == undefined){
     return '';
   }
   const msgUpload = {

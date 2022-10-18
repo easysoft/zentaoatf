@@ -23,7 +23,7 @@ import (
 )
 
 func CommitCase(caseId int, title string, steps []commDomain.ZentaoCaseStep, script serverDomain.TestScript,
-	config commDomain.WorkspaceConf) (err error) {
+	config commDomain.WorkspaceConf, noNeedConfirm bool, submitCode string) (err error) {
 
 	err = Login(config)
 	if err != nil {
@@ -39,13 +39,20 @@ func CommitCase(caseId int, title string, steps []commDomain.ZentaoCaseStep, scr
 	url := GenApiUrl(uri, nil, config.Url)
 
 	requestObj := map[string]interface{}{
-		"type":   "feature",
-		"title":  title,
-		"steps":  steps,
-		"script": script.Code,
-		"lang":   script.Lang,
+		"type": "feature",
 	}
-
+	if submitCode == "" {
+		requestObj["title"] = title
+		requestObj["steps"] = steps
+		requestObj["script"] = script.Code
+		requestObj["lang"] = script.Lang
+	} else if submitCode == "code" {
+		requestObj["script"] = script.Code
+		requestObj["lang"] = script.Lang
+	} else {
+		requestObj["title"] = title
+		requestObj["steps"] = steps
+	}
 	json, err := json.Marshal(requestObj)
 	if err != nil {
 		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
@@ -57,7 +64,7 @@ func CommitCase(caseId int, title string, steps []commDomain.ZentaoCaseStep, scr
 	}
 
 	yes := true
-	if commConsts.ExecFrom == commConsts.FromCmd {
+	if !noNeedConfirm && commConsts.ExecFrom == commConsts.FromCmd {
 		logUtils.ExecConsole(1, "\n"+i118Utils.Sprintf("case_update_confirm", caseId, title))
 		stdinUtils.InputForBool(&yes, true, "want_to_continue")
 	}

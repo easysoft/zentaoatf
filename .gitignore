@@ -41,6 +41,7 @@ logs/
 /test/conf
 /test/log
 /test/product1
+/test/ui/docker
 /test/demo/ci_test*
 test/demo/php/conf
 test/demo/php/log

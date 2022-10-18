@@ -1,5 +1,7 @@
 package conf
 
 var (
-	ExitAllOnError = false
+	ExitAllOnError = true
+	ShowErr        = true
+	Headless       = false
 )

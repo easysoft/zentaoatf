@@ -96,6 +96,7 @@ func RunZtf(ch chan int,
 	if commConsts.ExecFrom != commConsts.FromCmd {
 		websocketHelper.SendExecMsg("", "false", commConsts.Run, nil, wsMsg)
 	}
+	close(ch)
 
 	return
 }

@@ -14,8 +14,16 @@ import (
 var page playwright.Page
 var zentaoVersion = ""
 
-func Login() (err error) {
-	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
+func GetStatus(url string) bool {
+	if _, err := page.Goto(url, playwright.PageGotoOptions{
+		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
+		return false
+	}
+	return true
+}
+
+func Login(url string) (err error) {
+	if _, err = page.Goto(url, playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		return
 	}
@@ -172,12 +180,111 @@ func createSuite() (err error) {
 	return
 }
 
-func goToLastUnitTestResult() {
-
+func getLastUnitTestResult() (results []map[string]string, err error) {
+	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
+		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
+		return
+	}
+	page.Click(".nav>>li>>text=测试")
+	iframeName := "app-qa"
+	iframe := page.Frame(playwright.PageFrameOptions{Name: &iframeName})
+	results = []map[string]string{}
+	if iframe != nil {
+		iframe.Click(".nav>>li>>text=用例")
+		iframe.Click("#mainMenu>>a>>text=单元测试")
+		iframe.Click("#taskList>>tr>>nth=1>>td>>nth=1>>a")
+		iframe.WaitForSelector("#taskList", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+		tds, err := iframe.QuerySelectorAll("table>>tr")
+		if err != nil {
+			return results, err
+		}
+		for index := 1; index < len(tds); index++ {
+			titleNth := "2"
+			statusNth := "5"
+			if index == 1 {
+				titleNth = "3"
+				statusNth = "6"
+			}
+			titleSelector, err := iframe.QuerySelector("table>>tr>>nth=" + strconv.Itoa(index) + ">>td>>nth=" + titleNth)
+			if err != nil || titleSelector == nil {
+				continue
+			}
+			title, err := titleSelector.InnerText()
+			if err != nil {
+				continue
+			}
+			statusSelector, err := iframe.QuerySelector("table>>tr>>nth=" + strconv.Itoa(index) + ">>td>>nth=" + statusNth)
+			if err != nil {
+				continue
+			}
+			status, err := statusSelector.InnerText()
+			if err != nil {
+				continue
+			}
+			results = append(results, map[string]string{
+				"title":  title,
+				"status": status,
+			})
+		}
+	} else {
+		page.Hover(".nav>>li>>text=用例")
+		page.Click(".nav>>li>>text=单元测试")
+		page.Click("#currentItem")
+		page.Click("#dropMenu>>a>>text=公司企业网站建设")
+		page.Click("#taskList>>tr>>nth=1>>td>>nth=1>>a")
+		page.WaitForSelector("#taskList", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+		tds, err := page.QuerySelectorAll("table>>tr")
+		if err != nil {
+			return results, err
+		}
+		for index := 1; index < len(tds); index++ {
+			titleNth := "2"
+			statusNth := "5"
+			if index == 1 {
+				titleNth = "3"
+				statusNth = "6"
+			}
+			titleSelector, err := page.QuerySelector("table>>tr>>nth=" + strconv.Itoa(index) + ">>td>>nth=" + titleNth)
+			if err != nil || titleSelector == nil {
+				continue
+			}
+			title, err := titleSelector.InnerText()
+			if err != nil {
+				continue
+			}
+			statusSelector, err := page.QuerySelector("table>>tr>>nth=" + strconv.Itoa(index) + ">>td>>nth=" + statusNth)
+			if err != nil {
+				continue
+			}
+			status, err := statusSelector.InnerText()
+			if err != nil {
+				continue
+			}
+			results = append(results, map[string]string{
+				"title":  title,
+				"status": status,
+			})
+		}
+	}
+	return results, err
 }
 
-func checkUnitTestResult() {
-
+func CheckUnitTestResult() bool {
+	results, err := getLastUnitTestResult()
+	if err != nil {
+		return false
+	}
+	titleExist := map[string]bool{}
+	for _, result := range results {
+		titleExist[result["title"]] = true
+		if result["title"] == "loginFail" && result["status"] != "通过" {
+			return false
+		}
+		if result["title"] == "loginSuccess" && result["status"] != "通过" {
+			return false
+		}
+	}
+	return titleExist["loginFail"] == true && titleExist["loginSuccess"] == true
 }
 
 func InstallExt(version, codeDir string) error {
@@ -248,7 +355,7 @@ func InitZentaoData(version string, codeDir string) (err error) {
 	if err != nil {
 		return
 	}
-	headless := true
+	headless := false
 	var slowMo float64 = 100
 	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
@@ -334,7 +441,7 @@ func InitZentaoData(version string, codeDir string) (err error) {
 		if err != nil {
 			return
 		}
-		err = Login()
+		err = Login("http://127.0.0.1:8081")
 		if err != nil {
 			return
 		}
@@ -351,7 +458,26 @@ func InitZentaoData(version string, codeDir string) (err error) {
 			return
 		}
 	}
-	page.Close()
-	pw.Stop()
 	return
+}
+
+func init() {
+	if page != nil {
+		return
+	}
+	pw, err := playwright.Run()
+	if err != nil {
+		return
+	}
+	headless := false
+	var slowMo float64 = 100
+	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	if err != nil {
+		return
+	}
+	page, err = runBrowser.NewPage()
+	if err != nil {
+		return
+	}
+	Login("http://127.0.0.1:8081")
 }

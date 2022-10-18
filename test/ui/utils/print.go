@@ -1,17 +1,19 @@
 package utils
 
 import (
+	"log"
+
 	"github.com/easysoft/zentaoatf/test/ui/conf"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
-	"log"
 )
 
 func PrintErrOrNot(err error, t provider.T) {
-	if err != nil {
+	if err != nil && t != nil {
 		if conf.ExitAllOnError {
-			log.Panicln(err)
-		} else {
-			log.Println(err)
+			t.Error(err)
+			t.FailNow()
+		} else if conf.ShowErr {
+			t.Error(err)
 		}
 	}
 }

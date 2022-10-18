@@ -27,6 +27,11 @@ func KillProcessByUUID(uuid string) {
 			cmd2 := exec.Command("cmd")
 			cmd2.SysProcAttr = &syscall.SysProcAttr{CmdLine: fmt.Sprintf(`/c taskkill /F /pid %s`, cols[3]), HideWindow: true}
 			cmd2.Start()
+		} else if len(cols) == 2 {
+			fmt.Println(fmt.Sprintf(`taskkill /F /pid %s`, cols[2]))
+			cmd2 := exec.Command("cmd")
+			cmd2.SysProcAttr = &syscall.SysProcAttr{CmdLine: fmt.Sprintf(`/c taskkill /F /pid %s`, cols[2]), HideWindow: true}
+			cmd2.Start()
 		}
 	}
 }
