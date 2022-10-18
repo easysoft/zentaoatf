@@ -32,7 +32,7 @@ func CreateProxy(t provider.T) {
 	webpage.WaitForTimeout(200)
 	locator.FillNth(1, "http://127.0.0.1:8085")
 	webpage.Click("#proxyFormModal>>text=确定")
-	webpage.WaitForSelectorByOptions("#proxyFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+	webpage.WaitForSelector("#proxyFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
 	webpage.WaitForTimeout(1000)
 	locator = webpage.Locator("#proxyTable .z-tbody-td >> :scope:has-text('测试执行节点')")
 }
@@ -49,7 +49,7 @@ func EditProxy(t provider.T) {
 	locator = webpage.Locator("#proxyFormModal input")
 	locator.FillNth(0, "测试执行节点-update")
 	webpage.Click("#proxyFormModal>>text=确定")
-	webpage.WaitForSelectorByOptions("#proxyFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+	webpage.WaitForSelector("#proxyFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
 	webpage.WaitForTimeout(1000)
 	locator = webpage.Locator("#proxyTable .z-tbody-td >> :scope:has-text('测试执行节点')")
 }

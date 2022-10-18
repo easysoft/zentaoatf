@@ -55,7 +55,7 @@ func SubmitResult(t provider.T) {
 	titleInput := webpage.Locator("#syncToZentaoModal>>.form-item:has-text('或输入新测试单标题')>>input")
 	titleInput.Fill("单元测试测试单")
 	webpage.Click("#syncToZentaoModal>>text=确定")
-	webpage.WaitForSelectorByOptions("#syncToZentaoModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateHidden})
+	webpage.WaitForSelector("#syncToZentaoModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateHidden})
 	webpage.Locator(".toast-notification-container:has-text('提交成功')")
 }
 
@@ -69,7 +69,7 @@ func SubmitBug(t provider.T) {
 	webpage.Click(".page-result .btn:has-text('提交缺陷到禅道')")
 	webpage.WaitForSelector("#submitBugModal")
 	webpage.Click("#submitBugModal>>text=确定")
-	webpage.WaitForSelectorByOptions("#submitBugModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateHidden})
+	webpage.WaitForSelector("#submitBugModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateHidden})
 	webpage.Locator(".toast-notification-container", playwright.PageLocatorOptions{HasText: "提交成功"})
 }
 
@@ -88,7 +88,7 @@ func SubmitBugTwoStep(t provider.T) {
 	webpage.WaitForSelector("#submitBugModal")
 	webpage.Click("#cbox0")
 	webpage.Click("#submitBugModal>>text=确定")
-	webpage.WaitForSelectorByOptions("#submitBugModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateHidden})
+	webpage.WaitForSelector("#submitBugModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateHidden})
 	webpage.Locator(".toast-notification-container", playwright.PageLocatorOptions{HasText: "提交成功"})
 }
 

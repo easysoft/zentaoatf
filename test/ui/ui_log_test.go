@@ -3,6 +3,7 @@ package main
 import (
 	"testing"
 
+	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
 	plwConf "github.com/easysoft/zentaoatf/test/ui/conf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
@@ -15,15 +16,14 @@ func CollapseLog(t provider.T) {
 	t.AddParentSuite("脚本执行日志")
 	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
 	defer webpage.Close()
-	webpage.WaitForSelector(".tree-node")
-	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	locator.Click()
-	scriptLocator := locator.Locator("text=1_string_match.php")
+	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.ExpandWorspace(webpage)
+	scriptLocator := webpage.Locator(".tree-node-title>>text=1_string_match.php")
 	scriptLocator.Click()
 	webpage.Click(".tabs-nav-toolbar>>[title=\"Run\"]")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	webpage.Click(".btn[title=\"展开所有\"]")
-	locator = webpage.Locator("#log-list>>.show-detail>>:has-text('[Expect]')")
+	locator := webpage.Locator("#log-list>>.show-detail>>:has-text('[Expect]')")
 	webpage.WaitForTimeout(100)
 	webpage.Click(".btn[title=\"折叠所有\"]")
 	plwConf.DisableErr()

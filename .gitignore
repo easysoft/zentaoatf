@@ -42,9 +42,11 @@ logs/
 /test/log
 /test/cli/product1
 /test/ui/docker
+/test/ui/log
 /test/demo/ci_test*
 test/demo/php/conf
 test/demo/php/log
 test/demo/php/product1
 /test/ui/allure-results
 /test/cli/allure-results
+test/ui/demo/ci_test_testng/

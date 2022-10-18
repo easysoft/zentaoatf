@@ -3,6 +3,7 @@ package main
 import (
 	"testing"
 
+	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/runner"
@@ -13,11 +14,7 @@ func SwitchProduct(t provider.T) {
 	t.AddParentSuite("切换禅道产品")
 	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
 	defer webpage.Close()
-	webpage.WaitForSelector(".tree-node")
-	locator := webpage.Locator("#siteMenuToggle")
-	locator.Click()
-	webpage.WaitForSelector("#navbar .list-item")
-	webpage.Click(".list-item-title>>text=单元测试站点")
+	ztfTestHelper.ExpandWorspace(webpage)
 	webpage.Click("#productMenuToggle")
 	webpage.WaitForSelector("#navbar .list-item")
 	webpage.Click("#navbar .list-item>>text=企业内部工时管理系统")

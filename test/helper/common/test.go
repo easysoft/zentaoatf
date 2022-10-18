@@ -116,6 +116,5 @@ func ExecUnit(
 	entTime := time.Now()
 	// gen report
 	report = execHelper.GenUnitTestReport(req, startTime.Unix(), entTime.Unix(), nil, nil)
-	fmt.Println(report)
 	return report
 }

@@ -12,6 +12,7 @@ import (
 )
 
 var page playwright.Page
+var pw *playwright.Playwright
 var zentaoVersion = ""
 
 func GetStatus(url string) bool {
@@ -157,7 +158,7 @@ func createSuite() (err error) {
 		}
 		iframe.Click("#mainContent>>a[title=\"关联用例\"]")
 		iframe.Click(`input[name="cases\[\]"]>>nth=-1`)
-		iframe.Click("#submit")
+		iframe.Click("#submit:has-text('保存')")
 	} else {
 		page.Click(".nav>>li>>text=套件")
 		page.Click("#mainMenu>>text=建套件")
@@ -175,7 +176,7 @@ func createSuite() (err error) {
 		}
 		page.Click("#mainContent>>a[title=\"关联用例\"]")
 		page.Click(`input[name="cases\[\]"]>>nth=-1`)
-		page.Click("#submit")
+		page.Click("#submit:has-text('保存')")
 	}
 	return
 }
@@ -351,20 +352,6 @@ func downloadExt(codeDir string) (err error) {
 }
 
 func InitZentaoData(version string, codeDir string) (err error) {
-	pw, err := playwright.Run()
-	if err != nil {
-		return
-	}
-	headless := false
-	var slowMo float64 = 100
-	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
-	if err != nil {
-		return
-	}
-	page, err = runBrowser.NewPage()
-	if err != nil {
-		return
-	}
 	zentaoVersion = version
 	if _, err = page.Goto("http://127.0.0.1:8081", playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
@@ -398,6 +385,29 @@ func InitZentaoData(version string, codeDir string) (err error) {
 		err = page.Click("text=保存")
 		if err != nil {
 			return
+		}
+		retryCount := 0
+		for {
+			retryCount++
+			if retryCount > 20 {
+				break
+			}
+			locator, _ := page.Locator("text=数据库连接失败")
+			c, _ := locator.Count()
+			if c > 0 {
+				page.Click("text=返回")
+			} else {
+				break
+			}
+			page.WaitForTimeout(1000)
+			err = page.Fill(`input[name="dbPassword"]`, "123456")
+			if err != nil {
+				return
+			}
+			err = page.Click("text=保存")
+			if err != nil {
+				return
+			}
 		}
 		err = page.Click("text=下一步")
 		if err != nil {
@@ -461,21 +471,27 @@ func InitZentaoData(version string, codeDir string) (err error) {
 	return
 }
 
+func Close() {
+	page.Close()
+	pw.Stop()
+}
+
 func init() {
 	if page != nil {
 		return
 	}
-	pw, err := playwright.Run()
+	var err error
+	pw, err = playwright.Run()
 	if err != nil {
 		return
 	}
 	headless := false
 	var slowMo float64 = 100
-	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
+	browser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
 		return
 	}
-	page, err = runBrowser.NewPage()
+	page, err = browser.NewPage()
 	if err != nil {
 		return
 	}

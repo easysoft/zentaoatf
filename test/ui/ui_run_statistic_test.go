@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"testing"
 
+	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/runner"
@@ -18,10 +19,9 @@ func RunFailStatistic(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
 	defer webpage.Close()
-	webpage.WaitForSelector(".tree-node")
-	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	locator.Click()
-	scriptLocator := locator.Locator("text=1_string_match.php")
+	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.ExpandWorspace(webpage)
+	scriptLocator := webpage.Locator(".tree-node-title>>text=1_string_match.php")
 	scriptLocator.Click()
 	elements := webpage.QuerySelectorAll(".statistic>>span")
 	runTimes := elements.InnerText(0)
@@ -48,10 +48,9 @@ func RunSuccessStatistic(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
 	defer webpage.Close()
-	webpage.WaitForSelector(".tree-node")
-	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	locator.Click()
-	scriptLocator := locator.Locator("text=3_http_interface_call.php")
+	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.ExpandWorspace(webpage)
+	scriptLocator := webpage.Locator(".tree-node-title>>text=3_http_interface_call.php")
 	scriptLocator.Click()
 	elements := webpage.QuerySelectorAll(".statistic>>span")
 	runTimes := elements.InnerText(0)
@@ -78,10 +77,9 @@ func RunBugStatistic(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
 	defer webpage.Close()
-	webpage.WaitForSelector(".tree-node")
-	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	locator.Click()
-	scriptLocator := locator.Locator("text=1_string_match.php")
+	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.ExpandWorspace(webpage)
+	scriptLocator := webpage.Locator(".tree-node-title>>text=1_string_match.php")
 	scriptLocator.Click()
 	webpage.WaitForTimeout(200)
 	elements := webpage.QuerySelectorAll(".statistic>>span")

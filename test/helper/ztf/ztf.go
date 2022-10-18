@@ -61,6 +61,8 @@ func RunScript(webpage plwHelper.Webpage, scriptName string) {
 }
 
 func SelectSite(webpage plwHelper.Webpage) (err error) {
+	plwConf.DisableErr()
+	defer plwConf.EnableErr()
 	locator := webpage.Locator("#siteMenuToggle")
 	locator.Click()
 	webpage.WaitForSelector("#navbar .list-item")
@@ -73,8 +75,8 @@ func SelectSite(webpage plwHelper.Webpage) (err error) {
 func ExpandWorspace(webpage plwHelper.Webpage) (err error) {
 	var waitTimeOut float64 = 5000
 	plwConf.DisableErr()
+	defer plwConf.EnableErr()
 	err = webpage.WaitForSelector(".tree-node:has-text('单元测试工作目录')", playwright.PageWaitForSelectorOptions{Timeout: &waitTimeOut})
-	plwConf.EnableErr()
 	if err != nil {
 		createTestWorkspace(webpage)
 	}
@@ -85,9 +87,7 @@ func ExpandWorspace(webpage plwHelper.Webpage) (err error) {
 	}
 
 	webpage.Click(".tree-node-title:has-text(\"单元测试工作目录\")")
-	plwConf.DisableErr()
-	webpage.WaitForSelector(".tree-node-item>>div:has-text('1_string_match.php')", playwright.PageWaitForSelectorOptions{Timeout: &waitTimeOut})
-	plwConf.EnableErr()
+	err = webpage.WaitForSelector(".tree-node-item>>div:has-text('1_string_match.php')", playwright.PageWaitForSelectorOptions{Timeout: &waitTimeOut})
 	if err != nil {
 		if expandTimes > 5 {
 			expandTimes = 0
@@ -101,6 +101,8 @@ func ExpandWorspace(webpage plwHelper.Webpage) (err error) {
 }
 
 func ExpandProduct(webpage plwHelper.Webpage) (err error) {
+	plwConf.DisableErr()
+	defer plwConf.EnableErr()
 	ExpandWorspace(webpage)
 	var waitTimeOut float64 = 5000
 	webpage.WaitForSelector(".tree-node-item:has-text('product1')", playwright.PageWaitForSelectorOptions{Timeout: &waitTimeOut})
@@ -142,7 +144,7 @@ func SubmitResult(webpage plwHelper.Webpage) {
 	webpage.Click(".page-result .btn:has-text('提交缺陷到禅道')")
 	webpage.WaitForSelector("#submitBugModal")
 	webpage.Click("#submitBugModal>>text=确定")
-	webpage.WaitForSelectorByOptions("#submitBugModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateHidden})
+	webpage.WaitForSelector("#submitBugModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateHidden})
 	locator := webpage.Locator(".toast-notification-container", playwright.PageLocatorOptions{HasText: "提交成功"})
 	locator.Click()
 }

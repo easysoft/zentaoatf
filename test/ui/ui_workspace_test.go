@@ -130,12 +130,12 @@ func DeleteScript(t provider.T) {
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandProduct(webpage)
-	webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
 	scriptLocator := webpage.Locator(".tree-node-title>>text=1.php")
 	scriptLocator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
 	webpage.Click(".tree-context-menu>>text=删除")
+	webpage.WaitForSelector(".modal-action>>span:has-text(\"确定\")")
 	webpage.Click(".modal-action>>span:has-text(\"确定\")")
-	webpage.WaitForTimeout(1000)
+	webpage.WaitForSelector(".tree-node-title>>text=1.php", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
 	plwConf.DisableErr()
 	defer plwConf.EnableErr()
 	scriptLocator = webpage.Locator(".tree-node-item>>div:has-text('1.php')")
@@ -152,13 +152,12 @@ func DeleteDir(t provider.T) {
 	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
-	webpage.WaitForSelector(".tree-node")
 	ztfTestHelper.ExpandWorspace(webpage)
 	productLocator := webpage.Locator(".tree-node:has-text('单元测试工作目录')>>.tree-node-item:has-text('product1')")
 	productLocator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
 	webpage.Click(".tree-context-menu>>text=删除")
 	webpage.Click(".modal-action>>span:has-text(\"确定\")")
-	webpage.WaitForTimeout(1000)
+	webpage.WaitForSelector(".tree-node:has-text('单元测试工作目录')>>.tree-node-item:has-text('product1')", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
 	plwConf.DisableErr()
 	defer plwConf.EnableErr()
 	scriptLocator := webpage.Locator(".tree-node:has-text('单元测试工作目录')>>.tree-node-item:has-text('product1')")
@@ -218,42 +217,27 @@ func Collapse(t provider.T) {
 	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.ExpandWorspace(webpage)
 	className := webpage.GetAttribute(".tree-node:has-text(\"单元测试工作目录\")", "class")
 	if strings.Contains(className, "collapsed") {
 		webpage.Click(`#leftPane>>.toolbar>>[title="展开"]`)
 	} else {
 		webpage.Click(`#leftPane>>.toolbar>>[title="折叠"]`)
 	}
-	webpage.WaitForTimeout(1000)
-	locator := webpage.Locator("#leftPane>>.tree-node-item>>text=1_string_match.php")
-	count := locator.Count()
-	if strings.Contains(className, "collapsed") && count == 0 {
-		t.Error("Expand workspace fail")
-		t.FailNow()
-		return
-	} else if !strings.Contains(className, "collapsed") && count > 0 {
-		t.Error("Collapse workspace fail")
-		t.FailNow()
-		return
+	if strings.Contains(className, "collapsed") {
+		webpage.WaitForSelector("#leftPane>>.tree-node-item>>text=1_string_match.php")
+	} else if !strings.Contains(className, "collapsed") {
+		webpage.WaitForSelector("#leftPane>>.tree-node-item>>text=1_string_match.php", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
 	}
 	if strings.Contains(className, "collapsed") {
 		webpage.Click(`#leftPane>>.toolbar>>[title="折叠"]`)
 	} else {
 		webpage.Click(`#leftPane>>.toolbar>>[title="展开"]`)
 	}
-	webpage.WaitForTimeout(100)
-	plwConf.DisableErr()
-	defer plwConf.EnableErr()
-	locator = webpage.Locator("#leftPane>>.tree-node-item>>text=1_string_match.php")
-	count = locator.Count()
-	if !strings.Contains(className, "collapsed") && count == 0 {
-		t.Error("Expand workspace fail")
-		t.FailNow()
-		return
-	} else if strings.Contains(className, "collapsed") && count > 0 {
-		t.Error("Collapse workspace fail")
-		t.FailNow()
-		return
+	if strings.Contains(className, "collapsed") {
+		webpage.WaitForSelector("#leftPane>>.tree-node-item>>text=1_string_match.php", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+	} else if !strings.Contains(className, "collapsed") {
+		webpage.WaitForSelector("#leftPane>>.tree-node-item>>text=1_string_match.php")
 	}
 }
 func TestUiWorkspace(t *testing.T) {

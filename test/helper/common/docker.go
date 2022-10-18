@@ -13,7 +13,7 @@ import (
 )
 
 func Run(version string, codeDir string) (err error) {
-	versionNumber := strings.ReplaceAll(version, ".", "")
+	versionNumber := strings.ReplaceAll(version, ".", "_")
 	// codeDir = "/www/zentaopms" + versionNumber
 
 	_, err = os.Stat(codeDir)
@@ -22,7 +22,7 @@ func Run(version string, codeDir string) (err error) {
 	}
 
 	// cmd := exec.Command("docker", "run", "--name", "zentao"+versionNumber, "-p", "8081:80", "-v", codeDir+":/www/zentaopms", "-d", "easysoft/zentao:"+version)
-	cmd := exec.Command("docker", "run", "--name", "zentao_"+versionNumber, "-p", "8081:80", "-d", "easysoft/zentao:"+version)
+	cmd := exec.Command("docker", "run", "--name", "zentao"+versionNumber, "-p", "8081:80", "-d", "easysoft/zentao:"+version)
 	fmt.Println(cmd.String())
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -98,8 +98,8 @@ func Stop(name string) bool {
 }
 
 func InitZentao(version string) (err error) {
-	versionNumber := strings.ReplaceAll(version, ".", "")
-	containerName := "zentao_" + versionNumber
+	versionNumber := strings.ReplaceAll(version, ".", "_")
+	containerName := "zentao" + versionNumber
 	isExist := IsExistContainer(containerName)
 	apath, _ := os.Getwd()
 	codeDir := apath + "/docker/www/zentao" + versionNumber
@@ -134,6 +134,6 @@ func waitZentaoAccessed() {
 		if isTimeout || status {
 			return
 		}
-		time.Sleep(time.Second)
+		time.Sleep(3 * time.Second)
 	}
 }
