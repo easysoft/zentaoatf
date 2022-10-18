@@ -45,10 +45,10 @@ func SyncFromZentao(t provider.T) {
 	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
-	var waitTimeOut float64 = 5000
-	webpage.WaitForSelector(".tree-node", playwright.PageWaitForSelectorOptions{Timeout: &waitTimeOut})
 	plwConf.DisableErr()
-	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	defer plwConf.EnableErr()
+	webpage.WaitForSelectorTimeout(".tree-node-root>>has-text('单元测试工作目录')", 2000)
+	locator := webpage.Locator(".tree-node-root>>has-text('单元测试工作目录')")
 	c := locator.Count()
 	if c == 0 {
 		plwConf.EnableErr()

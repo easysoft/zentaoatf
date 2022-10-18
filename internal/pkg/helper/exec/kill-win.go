@@ -22,15 +22,16 @@ func KillProcessByUUID(uuid string) {
 		}
 		line = strings.TrimSpace(line)
 		cols := strings.Split(line, " ")
+		pid := ""
 		if len(cols) > 3 {
-			fmt.Println(fmt.Sprintf(`taskkill /F /pid %s`, cols[3]))
+			pid = cols[3]
+		} else if len(cols) > 2 {
+			pid = cols[2]
+		}
+		if pid != "" {
+			fmt.Println(fmt.Sprintf(`taskkill /F /pid %s`, pid))
 			cmd2 := exec.Command("cmd")
-			cmd2.SysProcAttr = &syscall.SysProcAttr{CmdLine: fmt.Sprintf(`/c taskkill /F /pid %s`, cols[3]), HideWindow: true}
-			cmd2.Start()
-		} else if len(cols) == 2 {
-			fmt.Println(fmt.Sprintf(`taskkill /F /pid %s`, cols[2]))
-			cmd2 := exec.Command("cmd")
-			cmd2.SysProcAttr = &syscall.SysProcAttr{CmdLine: fmt.Sprintf(`/c taskkill /F /pid %s`, cols[2]), HideWindow: true}
+			cmd2.SysProcAttr = &syscall.SysProcAttr{CmdLine: fmt.Sprintf(`/c taskkill /F /pid %s`, pid), HideWindow: true}
 			cmd2.Start()
 		}
 	}

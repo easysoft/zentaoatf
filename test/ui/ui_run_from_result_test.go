@@ -26,6 +26,7 @@ func RunReExecFailCase(t provider.T) {
 		t.Errorf("Exec failed case fail")
 		t.FailNow()
 	}
+	webpage.WaitForTimeout(2000)
 	resultTitle := webpage.InnerText("#rightPane .result-list-item .list-item-title")
 	if resultTitle != "1_string_match.php" {
 		t.Errorf("Find result in rightPane fail")
@@ -60,16 +61,17 @@ func RunReExecAllCase(t provider.T) {
 		t.Errorf("Exec failed case fail")
 		t.FailNow()
 	}
+	webpage.WaitForTimeout(2000)
 	resultTitle := webpage.InnerText("#rightPane .result-list-item .list-item-title")
 	if resultTitle != "1_string_match.php" {
-		t.Errorf("Find result in rightPane fail")
+		t.Errorf("Find result title in rightPane fail")
 		t.FailNow()
 	}
 	timeElement := locator.Locator(".time>>span")
 	logTime := timeElement.InnerText()
 	resultTime := webpage.InnerText("#rightPane .result-list-item .list-item-trailing-text")
 	if logTime[:5] != resultTime {
-		t.Errorf("Find result in rightPane fail")
+		t.Errorf("Find result time in rightPane fail")
 		t.FailNow()
 	}
 }
