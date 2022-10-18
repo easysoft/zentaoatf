@@ -22,7 +22,7 @@ func Run(version string, codeDir string) (err error) {
 	}
 
 	// cmd := exec.Command("docker", "run", "--name", "zentao"+versionNumber, "-p", "8081:80", "-v", codeDir+":/www/zentaopms", "-d", "easysoft/zentao:"+version)
-	cmd := exec.Command("docker", "run", "--name", "zentao"+versionNumber, "-p", "8081:80", "-d", "easysoft/zentao:"+version)
+	cmd := exec.Command("docker", "run", "--name", "zentao_"+versionNumber, "-p", "8081:80", "-d", "easysoft/zentao:"+version)
 	fmt.Println(cmd.String())
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -99,7 +99,7 @@ func Stop(name string) bool {
 
 func InitZentao(version string) (err error) {
 	versionNumber := strings.ReplaceAll(version, ".", "")
-	containerName := "zentao" + versionNumber
+	containerName := "zentao_" + versionNumber
 	isExist := IsExistContainer(containerName)
 	apath, _ := os.Getwd()
 	codeDir := apath + "/docker/www/zentao" + versionNumber
@@ -110,7 +110,7 @@ func InitZentao(version string) (err error) {
 		if !IsRuning(containerName) {
 			StopAll()
 			Start(containerName)
-			time.Sleep(time.Second * 20)
+			waitZentaoAccessed()
 		}
 	} else {
 		StopAll()
@@ -118,8 +118,22 @@ func InitZentao(version string) (err error) {
 		if err != nil {
 			return
 		}
-		time.Sleep(time.Second * 20)
+		waitZentaoAccessed()
 	}
 	err = uiTest.InitZentaoData(version, codeDir)
 	return
+}
+
+func waitZentaoAccessed() {
+	isTimeout := false
+	time.AfterFunc(20*time.Second, func() {
+		isTimeout = true
+	})
+	for {
+		status := uiTest.GetStatus("http://127.0.0.1:8081/")
+		if isTimeout || status {
+			return
+		}
+		time.Sleep(time.Second)
+	}
 }

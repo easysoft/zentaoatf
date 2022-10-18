@@ -14,6 +14,14 @@ import (
 var page playwright.Page
 var zentaoVersion = ""
 
+func GetStatus(url string) bool {
+	if _, err := page.Goto(url, playwright.PageGotoOptions{
+		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
+		return false
+	}
+	return true
+}
+
 func Login(url string) (err error) {
 	if _, err = page.Goto(url, playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
@@ -272,11 +280,11 @@ func CheckUnitTestResult() bool {
 		if result["title"] == "loginFail" && result["status"] != "通过" {
 			return false
 		}
-		if result["title"] == "loginSuccess" && result["status"] != "失败" {
+		if result["title"] == "loginSuccess" && result["status"] != "通过" {
 			return false
 		}
 	}
-	return true && titleExist["loginFail"] == true && titleExist["loginSuccess"] == true
+	return titleExist["loginFail"] == true && titleExist["loginSuccess"] == true
 }
 
 func InstallExt(version, codeDir string) error {
@@ -450,8 +458,6 @@ func InitZentaoData(version string, codeDir string) (err error) {
 			return
 		}
 	}
-	page.Close()
-	pw.Stop()
 	return
 }
 
@@ -463,7 +469,7 @@ func init() {
 	if err != nil {
 		return
 	}
-	headless := true
+	headless := false
 	var slowMo float64 = 100
 	runBrowser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {

@@ -3,367 +3,82 @@ package main
 import (
 	"testing"
 
+	plwConf "github.com/easysoft/zentaoatf/test/ui/conf"
+	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"
 )
 
-var siteBrowser playwright.Browser
-
 func CreateSite(t provider.T) {
 	t.ID("5466")
 	t.AddParentSuite("配置禅道站点")
-	pw, err := playwright.Run()
-	if err != nil {
-		t.Error(err)
-		t.FailNow()
-	}
-	headless := true
-	var slowMo float64 = 100
-	if siteBrowser == nil || !siteBrowser.IsConnected() {
-		siteBrowser, err = pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
-	}
-	if err != nil {
-		t.Errorf("Fail to launch the web siteBrowser: %v", err)
-		t.FailNow()
-	}
-	page, err := siteBrowser.NewPage()
-	if err != nil {
-		t.Errorf("Create the new page fail: %v", err)
-		t.FailNow()
-	}
-	defer func() {
-		if err = siteBrowser.Close(); err != nil {
-			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-			t.FailNow()
-			return
-		}
-		if err = pw.Stop(); err != nil {
-			t.Errorf("The playwright cannot be stopped: %v", err)
-			t.FailNow()
-			return
-		}
-	}()
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
-		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
-		t.Errorf("The specific URL is missing: %v", err)
-		t.FailNow()
-	}
-	// page.WaitForSelector(".tree")
-	locator, err := page.Locator("#siteMenuToggle")
-	if err != nil {
-		t.Errorf("The siteMenuToggle is missing: %v", err)
-		t.FailNow()
-	}
-	err = locator.Click()
-	if err != nil {
-		t.Errorf("The Click is fail: %v", err)
-		t.FailNow()
-	}
-	_, err = page.WaitForSelector("#navbar .list-item")
-	if err != nil {
-		t.Errorf("Wait for site list nav fail: %v", err)
-		t.FailNow()
-	}
-	err = page.Click("text=禅道站点管理")
-	if err != nil {
-		t.Errorf("The Click site nav fail: %v", err)
-		t.FailNow()
-	}
-	// page.WaitForSelector(".modal-title")
-	err = page.Click("text=新建站点")
-	if err != nil {
-		t.Errorf("The Click create site fail: %v", err)
-		t.FailNow()
-	}
-	locator, err = page.Locator("#siteFormModal input")
-	if err != nil {
-		t.Errorf("Find create site input fail: %v", err)
-		t.FailNow()
-	}
-	titleInput, err := locator.Nth(0)
-	if err != nil {
-		t.Errorf("Find title input fail: %v", err)
-		t.FailNow()
-	}
-	err = titleInput.Fill("单元测试站点")
-	if err != nil {
-		t.Errorf("Fil title input fail: %v", err)
-		t.FailNow()
-	}
-	addressInput, err := locator.Nth(1)
-	if err != nil {
-		t.Errorf("Find address input fail: %v", err)
-		t.FailNow()
-	}
-	err = addressInput.Fill("http://127.0.0.1:8081/")
-	if err != nil {
-		t.Errorf("Fil address input fail: %v", err)
-		t.FailNow()
-	}
-	nameInput, err := locator.Nth(2)
-	if err != nil {
-		t.Errorf("Find name input fail: %v", err)
-		t.FailNow()
-	}
-	err = nameInput.Fill("admin")
-	if err != nil {
-		t.Errorf("Fil name input fail: %v", err)
-		t.FailNow()
-	}
-	pwdInput, err := locator.Nth(3)
-	if err != nil {
-		t.Errorf("Find passwd input fail: %v", err)
-		t.FailNow()
-	}
-	err = pwdInput.Fill("Test123456.")
-	if err != nil {
-		t.Errorf("Fil passwd input fail: %v", err)
-		t.FailNow()
-	}
-	err = page.Click("text=确定")
-	if err != nil {
-		t.Errorf("The Click submit form fail: %v", err)
-		t.FailNow()
-	}
-	_, err = page.WaitForSelector(".list-item-content span:has-text('单元测试站点')")
-	if err != nil {
-		t.Errorf("Wait created site fail: %v", err)
-		t.FailNow()
-	}
-	locator, err = page.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: "单元测试站点"})
-	c, err := locator.Count()
-	if err != nil || c == 0 {
-		t.Errorf("Find created site fail: %v", err)
-		t.FailNow()
-	}
+	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	defer webpage.Close()
+	locator := webpage.Locator("#siteMenuToggle")
+	locator.Click()
+	webpage.WaitForSelector("#navbar .list-item")
+	webpage.Click("text=禅道站点管理")
+	webpage.Click("text=新建站点")
+	locator = webpage.Locator("#siteFormModal input")
+	locator.FillNth(0, "单元测试站点")
+	locator.FillNth(1, "http://127.0.0.1:8081/")
+	locator.FillNth(2, "admin")
+	locator.FillNth(3, "Test123456.")
+	webpage.Click("text=确定")
+	webpage.WaitForSelector(".list-item-content span:has-text('单元测试站点')")
+	locator = webpage.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: "单元测试站点"})
 }
 func EditSite(t provider.T) {
 	t.ID("5466")
 	t.AddParentSuite("配置禅道站点")
-	pw, err := playwright.Run()
-	if err != nil {
-		t.Error(err)
-		t.FailNow()
-	}
-	headless := true
-	var slowMo float64 = 100
-	if siteBrowser == nil || !siteBrowser.IsConnected() {
-		siteBrowser, err = pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
-	}
-	if err != nil {
-		t.Errorf("Fail to launch the web siteBrowser: %v", err)
-		t.FailNow()
-	}
-	page, err := siteBrowser.NewPage()
-	if err != nil {
-		t.Errorf("Create the new page fail: %v", err)
-		t.FailNow()
-	}
-	defer func() {
-		if err = siteBrowser.Close(); err != nil {
-			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-			t.FailNow()
-			return
-		}
-		if err = pw.Stop(); err != nil {
-			t.Errorf("The playwright cannot be stopped: %v", err)
-			t.FailNow()
-			return
-		}
-	}()
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
-		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
-		t.Errorf("The specific URL is missing: %v", err)
-		t.FailNow()
-	}
-	locator, err := page.Locator("#siteMenuToggle")
-	if err != nil {
-		t.Errorf("The siteMenuToggle is missing: %v", err)
-		t.FailNow()
-	}
-	err = locator.Click()
-	if err != nil {
-		t.Errorf("The Click is fail: %v", err)
-		t.FailNow()
-	}
-	_, err = page.WaitForSelector("#navbar .list-item")
-	if err != nil {
-		t.Errorf("Wait for site list nav fail: %v", err)
-		t.FailNow()
-	}
-	err = page.Click("text=禅道站点管理")
-	if err != nil {
-		t.Errorf("The Click site nav fail: %v", err)
-		t.FailNow()
-	}
-	// page.WaitForSelector(".modal-title")
-	locator, err = page.Locator(".list-item", playwright.PageLocatorOptions{HasText: "单元测试站点"})
-	c, err := locator.Count()
-	if err != nil || c == 0 {
-		siteBrowser.Close()
+	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	defer webpage.Close()
+	locator := webpage.Locator("#siteMenuToggle")
+	locator.Click()
+	webpage.WaitForSelector("#navbar .list-item")
+	webpage.Click("text=禅道站点管理")
+	plwConf.DisableErr()
+	locator = webpage.Locator(".list-item", playwright.PageLocatorOptions{HasText: "单元测试站点"})
+	c := locator.Count()
+	if c == 0 {
 		CreateSite(t)
 		EditSite(t)
+		plwConf.EnableErr()
 		return
 	}
-	locator, err = page.Locator(".list-item", playwright.PageLocatorOptions{HasText: "单元测试站点"})
-	if err != nil {
-		t.Errorf("Find test site fail: %v", err)
-		t.FailNow()
-	}
-	err = page.Click("text=编辑")
-	if err != nil {
-		t.Errorf("The Click update site fail: %v", err)
-		t.FailNow()
-	}
-	locator, err = page.Locator("#siteFormModal input")
-	if err != nil {
-		t.Errorf("Find update site input fail: %v", err)
-		t.FailNow()
-	}
-	titleInput, err := locator.Nth(0)
-	if err != nil {
-		t.Errorf("Find title input fail: %v", err)
-		t.FailNow()
-	}
-	err = titleInput.Fill("单元测试站点-update")
-	if err != nil {
-		t.Errorf("Fil title input fail: %v", err)
-		t.FailNow()
-	}
-	addressInput, err := locator.Nth(1)
-	if err != nil {
-		t.Errorf("Find address input fail: %v", err)
-		t.FailNow()
-	}
-	err = addressInput.Fill("http://127.0.0.1:8081/")
-	if err != nil {
-		t.Errorf("Fil address input fail: %v", err)
-		t.FailNow()
-	}
-	nameInput, err := locator.Nth(2)
-	if err != nil {
-		t.Errorf("Find name input fail: %v", err)
-		t.FailNow()
-	}
-	err = nameInput.Fill("admin")
-	if err != nil {
-		t.Errorf("Fil name input fail: %v", err)
-		t.FailNow()
-	}
-	pwdInput, err := locator.Nth(3)
-	if err != nil {
-		t.Errorf("Find passwd input fail: %v", err)
-		t.FailNow()
-	}
-	err = pwdInput.Fill("Test123456.")
-	if err != nil {
-		t.Errorf("Fil passwd input fail: %v", err)
-		t.FailNow()
-	}
-	err = page.Click("#siteFormModal>>.modal-action>>span:has-text(\"确定\")")
-	if err != nil {
-		t.Errorf("The Click submit form fail: %v", err)
-		t.FailNow()
-	}
-	_, err = page.WaitForSelector(".list-item-content span:has-text('单元测试站点-update')")
-	if err != nil {
-		t.Errorf("Wait updated site fail: %v", err)
-		t.FailNow()
-	}
-	locator, err = page.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: "单元测试站点-update"})
-	c, err = locator.Count()
-	if err != nil || c == 0 {
-		t.Errorf("Find update site fail: %v", err)
-		t.FailNow()
-	}
+	plwConf.EnableErr()
+	locator = webpage.Locator(".list-item", playwright.PageLocatorOptions{HasText: "单元测试站点"})
+	webpage.Click("text=编辑")
+	locator = webpage.Locator("#siteFormModal input")
+	locator.FillNth(0, "单元测试站点-update")
+	locator.FillNth(1, "http://127.0.0.1:8081/")
+	locator.FillNth(2, "admin")
+	locator.FillNth(3, "Test123456.")
+	webpage.Click("#siteFormModal>>.modal-action>>span:has-text(\"确定\")")
+	webpage.WaitForSelector(".list-item-content span:has-text('单元测试站点-update')")
+	locator = webpage.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: "单元测试站点-update"})
 }
 func DeleteSite(t provider.T) {
 	t.ID("5466")
 	t.AddParentSuite("配置禅道站点")
-	pw, err := playwright.Run()
-	if err != nil {
-		t.Error(err)
-		t.FailNow()
-	}
-	headless := true
-	var slowMo float64 = 100
-	if siteBrowser == nil || !siteBrowser.IsConnected() {
-		siteBrowser, err = pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
-	}
-	if err != nil {
-		t.Errorf("Fail to launch the web siteBrowser: %v", err)
-		t.FailNow()
-	}
-	page, err := siteBrowser.NewPage()
-	if err != nil {
-		t.Errorf("Create the new page fail: %v", err)
-		t.FailNow()
-	}
-	defer func() {
-		if err = siteBrowser.Close(); err != nil {
-			t.Errorf("The workspaceBrowser cannot be closed: %v", err)
-			t.FailNow()
-			return
-		}
-		if err = pw.Stop(); err != nil {
-			t.Errorf("The playwright cannot be stopped: %v", err)
-			t.FailNow()
-			return
-		}
-	}()
-	if _, err = page.Goto("http://127.0.0.1:8000/", playwright.PageGotoOptions{
-		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
-		t.Errorf("The specific URL is missing: %v", err)
-		t.FailNow()
-	}
-	// page.WaitForSelector(".tree")
-	locator, err := page.Locator("#siteMenuToggle")
-	if err != nil {
-		t.Errorf("The siteMenuToggle is missing: %v", err)
-		t.FailNow()
-	}
-	err = locator.Click()
-	if err != nil {
-		t.Errorf("The Click is fail: %v", err)
-		t.FailNow()
-	}
-	_, err = page.WaitForSelector("#navbar .list-item")
-	if err != nil {
-		t.Errorf("Wait for site list nav fail: %v", err)
-		t.FailNow()
-	}
-	err = page.Click("text=禅道站点管理")
-	if err != nil {
-		t.Errorf("The Click site nav fail: %v", err)
-		t.FailNow()
-	}
-	// page.WaitForSelector(".modal-title")
-	locator, err = page.Locator(".list-item", playwright.PageLocatorOptions{HasText: "单元测试站点"})
-	if err != nil {
-		t.Errorf("Find test site fail: %v", err)
-		t.FailNow()
-	}
-	err = page.Click("text=删除")
-	if err != nil {
-		t.Errorf("The Click delete site fail: %v", err)
-		t.FailNow()
-	}
-	page.WaitForTimeout(1000)
-	err = page.Click(":nth-match(.modal-action > button, 1)")
-	if err != nil {
-		t.Errorf("The Click submit form fail: %v", err)
-		t.FailNow()
-	}
-	_, err = page.WaitForSelector(".list-item-content span:has-text('单元测试站点')", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
-	if err != nil {
-		t.Errorf("Wait updated site fail: %v", err)
-		t.FailNow()
-	}
-	locator, err = page.Locator(".list-item-content", playwright.PageLocatorOptions{HasText: "单元测试站点"})
-	c, err := locator.Count()
-	if err != nil || c > 0 {
-		t.Errorf("Delete site fail: %v", err)
+	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	defer webpage.Close()
+	locator := webpage.Locator("#siteMenuToggle")
+	locator.Click()
+	webpage.WaitForSelector("#navbar .list-item")
+	webpage.Click("text=禅道站点管理")
+	locator = webpage.Locator(".list-item:has-text('单元测试站点')")
+	webpage.Click("text=删除")
+	webpage.WaitForTimeout(1000)
+	webpage.Click(":nth-match(.modal-action > button, 1)")
+	webpage.WaitForSelector(".list-item-content span:has-text('单元测试站点')", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+	plwConf.DisableErr()
+	defer plwConf.EnableErr()
+	locator = webpage.Locator(".list-item-content:has-text('单元测试站点')")
+	c := locator.Count()
+	if c > 0 {
+		t.Errorf("Delete site fail")
 		t.FailNow()
 	}
 }
