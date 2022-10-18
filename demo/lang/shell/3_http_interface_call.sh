@@ -8,11 +8,11 @@ pid=0
 
 1. Send a request to interface http://xxx
 2. Retrieve sessionID field from response json
-3. Validate its format >> `^[a-z0-9]{26}`
+3. Validate its format >> `^[0-9]{8}`
 
 !
 
-resp=$(curl -s 'http://max.demo.zentao.net/pms/?mode=getconfig')  # apt-get install curl if needed
-elem=`echo $resp | grep -o '"sessionID":"[^"]*"' | sed 's/^.*:"//g' | sed 's/"//g'`
+resp=$(curl -s 'https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1')  # apt-get install curl if needed
+elem=`echo $resp | grep -o '"startdate":"[^"]*"' | sed 's/^.*:"//g' | sed 's/"//g'`
 
 echo "$elem"

@@ -7,18 +7,18 @@ pid=0
 
 1. Send a request to interface http://xxx
 2. Retrieve sessionID field from response json
-3. Check its format >> `^[a-z0-9]{26}`
+3. Check its format >> `^[0-9]{8}`
 
 =end
 
-require "open-uri"
-require "json"
+require 'uri'
+require 'net/http'
+require 'json'
 
-uri = 'http://max.demo.zentao.net/pms/?mode=getconfig'
-html = nil
-open(uri) do |http|
-  html = http.read
-end
+uri = URI('https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1')
+res = Net::HTTP.get_response(uri)
 
-json = JSON.parse(html)   # need json library (gem install json)
-puts json['sessionID']
+json = JSON.parse(res.body)
+
+puts json['images'][0]['startdate']
+

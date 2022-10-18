@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 '''
 
@@ -8,13 +8,13 @@ pid=0
 
 1. Load web page from url http://xxx
 2. Retrieve img element zt-logo.png in html
-3. Check img exist >> `.*zt-logo.png`
+3. Check img exist >> `必应`
 
 '''
 
 import requests
 import re
 
-html = requests.get('http://max.demo.zentao.net/user-login-Lw==.html').content #need requests library (pip/pip3 install requests)
-elem = re.search(r"<img src=\"(.*?)\" .*>", html.decode("utf-8")).group(1)
+html = requests.get('https://cn.bing.com').content #need requests library (pip/pip3 install requests)
+elem = re.search(r"<title>(.*?)<", html.decode("utf-8")).group(1)
 print(elem)
