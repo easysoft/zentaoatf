@@ -83,7 +83,7 @@ func RunNoInterpreterScript(t provider.T) {
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
-	scriptLocator := webpage.Locator("text=1_string_match.js")
+	scriptLocator := webpage.Locator("text=1_string_match.rb")
 	scriptLocator.Click()
 	webpage.Click(".tabs-nav-toolbar>>[title=\"Run\"]")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('忽略1个未设置解析器的脚本')")
