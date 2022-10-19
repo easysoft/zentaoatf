@@ -64,7 +64,7 @@ func SelectSite(webpage plwHelper.Webpage) (err error) {
 	plwConf.DisableErr()
 	defer plwConf.EnableErr()
 	webpage.Click("#siteMenuToggle")
-	webpage.WaitForSelector("#navbar .list-item")
+	webpage.WaitForSelectorTimeout("#navbar>>.list-item-title>>text=单元测试站点", 3000)
 	locator := webpage.Locator(".list-item-title>>text=单元测试站点")
 	if locator.Count() == 0 {
 		CreateSite(webpage)
