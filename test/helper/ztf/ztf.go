@@ -155,7 +155,8 @@ func DeleteWorkspace(webpage plwHelper.Webpage, workspaceName string) {
 		return
 	}
 	locator.Hover()
-	webpage.Click(`[title="删除"]`)
+	locator = locator.Locator(`[title="删除"]`)
+	locator.Click()
 	webpage.Click(".modal-action>>span:has-text(\"确定\")")
 	webpage.WaitForTimeout(1000)
 }

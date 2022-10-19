@@ -2,6 +2,8 @@ package service
 
 import (
 	"errors"
+	"strings"
+
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
@@ -9,7 +11,6 @@ import (
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 	"github.com/easysoft/zentaoatf/pkg/domain"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
-	"strings"
 )
 
 type SiteService struct {
@@ -54,7 +55,12 @@ func (s *SiteService) Create(site model.Site) (id uint, isDuplicate bool, err er
 	config := configHelper.LoadBySite(site)
 	err = zentaoHelper.Login(config)
 	if err != nil {
-		return
+		config.Url += "zentao/"
+		site.Url += "zentao/"
+		err = zentaoHelper.Login(config)
+		if err != nil {
+			return
+		}
 	}
 
 	id, isDuplicate, err = s.SiteRepo.Create(&site)
