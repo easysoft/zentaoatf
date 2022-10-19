@@ -25,7 +25,7 @@
     "mitt": "^3.0.0",
     "monaco-editor": "^0.25.2",
     "monaco-editor-webpack-plugin": "^6.0.0",
-    "neffos.js": "^0.1.25",
+    "neffos.js": "0.1.25",
     "nprogress": "^0.2.0",
     "sass-loader": "^12.6.0",
     "splitpanes": "^3.1.1",

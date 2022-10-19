@@ -45,17 +45,8 @@ func SyncFromZentao(t provider.T) {
 	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
-	plwConf.DisableErr()
-	defer plwConf.EnableErr()
-	webpage.WaitForSelectorTimeout(".tree-node-root>>has-text('单元测试工作目录')", 2000)
+	ztfTestHelper.ExpandWorspace(webpage)
 	locator := webpage.Locator(".tree-node-root>>has-text('单元测试工作目录')")
-	c := locator.Count()
-	if c == 0 {
-		plwConf.EnableErr()
-		CreateWorkspace(t)
-		SyncFromZentao(t)
-		return
-	}
 	plwConf.EnableErr()
 	locator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
 	webpage.Click(".tree-context-menu>>text=从禅道同步")
