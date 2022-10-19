@@ -182,16 +182,24 @@ func RunAll(t provider.T) {
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
+	runInfo := "执行5个用例，耗时"
+	runRes := "1(20.0%) 通过，4(80.0%) 失败"
+	resTitle := "单元测试工作目录(5)"
+	if runtime.GOOS == "windows" {
+		runInfo = "执行4个用例，耗时"
+		runRes = "1(25.0%) 通过，3(75.0%) 失败"
+		resTitle = "单元测试工作目录(4)"
+	}
 	webpage.Click("#batchRunMenuToggle")
 	webpage.Click(".list-item-content:has-text('执行所有文件')")
-	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行4个用例，耗时')")
-	locator := webpage.Locator("#log-list>>code:has-text('执行4个用例，耗时')")
+	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('" + runInfo + "')")
+	locator := webpage.Locator("#log-list>>code:has-text('" + runInfo + "')")
 	innerText := locator.InnerText()
-	if !strings.Contains(innerText, "1(25.0%) 通过，3(75.0%) 失败") {
+	if !strings.Contains(innerText, runRes) {
 		t.Errorf("Exec all fail")
 		t.FailNow()
 	}
-	webpage.WaitForSelector("#rightPane>>.result-list-item>>nth=0>>.list-item-title:has-text('单元测试工作目录(4)')")
+	webpage.WaitForSelector("#rightPane>>.result-list-item>>nth=0>>.list-item-title:has-text('" + resTitle + "')")
 
 	timeElement := webpage.Locator("#log-list>>code:has-text('开始任务')>>.time>>span")
 	logTime := timeElement.InnerText()
@@ -216,16 +224,24 @@ func RunWorkspace(t provider.T) {
 		t.Errorf("Find workspace fail")
 		t.FailNow()
 	}
+	runInfo := "执行4个用例，耗时"
+	runRes := "1(25.0%) 通过，3(75.0%) 失败"
+	resTitle := "单元测试工作目录(4)"
+	if runtime.GOOS == "windows" {
+		runInfo = "执行3个用例，耗时"
+		runRes = "1(33.0%) 通过，2(66.0%) 失败"
+		resTitle = "单元测试工作目录(3)"
+	}
 	locator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
 	webpage.Click(".tree-context-menu>>text=执行")
-	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行3个用例，耗时')")
-	locator = webpage.Locator("#log-list>>code:has-text('执行3个用例，耗时')")
+	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('" + runInfo + "')")
+	locator = webpage.Locator("#log-list>>code:has-text('" + runInfo + "')")
 	innerText := locator.InnerText()
-	if !strings.Contains(innerText, "1(33.0%) 通过，2(66.0%) 失败") {
+	if !strings.Contains(innerText, runRes) {
 		t.Errorf("Exec workspace fail")
 		t.FailNow()
 	}
-	webpage.WaitForSelector("#rightPane>>.result-list-item>>nth=0>>.list-item-title:has-text('单元测试工作目录(3)')")
+	webpage.WaitForSelector("#rightPane>>.result-list-item>>nth=0>>.list-item-title:has-text('" + resTitle + "')")
 
 	timeElement := webpage.Locator("#log-list>>code:has-text('开始任务')>>.time>>span")
 	logTime := timeElement.InnerText()
@@ -405,7 +421,9 @@ func selectLocalProxy(webpage plwHelper.Webpage) {
 func TestUiRun(t *testing.T) {
 	runner.Run(t, "客户端-执行单个脚本", RunScript)
 	runner.Run(t, "客户端-右键执行单个脚本", RunScriptByRightClick)
-	runner.Run(t, "客户端-忽略执行未设置解析器的脚本", RunNoInterpreterScript)
+	if runtime.GOOS == "windows" {
+		runner.Run(t, "客户端-忽略执行未设置解析器的脚本", RunNoInterpreterScript)
+	}
 	runner.Run(t, "客户端-执行选中的脚本文件和文件夹", RunSelectedScripts)
 	runner.Run(t, "客户端-执行打开的脚本文件", RunOpenedAndLast)
 	runner.Run(t, "客户端-执行所有的脚本文件", RunAll)
