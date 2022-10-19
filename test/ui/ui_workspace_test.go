@@ -46,7 +46,7 @@ func SyncFromZentao(t provider.T) {
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
-	locator := webpage.Locator(".tree-node-root>>has-text('单元测试工作目录')")
+	locator := webpage.Locator(".tree-node-title:has-text('单元测试工作目录')")
 	plwConf.EnableErr()
 	locator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
 	webpage.Click(".tree-context-menu>>text=从禅道同步")

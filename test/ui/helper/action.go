@@ -115,11 +115,11 @@ func (p *Webpage) WaitForSelector(selector string, options ...playwright.PageWai
 	return
 }
 
-func (p *Webpage) WaitForSelectorTimeout(selector string, timeout float64, options ...playwright.PageWaitForSelectorOptions) {
+func (p *Webpage) WaitForSelectorTimeout(selector string, timeout float64, options ...playwright.PageWaitForSelectorOptions) (err error) {
 	t := p.T
 	timeoutOption := playwright.PageWaitForSelectorOptions{Timeout: &timeout}
 	options = append(options, timeoutOption)
-	_, err := p.Page.WaitForSelector(selector, options...)
+	_, err = p.Page.WaitForSelector(selector, options...)
 	if err != nil {
 		err = errors.New(fmt.Sprintf("Wait for %s selector fail: %s", selector, err.Error()))
 		utils.PrintErrOrNot(err, t)

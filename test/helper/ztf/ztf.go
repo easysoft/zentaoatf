@@ -63,31 +63,52 @@ func RunScript(webpage plwHelper.Webpage, scriptName string) {
 func SelectSite(webpage plwHelper.Webpage) (err error) {
 	plwConf.DisableErr()
 	defer plwConf.EnableErr()
-	locator := webpage.Locator("#siteMenuToggle")
-	locator.Click()
+	webpage.Click("#siteMenuToggle")
 	webpage.WaitForSelector("#navbar .list-item")
+	locator := webpage.Locator(".list-item-title>>text=单元测试站点")
+	if locator.Count() == 0 {
+		CreateSite(webpage)
+		SelectSite(webpage)
+		return
+	}
 	webpage.Click(".list-item-title>>text=单元测试站点")
 	var waitTimeOut float64 = 5000
 	webpage.WaitForSelector("#siteMenuToggle:has-text('单元测试站点')", playwright.PageWaitForSelectorOptions{Timeout: &waitTimeOut})
 	return nil
 }
 
+func CreateSite(webpage plwHelper.Webpage) {
+	webpage.WaitForSelector("#siteMenuToggle")
+	webpage.Click("#siteMenuToggle")
+	webpage.WaitForSelector("#navbar .list-item")
+	webpage.Click("text=禅道站点管理")
+	webpage.Click("text=新建站点")
+	locator := webpage.Locator("#siteFormModal input")
+	locator.FillNth(0, "单元测试站点")
+	locator.FillNth(1, "http://127.0.0.1:8081/")
+	locator.FillNth(2, "admin")
+	locator.FillNth(3, "Test123456.")
+	webpage.Click("text=确定")
+	webpage.WaitForSelector(".list-item-content span:has-text('单元测试站点')")
+	locator = webpage.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: "单元测试站点"})
+	webpage.Click("#siteModal>>.modal-close")
+}
+
 func ExpandWorspace(webpage plwHelper.Webpage) (err error) {
-	var waitTimeOut float64 = 5000
 	plwConf.DisableErr()
 	defer plwConf.EnableErr()
-	err = webpage.WaitForSelector(".tree-node:has-text('单元测试工作目录')", playwright.PageWaitForSelectorOptions{Timeout: &waitTimeOut})
+	err = webpage.WaitForSelectorTimeout(".tree-node-title:has-text('单元测试工作目录')", 5000)
 	if err != nil {
 		createTestWorkspace(webpage)
 	}
 	selector := webpage.QuerySelectorAll(".tree-node-root:has-text('单元测试工作目录')")
 	className := selector.GetAttribute(0, "class")
-	if !strings.Contains(className, "collapsed") {
+	if className != "" && !strings.Contains(className, "collapsed") {
 		return
 	}
 
 	webpage.Click(".tree-node-title:has-text(\"单元测试工作目录\")")
-	err = webpage.WaitForSelector(".tree-node-item>>div:has-text('1_string_match.php')", playwright.PageWaitForSelectorOptions{Timeout: &waitTimeOut})
+	err = webpage.WaitForSelectorTimeout(".tree-node-item>>div:has-text('1_string_match.php')", 5000)
 	if err != nil {
 		if expandTimes > 5 {
 			expandTimes = 0
@@ -108,14 +129,14 @@ func ExpandProduct(webpage plwHelper.Webpage) (err error) {
 	webpage.WaitForSelector(".tree-node-item:has-text('product1')", playwright.PageWaitForSelectorOptions{Timeout: &waitTimeOut})
 	selector := webpage.QuerySelectorAll(".tree-node-root .tree-node:has-text('product1')")
 	className := selector.GetAttribute(0, "class")
-	if !strings.Contains(className, "collapsed") {
+	if className != "" && !strings.Contains(className, "collapsed") {
 		return
 	}
 	webpage.Click(".tree-node-item:has-text('product1')")
 	webpage.WaitForTimeout(100)
 	selector = webpage.QuerySelectorAll(".tree-node-root .tree-node:has-text('product1')")
 	className = selector.GetAttribute(0, "class")
-	if strings.Contains(className, "collapsed") {
+	if className != "" && strings.Contains(className, "collapsed") {
 		if expandTimes > 5 {
 			expandTimes = 0
 			return err

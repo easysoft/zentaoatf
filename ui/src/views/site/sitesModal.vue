@@ -1,6 +1,7 @@
 <template>
 <ZModal
     :showModal="props.show"
+    id="siteModal"
     :title="t('site_management')"
     :contentStyle="{width: '90vw', height: '90vh'}"
     @onCancel="emit('cancel', {event: $event})"

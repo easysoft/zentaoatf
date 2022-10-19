@@ -158,6 +158,9 @@ func (l MyElementHandle) InnerText(nth int) string {
 
 func (l MyElementHandle) GetAttribute(nth int, name string) string {
 	t := l.T
+	if len(l.ElementHandles) == 0 {
+		return ""
+	}
 	text, err := l.ElementHandles[nth].GetAttribute(name)
 	if err != nil {
 		err = errors.New(fmt.Sprintf("Get %s Attribute fail: %s", l.Selector, err.Error()))
