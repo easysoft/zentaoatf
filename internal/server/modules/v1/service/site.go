@@ -80,7 +80,12 @@ func (s *SiteService) Update(site model.Site) (isDuplicate bool, err error) {
 	config := configHelper.LoadBySite(site)
 	err = zentaoHelper.Login(config)
 	if err != nil {
-		return
+		config.Url += "zentao/"
+		site.Url += "zentao/"
+		err = zentaoHelper.Login(config)
+		if err != nil {
+			return
+		}
 	}
 
 	isDuplicate, err = s.SiteRepo.Update(site)
