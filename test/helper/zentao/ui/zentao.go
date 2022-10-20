@@ -8,6 +8,7 @@ import (
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	"github.com/easysoft/zentaoatf/test/ui/conf"
 	playwright "github.com/playwright-community/playwright-go"
 )
 
@@ -485,7 +486,7 @@ func init() {
 	if err != nil {
 		return
 	}
-	headless := false
+	headless := conf.Headless
 	var slowMo float64 = 100
 	browser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
