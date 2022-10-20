@@ -209,6 +209,7 @@ func Collapse(t provider.T) {
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
+	webpage.WaitForSelectorTimeout(".tree-node:has-text(\"单元测试工作目录\")", 5000)
 	className := webpage.GetAttribute(".tree-node:has-text(\"单元测试工作目录\")", "class")
 	if strings.Contains(className, "collapsed") {
 		webpage.Click(`#leftPane>>.toolbar>>[title="展开"]`)
@@ -216,9 +217,9 @@ func Collapse(t provider.T) {
 		webpage.Click(`#leftPane>>.toolbar>>[title="折叠"]`)
 	}
 	if strings.Contains(className, "collapsed") {
-		webpage.WaitForSelector("#leftPane>>.tree-node-item>>text=1_string_match.php")
+		webpage.WaitForSelectorTimeout("#leftPane>>.tree-node-item>>text=1_string_match.php", 5000)
 	} else if !strings.Contains(className, "collapsed") {
-		webpage.WaitForSelector("#leftPane>>.tree-node-item>>text=1_string_match.php", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+		webpage.WaitForSelectorTimeout("#leftPane>>.tree-node-item>>text=1_string_match.php", 5000, playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
 	}
 	if strings.Contains(className, "collapsed") {
 		webpage.Click(`#leftPane>>.toolbar>>[title="折叠"]`)
@@ -226,9 +227,9 @@ func Collapse(t provider.T) {
 		webpage.Click(`#leftPane>>.toolbar>>[title="展开"]`)
 	}
 	if strings.Contains(className, "collapsed") {
-		webpage.WaitForSelector("#leftPane>>.tree-node-item>>text=1_string_match.php", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+		webpage.WaitForSelectorTimeout("#leftPane>>.tree-node-item>>text=1_string_match.php", 5000, playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
 	} else if !strings.Contains(className, "collapsed") {
-		webpage.WaitForSelector("#leftPane>>.tree-node-item>>text=1_string_match.php")
+		webpage.WaitForSelectorTimeout("#leftPane>>.tree-node-item>>text=1_string_match.php", 5000)
 	}
 }
 func TestUiWorkspace(t *testing.T) {
