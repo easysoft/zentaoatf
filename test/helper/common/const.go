@@ -11,7 +11,7 @@ const (
 )
 
 var (
-	NewLine  = "/n"
+	NewLine  = "\n"
 	RootPath = ""
 )
 
