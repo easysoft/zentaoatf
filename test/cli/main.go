@@ -7,24 +7,32 @@ import (
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
+	uiTest "github.com/easysoft/zentaoatf/test/helper/zentao/ui"
 )
 
 func main() {
+	commConsts.ExecFrom = commConsts.FromCmd
 	serverConfig.InitLog()
-	commConsts.Verbose = true
+	serverConfig.InitExecLog(commonTestHelper.RootPath)
+	commConsts.ZtfDir = commonTestHelper.RootPath
+	i118Utils.Init("zh-CN", commConsts.AppServer)
 	var version = flag.String("zentaoVersion", "", "")
 	testing.Init()
 	flag.Parse()
 	fmt.Println(*version)
+	defer func() {
+		uiTest.Close()
+	}()
 	err := commonTestHelper.InitZentao(*version)
 	if err != nil {
 		fmt.Println("Init zentao data fail ", err)
 	}
-	err = commonTestHelper.Pull()
-	if err != nil {
-		fmt.Println("Git pull code fail ", err)
-	}
+	// err = commonTestHelper.Pull()
+	// if err != nil {
+	// 	fmt.Println("Git pull code fail ", err)
+	// }
 	err = commonTestHelper.BuildCli()
 	if err != nil {
 		fmt.Println("Build cli fail ", err)

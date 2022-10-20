@@ -77,7 +77,7 @@ func (e *GExpect) Expect(expect *regexp.Regexp, timeout time.Duration) (out stri
 			if out != "" {
 				err = errors.New(out)
 			} else {
-				err = errors.New("Time out")
+				err = errors.New(fmt.Sprintf("Time out, out:%v", out))
 			}
 			return
 		}
