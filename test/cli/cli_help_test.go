@@ -21,7 +21,7 @@ import (
 )
 
 var (
-	successHelpRe = regexp.MustCompile("为了方便在任意目录中执行ztf.exe命令")
+	successHelpRe = regexp.MustCompile("为了方便在任意目录中执行ztf")
 )
 
 type HelpSuite struct {

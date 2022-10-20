@@ -2,7 +2,7 @@ if [ ! -d "zentaoatf" ];then
     git clone https://github.com/easysoft/zentaoatf.git
     go env -w GOPROXY=https://goproxy.cn,direct
     cd zentaoatf
-    git checkout ztf-42_zhaoke
+    git checkout main
     go mod tidy || true
     go run github.com/playwright-community/playwright-go/cmd/playwright install --with-deps
     cd ui

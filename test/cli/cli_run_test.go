@@ -88,7 +88,7 @@ func (s *RunSuit) TestRunZtfSuite(t provider.T) {
 	t.ID("1588")
 	t.Title("执行禅道测试套件")
 	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %stest/demo -suite 1", commonTestHelper.RootPath)
-	expectReg := regexp.MustCompile(`Run 2 scripts in \d+ sec, 0\(0\.0%\) Pass, 2\(100\.0%\) Fail, 0\(0\.0%\) Skip|执行2个用例，耗时\d+秒。0\(0\.0%\) 通过，2\(100\.0%\) 失败，0\(0\.0%\) 忽略`)
+	expectReg := regexp.MustCompile(`Run 1 scripts in \d+ sec, 0\(0\.0%\) Pass, 1\(100\.0%\) Fail, 0\(0\.0%\) Skip|执行1个用例，耗时\d+秒。0\(0\.0%\) 通过，1\(100\.0%\) 失败，0\(0\.0%\) 忽略`)
 	t.Require().Equal("Success", testRun(cmd, expectReg))
 }
 
