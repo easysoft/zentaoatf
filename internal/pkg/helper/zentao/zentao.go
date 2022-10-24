@@ -2,6 +2,7 @@ package zentaoHelper
 
 import (
 	"fmt"
+	"net/url"
 	"regexp"
 	"strings"
 
@@ -86,7 +87,7 @@ func ListLang() (langs []serverDomain.ZentaoLang, err error) {
 	return
 }
 
-func FixSiteUrl(url string) (ret string) {
+func FixUrl(url string) (ret string) {
 	regx := regexp.MustCompile(`(http|https):\/\/.+`)
 	result := regx.FindStringSubmatch(url)
 	if result == nil {
@@ -106,5 +107,18 @@ func FixSiteUrl(url string) (ret string) {
 		}
 	}
 
+	return
+}
+
+func FixSiteUrl(orginUrl string) (ret string) {
+	u, _ := url.Parse(orginUrl)
+	ret = fmt.Sprintf("%s://%s", u.Scheme, u.Host)
+	if u.Port() != "" {
+		ret += ":" + u.Port()
+	}
+	ret += "/"
+	if u.Path[:8] == "/zentao/" {
+		ret = ret + "zentao/"
+	}
 	return
 }

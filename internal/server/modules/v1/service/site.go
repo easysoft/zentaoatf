@@ -51,16 +51,10 @@ func (s *SiteService) Create(site model.Site) (id uint, isDuplicate bool, err er
 	}
 
 	site.Url = fileUtils.AddUrlPathSepIfNeeded(site.Url)
-
 	config := configHelper.LoadBySite(site)
 	err = zentaoHelper.Login(config)
 	if err != nil {
-		config.Url += "zentao/"
-		site.Url += "zentao/"
-		err = zentaoHelper.Login(config)
-		if err != nil {
-			return
-		}
+		return
 	}
 
 	id, isDuplicate, err = s.SiteRepo.Create(&site)
@@ -74,18 +68,10 @@ func (s *SiteService) Update(site model.Site) (isDuplicate bool, err error) {
 		err = errors.New("url not right")
 		return
 	}
-
-	site.Url = fileUtils.AddUrlPathSepIfNeeded(site.Url)
-
 	config := configHelper.LoadBySite(site)
 	err = zentaoHelper.Login(config)
 	if err != nil {
-		config.Url += "zentao/"
-		site.Url += "zentao/"
-		err = zentaoHelper.Login(config)
-		if err != nil {
-			return
-		}
+		return
 	}
 
 	isDuplicate, err = s.SiteRepo.Update(site)
