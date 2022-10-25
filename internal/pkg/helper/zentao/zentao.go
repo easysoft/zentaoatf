@@ -113,11 +113,8 @@ func FixUrl(url string) (ret string) {
 func FixSiteUrl(orginUrl string) (ret string) {
 	u, _ := url.Parse(orginUrl)
 	ret = fmt.Sprintf("%s://%s", u.Scheme, u.Host)
-	if u.Port() != "" {
-		ret += ":" + u.Port()
-	}
 	ret += "/"
-	if len(u.Path) > 8 && u.Path[:8] == "/zentao/" {
+	if len(u.Path) >= 7 && u.Path[:7] == "/zentao" {
 		ret = ret + "zentao/"
 	}
 	return
