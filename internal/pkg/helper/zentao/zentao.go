@@ -117,7 +117,7 @@ func FixSiteUrl(orginUrl string) (ret string) {
 		ret += ":" + u.Port()
 	}
 	ret += "/"
-	if u.Path[:8] == "/zentao/" {
+	if len(u.Path) > 8 && u.Path[:8] == "/zentao/" {
 		ret = ret + "zentao/"
 	}
 	return
