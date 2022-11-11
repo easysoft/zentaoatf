@@ -10,7 +10,6 @@ import (
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 	"github.com/easysoft/zentaoatf/pkg/domain"
-	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 )
 
 type SiteService struct {
@@ -44,17 +43,23 @@ func (s *SiteService) GetDomainObject(id uint) (site serverDomain.ZentaoSite, er
 }
 
 func (s *SiteService) Create(site model.Site) (id uint, isDuplicate bool, err error) {
-	site.Url = zentaoHelper.FixSiteUrl(site.Url)
-	if site.Url == "" {
+	url1, url2 := zentaoHelper.FixSiteUrl(site.Url)
+	if url1 == "" {
 		err = errors.New("url not right")
 		return
 	}
 
-	site.Url = fileUtils.AddUrlPathSepIfNeeded(site.Url)
+	site.Url = url1
 	config := configHelper.LoadBySite(site)
 	err = zentaoHelper.Login(config)
 	if err != nil {
-		return
+		site.Url = url2
+		config := configHelper.LoadBySite(site)
+		err = zentaoHelper.Login(config)
+
+		if err != nil {
+			return
+		}
 	}
 
 	id, isDuplicate, err = s.SiteRepo.Create(&site)
@@ -63,15 +68,23 @@ func (s *SiteService) Create(site model.Site) (id uint, isDuplicate bool, err er
 }
 
 func (s *SiteService) Update(site model.Site) (isDuplicate bool, err error) {
-	site.Url = zentaoHelper.FixSiteUrl(site.Url)
-	if site.Url == "" {
+	url1, url2 := zentaoHelper.FixSiteUrl(site.Url)
+	if url1 == "" {
 		err = errors.New("url not right")
 		return
 	}
+
+	site.Url = url1
 	config := configHelper.LoadBySite(site)
 	err = zentaoHelper.Login(config)
 	if err != nil {
-		return
+		site.Url = url2
+		config := configHelper.LoadBySite(site)
+		err = zentaoHelper.Login(config)
+
+		if err != nil {
+			return
+		}
 	}
 
 	isDuplicate, err = s.SiteRepo.Update(site)

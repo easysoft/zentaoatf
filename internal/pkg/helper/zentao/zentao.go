@@ -2,6 +2,7 @@ package zentaoHelper
 
 import (
 	"fmt"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	"net/url"
 	"regexp"
 	"strings"
@@ -110,12 +111,20 @@ func FixUrl(url string) (ret string) {
 	return
 }
 
-func FixSiteUrl(orginUrl string) (ret string) {
+func FixSiteUrl(orginUrl string) (url1, url2 string) {
 	u, _ := url.Parse(orginUrl)
-	ret = fmt.Sprintf("%s://%s", u.Scheme, u.Host)
-	ret += "/"
-	if len(u.Path) >= 7 && u.Path[:7] == "/zentao" {
-		ret = ret + "zentao/"
+	url1 = fmt.Sprintf("%s://%s", u.Scheme, u.Host)
+	url1 += "/"
+
+	pth := strings.Replace(orginUrl, url1, "", -1)
+	pth = strings.TrimLeft(pth, "/")
+	arr := strings.Split(pth, "/")
+	if len(arr) > 1 {
+		url2 = url1 + arr[0]
 	}
+
+	url1 = fileUtils.AddUrlPathSepIfNeeded(url1)
+	url2 = fileUtils.AddUrlPathSepIfNeeded(url2)
+
 	return
 }
