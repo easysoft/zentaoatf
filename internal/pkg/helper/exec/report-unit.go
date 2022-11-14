@@ -781,7 +781,6 @@ func isAllureReport(testTool commConsts.TestTool) (ret bool) {
 }
 
 func getResultDir(testset *serverDomain.TestSet) {
-
 	if testset.TestTool == commConsts.JUnit && testset.BuildTool == commConsts.Maven {
 		testset.ResultDir = filepath.Join("target", "surefire-reports")
 		testset.ZipDir = testset.ResultDir
@@ -801,8 +800,13 @@ func getResultDir(testset *serverDomain.TestSet) {
 	}
 
 	if testset.ResultDir != "" {
-		testset.ZipDir = filepath.Join(testset.WorkspacePath, testset.ZipDir)
-		testset.ResultDir = filepath.Join(testset.WorkspacePath, testset.ResultDir)
+		if !fileUtils.IsAbsolutePath(testset.ResultDir) {
+			testset.ResultDir = filepath.Join(testset.WorkspacePath, testset.ResultDir)
+		}
+
+		if !fileUtils.IsAbsolutePath(testset.ZipDir) {
+			testset.ZipDir = filepath.Join(testset.WorkspacePath, testset.ZipDir)
+		}
 	}
 
 	return
