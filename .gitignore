@@ -53,3 +53,4 @@ test/ui/demo/ci_test_testng/
 /demo/unit/.pytest_cache/
 /demo/unit/report/
 /.pytest_cache/
+/res/res.go
