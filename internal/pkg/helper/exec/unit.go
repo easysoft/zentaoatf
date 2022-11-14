@@ -27,7 +27,7 @@ import (
 )
 
 func ExecUnit(ch chan int,
-	req serverDomain.TestSet, wsMsg *websocket.Message) (resultDir string, err error) {
+	req serverDomain.TestSet, wsMsg *websocket.Message) (err error) {
 
 	key := stringUtils.Md5(req.WorkspacePath)
 
@@ -50,17 +50,24 @@ func ExecUnit(ch chan int,
 		req.Cmd = strings.Join(arr[2:], " ")
 	}
 
-	// run
-	RunUnitTest(ch, req.Cmd, req.WorkspacePath, wsMsg)
+	getResultDir(&req)
 
-	// end msg
+	// run
 	entTime := time.Now()
-	endMsg := i118Utils.Sprintf("end_execution", req.Cmd, dateUtils.DateTimeStr(entTime))
-	logUtils.ExecConsolef(-1, endMsg)
-	logUtils.ExecFilef(endMsg)
-	if commConsts.ExecFrom != commConsts.FromCmd {
-		websocketHelper.SendExecMsg(endMsg, "", commConsts.Run,
-			iris.Map{"key": key, "status": "end"}, wsMsg)
+	if strings.TrimSpace(req.Cmd) != "" {
+		// remove old results
+		fileUtils.RmDir(req.ResultDir)
+
+		RunUnitTest(ch, req.Cmd, req.WorkspacePath, wsMsg)
+
+		// end msg
+		endMsg := i118Utils.Sprintf("end_execution", req.Cmd, dateUtils.DateTimeStr(entTime))
+		logUtils.ExecConsolef(-1, endMsg)
+		logUtils.ExecFilef(endMsg)
+		if commConsts.ExecFrom != commConsts.FromCmd {
+			websocketHelper.SendExecMsg(endMsg, "", commConsts.Run,
+				iris.Map{"key": key, "status": "end"}, wsMsg)
+		}
 	}
 
 	// gen report

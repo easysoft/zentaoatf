@@ -5,6 +5,10 @@ import (
 )
 
 func GetUnitTools(args []string, startIndex int) {
+	if startIndex > len(args)-1 { // no exec command
+		return
+	}
+
 	str := args[startIndex]
 
 	if str == commConsts.UnitTestToolMvn {

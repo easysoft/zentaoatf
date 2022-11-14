@@ -49,6 +49,9 @@ type TestSet struct {
 	BuildTool commConsts.BuildTool `json:"buildTool"`
 	Cmd       string               `json:"cmd"`
 
+	ResultDir string `json:"resultDir"`
+	ZipDir    string `json:"cmd"`
+
 	SubmitResult bool `json:"submitResult"`
 }
 

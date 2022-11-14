@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"path"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -34,10 +35,10 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 
 	key := stringUtils.Md5(req.WorkspacePath)
 
-	testSuites, zipDir := RetrieveUnitResult(req.WorkspacePath, startTime, req.TestTool, req.BuildTool)
-	if zipDir != "" {
+	testSuites := RetrieveUnitResult(req, startTime)
+	if req.ZipDir != "" {
 		zipFile := filepath.Join(commConsts.ExecLogDir, commConsts.ResultZip)
-		fileUtils.ZipDir(zipFile, zipDir)
+		fileUtils.ZipDir(zipFile, req.ZipDir)
 	}
 
 	cases, classNameMaxWidth, duration := ParserUnitTestResult(testSuites)
@@ -186,39 +187,17 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 	return
 }
 
-func RetrieveUnitResult(workspacePath string, startTime int64, testTool commConsts.TestTool, buildTool commConsts.BuildTool) (
-	suites []commDomain.UnitTestSuite, zipDir string) {
+func RetrieveUnitResult(testset serverDomain.TestSet, startTime int64) (
+	suites []commDomain.UnitTestSuite) {
 
-	resultDir := ""
 	resultFiles := make([]string, 0)
-
-	if testTool == commConsts.JUnit && buildTool == commConsts.Maven {
-		resultDir = filepath.Join("target", "surefire-reports")
-		zipDir = resultDir
-	} else if testTool == commConsts.TestNG && buildTool == commConsts.Maven {
-		resultDir = filepath.Join("target", "surefire-reports", "junitreports")
-		zipDir = filepath.Dir(resultDir)
-	} else if testTool == commConsts.RobotFramework || testTool == commConsts.Cypress ||
-		testTool == commConsts.Playwright || testTool == commConsts.Puppeteer {
-		resultDir = "results"
-		zipDir = resultDir
-	} else if isAllureReport(testTool) {
-		resultDir = commConsts.AllureReportDir
-		zipDir = resultDir
-	} else {
-		resultDir = "testresults.xml"
-		zipDir = resultDir
+	if testset.ResultDir != "" {
+		resultFiles, _ = GetSuiteFiles(testset.ResultDir, startTime, testset.TestTool)
 	}
 
-	if resultDir != "" {
-		zipDir = filepath.Join(workspacePath, zipDir)
-		resultDir = filepath.Join(workspacePath, resultDir)
-		resultFiles, _ = GetSuiteFiles(resultDir, startTime, testTool)
-	}
-
-	if isAllureReport(testTool) {
-		if resultDir != "" {
-			suites = GetAllureSuites(resultDir, startTime)
+	if isAllureReport(testset.TestTool) {
+		if testset.ResultDir != "" {
+			suites = GetAllureSuites(testset.ResultDir, startTime)
 		} else {
 			logUtils.Info(color.RedString(
 				i118Utils.Sprintf("must_provide_allure_report_dir")))
@@ -226,7 +205,7 @@ func RetrieveUnitResult(workspacePath string, startTime int64, testTool commCons
 
 	} else {
 		for _, file := range resultFiles {
-			testSuite, err := GetTestSuite(file, testTool)
+			testSuite, err := GetTestSuite(file, testset.TestTool)
 
 			if err == nil {
 				suites = append(suites, testSuite)
@@ -247,7 +226,7 @@ func GetAllureSuites(resultDir string, startTime int64) (suites []commDomain.Uni
 	for _, fi := range files {
 		name := fi.Name()
 
-		if strings.Index(name, "-result.json") < 0 || fi.ModTime().Unix() < startTime {
+		if strings.Index(name, "-result.json") < 0 { // || fi.ModTime().Unix() < startTime {
 			continue
 		}
 
@@ -274,9 +253,9 @@ func GetSuiteFiles(resultDir string, startTime int64, testTool commConsts.TestTo
 				name := fi.Name()
 				ext := path.Ext(name)
 
-				if fi.ModTime().Unix() < startTime {
-					continue
-				}
+				//if fi.ModTime().Unix() < startTime {
+				//	continue
+				//}
 
 				if (isAllureReport(testTool) && ext == ".json") || ext == ".xml" {
 					pth := filepath.Join(resultDir, name)
@@ -430,7 +409,7 @@ func ConvertAllureResult(cases []commDomain.AllureCase) (testSuites []commDomain
 
 		suiteMap[suiteName].Name = "111"
 
-		caseId := GetAllureCaseId(cs.TestCaseId, cs)
+		caseId := GetAllureCaseId(cs)
 
 		// passed, failed
 		var status commConsts.ResultStatus
@@ -492,23 +471,35 @@ func GetAllureCaseSuiteName(cs commDomain.AllureCase) (name string) {
 	return
 }
 
-func GetAllureCaseId(testCaseIdStr string, cs commDomain.AllureCase) (id int) {
-	id, err := strconv.Atoi(testCaseIdStr)
+func GetAllureCaseId(cs commDomain.AllureCase) (id int) {
+	// 1. from testCaseId
+	id, err := strconv.Atoi(cs.TestCaseId)
 	if err == nil && id > 0 {
 		return
 	}
 
+	// 2. from as_id label
 	for _, label := range cs.Labels {
 		if label.Name == "as_id" {
 			if label.Value != "" {
-				testCaseIdStr = label.Value
+				cs.TestCaseId = label.Value // 2
 			}
 
 			break
 		}
 	}
+	id = stringUtils.ParseInt(cs.TestCaseId)
 
-	id = stringUtils.ParseInt(testCaseIdStr)
+	// 2. from the ids param in name like [cs-1]
+	regx := regexp.MustCompile(`\[(.+)\]`)
+	arr := regx.FindAllStringSubmatch(cs.Name, -1)
+	if len(arr) > 0 {
+		item := arr[len(arr)-1]
+		idFromName := stringUtils.ParseInt(item[1])
+		if idFromName > 0 {
+			id = idFromName
+		}
+	}
 
 	return
 }
@@ -787,4 +778,32 @@ func ConvertCyResult(result commDomain.CypressTestsuites) commDomain.UnitTestSui
 
 func isAllureReport(testTool commConsts.TestTool) (ret bool) {
 	return testTool == commConsts.Allure || testTool == commConsts.GoTest
+}
+
+func getResultDir(testset *serverDomain.TestSet) {
+
+	if testset.TestTool == commConsts.JUnit && testset.BuildTool == commConsts.Maven {
+		testset.ResultDir = filepath.Join("target", "surefire-reports")
+		testset.ZipDir = testset.ResultDir
+	} else if testset.TestTool == commConsts.TestNG && testset.BuildTool == commConsts.Maven {
+		testset.ResultDir = filepath.Join("target", "surefire-reports", "junitreports")
+		testset.ZipDir = filepath.Dir(testset.ResultDir)
+	} else if testset.TestTool == commConsts.RobotFramework || testset.TestTool == commConsts.Cypress ||
+		testset.TestTool == commConsts.Playwright || testset.TestTool == commConsts.Puppeteer {
+		testset.ResultDir = "results"
+		testset.ZipDir = testset.ResultDir
+	} else if isAllureReport(testset.TestTool) {
+		testset.ResultDir = commConsts.AllureReportDir
+		testset.ZipDir = testset.ResultDir
+	} else {
+		testset.ResultDir = "testresults.xml"
+		testset.ZipDir = testset.ResultDir
+	}
+
+	if testset.ResultDir != "" {
+		testset.ZipDir = filepath.Join(testset.WorkspacePath, testset.ZipDir)
+		testset.ResultDir = filepath.Join(testset.WorkspacePath, testset.ResultDir)
+	}
+
+	return
 }

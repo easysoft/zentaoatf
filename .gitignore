@@ -50,3 +50,6 @@ test/demo/php/product1
 /test/ui/allure-results
 /test/cli/allure-results
 test/ui/demo/ci_test_testng/
+/demo/unit/.pytest_cache/
+/demo/unit/report/
+/.pytest_cache/
