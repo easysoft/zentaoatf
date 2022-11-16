@@ -3,6 +3,7 @@ package plw
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/easysoft/zentaoatf/test/ui/conf"
 	"github.com/easysoft/zentaoatf/test/ui/utils"
@@ -109,6 +110,8 @@ func (p *Webpage) WaitForSelector(selector string, options ...playwright.PageWai
 	_, err = p.Page.WaitForSelector(selector, options...)
 	if err != nil {
 		err = errors.New(fmt.Sprintf("Wait for %s selector fail: %s", selector, err.Error()))
+		var screenshotPath = fmt.Sprintf("screenshot/%v.png", time.Now().Unix())
+		p.Page.Screenshot(playwright.PageScreenshotOptions{Path: &screenshotPath})
 		utils.PrintErrOrNot(err, t)
 	}
 
@@ -122,6 +125,8 @@ func (p *Webpage) WaitForSelectorTimeout(selector string, timeout float64, optio
 	_, err = p.Page.WaitForSelector(selector, options...)
 	if err != nil {
 		err = errors.New(fmt.Sprintf("Wait for %s selector fail: %s", selector, err.Error()))
+		var screenshotPath = fmt.Sprintf("screenshot/%v.png", time.Now().Unix())
+		p.Page.Screenshot(playwright.PageScreenshotOptions{Path: &screenshotPath})
 		utils.PrintErrOrNot(err, t)
 	}
 
