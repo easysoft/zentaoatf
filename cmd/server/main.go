@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	"github.com/easysoft/zentaoatf/internal/server/core/web"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
@@ -37,6 +38,8 @@ func main() {
 		logUtils.PrintVersion(AppVersion, BuildTime, GoVersion, GitHash)
 		return
 	default:
+		commConsts.ExecFrom = commConsts.FromClient
+
 		webServer := web.Init(port)
 		if webServer == nil {
 			return

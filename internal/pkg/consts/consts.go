@@ -14,7 +14,6 @@ const (
 	ConfigDir          = "conf"
 	ConfigFile         = "ztf.conf"
 	LogDirName         = "log"
-	LogBakDirName      = "log-bak"
 	ExtNameSuite       = "cs"
 	LogText            = "log.txt"
 	ResultText         = "result.txt"

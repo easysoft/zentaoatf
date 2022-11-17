@@ -53,6 +53,7 @@ require (
 	go.uber.org/zap v1.21.0 // indirect
 	golang.org/x/text v0.3.7
 	gopkg.in/ini.v1 v1.63.0
+	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 	gorm.io/driver/sqlite v1.2.6
 	gorm.io/gorm v1.22.3
 	gorm.io/plugin/dbresolver v1.1.0

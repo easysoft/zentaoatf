@@ -14,15 +14,15 @@ import (
 )
 
 func Get(url string) (ret []byte, err error) {
-	if commConsts.Verbose {
-		logUtils.Infof("===DEBUG===  request: %s", url)
+	if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
+		logUtils.Infof("===DEBUG=== request: %s", url)
 	}
 
 	client := &http.Client{}
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		if commConsts.Verbose {
+		if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
 			logUtils.Infof(color.RedString("get request failed, error: %s.", err.Error()))
 		}
 		return
@@ -34,7 +34,7 @@ func Get(url string) (ret []byte, err error) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		if commConsts.Verbose {
+		if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
 			logUtils.Infof(color.RedString("get request failed, error: %s.", err.Error()))
 		}
 		return
@@ -42,7 +42,7 @@ func Get(url string) (ret []byte, err error) {
 	defer resp.Body.Close()
 
 	if !IsSuccessCode(resp.StatusCode) {
-		if commConsts.Verbose {
+		if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
 			logUtils.Infof(color.RedString("read response failed, StatusCode: %d.", resp.StatusCode))
 		}
 		err = errors.New(resp.Status)
@@ -50,12 +50,12 @@ func Get(url string) (ret []byte, err error) {
 	}
 
 	ret, err = ioutil.ReadAll(resp.Body)
-	if commConsts.Verbose {
+	if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
 		logUtils.Infof("===DEBUG=== response: %s", logUtils.ConvertUnicode(ret))
 	}
 
 	if err != nil {
-		if commConsts.Verbose {
+		if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
 			logUtils.Infof(color.RedString("read response failed, error ", err.Error()))
 		}
 		return
@@ -86,19 +86,19 @@ func Put(url string, data interface{}) (ret []byte, err error) {
 }
 
 func PostOrPut(url string, method string, data interface{}) (ret []byte, err error) {
-	if commConsts.Verbose {
-		logUtils.Infof("===DEBUG===  request: %s", url)
+	if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
+		logUtils.Infof("===DEBUG=== request: %s", url)
 	}
 
 	client := &http.Client{}
 
 	dataBytes, err := json.Marshal(data)
-	if commConsts.Verbose {
-		logUtils.Infof("===DEBUG===     data: %s", string(dataBytes))
+	if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
+		logUtils.Infof("===DEBUG=== data: %s", string(dataBytes))
 	}
 
 	if err != nil {
-		if commConsts.Verbose {
+		if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
 			logUtils.Infof(color.RedString("marshal request failed, error: %s.", err.Error()))
 		}
 		return
@@ -108,7 +108,7 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 
 	req, err := http.NewRequest(method, url, strings.NewReader(dataStr))
 	if err != nil {
-		if commConsts.Verbose {
+		if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
 			logUtils.Infof(color.RedString("post request failed, error: %s.", err.Error()))
 		}
 		return
@@ -122,14 +122,14 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 
 	resp, err := client.Do(req)
 	if err != nil {
-		if commConsts.Verbose {
+		if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
 			logUtils.Infof(color.RedString("post request failed, error: %s.", err.Error()))
 		}
 		return
 	}
 
 	if !IsSuccessCode(resp.StatusCode) {
-		if commConsts.Verbose {
+		if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
 			logUtils.Infof(color.RedString("post request return '%s'.", resp.Status))
 		}
 		err = errors.New(resp.Status)
@@ -139,12 +139,12 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 	ret, err = ioutil.ReadAll(resp.Body)
 	defer resp.Body.Close()
 
-	if commConsts.Verbose {
+	if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
 		logUtils.Infof("===DEBUG=== response: %s", logUtils.ConvertUnicode(ret))
 	}
 
 	if err != nil {
-		if commConsts.Verbose {
+		if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
 			logUtils.Infof(color.RedString("read response failed, error: %s.", err.Error()))
 		}
 		return

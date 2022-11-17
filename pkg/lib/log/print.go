@@ -67,15 +67,6 @@ func ExecFilef(str string, args ...interface{}) {
 func ExecResult(str string) {
 	LoggerExecResult.Info(str)
 }
-func ExecResultf(str string, args ...interface{}) {
-	msg := fmt.Sprintf(str, args...)
-	LoggerExecResult.Info(msg)
-}
-
-func PrintUnicode(str []byte) {
-	msg := ConvertUnicode(str)
-	LoggerStandard.Info(msg)
-}
 
 func ConvertUnicode(str []byte) string {
 	var a interface{}
@@ -109,17 +100,6 @@ func GetWholeLine(msg string, char string) string {
 	postFixStr := strings.Repeat(char, postfixLen)
 
 	return fmt.Sprintf("%s %s %s", preFixStr, msg, postFixStr)
-}
-
-func PrintToCmd(msg string, attr color.Attribute) {
-	output := color.Output
-
-	if attr == -1 {
-		fmt.Fprint(output, msg+"\n")
-	} else {
-		clr := color.New(attr)
-		clr.Fprint(output, msg+"\n")
-	}
 }
 
 func PrintVersion(appVersion, buildTime, goVersion, gitHash string) {

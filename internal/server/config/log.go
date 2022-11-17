@@ -5,6 +5,7 @@ import (
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"log"
 	"net/url"
 	"os"
@@ -27,38 +28,39 @@ func InitLog() {
 
 	zapConfig := getLogConfig()
 
-	// print to console
+	// print to console and info、err files
 	var err error
 	zapConfig.EncoderConfig.EncodeLevel = nil
 	zapConfig.DisableCaller = true
 	zapConfig.EncoderConfig.TimeKey = ""
-	logUtils.LoggerStandard, err = zapConfig.Build()
+	logUtils.LoggerStandard, err = zapConfig.Build(zap.WrapCore(zapCore))
 	if err != nil {
 		log.Println("init console logger fail " + err.Error())
 	}
 
-	// print to console without detail
+	// print to console and info、err files without stacktrace detail
+	// by set DisableStacktrace to true
 	zapConfig.DisableStacktrace = true
-	logUtils.LoggerExecConsole, err = zapConfig.Build()
+	logUtils.LoggerExecConsole, err = zapConfig.Build(zap.WrapCore(zapCore))
 	if err != nil {
 		log.Println("init exec console logger fail " + err.Error())
 	}
 }
 
-// 执行日志，用于具体的测试执行
+// write exec results by using zap log
 func InitExecLog(workspacePath string) {
 	commConsts.ExecLogDir = logUtils.GetLogDir(workspacePath)
 	config := getLogConfig()
 	config.EncoderConfig.EncodeLevel = nil
 
 	// print to test log file
-	logPath := filepath.Join(commConsts.ExecLogDir, commConsts.LogText)
+	logPathInfo := filepath.Join(commConsts.ExecLogDir, commConsts.LogText)
 	if commonUtils.IsWin() {
-		logPath = filepath.Join(WinFileSchema, logPath)
+		logPathInfo = filepath.Join(WinFileSchema, logPathInfo)
 		zap.RegisterSink("winfile", newWinFileSink)
 	}
 
-	config.OutputPaths = []string{logPath}
+	config.OutputPaths = []string{logPathInfo}
 	var err error
 	logUtils.LoggerExecFile, err = config.Build()
 
@@ -128,17 +130,10 @@ func getLogConfig() (config zap.Config) {
 		StacktraceKey: "stacktrace",
 		LineEnding:    zapcore.DefaultLineEnding,
 		//EncodeLevel:    zapcore.LowercaseLevelEncoder,  // 小写编码器
+		EncodeTime:     zapcore.TimeEncoderOfLayout("2006-01-02 15:04:05.000"),
 		EncodeLevel:    zapcore.CapitalColorLevelEncoder, //这里可以指定颜色
-		EncodeTime:     zapcore.ISO8601TimeEncoder,       // ISO8601 UTC 时间格式
 		EncodeDuration: zapcore.SecondsDurationEncoder,
 		EncodeCaller:   zapcore.FullCallerEncoder, // 全路径编码器
-	}
-
-	logPathInfo := filepath.Join(CONFIG.Zap.Director, "info.log")
-	logPathErr := filepath.Join(CONFIG.Zap.Director, "err.log")
-	if commonUtils.IsWin() {
-		logPathInfo = filepath.Join(WinFileSchema, logPathInfo)
-		logPathErr = filepath.Join(WinFileSchema, logPathErr)
 	}
 
 	config = zap.Config{
@@ -149,11 +144,18 @@ func getLogConfig() (config zap.Config) {
 		//InitialFields:    map[string]interface{}{"test_machine": "pc1"}, // 初始化字段
 	}
 	config.EncoderConfig.EncodeLevel = zapcore.LowercaseColorLevelEncoder //这里可以指定颜色
-	if commonUtils.IsWin() {
-		zap.RegisterSink("winfile", newWinFileSink)
-	}
-	config.OutputPaths = []string{"stdout", logPathInfo}
-	config.ErrorOutputPaths = []string{"stderr", logPathErr}
+	//if commonUtils.IsWin() {
+	//	zap.RegisterSink("winfile", newWinFileSink)
+	//}
+	//
+	//logPathInfo := filepath.Join(CONFIG.Zap.Director, "info.log")
+	//logPathErr := filepath.Join(CONFIG.Zap.Director, "err.log")
+	//if commonUtils.IsWin() {
+	//	logPathInfo = filepath.Join(WinFileSchema, logPathInfo)
+	//	logPathErr = filepath.Join(WinFileSchema, logPathErr)
+	//}
+	//config.OutputPaths = []string{"stdout", logPathInfo}
+	//config.ErrorOutputPaths = []string{"stderr", logPathErr}
 
 	return
 }
@@ -169,4 +171,25 @@ func newWinFileSink(u *url.URL) (zap.Sink, error) {
 		return nil, errors.New("path error")
 	}
 	return os.OpenFile(name, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
+}
+
+func zapCore(c zapcore.Core) zapcore.Core {
+	logPathInfo := filepath.Join(CONFIG.Zap.Director, "ztf.log")
+
+	w := zapcore.AddSync(&lumberjack.Logger{
+		Filename:   logPathInfo,
+		LocalTime:  true,
+		MaxSize:    300, // M
+		MaxAge:     30,  // days
+		MaxBackups: 30,
+	})
+
+	core := zapcore.NewCore(
+		zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig()),
+		w,
+		zap.DebugLevel,
+	)
+	cores := zapcore.NewTee(c, core)
+
+	return cores
 }
