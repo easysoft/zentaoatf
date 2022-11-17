@@ -115,6 +115,15 @@ func ExecUnit(
 	execHelper.RunUnitTest(nil, req.Cmd, req.WorkspacePath, nil)
 	entTime := time.Now()
 	// gen report
+	req.ResultDir = commConsts.AllureReportDir
+	req.ZipDir = req.ResultDir
+	if !fileUtils.IsAbsolutePath(req.ResultDir) {
+		req.ResultDir = filepath.Join(req.WorkspacePath, req.ResultDir)
+	}
+
+	if !fileUtils.IsAbsolutePath(req.ZipDir) {
+		req.ZipDir = filepath.Join(req.WorkspacePath, req.ZipDir)
+	}
 	report = execHelper.GenUnitTestReport(req, startTime.Unix(), entTime.Unix(), nil, nil)
 	return report
 }

@@ -50,7 +50,7 @@ type TestSet struct {
 	Cmd       string               `json:"cmd"`
 
 	ResultDir string `json:"resultDir"`
-	ZipDir    string `json:"cmd"`
+	ZipDir    string `json:"zipDir"`
 
 	SubmitResult bool `json:"submitResult"`
 }
