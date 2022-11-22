@@ -83,7 +83,7 @@ func TestCli() (err error) {
 	}
 	config := commDomain.WorkspaceConf{Url: "http://127.0.0.1:8081/", Password: "Test123456.", Username: "admin"}
 
-	err = zentaoHelper.CommitResult(report, 1, 0, 0, config, nil)
+	err = zentaoHelper.CommitResult(report, 1, 0, config, nil)
 	return
 }
 
@@ -101,7 +101,7 @@ func TestUi() (err error) {
 
 	config := commDomain.WorkspaceConf{Url: "http://127.0.0.1:8081/", Password: "Test123456.", Username: "admin"}
 
-	err = zentaoHelper.CommitResult(report, 1, 0, 0, config, nil)
+	err = zentaoHelper.CommitResult(report, 1, 0, config, nil)
 	return
 }
 
