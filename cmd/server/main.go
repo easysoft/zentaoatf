@@ -4,6 +4,7 @@ import (
 	"flag"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
+	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	"github.com/easysoft/zentaoatf/internal/server/core/web"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"os"
@@ -15,7 +16,6 @@ var (
 	GoVersion  string
 	GitHash    string
 
-	port = 0
 	uuid = ""
 )
 
@@ -25,8 +25,13 @@ var (
 // @contact.url https://github.com/easysoft/zentaoatf/issues
 // @contact.email 462626@qq.com
 func main() {
-	flag.IntVar(&port, "p", 0, "服务端口")
 	flag.StringVar(&uuid, "uuid", "", "区分服务进程的唯一ID")
+
+	flag.StringVar(&serverConfig.CONFIG.Server, "s", "http://pms.deeptest.loc", "")
+	flag.StringVar(&serverConfig.CONFIG.Ip, "i", commConsts.Ip, "服务所在机器IP地址")
+	flag.IntVar(&serverConfig.CONFIG.Port, "p", commConsts.Port, "服务所在端口")
+	flag.StringVar(&serverConfig.CONFIG.Secret, "secret", "", "禅道认证安全码")
+
 	flag.Parse()
 
 	if len(os.Args) == 1 {
@@ -40,7 +45,7 @@ func main() {
 	default:
 		commConsts.ExecFrom = commConsts.FromClient
 
-		webServer := web.Init(port)
+		webServer := web.Init(serverConfig.CONFIG.Port)
 		if webServer == nil {
 			return
 		}

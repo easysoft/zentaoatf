@@ -123,7 +123,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 	msg := fmt.Sprintf(format, scriptIdx+1, total, status, path, csResult.Id, csResult.Title, secs)
 
 	// print each case result
-	if commConsts.ExecFrom != commConsts.FromCmd {
+	if commConsts.ExecFrom == commConsts.FromClient {
 		msgCategory := commConsts.Result
 		if csResult.Status == commConsts.FAIL {
 			msgCategory = commConsts.Error

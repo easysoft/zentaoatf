@@ -3,6 +3,7 @@ package commConsts
 type ExecFromDef string
 
 const (
+	FromZentao ExecFromDef = "zentao"
 	FromCmd    ExecFromDef = "cmd"
 	FromClient ExecFromDef = "client"
 )
@@ -252,19 +253,22 @@ func (e DropPos) Int() int {
 	return int(e)
 }
 
-type ProgressStatus string
+type JobStatus string
 
 const (
-	ProgressCreated    ProgressStatus = "created"
-	ProgressInProgress ProgressStatus = "in_progress"
-	ProgressTimeout    ProgressStatus = "timeout"
-	ProgressCompleted  ProgressStatus = "completed"
+	JobCreated    JobStatus = "created"
+	JobInprogress JobStatus = "inprogress"
+
+	// temp status
+	JobTimeout JobStatus = "timeout"
+	JobError   JobStatus = "error"
+
+	// final status
+	JobCanceled  JobStatus = "canceled"
+	JobCompleted JobStatus = "completed"
+	JobFailed    JobStatus = "failed"
 )
 
-type BuildStatus string
-
-const (
-	StatusCreated BuildStatus = "created"
-	StatusPass    BuildStatus = "pass"
-	StatusFail    BuildStatus = "fail"
-)
+func (e JobStatus) ToString() string {
+	return string(e)
+}

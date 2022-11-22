@@ -8,7 +8,11 @@ const (
 	AppAgent   = "agent"
 	AppCommand = "cmd"
 
-	JobTimeout = 60 * 3
+	Ip   = "127.0.0.1"
+	Port = 8085
+
+	JobTimeoutTime = 60 * 3
+	JobRetryTime   = 3
 
 	ConfigVersion      = "3.0"
 	ConfigDir          = "conf"

@@ -134,7 +134,7 @@ func PrepareBug(workspacePath, seq string, caseIdStr string, productId int) (bug
 			Type: "codeerror", Severity: 3, Pri: 3, OpenedBuild: []string{"trunk"},
 			CaseVersion: "0", OldTaskID: "0",
 		}
-		if commConsts.ExecFrom != commConsts.FromCmd {
+		if commConsts.ExecFrom == commConsts.FromClient {
 			jsonSteps, _ := json.Marshal(stepsArray)
 			bug.Steps = string(jsonSteps)
 		}

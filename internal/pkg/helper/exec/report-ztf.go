@@ -89,7 +89,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	msgRun := dateUtils.DateTimeStr(time.Now()) + " " +
 		i118Utils.Sprintf("run_result", report.Total, report.Duration, passStr, failStr, skipStr)
 
-	if commConsts.ExecFrom != commConsts.FromCmd {
+	if commConsts.ExecFrom == commConsts.FromClient {
 		msgRunColor := i118Utils.Sprintf("run_result", report.Total, report.Duration,
 			fmt.Sprintf(`<span class="result-pass">%s</span>`, passStr),
 			fmt.Sprintf(`<span class="result-fail">%s</span>`, failStr),
@@ -106,7 +106,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 
 	logUtils.ExecConsole(color.FgCyan, msgReport)
 	logUtils.ExecResult(msgReport)
-	if commConsts.ExecFrom != commConsts.FromCmd {
+	if commConsts.ExecFrom == commConsts.FromClient {
 		websocketHelper.SendExecMsg(msgReport, "", commConsts.Run, map[string]interface{}{
 			"logDir": commConsts.ExecLogDir,
 		}, wsMsg)

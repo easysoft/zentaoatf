@@ -171,6 +171,7 @@ type ZtfReport struct {
 
 	ProductId int               `json:"productId,omitempty"`
 	TaskId    int               `json:"taskId,omitempty"`
+	Task      int               `json:"task,omitempty"`
 	ExecBy    commConsts.ExecBy `json:"execBy,omitempty"`
 	ExecById  int               `json:"execById,omitempty"`
 

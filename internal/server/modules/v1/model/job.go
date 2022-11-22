@@ -8,35 +8,22 @@ import (
 type Job struct {
 	BaseModel
 
-	Name     string
-	Priority int
+	Name string `json:"name"`
+	Desc string `json:"desc,omitempty"`
 
-	ScmAddress  string
-	ScmAccount  string
-	ScmPassword string
-	ScmToken    string
+	Workspace string `json:"workspace"`
+	Path      string `json:"path"`
+	Ids       string `json:"ids"`
 
-	ProgressStatus commConsts.ProgressStatus
-	BuildStatus    commConsts.BuildStatus
+	Status commConsts.JobStatus `json:"status"`
+	Retry  int                  `json:"retry"`
 
-	StartTime     *time.Time
-	TimeoutTime   *time.Time
-	TerminateTime *time.Time
-	ResultTime    *time.Time
+	StartDate   *time.Time `json:"startDate"`
+	EndDate     *time.Time `json:"endDate"`
+	TimeoutDate *time.Time `json:"timeoutDate,omitempty"`
+	CancelDate  *time.Time `json:"cancelDate,omitempty"`
 
-	CaseIds   []int `json:"caseIds" gorm:"-"`
-	ProductId int   `json:"productId"`
-	ModuleId  int   `json:"moduleId"`
-	SuiteId   int   `json:"suiteId"`
-	TaskId    int   `json:"taskId"`
-}
-
-func NewJob() Job {
-	task := Job{
-		ProgressStatus: commConsts.ProgressCreated,
-		BuildStatus:    commConsts.StatusCreated,
-	}
-	return task
+	Task int `json:"task"`
 }
 
 func (Job) TableName() string {

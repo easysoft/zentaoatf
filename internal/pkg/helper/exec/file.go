@@ -61,7 +61,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			cmd = exec.CommandContext(ctxt, "cmd", "/C", filePath, "-uuid", uuidString)
 		} else {
 			msg := i118Utils.I118Prt.Sprintf("no_interpreter_for_run", lang, filePath)
-			if commConsts.ExecFrom != commConsts.FromCmd {
+			if commConsts.ExecFrom == commConsts.FromClient {
 				websocketHelper.SendOutputMsg(msg, "", iris.Map{"key": key}, wsMsg)
 			}
 			logUtils.ExecConsolef(-1, msg)
@@ -71,7 +71,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		err := os.Chmod(filePath, 0777)
 		if err != nil {
 			msg := i118Utils.I118Prt.Sprintf("exec_cmd_fail", filePath, err.Error())
-			if commConsts.ExecFrom != commConsts.FromCmd {
+			if commConsts.ExecFrom == commConsts.FromClient {
 				websocketHelper.SendOutputMsg(msg, "", iris.Map{"key": key}, wsMsg)
 			}
 			logUtils.ExecConsolef(-1, msg)
@@ -84,7 +84,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		if scriptInterpreter != "" {
 			msg := fmt.Sprintf("use interpreter %s", scriptInterpreter)
 
-			if commConsts.ExecFrom != commConsts.FromCmd {
+			if commConsts.ExecFrom == commConsts.FromClient {
 				//websocketHelper.SendOutputMsg(msg, "", iris.Map{"key": key}, wsMsg)
 				logUtils.ExecConsolef(-1, msg)
 			}
@@ -105,7 +105,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 
 	if cmd == nil {
 		msgStr := i118Utils.Sprintf("cmd_empty")
-		if commConsts.ExecFrom != commConsts.FromCmd {
+		if commConsts.ExecFrom == commConsts.FromClient {
 			websocketHelper.SendOutputMsg(msgStr, "", iris.Map{"key": key}, wsMsg)
 			logUtils.ExecConsolef(color.FgRed, msgStr)
 		}
@@ -123,7 +123,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	stderr, err2 := cmd.StderrPipe()
 
 	if err1 != nil {
-		if commConsts.ExecFrom != commConsts.FromCmd {
+		if commConsts.ExecFrom == commConsts.FromClient {
 			websocketHelper.SendOutputMsg(err1.Error(), "", iris.Map{"key": key}, wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, err1.Error())
@@ -131,7 +131,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 
 		return "", err1.Error()
 	} else if err2 != nil {
-		if commConsts.ExecFrom != commConsts.FromCmd {
+		if commConsts.ExecFrom == commConsts.FromClient {
 			websocketHelper.SendOutputMsg(err2.Error(), "", iris.Map{"key": key}, wsMsg)
 		}
 		logUtils.ExecConsolef(color.FgRed, err2.Error())
@@ -169,7 +169,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	for {
 		line, err2 := reader1.ReadString('\n')
 		if line != "" {
-			if commConsts.ExecFrom != commConsts.FromCmd {
+			if commConsts.ExecFrom == commConsts.FromClient {
 				websocketHelper.SendOutputMsg(line, "", iris.Map{"key": key}, wsMsg)
 				logUtils.ExecConsole(-1, line)
 			}
@@ -194,7 +194,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 		case <-ch:
 			msg := i118Utils.Sprintf("exit_exec_curr")
 
-			if commConsts.ExecFrom != commConsts.FromCmd {
+			if commConsts.ExecFrom == commConsts.FromClient {
 				websocketHelper.SendExecMsg(msg, "", commConsts.Run,
 					iris.Map{"key": key, "status": "end"}, wsMsg)
 			}
