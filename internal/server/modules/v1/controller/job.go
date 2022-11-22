@@ -8,71 +8,54 @@ import (
 )
 
 type JobCtrl struct {
+	JobService *service.JobService `inject:""`
 	BaseCtrl
-	JobService  *service.JobService  `inject:""`
-	ExecService *service.ExecService `inject:""`
 }
 
 func NewJobCtrl() *JobCtrl {
 	return &JobCtrl{}
 }
 
-func (c *JobCtrl) List(ctx iris.Context) {
-	list, err := c.JobService.List()
-
-	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
-		return
-	}
-
-	ctx.JSON(c.SuccessResp(list))
-}
-
+// @summary 添加下载任务
+// @Accept json
+// @Produce json
+// @Param DownloadReq body []v1.DownloadReq true "Download Request Object"
+// @Success 200 {object} _domain.Response "code = success | fail"
+// @Router /api/v1/download/add [post]
 func (c *JobCtrl) Add(ctx iris.Context) {
-	req := serverDomain.JobReq{}
-	if err := ctx.ReadQuery(&req); err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+	var req serverDomain.ZentaoExecReq
+	err := ctx.ReadJSON(&req)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
 		return
 	}
 
-	err := c.JobService.Add(req)
-
+	err = c.JobService.Add(req)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
 		return
 	}
 
 	ctx.JSON(c.SuccessResp(nil))
+	return
 }
 
-func (c *JobCtrl) Remove(ctx iris.Context) {
-	req := serverDomain.JobReq{}
-	if err := ctx.ReadQuery(&req); err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+// @summary 强制终止下载任务
+// @Accept json
+// @Produce json
+// @Param DownloadCancelReq body v1.DownloadCancelReq true "CancelDate Download Request Object"
+// @Success 200 {object} _domain.Response "code = success | fail"
+// @Router /api/v1/download/cancel [post]
+func (c *JobCtrl) Cancel(ctx iris.Context) {
+	req := serverDomain.ZentaoCancelReq{}
+	err := ctx.ReadJSON(&req)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, err.Error()))
 		return
 	}
 
-	err := c.JobService.Remove(req)
-	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
-		return
-	}
+	c.JobService.Cancel(uint(req.Task))
 
 	ctx.JSON(c.SuccessResp(nil))
-}
-
-func (c *JobCtrl) Stop(ctx iris.Context) {
-	req := serverDomain.JobReq{}
-	if err := ctx.ReadQuery(&req); err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
-		return
-	}
-
-	err := c.JobService.Stop()
-	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
-		return
-	}
-
-	ctx.JSON(c.SuccessResp(nil))
+	return
 }

@@ -31,4 +31,7 @@ var (
 	RunModeCommon  = "common"
 	RunModeServer  = "server"
 	RunModeRequest = "request"
+
+	Authorization = "Authorization"
+	Bearer        = "Bearer"
 )

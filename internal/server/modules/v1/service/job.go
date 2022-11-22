@@ -2,126 +2,241 @@ package service
 
 import (
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/easysoft/zentaoatf/internal/server/core/cache"
+	analysisHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
+	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
+	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
-	"github.com/jinzhu/copier"
+	channelUtils "github.com/easysoft/zentaoatf/pkg/lib/channel"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	"path/filepath"
 	"strconv"
+	"strings"
+	"sync"
 	"time"
 )
 
+var (
+	channelMap sync.Map
+)
+
 type JobService struct {
-	JobRepo     *repo.JobRepo `inject:""`
-	ExecService *ExecService  `inject:""`
+	JobRepo *repo.JobRepo `inject:""`
 }
 
 func NewJobService() *JobService {
 	return &JobService{}
 }
 
-func (s *JobService) List() (pos []model.Job, err error) {
-	pos, err = s.JobRepo.Query()
+func (s *JobService) Add(req serverDomain.ZentaoExecReq) (err error) {
+	po := model.Job{
+		Workspace: req.Workspace,
+		Path:      req.Path,
+		Ids:       req.Ids,
 
-	return
-}
-
-func (s *JobService) Add(req serverDomain.JobReq) (err error) {
-	job := model.Job{}
-	copier.CopyWithOption(&job, req, copier.Option{
-		IgnoreEmpty: true,
-		DeepCopy:    true,
-	})
-
-	s.JobRepo.Create(&job)
-
-	return
-}
-
-func (s *JobService) Remove(req serverDomain.JobReq) (err error) {
-	currJob := cache.GetCurrJob()
-
-	if currJob.ID != 0 && currJob.ID == req.JobId {
-		err = s.Stop()
+		Task:   req.Task,
+		Retry:  1,
+		Status: commConsts.JobCreated,
 	}
 
-	s.JobRepo.Delete(req.JobId)
+	s.JobRepo.Save(&po)
 
 	return
 }
 
-func (s *JobService) Stop() (err error) {
-	s.ExecService.Stop(nil)
+func (s *JobService) Start(po model.Job) {
+	ch := make(chan int, 1)
+	channelMap.Store(po.ID, ch)
 
-	return
+	req := s.genExecReq(po)
+
+	go func() {
+		s.JobRepo.UpdateStatus(po.ID, commConsts.JobInprogress, true, false)
+
+		execHelper.Exec(nil, req, nil)
+
+		s.JobRepo.UpdateStatus(po.ID, commConsts.JobCompleted, false, true)
+
+		s.SubmitResult(po)
+
+		if ch != nil {
+			channelMap.Delete(po.ID)
+			close(ch)
+		}
+	}()
 }
 
-func (s *JobService) Check(currJob model.Job) (err error) {
-	s.CheckJob()
-	s.CheckTimeout()
+func (s *JobService) Cancel(id uint) {
+	taskInfo, _ := s.JobRepo.Get(id)
 
-	return
+	if taskInfo.ID > 0 {
+		s.JobRepo.SetCanceled(taskInfo)
+	}
+
+	s.Stop(id)
 }
 
-func (s *JobService) CheckJob() (err error) {
-	job, err := s.JobRepo.QueryForExec()
-	if err != nil {
+func (s *JobService) Stop(id uint) {
+	chVal, ok := channelMap.Load(id)
+
+	if !ok || chVal == nil {
 		return
 	}
 
-	s.Run(job)
+	channelMap.Delete(id)
+
+	ch := chVal.(chan int)
+	if ch != nil {
+		if !channelUtils.IsChanClose(ch) {
+			ch <- 1
+		}
+
+		ch = nil
+	}
+}
+
+func (s *JobService) Restart(po model.Job) (ret bool) {
+	s.Cancel(po.ID)
+	s.Start(po)
+
+	s.JobRepo.AddRetry(po)
 
 	return
 }
 
-func (s JobService) Run(job model.Job) (err error) {
-	testSet := serverDomain.TestSet{
-		Cases: s.convertIntToStrArr(job.CaseIds),
+func (s *JobService) Check() (err error) {
+	taskMap, _ := s.List()
+
+	toStartNewJob := false
+	if len(taskMap.Inprogress) > 0 {
+		runningJob := taskMap.Inprogress[0]
+
+		if s.IsError(runningJob) || s.IsTimeout(runningJob) || s.isEmpty() {
+			if s.NeedRetry(runningJob) {
+				s.Restart(runningJob)
+			} else {
+				s.JobRepo.SetFailed(runningJob)
+				toStartNewJob = true
+			}
+		}
+
+	} else {
+		toStartNewJob = true
 	}
 
-	req := serverDomain.ExecReq{
-		ProductId: job.ProductId,
-		ModuleId:  job.ModuleId,
-		SuiteId:   job.SuiteId,
-		TaskId:    job.TaskId,
-		TestSets:  []serverDomain.TestSet{testSet},
-	}
+	if toStartNewJob && len(taskMap.Created) > 0 {
+		newJob := taskMap.Created[0]
 
-	err = s.ExecService.Start(req, nil)
-	if err != nil {
-		return
+		s.Start(newJob)
 	}
-
-	s.JobRepo.UpdateProgressStatus(job.ID, commConsts.ProgressInProgress)
 
 	return
 }
 
-func (s JobService) CheckTimeout() (err error) {
-	currJob := cache.GetCurrJob()
-
-	pos, err := s.JobRepo.ListByProgressStatus(commConsts.ProgressInProgress)
-	if err != nil {
-		return
+func (s *JobService) List() (ret serverDomain.ListJobResp, err error) {
+	ret = serverDomain.ListJobResp{
+		Created:    make([]model.Job, 0),
+		Inprogress: make([]model.Job, 0),
+		Canceled:   make([]model.Job, 0),
+		Completed:  make([]model.Job, 0),
+		Failed:     make([]model.Job, 0),
 	}
+
+	pos, _ := s.JobRepo.Query()
 
 	for _, po := range pos {
-		if time.Now().Unix()-po.StartTime.Unix() > commConsts.JobTimeout {
-			if currJob.ID != 0 && currJob.ID == po.ID {
-				err = s.Stop()
-			}
+		status := po.Status
+		if status == commConsts.JobTimeout || status == commConsts.JobError {
+			status = commConsts.JobInprogress
+		}
 
-			err = s.JobRepo.SetTimeout(currJob.ID)
+		if status == commConsts.JobCreated {
+			ret.Created = append(ret.Created, po)
+		} else if status == commConsts.JobInprogress {
+			ret.Inprogress = append(ret.Inprogress, po)
+		} else if status == commConsts.JobCanceled {
+			ret.Canceled = append(ret.Canceled, po)
+		} else if status == commConsts.JobCompleted {
+			ret.Completed = append(ret.Completed, po)
+		} else if status == commConsts.JobFailed {
+			ret.Failed = append(ret.Failed, po)
 		}
 	}
 
 	return
 }
 
-func (s *JobService) convertIntToStrArr(ids []int) (ret []string) {
-	for _, item := range ids {
-		ret = append(ret, strconv.Itoa(item))
+func (s *JobService) SubmitResult(job model.Job) (err error) {
+	result := serverDomain.ZentaoResultSubmitReq{
+		Task: job.Task,
+		Seq:  commConsts.ExecLogDir,
 	}
 
+	report, err := analysisHelper.ReadReportByPath(filepath.Join(result.Seq, commConsts.ResultJson))
+	if err != nil {
+		return
+	}
+
+	config := configHelper.LoadByWorkspacePath(commConsts.ZtfDir)
+	err = zentaoHelper.CommitResult(report, result.ProductId, result.TaskId, result.Task, config, nil)
+
 	return
+}
+
+func (s *JobService) genExecReq(po model.Job) (req serverDomain.ExecReq) {
+	caseIds := make([]int, 0)
+	for _, idStr := range strings.Split(po.Ids, ",") {
+		id, err := strconv.Atoi(idStr)
+		if err == nil {
+			caseIds = append(caseIds, id)
+		}
+	}
+
+	dir := po.Path
+	if !fileUtils.IsAbsolutePath(dir) {
+		dir = filepath.Join(po.Workspace, dir)
+	}
+
+	caseIdMap := map[int]string{}
+	scriptHelper.GetScriptByIdsInDir(dir, &caseIdMap)
+
+	cases := scriptHelper.GetCaseByListInMap(caseIds, caseIdMap)
+
+	commConsts.ExecFrom = commConsts.FromZentao
+	req.Act = commConsts.ExecCase
+	req.ScriptDirParamFromCmdLine = "."
+	req.TestSets = append(req.TestSets, serverDomain.TestSet{
+		WorkspacePath: po.Workspace,
+		Cases:         cases,
+	})
+
+	return
+}
+
+func (s *JobService) IsError(po model.Job) bool {
+	return po.Status == commConsts.JobError
+}
+
+func (s *JobService) IsTimeout(po model.Job) bool {
+	dur := time.Now().Unix() - po.StartDate.Unix()
+	//return dur > 3
+	return po.Status == commConsts.JobInprogress && dur > commConsts.JobTimeoutTime
+}
+
+func (s *JobService) NeedRetry(po model.Job) bool {
+	return po.Retry < commConsts.JobRetryTime
+}
+
+func (s *JobService) isEmpty() bool {
+	length := 0
+
+	channelMap.Range(func(key, value interface{}) bool {
+		length++
+		return true
+	})
+
+	return length == 0
 }

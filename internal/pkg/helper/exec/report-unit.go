@@ -115,7 +115,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 		logUtils.ExecResult(msg)
 	}
 
-	if commConsts.ExecFrom != commConsts.FromCmd {
+	if commConsts.ExecFrom == commConsts.FromClient {
 		websocketHelper.SendExecMsg(msg, "", msgCategory,
 			iris.Map{"key": key, "status": status}, wsMsg)
 	}
@@ -143,7 +143,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 			passStr, failStr, skipStr,
 		)
 
-	if commConsts.ExecFrom != commConsts.FromCmd {
+	if commConsts.ExecFrom == commConsts.FromClient {
 		websocketHelper.SendExecMsg(msgRun, "", commConsts.Result, nil, wsMsg)
 	}
 	logUtils.ExecConsole(color.FgCyan, msgRun)
@@ -157,7 +157,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 		format := "(%" + width + "d/%d) %s [%s] [%" + width + "d. %s] (%.3fs)"
 		msgCase := fmt.Sprintf(format, idx+1, report.Total, cs.Status, testSuite, cs.Id, cs.Title, cs.Duration)
 
-		if commConsts.ExecFrom != commConsts.FromCmd {
+		if commConsts.ExecFrom == commConsts.FromClient {
 			websocketHelper.SendExecMsg(msgCase, "", commConsts.Result, nil, wsMsg)
 		}
 
@@ -169,7 +169,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
 	resultPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)
 	msgReport := "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
 
-	if commConsts.ExecFrom != commConsts.FromCmd {
+	if commConsts.ExecFrom == commConsts.FromClient {
 		websocketHelper.SendExecMsg(msgReport, "false", commConsts.Result, map[string]interface{}{
 			"logDir": commConsts.ExecLogDir,
 		}, wsMsg)

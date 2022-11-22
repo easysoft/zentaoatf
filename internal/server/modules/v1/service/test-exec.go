@@ -16,15 +16,15 @@ var (
 	ch chan int
 )
 
-type ExecService struct {
+type TestExecService struct {
 	WorkspaceService *WorkspaceService `inject:""`
 }
 
-func NewTestExecService() *ExecService {
-	return &ExecService{}
+func NewTestExecService() *TestExecService {
+	return &TestExecService{}
 }
 
-func (s *ExecService) Start(req serverDomain.ExecReq, wsMsg *websocket.Message) (err error) {
+func (s *TestExecService) Start(req serverDomain.ExecReq, wsMsg *websocket.Message) (err error) {
 	if execHelper.GetRunning() && req.Act != commConsts.ExecStop {
 		msg := i118Utils.Sprintf("pls_stop_previous")
 		websocketHelper.SendExecMsg(msg, "true", commConsts.Run, nil, wsMsg)
@@ -62,7 +62,7 @@ func (s *ExecService) Start(req serverDomain.ExecReq, wsMsg *websocket.Message) 
 	return
 }
 
-func (s *ExecService) Stop(wsMsg *websocket.Message) (err error) {
+func (s *TestExecService) Stop(wsMsg *websocket.Message) (err error) {
 	if ch != nil {
 		if !execHelper.GetRunning() {
 			ch = nil

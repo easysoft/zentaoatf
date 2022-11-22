@@ -20,9 +20,10 @@ func (m *JobModule) Party() module.WebModule {
 	handler := func(index iris.Party) {
 		index.Use(middleware.InitCheck())
 
+		//index.Use(core.Auth())
+
 		index.Post("/add", m.JobCtrl.Add).Name = "添加任务到队列"
-		index.Post("/remove", m.JobCtrl.Remove).Name = "移除队列中任务"
-		index.Post("/stop", m.JobCtrl.Stop).Name = "终止当前执行的任务"
+		index.Post("/cancel", m.JobCtrl.Cancel).Name = "强制终止任务"
 	}
 	return module.NewModule("/jobs", handler)
 }

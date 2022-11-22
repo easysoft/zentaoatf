@@ -15,19 +15,22 @@ import (
 	"github.com/kataras/iris/v12/websocket"
 )
 
-func CommitResult(report commDomain.ZtfReport, productId, taskId int, config commDomain.WorkspaceConf,
+func CommitResult(report commDomain.ZtfReport, productId, taskId, task int, config commDomain.WorkspaceConf,
 	wsMsg *websocket.Message) (err error) {
 	if productId != 0 {
 		report.ProductId = productId
 	}
 	RemoveAutoCreateId(&report)
 	report.TaskId = taskId
+	report.Task = task
 
 	// for ci tool debug
 	report.ZentaoData = os.Getenv("ZENTAO_DATA")
 	report.BuildUrl = os.Getenv("BUILD_URL")
 
-	Login(config)
+	if commConsts.ExecFrom != commConsts.FromZentao {
+		Login(config)
+	}
 
 	uri := fmt.Sprintf("/ciresults")
 	url := GenApiUrl(uri, nil, config.Url)
@@ -47,7 +50,7 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId int, config com
 	msg := i118Utils.Sprintf("success_to_submit_test_result")
 	logUtils.Info(color.GreenString(msg))
 
-	if commConsts.ExecFrom != commConsts.FromCmd &&
+	if commConsts.ExecFrom == commConsts.FromClient &&
 		wsMsg != nil { // from executing, not submit in webpage
 		websocketHelper.SendExecMsg(msg, "", commConsts.Result, nil, wsMsg)
 	}

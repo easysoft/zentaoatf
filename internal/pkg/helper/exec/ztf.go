@@ -88,12 +88,12 @@ func RunZtf(ch chan int,
 	// run
 	ExeScripts(casesToRun, casesToIgnore, workspacePath, conf, &report, pathMaxWidth, numbMaxWidth, ch, wsMsg)
 
+	// gen report
 	if len(casesToRun) > 0 {
-		// gen report
 		GenZTFTestReport(report, pathMaxWidth, workspacePath, ch, wsMsg)
 	}
 
-	if commConsts.ExecFrom != commConsts.FromCmd {
+	if commConsts.ExecFrom == commConsts.FromClient {
 		websocketHelper.SendExecMsg("", "false", commConsts.Run, nil, wsMsg)
 	}
 	if ch != nil {
@@ -112,13 +112,13 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 	report.StartTime = startTime
 
 	workDir := commConsts.WorkDir
-	if commConsts.ExecFrom != commConsts.FromCmd {
+	if commConsts.ExecFrom == commConsts.FromClient {
 		workDir = workspacePath
 	}
 
 	msg := i118Utils.Sprintf("found_scripts", len(casesToRun), workDir, commConsts.ZtfDir)
 
-	if commConsts.ExecFrom != commConsts.FromCmd {
+	if commConsts.ExecFrom == commConsts.FromClient {
 		msg = i118Utils.Sprintf("found_scripts_no_ztf_dir", len(casesToRun), workDir)
 		websocketHelper.SendExecMsg(msg, "", commConsts.Run, nil, wsMsg)
 	}
@@ -127,7 +127,7 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 
 	if len(casesToIgnore) > 0 {
 		temp := i118Utils.Sprintf("ignore_scripts", strconv.Itoa(len(casesToIgnore)))
-		if commConsts.ExecFrom != commConsts.FromCmd {
+		if commConsts.ExecFrom == commConsts.FromClient {
 			websocketHelper.SendExecMsg(temp, "", commConsts.Run, nil, wsMsg)
 		}
 
@@ -145,7 +145,7 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 		select {
 		case <-ch:
 			msg := i118Utils.Sprintf("exit_exec_all")
-			if commConsts.ExecFrom != commConsts.FromCmd {
+			if commConsts.ExecFrom == commConsts.FromClient {
 				websocketHelper.SendExecMsg(msg, "", commConsts.Run, nil, wsMsg)
 			}
 

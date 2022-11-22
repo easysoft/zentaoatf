@@ -22,7 +22,7 @@ type WebSocketCtrl struct {
 	*websocket.NSConn `stateless:"true"`
 
 	WorkspaceService *service.WorkspaceService `inject:""`
-	TestExecService  *service.ExecService      `inject:""`
+	TestExecService  *service.TestExecService  `inject:""`
 }
 
 func NewWebSocketCtrl() *WebSocketCtrl {

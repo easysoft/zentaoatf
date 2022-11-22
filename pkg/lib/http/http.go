@@ -3,6 +3,7 @@ package httpUtils
 import (
 	"encoding/json"
 	"errors"
+	authUtils "github.com/easysoft/zentaoatf/internal/pkg/helper/auth"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -31,6 +32,8 @@ func Get(url string) (ret []byte, err error) {
 	if strings.Index(url, "user-login") < 0 && strings.Index(url, "mode=getconfig") < 0 {
 		req.Header.Add(commConsts.Token, commConsts.SessionId)
 	}
+
+	authUtils.AddBearTokenIfNeeded(req)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -119,6 +122,8 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 	}
 	//req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	authUtils.AddBearTokenIfNeeded(req)
 
 	resp, err := client.Do(req)
 	if err != nil {

@@ -4,6 +4,10 @@ import (
 	"time"
 )
 
+const (
+	dateTimeFormat = "2006-01-02 15:04:05"
+)
+
 func DateStr(tm time.Time) string {
 	return tm.Format("2006-01-02")
 }
@@ -41,4 +45,12 @@ func DateStrToTimestamp(str string) (int64, error) {
 	}
 
 	return time.Unix(), nil
+}
+
+func UnitToDate(unit int64) (date time.Time, err error) {
+	timeStr := time.Unix(unit, 0).Format(dateTimeFormat)
+
+	date, _ = time.ParseInLocation(dateTimeFormat, timeStr, time.Local)
+
+	return
 }

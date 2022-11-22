@@ -11,6 +11,15 @@
     },
 
     {
+      "id": "success_to_register",
+      "translation": "注册成功%s。"
+    },
+    {
+      "id": "fail_to_register",
+      "translation": "注册失败%s，响应%v。"
+    },
+
+    {
       "id": "request_success",
       "translation": "请求成功"
     },

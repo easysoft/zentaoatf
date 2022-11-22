@@ -1,7 +1,8 @@
 package serverConfig
 
 const (
-	JobCheckInterval = 15
+	HeartbeatInterval = 15
+	JobCheckInterval  = 15
 
 	WsDefaultNameSpace = "default"
 	WsDefaultRoom      = "default"

@@ -4,6 +4,17 @@ import (
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 )
 
+type ZentaoExecReq struct {
+	Workspace string `json:"workspace"`
+	Path      string `json:"path"`
+	Ids       string `json:"ids"`
+
+	Task int `json:"task"`
+}
+type ZentaoCancelReq struct {
+	Task int `json:"task"`
+}
+
 type ExecReq struct {
 	Act commConsts.ExecCmd `json:"act"`
 

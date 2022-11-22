@@ -6,15 +6,12 @@ import (
 	"github.com/easysoft/zentaoatf/internal/server/core/cache"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
 	"github.com/easysoft/zentaoatf/pkg/lib/cron"
-	"github.com/easysoft/zentaoatf/pkg/lib/date"
-	"github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/kataras/iris/v12"
-	"time"
 )
 
 type ServerCron struct {
-	ExecService *service.ExecService `inject:""`
-	JobService  *service.JobService  `inject:""`
+	HeartbeatService *service.HeartbeatService `inject:""`
+	JobService       *service.JobService       `inject:""`
 }
 
 func NewServerCron() *ServerCron {
@@ -27,25 +24,16 @@ func (s *ServerCron) Init() {
 	cache.SyncMap.Store(cache.LastLoopEndTime, int64(0))
 
 	cronUtils.AddTask(
+		"heartbeat", fmt.Sprintf("@every %ds", serverConfig.HeartbeatInterval),
+		func() {
+			s.HeartbeatService.Heartbeat()
+		},
+	)
+
+	cronUtils.AddTask(
 		"checkJob", fmt.Sprintf("@every %ds", serverConfig.JobCheckInterval),
 		func() {
-			isRunning, _ := cache.SyncMap.Load(cache.IsRunning)
-			lastCompletedTime, _ := cache.SyncMap.Load(cache.LastLoopEndTime)
-
-			if isRunning.(bool) || time.Now().Unix()-lastCompletedTime.(int64) < serverConfig.JobCheckInterval {
-				logUtils.Infof("skip iteration" + dateUtils.DateTimeStr(time.Now()))
-				return
-			}
-
-			cache.SyncMap.Store(isRunning, true)
-
-			// start
-			currJob := cache.GetCurrJob()
-			s.JobService.Check(currJob)
-			// end
-
-			cache.SyncMap.Store(isRunning, false)
-			cache.SyncMap.Store(lastCompletedTime, time.Now().Unix())
+			s.JobService.Check()
 		},
 	)
 

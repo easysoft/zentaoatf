@@ -1,5 +1,19 @@
 package serverDomain
 
+import "time"
+
+type ZentaoHeartbeatReq struct {
+	Secret string `json:"secret"`
+	Token  string `json:"token"`
+	Ip     string `json:"ip"`
+	Port   int    `json:"port"`
+}
+type ZentaoHeartbeatResp struct {
+	Token           string    `json:"token" yaml:"token"`
+	ExpiredTimeUnix int64     `json:"expiredTimeUnix" yaml:"expiredTimeUnix"`
+	ExpiredDate     time.Time `json:"expiredDate" yaml:"expiredDate"`
+}
+
 type ZentaoResp struct {
 	Status string
 	Data   string
@@ -15,6 +29,8 @@ type ZentaoResultSubmitReq struct {
 	WorkspaceId int    `json:"workspaceId"`
 	ProductId   int    `json:"productId"`
 	TaskId      int    `json:"taskId"`
+
+	Task int `json:"task"`
 }
 
 type ZentaoLang struct {
