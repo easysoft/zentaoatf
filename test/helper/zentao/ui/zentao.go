@@ -8,6 +8,7 @@ import (
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	"github.com/easysoft/zentaoatf/test/ui/conf"
 	playwright "github.com/playwright-community/playwright-go"
 )
@@ -88,7 +89,7 @@ func Login(url string) (err error) {
 }
 
 func createModule() (err error) {
-	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
+	if _, err = page.Goto(constTestHelper.ZentaoSiteUrl, playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		return
 	}
@@ -135,7 +136,7 @@ func createModule() (err error) {
 }
 
 func createSuite() (err error) {
-	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
+	if _, err = page.Goto(constTestHelper.ZentaoSiteUrl, playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		return
 	}
@@ -183,7 +184,7 @@ func createSuite() (err error) {
 }
 
 func getLastUnitTestResult() (results []map[string]string, err error) {
-	if _, err = page.Goto("http://127.0.0.1:8081/", playwright.PageGotoOptions{
+	if _, err = page.Goto(constTestHelper.ZentaoSiteUrl, playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		return
 	}
@@ -354,7 +355,7 @@ func downloadExt(codeDir string) (err error) {
 
 func InitZentaoData(version string, codeDir string) (err error) {
 	zentaoVersion = version
-	if _, err = page.Goto("http://127.0.0.1:8081", playwright.PageGotoOptions{
+	if _, err = page.Goto(constTestHelper.ZentaoSiteUrl, playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		return
 	}
@@ -452,7 +453,7 @@ func InitZentaoData(version string, codeDir string) (err error) {
 		if err != nil {
 			return
 		}
-		err = Login("http://127.0.0.1:8081")
+		err = Login(constTestHelper.ZentaoSiteUrl)
 		if err != nil {
 			return
 		}
@@ -496,5 +497,5 @@ func init() {
 	if err != nil {
 		return
 	}
-	Login("http://127.0.0.1:8081")
+	Login(constTestHelper.ZentaoSiteUrl)
 }

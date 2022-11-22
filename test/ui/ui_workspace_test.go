@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
 	plwConf "github.com/easysoft/zentaoatf/test/ui/conf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	workspacePath = fmt.Sprintf("%stest%sdemo%sphp", commonTestHelper.RootPath, commonTestHelper.FilePthSep, commonTestHelper.FilePthSep)
+	workspacePath = fmt.Sprintf("%stest%sdemo%sphp", constTestHelper.RootPath, constTestHelper.FilePthSep, constTestHelper.FilePthSep)
 )
 
 func CreateWorkspace(t provider.T) {

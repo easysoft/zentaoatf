@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	uiTest "github.com/easysoft/zentaoatf/test/helper/zentao/ui"
 )
 
@@ -130,7 +131,7 @@ func waitZentaoAccessed() {
 		isTimeout = true
 	})
 	for {
-		status := uiTest.GetStatus("http://127.0.0.1:8081/")
+		status := uiTest.GetStatus(constTestHelper.ZentaoSiteUrl)
 		if isTimeout || status {
 			return
 		}

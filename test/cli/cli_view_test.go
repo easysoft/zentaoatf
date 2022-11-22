@@ -18,6 +18,7 @@ import (
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
@@ -31,9 +32,9 @@ func (s *ViewSuite) BeforeEach(t provider.T) {
 	t.AddSubSuite("命令行-查看脚本详情")
 }
 func (s *ViewSuite) TestViewSuite(t provider.T) {
-	t.Require().Equal("Success", testView(commonTestHelper.GetZtfPath()+fmt.Sprintf(" view %stest/demo/1_string_match_fail.php", commonTestHelper.RootPath), regexp.MustCompile("check string matches pattern")))
-	t.Require().Equal("Success", testView(commonTestHelper.GetZtfPath()+fmt.Sprintf(" -v %stest/demo -k 1", commonTestHelper.RootPath), regexp.MustCompile("check string matches pattern")))
-	t.Require().Equal("Success", testView(commonTestHelper.GetZtfPath()+fmt.Sprintf(" view %stest/demo -k match", commonTestHelper.RootPath), regexp.MustCompile("Found 5 test cases|发现5个用例")))
+	t.Require().Equal("Success", testView(commonTestHelper.GetZtfPath()+fmt.Sprintf(" view %stest/demo/1_string_match_fail.php", constTestHelper.RootPath), regexp.MustCompile("check string matches pattern")))
+	t.Require().Equal("Success", testView(commonTestHelper.GetZtfPath()+fmt.Sprintf(" -v %stest/demo -k 1", constTestHelper.RootPath), regexp.MustCompile("check string matches pattern")))
+	t.Require().Equal("Success", testView(commonTestHelper.GetZtfPath()+fmt.Sprintf(" view %stest/demo -k match", constTestHelper.RootPath), regexp.MustCompile("Found 5 test cases|发现5个用例")))
 }
 
 func testView(cmd string, successRe *regexp.Regexp) string {

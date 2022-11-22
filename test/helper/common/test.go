@@ -10,6 +10,7 @@ import (
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 
@@ -18,18 +19,19 @@ import (
 )
 
 func TestCli() (err error) {
-	testPath := fmt.Sprintf(`%stest`, RootPath)
+	testPath := fmt.Sprintf(`%stest`, constTestHelper.RootPath)
 	if runtime.GOOS == "windows" {
-		testPath = fmt.Sprintf(`%stest`, RootPath)
+		testPath = fmt.Sprintf(`%stest`, constTestHelper.RootPath)
 	}
 	req := serverDomain.TestSet{
 		WorkspacePath: testPath,
 		Cmd:           "go test ./cli -v",
 		TestTool:      commConsts.GoTest,
 	}
+	fmt.Println(testPath, req.Cmd)
 	report := ExecUnit(req)
 
-	config := commDomain.WorkspaceConf{Url: "http://127.0.0.1:8081/", Password: "Test123456.", Username: "admin"}
+	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl, Password: "Test123456.", Username: "admin"}
 	err = zentaoHelper.CommitResult(report, 1, 0, config, nil)
 
 	if report.Fail > 0 {
@@ -39,9 +41,9 @@ func TestCli() (err error) {
 }
 
 func TestUi() (err error) {
-	testPath := fmt.Sprintf(`%stest`, RootPath)
+	testPath := fmt.Sprintf(`%stest`, constTestHelper.RootPath)
 	if runtime.GOOS == "windows" {
-		testPath = fmt.Sprintf(`%stest`, RootPath)
+		testPath = fmt.Sprintf(`%stest`, constTestHelper.RootPath)
 	}
 	req := serverDomain.TestSet{
 		WorkspacePath: testPath,
@@ -50,7 +52,7 @@ func TestUi() (err error) {
 	}
 	report := ExecUnit(req)
 
-	config := commDomain.WorkspaceConf{Url: "http://127.0.0.1:8081/", Password: "Test123456.", Username: "admin"}
+	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl, Password: "Test123456.", Username: "admin"}
 	err = zentaoHelper.CommitResult(report, 1, 0, config, nil)
 
 	if report.Fail > 0 {
@@ -79,5 +81,6 @@ func ExecUnit(
 		req.ZipDir = filepath.Join(req.WorkspacePath, req.ZipDir)
 	}
 	report = execHelper.GenUnitTestReport(req, startTime.Unix(), entTime.Unix(), nil, nil)
+	fmt.Println(report.Log)
 	return report
 }

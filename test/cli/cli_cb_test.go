@@ -16,6 +16,7 @@ import (
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
@@ -38,7 +39,7 @@ func (s *CbSuite) TestCbSuite(t provider.T) {
 }
 
 func testCb() string {
-	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" cb %stest/demo/001 -p 1", commonTestHelper.RootPath)
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" cb %stest/demo/001 -p 1", constTestHelper.RootPath)
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		return err.Error()
@@ -48,7 +49,7 @@ func testCb() string {
 		return fmt.Sprintf("expect %s, actual %s", continueRe, err.Error())
 	}
 
-	if err = child.Send("1" + commonTestHelper.NewLine); err != nil {
+	if err = child.Send("1" + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 

@@ -3,6 +3,7 @@ package main
 import (
 	"testing"
 
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	plwConf "github.com/easysoft/zentaoatf/test/ui/conf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
@@ -22,7 +23,7 @@ func CreateSite(t provider.T) {
 	webpage.Click("text=新建站点")
 	locator = webpage.Locator("#siteFormModal input")
 	locator.FillNth(0, "单元测试站点")
-	locator.FillNth(1, "http://127.0.0.1:8081/")
+	locator.FillNth(1, constTestHelper.ZentaoSiteUrl)
 	locator.FillNth(2, "admin")
 	locator.FillNth(3, "Test123456.")
 	webpage.Click("text=确定")
@@ -52,7 +53,7 @@ func EditSite(t provider.T) {
 	webpage.Click("text=编辑")
 	locator = webpage.Locator("#siteFormModal input")
 	locator.FillNth(0, "单元测试站点-update")
-	locator.FillNth(1, "http://127.0.0.1:8081/")
+	locator.FillNth(1, constTestHelper.ZentaoSiteUrl)
 	locator.FillNth(2, "admin")
 	locator.FillNth(3, "Test123456.")
 	webpage.Click("#siteFormModal>>.modal-action>>span:has-text(\"确定\")")

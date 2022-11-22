@@ -5,6 +5,7 @@ import (
 	"os/exec"
 
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	"github.com/go-git/go-git/v5"
 )
 
@@ -23,7 +24,7 @@ func CloneGit(gitUrl string, name string) error {
 func Pull() (err error) {
 	var cmd *exec.Cmd
 	cmd = exec.Command("git", "pull")
-	cmd.Dir = RootPath
+	cmd.Dir = constTestHelper.RootPath
 	_, err = cmd.CombinedOutput()
 	if err != nil {
 		return
