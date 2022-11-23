@@ -178,13 +178,16 @@ func zapCoreInFile(c zapcore.Core) zapcore.Core {
 
 	core := zapcore.NewCore(
 		zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig()),
-		zapcore.AddSync(&lumberjack.Logger{
-			Filename:   logPathInfo,
-			LocalTime:  true,
-			MaxSize:    300, // M
-			MaxAge:     30,  // days
-			MaxBackups: 30,
-		}),
+		zapcore.NewMultiWriteSyncer(
+			zapcore.AddSync(&lumberjack.Logger{
+				Filename:   logPathInfo,
+				LocalTime:  true,
+				MaxSize:    300, // M
+				MaxAge:     30,  // days
+				MaxBackups: 30,
+			}),
+			zapcore.AddSync(os.Stdout),
+		),
 		zap.DebugLevel,
 	)
 	cores := zapcore.NewTee(c, core)
