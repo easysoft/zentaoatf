@@ -31,7 +31,7 @@ func TestCli() (err error) {
 	fmt.Println(testPath, req.Cmd)
 	report := ExecUnit(req)
 
-	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl, Password: "Test123456.", Username: "admin"}
+	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl + "/", Password: "Test123456.", Username: "admin"}
 
 	err = zentaoHelper.CommitResult(report, 1, 0, 0, config, nil)
 
@@ -53,7 +53,7 @@ func TestUi() (err error) {
 	}
 	report := ExecUnit(req)
 
-	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl, Password: "Test123456.", Username: "admin"}
+	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl + "/", Password: "Test123456.", Username: "admin"}
 
 	err = zentaoHelper.CommitResult(report, 1, 0, 0, config, nil)
 
