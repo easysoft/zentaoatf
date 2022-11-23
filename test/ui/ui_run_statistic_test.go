@@ -37,7 +37,8 @@ func RunFailStatistic(t provider.T) {
 	runTimes2Int, _ := strconv.Atoi(runTimes2)
 	failTimes2Int, _ := strconv.Atoi(failTimes2)
 	if runTimes2Int-runTimesInt != 1 || failTimes2Int-failTimesInt != 1 {
-		t.Error("statistic error")
+		webpage.ScreenShot()
+		t.Error("statistic fail num error")
 		t.FailNow()
 	}
 }
@@ -66,7 +67,8 @@ func RunSuccessStatistic(t provider.T) {
 	runTimes2Int, _ := strconv.Atoi(runTimes2)
 	succTimes2Int, _ := strconv.Atoi(succTimes2)
 	if runTimes2Int-runTimesInt != 1 || succTimes2Int-succTimesInt != 1 {
-		t.Error("statistic error")
+		webpage.ScreenShot()
+		t.Error("statistic success num error")
 		t.FailNow()
 	}
 }
@@ -90,7 +92,8 @@ func RunBugStatistic(t provider.T) {
 
 	bugTimes2Int := len(elements.ElementHandles)
 	if bugTimes2Int-1 != bugTimesInt {
-		t.Error("statistic error")
+		webpage.ScreenShot()
+		t.Error("statistic bug num error")
 		t.FailNow()
 	}
 }

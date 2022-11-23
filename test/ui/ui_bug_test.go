@@ -29,7 +29,8 @@ func ScriptBug(t provider.T) {
 
 	bugTimesInt := len(elements.ElementHandles)
 	if bugTimesInt < 2 {
-		t.Error("statistic error")
+		webpage.ScreenShot()
+		t.Error("View script bug error")
 		t.FailNow()
 	}
 }

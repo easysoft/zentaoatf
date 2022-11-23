@@ -335,6 +335,7 @@ func RunUnit(t provider.T) {
 	}
 	isSuccess := zentaoTestHelper.CheckUnitTestResult()
 	if !isSuccess {
+		webpage.ScreenShot()
 		t.Errorf("Exec testng unit fail")
 		t.FailNow()
 	}
