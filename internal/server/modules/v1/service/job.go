@@ -108,7 +108,7 @@ func (s *JobService) Restart(po model.Job) (ret bool) {
 }
 
 func (s *JobService) Check() (err error) {
-	taskMap, _ := s.List()
+	taskMap, _ := s.Query()
 
 	toStartNewJob := false
 	if len(taskMap.Inprogress) > 0 {
@@ -136,14 +136,21 @@ func (s *JobService) Check() (err error) {
 	return
 }
 
-func (s *JobService) List() (ret serverDomain.ListJobResp, err error) {
-	ret = serverDomain.ListJobResp{
-		Created:    make([]model.Job, 0),
-		Inprogress: make([]model.Job, 0),
-		Canceled:   make([]model.Job, 0),
-		Completed:  make([]model.Job, 0),
-		Failed:     make([]model.Job, 0),
-	}
+func (s *JobService) List(status string) (jobs []model.Job, err error) {
+	status = strings.TrimSpace(status)
+	jobs, err = s.JobRepo.ListByStatus(status)
+
+	return
+}
+
+func (s *JobService) Query() (ret serverDomain.JobQueryResp, err error) {
+	//ret = serverDomain.JobQueryResp{
+	//	Created:    make([]model.Job, 0),
+	//	Inprogress: make([]model.Job, 0),
+	//	Canceled:   make([]model.Job, 0),
+	//	Completed:  make([]model.Job, 0),
+	//	Failed:     make([]model.Job, 0),
+	//}
 
 	pos, _ := s.JobRepo.Query()
 

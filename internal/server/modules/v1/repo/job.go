@@ -3,8 +3,8 @@ package repo
 import (
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
-	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"gorm.io/gorm"
+	"strings"
 	"time"
 )
 
@@ -21,9 +21,19 @@ func (r *JobRepo) Query() (pos []model.Job, err error) {
 		Where("NOT deleted").
 		Find(&pos).Error
 
-	if err != nil {
-		logUtils.Errorf("sql error %s", err.Error())
+	return
+}
+
+func (r *JobRepo) ListByStatus(status string) (jobs []model.Job, err error) {
+	db := r.DB.Model(&model.Job{}).
+		Where("NOT deleted")
+
+	if status != "" {
+		arr := strings.Split(status, ",")
+		db.Where("status IN (?)", arr)
 	}
+
+	err = db.Find(&jobs).Error
 
 	return
 }
@@ -46,7 +56,6 @@ func (r *JobRepo) Update(po *model.Job) (err error) {
 }
 
 func (r *JobRepo) UpdateStatus(id uint, status commConsts.JobStatus, isStart, isEnd bool) (err error) {
-
 	updates := map[string]interface{}{"status": status}
 
 	if isStart {

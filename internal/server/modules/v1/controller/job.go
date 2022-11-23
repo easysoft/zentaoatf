@@ -16,6 +16,19 @@ func NewJobCtrl() *JobCtrl {
 	return &JobCtrl{}
 }
 
+func (c *JobCtrl) List(ctx iris.Context) {
+	status := ctx.URLParam("status")
+
+	jobs, err := c.JobService.List(status)
+	if err != nil {
+		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
+		return
+	}
+
+	ctx.JSON(c.SuccessResp(jobs))
+	return
+}
+
 // @summary 添加下载任务
 // @Accept json
 // @Produce json

@@ -21,7 +21,7 @@ type JobResp struct {
 	Status   commConsts.JobStatus `json:"status"` // Enums commConsts.JobStatus
 }
 
-type ListJobResp struct {
+type JobQueryResp struct {
 	Created    []model.Job `json:"created"`
 	Inprogress []model.Job `json:"inprogress"`
 

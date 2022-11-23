@@ -22,6 +22,7 @@ func (m *JobModule) Party() module.WebModule {
 
 		//index.Use(core.Auth())
 
+		index.Get("/", m.JobCtrl.List).Name = "添加任务到队列"
 		index.Post("/add", m.JobCtrl.Add).Name = "添加任务到队列"
 		index.Post("/cancel", m.JobCtrl.Cancel).Name = "强制终止任务"
 	}
