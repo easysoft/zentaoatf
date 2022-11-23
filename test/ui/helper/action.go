@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	"github.com/easysoft/zentaoatf/test/ui/conf"
 	"github.com/easysoft/zentaoatf/test/ui/utils"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
@@ -110,7 +111,7 @@ func (p *Webpage) WaitForSelector(selector string, options ...playwright.PageWai
 	_, err = p.Page.WaitForSelector(selector, options...)
 	if err != nil {
 		err = errors.New(fmt.Sprintf("Wait for %s selector fail: %s", selector, err.Error()))
-		var screenshotPath = fmt.Sprintf("screenshot/%v.png", time.Now().Unix())
+		var screenshotPath = fmt.Sprintf("%s/test/ui/screenshot/%v.png", constTestHelper.RootPath, time.Now().Unix())
 		p.Page.Screenshot(playwright.PageScreenshotOptions{Path: &screenshotPath})
 		utils.PrintErrOrNot(err, t)
 	}
@@ -125,7 +126,7 @@ func (p *Webpage) WaitForSelectorTimeout(selector string, timeout float64, optio
 	_, err = p.Page.WaitForSelector(selector, options...)
 	if err != nil {
 		err = errors.New(fmt.Sprintf("Wait for %s selector fail: %s", selector, err.Error()))
-		var screenshotPath = fmt.Sprintf("screenshot/%v.png", time.Now().Unix())
+		var screenshotPath = fmt.Sprintf("%s/test/ui/screenshot/%v.png", constTestHelper.RootPath, time.Now().Unix())
 		p.Page.Screenshot(playwright.PageScreenshotOptions{Path: &screenshotPath})
 		utils.PrintErrOrNot(err, t)
 	}
@@ -196,4 +197,9 @@ func (p *Webpage) GetAttribute(selector string, name string, options ...playwrig
 		utils.PrintErrOrNot(err, t)
 	}
 	return attr
+}
+
+func (p *Webpage) ScreenShot() {
+	var screenshotPath = fmt.Sprintf("%s/test/ui/screenshot/%v.png", constTestHelper.RootPath, time.Now().Unix())
+	p.Page.Screenshot(playwright.PageScreenshotOptions{Path: &screenshotPath})
 }

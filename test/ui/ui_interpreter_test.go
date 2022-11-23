@@ -24,7 +24,7 @@ func CreateInterpreter(t provider.T) {
 	webpage.WaitForTimeout(200)
 	locator.SelectNth(1, playwright.SelectOptionValues{Indexes: &[]int{1}})
 	webpage.Click("#interpreterFormModal>>text=确定")
-	_ = webpage.Locator("#settingModal .z-tbody-td", playwright.PageLocatorOptions{HasText: "Python"})
+	webpage.Locator("#settingModal .z-tbody-td:has-text('Python')")
 }
 
 func EditInterpreter(t provider.T) {
@@ -41,7 +41,7 @@ func EditInterpreter(t provider.T) {
 	webpage.WaitForTimeout(200)
 	locator.SelectNth(1, playwright.SelectOptionValues{Indexes: &[]int{1}})
 	webpage.Click("#interpreterFormModal>>text=确定")
-	locator = webpage.Locator("#settingModal .z-tbody-td", playwright.PageLocatorOptions{HasText: "Python"})
+	webpage.Locator("#settingModal .z-tbody-td:has-text('Python')")
 }
 
 func DeleteInterpreter(t provider.T) {
@@ -51,13 +51,13 @@ func DeleteInterpreter(t provider.T) {
 	defer webpage.Close()
 	webpage.Click("#navbar>>[title=\"设置\"]")
 	webpage.Click("#proxyTable>>tr:has-text('本地节点')>>button:has-text('运行环境')")
-	locator := webpage.Locator("#settingModal .z-tbody-tr", playwright.PageLocatorOptions{HasText: "Python"})
+	locator := webpage.Locator("#settingModal .z-tbody-tr:has-text('Python')")
 	locator = locator.Locator("text=删除")
 	locator.Click()
 	webpage.Click(":nth-match(.modal-action > button, 1)")
 	webpage.WaitForTimeout(1000)
 	plwConf.DisableErr()
-	locator = webpage.Locator("#settingModal .z-tbody-tr", playwright.PageLocatorOptions{HasText: "Python"})
+	locator = webpage.Locator("#settingModal .z-tbody-tr:has-text('Python')")
 	c := locator.Count()
 	if c > 0 {
 		t.Errorf("Delete interpreter fail")
