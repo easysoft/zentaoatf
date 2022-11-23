@@ -19,6 +19,7 @@ import (
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
@@ -40,7 +41,7 @@ func (s *ExtractSuite) TestExtractSuite(t provider.T) {
 }
 
 func testExtract() string {
-	path := fmt.Sprintf(`%sdemo/sample/8_extract_desc.php`, commonTestHelper.RootPath)
+	path := fmt.Sprintf(`%sdemo/sample/8_extract_desc.php`, constTestHelper.RootPath)
 	cmd := commonTestHelper.GetZtfPath() + ` extract ` + path
 
 	child, err := expect.Spawn(cmd, -1)

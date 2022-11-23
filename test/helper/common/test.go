@@ -1,20 +1,15 @@
 package commonTestHelper
 
 import (
-	"bufio"
-	"errors"
 	"fmt"
-	"io"
-	"os/exec"
 	"path/filepath"
 	"runtime"
-	"strings"
 	"time"
 
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
-	analysisHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
 	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 
@@ -23,74 +18,28 @@ import (
 )
 
 func TestCli() (err error) {
-	cmdStr := fmt.Sprintf(`%sztf allure -allureReportDir ./test/cli/allure-results go test %stest/cli -v`, RootPath, RootPath)
-	var cmd *exec.Cmd
+	testPath := fmt.Sprintf(`%stest`, constTestHelper.RootPath)
 	if runtime.GOOS == "windows" {
-		cmdStr = fmt.Sprintf(`%sztf.exe allure -allureReportDir .\test\cli\allure-results go test %stest\cli -v`, RootPath, RootPath)
-		cmd = exec.Command("cmd", "/C", cmdStr)
-	} else {
-		cmd = exec.Command("/bin/bash", "-c", cmdStr)
+		testPath = fmt.Sprintf(`%stest`, constTestHelper.RootPath)
 	}
-	cmd.Dir = RootPath
-	fmt.Println(cmd.String())
+	req := serverDomain.TestSet{
+		WorkspacePath: testPath,
+		Cmd:           "go test ./cli -v",
+		TestTool:      commConsts.GoTest,
+	}
+	fmt.Println(testPath, req.Cmd)
+	report := ExecUnit(req)
 
-	if cmd == nil {
-		err = errors.New("cmd is nil")
-		return
-	}
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		return
-	}
-
-	err = cmd.Start()
-	if err != nil {
-		return
-	}
-	defer func() {
-		cmd.Process.Kill()
-		execHelper.KillProcessByUUID("cli_auto_test")
-	}()
-	reader1 := bufio.NewReader(stdout)
-	reportDir := ""
-	for {
-		line, err2 := reader1.ReadString('\n')
-		line = strings.TrimSpace(line)
-		fmt.Println(line)
-		lineRune := []rune(line)
-		if len(lineRune) >= 6 && string(lineRune[:6]) == "Report" {
-			reportDir = strings.TrimSpace(string(lineRune[6 : len(lineRune)-1]))
-			break
-		} else if len(lineRune) >= 6 && string(lineRune[:2]) == "报告" {
-			reportDir = strings.TrimSpace(string(lineRune[2 : len(lineRune)-1]))
-			break
-		}
-		if err2 != nil {
-			err = err2
-			return
-		}
-		if err != nil || io.EOF == err {
-			break
-		}
-	}
-	if reportDir == "" {
-		return
-	}
-
-	report, err := analysisHelper.ReadReportByPath(strings.Replace(reportDir, "result.txt", "result.json", 1))
-	if err != nil {
-		return
-	}
-	config := commDomain.WorkspaceConf{Url: "http://127.0.0.1:8081/", Password: "Test123456.", Username: "admin"}
+	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl, Password: "Test123456.", Username: "admin"}
 
 	err = zentaoHelper.CommitResult(report, 1, 0, 0, config, nil)
 	return
 }
 
 func TestUi() (err error) {
-	testPath := fmt.Sprintf(`%stest`, RootPath)
+	testPath := fmt.Sprintf(`%stest`, constTestHelper.RootPath)
 	if runtime.GOOS == "windows" {
-		testPath = fmt.Sprintf(`%stest`, RootPath)
+		testPath = fmt.Sprintf(`%stest`, constTestHelper.RootPath)
 	}
 	req := serverDomain.TestSet{
 		WorkspacePath: testPath,
@@ -99,7 +48,7 @@ func TestUi() (err error) {
 	}
 	report := ExecUnit(req)
 
-	config := commDomain.WorkspaceConf{Url: "http://127.0.0.1:8081/", Password: "Test123456.", Username: "admin"}
+	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl, Password: "Test123456.", Username: "admin"}
 
 	err = zentaoHelper.CommitResult(report, 1, 0, 0, config, nil)
 	return
@@ -125,5 +74,6 @@ func ExecUnit(
 		req.ZipDir = filepath.Join(req.WorkspacePath, req.ZipDir)
 	}
 	report = execHelper.GenUnitTestReport(req, startTime.Unix(), entTime.Unix(), nil, nil)
+	fmt.Println(report.Log)
 	return report
 }

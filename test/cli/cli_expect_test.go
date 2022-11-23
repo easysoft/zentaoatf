@@ -19,6 +19,7 @@ import (
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
@@ -40,7 +41,7 @@ func (s *ExpectSuite) TestExpectSuite(t provider.T) {
 }
 
 func testExpect() string {
-	path := fmt.Sprintf(`%sdemo/sample/1_simple.php`, commonTestHelper.RootPath)
+	path := fmt.Sprintf(`%sdemo/sample/1_simple.php`, constTestHelper.RootPath)
 	cmd := commonTestHelper.GetZtfPath() + ` expect ` + path
 
 	child, err := expect.Spawn(cmd, -1)

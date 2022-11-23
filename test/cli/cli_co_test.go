@@ -30,6 +30,7 @@ import (
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
@@ -88,48 +89,48 @@ func testCoProduct() string {
 		return fmt.Sprintf("expect %s, actual %s", typeRe, err.Error())
 	}
 
-	if err = child.Send("1" + commonTestHelper.NewLine); err != nil {
+	if err = child.Send("1" + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(productRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", productRe, err.Error())
 	}
 
-	if err = child.Send(strconv.Itoa(productId) + commonTestHelper.NewLine); err != nil {
+	if err = child.Send(strconv.Itoa(productId) + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(moduleRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", moduleRe, err.Error())
 	}
 
-	if err = child.Send(strconv.Itoa(moduleId) + commonTestHelper.NewLine); err != nil {
+	if err = child.Send(strconv.Itoa(moduleId) + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(separateRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", separateRe, err.Error())
 	}
 
-	if err = child.Send("n" + commonTestHelper.NewLine); err != nil {
+	if err = child.Send("n" + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(languageCoRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", languageCoRe, err.Error())
 	}
 
-	if err = child.Send("5" + commonTestHelper.NewLine); err != nil {
+	if err = child.Send("5" + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(storeRe, time.Second*60); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", storeRe, err.Error())
 	}
-	if err = child.Send(commonTestHelper.NewLine); err != nil {
+	if err = child.Send(constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(organizeRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", organizeRe, err.Error())
 	}
 
-	if err = child.Send(commonTestHelper.NewLine); err != nil {
+	if err = child.Send(constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(successCoRe, 10*time.Second); err != nil {
@@ -150,41 +151,41 @@ func testCoSuite() string {
 		return fmt.Sprintf("expect %s, actual %s", typeRe, err.Error())
 	}
 
-	if err = child.Send("2" + commonTestHelper.NewLine); err != nil {
+	if err = child.Send("2" + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(suiteRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", suiteRe, err.Error())
 	}
 
-	if err = child.Send(strconv.Itoa(suiteId) + commonTestHelper.NewLine); err != nil {
+	if err = child.Send(strconv.Itoa(suiteId) + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(separateRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", separateRe, err.Error())
 	}
 
-	if err = child.Send("n" + commonTestHelper.NewLine); err != nil {
+	if err = child.Send("n" + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(languageCoRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", languageCoRe, err.Error())
 	}
 
-	if err = child.Send("5" + commonTestHelper.NewLine); err != nil {
+	if err = child.Send("5" + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(storeRe, time.Second*60); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", storeRe, err.Error())
 	}
-	if err = child.Send(commonTestHelper.NewLine); err != nil {
+	if err = child.Send(constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(organizeRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", organizeRe, err.Error())
 	}
 
-	if err = child.Send(commonTestHelper.NewLine); err != nil {
+	if err = child.Send(constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(successCoRe, 10*time.Second); err != nil {
@@ -205,41 +206,41 @@ func testCoTask() string {
 		return fmt.Sprintf("expect %s, actual %s", typeRe, err.Error())
 	}
 
-	if err = child.Send("3" + commonTestHelper.NewLine); err != nil {
+	if err = child.Send("3" + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(taskRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", taskRe, err.Error())
 	}
 
-	if err = child.Send(strconv.Itoa(taskId) + commonTestHelper.NewLine); err != nil {
+	if err = child.Send(strconv.Itoa(taskId) + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(separateRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", separateRe, err.Error())
 	}
 
-	if err = child.Send("n" + commonTestHelper.NewLine); err != nil {
+	if err = child.Send("n" + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(languageCoRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", languageCoRe, err.Error())
 	}
 
-	if err = child.Send("5" + commonTestHelper.NewLine); err != nil {
+	if err = child.Send("5" + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(storeRe, time.Second*60*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", storeRe, err.Error())
 	}
-	if err = child.Send(commonTestHelper.NewLine); err != nil {
+	if err = child.Send(constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(organizeRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", organizeRe, err.Error())
 	}
 
-	if err = child.Send(commonTestHelper.NewLine); err != nil {
+	if err = child.Send(constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(successCoRe, 10*time.Second); err != nil {
@@ -260,14 +261,14 @@ func testCo(cmd string) string {
 	if _, err = child.Expect(storeRe, time.Second*60); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", storeRe, err.Error())
 	}
-	if err = child.Send(commonTestHelper.NewLine); err != nil {
+	if err = child.Send(constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(organizeRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", organizeRe, err.Error())
 	}
 
-	if err = child.Send(commonTestHelper.NewLine); err != nil {
+	if err = child.Send(constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(successCoRe, 10*time.Second); err != nil {

@@ -20,6 +20,7 @@ import (
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
@@ -73,46 +74,46 @@ func testSet(language string) (ret string) {
 		return fmt.Sprintf("expect %s, actual %s", languageRe, err.Error())
 	}
 
-	if err = child.Send(language + commonTestHelper.NewLine); err != nil {
+	if err = child.Send(language + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err := child.Expect(configRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", configRe, err.Error())
 	}
-	if err = child.Send("y" + commonTestHelper.NewLine); err != nil {
+	if err = child.Send("y" + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(urlRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", urlRe, err.Error())
 	}
-	if err = child.Send("http://127.0.0.1:8081/" + commonTestHelper.NewLine); err != nil {
+	if err = child.Send(constTestHelper.ZentaoSiteUrl + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if _, err = child.Expect(accountRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", accountRe, err.Error())
 	}
-	if err = child.Send("admin" + commonTestHelper.NewLine); err != nil {
+	if err = child.Send("admin" + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 
 	if _, err = child.Expect(passwordRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", passwordRe, err.Error())
 	}
-	if err = child.Send("Test123456." + commonTestHelper.NewLine); err != nil {
+	if err = child.Send("Test123456." + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if runtime.GOOS == "windows" {
 		if _, err = child.Expect(interpreterRe, time.Second*5); err != nil {
 			return fmt.Sprintf("expect %s, actual %s", interpreterRe, err)
 		}
-		if err = child.Send("y" + commonTestHelper.NewLine); err != nil {
+		if err = child.Send("y" + constTestHelper.NewLine); err != nil {
 			return err.Error()
 		}
 		for _, lang := range langArray {
 			if _, err = child.Expect(regexp.MustCompile(lang), time.Second*5); err != nil {
 				return fmt.Sprintf("expect %s, actual %s", lang, err.Error())
 			}
-			if err = child.Send(langMap[lang] + commonTestHelper.NewLine); err != nil {
+			if err = child.Send(langMap[lang] + constTestHelper.NewLine); err != nil {
 				return err.Error()
 			}
 		}

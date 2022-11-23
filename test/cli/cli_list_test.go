@@ -18,6 +18,7 @@ import (
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
@@ -31,9 +32,9 @@ func (s *ListSuite) BeforeEach(t provider.T) {
 	t.AddSubSuite("命令行-查看脚本列表")
 }
 func (s *ListSuite) TestListSuite(t provider.T) {
-	t.Require().Equal("Success", testLs(commonTestHelper.GetZtfPath()+fmt.Sprintf(" list %stest/demo", commonTestHelper.RootPath), regexp.MustCompile("Found 6 test cases|发现6个用例")))
-	t.Require().Equal("Success", testLs(commonTestHelper.GetZtfPath()+fmt.Sprintf(" ls %stest/demo -k 1", commonTestHelper.RootPath), regexp.MustCompile("Found 3 test cases|发现3个用例")))
-	t.Require().Equal("Success", testLs(commonTestHelper.GetZtfPath()+fmt.Sprintf(" ls %stest/demo -k match", commonTestHelper.RootPath), regexp.MustCompile("Found 4 test cases|发现4个用例")))
+	t.Require().Equal("Success", testLs(commonTestHelper.GetZtfPath()+fmt.Sprintf(" list %stest/demo", constTestHelper.RootPath), regexp.MustCompile("Found 6 test cases|发现6个用例")))
+	t.Require().Equal("Success", testLs(commonTestHelper.GetZtfPath()+fmt.Sprintf(" ls %stest/demo -k 1", constTestHelper.RootPath), regexp.MustCompile("Found 3 test cases|发现3个用例")))
+	t.Require().Equal("Success", testLs(commonTestHelper.GetZtfPath()+fmt.Sprintf(" ls %stest/demo -k match", constTestHelper.RootPath), regexp.MustCompile("Found 4 test cases|发现4个用例")))
 }
 
 func testLs(cmd string, successRe *regexp.Regexp) string {

@@ -10,14 +10,15 @@ import (
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	uiTest "github.com/easysoft/zentaoatf/test/helper/zentao/ui"
 )
 
 func main() {
 	commConsts.ExecFrom = commConsts.FromCmd
 	serverConfig.InitLog()
-	serverConfig.InitExecLog(commonTestHelper.RootPath)
-	commConsts.ZtfDir = commonTestHelper.RootPath
+	serverConfig.InitExecLog(constTestHelper.RootPath)
+	commConsts.ZtfDir = constTestHelper.RootPath
 	i118Utils.Init("zh-CN", commConsts.AppServer)
 	// commConsts.Verbose = true
 	var version = flag.String("zentaoVersion", "", "")

@@ -10,11 +10,12 @@ import (
 	"strings"
 	"time"
 
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	uiTest "github.com/easysoft/zentaoatf/test/helper/zentao/ui"
 )
 
 func BuildCli() (err error) {
-	outPath := fmt.Sprintf("%s%s", RootPath, "ztf")
+	outPath := fmt.Sprintf("%s%s", constTestHelper.RootPath, "ztf")
 	cliPath := `./cmd/command/main.go`
 	if runtime.GOOS == "windows" {
 		cliPath = `.\cmd\command\main.go`
@@ -26,7 +27,7 @@ func BuildCli() (err error) {
 	}
 	var cmd *exec.Cmd
 	cmd = exec.Command("go", "build", "-o", outPath, cliPath)
-	cmd.Dir = RootPath
+	cmd.Dir = constTestHelper.RootPath
 	fmt.Println(cmd.String())
 	_, err = cmd.CombinedOutput()
 	if err != nil {
@@ -39,7 +40,7 @@ func RunServer() (err error) {
 	ztfPath := GetZtfPath()
 	var cmd *exec.Cmd
 	cmd = exec.Command(ztfPath, "-P", "8085", "-uuid=ui_auto_test")
-	cmd.Dir = RootPath
+	cmd.Dir = constTestHelper.RootPath
 	fmt.Println(cmd.String())
 	err = cmd.Start()
 	if err != nil {
@@ -51,7 +52,7 @@ func RunServer() (err error) {
 func RunUi() (err error) {
 	var cmd *exec.Cmd
 	cmd = exec.Command("npm", "run", "serve", "-uuid=ui_auto_test")
-	cmd.Dir = RootPath + FilePthSep + "ui"
+	cmd.Dir = constTestHelper.RootPath + constTestHelper.FilePthSep + "ui"
 	fmt.Println(cmd.String())
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
@@ -80,7 +81,7 @@ func RunUi() (err error) {
 }
 
 func GetZtfPath() string {
-	ztfPath := fmt.Sprintf("%s%s", RootPath, "ztf")
+	ztfPath := fmt.Sprintf("%s%s", constTestHelper.RootPath, "ztf")
 	if runtime.GOOS == "windows" {
 		ztfPath += ".exe"
 	}
@@ -88,11 +89,11 @@ func GetZtfPath() string {
 }
 
 func GetZtfProductPath() string {
-	return fmt.Sprintf("%s%s%s%s%s%s%s%s", RootPath, "test", FilePthSep, "demo", FilePthSep, "php", FilePthSep, "product1")
+	return fmt.Sprintf("%s%s%s%s%s%s%s%s", constTestHelper.RootPath, "test", constTestHelper.FilePthSep, "demo", constTestHelper.FilePthSep, "php", constTestHelper.FilePthSep, "product1")
 }
 
 func GetPhpWorkspacePath() string {
-	return fmt.Sprintf("%s%s%s%s%s%s%s", RootPath, "test", FilePthSep, "demo", FilePthSep, "php", FilePthSep)
+	return fmt.Sprintf("%s%s%s%s%s%s%s", constTestHelper.RootPath, "test", constTestHelper.FilePthSep, "demo", constTestHelper.FilePthSep, "php", constTestHelper.FilePthSep)
 }
 
 func waitZtfAccessed() {

@@ -1,4 +1,4 @@
-package commonTestHelper
+package constTestHelper
 
 import (
 	"os"
@@ -11,8 +11,9 @@ const (
 )
 
 var (
-	NewLine  = "\n"
-	RootPath = ""
+	NewLine       = "\n"
+	RootPath      = ""
+	ZentaoSiteUrl = "http://127.0.0.1:8081"
 )
 
 func init() {
