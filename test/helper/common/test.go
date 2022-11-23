@@ -2,6 +2,7 @@ package commonTestHelper
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"runtime"
 	"time"
@@ -33,6 +34,10 @@ func TestCli() (err error) {
 	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl, Password: "Test123456.", Username: "admin"}
 
 	err = zentaoHelper.CommitResult(report, 1, 0, 0, config, nil)
+
+	if report.Fail > 0 {
+		os.Exit(1)
+	}
 	return
 }
 
@@ -51,6 +56,10 @@ func TestUi() (err error) {
 	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl, Password: "Test123456.", Username: "admin"}
 
 	err = zentaoHelper.CommitResult(report, 1, 0, 0, config, nil)
+
+	if report.Fail > 0 {
+		os.Exit(1)
+	}
 	return
 }
 
@@ -74,6 +83,6 @@ func ExecUnit(
 		req.ZipDir = filepath.Join(req.WorkspacePath, req.ZipDir)
 	}
 	report = execHelper.GenUnitTestReport(req, startTime.Unix(), entTime.Unix(), nil, nil)
-	fmt.Println(report.Log)
+	fmt.Printf("执行：%v, 成功：%v，失败：%v", report.Total, report.Pass, report.Fail)
 	return report
 }
