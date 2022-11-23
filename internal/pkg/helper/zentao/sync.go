@@ -14,7 +14,7 @@ import (
 	"github.com/fatih/color"
 )
 
-func SyncFromZentao(settings commDomain.SyncSettings, config commDomain.WorkspaceConf, workspacePath string) (
+func Checkout(settings commDomain.SyncSettings, config commDomain.WorkspaceConf, workspacePath string) (
 	pths []string, err error) {
 
 	productId := settings.ProductId
@@ -69,7 +69,7 @@ func SyncFromZentao(settings commDomain.SyncSettings, config commDomain.Workspac
 	return
 }
 
-func SyncToZentao(cases []string, config commDomain.WorkspaceConf, noNeedConfirm bool, submitCode string) (count int, err error) {
+func CheckIn(cases []string, config commDomain.WorkspaceConf, noNeedConfirm, withCode bool) (count int, err error) {
 	for _, cs := range cases {
 		pass, id, _, title, _ := scriptHelper.GetCaseInfo(cs)
 		if !pass {
@@ -78,14 +78,14 @@ func SyncToZentao(cases []string, config commDomain.WorkspaceConf, noNeedConfirm
 
 		steps := scriptHelper.GetStepAndExpectMap(cs)
 		script, _ := scriptHelper.GetScriptContent(cs, -1)
-		err = CommitCase(id, title, steps, script, config, noNeedConfirm, submitCode)
+		err = CommitCase(id, title, steps, script, config, noNeedConfirm, withCode)
 
 		if err == nil {
 			count++
 		}
 	}
 
-	logUtils.Infof(i118Utils.Sprintf("commit_cases_result", count) + "\n")
+	logUtils.Infof(i118Utils.Sprintf("commit_cases_result", count))
 
 	return
 }

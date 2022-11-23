@@ -2,6 +2,7 @@ package stdinUtils
 
 import (
 	"bufio"
+	"fmt"
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
@@ -26,7 +27,9 @@ func InputForBool(in *bool, defaultVal bool, fmtStr string, fmtParam ...interfac
 		} else {
 			msg = "no"
 		}
-		logUtils.Info(msg)
+
+		fmt.Print("\033[A")
+		logUtils.ExecConsole(-1, msg)
 		return
 	}
 
@@ -49,8 +52,7 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 
 		if ret == "" && defaultVal != "" {
 			ret = defaultVal
-
-			logUtils.Info(ret)
+			logUtils.ExecConsole(-1, ret)
 		}
 
 		temp := strings.ToLower(ret)
@@ -68,9 +70,11 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 		if regx == "is_dir" {
 			pass = fileUtils.IsDir(ret)
 			msg = "dir_not_exist"
-		} else {
+		} else if regx != "" {
 			pass, _ = regexp.MatchString("^"+regx+"$", temp)
-			msg = "invalid_input"
+			if !pass {
+				msg = "invalid_input"
+			}
 		}
 
 		if pass {

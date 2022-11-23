@@ -63,7 +63,7 @@ func InitConfig() {
 
 func Init() {
 	InitConfig()
-	serverConfig.InitLog()
+	InitLog()
 
 	CheckConfigPermission()
 

@@ -33,7 +33,7 @@ func InitLog() {
 	zapConfig.EncoderConfig.EncodeLevel = nil
 	zapConfig.DisableCaller = true
 	zapConfig.EncoderConfig.TimeKey = ""
-	logUtils.LoggerStandard, err = zapConfig.Build(zap.WrapCore(zapCore))
+	logUtils.LoggerStandard, err = zapConfig.Build(zap.WrapCore(zapCoreInFile))
 	if err != nil {
 		log.Println("init console logger fail " + err.Error())
 	}
@@ -41,7 +41,7 @@ func InitLog() {
 	// print to console and info、err files without stacktrace detail
 	// by set DisableStacktrace to true
 	zapConfig.DisableStacktrace = true
-	logUtils.LoggerExecConsole, err = zapConfig.Build(zap.WrapCore(zapCore))
+	logUtils.LoggerExecConsole, err = zapConfig.Build(zap.WrapCore(zapCoreInFile))
 	if err != nil {
 		log.Println("init exec console logger fail " + err.Error())
 	}
@@ -173,20 +173,18 @@ func newWinFileSink(u *url.URL) (zap.Sink, error) {
 	return os.OpenFile(name, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
 }
 
-func zapCore(c zapcore.Core) zapcore.Core {
+func zapCoreInFile(c zapcore.Core) zapcore.Core {
 	logPathInfo := filepath.Join(CONFIG.Zap.Director, "ztf.log")
-
-	w := zapcore.AddSync(&lumberjack.Logger{
-		Filename:   logPathInfo,
-		LocalTime:  true,
-		MaxSize:    300, // M
-		MaxAge:     30,  // days
-		MaxBackups: 30,
-	})
 
 	core := zapcore.NewCore(
 		zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig()),
-		w,
+		zapcore.AddSync(&lumberjack.Logger{
+			Filename:   logPathInfo,
+			LocalTime:  true,
+			MaxSize:    300, // M
+			MaxAge:     30,  // days
+			MaxBackups: 30,
+		}),
 		zap.DebugLevel,
 	)
 	cores := zapcore.NewTee(c, core)

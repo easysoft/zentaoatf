@@ -3,6 +3,7 @@ package zentaoHelper
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/fatih/color"
 	"sort"
 	"strconv"
 	"strings"
@@ -23,7 +24,7 @@ import (
 )
 
 func CommitCase(caseId int, title string, steps []commDomain.ZentaoCaseStep, script serverDomain.TestScript,
-	config commDomain.WorkspaceConf, noNeedConfirm bool, submitCode string) (err error) {
+	config commDomain.WorkspaceConf, noNeedConfirm, withCode bool) (err error) {
 
 	err = Login(config)
 	if err != nil {
@@ -41,18 +42,15 @@ func CommitCase(caseId int, title string, steps []commDomain.ZentaoCaseStep, scr
 	requestObj := map[string]interface{}{
 		"type": "feature",
 	}
-	if submitCode == "" {
-		requestObj["title"] = title
-		requestObj["steps"] = steps
+
+	requestObj["title"] = title
+	requestObj["steps"] = steps
+	if withCode {
+		requestObj["path"] = script.Path
 		requestObj["script"] = script.Code
 		requestObj["lang"] = script.Lang
-	} else if submitCode == "code" {
-		requestObj["script"] = script.Code
-		requestObj["lang"] = script.Lang
-	} else {
-		requestObj["title"] = title
-		requestObj["steps"] = steps
 	}
+
 	json, err := json.Marshal(requestObj)
 	if err != nil {
 		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
@@ -65,7 +63,7 @@ func CommitCase(caseId int, title string, steps []commDomain.ZentaoCaseStep, scr
 
 	yes := true
 	if !noNeedConfirm && commConsts.ExecFrom == commConsts.FromCmd {
-		logUtils.ExecConsole(1, "\n"+i118Utils.Sprintf("case_update_confirm", caseId, title))
+		logUtils.ExecConsole(color.FgCyan, "\n"+i118Utils.Sprintf("case_update_confirm", caseId, title))
 		stdinUtils.InputForBool(&yes, true, "want_to_continue")
 	}
 
@@ -76,7 +74,7 @@ func CommitCase(caseId int, title string, steps []commDomain.ZentaoCaseStep, scr
 			return
 		}
 
-		logUtils.Infof(i118Utils.Sprintf("success_to_commit_case", caseId) + "\n")
+		logUtils.Infof(i118Utils.Sprintf("success_to_commit_case", caseId))
 	}
 
 	return

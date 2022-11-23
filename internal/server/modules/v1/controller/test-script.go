@@ -237,7 +237,7 @@ func (c *TestScriptCtrl) SyncFromZentao(ctx iris.Context) {
 	if syncSettings.Lang == "" {
 		syncSettings.Lang = workspace.Lang
 	}
-	pths, err := zentaoHelper.SyncFromZentao(syncSettings, config, workspace.Path)
+	pths, err := zentaoHelper.Checkout(syncSettings, config, workspace.Path)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return
@@ -270,7 +270,7 @@ func (c *TestScriptCtrl) SyncToZentao(ctx iris.Context) {
 	for _, set := range sets {
 		totalNum += len(set.Cases)
 
-		count, _ := zentaoHelper.SyncToZentao(set.Cases, config, true, "")
+		count, _ := zentaoHelper.CheckIn(set.Cases, config, true, false)
 
 		successNum += count
 	}
