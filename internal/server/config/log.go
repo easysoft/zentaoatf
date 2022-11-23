@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/snowlyg/helper/dir"
 	"go.uber.org/zap"
@@ -176,8 +177,12 @@ func newWinFileSink(u *url.URL) (zap.Sink, error) {
 func zapCoreInFile(c zapcore.Core) zapcore.Core {
 	logPathInfo := filepath.Join(CONFIG.Zap.Director, "ztf.log")
 
+	encoderConfig := zap.NewProductionEncoderConfig()
+	encoderConfig.TimeKey = "time"
+	encoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout(time.RFC3339)
+
 	core := zapcore.NewCore(
-		zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig()),
+		zapcore.NewJSONEncoder(encoderConfig),
 		zapcore.NewMultiWriteSyncer(
 			zapcore.AddSync(&lumberjack.Logger{
 				Filename:   logPathInfo,
