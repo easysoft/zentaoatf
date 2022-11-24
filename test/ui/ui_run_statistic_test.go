@@ -36,9 +36,14 @@ func RunFailStatistic(t provider.T) {
 	failTimes2 := elements.InnerText(2)
 	runTimes2Int, _ := strconv.Atoi(runTimes2)
 	failTimes2Int, _ := strconv.Atoi(failTimes2)
-	if runTimes2Int-runTimesInt != 1 || failTimes2Int-failTimesInt != 1 {
+	if runTimes2Int-runTimesInt != 1 {
 		webpage.ScreenShot()
-		t.Error("statistic fail num error")
+		t.Errorf("statistic fail num error, total num expect: %v ,actual： %v", runTimesInt+1, runTimes2Int)
+		t.FailNow()
+	}
+	if failTimes2Int-failTimesInt != 1 {
+		webpage.ScreenShot()
+		t.Errorf("statistic fail num error, fail num expect: %v ,actual： %v", failTimesInt+1, failTimes2Int)
 		t.FailNow()
 	}
 }
@@ -66,9 +71,15 @@ func RunSuccessStatistic(t provider.T) {
 	succTimes2 := elements.InnerText(1)
 	runTimes2Int, _ := strconv.Atoi(runTimes2)
 	succTimes2Int, _ := strconv.Atoi(succTimes2)
-	if runTimes2Int-runTimesInt != 1 || succTimes2Int-succTimesInt != 1 {
+	if runTimes2Int-runTimesInt != 1 {
 		webpage.ScreenShot()
-		t.Error("statistic success num error")
+		t.Errorf("statistic success num error, total num expect: %v ,actual： %v", runTimesInt+1, runTimes2Int)
+		t.FailNow()
+	}
+
+	if succTimes2Int-succTimesInt != 1 {
+		webpage.ScreenShot()
+		t.Errorf("statistic success num error, success num expect: %v ,actual： %v", succTimesInt+1, succTimes2Int)
 		t.FailNow()
 	}
 }
@@ -93,7 +104,7 @@ func RunBugStatistic(t provider.T) {
 	bugTimes2Int := len(elements.ElementHandles)
 	if bugTimes2Int-1 != bugTimesInt {
 		webpage.ScreenShot()
-		t.Error("statistic bug num error")
+		t.Errorf("statistic bug num error, bug num expect: %v ,actual： %v", bugTimesInt+1, bugTimes2Int)
 		t.FailNow()
 	}
 }
