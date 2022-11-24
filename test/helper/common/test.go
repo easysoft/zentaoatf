@@ -42,6 +42,9 @@ func TestCli() (err error) {
 }
 
 func TestUi() (err error) {
+	var screenshotPath = fmt.Sprintf("%stest/screenshot", constTestHelper.RootPath)
+	os.RemoveAll(screenshotPath)
+	fileUtils.MkDirIfNeeded(screenshotPath)
 	testPath := fmt.Sprintf(`%stest`, constTestHelper.RootPath)
 	if runtime.GOOS == "windows" {
 		testPath = fmt.Sprintf(`%stest`, constTestHelper.RootPath)
