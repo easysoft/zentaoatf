@@ -207,6 +207,6 @@ func (p *Webpage) GetAttribute(selector string, name string, options ...playwrig
 }
 
 func (p *Webpage) ScreenShot() {
-	var screenshotPath = fmt.Sprintf("%s/test/ui/screenshot/%v.png", constTestHelper.RootPath, time.Now().Unix())
+	var screenshotPath = fmt.Sprintf("%s/test/screenshot/%v.png", constTestHelper.RootPath, time.Now().Unix())
 	p.Page.Screenshot(playwright.PageScreenshotOptions{Path: &screenshotPath})
 }
