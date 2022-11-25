@@ -29,7 +29,7 @@ func TestCli() (err error) {
 		TestTool:      commConsts.GoTest,
 	}
 	fmt.Println(testPath, req.Cmd)
-	report := ExecUnit(req)
+	report := ExecUnit(req, "cli")
 
 	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl + "/", Password: "Test123456.", Username: "admin"}
 
@@ -54,7 +54,7 @@ func TestUi() (err error) {
 		Cmd:           "go test ./ui -v",
 		TestTool:      commConsts.GoTest,
 	}
-	report := ExecUnit(req)
+	report := ExecUnit(req, "ui")
 
 	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl + "/", Password: "Test123456.", Username: "admin"}
 
@@ -66,9 +66,12 @@ func TestUi() (err error) {
 	return
 }
 
-func ExecUnit(
-	req serverDomain.TestSet) (report commDomain.ZtfReport) {
-	commConsts.AllureReportDir = "ui/allure-results"
+func ExecUnit(req serverDomain.TestSet, unitType string) (report commDomain.ZtfReport) {
+	if unitType == "ui" {
+		commConsts.AllureReportDir = "ui/allure-results"
+	} else {
+		commConsts.AllureReportDir = "cli/allure-results"
+	}
 	pth := filepath.Join(req.WorkspacePath, commConsts.AllureReportDir)
 	fileUtils.RmDir(pth)
 	startTime := time.Now()
