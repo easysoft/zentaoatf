@@ -99,7 +99,8 @@ func (s *JobService) Stop(id uint) {
 }
 
 func (s *JobService) Restart(po model.Job) (ret bool) {
-	s.Cancel(po.ID)
+	//s.Cancel(po.ID)
+	s.Stop(po.ID)
 	s.Start(po)
 
 	s.JobRepo.AddRetry(po)
