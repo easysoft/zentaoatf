@@ -312,6 +312,7 @@ func RunUnit(t provider.T) {
 	}
 	locator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
 	webpage.Click(".tree-context-menu>>text=执行")
+	webpage.WaitForSelectorTimeout("#tabsPane >> text=执行", 3000)
 	webpage.Check(`#tabsPane >> input[type="checkbox"]`)
 	locator = webpage.Locator("#tabsPane:has-text('禅道测试单标题')>>input")
 	locator.FillNth(2, "test unit")
