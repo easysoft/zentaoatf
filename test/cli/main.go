@@ -16,7 +16,6 @@ import (
 
 func main() {
 	commConsts.ExecFrom = commConsts.FromCmd
-	commConsts.Verbose = true
 	serverConfig.InitLog()
 	serverConfig.InitExecLog(constTestHelper.RootPath)
 	commConsts.ZtfDir = constTestHelper.RootPath
