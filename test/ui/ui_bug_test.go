@@ -25,6 +25,7 @@ func ScriptBug(t provider.T) {
 	webpage.Click(".tree-node-title:has-text('1_string_match.php')")
 	webpage.WaitForTimeout(200)
 	webpage.Click(".statistic>>span>>nth=3")
+	webpage.WaitForSelectorTimeout("#bugsModal>>tr", 3000)
 	elements := webpage.QuerySelectorAll("#bugsModal>>tr")
 
 	bugTimesInt := len(elements.ElementHandles)
