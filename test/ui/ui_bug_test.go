@@ -1,7 +1,6 @@
 package main
 
 import (
-	"regexp"
 	"testing"
 
 	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
@@ -24,8 +23,7 @@ func ScriptBug(t provider.T) {
 	ztfTestHelper.RunScript(webpage, "1_string_match.php")
 	ztfTestHelper.SubmitResult(webpage)
 	webpage.Click(".tree-node-title:has-text('1_string_match.php')")
-	re := regexp.MustCompile(".*/bugs")
-	webpage.Page.WaitForResponse(re)
+	webpage.WaitForResponse(".*/bugs")
 	webpage.WaitForSelectorTimeout(".statistic>>span>>nth=3", 3000)
 	webpage.Click(".statistic>>span>>nth=3")
 	webpage.WaitForSelectorTimeout("#bugsModal>>tr", 3000)

@@ -3,6 +3,7 @@ package plw
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"time"
 
 	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
@@ -212,4 +213,10 @@ func (p *Webpage) ScreenShot() {
 	}
 	var screenshotPath = fmt.Sprintf("%stest/screenshot/%v.png", constTestHelper.RootPath, time.Now().Unix())
 	p.Page.Screenshot(playwright.PageScreenshotOptions{Path: &screenshotPath})
+}
+
+func (p *Webpage) WaitForResponse(regx string) (resp playwright.Response) {
+	re := regexp.MustCompile(regx)
+	resp = p.Page.WaitForResponse(re)
+	return
 }
