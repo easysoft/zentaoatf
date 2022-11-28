@@ -24,10 +24,10 @@ func ScriptBug(t provider.T) {
 	ztfTestHelper.RunScript(webpage, "1_string_match.php")
 	ztfTestHelper.SubmitResult(webpage)
 	webpage.Click(".tree-node-title:has-text('1_string_match.php')")
+	re := regexp.MustCompile(".*/bugs")
+	webpage.Page.WaitForResponse(re)
 	webpage.WaitForSelectorTimeout(".statistic>>span>>nth=3", 3000)
 	webpage.Click(".statistic>>span>>nth=3")
-	re := regexp.MustCompile(".*/bugs")
-	webpage.Page.WaitForRequest(re)
 	webpage.WaitForSelectorTimeout("#bugsModal>>tr", 3000)
 	elements := webpage.QuerySelectorAll("#bugsModal>>tr")
 
