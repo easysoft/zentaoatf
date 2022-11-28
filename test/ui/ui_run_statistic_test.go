@@ -95,6 +95,7 @@ func RunBugStatistic(t provider.T) {
 	scriptLocator := webpage.Locator(".tree-node-title>>text=1_string_match.php")
 	scriptLocator.Click()
 	webpage.WaitForResponse(".*/statistic")
+	webpage.WaitForTimeout(500)
 	elements := webpage.QuerySelectorAll(".statistic>>span")
 	bugTimes := elements.InnerText(3)
 	bugTimesInt, _ := strconv.Atoi(bugTimes)
