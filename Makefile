@@ -90,6 +90,8 @@ compile_gui_win64:
 		${BUILD_CMD_WIN} -x -v \
 		-o ${CLIENT_BIN_DIR}win32/${PROJECT}.exe ${SERVER_MAIN_FILE}
 	@cd ${CLIENT_BIN_DIR}win32 && zip -ry ${QINIU_DIST_DIR}win64/${PROJECT}-server.zip ./${PROJECT}.exe && cd ../../..
+	@md5sum ${QINIU_DIST_DIR}win64/${PROJECT}-server.zip | awk '{print $$1}' | \
+			xargs echo > ${QINIU_DIST_DIR}win64/${PROJECT}-server.zip.md5
 
 package_gui_win64_client:
 	@cd client && npm run package-win64 && cd ..
@@ -104,6 +106,8 @@ compile_gui_win32:
 		${BUILD_CMD_WIN} -x -v \
 		-o ${CLIENT_BIN_DIR}win32/${PROJECT}.exe ${SERVER_MAIN_FILE}
 	@cd ${CLIENT_BIN_DIR}win32 && zip -ry ${QINIU_DIST_DIR}win32/${PROJECT}-server.zip ./${PROJECT}.exe && cd ../../..
+	@md5sum ${QINIU_DIST_DIR}win32/${PROJECT}-server.zip | awk '{print $$1}' | \
+				xargs echo > ${QINIU_DIST_DIR}win32/${PROJECT}-server.zip.md5
 
 package_gui_win32_client:
 	@cd client && npm run package-win32 && cd ..
@@ -124,6 +128,8 @@ else
 		-o ${CLIENT_BIN_DIR}linux/${PROJECT} ${SERVER_MAIN_FILE}
 endif
 	@cd ${CLIENT_BIN_DIR}linux && zip -ry ${QINIU_DIST_DIR}linux/${PROJECT}-server.zip ./${PROJECT} && cd ../../..
+	@md5sum ${QINIU_DIST_DIR}linux/${PROJECT}-server.zip | awk '{print $$1}' | \
+				xargs echo > ${QINIU_DIST_DIR}linux/${PROJECT}-server.zip.md5
 
 package_gui_linux_client:
 	@cd client && npm run package-linux && cd ..
@@ -139,6 +145,8 @@ compile_gui_mac:
 		${BUILD_CMD} \
 		-o ${CLIENT_BIN_DIR}darwin/${PROJECT} ${SERVER_MAIN_FILE}
 	@cd ${CLIENT_BIN_DIR}darwin && zip -ry ${QINIU_DIST_DIR}darwin/${PROJECT}-server.zip ./${PROJECT} && cd ../../..
+	@md5sum ${QINIU_DIST_DIR}darwin/${PROJECT}-server.zip | awk '{print $$1}' | \
+				xargs echo > ${QINIU_DIST_DIR}darwin/${PROJECT}-server.zip.md5
 
 package_gui_mac_client:
 	@cd client && npm run package-mac && cd ..
