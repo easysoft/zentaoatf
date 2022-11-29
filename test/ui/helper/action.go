@@ -3,6 +3,7 @@ package plw
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"time"
 
 	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
@@ -72,6 +73,7 @@ func (p *Webpage) Locator(selector string, options ...playwright.PageLocatorOpti
 	}
 
 	if err != nil {
+		p.ScreenShot()
 		err = errors.New(fmt.Sprintf("Get Locator %s fail: %s", selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
@@ -89,10 +91,12 @@ func (p *Webpage) QuerySelectorAll(selector string) (ret MyElementHandle) {
 	t := p.T
 	ElementHandles, err := p.Page.QuerySelectorAll(selector)
 	if err != nil {
+		p.ScreenShot()
 		err = errors.New("not found")
 	}
 
 	if err != nil {
+		p.ScreenShot()
 		err = errors.New(fmt.Sprintf("Get Selector %s fail: %s", selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
@@ -110,9 +114,8 @@ func (p *Webpage) WaitForSelector(selector string, options ...playwright.PageWai
 	t := p.T
 	_, err = p.Page.WaitForSelector(selector, options...)
 	if err != nil {
+		p.ScreenShot()
 		err = errors.New(fmt.Sprintf("Wait for %s selector fail: %s", selector, err.Error()))
-		var screenshotPath = fmt.Sprintf("%s/test/ui/screenshot/%v.png", constTestHelper.RootPath, time.Now().Unix())
-		p.Page.Screenshot(playwright.PageScreenshotOptions{Path: &screenshotPath})
 		utils.PrintErrOrNot(err, t)
 	}
 
@@ -125,9 +128,8 @@ func (p *Webpage) WaitForSelectorTimeout(selector string, timeout float64, optio
 	options = append(options, timeoutOption)
 	_, err = p.Page.WaitForSelector(selector, options...)
 	if err != nil {
+		p.ScreenShot()
 		err = errors.New(fmt.Sprintf("Wait for %s selector fail: %s", selector, err.Error()))
-		var screenshotPath = fmt.Sprintf("%s/test/ui/screenshot/%v.png", constTestHelper.RootPath, time.Now().Unix())
-		p.Page.Screenshot(playwright.PageScreenshotOptions{Path: &screenshotPath})
 		utils.PrintErrOrNot(err, t)
 	}
 
@@ -143,6 +145,7 @@ func (p *Webpage) Click(selector string, options ...playwright.PageClickOptions)
 	t := p.T
 	err := p.Page.Click(selector, options...)
 	if err != nil {
+		p.ScreenShot()
 		err = errors.New(fmt.Sprintf("Click %s fail: %s", selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
@@ -153,6 +156,7 @@ func (p *Webpage) Check(selector string, options ...playwright.FrameCheckOptions
 	t := p.T
 	err := p.Page.Check(selector, options...)
 	if err != nil {
+		p.ScreenShot()
 		err = errors.New(fmt.Sprintf("Check %s fail: %s", selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
@@ -163,6 +167,7 @@ func (p *Webpage) RightClick(selector string) {
 	t := p.T
 	err := p.Page.Click(selector, playwright.PageClickOptions{Button: playwright.MouseButtonRight})
 	if err != nil {
+		p.ScreenShot()
 		err = errors.New(fmt.Sprintf("Rigth click %s fail: %s", selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
@@ -173,6 +178,7 @@ func (p *Webpage) IsHidden(selector string) bool {
 	t := p.T
 	isHidden, err := p.Page.IsHidden(selector)
 	if err != nil {
+		p.ScreenShot()
 		err = errors.New(fmt.Sprintf("Get %s isHidden fail: %s", selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
@@ -183,6 +189,7 @@ func (p *Webpage) InnerText(selector string) string {
 	t := p.T
 	text, err := p.Page.InnerText(selector)
 	if err != nil {
+		p.ScreenShot()
 		err = errors.New(fmt.Sprintf("Get %s InnerText fail: %s", selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
@@ -193,6 +200,7 @@ func (p *Webpage) GetAttribute(selector string, name string, options ...playwrig
 	t := p.T
 	attr, err := p.Page.GetAttribute(selector, name, options...)
 	if err != nil {
+		p.ScreenShot()
 		err = errors.New(fmt.Sprintf("Get %s attribute fail: %s", selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
@@ -200,6 +208,15 @@ func (p *Webpage) GetAttribute(selector string, name string, options ...playwrig
 }
 
 func (p *Webpage) ScreenShot() {
-	var screenshotPath = fmt.Sprintf("%s/test/ui/screenshot/%v.png", constTestHelper.RootPath, time.Now().Unix())
+	if !conf.ShowErr && !conf.ExitAllOnError {
+		return
+	}
+	var screenshotPath = fmt.Sprintf("%stest/screenshot/%v.png", constTestHelper.RootPath, time.Now().Unix())
 	p.Page.Screenshot(playwright.PageScreenshotOptions{Path: &screenshotPath})
+}
+
+func (p *Webpage) WaitForResponse(regx string) (resp playwright.Response) {
+	re := regexp.MustCompile(regx)
+	resp = p.Page.WaitForResponse(re)
+	return
 }

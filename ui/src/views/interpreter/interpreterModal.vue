@@ -1,5 +1,6 @@
 <template>
 <ZModal
+    id="interpreterModal"
     :showModal="props.show"
     :title="t('interpreter')"
     :contentStyle="{width: '90vw', height: '90vh'}"

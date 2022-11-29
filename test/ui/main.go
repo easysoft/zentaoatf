@@ -20,7 +20,6 @@ func main() {
 	serverConfig.InitExecLog(constTestHelper.RootPath)
 	commConsts.ZtfDir = constTestHelper.RootPath
 	i118Utils.Init("zh-CN", commConsts.AppServer)
-	// commConsts.Verbose = true
 	var version = flag.String("zentaoVersion", "", "")
 	testing.Init()
 	flag.Parse()
