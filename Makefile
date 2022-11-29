@@ -89,6 +89,8 @@ compile_gui_win64:
 	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
 		${BUILD_CMD_WIN} -x -v \
 		-o ${CLIENT_BIN_DIR}win32/${PROJECT}.exe ${SERVER_MAIN_FILE}
+	@cd ${CLIENT_BIN_DIR}win32 && zip -ry ${QINIU_DIST_DIR}win64/${PROJECT}-server.zip ./${PROJECT}.exe && cd ../../..
+
 package_gui_win64_client:
 	@cd client && npm run package-win64 && cd ..
 	@rm -rf ${CLIENT_OUT_DIR}win64 && mkdir ${CLIENT_OUT_DIR}win64 && \
@@ -101,6 +103,8 @@ compile_gui_win32:
 	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
 		${BUILD_CMD_WIN} -x -v \
 		-o ${CLIENT_BIN_DIR}win32/${PROJECT}.exe ${SERVER_MAIN_FILE}
+	@cd ${CLIENT_BIN_DIR}win32 && zip -ry ${QINIU_DIST_DIR}win32/${PROJECT}-server.zip ./${PROJECT}.exe && cd ../../..
+
 package_gui_win32_client:
 	@cd client && npm run package-win32 && cd ..
 	@rm -rf ${CLIENT_OUT_DIR}win32 && mkdir ${CLIENT_OUT_DIR}win32 && \
@@ -119,6 +123,8 @@ else
 		${BUILD_CMD} \
 		-o ${CLIENT_BIN_DIR}linux/${PROJECT} ${SERVER_MAIN_FILE}
 endif
+	@cd ${CLIENT_BIN_DIR}linux && zip -ry ${QINIU_DIST_DIR}linux/${PROJECT}-server.zip ./${PROJECT} && cd ../../..
+
 package_gui_linux_client:
 	@cd client && npm run package-linux && cd ..
 	@rm -rf ${CLIENT_OUT_DIR}linux && mkdir ${CLIENT_OUT_DIR}linux && \
@@ -132,6 +138,8 @@ compile_gui_mac:
 	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 \
 		${BUILD_CMD} \
 		-o ${CLIENT_BIN_DIR}darwin/${PROJECT} ${SERVER_MAIN_FILE}
+	@cd ${CLIENT_BIN_DIR}darwin && zip -ry ${QINIU_DIST_DIR}darwin/${PROJECT}-server.zip ./${PROJECT} && cd ../../..
+
 package_gui_mac_client:
 	@cd client && npm run package-mac && cd ..
 	@rm -rf ${CLIENT_OUT_DIR}darwin && mkdir ${CLIENT_OUT_DIR}darwin && \
