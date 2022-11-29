@@ -7,7 +7,10 @@ import (
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	"github.com/easysoft/zentaoatf/internal/server/core/web"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	"github.com/fatih/color"
 	"os"
+	"os/signal"
+	"syscall"
 )
 
 var (
@@ -16,7 +19,8 @@ var (
 	GoVersion  string
 	GitHash    string
 
-	uuid = ""
+	uuid    = ""
+	flagSet *flag.FlagSet
 )
 
 // @title ZTF服务端API文档
@@ -25,18 +29,27 @@ var (
 // @contact.url https://github.com/easysoft/zentaoatf/issues
 // @contact.email 462626@qq.com
 func main() {
-	flag.StringVar(&uuid, "uuid", "", "区分服务进程的唯一ID")
+	channel := make(chan os.Signal)
+	signal.Notify(channel, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-channel
+		cleanup()
+		os.Exit(0)
+	}()
 
-	flag.StringVar(&serverConfig.CONFIG.Server, "s", "http://pms.deeptest.loc", "")
-	flag.StringVar(&serverConfig.CONFIG.Ip, "i", commConsts.Ip, "服务所在机器IP地址")
-	flag.IntVar(&serverConfig.CONFIG.Port, "p", commConsts.Port, "服务所在端口")
-	flag.StringVar(&serverConfig.CONFIG.Secret, "secret", "", "禅道认证安全码")
+	flagSet = flag.NewFlagSet("ztf", flag.ContinueOnError)
 
-	flag.Parse()
+	flagSet.StringVar(&uuid, "uuid", "", "区分服务进程的唯一ID")
+
+	flagSet.StringVar(&serverConfig.CONFIG.Server, "s", "http://pms.deeptest.loc", "")
+	flagSet.StringVar(&serverConfig.CONFIG.Ip, "i", commConsts.Ip, "服务机器IP")
+	flagSet.IntVar(&serverConfig.CONFIG.Port, "p", commConsts.Port, "服务端口")
+	flagSet.StringVar(&serverConfig.CONFIG.Secret, "secret", "", "禅道认证安全码")
 
 	if len(os.Args) == 1 {
 		os.Args = append(os.Args, "run")
 	}
+	flagSet.Parse(os.Args[1:])
 
 	switch os.Args[1] {
 	case "version", "--version":
@@ -55,4 +68,12 @@ func main() {
 		webServer.Run()
 	}
 
+}
+
+func init() {
+	cleanup()
+}
+
+func cleanup() {
+	color.Unset()
 }

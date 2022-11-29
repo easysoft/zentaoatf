@@ -541,6 +541,15 @@
     },
 
     {
+      "id": "success_to_submit_job_status",
+      "translation": "Submitted job status to ZenTao."
+    },
+    {
+      "id": "fail_to_submit_job_status",
+      "translation": "Failed to submit job status to ZenTao, err %s."
+    },
+
+    {
       "id": "success_to_submit_test_result",
       "translation": "Submitted test results to ZenTao."
     },

@@ -55,17 +55,22 @@ func (r *JobRepo) Update(po *model.Job) (err error) {
 	return
 }
 
-func (r *JobRepo) UpdateStatus(id uint, status commConsts.JobStatus, isStart, isEnd bool) (err error) {
-	updates := map[string]interface{}{"status": status}
+func (r *JobRepo) UpdateStatus(job *model.Job, status commConsts.JobStatus, isStart, isEnd bool) (err error) {
+	job.Status = status
 
+	updates := map[string]interface{}{"status": job.Status}
+
+	now := time.Now()
 	if isStart {
 		updates["start_date"] = time.Now()
+		job.StartDate = &now
 	}
 	if isEnd {
 		updates["end_date"] = time.Now()
+		job.EndDate = &now
 	}
 
-	err = r.DB.Model(&model.Job{}).Where("id = ?", id).
+	err = r.DB.Model(&model.Job{}).Where("id = ?", job.ID).
 		Updates(updates).Error
 
 	return
@@ -78,11 +83,11 @@ func (r *JobRepo) Delete(id uint) (err error) {
 	return
 }
 
-func (r *JobRepo) SetFailed(po model.Job) (err error) {
-	r.DB.Model(&model.Job{}).Where("id=?", po.ID).Updates(
-		map[string]interface{}{"status": commConsts.JobFailed, "timeout_date": time.Now()})
-	return
-}
+//func (r *JobRepo) SetFailed(po model.Job) (err error) {
+//	r.DB.Model(&model.Job{}).Where("id=?", po.ID).Updates(
+//		map[string]interface{}{"status": commConsts.JobFailed, "timeout_date": time.Now()})
+//	return
+//}
 
 func (r *JobRepo) SetCanceled(po model.Job) (err error) {
 	r.DB.Model(&model.Job{}).Where("id=?", po.ID).Updates(
@@ -90,7 +95,9 @@ func (r *JobRepo) SetCanceled(po model.Job) (err error) {
 	return
 }
 
-func (r *JobRepo) AddRetry(po model.Job) (err error) {
+func (r *JobRepo) AddRetry(po *model.Job) (err error) {
+	po.Retry += 1
+
 	r.DB.Model(&model.Job{}).Where("id=?", po.ID).Updates(
 		map[string]interface{}{"retry": gorm.Expr("retry + ?", 1)})
 	return

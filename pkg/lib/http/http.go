@@ -29,11 +29,13 @@ func Get(url string) (ret []byte, err error) {
 		return
 	}
 
-	if strings.Index(url, "user-login") < 0 && strings.Index(url, "mode=getconfig") < 0 {
-		req.Header.Add(commConsts.Token, commConsts.SessionId)
+	if commConsts.ExecFrom == commConsts.FromZentao {
+		authUtils.AddBearTokenIfNeeded(req)
+	} else {
+		if strings.Index(url, "/tokens") < 0 {
+			req.Header.Add(commConsts.Token, commConsts.SessionId)
+		}
 	}
-
-	authUtils.AddBearTokenIfNeeded(req)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -117,13 +119,16 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 		return
 	}
 
-	if strings.Index(url, "/tokens") < 0 {
-		req.Header.Add(commConsts.Token, commConsts.SessionId)
+	if commConsts.ExecFrom == commConsts.FromZentao {
+		authUtils.AddBearTokenIfNeeded(req)
+	} else {
+		if strings.Index(url, "/tokens") < 0 {
+			req.Header.Add(commConsts.Token, commConsts.SessionId)
+		}
 	}
+
 	//req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	authUtils.AddBearTokenIfNeeded(req)
 
 	resp, err := client.Do(req)
 	if err != nil {

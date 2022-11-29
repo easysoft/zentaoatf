@@ -1,6 +1,9 @@
 package serverDomain
 
-import "time"
+import (
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	"time"
+)
 
 type ZentaoHeartbeatReq struct {
 	Secret string `json:"secret"`
@@ -21,6 +24,14 @@ type ZentaoResp struct {
 type ZentaoRespData struct {
 	Result  string `json:"result"`
 	Message string `json:"message"`
+}
+
+type ZentaoJobSubmitReq struct {
+	Task      int                  `json:"task"`
+	Status    commConsts.JobStatus `json:"status"`
+	StartTime time.Time            `json:"startTime"`
+	EndTime   time.Time            `json:"endTime"`
+	RetryTime int                  `json:"retryTime"`
 }
 
 type ZentaoResultSubmitReq struct {

@@ -22,10 +22,10 @@ type JobResp struct {
 }
 
 type JobQueryResp struct {
-	Created    []model.Job `json:"created"`
-	Inprogress []model.Job `json:"inprogress"`
+	Created    []*model.Job `json:"created"`
+	Inprogress []*model.Job `json:"inprogress"`
 
-	Canceled  []model.Job `json:"canceled"`
-	Completed []model.Job `json:"completed"`
-	Failed    []model.Job `json:"failed"`
+	Canceled  []*model.Job `json:"canceled"`
+	Completed []*model.Job `json:"completed"`
+	Failed    []*model.Job `json:"failed"`
 }

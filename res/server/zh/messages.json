@@ -536,6 +536,14 @@
       "translation": "成功将ztf命令加入用户PATH环境变量。"
     },
     {
+      "id": "success_to_submit_job_status",
+      "translation": "提交任务状态到禅道成功。"
+    },
+    {
+      "id": "fail_to_submit_job_status",
+      "translation": "提交任务状态到禅道失败，错误%s。"
+    },
+    {
       "id": "success_to_submit_test_result",
       "translation": "提交测试结果到禅道成功。"
     },
