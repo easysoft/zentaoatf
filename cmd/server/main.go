@@ -6,6 +6,7 @@ import (
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	"github.com/easysoft/zentaoatf/internal/server/core/web"
+	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/fatih/color"
 	"os"
@@ -57,6 +58,8 @@ func main() {
 		return
 	default:
 		commConsts.ExecFrom = commConsts.FromClient
+
+		serverConfig.CONFIG.Server = httpUtils.AddSepIfNeeded(serverConfig.CONFIG.Server)
 
 		webServer := web.Init(serverConfig.CONFIG.Port)
 		if webServer == nil {

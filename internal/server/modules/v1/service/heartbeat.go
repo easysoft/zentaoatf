@@ -29,7 +29,7 @@ func (s *HeartbeatService) Heartbeat() {
 		req.Secret = serverConfig.CONFIG.Secret
 	}
 
-	url := zentaoHelper.GenApiUrl("api.php/v1/ztf/heartbeat", nil, serverConfig.CONFIG.Server)
+	url := zentaoHelper.GenApiUrl("ztf/heartbeat", nil, serverConfig.CONFIG.Server)
 	respBytes, err := httpUtils.Post(url, req)
 	ok := err == nil
 
@@ -48,8 +48,8 @@ func (s *HeartbeatService) Heartbeat() {
 	}
 
 	if ok {
-		logUtils.Info(i118Utils.I118Prt.Sprintf("success_to_register", serverConfig.CONFIG.Server))
+		logUtils.Info(i118Utils.I118Prt.Sprintf("success_to_register", url))
 	} else {
-		logUtils.Info(i118Utils.I118Prt.Sprintf("fail_to_register", serverConfig.CONFIG.Server, respBytes))
+		logUtils.Info(i118Utils.I118Prt.Sprintf("fail_to_register", url, respBytes))
 	}
 }
