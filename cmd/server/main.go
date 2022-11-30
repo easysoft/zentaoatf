@@ -42,7 +42,7 @@ func main() {
 
 	flagSet.StringVar(&uuid, "uuid", "", "区分服务进程的唯一ID")
 
-	flagSet.StringVar(&serverConfig.CONFIG.Server, "s", "http://pms.deeptest.loc", "")
+	flagSet.StringVar(&serverConfig.CONFIG.Server, "s", "", "")
 	flagSet.StringVar(&serverConfig.CONFIG.Ip, "i", commConsts.Ip, "服务机器IP")
 	flagSet.IntVar(&serverConfig.CONFIG.Port, "p", commConsts.Port, "服务端口")
 	flagSet.StringVar(&serverConfig.CONFIG.Secret, "secret", "", "禅道认证安全码")

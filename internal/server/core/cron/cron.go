@@ -23,12 +23,14 @@ func (s *ServerCron) Init() {
 	cache.SyncMap.Store(cache.IsRunning, false)
 	cache.SyncMap.Store(cache.LastLoopEndTime, int64(0))
 
-	cronUtils.AddTask(
-		"heartbeat", fmt.Sprintf("@every %ds", serverConfig.HeartbeatInterval),
-		func() {
-			s.HeartbeatService.Heartbeat()
-		},
-	)
+	if serverConfig.CONFIG.Server != "" {
+		cronUtils.AddTask(
+			"heartbeat", fmt.Sprintf("@every %ds", serverConfig.HeartbeatInterval),
+			func() {
+				s.HeartbeatService.Heartbeat()
+			},
+		)
+	}
 
 	cronUtils.AddTask(
 		"checkJob", fmt.Sprintf("@every %ds", serverConfig.JobCheckInterval),
