@@ -34,9 +34,15 @@ BUILD_CMD=go build -ldflags "-X 'main.AppVersion=${VERSION}' -X 'main.BuildTime=
 BUILD_CMD_WIN=go build -ldflags "-s -w -X 'main.AppVersion=${VERSION}' -X 'main.BuildTime=${BUILD_TIME}' -X 'main.GoVersion=${GO_VERSION}' -X 'main.GitHash=${GIT_HASH}'"
 
 default: win64 win32 linux mac
+server: server_win64 server_win32 server_linux server_mac
+
+server_win64: prepare compile_server_mac copy_files_win64   zip_server_win64
+server_win32: prepare compile_server_win32 copy_files_win32   zip_server_win32
+server_linux: prepare compile_server_linux copy_files_linux   zip_server_linux
+server_mac: prepare compile_server_mac copy_files_mac   zip_server_mac
 
 win64: prepare compile_server_win64 package_gui_win64_client compile_launcher_win64 compile_command_win64 copy_files_win64 zip_server_win64 zip_client_win64
-win32: prepare compile_server_win64 package_gui_win32_client compile_launcher_win32 compile_command_win32 copy_files_win32 zip_server_win32 zip_client_win32
+win32: prepare compile_server_win32 package_gui_win32_client compile_launcher_win32 compile_command_win32 copy_files_win32 zip_server_win32 zip_client_win32
 linux: prepare compile_server_linux package_gui_linux_client                        compile_command_linux copy_files_linux zip_server_linux zip_client_linux
 mac:   prepare compile_server_mac   package_gui_mac_client                          compile_command_mac   copy_files_mac   zip_server_mac   zip_client_mac
 
