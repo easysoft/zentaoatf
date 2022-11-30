@@ -6,6 +6,7 @@ import (
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	"github.com/easysoft/zentaoatf/internal/server/core/web"
+	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/fatih/color"
 	"os"
@@ -41,7 +42,7 @@ func main() {
 
 	flagSet.StringVar(&uuid, "uuid", "", "区分服务进程的唯一ID")
 
-	flagSet.StringVar(&serverConfig.CONFIG.Server, "s", "http://pms.deeptest.loc", "")
+	flagSet.StringVar(&serverConfig.CONFIG.Server, "s", "", "")
 	flagSet.StringVar(&serverConfig.CONFIG.Ip, "i", commConsts.Ip, "服务机器IP")
 	flagSet.IntVar(&serverConfig.CONFIG.Port, "p", commConsts.Port, "服务端口")
 	flagSet.StringVar(&serverConfig.CONFIG.Secret, "secret", "", "禅道认证安全码")
@@ -57,6 +58,8 @@ func main() {
 		return
 	default:
 		commConsts.ExecFrom = commConsts.FromClient
+
+		serverConfig.CONFIG.Server = httpUtils.AddSepIfNeeded(serverConfig.CONFIG.Server)
 
 		webServer := web.Init(serverConfig.CONFIG.Port)
 		if webServer == nil {
