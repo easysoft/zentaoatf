@@ -21,6 +21,7 @@ func SwitchProduct(t provider.T) {
 	webpage.WaitForTimeout(100)
 	productName := webpage.InnerText("#productMenuToggle>>span")
 	if productName != "企业内部工时管理系统" {
+		webpage.ScreenShot()
 		t.Error("Switch product fail")
 		t.FailNow()
 	}
