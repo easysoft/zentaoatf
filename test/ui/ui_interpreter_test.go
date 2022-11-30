@@ -17,8 +17,15 @@ func CreateInterpreter(t provider.T) {
 	defer webpage.Close()
 	webpage.Click("#navbar>>[title=\"设置\"]")
 	webpage.Click("#proxyTable>>tr:has-text('本地节点')>>button:has-text('运行环境')")
+	plwConf.DisableErr()
+	locator := webpage.Locator("#interpreterModal .z-tbody-tr:has-text('Python')")
+	c := locator.Count()
+	if c > 0 {
+		DeleteInterpreter(t)
+	}
+	plwConf.EnableErr()
 	webpage.Click("text=新建运行环境")
-	locator := webpage.Locator("#interpreterFormModal select")
+	locator = webpage.Locator("#interpreterFormModal select")
 	locator.Click()
 	locator.SelectNth(0, playwright.SelectOptionValues{Values: &[]string{"python"}})
 	locator.SelectNth(1, playwright.SelectOptionValues{Indexes: &[]int{1}})
