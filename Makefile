@@ -119,6 +119,7 @@ compile_server_mac:
 # gui
 package_gui_win64_client:
 	@echo 'start package gui win64'
+	@rm -rf ${CLIENT_BIN_DIR}win32 && mkdir ${CLIENT_BIN_DIR}win32
 	@cp -rf ${COMMAND_BIN_DIR}win64/${PROJECT}-server.exe ${CLIENT_BIN_DIR}win32/${PROJECT}.exe
 	@cd client && npm run package-win64 && cd ..
 	@rm -rf ${CLIENT_OUT_DIR}win64 && mkdir ${CLIENT_OUT_DIR}win64 && \
@@ -126,13 +127,15 @@ package_gui_win64_client:
 
 package_gui_win32_client:
 	@echo 'start package gui win32'
-	@cp -rf ${COMMAND_BIN_DIR}win32/${PROJECT}-server.exe ${CLIENT_BIN_DIR}win32/${PROJECT}.exe
+	@rm -rf ${CLIENT_BIN_DIR}win32 && mkdir ${CLIENT_BIN_DIR}win32
+	@cp -rf ${COMMAND_BIN_DIR}win64/${PROJECT}-server.exe ${CLIENT_BIN_DIR}win32/${PROJECT}.exe
 	@cd client && npm run package-win32 && cd ..
 	@rm -rf ${CLIENT_OUT_DIR}win32 && mkdir ${CLIENT_OUT_DIR}win32 && \
 		mv ${CLIENT_OUT_DIR}${PROJECT}-win32-ia32 ${CLIENT_OUT_DIR}win32/gui
 
 package_gui_linux_client:
 	@echo 'start package gui linux'
+	@rm -rf ${CLIENT_BIN_DIR}linux && mkdir ${CLIENT_BIN_DIR}linux
 	@cp -rf ${COMMAND_BIN_DIR}linux/${PROJECT}-server ${CLIENT_BIN_DIR}linux/${PROJECT}
 	@cd client && npm run package-linux && cd ..
 	@rm -rf ${CLIENT_OUT_DIR}linux && mkdir ${CLIENT_OUT_DIR}linux && \
@@ -140,6 +143,7 @@ package_gui_linux_client:
 
 package_gui_mac_client:
 	@echo 'start package gui mac'
+	@rm -rf ${CLIENT_BIN_DIR}darwin && mkdir ${CLIENT_BIN_DIR}darwin
 	@cp -rf ${COMMAND_BIN_DIR}darwin/${PROJECT}-server ${CLIENT_BIN_DIR}darwin/${PROJECT}
 	@cd client && npm run package-mac && cd ..
 	@rm -rf ${CLIENT_OUT_DIR}darwin && mkdir ${CLIENT_OUT_DIR}darwin && \
