@@ -31,6 +31,12 @@ func CreateInterpreter(t provider.T) {
 	locator.SelectNth(1, playwright.SelectOptionValues{Indexes: &[]int{1}})
 	webpage.WaitForTimeout(500)
 	webpage.Click("#interpreterFormModal>>.modal-action>>text=确定")
+	plwConf.DisableErr()
+	err := webpage.WaitForSelectorTimeout("#interpreterFormModal>>.modal-action>>text=确定", 3000, playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+	if err != nil {
+		webpage.Click("#interpreterFormModal>>.modal-action>>text=确定")
+	}
+	plwConf.EnableErr()
 	webpage.Locator("#interpreterModal .z-tbody-td:has-text('Python')")
 }
 
