@@ -32,8 +32,13 @@ func CreateProxy(t provider.T) {
 	webpage.WaitForTimeout(200)
 	locator.FillNth(1, "http://127.0.0.1:8085")
 	webpage.Click("#proxyFormModal>>text=确定")
-	webpage.WaitForSelector("#proxyFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
-	webpage.WaitForTimeout(1000)
+	plwConf.DisableErr()
+	err := webpage.WaitForSelector("#proxyFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+	if err != nil {
+		webpage.Click("#proxyFormModal>>text=确定")
+		webpage.WaitForSelector("#proxyFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+	}
+	plwConf.EnableErr()
 	locator = webpage.Locator("#proxyTable .z-tbody-td >> :scope:has-text('测试执行节点')")
 }
 func EditProxy(t provider.T) {
