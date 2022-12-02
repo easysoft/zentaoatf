@@ -69,7 +69,7 @@ func RunScriptByRightClick(t provider.T) {
 	timeElement := webpage.Locator("#log-list>>code:has-text('开始任务')>>.time>>span")
 	logTime := timeElement.InnerText()
 	resultTime := webpage.InnerText("#rightPane .result-list-item .list-item-trailing-text")
-	if logTime[:5] != resultTime {
+	if logTime[:4] != resultTime[:4] {
 		t.Errorf("Find result time in rightPane fail")
 		t.FailNow()
 	}
