@@ -152,6 +152,8 @@ func RunOpenedAndLast(t provider.T) {
 		t.Errorf("Find result in rightPane fail")
 	}
 
+	webpage.Click(`#bottomPane>>[title="清空"]`)
+
 	webpage.Click("#batchRunMenuToggle")
 	webpage.Click(".list-item-content:has-text('执行上次')")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行2个用例，耗时')")
@@ -190,7 +192,6 @@ func RunAll(t provider.T) {
 		runRes = "1(25.0%) 通过，3(75.0%) 失败"
 		resTitle = "单元测试工作目录(4)"
 	}
-	webpage.Click(`#bottomPane>>[title="清空"]`)
 	webpage.Click("#batchRunMenuToggle")
 	webpage.Click(".list-item-content:has-text('执行所有文件')")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('" + runInfo + "')")
