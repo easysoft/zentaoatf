@@ -39,7 +39,8 @@ func CreateProxy(t provider.T) {
 		webpage.WaitForSelector("#proxyFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
 	}
 	plwConf.EnableErr()
-	locator = webpage.Locator("#proxyTable .z-tbody-td >> :scope:has-text('测试执行节点')")
+	webpage.WaitForResponse(".*/proxies")
+	webpage.Locator("#proxyTable .z-tbody-td >> :scope:has-text('测试执行节点')")
 }
 func EditProxy(t provider.T) {
 	t.ID("5741")
