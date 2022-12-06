@@ -5,10 +5,10 @@ import (
 )
 
 type ZentaoExecReq struct {
-	Workspace string `json:"workspace"`
-	Path      string `json:"path"`
-	Ids       string `json:"ids"`
-	Cmd       string `json:"cmd"`
+	Workspace string `json:"workspace"` // workspace absolute path
+	Path      string `json:"path"`      // relative path in workspace to find scripts
+	Ids       string `json:"ids"`       // zentao case ids
+	Cmd       string `json:"cmd"`       // commands to exec before run test cases
 
 	Task int `json:"task"`
 }
