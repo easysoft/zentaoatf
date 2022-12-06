@@ -64,3 +64,6 @@ CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows 
 
 cd ui && yarn lint && cd ..
 sonar-scanner
+
+# 本地安装swaggo，生成并上传。 https://github.com/swaggo/swag
+rm -rf xdoc/docs && swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/server -o xdoc/docs

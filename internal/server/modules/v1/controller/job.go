@@ -29,12 +29,12 @@ func (c *JobCtrl) List(ctx iris.Context) {
 	return
 }
 
-// @summary 添加下载任务
+// @summary 添加脚本执行任务
 // @Accept json
 // @Produce json
-// @Param DownloadReq body []v1.DownloadReq true "Download Request Object"
-// @Success 200 {object} _domain.Response "code = success | fail"
-// @Router /api/v1/download/add [post]
+// @Param ZentaoExecReq body serverDomain.ZentaoExecReq true "Zentao Job Add Request Object"
+// @Success 200 {object} domain.Response "code = success | fail"
+// @Router /api/v1/jobs/add [post]
 func (c *JobCtrl) Add(ctx iris.Context) {
 	var req serverDomain.ZentaoExecReq
 	err := ctx.ReadJSON(&req)
@@ -53,12 +53,12 @@ func (c *JobCtrl) Add(ctx iris.Context) {
 	return
 }
 
-// @summary 强制终止下载任务
+// @summary 取消脚本执行任务
 // @Accept json
 // @Produce json
-// @Param DownloadCancelReq body v1.DownloadCancelReq true "CancelDate Download Request Object"
-// @Success 200 {object} _domain.Response "code = success | fail"
-// @Router /api/v1/download/cancel [post]
+// @Param ZentaoExecReq body serverDomain.ZentaoCancelReq true "Zentao Job Cancel Request Object"
+// @Success 200 {object} domain.Response "code = success | fail"
+// @Router /api/v1/jobs/cancel [post]
 func (c *JobCtrl) Cancel(ctx iris.Context) {
 	req := serverDomain.ZentaoCancelReq{}
 	err := ctx.ReadJSON(&req)
