@@ -16,6 +16,12 @@ func NewJobCtrl() *JobCtrl {
 	return &JobCtrl{}
 }
 
+// @summary 列出执行任务
+// @Accept json
+// @Produce json
+// @Param status query string true "Status List to Filter like 'created,inprogress'"
+// @Success 200 {object} domain.Response "code = success | fail"
+// @Router /api/v1/jobs/add [post]
 func (c *JobCtrl) List(ctx iris.Context) {
 	status := ctx.URLParam("status")
 

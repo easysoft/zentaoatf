@@ -67,3 +67,7 @@ sonar-scanner
 
 # 本地安装swaggo，生成并上传。 https://github.com/swaggo/swag
 rm -rf xdoc/docs && swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/server -o xdoc/docs
+
+# 服务器上启动go-swagger服务。 https://github.com/go-swagger/go-swagger
+ps -ef | grep swagger | grep -v grep | awk '{print $2}' | xargs kill -9
+nohup swagger serve --no-open -p 50004 https://gitee.com/aaronchen2k/zagent/raw/main/xdoc/docs/swagger.json > ztf.log 2>&1 &
