@@ -14,6 +14,7 @@ type Job struct {
 	Workspace string `json:"workspace"`
 	Path      string `json:"path"`
 	Ids       string `json:"ids"`
+	Cmd       string `json:"cmd"`
 
 	Status commConsts.JobStatus `json:"status"`
 	Retry  int                  `json:"retry"`

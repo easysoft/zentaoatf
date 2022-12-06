@@ -40,6 +40,7 @@ func (s *JobService) Add(req serverDomain.ZentaoExecReq) (err error) {
 		Workspace: req.Workspace,
 		Path:      req.Path,
 		Ids:       req.Ids,
+		Cmd:       req.Cmd,
 
 		Task:   req.Task,
 		Retry:  1,
@@ -55,7 +56,7 @@ func (s *JobService) Start(po *model.Job) {
 	ch := make(chan int, 1)
 	channelMap.Store(po.ID, ch)
 
-	req := s.genExecReq(*po)
+	req := s.genExecReqFromJob(*po)
 
 	go func() {
 		s.JobRepo.UpdateStatus(po, commConsts.JobInprogress, true, false)
@@ -238,7 +239,7 @@ func (s *JobService) SubmitExecResult(job model.Job, execErr error) (err error) 
 	return
 }
 
-func (s *JobService) genExecReq(po model.Job) (req serverDomain.ExecReq) {
+func (s *JobService) genExecReqFromJob(po model.Job) (req serverDomain.ExecReq) {
 	caseIds := make([]int, 0)
 	for _, idStr := range strings.Split(po.Ids, ",") {
 		id, err := strconv.Atoi(idStr)
@@ -263,6 +264,7 @@ func (s *JobService) genExecReq(po model.Job) (req serverDomain.ExecReq) {
 	req.TestSets = append(req.TestSets, serverDomain.TestSet{
 		WorkspacePath: po.Workspace,
 		Cases:         cases,
+		Cmd:           po.Cmd,
 	})
 
 	return

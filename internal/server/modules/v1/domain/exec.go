@@ -8,6 +8,7 @@ type ZentaoExecReq struct {
 	Workspace string `json:"workspace"`
 	Path      string `json:"path"`
 	Ids       string `json:"ids"`
+	Cmd       string `json:"cmd"`
 
 	Task int `json:"task"`
 }

@@ -2,6 +2,7 @@ package execHelper
 
 import (
 	"path"
+	"path/filepath"
 	"strconv"
 	"time"
 
@@ -24,8 +25,30 @@ import (
 )
 
 func ExecCases(ch chan int, testSet serverDomain.TestSet, msg *websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	cases := testSet.Cases
-	return RunZtf(ch, testSet.WorkspacePath, 0, 0, commConsts.Case, cases, msg)
+	if testSet.Cmd != "" {
+		err = execCmd(testSet.Cmd, testSet.WorkspacePath)
+		if err != nil {
+			return
+		}
+	}
+
+	return RunZtf(ch, testSet.WorkspacePath, 0, 0, commConsts.Case, testSet.Cases, msg)
+}
+
+func execCmd(cmd string, workspacePath string) (err error) {
+	pth := filepath.Join(workspacePath, ".cmd.tmp")
+	fileUtils.WriteFile(pth, cmd)
+
+	conf := configHelper.LoadByWorkspacePath(workspacePath)
+
+	stdOutput, errOutput := RunFile(pth, workspacePath, conf, nil, nil)
+	if errOutput != "" {
+		logUtils.Infof("failed to exec command '%s' without output %s, err %v.", pth, stdOutput, errOutput)
+	} else {
+		logUtils.Infof("exec command '%s' with output %v.", pth, stdOutput)
+	}
+
+	return
 }
 
 func ExecModule(ch chan int, testSet serverDomain.TestSet, msg *websocket.Message) (
@@ -85,7 +108,7 @@ func RunZtf(ch chan int,
 	numbMaxWidth, pathMaxWidth = getNumbMaxWidth(casesToRun)
 	report = genReport(productId, id, by)
 
-	// run
+	// exec scripts
 	ExeScripts(casesToRun, casesToIgnore, workspacePath, conf, &report, pathMaxWidth, numbMaxWidth, ch, wsMsg)
 
 	// gen report
