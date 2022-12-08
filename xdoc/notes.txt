@@ -66,7 +66,7 @@ cd ui && yarn lint && cd ..
 sonar-scanner
 
 # 本地安装swaggo，生成并上传。 https://github.com/swaggo/swag
-rm -rf xdoc/docs && swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/server -o xdoc/docs
+swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/server -o xdoc/docs && rm -rf xdoc/docs/*.{go,yaml}
 
 # 服务器上启动go-swagger服务。 https://github.com/go-swagger/go-swagger
 ps -ef | grep swagger | grep -v grep | awk '{print $2}' | xargs kill -9
