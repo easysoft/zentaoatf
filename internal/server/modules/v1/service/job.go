@@ -1,6 +1,14 @@
 package service
 
 import (
+	"errors"
+	"fmt"
+	"path/filepath"
+	"strconv"
+	"strings"
+	"sync"
+	"time"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	analysisHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
@@ -13,11 +21,6 @@ import (
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 	channelUtils "github.com/easysoft/zentaoatf/pkg/lib/channel"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
-	"path/filepath"
-	"strconv"
-	"strings"
-	"sync"
-	"time"
 )
 
 var (
@@ -57,13 +60,13 @@ func (s *JobService) Start(po *model.Job) {
 	go func() {
 		s.JobRepo.UpdateStatus(po, commConsts.JobInprogress, true, false)
 
-		execHelper.Exec(nil, req, nil)
+		err := execHelper.Exec(nil, req, nil)
 
 		s.JobRepo.UpdateStatus(po, commConsts.JobCompleted, false, true)
 
-		s.SubmitJobStatus(*po)
+		// s.SubmitJobStatus(*po)
 
-		s.SubmitExecResult(*po)
+		s.SubmitExecResult(*po, err)
 
 		if ch != nil {
 			channelMap.Delete(po.ID)
@@ -185,34 +188,52 @@ func (s *JobService) SubmitJobStatus(job model.Job) (err error) {
 	status := serverDomain.ZentaoJobSubmitReq{
 		Task:      job.Task,
 		Status:    job.Status,
-		StartTime: *job.StartDate,
-		EndTime:   *job.EndDate,
+		StartTime: (*job.StartDate).Format("2006-01-02 15:04:05"),
+		EndTime:   (*job.EndDate).Format("2006-01-02 15:04:05"),
 		RetryTime: job.Retry,
+		Error:     "",
+		Data:      "",
 	}
 
 	config := commDomain.WorkspaceConf{
 		Url: serverConfig.CONFIG.Server,
 	}
-	err = zentaoHelper.CommitStatus(status, config)
+	err = zentaoHelper.JobCommitResult(status, config)
 
 	return
 }
 
-func (s *JobService) SubmitExecResult(job model.Job) (err error) {
+func (s *JobService) SubmitExecResult(job model.Job, execErr error) (err error) {
 	result := serverDomain.ZentaoResultSubmitReq{
 		Task: job.Task,
 		Seq:  commConsts.ExecLogDir,
 	}
 
-	report, err := analysisHelper.ReadReportByPath(filepath.Join(result.Seq, commConsts.ResultJson))
-	if err != nil {
-		return
+	reportPth := filepath.Join(result.Seq, commConsts.ResultJson)
+	var report commDomain.ZtfReport
+	if fileUtils.FileExist(reportPth) {
+		report, err = analysisHelper.ReadReportByPath(reportPth)
+	} else {
+		err = errors.New("case not found")
+	}
+	if err != nil && execErr == nil {
+		execErr = err
 	}
 
 	config := commDomain.WorkspaceConf{
 		Url: serverConfig.CONFIG.Server,
 	}
-	err = zentaoHelper.CommitResult(report, result.ProductId, result.TaskId, result.Task, config, nil)
+
+	ret := serverDomain.ZentaoJobSubmitReq{
+		Task:      job.Task,
+		Status:    job.Status,
+		StartTime: (*job.StartDate).Format("2006-01-02 15:04:05"),
+		EndTime:   (*job.EndDate).Format("2006-01-02 15:04:05"),
+		RetryTime: job.Retry,
+		Error:     fmt.Sprintf("%v", execErr),
+		Data:      report.FuncResult,
+	}
+	err = zentaoHelper.JobCommitResult(ret, config)
 
 	return
 }

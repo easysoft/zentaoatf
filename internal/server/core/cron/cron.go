@@ -2,10 +2,11 @@ package cron
 
 import (
 	"fmt"
+
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	"github.com/easysoft/zentaoatf/internal/server/core/cache"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
-	"github.com/easysoft/zentaoatf/pkg/lib/cron"
+	cronUtils "github.com/easysoft/zentaoatf/pkg/lib/cron"
 	"github.com/kataras/iris/v12"
 )
 
@@ -23,7 +24,7 @@ func (s *ServerCron) Init() {
 	cache.SyncMap.Store(cache.IsRunning, false)
 	cache.SyncMap.Store(cache.LastLoopEndTime, int64(0))
 
-	if serverConfig.CONFIG.Server != "" {
+	if serverConfig.CONFIG.Host != "" {
 		cronUtils.AddTask(
 			"heartbeat", fmt.Sprintf("@every %ds", serverConfig.HeartbeatInterval),
 			func() {

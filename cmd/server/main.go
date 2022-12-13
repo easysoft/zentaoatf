@@ -2,6 +2,10 @@ package main
 
 import (
 	"flag"
+	"os"
+	"os/signal"
+	"syscall"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
@@ -9,9 +13,6 @@ import (
 	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/fatih/color"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 var (
@@ -42,7 +43,7 @@ func main() {
 
 	flagSet.StringVar(&uuid, "uuid", "", "区分服务进程的唯一ID")
 
-	flagSet.StringVar(&serverConfig.CONFIG.Server, "s", "", "")
+	flagSet.StringVar(&serverConfig.CONFIG.Host, "h", "", "")
 	flagSet.StringVar(&serverConfig.CONFIG.Ip, "i", commConsts.Ip, "服务机器IP")
 	flagSet.IntVar(&serverConfig.CONFIG.Port, "p", commConsts.Port, "服务端口")
 	flagSet.StringVar(&serverConfig.CONFIG.Secret, "secret", "", "禅道认证安全码")
@@ -59,7 +60,7 @@ func main() {
 	default:
 		commConsts.ExecFrom = commConsts.FromClient
 
-		serverConfig.CONFIG.Server = httpUtils.AddSepIfNeeded(serverConfig.CONFIG.Server)
+		serverConfig.CONFIG.Host = httpUtils.AddSepIfNeeded(serverConfig.CONFIG.Host)
 
 		webServer := web.Init(serverConfig.CONFIG.Port)
 		if webServer == nil {

@@ -1,8 +1,9 @@
 package serverConfig
 
 import (
-	myZap "github.com/easysoft/zentaoatf/pkg/core/zap"
 	"time"
+
+	myZap "github.com/easysoft/zentaoatf/pkg/core/zap"
 )
 
 type Config struct {
@@ -11,6 +12,7 @@ type Config struct {
 	Limit   Limit     `mapstructure:"limit" json:"limit" yaml:"limit"`
 	Zap     myZap.Zap `mapstructure:"zap" json:"zap" yaml:"zap"`
 
+	Host   string
 	Server string
 	Ip     string
 	Port   int

@@ -2,14 +2,14 @@ package service
 
 import (
 	"encoding/json"
-	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
+
+	hostHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/host"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
-	dateUtils "github.com/easysoft/zentaoatf/pkg/lib/date"
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"time"
 )
 
 type HeartbeatService struct {
@@ -20,26 +20,32 @@ func NewHeartbeatService() *HeartbeatService {
 }
 
 func (s *HeartbeatService) Heartbeat() {
-	req := serverDomain.ZentaoHeartbeatReq{
-		Ip:   serverConfig.CONFIG.Ip,
-		Port: serverConfig.CONFIG.Port,
+	_, macObj := commonUtils.GetIp()
+	req := serverDomain.HostHeartbeatReq{
+		MacAddress: macObj.String(),
 	}
 
-	if serverConfig.CONFIG.AuthToken == "" || serverConfig.CONFIG.ExpiredDate.Unix() < time.Now().Unix() { // re-apply token using secret
-		req.Secret = serverConfig.CONFIG.Secret
-	}
-
-	url := zentaoHelper.GenApiUrl("ztf/heartbeat", nil, serverConfig.CONFIG.Server)
+	url := hostHelper.GenApiUrl("virtual/notifyHost", nil, serverConfig.CONFIG.Host)
 	respBytes, err := httpUtils.Post(url, req)
 	ok := err == nil
 
 	if ok {
-		respObj := serverDomain.ZentaoHeartbeatResp{}
-		err := json.Unmarshal(respBytes, &respObj)
+		resp := serverDomain.HostResponse{}
+		err = json.Unmarshal(respBytes, &resp)
+		if err != nil {
+			return
+		}
+
+		respDataBytes, _ := json.Marshal(resp.Data)
+
+		respObj := serverDomain.HostHeartbeatResp{}
+		err := json.Unmarshal(respDataBytes, &respObj)
 		if err == nil && respObj.Token != "" {
-			respObj.ExpiredDate, _ = dateUtils.UnitToDate(respObj.ExpiredTimeUnix)
 			serverConfig.CONFIG.AuthToken = respObj.Token
-			serverConfig.CONFIG.ExpiredDate = respObj.ExpiredDate
+		}
+		if serverConfig.CONFIG.Server == "" && respObj.Server != "" {
+			serverConfig.CONFIG.Server = respObj.Server
+			serverConfig.CONFIG.Server = httpUtils.AddSepIfNeeded(serverConfig.CONFIG.Server)
 		}
 	}
 
@@ -50,6 +56,6 @@ func (s *HeartbeatService) Heartbeat() {
 	if ok {
 		logUtils.Info(i118Utils.I118Prt.Sprintf("success_to_register", url))
 	} else {
-		logUtils.Info(i118Utils.I118Prt.Sprintf("fail_to_register", url, respBytes))
+		logUtils.Info(i118Utils.I118Prt.Sprintf("fail_to_register", url, string(respBytes)))
 	}
 }

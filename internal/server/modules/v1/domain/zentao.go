@@ -2,20 +2,7 @@ package serverDomain
 
 import (
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"time"
 )
-
-type ZentaoHeartbeatReq struct {
-	Secret string `json:"secret"`
-	Token  string `json:"token"`
-	Ip     string `json:"ip"`
-	Port   int    `json:"port"`
-}
-type ZentaoHeartbeatResp struct {
-	Token           string    `json:"token" yaml:"token"`
-	ExpiredTimeUnix int64     `json:"expiredTimeUnix" yaml:"expiredTimeUnix"`
-	ExpiredDate     time.Time `json:"expiredDate" yaml:"expiredDate"`
-}
 
 type ZentaoResp struct {
 	Status string
@@ -29,9 +16,11 @@ type ZentaoRespData struct {
 type ZentaoJobSubmitReq struct {
 	Task      int                  `json:"task"`
 	Status    commConsts.JobStatus `json:"status"`
-	StartTime time.Time            `json:"startTime"`
-	EndTime   time.Time            `json:"endTime"`
+	StartTime string               `json:"startTime"`
+	EndTime   string               `json:"endTime"`
 	RetryTime int                  `json:"retryTime"`
+	Error     string               `json:"error"`
+	Data      interface{}          `json:"data"`
 }
 
 type ZentaoResultSubmitReq struct {

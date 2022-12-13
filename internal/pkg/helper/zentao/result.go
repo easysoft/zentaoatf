@@ -58,6 +58,28 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId, task int, conf
 	return
 }
 
+func JobCommitResult(report interface{}, config commDomain.WorkspaceConf) (err error) {
+	uri := "/ztf/submitResult"
+	url := GenApiUrl(uri, nil, config.Url)
+
+	if commConsts.Verbose {
+		jsn, _ := json.Marshal(report)
+		logUtils.Info(url)
+		logUtils.Info(string(jsn))
+	}
+
+	_, err = httpUtils.Post(url, report)
+	if err != nil {
+		err = ZentaoRequestErr(i118Utils.Sprintf("fail_to_submit_test_result", err.Error()))
+		return
+	}
+
+	msg := i118Utils.Sprintf("success_to_submit_test_result")
+	logUtils.Info(color.GreenString(msg))
+
+	return
+}
+
 func RemoveAutoCreateId(report *commDomain.ZtfReport) {
 	if report.TestType == commConsts.TestFunc {
 		return
