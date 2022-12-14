@@ -33,7 +33,7 @@ func NewFileService() *FileService {
 	return &FileService{}
 }
 
-// UploadFile 上传文件
+// UploadFile  上传文件
 func (s *FileService) UploadFile(ctx iris.Context, fh *multipart.FileHeader) (iris.Map, error) {
 	filename, err := GetFileName(fh.Filename)
 	if err != nil {
