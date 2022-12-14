@@ -231,7 +231,7 @@ func (s *JobService) SubmitExecResult(job model.Job, execErr error) (err error) 
 		EndTime:   (*job.EndDate).Format("2006-01-02 15:04:05"),
 		RetryTime: job.Retry,
 		Error:     fmt.Sprintf("%v", execErr),
-		Data:      report.FuncResult,
+		Data:      report,
 	}
 	err = zentaoHelper.JobCommitResult(ret, config)
 
