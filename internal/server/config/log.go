@@ -34,10 +34,12 @@ func InitLog() {
 	zapConfig.EncoderConfig.EncodeLevel = nil
 	zapConfig.DisableCaller = true
 	zapConfig.EncoderConfig.TimeKey = ""
-	logUtils.LoggerStandard, err = zapConfig.Build(zap.WrapCore(zapCoreInFile))
+
+	logUtils.LoggerStandard, err = zapConfig.Build()
 	if err != nil {
 		log.Println("init console logger fail " + err.Error())
 	}
+	logUtils.LoggerStandard = logUtils.LoggerStandard.WithOptions(zap.AddCaller(), zap.AddCallerSkip(1))
 
 	// print to console and info、err files without stacktrace detail
 	// by set DisableStacktrace to true
@@ -46,6 +48,8 @@ func InitLog() {
 	if err != nil {
 		log.Println("init exec console logger fail " + err.Error())
 	}
+
+	logUtils.LoggerExecConsole = logUtils.LoggerExecConsole.WithOptions(zap.AddCaller(), zap.AddCallerSkip(1))
 }
 
 // write exec results by using zap log
@@ -64,6 +68,7 @@ func InitExecLog(workspacePath string) {
 	config.OutputPaths = []string{logPathInfo}
 	var err error
 	logUtils.LoggerExecFile, err = config.Build()
+	logUtils.LoggerExecFile = logUtils.LoggerExecFile.WithOptions(zap.AddCaller(), zap.AddCallerSkip(1))
 
 	if err != nil {
 		log.Println("init exec file logger fail " + err.Error())
@@ -85,6 +90,7 @@ func InitExecLog(workspacePath string) {
 		log.Println("init exec result logger fail " + err.Error())
 	}
 
+	logUtils.LoggerExecResult = logUtils.LoggerExecResult.WithOptions(zap.AddCaller(), zap.AddCallerSkip(1))
 }
 
 // flush buffer and release the file.
@@ -123,18 +129,18 @@ func getLogConfig() (config zap.Config) {
 	}
 
 	encoderConfig := zapcore.EncoderConfig{
-		TimeKey:       "time",
-		LevelKey:      "level",
-		NameKey:       "logger",
-		CallerKey:     "caller",
-		MessageKey:    "msg",
-		StacktraceKey: "stacktrace",
-		LineEnding:    zapcore.DefaultLineEnding,
-		//EncodeLevel:    zapcore.LowercaseLevelEncoder,  // 小写编码器
+		TimeKey:        "time",
+		LevelKey:       "level",
+		NameKey:        "logger",
+		CallerKey:      "caller",
+		MessageKey:     "msg",
+		StacktraceKey:  "stacktrace",
+		LineEnding:     zapcore.DefaultLineEnding,
 		EncodeTime:     zapcore.TimeEncoderOfLayout("2006-01-02 15:04:05.000"),
 		EncodeLevel:    zapcore.CapitalColorLevelEncoder, //这里可以指定颜色
 		EncodeDuration: zapcore.SecondsDurationEncoder,
-		EncodeCaller:   zapcore.FullCallerEncoder, // 全路径编码器
+		EncodeCaller:   zapcore.ShortCallerEncoder, // 路径编码器
+		//EncodeLevel:    zapcore.LowercaseLevelEncoder,  // 小写编码器
 	}
 
 	config = zap.Config{
@@ -144,7 +150,7 @@ func getLogConfig() (config zap.Config) {
 		EncoderConfig: encoderConfig,               // 编码器配置
 		//InitialFields:    map[string]interface{}{"test_machine": "pc1"}, // 初始化字段
 	}
-	config.EncoderConfig.EncodeLevel = zapcore.LowercaseColorLevelEncoder //这里可以指定颜色
+
 	//if commonUtils.IsWin() {
 	//	zap.RegisterSink("winfile", newWinFileSink)
 	//}

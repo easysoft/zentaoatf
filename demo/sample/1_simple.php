@@ -2,7 +2,7 @@
 <?php
 /**
 
-title=simple demo
+title = simple demo
 cid=1
 pid=1
 

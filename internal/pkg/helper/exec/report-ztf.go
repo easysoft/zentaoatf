@@ -129,7 +129,7 @@ func appendFailedStepResult(cs commDomain.FuncResult, failedSteps *[]string) (pa
 
 			step.Id = strings.TrimRight(step.Id, ".")
 			status := i118Utils.Sprintf(string(step.Status))
-			*failedSteps = append(*failedSteps, fmt.Sprintf("Step %s: %s", step.Id, status))
+			*failedSteps = append(*failedSteps, fmt.Sprintf("Step %s: %s [%s]", step.Id, status, step.Name))
 
 			for idx1, cp := range step.CheckPoints {
 				//cpStatus := commonUtils.BoolToPass(step.Status)

@@ -78,7 +78,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 			if errOutput != "" && index == 0 && len(checkpointLogs) > 0 {
 				checkpointLogs[0].Actual = errOutput
 			}
-			stepLog := commDomain.StepLog{Id: strconv.Itoa(stepIdxToCheck), Name: stepName, Status: stepResult, CheckPoints: checkpointLogs}
+			stepLog := commDomain.StepLog{Id: strconv.Itoa(stepIdxToCheck + 1), Name: stepName, Status: stepResult, CheckPoints: checkpointLogs}
 			stepLogs = append(stepLogs, stepLog)
 			if stepResult == commConsts.FAIL {
 				caseResult = commConsts.FAIL
