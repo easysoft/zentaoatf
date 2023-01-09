@@ -55,6 +55,7 @@ func (s *JobService) Add(req serverDomain.ZentaoExecReq) (err error) {
 func (s *JobService) Start(po *model.Job) {
 	ch := make(chan int, 1)
 	channelMap.Store(po.ID, ch)
+	commConsts.ExecFrom = commConsts.FromZentao
 
 	req := s.genExecReqFromJob(*po)
 
@@ -258,7 +259,6 @@ func (s *JobService) genExecReqFromJob(po model.Job) (req serverDomain.ExecReq) 
 
 	cases := scriptHelper.GetCaseByListInMap(caseIds, caseIdMap)
 
-	commConsts.ExecFrom = commConsts.FromZentao
 	req.Act = commConsts.ExecCase
 	req.ScriptDirParamFromCmdLine = "."
 	req.TestSets = append(req.TestSets, serverDomain.TestSet{
