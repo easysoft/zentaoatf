@@ -1,6 +1,8 @@
 package action
 
 import (
+	"path/filepath"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
@@ -9,7 +11,6 @@ import (
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"path/filepath"
 )
 
 func GenExpectFiles(files []string) error {
@@ -29,7 +30,7 @@ func GenExpectFiles(files []string) error {
 	}
 	conf := configHelper.LoadByWorkspacePath(commConsts.ZtfDir)
 
-	casesToRun, _ := execHelper.FilterCases(cases, conf)
+	casesToRun, _ := execHelper.FilterCases(cases, &conf)
 
 	dryRunScripts(casesToRun)
 	logUtils.Info(i118Utils.Sprintf("success_to_create_expect"))

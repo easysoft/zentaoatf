@@ -7,7 +7,7 @@ var (
 
 	AutoCommitResult bool
 	AutoCommitBug    bool
-	Verbose          = true
+	Verbose          = false
 	IsRelease        bool
 	ZtfDir           string
 	WorkDir          string

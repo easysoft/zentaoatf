@@ -2,6 +2,7 @@ package controller
 
 import (
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
@@ -30,7 +31,7 @@ func (c *InterpreterCtrl) GetLangSettings(ctx iris.Context) {
 func (c *InterpreterCtrl) GetLangInterpreter(ctx iris.Context) {
 	language := ctx.URLParam("language")
 
-	data, err := c.InterpreterService.GetLangInterpreter(language)
+	data, err := execHelper.GetLangInterpreter(language)
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))
 		return

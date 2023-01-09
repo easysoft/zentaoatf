@@ -129,3 +129,48 @@ func GetInterpreterConfig(config *commDomain.WorkspaceConf) (err error) {
 	config.Autoit = mp["autoit"]
 	return
 }
+
+func UpdateAllInterpreterConfig() {
+	var workspaces []model.Workspace
+	dao.GetDB().Model(&model.Workspace{}).
+		Where("NOT deleted").
+		Find(&workspaces)
+
+	for _, item := range workspaces {
+		if item.Type != commConsts.ZTF {
+			continue
+		}
+
+		UpdateInterpreterConfig(item)
+	}
+}
+
+func UpdateInterpreterConfig(workspace model.Workspace) (err error) {
+	interps := []model.Interpreter{}
+	dao.GetDB().Model(&model.Interpreter{}).Where("NOT deleted")
+	err = dao.GetDB().Find(&interps).Error
+	mp := map[string]string{}
+
+	for _, item := range interps {
+		mp[item.Lang] = item.Path
+	}
+
+	conf := ReadFromFile(workspace.Path)
+	if conf.Language == "" {
+		conf.Language = commConsts.LanguageZh
+	}
+
+	conf.Javascript = mp["javascript"]
+	conf.Lua = mp["lua"]
+	conf.Perl = mp["perl"]
+	conf.Php = mp["php"]
+	conf.Python = mp["python"]
+	conf.Go = mp["go"]
+	conf.Ruby = mp["ruby"]
+	conf.Tcl = mp["tcl"]
+	conf.Autoit = mp["autoit"]
+
+	SaveToFile(conf, workspace.Path)
+
+	return
+}

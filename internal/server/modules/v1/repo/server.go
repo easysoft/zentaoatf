@@ -23,7 +23,6 @@ func NewServerRepo() *ServerRepo {
 func (r *ServerRepo) List() (pos []model.Server, err error) {
 	db := r.DB.Model(&model.Server{}).Where("NOT deleted")
 	err = db.Find(&pos).Error
-	fmt.Println(err)
 
 	return
 }

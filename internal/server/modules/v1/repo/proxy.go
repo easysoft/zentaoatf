@@ -23,7 +23,6 @@ func NewProxyRepo() *ProxyRepo {
 func (r *ProxyRepo) List() (pos []model.Proxy, err error) {
 	db := r.DB.Model(&model.Proxy{}).Where("NOT deleted")
 	err = db.Find(&pos).Error
-	fmt.Println(err)
 
 	return
 }

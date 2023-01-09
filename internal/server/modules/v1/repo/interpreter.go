@@ -23,7 +23,6 @@ func NewInterpreterRepo() *InterpreterRepo {
 func (r *InterpreterRepo) List() (pos []model.Interpreter, err error) {
 	db := r.DB.Model(&model.Interpreter{}).Where("NOT deleted")
 	err = db.Find(&pos).Error
-	fmt.Println(err)
 
 	return
 }

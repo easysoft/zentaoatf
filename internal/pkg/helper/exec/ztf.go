@@ -102,7 +102,7 @@ func RunZtf(ch chan int,
 
 	conf := configHelper.LoadByWorkspacePath(workspacePath)
 
-	casesToRun, casesToIgnore := FilterCases(cases, conf)
+	casesToRun, casesToIgnore := FilterCases(cases, &conf)
 
 	numbMaxWidth := 0
 	numbMaxWidth, pathMaxWidth = getNumbMaxWidth(casesToRun)
@@ -186,7 +186,7 @@ ExitAllCase:
 	report.Duration = endTime - startTime
 }
 
-func FilterCases(cases []string, conf commDomain.WorkspaceConf) (casesToRun, casesToIgnore []string) {
+func FilterCases(cases []string, conf *commDomain.WorkspaceConf) (casesToRun, casesToIgnore []string) {
 	for _, cs := range cases {
 		ext := path.Ext(cs)
 		if ext != "" {
@@ -202,11 +202,16 @@ func FilterCases(cases []string, conf commDomain.WorkspaceConf) (casesToRun, cas
 				continue
 			}
 
-			interpreter := configHelper.GetFieldVal(conf, stringUtils.UcFirst(lang))
+			interpreter := configHelper.GetFieldVal(*conf, stringUtils.UcFirst(lang))
 			if interpreter == "-" || interpreter == "" {
 				interpreter = ""
 				if lang != "bat" {
-					casesToIgnore = append(casesToIgnore, cs)
+					ok := AddInterpreterIfExist(conf, lang)
+					if !ok {
+						casesToIgnore = append(casesToIgnore, cs)
+					} else {
+						interpreter = configHelper.GetFieldVal(*conf, stringUtils.UcFirst(lang))
+					}
 				}
 			}
 			if lang != "bat" && interpreter == "" { // ignore the ones with no interpreter set

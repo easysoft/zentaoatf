@@ -251,7 +251,6 @@ func testCoTask() string {
 }
 
 func testCo(cmd string) string {
-	fmt.Println(cmd)
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		return err.Error()
