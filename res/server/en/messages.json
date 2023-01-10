@@ -326,6 +326,10 @@
       "translation": "Failed to login."
     },
     {
+        "id": "try_login",
+        "translation": "Try connect %s."
+    },
+    {
       "id": "fail_to_login_with_err",
       "translation": "Failed to login, Zentao return: %s."
     },

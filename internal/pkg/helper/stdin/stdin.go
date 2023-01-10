@@ -132,14 +132,24 @@ func InputForSet(dir string) {
 
 		url1, url2 := zentaoHelper.FixSiteUrl(conf.Url)
 		conf.Url = url1
-		err := zentaoHelper.Login(conf)
-		if err != nil {
-			conf.Url = url2
-			err = zentaoHelper.Login(conf)
 
+		logUtils.Info(i118Utils.Sprintf("try_login", url1))
+		err := zentaoHelper.LoginSilently(conf)
+		if err != nil {
+			logUtils.Info(i118Utils.Sprintf("fail_to_login"))
+			conf.Url = url2
+
+			logUtils.Info(i118Utils.Sprintf("try_login", url2))
+			err = zentaoHelper.Login(conf)
 			if err != nil {
+				logUtils.Info(i118Utils.Sprintf("fail_to_login"))
 				goto SetZentao
+			} else {
+				logUtils.Info(i118Utils.Sprintf("success_to_login"))
 			}
+
+		} else {
+			logUtils.Info(i118Utils.Sprintf("success_to_login"))
 		}
 	}
 
