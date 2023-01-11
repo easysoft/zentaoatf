@@ -39,7 +39,7 @@ func CreateProxy(t provider.T) {
 		webpage.WaitForSelector("#proxyFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
 	}
 	plwConf.EnableErr()
-	webpage.WaitForResponse(".*/proxies")
+	webpage.WaitForSelector("#proxyTable .z-tbody-td >> :scope:has-text('测试执行节点')")
 	webpage.Locator("#proxyTable .z-tbody-td >> :scope:has-text('测试执行节点')")
 }
 func EditProxy(t provider.T) {
@@ -58,7 +58,7 @@ func EditProxy(t provider.T) {
 	webpage.Click("#proxyFormModal>>text=确定")
 	webpage.WaitForSelector("#proxyFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
 	webpage.WaitForTimeout(1000)
-	locator = webpage.Locator("#proxyTable .z-tbody-td >> :scope:has-text('测试执行节点')")
+	webpage.Locator("#proxyTable .z-tbody-td >> :scope:has-text('测试执行节点')")
 }
 func DeleteProxy(t provider.T) {
 	t.ID("5742")
