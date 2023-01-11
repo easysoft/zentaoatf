@@ -111,15 +111,7 @@ func (p *Webpage) QuerySelectorAll(selector string) (ret MyElementHandle) {
 }
 
 func (p *Webpage) WaitForSelector(selector string, options ...playwright.PageWaitForSelectorOptions) (err error) {
-	t := p.T
-	_, err = p.Page.WaitForSelector(selector, options...)
-	if err != nil {
-		p.ScreenShot()
-		err = errors.New(fmt.Sprintf("Wait for %s selector fail: %s", selector, err.Error()))
-		utils.PrintErrOrNot(err, t)
-	}
-
-	return
+	return p.WaitForSelectorTimeout(selector, 10000, options...)
 }
 
 func (p *Webpage) WaitForSelectorTimeout(selector string, timeout float64, options ...playwright.PageWaitForSelectorOptions) (err error) {

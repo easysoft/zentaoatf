@@ -2,10 +2,11 @@ package zentaoHelper
 
 import (
 	"fmt"
-	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	"net/url"
 	"regexp"
 	"strings"
+
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 
 	"github.com/bitly/go-simplejson"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
@@ -80,6 +81,48 @@ func Login(config commDomain.WorkspaceConf) (err error) {
 	return
 }
 
+func LoginSilently(config commDomain.WorkspaceConf) (err error) {
+	url := GenApiUrl("tokens", nil, config.Url)
+
+	params := map[string]string{
+		"account":  config.Username,
+		"password": config.Password,
+	}
+	bodyBytes, err := httpUtils.Post(url, params)
+	if err != nil {
+		return
+	}
+
+	jsn, err := simplejson.NewJson(bodyBytes)
+	if err != nil {
+		return
+	}
+
+	if jsn == nil {
+		return
+	}
+	mp, err := jsn.Map()
+	if err != nil {
+		return
+	}
+
+	val, ok := mp["token"]
+	if ok {
+		commConsts.SessionId = val.(string)
+		if commConsts.Verbose {
+			logUtils.Info(i118Utils.Sprintf("success_to_login"))
+		}
+	} else {
+		if commConsts.Verbose {
+			err = ZentaoLoginErr(fmt.Sprintf("%#v", mp["error"]))
+		}
+
+		return
+	}
+
+	return
+}
+
 func ListLang() (langs []serverDomain.ZentaoLang, err error) {
 	for key, mp := range commConsts.LangMap {
 		langs = append(langs, serverDomain.ZentaoLang{Code: key, Name: mp["name"]})
@@ -119,7 +162,7 @@ func FixSiteUrl(orginUrl string) (url1, url2 string) {
 	pth := strings.Replace(orginUrl, url1, "", -1)
 	pth = strings.TrimLeft(pth, "/")
 	arr := strings.Split(pth, "/")
-	if len(arr) > 1 {
+	if len(arr) >= 1 {
 		url2 = url1 + arr[0]
 	}
 

@@ -316,6 +316,10 @@
       "translation": "登录失败。"
     },
     {
+        "id": "try_login",
+        "translation": "尝试连接 %s。"
+    },
+    {
       "id": "fail_to_login_with_err",
       "translation": "登录失败，禅道返回：%s。"
     },
