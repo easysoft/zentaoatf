@@ -18,6 +18,8 @@ export class ZtfApp {
 
         this._windows = new Map();
 
+        killZtfServer();
+
         startZtfServer().then((ztfServerUrl)=> {
             if (ztfServerUrl) logInfo(`>> ztf server started successfully on : ${ztfServerUrl}`);
             this.bindElectronEvents();

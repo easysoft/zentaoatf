@@ -124,10 +124,14 @@ export function killZtfServer() {
         const cmd = `ps -ef | grep ${uuid} | grep -v "grep" | awk '{print $2}' | xargs kill -9`
         logInfo(`>> exit cmd: ${cmd}`);
 
-        const cp = require('child_process');
-        cp.exec(cmd, function (error, stdout, stderr) {
-            logInfo(`>> exit result: stdout: ${stdout}; stderr: ${stderr}; error: ${error}`);
-        });
+        // const cp = require('child_process');
+        // cp.exec(cmd, function (error, stdout, stderr) {
+        //     logInfo(`>> exit result: stdout: ${stdout}; stderr: ${stderr}; error: ${error}`);
+        // });
+
+        const stdout = execSync(cmd, {windowsHide: true}).toString().trim()
+        logInfo(`>> exit result: ${stdout}`)
+
     } else {
         const cmd = 'WMIC path win32_process  where "Commandline like \'%%' + uuid + '%%\'" get Processid,Caption';
         logInfo(`>> list process cmd: ${cmd}`);
@@ -158,8 +162,8 @@ export function killZtfServer() {
             const killCmd = `taskkill /F /pid ${pid}`
             logInfo(`>> exit cmd: exec ${killCmd}`)
 
-            const out = execSync(`taskkill /F /pid ${pid}`, {windowsHide: true}).toString().trim()
-            logInfo(`>> exit result: ${out}`)
+            const stdout = execSync(`taskkill /F /pid ${pid}`, {windowsHide: true}).toString().trim()
+            logInfo(`>> exit result: ${stdout}`)
         }
     }
 }
