@@ -23,7 +23,7 @@ if(platform.system()=='Windows'):
    sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='utf8')
 
 option = webdriver.ChromeOptions()
-option.add_argument('--headless')
+# option.add_argument('--headless')
 driver = webdriver.Chrome(options=option)
 driver.get('https://www.baidu.com/')
 
