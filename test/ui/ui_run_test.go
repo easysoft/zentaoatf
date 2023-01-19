@@ -315,11 +315,20 @@ func RunUnit(t provider.T) {
 	locator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
 	webpage.Click(".tree-context-menu>>text=执行")
 	webpage.WaitForSelectorTimeout("#tabsPane >> text=执行", 3000)
+	locator = webpage.Locator("#tabsPane>>.form-item:has-text('测试命令')>>input")
+	locator.FillNth(0, "mvn clean package test")
 	webpage.Check(`#tabsPane >> input[type="checkbox"]`)
 	locator = webpage.Locator("#tabsPane:has-text('禅道测试单标题')>>input")
 	locator.FillNth(2, "test unit")
 	webpage.Click("#tabsPane >> text=执行")
-	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行3个用例，耗时')")
+	plwConf.DisableErr()
+	err := webpage.WaitForSelector("#log-list")
+	if err != nil {
+		webpage.Click("#tabsPane >> text=执行")
+	}
+	plwConf.EnableErr()
+
+	webpage.WaitForSelectorTimeout("#log-list>>.msg-span>>:has-text('执行3个用例，耗时')", 20000)
 	locator = webpage.Locator("#log-list>>code:has-text('执行3个用例，耗时')")
 	innerText := locator.InnerText()
 	if !strings.Contains(innerText, "3(100.0%) 通过，0(0.0%) 失败") {

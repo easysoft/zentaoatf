@@ -3,6 +3,9 @@ package plw
 import (
 	"errors"
 	"fmt"
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
+	"github.com/easysoft/zentaoatf/test/ui/conf"
+	"time"
 
 	"github.com/easysoft/zentaoatf/test/ui/utils"
 	playwright "github.com/playwright-community/playwright-go"
@@ -12,6 +15,7 @@ func (l MyLocator) Click(options ...playwright.PageClickOptions) (err error) {
 	err = l.PlwLocator.Click(options...)
 	t := l.T
 	if err != nil {
+		l.ScreenShot()
 		err = errors.New(fmt.Sprintf("Click %s fail: %s", l.Selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
@@ -23,6 +27,7 @@ func (l MyLocator) RightClick(selector string) {
 	t := l.T
 	err := l.PlwLocator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
 	if err != nil {
+		l.ScreenShot()
 		err = errors.New(fmt.Sprintf("Rigth click %s fail: %s", selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
@@ -33,6 +38,7 @@ func (l MyLocator) Type(text string, options ...playwright.PageTypeOptions) (err
 	err = l.PlwLocator.Type(text, options...)
 	t := l.T
 	if err != nil {
+		l.ScreenShot()
 		err = errors.New(fmt.Sprintf("Type %s fail: %s", l.Selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
@@ -44,6 +50,7 @@ func (l MyLocator) Press(text string, options ...playwright.PagePressOptions) (e
 	err = l.PlwLocator.Press(text, options...)
 	t := l.T
 	if err != nil {
+		l.ScreenShot()
 		err = errors.New(fmt.Sprintf("Press %s fail: %s", l.Selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
@@ -55,12 +62,14 @@ func (l MyLocator) FillNth(nth int, value string, options ...playwright.FrameFil
 	t := l.T
 	input, err := l.PlwLocator.Nth(nth)
 	if err != nil {
+		l.ScreenShot()
 		err = errors.New(fmt.Sprintf("Fill %s fail: %s", l.Selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
 
 	err = input.Fill(value, options...)
 	if err != nil {
+		l.ScreenShot()
 		err = errors.New(fmt.Sprintf("Fill %s fail: %s", l.Selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
@@ -72,6 +81,7 @@ func (l MyLocator) Fill(value string, options ...playwright.FrameFillOptions) (e
 	t := l.T
 	err = l.PlwLocator.Fill(value, options...)
 	if err != nil {
+		l.ScreenShot()
 		err = errors.New(fmt.Sprintf("Fill %s fail: %s", l.Selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
@@ -83,12 +93,14 @@ func (l MyLocator) SelectNth(nth int, values playwright.SelectOptionValues) (err
 	t := l.T
 	selectLocator, err := l.PlwLocator.Nth(nth)
 	if err != nil {
+		l.ScreenShot()
 		err = errors.New(fmt.Sprintf("Select %s fail: %s", l.Selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
 
 	_, err = selectLocator.SelectOption(values)
 	if err != nil {
+		l.ScreenShot()
 		err = errors.New(fmt.Sprintf("Select %s fail: %s", l.Selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
@@ -104,6 +116,7 @@ func (l MyLocator) Locator(selector string) (ret MyLocator) {
 	}
 
 	if err != nil {
+		l.ScreenShot()
 		err = errors.New(fmt.Sprintf("Get Locator %s fail: %s", selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
@@ -120,6 +133,7 @@ func (l MyLocator) InnerText() string {
 	t := l.T
 	text, err := l.PlwLocator.InnerText()
 	if err != nil {
+		l.ScreenShot()
 		err = errors.New(fmt.Sprintf("Get %s InnerText fail: %s", l.Selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
@@ -130,6 +144,7 @@ func (l MyLocator) Count() int {
 	t := l.T
 	count, err := l.PlwLocator.Count()
 	if err != nil {
+		l.ScreenShot()
 		err = errors.New(fmt.Sprintf("Get %s count fail: %s", l.Selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
@@ -140,10 +155,19 @@ func (l MyLocator) Hover(options ...playwright.PageHoverOptions) {
 	t := l.T
 	err := l.PlwLocator.Hover(options...)
 	if err != nil {
+		l.ScreenShot()
 		err = errors.New(fmt.Sprintf("Hover %s fail: %s", l.Selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
 	return
+}
+
+func (l *MyLocator) ScreenShot() {
+	if !conf.ShowErr && !conf.ExitAllOnError {
+		return
+	}
+	var screenshotPath = fmt.Sprintf("%stest/screenshot/%v.png", constTestHelper.RootPath, time.Now().Unix())
+	l.Page.Screenshot(playwright.PageScreenshotOptions{Path: &screenshotPath})
 }
 
 func (l MyElementHandle) InnerText(nth int) string {

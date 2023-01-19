@@ -16,6 +16,7 @@ type MyLocator struct {
 	Selector   string
 	PlwLocator playwright.Locator
 	T          provider.T
+	Page       playwright.Page
 }
 
 type MyElementHandle struct {

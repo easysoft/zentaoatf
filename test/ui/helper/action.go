@@ -81,6 +81,7 @@ func (p *Webpage) Locator(selector string, options ...playwright.PageLocatorOpti
 		PlwLocator: locator,
 		Selector:   selector,
 		T:          t,
+		Page:       p.Page,
 	}
 
 	return

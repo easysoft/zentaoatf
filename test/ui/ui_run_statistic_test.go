@@ -96,6 +96,7 @@ func RunBugStatistic(t provider.T) {
 	ztfTestHelper.ExpandWorspace(webpage)
 	scriptLocator := webpage.Locator(".tree-node-title>>text=1_string_match.php")
 	scriptLocator.Click()
+	scriptLocator.Click()
 	webpage.WaitForResponse("**/statistic*")
 	webpage.WaitForTimeout(1000)
 	elements := webpage.QuerySelectorAll(".statistic>>span")
