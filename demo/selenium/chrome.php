@@ -19,11 +19,11 @@ include 'vendor/autoload.php';
 /* launch build-in selenium driver to test */
 if (isWindows())
 {
-	$command = 'start ' . dirname(__FILE__, 3) . '\runtime\selenium\chrome80.exe >log.txt 2>&1';
+	$command = 'start chromedriver.exe >log.txt 2>&1';
     //	exec("CHCP 936");
 } else // for no-windows system, pls download chrome driver from https://chromedriver.storage.googleapis.com/index.html
 {
-    $command = 'nohup ' . dirname(__FILE__, 3) . '/runtime/selenium/chrome80 >log.txt 2>&1 &';
+    $command = 'nohup chromedriver >log.txt 2>&1 &';
 }
 pclose(popen($command, 'r'));
 sleep(1);
@@ -31,7 +31,7 @@ sleep(1);
 $host = 'http://127.0.0.1:9515';
 
 $options = new ChromeOptions();
-$options->addArguments(['--no-sandbox']); // ['--headless', '--no-sandbox']
+// $options->addArguments(['--no-sandbox']); // ['--headless', '--no-sandbox']
 $desiredCapabilities = DesiredCapabilities::chrome();
 $desiredCapabilities->setCapability(ChromeOptions::CAPABILITY, $options);
 
@@ -57,10 +57,10 @@ $driver->close();
 
 if (isWindows())
 {
-    exec('taskkill /F /im chrome80.exe');
+    exec('taskkill /F /im chromedriver.exe');
 } else
 {
-    exec('ps -ef | grep chrome80 | grep -v grep | xargs kill -9 2>/dev/null');
+    exec('ps -ef | grep chromedriver | grep -v grep | xargs kill -9 2>/dev/null');
 }
 
 function  isWindows()
