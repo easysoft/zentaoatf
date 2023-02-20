@@ -3,10 +3,11 @@ package zentaoHelper
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/fatih/color"
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/fatih/color"
 
 	"github.com/bitly/go-simplejson"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
@@ -334,7 +335,7 @@ func GetCaseIdsInZentaoModule(productId, moduleId uint, config commDomain.Worksp
 	caseIdMap = map[int]string{}
 	for _, item := range items {
 		mp, _ := item.(map[string]interface{})
-		id, _ := mp["id"].(json.Number).Int64()
+		id, _ := strconv.ParseInt(fmt.Sprintf("%v", mp["id"]), 10, 64)
 
 		caseIdMap[int(id)] = ""
 	}
@@ -373,7 +374,7 @@ func GetCaseIdsInZentaoSuite(productId uint, suiteId int, config commDomain.Work
 	caseIdMap = map[int]string{}
 	for _, item := range items {
 		mp, _ := item.(map[string]interface{})
-		id, _ := mp["id"].(json.Number).Int64()
+		id, _ := strconv.ParseInt(fmt.Sprintf("%v", mp["id"]), 10, 64)
 
 		caseIdMap[int(id)] = ""
 	}
@@ -412,7 +413,7 @@ func GetCaseIdsInZentaoTask(productId uint, taskId int, config commDomain.Worksp
 	caseIdMap = map[int]string{}
 	for _, item := range items {
 		mp, _ := item.(map[string]interface{})
-		id, _ := mp["case"].(json.Number).Int64()
+		id, _ := strconv.ParseInt(fmt.Sprintf("%v", mp["case"]), 10, 64)
 
 		caseIdMap[int(id)] = ""
 	}

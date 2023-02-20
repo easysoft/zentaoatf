@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"path"
+	"strconv"
+
 	"github.com/bitly/go-simplejson"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
@@ -13,7 +16,6 @@ import (
 	"github.com/easysoft/zentaoatf/pkg/domain"
 	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
-	"path"
 )
 
 func LoadSiteProduct(currSite serverDomain.ZentaoSite, currProductId int) (
@@ -90,7 +92,7 @@ func loadProduct(config commDomain.WorkspaceConf) (products []serverDomain.Zenta
 	for _, item := range items {
 		productMap, _ := item.(map[string]interface{})
 
-		id, _ := productMap["id"].(json.Number).Int64()
+		id, _ := strconv.ParseInt(fmt.Sprintf("%v", productMap["id"]), 10, 64)
 		name, _ := productMap["name"].(string)
 
 		products = append(products, serverDomain.ZentaoProduct{Id: int(id), Name: name})
@@ -254,7 +256,7 @@ func LoadTask(productId uint, config commDomain.WorkspaceConf) (tasks []domain.N
 func GenPlatItems(arr []interface{}) (ret []domain.NestedItem, err error) {
 	for _, iterf := range arr {
 		temp := iterf.(map[string]interface{})
-		id64, _ := temp["id"].(json.Number).Int64()
+		id64, _ := strconv.ParseInt(fmt.Sprintf("%v", temp["id"]), 10, 64)
 
 		item := domain.NestedItem{Id: int(id64), Name: temp["name"].(string)}
 		ret = append(ret, item)

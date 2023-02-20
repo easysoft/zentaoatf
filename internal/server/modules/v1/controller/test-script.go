@@ -270,7 +270,7 @@ func (c *TestScriptCtrl) SyncToZentao(ctx iris.Context) {
 	for _, set := range sets {
 		totalNum += len(set.Cases)
 
-		count, _ := zentaoHelper.CheckIn(set.Cases, config, true, false)
+		count, _ := zentaoHelper.CheckIn(set.Cases, config, true, true)
 
 		successNum += count
 	}

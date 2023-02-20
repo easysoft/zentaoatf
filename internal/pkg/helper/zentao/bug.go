@@ -270,10 +270,10 @@ func LoadBugs(Product int, config commDomain.WorkspaceConf) (bugs []commDomain.Z
 
 	for _, item := range items {
 		bug, _ := item.(map[string]interface{})
-		id, _ := bug["id"].(json.Number).Int64()
-		caseId, _ := bug["case"].(json.Number).Int64()
-		severity, _ := bug["severity"].(json.Number).Int64()
-		pri, _ := bug["pri"].(json.Number).Int64()
+		id, _ := strconv.ParseInt(fmt.Sprintf("%v", bug["id"]), 10, 64)
+		caseId, _ := strconv.ParseInt(fmt.Sprintf("%v", bug["case"]), 10, 64)
+		severity, _ := strconv.ParseInt(fmt.Sprintf("%v", bug["severity"]), 10, 64)
+		pri, _ := strconv.ParseInt(fmt.Sprintf("%v", bug["pri"]), 10, 64)
 		title, _ := bug["title"].(string)
 		openedBy, _ := bug["openedBy"].(map[string]interface{})
 		bugs = append(bugs, commDomain.ZentaoBug{
