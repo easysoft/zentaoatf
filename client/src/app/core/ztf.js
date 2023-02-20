@@ -10,7 +10,7 @@ import {logErr, logInfo} from '../utils/log';
 let _ztfProcess;
 
 export async function startZtfServer() {
-    if (process.env.SKIP_SERVER) {
+    if (process.env.SKIP_SERVER && parseInt(process.env.SKIP_SERVER)) {
         logInfo(`>> skip to start ztf Server by env "SKIP_SERVER=${process.env.SKIP_SERVER}".`);
         return Promise.resolve();
     }
