@@ -196,13 +196,15 @@ copy_files_win64:
 	@echo 'start copy files win64'
 	@cp -r demo "${CLIENT_OUT_DIR}win64"
 	@cp -r demo "${COMMAND_BIN_DIR}win64"
-	@cp ${COMMAND_BIN_DIR}win64/{ztf.exe,ztf-gui.exe} "${CLIENT_OUT_DIR}win64"
+	@cp ${COMMAND_BIN_DIR}win64/ztf.exe "${CLIENT_OUT_DIR}win64"
+	@cp ${COMMAND_BIN_DIR}win64/ztf-gui.exe "${CLIENT_OUT_DIR}win64"
 
 copy_files_win32:
 	@echo 'start copy files win32'
 	@cp -r demo "${CLIENT_OUT_DIR}win32"
 	@cp -r demo "${COMMAND_BIN_DIR}win32"
-	@cp ${COMMAND_BIN_DIR}win32/{ztf.exe,ztf-gui.exe} "${CLIENT_OUT_DIR}win32"
+	@cp ${COMMAND_BIN_DIR}win32/ztf.exe "${CLIENT_OUT_DIR}win32"
+	@cp ${COMMAND_BIN_DIR}win32/ztf-gui.exe "${CLIENT_OUT_DIR}win32"
 
 copy_files_linux:
 	@echo 'start copy files linux'

@@ -70,7 +70,7 @@ func loadProduct(config commDomain.WorkspaceConf) (products []serverDomain.Zenta
 		return
 	}
 
-	url := GenApiUrl("products", nil, config.Url)
+	url := GenApiUrl("products", map[string]interface{}{"limit": 1000}, config.Url)
 	bytes, err := httpUtils.Get(url)
 	if err != nil {
 		err = ZentaoRequestErr(err.Error())
