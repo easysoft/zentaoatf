@@ -16,6 +16,7 @@ require (
 	github.com/facebookgo/subset v0.0.0-20200203212716-c811ad88dec4 // indirect
 	github.com/fatih/color v1.13.0
 	github.com/fsnotify/fsnotify v1.5.4
+	github.com/go-bindata/go-bindata v3.1.2+incompatible // indirect
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/go-playground/validator/v10 v10.9.0
 	github.com/go-redis/redis/v8 v8.11.3

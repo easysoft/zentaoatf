@@ -96,7 +96,7 @@ export const unitTestTypesDef = [
     {
         label: 'PyTest',
         value: 'pytest',
-        cmd: 'ztf.exe pytest -p product_id pytest --junitxml=testresult.xml',
+        cmd: 'ztf.exe pytest -p product_id pytest --junitxml=testresults.xml',
     },
     {
         label: 'Jest',

@@ -525,7 +525,9 @@ func ListCaseByProduct(baseUrl string, productId int) (casesResp commDomain.ZtfR
 
 func ListCaseByModule(baseUrl string, productId, moduleId int) (casesResp commDomain.ZtfRespTestCases, err error) {
 	uri := fmt.Sprintf("/products/%d/testcases?module=%d", productId, moduleId)
-	url := GenApiUrl(uri, nil, baseUrl)
+	url := GenApiUrl(uri, map[string]interface{}{
+		"limit": 10000,
+	}, baseUrl)
 
 	bytes, err := httpUtils.Get(url)
 	if err != nil {
