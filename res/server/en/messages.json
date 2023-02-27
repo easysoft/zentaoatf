@@ -700,6 +700,10 @@
       "translation": "Fail to parse upload file response: %s."
     },
     {
+        "id": "fail_to_exec_command",
+        "translation": "Fail to exec command: %s."
+    },
+    {
       "id": "upload_file_result",
       "translation": "Upload file result: %s，%s."
     },

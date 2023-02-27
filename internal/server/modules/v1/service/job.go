@@ -21,6 +21,7 @@ import (
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 	channelUtils "github.com/easysoft/zentaoatf/pkg/lib/channel"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
 )
 
 var (
@@ -61,6 +62,10 @@ func (s *JobService) Start(po *model.Job) {
 
 	go func() {
 		s.JobRepo.UpdateStatus(po, commConsts.JobInprogress, true, false)
+
+		if po.Cmd != "" {
+			shellUtils.ExeShellWithOutput(po.Cmd)
+		}
 
 		err := execHelper.Exec(nil, req, nil)
 
