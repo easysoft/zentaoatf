@@ -22,6 +22,7 @@ import (
 	channelUtils "github.com/easysoft/zentaoatf/pkg/lib/channel"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
+	"github.com/jinzhu/copier"
 )
 
 var (
@@ -175,16 +176,18 @@ func (s *JobService) Query() (ret serverDomain.JobQueryResp, err error) {
 			status = commConsts.JobInprogress
 		}
 
+		poTmp := model.Job{}
+		copier.Copy(&poTmp, po)
 		if status == commConsts.JobCreated {
-			ret.Created = append(ret.Created, &po)
+			ret.Created = append(ret.Created, &poTmp)
 		} else if status == commConsts.JobInprogress {
-			ret.Inprogress = append(ret.Inprogress, &po)
+			ret.Inprogress = append(ret.Inprogress, &poTmp)
 		} else if status == commConsts.JobCanceled {
-			ret.Canceled = append(ret.Canceled, &po)
+			ret.Canceled = append(ret.Canceled, &poTmp)
 		} else if status == commConsts.JobCompleted {
-			ret.Completed = append(ret.Completed, &po)
+			ret.Completed = append(ret.Completed, &poTmp)
 		} else if status == commConsts.JobFailed {
-			ret.Failed = append(ret.Failed, &po)
+			ret.Failed = append(ret.Failed, &poTmp)
 		}
 	}
 

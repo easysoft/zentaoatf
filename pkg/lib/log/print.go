@@ -3,9 +3,10 @@ package logUtils
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/easysoft/zentaoatf/pkg/consts"
 	"strings"
 	"unicode/utf8"
+
+	"github.com/easysoft/zentaoatf/pkg/consts"
 
 	"github.com/fatih/color"
 	"go.uber.org/zap"
@@ -57,14 +58,23 @@ func ExecConsolef(clr color.Attribute, str string, args ...interface{}) {
 }
 
 func ExecFile(str string) {
+	if LoggerExecFile == nil {
+		return
+	}
 	LoggerExecFile.Info(str)
 }
 func ExecFilef(str string, args ...interface{}) {
 	msg := fmt.Sprintf(str, args...)
+	if LoggerExecFile == nil {
+		return
+	}
 	LoggerExecFile.Info(msg)
 }
 
 func ExecResult(str string) {
+	if LoggerExecFile == nil {
+		return
+	}
 	LoggerExecResult.Info(str)
 }
 
