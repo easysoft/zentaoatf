@@ -121,7 +121,7 @@ export function killZtfServer() {
     if (!IS_WINDOWS_OS) {
         logInfo(`>> not windows`);
 
-        const cmd = `ps -ef | grep ${uuid} | grep -v "grep" | awk '{print $2}' | xargs kill -9`
+        const cmd = `ps -ef | grep ${uuid} | grep -v "grep" | awk '{print $2}' | xargs -r kill -9`
         logInfo(`>> exit cmd: ${cmd}`);
 
         // const cp = require('child_process');
@@ -147,8 +147,8 @@ export function killZtfServer() {
             logInfo(`<${line}>`)
             const cols = line.split(/\s/)
 
-            if (line.indexOf('ztf') > -1 && cols.length > 3) {
-                const col3 = cols[3].trim()
+            if (line.indexOf('ztf') > -1) {
+                const col3 = cols[cols.length-1].trim()
                 console.log(`col3=${col3}`);
                 logInfo(`col3=${col3}`)
 
