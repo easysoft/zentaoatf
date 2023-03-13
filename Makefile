@@ -229,6 +229,7 @@ copy_files_linux:
 
 copy_files_linux_arm64:
 	@echo 'start copy files linux for arm64'
+	@mkdir -p "${CLIENT_OUT_DIR}linux_arm64"
 	@cp -r demo "${CLIENT_OUT_DIR}linux_arm64"
 	@cp -r demo "${COMMAND_BIN_DIR}linux_arm64"
 
