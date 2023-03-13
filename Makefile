@@ -159,6 +159,7 @@ package_gui_linux_client_arm64:
 	@echo 'start package gui linux for arm64'
 	@rm -rf ${CLIENT_BIN_DIR}/* && mkdir ${CLIENT_BIN_DIR}linux_arm64
 	@cp -rf ${COMMAND_BIN_DIR}linux_arm64/${PROJECT}-server ${CLIENT_BIN_DIR}linux_arm64/${PROJECT}
+	@rm -rf ${CLIENT_OUT_DIR}linux_arm64 && mkdir ${CLIENT_OUT_DIR}linux_arm64
 
 package_gui_mac_client:
 	@echo 'start package gui mac'
@@ -229,7 +230,7 @@ copy_files_linux:
 
 copy_files_linux_arm64:
 	@echo 'start copy files linux for arm64'
-	@cp -r demo "${CLIENT_OUT_DIR}linux"
+	@cp -r demo "${CLIENT_OUT_DIR}linux_arm64"
 	@cp -r demo "${COMMAND_BIN_DIR}linux_arm64"
 
 copy_files_mac:
