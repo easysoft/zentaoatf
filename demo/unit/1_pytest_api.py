@@ -15,7 +15,7 @@ class TestCApi(object):
     @allure.story('测试初始化')
     @allure.testcase('5555555')
     @allure.id('11')
-    @pytest.mark.parametrize('para', ['asd', 'rtrtrt'], ids=['1', '2'])
+    @pytest.mark.parametrize('para', ['asd', 'rtrtrt'], ids=['111', '222'])
     def test_c_api_init(self, para):
         # allure.getLifecycle()
         # lifecycle.updateTestCase(testResult -> testResult.setTestCaseId("1"));

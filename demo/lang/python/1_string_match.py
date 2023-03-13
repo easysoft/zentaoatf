@@ -11,6 +11,14 @@ pid=1
 3. format string match      >> `%s%d`
 4. with Chinese      >> 中文
 
+step multi lines #3
+- 步骤1
+  - 子步骤2 @{
+        第三方
+        qqqq
+    }
+- 步骤3 @ 预期
+
 '''
 ## for Chinese display
 import sys,io,platform

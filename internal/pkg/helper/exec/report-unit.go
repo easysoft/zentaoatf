@@ -407,7 +407,7 @@ func ConvertAllureResult(cases []commDomain.AllureCase) (testSuites []commDomain
 			suiteMap[suiteName] = &suite
 		}
 
-		suiteMap[suiteName].Name = "111"
+		//suiteMap[suiteName].Name = "111"
 
 		caseId := GetAllureCaseId(cs)
 
