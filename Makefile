@@ -229,6 +229,7 @@ copy_files_linux:
 
 copy_files_linux_arm64:
 	@echo 'start copy files linux for arm64'
+	@cp -r demo "${CLIENT_OUT_DIR}linux"
 	@cp -r demo "${COMMAND_BIN_DIR}linux_arm64"
 
 copy_files_mac:
@@ -245,6 +246,7 @@ zip_server_win64:
 			xargs echo > ${QINIU_DIST_DIR}win64/${PROJECT}-server.zip.md5
 
 zip_server_win32:
+	@mkdir -p ${QINIU_DIST_DIR}win32
 	@cd ${COMMAND_BIN_DIR}win32 && zip -ry ${QINIU_DIST_DIR}win32/${PROJECT}-server.zip ./demo ./${PROJECT}-server.exe && cd ../..
 	@md5sum ${QINIU_DIST_DIR}win32/${PROJECT}-server.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}win32/${PROJECT}-server.zip.md5
