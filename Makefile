@@ -187,7 +187,7 @@ endif
 compile_command_linux_arm64:
 	@echo 'start compile linux'
 
-	CGO_ENABLED=1 GOOS=linux GOARCH=arm64 GOARM=7 CC=aarch64-linux-gnu-gcc CXX=aarch64-linux-gnu-g++ AR=aarch64-linux-gnu-ar \
+	CGO_ENABLED=1 GOOS=linux GOARCH=arm64 GOARM=7 CC=aarch64-linux-gnu-gcc-10 CXX=aarch64-linux-gnu-g++ AR=aarch64-linux-gnu-ar \
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}linux/${PROJECT} ${COMMAND_MAIN_FILE}
 
