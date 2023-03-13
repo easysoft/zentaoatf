@@ -184,6 +184,18 @@ else
 		-o ${COMMAND_BIN_DIR}linux/${PROJECT} ${COMMAND_MAIN_FILE}
 endif
 
+compile_command_linux_arm64:
+	@echo 'start compile linux'
+ifeq ($(PLATFORM),"Mac")
+	@CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=aarch64-linux-gnu-gcc CXX=aarch64-linux-gnu-g++ AR=aarch64-linux-gnu-ar \
+		${BUILD_CMD} \
+		-o ${COMMAND_BIN_DIR}linux/${PROJECT} ${COMMAND_MAIN_FILE}
+else
+	CGO_ENABLED=1 GOOS=linux GOARCH=arm64 GOARM=7 CC=gcc CXX=g++ \
+		${BUILD_CMD} \
+		-o ${COMMAND_BIN_DIR}linux/${PROJECT} ${COMMAND_MAIN_FILE}
+endif
+
 compile_command_mac:
 	@echo 'start compile darwin'
 	@echo
