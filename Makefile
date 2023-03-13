@@ -34,17 +34,19 @@ BUILD_CMD=go build -ldflags "-X 'main.AppVersion=${VERSION}' -X 'main.BuildTime=
 BUILD_CMD_WIN=go build -ldflags "-s -w -X 'main.AppVersion=${VERSION}' -X 'main.BuildTime=${BUILD_TIME}' -X 'main.GoVersion=${GO_VERSION}' -X 'main.GitHash=${GIT_HASH}'"
 
 default: win64 win32 linux mac
-server: server_win64 server_win32 server_linux server_mac
+server: server_win64 server_win32 server_linux server_linux_arm64 server_mac
 
-server_win64: prepare compile_server_mac copy_files_win64   zip_server_win64
-server_win32: prepare compile_server_win32 copy_files_win32   zip_server_win32
-server_linux: prepare compile_server_linux copy_files_linux   zip_server_linux
-server_mac: prepare compile_server_mac copy_files_mac   zip_server_mac
+server_win64:       prepare compile_server_mac copy_files_win64   zip_server_win64
+server_win32:       prepare compile_server_win32 copy_files_win32   zip_server_win32
+server_linux:       prepare compile_server_linux copy_files_linux   zip_server_linux
+server_linux_arm64: prepare compile_server_linux_arm64 copy_files_linux_arm64   zip_server_linux_arm64
+server_mac:         prepare compile_server_mac copy_files_mac   zip_server_mac
 
-win64: prepare compile_server_win64 package_gui_win64_client compile_launcher_win64 compile_command_win64 copy_files_win64 zip_server_win64 zip_client_win64
-win32: prepare compile_server_win32 package_gui_win32_client compile_launcher_win32 compile_command_win32 copy_files_win32 zip_server_win32 zip_client_win32
-linux: prepare compile_server_linux package_gui_linux_client                        compile_command_linux copy_files_linux zip_server_linux zip_client_linux
-mac:   prepare compile_server_mac   package_gui_mac_client                          compile_command_mac   copy_files_mac   zip_server_mac   zip_client_mac
+win64:     prepare compile_server_win64 package_gui_win64_client compile_launcher_win64 compile_command_win64       copy_files_win64       zip_server_win64       zip_client_win64
+win32:     prepare compile_server_win32 package_gui_win32_client compile_launcher_win32 compile_command_win32       copy_files_win32       zip_server_win32       zip_client_win32
+linux:     prepare compile_server_linux package_gui_linux_client                        compile_command_linux       copy_files_linux       zip_server_linux       zip_client_linux
+linux_arm: prepare compile_server_linux_arm64 package_gui_linux_client_arm64            compile_command_linux_arm64 copy_files_linux_arm64 zip_server_linux_arm64 zip_client_linux_arm64
+mac:       prepare compile_server_mac   package_gui_mac_client                          compile_command_mac         copy_files_mac   	   zip_server_mac         zip_client_mac
 
 prepare: update_version prepare_res
 update_version: update_version_in_config gen_version_file
@@ -114,6 +116,13 @@ else
 		-o ${COMMAND_BIN_DIR}linux/${PROJECT}-server ${SERVER_MAIN_FILE}
 endif
 
+compile_server_linux_arm64:
+	@echo 'start compile server linux for arm64'
+	@rm -rf ${COMMAND_BIN_DIR}linux_arm64/${PROJECT}-server
+	@CGO_ENABLED=1 GOOS=linux GOARCH=arm64 GOARM=7 CC=aarch64-linux-gnu-gcc CXX=aarch64-linux-gnu-g++ AR=aarch64-linux-gnu-ar \
+		${BUILD_CMD} \
+		-o ${COMMAND_BIN_DIR}linux_arm64/${PROJECT}-server ${SERVER_MAIN_FILE}
+
 compile_server_mac:
 	@echo 'start compile mac'
 	@rm -rf ${COMMAND_BIN_DIR}darwin/${PROJECT}-server
@@ -148,6 +157,11 @@ package_gui_linux_client:
 	@cd client && npm run package-linux && cd ..
 	@rm -rf ${CLIENT_OUT_DIR}linux && mkdir ${CLIENT_OUT_DIR}linux && \
 		mv ${CLIENT_OUT_DIR}${PROJECT}-linux-x64 ${CLIENT_OUT_DIR}linux/gui
+
+package_gui_linux_client_arm64:
+	@echo 'start package gui linux for arm64'
+	@rm -rf ${CLIENT_BIN_DIR}/* && mkdir ${CLIENT_BIN_DIR}linux_arm64
+	@cp -rf ${COMMAND_BIN_DIR}linux_arm64/${PROJECT}-server ${CLIENT_BIN_DIR}linux_arm64/${PROJECT}
 
 package_gui_mac_client:
 	@echo 'start package gui mac'
@@ -185,15 +199,13 @@ else
 endif
 
 compile_command_linux_arm64:
-	@echo 'start compile linux'
-
+	@echo 'start compile linux for arm64'
 	CGO_ENABLED=1 GOOS=linux GOARCH=arm64 GOARM=7 CC=aarch64-linux-gnu-gcc CXX=aarch64-linux-gnu-g++ AR=aarch64-linux-gnu-ar \
 		${BUILD_CMD} \
-		-o ${COMMAND_BIN_DIR}linux/${PROJECT}_arm64 ${COMMAND_MAIN_FILE}
+		-o ${COMMAND_BIN_DIR}linux_arm64/${PROJECT} ${COMMAND_MAIN_FILE}
 
 compile_command_mac:
 	@echo 'start compile darwin'
-	@echo
 	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 \
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}darwin/${PROJECT} ${COMMAND_MAIN_FILE}
@@ -218,6 +230,10 @@ copy_files_linux:
 	@cp -r demo "${COMMAND_BIN_DIR}linux"
 	@cp ${COMMAND_BIN_DIR}linux/ztf "${CLIENT_OUT_DIR}linux"
 
+copy_files_linux_arm64:
+	@echo 'start copy files linux for arm64'
+	@cp -r demo "${COMMAND_BIN_DIR}linux_arm64"
+
 copy_files_mac:
 	@echo 'start copy files darwin'
 	@cp -r demo "${CLIENT_OUT_DIR}darwin"
@@ -239,6 +255,11 @@ zip_server_linux:
 	@cd ${COMMAND_BIN_DIR}linux && zip -ry ${QINIU_DIST_DIR}linux/${PROJECT}-server.zip ./demo ./${PROJECT}-server && cd ../..
 	@md5sum ${QINIU_DIST_DIR}linux/${PROJECT}-server.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}linux/${PROJECT}-server.zip.md5
+
+zip_server_linux_arm64:
+	@cd ${COMMAND_BIN_DIR}linux_arm64 && zip -ry ${QINIU_DIST_DIR}linux_arm64/${PROJECT}-server.zip ./demo ./${PROJECT}-server && cd ../..
+	@md5sum ${QINIU_DIST_DIR}linux_arm64/${PROJECT}-server.zip | awk '{print $$1}' | \
+			xargs echo > ${QINIU_DIST_DIR}linux_arm64/${PROJECT}-server.zip.md5
 
 zip_server_mac:
 	@cd ${COMMAND_BIN_DIR}darwin && zip -ry ${QINIU_DIST_DIR}darwin/${PROJECT}-server.zip ./demo ./${PROJECT}-server && cd ../..
@@ -274,6 +295,16 @@ zip_client_linux:
 		zip -ry ${QINIU_DIST_DIR}linux/${PROJECT}.zip ./* && \
 		md5sum ${QINIU_DIST_DIR}linux/${PROJECT}.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}linux/${PROJECT}.zip.md5 && \
+        cd ../..; \
+
+zip_client_linux_arm64:
+	@echo 'start zip linux for arm64'
+	@find . -name .DS_Store -print0 | xargs -0 rm -f
+	@mkdir -p ${QINIU_DIST_DIR}linux_arm64 && rm -rf ${QINIU_DIST_DIR}linux_arm64/${PROJECT}.zip
+	@cd ${CLIENT_OUT_DIR}linux_arm64 && \
+		zip -ry ${QINIU_DIST_DIR}linux_arm64/${PROJECT}.zip ./* && \
+		md5sum ${QINIU_DIST_DIR}linux_arm64/${PROJECT}.zip | awk '{print $$1}' | \
+			xargs echo > ${QINIU_DIST_DIR}linux_arm64/${PROJECT}.zip.md5 && \
         cd ../..; \
 
 zip_client_mac:
