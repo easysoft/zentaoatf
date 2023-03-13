@@ -73,3 +73,5 @@ ps -ef | grep swagger | grep -v grep | awk '{print $2}' | xargs kill -9
 nohup swagger serve --no-open -p 50004 https://gitee.com/wwccss/zentaoatf/raw/main/xdoc/docs/swagger.json > ztf.log 2>&1 &
 
 http://localhost:55232/api/v1/configs/setVerbose?val=true
+
+mkdir -p bin/linux_arm64 && scp 192.168.0.56:~/dev/project/zentaoatf/bin/linux/ztf_arm64 bin/linux_arm64/ztf
