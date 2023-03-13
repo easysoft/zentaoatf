@@ -14,7 +14,7 @@ endif
 ifeq ($(PLATFORM),"Mac")
     QINIU_DIR=/Users/aaron/work/zentao/qiniu/
 else
-    QINIU_DIR=~/ztfZip
+    QINIU_DIR=~/ztf-make/
 endif
 
 QINIU_DIST_DIR=${QINIU_DIR}${PROJECT}/${VERSION}/
