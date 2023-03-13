@@ -42,11 +42,11 @@ server_linux:       prepare compile_server_linux copy_files_linux   zip_server_l
 server_linux_arm64: prepare compile_server_linux_arm64 copy_files_linux_arm64   zip_server_linux_arm64
 server_mac:         prepare compile_server_mac copy_files_mac   zip_server_mac
 
-win64:     prepare compile_server_win64 package_gui_win64_client compile_launcher_win64 compile_command_win64       copy_files_win64       zip_server_win64       zip_client_win64
-win32:     prepare compile_server_win32 package_gui_win32_client compile_launcher_win32 compile_command_win32       copy_files_win32       zip_server_win32       zip_client_win32
-linux:     prepare compile_server_linux package_gui_linux_client                        compile_command_linux       copy_files_linux       zip_server_linux       zip_client_linux
-linux_arm: prepare compile_server_linux_arm64 package_gui_linux_client_arm64            compile_command_linux_arm64 copy_files_linux_arm64 zip_server_linux_arm64 zip_client_linux_arm64
-mac:       prepare compile_server_mac   package_gui_mac_client                          compile_command_mac         copy_files_mac   	   zip_server_mac         zip_client_mac
+win64:       prepare compile_server_win64 package_gui_win64_client compile_launcher_win64 compile_command_win64       copy_files_win64       zip_server_win64       zip_client_win64
+win32:       prepare compile_server_win32 package_gui_win32_client compile_launcher_win32 compile_command_win32       copy_files_win32       zip_server_win32       zip_client_win32
+linux:       prepare compile_server_linux package_gui_linux_client                        compile_command_linux       copy_files_linux       zip_server_linux       zip_client_linux
+linux_arm64: prepare compile_server_linux_arm64 package_gui_linux_client_arm64            compile_command_linux_arm64 copy_files_linux_arm64 zip_server_linux_arm64 zip_client_linux_arm64
+mac:         prepare compile_server_mac   package_gui_mac_client                          compile_command_mac         copy_files_mac   	   zip_server_mac         zip_client_mac
 
 prepare: update_version prepare_res
 update_version: update_version_in_config gen_version_file
