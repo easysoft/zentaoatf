@@ -239,6 +239,7 @@ copy_files_mac:
 
 # zip server
 zip_server_win64:
+	@mkdir -p ${QINIU_DIST_DIR}win64
 	@cd ${COMMAND_BIN_DIR}win64 && zip -ry ${QINIU_DIST_DIR}win64/${PROJECT}-server.zip ./demo ./${PROJECT}-server.exe && cd ../..
 	@md5sum ${QINIU_DIST_DIR}win64/${PROJECT}-server.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}win64/${PROJECT}-server.zip.md5
@@ -249,16 +250,19 @@ zip_server_win32:
 			xargs echo > ${QINIU_DIST_DIR}win32/${PROJECT}-server.zip.md5
 
 zip_server_linux:
+	@mkdir -p ${QINIU_DIST_DIR}linux
 	@cd ${COMMAND_BIN_DIR}linux && zip -ry ${QINIU_DIST_DIR}linux/${PROJECT}-server.zip ./demo ./${PROJECT}-server && cd ../..
 	@md5sum ${QINIU_DIST_DIR}linux/${PROJECT}-server.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}linux/${PROJECT}-server.zip.md5
 
 zip_server_linux_arm64:
+	@mkdir -p ${QINIU_DIST_DIR}linux_arm64
 	@cd ${COMMAND_BIN_DIR}linux_arm64 && zip -ry ${QINIU_DIST_DIR}linux_arm64/${PROJECT}-server.zip ./demo ./${PROJECT}-server && cd ../..
 	@md5sum ${QINIU_DIST_DIR}linux_arm64/${PROJECT}-server.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}linux_arm64/${PROJECT}-server.zip.md5
 
 zip_server_mac:
+	@mkdir -p ${QINIU_DIST_DIR}darwin
 	@cd ${COMMAND_BIN_DIR}darwin && zip -ry ${QINIU_DIST_DIR}darwin/${PROJECT}-server.zip ./demo ./${PROJECT}-server && cd ../..
 	@md5sum ${QINIU_DIST_DIR}darwin/${PROJECT}-server.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}darwin/${PROJECT}-server.zip.md5
