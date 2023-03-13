@@ -141,13 +141,19 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	}
 
 	cmd.Start()
+	isTerminal := false
+
 	go func() {
 		time.AfterFunc(time.Second*time.Duration(timeout), func() {
 			KillProcessByUUID(uuidString)
+			isTerminal = true
 			stdout.Close()
 			stderr.Close()
 		})
 		for {
+			if isTerminal {
+				break
+			}
 			select {
 			case _, ok := <-ch:
 				KillProcessByUUID(uuidString)
@@ -162,7 +168,6 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			}
 		}
 	}()
-	isTerminal := false
 	reader1 := bufio.NewReader(stdout)
 	stdOutputArr := make([]string, 0)
 

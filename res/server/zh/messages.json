@@ -688,6 +688,10 @@
       "translation": "解析上传文件响应失败：%s。"
     },
     {
+        "id": "fail_to_exec_command",
+        "translation": "执行命令失败: %s."
+    },
+    {
       "id": "upload_file_result",
       "translation": "上传文件响应结果：%s，%s。"
     },
