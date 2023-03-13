@@ -232,6 +232,7 @@ copy_files_linux_arm64:
 	@mkdir -p "${CLIENT_OUT_DIR}linux_arm64"
 	@cp -r demo "${CLIENT_OUT_DIR}linux_arm64"
 	@cp -r demo "${COMMAND_BIN_DIR}linux_arm64"
+	@cp ${COMMAND_BIN_DIR}linux_arm64/ztf "${CLIENT_OUT_DIR}linux_arm64"
 
 copy_files_mac:
 	@echo 'start copy files darwin'
