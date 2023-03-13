@@ -11,11 +11,7 @@ else
     endif
 endif
 
-ifeq ($(PLATFORM),"Mac")
-    QINIU_DIR=/Users/aaron/work/zentao/qiniu/
-else
-    QINIU_DIR=~/ztf-make/
-endif
+QINIU_DIR=~/work/zentao/qiniu/
 
 QINIU_DIST_DIR=${QINIU_DIR}${PROJECT}/${VERSION}/
 SERVER_MAIN_FILE=cmd/server/main.go
