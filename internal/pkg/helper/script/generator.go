@@ -2,6 +2,7 @@ package scriptHelper
 
 import (
 	"fmt"
+	"html"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -141,7 +142,7 @@ func generateTestStepAndScript(testSteps []commDomain.ZtfStep, steps *[]string, 
 	*steps = append(*steps, "")
 	for _, item := range nestedSteps {
 		numbStr := fmt.Sprintf("%d", stepNumb)
-		stepLines1, expects1 := GetCaseContent(item, numbStr, independentFile, false)
+		stepLines1, expects1 := getCaseContent(item, numbStr, independentFile, false)
 		*steps = append(*steps, stepLines1)
 
 		if independentFile && strings.TrimSpace(item.Expect) != "" {
@@ -150,7 +151,7 @@ func generateTestStepAndScript(testSteps []commDomain.ZtfStep, steps *[]string, 
 
 		for childNo, child := range item.Children {
 			numbStr := fmt.Sprintf("%d.%d", stepNumb, childNo+1)
-			stepLines2, expects2 := GetCaseContent(child, numbStr, independentFile, true)
+			stepLines2, expects2 := getCaseContent(child, numbStr, independentFile, true)
 			*steps = append(*steps, stepLines2)
 
 			if independentFile && strings.TrimSpace(child.Expect) != "" {
@@ -176,4 +177,88 @@ func GenSuite(cases []string, targetDir string) {
 	str := strings.Join(cases, "\n")
 
 	fileUtils.WriteFile(targetDir+"all."+commConsts.ExtNameSuite, str)
+}
+
+func getCaseContent(stepObj commDomain.ZtfStep, seq string, independentFile bool, isChild bool) (
+	stepContent, expectContent string) {
+
+	step := strings.TrimSpace(stepObj.Desc)
+	expect := strings.TrimSpace(stepObj.Expect)
+
+	stepStr := getStepContent(step, isChild)
+	expectStr := getExpectContent(expect, isChild, independentFile)
+
+	if !independentFile {
+		stepContent = stepStr + expectStr
+	} else {
+		stepContent = stepStr
+		if stepObj.Children == nil || len(stepObj.Children) == 0 {
+			stepContent += " >>"
+		}
+	}
+
+	expectContent = expectStr
+
+	stepContent = html.UnescapeString(stepContent)
+	expectContent = html.UnescapeString(expectContent)
+
+	return
+}
+
+func getStepContent(str string, isChild bool) (ret string) {
+	str = strings.TrimSpace(str)
+
+	rpl := "\n"
+	if isChild {
+		rpl = "\n" + "  "
+	}
+	ret = strings.ReplaceAll(str, "\r\n", rpl)
+	if isChild {
+		ret = "  " + ret
+	}
+
+	return
+}
+func getExpectContent(str string, isChild bool, independentFile bool) (ret string) {
+	str = strings.TrimSpace(str)
+	if str == "" {
+		return
+	}
+
+	isSingleLine := strings.Count(str, "\r\n") == 0
+	if isSingleLine {
+		if independentFile {
+			ret = str
+		} else {
+			ret = " >> " + str
+		}
+	} else { // multi-line
+		rpl := "\r\n"
+
+		space := "  "
+		spaceBeforeTerminator := ""
+		spaceBeforeText := space
+		if isChild {
+			spaceBeforeTerminator = space
+			spaceBeforeText = strings.Repeat(space, 2)
+		}
+
+		if independentFile {
+			//>>
+			//	expect 1.2 line 1
+			//	expect 1.2 line 2
+			//>>
+			ret = ">>\n" + space + strings.ReplaceAll(str, rpl, rpl+space) + "\n>>"
+		} else {
+			//step 1.2 >>
+			//	expect 1.2 line 1
+			//  expect 1.2 line 2
+			//>>
+			ret = " >> \n" + spaceBeforeText +
+				strings.ReplaceAll(str, rpl, rpl+spaceBeforeText) +
+				"\n" + spaceBeforeTerminator + ">>"
+		}
+	}
+
+	return
 }
