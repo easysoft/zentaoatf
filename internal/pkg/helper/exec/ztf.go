@@ -14,6 +14,7 @@ import (
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
+	channelUtils "github.com/easysoft/zentaoatf/pkg/lib/channel"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
@@ -120,7 +121,9 @@ func RunZtf(ch chan int,
 		websocketHelper.SendExecMsg("", "false", commConsts.Run, nil, wsMsg)
 	}
 	if ch != nil {
-		close(ch)
+		if !channelUtils.IsChanClose(ch) {
+			close(ch)
+		}
 	}
 
 	return
