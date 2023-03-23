@@ -248,7 +248,7 @@ func getExpectContent(str string, isChild bool, independentFile bool) (ret strin
 			//	expect 1.2 line 1
 			//	expect 1.2 line 2
 			//>>
-			ret = "@{\n" + space + strings.ReplaceAll(str, rpl, rpl+space) + "\n}"
+			ret = "{\n" + space + strings.ReplaceAll(str, rpl, rpl+space) + "\n}"
 		} else {
 			//step 1.2 @{
 			//	expect 1.2 line 1
