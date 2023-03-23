@@ -115,7 +115,7 @@ func (s *RunSuit) TestRunPytest(t provider.T) {
 	t.Title("执行PyTest单元测试")
 	cloneGit("https://gitee.com/ngtesting/ci_test_pytest.git", pytestDir)
 
-	t.Require().Equal("Success", testRunUnitTest("pytest --junitxml=testresult.xml", pytestDir, regexp.MustCompile("1 failed, 1 passed")))
+	t.Require().Equal("Success", testRunUnitTest("pytest --junitxml=testresults.xml", pytestDir, regexp.MustCompile("1 failed, 1 passed")))
 }
 
 func testRun(cmd string, expectReg *regexp.Regexp) string {
