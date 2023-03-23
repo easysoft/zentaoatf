@@ -300,6 +300,7 @@ func LoadTestCasesDetailByCaseIds(caseIds []int,
 
 func GetTestCaseDetail(caseId int, config commDomain.WorkspaceConf) (cs commDomain.ZtfCase, err error) {
 	csWithSteps, err := GetCaseById(config.Url, caseId)
+
 	stepArr := genCaseSteps(csWithSteps)
 	cs = commDomain.ZtfCase{Id: caseId, Product: csWithSteps.Product, Module: csWithSteps.Module,
 		Title: csWithSteps.Title, Steps: stepArr}

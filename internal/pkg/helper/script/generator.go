@@ -49,7 +49,7 @@ func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool
 	targetDir string, byModule bool) (scriptPath string, err error) {
 
 	caseId := cs.Id
-	productId := cs.Product
+	//productId := cs.Product
 	moduleId := cs.Module
 	caseTitle := cs.Title
 
@@ -72,9 +72,9 @@ func GenerateScript(cs commDomain.ZtfCase, langType string, independentFile bool
 		i118Utils.Sprintf("find_example", consts.FilePthSep, langType))
 
 	info = append(info, fmt.Sprintf("title=%s", caseTitle))
-	info = append(info, fmt.Sprintf("timeout=%d", 0))
+	//info = append(info, fmt.Sprintf("timeout=%d", 0))
 	info = append(info, fmt.Sprintf("cid=%d", caseId))
-	info = append(info, fmt.Sprintf("pid=%d", productId))
+	//info = append(info, fmt.Sprintf("pid=%d", productId))
 
 	StepWidth := 20
 	stepDisplayMaxWidth := 0
@@ -142,7 +142,7 @@ func generateTestStepAndScript(testSteps []commDomain.ZtfStep, steps *[]string, 
 	*steps = append(*steps, "")
 	for _, item := range nestedSteps {
 		numbStr := fmt.Sprintf("%d", stepNumb)
-		stepLines1, expects1 := getCaseContent(item, numbStr, independentFile, false)
+		stepLines1, expects1 := getCaseStepContent(item, numbStr, independentFile, false)
 		*steps = append(*steps, stepLines1)
 
 		if independentFile && strings.TrimSpace(item.Expect) != "" {
@@ -151,7 +151,7 @@ func generateTestStepAndScript(testSteps []commDomain.ZtfStep, steps *[]string, 
 
 		for childNo, child := range item.Children {
 			numbStr := fmt.Sprintf("%d.%d", stepNumb, childNo+1)
-			stepLines2, expects2 := getCaseContent(child, numbStr, independentFile, true)
+			stepLines2, expects2 := getCaseStepContent(child, numbStr, independentFile, true)
 			*steps = append(*steps, stepLines2)
 
 			if independentFile && strings.TrimSpace(child.Expect) != "" {
@@ -179,7 +179,7 @@ func GenSuite(cases []string, targetDir string) {
 	fileUtils.WriteFile(targetDir+"all."+commConsts.ExtNameSuite, str)
 }
 
-func getCaseContent(stepObj commDomain.ZtfStep, seq string, independentFile bool, isChild bool) (
+func getCaseStepContent(stepObj commDomain.ZtfStep, seq string, independentFile bool, isChild bool) (
 	stepContent, expectContent string) {
 
 	step := strings.TrimSpace(stepObj.Desc)
@@ -206,7 +206,7 @@ func getCaseContent(stepObj commDomain.ZtfStep, seq string, independentFile bool
 }
 
 func getStepContent(str string, isChild bool) (ret string) {
-	str = strings.TrimSpace(str)
+	str = " - " + strings.TrimSpace(str)
 
 	rpl := "\n"
 	if isChild {
@@ -230,7 +230,7 @@ func getExpectContent(str string, isChild bool, independentFile bool) (ret strin
 		if independentFile {
 			ret = str
 		} else {
-			ret = " >> " + str
+			ret = " @" + str
 		}
 	} else { // multi-line
 		rpl := "\r\n"
@@ -248,15 +248,15 @@ func getExpectContent(str string, isChild bool, independentFile bool) (ret strin
 			//	expect 1.2 line 1
 			//	expect 1.2 line 2
 			//>>
-			ret = ">>\n" + space + strings.ReplaceAll(str, rpl, rpl+space) + "\n>>"
+			ret = "@{\n" + space + strings.ReplaceAll(str, rpl, rpl+space) + "\n}"
 		} else {
-			//step 1.2 >>
+			//step 1.2 @{
 			//	expect 1.2 line 1
 			//  expect 1.2 line 2
-			//>>
-			ret = " >> \n" + spaceBeforeText +
+			//}
+			ret = " @{\n" + spaceBeforeText +
 				strings.ReplaceAll(str, rpl, rpl+spaceBeforeText) +
-				"\n" + spaceBeforeTerminator + ">>"
+				"\n" + spaceBeforeTerminator + "}"
 		}
 	}
 

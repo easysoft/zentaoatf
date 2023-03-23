@@ -305,7 +305,7 @@ func ReplaceCaseDesc(desc, file string) {
 	content := fileUtils.ReadFile(file)
 	lang := langHelper.GetLangByFile(file)
 
-	regStr := fmt.Sprintf(`(?smU)%s((?U:.*pid.*))\n(.*)%s`,
+	regStr := fmt.Sprintf(`(?smU)%s((?U:.*cid.*))\n(.*)%s`,
 		commConsts.LangCommentsRegxMap[lang][0], commConsts.LangCommentsRegxMap[lang][1])
 	re, _ := regexp.Compile(regStr)
 

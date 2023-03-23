@@ -3,7 +3,7 @@
 /**
 
 title = simple demo
-cid=1
+cid=3
 pid=1
 
 step1 >> expect 1
