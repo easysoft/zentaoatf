@@ -394,7 +394,7 @@ func GetCaseIdsInZentaoTask(productId uint, taskId int, config commDomain.Worksp
 	}
 
 	uri := fmt.Sprintf("/testtasks/%d", taskId)
-	url := GenApiUrl(uri, nil, config.Url)
+	url := GenApiUrl(uri, map[string]interface{}{"limit": 10000}, config.Url)
 
 	bytes, err := httpUtils.Get(url)
 	if err != nil {
@@ -568,7 +568,7 @@ func ListCaseBySuite(baseUrl string, suiteId int) (casesResp commDomain.ZtfRespT
 
 func ListCaseByTask(baseUrl string, taskId int) (casesResp commDomain.ZtfRespTestCases, err error) {
 	uri := fmt.Sprintf("/testtasks/%d", taskId)
-	url := GenApiUrl(uri, nil, baseUrl)
+	url := GenApiUrl(uri, map[string]interface{}{"limit": 10000}, baseUrl)
 
 	bytes, err := httpUtils.Get(url)
 	if err != nil {
