@@ -57,7 +57,6 @@ func (s *JobService) Add(req serverDomain.ZentaoExecReq) (err error) {
 func (s *JobService) Start(po *model.Job) {
 	ch := make(chan int, 1)
 	channelMap.Store(po.ID, ch)
-	commConsts.ExecFrom = commConsts.FromZentao
 
 	req := s.genExecReqFromJob(*po)
 

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	"strings"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
@@ -279,6 +280,20 @@ func (c *TestScriptCtrl) SyncToZentao(ctx iris.Context) {
 		"total":   totalNum,
 		"success": successNum,
 	}))
+}
+
+func (c *TestScriptCtrl) SyncDirToZentao(ctx iris.Context) {
+	dir := ctx.URLParam("dir")
+
+	cases := scriptHelper.GetCaseByDirAndFile([]string{dir})
+
+	config := commDomain.WorkspaceConf{
+		Url: serverConfig.CONFIG.Server,
+	}
+
+	zentaoHelper.CheckIn(cases, config, true, true)
+
+	return
 }
 
 // Get 根据报告获取用例编号的列表

@@ -46,7 +46,6 @@ func main() {
 	flagSet.StringVar(&serverConfig.CONFIG.Host, "h", "", "")
 	flagSet.StringVar(&serverConfig.CONFIG.Ip, "i", commConsts.Ip, "服务机器IP")
 	flagSet.IntVar(&serverConfig.CONFIG.Port, "p", commConsts.Port, "服务端口")
-	flagSet.StringVar(&serverConfig.CONFIG.Secret, "secret", "", "禅道认证安全码")
 
 	if len(os.Args) == 1 {
 		os.Args = append(os.Args, "run")

@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 
 	hostHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/host"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
@@ -54,6 +55,9 @@ func (s *HeartbeatService) Heartbeat() {
 	}
 
 	if ok {
+		if serverConfig.CONFIG.AuthToken != "" {
+			commConsts.ExecFrom = commConsts.FromZentao
+		}
 		logUtils.Info(i118Utils.I118Prt.Sprintf("success_to_register", url))
 	} else {
 		logUtils.Info(i118Utils.I118Prt.Sprintf("fail_to_register", url, string(respBytes)))

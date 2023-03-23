@@ -16,8 +16,6 @@ type Config struct {
 	Server string
 	Ip     string
 	Port   int
-	Secret string
-	Token  string
 
 	AuthToken   string
 	ExpiredDate time.Time

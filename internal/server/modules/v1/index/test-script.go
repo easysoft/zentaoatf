@@ -33,6 +33,7 @@ func (m *TestScriptModule) Party() module.WebModule {
 		index.Put("/rename", m.TestScriptCtrl.Rename).Name = "重命名脚本"
 		index.Get("/extract", m.TestScriptCtrl.Extract).Name = "抽取脚本"
 
+		index.Post("/syncDirToZentao", m.TestScriptCtrl.SyncDirToZentao).Name = "同步目录中的脚本到禅道"
 		index.Post("/syncFromZentao", m.TestScriptCtrl.SyncFromZentao).Name = "从禅道导出脚本"
 		index.Post("/syncToZentao", m.TestScriptCtrl.SyncToZentao).Name = "更新脚本到禅道"
 		index.Get("/getCaseIdsFromReport", m.TestScriptCtrl.GetCaseIdsFromReport).Name = "获取报告中的用例编号列表"

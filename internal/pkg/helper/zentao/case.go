@@ -3,6 +3,7 @@ package zentaoHelper
 import (
 	"encoding/json"
 	"fmt"
+	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	"sort"
 	"strconv"
 	"strings"
@@ -27,9 +28,11 @@ import (
 func CommitCase(caseId int, title string, steps []commDomain.ZentaoCaseStep, script serverDomain.TestScript,
 	config commDomain.WorkspaceConf, noNeedConfirm, withCode bool) (err error) {
 
-	err = Login(config)
-	if err != nil {
-		return
+	if serverConfig.CONFIG.AuthToken == "" {
+		err = Login(config)
+		if err != nil {
+			return
+		}
 	}
 
 	_, err = GetCaseById(config.Url, caseId)
