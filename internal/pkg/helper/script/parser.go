@@ -2,7 +2,6 @@ package scriptHelper
 
 import (
 	"fmt"
-	"html"
 	"io/ioutil"
 	"path"
 	"path/filepath"
@@ -18,32 +17,172 @@ import (
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 )
 
-func ReplaceCaseDesc(desc, file string) {
-	content := fileUtils.ReadFile(file)
-	lang := langHelper.GetLangByFile(file)
-
-	regStr := fmt.Sprintf(`(?smU)%s((?U:.*pid.*))\n(.*)%s`,
-		commConsts.LangCommentsRegxMap[lang][0], commConsts.LangCommentsRegxMap[lang][1])
-	re, _ := regexp.Compile(regStr)
-
-	newDesc := fmt.Sprintf("\n%s\n\n"+desc+"\n\n%s",
-		commConsts.LangCommentsTagMap[lang][0],
-		commConsts.LangCommentsTagMap[lang][1])
-
-	out := re.ReplaceAllString(content, newDesc)
-
-	fileUtils.WriteFile(file, out)
-}
-
 func GetStepAndExpectMap(file string) (steps []commDomain.ZentaoCaseStep) {
 	if !fileUtils.FileExist(file) {
 		return
 	}
 
 	lang := langHelper.GetLangByFile(file)
-	txt := fileUtils.ReadFile(file)
+	content := fileUtils.ReadFile(file)
 
-	_, checkpoints := ReadCaseInfo(txt, lang)
+	info, checkpoints := ReadCaseInfoInOldFormat(content, lang)
+	if info != "" {
+		steps = GetStepAndExpectMapInOldFormat(checkpoints, file)
+		return
+	}
+
+	_, _, steps = ReadTitleAndStepsInNewFormat(content, lang)
+
+	return
+}
+
+func ReadTitleAndStepsInNewFormat(content, lang string) (caseId int, title string, steps []commDomain.ZentaoCaseStep) {
+	//测试用例标题 #1
+	//- 步骤1 @期待结果1
+	//- 步骤2
+	//- 子步骤2.1 @{
+	//	期待结果2.1.1
+	//	期待结果2.1.2
+	//}
+	//- 子步骤2.2 @期待结果2.2
+	//- 步骤3 @期待结果3
+
+	comments := strings.TrimSpace(getScriptComments(content, lang))
+	index := 0
+	titleLineStart := false
+	lines := strings.Split(comments, "\n")
+	for index < len(lines) {
+		line := lines[index]
+
+		if !titleLineStart {
+			caseId, title = findTitle(line)
+			if title != "" {
+				titleLineStart = true
+				index += 1
+				continue
+			}
+		}
+
+		isStepLine, descAndExpect, isChild := isStepLine(line)
+		if !isStepLine {
+			index += 1
+			continue
+		}
+
+		isMultiExpect, desc2 := isMultiLineExpectStart(line)
+		step := commDomain.ZentaoCaseStep{}
+
+		if isMultiExpect { // more than one line
+			index += 1
+			step.Desc = desc2
+			step.Expect = getMultiExpect(lines, &index)
+		} else {
+			step.Desc, step.Expect = getSingleExpect(descAndExpect)
+		}
+
+		step.Type = commConsts.Group
+		if isChild {
+			step.Type = commConsts.Item
+		}
+
+		steps = append(steps, step)
+
+		index += 1
+	}
+
+	return
+}
+
+func getSingleExpect(descAndExpect string) (desc, expect string) {
+	arr := strings.Split(descAndExpect, "@")
+
+	desc = strings.TrimSpace(arr[0])
+	if len(arr) > 1 {
+		expect = arr[1]
+	}
+
+	return
+}
+
+func findTitle(line string) (id int, title string) {
+	reg := `(.*)#(\d*)`
+	arr := regexp.MustCompile(reg).FindStringSubmatch(line)
+	if len(arr) > 2 {
+		var err error
+		id, err = strconv.Atoi(arr[2])
+		if err == nil {
+			title = strings.TrimSpace(arr[1])
+		}
+	}
+
+	return
+}
+
+func getMultiExpect(lines []string, index *int) (ret string) {
+	var arr []string
+
+	for *index < len(lines) {
+		line := strings.TrimSpace(lines[*index])
+		if isMultiLineExpectEnd(line) {
+			break
+		}
+
+		arr = append(arr, line)
+
+		*index += 1
+	}
+
+	ret = strings.Join(arr, "\r\n")
+	return
+}
+
+func isStepLine(line string) (is bool, ret string, isChild bool) {
+	reg := `^(\s*)-\s*(.+)$`
+	arr := regexp.MustCompile(reg).FindStringSubmatch(line)
+	if len(arr) > 2 {
+		is = true
+		ret = arr[2]
+
+		if len(arr[1]) > 0 {
+			isChild = true
+		}
+	}
+
+	return
+}
+func isMultiLineExpectStart(line string) (is bool, step string) {
+	reg := `^\s*-\s*(.+)@\s*\{\s*$`
+	arr := regexp.MustCompile(reg).FindStringSubmatch(line)
+	if len(arr) > 1 {
+		is = true
+		step = arr[1]
+	}
+
+	return
+}
+func isMultiLineExpectEnd(line string) (is bool) {
+	is = strings.TrimSpace(line) == "}"
+	return
+}
+
+func ReadCaseInfoInOldFormat(content, lang string) (info, checkpoints string) {
+	regStr := fmt.Sprintf(`(?smU)%s((?U:.*pid.*))\n(.*)%s`,
+		commConsts.LangCommentsRegxMap[lang][0], commConsts.LangCommentsRegxMap[lang][1])
+
+	myExp := regexp.MustCompile(regStr)
+	arr := myExp.FindStringSubmatch(content)
+
+	if len(arr) > 2 {
+		info = strings.TrimSpace(arr[1])
+		checkpoints = strings.TrimSpace(arr[2])
+
+		return
+	}
+
+	return
+}
+
+func GetStepAndExpectMapInOldFormat(checkpoints, file string) (steps []commDomain.ZentaoCaseStep) {
 	lines := strings.Split(checkpoints, "\n")
 
 	groupArr := getStepNestedArr(lines)
@@ -57,46 +196,33 @@ func GetStepAndExpectMap(file string) (steps []commDomain.ZentaoCaseStep) {
 	return
 }
 
-func getGroupBlockArr(lines []string) [][]string {
-	groupBlockArr := make([][]string, 0)
+func ReadCaseId(content string) string {
+	myExp := regexp.MustCompile(`(?s).*\ncid=((?U:.*))\n.*`)
+	arr := myExp.FindStringSubmatch(content)
 
-	idx := 0
-	for true {
-		if idx >= len(lines) {
-			break
-		}
-
-		var groupContent []string
-		line := strings.TrimSpace(lines[idx])
-		if isGroup(line) { // must match a group
-			groupContent = make([]string, 0)
-			groupContent = append(groupContent, line)
-
-			idx++
-
-			for true {
-				if idx >= len(lines) {
-					groupBlockArr = append(groupBlockArr, groupContent)
-					break
-				}
-
-				line = strings.TrimSpace(lines[idx])
-				if isGroup(line) {
-					groupBlockArr = append(groupBlockArr, groupContent)
-
-					break
-				} else if line != "" && !isGroup(line) {
-					groupContent = append(groupContent, line)
-				}
-
-				idx++
-			}
-		} else {
-			idx++
-		}
+	if len(arr) > 1 {
+		id := strings.TrimSpace(arr[1])
+		return id
 	}
 
-	return groupBlockArr
+	return ""
+}
+
+func GetDependentExpect(file string) (bool, string) {
+	dir := fileUtils.AddFilePathSepIfNeeded(filepath.Dir(file))
+	name := strings.Replace(filepath.Base(file), path.Ext(file), ".exp", -1)
+	expectIndependentFile := dir + name
+
+	if !fileUtils.FileExist(expectIndependentFile) {
+		expectIndependentFile = dir + "." + name
+	}
+
+	if fileUtils.FileExist(expectIndependentFile) {
+		expectIndependentContent := fileUtils.ReadFile(expectIndependentFile)
+		return true, expectIndependentContent
+	}
+
+	return false, ""
 }
 
 func getStepNestedArr(lines []string) (ret []commDomain.ZtfStep) {
@@ -175,111 +301,21 @@ func parserNextLines(str string, nextLines []string) (ret commDomain.ZtfStep, in
 	return
 }
 
-func loadMultiLineSteps(arr []string) []commDomain.ZtfStep {
-	childs := make([]commDomain.ZtfStep, 0)
+func ReplaceCaseDesc(desc, file string) {
+	content := fileUtils.ReadFile(file)
+	lang := langHelper.GetLangByFile(file)
 
-	child := commDomain.ZtfStep{}
-	idx := 0
-	for true {
-		if idx >= len(arr) {
-			if child.Desc != "" {
-				childs = append(childs, child)
-			}
+	regStr := fmt.Sprintf(`(?smU)%s((?U:.*pid.*))\n(.*)%s`,
+		commConsts.LangCommentsRegxMap[lang][0], commConsts.LangCommentsRegxMap[lang][1])
+	re, _ := regexp.Compile(regStr)
 
-			break
-		}
+	newDesc := fmt.Sprintf("\n%s\n\n"+desc+"\n\n%s",
+		commConsts.LangCommentsTagMap[lang][0],
+		commConsts.LangCommentsTagMap[lang][1])
 
-		line := arr[idx]
-		line = strings.TrimSpace(line)
+	out := re.ReplaceAllString(content, newDesc)
 
-		if isStepsIdent(line) {
-			if idx > 0 {
-				childs = append(childs, child)
-			}
-
-			child = commDomain.ZtfStep{}
-			idx++
-
-			stp := ""
-			for true { // retrieve next lines
-				if idx >= len(arr) || hasBrackets(arr[idx]) {
-					child.Desc = stp
-					break
-				}
-
-				stp += arr[idx] + "\n"
-				idx++
-			}
-		}
-
-		if isExpectsIdent(line) {
-			idx++
-
-			exp := ""
-			for true { // retrieve next lines
-				if idx >= len(arr) || hasBrackets(arr[idx]) {
-					child.Expect = exp
-					break
-				}
-
-				temp := strings.TrimSpace(arr[idx])
-				if temp == ">>" {
-					temp = ""
-				}
-				exp += temp + "\n"
-				idx++
-			}
-		}
-
-	}
-
-	return childs
-}
-
-func loadSingleLineSteps(arr []string) []commDomain.ZtfStep {
-	children := make([]commDomain.ZtfStep, 0)
-
-	for _, line := range arr {
-		line = strings.TrimSpace(line)
-
-		sections := strings.Split(line, ">>")
-		expect := ""
-		if len(sections) > 1 { // has expect
-			expect = strings.TrimSpace(sections[1])
-		}
-
-		child := commDomain.ZtfStep{Desc: sections[0], Expect: expect}
-
-		children = append(children, child)
-	}
-
-	return children
-}
-
-func isGroupIdent(str string) bool {
-	pass, _ := regexp.MatchString(`(?i)\[\s*group\s*\]`, str)
-	return pass
-}
-
-func isStepsIdent(str string) bool {
-	pass, _ := regexp.MatchString(`(?i)\[.*steps\.*\]`, str)
-	return pass
-}
-
-func isExpectsIdent(str string) bool {
-	pass, _ := regexp.MatchString(`(?i)\[.*expects\.*\]`, str)
-	return pass
-}
-
-func hasBrackets(str string) bool {
-	pass, _ := regexp.MatchString(`(?i)()\[.*\]`, str)
-	return pass
-}
-
-func isGroup(str string) bool {
-	ret := strings.Index(str, ">>") < 0 && hasBrackets(str) && !isStepsIdent(str) && !isExpectsIdent(str)
-
-	return ret
+	fileUtils.WriteFile(file, out)
 }
 
 func getSortedTextFromNestedSteps(groups []commDomain.ZtfStep) (ret string, steps []commDomain.ZentaoCaseStep) {
@@ -335,53 +371,6 @@ func getSortedTextFromNestedSteps(groups []commDomain.ZtfStep) (ret string, step
 	return
 }
 
-func replaceNumb(str string, groupNumb int, childNumb int, withBrackets bool) string {
-	numb := getNumbStr(groupNumb, childNumb)
-
-	reg := `[\d\.\s]*(.*)`
-	repl := numb + " ${1}"
-	if withBrackets {
-		reg = `\[` + reg + `\]`
-		repl = `[` + repl + `]`
-	}
-
-	regx, _ := regexp.Compile(reg)
-	str = regx.ReplaceAllString(str, repl)
-
-	return str
-}
-func getNumbStr(groupNumb int, childNumb int) string {
-	numb := strconv.Itoa(groupNumb) + "."
-	if childNumb != -1 {
-		numb += strconv.Itoa(childNumb) + "."
-	}
-
-	return numb
-}
-func getGroupName(str string) string {
-	reg := `\[\d\.\s]*(.*)\]`
-	repl := "${1}"
-
-	regx, _ := regexp.Compile(reg)
-	str = regx.ReplaceAllString(str, repl)
-
-	return str
-}
-
-func printMutiStepOrExpect(str string) string {
-	str = strings.TrimSpace(str)
-
-	ret := make([]string, 0)
-
-	for _, line := range strings.Split(str, "\n") {
-		line = strings.TrimSpace(line)
-
-		ret = append(ret, fmt.Sprintf("%s%s", strings.Repeat(" ", 4), line))
-	}
-
-	return strings.Join(ret, "\r\n")
-}
-
 func GetExpectMapFromIndependentFile(steps *[]commDomain.ZentaoCaseStep, content string, withEmptyExpect bool) {
 	expectArr := ReadExpectIndependentArr(content)
 
@@ -400,98 +389,6 @@ func GetExpectMapFromIndependentFile(steps *[]commDomain.ZentaoCaseStep, content
 	return
 }
 
-func GetCaseContent(stepObj commDomain.ZtfStep, seq string, independentFile bool, isChild bool) (
-	stepContent, expectContent string) {
-
-	step := strings.TrimSpace(stepObj.Desc)
-	expect := strings.TrimSpace(stepObj.Expect)
-
-	stepStr := getStepContent(step, isChild)
-	expectStr := getExpectContent(expect, isChild, independentFile)
-
-	if !independentFile {
-		stepContent = stepStr + expectStr
-	} else {
-		stepContent = stepStr
-		if stepObj.Children == nil || len(stepObj.Children) == 0 {
-			stepContent += " >>"
-		}
-	}
-
-	expectContent = expectStr
-
-	stepContent = html.UnescapeString(stepContent)
-	expectContent = html.UnescapeString(expectContent)
-
-	return
-}
-
-func getStepContent(str string, isChild bool) (ret string) {
-	str = strings.TrimSpace(str)
-
-	rpl := "\n"
-	if isChild {
-		rpl = "\n" + "  "
-	}
-	ret = strings.ReplaceAll(str, "\r\n", rpl)
-	if isChild {
-		ret = "  " + ret
-	}
-
-	return
-}
-func getExpectContent(str string, isChild bool, independentFile bool) (ret string) {
-	str = strings.TrimSpace(str)
-	if str == "" {
-		return
-	}
-
-	isSingleLine := strings.Count(str, "\r\n") == 0
-	if isSingleLine {
-		if independentFile {
-			ret = str
-		} else {
-			ret = " >> " + str
-		}
-	} else { // multi-line
-		rpl := "\r\n"
-
-		space := "  "
-		spaceBeforeTerminator := ""
-		spaceBeforeText := space
-		if isChild {
-			spaceBeforeTerminator = space
-			spaceBeforeText = strings.Repeat(space, 2)
-		}
-
-		if independentFile {
-			//>>
-			//	expect 1.2 line 1
-			//	expect 1.2 line 2
-			//>>
-			ret = ">>\n" + space + strings.ReplaceAll(str, rpl, rpl+space) + "\n>>"
-		} else {
-			//step 1.2 >>
-			//	expect 1.2 line 1
-			//  expect 1.2 line 2
-			//>>
-			ret = " >> \n" + spaceBeforeText +
-				strings.ReplaceAll(str, rpl, rpl+spaceBeforeText) +
-				"\n" + spaceBeforeTerminator + ">>"
-		}
-	}
-
-	return
-}
-
-func IsMultiLine(step commDomain.ZtfStep) bool {
-	if strings.Index(step.Desc, "\n") > -1 || strings.Index(step.Expect, "\n") > -1 {
-		return true
-	}
-
-	return false
-}
-
 func ScriptToExpectName(file string) string {
 	fileSuffix := path.Ext(file)
 	expectName := strings.TrimSuffix(file, fileSuffix) + ".exp"
@@ -499,14 +396,41 @@ func ScriptToExpectName(file string) string {
 	return expectName
 }
 
-//func RunDateFolder() string {
-//	runName := dateUtils.DateTimeStrFmt(time.Now(), "2006-01-02T150405") + string(os.PathSeparator)
-//
-//	return runName
-//}
+func getScriptComments(content, lang string) (ret string) {
+	reg := fmt.Sprintf(`(?smU)%s((?U:.*))%s`, commConsts.LangCommentsRegxMap[lang][0], commConsts.LangCommentsRegxMap[lang][1])
+	arr := regexp.MustCompile(reg).FindStringSubmatch(content)
+	if len(arr) < 2 { // wrong format
+		return
+	}
+
+	ret = strings.TrimSpace(arr[1])
+
+	return
+}
 
 func GetCaseInfo(file string) (pass bool, caseId, productId int, title string, timeout int64) {
 	content := fileUtils.ReadFile(file)
+	lang := langHelper.GetLangByFile(file)
+
+	comments := strings.TrimSpace(getScriptComments(content, lang))
+	index := 0
+	lines := strings.Split(comments, "\n")
+	for index < len(lines) {
+		line := strings.TrimSpace(lines[index])
+		caseId, title = findTitle(line)
+		if title != "" {
+			break
+		}
+
+		index += 1
+	}
+
+	pass = title != ""
+	if pass {
+		return
+	}
+
+	// TODO: deal with old format, will removed
 	isOldFormat := strings.Index(content, "[esac]") > -1
 	pass = CheckFileContentIsScript(content)
 	if !pass {
@@ -514,7 +438,6 @@ func GetCaseInfo(file string) (pass bool, caseId, productId int, title string, t
 	}
 
 	caseInfo := ""
-	lang := langHelper.GetLangByFile(file)
 	regStr := ""
 	if isOldFormat {
 		regStr = `(?s)\[case\](.*)\[esac\]`
@@ -670,52 +593,11 @@ func CheckFileIsScript(path string) bool {
 func CheckFileContentIsScript(content string) bool {
 	pass, _ := regexp.MatchString(`cid\b\s*=`, content)
 
+	if !pass {
+		pass, _ = regexp.MatchString(`(?m:^(.+ +)#\d*$)`, content)
+	}
+
 	return pass
-}
-
-func ReadCaseInfo(content, lang string) (info, checkpoints string) {
-	regStr := fmt.Sprintf(`(?smU)%s((?U:.*pid.*))\n(.*)%s`,
-		commConsts.LangCommentsRegxMap[lang][0], commConsts.LangCommentsRegxMap[lang][1])
-
-	myExp := regexp.MustCompile(regStr)
-	arr := myExp.FindStringSubmatch(content)
-
-	if len(arr) > 2 {
-		info = strings.TrimSpace(arr[1])
-		checkpoints = strings.TrimSpace(arr[2])
-
-		return
-	}
-
-	return
-}
-func ReadCaseId(content string) string {
-	myExp := regexp.MustCompile(`(?s).*\ncid=((?U:.*))\n.*`)
-	arr := myExp.FindStringSubmatch(content)
-
-	if len(arr) > 1 {
-		id := strings.TrimSpace(arr[1])
-		return id
-	}
-
-	return ""
-}
-
-func GetDependentExpect(file string) (bool, string) {
-	dir := fileUtils.AddFilePathSepIfNeeded(filepath.Dir(file))
-	name := strings.Replace(filepath.Base(file), path.Ext(file), ".exp", -1)
-	expectIndependentFile := dir + name
-
-	if !fileUtils.FileExist(expectIndependentFile) {
-		expectIndependentFile = dir + "." + name
-	}
-
-	if fileUtils.FileExist(expectIndependentFile) {
-		expectIndependentContent := fileUtils.ReadFile(expectIndependentFile)
-		return true, expectIndependentContent
-	}
-
-	return false, ""
 }
 
 func GetScriptByIdsInDir(dirPth string, idMap *map[int]string) error {
@@ -748,6 +630,8 @@ func GetScriptByIdsInDir(dirPth string, idMap *map[int]string) error {
 			pass, id, _, _, _ := GetCaseInfo(path)
 			if pass {
 				(*idMap)[id] = path
+			} else {
+				pass, id, _, _, _ = GetCaseInfo(path)
 			}
 		}
 	}
@@ -770,3 +654,213 @@ func GetCaseIdsInSuiteFile(name string, ids *[]int) {
 		}
 	}
 }
+
+//func getGroupBlockArr(lines []string) [][]string {
+//	groupBlockArr := make([][]string, 0)
+//
+//	idx := 0
+//	for true {
+//		if idx >= len(lines) {
+//			break
+//		}
+//
+//		var groupContent []string
+//		line := strings.TrimSpace(lines[idx])
+//		if isGroup(line) { // must match a group
+//			groupContent = make([]string, 0)
+//			groupContent = append(groupContent, line)
+//
+//			idx++
+//
+//			for true {
+//				if idx >= len(lines) {
+//					groupBlockArr = append(groupBlockArr, groupContent)
+//					break
+//				}
+//
+//				line = strings.TrimSpace(lines[idx])
+//				if isGroup(line) {
+//					groupBlockArr = append(groupBlockArr, groupContent)
+//
+//					break
+//				} else if line != "" && !isGroup(line) {
+//					groupContent = append(groupContent, line)
+//				}
+//
+//				idx++
+//			}
+//		} else {
+//			idx++
+//		}
+//	}
+//
+//	return groupBlockArr
+//}
+
+//func loadMultiLineSteps(arr []string) []commDomain.ZtfStep {
+//	childs := make([]commDomain.ZtfStep, 0)
+//
+//	child := commDomain.ZtfStep{}
+//	idx := 0
+//	for true {
+//		if idx >= len(arr) {
+//			if child.Desc != "" {
+//				childs = append(childs, child)
+//			}
+//
+//			break
+//		}
+//
+//		line := arr[idx]
+//		line = strings.TrimSpace(line)
+//
+//		if isStepsIdent(line) {
+//			if idx > 0 {
+//				childs = append(childs, child)
+//			}
+//
+//			child = commDomain.ZtfStep{}
+//			idx++
+//
+//			stp := ""
+//			for true { // retrieve next lines
+//				if idx >= len(arr) || hasBrackets(arr[idx]) {
+//					child.Desc = stp
+//					break
+//				}
+//
+//				stp += arr[idx] + "\n"
+//				idx++
+//			}
+//		}
+//
+//		if isExpectsIdent(line) {
+//			idx++
+//
+//			exp := ""
+//			for true { // retrieve next lines
+//				if idx >= len(arr) || hasBrackets(arr[idx]) {
+//					child.Expect = exp
+//					break
+//				}
+//
+//				temp := strings.TrimSpace(arr[idx])
+//				if temp == ">>" {
+//					temp = ""
+//				}
+//				exp += temp + "\n"
+//				idx++
+//			}
+//		}
+//
+//	}
+//
+//	return childs
+//}
+//
+//func loadSingleLineSteps(arr []string) []commDomain.ZtfStep {
+//	children := make([]commDomain.ZtfStep, 0)
+//
+//	for _, line := range arr {
+//		line = strings.TrimSpace(line)
+//
+//		sections := strings.Split(line, ">>")
+//		expect := ""
+//		if len(sections) > 1 { // has expect
+//			expect = strings.TrimSpace(sections[1])
+//		}
+//
+//		child := commDomain.ZtfStep{Desc: sections[0], Expect: expect}
+//
+//		children = append(children, child)
+//	}
+//
+//	return children
+//}
+//
+//func isGroupIdent(str string) bool {
+//	pass, _ := regexp.MatchString(`(?i)\[\s*group\s*\]`, str)
+//	return pass
+//}
+
+//func isGroup(str string) bool {
+//	ret := strings.Index(str, ">>") < 0 && hasBrackets(str) && !isStepsIdent(str) && !isExpectsIdent(str)
+//
+//	return ret
+//}
+
+//func isStepsIdent(str string) bool {
+//	pass, _ := regexp.MatchString(`(?i)\[.*steps\.*\]`, str)
+//	return pass
+//}
+//
+//func isExpectsIdent(str string) bool {
+//	pass, _ := regexp.MatchString(`(?i)\[.*expects\.*\]`, str)
+//	return pass
+//}
+//
+//func hasBrackets(str string) bool {
+//	pass, _ := regexp.MatchString(`(?i)()\[.*\]`, str)
+//	return pass
+//}
+
+//func getGroupName(str string) string {
+//	reg := `\[\d\.\s]*(.*)\]`
+//	repl := "${1}"
+//
+//	regx, _ := regexp.Compile(reg)
+//	str = regx.ReplaceAllString(str, repl)
+//
+//	return str
+//}
+//
+//func printMultiStepOrExpect(str string) string {
+//	str = strings.TrimSpace(str)
+//
+//	ret := make([]string, 0)
+//
+//	for _, line := range strings.Split(str, "\n") {
+//		line = strings.TrimSpace(line)
+//
+//		ret = append(ret, fmt.Sprintf("%s%s", strings.Repeat(" ", 4), line))
+//	}
+//
+//	return strings.Join(ret, "\r\n")
+//}
+
+//func replaceNumb(str string, groupNumb int, childNumb int, withBrackets bool) string {
+//	numb := getNumbStr(groupNumb, childNumb)
+//
+//	reg := `[\d\.\s]*(.*)`
+//	repl := numb + " ${1}"
+//	if withBrackets {
+//		reg = `\[` + reg + `\]`
+//		repl = `[` + repl + `]`
+//	}
+//
+//	regx, _ := regexp.Compile(reg)
+//	str = regx.ReplaceAllString(str, repl)
+//
+//	return str
+//}
+//func getNumbStr(groupNumb int, childNumb int) string {
+//	numb := strconv.Itoa(groupNumb) + "."
+//	if childNumb != -1 {
+//		numb += strconv.Itoa(childNumb) + "."
+//	}
+//
+//	return numb
+//}
+
+//func IsMultiLine(step commDomain.ZtfStep) bool {
+//	if strings.Index(step.Desc, "\n") > -1 || strings.Index(step.Expect, "\n") > -1 {
+//		return true
+//	}
+//
+//	return false
+//}
+//func RunDateFolder() string {
+//	runName := dateUtils.DateTimeStrFmt(time.Now(), "2006-01-02T150405") + string(os.PathSeparator)
+//
+//	return runName
+//}

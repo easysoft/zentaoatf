@@ -7,6 +7,8 @@ import (
 	"strconv"
 	"strings"
 
+	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
+
 	"github.com/fatih/color"
 
 	"github.com/bitly/go-simplejson"
@@ -27,9 +29,11 @@ import (
 func CommitCase(caseId int, title string, steps []commDomain.ZentaoCaseStep, script serverDomain.TestScript,
 	config commDomain.WorkspaceConf, noNeedConfirm, withCode bool) (err error) {
 
-	err = Login(config)
-	if err != nil {
-		return
+	if serverConfig.CONFIG.AuthToken == "" {
+		err = Login(config)
+		if err != nil {
+			return
+		}
 	}
 
 	_, err = GetCaseById(config.Url, caseId)
@@ -391,7 +395,7 @@ func GetCaseIdsInZentaoTask(productId uint, taskId int, config commDomain.Worksp
 	}
 
 	uri := fmt.Sprintf("/testtasks/%d", taskId)
-	url := GenApiUrl(uri, nil, config.Url)
+	url := GenApiUrl(uri, map[string]interface{}{"limit": 10000}, config.Url)
 
 	bytes, err := httpUtils.Get(url)
 	if err != nil {
