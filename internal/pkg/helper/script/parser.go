@@ -553,13 +553,14 @@ func ReadLogArr(content string) (isSkip bool, ret [][]string) {
 			return
 		}
 
-		if line == ">>" { // more than one line
+		if line == "@{" { // more than one line
 			model = "multi"
 			cpArr = make([]string, 0)
-		} else if model == "multi" { // in >> and >> in multi line mode
+		} else if model == "multi" { // between line @{ and } in multi line mode
 			cpArr = append(cpArr, line)
 
-			if idx == len(lines)-1 || strings.Index(lines[idx+1], ">>") > -1 {
+			//if idx == len(lines)-1 || strings.Index(lines[idx+1], "}") > -1 {
+			if idx == len(lines)-1 || strings.TrimSpace(lines[idx+1]) == "}" {
 				temp := make([]string, 0)
 				temp = append(temp, cpArr...)
 
@@ -573,6 +574,11 @@ func ReadLogArr(content string) (isSkip bool, ret [][]string) {
 			model = "single"
 
 			line = strings.TrimSpace(line)
+			if strings.Index(line, "@") != 0 { // ignore the line not started with @
+				continue
+			}
+
+			line = line[1:]
 
 			cpArr = append(cpArr, line)
 			ret = append(ret, cpArr)

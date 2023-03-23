@@ -192,8 +192,8 @@ func getCaseStepContent(stepObj commDomain.ZtfStep, seq string, independentFile 
 		stepContent = stepStr + expectStr
 	} else {
 		stepContent = stepStr
-		if stepObj.Children == nil || len(stepObj.Children) == 0 {
-			stepContent += " >>"
+		if (stepObj.Children == nil || len(stepObj.Children) == 0) && expectStr != "" {
+			stepContent += " @"
 		}
 	}
 
