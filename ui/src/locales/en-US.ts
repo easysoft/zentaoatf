@@ -18,6 +18,7 @@ export default {
     'name': 'Name',
     'path': 'Path',
     'type': 'Type',
+    'file': 'File',
     'create_time': 'Create Time',
     'created_by': 'Created By',
     'start_time': 'Start Time',

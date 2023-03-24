@@ -19,6 +19,7 @@ export default {
     'name': '名称',
     'path': '路径',
     'type': '类型',
+    'file': '文件',
     'create_time': '创建时间',
     'created_by': '创建者',
     'start_time': '开始时间',
