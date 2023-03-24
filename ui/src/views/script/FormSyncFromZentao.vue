@@ -162,7 +162,7 @@ const submit = () => {
   }
   okTitle.value = t('syncing');
   disabled.value = true;
-  console.log("syncFromZentaoSubmit", console.log(selectedCases.value));
+  console.log("syncFromZentaoSubmit", selectedCases.value);
   if (validate()) {
     emit("submit", {caseIds:selectedCases.value, ...modelRef.value});
   }
@@ -191,6 +191,7 @@ const fetchCases = () => {
     ...modelRef.value,
   }).then((res) => {
     tableNotice.value = t('empty_data');
+    selectedCases.value = [];
     res.data.forEach((item, index) => {
       res.data[index].checked = true;
       selectedCases.value.push(item.Id);
