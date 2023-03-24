@@ -98,7 +98,10 @@ func getSingleExpect(descAndExpect string) (desc, expect string) {
 
 	desc = strings.TrimSpace(arr[0])
 	if len(arr) > 1 {
-		expect = arr[1]
+		expect = strings.TrimSpace(arr[1])
+		if expect == "" {
+			expect = "pass"
+		}
 	}
 
 	return
@@ -185,7 +188,7 @@ func ReadCaseInfoInOldFormat(content, lang string) (info, checkpoints string) {
 func GetStepAndExpectMapInOldFormat(checkpoints, file string) (steps []commDomain.ZentaoCaseStep) {
 	lines := strings.Split(checkpoints, "\n")
 
-	groupArr := getStepNestedArr(lines)
+	groupArr := getStepNestedArrInOldFormat(lines)
 	_, steps = getSortedTextFromNestedSteps(groupArr)
 
 	isIndependent, expectIndependentContent := GetDependentExpect(file)
@@ -225,7 +228,7 @@ func GetDependentExpect(file string) (bool, string) {
 	return false, ""
 }
 
-func getStepNestedArr(lines []string) (ret []commDomain.ZtfStep) {
+func getStepNestedArrInOldFormat(lines []string) (ret []commDomain.ZtfStep) {
 	parent := commDomain.ZtfStep{}
 	increase := 0
 	for index := 0; index < len(lines); index++ {
@@ -305,7 +308,7 @@ func ReplaceCaseDesc(desc, file string) {
 	content := fileUtils.ReadFile(file)
 	lang := langHelper.GetLangByFile(file)
 
-	regStr := fmt.Sprintf(`(?smU)%s((?U:.*pid.*))\n(.*)%s`,
+	regStr := fmt.Sprintf(`(?smU)%s((?U:.*cid.*))\n(.*)%s`,
 		commConsts.LangCommentsRegxMap[lang][0], commConsts.LangCommentsRegxMap[lang][1])
 	re, _ := regexp.Compile(regStr)
 
@@ -487,14 +490,14 @@ func GetCaseInfo(file string) (pass bool, caseId, productId int, title string, t
 func ReadExpectIndependentArr(content string) [][]string {
 	//正常显示6
 	//E2.16
-	//>>
+	//{
 	//  E2.2 - 16
 	//  E2.2 - 26
-	//>>
-	//>>
+	//}
+	//{
 	//  E3 - 16
 	//  E3 - 26
-	//>>
+	//}
 
 	lines := strings.Split(content, "\n")
 
@@ -506,13 +509,13 @@ func ReadExpectIndependentArr(content string) [][]string {
 	for idx < len(lines) {
 		line := strings.TrimSpace(lines[idx])
 
-		if line == ">>" { // more than one line
+		if line == "{" { // more than one line
 			currModel = "multi"
 			cpArr = make([]string, 0)
-		} else if currModel == "multi" { // in >> and >> in multi line mode
+		} else if currModel == "multi" { // in { and } in multi line mode
 			cpArr = append(cpArr, line)
 
-			if idx == len(lines)-1 || strings.Index(lines[idx+1], ">>") > -1 { // end multi line
+			if idx == len(lines)-1 || strings.TrimSpace(lines[idx+1]) == "}" { // end multi line
 				temp := make([]string, 0)
 				temp = append(temp, strings.Join(cpArr, "\r\n"))
 
@@ -553,13 +556,14 @@ func ReadLogArr(content string) (isSkip bool, ret [][]string) {
 			return
 		}
 
-		if line == ">>" { // more than one line
+		if line == "@{" { // more than one line
 			model = "multi"
 			cpArr = make([]string, 0)
-		} else if model == "multi" { // in >> and >> in multi line mode
+		} else if model == "multi" { // between line @{ and } in multi line mode
 			cpArr = append(cpArr, line)
 
-			if idx == len(lines)-1 || strings.Index(lines[idx+1], ">>") > -1 {
+			//if idx == len(lines)-1 || strings.Index(lines[idx+1], "}") > -1 {
+			if idx == len(lines)-1 || strings.TrimSpace(lines[idx+1]) == "}" {
 				temp := make([]string, 0)
 				temp = append(temp, cpArr...)
 
@@ -573,6 +577,11 @@ func ReadLogArr(content string) (isSkip bool, ret [][]string) {
 			model = "single"
 
 			line = strings.TrimSpace(line)
+			if strings.Index(line, "@") != 0 { // ignore the line not started with @
+				continue
+			}
+
+			line = line[1:]
 
 			cpArr = append(cpArr, line)
 			ret = append(ret, cpArr)
