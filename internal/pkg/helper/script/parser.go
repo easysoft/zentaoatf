@@ -400,6 +400,9 @@ func ScriptToExpectName(file string) string {
 }
 
 func getScriptComments(content, lang string) (ret string) {
+	if lang == "" {
+		return
+	}
 	reg := fmt.Sprintf(`(?smU)%s((?U:.*))%s`, commConsts.LangCommentsRegxMap[lang][0], commConsts.LangCommentsRegxMap[lang][1])
 	arr := regexp.MustCompile(reg).FindStringSubmatch(content)
 	if len(arr) < 2 { // wrong format

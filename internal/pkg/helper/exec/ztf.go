@@ -26,12 +26,12 @@ import (
 )
 
 func ExecCases(ch chan int, testSet serverDomain.TestSet, msg *websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	if testSet.Cmd != "" {
-		err = execCmd(testSet.Cmd, testSet.WorkspacePath)
-		if err != nil {
-			return
-		}
-	}
+	// if testSet.Cmd != "" {
+	// 	err = execCmd(testSet.Cmd, testSet.WorkspacePath)
+	// 	if err != nil {
+	// 		return
+	// 	}
+	// }
 
 	return RunZtf(ch, testSet.WorkspacePath, 0, 0, commConsts.Case, testSet.Cases, msg)
 }
