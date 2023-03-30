@@ -157,8 +157,12 @@ package_gui_linux_client:
 
 package_gui_linux_client_arm64:
 	@echo 'start package gui linux for arm64'
-	@rm -rf ${CLIENT_BIN_DIR}/* && mkdir -p ${CLIENT_BIN_DIR}linux_arm64
-	@cp -rf ${COMMAND_BIN_DIR}linux_arm64/${PROJECT}-server ${CLIENT_BIN_DIR}linux_arm64/${PROJECT}
+	@rm -rf ${CLIENT_BIN_DIR}/* && mkdir -p ${CLIENT_BIN_DIR}linux
+	@cp -rf ${COMMAND_BIN_DIR}linux_arm64/${PROJECT}-server ${CLIENT_BIN_DIR}linux/${PROJECT}
+
+	@cd client && npm run package-linux-arm64 && cd ..
+	@rm -rf ${CLIENT_OUT_DIR}linux_arm64 && mkdir -p ${CLIENT_OUT_DIR}linux_arm64 && \
+		mv ${CLIENT_OUT_DIR}${PROJECT}-linux-arm64 ${CLIENT_OUT_DIR}linux_arm64/gui
 
 package_gui_mac_client:
 	@echo 'start package gui mac'
