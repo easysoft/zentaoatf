@@ -64,7 +64,7 @@ func (s *JobService) Start(po *model.Job) {
 		s.JobRepo.UpdateStatus(po, commConsts.JobInprogress, true, false)
 
 		if po.Cmd != "" {
-			shellUtils.ExeShellWithOutput(po.Cmd)
+			shellUtils.ExeShellWithOutputInDir(po.Cmd, po.Workspace)
 		}
 
 		err := execHelper.Exec(nil, req, nil)

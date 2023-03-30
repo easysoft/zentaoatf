@@ -504,7 +504,7 @@ const menuClick = (menuKey: string, targetId: number) => {
     Modal.confirm({
       title: t("confirm_delete", {
         name: contextNodeData.title,
-        typ: t("node"),
+        typ: t(contextNodeData.type),
       }),
       okText: t("confirm"),
       cancelText: t("cancel"),
