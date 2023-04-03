@@ -420,6 +420,7 @@ func ConvertAllureResult(cases []commDomain.AllureCase) (testSuites []commDomain
 		}
 		caseResult := commDomain.UnitResult{
 			Id:        caseId,
+			Cid:       caseId,
 			Title:     cs.Name,
 			TestSuite: suiteName,
 			Duration:  float32(cs.Stop-cs.Start) / 1000,
