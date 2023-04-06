@@ -1,6 +1,7 @@
 package zentaoHelper
 
 import (
+	"errors"
 	"fmt"
 	"net/url"
 	"regexp"
@@ -154,12 +155,33 @@ func FixUrl(url string) (ret string) {
 	return
 }
 
-func FixSiteUrl(orginUrl string) (url1, url2 string) {
-	u, _ := url.Parse(orginUrl)
+func GetSiteUrl(srcUrl string) (baseUrl, version string, err error) {
+	url1, url2 := fixSiteUrl(srcUrl)
+
+	version = getZentaoVersion(url1)
+	if version != "" {
+		baseUrl = url1
+	} else {
+		version = getZentaoVersion(url2)
+		if version != "" {
+			baseUrl = url2
+		}
+	}
+
+	if baseUrl == "" {
+		err = errors.New(i118Utils.Sprintf("wrong_zentao_url"))
+		return
+	}
+
+	return
+}
+
+func fixSiteUrl(originalUrl string) (url1, url2 string) {
+	u, _ := url.Parse(originalUrl)
 	url1 = fmt.Sprintf("%s://%s", u.Scheme, u.Host)
 	url1 += "/"
 
-	pth := strings.Replace(orginUrl, url1, "", -1)
+	pth := strings.Replace(originalUrl, url1, "", -1)
 	pth = strings.TrimLeft(pth, "/")
 	arr := strings.Split(pth, "/")
 	if len(arr) >= 1 {
@@ -168,6 +190,47 @@ func FixSiteUrl(orginUrl string) (url1, url2 string) {
 
 	url1 = fileUtils.AddUrlPathSepIfNeeded(url1)
 	url2 = fileUtils.AddUrlPathSepIfNeeded(url2)
+
+	return
+}
+
+//func CheckRestApi(baseUrl string) (err error) {
+//	url := baseUrl + "api.php/v1/products"
+//	bytes, err := httpUtils.Get(url)
+//	if err != nil {
+//		return
+//	}
+//
+//	json, err := simplejson.NewJson(bytes)
+//	if err != nil {
+//		return
+//	}
+//
+//	total, err := json.Get("total").Int()
+//	if err != nil {
+//		return
+//	}
+//
+//	if total < 1 {
+//		err = errors.New(i118Utils.Sprintf("wrong_zentao_url"))
+//	}
+//
+//	return
+//}
+
+func getZentaoVersion(baseUrl string) (ret string) {
+	url := baseUrl + "?mode=getconfig"
+	bytes, isForward, err := httpUtils.GetCheckForward(url)
+	if err != nil || isForward {
+		return
+	}
+
+	json, err := simplejson.NewJson(bytes)
+	if err != nil {
+		return
+	}
+
+	ret, _ = json.Get("version").String()
 
 	return
 }

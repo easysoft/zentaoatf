@@ -15,6 +15,11 @@ import (
 )
 
 func Get(url string) (ret []byte, err error) {
+	ret, _, err = GetCheckForward(url)
+	return
+}
+
+func GetCheckForward(url string) (ret []byte, isForward bool, err error) {
 	if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
 		logUtils.Infof("===DEBUG=== request: %s", url)
 	}
@@ -45,6 +50,8 @@ func Get(url string) (ret []byte, err error) {
 		return
 	}
 	defer resp.Body.Close()
+
+	isForward = req.URL.Path != resp.Request.URL.Path
 
 	if !IsSuccessCode(resp.StatusCode) {
 		if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {

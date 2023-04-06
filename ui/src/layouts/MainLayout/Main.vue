@@ -69,14 +69,18 @@ const onExecStartEvent = () => {
 const notify = (result: any) => {
   if (!result.httpCode) result.httpCode = 100
   let msg = result.httpCode === 200 ? t('biz_'+result.resultCode) : t('http_'+result.httpCode)
+
   if(result.resultCode === 2000) {
     msg = result.resultMsg
+    result.timeout = 30000
   }
   const desc = result.resultMsg ? result.resultMsg : ''
 
+  console.log('result.duration', result.duration)
   notification.error({
     message: msg,
     description: desc,
+    timeout: result.timeout ? result.timeout : 5000,
   });
 }
 

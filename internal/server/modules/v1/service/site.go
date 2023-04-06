@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	"strings"
 
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
@@ -43,23 +44,17 @@ func (s *SiteService) GetDomainObject(id uint) (site serverDomain.ZentaoSite, er
 }
 
 func (s *SiteService) Create(site model.Site) (id uint, isDuplicate bool, err error) {
-	url1, url2 := zentaoHelper.FixSiteUrl(site.Url)
-	if url1 == "" {
-		err = errors.New("url not right")
+	baseUrl, version, err := zentaoHelper.GetSiteUrl(site.Url)
+	if err != nil {
 		return
 	}
 
-	site.Url = url1
+	site.Url = baseUrl
 	config := configHelper.LoadBySite(site)
 	err = zentaoHelper.Login(config)
 	if err != nil {
-		site.Url = url2
-		config := configHelper.LoadBySite(site)
-		err = zentaoHelper.Login(config)
-
-		if err != nil {
-			return
-		}
+		err = errors.New(i118Utils.Sprintf("pls_check_zentao_url", version, err.Error()))
+		return
 	}
 
 	id, isDuplicate, err = s.SiteRepo.Create(&site)
@@ -68,23 +63,20 @@ func (s *SiteService) Create(site model.Site) (id uint, isDuplicate bool, err er
 }
 
 func (s *SiteService) Update(site model.Site) (isDuplicate bool, err error) {
-	url1, url2 := zentaoHelper.FixSiteUrl(site.Url)
-	if url1 == "" {
-		err = errors.New("url not right")
+	baseUrl, version, err := zentaoHelper.GetSiteUrl(site.Url)
+	if err != nil {
+		if version == "" {
+			version = i118Utils.Sprintf("empty")
+		}
+		err = errors.New(i118Utils.Sprintf("pls_check_zentao_url", err.Error(), version))
 		return
 	}
 
-	site.Url = url1
+	site.Url = baseUrl
 	config := configHelper.LoadBySite(site)
 	err = zentaoHelper.Login(config)
 	if err != nil {
-		site.Url = url2
-		config := configHelper.LoadBySite(site)
-		err = zentaoHelper.Login(config)
-
-		if err != nil {
-			return
-		}
+		return
 	}
 
 	isDuplicate, err = s.SiteRepo.Update(site)

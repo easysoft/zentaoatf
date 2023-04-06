@@ -2,6 +2,10 @@
   "language": "zh",
   "messages": [
     {
+      "id": "empty",
+      "translation": "空"
+    },
+    {
       "id": "usage",
       "translation": "帮助："
     },
@@ -702,6 +706,14 @@
     {
         "id": "bug_title",
         "translation": "缺陷标题"
+    },
+    {
+      "id": "wrong_zentao_url",
+      "translation": "错误的禅道站点地址"
+    },
+    {
+      "id": "pls_check_zentao_url",
+      "translation": "%s，当前禅道版本'%s'。\n请确认您使用了禅道开源17.0、企业7.0、旗舰3.1以上版本，或已按照用户手册4.4小节成功安装RestAPI插件。"
     }
   ]
 }

@@ -2,6 +2,10 @@
   "language": "en",
   "messages": [
     {
+      "id": "empty",
+      "translation": "Empty"
+    },
+    {
       "id": "usage",
       "translation": "Usage:"
     },
@@ -714,6 +718,14 @@
     {
         "id": "bug_title",
         "translation": "BUG Title"
+    },
+    {
+      "id": "wrong_zentao_url",
+      "translation": "Wrong ZenTao URL"
+    },
+    {
+      "id": "pls_check_zentao_url",
+      "translation": "%s, Zentao version '%s'.\n Please use above OpenSource 17.0, Biz 7.0, Max 3.1 version, or you may install RestAPI plugin according to UserManual section 4.4."
     }
   ]
 }

@@ -16,7 +16,7 @@ export default {
     },
     error(options) {
         options['hideProgressBar'] = true;
-        options['timeout'] = 3000;
+        options['timeout'] = options['timeout'] ? options['timeout']: 6000;
         options['toastClassName'] = 'toast-notification toast-notification-error';
         options['bodyClassName'] = 'toast-notification-container';
         options['closeButtonClassName'] = 'toast-notification-close';

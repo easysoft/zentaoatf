@@ -71,7 +71,6 @@
 </template>
 
 <script setup lang="ts">
-import { PageTab } from "@/store/tabs";
 import { defineProps, defineEmits, ref, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
@@ -88,7 +87,6 @@ import FormSite from "@/views/site/FormSite.vue";
 import useSites from '@/hooks/use-sites';
 
 const { t } = useI18n();
-const momentUtc = momentUtcDef;
 
 const props = defineProps<{
   show: boolean;
