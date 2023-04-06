@@ -20,7 +20,7 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId, task int, conf
 	if productId != 0 {
 		report.ProductId = productId
 	}
-	//RemoveAutoCreateId(&report)
+	RemoveAutoCreateId(&report)
 	report.TaskId = taskId
 	report.Task = task
 
@@ -84,16 +84,8 @@ func RemoveAutoCreateId(report *commDomain.ZtfReport) {
 	if report.TestType == commConsts.TestFunc {
 		return
 	}
-	isAuto := true
 	for idx, cs := range report.UnitResult {
-		if cs.Id != idx+1 {
-			isAuto = false
-		}
-	}
-	if isAuto {
-		for idx, _ := range report.UnitResult {
-			report.UnitResult[idx].Id = 0
-		}
+		report.UnitResult[idx].Id = cs.Cid
 	}
 	return
 }

@@ -146,7 +146,7 @@ func isStepLine(line string) (is bool, ret string, isChild bool) {
 		is = true
 		ret = arr[2]
 
-		if len(arr[1]) > 0 {
+		if len(arr[1]) > 1 {
 			isChild = true
 		}
 	}
@@ -327,10 +327,7 @@ func getSortedTextFromNestedSteps(groups []commDomain.ZtfStep) (ret string, step
 	for _, group := range groups {
 		step := commDomain.ZentaoCaseStep{}
 
-		stepType := commConsts.Item
-		if len(group.Children) > 0 {
-			stepType = commConsts.Group
-		}
+		stepType := commConsts.Group
 		step.Type = stepType
 
 		stepTxt := strings.TrimSpace(group.Desc)
@@ -448,7 +445,7 @@ func GetCaseInfo(file string) (pass bool, caseId, productId int, title string, t
 	if isOldFormat {
 		regStr = `(?s)\[case\](.*)\[esac\]`
 	} else {
-		regStr = fmt.Sprintf(`(?sm)%s((?U:.*pid.*))\n(.*)%s`,
+		regStr = fmt.Sprintf(`(?sm)%s((?U:.*cid.*))\n(.*)%s`,
 			commConsts.LangCommentsRegxMap[lang][0], commConsts.LangCommentsRegxMap[lang][1])
 	}
 	myExp := regexp.MustCompile(regStr)
@@ -471,7 +468,7 @@ func GetCaseInfo(file string) (pass bool, caseId, productId int, title string, t
 		timeout, _ = strconv.ParseInt(arr[1], 10, 64)
 	}
 
-	myExp = regexp.MustCompile(`[\S\s]*pid=\s*([^\n]*?)\s*\n`)
+	myExp = regexp.MustCompile(`[\S\s]*cid=\s*([^\n]*?)\s*\n`)
 	arr = myExp.FindStringSubmatch(caseInfo)
 	if len(arr) > 1 {
 		productId, _ = strconv.Atoi(arr[1])
