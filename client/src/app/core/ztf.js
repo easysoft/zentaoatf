@@ -133,10 +133,9 @@ export function killZtfServer() {
         logInfo(`>> exit result: ${stdout}`)
 
     } else {
-        const cmd = 'WMIC path win32_process  where "Commandline like \'%%' + uuid + '%%\'" get Processid,Caption';
+        const cmd = 'Get-WmiObject -class win32_process -filter "Commandline like \'%%' + uuid + '%%\'" | Select-Object Processid, Caption';
         logInfo(`>> list process cmd: ${cmd}`);
-
-        const stdout = execSync(cmd, {windowsHide: true}).toString().trim()
+        const stdout = execSync(cmd, {windowsHide: true, shell:'powershell.exe'}).toString().trim()
         logInfo(`>> list process result: exec ${cmd}, stdout: ${stdout}`)
 
         let pid = 0
@@ -148,12 +147,12 @@ export function killZtfServer() {
             const cols = line.split(/\s/)
 
             if (line.indexOf('ztf') > -1) {
-                const col3 = cols[cols.length-1].trim()
-                console.log(`col3=${col3}`);
-                logInfo(`col3=${col3}`)
+                const col2 = cols[cols.length-2].trim()
+                console.log(`col2=${col2}`);
+                logInfo(`col2=${col2}`)
 
-                if (col3 && parseInt(col3, 10)) {
-                    pid = parseInt(col3, 10)
+                if (col2 && parseInt(col2, 10)) {
+                    pid = parseInt(col2, 10)
                 }
             }
         });
