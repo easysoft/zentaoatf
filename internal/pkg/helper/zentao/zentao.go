@@ -156,7 +156,7 @@ func FixUrl(url string) (ret string) {
 }
 
 func GetSiteUrl(srcUrl string) (baseUrl, version string, err error) {
-	url1, url2 := fixSiteUrl(srcUrl)
+	url1, url2 := FixSiteUrl(srcUrl)
 
 	version = getZentaoVersion(url1)
 	if version != "" {
@@ -176,7 +176,7 @@ func GetSiteUrl(srcUrl string) (baseUrl, version string, err error) {
 	return
 }
 
-func fixSiteUrl(originalUrl string) (url1, url2 string) {
+func FixSiteUrl(originalUrl string) (url1, url2 string) {
 	u, _ := url.Parse(originalUrl)
 	url1 = fmt.Sprintf("%s://%s", u.Scheme, u.Host)
 	url1 += "/"
