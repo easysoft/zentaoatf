@@ -1,26 +1,19 @@
 #!/usr/bin/env php
 <?php
 /**
+title=multi lines
+cid=0
+pid=0
 
-title = simple demo
-cid=3
-pid=1
-
-step1 >> expect 1
-step2 >>
-step3 >> expect 3
-
+steps
+  step 1.1
+  step 1.2 >>
+    expect 1.2 line 1
+    expect 1.2 line 2
+  >>
 */
 
-checkStep1() || print("expect 1\n");
-print("pass\n");
-checkStep3() || print("expect 3\n");
-
-function checkStep1(){}
-function checkStep3(){}
-
-stdErr('it is stderr msg');
-
-function stdErr($msg) {
-    fwrite(STDERR, "$msg\n");
-}
+print(">>\n");
+print("expect 1.2 line 1\n");
+print("expect 1.2 line 2\n");
+print(">>\n");
