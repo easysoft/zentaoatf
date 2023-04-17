@@ -130,16 +130,14 @@ func InputForSet(dir string) {
 		conf.Username = stdinUtils.GetInput("(.{2,})", conf.Username, "enter_account", conf.Username)
 		conf.Password = stdinUtils.GetInput("(.{2,})", conf.Password, "enter_password", conf.Password)
 
-		url1, url2 := zentaoHelper.FixSiteUrl(conf.Url)
+		url1 := zentaoHelper.FixUrl(conf.Url)
 		conf.Url = url1
 
 		logUtils.Info(i118Utils.Sprintf("try_login", url1))
 		err := zentaoHelper.LoginSilently(conf)
 		if err != nil {
 			logUtils.Info(i118Utils.Sprintf("fail_to_login"))
-			conf.Url = url2
 
-			logUtils.Info(i118Utils.Sprintf("try_login", url2))
 			err = zentaoHelper.Login(conf)
 			if err != nil {
 				logUtils.Info(i118Utils.Sprintf("fail_to_login"))

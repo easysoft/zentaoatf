@@ -560,7 +560,9 @@ func ReadLogArr(content string) (isSkip bool, ret [][]string) {
 			model = "multi"
 			cpArr = make([]string, 0)
 		} else if model == "multi" { // between line @{ and } in multi line mode
-			cpArr = append(cpArr, line)
+			if line != "" {
+				cpArr = append(cpArr, line)
+			}
 
 			//if idx == len(lines)-1 || strings.Index(lines[idx+1], "}") > -1 {
 			if idx == len(lines)-1 || strings.TrimSpace(lines[idx+1]) == "}" {
@@ -582,6 +584,53 @@ func ReadLogArr(content string) (isSkip bool, ret [][]string) {
 			}
 
 			line = line[1:]
+
+			cpArr = append(cpArr, line)
+			ret = append(ret, cpArr)
+			cpArr = make([]string, 0)
+		}
+	}
+
+	return
+}
+
+func ReadLogArrOld(content string) (isSkip bool, ret [][]string) {
+	lines := strings.Split(content, "\n")
+
+	ret = make([][]string, 0)
+	var cpArr []string
+
+	model := ""
+	for idx := 0; idx < len(lines); idx++ {
+		line := strings.TrimSpace(lines[idx])
+
+		if line == "skip" {
+			isSkip = true
+			return
+		}
+
+		if line == ">>" { // more than one line
+			model = "multi"
+			cpArr = make([]string, 0)
+		} else if model == "multi" { // in >> and >> in multi line mode
+			if line != "" {
+				cpArr = append(cpArr, line)
+			}
+
+			if idx == len(lines)-1 || strings.Index(lines[idx+1], ">>") > -1 {
+				temp := make([]string, 0)
+				temp = append(temp, cpArr...)
+
+				ret = append(ret, temp)
+				cpArr = make([]string, 0)
+
+				idx = idx + 1
+				model = ""
+			}
+		} else {
+			model = "single"
+
+			line = strings.TrimSpace(line)
 
 			cpArr = append(cpArr, line)
 			ret = append(ret, cpArr)

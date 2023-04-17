@@ -35,6 +35,9 @@ func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfRepor
 	skip := false
 	actualArr := make([][]string, 0)
 	skip, actualArr = scriptHelper.ReadLogArr(logs)
+	if len(actualArr) == 0 {
+		skip, actualArr = scriptHelper.ReadLogArrOld(logs)
+	}
 
 	language := langHelper.GetLangByFile(scriptFile)
 	ValidateCaseResult(scriptFile, language, steps, skip, actualArr, report,
