@@ -52,15 +52,17 @@ var (
 	UnitTestTypeCypress    = "cypress"
 	UnitTestTypePlaywright = "playwright"
 	UnitTestTypePuppeteer  = "puppeteer"
-	UnitTestPhpUnit        = "phpunit"
-	UnitTestTypePyTest     = "pytest"
-	UnitTestTypeJest       = "jest"
-	UnitTestTypeCppUnit    = "cppunit"
-	UnitTestTypeGTest      = "gtest"
-	UnitTestTypeQTest      = "qtest"
-	UnitTestTypes          = []string{
+	UnitTestTypeK6         = "k6"
+
+	UnitTestPhpUnit     = "phpunit"
+	UnitTestTypePyTest  = "pytest"
+	UnitTestTypeJest    = "jest"
+	UnitTestTypeCppUnit = "cppunit"
+	UnitTestTypeGTest   = "gtest"
+	UnitTestTypeQTest   = "qtest"
+	UnitTestTypes       = []string{
 		UnitTestTypeAllure, UnitTestTypeJunit, UnitTestTypeTestNG,
-		UnitTestTypeRobot, UnitTestTypeCypress, UnitTestTypePlaywright, UnitTestTypePuppeteer,
+		UnitTestTypeRobot, UnitTestTypeCypress, UnitTestTypePlaywright, UnitTestTypePuppeteer, UnitTestTypeK6,
 		UnitTestPhpUnit, UnitTestTypePyTest, UnitTestTypeJest, UnitTestTypeCppUnit, UnitTestTypeGTest, UnitTestTypeQTest,
 	}
 

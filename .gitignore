@@ -61,3 +61,4 @@ test/ui/demo/ci_test_testng/
 yarn.lock
 package-lock.json
 node_modules
+/test/k6/log/

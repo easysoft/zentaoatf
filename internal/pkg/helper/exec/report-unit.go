@@ -29,8 +29,7 @@ import (
 	"github.com/mattn/go-runewidth"
 )
 
-func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64,
-	ch chan int, wsMsg *websocket.Message) (
+func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch chan int, wsMsg *websocket.Message) (
 	report commDomain.ZtfReport) {
 
 	key := stringUtils.Md5(req.WorkspacePath)
@@ -257,7 +256,7 @@ func GetSuiteFiles(resultDir string, startTime int64, testTool commConsts.TestTo
 				//	continue
 				//}
 
-				if (isAllureReport(testTool) && ext == ".json") || ext == ".xml" {
+				if ((isAllureReport(testTool) || testTool == commConsts.K6) && ext == ".json") || ext == ".xml" {
 					pth := filepath.Join(resultDir, name)
 					resultFiles = append(resultFiles, pth)
 				}
@@ -270,10 +269,10 @@ func GetSuiteFiles(resultDir string, startTime int64, testTool commConsts.TestTo
 	return
 }
 
-func GetTestSuite(xmlFile string, testTool commConsts.TestTool) (
+func GetTestSuite(logFile string, testTool commConsts.TestTool) (
 	testSuite commDomain.UnitTestSuite, err error) {
 
-	content := fileUtils.ReadFile(xmlFile)
+	content := fileUtils.ReadFile(logFile)
 
 	if testTool == commConsts.JUnit || testTool == commConsts.TestNG {
 		testSuite = commDomain.UnitTestSuite{}
@@ -339,6 +338,26 @@ func GetTestSuite(xmlFile string, testTool commConsts.TestTool) (
 		if err == nil {
 			testSuite = ConvertCyResult(cyResult)
 		}
+	} else if testTool == commConsts.K6 {
+		results := []interface{}{}
+
+		for _, line := range strings.Split(content, "\n") {
+			k6Metric := commDomain.K6Metric{}
+			err = json.Unmarshal([]byte(line), &k6Metric)
+			if k6Metric.Type == commConsts.Metric {
+				results = append(results, k6Metric)
+				continue
+			}
+
+			k6Point := commDomain.K6Point{}
+			err = json.Unmarshal([]byte(line), &k6Point)
+			if k6Point.Type == commConsts.Point {
+				results = append(results, k6Point)
+				continue
+			}
+		}
+
+		testSuite = ConvertK6Result(results)
 	}
 
 	return
@@ -777,27 +796,97 @@ func ConvertCyResult(result commDomain.CypressTestsuites) commDomain.UnitTestSui
 	return testSuite
 }
 
+func ConvertK6Result(results []interface{}) commDomain.UnitTestSuite {
+	caseResultMap := map[string]commDomain.UnitResult{}
+
+	for _, result := range results {
+		point, ok := result.(commDomain.K6Point)
+		if !ok || point.Type != commConsts.Point || point.Metric != "checks" {
+			continue
+		}
+
+		caseName := strings.TrimLeft(point.Data.Tags.Name, ":")
+		caseResult, ok := caseResultMap[caseName]
+		if !ok { // create if not exist
+			if point.Data.Tags.Group == "" { // not a case
+				continue
+			}
+
+			caseResultMap[caseName] = commDomain.UnitResult{
+				Id:        stringUtils.ParseInt(point.Data.Tags.Id),
+				Title:     point.Data.Tags.Name,
+				TestSuite: strings.TrimLeft(point.Data.Tags.Group, ":"),
+				Status:    commConsts.PASS,
+			}
+			caseResult = caseResultMap[caseName]
+		}
+
+		if caseResult.StartTime == 0 || caseResult.StartTime > point.Data.Time.Unix() {
+			caseResult.StartTime = point.Data.Time.Unix()
+		}
+		if caseResult.EndTime == 0 || caseResult.EndTime < point.Data.Time.Unix() {
+			caseResult.EndTime = point.Data.Time.Unix()
+		}
+
+		if point.Metric == "checks" && point.Data.Value == 0 {
+			caseResult.Status = commConsts.FAIL
+			caseResult.Failure = &commDomain.Failure{Type: "", Desc: point.Data.Tags.Checkpoint}
+		}
+
+		caseResultMap[caseName] = caseResult
+	}
+
+	var startTime, endTime int64
+	testSuite := commDomain.UnitTestSuite{}
+	for _, cs := range caseResultMap {
+		cs.Duration = float32(cs.EndTime - cs.StartTime)
+
+		testSuite.Cases = append(testSuite.Cases, cs)
+
+		if startTime == 0 || startTime > cs.StartTime {
+			startTime = cs.StartTime
+		}
+		if endTime == 0 || endTime < cs.EndTime {
+			endTime = cs.EndTime
+		}
+	}
+
+	testSuite.Time = float32(startTime)
+	testSuite.Duration = endTime - startTime
+
+	return testSuite
+}
+
 func isAllureReport(testTool commConsts.TestTool) (ret bool) {
 	return testTool == commConsts.Allure || testTool == commConsts.GoTest
 }
 
-func getResultDir(testset *serverDomain.TestSet) {
+func getResultDirForDifferentTool(testset *serverDomain.TestSet) {
 	if testset.TestTool == commConsts.JUnit && testset.BuildTool == commConsts.Maven {
 		testset.ResultDir = filepath.Join("target", "surefire-reports")
 		testset.ZipDir = testset.ResultDir
+
 	} else if testset.TestTool == commConsts.TestNG && testset.BuildTool == commConsts.Maven {
 		testset.ResultDir = filepath.Join("target", "surefire-reports", "junitreports")
 		testset.ZipDir = filepath.Dir(testset.ResultDir)
+
 	} else if testset.TestTool == commConsts.RobotFramework || testset.TestTool == commConsts.Cypress ||
 		testset.TestTool == commConsts.Playwright || testset.TestTool == commConsts.Puppeteer {
 		testset.ResultDir = "results"
 		testset.ZipDir = testset.ResultDir
+
+	} else if testset.TestTool == commConsts.K6 {
+		testset.ResultDir = "results"
+		testset.ZipDir = testset.ResultDir
+
 	} else if isAllureReport(testset.TestTool) {
 		testset.ResultDir = commConsts.AllureReportDir
 		testset.ZipDir = testset.ResultDir
+
 	} else {
 		testset.ResultDir = "testresults.xml"
 		testset.ZipDir = testset.ResultDir
+
 	}
 
 	if testset.ResultDir != "" {

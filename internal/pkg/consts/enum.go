@@ -167,6 +167,7 @@ const (
 	Cypress        TestTool = "cypress"
 	Playwright     TestTool = "playwright"
 	Puppeteer      TestTool = "puppeteer"
+	K6             TestTool = "k6"
 )
 
 func (e TestTool) String() string {
@@ -270,5 +271,16 @@ const (
 )
 
 func (e JobStatus) ToString() string {
+	return string(e)
+}
+
+type K6ResultType string
+
+const (
+	Metric K6ResultType = "Metric"
+	Point  K6ResultType = "Point"
+)
+
+func (e K6ResultType) ToString() string {
 	return string(e)
 }

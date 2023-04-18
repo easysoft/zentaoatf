@@ -558,6 +558,41 @@ type CypressFailure struct {
 	Type    string `xml:"type,attr"`
 }
 
+// k6
+type K6Metric struct {
+	Type   commConsts.K6ResultType `json:"type"`
+	Metric string                  `json:"metric"`
+	Data   struct {
+		Name       string        `json:"name"`
+		Type       string        `json:"type"`
+		Contains   string        `json:"contains"`
+		Thresholds []interface{} `json:"thresholds"`
+		Submetrics interface{}   `json:"submetrics"`
+	} `json:"data"`
+}
+type K6Point struct {
+	Type   commConsts.K6ResultType `json:"type"`
+	Metric string                  `json:"metric"`
+	Data   struct {
+		Time  time.Time `json:"time"`
+		Value int       `json:"value"`
+		Tags  struct {
+			ExpectedResponse string `json:"expected_response"`
+			Group            string `json:"group"`
+			Method           string `json:"method"`
+			Proto            string `json:"proto"`
+			Scenario         string `json:"scenario"`
+			Status           string `json:"status"`
+			TlsVersion       string `json:"tls_version"`
+			Url              string `json:"url"`
+
+			Id         string `json:"id"`
+			Name       string `json:"name"`
+			Checkpoint string `json:"checkpoint"`
+		} `json:"tags"`
+	} `json:"data"`
+}
+
 type TestResult struct {
 	TestSetId uint `json:"testSetId" yaml:"testSetId"`
 

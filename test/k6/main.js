@@ -26,10 +26,11 @@ export default function () {
         let resp = http.get('https://httpbin.org/get?p1=1');
 
         // 验证点
-        const validator = (r) => resp.status == 200
+        const validator = (r) => resp.status == 2001
 
         // 断言
-        assert(1, '微信扫码登录', resp, validator);
+        assert(1, '微信扫码登录', '验证跳转到个人仪表盘', resp, validator);
+        assert(2, '邮箱登录', '验证跳转到个人仪表盘', resp, validator); // 测试结果分析用
 
         sleep(1);
     });
@@ -56,14 +57,14 @@ export default function () {
         }
 
         // 断言
-        assert(2, '重置密码', resp, validator);
+        assert(2, '重置密码', '验证用户收到密码重置右键', resp, validator);
 
         sleep(1);
     });
 }
 
-function assert (caseId, caseName, data, validator) {
-    const checkpoint = `${caseId} - ${caseName}`
+function assert (caseId, caseName, checkpoint, data, validator) {
+    const name = `${caseId} - ${caseName}`
 
-    check(data, { [checkpoint]: validator }, { id: caseId, name: caseName });
+    check(data, { [name]: validator }, { id: caseId, name: caseName, checkpoint: checkpoint });
 }

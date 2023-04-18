@@ -203,6 +203,7 @@ func view() {
 func run(args []string) {
 	if len(args) >= 3 && stringUtils.FindInArr(args[2], commConsts.UnitTestTypes) { // unit test
 		runUnitTest(args)
+
 	} else { // ztf test
 		runFuncTest(args)
 
@@ -214,6 +215,7 @@ func run(args []string) {
 		if commConsts.AutoCommitBug && productId != "" {
 			action.CommitBug([]string{commConsts.ExecLogDir}, stringUtils.ParseInt(productId), true)
 		}
+
 	}
 }
 

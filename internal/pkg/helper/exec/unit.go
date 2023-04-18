@@ -50,13 +50,14 @@ func ExecUnit(ch chan int,
 		req.Cmd = strings.Join(arr[2:], " ")
 	}
 
-	getResultDir(&req)
+	getResultDirForDifferentTool(&req)
 
 	// run
 	entTime := time.Now()
 	if strings.TrimSpace(req.Cmd) != "" {
 		// remove old results
 		fileUtils.RmDir(req.ResultDir)
+		fileUtils.MkDirIfNeeded(req.ResultDir)
 
 		RunUnitTest(ch, req.Cmd, req.WorkspacePath, wsMsg)
 
