@@ -56,3 +56,8 @@ test/ui/demo/ci_test_testng/
 /res/res.go
 
 /cmd/server/log
+/test/nodejs/test.json
+
+yarn.lock
+package-lock.json
+node_modules
