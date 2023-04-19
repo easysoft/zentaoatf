@@ -813,7 +813,7 @@ func ConvertK6Result(results []interface{}) commDomain.UnitTestSuite {
 			}
 
 			caseResultMap[caseName] = commDomain.UnitResult{
-				Id:        stringUtils.ParseInt(point.Data.Tags.Id),
+				Cid:       stringUtils.ParseInt(point.Data.Tags.Id),
 				Title:     point.Data.Tags.Name,
 				TestSuite: strings.TrimLeft(point.Data.Tags.Group, ":"),
 				Status:    commConsts.PASS,

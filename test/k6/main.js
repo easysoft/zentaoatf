@@ -22,7 +22,7 @@ export const options = {
 
 export default function () {
     // 执行脚本
-    group('登录请求', function () { // 模块
+    group('登录请求', function () { // 套件
         let resp = http.get('https://httpbin.org/get?p1=1');
 
         // 验证点
@@ -57,7 +57,7 @@ export default function () {
         }
 
         // 断言
-        assert(2, '重置密码', '验证用户收到密码重置右键', resp, validator);
+        assert(5, '重置密码', '验证用户收到密码重置右键', resp, validator);
 
         sleep(1);
     });

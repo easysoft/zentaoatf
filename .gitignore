@@ -62,3 +62,4 @@ yarn.lock
 package-lock.json
 node_modules
 /test/k6/log/
+/test/k6/results/
