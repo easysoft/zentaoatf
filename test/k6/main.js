@@ -42,11 +42,12 @@ export default function () {
         // 验证器
         const validator = (r) => resp.status == expectRespStatus
 
-        // 断言：用例ID, 用例名称，验证点名称，被验证数据，验证器
-        assert(0, '微信扫码登录', '验证跳转到个人仪表盘', resp, validator);
+        // 注意：此处的检查点和前面定义的阀值'http_req_duration{id:1}'均会影响用例的成败
+        // 断言方法（用例ID, 用例名称，验证点名称，被验证数据，验证器）
+        assert(1, '微信扫码登录', '验证跳转到个人仪表盘', resp, validator);
 
-        // 提交到结果到禅道里存在的用例上
-        assert(1, '邮箱登录', '验证到达首页', resp, (r) => resp.status == 200);
+        // 另一个用例
+        assert(0, '邮箱登录', '验证到达首页', resp, (r) => resp.status == 200);
 
         sleep(1);
     });
