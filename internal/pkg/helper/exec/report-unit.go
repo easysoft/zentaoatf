@@ -342,18 +342,10 @@ func GetTestSuite(logFile string, testTool commConsts.TestTool) (
 		results := []interface{}{}
 
 		for _, line := range strings.Split(content, "\n") {
-			k6Metric := commDomain.K6Metric{}
-			err = json.Unmarshal([]byte(line), &k6Metric)
-			if k6Metric.Type == commConsts.Metric {
-				results = append(results, k6Metric)
-				continue
-			}
-
 			k6Point := commDomain.K6Point{}
-			err = json.Unmarshal([]byte(line), &k6Point)
-			if k6Point.Type == commConsts.Point {
+			errInner := json.Unmarshal([]byte(line), &k6Point)
+			if errInner == nil && k6Point.Type == commConsts.Point {
 				results = append(results, k6Point)
-				continue
 			}
 		}
 
