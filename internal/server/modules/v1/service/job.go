@@ -3,6 +3,8 @@ package service
 import (
 	"errors"
 	"fmt"
+	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -67,7 +69,11 @@ func (s *JobService) Start(po *model.Job) {
 			shellUtils.ExeShellWithOutputInDir(po.Cmd, po.Workspace)
 		}
 
-		err := execHelper.Exec(nil, req, nil)
+		err := s.filterCases(po, req)
+
+		if err == nil {
+			err = execHelper.Exec(nil, req, nil)
+		}
 
 		s.JobRepo.UpdateStatus(po, commConsts.JobCompleted, false, true)
 
@@ -233,6 +239,10 @@ func (s *JobService) SubmitExecResult(job model.Job, execErr error) (err error) 
 		Url: serverConfig.CONFIG.Server,
 	}
 
+	if job.EndDate == nil {
+		now := time.Now()
+		job.EndDate = &now
+	}
 	ret := serverDomain.ZentaoJobSubmitReq{
 		Task:      job.Task,
 		Status:    job.Status,
@@ -245,6 +255,23 @@ func (s *JobService) SubmitExecResult(job model.Job, execErr error) (err error) 
 	err = zentaoHelper.JobCommitResult(ret, config)
 
 	return
+}
+
+func (s *JobService) filterCases(po *model.Job, req serverDomain.ExecReq) error {
+	testSets := req.TestSets
+
+	for _, testSet := range testSets {
+		conf := configHelper.LoadByWorkspacePath(testSet.WorkspacePath)
+		_, casesToIgnore := execHelper.FilterCases(testSet.Cases, &conf)
+
+		if len(casesToIgnore) > 0 {
+			temp := i118Utils.Sprintf("ignore_scripts", strconv.Itoa(len(casesToIgnore)))
+			err := errors.New(temp)
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (s *JobService) genExecReqFromJob(po model.Job) (req serverDomain.ExecReq) {
