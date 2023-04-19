@@ -25,7 +25,7 @@ export default function () {
     group('登录请求', function () { // 单元测试套件
         let resp = http.get('https://httpbin.org/get?p1=1');
 
-        // 期待的响应状态码
+        // 期待响应状态码
         let expectRespStatus = 200
 
         // 通过设置错误的期待响应状态码，模拟三分之一的迭代失败
