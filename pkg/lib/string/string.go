@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/base64"
 	"encoding/hex"
+	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/jameskeane/bcrypt"
 	"github.com/mattn/go-runewidth"
@@ -136,5 +137,10 @@ func Md5(str string) (ret string) {
 	h.Write([]byte(str))
 	ret = hex.EncodeToString(h.Sum(nil))
 
+	return
+}
+
+func ItoStr(i interface{}) (ret string) {
+	ret = fmt.Sprintf("%v", i)
 	return
 }

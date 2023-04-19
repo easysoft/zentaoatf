@@ -12,6 +12,9 @@ export const options = {
 
     // 设置性能有关指标的阀值
     thresholds: {
+        // 编号为1的用例的执行时间，平均值小于1000毫秒
+        'http_req_duration{id:1}': ['avg < 1'],
+
         // '登录请求'分组中所有请求的响应时间，90%小于6000毫秒
         'http_req_duration{group:::登录请求}': ['p(90) < 6000'],
 
@@ -23,16 +26,18 @@ export const options = {
 export default function () {
     // 执行脚本
     group('登录请求', function () { // 单元测试套件
-        let resp = http.get('https://httpbin.org/get?p1=1');
+        let resp = http.get('https://httpbin.org/get?p1=1', {
+            tags: { id: '1' },
+        });
 
         // 期待响应状态码
         let expectRespStatus = 200
 
-        // 通过设置错误的期待响应状态码，模拟三分之一的迭代失败
-        if (+`${exec.vu.idInTest}` % 3 === 0) {
-            expectRespStatus = 222
-        }
-        console.log(`in iteration ${exec.vu.idInTest}, expectRespStatus=${expectRespStatus}`)
+        // 通过设置错误的期待结果，模拟三分之一的迭代失败
+        // if (+`${exec.vu.idInTest}` % 3 === 0) {
+        //     expectRespStatus = 222
+        // }
+        // console.log(`in iteration ${exec.vu.idInTest}, expectRespStatus=${expectRespStatus}`)
 
         // 验证器
         const validator = (r) => resp.status == expectRespStatus
@@ -63,7 +68,9 @@ export default function () {
             const dur = data.timings.duration
             // console.log('===', status, dur)
 
-            const pass = status == 200 && dur < 3000
+            // 验证状态码和响应时间
+            const pass = status == 200 && dur < 6000
+
             return pass
         }
 
@@ -81,9 +88,17 @@ export function setup() {
 export function teardown(data) {
     console.log('--- teardown')
 }
+// 请保留该函数，否则thresholds阀值结果不会影响用例结果
+export function handleSummary(data) {
+    return {
+        'results/summary.json': JSON.stringify(data), //the default data object
+    };
+}
 
 function assert (caseId, caseName, checkpoint, data, validator) {
     const name = `${caseId} - ${caseName}`
 
-    check(data, { [name]: validator }, { id: caseId, name: caseName, checkpoint: checkpoint });
+    const tags = { id: caseId, name: caseName, checkpoint: checkpoint}
+
+    check(data, { [name]: validator }, tags);
 }

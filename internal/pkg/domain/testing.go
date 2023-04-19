@@ -593,6 +593,39 @@ type K6Point struct {
 	} `json:"data"`
 }
 
+type K6Summary struct {
+	RootGroup struct {
+		Name   string `json:"name"`
+		Path   string `json:"path"`
+		Id     string `json:"id"`
+		Groups []struct {
+			Name   string        `json:"name"`
+			Path   string        `json:"path"`
+			Id     string        `json:"id"`
+			Groups []interface{} `json:"groups"`
+			Checks []struct {
+				Path   string `json:"path"`
+				Id     string `json:"id"`
+				Passes int    `json:"passes"`
+				Fails  int    `json:"fails"`
+				Name   string `json:"name"`
+			} `json:"checks"`
+		} `json:"groups"`
+		Checks []interface{} `json:"checks"`
+	} `json:"root_group"`
+	Options struct {
+		SummaryTrendStats []string `json:"summaryTrendStats"`
+		SummaryTimeUnit   string   `json:"summaryTimeUnit"`
+		NoColor           bool     `json:"noColor"`
+	} `json:"options"`
+	State struct {
+		IsStdErrTTY       bool    `json:"isStdErrTTY"`
+		TestRunDurationMs float64 `json:"testRunDurationMs"`
+		IsStdOutTTY       bool    `json:"isStdOutTTY"`
+	} `json:"state"`
+	Metrics map[string]interface{} `json:"metrics"`
+}
+
 type TestResult struct {
 	TestSetId uint `json:"testSetId" yaml:"testSetId"`
 

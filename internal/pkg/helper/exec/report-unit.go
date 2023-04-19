@@ -203,8 +203,15 @@ func RetrieveUnitResult(testset serverDomain.TestSet, startTime int64) (
 		}
 
 	} else {
+		failedCaseIdToThresholdMap := map[string]string{}
+
+		if testset.TestTool == commConsts.K6 && len(resultFiles) > 1 {
+			content := fileUtils.ReadFile(resultFiles[len(resultFiles)-1])
+			failedCaseIdToThresholdMap = GetK6FailCaseInSummary(content)
+		}
+
 		for _, file := range resultFiles {
-			testSuite, err := GetTestSuite(file, testset.TestTool)
+			testSuite, err := GetTestSuite(file, testset.TestTool, failedCaseIdToThresholdMap)
 
 			if err == nil {
 				suites = append(suites, testSuite)
@@ -269,7 +276,7 @@ func GetSuiteFiles(resultDir string, startTime int64, testTool commConsts.TestTo
 	return
 }
 
-func GetTestSuite(logFile string, testTool commConsts.TestTool) (
+func GetTestSuite(logFile string, testTool commConsts.TestTool, failedCaseIdToThresholdMap map[string]string) (
 	testSuite commDomain.UnitTestSuite, err error) {
 
 	content := fileUtils.ReadFile(logFile)
@@ -340,16 +347,19 @@ func GetTestSuite(logFile string, testTool commConsts.TestTool) (
 		}
 	} else if testTool == commConsts.K6 {
 		results := []interface{}{}
+		lines := strings.Split(content, "\n")
 
-		for _, line := range strings.Split(content, "\n") {
-			k6Point := commDomain.K6Point{}
-			errInner := json.Unmarshal([]byte(line), &k6Point)
-			if errInner == nil && k6Point.Type == commConsts.Point {
-				results = append(results, k6Point)
+		if len(lines) > 1 {
+			for _, line := range strings.Split(content, "\n") {
+				k6Point := commDomain.K6Point{}
+				errInner := json.Unmarshal([]byte(line), &k6Point)
+				if errInner == nil && k6Point.Type == commConsts.Point {
+					results = append(results, k6Point)
+					continue
+				}
 			}
+			testSuite = ConvertK6Result(results, failedCaseIdToThresholdMap)
 		}
-
-		testSuite = ConvertK6Result(results)
 	}
 
 	return
@@ -784,67 +794,6 @@ func ConvertCyResult(result commDomain.CypressTestsuites) commDomain.UnitTestSui
 			testSuite.Cases = append(testSuite.Cases, caseResult)
 		}
 	}
-
-	return testSuite
-}
-
-func ConvertK6Result(results []interface{}) commDomain.UnitTestSuite {
-	caseResultMap := map[string]commDomain.UnitResult{}
-
-	for _, result := range results {
-		point, ok := result.(commDomain.K6Point)
-		if !ok || point.Type != commConsts.Point || point.Metric != "checks" {
-			continue
-		}
-
-		caseName := strings.TrimLeft(point.Data.Tags.Name, ":")
-		caseResult, ok := caseResultMap[caseName]
-		if !ok { // create if not exist
-			if point.Data.Tags.Group == "" { // not a case
-				continue
-			}
-
-			caseResultMap[caseName] = commDomain.UnitResult{
-				Cid:       stringUtils.ParseInt(point.Data.Tags.Id),
-				Title:     point.Data.Tags.Name,
-				TestSuite: strings.TrimLeft(point.Data.Tags.Group, ":"),
-				Status:    commConsts.PASS,
-			}
-			caseResult = caseResultMap[caseName]
-		}
-
-		if caseResult.StartTime == 0 || caseResult.StartTime > point.Data.Time.Unix() {
-			caseResult.StartTime = point.Data.Time.Unix()
-		}
-		if caseResult.EndTime == 0 || caseResult.EndTime < point.Data.Time.Unix() {
-			caseResult.EndTime = point.Data.Time.Unix()
-		}
-
-		if point.Metric == "checks" && point.Data.Value == 0 {
-			caseResult.Status = commConsts.FAIL
-			caseResult.Failure = &commDomain.Failure{Type: "", Desc: point.Data.Tags.Checkpoint}
-		}
-
-		caseResultMap[caseName] = caseResult
-	}
-
-	var startTime, endTime int64
-	testSuite := commDomain.UnitTestSuite{}
-	for _, cs := range caseResultMap {
-		cs.Duration = float32(cs.EndTime - cs.StartTime)
-
-		testSuite.Cases = append(testSuite.Cases, cs)
-
-		if startTime == 0 || startTime > cs.StartTime {
-			startTime = cs.StartTime
-		}
-		if endTime == 0 || endTime < cs.EndTime {
-			endTime = cs.EndTime
-		}
-	}
-
-	testSuite.Time = float32(startTime)
-	testSuite.Duration = endTime - startTime
 
 	return testSuite
 }
