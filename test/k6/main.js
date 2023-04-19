@@ -12,7 +12,7 @@ export const options = {
 
     // 设置性能有关指标的阀值
     thresholds: {
-        // 编号为1的用例的执行时间，平均值小于1000毫秒
+        // 编号为1的用例的响应时间，平均值小于1000毫秒
         'http_req_duration{id:1}': ['avg < 1'],
 
         // '登录请求'分组中所有请求的响应时间，90%小于6000毫秒
@@ -27,7 +27,7 @@ export default function () {
     // 执行脚本
     group('登录请求', function () { // 单元测试套件
         let resp = http.get('https://httpbin.org/get?p1=1', {
-            tags: { id: '1' },
+            tags: { id: '1' }, // 标记用例编号为1，用于上述阀值统计
         });
 
         // 期待响应状态码
