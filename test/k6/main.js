@@ -22,20 +22,20 @@ export const options = {
 
 export default function () {
     // 执行脚本
-    group('登录请求', function () { // 套件
+    group('登录请求', function () { // 单元测试套件
         let resp = http.get('https://httpbin.org/get?p1=1');
 
-        // 验证点
+        // 验证器
         const validator = (r) => resp.status == 2001
 
-        // 断言
+        // 断言：用例ID, 用例名称，验证点名称，被验证数据，验证器
         assert(1, '微信扫码登录', '验证跳转到个人仪表盘', resp, validator);
-        assert(2, '邮箱登录', '验证跳转到个人仪表盘', resp, validator); // 测试结果分析用
+        assert(20, '邮箱登录', '验证跳转到个人仪表盘', resp, validator); // 测试用例ID在禅道中不存在
 
         sleep(1);
     });
 
-    group('用户管理', function () {
+    group('用户管理', function () { // 单元测试套件
         const resp = http.post('https://httpbin.org/post', JSON.stringify({
             foo: 'abc',
             bar: '123',
@@ -46,7 +46,7 @@ export default function () {
             },
         });
 
-        // 验证点
+        // 验证器
         const validator = (data) => {
             const status = data.status
             const dur = data.timings.duration
@@ -56,8 +56,8 @@ export default function () {
             return pass
         }
 
-        // 断言
-        assert(5, '重置密码', '验证用户收到密码重置右键', resp, validator);
+        // 断言：用例ID, 用例名称，验证点名称，被验证数据，验证器
+        assert(2, '重置密码', '验证用户收到密码重置右键', resp, validator);
 
         sleep(1);
     });
