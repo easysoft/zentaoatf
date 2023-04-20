@@ -15,17 +15,17 @@ export const options = {
         // 编号为1的用例的响应时间，平均值小于1000毫秒
         'http_req_duration{id:1}': ['avg < 1'],
 
-        // '登录请求'分组中所有请求的响应时间，90%小于6000毫秒
+        // '用户登录'分组中所有请求的响应时间，90%小于6000毫秒
         'http_req_duration{group:::登录请求}': ['p(90) < 6000'],
 
-        // '登录请求'分组的整体执行时间，平均值小于6000毫秒
+        // '用户登录'分组的整体执行时间，平均值小于6000毫秒
         'group_duration{group:::登录请求}': ['avg < 6000'],
     },
 };
 
 export default function () {
-    // 执行脚本
-    group('登录请求', function () { // 单元测试套件
+    // 单元测试套件
+    group('用户登录', function () {
         let resp = http.get('https://httpbin.org/get?p1=1', {
             tags: { id: '1' }, // 标记用例编号为1，用于上述阀值统计
         });
@@ -46,8 +46,17 @@ export default function () {
         // 断言方法（用例ID, 用例名称，验证点名称，被验证数据，验证器）
         assert(1, '微信扫码登录', '验证跳转到个人仪表盘', resp, validator);
 
-        // 另一个用例
-        assert(0, '邮箱登录', '验证到达首页', resp, (r) => resp.status == 200);
+        // 子套件'登录请求-登录次数限制'及其下用例代码
+        group('失败次数限制', function () {
+            assert(0, '登录失败连续3次，账号锁定', '显示账号已被锁定', resp, (r) => true);
+            assert(0, '登录非连续性失败累计达到3次，账号不锁定', '可成功登录', resp, (r) => true);
+            assert(0, '锁定账号15分钟后自动解禁', '解禁后可成功登录', resp, (r) => true);
+        });
+
+        // 当前套件'用户登录'下的另一个用例
+        group('CASE', function () {
+            assert(0, '邮箱登录', '验证到达首页', resp, (r) => resp.status == 200);
+        });
 
         sleep(1);
     });

@@ -29,10 +29,13 @@ func ConvertK6Result(results []interface{}, failedCaseIdToThresholdMap map[strin
 				continue
 			}
 
+			suite := strings.Trim(strings.TrimSuffix(point.Data.Tags.Group, "CASE"), ":")
+			suite = regexp.MustCompile(":+").ReplaceAllString(suite, "-")
+
 			caseResultMap[caseName] = commDomain.UnitResult{
 				Cid:       stringUtils.ParseInt(caseId),
 				Title:     point.Data.Tags.Name,
-				TestSuite: strings.TrimLeft(point.Data.Tags.Group, ":"),
+				TestSuite: suite,
 				Status:    commConsts.PASS,
 			}
 			caseResult = caseResultMap[caseName]
