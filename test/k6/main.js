@@ -4,9 +4,9 @@ import exec from 'k6/execution';
 import { check, sleep, group } from "k6";
 
 export const options = {
-    // 并发用户数及其加载方式
+    // 设置并发用户数及其加载方式
     stages: [
-        { duration: "2s", target: 3 }, // 1秒内，加载3个虚拟用户
+        { duration: "2s", target: 3 }, // 2秒内，加载3个虚拟用户
         { duration: "1s", target: 0 }, // 1秒内，销毁所有虚拟用户
     ],
 
