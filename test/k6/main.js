@@ -39,7 +39,7 @@ export default function () {
         // }
         // console.log(`in iteration ${exec.vu.idInTest}, expectRespStatus=${expectRespStatus}`)
 
-        // 验证器
+        // 验证器方法，可以验证响应的状态码、耗时、内容等
         const validator = (r) => resp.status == expectRespStatus
 
         // 注意：此处的检查点和前面定义的阀值'http_req_duration{id:1}'均会影响用例的成败
