@@ -107,7 +107,6 @@ export function handleSummary(data) {
 
 function assert (caseId, caseName, checkpoint, data, validator) {
     const name = `${caseId} - ${caseName}`
-
     const tags = { id: caseId, name: caseName, checkpoint: checkpoint}
 
     check(data, { [name]: validator }, tags);
