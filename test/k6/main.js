@@ -10,7 +10,7 @@ export const options = {
         { duration: "1s", target: 0 }, // 1秒内，销毁所有虚拟用户
     ],
 
-    // 设置性能有关指标的阀值
+    // 设置性能有关指标的阀值,形如{id:1}标签的指标会影响指定用例的成败。
     thresholds: {
         // 验证编号为1的用例的响应时间，平均值小于1000毫秒
         'http_req_duration{id:1}': ['avg < 1'],
