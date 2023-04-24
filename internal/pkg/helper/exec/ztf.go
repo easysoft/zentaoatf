@@ -161,6 +161,9 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 		logUtils.ExecResult(temp)
 	}
 
+	//extract file if commConsts.AutoExtract is true
+	scriptHelper.Extract(casesToRun)
+
 	for idx, file := range casesToRun {
 		if fileUtils.IsDir(file) {
 			continue

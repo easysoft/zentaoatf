@@ -7,6 +7,7 @@ var (
 
 	AutoCommitResult bool
 	AutoCommitBug    bool
+	AutoExtract      bool
 	Verbose          = false
 	IsRelease        bool
 	ZtfDir           string

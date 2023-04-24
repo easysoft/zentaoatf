@@ -89,6 +89,7 @@ func main() {
 	flagSet.BoolVar(&commConsts.AutoCommitBug, "cb", false, "")
 	flagSet.BoolVar(&noNeedConfirm, "y", false, "")
 	flagSet.BoolVar(&commConsts.Verbose, "verbose", false, "")
+	flagSet.BoolVar(&commConsts.AutoExtract, "ext", true, "")
 
 	flagSet.BoolVar(&withCode, "withCode", false, "")
 	flagSet.StringVar(&commConsts.AllureReportDir, "allureReportDir", "", "")
