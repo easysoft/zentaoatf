@@ -11,7 +11,7 @@ else
     endif
 endif
 
-QINIU_DIR=~/work/zentao/qiniu/
+QINIU_DIR="${HOME}/work/zentao/qiniu/"
 
 QINIU_DIST_DIR=${QINIU_DIR}${PROJECT}/${VERSION}/
 SERVER_MAIN_FILE=cmd/server/main.go
@@ -327,7 +327,7 @@ zip_client_mac:
         cd ../..; \
 
 upload_to:
-	@echo 'upload...'
+	@echo 'upload ${QINIU_DIR} ...'
 	@find ${QINIU_DIR} -name ".DS_Store" -type f -delete
 	@qshell qupload2 --src-dir=${QINIU_DIR} --bucket=download --thread-count=10 --log-file=qshell.log \
 					 --skip-path-prefixes=zd,zv,zmanager,driver,deeptest --rescan-local --overwrite --check-hash
