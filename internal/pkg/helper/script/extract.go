@@ -1,10 +1,7 @@
 package scriptHelper
 
 import (
-	"bufio"
-	"bytes"
 	"fmt"
-	"io"
 	"os/exec"
 	"regexp"
 	"strings"
@@ -79,6 +76,8 @@ func extractFromComments(file string) (stepObjs []*commDomain.ZtfStep) {
 	findCaseTag := false
 	start := false
 	inGroup := false
+	rpeDescLines := make([]string, 0)
+	rpeIndex := 0
 
 	lines := strings.Split(content, "\n")
 	for index := 0; index < len(lines); index++ {
@@ -165,15 +164,16 @@ func extractFromComments(file string) (stepObjs []*commDomain.ZtfStep) {
 				}
 			}
 
-			fmt.Printf("desc:%s, expect:%s", desc, expect)
-			fmt.Println()
 			if desc == "" {
-				//generate from script
-				content, err := ExeShellWithOutput(file, "extract")
-				fmt.Println("/bin/bash -c" + fmt.Sprintf("%s -extract", file))
-				fmt.Println(45454, content, err)
+				if len(rpeDescLines) == 0 {
+					rpeDescLines = genDescFromRPE(file)
+				}
+				if len(rpeDescLines) > rpeIndex {
+					desc = rpeDescLines[rpeIndex]
+				}
 			}
 
+			rpeIndex++
 			stepObj := commDomain.ZtfStep{Desc: desc, Expect: expect, MultiLine: false}
 			stepObjs = append(stepObjs, &stepObj)
 		}
@@ -249,41 +249,18 @@ func isCommentEndTag(str, lang string) (pass bool) {
 	return
 }
 
-func ExeShellWithOutput(cmdStr string, arg ...string) ([]string, error) {
+func genDescFromRPE(file string) []string {
 	var cmd *exec.Cmd
-	arg = append([]string{"-c", cmdStr}, arg...)
-	cmd = exec.Command("/bin/bash", "-c", cmdStr)
+	cmd = exec.Command("/bin/bash", "-c", file+" -extract")
 
 	output := make([]string, 0)
 
-	stdout, err := cmd.StdoutPipe()
-	fmt.Println(3434343, cmd.String())
+	content, err := cmd.CombinedOutput()
 	if err != nil {
-		return output, err
+		return output
 	}
 
-	stderr, err := cmd.StderrPipe()
-	if err != nil {
-		return output, err
-	}
+	output = strings.Split(string(content), "\n")
 
-	cmd.Start()
-
-	reader := bufio.NewReader(stdout)
-	for {
-		line, err2 := reader.ReadString('\n')
-		if err2 != nil || io.EOF == err2 {
-			break
-		}
-		output = append(output, line)
-	}
-
-	cmd.Wait()
-
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(stderr)
-
-	output = append(output, buf.String())
-
-	return output, nil
+	return output
 }
