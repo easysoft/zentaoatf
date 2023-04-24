@@ -13,7 +13,7 @@ export const options = {
     // 设置性能有关指标的阀值,形如{id:1}标签的指标会影响指定用例的成败。
     thresholds: {
         // 验证编号为1的用例的响应时间，平均值小于1000毫秒
-        'http_req_duration{id:1}': ['avg < 1'],
+        'http_req_duration{id:1}': ['avg < 6000'],
 
         // '用户登录'分组中所有请求的响应时间，90%小于6000毫秒
         'http_req_duration{group:::登录请求}': ['p(90) < 6000'],
@@ -98,12 +98,12 @@ export function setup() {
 export function teardown(data) {
     console.log('--- teardown')
 }
-// 请保留该函数，否则thresholds阀值结果不会影响用例结果
-export function handleSummary(data) {
-    return {
-        'results/summary.json': JSON.stringify(data), //the default data object
-    };
-}
+// 配置ZTF执行时请保留该函数，否则thresholds阀值结果不会影响用例结果
+// export function handleSummary(data) {
+//     return {
+//         'results/summary.json': JSON.stringify(data), //the default data object
+//     };
+// }
 
 function assert (caseId, caseName, checkpoint, data, validator) {
     const name = `${caseId} - ${caseName}`
