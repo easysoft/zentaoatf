@@ -103,6 +103,9 @@ func RunZtf(ch chan int,
 
 	conf := configHelper.LoadByWorkspacePath(workspacePath)
 
+	//extract file if commConsts.AutoExtract is true
+	scriptHelper.Extract(cases)
+
 	casesToRun, casesToIgnore := FilterCases(cases, &conf)
 
 	numbMaxWidth := 0
@@ -160,9 +163,6 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 		logUtils.ExecConsolef(color.FgCyan, temp)
 		logUtils.ExecResult(temp)
 	}
-
-	//extract file if commConsts.AutoExtract is true
-	scriptHelper.Extract(casesToRun)
 
 	for idx, file := range casesToRun {
 		if fileUtils.IsDir(file) {
