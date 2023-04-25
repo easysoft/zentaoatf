@@ -3,6 +3,7 @@ package zentaoHelper
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/kataras/iris/v12"
 	"strconv"
 	"strings"
 
@@ -237,9 +238,19 @@ func GetBugFiledOptions(config commDomain.WorkspaceConf, productId int) (
 		return
 	}
 
+	arr, ok := bugOptionsWrapper.Options.SeverityObj.([]interface{})
+	if ok {
+		bugFields.Severity = fieldArrToListKeyStr(arr, false)
+	} else {
+		mp, ok := bugOptionsWrapper.Options.SeverityObj.(iris.Map)
+		if ok {
+			bugFields.Severity = fieldMapToListOrderByInt(mp)
+		}
+	}
+
 	bugFields.Types = fieldMapToListOrderByStr(bugOptionsWrapper.Options.Type, false)
 	bugFields.Pri = fieldArrToListKeyStr(bugOptionsWrapper.Options.Pri, false)
-	bugFields.Severity = fieldMapToListOrderByInt(bugOptionsWrapper.Options.Severity)
+
 	bugFields.Modules = fieldMapToListOrderByInt(bugOptionsWrapper.Options.Modules)
 	bugFields.Build = fieldMapToListOrderByStr(bugOptionsWrapper.Options.Build, true)
 

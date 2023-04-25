@@ -106,15 +106,18 @@ func coloredStatus(status string) string {
 	return status
 }
 
-func reportBug(resultDir string, caseId string, productId int) error {
+func reportBug(resultDir string, caseId string, productId int) (err error) {
 	config := configHelper.LoadByWorkspacePath(commConsts.ZtfDir)
 
-	bugFields, _ = zentaoHelper.GetBugFiledOptions(config, bug.Product)
+	bugFields, err = zentaoHelper.GetBugFiledOptions(config, productId)
+	if err != nil {
+		return
+	}
 
 	bug = zentaoHelper.PrepareBug(commConsts.WorkDir, resultDir, caseId, productId)
 
-	err := zentaoHelper.CommitBug(bug, config)
-	return err
+	err = zentaoHelper.CommitBug(bug, config)
+	return
 }
 
 func getFirstNoEmptyVal(options []commDomain.BugOption) string {

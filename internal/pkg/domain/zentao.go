@@ -24,9 +24,11 @@ type BugOptionsWrapper struct {
 }
 
 type BugOptions struct {
-	Type     iris.Map      `json:"type"`
-	Pri      []interface{} `json:"pri"`
-	Severity iris.Map      `json:"severity"`
-	Modules  iris.Map      `json:"modules"`
-	Build    iris.Map      `json:"build"`
+	Type iris.Map      `json:"type"`
+	Pri  []interface{} `json:"pri"`
+
+	SeverityObj interface{} `json:"severity"`
+
+	Modules iris.Map `json:"modules"`
+	Build   iris.Map `json:"build"`
 }
