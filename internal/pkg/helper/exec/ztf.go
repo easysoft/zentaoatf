@@ -104,7 +104,9 @@ func RunZtf(ch chan int,
 	conf := configHelper.LoadByWorkspacePath(workspacePath)
 
 	//extract file if commConsts.AutoExtract is true
-	scriptHelper.Extract(cases)
+	if commConsts.AutoExtract {
+		scriptHelper.Extract(cases)
+	}
 
 	casesToRun, casesToIgnore := FilterCases(cases, &conf)
 
