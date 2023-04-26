@@ -34,7 +34,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	failedCaseLines := make([]string, 0)
 	failedCaseLinesWithCheckpoint := make([]string, 0)
 
-	for _, csResult := range report.FuncResult {
+	for index, csResult := range report.FuncResult {
 		if report.ProductId == 0 && csResult.ProductId > 0 {
 			report.ProductId = csResult.ProductId
 		}
@@ -53,7 +53,12 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 				path += postFix
 			}
 
-			line := fmt.Sprintf("[%s] %d.%s", csResult.Path, csResult.Id, csResult.Title)
+			line := ""
+			if index == 0 {
+				line = fmt.Sprintf("[%s] %d.%s", csResult.Path, csResult.Id, csResult.Title)
+			} else {
+				line = fmt.Sprintf("[%s] %d.%s", csResult.Path, csResult.Id, csResult.Title)
+			}
 			failedCaseLines = append(failedCaseLines, line)
 			failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, line)
 
@@ -129,12 +134,12 @@ func appendFailedStepResult(cs commDomain.FuncResult, failedSteps *[]string) (pa
 
 			step.Id = strings.TrimRight(step.Id, ".")
 			status := i118Utils.Sprintf(string(step.Status))
-			*failedSteps = append(*failedSteps, fmt.Sprintf("Step %s: %s [%s]", step.Id, status, step.Name))
+			*failedSteps = append(*failedSteps, fmt.Sprintf("  Step %s: %s [%s]", step.Id, status, step.Name))
 
 			for idx1, cp := range step.CheckPoints {
 				//cpStatus := commonUtils.BoolToPass(step.Status)
-				*failedSteps = append(*failedSteps, fmt.Sprintf("[Expect] %s", cp.Expect))
-				*failedSteps = append(*failedSteps, fmt.Sprintf("[Actual] %s", cp.Actual))
+				*failedSteps = append(*failedSteps, fmt.Sprintf("    [Expect] %s", cp.Expect))
+				*failedSteps = append(*failedSteps, fmt.Sprintf("    [Actual] %s", cp.Actual))
 
 				if idx1 < len(step.CheckPoints)-1 {
 					*failedSteps = append(*failedSteps, "")
