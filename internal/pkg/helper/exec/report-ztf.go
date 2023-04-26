@@ -34,7 +34,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	failedCaseLines := make([]string, 0)
 	failedCaseLinesWithCheckpoint := make([]string, 0)
 
-	for index, csResult := range report.FuncResult {
+	for _, csResult := range report.FuncResult {
 		if report.ProductId == 0 && csResult.ProductId > 0 {
 			report.ProductId = csResult.ProductId
 		}
@@ -54,11 +54,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 			}
 
 			line := ""
-			if index == 0 {
-				line = fmt.Sprintf("[%s] %d.%s", csResult.Path, csResult.Id, csResult.Title)
-			} else {
-				line = fmt.Sprintf("\n[%s] %d.%s", csResult.Path, csResult.Id, csResult.Title)
-			}
+			line = fmt.Sprintf("[%s] %d.%s", csResult.Path, csResult.Id, csResult.Title)
 			failedCaseLines = append(failedCaseLines, line)
 			failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, line)
 
@@ -68,6 +64,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	if failedCount > 0 {
 		msgFail := "\n" + i118Utils.Sprintf("failed_scripts") + "\n"
 		msgFail += strings.Join(failedCaseLines, "\n")
+		msgFail += "\n\n"
 		msgFail += strings.Join(failedCaseLinesWithCheckpoint, "\n")
 
 		logUtils.ExecConsolef(color.FgRed, msgFail)
