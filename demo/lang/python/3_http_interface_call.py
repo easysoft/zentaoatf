@@ -15,6 +15,12 @@ pid=0
 import requests
 import json
 
+## for Chinese display
+import sys,io,platform
+if(platform.system()=='Windows'):
+   import sys,io
+   sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='utf8')
+
 jsonStr = requests.get('https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1').content
 jsonObj = json.loads(jsonStr)
 print(jsonObj['images'][0]['startdate'])
