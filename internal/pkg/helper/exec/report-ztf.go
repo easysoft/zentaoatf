@@ -54,7 +54,11 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 			}
 
 			line := ""
-			line = fmt.Sprintf("[%s] %d.%s", csResult.Path, csResult.Id, csResult.Title)
+			relativePath := csResult.Path
+			if strings.Contains(relativePath, "module") {
+				relativePath = relativePath[strings.Index(relativePath, "module"):]
+			}
+			line = fmt.Sprintf("[%s] %d.%s", relativePath, csResult.Id, csResult.Title)
 			failedCaseLines = append(failedCaseLines, line)
 			failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, line)
 
