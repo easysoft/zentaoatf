@@ -12,15 +12,12 @@ $>ztf.exe run log\001\result.txt                     执行result.txt结果文�
 $>ztf.exe run product01 -suite 1                     执行禅道系统中编号为1的套件，脚本在product01目录，缩写-s。
 $>ztf.exe run -task 1                                执行禅道系统中编号为1的任务，脚本在当期目录, 缩写-t。
 $>ztf.exe run demo\demo -p 1 -t task1 -cr -cb        执行目录demo下的脚本，完成后提交结果到禅道，并将失败结果提交成缺陷。
-                                                     cr提交结果，-cb提交缺陷; -p必填参数指定产品ID， -t可选参数指定禅道新建测试单名称。
+                                                     cr提交结果，-cb提交缺陷; -p必填参数指定产品ID，-C并发数（默认为1，串行执行） -t可选参数指定禅道新建测试单名称。
 
 $>ztf.exe run demo\autoit                            执行ZTF自带AutoIT脚本。
-$>ztf.exe run demo\selenium\chrome.php --interp runtime\php\php7\php.exe
-                                                     执行ZTF自带Selenium脚本，使用指定PHP解释器。
-$>ztf.exe run demo\appium\android.php --interp runtime\php\php7\php.exe
-                                                     执行ZTF自带Appium脚本，使用指定PHP解释器。
-$>ztf.exe junit -p 1 mvn clean package test          执行junit单元测试脚本，
-                                                     更多请参照https://www.ztesting.net/book/ztf-doc/junit-33.html
+$>ztf.exe run demo\selenium\chrome.php --interp runtime\php\php7\php.exe 执行ZTF自带Selenium脚本，使用指定PHP解释器。
+$>ztf.exe run demo\appium\android.php --interp runtime\php\php7\php.exe 执行ZTF自带Appium脚本，使用指定PHP解释器。
+$>ztf.exe junit -p 1 mvn clean package test          执行junit单元测试脚本，更多请参照https://www.ztesting.net/book/ztf-doc/junit-33.html
 $>ztf.exe expect demo\sample\1_simple.php            在脚本1_simple.php的同目录下，生成.exp期待结果文件。
 $>ztf.exe extract demo\sample\8_extract_desc.php     提取脚本中的注释，生成用例步骤和期待结果。
 $>ztf.exe ci product01\tc-1.py                       将脚本里修改的用例信息，同步到禅道系统。

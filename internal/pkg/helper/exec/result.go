@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"sync"
 
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
@@ -21,9 +22,9 @@ import (
 	"github.com/mattn/go-runewidth"
 )
 
-func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfReport, scriptIdx int,
+func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfReport,
 	total int, secs string, pathMaxWidth int, numbMaxWidth int,
-	wsMsg *websocket.Message, errOutput string) {
+	wsMsg *websocket.Message, errOutput string, lock *sync.Mutex) {
 
 	steps := scriptHelper.GetStepAndExpectMap(scriptFile)
 
@@ -41,13 +42,12 @@ func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfRepor
 
 	language := langHelper.GetLangByFile(scriptFile)
 	ValidateCaseResult(scriptFile, language, steps, skip, actualArr, report,
-		scriptIdx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg, errOutput)
+		total, secs, pathMaxWidth, numbMaxWidth, wsMsg, errOutput, lock)
 }
 
 func ValidateCaseResult(scriptFile string, langType string,
-	steps []commDomain.ZentaoCaseStep, skip bool, actualArr [][]string, report *commDomain.ZtfReport,
-	scriptIdx int, total int, secs string, pathMaxWidth int, numbMaxWidth int,
-	wsMsg *websocket.Message, errOutput string) {
+	steps []commDomain.ZentaoCaseStep, skip bool, actualArr [][]string, report *commDomain.ZtfReport, total int, secs string, pathMaxWidth int, numbMaxWidth int,
+	wsMsg *websocket.Message, errOutput string, lock *sync.Mutex) {
 
 	key := stringUtils.Md5(scriptFile)
 
@@ -95,6 +95,10 @@ func ValidateCaseResult(scriptFile string, langType string,
 		caseResult = commConsts.SKIP
 	}
 
+	if lock != nil {
+		lock.Lock()
+		defer lock.Unlock()
+	}
 	if caseResult == commConsts.FAIL {
 		report.Fail = report.Fail + 1
 	} else if caseResult == commConsts.PASS {
@@ -123,7 +127,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 	format := "(%" + width + "d/%d) %s [%s] [%" + numbWidth + "d. %s] (%ss)"
 
 	status := i118Utils.Sprintf(csResult.Status.String())
-	msg := fmt.Sprintf(format, scriptIdx+1, total, status, path, csResult.Id, csResult.Title, secs)
+	msg := fmt.Sprintf(format, len(report.FuncResult), total, status, path, csResult.Id, csResult.Title, secs)
 
 	// print each case result
 	if commConsts.ExecFrom == commConsts.FromClient {
