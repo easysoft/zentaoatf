@@ -3,6 +3,7 @@ package execHelper
 import (
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 
 	dateUtils "github.com/easysoft/zentaoatf/pkg/lib/date"
@@ -21,7 +22,7 @@ func ExecScript(scriptFile, workspacePath string,
 	conf commDomain.WorkspaceConf,
 	report *commDomain.ZtfReport, scriptIdx,
 	total, pathMaxWidth, numbMaxWidth int,
-	ch chan int, wsMsg *websocket.Message) {
+	ch chan int, wsMsg *websocket.Message, lock *sync.Mutex) {
 
 	key := stringUtils.Md5(scriptFile)
 
@@ -38,7 +39,7 @@ func ExecScript(scriptFile, workspacePath string,
 	logUtils.ExecFilef(startMsg)
 
 	logs := ""
-	stdOutput, errOutput := RunFile(scriptFile, workspacePath, conf, ch, wsMsg)
+	stdOutput, errOutput := RunFile(scriptFile, workspacePath, conf, ch, wsMsg, scriptIdx)
 	stdOutput = strings.Trim(stdOutput, "\n")
 
 	if stdOutput != "" {
@@ -56,7 +57,7 @@ func ExecScript(scriptFile, workspacePath string,
 	secs := fmt.Sprintf("%.2f", float32(entTime.Sub(startTime)/time.Second))
 	report.WorkspacePath = workspacePath
 
-	CheckCaseResult(scriptFile, logs, report, scriptIdx, total, secs, pathMaxWidth, numbMaxWidth, wsMsg, errOutput)
+	CheckCaseResult(scriptFile, logs, report, total, secs, pathMaxWidth, numbMaxWidth, wsMsg, errOutput, lock)
 
 	endMsg := i118Utils.Sprintf("end_execution", scriptFile, dateUtils.DateTimeStr(entTime))
 	if commConsts.ExecFrom == commConsts.FromClient {
@@ -65,10 +66,4 @@ func ExecScript(scriptFile, workspacePath string,
 		logUtils.ExecConsolef(-1, endMsg)
 	}
 	logUtils.ExecFilef(endMsg)
-
-	//for i := 0; i < 100000; i++ {
-	//	websocketHelper.SendExecMsg(fmt.Sprintf("------%d", i), "", commConsts.Result,
-	//		iris.Map{"key": key, "status": "end"}, wsMsg)
-	//	time.Sleep(time.Millisecond * 100)
-	//}
 }

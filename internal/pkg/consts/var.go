@@ -8,6 +8,7 @@ var (
 	AutoCommitResult bool
 	AutoCommitBug    bool
 	AutoExtract      bool
+	BatchCount       = 1
 	Verbose          = false
 	IsRelease        bool
 	ZtfDir           string

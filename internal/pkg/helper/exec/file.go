@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"time"
 
@@ -27,7 +28,7 @@ import (
 )
 
 func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
-	ch chan int, wsMsg *websocket.Message) (
+	ch chan int, wsMsg *websocket.Message, idx int) (
 	stdOutput string, errOutput string) {
 
 	key := stringUtils.Md5(filePath)
@@ -118,6 +119,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	}
 
 	cmd.Dir = workspacePath
+	cmd.Env = append(cmd.Env, "poolID="+strconv.Itoa(idx+1))
 
 	stdout, err1 := cmd.StdoutPipe()
 	stderr, err2 := cmd.StderrPipe()
