@@ -1,6 +1,6 @@
 package commDomain
 
-type JacocoReport struct {
+type JacocoResult struct {
 	Sessioninfo JacocoSessioninfo `xml:"sessioninfo"`
 	Package     JacocoPackage     `xml:"package"`
 	Counter     []JacocoCounter   `xml:"counter"`

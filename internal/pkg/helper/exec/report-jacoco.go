@@ -24,7 +24,7 @@ const (
 `
 )
 
-func GenJacocoCovReport() (report commDomain.JacocoReport) {
+func GenJacocoCovReport() (report commDomain.JacocoResult) {
 	content := fileUtils.ReadFileBuf(commConsts.JacocoReport)
 
 	xml.Unmarshal(content, &report)

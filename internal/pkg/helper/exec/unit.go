@@ -76,7 +76,7 @@ func ExecUnit(ch chan int,
 
 	// dealwith jacoco report
 	if commConsts.JacocoReport != "" {
-		GenJacocoCovReport()
+		report.JacocoResult = GenJacocoCovReport()
 	}
 
 	// submit result

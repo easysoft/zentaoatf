@@ -188,8 +188,9 @@ type ZtfReport struct {
 	EndTime   int64 `json:"endTime"`
 	Duration  int64 `json:"duration"`
 
-	FuncResult []FuncResult `json:"funcResult,omitempty"`
-	UnitResult []UnitResult `json:"unitResult,omitempty"`
+	FuncResult   []FuncResult `json:"funcResult,omitempty"`
+	UnitResult   []UnitResult `json:"unitResult,omitempty"`
+	JacocoResult JacocoResult `json:"jacocoResult,omitempty"`
 }
 
 type FuncResult struct {
