@@ -237,6 +237,7 @@ func runFuncTest(args []string) {
 	}
 
 	commConsts.ProductId = productId
+	commConsts.CommandArgs = args
 
 	if len(files) == 0 {
 		files = append(files, ".")

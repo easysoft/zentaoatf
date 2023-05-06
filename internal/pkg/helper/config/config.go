@@ -38,7 +38,7 @@ func LoadByWorkspacePath(workspacePath string) (config commDomain.WorkspaceConf)
 		GetInterpreterConfig(&config)
 		return
 	}
-	pth := filepath.Join(workspacePath, commConsts.ConfigDir, commConsts.ConfigFile)
+	pth := filepath.Join(commConsts.ConfigPath, commConsts.ConfigFile)
 	return LoadByConfigPath(pth)
 }
 
@@ -61,7 +61,7 @@ func SaveConfig(config commDomain.WorkspaceConf, workspacePath string) (err erro
 }
 
 func ReadFromFile(workspacePath string) (config commDomain.WorkspaceConf) {
-	pth := filepath.Join(workspacePath, commConsts.ConfigDir, commConsts.ConfigFile)
+	pth := filepath.Join(commConsts.ConfigPath, commConsts.ConfigFile)
 	ini.MapTo(&config, pth)
 
 	config.Url = commonUtils.AddSlashForUrl(config.Url)
@@ -70,7 +70,7 @@ func ReadFromFile(workspacePath string) (config commDomain.WorkspaceConf) {
 }
 
 func SaveToFile(config commDomain.WorkspaceConf, workspacePath string) (err error) {
-	pth := filepath.Join(workspacePath, commConsts.ConfigDir, commConsts.ConfigFile)
+	pth := filepath.Join(commConsts.ConfigPath, commConsts.ConfigFile)
 	fileUtils.MkDirIfNeeded(filepath.Dir(pth))
 
 	config.Version = commConsts.ConfigVersion

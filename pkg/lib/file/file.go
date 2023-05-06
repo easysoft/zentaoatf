@@ -278,7 +278,11 @@ func GetWorkDir() string { // where we run file in
 	dir, _ = filepath.Abs(dir)
 	dir = AddSepIfNeeded(dir)
 
-	dir, _ = GetUserHome()
+	return dir
+}
+
+func GetZTFHome() string { // ztf dir in $HOME
+	dir, _ := GetUserHome()
 	dir += "ztf"
 	dir = AddSepIfNeeded(dir)
 	return dir

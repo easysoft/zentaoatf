@@ -25,6 +25,8 @@ var (
 	ServerWorkDir      string
 	ServerWorkspaceDir string
 
+	CommandArgs []string
+
 	UnitTestType    string
 	UnitBuildTool   BuildTool
 	UnitTestTool    TestTool

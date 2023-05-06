@@ -2,6 +2,7 @@ package scriptHelper
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"regexp"
 	"strings"
@@ -245,8 +246,9 @@ func isCommentEndTag(str, lang string) (pass bool) {
 }
 
 func genDescFromRPE(file string) (steps []string, needExtract bool) {
+	os.Chmod(file, 0777)
 	var cmd *exec.Cmd
-	cacheDir := fileUtils.AddFilePathSepIfNeeded(fmt.Sprintf("%scache", fileUtils.GetZTFDir()))
+	cacheDir := fileUtils.AddFilePathSepIfNeeded(fmt.Sprintf("%scache", fileUtils.GetZTFHome()))
 	fileUtils.MkDirIfNeeded(cacheDir)
 
 	md5Sum := stringUtils.Md5(file)
