@@ -53,9 +53,10 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 				path += postFix
 			}
 
-			line := fmt.Sprintf("[%s] %d.%s", csResult.Path, csResult.Id, csResult.Title)
+			line := fmt.Sprintf("[%s] %d.%s", path, csResult.Id, csResult.Title)
+			trimLine := fmt.Sprintf("[%s] %d.%s", csResult.Path, csResult.Id, csResult.Title)
 			failedCaseLines = append(failedCaseLines, line)
-			failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, line)
+			failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, trimLine)
 
 			appendFailedStepResult(csResult, &failedCaseLinesWithCheckpoint)
 		}

@@ -106,11 +106,11 @@ func RunZtf(ch chan int,
 	casesToRun, casesToIgnore := FilterCases(cases, &conf)
 
 	numbMaxWidth := 0
-	numbMaxWidth, pathMaxWidth = getNumbMaxWidth(casesToRun)
+	numbMaxWidth, pathMaxWidth, titleMaxWidth := getNumbMaxWidth(casesToRun)
 	report = genReport(productId, id, by)
 
 	// exec scripts
-	ExeScripts(casesToRun, casesToIgnore, workspacePath, conf, &report, pathMaxWidth, numbMaxWidth, ch, wsMsg)
+	ExeScripts(casesToRun, casesToIgnore, workspacePath, conf, &report, pathMaxWidth, numbMaxWidth, titleMaxWidth, ch, wsMsg)
 
 	// gen report
 	if len(casesToRun) > 0 {
@@ -130,7 +130,7 @@ func RunZtf(ch chan int,
 }
 
 func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath string, conf commDomain.WorkspaceConf,
-	report *commDomain.ZtfReport, pathMaxWidth int, numbMaxWidth int,
+	report *commDomain.ZtfReport, pathMaxWidth, numbMaxWidth, titleMaxWidth int,
 	ch chan int, wsMsg *websocket.Message) {
 
 	now := time.Now()
@@ -166,7 +166,7 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 			continue
 		}
 
-		ExecScript(file, workspacePath, conf, report, idx, len(casesToRun), pathMaxWidth, numbMaxWidth, ch, wsMsg)
+		ExecScript(file, workspacePath, conf, report, idx, len(casesToRun), pathMaxWidth, numbMaxWidth, titleMaxWidth, ch, wsMsg)
 
 		select {
 		case <-ch:
@@ -247,7 +247,7 @@ func genReport(productId, id int, by commConsts.ExecBy) (report commDomain.ZtfRe
 	return
 }
 
-func getNumbMaxWidth(casesToRun []string) (numbMaxWidth, pathMaxWidth int) {
+func getNumbMaxWidth(casesToRun []string) (numbMaxWidth, pathMaxWidth, titleMaxWidth int) {
 	for _, cs := range casesToRun {
 		lent := runewidth.StringWidth(cs)
 		if lent > pathMaxWidth {
@@ -258,6 +258,12 @@ func getNumbMaxWidth(casesToRun []string) (numbMaxWidth, pathMaxWidth int) {
 		caseId := scriptHelper.ReadCaseId(content)
 		if len(caseId) > numbMaxWidth {
 			numbMaxWidth = len(caseId)
+		}
+
+		_, _, _, title, _ := scriptHelper.GetCaseInfo(cs)
+		titleLength := runewidth.StringWidth(title)
+		if titleLength > titleMaxWidth {
+			titleMaxWidth = titleLength
 		}
 	}
 
