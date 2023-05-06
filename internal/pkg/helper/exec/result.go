@@ -23,7 +23,7 @@ import (
 )
 
 func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfReport,
-	total int, secs string, pathMaxWidth int, numbMaxWidth int,
+	total int, secs string, pathMaxWidth, numbMaxWidth, titleMaxWidth int,
 	wsMsg *websocket.Message, errOutput string, lock *sync.Mutex) {
 
 	steps := scriptHelper.GetStepAndExpectMap(scriptFile)
@@ -42,11 +42,12 @@ func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfRepor
 
 	language := langHelper.GetLangByFile(scriptFile)
 	ValidateCaseResult(scriptFile, language, steps, skip, actualArr, report,
-		total, secs, pathMaxWidth, numbMaxWidth, wsMsg, errOutput, lock)
+		total, secs, pathMaxWidth, numbMaxWidth, titleMaxWidth, wsMsg, errOutput, lock)
 }
 
 func ValidateCaseResult(scriptFile string, langType string,
-	steps []commDomain.ZentaoCaseStep, skip bool, actualArr [][]string, report *commDomain.ZtfReport, total int, secs string, pathMaxWidth int, numbMaxWidth int,
+	steps []commDomain.ZentaoCaseStep, skip bool, actualArr [][]string, report *commDomain.ZtfReport,
+	total int, secs string, pathMaxWidth, numbMaxWidth, titleMaxWidth int,
 	wsMsg *websocket.Message, errOutput string, lock *sync.Mutex) {
 
 	key := stringUtils.Md5(scriptFile)
@@ -120,17 +121,24 @@ func ValidateCaseResult(scriptFile string, langType string,
 	numbWidth := strconv.Itoa(numbMaxWidth)
 
 	path := csResult.Path
-	lent := runewidth.StringWidth(path)
+	csTitle := csResult.Title
+	lenp := runewidth.StringWidth(path)
+	lent := runewidth.StringWidth(csTitle)
 
-	if pathMaxWidth > lent {
-		postFix := strings.Repeat(" ", pathMaxWidth-lent)
+	if pathMaxWidth > lenp {
+		postFix := strings.Repeat(" ", pathMaxWidth-lenp)
 		path += postFix
+	}
+
+	if titleMaxWidth > lent {
+		postFix := strings.Repeat(" ", titleMaxWidth-lent)
+		csTitle += postFix
 	}
 
 	format := "(%" + width + "d/%d) %s [%s] [%" + numbWidth + "d. %s] (%ss)"
 
 	status := i118Utils.Sprintf(csResult.Status.String())
-	msg := fmt.Sprintf(format, resultCount, total, status, path, csResult.Id, csResult.Title, secs)
+	msg := fmt.Sprintf(format, resultCount, total, status, path, csResult.Id, csTitle, secs)
 
 	// print each case result
 	if commConsts.ExecFrom == commConsts.FromClient {
@@ -153,7 +161,11 @@ func ValidateCaseResult(scriptFile string, langType string,
 		websocketHelper.SendExecMsg(msg, "", msgCategory,
 			iris.Map{"key": key, "status": csResult.Status}, wsMsg)
 	}
-	logUtils.ExecConsole(color.FgCyan, msg)
+	if csResult.Status == commConsts.FAIL {
+		logUtils.ExecConsole(color.FgRed, msg)
+	} else {
+		logUtils.ExecConsole(color.FgCyan, msg)
+	}
 	logUtils.ExecResult(msg)
 }
 

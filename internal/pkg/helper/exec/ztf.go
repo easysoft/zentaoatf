@@ -107,11 +107,11 @@ func RunZtf(ch chan int,
 	casesToRun, casesToIgnore := FilterCases(cases, &conf)
 
 	numbMaxWidth := 0
-	numbMaxWidth, pathMaxWidth = getNumbMaxWidth(casesToRun)
+	numbMaxWidth, pathMaxWidth, titleMaxWidth := getNumbMaxWidth(casesToRun)
 	report = genReport(productId, id, by)
 
 	// exec scripts
-	ExeScripts(casesToRun, casesToIgnore, workspacePath, conf, &report, pathMaxWidth, numbMaxWidth, ch, wsMsg)
+	ExeScripts(casesToRun, casesToIgnore, workspacePath, conf, &report, pathMaxWidth, numbMaxWidth, titleMaxWidth, ch, wsMsg)
 
 	// gen report
 	if len(casesToRun) > 0 {
@@ -131,7 +131,7 @@ func RunZtf(ch chan int,
 }
 
 func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath string, conf commDomain.WorkspaceConf,
-	report *commDomain.ZtfReport, pathMaxWidth int, numbMaxWidth int,
+	report *commDomain.ZtfReport, pathMaxWidth, numbMaxWidth, titleMaxWidth int,
 	ch chan int, wsMsg *websocket.Message) {
 
 	now := time.Now()
@@ -163,9 +163,9 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 	}
 
 	if commConsts.BatchCount <= 1 {
-		execScripts(casesToRun, workspacePath, conf, report, pathMaxWidth, numbMaxWidth, ch, wsMsg)
+		execScripts(casesToRun, workspacePath, conf, report, pathMaxWidth, numbMaxWidth, titleMaxWidth, ch, wsMsg)
 	} else {
-		batchExecScripts(casesToRun, workspacePath, conf, report, pathMaxWidth, numbMaxWidth, ch, wsMsg)
+		batchExecScripts(casesToRun, workspacePath, conf, report, pathMaxWidth, numbMaxWidth, titleMaxWidth, ch, wsMsg)
 	}
 	endTime := time.Now().Unix()
 	report.EndTime = endTime
@@ -173,14 +173,14 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 }
 
 func execScripts(casesToRun []string, workspacePath string, conf commDomain.WorkspaceConf,
-	report *commDomain.ZtfReport, pathMaxWidth int, numbMaxWidth int,
+	report *commDomain.ZtfReport, pathMaxWidth int, numbMaxWidth, titleMaxWidth int,
 	ch chan int, wsMsg *websocket.Message) {
 	for idx, file := range casesToRun {
 		if fileUtils.IsDir(file) {
 			continue
 		}
 
-		ExecScript(file, workspacePath, conf, report, idx, len(casesToRun), pathMaxWidth, numbMaxWidth, ch, wsMsg, nil)
+		ExecScript(file, workspacePath, conf, report, idx, len(casesToRun), pathMaxWidth, numbMaxWidth, titleMaxWidth, ch, wsMsg, nil)
 
 		select {
 		case <-ch:
@@ -199,7 +199,7 @@ func execScripts(casesToRun []string, workspacePath string, conf commDomain.Work
 }
 
 func batchExecScripts(casesToRun []string, workspacePath string, conf commDomain.WorkspaceConf,
-	report *commDomain.ZtfReport, pathMaxWidth int, numbMaxWidth int,
+	report *commDomain.ZtfReport, pathMaxWidth int, numbMaxWidth, titleMaxWidth int,
 	ch chan int, wsMsg *websocket.Message) {
 	realCasesToRun := []string{}
 	for _, file := range casesToRun {
@@ -223,7 +223,7 @@ func batchExecScripts(casesToRun []string, workspacePath string, conf commDomain
 	for _, file := range realCasesToRun {
 		poolId++
 		go func(poolId int, file string) {
-			ExecScript(file, workspacePath, conf, report, poolId-1, caseCount, pathMaxWidth, numbMaxWidth, ch, wsMsg, &lock)
+			ExecScript(file, workspacePath, conf, report, poolId-1, caseCount, pathMaxWidth, numbMaxWidth, titleMaxWidth, ch, wsMsg, &lock)
 			wg.Done()
 		}(poolId, file)
 
@@ -313,7 +313,7 @@ func genReport(productId, id int, by commConsts.ExecBy) (report commDomain.ZtfRe
 	return
 }
 
-func getNumbMaxWidth(casesToRun []string) (numbMaxWidth, pathMaxWidth int) {
+func getNumbMaxWidth(casesToRun []string) (numbMaxWidth, pathMaxWidth, titleMaxWidth int) {
 	for _, cs := range casesToRun {
 		lent := runewidth.StringWidth(cs)
 		if lent > pathMaxWidth {
@@ -324,6 +324,12 @@ func getNumbMaxWidth(casesToRun []string) (numbMaxWidth, pathMaxWidth int) {
 		caseId := scriptHelper.ReadCaseId(content)
 		if len(caseId) > numbMaxWidth {
 			numbMaxWidth = len(caseId)
+		}
+
+		_, _, _, title, _ := scriptHelper.GetCaseInfo(cs)
+		titleLength := runewidth.StringWidth(title)
+		if titleLength > titleMaxWidth {
+			titleMaxWidth = titleLength
 		}
 	}
 
