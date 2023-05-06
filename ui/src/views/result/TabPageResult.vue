@@ -49,7 +49,7 @@
       <div class="result-infos space-xl-top row justify-between gap-lg">
         <div class="row single gap-sm align-center">
           <span class="muted">{{t("test_env")}}</span>
-          <span>{{testEnv(report.testEnv)}}</span>
+          <span>{{platform(report.platform)}}</span>
         </div>
         <div class="row single gap-sm align-center">
           <span class="muted">{{t("test_type")}}</span>
@@ -190,7 +190,7 @@ import {useStore} from "vuex";
 import {momentUnixFormat, percentDef} from "@/utils/datetime";
 import Modal from "@/utils/modal"
 import {jsonStrDef} from "@/utils/dom";
-import {actualDesc, execByDef, expectDesc, resultStatusDef, testEnvDef, testTypeDef,} from "@/utils/testing";
+import {actualDesc, execByDef, expectDesc, resultStatusDef, platformDef, testTypeDef,} from "@/utils/testing";
 import {ZentaoData} from "@/store/zentao";
 import bus from "@/utils/eventBus";
 import settings from "@/config/settings";
@@ -214,7 +214,7 @@ const jsonStr = jsonStrDef
 const execBy = execByDef;
 const momentTime = momentUnixFormat;
 const percent = percentDef;
-const testEnv = testEnvDef;
+const platform = platformDef;
 const testType = testTypeDef;
 const resultStatus = (code) => {
   const s = resultStatusDef(code);

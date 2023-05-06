@@ -17,7 +17,7 @@ interface TestResultInfo {
     seq: string;
     skip: number;
     startTime: number;
-    testEnv: string;
+    platform: string;
     testTool: string;
     testType: string;
     total: number;

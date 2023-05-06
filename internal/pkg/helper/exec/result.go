@@ -108,10 +108,8 @@ func ValidateCaseResult(scriptFile string, langType string,
 	}
 	report.Total = report.Total + 1
 
-	relativePath := strings.TrimLeft(scriptFile, report.WorkspacePath)
-	if strings.Contains(relativePath, "module") {
-		relativePath = relativePath[strings.Index(relativePath, "module"):]
-	}
+	relativePath := strings.TrimPrefix(scriptFile, report.WorkspacePath)
+
 	csResult := commDomain.FuncResult{Id: caseId, ProductId: productId, Title: title,
 		Key: key, Path: scriptFile, RelativePath: relativePath, Status: caseResult, Steps: stepLogs}
 	report.FuncResult = append(report.FuncResult, csResult)
@@ -128,6 +126,10 @@ func ValidateCaseResult(scriptFile string, langType string,
 	lenp := runewidth.StringWidth(path)
 	lent := runewidth.StringWidth(csTitle)
 
+	relativePath = scriptFile
+	if strings.Contains(relativePath, "/module/") {
+		relativePath = relativePath[strings.Index(relativePath, "/module/"):]
+	}
 	if pathMaxWidth > lenp {
 		postFix := strings.Repeat(" ", pathMaxWidth-lenp)
 		path += postFix

@@ -78,7 +78,8 @@ func ReadReportByPath(pth string) (report commDomain.ZtfReport, err error) {
 		contentData := strings.Replace(string(content), "\n", "", -1)
 		contentData = strings.ReplaceAll(contentData, "\"status\":false", "\"status\":\"fail\"")
 		contentData = strings.ReplaceAll(contentData, "\"status\":true", "\"status\":\"pass\"")
-		contentData = strings.ReplaceAll(contentData, "\"env\"", "\"testEnv\"")
+		contentData = strings.ReplaceAll(contentData, "\"env\"", "\"platform\"")
+		contentData = strings.ReplaceAll(contentData, "\"testEnv\"", "\"platform\"")
 		contentData = strings.ReplaceAll(contentData, "\"testFrame\"", "\"testTool\"")
 		content = []byte(contentData)
 	}

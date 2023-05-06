@@ -49,8 +49,8 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 			lent := runewidth.StringWidth(path)
 
 			relativePath := csResult.Path
-			if strings.Contains(relativePath, "module") {
-				relativePath = relativePath[strings.Index(relativePath, "module"):]
+			if strings.Contains(relativePath, "/module/") {
+				relativePath = relativePath[strings.Index(relativePath, "/module/"):]
 			}
 
 			if pathMaxWidth > lent {

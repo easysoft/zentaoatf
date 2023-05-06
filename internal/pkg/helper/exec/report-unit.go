@@ -48,7 +48,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 
 	report = commDomain.ZtfReport{
 		Name:        req.Name,
-		TestEnv:     commonUtils.GetOs(),
+		Platform:    commonUtils.GetOs(),
 		TestType:    commConsts.TestUnit,
 		TestTool:    req.TestTool,
 		BuildTool:   req.BuildTool,

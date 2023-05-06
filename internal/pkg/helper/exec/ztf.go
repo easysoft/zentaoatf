@@ -309,7 +309,7 @@ func FilterCases(cases []string, conf *commDomain.WorkspaceConf) (casesToRun, ca
 
 func genReport(productId, id int, by commConsts.ExecBy) (report commDomain.ZtfReport) {
 	report = commDomain.ZtfReport{
-		TestEnv: commonUtils.GetOs(), ExecBy: by, ExecById: id, ProductId: productId,
+		Platform: commonUtils.GetOs(), ExecBy: by, ExecById: id, ProductId: productId,
 		Pass: 0, Fail: 0, Total: 0, FuncResult: make([]commDomain.FuncResult, 0)}
 
 	report.TestType = commConsts.TestFunc
