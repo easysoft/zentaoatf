@@ -12,6 +12,7 @@ import (
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 )
 
 const (
@@ -30,9 +31,12 @@ func Extract(scriptPaths []string) (done bool, err error) {
 	}
 
 	for _, pth := range scriptPaths {
-		stepObjs := extractFromComments(pth)
-		steps := prepareSteps(stepObjs)
-		steps = genDescFromRPE(pth)
+		// stepObjs := extractFromComments(pth)
+		// steps := prepareSteps(stepObjs)
+		steps, needExtract := genDescFromRPE(pth)
+		if !needExtract {
+			continue
+		}
 		desc := prepareDesc(steps, pth)
 
 		if steps != nil && len(steps) > 0 {
@@ -77,7 +81,6 @@ func extractFromComments(file string) (stepObjs []*commDomain.ZtfStep) {
 	findCaseTag := false
 	start := false
 	inGroup := false
-	rpeDescLines := make([]string, 0)
 	rpeIndex := 0
 
 	lines := strings.Split(content, "\n")
@@ -165,15 +168,6 @@ func extractFromComments(file string) (stepObjs []*commDomain.ZtfStep) {
 				}
 			}
 
-			if desc == "" {
-				if len(rpeDescLines) == 0 {
-					rpeDescLines = genDescFromRPE(file)
-				}
-				if len(rpeDescLines) > rpeIndex {
-					desc = rpeDescLines[rpeIndex]
-				}
-			}
-
 			rpeIndex++
 			stepObj := commDomain.ZtfStep{Desc: desc, Expect: expect, MultiLine: false}
 			stepObjs = append(stepObjs, &stepObj)
@@ -250,18 +244,33 @@ func isCommentEndTag(str, lang string) (pass bool) {
 	return
 }
 
-func genDescFromRPE(file string) []string {
+func genDescFromRPE(file string) (steps []string, needExtract bool) {
 	var cmd *exec.Cmd
+	cacheDir := fileUtils.AddFilePathSepIfNeeded(fmt.Sprintf("%scache", fileUtils.GetZTFDir()))
+	fileUtils.MkDirIfNeeded(cacheDir)
+
+	md5Sum := stringUtils.Md5(file)
+	fileMd5 := fileUtils.Md5(file)
+
+	md5FileName := cacheDir + md5Sum
+	if fileUtils.FileExist(md5FileName) {
+		cacheMd5 := fileUtils.ReadFile(md5FileName)
+		if cacheMd5 == fileMd5 {
+			return nil, false
+		}
+
+	}
 	cmd = exec.Command("/bin/bash", "-c", file+" -extract")
 
 	output := make([]string, 0)
 
 	content, err := cmd.CombinedOutput()
 	if err != nil {
-		return output
+		return output, true
 	}
 
 	output = strings.Split(string(content), "\n")
 
-	return output
+	fileUtils.WriteFile(md5FileName, fileMd5)
+	return output, true
 }

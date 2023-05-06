@@ -97,7 +97,6 @@ func ValidateCaseResult(scriptFile string, langType string,
 
 	if lock != nil {
 		lock.Lock()
-		defer lock.Unlock()
 	}
 	if caseResult == commConsts.FAIL {
 		report.Fail = report.Fail + 1
@@ -109,9 +108,15 @@ func ValidateCaseResult(scriptFile string, langType string,
 	report.Total = report.Total + 1
 
 	relativePath := strings.TrimLeft(scriptFile, report.WorkspacePath)
+	if strings.Contains(relativePath, "module") {
+		relativePath = relativePath[strings.Index(relativePath, "module"):]
+	}
 	csResult := commDomain.FuncResult{Id: caseId, ProductId: productId, Title: title,
 		Key: key, Path: scriptFile, RelativePath: relativePath, Status: caseResult, Steps: stepLogs}
 	report.FuncResult = append(report.FuncResult, csResult)
+	if lock != nil {
+		lock.Unlock()
+	}
 
 	width := strconv.Itoa(len(strconv.Itoa(total)))
 	numbWidth := strconv.Itoa(numbMaxWidth)
@@ -127,7 +132,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 	format := "(%" + width + "d/%d) %s [%s] [%" + numbWidth + "d. %s] (%ss)"
 
 	status := i118Utils.Sprintf(csResult.Status.String())
-	msg := fmt.Sprintf(format, len(report.FuncResult), total, status, path, csResult.Id, csResult.Title, secs)
+	msg := fmt.Sprintf(format, len(report.FuncResult), total, status, relativePath, csResult.Id, csResult.Title, secs)
 
 	// print each case result
 	if commConsts.ExecFrom == commConsts.FromClient {
