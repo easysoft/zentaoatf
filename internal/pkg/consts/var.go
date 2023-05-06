@@ -29,6 +29,7 @@ var (
 	UnitBuildTool   BuildTool
 	UnitTestTool    TestTool
 	AllureReportDir string
+	JacocoReport    string
 	ProductId       string
 
 	ZenTaoVersion string

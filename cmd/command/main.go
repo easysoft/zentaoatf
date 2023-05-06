@@ -82,6 +82,8 @@ func main() {
 	flagSet.StringVar(&unitTestTool, "unitTestTool", "", "")
 	flagSet.StringVar(&unitBuildTool, "unitBuildTool", "", "")
 
+	flagSet.StringVar(&commConsts.JacocoReport, "jacocoReport", "", "")
+
 	flagSet.StringVar(&keywords, "k", "", "")
 	flagSet.StringVar(&keywords, "keywords", "", "")
 
@@ -265,6 +267,9 @@ func runUnitTest(args []string) {
 		start = start + 2
 	}
 	if commConsts.AllureReportDir != "" {
+		start = start + 2
+	}
+	if commConsts.JacocoReport != "" {
 		start = start + 2
 	}
 	if unitTestTool != "" {

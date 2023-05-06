@@ -3,6 +3,8 @@ package websocketHelper
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
@@ -10,7 +12,6 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/kataras/neffos"
-	"strings"
 )
 
 var (
@@ -34,12 +35,12 @@ func SendOutputMsg(msg, isRunning string, info iris.Map, wsMsg *websocket.Messag
 }
 
 func SendExecMsg(msg, isRunning string, category commConsts.WsMsgCategory, info iris.Map, wsMsg *websocket.Message) {
-	logUtils.Infof(i118Utils.Sprintf("ws_send_exec_msg", wsMsg.Room,
-		strings.ReplaceAll(strings.TrimSpace(msg), `%`, `%%`)))
-
 	if wsMsg == nil {
 		return
 	}
+
+	logUtils.Infof(i118Utils.Sprintf("ws_send_exec_msg", wsMsg.Room,
+		strings.ReplaceAll(strings.TrimSpace(msg), `%`, `%%`)))
 
 	msg = strings.TrimSpace(msg)
 	resp := commDomain.WsResp{Msg: msg, IsRunning: isRunning, Category: category, Info: info}

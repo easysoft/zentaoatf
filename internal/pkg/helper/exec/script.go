@@ -21,7 +21,7 @@ import (
 func ExecScript(scriptFile, workspacePath string,
 	conf commDomain.WorkspaceConf,
 	report *commDomain.ZtfReport, scriptIdx,
-	total, pathMaxWidth, numbMaxWidth int,
+	total, pathMaxWidth, numbMaxWidth, titleMaxWidth int,
 	ch chan int, wsMsg *websocket.Message, lock *sync.Mutex) {
 
 	key := stringUtils.Md5(scriptFile)
@@ -57,7 +57,7 @@ func ExecScript(scriptFile, workspacePath string,
 	secs := fmt.Sprintf("%.2f", float32(entTime.Sub(startTime)/time.Second))
 	report.WorkspacePath = workspacePath
 
-	CheckCaseResult(scriptFile, logs, report, total, secs, pathMaxWidth, numbMaxWidth, wsMsg, errOutput, lock)
+	CheckCaseResult(scriptFile, logs, report, total, secs, pathMaxWidth, numbMaxWidth, titleMaxWidth, wsMsg, errOutput, lock)
 
 	endMsg := i118Utils.Sprintf("end_execution", scriptFile, dateUtils.DateTimeStr(entTime))
 	if commConsts.ExecFrom == commConsts.FromClient {

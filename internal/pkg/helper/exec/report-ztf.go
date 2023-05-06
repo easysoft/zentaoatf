@@ -48,27 +48,28 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 			path := csResult.Path
 			lent := runewidth.StringWidth(path)
 
-			if pathMaxWidth > lent {
-				postFix := strings.Repeat(" ", pathMaxWidth-lent)
-				path += postFix
-			}
-
-			line := ""
 			relativePath := csResult.Path
 			if strings.Contains(relativePath, "module") {
 				relativePath = relativePath[strings.Index(relativePath, "module"):]
 			}
-			line = fmt.Sprintf("[%s] %d.%s", relativePath, csResult.Id, csResult.Title)
+
+			if pathMaxWidth > lent {
+				postFix := strings.Repeat(" ", pathMaxWidth-lent)
+				path += postFix
+				relativePath += postFix
+			}
+
+			line := fmt.Sprintf("[%s] %d.%s", relativePath, csResult.Id, csResult.Title)
+			trimLine := fmt.Sprintf("[%s] %d.%s", strings.TrimSpace(relativePath), csResult.Id, csResult.Title)
 			failedCaseLines = append(failedCaseLines, line)
-			failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, line)
+			failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, trimLine)
 
 			appendFailedStepResult(csResult, &failedCaseLinesWithCheckpoint)
 		}
 	}
 	if failedCount > 0 {
 		msgFail := "\n" + i118Utils.Sprintf("failed_scripts") + "\n"
-		msgFail += strings.Join(failedCaseLines, "\n")
-		msgFail += "\n\n"
+		msgFail += strings.Join(failedCaseLines, "\n") + "\n\n"
 		msgFail += strings.Join(failedCaseLinesWithCheckpoint, "\n")
 
 		logUtils.ExecConsolef(color.FgRed, msgFail)

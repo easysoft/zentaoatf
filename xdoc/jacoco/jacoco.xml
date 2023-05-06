@@ -1,0 +1,66 @@
+<report name="ci_test_jcoco">
+    <sessioninfo id="MacBook-Pro.local-326fb78a" start="1682494760900" dump="1682494762314"/>
+    <package name="com/deeptest/sample/jcoco">
+        <class name="com/deeptest/sample/jcoco/Count" sourcefilename="Count.java">
+            <method name="&lt;init&gt;" desc="()V" line="3">
+                <counter type="INSTRUCTION" missed="0" covered="3"/>
+                <counter type="LINE" missed="0" covered="1"/>
+                <counter type="COMPLEXITY" missed="0" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="add" desc="(II)I" line="5">
+                <counter type="INSTRUCTION" missed="1" covered="10"/>
+                <counter type="BRANCH" missed="1" covered="1"/>
+                <counter type="LINE" missed="1" covered="4"/>
+                <counter type="COMPLEXITY" missed="1" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="sub" desc="(II)I" line="16">
+                <counter type="INSTRUCTION" missed="4" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="div" desc="(II)I" line="20">
+                <counter type="INSTRUCTION" missed="4" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <counter type="INSTRUCTION" missed="9" covered="13"/>
+            <counter type="BRANCH" missed="1" covered="1"/>
+            <counter type="LINE" missed="3" covered="5"/>
+            <counter type="COMPLEXITY" missed="3" covered="2"/>
+            <counter type="METHOD" missed="2" covered="2"/>
+            <counter type="CLASS" missed="0" covered="1"/>
+        </class>
+        <sourcefile name="Count.java">
+            <line nr="3" mi="0" ci="3" mb="0" cb="0"/>
+            <line nr="5" mi="0" ci="2" mb="0" cb="0"/>
+            <line nr="6" mi="0" ci="2" mb="1" cb="1"/>
+            <line nr="7" mi="0" ci="2" mb="0" cb="0"/>
+            <line nr="9" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="12" mi="0" ci="4" mb="0" cb="0"/>
+            <line nr="16" mi="4" ci="0" mb="0" cb="0"/>
+            <line nr="20" mi="4" ci="0" mb="0" cb="0"/>
+            <counter type="INSTRUCTION" missed="9" covered="13"/>
+            <counter type="BRANCH" missed="1" covered="1"/>
+            <counter type="LINE" missed="3" covered="5"/>
+            <counter type="COMPLEXITY" missed="3" covered="2"/>
+            <counter type="METHOD" missed="2" covered="2"/>
+            <counter type="CLASS" missed="0" covered="1"/>
+        </sourcefile>
+        <counter type="INSTRUCTION" missed="9" covered="13"/>
+        <counter type="BRANCH" missed="1" covered="1"/>
+        <counter type="LINE" missed="3" covered="5"/>
+        <counter type="COMPLEXITY" missed="3" covered="2"/>
+        <counter type="METHOD" missed="2" covered="2"/>
+        <counter type="CLASS" missed="0" covered="1"/>
+    </package>
+    <counter type="INSTRUCTION" missed="9" covered="13"/>
+    <counter type="BRANCH" missed="1" covered="1"/>
+    <counter type="LINE" missed="3" covered="5"/>
+    <counter type="COMPLEXITY" missed="3" covered="2"/>
+    <counter type="METHOD" missed="2" covered="2"/>
+    <counter type="CLASS" missed="0" covered="1"/>
+</report>
