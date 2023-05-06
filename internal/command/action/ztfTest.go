@@ -1,14 +1,15 @@
 package action
 
 import (
+	"path"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
-	"github.com/easysoft/zentaoatf/internal/pkg/helper/script"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
+	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
+	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/pkg/consts"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
-	"path"
 )
 
 func RunZTFTest(files []string, moduleIdStr, suiteIdStr, taskIdOrName string) error {
@@ -16,7 +17,7 @@ func RunZTFTest(files []string, moduleIdStr, suiteIdStr, taskIdOrName string) er
 		ScriptDirParamFromCmdLine: files[0],
 	}
 	testSet := serverDomain.TestSet{
-		WorkspacePath: commConsts.ZtfDir,
+		WorkspacePath: commConsts.WorkDir,
 	}
 
 	if moduleIdStr != "" { // run with module id
