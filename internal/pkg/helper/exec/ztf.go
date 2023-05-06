@@ -227,7 +227,7 @@ func batchExecScripts(casesToRun []string, workspacePath string, conf commDomain
 			wg.Done()
 		}(poolId, file)
 
-		if caseCount > commConsts.BatchCount && poolId%commConsts.BatchCount == 0 {
+		if caseCount >= commConsts.BatchCount && poolId%commConsts.BatchCount == 0 {
 			wg.Wait()
 			if caseCount-poolId < commConsts.BatchCount {
 				wgCount = caseCount - poolId
@@ -250,7 +250,7 @@ func batchExecScripts(casesToRun []string, workspacePath string, conf commDomain
 		}
 	}
 
-	if caseCount <= commConsts.BatchCount {
+	if caseCount%commConsts.BatchCount != 0 {
 		wg.Wait()
 	}
 }

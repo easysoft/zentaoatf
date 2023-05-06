@@ -119,7 +119,10 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	}
 
 	cmd.Dir = workspacePath
-	cmd.Env = append(cmd.Env, "poolID="+strconv.Itoa(idx+1))
+	if commConsts.BatchCount > 1 {
+		cmd.Env = append(cmd.Env, "ZTF_POOL_ID="+strconv.Itoa(idx+1))
+	}
+	cmd.Env = append(cmd.Env, "ZTF_REPORT_DIR="+commConsts.ExecLogDir)
 
 	stdout, err1 := cmd.StdoutPipe()
 	stderr, err2 := cmd.StderrPipe()
