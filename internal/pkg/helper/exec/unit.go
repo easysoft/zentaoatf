@@ -41,7 +41,7 @@ func ExecUnit(ch chan int,
 			iris.Map{"key": key, "status": "start"}, wsMsg)
 	}
 
-	//deal with  -allureReportDir param
+	//deal with -allureReportDir param
 	arr := strings.Split(req.Cmd, " ")
 	if len(arr) > 1 && strings.TrimSpace(arr[0]) == "-allureReportDir" {
 		commConsts.AllureReportDir = arr[1]
@@ -73,6 +73,11 @@ func ExecUnit(ch chan int,
 
 	// gen report
 	report := GenUnitTestReport(req, startTime.Unix(), entTime.Unix(), ch, wsMsg)
+
+	// dealwith jacoco report
+	if commConsts.JacocoReport != "" {
+		report.JacocoResult = GenJacocoCovReport()
+	}
 
 	// submit result
 	if req.SubmitResult && (report.FuncResult != nil || report.UnitResult != nil) {

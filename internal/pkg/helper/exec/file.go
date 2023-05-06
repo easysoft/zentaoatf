@@ -170,6 +170,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 				}
 				return
 			default:
+				time.Sleep(time.Millisecond * 100)
 			}
 		}
 	}()

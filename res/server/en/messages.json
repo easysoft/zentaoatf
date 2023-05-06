@@ -726,6 +726,10 @@
     {
       "id": "pls_check_zentao_url",
       "translation": "%s, Zentao version '%s'.\n Please use above OpenSource 17.0, Biz 7.0, Max 3.1 version, or you may install RestAPI plugin according to UserManual section 4.4."
+    },
+    {
+      "id": "jacoco_report",
+      "translation": "Jacoco Coverage Report"
     }
   ]
 }
