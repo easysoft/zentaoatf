@@ -34,6 +34,8 @@ func Extract(scriptPaths []string) (done bool, err error) {
 	for _, pth := range scriptPaths {
 		// stepObjs := extractFromComments(pth)
 		// steps := prepareSteps(stepObjs)
+		os.Chmod(pth, 0777)
+
 		var steps []string
 		if isRPEScript(pth) {
 			var needExtract bool
@@ -269,7 +271,6 @@ func isRPEScript(file string) bool {
 }
 
 func genDescFromRPE(file string) (steps []string, needExtract bool) {
-	os.Chmod(file, 0777)
 	var cmd *exec.Cmd
 	cacheDir := fileUtils.AddFilePathSepIfNeeded(fmt.Sprintf("%scache", fileUtils.GetZTFHome()))
 	fileUtils.MkDirIfNeeded(cacheDir)
