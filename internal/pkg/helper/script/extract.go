@@ -34,15 +34,24 @@ func Extract(scriptPaths []string) (done bool, err error) {
 	for _, pth := range scriptPaths {
 		// stepObjs := extractFromComments(pth)
 		// steps := prepareSteps(stepObjs)
-		steps, needExtract := genDescFromRPE(pth)
-		if !needExtract {
-			continue
+		var steps []string
+		if isRPEScript(pth) {
+			var needExtract bool
+			steps, needExtract = genDescFromRPE(pth)
+			if !needExtract {
+				continue
+			}
+		} else {
+			stepObjs := extractFromComments(pth)
+			steps = prepareSteps(stepObjs)
 		}
+
 		desc := prepareDesc(steps, pth)
 
 		if steps != nil && len(steps) > 0 {
 			ReplaceCaseDesc(desc, pth)
 			done = true
+			reGenerateCache(pth)
 		}
 	}
 
@@ -245,6 +254,20 @@ func isCommentEndTag(str, lang string) (pass bool) {
 	return
 }
 
+func reGenerateCache(file string) {
+	cacheDir := fileUtils.AddFilePathSepIfNeeded(fmt.Sprintf("%scache", fileUtils.GetZTFHome()))
+	md5Sum := stringUtils.Md5(file)
+	fileMd5 := fileUtils.Md5(file)
+	md5FileName := cacheDir + md5Sum
+	fileUtils.WriteFile(md5FileName, fileMd5)
+}
+
+func isRPEScript(file string) bool {
+	myExp := regexp.MustCompile(funcRegex)
+	arr := myExp.FindStringSubmatch(fileUtils.ReadFile(file))
+	return len(arr) != 0
+}
+
 func genDescFromRPE(file string) (steps []string, needExtract bool) {
 	os.Chmod(file, 0777)
 	var cmd *exec.Cmd
@@ -263,12 +286,6 @@ func genDescFromRPE(file string) (steps []string, needExtract bool) {
 
 	}
 
-	myExp := regexp.MustCompile(funcRegex)
-	arr := myExp.FindStringSubmatch(fileUtils.ReadFile(file))
-	if len(arr) == 0 {
-		return steps, false
-	}
-
 	cmd = exec.Command("/bin/bash", "-c", file+" -extract")
 
 	output := make([]string, 0)
@@ -280,6 +297,6 @@ func genDescFromRPE(file string) (steps []string, needExtract bool) {
 
 	output = strings.Split(string(content), "\n")
 
-	fileUtils.WriteFile(md5FileName, fileMd5)
+	os.Remove(md5FileName)
 	return output, true
 }
