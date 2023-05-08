@@ -20,7 +20,7 @@ const (
 	groupTag = "group:"
 	stepTag  = "step:"
 
-	funcRegex               = `(?U)\We\(['"](.+)['"]\)`
+	funcRegex               = `(?U)\We\((.+)\)`
 	singleLineCommentsRegex = `.*(?://|#)(.+)$`
 	multiLineCommentsRegex  = `/\*+(.+)\*+/`
 )
