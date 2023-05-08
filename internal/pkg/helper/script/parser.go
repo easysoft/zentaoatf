@@ -3,6 +3,7 @@ package scriptHelper
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path"
 	"path/filepath"
 	"regexp"
@@ -644,6 +645,7 @@ func ReadLogArrOld(content string) (isSkip bool, ret [][]string) {
 }
 
 func CheckFileIsScript(path string) bool {
+	os.Chmod(path, 0777)
 	content := fileUtils.ReadFile(path)
 
 	pass := CheckFileContentIsScript(content)
