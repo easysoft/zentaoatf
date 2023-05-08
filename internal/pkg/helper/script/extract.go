@@ -262,6 +262,13 @@ func genDescFromRPE(file string) (steps []string, needExtract bool) {
 		}
 
 	}
+
+	myExp := regexp.MustCompile(funcRegex)
+	arr := myExp.FindStringSubmatch(fileUtils.ReadFile(file))
+	if len(arr) == 0 {
+		return steps, false
+	}
+
 	cmd = exec.Command("/bin/bash", "-c", file+" -extract")
 
 	output := make([]string, 0)

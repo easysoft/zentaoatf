@@ -155,24 +155,27 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			stdout.Close()
 			stderr.Close()
 		})
-		for {
-			if isTerminal {
-				break
-			}
-			select {
-			case _, ok := <-ch:
-				KillProcessByUUID(uuidString)
-				stdout.Close()
-				stderr.Close()
-				SetRunning(false)
-				if ok {
-					close(ch)
+		if ch != nil{
+			for {
+				if isTerminal {
+					break
 				}
-				return
-			default:
-				time.Sleep(time.Millisecond * 100)
+				select {
+				case _, ok := <-ch:
+					KillProcessByUUID(uuidString)
+					stdout.Close()
+					stderr.Close()
+					SetRunning(false)
+					if ok {
+						close(ch)
+					}
+					return
+				default:
+					time.Sleep(time.Millisecond * 100)
+				}
 			}
 		}
+		
 	}()
 	reader1 := bufio.NewReader(stdout)
 	stdOutputArr := make([]string, 0)
