@@ -2,7 +2,6 @@ package execHelper
 
 import (
 	"fmt"
-	"strings"
 	"sync"
 	"time"
 
@@ -40,7 +39,7 @@ func ExecScript(scriptFile, workspacePath string,
 
 	logs := ""
 	stdOutput, errOutput := RunFile(scriptFile, workspacePath, conf, ch, wsMsg, scriptIdx)
-	stdOutput = strings.Trim(stdOutput, "\n")
+	// stdOutput = strings.Trim(stdOutput, "\n")
 
 	if stdOutput != "" {
 		logs = stdOutput
