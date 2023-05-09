@@ -169,6 +169,8 @@ func ValidateCaseResult(scriptFile string, langType string,
 	}
 	if csResult.Status == commConsts.FAIL {
 		logUtils.ExecConsole(color.FgRed, msg)
+	} else if csResult.Status == commConsts.SKIP {
+		logUtils.ExecConsole(color.FgYellow, msg)
 	} else {
 		logUtils.ExecConsole(color.FgCyan, msg)
 	}
