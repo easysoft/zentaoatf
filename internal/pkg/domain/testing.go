@@ -191,8 +191,8 @@ type ZtfReport struct {
 	FuncResult []FuncResult `json:"funcResult,omitempty"`
 	UnitResult []UnitResult `json:"unitResult,omitempty"`
 
-	JacocoResult JacocoResult `json:"jacocoResult,omitempty"`
-	ZapResult    ZapResult    `json:"zapResult,omitempty"`
+	JacocoResult *JacocoResult `json:"jacocoResult,omitempty"`
+	ZapResult    *ZapResult    `json:"zapResult,omitempty"`
 }
 
 type FuncResult struct {
