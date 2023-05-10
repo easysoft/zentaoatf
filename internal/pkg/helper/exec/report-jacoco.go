@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
+	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	dateUtils "github.com/easysoft/zentaoatf/pkg/lib/date"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
@@ -42,6 +43,24 @@ func GenJacocoCovReport() (report commDomain.JacocoResult) {
 
 	logUtils.ExecConsole(color.FgCyan, msg)
 	logUtils.ExecResult(msg)
+
+	return
+}
+
+func GenZapReport(req serverDomain.TestSet) (ret commDomain.ZapResult) {
+	content := fileUtils.ReadFile(req.ResultDir)
+
+	ext := fileUtils.GetExtName(req.ResultDir)
+	if ext == ".html" {
+		ret.Html = content
+		return
+	}
+
+	report := commDomain.ZapReport{}
+
+	xml.Unmarshal([]byte(content), &report)
+
+	ret.Report = report
 
 	return
 }
