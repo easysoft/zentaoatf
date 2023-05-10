@@ -53,16 +53,17 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 				path += postFix
 			}
 
-			line := fmt.Sprintf("[%s] %d.%s", csResult.Path, csResult.Id, csResult.Title)
+			line := fmt.Sprintf("[%s] %d.%s", path, csResult.Id, csResult.Title)
+			trimLine := fmt.Sprintf("[%s] %d.%s", csResult.Path, csResult.Id, csResult.Title)
 			failedCaseLines = append(failedCaseLines, line)
-			failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, line)
+			failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, trimLine)
 
 			appendFailedStepResult(csResult, &failedCaseLinesWithCheckpoint)
 		}
 	}
 	if failedCount > 0 {
 		msgFail := "\n" + i118Utils.Sprintf("failed_scripts") + "\n"
-		msgFail += strings.Join(failedCaseLines, "\n")
+		msgFail += strings.Join(failedCaseLines, "\n") + "\n\n"
 		msgFail += strings.Join(failedCaseLinesWithCheckpoint, "\n")
 
 		logUtils.ExecConsolef(color.FgRed, msgFail)
