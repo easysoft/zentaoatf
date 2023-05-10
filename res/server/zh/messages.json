@@ -429,7 +429,7 @@
     },
     {
       "id": "run_result",
-      "translation": "执行%d个用例，耗时%d秒。\n%s，%s，%s。"
+      "translation": "共执行%d个用例，耗时%d秒。\n%s，%s，%s。"
     },
     {
       "id": "run_report",
