@@ -4,7 +4,6 @@
 package shellUtils
 
 import (
-	"fmt"
 	"syscall"
 	"unsafe"
 )
@@ -22,7 +21,6 @@ func WindowSize() window {
 		uintptr(syscall.TIOCGWINSZ), //此参数,不同的操作系统可能不一样,例如:TIOCGWINSZ_OSX
 		uintptr(unsafe.Pointer(&win)),
 	)
-	fmt.Println(res)
 	if int(res) == -1 {
 		return window{0, 0}
 	}

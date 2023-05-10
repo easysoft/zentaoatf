@@ -72,7 +72,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		msgFail += divider
 		msgFail += "\n" + color.New(color.Bold, color.FgWhite).Sprint(i118Utils.Sprintf("failed_scripts")) + "\n"
 		msgFail += strings.Join(failedCaseLinesWithCheckpoint, "\n")
-		msgFail += "\n\n" + divider + "\n"
+		msgFail += "\n\n" + divider
 
 		logUtils.ExecConsolef(-1, msgFail)
 		logUtils.ExecFile(msgFail)
