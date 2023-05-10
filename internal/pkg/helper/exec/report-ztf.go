@@ -66,19 +66,20 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 			appendFailedStepResult(csResult, &failedCaseLinesWithCheckpoint)
 		}
 	}
-	if failedCount > 0 {
-		msgFail := "\n"
 
+	logUtils.ExecConsolef(-1, "")
+
+	if failedCount > 0 {
 		divider := "--------------------------------"
 		window := shellUtils.WindowSize()
 		if window.Col != 0 {
 			divider = strings.Repeat("-", int(window.Col))
 		}
 
-		msgFail += divider
+		msgFail := divider
 		msgFail += "\n" + color.New(color.Bold, color.FgWhite).Sprint(i118Utils.Sprintf("failed_scripts")) + "\n"
 		msgFail += strings.Join(failedCaseLinesWithCheckpoint, "\n")
-		msgFail += "\n\n" + divider + "\n"
+		msgFail += "\n\n" + divider
 
 		logUtils.ExecConsolef(-1, msgFail)
 		logUtils.ExecFile(msgFail)
@@ -99,7 +100,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	failStr := fmt.Sprintf(fmtStr, i118Utils.Sprintf("fail_num"), report.Fail, float32(failRate))
 	skipStr := fmt.Sprintf(fmtStr, i118Utils.Sprintf("skip_num"), report.Skip, float32(skipRate))
 
-	if commConsts.ExecFrom == commConsts.FromCmd{
+	if commConsts.ExecFrom == commConsts.FromCmd {
 		passStr = fmt.Sprintf(fmtStr, color.New(color.FgGreen).Sprint(i118Utils.Sprintf("pass_num")), report.Pass, float32(passRate))
 		failStr = fmt.Sprintf(fmtStr, color.New(color.FgRed).Sprint(i118Utils.Sprintf("fail_num")), report.Fail, float32(failRate))
 		skipStr = fmt.Sprintf(fmtStr, color.New(color.FgYellow).Sprint(i118Utils.Sprintf("skip_num")), report.Skip, float32(skipRate))
@@ -151,7 +152,7 @@ func appendFailedStepResult(cs commDomain.FuncResult, failedSteps *[]string) (pa
 
 			step.Id = strings.TrimRight(step.Id, ".")
 			status := i118Utils.Sprintf(string(step.Status))
-			if commConsts.ExecFrom == commConsts.FromCmd{
+			if commConsts.ExecFrom == commConsts.FromCmd {
 				if step.Status == commConsts.FAIL {
 					status = color.New(color.FgRed).Sprint(status)
 				} else if step.Status == commConsts.PASS {

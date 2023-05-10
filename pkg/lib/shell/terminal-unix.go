@@ -1,3 +1,6 @@
+//go:build linux
+// +build linux
+
 package shellUtils
 
 import (
@@ -12,6 +15,7 @@ type window struct {
 
 func WindowSize() window {
 	win := window{0, 0}
+
 	res, _, _ := syscall.Syscall(syscall.SYS_IOCTL,
 		uintptr(syscall.Stdin),
 		uintptr(syscall.TIOCGWINSZ), //此参数,不同的操作系统可能不一样,例如:TIOCGWINSZ_OSX
