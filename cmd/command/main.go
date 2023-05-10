@@ -79,9 +79,7 @@ func main() {
 	flagSet.StringVar(&commConsts.Interpreter, "I", "", "")
 	flagSet.StringVar(&commConsts.Interpreter, "interpreter", "", "")
 
-	flagSet.StringVar(&unitTestTool, "unitTestTool", "", "")
-	flagSet.StringVar(&unitBuildTool, "unitBuildTool", "", "")
-
+	// jacocoReport for unittest
 	flagSet.StringVar(&commConsts.JacocoReport, "jacocoReport", "", "")
 
 	flagSet.StringVar(&keywords, "k", "", "")
@@ -270,22 +268,10 @@ func runUnitTest(args []string) {
 	if commConsts.JacocoReport != "" {
 		start = start + 2
 	}
-	if unitTestTool != "" {
-		start = start + 2
-	}
-	if unitBuildTool != "" {
-		start = start + 2
-	}
 	if commConsts.Verbose {
 		start = start + 1
 	}
 
-	if unitTestTool != "" {
-		commConsts.UnitTestTool = commConsts.TestTool(unitTestTool)
-	}
-	if unitBuildTool != "" {
-		commConsts.UnitBuildTool = commConsts.BuildTool(unitBuildTool)
-	}
 	unitHelper.GetUnitTools(args, start)
 
 	cmd := strings.Join(args[start:], " ")

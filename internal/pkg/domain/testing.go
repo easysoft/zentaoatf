@@ -188,9 +188,11 @@ type ZtfReport struct {
 	EndTime   int64 `json:"endTime"`
 	Duration  int64 `json:"duration"`
 
-	FuncResult   []FuncResult `json:"funcResult,omitempty"`
-	UnitResult   []UnitResult `json:"unitResult,omitempty"`
-	JacocoResult JacocoResult `json:"jacocoResult,omitempty"`
+	FuncResult []FuncResult `json:"funcResult,omitempty"`
+	UnitResult []UnitResult `json:"unitResult,omitempty"`
+
+	JacocoResult *JacocoResult `json:"jacocoResult,omitempty"`
+	ZapResult    *ZapResult    `json:"zapResult,omitempty"`
 }
 
 type FuncResult struct {
@@ -593,7 +595,6 @@ type K6Point struct {
 		} `json:"tags"`
 	} `json:"data"`
 }
-
 type K6Summary struct {
 	RootGroup struct {
 		Name   string `json:"name"`
@@ -625,6 +626,59 @@ type K6Summary struct {
 		IsStdOutTTY       bool    `json:"isStdOutTTY"`
 	} `json:"state"`
 	Metrics map[string]interface{} `json:"metrics"`
+}
+
+type ZapResult struct {
+	Report ZapReport `xml:"report"`
+	Html   string    `xml:"html"`
+}
+type ZapReport struct {
+	XMLName   xml.Name  `xml:"OWASPZAPReport"`
+	Text      string    `xml:",chardata"`
+	Version   string    `xml:"version,attr"`
+	Generated string    `xml:"generated,attr"`
+	Site      []ZapSite `xml:"site"`
+}
+type ZapSite struct {
+	Text   string `xml:",chardata"`
+	Name   string `xml:"name,attr"`
+	Host   string `xml:"host,attr"`
+	Port   string `xml:"port,attr"`
+	Ssl    string `xml:"ssl,attr"`
+	Alerts struct {
+		Text      string         `xml:",chardata"`
+		Alertitem []ZapAlertItem `xml:"alertitem"`
+	} `xml:"alerts"`
+}
+type ZapAlertItem struct {
+	Text           string `xml:",chardata"`
+	Pluginid       string `xml:"pluginid"`
+	AlertRef       string `xml:"alertRef"`
+	Alert          string `xml:"alert"`
+	Name           string `xml:"name"`
+	Riskcode       string `xml:"riskcode"`
+	Confidence     string `xml:"confidence"`
+	Riskdesc       string `xml:"riskdesc"`
+	Confidencedesc string `xml:"confidencedesc"`
+	Desc           string `xml:"desc"`
+	Instances      struct {
+		Text     string `xml:",chardata"`
+		Instance []struct {
+			Text     string `xml:",chardata"`
+			URI      string `xml:"uri"`
+			Method   string `xml:"method"`
+			Param    string `xml:"param"`
+			Attack   string `xml:"attack"`
+			Evidence string `xml:"evidence"`
+		} `xml:"instance"`
+	} `xml:"instances"`
+	Count     string `xml:"count"`
+	Solution  string `xml:"solution"`
+	Otherinfo string `xml:"otherinfo"`
+	Reference string `xml:"reference"`
+	Cweid     string `xml:"cweid"`
+	Wascid    string `xml:"wascid"`
+	Sourceid  string `xml:"sourceid"`
 }
 
 type TestResult struct {

@@ -41,32 +41,10 @@ var (
 		"mvn": Maven,
 	}
 
-	AutoTestTypeSelenium = "selenium"
-	AutoTestTypeAppium   = "appium"
-	AutoTestTypes        = []string{AutoTestTypeSelenium, AutoTestTypeAppium}
-
-	UnitTestTypeAllure     = "allure"
-	UnitTestTypeJunit      = "junit"
-	UnitTestTypeTestNG     = "testng"
-	UnitTestTypeRobot      = "robot"
-	UnitTestTypeCypress    = "cypress"
-	UnitTestTypePlaywright = "playwright"
-	UnitTestTypePuppeteer  = "puppeteer"
-	UnitTestTypeK6         = "k6"
-
-	UnitTestPhpUnit     = "phpunit"
-	UnitTestTypePyTest  = "pytest"
-	UnitTestTypeJest    = "jest"
-	UnitTestTypeCppUnit = "cppunit"
-	UnitTestTypeGTest   = "gtest"
-	UnitTestTypeQTest   = "qtest"
-	UnitTestTypes       = []string{
-		UnitTestTypeAllure, UnitTestTypeJunit, UnitTestTypeTestNG,
-		UnitTestTypeRobot, UnitTestTypeCypress, UnitTestTypePlaywright, UnitTestTypePuppeteer, UnitTestTypeK6,
-		UnitTestPhpUnit, UnitTestTypePyTest, UnitTestTypeJest, UnitTestTypeCppUnit, UnitTestTypeGTest, UnitTestTypeQTest,
+	AutoTestTypes = []string{Selenium.String(), Appium.String(), AutoIt.String()}
+	UnitTestTypes = []string{
+		Allure.String(),
+		JUnit.String(), TestNG.String(), PHPUnit.String(), PyTest.String(), Jest.String(), CppUnit.String(), GTest.String(), QTest.String(),
+		RobotFramework.String(), Cypress.String(), Playwright.String(), Puppeteer.String(), K6.String(), Zap.String(),
 	}
-
-	UnitTestToolMvn   = "mvn"
-	UnitTestToolMocha = "mocha"
-	UnitTestToolRobot = "robot"
 )
