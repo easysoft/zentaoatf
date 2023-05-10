@@ -60,16 +60,17 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 			appendFailedStepResult(csResult, &failedCaseLinesWithCheckpoint)
 		}
 	}
-	if failedCount > 0 {
-		msgFail := "\n"
 
+	logUtils.ExecConsolef(-1, "")
+
+	if failedCount > 0 {
 		divider := "--------------------------------"
 		window := shellUtils.WindowSize()
 		if window.Col != 0 {
 			divider = strings.Repeat("-", int(window.Col))
 		}
 
-		msgFail += divider
+		msgFail := divider
 		msgFail += "\n" + color.New(color.Bold, color.FgWhite).Sprint(i118Utils.Sprintf("failed_scripts")) + "\n"
 		msgFail += strings.Join(failedCaseLinesWithCheckpoint, "\n")
 		msgFail += "\n\n" + divider
