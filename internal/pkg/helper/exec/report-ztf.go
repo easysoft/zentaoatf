@@ -66,7 +66,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		divider := "--------------------------------"
 		window := shellUtils.WindowSize()
 		if window.Col != 0 {
-			divider = strings.Repeat("-", window.Col)
+			divider = strings.Repeat("-", int(window.Col))
 		}
 
 		msgFail += divider

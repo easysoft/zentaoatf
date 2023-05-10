@@ -1,7 +1,7 @@
 //go:build windows
 // +build windows
 
-package execHelper
+package shellUtils
 
 import (
 	"fmt"
@@ -11,11 +11,11 @@ import (
 )
 
 type window struct {
-	Row int
-	Col int
+	Row uint16
+	Col uint16
 }
 
-func WindowSize(uuid string) window {
+func WindowSize() window {
 	win := window{0, 0}
 
 	cmd1 := exec.Command("cmd")
@@ -24,19 +24,19 @@ func WindowSize(uuid string) window {
 	out, _ := cmd1.Output()
 	lines := strings.Split(string(out), "\n")
 
-	for index, line := range lines {
+	for _, line := range lines {
 		if win.Row > 0 && win.Col > 0 {
 			return win
 		}
 		line = strings.TrimSpace(line)
-		if strings.Contain("行") || strings.Contain("Row") {
+		if strings.Contains(line, "行") || strings.Contains(line, "Row") {
 			re := regexp.MustCompile(`\d+`)
-			rs := re.FindAllString(out.String(), -1)
+			rs := re.FindAllString(line, -1)
 			win.Row, _ = strconv.Atoi(rs[1])
 		}
-		if strings.Contain("列") || strings.Contain("Col") {
+		if strings.Contains(line, "列") || strings.Contains(line, "Col") {
 			re := regexp.MustCompile(`\d+`)
-			rs := re.FindAllString(out.String(), -1)
+			rs := re.FindAllString(line, -1)
 			win.Col, _ = strconv.Atoi(rs[1])
 		}
 	}

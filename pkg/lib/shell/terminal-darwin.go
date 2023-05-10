@@ -10,8 +10,8 @@ import (
 )
 
 type window struct {
-	Row int
-	Col int
+	Row uint16
+	Col uint16
 }
 
 func WindowSize() window {
