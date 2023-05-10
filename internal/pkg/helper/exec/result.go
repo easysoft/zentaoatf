@@ -127,9 +127,16 @@ func ValidateCaseResult(scriptFile string, langType string,
 		csTitle += postFix
 	}
 
-	format := "(%" + width + "d/%d) %s [%s] [%" + numbWidth + "d. %s] (%ss)"
+	format := "(%" + width + "d/%d) [%s] [%s] [%" + numbWidth + "d. %s] [%ss]"
 
 	status := i118Utils.Sprintf(csResult.Status.String())
+	if csResult.Status == commConsts.FAIL {
+		status = color.New(color.FgRed).Sprint(status)
+	} else if csResult.Status == commConsts.PASS {
+		status = color.New(color.FgGreen).Sprint(status)
+	} else {
+		status = color.New(color.FgYellow).Sprint(status)
+	}
 	msg := fmt.Sprintf(format, scriptIdx+1, total, status, path, csResult.Id, csTitle, secs)
 
 	// print each case result
@@ -153,11 +160,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 		websocketHelper.SendExecMsg(msg, "", msgCategory,
 			iris.Map{"key": key, "status": csResult.Status}, wsMsg)
 	}
-	if csResult.Status == commConsts.FAIL {
-		logUtils.ExecConsole(color.FgRed, msg)
-	} else {
-		logUtils.ExecConsole(color.FgCyan, msg)
-	}
+	logUtils.ExecConsole(-1, msg)
 	logUtils.ExecResult(msg)
 }
 
