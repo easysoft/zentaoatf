@@ -291,12 +291,14 @@ func genDescFromRPE(file string) (steps []string, needExtract bool) {
 
 	output := make([]string, 0)
 
-	content, err := cmd.CombinedOutput()
+	contentByte, err := cmd.CombinedOutput()
 	if err != nil {
 		return output, true
 	}
 
-	output = strings.Split(string(content), "\n")
+	content := string(contentByte)
+	content = strings.ReplaceAll(content, "%", "%%")
+	output = strings.Split(content, "\n")
 
 	os.Remove(md5FileName)
 	return output, true
