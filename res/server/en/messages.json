@@ -104,6 +104,18 @@
       "id": "skip",
       "translation": "Skip"
     },
+    {
+        "id": "pass_num",
+        "translation": "Pass:"
+      },
+      {
+        "id": "fail_num",
+        "translation": "Fail:"
+      },
+      {
+        "id": "skip_num",
+        "translation": "Skip:"
+      },
 
     {
       "id": "product_id",
@@ -125,6 +137,10 @@
     {
       "id": "test_case",
       "translation": "Test Case"
+    },
+    {
+        "id": "test_case_prefix",
+        "translation": "Test Case %d:"
     },
     {
       "id": "test_suite",
@@ -149,6 +165,14 @@
     {
       "id": "steps",
       "translation": "Steps"
+    },
+    {
+        "id": "expect",
+        "translation": "Expect"
+    },
+    {
+        "id": "actual",
+        "translation": "Actual"
     },
     {
       "id": "checkpoint",
@@ -416,11 +440,11 @@
     },
     {
       "id": "run_result",
-      "translation": "Run %d scripts in %d sec, %s, %s, %s."
+      "translation": "Run %d scripts in %d sec.\n%s, %s, %s."
     },
     {
-      "id": "run_report",
-      "translation": "Report %s."
+    "id": "run_report",
+    "translation": "Report %s."
     },
     {
       "id": "read_report_fail",

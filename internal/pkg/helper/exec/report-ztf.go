@@ -14,6 +14,7 @@ import (
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/mattn/go-runewidth"
@@ -31,10 +32,9 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	}
 	// print failed case
 	failedCount := 0
-	failedCaseLines := make([]string, 0)
 	failedCaseLinesWithCheckpoint := make([]string, 0)
 
-	for _, csResult := range report.FuncResult {
+	for index, csResult := range report.FuncResult {
 		if report.ProductId == 0 && csResult.ProductId > 0 {
 			report.ProductId = csResult.ProductId
 		}
@@ -50,7 +50,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 
 			relativePath := csResult.Path
 			if strings.Contains(relativePath, "/module/") {
-				relativePath = relativePath[strings.Index(relativePath, "/module/"):]
+				relativePath = relativePath[strings.Index(relativePath, "/module/")+1:]
 			}
 
 			if pathMaxWidth > lent {
@@ -59,25 +59,33 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 				relativePath += postFix
 			}
 
-			line := fmt.Sprintf("[%s] %d.%s", relativePath, csResult.Id, csResult.Title)
-			trimLine := fmt.Sprintf("[%s] %d.%s", strings.TrimSpace(relativePath), csResult.Id, csResult.Title)
-			failedCaseLines = append(failedCaseLines, line)
-			failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, trimLine)
+			prefix := i118Utils.Sprintf("test_case_prefix", index+1)
+			line := fmt.Sprintf("%s[%s] [%d.%s]", prefix, strings.TrimSpace(relativePath), csResult.Id, csResult.Title)
+			failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, line)
 
 			appendFailedStepResult(csResult, &failedCaseLinesWithCheckpoint)
 		}
 	}
 	if failedCount > 0 {
-		msgFail := "\n" + i118Utils.Sprintf("failed_scripts") + "\n"
-		msgFail += strings.Join(failedCaseLines, "\n") + "\n\n"
-		msgFail += strings.Join(failedCaseLinesWithCheckpoint, "\n")
+		msgFail := "\n"
 
-		logUtils.ExecConsolef(color.FgRed, msgFail)
+		divider := "--------------------------------"
+		window := shellUtils.WindowSize()
+		if window.Col != 0 {
+			divider = strings.Repeat("-", int(window.Col))
+		}
+
+		msgFail += divider
+		msgFail += "\n" + color.New(color.Bold, color.FgWhite).Sprint(i118Utils.Sprintf("failed_scripts")) + "\n"
+		msgFail += strings.Join(failedCaseLinesWithCheckpoint, "\n")
+		msgFail += "\n\n" + divider + "\n"
+
+		logUtils.ExecConsolef(-1, msgFail)
 		logUtils.ExecFile(msgFail)
 	}
 
 	// 生成统计行
-	fmtStr := "%d(%.1f%%) %s"
+	fmtStr := "%s%d(%.1f%%)"
 	passRate := 0
 	failRate := 0
 	skipRate := 0
@@ -87,9 +95,15 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		skipRate = report.Skip * 100 / report.Total
 	}
 
-	passStr := fmt.Sprintf(fmtStr, report.Pass, float32(passRate), i118Utils.Sprintf("pass"))
-	failStr := fmt.Sprintf(fmtStr, report.Fail, float32(failRate), i118Utils.Sprintf("fail"))
-	skipStr := fmt.Sprintf(fmtStr, report.Skip, float32(skipRate), i118Utils.Sprintf("skip"))
+	passStr := fmt.Sprintf(fmtStr, i118Utils.Sprintf("pass_num"), report.Pass, float32(passRate))
+	failStr := fmt.Sprintf(fmtStr, i118Utils.Sprintf("fail_num"), report.Fail, float32(failRate))
+	skipStr := fmt.Sprintf(fmtStr, i118Utils.Sprintf("skip_num"), report.Skip, float32(skipRate))
+
+	if commConsts.ExecFrom == commConsts.FromCmd{
+		passStr = fmt.Sprintf(fmtStr, color.New(color.FgGreen).Sprint(i118Utils.Sprintf("pass_num")), report.Pass, float32(passRate))
+		failStr = fmt.Sprintf(fmtStr, color.New(color.FgRed).Sprint(i118Utils.Sprintf("fail_num")), report.Fail, float32(failRate))
+		skipStr = fmt.Sprintf(fmtStr, color.New(color.FgYellow).Sprint(i118Utils.Sprintf("skip_num")), report.Skip, float32(skipRate))
+	}
 
 	// 执行%d个用例，耗时%d秒%s。%s，%s，%s。
 	// Run %d script in %d sec, %s, %s, %s.
@@ -105,13 +119,13 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		websocketHelper.SendExecMsg(msgRunColor, "", commConsts.Run, nil, wsMsg)
 	}
 
-	logUtils.ExecConsole(color.FgCyan, msgRun)
 	logUtils.ExecResult(msgRun)
 
 	resultPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)
-	msgReport := "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
+	msgReport := i118Utils.Sprintf("run_report", resultPath)
 
-	logUtils.ExecConsole(color.FgCyan, msgReport)
+	logUtils.ExecConsole(-1, msgReport)
+	logUtils.ExecConsole(-1, msgRun)
 	logUtils.ExecResult(msgReport)
 	if commConsts.ExecFrom == commConsts.FromClient {
 		websocketHelper.SendExecMsg(msgReport, "", commConsts.Run, map[string]interface{}{
@@ -137,12 +151,22 @@ func appendFailedStepResult(cs commDomain.FuncResult, failedSteps *[]string) (pa
 
 			step.Id = strings.TrimRight(step.Id, ".")
 			status := i118Utils.Sprintf(string(step.Status))
-			*failedSteps = append(*failedSteps, fmt.Sprintf("  Step %s: %s [%s]", step.Id, status, step.Name))
+			if commConsts.ExecFrom == commConsts.FromCmd{
+				if step.Status == commConsts.FAIL {
+					status = color.New(color.FgRed).Sprint(status)
+				} else if step.Status == commConsts.PASS {
+					status = color.New(color.FgGreen).Sprint(status)
+				} else {
+					status = color.New(color.FgYellow).Sprint(status)
+				}
+			}
+
+			*failedSteps = append(*failedSteps, fmt.Sprintf("%s%s: %s [%s]", i118Utils.Sprintf("step"), step.Id, status, step.Name))
 
 			for idx1, cp := range step.CheckPoints {
 				//cpStatus := commonUtils.BoolToPass(step.Status)
-				*failedSteps = append(*failedSteps, fmt.Sprintf("    [Expect] %s", cp.Expect))
-				*failedSteps = append(*failedSteps, fmt.Sprintf("    [Actual] %s", cp.Actual))
+				*failedSteps = append(*failedSteps, fmt.Sprintf("[%s] %s", i118Utils.Sprintf("expect"), cp.Expect))
+				*failedSteps = append(*failedSteps, fmt.Sprintf("[%s] %s", i118Utils.Sprintf("actual"), cp.Actual))
 
 				if idx1 < len(step.CheckPoints)-1 {
 					*failedSteps = append(*failedSteps, "")

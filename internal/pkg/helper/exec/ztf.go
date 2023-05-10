@@ -148,13 +148,19 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 		workDir = workspacePath
 	}
 
-	msg := i118Utils.Sprintf("found_scripts", len(casesToRun), workDir, commConsts.ZtfDir)
+	msg := ""
+	if commConsts.Language == commConsts.LanguageZh {
+		msg = i118Utils.Sprintf("found_scripts", workDir, len(casesToRun), commConsts.ZtfDir)
+
+	} else {
+		msg = i118Utils.Sprintf("found_scripts", len(casesToRun), workDir, commConsts.ZtfDir)
+	}
 
 	if commConsts.ExecFrom == commConsts.FromClient {
 		msg = i118Utils.Sprintf("found_scripts_no_ztf_dir", len(casesToRun), workDir)
 		websocketHelper.SendExecMsg(msg, "", commConsts.Run, nil, wsMsg)
 	}
-	logUtils.ExecConsolef(color.FgCyan, msg)
+	logUtils.ExecConsolef(-1, msg)
 	logUtils.ExecResult(msg)
 
 	if len(casesToIgnore) > 0 {

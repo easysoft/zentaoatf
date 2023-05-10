@@ -57,7 +57,9 @@ func ExecUnit(ch chan int,
 	if strings.TrimSpace(req.Cmd) != "" {
 		// remove old results
 		fileUtils.RmDir(req.ResultDir)
-		fileUtils.MkDirIfNeeded(req.ResultDir)
+		if fileUtils.GetExtName(req.ResultDir) == "" { // not file
+			fileUtils.MkDirIfNeeded(req.ResultDir)
+		}
 
 		RunUnitTest(ch, req.Cmd, req.WorkspacePath, wsMsg)
 
@@ -77,6 +79,8 @@ func ExecUnit(ch chan int,
 	// dealwith jacoco report
 	if commConsts.JacocoReport != "" {
 		report.JacocoResult = GenJacocoCovReport()
+	} else if req.TestTool == commConsts.Zap {
+		report.ZapResult = GenZapReport(req)
 	}
 
 	// submit result

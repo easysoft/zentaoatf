@@ -148,8 +148,8 @@ func (TestType) Get(str string) TestType {
 type TestTool string
 
 const (
-	Allure  TestTool = "allure"
 	ZTF     TestTool = "ztf"
+	Allure  TestTool = "allure"
 	JUnit   TestTool = "junit"
 	TestNG  TestTool = "testng"
 	PHPUnit TestTool = "phpunit"
@@ -163,11 +163,12 @@ const (
 	AutoIt         TestTool = "autoit"
 	Selenium       TestTool = "selenium"
 	Appium         TestTool = "appium"
-	RobotFramework TestTool = "robotframework"
+	RobotFramework TestTool = "robot"
 	Cypress        TestTool = "cypress"
 	Playwright     TestTool = "playwright"
 	Puppeteer      TestTool = "puppeteer"
 	K6             TestTool = "k6"
+	Zap            TestTool = "zap"
 )
 
 func (e TestTool) String() string {

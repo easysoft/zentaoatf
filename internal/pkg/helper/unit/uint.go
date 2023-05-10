@@ -11,11 +11,11 @@ func GetUnitTools(args []string, startIndex int) {
 
 	str := args[startIndex]
 
-	if str == commConsts.UnitTestToolMvn {
+	if str == commConsts.Maven.String() {
 		commConsts.UnitBuildTool = commConsts.Maven
-	} else if str == commConsts.UnitTestToolMocha {
+	} else if str == commConsts.Mocha.String() {
 		commConsts.UnitBuildTool = commConsts.Mocha
-	} else if str == commConsts.UnitTestToolRobot {
+	} else if str == commConsts.RobotFramework.String() {
 		commConsts.UnitTestTool = commConsts.RobotFramework
 	}
 

@@ -5,6 +5,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path"
 	"path/filepath"
 	"regexp"
@@ -820,6 +821,10 @@ func getResultDirForDifferentTool(testset *serverDomain.TestSet) {
 		testset.ResultDir = "results"
 		testset.ZipDir = testset.ResultDir
 
+	} else if testset.TestTool == commConsts.Zap {
+		testset.ResultDir = getZapReport()
+		testset.ZipDir = testset.ResultDir
+
 	} else if isAllureReport(testset.TestTool) {
 		testset.ResultDir = commConsts.AllureReportDir
 		testset.ZipDir = testset.ResultDir
@@ -827,7 +832,6 @@ func getResultDirForDifferentTool(testset *serverDomain.TestSet) {
 	} else {
 		testset.ResultDir = "testresults.xml"
 		testset.ZipDir = testset.ResultDir
-
 	}
 
 	if testset.ResultDir != "" {
@@ -837,6 +841,17 @@ func getResultDirForDifferentTool(testset *serverDomain.TestSet) {
 
 		if !fileUtils.IsAbsolutePath(testset.ZipDir) {
 			testset.ZipDir = filepath.Join(testset.WorkspacePath, testset.ZipDir)
+		}
+	}
+
+	return
+}
+
+func getZapReport() (ret string) {
+	for index, item := range os.Args {
+		if item == "-quickout" && index < len(os.Args)-1 {
+			ret = os.Args[index+1]
+			return
 		}
 	}
 

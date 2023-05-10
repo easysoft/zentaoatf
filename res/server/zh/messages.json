@@ -108,6 +108,18 @@
       "translation": "忽略"
     },
     {
+        "id": "pass_num",
+        "translation": "通过数："
+    },
+    {
+    "id": "fail_num",
+    "translation": "失败数："
+    },
+    {
+    "id": "skip_num",
+    "translation": "忽略数："
+    },
+    {
       "id": "product_id",
       "translation": "产品Id"
     },
@@ -128,6 +140,10 @@
       "translation": "用例"
     },
     {
+        "id": "test_case_prefix",
+        "translation": "用例%d："
+    },
+    {
       "id": "test_suite",
       "translation": "测试套件"
     },
@@ -146,6 +162,14 @@
     {
       "id": "step",
       "translation": "步骤"
+    },
+    {
+        "id": "expect",
+        "translation": "期望"
+    },
+    {
+        "id": "actual",
+        "translation": "实际"
     },
     {
       "id": "checkpoint",
@@ -381,7 +405,7 @@
     },
     {
       "id": "found_scripts",
-      "translation": "发现%d个用例，工作目录为%s，ZTF目录为%s。"
+      "translation": "在工作目录%s中共发现%d个用例，ZTF目录为%s。"
     },
     {
       "id": "found_scripts_no_ztf_dir",
@@ -393,7 +417,7 @@
     },
     {
       "id": "failed_scripts",
-      "translation": "失败用例："
+      "translation": "失败用例详情："
     },
     {
       "id": "start_case",
@@ -405,11 +429,11 @@
     },
     {
       "id": "run_result",
-      "translation": "执行%d个用例，耗时%d秒。%s，%s，%s。"
+      "translation": "执行%d个用例，耗时%d秒。\n%s，%s，%s。"
     },
     {
       "id": "run_report",
-      "translation": "报告%s。"
+      "translation": "测试报告 [%s]"
     },
     {
       "id": "read_report_fail",
