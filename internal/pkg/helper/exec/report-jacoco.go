@@ -26,6 +26,8 @@ const (
 )
 
 func GenJacocoCovReport() (report *commDomain.JacocoResult) {
+	report = &commDomain.JacocoResult{}
+
 	content := fileUtils.ReadFileBuf(commConsts.JacocoReport)
 
 	xml.Unmarshal(content, &report)
@@ -48,18 +50,20 @@ func GenJacocoCovReport() (report *commDomain.JacocoResult) {
 }
 
 func GenZapReport(req serverDomain.TestSet) (ret *commDomain.ZapResult) {
+	ret = &commDomain.ZapResult{}
+
 	content := fileUtils.ReadFile(req.ResultDir)
 
 	ext := fileUtils.GetExtName(req.ResultDir)
 	if ext == ".html" {
 		ret.Html = content
+
 		return
 	}
 
 	report := commDomain.ZapReport{}
 
 	xml.Unmarshal([]byte(content), &report)
-
 	ret.Report = report
 
 	return
