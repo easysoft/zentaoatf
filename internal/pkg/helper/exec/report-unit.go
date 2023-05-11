@@ -172,7 +172,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 
 	// print summary result
 	// 执行%d个用例，耗时%d秒%s。%s，%s，%s。报告%s。
-	fmtStr := "%s%d(%.1f%%)"
+	fmtStr := "%s%s%d(%.1f%%)"
 	passRate := 0
 	failRate := 0
 	skipRate := 0
@@ -182,14 +182,14 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 		skipRate = report.Skip * 100 / report.Total
 	}
 
-	passStr := fmt.Sprintf(fmtStr, i118Utils.Sprintf("pass_num"), report.Pass, float32(passRate))
-	failStr := fmt.Sprintf(fmtStr, i118Utils.Sprintf("fail_num"), report.Fail, float32(failRate))
-	skipStr := fmt.Sprintf(fmtStr, i118Utils.Sprintf("skip_num"), report.Skip, float32(skipRate))
+	passStr := fmt.Sprintf(fmtStr, i118Utils.Sprintf("pass_num"), i118Utils.Sprintf("colon"), report.Pass, float32(passRate))
+	failStr := fmt.Sprintf(fmtStr, i118Utils.Sprintf("fail_num"), i118Utils.Sprintf("colon"), report.Fail, float32(failRate))
+	skipStr := fmt.Sprintf(fmtStr, i118Utils.Sprintf("skip_num"), i118Utils.Sprintf("colon"), report.Skip, float32(skipRate))
 
 	if commConsts.ExecFrom == commConsts.FromCmd {
-		passStr = fmt.Sprintf(fmtStr, color.New(color.FgHiGreen, color.Bold).Sprint(i118Utils.Sprintf("pass_num")), report.Pass, float32(passRate))
-		failStr = fmt.Sprintf(fmtStr, color.New(color.FgHiRed, color.Bold).Sprint(i118Utils.Sprintf("fail_num")), report.Fail, float32(failRate))
-		skipStr = fmt.Sprintf(fmtStr, color.New(color.FgHiYellow, color.Bold).Sprint(i118Utils.Sprintf("skip_num")), report.Skip, float32(skipRate))
+		passStr = fmt.Sprintf(fmtStr, color.New(color.FgHiGreen, color.Bold).Sprint(i118Utils.Sprintf("pass_num")), i118Utils.Sprintf("colon"), report.Pass, float32(passRate))
+		failStr = fmt.Sprintf(fmtStr, color.New(color.FgHiRed, color.Bold).Sprint(i118Utils.Sprintf("fail_num")), i118Utils.Sprintf("colon"), report.Fail, float32(failRate))
+		skipStr = fmt.Sprintf(fmtStr, color.New(color.FgHiYellow, color.Bold).Sprint(i118Utils.Sprintf("skip_num")), i118Utils.Sprintf("colon"), report.Skip, float32(skipRate))
 	}
 
 	msgRun := dateUtils.DateTimeStr(time.Now()) + " " +

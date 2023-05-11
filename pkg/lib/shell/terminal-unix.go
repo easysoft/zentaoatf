@@ -1,5 +1,5 @@
-//go:build linux
-// +build linux
+//go:build !windows
+// +build !windows
 
 package shellUtils
 
@@ -18,7 +18,7 @@ func WindowSize() window {
 
 	res, _, _ := syscall.Syscall(syscall.SYS_IOCTL,
 		uintptr(syscall.Stdin),
-		uintptr(syscall.TIOCGWINSZ), //此参数,不同的操作系统可能不一样,例如:TIOCGWINSZ_OSX
+		uintptr(syscall.TIOCGWINSZ),
 		uintptr(unsafe.Pointer(&win)),
 	)
 	if int(res) == -1 {
