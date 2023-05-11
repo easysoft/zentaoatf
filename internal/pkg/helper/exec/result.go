@@ -104,17 +104,16 @@ func ValidateCaseResult(scriptFile string, langType string,
 	}
 	report.Total = report.Total + 1
 
-	relativePath := strings.TrimLeft(scriptFile, report.WorkspacePath)
+	relativePath := strings.TrimPrefix(scriptFile, commConsts.WorkDir)
 	csResult := commDomain.FuncResult{Id: caseId, ProductId: productId, Title: title,
 		Key: key, Path: scriptFile, RelativePath: relativePath, Status: caseResult, Steps: stepLogs}
 	report.FuncResult = append(report.FuncResult, csResult)
 
 	width := strconv.Itoa(len(strconv.Itoa(total)))
-	numbWidth := strconv.Itoa(numbMaxWidth)
 
-	path := csResult.Path
+	path := relativePath
 	csTitle := csResult.Title
-	lenp := runewidth.StringWidth(path)
+	lenp := runewidth.StringWidth(csResult.Path)
 	lent := runewidth.StringWidth(csTitle)
 
 	if pathMaxWidth > lenp {
@@ -127,17 +126,17 @@ func ValidateCaseResult(scriptFile string, langType string,
 		csTitle += postFix
 	}
 
-	format := "(%" + width + "d/%d) [%s] [%s] [%" + numbWidth + "d. %s] [%ss]"
+	format := "(%" + width + "d/%d) [%s] [%s] [%s] [%ss]"
 
 	status := i118Utils.Sprintf(csResult.Status.String())
 	if csResult.Status == commConsts.FAIL {
-		status = color.New(color.FgRed).Sprint(status)
+		status = color.New(color.FgHiRed, color.Bold).Sprint(status)
 	} else if csResult.Status == commConsts.PASS {
-		status = color.New(color.FgGreen).Sprint(status)
+		status = color.New(color.FgHiGreen, color.Bold).Sprint(status)
 	} else {
-		status = color.New(color.FgYellow).Sprint(status)
+		status = color.New(color.FgHiYellow, color.Bold).Sprint(status)
 	}
-	msg := fmt.Sprintf(format, scriptIdx+1, total, status, path, csResult.Id, csTitle, secs)
+	msg := fmt.Sprintf(format, scriptIdx+1, total, status, path, csTitle, secs)
 
 	// print each case result
 	if commConsts.ExecFrom == commConsts.FromClient {

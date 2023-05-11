@@ -444,7 +444,7 @@
     },
     {
     "id": "run_report",
-    "translation": "Report %s."
+    "translation": "Report"
     },
     {
       "id": "read_report_fail",

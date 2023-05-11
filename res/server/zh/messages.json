@@ -433,7 +433,7 @@
     },
     {
       "id": "run_report",
-      "translation": "测试报告 [%s]"
+      "translation": "测试报告"
     },
     {
       "id": "read_report_fail",
