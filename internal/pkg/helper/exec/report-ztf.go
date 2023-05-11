@@ -117,7 +117,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	}
 
 	logUtils.ExecConsole(-1, msgReport)
-	logUtils.ExecConsole(-1, msgRun)
+	logUtils.ExecConsole(-1, msgRun+"\n")
 	logUtils.ExecResult(msgReport)
 	if commConsts.ExecFrom == commConsts.FromClient {
 		websocketHelper.SendExecMsg(msgReport, "", commConsts.Run, map[string]interface{}{

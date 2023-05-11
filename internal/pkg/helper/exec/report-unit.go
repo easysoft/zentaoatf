@@ -200,7 +200,12 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 		)
 
 	if commConsts.ExecFrom == commConsts.FromClient {
-		websocketHelper.SendExecMsg(msgRun, "", commConsts.Result, nil, wsMsg)
+		msgRunColor := i118Utils.Sprintf("run_result", report.Total, report.Duration,
+			fmt.Sprintf(`<span class="result-pass">%s</span>`, passStr),
+			fmt.Sprintf(`<span class="result-fail">%s</span>`, failStr),
+			fmt.Sprintf(`<span class="result-skip">%s</span>`, skipStr),
+		)
+		websocketHelper.SendExecMsg(msgRunColor, "", commConsts.Result, nil, wsMsg)
 	}
 	logUtils.ExecResult(msgRun)
 
@@ -218,7 +223,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 	}
 
 	logUtils.ExecConsole(-1, msgReport)
-	logUtils.ExecConsole(-1, msgRun)
+	logUtils.ExecConsole(-1, msgRun+"\n")
 	logUtils.ExecResult(msgReport)
 	report.Log = fileUtils.ReadFile(filepath.Join(commConsts.ExecLogDir, commConsts.LogText))
 
