@@ -108,16 +108,20 @@
       "translation": "忽略"
     },
     {
+        "id": "colon",
+        "translation": "："
+    },
+    {
         "id": "pass_num",
-        "translation": "通过数："
+        "translation": "通过数"
     },
     {
     "id": "fail_num",
-    "translation": "失败数："
+    "translation": "失败数"
     },
     {
     "id": "skip_num",
-    "translation": "忽略数："
+    "translation": "忽略数"
     },
     {
       "id": "product_id",
@@ -162,6 +166,10 @@
     {
       "id": "step",
       "translation": "步骤"
+    },
+    {
+        "id": "step_prefix",
+        "translation": "步骤%s："
     },
     {
         "id": "expect",
@@ -417,7 +425,7 @@
     },
     {
       "id": "failed_scripts",
-      "translation": "失败用例详情："
+      "translation": "失败用例详情"
     },
     {
       "id": "start_case",

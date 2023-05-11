@@ -105,16 +105,20 @@
       "translation": "Skip"
     },
     {
+        "id": "colon",
+        "translation": ":"
+    },
+    {
         "id": "pass_num",
-        "translation": "Pass:"
+        "translation": "Pass"
       },
       {
         "id": "fail_num",
-        "translation": "Fail:"
+        "translation": "Fail"
       },
       {
         "id": "skip_num",
-        "translation": "Skip:"
+        "translation": "Skip"
       },
 
     {
@@ -160,7 +164,11 @@
     },
     {
       "id": "step",
-      "translation": "Step"
+      "translation": "Step:"
+    },
+    {
+        "id": "step_prefix",
+        "translation": "Step%s:"
     },
     {
       "id": "steps",
