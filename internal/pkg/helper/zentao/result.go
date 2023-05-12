@@ -15,14 +15,13 @@ import (
 	"github.com/kataras/iris/v12/websocket"
 )
 
-func CommitResult(report commDomain.ZtfReport, productId, taskId, task int, config commDomain.WorkspaceConf,
+func CommitResult(report commDomain.ZtfReport, productId, taskId int, config commDomain.WorkspaceConf,
 	wsMsg *websocket.Message) (err error) {
 	if productId != 0 {
 		report.ProductId = productId
 	}
 	RemoveAutoCreateId(&report)
 	report.TaskId = taskId
-	report.Task = task
 
 	// for ci tool debug
 	report.ZentaoData = os.Getenv("ZENTAO_DATA")

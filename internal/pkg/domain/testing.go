@@ -171,7 +171,6 @@ type ZtfReport struct {
 
 	ProductId int               `json:"productId,omitempty"`
 	TaskId    int               `json:"taskId,omitempty"`
-	Task      int               `json:"task,omitempty"`
 	ExecBy    commConsts.ExecBy `json:"execBy,omitempty"`
 	ExecById  int               `json:"execById,omitempty"`
 
@@ -192,7 +191,7 @@ type ZtfReport struct {
 	UnitResult []UnitResult `json:"unitResult,omitempty"`
 
 	JacocoResult *JacocoResult `json:"jacocoResult,omitempty"`
-	ZapResult    *ZapResult    `json:"zapResult,omitempty"`
+	ZapReport    *ZapReport    `json:"zapResult,omitempty"`
 }
 
 type FuncResult struct {
@@ -628,10 +627,6 @@ type K6Summary struct {
 	Metrics map[string]interface{} `json:"metrics"`
 }
 
-type ZapResult struct {
-	Report ZapReport `xml:"report"`
-	Html   string    `xml:"html"`
-}
 type ZapReport struct {
 	XMLName   xml.Name  `xml:"OWASPZAPReport"`
 	Text      string    `xml:",chardata"`

@@ -26,9 +26,7 @@ import (
 	"github.com/kataras/iris/v12/websocket"
 )
 
-func ExecUnit(ch chan int,
-	req serverDomain.TestSet, wsMsg *websocket.Message) (err error) {
-
+func ExecUnit(ch chan int, req serverDomain.TestSet, wsMsg *websocket.Message) (err error) {
 	key := stringUtils.Md5(req.WorkspacePath)
 
 	// start msg
@@ -79,8 +77,6 @@ func ExecUnit(ch chan int,
 	// dealwith jacoco report
 	if commConsts.JacocoReport != "" {
 		report.JacocoResult = GenJacocoCovReport()
-	} else if req.TestTool == commConsts.Zap {
-		report.ZapResult = GenZapReport(req)
 	}
 
 	// submit result
@@ -92,7 +88,7 @@ func ExecUnit(ch chan int,
 
 		config := configHelper.LoadByWorkspacePath(configDir)
 
-		err = zentaoHelper.CommitResult(report, req.ProductId, 0, 0, config, wsMsg)
+		err = zentaoHelper.CommitResult(report, req.ProductId, req.TaskId, config, wsMsg)
 	}
 
 	if commConsts.ExecFrom == commConsts.FromClient {
