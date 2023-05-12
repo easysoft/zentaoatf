@@ -76,7 +76,7 @@ func (r *ProxyRepo) Delete(id uint) (err error) {
 	err = r.DB.Model(&model.Proxy{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"deleted": true}).Error
 	if err != nil {
-		logUtils.Errorf("delete proxy by id error", zap.String("error:", err.Error()))
+		logUtils.Errorf("delete proxy by id error:%v", zap.String("error:", err.Error()))
 		return
 	}
 

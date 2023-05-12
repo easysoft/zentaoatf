@@ -33,7 +33,7 @@ func TestCli() (err error) {
 
 	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl + "/", Password: "Test123456.", Username: "admin"}
 
-	err = zentaoHelper.CommitResult(report, 1, 0, 0, config, nil)
+	err = zentaoHelper.CommitResult(report, 1, 0, config, nil)
 
 	if report.Fail > 0 {
 		os.Exit(1)
@@ -58,7 +58,7 @@ func TestUi() (err error) {
 
 	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl + "/", Password: "Test123456.", Username: "admin"}
 
-	err = zentaoHelper.CommitResult(report, 1, 0, 0, config, nil)
+	err = zentaoHelper.CommitResult(report, 1, 0, config, nil)
 
 	if report.Fail > 0 {
 		os.Exit(1)
