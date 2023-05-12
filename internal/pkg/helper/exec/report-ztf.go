@@ -48,7 +48,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 			relativePath := strings.TrimPrefix(path, commConsts.WorkDir)
 
 			prefix := i118Utils.Sprintf("test_case_prefix", index+1)
-			line := fmt.Sprintf("%s[%s] [%s]", prefix, relativePath, csResult.Title)
+			line := fmt.Sprintf("%s [%s] [%s]", prefix, relativePath, csResult.Title)
 			failedCaseLinesWithCheckpoint = append(failedCaseLinesWithCheckpoint, line)
 
 			appendFailedStepResult(csResult, &failedCaseLinesWithCheckpoint)
@@ -157,8 +157,8 @@ func appendFailedStepResult(cs commDomain.FuncResult, failedSteps *[]string) (pa
 
 			for idx1, cp := range step.CheckPoints {
 				//cpStatus := commonUtils.BoolToPass(step.Status)
-				*failedSteps = append(*failedSteps, fmt.Sprintf("[%s] %s", i118Utils.Sprintf("expect"), cp.Expect))
-				*failedSteps = append(*failedSteps, fmt.Sprintf("[%s] %s", i118Utils.Sprintf("actual"), cp.Actual))
+				*failedSteps = append(*failedSteps, fmt.Sprintf("[%s]  %s", i118Utils.Sprintf("expect"), cp.Expect))
+				*failedSteps = append(*failedSteps, fmt.Sprintf("[%s]  %s", i118Utils.Sprintf("actual"), cp.Actual))
 
 				if idx1 < len(step.CheckPoints)-1 {
 					*failedSteps = append(*failedSteps, "")
