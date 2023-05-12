@@ -398,7 +398,7 @@ const uploadScript = async (workspaceId, msg) => {
         }
       }
       .sign {
-        margin: auto;
+        // margin: auto;
 
         width: 20px;
         font-size: 6px;

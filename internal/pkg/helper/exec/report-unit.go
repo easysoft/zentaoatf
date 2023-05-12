@@ -23,6 +23,7 @@ import (
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
@@ -68,6 +69,11 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 	failedCaseLines := make([]string, 0)
 	failedCaseLinesDesc := make([]string, 0)
 
+	spaceQuote := " "
+	if commConsts.ExecFrom == commConsts.FromClient {
+		spaceQuote = "&nbsp;"
+	}
+
 	for idx, cs := range cases {
 		if cs.Failure != nil {
 			report.Fail++
@@ -77,7 +83,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 			}
 			className := cases[idx].TestSuite
 
-			line := fmt.Sprintf("[%s] %d.%s", className, cs.Id, cs.Title)
+			line := fmt.Sprintf("[%s] %s", className, cs.Title)
 			failedCaseLines = append(failedCaseLines, line)
 
 			failedCaseLinesDesc = append(failedCaseLinesDesc, line)
@@ -99,6 +105,42 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 		report.Duration = int64(duration)
 	}
 
+	// print case result one by one
+	width := strconv.Itoa(len(strconv.Itoa(report.Total)))
+	titleMaxWidth := getTitleMaxWidth(cases)
+	for idx, cs := range cases {
+		testSuite := stringUtils.AddPostfix(cs.TestSuite, classNameMaxWidth, spaceQuote)
+
+		csTitle := cs.Title
+		lent := runewidth.StringWidth(cs.Title)
+		if titleMaxWidth > lent {
+			postFix := strings.Repeat(spaceQuote, titleMaxWidth-lent)
+			csTitle += postFix
+		}
+
+		status := i118Utils.Sprintf(cs.Status.String())
+		if commConsts.ExecFrom == commConsts.FromCmd {
+			if cs.Status == commConsts.FAIL {
+				status = color.New(color.FgHiRed, color.Bold).Sprint(status)
+			} else if cs.Status == commConsts.PASS {
+				status = color.New(color.FgHiGreen, color.Bold).Sprint(status)
+			} else {
+				status = color.New(color.FgHiYellow, color.Bold).Sprint(status)
+			}
+		}
+
+		format := "(%" + width + "d/%d) [%s] [%s] [%s] [%.3fs]"
+		msgCase := fmt.Sprintf(format, idx+1, report.Total, status, testSuite, csTitle, cs.Duration)
+
+		if commConsts.ExecFrom == commConsts.FromClient {
+			websocketHelper.SendExecMsg(msgCase, "", commConsts.Result, nil, wsMsg)
+		}
+
+		logUtils.ExecConsolef(-1, msgCase)
+		logUtils.ExecResult(msgCase)
+	}
+	logUtils.ExecConsolef(-1, "")
+
 	// print failed cases with whole result status
 	msg := ""
 	status := commConsts.PASS
@@ -107,11 +149,19 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 		status = commConsts.FAIL
 		msgCategory = commConsts.Error
 
-		msg += "\n" + i118Utils.Sprintf("failed_scripts") + "\n"
+		divider := "--------------------------------"
+		window := shellUtils.WindowSize()
+		if window.Col != 0 {
+			divider = strings.Repeat("-", int(window.Col))
+		}
+
+		msg := divider
+		msg += "\n" + color.New(color.Bold, color.FgHiWhite).Sprint(i118Utils.Sprintf("failed_scripts")) + "\n"
 		msg += strings.Join(failedCaseLines, "\n")
 		msg += strings.Join(failedCaseLinesDesc, "\n")
+		msg += "\n\n" + divider
 
-		logUtils.ExecConsolef(color.FgRed, msg)
+		logUtils.ExecConsolef(-1, msg)
 		logUtils.ExecResult(msg)
 	}
 
@@ -122,7 +172,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 
 	// print summary result
 	// 执行%d个用例，耗时%d秒%s。%s，%s，%s。报告%s。
-	fmtStr := "%d(%.1f%%) %s"
+	fmtStr := "%s%s%d(%.1f%%)"
 	passRate := 0
 	failRate := 0
 	skipRate := 0
@@ -132,9 +182,15 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 		skipRate = report.Skip * 100 / report.Total
 	}
 
-	passStr := fmt.Sprintf(fmtStr, report.Pass, float32(passRate), i118Utils.Sprintf("pass"))
-	failStr := fmt.Sprintf(fmtStr, report.Fail, float32(failRate), i118Utils.Sprintf("fail"))
-	skipStr := fmt.Sprintf(fmtStr, report.Skip, float32(skipRate), i118Utils.Sprintf("skip"))
+	passStr := fmt.Sprintf(fmtStr, i118Utils.Sprintf("pass_num"), i118Utils.Sprintf("colon"), report.Pass, float32(passRate))
+	failStr := fmt.Sprintf(fmtStr, i118Utils.Sprintf("fail_num"), i118Utils.Sprintf("colon"), report.Fail, float32(failRate))
+	skipStr := fmt.Sprintf(fmtStr, i118Utils.Sprintf("skip_num"), i118Utils.Sprintf("colon"), report.Skip, float32(skipRate))
+
+	if commConsts.ExecFrom == commConsts.FromCmd {
+		passStr = fmt.Sprintf(fmtStr, color.New(color.FgHiGreen, color.Bold).Sprint(i118Utils.Sprintf("pass_num")), i118Utils.Sprintf("colon"), report.Pass, float32(passRate))
+		failStr = fmt.Sprintf(fmtStr, color.New(color.FgHiRed, color.Bold).Sprint(i118Utils.Sprintf("fail_num")), i118Utils.Sprintf("colon"), report.Fail, float32(failRate))
+		skipStr = fmt.Sprintf(fmtStr, color.New(color.FgHiYellow, color.Bold).Sprint(i118Utils.Sprintf("skip_num")), i118Utils.Sprintf("colon"), report.Skip, float32(skipRate))
+	}
 
 	msgRun := dateUtils.DateTimeStr(time.Now()) + " " +
 		// 执行%d个用例，耗时%d秒。%s，%s，%s。
@@ -144,30 +200,21 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 		)
 
 	if commConsts.ExecFrom == commConsts.FromClient {
-		websocketHelper.SendExecMsg(msgRun, "", commConsts.Result, nil, wsMsg)
+		msgRunColor := i118Utils.Sprintf("run_result", report.Total, report.Duration,
+			fmt.Sprintf(`<span class="result-pass">%s</span>`, passStr),
+			fmt.Sprintf(`<span class="result-fail">%s</span>`, failStr),
+			fmt.Sprintf(`<span class="result-skip">%s</span>`, skipStr),
+		)
+		websocketHelper.SendExecMsg(msgRunColor, "", commConsts.Result, nil, wsMsg)
 	}
-	logUtils.ExecConsole(color.FgCyan, msgRun)
 	logUtils.ExecResult(msgRun)
-
-	// print case result one by one
-	width := strconv.Itoa(len(strconv.Itoa(report.Total)))
-	for idx, cs := range cases {
-		testSuite := stringUtils.AddPostfix(cs.TestSuite, classNameMaxWidth, " ")
-
-		format := "(%" + width + "d/%d) %s [%s] [%" + width + "d. %s] (%.3fs)"
-		msgCase := fmt.Sprintf(format, idx+1, report.Total, cs.Status, testSuite, cs.Id, cs.Title, cs.Duration)
-
-		if commConsts.ExecFrom == commConsts.FromClient {
-			websocketHelper.SendExecMsg(msgCase, "", commConsts.Result, nil, wsMsg)
-		}
-
-		logUtils.ExecConsolef(color.FgCyan, msgCase)
-		logUtils.ExecResult(msgCase)
-	}
 
 	// print result path
 	resultPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)
-	msgReport := "                    " + i118Utils.Sprintf("run_report", resultPath) + "\n"
+	msgReport := i118Utils.Sprintf("run_report") + " " + resultPath + "."
+	if commConsts.ExecFrom == commConsts.FromCmd {
+		msgReport = color.New(color.Bold, color.FgHiWhite).Sprint(i118Utils.Sprintf("run_report")) + " [" + resultPath + "]"
+	}
 
 	if commConsts.ExecFrom == commConsts.FromClient {
 		websocketHelper.SendExecMsg(msgReport, "false", commConsts.Result, map[string]interface{}{
@@ -175,7 +222,8 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 		}, wsMsg)
 	}
 
-	logUtils.ExecConsole(color.FgCyan, msgReport)
+	logUtils.ExecConsole(-1, msgReport)
+	logUtils.ExecConsole(-1, msgRun+"\n")
 	logUtils.ExecResult(msgReport)
 	report.Log = fileUtils.ReadFile(filepath.Join(commConsts.ExecLogDir, commConsts.LogText))
 
@@ -185,6 +233,18 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 	fileUtils.WriteFile(jsonPath, string(json))
 
 	return
+}
+
+func getTitleMaxWidth(cases []commDomain.UnitResult) int {
+	maxWidth := 0
+	for _, cs := range cases {
+		titleWidth := runewidth.StringWidth(cs.Title)
+		if maxWidth < titleWidth {
+			maxWidth = titleWidth
+		}
+	}
+
+	return maxWidth
 }
 
 func RetrieveUnitResult(testset serverDomain.TestSet, startTime int64) (

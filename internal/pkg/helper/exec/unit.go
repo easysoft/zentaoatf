@@ -63,7 +63,7 @@ func ExecUnit(ch chan int, req serverDomain.TestSet, wsMsg *websocket.Message) (
 
 		// end msg
 		endMsg := i118Utils.Sprintf("end_execution", req.Cmd, dateUtils.DateTimeStr(entTime))
-		logUtils.ExecConsolef(-1, endMsg)
+		logUtils.ExecConsolef(-1, endMsg+"\n")
 		logUtils.ExecFilef(endMsg)
 		if commConsts.ExecFrom == commConsts.FromClient {
 			websocketHelper.SendExecMsg(endMsg, "", commConsts.Run,
