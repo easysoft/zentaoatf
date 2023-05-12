@@ -171,7 +171,6 @@ type ZtfReport struct {
 
 	ProductId int               `json:"productId,omitempty"`
 	TaskId    int               `json:"taskId,omitempty"`
-	Task      int               `json:"task,omitempty"`
 	ExecBy    commConsts.ExecBy `json:"execBy,omitempty"`
 	ExecById  int               `json:"execById,omitempty"`
 
@@ -192,7 +191,7 @@ type ZtfReport struct {
 	UnitResult []UnitResult `json:"unitResult,omitempty"`
 
 	JacocoResult *JacocoResult `json:"jacocoResult,omitempty"`
-	ZapResult    *ZapResult    `json:"zapResult,omitempty"`
+	ZapReport    *ZapReport    `json:"zapResult,omitempty"`
 }
 
 type FuncResult struct {
@@ -628,57 +627,36 @@ type K6Summary struct {
 	Metrics map[string]interface{} `json:"metrics"`
 }
 
-type ZapResult struct {
-	Report ZapReport `xml:"report"`
-	Html   string    `xml:"html"`
-}
 type ZapReport struct {
-	XMLName   xml.Name  `xml:"OWASPZAPReport"`
-	Text      string    `xml:",chardata"`
-	Version   string    `xml:"version,attr"`
-	Generated string    `xml:"generated,attr"`
-	Site      []ZapSite `xml:"site"`
+	Alerts []Alert `xml:"site"`
 }
-type ZapSite struct {
-	Text   string `xml:",chardata"`
-	Name   string `xml:"name,attr"`
-	Host   string `xml:"host,attr"`
-	Port   string `xml:"port,attr"`
-	Ssl    string `xml:"ssl,attr"`
-	Alerts struct {
-		Text      string         `xml:",chardata"`
-		Alertitem []ZapAlertItem `xml:"alertitem"`
-	} `xml:"alerts"`
-}
-type ZapAlertItem struct {
-	Text           string `xml:",chardata"`
-	Pluginid       string `xml:"pluginid"`
-	AlertRef       string `xml:"alertRef"`
-	Alert          string `xml:"alert"`
-	Name           string `xml:"name"`
-	Riskcode       string `xml:"riskcode"`
-	Confidence     string `xml:"confidence"`
-	Riskdesc       string `xml:"riskdesc"`
-	Confidencedesc string `xml:"confidencedesc"`
-	Desc           string `xml:"desc"`
-	Instances      struct {
-		Text     string `xml:",chardata"`
-		Instance []struct {
-			Text     string `xml:",chardata"`
-			URI      string `xml:"uri"`
-			Method   string `xml:"method"`
-			Param    string `xml:"param"`
-			Attack   string `xml:"attack"`
-			Evidence string `xml:"evidence"`
-		} `xml:"instance"`
-	} `xml:"instances"`
-	Count     string `xml:"count"`
-	Solution  string `xml:"solution"`
-	Otherinfo string `xml:"otherinfo"`
-	Reference string `xml:"reference"`
-	Cweid     string `xml:"cweid"`
-	Wascid    string `xml:"wascid"`
-	Sourceid  string `xml:"sourceid"`
+type Alert struct {
+	Sourceid    string `json:"sourceid"`
+	Other       string `json:"other"`
+	Method      string `json:"method"`
+	Evidence    string `json:"evidence"`
+	PluginId    string `json:"pluginId"`
+	Cweid       string `json:"cweid"`
+	Confidence  string `json:"confidence"`
+	Wascid      string `json:"wascid"`
+	Description string `json:"description"`
+	MessageId   string `json:"messageId"`
+	InputVector string `json:"inputVector"`
+	Url         string `json:"url"`
+	Tags        struct {
+		OWASP2021A05  string `json:"OWASP_2021_A05"`
+		WSTGV42CLNT09 string `json:"WSTG-v42-CLNT-09"`
+		OWASP2017A06  string `json:"OWASP_2017_A06"`
+	} `json:"tags"`
+	Reference string `json:"reference"`
+	Solution  string `json:"solution"`
+	Alert     string `json:"alert"`
+	Param     string `json:"param"`
+	Attack    string `json:"attack"`
+	Name      string `json:"name"`
+	Risk      string `json:"risk"`
+	Id        string `json:"id"`
+	AlertRef  string `json:"alertRef"`
 }
 
 type TestResult struct {

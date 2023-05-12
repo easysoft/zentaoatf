@@ -32,10 +32,13 @@ func Exec(ch chan int, req serverDomain.ExecReq, msg *websocket.Message) (
 			} else if req.Act == commConsts.ExecTask {
 				ExecTask(ch, testSet, msg)
 			} else if req.Act == commConsts.ExecUnit {
-				ExecUnit(ch, testSet, msg)
+				if testSet.TestTool == commConsts.Zap {
+					ExecZapScan(testSet)
+				} else {
+					ExecUnit(ch, testSet, msg)
+				}
 			}
 		}() // for defer
-
 	}
 
 	return

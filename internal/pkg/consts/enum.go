@@ -67,7 +67,8 @@ const (
 	ExecSuite  ExecCmd = "execSuite"
 	ExecTask   ExecCmd = "execTask"
 
-	ExecUnit ExecCmd = "execUnit"
+	ExecUnit    ExecCmd = "execUnit"
+	ExecZapScan ExecCmd = "zapScan"
 
 	Watch ExecCmd = "watch"
 )
@@ -136,6 +137,7 @@ type TestType string
 const (
 	TestFunc TestType = "func"
 	TestUnit TestType = "unit"
+	TestZap  TestType = "zap"
 )
 
 func (e TestType) String() string {
