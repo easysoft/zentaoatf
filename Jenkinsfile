@@ -31,14 +31,14 @@ pipeline {
             }
           }
 
-          // post {
-          //   failure {
-          //     container('xuanimbot') {
-          //       sh 'git config --global --add safe.directory $(pwd)'
-          //       sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "ztf unit test failure" --url "${BUILD_URL}" --content "ztf unit test failure, please check it" --debug --custom'
-          //     }
-          //   }
-          // }
+          post {
+            failure {
+              container('xuanimbot') {
+                sh 'git config --global --add safe.directory $(pwd)'
+                sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "ztf unit test failure" --url "${BUILD_URL}" --content "ztf unit test failure, please check it" --debug --custom'
+              }
+            }
+          }
         } // End UnitTest
 
         stage("SonarScan") {
@@ -53,14 +53,14 @@ pipeline {
             }
           }
 
-          // post {
-          //   failure {
-          //     container('xuanimbot') {
-          //       sh 'git config --global --add safe.directory $(pwd)'
-          //       sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "ztf sonar scan failure" --url "${BUILD_URL}" --content "ztf sonar scan failure, please check it" --debug --custom'
-          //     }
-          //   }
-          // }
+          post {
+            failure {
+              container('xuanimbot') {
+                sh 'git config --global --add safe.directory $(pwd)'
+                sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "ztf sonar scan failure" --url "${BUILD_URL}" --content "ztf sonar scan failure, please check it" --debug --custom'
+              }
+            }
+          }
         } // End SonarScan
       }
     }
@@ -72,20 +72,20 @@ pipeline {
         }
       }
 
-      // post {
-      //   success {
-      //     container('xuanimbot') {
-      //     	sh 'git config --global --add safe.directory $(pwd)'
-      //       sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "quickon-servier docker image build success" --url "${BUILD_URL}" --content "quickon-servier docker image: ${IMAGE}" --debug --custom'
-      //     }
-      //   }
-      //   failure {
-      //     container('xuanimbot') {
-      //     	sh 'git config --global --add safe.directory $(pwd)'
-      //       sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "quickon-servier docker image build failure" --url "${BUILD_URL}" --content "quickon-servier docker image build failure, please check it" --debug --custom'
-      //     }
-      //   }
-      // }
+      post {
+        success {
+          container('xuanimbot') {
+          	sh 'git config --global --add safe.directory $(pwd)'
+            sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "quickon-servier docker image build success" --url "${BUILD_URL}" --content "quickon-servier docker image: ${IMAGE}" --debug --custom'
+          }
+        }
+        failure {
+          container('xuanimbot') {
+          	sh 'git config --global --add safe.directory $(pwd)'
+            sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "quickon-servier docker image build failure" --url "${BUILD_URL}" --content "quickon-servier docker image build failure, please check it" --debug --custom'
+          }
+        }
+      }
 
     } // End Build
 
