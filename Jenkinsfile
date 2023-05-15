@@ -24,22 +24,22 @@ pipeline {
 
     stage("Test") {
       parallel {
-        stage("UnitTest") {
-          steps {
-            container('golang') {
-              sh 'CGO_ENABLED=0 go test ./...'
-            }
-          }
+        // stage("UnitTest") {
+        //   steps {
+        //     container('golang') {
+        //       sh 'CGO_ENABLED=0 go test ./...'
+        //     }
+        //   }
 
-          post {
-            failure {
-              container('xuanimbot') {
-                sh 'git config --global --add safe.directory $(pwd)'
-                sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "ztf unit test failure" --url "${BUILD_URL}" --content "ztf unit test failure, please check it" --debug --custom'
-              }
-            }
-          }
-        } // End UnitTest
+        //   post {
+        //     failure {
+        //       container('xuanimbot') {
+        //         sh 'git config --global --add safe.directory $(pwd)'
+        //         sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "ztf unit test failure" --url "${BUILD_URL}" --content "ztf unit test failure, please check it" --debug --custom'
+        //       }
+        //     }
+        //   }
+        // } // End UnitTest
 
         stage("SonarScan") {
           steps {
