@@ -497,7 +497,7 @@ func ConvertAllureResult(cases []commDomain.AllureCase) (testSuites []commDomain
 		var status commConsts.ResultStatus
 		if cs.Status == "passed" {
 			status = commConsts.PASS
-		} else if cs.Status == "passed" {
+		} else if cs.Status == "failed" {
 			status = commConsts.FAIL
 		}
 		caseResult := commDomain.UnitResult{
@@ -873,14 +873,10 @@ func getResultDirForDifferentTool(testset *serverDomain.TestSet) {
 		testset.ZipDir = filepath.Dir(testset.ResultDir)
 
 	} else if testset.TestTool == commConsts.RobotFramework || testset.TestTool == commConsts.Cypress ||
-		testset.TestTool == commConsts.Playwright || testset.TestTool == commConsts.Puppeteer {
+		testset.TestTool == commConsts.Playwright || testset.TestTool == commConsts.Puppeteer ||
+		testset.TestTool == commConsts.K6 {
 		testset.ResultDir = "results"
 		testset.ZipDir = testset.ResultDir
-
-	} else if testset.TestTool == commConsts.K6 {
-		testset.ResultDir = "results"
-		testset.ZipDir = testset.ResultDir
-
 	} else if testset.TestTool == commConsts.Zap {
 		testset.ResultDir = getZapReport()
 		testset.ZipDir = testset.ResultDir
