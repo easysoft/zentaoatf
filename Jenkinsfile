@@ -14,7 +14,7 @@ pipeline {
       steps {
         container('golang') {
           sh "sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories"
-          sh "apk --no-cache add make"
+          sh "apk --no-cache add make git gcc libc-dev"
           sh 'go mod download'
           sh 'go install -a -v github.com/go-bindata/go-bindata/...@latest'
           sh 'go-bindata -o=res/res.go -pkg=res res/...'
@@ -68,7 +68,9 @@ pipeline {
     stage("Build") {
       steps {
         container('golang') {
+          sh 'git config --global --add safe.directory $(pwd)'
           sh 'CGO_ENABLED=0 make compile_command_linux'
+          sh 'ls bin/linux/'
         }
       }
 
@@ -76,13 +78,13 @@ pipeline {
         success {
           container('xuanimbot') {
           	sh 'git config --global --add safe.directory $(pwd)'
-            sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "quickon-servier docker image build success" --url "${BUILD_URL}" --content "quickon-servier docker image: ${IMAGE}" --debug --custom'
+            sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "ztf build success" --url "${BUILD_URL}" --content "ztf build success" --debug --custom'
           }
         }
         failure {
           container('xuanimbot') {
           	sh 'git config --global --add safe.directory $(pwd)'
-            sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "quickon-servier docker image build failure" --url "${BUILD_URL}" --content "quickon-servier docker image build failure, please check it" --debug --custom'
+            sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "ztf build failure" --url "${BUILD_URL}" --content "ztf build failure, please check it" --debug --custom'
           }
         }
       }
