@@ -102,7 +102,7 @@ func waitZtfAccessed() {
 		isTimeout = true
 	})
 	for {
-		status := uiTest.GetStatus("http://127.0.0.1:8000/")
+		status := uiTest.GetStatus(constTestHelper.ZtfUrl)
 		if isTimeout || status {
 			return
 		}

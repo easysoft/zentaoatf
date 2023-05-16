@@ -3,6 +3,7 @@ package main
 import (
 	"testing"
 
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
@@ -16,7 +17,7 @@ func ScriptBug(t provider.T) {
 	t.ID("5747")
 	t.AddParentSuite("查看bug列表")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -41,7 +42,7 @@ func ScriptsBug(t provider.T) {
 	t.ID("5748")
 	t.AddParentSuite("查看bug列表")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)

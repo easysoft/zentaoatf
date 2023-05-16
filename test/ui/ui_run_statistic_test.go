@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"testing"
 
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
@@ -17,7 +18,7 @@ func RunFailStatistic(t provider.T) {
 	t.ID("5487")
 	t.AddParentSuite("执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -53,7 +54,7 @@ func RunSuccessStatistic(t provider.T) {
 	t.ID("5487")
 	t.AddParentSuite("执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -90,7 +91,7 @@ func RunBugStatistic(t provider.T) {
 	t.ID("5487")
 	t.AddParentSuite("执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)

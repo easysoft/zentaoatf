@@ -25,6 +25,8 @@ func OpenUrl(url string, t provider.T) (ret Webpage, err error) {
 	utils.PrintErrOrNot(err, t)
 
 	if _, err = page.Goto(url, playwright.PageGotoOptions{WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
+		page.Close()
+		browser.Close()
 		utils.PrintErrOrNot(err, t)
 	}
 

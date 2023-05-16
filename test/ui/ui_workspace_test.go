@@ -21,7 +21,7 @@ var (
 func CreateWorkspace(t provider.T) {
 	t.ID("5468")
 	t.AddParentSuite("管理禅道站点下工作目录")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	webpage.Click(`[title="新建工作目录"]`)
@@ -42,7 +42,7 @@ func CreateWorkspace(t provider.T) {
 func SyncFromZentao(t provider.T) {
 	t.ID("5751")
 	t.AddParentSuite("管理禅道站点下工作目录")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -59,7 +59,7 @@ func SyncFromZentao(t provider.T) {
 func SyncTwoCaseFromZentao(t provider.T) {
 	t.ID("5752")
 	t.AddParentSuite("管理禅道站点下工作目录")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	var waitTimeOut float64 = 5000
@@ -79,7 +79,7 @@ func SyncTwoCaseFromZentao(t provider.T) {
 func SyncToZentao(t provider.T) {
 	t.ID("5431")
 	t.AddParentSuite("管理禅道站点下工作目录")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	var waitTimeOut float64 = 5000
@@ -93,7 +93,7 @@ func SyncToZentao(t provider.T) {
 func Copy(t provider.T) {
 	t.ID("5474")
 	t.AddParentSuite("管理禅道站点下工作目录")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandProduct(webpage)
@@ -117,7 +117,7 @@ func Copy(t provider.T) {
 func DeleteScript(t provider.T) {
 	t.ID("5478")
 	t.AddParentSuite("管理禅道站点下工作目录")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandProduct(webpage)
@@ -140,7 +140,7 @@ func DeleteScript(t provider.T) {
 func DeleteDir(t provider.T) {
 	t.ID("5477")
 	t.AddParentSuite("管理禅道站点下工作目录")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -163,7 +163,7 @@ func DeleteDir(t provider.T) {
 func DeleteWorkspace(t provider.T) {
 	t.ID("5468")
 	t.AddParentSuite("管理禅道站点下工作目录")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	webpage.WaitForSelector(".tree-node")
@@ -185,7 +185,7 @@ func DeleteWorkspace(t provider.T) {
 func Clip(t provider.T) {
 	t.ID("5476")
 	t.AddParentSuite("管理禅道站点下工作目录")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	webpage.WaitForSelector(".tree-node")
@@ -205,7 +205,7 @@ func Clip(t provider.T) {
 func Collapse(t provider.T) {
 	t.ID("5472")
 	t.AddParentSuite("管理禅道站点下工作目录")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)

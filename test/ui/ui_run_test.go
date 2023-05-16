@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	zentaoTestHelper "github.com/easysoft/zentaoatf/test/helper/zentao/ui"
 	ztfTest "github.com/easysoft/zentaoatf/test/helper/ztf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
@@ -21,7 +22,7 @@ func RunScript(t provider.T) {
 	t.ID("5743")
 	t.AddParentSuite("执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -51,7 +52,7 @@ func RunScriptByRightClick(t provider.T) {
 	t.ID("5479")
 	t.AddParentSuite("执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -78,7 +79,7 @@ func RunNoInterpreterScript(t provider.T) {
 	t.ID("5501")
 	t.AddParentSuite("执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -92,7 +93,7 @@ func RunSelectedScripts(t provider.T) {
 	t.ID("5481")
 	t.AddParentSuite("执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -126,7 +127,7 @@ func RunOpenedAndLast(t provider.T) {
 	t.ID("5484")
 	t.AddParentSuite("执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -179,7 +180,7 @@ func RunAll(t provider.T) {
 
 	os.RemoveAll(commonTestHelper.GetZtfProductPath())
 	os.Remove(commonTestHelper.GetPhpWorkspacePath() + "1.php")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -214,7 +215,7 @@ func RunWorkspace(t provider.T) {
 	t.ID("5482")
 	t.AddParentSuite("右键执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -257,7 +258,7 @@ func RunDir(t provider.T) {
 	t.ID("5480")
 	t.AddParentSuite("右键执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -290,7 +291,7 @@ func RunUnit(t provider.T) {
 	t.ID("5432")
 	t.AddParentSuite("右键执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -370,7 +371,7 @@ func RunUseProxy(t provider.T) {
 	t.ID("5746")
 	t.AddParentSuite("执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)

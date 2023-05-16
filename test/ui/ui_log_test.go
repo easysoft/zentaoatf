@@ -9,12 +9,13 @@ import (
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 )
 
 func CollapseLog(t provider.T) {
 	t.ID("5502")
 	t.AddParentSuite("脚本执行日志")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -39,7 +40,7 @@ func CollapseLog(t provider.T) {
 func FullScreenLog(t provider.T) {
 	t.ID("5749")
 	t.AddParentSuite("脚本执行日志")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	webpage.WaitForSelector(".tree-node")
 	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})

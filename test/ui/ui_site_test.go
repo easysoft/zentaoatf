@@ -14,7 +14,7 @@ import (
 func CreateSite(t provider.T) {
 	t.ID("5466")
 	t.AddParentSuite("配置禅道站点")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	locator := webpage.Locator("#siteMenuToggle")
 	locator.Click()
@@ -33,7 +33,7 @@ func CreateSite(t provider.T) {
 func EditSite(t provider.T) {
 	t.ID("5466")
 	t.AddParentSuite("配置禅道站点")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	locator := webpage.Locator("#siteMenuToggle")
 	locator.Click()
@@ -63,7 +63,7 @@ func EditSite(t provider.T) {
 func DeleteSite(t provider.T) {
 	t.ID("5466")
 	t.AddParentSuite("配置禅道站点")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	locator := webpage.Locator("#siteMenuToggle")
 	locator.Click()

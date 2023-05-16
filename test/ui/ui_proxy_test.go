@@ -3,6 +3,7 @@ package main
 import (
 	"testing"
 
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	plwConf "github.com/easysoft/zentaoatf/test/ui/conf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
@@ -13,7 +14,7 @@ import (
 func CreateProxy(t provider.T) {
 	t.ID("5740")
 	t.AddParentSuite("设置界面语言")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	webpage.Click("#navbar>>[title=\"设置\"]")
 	webpage.WaitForSelector("#settingModal .z-tbody-tr:has-text('本地节点')")
@@ -45,7 +46,7 @@ func CreateProxy(t provider.T) {
 func EditProxy(t provider.T) {
 	t.ID("5741")
 	t.AddParentSuite("设置界面语言")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	webpage.Click("#navbar>>[title=\"设置\"]")
 	webpage.WaitForSelectorTimeout("#proxyTable", 5000)
@@ -63,7 +64,7 @@ func EditProxy(t provider.T) {
 func DeleteProxy(t provider.T) {
 	t.ID("5742")
 	t.AddParentSuite("设置界面语言")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	webpage.Click("#navbar>>[title=\"设置\"]")
 	webpage.WaitForSelectorTimeout("#proxyTable", 5000)

@@ -3,6 +3,7 @@ package main
 import (
 	"testing"
 
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
@@ -12,7 +13,7 @@ import (
 func SwitchProduct(t provider.T) {
 	t.ID("5496")
 	t.AddParentSuite("切换禅道产品")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.ExpandWorspace(webpage)
 	webpage.Click("#productMenuToggle")

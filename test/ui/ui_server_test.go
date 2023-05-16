@@ -3,6 +3,7 @@ package main
 import (
 	"testing"
 
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	plwConf "github.com/easysoft/zentaoatf/test/ui/conf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
@@ -13,7 +14,7 @@ import (
 func CreateServer(t provider.T) {
 	t.ID("5737")
 	t.AddParentSuite("管理服务器")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	webpage.Click("#navbar>>[title=\"设置\"]")
 	webpage.Click("text=新建服务器")
@@ -30,7 +31,7 @@ func CreateServer(t provider.T) {
 func EditServer(t provider.T) {
 	t.ID("5738")
 	t.AddParentSuite("管理服务器")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	webpage.Click("#navbar>>[title=\"设置\"]")
 	webpage.WaitForSelector("#settingModal .z-tbody-tr:has-text('测试服务器')")
@@ -47,7 +48,7 @@ func EditServer(t provider.T) {
 func DeleteServer(t provider.T) {
 	t.ID("5739")
 	t.AddParentSuite("管理服务器")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	webpage.Click("#navbar>>[title=\"设置\"]")
 	webpage.WaitForSelector("#settingModal .z-tbody-tr:has-text('测试服务器')")

@@ -30,6 +30,10 @@ func Login(url string) (err error) {
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		return
 	}
+	title, _ := page.Title()
+	if !strings.Contains(title, "用户登录") {
+		return
+	}
 	err = page.Fill(`input[name="account"]`, "admin")
 	if err != nil {
 		return
@@ -46,7 +50,7 @@ func Login(url string) (err error) {
 	if err != nil {
 		return
 	}
-	title, err := page.Title()
+	title, err = page.Title()
 	if err != nil {
 		return
 	}
@@ -380,7 +384,7 @@ func InitZentaoData(version string, codeDir string) (err error) {
 		if err != nil {
 			return
 		}
-		err = page.Fill(`input[name="dbPassword"]`, "123456")
+		err = page.Fill(`input[name="dbPassword"]`, "pass4Zentao")
 		if err != nil {
 			return
 		}
@@ -474,6 +478,9 @@ func InitZentaoData(version string, codeDir string) (err error) {
 		}
 		err = createSuite()
 		if err != nil {
+			return
+		}
+		if codeDir == "" {
 			return
 		}
 		err = InstallExt(version, codeDir)
