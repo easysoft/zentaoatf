@@ -194,6 +194,10 @@ func getLastUnitTestResult() (results []map[string]string, err error) {
 	results = []map[string]string{}
 	if iframe != nil {
 		iframe.Click(".nav>>li>>text=用例")
+		navbarHtml, _ := iframe.InnerHTML("#navbar")
+		if !strings.Contains(navbarHtml, "单元测试") {
+			iframe.Click("#byTypeTab")
+		}
 		iframe.Click("#mainMenu>>a>>text=单元测试")
 		iframe.Click("#taskList>>tr>>nth=1>>td>>nth=1>>a")
 		iframe.WaitForSelector("#taskList", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
@@ -293,7 +297,7 @@ func CheckUnitTestResult() bool {
 func InstallExt(version, codeDir string) error {
 	versions := strings.Split(version, ".")
 	versionNumber, _ := strconv.Atoi(versions[0])
-	if versionNumber < 17 {
+	if versionNumber < 17 && version != "latest" {
 		return downloadExt(codeDir)
 	}
 	return nil
@@ -415,14 +419,21 @@ func InitZentaoData(version string, codeDir string) (err error) {
 		if err != nil {
 			return
 		}
+
 		_, err = page.WaitForSelector(".modal-header>>:has-text('保存配置文件')", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
 		if err != nil {
 			return
 		}
+
+		page.WaitForLoadState()
 		title, err = page.Title()
 		if err != nil {
 			return
 		}
+		if strings.Contains(title, "使用模式") {
+			page.Click("text=使用全生命周期管理模式")
+		}
+
 		if strings.Contains(title, "功能介绍") {
 			err = page.Click(`button:has-text("下一步")`)
 			if err != nil {

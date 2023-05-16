@@ -22,7 +22,7 @@ func RunReExecFailCase(t provider.T) {
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	locator := webpage.Locator("#log-list>>code:has-text('执行1个用例，耗时')")
 	innerText := locator.InnerText()
-	if !strings.Contains(innerText, "0(0.0%) 通过，1(100.0%) 失败") {
+	if !strings.Contains(innerText, "通过数：0(0.0%)，失败数：1(100.0%)") {
 		t.Errorf("Exec failed case fail")
 		t.FailNow()
 	}
@@ -57,7 +57,7 @@ func RunReExecAllCase(t provider.T) {
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	locator := webpage.Locator("#log-list>>code:has-text('执行1个用例，耗时')")
 	innerText := locator.InnerText()
-	if !strings.Contains(innerText, "0(0.0%) 通过，1(100.0%) 失败") {
+	if !strings.Contains(innerText, "通过数：0(0.0%)，失败数：1(100.0%)") {
 		t.Errorf("Exec failed case fail")
 		t.FailNow()
 	}

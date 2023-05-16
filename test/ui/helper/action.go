@@ -179,7 +179,7 @@ func (p *Webpage) IsHidden(selector string) bool {
 
 func (p *Webpage) InnerText(selector string) string {
 	t := p.T
-	text, err := p.Page.InnerText(selector)
+	text, err := p.Page.InnerText(selector, playwright.PageInnerTextOptions{Timeout: &conf.Timeout})
 	if err != nil {
 		p.ScreenShot()
 		err = errors.New(fmt.Sprintf("Get %s InnerText fail: %s", selector, err.Error()))
