@@ -43,6 +43,33 @@ pipeline {
       }
     }
 
+    stage("DEBUG") {
+      steps {
+        container('zentao') {
+          sh '/etc/s6/s6-init/run'
+          sh 'apachectl start'
+          sh 'env'
+        }
+        container('golang') {
+          sh 'git config --global --add safe.directory $(pwd)'
+          sh 'CGO_ENABLED=0 make compile_command_linux'
+          sh 'cp bin/linux/ztf ./'
+          sh 'cd bin/linux && tar zcf ${WORKSPACE}/ztf.linux.tar.gz ztf'
+        }
+        container('golang') {
+          sh 'nohup go run cmd/server/main.go &'
+        }
+        container('node') {
+          sh 'cd ui && yarn && nohup yarn serve &'
+        }
+        container('golang') {
+          sh 'CGO_ENABLED=0 go run cmd/cli/main.go'
+          sh 'CGO_ENABLED=0 go run cmd/ui/main.go'
+          sh 'CGO_ENABLED=0 go test $(go list ./... | grep -v /test/ui | grep -v /test/cli | grep -v /test/helper)'
+        }
+      }
+    }
+    
     stage("Test") {
       parallel {
         // stage("UnitTest") {
@@ -138,33 +165,5 @@ pipeline {
       }
 
     } // End Build
-
-    stage("DEBUG") {
-      steps {
-        container('zentao') {
-          sh '/etc/s6/s6-init/run'
-          sh 'apachectl start'
-          sh 'env'
-        }
-        container('golang') {
-          sh 'git config --global --add safe.directory $(pwd)'
-          sh 'CGO_ENABLED=0 make compile_command_linux'
-          sh 'cp bin/linux/ztf ./'
-          sh 'cd bin/linux && tar zcf ${WORKSPACE}/ztf.linux.tar.gz ztf'
-        }
-        container('golang') {
-          sh 'nohup go run cmd/server/main.go &'
-        }
-        container('node') {
-          sh 'cd ui && yarn && nohup yarn serve &'
-        }
-        container('golang') {
-          sh 'CGO_ENABLED=0 go run cmd/cli/main.go'
-          sh 'CGO_ENABLED=0 go run cmd/ui/main.go'
-          sh 'CGO_ENABLED=0 go test $(go list ./... | grep -v /test/ui | grep -v /test/cli | grep -v /test/helper)'
-        }
-      }
-    }
-
   }
 }
