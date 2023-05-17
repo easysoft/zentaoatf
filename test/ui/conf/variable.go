@@ -3,6 +3,6 @@ package conf
 var (
 	ExitAllOnError         = true
 	ShowErr                = true
-	Headless               = false
+	Headless               = true
 	Timeout        float64 = 5000
 )

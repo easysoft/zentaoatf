@@ -2,6 +2,7 @@ package uiTest
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -492,6 +493,9 @@ func InitZentaoData(version string, codeDir string) (err error) {
 }
 
 func Close() {
+	if page == nil {
+		return
+	}
 	page.Close()
 	pw.Stop()
 }
@@ -501,18 +505,23 @@ func init() {
 		return
 	}
 	var err error
-	pw, err = playwright.Run()
+	pw, err = playwright.Run(&playwright.RunOptions{
+		SkipInstallBrowsers: true,
+	})
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 	headless := conf.Headless
 	var slowMo float64 = 100
 	browser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 	page, err = browser.NewPage()
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 	Login(constTestHelper.ZentaoSiteUrl)
