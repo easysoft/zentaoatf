@@ -542,7 +542,7 @@ func init() {
 		fmt.Println(err)
 		return
 	}
-	page, err = browser.NewPage()
+	page, err = browser.NewPage(playwright.BrowserNewContextOptions{Locale: &conf.Locale})
 	if err != nil {
 		fmt.Println(err)
 		return

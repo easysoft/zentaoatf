@@ -21,7 +21,7 @@ func OpenUrl(url string, t provider.T) (ret Webpage, err error) {
 	browser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	utils.PrintErrOrNot(err, t)
 
-	page, err := browser.NewPage()
+	page, err := browser.NewPage(playwright.BrowserNewContextOptions{Locale: &conf.Locale})
 	utils.PrintErrOrNot(err, t)
 
 	if _, err = page.Goto(url, playwright.PageGotoOptions{WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
