@@ -17,9 +17,9 @@ pipeline {
             tty: true
             env:
             - name: MYSQL_PASSWORD
-              value: pass4Zentao
+              value: 123456
             - name: MYSQL_ROOT_PASSWORD
-              value: pass4Zentao
+              value: 123456
           - name: playwright
             image: hub.qucheng.com/ci/playwright-go:v1
             tty: true
@@ -63,8 +63,11 @@ pipeline {
           sh 'nohup go run cmd/server/main.go &'
         }
         container('node') {
+          sh 'yarn config set registry https://registry.npm.taobao.org --global'
           sh 'cd ui && yarn && nohup yarn serve &'
+          sh 'while ! nc -z 127.0.0.1 8000; do sleep 1;done'
         }
+                
         container('playwright') {
           sh 'CGO_ENABLED=0 go run test/ui/main.go -runFrom jenkins'
           sh 'CGO_ENABLED=0 go run test/cli/main.go -runFrom jenkins'
