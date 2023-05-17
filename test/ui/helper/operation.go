@@ -3,15 +3,17 @@ package plw
 import (
 	"errors"
 	"fmt"
+	"time"
+
 	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	"github.com/easysoft/zentaoatf/test/ui/conf"
-	"time"
 
 	"github.com/easysoft/zentaoatf/test/ui/utils"
 	playwright "github.com/playwright-community/playwright-go"
 )
 
 func (l MyLocator) Click(options ...playwright.PageClickOptions) (err error) {
+	options = append([]playwright.PageClickOptions{{Timeout: &conf.Timeout}}, options...)
 	err = l.PlwLocator.Click(options...)
 	t := l.T
 	if err != nil {

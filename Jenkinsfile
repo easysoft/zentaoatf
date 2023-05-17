@@ -12,6 +12,9 @@ pipeline {
             image: hub.qucheng.com/app/quickon-zentao:max4.3.k8s-20230407
             tty: true
             args: ["sleep", "99d"]
+            env:
+            - name: MYSQL_PASSWORD
+              value: 123456
           - name: mysql
             image: hub.qucheng.com/app/mysql:5.7.37-debian-10
             tty: true
@@ -38,7 +41,7 @@ pipeline {
       steps {
         container('playwright') {
         //   sh "sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories"
-          sh "apt install make git gcc libc-dev"
+          sh "apt install -y make git gcc libc-dev curl"
           sh 'go mod download'
         //   sh 'go install -a -v github.com/go-bindata/go-bindata/...@latest'
           sh 'go-bindata -o=res/res.go -pkg=res res/...'
@@ -69,6 +72,8 @@ pipeline {
         }
                 
         container('playwright') {
+          sh 'curl http://127.0.0.1:8000'
+          sh 'curl http://127.0.0.1'
           sh 'CGO_ENABLED=0 go run test/ui/main.go -runFrom jenkins'
           sh 'CGO_ENABLED=0 go run test/cli/main.go -runFrom jenkins'
           sh 'CGO_ENABLED=0 go test $(go list ./... | grep -v /test/ui | grep -v /test/cli | grep -v /test/helper)'
