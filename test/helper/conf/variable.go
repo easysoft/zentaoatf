@@ -13,7 +13,7 @@ const (
 var (
 	NewLine       = "\n"
 	RootPath      = ""
-	ZentaoSiteUrl = "http://127.0.0.1:80"
+	ZentaoSiteUrl = "http://127.0.0.1:80/"
 	ZtfUrl        = "http://127.0.0.1:8000/"
 )
 
