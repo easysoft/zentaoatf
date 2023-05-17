@@ -25,7 +25,7 @@ import (
 	"strings"
 )
 
-func setScriptInterpreter(filePath, lang, uuidString string, conf commDomain.WorkspaceConf, ctx context.Context, wsMsg *websocket.Message) (
+func getCommand(filePath, lang, uuidString string, conf commDomain.WorkspaceConf, ctx context.Context, wsMsg *websocket.Message) (
 	cmd *exec.Cmd) {
 
 	if commonUtils.IsWin() {

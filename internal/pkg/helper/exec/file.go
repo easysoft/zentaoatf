@@ -38,7 +38,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(timeout))
 	defer cancel()
 
-	cmd := setScriptInterpreter(filePath, lang, uuidString, conf, ctx, wsMsg)
+	cmd := getCommand(filePath, lang, uuidString, conf, ctx, wsMsg)
 
 	if cmd == nil {
 		msgStr := i118Utils.Sprintf("cmd_empty")
@@ -60,21 +60,9 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	stderr, err2 := cmd.StderrPipe()
 
 	if err1 != nil {
-		if commConsts.ExecFrom == commConsts.FromClient {
-			websocketHelper.SendOutputMsg(err1.Error(), "", iris.Map{"key": key}, wsMsg)
-		}
-		logUtils.ExecConsolef(color.FgRed, err1.Error())
-		logUtils.ExecFilef(err1.Error())
-
-		return "", err1.Error()
+		return PrintErrMsg(key, err1, wsMsg)
 	} else if err2 != nil {
-		if commConsts.ExecFrom == commConsts.FromClient {
-			websocketHelper.SendOutputMsg(err2.Error(), "", iris.Map{"key": key}, wsMsg)
-		}
-		logUtils.ExecConsolef(color.FgRed, err2.Error())
-		logUtils.ExecFilef(err2.Error())
-
-		return "", err2.Error()
+		return PrintErrMsg(key, err2, wsMsg)
 	}
 
 	cmd.Start()
