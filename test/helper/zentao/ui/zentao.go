@@ -501,6 +501,8 @@ func InitZentaoData(version string, codeDir string) (err error) {
 			return
 		}
 		err = createSuite()
+		title, err = page.Title()
+		fmt.Println(title)
 		if err != nil {
 			return
 		}
