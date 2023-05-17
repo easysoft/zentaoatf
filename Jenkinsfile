@@ -1,7 +1,7 @@
 pipeline {
   agent {
     kubernetes {
-      inheritFrom "build-go build-node code-scan xuanim"
+      inheritFrom "build-node code-scan xuanim"
       yaml '''
         apiVersion: v1
         kind: Pod
@@ -20,6 +20,9 @@ pipeline {
               value: pass4Zentao
             - name: MYSQL_ROOT_PASSWORD
               value: pass4Zentao
+          - name: playwright
+            image: hub.qucheng.com/ci/playwright-go:v1
+            tty: true
           nodeSelector:
             kubernetes.io/hostname: k3s-worker01
         '''
@@ -33,11 +36,11 @@ pipeline {
       }
 
       steps {
-        container('golang') {
-          sh "sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories"
-          sh "apk --no-cache add make git gcc libc-dev"
+        container('playwright') {
+        //   sh "sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories"
+          sh "apt install make git gcc libc-dev"
           sh 'go mod download'
-          sh 'go install -a -v github.com/go-bindata/go-bindata/...@latest'
+        //   sh 'go install -a -v github.com/go-bindata/go-bindata/...@latest'
           sh 'go-bindata -o=res/res.go -pkg=res res/...'
         }
       }
@@ -50,21 +53,21 @@ pipeline {
           sh 'apachectl start'
           sh 'env'
         }
-        container('golang') {
+        container('playwright') {
           sh 'git config --global --add safe.directory $(pwd)'
           sh 'CGO_ENABLED=0 make compile_command_linux'
           sh 'cp bin/linux/ztf ./'
           sh 'cd bin/linux && tar zcf ${WORKSPACE}/ztf.linux.tar.gz ztf'
         }
-        container('golang') {
+        container('playwright') {
           sh 'nohup go run cmd/server/main.go &'
         }
         container('node') {
           sh 'cd ui && yarn && nohup yarn serve &'
         }
-        container('golang') {
-          sh 'CGO_ENABLED=0 go run cmd/cli/main.go'
-          sh 'CGO_ENABLED=0 go run cmd/ui/main.go'
+        container('playwright') {
+          sh 'CGO_ENABLED=0 go run test/cli/main.go -runFrom jenkins'
+          sh 'CGO_ENABLED=0 go run test/ui/main.go -runFrom jenkins'
           sh 'CGO_ENABLED=0 go test $(go list ./... | grep -v /test/ui | grep -v /test/cli | grep -v /test/helper)'
         }
       }
