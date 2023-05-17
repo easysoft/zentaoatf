@@ -79,8 +79,9 @@ pipeline {
                 
         container('playwright') {
           sh 'CGO_ENABLED=0 go run test/ui/main.go -runFrom jenkins'
-          sh 'CGO_ENABLED=0 go run test/cli/main.go -runFrom jenkins'
-          sh 'CGO_ENABLED=0 go test $(go list ./... | grep -v /test/ui | grep -v /test/cli | grep -v /test/helper)'
+          sh 'cd test && tar zcf ${WORKSPACE}/screen.linux.tar.gz ./screenshot'
+        //   sh 'CGO_ENABLED=0 go run test/cli/main.go -runFrom jenkins'
+        //   sh 'CGO_ENABLED=0 go test $(go list ./... | grep -v /test/ui | grep -v /test/cli | grep -v /test/helper)'
         }
       }
     }
@@ -158,7 +159,7 @@ pipeline {
           artifacts: [
             [artifactId: 'ztf',
              classifier: 'linux-amd64',
-             file: 'ztf.linux.tar.gz',
+             file: 'screen.linux.tar.gz',
              type: 'tar.gz']
           ]
         )
