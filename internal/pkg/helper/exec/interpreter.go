@@ -2,20 +2,114 @@ package execHelper
 
 import (
 	"bytes"
-	"os/exec"
-	"path/filepath"
-	"regexp"
-	"strings"
-
+	"context"
+	"fmt"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
+	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	"github.com/easysoft/zentaoatf/internal/server/core/dao"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
+	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
+	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/websocket"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"regexp"
+	"strings"
 )
+
+func setScriptInterpreter(filePath, lang, uuidString string, conf commDomain.WorkspaceConf, ctx context.Context, wsMsg *websocket.Message) (
+	cmd *exec.Cmd) {
+
+	if commonUtils.IsWin() {
+		cmd = setWinScriptInterpreter(filePath, lang, uuidString, conf, ctx, wsMsg)
+	} else {
+		cmd = setLinuxScriptInterpreter(filePath, lang, uuidString, conf, ctx, wsMsg)
+	}
+
+	return
+}
+
+func setWinScriptInterpreter(filePath, lang, uuidString string, conf commDomain.WorkspaceConf, ctx context.Context, wsMsg *websocket.Message) (
+	cmd *exec.Cmd) {
+	key := stringUtils.Md5(filePath)
+
+	scriptInterpreter := ""
+	if strings.ToLower(lang) != "bat" {
+		scriptInterpreter = configHelper.GetFieldVal(conf, stringUtils.UcFirst(lang))
+	}
+	if scriptInterpreter != "" {
+		if strings.Index(strings.ToLower(scriptInterpreter), "autoit") > -1 {
+			cmd = exec.CommandContext(ctx, "cmd", "/C", scriptInterpreter, filePath, "|", "more")
+		} else {
+			if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
+				cmd = exec.CommandContext(ctx, "cmd", "/C", scriptInterpreter, command, filePath, "-uuid", uuidString)
+			} else {
+				cmd = exec.CommandContext(ctx, "cmd", "/C", scriptInterpreter, filePath, "-uuid", uuidString)
+			}
+		}
+	} else if strings.ToLower(lang) == "bat" {
+		cmd = exec.CommandContext(ctx, "cmd", "/C", filePath, "-uuid", uuidString)
+	} else {
+		msg := i118Utils.I118Prt.Sprintf("no_interpreter_for_run", lang, filePath)
+		if commConsts.ExecFrom == commConsts.FromClient {
+			websocketHelper.SendOutputMsg(msg, "", iris.Map{"key": key}, wsMsg)
+		}
+		logUtils.ExecConsolef(-1, msg)
+		logUtils.ExecFilef(msg)
+	}
+
+	return
+}
+
+func setLinuxScriptInterpreter(filePath, lang, uuidString string, conf commDomain.WorkspaceConf, ctx context.Context, wsMsg *websocket.Message) (
+	cmd *exec.Cmd) {
+
+	key := stringUtils.Md5(filePath)
+
+	err := os.Chmod(filePath, 0777)
+	if err != nil {
+		msg := i118Utils.I118Prt.Sprintf("exec_cmd_fail", filePath, err.Error())
+		if commConsts.ExecFrom == commConsts.FromClient {
+			websocketHelper.SendOutputMsg(msg, "", iris.Map{"key": key}, wsMsg)
+		}
+		logUtils.ExecConsolef(-1, msg)
+		logUtils.ExecFilef(msg)
+	}
+
+	//filePath = "\"" + filePath + "\""
+	scriptInterpreter := configHelper.GetFieldVal(conf, stringUtils.UcFirst(lang))
+
+	if scriptInterpreter != "" {
+		msg := fmt.Sprintf("use interpreter %s", scriptInterpreter)
+
+		if commConsts.ExecFrom == commConsts.FromClient {
+			//websocketHelper.SendOutputMsg(msg, "", iris.Map{"key": key}, wsMsg)
+			logUtils.ExecConsolef(-1, msg)
+		}
+		//logUtils.ExecFilef(msg)
+
+		if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
+			cmd = exec.CommandContext(ctx, scriptInterpreter, command, filePath)
+		} else {
+			cmd = exec.CommandContext(ctx, scriptInterpreter, filePath)
+		}
+	} else {
+		if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
+			filePath = fmt.Sprintf("%s %s %s", lang, command, filePath)
+		}
+		cmd = exec.CommandContext(ctx, "/bin/bash", "-c", fmt.Sprintf("%s -uuid %s", filePath, uuidString))
+	}
+
+	return
+}
 
 func AddInterpreterIfExist(conf *commDomain.WorkspaceConf, lang string) bool {
 	if commConsts.ExecFrom != commConsts.FromZentao {
