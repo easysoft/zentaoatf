@@ -31,10 +31,12 @@ func main() {
 	}()
 
 	if *runFrom == "jenkins" {
+		fmt.Println("Init zentao data start ")
 		err := commonTestHelper.InitZentaoData()
 		if err != nil {
 			fmt.Println("Init zentao data fail ", err)
 		}
+		fmt.Println("Init zentao data end ")
 	} else {
 		err := commonTestHelper.InitZentao(*version)
 		if err != nil {
