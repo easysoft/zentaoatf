@@ -181,7 +181,7 @@ func ValidateStepResult(langType string, expectLines []string, actualLines []str
 			pass = MatchScene(expect[1:len(expect)-1], log, langType)
 		} else if len(expect) >= 2 && expect[:1] == "`" && expect[len(expect)-1:] == "`" {
 			expect = expect[1 : len(expect)-1]
-			pass = MatchString(expect, log, langType)
+			pass = Match(expect, log)
 		} else {
 			pass = strings.TrimSpace(log) == strings.TrimSpace(expect)
 		}
@@ -200,7 +200,54 @@ func ValidateStepResult(langType string, expectLines []string, actualLines []str
 
 }
 
-func MatchString(expect string, actual string, langType string) bool {
+func MatchScene(expect, actual, langType string) (pass bool) {
+	expect = strings.TrimSpace(expect)
+	actual = strings.TrimSpace(actual)
+
+	if len(expect) == 0 {
+		pass = actual == ""
+		return
+	}
+
+	if len(expect) <= 2 {
+		return
+	}
+
+	// len(expect) > 2
+	scene := expect[:2]
+	expect = strings.TrimSpace(expect[2:])
+
+	switch scene {
+	case "f:":
+		return Contain(expect, actual, langType)
+
+	case "m:":
+		return Match(expect, actual)
+
+	case "c:":
+		return Compare(expect, actual)
+
+	case "l:":
+		return Logic(expect, actual, langType)
+	}
+
+	return
+}
+
+func Contain(expect, actual string, langType string) bool {
+	if strings.Contains(expect, "*") {
+		expectArr := strings.Split(expect, "*")
+		repeatCount, _ := strconv.Atoi(string(expectArr[1]))
+		return strings.Count(actual, expectArr[0]) >= repeatCount
+	}
+	if expect[0:1] == "(" && expect[len(expect)-1:] == ")" && strings.Contains(expect, ",") {
+		expect = fmt.Sprintf("^%s{1}$", strings.ReplaceAll(expect, ",", "|"))
+	}
+
+	return Match(expect, actual)
+}
+
+func Match(expect string, actual string) bool {
 	expect = strings.TrimSpace(expect)
 	actual = strings.TrimSpace(actual)
 
@@ -215,124 +262,107 @@ func MatchString(expect string, actual string, langType string) bool {
 	return pass
 }
 
-func MatchScene(expect, actual, langType string) (pass bool) {
-	expect = strings.TrimSpace(expect)
-	actual = strings.TrimSpace(actual)
-	if len(expect) == 0 {
-		return actual == ""
+func Compare(expect string, actual string) bool {
+	if len(expect) > 2 && (expect[:2] == ">=" || expect[:2] == "<=" || expect[:2] == "<>" || expect[:2] == "!=") {
+		character := expect[:2]
+		expectFloot, err := strconv.ParseFloat(strings.TrimSpace(expect[2:]), 64)
+		if err != nil {
+			return false
+		}
+		actualFloot, err := strconv.ParseFloat(strings.TrimSpace(actual), 64)
+		if err != nil {
+			return false
+		}
+		switch character {
+		case ">=":
+			return actualFloot >= expectFloot
+		case "<=":
+			return actualFloot <= expectFloot
+		case "<>":
+			return actualFloot != expectFloot
+		case "!=":
+			return actualFloot != expectFloot
+		}
+
+		return false
 	}
 
-	if len(expect) > 2 {
-		scene := expect[:2]
-		expect = strings.TrimSpace(expect[2:])
-		switch scene {
-		case "f:":
-			if strings.Contains(expect, "*") {
-				expectArr := strings.Split(expect, "*")
-				repeatCount, _ := strconv.Atoi(string(expectArr[1]))
-				return strings.Count(actual, expectArr[0]) >= repeatCount
-			}
-			if expect[0:1] == "(" && expect[len(expect)-1:] == ")" && strings.Contains(expect, ",") {
-				expect = fmt.Sprintf("^%s{1}$", strings.ReplaceAll(expect, ",", "|"))
-			}
-			return MatchString(expect, actual, langType)
-		case "m:":
-			return MatchString(expect, actual, langType)
-		case "c:":
-			if len(expect) > 2 && (expect[:2] == ">=" || expect[:2] == "<=" || expect[:2] == "<>" || expect[:2] == "!=") {
-				character := expect[:2]
-				expectFloot, err := strconv.ParseFloat(strings.TrimSpace(expect[2:]), 64)
-				if err != nil {
-					return false
-				}
-				actualFloot, err := strconv.ParseFloat(strings.TrimSpace(actual), 64)
-				if err != nil {
-					return false
-				}
-				switch character {
-				case ">=":
-					return actualFloot >= expectFloot
-				case "<=":
-					return actualFloot <= expectFloot
-				case "<>":
-					return actualFloot != expectFloot
-				case "!=":
-					return actualFloot != expectFloot
-				}
-			} else if strings.Contains(expect, "-") && strings.Count(expect, "-") == 1 {
-				rangeArr := strings.Split(expect, "-")
-				rangeFrom, err := strconv.ParseFloat(strings.TrimSpace(rangeArr[0]), 64)
-				if err != nil {
-					return false
-				}
-				rangeTo, err := strconv.ParseFloat(strings.TrimSpace(rangeArr[1]), 64)
-				if err != nil {
-					return false
-				}
-				actualFloot, err := strconv.ParseFloat(strings.TrimSpace(actual), 64)
-				if err != nil {
-					return false
-				}
-				return actualFloot >= rangeFrom && actualFloot <= rangeTo
-			} else {
-				character := expect[:1]
-				expectFloot, err := strconv.ParseFloat(strings.TrimSpace(expect[1:]), 64)
-				if err != nil {
-					return false
-				}
-				actualFloot, err := strconv.ParseFloat(strings.TrimSpace(actual), 64)
-				if err != nil {
-					return false
-				}
-				switch character {
-				case ">":
-					return actualFloot > expectFloot
-				case "<":
-					return actualFloot < expectFloot
-				case "=":
-					return actualFloot == expectFloot
-				}
-				if strings.Contains(expect, "-") {
-					expectArr := strings.Split(expect, "-")
-					expectMin, _ := strconv.ParseFloat(strings.TrimSpace(expectArr[0]), 64)
-					expectMax, _ := strconv.ParseFloat(strings.TrimSpace(expectArr[1]), 64)
-					return actualFloot >= expectMin && actualFloot <= expectMax
-				}
-			}
-		case "l:":
-			openParenthesisCount, closeParenthesisCount := 0, 0
-			hasLogicCharacter := false
-			for index, v := range expect {
-				if v == '(' {
-					openParenthesisCount++
-				} else if v == ')' {
-					closeParenthesisCount++
-				}
-				if v == '&' || v == '|' {
-					hasLogicCharacter = true
-				}
-				if v == '|' && index > 0 && expect[index-1] != '\\' && (openParenthesisCount == closeParenthesisCount) {
-					return MatchScene("l:"+expect[:index], actual, langType) || MatchScene("l:"+expect[index+1:], actual, langType)
-				} else if v == '&' && index > 0 && string(expect[index-1]) != "\\" && (openParenthesisCount == closeParenthesisCount) {
-					return MatchScene("l:"+expect[:index], actual, langType) && MatchScene("l:"+expect[index+1:], actual, langType)
-				}
-			}
-			if expect[:1] == "(" {
-				expect = expect[1:]
-			}
-			if expect[len(expect)-1:] == ")" {
-				expect = expect[:len(expect)-1]
-			}
-			if !hasLogicCharacter {
-				if expect[:1] == "!" {
-					return !MatchScene(expect[1:], actual, langType)
-				}
-				return MatchScene(expect, actual, langType)
-			} else {
-				return MatchScene("l:"+expect, actual, langType)
-			}
+	if strings.Contains(expect, "-") && strings.Count(expect, "-") == 1 {
+		rangeArr := strings.Split(expect, "-")
+		rangeFrom, err := strconv.ParseFloat(strings.TrimSpace(rangeArr[0]), 64)
+		if err != nil {
+			return false
+		}
+		rangeTo, err := strconv.ParseFloat(strings.TrimSpace(rangeArr[1]), 64)
+		if err != nil {
+			return false
+		}
+		actualFloot, err := strconv.ParseFloat(strings.TrimSpace(actual), 64)
+		if err != nil {
+			return false
+		}
+		return actualFloot >= rangeFrom && actualFloot <= rangeTo
+	}
+
+	character := expect[:1]
+	expectFloot, err := strconv.ParseFloat(strings.TrimSpace(expect[1:]), 64)
+	if err != nil {
+		return false
+	}
+	actualFloot, err := strconv.ParseFloat(strings.TrimSpace(actual), 64)
+	if err != nil {
+		return false
+	}
+	switch character {
+	case ">":
+		return actualFloot > expectFloot
+	case "<":
+		return actualFloot < expectFloot
+	case "=":
+		return actualFloot == expectFloot
+	}
+	if strings.Contains(expect, "-") {
+		expectArr := strings.Split(expect, "-")
+		expectMin, _ := strconv.ParseFloat(strings.TrimSpace(expectArr[0]), 64)
+		expectMax, _ := strconv.ParseFloat(strings.TrimSpace(expectArr[1]), 64)
+		return actualFloot >= expectMin && actualFloot <= expectMax
+	}
+
+	return false
+}
+
+func Logic(expect, actual, langType string) bool {
+	openParenthesisCount, closeParenthesisCount := 0, 0
+	hasLogicCharacter := false
+	for index, v := range expect {
+		if v == '(' {
+			openParenthesisCount++
+		} else if v == ')' {
+			closeParenthesisCount++
+		}
+		if v == '&' || v == '|' {
+			hasLogicCharacter = true
+		}
+		if v == '|' && index > 0 && expect[index-1] != '\\' && (openParenthesisCount == closeParenthesisCount) {
+			return MatchScene("l:"+expect[:index], actual, langType) || MatchScene("l:"+expect[index+1:], actual, langType)
+		} else if v == '&' && index > 0 && string(expect[index-1]) != "\\" && (openParenthesisCount == closeParenthesisCount) {
+			return MatchScene("l:"+expect[:index], actual, langType) && MatchScene("l:"+expect[index+1:], actual, langType)
 		}
 	}
+	if expect[:1] == "(" {
+		expect = expect[1:]
+	}
+	if expect[len(expect)-1:] == ")" {
+		expect = expect[:len(expect)-1]
+	}
+	if !hasLogicCharacter {
+		if expect[:1] == "!" {
+			return !MatchScene(expect[1:], actual, langType)
+		}
+		return MatchScene(expect, actual, langType)
+	} else {
+		return MatchScene("l:"+expect, actual, langType)
+	}
 
-	return pass
+	return false
 }
