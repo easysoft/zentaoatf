@@ -19,22 +19,22 @@ func ScriptBug(t provider.T) {
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
-	// ztfTestHelper.ExpandWorspace(webpage)
-	// ztfTestHelper.RunScript(webpage, "1_string_match.php")
-	// ztfTestHelper.SubmitResult(webpage)
-	// webpage.Click(".tree-node-title:has-text('1_string_match.php')")
-	// webpage.WaitForResponse("**/bugs*")
-	// webpage.WaitForSelectorTimeout(".statistic>>span>>nth=3", 3000)
-	// webpage.Click(".statistic>>span>>nth=3")
-	// webpage.WaitForSelectorTimeout("#bugsModal>>tr", 3000)
-	// elements := webpage.QuerySelectorAll("#bugsModal>>tr")
+	ztfTestHelper.ExpandWorspace(webpage)
+	ztfTestHelper.RunScript(webpage, "1_string_match.php")
+	ztfTestHelper.SubmitResult(webpage)
+	webpage.Click(".tree-node-title:has-text('1_string_match.php')")
+	webpage.WaitForResponse("**/bugs*")
+	webpage.WaitForSelectorTimeout(".statistic>>span>>nth=3", 3000)
+	webpage.Click(".statistic>>span>>nth=3")
+	webpage.WaitForSelectorTimeout("#bugsModal>>tr", 3000)
+	elements := webpage.QuerySelectorAll("#bugsModal>>tr")
 
-	// bugTimesInt := len(elements.ElementHandles)
-	// if bugTimesInt < 2 {
-	// 	webpage.ScreenShot()
-	// 	t.Error("View script bug error")
-	// 	t.FailNow()
-	// }
+	bugTimesInt := len(elements.ElementHandles)
+	if bugTimesInt < 2 {
+		webpage.ScreenShot()
+		t.Error("View script bug error")
+		t.FailNow()
+	}
 }
 
 func ScriptsBug(t provider.T) {
@@ -60,5 +60,5 @@ func ScriptsBug(t provider.T) {
 }
 func TestUiBug(t *testing.T) {
 	runner.Run(t, "客户端-查看单个脚本bug列表", ScriptBug)
-	// runner.Run(t, "客户端-查看选中脚本bug列表", ScriptsBug)
+	runner.Run(t, "客户端-查看选中脚本bug列表", ScriptsBug)
 }

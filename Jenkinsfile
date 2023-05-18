@@ -30,7 +30,7 @@ pipeline {
             - name: MYSQL_ROOT_PASSWORD
               value: 123456
           - name: playwright
-            image: hub.qucheng.com/ci/playwright-go:v2
+            image: hub.qucheng.com/ci/playwright-go:v3
             tty: true
           nodeSelector:
             kubernetes.io/hostname: k3s-worker01
