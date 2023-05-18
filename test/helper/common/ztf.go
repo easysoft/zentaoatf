@@ -76,7 +76,7 @@ func RunUi() (err error) {
 			}
 		}
 	}()
-	waitZtfAccessed()
+	WaitZtfAccessed()
 	return
 }
 
@@ -96,9 +96,9 @@ func GetPhpWorkspacePath() string {
 	return fmt.Sprintf("%s%s%s%s%s%s%s", constTestHelper.RootPath, "test", constTestHelper.FilePthSep, "demo", constTestHelper.FilePthSep, "php", constTestHelper.FilePthSep)
 }
 
-func waitZtfAccessed() {
+func WaitZtfAccessed() {
 	isTimeout := false
-	time.AfterFunc(20*time.Second, func() {
+	time.AfterFunc(120*time.Second, func() {
 		isTimeout = true
 	})
 	for {

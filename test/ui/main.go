@@ -56,5 +56,6 @@ func main() {
 		}
 	}
 
+	commonTestHelper.WaitZtfAccessed()
 	commonTestHelper.TestUi()
 }
