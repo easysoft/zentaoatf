@@ -57,7 +57,7 @@ func RunScriptByRightClick(t provider.T) {
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
 	scriptLocator := webpage.Locator(".tree-node-title>>text=1_string_match.php")
-	scriptLocator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
+	scriptLocator.RightClick()
 	webpage.Click(".tree-context-menu>>text=执行")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	innerText := webpage.InnerText("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
@@ -234,7 +234,7 @@ func RunWorkspace(t provider.T) {
 		runRes = "通过数：1(33.0%)，失败数：2(66.0%)"
 		resTitle = "单元测试工作目录(3)"
 	}
-	locator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
+	locator.RightClick()
 	webpage.Click(".tree-context-menu>>text=执行")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('" + runInfo + "')")
 	locator = webpage.Locator("#log-list>>code:has-text('" + runInfo + "')")
@@ -312,7 +312,7 @@ func RunUnit(t provider.T) {
 		t.Errorf("Find workspace fail")
 		t.FailNow()
 	}
-	locator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
+	locator.RightClick()
 	webpage.Click(".tree-context-menu>>text=执行")
 	webpage.WaitForSelectorTimeout("#tabsPane >> text=执行", 3000)
 	locator = webpage.Locator("#tabsPane>>.form-item:has-text('测试命令')>>input")
@@ -432,16 +432,16 @@ func selectLocalProxy(webpage plwHelper.Webpage) {
 	webpage.Click(".list-item-title:has-text('本地节点')")
 }
 func TestUiRun(t *testing.T) {
-	// runner.Run(t, "客户端-执行单个脚本", RunScript)
-	// runner.Run(t, "客户端-右键执行单个脚本", RunScriptByRightClick)
-	// if runtime.GOOS == "windows" {
-	// 	runner.Run(t, "客户端-忽略执行未设置解析器的脚本", RunNoInterpreterScript)
-	// }
-	// runner.Run(t, "客户端-执行选中的脚本文件和文件夹", RunSelectedScripts)
-	// runner.Run(t, "客户端-执行打开的脚本文件", RunOpenedAndLast)
-	// runner.Run(t, "客户端-执行所有的脚本文件", RunAll)
-	// runner.Run(t, "客户端-右键执行工作目录", RunWorkspace)
-	// runner.Run(t, "客户端-右键执行文件夹", RunDir)
+	runner.Run(t, "客户端-执行单个脚本", RunScript)
+	runner.Run(t, "客户端-右键执行单个脚本", RunScriptByRightClick)
+	if runtime.GOOS == "windows" {
+		runner.Run(t, "客户端-忽略执行未设置解析器的脚本", RunNoInterpreterScript)
+	}
+	runner.Run(t, "客户端-执行选中的脚本文件和文件夹", RunSelectedScripts)
+	runner.Run(t, "客户端-执行打开的脚本文件", RunOpenedAndLast)
+	runner.Run(t, "客户端-执行所有的脚本文件", RunAll)
+	runner.Run(t, "客户端-右键执行工作目录", RunWorkspace)
+	runner.Run(t, "客户端-右键执行文件夹", RunDir)
 	runner.Run(t, "客户端-执行TestNG单元测试", RunUnit)
-	// runner.Run(t, "客户端-使用代理执行单个脚本", RunUseProxy)
+	runner.Run(t, "客户端-使用代理执行单个脚本", RunUseProxy)
 }

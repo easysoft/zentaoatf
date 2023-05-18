@@ -22,7 +22,7 @@ func SaveScript(t provider.T) {
 	locator := webpage.Locator(".view-line>>text=title=check string matches pattern")
 	var positionX, positionY float64 = 400, 0
 	force := true
-	locator.Click(playwright.PageClickOptions{Force: &force, Position: &playwright.PageClickOptionsPosition{X: &positionX, Y: &positionY}})
+	locator.ClickWithOption(playwright.PageClickOptions{Force: &force, Position: &playwright.PageClickOptionsPosition{X: &positionX, Y: &positionY}})
 	locator.Type("-test")
 	webpage.Click(".tabs-nav-toolbar>>[title=\"Save\"]")
 	webpage.WaitForSelector(".toast-notification-close")
@@ -31,7 +31,7 @@ func SaveScript(t provider.T) {
 	webpage.Click(".tree-node-title>>text=1_string_match.php")
 
 	locator = webpage.Locator(".view-line>>:has-text('title=check string matches pattern')")
-	locator.Click(playwright.PageClickOptions{Force: &force, Position: &playwright.PageClickOptionsPosition{X: &positionX, Y: &positionY}})
+	locator.ClickWithOption(playwright.PageClickOptions{Force: &force, Position: &playwright.PageClickOptionsPosition{X: &positionX, Y: &positionY}})
 	locator.Press("Backspace")
 	locator.Press("Backspace")
 	locator.Press("Backspace")
