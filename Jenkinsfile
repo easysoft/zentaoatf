@@ -74,7 +74,6 @@ pipeline {
         container('node') {
           sh 'yarn config set registry https://registry.npm.taobao.org --global'
           sh 'cd ui && yarn && nohup yarn serve &'
-          sh 'while ! nc -z 127.0.0.1 8000; do sleep 1;done'
         }
                 
         container('playwright') {

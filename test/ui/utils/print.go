@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/easysoft/zentaoatf/test/ui/conf"
@@ -9,6 +10,7 @@ import (
 
 func PrintErrOrNot(err error, t provider.T) {
 	if err != nil && t != nil {
+		fmt.Println(err)
 		if conf.ExitAllOnError {
 			t.Error(err)
 			t.FailNow()
