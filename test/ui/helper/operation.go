@@ -13,7 +13,6 @@ import (
 )
 
 func (l MyLocator) Click(options ...playwright.PageClickOptions) (err error) {
-	options = append([]playwright.PageClickOptions{{Timeout: &conf.Timeout}}, options...)
 	err = l.PlwLocator.Click(options...)
 	t := l.T
 	if err != nil {

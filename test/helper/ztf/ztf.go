@@ -36,7 +36,6 @@ func RunScript(webpage plwHelper.Webpage, scriptName string) {
 		createTestWorkspace(webpage)
 	}
 	locator = webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	c = locator.Count()
 	locator.Click()
 	scriptLocator := locator.Locator("text=" + scriptName)
 	scriptLocator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})

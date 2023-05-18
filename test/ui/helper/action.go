@@ -139,7 +139,6 @@ func (p *Webpage) WaitForTimeout(timeout float64) {
 
 func (p *Webpage) Click(selector string, options ...playwright.PageClickOptions) {
 	t := p.T
-	options = append([]playwright.PageClickOptions{{Timeout: &conf.Timeout}}, options...)
 	err := p.Page.Click(selector, options...)
 	if err != nil {
 		p.ScreenShot()
