@@ -29,6 +29,7 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 		}
 	default:
 	}
+
 	// print failed case
 	failedCount := 0
 	failedCaseLinesWithCheckpoint := make([]string, 0)

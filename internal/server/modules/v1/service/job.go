@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
+	"github.com/easysoft/zentaoatf/pkg/consts"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	"path/filepath"
 	"strconv"
@@ -203,8 +204,8 @@ func (s *JobService) SubmitJobStatus(job model.Job) (err error) {
 	status := serverDomain.ZentaoJobSubmitReq{
 		Task:      job.Task,
 		Status:    job.Status,
-		StartTime: (*job.StartDate).Format("2006-01-02 15:04:05"),
-		EndTime:   (*job.EndDate).Format("2006-01-02 15:04:05"),
+		StartTime: (*job.StartDate).Format(consts.DateTimeFormat),
+		EndTime:   (*job.EndDate).Format(consts.DateTimeFormat),
 		RetryTime: job.Retry,
 		Error:     "",
 		Data:      "",
@@ -246,8 +247,8 @@ func (s *JobService) SubmitExecResult(job model.Job, execErr error) (err error) 
 	ret := serverDomain.ZentaoJobSubmitReq{
 		Task:      job.Task,
 		Status:    job.Status,
-		StartTime: (*job.StartDate).Format("2006-01-02 15:04:05"),
-		EndTime:   (*job.EndDate).Format("2006-01-02 15:04:05"),
+		StartTime: (*job.StartDate).Format(consts.DateTimeFormat),
+		EndTime:   (*job.EndDate).Format(consts.DateTimeFormat),
 		RetryTime: job.Retry,
 		Error:     fmt.Sprintf("%v", execErr),
 		Data:      report,

@@ -433,7 +433,7 @@ func GetCaseInfo(file string) (pass bool, caseId, productId int, title string, t
 		return
 	}
 
-	// TODO: deal with old format, will removed
+	// deal with old format, will be removed
 	isOldFormat := strings.Index(content, "[esac]") > -1
 	pass = CheckFileContentIsScript(content)
 	if !pass {

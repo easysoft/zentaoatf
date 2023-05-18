@@ -2,6 +2,7 @@ package action
 
 import (
 	"fmt"
+	"github.com/easysoft/zentaoatf/pkg/consts"
 	"strconv"
 	"strings"
 	"time"
@@ -45,7 +46,7 @@ func List(files []string, keywords string) {
 	total := len(scriptArr)
 	width := strconv.Itoa(len(strconv.Itoa(total)))
 
-	logUtils.Info("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
+	logUtils.Info("\n" + time.Now().Format(consts.DateTimeFormat) + " " +
 		i118Utils.Sprintf("found_scripts_no_ztf_dir", total, commConsts.WorkDir))
 
 	for idx, cs := range scriptArr {

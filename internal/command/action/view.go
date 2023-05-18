@@ -5,6 +5,7 @@ import (
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
+	"github.com/easysoft/zentaoatf/pkg/consts"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
@@ -44,7 +45,7 @@ func view(cases []string, keywords string) {
 
 	total := len(arrs)
 
-	logUtils.Info("\n" + time.Now().Format("2006-01-02 15:04:05") + " " +
+	logUtils.Info("\n" + time.Now().Format(consts.DateTimeFormat) + " " +
 		i118Utils.Sprintf("found_scripts_no_ztf_dir", total, commConsts.WorkDir))
 
 	width := len(strconv.Itoa(len(arrs)))
