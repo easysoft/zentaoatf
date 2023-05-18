@@ -36,10 +36,9 @@ func RunScript(webpage plwHelper.Webpage, scriptName string) {
 		createTestWorkspace(webpage)
 	}
 	locator = webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	c = locator.Count()
 	locator.Click()
 	scriptLocator := locator.Locator("text=" + scriptName)
-	scriptLocator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
+	scriptLocator.RightClick()
 	webpage.Click(".tree-context-menu>>text=执行")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	element := webpage.QuerySelectorAll("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
@@ -62,14 +61,18 @@ func RunScript(webpage plwHelper.Webpage, scriptName string) {
 }
 
 func SelectSite(webpage plwHelper.Webpage) (err error) {
+	webpage.ScreenShot()
+	fmt.Println("select site")
 	plwConf.DisableErr()
 	defer plwConf.EnableErr()
 	webpage.Click("#siteMenuToggle")
+	webpage.ScreenShot()
 	webpage.WaitForSelectorTimeout("#navbar>>.list-item-title>>text=单元测试站点", 3000)
 	locator := webpage.Locator(".list-item-title>>text=单元测试站点")
+	webpage.ScreenShot()
 	if locator.Count() == 0 {
 		AddSiteTimes++
-		if AddSiteTimes > 2 {
+		if AddSiteTimes > 1 {
 			return
 		}
 		CreateSite(webpage)
@@ -83,12 +86,17 @@ func SelectSite(webpage plwHelper.Webpage) (err error) {
 }
 
 func CreateSite(webpage plwHelper.Webpage) {
+	fmt.Println("create site")
 	webpage.WaitForSelector("#siteMenuToggle")
 	webpage.Click("#siteMenuToggle")
 	webpage.WaitForSelector("#navbar .list-item")
+	webpage.ScreenShot()
 	webpage.Click("text=禅道站点管理")
+	webpage.ScreenShot()
 	webpage.Click("text=新建站点")
+	webpage.ScreenShot()
 	locator := webpage.Locator("#siteFormModal input")
+	webpage.ScreenShot()
 	locator.FillNth(0, "单元测试站点")
 	locator.FillNth(1, constTestHelper.ZentaoSiteUrl)
 	locator.FillNth(2, "admin")
@@ -115,7 +123,7 @@ func ExpandWorspace(webpage plwHelper.Webpage) (err error) {
 	webpage.Click(".tree-node-title:has-text(\"单元测试工作目录\")")
 	err = webpage.WaitForSelectorTimeout(".tree-node-item>>div:has-text('1_string_match.php')", 5000)
 	if err != nil {
-		if expandTimes > 5 {
+		if expandTimes > 1 {
 			expandTimes = 0
 			return err
 		}

@@ -51,7 +51,7 @@ func TestUi() (err error) {
 	}
 	req := serverDomain.TestSet{
 		WorkspacePath: testPath,
-		Cmd:           "go test ./ui/ui_bug_test.go -v",
+		Cmd:           "go test ./ui/ui_bug_test.go -v -timeout 100m",
 		TestTool:      commConsts.GoTest,
 	}
 	report := ExecUnit(req, "ui")

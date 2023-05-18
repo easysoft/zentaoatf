@@ -194,6 +194,7 @@ export default {
     'back':  '返回',
     'stop':  '停止',
     'exec':  '执行',
+    'run':  '执行',
     'test_exec':  '测试执行',
     'execute_unit_or_automated':  '执行单元或自动化测试',
 

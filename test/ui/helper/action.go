@@ -14,6 +14,7 @@ import (
 
 func OpenUrl(url string, t provider.T) (ret Webpage, err error) {
 	pw, err := playwright.Run()
+	fmt.Println(url, err)
 	utils.PrintErrOrNot(err, t)
 
 	headless := conf.Headless
@@ -139,7 +140,6 @@ func (p *Webpage) WaitForTimeout(timeout float64) {
 
 func (p *Webpage) Click(selector string, options ...playwright.PageClickOptions) {
 	t := p.T
-	options = append([]playwright.PageClickOptions{{Timeout: &conf.Timeout}}, options...)
 	err := p.Page.Click(selector, options...)
 	if err != nil {
 		p.ScreenShot()

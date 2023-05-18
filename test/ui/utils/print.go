@@ -9,8 +9,8 @@ import (
 )
 
 func PrintErrOrNot(err error, t provider.T) {
-	fmt.Println(err)
 	if err != nil && t != nil {
+		fmt.Println(err)
 		if conf.ExitAllOnError {
 			t.Error(err)
 			t.FailNow()
@@ -21,8 +21,8 @@ func PrintErrOrNot(err error, t provider.T) {
 }
 
 func PrintErrMsg(err string, t provider.T) {
-	fmt.Println(err)
 	if err != "" {
+		fmt.Println(err)
 		if conf.ExitAllOnError {
 			log.Panicln(err)
 		} else {

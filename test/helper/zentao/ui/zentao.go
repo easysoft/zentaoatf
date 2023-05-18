@@ -450,7 +450,6 @@ func InitZentaoData(version string, codeDir string) (err error) {
 
 		page.WaitForLoadState()
 		title, err = page.Title()
-		title, err = page.Title()
 		fmt.Println(title)
 		if err != nil {
 			return
