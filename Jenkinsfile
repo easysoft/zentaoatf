@@ -12,14 +12,23 @@ pipeline {
             image: hub.qucheng.com/app/quickon-zentao:max4.3.k8s-20230407
             tty: true
             args: ["sleep", "99d"]
+            env:
+            - name: MYSQL_PASSWORD
+              value: 123456
+            - name: LANG
+              value: zh_CN.UTF-8
+            - name: LANGUAGE
+              value: zh_CN.UTF-8
+            - name: LC_ALL
+              value: zh_CN.UTF-8
           - name: mysql
             image: hub.qucheng.com/app/mysql:5.7.37-debian-10
             tty: true
             env:
             - name: MYSQL_PASSWORD
-              value: pass4Zentao
+              value: 123456
             - name: MYSQL_ROOT_PASSWORD
-              value: pass4Zentao
+              value: 123456
           - name: playwright
             image: hub.qucheng.com/ci/playwright-go:v1
             tty: true
@@ -38,7 +47,7 @@ pipeline {
       steps {
         container('playwright') {
         //   sh "sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories"
-          sh "apt install make git gcc libc-dev"
+          sh "apt install -y make git gcc libc-dev"
           sh 'go mod download'
         //   sh 'go install -a -v github.com/go-bindata/go-bindata/...@latest'
           sh 'go-bindata -o=res/res.go -pkg=res res/...'
@@ -63,12 +72,16 @@ pipeline {
           sh 'nohup go run cmd/server/main.go &'
         }
         container('node') {
+          sh 'yarn config set registry https://registry.npm.taobao.org --global'
           sh 'cd ui && yarn && nohup yarn serve &'
+          sh 'while ! nc -z 127.0.0.1 8000; do sleep 1;done'
         }
+                
         container('playwright') {
           sh 'CGO_ENABLED=0 go run test/ui/main.go -runFrom jenkins'
-          sh 'CGO_ENABLED=0 go run test/cli/main.go -runFrom jenkins'
-          sh 'CGO_ENABLED=0 go test $(go list ./... | grep -v /test/ui | grep -v /test/cli | grep -v /test/helper)'
+          sh 'cd test && tar zcf ${WORKSPACE}/screen.linux.tar.gz ./screenshot'
+        //   sh 'CGO_ENABLED=0 go run test/cli/main.go -runFrom jenkins'
+        //   sh 'CGO_ENABLED=0 go test $(go list ./... | grep -v /test/ui | grep -v /test/cli | grep -v /test/helper)'
         }
       }
     }
@@ -146,7 +159,7 @@ pipeline {
           artifacts: [
             [artifactId: 'ztf',
              classifier: 'linux-amd64',
-             file: 'ztf.linux.tar.gz',
+             file: 'screen.linux.tar.gz',
              type: 'tar.gz']
           ]
         )

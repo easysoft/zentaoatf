@@ -21,7 +21,7 @@ func OpenUrl(url string, t provider.T) (ret Webpage, err error) {
 	browser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	utils.PrintErrOrNot(err, t)
 
-	page, err := browser.NewPage()
+	page, err := browser.NewPage(playwright.BrowserNewContextOptions{Locale: &conf.Locale})
 	utils.PrintErrOrNot(err, t)
 
 	if _, err = page.Goto(url, playwright.PageGotoOptions{WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
@@ -29,6 +29,8 @@ func OpenUrl(url string, t provider.T) (ret Webpage, err error) {
 		browser.Close()
 		utils.PrintErrOrNot(err, t)
 	}
+
+	page.SetDefaultTimeout(conf.Timeout)
 
 	ret = Webpage{
 		Browser: &browser,
@@ -137,6 +139,7 @@ func (p *Webpage) WaitForTimeout(timeout float64) {
 
 func (p *Webpage) Click(selector string, options ...playwright.PageClickOptions) {
 	t := p.T
+	options = append([]playwright.PageClickOptions{{Timeout: &conf.Timeout}}, options...)
 	err := p.Page.Click(selector, options...)
 	if err != nil {
 		p.ScreenShot()

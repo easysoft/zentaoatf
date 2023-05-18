@@ -11,6 +11,7 @@ import (
 )
 
 var expandTimes = 0
+var AddSiteTimes = 0
 
 func createTestWorkspace(webpage plwHelper.Webpage) {
 	webpage.Click(`[title="新建工作目录"]`)
@@ -67,6 +68,10 @@ func SelectSite(webpage plwHelper.Webpage) (err error) {
 	webpage.WaitForSelectorTimeout("#navbar>>.list-item-title>>text=单元测试站点", 3000)
 	locator := webpage.Locator(".list-item-title>>text=单元测试站点")
 	if locator.Count() == 0 {
+		AddSiteTimes++
+		if AddSiteTimes > 2 {
+			return
+		}
 		CreateSite(webpage)
 		SelectSite(webpage)
 		return

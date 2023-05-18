@@ -369,6 +369,7 @@ func InitZentaoData(version string, codeDir string) (err error) {
 		return
 	}
 	title, err := page.Title()
+	fmt.Println(title)
 	if err != nil {
 		return
 	}
@@ -377,28 +378,42 @@ func InitZentaoData(version string, codeDir string) (err error) {
 		if err != nil {
 			return
 		}
+		title, err = page.Title()
+		fmt.Println(title)
 		err = page.Click("text=下一步")
 		if err != nil {
 			return
 		}
+		title, err = page.Title()
+		fmt.Println(title)
 		err = page.Click("text=下一步")
 		if err != nil {
 			return
 		}
-		err = page.Fill(`input[name="dbPassword"]`, "pass4Zentao")
+		title, err = page.Title()
+		fmt.Println(title)
+		err = page.Fill(`input[name="dbPassword"]`, "123456")
 		if err != nil {
 			return
 		}
+		title, err = page.Title()
+		fmt.Println(title)
 		err = page.Click(`input[name="clearDB\[\]"]`)
 		if err != nil {
 			return
 		}
+		title, err = page.Title()
+		fmt.Println(title)
 		err = page.Click("text=保存")
 		if err != nil {
 			return
 		}
+		title, err = page.Title()
+		fmt.Println(title)
 		retryCount := 0
 		for {
+			title, err = page.Title()
+			fmt.Println(title)
 			retryCount++
 			if retryCount > 20 {
 				break
@@ -420,11 +435,14 @@ func InitZentaoData(version string, codeDir string) (err error) {
 				return
 			}
 		}
+		title, err = page.Title()
+		fmt.Println(title)
 		err = page.Click("text=下一步")
 		if err != nil {
 			return
 		}
-
+		title, err = page.Title()
+		fmt.Println(title)
 		_, err = page.WaitForSelector(".modal-header>>:has-text('保存配置文件')", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
 		if err != nil {
 			return
@@ -432,19 +450,24 @@ func InitZentaoData(version string, codeDir string) (err error) {
 
 		page.WaitForLoadState()
 		title, err = page.Title()
+		title, err = page.Title()
+		fmt.Println(title)
 		if err != nil {
 			return
 		}
+
 		if strings.Contains(title, "使用模式") {
 			page.Click("text=使用全生命周期管理模式")
 		}
-
+		title, err = page.Title()
+		fmt.Println(title)
 		if strings.Contains(title, "功能介绍") {
 			err = page.Click(`button:has-text("下一步")`)
 			if err != nil {
 				return
 			}
 		}
+
 		err = page.Fill(`input[name="company"]`, "test")
 		if err != nil {
 			return
@@ -478,6 +501,8 @@ func InitZentaoData(version string, codeDir string) (err error) {
 			return
 		}
 		err = createSuite()
+		title, err = page.Title()
+		fmt.Println(title)
 		if err != nil {
 			return
 		}
@@ -519,7 +544,7 @@ func init() {
 		fmt.Println(err)
 		return
 	}
-	page, err = browser.NewPage()
+	page, err = browser.NewPage(playwright.BrowserNewContextOptions{Locale: &conf.Locale})
 	if err != nil {
 		fmt.Println(err)
 		return
