@@ -14,6 +14,7 @@ import (
 
 func OpenUrl(url string, t provider.T) (ret Webpage, err error) {
 	pw, err := playwright.Run()
+	fmt.Println(url, err)
 	utils.PrintErrOrNot(err, t)
 
 	headless := conf.Headless

@@ -24,7 +24,7 @@ func SaveScript(t provider.T) {
 	force := true
 	locator.ClickWithOption(playwright.PageClickOptions{Force: &force, Position: &playwright.PageClickOptionsPosition{X: &positionX, Y: &positionY}})
 	locator.Type("-test")
-	webpage.Click(".tabs-nav-toolbar>>[title=\"Save\"]")
+	webpage.Click(".tabs-nav-toolbar>>[title=\"保存\"]")
 	webpage.WaitForSelector(".toast-notification-close")
 	locator = webpage.Locator(".toast-notification-container", playwright.PageLocatorOptions{HasText: "保存成功"})
 	locator.Click()
@@ -37,7 +37,7 @@ func SaveScript(t provider.T) {
 	locator.Press("Backspace")
 	locator.Press("Backspace")
 	locator.Press("Backspace")
-	webpage.Click(".tabs-nav-toolbar>>[title=\"Save\"]")
+	webpage.Click(".tabs-nav-toolbar>>[title=\"保存\"]")
 }
 
 func ViewScript(t provider.T) {

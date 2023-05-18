@@ -3,13 +3,13 @@ package main
 import (
 	"testing"
 
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
 	plwConf "github.com/easysoft/zentaoatf/test/ui/conf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"
-	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 )
 
 func CollapseLog(t provider.T) {
@@ -21,7 +21,7 @@ func CollapseLog(t provider.T) {
 	ztfTestHelper.ExpandWorspace(webpage)
 	scriptLocator := webpage.Locator(".tree-node-title>>text=1_string_match.php")
 	scriptLocator.Click()
-	webpage.Click(".tabs-nav-toolbar>>[title=\"Run\"]")
+	webpage.Click(".tabs-nav-toolbar>>[title=\"执行\"]")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	webpage.Click(".btn[title=\"展开所有\"]")
 	locator := webpage.Locator("#log-list>>.show-detail>>:has-text('[期望]')")
@@ -47,7 +47,7 @@ func FullScreenLog(t provider.T) {
 	locator.Click()
 	scriptLocator := locator.Locator("text=1_string_match.php")
 	scriptLocator.Click()
-	webpage.Click(".tabs-nav-toolbar>>[title=\"Run\"]")
+	webpage.Click(".tabs-nav-toolbar>>[title=\"执行\"]")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	webpage.Click(".btn[title=\"向上展开\"]")
 	webpage.WaitForTimeout(100)

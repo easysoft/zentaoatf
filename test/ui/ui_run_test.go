@@ -30,7 +30,7 @@ func RunScript(t provider.T) {
 	scriptLocator.Click()
 	webpage.WaitForTimeout(2000)
 	selectLocalProxy(webpage)
-	webpage.Click(".tabs-nav-toolbar>>[title=\"Run\"]")
+	webpage.Click(".tabs-nav-toolbar>>[title=\"执行\"]")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	innerText := webpage.InnerText("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	if !strings.Contains(innerText, "失败数：1(100.0%)") {
@@ -85,7 +85,7 @@ func RunNoInterpreterScript(t provider.T) {
 	ztfTestHelper.ExpandWorspace(webpage)
 	scriptLocator := webpage.Locator("text=1_string_match.rb")
 	scriptLocator.Click()
-	webpage.Click(".tabs-nav-toolbar>>[title=\"Run\"]")
+	webpage.Click(".tabs-nav-toolbar>>[title=\"执行\"]")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('忽略1个未设置解析器的脚本')")
 }
 
@@ -381,7 +381,7 @@ func RunUseProxy(t provider.T) {
 	scriptLocator.Click()
 	webpage.Click("#proxyMenuToggle")
 	webpage.Click(".list-item-title:has-text('测试执行节点')")
-	webpage.Click(".tabs-nav-toolbar>>[title=\"Run\"]")
+	webpage.Click(".tabs-nav-toolbar>>[title=\"执行\"]")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	innerText := webpage.InnerText("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	if !strings.Contains(innerText, "失败数：1(100.0%)") {
