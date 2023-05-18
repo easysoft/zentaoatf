@@ -431,14 +431,8 @@ func ParserUnitTestResult(testSuites []commDomain.UnitTestSuite) (
 
 	idx := 1
 	for _, suite := range testSuites {
-		//if suite.Time != 0 && suite.Time  { // for junit, there is a time on suite level
-		//	dur += suite.Time
-		//}
-
 		for _, cs := range suite.Cases {
-			if cs.Id <= 0 {
-				cs.Id = idx
-			}
+			getCaseIdFromName(&cs, idx)
 
 			if cs.Failure != nil {
 				cs.Status = "fail"
@@ -909,6 +903,27 @@ func getZapReport() (ret string) {
 			ret = os.Args[index+1]
 			return
 		}
+	}
+
+	return
+}
+
+func getCaseIdFromName(cs *commDomain.UnitResult, defaultVal int) {
+	if cs.Cid > 0 {
+		return
+	}
+
+	cs.Title = strings.TrimSpace(cs.Title)
+
+	regx := regexp.MustCompile(`^(\d+)\. (.+)`)
+	arr := regx.FindAllStringSubmatch(cs.Title, -1)
+	if len(arr) > 0 {
+		cs.Cid = stringUtils.ParseInt(arr[0][1])
+		cs.Title = arr[0][2]
+	}
+
+	if cs.Cid <= 0 {
+		cs.Cid = defaultVal
 	}
 
 	return

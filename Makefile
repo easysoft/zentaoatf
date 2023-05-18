@@ -1,5 +1,5 @@
 PROJECT=ztf
-VERSION=`head -n 1 VERSION`
+VERSION:=$(shell head -n 1 VERSION)
 
 ifeq ($(OS),Windows_NT)
     PLATFORM="Windows"
