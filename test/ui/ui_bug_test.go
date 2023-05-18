@@ -5,6 +5,7 @@ import (
 
 	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
+	"github.com/easysoft/zentaoatf/test/ui/conf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/runner"
@@ -45,6 +46,7 @@ func ScriptsBug(t provider.T) {
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
+	webpage.WaitForSelector("#siteMenuToggle:has-text('单元测试站点')", playwright.PageWaitForSelectorOptions{Timeout: &conf.Timeout})
 	ztfTestHelper.ExpandWorspace(webpage)
 	webpage.Click(`[title="批量选择"]`)
 	webpage.Click(".tree-node-item:has-text('1_string_match.php')>>.tree-node-check")

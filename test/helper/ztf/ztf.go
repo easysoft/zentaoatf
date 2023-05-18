@@ -72,7 +72,7 @@ func SelectSite(webpage plwHelper.Webpage) (err error) {
 	webpage.ScreenShot()
 	if locator.Count() == 0 {
 		AddSiteTimes++
-		if AddSiteTimes > 2 {
+		if AddSiteTimes > 1 {
 			return
 		}
 		CreateSite(webpage)
@@ -123,7 +123,7 @@ func ExpandWorspace(webpage plwHelper.Webpage) (err error) {
 	webpage.Click(".tree-node-title:has-text(\"单元测试工作目录\")")
 	err = webpage.WaitForSelectorTimeout(".tree-node-item>>div:has-text('1_string_match.php')", 5000)
 	if err != nil {
-		if expandTimes > 5 {
+		if expandTimes > 1 {
 			expandTimes = 0
 			return err
 		}
