@@ -92,6 +92,35 @@ pipeline {
               sh 'CGO_ENABLED=0 go test $(go list ./... | grep -v /test/ui | grep -v /test/cli | grep -v /test/helper)'
             }
           }
+
+          post {
+            failure {
+              container('xuanimbot') {
+                sh 'git config --global --add safe.directory $(pwd)'
+                sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "ztf unit test failure" --url "${BUILD_URL}" --content "ztf unit test failure, please check it" --debug --custom'
+              }
+              
+              container('playwright') {
+                sh 'cd test && tar zcf ${WORKSPACE}/screen.linux.tar.gz ./screenshot'
+              }
+
+              nexusArtifactUploader(
+                nexusVersion: 'nexus3',
+                protocol: env.ARTIFACT_PROTOCOL,
+                nexusUrl: env.ARTIFACT_HOST,
+                groupId: 'autotest.framework',
+                version: env.ZTF_VERSION,
+                repository: env.ARTIFACT_REPOSITORY,
+                credentialsId: env.ARTIFACT_CRED_ID,
+                artifacts: [
+                  [artifactId: 'ztf',
+                  classifier: 'screenshot',
+                  file: 'screen.linux.tar.gz',
+                  type: 'tar.gz']
+                ]
+              )
+            }
+          }
         } // End UnitTest
 
         stage("SonarScan") {
@@ -112,26 +141,6 @@ pipeline {
                 sh 'git config --global --add safe.directory $(pwd)'
                 sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "ztf sonar scan failure" --url "${BUILD_URL}" --content "ztf sonar scan failure, please check it" --debug --custom'
               }
-
-              container('playwright') {
-                sh 'cd test && tar zcf ${WORKSPACE}/screen.linux.tar.gz ./screenshot'
-              }
-
-              nexusArtifactUploader(
-                nexusVersion: 'nexus3',
-                protocol: env.ARTIFACT_PROTOCOL,
-                nexusUrl: env.ARTIFACT_HOST,
-                groupId: 'autotest.framework',
-                version: env.ZTF_VERSION,
-                repository: env.ARTIFACT_REPOSITORY,
-                credentialsId: env.ARTIFACT_CRED_ID,
-                artifacts: [
-                  [artifactId: 'ztf',
-                  classifier: 'screenshot',
-                  file: 'screen.linux.tar.gz',
-                  type: 'tar.gz']
-                ]
-              )
             }
           }
         } // End SonarScan
