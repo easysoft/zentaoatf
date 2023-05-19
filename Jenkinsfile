@@ -140,8 +140,8 @@ pipeline {
              classifier: 'linux-amd64',
              file: 'ztf.linux.tar.gz',
              type: 'tar.gz'],
-             [artifactId: 'screenshot',
-             classifier: 'linux-amd64',
+             [artifactId: 'ztf',
+             classifier: 'screenshot',
              file: 'screen.linux.tar.gz',
              type: 'tar.gz']
           ]
