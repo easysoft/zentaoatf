@@ -53,6 +53,17 @@ pipeline {
     }
     
     stage("Test") {
+      environment {
+        ARTIFACT_REPOSITORY = "easycorp-snapshot"
+        ARTIFACT_HOST = "nexus.qc.oop.cc"
+        ARTIFACT_PROTOCOL = "https"
+        ARTIFACT_CRED_ID = "nexus-jenkins"
+        ZTF_VERSION = """${sh(
+                        returnStdout: true,
+                        script: 'cat VERSION'
+        ).trim()}"""
+      }
+
       parallel {
         stage("UnitTest") {
           steps {
@@ -77,7 +88,6 @@ pipeline {
                     
             container('playwright') {
               sh 'CGO_ENABLED=0 go run test/ui/main.go -runFrom jenkins'
-              sh 'cd test && tar zcf ${WORKSPACE}/screen.linux.tar.gz ./screenshot'
               sh 'CGO_ENABLED=0 go run test/cli/main.go -runFrom jenkins'
               sh 'CGO_ENABLED=0 go test $(go list ./... | grep -v /test/ui | grep -v /test/cli | grep -v /test/helper)'
             }
@@ -102,6 +112,26 @@ pipeline {
                 sh 'git config --global --add safe.directory $(pwd)'
                 sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "ztf sonar scan failure" --url "${BUILD_URL}" --content "ztf sonar scan failure, please check it" --debug --custom'
               }
+
+              container('playwright') {
+                sh 'cd test && tar zcf ${WORKSPACE}/screen.linux.tar.gz ./screenshot'
+              }
+
+              nexusArtifactUploader(
+                nexusVersion: 'nexus3',
+                protocol: env.ARTIFACT_PROTOCOL,
+                nexusUrl: env.ARTIFACT_HOST,
+                groupId: 'autotest.framework',
+                version: env.ZTF_VERSION,
+                repository: env.ARTIFACT_REPOSITORY,
+                credentialsId: env.ARTIFACT_CRED_ID,
+                artifacts: [
+                  [artifactId: 'ztf',
+                  classifier: 'screenshot',
+                  file: 'screen.linux.tar.gz',
+                  type: 'tar.gz']
+                ]
+              )
             }
           }
         } // End SonarScan
@@ -139,10 +169,6 @@ pipeline {
             [artifactId: 'ztf',
              classifier: 'linux-amd64',
              file: 'ztf.linux.tar.gz',
-             type: 'tar.gz'],
-             [artifactId: 'ztf',
-             classifier: 'screenshot',
-             file: 'screen.linux.tar.gz',
              type: 'tar.gz']
           ]
         )

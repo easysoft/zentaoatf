@@ -47,7 +47,6 @@ import (
 
 type RunSuit struct {
 	suite.Suite
-	testCount uint32
 }
 
 func (s *RunSuit) BeforeEach(t provider.T) {
@@ -58,6 +57,7 @@ func (s *RunSuit) BeforeEach(t provider.T) {
 	}
 	t.AddSubSuite("命令行-run")
 }
+
 func (s *RunSuit) TestRunZtfFile(t provider.T) {
 	t.ID("1584")
 	t.Title("执行多个文件和目录中的脚本")
@@ -209,57 +209,57 @@ func testRunUnitTest(cmdStr, workspacePath string, successRe *regexp.Regexp) str
 	return "Success"
 }
 
-// func (s *RunSuit) TestRunScenes(t provider.T) {
-// 	sceneMap := map[string]string{
-// 		"exactly empty >> ~~":                            "",
-// 		"exactly start with abc >> ~f:^abc~":             "abcdvd",
-// 		"exactly end with abc >> ~f:abc$~":               "dcdabc",
-// 		"exactly contain abc >> ~f:abc~":                 "dvabcd",
-// 		"exactly containX abc*3 >> ~f:abc*3~":            "dvabcdabcabcdds",
-// 		"exactly 2 in (1,2,3) >> ~f:(1,2,3)~":            "2",
-// 		"exactly match %sabc%d >> ~m:%sabc%d~":           "dabc1dad",
-// 		"exactly match .*cid=.* >> ~m:.*cid=.*~":         "sdfascid=ljlkjl",
-// 		"exactly equal 123 >> ~c:=123~":                  "123",
-// 		"exactly less than 123 >> ~c:<123~":              "1",
-// 		"exactly less than or equal 123 >> ~c:<=123~":    "123",
-// 		"exactly greater than 123 >> ~c:>123~":           "124",
-// 		"exactly greater than or equal 123 >> ~c:>=123~": "123",
-// 		"exactly not equal 123 >> ~c:<>123~":             "120",
-// 		"exactly between 12-19 >> ~c:12-19~":             "15",
-// 	}
-// 	template := `#!/usr/bin/env php
-// 	<?php
-// 	/**
+func (s *RunSuit) TestRunScenes(t provider.T) {
+	sceneMap := map[string]string{
+		"exactly empty >> ~~":                            "",
+		"exactly start with abc >> ~f:^abc~":             "abcdvd",
+		"exactly end with abc >> ~f:abc$~":               "dcdabc",
+		"exactly contain abc >> ~f:abc~":                 "dvabcd",
+		"exactly containX abc*3 >> ~f:abc*3~":            "dvabcdabcabcdds",
+		"exactly 2 in (1,2,3) >> ~f:(1,2,3)~":            "2",
+		"exactly match %sabc%d >> ~m:%sabc%d~":           "dabc1dad",
+		"exactly match .*cid=.* >> ~m:.*cid=.*~":         "sdfascid=ljlkjl",
+		"exactly equal 123 >> ~c:=123~":                  "123",
+		"exactly less than 123 >> ~c:<123~":              "1",
+		"exactly less than or equal 123 >> ~c:<=123~":    "123",
+		"exactly greater than 123 >> ~c:>123~":           "124",
+		"exactly greater than or equal 123 >> ~c:>=123~": "123",
+		"exactly not equal 123 >> ~c:<>123~":             "120",
+		"exactly between 12-19 >> ~c:12-19~":             "15",
+	}
+	template := `#!/usr/bin/env php
+	<?php
+	/**
 
-// 	title=check string matches pattern
-// 	cid=1
-// 	pid=1
+	title=check string matches pattern
+	cid=1
+	pid=1
 
-// 	%s
+	%s
 
-// 	*/
+	*/
 
-// 	print("%s\n");`
+	print("%s\n");`
 
-// 	path := "../../demoo/test_scene.php"
-// 	if runtime.GOOS == "windows" {
-// 		path = `..\..\demo\test_scene.php`
-// 	}
-// 	cmd := commonTestHelper.GetZtfPath()+` run ` + path
-// 	for expectVal, actualVal := range sceneMap {
-// 		file, err := os.OpenFile(path, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0666)
-// 		if err != nil {
-// 			t.Errorf("open file fail, err:%s", err)
-// 			return
-// 		}
-// 		write := bufio.NewWriter(file)
-// 		write.WriteString(fmt.Sprintf(template, expectVal, actualVal))
-// 		write.Flush()
-// 		t.Require().Equal("Success", testRun(cmd, regexp.MustCompile(`Run 1 scripts in \d+ sec, 1\(100\.0%\) Pass, 0\(0\.0%\) Fail, 0\(0\.0%\) Skip|执行1个用例，耗时\d+秒。1\(100\.0%\) 通过，0\(0\.0%\) 失败，0\(0\.0%\) 忽略`)))
-// 		file.Close()
-// 	}
-// 	os.Remove(path)
-// }
+	path := "../../demo/test_scene.php"
+	if runtime.GOOS == "windows" {
+		path = `..\..\demo\test_scene.php`
+	}
+	cmd := commonTestHelper.GetZtfPath() + ` run ` + path
+	for expectVal, actualVal := range sceneMap {
+		file, err := os.OpenFile(path, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0666)
+		if err != nil {
+			t.Errorf("open file fail, err:%s", err)
+			return
+		}
+		write := bufio.NewWriter(file)
+		write.WriteString(fmt.Sprintf(template, expectVal, actualVal))
+		write.Flush()
+		file.Close()
+		t.Require().Equal("Success", testRun(cmd, regexp.MustCompile(`Pass:1\(100\.0%\), Fail:0\(0\.0%\), Skip:0\(0\.0%\)|通过数：1\(100\.0%\)，失败数：0\(0\.0%\)，忽略数：0\(0\.0%\)`)))
+	}
+	os.Remove(path)
+}
 
 func TestCliRun(t *testing.T) {
 	suite.RunSuite(t, new(RunSuit))
