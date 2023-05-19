@@ -218,39 +218,43 @@ func FilterCases(cases []string, conf *commDomain.WorkspaceConf) (casesToRun, ca
 		}
 
 		if commonUtils.IsWin() {
-			if path.Ext(cs) == ".sh" { // filter by os
-				continue
-			}
-
-			interpreter := configHelper.GetFieldVal(*conf, stringUtils.UcFirst(lang))
-			if interpreter == "-" || interpreter == "" {
-				interpreter = ""
-				if lang != "bat" {
-					ok := AddInterpreterIfExist(conf, lang)
-					if !ok {
-						casesToIgnore = append(casesToIgnore, cs)
-					} else {
-						interpreter = configHelper.GetFieldVal(*conf, stringUtils.UcFirst(lang))
-					}
-				}
-			}
-			if lang != "bat" && interpreter == "" { // ignore the ones with no interpreter set
-				continue
-			}
-
-		} else { // filter by os
-			if path.Ext(cs) == ".bat" {
-				continue
-			}
+			filterWinCases(cs, lang, conf, &casesToIgnore, &casesToRun)
+			continue
 		}
 
-		//pass := scriptHelper.CheckFileIsScript(cs)
-		//if pass {
+		if path.Ext(cs) == ".bat" {
+			continue
+		}
 		casesToRun = append(casesToRun, cs)
-		//}
 	}
 
 	return
+}
+
+func filterWinCases(cs, lang string, conf *commDomain.WorkspaceConf, casesToIgnore, casesToRun *[]string) {
+	if path.Ext(cs) == ".sh" { // filter by os
+		return
+	}
+
+	interpreter := configHelper.GetFieldVal(*conf, stringUtils.UcFirst(lang))
+
+	if interpreter == "-" || interpreter == "" {
+		interpreter = ""
+		if lang != "bat" {
+			ok := AddInterpreterIfExist(conf, lang)
+			if !ok {
+				*casesToIgnore = append(*casesToIgnore, cs)
+			} else {
+				interpreter = configHelper.GetFieldVal(*conf, stringUtils.UcFirst(lang))
+			}
+		}
+	}
+
+	if lang != "bat" && interpreter == "" { // ignore the ones with no interpreter set
+		return
+	}
+
+	*casesToRun = append(*casesToRun, cs)
 }
 
 func genReport(productId, id int, by commConsts.ExecBy) (report commDomain.ZtfReport) {
