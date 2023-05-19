@@ -25,7 +25,7 @@ func TestCli() (err error) {
 	}
 	req := serverDomain.TestSet{
 		WorkspacePath: testPath,
-		Cmd:           "go test ./cli -v",
+		Cmd:           "go test ./cli/cli_set_test.go && go test ./cli -v",
 		TestTool:      commConsts.GoTest,
 	}
 	fmt.Println(testPath, req.Cmd)

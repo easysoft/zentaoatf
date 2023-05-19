@@ -62,11 +62,11 @@ func (s *RunSuit) TestRunZtfFile(t provider.T) {
 	t.ID("1584")
 	t.Title("执行多个文件和目录中的脚本")
 	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %s/test/demo/1_string_match_pass.php", constTestHelper.RootPath)
-	expectReg := regexp.MustCompile(`Run 1 scripts in \d+ sec, 1\(100\.0%\) Pass, 0\(0\.0%\) Fail, 0\(0\.0%\) Skip|执行1个用例，耗时\d+秒。1\(100\.0%\) 通过，0\(0\.0%\) 失败，0\(0\.0%\) 忽略`)
+	expectReg := regexp.MustCompile(`Pass:1\(100\.0%\), Fail:0\(0\.0%\), Skip:0\(0\.0%\)|通过数：1\(100\.0%\)，失败数：0\(0\.0%\)，忽略数：0\(0\.0%\)`)
 	t.Require().Equal("Success", testRun(cmd, expectReg))
 
 	cmd = commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %stest/demo/1_string_match_pass.php %stest/demo/2_webpage_extract.php", constTestHelper.RootPath, constTestHelper.RootPath)
-	expectReg = regexp.MustCompile(`Run 2 scripts in \d+ sec, 2\(100\.0%\) Pass, 0\(0\.0%\) Fail, 0\(0\.0%\) Skip|执行2个用例，耗时\d+秒。2\(100\.0%\) 通过，0\(0\.0%\) 失败，0\(0\.0%\) 忽略`)
+	expectReg = regexp.MustCompile(`Pass:2\(100\.0%\), Fail:0\(0\.0%\), Skip:0\(0\.0%\)|通过数：2\(100\.0%\)，失败数：0\(0\.0%\)，忽略数：0\(0\.0%\)`)
 	t.Require().Equal("Success", testRun(cmd, expectReg))
 
 	cmd = commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %stest/demo", constTestHelper.RootPath)
@@ -81,7 +81,7 @@ func (s *RunSuit) TestRunZtfTask(t provider.T) {
 	t.ID("1589")
 	t.Title("执行禅道测试任务")
 	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %stest/demo -task 1", constTestHelper.RootPath)
-	expectReg := regexp.MustCompile(`Run 3 scripts in \d+ sec, 0\(0\.0%\) Pass, 3\(100\.0%\) Fail, 0\(0\.0%\) Skip|执行3个用例，耗时\d+秒。0\(0\.0%\) 通过，3\(100\.0%\) 失败，0\(0\.0%\) 忽略`)
+	expectReg := regexp.MustCompile(`Pass:0\(0\.0%\), Fail:3\(100\.0%\), Skip:0\(0\.0%\)|通过数：0\(0\.0%\)，失败数：3\(100\.0%\)，忽略数：0\(0\.0%\)`)
 	t.Require().Equal("Success", testRun(cmd, expectReg))
 }
 
@@ -89,7 +89,7 @@ func (s *RunSuit) TestRunZtfSuite(t provider.T) {
 	t.ID("1588")
 	t.Title("执行禅道测试套件")
 	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %stest/demo -suite 1", constTestHelper.RootPath)
-	expectReg := regexp.MustCompile(`Run 1 scripts in \d+ sec, 0\(0\.0%\) Pass, 1\(100\.0%\) Fail, 0\(0\.0%\) Skip|执行1个用例，耗时\d+秒。0\(0\.0%\) 通过，1\(100\.0%\) 失败，0\(0\.0%\) 忽略`)
+	expectReg := regexp.MustCompile(`Pass:0\(0\.0%\), Fail:1\(100\.0%\), Skip:0\(0\.0%\)|通过数：0\(0\.0%\)，失败数：1\(100\.0%\)，忽略数：0\(0\.0%\)`)
 	t.Require().Equal("Success", testRun(cmd, expectReg))
 }
 
@@ -97,7 +97,7 @@ func (s *RunSuit) TestRunZtfCsFile(t provider.T) {
 	t.ID("1586")
 	t.Title("执行本地套件文件中指定编号的脚本")
 	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %stest/demo %stest/demo/all.cs", constTestHelper.RootPath, constTestHelper.RootPath)
-	expectReg := regexp.MustCompile(`Run 2 scripts in \d+ sec, 0\(0\.0%\) Pass, 2\(100\.0%\) Fail, 0\(0\.0%\) Skip|执行2个用例，耗时\d+秒。0\(0\.0%\) 通过，2\(100\.0%\) 失败，0\(0\.0%\) 忽略`)
+	expectReg := regexp.MustCompile(`Pass:0\(0\.0%\), Fail:2\(100\.0%\), Skip:0\(0\.0%\)|通过数：0\(0\.0%\)，失败数：2\(100\.0%\)，忽略数：0\(0\.0%\)`)
 	t.Require().Equal("Success", testRun(cmd, expectReg))
 }
 

@@ -30,7 +30,7 @@ pipeline {
             - name: MYSQL_ROOT_PASSWORD
               value: 123456
           - name: playwright
-            image: hub.qucheng.com/ci/playwright-go:v3
+            image: hub.qucheng.com/ci/playwright-go:v5
             tty: true
           nodeSelector:
             kubernetes.io/hostname: k3s-worker01
@@ -46,10 +46,7 @@ pipeline {
 
       steps {
         container('playwright') {
-        //   sh "sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories"
-          sh "apt install -y make git gcc libc-dev php maven"
           sh 'go mod download'
-        //   sh 'go install -a -v github.com/go-bindata/go-bindata/...@latest'
           sh 'go-bindata -o=res/res.go -pkg=res res/...'
         }
       }
@@ -81,8 +78,8 @@ pipeline {
             container('playwright') {
               sh 'CGO_ENABLED=0 go run test/ui/main.go -runFrom jenkins'
               sh 'cd test && tar zcf ${WORKSPACE}/screen.linux.tar.gz ./screenshot'
-              //   sh 'CGO_ENABLED=0 go run test/cli/main.go -runFrom jenkins'
-              //   sh 'CGO_ENABLED=0 go test $(go list ./... | grep -v /test/ui | grep -v /test/cli | grep -v /test/helper)'
+              sh 'CGO_ENABLED=0 go run test/cli/main.go -runFrom jenkins'
+              sh 'CGO_ENABLED=0 go test $(go list ./... | grep -v /test/ui | grep -v /test/cli | grep -v /test/helper)'
             }
           }
         } // End UnitTest
@@ -140,6 +137,10 @@ pipeline {
           credentialsId: env.ARTIFACT_CRED_ID,
           artifacts: [
             [artifactId: 'ztf',
+             classifier: 'linux-amd64',
+             file: 'ztf.linux.tar.gz',
+             type: 'tar.gz'],
+             [artifactId: 'screenshot',
              classifier: 'linux-amd64',
              file: 'screen.linux.tar.gz',
              type: 'tar.gz']
