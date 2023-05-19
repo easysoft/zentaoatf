@@ -4,6 +4,7 @@
 package shellUtils
 
 import (
+	"strings"
 	"syscall"
 	"unsafe"
 )
