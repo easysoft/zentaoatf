@@ -6,10 +6,10 @@ import (
 	"strings"
 	"testing"
 
+	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
 	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	zentaoTestHelper "github.com/easysoft/zentaoatf/test/helper/zentao/ui"
-	ztfTest "github.com/easysoft/zentaoatf/test/helper/ztf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
 	plwConf "github.com/easysoft/zentaoatf/test/ui/conf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
@@ -288,6 +288,7 @@ func RunUnit(t provider.T) {
 		testngDir = pwd + "\\demo\\ci_test_testng"
 	}
 	commonTestHelper.CloneGit("https://gitee.com/ngtesting/ci_test_testng.git", testngDir)
+	shellUtils.ExeShellWithOutputInDir("mvn clean package test", testngDir)
 	t.ID("5432")
 	t.AddParentSuite("右键执行脚本")
 
@@ -296,7 +297,7 @@ func RunUnit(t provider.T) {
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
 	defer func() {
-		ztfTest.DeleteWorkspace(webpage, "testng工作目录")
+		ztfTestHelper.DeleteWorkspace(webpage, "testng工作目录")
 	}()
 	plwConf.DisableErr()
 	webpage.WaitForSelectorTimeout(".tree-node-title:has-text('testng工作目录')", 5000)
@@ -364,7 +365,7 @@ func createWorkspace(t provider.T, workspacePath string, webpage plwHelper.Webpa
 	webpage.Click("#workspaceFormModal>>.modal-action>>span:has-text(\"确定\")")
 	webpage.WaitForSelector("#workspaceFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
 	webpage.WaitForTimeout(1000)
-	locator = webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "testng工作目录"})
+	webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "testng工作目录"})
 }
 
 func RunUseProxy(t provider.T) {

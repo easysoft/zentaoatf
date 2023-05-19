@@ -54,55 +54,38 @@ pipeline {
         }
       }
     }
-
-    stage("DEBUG") {
-      steps {
-        container('zentao') {
-          sh '/etc/s6/s6-init/run'
-          sh 'apachectl start'
-          sh 'env'
-        }
-        container('playwright') {
-          sh 'git config --global --add safe.directory $(pwd)'
-          sh 'CGO_ENABLED=0 make compile_command_linux'
-          sh 'cp bin/linux/ztf ./'
-          sh 'cd bin/linux && tar zcf ${WORKSPACE}/ztf.linux.tar.gz ztf'
-        }
-        container('playwright') {
-          sh 'nohup go run cmd/server/main.go &'
-        }
-        container('node') {
-          sh 'yarn config set registry https://registry.npm.taobao.org --global'
-          sh 'cd ui && yarn && nohup yarn serve &'
-        }
-                
-        container('playwright') {
-          sh 'CGO_ENABLED=0 go run test/ui/main.go -runFrom jenkins'
-          sh 'cd test && tar zcf ${WORKSPACE}/screen.linux.tar.gz ./screenshot'
-        //   sh 'CGO_ENABLED=0 go run test/cli/main.go -runFrom jenkins'
-        //   sh 'CGO_ENABLED=0 go test $(go list ./... | grep -v /test/ui | grep -v /test/cli | grep -v /test/helper)'
-        }
-      }
-    }
     
     stage("Test") {
       parallel {
-        // stage("UnitTest") {
-        //   steps {
-        //     container('golang') {
-        //       sh 'CGO_ENABLED=0 go test ./...'
-        //     }
-        //   }
-
-        //   post {
-        //     failure {
-        //       container('xuanimbot') {
-        //         sh 'git config --global --add safe.directory $(pwd)'
-        //         sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "ztf unit test failure" --url "${BUILD_URL}" --content "ztf unit test failure, please check it" --debug --custom'
-        //       }
-        //     }
-        //   }
-        // } // End UnitTest
+        stage("UnitTest") {
+          steps {
+            container('zentao') {
+              sh '/etc/s6/s6-init/run'
+              sh 'apachectl start'
+              sh 'env'
+            }
+            container('playwright') {
+              sh 'git config --global --add safe.directory $(pwd)'
+              sh 'CGO_ENABLED=0 make compile_command_linux'
+              sh 'cp bin/linux/ztf ./'
+              sh 'cd bin/linux && tar zcf ${WORKSPACE}/ztf.linux.tar.gz ztf'
+            }
+            container('playwright') {
+              sh 'nohup go run cmd/server/main.go &'
+            }
+            container('node') {
+              sh 'yarn config set registry https://registry.npm.taobao.org --global'
+              sh 'cd ui && yarn && nohup yarn serve &'
+            }
+                    
+            container('playwright') {
+              sh 'CGO_ENABLED=0 go run test/ui/main.go -runFrom jenkins'
+              sh 'cd test && tar zcf ${WORKSPACE}/screen.linux.tar.gz ./screenshot'
+              //   sh 'CGO_ENABLED=0 go run test/cli/main.go -runFrom jenkins'
+              //   sh 'CGO_ENABLED=0 go test $(go list ./... | grep -v /test/ui | grep -v /test/cli | grep -v /test/helper)'
+            }
+          }
+        } // End UnitTest
 
         stage("SonarScan") {
           steps {
