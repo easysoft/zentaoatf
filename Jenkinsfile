@@ -47,7 +47,7 @@ pipeline {
       steps {
         container('playwright') {
         //   sh "sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories"
-          sh "apt install -y make git gcc libc-dev"
+          sh "apt install -y make git gcc libc-dev php maven"
           sh 'go mod download'
         //   sh 'go install -a -v github.com/go-bindata/go-bindata/...@latest'
           sh 'go-bindata -o=res/res.go -pkg=res res/...'

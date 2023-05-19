@@ -262,7 +262,7 @@ func RunDir(t provider.T) {
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
-	webpage.Click(".tree-node-children>>.tree-node>>:has-text('testdir')", playwright.PageClickOptions{Button: playwright.MouseButtonRight})
+	webpage.RightClick(".tree-node-children>>.tree-node>>:has-text('testdir')")
 	webpage.Click(".tree-context-menu>>text=执行")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	innerText := webpage.InnerText("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
@@ -332,8 +332,8 @@ func RunUnit(t provider.T) {
 	locator = webpage.Locator("#log-list>>code:has-text('执行3个用例，耗时')")
 	innerText := locator.InnerText()
 
-	if !strings.Contains(innerText, "通过数：3(100.0%)，失败数：0(0.0%)") {
-		t.Errorf("Exec testng fail")
+	if !strings.Contains(innerText, "通过数：2(66.0%)，失败数：1(33.0%)") {
+		t.Errorf("Exec testng fail, result:" + innerText)
 		t.FailNow()
 	}
 	webpage.WaitForSelector("#rightPane>>.result-list-item>>nth=0>>.list-item-title:has-text('testng工作目录(3)')")

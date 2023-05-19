@@ -838,8 +838,9 @@ func getCaseIdFromName(cs *commDomain.UnitResult, defaultVal int) {
 		cs.Title = arr[0][2]
 	}
 
-	if cs.Cid <= 0 {
-		cs.Cid = defaultVal
+	cs.Id = cs.Cid
+	if cs.Id <= 0 {
+		cs.Id = defaultVal
 	}
 
 	return
