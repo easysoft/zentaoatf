@@ -41,6 +41,8 @@ var (
 		"mvn": Maven,
 	}
 
+	SpaceQuote = " "
+
 	AutoTestTypes = []string{Selenium.String(), Appium.String(), AutoIt.String()}
 	UnitTestTypes = []string{
 		Allure.String(),

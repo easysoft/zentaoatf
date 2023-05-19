@@ -109,8 +109,19 @@ func RunZtf(ch chan int,
 	numbMaxWidth, pathMaxWidth, titleMaxWidth := getNumbMaxWidth(casesToRun)
 	report = genReport(productId, id, by)
 
+	params := commDomain.ExecParams{
+		CasesToRun:    casesToRun,
+		CasesToIgnore: casesToIgnore,
+		WorkspacePath: workspacePath,
+		Conf:          conf,
+		NumbMaxWidth:  numbMaxWidth,
+		PathMaxWidth:  pathMaxWidth,
+		TitleMaxWidth: titleMaxWidth,
+		Report:        &report,
+	}
+
 	// exec scripts
-	ExeScripts(casesToRun, casesToIgnore, workspacePath, conf, &report, pathMaxWidth, numbMaxWidth, titleMaxWidth, ch, wsMsg)
+	ExeScripts(params, ch, wsMsg)
 
 	// gen report
 	if len(casesToRun) > 0 {
@@ -129,36 +140,34 @@ func RunZtf(ch chan int,
 	return
 }
 
-func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath string, conf commDomain.WorkspaceConf,
-	report *commDomain.ZtfReport, pathMaxWidth, numbMaxWidth, titleMaxWidth int,
-	ch chan int, wsMsg *websocket.Message) {
+func ExeScripts(execParams commDomain.ExecParams, ch chan int, wsMsg *websocket.Message) {
 
 	now := time.Now()
 	startTime := now.Unix()
-	report.StartTime = startTime
+	execParams.Report.StartTime = startTime
 
 	workDir := commConsts.WorkDir
 	if commConsts.ExecFrom == commConsts.FromClient {
-		workDir = workspacePath
+		workDir = execParams.WorkspacePath
 	}
 
 	msg := ""
 	if commConsts.Language == commConsts.LanguageZh {
-		msg = i118Utils.Sprintf("found_scripts", workDir, len(casesToRun), commConsts.ZtfDir)
+		msg = i118Utils.Sprintf("found_scripts", workDir, len(execParams.CasesToRun), commConsts.ZtfDir)
 
 	} else {
-		msg = i118Utils.Sprintf("found_scripts", len(casesToRun), workDir, commConsts.ZtfDir)
+		msg = i118Utils.Sprintf("found_scripts", len(execParams.CasesToRun), workDir, commConsts.ZtfDir)
 	}
 
 	if commConsts.ExecFrom == commConsts.FromClient {
-		msg = i118Utils.Sprintf("found_scripts_no_ztf_dir", len(casesToRun), workDir)
+		msg = i118Utils.Sprintf("found_scripts_no_ztf_dir", len(execParams.CasesToRun), workDir)
 		websocketHelper.SendExecMsg(msg, "", commConsts.Run, nil, wsMsg)
 	}
 	logUtils.ExecConsolef(-1, msg)
 	logUtils.ExecResult(msg)
 
-	if len(casesToIgnore) > 0 {
-		temp := i118Utils.Sprintf("ignore_scripts", strconv.Itoa(len(casesToIgnore)))
+	if len(execParams.CasesToIgnore) > 0 {
+		temp := i118Utils.Sprintf("ignore_scripts", strconv.Itoa(len(execParams.CasesToIgnore)))
 		if commConsts.ExecFrom == commConsts.FromClient {
 			websocketHelper.SendExecMsg(temp, "", commConsts.Run, nil, wsMsg)
 		}
@@ -167,12 +176,14 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 		logUtils.ExecResult(temp)
 	}
 
-	for idx, file := range casesToRun {
+	for idx, file := range execParams.CasesToRun {
 		if fileUtils.IsDir(file) {
 			continue
 		}
 
-		ExecScript(file, workspacePath, conf, report, idx, len(casesToRun), pathMaxWidth, numbMaxWidth, titleMaxWidth, ch, wsMsg)
+		execParams.ScriptIdx = idx
+		execParams.ScriptFile = file
+		ExecScript(execParams, ch, wsMsg)
 
 		select {
 		case <-ch:
@@ -191,8 +202,8 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 
 ExitAllCase:
 	endTime := time.Now().Unix()
-	report.EndTime = endTime
-	report.Duration = endTime - startTime
+	execParams.Report.EndTime = endTime
+	execParams.Report.Duration = endTime - startTime
 }
 
 func FilterCases(cases []string, conf *commDomain.WorkspaceConf) (casesToRun, casesToIgnore []string) {

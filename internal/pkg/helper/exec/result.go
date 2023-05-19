@@ -21,13 +21,10 @@ import (
 	"github.com/mattn/go-runewidth"
 )
 
-func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfReport, scriptIdx int,
-	total int, secs string, pathMaxWidth, numbMaxWidth, titleMaxWidth int,
-	wsMsg *websocket.Message, errOutput string) {
+func CheckCaseResult(execParams commDomain.ExecParams, logs string, wsMsg *websocket.Message, errOutput string) {
+	steps := scriptHelper.GetStepAndExpectMap(execParams.ScriptFile)
 
-	steps := scriptHelper.GetStepAndExpectMap(scriptFile)
-
-	isIndependent, expectIndependentContent := scriptHelper.GetDependentExpect(scriptFile)
+	isIndependent, expectIndependentContent := scriptHelper.GetDependentExpect(execParams.ScriptFile)
 	if isIndependent {
 		scriptHelper.GetExpectMapFromIndependentFile(&steps, expectIndependentContent, false)
 	}
@@ -39,19 +36,17 @@ func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfRepor
 		skip, actualArr = scriptHelper.ReadLogArrOld(logs)
 	}
 
-	language := langHelper.GetLangByFile(scriptFile)
-	ValidateCaseResult(scriptFile, language, steps, skip, actualArr, report,
-		scriptIdx, total, secs, pathMaxWidth, numbMaxWidth, titleMaxWidth, wsMsg, errOutput)
+	language := langHelper.GetLangByFile(execParams.ScriptFile)
+	ValidateCaseResult(execParams, language, steps, skip, actualArr, wsMsg, errOutput)
 }
 
-func ValidateCaseResult(scriptFile string, langType string,
-	steps []commDomain.ZentaoCaseStep, skip bool, actualArr [][]string, report *commDomain.ZtfReport,
-	scriptIdx int, total int, secs string, pathMaxWidth, numbMaxWidth, titleMaxWidth int,
+func ValidateCaseResult(execParams commDomain.ExecParams, langType string,
+	steps []commDomain.ZentaoCaseStep, skip bool, actualArr [][]string,
 	wsMsg *websocket.Message, errOutput string) {
 
-	key := stringUtils.Md5(scriptFile)
+	key := stringUtils.Md5(execParams.ScriptFile)
 
-	_, caseId, productId, title, _ := scriptHelper.GetCaseInfo(scriptFile)
+	_, caseId, productId, title, _ := scriptHelper.GetCaseInfo(execParams.ScriptFile)
 
 	stepLogs := make([]commDomain.StepLog, 0)
 	caseResult := commConsts.PASS
@@ -96,33 +91,33 @@ func ValidateCaseResult(scriptFile string, langType string,
 	}
 
 	if caseResult == commConsts.FAIL {
-		report.Fail = report.Fail + 1
+		execParams.Report.Fail = execParams.Report.Fail + 1
 	} else if caseResult == commConsts.PASS {
-		report.Pass = report.Pass + 1
+		execParams.Report.Pass = execParams.Report.Pass + 1
 	} else if caseResult == commConsts.SKIP {
-		report.Skip = report.Skip + 1
+		execParams.Report.Skip = execParams.Report.Skip + 1
 	}
-	report.Total = report.Total + 1
+	execParams.Report.Total = execParams.Report.Total + 1
 
-	relativePath := strings.TrimPrefix(scriptFile, commConsts.WorkDir)
+	relativePath := strings.TrimPrefix(execParams.ScriptFile, commConsts.WorkDir)
 	csResult := commDomain.FuncResult{Id: caseId, ProductId: productId, Title: title,
-		Key: key, Path: scriptFile, RelativePath: relativePath, Status: caseResult, Steps: stepLogs}
-	report.FuncResult = append(report.FuncResult, csResult)
+		Key: key, Path: execParams.ScriptFile, RelativePath: relativePath, Status: caseResult, Steps: stepLogs}
+	execParams.Report.FuncResult = append(execParams.Report.FuncResult, csResult)
 
-	width := strconv.Itoa(len(strconv.Itoa(total)))
+	width := strconv.Itoa(len(strconv.Itoa(len(execParams.CasesToRun))))
 
 	path := relativePath
 	csTitle := csResult.Title
 	lenp := runewidth.StringWidth(csResult.Path)
 	lent := runewidth.StringWidth(csTitle)
 
-	if pathMaxWidth > lenp {
-		postFix := strings.Repeat(" ", pathMaxWidth-lenp)
+	if execParams.PathMaxWidth > lenp {
+		postFix := strings.Repeat(" ", execParams.PathMaxWidth-lenp)
 		path += postFix
 	}
 
-	if titleMaxWidth > lent {
-		postFix := strings.Repeat(" ", titleMaxWidth-lent)
+	if execParams.TitleMaxWidth > lent {
+		postFix := strings.Repeat(" ", execParams.TitleMaxWidth-lent)
 		csTitle += postFix
 	}
 
@@ -136,7 +131,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 	} else {
 		status = color.New(color.FgHiYellow, color.Bold).Sprint(status)
 	}
-	msg := fmt.Sprintf(format, scriptIdx+1, total, status, path, csTitle, secs)
+	msg := fmt.Sprintf(format, execParams.ScriptIdx+1, len(execParams.CasesToRun), status, path, csTitle, execParams.Secs)
 
 	// print each case result
 	if commConsts.ExecFrom == commConsts.FromClient {

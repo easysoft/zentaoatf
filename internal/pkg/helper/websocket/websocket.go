@@ -50,6 +50,13 @@ func SendExecMsg(msg, isRunning string, category commConsts.WsMsgCategory, info 
 	PubMsg(mqData)
 }
 
+func SendExecMsgIfNeed(msg, isRunning string, category commConsts.WsMsgCategory, info iris.Map, wsMsg *websocket.Message) {
+	if commConsts.ExecFrom == commConsts.FromClient {
+		SendExecMsg(msg, isRunning, category,
+			info, wsMsg)
+	}
+}
+
 func Broadcast(namespace, room, event string, content string) {
 	wsConn.Server().Broadcast(nil, websocket.Message{
 		Namespace: namespace,
