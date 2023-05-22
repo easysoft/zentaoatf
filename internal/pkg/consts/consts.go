@@ -11,9 +11,8 @@ const (
 	Ip   = "127.0.0.1"
 	Port = 8085
 
-	LevelToScanScriptFile = 8
-	JobTimeoutTime        = 60 * 30
-	JobRetryTime          = 3
+	JobTimeoutTime = 60 * 30
+	JobRetryTime   = 3
 
 	ConfigVersion      = "3.0"
 	ConfigDir          = "conf"
@@ -31,6 +30,8 @@ const (
 	ExecProxyPath      = "proxyExecDir"
 
 	ExpectResultPass = "pass"
+
+	LevelToScanScriptFile = 8
 
 	PathInfo = "PATH_INFO"
 	Get      = "GET"
@@ -50,4 +51,7 @@ var (
 		JUnit.String(), TestNG.String(), PHPUnit.String(), PyTest.String(), Jest.String(), CppUnit.String(), GTest.String(), QTest.String(),
 		RobotFramework.String(), Cypress.String(), Playwright.String(), Puppeteer.String(), K6.String(), Zap.String(),
 	}
+
+	DirToIgnore = []string{"node_modules", ".webpack",
+		"bin", "logs", "xdoc", "log", "log-bak", "conf"}
 )
