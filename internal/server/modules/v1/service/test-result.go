@@ -67,13 +67,7 @@ func (s *TestResultService) Paginate(siteId, productId uint, req serverDomain.Re
 			summary.WorkspaceName = workspace.Name
 
 			if report.Total == 1 && len(report.FuncResult) > 0 {
-				scriptName := ""
-				if commConsts.PthSep == "\\" {
-					scriptName = strings.Replace(report.FuncResult[0].Path, "/", "\\", -1)
-				} else {
-					scriptName = strings.Replace(report.FuncResult[0].Path, "\\", "/", -1)
-				}
-				_, summary.TestScriptName = filepath.Split(scriptName)
+				summary.TestScriptName = fileUtils.GetFileNameBySep(report.FuncResult[0].Path, commConsts.PthSep)
 			}
 
 			reports = append(reports, summary)

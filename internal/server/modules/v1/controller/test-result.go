@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"strings"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
@@ -151,7 +150,7 @@ func (c *TestResultCtrl) GetStatistic(ctx iris.Context) {
 	scriptPath := ctx.URLParam("path")
 
 	if scriptPath == "" {
-		ctx.JSON(c.ErrResp(commConsts.ParamErr, fmt.Sprintf("参数%s不合法", "path")))
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, "path"))
 		return
 	}
 
@@ -173,7 +172,7 @@ func (c *TestResultCtrl) UpdateStatistic(ctx iris.Context) {
 	resultPath := ctx.URLParam("path")
 
 	if resultPath == "" {
-		ctx.JSON(c.ErrResp(commConsts.ParamErr, fmt.Sprintf("参数%s不合法", "path")))
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, "path"))
 		return
 	}
 
@@ -195,7 +194,7 @@ func (c *TestResultCtrl) GetFailure(ctx iris.Context) {
 	scriptPath := ctx.URLParam("path")
 
 	if scriptPath == "" {
-		ctx.JSON(c.ErrResp(commConsts.ParamErr, fmt.Sprintf("参数%s不合法", "path")))
+		ctx.JSON(c.ErrResp(commConsts.ParamErr, "path"))
 		return
 	}
 
