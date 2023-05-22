@@ -31,26 +31,7 @@ func Watch(files []string, wsMsg *websocket.Message) {
 	go func() {
 		defer close(done)
 
-		for {
-			select {
-			case event, ok := <-watcher.Events:
-				if !ok {
-					return
-				}
-				if "REMOVE" == event.Op.String() || "CREATE" == event.Op.String() {
-					if strings.Contains(event.Name, "log"+consts.FilePthSep) {
-						return
-					}
-					bytes, _ := json.Marshal(commDomain.WsResp{Category: "watch"})
-					mqData := commDomain.MqMsg{Namespace: wsMsg.Namespace, Room: wsMsg.Room, Event: wsMsg.Event, Content: string(bytes)}
-					websocketHelper.PubMsg(mqData)
-				}
-			case _, ok := <-watcher.Errors:
-				if !ok {
-					return
-				}
-			}
-		}
+		watchEvent(watcher, wsMsg)
 	}()
 
 	for _, file := range files {
@@ -60,4 +41,31 @@ func Watch(files []string, wsMsg *websocket.Message) {
 		watcher.Add(file)
 	}
 	<-done
+}
+
+func watchEvent(watcher *fsnotify.Watcher, wsMsg *websocket.Message) {
+	for {
+		select {
+		case event, ok := <-watcher.Events:
+			if !ok {
+				return
+			}
+
+			//watch remove and create event
+			if fsnotify.Remove == event.Op || fsnotify.Create == event.Op {
+				if strings.Contains(event.Name, "log"+consts.FilePthSep) {
+					return
+				}
+
+				//send websocket msg
+				bytes, _ := json.Marshal(commDomain.WsResp{Category: "watch"})
+				mqData := commDomain.MqMsg{Namespace: wsMsg.Namespace, Room: wsMsg.Room, Event: wsMsg.Event, Content: string(bytes)}
+				websocketHelper.PubMsg(mqData)
+			}
+		case _, ok := <-watcher.Errors:
+			if !ok {
+				return
+			}
+		}
+	}
 }

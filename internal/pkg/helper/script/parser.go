@@ -242,23 +242,28 @@ func getStepNestedArrInOldFormat(lines []string) (ret []commDomain.ZtfStep) {
 			parent, increase = parserNextLines(line, lines[index+1:])
 			index += increase
 
-			if strings.TrimSpace(parent.Expect) == "" && strings.Index(line, ">>") > -1 {
+			if strings.TrimSpace(parent.Expect) == "" && strings.Contains(line, ">>") {
 				parent.Expect = commConsts.ExpectResultPass
 			}
 			ret = append(ret, parent)
-		} else { // 有缩进
-			child := commDomain.ZtfStep{}
-			child, increase = parserNextLines(line, lines[index+1:])
-			index += increase
 
-			if parent.Desc != "" {
-				if strings.TrimSpace(child.Expect) == "" && strings.Index(line, ">>") > -1 {
-					child.Expect = commConsts.ExpectResultPass
-				}
-
-				ret[len(ret)-1].Children = append(ret[len(ret)-1].Children, child)
-			}
+			continue
 		}
+
+		// 有缩进
+		child := commDomain.ZtfStep{}
+		child, increase = parserNextLines(line, lines[index+1:])
+		index += increase
+
+		if parent.Desc == "" {
+			continue
+		}
+
+		if strings.TrimSpace(child.Expect) == "" && strings.Contains(line, ">>") {
+			child.Expect = commConsts.ExpectResultPass
+		}
+
+		ret[len(ret)-1].Children = append(ret[len(ret)-1].Children, child)
 	}
 
 	return
@@ -272,32 +277,31 @@ func parserNextLines(str string, nextLines []string) (ret commDomain.ZtfStep, in
 		expect = strings.TrimSpace(arr[1])
 	}
 
-	if strings.Index(str, ">>") < 0 || expect != "" { // no >> or single line expect
+	if !strings.Contains(str, ">>") || expect != "" { // no >> or single line expect
 		ret = commDomain.ZtfStep{Desc: desc, Expect: expect}
 		return
 	}
 
-	if strings.Index(str, ">>") > -1 { // will test if it has multi-line expect
-		for index, line := range nextLines {
-			if strings.TrimSpace(line) == ">>" {
-				increase = index
-				break
-			}
-
-			if strings.Index(line, ">>") > -1 {
-				expect = ""
-				break
-			}
-
-			if len(expect) > 0 {
-				expect += "\r\n"
-			}
-			expect += strings.TrimSpace(line)
+	// will test if it has multi-line expect
+	for index, line := range nextLines {
+		if strings.TrimSpace(line) == ">>" {
+			increase = index
+			break
 		}
 
-		if increase == 0 { // multi-line
+		if strings.Contains(line, ">>") {
 			expect = ""
+			break
 		}
+
+		if len(expect) > 0 {
+			expect += "\r\n"
+		}
+		expect += strings.TrimSpace(line)
+	}
+
+	if increase == 0 { // multi-line
+		expect = ""
 	}
 
 	ret = commDomain.ZtfStep{Desc: desc, Expect: expect}
