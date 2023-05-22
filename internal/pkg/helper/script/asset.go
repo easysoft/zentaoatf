@@ -138,7 +138,7 @@ func LoadScriptListInDir(path string, files *[]string, level int) error {
 			continue
 		}
 
-		if fi.IsDir() && level < 3 { // 目录, 递归遍历
+		if fi.IsDir() && level < commConsts.LevelToScanScriptFile { // 目录, 递归遍历
 			LoadScriptListInDir(path+name+consts.FilePthSep, files, level+1)
 			continue
 		}

@@ -11,8 +11,9 @@ const (
 	Ip   = "127.0.0.1"
 	Port = 8085
 
-	JobTimeoutTime = 60 * 30
-	JobRetryTime   = 3
+	LevelToScanScriptFile = 8
+	JobTimeoutTime        = 60 * 30
+	JobRetryTime          = 3
 
 	ConfigVersion      = "3.0"
 	ConfigDir          = "conf"
