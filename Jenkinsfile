@@ -29,6 +29,10 @@ pipeline {
               value: 123456
             - name: MYSQL_ROOT_PASSWORD
               value: 123456
+            resources:
+              limits:
+                cpu: "1"
+                memory: 2Gi
           - name: playwright
             image: hub.qucheng.com/ci/playwright-go:v5
             tty: true
