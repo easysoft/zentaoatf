@@ -3,10 +3,11 @@ package httpUtils
 import (
 	"encoding/json"
 	"errors"
-	authUtils "github.com/easysoft/zentaoatf/internal/pkg/helper/auth"
 	"io/ioutil"
 	"net/http"
 	"strings"
+
+	authUtils "github.com/easysoft/zentaoatf/internal/pkg/helper/auth"
 
 	"github.com/bitly/go-simplejson"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
@@ -20,33 +21,27 @@ func Get(url string) (ret []byte, err error) {
 }
 
 func GetCheckForward(url string) (ret []byte, isForward bool, err error) {
-	if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
-		logUtils.Infof("===DEBUG=== request: %s", url)
-	}
+	logUtils.InfofIfVerbose("===DEBUG=== request: %s", url)
 
 	client := &http.Client{}
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
-			logUtils.Infof(color.RedString("get request failed, error: %s.", err.Error()))
-		}
+		logUtils.InfofIfVerbose(color.RedString("get request failed, error: %s.", err.Error()))
 		return
 	}
 
 	if commConsts.ExecFrom == commConsts.FromZentao {
 		authUtils.AddBearTokenIfNeeded(req)
 	} else {
-		if strings.Index(url, "/tokens") < 0 {
+		if !strings.Contains(url, "/tokens") {
 			req.Header.Add(commConsts.Token, commConsts.SessionId)
 		}
 	}
 
 	resp, err := client.Do(req)
 	if err != nil {
-		if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
-			logUtils.Infof(color.RedString("get request failed, error: %s.", err.Error()))
-		}
+		logUtils.InfofIfVerbose(color.RedString("get request failed, error: %s.", err.Error()))
 		return
 	}
 	defer resp.Body.Close()
@@ -54,22 +49,16 @@ func GetCheckForward(url string) (ret []byte, isForward bool, err error) {
 	isForward = req.URL.Path != resp.Request.URL.Path
 
 	if !IsSuccessCode(resp.StatusCode) {
-		if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
-			logUtils.Infof(color.RedString("read response failed, StatusCode: %d.", resp.StatusCode))
-		}
+		logUtils.InfofIfVerbose(color.RedString("read response failed, StatusCode: %d.", resp.StatusCode))
 		err = errors.New(resp.Status)
 		return
 	}
 
 	ret, err = ioutil.ReadAll(resp.Body)
-	if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
-		logUtils.Infof("===DEBUG=== response: %s", logUtils.ConvertUnicode(ret))
-	}
+	logUtils.InfofIfVerbose("===DEBUG=== response: %s", logUtils.ConvertUnicode(ret))
 
 	if err != nil {
-		if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
-			logUtils.Infof(color.RedString("read response failed, error ", err.Error()))
-		}
+		logUtils.InfofIfVerbose(color.RedString("read response failed, error ", err.Error()))
 		return
 	}
 
@@ -98,21 +87,15 @@ func Put(url string, data interface{}) (ret []byte, err error) {
 }
 
 func PostOrPut(url string, method string, data interface{}) (ret []byte, err error) {
-	if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
-		logUtils.Infof("===DEBUG=== request: %s", url)
-	}
+	logUtils.InfofIfVerbose("===DEBUG=== request: %s", url)
 
 	client := &http.Client{}
 
 	dataBytes, err := json.Marshal(data)
-	if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
-		logUtils.Infof("===DEBUG=== data: %s", string(dataBytes))
-	}
+	logUtils.InfofIfVerbose("===DEBUG=== data: %s", string(dataBytes))
 
 	if err != nil {
-		if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
-			logUtils.Infof(color.RedString("marshal request failed, error: %s.", err.Error()))
-		}
+		logUtils.InfofIfVerbose(color.RedString("marshal request failed, error: %s.", err.Error()))
 		return
 	}
 
@@ -120,16 +103,14 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 
 	req, err := http.NewRequest(method, url, strings.NewReader(dataStr))
 	if err != nil {
-		if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
-			logUtils.Infof(color.RedString("post request failed, error: %s.", err.Error()))
-		}
+		logUtils.InfofIfVerbose(color.RedString("post request failed, error: %s.", err.Error()))
 		return
 	}
 
 	if commConsts.ExecFrom == commConsts.FromZentao {
 		authUtils.AddBearTokenIfNeeded(req)
 	} else {
-		if strings.Index(url, "/tokens") < 0 {
+		if !strings.Contains(url, "/tokens") {
 			req.Header.Add(commConsts.Token, commConsts.SessionId)
 		}
 	}
@@ -139,16 +120,12 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 
 	resp, err := client.Do(req)
 	if err != nil {
-		if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
-			logUtils.Infof(color.RedString("post request failed, error: %s.", err.Error()))
-		}
+		logUtils.InfofIfVerbose(color.RedString("post request failed, error: %s.", err.Error()))
 		return
 	}
 
 	if !IsSuccessCode(resp.StatusCode) {
-		if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
-			logUtils.Infof(color.RedString("post request return '%s'.", resp.Status))
-		}
+		logUtils.InfofIfVerbose(color.RedString("post request return '%s'.", resp.Status))
 		err = errors.New(resp.Status)
 		return
 	}
@@ -156,14 +133,10 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 	ret, err = ioutil.ReadAll(resp.Body)
 	defer resp.Body.Close()
 
-	if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
-		logUtils.Infof("===DEBUG=== response: %s", logUtils.ConvertUnicode(ret))
-	}
+	logUtils.InfofIfVerbose("===DEBUG=== response: %s", logUtils.ConvertUnicode(ret))
 
 	if err != nil {
-		if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
-			logUtils.Infof(color.RedString("read response failed, error: %s.", err.Error()))
-		}
+		logUtils.InfofIfVerbose(color.RedString("read response failed, error: %s.", err.Error()))
 		return
 	}
 

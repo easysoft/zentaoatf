@@ -3,16 +3,18 @@ package stdinUtils
 import (
 	"bufio"
 	"fmt"
+	"strconv"
+
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"strconv"
 
-	"github.com/fatih/color"
 	"os"
 	"regexp"
 	"strings"
+
+	"github.com/fatih/color"
 )
 
 func InputForBool(in *bool, defaultVal bool, fmtStr string, fmtParam ...interface{}) {
@@ -79,10 +81,10 @@ func GetInput(regx string, defaultVal string, fmtStr string, params ...interface
 
 		if pass {
 			return ret
-		} else {
-			ret = ""
-			logUtils.ExecConsole(color.FgRed, i118Utils.Sprintf(msg))
 		}
+
+		ret = ""
+		logUtils.ExecConsole(color.FgRed, i118Utils.Sprintf(msg))
 	}
 }
 

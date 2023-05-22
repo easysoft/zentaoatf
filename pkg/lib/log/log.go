@@ -2,10 +2,6 @@ package logUtils
 
 import (
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/easysoft/zentaoatf/pkg/consts"
-	dateUtils "github.com/easysoft/zentaoatf/pkg/lib/date"
-	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -13,6 +9,11 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	"github.com/easysoft/zentaoatf/pkg/consts"
+	dateUtils "github.com/easysoft/zentaoatf/pkg/lib/date"
+	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 
 	"github.com/snowlyg/helper/dir"
 )
@@ -38,17 +39,21 @@ func GetLogDir(workspacePath string) string {
 	regx := `^\d\d\d$`
 	numb := 0
 	for _, fi := range files2 {
-		if fi.IsDir() {
-			name := fi.Name()
-			isLog, _ := regexp.MatchString(regx, name)
-			if isLog {
-				name = strings.TrimLeft(name, "0")
-				nm, _ := strconv.Atoi(name)
+		if !fi.IsDir() {
+			continue
+		}
 
-				if nm >= numb {
-					numb = nm
-				}
-			}
+		name := fi.Name()
+		isLog, _ := regexp.MatchString(regx, name)
+		if !isLog {
+			continue
+		}
+
+		name = strings.TrimLeft(name, "0")
+		nm, _ := strconv.Atoi(name)
+
+		if nm >= numb {
+			numb = nm
 		}
 	}
 
