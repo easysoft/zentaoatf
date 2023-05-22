@@ -4,6 +4,7 @@
 package shellUtils
 
 import (
+	"fmt"
 	"os/exec"
 	"regexp"
 	"strconv"
@@ -32,44 +33,49 @@ func WindowSize() window {
 	lines := strings.Split(string(out), "\n")
 
 	for _, line := range lines {
+		line = strings.TrimSpace(line)
+		getWindowSizeFromLine(line, &win)
 		if win.Row > 0 && win.Col > 0 {
 			return win
-		}
-
-		line = strings.TrimSpace(line)
-
-		if strings.Contains(line, "行") || strings.Contains(line, "Lines") {
-			re := regexp.MustCompile(`\d+`)
-			rs := re.FindAllString(line, -1)
-			if len(rs) == 0 {
-				continue
-			}
-
-			row, err := strconv.ParseUint(rs[0], 10, 16)
-			if err != nil {
-				continue
-			}
-
-			win.Row = uint16(row)
-		}
-
-		if strings.Contains(line, "列") || strings.Contains(line, "Columns") {
-			re := regexp.MustCompile(`\d+`)
-			rs := re.FindAllString(line, -1)
-			if len(rs) == 0 {
-				continue
-			}
-
-			col, err := strconv.ParseUint(rs[0], 10, 16)
-			if err != nil {
-				continue
-			}
-
-			win.Col = uint16(col)
 		}
 	}
 
 	return win
+}
+
+func getWindowSizeFromLine(line string, win *window) {
+	fmt.Println(line)
+	if strings.Contains(line, "行") || strings.Contains(line, "Lines") {
+		re := regexp.MustCompile(`\d+`)
+		rs := re.FindAllString(line, -1)
+		if len(rs) == 0 {
+			return
+		}
+
+		row, err := strconv.ParseUint(rs[0], 10, 16)
+		if err != nil {
+			return
+		}
+
+		win.Row = uint16(row)
+	}
+
+	if strings.Contains(line, "列") || strings.Contains(line, "Columns") {
+		re := regexp.MustCompile(`\d+`)
+		rs := re.FindAllString(line, -1)
+		if len(rs) == 0 {
+			return
+		}
+
+		col, err := strconv.ParseUint(rs[0], 10, 16)
+		if err != nil {
+			return
+		}
+
+		win.Col = uint16(col)
+	}
+
+	return
 }
 
 func GenFullScreenDivider() string {
