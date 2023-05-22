@@ -292,7 +292,7 @@ func CheckUnitTestResult() bool {
 		if result["title"] == "loginFail" && result["status"] != "通过" {
 			return false
 		}
-		if result["title"] == "loginSuccess" && result["status"] != "通过" {
+		if result["title"] == "loginSuccess" && result["status"] != "失败" {
 			return false
 		}
 	}

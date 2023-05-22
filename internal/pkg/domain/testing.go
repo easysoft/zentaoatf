@@ -701,3 +701,18 @@ func (result *TestResult) Failf(str string, args ...interface{}) {
 func (result *TestResult) IsSuccess() bool {
 	return result.Code == consts.ResultCodeSuccess.Int()
 }
+
+type ExecParams struct {
+	CasesToRun    []string
+	CasesToIgnore []string
+	Report        *ZtfReport
+	WorkspacePath string
+	Conf          WorkspaceConf
+
+	PathMaxWidth  int
+	NumbMaxWidth  int
+	TitleMaxWidth int
+	ScriptIdx     int
+	ScriptFile    string
+	Secs          string
+}

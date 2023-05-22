@@ -10,13 +10,13 @@ import (
 	"time"
 
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
-	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	dateUtils "github.com/easysoft/zentaoatf/pkg/lib/date"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
@@ -101,20 +101,11 @@ func ExecUnit(ch chan int, req serverDomain.TestSet, wsMsg *websocket.Message) (
 func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg *websocket.Message) (err error) {
 	key := stringUtils.Md5(workspacePath)
 
-	var cmd *exec.Cmd
-	if commonUtils.IsWin() {
-		cmd = exec.Command("cmd", "/C", cmdStr)
-	} else {
-		cmd = exec.Command("/bin/bash", "-c", cmdStr)
-	}
-
-	cmd.Dir = workspacePath
+	cmd := shellUtils.GetCmd(cmdStr)
 
 	if cmd == nil {
 		msgStr := i118Utils.Sprintf("cmd_empty")
-		if commConsts.ExecFrom == commConsts.FromClient {
-			websocketHelper.SendOutputMsg(msgStr, "", iris.Map{"key": key}, wsMsg)
-		}
+		websocketHelper.SendOutputMsgIfNeed(msgStr, "", iris.Map{"key": key}, wsMsg)
 
 		logUtils.ExecConsolef(color.FgRed, msgStr)
 		logUtils.ExecFilef(msgStr)
@@ -123,21 +114,18 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg *websocket.Mes
 		return
 	}
 
+	cmd.Dir = workspacePath
 	stdout, err1 := cmd.StdoutPipe()
 	stderr, err2 := cmd.StderrPipe()
 
 	if err1 != nil {
-		if commConsts.ExecFrom == commConsts.FromClient {
-			websocketHelper.SendOutputMsg(err1.Error(), "", iris.Map{"key": key}, wsMsg)
-		}
+		websocketHelper.SendOutputMsgIfNeed(err1.Error(), "", iris.Map{"key": key}, wsMsg)
 		logUtils.ExecConsolef(color.FgRed, err1.Error())
 		logUtils.ExecFilef(err1.Error())
 
 		return
 	} else if err2 != nil {
-		if commConsts.ExecFrom == commConsts.FromClient {
-			websocketHelper.SendOutputMsg(err2.Error(), "", iris.Map{"key": key}, wsMsg)
-		}
+		websocketHelper.SendOutputMsgIfNeed(err2.Error(), "", iris.Map{"key": key}, wsMsg)
 		logUtils.ExecConsolef(color.FgRed, err2.Error())
 		logUtils.ExecFilef(err2.Error())
 
@@ -146,14 +134,23 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg *websocket.Mes
 
 	cmd.Start()
 
-	isTerminal := false
+	isTerminal := printStdout(stdout, ch, cmd, key, wsMsg)
+
+	printStderr(isTerminal, stderr, key, wsMsg)
+
+	cmd.Wait()
+
+	return
+}
+
+func printStdout(stdout io.ReadCloser, ch chan int, cmd *exec.Cmd, key string, wsMsg *websocket.Message) (isTerminal bool) {
+	isTerminal = false
 	reader1 := bufio.NewReader(stdout)
+
 	for {
 		line, err3 := reader1.ReadString('\n')
 		if line != "" {
-			if commConsts.ExecFrom == commConsts.FromClient {
-				websocketHelper.SendOutputMsg(line, "", iris.Map{"key": key}, wsMsg)
-			}
+			websocketHelper.SendOutputMsgIfNeed(line, "", iris.Map{"key": key}, wsMsg)
 			logUtils.ExecConsole(1, line)
 			logUtils.ExecFile(line)
 
@@ -169,19 +166,20 @@ func RunUnitTest(ch chan int, cmdStr, workspacePath string, wsMsg *websocket.Mes
 			cmd.Process.Kill()
 			msg := i118Utils.Sprintf("exit_exec_curr")
 
-			if commConsts.ExecFrom == commConsts.FromClient {
-				websocketHelper.SendExecMsg(msg, "", commConsts.Run, nil, wsMsg)
-			}
+			websocketHelper.SendExecMsgIfNeed(msg, "", commConsts.Run, nil, wsMsg)
 
 			logUtils.ExecConsolef(color.FgCyan, msg)
 			logUtils.ExecFilef(msg)
 
-			goto ExitUnitTest
+			return
 		default:
 		}
 	}
 
-ExitUnitTest:
+	return
+}
+
+func printStderr(isTerminal bool, stderr io.ReadCloser, key string, wsMsg *websocket.Message) {
 	errOutputArr := make([]string, 0)
 	if !isTerminal {
 		reader2 := bufio.NewReader(stderr)
@@ -198,14 +196,8 @@ ExitUnitTest:
 	errOutput := strings.Join(errOutputArr, "")
 
 	if errOutput != "" {
-		if commConsts.ExecFrom == commConsts.FromClient {
-			websocketHelper.SendOutputMsg(errOutput, "", iris.Map{"key": key}, wsMsg)
-		}
+		websocketHelper.SendOutputMsgIfNeed(errOutput, "", iris.Map{"key": key}, wsMsg)
 		logUtils.ExecConsolef(-1, errOutput)
 		logUtils.ExecFilef(errOutput)
 	}
-
-	cmd.Wait()
-
-	return
 }

@@ -30,7 +30,7 @@ pipeline {
             - name: MYSQL_ROOT_PASSWORD
               value: 123456
           - name: playwright
-            image: hub.qucheng.com/ci/playwright-go:v2
+            image: hub.qucheng.com/ci/playwright-go:v5
             tty: true
           nodeSelector:
             kubernetes.io/hostname: k3s-worker01
@@ -46,64 +46,82 @@ pipeline {
 
       steps {
         container('playwright') {
-        //   sh "sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories"
-          sh "apt install -y make git gcc libc-dev"
           sh 'go mod download'
-        //   sh 'go install -a -v github.com/go-bindata/go-bindata/...@latest'
           sh 'go-bindata -o=res/res.go -pkg=res res/...'
-        }
-      }
-    }
-
-    stage("DEBUG") {
-      steps {
-        container('zentao') {
-          sh '/etc/s6/s6-init/run'
-          sh 'apachectl start'
-          sh 'env'
-        }
-        container('playwright') {
-          sh 'git config --global --add safe.directory $(pwd)'
-          sh 'CGO_ENABLED=0 make compile_command_linux'
-          sh 'cp bin/linux/ztf ./'
-          sh 'cd bin/linux && tar zcf ${WORKSPACE}/ztf.linux.tar.gz ztf'
-        }
-        container('playwright') {
-          sh 'nohup go run cmd/server/main.go &'
-        }
-        container('node') {
-          sh 'yarn config set registry https://registry.npm.taobao.org --global'
-          sh 'cd ui && yarn && nohup yarn serve &'
-          sh 'while ! nc -z 127.0.0.1 8000; do sleep 1;done'
-        }
-                
-        container('playwright') {
-          sh 'CGO_ENABLED=0 go run test/ui/main.go -runFrom jenkins'
-          sh 'cd test && tar zcf ${WORKSPACE}/screen.linux.tar.gz ./screenshot'
-        //   sh 'CGO_ENABLED=0 go run test/cli/main.go -runFrom jenkins'
-        //   sh 'CGO_ENABLED=0 go test $(go list ./... | grep -v /test/ui | grep -v /test/cli | grep -v /test/helper)'
         }
       }
     }
     
     stage("Test") {
-      parallel {
-        // stage("UnitTest") {
-        //   steps {
-        //     container('golang') {
-        //       sh 'CGO_ENABLED=0 go test ./...'
-        //     }
-        //   }
+      environment {
+        ARTIFACT_REPOSITORY = "easycorp-snapshot"
+        ARTIFACT_HOST = "nexus.qc.oop.cc"
+        ARTIFACT_PROTOCOL = "https"
+        ARTIFACT_CRED_ID = "nexus-jenkins"
+        ZTF_VERSION = """${sh(
+                        returnStdout: true,
+                        script: 'cat VERSION'
+        ).trim()}"""
+      }
 
-        //   post {
-        //     failure {
-        //       container('xuanimbot') {
-        //         sh 'git config --global --add safe.directory $(pwd)'
-        //         sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "ztf unit test failure" --url "${BUILD_URL}" --content "ztf unit test failure, please check it" --debug --custom'
-        //       }
-        //     }
-        //   }
-        // } // End UnitTest
+      parallel {
+        stage("UnitTest") {
+          steps {
+            container('zentao') {
+              sh '/etc/s6/s6-init/run'
+              sh 'apachectl start'
+              sh 'env'
+            }
+            container('playwright') {
+              sh 'git config --global --add safe.directory $(pwd)'
+              sh 'CGO_ENABLED=0 make compile_command_linux'
+              sh 'cp bin/linux/ztf ./'
+              sh 'cd bin/linux && tar zcf ${WORKSPACE}/ztf.linux.tar.gz ztf'
+            }
+            container('playwright') {
+              sh 'nohup go run cmd/server/main.go &'
+            }
+            container('node') {
+              sh 'yarn config set registry https://registry.npm.taobao.org --global'
+              sh 'cd ui && yarn && nohup yarn serve &'
+            }
+                    
+            container('playwright') {
+              sh 'CGO_ENABLED=0 go run test/ui/main.go -runFrom jenkins'
+              sh 'CGO_ENABLED=0 go run test/cli/main.go -runFrom jenkins'
+              sh 'CGO_ENABLED=0 go test $(go list ./... | grep -v /test/ui | grep -v /test/cli | grep -v /test/helper)'
+            }
+          }
+
+          post {
+            failure {
+              container('xuanimbot') {
+                sh 'git config --global --add safe.directory $(pwd)'
+                sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "ztf unit test failure" --url "${BUILD_URL}" --content "ztf unit test failure, please check it" --debug --custom'
+              }
+              
+              container('playwright') {
+                sh 'cd test && tar zcf ${WORKSPACE}/screen.linux.tar.gz ./screenshot'
+              }
+
+              nexusArtifactUploader(
+                nexusVersion: 'nexus3',
+                protocol: env.ARTIFACT_PROTOCOL,
+                nexusUrl: env.ARTIFACT_HOST,
+                groupId: 'autotest.framework',
+                version: env.ZTF_VERSION,
+                repository: env.ARTIFACT_REPOSITORY,
+                credentialsId: env.ARTIFACT_CRED_ID,
+                artifacts: [
+                  [artifactId: 'ztf',
+                  classifier: 'screenshot',
+                  file: 'screen.linux.tar.gz',
+                  type: 'tar.gz']
+                ]
+              )
+            }
+          }
+        } // End UnitTest
 
         stage("SonarScan") {
           steps {
@@ -159,7 +177,7 @@ pipeline {
           artifacts: [
             [artifactId: 'ztf',
              classifier: 'linux-amd64',
-             file: 'screen.linux.tar.gz',
+             file: 'ztf.linux.tar.gz',
              type: 'tar.gz']
           ]
         )

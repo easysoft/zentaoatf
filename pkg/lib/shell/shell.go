@@ -4,18 +4,19 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
-	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
-	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	"io"
 	"os"
 	"os/exec"
 	"strings"
+
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 )
 
 func ExeSysCmd(cmdStr string) (string, error) {
-	cmd := getCmd(cmdStr)
+	cmd := GetCmd(cmdStr)
 
 	var out bytes.Buffer
 	cmd.Stdout = &out
@@ -41,7 +42,7 @@ func ExeShellWithPid(cmdStr string) (string, error, int) {
 }
 
 func ExeShellInDirWithPid(cmdStr string, dir string) (ret string, err error, pid int) {
-	cmd := getCmd(cmdStr)
+	cmd := GetCmd(cmdStr)
 	if dir != "" {
 		cmd.Dir = dir
 	}
@@ -68,7 +69,7 @@ func ExeShellWithOutputInDir(cmdStr string, dir string) ([]string, error) {
 }
 
 func ExeShellWithEnvVarsAndOutputInDir(cmdStr, dir string, envVars []string) ([]string, error) {
-	cmd := getCmd(cmdStr)
+	cmd := GetCmd(cmdStr)
 
 	if dir != "" {
 		cmd.Dir = dir
@@ -108,7 +109,7 @@ func ExeShellWithEnvVarsAndOutputInDir(cmdStr, dir string, envVars []string) ([]
 	return output, nil
 }
 
-func getCmd(cmdStr string) (cmd *exec.Cmd) {
+func GetCmd(cmdStr string) (cmd *exec.Cmd) {
 	if commonUtils.IsWin() {
 		cmd = getWinCmd(cmdStr)
 	} else {

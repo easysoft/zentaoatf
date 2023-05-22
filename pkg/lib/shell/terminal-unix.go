@@ -4,6 +4,7 @@
 package shellUtils
 
 import (
+	"strings"
 	"syscall"
 	"unsafe"
 )
@@ -26,4 +27,14 @@ func WindowSize() window {
 	}
 
 	return win
+}
+
+func GenFullScreenDivider() string {
+	divider := "--------------------------------"
+	window := WindowSize()
+	if window.Col != 0 {
+		divider = strings.Repeat("-", int(window.Col))
+	}
+
+	return divider
 }

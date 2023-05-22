@@ -25,6 +25,7 @@ func (l MyLocator) Click() (err error) {
 }
 
 func (l MyLocator) ClickWithOption(option playwright.PageClickOptions) (err error) {
+	option.Timeout = &conf.Timeout
 	err = l.PlwLocator.Click(option)
 	t := l.T
 	if err != nil {

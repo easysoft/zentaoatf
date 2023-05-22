@@ -58,6 +58,7 @@ func main() {
 		return
 	default:
 		commConsts.ExecFrom = commConsts.FromClient
+		commConsts.SpaceQuote = "&nbsp;"
 
 		serverConfig.CONFIG.Host = httpUtils.AddSepIfNeeded(serverConfig.CONFIG.Host)
 
