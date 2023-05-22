@@ -52,6 +52,6 @@ var (
 		RobotFramework.String(), Cypress.String(), Playwright.String(), Puppeteer.String(), K6.String(), Zap.String(),
 	}
 
-	DirToIgnore = []string{"node_modules",
+	DirToIgnore = []string{"node_modules", ".webpack",
 		"bin", "logs", "xdoc", "log", "log-bak", "conf"}
 )
