@@ -3,9 +3,10 @@ package zentaoHelper
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/kataras/iris/v12"
 	"strconv"
 	"strings"
+
+	"github.com/kataras/iris/v12"
 
 	"github.com/bitly/go-simplejson"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
@@ -101,56 +102,42 @@ func PrepareBug(workspacePath, seq string, caseIdStr string, productId int) (bug
 		return
 	}
 
+	if report.TestType == commConsts.TestFunc {
+		return prepareBugForFunc(report, productId, caseId)
+	}
+
+	//unit type
+	return prepareBugForUnit(report, productId, caseId)
+}
+
+func prepareBugForFunc(report commDomain.ZtfReport, productId, caseId int) (bug commDomain.ZtfBug) {
 	for _, cs := range report.FuncResult {
 		if cs.Id != caseId || cs.Status != commConsts.FAIL {
 			continue
 		}
 
-		steps := make([]string, 0)
-		stepsArray := make([]map[string]interface{}, 0)
-		stepIds := ""
-		for _, step := range cs.Steps {
-			if step.Status == commConsts.FAIL {
-				stepIds += step.Id + "_"
-			}
-			stepIds = strings.Trim(stepIds, "_")
-			stepsContent := GenBugStepText(step)
-			steps = append(steps, stepsContent)
-			stepsArray = append(stepsArray, map[string]interface{}{
-				"title":  step.Name,
-				"status": step.Status,
-				"steps":  stepsContent,
-			})
-		}
+		steps, stepIds := parseStep(cs)
 
 		bug = commDomain.ZtfBug{
 			Title:    cs.Title,
 			TestType: "func",
 			Case:     cs.Id,
 			Product:  productId,
-			Steps:    strings.Join(steps, "\n"),
+			Steps:    steps,
 			StepIds:  stepIds,
 
 			Uid:  uuid.NewV4().String(),
 			Type: "codeerror", Severity: 3, Pri: 3, OpenedBuild: []string{"trunk"},
 			CaseVersion: "0", OldTaskID: "0",
 		}
-		if commConsts.ExecFrom == commConsts.FromClient {
-			jsonSteps, _ := json.Marshal(stepsArray)
-			bug.Steps = string(jsonSteps)
-		}
-		return
 	}
 
-	if report.TestType == commConsts.TestFunc {
-		return
-	}
+	return
+}
+
+func prepareBugForUnit(report commDomain.ZtfReport, productId, caseId int) (bug commDomain.ZtfBug) {
 	bugs := make([]map[string]interface{}, 0)
 	stepIds := ""
-	hasCaseId := true
-	if len(report.UnitResult) == report.UnitResult[len(report.UnitResult)-1].Id {
-		hasCaseId = false
-	}
 
 	for _, cs := range report.UnitResult {
 		if (caseId > 0 && cs.Id != caseId) || cs.Status == "pass" {
@@ -161,15 +148,12 @@ func PrepareBug(workspacePath, seq string, caseIdStr string, productId int) (bug
 		if cs.Failure != nil {
 			steps = cs.Failure.Desc
 		}
-		caseId = cs.Id
-		if !hasCaseId {
-			caseId = 0
-		}
+
 		bugMap := map[string]interface{}{
 			"title":  cs.Title,
 			"status": cs.Status,
 			"steps":  steps,
-			"caseId": caseId,
+			"caseId": cs.Cid,
 			"id":     cs.Id,
 		}
 		bugs = append(bugs, bugMap)
@@ -190,6 +174,35 @@ func PrepareBug(workspacePath, seq string, caseIdStr string, productId int) (bug
 		Type: "codeerror", Severity: 3, Pri: 3, OpenedBuild: []string{"trunk"},
 		CaseVersion: "0", OldTaskID: "0",
 	}
+
+	return
+}
+
+func parseStep(cs commDomain.FuncResult) (bugSteps string, stepIds string) {
+	steps := make([]string, 0)
+	stepsArray := make([]map[string]interface{}, 0)
+
+	for _, step := range cs.Steps {
+		if step.Status == commConsts.FAIL {
+			stepIds += step.Id + "_"
+		}
+		stepIds = strings.Trim(stepIds, "_")
+		stepsContent := GenBugStepText(step)
+		steps = append(steps, stepsContent)
+		stepsArray = append(stepsArray, map[string]interface{}{
+			"title":  step.Name,
+			"status": step.Status,
+			"steps":  stepsContent,
+		})
+	}
+
+	if commConsts.ExecFrom == commConsts.FromClient {
+		jsonSteps, _ := json.Marshal(stepsArray)
+		bugSteps = string(jsonSteps)
+		return
+	}
+
+	bugSteps = strings.Join(steps, "\n")
 	return
 }
 
@@ -232,6 +245,12 @@ func GetBugFiledOptions(config commDomain.WorkspaceConf, productId int) (
 		return
 	}
 
+	jsn, err := simplejson.NewJson(bytes)
+	if err != nil {
+		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
+		return
+	}
+	fmt.Println(jsn)
 	err = json.Unmarshal(bytes, &bugOptionsWrapper)
 	if err != nil {
 		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
