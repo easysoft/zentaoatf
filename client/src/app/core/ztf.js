@@ -122,19 +122,15 @@ export function killZtfServer() {
         logInfo(`>> not windows`);
 
         const cmd = `ps -ef | grep ${uuid} | grep -v "grep" | awk '{print $2}' | xargs -r kill -9`
-        logInfo(`>> exit cmd: ${cmd}`);
-
-        // const cp = require('child_process');
-        // cp.exec(cmd, function (error, stdout, stderr) {
-        //     logInfo(`>> exit result: stdout: ${stdout}; stderr: ${stderr}; error: ${error}`);
-        // });
+        logInfo(`>> kill ztf service cmd: ${cmd}`);
 
         const stdout = execSync(cmd, {windowsHide: true}).toString().trim()
-        logInfo(`>> exit result: ${stdout}`)
+        logInfo(`>> kill ztf service result: ${stdout}`)
 
     } else {
         const cmd = 'Get-WmiObject -class win32_process -filter "Commandline like \'%%' + uuid + '%%\'" | Select-Object Processid, Caption';
         logInfo(`>> list process cmd: ${cmd}`);
+
         const stdout = execSync(cmd, {windowsHide: true, shell:'powershell.exe'}).toString().trim()
         logInfo(`>> list process result: exec ${cmd}, stdout: ${stdout}`)
 
@@ -159,10 +155,10 @@ export function killZtfServer() {
 
         if (pid && pid > 0) {
             const killCmd = `taskkill /F /pid ${pid}`
-            logInfo(`>> exit cmd: exec ${killCmd}`)
+            logInfo(`>> kill ztf service cmd: exec ${killCmd}`)
 
             const stdout = execSync(`taskkill /F /pid ${pid}`, {windowsHide: true}).toString().trim()
-            logInfo(`>> exit result: ${stdout}`)
+            logInfo(`>> kill ztf service result: ${stdout}`)
         }
     }
 }

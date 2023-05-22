@@ -36,6 +36,9 @@ func (s *TestExecService) Start(req serverDomain.ExecReq, wsMsg *websocket.Messa
 	execHelper.PopulateTestSetPropsWithParentRequest(&req)
 	for idx, _ := range req.TestSets {
 		testSet := &req.TestSets[idx]
+		if testSet.TestTool == "robotframework" {
+			testSet.TestTool = commConsts.RobotFramework
+		}
 
 		if testSet.WorkspaceId != 0 {
 			po, _ := s.WorkspaceService.Get(uint(testSet.WorkspaceId))
