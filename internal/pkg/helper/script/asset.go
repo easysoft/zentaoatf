@@ -118,11 +118,8 @@ func LoadScriptListInDir(path string, files *[]string, level int) error {
 
 	if !fileUtils.IsDir(path) { // first call, param is a file
 		pass, _ := regexp.MatchString(`.*\.`+regx+`$`, path)
-		if pass {
-			pass = CheckFileIsScript(path)
-			if pass {
-				*files = append(*files, path)
-			}
+		if pass && CheckFileIsScript(path) {
+			*files = append(*files, path)
 		}
 
 		return nil
@@ -141,18 +138,16 @@ func LoadScriptListInDir(path string, files *[]string, level int) error {
 			continue
 		}
 
-		if fi.IsDir() && level < 3 { // 目录, 递归遍历
+		if fi.IsDir() && level < commConsts.LevelToScanScriptFile { // 目录, 递归遍历
 			LoadScriptListInDir(path+name+consts.FilePthSep, files, level+1)
-		} else {
-			path := path + name
-			pass, _ := regexp.MatchString("^*.\\."+regx+"$", path)
+			continue
+		}
 
-			if pass {
-				pass = CheckFileIsScript(path)
-				if pass {
-					*files = append(*files, path)
-				}
-			}
+		path := path + name
+		pass, _ := regexp.MatchString("^*.\\."+regx+"$", path)
+
+		if pass && CheckFileIsScript(path) {
+			*files = append(*files, path)
 		}
 	}
 
@@ -299,11 +294,8 @@ func GetAllScriptsInDir(path string, files *[]string) error {
 
 		pass, _ := regexp.MatchString(`.*\.`+regx+`$`, path)
 
-		if pass {
-			pass := CheckFileIsScript(path)
-			if pass {
-				*files = append(*files, path)
-			}
+		if pass && CheckFileIsScript(path) {
+			*files = append(*files, path)
 		}
 
 		return nil
@@ -324,17 +316,15 @@ func GetAllScriptsInDir(path string, files *[]string) error {
 
 		if fi.IsDir() { // 目录, 递归遍历
 			GetAllScriptsInDir(path+name+consts.FilePthSep, files)
-		} else {
-			path := path + name
-			regx := langHelper.GetSupportLanguageExtRegx()
-			pass, _ := regexp.MatchString("^*.\\."+regx+"$", path)
+			continue
+		}
 
-			if pass {
-				pass = CheckFileIsScript(path)
-				if pass {
-					*files = append(*files, path)
-				}
-			}
+		path := path + name
+		regx := langHelper.GetSupportLanguageExtRegx()
+		pass, _ := regexp.MatchString("^*.\\."+regx+"$", path)
+
+		if pass && CheckFileIsScript(path) {
+			*files = append(*files, path)
 		}
 	}
 

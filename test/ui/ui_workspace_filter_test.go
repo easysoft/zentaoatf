@@ -3,6 +3,7 @@ package main
 import (
 	"testing"
 
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
@@ -12,7 +13,7 @@ import (
 func FilterDir(t provider.T) {
 	t.ID("5494")
 	t.AddParentSuite("管理禅道站点下工作目录")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -29,7 +30,7 @@ func FilterDir(t provider.T) {
 func FilterSuite(t provider.T) {
 	t.ID("5495")
 	t.AddParentSuite("管理禅道站点下工作目录")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.ExpandWorspace(webpage)
 	webpage.Click(`[title="筛选"]`)
@@ -47,7 +48,7 @@ func FilterSuite(t provider.T) {
 func ByModule(t provider.T) {
 	t.ID("5493")
 	t.AddParentSuite("管理禅道站点下工作目录")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.ExpandWorspace(webpage)
 	webpage.Click("#displayByMenuToggle")
@@ -66,7 +67,7 @@ func ByModule(t provider.T) {
 func FilterTask(t provider.T) {
 	t.ID("5496")
 	t.AddParentSuite("管理禅道站点下工作目录")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.ExpandWorspace(webpage)
 	webpage.Click(`[title="筛选"]`)

@@ -6,6 +6,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/easysoft/zentaoatf/pkg/consts"
 
 	"github.com/fatih/color"
@@ -24,6 +25,12 @@ func Info(str string) {
 func Infof(str string, args ...interface{}) {
 	msg := fmt.Sprintf(str, args...)
 	LoggerStandard.Info(msg)
+}
+func InfofIfVerbose(str string, args ...interface{}) {
+	if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
+		msg := fmt.Sprintf(str, args...)
+		LoggerStandard.Info(msg)
+	}
 }
 func Warn(str string) {
 	LoggerStandard.Warn(str)

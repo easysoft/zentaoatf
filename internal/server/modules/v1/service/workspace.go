@@ -144,13 +144,10 @@ func (s *WorkspaceService) UpdateConfig(workspace model.Workspace, by string) (e
 }
 
 func (s *WorkspaceService) UploadScriptsToProxy(testSets []serverDomain.TestSet) (pathMap map[string]string, err error) {
-	pathMap = make(map[string]string)
 	unitResultPath := filepath.Join(commConsts.WorkDir, commConsts.ExecZip)
 	uploadDir := filepath.Join(commConsts.WorkDir, commConsts.ExecZipPath)
 	os.RemoveAll(uploadDir)
 	os.Remove(unitResultPath)
-	var workspaceInfo model.Workspace
-	var workspacePathArray = []string{}
 	var workspaceIsZtfMap = make(map[string]bool)
 	var uploadUrl = ""
 
@@ -163,28 +160,9 @@ func (s *WorkspaceService) UploadScriptsToProxy(testSets []serverDomain.TestSet)
 			}
 		}
 		testSets[index].WorkspacePath = po.Path
-		if workspaceInfo.ID == 0 && po.ID > 0 {
-			workspaceInfo = po
-		}
-		workspacePathArray = append(workspacePathArray, po.Path)
 		workspaceIsZtfMap[po.Path] = po.Type == "ztf"
 
-		if po.Type == "ztf" {
-			for _, casePath := range testSet.Cases {
-				if fileUtils.IsDir(casePath) {
-					continue
-				}
-				_, err = fileUtils.CopyFileAll(casePath, strings.Replace(casePath, po.Path, uploadDir, 1))
-				if err != nil {
-					return
-				}
-			}
-		} else {
-			err = fileUtils.CopyDir(po.Path, uploadDir)
-			if err != nil {
-				return
-			}
-		}
+		s.copyToUploadDir(po, testSet, uploadDir)
 	}
 
 	if uploadUrl == "" {
@@ -197,22 +175,57 @@ func (s *WorkspaceService) UploadScriptsToProxy(testSets []serverDomain.TestSet)
 	proxySep := dataMap["sep"].(string)
 	realScriptDir := proxyWorkDir + commConsts.ExecProxyPath
 
+	pathMap = s.getPathMap(testSets, workspaceIsZtfMap, proxySep, realScriptDir)
+
+	return
+}
+
+func (s *WorkspaceService) getPathMap(testSets []serverDomain.TestSet, workspaceIsZtfMap map[string]bool, proxySep, realScriptDir string) map[string]string {
+	pathMap := make(map[string]string)
+
 	for _, testSet := range testSets {
-		if workspaceIsZtfMap[testSet.WorkspacePath] {
-			workspacePath := testSet.WorkspacePath
-			for _, casePath := range testSet.Cases {
-				oldCasePath := casePath
-				if commConsts.PthSep != proxySep {
-					workspacePath = strings.Replace(workspacePath, commConsts.PthSep, proxySep, -1)
-					casePath = strings.Replace(casePath, commConsts.PthSep, proxySep, -1)
-				}
-				pathMap[strings.Replace(casePath, workspacePath, realScriptDir, 1)] = oldCasePath
-			}
-		} else {
+		if !workspaceIsZtfMap[testSet.WorkspacePath] {
 			pathMap[realScriptDir] = testSet.WorkspacePath
+			continue
+		}
+
+		workspacePath := testSet.WorkspacePath
+		for _, casePath := range testSet.Cases {
+			oldCasePath := casePath
+
+			if commConsts.PthSep != proxySep {
+				workspacePath = strings.Replace(workspacePath, commConsts.PthSep, proxySep, -1)
+				casePath = strings.Replace(casePath, commConsts.PthSep, proxySep, -1)
+			}
+
+			pathMap[strings.Replace(casePath, workspacePath, realScriptDir, 1)] = oldCasePath
 		}
 	}
-	return
+
+	return pathMap
+}
+
+func (s *WorkspaceService) copyToUploadDir(po model.Workspace, testSet serverDomain.TestSet, uploadDir string) error {
+	if po.Type == "ztf" {
+		for _, casePath := range testSet.Cases {
+			if fileUtils.IsDir(casePath) {
+				continue
+			}
+			_, err := fileUtils.CopyFileAll(casePath, strings.Replace(casePath, po.Path, uploadDir, 1))
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	}
+
+	//Copy dir if type is not ztf.
+	err := fileUtils.CopyDir(po.Path, uploadDir)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *WorkspaceService) UploadScripts(fh *multipart.FileHeader, ctx iris.Context) (err error) {

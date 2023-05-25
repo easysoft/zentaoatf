@@ -2,6 +2,7 @@ package repo
 
 import (
 	"fmt"
+
 	"github.com/easysoft/zentaoatf/internal/server/core/dao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
@@ -46,7 +47,7 @@ func (r *SiteRepo) Paginate(req serverDomain.ReqPaginate) (data domain.PageData,
 		Scopes(dao.PaginateScope(req.Page, req.PageSize, req.Order, req.Field)).
 		Find(&pos).Error
 	if err != nil {
-		logUtils.Errorf("query site error", zap.String("error:", err.Error()))
+		logUtils.Errorf("query site error:%v", zap.String("error:", err.Error()))
 		return
 	}
 
@@ -109,7 +110,7 @@ func (r *SiteRepo) Delete(id uint) (err error) {
 	err = r.DB.Model(&model.Site{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"deleted": true}).Error
 	if err != nil {
-		logUtils.Errorf("delete site by id error", zap.String("error:", err.Error()))
+		logUtils.Errorf("delete site by id error:%v", zap.String("error:", err.Error()))
 		return
 	}
 

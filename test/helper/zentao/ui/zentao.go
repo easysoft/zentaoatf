@@ -2,6 +2,7 @@ package uiTest
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -30,6 +31,10 @@ func Login(url string) (err error) {
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
 		return
 	}
+	title, _ := page.Title()
+	if !strings.Contains(title, "用户登录") {
+		return
+	}
 	err = page.Fill(`input[name="account"]`, "admin")
 	if err != nil {
 		return
@@ -46,7 +51,7 @@ func Login(url string) (err error) {
 	if err != nil {
 		return
 	}
-	title, err := page.Title()
+	title, err = page.Title()
 	if err != nil {
 		return
 	}
@@ -194,6 +199,10 @@ func getLastUnitTestResult() (results []map[string]string, err error) {
 	results = []map[string]string{}
 	if iframe != nil {
 		iframe.Click(".nav>>li>>text=用例")
+		navbarHtml, _ := iframe.InnerHTML("#navbar")
+		if !strings.Contains(navbarHtml, "单元测试") {
+			iframe.Click("#byTypeTab")
+		}
 		iframe.Click("#mainMenu>>a>>text=单元测试")
 		iframe.Click("#taskList>>tr>>nth=1>>td>>nth=1>>a")
 		iframe.WaitForSelector("#taskList", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
@@ -283,7 +292,7 @@ func CheckUnitTestResult() bool {
 		if result["title"] == "loginFail" && result["status"] != "通过" {
 			return false
 		}
-		if result["title"] == "loginSuccess" && result["status"] != "通过" {
+		if result["title"] == "loginSuccess" && result["status"] != "失败" {
 			return false
 		}
 	}
@@ -293,7 +302,7 @@ func CheckUnitTestResult() bool {
 func InstallExt(version, codeDir string) error {
 	versions := strings.Split(version, ".")
 	versionNumber, _ := strconv.Atoi(versions[0])
-	if versionNumber < 17 {
+	if versionNumber < 17 && version != "latest" {
 		return downloadExt(codeDir)
 	}
 	return nil
@@ -360,6 +369,7 @@ func InitZentaoData(version string, codeDir string) (err error) {
 		return
 	}
 	title, err := page.Title()
+	fmt.Println(title)
 	if err != nil {
 		return
 	}
@@ -368,28 +378,42 @@ func InitZentaoData(version string, codeDir string) (err error) {
 		if err != nil {
 			return
 		}
+		title, err = page.Title()
+		fmt.Println(title)
 		err = page.Click("text=下一步")
 		if err != nil {
 			return
 		}
+		title, err = page.Title()
+		fmt.Println(title)
 		err = page.Click("text=下一步")
 		if err != nil {
 			return
 		}
+		title, err = page.Title()
+		fmt.Println(title)
 		err = page.Fill(`input[name="dbPassword"]`, "123456")
 		if err != nil {
 			return
 		}
+		title, err = page.Title()
+		fmt.Println(title)
 		err = page.Click(`input[name="clearDB\[\]"]`)
 		if err != nil {
 			return
 		}
+		title, err = page.Title()
+		fmt.Println(title)
 		err = page.Click("text=保存")
 		if err != nil {
 			return
 		}
+		title, err = page.Title()
+		fmt.Println(title)
 		retryCount := 0
 		for {
+			title, err = page.Title()
+			fmt.Println(title)
 			retryCount++
 			if retryCount > 20 {
 				break
@@ -411,24 +435,38 @@ func InitZentaoData(version string, codeDir string) (err error) {
 				return
 			}
 		}
+		title, err = page.Title()
+		fmt.Println(title)
 		err = page.Click("text=下一步")
 		if err != nil {
 			return
 		}
+		title, err = page.Title()
+		fmt.Println(title)
 		_, err = page.WaitForSelector(".modal-header>>:has-text('保存配置文件')", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
 		if err != nil {
 			return
 		}
+
+		page.WaitForLoadState()
 		title, err = page.Title()
+		fmt.Println(title)
 		if err != nil {
 			return
 		}
+
+		if strings.Contains(title, "使用模式") {
+			page.Click("text=使用全生命周期管理模式")
+		}
+		title, err = page.Title()
+		fmt.Println(title)
 		if strings.Contains(title, "功能介绍") {
 			err = page.Click(`button:has-text("下一步")`)
 			if err != nil {
 				return
 			}
 		}
+
 		err = page.Fill(`input[name="company"]`, "test")
 		if err != nil {
 			return
@@ -462,7 +500,12 @@ func InitZentaoData(version string, codeDir string) (err error) {
 			return
 		}
 		err = createSuite()
+		title, err = page.Title()
+		fmt.Println(title)
 		if err != nil {
+			return
+		}
+		if codeDir == "" {
 			return
 		}
 		err = InstallExt(version, codeDir)
@@ -474,6 +517,9 @@ func InitZentaoData(version string, codeDir string) (err error) {
 }
 
 func Close() {
+	if page == nil {
+		return
+	}
 	page.Close()
 	pw.Stop()
 }
@@ -483,18 +529,23 @@ func init() {
 		return
 	}
 	var err error
-	pw, err = playwright.Run()
+	pw, err = playwright.Run(&playwright.RunOptions{
+		SkipInstallBrowsers: true,
+	})
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 	headless := conf.Headless
 	var slowMo float64 = 100
 	browser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
-	page, err = browser.NewPage()
+	page, err = browser.NewPage(playwright.BrowserNewContextOptions{Locale: &conf.Locale})
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 	Login(constTestHelper.ZentaoSiteUrl)

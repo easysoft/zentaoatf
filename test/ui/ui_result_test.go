@@ -4,6 +4,7 @@ import (
 	"strings"
 	"testing"
 
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	ztfTest "github.com/easysoft/zentaoatf/test/helper/ztf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
@@ -15,7 +16,7 @@ import (
 func Detail(t provider.T) {
 	t.ID("5489")
 	t.AddParentSuite("测试结果")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTest.SelectSite(webpage)
 	ztfTest.ExpandWorspace(webpage)
@@ -45,7 +46,7 @@ func Detail(t provider.T) {
 func SubmitResult(t provider.T) {
 	t.ID("5499")
 	t.AddParentSuite("测试结果")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	webpage.Click("#rightPane .result-list-item .list-item-title>>nth=0")
@@ -62,7 +63,7 @@ func SubmitResult(t provider.T) {
 func SubmitBug(t provider.T) {
 	t.ID("5500")
 	t.AddParentSuite("测试结果")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	webpage.Click("#rightPane .result-list-item .list-item-title>>nth=0")
@@ -76,7 +77,7 @@ func SubmitBug(t provider.T) {
 func SubmitBugTwoStep(t provider.T) {
 	t.ID("5500")
 	t.AddParentSuite("测试结果")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)

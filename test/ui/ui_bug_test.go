@@ -3,20 +3,20 @@ package main
 import (
 	"testing"
 
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
+	"github.com/easysoft/zentaoatf/test/ui/conf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"
 )
 
-var bugBrowser playwright.Browser
-
 func ScriptBug(t provider.T) {
 	t.ID("5747")
 	t.AddParentSuite("查看bug列表")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -41,9 +41,10 @@ func ScriptsBug(t provider.T) {
 	t.ID("5748")
 	t.AddParentSuite("查看bug列表")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
+	webpage.WaitForSelector("#siteMenuToggle:has-text('单元测试站点')", playwright.PageWaitForSelectorOptions{Timeout: &conf.Timeout})
 	ztfTestHelper.ExpandWorspace(webpage)
 	webpage.Click(`[title="批量选择"]`)
 	webpage.Click(".tree-node-item:has-text('1_string_match.php')>>.tree-node-check")

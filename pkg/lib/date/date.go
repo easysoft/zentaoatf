@@ -1,11 +1,8 @@
 package dateUtils
 
 import (
+	"github.com/easysoft/zentaoatf/pkg/consts"
 	"time"
-)
-
-const (
-	dateTimeFormat = "2006-01-02 15:04:05"
 )
 
 func DateStr(tm time.Time) string {
@@ -24,7 +21,7 @@ func DateTimeStrFmt(tm time.Time, fm string) string {
 }
 
 func DateTimeStr(tm time.Time) string {
-	return tm.Format("2006-01-02 15:04:05")
+	return tm.Format(consts.DateTimeFormat)
 }
 
 func DateTimeStrLong(tm time.Time) string {
@@ -48,9 +45,9 @@ func DateStrToTimestamp(str string) (int64, error) {
 }
 
 func UnitToDate(unit int64) (date time.Time, err error) {
-	timeStr := time.Unix(unit, 0).Format(dateTimeFormat)
+	timeStr := time.Unix(unit, 0).Format(consts.DateTimeFormat)
 
-	date, _ = time.ParseInLocation(dateTimeFormat, timeStr, time.Local)
+	date, _ = time.ParseInLocation(consts.DateTimeFormat, timeStr, time.Local)
 
 	return
 }

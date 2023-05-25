@@ -117,12 +117,10 @@ func IsDisable(enable string) bool {
 func IgnoreZtfFile(path string) bool {
 	path = filepath.Base(path)
 
-	arr := []string{"bin", "logs", "xdoc",
-		"log", "log-bak", "conf"}
-	if strings.Index(path, ".") == 0 ||
-		stringUtils.FindInArr(path, arr) ||
+	if strings.Index(path, ".") == 0 || stringUtils.FindInArr(path, commConsts.DirToIgnore) ||
 		(len(path) >= 4 && path[len(path)-4:] == ".exp") {
 		return true
+
 	} else {
 		return false
 	}

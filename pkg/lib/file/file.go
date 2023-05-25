@@ -361,6 +361,20 @@ func homeWindows() (string, error) {
 	return home, nil
 }
 
+func GetFileNameBySep(path string, pthSep string) string {
+	scriptName := ""
+
+	if pthSep == "\\" {
+		path = strings.Replace(path, "/", "\\", -1)
+	} else {
+		path = strings.Replace(path, "\\", "/", -1)
+	}
+
+	_, scriptName = filepath.Split(path)
+
+	return scriptName
+}
+
 func Md5(path string) string {
 	file, err := os.Open(path)
 	if err != nil {

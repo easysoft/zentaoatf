@@ -76,7 +76,7 @@ func RunUi() (err error) {
 			}
 		}
 	}()
-	waitZtfAccessed()
+	WaitZtfAccessed()
 	return
 }
 
@@ -96,13 +96,13 @@ func GetPhpWorkspacePath() string {
 	return fmt.Sprintf("%s%s%s%s%s%s%s", constTestHelper.RootPath, "test", constTestHelper.FilePthSep, "demo", constTestHelper.FilePthSep, "php", constTestHelper.FilePthSep)
 }
 
-func waitZtfAccessed() {
+func WaitZtfAccessed() {
 	isTimeout := false
-	time.AfterFunc(20*time.Second, func() {
+	time.AfterFunc(120*time.Second, func() {
 		isTimeout = true
 	})
 	for {
-		status := uiTest.GetStatus("http://127.0.0.1:8000/")
+		status := uiTest.GetStatus(constTestHelper.ZtfUrl)
 		if isTimeout || status {
 			return
 		}

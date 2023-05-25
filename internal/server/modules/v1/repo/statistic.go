@@ -108,7 +108,7 @@ func (r *StatisticRepo) Delete(id uint) (err error) {
 	err = r.DB.Model(&model.Statistic{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"deleted": true}).Error
 	if err != nil {
-		logUtils.Errorf("delete statistics by id error", zap.String("error:", err.Error()))
+		logUtils.Errorf("delete statistics by id error:%v", zap.String("error:", err.Error()))
 		return
 	}
 

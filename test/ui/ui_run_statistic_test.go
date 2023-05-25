@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"testing"
 
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
@@ -17,7 +18,7 @@ func RunFailStatistic(t provider.T) {
 	t.ID("5487")
 	t.AddParentSuite("执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -28,7 +29,7 @@ func RunFailStatistic(t provider.T) {
 	failTimes := elements.InnerText(2)
 	runTimesInt, _ := strconv.Atoi(runTimes)
 	failTimesInt, _ := strconv.Atoi(failTimes)
-	webpage.Click(".tabs-nav-toolbar>>[title=\"Run\"]")
+	webpage.Click(".tabs-nav-toolbar>>[title=\"执行\"]")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	webpage.WaitForResponse("**/statistic*")
 	webpage.WaitForTimeout(1000)
@@ -53,7 +54,7 @@ func RunSuccessStatistic(t provider.T) {
 	t.ID("5487")
 	t.AddParentSuite("执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -64,7 +65,7 @@ func RunSuccessStatistic(t provider.T) {
 	succTimes := elements.InnerText(1)
 	runTimesInt, _ := strconv.Atoi(runTimes)
 	succTimesInt, _ := strconv.Atoi(succTimes)
-	webpage.Click(".tabs-nav-toolbar>>[title=\"Run\"]")
+	webpage.Click(".tabs-nav-toolbar>>[title=\"执行\"]")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	webpage.WaitForResponse("**/statistic*")
 	webpage.WaitForTimeout(1000)
@@ -90,14 +91,13 @@ func RunBugStatistic(t provider.T) {
 	t.ID("5487")
 	t.AddParentSuite("执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
 	scriptLocator := webpage.Locator(".tree-node-title>>text=1_string_match.php")
 	scriptLocator.Click()
-	scriptLocator.Click()
-	webpage.WaitForResponse("**/statistic*")
+	webpage.WaitForSelector("#mainContent:has-text('执行统计')")
 	webpage.WaitForTimeout(1000)
 	elements := webpage.QuerySelectorAll(".statistic>>span")
 	bugTimes := elements.InnerText(3)

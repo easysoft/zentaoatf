@@ -85,6 +85,8 @@ func HashPassword(pwd string) string {
 }
 
 func ParseInt(str string) (ret int) {
+	str = strings.TrimSpace(str)
+
 	ret, _ = strconv.Atoi(str)
 	return
 }

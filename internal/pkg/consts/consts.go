@@ -31,6 +31,8 @@ const (
 
 	ExpectResultPass = "pass"
 
+	LevelToScanScriptFile = 8
+
 	PathInfo = "PATH_INFO"
 	Get      = "GET"
 	PthSep   = string(os.PathSeparator)
@@ -41,10 +43,15 @@ var (
 		"mvn": Maven,
 	}
 
+	SpaceQuote = " "
+
 	AutoTestTypes = []string{Selenium.String(), Appium.String(), AutoIt.String()}
 	UnitTestTypes = []string{
 		Allure.String(),
 		JUnit.String(), TestNG.String(), PHPUnit.String(), PyTest.String(), Jest.String(), CppUnit.String(), GTest.String(), QTest.String(),
 		RobotFramework.String(), Cypress.String(), Playwright.String(), Puppeteer.String(), K6.String(), Zap.String(),
 	}
+
+	DirToIgnore = []string{"node_modules", ".webpack",
+		"bin", "logs", "xdoc", "log", "log-bak", "conf"}
 )

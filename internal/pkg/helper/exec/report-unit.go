@@ -37,10 +37,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 	key := stringUtils.Md5(req.WorkspacePath)
 
 	testSuites := RetrieveUnitResult(req, startTime)
-	if req.ZipDir != "" {
-		zipFile := filepath.Join(commConsts.ExecLogDir, commConsts.ResultZip)
-		fileUtils.ZipDir(zipFile, req.ZipDir)
-	}
+	ZipDir(req)
 
 	cases, classNameMaxWidth, duration := ParserUnitTestResult(testSuites)
 
@@ -65,80 +62,32 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 		WorkspaceType: req.WorkspaceType,
 	}
 
-	failedCount := 0
-	failedCaseLines := make([]string, 0)
-	failedCaseLinesDesc := make([]string, 0)
-
-	spaceQuote := " "
-	if commConsts.ExecFrom == commConsts.FromClient {
-		spaceQuote = "&nbsp;"
-	}
-
-	for idx, cs := range cases {
-		if cs.Failure != nil {
-			report.Fail++
-
-			if failedCount > 0 { // 换行
-				failedCaseLinesDesc = append(failedCaseLinesDesc, "")
-			}
-			className := cases[idx].TestSuite
-
-			line := fmt.Sprintf("[%s] %s", className, cs.Title)
-			failedCaseLines = append(failedCaseLines, line)
-
-			failedCaseLinesDesc = append(failedCaseLinesDesc, line)
-			failDesc := fmt.Sprintf("   %s - %s", cs.Failure.Type, cs.Failure.Desc)
-			failedCaseLinesDesc = append(failedCaseLinesDesc, failDesc)
-		} else {
-			report.Pass++
-		}
-		report.Total++
-
-		if cs.EndTime > report.EndTime {
-			report.EndTime = cs.EndTime
-		}
-	}
-	report.UnitResult = cases
-	if duration == 0 {
-		report.Duration = report.EndTime - report.StartTime
-	} else {
-		report.Duration = int64(duration)
-	}
+	failedCaseLines, failedCaseLinesDesc := GenUnitReport(cases, &report, duration)
 
 	// print case result one by one
 	width := strconv.Itoa(len(strconv.Itoa(report.Total)))
 	titleMaxWidth := getTitleMaxWidth(cases)
 	for idx, cs := range cases {
-		testSuite := stringUtils.AddPostfix(cs.TestSuite, classNameMaxWidth, spaceQuote)
+		testSuite := stringUtils.AddPostfix(cs.TestSuite, classNameMaxWidth, commConsts.SpaceQuote)
 
 		csTitle := cs.Title
 		lent := runewidth.StringWidth(cs.Title)
 		if titleMaxWidth > lent {
-			postFix := strings.Repeat(spaceQuote, titleMaxWidth-lent)
+			postFix := strings.Repeat(commConsts.SpaceQuote, titleMaxWidth-lent)
 			csTitle += postFix
 		}
 
-		status := i118Utils.Sprintf(cs.Status.String())
-		if commConsts.ExecFrom == commConsts.FromCmd {
-			if cs.Status == commConsts.FAIL {
-				status = color.New(color.FgHiRed, color.Bold).Sprint(status)
-			} else if cs.Status == commConsts.PASS {
-				status = color.New(color.FgHiGreen, color.Bold).Sprint(status)
-			} else {
-				status = color.New(color.FgHiYellow, color.Bold).Sprint(status)
-			}
-		}
+		status, _ := GenStatusTxt(cs.Status)
 
 		format := "(%" + width + "d/%d) [%s] [%s] [%s] [%.3fs]"
 		msgCase := fmt.Sprintf(format, idx+1, report.Total, status, testSuite, csTitle, cs.Duration)
 
-		if commConsts.ExecFrom == commConsts.FromClient {
-			websocketHelper.SendExecMsg(msgCase, "", commConsts.Result, nil, wsMsg)
-		}
+		websocketHelper.SendExecMsgIfNeed(msgCase, "", commConsts.Result, nil, wsMsg)
 
 		logUtils.ExecConsolef(-1, msgCase)
 		logUtils.ExecResult(msgCase)
 	}
+
 	logUtils.ExecConsolef(-1, "")
 
 	// print failed cases with whole result status
@@ -148,83 +97,40 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 	if report.Fail > 0 {
 		status = commConsts.FAIL
 		msgCategory = commConsts.Error
-
-		divider := "--------------------------------"
-		window := shellUtils.WindowSize()
-		if window.Col != 0 {
-			divider = strings.Repeat("-", int(window.Col))
-		}
-
-		msg := divider
-		msg += "\n" + color.New(color.Bold, color.FgHiWhite).Sprint(i118Utils.Sprintf("failed_scripts")) + "\n"
-		msg += strings.Join(failedCaseLines, "\n")
-		msg += strings.Join(failedCaseLinesDesc, "\n")
-		msg += "\n\n" + divider
+		msg = genUnitFailedMsg(failedCaseLines, failedCaseLinesDesc)
 
 		logUtils.ExecConsolef(-1, msg)
 		logUtils.ExecResult(msg)
 	}
 
-	if commConsts.ExecFrom == commConsts.FromClient {
-		websocketHelper.SendExecMsg(msg, "", msgCategory,
-			iris.Map{"key": key, "status": status}, wsMsg)
-	}
+	websocketHelper.SendExecMsgIfNeed(msg, "", msgCategory,
+		iris.Map{"key": key, "status": status}, wsMsg)
 
 	// print summary result
 	// 执行%d个用例，耗时%d秒%s。%s，%s，%s。报告%s。
-	fmtStr := "%s%s%d(%.1f%%)"
-	passRate := 0
-	failRate := 0
-	skipRate := 0
-	if report.Total > 0 {
-		passRate = report.Pass * 100 / report.Total
-		failRate = report.Fail * 100 / report.Total
-		skipRate = report.Skip * 100 / report.Total
-	}
+	runResult, msgRunColor, runResultLog := GenRunResult(report)
 
-	passStr := fmt.Sprintf(fmtStr, i118Utils.Sprintf("pass_num"), i118Utils.Sprintf("colon"), report.Pass, float32(passRate))
-	failStr := fmt.Sprintf(fmtStr, i118Utils.Sprintf("fail_num"), i118Utils.Sprintf("colon"), report.Fail, float32(failRate))
-	skipStr := fmt.Sprintf(fmtStr, i118Utils.Sprintf("skip_num"), i118Utils.Sprintf("colon"), report.Skip, float32(skipRate))
+	msgRun := dateUtils.DateTimeStr(time.Now()) + " " + runResult
+	msgRunLog := dateUtils.DateTimeStr(time.Now()) + " " + runResultLog
 
-	if commConsts.ExecFrom == commConsts.FromCmd {
-		passStr = fmt.Sprintf(fmtStr, color.New(color.FgHiGreen, color.Bold).Sprint(i118Utils.Sprintf("pass_num")), i118Utils.Sprintf("colon"), report.Pass, float32(passRate))
-		failStr = fmt.Sprintf(fmtStr, color.New(color.FgHiRed, color.Bold).Sprint(i118Utils.Sprintf("fail_num")), i118Utils.Sprintf("colon"), report.Fail, float32(failRate))
-		skipStr = fmt.Sprintf(fmtStr, color.New(color.FgHiYellow, color.Bold).Sprint(i118Utils.Sprintf("skip_num")), i118Utils.Sprintf("colon"), report.Skip, float32(skipRate))
-	}
-
-	msgRun := dateUtils.DateTimeStr(time.Now()) + " " +
-		// 执行%d个用例，耗时%d秒。%s，%s，%s。
-		i118Utils.Sprintf("run_result",
-			report.Total, report.Duration,
-			passStr, failStr, skipStr,
-		)
-
-	if commConsts.ExecFrom == commConsts.FromClient {
-		msgRunColor := i118Utils.Sprintf("run_result", report.Total, report.Duration,
-			fmt.Sprintf(`<span class="result-pass">%s</span>`, passStr),
-			fmt.Sprintf(`<span class="result-fail">%s</span>`, failStr),
-			fmt.Sprintf(`<span class="result-skip">%s</span>`, skipStr),
-		)
-		websocketHelper.SendExecMsg(msgRunColor, "", commConsts.Result, nil, wsMsg)
-	}
-	logUtils.ExecResult(msgRun)
+	websocketHelper.SendExecMsgIfNeed(msgRunColor, "", commConsts.Result, nil, wsMsg)
+	logUtils.ExecResult(msgRunLog)
 
 	// print result path
 	resultPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)
 	msgReport := i118Utils.Sprintf("run_report") + " " + resultPath + "."
+	msgReportLog := msgReport
 	if commConsts.ExecFrom == commConsts.FromCmd {
 		msgReport = color.New(color.Bold, color.FgHiWhite).Sprint(i118Utils.Sprintf("run_report")) + " [" + resultPath + "]"
 	}
 
-	if commConsts.ExecFrom == commConsts.FromClient {
-		websocketHelper.SendExecMsg(msgReport, "false", commConsts.Result, map[string]interface{}{
-			"logDir": commConsts.ExecLogDir,
-		}, wsMsg)
-	}
+	websocketHelper.SendExecMsgIfNeed(msgReport, "false", commConsts.Result, map[string]interface{}{
+		"logDir": commConsts.ExecLogDir,
+	}, wsMsg)
 
 	logUtils.ExecConsole(-1, msgReport)
 	logUtils.ExecConsole(-1, msgRun+"\n")
-	logUtils.ExecResult(msgReport)
+	logUtils.ExecResult(msgReportLog)
 	report.Log = fileUtils.ReadFile(filepath.Join(commConsts.ExecLogDir, commConsts.LogText))
 
 	//report.ProductId, _ = strconv.Atoi(vari.ProductId)
@@ -233,6 +139,18 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 	fileUtils.WriteFile(jsonPath, string(json))
 
 	return
+}
+
+func genUnitFailedMsg(failedCaseLines []string, failedCaseLinesDesc []string) string {
+	divider := shellUtils.GenFullScreenDivider()
+
+	msg := divider
+	msg += "\n" + color.New(color.Bold, color.FgHiWhite).Sprint(i118Utils.Sprintf("failed_scripts")) + "\n"
+	msg += strings.Join(failedCaseLines, "\n")
+	msg += strings.Join(failedCaseLinesDesc, "\n")
+	msg += "\n\n" + divider
+
+	return msg
 }
 
 func getTitleMaxWidth(cases []commDomain.UnitResult) int {
@@ -431,14 +349,8 @@ func ParserUnitTestResult(testSuites []commDomain.UnitTestSuite) (
 
 	idx := 1
 	for _, suite := range testSuites {
-		//if suite.Time != 0 && suite.Time  { // for junit, there is a time on suite level
-		//	dur += suite.Time
-		//}
-
 		for _, cs := range suite.Cases {
-			if cs.Id <= 0 {
-				cs.Id = idx
-			}
+			getCaseIdFromName(&cs, idx)
 
 			if cs.Failure != nil {
 				cs.Status = "fail"
@@ -497,7 +409,7 @@ func ConvertAllureResult(cases []commDomain.AllureCase) (testSuites []commDomain
 		var status commConsts.ResultStatus
 		if cs.Status == "passed" {
 			status = commConsts.PASS
-		} else if cs.Status == "passed" {
+		} else if cs.Status == "failed" {
 			status = commConsts.FAIL
 		}
 		caseResult := commDomain.UnitResult{
@@ -873,14 +785,10 @@ func getResultDirForDifferentTool(testset *serverDomain.TestSet) {
 		testset.ZipDir = filepath.Dir(testset.ResultDir)
 
 	} else if testset.TestTool == commConsts.RobotFramework || testset.TestTool == commConsts.Cypress ||
-		testset.TestTool == commConsts.Playwright || testset.TestTool == commConsts.Puppeteer {
+		testset.TestTool == commConsts.Playwright || testset.TestTool == commConsts.Puppeteer ||
+		testset.TestTool == commConsts.K6 {
 		testset.ResultDir = "results"
 		testset.ZipDir = testset.ResultDir
-
-	} else if testset.TestTool == commConsts.K6 {
-		testset.ResultDir = "results"
-		testset.ZipDir = testset.ResultDir
-
 	} else if testset.TestTool == commConsts.Zap {
 		testset.ResultDir = getZapReport()
 		testset.ZipDir = testset.ResultDir
@@ -913,6 +821,28 @@ func getZapReport() (ret string) {
 			ret = os.Args[index+1]
 			return
 		}
+	}
+
+	return
+}
+
+func getCaseIdFromName(cs *commDomain.UnitResult, defaultVal int) {
+	if cs.Cid > 0 {
+		return
+	}
+
+	cs.Title = strings.TrimSpace(cs.Title)
+
+	regx := regexp.MustCompile(`^(\d+)\. (.+)`)
+	arr := regx.FindAllStringSubmatch(cs.Title, -1)
+	if len(arr) > 0 {
+		cs.Cid = stringUtils.ParseInt(arr[0][1])
+		cs.Title = arr[0][2]
+	}
+
+	cs.Id = cs.Cid
+	if cs.Id <= 0 {
+		cs.Id = defaultVal
 	}
 
 	return

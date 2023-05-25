@@ -3,16 +3,17 @@ package plw
 import (
 	"errors"
 	"fmt"
+	"time"
+
 	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	"github.com/easysoft/zentaoatf/test/ui/conf"
-	"time"
 
 	"github.com/easysoft/zentaoatf/test/ui/utils"
 	playwright "github.com/playwright-community/playwright-go"
 )
 
-func (l MyLocator) Click(options ...playwright.PageClickOptions) (err error) {
-	err = l.PlwLocator.Click(options...)
+func (l MyLocator) Click() (err error) {
+	err = l.PlwLocator.Click(playwright.PageClickOptions{Timeout: &conf.Timeout})
 	t := l.T
 	if err != nil {
 		l.ScreenShot()
@@ -23,12 +24,25 @@ func (l MyLocator) Click(options ...playwright.PageClickOptions) (err error) {
 	return
 }
 
-func (l MyLocator) RightClick(selector string) {
+func (l MyLocator) ClickWithOption(option playwright.PageClickOptions) (err error) {
+	option.Timeout = &conf.Timeout
+	err = l.PlwLocator.Click(option)
 	t := l.T
-	err := l.PlwLocator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
 	if err != nil {
 		l.ScreenShot()
-		err = errors.New(fmt.Sprintf("Rigth click %s fail: %s", selector, err.Error()))
+		err = errors.New(fmt.Sprintf("Click %s fail: %s", l.Selector, err.Error()))
+		utils.PrintErrOrNot(err, t)
+	}
+
+	return
+}
+
+func (l MyLocator) RightClick() {
+	t := l.T
+	err := l.PlwLocator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight, Timeout: &conf.Timeout})
+	if err != nil {
+		l.ScreenShot()
+		err = errors.New(fmt.Sprintf("Rigth click %s fail: %s", l.Selector, err.Error()))
 		utils.PrintErrOrNot(err, t)
 	}
 	return

@@ -3,21 +3,17 @@ package execHelper
 import (
 	"bufio"
 	"context"
-	"fmt"
 	"io"
-	"os"
-	"os/exec"
 	"strconv"
 	"strings"
 	"time"
 
+	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
-	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
-	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
-	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
@@ -35,74 +31,16 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 
 	lang := langHelper.GetLangByFile(filePath)
 
-	var cmd *exec.Cmd
+	uuidString := uuid.Must(uuid.NewV4()).String()
 	_, _, _, _, timeout := scriptHelper.GetCaseInfo(filePath)
 	if timeout == 0 {
 		timeout = 86400 * 7
 	}
-	ctxt, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(timeout))
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(timeout))
 	defer cancel()
-	uuidString := uuid.Must(uuid.NewV4()).String()
-	if commonUtils.IsWin() {
-		scriptInterpreter := ""
-		if strings.ToLower(lang) != "bat" {
-			scriptInterpreter = configHelper.GetFieldVal(conf, stringUtils.UcFirst(lang))
-		}
-		if scriptInterpreter != "" {
-			if strings.Index(strings.ToLower(scriptInterpreter), "autoit") > -1 {
-				cmd = exec.CommandContext(ctxt, "cmd", "/C", scriptInterpreter, filePath, "|", "more")
-			} else {
-				if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
-					cmd = exec.CommandContext(ctxt, "cmd", "/C", scriptInterpreter, command, filePath, "-uuid", uuidString)
-				} else {
-					cmd = exec.CommandContext(ctxt, "cmd", "/C", scriptInterpreter, filePath, "-uuid", uuidString)
-				}
-			}
-		} else if strings.ToLower(lang) == "bat" {
-			cmd = exec.CommandContext(ctxt, "cmd", "/C", filePath, "-uuid", uuidString)
-		} else {
-			msg := i118Utils.I118Prt.Sprintf("no_interpreter_for_run", lang, filePath)
-			if commConsts.ExecFrom == commConsts.FromClient {
-				websocketHelper.SendOutputMsg(msg, "", iris.Map{"key": key}, wsMsg)
-			}
-			logUtils.ExecConsolef(-1, msg)
-			logUtils.ExecFilef(msg)
-		}
-	} else {
-		err := os.Chmod(filePath, 0777)
-		if err != nil {
-			msg := i118Utils.I118Prt.Sprintf("exec_cmd_fail", filePath, err.Error())
-			if commConsts.ExecFrom == commConsts.FromClient {
-				websocketHelper.SendOutputMsg(msg, "", iris.Map{"key": key}, wsMsg)
-			}
-			logUtils.ExecConsolef(-1, msg)
-			logUtils.ExecFilef(msg)
-		}
 
-		//filePath = "\"" + filePath + "\""
-		scriptInterpreter := configHelper.GetFieldVal(conf, stringUtils.UcFirst(lang))
-
-		if scriptInterpreter != "" {
-			msg := fmt.Sprintf("use interpreter %s", scriptInterpreter)
-
-			if commConsts.ExecFrom == commConsts.FromClient {
-				//websocketHelper.SendOutputMsg(msg, "", iris.Map{"key": key}, wsMsg)
-				logUtils.ExecConsolef(-1, msg)
-			}
-			//logUtils.ExecFilef(msg)
-
-			if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
-				cmd = exec.CommandContext(ctxt, scriptInterpreter, command, filePath)
-			} else {
-				cmd = exec.CommandContext(ctxt, scriptInterpreter, filePath)
-			}
-		} else {
-			if command, ok := commConsts.LangMap[lang]["CompiledCommand"]; ok && command != "" {
-				filePath = fmt.Sprintf("%s %s %s", lang, command, filePath)
-			}
-			cmd = exec.CommandContext(ctxt, "/bin/bash", "-c", fmt.Sprintf("%s -uuid %s", filePath, uuidString))
-		}
-	}
+	cmd := getCommand(filePath, lang, uuidString, conf, ctx, wsMsg)
 
 	if cmd == nil {
 		msgStr := i118Utils.Sprintf("cmd_empty")
@@ -128,21 +66,9 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	stderr, err2 := cmd.StderrPipe()
 
 	if err1 != nil {
-		if commConsts.ExecFrom == commConsts.FromClient {
-			websocketHelper.SendOutputMsg(err1.Error(), "", iris.Map{"key": key}, wsMsg)
-		}
-		logUtils.ExecConsolef(color.FgRed, err1.Error())
-		logUtils.ExecFilef(err1.Error())
-
-		return "", err1.Error()
+		return PrintErrMsg(key, err1, wsMsg)
 	} else if err2 != nil {
-		if commConsts.ExecFrom == commConsts.FromClient {
-			websocketHelper.SendOutputMsg(err2.Error(), "", iris.Map{"key": key}, wsMsg)
-		}
-		logUtils.ExecConsolef(color.FgRed, err2.Error())
-		logUtils.ExecFilef(err2.Error())
-
-		return "", err2.Error()
+		return PrintErrMsg(key, err2, wsMsg)
 	}
 
 	cmd.Start()
@@ -155,7 +81,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			stdout.Close()
 			stderr.Close()
 		})
-		if ch != nil{
+		if ch != nil {
 			for {
 				if isTerminal {
 					break
@@ -175,7 +101,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 				}
 			}
 		}
-		
+
 	}()
 	reader1 := bufio.NewReader(stdout)
 	stdOutputArr := make([]string, 0)
@@ -234,7 +160,7 @@ ExitCurrCase:
 			errOutputArr = append(errOutputArr, line)
 		}
 	}
-	if ctxt.Err() != nil {
+	if ctx.Err() != nil {
 		errOutputArr = append(errOutputArr, i118Utils.Sprintf("exec_cmd_timeout"))
 
 	}

@@ -4,6 +4,7 @@ import (
 	"strings"
 	"testing"
 
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
@@ -13,7 +14,7 @@ import (
 func RunReExecFailCase(t provider.T) {
 	t.ID("5491")
 	t.AddParentSuite("测试结果页面执行脚本")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -22,7 +23,7 @@ func RunReExecFailCase(t provider.T) {
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	locator := webpage.Locator("#log-list>>code:has-text('执行1个用例，耗时')")
 	innerText := locator.InnerText()
-	if !strings.Contains(innerText, "0(0.0%) 通过，1(100.0%) 失败") {
+	if !strings.Contains(innerText, "通过数：0(0.0%)，失败数：1(100.0%)") {
 		t.Errorf("Exec failed case fail")
 		t.FailNow()
 	}
@@ -48,7 +49,7 @@ func RunReExecFailCase(t provider.T) {
 func RunReExecAllCase(t provider.T) {
 	t.ID("5750")
 	t.AddParentSuite("测试结果页面执行脚本")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.ExpandWorspace(webpage)
 	ztfTestHelper.RunScript(webpage, "1_string_match.php")
@@ -57,7 +58,7 @@ func RunReExecAllCase(t provider.T) {
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	locator := webpage.Locator("#log-list>>code:has-text('执行1个用例，耗时')")
 	innerText := locator.InnerText()
-	if !strings.Contains(innerText, "0(0.0%) 通过，1(100.0%) 失败") {
+	if !strings.Contains(innerText, "通过数：0(0.0%)，失败数：1(100.0%)") {
 		t.Errorf("Exec failed case fail")
 		t.FailNow()
 	}

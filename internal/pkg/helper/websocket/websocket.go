@@ -18,6 +18,14 @@ var (
 	wsConn *neffos.Conn
 )
 
+func SendOutputMsgIfNeed(msg, isRunning string, info iris.Map, wsMsg *websocket.Message) {
+	if commConsts.ExecFrom != commConsts.FromClient {
+		return
+	}
+
+	SendOutputMsg(msg, isRunning, info, wsMsg)
+}
+
 func SendOutputMsg(msg, isRunning string, info iris.Map, wsMsg *websocket.Message) {
 	logUtils.Infof(i118Utils.Sprintf("ws_send_exec_msg", wsMsg.Room,
 		strings.ReplaceAll(strings.TrimSpace(msg), `%`, `%%`)))
@@ -48,6 +56,14 @@ func SendExecMsg(msg, isRunning string, category commConsts.WsMsgCategory, info 
 	bytes, _ := json.Marshal(resp)
 	mqData := commDomain.MqMsg{Namespace: wsMsg.Namespace, Room: wsMsg.Room, Event: wsMsg.Event, Content: string(bytes)}
 	PubMsg(mqData)
+}
+
+func SendExecMsgIfNeed(msg, isRunning string, category commConsts.WsMsgCategory, info iris.Map, wsMsg *websocket.Message) {
+	if commConsts.ExecFrom != commConsts.FromClient {
+		return
+	}
+
+	SendExecMsg(msg, isRunning, category, info, wsMsg)
 }
 
 func Broadcast(namespace, room, event string, content string) {

@@ -29,9 +29,9 @@ var (
 	ErrDirNotEmpty                    = ResponseCode{1100, "Dir Not Empty Error"}
 	ErrZentaoConfig                   = ResponseCode{2000, "Zentao Config Error"}
 	ErrZentaoRequest                  = ResponseCode{3000, "zentao request Error"}
-	ErrRecordWithSameNameExist        = ResponseCode{3010, "Record Exist"}
-	ErrRecordWithSamePathExist        = ResponseCode{3011, "Record Exist"}
-	ErrRecordWithSameInterpreterExist = ResponseCode{2000, "Record Exist"}
+	ErrRecordWithSameNameExist        = ResponseCode{3010, "Record With Same Name Exist"}
+	ErrRecordWithSamePathExist        = ResponseCode{3011, "Record With Same Path Exist"}
+	ErrRecordWithSameInterpreterExist = ResponseCode{2000, "Record With Same Interpreter Exist"}
 	ErrRecordNotExist                 = ResponseCode{4000, "Record Not Found"}
 	ErrRecordNotAllowDelete           = ResponseCode{2000, "Record Can Not Delete"}
 	ErrPostParam                      = ResponseCode{2000, "Parameter Error"}
@@ -67,7 +67,8 @@ const (
 	ExecSuite  ExecCmd = "execSuite"
 	ExecTask   ExecCmd = "execTask"
 
-	ExecUnit ExecCmd = "execUnit"
+	ExecUnit    ExecCmd = "execUnit"
+	ExecZapScan ExecCmd = "zapScan"
 
 	Watch ExecCmd = "watch"
 )
@@ -136,6 +137,7 @@ type TestType string
 const (
 	TestFunc TestType = "func"
 	TestUnit TestType = "unit"
+	TestZap  TestType = "zap"
 )
 
 func (e TestType) String() string {

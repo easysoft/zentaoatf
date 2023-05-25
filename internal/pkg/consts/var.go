@@ -32,6 +32,7 @@ var (
 	UnitTestTool    TestTool
 	AllureReportDir string
 	JacocoReport    string
+	Options         string
 	ProductId       string
 
 	ZenTaoVersion string

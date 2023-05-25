@@ -1,15 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"runtime"
 	"strings"
 	"testing"
 
+	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
 	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	zentaoTestHelper "github.com/easysoft/zentaoatf/test/helper/zentao/ui"
-	ztfTest "github.com/easysoft/zentaoatf/test/helper/ztf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
 	plwConf "github.com/easysoft/zentaoatf/test/ui/conf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
@@ -22,7 +22,7 @@ func RunScript(t provider.T) {
 	t.ID("5743")
 	t.AddParentSuite("执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -30,10 +30,10 @@ func RunScript(t provider.T) {
 	scriptLocator.Click()
 	webpage.WaitForTimeout(2000)
 	selectLocalProxy(webpage)
-	webpage.Click(".tabs-nav-toolbar>>[title=\"Run\"]")
+	webpage.Click(".tabs-nav-toolbar>>[title=\"执行\"]")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	innerText := webpage.InnerText("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
-	if !strings.Contains(innerText, "1(100.0%) 失败") {
+	if !strings.Contains(innerText, "失败数：1(100.0%)") {
 		t.Errorf("Exec 1_string_match.php fail")
 		t.FailNow()
 	}
@@ -52,16 +52,16 @@ func RunScriptByRightClick(t provider.T) {
 	t.ID("5479")
 	t.AddParentSuite("执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
 	scriptLocator := webpage.Locator(".tree-node-title>>text=1_string_match.php")
-	scriptLocator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
+	scriptLocator.RightClick()
 	webpage.Click(".tree-context-menu>>text=执行")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	innerText := webpage.InnerText("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
-	if !strings.Contains(innerText, "1(100.0%) 失败") {
+	if !strings.Contains(innerText, "失败数：1(100.0%)") {
 		t.Errorf("Exec 1_string_match.php fail")
 		t.FailNow()
 	}
@@ -79,13 +79,13 @@ func RunNoInterpreterScript(t provider.T) {
 	t.ID("5501")
 	t.AddParentSuite("执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
 	scriptLocator := webpage.Locator("text=1_string_match.rb")
 	scriptLocator.Click()
-	webpage.Click(".tabs-nav-toolbar>>[title=\"Run\"]")
+	webpage.Click(".tabs-nav-toolbar>>[title=\"执行\"]")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('忽略1个未设置解析器的脚本')")
 }
 
@@ -93,7 +93,7 @@ func RunSelectedScripts(t provider.T) {
 	t.ID("5481")
 	t.AddParentSuite("执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -107,7 +107,7 @@ func RunSelectedScripts(t provider.T) {
 	webpage.Click(".run-selected")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行2个用例，耗时')")
 	innerText := webpage.InnerText("#log-list>>.msg-span>>:has-text('执行2个用例，耗时')")
-	if !strings.Contains(innerText, "0(0.0%) 通过，2(100.0%) 失败") {
+	if !strings.Contains(innerText, "通过数：0(0.0%)，失败数：2(100.0%)") {
 		t.Errorf("Exec 1_string_match.php,2_webpage_extract.php fail")
 		t.FailNow()
 	}
@@ -127,7 +127,7 @@ func RunOpenedAndLast(t provider.T) {
 	t.ID("5484")
 	t.AddParentSuite("执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -138,7 +138,7 @@ func RunOpenedAndLast(t provider.T) {
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行2个用例，耗时')")
 	locator := webpage.Locator("#log-list>>code:has-text('执行2个用例，耗时')")
 	innerText := locator.InnerText()
-	if !strings.Contains(innerText, "0(0.0%) 通过，2(100.0%) 失败") {
+	if !strings.Contains(innerText, "通过数：0(0.0%)，失败数：2(100.0%)") {
 		t.Errorf("Exec opened scripts fail")
 		t.FailNow()
 	}
@@ -159,7 +159,7 @@ func RunOpenedAndLast(t provider.T) {
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行2个用例，耗时')")
 	locator = webpage.Locator("#log-list>>code:has-text('执行2个用例，耗时')")
 	innerText = locator.InnerText()
-	if !strings.Contains(innerText, "0(0.0%) 通过，2(100.0%) 失败") {
+	if !strings.Contains(innerText, "通过数：0(0.0%)，失败数：2(100.0%)") {
 		t.Errorf("Exec last time fail")
 		t.FailNow()
 	}
@@ -180,16 +180,16 @@ func RunAll(t provider.T) {
 
 	os.RemoveAll(commonTestHelper.GetZtfProductPath())
 	os.Remove(commonTestHelper.GetPhpWorkspacePath() + "1.php")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
 	runInfo := "执行5个用例，耗时"
-	runRes := "1(20.0%) 通过，4(80.0%) 失败"
+	runRes := "通过数：1(20.0%)，失败数：4(80.0%)"
 	resTitle := "单元测试工作目录(5)"
 	if runtime.GOOS == "windows" {
 		runInfo = "执行4个用例，耗时"
-		runRes = "1(25.0%) 通过，3(75.0%) 失败"
+		runRes = "通过数：1(25.0%)，失败数：3(75.0%)"
 		resTitle = "单元测试工作目录(4)"
 	}
 	webpage.Click("#batchRunMenuToggle")
@@ -215,7 +215,7 @@ func RunWorkspace(t provider.T) {
 	t.ID("5482")
 	t.AddParentSuite("右键执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -227,14 +227,14 @@ func RunWorkspace(t provider.T) {
 		t.FailNow()
 	}
 	runInfo := "执行4个用例，耗时"
-	runRes := "1(25.0%) 通过，3(75.0%) 失败"
+	runRes := "通过数：1(25.0%)，失败数：3(75.0%)"
 	resTitle := "单元测试工作目录(4)"
 	if runtime.GOOS == "windows" {
 		runInfo = "执行3个用例，耗时"
-		runRes = "1(33.0%) 通过，2(66.0%) 失败"
+		runRes = "通过数：1(33.0%)，失败数：2(66.0%)"
 		resTitle = "单元测试工作目录(3)"
 	}
-	locator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
+	locator.RightClick()
 	webpage.Click(".tree-context-menu>>text=执行")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('" + runInfo + "')")
 	locator = webpage.Locator("#log-list>>code:has-text('" + runInfo + "')")
@@ -258,15 +258,15 @@ func RunDir(t provider.T) {
 	t.ID("5480")
 	t.AddParentSuite("右键执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
-	webpage.Click(".tree-node-children>>.tree-node>>:has-text('testdir')", playwright.PageClickOptions{Button: playwright.MouseButtonRight})
+	webpage.RightClick(".tree-node-children>>.tree-node>>:has-text('testdir')")
 	webpage.Click(".tree-context-menu>>text=执行")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	innerText := webpage.InnerText("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
-	if !strings.Contains(innerText, "1(100.0%) 失败") {
+	if !strings.Contains(innerText, "失败数：1(100.0%)") {
 		t.Errorf("Exec 1_string_match.php fail")
 		t.FailNow()
 	}
@@ -288,15 +288,16 @@ func RunUnit(t provider.T) {
 		testngDir = pwd + "\\demo\\ci_test_testng"
 	}
 	commonTestHelper.CloneGit("https://gitee.com/ngtesting/ci_test_testng.git", testngDir)
+	shellUtils.ExeShellWithOutputInDir("mvn clean package test", testngDir)
 	t.ID("5432")
 	t.AddParentSuite("右键执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
 	defer func() {
-		ztfTest.DeleteWorkspace(webpage, "testng工作目录")
+		ztfTestHelper.DeleteWorkspace(webpage, "testng工作目录")
 	}()
 	plwConf.DisableErr()
 	webpage.WaitForSelectorTimeout(".tree-node-title:has-text('testng工作目录')", 5000)
@@ -312,7 +313,7 @@ func RunUnit(t provider.T) {
 		t.Errorf("Find workspace fail")
 		t.FailNow()
 	}
-	locator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
+	locator.RightClick()
 	webpage.Click(".tree-context-menu>>text=执行")
 	webpage.WaitForSelectorTimeout("#tabsPane >> text=执行", 3000)
 	locator = webpage.Locator("#tabsPane>>.form-item:has-text('测试命令')>>input")
@@ -331,17 +332,17 @@ func RunUnit(t provider.T) {
 	webpage.WaitForSelectorTimeout("#log-list>>.msg-span>>:has-text('执行3个用例，耗时')", 20000)
 	locator = webpage.Locator("#log-list>>code:has-text('执行3个用例，耗时')")
 	innerText := locator.InnerText()
-	if !strings.Contains(innerText, "3(100.0%) 通过，0(0.0%) 失败") {
-		t.Errorf("Exec testng fail")
+
+	if !strings.Contains(innerText, "通过数：2(66.0%)，失败数：1(33.0%)") {
+		t.Errorf("Exec testng fail, result:" + innerText)
 		t.FailNow()
 	}
 	webpage.WaitForSelector("#rightPane>>.result-list-item>>nth=0>>.list-item-title:has-text('testng工作目录(3)')")
 
 	timeElement := webpage.Locator("#log-list>>code:has-text('开始任务')>>.time>>span")
 	logTime := timeElement.InnerText()
-	resultTime := webpage.InnerText("#rightPane .result-list-item .list-item-trailing-text")
+	resultTime := webpage.InnerText("#rightPane .result-list-item .list-item-trailing-text>>nth=0")
 	if logTime[:5] != resultTime {
-		fmt.Println(logTime[:5], resultTime)
 		t.Errorf("Find result in rightPane fail")
 		t.FailNow()
 	}
@@ -364,14 +365,14 @@ func createWorkspace(t provider.T, workspacePath string, webpage plwHelper.Webpa
 	webpage.Click("#workspaceFormModal>>.modal-action>>span:has-text(\"确定\")")
 	webpage.WaitForSelector("#workspaceFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
 	webpage.WaitForTimeout(1000)
-	locator = webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "testng工作目录"})
+	webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "testng工作目录"})
 }
 
 func RunUseProxy(t provider.T) {
 	t.ID("5746")
 	t.AddParentSuite("执行脚本")
 
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
@@ -381,10 +382,10 @@ func RunUseProxy(t provider.T) {
 	scriptLocator.Click()
 	webpage.Click("#proxyMenuToggle")
 	webpage.Click(".list-item-title:has-text('测试执行节点')")
-	webpage.Click(".tabs-nav-toolbar>>[title=\"Run\"]")
+	webpage.Click(".tabs-nav-toolbar>>[title=\"执行\"]")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	innerText := webpage.InnerText("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
-	if !strings.Contains(innerText, "1(100.0%) 失败") {
+	if !strings.Contains(innerText, "失败数：1(100.0%)") {
 		t.Errorf("Exec 1_string_match.php fail")
 		t.FailNow()
 	}

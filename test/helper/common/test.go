@@ -25,7 +25,7 @@ func TestCli() (err error) {
 	}
 	req := serverDomain.TestSet{
 		WorkspacePath: testPath,
-		Cmd:           "go test ./cli -v",
+		Cmd:           "go test ./cli/cli_set_test.go && go test ./cli -v",
 		TestTool:      commConsts.GoTest,
 	}
 	fmt.Println(testPath, req.Cmd)
@@ -33,7 +33,7 @@ func TestCli() (err error) {
 
 	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl + "/", Password: "Test123456.", Username: "admin"}
 
-	err = zentaoHelper.CommitResult(report, 1, 0, 0, config, nil)
+	err = zentaoHelper.CommitResult(report, 1, 0, config, nil)
 
 	if report.Fail > 0 {
 		os.Exit(1)
@@ -51,14 +51,14 @@ func TestUi() (err error) {
 	}
 	req := serverDomain.TestSet{
 		WorkspacePath: testPath,
-		Cmd:           "go test ./ui -v",
+		Cmd:           "go test ./ui -v -timeout 10m",
 		TestTool:      commConsts.GoTest,
 	}
 	report := ExecUnit(req, "ui")
 
 	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl + "/", Password: "Test123456.", Username: "admin"}
 
-	err = zentaoHelper.CommitResult(report, 1, 0, 0, config, nil)
+	err = zentaoHelper.CommitResult(report, 1, 0, config, nil)
 
 	if report.Fail > 0 {
 		os.Exit(1)

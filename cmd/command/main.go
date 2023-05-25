@@ -81,6 +81,7 @@ func main() {
 
 	// jacocoReport for unittest
 	flagSet.StringVar(&commConsts.JacocoReport, "jacocoReport", "", "")
+	flagSet.StringVar(&commConsts.Options, "options", "", "")
 
 	flagSet.StringVar(&keywords, "k", "", "")
 	flagSet.StringVar(&keywords, "keywords", "", "")

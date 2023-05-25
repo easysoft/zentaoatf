@@ -20,7 +20,8 @@ func main() {
 	serverConfig.InitExecLog(constTestHelper.RootPath)
 	commConsts.ZtfDir = constTestHelper.RootPath
 	i118Utils.Init("zh-CN", commConsts.AppServer)
-	var version = flag.String("zentaoVersion", "", "")
+	var version = flag.String("zentaoVersion", "", "latest")
+	var runFrom = flag.String("runFrom", "", "cmd")
 	testing.Init()
 	flag.Parse()
 	fmt.Println(*version)
@@ -28,17 +29,20 @@ func main() {
 		execHelper.KillProcessByUUID("ui_auto_test")
 		uiTest.Close()
 	}()
-	err := commonTestHelper.InitZentao(*version)
-	if err != nil {
-		fmt.Println("Init zentao data fail ", err)
-	}
-	// err = constTestHelper.Pull()
-	// if err != nil {
-	// 	fmt.Println("Git pull code fail ", err)
-	// }
-	err = commonTestHelper.BuildCli()
-	if err != nil {
-		fmt.Println("Build cli fail ", err)
+	if *runFrom == "jenkins" {
+		err := commonTestHelper.InitZentaoData()
+		if err != nil {
+			fmt.Println("Init zentao data fail ", err)
+		}
+	} else {
+		err := commonTestHelper.InitZentao(*version)
+		if err != nil {
+			fmt.Println("Init zentao data fail ", err)
+		}
+		err = commonTestHelper.BuildCli()
+		if err != nil {
+			fmt.Println("Build cli fail ", err)
+		}
 	}
 	commonTestHelper.TestCli()
 }

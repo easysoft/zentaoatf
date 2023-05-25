@@ -11,6 +11,7 @@ import (
 )
 
 var expandTimes = 0
+var AddSiteTimes = 0
 
 func createTestWorkspace(webpage plwHelper.Webpage) {
 	webpage.Click(`[title="新建工作目录"]`)
@@ -35,10 +36,9 @@ func RunScript(webpage plwHelper.Webpage, scriptName string) {
 		createTestWorkspace(webpage)
 	}
 	locator = webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	c = locator.Count()
 	locator.Click()
 	scriptLocator := locator.Locator("text=" + scriptName)
-	scriptLocator.Click(playwright.PageClickOptions{Button: playwright.MouseButtonRight})
+	scriptLocator.RightClick()
 	webpage.Click(".tree-context-menu>>text=执行")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	element := webpage.QuerySelectorAll("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
@@ -67,6 +67,10 @@ func SelectSite(webpage plwHelper.Webpage) (err error) {
 	webpage.WaitForSelectorTimeout("#navbar>>.list-item-title>>text=单元测试站点", 3000)
 	locator := webpage.Locator(".list-item-title>>text=单元测试站点")
 	if locator.Count() == 0 {
+		AddSiteTimes++
+		if AddSiteTimes > 2 {
+			return
+		}
 		CreateSite(webpage)
 		SelectSite(webpage)
 		return
@@ -110,7 +114,7 @@ func ExpandWorspace(webpage plwHelper.Webpage) (err error) {
 	webpage.Click(".tree-node-title:has-text(\"单元测试工作目录\")")
 	err = webpage.WaitForSelectorTimeout(".tree-node-item>>div:has-text('1_string_match.php')", 5000)
 	if err != nil {
-		if expandTimes > 5 {
+		if expandTimes > 2 {
 			expandTimes = 0
 			return err
 		}

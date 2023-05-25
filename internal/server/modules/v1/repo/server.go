@@ -81,7 +81,7 @@ func (r *ServerRepo) Delete(id uint) (err error) {
 	err = r.DB.Model(&model.Server{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"deleted": true}).Error
 	if err != nil {
-		logUtils.Errorf("delete server by id error", zap.String("error:", err.Error()))
+		logUtils.Errorf("delete server by id error:%v", zap.String("error:", err.Error()))
 		return
 	}
 

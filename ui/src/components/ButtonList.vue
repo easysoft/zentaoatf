@@ -60,8 +60,9 @@ const buttonPropsList = computed(() => {
             };
         }
 
-        if(te(item.hint)){
-            item.hint = t(item.hint)
+        let hint = item.hint.toLowerCase()
+        if(te(hint)){
+            item.hint = t(hint)
         }
         if(item.hintI18n !== undefined){
             item.hint += t(item.hintI18n)

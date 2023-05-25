@@ -16,140 +16,78 @@ import (
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
-	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/mattn/go-runewidth"
 )
 
-func CheckCaseResult(scriptFile string, logs string, report *commDomain.ZtfReport,
-	total int, secs string, pathMaxWidth, numbMaxWidth, titleMaxWidth int,
-	wsMsg *websocket.Message, errOutput string, lock *sync.Mutex) {
+func CheckCaseResult(execParams commDomain.ExecParams, logs string, wsMsg *websocket.Message, errOutput string, lock *sync.Mutex) {
+	steps := scriptHelper.GetStepAndExpectMap(execParams.ScriptFile)
 
-	steps := scriptHelper.GetStepAndExpectMap(scriptFile)
-
-	isIndependent, expectIndependentContent := scriptHelper.GetDependentExpect(scriptFile)
+	isIndependent, expectIndependentContent := scriptHelper.GetDependentExpect(execParams.ScriptFile)
 	if isIndependent {
 		scriptHelper.GetExpectMapFromIndependentFile(&steps, expectIndependentContent, false)
 	}
 
 	skip := false
-	actualArr := make([][]string, 0)
-	skip, actualArr = scriptHelper.ReadLogArr(logs)
+	skip, actualArr := scriptHelper.ReadLogArr(logs)
 	if len(actualArr) == 0 {
 		skip, actualArr = scriptHelper.ReadLogArrOld(logs)
 	}
 
-	language := langHelper.GetLangByFile(scriptFile)
-	ValidateCaseResult(scriptFile, language, steps, skip, actualArr, report,
-		total, secs, pathMaxWidth, numbMaxWidth, titleMaxWidth, wsMsg, errOutput, lock)
+	language := langHelper.GetLangByFile(execParams.ScriptFile)
+	ValidateCaseResult(execParams, language, steps, skip, actualArr, wsMsg, errOutput, lock)
 }
 
-func ValidateCaseResult(scriptFile string, langType string,
-	steps []commDomain.ZentaoCaseStep, skip bool, actualArr [][]string, report *commDomain.ZtfReport,
-	total int, secs string, pathMaxWidth, numbMaxWidth, titleMaxWidth int,
+func ValidateCaseResult(execParams commDomain.ExecParams, langType string,
+	steps []commDomain.ZentaoCaseStep, skip bool, actualArr [][]string,
 	wsMsg *websocket.Message, errOutput string, lock *sync.Mutex) {
 
-	key := stringUtils.Md5(scriptFile)
+	key := stringUtils.Md5(execParams.ScriptFile)
 
-	_, caseId, productId, title, _ := scriptHelper.GetCaseInfo(scriptFile)
+	_, caseId, productId, title, _ := scriptHelper.GetCaseInfo(execParams.ScriptFile)
 
-	stepLogs := make([]commDomain.StepLog, 0)
-	caseResult := commConsts.PASS
-	noExpects := true
-
-	if skip {
-		caseResult = commConsts.SKIP
-	} else {
-		stepIdxToCheck := 0
-		for index, step := range steps { // iterate by checkpoints
-			stepName := strings.TrimSpace(step.Desc)
-			expect := strings.TrimSpace(step.Expect)
-
-			if expect == "" {
-				continue
-			}
-
-			noExpects = false
-
-			expectLines := strings.Split(expect, "\n")
-			var actualLines []string
-			if len(actualArr) > stepIdxToCheck {
-				actualLines = actualArr[stepIdxToCheck]
-			}
-
-			stepResult, checkpointLogs := ValidateStepResult(langType, expectLines, actualLines)
-			if errOutput != "" && index == 0 && len(checkpointLogs) > 0 {
-				checkpointLogs[0].Actual = errOutput
-			}
-			stepLog := commDomain.StepLog{Id: strconv.Itoa(stepIdxToCheck + 1), Name: stepName, Status: stepResult, CheckPoints: checkpointLogs}
-			stepLogs = append(stepLogs, stepLog)
-			if stepResult == commConsts.FAIL {
-				caseResult = commConsts.FAIL
-			}
-
-			stepIdxToCheck++
-		}
-	}
-
-	if noExpects {
-		caseResult = commConsts.SKIP
-	}
+	stepLogs, caseResult := getStepLogs(skip, steps, actualArr, langType, errOutput)
 
 	if lock != nil {
 		lock.Lock()
 	}
-	if caseResult == commConsts.FAIL {
-		report.Fail = report.Fail + 1
-	} else if caseResult == commConsts.PASS {
-		report.Pass = report.Pass + 1
-	} else if caseResult == commConsts.SKIP {
-		report.Skip = report.Skip + 1
-	}
-	report.Total = report.Total + 1
 
-	relativePath := strings.TrimPrefix(scriptFile, commConsts.WorkDir)
+	incrReportNum(caseResult, execParams.Report)
+
+	relativePath := strings.TrimPrefix(execParams.ScriptFile, commConsts.WorkDir)
 	csResult := commDomain.FuncResult{Id: caseId, ProductId: productId, Title: title,
-		Key: key, Path: scriptFile, RelativePath: relativePath, Status: caseResult, Steps: stepLogs}
-	report.FuncResult = append(report.FuncResult, csResult)
-	resultCount := len(report.FuncResult)
+		Key: key, Path: execParams.ScriptFile, RelativePath: relativePath, Status: caseResult, Steps: stepLogs}
+	execParams.Report.FuncResult = append(execParams.Report.FuncResult, csResult)
+
 	if lock != nil {
 		lock.Unlock()
 	}
 
-	width := strconv.Itoa(len(strconv.Itoa(total)))
+	width := strconv.Itoa(len(strconv.Itoa(len(execParams.CasesToRun))))
 
 	path := relativePath
 	csTitle := csResult.Title
 	lenp := runewidth.StringWidth(csResult.Path)
 	lent := runewidth.StringWidth(csTitle)
 
-	relativePath = scriptFile
-	if strings.Contains(relativePath, "/module/") {
-		relativePath = relativePath[strings.Index(relativePath, "/module/")+1:]
-	}
-	if pathMaxWidth > lenp {
-		postFix := strings.Repeat(" ", pathMaxWidth-lenp)
+	if execParams.PathMaxWidth > lenp {
+		postFix := strings.Repeat(" ", execParams.PathMaxWidth-lenp)
 		path += postFix
 		relativePath += postFix
 	}
 
-	if titleMaxWidth > lent {
-		postFix := strings.Repeat(" ", titleMaxWidth-lent)
+	if execParams.TitleMaxWidth > lent {
+		postFix := strings.Repeat(" ", execParams.TitleMaxWidth-lent)
 		csTitle += postFix
 	}
 
 	format := "(%" + width + "d/%d) [%s] [%s] [%s] [%ss]"
 
-	status := i118Utils.Sprintf(csResult.Status.String())
-	if csResult.Status == commConsts.FAIL {
-		status = color.New(color.FgHiRed, color.Bold).Sprint(status)
-	} else if csResult.Status == commConsts.PASS {
-		status = color.New(color.FgHiGreen, color.Bold).Sprint(status)
-	} else {
-		status = color.New(color.FgHiYellow, color.Bold).Sprint(status)
-	}
-	msg := fmt.Sprintf(format, resultCount, total, status, path, csTitle, secs)
+	statusWithColor, status := GenStatusTxt(csResult.Status)
+
+	msg := fmt.Sprintf(format, execParams.ScriptIdx+1, len(execParams.CasesToRun), status, path, csTitle, execParams.Secs)
+	msgWithColor := fmt.Sprintf(format, execParams.ScriptIdx+1, len(execParams.CasesToRun), statusWithColor, path, csTitle, execParams.Secs)
 
 	// print each case result
 	if commConsts.ExecFrom == commConsts.FromClient {
@@ -172,7 +110,7 @@ func ValidateCaseResult(scriptFile string, langType string,
 		websocketHelper.SendExecMsg(msg, "", msgCategory,
 			iris.Map{"key": key, "status": csResult.Status}, wsMsg)
 	}
-	logUtils.ExecConsole(-1, msg)
+	logUtils.ExecConsole(-1, msgWithColor)
 	logUtils.ExecResult(msg)
 }
 
@@ -194,7 +132,7 @@ func ValidateStepResult(langType string, expectLines []string, actualLines []str
 			pass = MatchScene(expect[1:len(expect)-1], log, langType)
 		} else if len(expect) >= 2 && expect[:1] == "`" && expect[len(expect)-1:] == "`" {
 			expect = expect[1 : len(expect)-1]
-			pass = MatchString(expect, log, langType)
+			pass = Match(expect, log)
 		} else {
 			pass = strings.TrimSpace(log) == strings.TrimSpace(expect)
 		}
@@ -213,7 +151,54 @@ func ValidateStepResult(langType string, expectLines []string, actualLines []str
 
 }
 
-func MatchString(expect string, actual string, langType string) bool {
+func MatchScene(expect, actual, langType string) (pass bool) {
+	expect = strings.TrimSpace(expect)
+	actual = strings.TrimSpace(actual)
+
+	if len(expect) == 0 {
+		pass = actual == ""
+		return
+	}
+
+	if len(expect) <= 2 {
+		return
+	}
+
+	// len(expect) > 2
+	scene := expect[:2]
+	expect = strings.TrimSpace(expect[2:])
+
+	switch scene {
+	case "f:":
+		return Contain(expect, actual, langType)
+
+	case "m:":
+		return Match(expect, actual)
+
+	case "c:":
+		return Compare(expect, actual)
+
+	case "l:":
+		return Logic(expect, actual, langType)
+	}
+
+	return
+}
+
+func Contain(expect, actual string, langType string) bool {
+	if strings.Contains(expect, "*") {
+		expectArr := strings.Split(expect, "*")
+		repeatCount, _ := strconv.Atoi(string(expectArr[1]))
+		return strings.Count(actual, expectArr[0]) >= repeatCount
+	}
+	if expect[0:1] == "(" && expect[len(expect)-1:] == ")" && strings.Contains(expect, ",") {
+		expect = fmt.Sprintf("^%s{1}$", strings.ReplaceAll(expect, ",", "|"))
+	}
+
+	return Match(expect, actual)
+}
+
+func Match(expect string, actual string) bool {
 	expect = strings.TrimSpace(expect)
 	actual = strings.TrimSpace(actual)
 
@@ -228,124 +213,186 @@ func MatchString(expect string, actual string, langType string) bool {
 	return pass
 }
 
-func MatchScene(expect, actual, langType string) (pass bool) {
-	expect = strings.TrimSpace(expect)
-	actual = strings.TrimSpace(actual)
-	if len(expect) == 0 {
-		return actual == ""
+func Compare(expect string, actual string) bool {
+	if len(expect) > 2 && stringUtils.FindInArr(expect[:2], []string{">=", "<=", "<>", "!="}) {
+		character := expect[:2]
+		expectFloat, err := strconv.ParseFloat(strings.TrimSpace(expect[2:]), 64)
+		if err != nil {
+			return false
+		}
+		actualFloat, err := strconv.ParseFloat(strings.TrimSpace(actual), 64)
+		if err != nil {
+			return false
+		}
+
+		compareResult := CompareFloat(actualFloat, expectFloat, character)
+
+		return compareResult
 	}
 
-	if len(expect) > 2 {
-		scene := expect[:2]
-		expect = strings.TrimSpace(expect[2:])
-		switch scene {
-		case "f:":
-			if strings.Contains(expect, "*") {
-				expectArr := strings.Split(expect, "*")
-				repeatCount, _ := strconv.Atoi(string(expectArr[1]))
-				return strings.Count(actual, expectArr[0]) >= repeatCount
-			}
-			if expect[0:1] == "(" && expect[len(expect)-1:] == ")" && strings.Contains(expect, ",") {
-				expect = fmt.Sprintf("^%s{1}$", strings.ReplaceAll(expect, ",", "|"))
-			}
-			return MatchString(expect, actual, langType)
-		case "m:":
-			return MatchString(expect, actual, langType)
-		case "c:":
-			if len(expect) > 2 && (expect[:2] == ">=" || expect[:2] == "<=" || expect[:2] == "<>" || expect[:2] == "!=") {
-				character := expect[:2]
-				expectFloot, err := strconv.ParseFloat(strings.TrimSpace(expect[2:]), 64)
-				if err != nil {
-					return false
-				}
-				actualFloot, err := strconv.ParseFloat(strings.TrimSpace(actual), 64)
-				if err != nil {
-					return false
-				}
-				switch character {
-				case ">=":
-					return actualFloot >= expectFloot
-				case "<=":
-					return actualFloot <= expectFloot
-				case "<>":
-					return actualFloot != expectFloot
-				case "!=":
-					return actualFloot != expectFloot
-				}
-			} else if strings.Contains(expect, "-") && strings.Count(expect, "-") == 1 {
-				rangeArr := strings.Split(expect, "-")
-				rangeFrom, err := strconv.ParseFloat(strings.TrimSpace(rangeArr[0]), 64)
-				if err != nil {
-					return false
-				}
-				rangeTo, err := strconv.ParseFloat(strings.TrimSpace(rangeArr[1]), 64)
-				if err != nil {
-					return false
-				}
-				actualFloot, err := strconv.ParseFloat(strings.TrimSpace(actual), 64)
-				if err != nil {
-					return false
-				}
-				return actualFloot >= rangeFrom && actualFloot <= rangeTo
-			} else {
-				character := expect[:1]
-				expectFloot, err := strconv.ParseFloat(strings.TrimSpace(expect[1:]), 64)
-				if err != nil {
-					return false
-				}
-				actualFloot, err := strconv.ParseFloat(strings.TrimSpace(actual), 64)
-				if err != nil {
-					return false
-				}
-				switch character {
-				case ">":
-					return actualFloot > expectFloot
-				case "<":
-					return actualFloot < expectFloot
-				case "=":
-					return actualFloot == expectFloot
-				}
-				if strings.Contains(expect, "-") {
-					expectArr := strings.Split(expect, "-")
-					expectMin, _ := strconv.ParseFloat(strings.TrimSpace(expectArr[0]), 64)
-					expectMax, _ := strconv.ParseFloat(strings.TrimSpace(expectArr[1]), 64)
-					return actualFloot >= expectMin && actualFloot <= expectMax
-				}
-			}
-		case "l:":
-			openParenthesisCount, closeParenthesisCount := 0, 0
-			hasLogicCharacter := false
-			for index, v := range expect {
-				if v == '(' {
-					openParenthesisCount++
-				} else if v == ')' {
-					closeParenthesisCount++
-				}
-				if v == '&' || v == '|' {
-					hasLogicCharacter = true
-				}
-				if v == '|' && index > 0 && expect[index-1] != '\\' && (openParenthesisCount == closeParenthesisCount) {
-					return MatchScene("l:"+expect[:index], actual, langType) || MatchScene("l:"+expect[index+1:], actual, langType)
-				} else if v == '&' && index > 0 && string(expect[index-1]) != "\\" && (openParenthesisCount == closeParenthesisCount) {
-					return MatchScene("l:"+expect[:index], actual, langType) && MatchScene("l:"+expect[index+1:], actual, langType)
-				}
-			}
-			if expect[:1] == "(" {
-				expect = expect[1:]
-			}
-			if expect[len(expect)-1:] == ")" {
-				expect = expect[:len(expect)-1]
-			}
-			if !hasLogicCharacter {
-				if expect[:1] == "!" {
-					return !MatchScene(expect[1:], actual, langType)
-				}
-				return MatchScene(expect, actual, langType)
-			} else {
-				return MatchScene("l:"+expect, actual, langType)
-			}
+	if strings.Contains(expect, "-") && strings.Count(expect, "-") == 1 {
+		return CompareRange(expect, actual)
+	}
+
+	character := expect[:1]
+	expectFloat, err := strconv.ParseFloat(strings.TrimSpace(expect[1:]), 64)
+	if err != nil {
+		return false
+	}
+	actualFloat, err := strconv.ParseFloat(strings.TrimSpace(actual), 64)
+	if err != nil {
+		return false
+	}
+
+	switch character {
+	case ">":
+		return actualFloat > expectFloat
+	case "<":
+		return actualFloat < expectFloat
+	case "=":
+		return actualFloat == expectFloat
+	}
+
+	if strings.Contains(expect, "-") {
+		expectArr := strings.Split(expect, "-")
+		expectMin, _ := strconv.ParseFloat(strings.TrimSpace(expectArr[0]), 64)
+		expectMax, _ := strconv.ParseFloat(strings.TrimSpace(expectArr[1]), 64)
+		return actualFloat >= expectMin && actualFloat <= expectMax
+	}
+
+	return false
+}
+
+func CompareFloat(actualFloat, expectFloat float64, symbol string) bool {
+	switch symbol {
+	case ">=":
+		return actualFloat >= expectFloat
+	case "<=":
+		return actualFloat <= expectFloat
+	case "<>":
+		return actualFloat != expectFloat
+	case "!=":
+		return actualFloat != expectFloat
+	case ">":
+		return actualFloat > expectFloat
+	case "<":
+		return actualFloat < expectFloat
+	case "=":
+		return actualFloat == expectFloat
+	}
+
+	return false
+}
+
+func CompareRange(expect string, actual string) bool {
+	rangeArr := strings.Split(expect, "-")
+	rangeFrom, err := strconv.ParseFloat(strings.TrimSpace(rangeArr[0]), 64)
+	if err != nil {
+		return false
+	}
+
+	rangeTo, err := strconv.ParseFloat(strings.TrimSpace(rangeArr[1]), 64)
+	if err != nil {
+		return false
+	}
+
+	actualFloat, err := strconv.ParseFloat(strings.TrimSpace(actual), 64)
+	if err != nil {
+		return false
+	}
+
+	return actualFloat >= rangeFrom && actualFloat <= rangeTo
+}
+
+func Logic(expect, actual, langType string) bool {
+	openParenthesisCount, closeParenthesisCount := 0, 0
+	hasLogicCharacter := false
+	for index, v := range expect {
+		if v == '(' {
+			openParenthesisCount++
+		} else if v == ')' {
+			closeParenthesisCount++
+		}
+		if v == '&' || v == '|' {
+			hasLogicCharacter = true
+		}
+		if v == '|' && index > 0 && expect[index-1] != '\\' && (openParenthesisCount == closeParenthesisCount) {
+			return MatchScene("l:"+expect[:index], actual, langType) || MatchScene("l:"+expect[index+1:], actual, langType)
+		} else if v == '&' && index > 0 && string(expect[index-1]) != "\\" && (openParenthesisCount == closeParenthesisCount) {
+			return MatchScene("l:"+expect[:index], actual, langType) && MatchScene("l:"+expect[index+1:], actual, langType)
 		}
 	}
+	if expect[:1] == "(" {
+		expect = expect[1:]
+	}
+	if expect[len(expect)-1:] == ")" {
+		expect = expect[:len(expect)-1]
+	}
+	if !hasLogicCharacter {
+		if expect[:1] == "!" {
+			return !MatchScene(expect[1:], actual, langType)
+		}
+		return MatchScene(expect, actual, langType)
+	} else {
+		return MatchScene("l:"+expect, actual, langType)
+	}
+}
 
-	return pass
+func getStepLogs(skip bool, steps []commDomain.ZentaoCaseStep, actualArr [][]string, langType string, errOutput string) (stepLogs []commDomain.StepLog, caseResult commConsts.ResultStatus) {
+	stepLogs = make([]commDomain.StepLog, 0)
+	caseResult = commConsts.PASS
+	noExpects := true
+
+	if skip {
+		caseResult = commConsts.SKIP
+		return
+	}
+
+	stepIdxToCheck := 0
+	for index, step := range steps { // iterate by checkpoints
+		stepName := strings.TrimSpace(step.Desc)
+		expect := strings.TrimSpace(step.Expect)
+
+		if expect == "" {
+			continue
+		}
+
+		noExpects = false
+
+		expectLines := strings.Split(expect, "\n")
+		var actualLines []string
+		if len(actualArr) > stepIdxToCheck {
+			actualLines = actualArr[stepIdxToCheck]
+		}
+
+		stepResult, checkpointLogs := ValidateStepResult(langType, expectLines, actualLines)
+		if errOutput != "" && index == 0 && len(checkpointLogs) > 0 {
+			checkpointLogs[0].Actual = errOutput
+		}
+		stepLog := commDomain.StepLog{Id: strconv.Itoa(stepIdxToCheck + 1), Name: stepName, Status: stepResult, CheckPoints: checkpointLogs}
+		stepLogs = append(stepLogs, stepLog)
+		if stepResult == commConsts.FAIL {
+			caseResult = commConsts.FAIL
+		}
+
+		stepIdxToCheck++
+	}
+
+	if noExpects {
+		caseResult = commConsts.SKIP
+	}
+
+	return
+}
+
+func incrReportNum(caseResult commConsts.ResultStatus, report *commDomain.ZtfReport) {
+	if caseResult == commConsts.FAIL {
+		report.Fail = report.Fail + 1
+	} else if caseResult == commConsts.PASS {
+		report.Pass = report.Pass + 1
+	} else if caseResult == commConsts.SKIP {
+		report.Skip = report.Skip + 1
+	}
+
+	report.Total = report.Total + 1
 }

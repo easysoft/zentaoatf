@@ -30,7 +30,7 @@ func Spawn(cmdStr string, timeout time.Duration) (expect *GExpect, err error) {
 		cmdStr = strings.ReplaceAll(cmdStr, "/", "\\")
 		cmd = exec.Command("cmd", "/C", cmdStr)
 	} else {
-		cmd = exec.Command("/bin/bash", "-c", cmdStr)
+		cmd = exec.Command("/bin/sh", "-c", cmdStr)
 	}
 	fmt.Println(cmd.String())
 

@@ -21,12 +21,16 @@ func OpenUrl(url string, t provider.T) (ret Webpage, err error) {
 	browser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: &headless, SlowMo: &slowMo})
 	utils.PrintErrOrNot(err, t)
 
-	page, err := browser.NewPage()
+	page, err := browser.NewPage(playwright.BrowserNewContextOptions{Locale: &conf.Locale})
 	utils.PrintErrOrNot(err, t)
 
 	if _, err = page.Goto(url, playwright.PageGotoOptions{WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
+		page.Close()
+		browser.Close()
 		utils.PrintErrOrNot(err, t)
 	}
+
+	page.SetDefaultTimeout(conf.Timeout)
 
 	ret = Webpage{
 		Browser: &browser,
@@ -133,9 +137,9 @@ func (p *Webpage) WaitForTimeout(timeout float64) {
 	return
 }
 
-func (p *Webpage) Click(selector string, options ...playwright.PageClickOptions) {
+func (p *Webpage) Click(selector string) {
 	t := p.T
-	err := p.Page.Click(selector, options...)
+	err := p.Page.Click(selector, playwright.PageClickOptions{Timeout: &conf.Timeout})
 	if err != nil {
 		p.ScreenShot()
 		err = errors.New(fmt.Sprintf("Click %s fail: %s", selector, err.Error()))
@@ -157,7 +161,7 @@ func (p *Webpage) Check(selector string, options ...playwright.FrameCheckOptions
 
 func (p *Webpage) RightClick(selector string) {
 	t := p.T
-	err := p.Page.Click(selector, playwright.PageClickOptions{Button: playwright.MouseButtonRight})
+	err := p.Page.Click(selector, playwright.PageClickOptions{Button: playwright.MouseButtonRight, Timeout: &conf.Timeout})
 	if err != nil {
 		p.ScreenShot()
 		err = errors.New(fmt.Sprintf("Rigth click %s fail: %s", selector, err.Error()))
@@ -179,7 +183,7 @@ func (p *Webpage) IsHidden(selector string) bool {
 
 func (p *Webpage) InnerText(selector string) string {
 	t := p.T
-	text, err := p.Page.InnerText(selector)
+	text, err := p.Page.InnerText(selector, playwright.PageInnerTextOptions{Timeout: &conf.Timeout})
 	if err != nil {
 		p.ScreenShot()
 		err = errors.New(fmt.Sprintf("Get %s InnerText fail: %s", selector, err.Error()))
@@ -208,6 +212,6 @@ func (p *Webpage) ScreenShot() {
 }
 
 func (p *Webpage) WaitForResponse(url string) (resp playwright.Response) {
-	resp = p.Page.WaitForResponse(url, playwright.PageWaitForResponseOptions{Timeout: playwright.Float(3000)})
+	resp = p.Page.WaitForResponse(url, playwright.PageWaitForResponseOptions{Timeout: &conf.Timeout})
 	return
 }

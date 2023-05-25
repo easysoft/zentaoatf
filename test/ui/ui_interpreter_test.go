@@ -3,6 +3,7 @@ package main
 import (
 	"testing"
 
+	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	plwConf "github.com/easysoft/zentaoatf/test/ui/conf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
@@ -13,7 +14,7 @@ import (
 func CreateInterpreter(t provider.T) {
 	t.ID("5744")
 	t.AddParentSuite("管理解析器")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	webpage.Click("#navbar>>[title=\"设置\"]")
 	webpage.Click("#proxyTable>>tr:has-text('本地节点')>>button:has-text('运行环境')")
@@ -43,7 +44,7 @@ func CreateInterpreter(t provider.T) {
 func EditInterpreter(t provider.T) {
 	t.ID("5745")
 	t.AddParentSuite("管理解析器")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	webpage.Click("#navbar>>[title=\"设置\"]")
 	webpage.Click("#proxyTable>>tr:has-text('本地节点')>>button:has-text('运行环境')")
@@ -60,7 +61,7 @@ func EditInterpreter(t provider.T) {
 func DeleteInterpreter(t provider.T) {
 	t.ID("5465")
 	t.AddParentSuite("管理解析器")
-	webpage, _ := plwHelper.OpenUrl("http://127.0.0.1:8000/", t)
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	webpage.Click("#navbar>>[title=\"设置\"]")
 	webpage.Click("#proxyTable>>tr:has-text('本地节点')>>button:has-text('运行环境')")

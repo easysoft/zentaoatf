@@ -125,6 +125,11 @@ func InitZentao(version string) (err error) {
 	return
 }
 
+func InitZentaoData() (err error) {
+	err = uiTest.InitZentaoData("latest", "")
+	return
+}
+
 func waitZentaoAccessed() {
 	isTimeout := false
 	time.AfterFunc(20*time.Second, func() {

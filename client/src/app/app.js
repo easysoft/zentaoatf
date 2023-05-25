@@ -142,16 +142,6 @@ export class ZtfApp {
     }
 
     bindElectronEvents() {
-        app.on('window-all-closed', () => {
-            logInfo(`>> event: window-all-closed`)
-            app.quit();
-        });
-
-        app.on('quit', () => {
-            logInfo(`>> event: quit`)
-            this.quit();
-        });
-
         app.on('activate', () => {
             logInfo('>> event: activate');
 
@@ -159,6 +149,26 @@ export class ZtfApp {
 
             // 在 OS X 系统上，可能存在所有应用窗口关闭了，但是程序还没关闭，此时如果收到激活应用请求，需要重新打开应用窗口并创建应用菜单。
             this.openOrCreateWindow()
+        });
+        app.on('window-all-closed', () => {
+            logInfo(`>> event: window-all-closed`)
+            app.quit();
+        });
+
+        app.on('will-quit', (e) => {
+            e.preventDefault()
+
+            logInfo(`>> event: app will-quit`)
+
+            logInfo(`>> start to kill child process`)
+            this.quit();
+            logInfo(`>> end to kill child process`)
+
+            app.exit()
+        });
+
+        app.on('quit', () => {
+            logInfo(`>> event: app quit`)
         });
     }
 

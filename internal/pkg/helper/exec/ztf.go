@@ -2,7 +2,6 @@ package execHelper
 
 import (
 	"path"
-	"path/filepath"
 	"strconv"
 	"sync"
 	"time"
@@ -27,31 +26,24 @@ import (
 )
 
 func ExecCases(ch chan int, testSet serverDomain.TestSet, msg *websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {
-	// if testSet.Cmd != "" {
-	// 	err = execCmd(testSet.Cmd, testSet.WorkspacePath)
-	// 	if err != nil {
-	// 		return
-	// 	}
-	// }
-
 	return RunZtf(ch, testSet.WorkspacePath, 0, 0, commConsts.Case, testSet.Cases, msg)
 }
 
-func execCmd(cmd string, workspacePath string) (err error) {
-	pth := filepath.Join(workspacePath, ".cmd.tmp")
-	fileUtils.WriteFile(pth, cmd)
-
-	conf := configHelper.LoadByWorkspacePath(workspacePath)
-
-	stdOutput, errOutput := RunFile(pth, workspacePath, conf, nil, nil, 0)
-	if errOutput != "" {
-		logUtils.Infof("failed to exec command '%s' without output %s, err %v.", pth, stdOutput, errOutput)
-	} else {
-		logUtils.Infof("exec command '%s' with output %v.", pth, stdOutput)
-	}
-
-	return
-}
+//func execCmd(cmd string, workspacePath string) (err error) {
+//	pth := filepath.Join(workspacePath, ".cmd.tmp")
+//	fileUtils.WriteFile(pth, cmd)
+//
+//	conf := configHelper.LoadByWorkspacePath(workspacePath)
+//
+//	stdOutput, errOutput := RunFile(pth, workspacePath, conf, nil, nil)
+//	if errOutput != "" {
+//		logUtils.Infof("failed to exec command '%s' without output %s, err %v.", pth, stdOutput, errOutput)
+//	} else {
+//		logUtils.Infof("exec command '%s' with output %v.", pth, stdOutput)
+//	}
+//
+//	return
+//}
 
 func ExecModule(ch chan int, testSet serverDomain.TestSet, msg *websocket.Message) (
 	report commDomain.ZtfReport, pathMaxWidth int, err error) {
@@ -115,8 +107,19 @@ func RunZtf(ch chan int,
 	numbMaxWidth, pathMaxWidth, titleMaxWidth := getNumbMaxWidth(casesToRun)
 	report = genReport(productId, id, by)
 
+	params := commDomain.ExecParams{
+		CasesToRun:    casesToRun,
+		CasesToIgnore: casesToIgnore,
+		WorkspacePath: workspacePath,
+		Conf:          conf,
+		NumbMaxWidth:  numbMaxWidth,
+		PathMaxWidth:  pathMaxWidth,
+		TitleMaxWidth: titleMaxWidth,
+		Report:        &report,
+	}
+
 	// exec scripts
-	ExeScripts(casesToRun, casesToIgnore, workspacePath, conf, &report, pathMaxWidth, numbMaxWidth, titleMaxWidth, ch, wsMsg)
+	ExeScripts(params, ch, wsMsg)
 
 	// gen report
 	if len(casesToRun) > 0 {
@@ -135,36 +138,34 @@ func RunZtf(ch chan int,
 	return
 }
 
-func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath string, conf commDomain.WorkspaceConf,
-	report *commDomain.ZtfReport, pathMaxWidth, numbMaxWidth, titleMaxWidth int,
-	ch chan int, wsMsg *websocket.Message) {
+func ExeScripts(execParams commDomain.ExecParams, ch chan int, wsMsg *websocket.Message) {
 
 	now := time.Now()
 	startTime := now.Unix()
-	report.StartTime = startTime
+	execParams.Report.StartTime = startTime
 
 	workDir := commConsts.WorkDir
 	if commConsts.ExecFrom == commConsts.FromClient {
-		workDir = workspacePath
+		workDir = execParams.WorkspacePath
 	}
 
 	msg := ""
 	if commConsts.Language == commConsts.LanguageZh {
-		msg = i118Utils.Sprintf("found_scripts", workDir, len(casesToRun), commConsts.ZtfDir)
+		msg = i118Utils.Sprintf("found_scripts", workDir, len(execParams.CasesToRun), commConsts.ZtfDir)
 
 	} else {
-		msg = i118Utils.Sprintf("found_scripts", len(casesToRun), workDir, commConsts.ZtfDir)
+		msg = i118Utils.Sprintf("found_scripts", len(execParams.CasesToRun), workDir, commConsts.ZtfDir)
 	}
 
 	if commConsts.ExecFrom == commConsts.FromClient {
-		msg = i118Utils.Sprintf("found_scripts_no_ztf_dir", len(casesToRun), workDir)
+		msg = i118Utils.Sprintf("found_scripts_no_ztf_dir", len(execParams.CasesToRun), workDir)
 		websocketHelper.SendExecMsg(msg, "", commConsts.Run, nil, wsMsg)
 	}
 	logUtils.ExecConsolef(-1, msg)
 	logUtils.ExecResult(msg)
 
-	if len(casesToIgnore) > 0 {
-		temp := i118Utils.Sprintf("ignore_scripts", strconv.Itoa(len(casesToIgnore)))
+	if len(execParams.CasesToIgnore) > 0 {
+		temp := i118Utils.Sprintf("ignore_scripts", strconv.Itoa(len(execParams.CasesToIgnore)))
 		if commConsts.ExecFrom == commConsts.FromClient {
 			websocketHelper.SendExecMsg(temp, "", commConsts.Run, nil, wsMsg)
 		}
@@ -174,24 +175,24 @@ func ExeScripts(casesToRun []string, casesToIgnore []string, workspacePath strin
 	}
 
 	if commConsts.BatchCount <= 1 {
-		execScripts(casesToRun, workspacePath, conf, report, pathMaxWidth, numbMaxWidth, titleMaxWidth, ch, wsMsg)
+		execScripts(execParams, ch, wsMsg)
 	} else {
-		batchExecScripts(casesToRun, workspacePath, conf, report, pathMaxWidth, numbMaxWidth, titleMaxWidth, ch, wsMsg)
+		batchExecScripts(execParams, ch, wsMsg)
 	}
 	endTime := time.Now().Unix()
-	report.EndTime = endTime
-	report.Duration = endTime - startTime
+	execParams.Report.EndTime = endTime
+	execParams.Report.Duration = endTime - startTime
 }
 
-func execScripts(casesToRun []string, workspacePath string, conf commDomain.WorkspaceConf,
-	report *commDomain.ZtfReport, pathMaxWidth int, numbMaxWidth, titleMaxWidth int,
-	ch chan int, wsMsg *websocket.Message) {
-	for idx, file := range casesToRun {
+func execScripts(execParams commDomain.ExecParams, ch chan int, wsMsg *websocket.Message) {
+	for idx, file := range execParams.CasesToRun {
 		if fileUtils.IsDir(file) {
 			continue
 		}
 
-		ExecScript(file, workspacePath, conf, report, idx, len(casesToRun), pathMaxWidth, numbMaxWidth, titleMaxWidth, ch, wsMsg, nil)
+		execParams.ScriptIdx = idx
+		execParams.ScriptFile = file
+		ExecScript(execParams, ch, wsMsg, nil)
 
 		select {
 		case <-ch:
@@ -209,11 +210,9 @@ func execScripts(casesToRun []string, workspacePath string, conf commDomain.Work
 	}
 }
 
-func batchExecScripts(casesToRun []string, workspacePath string, conf commDomain.WorkspaceConf,
-	report *commDomain.ZtfReport, pathMaxWidth int, numbMaxWidth, titleMaxWidth int,
-	ch chan int, wsMsg *websocket.Message) {
+func batchExecScripts(execParams commDomain.ExecParams, ch chan int, wsMsg *websocket.Message) {
 	realCasesToRun := []string{}
-	for _, file := range casesToRun {
+	for _, file := range execParams.CasesToRun {
 		if fileUtils.IsDir(file) {
 			continue
 		}
@@ -231,12 +230,14 @@ func batchExecScripts(casesToRun []string, workspacePath string, conf commDomain
 	}
 	wg.Add(wgCount)
 
-	for _, file := range realCasesToRun {
+	for idx, file := range realCasesToRun {
 		poolId++
-		go func(poolId int, file string) {
-			ExecScript(file, workspacePath, conf, report, poolId-1, caseCount, pathMaxWidth, numbMaxWidth, titleMaxWidth, ch, wsMsg, &lock)
+		execParams.ScriptIdx = idx
+		execParams.ScriptFile = file
+		go func(poolId int, execParams commDomain.ExecParams) {
+			ExecScript(execParams, ch, wsMsg, &lock)
 			wg.Done()
-		}(poolId, file)
+		}(poolId, execParams)
 
 		if caseCount >= commConsts.BatchCount && poolId%commConsts.BatchCount == 0 {
 			wg.Wait()
@@ -278,39 +279,43 @@ func FilterCases(cases []string, conf *commDomain.WorkspaceConf) (casesToRun, ca
 		}
 
 		if commonUtils.IsWin() {
-			if path.Ext(cs) == ".sh" { // filter by os
-				continue
-			}
-
-			interpreter := configHelper.GetFieldVal(*conf, stringUtils.UcFirst(lang))
-			if interpreter == "-" || interpreter == "" {
-				interpreter = ""
-				if lang != "bat" {
-					ok := AddInterpreterIfExist(conf, lang)
-					if !ok {
-						casesToIgnore = append(casesToIgnore, cs)
-					} else {
-						interpreter = configHelper.GetFieldVal(*conf, stringUtils.UcFirst(lang))
-					}
-				}
-			}
-			if lang != "bat" && interpreter == "" { // ignore the ones with no interpreter set
-				continue
-			}
-
-		} else { // filter by os
-			if path.Ext(cs) == ".bat" {
-				continue
-			}
+			filterWinCases(cs, lang, conf, &casesToIgnore, &casesToRun)
+			continue
 		}
 
-		//pass := scriptHelper.CheckFileIsScript(cs)
-		//if pass {
+		if path.Ext(cs) == ".bat" {
+			continue
+		}
 		casesToRun = append(casesToRun, cs)
-		//}
 	}
 
 	return
+}
+
+func filterWinCases(cs, lang string, conf *commDomain.WorkspaceConf, casesToIgnore, casesToRun *[]string) {
+	if path.Ext(cs) == ".sh" { // filter by os
+		return
+	}
+
+	interpreter := configHelper.GetFieldVal(*conf, stringUtils.UcFirst(lang))
+
+	if interpreter == "-" || interpreter == "" {
+		interpreter = ""
+		if lang != "bat" {
+			ok := AddInterpreterIfExist(conf, lang)
+			if !ok {
+				*casesToIgnore = append(*casesToIgnore, cs)
+			} else {
+				interpreter = configHelper.GetFieldVal(*conf, stringUtils.UcFirst(lang))
+			}
+		}
+	}
+
+	if lang != "bat" && interpreter == "" { // ignore the ones with no interpreter set
+		return
+	}
+
+	*casesToRun = append(*casesToRun, cs)
 }
 
 func genReport(productId, id int, by commConsts.ExecBy) (report commDomain.ZtfReport) {

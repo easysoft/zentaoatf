@@ -2,6 +2,7 @@ package execHelper
 
 import (
 	"fmt"
+	"strings"
 	"sync"
 	"time"
 
@@ -17,17 +18,13 @@ import (
 	"github.com/kataras/iris/v12/websocket"
 )
 
-func ExecScript(scriptFile, workspacePath string,
-	conf commDomain.WorkspaceConf,
-	report *commDomain.ZtfReport, scriptIdx,
-	total, pathMaxWidth, numbMaxWidth, titleMaxWidth int,
-	ch chan int, wsMsg *websocket.Message, lock *sync.Mutex) {
+func ExecScript(execParams commDomain.ExecParams, ch chan int, wsMsg *websocket.Message, lock *sync.Mutex) {
 
-	key := stringUtils.Md5(scriptFile)
+	key := stringUtils.Md5(execParams.ScriptFile)
 
 	startTime := time.Now()
 
-	startMsg := i118Utils.Sprintf("start_execution", scriptFile, dateUtils.DateTimeStr(startTime))
+	startMsg := i118Utils.Sprintf("start_execution", execParams.ScriptFile, dateUtils.DateTimeStr(startTime))
 
 	if commConsts.ExecFrom == commConsts.FromClient {
 		websocketHelper.SendExecMsg(startMsg, "", commConsts.Run,
@@ -38,8 +35,8 @@ func ExecScript(scriptFile, workspacePath string,
 	logUtils.ExecFilef(startMsg)
 
 	logs := ""
-	stdOutput, errOutput := RunFile(scriptFile, workspacePath, conf, ch, wsMsg, scriptIdx)
-	// stdOutput = strings.Trim(stdOutput, "\n")
+	stdOutput, errOutput := RunFile(execParams.ScriptFile, execParams.WorkspacePath, execParams.Conf, ch, wsMsg, execParams.ScriptIdx)
+	stdOutput = strings.Trim(stdOutput, "\n")
 
 	if stdOutput != "" {
 		logs = stdOutput
@@ -53,12 +50,12 @@ func ExecScript(scriptFile, workspacePath string,
 	}
 
 	entTime := time.Now()
-	secs := fmt.Sprintf("%.2f", float32(entTime.Sub(startTime)/time.Second))
-	report.WorkspacePath = workspacePath
+	execParams.Secs = fmt.Sprintf("%.2f", float32(entTime.Sub(startTime)/time.Second))
+	execParams.Report.WorkspacePath = execParams.WorkspacePath
 
-	CheckCaseResult(scriptFile, logs, report, total, secs, pathMaxWidth, numbMaxWidth, titleMaxWidth, wsMsg, errOutput, lock)
+	CheckCaseResult(execParams, logs, wsMsg, errOutput, lock)
 
-	endMsg := i118Utils.Sprintf("end_execution", scriptFile, dateUtils.DateTimeStr(entTime))
+	endMsg := i118Utils.Sprintf("end_execution", execParams.ScriptFile, dateUtils.DateTimeStr(entTime))
 	if commConsts.ExecFrom == commConsts.FromClient {
 		websocketHelper.SendExecMsg(endMsg, "", commConsts.Run, iris.Map{"key": key, "status": "end"}, wsMsg)
 
