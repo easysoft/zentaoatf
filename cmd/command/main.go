@@ -88,8 +88,10 @@ func main() {
 
 	flagSet.BoolVar(&commConsts.AutoCommitResult, "cr", false, "")
 	flagSet.BoolVar(&commConsts.AutoCommitBug, "cb", false, "")
+	flagSet.IntVar(&commConsts.BatchCount, "C", 1, "")
 	flagSet.BoolVar(&noNeedConfirm, "y", false, "")
 	flagSet.BoolVar(&commConsts.Verbose, "verbose", false, "")
+	flagSet.BoolVar(&commConsts.AutoExtract, "ext", true, "")
 
 	flagSet.BoolVar(&withCode, "withCode", false, "")
 	flagSet.StringVar(&commConsts.AllureReportDir, "allureReportDir", "", "")
@@ -234,6 +236,7 @@ func runFuncTest(args []string) {
 	}
 
 	commConsts.ProductId = productId
+	commConsts.CommandArgs = args
 
 	if len(files) == 0 {
 		files = append(files, ".")

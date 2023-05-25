@@ -46,7 +46,7 @@ func dryRunScripts(casesToRun []string) {
 func dryRunScript(file string) {
 	conf := configHelper.LoadByWorkspacePath(commConsts.ZtfDir)
 
-	out, _ := execHelper.RunFile(file, commConsts.WorkDir, conf, nil, nil)
+	out, _ := execHelper.RunFile(file, commConsts.WorkDir, conf, nil, nil, 0)
 
 	expFile := filepath.Join(filepath.Dir(file), fileUtils.GetFileNameWithoutExt(file)+".exp")
 	fileUtils.WriteFile(expFile, out)

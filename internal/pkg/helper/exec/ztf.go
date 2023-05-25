@@ -3,6 +3,7 @@ package execHelper
 import (
 	"path"
 	"strconv"
+	"sync"
 	"time"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
@@ -95,6 +96,11 @@ func RunZtf(ch chan int,
 
 	conf := configHelper.LoadByWorkspacePath(workspacePath)
 
+	//extract file if commConsts.AutoExtract is true
+	if commConsts.AutoExtract {
+		scriptHelper.Extract(cases)
+	}
+
 	casesToRun, casesToIgnore := FilterCases(cases, &conf)
 
 	numbMaxWidth := 0
@@ -168,6 +174,17 @@ func ExeScripts(execParams commDomain.ExecParams, ch chan int, wsMsg *websocket.
 		logUtils.ExecResult(temp)
 	}
 
+	if commConsts.BatchCount <= 1 {
+		execScripts(execParams, ch, wsMsg)
+	} else {
+		batchExecScripts(execParams, ch, wsMsg)
+	}
+	endTime := time.Now().Unix()
+	execParams.Report.EndTime = endTime
+	execParams.Report.Duration = endTime - startTime
+}
+
+func execScripts(execParams commDomain.ExecParams, ch chan int, wsMsg *websocket.Message) {
 	for idx, file := range execParams.CasesToRun {
 		if fileUtils.IsDir(file) {
 			continue
@@ -175,7 +192,7 @@ func ExeScripts(execParams commDomain.ExecParams, ch chan int, wsMsg *websocket.
 
 		execParams.ScriptIdx = idx
 		execParams.ScriptFile = file
-		ExecScript(execParams, ch, wsMsg)
+		ExecScript(execParams, ch, wsMsg, nil)
 
 		select {
 		case <-ch:
@@ -187,15 +204,67 @@ func ExeScripts(execParams commDomain.ExecParams, ch chan int, wsMsg *websocket.
 			logUtils.ExecConsolef(color.FgCyan, msg)
 			logUtils.ExecFilef(msg)
 
-			goto ExitAllCase
+			return
+		default:
+		}
+	}
+}
+
+func batchExecScripts(execParams commDomain.ExecParams, ch chan int, wsMsg *websocket.Message) {
+	realCasesToRun := []string{}
+	for _, file := range execParams.CasesToRun {
+		if fileUtils.IsDir(file) {
+			continue
+		}
+		realCasesToRun = append(realCasesToRun, file)
+	}
+
+	var wg sync.WaitGroup
+	var lock sync.Mutex
+	poolId := 0
+	caseCount := len(realCasesToRun)
+
+	wgCount := commConsts.BatchCount
+	if caseCount-poolId < commConsts.BatchCount {
+		wgCount = caseCount - poolId
+	}
+	wg.Add(wgCount)
+
+	for idx, file := range realCasesToRun {
+		poolId++
+		execParams.ScriptIdx = idx
+		execParams.ScriptFile = file
+		go func(poolId int, execParams commDomain.ExecParams) {
+			ExecScript(execParams, ch, wsMsg, &lock)
+			wg.Done()
+		}(poolId, execParams)
+
+		if caseCount >= commConsts.BatchCount && poolId%commConsts.BatchCount == 0 {
+			wg.Wait()
+			if caseCount-poolId < commConsts.BatchCount {
+				wgCount = caseCount - poolId
+			}
+			wg.Add(wgCount)
+		}
+
+		select {
+		case <-ch:
+			msg := i118Utils.Sprintf("exit_exec_all")
+			if commConsts.ExecFrom == commConsts.FromClient {
+				websocketHelper.SendExecMsg(msg, "", commConsts.Run, nil, wsMsg)
+			}
+
+			logUtils.ExecConsolef(color.FgCyan, msg)
+			logUtils.ExecFilef(msg)
+
+			return
 		default:
 		}
 	}
 
-ExitAllCase:
-	endTime := time.Now().Unix()
-	execParams.Report.EndTime = endTime
-	execParams.Report.Duration = endTime - startTime
+	if caseCount%commConsts.BatchCount != 0 {
+		wg.Wait()
+	}
 }
 
 func FilterCases(cases []string, conf *commDomain.WorkspaceConf) (casesToRun, casesToIgnore []string) {
@@ -251,11 +320,11 @@ func filterWinCases(cs, lang string, conf *commDomain.WorkspaceConf, casesToIgno
 
 func genReport(productId, id int, by commConsts.ExecBy) (report commDomain.ZtfReport) {
 	report = commDomain.ZtfReport{
-		TestEnv: commonUtils.GetOs(), ExecBy: by, ExecById: id, ProductId: productId,
+		Platform: commonUtils.GetOs(), ExecBy: by, ExecById: id, ProductId: productId,
 		Pass: 0, Fail: 0, Total: 0, FuncResult: make([]commDomain.FuncResult, 0)}
 
 	report.TestType = commConsts.TestFunc
-	report.TestTool = commConsts.AppServer
+	report.TestTool = commConsts.ZTF
 
 	return
 }

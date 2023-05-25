@@ -3,6 +3,11 @@ package commandConfig
 import (
 	"bytes"
 	"fmt"
+	"log"
+	"os"
+	"path/filepath"
+	"reflect"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
@@ -16,10 +21,6 @@ import (
 	resUtils "github.com/easysoft/zentaoatf/pkg/lib/res"
 	"github.com/fatih/color"
 	"github.com/spf13/viper"
-	"log"
-	"os"
-	"path/filepath"
-	"reflect"
 )
 
 func InitConfig() {
@@ -27,15 +28,16 @@ func InitConfig() {
 
 	commConsts.WorkDir = fileUtils.GetWorkDir()
 	commConsts.ZtfDir = fileUtils.GetZTFDir()
+	ztfHomePath := fileUtils.GetZTFHome()
 
 	if !commConsts.IsRelease {
 		log.Println("WorkDir=" + commConsts.WorkDir)
 		log.Println("ZtfDir=" + commConsts.ZtfDir)
 	}
 
-	commConsts.ConfigPath = filepath.Join(commConsts.WorkDir, commConsts.ConfigDir, commConsts.ConfigFile)
+	commConsts.ConfigPath = filepath.Join(ztfHomePath, commConsts.ConfigDir, commConsts.ConfigFile)
 	if commConsts.IsRelease {
-		commConsts.ConfigPath = filepath.Join(commConsts.ZtfDir, commConsts.ConfigDir, commConsts.ConfigFile)
+		commConsts.ConfigPath = filepath.Join(ztfHomePath, commConsts.ConfigDir, commConsts.ConfigFile)
 	}
 
 	config := configHelper.LoadByConfigPath(commConsts.ConfigPath)
@@ -79,9 +81,9 @@ func Init() {
 }
 
 func CheckConfigPermission() {
-	err := fileUtils.MkDirIfNeeded(commConsts.WorkDir + "conf")
+	err := fileUtils.MkDirIfNeeded(commConsts.ConfigPath)
 	if err != nil {
-		msg := i118Utils.Sprintf("perm_deny", commConsts.WorkDir)
+		msg := i118Utils.Sprintf("perm_deny", commConsts.ConfigPath)
 		logUtils.ExecConsolef(color.FgRed, msg)
 		os.Exit(0)
 	}
