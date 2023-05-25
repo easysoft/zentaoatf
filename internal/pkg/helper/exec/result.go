@@ -84,9 +84,10 @@ func ValidateCaseResult(execParams commDomain.ExecParams, langType string,
 
 	format := "(%" + width + "d/%d) [%s] [%s] [%s] [%ss]"
 
-	status := GenStatusTxt(csResult.Status)
+	statusWithColor, status := GenStatusTxt(csResult.Status)
 
 	msg := fmt.Sprintf(format, execParams.ScriptIdx+1, len(execParams.CasesToRun), status, path, csTitle, execParams.Secs)
+	msgWithColor := fmt.Sprintf(format, execParams.ScriptIdx+1, len(execParams.CasesToRun), statusWithColor, path, csTitle, execParams.Secs)
 
 	// print each case result
 	if commConsts.ExecFrom == commConsts.FromClient {
@@ -109,7 +110,7 @@ func ValidateCaseResult(execParams commDomain.ExecParams, langType string,
 		websocketHelper.SendExecMsg(msg, "", msgCategory,
 			iris.Map{"key": key, "status": csResult.Status}, wsMsg)
 	}
-	logUtils.ExecConsole(-1, msg)
+	logUtils.ExecConsole(-1, msgWithColor)
 	logUtils.ExecResult(msg)
 }
 

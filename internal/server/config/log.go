@@ -96,7 +96,7 @@ func InitExecLog(workspacePath string) {
 		log.Println("init exec result logger fail " + err.Error())
 	}
 
-	logUtils.LoggerExecResult = logUtils.LoggerExecResult.WithOptions(zap.AddCaller(), zap.AddCallerSkip(1))
+	// logUtils.LoggerExecResult = logUtils.LoggerExecResult.WithOptions(zap.AddCaller(), zap.AddCallerSkip(1))
 }
 
 // flush buffer and release the file.
