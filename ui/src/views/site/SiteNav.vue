@@ -35,6 +35,7 @@
 
   <DropdownMenu
       v-if="products.length > 0"
+      :filter="true"
       toggle="#productMenuToggle"
       class="scrollbar-y scrollbar-hover"
       :items="products"
@@ -43,6 +44,7 @@
       @click="selectProduct"
       :replaceFields="replaceFields"
   />
+
   <SitesModal
     :show="showSitesModal"
     @cancel="sitesModalClose"
