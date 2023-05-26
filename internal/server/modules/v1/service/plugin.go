@@ -19,11 +19,10 @@ type PluginService struct {
 
 func (s *PluginService) Start() (err error) {
 	s.zapClient = plugin.NewClient(&plugin.ClientConfig{
-		HandshakeConfig: zapShared.Handshake,
-		Plugins:         zapShared.PluginMap,
-		Cmd:             shellUtils.GetCmd(ZapPath),
-		AllowedProtocols: []plugin.Protocol{
-			plugin.ProtocolNetRPC, plugin.ProtocolGRPC},
+		HandshakeConfig:  zapShared.Handshake,
+		Plugins:          zapShared.PluginMap,
+		Cmd:              shellUtils.GetCmd(ZapPath),
+		AllowedProtocols: []plugin.Protocol{plugin.ProtocolNetRPC, plugin.ProtocolGRPC},
 	})
 
 	s.zapRpcClient, err = s.zapClient.Client()
@@ -39,14 +38,14 @@ func (s *PluginService) Start() (err error) {
 		return
 	}
 
-	kv := raw.(zapService.ZapInterface)
+	zapService := raw.(zapService.ZapInterface)
 
-	err = kv.Put("key", []byte("Set Msg"))
+	err = zapService.Put("key", []byte("Set Msg"))
 	if err != nil {
 		fmt.Println("Error:", err.Error())
 	}
 
-	result, err := kv.Get("key")
+	result, err := zapService.Get("key")
 	if err != nil {
 		fmt.Println("Error:", err.Error())
 	}
