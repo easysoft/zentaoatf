@@ -1,4 +1,4 @@
-package zapShared
+package zapPlugin
 
 import (
 	"context"
@@ -7,10 +7,12 @@ import (
 )
 
 // GRPCClient is an implementation of ZapInterface that talks over RPC.
-type GRPCClient struct{ client zapProto.ZapClient }
+type GRPCClient struct {
+	Client zapProto.ZapClient
+}
 
 func (m *GRPCClient) Put(key string, value []byte) error {
-	_, err := m.client.Put(context.Background(), &zapProto.PutRequest{
+	_, err := m.Client.Put(context.Background(), &zapProto.PutRequest{
 		Key:   key,
 		Value: value,
 	})
@@ -18,7 +20,7 @@ func (m *GRPCClient) Put(key string, value []byte) error {
 }
 
 func (m *GRPCClient) Get(key string) ([]byte, error) {
-	resp, err := m.client.Get(context.Background(), &zapProto.GetRequest{
+	resp, err := m.Client.Get(context.Background(), &zapProto.GetRequest{
 		Key: key,
 	})
 	if err != nil {

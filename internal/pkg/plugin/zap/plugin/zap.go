@@ -1,4 +1,4 @@
-package zapShared
+package zapPlugin
 
 import (
 	"context"
@@ -25,5 +25,5 @@ func (p *ZapPlugin) GRPCServer(broker *plugin.GRPCBroker, s *grpc.Server) error 
 }
 
 func (p *ZapPlugin) GRPCClient(ctx context.Context, broker *plugin.GRPCBroker, c *grpc.ClientConn) (interface{}, error) {
-	return &GRPCClient{client: zapProto.NewZapClient(c)}, nil
+	return &GRPCClient{Client: zapProto.NewZapClient(c)}, nil
 }

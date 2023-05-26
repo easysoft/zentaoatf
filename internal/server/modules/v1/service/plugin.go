@@ -19,9 +19,9 @@ type PluginService struct {
 
 func (s *PluginService) Start() (err error) {
 	s.zapClient = plugin.NewClient(&plugin.ClientConfig{
-		HandshakeConfig:  zapShared.Handshake,
 		Plugins:          zapShared.PluginMap,
 		Cmd:              shellUtils.GetCmd(ZapPath),
+		HandshakeConfig:  zapShared.Handshake,
 		AllowedProtocols: []plugin.Protocol{plugin.ProtocolNetRPC, plugin.ProtocolGRPC},
 	})
 
