@@ -77,3 +77,6 @@ http://localhost:55232/api/v1/configs/setVerbose?val=true
 mkdir -p bin/linux_arm64 && scp 192.168.0.56:~/dev/project/zentaoatf/bin/linux_arm64/ztf bin/linux_arm64/ztf
 
 VERSION=3.2.0 && scp -r 192.168.0.56:~/work/zentao/qiniu/ztf/$VERSION/linux_arm64 ~/work/zentao/qiniu/ztf/$VERSION/linux_arm64
+
+ln -s ~/go/bin/protoc-gen-go-grpc ~/go/bin/protoc-gen-go_grpc
+MacBook-Pro:proto aaron$ protoc --proto_path=.     --go_out=. --go_opt=paths=source_relative  --go_grpc_out=. --go_grpc_opt=paths=source_relative zap.proto

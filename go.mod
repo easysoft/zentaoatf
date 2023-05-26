@@ -16,12 +16,12 @@ require (
 	github.com/facebookgo/subset v0.0.0-20200203212716-c811ad88dec4 // indirect
 	github.com/fatih/color v1.13.0
 	github.com/fsnotify/fsnotify v1.5.4
-	github.com/go-bindata/go-bindata v3.1.2+incompatible // indirect
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/go-playground/validator/v10 v10.9.0
 	github.com/go-redis/redis/v8 v8.11.3
 	github.com/gofrs/uuid v4.2.0+incompatible
 	github.com/gorilla/websocket v1.4.2
+	github.com/hashicorp/go-plugin v1.4.9
 	github.com/iris-contrib/middleware/cors v0.0.0-20210110101738-6d0a4d799b5d
 	github.com/jameskeane/bcrypt v0.0.0-20120420032655-c3cd44c1e20f
 	github.com/jinzhu/copier v0.3.5
@@ -48,6 +48,8 @@ require (
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.21.0
 	golang.org/x/text v0.3.7
+	google.golang.org/grpc v1.38.0
+	google.golang.org/protobuf v1.30.0
 	gopkg.in/ini.v1 v1.63.0
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gorm.io/driver/sqlite v1.2.6
