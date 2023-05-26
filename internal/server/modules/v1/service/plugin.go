@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	zapPlugin "github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/plugin"
 	zapService "github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/service"
 	"github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/shared"
 	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
@@ -19,7 +20,9 @@ type PluginService struct {
 
 func (s *PluginService) Start() (err error) {
 	s.zapClient = plugin.NewClient(&plugin.ClientConfig{
-		Plugins:          zapShared.PluginMap,
+		Plugins: map[string]plugin.Plugin{
+			zapShared.PluginNameZap: &zapPlugin.ZapPlugin{},
+		},
 		Cmd:              shellUtils.GetCmd(ZapPath),
 		HandshakeConfig:  zapShared.Handshake,
 		AllowedProtocols: []plugin.Protocol{plugin.ProtocolNetRPC, plugin.ProtocolGRPC},
