@@ -11,7 +11,7 @@ import (
 type Zap struct{}
 
 func (Zap) Put(key string, value []byte) error {
-	value = []byte(fmt.Sprintf("%s\n\nWritten from plugin-go-grpc", string(value)))
+	value = []byte(fmt.Sprintf("%s\nWritten from plugin-go-grpc", string(value)))
 	return ioutil.WriteFile("zap_"+key, value, 0644)
 }
 

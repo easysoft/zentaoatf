@@ -32,7 +32,7 @@ func (s *PluginService) Start() (err error) {
 	}
 
 	// Request the plugin
-	raw, err := s.zapRpcClient.Dispense("ZAP")
+	raw, err := s.zapRpcClient.Dispense(shared.PluginNameZap)
 	if err != nil {
 		fmt.Println("Error:", err.Error())
 		return
