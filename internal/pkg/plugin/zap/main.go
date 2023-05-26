@@ -21,9 +21,9 @@ func (Zap) Get(key string) ([]byte, error) {
 
 func main() {
 	plugin.Serve(&plugin.ServeConfig{
-		HandshakeConfig: shared.Handshake,
+		HandshakeConfig: zapShared.Handshake,
 		Plugins: map[string]plugin.Plugin{
-			"ZAP": &shared.ZapPlugin{Impl: &Zap{}},
+			"ZAP": &zapShared.ZapPlugin{Impl: &Zap{}},
 		},
 
 		GRPCServer: plugin.DefaultGRPCServer,

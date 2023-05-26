@@ -1,4 +1,4 @@
-package shared
+package zapShared
 
 const (
 	PluginNameZap = "ZAP"

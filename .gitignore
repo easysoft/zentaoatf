@@ -64,3 +64,5 @@ node_modules
 /test/k6/log/
 /test/k6/results/
 /test/coverage/allure-results/
+/internal/pkg/plugin/zap-plugin
+/zap_key
