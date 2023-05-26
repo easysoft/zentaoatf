@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	zapService "github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/service"
 	"github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/shared"
 	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
 	"github.com/hashicorp/go-plugin"
@@ -38,7 +39,7 @@ func (s *PluginService) Start() (err error) {
 		return
 	}
 
-	kv := raw.(zapShared.Zap)
+	kv := raw.(zapService.ZapInterface)
 
 	err = kv.Put("key", []byte("Set Msg"))
 	if err != nil {

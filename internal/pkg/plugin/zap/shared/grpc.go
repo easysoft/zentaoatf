@@ -3,9 +3,10 @@ package zapShared
 import (
 	"context"
 	zapProto "github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/proto"
+	zapService "github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/service"
 )
 
-// GRPCClient is an implementation of Zap that talks over RPC.
+// GRPCClient is an implementation of ZapInterface that talks over RPC.
 type GRPCClient struct{ client zapProto.ZapClient }
 
 func (m *GRPCClient) Put(key string, value []byte) error {
@@ -29,7 +30,7 @@ func (m *GRPCClient) Get(key string) ([]byte, error) {
 
 type GRPCServer struct {
 	zapProto.UnimplementedZapServer
-	Impl Zap
+	Impl zapService.ZapInterface
 }
 
 func (m *GRPCServer) Put(ctx context.Context, req *zapProto.PutRequest) (*zapProto.Empty, error) {
