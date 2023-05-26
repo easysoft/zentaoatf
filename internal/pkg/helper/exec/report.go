@@ -13,15 +13,16 @@ import (
 	"github.com/fatih/color"
 )
 
-func GenStatusTxt(status commConsts.ResultStatus) (txt string) {
+func GenStatusTxt(status commConsts.ResultStatus) (colorTxt string, txt string) {
 	txt = i118Utils.Sprintf(string(status))
+	colorTxt = txt
 	if commConsts.ExecFrom == commConsts.FromCmd {
 		if status == commConsts.FAIL {
-			txt = color.New(color.FgHiRed, color.Bold).Sprint(status)
+			colorTxt = color.New(color.FgHiRed, color.Bold).Sprint(status)
 		} else if status == commConsts.PASS {
-			txt = color.New(color.FgHiGreen, color.Bold).Sprint(status)
+			colorTxt = color.New(color.FgHiGreen, color.Bold).Sprint(status)
 		} else {
-			txt = color.New(color.FgHiYellow, color.Bold).Sprint(status)
+			colorTxt = color.New(color.FgHiYellow, color.Bold).Sprint(status)
 		}
 	}
 
@@ -102,7 +103,7 @@ func GenUnitReport(cases []commDomain.UnitResult, report *commDomain.ZtfReport, 
 	return
 }
 
-func GenRunResult(report commDomain.ZtfReport) (result, resultClient string) {
+func GenRunResult(report commDomain.ZtfReport) (result, resultClient, resultLog string) {
 	fmtStr := "%s%s%d(%.1f%%)"
 	passRate := 0
 	failRate := 0
@@ -116,6 +117,11 @@ func GenRunResult(report commDomain.ZtfReport) (result, resultClient string) {
 	passStr := fmt.Sprintf(fmtStr, i118Utils.Sprintf("pass_num"), i118Utils.Sprintf("colon"), report.Pass, float32(passRate))
 	failStr := fmt.Sprintf(fmtStr, i118Utils.Sprintf("fail_num"), i118Utils.Sprintf("colon"), report.Fail, float32(failRate))
 	skipStr := fmt.Sprintf(fmtStr, i118Utils.Sprintf("skip_num"), i118Utils.Sprintf("colon"), report.Skip, float32(skipRate))
+
+	resultLog = i118Utils.Sprintf("run_result",
+		report.Total, report.Duration,
+		passStr, failStr, skipStr,
+	)
 
 	if commConsts.ExecFrom == commConsts.FromCmd {
 		passStr = fmt.Sprintf(fmtStr, color.New(color.FgHiGreen, color.Bold).Sprint(i118Utils.Sprintf("pass_num")), i118Utils.Sprintf("colon"), report.Pass, float32(passRate))

@@ -36,29 +36,32 @@ func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,
 	}
 
 	// 生成统计行
-	runResult, msgRunColor := GenRunResult(report)
+	runResult, msgRunColor, resultLog := GenRunResult(report)
 
 	// 执行%d个用例，耗时%d秒%s。%s，%s，%s。
 	// Run %d script in %d sec, %s, %s, %s.
 	msgRun := dateUtils.DateTimeStr(time.Now()) + " " + runResult
+	msgRunLog := dateUtils.DateTimeStr(time.Now()) + " " + resultLog
 
 	websocketHelper.SendExecMsgIfNeed(msgRunColor, "", commConsts.Run, nil, wsMsg)
 
-	logUtils.ExecResult(msgRun)
+	logUtils.ExecResult(msgRunLog)
 
 	resultPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)
 	msgReport := i118Utils.Sprintf("run_report") + " " + resultPath + "."
+	msgReportLog := msgReport
 	if commConsts.ExecFrom == commConsts.FromCmd {
 		msgReport = color.New(color.Bold, color.FgHiWhite).Sprint(i118Utils.Sprintf("run_report")) + " [" + resultPath + "]"
 	}
 
 	logUtils.ExecConsole(-1, msgReport)
 	logUtils.ExecConsole(-1, msgRun)
-	logUtils.ExecResult(msgReport)
+	logUtils.ExecResult(msgReportLog)
 	websocketHelper.SendExecMsgIfNeed(msgReport, "", commConsts.Run, map[string]interface{}{
 		"logDir": commConsts.ExecLogDir,
 	}, wsMsg)
 	report.Log = fileUtils.ReadFile(filepath.Join(commConsts.ExecLogDir, commConsts.LogText))
+	report.TestCommand = strings.Join(commConsts.CommandArgs, " ")
 
 	//report.ProductId, _ = strconv.Atoi(vari.ProductId)
 	json, _ := json.MarshalIndent(report, "", "\t")
@@ -90,7 +93,7 @@ func appendFailedStepResult(cs commDomain.FuncResult, failedSteps *[]string) (pa
 		}
 
 		step.Id = strings.TrimRight(step.Id, ".")
-		status := GenStatusTxt(cs.Status)
+		status, _ := GenStatusTxt(cs.Status)
 
 		*failedSteps = append(*failedSteps, fmt.Sprintf("%s %s [%s]", i118Utils.Sprintf("step_prefix", step.Id), status, step.Name))
 

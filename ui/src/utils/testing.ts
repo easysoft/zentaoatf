@@ -88,7 +88,7 @@ const osMap = {
     linux: 'Linux',
     mac: 'mac',
 }
-export function testEnvDef(code) {
+export function platformDef(code) {
     return osMap[code]
 }
 const testTypeMap = {

@@ -47,7 +47,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 
 	report = commDomain.ZtfReport{
 		Name:        req.Name,
-		TestEnv:     commonUtils.GetOs(),
+		Platform:    commonUtils.GetOs(),
 		TestType:    commConsts.TestUnit,
 		TestTool:    req.TestTool,
 		BuildTool:   req.BuildTool,
@@ -77,7 +77,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 			csTitle += postFix
 		}
 
-		status := GenStatusTxt(cs.Status)
+		status, _ := GenStatusTxt(cs.Status)
 
 		format := "(%" + width + "d/%d) [%s] [%s] [%s] [%.3fs]"
 		msgCase := fmt.Sprintf(format, idx+1, report.Total, status, testSuite, csTitle, cs.Duration)
@@ -108,16 +108,18 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 
 	// print summary result
 	// 执行%d个用例，耗时%d秒%s。%s，%s，%s。报告%s。
-	runResult, msgRunColor := GenRunResult(report)
+	runResult, msgRunColor, runResultLog := GenRunResult(report)
 
 	msgRun := dateUtils.DateTimeStr(time.Now()) + " " + runResult
+	msgRunLog := dateUtils.DateTimeStr(time.Now()) + " " + runResultLog
 
 	websocketHelper.SendExecMsgIfNeed(msgRunColor, "", commConsts.Result, nil, wsMsg)
-	logUtils.ExecResult(msgRun)
+	logUtils.ExecResult(msgRunLog)
 
 	// print result path
 	resultPath := filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)
 	msgReport := i118Utils.Sprintf("run_report") + " " + resultPath + "."
+	msgReportLog := msgReport
 	if commConsts.ExecFrom == commConsts.FromCmd {
 		msgReport = color.New(color.Bold, color.FgHiWhite).Sprint(i118Utils.Sprintf("run_report")) + " [" + resultPath + "]"
 	}
@@ -128,7 +130,7 @@ func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch ch
 
 	logUtils.ExecConsole(-1, msgReport)
 	logUtils.ExecConsole(-1, msgRun+"\n")
-	logUtils.ExecResult(msgReport)
+	logUtils.ExecResult(msgReportLog)
 	report.Log = fileUtils.ReadFile(filepath.Join(commConsts.ExecLogDir, commConsts.LogText))
 
 	//report.ProductId, _ = strconv.Atoi(vari.ProductId)

@@ -3,6 +3,9 @@ package execHelper
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
+	"time"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
@@ -10,8 +13,6 @@ import (
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
-	"strings"
-	"time"
 )
 
 type ZapScanResp struct {
@@ -30,7 +31,7 @@ func ExecZapScan(req serverDomain.TestSet) (err error) {
 
 	report := commDomain.ZtfReport{
 		Name:     req.Name,
-		TestEnv:  commonUtils.GetOs(),
+		Platform: commonUtils.GetOs(),
 		TestType: commConsts.TestZap,
 		TestTool: req.TestTool,
 

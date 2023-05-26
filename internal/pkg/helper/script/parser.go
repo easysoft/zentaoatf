@@ -3,6 +3,7 @@ package scriptHelper
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path"
 	"path/filepath"
 	"regexp"
@@ -319,9 +320,11 @@ func ReplaceCaseDesc(desc, file string) {
 	newDesc := fmt.Sprintf("\n%s\n\n"+desc+"\n\n%s",
 		commConsts.LangCommentsTagMap[lang][0],
 		commConsts.LangCommentsTagMap[lang][1])
+	newDesc = strings.Replace(newDesc, "$", "￥￥￥", -1)
 
 	out := re.ReplaceAllString(content, newDesc)
 
+	out = strings.Replace(out, "￥￥￥", "$", -1)
 	fileUtils.WriteFile(file, out)
 }
 
@@ -646,6 +649,7 @@ func ReadLogArrOld(content string) (isSkip bool, ret [][]string) {
 }
 
 func CheckFileIsScript(path string) bool {
+	os.Chmod(path, 0777)
 	content := fileUtils.ReadFile(path)
 
 	pass := CheckFileContentIsScript(content)

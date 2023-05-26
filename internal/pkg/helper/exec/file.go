@@ -3,10 +3,12 @@ package execHelper
 import (
 	"bufio"
 	"context"
-	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	"io"
+	"strconv"
 	"strings"
 	"time"
+
+	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
@@ -22,7 +24,7 @@ import (
 )
 
 func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
-	ch chan int, wsMsg *websocket.Message) (
+	ch chan int, wsMsg *websocket.Message, idx int) (
 	stdOutput string, errOutput string) {
 
 	key := stringUtils.Md5(filePath)
@@ -55,6 +57,10 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	}
 
 	cmd.Dir = workspacePath
+	if commConsts.BatchCount > 1 {
+		cmd.Env = append(cmd.Env, "ZTF_POOL_ID="+strconv.Itoa(idx+1))
+	}
+	cmd.Env = append(cmd.Env, "ZTF_REPORT_DIR="+commConsts.ExecLogDir)
 
 	stdout, err1 := cmd.StdoutPipe()
 	stderr, err2 := cmd.StderrPipe()
@@ -75,24 +81,27 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 			stdout.Close()
 			stderr.Close()
 		})
-		for {
-			if isTerminal {
-				break
-			}
-			select {
-			case _, ok := <-ch:
-				KillProcessByUUID(uuidString)
-				stdout.Close()
-				stderr.Close()
-				SetRunning(false)
-				if ok {
-					close(ch)
+		if ch != nil {
+			for {
+				if isTerminal {
+					break
 				}
-				return
-			default:
-				time.Sleep(time.Millisecond * 100)
+				select {
+				case _, ok := <-ch:
+					KillProcessByUUID(uuidString)
+					stdout.Close()
+					stderr.Close()
+					SetRunning(false)
+					if ok {
+						close(ch)
+					}
+					return
+				default:
+					time.Sleep(time.Millisecond * 100)
+				}
 			}
 		}
+
 	}()
 	reader1 := bufio.NewReader(stdout)
 	stdOutputArr := make([]string, 0)

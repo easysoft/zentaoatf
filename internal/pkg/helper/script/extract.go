@@ -2,6 +2,8 @@ package scriptHelper
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
 	"regexp"
 	"strings"
 
@@ -11,13 +13,14 @@ import (
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 )
 
 const (
 	groupTag = "group:"
 	stepTag  = "step:"
 
-	funcRegex               = `(?U)\We\(['"](.+)['"]\)`
+	funcRegex               = `(?U)\We\((.+)\)`
 	singleLineCommentsRegex = `.*(?://|#)(.+)$`
 	multiLineCommentsRegex  = `/\*+(.+)\*+/`
 )
@@ -29,13 +32,28 @@ func Extract(scriptPaths []string) (done bool, err error) {
 	}
 
 	for _, pth := range scriptPaths {
-		stepObjs := extractFromComments(pth)
-		steps := prepareSteps(stepObjs)
+		// stepObjs := extractFromComments(pth)
+		// steps := prepareSteps(stepObjs)
+		os.Chmod(pth, 0777)
+
+		var steps []string
+		if isRPEScript(pth) {
+			var needExtract bool
+			steps, needExtract = genDescFromRPE(pth)
+			if !needExtract {
+				continue
+			}
+		} else {
+			stepObjs := extractFromComments(pth)
+			steps = prepareSteps(stepObjs)
+		}
+
 		desc := prepareDesc(steps, pth)
 
 		if steps != nil && len(steps) > 0 {
 			ReplaceCaseDesc(desc, pth)
 			done = true
+			reGenerateCache(pth)
 		}
 	}
 
@@ -75,6 +93,7 @@ func extractFromComments(file string) (stepObjs []*commDomain.ZtfStep) {
 	findCaseTag := false
 	start := false
 	inGroup := false
+	rpeIndex := 0
 
 	lines := strings.Split(content, "\n")
 	for index := 0; index < len(lines); index++ {
@@ -94,6 +113,7 @@ func extractFromComments(file string) (stepObjs []*commDomain.ZtfStep) {
 			start = true
 			continue
 		}
+
 		if !start {
 			continue
 		}
@@ -138,6 +158,7 @@ func extractFromComments(file string) (stepObjs []*commDomain.ZtfStep) {
 		arr := myExp.FindStringSubmatch(line)
 
 		if len(arr) > 1 {
+			//find function file and extract
 			expect := arr[1]
 			desc := ""
 
@@ -159,6 +180,7 @@ func extractFromComments(file string) (stepObjs []*commDomain.ZtfStep) {
 				}
 			}
 
+			rpeIndex++
 			stepObj := commDomain.ZtfStep{Desc: desc, Expect: expect, MultiLine: false}
 			stepObjs = append(stepObjs, &stepObj)
 		}
@@ -167,7 +189,7 @@ func extractFromComments(file string) (stepObjs []*commDomain.ZtfStep) {
 }
 
 func prepareDesc(steps []string, file string) (desc string) {
-	_, caseId, productId, title, timeout := GetCaseInfo(file)
+	_, caseId, _, title, timeout := GetCaseInfo(file)
 	// if !pass {
 	// 	return
 	// }
@@ -176,7 +198,7 @@ func prepareDesc(steps []string, file string) (desc string) {
 	info = append(info, fmt.Sprintf("title=%s", title))
 	info = append(info, fmt.Sprintf("timeout=%d", timeout))
 	info = append(info, fmt.Sprintf("cid=%d", caseId))
-	info = append(info, fmt.Sprintf("pid=%d", productId))
+	//info = append(info, fmt.Sprintf("pid=%d", productId))
 	info = append(info, "\n"+strings.Join(steps, "\n"))
 
 	desc = strings.Join(info, "\n")
@@ -232,4 +254,52 @@ func isCommentStartTag(str, lang string) (pass bool) {
 func isCommentEndTag(str, lang string) (pass bool) {
 	pass, _ = regexp.MatchString(commConsts.LangCommentsRegxMap[lang][1], str)
 	return
+}
+
+func reGenerateCache(file string) {
+	cacheDir := fileUtils.AddFilePathSepIfNeeded(fmt.Sprintf("%scache", fileUtils.GetZTFHome()))
+	md5Sum := stringUtils.Md5(file)
+	fileMd5 := fileUtils.Md5(file)
+	md5FileName := cacheDir + md5Sum
+	fileUtils.WriteFile(md5FileName, fileMd5)
+}
+
+func isRPEScript(file string) bool {
+	myExp := regexp.MustCompile(funcRegex)
+	arr := myExp.FindStringSubmatch(fileUtils.ReadFile(file))
+	return len(arr) != 0
+}
+
+func genDescFromRPE(file string) (steps []string, needExtract bool) {
+	var cmd *exec.Cmd
+	cacheDir := fileUtils.AddFilePathSepIfNeeded(fmt.Sprintf("%scache", fileUtils.GetZTFHome()))
+	fileUtils.MkDirIfNeeded(cacheDir)
+
+	md5Sum := stringUtils.Md5(file)
+	fileMd5 := fileUtils.Md5(file)
+
+	md5FileName := cacheDir + md5Sum
+	if fileUtils.FileExist(md5FileName) {
+		cacheMd5 := fileUtils.ReadFile(md5FileName)
+		if cacheMd5 == fileMd5 {
+			return nil, false
+		}
+
+	}
+
+	cmd = exec.Command("/bin/bash", "-c", file+" -extract")
+
+	output := make([]string, 0)
+
+	contentByte, err := cmd.CombinedOutput()
+	if err != nil {
+		return output, true
+	}
+
+	content := string(contentByte)
+	content = strings.ReplaceAll(content, "%", "%%")
+	output = strings.Split(content, "\n")
+
+	os.Remove(md5FileName)
+	return output, true
 }

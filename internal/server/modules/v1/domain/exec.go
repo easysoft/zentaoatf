@@ -71,7 +71,7 @@ type TestReportSummary struct {
 	Name      string               `json:"name"`
 	No        string               `json:"no"`
 	Seq       string               `json:"seq"`
-	TestEnv   commConsts.OsType    `json:"testEnv,omitempty"`
+	Platform  commConsts.OsType    `json:"platform,omitempty"`
 	TestType  commConsts.TestType  `json:"testType"`
 	TestTool  commConsts.TestTool  `json:"testTool"`
 	BuildTool commConsts.BuildTool `json:"buildTool"`

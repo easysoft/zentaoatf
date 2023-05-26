@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"sync"
 
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
@@ -20,7 +21,7 @@ import (
 	"github.com/mattn/go-runewidth"
 )
 
-func CheckCaseResult(execParams commDomain.ExecParams, logs string, wsMsg *websocket.Message, errOutput string) {
+func CheckCaseResult(execParams commDomain.ExecParams, logs string, wsMsg *websocket.Message, errOutput string, lock *sync.Mutex) {
 	steps := scriptHelper.GetStepAndExpectMap(execParams.ScriptFile)
 
 	isIndependent, expectIndependentContent := scriptHelper.GetDependentExpect(execParams.ScriptFile)
@@ -35,12 +36,12 @@ func CheckCaseResult(execParams commDomain.ExecParams, logs string, wsMsg *webso
 	}
 
 	language := langHelper.GetLangByFile(execParams.ScriptFile)
-	ValidateCaseResult(execParams, language, steps, skip, actualArr, wsMsg, errOutput)
+	ValidateCaseResult(execParams, language, steps, skip, actualArr, wsMsg, errOutput, lock)
 }
 
 func ValidateCaseResult(execParams commDomain.ExecParams, langType string,
 	steps []commDomain.ZentaoCaseStep, skip bool, actualArr [][]string,
-	wsMsg *websocket.Message, errOutput string) {
+	wsMsg *websocket.Message, errOutput string, lock *sync.Mutex) {
 
 	key := stringUtils.Md5(execParams.ScriptFile)
 
@@ -48,12 +49,20 @@ func ValidateCaseResult(execParams commDomain.ExecParams, langType string,
 
 	stepLogs, caseResult := getStepLogs(skip, steps, actualArr, langType, errOutput)
 
+	if lock != nil {
+		lock.Lock()
+	}
+
 	incrReportNum(caseResult, execParams.Report)
 
 	relativePath := strings.TrimPrefix(execParams.ScriptFile, commConsts.WorkDir)
 	csResult := commDomain.FuncResult{Id: caseId, ProductId: productId, Title: title,
 		Key: key, Path: execParams.ScriptFile, RelativePath: relativePath, Status: caseResult, Steps: stepLogs}
 	execParams.Report.FuncResult = append(execParams.Report.FuncResult, csResult)
+
+	if lock != nil {
+		lock.Unlock()
+	}
 
 	width := strconv.Itoa(len(strconv.Itoa(len(execParams.CasesToRun))))
 
@@ -65,6 +74,7 @@ func ValidateCaseResult(execParams commDomain.ExecParams, langType string,
 	if execParams.PathMaxWidth > lenp {
 		postFix := strings.Repeat(" ", execParams.PathMaxWidth-lenp)
 		path += postFix
+		relativePath += postFix
 	}
 
 	if execParams.TitleMaxWidth > lent {
@@ -74,9 +84,10 @@ func ValidateCaseResult(execParams commDomain.ExecParams, langType string,
 
 	format := "(%" + width + "d/%d) [%s] [%s] [%s] [%ss]"
 
-	status := GenStatusTxt(csResult.Status)
+	statusWithColor, status := GenStatusTxt(csResult.Status)
 
 	msg := fmt.Sprintf(format, execParams.ScriptIdx+1, len(execParams.CasesToRun), status, path, csTitle, execParams.Secs)
+	msgWithColor := fmt.Sprintf(format, execParams.ScriptIdx+1, len(execParams.CasesToRun), statusWithColor, path, csTitle, execParams.Secs)
 
 	// print each case result
 	if commConsts.ExecFrom == commConsts.FromClient {
@@ -99,7 +110,7 @@ func ValidateCaseResult(execParams commDomain.ExecParams, langType string,
 		websocketHelper.SendExecMsg(msg, "", msgCategory,
 			iris.Map{"key": key, "status": csResult.Status}, wsMsg)
 	}
-	logUtils.ExecConsole(-1, msg)
+	logUtils.ExecConsole(-1, msgWithColor)
 	logUtils.ExecResult(msg)
 }
 

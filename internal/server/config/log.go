@@ -2,15 +2,17 @@ package serverConfig
 
 import (
 	"errors"
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
-	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"gopkg.in/natefinch/lumberjack.v2"
 	"log"
 	"net/url"
 	"os"
 	"path/filepath"
 	"time"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	"gopkg.in/natefinch/lumberjack.v2"
 
 	"github.com/snowlyg/helper/dir"
 	"go.uber.org/zap"
@@ -54,7 +56,11 @@ func InitLog() {
 
 // write exec results by using zap log
 func InitExecLog(workspacePath string) {
-	commConsts.ExecLogDir = logUtils.GetLogDir(workspacePath)
+	if commConsts.ExecFrom == commConsts.FromClient {
+		commConsts.ExecLogDir = logUtils.GetLogDir(workspacePath)
+	} else {
+		commConsts.ExecLogDir = logUtils.GetLogDir(fileUtils.GetZTFHome())
+	}
 	config := getLogConfig()
 	config.EncoderConfig.EncodeLevel = nil
 
@@ -90,7 +96,7 @@ func InitExecLog(workspacePath string) {
 		log.Println("init exec result logger fail " + err.Error())
 	}
 
-	logUtils.LoggerExecResult = logUtils.LoggerExecResult.WithOptions(zap.AddCaller(), zap.AddCallerSkip(1))
+	// logUtils.LoggerExecResult = logUtils.LoggerExecResult.WithOptions(zap.AddCaller(), zap.AddCallerSkip(1))
 }
 
 // flush buffer and release the file.

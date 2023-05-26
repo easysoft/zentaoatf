@@ -101,7 +101,7 @@ const setColumns = () => {
     },
     {
       label: t("test_env"),
-      field: "testEnv",
+      field: "platform",
       width: "60px",
     },
     {

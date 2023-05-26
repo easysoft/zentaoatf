@@ -7,6 +7,8 @@ var (
 
 	AutoCommitResult bool
 	AutoCommitBug    bool
+	AutoExtract      bool
+	BatchCount       = 1
 	Verbose          = false
 	IsRelease        bool
 	ZtfDir           string
@@ -22,6 +24,8 @@ var (
 	ConfigPath         string
 	ServerWorkDir      string
 	ServerWorkspaceDir string
+
+	CommandArgs []string
 
 	UnitTestType    string
 	UnitBuildTool   BuildTool

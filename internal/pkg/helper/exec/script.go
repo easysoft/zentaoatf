@@ -3,6 +3,7 @@ package execHelper
 import (
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 
 	dateUtils "github.com/easysoft/zentaoatf/pkg/lib/date"
@@ -17,7 +18,7 @@ import (
 	"github.com/kataras/iris/v12/websocket"
 )
 
-func ExecScript(execParams commDomain.ExecParams, ch chan int, wsMsg *websocket.Message) {
+func ExecScript(execParams commDomain.ExecParams, ch chan int, wsMsg *websocket.Message, lock *sync.Mutex) {
 
 	key := stringUtils.Md5(execParams.ScriptFile)
 
@@ -34,7 +35,7 @@ func ExecScript(execParams commDomain.ExecParams, ch chan int, wsMsg *websocket.
 	logUtils.ExecFilef(startMsg)
 
 	logs := ""
-	stdOutput, errOutput := RunFile(execParams.ScriptFile, execParams.WorkspacePath, execParams.Conf, ch, wsMsg)
+	stdOutput, errOutput := RunFile(execParams.ScriptFile, execParams.WorkspacePath, execParams.Conf, ch, wsMsg, execParams.ScriptIdx)
 	stdOutput = strings.Trim(stdOutput, "\n")
 
 	if stdOutput != "" {
@@ -52,7 +53,7 @@ func ExecScript(execParams commDomain.ExecParams, ch chan int, wsMsg *websocket.
 	execParams.Secs = fmt.Sprintf("%.2f", float32(entTime.Sub(startTime)/time.Second))
 	execParams.Report.WorkspacePath = execParams.WorkspacePath
 
-	CheckCaseResult(execParams, logs, wsMsg, errOutput)
+	CheckCaseResult(execParams, logs, wsMsg, errOutput, lock)
 
 	endMsg := i118Utils.Sprintf("end_execution", execParams.ScriptFile, dateUtils.DateTimeStr(entTime))
 	if commConsts.ExecFrom == commConsts.FromClient {
