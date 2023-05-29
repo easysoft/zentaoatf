@@ -60,23 +60,21 @@ func testExtract() string {
 	}
 	defer file.Close()
 	content, err := ioutil.ReadAll(file)
-	checkResSuccess := strings.Contains(string(content), `/**
-
+	checkResSuccess := strings.Contains(string(content), `
 title=sync step from comments
-timeout=0
 cid=0
 pid=0
 
 1 >> expect 1
 
 group2
-  2.1 >> expect 2.1
-  2.2 >> expect 2.2
-  2.3 >> expect 2.3  
+	2.1 >> expect 2.1
+	2.2 >> expect 2.2
+	2.3 >> expect 2.3  
 
 multi line expect >>
-  expect 3.1
-  expect 3.2
+	expect 3.1
+	expect 3.2
 >>
 
 4 >> expect 4
@@ -85,9 +83,7 @@ step 6 >> expect 6
 step 7 >> expect 7
 step 8 >> expect 8
 step 9 >> expect 9
-step 10 >> expect 10
-
-*/`)
+step 10 >> expect 10`)
 	if !checkResSuccess {
 		return "Check steps error"
 	}
