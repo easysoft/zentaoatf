@@ -28,16 +28,15 @@ func InitConfig() {
 
 	commConsts.WorkDir = fileUtils.GetWorkDir()
 	commConsts.ZtfDir = fileUtils.GetZTFDir()
-	ztfHomePath := fileUtils.GetZTFHome()
 
 	if !commConsts.IsRelease {
 		log.Println("WorkDir=" + commConsts.WorkDir)
 		log.Println("ZtfDir=" + commConsts.ZtfDir)
 	}
 
-	commConsts.ConfigPath = filepath.Join(ztfHomePath, commConsts.ConfigDir, commConsts.ConfigFile)
+	commConsts.ConfigPath = filepath.Join(commConsts.WorkDir, commConsts.ConfigDir, commConsts.ConfigFile)
 	if commConsts.IsRelease {
-		commConsts.ConfigPath = filepath.Join(ztfHomePath, commConsts.ConfigDir, commConsts.ConfigFile)
+		commConsts.ConfigPath = filepath.Join(commConsts.ZtfDir, commConsts.ConfigDir, commConsts.ConfigFile)
 	}
 
 	config := configHelper.LoadByConfigPath(commConsts.ConfigPath)
@@ -81,9 +80,9 @@ func Init() {
 }
 
 func CheckConfigPermission() {
-	err := fileUtils.MkDirIfNeeded(commConsts.ConfigPath)
+	err := fileUtils.MkDirIfNeeded(commConsts.WorkDir + "conf")
 	if err != nil {
-		msg := i118Utils.Sprintf("perm_deny", commConsts.ConfigPath)
+		msg := i118Utils.Sprintf("perm_deny", commConsts.WorkDir)
 		logUtils.ExecConsolef(color.FgRed, msg)
 		os.Exit(0)
 	}
