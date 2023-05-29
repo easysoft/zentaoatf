@@ -55,11 +55,7 @@ func InitLog() {
 
 // write exec results by using zap log
 func InitExecLog(workspacePath string) {
-	if commConsts.ExecFrom == commConsts.FromClient {
-		commConsts.ExecLogDir = logUtils.GetLogDir(workspacePath)
-	} else {
-		commConsts.ExecLogDir = logUtils.GetLogDir(workspacePath)
-	}
+	commConsts.ExecLogDir = logUtils.GetLogDir(workspacePath)
 	config := getLogConfig()
 	config.EncoderConfig.EncodeLevel = nil
 
