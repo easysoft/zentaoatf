@@ -20,7 +20,7 @@ const (
 	groupTag = "group:"
 	stepTag  = "step:"
 
-	funcRegex               = `(?U)\We\((.+)\)`
+	funcRegex               = `r\((.*?)\)\s*&&\s*p\((.*?)\)\s*&&\s*e\((.*?)\);(.*)`
 	singleLineCommentsRegex = `.*(?://|#)(.+)$`
 	multiLineCommentsRegex  = `/\*+(.+)\*+/`
 )
@@ -32,8 +32,6 @@ func Extract(scriptPaths []string) (done bool, err error) {
 	}
 
 	for _, pth := range scriptPaths {
-		// stepObjs := extractFromComments(pth)
-		// steps := prepareSteps(stepObjs)
 		os.Chmod(pth, 0777)
 
 		var steps []string

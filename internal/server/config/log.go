@@ -10,7 +10,6 @@ import (
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
-	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"gopkg.in/natefinch/lumberjack.v2"
 
@@ -59,7 +58,7 @@ func InitExecLog(workspacePath string) {
 	if commConsts.ExecFrom == commConsts.FromClient {
 		commConsts.ExecLogDir = logUtils.GetLogDir(workspacePath)
 	} else {
-		commConsts.ExecLogDir = logUtils.GetLogDir(fileUtils.GetZTFHome())
+		commConsts.ExecLogDir = logUtils.GetLogDir(workspacePath)
 	}
 	config := getLogConfig()
 	config.EncoderConfig.EncodeLevel = nil
