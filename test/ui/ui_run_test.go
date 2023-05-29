@@ -375,8 +375,8 @@ func RunUseProxy(t provider.T) {
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
-	ztfTestHelper.ExpandWorspace(webpage)
 	CreateProxyAndInterpreter(webpage, t)
+	ztfTestHelper.ExpandWorspace(webpage)
 
 	scriptLocator := webpage.Locator(".tree-node-title>>text=1_string_match.php")
 	scriptLocator.Click()

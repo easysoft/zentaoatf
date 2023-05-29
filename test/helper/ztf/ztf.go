@@ -101,7 +101,7 @@ func CreateSite(webpage plwHelper.Webpage) {
 func ExpandWorspace(webpage plwHelper.Webpage) (err error) {
 	plwConf.DisableErr()
 	defer plwConf.EnableErr()
-	err = webpage.WaitForSelectorTimeout(".tree-node-title:has-text('单元测试工作目录')", 5000)
+	err = webpage.WaitForSelectorTimeout(".tree-node-title:has-text('单元测试工作目录')", 3000)
 	if err != nil {
 		createTestWorkspace(webpage)
 	}
@@ -112,9 +112,9 @@ func ExpandWorspace(webpage plwHelper.Webpage) (err error) {
 	}
 
 	webpage.Click(".tree-node-title:has-text(\"单元测试工作目录\")")
-	err = webpage.WaitForSelectorTimeout(".tree-node-item>>div:has-text('1_string_match.php')", 5000)
+	err = webpage.WaitForSelectorTimeout(".tree-node-item>>div:has-text('1_string_match.php')", 3000)
 	if err != nil {
-		if expandTimes > 2 {
+		if expandTimes > 3 {
 			expandTimes = 0
 			return err
 		}
