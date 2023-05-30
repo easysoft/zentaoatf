@@ -21,18 +21,22 @@ func BuildCli() (err error) {
 		cliPath = `.\cmd\command\main.go`
 		outPath += ".exe"
 	}
+
 	_, err = os.Stat(outPath)
 	if err != nil && os.IsExist(err) {
 		os.Remove(outPath)
 	}
+
 	var cmd *exec.Cmd
 	cmd = exec.Command("go", "build", "-o", outPath, cliPath)
 	cmd.Dir = constTestHelper.RootPath
 	fmt.Println(cmd.String())
+
 	_, err = cmd.CombinedOutput()
 	if err != nil {
 		return
 	}
+
 	return
 }
 
