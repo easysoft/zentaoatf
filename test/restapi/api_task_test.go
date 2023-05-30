@@ -27,7 +27,7 @@ func (s *TaskApiSuite) BeforeEach(t provider.T) {
 func (s *TaskApiSuite) TestTaskListApi(t provider.T) {
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testtasks?product=%d", ProductId), nil, constTestHelper.ZtfUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testtasks?product=%d", ProductId), nil, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 
@@ -39,7 +39,7 @@ func (s *TaskApiSuite) TestTaskListApi(t provider.T) {
 func (s *TaskApiSuite) TestTaskDetailApi(t provider.T) {
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testtasks/%d", TaskId), nil, constTestHelper.ZtfUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testtasks/%d", TaskId), nil, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 

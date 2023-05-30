@@ -33,7 +33,7 @@ func (s *BugApiSuite) BeforeEach(t provider.T) {
 func (s *BugApiSuite) TestBugListApi(t provider.T) {
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("products/%d/bugs", ProductId), nil, constTestHelper.ZtfUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("products/%d/bugs", ProductId), nil, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 
@@ -45,12 +45,12 @@ func (s *BugApiSuite) TestBugListApi(t provider.T) {
 func (s *BugApiSuite) TestBugCreateApi(t provider.T) {
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("products/%d/bugs", ProductId), nil, constTestHelper.ZtfUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("products/%d/bugs", ProductId), nil, constTestHelper.ZentaoSiteUrl)
 
 	title := BugTitle + stringUtils.NewUuid()
 
 	data := map[string]interface{}{
-		"id":       1,
+		"id":       0,
 		"title":    title,
 		"type":     "codeerror",
 		"product":  ProductId,
@@ -86,7 +86,7 @@ func (s *BugApiSuite) TestBugOptionsApi(t provider.T) {
 	params := map[string]interface{}{
 		"product": ProductId,
 	}
-	url := zentaoHelper.GenApiUrl("options/bug", params, constTestHelper.ZtfUrl)
+	url := zentaoHelper.GenApiUrl("options/bug", params, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 
@@ -98,7 +98,7 @@ func (s *BugApiSuite) TestBugOptionsApi(t provider.T) {
 func getBug(id int64) (bug map[string]interface{}) {
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("bugs/%d", id), nil, constTestHelper.ZtfUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("bugs/%d", id), nil, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 

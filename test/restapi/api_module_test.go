@@ -27,7 +27,7 @@ func (s *ModuleApiSuite) BeforeEach(t provider.T) {
 func (s *ModuleApiSuite) TestModuleListForCaseApi(t provider.T) {
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("modules?type=case&id=%d", ProductId), nil, constTestHelper.ZtfUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("modules?type=case&id=%d", ProductId), nil, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 

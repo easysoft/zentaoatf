@@ -27,7 +27,7 @@ func (s *SuiteApiSuite) BeforeEach(t provider.T) {
 func (s *SuiteApiSuite) TestSuiteListApi(t provider.T) {
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("products/%d/testsuites", ProductId), nil, constTestHelper.ZtfUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("products/%d/testsuites", ProductId), nil, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 
@@ -39,7 +39,7 @@ func (s *SuiteApiSuite) TestSuiteListApi(t provider.T) {
 func (s *SuiteApiSuite) TestSuiteDetailApi(t provider.T) {
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testsuites/%d", SuiteId), nil, constTestHelper.ZtfUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testsuites/%d", SuiteId), nil, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 

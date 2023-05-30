@@ -27,7 +27,7 @@ func (s *ResultApiSuite) BeforeEach(t provider.T) {
 func (s *ResultApiSuite) TestResultSubmitApi(t provider.T) {
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl("ciresults", nil, constTestHelper.ZtfUrl)
+	url := zentaoHelper.GenApiUrl("ciresults", nil, constTestHelper.ZentaoSiteUrl)
 
 	report := commDomain.ZtfReport{}
 	json.Unmarshal([]byte(reportJson), &report)

@@ -33,7 +33,7 @@ func (s *CaseApiSuite) TestCaseListApi(t provider.T) {
 	params := map[string]interface{}{
 		"limit": 10,
 	}
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("/products/%d/testcases", ProductId), params, constTestHelper.ZtfUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("/products/%d/testcases", ProductId), params, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 
@@ -46,7 +46,7 @@ func (s *CaseApiSuite) TestCaseListByModuleApi(t provider.T) {
 	token := httpHelper.Login()
 
 	url := zentaoHelper.GenApiUrl(fmt.Sprintf("/products/%d/testcases?module=%d", ProductId, ModuleId),
-		nil, constTestHelper.ZtfUrl)
+		nil, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 
@@ -58,7 +58,7 @@ func (s *CaseApiSuite) TestCaseListByModuleApi(t provider.T) {
 func (s *CaseApiSuite) TestCaseListBySuiteApi(t provider.T) {
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("/testsuites/%d", SuiteId), nil, constTestHelper.ZtfUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("/testsuites/%d", SuiteId), nil, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 
@@ -70,7 +70,7 @@ func (s *CaseApiSuite) TestCaseListBySuiteApi(t provider.T) {
 func (s *CaseApiSuite) TestCaseListByTaskApi(t provider.T) {
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("/testtasks/%d", TaskId), nil, constTestHelper.ZtfUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("/testtasks/%d", TaskId), nil, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 
@@ -82,7 +82,7 @@ func (s *CaseApiSuite) TestCaseListByTaskApi(t provider.T) {
 func (s *CaseApiSuite) TestCaseDetailApi(t provider.T) {
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testcases/%d", CaseId), nil, constTestHelper.ZtfUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testcases/%d", CaseId), nil, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 
@@ -93,7 +93,7 @@ func (s *CaseApiSuite) TestCaseDetailApi(t provider.T) {
 
 func (s *CaseApiSuite) TestCaseCheckinApi(t provider.T) {
 	token := httpHelper.Login()
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testcases/%d", CaseId), nil, constTestHelper.ZtfUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testcases/%d", CaseId), nil, constTestHelper.ZentaoSiteUrl)
 
 	steps := []commDomain.ZentaoCaseStep{
 		{Type: commConsts.Item, Desc: "Step 1", Expect: "Expect 1"},
@@ -125,7 +125,7 @@ func (s *CaseApiSuite) TestCaseCheckinApi(t provider.T) {
 func getCase(id int) (cs map[string]interface{}) {
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testcases/%d", id), nil, constTestHelper.ZtfUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testcases/%d", id), nil, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 

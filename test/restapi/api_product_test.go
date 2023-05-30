@@ -26,7 +26,7 @@ func (s *ProductApiSuite) BeforeEach(t provider.T) {
 func (s *ProductApiSuite) TestProductListApi(t provider.T) {
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl("products", nil, constTestHelper.ZtfUrl)
+	url := zentaoHelper.GenApiUrl("products", nil, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 
