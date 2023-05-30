@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"strings"
 	"testing"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
@@ -30,6 +31,8 @@ func main() {
 		uiTest.Close()
 	}()
 	if *runFrom == "jenkins" {
+		constTestHelper.ZentaoSiteUrl = constTestHelper.ZentaoSiteUrl[:strings.LastIndex(constTestHelper.ZentaoSiteUrl, ":")]
+
 		err := commonTestHelper.InitZentaoData()
 		if err != nil {
 			fmt.Println("Init zentao data fail ", err)

@@ -3,15 +3,17 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
+	"path/filepath"
+	"runtime"
+	"strings"
+	"testing"
+	"time"
+
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
-	"os"
-	"path/filepath"
-	"runtime"
-	"testing"
-	"time"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
@@ -67,6 +69,8 @@ func initTest(version string) (err error) {
 
 func initZentao(runFrom, version string) (err error) {
 	if runFrom == "jenkins" {
+		constTestHelper.ZentaoSiteUrl = constTestHelper.ZentaoSiteUrl[:strings.LastIndex(constTestHelper.ZentaoSiteUrl, ":")]
+
 		err := commonTestHelper.InitZentaoData()
 		if err != nil {
 			fmt.Println("Init zentao data fail ", err)
@@ -102,7 +106,7 @@ func doTest(testToRun string) (err error) {
 	report := execSuite(req, "api")
 
 	// submit result
-	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl + "/", Password: "Test123456.", Username: "admin"}
+	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl + "/", Password: constTestHelper.ZentaoPassword, Username: constTestHelper.ZentaoUsername}
 	err = zentaoHelper.CommitResult(report, 1, 0, config, nil)
 
 	return

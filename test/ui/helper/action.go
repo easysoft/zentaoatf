@@ -67,6 +67,16 @@ func (p *Webpage) Close() {
 	return
 }
 
+func (p *Webpage) Goto(url string, options ...playwright.PageGotoOptions) (ret playwright.Response, err error) {
+	t := p.T
+	ret, err = p.Page.Goto(url, options...)
+	if err != nil {
+		utils.PrintErrOrNot(err, t)
+	}
+
+	return
+}
+
 func (p *Webpage) Locator(selector string, options ...playwright.PageLocatorOptions) (ret MyLocator) {
 	t := p.T
 	locator, err := p.Page.Locator(selector, options...)
@@ -135,6 +145,12 @@ func (p *Webpage) WaitForSelectorTimeout(selector string, timeout float64, optio
 func (p *Webpage) WaitForTimeout(timeout float64) {
 	p.Page.WaitForTimeout(timeout)
 	return
+}
+
+func (p *Webpage) Title() string {
+	title, _ := p.Page.Title()
+
+	return title
 }
 
 func (p *Webpage) Click(selector string) {

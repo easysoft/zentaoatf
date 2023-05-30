@@ -4,7 +4,6 @@
 package shellUtils
 
 import (
-	"fmt"
 	"os/exec"
 	"regexp"
 	"strconv"
@@ -44,7 +43,6 @@ func WindowSize() window {
 }
 
 func getWindowSizeFromLine(line string, win *window) {
-	fmt.Println(line)
 	if strings.Contains(line, "行") || strings.Contains(line, "Lines") {
 		re := regexp.MustCompile(`\d+`)
 		rs := re.FindAllString(line, -1)

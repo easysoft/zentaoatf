@@ -18,9 +18,12 @@ var (
 	ZentaoPort    = 58080
 	ZentaoSiteUrl = fmt.Sprintf("http://127.0.0.1:%d", ZentaoPort)
 
-	ZtfUrl         = "http://127.0.0.1:58080/"
+	UiPort         = 58000
+	ZtfUrl         = fmt.Sprintf("http://127.0.0.1:%d/", UiPort)
 	ZentaoUsername = "admin"
 	ZentaoPassword = "Test123456."
+
+	ZentaoExtUrl = "https://www.zentao.net/file-download-22700.html"
 )
 
 func init() {
