@@ -41,8 +41,8 @@ func main() {
 	flagSet.StringVar(&version, "version", "latest", "")
 	flagSet.StringVar(&version, "v", "latest", "")
 
-	flagSet.StringVar(&testToRun, "testToRun", "all_test.go", "")
-	flagSet.StringVar(&testToRun, "t", "all_test.go", "")
+	flagSet.StringVar(&testToRun, "testToRun", "", "")
+	flagSet.StringVar(&testToRun, "t", "", "")
 
 	testing.Init()
 	flagSet.Parse(os.Args[1:])
