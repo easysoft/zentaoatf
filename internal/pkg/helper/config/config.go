@@ -38,9 +38,7 @@ func LoadByWorkspacePath(workspacePath string) (config commDomain.WorkspaceConf)
 		GetInterpreterConfig(&config)
 		return
 	}
-
-	pth := filepath.Join(workspacePath, "conf", commConsts.ConfigFile)
-
+	pth := filepath.Join(commConsts.ConfigPath, commConsts.ConfigFile)
 	return LoadByConfigPath(pth)
 }
 

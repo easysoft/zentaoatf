@@ -20,7 +20,8 @@ const (
 	groupTag = "group:"
 	stepTag  = "step:"
 
-	funcRegex               = `r\((.*?)\)\s*&&\s*p\((.*?)\)\s*&&\s*e\((.*?)\);(.*)`
+	funcRegex               = `(?U)\We\(['"](.+)['"]\)`
+	zentaoRegex             = `r\((.*?)\)\s*&&\s*p\((.*?)\)\s*&&\s*e\((.*?)\);(.*)`
 	singleLineCommentsRegex = `.*(?://|#)(.+)$`
 	multiLineCommentsRegex  = `/\*+(.+)\*+/`
 )
@@ -263,7 +264,7 @@ func reGenerateCache(file string) {
 }
 
 func isRPEScript(file string) bool {
-	myExp := regexp.MustCompile(funcRegex)
+	myExp := regexp.MustCompile(zentaoRegex)
 	arr := myExp.FindStringSubmatch(fileUtils.ReadFile(file))
 	return len(arr) != 0
 }
