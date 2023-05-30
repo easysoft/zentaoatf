@@ -38,14 +38,17 @@ func Spawn(cmdStr string, timeout time.Duration) (expect *GExpect, err error) {
 		err = errors.New("cmd is nil")
 		return
 	}
+
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		return
 	}
+
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
 		return
 	}
+
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
 		return
@@ -67,8 +70,10 @@ func Spawn(cmdStr string, timeout time.Duration) (expect *GExpect, err error) {
 func (e *GExpect) Expect(expect *regexp.Regexp, timeout time.Duration) (out string, err error) {
 	timer := time.NewTimer(timeout)
 	defer timer.Stop()
+
 	c := make(chan int, 1)
 	go e.expectActual(c, expect, &out, &err)
+
 	for {
 		select {
 		case <-c:
@@ -91,11 +96,13 @@ func (e *GExpect) expectActual(c chan int, expect *regexp.Regexp, out *string, e
 			err = &err2
 			return
 		}
+
 		*out = fmt.Sprintf("%s%s", *out, line)
 		if expect.MatchString(*out) {
 			c <- 1
 			return
 		}
+
 		if *err != nil || io.EOF == *err {
 			break
 		}
