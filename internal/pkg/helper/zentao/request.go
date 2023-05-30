@@ -2,6 +2,7 @@ package zentaoHelper
 
 import (
 	"fmt"
+	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
 	"path"
 )
 
@@ -24,7 +25,7 @@ func GenApiUrl(pth string, params map[string]interface{}, baseUrl string) (url s
 		index++
 	}
 
-	url = baseUrl + uri
+	url = httpUtils.AddSepIfNeeded(baseUrl) + uri
 
 	return
 }
