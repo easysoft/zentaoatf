@@ -15,13 +15,13 @@ var (
 	NewLine  = "\n"
 	RootPath = ""
 
-	ZentaoPort    = 58080
-	ZentaoSiteUrl = fmt.Sprintf("http://127.0.0.1:%d", ZentaoPort)
-
-	UiPort         = 58000
-	ZtfUrl         = fmt.Sprintf("http://127.0.0.1:%d/", UiPort)
+	ZentaoPort     = 58080
+	ZentaoSiteUrl  = fmt.Sprintf("http://127.0.0.1:%d", ZentaoPort)
 	ZentaoUsername = "admin"
 	ZentaoPassword = "Test123456."
+
+	UiPort = 58000
+	ZtfUrl = fmt.Sprintf("http://127.0.0.1:%d/", UiPort)
 
 	ZentaoExtUrl = "https://www.zentao.net/file-download-22700.html"
 )

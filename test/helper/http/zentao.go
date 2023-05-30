@@ -7,7 +7,7 @@ import (
 )
 
 func Login() (ret string) {
-	url := zentaoHelper.GenApiUrl("tokens", nil, constTestHelper.ZtfUrl)
+	url := zentaoHelper.GenApiUrl("tokens", nil, constTestHelper.ZentaoSiteUrl)
 
 	params := map[string]string{
 		"account":  constTestHelper.ZentaoUsername,
