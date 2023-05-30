@@ -16,7 +16,7 @@ var (
 	RootPath = ""
 
 	ZentaoPort    = 58080
-	ZentaoSiteUrl = fmt.Sprintf("http://127.0.0.1:%d", ZentaoPort)
+	ZentaoSiteUrl = fmt.Sprintf("http://127.0.0.1:%d/", ZentaoPort)
 
 	ZtfUrl = "http://127.0.0.1:8000/"
 )
