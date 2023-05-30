@@ -1,6 +1,7 @@
 package constTestHelper
 
 import (
+	"fmt"
 	"os"
 	"runtime"
 	"strings"
@@ -11,10 +12,13 @@ const (
 )
 
 var (
-	NewLine       = "\n"
-	RootPath      = ""
-	ZentaoSiteUrl = "http://127.0.0.1/"
-	ZtfUrl        = "http://127.0.0.1:8000/"
+	NewLine  = "\n"
+	RootPath = ""
+
+	ZentaoPort    = 58080
+	ZentaoSiteUrl = fmt.Sprintf("http://127.0.0.1:%d", ZentaoPort)
+
+	ZtfUrl = "http://127.0.0.1:8000/"
 )
 
 func init() {

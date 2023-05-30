@@ -36,6 +36,11 @@ const (
 	PathInfo = "PATH_INFO"
 	Get      = "GET"
 	PthSep   = string(os.PathSeparator)
+
+	PluginDir      = "plugin"
+	DownloadDir    = "download"
+	BinDir         = "bin"
+	ZapDownloadUrl = "https://dl.cnezsoft.com/ztf/plugin/zap/zap-%s.zip"
 )
 
 var (

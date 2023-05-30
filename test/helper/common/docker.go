@@ -23,8 +23,10 @@ func Run(version string, codeDir string) (err error) {
 	}
 
 	// cmd := exec.Command("docker", "run", "--name", "zentao"+versionNumber, "-p", "8081:80", "-v", codeDir+":/www/zentaopms", "-d", "easysoft/zentao:"+version)
-	cmd := exec.Command("docker", "run", "--name", "zentao"+versionNumber, "-p", "8081:80", "-d", "easysoft/zentao:"+version)
+	cmd := exec.Command("docker", "run", "--name", "zentao"+versionNumber, "-p",
+		fmt.Sprintf("%d:80", constTestHelper.ZentaoPort), "-d", "easysoft/zentao:"+version)
 	fmt.Println(cmd.String())
+
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return
@@ -44,7 +46,7 @@ func IsExistContainer(name string) bool {
 	return strings.Contains(string(output), name)
 }
 
-func IsRuning(name string) bool {
+func IsRunning(name string) bool {
 	cmd := exec.Command("docker", "ps", "--format", "'{{.Names}}'")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -104,11 +106,13 @@ func InitZentao(version string) (err error) {
 	isExist := IsExistContainer(containerName)
 	apath, _ := os.Getwd()
 	codeDir := apath + "/docker/www/zentao" + versionNumber
+
 	if runtime.GOOS == "windows" {
 		codeDir = apath + `\docker\www\zentao` + versionNumber
 	}
+
 	if isExist {
-		if !IsRuning(containerName) {
+		if !IsRunning(containerName) {
 			StopAll()
 			Start(containerName)
 			waitZentaoAccessed()

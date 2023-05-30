@@ -38,31 +38,7 @@ func TestCli() (err error) {
 	if report.Fail > 0 {
 		os.Exit(1)
 	}
-	return
-}
 
-func TestUi() (err error) {
-	var screenshotPath = fmt.Sprintf("%stest/screenshot", constTestHelper.RootPath)
-	os.RemoveAll(screenshotPath)
-	fileUtils.MkDirIfNeeded(screenshotPath)
-	testPath := fmt.Sprintf(`%stest`, constTestHelper.RootPath)
-	if runtime.GOOS == "windows" {
-		testPath = fmt.Sprintf(`%stest`, constTestHelper.RootPath)
-	}
-	req := serverDomain.TestSet{
-		WorkspacePath: testPath,
-		Cmd:           "go test ./ui -v -timeout 10m",
-		TestTool:      commConsts.GoTest,
-	}
-	report := ExecUnit(req, "ui")
-
-	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl + "/", Password: "Test123456.", Username: "admin"}
-
-	err = zentaoHelper.CommitResult(report, 1, 0, config, nil)
-
-	if report.Fail > 0 {
-		os.Exit(1)
-	}
 	return
 }
 
@@ -74,10 +50,14 @@ func ExecUnit(req serverDomain.TestSet, unitType string) (report commDomain.ZtfR
 	}
 	pth := filepath.Join(req.WorkspacePath, commConsts.AllureReportDir)
 	fileUtils.RmDir(pth)
+
 	startTime := time.Now()
+
 	// run
 	execHelper.RunUnitTest(nil, req.Cmd, req.WorkspacePath, nil)
+
 	entTime := time.Now()
+
 	// gen report
 	req.ResultDir = commConsts.AllureReportDir
 	req.ZipDir = req.ResultDir

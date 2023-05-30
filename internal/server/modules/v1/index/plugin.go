@@ -20,11 +20,14 @@ func (m *PluginModule) Party() module.WebModule {
 	handler := func(index iris.Party) {
 		index.Use(middleware.InitCheck())
 
-		index.Get("/install", m.PluginCtrl.Install).Name = "安装插件"
-		index.Get("/uninstall", m.PluginCtrl.Uninstall).Name = "卸载插件"
+		index.Post("/install", m.PluginCtrl.Install).Name = "安装插件"
+		index.Post("/uninstall", m.PluginCtrl.Uninstall).Name = "卸载插件"
 
-		index.Get("/start", m.PluginCtrl.Start).Name = "启动插件"
-		index.Get("/stop", m.PluginCtrl.Stop).Name = "停止插件"
+		index.Post("/start", m.PluginCtrl.Start).Name = "启动插件"
+		index.Post("/stop", m.PluginCtrl.Stop).Name = "停止插件"
+
+		index.Post("/exec", m.PluginCtrl.Exec).Name = "执行扫描"
+		index.Post("/cancel", m.PluginCtrl.Cancel).Name = "取消扫描"
 	}
 
 	return module.NewModule("/plugins", handler)

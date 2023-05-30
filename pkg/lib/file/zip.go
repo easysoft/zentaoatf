@@ -37,6 +37,8 @@ func ZipFiles(dist string, dir string, files []string) error {
 }
 
 func Unzip(zipPath, dstDir string) error {
+	MkDirIfNeeded(filepath.Dir(dstDir))
+
 	// open zip file
 	reader, err := zip.OpenReader(zipPath)
 	if err != nil {
