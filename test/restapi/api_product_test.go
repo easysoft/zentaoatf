@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
-	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
+	httpHelper "github.com/easysoft/zentaoatf/test/helper/http"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
-	"log"
+	"github.com/tidwall/gjson"
 	"testing"
 )
 
@@ -19,15 +19,18 @@ type ProductApiSuite struct {
 }
 
 func (s *ProductApiSuite) BeforeEach(t provider.T) {
-	t.ID("1")
+	t.ID("0")
 	t.AddSubSuite("ProductApi")
 }
 
-func (s *ProductApiSuite) TestProductApi(t provider.T) {
-	url := fmt.Sprintf("http://127.0.0.1:%d/api.php/v1/products", constTestHelper.ZentaoPort)
-	resp, _ := httpUtils.Get(url)
+func (s *ProductApiSuite) TestProductListApi(t provider.T) {
+	token := httpHelper.Login()
 
-	log.Print(resp)
+	url := zentaoHelper.GenApiUrl("products", nil, constTestHelper.ZtfUrl)
 
-	t.Require().Equal(1, 1, "Assertion Failed")
+	bodyBytes, _ := httpHelper.Get(url, token)
+
+	firstProductId := gjson.Get(string(bodyBytes), "products.0.id").Int()
+
+	t.Require().Greater(firstProductId, int64(0), "list product failed")
 }

@@ -1,10 +1,7 @@
 package main
 
 import (
-	"github.com/bitly/go-simplejson"
-	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
-	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
-	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
+	httpHelper "github.com/easysoft/zentaoatf/test/helper/http"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 	"testing"
@@ -24,37 +21,7 @@ func (s *TokenApiSuite) BeforeEach(t provider.T) {
 }
 
 func (s *TokenApiSuite) TestTokenApi(t provider.T) {
-	login(t)
+	token := httpHelper.Login()
 
-	t.Require().Greater(len(ZentaoToken), 6, "login failed")
-}
-
-func login(t provider.T) {
-	url := zentaoHelper.GenApiUrl("tokens", nil, constTestHelper.ZtfUrl)
-
-	params := map[string]string{
-		"account":  constTestHelper.ZentaoUsername,
-		"password": constTestHelper.ZentaoPassword,
-	}
-	bodyBytes, err := httpUtils.Post(url, params)
-	if err != nil {
-		return
-	}
-
-	jsn, err := simplejson.NewJson(bodyBytes)
-	if err != nil || jsn == nil {
-		return
-	}
-
-	mp, err := jsn.Map()
-	if err != nil {
-		return
-	}
-
-	val, ok := mp["token"]
-	if ok {
-		ZentaoToken = val.(string)
-	}
-
-	return
+	t.Require().Greater(len(token), 6, "login failed")
 }
