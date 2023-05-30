@@ -6,6 +6,7 @@ import (
 	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
+	"log"
 	"testing"
 )
 
@@ -24,9 +25,9 @@ func (s *ProductApiSuite) BeforeEach(t provider.T) {
 
 func (s *ProductApiSuite) TestProductApi(t provider.T) {
 	url := fmt.Sprintf("http://127.0.0.1:%d/api.php/v1/products", constTestHelper.ZentaoPort)
-	httpUtils.Get(url)
+	resp, _ := httpUtils.Get(url)
 
-	t.WithNewStep("My Second Step!", func(sCtx provider.StepCtx) {
-		sCtx.NewStep("My First SubStep!")
-	})
+	log.Print(resp)
+
+	t.Require().Equal(1, 1, "Assertion Failed")
 }
