@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strconv"
 	"strings"
 	"time"
 
@@ -58,7 +59,7 @@ func RunServer() (err error) {
 
 func RunUi() (err error) {
 	var cmd *exec.Cmd
-	cmd = exec.Command("npm", "run", "serve", "-uuid=ui_auto_test")
+	cmd = exec.Command("yarn", "run", "serve", "--port", strconv.Itoa(constTestHelper.UiPort), "-uuid=ui_auto_test")
 	cmd.Dir = constTestHelper.RootPath + constTestHelper.FilePthSep + "ui"
 
 	fmt.Println(cmd.String())
