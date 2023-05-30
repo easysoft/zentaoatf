@@ -18,7 +18,7 @@ var (
 	ZentaoPort    = 58080
 	ZentaoSiteUrl = fmt.Sprintf("http://127.0.0.1:%d", ZentaoPort)
 
-	ZtfUrl         = "http://127.0.0.1:8000/"
+	ZtfUrl         = "http://127.0.0.1:58080/"
 	ZentaoUsername = "admin"
 	ZentaoPassword = "Test123456."
 )
