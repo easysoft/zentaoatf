@@ -2,12 +2,14 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	httpHelper "github.com/easysoft/zentaoatf/test/helper/http"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
+	"github.com/tidwall/gjson"
 	"testing"
 )
 
@@ -27,17 +29,33 @@ func (s *ResultApiSuite) BeforeEach(t provider.T) {
 func (s *ResultApiSuite) TestResultSubmitApi(t provider.T) {
 	token := httpHelper.Login()
 
+	latestId := getCaseResult(CaseId)["latestId"].(int64)
+
 	url := zentaoHelper.GenApiUrl("ciresults", nil, constTestHelper.ZentaoSiteUrl)
 
 	report := commDomain.ZtfReport{}
 	json.Unmarshal([]byte(reportJson), &report)
 
 	_, err := httpHelper.Post(url, token, report)
-
 	t.Require().Equal(err, nil, "list testsuite failed")
 
-	//firstSuiteId := gjson.Get(string(bodyBytes), "testsuites.0.id").Int()
-	//t.Require().Greater(firstSuiteId, int64(0), "list testsuite failed")
+	latestIdNew := getCaseResult(CaseId)["latestId"].(int64)
+
+	t.Require().Equal(latestIdNew, latestId+1, "list testsuite failed")
+}
+
+func getCaseResult(caseId int) (result map[string]interface{}) {
+	token := httpHelper.Login()
+
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testcases/%d/results", caseId), nil, constTestHelper.ZentaoSiteUrl)
+
+	bodyBytes, _ := httpHelper.Get(url, token)
+
+	result = map[string]interface{}{}
+
+	result["latestId"] = gjson.Get(string(bodyBytes), "results.0.id").Int()
+
+	return
 }
 
 const reportJson = `
