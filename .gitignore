@@ -40,6 +40,7 @@ logs/
 #test
 /test/conf
 /test/log
+/test/screenshot
 /test/cli/product1
 /test/ui/docker
 /test/ui/log
@@ -67,3 +68,4 @@ node_modules
 /internal/pkg/plugin/zap-plugin
 /zap_key
 /test/restapi/allure-results/
+zentaoatf.exe~

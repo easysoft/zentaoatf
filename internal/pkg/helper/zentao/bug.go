@@ -210,7 +210,6 @@ func GenBugStepText(step commDomain.StepLog) string {
 	stepResults := make([]string, 0)
 
 	stepId, _ := strconv.Atoi(step.Id)
-	stepId += 1
 	stepTxt := fmt.Sprintf("%s%d： %s %s\n", i118Utils.Sprintf("step"), stepId, step.Name, step.Status)
 	for _, checkpoint := range step.CheckPoints {
 		text := fmt.Sprintf(

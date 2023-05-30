@@ -92,14 +92,14 @@ func testSet(language string) (ret string) {
 	if _, err = child.Expect(accountRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", accountRe, err.Error())
 	}
-	if err = child.Send("admin" + constTestHelper.NewLine); err != nil {
+	if err = child.Send(constTestHelper.ZentaoUsername + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 
 	if _, err = child.Expect(passwordRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", passwordRe, err.Error())
 	}
-	if err = child.Send("Test123456." + constTestHelper.NewLine); err != nil {
+	if err = child.Send(constTestHelper.ZentaoPassword + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
 	if runtime.GOOS == "windows" {

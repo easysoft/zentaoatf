@@ -42,14 +42,17 @@ func BuildCli() (err error) {
 
 func RunServer() (err error) {
 	ztfPath := GetZtfPath()
+
 	var cmd *exec.Cmd
 	cmd = exec.Command(ztfPath, "-P", "8085", "-uuid=ui_auto_test")
 	cmd.Dir = constTestHelper.RootPath
+
 	fmt.Println(cmd.String())
 	err = cmd.Start()
 	if err != nil {
 		return
 	}
+
 	return
 }
 
@@ -57,15 +60,18 @@ func RunUi() (err error) {
 	var cmd *exec.Cmd
 	cmd = exec.Command("npm", "run", "serve", "-uuid=ui_auto_test")
 	cmd.Dir = constTestHelper.RootPath + constTestHelper.FilePthSep + "ui"
+
 	fmt.Println(cmd.String())
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		return
 	}
+
 	err = cmd.Start()
 	if err != nil {
 		return
 	}
+
 	reader1 := bufio.NewReader(stdout)
 	go func() {
 		for {
@@ -75,11 +81,13 @@ func RunUi() (err error) {
 			if err2 != nil {
 				return
 			}
+
 			if err != nil || io.EOF == err {
 				break
 			}
 		}
 	}()
+
 	WaitZtfAccessed()
 	return
 }
@@ -105,11 +113,13 @@ func WaitZtfAccessed() {
 	time.AfterFunc(120*time.Second, func() {
 		isTimeout = true
 	})
+
 	for {
 		status := uiTest.GetStatus(constTestHelper.ZtfUrl)
 		if isTimeout || status {
 			return
 		}
+
 		time.Sleep(time.Second)
 	}
 }

@@ -21,6 +21,8 @@ var (
 	ZtfUrl         = "http://127.0.0.1:8000/"
 	ZentaoUsername = "admin"
 	ZentaoPassword = "Test123456."
+
+	ZentaoExtUrl = "https://www.zentao.net/file-download-22700.html"
 )
 
 func init() {
