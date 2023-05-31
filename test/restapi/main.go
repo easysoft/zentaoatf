@@ -128,6 +128,7 @@ func execSuite(req serverDomain.TestSet, unitType string) (report commDomain.Ztf
 
 	pth := filepath.Join(req.WorkspacePath, commConsts.AllureReportDir)
 	fileUtils.RmDir(pth)
+	fileUtils.MkDirIfNeeded(pth)
 
 	startTime := time.Now()
 
