@@ -107,12 +107,14 @@ func doTest(testToRun string) (err error) {
 	// exec testing
 	report := execSuite(req, "restapi")
 
-	// submit result, remove it if running via ci
-	config := commDomain.WorkspaceConf{
-		Url:      "http://110.42.146.127:50080",
-		Username: "admin",
-		Password: "P2ssw0rd"}
-	err = zentaoHelper.CommitResult(report, 1, 0, config, nil)
+	// submit result for test
+	if runFrom != "jenkins" {
+		config := commDomain.WorkspaceConf{
+			Url:      "http://110.42.146.127:50080",
+			Username: "admin",
+			Password: "P2ssw0rd"}
+		err = zentaoHelper.CommitResult(report, 1, 0, config, nil)
+	}
 
 	return
 }
