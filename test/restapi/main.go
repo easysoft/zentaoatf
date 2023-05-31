@@ -107,7 +107,7 @@ func doTest(testToRun string) (err error) {
 	// exec testing
 	report := execSuite(req, "restapi")
 
-	// submit result
+	// submit result, remove it if running via ci
 	config := commDomain.WorkspaceConf{
 		Url:      "http://110.42.146.127:50080",
 		Username: "admin",
