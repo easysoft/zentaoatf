@@ -181,7 +181,7 @@ const ztfReportJson = `
 					"status": "pass",
 					"checkPoints": [
 						{
-							"numb": 1,
+							"numb": 1
 							"expect": "two",
 							"actual": "two",
 							"status": "pass"
