@@ -100,21 +100,23 @@ func doTest(testToRun string) (err error) {
 
 	req := serverDomain.TestSet{
 		WorkspacePath: testPath,
-		Cmd:           fmt.Sprintf("go test restapi/%s -v", testToRun),
+		Cmd:           fmt.Sprintf("go test %s -v", testToRun),
 		TestTool:      commConsts.GoTest,
 	}
 	fmt.Println(testPath, req.Cmd)
 
 	// exec testing
 	report := execSuite(req, "restapi")
+	report.ProductId = 82
 
 	// submit result for test
 	if runFrom != "jenkins" {
 		config := commDomain.WorkspaceConf{
-			Url:      "http://110.42.146.127:50080",
-			Username: "admin",
-			Password: "P2ssw0rd"}
-		err = zentaoHelper.CommitResult(report, 1, 0, config, nil)
+			Url:      "https://back.zcorp.cc/pms",
+			Username: "chenqi",
+			Password: "th2ISxOVXcoUiMLazk1b"}
+		err = zentaoHelper.CommitResult(report, report.ProductId, 0, config, nil)
+
 	}
 
 	return

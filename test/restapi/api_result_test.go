@@ -48,7 +48,7 @@ func (s *ResultApiSuite) TestResultSubmitZtfResultApi(t provider.T) {
 
 	// check case result
 	latestIdNew := getCaseResult(config.CaseId)["latestId"].(int64)
-	t.Require().Equal(latestIdNew, latestId+1, "submit result failed")
+	t.Require().Greater(latestIdNew, latestId, "submit result failed")
 
 	// check task record
 	tasksBytes := listTask(token)

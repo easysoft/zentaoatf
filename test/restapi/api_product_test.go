@@ -25,7 +25,7 @@ func (s *ProductApiSuite) BeforeEach(t provider.T) {
 }
 
 func (s *ProductApiSuite) TestProductListApi(t provider.T) {
-	t.ID("7620")
+	t.ID("7639")
 	//t.ID("1")
 
 	token := httpHelper.Login()
@@ -40,7 +40,7 @@ func (s *ProductApiSuite) TestProductListApi(t provider.T) {
 }
 
 func (s *ProductApiSuite) TestProductDetailApi(t provider.T) {
-	t.ID("7621")
+	t.ID("7640")
 	//t.ID("2")
 
 	token := httpHelper.Login()
