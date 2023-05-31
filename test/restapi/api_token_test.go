@@ -16,11 +16,11 @@ type TokenApiSuite struct {
 }
 
 func (s *TokenApiSuite) BeforeEach(t provider.T) {
-	t.ID("1")
 	t.AddSubSuite("TokenApi")
 }
 
 func (s *TokenApiSuite) TestTokenApi(t provider.T) {
+	t.ID("7637")
 	token := httpHelper.Login()
 
 	t.Require().Greater(len(token), 6, "login failed")

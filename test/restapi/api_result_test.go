@@ -22,11 +22,11 @@ type ResultApiSuite struct {
 }
 
 func (s *ResultApiSuite) BeforeEach(t provider.T) {
-	t.ID("0")
 	t.AddSubSuite("SuiteApi")
 }
 
-func (s *ResultApiSuite) TestResultSubmitApi(t provider.T) {
+func (s *ResultApiSuite) TestResultSubmitZtfResultApi(t provider.T) {
+	t.ID("7626,7628")
 	token := httpHelper.Login()
 
 	latestId := getCaseResult(CaseId)["latestId"].(int64)
@@ -34,7 +34,62 @@ func (s *ResultApiSuite) TestResultSubmitApi(t provider.T) {
 	url := zentaoHelper.GenApiUrl("ciresults", nil, constTestHelper.ZentaoSiteUrl)
 
 	report := commDomain.ZtfReport{}
-	json.Unmarshal([]byte(reportJson), &report)
+	json.Unmarshal([]byte(ztfReportJson), &report)
+
+	_, err := httpHelper.Post(url, token, report)
+	t.Require().Equal(err, nil, "submit result failed")
+
+	latestIdNew := getCaseResult(CaseId)["latestId"].(int64)
+
+	t.Require().Equal(latestIdNew, latestId+1, "submit result failed")
+}
+
+func (s *ResultApiSuite) TestResultSubmitUnitResultApi(t provider.T) {
+	t.ID("7627")
+	token := httpHelper.Login()
+
+	latestId := getCaseResult(CaseId)["latestId"].(int64)
+
+	url := zentaoHelper.GenApiUrl("ciresults", nil, constTestHelper.ZentaoSiteUrl)
+
+	report := commDomain.ZtfReport{}
+	json.Unmarshal([]byte(unitReportJson), &report)
+
+	_, err := httpHelper.Post(url, token, report)
+	t.Require().Equal(err, nil, "submit result failed")
+
+	latestIdNew := getCaseResult(CaseId)["latestId"].(int64)
+
+	t.Require().Equal(latestIdNew, latestId+1, "submit result failed")
+}
+func (s *ResultApiSuite) TestResultSubmitSameTaskNameApi(t provider.T) {
+	t.ID("7629")
+	token := httpHelper.Login()
+
+	latestId := getCaseResult(CaseId)["latestId"].(int64)
+
+	url := zentaoHelper.GenApiUrl("ciresults", nil, constTestHelper.ZentaoSiteUrl)
+
+	report := commDomain.ZtfReport{}
+	json.Unmarshal([]byte(ztfReportJson), &report)
+
+	_, err := httpHelper.Post(url, token, report)
+	t.Require().Equal(err, nil, "submit result failed")
+
+	latestIdNew := getCaseResult(CaseId)["latestId"].(int64)
+
+	t.Require().Equal(latestIdNew, latestId+1, "submit result failed")
+}
+func (s *ResultApiSuite) TestResultSubmitSameTaskIdApi(t provider.T) {
+	t.ID("7630")
+	token := httpHelper.Login()
+
+	latestId := getCaseResult(CaseId)["latestId"].(int64)
+
+	url := zentaoHelper.GenApiUrl("ciresults", nil, constTestHelper.ZentaoSiteUrl)
+
+	report := commDomain.ZtfReport{}
+	json.Unmarshal([]byte(ztfReportJson), &report)
 
 	_, err := httpHelper.Post(url, token, report)
 	t.Require().Equal(err, nil, "submit result failed")
@@ -58,7 +113,7 @@ func getCaseResult(caseId int) (result map[string]interface{}) {
 	return
 }
 
-const reportJson = `
+const ztfReportJson = `
 {
 	"name": "",
 	"platform": "mac",
@@ -134,5 +189,29 @@ const reportJson = `
 			]
 		}
 	]
+}
+`
+
+const unitReportJson = `
+{
+    "name": "",
+    "platform": "mac",
+    "testType": "unit",
+    "testTool": "gotest",
+    "buildTool": "",
+    "testCommand": "go test restapi/api_product_test.go -v",
+    "workspaceType": "",
+    "workspacePath": "",
+    "submitResult": false,
+    "zentaoData": "",
+    "buildUrl": "",
+    "log": "2023-05-31 13:35:38.075\texec/unit.go:155\tFAIL\tcommand-line-arguments [build failed]\n\n2023-05-31 13:35:38.075\texec/unit.go:155\tFAIL",
+    "pass": 0,
+    "fail": 0,
+    "skip": 0,
+    "total": 0,
+    "startTime": 1685511337,
+    "endTime": 1685511338,
+    "duration": 1
 }
 `

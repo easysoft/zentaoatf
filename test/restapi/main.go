@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -52,7 +54,7 @@ func main() {
 	flagSet.Parse(os.Args[1:])
 
 	initTest(version)
-	initZentao(runFrom, version)
+	//initZentao(runFrom, version)
 
 	doTest(testToRun)
 }
@@ -106,6 +108,8 @@ func doTest(testToRun string) (err error) {
 
 	// exec testing
 	report := execSuite(req, "restapi")
+	jsn, _ := json.Marshal(report)
+	log.Print(jsn)
 
 	// submit result for test
 	if runFrom != "jenkins" {

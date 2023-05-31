@@ -20,11 +20,11 @@ type SuiteApiSuite struct {
 }
 
 func (s *SuiteApiSuite) BeforeEach(t provider.T) {
-	t.ID("0")
 	t.AddSubSuite("SuiteApi")
 }
 
 func (s *SuiteApiSuite) TestSuiteListApi(t provider.T) {
+	t.ID("7622")
 	token := httpHelper.Login()
 
 	url := zentaoHelper.GenApiUrl(fmt.Sprintf("products/%d/testsuites", ProductId), nil, constTestHelper.ZentaoSiteUrl)
@@ -37,6 +37,7 @@ func (s *SuiteApiSuite) TestSuiteListApi(t provider.T) {
 }
 
 func (s *SuiteApiSuite) TestSuiteDetailApi(t provider.T) {
+	t.ID("7623")
 	token := httpHelper.Login()
 
 	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testsuites/%d", SuiteId), nil, constTestHelper.ZentaoSiteUrl)

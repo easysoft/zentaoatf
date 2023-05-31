@@ -31,6 +31,7 @@ func (s *BugApiSuite) BeforeEach(t provider.T) {
 }
 
 func (s *BugApiSuite) TestBugListApi(t provider.T) {
+	t.ID("7617")
 	token := httpHelper.Login()
 
 	url := zentaoHelper.GenApiUrl(fmt.Sprintf("products/%d/bugs", ProductId), nil, constTestHelper.ZentaoSiteUrl)
@@ -43,6 +44,7 @@ func (s *BugApiSuite) TestBugListApi(t provider.T) {
 }
 
 func (s *BugApiSuite) TestBugCreateApi(t provider.T) {
+	t.ID("7619")
 	token := httpHelper.Login()
 
 	url := zentaoHelper.GenApiUrl(fmt.Sprintf("products/%d/bugs", ProductId), nil, constTestHelper.ZentaoSiteUrl)
@@ -81,6 +83,7 @@ func (s *BugApiSuite) TestBugCreateApi(t provider.T) {
 }
 
 func (s *BugApiSuite) TestBugOptionsApi(t provider.T) {
+	t.ID("7618")
 	token := httpHelper.Login()
 
 	params := map[string]interface{}{

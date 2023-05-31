@@ -20,11 +20,11 @@ type TaskApiSuite struct {
 }
 
 func (s *TaskApiSuite) BeforeEach(t provider.T) {
-	t.ID("0")
 	t.AddSubSuite("TaskApi")
 }
 
 func (s *TaskApiSuite) TestTaskListApi(t provider.T) {
+	t.ID("7624")
 	token := httpHelper.Login()
 
 	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testtasks?product=%d", ProductId), nil, constTestHelper.ZentaoSiteUrl)
@@ -37,6 +37,7 @@ func (s *TaskApiSuite) TestTaskListApi(t provider.T) {
 }
 
 func (s *TaskApiSuite) TestTaskDetailApi(t provider.T) {
+	t.ID("7625")
 	token := httpHelper.Login()
 
 	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testtasks/%d", TaskId), nil, constTestHelper.ZentaoSiteUrl)

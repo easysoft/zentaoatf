@@ -20,11 +20,11 @@ type ModuleApiSuite struct {
 }
 
 func (s *ModuleApiSuite) BeforeEach(t provider.T) {
-	t.ID("0")
 	t.AddSubSuite("ModuleApi")
 }
 
 func (s *ModuleApiSuite) TestModuleListForCaseApi(t provider.T) {
+	t.ID("7636")
 	token := httpHelper.Login()
 
 	url := zentaoHelper.GenApiUrl(fmt.Sprintf("modules?type=case&id=%d", ProductId), nil, constTestHelper.ZentaoSiteUrl)
