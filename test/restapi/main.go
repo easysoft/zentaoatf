@@ -52,7 +52,7 @@ func main() {
 	flagSet.Parse(os.Args[1:])
 
 	initTest(version)
-	//initZentao(runFrom, version)
+	initZentao(runFrom, version)
 
 	doTest(testToRun)
 }
