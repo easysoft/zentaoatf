@@ -8,6 +8,7 @@ import (
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	httpHelper "github.com/easysoft/zentaoatf/test/helper/http"
+	"github.com/easysoft/zentaoatf/test/restapi/config"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 	"github.com/tidwall/gjson"
@@ -33,7 +34,7 @@ func (s *CaseApiSuite) TestCaseListApi(t provider.T) {
 	params := map[string]interface{}{
 		"limit": 10,
 	}
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("/products/%d/testcases", ProductId), params, constTestHelper.ZentaoSiteUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("/products/%d/testcases", config.ProductId), params, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 
@@ -46,7 +47,7 @@ func (s *CaseApiSuite) TestCaseListByModuleApi(t provider.T) {
 	t.ID("7635")
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("/products/%d/testcases?module=%d", ProductId, ModuleId),
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("/products/%d/testcases?module=%d", config.ProductId, config.ModuleId),
 		nil, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
@@ -60,7 +61,7 @@ func (s *CaseApiSuite) TestCaseListBySuiteApi(t provider.T) {
 	t.ID("7614")
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("/testsuites/%d", SuiteId), nil, constTestHelper.ZentaoSiteUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("/testsuites/%d", config.SuiteId), nil, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 
@@ -73,7 +74,7 @@ func (s *CaseApiSuite) TestCaseListByTaskApi(t provider.T) {
 	t.ID("7615")
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("/testtasks/%d", TaskId), nil, constTestHelper.ZentaoSiteUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("/testtasks/%d", config.TaskId), nil, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 
@@ -86,7 +87,7 @@ func (s *CaseApiSuite) TestCaseDetailApi(t provider.T) {
 	t.ID("7613")
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testcases/%d", CaseId), nil, constTestHelper.ZentaoSiteUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testcases/%d", config.CaseId), nil, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 
@@ -99,7 +100,7 @@ func (s *CaseApiSuite) TestCaseCheckinApi(t provider.T) {
 	t.ID("7616")
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testcases/%d", CaseId), nil, constTestHelper.ZentaoSiteUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testcases/%d", config.CaseId), nil, constTestHelper.ZentaoSiteUrl)
 
 	steps := []commDomain.ZentaoCaseStep{
 		{Type: commConsts.Item, Desc: "Step 1", Expect: "Expect 1"},
@@ -123,7 +124,7 @@ func (s *CaseApiSuite) TestCaseCheckinApi(t provider.T) {
 	actualTitle := gjson.Get(string(bodyBytes), "title").String()
 	t.Require().Equal(actualTitle, title, "checkin testcases failed")
 
-	newCase := getCase(CaseId)
+	newCase := getCase(config.CaseId)
 	titleFromRemote := newCase["title"]
 	t.Require().Equal(titleFromRemote, title, "get testcases failed")
 }

@@ -1,10 +1,8 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -63,6 +61,7 @@ func initTest(version string) (err error) {
 	commConsts.ExecFrom = commConsts.FromCmd
 	serverConfig.InitLog()
 	serverConfig.InitExecLog(constTestHelper.RootPath)
+
 	commConsts.ZtfDir = constTestHelper.RootPath
 	i118Utils.Init("zh-CN", commConsts.AppServer)
 
@@ -108,8 +107,6 @@ func doTest(testToRun string) (err error) {
 
 	// exec testing
 	report := execSuite(req, "restapi")
-	jsn, _ := json.Marshal(report)
-	log.Print(jsn)
 
 	// submit result for test
 	if runFrom != "jenkins" {

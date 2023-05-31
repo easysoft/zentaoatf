@@ -6,6 +6,7 @@ import (
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	httpHelper "github.com/easysoft/zentaoatf/test/helper/http"
+	"github.com/easysoft/zentaoatf/test/restapi/config"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 	"github.com/tidwall/gjson"
@@ -34,7 +35,7 @@ func (s *BugApiSuite) TestBugListApi(t provider.T) {
 	t.ID("7617")
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("products/%d/bugs", ProductId), nil, constTestHelper.ZentaoSiteUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("products/%d/bugs", config.ProductId), nil, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 
@@ -47,7 +48,7 @@ func (s *BugApiSuite) TestBugCreateApi(t provider.T) {
 	t.ID("7619")
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("products/%d/bugs", ProductId), nil, constTestHelper.ZentaoSiteUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("products/%d/bugs", config.ProductId), nil, constTestHelper.ZentaoSiteUrl)
 
 	title := BugTitle + stringUtils.NewUuid()
 
@@ -55,7 +56,7 @@ func (s *BugApiSuite) TestBugCreateApi(t provider.T) {
 		"id":       0,
 		"title":    title,
 		"type":     "codeerror",
-		"product":  ProductId,
+		"product":  config.ProductId,
 		"module":   0,
 		"severity": 3,
 		"pri":      3,
@@ -87,7 +88,7 @@ func (s *BugApiSuite) TestBugOptionsApi(t provider.T) {
 	token := httpHelper.Login()
 
 	params := map[string]interface{}{
-		"product": ProductId,
+		"product": config.ProductId,
 	}
 	url := zentaoHelper.GenApiUrl("options/bug", params, constTestHelper.ZentaoSiteUrl)
 

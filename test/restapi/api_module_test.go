@@ -5,6 +5,7 @@ import (
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	httpHelper "github.com/easysoft/zentaoatf/test/helper/http"
+	"github.com/easysoft/zentaoatf/test/restapi/config"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 	"github.com/tidwall/gjson"
@@ -27,7 +28,7 @@ func (s *ModuleApiSuite) TestModuleListForCaseApi(t provider.T) {
 	t.ID("7636")
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("modules?type=case&id=%d", ProductId), nil, constTestHelper.ZentaoSiteUrl)
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("modules?type=case&id=%d", config.ProductId), nil, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
 

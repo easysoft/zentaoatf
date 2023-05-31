@@ -5,8 +5,10 @@ import (
 	"fmt"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
+	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	httpHelper "github.com/easysoft/zentaoatf/test/helper/http"
+	"github.com/easysoft/zentaoatf/test/restapi/config"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 	"github.com/tidwall/gjson"
@@ -29,62 +31,57 @@ func (s *ResultApiSuite) TestResultSubmitZtfResultApi(t provider.T) {
 	t.ID("7626,7628")
 	token := httpHelper.Login()
 
-	latestId := getCaseResult(CaseId)["latestId"].(int64)
+	latestId := getCaseResult(config.CaseId)["latestId"].(int64)
 
 	url := zentaoHelper.GenApiUrl("ciresults", nil, constTestHelper.ZentaoSiteUrl)
 
 	report := commDomain.ZtfReport{}
 	json.Unmarshal([]byte(ztfReportJson), &report)
+	report.Name = "接口测试任务" + stringUtils.NewUuid()
 
 	_, err := httpHelper.Post(url, token, report)
 	t.Require().Equal(err, nil, "submit result failed")
 
-	latestIdNew := getCaseResult(CaseId)["latestId"].(int64)
-
+	// check case result
+	latestIdNew := getCaseResult(config.CaseId)["latestId"].(int64)
 	t.Require().Equal(latestIdNew, latestId+1, "submit result failed")
+
+	// check task record
+	tasksBytes := listTask(token)
+	name := gjson.Get(string(tasksBytes), "testtasks.0.name").String()
+	t.Require().Equal(name, report.Name, "submit result failed")
 }
 
 func (s *ResultApiSuite) TestResultSubmitUnitResultApi(t provider.T) {
 	t.ID("7627")
 	token := httpHelper.Login()
 
-	latestId := getCaseResult(CaseId)["latestId"].(int64)
+	latestId := getCaseResult(config.CaseId)["latestId"].(int64)
 
 	url := zentaoHelper.GenApiUrl("ciresults", nil, constTestHelper.ZentaoSiteUrl)
 
 	report := commDomain.ZtfReport{}
 	json.Unmarshal([]byte(unitReportJson), &report)
+	report.Name = "接口测试任务" + stringUtils.NewUuid()
 
 	_, err := httpHelper.Post(url, token, report)
 	t.Require().Equal(err, nil, "submit result failed")
 
-	latestIdNew := getCaseResult(CaseId)["latestId"].(int64)
-
+	// check case result
+	latestIdNew := getCaseResult(config.CaseId)["latestId"].(int64)
 	t.Require().Equal(latestIdNew, latestId+1, "submit result failed")
+
+	// check task record
+	tasksBytes := listTask(token)
+	name := gjson.Get(string(tasksBytes), "testtasks.0.name").String()
+	t.Require().Equal(name, report.Name, "submit result failed")
 }
-func (s *ResultApiSuite) TestResultSubmitSameTaskNameApi(t provider.T) {
-	t.ID("7629")
-	token := httpHelper.Login()
 
-	latestId := getCaseResult(CaseId)["latestId"].(int64)
-
-	url := zentaoHelper.GenApiUrl("ciresults", nil, constTestHelper.ZentaoSiteUrl)
-
-	report := commDomain.ZtfReport{}
-	json.Unmarshal([]byte(ztfReportJson), &report)
-
-	_, err := httpHelper.Post(url, token, report)
-	t.Require().Equal(err, nil, "submit result failed")
-
-	latestIdNew := getCaseResult(CaseId)["latestId"].(int64)
-
-	t.Require().Equal(latestIdNew, latestId+1, "submit result failed")
-}
 func (s *ResultApiSuite) TestResultSubmitSameTaskIdApi(t provider.T) {
 	t.ID("7630")
 	token := httpHelper.Login()
 
-	latestId := getCaseResult(CaseId)["latestId"].(int64)
+	latestCaseResultId := getCaseResult(config.CaseId)["latestId"]
 
 	url := zentaoHelper.GenApiUrl("ciresults", nil, constTestHelper.ZentaoSiteUrl)
 
@@ -94,9 +91,27 @@ func (s *ResultApiSuite) TestResultSubmitSameTaskIdApi(t provider.T) {
 	_, err := httpHelper.Post(url, token, report)
 	t.Require().Equal(err, nil, "submit result failed")
 
-	latestIdNew := getCaseResult(CaseId)["latestId"].(int64)
+	// check case result
+	latestCaseResultId2 := getCaseResult(config.CaseId)["latestId"]
+	t.Require().Greater(latestCaseResultId2, latestCaseResultId, "submit result failed")
 
-	t.Require().Equal(latestIdNew, latestId+1, "submit result failed")
+	// get latest task id
+	latestTaskId := getLatestTaskId(token)
+
+	// submit again with same task id
+	report.TaskId = latestTaskId
+	_, err = httpHelper.Post(url, token, report)
+	t.Require().Equal(err, nil, "submit result failed")
+
+	// check case result
+	latestCaseResultId3 := getCaseResult(config.CaseId)["latestId"].(int64)
+	t.Require().Greater(latestCaseResultId3, latestCaseResultId2, "submit result failed")
+
+	// get latest task id
+	latestTaskId2 := getLatestTaskId(token)
+
+	// check not add an new task
+	t.Require().Equal(latestTaskId2, latestTaskId, "submit result failed")
 }
 
 func getCaseResult(caseId int) (result map[string]interface{}) {
@@ -205,13 +220,42 @@ const unitReportJson = `
     "submitResult": false,
     "zentaoData": "",
     "buildUrl": "",
-    "log": "2023-05-31 13:35:38.075\texec/unit.go:155\tFAIL\tcommand-line-arguments [build failed]\n\n2023-05-31 13:35:38.075\texec/unit.go:155\tFAIL",
-    "pass": 0,
+    "log": "2023-05-31 13:58:03.483\texec/unit.go:155\t=== RUN ...",
+    "pass": 2,
     "fail": 0,
     "skip": 0,
-    "total": 0,
-    "startTime": 1685511337,
-    "endTime": 1685511338,
-    "duration": 1
+    "total": 2,
+    "startTime": 1685512678,
+    "endTime": 1685512683,
+    "duration": 5,
+    "unitResult":
+    [
+        {
+            "title": "TestProductDetailApi",
+            "testSuite": "ProductApiSuite-ProductApi",
+            "startTime": 0,
+            "endTime": 0,
+            "duration": 0.081,
+            "failure": null,
+            "errorType": "",
+            "errorContent": "",
+            "id": 0,
+            "cid": 1,
+            "status": "pass"
+        },
+        {
+            "title": "TestProductListApi",
+            "testSuite": "ProductApiSuite-ProductApi",
+            "startTime": 0,
+            "endTime": 0,
+            "duration": 0.165,
+            "failure": null,
+            "errorType": "",
+            "errorContent": "",
+            "id": 0,
+            "cid": 2,
+            "status": "pass"
+        }
+    ]
 }
 `
