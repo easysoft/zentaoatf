@@ -487,10 +487,15 @@ func GetAllureCaseSuiteName(cs commDomain.AllureCase) (name string) {
 }
 
 func GetAllureCaseId(cs commDomain.AllureCase) (ids string) {
+	expIds := "^[ \\,\\d]+$"
+
 	// 1. from testCaseId
-	ids = cs.TestCaseId
+	ids = strings.TrimSpace(cs.TestCaseId)
 	if ids != "" {
-		return
+		found, _ := regexp.MatchString(expIds, ids)
+		if found {
+			return
+		}
 	}
 
 	// 2. from as_id label
@@ -498,7 +503,10 @@ func GetAllureCaseId(cs commDomain.AllureCase) (ids string) {
 		if label.Name == "as_id" {
 			if label.Value != "" {
 				ids = label.Value // 2
-				return
+				found, _ := regexp.MatchString(expIds, ids)
+				if found {
+					return
+				}
 			}
 		}
 	}

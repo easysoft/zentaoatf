@@ -19,7 +19,7 @@ type ProductApiSuite struct {
 }
 
 func (s *ProductApiSuite) BeforeEach(t provider.T) {
-	t.ID("0")
+	t.ID("1,2")
 	t.AddSubSuite("ProductApi")
 }
 
@@ -32,5 +32,5 @@ func (s *ProductApiSuite) TestProductListApi(t provider.T) {
 
 	firstProductId := gjson.Get(string(bodyBytes), "products.0.id").Int()
 
-	t.Require().Greater(firstProductId, int64(0), "list product failed")
+	t.Require().Greater(firstProductId, int64(0), "list product")
 }

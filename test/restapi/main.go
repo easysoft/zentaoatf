@@ -50,7 +50,7 @@ func main() {
 	flagSet.Parse(os.Args[1:])
 
 	initTest(version)
-	initZentao(runFrom, version)
+	//initZentao(runFrom, version)
 
 	doTest(testToRun)
 }
@@ -97,13 +97,13 @@ func doTest(testToRun string) (err error) {
 
 	req := serverDomain.TestSet{
 		WorkspacePath: testPath,
-		Cmd:           fmt.Sprintf("go test ./restapi/%s -v", testToRun),
+		Cmd:           fmt.Sprintf("go test restapi/%s -v", testToRun),
 		TestTool:      commConsts.GoTest,
 	}
 	fmt.Println(testPath, req.Cmd)
 
 	// exec testing
-	report := execSuite(req, "api")
+	report := execSuite(req, "restapi")
 
 	// submit result
 	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl + "/", Password: constTestHelper.ZentaoPassword, Username: constTestHelper.ZentaoUsername}
@@ -137,7 +137,10 @@ func execSuite(req serverDomain.TestSet, unitType string) (report commDomain.Ztf
 	}
 
 	report = execHelper.GenUnitTestReport(req, startTime.Unix(), entTime.Unix(), nil, nil)
-	fmt.Printf("执行：%v, 成功：%v，失败：%v", report.Total, report.Pass, report.Fail)
+	fmt.Printf("执行：%v, 成功：%v，失败：%v \n", report.Total, report.Pass, report.Fail)
+
+	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl + "/", Password: constTestHelper.ZentaoPassword, Username: constTestHelper.ZentaoUsername}
+	zentaoHelper.CommitResult(report, 1, 0, config, nil)
 
 	return report
 }
