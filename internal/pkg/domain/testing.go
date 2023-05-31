@@ -248,6 +248,7 @@ type UnitResult struct {
 
 	Id     int                     `json:"id"`
 	Cid    int                     `json:"cid"`
+	Cids   string                  `json:"-"`
 	Status commConsts.ResultStatus `json:"status"`
 }
 type CaseSlice []UnitResult

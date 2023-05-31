@@ -37,11 +37,11 @@ func (s *ResultApiSuite) TestResultSubmitApi(t provider.T) {
 	json.Unmarshal([]byte(reportJson), &report)
 
 	_, err := httpHelper.Post(url, token, report)
-	t.Require().Equal(err, nil, "list testsuite failed")
+	t.Require().Equal(err, nil, "submit result failed")
 
 	latestIdNew := getCaseResult(CaseId)["latestId"].(int64)
 
-	t.Require().Equal(latestIdNew, latestId+1, "list testsuite failed")
+	t.Require().Equal(latestIdNew, latestId+1, "submit result failed")
 }
 
 func getCaseResult(caseId int) (result map[string]interface{}) {

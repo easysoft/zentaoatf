@@ -11,7 +11,7 @@ func GetUnitTools(args []string, startIndex int) {
 
 	str := args[startIndex]
 
-	if str == commConsts.Maven.String() {
+	if str == commConsts.MavenShort.String() {
 		commConsts.UnitBuildTool = commConsts.Maven
 	} else if str == commConsts.Mocha.String() {
 		commConsts.UnitBuildTool = commConsts.Mocha

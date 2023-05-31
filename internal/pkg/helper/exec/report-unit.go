@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"github.com/jinzhu/copier"
 	"io/ioutil"
 	"os"
 	"path"
@@ -181,6 +182,8 @@ func RetrieveUnitResult(testset serverDomain.TestSet, startTime int64) (
 				i118Utils.Sprintf("must_provide_allure_report_dir")))
 		}
 
+		ExpandCaseForMultiIds(&suites)
+
 	} else {
 		failedCaseIdToThresholdMap := map[string]string{}
 
@@ -199,6 +202,26 @@ func RetrieveUnitResult(testset serverDomain.TestSet, startTime int64) (
 	}
 
 	return
+}
+
+func ExpandCaseForMultiIds(suites *[]commDomain.UnitTestSuite) {
+	for idx1, suite := range *suites {
+		cases := suite.Cases
+		(*suites)[idx1].Cases = []commDomain.UnitResult{}
+
+		for _, cs := range cases {
+			ids := strings.Split(cs.Cids, ",")
+
+			for _, id := range ids {
+				newCs := commDomain.UnitResult{}
+				copier.CopyWithOption(&newCs, cs, copier.Option{DeepCopy: true})
+
+				newCs.Cid = stringUtils.ParseInt(id)
+
+				(*suites)[idx1].Cases = append((*suites)[idx1].Cases, newCs)
+			}
+		}
+	}
 }
 
 func GetAllureSuites(resultDir string, startTime int64) (suites []commDomain.UnitTestSuite) {
@@ -401,9 +424,7 @@ func ConvertAllureResult(cases []commDomain.AllureCase) (testSuites []commDomain
 			suiteMap[suiteName] = &suite
 		}
 
-		//suiteMap[suiteName].Name = "111"
-
-		caseId := GetAllureCaseId(cs)
+		caseIds := GetAllureCaseId(cs)
 
 		// passed, failed
 		var status commConsts.ResultStatus
@@ -413,8 +434,7 @@ func ConvertAllureResult(cases []commDomain.AllureCase) (testSuites []commDomain
 			status = commConsts.FAIL
 		}
 		caseResult := commDomain.UnitResult{
-			Id:        caseId,
-			Cid:       caseId,
+			Cids:      caseIds,
 			Title:     cs.Name,
 			TestSuite: suiteName,
 			Duration:  float32(cs.Stop-cs.Start) / 1000,
@@ -466,10 +486,10 @@ func GetAllureCaseSuiteName(cs commDomain.AllureCase) (name string) {
 	return
 }
 
-func GetAllureCaseId(cs commDomain.AllureCase) (id int) {
+func GetAllureCaseId(cs commDomain.AllureCase) (ids string) {
 	// 1. from testCaseId
-	id, err := strconv.Atoi(cs.TestCaseId)
-	if err == nil && id > 0 {
+	ids = cs.TestCaseId
+	if ids != "" {
 		return
 	}
 
@@ -477,23 +497,18 @@ func GetAllureCaseId(cs commDomain.AllureCase) (id int) {
 	for _, label := range cs.Labels {
 		if label.Name == "as_id" {
 			if label.Value != "" {
-				cs.TestCaseId = label.Value // 2
+				ids = label.Value // 2
+				return
 			}
-
-			break
 		}
 	}
-	id = stringUtils.ParseInt(cs.TestCaseId)
 
-	// 2. from the ids param in name like [cs-1]
+	// 3. from the ids param in name like [1]
 	regx := regexp.MustCompile(`\[(.+)\]`)
 	arr := regx.FindAllStringSubmatch(cs.Name, -1)
 	if len(arr) > 0 {
 		item := arr[len(arr)-1]
-		idFromName := stringUtils.ParseInt(item[1])
-		if idFromName > 0 {
-			id = idFromName
-		}
+		ids = item[1]
 	}
 
 	return
@@ -776,7 +791,7 @@ func isAllureReport(testTool commConsts.TestTool) (ret bool) {
 }
 
 func getResultDirForDifferentTool(testset *serverDomain.TestSet) {
-	if testset.TestTool == commConsts.JUnit && testset.BuildTool == commConsts.Maven {
+	if (testset.TestTool == commConsts.TestNG || testset.TestTool == commConsts.JUnit) && testset.BuildTool == commConsts.Maven {
 		testset.ResultDir = filepath.Join("target", "surefire-reports")
 		testset.ZipDir = testset.ResultDir
 
@@ -827,7 +842,7 @@ func getZapReport() (ret string) {
 }
 
 func getCaseIdFromName(cs *commDomain.UnitResult, defaultVal int) {
-	if cs.Cid > 0 {
+	if cs.Cids != "" {
 		return
 	}
 
@@ -836,11 +851,10 @@ func getCaseIdFromName(cs *commDomain.UnitResult, defaultVal int) {
 	regx := regexp.MustCompile(`^(\d+)\. (.+)`)
 	arr := regx.FindAllStringSubmatch(cs.Title, -1)
 	if len(arr) > 0 {
-		cs.Cid = stringUtils.ParseInt(arr[0][1])
+		cs.Cids = arr[0][1]
 		cs.Title = arr[0][2]
 	}
 
-	cs.Id = cs.Cid
 	if cs.Id <= 0 {
 		cs.Id = defaultVal
 	}

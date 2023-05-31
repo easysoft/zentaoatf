@@ -183,8 +183,9 @@ func (TestTool) Get(str string) TestTool {
 type BuildTool string
 
 const (
-	Maven BuildTool = "maven"
-	Mocha BuildTool = "mocha"
+	Maven      BuildTool = "maven"
+	MavenShort BuildTool = "mvn"
+	Mocha      BuildTool = "mocha"
 )
 
 func (e BuildTool) String() string {

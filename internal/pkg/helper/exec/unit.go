@@ -81,12 +81,12 @@ func ExecUnit(ch chan int, req serverDomain.TestSet, wsMsg *websocket.Message) (
 
 	// submit result
 	if req.SubmitResult && (report.FuncResult != nil || report.UnitResult != nil) {
-		configDir := req.WorkspacePath
+		workspaceDir := req.WorkspacePath
 		if commConsts.ExecFrom == commConsts.FromCmd {
-			configDir = commConsts.ZtfDir
+			workspaceDir = commConsts.ZtfDir
 		}
 
-		config := configHelper.LoadByWorkspacePath(configDir)
+		config := configHelper.LoadByWorkspacePath(workspaceDir)
 
 		err = zentaoHelper.CommitResult(report, req.ProductId, req.TaskId, config, wsMsg)
 	}
