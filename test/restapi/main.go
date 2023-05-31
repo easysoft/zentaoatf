@@ -46,6 +46,8 @@ func main() {
 	flagSet.StringVar(&testToRun, "testToRun", "", "")
 	flagSet.StringVar(&testToRun, "t", "", "")
 
+	flagSet.BoolVar(&commConsts.Verbose, "verbose", false, "")
+
 	testing.Init()
 	flagSet.Parse(os.Args[1:])
 
@@ -106,7 +108,10 @@ func doTest(testToRun string) (err error) {
 	report := execSuite(req, "restapi")
 
 	// submit result
-	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl + "/", Password: constTestHelper.ZentaoPassword, Username: constTestHelper.ZentaoUsername}
+	config := commDomain.WorkspaceConf{
+		Url:      "http://110.42.146.127:50080",
+		Username: "admin",
+		Password: "P2ssw0rd"}
 	err = zentaoHelper.CommitResult(report, 1, 0, config, nil)
 
 	return
@@ -138,9 +143,6 @@ func execSuite(req serverDomain.TestSet, unitType string) (report commDomain.Ztf
 
 	report = execHelper.GenUnitTestReport(req, startTime.Unix(), entTime.Unix(), nil, nil)
 	fmt.Printf("执行：%v, 成功：%v，失败：%v \n", report.Total, report.Pass, report.Fail)
-
-	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl + "/", Password: constTestHelper.ZentaoPassword, Username: constTestHelper.ZentaoUsername}
-	zentaoHelper.CommitResult(report, 1, 0, config, nil)
 
 	return report
 }

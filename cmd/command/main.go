@@ -90,11 +90,11 @@ func main() {
 	flagSet.BoolVar(&commConsts.AutoCommitBug, "cb", false, "")
 	flagSet.IntVar(&commConsts.BatchCount, "C", 1, "")
 	flagSet.BoolVar(&noNeedConfirm, "y", false, "")
-	flagSet.BoolVar(&commConsts.Verbose, "verbose", false, "")
 	flagSet.BoolVar(&commConsts.AutoExtract, "ext", true, "")
 
 	flagSet.BoolVar(&withCode, "withCode", false, "")
 	flagSet.StringVar(&commConsts.AllureReportDir, "allureReportDir", "", "")
+	flagSet.BoolVar(&commConsts.Verbose, "verbose", false, "")
 
 	if len(os.Args) == 1 {
 		os.Args = append(os.Args, "run", ".")
