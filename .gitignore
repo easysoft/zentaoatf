@@ -69,3 +69,4 @@ node_modules
 /zap_key
 /test/restapi/allure-results/
 zentaoatf.exe~
+/ztf
