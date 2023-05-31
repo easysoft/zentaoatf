@@ -28,33 +28,33 @@ func (s *ResultApiSuite) BeforeEach(t provider.T) {
 	t.AddSubSuite("SuiteApi")
 }
 
-//func (s *ResultApiSuite) TestResultSubmitZtfResultApi(t provider.T) {
-//	t.ID("7626,7628")
-//	token := httpHelper.Login()
-//
-//	latestId := getCaseResult(config.CaseId)["latestId"].(int64)
-//
-//	url := zentaoHelper.GenApiUrl("ciresults", nil, constTestHelper.ZentaoSiteUrl)
-//
-//	report := commDomain.ZtfReport{}
-//	err := json.Unmarshal([]byte(ztfReportJson), &report)
-//	t.Require().Equal(err, nil, "submit result failed")
-//
-//	report.Name = "接口测试任务" + stringUtils.NewUuid()
-//
-//	resp, err := httpHelper.Post(url, token, report)
-//	log.Print(resp)
-//	t.Require().Equal(err, nil, "submit result failed")
-//
-//	// check case result
-//	latestIdNew := getCaseResult(config.CaseId)["latestId"].(int64)
-//	t.Require().Equal(latestIdNew, latestId+1, "submit result failed")
-//
-//	// check task record
-//	tasksBytes := listTask(token)
-//	name := gjson.Get(string(tasksBytes), "testtasks.0.name").String()
-//	t.Require().Equal(name, report.Name, "submit result failed")
-//}
+func (s *ResultApiSuite) TestResultSubmitZtfResultApi(t provider.T) {
+	t.ID("7626,7628")
+	token := httpHelper.Login()
+
+	latestId := getCaseResult(config.CaseId)["latestId"].(int64)
+
+	url := zentaoHelper.GenApiUrl("ciresults", nil, constTestHelper.ZentaoSiteUrl)
+
+	report := commDomain.ZtfReport{}
+	err := json.Unmarshal([]byte(ztfReportJson), &report)
+	t.Require().Equal(err, nil, "submit result failed")
+
+	report.Name = "接口测试任务" + stringUtils.NewUuid()
+
+	resp, err := httpHelper.Post(url, token, report)
+	log.Print(resp)
+	t.Require().Equal(err, nil, "submit result failed")
+
+	// check case result
+	latestIdNew := getCaseResult(config.CaseId)["latestId"].(int64)
+	t.Require().Equal(latestIdNew, latestId+1, "submit result failed")
+
+	// check task record
+	tasksBytes := listTask(token)
+	name := gjson.Get(string(tasksBytes), "testtasks.0.name").String()
+	t.Require().Equal(name, report.Name, "submit result failed")
+}
 
 func (s *ResultApiSuite) TestResultSubmitUnitResultApi(t provider.T) {
 	t.ID("7627")
@@ -76,50 +76,45 @@ func (s *ResultApiSuite) TestResultSubmitUnitResultApi(t provider.T) {
 	// check case result
 	latestCaseResultIdNew := getCaseResult(config.CaseId)["latestId"].(int64)
 	t.Require().Greater(latestCaseResultIdNew, latestCaseResultId, "submit result failed")
-
-	// check task record
-	//tasksBytes := listTask(token)
-	//name := gjson.Get(string(tasksBytes), "testtasks.0.name").String()
-	//t.Require().Equal(name, report.Name, "submit result failed")
 }
 
-//func (s *ResultApiSuite) TestResultSubmitSameTaskIdApi(t provider.T) {
-//	t.ID("7630")
-//	token := httpHelper.Login()
-//
-//	latestCaseResultId := getCaseResult(config.CaseId)["latestId"]
-//
-//	url := zentaoHelper.GenApiUrl("ciresults", nil, constTestHelper.ZentaoSiteUrl)
-//
-//	report := commDomain.ZtfReport{}
-//	err := json.Unmarshal([]byte(ztfReportJson), &report)
-//	t.Require().Equal(err, nil, "submit result failed")
-//
-//	_, err = httpHelper.Post(url, token, report)
-//	t.Require().Equal(err, nil, "submit result failed")
-//
-//	// check case result
-//	latestCaseResultId2 := getCaseResult(config.CaseId)["latestId"]
-//	t.Require().Greater(latestCaseResultId2, latestCaseResultId, "submit result failed")
-//
-//	// get latest task id
-//	latestTaskId := getLatestTaskId(token)
-//
-//	// submit again with same task id
-//	report.TaskId = latestTaskId
-//	_, err = httpHelper.Post(url, token, report)
-//	t.Require().Equal(err, nil, "submit result failed")
-//
-//	// check case result
-//	latestCaseResultId3 := getCaseResult(config.CaseId)["latestId"].(int64)
-//	t.Require().Greater(latestCaseResultId3, latestCaseResultId2, "submit result failed")
-//
-//	// get latest task id
-//	latestTaskId2 := getLatestTaskId(token)
-//
-//	// check not add an new task
-//	t.Require().Equal(latestTaskId2, latestTaskId, "submit result failed")
-//}
+func (s *ResultApiSuite) TestResultSubmitSameTaskIdApi(t provider.T) {
+	t.ID("7630")
+	token := httpHelper.Login()
+
+	latestCaseResultId := getCaseResult(config.CaseId)["latestId"]
+
+	url := zentaoHelper.GenApiUrl("ciresults", nil, constTestHelper.ZentaoSiteUrl)
+
+	report := commDomain.ZtfReport{}
+	err := json.Unmarshal([]byte(ztfReportJson), &report)
+	t.Require().Equal(err, nil, "submit result failed")
+
+	_, err = httpHelper.Post(url, token, report)
+	t.Require().Equal(err, nil, "submit result failed")
+
+	// check case result
+	latestCaseResultId2 := getCaseResult(config.CaseId)["latestId"]
+	t.Require().Greater(latestCaseResultId2, latestCaseResultId, "submit result failed")
+
+	// get latest task id
+	latestTaskId := getLatestTaskId(token)
+
+	// submit again with same task id
+	report.TaskId = latestTaskId
+	_, err = httpHelper.Post(url, token, report)
+	t.Require().Equal(err, nil, "submit result failed")
+
+	// check case result
+	latestCaseResultId3 := getCaseResult(config.CaseId)["latestId"].(int64)
+	t.Require().Greater(latestCaseResultId3, latestCaseResultId2, "submit result failed")
+
+	// get latest task id
+	latestTaskId2 := getLatestTaskId(token)
+
+	// check not add an new task
+	t.Require().Equal(latestTaskId2, latestTaskId, "submit result failed")
+}
 
 func getCaseResult(caseId int) (result map[string]interface{}) {
 	token := httpHelper.Login()
