@@ -87,7 +87,7 @@ pipeline {
             }
             container('node') {
               sh 'yarn config set registry https://registry.npm.taobao.org --global'
-              sh 'cd ui && yarn && nohup yarn serve &'
+              sh 'cd ui && yarn && nohup yarn run serve --port 58000 &'
             }
                     
             container('playwright') {
