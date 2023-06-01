@@ -7,6 +7,7 @@ import (
 
 	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	"github.com/easysoft/zentaoatf/test/ui/conf"
+	plwConf "github.com/easysoft/zentaoatf/test/ui/conf"
 	"github.com/easysoft/zentaoatf/test/ui/utils"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	playwright "github.com/playwright-community/playwright-go"
@@ -99,6 +100,19 @@ func (p *Webpage) Locator(selector string, options ...playwright.PageLocatorOpti
 	}
 
 	return
+}
+
+func (p *Webpage) ElementExist(selector string) bool {
+	plwConf.DisableErr()
+	defer plwConf.EnableErr()
+
+	locator, err := p.Page.Locator(selector)
+	c, err := locator.Count()
+	if err == nil && c == 0 {
+		return false
+	}
+
+	return true
 }
 
 func (p *Webpage) QuerySelectorAll(selector string) (ret MyElementHandle) {

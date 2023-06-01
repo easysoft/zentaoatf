@@ -58,7 +58,25 @@ func FullScreenLog(t provider.T) {
 	}
 }
 
+func ClearLog(t provider.T) {
+	t.ID("7540")
+	t.AddParentSuite("清除测试执行日志")
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
+	defer webpage.Close()
+	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.ExpandWorspace(webpage)
+	ztfTestHelper.RunScript(webpage, "1_string_match.php")
+	webpage.Click(".btn[title=\"清空\"]")
+	webpage.WaitForTimeout(100)
+	isHidden := webpage.IsHidden("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
+	if !isHidden {
+		t.Errorf("Check clear log fail")
+		t.FailNow()
+	}
+}
+
 func TestUiLog(t *testing.T) {
 	runner.Run(t, "客户端-展开折叠执行日志", CollapseLog)
 	runner.Run(t, "客户端-最大化脚本执行日志", FullScreenLog)
+	runner.Run(t, "客户端-清空执行日志", ClearLog)
 }

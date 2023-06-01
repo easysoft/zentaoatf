@@ -1,5 +1,6 @@
 <template>
   <ZModal
+    id="scriptFormModal"
     :showModal="showModalRef"
     @onCancel="cancel"
     @onOk="submit"

@@ -63,7 +63,7 @@ func SaveConfig(config commDomain.WorkspaceConf, workspacePath string) (err erro
 }
 
 func ReadFromFile(workspacePath string) (config commDomain.WorkspaceConf) {
-	pth := filepath.Join(commConsts.ConfigPath, commConsts.ConfigFile)
+	pth := filepath.Join(workspacePath, commConsts.ConfigDir, commConsts.ConfigFile)
 	ini.MapTo(&config, pth)
 
 	config.Url = commonUtils.AddSlashForUrl(config.Url)
@@ -72,7 +72,7 @@ func ReadFromFile(workspacePath string) (config commDomain.WorkspaceConf) {
 }
 
 func SaveToFile(config commDomain.WorkspaceConf, workspacePath string) (err error) {
-	pth := filepath.Join(commConsts.ConfigPath, commConsts.ConfigFile)
+	pth := filepath.Join(workspacePath, commConsts.ConfigDir, commConsts.ConfigFile)
 	fileUtils.MkDirIfNeeded(filepath.Dir(pth))
 
 	config.Version = commConsts.ConfigVersion

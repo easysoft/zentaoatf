@@ -30,6 +30,27 @@ func CreateSite(t provider.T) {
 	webpage.WaitForSelector(".list-item-content span:has-text('单元测试站点')")
 	locator = webpage.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: "单元测试站点"})
 }
+
+func CreateSiteWithFullUrl(t provider.T) {
+	t.ID("7575")
+	t.AddParentSuite("禅道站点URL格式兼容")
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
+	defer webpage.Close()
+	locator := webpage.Locator("#siteMenuToggle")
+	locator.Click()
+	webpage.WaitForSelector("#navbar .list-item")
+	webpage.Click("text=禅道站点管理")
+	webpage.Click("text=新建站点")
+	locator = webpage.Locator("#siteFormModal input")
+	locator.FillNth(0, "单元测试站点")
+	locator.FillNth(1, constTestHelper.ZentaoSiteUrl+"/my.php")
+	locator.FillNth(2, constTestHelper.ZentaoUsername)
+	locator.FillNth(3, constTestHelper.ZentaoPassword)
+	webpage.Click("text=确定")
+	webpage.WaitForSelector(".list-item-content span:has-text('单元测试站点')")
+	locator = webpage.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: "单元测试站点"})
+}
+
 func EditSite(t provider.T) {
 	t.ID("5466")
 	t.AddParentSuite("配置禅道站点")

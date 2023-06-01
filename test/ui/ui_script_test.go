@@ -52,7 +52,32 @@ func ViewScript(t provider.T) {
 	webpage.Locator(".view-line>>text=title=check string matches pattern")
 }
 
+func SwitchScript(t provider.T) {
+	t.ID("7583")
+	t.AddParentSuite("脚本切换和关闭")
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
+	defer webpage.Close()
+	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.ExpandWorspace(webpage)
+	webpage.Click(".tree-node-title:has-text('1_string_match.php')")
+	webpage.Locator(".view-line>>text=title=check string matches pattern")
+
+	webpage.Click(".tree-node-title:has-text('2_webpage_extract.php')")
+	webpage.Locator(".view-line>>text=title=extract content from webpage")
+
+	//switch
+	webpage.Click(".tabs-nav-item>>.tabs-nav-title:has-text('1_string_match.php')")
+	webpage.Locator(".view-line>>text=title=check string matches pattern")
+
+	//close
+	locator := webpage.Locator(".tabs-nav-item>>.tabs-nav-title:has-text('1_string_match.php')")
+	locator.Hover()
+	webpage.Click(".tabs-nav-close")
+	webpage.Locator(".view-line>>text=title=extract content from webpage")
+}
+
 func TestUiScript(t *testing.T) {
 	runner.Run(t, "客户端-编辑保存禅道站点脚本", SaveScript)
 	runner.Run(t, "客户端-显示禅道站点脚本", ViewScript)
+	runner.Run(t, "客户端-切换禅道站点脚本", SwitchScript)
 }

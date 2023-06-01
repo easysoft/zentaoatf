@@ -77,6 +77,30 @@ func (s *RunSuit) TestRunZtfFile(t provider.T) {
 	t.Require().Equal("Success", testRun(cmd, expectReg))
 }
 
+func (s *RunSuit) TestRunExpectFile(t provider.T) {
+	t.ID("7561")
+	t.Title("执行期待结果独立文件的用例")
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %s/test/demo/expect.php", constTestHelper.RootPath)
+	expectReg := regexp.MustCompile(`Pass:1\(100\.0%\), Fail:0\(0\.0%\), Skip:0\(0\.0%\)|通过数：1\(100\.0%\)，失败数：0\(0\.0%\)，忽略数：0\(0\.0%\)`)
+	t.Require().Equal("Success", testRun(cmd, expectReg))
+}
+
+func (s *RunSuit) TestRunFileAndSubmit(t provider.T) {
+	t.ID("7552")
+	t.Title("执行后自动提交结果")
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %s/test/demo/1_string_match_pass.php -p 1 -cr", constTestHelper.RootPath)
+	expectReg := regexp.MustCompile(`Submitted test results to ZenTao|提交测试结果到禅道成功`)
+	t.Require().Equal("Success", testRun(cmd, expectReg))
+}
+
+func (s *RunSuit) TestRunFileAndSubmitBug(t provider.T) {
+	t.ID("7553")
+	t.Title("执行后自动提交缺陷")
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %s/test/demo/1_string_match_fail.php -p 1 -cb", constTestHelper.RootPath)
+	expectReg := regexp.MustCompile(`Success to report bug for case \\d+|成功为用例\d+提交缺陷`)
+	t.Require().Equal("Success", testRun(cmd, expectReg))
+}
+
 func (s *RunSuit) TestRunZtfTask(t provider.T) {
 	t.ID("1589")
 	t.Title("执行禅道测试任务")

@@ -155,6 +155,76 @@ func createModule() (err error) {
 	return
 }
 
+func createCaseInModule() error {
+	err := createCaseByModule("module1", "module1-case1")
+	if err != nil {
+		return err
+	}
+
+	createCaseByModule("module1", "module1-case2")
+	if err != nil {
+		return err
+	}
+
+	createCaseByModule("module2", "module2-case1")
+	if err != nil {
+		return err
+	}
+
+	createCaseByModule("module2", "module2-case2")
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func createCaseByModule(moduleName, caseName string) (err error) {
+	if _, err = page.Goto(constTestHelper.ZentaoSiteUrl, playwright.PageGotoOptions{
+		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
+		return
+	}
+
+	page.Click(".nav>>li>>text=测试")
+
+	iframeName := "app-qa"
+	iframe := page.Frame(playwright.PageFrameOptions{Name: &iframeName})
+
+	if iframe != nil {
+		iframe.Click(".nav>>li>>text=用例")
+		iframe.Click("#mainContent>>a>>text=" + moduleName)
+		iframe.Click("#mainMenu>>a>>text=建用例")
+
+		err = iframe.Fill(`input[name="title"]>>nth=0`, caseName)
+		if err != nil {
+			return
+		}
+		err = iframe.Click(`#submit`)
+		if err != nil {
+			return
+		}
+	} else {
+		page.Click(".nav>>li>>text=用例")
+		page.Click("#currentItem")
+		page.WaitForSelector("#dropMenu>>.list-group", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateVisible})
+		page.Click("#dropMenu>>a:has-text('企业网站建设')")
+		page.Click("#mainContent>>a>>text=" + moduleName)
+		page.Click("#mainMenu>>a>>text=建用例>>nth=-1")
+
+		err = page.Fill(`input[name="title"]>>nth=0`, caseName)
+		if err != nil {
+			return
+		}
+		err = page.Click(`#submit`)
+		if err != nil {
+			return
+		}
+	}
+
+	page.WaitForTimeout(1000)
+	return
+}
+
 func createSuite() (err error) {
 	if _, err = page.Goto(constTestHelper.ZentaoSiteUrl, playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
@@ -513,6 +583,8 @@ func InitZentaoData(version string, codeDir string) (err error) {
 		if err != nil {
 			return
 		}
+
+		createCaseInModule()
 
 		err = createSuite()
 

@@ -42,6 +42,7 @@ logs/
 /test/log
 /test/screenshot
 /test/cli/product1
+test/cli/docker
 /test/ui/docker
 /test/ui/log
 /test/demo/ci_test*

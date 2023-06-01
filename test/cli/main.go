@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 	"strings"
 	"testing"
 
@@ -15,22 +16,39 @@ import (
 	uiTest "github.com/easysoft/zentaoatf/test/helper/zentao/ui"
 )
 
+var (
+	runFrom, version, testToRun string
+	flagSet                     *flag.FlagSet
+)
+
 func main() {
+	defer func() {
+		execHelper.KillProcessByUUID("ui_auto_test")
+		uiTest.Close()
+	}()
+
+	flagSet = flag.NewFlagSet("restapi", flag.ContinueOnError)
+
+	flagSet.StringVar(&runFrom, "runFrom", "cmd", "")
+	flagSet.StringVar(&runFrom, "f", "cmd", "")
+
+	flagSet.StringVar(&version, "version", "latest", "")
+	flagSet.StringVar(&version, "v", "latest", "")
+
+	flagSet.StringVar(&testToRun, "testToRun", "", "")
+	flagSet.StringVar(&testToRun, "t", "", "")
+
+	testing.Init()
+	flagSet.Parse(os.Args[1:])
+	fmt.Println(version)
+
 	commConsts.ExecFrom = commConsts.FromCmd
 	serverConfig.InitLog()
 	serverConfig.InitExecLog(constTestHelper.RootPath)
 	commConsts.ZtfDir = constTestHelper.RootPath
 	i118Utils.Init("zh-CN", commConsts.AppServer)
-	var version = flag.String("zentaoVersion", "", "latest")
-	var runFrom = flag.String("runFrom", "", "cmd")
-	testing.Init()
-	flag.Parse()
-	fmt.Println(*version)
-	defer func() {
-		execHelper.KillProcessByUUID("ui_auto_test")
-		uiTest.Close()
-	}()
-	if *runFrom == "jenkins" {
+
+	if runFrom == "jenkins" {
 		constTestHelper.ZentaoSiteUrl = constTestHelper.ZentaoSiteUrl[:strings.LastIndex(constTestHelper.ZentaoSiteUrl, ":")]
 
 		err := commonTestHelper.InitZentaoData()
@@ -38,7 +56,7 @@ func main() {
 			fmt.Println("Init zentao data fail ", err)
 		}
 	} else {
-		err := commonTestHelper.InitZentao(*version)
+		err := commonTestHelper.InitZentao(version)
 		if err != nil {
 			fmt.Println("Init zentao data fail ", err)
 		}
