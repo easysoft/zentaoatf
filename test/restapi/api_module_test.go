@@ -36,3 +36,21 @@ func (s *ModuleApiSuite) TestModuleListForCaseApi(t provider.T) {
 
 	t.Require().Greater(firstModuleId, int64(0), "list modules failed")
 }
+
+func getModuleMinId() (id int64) {
+	token := httpHelper.Login()
+
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("modules?type=case&id=%d", config.ProductId), nil, constTestHelper.ZentaoSiteUrl)
+
+	bodyBytes, _ := httpHelper.Get(url, token)
+
+	modules := gjson.Get(string(bodyBytes), "modules").Array()
+	for _, item := range modules {
+		itemId := item.Get("id").Int()
+		if id == 0 || (itemId > 0 && id > itemId) {
+			id = itemId
+		}
+	}
+
+	return
+}

@@ -47,7 +47,9 @@ func (s *CaseApiSuite) TestCaseListByModuleApi(t provider.T) {
 	t.ID("7635")
 	token := httpHelper.Login()
 
-	url := zentaoHelper.GenApiUrl(fmt.Sprintf("/products/%d/testcases?module=%d", config.ProductId, config.ModuleId),
+	moduleId := getModuleMinId()
+
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("/products/%d/testcases?module=%d", config.ProductId, moduleId),
 		nil, constTestHelper.ZentaoSiteUrl)
 
 	bodyBytes, _ := httpHelper.Get(url, token)
