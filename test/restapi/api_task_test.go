@@ -64,3 +64,21 @@ func getLatestTaskId(token string) (id int) {
 
 	return
 }
+
+func getTaskMinId() (id int64) {
+	token := httpHelper.Login()
+
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testtasks?product=%d", config.ProductId), nil, constTestHelper.ZentaoSiteUrl)
+
+	bodyBytes, _ := httpHelper.Get(url, token)
+
+	tasks := gjson.Get(string(bodyBytes), "testtasks").Array()
+	for _, task := range tasks {
+		taskId := task.Get("id").Int()
+		if id == 0 || (taskId > 0 && id > taskId) {
+			id = taskId
+		}
+	}
+
+	return
+}

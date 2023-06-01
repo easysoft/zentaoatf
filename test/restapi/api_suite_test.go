@@ -49,3 +49,21 @@ func (s *SuiteApiSuite) TestSuiteDetailApi(t provider.T) {
 
 	t.Require().Greater(len(name), 0, "get testsuite failed")
 }
+
+func getSuiteMinId() (id int64) {
+	token := httpHelper.Login()
+
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("products/%d/testsuites", config.ProductId), nil, constTestHelper.ZentaoSiteUrl)
+
+	bodyBytes, _ := httpHelper.Get(url, token)
+
+	suites := gjson.Get(string(bodyBytes), "testsuites").Array()
+	for _, suite := range suites {
+		suiteId := suite.Get("id").Int()
+		if id == 0 || (suiteId > 0 && id > suiteId) {
+			id = suiteId
+		}
+	}
+
+	return
+}
