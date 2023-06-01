@@ -1,13 +1,5 @@
 package main
 
-/**
-
-cid=0
-pid=0
-
-1.更新用例到禅道 >> Success
-
-*/
 import (
 	"fmt"
 	"io/ioutil"
@@ -42,7 +34,10 @@ func (s *ExpectSuite) TestExpectSuite(t provider.T) {
 
 func testExpect() string {
 	path := fmt.Sprintf(`%sdemo/sample/1_simple.php`, constTestHelper.RootPath)
+	expPath := path[:len(path)-3] + "exp"
 	cmd := commonTestHelper.GetZtfPath() + ` expect ` + path
+
+	os.Remove(expPath)
 
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
@@ -54,7 +49,6 @@ func testExpect() string {
 		return fmt.Sprintf("expect %s, actual %s", successExpectRe, err.Error())
 	}
 
-	expPath := path[:len(path)-3] + "exp"
 	file, err := os.Open(expPath)
 	if err != nil {
 		return err.Error()
@@ -63,6 +57,7 @@ func testExpect() string {
 		file.Close()
 		os.Remove(expPath)
 	}()
+
 	content, err := ioutil.ReadAll(file)
 	checkResSuccess := strings.Contains(string(content), `expect 1
 pass
@@ -70,6 +65,7 @@ expect 3`)
 	if !checkResSuccess {
 		return "Check exp error"
 	}
+
 	return "Success"
 }
 

@@ -1,15 +1,5 @@
 package main
 
-/**
-
-cid=0
-pid=0
-
-1.查看脚本 >> Success
-2.查看目录下cid=1的脚本 >> Success
-3.查看目录下标题包含match的脚本 >> Success
-
-*/
 import (
 	"fmt"
 	"regexp"
@@ -33,7 +23,9 @@ func (s *ViewSuite) BeforeEach(t provider.T) {
 }
 func (s *ViewSuite) TestViewSuite(t provider.T) {
 	t.Require().Equal("Success", testView(commonTestHelper.GetZtfPath()+fmt.Sprintf(" view %stest/demo/1_string_match_fail.php", constTestHelper.RootPath), regexp.MustCompile("check string matches pattern")))
+
 	t.Require().Equal("Success", testView(commonTestHelper.GetZtfPath()+fmt.Sprintf(" -v %stest/demo -k 1", constTestHelper.RootPath), regexp.MustCompile("check string matches pattern")))
+
 	t.Require().Equal("Success", testView(commonTestHelper.GetZtfPath()+fmt.Sprintf(" view %stest/demo -k match", constTestHelper.RootPath), regexp.MustCompile("Found 5 test cases|发现5个用例")))
 }
 

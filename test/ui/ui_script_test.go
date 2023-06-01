@@ -55,10 +55,12 @@ func ViewScript(t provider.T) {
 func SwitchScript(t provider.T) {
 	t.ID("7583")
 	t.AddParentSuite("脚本切换和关闭")
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
+
 	webpage.Click(".tree-node-title:has-text('1_string_match.php')")
 	webpage.Locator(".view-line>>text=title=check string matches pattern")
 

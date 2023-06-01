@@ -392,15 +392,15 @@ func CheckUnitTestResult() bool {
 	titleExist := map[string]bool{}
 	for _, result := range results {
 		titleExist[result["title"]] = true
-		if result["title"] == "loginFail" && result["status"] != "通过" {
+		if result["title"] == "密码错误" && result["status"] != "通过" {
 			return false
 		}
-		if result["title"] == "loginSuccess" && result["status"] != "失败" {
+		if result["title"] == "登录成功" && result["status"] != "失败" {
 			return false
 		}
 	}
 
-	return titleExist["loginFail"] == true && titleExist["loginSuccess"] == true
+	return titleExist["登录成功"] == true && titleExist["密码错误"] == true
 }
 
 func InstallExt(version, codeDir string) error {

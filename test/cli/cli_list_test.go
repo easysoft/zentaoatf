@@ -1,15 +1,5 @@
 package main
 
-/**
-
-cid=0
-pid=0
-
-1.列出目录下的所有脚本 >> Success
-2.列出目录下cid=1的脚本 >> Success
-3.列出目录下标题包含match的脚本 >> Success
-
-*/
 import (
 	"fmt"
 	"regexp"

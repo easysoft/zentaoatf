@@ -9,23 +9,26 @@ import (
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/runner"
-	playwright "github.com/playwright-community/playwright-go"
 )
 
 func CollapseLog(t provider.T) {
 	t.ID("5502")
 	t.AddParentSuite("脚本执行日志")
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
+
 	scriptLocator := webpage.Locator(".tree-node-title>>text=1_string_match.php")
 	scriptLocator.Click()
 	webpage.Click(".tabs-nav-toolbar>>[title=\"执行\"]")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
+
 	webpage.Click(".btn[title=\"展开所有\"]")
 	locator := webpage.Locator("#log-list>>.show-detail>>:has-text('[期望]')")
 	webpage.WaitForTimeout(100)
+
 	webpage.Click(".btn[title=\"折叠所有\"]")
 	plwConf.DisableErr()
 	defer plwConf.EnableErr()
@@ -40,17 +43,17 @@ func CollapseLog(t provider.T) {
 func FullScreenLog(t provider.T) {
 	t.ID("5749")
 	t.AddParentSuite("脚本执行日志")
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	webpage.WaitForSelector(".tree-node")
-	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
-	locator.Click()
-	scriptLocator := locator.Locator("text=1_string_match.php")
-	scriptLocator.Click()
-	webpage.Click(".tabs-nav-toolbar>>[title=\"执行\"]")
-	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
+	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.ExpandWorspace(webpage)
+
+	ztfTestHelper.RunScript(webpage, "1_string_match.php")
+
 	webpage.Click(".btn[title=\"向上展开\"]")
 	webpage.WaitForTimeout(100)
+
 	isHidden := webpage.IsHidden("#tabsPane")
 	if !isHidden {
 		t.Errorf("Check Full Screen fail")
@@ -61,11 +64,14 @@ func FullScreenLog(t provider.T) {
 func ClearLog(t provider.T) {
 	t.ID("7540")
 	t.AddParentSuite("清除测试执行日志")
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
+
 	ztfTestHelper.RunScript(webpage, "1_string_match.php")
+
 	webpage.Click(".btn[title=\"清空\"]")
 	webpage.WaitForTimeout(100)
 	isHidden := webpage.IsHidden("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")

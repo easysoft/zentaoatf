@@ -45,6 +45,7 @@ func testCi() string {
 		return err.Error()
 	}
 	defer child.Close()
+
 	if _, err = child.Expect(continueCiRe, time.Second*10); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", continueCiRe, err.Error())
 	}

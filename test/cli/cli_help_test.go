@@ -1,13 +1,5 @@
 package main
 
-/**
-
-cid=0
-pid=0
-
-1.更新用例到禅道 >> Success
-
-*/
 import (
 	"fmt"
 	"regexp"

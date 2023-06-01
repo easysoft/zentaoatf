@@ -12,8 +12,10 @@ import (
 func SwitchLanguage(t provider.T) {
 	t.ID("5464")
 	t.AddParentSuite("设置界面语言")
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
+
 	webpage.Click("#navbar>>[title=\"设置\"]")
 	webpage.Click(`input[type="radio"]>>nth=1`)
 	locator := webpage.Locator(".t-card-toolbar div>>nth=2")
@@ -22,18 +24,21 @@ func SwitchLanguage(t provider.T) {
 		t.Error("Switch language fail, find interpreter fail")
 		t.FailNow()
 	}
+
 	locator = webpage.Locator(".t-card-toolbar button")
 	CreateInterpreterTitle := locator.InnerText()
 	if CreateInterpreterTitle != "Create Remote Server" {
 		t.Error("Switch language fail, find create remote server btn fail")
 		t.FailNow()
 	}
+
 	locator = webpage.Locator("#settingModal .modal-title")
 	modalTitle := locator.InnerText()
 	if modalTitle != "Settings" {
 		t.Error("Switch language fail, find modalTitle fail")
 		t.FailNow()
 	}
+
 	webpage.Click(`input[type="radio"]>>nth=0`)
 }
 

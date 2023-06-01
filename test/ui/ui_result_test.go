@@ -16,25 +16,31 @@ import (
 func Detail(t provider.T) {
 	t.ID("5489")
 	t.AddParentSuite("测试结果")
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTest.SelectSite(webpage)
 	ztfTest.ExpandWorspace(webpage)
+
 	ztfTest.RunScript(webpage, "1_string_match.php")
+
 	webpage.Click("#rightPane .result-list-item .list-item-title>>nth=0")
 	webpage.WaitForSelector(".result-action .btn:has-text('提交结果到禅道')")
+
 	locator := webpage.Locator(".page-result .single small")
 	result := locator.InnerText()
 	if result != "通过 0.00%" {
 		t.Error("Detail result error")
 		t.FailNow()
 	}
+
 	locator = webpage.Locator(".result-step-checkpoint code")
 	expectVal := locator.InnerText()
 	if strings.TrimSpace(expectVal) != "~c:!=2~" {
 		t.Error("Detail expect error")
 		t.FailNow()
 	}
+
 	locator = webpage.Locator(".result-step-checkpoint code>>nth=1")
 	actualVal := locator.InnerText()
 	if strings.TrimSpace(actualVal) != "2" {
@@ -46,16 +52,20 @@ func Detail(t provider.T) {
 func SubmitResult(t provider.T) {
 	t.ID("5499")
 	t.AddParentSuite("测试结果")
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
+
 	webpage.Click("#rightPane .result-list-item .list-item-title>>nth=0")
 	webpage.Click(".result-action .btn:has-text('提交结果到禅道')")
 
 	webpage.WaitForSelector("#syncToZentaoModal")
 	titleInput := webpage.Locator("#syncToZentaoModal>>.form-item:has-text('或输入新测试单标题')>>input")
+
 	titleInput.Fill("单元测试测试单")
 	webpage.Click("#syncToZentaoModal>>text=确定")
+
 	webpage.WaitForSelector("#syncToZentaoModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateHidden})
 	webpage.Locator(".toast-notification-container:has-text('提交成功')")
 }
@@ -63,13 +73,16 @@ func SubmitResult(t provider.T) {
 func SubmitBug(t provider.T) {
 	t.ID("5500")
 	t.AddParentSuite("测试结果")
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
+
 	webpage.Click("#rightPane .result-list-item .list-item-title>>nth=0")
 	webpage.Click(".page-result .btn:has-text('提交缺陷到禅道')")
 	webpage.WaitForSelector("#submitBugModal")
 	webpage.Click("#submitBugModal>>text=确定")
+
 	webpage.WaitForSelector("#submitBugModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateHidden})
 	webpage.Locator(".toast-notification-container", playwright.PageLocatorOptions{HasText: "提交成功"})
 }
@@ -77,10 +90,12 @@ func SubmitBug(t provider.T) {
 func SubmitBugTwoStep(t provider.T) {
 	t.ID("5500")
 	t.AddParentSuite("测试结果")
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
+
 	ztfTest.RunScript(webpage, "1_string_match.php")
 	webpage.Click("#rightPane .result-list-item .list-item-title>>nth=0")
 
@@ -89,6 +104,7 @@ func SubmitBugTwoStep(t provider.T) {
 	webpage.WaitForSelector("#submitBugModal")
 	webpage.Click("#cbox0")
 	webpage.Click("#submitBugModal>>text=确定")
+
 	webpage.WaitForSelector("#submitBugModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateHidden})
 	webpage.Locator(".toast-notification-container", playwright.PageLocatorOptions{HasText: "提交成功"})
 }

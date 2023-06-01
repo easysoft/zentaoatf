@@ -58,6 +58,7 @@ func RunSuccessStatistic(t provider.T) {
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
+
 	scriptLocator := webpage.Locator(".tree-node-title>>text=3_http_interface_call.php")
 	scriptLocator.Click()
 	elements := webpage.QuerySelectorAll(".statistic>>span")
@@ -65,15 +66,18 @@ func RunSuccessStatistic(t provider.T) {
 	succTimes := elements.InnerText(1)
 	runTimesInt, _ := strconv.Atoi(runTimes)
 	succTimesInt, _ := strconv.Atoi(succTimes)
+
 	webpage.Click(".tabs-nav-toolbar>>[title=\"执行\"]")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	webpage.WaitForResponse("**/statistic*")
 	webpage.WaitForTimeout(1000)
+
 	elements = webpage.QuerySelectorAll(".statistic>>span")
 	runTimes2 := elements.InnerText(0)
 	succTimes2 := elements.InnerText(1)
 	runTimes2Int, _ := strconv.Atoi(runTimes2)
 	succTimes2Int, _ := strconv.Atoi(succTimes2)
+
 	if runTimes2Int-runTimesInt != 1 {
 		webpage.ScreenShot()
 		t.Errorf("statistic success num error, total num expect: %v ,actual： %v", runTimesInt+1, runTimes2Int)
@@ -95,10 +99,13 @@ func RunBugStatistic(t provider.T) {
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
+
 	scriptLocator := webpage.Locator(".tree-node-title>>text=1_string_match.php")
 	scriptLocator.Click()
+
 	webpage.WaitForSelector("#mainContent:has-text('执行统计')")
 	webpage.WaitForTimeout(1000)
+
 	elements := webpage.QuerySelectorAll(".statistic>>span")
 	bugTimes := elements.InnerText(3)
 	bugTimesInt, _ := strconv.Atoi(bugTimes)

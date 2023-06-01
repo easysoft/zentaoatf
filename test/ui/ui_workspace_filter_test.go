@@ -13,13 +13,16 @@ import (
 func FilterDir(t provider.T) {
 	t.ID("5494")
 	t.AddParentSuite("管理禅道站点下工作目录")
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
+
 	webpage.Click(`[title="筛选"]`)
 	webpage.WaitForSelector("#filterModal")
 	webpage.Click("#filterModal>>.list-item-title:has-text(\"单元测试工作目录\")")
+
 	eleArr := webpage.QuerySelectorAll("#leftPane>>.tree>>.tree-node")
 	if len(eleArr.ElementHandles) < 1 {
 		t.Errorf("Filter valid fail")
@@ -30,27 +33,34 @@ func FilterDir(t provider.T) {
 func FilterSuite(t provider.T) {
 	t.ID("5495")
 	t.AddParentSuite("管理禅道站点下工作目录")
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.ExpandWorspace(webpage)
+
 	webpage.Click(`[title="筛选"]`)
 	webpage.WaitForSelector("#filterModal")
 	webpage.WaitForTimeout(1000)
+
 	webpage.Click("#filterModal>>.tab-nav:has-text(\"按套件\")")
 	webpage.WaitForSelector("#filterModal>>.list-item-title:has-text(\"test_suite\")")
 	webpage.Click("#filterModal>>.list-item-title:has-text(\"test_suite\")")
+
 	webpage.WaitForTimeout(200)
 	webpage.WaitForSelector(".toolbar:has-text(\"按套件\")")
 	ztfTestHelper.ExpandWorspace(webpage)
 	webpage.WaitForTimeout(200)
+
 	webpage.Locator(".tree-node>>text=1_string_match.php")
 }
 func ByModule(t provider.T) {
 	t.ID("5493")
 	t.AddParentSuite("管理禅道站点下工作目录")
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.ExpandWorspace(webpage)
+
 	webpage.Click("#displayByMenuToggle")
 	webpage.WaitForTimeout(1000)
 	webpage.Click(".dropdown-menu>>.list-item-content:has-text(\"按模块\")")
@@ -67,9 +77,11 @@ func ByModule(t provider.T) {
 func FilterTask(t provider.T) {
 	t.ID("5496")
 	t.AddParentSuite("管理禅道站点下工作目录")
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.ExpandWorspace(webpage)
+
 	webpage.Click(`[title="筛选"]`)
 	webpage.WaitForSelector("#filterModal")
 	webpage.WaitForTimeout(1000)
@@ -78,7 +90,9 @@ func FilterTask(t provider.T) {
 	webpage.Click("#filterModal>>.list-item-title:has-text(\"企业网站第一期测试任务\")")
 	webpage.WaitForTimeout(200)
 	webpage.WaitForSelector(".toolbar:has-text(\"按测试单\")")
+
 	ztfTestHelper.ExpandWorspace(webpage)
+
 	webpage.Locator(".tree-node>>text=1_string_match.php")
 }
 

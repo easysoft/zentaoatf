@@ -20,15 +20,19 @@ func ScriptBug(t provider.T) {
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
+
 	ztfTestHelper.RunScript(webpage, "1_string_match.php")
 	ztfTestHelper.SubmitResult(webpage)
+
 	webpage.Click(".tree-node-title:has-text('1_string_match.php')")
+
 	webpage.WaitForResponse("**/bugs*")
 	webpage.WaitForSelectorTimeout(".statistic>>span>>nth=3", 3000)
+
 	webpage.Click(".statistic>>span>>nth=3")
 	webpage.WaitForSelectorTimeout("#bugsModal>>tr", 3000)
-	elements := webpage.QuerySelectorAll("#bugsModal>>tr")
 
+	elements := webpage.QuerySelectorAll("#bugsModal>>tr")
 	bugTimesInt := len(elements.ElementHandles)
 	if bugTimesInt < 2 {
 		webpage.ScreenShot()
@@ -46,6 +50,7 @@ func ScriptsBug(t provider.T) {
 	ztfTestHelper.SelectSite(webpage)
 	webpage.WaitForSelector("#siteMenuToggle:has-text('单元测试站点')", playwright.PageWaitForSelectorOptions{Timeout: &conf.Timeout})
 	ztfTestHelper.ExpandWorspace(webpage)
+
 	webpage.Click(`[title="批量选择"]`)
 	webpage.Click(".tree-node-item:has-text('1_string_match.php')>>.tree-node-check")
 	webpage.Click(".tree-node-item:has-text('2_webpage_extract.php')>>.tree-node-check")

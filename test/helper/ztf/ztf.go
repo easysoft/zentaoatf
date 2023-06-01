@@ -13,12 +13,15 @@ import (
 var expandTimes = 0
 var AddSiteTimes = 0
 
-func CreateTestWorkspace(webpage plwHelper.Webpage, name string) {
+func CreateTestWorkspace(webpage plwHelper.Webpage, name, workspacePath string) {
+	if workspacePath == "" {
+		workspacePath = fmt.Sprintf("%stest%sdemo%sphp", constTestHelper.RootPath, constTestHelper.FilePthSep, constTestHelper.FilePthSep)
+	}
+
 	webpage.Click(`[title="新建工作目录"]`)
 	webpage.WaitForSelector("#workspaceFormModal")
 	locator := webpage.Locator("#workspaceFormModal input")
 	locator.FillNth(0, name)
-	workspacePath := fmt.Sprintf("%stest%sdemo%sphp", constTestHelper.RootPath, constTestHelper.FilePthSep, constTestHelper.FilePthSep)
 	locator.FillNth(1, workspacePath)
 	locator = webpage.Locator("#workspaceFormModal select")
 	locator.SelectNth(0, playwright.SelectOptionValues{Values: &[]string{"ztf"}})
@@ -33,7 +36,7 @@ func RunScript(webpage plwHelper.Webpage, scriptName string) {
 	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
 	c := locator.Count()
 	if c == 0 {
-		CreateTestWorkspace(webpage, "单元测试工作目录")
+		CreateTestWorkspace(webpage, "单元测试工作目录", "")
 	}
 	locator = webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
 	locator.Click()
@@ -103,7 +106,7 @@ func ExpandWorspace(webpage plwHelper.Webpage) (err error) {
 	defer plwConf.EnableErr()
 	err = webpage.WaitForSelectorTimeout(".tree-node-title:has-text('单元测试工作目录')", 3000)
 	if err != nil {
-		CreateTestWorkspace(webpage, "单元测试工作目录")
+		CreateTestWorkspace(webpage, "单元测试工作目录", "")
 	}
 	selector := webpage.QuerySelectorAll(".tree-node-root:has-text('单元测试工作目录')")
 	className := selector.GetAttribute(0, "class")

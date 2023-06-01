@@ -32,7 +32,7 @@ func Spawn(cmdStr string, timeout time.Duration) (expect *GExpect, err error) {
 	} else {
 		cmd = exec.Command("/bin/sh", "-c", cmdStr)
 	}
-	fmt.Println(cmd.String())
+	fmt.Println(cmd.String() + "\n")
 
 	if cmd == nil {
 		err = errors.New("cmd is nil")

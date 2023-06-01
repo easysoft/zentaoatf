@@ -18,7 +18,7 @@
 
           <div class="group">
             <template v-if="info?.status === 'start'">
-              <span @click="showDetail(item.info?.key)" class="link state center">
+              <span id="show-detail" @click="showDetail(item.info?.key)" class="link state center">
                 <Icon v-if="!caseDetail[csKey]" icon="chevron-right" />
                 <Icon v-if="caseDetail[csKey]" icon="chevron-down" />
               </span>

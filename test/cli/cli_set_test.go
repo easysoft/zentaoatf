@@ -1,15 +1,7 @@
 package main
 
 /**
-
 $>ztf set   根据系统提示，设置语言、禅道地址、账号等，Windows下会提示输入语言解释程序。
-
-cid=0
-pid=0
-
-中文set >> Success
-英文set >> Success
-
 */
 import (
 	"fmt"
@@ -33,7 +25,8 @@ var (
 	passwordRe    = regexp.MustCompile("Zentao password|请输入账号密码")
 	interpreterRe = regexp.MustCompile("Do you want to config script interpreter|现在配置脚本的解释程序")
 	successRe     = regexp.MustCompile("Success")
-	langMap       = map[string]string{
+
+	langMap = map[string]string{
 		"php":        "D:\\Program Files\\phpstudy_pro\\Extensions\\php\\php7.4.3nts\\php.exe",
 		"javascript": "",
 		"lua":        "",
@@ -73,22 +66,24 @@ func testSet(language string) (ret string) {
 	if _, err = child.Expect(languageRe, 3*time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", languageRe, err.Error())
 	}
-
 	if err = child.Send(language + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
+
 	if _, err := child.Expect(configRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", configRe, err.Error())
 	}
 	if err = child.Send("y" + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
+
 	if _, err = child.Expect(urlRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", urlRe, err.Error())
 	}
 	if err = child.Send(constTestHelper.ZentaoSiteUrl + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
+
 	if _, err = child.Expect(accountRe, time.Second*5); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", accountRe, err.Error())
 	}
@@ -102,6 +97,7 @@ func testSet(language string) (ret string) {
 	if err = child.Send(constTestHelper.ZentaoPassword + constTestHelper.NewLine); err != nil {
 		return err.Error()
 	}
+
 	if runtime.GOOS == "windows" {
 		if _, err = child.Expect(interpreterRe, time.Second*5); err != nil {
 			return fmt.Sprintf("expect %s, actual %s", interpreterRe, err)
@@ -109,18 +105,22 @@ func testSet(language string) (ret string) {
 		if err = child.Send("y" + constTestHelper.NewLine); err != nil {
 			return err.Error()
 		}
+
 		for _, lang := range langArray {
 			if _, err = child.Expect(regexp.MustCompile(lang), time.Second*5); err != nil {
 				return fmt.Sprintf("expect %s, actual %s", lang, err.Error())
 			}
+
 			if err = child.Send(langMap[lang] + constTestHelper.NewLine); err != nil {
 				return err.Error()
 			}
 		}
 	}
+
 	if _, err = child.Expect(successRe, 5*time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", successRe, err.Error())
 	}
+
 	child.Close()
 	return "Success"
 }

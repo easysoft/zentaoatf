@@ -1,14 +1,5 @@
 package main
 
-/**
-
-cid=0
-pid=0
-timeout=10
-
-1.提交结果到禅道 >> Success
-
-*/
 import (
 	"fmt"
 	"regexp"
@@ -40,7 +31,9 @@ func (s *CrSuite) BeforeEach(t provider.T) {
 func (s *CrSuite) TestAutoCr(t provider.T) {
 	t.ID("7558")
 	t.AddSubSuite("命令行-提交测试结果到禅道免确认")
+
 	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" cr %stest/demo/001 -p 1 -y -t testcr", constTestHelper.RootPath)
+
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		t.Require().Equal("Success", err.Error())
@@ -55,6 +48,7 @@ func (s *CrSuite) TestAutoCr(t provider.T) {
 func (s *CrSuite) TestCr(t provider.T) {
 	t.ID("1590")
 	t.AddSubSuite("命令行-提交测试结果到禅道")
+
 	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" cr %stest/demo/001", constTestHelper.RootPath)
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {

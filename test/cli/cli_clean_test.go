@@ -1,13 +1,5 @@
 package main
 
-/**
-
-cid=0
-pid=0
-
-1.更新用例到禅道 >> Success
-
-*/
 import (
 	"fmt"
 	"os"
@@ -44,6 +36,7 @@ func testClean() string {
 	if runtime.GOOS == "windows" {
 		path = `.\log\test`
 	}
+
 	_, err := os.Stat(path)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -53,6 +46,7 @@ func testClean() string {
 			}
 		}
 	}
+
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		return err.Error()

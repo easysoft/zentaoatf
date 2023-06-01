@@ -14,12 +14,15 @@ import (
 func RunReExecFailCase(t provider.T) {
 	t.ID("5491")
 	t.AddParentSuite("测试结果页面执行脚本")
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
+
 	webpage.Click("#rightPane .result-list-item .list-item-title>>nth=0")
 	webpage.Click(".result-action .btn:has-text('重新执行失败用例')")
+
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
 	locator := webpage.Locator("#log-list>>code:has-text('执行1个用例，耗时')")
 	innerText := locator.InnerText()
@@ -27,17 +30,20 @@ func RunReExecFailCase(t provider.T) {
 		t.Errorf("Exec failed case fail")
 		t.FailNow()
 	}
+
 	webpage.WaitForTimeout(2000)
 	resultTitle := webpage.InnerText("#rightPane .result-list-item .list-item-title")
 	if resultTitle != "1_string_match.php" {
 		t.Errorf("Find result in rightPane fail")
 		t.FailNow()
 	}
+
 	timeElement := locator.Locator(".time>>span")
 	if resultTitle != "1_string_match.php" {
 		t.Errorf("Find log time element in logPane fail")
 		t.FailNow()
 	}
+
 	logTime := timeElement.InnerText()
 	resultTime := webpage.InnerText("#rightPane .result-list-item .list-item-trailing-text")
 	if logTime[:5] != resultTime {
@@ -49,25 +55,31 @@ func RunReExecFailCase(t provider.T) {
 func RunReExecAllCase(t provider.T) {
 	t.ID("5750")
 	t.AddParentSuite("测试结果页面执行脚本")
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.ExpandWorspace(webpage)
+
 	ztfTestHelper.RunScript(webpage, "1_string_match.php")
+
 	webpage.Click("#rightPane .result-list-item .list-item-title>>nth=0")
 	webpage.Click(".result-action .btn:has-text('重新执行所有用例')")
 	webpage.WaitForSelector("#log-list>>.msg-span>>:has-text('执行1个用例，耗时')")
+
 	locator := webpage.Locator("#log-list>>code:has-text('执行1个用例，耗时')")
 	innerText := locator.InnerText()
 	if !strings.Contains(innerText, "通过数：0(0.0%)，失败数：1(100.0%)") {
 		t.Errorf("Exec failed case fail")
 		t.FailNow()
 	}
+
 	webpage.WaitForTimeout(2000)
 	resultTitle := webpage.InnerText("#rightPane .result-list-item .list-item-title")
 	if resultTitle != "1_string_match.php" {
 		t.Errorf("Find result title in rightPane fail")
 		t.FailNow()
 	}
+
 	timeElement := locator.Locator(".time>>span")
 	logTime := timeElement.InnerText()
 	resultTime := webpage.InnerText("#rightPane .result-list-item .list-item-trailing-text")

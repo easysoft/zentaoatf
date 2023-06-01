@@ -1,13 +1,5 @@
 package main
 
-/**
-
-cid=0
-pid=0
-
-1.更新用例到禅道 >> Success
-
-*/
 import (
 	"fmt"
 	"regexp"
@@ -29,7 +21,7 @@ type VersionSuite struct {
 }
 
 func (s *VersionSuite) BeforeEach(t provider.T) {
-	t.ID("2")
+	t.ID("7534")
 	t.AddSubSuite("命令行-查看ZTF版本")
 }
 func (s *VersionSuite) TestVersionSuite(t provider.T) {
