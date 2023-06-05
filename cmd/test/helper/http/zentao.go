@@ -1,8 +1,8 @@
 package httpHelper
 
 import (
+	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
-	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	"github.com/tidwall/gjson"
 )
 

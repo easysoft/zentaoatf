@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
-	"github.com/easysoft/zentaoatf/test/ui/conf"
+	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
+	"github.com/easysoft/zentaoatf/cmd/test/ui/conf"
 
-	"github.com/easysoft/zentaoatf/test/ui/utils"
+	"github.com/easysoft/zentaoatf/cmd/test/ui/utils"
 	playwright "github.com/playwright-community/playwright-go"
 )
 

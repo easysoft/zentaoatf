@@ -3,8 +3,8 @@ package main
 import (
 	"testing"
 
-	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
-	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
+	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
+	plwHelper "github.com/easysoft/zentaoatf/cmd/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/runner"
 )

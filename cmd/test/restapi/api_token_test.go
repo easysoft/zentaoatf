@@ -1,7 +1,7 @@
 package main
 
 import (
-	httpHelper "github.com/easysoft/zentaoatf/test/helper/http"
+	httpHelper "github.com/easysoft/zentaoatf/cmd/test/helper/http"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 	"testing"

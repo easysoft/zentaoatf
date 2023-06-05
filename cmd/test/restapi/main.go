@@ -15,13 +15,13 @@ import (
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
+	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
+	uiTest "github.com/easysoft/zentaoatf/cmd/test/helper/zentao/ui"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
-	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
-	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
-	uiTest "github.com/easysoft/zentaoatf/test/helper/zentao/ui"
 )
 
 var (

@@ -7,10 +7,10 @@ import (
 	"runtime"
 	"time"
 
+	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
-	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 

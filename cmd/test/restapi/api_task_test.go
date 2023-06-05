@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
+	httpHelper "github.com/easysoft/zentaoatf/cmd/test/helper/http"
+	"github.com/easysoft/zentaoatf/cmd/test/restapi/config"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
-	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
-	httpHelper "github.com/easysoft/zentaoatf/test/helper/http"
-	"github.com/easysoft/zentaoatf/test/restapi/config"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 	"github.com/tidwall/gjson"

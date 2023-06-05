@@ -4,8 +4,8 @@ import (
 	"os"
 	"os/exec"
 
+	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
-	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	"github.com/go-git/go-git/v5"
 )
 

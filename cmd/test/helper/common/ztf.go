@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
-	uiTest "github.com/easysoft/zentaoatf/test/helper/zentao/ui"
+	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
+	uiTest "github.com/easysoft/zentaoatf/cmd/test/helper/zentao/ui"
 )
 
 func BuildCli() (err error) {

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
-	plwConf "github.com/easysoft/zentaoatf/test/ui/conf"
-	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
+	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
+	plwConf "github.com/easysoft/zentaoatf/cmd/test/ui/conf"
+	plwHelper "github.com/easysoft/zentaoatf/cmd/test/ui/helper"
 	"github.com/playwright-community/playwright-go"
 )
 

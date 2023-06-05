@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
-	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )

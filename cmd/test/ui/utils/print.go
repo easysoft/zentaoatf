@@ -3,7 +3,7 @@ package utils
 import (
 	"log"
 
-	"github.com/easysoft/zentaoatf/test/ui/conf"
+	"github.com/easysoft/zentaoatf/cmd/test/ui/conf"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 )
 

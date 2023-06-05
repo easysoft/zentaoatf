@@ -7,10 +7,10 @@ import (
 	"strconv"
 	"strings"
 
+	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
+	"github.com/easysoft/zentaoatf/cmd/test/ui/conf"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
-	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
-	"github.com/easysoft/zentaoatf/test/ui/conf"
 	playwright "github.com/playwright-community/playwright-go"
 )
 
