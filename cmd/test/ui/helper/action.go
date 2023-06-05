@@ -106,13 +106,16 @@ func (p *Webpage) ElementExist(selector string) bool {
 	plwConf.DisableErr()
 	defer plwConf.EnableErr()
 
+	p.WaitForSelectorTimeout(selector, 3000)
+
 	locator, err := p.Page.Locator(selector)
-	c, err := locator.Count()
-	if err == nil && c == 0 {
+	if err != nil {
 		return false
 	}
 
-	return true
+	c, err := locator.Count()
+
+	return c > 0
 }
 
 func (p *Webpage) QuerySelectorAll(selector string) (ret MyElementHandle) {

@@ -24,6 +24,9 @@ var (
 	ZtfUrl = fmt.Sprintf("http://127.0.0.1:%d/", UiPort)
 
 	ZentaoExtUrl = "https://www.zentao.net/file-download-22700.html"
+
+	WorkspaceName = "单元测试工作目录"
+	SiteName      = "单元测试站点"
 )
 
 func init() {

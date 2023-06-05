@@ -25,14 +25,14 @@ func CreateSite(t provider.T) {
 
 	webpage.Click("text=新建站点")
 	locator = webpage.Locator("#siteFormModal input")
-	locator.FillNth(0, "单元测试站点")
+	locator.FillNth(0, constTestHelper.SiteName)
 	locator.FillNth(1, constTestHelper.ZentaoSiteUrl)
 	locator.FillNth(2, constTestHelper.ZentaoUsername)
 	locator.FillNth(3, constTestHelper.ZentaoPassword)
 	webpage.Click("text=确定")
 
 	webpage.WaitForSelector(".list-item-content span:has-text('单元测试站点')")
-	locator = webpage.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: "单元测试站点"})
+	locator = webpage.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: constTestHelper.SiteName})
 }
 
 func CreateSiteWithFullUrl(t provider.T) {
@@ -49,14 +49,14 @@ func CreateSiteWithFullUrl(t provider.T) {
 	webpage.Click("text=新建站点")
 
 	locator = webpage.Locator("#siteFormModal input")
-	locator.FillNth(0, "单元测试站点")
+	locator.FillNth(0, constTestHelper.SiteName)
 	locator.FillNth(1, constTestHelper.ZentaoSiteUrl+"/my.php")
 	locator.FillNth(2, constTestHelper.ZentaoUsername)
 	locator.FillNth(3, constTestHelper.ZentaoPassword)
 	webpage.Click("text=确定")
 
 	webpage.WaitForSelector(".list-item-content span:has-text('单元测试站点')")
-	locator = webpage.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: "单元测试站点"})
+	locator = webpage.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: constTestHelper.SiteName})
 }
 
 func EditSite(t provider.T) {
@@ -72,7 +72,7 @@ func EditSite(t provider.T) {
 	webpage.Click("text=禅道站点管理")
 
 	plwConf.DisableErr()
-	locator = webpage.Locator(".list-item", playwright.PageLocatorOptions{HasText: "单元测试站点"})
+	locator = webpage.Locator(".list-item", playwright.PageLocatorOptions{HasText: constTestHelper.SiteName})
 	c := locator.Count()
 	if c == 0 {
 		CreateSite(t)
@@ -82,7 +82,7 @@ func EditSite(t provider.T) {
 	}
 	plwConf.EnableErr()
 
-	locator = webpage.Locator(".list-item", playwright.PageLocatorOptions{HasText: "单元测试站点"})
+	locator = webpage.Locator(".list-item", playwright.PageLocatorOptions{HasText: constTestHelper.SiteName})
 	webpage.Click("text=编辑")
 
 	locator = webpage.Locator("#siteFormModal input")

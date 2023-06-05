@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
@@ -23,7 +24,7 @@ func SwitchProduct(t provider.T) {
 	webpage.WaitForSelector("#navbar .list-item")
 	webpage.Click("#navbar .list-item>>text=企业内部工时管理系统")
 
-	webpage.WaitForSelector(".tree-node-root>>.tree-node-title>> :scope:has-text('单元测试工作目录')", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+	webpage.WaitForSelector(fmt.Sprintf(".tree-node-root>>.tree-node-title>> :scope:has-text('%s')", constTestHelper.WorkspaceName), playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
 	productName := webpage.InnerText("#productMenuToggle>>span")
 	if productName != "企业内部工时管理系统" {
 		webpage.ScreenShot()

@@ -7,12 +7,12 @@ import (
 	"strings"
 	"testing"
 
-	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
+	plwConf "github.com/easysoft/zentaoatf/cmd/test/ui/conf"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	apiTest "github.com/easysoft/zentaoatf/test/helper/zentao/api"
 	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
-	plwConf "github.com/easysoft/zentaoatf/cmd/test/ui/conf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/runner"
@@ -35,7 +35,7 @@ func CreateWorkspace(t provider.T) {
 	webpage.WaitForSelector("#workspaceFormModal")
 
 	locator := webpage.Locator("#workspaceFormModal input")
-	locator.FillNth(0, "单元测试工作目录")
+	locator.FillNth(0, constTestHelper.WorkspaceName)
 	locator.FillNth(1, workspacePath)
 	locator = webpage.Locator("#workspaceFormModal select")
 	locator.SelectNth(0, playwright.SelectOptionValues{Values: &[]string{"ztf"}})
@@ -45,7 +45,7 @@ func CreateWorkspace(t provider.T) {
 
 	webpage.WaitForSelector(".tree-node", playwright.PageWaitForSelectorOptions{Timeout: &waitTimeOut})
 
-	webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
 }
 
 func SyncFromZentao(t provider.T) {
@@ -64,7 +64,7 @@ func syncAllCaseFromZentao(t provider.T) {
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
 
-	locator := webpage.Locator(".tree-node-title:has-text('单元测试工作目录')")
+	locator := webpage.Locator(fmt.Sprintf(".tree-node-title:has-text('%s')", constTestHelper.WorkspaceName))
 	plwConf.EnableErr()
 	locator.RightClick()
 
@@ -92,7 +92,7 @@ func syncCaseFromZentaoTask(t provider.T) {
 	ztfTestHelper.SelectSite(webpage)
 
 	webpage.WaitForSelector(".tree-node", playwright.PageWaitForSelectorOptions{Timeout: &plwConf.Timeout})
-	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
 	locator.RightClick()
 
 	webpage.Click(".tree-context-menu>>text=从禅道同步")
@@ -124,7 +124,7 @@ func syncCaseFromZentaoModule(t provider.T) {
 	ztfTestHelper.SelectSite(webpage)
 
 	webpage.WaitForSelector(".tree-node", playwright.PageWaitForSelectorOptions{Timeout: &plwConf.Timeout})
-	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
 	locator.RightClick()
 
 	webpage.Click(".tree-context-menu>>text=从禅道同步")
@@ -156,7 +156,7 @@ func syncCaseFromZentaoSuite(t provider.T) {
 	ztfTestHelper.SelectSite(webpage)
 
 	webpage.WaitForSelector(".tree-node", playwright.PageWaitForSelectorOptions{Timeout: &plwConf.Timeout})
-	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
 	locator.RightClick()
 
 	webpage.Click(".tree-context-menu>>text=从禅道同步")
@@ -190,7 +190,7 @@ func SyncTwoCaseFromZentao(t provider.T) {
 	ztfTestHelper.SelectSite(webpage)
 
 	webpage.WaitForSelector(".tree-node", playwright.PageWaitForSelectorOptions{Timeout: &plwConf.Timeout})
-	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
 	locator.RightClick()
 
 	webpage.Click(".tree-context-menu>>text=从禅道同步")
@@ -227,7 +227,7 @@ func SyncToZentao(t provider.T) {
 	ztfTestHelper.SelectSite(webpage)
 
 	webpage.WaitForSelector(".tree-node", playwright.PageWaitForSelectorOptions{Timeout: &plwConf.Timeout})
-	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
 	locator.RightClick()
 
 	webpage.Click(".tree-context-menu>>text=同步到禅道")
@@ -250,18 +250,18 @@ func Copy(t provider.T) {
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandProduct(webpage)
 
-	scriptLocator := webpage.Locator(".tree-node:has-text('单元测试工作目录')>>.tree-node-title>>text=1_string_match.php")
+	scriptLocator := webpage.Locator(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-title>>text=1_string_match.php", constTestHelper.WorkspaceName))
 	scriptLocator.RightClick()
 
 	webpage.Click(".tree-context-menu>>text=复制")
-	productLocator := webpage.Locator(".tree-node:has-text('单元测试工作目录')>>.tree-node-item:has-text('product1')")
+	productLocator := webpage.Locator(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-item:has-text('product1')", constTestHelper.WorkspaceName))
 	productLocator.RightClick()
 	webpage.Click(".tree-context-menu>>text=粘贴")
 	webpage.WaitForTimeout(1000)
 
 	plwConf.DisableErr()
 	defer plwConf.EnableErr()
-	scriptLocator = webpage.Locator(".tree-node:has-text('单元测试工作目录')>>.tree-node-title>>text=1_string_match.php")
+	scriptLocator = webpage.Locator(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-title>>text=1_string_match.php", constTestHelper.WorkspaceName))
 	c := scriptLocator.Count()
 	if c < 2 {
 		t.Errorf("Find 1_string_match fail")
@@ -286,15 +286,15 @@ func CopyDir(t provider.T) {
 	ztfTestHelper.ExpandProduct(webpage)
 	CreateDir(t)
 
-	scriptLocator := webpage.Locator(".tree-node:has-text('单元测试工作目录')>>.tree-node-title>>text=oldDir")
+	scriptLocator := webpage.Locator(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-title>>text=oldDir", constTestHelper.WorkspaceName))
 	scriptLocator.RightClick()
 
 	webpage.Click(".tree-context-menu>>text=复制")
-	productLocator := webpage.Locator(".tree-node:has-text('单元测试工作目录')>>.tree-node-item:has-text('product1')")
+	productLocator := webpage.Locator(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-item:has-text('product1')", constTestHelper.WorkspaceName))
 	productLocator.RightClick()
 	webpage.Click(".tree-context-menu>>text=粘贴")
 
-	if webpage.ElementExist(".tree-node:has-text('单元测试工作目录')>>.tree-node-item:has-text('product1')>>.tree-node-title>>text=oldDir") {
+	if webpage.ElementExist(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-item:has-text('product1')>>.tree-node-title>>text=oldDir", constTestHelper.WorkspaceName)) {
 		t.Errorf("Copy dir fail")
 		t.FailNow()
 		return
@@ -315,15 +315,15 @@ func ClipDir(t provider.T) {
 	ztfTestHelper.ExpandProduct(webpage)
 	CreateDir(t)
 
-	scriptLocator := webpage.Locator(".tree-node:has-text('单元测试工作目录')>>.tree-node-title>>text=oldDir")
+	scriptLocator := webpage.Locator(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-title>>text=oldDir", constTestHelper.WorkspaceName))
 	scriptLocator.RightClick()
 
 	webpage.Click(".tree-context-menu>>text=剪切")
-	productLocator := webpage.Locator(".tree-node:has-text('单元测试工作目录')>>.tree-node-item:has-text('product1')")
+	productLocator := webpage.Locator(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-item:has-text('product1')", constTestHelper.WorkspaceName))
 	productLocator.RightClick()
 	webpage.Click(".tree-context-menu>>text=粘贴")
 
-	if webpage.ElementExist(".tree-node:has-text('单元测试工作目录')>>.tree-node-item:has-text('product1')>>.tree-node-title>>text=oldDir") {
+	if webpage.ElementExist(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-item:has-text('product1')>>.tree-node-title>>text=oldDir", constTestHelper.WorkspaceName)) {
 		t.Errorf("Copy dir fail")
 		t.FailNow()
 		return
@@ -342,18 +342,18 @@ func CreateScript(t provider.T) {
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandProduct(webpage)
 
-	if webpage.ElementExist(".tree-node:has-text('单元测试工作目录')>>.tree-node-title>>text=old.php") {
+	if webpage.ElementExist(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-title>>text=old.php", constTestHelper.WorkspaceName)) {
 		return
 	}
 
-	workspaceLocator := webpage.Locator(".tree-node-title:has-text('单元测试工作目录')")
+	workspaceLocator := webpage.Locator(fmt.Sprintf(".tree-node-title:has-text('%s')", constTestHelper.WorkspaceName))
 	workspaceLocator.Hover()
 	webpage.Click(`[title="新建脚本"]`)
 	productLocator := webpage.Locator("#scriptFormModal>>input")
 	productLocator.Fill("old.php")
 	webpage.Click("#scriptFormModal>>.modal-action>>span:has-text(\"确定\")")
 
-	webpage.Locator(".tree-node:has-text('单元测试工作目录')>>.tree-node-title>>text=old.php")
+	webpage.Locator(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-title>>text=old.php", constTestHelper.WorkspaceName))
 }
 
 func RenameScript(t provider.T) {
@@ -367,7 +367,7 @@ func RenameScript(t provider.T) {
 	ztfTestHelper.ExpandProduct(webpage)
 	CreateScript(t)
 
-	scriptLocator := webpage.Locator(".tree-node:has-text('单元测试工作目录')>>.tree-node-title>>text=old.php")
+	scriptLocator := webpage.Locator(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-title>>text=old.php", constTestHelper.WorkspaceName))
 	scriptLocator.RightClick()
 
 	webpage.Click(".tree-context-menu>>text=重命名")
@@ -375,7 +375,7 @@ func RenameScript(t provider.T) {
 	productLocator.Fill("new.php")
 	webpage.Click("#scriptFormModal>>.modal-action>>span:has-text(\"确定\")")
 
-	scriptLocator = webpage.Locator(".tree-node:has-text('单元测试工作目录')>>.tree-node-title>>text=new.php")
+	scriptLocator = webpage.Locator(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-title>>text=new.php", constTestHelper.WorkspaceName))
 
 	os.Remove(commonTestHelper.GetPhpWorkspacePath() + "old.php")
 	os.Remove(commonTestHelper.GetPhpWorkspacePath() + "new.php")
@@ -390,18 +390,18 @@ func CreateDir(t provider.T) {
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandProduct(webpage)
 
-	if webpage.ElementExist(".tree-node:has-text('单元测试工作目录')>>.tree-node-title>>text=oldDir") {
+	if webpage.ElementExist(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-title>>text=oldDir", constTestHelper.WorkspaceName)) {
 		return
 	}
 
-	workspaceLocator := webpage.Locator(".tree-node-title:has-text('单元测试工作目录')")
+	workspaceLocator := webpage.Locator(fmt.Sprintf(".tree-node-title:has-text('%s')", constTestHelper.WorkspaceName))
 	workspaceLocator.Hover()
-	webpage.Click(`.tree-node-item:has-text('单元测试工作目录')>>[title="新建工作目录"]`)
+	webpage.Click(fmt.Sprintf(".tree-node-item:has-text('%s')>>[title=\"新建工作目录\"]", constTestHelper.WorkspaceName))
 	productLocator := webpage.Locator("#scriptFormModal>>input")
 	productLocator.Fill("oldDir")
 	webpage.Click("#scriptFormModal>>.modal-action>>span:has-text(\"确定\")")
 
-	webpage.Locator(".tree-node:has-text('单元测试工作目录')>>.tree-node-title>>text=oldDir")
+	webpage.Locator(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-title>>text=oldDir", constTestHelper.WorkspaceName))
 }
 
 func RenameDir(t provider.T) {
@@ -415,14 +415,14 @@ func RenameDir(t provider.T) {
 	ztfTestHelper.ExpandProduct(webpage)
 	CreateDir(t)
 
-	dirLocator := webpage.Locator(".tree-node:has-text('单元测试工作目录')>>.tree-node-title>>text=oldDir")
+	dirLocator := webpage.Locator(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-title>>text=oldDir", constTestHelper.WorkspaceName))
 	dirLocator.RightClick()
 	webpage.Click(".tree-context-menu>>text=重命名")
 	productLocator := webpage.Locator("#scriptFormModal>>input")
 	productLocator.Fill("newDir")
 	webpage.Click("#scriptFormModal>>.modal-action>>span:has-text(\"确定\")")
 
-	webpage.Locator(".tree-node:has-text('单元测试工作目录')>>.tree-node-title>>text=newDir")
+	webpage.Locator(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-title>>text=newDir", constTestHelper.WorkspaceName))
 
 	os.Remove(commonTestHelper.GetPhpWorkspacePath() + "oldDir")
 	os.Remove(commonTestHelper.GetPhpWorkspacePath() + "newDir")
@@ -465,15 +465,15 @@ func DeleteDir(t provider.T) {
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
 
-	productLocator := webpage.Locator(".tree-node:has-text('单元测试工作目录')>>.tree-node-item:has-text('product1')")
+	productLocator := webpage.Locator(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-item:has-text('product1')", constTestHelper.WorkspaceName))
 	productLocator.RightClick()
 	webpage.Click(".tree-context-menu>>text=删除")
 	webpage.Click(".modal-action>>span:has-text(\"确定\")")
-	webpage.WaitForSelector(".tree-node:has-text('单元测试工作目录')>>.tree-node-item:has-text('product1')", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+	webpage.WaitForSelector(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-item:has-text('product1')", constTestHelper.WorkspaceName), playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
 
 	plwConf.DisableErr()
 	defer plwConf.EnableErr()
-	scriptLocator := webpage.Locator(".tree-node:has-text('单元测试工作目录')>>.tree-node-item:has-text('product1')")
+	scriptLocator := webpage.Locator(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-item:has-text('product1')", constTestHelper.WorkspaceName))
 	c := scriptLocator.Count()
 	if c > 0 {
 		t.Errorf("Delete workspace fail")
@@ -492,7 +492,7 @@ func DeleteWorkspace(t provider.T) {
 	ztfTestHelper.SelectSite(webpage)
 
 	webpage.WaitForSelector(".tree-node")
-	locator := webpage.Locator(".tree-node-item", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	locator := webpage.Locator(".tree-node-item", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
 	locator.Hover()
 	webpage.Click(`[title="删除"]`)
 	webpage.Click(".modal-action>>span:has-text(\"确定\")")
@@ -501,7 +501,7 @@ func DeleteWorkspace(t provider.T) {
 	plwConf.DisableErr()
 	defer plwConf.EnableErr()
 
-	scriptLocator := webpage.Locator(".tree-node-title:has-text('单元测试工作目录')")
+	scriptLocator := webpage.Locator(fmt.Sprintf(".tree-node-title:has-text('%s')", constTestHelper.WorkspaceName))
 	c := scriptLocator.Count()
 	if c > 0 {
 		t.Errorf("Delete workspace fail")
@@ -519,14 +519,14 @@ func Clip(t provider.T) {
 	ztfTestHelper.SelectSite(webpage)
 
 	webpage.WaitForSelector(".tree-node")
-	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
 	locator.Click()
 	ztfTestHelper.ExpandProduct(webpage)
 
 	scriptLocator := locator.Locator(".tree-node-title>>text=1.php")
 	scriptLocator.RightClick()
 	webpage.Click(".tree-context-menu>>text=剪切")
-	workspaceLocator := webpage.Locator(".tree-node-title", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	workspaceLocator := webpage.Locator(".tree-node-title", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
 	workspaceLocator.RightClick()
 	webpage.Click(".tree-context-menu>>text=粘贴")
 
@@ -544,8 +544,8 @@ func Collapse(t provider.T) {
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandWorspace(webpage)
 
-	webpage.WaitForSelectorTimeout(".tree-node:has-text(\"单元测试工作目录\")", 5000)
-	className := webpage.GetAttribute(".tree-node:has-text(\"单元测试工作目录\")", "class")
+	webpage.WaitForSelectorTimeout(fmt.Sprintf(".tree-node:has-text(\"%s\")", constTestHelper.WorkspaceName), 5000)
+	className := webpage.GetAttribute(fmt.Sprintf(".tree-node:has-text(\"%s\")", constTestHelper.WorkspaceName), "class")
 
 	if strings.Contains(className, "collapsed") {
 		webpage.Click(`#leftPane>>.toolbar>>[title="展开"]`)

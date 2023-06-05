@@ -33,12 +33,12 @@ func CreateTestWorkspace(webpage plwHelper.Webpage, name, workspacePath string) 
 }
 
 func RunScript(webpage plwHelper.Webpage, scriptName string) {
-	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
 	c := locator.Count()
 	if c == 0 {
-		CreateTestWorkspace(webpage, "单元测试工作目录", "")
+		CreateTestWorkspace(webpage, constTestHelper.WorkspaceName, "")
 	}
-	locator = webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	locator = webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
 	locator.Click()
 	scriptLocator := locator.Locator("text=" + scriptName)
 	scriptLocator.RightClick()
@@ -91,28 +91,28 @@ func CreateSite(webpage plwHelper.Webpage) {
 	webpage.Click("text=禅道站点管理")
 	webpage.Click("text=新建站点")
 	locator := webpage.Locator("#siteFormModal input")
-	locator.FillNth(0, "单元测试站点")
+	locator.FillNth(0, constTestHelper.SiteName)
 	locator.FillNth(1, constTestHelper.ZentaoSiteUrl)
 	locator.FillNth(2, constTestHelper.ZentaoUsername)
 	locator.FillNth(3, constTestHelper.ZentaoPassword)
 	webpage.Click("text=确定")
 	webpage.WaitForSelector(".list-item-content span:has-text('单元测试站点')")
-	locator = webpage.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: "单元测试站点"})
+	locator = webpage.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: constTestHelper.SiteName})
 	webpage.Click("#siteModal>>.modal-close")
 }
 
 func ExpandWorspace(webpage plwHelper.Webpage) (err error) {
-	if !webpage.ElementExist(".tree-node-title:has-text('单元测试工作目录')") {
-		CreateTestWorkspace(webpage, "单元测试工作目录", "")
+	if !webpage.ElementExist(fmt.Sprintf(".tree-node-title:has-text('%s')", constTestHelper.WorkspaceName)) {
+		CreateTestWorkspace(webpage, constTestHelper.WorkspaceName, "")
 	}
 
-	selector := webpage.QuerySelectorAll(".tree-node-root:has-text('单元测试工作目录')")
+	selector := webpage.QuerySelectorAll(fmt.Sprintf(".tree-node-root:has-text('%s')", constTestHelper.WorkspaceName))
 	className := selector.GetAttribute(0, "class")
 	if className != "" && !strings.Contains(className, "collapsed") {
 		return
 	}
 
-	webpage.Click(".tree-node-title:has-text(\"单元测试工作目录\")")
+	webpage.Click(fmt.Sprintf(".tree-node-title:has-text(\"%s\")", constTestHelper.WorkspaceName))
 	err = webpage.WaitForSelectorTimeout(".tree-node-item>>div:has-text('1_string_match.php')", 3000)
 	if err != nil {
 		if expandTimes > 3 {

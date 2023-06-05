@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"runtime"
 	"strings"
@@ -158,7 +159,7 @@ func RunSelectedScripts(t provider.T) {
 		t.FailNow()
 	}
 
-	webpage.WaitForSelector("#rightPane>>.result-list-item>>nth=0>>.list-item-title:has-text('单元测试工作目录(2)')")
+	webpage.WaitForSelector(fmt.Sprintf("#rightPane>>.result-list-item>>nth=0>>.list-item-title:has-text('%s(2)')", constTestHelper.WorkspaceName))
 
 	timeElement := webpage.Locator("#log-list>>code:has-text('开始任务')>>.time>>span")
 	logTime := timeElement.InnerText()
@@ -193,7 +194,7 @@ func RunOpenedAndLast(t provider.T) {
 		t.FailNow()
 	}
 
-	webpage.WaitForSelector("#rightPane>>.result-list-item>>nth=0>>.list-item-title:has-text('单元测试工作目录(2)')")
+	webpage.WaitForSelector(fmt.Sprintf("#rightPane>>.result-list-item>>nth=0>>.list-item-title:has-text('%s(2)')", constTestHelper.WorkspaceName))
 
 	timeElement := webpage.Locator("#log-list>>code:has-text('开始任务')>>.time>>span")
 	logTime := timeElement.InnerText()
@@ -213,7 +214,7 @@ func RunOpenedAndLast(t provider.T) {
 		t.Errorf("Exec last time fail")
 		t.FailNow()
 	}
-	webpage.WaitForSelector("#rightPane>>.result-list-item>>nth=0>>.list-item-title:has-text('单元测试工作目录(2)')")
+	webpage.WaitForSelector(fmt.Sprintf("#rightPane>>.result-list-item>>nth=0>>.list-item-title:has-text('%s(2)')", constTestHelper.WorkspaceName))
 
 	timeElement = webpage.Locator("#log-list>>code:has-text('开始任务')>>.time>>span")
 	logTime = timeElement.InnerText()
@@ -238,11 +239,11 @@ func RunAll(t provider.T) {
 
 	runInfo := "执行5个用例，耗时"
 	runRes := "通过数：1(20.0%)，失败数：4(80.0%)"
-	resTitle := "单元测试工作目录(5)"
+	resTitle := fmt.Sprintf("%s(5)", constTestHelper.WorkspaceName)
 	if runtime.GOOS == "windows" {
 		runInfo = "执行4个用例，耗时"
 		runRes = "通过数：1(25.0%)，失败数：3(75.0%)"
-		resTitle = "单元测试工作目录(4)"
+		resTitle = fmt.Sprintf("%s(4)", constTestHelper.WorkspaceName)
 	}
 
 	webpage.Click("#batchRunMenuToggle")
@@ -275,7 +276,7 @@ func RunWorkspace(t provider.T) {
 	ztfTestHelper.ExpandWorspace(webpage)
 
 	webpage.WaitForSelector(".tree-node")
-	locator := webpage.Locator(".tree-node-root>>.tree-node-title>> :scope:has-text('单元测试工作目录')")
+	locator := webpage.Locator(fmt.Sprintf(".tree-node-root>>.tree-node-title>> :scope:has-text('%s')", constTestHelper.WorkspaceName))
 	c := locator.Count()
 	if c == 0 {
 		t.Errorf("Find workspace fail")
@@ -284,11 +285,11 @@ func RunWorkspace(t provider.T) {
 
 	runInfo := "执行4个用例，耗时"
 	runRes := "通过数：1(25.0%)，失败数：3(75.0%)"
-	resTitle := "单元测试工作目录(4)"
+	resTitle := fmt.Sprintf("%s(4)", constTestHelper.WorkspaceName)
 	if runtime.GOOS == "windows" {
 		runInfo = "执行3个用例，耗时"
 		runRes = "通过数：1(33.0%)，失败数：2(66.0%)"
-		resTitle = "单元测试工作目录(3)"
+		resTitle = fmt.Sprintf("%s(3)", constTestHelper.WorkspaceName)
 	}
 
 	locator.RightClick()

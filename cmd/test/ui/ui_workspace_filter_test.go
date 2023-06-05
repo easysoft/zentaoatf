@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
@@ -21,7 +22,7 @@ func FilterDir(t provider.T) {
 
 	webpage.Click(`[title="筛选"]`)
 	webpage.WaitForSelector("#filterModal")
-	webpage.Click("#filterModal>>.list-item-title:has-text(\"单元测试工作目录\")")
+	webpage.Click(fmt.Sprintf("#filterModal>>.list-item-title:has-text(\"%s\")", constTestHelper.WorkspaceName))
 
 	eleArr := webpage.QuerySelectorAll("#leftPane>>.tree>>.tree-node")
 	if len(eleArr.ElementHandles) < 1 {

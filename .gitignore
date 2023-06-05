@@ -72,3 +72,6 @@ node_modules
 zentaoatf.exe~
 /ztf
 /cmd/test/log/
+cmd/test/demo/php/log/
+cmd/test/demo/php/conf/
+cmd/test/ui/allure-results/
