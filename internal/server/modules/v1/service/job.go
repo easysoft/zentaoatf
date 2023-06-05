@@ -3,14 +3,15 @@ package service
 import (
 	"errors"
 	"fmt"
-	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
-	"github.com/easysoft/zentaoatf/pkg/consts"
-	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
+
+	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
+	"github.com/easysoft/zentaoatf/pkg/consts"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
@@ -310,7 +311,11 @@ func (s *JobService) IsError(po model.Job) bool {
 }
 
 func (s *JobService) IsTimeout(po model.Job) bool {
-	dur := time.Now().Unix() - po.StartDate.Unix()
+	dur := time.Now().Unix()
+	if po.StartDate != nil {
+		dur = time.Now().Unix() - po.StartDate.Unix()
+	}
+
 	// return dur > 3
 	return po.Status == commConsts.JobInprogress && dur > commConsts.JobTimeoutTime
 }
