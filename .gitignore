@@ -71,3 +71,4 @@ node_modules
 /test/restapi/allure-results/
 zentaoatf.exe~
 /ztf
+/cmd/test/log/
