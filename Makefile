@@ -32,7 +32,7 @@ BUILD_CMD_WIN=go build -ldflags "-s -w -X 'main.AppVersion=${VERSION}' -X 'main.
 default: win64 win32 linux mac
 server: server_win64 server_win32 server_linux server_linux_arm64 server_mac
 
-server_win64:       prepare compile_server_mac copy_files_win64   zip_server_win64
+server_win64:       prepare compile_server_win64 copy_files_win64   zip_server_win64
 server_win32:       prepare compile_server_win32 copy_files_win32   zip_server_win32
 server_linux:       prepare compile_server_linux copy_files_linux   zip_server_linux
 server_linux_arm64: prepare compile_server_linux_arm64 copy_files_linux_arm64   zip_server_linux_arm64
