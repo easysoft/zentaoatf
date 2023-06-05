@@ -1,10 +1,14 @@
 package main
 
 import (
+	"math"
 	"strings"
 	"testing"
+	"time"
 
+	dateUtils "github.com/easysoft/zentaoatf/pkg/lib/date"
 	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
+	apiTest "github.com/easysoft/zentaoatf/test/helper/zentao/api"
 	ztfTest "github.com/easysoft/zentaoatf/test/helper/ztf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
@@ -53,6 +57,9 @@ func SubmitResult(t provider.T) {
 	t.ID("5499")
 	t.AddParentSuite("测试结果")
 
+	caseInfo := apiTest.GetCaseResult(1)
+	lastId := caseInfo["Id"].(int64)
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage)
@@ -68,11 +75,20 @@ func SubmitResult(t provider.T) {
 
 	webpage.WaitForSelector("#syncToZentaoModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateHidden})
 	webpage.Locator(".toast-notification-container:has-text('提交成功')")
+
+	//check zentao
+	caseInfo = apiTest.GetCaseResult(1)
+	resultTime := dateUtils.TimeStrToTimestamp(caseInfo["Date"].(string))
+	t.Require().Greater(caseInfo["Id"].(int64), lastId)
+	t.Require().Equal("fail", caseInfo["CaseResult"])
+	t.Require().LessOrEqual(math.Abs(float64(resultTime-time.Now().Unix())), float64(10))
 }
 
 func SubmitBug(t provider.T) {
 	t.ID("5500")
 	t.AddParentSuite("测试结果")
+
+	lastId := apiTest.GetLastBugId()
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -85,11 +101,16 @@ func SubmitBug(t provider.T) {
 
 	webpage.WaitForSelector("#submitBugModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateHidden})
 	webpage.Locator(".toast-notification-container", playwright.PageLocatorOptions{HasText: "提交成功"})
+
+	newLastId := apiTest.GetLastBugId()
+	t.Require().Equal(lastId+1, newLastId)
 }
 
 func SubmitBugTwoStep(t provider.T) {
 	t.ID("5500")
 	t.AddParentSuite("测试结果")
+
+	lastId := apiTest.GetLastBugId()
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -107,6 +128,9 @@ func SubmitBugTwoStep(t provider.T) {
 
 	webpage.WaitForSelector("#submitBugModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateHidden})
 	webpage.Locator(".toast-notification-container", playwright.PageLocatorOptions{HasText: "提交成功"})
+
+	newLastId := apiTest.GetLastBugId()
+	t.Require().Equal(lastId+1, newLastId)
 }
 
 func TestUiResult(t *testing.T) {

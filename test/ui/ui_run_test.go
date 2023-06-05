@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"runtime"
 	"strings"
@@ -77,7 +76,6 @@ func CheckStep(t provider.T) {
 	timeElement := webpage.Locator("#log-list>>code:has-text('开始任务')>>.time>>span")
 	logTime := timeElement.InnerText()
 	resultTime := webpage.InnerText("#rightPane .result-list-item .list-item-trailing-text")
-	fmt.Println(resultTime, logTime)
 	if logTime[:5] != resultTime {
 		t.Errorf("Find result time in rightPane fail")
 		t.FailNow()

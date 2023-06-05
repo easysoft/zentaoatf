@@ -12,12 +12,17 @@ $>ztf co -t 1 -l php                          导出编号为1的测试单所含
 */
 import (
 	"fmt"
+	"os"
+	"path"
 	"regexp"
+	"runtime"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
@@ -36,10 +41,13 @@ var (
 	organizeRe   = regexp.MustCompile("Organize test scripts by module|是否希望按模块ID组织脚本目录结构")
 	successCoRe  = regexp.MustCompile("Successfully generated \\d+ test scripts|成功创建\\d+个测试脚本")
 	languageCoRe = regexp.MustCompile("Select script language|请选择脚本语言")
-	productId    = 1
-	moduleId     = 0
-	taskId       = 1
-	suiteId      = 1
+
+	productId = 1
+	moduleId  = 0
+	taskId    = 1
+	suiteId   = 1
+
+	productDir = "./product1"
 )
 
 type CoSuite struct {
@@ -49,14 +57,19 @@ type CoSuite struct {
 func (s *CoSuite) BeforeEach(t provider.T) {
 	t.ID("1580")
 	t.AddSubSuite("命令行-co")
+
+	if runtime.GOOS == "windows" {
+		productDir = ".\\product1"
+	}
+	productDir = fileUtils.AbsolutePath(productDir)
 }
 
-// 当前禅道版本有bug，当前无法通过测试。bug已修复，未打包
+// 当前禅道版本max4.3有bug，当前无法通过测试。bug已修复，未打包
 //
-//	func (s *CoSuite) TestCoProduct(t provider.T) {
-//		t.Title("导出用例，不提供参数")
-//		t.Require().Equal("Success", testCoProduct())
-//	}
+func (s *CoSuite) TestCoProduct(t provider.T) {
+	t.Title("导出用例，不提供参数")
+	t.Require().Equal("Success", testCoProduct())
+}
 
 func (s *CoSuite) TestCoSuite(t provider.T) {
 	t.Require().Equal("Success", testCoSuite())
@@ -74,6 +87,8 @@ func (s *CoSuite) TestCo(t provider.T) {
 }
 
 func testCoProduct() string {
+	os.RemoveAll(productDir)
+
 	cmd := commonTestHelper.GetZtfPath() + " co"
 
 	child, err := expect.Spawn(cmd, -1)
@@ -139,6 +154,8 @@ func testCoProduct() string {
 }
 
 func testCoSuite() string {
+	os.RemoveAll(productDir)
+
 	cmd := commonTestHelper.GetZtfPath() + " co"
 
 	child, err := expect.Spawn(cmd, -1)
@@ -193,10 +210,16 @@ func testCoSuite() string {
 		return fmt.Sprintf("expect %s, actual %s", successCoRe, err.Error())
 	}
 
+	if !fileUtils.FileExist(path.Join(productDir, "1.pl")) {
+		return "expect 1.pl exist, actual not exist"
+	}
+
 	return "Success"
 }
 
 func testCoTask() string {
+	os.RemoveAll(productDir)
+
 	cmd := commonTestHelper.GetZtfPath() + " co"
 
 	child, err := expect.Spawn(cmd, -1)
@@ -251,10 +274,16 @@ func testCoTask() string {
 		return fmt.Sprintf("expect %s, actual %s", successCoRe, err.Error())
 	}
 
+	if !fileUtils.FileExist(path.Join(productDir, "2.pl")) {
+		return "expect 2.pl exist, actual not exist"
+	}
+
 	return "Success"
 }
 
 func testCo(cmd string) string {
+	os.RemoveAll(productDir)
+
 	child, err := expect.Spawn(cmd, -1)
 
 	if err != nil {
@@ -278,6 +307,16 @@ func testCo(cmd string) string {
 
 	if _, err = child.Expect(successCoRe, 10*time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", successCoRe, err.Error())
+	}
+
+	if strings.Contains(cmd, "-s") {
+		if !fileUtils.FileExist(path.Join(productDir, "1.exp")) {
+			return "expect 1.exp exist, actual not exist"
+		}
+	} else {
+		if !fileUtils.FileExist(path.Join(productDir, "2.php")) {
+			return "expect 2.php exist, actual not exist"
+		}
 	}
 
 	return "Success"

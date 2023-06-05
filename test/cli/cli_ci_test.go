@@ -17,6 +17,7 @@ import (
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
+	apiTest "github.com/easysoft/zentaoatf/test/helper/zentao/api"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
@@ -56,6 +57,12 @@ func testCi() string {
 
 	if _, err = child.Expect(successCiRe, 10*time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", successCiRe, err.Error())
+	}
+
+	//check zentao info
+	title := apiTest.GetCaseTitleById(1)
+	if title != "check string matches pattern" {
+		return fmt.Sprintf("check zentao title fail, expect check string matches pattern, actual %s", title)
 	}
 
 	return "Success"

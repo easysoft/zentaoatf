@@ -3,12 +3,14 @@ package main
 import (
 	"fmt"
 	"os"
-	"path"
+	"path/filepath"
 	"strings"
 	"testing"
 
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
+	apiTest "github.com/easysoft/zentaoatf/test/helper/zentao/api"
 	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
 	plwConf "github.com/easysoft/zentaoatf/test/ui/conf"
 	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
@@ -47,8 +49,14 @@ func CreateWorkspace(t provider.T) {
 }
 
 func SyncFromZentao(t provider.T) {
-	t.ID("5751")
-	t.AddParentSuite("管理禅道站点下工作目录")
+	syncCaseFromZentaoTask(t)
+	syncCaseFromZentaoModule(t)
+	syncCaseFromZentaoSuite(t)
+	syncAllCaseFromZentao(t)
+}
+func syncAllCaseFromZentao(t provider.T) {
+	syncDir := filepath.Join(workspacePath, "product1")
+	os.RemoveAll(syncDir)
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -61,21 +69,25 @@ func SyncFromZentao(t provider.T) {
 	locator.RightClick()
 
 	webpage.Click(".tree-context-menu>>text=从禅道同步")
-	locator = webpage.Locator("#syncFromZentaoFormModal select")
-	locator.SelectNth(2, playwright.SelectOptionValues{Labels: &[]string{"企业网站第一期测试任务"}})
+
 	webpage.WaitForSelector("#syncFromZentaoFormModal .z-tbody-checkbox")
 	webpage.Click("#syncFromZentaoFormModal>>.modal-action>>span:has-text(\"确定\")")
 
 	webpage.WaitForSelector("#syncFromZentaoFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateHidden})
 	webpage.Locator(".toast-notification-container", playwright.PageLocatorOptions{HasText: "成功从禅道同步"})
+
+	//check file info
+	scriptPath := filepath.Join(workspacePath, "product1", "2.php")
+	content := fileUtils.ReadFile(scriptPath)
+	t.Require().Contains(content, "extract content from webpage-synctozentao")
 }
 
-func SyncTwoCaseFromZentao(t provider.T) {
-	t.ID("5752")
-	t.AddParentSuite("管理禅道站点下工作目录")
-
+func syncCaseFromZentaoTask(t provider.T) {
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
+
+	syncDir := filepath.Join(workspacePath, "product1")
+	os.RemoveAll(syncDir)
 
 	ztfTestHelper.SelectSite(webpage)
 
@@ -90,16 +102,124 @@ func SyncTwoCaseFromZentao(t provider.T) {
 	webpage.WaitForSelector("#syncFromZentaoFormModal .z-tbody-checkbox")
 	webpage.Click("text=编号标题类型状态结果 >> input[type=\"checkbox\"]")
 	webpage.Click("text=1check string matches pattern功能测试 >> input[type=\"checkbox\"]")
-	webpage.Click("text=2extract content from webpage功能测试 >> input[type=\"checkbox\"]")
+	webpage.Click("text=2extract content from webpage-synctozentao功能测试 >> input[type=\"checkbox\"]")
 	webpage.Click("#syncFromZentaoFormModal>>.modal-action>>span:has-text(\"确定\")")
 
 	webpage.WaitForSelector("#syncFromZentaoFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateHidden})
 	locator = webpage.Locator(".toast-notification-container", playwright.PageLocatorOptions{HasText: "成功从禅道同步2个用例"})
+
+	//check file info
+	scriptPath := filepath.Join(workspacePath, "product1", "2.php")
+	content := fileUtils.ReadFile(scriptPath)
+	t.Require().Contains(content, "extract content from webpage-synctozentao")
+}
+
+func syncCaseFromZentaoModule(t provider.T) {
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
+	defer webpage.Close()
+
+	syncDir := filepath.Join(workspacePath, "product1")
+	os.RemoveAll(syncDir)
+
+	ztfTestHelper.SelectSite(webpage)
+
+	webpage.WaitForSelector(".tree-node", playwright.PageWaitForSelectorOptions{Timeout: &plwConf.Timeout})
+	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	locator.RightClick()
+
+	webpage.Click(".tree-context-menu>>text=从禅道同步")
+	locator = webpage.Locator("#syncFromZentaoFormModal select")
+	locator.SelectNth(0, playwright.SelectOptionValues{Labels: &[]string{"/module1"}})
+
+	webpage.WaitForSelector("#syncFromZentaoFormModal .z-tbody-checkbox")
+	webpage.Click("text=编号标题类型状态结果 >> input[type=\"checkbox\"]")
+	webpage.Click("text=6module1-case2功能测试 >> input[type=\"checkbox\"]")
+	webpage.Click("text=5module1-case1功能测试 >> input[type=\"checkbox\"]")
+	webpage.Click("#syncFromZentaoFormModal>>.modal-action>>span:has-text(\"确定\")")
+
+	webpage.WaitForSelector("#syncFromZentaoFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateHidden})
+	locator = webpage.Locator(".toast-notification-container", playwright.PageLocatorOptions{HasText: "成功从禅道同步2个用例"})
+
+	//check file info
+	scriptPath := filepath.Join(workspacePath, "product1", "6.php")
+	content := fileUtils.ReadFile(scriptPath)
+	t.Require().Contains(content, "module1-case2")
+}
+
+func syncCaseFromZentaoSuite(t provider.T) {
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
+	defer webpage.Close()
+
+	syncDir := filepath.Join(workspacePath, "product1")
+	os.RemoveAll(syncDir)
+
+	ztfTestHelper.SelectSite(webpage)
+
+	webpage.WaitForSelector(".tree-node", playwright.PageWaitForSelectorOptions{Timeout: &plwConf.Timeout})
+	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	locator.RightClick()
+
+	webpage.Click(".tree-context-menu>>text=从禅道同步")
+	locator = webpage.Locator("#syncFromZentaoFormModal select")
+	locator.SelectNth(1, playwright.SelectOptionValues{Labels: &[]string{"test_suite"}})
+
+	webpage.WaitForSelector("#syncFromZentaoFormModal .z-tbody-checkbox")
+	webpage.Click("text=编号标题类型状态结果 >> input[type=\"checkbox\"]")
+	webpage.Click("text=1check string matches pattern功能测试 >> input[type=\"checkbox\"]")
+	webpage.Click("#syncFromZentaoFormModal>>.modal-action>>span:has-text(\"确定\")")
+
+	webpage.WaitForSelector("#syncFromZentaoFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateHidden})
+	locator = webpage.Locator(".toast-notification-container", playwright.PageLocatorOptions{HasText: "成功从禅道同步1个用例"})
+
+	//check file info
+	scriptPath := filepath.Join(workspacePath, "product1", "1.php")
+	content := fileUtils.ReadFile(scriptPath)
+	t.Require().Contains(content, "check string matches pattern")
+}
+
+func SyncTwoCaseFromZentao(t provider.T) {
+	t.ID("5752")
+	t.AddParentSuite("管理禅道站点下工作目录")
+
+	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
+	defer webpage.Close()
+
+	syncDir := filepath.Join(workspacePath, "product1")
+	os.RemoveAll(syncDir)
+
+	ztfTestHelper.SelectSite(webpage)
+
+	webpage.WaitForSelector(".tree-node", playwright.PageWaitForSelectorOptions{Timeout: &plwConf.Timeout})
+	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: "单元测试工作目录"})
+	locator.RightClick()
+
+	webpage.Click(".tree-context-menu>>text=从禅道同步")
+
+	webpage.WaitForSelector("#syncFromZentaoFormModal .z-tbody-checkbox")
+	webpage.Click("text=编号标题类型状态结果 >> input[type=\"checkbox\"]")
+	webpage.Click("text=1check string matches pattern功能测试 >> input[type=\"checkbox\"]")
+	webpage.Click("text=2extract content from webpage-synctozentao功能测试 >> input[type=\"checkbox\"]")
+	webpage.Click("#syncFromZentaoFormModal>>.modal-action>>span:has-text(\"确定\")")
+
+	webpage.WaitForSelector("#syncFromZentaoFormModal", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateHidden})
+	locator = webpage.Locator(".toast-notification-container", playwright.PageLocatorOptions{HasText: "成功从禅道同步2个用例"})
+
+	//check file info
+	scriptPath := filepath.Join(workspacePath, "product1", "2.php")
+	content := fileUtils.ReadFile(scriptPath)
+	t.Require().Contains(content, "extract content from webpage-synctozentao")
 }
 
 func SyncToZentao(t provider.T) {
 	t.ID("5431")
 	t.AddParentSuite("管理禅道站点下工作目录")
+
+	//update script title
+	scriptPath := filepath.Join(workspacePath, "2_webpage_extract.php")
+	content := fileUtils.ReadFile(scriptPath)
+	newContent := strings.Replace(content, "title=extract content from webpage", "title=extract content from webpage-synctozentao", 1)
+	fileUtils.WriteFile(scriptPath, newContent)
+	defer fileUtils.WriteFile(scriptPath, content)
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -114,6 +234,10 @@ func SyncToZentao(t provider.T) {
 
 	webpage.WaitForSelector(".toast-notification-close")
 	locator = webpage.Locator(".toast-notification-container", playwright.PageLocatorOptions{HasText: "成功同步"})
+
+	//check zentao info
+	title := apiTest.GetCaseTitleById(2)
+	t.Require().Equal("extract content from webpage-synctozentao", title)
 }
 
 func Copy(t provider.T) {
@@ -177,7 +301,7 @@ func CopyDir(t provider.T) {
 	}
 
 	os.Remove(commonTestHelper.GetPhpWorkspacePath() + "oldDir")
-	os.Remove(path.Join(commonTestHelper.GetPhpWorkspacePath(), "product1", "oldDir"))
+	os.Remove(filepath.Join(commonTestHelper.GetPhpWorkspacePath(), "product1", "oldDir"))
 }
 
 func ClipDir(t provider.T) {
@@ -206,7 +330,7 @@ func ClipDir(t provider.T) {
 	}
 
 	os.Remove(commonTestHelper.GetPhpWorkspacePath() + "oldDir")
-	os.Remove(path.Join(commonTestHelper.GetPhpWorkspacePath(), "product1", "oldDir"))
+	os.Remove(filepath.Join(commonTestHelper.GetPhpWorkspacePath(), "product1", "oldDir"))
 }
 
 func CreateScript(t provider.T) {
@@ -454,7 +578,6 @@ func TestUiWorkspace(t *testing.T) {
 	runner.Run(t, "客户端-复制粘贴树状脚本文件", Copy)
 	runner.Run(t, "客户端-复制粘贴目录", ClipAndCopyDir)
 	runner.Run(t, "客户端-剪切粘贴树状脚本文件", Clip)
-	runner.Run(t, "客户端-复制粘贴文件夹", CopyDir)
 	runner.Run(t, "客户端-重命名脚本文件", RenameScript)
 	runner.Run(t, "客户端-重命名目录", RenameDir)
 	runner.Run(t, "客户端-删除树状脚本文件", DeleteScript)

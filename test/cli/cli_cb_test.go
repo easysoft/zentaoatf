@@ -9,6 +9,7 @@ import (
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 	commonTestHelper "github.com/easysoft/zentaoatf/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
+	apiTest "github.com/easysoft/zentaoatf/test/helper/zentao/api"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
@@ -31,12 +32,16 @@ func (s *CbSuite) TestCbSuite(t provider.T) {
 }
 
 func testCb() string {
+	lastId := apiTest.GetLastBugId()
+
 	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" cb %stest/demo/001 -p 1", constTestHelper.RootPath)
+
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		return err.Error()
 	}
 	defer child.Close()
+
 	if _, err := child.Expect(continueRe, 5*time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", continueRe, err.Error())
 	}
@@ -48,7 +53,13 @@ func testCb() string {
 	if _, err = child.Expect(successCbRe, 30*time.Second); err != nil {
 		return fmt.Sprintf("expect %s, actual %s", successCbRe, err.Error())
 	}
-	child.Close()
+
+	newLastId := apiTest.GetLastBugId()
+
+	if newLastId != lastId+1 {
+		return "check zentao last bug id fail."
+	}
+
 	return "Success"
 }
 

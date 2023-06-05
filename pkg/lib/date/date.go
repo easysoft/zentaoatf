@@ -1,8 +1,9 @@
 package dateUtils
 
 import (
-	"github.com/easysoft/zentaoatf/pkg/consts"
 	"time"
+
+	"github.com/easysoft/zentaoatf/pkg/consts"
 )
 
 func DateStr(tm time.Time) string {
@@ -42,6 +43,22 @@ func DateStrToTimestamp(str string) (int64, error) {
 	}
 
 	return time.Unix(), nil
+}
+
+func TimeStrToTimestamp(str string) int64 {
+	layout := "2006-01-02 15:04:05"
+
+	loc, err := time.LoadLocation("Local")
+	if err != nil {
+		return 0
+	}
+
+	time, err := time.ParseInLocation(layout, str, loc)
+	if err != nil {
+		return 0
+	}
+
+	return time.Unix()
 }
 
 func UnitToDate(unit int64) (date time.Time, err error) {
