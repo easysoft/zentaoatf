@@ -187,7 +187,9 @@ func LoadSuite(productId uint, config commDomain.WorkspaceConf) (suites []domain
 	}
 
 	uri := fmt.Sprintf("products/%d/testsuites", productId)
-	url := GenApiUrl(uri, nil, config.Url)
+	url := GenApiUrl(uri, map[string]interface{}{
+		"limit": 10000,
+	}, config.Url)
 
 	bytes, err := httpUtils.Get(url)
 	if err != nil {

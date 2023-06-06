@@ -22,8 +22,10 @@ func FilterDir(t provider.T) {
 
 	webpage.Click(`[title="筛选"]`)
 	webpage.WaitForSelector("#filterModal")
+	webpage.WaitForTimeout(1000)
 	webpage.Click(fmt.Sprintf("#filterModal>>.list-item-title:has-text(\"%s\")", constTestHelper.WorkspaceName))
 
+	webpage.WaitForSelector("#leftPane>>.tree>>.tree-node")
 	eleArr := webpage.QuerySelectorAll("#leftPane>>.tree>>.tree-node")
 	if len(eleArr.ElementHandles) < 1 {
 		t.Errorf("Filter valid fail")

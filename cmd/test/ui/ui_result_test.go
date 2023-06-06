@@ -7,11 +7,11 @@ import (
 	"time"
 
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
+	apiTest "github.com/easysoft/zentaoatf/cmd/test/helper/zentao/api"
 	ztfTest "github.com/easysoft/zentaoatf/cmd/test/helper/ztf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/ztf"
 	plwHelper "github.com/easysoft/zentaoatf/cmd/test/ui/helper"
 	dateUtils "github.com/easysoft/zentaoatf/pkg/lib/date"
-	apiTest "github.com/easysoft/zentaoatf/test/helper/zentao/api"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"

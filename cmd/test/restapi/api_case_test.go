@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"testing"
+
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	httpHelper "github.com/easysoft/zentaoatf/cmd/test/helper/http"
 	"github.com/easysoft/zentaoatf/cmd/test/restapi/config"
@@ -12,7 +14,6 @@ import (
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 	"github.com/tidwall/gjson"
-	"testing"
 )
 
 func TestCaseApi(t *testing.T) {
@@ -40,7 +41,7 @@ func (s *CaseApiSuite) TestCaseListApi(t provider.T) {
 
 	firstCaseId := gjson.Get(string(bodyBytes), "testcases.0.id").Int()
 
-	t.Require().Greater(firstCaseId, int64(0), "list testcases failed")
+	t.Require().Greater(firstCaseId, int64(0), "list testcases failed, url: "+url)
 }
 
 func (s *CaseApiSuite) TestCaseListByModuleApi(t provider.T) {
@@ -56,7 +57,7 @@ func (s *CaseApiSuite) TestCaseListByModuleApi(t provider.T) {
 
 	firstCaseId := gjson.Get(string(bodyBytes), "testcases.0.id").Int()
 
-	t.Require().Greater(firstCaseId, int64(0), "list testcases failed")
+	t.Require().Greater(firstCaseId, int64(0), "list testcases failed, url: "+url)
 }
 
 func (s *CaseApiSuite) TestCaseListBySuiteApi(t provider.T) {
@@ -69,7 +70,7 @@ func (s *CaseApiSuite) TestCaseListBySuiteApi(t provider.T) {
 
 	firstCaseId := gjson.Get(string(bodyBytes), "testcases.0.id").Int()
 
-	t.Require().Greater(firstCaseId, int64(0), "list testcases failed")
+	t.Require().Greater(firstCaseId, int64(0), "list testcases failed, url: "+url)
 }
 
 func (s *CaseApiSuite) TestCaseListByTaskApi(t provider.T) {
@@ -82,7 +83,7 @@ func (s *CaseApiSuite) TestCaseListByTaskApi(t provider.T) {
 
 	firstCaseId := gjson.Get(string(bodyBytes), "testcases.0.id").Int()
 
-	t.Require().Greater(firstCaseId, int64(0), "list testcases failed")
+	t.Require().Greater(firstCaseId, int64(0), "list testcases failed, url: "+url)
 }
 
 func (s *CaseApiSuite) TestCaseDetailApi(t provider.T) {
@@ -95,7 +96,7 @@ func (s *CaseApiSuite) TestCaseDetailApi(t provider.T) {
 
 	title := gjson.Get(string(bodyBytes), "title").String()
 
-	t.Require().Greater(len(title), 0, "get testcases failed")
+	t.Require().Greater(len(title), 0, "get testcases failed, url: "+url)
 }
 
 func (s *CaseApiSuite) TestCaseCheckinApi(t provider.T) {
@@ -124,11 +125,11 @@ func (s *CaseApiSuite) TestCaseCheckinApi(t provider.T) {
 	bodyBytes, _ := httpHelper.Put(url, token, requestObj)
 
 	actualTitle := gjson.Get(string(bodyBytes), "title").String()
-	t.Require().Equal(actualTitle, title, "checkin testcases failed")
+	t.Require().Equal(actualTitle, title, "checkin testcases failed, url: "+url)
 
 	newCase := getCase(config.CaseId)
 	titleFromRemote := newCase["title"]
-	t.Require().Equal(titleFromRemote, title, "get testcases failed")
+	t.Require().Equal(titleFromRemote, title, "get testcases failed, url: "+url)
 }
 
 func getCase(id int) (cs map[string]interface{}) {

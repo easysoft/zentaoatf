@@ -10,6 +10,7 @@ import (
 	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	uiTest "github.com/easysoft/zentaoatf/cmd/test/helper/zentao/ui"
+	commandConfig "github.com/easysoft/zentaoatf/internal/command/config"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
@@ -45,7 +46,7 @@ func main() {
 	commConsts.ExecFrom = commConsts.FromCmd
 	commConsts.ZtfDir = constTestHelper.RootPath
 
-	serverConfig.InitLog()
+	commandConfig.InitLog()
 	serverConfig.InitExecLog(constTestHelper.RootPath)
 	i118Utils.Init("zh-CN", commConsts.AppServer)
 
@@ -62,16 +63,19 @@ func main() {
 			fmt.Println("Init zentao data fail ", err)
 		}
 
+		fmt.Println("build cli")
 		err = commonTestHelper.BuildCli()
 		if err != nil {
 			fmt.Println("Build cli fail ", err)
 		}
 
+		fmt.Println("run server")
 		err = commonTestHelper.RunServer()
 		if err != nil {
 			fmt.Println("Build server fail ")
 		}
 
+		fmt.Println("run ui")
 		err = commonTestHelper.RunUi()
 		if err != nil {
 			fmt.Println("Build server fail ")

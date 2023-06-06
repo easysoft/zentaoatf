@@ -3,6 +3,8 @@ package zentaoHelper
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
@@ -11,7 +13,6 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12/websocket"
-	"os"
 )
 
 func CommitResult(report commDomain.ZtfReport, productId, taskId int, config commDomain.WorkspaceConf,
@@ -19,7 +20,8 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId int, config com
 	if productId != 0 {
 		report.ProductId = productId
 	}
-	RemoveAutoCreateId(&report)
+
+	FilterCases(&report, config)
 	report.TaskId = taskId
 
 	// for ci tool debug
@@ -78,12 +80,37 @@ func JobCommitResult(report interface{}, config commDomain.WorkspaceConf) (err e
 	return
 }
 
-func RemoveAutoCreateId(report *commDomain.ZtfReport) {
-	if report.TestType == commConsts.TestFunc {
-		return
+func FilterCases(report *commDomain.ZtfReport, config commDomain.WorkspaceConf) {
+	//get case list
+	casesResp, _ := LoadTestCaseSimple(report.ProductId, 0, 0, 0, config)
+
+	casesMap := map[int]bool{}
+	for _, caseInfo := range casesResp.Cases {
+		casesMap[caseInfo.Id] = true
 	}
-	for idx, cs := range report.UnitResult {
-		report.UnitResult[idx].Id = cs.Cid
+
+	funcResult := make([]commDomain.FuncResult, 0)
+	for _, cs := range report.FuncResult {
+		if _, ok := casesMap[cs.Id]; !ok || cs.Id == 0 {
+			continue
+		}
+
+		funcResult = append(funcResult, cs)
 	}
+
+	report.FuncResult = funcResult
+
+	unitResult := make([]commDomain.UnitResult, 0)
+	for _, cs := range report.UnitResult {
+		cs.Id = cs.Cid
+
+		if _, ok := casesMap[cs.Id]; !ok || cs.Id == 0 {
+			continue
+		}
+
+		unitResult = append(unitResult, cs)
+	}
+
+	report.UnitResult = unitResult
 	return
 }

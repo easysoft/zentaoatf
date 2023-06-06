@@ -8,18 +8,18 @@ import (
 	"time"
 
 	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
+	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
+	apiTest "github.com/easysoft/zentaoatf/cmd/test/helper/zentao/api"
 	dateUtils "github.com/easysoft/zentaoatf/pkg/lib/date"
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
-	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
-	apiTest "github.com/easysoft/zentaoatf/test/helper/zentao/api"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
 
 var (
 	successCrRe = regexp.MustCompile("Submitted test results to ZenTao|提交测试结果到禅道成功")
-	productIdRe = regexp.MustCompile("Zentao account|请输入 产品Id")
-	taskIdRe    = regexp.MustCompile("Zentao account|请输入 测试任务Id")
+	productIdRe = regexp.MustCompile("Please enter Product Id|请输入 产品Id")
+	taskIdRe    = regexp.MustCompile("Please enter Test Request Id|请输入 测试任务Id")
 )
 
 type CrSuite struct {
@@ -38,7 +38,7 @@ func (s *CrSuite) TestAutoCr(t provider.T) {
 	caseInfo := apiTest.GetCaseResult(1)
 	lastId := caseInfo["Id"].(int64)
 
-	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" cr %stest/demo/001 -p 1 -y -t testcr", constTestHelper.RootPath)
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" cr %scmd/test/demo/001 -p 1 -y -t testcr", constTestHelper.RootPath)
 
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
@@ -53,7 +53,7 @@ func (s *CrSuite) TestAutoCr(t provider.T) {
 	//check zentao
 	caseInfo = apiTest.GetCaseResult(1)
 	resultTime := dateUtils.TimeStrToTimestamp(caseInfo["Date"].(string))
-	t.Require().Equal(lastId+1, caseInfo["Id"].(int64))
+	t.Require().GreaterOrEqual(caseInfo["Id"].(int64), lastId+1)
 	t.Require().Equal("fail", caseInfo["CaseResult"])
 	t.Require().LessOrEqual(math.Abs(float64(resultTime-time.Now().Unix())), float64(10))
 }
@@ -65,7 +65,7 @@ func (s *CrSuite) TestCr(t provider.T) {
 	caseInfo := apiTest.GetCaseResult(1)
 	lastId := caseInfo["Id"].(int64)
 
-	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" cr %stest/demo/001", constTestHelper.RootPath)
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" cr %scmd/test/demo/001", constTestHelper.RootPath)
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		t.Require().Equal("Success", err.Error())

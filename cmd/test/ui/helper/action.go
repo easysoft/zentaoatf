@@ -240,7 +240,7 @@ func (p *Webpage) ScreenShot() {
 	if !conf.ShowErr && !conf.ExitAllOnError {
 		return
 	}
-	var screenshotPath = fmt.Sprintf("%stest/screenshot/%v.png", constTestHelper.RootPath, time.Now().Unix())
+	var screenshotPath = fmt.Sprintf("%scmd/test/screenshot/%v.png", constTestHelper.RootPath, time.Now().Unix())
 	p.Page.Screenshot(playwright.PageScreenshotOptions{Path: &screenshotPath})
 }
 

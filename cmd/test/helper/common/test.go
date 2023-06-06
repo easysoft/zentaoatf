@@ -19,9 +19,9 @@ import (
 )
 
 func TestCli() (err error) {
-	testPath := fmt.Sprintf(`%stest`, constTestHelper.RootPath)
+	testPath := fmt.Sprintf(`%scmd/test`, constTestHelper.RootPath)
 	if runtime.GOOS == "windows" {
-		testPath = fmt.Sprintf(`%stest`, constTestHelper.RootPath)
+		testPath = fmt.Sprintf(`%scmd\test`, constTestHelper.RootPath)
 	}
 	req := serverDomain.TestSet{
 		WorkspacePath: testPath,
@@ -43,13 +43,11 @@ func TestCli() (err error) {
 }
 
 func TestUi() (err error) {
-	var screenshotPath = fmt.Sprintf("%stest/screenshot", constTestHelper.RootPath)
+	var screenshotPath = fmt.Sprintf("%scmd/test/screenshot", constTestHelper.RootPath)
 	os.RemoveAll(screenshotPath)
 	fileUtils.MkDirIfNeeded(screenshotPath)
-	testPath := fmt.Sprintf(`%stest`, constTestHelper.RootPath)
-	if runtime.GOOS == "windows" {
-		testPath = fmt.Sprintf(`%stest`, constTestHelper.RootPath)
-	}
+	testPath := filepath.Join(constTestHelper.RootPath, "cmd", "test")
+
 	req := serverDomain.TestSet{
 		WorkspacePath: testPath,
 		Cmd:           "go test ./ui -v -timeout 10m",

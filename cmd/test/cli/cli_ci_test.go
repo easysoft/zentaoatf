@@ -16,8 +16,8 @@ import (
 
 	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
+	apiTest "github.com/easysoft/zentaoatf/cmd/test/helper/zentao/api"
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
-	apiTest "github.com/easysoft/zentaoatf/test/helper/zentao/api"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
@@ -40,7 +40,7 @@ func (s *CiSuite) TestCiSuite(t provider.T) {
 }
 
 func testCi() string {
-	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" ci %stest/demo/1_string_match_pass.php", constTestHelper.RootPath)
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" ci %scmd/test/demo/1_string_match_pass.php", constTestHelper.RootPath)
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {
 		return err.Error()

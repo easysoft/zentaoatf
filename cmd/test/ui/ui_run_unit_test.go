@@ -1,8 +1,7 @@
 package main
 
 import (
-	"os"
-	"runtime"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -12,6 +11,7 @@ import (
 	ztfTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/ztf"
 	plwConf "github.com/easysoft/zentaoatf/cmd/test/ui/conf"
 	plwHelper "github.com/easysoft/zentaoatf/cmd/test/ui/helper"
+	commandConfig "github.com/easysoft/zentaoatf/internal/command/config"
 	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/runner"
@@ -37,11 +37,9 @@ func createUnitWorkspace(t provider.T, workspaceName, workspacePath, unitType st
 }
 
 func RunTestNG(t provider.T) {
-	var pwd, _ = os.Getwd()
-	testngDir := pwd + "/demo/ci_test_testng"
-	if runtime.GOOS == "windows" {
-		testngDir = pwd + "\\demo\\ci_test_testng"
-	}
+	commandConfig.InitLog()
+
+	testngDir := filepath.Join(constTestHelper.RootPath, "cmd", "test", "demo", "ci_test_testng")
 	workspaceName := "testng工作目录"
 
 	commonTestHelper.CloneGit("https://gitee.com/ngtesting/ci_test_testng.git", testngDir)

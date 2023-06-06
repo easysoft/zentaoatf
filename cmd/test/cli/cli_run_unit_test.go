@@ -29,13 +29,13 @@ func (s *RunUnitSuit) BeforeEach(t provider.T) {
 	if runtime.GOOS == "windows" {
 		os.RemoveAll(fmt.Sprintf("%s\\test\\demo\\php\\product1", constTestHelper.RootPath))
 	} else {
-		os.RemoveAll(fmt.Sprintf("%s/test/demo/php/product1", constTestHelper.RootPath))
+		os.RemoveAll(fmt.Sprintf("%s/cmd/test/demo/php/product1", constTestHelper.RootPath))
 	}
 	t.AddSubSuite("命令行-run")
 }
 
 func (s *RunUnitSuit) TestRunTestng(t provider.T) {
-	testngDir := fmt.Sprintf("%stest/demo/ci_test_testng", constTestHelper.RootPath)
+	testngDir := fmt.Sprintf("%scmd/test/demo/ci_test_testng", constTestHelper.RootPath)
 	t.ID("5432")
 	t.Title("执行TestNG单元测试")
 	cloneGit("https://gitee.com/ngtesting/ci_test_testng.git", testngDir)
@@ -43,7 +43,7 @@ func (s *RunUnitSuit) TestRunTestng(t provider.T) {
 }
 
 func (s *RunUnitSuit) TestRunPytest(t provider.T) {
-	pytestDir := fmt.Sprintf(".%stest/demo/ci_test_pytest", constTestHelper.RootPath)
+	pytestDir := fmt.Sprintf(".%scmd/test/demo/ci_test_pytest", constTestHelper.RootPath)
 	t.ID("5435")
 	t.Title("执行PyTest单元测试")
 	cloneGit("https://gitee.com/ngtesting/ci_test_pytest.git", pytestDir)

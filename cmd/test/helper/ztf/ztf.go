@@ -15,7 +15,7 @@ var AddSiteTimes = 0
 
 func CreateTestWorkspace(webpage plwHelper.Webpage, name, workspacePath string) {
 	if workspacePath == "" {
-		workspacePath = fmt.Sprintf("%stest%sdemo%sphp", constTestHelper.RootPath, constTestHelper.FilePthSep, constTestHelper.FilePthSep)
+		workspacePath = fmt.Sprintf("%scmd%stest%sdemo%sphp", constTestHelper.RootPath, constTestHelper.FilePthSep, constTestHelper.FilePthSep, constTestHelper.FilePthSep)
 	}
 
 	webpage.Click(`[title="新建工作目录"]`)
@@ -102,6 +102,9 @@ func CreateSite(webpage plwHelper.Webpage) {
 }
 
 func ExpandWorspace(webpage plwHelper.Webpage) (err error) {
+	plwConf.DisableErr()
+	defer plwConf.EnableErr()
+
 	if !webpage.ElementExist(fmt.Sprintf(".tree-node-title:has-text('%s')", constTestHelper.WorkspaceName)) {
 		CreateTestWorkspace(webpage, constTestHelper.WorkspaceName, "")
 	}
@@ -113,8 +116,8 @@ func ExpandWorspace(webpage plwHelper.Webpage) (err error) {
 	}
 
 	webpage.Click(fmt.Sprintf(".tree-node-title:has-text(\"%s\")", constTestHelper.WorkspaceName))
-	err = webpage.WaitForSelectorTimeout(".tree-node-item>>div:has-text('1_string_match.php')", 3000)
-	if err != nil {
+
+	if webpage.ElementExist(".tree-node-item>>text=1_string_match.php") {
 		if expandTimes > 3 {
 			expandTimes = 0
 			return err
@@ -129,9 +132,16 @@ func ExpandWorspace(webpage plwHelper.Webpage) (err error) {
 func ExpandProduct(webpage plwHelper.Webpage) (err error) {
 	plwConf.DisableErr()
 	defer plwConf.EnableErr()
+
 	ExpandWorspace(webpage)
-	var waitTimeOut float64 = 5000
-	webpage.WaitForSelector(".tree-node-item:has-text('product1')", playwright.PageWaitForSelectorOptions{Timeout: &waitTimeOut})
+
+	if !webpage.ElementExist(".tree-node-root .tree-node:has-text('product1')") {
+		webpage.WaitForTimeout(100)
+		expandTimes++
+		ExpandProduct(webpage)
+		return
+	}
+
 	selector := webpage.QuerySelectorAll(".tree-node-root .tree-node:has-text('product1')")
 	className := selector.GetAttribute(0, "class")
 	if className != "" && !strings.Contains(className, "collapsed") {

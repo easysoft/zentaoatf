@@ -46,6 +46,7 @@ func main() {
 	serverConfig.InitLog()
 	serverConfig.InitExecLog(constTestHelper.RootPath)
 	commConsts.ZtfDir = constTestHelper.RootPath
+
 	i118Utils.Init("zh-CN", commConsts.AppServer)
 
 	if runFrom == "jenkins" {

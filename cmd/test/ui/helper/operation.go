@@ -180,7 +180,7 @@ func (l *MyLocator) ScreenShot() {
 	if !conf.ShowErr && !conf.ExitAllOnError {
 		return
 	}
-	var screenshotPath = fmt.Sprintf("%stest/screenshot/%v.png", constTestHelper.RootPath, time.Now().Unix())
+	var screenshotPath = fmt.Sprintf("%scmd/test/screenshot/%v.png", constTestHelper.RootPath, time.Now().Unix())
 	l.Page.Screenshot(playwright.PageScreenshotOptions{Path: &screenshotPath})
 }
 

@@ -8,8 +8,8 @@ import (
 
 	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
+	apiTest "github.com/easysoft/zentaoatf/cmd/test/helper/zentao/api"
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
-	apiTest "github.com/easysoft/zentaoatf/test/helper/zentao/api"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
@@ -34,7 +34,7 @@ func (s *CbSuite) TestCbSuite(t provider.T) {
 func testCb() string {
 	lastId := apiTest.GetLastBugId()
 
-	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" cb %stest/demo/001 -p 1", constTestHelper.RootPath)
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" cb %scmd/test/demo/001 -p 1", constTestHelper.RootPath)
 
 	child, err := expect.Spawn(cmd, -1)
 	if err != nil {

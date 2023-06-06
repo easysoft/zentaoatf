@@ -35,7 +35,7 @@ func init() {
 	}
 	RootPath, _ = os.Getwd()
 	if strings.Index(RootPath, "test") != -1 {
-		RootPath = RootPath[:strings.Index(RootPath, "test")]
+		RootPath = RootPath[:strings.Index(RootPath, "test")-4]
 	}
 	if RootPath[len(RootPath)-1:] != FilePthSep {
 		RootPath += FilePthSep

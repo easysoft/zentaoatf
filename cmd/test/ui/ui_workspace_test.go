@@ -8,19 +8,23 @@ import (
 	"testing"
 
 	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
+	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
+	apiTest "github.com/easysoft/zentaoatf/cmd/test/helper/zentao/api"
+	ztfTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/ztf"
 	plwConf "github.com/easysoft/zentaoatf/cmd/test/ui/conf"
+	plwHelper "github.com/easysoft/zentaoatf/cmd/test/ui/helper"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
-	constTestHelper "github.com/easysoft/zentaoatf/test/helper/conf"
-	apiTest "github.com/easysoft/zentaoatf/test/helper/zentao/api"
-	ztfTestHelper "github.com/easysoft/zentaoatf/test/helper/ztf"
-	plwHelper "github.com/easysoft/zentaoatf/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/runner"
 	playwright "github.com/playwright-community/playwright-go"
 )
 
 var (
-	workspacePath = fmt.Sprintf("%stest%sdemo%sphp", constTestHelper.RootPath, constTestHelper.FilePthSep, constTestHelper.FilePthSep)
+	workspacePath = fileUtils.AddFilePathSepIfNeeded(commonTestHelper.GetPhpWorkspacePath())
+
+	syncDir    = filepath.Join(workspacePath, "product1")
+	oldDirPath = workspacePath + "oldDir"
+	newDirPath = filepath.Join(workspacePath, "product1", "oldDir")
 )
 
 func CreateWorkspace(t provider.T) {
@@ -55,7 +59,6 @@ func SyncFromZentao(t provider.T) {
 	syncAllCaseFromZentao(t)
 }
 func syncAllCaseFromZentao(t provider.T) {
-	syncDir := filepath.Join(workspacePath, "product1")
 	os.RemoveAll(syncDir)
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
@@ -79,20 +82,19 @@ func syncAllCaseFromZentao(t provider.T) {
 	//check file info
 	scriptPath := filepath.Join(workspacePath, "product1", "2.php")
 	content := fileUtils.ReadFile(scriptPath)
-	t.Require().Contains(content, "extract content from webpage-synctozentao")
+	t.Require().Contains(content, "extract content from webpage")
 }
 
 func syncCaseFromZentaoTask(t provider.T) {
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 
-	syncDir := filepath.Join(workspacePath, "product1")
 	os.RemoveAll(syncDir)
 
 	ztfTestHelper.SelectSite(webpage)
 
 	webpage.WaitForSelector(".tree-node", playwright.PageWaitForSelectorOptions{Timeout: &plwConf.Timeout})
-	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
+	locator := webpage.Locator(".tree-node-title", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
 	locator.RightClick()
 
 	webpage.Click(".tree-context-menu>>text=从禅道同步")
@@ -118,13 +120,12 @@ func syncCaseFromZentaoModule(t provider.T) {
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 
-	syncDir := filepath.Join(workspacePath, "product1")
 	os.RemoveAll(syncDir)
 
 	ztfTestHelper.SelectSite(webpage)
 
 	webpage.WaitForSelector(".tree-node", playwright.PageWaitForSelectorOptions{Timeout: &plwConf.Timeout})
-	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
+	locator := webpage.Locator(".tree-node-title", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
 	locator.RightClick()
 
 	webpage.Click(".tree-context-menu>>text=从禅道同步")
@@ -150,13 +151,12 @@ func syncCaseFromZentaoSuite(t provider.T) {
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 
-	syncDir := filepath.Join(workspacePath, "product1")
 	os.RemoveAll(syncDir)
 
 	ztfTestHelper.SelectSite(webpage)
 
 	webpage.WaitForSelector(".tree-node", playwright.PageWaitForSelectorOptions{Timeout: &plwConf.Timeout})
-	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
+	locator := webpage.Locator(".tree-node-title", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
 	locator.RightClick()
 
 	webpage.Click(".tree-context-menu>>text=从禅道同步")
@@ -184,13 +184,12 @@ func SyncTwoCaseFromZentao(t provider.T) {
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 
-	syncDir := filepath.Join(workspacePath, "product1")
 	os.RemoveAll(syncDir)
 
 	ztfTestHelper.SelectSite(webpage)
 
 	webpage.WaitForSelector(".tree-node", playwright.PageWaitForSelectorOptions{Timeout: &plwConf.Timeout})
-	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
+	locator := webpage.Locator(".tree-node-title", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
 	locator.RightClick()
 
 	webpage.Click(".tree-context-menu>>text=从禅道同步")
@@ -225,9 +224,9 @@ func SyncToZentao(t provider.T) {
 	defer webpage.Close()
 
 	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.ExpandWorspace(webpage)
 
-	webpage.WaitForSelector(".tree-node", playwright.PageWaitForSelectorOptions{Timeout: &plwConf.Timeout})
-	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
+	locator := webpage.Locator(".tree-node-title", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
 	locator.RightClick()
 
 	webpage.Click(".tree-context-menu>>text=同步到禅道")
@@ -243,6 +242,9 @@ func SyncToZentao(t provider.T) {
 func Copy(t provider.T) {
 	t.ID("5474")
 	t.AddParentSuite("管理禅道站点下工作目录")
+
+	fileUtils.MkDirIfNeeded(syncDir)
+	defer os.RemoveAll(syncDir)
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -279,14 +281,26 @@ func CopyDir(t provider.T) {
 	t.ID("7593")
 	t.AddParentSuite("管理禅道站点下工作目录")
 
+	fileUtils.MkDirIfNeeded(syncDir)
+	defer os.RemoveAll(syncDir)
+	if !fileUtils.FileExist(oldDirPath) {
+		fileUtils.MkDirIfNeeded(oldDirPath)
+	}
+	if fileUtils.FileExist(newDirPath) {
+		os.RemoveAll(newDirPath)
+	}
+
+	defer os.Remove(oldDirPath)
+	defer os.Remove(newDirPath)
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 
 	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.ExpandWorspace(webpage)
 	ztfTestHelper.ExpandProduct(webpage)
-	CreateDir(t)
 
-	scriptLocator := webpage.Locator(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-title>>text=oldDir", constTestHelper.WorkspaceName))
+	scriptLocator := webpage.Locator(".tree-node-title>>text=oldDir")
 	scriptLocator.RightClick()
 
 	webpage.Click(".tree-context-menu>>text=复制")
@@ -299,21 +313,27 @@ func CopyDir(t provider.T) {
 		t.FailNow()
 		return
 	}
-
-	os.Remove(commonTestHelper.GetPhpWorkspacePath() + "oldDir")
-	os.Remove(filepath.Join(commonTestHelper.GetPhpWorkspacePath(), "product1", "oldDir"))
 }
 
 func ClipDir(t provider.T) {
 	t.ID("7593")
 	t.AddParentSuite("管理禅道站点下工作目录")
 
+	fileUtils.MkDirIfNeeded(syncDir)
+	defer os.RemoveAll(syncDir)
+	if !fileUtils.FileExist(oldDirPath) {
+		fileUtils.MkDirIfNeeded(oldDirPath)
+	}
+	if fileUtils.FileExist(newDirPath) {
+		os.RemoveAll(newDirPath)
+	}
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 
 	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.ExpandWorspace(webpage)
 	ztfTestHelper.ExpandProduct(webpage)
-	CreateDir(t)
 
 	scriptLocator := webpage.Locator(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-title>>text=oldDir", constTestHelper.WorkspaceName))
 	scriptLocator.RightClick()
@@ -329,8 +349,8 @@ func ClipDir(t provider.T) {
 		return
 	}
 
-	os.Remove(commonTestHelper.GetPhpWorkspacePath() + "oldDir")
-	os.Remove(filepath.Join(commonTestHelper.GetPhpWorkspacePath(), "product1", "oldDir"))
+	os.Remove(oldDirPath)
+	os.Remove(newDirPath)
 }
 
 func CreateScript(t provider.T) {
@@ -360,10 +380,19 @@ func RenameScript(t provider.T) {
 	t.ID("7596")
 	t.AddParentSuite("管理禅道站点下工作目录")
 
+	fileUtils.MkDirIfNeeded(syncDir)
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
-	defer webpage.Close()
+
+	defer func() {
+		webpage.Close()
+		os.RemoveAll(syncDir)
+		os.Remove(workspacePath + "old.php")
+		os.Remove(workspacePath + "new.php")
+	}()
 
 	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.ExpandWorspace(webpage)
 	ztfTestHelper.ExpandProduct(webpage)
 	CreateScript(t)
 
@@ -376,9 +405,6 @@ func RenameScript(t provider.T) {
 	webpage.Click("#scriptFormModal>>.modal-action>>span:has-text(\"确定\")")
 
 	scriptLocator = webpage.Locator(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-title>>text=new.php", constTestHelper.WorkspaceName))
-
-	os.Remove(commonTestHelper.GetPhpWorkspacePath() + "old.php")
-	os.Remove(commonTestHelper.GetPhpWorkspacePath() + "new.php")
 }
 
 func CreateDir(t provider.T) {
@@ -390,7 +416,7 @@ func CreateDir(t provider.T) {
 	ztfTestHelper.SelectSite(webpage)
 	ztfTestHelper.ExpandProduct(webpage)
 
-	if webpage.ElementExist(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-title>>text=oldDir", constTestHelper.WorkspaceName)) {
+	if webpage.ElementExist(".tree-node-title>>text=oldDir") {
 		return
 	}
 
@@ -408,10 +434,16 @@ func RenameDir(t provider.T) {
 	t.ID("7595")
 	t.AddParentSuite("管理禅道站点下工作目录")
 
+	fileUtils.MkDirIfNeeded(syncDir)
+	defer os.RemoveAll(syncDir)
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
+	defer os.RemoveAll(oldDirPath)
+	defer os.RemoveAll(workspacePath + "newDir")
 
 	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.ExpandWorspace(webpage)
 	ztfTestHelper.ExpandProduct(webpage)
 	CreateDir(t)
 
@@ -423,14 +455,17 @@ func RenameDir(t provider.T) {
 	webpage.Click("#scriptFormModal>>.modal-action>>span:has-text(\"确定\")")
 
 	webpage.Locator(fmt.Sprintf(".tree-node:has-text('%s')>>.tree-node-title>>text=newDir", constTestHelper.WorkspaceName))
-
-	os.Remove(commonTestHelper.GetPhpWorkspacePath() + "oldDir")
-	os.Remove(commonTestHelper.GetPhpWorkspacePath() + "newDir")
 }
 
 func DeleteScript(t provider.T) {
 	t.ID("5478")
 	t.AddParentSuite("管理禅道站点下工作目录")
+
+	fileUtils.MkDirIfNeeded(syncDir)
+	scriptPath := filepath.Join(workspacePath, "product1", "1.php")
+	fileUtils.WriteFile(scriptPath, "")
+	defer os.RemoveAll(syncDir)
+	defer os.RemoveAll(scriptPath)
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -458,6 +493,9 @@ func DeleteScript(t provider.T) {
 func DeleteDir(t provider.T) {
 	t.ID("5477")
 	t.AddParentSuite("管理禅道站点下工作目录")
+
+	fileUtils.MkDirIfNeeded(syncDir)
+	defer os.RemoveAll(syncDir)
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -490,18 +528,19 @@ func DeleteWorkspace(t provider.T) {
 	defer webpage.Close()
 
 	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.ExpandWorspace(webpage)
 
 	webpage.WaitForSelector(".tree-node")
 	locator := webpage.Locator(".tree-node-item", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
 	locator.Hover()
 	webpage.Click(`[title="删除"]`)
-	webpage.Click(".modal-action>>span:has-text(\"确定\")")
+	webpage.Click(".modal-action>>span>>text=确定")
 
 	webpage.WaitForTimeout(1000)
 	plwConf.DisableErr()
 	defer plwConf.EnableErr()
 
-	scriptLocator := webpage.Locator(fmt.Sprintf(".tree-node-title:has-text('%s')", constTestHelper.WorkspaceName))
+	scriptLocator := webpage.Locator(fmt.Sprintf(".tree-node-title>>text=%s", constTestHelper.WorkspaceName))
 	c := scriptLocator.Count()
 	if c > 0 {
 		t.Errorf("Delete workspace fail")
@@ -513,17 +552,25 @@ func Clip(t provider.T) {
 	t.ID("5476")
 	t.AddParentSuite("管理禅道站点下工作目录")
 
+	fileUtils.MkDirIfNeeded(syncDir)
+	scriptPath := filepath.Join(workspacePath, "product1", "1.php")
+	scriptNewPath := filepath.Join(workspacePath, "1.php")
+	fileUtils.WriteFile(scriptPath, "")
+
+	defer func() {
+		os.RemoveAll(syncDir)
+		os.RemoveAll(scriptPath)
+		os.RemoveAll(scriptNewPath)
+	}()
+
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 
 	ztfTestHelper.SelectSite(webpage)
-
-	webpage.WaitForSelector(".tree-node")
-	locator := webpage.Locator(".tree-node", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
-	locator.Click()
+	ztfTestHelper.ExpandWorspace(webpage)
 	ztfTestHelper.ExpandProduct(webpage)
 
-	scriptLocator := locator.Locator(".tree-node-title>>text=1.php")
+	scriptLocator := webpage.Locator(".tree-node-title>>text=1.php")
 	scriptLocator.RightClick()
 	webpage.Click(".tree-context-menu>>text=剪切")
 	workspaceLocator := webpage.Locator(".tree-node-title", playwright.PageLocatorOptions{HasText: constTestHelper.WorkspaceName})
@@ -531,7 +578,7 @@ func Clip(t provider.T) {
 	webpage.Click(".tree-context-menu>>text=粘贴")
 
 	webpage.WaitForTimeout(1000)
-	locator.Locator(".tree-node-item>>div:has-text('1.php')")
+	webpage.Locator(".tree-node-item>>div:has-text('1.php')")
 }
 
 func Collapse(t provider.T) {
@@ -573,8 +620,8 @@ func Collapse(t provider.T) {
 }
 func TestUiWorkspace(t *testing.T) {
 	runner.Run(t, "客户端-同步到禅道", SyncToZentao)
-	runner.Run(t, "客户端-从禅道同步选中用例", SyncTwoCaseFromZentao)
 	runner.Run(t, "客户端-从禅道同步", SyncFromZentao)
+	runner.Run(t, "客户端-从禅道同步选中用例", SyncTwoCaseFromZentao)
 	runner.Run(t, "客户端-复制粘贴树状脚本文件", Copy)
 	runner.Run(t, "客户端-复制粘贴目录", ClipAndCopyDir)
 	runner.Run(t, "客户端-剪切粘贴树状脚本文件", Clip)

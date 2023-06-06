@@ -22,11 +22,11 @@ func (s *ViewSuite) BeforeEach(t provider.T) {
 	t.AddSubSuite("命令行-查看脚本详情")
 }
 func (s *ViewSuite) TestViewSuite(t provider.T) {
-	t.Require().Equal("Success", testView(commonTestHelper.GetZtfPath()+fmt.Sprintf(" view %stest/demo/1_string_match_fail.php", constTestHelper.RootPath), regexp.MustCompile("check string matches pattern")))
+	t.Require().Equal("Success", testView(commonTestHelper.GetZtfPath()+fmt.Sprintf(" view %scmd/test/demo/1_string_match_fail.php", constTestHelper.RootPath), regexp.MustCompile("check string matches pattern")))
 
-	t.Require().Equal("Success", testView(commonTestHelper.GetZtfPath()+fmt.Sprintf(" -v %stest/demo -k 1", constTestHelper.RootPath), regexp.MustCompile("check string matches pattern")))
+	t.Require().Equal("Success", testView(commonTestHelper.GetZtfPath()+fmt.Sprintf(" -v %scmd/test/demo -k 1", constTestHelper.RootPath), regexp.MustCompile("check string matches pattern")))
 
-	t.Require().Equal("Success", testView(commonTestHelper.GetZtfPath()+fmt.Sprintf(" view %stest/demo -k match", constTestHelper.RootPath), regexp.MustCompile("Found 5 test cases|发现5个用例")))
+	t.Require().Equal("Success", testView(commonTestHelper.GetZtfPath()+fmt.Sprintf(" view %scmd/test/demo -k match", constTestHelper.RootPath), regexp.MustCompile("Found 5 test cases|发现5个用例")))
 }
 
 func testView(cmd string, successRe *regexp.Regexp) string {

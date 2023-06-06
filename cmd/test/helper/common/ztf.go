@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
@@ -102,11 +103,11 @@ func GetZtfPath() string {
 }
 
 func GetZtfProductPath() string {
-	return fmt.Sprintf("%s%s%s%s%s%s%s%s", constTestHelper.RootPath, "test", constTestHelper.FilePthSep, "demo", constTestHelper.FilePthSep, "php", constTestHelper.FilePthSep, "product1")
+	return filepath.Join(constTestHelper.RootPath, "cmd", "test", "demo", "php", "product1")
 }
 
 func GetPhpWorkspacePath() string {
-	return fmt.Sprintf("%s%s%s%s%s%s%s", constTestHelper.RootPath, "test", constTestHelper.FilePthSep, "demo", constTestHelper.FilePthSep, "php", constTestHelper.FilePthSep)
+	return filepath.Join(constTestHelper.RootPath, "cmd", "test", "demo", "php")
 }
 
 func WaitZtfAccessed() {

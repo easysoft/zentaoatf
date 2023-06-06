@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"regexp"
 	"runtime"
+	"strings"
 	"testing"
 	"time"
 
@@ -36,7 +37,7 @@ var (
 		"tcl":        "",
 		"go":         "",
 	}
-	langArray = []string{"php", "javascript", "lua", "perl", "python", "ruby", "tcl", "go"}
+	langArray = []string{"go", "php", "ruby", "javascript", "lua", "perl", "python", "tcl"}
 )
 
 type SetSuite struct {
@@ -107,11 +108,17 @@ func testSet(language string) (ret string) {
 		}
 
 		for _, lang := range langArray {
-			if _, err = child.Expect(regexp.MustCompile(lang), time.Second*5); err != nil {
+			out, err := child.Expect(regexp.MustCompile("Please set script|请设置"), time.Second*5)
+			if err != nil {
 				return fmt.Sprintf("expect %s, actual %s", lang, err.Error())
 			}
 
-			if err = child.Send(langMap[lang] + constTestHelper.NewLine); err != nil {
+			sendMsg := ""
+			if strings.Contains(out, "php") {
+				sendMsg = "D:\\Program Files\\phpstudy_pro\\Extensions\\php\\php7.4.3nts\\php.exe"
+			}
+
+			if err = child.Send(sendMsg + constTestHelper.NewLine); err != nil {
 				return err.Error()
 			}
 		}

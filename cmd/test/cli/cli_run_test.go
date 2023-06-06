@@ -17,6 +17,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"path/filepath"
 	"regexp"
 	"runtime"
 	"strings"
@@ -38,7 +39,7 @@ func (s *RunSuite) BeforeEach(t provider.T) {
 	if runtime.GOOS == "windows" {
 		os.RemoveAll(fmt.Sprintf("%s\\test\\demo\\php\\product1", constTestHelper.RootPath))
 	} else {
-		os.RemoveAll(fmt.Sprintf("%s/test/demo/php/product1", constTestHelper.RootPath))
+		os.RemoveAll(fmt.Sprintf("%s/cmd/test/demo/php/product1", constTestHelper.RootPath))
 	}
 	t.AddSubSuite("命令行-run")
 }
@@ -47,17 +48,17 @@ func (s *RunSuite) TestRunZtfFile(t provider.T) {
 	t.ID("1584")
 	t.Title("执行多个文件和目录中的脚本")
 
-	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %s/test/demo/1_string_match_pass.php", constTestHelper.RootPath)
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %s/cmd/test/demo/1_string_match_pass.php", constTestHelper.RootPath)
 	expectReg := regexp.MustCompile(`Pass:1\(100\.0%\), Fail:0\(0\.0%\), Skip:0\(0\.0%\)|通过数：1\(100\.0%\)，失败数：0\(0\.0%\)，忽略数：0\(0\.0%\)`)
 
 	t.Require().Equal("Success", testRun(cmd, expectReg))
 
-	cmd = commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %stest/demo/1_string_match_pass.php %stest/demo/2_webpage_extract.php", constTestHelper.RootPath, constTestHelper.RootPath)
+	cmd = commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %scmd/test/demo/1_string_match_pass.php %scmd/test/demo/2_webpage_extract.php", constTestHelper.RootPath, constTestHelper.RootPath)
 	expectReg = regexp.MustCompile(`Pass:2\(100\.0%\), Fail:0\(0\.0%\), Skip:0\(0\.0%\)|通过数：2\(100\.0%\)，失败数：0\(0\.0%\)，忽略数：0\(0\.0%\)`)
 
 	t.Require().Equal("Success", testRun(cmd, expectReg))
 
-	cmd = commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %stest/demo", constTestHelper.RootPath)
+	cmd = commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %scmd/test/demo", constTestHelper.RootPath)
 	if runtime.GOOS == "windows" {
 		cmd = strings.ReplaceAll(cmd, "/", "\\")
 	}
@@ -70,7 +71,7 @@ func (s *RunSuite) TestRunExpectFile(t provider.T) {
 	t.ID("7561")
 	t.Title("执行期待结果独立文件的用例")
 
-	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %s/test/demo/expect.php", constTestHelper.RootPath)
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %s/cmd/test/demo/expect.php", constTestHelper.RootPath)
 	expectReg := regexp.MustCompile(`Pass:1\(100\.0%\), Fail:0\(0\.0%\), Skip:0\(0\.0%\)|通过数：1\(100\.0%\)，失败数：0\(0\.0%\)，忽略数：0\(0\.0%\)`)
 
 	t.Require().Equal("Success", testRun(cmd, expectReg))
@@ -80,7 +81,7 @@ func (s *RunSuite) TestRunFileAndSubmit(t provider.T) {
 	t.ID("7552")
 	t.Title("执行后自动提交结果")
 
-	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %s/test/demo/1_string_match_pass.php -p 1 -cr", constTestHelper.RootPath)
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %s/cmd/test/demo/1_string_match_pass.php -p 1 -cr", constTestHelper.RootPath)
 	expectReg := regexp.MustCompile(`Submitted test results to ZenTao|提交测试结果到禅道成功`)
 
 	t.Require().Equal("Success", testRun(cmd, expectReg))
@@ -90,8 +91,9 @@ func (s *RunSuite) TestRunFileAndSubmitBug(t provider.T) {
 	t.ID("7553")
 	t.Title("执行后自动提交缺陷")
 
-	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %s/test/demo/1_string_match_fail.php -p 1 -cb", constTestHelper.RootPath)
-	expectReg := regexp.MustCompile(`Success to report bug for case \\d+|成功为用例\d+提交缺陷`)
+	scriptPath := filepath.Join(constTestHelper.RootPath, "cmd", "test", "demo", "1_string_match_fail.php")
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %s -p 1 -cb", scriptPath)
+	expectReg := regexp.MustCompile(`Success to report bug for case \d+|成功为用例\d+提交缺陷`)
 
 	t.Require().Equal("Success", testRun(cmd, expectReg))
 }
@@ -100,7 +102,7 @@ func (s *RunSuite) TestRunZtfTask(t provider.T) {
 	t.ID("1589")
 	t.Title("执行禅道测试任务")
 
-	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %stest/demo -task 1", constTestHelper.RootPath)
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %scmd/test/demo -task 1", constTestHelper.RootPath)
 	expectReg := regexp.MustCompile(`Pass:0\(0\.0%\), Fail:3\(100\.0%\), Skip:0\(0\.0%\)|通过数：0\(0\.0%\)，失败数：3\(100\.0%\)，忽略数：0\(0\.0%\)`)
 
 	t.Require().Equal("Success", testRun(cmd, expectReg))
@@ -110,7 +112,7 @@ func (s *RunSuite) TestRunZtfSuite(t provider.T) {
 	t.ID("1588")
 	t.Title("执行禅道测试套件")
 
-	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %stest%sdemo -suite 1", constTestHelper.RootPath, constTestHelper.FilePthSep)
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %scmd%stest%sdemo -suite 1", constTestHelper.RootPath, constTestHelper.FilePthSep, constTestHelper.FilePthSep)
 	expectReg := regexp.MustCompile(`Pass:0\(0\.0%\), Fail:1\(100\.0%\), Skip:0\(0\.0%\)|通过数：0\(0\.0%\)，失败数：1\(100\.0%\)，忽略数：0\(0\.0%\)`)
 
 	t.Require().Equal("Success", testRun(cmd, expectReg))
@@ -120,7 +122,7 @@ func (s *RunSuite) TestRunZtfCsFile(t provider.T) {
 	t.ID("1586")
 	t.Title("执行本地套件文件中指定编号的脚本")
 
-	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %stest/demo %stest/demo/all.cs", constTestHelper.RootPath, constTestHelper.RootPath)
+	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %scmd/test/demo %scmd/test/demo/all.cs", constTestHelper.RootPath, constTestHelper.RootPath)
 	expectReg := regexp.MustCompile(`Pass:0\(0\.0%\), Fail:2\(100\.0%\), Skip:0\(0\.0%\)|通过数：0\(0\.0%\)，失败数：2\(100\.0%\)，忽略数：0\(0\.0%\)`)
 
 	t.Require().Equal("Success", testRun(cmd, expectReg))
@@ -172,10 +174,7 @@ func (s *RunSuite) TestRunScenes(t provider.T) {
 
 	print("%s\n");`
 
-	path := "../../demo/test_scene.php"
-	if runtime.GOOS == "windows" {
-		path = `..\..\demo\test_scene.php`
-	}
+	path := filepath.Join(constTestHelper.RootPath, "cmd", "test", "demo", "test_scene.php")
 	cmd := commonTestHelper.GetZtfPath() + ` run ` + path
 
 	for expectVal, actualVal := range sceneMap {
