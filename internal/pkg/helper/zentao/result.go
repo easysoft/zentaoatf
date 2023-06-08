@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strconv"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
@@ -22,6 +23,7 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId int, config com
 	}
 
 	FilterCases(&report, config)
+
 	report.TaskId = taskId
 
 	// for ci tool debug
@@ -89,9 +91,12 @@ func FilterCases(report *commDomain.ZtfReport, config commDomain.WorkspaceConf) 
 		casesMap[caseInfo.Id] = true
 	}
 
+	ignoredCases := map[int]bool{}
+
 	funcResult := make([]commDomain.FuncResult, 0)
 	for _, cs := range report.FuncResult {
 		if _, ok := casesMap[cs.Id]; !ok || cs.Id == 0 {
+			ignoredCases[cs.Id] = true
 			continue
 		}
 
@@ -105,6 +110,7 @@ func FilterCases(report *commDomain.ZtfReport, config commDomain.WorkspaceConf) 
 		cs.Id = cs.Cid
 
 		if _, ok := casesMap[cs.Id]; !ok || cs.Id == 0 {
+			ignoredCases[cs.Id] = true
 			continue
 		}
 
@@ -112,5 +118,13 @@ func FilterCases(report *commDomain.ZtfReport, config commDomain.WorkspaceConf) 
 	}
 
 	report.UnitResult = unitResult
+
+	if len(ignoredCases) > 0 {
+		msg := i118Utils.Sprintf("ignored_cases_to_submit_test_result", report.ProductId)
+		logUtils.Info("\n" + color.HiYellowString(msg))
+		for k := range ignoredCases {
+			logUtils.Info("  " + strconv.Itoa(k))
+		}
+	}
 	return
 }

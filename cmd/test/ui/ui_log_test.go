@@ -17,7 +17,7 @@ func CollapseLog(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 	ztfTestHelper.ExpandWorspace(webpage)
 
 	scriptLocator := webpage.Locator(".tree-node-title>>text=1_string_match.php")
@@ -46,7 +46,7 @@ func FullScreenLog(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 	ztfTestHelper.ExpandWorspace(webpage)
 
 	ztfTestHelper.RunScript(webpage, "1_string_match.php")
@@ -67,7 +67,7 @@ func ClearLog(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 	ztfTestHelper.ExpandWorspace(webpage)
 
 	ztfTestHelper.RunScript(webpage, "1_string_match.php")

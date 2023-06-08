@@ -23,7 +23,7 @@ func RunScript(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 	ztfTestHelper.ExpandWorspace(webpage)
 
 	scriptLocator := webpage.Locator(".tree-node-title>>text=1_string_match.php")
@@ -56,7 +56,7 @@ func CheckStep(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 	ztfTestHelper.ExpandWorspace(webpage)
 
 	scriptLocator := webpage.Locator(".tree-node-title>>text=1_string_match.php")
@@ -93,7 +93,7 @@ func RunScriptByRightClick(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 	ztfTestHelper.ExpandWorspace(webpage)
 
 	scriptLocator := webpage.Locator(".tree-node-title>>text=1_string_match.php")
@@ -124,7 +124,7 @@ func RunNoInterpreterScript(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 	ztfTestHelper.ExpandWorspace(webpage)
 
 	scriptLocator := webpage.Locator("text=1_string_match.rb")
@@ -139,7 +139,7 @@ func RunSelectedScripts(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 	ztfTestHelper.ExpandWorspace(webpage)
 
 	webpage.Click(`[title="批量选择"]`)
@@ -177,7 +177,7 @@ func RunOpenedAndLast(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 	ztfTestHelper.ExpandWorspace(webpage)
 
 	webpage.Click(".tree-node-item:has-text('1_string_match.php')")
@@ -234,7 +234,7 @@ func RunAll(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 	ztfTestHelper.ExpandWorspace(webpage)
 
 	runInfo := "执行5个用例，耗时"
@@ -272,7 +272,7 @@ func RunWorkspace(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 	ztfTestHelper.ExpandWorspace(webpage)
 
 	webpage.WaitForSelector(".tree-node")
@@ -319,7 +319,7 @@ func RunDir(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 	ztfTestHelper.ExpandWorspace(webpage)
 
 	webpage.RightClick(".tree-node-children>>.tree-node>>:has-text('testdir')")
@@ -348,7 +348,7 @@ func RunUseProxy(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 	CreateProxyAndInterpreter(webpage, t)
 	ztfTestHelper.ExpandWorspace(webpage)
 

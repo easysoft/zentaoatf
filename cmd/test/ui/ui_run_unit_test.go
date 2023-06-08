@@ -50,7 +50,7 @@ func RunTestNG(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 	ztfTestHelper.ExpandWorspace(webpage)
 	defer func() {
 		ztfTestHelper.DeleteWorkspace(webpage, workspaceName)

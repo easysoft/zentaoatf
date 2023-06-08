@@ -3,14 +3,13 @@ package uiTest
 import (
 	"errors"
 	"fmt"
-	"os"
+	"os/exec"
+	"runtime"
 	"strconv"
 	"strings"
 
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	"github.com/easysoft/zentaoatf/cmd/test/ui/conf"
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	playwright "github.com/playwright-community/playwright-go"
 )
 
@@ -84,6 +83,9 @@ func Login(url string) (err error) {
 
 		iframeName := "iframe-triggerModal"
 		iframe := page.Frame(playwright.PageFrameOptions{Name: &iframeName})
+		if iframe == nil {
+			continue
+		}
 		isVisible, _ = iframe.IsVisible("footer>>text=下一步")
 		if isVisible {
 			err = iframe.Click("footer>>text=下一步")
@@ -403,37 +405,32 @@ func CheckUnitTestResult() bool {
 	return titleExist["登录成功"] == true && titleExist["密码错误"] == true
 }
 
-func InstallExt(version, codeDir string) error {
+func InstallExt(version string) error {
 	versions := strings.Split(version, ".")
 	versionNumber, _ := strconv.Atoi(versions[0])
 	if versionNumber < 17 && version != "latest" {
-		return downloadExt(codeDir)
+		return downloadExt(version)
 	}
 	return nil
 }
 
-func downloadExt(codeDir string) (err error) {
-	err = fileUtils.Download(constTestHelper.ZentaoExtUrl, "restful.zip")
-	if err != nil {
-		return
+func downloadExt(version string) (err error) {
+	versionNumber := strings.ReplaceAll(version, ".", "_")
+
+	dockerCmd := fmt.Sprintf("curl -o ext.zip -L %s && unzip ext.zip && cp -rf restful/* /www/zentaopms/", constTestHelper.ZentaoExtUrl)
+	cmd := exec.Command("/bin/bash", "-c", "docker", "exec", "zentao"+versionNumber, "/bin/bash", "-c", dockerCmd)
+	if runtime.GOOS == "windows" {
+		cmd = exec.Command("cmd", "/C", "docker", "exec", "zentao"+versionNumber, "/bin/bash", "-c", dockerCmd)
 	}
 
-	err = fileUtils.Unzip("restful.zip", "")
-	if err != nil {
-		return
-	}
+	fmt.Println(cmd.String())
 
-	err = fileUtils.CopyDir("restful"+commConsts.PthSep, codeDir)
-	if err != nil {
-		return
-	}
-
-	os.RemoveAll("restful")
-	os.Remove("restful.zip")
+	out, err := cmd.CombinedOutput()
+	fmt.Println(string(out), err)
 	return
 }
 
-func InitZentaoData(version string, codeDir string) (err error) {
+func InitZentaoData(version string) (err error) {
 	zentaoVersion = version
 	if _, err = page.Goto(constTestHelper.ZentaoSiteUrl, playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateDomcontentloaded}); err != nil {
@@ -593,11 +590,8 @@ func InitZentaoData(version string, codeDir string) (err error) {
 		if err != nil {
 			return
 		}
-		if codeDir == "" {
-			return
-		}
 
-		err = InstallExt(version, codeDir)
+		err = InstallExt(version)
 		if err != nil {
 			return
 		}

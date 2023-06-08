@@ -3,9 +3,7 @@ package commonTestHelper
 import (
 	"errors"
 	"fmt"
-	"os"
 	"os/exec"
-	"runtime"
 	"strings"
 	"time"
 
@@ -13,13 +11,8 @@ import (
 	uiTest "github.com/easysoft/zentaoatf/cmd/test/helper/zentao/ui"
 )
 
-func Run(version string, codeDir string) (err error) {
+func Run(version string) (err error) {
 	versionNumber := strings.ReplaceAll(version, ".", "_")
-
-	_, err = os.Stat(codeDir)
-	if os.IsExist(err) {
-		os.RemoveAll(codeDir)
-	}
 
 	cmd := exec.Command("docker", "run", "--name", "zentao"+versionNumber, "-p",
 		fmt.Sprintf("%d:80", constTestHelper.ZentaoPort), "-d", "easysoft/zentao:"+version)
@@ -112,12 +105,6 @@ func InitZentao(version string) (err error) {
 	versionNumber := strings.ReplaceAll(version, ".", "_")
 	containerName := "zentao" + versionNumber
 	isExist := IsExistContainer(containerName)
-	pwd, _ := os.Getwd()
-	codeDir := pwd + "/docker/www/zentao" + versionNumber
-
-	if runtime.GOOS == "windows" {
-		codeDir = pwd + `\docker\www\zentao` + versionNumber
-	}
 
 	if isExist {
 		if !IsRunning(containerName) {
@@ -128,7 +115,7 @@ func InitZentao(version string) (err error) {
 		}
 	} else {
 		StopAll()
-		err = Run(version, codeDir)
+		err = Run(version)
 		if err != nil {
 			return
 		}
@@ -136,18 +123,18 @@ func InitZentao(version string) (err error) {
 		waitZentaoAccessed()
 	}
 
-	err = uiTest.InitZentaoData(version, codeDir)
+	err = uiTest.InitZentaoData(version)
 	return
 }
 
 func InitZentaoData() (err error) {
-	err = uiTest.InitZentaoData("latest", "")
+	err = uiTest.InitZentaoData("latest")
 	return
 }
 
 func waitZentaoAccessed() {
 	isTimeout := false
-	time.AfterFunc(20*time.Second, func() {
+	time.AfterFunc(80*time.Second, func() {
 		isTimeout = true
 	})
 
@@ -157,5 +144,6 @@ func waitZentaoAccessed() {
 			return
 		}
 		time.Sleep(3 * time.Second)
+		fmt.Println("waiting zentao ...")
 	}
 }

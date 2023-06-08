@@ -16,7 +16,7 @@ func SaveScript(t provider.T) {
 	t.AddParentSuite("禅道站点脚本")
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 	ztfTestHelper.ExpandWorspace(webpage)
 	webpage.Click(".tree-node-title:has-text('1_string_match.php')")
 	locator := webpage.Locator(".view-line>>text=title=check string matches pattern")
@@ -45,7 +45,7 @@ func ViewScript(t provider.T) {
 	t.AddParentSuite("禅道站点脚本")
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 	ztfTestHelper.ExpandWorspace(webpage)
 	scriptLocator := webpage.Locator(".tree-node-title:has-text('1_string_match.php')")
 	scriptLocator.Click()
@@ -58,7 +58,7 @@ func SwitchScript(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 	ztfTestHelper.ExpandWorspace(webpage)
 
 	webpage.Click(".tree-node-title:has-text('1_string_match.php')")

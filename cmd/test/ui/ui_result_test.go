@@ -62,7 +62,7 @@ func SubmitResult(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 
 	webpage.Click("#rightPane .result-list-item .list-item-title>>nth=0")
 	webpage.Click(".result-action .btn:has-text('提交结果到禅道')")
@@ -92,7 +92,7 @@ func SubmitBug(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 
 	webpage.Click("#rightPane .result-list-item .list-item-title>>nth=0")
 	webpage.Click(".page-result .btn:has-text('提交缺陷到禅道')")
@@ -114,7 +114,7 @@ func SubmitBugTwoStep(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 	ztfTestHelper.ExpandWorspace(webpage)
 
 	ztfTest.RunScript(webpage, "1_string_match.php")

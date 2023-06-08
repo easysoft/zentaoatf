@@ -588,6 +588,10 @@
       "translation": "提交测试结果到禅道成功。"
     },
     {
+        "id": "ignored_cases_to_submit_test_result",
+        "translation": "未提交用例（用例不属于产品%d）："
+    },
+    {
       "id": "fail_to_submit_test_result",
       "translation": "提交测试结果到禅道失败，错误%s。"
     },

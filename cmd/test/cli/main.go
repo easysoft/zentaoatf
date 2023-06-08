@@ -10,6 +10,7 @@ import (
 	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	uiTest "github.com/easysoft/zentaoatf/cmd/test/helper/zentao/ui"
+	commandConfig "github.com/easysoft/zentaoatf/internal/command/config"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
@@ -43,7 +44,7 @@ func main() {
 	fmt.Println(version)
 
 	commConsts.ExecFrom = commConsts.FromCmd
-	serverConfig.InitLog()
+	commandConfig.InitLog()
 	serverConfig.InitExecLog(constTestHelper.RootPath)
 	commConsts.ZtfDir = constTestHelper.RootPath
 

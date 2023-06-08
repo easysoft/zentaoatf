@@ -594,6 +594,10 @@
       "translation": "Submitted test results to ZenTao."
     },
     {
+        "id": "ignored_cases_to_submit_test_result",
+        "translation": "Ignored Submit Because Case Not Belong To The Product %d:"
+    },
+    {
       "id": "fail_to_submit_test_result",
       "translation": "Failed to submit test results to ZenTao, err %s."
     },

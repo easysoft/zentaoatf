@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
@@ -31,7 +32,7 @@ func CreateSite(t provider.T) {
 	locator.FillNth(3, constTestHelper.ZentaoPassword)
 	webpage.Click("text=确定")
 
-	webpage.WaitForSelector(".list-item-content span:has-text('单元测试站点')")
+	webpage.WaitForSelector(fmt.Sprintf(".list-item-content span:has-text('%s')", constTestHelper.SiteName))
 	locator = webpage.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: constTestHelper.SiteName})
 }
 
@@ -55,7 +56,7 @@ func CreateSiteWithFullUrl(t provider.T) {
 	locator.FillNth(3, constTestHelper.ZentaoPassword)
 	webpage.Click("text=确定")
 
-	webpage.WaitForSelector(".list-item-content span:has-text('单元测试站点')")
+	webpage.WaitForSelector("fmt.Sprintf(".list-item-content span:has-text('%s')", constTestHelper.SiteName)")
 	locator = webpage.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: constTestHelper.SiteName})
 }
 
@@ -86,14 +87,14 @@ func EditSite(t provider.T) {
 	webpage.Click("text=编辑")
 
 	locator = webpage.Locator("#siteFormModal input")
-	locator.FillNth(0, "单元测试站点-update")
+	locator.FillNth(0, fmt.Sprintf("%s-update", constTestHelper.SiteName))
 	locator.FillNth(1, constTestHelper.ZentaoSiteUrl)
 	locator.FillNth(2, constTestHelper.ZentaoUsername)
 	locator.FillNth(3, constTestHelper.ZentaoPassword)
 	webpage.Click("#siteFormModal>>.modal-action>>span:has-text(\"确定\")")
 
-	webpage.WaitForSelector(".list-item-content span:has-text('单元测试站点-update')")
-	locator = webpage.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: "单元测试站点-update"})
+	webpage.WaitForSelector(fmt.Sprintf(".list-item-content span:has-text('%s-update')", constTestHelper.SiteName))
+	locator = webpage.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: constTestHelper.SiteName+"-update"})
 }
 func DeleteSite(t provider.T) {
 	t.ID("5466")
@@ -107,16 +108,16 @@ func DeleteSite(t provider.T) {
 	webpage.WaitForSelector("#navbar .list-item")
 	webpage.Click("text=禅道站点管理")
 
-	locator = webpage.Locator(".list-item:has-text('单元测试站点')")
+	locator = webpage.Locator(fmt.Sprintf(".list-item:has-text('%s')", constTestHelper.SiteName))
 	webpage.Click("text=删除")
 	webpage.WaitForTimeout(1000)
 
 	webpage.Click(":nth-match(.modal-action > button, 1)")
-	webpage.WaitForSelector(".list-item-content span:has-text('单元测试站点')", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+	webpage.WaitForSelector("fmt.Sprintf(".list-item-content span:has-text('%s')", constTestHelper.SiteName)", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
 
 	plwConf.DisableErr()
 	defer plwConf.EnableErr()
-	locator = webpage.Locator(".list-item-content:has-text('单元测试站点')")
+	locator = webpage.Locator(fmt.Sprintf(".list-item-content:has-text('%s')", constTestHelper.SiteName))
 	c := locator.Count()
 	if c > 0 {
 		t.Errorf("Delete site fail")

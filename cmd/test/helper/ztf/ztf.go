@@ -63,24 +63,36 @@ func RunScript(webpage plwHelper.Webpage, scriptName string) {
 	}
 }
 
-func SelectSite(webpage plwHelper.Webpage) (err error) {
+func SelectSite(webpage plwHelper.Webpage, siteName string) (err error) {
 	plwConf.DisableErr()
 	defer plwConf.EnableErr()
+
+	if siteName == "" {
+		siteName = constTestHelper.SiteName
+	}
+
 	webpage.Click("#siteMenuToggle")
-	webpage.WaitForSelectorTimeout("#navbar>>.list-item-title>>text=单元测试站点", 3000)
-	locator := webpage.Locator(".list-item-title>>text=单元测试站点")
+	webpage.WaitForSelectorTimeout("#navbar>>.list-item-title>>text="+siteName, 3000)
+	locator := webpage.Locator(".list-item-title>>text=" + siteName)
+
 	if locator.Count() == 0 {
 		AddSiteTimes++
+
 		if AddSiteTimes > 2 {
 			return
 		}
-		CreateSite(webpage)
-		SelectSite(webpage)
+
+		if siteName == constTestHelper.SiteName {
+			CreateSite(webpage)
+		}
+
+		SelectSite(webpage, siteName)
 		return
 	}
-	webpage.Click(".list-item-title>>text=单元测试站点")
+
+	webpage.Click(".list-item-title>>text=" + siteName)
 	var waitTimeOut float64 = 5000
-	webpage.WaitForSelector("#siteMenuToggle:has-text('单元测试站点')", playwright.PageWaitForSelectorOptions{Timeout: &waitTimeOut})
+	webpage.WaitForSelector(fmt.Sprintf("#siteMenuToggle:has-text('%s')", siteName), playwright.PageWaitForSelectorOptions{Timeout: &waitTimeOut})
 	return nil
 }
 
@@ -96,7 +108,7 @@ func CreateSite(webpage plwHelper.Webpage) {
 	locator.FillNth(2, constTestHelper.ZentaoUsername)
 	locator.FillNth(3, constTestHelper.ZentaoPassword)
 	webpage.Click("text=确定")
-	webpage.WaitForSelector(".list-item-content span:has-text('单元测试站点')")
+	webpage.WaitForSelector(fmt.Sprintf(".list-item-content span:has-text('%s')", constTestHelper.SiteName))
 	locator = webpage.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: constTestHelper.SiteName})
 	webpage.Click("#siteModal>>.modal-close")
 }

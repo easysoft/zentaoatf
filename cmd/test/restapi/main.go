@@ -5,22 +5,21 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"testing"
 	"time"
 
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
-	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 
 	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	uiTest "github.com/easysoft/zentaoatf/cmd/test/helper/zentao/ui"
+	commandConfig "github.com/easysoft/zentaoatf/internal/command/config"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
-	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 )
 
@@ -59,8 +58,7 @@ func main() {
 
 func initTest(version string) (err error) {
 	commConsts.ExecFrom = commConsts.FromCmd
-	serverConfig.InitLog()
-	serverConfig.InitExecLog(constTestHelper.RootPath)
+	commandConfig.InitLog()
 
 	commConsts.ZtfDir = constTestHelper.RootPath
 	i118Utils.Init("zh-CN", commConsts.AppServer)
@@ -93,10 +91,7 @@ func initZentao(runFrom, version string) (err error) {
 }
 
 func doTest(testToRun string) (err error) {
-	testPath := fmt.Sprintf(`%stest`, constTestHelper.RootPath)
-	if runtime.GOOS == "windows" {
-		testPath = fmt.Sprintf(`%stest`, constTestHelper.RootPath)
-	}
+	testPath := filepath.Join(constTestHelper.RootPath, "cmd", "test")
 
 	req := serverDomain.TestSet{
 		WorkspacePath: testPath,

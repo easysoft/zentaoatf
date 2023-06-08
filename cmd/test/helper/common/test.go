@@ -30,10 +30,14 @@ func TestCli() (err error) {
 	}
 	fmt.Println(testPath, req.Cmd)
 	report := ExecUnit(req, "cli")
+	report.ProductId = 82
 
-	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl + "/", Password: constTestHelper.ZentaoPassword, Username: constTestHelper.ZentaoUsername}
+	config := commDomain.WorkspaceConf{
+		Url:      "https://back.zcorp.cc/pms",
+		Username: "chenqi",
+		Password: "th2ISxOVXcoUiMLazk1b"}
 
-	err = zentaoHelper.CommitResult(report, 1, 0, config, nil)
+	err = zentaoHelper.CommitResult(report, report.ProductId, 0, config, nil)
 
 	if report.Fail > 0 {
 		os.Exit(1)
@@ -50,14 +54,18 @@ func TestUi() (err error) {
 
 	req := serverDomain.TestSet{
 		WorkspacePath: testPath,
-		Cmd:           "go test ./ui -v -timeout 10m",
+		Cmd:           "go test ./ui/ -v -timeout 10m",
 		TestTool:      commConsts.GoTest,
 	}
 	report := ExecUnit(req, "ui")
+	report.ProductId = 82
 
-	config := commDomain.WorkspaceConf{Url: constTestHelper.ZentaoSiteUrl + "/", Password: constTestHelper.ZentaoPassword, Username: constTestHelper.ZentaoUsername}
+	config := commDomain.WorkspaceConf{
+		Url:      "https://back.zcorp.cc/pms",
+		Username: "chenqi",
+		Password: "th2ISxOVXcoUiMLazk1b"}
 
-	err = zentaoHelper.CommitResult(report, 1, 0, config, nil)
+	err = zentaoHelper.CommitResult(report, report.ProductId, 0, config, nil)
 
 	if report.Fail > 0 {
 		os.Exit(1)

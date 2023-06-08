@@ -29,7 +29,12 @@ func Infof(str string, args ...interface{}) {
 func InfofIfVerbose(str string, args ...interface{}) {
 	if commConsts.Verbose || commConsts.ExecFrom == commConsts.FromClient {
 		msg := fmt.Sprintf(str, args...)
-		LoggerStandard.Info(msg)
+		if LoggerStandard != nil {
+			LoggerStandard.Info(msg)
+		}
+		if LoggerExecConsole != nil {
+			LoggerExecConsole.Info(msg)
+		}
 	}
 }
 func Warn(str string) {

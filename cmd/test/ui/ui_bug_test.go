@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
@@ -18,7 +19,7 @@ func ScriptBug(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
+	ztfTestHelper.SelectSite(webpage, "")
 	ztfTestHelper.ExpandWorspace(webpage)
 
 	ztfTestHelper.RunScript(webpage, "1_string_match.php")
@@ -47,8 +48,8 @@ func ScriptsBug(t provider.T) {
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTestHelper.SelectSite(webpage)
-	webpage.WaitForSelector("#siteMenuToggle:has-text('单元测试站点')", playwright.PageWaitForSelectorOptions{Timeout: &conf.Timeout})
+	ztfTestHelper.SelectSite(webpage, "")
+	webpage.WaitForSelector(fmt.Sprintf("#siteMenuToggle:has-text('%s')", constTestHelper.SiteName), playwright.PageWaitForSelectorOptions{Timeout: &conf.Timeout})
 	ztfTestHelper.ExpandWorspace(webpage)
 
 	webpage.Click(`[title="批量选择"]`)
