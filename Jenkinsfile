@@ -91,9 +91,9 @@ pipeline {
             }
                     
             container('playwright') {
-              sh 'CGO_ENABLED=0 go run test/ui/main.go -runFrom jenkins'
-              sh 'CGO_ENABLED=0 go run test/cli/main.go -runFrom jenkins'
-              sh 'CGO_ENABLED=0 go test $(go list ./... | grep -v /test/ui | grep -v /test/cli | grep -v /test/helper)'
+              sh 'CGO_ENABLED=0 go run cmd/test/ui/main.go -runFrom jenkins'
+              sh 'CGO_ENABLED=0 go run cmd/test/cli/main.go -runFrom jenkins'
+              sh 'CGO_ENABLED=0 go test $(go list ./... | grep -v /cmd/test/ui | grep -v /cmd/test/cli | grep -v /cmd/test/helper)'
             }
           }
 
