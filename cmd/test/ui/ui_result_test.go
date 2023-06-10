@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	apiTest "github.com/easysoft/zentaoatf/cmd/test/helper/zentao/api"
 	ztfTest "github.com/easysoft/zentaoatf/cmd/test/helper/ztf"
@@ -19,11 +20,11 @@ import (
 
 func Detail(t provider.T) {
 	t.ID("5489")
-	t.AddParentSuite("测试结果")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理测试结果")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
-	ztfTest.SelectSite(webpage)
+	ztfTest.SelectSite(webpage, "")
 	ztfTest.ExpandWorspace(webpage)
 
 	ztfTest.RunScript(webpage, "1_string_match.php")
@@ -55,7 +56,7 @@ func Detail(t provider.T) {
 
 func SubmitResult(t provider.T) {
 	t.ID("5499")
-	t.AddParentSuite("测试结果")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理测试结果")
 
 	caseInfo := apiTest.GetCaseResult(1)
 	lastId := caseInfo["Id"].(int64)
@@ -86,7 +87,7 @@ func SubmitResult(t provider.T) {
 
 func SubmitBug(t provider.T) {
 	t.ID("5500")
-	t.AddParentSuite("测试结果")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理测试结果")
 
 	lastId := apiTest.GetLastBugId()
 
@@ -108,7 +109,7 @@ func SubmitBug(t provider.T) {
 
 func SubmitBugTwoStep(t provider.T) {
 	t.ID("5500")
-	t.AddParentSuite("测试结果")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理测试结果")
 
 	lastId := apiTest.GetLastBugId()
 
@@ -134,8 +135,8 @@ func SubmitBugTwoStep(t provider.T) {
 }
 
 func TestUiResult(t *testing.T) {
-	runner.Run(t, "客户端-查看测试结果详情", Detail)
-	runner.Run(t, "客户端-提交禅道用例脚本测试结果", SubmitResult)
+	runner.Run(t, "客户端-查看管理测试结果详情", Detail)
+	runner.Run(t, "客户端-提交禅道用例脚本管理测试结果", SubmitResult)
 	runner.Run(t, "客户端-提交禅道失败用例为缺陷", SubmitBug)
 	runner.Run(t, "客户端-提交禅道部分失败用例为缺陷", SubmitBugTwoStep)
 }

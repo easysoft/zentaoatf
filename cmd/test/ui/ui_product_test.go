@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/ztf"
 	plwHelper "github.com/easysoft/zentaoatf/cmd/test/ui/helper"
@@ -14,7 +15,7 @@ import (
 
 func SwitchProduct(t provider.T) {
 	t.ID("5496")
-	t.AddParentSuite("切换禅道产品")
+	commonTestHelper.ReplaceLabel(t, "客户端-切换禅道产品")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()

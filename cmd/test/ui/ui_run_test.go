@@ -19,7 +19,7 @@ import (
 
 func RunScript(t provider.T) {
 	t.ID("5743")
-	t.AddParentSuite("执行脚本")
+	commonTestHelper.ReplaceLabel(t, "客户端-执行脚本")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -52,7 +52,7 @@ func RunScript(t provider.T) {
 
 func CheckStep(t provider.T) {
 	t.ID("7609")
-	t.AddParentSuite("执行脚本")
+	commonTestHelper.ReplaceLabel(t, "客户端-执行脚本")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -89,7 +89,7 @@ func CheckStep(t provider.T) {
 
 func RunScriptByRightClick(t provider.T) {
 	t.ID("5479")
-	t.AddParentSuite("执行脚本")
+	commonTestHelper.ReplaceLabel(t, "客户端-执行脚本")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -120,7 +120,7 @@ func RunScriptByRightClick(t provider.T) {
 
 func RunNoInterpreterScript(t provider.T) {
 	t.ID("5501")
-	t.AddParentSuite("执行脚本")
+	commonTestHelper.ReplaceLabel(t, "客户端-执行脚本")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -135,7 +135,7 @@ func RunNoInterpreterScript(t provider.T) {
 
 func RunSelectedScripts(t provider.T) {
 	t.ID("5481")
-	t.AddParentSuite("执行脚本")
+	commonTestHelper.ReplaceLabel(t, "客户端-执行脚本")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -173,7 +173,7 @@ func RunSelectedScripts(t provider.T) {
 
 func RunOpenedAndLast(t provider.T) {
 	t.ID("5484")
-	t.AddParentSuite("执行脚本")
+	commonTestHelper.ReplaceLabel(t, "客户端-执行脚本")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -227,7 +227,7 @@ func RunOpenedAndLast(t provider.T) {
 
 func RunAll(t provider.T) {
 	t.ID("5485")
-	t.AddParentSuite("执行脚本")
+	commonTestHelper.ReplaceLabel(t, "客户端-执行脚本")
 
 	os.RemoveAll(commonTestHelper.GetZtfProductPath())
 	os.Remove(commonTestHelper.GetPhpWorkspacePath() + "1.php")
@@ -268,7 +268,7 @@ func RunAll(t provider.T) {
 
 func RunWorkspace(t provider.T) {
 	t.ID("5482")
-	t.AddParentSuite("执行脚本")
+	commonTestHelper.ReplaceLabel(t, "客户端-执行脚本")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -315,7 +315,7 @@ func RunWorkspace(t provider.T) {
 
 func RunDir(t provider.T) {
 	t.ID("5480")
-	t.AddParentSuite("执行脚本")
+	commonTestHelper.ReplaceLabel(t, "客户端-执行脚本")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -344,7 +344,7 @@ func RunDir(t provider.T) {
 
 func RunUseProxy(t provider.T) {
 	t.ID("5746")
-	t.AddParentSuite("执行脚本")
+	commonTestHelper.ReplaceLabel(t, "客户端-执行脚本")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()

@@ -3,6 +3,7 @@ package main
 import (
 	"testing"
 
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	plwConf "github.com/easysoft/zentaoatf/cmd/test/ui/conf"
 	plwHelper "github.com/easysoft/zentaoatf/cmd/test/ui/helper"
@@ -13,7 +14,7 @@ import (
 
 func CreateInterpreter(t provider.T) {
 	t.ID("5744")
-	t.AddParentSuite("管理解析器")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理解析器")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -50,7 +51,7 @@ func CreateInterpreter(t provider.T) {
 
 func EditInterpreter(t provider.T) {
 	t.ID("5745")
-	t.AddParentSuite("管理解析器")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理解析器")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -71,7 +72,7 @@ func EditInterpreter(t provider.T) {
 
 func DeleteInterpreter(t provider.T) {
 	t.ID("5465")
-	t.AddParentSuite("管理解析器")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理解析器")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()

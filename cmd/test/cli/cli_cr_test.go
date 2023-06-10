@@ -28,12 +28,11 @@ type CrSuite struct {
 
 func (s *CrSuite) BeforeEach(t provider.T) {
 	t.ID("1590")
-	t.AddSubSuite("命令行-提交测试结果到禅道")
+	commonTestHelper.ReplaceLabel(t, "命令行-提交测试结果到禅道")
 }
 
 func (s *CrSuite) TestAutoCr(t provider.T) {
 	t.ID("7558")
-	t.AddSubSuite("命令行-提交测试结果到禅道免确认")
 
 	caseInfo := apiTest.GetCaseResult(1)
 	lastId := caseInfo["Id"].(int64)
@@ -60,7 +59,6 @@ func (s *CrSuite) TestAutoCr(t provider.T) {
 
 func (s *CrSuite) TestCr(t provider.T) {
 	t.ID("1590")
-	t.AddSubSuite("命令行-提交测试结果到禅道")
 
 	caseInfo := apiTest.GetCaseResult(1)
 	lastId := caseInfo["Id"].(int64)

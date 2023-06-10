@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	"os"
 	"regexp"
 	"runtime"
 	"testing"
 	"time"
+
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
@@ -24,7 +25,7 @@ type CleanSuite struct {
 
 func (s *CleanSuite) BeforeEach(t provider.T) {
 	t.ID("1595")
-	t.AddSubSuite("命令行-清除测试日志")
+	commonTestHelper.ReplaceLabel(t, "命令行-清除测试日志")
 }
 func (s *CleanSuite) TestCleanSuite(t provider.T) {
 	t.Require().Equal("Success", testClean())

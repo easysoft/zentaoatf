@@ -46,7 +46,7 @@ func RunTestNG(t provider.T) {
 	shellUtils.ExeShellWithOutputInDir("mvn clean package test", testngDir)
 
 	t.ID("5432")
-	t.AddParentSuite("执行单元测试")
+	commonTestHelper.ReplaceLabel(t, "客户端-执行单元测试")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()

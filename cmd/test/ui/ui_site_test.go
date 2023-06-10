@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	plwConf "github.com/easysoft/zentaoatf/cmd/test/ui/conf"
 	plwHelper "github.com/easysoft/zentaoatf/cmd/test/ui/helper"
@@ -14,7 +15,7 @@ import (
 
 func CreateSite(t provider.T) {
 	t.ID("5466")
-	t.AddParentSuite("配置禅道站点")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理禅道站点")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -38,7 +39,7 @@ func CreateSite(t provider.T) {
 
 func CreateSiteWithFullUrl(t provider.T) {
 	t.ID("7575")
-	t.AddParentSuite("禅道站点URL格式兼容")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理禅道站点")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -56,13 +57,13 @@ func CreateSiteWithFullUrl(t provider.T) {
 	locator.FillNth(3, constTestHelper.ZentaoPassword)
 	webpage.Click("text=确定")
 
-	webpage.WaitForSelector("fmt.Sprintf(".list-item-content span:has-text('%s')", constTestHelper.SiteName)")
+	webpage.WaitForSelector(fmt.Sprintf(".list-item-content span:has-text('%s')", constTestHelper.SiteName))
 	locator = webpage.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: constTestHelper.SiteName})
 }
 
 func EditSite(t provider.T) {
 	t.ID("5466")
-	t.AddParentSuite("配置禅道站点")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理禅道站点")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -94,11 +95,11 @@ func EditSite(t provider.T) {
 	webpage.Click("#siteFormModal>>.modal-action>>span:has-text(\"确定\")")
 
 	webpage.WaitForSelector(fmt.Sprintf(".list-item-content span:has-text('%s-update')", constTestHelper.SiteName))
-	locator = webpage.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: constTestHelper.SiteName+"-update"})
+	locator = webpage.Locator(".list-item-content span", playwright.PageLocatorOptions{HasText: constTestHelper.SiteName + "-update"})
 }
 func DeleteSite(t provider.T) {
 	t.ID("5466")
-	t.AddParentSuite("配置禅道站点")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理禅道站点")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -113,7 +114,7 @@ func DeleteSite(t provider.T) {
 	webpage.WaitForTimeout(1000)
 
 	webpage.Click(":nth-match(.modal-action > button, 1)")
-	webpage.WaitForSelector("fmt.Sprintf(".list-item-content span:has-text('%s')", constTestHelper.SiteName)", playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
+	webpage.WaitForSelector(fmt.Sprintf(".list-item-content span:has-text('%s')", constTestHelper.SiteName), playwright.PageWaitForSelectorOptions{State: playwright.WaitForSelectorStateDetached})
 
 	plwConf.DisableErr()
 	defer plwConf.EnableErr()

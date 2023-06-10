@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	httpHelper "github.com/easysoft/zentaoatf/cmd/test/helper/http"
 	"github.com/easysoft/zentaoatf/cmd/test/restapi/config"
@@ -25,7 +26,7 @@ type CaseApiSuite struct {
 }
 
 func (s *CaseApiSuite) BeforeEach(t provider.T) {
-	t.AddSubSuite("CaseApi")
+	commonTestHelper.ReplaceLabel(t, "CaseApi")
 }
 
 func (s *CaseApiSuite) TestCaseListApi(t provider.T) {

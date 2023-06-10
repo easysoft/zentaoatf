@@ -46,7 +46,7 @@ type SetSuite struct {
 
 func (s *SetSuite) BeforeEach(t provider.T) {
 	t.ID("1579")
-	t.AddSubSuite("命令行-set")
+	commonTestHelper.ReplaceLabel(t, "命令行-设置")
 }
 
 func (s *SetSuite) TestChSetSuite(t provider.T) {
@@ -110,7 +110,7 @@ func testSet(language string) (ret string) {
 		for _, lang := range langArray {
 			out, err := child.Expect(regexp.MustCompile("Please set script|请设置"), time.Second*5)
 			if err != nil {
-				return fmt.Sprintf("expect %s, actual %s", lang, err.Error())
+				return fmt.Sprintf("expect Please set script|请设置%s, actual %s", lang, err.Error())
 			}
 
 			sendMsg := ""

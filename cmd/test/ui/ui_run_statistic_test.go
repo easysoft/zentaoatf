@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"testing"
 
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/ztf"
 	plwHelper "github.com/easysoft/zentaoatf/cmd/test/ui/helper"
@@ -16,7 +17,7 @@ var runStatisticPage playwright.Page
 
 func RunFailStatistic(t provider.T) {
 	t.ID("5487")
-	t.AddParentSuite("执行脚本")
+	commonTestHelper.ReplaceLabel(t, "客户端-执行统计信息")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -52,7 +53,7 @@ func RunFailStatistic(t provider.T) {
 
 func RunSuccessStatistic(t provider.T) {
 	t.ID("5487")
-	t.AddParentSuite("执行脚本")
+	commonTestHelper.ReplaceLabel(t, "客户端-执行统计信息")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -93,7 +94,7 @@ func RunSuccessStatistic(t provider.T) {
 
 func RunBugStatistic(t provider.T) {
 	t.ID("5487")
-	t.AddParentSuite("执行脚本")
+	commonTestHelper.ReplaceLabel(t, "客户端-执行统计信息")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()

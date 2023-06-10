@@ -33,7 +33,7 @@ type CiSuite struct {
 
 func (s *CiSuite) BeforeEach(t provider.T) {
 	t.ID("5431")
-	t.AddSubSuite("命令行-同步用例信息到禅道")
+	commonTestHelper.ReplaceLabel(t, "命令行-同步用例信息到禅道")
 }
 func (s *CiSuite) TestCiSuite(t provider.T) {
 	t.Require().Equal("Success", testCi())

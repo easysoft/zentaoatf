@@ -25,7 +25,7 @@ type CbSuite struct {
 
 func (s *CbSuite) BeforeEach(t provider.T) {
 	t.ID("1591")
-	t.AddSubSuite("命令行-提交失败结果为禅道中缺陷")
+	commonTestHelper.ReplaceLabel(t, "命令行-提交失败结果为禅道中缺陷")
 }
 func (s *CbSuite) TestCbSuite(t provider.T) {
 	t.Require().Equal("Success", testCb())

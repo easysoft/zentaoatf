@@ -1,10 +1,12 @@
 package main
 
 import (
+	"testing"
+
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	httpHelper "github.com/easysoft/zentaoatf/cmd/test/helper/http"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
-	"testing"
 )
 
 func TestTokenApi(t *testing.T) {
@@ -16,7 +18,7 @@ type TokenApiSuite struct {
 }
 
 func (s *TokenApiSuite) BeforeEach(t provider.T) {
-	t.AddSubSuite("TokenApi")
+	commonTestHelper.ReplaceLabel(t, "TokenApi")
 }
 
 func (s *TokenApiSuite) TestTokenApi(t provider.T) {

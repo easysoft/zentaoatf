@@ -19,7 +19,7 @@ type ListSuite struct {
 
 func (s *ListSuite) BeforeEach(t provider.T) {
 	t.ID("1592")
-	t.AddSubSuite("命令行-查看脚本列表")
+	commonTestHelper.ReplaceLabel(t, "命令行-查看脚本列表")
 }
 func (s *ListSuite) TestListSuite(t provider.T) {
 	t.Require().Equal("Success", testLs(commonTestHelper.GetZtfPath()+fmt.Sprintf(" list %scmd/test/demo", constTestHelper.RootPath), regexp.MustCompile("Found 7 test cases|发现7个用例")))

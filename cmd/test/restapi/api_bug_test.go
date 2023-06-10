@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"testing"
+
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	httpHelper "github.com/easysoft/zentaoatf/cmd/test/helper/http"
 	"github.com/easysoft/zentaoatf/cmd/test/restapi/config"
@@ -10,7 +13,6 @@ import (
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 	"github.com/tidwall/gjson"
-	"testing"
 )
 
 const (
@@ -28,7 +30,7 @@ type BugApiSuite struct {
 
 func (s *BugApiSuite) BeforeEach(t provider.T) {
 	t.ID("0")
-	t.AddSubSuite("BugApi")
+	commonTestHelper.ReplaceLabel(t, "BugApi")
 }
 
 func (s *BugApiSuite) TestBugListApi(t provider.T) {

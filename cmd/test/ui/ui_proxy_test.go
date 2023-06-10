@@ -3,6 +3,7 @@ package main
 import (
 	"testing"
 
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	plwConf "github.com/easysoft/zentaoatf/cmd/test/ui/conf"
 	plwHelper "github.com/easysoft/zentaoatf/cmd/test/ui/helper"
@@ -13,7 +14,7 @@ import (
 
 func CreateProxy(t provider.T) {
 	t.ID("5740")
-	t.AddParentSuite("设置界面语言")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理代理服务器")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -50,7 +51,7 @@ func CreateProxy(t provider.T) {
 }
 func EditProxy(t provider.T) {
 	t.ID("5741")
-	t.AddParentSuite("设置界面语言")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理代理服务器")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -72,7 +73,7 @@ func EditProxy(t provider.T) {
 }
 func DeleteProxy(t provider.T) {
 	t.ID("5742")
-	t.AddParentSuite("设置界面语言")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理代理服务器")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()

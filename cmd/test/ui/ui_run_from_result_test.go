@@ -4,6 +4,7 @@ import (
 	"strings"
 	"testing"
 
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/ztf"
 	plwHelper "github.com/easysoft/zentaoatf/cmd/test/ui/helper"
@@ -13,7 +14,7 @@ import (
 
 func RunReExecFailCase(t provider.T) {
 	t.ID("5491")
-	t.AddParentSuite("测试结果页面执行脚本")
+	commonTestHelper.ReplaceLabel(t, "客户端-结果中重新执行脚本")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -54,7 +55,7 @@ func RunReExecFailCase(t provider.T) {
 
 func RunReExecAllCase(t provider.T) {
 	t.ID("5750")
-	t.AddParentSuite("测试结果页面执行脚本")
+	commonTestHelper.ReplaceLabel(t, "客户端-结果中重新执行脚本")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()

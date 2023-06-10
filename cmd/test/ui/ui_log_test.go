@@ -3,6 +3,7 @@ package main
 import (
 	"testing"
 
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/ztf"
 	plwConf "github.com/easysoft/zentaoatf/cmd/test/ui/conf"
@@ -13,7 +14,7 @@ import (
 
 func CollapseLog(t provider.T) {
 	t.ID("5502")
-	t.AddParentSuite("脚本执行日志")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理脚本执行日志")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -42,7 +43,7 @@ func CollapseLog(t provider.T) {
 
 func FullScreenLog(t provider.T) {
 	t.ID("5749")
-	t.AddParentSuite("脚本执行日志")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理脚本执行日志")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -63,7 +64,7 @@ func FullScreenLog(t provider.T) {
 
 func ClearLog(t provider.T) {
 	t.ID("7540")
-	t.AddParentSuite("清除测试执行日志")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理脚本执行日志")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -83,6 +84,6 @@ func ClearLog(t provider.T) {
 
 func TestUiLog(t *testing.T) {
 	runner.Run(t, "客户端-展开折叠执行日志", CollapseLog)
-	runner.Run(t, "客户端-最大化脚本执行日志", FullScreenLog)
+	runner.Run(t, "客户端-最大化管理脚本执行日志", FullScreenLog)
 	runner.Run(t, "客户端-清空执行日志", ClearLog)
 }

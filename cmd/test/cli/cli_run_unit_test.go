@@ -14,6 +14,7 @@ import (
 	"strings"
 	"testing"
 
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	"github.com/go-git/go-git/v5"
@@ -31,7 +32,7 @@ func (s *RunUnitSuit) BeforeEach(t provider.T) {
 	} else {
 		os.RemoveAll(fmt.Sprintf("%s/cmd/test/demo/php/product1", constTestHelper.RootPath))
 	}
-	t.AddSubSuite("命令行-run")
+	commonTestHelper.ReplaceLabel(t, "命令行-运行单元测试")
 }
 
 func (s *RunUnitSuit) TestRunTestng(t provider.T) {

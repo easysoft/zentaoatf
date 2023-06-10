@@ -29,7 +29,7 @@ var (
 
 func MangeWorkspace(t provider.T) {
 	t.ID("5468")
-	t.AddParentSuite("管理禅道站点下工作目录")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理禅道站点下工作目录")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -45,7 +45,7 @@ func MangeWorkspace(t provider.T) {
 
 func MangeLocalWorkspace(t provider.T) {
 	t.ID("5467")
-	t.AddParentSuite("管理本地站点下工作目录")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理本地站点下工作目录")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -204,7 +204,7 @@ func syncCaseFromZentaoSuite(t provider.T) {
 
 func SyncTwoCaseFromZentao(t provider.T) {
 	t.ID("5752")
-	t.AddParentSuite("管理禅道站点下工作目录")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理禅道站点下工作目录")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -236,7 +236,7 @@ func SyncTwoCaseFromZentao(t provider.T) {
 
 func SyncToZentao(t provider.T) {
 	t.ID("5431")
-	t.AddParentSuite("管理禅道站点下工作目录")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理禅道站点下工作目录")
 
 	//update script title
 	scriptPath := filepath.Join(workspacePath, "2_webpage_extract.php")
@@ -266,7 +266,7 @@ func SyncToZentao(t provider.T) {
 
 func Copy(t provider.T) {
 	t.ID("5474")
-	t.AddParentSuite("管理禅道站点下工作目录")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理禅道站点下工作目录")
 
 	fileUtils.MkDirIfNeeded(syncDir)
 	defer os.RemoveAll(syncDir)
@@ -299,7 +299,7 @@ func Copy(t provider.T) {
 
 func ClipAndCopyDir(t provider.T) {
 	t.ID("5473,7593")
-	t.AddParentSuite("管理禅道站点下工作目录")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理禅道站点下工作目录")
 
 	CopyDir(t)
 	ClipDir(t)
@@ -377,7 +377,7 @@ func ClipDir(t provider.T) {
 
 func CreateScript(t provider.T) {
 	// t.ID("7596")
-	// t.AddParentSuite("管理禅道站点下工作目录")
+	// commonTestHelper.ReplaceLabel(t, "客户端-管理禅道站点下工作目录")
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 
@@ -400,7 +400,7 @@ func CreateScript(t provider.T) {
 
 func RenameScript(t provider.T) {
 	t.ID("7596")
-	t.AddParentSuite("管理禅道站点下工作目录")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理禅道站点下工作目录")
 
 	fileUtils.MkDirIfNeeded(syncDir)
 
@@ -431,7 +431,7 @@ func RenameScript(t provider.T) {
 
 func CreateDir(t provider.T) {
 	// t.ID("7596")
-	// t.AddParentSuite("管理禅道站点下工作目录")
+	// commonTestHelper.ReplaceLabel(t, "客户端-管理禅道站点下工作目录")
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 
@@ -454,7 +454,7 @@ func CreateDir(t provider.T) {
 
 func RenameDir(t provider.T) {
 	t.ID("7595")
-	t.AddParentSuite("管理禅道站点下工作目录")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理禅道站点下工作目录")
 
 	fileUtils.MkDirIfNeeded(syncDir)
 	defer os.RemoveAll(syncDir)
@@ -481,7 +481,7 @@ func RenameDir(t provider.T) {
 
 func DeleteScript(t provider.T) {
 	t.ID("5478")
-	t.AddParentSuite("管理禅道站点下工作目录")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理禅道站点下工作目录")
 
 	fileUtils.MkDirIfNeeded(syncDir)
 	scriptPath := filepath.Join(workspacePath, "product1", "1.php")
@@ -514,7 +514,7 @@ func DeleteScript(t provider.T) {
 }
 func DeleteDir(t provider.T) {
 	t.ID("5477")
-	t.AddParentSuite("管理禅道站点下工作目录")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理禅道站点下工作目录")
 
 	fileUtils.MkDirIfNeeded(syncDir)
 	defer os.RemoveAll(syncDir)
@@ -562,7 +562,7 @@ func DeleteWorkspace(t provider.T, webpage plwHelper.Webpage) {
 }
 func Clip(t provider.T) {
 	t.ID("5476")
-	t.AddParentSuite("管理禅道站点下工作目录")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理禅道站点下工作目录")
 
 	fileUtils.MkDirIfNeeded(syncDir)
 	scriptPath := filepath.Join(workspacePath, "product1", "1.php")
@@ -595,7 +595,7 @@ func Clip(t provider.T) {
 
 func Collapse(t provider.T) {
 	t.ID("5472")
-	t.AddParentSuite("管理禅道站点下工作目录")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理禅道站点下工作目录")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()

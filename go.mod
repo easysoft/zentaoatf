@@ -36,6 +36,7 @@ require (
 	github.com/mitchellh/mapstructure v1.4.2 // indirect
 	github.com/nats-io/nats-server/v2 v2.7.2 // indirect
 	github.com/otiai10/copy v1.7.0
+	github.com/ozontech/allure-go/pkg/allure v0.6.4 // indirect
 	github.com/ozontech/allure-go/pkg/framework v0.6.18
 	github.com/playwright-community/playwright-go v0.2000.1
 	github.com/robfig/cron/v3 v3.0.1

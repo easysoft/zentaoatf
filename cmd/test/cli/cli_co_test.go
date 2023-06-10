@@ -56,7 +56,7 @@ type CoSuite struct {
 
 func (s *CoSuite) BeforeEach(t provider.T) {
 	t.ID("1580")
-	t.AddSubSuite("命令行-co")
+	commonTestHelper.ReplaceLabel(t, "命令行-从禅道同步用例")
 
 	if runtime.GOOS == "windows" {
 		productDir = ".\\product1"

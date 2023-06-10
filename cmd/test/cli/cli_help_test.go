@@ -22,7 +22,7 @@ type HelpSuite struct {
 
 func (s *HelpSuite) BeforeEach(t provider.T) {
 	t.ID("1578")
-	t.AddSubSuite("命令行-查看帮助")
+	commonTestHelper.ReplaceLabel(t, "命令行-查看帮助")
 }
 func (s *HelpSuite) TestHelpSuite(t provider.T) {
 	t.Require().Equal("Success", testHelp())

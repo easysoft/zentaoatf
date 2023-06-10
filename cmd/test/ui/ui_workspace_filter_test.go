@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/ztf"
 	plwHelper "github.com/easysoft/zentaoatf/cmd/test/ui/helper"
@@ -13,7 +14,7 @@ import (
 
 func FilterDir(t provider.T) {
 	t.ID("5494")
-	t.AddParentSuite("管理禅道站点下工作目录")
+	commonTestHelper.ReplaceLabel(t, "客户端-过滤禅道站点下工作目录")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -35,7 +36,7 @@ func FilterDir(t provider.T) {
 }
 func FilterSuite(t provider.T) {
 	t.ID("5495")
-	t.AddParentSuite("管理禅道站点下工作目录")
+	commonTestHelper.ReplaceLabel(t, "客户端-过滤禅道站点下工作目录")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -58,7 +59,7 @@ func FilterSuite(t provider.T) {
 }
 func ByModule(t provider.T) {
 	t.ID("5493")
-	t.AddParentSuite("管理禅道站点下工作目录")
+	commonTestHelper.ReplaceLabel(t, "客户端-过滤禅道站点下工作目录")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -79,7 +80,7 @@ func ByModule(t provider.T) {
 }
 func FilterTask(t provider.T) {
 	t.ID("5496")
-	t.AddParentSuite("管理禅道站点下工作目录")
+	commonTestHelper.ReplaceLabel(t, "客户端-过滤禅道站点下工作目录")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/ztf"
 	"github.com/easysoft/zentaoatf/cmd/test/ui/conf"
@@ -15,7 +16,7 @@ import (
 
 func ScriptBug(t provider.T) {
 	t.ID("5747")
-	t.AddParentSuite("查看bug列表")
+	commonTestHelper.ReplaceLabel(t, "客户端-查看bug列表")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -44,7 +45,7 @@ func ScriptBug(t provider.T) {
 
 func ScriptsBug(t provider.T) {
 	t.ID("5748")
-	t.AddParentSuite("查看bug列表")
+	commonTestHelper.ReplaceLabel(t, "客户端-查看bug列表")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()

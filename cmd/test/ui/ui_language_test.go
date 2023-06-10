@@ -3,6 +3,7 @@ package main
 import (
 	"testing"
 
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	plwHelper "github.com/easysoft/zentaoatf/cmd/test/ui/helper"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
@@ -11,7 +12,7 @@ import (
 
 func SwitchLanguage(t provider.T) {
 	t.ID("5464")
-	t.AddParentSuite("设置界面语言")
+	commonTestHelper.ReplaceLabel(t, "客户端-设置界面语言")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()

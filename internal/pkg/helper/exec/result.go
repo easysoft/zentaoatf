@@ -86,8 +86,8 @@ func ValidateCaseResult(execParams commDomain.ExecParams, langType string,
 
 	statusWithColor, status := GenStatusTxt(csResult.Status)
 
-	msg := fmt.Sprintf(format, execParams.ScriptIdx+1, len(execParams.CasesToRun), status, path, csTitle, execParams.Secs)
-	msgWithColor := fmt.Sprintf(format, execParams.ScriptIdx+1, len(execParams.CasesToRun), statusWithColor, path, csTitle, execParams.Secs)
+	msg := fmt.Sprintf(format, len(execParams.Report.FuncResult), len(execParams.CasesToRun), status, path, csTitle, execParams.Secs)
+	msgWithColor := fmt.Sprintf(format, len(execParams.Report.FuncResult), len(execParams.CasesToRun), statusWithColor, path, csTitle, execParams.Secs)
 
 	// print each case result
 	if commConsts.ExecFrom == commConsts.FromClient {

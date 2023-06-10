@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"testing"
+
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	httpHelper "github.com/easysoft/zentaoatf/cmd/test/helper/http"
 	"github.com/easysoft/zentaoatf/cmd/test/restapi/config"
@@ -9,7 +12,6 @@ import (
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 	"github.com/tidwall/gjson"
-	"testing"
 )
 
 func TestProductApi(t *testing.T) {
@@ -21,7 +23,7 @@ type ProductApiSuite struct {
 }
 
 func (s *ProductApiSuite) BeforeEach(t provider.T) {
-	t.AddSubSuite("ProductApi")
+	commonTestHelper.ReplaceLabel(t, "ProductApi")
 }
 
 func (s *ProductApiSuite) TestProductListApi(t provider.T) {

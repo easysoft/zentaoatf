@@ -22,7 +22,7 @@ type VersionSuite struct {
 
 func (s *VersionSuite) BeforeEach(t provider.T) {
 	t.ID("7534")
-	t.AddSubSuite("命令行-查看ZTF版本")
+	commonTestHelper.ReplaceLabel(t, "命令行-查看ZTF版本")
 }
 func (s *VersionSuite) TestVersionSuite(t provider.T) {
 	t.Require().Equal("Success", testVersion())

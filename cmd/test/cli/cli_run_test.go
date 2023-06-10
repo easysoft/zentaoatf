@@ -41,7 +41,7 @@ func (s *RunSuite) BeforeEach(t provider.T) {
 	} else {
 		os.RemoveAll(fmt.Sprintf("%s/cmd/test/demo/php/product1", constTestHelper.RootPath))
 	}
-	t.AddSubSuite("命令行-run")
+	commonTestHelper.ReplaceLabel(t, "命令行-运行脚本")
 }
 
 func (s *RunSuite) TestRunZtfFile(t provider.T) {

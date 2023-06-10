@@ -26,7 +26,7 @@ type ExtractSuite struct {
 
 func (s *ExtractSuite) BeforeEach(t provider.T) {
 	t.ID("5430")
-	t.AddSubSuite("命令行-提取分散在脚本中的注释")
+	commonTestHelper.ReplaceLabel(t, "命令行-提取分散在脚本中的注释")
 }
 func (s *ExtractSuite) TestExtractSuite(t provider.T) {
 	t.Require().Equal("Success", testExtract())

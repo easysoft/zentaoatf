@@ -3,6 +3,7 @@ package main
 import (
 	"testing"
 
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	ztfTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/ztf"
 	plwHelper "github.com/easysoft/zentaoatf/cmd/test/ui/helper"
@@ -13,7 +14,7 @@ import (
 
 func SaveScript(t provider.T) {
 	t.ID("5470")
-	t.AddParentSuite("禅道站点脚本")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理禅道站点脚本")
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage, "")
@@ -42,7 +43,7 @@ func SaveScript(t provider.T) {
 
 func ViewScript(t provider.T) {
 	t.ID("5469")
-	t.AddParentSuite("禅道站点脚本")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理禅道站点脚本")
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
 	ztfTestHelper.SelectSite(webpage, "")
@@ -54,7 +55,7 @@ func ViewScript(t provider.T) {
 
 func SwitchScript(t provider.T) {
 	t.ID("7583")
-	t.AddParentSuite("脚本切换和关闭")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理禅道站点脚本")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -79,7 +80,7 @@ func SwitchScript(t provider.T) {
 }
 
 func TestUiScript(t *testing.T) {
-	runner.Run(t, "客户端-编辑保存禅道站点脚本", SaveScript)
-	runner.Run(t, "客户端-显示禅道站点脚本", ViewScript)
-	runner.Run(t, "客户端-切换禅道站点脚本", SwitchScript)
+	runner.Run(t, "客户端-编辑保存管理禅道站点脚本", SaveScript)
+	runner.Run(t, "客户端-显示管理禅道站点脚本", ViewScript)
+	runner.Run(t, "客户端-切换管理禅道站点脚本", SwitchScript)
 }

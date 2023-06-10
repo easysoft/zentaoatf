@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"github.com/jinzhu/copier"
 	"io/ioutil"
 	"os"
 	"path"
@@ -14,6 +13,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/jinzhu/copier"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
@@ -147,7 +148,7 @@ func genUnitFailedMsg(failedCaseLines []string, failedCaseLinesDesc []string) st
 
 	msg := divider
 	msg += "\n" + color.New(color.Bold, color.FgHiWhite).Sprint(i118Utils.Sprintf("failed_scripts")) + "\n"
-	msg += strings.Join(failedCaseLines, "\n")
+	msg += strings.Join(failedCaseLines, "\n") + "\n"
 	msg += strings.Join(failedCaseLinesDesc, "\n")
 	msg += "\n\n" + divider
 

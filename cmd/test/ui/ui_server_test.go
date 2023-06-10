@@ -3,6 +3,7 @@ package main
 import (
 	"testing"
 
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	plwConf "github.com/easysoft/zentaoatf/cmd/test/ui/conf"
 	plwHelper "github.com/easysoft/zentaoatf/cmd/test/ui/helper"
@@ -13,7 +14,7 @@ import (
 
 func CreateServer(t provider.T) {
 	t.ID("5737")
-	t.AddParentSuite("管理服务器")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理服务器")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -34,7 +35,7 @@ func CreateServer(t provider.T) {
 
 func EditServer(t provider.T) {
 	t.ID("5738")
-	t.AddParentSuite("管理服务器")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理服务器")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
@@ -55,7 +56,7 @@ func EditServer(t provider.T) {
 
 func DeleteServer(t provider.T) {
 	t.ID("5739")
-	t.AddParentSuite("管理服务器")
+	commonTestHelper.ReplaceLabel(t, "客户端-管理服务器")
 
 	webpage, _ := plwHelper.OpenUrl(constTestHelper.ZtfUrl, t)
 	defer webpage.Close()
