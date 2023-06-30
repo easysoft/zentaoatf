@@ -34,7 +34,9 @@ func (s *TaskApiSuite) TestTaskListApi(t provider.T) {
 
 	firstTaskId := gjson.Get(string(bodyBytes), "testtasks.0.id").Int()
 
-	t.Require().Greater(firstTaskId, int64(0), "list testtasks failed")
+	url := zentaoHelper.GenApiUrl(fmt.Sprintf("testtasks?product=%d", config.ProductId), nil, constTestHelper.ZentaoSiteUrl)
+
+	t.Require().Greater(firstTaskId, int64(0), "list testtasks failed, url: "+url)
 }
 
 func (s *TaskApiSuite) TestTaskDetailApi(t provider.T) {

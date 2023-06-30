@@ -36,7 +36,7 @@ func CommitCase(caseId int, title string, steps []commDomain.ZentaoCaseStep, scr
 		}
 	}
 
-	_, err = GetCaseById(config.Url, caseId)
+	_, err = GetCaseById(config, caseId)
 	if err != nil {
 		return
 	}
@@ -133,9 +133,16 @@ func CreateCase(productId int, title string, steps []commDomain.ZentaoCaseStep, 
 	return
 }
 
-func GetCaseById(baseUrl string, caseId int) (cs commDomain.ZtfCase, err error) {
+func GetCaseById(config commDomain.WorkspaceConf, caseId int) (cs commDomain.ZtfCase, err error) {
+	if serverConfig.CONFIG.AuthToken == "" {
+		err = Login(config)
+		if err != nil {
+			return
+		}
+	}
+
 	uri := fmt.Sprintf("/testcases/%d", caseId)
-	url := GenApiUrl(uri, nil, baseUrl)
+	url := GenApiUrl(uri, nil, config.Url)
 
 	bytes, err := httpUtils.Get(url)
 	if err != nil {
@@ -300,7 +307,7 @@ func LoadTestCasesDetailByCaseIds(caseIds []int,
 }
 
 func GetTestCaseDetail(caseId int, config commDomain.WorkspaceConf) (cs commDomain.ZtfCase, err error) {
-	csWithSteps, err := GetCaseById(config.Url, caseId)
+	csWithSteps, err := GetCaseById(config, caseId)
 
 	stepArr := genCaseSteps(csWithSteps)
 	cs = commDomain.ZtfCase{Id: caseId, Product: csWithSteps.Product, Module: csWithSteps.Module,

@@ -16,6 +16,7 @@ import (
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/mattn/go-runewidth"
@@ -47,7 +48,9 @@ func ValidateCaseResult(execParams commDomain.ExecParams, langType string,
 
 	_, caseId, productId, title, _ := scriptHelper.GetCaseInfo(execParams.ScriptFile)
 
-	stepLogs, caseResult := getStepLogs(skip, steps, actualArr, langType, errOutput)
+	zentaoSteps := getZentaoSteps(caseId, execParams.Conf)
+
+	stepLogs, caseResult := getStepLogs(skip, steps, actualArr, langType, errOutput, zentaoSteps)
 
 	if lock != nil {
 		lock.Lock()
@@ -148,7 +151,22 @@ func ValidateStepResult(langType string, expectLines []string, actualLines []str
 	}
 
 	return stepResult, checkpointLogs
+}
 
+func getZentaoSteps(caseId int, config commDomain.WorkspaceConf) (steps []commDomain.ZtfStep) {
+	if config.Url == "" || config.Username == "" || config.Password == "" {
+		return
+	}
+
+	cs, err := zentaoHelper.GetTestCaseDetail(caseId, config)
+
+	if err != nil || cs.Id == 0 {
+		return
+	}
+
+	steps = cs.Steps
+
+	return
 }
 
 func MatchScene(expect, actual, langType string) (pass bool) {
@@ -338,11 +356,12 @@ func Logic(expect, actual, langType string) bool {
 	}
 }
 
-func getStepLogs(skip bool, steps []commDomain.ZentaoCaseStep, actualArr [][]string, langType string, errOutput string) (stepLogs []commDomain.StepLog, caseResult commConsts.ResultStatus) {
+func getStepLogs(skip bool, steps []commDomain.ZentaoCaseStep, actualArr [][]string, langType string, errOutput string, zentaoSteps []commDomain.ZtfStep) (stepLogs []commDomain.StepLog, caseResult commConsts.ResultStatus) {
 	stepLogs = make([]commDomain.StepLog, 0)
 	caseResult = commConsts.PASS
 	noExpects := true
 
+	isStepsCountEqual := len(steps) == len(zentaoSteps)
 	if skip {
 		caseResult = commConsts.SKIP
 		return
@@ -369,7 +388,20 @@ func getStepLogs(skip bool, steps []commDomain.ZentaoCaseStep, actualArr [][]str
 		if errOutput != "" && index == 0 && len(checkpointLogs) > 0 {
 			checkpointLogs[0].Actual = errOutput
 		}
-		stepLog := commDomain.StepLog{Id: strconv.Itoa(stepIdxToCheck + 1), Name: stepName, Status: stepResult, CheckPoints: checkpointLogs}
+
+		stepId := 0
+		if isStepsCountEqual {
+			stepId = zentaoSteps[index].Id
+		} else {
+			stepId = findStepIdByDescAndExpect(stepName, checkpointLogs[0].Expect, zentaoSteps)
+		}
+
+		if stepId == 0 {
+			stepId = stepIdxToCheck + 1
+		}
+
+		stepLog := commDomain.StepLog{Id: strconv.Itoa(stepId), Name: stepName, Status: stepResult, CheckPoints: checkpointLogs}
+
 		stepLogs = append(stepLogs, stepLog)
 		if stepResult == commConsts.FAIL {
 			caseResult = commConsts.FAIL
@@ -383,6 +415,19 @@ func getStepLogs(skip bool, steps []commDomain.ZentaoCaseStep, actualArr [][]str
 	}
 
 	return
+}
+
+func findStepIdByDescAndExpect(desc, expect string, zentaoSteps []commDomain.ZtfStep) (stepId int) {
+	for _, step := range zentaoSteps {
+		if desc == step.Desc {
+			stepId = step.Id
+			if expect == step.Expect {
+				return step.Id
+			}
+		}
+	}
+
+	return stepId
 }
 
 func incrReportNum(caseResult commConsts.ResultStatus, report *commDomain.ZtfReport) {

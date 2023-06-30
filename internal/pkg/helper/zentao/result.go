@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/bitly/go-simplejson"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
@@ -38,12 +39,16 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId int, config com
 	url := GenApiUrl(uri, nil, config.Url)
 
 	jsn, _ := json.Marshal(report)
+
+	//convert steps array to map
+	newReport := convertStepsToMap(jsn)
+
 	if commConsts.Verbose {
 		logUtils.Info(url)
 		logUtils.Info(string(jsn))
 	}
 
-	_, err = httpUtils.Post(url, report)
+	_, err = httpUtils.Post(url, newReport)
 	if err != nil {
 		err = ZentaoRequestErr(i118Utils.Sprintf("fail_to_submit_test_result", err.Error()))
 		return
@@ -127,4 +132,33 @@ func FilterCases(report *commDomain.ZtfReport, config commDomain.WorkspaceConf) 
 		}
 	}
 	return
+}
+
+func convertStepsToMap(rawJsn []byte) interface{} {
+	jsn, err := simplejson.NewJson(rawJsn)
+	if err != nil {
+		return nil
+	}
+	funcResult, err := jsn.Get("funcResult").Array()
+	if err != nil || funcResult == nil {
+		return jsn.Interface()
+	}
+	for index, row := range funcResult {
+		result := row.(map[string]interface{})
+		steps := result["steps"].([]interface{})
+		newSteps := map[string]interface{}{}
+
+		for _, step := range steps {
+			stepMap := step.(map[string]interface{})
+			newSteps[stepMap["id"].(string)] = step
+		}
+
+		result["steps"] = newSteps
+
+		funcResult[index] = result
+	}
+
+	jsn.Set("funcResult", funcResult)
+
+	return jsn.Interface()
 }

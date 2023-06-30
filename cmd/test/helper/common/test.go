@@ -12,13 +12,14 @@ import (
 	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 
+	dateUtils "github.com/easysoft/zentaoatf/pkg/lib/date"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 )
 
-func TestCli() (err error) {
+func TestCli(version string) (err error) {
 	testPath := fmt.Sprintf(`%scmd/test`, constTestHelper.RootPath)
 	if runtime.GOOS == "windows" {
 		testPath = fmt.Sprintf(`%scmd\test`, constTestHelper.RootPath)
@@ -31,6 +32,7 @@ func TestCli() (err error) {
 	fmt.Println(testPath, req.Cmd)
 	report := ExecUnit(req, "cli")
 	report.ProductId = 82
+	report.Name = fmt.Sprintf("禅道版本:%s Cli测试-%s", version, dateUtils.TimeStr(time.Now()))
 
 	config := commDomain.WorkspaceConf{
 		Url:      "https://back.zcorp.cc/pms",
@@ -46,7 +48,7 @@ func TestCli() (err error) {
 	return
 }
 
-func TestUi() (err error) {
+func TestUi(version string) (err error) {
 	var screenshotPath = fmt.Sprintf("%scmd/test/screenshot", constTestHelper.RootPath)
 	os.RemoveAll(screenshotPath)
 	fileUtils.MkDirIfNeeded(screenshotPath)
@@ -59,6 +61,7 @@ func TestUi() (err error) {
 	}
 	report := ExecUnit(req, "ui")
 	report.ProductId = 82
+	report.Name = fmt.Sprintf("禅道版本:%s UI测试-%s", version, dateUtils.TimeStr(time.Now()))
 
 	config := commDomain.WorkspaceConf{
 		Url:      "https://back.zcorp.cc/pms",

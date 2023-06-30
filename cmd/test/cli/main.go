@@ -67,5 +67,5 @@ func main() {
 			fmt.Println("Build cli fail ", err)
 		}
 	}
-	commonTestHelper.TestCli()
+	commonTestHelper.TestCli(version)
 }

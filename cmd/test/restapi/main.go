@@ -20,6 +20,7 @@ import (
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
+	dateUtils "github.com/easysoft/zentaoatf/pkg/lib/date"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 )
 
@@ -53,7 +54,7 @@ func main() {
 	initTest(version)
 	initZentao(runFrom, version)
 
-	doTest(testToRun)
+	doTest(testToRun, version)
 }
 
 func initTest(version string) (err error) {
@@ -90,7 +91,7 @@ func initZentao(runFrom, version string) (err error) {
 	return
 }
 
-func doTest(testToRun string) (err error) {
+func doTest(testToRun string, version string) (err error) {
 	testPath := filepath.Join(constTestHelper.RootPath, "cmd", "test")
 
 	req := serverDomain.TestSet{
@@ -103,6 +104,7 @@ func doTest(testToRun string) (err error) {
 	// exec testing
 	report := execSuite(req, "restapi")
 	report.ProductId = 82
+	report.Name = fmt.Sprintf("禅道版本:%s restpai测试-%s", version, dateUtils.TimeStr(time.Now()))
 
 	// submit result for test
 	if runFrom != "jenkins" {

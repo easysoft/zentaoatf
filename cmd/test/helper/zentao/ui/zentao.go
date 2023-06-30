@@ -406,15 +406,36 @@ func CheckUnitTestResult() bool {
 }
 
 func InstallExt(version string) error {
+	if version == "latest" {
+		return nil
+	}
+
+	versionType := "open"
+	prefix := version[:3]
+	if prefix == "max" || prefix == "biz" || prefix == "pro" {
+		versionType = prefix
+	}
+
 	versions := strings.Split(version, ".")
 	versionNumber, _ := strconv.Atoi(versions[0])
-	if versionNumber < 17 && version != "latest" {
-		return downloadExt(version)
+
+	if versionType == "open" && versionNumber >= 17 {
+		return nil
 	}
-	return nil
+
+	if versionType == "max" && versionNumber >= 3 {
+		return nil
+	}
+
+	if versionType == "biz" && versionNumber >= 7 {
+		return nil
+	}
+
+	return downloadExt(version)
 }
 
 func downloadExt(version string) (err error) {
+	fmt.Println("start download zentao ext.")
 	versionNumber := strings.ReplaceAll(version, ".", "_")
 
 	dockerCmd := fmt.Sprintf("curl -o ext.zip -L %s && unzip ext.zip && cp -rf restful/* /www/zentaopms/", constTestHelper.ZentaoExtUrl)

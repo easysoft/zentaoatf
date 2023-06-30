@@ -83,5 +83,5 @@ func main() {
 	}
 
 	commonTestHelper.WaitZtfAccessed()
-	commonTestHelper.TestUi()
+	commonTestHelper.TestUi(version)
 }
