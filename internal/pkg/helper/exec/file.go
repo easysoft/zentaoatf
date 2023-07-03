@@ -109,6 +109,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	for {
 		line, err2 := reader1.ReadString('\n')
 		if line != "" {
+			line = stringUtils.Convert2Utf8IfNeeded(line)
 			if commConsts.ExecFrom == commConsts.FromClient {
 				websocketHelper.SendOutputMsg(line, "", iris.Map{"key": key}, wsMsg)
 				logUtils.ExecConsole(-1, line)
@@ -157,6 +158,7 @@ ExitCurrCase:
 			if err2 != nil || io.EOF == err2 {
 				break
 			}
+			line = stringUtils.Convert2Utf8IfNeeded(line)
 			errOutputArr = append(errOutputArr, line)
 		}
 	}
