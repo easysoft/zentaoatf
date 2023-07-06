@@ -150,6 +150,7 @@ func printStdout(stdout io.ReadCloser, ch chan int, cmd *exec.Cmd, key string, w
 	for {
 		line, err3 := reader1.ReadString('\n')
 		if line != "" {
+			line = stringUtils.Convert2Utf8IfNeeded(line)
 			websocketHelper.SendOutputMsgIfNeed(line, "", iris.Map{"key": key}, wsMsg)
 			logUtils.ExecConsole(1, line)
 			logUtils.ExecFile(line)
@@ -189,6 +190,7 @@ func printStderr(isTerminal bool, stderr io.ReadCloser, key string, wsMsg *webso
 			if err2 != nil || io.EOF == err2 {
 				break
 			}
+			line = stringUtils.Convert2Utf8IfNeeded(line)
 			errOutputArr = append(errOutputArr, line)
 		}
 	}

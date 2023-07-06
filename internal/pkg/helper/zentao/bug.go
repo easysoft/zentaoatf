@@ -244,12 +244,7 @@ func GetBugFiledOptions(config commDomain.WorkspaceConf, productId int) (
 		return
 	}
 
-	jsn, err := simplejson.NewJson(bytes)
-	if err != nil {
-		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
-		return
-	}
-	fmt.Println(jsn)
+	bytes = []byte(strings.Replace(string(bytes), `"modules":["\/"]`, `"modules":{"0":"\/"}`, 1))
 	err = json.Unmarshal(bytes, &bugOptionsWrapper)
 	if err != nil {
 		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)

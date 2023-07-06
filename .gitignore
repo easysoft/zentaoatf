@@ -76,3 +76,5 @@ test/cli/docker/
 cmd/test/restapi/allure-results/
 cmd/test/restapi/result.json
 cmd/test/restapi/result.zip
+cmd/test/result.json
+cmd/test/result.zip
