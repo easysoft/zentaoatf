@@ -125,6 +125,8 @@ const selectType = () => {
         cmdSample.value = cmdMap.value[modelRef.value.type].cmd
         modelRef.value.cmd = cmdSample.value.split('product_id')[1].trim()
         rulesRef.value.lang = [{ required: false, msg: t("pls_script_lang") }]
+
+        if(info.value.id === modelRef.value.id && info.value.type === modelRef.value.type) modelRef.value.cmd = info.value.cmd;
     }else{
         rulesRef.value.lang = [{ required: true, msg: t("pls_script_lang") }]
     }
