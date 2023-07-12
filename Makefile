@@ -29,7 +29,7 @@ GIT_HASH=`git show -s --format=%H`
 BUILD_CMD=go build -ldflags "-X 'main.AppVersion=${VERSION}' -X 'main.BuildTime=${BUILD_TIME}' -X 'main.GoVersion=${GO_VERSION}' -X 'main.GitHash=${GIT_HASH}'"
 BUILD_CMD_WIN=go build -ldflags "-s -w -X 'main.AppVersion=${VERSION}' -X 'main.BuildTime=${BUILD_TIME}' -X 'main.GoVersion=${GO_VERSION}' -X 'main.GitHash=${GIT_HASH}'"
 
-default: win64 win32 linux mac
+default: win64 win32 linux linux_arm64 mac
 server: server_win64 server_win32 server_linux server_linux_arm64 server_mac
 
 server_win64:       prepare compile_server_win64 copy_files_win64   zip_server_win64
