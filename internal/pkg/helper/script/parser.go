@@ -341,7 +341,7 @@ func getSortedTextFromNestedSteps(groups []commDomain.ZtfStep) (ret string, step
 		step.Desc = stepTxt
 
 		expectTxt := strings.TrimSpace(group.Expect)
-		expectTxt = strings.TrimRight(expectTxt, "]]")
+		expectTxt = strings.TrimSuffix(expectTxt, "]]")
 		expectTxt = strings.TrimSpace(expectTxt)
 
 		step.Expect = expectTxt
