@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"io"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -57,6 +58,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	}
 
 	cmd.Dir = workspacePath
+	cmd.Env = os.Environ()
 	if commConsts.BatchCount > 1 {
 		cmd.Env = append(cmd.Env, "ZTF_POOL_ID="+strconv.Itoa(idx+1))
 	}
