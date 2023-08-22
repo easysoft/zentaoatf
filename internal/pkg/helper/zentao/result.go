@@ -100,7 +100,7 @@ func FilterCases(report *commDomain.ZtfReport, config commDomain.WorkspaceConf) 
 
 	funcResult := make([]commDomain.FuncResult, 0)
 	for _, cs := range report.FuncResult {
-		if _, ok := casesMap[cs.Id]; !ok || cs.Id == 0 {
+		if _, ok := casesMap[cs.Id]; !ok && cs.Id != 0 {
 			ignoredCases[cs.Id] = true
 			continue
 		}

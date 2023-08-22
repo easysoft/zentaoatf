@@ -78,3 +78,10 @@ cmd/test/restapi/result.json
 cmd/test/restapi/result.zip
 cmd/test/result.json
 cmd/test/result.zip
+test/cli/product1/
+test/cli/allure-results/
+cmd/command/log/
+test/demo/php/log/
+test/ui/allure-results/
+test/log/
+test/demo/php/conf/ztf.conf
