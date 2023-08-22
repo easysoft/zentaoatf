@@ -62,8 +62,6 @@ func (s *JobService) Start(po *model.Job) {
 	ch := make(chan int, 1)
 	channelMap.Store(po.ID, ch)
 
-	req := s.genExecReqFromJob(*po)
-
 	go func() {
 		s.JobRepo.UpdateStatus(po, commConsts.JobInprogress, true, false)
 
@@ -71,6 +69,7 @@ func (s *JobService) Start(po *model.Job) {
 			shellUtils.ExeShellWithOutputInDir(po.Cmd, po.Workspace)
 		}
 
+		req := s.genExecReqFromJob(*po)
 		err := s.filterCases(po, req)
 
 		if err == nil {
