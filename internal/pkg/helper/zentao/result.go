@@ -44,6 +44,7 @@ func CommitResult(report commDomain.ZtfReport, productId, taskId int, config com
 	newReport := convertStepsToMap(jsn)
 
 	if commConsts.Verbose {
+		jsn, _ := json.Marshal(newReport)
 		logUtils.Info(url)
 		logUtils.Info(string(jsn))
 	}
@@ -114,7 +115,7 @@ func FilterCases(report *commDomain.ZtfReport, config commDomain.WorkspaceConf) 
 	for _, cs := range report.UnitResult {
 		cs.Id = cs.Cid
 
-		if _, ok := casesMap[cs.Id]; !ok || cs.Id == 0 {
+		if _, ok := casesMap[cs.Id]; !ok && cs.Id != 0 {
 			ignoredCases[cs.Id] = true
 			continue
 		}
@@ -131,7 +132,6 @@ func FilterCases(report *commDomain.ZtfReport, config commDomain.WorkspaceConf) 
 			logUtils.Info("  " + strconv.Itoa(k))
 		}
 	}
-	return
 }
 
 func convertStepsToMap(rawJsn []byte) interface{} {
