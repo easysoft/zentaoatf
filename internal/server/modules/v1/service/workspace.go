@@ -243,5 +243,6 @@ func (s *WorkspaceService) UploadScripts(fh *multipart.FileHeader, ctx iris.Cont
 	}
 	fileUtils.Unzip(zipPath, path)
 	fileUtils.CopyDir(filepath.Join(path, commConsts.ExecZipPath), path)
+	fileUtils.RmDir(filepath.Join(path, commConsts.ExecZipPath))
 	return
 }
