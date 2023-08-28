@@ -38,6 +38,7 @@ var (
 	suiteId      string
 	taskName     string
 	withCode     bool
+	withCache    bool
 
 	unitTestTool  string
 	unitBuildTool string
@@ -93,6 +94,7 @@ func main() {
 	flagSet.BoolVar(&commConsts.AutoExtract, "ext", true, "")
 
 	flagSet.BoolVar(&withCode, "withCode", false, "")
+	flagSet.BoolVar(&commConsts.WithCache, "withCache", false, "")
 	flagSet.StringVar(&commConsts.AllureReportDir, "allureReportDir", "", "")
 	flagSet.BoolVar(&commConsts.Verbose, "verbose", false, "")
 

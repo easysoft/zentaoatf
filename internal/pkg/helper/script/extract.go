@@ -271,19 +271,21 @@ func isRPEScript(file string) bool {
 
 func genDescFromRPE(file string) (steps []string, needExtract bool) {
 	var cmd *exec.Cmd
-	cacheDir := fileUtils.AddFilePathSepIfNeeded(fmt.Sprintf("%scache", fileUtils.GetZTFHome()))
-	fileUtils.MkDirIfNeeded(cacheDir)
+	if commConsts.WithCache {
+		cacheDir := fileUtils.AddFilePathSepIfNeeded(fmt.Sprintf("%scache", fileUtils.GetZTFHome()))
+		fileUtils.MkDirIfNeeded(cacheDir)
 
-	md5Sum := stringUtils.Md5(file)
-	fileMd5 := fileUtils.Md5(file)
+		md5Sum := stringUtils.Md5(file)
+		fileMd5 := fileUtils.Md5(file)
 
-	md5FileName := cacheDir + md5Sum
-	if fileUtils.FileExist(md5FileName) {
-		cacheMd5 := fileUtils.ReadFile(md5FileName)
-		if cacheMd5 == fileMd5 {
-			return nil, false
+		md5FileName := cacheDir + md5Sum
+		if fileUtils.FileExist(md5FileName) {
+			cacheMd5 := fileUtils.ReadFile(md5FileName)
+			if cacheMd5 == fileMd5 {
+				return nil, false
+			}
 		}
-
+		os.Remove(md5FileName)
 	}
 
 	cmd = exec.Command("/bin/bash", "-c", file+" -extract")
@@ -299,6 +301,5 @@ func genDescFromRPE(file string) (steps []string, needExtract bool) {
 	content = strings.ReplaceAll(content, "%", "%%")
 	output = strings.Split(content, "\n")
 
-	os.Remove(md5FileName)
 	return output, true
 }

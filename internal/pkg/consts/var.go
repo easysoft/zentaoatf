@@ -15,6 +15,7 @@ var (
 	WorkDir          string
 	ExecLogDir       string
 	LogDir           string
+	WithCache        bool
 
 	RequestType string
 	ExecFrom    ExecFromDef
