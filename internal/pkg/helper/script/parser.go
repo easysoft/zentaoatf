@@ -170,7 +170,7 @@ func isMultiLineExpectEnd(line string) (is bool) {
 }
 
 func ReadCaseInfoInOldFormat(content, lang string) (info, checkpoints string) {
-	regStr := fmt.Sprintf(`(?smU)%s((?U:.*pid.*))\n(.*)%s`,
+	regStr := fmt.Sprintf(`(?smU)%s((?U:.*pid\s*=.*))\n(.*)%s`,
 		commConsts.LangCommentsRegxMap[lang][0], commConsts.LangCommentsRegxMap[lang][1])
 
 	myExp := regexp.MustCompile(regStr)

@@ -158,6 +158,10 @@ func getZentaoSteps(caseId int, config commDomain.WorkspaceConf) (steps []commDo
 		return
 	}
 
+	if caseId == 0 {
+		return
+	}
+
 	cs, err := zentaoHelper.GetTestCaseDetail(caseId, config)
 
 	if err != nil || cs.Id == 0 {
