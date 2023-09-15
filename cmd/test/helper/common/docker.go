@@ -15,9 +15,8 @@ func Run(version string) (err error) {
 	versionNumber := strings.ReplaceAll(version, ".", "_")
 
 	cmd := exec.Command("docker", "run", "--name", "zentao"+versionNumber, "-p",
-		fmt.Sprintf("%d:80", constTestHelper.ZentaoPort), "-d", "easysoft/zentao:"+version)
+		fmt.Sprintf("%d:80", constTestHelper.ZentaoPort), "-e", "MYSQL_INTERNAL=true", "-d", "hub.zentao.net/app/zentao:"+version)
 	fmt.Println(cmd.String())
-
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return
