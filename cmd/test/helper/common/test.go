@@ -35,9 +35,8 @@ func TestCli(version string) (err error) {
 	report.Name = fmt.Sprintf("禅道版本:%s Cli测试-%s", version, dateUtils.TimeStr(time.Now()))
 
 	config := commDomain.WorkspaceConf{
-		Url:      "https://back.zcorp.cc/pms",
-		Username: "chenqi",
-		Password: "th2ISxOVXcoUiMLazk1b"}
+		Url: "https://back.zcorp.cc/pms",
+	}
 
 	err = zentaoHelper.CommitResult(report, report.ProductId, 0, config, nil)
 
