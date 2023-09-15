@@ -124,14 +124,14 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 		return
 	}
 
+	ret, err = ioutil.ReadAll(resp.Body)
+	defer resp.Body.Close()
+
 	if !IsSuccessCode(resp.StatusCode) {
 		logUtils.InfofIfVerbose(color.RedString("post request return '%s'.", resp.Status))
 		err = errors.New(resp.Status)
 		return
 	}
-
-	ret, err = ioutil.ReadAll(resp.Body)
-	defer resp.Body.Close()
 
 	logUtils.InfofIfVerbose("===DEBUG=== response: %s", logUtils.ConvertUnicode(ret))
 

@@ -43,14 +43,18 @@ func Login(config commDomain.WorkspaceConf) (err error) {
 		"account":  config.Username,
 		"password": config.Password,
 	}
-	bodyBytes, err := httpUtils.Post(url, params)
-	if err != nil {
-		err = ZentaoLoginErr(err.Error())
+	bodyBytes, httpError := httpUtils.Post(url, params)
+	if httpError != nil && string(bodyBytes) == "" {
+		err = ZentaoLoginErr(httpError.Error())
 		return
 	}
 
 	jsn, err := simplejson.NewJson(bodyBytes)
 	if err != nil {
+		if httpError != nil {
+			err = ZentaoLoginErr(err.Error())
+			return
+		}
 		err = ZentaoLoginErr(err.Error())
 
 		return
@@ -61,8 +65,22 @@ func Login(config commDomain.WorkspaceConf) (err error) {
 	}
 	mp, err := jsn.Map()
 	if err != nil {
+		if httpError != nil {
+			err = ZentaoLoginErr(err.Error())
+			return
+		}
 		err = ZentaoLoginErr(err.Error())
 
+		return
+	}
+
+	if httpError != nil {
+		_, ok := mp["error"]
+		if ok {
+			err = ZentaoLoginErr(strings.TrimRight(mp["error"].(string), ".。"))
+			return
+		}
+		err = ZentaoLoginErr(err.Error())
 		return
 	}
 

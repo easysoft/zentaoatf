@@ -23,6 +23,7 @@ import (
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stdinUtils "github.com/easysoft/zentaoatf/pkg/lib/stdin"
+	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	"github.com/kataras/iris/v12"
 )
 
@@ -526,11 +527,82 @@ func ListCaseByProduct(baseUrl string, productId int) (casesResp commDomain.ZtfR
 		return
 	}
 
-	err = json.Unmarshal(dataStr, &casesResp)
+	casesResp, err = parseCases(dataStr)
 	if err != nil {
 		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
+
+	return
+}
+
+func parseCases(bytes []byte) (casesResp commDomain.ZtfRespTestCases, err error) {
+	casesResp = commDomain.ZtfRespTestCases{}
+	casesResp.Cases = make([]commDomain.ZtfCaseInModule, 0)
+	jsn, err := simplejson.NewJson(bytes)
+	if err != nil {
+		return
+	}
+
+	items, err := jsn.Get("testcases").Array()
+	parseCaseItem(items, &casesResp)
+	return
+}
+
+func parseCaseItem(items []interface{}, casesResp *commDomain.ZtfRespTestCases) {
+	for _, item := range items {
+		itemMap := item.(map[string]interface{})
+		isScene, ok := itemMap["isScene"]
+		if ok {
+			cases, casesExist := itemMap["cases"]
+			if casesExist {
+				casesMap := cases.(map[string]interface{})
+				for _, caseItem := range casesMap {
+					casesResp.Cases = append(casesResp.Cases, convertMap2Case(caseItem))
+				}
+			}
+
+			if isScene.(bool) {
+				children, childrenExist := itemMap["children"]
+				if childrenExist {
+					childItems := []interface{}{}
+					childrenMap := children.(map[string]interface{})
+					for _, childItem := range childrenMap {
+						childItems = append(childItems, childItem)
+					}
+					parseCaseItem(childItems, casesResp)
+				}
+
+				continue
+			}
+		}
+
+		casesResp.Cases = append(casesResp.Cases, convertMap2Case(item))
+	}
+}
+
+func convertMap2Case(caseItem interface{}) (caseStruct commDomain.ZtfCaseInModule) {
+	caseItemMap := caseItem.(map[string]interface{})
+
+	_, ok := caseItemMap["id"].(json.Number)
+	if ok {
+		caseId, _ := caseItemMap["id"].(json.Number).Int64()
+		caseStruct.Id, _ = fmt.Printf("%d", caseId)
+	} else {
+		caseStruct.Id, _ = strconv.Atoi(strings.Replace(caseItemMap["id"].(string), "case_", "", 1))
+	}
+
+	product, _ := caseItemMap["product"].(json.Number).Int64()
+	caseStruct.Product, _ = fmt.Printf("%d", product)
+	module, _ := caseItemMap["module"].(json.Number).Int64()
+	caseStruct.Module, _ = fmt.Printf("%d", module)
+	caseId, _ := caseItemMap["case"].(json.Number).Int64()
+	caseStruct.Case, _ = fmt.Printf("%d", caseId)
+	caseStruct.Title = stringUtils.ToStr(caseItemMap["title"])
+	caseStruct.StatusName = stringUtils.ToStr(caseItemMap["statusName"])
+	caseStruct.Type = stringUtils.ToStr(caseItemMap["type"])
+
+	caseStruct.LastRunResult = caseItemMap["lastRunResult"].(string)
 
 	return
 }
@@ -547,7 +619,7 @@ func ListCaseByModule(baseUrl string, productId, moduleId int) (casesResp commDo
 		return
 	}
 
-	err = json.Unmarshal(bytes, &casesResp)
+	casesResp, err = parseCases(bytes)
 	if err != nil {
 		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
@@ -568,7 +640,7 @@ func ListCaseBySuite(baseUrl string, suiteId int) (casesResp commDomain.ZtfRespT
 		return
 	}
 
-	err = json.Unmarshal(bytes, &casesResp)
+	casesResp, err = parseCases(bytes)
 	if err != nil {
 		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
@@ -589,7 +661,7 @@ func ListCaseByTask(baseUrl string, taskId int) (casesResp commDomain.ZtfRespTes
 		return
 	}
 
-	err = json.Unmarshal(bytes, &casesResp)
+	casesResp, err = parseCases(bytes)
 	if err != nil {
 		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return

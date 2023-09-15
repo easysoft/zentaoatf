@@ -26,6 +26,7 @@ var (
 	ResponseParseErr = ResponseCode{6000, "Json Parse Error"}
 	NeedInitErr      = ResponseCode{1000, "Data Not Init"}
 
+	ErrCommon                         = ResponseCode{2000, "Common Error"}
 	ErrDirNotEmpty                    = ResponseCode{1100, "Dir Not Empty Error"}
 	ErrZentaoConfig                   = ResponseCode{2000, "Zentao Config Error"}
 	ErrZentaoRequest                  = ResponseCode{3000, "zentao request Error"}

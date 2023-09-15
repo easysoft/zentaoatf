@@ -5,15 +5,16 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/jameskeane/bcrypt"
-	"github.com/mattn/go-runewidth"
 	"math/rand"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
 	"unicode"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	"github.com/jameskeane/bcrypt"
+	"github.com/mattn/go-runewidth"
 )
 
 func TrimAll(str string) string {
@@ -144,5 +145,13 @@ func Md5(str string) (ret string) {
 
 func ItoStr(i interface{}) (ret string) {
 	ret = fmt.Sprintf("%v", i)
+	return
+}
+
+func ToStr(str interface{}) (ret string) {
+	if str == nil {
+		return ""
+	}
+	ret = fmt.Sprintf("%v", str)
 	return
 }

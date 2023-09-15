@@ -70,7 +70,7 @@ func (c *WorkspaceCtrl) Create(ctx iris.Context) {
 	req.ProductId = uint(currProductId)
 	id, err := c.WorkspaceService.Create(req)
 	if err != nil {
-		ctx.JSON(c.ErrResp(commConsts.ErrRecordWithSamePathExist, err.Error()))
+		ctx.JSON(c.ErrResp(commConsts.ErrCommon, err.Error()))
 		return
 	}
 
