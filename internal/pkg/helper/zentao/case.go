@@ -504,7 +504,7 @@ func GetCasesByTaskInDir(productId int, taskId int, workspacePath, scriptDir str
 
 	caseIds := make([]int, 0)
 	for _, tc := range caseResp.Cases {
-		caseIds = append(caseIds, tc.Id)
+		caseIds = append(caseIds, tc.Case)
 	}
 
 	caseIdMap := map[int]string{}
