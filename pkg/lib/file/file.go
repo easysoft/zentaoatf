@@ -86,6 +86,14 @@ func IsDir(f string) bool {
 	return fi.IsDir()
 }
 
+func IsFile(path string) bool {
+	fileInfo, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+	return !fileInfo.IsDir()
+}
+
 func AbsolutePath(pth string) string {
 	if !IsAbsolutePath(pth) {
 		pth, _ = filepath.Abs(pth)

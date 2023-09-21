@@ -667,6 +667,13 @@ func CheckFileContentIsScript(content string) bool {
 }
 
 func GetScriptByIdsInDir(dirPth string, idMap *map[int]string) error {
+	if fileUtils.IsFile(dirPth) {
+		pass, id, _, _, _ := GetCaseInfo(dirPth)
+		if pass {
+			(*idMap)[id] = dirPth
+		}
+		return nil
+	}
 	dirPth = fileUtils.AbsolutePath(dirPth)
 
 	sep := consts.FilePthSep
