@@ -36,8 +36,6 @@ pipeline {
           - name: playwright
             image: hub.qucheng.com/ci/playwright-go:v5
             tty: true
-          nodeSelector:
-            kubernetes.io/hostname: k3s-worker01
         '''
     }
   }
