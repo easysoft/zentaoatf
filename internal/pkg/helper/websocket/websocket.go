@@ -27,12 +27,12 @@ func SendOutputMsgIfNeed(msg, isRunning string, info iris.Map, wsMsg *websocket.
 }
 
 func SendOutputMsg(msg, isRunning string, info iris.Map, wsMsg *websocket.Message) {
-	logUtils.Infof(i118Utils.Sprintf("ws_send_exec_msg", wsMsg.Room,
-		strings.ReplaceAll(strings.TrimSpace(msg), `%`, `%%`)))
-
 	if wsMsg == nil {
 		return
 	}
+
+	logUtils.Infof(i118Utils.Sprintf("ws_send_exec_msg", wsMsg.Room,
+		strings.ReplaceAll(strings.TrimSpace(msg), `%`, `%%`)))
 
 	msg = strings.Trim(msg, "\n")
 	resp := commDomain.WsResp{Msg: msg, Category: commConsts.Output, Info: info}

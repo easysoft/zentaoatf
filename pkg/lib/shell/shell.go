@@ -3,7 +3,6 @@ package shellUtils
 import (
 	"bufio"
 	"bytes"
-	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -79,12 +78,13 @@ func ExeShellWithEnvVarsAndOutputInDir(cmdStr, dir string, envVars []string) ([]
 		cmd.Env = append(cmd.Env, envVars...)
 	}
 
-	output := make([]string, 0)
+	logUtils.InfofIfVerbose("exec cmd: %s", cmd.String())
 
+	output := make([]string, 0)
 	stdout, err := cmd.StdoutPipe()
 
 	if err != nil {
-		fmt.Println(err)
+		logUtils.InfofIfVerbose("exec cmd failed, cmd: %s, error: %s", cmd.String(), err.Error())
 		return output, err
 	}
 
