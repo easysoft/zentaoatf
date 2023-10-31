@@ -8,6 +8,7 @@
     "start": "NODE_ENV=development electron-forge start",
     "package": "electron-forge package",
     "package-mac": "npm run package -- --platform=darwin",
+    "package-mac-arm64": "npm run package -- --platform=darwin --arch=arm64",
     "package-linux": "npm run package -- --platform=linux",
     "package-linux-arm64": "npm run package -- --platform=linux --arch=arm64",
     "package-win64": "npm run package -- --platform=win32 --arch=x64",
