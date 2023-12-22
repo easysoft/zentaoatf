@@ -72,7 +72,7 @@ prepare_res:
 compile_launcher_win64:
 	@echo 'start compile win64 launcher'
 	@cd cmd/launcher && \
-        CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
+        GOOS=windows GOARCH=amd64 \
 		${BUILD_CMD} -x -v \
 		-o ../../${COMMAND_BIN_DIR}win64/${PROJECT}-gui.exe && \
 		cd ..
@@ -80,7 +80,7 @@ compile_launcher_win64:
 compile_launcher_win32:
 	@echo 'start compile win32 launcher'
 	@cd cmd/launcher && \
-        CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
+        GOOS=windows GOARCH=386 \
 		${BUILD_CMD} -x -v \
 		-o ../../${COMMAND_BIN_DIR}win32/${PROJECT}-gui.exe && \
         cd ..
@@ -89,14 +89,14 @@ compile_launcher_win32:
 compile_server_win64:
 	@echo 'start compile server win64'
 	@rm -rf ${COMMAND_BIN_DIR}win64/${PROJECT}-server.exe
-	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
+	@GOOS=windows GOARCH=amd64 \
 		${BUILD_CMD_WIN} -x -v \
 		-o ${COMMAND_BIN_DIR}win64/${PROJECT}-server.exe ${SERVER_MAIN_FILE}
 
 compile_server_win32:
 	@echo 'start compile server win32'
 	@rm -rf ${COMMAND_BIN_DIR}win32/${PROJECT}-server.exe
-	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
+	@GOOS=windows GOARCH=386 \
 		${BUILD_CMD_WIN} -x -v \
 		-o ${COMMAND_BIN_DIR}win32/${PROJECT}-server.exe ${SERVER_MAIN_FILE}
 
@@ -104,11 +104,11 @@ compile_server_linux:
 	@echo 'start compile server linux'
 	@rm -rf ${COMMAND_BIN_DIR}linux/${PROJECT}-server
 ifeq ($(PLATFORM),"Mac")
-	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ \
+	GOOS=linux GOARCH=amd64 \
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}linux/${PROJECT}-server ${SERVER_MAIN_FILE}
 else
-	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=gcc CXX=g++ \
+	GOOS=linux GOARCH=amd64 \
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}linux/${PROJECT}-server ${SERVER_MAIN_FILE}
 endif
@@ -116,14 +116,14 @@ endif
 compile_server_linux_arm64:
 	@echo 'start compile server linux for arm64'
 	@rm -rf ${COMMAND_BIN_DIR}linux_arm64/${PROJECT}-server
-	@CGO_ENABLED=1 GOOS=linux GOARCH=arm64 GOARM=7 CC=aarch64-linux-gnu-gcc CXX=aarch64-linux-gnu-g++ AR=aarch64-linux-gnu-ar \
+	@GOOS=linux GOARCH=arm64 GOARM=7 \
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}linux_arm64/${PROJECT}-server ${SERVER_MAIN_FILE}
 
 compile_server_mac:
 	@echo 'start compile mac'
 	@rm -rf ${COMMAND_BIN_DIR}darwin/${PROJECT}-server
-	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 \
+	@GOOS=darwin GOARCH=amd64 \
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}darwin/${PROJECT}-server ${SERVER_MAIN_FILE}
 
@@ -169,7 +169,7 @@ package_gui_mac_client:
 	@rm -rf ${CLIENT_BIN_DIR}/* && mkdir -p ${CLIENT_BIN_DIR}darwin
 	@cp -rf ${COMMAND_BIN_DIR}darwin/${PROJECT}-server ${CLIENT_BIN_DIR}darwin/${PROJECT}
 
-	@cd client && npm run package-mac && cd ..
+	@cd client && npm install && npm run package-mac && cd ..
 	@rm -rf ${CLIENT_OUT_DIR}darwin && mkdir -p ${CLIENT_OUT_DIR}darwin && \
 		mv ${CLIENT_OUT_DIR}${PROJECT}-darwin-x64 ${CLIENT_OUT_DIR}darwin/gui && \
 		mv ${CLIENT_OUT_DIR}darwin/gui/ztf.app ${CLIENT_OUT_DIR}darwin/ztf.app && rm -rf ${CLIENT_OUT_DIR}darwin/gui
@@ -177,39 +177,45 @@ package_gui_mac_client:
 # command line
 compile_command_win64:
 	@echo 'start compile win64'
-	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 \
+	@GOOS=windows GOARCH=amd64 \
 		${BUILD_CMD} -x -v \
 		-o ${COMMAND_BIN_DIR}win64/${PROJECT}.exe ${COMMAND_MAIN_FILE}
 
 compile_command_win32:
 	@echo 'start compile win32'
-	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 \
+	@GOOS=windows GOARCH=386 \
 		${BUILD_CMD} -x -v \
 		-o ${COMMAND_BIN_DIR}win32/${PROJECT}.exe ${COMMAND_MAIN_FILE}
 
 compile_command_linux:
 	@echo 'start compile linux'
 ifeq ($(PLATFORM),"Mac")
-	@CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ \
+	@GOOS=linux GOARCH=amd64 \
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}linux/${PROJECT} ${COMMAND_MAIN_FILE}
 else
-	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=gcc CXX=g++ \
+	GOOS=linux GOARCH=amd64 CC=gcc CXX=g++ \
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}linux/${PROJECT} ${COMMAND_MAIN_FILE}
 endif
 
 compile_command_linux_arm64:
 	@echo 'start compile linux for arm64'
-	CGO_ENABLED=1 GOOS=linux GOARCH=arm64 GOARM=7 CC=aarch64-linux-gnu-gcc CXX=aarch64-linux-gnu-g++ AR=aarch64-linux-gnu-ar \
+	GOOS=linux GOARCH=arm64 GOARM=7 CC=aarch64-linux-gnu-gcc CXX=aarch64-linux-gnu-g++ AR=aarch64-linux-gnu-ar \
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}linux_arm64/${PROJECT} ${COMMAND_MAIN_FILE}
 
 compile_command_mac:
 	@echo 'start compile darwin'
-	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 \
+	@GOOS=darwin GOARCH=amd64 \
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}darwin/${PROJECT} ${COMMAND_MAIN_FILE}
+
+compile_command_mac_arm64:
+	@echo 'start compile darwin'
+	@GOOS=darwin GOARCH=arm64 \
+		${BUILD_CMD} \
+		-o ${COMMAND_BIN_DIR}darwin_arm64/${PROJECT} ${COMMAND_MAIN_FILE}
 
 copy_files_win64:
 	@echo 'start copy files win64'

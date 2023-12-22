@@ -5,7 +5,7 @@ import (
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/fatih/color"
-	"gorm.io/driver/sqlite"
+	"github.com/glebarez/sqlite"
 	"gorm.io/gorm/schema"
 	"gorm.io/plugin/dbresolver"
 	"path/filepath"

@@ -139,7 +139,6 @@ func ValidateStepResult(langType string, expectLines []string, actualLines []str
 		} else {
 			pass = strings.TrimSpace(log) == strings.TrimSpace(expect)
 		}
-
 		if !pass {
 			stepResult = commConsts.FAIL
 		}

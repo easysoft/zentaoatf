@@ -36,7 +36,7 @@ func ExecScript(execParams commDomain.ExecParams, ch chan int, wsMsg *websocket.
 
 	logs := ""
 	stdOutput, errOutput := RunFile(execParams.ScriptFile, execParams.WorkspacePath, execParams.Conf, ch, wsMsg, execParams.ScriptIdx)
-	stdOutput = strings.Trim(stdOutput, "\n")
+	stdOutput = strings.TrimLeft(stdOutput, "\n")
 
 	if stdOutput != "" {
 		logs = stdOutput
