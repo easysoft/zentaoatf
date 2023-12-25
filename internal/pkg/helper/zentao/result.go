@@ -90,7 +90,15 @@ func JobCommitResult(report interface{}, config commDomain.WorkspaceConf) (err e
 
 func FilterCases(report *commDomain.ZtfReport, config commDomain.WorkspaceConf) {
 	//get case list
-	casesResp, _ := LoadTestCaseSimple(report.ProductId, 0, 0, 0, config)
+	casesResp, err := LoadTestCaseSimple(report.ProductId, 0, 0, 0, config)
+	if err != nil {
+		logUtils.Errorf("load test case simple err: %v", err.Error())
+		return
+	}
+	if len(casesResp.Cases) == 0 {
+		logUtils.Errorf("no test case found")
+		return
+	}
 
 	casesMap := map[int]bool{}
 	for _, caseInfo := range casesResp.Cases {
