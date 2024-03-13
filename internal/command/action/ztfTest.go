@@ -3,6 +3,7 @@ package action
 import (
 	"path"
 
+	"github.com/davecgh/go-spew/spew"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
@@ -13,6 +14,13 @@ import (
 )
 
 func RunZTFTest(files []string, moduleIdStr, suiteIdStr, taskIdOrName string) error {
+	spew.Dump(map[string]any{
+		"file":          files,
+		"moduleIdStr":   moduleIdStr,
+		"suiteIdStr":    suiteIdStr,
+		"taskIdOrName":  taskIdOrName,
+		"WorkspacePath": commConsts.ZtfDir,
+	})
 	req := serverDomain.ExecReq{
 		ScriptDirParamFromCmdLine: files[0],
 	}

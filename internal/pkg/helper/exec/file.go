@@ -41,6 +41,8 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(timeout))
 	defer cancel()
 
+	logUtils.Infof("RunFile: %s, lang: %s", filePath, lang)
+
 	cmd := getCommand(filePath, lang, uuidString, conf, ctx, wsMsg)
 
 	if cmd == nil {
@@ -72,6 +74,8 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 	} else if err2 != nil {
 		return PrintErrMsg(key, err2, wsMsg)
 	}
+
+	logUtils.Infof("cmd: %v, env: %v", cmd.String(), cmd.Environ())
 
 	cmd.Start()
 	isTerminal := false

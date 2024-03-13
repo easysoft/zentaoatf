@@ -3,6 +3,7 @@ package execHelper
 import (
 	"strings"
 
+	"github.com/davecgh/go-spew/spew"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
@@ -16,6 +17,7 @@ func Exec(ch chan int, req serverDomain.ExecReq, msg *websocket.Message) (
 
 	for _, testSet := range testSets {
 		func() {
+			spew.Dump(testSet)
 			serverConfig.InitExecLog(testSet.WorkspacePath)
 			defer serverConfig.SyncExecLog()
 

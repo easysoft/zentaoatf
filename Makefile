@@ -23,7 +23,7 @@ COMMAND_BIN_DIR=bin/
 CLIENT_BIN_DIR=client/bin/
 CLIENT_OUT_DIR=client/out/
 
-BUILD_TIME=`git show -s --format=%cd`
+BUILD_TIME=` date +%Y%m%d%H%M`
 GO_VERSION=`go version`
 GIT_HASH=`git show -s --format=%H`
 BUILD_CMD=go build -ldflags "-X 'main.AppVersion=${VERSION}' -X 'main.BuildTime=${BUILD_TIME}' -X 'main.GoVersion=${GO_VERSION}' -X 'main.GitHash=${GIT_HASH}'"

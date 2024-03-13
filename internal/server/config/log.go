@@ -18,9 +18,9 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-const (
-	WinFileSchema = "winfile:///"
-)
+// const (
+// 	WinFileSchema = "winfile:///"
+// )
 
 func InitLog() {
 	CONFIG.Zap.Director = filepath.Join(commConsts.WorkDir, CONFIG.Zap.Director)
@@ -62,18 +62,18 @@ func InitExecLog(workspacePath string) {
 	// print to test log file
 	logPathInfo := filepath.Join(commConsts.ExecLogDir, commConsts.LogText)
 	if commonUtils.IsWin() {
-		logPathInfo = filepath.Join(WinFileSchema, logPathInfo)
+		// logPathInfo = filepath.Join(WinFileSchema, logPathInfo)
 		zap.RegisterSink("winfile", newWinFileSink)
 	}
 
 	config.OutputPaths = []string{logPathInfo}
 	var err error
 	logUtils.LoggerExecFile, err = config.Build()
-	logUtils.LoggerExecFile = logUtils.LoggerExecFile.WithOptions(zap.AddCaller(), zap.AddCallerSkip(1))
 
 	if err != nil {
 		log.Println("init exec file logger fail " + err.Error())
 	}
+	logUtils.LoggerExecFile = logUtils.LoggerExecFile.WithOptions(zap.AddCaller(), zap.AddCallerSkip(1))
 
 	config.DisableCaller = true
 	config.DisableStacktrace = true
@@ -82,7 +82,7 @@ func InitExecLog(workspacePath string) {
 	// print to test result file
 	logPathResult := filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)
 	if commonUtils.IsWin() {
-		logPathResult = filepath.Join(WinFileSchema, logPathResult)
+		// logPathResult = filepath.Join(WinFileSchema, logPathResult)
 		zap.RegisterSink("winfile", newWinFileSink)
 	}
 	config.OutputPaths = []string{logPathResult}

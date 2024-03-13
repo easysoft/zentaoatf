@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"os/user"
@@ -30,7 +29,7 @@ func ReadFile(filePath string) string {
 }
 
 func ReadFileBuf(filePath string) []byte {
-	buf, err := ioutil.ReadFile(filePath)
+	buf, err := os.ReadFile(filePath)
 	if err != nil {
 		return []byte(err.Error())
 	}
@@ -43,7 +42,7 @@ func WriteFile(filePath string, content string) {
 	MkDirIfNeeded(dir)
 
 	var d1 = []byte(content)
-	err2 := ioutil.WriteFile(filePath, d1, 0666) //写入文件(字节数组)
+	err2 := os.WriteFile(filePath, d1, 0666) //写入文件(字节数组)
 	check(err2)
 }
 
