@@ -139,7 +139,6 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 		logUtils.InfofIfVerbose(color.RedString("read response failed, error: %s.", err.Error()))
 		return
 	}
-
 	if len(ret) == 0 {
 		return
 	}

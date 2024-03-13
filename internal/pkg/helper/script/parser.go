@@ -317,7 +317,7 @@ func ReplaceCaseDesc(desc, file string) {
 		commConsts.LangCommentsRegxMap[lang][0], commConsts.LangCommentsRegxMap[lang][1])
 	re, _ := regexp.Compile(regStr)
 
-	newDesc := fmt.Sprintf("\n%s\n\n"+desc+"\n\n%s",
+	newDesc := fmt.Sprintf("%s\n"+desc+"\n%s",
 		commConsts.LangCommentsTagMap[lang][0],
 		commConsts.LangCommentsTagMap[lang][1])
 	newDesc = strings.Replace(newDesc, "$", "￥￥￥", -1)
