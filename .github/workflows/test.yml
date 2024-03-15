@@ -1,0 +1,48 @@
+name: check
+
+env:
+  # Common versions
+  GO_VERSION: '1.22'
+  TZ: Asia/Shanghai
+
+
+permissions: write-all
+
+on:
+  push:
+    branches:
+      - '*'
+    paths:
+      - '**.go'
+      - 'go.mod'
+      - '.github/workflows/*.yml'
+  pull_request:
+    branches:
+      - "*"
+    paths:
+      - '**.go'
+
+jobs:
+  build:
+    name: "build"
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          check-latest: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: install task
+        run: |
+          echo "install task"
+          go install github.com/go-task/task/v3/cmd/task@latest
+      - name: Run task
+        run: |
+          echo "Run task"
+          task

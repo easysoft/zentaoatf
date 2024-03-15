@@ -51,6 +51,13 @@ func Errorf(str string, args ...interface{}) {
 	msg := fmt.Sprintf(str, args...)
 	LoggerStandard.Error(msg)
 }
+func Fatal(str string) {
+	LoggerStandard.Fatal(str)
+}
+func Fatalf(str string, args ...interface{}) {
+	msg := fmt.Sprintf(str, args...)
+	LoggerStandard.Fatal(msg)
+}
 
 func ExecConsole(clr color.Attribute, str string) {
 	msg := str

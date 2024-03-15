@@ -6,7 +6,6 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/facebookgo/inject"
 	"github.com/fatih/color"
-	"github.com/sirupsen/logrus"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -25,18 +24,18 @@ func NewStatisticRepo() *StatisticRepo {
 
 func (r *StatisticRepo) injectModule(instance *StatisticRepo) {
 	var g inject.Graph
-	g.Logger = logrus.StandardLogger()
+	g.Logger = logUtils.LoggerStandard.Sugar()
 
 	// inject objects
 	if err := g.Provide(
 		&inject.Object{Value: dao.GetDB()},
 		&inject.Object{Value: instance},
 	); err != nil {
-		logrus.Fatalf("provide usecase objects to the Graph: %v", err)
+		logUtils.Fatalf("provide usecase objects to the Graph: %v", err)
 	}
 	err := g.Populate()
 	if err != nil {
-		logrus.Fatalf("populate the incomplete Objects: %v", err)
+		logUtils.Fatalf("populate the incomplete Objects: %v", err)
 	}
 }
 

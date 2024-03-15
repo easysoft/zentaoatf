@@ -2,11 +2,32 @@
 
 version: '3'
 
-vars:
-  GREETING: Hello, World!
-
 tasks:
+  prepare:
+    desc: Prepare the environment
+    cmds:
+      - echo "Preparing the environment"
+
+  build_server:
+    desc: Build the server
+    cmds:
+      - echo "Building the server {{.GOOS}} {{.GOARCH}}"
+
+  package_gui:
+    desc: Package the GUI
+    cmds:
+      - echo "Packaging the GUI for {{.GOOS}} {{.GOARCH}}"
+
+  build_cli:
+    desc: Build the CLI
+    cmds:
+      - echo "Packaging the GUI for {{.GOOS}} {{.GOARCH}}"
+
   default:
     cmds:
-      - echo "{{.GREETING}}"
-    silent: true
+      - task: prepare
+      - task: build_server
+        vars: {
+          GOOS: darwin,
+          GOARCH: arm64
+        }

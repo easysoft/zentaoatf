@@ -26,7 +26,7 @@ var (
 )
 
 // @title ZTF服务端API文档
-// @version 1.0
+// @version 3.x
 // @contact.name API Support
 // @contact.url https://github.com/easysoft/zentaoatf/issues
 // @contact.email 462626@qq.com

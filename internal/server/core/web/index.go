@@ -3,10 +3,16 @@ package web
 import (
 	stdContext "context"
 	"fmt"
+	"net/http"
+	"path/filepath"
+	"sync"
+	"testing"
+	"time"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
-	"github.com/easysoft/zentaoatf/internal/server/config"
+	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	"github.com/easysoft/zentaoatf/internal/server/core/cron"
 	"github.com/easysoft/zentaoatf/internal/server/core/dao"
 	"github.com/easysoft/zentaoatf/internal/server/core/module"
@@ -18,12 +24,6 @@ import (
 	gorillaWs "github.com/gorilla/websocket"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/kataras/neffos/gorilla"
-	"github.com/sirupsen/logrus"
-	"net/http"
-	"path/filepath"
-	"sync"
-	"testing"
-	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/kataras/iris/v12/context"
@@ -119,7 +119,7 @@ func Init(port int) *WebServer {
 
 func injectModule(ws *WebServer) {
 	var g inject.Graph
-	g.Logger = logrus.StandardLogger()
+	g.Logger = logUtils.LoggerStandard.Sugar()
 
 	cron := cron.NewServerCron()
 	cron.Init()
@@ -131,11 +131,11 @@ func injectModule(ws *WebServer) {
 		&inject.Object{Value: cron},
 		&inject.Object{Value: indexModule},
 	); err != nil {
-		logrus.Fatalf("provide usecase objects to the Graph: %v", err)
+		logUtils.Fatalf("provide usecase objects to the Graph: %v", err)
 	}
 	err := g.Populate()
 	if err != nil {
-		logrus.Fatalf("populate the incomplete Objects: %v", err)
+		logUtils.Fatalf("populate the incomplete Objects: %v", err)
 	}
 
 	ws.AddModule(indexModule.Party())
@@ -145,18 +145,18 @@ func injectModule(ws *WebServer) {
 
 func injectWsModule(websocketCtrl *myWs.WebSocketCtrl) {
 	var g inject.Graph
-	g.Logger = logrus.StandardLogger()
+	g.Logger = logUtils.LoggerStandard.Sugar()
 
 	// inject objects
 	if err := g.Provide(
 		&inject.Object{Value: dao.GetDB()},
 		&inject.Object{Value: websocketCtrl},
 	); err != nil {
-		logrus.Fatalf("provide usecase objects to the Graph: %v", err)
+		logUtils.Fatalf("provide usecase objects to the Graph: %v", err)
 	}
 	err := g.Populate()
 	if err != nil {
-		logrus.Fatalf("populate the incomplete Objects: %v", err)
+		logUtils.Fatalf("populate the incomplete Objects: %v", err)
 	}
 }
 
