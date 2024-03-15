@@ -8,10 +8,10 @@ import (
 	"os/exec"
 	"strings"
 
-	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
+	"github.com/ergoapi/util/zos"
 )
 
 func ExeSysCmd(cmdStr string) (string, error) {
@@ -110,10 +110,10 @@ func ExeShellWithEnvVarsAndOutputInDir(cmdStr, dir string, envVars []string) ([]
 }
 
 func GetCmd(cmdStr string) (cmd *exec.Cmd) {
-	if commonUtils.IsWin() {
-		cmd = getWinCmd(cmdStr)
-	} else {
+	if zos.IsUnix() {
 		cmd = getLinuxCmd(cmdStr)
+	} else {
+		cmd = getWinCmd(cmdStr)
 	}
 
 	return

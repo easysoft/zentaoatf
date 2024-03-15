@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"regexp"
 	"strings"
@@ -51,7 +51,7 @@ func testExtract() string {
 		return "File can not open"
 	}
 	defer file.Close()
-	content, err := ioutil.ReadAll(file)
+	content, err := io.ReadAll(file)
 	checkResSuccess := strings.Contains(string(content), `
 title=sync step from comments
 timeout=0

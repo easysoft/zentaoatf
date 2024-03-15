@@ -19,6 +19,7 @@ import (
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	resUtils "github.com/easysoft/zentaoatf/pkg/lib/res"
+	"github.com/ergoapi/util/zos"
 	"github.com/fatih/color"
 	"github.com/spf13/viper"
 )
@@ -99,7 +100,7 @@ func PrintCurrConfig() {
 	val := reflect.ValueOf(conf)
 	typeOfS := val.Type()
 	for i := 0; i < reflect.ValueOf(conf).NumField(); i++ {
-		if !commonUtils.IsWin() && i >= 4 {
+		if zos.IsUnix() && i >= 4 {
 			break
 		}
 

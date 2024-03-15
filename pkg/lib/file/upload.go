@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
-	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -38,7 +37,7 @@ func Upload(url string, files []string, extraParams map[string]string) {
 		logUtils.Error(i118Utils.Sprintf("fail_to_upload_files", err.Error()))
 	}
 
-	respBody, err := ioutil.ReadAll(resp.Body)
+	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		logUtils.Error(i118Utils.Sprintf("fail_to_parse_upload_response", err.Error()))
 	}
@@ -71,7 +70,7 @@ func UploadWithResp(url string, files []string, extraParams map[string]string) m
 		logUtils.Error(i118Utils.Sprintf("fail_to_upload_files", err.Error()))
 	}
 
-	respBody, err := ioutil.ReadAll(resp.Body)
+	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		logUtils.Error(i118Utils.Sprintf("fail_to_parse_upload_response", err.Error()))
 	}

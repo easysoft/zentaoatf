@@ -2,15 +2,16 @@ package action
 
 import (
 	"fmt"
+	"os"
+	"regexp"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/easysoft/zentaoatf/pkg/consts"
-	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	resUtils "github.com/easysoft/zentaoatf/pkg/lib/res"
+	"github.com/ergoapi/util/zos"
 	"github.com/fatih/color"
-	"os"
-	"regexp"
 )
 
 var (
@@ -23,7 +24,7 @@ func PrintUsage() {
 
 	usageData, _ := resUtils.ReadRes(usageFile)
 	exeFile := commConsts.App
-	if commonUtils.IsWin() {
+	if !zos.IsUnix() {
 		exeFile += ".exe"
 	}
 	usage := fmt.Sprintf(string(usageData), exeFile)
@@ -33,7 +34,7 @@ func PrintUsage() {
 
 	sampleData, _ := resUtils.ReadRes(sampleFile)
 	sample := string(sampleData)
-	if !commonUtils.IsWin() {
+	if !zos.IsUnix() {
 		regx, _ := regexp.Compile(`\\`)
 		sample = regx.ReplaceAllString(sample, "/")
 

@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sort"
@@ -14,6 +13,7 @@ import (
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/easysoft/zentaoatf/pkg/domain"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	"github.com/ergoapi/util/file"
 
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	analysisHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
@@ -209,12 +209,12 @@ func (s *TestResultService) DownloadFromProxy(fileName string, workspaceId int, 
 	fileUtils.Download(url+"api/v1/results/downloadLog?file="+fileName, zipPath)
 	execLogDir := logUtils.GetLogDir(workspaceInfo.Path)
 	fileUtils.Unzip(zipPath, execLogDir)
-	paths, err := ioutil.ReadDir(execLogDir)
+	paths, err := file.ReadDir(execLogDir)
 	if len(paths) == 0 {
 		return
 	}
 	childrenDir := execLogDir + paths[0].Name()
-	paths, err = ioutil.ReadDir(childrenDir)
+	paths, err = file.ReadDir(childrenDir)
 	for _, path := range paths {
 		fileUtils.CopyFile(fileUtils.AddSepIfNeeded(childrenDir)+path.Name(), execLogDir+path.Name())
 		replaceProxyPath(execLogDir+path.Name(), fileName, execLogDir, pathMap)
@@ -242,7 +242,7 @@ func replaceProxyPath(fullPath, fileName, execLogDir string, pathMap map[string]
 		}
 		newContent = string(newContentByte)
 	} else {
-		bytes, _ := ioutil.ReadFile(fullPath)
+		bytes, _ := os.ReadFile(fullPath)
 		newContent = strings.ReplaceAll(string(bytes), fileName[0:len(fileName)-10], execLogDir)
 		for proxyFilePath, localFilePath := range pathMap {
 			newContent = strings.ReplaceAll(newContent, proxyFilePath, localFilePath)

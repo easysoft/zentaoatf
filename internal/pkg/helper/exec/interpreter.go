@@ -4,34 +4,35 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"regexp"
+	"strings"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	"github.com/easysoft/zentaoatf/internal/server/core/dao"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
-	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
+	"github.com/ergoapi/util/zos"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
-	"os"
-	"os/exec"
-	"path/filepath"
-	"regexp"
-	"strings"
 )
 
 func getCommand(filePath, lang, uuidString string, conf commDomain.WorkspaceConf, ctx context.Context, wsMsg *websocket.Message) (
 	cmd *exec.Cmd) {
 
-	if commonUtils.IsWin() {
-		cmd = setWinScriptInterpreter(filePath, lang, uuidString, conf, ctx, wsMsg)
-	} else {
+	if zos.IsUnix() {
 		cmd = setLinuxScriptInterpreter(filePath, lang, uuidString, conf, ctx, wsMsg)
+	} else {
+		cmd = setWinScriptInterpreter(filePath, lang, uuidString, conf, ctx, wsMsg)
 	}
 
 	return
@@ -139,10 +140,10 @@ func AddInterpreterIfExist(conf *commDomain.WorkspaceConf, lang string) bool {
 }
 
 func GetLangInterpreter(language string) (list []map[string]interface{}, err error) {
-	if commonUtils.IsWin() {
-		return GetLangInterpreterWin(language)
-	} else {
+	if zos.IsUnix() {
 		return GetLangInterpreterUnix(language)
+	} else {
+		return GetLangInterpreterWin(language)
 	}
 }
 
@@ -202,7 +203,7 @@ func GetLangInterpreterWin(language string) (list []map[string]interface{}, err 
 		return
 	}
 
-	if !commonUtils.IsWin() || whereCmd == "" {
+	if zos.IsUnix() || whereCmd == "" {
 		return
 	}
 

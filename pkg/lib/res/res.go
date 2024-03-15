@@ -1,12 +1,12 @@
 package resUtils
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/easysoft/zentaoatf/pkg/lib/common"
-	"github.com/easysoft/zentaoatf/res"
-	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	"github.com/easysoft/zentaoatf/res"
 )
 
 func ReadRes(path string) (ret []byte, err error) {
@@ -20,7 +20,7 @@ func ReadRes(path string) (ret []byte, err error) {
 			pth = filepath.Join(commConsts.ZtfDir, path) // in ide, set program args to testng project path
 		}
 
-		ret, err = ioutil.ReadFile(pth)
+		ret, err = os.ReadFile(pth)
 	}
 
 	return

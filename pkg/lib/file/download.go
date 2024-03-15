@@ -2,12 +2,14 @@ package fileUtils
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/pkg/lib/i118"
-	"github.com/easysoft/zentaoatf/pkg/lib/log"
-	"github.com/fatih/color"
-	"io/ioutil"
+	"io"
 	"net/http"
+	"os"
 	"path/filepath"
+
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	"github.com/fatih/color"
 )
 
 func Download(url string, dst string) (err error) {
@@ -35,7 +37,7 @@ func HTTPDownload(uri string) ([]byte, error) {
 		logUtils.Infof(color.RedString("download file failed, error: %s.", err.Error()))
 	}
 	defer res.Body.Close()
-	d, err := ioutil.ReadAll(res.Body)
+	d, err := io.ReadAll(res.Body)
 	if err != nil {
 		logUtils.Infof(color.RedString("read downloaded file failed, error: %s.", err.Error()))
 	}
@@ -43,7 +45,7 @@ func HTTPDownload(uri string) ([]byte, error) {
 }
 
 func WriteDownloadFile(dst string, d []byte) error {
-	err := ioutil.WriteFile(dst, d, 0444)
+	err := os.WriteFile(dst, d, 0444)
 	if err != nil {
 		logUtils.Infof(color.RedString("write download file failed, error: %s.", err.Error()))
 	}

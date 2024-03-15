@@ -41,11 +41,6 @@ func (c *InterpreterCtrl) GetLangInterpreter(ctx iris.Context) {
 }
 
 func (c *InterpreterCtrl) List(ctx iris.Context) {
-	//if !commonUtils.IsWin() {
-	//	ctx.JSON(c.SuccessResp(nil))
-	//	return
-	//}
-
 	data, err := c.InterpreterService.List()
 	if err != nil {
 		ctx.JSON(c.ErrResp(commConsts.CommErr, err.Error()))

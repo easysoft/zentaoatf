@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"regexp"
 	"strings"
@@ -58,7 +58,7 @@ func testExpect() string {
 		os.Remove(expPath)
 	}()
 
-	content, err := ioutil.ReadAll(file)
+	content, err := io.ReadAll(file)
 	checkResSuccess := strings.Contains(string(content), `expect 1
 pass
 expect 3`)

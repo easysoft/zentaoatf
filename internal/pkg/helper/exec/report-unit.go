@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -14,6 +13,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ergoapi/util/file"
 	"github.com/jinzhu/copier"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
@@ -226,7 +226,7 @@ func ExpandCaseForMultiIds(suites *[]commDomain.UnitTestSuite) {
 }
 
 func GetAllureSuites(resultDir string, startTime int64) (suites []commDomain.UnitTestSuite) {
-	files, err := ioutil.ReadDir(resultDir)
+	files, err := file.ReadDir(resultDir)
 	if err != nil {
 		return
 	}
@@ -256,7 +256,7 @@ func GetAllureSuites(resultDir string, startTime int64) (suites []commDomain.Uni
 
 func GetSuiteFiles(resultDir string, startTime int64, testTool commConsts.TestTool) (resultFiles []string, err error) {
 	if fileUtils.IsDir(resultDir) {
-		dir, err := ioutil.ReadDir(resultDir)
+		dir, err := file.ReadDir(resultDir)
 		if err == nil {
 			for _, fi := range dir {
 				name := fi.Name()

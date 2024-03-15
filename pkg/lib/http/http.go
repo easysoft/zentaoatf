@@ -3,7 +3,7 @@ package httpUtils
 import (
 	"encoding/json"
 	"errors"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 
@@ -54,7 +54,7 @@ func GetCheckForward(url string) (ret []byte, isForward bool, err error) {
 		return
 	}
 
-	ret, err = ioutil.ReadAll(resp.Body)
+	ret, err = io.ReadAll(resp.Body)
 	logUtils.InfofIfVerbose("===DEBUG=== response: %s", logUtils.ConvertUnicode(ret))
 
 	if err != nil {
@@ -124,7 +124,7 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 		return
 	}
 
-	ret, err = ioutil.ReadAll(resp.Body)
+	ret, err = io.ReadAll(resp.Body)
 	defer resp.Body.Close()
 
 	if !IsSuccessCode(resp.StatusCode) {

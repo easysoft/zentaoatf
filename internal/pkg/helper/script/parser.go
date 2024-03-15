@@ -2,7 +2,6 @@ package scriptHelper
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -16,6 +15,7 @@ import (
 	"github.com/easysoft/zentaoatf/pkg/consts"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	"github.com/ergoapi/util/file"
 )
 
 func GetStepAndExpectMap(file string) (steps []commDomain.ZentaoCaseStep) {
@@ -682,7 +682,7 @@ func GetScriptByIdsInDir(dirPth string, idMap *map[int]string) error {
 		return nil
 	}
 
-	dir, err := ioutil.ReadDir(dirPth)
+	dir, err := file.ReadDir(dirPth)
 	if err != nil {
 		return err
 	}

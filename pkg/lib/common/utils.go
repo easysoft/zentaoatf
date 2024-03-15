@@ -42,15 +42,6 @@ func GetOs() commConsts.OsType {
 		return commConsts.OsType(osName)
 	}
 }
-func IsWin() bool {
-	return GetOs() == "windows"
-}
-func IsLinux() bool {
-	return GetOs() == "linux"
-}
-func IsMac() bool {
-	return GetOs() == "mac"
-}
 
 func IntToStrArr(intArr []int) (strArr []string) {
 	for _, i := range intArr {

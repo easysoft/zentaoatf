@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	"github.com/ergoapi/util/zos"
 	"github.com/fatih/color"
 )
 
@@ -22,7 +22,7 @@ func main() {
 
 	pth := ""
 	var cmd *exec.Cmd
-	if commonUtils.IsWin() {
+	if !zos.IsUnix() {
 		pth = "gui\\ztf.exe"
 		cmd = exec.Command("cmd", "/C", "start", pth)
 	}

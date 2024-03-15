@@ -1,22 +1,23 @@
 package fileUtils
 
 import (
-	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
-	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
 	"strings"
+
+	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
+	"github.com/ergoapi/util/zos"
 )
 
 func GetMd5(pth string) (ret string, err error) {
 	cmdStr := ""
-	if commonUtils.IsWin() {
-		cmdStr = "CertUtil -hashfile " + pth + " MD5"
-	} else {
+	if zos.IsUnix() {
 		cmdStr = "md5sum " + pth + " | awk '{print $1}'"
+	} else {
+		cmdStr = "CertUtil -hashfile " + pth + " MD5"
 	}
 
 	ret, _ = shellUtils.ExeSysCmd(cmdStr)
 
-	if commonUtils.IsWin() {
+	if !zos.IsUnix() {
 		arr := strings.Split(ret, "\n")
 		if len(arr) > 1 {
 			ret = arr[1]

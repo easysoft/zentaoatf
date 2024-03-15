@@ -2,7 +2,6 @@ package logUtils
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -14,6 +13,7 @@ import (
 	"github.com/easysoft/zentaoatf/pkg/consts"
 	dateUtils "github.com/easysoft/zentaoatf/pkg/lib/date"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
+	"github.com/ergoapi/util/file"
 
 	"github.com/snowlyg/helper/dir"
 )
@@ -22,7 +22,7 @@ func GetLogDir(workspacePath string) string {
 	logBase := filepath.Join(workspacePath, commConsts.LogDirName)
 
 	days := geWeekDays()
-	files1, _ := ioutil.ReadDir(logBase)
+	files1, _ := file.ReadDir(logBase)
 	for _, fi := range files1 {
 		name := fi.Name()
 		if fi.IsDir() && !stringUtils.FindInArr(name, days) {
@@ -35,7 +35,7 @@ func GetLogDir(workspacePath string) string {
 		os.MkdirAll(logDir, os.ModePerm)
 	}
 
-	files2, _ := ioutil.ReadDir(logDir)
+	files2, _ := file.ReadDir(logDir)
 	regx := `^\d\d\d$`
 	numb := 0
 	for _, fi := range files2 {

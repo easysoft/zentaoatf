@@ -20,6 +20,7 @@ import (
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
+	"github.com/ergoapi/util/zos"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/mattn/go-runewidth"
@@ -278,7 +279,7 @@ func FilterCases(cases []string, conf *commDomain.WorkspaceConf) (casesToRun, ca
 			continue
 		}
 
-		if commonUtils.IsWin() {
+		if !zos.IsUnix() {
 			filterWinCases(cs, lang, conf, &casesToIgnore, &casesToRun)
 			continue
 		}

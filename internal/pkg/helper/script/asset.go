@@ -3,7 +3,6 @@ package scriptHelper
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"path"
 	"regexp"
 	"strconv"
@@ -20,6 +19,7 @@ import (
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
+	"github.com/ergoapi/util/file"
 	"github.com/kataras/iris/v12"
 )
 
@@ -76,7 +76,7 @@ func getScriptLang(pth string) (lang string) {
 func loadScriptNodesInDir(folder string, parent *serverDomain.TestAsset, level int, scriptIdsFromZentao map[int]string) (err error) {
 	folder = fileUtils.AddFilePathSepIfNeeded(fileUtils.AbsolutePath(folder))
 
-	list, err := ioutil.ReadDir(folder)
+	list, err := file.ReadDir(folder)
 	if err != nil {
 		return err
 	}
@@ -127,7 +127,7 @@ func LoadScriptListInDir(path string, files *[]string, level int) error {
 
 	path = fileUtils.AbsolutePath(path)
 
-	dir, err := ioutil.ReadDir(path)
+	dir, err := file.ReadDir(path)
 	if err != nil {
 		return err
 	}
@@ -303,7 +303,7 @@ func GetAllScriptsInDir(path string, files *[]string) error {
 
 	path = fileUtils.AbsolutePath(path)
 
-	dir, err := ioutil.ReadDir(path)
+	dir, err := file.ReadDir(path)
 	if err != nil {
 		return err
 	}

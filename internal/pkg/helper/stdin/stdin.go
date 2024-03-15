@@ -11,10 +11,10 @@ import (
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
-	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stdinUtils "github.com/easysoft/zentaoatf/pkg/lib/stdin"
+	"github.com/ergoapi/util/zos"
 	"github.com/fatih/color"
 )
 
@@ -151,7 +151,7 @@ func InputForSet(dir string) {
 		}
 	}
 
-	if commonUtils.IsWin() {
+	if !zos.IsUnix() {
 		var configInterpreter bool
 		stdinUtils.InputForBool(&configInterpreter, true, "config_script_interpreter")
 		if configInterpreter {

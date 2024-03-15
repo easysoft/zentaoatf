@@ -9,8 +9,8 @@ import (
 	"time"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	"github.com/ergoapi/util/zos"
 	"gopkg.in/natefinch/lumberjack.v2"
 
 	"github.com/snowlyg/helper/dir"
@@ -61,7 +61,7 @@ func InitExecLog(workspacePath string) {
 
 	// print to test log file
 	logPathInfo := filepath.Join(commConsts.ExecLogDir, commConsts.LogText)
-	if commonUtils.IsWin() {
+	if !zos.IsUnix() {
 		logPathInfo = filepath.Join(WinFileSchema, logPathInfo)
 		zap.RegisterSink("winfile", newWinFileSink)
 	}
@@ -81,7 +81,7 @@ func InitExecLog(workspacePath string) {
 
 	// print to test result file
 	logPathResult := filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)
-	if commonUtils.IsWin() {
+	if !zos.IsUnix() {
 		logPathResult = filepath.Join(WinFileSchema, logPathResult)
 		zap.RegisterSink("winfile", newWinFileSink)
 	}
@@ -151,20 +151,6 @@ func getLogConfig() (config zap.Config) {
 		EncoderConfig: encoderConfig,               // 编码器配置
 		//InitialFields:    map[string]interface{}{"test_machine": "pc1"}, // 初始化字段
 	}
-
-	//if commonUtils.IsWin() {
-	//	zap.RegisterSink("winfile", newWinFileSink)
-	//}
-	//
-	//logPathInfo := filepath.Join(CONFIG.Zap.Director, "info.log")
-	//logPathErr := filepath.Join(CONFIG.Zap.Director, "err.log")
-	//if commonUtils.IsWin() {
-	//	logPathInfo = filepath.Join(WinFileSchema, logPathInfo)
-	//	logPathErr = filepath.Join(WinFileSchema, logPathErr)
-	//}
-	//config.OutputPaths = []string{"stdout", logPathInfo}
-	//config.ErrorOutputPaths = []string{"stderr", logPathErr}
-
 	return
 }
 

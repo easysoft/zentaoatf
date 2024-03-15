@@ -2,16 +2,17 @@ package service
 
 import (
 	"errors"
+	"mime/multipart"
+	"path/filepath"
+	"strings"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	"github.com/ergoapi/util/file"
 	"github.com/fatih/color"
-	"io/ioutil"
-	"mime/multipart"
-	"path/filepath"
-	"strings"
 
 	"github.com/kataras/iris/v12"
 	"github.com/snowlyg/helper/dir"
@@ -74,7 +75,7 @@ func (s *FileService) GetAllChildren(childPath string, parent *serverDomain.Test
 
 	childPath = fileUtils.AddFilePathSepIfNeeded(fileUtils.AbsolutePath(childPath))
 
-	list, err := ioutil.ReadDir(childPath)
+	list, err := file.ReadDir(childPath)
 	if err != nil {
 		return err
 	}

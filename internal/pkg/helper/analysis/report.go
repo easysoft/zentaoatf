@@ -2,11 +2,12 @@ package analysisHelper
 
 import (
 	"encoding/json"
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
-	"io/ioutil"
 	"path/filepath"
 	"strings"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	"github.com/ergoapi/util/file"
 
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 )
@@ -24,13 +25,13 @@ func ListReport2(workspacePath string, maxSize int) (reportSeqs []string) {
 
 	var count int = 0
 	// read log dir
-	dailyFiles, _ := ioutil.ReadDir(logRoot)
+	dailyFiles, _ := file.ReadDir(logRoot)
 	for i := len(dailyFiles) - 1; i > -1; i-- {
 		daily := dailyFiles[i]
 
 		if daily.IsDir() {
 			// read daily log dir
-			files, _ := ioutil.ReadDir(filepath.Join(logRoot, daily.Name()))
+			files, _ := file.ReadDir(filepath.Join(logRoot, daily.Name()))
 			for j := len(files) - 1; j > -1; j-- {
 				count++
 				if count > maxSize {

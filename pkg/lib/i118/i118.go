@@ -3,7 +3,7 @@ package i118Utils
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	resUtils "github.com/easysoft/zentaoatf/pkg/lib/res"
@@ -47,7 +47,7 @@ func Check(e error) {
 	}
 }
 func ReadI18nJson(file string) string {
-	b, err := ioutil.ReadFile(file)
+	b, err := os.ReadFile(file)
 	Check(err)
 	str := string(b)
 	return str

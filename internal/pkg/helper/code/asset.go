@@ -2,13 +2,13 @@ package codeHelper
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"path/filepath"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	"github.com/ergoapi/util/file"
 
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
@@ -47,7 +47,7 @@ func LoadCodeTree(workspace model.Workspace) (asset serverDomain.TestAsset, err 
 
 func LoadCodeNodesInDir(dir string, workspaceId int, workspaceType commConsts.TestTool) (
 	nodes []*serverDomain.TestAsset, err error) {
-	list, err := ioutil.ReadDir(dir)
+	list, err := file.ReadDir(dir)
 	if err != nil {
 		return
 	}

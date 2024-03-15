@@ -1,13 +1,14 @@
 package display
 
 import (
-	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
-	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
 	"os"
 	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
+
+	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
+	"github.com/ergoapi/util/zos"
 )
 
 func GetScreenSize() (int, int) {
@@ -15,7 +16,7 @@ func GetScreenSize() (int, int) {
 	var width int
 	var height int
 
-	if commonUtils.IsWin() {
+	if !zos.IsUnix() {
 		cmd = "mode" // tested for win7
 		out, _ := shellUtils.ExeSysCmd(cmd)
 
