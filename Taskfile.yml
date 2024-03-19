@@ -2,21 +2,73 @@
 
 version: '3'
 
+env:
+  GOPROXY: 'https://goproxy.cn,direct'
+  GOSUMDB: sum.golang.google.cn
+  GO_VERSION: $(go version)
+  BUILD_VERSION: $(cat VERSION || echo "0.0.1")
+  BUILD_TIME: $(date "+%Y%m%d%H%M")
+  GIT_COMMIT: $(git rev-parse --short HEAD || echo "abcdefgh")
+  ROOT_DIR: $(pwd)
+  BUILD_DIR: $(pwd)/_output
+  BIN_DIR: $(pwd)/bin
+  CLIENT_BIN_DIR: client/bin
+  CLIENT_OUT_DIR: client/out
+  LDFLAGS: "-w -s \
+    -X 'main.AppVersion={{.BUILD_VERSION}}' \
+    -X 'main.GoVersion={{.GO_VERSION}}' \
+    -X 'main.BuildTime={{.BUILD_TIME}}' \
+    -X 'main.BuildTime={{.BUILD_TIME}}' \
+    -X 'main.GitHash=${GIT_COMMIT}'"
+
 tasks:
-  prepare:
-    desc: Prepare the environment
+
+  clean:
+    desc: clean
     cmds:
-      - echo "Preparing the environment"
+      - rm -rf res/res.go
+
+  install:
+    desc: install dep tools
+    run: once
+    cmds:
+      - go install github.com/kevinburke/go-bindata/v4/...@latest
+    status:
+      - command -v go-bindata
+
+  compile_ui:
+    desc: compile client ui
+    run: once
+    dir: ui
+    cmds:
+      - yarn install
+      - yarn build --dest ../client/ui
+
+  prepare:
+    desc: start prepare res
+    run: once
+    deps:
+      - install
+      - compile_ui
+    cmds:
+      - go-bindata -o=res/res.go -pkg=res res/...
+    status:
+      - test -f res/res.go
 
   build_server:
     desc: Build the server
+    run: once
     cmds:
-      - echo "Building the server {{.GOOS}} {{.GOARCH}}"
+      - GOOS={{.GOOS}} GOARCH={{.GOARCH}} go build -ldflags "{{.LDFLAGS}}" -o {{.BUILD_DIR}}/{{.GOOS}}/{{.GOARCH}}/zt-server{{if eq .GOOS "windows"}}.exe{{end}} cmd/server/main.go
+    status:
+      - test -f {{.BUILD_DIR}}/{{.GOOS}}/{{.GOARCH}}/zt-server{{if eq .GOOS "windows"}}.exe{{end}}
 
-  package_gui:
-    desc: Package the GUI
+  package_gui_client:
+    desc: start package gui
+    run: once
+    dir: client
     cmds:
-      - echo "Packaging the GUI for {{.GOOS}} {{.GOARCH}}"
+      - npm run package-{{.GOOS}}-{{.GOARCH}}
 
   build_cli:
     desc: Build the CLI
@@ -27,6 +79,11 @@ tasks:
     cmds:
       - task: prepare
       - task: build_server
+        vars: {
+          GOOS: darwin,
+          GOARCH: arm64
+        }
+      - task: package_gui_client
         vars: {
           GOOS: darwin,
           GOARCH: arm64

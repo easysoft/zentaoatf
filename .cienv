@@ -1,0 +1,2 @@
+QINIU_DIR=.release/qiniu
+QINIU_DIST_DIR=.release/qiniu/dist
