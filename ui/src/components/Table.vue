@@ -22,7 +22,7 @@
                 />
               </div>
             </th>
-            <th v-for="(col, index) in columns"
+            <th v-for="(col, index) in columns as any[]"
                 class="z-thead-th"
                 :class="col.headerClasses"
                 :key="index"
@@ -58,7 +58,7 @@
                          class="z-tbody-checkbox"
                          :ref="
                         (el) => {
-                          rowCheckbox[i] = el;
+                          (rowCheckbox as any[])[i] = el;
                         }
                       "
                          :value="row[setting.keyColumn]"
@@ -66,7 +66,7 @@
                          @click="checked"/>
                 </div>
               </td>
-              <td v-for="(col, j) in columns"
+              <td v-for="(col, j) in columns as any[]"
                   :key="j"
                   class="z-tbody-td"
                   :class="col.columnClasses"
@@ -82,7 +82,7 @@
             </tr>
           </template>
             <template v-else>
-            <tr v-for="(row, i) in rows"
+            <tr v-for="(row, i) in rows as any[]"
                 :key="i"
                 class="z-tbody-tr"
                 :class="typeof rowClasses === 'function' ? rowClasses(row) : rowClasses"
@@ -93,7 +93,7 @@
                          class="z-tbody-checkbox"
                          :ref="
                         (el) => {
-                          rowCheckbox[i] = el;
+                          (rowCheckbox as any[])[i] = el;
                         }
                       "
                          :value="row[setting.keyColumn]"
@@ -101,7 +101,7 @@
                          @click="checked"/>
                 </div>
               </td>
-              <td v-for="(col, j) in columns"
+              <td v-for="(col, j) in columns as any[]"
                   :key="j"
                   class="z-tbody-td"
                   :class="col.columnClasses"
@@ -132,7 +132,7 @@
         <div class="z-paging-change-div">
           <span class="z-paging-count-label">{{ info.pageSizeChangeLabel }}&nbsp;</span>
           <select class="z-paging-count-dropdown" v-model="setting.pageSize">
-            <option v-for="pageOption in pageOptions"
+            <option v-for="pageOption in pageOptions as any[]"
                     :value="pageOption.value"
                     :key="pageOption.value">
               {{ pageOption.text }}
@@ -141,7 +141,7 @@
 
           <span class="z-paging-page-label">{{ info.gotoPageLabel }}&nbsp;</span>
           <select class="z-paging-page-dropdown" v-model="setting.page">
-            <option v-for="n in setting.maxPage" :key="n" :value="parseInt(n)">
+            <option v-for="n in setting.maxPage" :key="n" :value="parseInt(n as unknown as string)">
               {{ n }}
             </option>
           </select>
@@ -529,7 +529,7 @@ export default defineComponent({
     //
 
     // 定義Checkbox參照 (Define Checkbox reference)
-    const rowCheckbox = ref([]);
+    const rowCheckbox = ref<any[]>([]);
     if (props.hasCheckbox) {
       /**
        * Execute before re-rendering

@@ -16,7 +16,7 @@
         <div class="select">
           <select name="module" v-model="modelRef.module">
             <option value=""></option>
-            <option v-for="item in modules" :key="item.code" :value="item.code+''">
+            <option v-for="item in modules as any[]" :key="item.code" :value="item.code+''">
               {{ item.name }}
             </option>
           </select>
@@ -27,7 +27,7 @@
         <div class="select">
           <select name="type" v-model="modelRef.type">
             <option value=""></option>
-            <option v-for="item in types" :key="item.code" :value="item.code+''">
+            <option v-for="item in types as any[]" :key="item.code" :value="item.code+''">
               {{ item.name }}
             </option>
           </select>
@@ -38,7 +38,7 @@
         <div class="select">
           <select name="openedBuild" v-model="modelRef.openedBuild">
             <option value=""></option>
-            <option v-for="item in builds" :key="item.code" :value="item.code+''">
+            <option v-for="item in builds as any[]" :key="item.code" :value="item.code+''">
               {{ item.name }}
             </option>
           </select>
@@ -48,7 +48,7 @@
       <FormItem name="severity" :label="t('severity')">
         <div class="select">
           <select name="severity" v-model="modelRef.severity">
-            <option v-for="item in severities" :key="item.code" :value="item.code+''">
+            <option v-for="item in severities as any[]" :key="item.code" :value="item.code+''">
               {{ item.name }}
             </option>
           </select>
@@ -58,7 +58,7 @@
       <FormItem name="priority" :label="t('priority')">
         <div class="select">
           <select name="priority" v-model="modelRef.pri">
-            <option v-for="item in priorities" :key="item.code" :value="item.code+''">
+            <option v-for="item in priorities as any[]" :key="item.code" :value="item.code+''">
               {{ item.name }}
             </option>
           </select>

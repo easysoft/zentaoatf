@@ -27,7 +27,7 @@
         :checkedTab="filerType"
         :checkedKey="filerType == oldFilerType ? oldFilerValue : ''"
         keyName="value"
-        @click="onFilterValueChanged"
+        @click="onFilterValueChanged as any"
         :hideOnClickMenu="true"
         :replace-fields="replaceFields"
         triggerEvent="click">
@@ -164,9 +164,9 @@ const genCheckedCaseIds = () => {
     if(selectedNodes.value[key] === true){
         const caseId = treeDataMap.value[key].caseId;
         if(
-            caseId > 0 && 
-            bugMap.value[caseId] != undefined && 
-            bugMap.value[caseId].length > 0 && 
+            caseId > 0 &&
+            bugMap.value[caseId] != undefined &&
+            bugMap.value[caseId].length > 0 &&
             checkedCaseIds.value.indexOf(caseId) === -1
         ){
             checkedCaseIds.value.push(caseId)
@@ -293,7 +293,7 @@ const loadScripts = async () => {
   store.dispatch('Script/listScript', params)
 }
 
-const workDirRef = ref<{toggleCheckable: () => void, isCheckable: boolean, toggleAllCollapsed: () => void, isAllCollapsed: boolean}>();
+const workDirRef = ref<{toggleCheckable: () => void, isCheckable: boolean, toggleAllCollapsed: () => void, isAllCollapsed: boolean, loadScripts: () => void}>();
 
 const showModal = ref(false)
 const modalClose = () => {
@@ -306,7 +306,7 @@ const createWorkSpace = (formData) => {
             formWorkspace.value.clearFormData()
             notification.success({message: t('save_success')});
             showModal.value = false;
-            workDirRef.value.loadScripts()
+            workDirRef.value!.loadScripts()
         }
     })
 };

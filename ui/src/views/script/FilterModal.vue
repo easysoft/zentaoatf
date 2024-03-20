@@ -10,10 +10,10 @@
         <div ref="titsRef" class="tab-header" layout="row" layout-wrap>
           <div
             ref="tabRef"
-            v-for="(item, index) in tabs"
+            v-for="(item, index) in tabs as any[]"
             :class="[{ active: activeKey == item.key }, 'tab-nav']"
             :key="item.key"
-            @click="onTabClick($event, item, index)"
+            @click="onTabClick($event, item)"
           >
             {{ item.title }}
           </div>
@@ -102,7 +102,7 @@ function _toggle(show?: boolean) {
   state.show = show;
   state.showed = false;
   if (show) {
-    showTimerRef.value = setTimeout(() => {
+    showTimerRef.value = window.setTimeout(() => {
       state.showed = true;
       showTimerRef.value = 0;
     }, 100);
@@ -255,7 +255,7 @@ onMounted(() => {
 });
 
 const activeKey = computed(() => props.checkedTab);
-const tabRef = ref(null);
+const tabRef = ref<any>(null);
 const onTabClick = (_event, tab) => {
   emit("tabChanged", tab);
 };

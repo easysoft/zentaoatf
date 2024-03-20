@@ -62,7 +62,7 @@ const cancel = () => {
   emit("cancel", {});
 };
 
-const modelRef = ref({name:'', path:''});
+const modelRef = ref<any>({name:'', path:''});
 const rulesRef = ref({
   name: [{ required: true, msg: t("pls_name") }],
 });

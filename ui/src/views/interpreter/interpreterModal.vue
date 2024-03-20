@@ -98,7 +98,7 @@ const momentUtc = momentUtcDef;
 
 const interpreters = ref<any>([]);
 
-const editInfo = ref({});
+const editInfo = ref({} as any);
 
 onMounted(() => {
   console.log("onMounted");
@@ -153,7 +153,7 @@ const setColumns = () => {
 setColumns();
 
 const showCreateInterpreterModal = ref(false);
-    
+
 let languageMap = ref<any>({});
 const getInterpretersA = async () => {
   const data = await getLangSettings(props.proxyInfo.path);

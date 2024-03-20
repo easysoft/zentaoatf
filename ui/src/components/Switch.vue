@@ -19,7 +19,7 @@ const props = defineProps({
     modelValue: {
         type: [Number, String, Boolean],
     },
-    trueValue: { 
+    trueValue: {
         type: [Number, String, Boolean],
         default: true,
     },
@@ -38,7 +38,7 @@ const props = defineProps({
 })
 const emits = defineEmits(['update:modelValue', 'change'])
 
-const input = ref(null)
+const input = ref<any>(null)
 const checked = computed(() => {
     return props.modelValue === props.trueValue
 })

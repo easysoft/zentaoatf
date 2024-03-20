@@ -39,14 +39,14 @@ const buttonPropsList = computed(() => {
         return null;
     }
     return props.buttons.map((x, i) => {
-        let item: (ButtonProps | Record<string, any>) & {key: string | number | symbol};
+        let item: (ButtonProps | Record<string, any>) & {key: string | number | symbol, hintI18n: string};
 
         if (props.replaceFields && Button.props) {
             item = Object.keys(Button.props).reduce((item2, propName) => {
                 const replacePropName = props.replaceFields ? props.replaceFields[propName] : null;
               item2[propName] = x[typeof replacePropName === 'string' ? replacePropName : propName];
                 return item2;
-            }, {key: x.key !== undefined ? x.key : i});
+            }, {key: x.key !== undefined ? x.key : i}) as typeof item;
         } else {
             item = {
                 key: i,

@@ -88,8 +88,8 @@ const editorChange = (newScriptCode) => {
     store.dispatch('Script/updateCurrentCodeChanged', changed)
 }
 
-const save = (item) => {
-  if(item.path.indexOf(currentScript.value.path) == -1 ){
+const save = (item?: any) => {
+  if(item?.path.indexOf(currentScript.value.path) == -1 ){
     return;
   }
   const code = editorRef.value?.getValue()
@@ -116,7 +116,7 @@ onMounted(() => {
       return vftEle.style.display != 'none';
     });
     if(isFocus > -1){
-        return 
+        return
     }
     if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)){
         e.preventDefault();

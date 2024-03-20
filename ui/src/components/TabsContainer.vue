@@ -180,7 +180,7 @@ function _handleNavClose(item) {
   store.dispatch('tabs/close', item);
 }
 
-if (process.env?.NODE_ENV === 'development') {
+if (import.meta.env.DEV) {
   onMounted(() => {
     Object.assign(window, {
       $openPage: (tab: string | PageTab): void => {

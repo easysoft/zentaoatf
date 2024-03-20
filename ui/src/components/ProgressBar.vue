@@ -10,7 +10,7 @@
       <span v-if="showProgress && progress">{{progress}}</span>
     </div>
     <div v-if="label" class="progress-label">
-      <span :class="labelClass" :style="labelStyle">
+      <span :class="labelClass" :style="labelStyle as any">
         {{label === true ? `${progressList[0]}%` : label}}
       </span>
     </div>

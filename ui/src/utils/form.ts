@@ -5,7 +5,7 @@ export function useForm(modelRef, rulesRef) {
   console.log('useForm', modelRef.value)
 
   const initialModel = cloneDeep(unref(modelRef));
-  const validateInfos = ref({})
+  const validateInfos = ref({} as any)
 
   const rules = unref(rulesRef)
   const ruleKeys = unref(Object.keys(rules))
@@ -80,4 +80,3 @@ export function checkRegex(key, item, model, errMap) :any {
   if (!pass) errMap[type].push(item.msg)
   return pass;
 }
-

@@ -41,7 +41,7 @@ const router = createRouter({
   scrollBehavior(/* to, from, savedPosition */) {
     return { top: 0 }
   },
-  history: createWebHashHistory(process.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: routes,
 });
 

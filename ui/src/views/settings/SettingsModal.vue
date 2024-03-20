@@ -117,7 +117,7 @@
 
     <InterpreterModal
       v-if="showInterpreterModal"
-      :proxyInfo="currentProxy.value" 
+      :proxyInfo="currentProxy.value"
       @cancel="interpreterModalClose"
       :showOkBtn="false"
       :showCancelBtn="false"
@@ -170,9 +170,9 @@ const momentUtc = momentUtcDef;
 
 const remoteServers = ref<any>([]);
 
-const editInfo = ref({});
-const editProxyInfo = ref({});
-const editServerInfo = ref({});
+const editInfo = ref({} as any);
+const editProxyInfo = ref({} as any);
+const editServerInfo = ref({} as any);
 
 onMounted(() => {
   console.log("onMounted");

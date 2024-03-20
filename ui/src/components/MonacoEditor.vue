@@ -95,7 +95,7 @@ onMounted(() => {
 
         emit('editorDidMount', editor);
         setTimeout(() => {
-            editor.getAction('editor.action.formatDocument').run();
+            editor.getAction('editor.action.formatDocument')?.run();
         }, 100);
     }
 });

@@ -94,7 +94,7 @@ function _toggle(show?: boolean) {
   state.show = show;
   state.showed = false;
   if (show) {
-    showTimerRef.value = setTimeout(() => {
+    showTimerRef.value = window.setTimeout(() => {
       state.showed = true;
       showTimerRef.value = 0;
     }, 100);

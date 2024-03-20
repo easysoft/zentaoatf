@@ -62,7 +62,7 @@ const workspaceId = computed<any>(() => props.tab.data.workspaceId)
 const workspaceType = computed<any>(() => props.tab.data.workspaceType)
 
 const modelRef = ref({} as any)
-const isRunning = ref(false)
+const isRunning = ref('false')
 
 const histories = ref([] as any[])
 const historyIndex = ref(0)

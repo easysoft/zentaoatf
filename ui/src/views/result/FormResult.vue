@@ -12,7 +12,7 @@
         <div class="select">
           <select name="taskId" v-model="modelRef.taskId">
             <option value="0"></option>
-            <option v-for="item in tasks" :key="item.id" :value="item.id">
+            <option v-for="item in tasks as any[]" :key="item.id" :value="item.id">
               {{ item.name }}
             </option>
           </select>
@@ -58,7 +58,7 @@ const store = useStore<{ Zentao: ZentaoData }>();
 const currProduct = computed<any>(() => store.state.Zentao.currProduct);
 
 const modelRef = ref({taskId: 0} as any);
-const rulesRef = ref({});
+const rulesRef = ref({} as any);
 
 let tasks = ref([])
 const listTask = () => {

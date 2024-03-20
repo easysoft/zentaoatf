@@ -9,7 +9,7 @@
   >
     <Form class="form-interpreter">
       <FormItem
-        v-if="props.proxyId > 0"
+        v-if="props.proxyId! > 0"
         labelWidth="100px"
         name="proxy_id"
         :label="t('copy_from')"
@@ -79,7 +79,7 @@
             {{ t("find_to_select", { num: interpreterInfos.length }) }}
           </option>
           <option
-            v-for="item in interpreterInfos"
+            v-for="item in interpreterInfos as any[]"
             :key="item.path"
             :value="item.path"
           >

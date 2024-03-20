@@ -297,7 +297,7 @@ const closeResultForm = () => {
 
 // 提交缺陷
 const showSubmitBugModal = ref(false)
-const bugFormData = ref({})
+const bugFormData = ref({} as any)
 const openBugForm = (cs) => {
   console.log("openBugForm");
 

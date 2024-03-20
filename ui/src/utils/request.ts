@@ -37,7 +37,7 @@ const serverCodeMessage: {[key: number]: string} = {
  * 配置request请求时的默认参数
  */
 const request = axios.create({
-    baseURL: process.env.VUE_APP_APIHOST, // url = api url + request url
+    baseURL: import.meta.env.VUE_APP_APIHOST, // url = api url + request url
     withCredentials: true, // 当跨域请求时发送cookie
     timeout: 0 // 请求超时时间,5000(单位毫秒) / 0 不做限制
 });
@@ -71,14 +71,14 @@ request.interceptors.request.use(
         // }
         let serverURL = await getCache(settings.currServerURL);
         if(!serverURL || serverURL == 'local' || config.url== undefined || config.url.indexOf('/servers') > -1) {
-            serverURL = process.env.VUE_APP_APIHOST;
+            serverURL = import.meta.env.VUE_APP_APIHOST;
         }else{
             serverURL = String(serverURL) + 'api/v1'
         }
         if(config.params.proxyPath != undefined && config.params.proxyPath != 'local') {
             serverURL = String(config.params.proxyPath) + 'api/v1'
         }else if(config.params.proxyPath == 'local'){
-            serverURL = process.env.VUE_APP_APIHOST;
+            serverURL = import.meta.env.VUE_APP_APIHOST;
         }
         config.baseURL = serverURL;
         console.log('=== request ===', config.url, config)

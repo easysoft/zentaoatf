@@ -151,7 +151,7 @@ const TabsModel: TabsModuleType = {
             }
 
             let lastTab: PageTab | undefined;
-            Object.values(state.map).forEach(tab => {
+            Object.values(state.map).forEach((tab: any) => {
                 if (payload && payload.exceptID === tab.id) {
                     return;
                 }

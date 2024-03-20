@@ -83,99 +83,88 @@ export const setLocale = (lang: string, callback: () => void, realReload = true)
 export function importAllLocales(): LocaleMessages<VueMessageType> {
     const modules: any = {};
     try {
-        // 导入 @/views 下文件，包含子目录，文件名为：[/\\]locales[/\\]([a-z]{2})-?([A-Z]{2})?\.ts
-        const viewsRequireContext: __WebpackModuleApi.RequireContext = require.context('../views', true, /[/\\]locales[/\\]([a-z]{2})-?([A-Z]{2})?\.ts$/);
-        viewsRequireContext.keys().forEach(fileName => {
-            // 获取内容
-            const modulesConent = viewsRequireContext(fileName);
-            if(modulesConent.default) {
-                // 获取 PascalCase 命名
-                const modulesName = fileName.replace(/(.*\/)*([^.]+).*/ig,"$2");
-
-                if(modules[modulesName]) {
-                    modules[modulesName] = {
-                        ...modules[modulesName],
-                        ...modulesConent.default
+        const viewsRequireContext = import.meta.glob('../views/**/locales/*.ts', {eager: true});
+        for (const path in viewsRequireContext) {
+            if (viewsRequireContext.hasOwnProperty(path)) {
+                const modulesConent = viewsRequireContext[path] as any;
+                if (modulesConent.default) {
+                    const modulesName = path.match(/\/([^/]+)\/locales/)?.[1];
+                    if (modulesName) {
+                        if (modules[modulesName]) {
+                            modules[modulesName] = {
+                                ...modules[modulesName],
+                                ...modulesConent.default
+                            };
+                        } else {
+                            modules[modulesName] = modulesConent.default;
+                        }
                     }
-                } else {
-                    modules[modulesName] = modulesConent.default;
                 }
-
             }
+        }
 
-        });
-
-        // 导入 @/layouts 下文件，包含子目录，文件名为：[/\\]locales[/\\]([a-z]{2})-?([A-Z]{2})?\.ts
-        const layoutsRequireContext: __WebpackModuleApi.RequireContext = require.context('../layouts', true, /[/\\]locales[/\\]([a-z]{2})-?([A-Z]{2})?\.ts$/);
-        layoutsRequireContext.keys().forEach(fileName => {
-            // 获取内容
-            const modulesConent = layoutsRequireContext(fileName);
-            if(modulesConent.default) {
-                // 获取 PascalCase 命名
-                const modulesName = fileName.replace(/(.*\/)*([^.]+).*/ig,"$2");
-
-                if(modules[modulesName]) {
-                    modules[modulesName] = {
-                        ...modules[modulesName],
-                        ...modulesConent.default
+        const layoutsRequireContext = import.meta.glob('../layouts/**/locales/*.ts', {eager: true});
+        for (const path in layoutsRequireContext) {
+            if (layoutsRequireContext.hasOwnProperty(path)) {
+                const modulesConent = layoutsRequireContext[path] as any;
+                if (modulesConent.default) {
+                    const modulesName = path.match(/\/([^/]+)\/locales/)?.[1];
+                    if (modulesName) {
+                        if (modules[modulesName]) {
+                            modules[modulesName] = {
+                                ...modules[modulesName],
+                                ...modulesConent.default
+                            };
+                        } else {
+                            modules[modulesName] = modulesConent.default;
+                        }
                     }
-                } else {
-                    modules[modulesName] = modulesConent.default;
                 }
-
             }
+        }
 
-        });
-
-        // 导入 @/components 下文件，包含子目录，文件名为：[/\\]locales[/\\]([a-z]{2})-?([A-Z]{2})?\.ts
-        const componentsRequireContext: __WebpackModuleApi.RequireContext = require.context('../components', true, /[/\\]locales[/\\]([a-z]{2})-?([A-Z]{2})?\.ts$/);
-        componentsRequireContext.keys().forEach(fileName => {
-            // 获取内容
-            const modulesConent = componentsRequireContext(fileName);
-            if(modulesConent.default) {
-                // 获取 PascalCase 命名
-                const modulesName = fileName.replace(/(.*\/)*([^.]+).*/ig,"$2");
-
-                if(modules[modulesName]) {
-                    modules[modulesName] = {
-                        ...modules[modulesName],
-                        ...modulesConent.default
+        const componentsRequireContext = import.meta.glob('../components/**/locales/*.ts', {eager: true});
+        for (const path in componentsRequireContext) {
+            if (componentsRequireContext.hasOwnProperty(path)) {
+                const modulesConent = componentsRequireContext[path] as any;
+                if (modulesConent.default) {
+                    const modulesName = path.match(/\/([^/]+)\/locales/)?.[1];
+                    if (modulesName) {
+                        if (modules[modulesName]) {
+                            modules[modulesName] = {
+                                ...modules[modulesName],
+                                ...modulesConent.default
+                            };
+                        } else {
+                            modules[modulesName] = modulesConent.default;
+                        }
                     }
-                } else {
-                    modules[modulesName] = modulesConent.default;
                 }
-
             }
+        }
 
-        });
-
-        // 导入 @/locales 下文件，不包含子目录，文件名为：([a-z]{2})-?([A-Z]{2})?\.ts
-        const localesRequireContext: __WebpackModuleApi.RequireContext = require.context('../locales', false, /([a-z]{2})-?([A-Z]{2})?\.ts$/);
-        localesRequireContext.keys().forEach(fileName => {
-            // 获取内容
-            const modulesConent = localesRequireContext(fileName);
-            if(modulesConent.default) {
-                // 获取 PascalCase 命名
-                const modulesName = fileName.replace(/(.*\/)*([^.]+).*/ig,"$2");
-                if(modules[modulesName]) {
-                    modules[modulesName] = {
-                        ...modules[modulesName],
-                        ...modulesConent.default
+        const localesRequireContext = import.meta.glob('../locales/*.ts', {eager: true});
+        for (const path in localesRequireContext) {
+            if (localesRequireContext.hasOwnProperty(path)) {
+                const modulesConent = localesRequireContext[path] as any;
+                if (modulesConent.default) {
+                    const modulesName = path.match(/\/([^/]+)\.ts$/)?.[1];
+                    if (modulesName) {
+                        if (modules[modulesName]) {
+                            modules[modulesName] = {
+                                ...modules[modulesName],
+                                ...modulesConent.default
+                            };
+                        } else {
+                            modules[modulesName] = modulesConent.default;
+                        }
                     }
-                } else {
-                    modules[modulesName] = modulesConent.default;
                 }
-
             }
-
-        });
-
-
+        }
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
+        console.log(error);
     }
 
     return modules;
 }
-

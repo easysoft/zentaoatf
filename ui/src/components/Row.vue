@@ -21,9 +21,9 @@ provide('gutter', gutter);
 const rowStyle = computed(() => {
   const style: Record<string, any> = {};
 
-  if (gutter.value > 0) { // move whole row
-    style.marginLeft = gutter.value / -2 + 'px';
-    style.marginRight = gutter.value / -2 + 'px';
+  if (gutter.value! > 0) { // move whole row
+    style.marginLeft = gutter.value! / -2 + 'px';
+    style.marginRight = gutter.value! / -2 + 'px';
   }
 
   return style

@@ -3,7 +3,7 @@
     <div
       class="dropdown-toggle"
       :class="toggleClass"
-      :style="toggleStyle"
+      :style="toggleStyle as any"
     >
       <slot />
     </div>

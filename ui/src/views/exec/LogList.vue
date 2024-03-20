@@ -1,26 +1,23 @@
 <template>
   <div id="log-list" class="log-list scrollbar-y">
     <pre id="content" class="content">
-      <template v-for="(item, index) in wsMsg.out" :key="index">
-        {{ void (info = item.info) }}
-        {{ void (csKey = info?.key) }}
-
+      <template v-for="(item, index) in (wsMsg.out as any[])" :key="index">
         <code class="item small"
              :class="[
-                 csKey && caseDetail[csKey] ? 'show-detail' : '',
+                 item.key && caseDetail[item.key] ? 'show-detail' : '',
 
-                 csKey ? 'case-item' : '',
-                 info?.status === 'start' ? 'case-start' : '',
-                 info?.status === 'start' ? 'result-'+caseResult[csKey] : '',
+                 item.key ? 'case-item' : '',
+                 item.info?.status === 'start' ? 'case-start' : '',
+                 item.info?.status === 'start' ? 'result-'+caseResult[item.key] : '',
 
-                 info?.status === 'start-task' ? 'strong' : ''
+                 item.info?.status === 'start-task' ? 'strong' : ''
              ]">
 
           <div class="group">
-            <template v-if="info?.status === 'start'">
+            <template v-if="item.info?.status === 'start'">
               <span id="show-detail" @click="showDetail(item.info?.key)" class="link state center">
-                <Icon v-if="!caseDetail[csKey]" icon="chevron-right" />
-                <Icon v-if="caseDetail[csKey]" icon="chevron-down" />
+                <Icon v-if="!caseDetail[item.key]" icon="chevron-right" />
+                <Icon v-if="caseDetail[item.key]" icon="chevron-down" />
               </span>
             </template>
           </div>
@@ -35,8 +32,8 @@
           </div>
           <div class="msg-span">
             <span v-html="item.msg"></span>
-            <span v-if="info?.status === 'start' && caseResult[csKey]">
-              [ {{ t(caseResult[csKey]) }} ]
+            <span v-if="item.info?.status === 'start' && caseResult[item.key]">
+              [ {{ t(caseResult[item.key]) }} ]
             </span>
           </div>
         </code>
@@ -83,11 +80,11 @@ const currentWorkspace = ref({} as any);
 const defaultProxy = computed<any>(() => store.state.proxy.currProxy);
 const currProxy = ref({} as any);
 
-const cachedExecData = ref({})
+const cachedExecData = ref({} as any)
 const caseCount = ref(1)
-const caseResult = ref({})
-const caseDetail = ref({})
-const realPathMap = ref({})
+const caseResult = ref({} as any)
+const caseDetail = ref({} as any)
+const realPathMap = ref({} as any)
 const lastWsMsg = ref('')
 
 // websocket
@@ -157,7 +154,7 @@ const onWebsocketMsgEvent = async (data: any) => {
   Object.keys(realPathMap.value).forEach(key => {
     item.msg = item.msg.replace(key, realPathMap.value[key])
   })
-  
+
   if(item.info?.logDir != undefined && currentWorkspace.value.type == 'ztf'){
     updateStatisticInfo(item.info.logDir)
   }
