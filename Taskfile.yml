@@ -59,9 +59,9 @@ tasks:
     desc: Build the server
     run: once
     cmds:
-      - GOOS={{.GOOS}} GOARCH={{.GOARCH}} go build -ldflags "{{.LDFLAGS}}" -o {{.BUILD_DIR}}/{{.GOOS}}/{{.GOARCH}}/zt-server{{if eq .GOOS "windows"}}.exe{{end}} cmd/server/main.go
+      - GOOS={{.GOOS}} GOARCH={{.GOARCH}} go build -ldflags "{{.LDFLAGS}}" -o {{.BUILD_DIR}}/{{.GOOS}}/{{.GOARCH}}/ztf-server{{if eq .GOOS "windows"}}.exe{{end}} cmd/server/main.go
     status:
-      - test -f {{.BUILD_DIR}}/{{.GOOS}}/{{.GOARCH}}/zt-server{{if eq .GOOS "windows"}}.exe{{end}}
+      - test -f {{.BUILD_DIR}}/{{.GOOS}}/{{.GOARCH}}/ztf-server{{if eq .GOOS "windows"}}.exe{{end}}
 
   package_gui_client:
     desc: start package gui
@@ -72,8 +72,11 @@ tasks:
 
   build_cli:
     desc: Build the CLI
+    run: once
     cmds:
-      - echo "Packaging the GUI for {{.GOOS}} {{.GOARCH}}"
+      - GOOS={{.GOOS}} GOARCH={{.GOARCH}} go build -ldflags "{{.LDFLAGS}}" -o {{.BUILD_DIR}}/{{.GOOS}}/{{.GOARCH}}/ztf{{if eq .GOOS "windows"}}.exe{{end}} cmd/command/main.go
+    status:
+      - test -f {{.BUILD_DIR}}/{{.GOOS}}/{{.GOARCH}}/ztf{{if eq .GOOS "windows"}}.exe{{end}}
 
   default:
     cmds:
@@ -84,6 +87,11 @@ tasks:
           GOARCH: arm64
         }
       - task: package_gui_client
+        vars: {
+          GOOS: darwin,
+          GOARCH: arm64
+        }
+      - task: build_cli
         vars: {
           GOOS: darwin,
           GOARCH: arm64
