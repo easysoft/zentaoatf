@@ -42,7 +42,7 @@ tasks:
     dir: ui
     cmds:
       - yarn install
-      - yarn build --dest ../client/ui
+      - yarn build
 
   prepare:
     desc: start prepare res

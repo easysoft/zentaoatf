@@ -12,5 +12,8 @@ export default defineConfig({
     },
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.less'],
   },
+  build: {
+    outDir: '../client/ui',
+  },
   plugins: [vue()],
 })
