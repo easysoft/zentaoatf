@@ -38,6 +38,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '18'
+      - name: install global dependencies
+        run: |
+          npm install -g yarn
+          npm install -g electron-forge
       - name: install task
         run: |
           echo "install task"
