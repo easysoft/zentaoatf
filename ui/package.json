@@ -14,7 +14,7 @@
     "@iconify/vue": "^3.2.1",
     "@intlify/core-base": "^9.10.2",
     "@vueuse/core": "^10.9.0",
-    "axios": "^0.21.4",
+    "axios": "^1.6.8",
     "localforage": "^1.10.0",
     "lodash-es": "^4.17.21",
     "lodash.debounce": "^4.0.8",
