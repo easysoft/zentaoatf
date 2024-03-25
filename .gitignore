@@ -85,3 +85,4 @@ test/demo/php/log/
 test/ui/allure-results/
 test/log/
 test/demo/php/conf/ztf.conf
+_output
