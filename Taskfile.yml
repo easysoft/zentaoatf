@@ -68,6 +68,7 @@ tasks:
     run: once
     dir: client
     cmds:
+      - npm install
       - npm run package-{{.GOOS}}-{{.GOARCH}}
 
   build_cli:
