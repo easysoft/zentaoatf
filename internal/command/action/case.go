@@ -6,6 +6,7 @@ import (
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stdinUtils "github.com/easysoft/zentaoatf/pkg/lib/stdin"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 )
@@ -37,5 +38,10 @@ func Checkout(productId, moduleId, suiteId, taskId string, independentFile bool,
 
 	config := configHelper.LoadByWorkspacePath(commConsts.ZtfDir)
 
-	zentaoHelper.Checkout(settings, config, commConsts.WorkDir)
+	_, err := zentaoHelper.Checkout(settings, config, commConsts.WorkDir)
+	if err != nil {
+		logUtils.Errorf("checkout failed: %v", err)
+		return
+	}
+	logUtils.Info("checkout success")
 }

@@ -40,7 +40,7 @@ const (
 	PluginDir      = "plugin"
 	DownloadDir    = "download"
 	BinDir         = "bin"
-	ZapDownloadUrl = "https://dl.cnezsoft.com/ztf/plugin/zap/zap-%s.zip"
+	ZapDownloadUrl = "https://dl.zentao.net/ztf/plugin/zap/zap-%s.zip"
 )
 
 var (

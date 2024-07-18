@@ -1,9 +1,11 @@
 package zentaoHelper
 
 import (
+	"errors"
 	"fmt"
 	"path/filepath"
 
+	"github.com/davecgh/go-spew/spew"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
@@ -32,7 +34,7 @@ func Checkout(settings commDomain.SyncSettings, config commDomain.WorkspaceConf,
 	if !ok {
 		return
 	}
-
+	spew.Dump(settings)
 	cases := make([]commDomain.ZtfCase, 0)
 	if caseId != 0 {
 		cs, err := GetTestCaseDetail(caseId, config)
@@ -50,7 +52,8 @@ func Checkout(settings commDomain.SyncSettings, config commDomain.WorkspaceConf,
 		return
 	}
 
-	if cases == nil || len(cases) == 0 {
+	if len(cases) == 0 {
+		err = errors.New("no_cases_found")
 		return
 	}
 

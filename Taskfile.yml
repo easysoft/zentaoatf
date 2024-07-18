@@ -73,11 +73,11 @@ tasks:
 
   build_cli:
     desc: Build the CLI
-    run: once
+    # run: once
     cmds:
       - GOOS={{.GOOS}} GOARCH={{.GOARCH}} go build -ldflags "{{.LDFLAGS}}" -o {{.BUILD_DIR}}/{{.GOOS}}/{{.GOARCH}}/ztf{{if eq .GOOS "windows"}}.exe{{end}} cmd/command/main.go
-    status:
-      - test -f {{.BUILD_DIR}}/{{.GOOS}}/{{.GOARCH}}/ztf{{if eq .GOOS "windows"}}.exe{{end}}
+    # status:
+    #   - test -f {{.BUILD_DIR}}/{{.GOOS}}/{{.GOARCH}}/ztf{{if eq .GOOS "windows"}}.exe{{end}}
 
   zip:
     desc: zip
@@ -90,19 +90,24 @@ tasks:
 
   default:
     cmds:
-      - task: prepare
-      - task: build_server
-        vars: {
-          GOOS: darwin,
-          GOARCH: arm64
-        }
-      - task: package_gui_client
-        vars: {
-          GOOS: darwin,
-          GOARCH: arm64
-        }
+      # - task: prepare
+      # - task: build_server
+      #   vars: {
+      #     GOOS: darwin,
+      #     GOARCH: arm64
+      #   }
+      # - task: package_gui_client
+      #   vars: {
+      #     GOOS: darwin,
+      #     GOARCH: arm64
+      #   }
+      # - task: build_cli
+      #   vars: {
+      #     GOOS: darwin,
+      #     GOARCH: arm64
+      #   }
       - task: build_cli
         vars: {
-          GOOS: darwin,
-          GOARCH: arm64
+          GOOS: linux,
+          GOARCH: amd64
         }

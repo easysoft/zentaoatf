@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/davecgh/go-spew/spew"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 
 	"github.com/fatih/color"
@@ -144,7 +145,7 @@ func GetCaseById(config commDomain.WorkspaceConf, caseId int) (cs commDomain.Ztf
 
 	uri := fmt.Sprintf("/testcases/%d", caseId)
 	url := GenApiUrl(uri, nil, config.Url)
-
+	logUtils.Infof("req url: %s", url)
 	bytes, err := httpUtils.Get(url)
 	if err != nil {
 		err = ZentaoRequestErr(err.Error())
@@ -610,17 +611,18 @@ func convertMap2Case(caseItem interface{}) (caseStruct commDomain.ZtfCaseInModul
 }
 
 func ListCaseByModule(baseUrl string, productId, moduleId int) (casesResp commDomain.ZtfRespTestCases, err error) {
-	uri := fmt.Sprintf("/products/%d/testcases?module=%d", productId, moduleId)
+	uri := fmt.Sprintf("/products/%d/testcases", productId)
 	url := GenApiUrl(uri, map[string]interface{}{
-		"limit": 10000,
+		"module": moduleId,
+		"limit":  10000,
 	}, baseUrl)
-
+	spew.Dump(url)
 	bytes, err := httpUtils.Get(url)
 	if err != nil {
 		err = ZentaoRequestErr(err.Error())
 		return
 	}
-
+	spew.Dump(string(bytes))
 	casesResp, err = parseCases(bytes)
 	if err != nil {
 		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
