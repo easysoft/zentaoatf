@@ -15,6 +15,7 @@ type ZentaoUserProfile struct {
 
 type ZentaoCaseStep struct {
 	Type   commConsts.CaseStepType `json:"type"`
+	Name   string                  `json:"name"`
 	Desc   string                  `json:"desc"`
 	Expect string                  `json:"expect"`
 }

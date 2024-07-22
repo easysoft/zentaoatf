@@ -50,6 +50,8 @@ func ReadTitleAndStepsInNewFormat(content, lang string) (caseId int, title strin
 
 	comments := strings.TrimSpace(getScriptComments(content, lang))
 	index := 0
+	groupName := 1
+	itemName := 1
 	titleLineStart := false
 	lines := strings.Split(comments, "\n")
 	for index < len(lines) {
@@ -84,6 +86,12 @@ func ReadTitleAndStepsInNewFormat(content, lang string) (caseId int, title strin
 		step.Type = commConsts.Group
 		if isChild {
 			step.Type = commConsts.Item
+			step.Name = fmt.Sprintf("%d.%d", groupName-1, itemName)
+			itemName += 1
+		} else {
+			step.Name = fmt.Sprintf("%d", groupName)
+			groupName += 1
+			itemName = 1
 		}
 
 		steps = append(steps, step)
