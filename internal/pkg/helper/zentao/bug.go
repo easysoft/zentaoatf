@@ -330,7 +330,7 @@ func generateCaseId(bugs []*commDomain.ZentaoBug, config commDomain.WorkspaceCon
 			}
 		}
 		if bug.Case == 0 {
-			caseInfo, _ := CreateCase(bug.Product, bug.Title, nil, serverDomain.TestScript{}, config)
+			caseInfo, _ := CreateCase(fmt.Sprintf("%v", bug.Product), bug.Title, nil, serverDomain.TestScript{}, config)
 			bug.Case = caseInfo.Id
 		}
 	}

@@ -7,7 +7,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/davecgh/go-spew/spew"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 
 	"github.com/fatih/color"
@@ -28,7 +27,7 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
-func CommitCase(caseId int, title string, steps []commDomain.ZentaoCaseStep, script serverDomain.TestScript,
+func CommitCase(productId string, caseId int, title string, steps []commDomain.ZentaoCaseStep, script serverDomain.TestScript,
 	config commDomain.WorkspaceConf, noNeedConfirm, withCode bool) (err error) {
 
 	if serverConfig.CONFIG.AuthToken == "" {
@@ -40,6 +39,15 @@ func CommitCase(caseId int, title string, steps []commDomain.ZentaoCaseStep, scr
 
 	_, err = GetCaseById(config, caseId)
 	if err != nil {
+		if !strings.Contains(err.Error(), "404") {
+			return
+		}
+		if len(productId) == 0 {
+			logUtils.Info("not found productId, like: pid=1")
+			return fmt.Errorf("not found productId, like: pid=1")
+		}
+		// 创建cases
+		_, err = CreateCase(productId, title, steps, script, config)
 		return
 	}
 
@@ -87,7 +95,7 @@ func CommitCase(caseId int, title string, steps []commDomain.ZentaoCaseStep, scr
 	return
 }
 
-func CreateCase(productId int, title string, steps []commDomain.ZentaoCaseStep, script serverDomain.TestScript,
+func CreateCase(productId, title string, steps []commDomain.ZentaoCaseStep, script serverDomain.TestScript,
 	config commDomain.WorkspaceConf) (cs commDomain.ZtfCase, err error) {
 
 	err = Login(config)
@@ -95,7 +103,7 @@ func CreateCase(productId int, title string, steps []commDomain.ZentaoCaseStep, 
 		return
 	}
 
-	uri := fmt.Sprintf("/products/%d/testcases", productId)
+	uri := fmt.Sprintf("/products/%v/testcases", productId)
 	url := GenApiUrl(uri, nil, config.Url)
 
 	requestObj := map[string]interface{}{
@@ -616,13 +624,11 @@ func ListCaseByModule(baseUrl string, productId, moduleId int) (casesResp commDo
 		"module": moduleId,
 		"limit":  10000,
 	}, baseUrl)
-	spew.Dump(url)
 	bytes, err := httpUtils.Get(url)
 	if err != nil {
 		err = ZentaoRequestErr(err.Error())
 		return
 	}
-	spew.Dump(string(bytes))
 	casesResp, err = parseCases(bytes)
 	if err != nil {
 		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)

@@ -11,12 +11,12 @@ import (
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 )
 
-func CheckIn(files []string, noNeedConfirm, withCode bool) {
+func CheckIn(productId string, files []string, noNeedConfirm, withCode bool) {
 	cases := scriptHelper.GetCaseByDirAndFile(files)
 
 	config := configHelper.LoadByWorkspacePath(commConsts.ZtfDir)
 
-	zentaoHelper.CheckIn(cases, config, noNeedConfirm, withCode)
+	zentaoHelper.CheckIn(productId, cases, config, noNeedConfirm, withCode)
 }
 
 func Checkout(productId, moduleId, suiteId, taskId string, independentFile bool, scriptLang string) {

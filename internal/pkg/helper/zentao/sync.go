@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/davecgh/go-spew/spew"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
@@ -34,7 +33,6 @@ func Checkout(settings commDomain.SyncSettings, config commDomain.WorkspaceConf,
 	if !ok {
 		return
 	}
-	spew.Dump(settings)
 	cases := make([]commDomain.ZtfCase, 0)
 	if caseId != 0 {
 		cs, err := GetTestCaseDetail(caseId, config)
@@ -72,16 +70,16 @@ func Checkout(settings commDomain.SyncSettings, config commDomain.WorkspaceConf,
 	return
 }
 
-func CheckIn(cases []string, config commDomain.WorkspaceConf, noNeedConfirm, withCode bool) (count int, err error) {
+func CheckIn(productId string, cases []string, config commDomain.WorkspaceConf, noNeedConfirm, withCode bool) (count int, err error) {
 	for _, cs := range cases {
-		pass, id, _, title, _ := scriptHelper.GetCaseInfo(cs)
+		pass, caseId, _, title, _ := scriptHelper.GetCaseInfo(cs)
 		if !pass {
 			continue
 		}
 
 		steps := scriptHelper.GetStepAndExpectMap(cs)
 		script, _ := scriptHelper.GetScriptContent(cs, -1)
-		err = CommitCase(id, title, steps, script, config, noNeedConfirm, withCode)
+		err = CommitCase(productId, caseId, title, steps, script, config, noNeedConfirm, withCode)
 
 		if err == nil {
 			count++

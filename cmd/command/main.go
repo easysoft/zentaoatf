@@ -168,7 +168,7 @@ func checkout() {
 func ci() {
 	files := fileUtils.GetFilesFromParams(os.Args[2:])
 	if err := flagSet.Parse(os.Args[len(files)+2:]); err == nil {
-		action.CheckIn(files, noNeedConfirm, withCode)
+		action.CheckIn(productId, files, noNeedConfirm, withCode)
 	}
 }
 

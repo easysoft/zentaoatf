@@ -2,8 +2,9 @@ package controller
 
 import (
 	"fmt"
-	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	"strings"
+
+	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
@@ -249,9 +250,9 @@ func (c *TestScriptCtrl) SyncFromZentao(ctx iris.Context) {
 
 func (c *TestScriptCtrl) SyncToZentao(ctx iris.Context) {
 	currSiteId, _ := ctx.URLParamInt("currSiteId")
-	currProductId, _ := ctx.URLParamInt("currProductId")
+	currProductId := ctx.URLParam("currProductId")
 
-	if currProductId == 0 {
+	if len(currProductId) == 0 {
 		ctx.JSON(c.ErrResp(commConsts.ParamErr, ""))
 		return
 	}
@@ -271,7 +272,7 @@ func (c *TestScriptCtrl) SyncToZentao(ctx iris.Context) {
 	for _, set := range sets {
 		totalNum += len(set.Cases)
 
-		count, _ := zentaoHelper.CheckIn(set.Cases, config, true, true)
+		count, _ := zentaoHelper.CheckIn(currProductId, set.Cases, config, true, true)
 
 		successNum += count
 	}
@@ -284,6 +285,7 @@ func (c *TestScriptCtrl) SyncToZentao(ctx iris.Context) {
 
 func (c *TestScriptCtrl) SyncDirToZentao(ctx iris.Context) {
 	dir := ctx.URLParam("dir")
+	productId := ctx.URLParam("productId")
 
 	cases := scriptHelper.GetCaseByDirAndFile([]string{dir})
 
@@ -291,7 +293,8 @@ func (c *TestScriptCtrl) SyncDirToZentao(ctx iris.Context) {
 		Url: serverConfig.CONFIG.Server,
 	}
 
-	zentaoHelper.CheckIn(cases, config, true, true)
+	// TODO 产品ID 新增
+	zentaoHelper.CheckIn(productId, cases, config, true, true)
 
 	return
 }
