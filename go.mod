@@ -24,7 +24,7 @@ require (
 	github.com/kataras/neffos v0.0.21
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/mattn/go-runewidth v0.0.15
-	github.com/mholt/archiver/v3 v3.5.0
+	github.com/mholt/archiver/v3 v3.5.1
 	github.com/otiai10/copy v1.14.0
 	github.com/ozontech/allure-go/pkg/allure v0.6.4
 	github.com/ozontech/allure-go/pkg/framework v0.6.18
