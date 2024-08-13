@@ -95,7 +95,7 @@ export async function getWebSocketApi (appApiHost): Promise<string> {
   const loc = window.location
   console.log(`${isProd}, ${loc.toString()}`)
   const serverUrl = await getServerUrl();
-  const apiHost = appApiHost && appApiHost != 'local' ? appApiHost + import.meta.env.VUE_APP_APISUFFIX : serverUrl
+  const apiHost = appApiHost && appApiHost != 'local' ? appApiHost + import.meta.env.VITE_APP_APISUFFIX : serverUrl
 
   const url = apiHost.replace('http', 'ws') + '/ws'
   console.log(`websocket url = ${url}`, appApiHost)
@@ -106,7 +106,7 @@ export async function getWebSocketApi (appApiHost): Promise<string> {
 export async function getServerUrl(): Promise<string>{
   let serverURL = await getCache(settings.currServerURL);
   if (!serverURL || serverURL == 'local') {
-    serverURL = import.meta.env.VUE_APP_APIHOST;
+    serverURL = import.meta.env.VITE_APP_APIHOST;
   } else {
     serverURL = String(serverURL) + 'api/v1';
   }
