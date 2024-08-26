@@ -132,6 +132,9 @@ func main() {
 	case "list", "ls", "-l":
 		list()
 
+	case "login":
+		login()
+
 	case "view", "-v":
 		view()
 
@@ -197,6 +200,12 @@ func list() {
 		}
 
 		action.List(files, keywords)
+	}
+}
+
+func login() {
+	if err := action.Login(); err != nil {
+		logUtils.ExecConsole(color.FgRed, i118Utils.Sprintf("login_fail"))
 	}
 }
 

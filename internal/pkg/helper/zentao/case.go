@@ -285,7 +285,11 @@ func LoadTestCaseSimple(productId, moduleId, suiteId, taskId int,
 func LoadTestCasesDetail(productId, moduleId, suiteId, taskId int,
 	config commDomain.WorkspaceConf) (cases []commDomain.ZtfCase, err error) {
 
-	casesResp, _ := LoadTestCaseSimple(productId, moduleId, suiteId, taskId, config)
+	casesResp, err := LoadTestCaseSimple(productId, moduleId, suiteId, taskId, config)
+
+	if err != nil {
+		return nil, err
+	}
 
 	for _, cs := range casesResp.Cases {
 		caseId := cs.Id

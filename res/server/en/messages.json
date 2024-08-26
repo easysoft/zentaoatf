@@ -371,7 +371,7 @@
     },
     {
       "id": "fail_to_request_zentao",
-      "translation": "Zentao request failed, return: %s."
+      "translation": "Zentao request failed, return: %s. If request 403, please precheck account permission by ztf login"
     },
     {
       "id": "exec_cmd_fail",
@@ -558,7 +558,14 @@
       "id": "help_exit",
       "translation": "CTRL+C: Exit"
     },
-
+    {
+      "id": "only_test_auth_login",
+      "translation": "Only test auth login."
+    },
+    {
+      "id": "login_fail",
+      "translation": "Login fail. Please Open Browser to login zentao test account."
+    },
     {
       "id": "success_to_clean_logs",
       "translation": "Successfully cleaned all logs."

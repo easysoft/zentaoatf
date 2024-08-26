@@ -361,7 +361,7 @@
     },
     {
       "id": "fail_to_request_zentao",
-      "translation": "禅道请求失败,返回：%s。"
+      "translation": "禅道请求失败,返回：%s。如果是403问题, 可以先用ztf login检测是否是权限问题"
     },
     {
       "id": "exec_cmd_fail",
@@ -554,6 +554,14 @@
     {
       "id": "help_exit",
       "translation": "CTRL+C: 退出"
+    },
+    {
+      "id": "only_test_auth_login",
+      "translation": "仅仅测试登录"
+    },
+    {
+      "id": "login_fail",
+      "translation": "测试登录失败, 请使用浏览器登录禅道确认是否有权限(如未禁用弱密码等)"
     },
     {
       "id": "success_to_clean_logs",
