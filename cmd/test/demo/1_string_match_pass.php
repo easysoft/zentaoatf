@@ -4,11 +4,10 @@
 
 title=check string matches pattern
 cid=1
-pid=1
 
-1. exactly match >> hello
-2. regular expression match >> `1\d{10}`
-3. format string match >> `%s%d`
+- 1. exactly match @ hello
+- 2. regular expression match @ `1\d{10}`
+- 3. format string match @ `%s%d`
 
 */
 

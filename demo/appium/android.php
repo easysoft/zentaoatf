@@ -3,10 +3,9 @@
 /**
 
 title=use ztf to run appium test
-cid=0
-pid=0
+cid=1
 
-1. check image element displayed attribute is >> true
+- 1. check image element displayed attribute is @ true
 
 */
 

@@ -2,12 +2,11 @@
 =begin
 
 title=check string matches pattern
-cid=0
-pid=0
+cid=1
 
-1. exactly match >> hello
-2. regular expression match >> `1\d{10}`
-3. format string match >> `%s%d`
+- 1. exactly match @ hello
+- 2. regular expression match @ `1\d{10}`
+- 3. format string match @ `%s%d`
 
 =end
 

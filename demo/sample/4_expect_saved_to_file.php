@@ -3,15 +3,12 @@
 /**
 
 title =expect in file
-cid=0
+cid=1
 
-step 1 >>
-
-step 2
-
-step 3 >>
-
-step 4 >>
+- step 1 @
+- step 2
+- step 3 @
+- step 4 @
 
 */
 

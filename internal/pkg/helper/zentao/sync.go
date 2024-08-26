@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"path/filepath"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/fatih/color"
 
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
@@ -79,6 +80,7 @@ func CheckIn(productId string, cases []string, config commDomain.WorkspaceConf, 
 
 		steps := scriptHelper.GetStepAndExpectMap(cs)
 		script, _ := scriptHelper.GetScriptContent(cs, -1)
+		spew.Dump(steps)
 		err = CommitCase(productId, caseId, title, steps, script, config, noNeedConfirm, withCode)
 
 		if err == nil {

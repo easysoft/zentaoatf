@@ -3,12 +3,12 @@
 /**
 
 title=expect with regx by using backquote `
-cid=0
+cid=1
 
-mobile phone >> `^1[0-9]\d{9}$`
-email        >> `^.+@.+\..+$`
-web url      >> `^https?.+\..+`
-ip address   >> `(\d+)\.(\d+)\.(\d+)\.(\d+)`
+- mobile phone @ `^1[0-9]\d{9}$`
+- email        @ `^.+@.+\..+$`
+- web url      @ `^https?.+\..+`
+- ip address   @ `(\d+)\.(\d+)\.(\d+)\.(\d+)`
 
 */
 

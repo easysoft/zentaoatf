@@ -5,9 +5,9 @@
 title = simple demo
 cid=1
 
-step1 >> expect 1
-step2 >>
-step3 >> expect 3
+- step1 @ expect 1
+- step2 @
+- step3 @ expect 3
 
 */
 

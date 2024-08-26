@@ -3,9 +3,9 @@
 /**
 
 title=use ztf to run selenium test
-cid=0
+cid=1
 
-1. check webpage title >> 禅道_百度搜索
+- 1. check webpage title @ 禅道_百度搜索
 
 */
 

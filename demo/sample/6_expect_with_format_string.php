@@ -3,14 +3,14 @@
 /**
 
 title=expect with format string by using backquote `
-cid=0
+cid=1
 
-string              >> `^%s$`
-integer             >> `^%d$`
-signed integer      >> `^%i$`
-hexadecimal number  >> `^%x$`
-float               >> `^%f$`
-char                >> `^%c$`
+- string              @ `^%s$`
+- integer             @ `^%d$`
+- signed integer      @ `^%i$`
+- hexadecimal number  @ `^%x$`
+- float               @ `^%f$`
+- char                @ `^%c$`
 
 */
 

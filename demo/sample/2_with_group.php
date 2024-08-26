@@ -3,16 +3,13 @@
 /**
 
 title=with multi groups
-cid=2
+cid=1
 
-step 1 >> expect 1
-step 2 >> expect 2
-step 3 >>
-
-steps
-  step >> expect 3.1
-  step >> expect 3.2
-  step >>
+- step1 @ expect 1
+- step2 @ expect 2
+- step3 @
+  - step3.1 @ expect 3.1
+  - step3.2 @ expect 3.2
 */
 
 print("expect 1\n");

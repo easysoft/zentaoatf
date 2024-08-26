@@ -3,12 +3,11 @@
 /**
 
 title=check string matches pattern
-cid=3
-pid=1
+cid=1
 
-1. exactly match >> hello1
-2. regular expression match >> `1\d{10}`
-3. format string match >> `%s%d`
+- 1. exactly match @ hello1
+- 2. regular expression match @ `1\d{10}`
+- 3. format string match @ `%s%d`
 
 */
 

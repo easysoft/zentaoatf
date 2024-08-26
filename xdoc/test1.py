@@ -4,10 +4,9 @@
 
 title=check string matches pattern
 cid=1
-pid=1
 
 1 登录RDsim
-2 点击建模按钮 >> 设置
+- 2 点击建模按钮 @ 设置
 
 '''
 

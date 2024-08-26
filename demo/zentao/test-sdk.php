@@ -3,9 +3,9 @@
 /**
 
 title=Use Zentao SDK to do interface testing
-cid=0
+cid=1
 
-1. check first product name >> `.+`
+- 1. check first product name @ `.+`
 
 */
 include_once 'vendor/sdk.php';

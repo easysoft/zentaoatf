@@ -167,7 +167,6 @@ func (s *RunSuite) TestRunScenes(t provider.T) {
 
 	title=check string matches pattern
 	cid=1
-	pid=1
 
 	%s
 

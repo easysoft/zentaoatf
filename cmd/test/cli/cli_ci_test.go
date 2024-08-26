@@ -2,9 +2,9 @@ package main
 
 /**
 
-cid=0
+cid=1
 
-1.更新用例到禅道 >> Success
+- 1.更新用例到禅道 @ Success
 
 */
 import (
