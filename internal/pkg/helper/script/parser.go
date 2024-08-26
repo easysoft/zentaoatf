@@ -105,7 +105,7 @@ func ReadTitleAndStepsInNewFormat(content, lang string) (caseId int, title strin
 }
 
 func getSingleExpect(descAndExpect string) (desc, expect string) {
-	arr := strings.Split(descAndExpect, "@")
+	arr := strings.SplitN(descAndExpect, "@", 2)
 
 	desc = strings.TrimSpace(arr[0])
 	if len(arr) > 1 {
@@ -114,7 +114,6 @@ func getSingleExpect(descAndExpect string) (desc, expect string) {
 			expect = "pass"
 		}
 	}
-
 	return
 }
 
@@ -150,6 +149,12 @@ func getMultiExpect(lines []string, index *int) (ret string) {
 	return
 }
 
+// isStepLine
+/*
+- 步骤1 # true 步骤1 false
+  - 子步骤1.1 # true 子步骤1.1 true
+- 步骤2 # true 步骤2 false
+*/
 func isStepLine(line string) (is bool, ret string, isChild bool) {
 	reg := `^(\s*)-\s*(.+)$`
 	arr := regexp.MustCompile(reg).FindStringSubmatch(line)
