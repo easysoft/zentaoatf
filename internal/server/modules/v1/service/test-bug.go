@@ -1,10 +1,11 @@
 package service
 
 import (
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
+
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 )
 
 type TestBugService struct {

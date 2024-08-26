@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/websocket"
+	"github.com/kataras/neffos"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/websocket"
-	"github.com/kataras/neffos"
 )
 
 var (

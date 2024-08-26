@@ -3,8 +3,9 @@ package fileUtils
 import (
 	"strings"
 
-	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
 	"github.com/ergoapi/util/zos"
+
+	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
 )
 
 func GetMd5(pth string) (ret string, err error) {

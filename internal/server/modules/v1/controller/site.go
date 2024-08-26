@@ -1,11 +1,13 @@
 package controller
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
+	"github.com/kataras/iris/v12"
+
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
-	"github.com/kataras/iris/v12"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 )
 
 type SiteCtrl struct {

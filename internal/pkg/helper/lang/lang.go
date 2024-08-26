@@ -46,7 +46,7 @@ func GetSupportLanguageOptions(scriptExtsInDir []string) ([]string, []string, []
 
 func GetSupportLanguageArrSort() []string {
 	arr := make([]string, 0)
-	for lang, _ := range commConsts.LangMap {
+	for lang := range commConsts.LangMap {
 		if lang == "autoit" {
 			continue
 		}

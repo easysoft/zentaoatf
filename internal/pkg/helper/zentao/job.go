@@ -3,13 +3,15 @@ package zentaoHelper
 import (
 	"encoding/json"
 	"fmt"
+
+	"github.com/fatih/color"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"github.com/fatih/color"
 )
 
 func CommitStatus(req serverDomain.ZentaoJobSubmitReq, config commDomain.WorkspaceConf) (err error) {

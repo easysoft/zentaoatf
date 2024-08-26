@@ -1,8 +1,9 @@
 package controller
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/easysoft/zentaoatf/pkg/domain"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 )
 
 type BaseCtrl struct {

@@ -2,7 +2,7 @@ package analysisHelper
 
 import (
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
+	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 )
 

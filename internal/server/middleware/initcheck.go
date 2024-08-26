@@ -3,13 +3,14 @@ package middleware
 import (
 	"net/http"
 
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/easysoft/zentaoatf/internal/server/core/dao"
-	"github.com/easysoft/zentaoatf/pkg/domain"
-	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
-
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/context"
+
+	"github.com/easysoft/zentaoatf/internal/server/core/dao"
+	"github.com/easysoft/zentaoatf/pkg/domain"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 )
 
 func InitCheck() iris.Handler {

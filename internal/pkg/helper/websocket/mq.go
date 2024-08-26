@@ -2,9 +2,11 @@ package websocketHelper
 
 import (
 	"fmt"
-	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
-	"github.com/easysoft/zentaoatf/pkg/core/mq"
 	"time"
+
+	"github.com/easysoft/zentaoatf/pkg/core/mq"
+
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 )
 
 var (

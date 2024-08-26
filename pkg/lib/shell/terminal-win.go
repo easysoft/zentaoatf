@@ -10,8 +10,9 @@ import (
 	"strings"
 	"syscall"
 
-	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	"golang.org/x/text/encoding/simplifiedchinese"
+
+	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 )
 
 type window struct {

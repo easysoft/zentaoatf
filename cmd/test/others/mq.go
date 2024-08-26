@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/pkg/core/mq"
 	"time"
+
+	"github.com/easysoft/zentaoatf/pkg/core/mq"
 )
 
 var (

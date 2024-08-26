@@ -1,7 +1,6 @@
 package web
 
 import (
-	stdContext "context"
 	"fmt"
 	"net/http"
 	"path/filepath"
@@ -9,30 +8,32 @@ import (
 	"testing"
 	"time"
 
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
-	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
-	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
-	"github.com/easysoft/zentaoatf/internal/server/core/cron"
-	"github.com/easysoft/zentaoatf/internal/server/core/dao"
-	"github.com/easysoft/zentaoatf/internal/server/core/module"
-	v1 "github.com/easysoft/zentaoatf/internal/server/modules/v1"
-	myWs "github.com/easysoft/zentaoatf/internal/server/modules/v1/controller"
-	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
-	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/facebookgo/inject"
-	gorillaWs "github.com/gorilla/websocket"
+	"github.com/go-playground/validator/v10"
+	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/context"
+	"github.com/kataras/iris/v12/mvc"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/kataras/neffos/gorilla"
-
-	"github.com/go-playground/validator/v10"
-	"github.com/kataras/iris/v12/context"
 	"github.com/snowlyg/helper/dir"
 	"github.com/snowlyg/helper/str"
 	"github.com/snowlyg/helper/tests"
 
-	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/mvc"
+	"github.com/easysoft/zentaoatf/internal/server/core/cron"
+	"github.com/easysoft/zentaoatf/internal/server/core/dao"
+	"github.com/easysoft/zentaoatf/internal/server/core/module"
+
+	stdContext "context"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
+	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
+	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
+	v1 "github.com/easysoft/zentaoatf/internal/server/modules/v1"
+	myWs "github.com/easysoft/zentaoatf/internal/server/modules/v1/controller"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	gorillaWs "github.com/gorilla/websocket"
 )
 
 var client *tests.Client

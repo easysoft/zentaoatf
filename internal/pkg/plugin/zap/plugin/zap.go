@@ -2,11 +2,12 @@ package zapPlugin
 
 import (
 	"context"
-	zapProto "github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/proto"
-	zapService "github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/service"
-	"google.golang.org/grpc"
 
 	"github.com/hashicorp/go-plugin"
+	"google.golang.org/grpc"
+
+	zapProto "github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/proto"
+	zapService "github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/service"
 )
 
 // This is the implementation of plugin.GRPCPlugin so we can serve/consume this.

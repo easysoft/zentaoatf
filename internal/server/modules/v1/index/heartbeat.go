@@ -1,8 +1,9 @@
 package index
 
 import (
-	"github.com/easysoft/zentaoatf/internal/server/core/module"
 	"github.com/kataras/iris/v12"
+
+	"github.com/easysoft/zentaoatf/internal/server/core/module"
 )
 
 type HeartBeatModule struct {

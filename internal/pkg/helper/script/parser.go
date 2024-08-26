@@ -9,13 +9,15 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/ergoapi/util/file"
+
+	"github.com/easysoft/zentaoatf/pkg/consts"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
-	"github.com/easysoft/zentaoatf/pkg/consts"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
-	"github.com/ergoapi/util/file"
 )
 
 func GetStepAndExpectMap(file string) (steps []commDomain.ZentaoCaseStep) {
@@ -390,7 +392,7 @@ func GetExpectMapFromIndependentFile(steps *[]commDomain.ZentaoCaseStep, content
 	expectArr := ReadExpectIndependentArr(content)
 
 	index := 0
-	for idx, _ := range *steps {
+	for idx := range *steps {
 		if len(expectArr) > index && (*steps)[idx].Expect == "pass" { // not set step that has no expect
 			(*steps)[idx].Expect = strings.Join(expectArr[index], "\r\n")
 			index++

@@ -2,19 +2,22 @@ package action
 
 import (
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
-	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
-	"github.com/easysoft/zentaoatf/pkg/consts"
-	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
-	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
-	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
-	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"github.com/fatih/color"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/fatih/color"
+
+	"github.com/easysoft/zentaoatf/pkg/consts"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 )
 
 func View(files []string, keywords string) {

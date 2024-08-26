@@ -109,7 +109,7 @@
     },
     {
         "id": "colon",
-        "translation": "："
+        "translation": ":"
     },
     {
         "id": "pass_num",
@@ -137,7 +137,7 @@
     },
     {
       "id": "task_id",
-      "translation": "测试任务Id"
+      "translation": "测试单Id"
     },
     {
       "id": "test_case",
@@ -145,7 +145,7 @@
     },
     {
         "id": "test_case_prefix",
-        "translation": "用例%d："
+        "translation": "用例%d:"
     },
     {
       "id": "test_suite",
@@ -169,7 +169,7 @@
     },
     {
         "id": "step_prefix",
-        "translation": "步骤%s："
+        "translation": "步骤%s:"
     },
     {
         "id": "expect",
@@ -229,7 +229,7 @@
     },
     {
       "id": "want_to_continue",
-      "translation": "确认继续？（y/n, 默认Yes）"
+      "translation": "确认继续?(y/n, 默认Yes)"
     },
     {
       "id": "case_update_confirm",
@@ -237,7 +237,7 @@
     },
     {
       "id": "enter_dir",
-      "translation": "输入%s目录："
+      "translation": "输入%s目录:"
     },
     {
       "id": "where_to_store_script",
@@ -245,7 +245,7 @@
     },
     {
       "id": "co_organize_by_module",
-      "translation": "是否希望按模块ID组织脚本目录结构？（y/n, 默认No）"
+      "translation": "是否希望按模块ID组织脚本目录结构?(y/n, 默认No)"
     },
     {
       "id": "co_script_prefix",
@@ -261,7 +261,7 @@
     },
     {
       "id": "config_zentao_site",
-      "translation": "现在开始配置禅道系统的同步参数？（y/n, 默认Yes）"
+      "translation": "现在开始配置禅道系统的同步参数?(y/n, 默认Yes)"
     },
     {
       "id": "enter_url",
@@ -281,7 +281,7 @@
     },
     {
       "id": "enter_co_independent",
-      "translation": "是否将用例期待结果保存在独立的文件中？（y/n, 默认No）"
+      "translation": "是否将用例期待结果保存在独立的文件中?(y/n, 默认No)"
     },
     {
       "id": "enter_co_language",
@@ -293,11 +293,11 @@
     },
     {
       "id": "enter_case_id_for_report_bug",
-      "translation": "请输入您想提交缺陷的用例ID，输入'exit'退出"
+      "translation": "请输入您想提交缺陷的用例ID,输入'exit'退出"
     },
     {
       "id": "confirm_commit_result",
-      "translation": "确认提交以下结果信息？（y/n, 默认Yes）\n%s"
+      "translation": "确认提交以下结果信息?(y/n, 默认Yes)\n%s"
     },
     {
       "id": "invalid_input",
@@ -317,7 +317,7 @@
     },
     {
       "id": "config_script_interpreter",
-      "translation": "现在配置脚本的解释程序？（y/n, 默认Yes）"
+      "translation": "现在配置脚本的解释程序?(y/n, 默认Yes)"
     },
     {
       "id": "set_script_interpreter",
@@ -325,7 +325,7 @@
     },
     {
       "id": "empty_to_ignore",
-      "translation": "（输入空忽略）"
+      "translation": "(输入空忽略)"
     },
     {
       "id": "en",
@@ -361,11 +361,11 @@
     },
     {
       "id": "fail_to_request_zentao",
-      "translation": "禅道请求失败，返回：%s。"
+      "translation": "禅道请求失败,返回：%s。"
     },
     {
       "id": "exec_cmd_fail",
-      "translation": "执行命令%s失败，错误%s。"
+      "translation": "执行命令%s失败,错误%s。"
     },
     {
         "id": "exec_cmd_timeout",
@@ -413,11 +413,11 @@
     },
     {
       "id": "found_scripts",
-      "translation": "在工作目录%s中共发现%d个用例，ZTF目录为%s。"
+      "translation": "在工作目录%s中共发现%d个用例,ZTF目录为%s。"
     },
     {
       "id": "found_scripts_no_ztf_dir",
-      "translation": "发现%d个用例，工作目录为%s。"
+      "translation": "发现%d个用例,工作目录为%s。"
     },
     {
       "id": "ignore_scripts",
@@ -433,11 +433,11 @@
     },
     {
       "id": "end_case",
-      "translation": "结束用例 %s %s，耗时%d秒。"
+      "translation": "结束用例 %s %s,耗时%d秒。"
     },
     {
       "id": "run_result",
-      "translation": "共执行%d个用例，耗时%d秒。\n%s，%s，%s。"
+      "translation": "共执行%d个用例,耗时%d秒。\n%s,%s,%s。"
     },
     {
       "id": "run_report",
@@ -449,7 +449,7 @@
     },
     {
       "id": "no_interpreter_for_run",
-      "translation": "未配置%s语言的解释程序，跳过脚本%s。"
+      "translation": "未配置%s语言的解释程序,跳过脚本%s。"
     },
     {
       "id": "time_from_to",
@@ -457,7 +457,7 @@
     },
     {
       "id": "steps_result_msg",
-      "translation": "共有%d个步骤，%d个通过，%d个失败。"
+      "translation": "共有%d个步骤,%d个通过,%d个失败。"
     },
     {
       "id": "no_checkpoints",
@@ -589,7 +589,7 @@
     },
     {
         "id": "ignored_cases_to_submit_test_result",
-        "translation": "未提交用例（用例不属于产品%d）："
+        "translation": "未提交用例(用例不属于产品%d):"
     },
     {
       "id": "fail_to_submit_test_result",
@@ -601,7 +601,7 @@
     },
     {
       "id": "ignore_to_submit_result_no_product_id",
-      "translation": "您未提供productId，忽略提交测试结果。"
+      "translation": "您未提供productId,忽略提交测试结果。"
     },
     {
       "id": "wrong_req_params",
@@ -641,11 +641,11 @@
     },
     {
       "id": "start_server",
-      "translation": "启动HTTP服务于http://%s:%s，按CTRL+C键退出。\n请访问https://ztf.im/book/ztf/agent-exec-124.html获取更多信息。"
+      "translation": "启动HTTP服务于http://%s:%s,按CTRL+C键退出。\n请访问https://ztf.im/book/ztf/agent-exec-124.html获取更多信息。"
     },
     {
       "id": "start_server_fail",
-      "translation": "ZenData HTTP服务启动失败，请确认端口%s有效。"
+      "translation": "ZenData HTTP服务启动失败,请确认端口%s有效。"
     },
     {
       "id": "server_request",
@@ -653,7 +653,7 @@
     },
     {
       "id": "server_response",
-      "translation": "生成%d条记录，耗时%d秒。"
+      "translation": "生成%d条记录,耗时%d秒。"
     },
     {
       "id": "fail_parse_req",
@@ -685,19 +685,19 @@
     },
     {
       "id": "fail_upgrade",
-      "translation": "失败升级版本从%.1f到%s，错误 %s。"
+      "translation": "失败升级版本从%.1f到%s,错误 %s。"
     },
     {
       "id": "download_fail",
-      "translation": "下载文件失败 %s，错误 %s。"
+      "translation": "下载文件失败 %s,错误 %s。"
     },
     {
       "id": "download_read_fail",
-      "translation": "读取下载文件%s失败，错误 %s。"
+      "translation": "读取下载文件%s失败,错误 %s。"
     },
     {
       "id": "download_write_fail",
-      "translation": "写入下载文件%s失败，错误 %s。"
+      "translation": "写入下载文件%s失败,错误 %s。"
     },
     {
       "id": "download_success",
@@ -709,7 +709,7 @@
     },
     {
       "id": "perm_deny",
-      "translation": "文件%s权限不足，建议切换工作目录。"
+      "translation": "文件%s权限不足,建议切换工作目录。"
     },
     {
       "id": "fail_unzip",
@@ -733,11 +733,11 @@
     },
     {
       "id": "upload_file_result",
-      "translation": "上传文件响应结果：%s，%s。"
+      "translation": "上传文件响应结果：%s,%s。"
     },
     {
       "id": "must_provide_allure_report_dir",
-      "translation": "使用Allure报表框架时，需要指定报告所在的目录。"
+      "translation": "使用Allure报表框架时,需要指定报告所在的目录。"
     },
     {
         "id": "bug_title",
@@ -749,7 +749,7 @@
     },
     {
       "id": "pls_check_zentao_url",
-      "translation": "%s，当前禅道版本'%s'。\n请确认您使用了禅道开源17.0、企业7.0、旗舰3.1以上版本，或已按照用户手册4.4小节成功安装RestAPI插件。"
+      "translation": "%s,当前禅道版本'%s'。\n请确认您使用了禅道开源17.0、企业7.0、旗舰3.1以上版本,或已按照用户手册4.4小节成功安装RestAPI插件。"
     },
     {
       "id": "jacoco_report",

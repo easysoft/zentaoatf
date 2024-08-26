@@ -3,9 +3,10 @@ package commandConfig
 import (
 	"os"
 
-	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 )
 
 func InitLog() {

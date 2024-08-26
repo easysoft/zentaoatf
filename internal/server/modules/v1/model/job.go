@@ -1,8 +1,9 @@
 package model
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"time"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 )
 
 type Job struct {

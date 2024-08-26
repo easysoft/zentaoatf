@@ -9,24 +9,25 @@ import (
 	"sync"
 	"time"
 
-	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
+	"github.com/jinzhu/copier"
+
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 	"github.com/easysoft/zentaoatf/pkg/consts"
-	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	analysisHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
+	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
 	channelUtils "github.com/easysoft/zentaoatf/pkg/lib/channel"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
-	"github.com/jinzhu/copier"
 )
 
 var (

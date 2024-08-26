@@ -2,9 +2,6 @@ package web
 
 import (
 	"fmt"
-	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
-	"github.com/easysoft/zentaoatf/internal/server/core/module"
-	"github.com/easysoft/zentaoatf/internal/server/middleware"
 	"strings"
 
 	"github.com/kataras/iris/v12"
@@ -12,6 +9,11 @@ import (
 	"github.com/kataras/iris/v12/core/router"
 	"github.com/kataras/iris/v12/middleware/pprof"
 	"github.com/snowlyg/helper/arr"
+
+	"github.com/easysoft/zentaoatf/internal/server/core/module"
+	"github.com/easysoft/zentaoatf/internal/server/middleware"
+
+	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 )
 
 // InitRouter 初始化模块路由

@@ -6,13 +6,15 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/fatih/color"
+
+	"github.com/easysoft/zentaoatf/internal/server/core/web"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
-	"github.com/easysoft/zentaoatf/internal/server/core/web"
 	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"github.com/fatih/color"
 )
 
 var (

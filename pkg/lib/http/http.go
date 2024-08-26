@@ -7,12 +7,12 @@ import (
 	"net/http"
 	"strings"
 
-	authUtils "github.com/easysoft/zentaoatf/internal/pkg/helper/auth"
-
 	"github.com/bitly/go-simplejson"
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/fatih/color"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	authUtils "github.com/easysoft/zentaoatf/internal/pkg/helper/auth"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 )
 
 func Get(url string) (ret []byte, err error) {

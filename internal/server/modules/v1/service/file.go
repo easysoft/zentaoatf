@@ -6,17 +6,17 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ergoapi/util/file"
+	"github.com/fatih/color"
+	"github.com/kataras/iris/v12"
+	"github.com/snowlyg/helper/dir"
+	"github.com/snowlyg/helper/str"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"github.com/ergoapi/util/file"
-	"github.com/fatih/color"
-
-	"github.com/kataras/iris/v12"
-	"github.com/snowlyg/helper/dir"
-	"github.com/snowlyg/helper/str"
 )
 
 const (

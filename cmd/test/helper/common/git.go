@@ -4,9 +4,10 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/go-git/go-git/v5"
+
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
-	"github.com/go-git/go-git/v5"
 )
 
 func CloneGit(gitUrl string, name string) error {

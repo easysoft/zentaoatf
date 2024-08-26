@@ -9,8 +9,9 @@ import (
 	"strings"
 	"time"
 
-	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
-	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
+	"github.com/fatih/color"
+	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/websocket"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
@@ -18,12 +19,11 @@ import (
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	dateUtils "github.com/easysoft/zentaoatf/pkg/lib/date"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
-	"github.com/fatih/color"
-	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/websocket"
 )
 
 func ExecUnit(ch chan int, req serverDomain.TestSet, wsMsg *websocket.Message) (err error) {

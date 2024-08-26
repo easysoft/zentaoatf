@@ -8,12 +8,14 @@ import (
 	"strconv"
 
 	"github.com/bitly/go-simplejson"
+
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+	"github.com/easysoft/zentaoatf/pkg/domain"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
-	"github.com/easysoft/zentaoatf/pkg/domain"
 	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 )

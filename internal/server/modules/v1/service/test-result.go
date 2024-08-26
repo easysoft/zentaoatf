@@ -10,19 +10,20 @@ import (
 	"sort"
 	"strings"
 
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/easysoft/zentaoatf/pkg/domain"
-	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	"github.com/ergoapi/util/file"
+	"github.com/jinzhu/copier"
 
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
+	"github.com/easysoft/zentaoatf/pkg/domain"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	analysisHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"github.com/jinzhu/copier"
 )
 
 type TestResultService struct {
@@ -230,7 +231,7 @@ func replaceProxyPath(fullPath, fileName, execLogDir string, pathMap map[string]
 		if err != nil {
 			return err
 		}
-		for k, _ := range report.FuncResult {
+		for k := range report.FuncResult {
 			for proxyFilePath, localFilePath := range pathMap {
 				report.FuncResult[k].Path = strings.ReplaceAll(report.FuncResult[k].Path, proxyFilePath, localFilePath)
 				report.FuncResult[k].RelativePath = strings.ReplaceAll(report.FuncResult[k].RelativePath, proxyFilePath, localFilePath)

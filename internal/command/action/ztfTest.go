@@ -3,11 +3,12 @@ package action
 import (
 	"path"
 
+	"github.com/easysoft/zentaoatf/pkg/consts"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
-	"github.com/easysoft/zentaoatf/pkg/consts"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 )

@@ -23,6 +23,13 @@ env:
 
 tasks:
 
+  fmt:
+    desc: format code
+    cmds:
+      - gci write --skip-generated --custom-order -s standard -s default -s "prefix(github.com/easysoft/zentaoatf)" -s blank -s dot -s alias .
+      - gofmt -s -w .
+      - goimports -w .
+
   clean:
     desc: clean
     cmds:

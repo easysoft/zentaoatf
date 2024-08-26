@@ -4,14 +4,16 @@ import (
 	"fmt"
 	"testing"
 
-	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
-	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
-	httpHelper "github.com/easysoft/zentaoatf/cmd/test/helper/http"
-	"github.com/easysoft/zentaoatf/cmd/test/restapi/config"
-	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 	"github.com/tidwall/gjson"
+
+	"github.com/easysoft/zentaoatf/cmd/test/restapi/config"
+
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
+	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
+	httpHelper "github.com/easysoft/zentaoatf/cmd/test/helper/http"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 )
 
 func TestModuleApi(t *testing.T) {

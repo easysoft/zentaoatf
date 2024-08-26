@@ -1,8 +1,9 @@
 package cache
 
 import (
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"sync"
+
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 )
 
 const (

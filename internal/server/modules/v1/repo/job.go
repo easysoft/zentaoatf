@@ -1,11 +1,14 @@
 package repo
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
-	"gorm.io/gorm"
 	"strings"
 	"time"
+
+	"gorm.io/gorm"
+
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 )
 
 type JobRepo struct {

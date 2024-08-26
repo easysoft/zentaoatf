@@ -6,9 +6,11 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/bitly/go-simplejson"
+	"github.com/fatih/color"
+	"github.com/jinzhu/copier"
 	"github.com/kataras/iris/v12"
 
-	"github.com/bitly/go-simplejson"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	analysisHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
@@ -17,8 +19,6 @@ import (
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stdinUtils "github.com/easysoft/zentaoatf/pkg/lib/stdin"
-	"github.com/fatih/color"
-	"github.com/jinzhu/copier"
 	uuid "github.com/satori/go.uuid"
 )
 

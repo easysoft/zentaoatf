@@ -3,12 +3,14 @@ package serverConfig
 import (
 	"bytes"
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/easysoft/zentaoatf/pkg/lib/common"
-	"github.com/easysoft/zentaoatf/pkg/lib/file"
-	"github.com/easysoft/zentaoatf/pkg/lib/res"
-	"github.com/spf13/viper"
 	"path/filepath"
+
+	"github.com/spf13/viper"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	resUtils "github.com/easysoft/zentaoatf/pkg/lib/res"
 )
 
 func Init() {

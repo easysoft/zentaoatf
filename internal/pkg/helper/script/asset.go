@@ -8,19 +8,21 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/ergoapi/util/file"
+	"github.com/kataras/iris/v12"
+
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+	"github.com/easysoft/zentaoatf/pkg/consts"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
-	"github.com/easysoft/zentaoatf/pkg/consts"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
-	"github.com/ergoapi/util/file"
-	"github.com/kataras/iris/v12"
 )
 
 func LoadScriptTreeByDir(workspace model.Workspace, scriptIdsFromZentao map[int]string) (asset serverDomain.TestAsset, err error) {

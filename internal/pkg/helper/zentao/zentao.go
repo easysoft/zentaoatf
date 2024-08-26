@@ -7,12 +7,12 @@ import (
 	"regexp"
 	"strings"
 
-	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
-
 	"github.com/bitly/go-simplejson"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"

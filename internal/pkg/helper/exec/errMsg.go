@@ -1,12 +1,13 @@
 package execHelper
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
-	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 )
 
 func PrintErrMsg(key string, err error, wsMsg *websocket.Message) (

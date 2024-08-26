@@ -12,9 +12,10 @@ import (
 	"time"
 	"unicode"
 
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/jameskeane/bcrypt"
 	"github.com/mattn/go-runewidth"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 )
 
 func TrimAll(str string) string {

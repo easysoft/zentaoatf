@@ -4,12 +4,13 @@ import (
 	"errors"
 	"fmt"
 
-	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
-	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/fatih/color"
 	"gorm.io/gorm"
+
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 )
 
 type InterpreterRepo struct {

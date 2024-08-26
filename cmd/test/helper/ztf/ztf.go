@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/playwright-community/playwright-go"
+
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	plwConf "github.com/easysoft/zentaoatf/cmd/test/ui/conf"
 	plwHelper "github.com/easysoft/zentaoatf/cmd/test/ui/helper"
-	"github.com/playwright-community/playwright-go"
 )
 
 var expandTimes = 0

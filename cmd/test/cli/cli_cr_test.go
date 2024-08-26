@@ -7,19 +7,20 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/suite"
+
 	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	apiTest "github.com/easysoft/zentaoatf/cmd/test/helper/zentao/api"
 	dateUtils "github.com/easysoft/zentaoatf/pkg/lib/date"
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
-	"github.com/ozontech/allure-go/pkg/framework/provider"
-	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
 
 var (
 	successCrRe = regexp.MustCompile("Submitted test results to ZenTao|提交测试结果到禅道成功")
 	productIdRe = regexp.MustCompile("Please enter Product Id|请输入 产品Id")
-	taskIdRe    = regexp.MustCompile("Please enter Test Request Id|请输入 测试任务Id")
+	taskIdRe    = regexp.MustCompile("Please enter Test Request Id|请输入 测试单Id")
 )
 
 type CrSuite struct {

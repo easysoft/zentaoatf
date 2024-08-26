@@ -21,12 +21,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/suite"
+
 	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
-	"github.com/ozontech/allure-go/pkg/framework/provider"
-	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
 
 var (
@@ -35,7 +36,7 @@ var (
 	productRe    = regexp.MustCompile("Please enter Product Id|请输入 产品Id")
 	moduleRe     = regexp.MustCompile("Please enter Module Id|请输入 模块Id")
 	suiteRe      = regexp.MustCompile("Please enter Suite Id|请输入 套件Id")
-	taskRe       = regexp.MustCompile("Please enter Test Request Id|请输入 测试任务Id")
+	taskRe       = regexp.MustCompile("Please enter Test Request Id|请输入 测试单Id")
 	separateRe   = regexp.MustCompile("Save expected results in a separate file|是否将用例期待结果保存在独立的文件中")
 	storeRe      = regexp.MustCompile("Where to store scripts|请输入脚本保存目录")
 	organizeRe   = regexp.MustCompile("Organize test scripts by module|是否希望按模块ID组织脚本目录结构")
@@ -65,7 +66,6 @@ func (s *CoSuite) BeforeEach(t provider.T) {
 }
 
 // 当前禅道版本max4.3有bug，当前无法通过测试。bug已修复，未打包
-//
 func (s *CoSuite) TestCoProduct(t provider.T) {
 	t.Title("导出用例，不提供参数")
 	t.Require().Equal("Success", testCoProduct())

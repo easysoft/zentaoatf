@@ -7,24 +7,24 @@ import (
 	"strconv"
 	"strings"
 
-	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
-
-	"github.com/fatih/color"
-
 	"github.com/bitly/go-simplejson"
+	"github.com/fatih/color"
+	"github.com/kataras/iris/v12"
+
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
+	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stdinUtils "github.com/easysoft/zentaoatf/pkg/lib/stdin"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
-	"github.com/kataras/iris/v12"
 )
 
 func CommitCase(productId string, caseId int, title string, steps []commDomain.ZentaoCaseStep, script serverDomain.TestScript,
@@ -703,7 +703,7 @@ func fieldMapToListOrderByInt(mp map[string]interface{}) []commDomain.BugOption 
 	arr := make([]commDomain.BugOption, 0)
 
 	keys := make([]int, 0)
-	for key, _ := range mp {
+	for key := range mp {
 		keyint, _ := strconv.Atoi(key)
 		keys = append(keys, keyint)
 	}
@@ -728,7 +728,7 @@ func fieldMapToListOrderByStr(mp map[string]interface{}, notNull bool) []commDom
 	arr := make([]commDomain.BugOption, 0)
 
 	keys := make([]string, 0)
-	for key, _ := range mp {
+	for key := range mp {
 		keys = append(keys, key)
 	}
 

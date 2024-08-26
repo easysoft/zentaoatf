@@ -1,10 +1,11 @@
 package main
 
 import (
+	"github.com/hashicorp/go-plugin"
+
 	zapPlugin "github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/plugin"
 	zapService "github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/service"
-	"github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/shared"
-	"github.com/hashicorp/go-plugin"
+	zapShared "github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/shared"
 )
 
 func main() {

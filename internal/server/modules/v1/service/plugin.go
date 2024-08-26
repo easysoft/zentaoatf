@@ -3,16 +3,18 @@ package service
 import (
 	"errors"
 	"fmt"
+	"path/filepath"
+	"strings"
+
+	"github.com/hashicorp/go-plugin"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	zapPlugin "github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/plugin"
 	zapService "github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/service"
-	"github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/shared"
+	zapShared "github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/shared"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
-	"github.com/hashicorp/go-plugin"
-	"path/filepath"
-	"strings"
 )
 
 const (

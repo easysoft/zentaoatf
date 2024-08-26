@@ -1,18 +1,20 @@
 package dao
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
-	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"github.com/fatih/color"
-	"github.com/glebarez/sqlite"
-	"gorm.io/gorm/schema"
-	"gorm.io/plugin/dbresolver"
 	"path/filepath"
 	"time"
 
+	"github.com/fatih/color"
+	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
+	"gorm.io/plugin/dbresolver"
+
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 )
 
 var (

@@ -6,6 +6,11 @@ import (
 	"sync"
 	"time"
 
+	"github.com/ergoapi/util/zos"
+	"github.com/fatih/color"
+	"github.com/kataras/iris/v12/websocket"
+	"github.com/mattn/go-runewidth"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	analysisHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
@@ -20,10 +25,6 @@ import (
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
-	"github.com/ergoapi/util/zos"
-	"github.com/fatih/color"
-	"github.com/kataras/iris/v12/websocket"
-	"github.com/mattn/go-runewidth"
 )
 
 func ExecCases(ch chan int, testSet serverDomain.TestSet, msg *websocket.Message) (report commDomain.ZtfReport, pathMaxWidth int, err error) {

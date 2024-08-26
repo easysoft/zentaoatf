@@ -1,11 +1,13 @@
 package myZap
 
 import (
-	zaprotatelogs "github.com/lestrrat-go/file-rotatelogs"
-	"go.uber.org/zap/zapcore"
 	"os"
 	"path"
 	"time"
+
+	"go.uber.org/zap/zapcore"
+
+	zaprotatelogs "github.com/lestrrat-go/file-rotatelogs"
 )
 
 // GetWriteSyncer zap logger中加入file-rotatelogs

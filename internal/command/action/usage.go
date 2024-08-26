@@ -5,13 +5,15 @@ import (
 	"os"
 	"regexp"
 
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	"github.com/ergoapi/util/zos"
+	"github.com/fatih/color"
+
 	"github.com/easysoft/zentaoatf/pkg/consts"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	resUtils "github.com/easysoft/zentaoatf/pkg/lib/res"
-	"github.com/ergoapi/util/zos"
-	"github.com/fatih/color"
 )
 
 var (

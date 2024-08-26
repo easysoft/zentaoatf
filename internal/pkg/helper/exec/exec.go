@@ -3,10 +3,11 @@ package execHelper
 import (
 	"strings"
 
+	"github.com/kataras/iris/v12/websocket"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
-	"github.com/kataras/iris/v12/websocket"
 )
 
 func Exec(ch chan int, req serverDomain.ExecReq, msg *websocket.Message) (
@@ -45,7 +46,7 @@ func Exec(ch chan int, req serverDomain.ExecReq, msg *websocket.Message) (
 }
 
 func PopulateTestSetPropsWithParentRequest(req *serverDomain.ExecReq) {
-	for idx, _ := range req.TestSets {
+	for idx := range req.TestSets {
 		testSet := &req.TestSets[idx]
 
 		testSet.Scope = req.Scope

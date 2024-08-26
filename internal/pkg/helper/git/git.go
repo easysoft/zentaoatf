@@ -5,11 +5,12 @@ import (
 	"os"
 	"strings"
 
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 )
 
 type Build struct {

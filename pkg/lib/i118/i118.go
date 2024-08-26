@@ -6,9 +6,10 @@ import (
 	"os"
 	"path/filepath"
 
-	resUtils "github.com/easysoft/zentaoatf/pkg/lib/res"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
+
+	resUtils "github.com/easysoft/zentaoatf/pkg/lib/res"
 )
 
 var I118Prt *message.Printer

@@ -4,16 +4,17 @@ import (
 	"fmt"
 	"strings"
 
-	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
+	"github.com/kataras/iris/v12"
+
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
+	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
-	"github.com/kataras/iris/v12"
 )
 
 type TestScriptCtrl struct {

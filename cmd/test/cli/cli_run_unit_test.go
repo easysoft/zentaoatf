@@ -14,12 +14,13 @@ import (
 	"strings"
 	"testing"
 
-	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
-	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
-	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	"github.com/go-git/go-git/v5"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
+
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
+	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 )
 
 type RunUnitSuit struct {

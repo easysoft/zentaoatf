@@ -4,6 +4,12 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/kataras/iris/v12"
+
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
+	"github.com/easysoft/zentaoatf/pkg/domain"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	codeHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/code"
@@ -11,11 +17,7 @@ import (
 	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
-	"github.com/easysoft/zentaoatf/pkg/domain"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
-	"github.com/kataras/iris/v12"
 )
 
 type TestScriptService struct {

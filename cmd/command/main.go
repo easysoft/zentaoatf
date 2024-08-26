@@ -8,18 +8,20 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/fatih/color"
+
 	"github.com/easysoft/zentaoatf/internal/command/action"
+	"github.com/easysoft/zentaoatf/internal/server/core/cron"
+	"github.com/easysoft/zentaoatf/internal/server/core/web"
+
 	commandConfig "github.com/easysoft/zentaoatf/internal/command/config"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	unitHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/unit"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
-	"github.com/easysoft/zentaoatf/internal/server/core/cron"
-	"github.com/easysoft/zentaoatf/internal/server/core/web"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
-	"github.com/fatih/color"
 )
 
 var (

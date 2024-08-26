@@ -6,11 +6,12 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/easysoft/zentaoatf/pkg/consts"
-
 	"github.com/fatih/color"
 	"go.uber.org/zap"
+
+	"github.com/easysoft/zentaoatf/pkg/consts"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 )
 
 var LoggerStandard *zap.Logger

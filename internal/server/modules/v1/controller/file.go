@@ -1,10 +1,12 @@
 package controller
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
-	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	"github.com/kataras/iris/v12"
+
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 )
 
 type FileCtrl struct {

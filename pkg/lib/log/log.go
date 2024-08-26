@@ -9,13 +9,14 @@ import (
 	"strings"
 	"time"
 
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	"github.com/ergoapi/util/file"
+	"github.com/snowlyg/helper/dir"
+
 	"github.com/easysoft/zentaoatf/pkg/consts"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	dateUtils "github.com/easysoft/zentaoatf/pkg/lib/date"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
-	"github.com/ergoapi/util/file"
-
-	"github.com/snowlyg/helper/dir"
 )
 
 func GetLogDir(workspacePath string) string {

@@ -2,10 +2,12 @@ package authUtils
 
 import (
 	"fmt"
-	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
-	"github.com/easysoft/zentaoatf/pkg/consts"
 	"net/http"
 	"strings"
+
+	"github.com/easysoft/zentaoatf/pkg/consts"
+
+	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 )
 
 func AddBearTokenIfNeeded(req *http.Request) {

@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"time"
 
-	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
-	"github.com/easysoft/zentaoatf/cmd/test/ui/conf"
-	plwConf "github.com/easysoft/zentaoatf/cmd/test/ui/conf"
-	"github.com/easysoft/zentaoatf/cmd/test/ui/utils"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
+
+	"github.com/easysoft/zentaoatf/cmd/test/ui/conf"
+	"github.com/easysoft/zentaoatf/cmd/test/ui/utils"
+
+	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
+	plwConf "github.com/easysoft/zentaoatf/cmd/test/ui/conf"
 	playwright "github.com/playwright-community/playwright-go"
 )
 

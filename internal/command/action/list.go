@@ -2,17 +2,19 @@ package action
 
 import (
 	"fmt"
-	"github.com/easysoft/zentaoatf/pkg/consts"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/mattn/go-runewidth"
+
+	"github.com/easysoft/zentaoatf/pkg/consts"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"github.com/mattn/go-runewidth"
 )
 
 func List(files []string, keywords string) {

@@ -3,11 +3,13 @@ package apiTest
 import (
 	"fmt"
 
+	"github.com/tidwall/gjson"
+
+	"github.com/easysoft/zentaoatf/cmd/test/restapi/config"
+
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	httpHelper "github.com/easysoft/zentaoatf/cmd/test/helper/http"
-	"github.com/easysoft/zentaoatf/cmd/test/restapi/config"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
-	"github.com/tidwall/gjson"
 )
 
 func GetCaseTitleById(id int) string {

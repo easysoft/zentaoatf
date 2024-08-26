@@ -1,11 +1,13 @@
 package controller
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
+	"github.com/kataras/iris/v12"
+
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
-	"github.com/kataras/iris/v12"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
 )
 
 type InterpreterCtrl struct {

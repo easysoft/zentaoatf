@@ -1,15 +1,17 @@
 package core
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	authUtils "github.com/easysoft/zentaoatf/internal/pkg/helper/auth"
-	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
-	"github.com/easysoft/zentaoatf/pkg/consts"
-	"github.com/easysoft/zentaoatf/pkg/domain"
 	"net/http"
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/context"
+
+	"github.com/easysoft/zentaoatf/pkg/consts"
+	"github.com/easysoft/zentaoatf/pkg/domain"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	authUtils "github.com/easysoft/zentaoatf/internal/pkg/helper/auth"
+	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 )
 
 func Auth() iris.Handler {

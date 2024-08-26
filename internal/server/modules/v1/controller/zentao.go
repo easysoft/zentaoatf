@@ -1,12 +1,14 @@
 package controller
 
 import (
+	"github.com/kataras/iris/v12"
+
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
-	"github.com/kataras/iris/v12"
 )
 
 type ZentaoCtrl struct {
@@ -50,7 +52,7 @@ func (c *ZentaoCtrl) ListSiteAndProduct(ctx iris.Context) {
 	sites, currSite, _ := c.SiteService.LoadSites(currSiteId, lang)
 	products, currProduct, err := zentaoHelper.LoadSiteProduct(currSite, currProductId)
 
-	for idx, _ := range sites {
+	for idx := range sites {
 		sites[idx].Url = ""
 	}
 

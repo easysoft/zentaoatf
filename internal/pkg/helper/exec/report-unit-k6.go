@@ -3,12 +3,13 @@ package execHelper
 import (
 	"encoding/json"
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
-	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	"log"
 	"regexp"
 	"strings"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
+	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 )
 
 func ConvertK6Result(results []interface{}, failedCaseIdToThresholdMap map[string]string) commDomain.UnitTestSuite {

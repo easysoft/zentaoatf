@@ -24,11 +24,12 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/suite"
+
 	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
-	"github.com/ozontech/allure-go/pkg/framework/provider"
-	"github.com/ozontech/allure-go/pkg/framework/suite"
 )
 
 type RunSuite struct {
@@ -100,7 +101,7 @@ func (s *RunSuite) TestRunFileAndSubmitBug(t provider.T) {
 
 func (s *RunSuite) TestRunZtfTask(t provider.T) {
 	t.ID("1589")
-	t.Title("执行禅道测试任务")
+	t.Title("执行禅道测试单")
 
 	cmd := commonTestHelper.GetZtfPath() + fmt.Sprintf(" run %scmd/test/demo -task 1", constTestHelper.RootPath)
 	expectReg := regexp.MustCompile(`Pass:0\(0\.0%\), Fail:3\(100\.0%\), Skip:0\(0\.0%\)|通过数：0\(0\.0%\)，失败数：3\(100\.0%\)，忽略数：0\(0\.0%\)`)

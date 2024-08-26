@@ -8,18 +8,19 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/easysoft/zentaoatf/pkg/domain"
-	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
-	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
 	"github.com/snowlyg/helper/dir"
 
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
+	"github.com/easysoft/zentaoatf/pkg/domain"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 )
 
 type WorkspaceService struct {

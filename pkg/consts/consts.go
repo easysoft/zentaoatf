@@ -2,8 +2,9 @@ package consts
 
 import (
 	"fmt"
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"os"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 )
 
 const (

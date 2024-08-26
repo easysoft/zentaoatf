@@ -4,12 +4,14 @@ import (
 	"encoding/json"
 	"strings"
 
+	"github.com/fsnotify/fsnotify"
+	"github.com/kataras/iris/v12/websocket"
+
+	"github.com/easysoft/zentaoatf/pkg/consts"
+
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
-	"github.com/easysoft/zentaoatf/pkg/consts"
-	"github.com/fsnotify/fsnotify"
-	"github.com/kataras/iris/v12/websocket"
 )
 
 func WatchFromReq(testSets []serverDomain.TestSet, wsMsg *websocket.Message) {

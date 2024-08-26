@@ -1,9 +1,11 @@
 package controller
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
 	"github.com/kataras/iris/v12"
+
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 )
 
 type TestFilterCtrl struct {

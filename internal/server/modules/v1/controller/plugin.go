@@ -1,10 +1,12 @@
 package controller
 
 import (
+	"github.com/kataras/iris/v12"
+
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
-	"github.com/kataras/iris/v12"
 )
 
 type PluginCtrl struct {

@@ -3,11 +3,13 @@ package controller
 import (
 	"strconv"
 
+	"github.com/kataras/iris/v12"
+
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
-	"github.com/kataras/iris/v12"
 )
 
 type TestBugCtrl struct {
@@ -55,7 +57,7 @@ func (c *TestBugCtrl) Submit(ctx iris.Context) {
 	ctx.JSON(c.SuccessResp(nil))
 }
 
-//查询产品下所有bug
+// 查询产品下所有bug
 func (c *TestBugCtrl) LoadBugs(ctx iris.Context) {
 	siteId, _ := ctx.URLParamInt("currSiteId")
 	productId, _ := ctx.URLParamInt("currProductId")

@@ -7,10 +7,10 @@ import (
 	"strconv"
 	"strings"
 
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-
-	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	"github.com/easysoft/zentaoatf/pkg/consts"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	resUtils "github.com/easysoft/zentaoatf/pkg/lib/res"

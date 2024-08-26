@@ -4,17 +4,19 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/fatih/color"
+	"github.com/kataras/iris/v12/websocket"
+
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	watchHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/watch"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"github.com/fatih/color"
-	"github.com/kataras/iris/v12/websocket"
 )
 
 type WebSocketCtrl struct {

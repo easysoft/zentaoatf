@@ -2,14 +2,16 @@ package execHelper
 
 import (
 	"encoding/xml"
+	"time"
+
+	"github.com/fatih/color"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	dateUtils "github.com/easysoft/zentaoatf/pkg/lib/date"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"github.com/fatih/color"
-	"time"
 )
 
 const (

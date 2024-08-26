@@ -6,12 +6,14 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/jinzhu/copier"
+
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	analysisHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/repo"
-	"github.com/jinzhu/copier"
 )
 
 type StatisticService struct {

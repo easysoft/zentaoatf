@@ -5,11 +5,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	"github.com/ergoapi/util/file"
 
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 )
 
 func ListReport(workspacePath string) (reportSeqs []string) {

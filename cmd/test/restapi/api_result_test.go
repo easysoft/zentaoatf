@@ -6,16 +6,18 @@ import (
 	"log"
 	"testing"
 
-	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
-	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
-	httpHelper "github.com/easysoft/zentaoatf/cmd/test/helper/http"
-	"github.com/easysoft/zentaoatf/cmd/test/restapi/config"
-	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
-	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
-	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 	"github.com/tidwall/gjson"
+
+	"github.com/easysoft/zentaoatf/cmd/test/restapi/config"
+
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
+	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
+	httpHelper "github.com/easysoft/zentaoatf/cmd/test/helper/http"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
+	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
+	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 )
 
 func TestResultApi(t *testing.T) {

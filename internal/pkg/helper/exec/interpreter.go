@@ -10,20 +10,22 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/ergoapi/util/zos"
+	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/websocket"
+
+	"github.com/easysoft/zentaoatf/internal/server/core/dao"
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
-	"github.com/easysoft/zentaoatf/internal/server/core/dao"
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
-	"github.com/ergoapi/util/zos"
-	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/websocket"
 )
 
 func getCommand(filePath, lang, uuidString string, conf commDomain.WorkspaceConf, ctx context.Context, wsMsg *websocket.Message) (

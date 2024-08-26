@@ -3,10 +3,11 @@ package main
 import (
 	"testing"
 
-	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
-	httpHelper "github.com/easysoft/zentaoatf/cmd/test/helper/http"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
+
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
+	httpHelper "github.com/easysoft/zentaoatf/cmd/test/helper/http"
 )
 
 func TestTokenApi(t *testing.T) {

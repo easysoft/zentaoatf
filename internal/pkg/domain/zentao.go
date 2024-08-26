@@ -1,8 +1,9 @@
 package commDomain
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/kataras/iris/v12"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 )
 
 type ZentaoUserProfile struct {

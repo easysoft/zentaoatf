@@ -7,6 +7,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/fatih/color"
+	"github.com/kataras/iris/v12/websocket"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
@@ -15,8 +18,6 @@ import (
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
-	"github.com/fatih/color"
-	"github.com/kataras/iris/v12/websocket"
 )
 
 func GenZTFTestReport(report commDomain.ZtfReport, pathMaxWidth int,

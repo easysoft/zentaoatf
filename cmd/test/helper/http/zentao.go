@@ -1,9 +1,10 @@
 package httpHelper
 
 import (
+	"github.com/tidwall/gjson"
+
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
-	"github.com/tidwall/gjson"
 )
 
 func Login() (ret string) {

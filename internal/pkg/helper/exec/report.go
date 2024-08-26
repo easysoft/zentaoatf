@@ -5,12 +5,13 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/fatih/color"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
-	"github.com/fatih/color"
 )
 
 func GenStatusTxt(status commConsts.ResultStatus) (colorTxt string, txt string) {

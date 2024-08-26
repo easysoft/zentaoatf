@@ -2,6 +2,7 @@ package zapPlugin
 
 import (
 	"context"
+
 	zapProto "github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/proto"
 	zapService "github.com/easysoft/zentaoatf/internal/pkg/plugin/zap/service"
 )

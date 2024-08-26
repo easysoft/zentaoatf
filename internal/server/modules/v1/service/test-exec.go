@@ -1,15 +1,16 @@
 package service
 
 import (
+	"github.com/fatih/color"
+	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/websocket"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"github.com/fatih/color"
-	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/websocket"
 )
 
 var (
@@ -34,7 +35,7 @@ func (s *TestExecService) Start(req serverDomain.ExecReq, wsMsg *websocket.Messa
 	}
 
 	execHelper.PopulateTestSetPropsWithParentRequest(&req)
-	for idx, _ := range req.TestSets {
+	for idx := range req.TestSets {
 		testSet := &req.TestSets[idx]
 		if testSet.TestTool == "robotframework" {
 			testSet.TestTool = commConsts.RobotFramework

@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"path/filepath"
 
-	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
-	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
-	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	"github.com/fatih/color"
 
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
-	"github.com/fatih/color"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 )
 
 func Checkout(settings commDomain.SyncSettings, config commDomain.WorkspaceConf, workspacePath string) (

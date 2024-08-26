@@ -3,18 +3,17 @@ package stdinUtils
 import (
 	"bufio"
 	"fmt"
+	"os"
+	"regexp"
 	"strconv"
+	"strings"
+
+	"github.com/fatih/color"
 
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-
-	"os"
-	"regexp"
-	"strings"
-
-	"github.com/fatih/color"
 )
 
 func InputForBool(in *bool, defaultVal bool, fmtStr string, fmtParam ...interface{}) {

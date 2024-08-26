@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/fatih/color"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	analysisHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
@@ -15,7 +17,6 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stdinUtils "github.com/easysoft/zentaoatf/pkg/lib/stdin"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
-	"github.com/fatih/color"
 )
 
 var (

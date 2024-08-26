@@ -4,12 +4,13 @@ import (
 	"errors"
 	"fmt"
 
-	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-
-	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
 	"github.com/fatih/color"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
+
+	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 )
 
 type ProxyRepo struct {

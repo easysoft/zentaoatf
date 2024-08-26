@@ -7,9 +7,9 @@ import (
 	"strings"
 	"sync"
 
-	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
-	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
+	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/websocket"
+	"github.com/mattn/go-runewidth"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
@@ -17,9 +17,9 @@ import (
 	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
-	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/websocket"
-	"github.com/mattn/go-runewidth"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 )
 
 func CheckCaseResult(execParams commDomain.ExecParams, logs string, wsMsg *websocket.Message, errOutput string, lock *sync.Mutex) {

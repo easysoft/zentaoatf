@@ -9,18 +9,17 @@ import (
 	"testing"
 	"time"
 
-	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
-	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
-	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
-
 	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
 	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	uiTest "github.com/easysoft/zentaoatf/cmd/test/helper/zentao/ui"
 	commandConfig "github.com/easysoft/zentaoatf/internal/command/config"
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	execHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/exec"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
+	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	dateUtils "github.com/easysoft/zentaoatf/pkg/lib/date"
+	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 )
 

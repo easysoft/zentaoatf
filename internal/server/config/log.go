@@ -8,14 +8,14 @@ import (
 	"path/filepath"
 	"time"
 
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	"github.com/ergoapi/util/zos"
-	"gopkg.in/natefinch/lumberjack.v2"
-
 	"github.com/snowlyg/helper/dir"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"gopkg.in/natefinch/lumberjack.v2"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 )
 
 const (

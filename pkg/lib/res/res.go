@@ -4,9 +4,10 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/easysoft/zentaoatf/res"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
-	"github.com/easysoft/zentaoatf/res"
 )
 
 func ReadRes(path string) (ret []byte, err error) {

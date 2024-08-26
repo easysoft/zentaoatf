@@ -6,6 +6,9 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/ergoapi/util/zos"
+	"github.com/fatih/color"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
@@ -14,8 +17,6 @@ import (
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stdinUtils "github.com/easysoft/zentaoatf/pkg/lib/stdin"
-	"github.com/ergoapi/util/zos"
-	"github.com/fatih/color"
 )
 
 func InputForScriptInterpreter(scripts []string, config *commDomain.WorkspaceConf, from string) bool {

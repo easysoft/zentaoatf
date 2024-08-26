@@ -1,8 +1,9 @@
 package serverDomain
 
 import (
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 )
 
 type JobReq struct {

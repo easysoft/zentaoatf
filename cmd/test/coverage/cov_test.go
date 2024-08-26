@@ -1,13 +1,12 @@
 package main
 
 import (
+	"testing"
+
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/runner"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
-	"testing"
 )
-
-var ()
 
 func testCov() (status string) {
 	return "pass"

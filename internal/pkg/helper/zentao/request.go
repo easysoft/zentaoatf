@@ -2,8 +2,9 @@ package zentaoHelper
 
 import (
 	"fmt"
-	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
 	"path"
+
+	httpUtils "github.com/easysoft/zentaoatf/pkg/lib/http"
 )
 
 const (

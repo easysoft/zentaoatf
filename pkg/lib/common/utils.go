@@ -13,9 +13,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/emirpasic/gods/maps"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
-	"github.com/emirpasic/gods/maps"
 )
 
 func Base(pathStr string) string {

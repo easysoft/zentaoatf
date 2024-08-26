@@ -5,8 +5,9 @@ import (
 	"path"
 	"time"
 
-	zaprotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"go.uber.org/zap/zapcore"
+
+	zaprotatelogs "github.com/lestrrat-go/file-rotatelogs"
 )
 
 // GetWriteSyncer zap logger中加入file-rotatelogs

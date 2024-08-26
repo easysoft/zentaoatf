@@ -1,6 +1,9 @@
 package action
 
 import (
+	"path/filepath"
+	"strconv"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	analysisHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/analysis"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
@@ -8,8 +11,6 @@ import (
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	stdinUtils "github.com/easysoft/zentaoatf/pkg/lib/stdin"
-	"path/filepath"
-	"strconv"
 )
 
 func CommitZTFTestResult(files []string, productId int, taskIdOrName string, noNeedConfirm bool) {

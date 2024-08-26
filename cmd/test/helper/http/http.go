@@ -8,9 +8,10 @@ import (
 	"strings"
 
 	"github.com/bitly/go-simplejson"
+	"github.com/fatih/color"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"github.com/fatih/color"
 )
 
 func Get(url, token string) (ret []byte, err error) {

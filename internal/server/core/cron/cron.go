@@ -3,11 +3,13 @@ package cron
 import (
 	"fmt"
 
-	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
+	"github.com/kataras/iris/v12"
+
 	"github.com/easysoft/zentaoatf/internal/server/core/cache"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/service"
+
+	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	cronUtils "github.com/easysoft/zentaoatf/pkg/lib/cron"
-	"github.com/kataras/iris/v12"
 )
 
 type ServerCron struct {

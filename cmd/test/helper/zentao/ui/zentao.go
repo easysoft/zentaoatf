@@ -8,8 +8,9 @@ import (
 	"strconv"
 	"strings"
 
-	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	"github.com/easysoft/zentaoatf/cmd/test/ui/conf"
+
+	constTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/conf"
 	playwright "github.com/playwright-community/playwright-go"
 )
 

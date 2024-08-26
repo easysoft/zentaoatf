@@ -8,10 +8,11 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/ergoapi/util/zos"
+
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
-	"github.com/ergoapi/util/zos"
 )
 
 func ExeSysCmd(cmdStr string) (string, error) {

@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	"github.com/easysoft/zentaoatf/pkg/consts"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 )
 
 type ZtfRespTestCases struct {

@@ -14,7 +14,11 @@ import (
 	"time"
 
 	"github.com/ergoapi/util/file"
+	"github.com/fatih/color"
 	"github.com/jinzhu/copier"
+	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/websocket"
+	"github.com/mattn/go-runewidth"
 
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
@@ -27,10 +31,6 @@ import (
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	shellUtils "github.com/easysoft/zentaoatf/pkg/lib/shell"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
-	"github.com/fatih/color"
-	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/websocket"
-	"github.com/mattn/go-runewidth"
 )
 
 func GenUnitTestReport(req serverDomain.TestSet, startTime, endTime int64, ch chan int, wsMsg *websocket.Message) (

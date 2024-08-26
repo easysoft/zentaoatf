@@ -9,19 +9,19 @@ import (
 	"strings"
 	"time"
 
-	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
-
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
-	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
-	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
-	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
-	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 	"github.com/fatih/color"
 	"github.com/gofrs/uuid"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
+	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
+	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
+	websocketHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/websocket"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
+	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
 )
 
 func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,

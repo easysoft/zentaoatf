@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/fatih/color"
+
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
-	"github.com/fatih/color"
 )
 
 func ZentaoLoginErr(errs ...interface{}) (err error) {

@@ -16,10 +16,12 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/snowlyg/helper/dir"
+
 	"github.com/easysoft/zentaoatf/pkg/consts"
+
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	cp "github.com/otiai10/copy"
-	"github.com/snowlyg/helper/dir"
 )
 
 func ReadFile(filePath string) string {

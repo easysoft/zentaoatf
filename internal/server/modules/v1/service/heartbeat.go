@@ -2,8 +2,8 @@ package service
 
 import (
 	"encoding/json"
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	hostHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/host"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
 	serverDomain "github.com/easysoft/zentaoatf/internal/server/modules/v1/domain"

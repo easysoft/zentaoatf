@@ -4,15 +4,17 @@ import (
 	"path/filepath"
 	"reflect"
 
-	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
-	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
+	"gopkg.in/ini.v1"
+
 	"github.com/easysoft/zentaoatf/internal/server/core/dao"
 	"github.com/easysoft/zentaoatf/internal/server/modules/v1/model"
+
+	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
+	commDomain "github.com/easysoft/zentaoatf/internal/pkg/domain"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
-	"gopkg.in/ini.v1"
 )
 
 func LoadBySite(site model.Site) (config commDomain.WorkspaceConf) {

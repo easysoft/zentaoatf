@@ -6,10 +6,11 @@ import (
 	"testing"
 	"time"
 
-	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
-	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
+
+	commonTestHelper "github.com/easysoft/zentaoatf/cmd/test/helper/common"
+	expect "github.com/easysoft/zentaoatf/pkg/lib/expect"
 )
 
 var (

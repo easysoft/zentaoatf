@@ -8,20 +8,22 @@ import (
 	"path/filepath"
 	"reflect"
 
+	"github.com/ergoapi/util/zos"
+	"github.com/fatih/color"
+	"github.com/spf13/viper"
+
+	"github.com/easysoft/zentaoatf/pkg/consts"
+	"github.com/easysoft/zentaoatf/pkg/lib/display"
+
 	commConsts "github.com/easysoft/zentaoatf/internal/pkg/consts"
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	langHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/lang"
 	serverConfig "github.com/easysoft/zentaoatf/internal/server/config"
-	"github.com/easysoft/zentaoatf/pkg/consts"
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
-	"github.com/easysoft/zentaoatf/pkg/lib/display"
 	fileUtils "github.com/easysoft/zentaoatf/pkg/lib/file"
 	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	resUtils "github.com/easysoft/zentaoatf/pkg/lib/res"
-	"github.com/ergoapi/util/zos"
-	"github.com/fatih/color"
-	"github.com/spf13/viper"
 )
 
 func InitConfig() {
