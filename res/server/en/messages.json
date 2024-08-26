@@ -560,7 +560,11 @@
     },
     {
       "id": "only_test_auth_login",
-      "translation": "Only test auth login."
+      "translation": "Only test auth [%s] login: %s."
+    },
+    {
+      "id": "login_success",
+      "translation": "Login success."
     },
     {
       "id": "login_fail",

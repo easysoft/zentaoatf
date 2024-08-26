@@ -9,7 +9,7 @@ import (
 )
 
 func Login() error {
-	logUtils.Info(i118Utils.Sprintf("only_test_auth_login"))
 	config := configHelper.LoadByWorkspacePath(commConsts.ZtfDir)
+	logUtils.Info(i118Utils.Sprintf("only_test_auth_login", config.Username, config.Url))
 	return zentaoHelper.Login(config)
 }

@@ -206,7 +206,9 @@ func list() {
 func login() {
 	if err := action.Login(); err != nil {
 		logUtils.ExecConsole(color.FgRed, i118Utils.Sprintf("login_fail"))
+		return
 	}
+	logUtils.ExecConsole(color.FgGreen, i118Utils.Sprintf("login_success"))
 }
 
 func view() {

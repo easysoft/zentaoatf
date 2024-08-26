@@ -557,7 +557,11 @@
     },
     {
       "id": "only_test_auth_login",
-      "translation": "仅仅测试登录"
+      "translation": "使用账号 %s 测试 %s登录接口是否正常"
+    },
+    {
+      "id": "login_success",
+      "translation": "客户端与禅道通信正常, 请排查是否有权限限制"
     },
     {
       "id": "login_fail",
