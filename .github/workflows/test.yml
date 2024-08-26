@@ -11,15 +11,6 @@ on:
   push:
     branches:
       - '*'
-    # paths:
-    #   - '**.go'
-    #   - 'go.mod'
-    #   - '.github/workflows/*.yml'
-  # pull_request:
-  #   branches:
-  #     - "*"
-  #   paths:
-  #     - '**.go'
 
 jobs:
   build:
@@ -49,5 +40,9 @@ jobs:
         run: |
           cd ui && yarn install && cd ..
           cd client && yarn install && cd ..
+          make prepare
           make compile_ui
+      - name: Release
+        run: |
           make default
+
