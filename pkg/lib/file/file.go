@@ -21,6 +21,8 @@ import (
 	"github.com/easysoft/zentaoatf/pkg/consts"
 
 	commonUtils "github.com/easysoft/zentaoatf/pkg/lib/common"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
+	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	cp "github.com/otiai10/copy"
 )
 
@@ -42,16 +44,16 @@ func ReadFileBuf(filePath string) []byte {
 
 func WriteFile(filePath string, content string) {
 	dir := filepath.Dir(filePath)
-	MkDirIfNeeded(dir)
+	if err := MkDirIfNeeded(dir); err != nil {
+		logUtils.Error(i118Utils.Sprintf("mkdir_failed", dir, err.Error()))
+		os.Exit(1)
+		return
+	}
 
 	var d1 = []byte(content)
-	err2 := os.WriteFile(filePath, d1, 0666) //写入文件(字节数组)
-	check(err2)
-}
-
-func check(e error) {
-	if e != nil {
-		panic(e)
+	if err := os.WriteFile(filePath, d1, 0666); err != nil {
+		logUtils.Error(i118Utils.Sprintf("writefile_failed", filePath, err.Error()))
+		os.Exit(1)
 	}
 }
 

@@ -53,7 +53,7 @@ tasks:
 
   prepare:
     desc: start prepare res
-    run: once
+    # run: once
     deps:
       - install
       # - compile_ui
@@ -94,6 +94,13 @@ tasks:
       - cp -a  ../../../demo .
       - cp -a ../../../client/out/ztf-{{.GOOS}}-{{.GOARCH}} gui
 
+
+  dev:
+    desc: dev
+    cmds:
+      - task: fmt
+      - make prepare
+      - make compile_command_linux
 
   default:
     cmds:

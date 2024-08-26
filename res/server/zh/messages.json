@@ -766,6 +766,18 @@
     {
       "id": "jacoco_report",
       "translation": "Jacoco覆盖率报告"
+    },
+    {
+      "id": "mkdir_failed",
+      "translation": "创建目录 %s 失败, err: %s"
+    },
+    {
+      "id": "writefile_failed",
+      "translation": "写文件 %s 失败, err: %s"
+    },
+    {
+      "id": "checkout_success",
+      "translation": "同步完成"
     }
   ]
 }

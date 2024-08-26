@@ -6,6 +6,7 @@ import (
 	configHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/config"
 	scriptHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/script"
 	zentaoHelper "github.com/easysoft/zentaoatf/internal/pkg/helper/zentao"
+	i118Utils "github.com/easysoft/zentaoatf/pkg/lib/i118"
 	logUtils "github.com/easysoft/zentaoatf/pkg/lib/log"
 	stdinUtils "github.com/easysoft/zentaoatf/pkg/lib/stdin"
 	stringUtils "github.com/easysoft/zentaoatf/pkg/lib/string"
@@ -40,8 +41,12 @@ func Checkout(productId, moduleId, suiteId, taskId string, independentFile bool,
 
 	_, err := zentaoHelper.Checkout(settings, config, commConsts.WorkDir)
 	if err != nil {
+		if err.Error() == "no_cases_found" {
+			logUtils.Info(i118Utils.Sprintf("no_cases"))
+			return
+		}
 		logUtils.Errorf("checkout failed: %v", err)
 		return
 	}
-	logUtils.Info("checkout success")
+	logUtils.Info(i118Utils.Sprintf("checkout_success"))
 }

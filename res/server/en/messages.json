@@ -777,6 +777,18 @@
     {
       "id": "jacoco_report",
       "translation": "Jacoco Coverage Report"
+    },
+    {
+      "id": "mkdir_failed",
+      "translation": "Make dir %s failed, err: %s"
+    },
+    {
+      "id": "writefile_failed",
+      "translation": "Write file %s failed, err: %s"
+    },
+    {
+      "id": "checkout_success",
+      "translation": "Checkout success."
     }
   ]
 }
