@@ -40,7 +40,7 @@ func (s *RunUnitSuit) TestRunTestng(t provider.T) {
 	testngDir := fmt.Sprintf("%scmd/test/demo/ci_test_testng", constTestHelper.RootPath)
 	t.ID("5432")
 	t.Title("执行TestNG单元测试")
-	cloneGit("https://gitee.com/ngtesting/ci_test_testng.git", testngDir)
+	cloneGit("https://github.com/easysoft/ci_test_testng.git", testngDir)
 	t.Require().Equal("Success", testRunUnitTest("mvn clean package test", testngDir, regexp.MustCompile(`Tests run\: 3, Failures\: 0, Errors\: 0, Skipped\: 0`)))
 }
 
@@ -48,7 +48,7 @@ func (s *RunUnitSuit) TestRunPytest(t provider.T) {
 	pytestDir := fmt.Sprintf(".%scmd/test/demo/ci_test_pytest", constTestHelper.RootPath)
 	t.ID("5435")
 	t.Title("执行PyTest单元测试")
-	cloneGit("https://gitee.com/ngtesting/ci_test_pytest.git", pytestDir)
+	cloneGit("https://github.com/easysoft/ci_test_pytest.git", pytestDir)
 
 	t.Require().Equal("Success", testRunUnitTest("pytest --junitxml=testresults.xml", pytestDir, regexp.MustCompile("1 failed, 1 passed")))
 }

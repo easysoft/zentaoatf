@@ -26,7 +26,7 @@ func PrintUsage() {
 
 	usageData, _ := resUtils.ReadRes(usageFile)
 	exeFile := commConsts.App
-	if !zos.IsUnix() {
+	if zos.NotUnix() {
 		exeFile += ".exe"
 	}
 	usage := fmt.Sprintf(string(usageData), exeFile)
@@ -36,7 +36,7 @@ func PrintUsage() {
 
 	sampleData, _ := resUtils.ReadRes(sampleFile)
 	sample := string(sampleData)
-	if !zos.IsUnix() {
+	if zos.IsUnix() {
 		regx, _ := regexp.Compile(`\\`)
 		sample = regx.ReplaceAllString(sample, "/")
 

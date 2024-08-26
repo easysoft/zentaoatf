@@ -43,7 +43,7 @@ func RunTestNG(t provider.T) {
 	testngDir := filepath.Join(constTestHelper.RootPath, "cmd", "test", "demo", "ci_test_testng")
 	workspaceName := "testng工作目录"
 
-	commonTestHelper.CloneGit("https://gitee.com/ngtesting/ci_test_testng.git", testngDir)
+	commonTestHelper.CloneGit("https://github.com/easysoft/ci_test_testng.git", testngDir)
 	shellUtils.ExeShellWithOutputInDir("mvn clean package test", testngDir)
 
 	t.ID("5432")

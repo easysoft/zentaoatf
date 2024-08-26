@@ -557,7 +557,7 @@
     },
     {
       "id": "only_test_auth_login",
-      "translation": "使用账号 %s 测试 %s登录接口是否正常"
+      "translation": "使用账号 %s 测试禅道 %s 通信是否正常"
     },
     {
       "id": "login_success",
