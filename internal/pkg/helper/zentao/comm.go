@@ -33,8 +33,12 @@ func ZentaoRequestErr(errs ...interface{}) (err error) {
 		arr = append(arr, fmt.Sprintf("%v", item))
 	}
 
-	msg := i118Utils.Sprintf("fail_to_request_zentao", strings.Join(arr, ", "))
-
+	msg := strings.Join(arr, ", ")
+	if strings.Contains(msg, "403") {
+		msg = i118Utils.Sprintf("fail_to_request_zentao_403")
+	} else {
+		msg = i118Utils.Sprintf("fail_to_request_zentao", msg)
+	}
 	err = errors.New(msg)
 	logUtils.Infof(color.RedString(err.Error()))
 

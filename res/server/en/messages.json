@@ -371,6 +371,10 @@
     },
     {
       "id": "fail_to_request_zentao",
+      "translation": "Zentao request failed, return: %s."
+    },
+    {
+      "id": "fail_to_request_zentao_403",
       "translation": "Zentao request failed, return: %s. If request 403, please precheck account permission by ztf login"
     },
     {
@@ -789,6 +793,18 @@
     {
       "id": "checkout_success",
       "translation": "Checkout success."
+    },
+    {
+      "id": "case_not_found",
+      "translation": "No found any case %v."
+    },
+    {
+      "id": "auto_create_case",
+      "translation": "Product %v create case %v."
+    },
+    {
+      "id": "success_to_create_case",
+      "translation": "Product %v create case success, title %v."
     }
   ]
 }

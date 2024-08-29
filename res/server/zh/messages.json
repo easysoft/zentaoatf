@@ -361,6 +361,10 @@
     },
     {
       "id": "fail_to_request_zentao",
+      "translation": "禅道请求失败,返回：%s。"
+    },
+    {
+      "id": "fail_to_request_zentao_403",
       "translation": "禅道请求失败,返回：%s。如果是403问题, 可以先用ztf login检测是否是权限问题"
     },
     {
@@ -778,6 +782,18 @@
     {
       "id": "checkout_success",
       "translation": "同步完成"
+    },
+    {
+      "id": "case_not_found",
+      "translation": "未发现用例 %v"
+    },
+    {
+      "id": "auto_create_case",
+      "translation": "产品ID %v 尝试创建用例 %v"
+    },
+    {
+      "id": "success_to_create_case",
+      "translation": "产品ID %v 创建用例成功, 标题为 %v"
     }
   ]
 }

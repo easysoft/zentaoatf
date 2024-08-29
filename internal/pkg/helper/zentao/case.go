@@ -42,12 +42,14 @@ func CommitCase(productId string, caseId int, title string, steps []commDomain.Z
 		if !strings.Contains(err.Error(), "404") {
 			return
 		}
-		if len(productId) == 0 {
-			logUtils.Info("not found productId, like: pid=1")
-			return fmt.Errorf("not found productId, like: pid=1")
+		logUtils.Info(i118Utils.Sprintf("case_not_found", caseId))
+		if len(productId) > 0 {
+			// 创建cases
+			logUtils.Info(i118Utils.Sprintf("auto_create_case", productId, caseId))
+			_, err = CreateCase(productId, title, steps, script, config)
+			return err
 		}
-		// 创建cases
-		_, err = CreateCase(productId, title, steps, script, config)
+
 		return
 	}
 
@@ -138,8 +140,7 @@ func CreateCase(productId, title string, steps []commDomain.ZentaoCaseStep, scri
 		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
 		return
 	}
-	logUtils.Infof(i118Utils.Sprintf("success_to_create_case", title) + "\n")
-
+	logUtils.Infof(i118Utils.Sprintf("success_to_create_case", productId, title) + "\n")
 	return
 }
 
