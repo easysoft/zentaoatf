@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ergoapi/util/exid"
 	"github.com/fatih/color"
-	"github.com/gofrs/uuid"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
 
@@ -32,7 +32,7 @@ func RunFile(filePath, workspacePath string, conf commDomain.WorkspaceConf,
 
 	lang := langHelper.GetLangByFile(filePath)
 
-	uuidString := uuid.Must(uuid.NewV4()).String()
+	uuidString := exid.GenUUID()
 	_, _, _, _, timeout := scriptHelper.GetCaseInfo(filePath)
 	if timeout == 0 {
 		timeout = 86400 * 7

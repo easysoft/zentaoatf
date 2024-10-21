@@ -63,16 +63,25 @@ func InitExecLog(workspacePath string) {
 	logPathInfo := filepath.Join(commConsts.ExecLogDir, commConsts.LogText)
 	if !zos.IsUnix() {
 		logPathInfo = filepath.Join(WinFileSchema, logPathInfo)
-		zap.RegisterSink("winfile", newWinFileSink)
+		if err := zap.RegisterSink("winfile", newWinFileSink); err != nil {
+			log.Println("register winfile sink fail " + err.Error())
+		}
 	}
-
+	if _, err := os.Stat(logPathInfo); err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			if err := dir.InsureDir(filepath.Dir(commConsts.ExecLogDir)); err != nil {
+				log.Println("init exec log dir fail " + err.Error())
+				os.Exit(1)
+			}
+		}
+	}
 	config.OutputPaths = []string{logPathInfo}
 	var err error
 	logUtils.LoggerExecFile, err = config.Build()
-	logUtils.LoggerExecFile = logUtils.LoggerExecFile.WithOptions(zap.AddCaller(), zap.AddCallerSkip(1))
-
 	if err != nil {
 		log.Println("init exec file logger fail " + err.Error())
+	} else if logUtils.LoggerExecFile != nil {
+		logUtils.LoggerExecFile = logUtils.LoggerExecFile.WithOptions(zap.AddCaller(), zap.AddCallerSkip(1))
 	}
 
 	config.DisableCaller = true
