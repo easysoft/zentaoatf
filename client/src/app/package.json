@@ -1,15 +1,15 @@
 {
-    "name": "ztf",
-    "displayName": "ZTF",
-    "version": "3.0.0",
-    "main": "./main.js",
-    "author": {
-        "name": "青岛易企天创管理咨询有限公司",
-        "email": "chenqi@cnezsoft.com"
-    },
-    "homepage": "https://ztf.im",
-    "company": "青岛易企天创管理咨询有限公司",
-    "license": "GPL 3.0",
-    "copyright": "Copyright (C) 2019-2022",
-    "buildTime": "2022/04/18 09:01::01"
+  "name": "ztf",
+  "displayName": "ZTF",
+  "version": "3.4",
+  "main": "./main.js",
+  "author": {
+    "name": "青岛易企天创管理咨询有限公司",
+    "email": "chenqi@cnezsoft.com"
+  },
+  "homepage": "https://ztf.im",
+  "company": "青岛易企天创管理咨询有限公司",
+  "license": "GPL 3.0",
+  "copyright": "Copyright (C) 2019-2022",
+  "buildTime": "2022/04/18 09:01::01"
 }

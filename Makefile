@@ -23,7 +23,7 @@ COMMAND_BIN_DIR=bin/
 CLIENT_BIN_DIR=client/bin/
 CLIENT_OUT_DIR=client/out/
 
-BUILD_TIME=`git show -s --format=%cd`
+BUILD_TIME=`date +%FT%T%z`
 GO_VERSION=`go version`
 GIT_HASH=`git show -s --format=%H`
 BUILD_CMD=go build -ldflags "-X 'main.AppVersion=${VERSION}' -X 'main.BuildTime=${BUILD_TIME}' -X 'main.GoVersion=${GO_VERSION}' -X 'main.GitHash=${GIT_HASH}'"
@@ -210,14 +210,14 @@ copy_files_mac:
 # zip server
 zip_server_win64:
 	@mkdir -p ${QINIU_DIST_DIR}win64
-	@cd ${COMMAND_BIN_DIR}win64 && zip -ry ${QINIU_DIST_DIR}win64/${PROJECT}-server.zip ./demo ./${PROJECT}-server.exe && cd ../..
+	@cd ${COMMAND_BIN_DIR}win64 && zip -qr ${QINIU_DIST_DIR}win64/${PROJECT}-server.zip ./demo ./${PROJECT}-server.exe && cd ../..
 	@md5sum ${QINIU_DIST_DIR}win64/${PROJECT}-server.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}win64/${PROJECT}-server.zip.md5
 
 zip_server_linux:
 	@mkdir -p ${QINIU_DIST_DIR}linux
 	@cd ${COMMAND_BIN_DIR}linux && \
-		zip -ry ${QINIU_DIST_DIR}linux/${PROJECT}-server.zip ./demo ./${PROJECT}-server && \
+		zip -qr ${QINIU_DIST_DIR}linux/${PROJECT}-server.zip ./demo ./${PROJECT}-server && \
 		md5sum ${QINIU_DIST_DIR}linux/${PROJECT}-server.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}linux/${PROJECT}-server.zip.md5 && \
 				cd ../..; \
@@ -225,14 +225,14 @@ zip_server_linux:
 zip_server_linux_arm64:
 	@mkdir -p ${QINIU_DIST_DIR}linux_arm64
 	@cd ${COMMAND_BIN_DIR}linux_arm64 && \
-		zip -ry ${QINIU_DIST_DIR}linux_arm64/${PROJECT}-server.zip ./demo ./${PROJECT}-server && \
+		zip -qr ${QINIU_DIST_DIR}linux_arm64/${PROJECT}-server.zip ./demo ./${PROJECT}-server && \
 		md5sum ${QINIU_DIST_DIR}linux_arm64/${PROJECT}-server.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}linux_arm64/${PROJECT}-server.zip.md5 && \
 			cd ../..; \
 
 zip_server_mac:
 	@mkdir -p ${QINIU_DIST_DIR}darwin
-	@cd ${COMMAND_BIN_DIR}darwin && zip -ry ${QINIU_DIST_DIR}darwin/${PROJECT}-server.zip ./demo ./${PROJECT}-server && cd ../..
+	@cd ${COMMAND_BIN_DIR}darwin && zip -qr ${QINIU_DIST_DIR}darwin/${PROJECT}-server.zip ./demo ./${PROJECT}-server && cd ../..
 	@md5sum ${QINIU_DIST_DIR}darwin/${PROJECT}-server.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}darwin/${PROJECT}-server.zip.md5
 
@@ -242,7 +242,7 @@ zip_client_win64:
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
 	@mkdir -p ${QINIU_DIST_DIR}win64 && rm -rf ${QINIU_DIST_DIR}win64/${PROJECT}.zip
 	@cd ${CLIENT_OUT_DIR}win64 && \
-		zip -ry ${QINIU_DIST_DIR}win64/${PROJECT}.zip ./* && \
+		zip -qr ${QINIU_DIST_DIR}win64/${PROJECT}.zip ./* && \
 		md5sum ${QINIU_DIST_DIR}win64/${PROJECT}.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}win64/${PROJECT}.zip.md5 && \
         cd ../..; \
@@ -252,7 +252,7 @@ zip_client_linux:
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
 	@mkdir -p ${QINIU_DIST_DIR}linux && rm -rf ${QINIU_DIST_DIR}linux/${PROJECT}.zip
 	@cd ${CLIENT_OUT_DIR}linux && \
-		zip -ry ${QINIU_DIST_DIR}linux/${PROJECT}.zip ./* && \
+		zip -qr ${QINIU_DIST_DIR}linux/${PROJECT}.zip ./* && \
 		md5sum ${QINIU_DIST_DIR}linux/${PROJECT}.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}linux/${PROJECT}.zip.md5 && \
         cd ../..; \
@@ -262,7 +262,7 @@ zip_client_linux_arm64:
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
 	@mkdir -p ${QINIU_DIST_DIR}linux_arm64 && rm -rf ${QINIU_DIST_DIR}linux_arm64/${PROJECT}.zip
 	@cd ${CLIENT_OUT_DIR}linux_arm64 && \
-		zip -ry ${QINIU_DIST_DIR}linux_arm64/${PROJECT}.zip ./* && \
+		zip -qr ${QINIU_DIST_DIR}linux_arm64/${PROJECT}.zip ./* && \
 		md5sum ${QINIU_DIST_DIR}linux_arm64/${PROJECT}.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}linux_arm64/${PROJECT}.zip.md5 && \
         cd ../..; \
@@ -272,7 +272,7 @@ zip_client_mac:
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
 	@mkdir -p ${QINIU_DIST_DIR}darwin && rm -rf ${QINIU_DIST_DIR}darwin/${PROJECT}.zip
 	@cd ${CLIENT_OUT_DIR}darwin && \
-		zip -ry ${QINIU_DIST_DIR}darwin/${PROJECT}.zip ./* && \
+		zip -qr ${QINIU_DIST_DIR}darwin/${PROJECT}.zip ./* && \
 		md5sum ${QINIU_DIST_DIR}darwin/${PROJECT}.zip | awk '{print $$1}' | \
 			xargs echo > ${QINIU_DIST_DIR}darwin/${PROJECT}.zip.md5 && \
         cd ../..; \

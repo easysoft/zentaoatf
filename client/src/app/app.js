@@ -68,6 +68,9 @@ export class ZtfApp {
             logInfo('msg from renderer: ' + arg)
 
             switch (arg) {
+                case 'getVersion':
+                    event.sender.send('version', Config.pkg.version);
+                    break;
                 case 'selectDir':
                     this.showFolderSelection(event)
                     break;
