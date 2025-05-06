@@ -1,10 +1,11 @@
 {
   "name": "ztf",
   "productName": "ztf",
-  "version": "3.3.0",
+  "version": "3.4",
   "description": "ztf",
   "main": ".webpack/main",
   "scripts": {
+    "preinstall": "node -e \"const fs=require('fs');const version=fs.readFileSync('../VERSION','utf8').trim();const pkg=require('./package.json');pkg.version=version;fs.writeFileSync('./package.json',JSON.stringify(pkg,null,2)+'\\n');const appPkg=require('./src/app/package.json');appPkg.version=version;fs.writeFileSync('./src/app/package.json',JSON.stringify(appPkg,null,2)+'\\n');\"",
     "start": "NODE_ENV=development electron-forge start",
     "package": "electron-forge package",
     "package-darwin-amd64": "npm run package -- --platform=darwin",

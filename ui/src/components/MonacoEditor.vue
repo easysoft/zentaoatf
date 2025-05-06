@@ -3,6 +3,26 @@
 </template>
 
 <script setup lang="ts">
+// 添加 WeakRef polyfill
+if (typeof WeakRef === 'undefined') {
+  class WeakRefPolyfill {
+    private ref: WeakMap<object, any>;
+    private key: object;
+
+    constructor(value: object) {
+      this.ref = new WeakMap();
+      this.key = {};
+      this.ref.set(this.key, value);
+    }
+
+    deref() {
+      return this.ref.get(this.key);
+    }
+  }
+  // @ts-ignore
+  window.WeakRef = WeakRefPolyfill;
+}
+
 import { defineProps, onBeforeUnmount, computed, CSSProperties, watch, shallowRef, defineEmits, onMounted, defineExpose } from 'vue';
 import * as monaco from 'monaco-editor';
 import { useElementSize } from '@vueuse/core'

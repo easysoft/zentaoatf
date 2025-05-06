@@ -124,8 +124,8 @@ export function genExecInfo(item: WsMsg, count: number) : WsMsg {
     }
 
     item.msg = item.msg.replace(/^"+/,'').replace(/"+$/,'')
-        .replaceAll('\n','<br />')
-        .replaceAll('[','&nbsp;&nbsp;&nbsp;[')
+        .replace('/\n/g','<br />')
+        .replace('/[/g','&nbsp;&nbsp;&nbsp;[')
     if (item.msg) item.time = momentTime(new Date());
     return item
 }

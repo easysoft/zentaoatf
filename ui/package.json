@@ -27,7 +27,7 @@
     "vue": "^3.4.33",
     "vue-final-modal": "3.4.4",
     "vue-i18n": "^9.13.1",
-    "vue-router": "^4.4.0",
+    "vue-router": "4.4.0",
     "vue-toast-notification": "^3.1.2",
     "vue-toastification": "2.0.0-rc.5",
     "vuex": "^4.1.0"
