@@ -3,5 +3,3 @@ out/
 bin/
 ui/
 /node_modules/
-/yarn.lock
-/package-lock.json
