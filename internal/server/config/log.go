@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/ergoapi/util/zos"
@@ -62,9 +63,13 @@ func InitExecLog(workspacePath string) {
 	// print to test log file
 	logPathInfo := filepath.Join(commConsts.ExecLogDir, commConsts.LogText)
 	if !zos.IsUnix() {
-		logPathInfo = filepath.Join(WinFileSchema, logPathInfo)
+		// filepath.Join does not work on Windows
+		logPathInfo = WinFileSchema + filepath.ToSlash(logPathInfo)
 		if err := zap.RegisterSink("winfile", newWinFileSink); err != nil {
-			log.Println("register winfile sink fail " + err.Error())
+			// Check if sink already registered`
+			if !strings.Contains(err.Error(), "sink factory already registered") {
+				log.Println("register winfile sink fail " + err.Error())
+			}
 		}
 	}
 	if _, err := os.Stat(logPathInfo); err != nil {
@@ -91,8 +96,14 @@ func InitExecLog(workspacePath string) {
 	// print to test result file
 	logPathResult := filepath.Join(commConsts.ExecLogDir, commConsts.ResultText)
 	if !zos.IsUnix() {
-		logPathResult = filepath.Join(WinFileSchema, logPathResult)
-		zap.RegisterSink("winfile", newWinFileSink)
+		// filepath.Join does not work on Windows
+		logPathResult = WinFileSchema + filepath.ToSlash(logPathResult)
+		if err := zap.RegisterSink("winfile", newWinFileSink); err != nil {
+			// Check if sink already registered`
+			if !strings.Contains(err.Error(), "sink factory already registered") {
+				log.Println("register winfile sink fail " + err.Error())
+			}
+		}
 	}
 	config.OutputPaths = []string{logPathResult}
 	logUtils.LoggerExecResult, err = config.Build()
