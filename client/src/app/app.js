@@ -12,6 +12,9 @@ const cp = require('child_process');
 const fs = require('fs');
 const pth = require('path');
 
+// Set a global variable to track if ztf server has fully started
+global.ztfServerFullyStarted = false;
+
 export class ZtfApp {
     constructor() {
         app.name = Lang.string('app.title', Config.pkg.displayName);
@@ -21,12 +24,42 @@ export class ZtfApp {
         killZtfServer();
 
         startZtfServer().then((ztfServerUrl)=> {
-            if (ztfServerUrl) logInfo(`>> ztf server started successfully on : ${ztfServerUrl}`);
+            if (ztfServerUrl) {
+                logInfo(`>> ztf server started successfully on : ${ztfServerUrl}`);
+                // Now ztf server has fully started, set the flag to true
+                global.ztfServerFullyStarted = true;
+            }
             this.bindElectronEvents();
         }).catch((err) => {
             logErr('>> ztf server started failed, err: ' + err);
             process.exit(1);
         })
+    }
+
+    async waitForZtfServer() {
+        // Skip ztf server startup if SKIP_SERVER is set to 1 in the environment variable
+        if (process.env.SKIP_SERVER && parseInt(process.env.SKIP_SERVER)) {
+            logInfo(`>> skip starting ztf server becuase SKIP_SERVER=${process.env.SKIP_SERVER}`);
+            return;
+        }
+
+        const maxRetries = 30; // max retries
+        const retryInterval = 1000; // retry interval in milliseconds
+
+        // Wait for ztf server to fully start
+        logInfo(`>> Wait for ztf server to fully start`);
+        for (let i = 0; i < maxRetries; i++) {
+            // Check if ztf server has fully started
+            if (global.ztfServerFullyStarted) {
+                logInfo(`>> ztf server has fully started, now continue starting UI server`);
+                return;
+            }
+
+            logInfo(`>> still wait for ztf server to fully start ... (${i+1}/${maxRetries})`);
+            await new Promise(resolve => setTimeout(resolve, retryInterval));
+        }
+
+        logInfo(`>> ztf server startup failed, please check the log and report to us.`);
     }
 
     showAndFocus() {
@@ -60,6 +93,9 @@ export class ZtfApp {
         mainWin.show()
 
         this._windows.set('main', mainWin);
+
+        // Wait for ztf server to fully start
+        await this.waitForZtfServer();
 
         const url = await startUIService()
         await mainWin.loadURL(url);
