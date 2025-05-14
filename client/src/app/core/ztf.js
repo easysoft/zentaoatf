@@ -8,6 +8,7 @@ import {IS_WINDOWS_OS} from "../utils/env";
 import {logErr, logInfo} from '../utils/log';
 
 let _ztfProcess;
+global._ztfProcess = null;
 
 export async function startZtfServer() {
     if (process.env.SKIP_SERVER && parseInt(process.env.SKIP_SERVER)) {
@@ -24,10 +25,31 @@ export async function startZtfServer() {
         const exePath = `bin/${platform}/ztf${platform === 'win32' ? '.exe' : ''}`;
         serverExePath = path.join(process.resourcesPath, exePath);
     }
+    logInfo(`>> About to start ztf server with command : ${serverExePath}`);
     if (serverExePath) {
         if (!path.isAbsolute(serverExePath)) {
             serverExePath = path.resolve(app.getAppPath(), serverExePath);
         }
+
+        // Make sure the ztf server has execute permission on non-Windows systems
+        if (!IS_WINDOWS_OS) {
+            logInfo(`>> Check if ${serverExePath} has execute permission.`);
+            try {
+                const fs = require('fs');
+                const stats = fs.statSync(serverExePath);
+                const hasReadExecPermission = !!(stats.mode & 0o400) && !!(stats.mode & 0o100);
+                if (!hasReadExecPermission) {
+                    logInfo(`>> ${serverExePath} has no execute permission, adding execute permission now...`);
+                    fs.chmodSync(serverExePath, '755');
+                    logInfo(`>> ${serverExePath} execute permission added.`);
+                } else {
+                    logInfo(`>> ${serverExePath} already has execute permission.`);
+                }
+            } catch (error) {
+                logErr(`>> Either getting stat or adding execute permission failed for ${error.message}. ztf GUI client will not work. Please report bug to us.`);
+            }
+        }
+
         return new Promise((resolve, reject) => {
             const cwd = process.env.SERVER_CWD_PATH || path.dirname(serverExePath);
             logInfo(`>> starting ztf server with command ` +
@@ -39,6 +61,7 @@ export async function startZtfServer() {
             });
 
             _ztfProcess = cmd;
+            global._ztfProcess = cmd; // 设置全局变量
             logInfo(`>> ztf server process = ${_ztfProcess.pid}`)
 
             cmd.on('close', (code) => {
