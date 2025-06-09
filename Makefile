@@ -26,7 +26,7 @@ CLIENT_OUT_DIR=client/out/
 BUILD_TIME=`date +%FT%T%z`
 GO_VERSION=`go version`
 GIT_HASH=`git show -s --format=%H`
-BUILD_CMD=go build -ldflags "-X 'main.AppVersion=${VERSION}' -X 'main.BuildTime=${BUILD_TIME}' -X 'main.GoVersion=${GO_VERSION}' -X 'main.GitHash=${GIT_HASH}'"
+BUILD_CMD=go build -ldflags "-s -w -X 'main.AppVersion=${VERSION}' -X 'main.BuildTime=${BUILD_TIME}' -X 'main.GoVersion=${GO_VERSION}' -X 'main.GitHash=${GIT_HASH}'"
 BUILD_CMD_WIN=go build -ldflags "-s -w -X 'main.AppVersion=${VERSION}' -X 'main.BuildTime=${BUILD_TIME}' -X 'main.GoVersion=${GO_VERSION}' -X 'main.GitHash=${GIT_HASH}'"
 
 default: win64 linux linux_arm64 mac
@@ -72,7 +72,7 @@ prepare_res:
 compile_launcher_win64:
 	@echo 'start compile win64 launcher'
 	@cd cmd/launcher && \
-        GOOS=windows GOARCH=amd64 \
+        CGO_ENABLED=0 GOOS=windows GOARCH=amd64 \
 		${BUILD_CMD} -x -v \
 		-o ../../${COMMAND_BIN_DIR}win64/${PROJECT}-gui.exe && \
 		cd ..
@@ -81,7 +81,7 @@ compile_launcher_win64:
 compile_server_win64:
 	@echo 'start compile server win64'
 	@rm -rf ${COMMAND_BIN_DIR}win64/${PROJECT}-server.exe
-	@GOOS=windows GOARCH=amd64 \
+	@CGO_ENABLED=0 GOOS=windows GOARCH=amd64 \
 		${BUILD_CMD_WIN} -x -v \
 		-o ${COMMAND_BIN_DIR}win64/${PROJECT}-server.exe ${SERVER_MAIN_FILE}
 
@@ -89,11 +89,11 @@ compile_server_linux:
 	@echo 'start compile server linux'
 	@rm -rf ${COMMAND_BIN_DIR}linux/${PROJECT}-server
 ifeq ($(PLATFORM),"Mac")
-	GOOS=linux GOARCH=amd64 \
+	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}linux/${PROJECT}-server ${SERVER_MAIN_FILE}
 else
-	GOOS=linux GOARCH=amd64 \
+	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}linux/${PROJECT}-server ${SERVER_MAIN_FILE}
 endif
@@ -101,14 +101,14 @@ endif
 compile_server_linux_arm64:
 	@echo 'start compile server linux for arm64'
 	@rm -rf ${COMMAND_BIN_DIR}linux_arm64/${PROJECT}-server
-	@GOOS=linux GOARCH=arm64 GOARM=7 \
+	@CGO_ENABLED=0 GOOS=linux GOARCH=arm64 GOARM=7 \
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}linux_arm64/${PROJECT}-server ${SERVER_MAIN_FILE}
 
 compile_server_mac:
 	@echo 'start compile mac'
 	@rm -rf ${COMMAND_BIN_DIR}darwin/${PROJECT}-server
-	@GOOS=darwin GOARCH=amd64 \
+	@CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 \
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}darwin/${PROJECT}-server ${SERVER_MAIN_FILE}
 
@@ -153,31 +153,31 @@ package_gui_mac_client:
 # command line
 compile_command_win64:
 	@echo 'start compile win64'
-	@GOOS=windows GOARCH=amd64 \
+	@CGO_ENABLED=0 GOOS=windows GOARCH=amd64 \
 		${BUILD_CMD} -x -v \
 		-o ${COMMAND_BIN_DIR}win64/${PROJECT}.exe ${COMMAND_MAIN_FILE}
 
 compile_command_linux:
 	@echo 'start compile linux'
 ifeq ($(PLATFORM),"Mac")
-	@GOOS=linux GOARCH=amd64 \
+	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}linux/${PROJECT} ${COMMAND_MAIN_FILE}
 else
-	GOOS=linux GOARCH=amd64 CC=gcc CXX=g++ \
+	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 CC=gcc CXX=g++ \
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}linux/${PROJECT} ${COMMAND_MAIN_FILE}
 endif
 
 compile_command_linux_arm64:
 	@echo 'start compile linux for arm64'
-	GOOS=linux GOARCH=arm64 GOARM=7 CC=aarch64-linux-gnu-gcc CXX=aarch64-linux-gnu-g++ AR=aarch64-linux-gnu-ar \
+	@CGO_ENABLED=0 GOOS=linux GOARCH=arm64 GOARM=7 CC=aarch64-linux-gnu-gcc CXX=aarch64-linux-gnu-g++ AR=aarch64-linux-gnu-ar \
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}linux_arm64/${PROJECT} ${COMMAND_MAIN_FILE}
 
 compile_command_mac:
 	@echo 'start compile darwin'
-	@GOOS=darwin GOARCH=amd64 \
+	@CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 \
 		${BUILD_CMD} \
 		-o ${COMMAND_BIN_DIR}darwin/${PROJECT} ${COMMAND_MAIN_FILE}
 
