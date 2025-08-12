@@ -38,6 +38,7 @@ var (
 
 	ZenTaoVersion string
 	Token         = "Token"
+	Cookie        = "Cookie"
 	SessionVar    = "zentaosid"
 	SessionId     string
 	RequestFix    string
