@@ -125,12 +125,14 @@ func generateTestStepAndScript(testSteps []commDomain.ZtfStep, steps *[]string, 
 
 	// convert steps to nested
 	for index := 0; index < len(testSteps); index++ {
+		fmt.Printf("index=%d\n", index)
 		ts := testSteps[index]
+		fmt.Printf("ts=%v\n", ts)
 		item := commDomain.ZtfStep{Desc: ts.Desc, Expect: ts.Expect, Children: make([]commDomain.ZtfStep, 0)}
 
 		if ts.Type == "group" {
 			nestedSteps = append(nestedSteps, item)
-		} else if ts.Type == "item" {
+		} else if ts.Type == "item" && len(nestedSteps) > 0 {
 			nestedSteps[len(nestedSteps)-1].Children = append(nestedSteps[len(nestedSteps)-1].Children, item)
 		} else if ts.Type == "step" {
 			nestedSteps = append(nestedSteps, item)

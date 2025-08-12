@@ -129,6 +129,12 @@ func IgnoreCodeFile(path string) bool {
 }
 
 func AddSlashForUrl(url string) string {
+	// 确保URL包含协议前缀
+	if !strings.HasPrefix(url, "http://") && !strings.HasPrefix(url, "https://") {
+		url = "http://" + url
+	}
+
+	// 确保URL以斜杠结尾
 	if strings.LastIndex(url, "/") < len(url)-1 {
 		url += "/"
 	}

@@ -32,6 +32,7 @@ func GetCheckForward(url, token string) (ret []byte, isForward bool, err error) 
 
 	if !strings.Contains(url, "/tokens") {
 		req.Header.Add(commConsts.Token, token)
+		req.Header.Add(commConsts.Cookie, "zentaosid="+commConsts.SessionId)
 	}
 
 	resp, err := client.Do(req)
@@ -104,6 +105,7 @@ func PostOrPut(url, token string, method string, data interface{}) (ret []byte, 
 
 	if !strings.Contains(url, "/tokens") {
 		req.Header.Add(commConsts.Token, token)
+		req.Header.Add(commConsts.Cookie, "zentaosid="+commConsts.SessionId)
 	}
 
 	//req.Header.Set("Content-Type", "application/json")

@@ -1,7 +1,7 @@
 {
   "name": "ztf",
   "displayName": "ZTF",
-  "version": "3.4",
+  "version": "3.4bug64461",
   "main": "./main.js",
   "author": {
     "name": "青岛易企天创管理咨询有限公司",
