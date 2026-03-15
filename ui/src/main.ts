@@ -13,6 +13,13 @@ import ZModal from "@/components/Modal.vue";
 import {setLang} from "@/services/settings";
 
 const app = createApp(App)
+app.config.errorHandler = (err, instance, info) => {
+    if (err instanceof TypeError && err.message.includes('ResizeObserver')) {
+        console.warn('ResizeObserver error suppressed:', err.message);
+        return;
+    }
+    console.error('Vue error:', err, info);
+};
 app.use(store);
 app.use(router)
 app.use(i18n);
