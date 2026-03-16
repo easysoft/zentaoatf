@@ -1,6 +1,7 @@
 package zentaoHelper
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"sort"
@@ -135,6 +136,10 @@ func CreateCase(productId, title string, steps []commDomain.ZentaoCaseStep, scri
 		err = ZentaoRequestErr(url, err.Error())
 		return
 	}
+
+	// Ensure numeric IDs are always int (some API responses return them as strings)
+	bytes, _ = normalizeJSONIntFields(bytes, "id", "project", "product")
+
 	err = json.Unmarshal(bytes, &cs)
 	if err != nil {
 		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
@@ -142,6 +147,42 @@ func CreateCase(productId, title string, steps []commDomain.ZentaoCaseStep, scri
 	}
 	logUtils.Infof(i118Utils.Sprintf("success_to_create_case", productId, title) + "\n")
 	return
+}
+
+func normalizeJSONIntFields(raw []byte, keys ...string) ([]byte, error) {
+	if len(raw) == 0 {
+		return raw, nil
+	}
+
+	// Decode with UseNumber so numbers are not auto-converted to float64
+	var obj map[string]interface{}
+	dec := json.NewDecoder(bytes.NewReader(raw))
+	dec.UseNumber()
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+
+	for _, key := range keys {
+		if val, ok := obj[key]; ok {
+			switch v := val.(type) {
+			case string:
+				if v == "" {
+					continue
+				}
+				if i, err := strconv.Atoi(v); err == nil {
+					obj[key] = i
+				}
+			case json.Number:
+				if i64, err := v.Int64(); err == nil {
+					obj[key] = int(i64)
+				}
+			case float64:
+				obj[key] = int(v)
+			}
+		}
+	}
+
+	return json.Marshal(obj)
 }
 
 func GetCaseById(config commDomain.WorkspaceConf, caseId int) (cs commDomain.ZtfCase, err error) {
@@ -160,7 +201,8 @@ func GetCaseById(config commDomain.WorkspaceConf, caseId int) (cs commDomain.Ztf
 		err = ZentaoRequestErr(err.Error())
 		return
 	}
-
+	// Ensure numeric IDs are always int (some API responses return them as strings)
+	bytes, _ = normalizeJSONIntFields(bytes, "id", "project", "product")
 	err = json.Unmarshal(bytes, &cs)
 	if err != nil {
 		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)

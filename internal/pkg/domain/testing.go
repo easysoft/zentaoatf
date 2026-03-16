@@ -1,8 +1,10 @@
 package commDomain
 
 import (
+	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/easysoft/zentaoatf/pkg/consts"
@@ -93,6 +95,64 @@ type ZtfCase struct {
 
 	ScriptPath string `json:"scriptPath"` // used for update exist script
 }
+
+func (c *ZtfCase) UnmarshalJSON(data []byte) error {
+	type alias ZtfCase
+	aux := struct {
+		Id      json.RawMessage `json:"id"`
+		Product json.RawMessage `json:"product"`
+		Module  json.RawMessage `json:"module"`
+		*alias
+	}{
+		alias: (*alias)(c),
+	}
+
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+
+	parseInt := func(raw json.RawMessage, dst *int) error {
+		if len(raw) == 0 || string(raw) == "null" {
+			return nil
+		}
+
+		// try numeric
+		var v int
+		if err := json.Unmarshal(raw, &v); err == nil {
+			*dst = v
+			return nil
+		}
+
+		// try string
+		var s string
+		if err := json.Unmarshal(raw, &s); err == nil {
+			if s == "" {
+				return nil
+			}
+			iv, err := strconv.Atoi(s)
+			if err != nil {
+				return err
+			}
+			*dst = iv
+			return nil
+		}
+
+		return fmt.Errorf("unexpected int type: %s", string(raw))
+	}
+
+	if err := parseInt(aux.Id, &c.Id); err != nil {
+		return err
+	}
+	if err := parseInt(aux.Product, &c.Product); err != nil {
+		return err
+	}
+	if err := parseInt(aux.Module, &c.Module); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 type ZtfCaseWrapper struct {
 	From string
 	Case ZtfCase
@@ -267,6 +327,73 @@ func (a CaseSlice) Less(i, j int) bool {
 type Failure struct {
 	Type string `json:"type" xml:"type,attr"`
 	Desc string `json:"desc" xml:",innerxml"`
+}
+
+// NormalizeJSONIntFields parses the given JSON bytes, forces the specified field names
+// (and by default "id", "project", "product") to be integers if they are strings
+// or float values, and returns the normalized JSON bytes.
+//
+// This is useful when the remote API sometimes returns numeric IDs as strings
+// ("123") or as float values (123.0) and the consumer expects them as integers.
+func NormalizeJSONIntFields(input []byte, fields ...string) ([]byte, error) {
+	var data interface{}
+	if err := json.Unmarshal(input, &data); err != nil {
+		return nil, err
+	}
+
+	fieldSet := map[string]struct{}{
+		"id":      {},
+		"project": {},
+		"product": {},
+	}
+	for _, f := range fields {
+		fieldSet[f] = struct{}{}
+	}
+
+	var normalize func(interface{})
+	normalize = func(v interface{}) {
+		switch t := v.(type) {
+		case map[string]interface{}:
+			for k, val := range t {
+				if _, ok := fieldSet[k]; ok {
+					if iv, ok := forceInt(val); ok {
+						t[k] = iv
+					}
+				}
+				normalize(val)
+			}
+		case []interface{}:
+			for _, item := range t {
+				normalize(item)
+			}
+		}
+	}
+
+	normalize(data)
+
+	return json.Marshal(data)
+}
+
+func forceInt(v interface{}) (interface{}, bool) {
+	switch t := v.(type) {
+	case json.Number:
+		if i, err := t.Int64(); err == nil {
+			return int(i), true
+		}
+		if f, err := t.Float64(); err == nil {
+			return int(f), true
+		}
+	case float64:
+		return int(t), true
+	case string:
+		if t == "" {
+			return 0, true
+		}
+		if i, err := strconv.Atoi(t); err == nil {
+			return i, true
+		}
+	}
+	return v, false
 }
 
 type Properties struct {
