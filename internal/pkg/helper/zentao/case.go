@@ -648,9 +648,20 @@ func convertMap2Case(caseItem interface{}) (caseStruct commDomain.ZtfCaseInModul
 		caseStruct.Id, _ = strconv.Atoi(strings.Replace(caseItemMap["id"].(string), "case_", "", 1))
 	}
 
-	product, _ := caseItemMap["product"].(json.Number).Int64()
+	var product int64
+	if num, ok := caseItemMap["product"].(json.Number); ok {
+		product, _ = num.Int64()
+	} else if str, ok := caseItemMap["product"].(string); ok {
+		product, _ = strconv.ParseInt(str, 10, 64)
+	}
 	caseStruct.Product = int(product)
-	module, _ := caseItemMap["module"].(json.Number).Int64()
+
+	var module int64
+	if num, ok := caseItemMap["module"].(json.Number); ok {
+		product, _ = num.Int64()
+	} else if str, ok := caseItemMap["module"].(string); ok {
+		module, _ = strconv.ParseInt(str, 10, 64)
+	}
 	caseStruct.Module = int(module)
 	if caseItemMap["case"] != nil {
 		taskCaseId, _ := caseItemMap["case"].(json.Number).Int64()
