@@ -181,7 +181,61 @@ func normalizeJSONIntFields(raw []byte, keys ...string) ([]byte, error) {
 			}
 		}
 	}
+	return json.Marshal(obj)
+}
 
+func normalizeJSONStepIntFields(raw []byte, fields ...string) ([]byte, error) {
+	if len(raw) == 0 || len(fields) == 0 {
+		return raw, nil
+	}
+
+	var obj map[string]interface{}
+	dec := json.NewDecoder(bytes.NewReader(raw))
+	dec.UseNumber()
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+
+	steps, ok := obj["steps"].([]interface{})
+	if !ok {
+		return json.Marshal(obj)
+	}
+
+	for i, s := range steps {
+		stepMap, ok := s.(map[string]interface{})
+		if !ok {
+			continue
+		}
+
+		// 遍历所有传入的字段，统一处理
+		for _, field := range fields {
+			val, exists := stepMap[field]
+			if !exists {
+				continue
+			}
+
+			switch v := val.(type) {
+			case string:
+				if v == "" {
+					continue
+				}
+				if n, err := strconv.Atoi(v); err == nil {
+					stepMap[field] = n
+				}
+			case json.Number:
+				if n, err := v.Int64(); err == nil {
+					stepMap[field] = int(n)
+				}
+			case float64:
+				stepMap[field] = int(v)
+			case int64:
+				stepMap[field] = int(v)
+			}
+		}
+		steps[i] = stepMap
+	}
+
+	obj["steps"] = steps
 	return json.Marshal(obj)
 }
 
@@ -203,6 +257,7 @@ func GetCaseById(config commDomain.WorkspaceConf, caseId int) (cs commDomain.Ztf
 	}
 	// Ensure numeric IDs are always int (some API responses return them as strings)
 	bytes, _ = normalizeJSONIntFields(bytes, "id", "project", "product")
+	bytes, _ = normalizeJSONStepIntFields(bytes, "id", "parent", "grade")
 	err = json.Unmarshal(bytes, &cs)
 	if err != nil {
 		err = ZentaoRequestErr(url, commConsts.ResponseParseErr.Message)
