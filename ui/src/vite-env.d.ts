@@ -12,7 +12,7 @@ interface ImportMetaEnv {
     // api接口域名
     readonly VITE_APP_APIHOST_MOCK: string; //  /api
     readonly VITE_APP_APISUFFIX: string; //  api/v1
-    readonly VITE_APP_APIHOST: string; //  http://127.0.0.1:8085/api/v1
+    readonly VITE_APP_APIHOST: string; //  http://127.0.0.1:56202/api/v1
 }
 
 interface ImportMeta {

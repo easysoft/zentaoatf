@@ -23,7 +23,7 @@
         :info="validateInfos.path"
         :helpText="t('proxy_desc')"
       >
-        <input placeholder="http://127.0.0.1:8085" type="text" v-model="modelRef.path" />
+        <input placeholder="http://127.0.0.1:56202" type="text" v-model="modelRef.path" />
       </FormItem>
     </Form>
   </ZModal>

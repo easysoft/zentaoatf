@@ -41,7 +41,7 @@
     position: fixed;
     display: flex;
     align-items: left;
-    right: 110px;
+    right: 130px;
     z-index: 1000;
   }
   .window-controls {
@@ -52,7 +52,6 @@
     font-size: 12px;
     color: green;
     -webkit-app-region: no-drag;
-    min-width: 80px;
     font-weight: bold;
   }
 </style>
